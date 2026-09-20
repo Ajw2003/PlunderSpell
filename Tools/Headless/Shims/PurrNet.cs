@@ -313,9 +313,13 @@ namespace PurrNet
     /// flips <see cref="NetworkHarness"/> into its server+client configuration, which is what the
     /// identity flags read.
     /// </summary>
+    /// <summary>Only referenced by field type here; the real asset's rules are never evaluated headlessly.</summary>
+    public class NetworkRules : UnityEngine.ScriptableObject { }
+
     public class NetworkManager : UnityEngine.MonoBehaviour
     {
         public static NetworkManager main { get; private set; }
+        public NetworkRules networkRules;
 
         public bool isServer => NetworkHarness.IsServer;
         public bool isClient => NetworkHarness.IsClient;

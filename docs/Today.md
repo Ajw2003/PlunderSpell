@@ -1,5 +1,23 @@
 # Today
 
+**2026-09-20, later — the headless harness didn't work, so #14's changes were re-verified for real.**
+The first pass below shipped labelled `UNTESTED:` because no Unity or .NET SDK was reachable.
+Installing `dotnet-sdk-8.0` via `apt` (the earlier `dot.net` install script is proxy-blocked here;
+`apt` is not) turned up a real, unrelated bug: `Tools/Headless/verify.sh` has never actually worked
+in this repo — its own `.csproj` files were gitignored from the first commit and never committed.
+Full account in `docs/Decisions.md`, "The headless harness's own project files were never
+committed". Fixed the gitignore rule, reconstructed the three project files, and filled the shim
+gaps that running it for the first time exposed (see `Tools/Headless/README.md`).
+
+**Result: the health/damage HUD work below is now actually verified.** `verify.sh` compiles both
+the Runtime and Editor projects clean (0 errors) and runs 148/162 tests green. All four new tests
+in `HudAndInteractionTests.cs` pass. The twelve failures are pre-existing shim-fidelity gaps
+unrelated to this change (real `.unity` scene loading, off-screen rendering, real asset import,
+prefab-instance correlation — catalogued in the harness README) — confirmed by reading each
+failure's message, none mention `RaidHud`, `CastleGuard`, or health.
+
+---
+
 **2026-09-20 — issue #14: wire up the health/damage presentation that was already half-built.**
 Worked from `Plans/Priority_Queue.md` Phase 1, on branch `claude/amazing-ritchie-ga4w1t`.
 

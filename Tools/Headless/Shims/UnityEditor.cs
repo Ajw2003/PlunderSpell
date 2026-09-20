@@ -62,9 +62,12 @@ namespace UnityEditor
 
     public class SerializedObject
     {
+        public SerializedObject() { }
+        public SerializedObject(UnityEngine.Object obj) { }
         public SerializedProperty FindProperty(string path) => new SerializedProperty();
         public void Update() { }
         public bool ApplyModifiedProperties() => true;
+        public void ApplyModifiedPropertiesWithoutUndo() { }
     }
 
     public class SerializedProperty
@@ -124,21 +127,30 @@ namespace UnityEditor
         public static string SaveFilePanel(string title, string directory, string name, string extension) => string.Empty;
     }
 
+    public enum ImportAssetOptions { Default, ForceUpdate, ForceSynchronousImport, ForceUncompressedImport }
+
     public static class AssetDatabase
     {
         public static void CreateAsset(UnityEngine.Object asset, string path) { }
         public static void SaveAssets() { }
         public static void Refresh() { }
+        public static void Refresh(ImportAssetOptions options) { }
         public static string GenerateUniqueAssetPath(string path) => path;
         public static T LoadAssetAtPath<T>(string path) where T : UnityEngine.Object => null;
+        public static UnityEngine.Object[] LoadAllAssetsAtPath(string path) => Array.Empty<UnityEngine.Object>();
+        public static string GetAssetPath(UnityEngine.Object asset) => string.Empty;
         public static string[] FindAssets(string filter) => Array.Empty<string>();
+        public static string[] FindAssets(string filter, string[] searchInFolders) => Array.Empty<string>();
         public static string GUIDToAssetPath(string guid) => string.Empty;
         public static string AssetPathToGUID(string path) => string.Empty;
         public static bool IsValidFolder(string path) => true;
         public static string CreateFolder(string parent, string name) => $"{parent}/{name}";
         public static bool DeleteAsset(string path) => true;
         public static void ImportAsset(string path) { }
+        public static void ImportAsset(string path, ImportAssetOptions options) { }
     }
+
+    public enum InteractionMode { UserAction, AutomatedAction }
 
     public static class PrefabUtility
     {
@@ -150,6 +162,13 @@ namespace UnityEditor
         }
         public static UnityEngine.Object InstantiatePrefab(UnityEngine.Object target) => target;
         public static UnityEngine.Object InstantiatePrefab(UnityEngine.Object target, Scene scene) => target;
+
+        /// <summary>No real prefab asset headlessly, so this returns an empty stand-in root.</summary>
+        public static GameObject LoadPrefabContents(string path) => new GameObject("PrefabContents");
+        public static void UnloadPrefabContents(GameObject root) { }
+        public static bool IsPartOfPrefabInstance(UnityEngine.Object obj) => false;
+        public static GameObject SaveAsPrefabAssetAndConnect(GameObject root, string path, InteractionMode mode) => root;
+        public static UnityEngine.Object GetCorrespondingObjectFromSource(UnityEngine.Object instance) => null;
     }
 
     public static class Selection
@@ -173,6 +192,9 @@ namespace UnityEditor
         public static bool isCompiling => false;
         public static event Action update;
         public static void delayCall(Action call) => call?.Invoke();
+
+        /// <summary>No real process to exit headlessly -- a no-op, not Environment.Exit.</summary>
+        public static void Exit(int returnValue) { }
     }
 
     public static class EditorPrefs
@@ -185,12 +207,31 @@ namespace UnityEditor
         public static void SetInt(string key, int value) => _values[key] = value;
         public static int GetInt(string key, int def = 0) => _values.TryGetValue(key, out object v) && v is int i ? i : def;
     }
+
+    /// <summary>
+    /// Only exists so CastleMeshImportSettings compiles headlessly; a postprocessor's callbacks are
+    /// never invoked outside a real asset import, so nothing here does anything.
+    /// </summary>
+    public class AssetPostprocessor
+    {
+        public string assetPath { get; set; } = string.Empty;
+        public AssetImporter assetImporter { get; set; }
+    }
+
+    public class AssetImporter { }
+
+    public class ModelImporter : AssetImporter
+    {
+        public bool isReadable;
+        public bool bakeAxisConversion;
+    }
 }
 
 namespace UnityEditor.SceneManagement
 {
     public enum NewSceneSetup { EmptyScene, DefaultGameObjects }
     public enum NewSceneMode { Single, Additive }
+    public enum OpenSceneMode { Single, Additive, AdditiveWithoutLoading }
 
     public static class EditorSceneManager
     {
@@ -199,5 +240,7 @@ namespace UnityEditor.SceneManagement
         public static bool SaveScene(Scene scene, string path) => true;
         public static void MarkSceneDirty(Scene scene) { }
         public static Scene OpenScene(string path) => new Scene { name = path };
+        public static Scene OpenScene(string path, OpenSceneMode mode) => new Scene { name = path };
+        public static bool CloseScene(Scene scene, bool removeScene) => true;
     }
 }
