@@ -3,6 +3,31 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-09-20 — Enemy health bars are IMGUI, projected from world space, not a second uGUI system
+
+**Context.** Issue #14 asks for enemy health to be readable in-world. `Assets/_Project/Scripts/Runtime/Core/UI/HealthBar.cs`
+already exists — a generic `IHealth`-driven world-space slider — but it was never placed on any
+prefab or in any scene; it's dead code. `RaidHudView` (the raid's real HUD) is deliberately all
+IMGUI (see the crosshair entry above), built this way so the game is legible before any canvas art
+is authored.
+
+**Decision.** Enemy health bars are drawn by `RaidHudView.DrawEnemyHealthBars`, projecting each
+living guard's world position (`CastleGuard.Active`, a self-registering static list mirroring the
+existing `Intruders` pattern) through `Camera.main.WorldToScreenPoint` and drawing a small IMGUI bar
+there, using the same `DrawBar` helper the alarm and player-health bars use. `HealthBar.cs` was left
+alone rather than wired up.
+
+**Why.** Standing up `HealthBar.cs` would mean authoring a uGUI canvas + slider prefab per enemy
+and placing it in every enemy prefab, which is real art/prefab work this pass isn't scoped for, and
+it would leave two parallel health-bar systems (one IMGUI, one uGUI) rather than one. Projecting
+from the existing IMGUI view costs one method and no new assets, matches `docs/Decisions.md`'s
+existing "swap for a canvas when the art pass arrives" plan for the rest of the HUD, and gives every
+enemy a bar today rather than only the ones someone remembers to wire a prefab for. When the uGUI
+art pass happens, `HealthBar.cs` is the natural component to revive — or delete, if the projected
+IMGUI bars are kept.
+
+**Status.** Current.
+
 ## 2026-09-18 — The raid scene is authored; the builder gets a scaffold path
 
 **Context.** `RaidSceneBuilder.BuildPlayer` assembled a player carrying

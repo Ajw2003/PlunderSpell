@@ -1,13 +1,17 @@
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using RogueAi.Alarm;
 using RogueAi.Castle;
 using RogueAi.Extraction;
+using RogueAi.Guards;
 using RogueAi.Lair;
 using RogueAi.Loot;
 using RogueAi.Raid;
 using RogueAi.UI;
+using StateMachine;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace RogueAi.Tests
 {
@@ -173,7 +177,7 @@ namespace RogueAi.Tests
         // --- HUD ------------------------------------------------------------------------------
 
         private RaidHudPresenter MakeHud(out ExtractionZone zone, out AlarmFSMManager alarm,
-            out LootInteractor interactor)
+            out LootInteractor interactor, PlayerStateMachine player = null)
         {
             var zoneGo = Track(new GameObject("Zone"));
             // Well away from the player, so the zone's own collider cannot sit on the interaction ray.
@@ -191,8 +195,22 @@ namespace RogueAi.Tests
 
             var hudGo = Track(new GameObject("Hud"));
             var presenter = hudGo.AddComponent<RaidHudPresenter>();
-            presenter.Configure(null, zone, alarm, lair, interactor);
+            presenter.Configure(null, zone, alarm, lair, interactor, player);
             return presenter;
+        }
+
+        private PlayerStateMachine MakePlayerStateMachine()
+        {
+            var go = Track(new GameObject("RaidPlayer"));
+            return go.AddComponent<PlayerStateMachine>();
+        }
+
+        private CastleGuard MakeGuard(Vector3 position)
+        {
+            var go = Track(new GameObject("Guard"));
+            go.transform.position = position;
+            go.AddComponent<RogueAi.Status.StatusEffectReceiver>();
+            return go.AddComponent<CastleGuard>();
         }
 
         [Test]
@@ -270,6 +288,63 @@ namespace RogueAi.Tests
 
             alarm.SetAlarmLevel(90f);
             StringAssert.Contains("HUE AND CRY", hud.Build().AlarmText);
+        }
+
+        [Test]
+        public void Test_TheHudShowsPlayerHealth()
+        {
+            PlayerStateMachine player = MakePlayerStateMachine();
+            RaidHudPresenter hud = MakeHud(out _, out _, out _, player);
+
+            RaidHudModel fullHealth = hud.Build();
+            Assert.AreEqual(player.MaxHealth, fullHealth.PlayerCurrentHealth);
+            Assert.AreEqual(1f, fullHealth.PlayerHealthFill, 0.001f);
+
+            player.TakeDamage(25f);
+            RaidHudModel damaged = hud.Build();
+            Assert.AreEqual(player.MaxHealth - 25f, damaged.PlayerCurrentHealth);
+            Assert.AreEqual((player.MaxHealth - 25f) / player.MaxHealth, damaged.PlayerHealthFill, 0.001f);
+        }
+
+        [Test]
+        public void Test_TheHudReadsFullWithNoPlayerWired()
+        {
+            RaidHudPresenter hud = MakeHud(out _, out _, out _);
+
+            Assert.AreEqual(1f, hud.Build().PlayerHealthFill,
+                "No player wired must read as a full, not empty, bar — an empty bar reads as dead.");
+        }
+
+        [Test]
+        public void Test_TheHudListsEveryLivingGuardAsAnInWorldHealthBar()
+        {
+            RaidHudPresenter hud = MakeHud(out _, out _, out _);
+            MakeGuard(new Vector3(3f, 0f, 4f));
+            CastleGuard hurt = MakeGuard(new Vector3(-2f, 0f, 6f));
+            hurt.TakeDamage(60f);
+
+            RaidHudModel model = hud.Build();
+
+            Assert.AreEqual(2, model.EnemyHealthBars.Length,
+                "Every living guard must contribute one in-world health bar.");
+            foreach (RaidHudModel.EnemyHealthBar bar in model.EnemyHealthBars)
+            {
+                Assert.Greater(bar.WorldPosition.y, 0f, "The bar must sit above the guard's pivot.");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Test_ADeadGuardStopsContributingAHealthBar()
+        {
+            RaidHudPresenter hud = MakeHud(out _, out _, out _);
+            MakeGuard(new Vector3(3f, 0f, 4f));
+            CastleGuard hurt = MakeGuard(new Vector3(-2f, 0f, 6f));
+
+            hurt.TakeDamage(1000f); // incapacitates and Destroy()s the guard's GameObject
+            yield return null;      // Destroy is deferred to end of frame
+
+            Assert.AreEqual(1, hud.Build().EnemyHealthBars.Length,
+                "A dead guard must self-unregister rather than leave a stale bar behind.");
         }
     }
 }

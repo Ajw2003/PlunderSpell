@@ -1,5 +1,49 @@
 # Today
 
+**2026-09-20 — issue #14: wire up the health/damage presentation that was already half-built.**
+Worked from `Plans/Priority_Queue.md` Phase 1, on branch `claude/amazing-ritchie-ga4w1t`.
+
+## Done
+
+- **Found and PR'd orphaned work.** `origin/claude/playable-loop-fixes` had two commits
+  (`46e8936`, `2bbe81b`) pushed after PR #95 merged, never opened as their own PR: a real fix for
+  `PlayerStateMachine.SpellBook` being an unserializable auto-property, the legacy-`Input`-vs-new-
+  Input-System split in `PushToCastController`/`MockVoiceInputService`, an action-disposal leak, and
+  a test-isolation bug. Confirmed by grep that current `main` still has the broken auto-property.
+  Opened [#96](https://github.com/Ajw2003/PlunderSpell/pull/96) rather than merging it myself.
+- **Issue #14 (health/damage model), the presentation half.** The damage pipeline was already
+  unified — `IHealth.TakeDamage` is the one pathway `MeleeWeapon`, `NetworkedProjectile` and
+  `CastleGuard`'s attack all go through, and `PlayerStateMachine` already tracks health and dies —
+  but neither health was visible. `RaidHudModel`/`RaidHudPresenter`/`RaidHudView` now carry and draw
+  the player's health bar, and `CastleGuard` self-registers into a new static `Active` list (mirroring
+  the existing `Intruders` pattern) so `RaidHudView` can project an in-world health bar over every
+  living guard. See `docs/Decisions.md`, "Enemy health bars are IMGUI, projected from world space",
+  for why that path was chosen over wiring up the existing but unused `HealthBar.cs` uGUI component.
+- Added `Test_TheHudShowsPlayerHealth`, `Test_TheHudReadsFullWithNoPlayerWired`,
+  `Test_TheHudListsEveryLivingGuardAsAnInWorldHealthBar` and
+  `Test_ADeadGuardStopsContributingAHealthBar` to `HudAndInteractionTests.cs`.
+
+## Not verified — no toolchain available this session
+
+Neither Unity nor a .NET SDK is installed in this container, and the proxy policy blocks fetching
+either (`builds.dotnet.microsoft.com` denied). `Tools/Headless/verify.sh` is the documented
+fallback but needs the SDK it couldn't download. **This code has not been compiled or run** — it
+was reviewed by re-reading every edit, not verified against a real toolchain. Whoever picks this up
+next should run Unity batchmode (or `Tools/Headless/verify.sh`) before treating #14 as closeable:
+`PlayerStateMachine` in particular has never been instantiated bare (without its prefab's other
+components) in a test before, and the two new tests that do so (`MakePlayerStateMachine`) are the
+main compile/behaviour risk.
+
+## Deliberately not done
+
+- **The player-death consequence** (`PlayerDeadState.Enter()` just reloads the active scene) was
+  left as-is. It technically satisfies "a defined consequence," but it's a hard scene reload with no
+  feedback — worth a follow-up but out of scope for wiring up presentation that already existed.
+- **Did not touch `#37` (melee) or `#39` (ranged aim/fire)**, the other two Phase-1 gaps — #14 was
+  chosen first because both of those already assume a working damage/health model.
+
+---
+
 **2026-09-18 — Phase 1 verification pass.** Worked `Plans/Priority_Queue.md` Phase 1 in order,
 checking each issue against the code rather than against its plan, on branch
 `claude/playable-loop-fixes`.

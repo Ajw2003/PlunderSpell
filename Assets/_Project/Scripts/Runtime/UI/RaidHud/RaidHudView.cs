@@ -34,8 +34,15 @@ namespace RogueAi.UI
             "TONITRUS", "SOMNUS", "CADAVER SURGE", "PORTA",
         };
 
+        private const float k_enemyBarWidth = 44f;
+        private const float k_enemyBarHeight = 5f;
+
+        private static readonly Color k_lowHealthColour = new Color(0.85f, 0.15f, 0.15f);
+        private static readonly Color k_fullHealthColour = new Color(0.25f, 0.85f, 0.35f);
+
         private RogueAi.Voice.PushToCastController _pushToCast;
         private RaidHudPresenter _presenter;
+        private Camera _camera;
         private GUIStyle _label;
         private GUIStyle _big;
         private Texture2D _barBackground;
@@ -69,8 +76,8 @@ namespace RogueAi.UI
             const float pad = 12f;
             float width = Mathf.Min(360f, Screen.width - pad * 2f);
 
-            // Top-left: phase, clock, alarm.
-            GUILayout.BeginArea(new Rect(pad, pad, width, 200f));
+            // Top-left: phase, clock, alarm, health.
+            GUILayout.BeginArea(new Rect(pad, pad, width, 240f));
             GUILayout.Label(PhaseLine(model.Phase), _label);
 
             _big.normal.textColor = model.TimerIsCritical ? Color.red : Color.white;
@@ -78,7 +85,15 @@ namespace RogueAi.UI
 
             GUILayout.Label(model.AlarmText, _label);
             DrawBar(GUILayoutUtility.GetRect(width - pad, 10f), model.AlarmFill, AlarmColour(model.Alarm));
+
+            GUILayout.Label(
+                $"Health {Mathf.CeilToInt(model.PlayerCurrentHealth)}/{Mathf.CeilToInt(model.PlayerMaxHealth)}",
+                _label);
+            DrawBar(GUILayoutUtility.GetRect(width - pad, 10f), model.PlayerHealthFill,
+                Color.Lerp(k_lowHealthColour, k_fullHealthColour, model.PlayerHealthFill));
             GUILayout.EndArea();
+
+            DrawEnemyHealthBars(model);
 
             // Top-right: the money, and the haul standing on the pad. The haul sits with the debt
             // rather than near the crosshair because it is the number the debt is measured against.
@@ -166,6 +181,35 @@ namespace RogueAi.UI
 
         private void DrawLine(float x, float y, float width, float height) =>
             GUI.DrawTexture(new Rect(x, y, width, height), _barFill);
+
+        /// <summary>
+        /// One small bar per living guard, projected from its world position (issue #14). See
+        /// docs/Decisions.md, "Enemy health bars are IMGUI, projected from world space".
+        /// </summary>
+        private void DrawEnemyHealthBars(RaidHudModel model)
+        {
+            if (_camera == null)
+                _camera = Camera.main;
+            if (_camera == null)
+                return;
+
+            foreach (RaidHudModel.EnemyHealthBar bar in model.EnemyHealthBars)
+            {
+                Vector3 screen = _camera.WorldToScreenPoint(bar.WorldPosition);
+                if (screen.z <= 0f)
+                    continue; // behind the camera
+
+                // WorldToScreenPoint is bottom-left origin with y up; IMGUI is top-left with y down.
+                float x = screen.x - k_enemyBarWidth * 0.5f;
+                float y = Screen.height - screen.y - k_enemyBarHeight * 0.5f;
+
+                if (x < -k_enemyBarWidth || x > Screen.width || y < -k_enemyBarHeight || y > Screen.height)
+                    continue;
+
+                DrawBar(new Rect(x, y, k_enemyBarWidth, k_enemyBarHeight), bar.HealthFraction,
+                    Color.Lerp(k_lowHealthColour, k_fullHealthColour, bar.HealthFraction));
+            }
+        }
 
         /// <summary>
         /// The casting controls. Push-to-cast is not guessable: you hold a key to open the mic and

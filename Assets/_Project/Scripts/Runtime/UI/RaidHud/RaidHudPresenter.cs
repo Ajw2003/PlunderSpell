@@ -1,9 +1,11 @@
 using RogueAi.Alarm;
 using RogueAi.Extraction;
+using RogueAi.Guards;
 using RogueAi.Lair;
 using RogueAi.Loot;
 using RogueAi.Raid;
 using RogueAi.Spells;
+using StateMachine;
 using UnityEngine;
 
 namespace RogueAi.UI
@@ -23,10 +25,14 @@ namespace RogueAi.UI
         [SerializeField] private AlarmFSMManager _alarm;
         [SerializeField] private LairHubManager _lair;
         [SerializeField] private LootInteractor _interactor;
+        [SerializeField] private PlayerStateMachine _player;
 
         [Header("Cast feed")]
         [Tooltip("Seconds the most recent cast stays on screen.")]
         [SerializeField] private float _castLineDuration = 4f;
+
+        [Tooltip("Height above a guard's pivot to draw its in-world health bar, in metres.")]
+        [SerializeField] private float _enemyBarHeight = 2.2f;
 
         private string _lastCastLine = string.Empty;
         private float _lastCastAt = float.NegativeInfinity;
@@ -61,7 +67,28 @@ namespace RogueAi.UI
                 _lair != null ? _lair.AccumulatedGold : 0f,
                 stale ? string.Empty : _lastCastLine,
                 _extractionZone != null ? _extractionZone.WorthInZone : 0f,
-                _extractionZone != null ? _extractionZone.PiecesInZone : 0);
+                _extractionZone != null ? _extractionZone.PiecesInZone : 0,
+                _player != null ? _player.CurrentHealth : 0f,
+                _player != null ? _player.MaxHealth : 0f,
+                BuildEnemyHealthBars());
+        }
+
+        /// <summary>
+        /// One entry per living guard, positioned above its pivot. Reads <see cref="CastleGuard.Active"/>
+        /// rather than a scene search — guards self-register, so this stays cheap with a full castle.
+        /// </summary>
+        private RaidHudModel.EnemyHealthBar[] BuildEnemyHealthBars()
+        {
+            var guards = CastleGuard.Active;
+            var bars = new RaidHudModel.EnemyHealthBar[guards.Count];
+            for (int i = 0; i < guards.Count; i++)
+            {
+                CastleGuard guard = guards[i];
+                float fraction = guard.MaxHealth > 0f ? guard.CurrentHealth / guard.MaxHealth : 0f;
+                bars[i] = new RaidHudModel.EnemyHealthBar(
+                    guard.transform.position + Vector3.up * _enemyBarHeight, fraction);
+            }
+            return bars;
         }
 
         /// <summary>
@@ -141,17 +168,19 @@ namespace RogueAi.UI
             if (_alarm == null) _alarm = FindObjectOfType<AlarmFSMManager>();
             if (_lair == null) _lair = FindObjectOfType<LairHubManager>();
             if (_interactor == null) _interactor = FindObjectOfType<LootInteractor>();
+            if (_player == null) _player = FindObjectOfType<PlayerStateMachine>();
         }
 
         /// <summary>Wires the presenter from code, for tests and tooling-built scenes.</summary>
         public void Configure(RaidDirector director, ExtractionZone zone, AlarmFSMManager alarm,
-            LairHubManager lair, LootInteractor interactor)
+            LairHubManager lair, LootInteractor interactor, PlayerStateMachine player = null)
         {
             _director = director;
             _extractionZone = zone;
             _alarm = alarm;
             _lair = lair;
             _interactor = interactor;
+            _player = player;
         }
     }
 }
