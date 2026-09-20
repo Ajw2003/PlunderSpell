@@ -133,15 +133,14 @@ namespace RogueAi.EditorTools
             }
 
             Transform player = casting.transform;
-            Vector3 hands = player.position + player.forward * 1.0f + Vector3.up * 1.5f;
+            Transform aim = Camera.main != null ? Camera.main.transform : player;
+            Vector3 hands = aim.position + aim.forward * 1.0f;
 
             SpellLook look = SpellLookbook.For(SpellId.Tonitrus);
             SpellBurst burst = SpellBurst.Spawn(hands, look.Colour, look.Radius, 0.45f);
             burst.SetProgress(k_CaptureProgress);
 
-            Vector3 eye = player.position + Vector3.up * 1.65f - player.forward * 1.2f;
-            SceneScreenshot.Capture(eye, Quaternion.LookRotation(hands - eye, Vector3.up),
-                isOrthographic: false, 10f,
+            SceneScreenshot.Capture(aim.position, aim.rotation, isOrthographic: false, 10f,
                 Path.Combine(outputDirectory, "raid-cast-eye.png"));
 
             Vector3 over = player.position + Vector3.up * 6f - player.forward * 7f;
@@ -195,16 +194,13 @@ namespace RogueAi.EditorTools
             Transform player = casting.transform;
             var castingFields = new SerializedObject(casting);
             float forwardOffset = castingFields.FindProperty("_castOriginForwardOffset").floatValue;
-            float castHeight = castingFields.FindProperty("_castOriginHeight").floatValue;
-            Vector3 hands = player.position + player.forward * forwardOffset + Vector3.up * castHeight;
 
             Camera playerCamera = Camera.main;
-            Vector3 eyePos = playerCamera != null
-                ? playerCamera.transform.position
-                : player.position + Vector3.up * 1.65f;
-            Quaternion eyeRot = playerCamera != null
-                ? playerCamera.transform.rotation
-                : Quaternion.LookRotation(hands - eyePos, Vector3.up);
+            Transform aim = playerCamera != null ? playerCamera.transform : player;
+            Vector3 hands = aim.position + aim.forward * forwardOffset;
+
+            Vector3 eyePos = aim.position;
+            Quaternion eyeRot = aim.rotation;
 
             int written = 0;
             foreach (SpellId spell in k_Showcase)

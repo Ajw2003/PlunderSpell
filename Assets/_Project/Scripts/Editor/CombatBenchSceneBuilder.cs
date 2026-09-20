@@ -8,6 +8,7 @@ using RogueAi.Raid;
 using RogueAi.Spells;
 using RogueAi.Spells.Vfx;
 using RogueAi.Status;
+using RogueAi.UI;
 using RogueAi.Voice;
 using StateMachine;
 using UnityEditor;
@@ -214,6 +215,7 @@ namespace RogueAi.EditorTools
             var go = new GameObject("CombatBench");
             CombatBench bench = go.AddComponent<CombatBench>();
             go.AddComponent<CombatBenchHud>();
+            go.AddComponent<CrosshairView>();
 
             var serialized = new SerializedObject(bench);
             serialized.FindProperty("m_roster").objectReferenceValue =

@@ -57,6 +57,26 @@ orange regardless of what it was aimed at, so "that went wrong" is readable befo
 exist yet. It disables its collider *before* destroying it: `Destroy` is deferred to the end of the
 frame, and a live collider expanding to 2.5 m punts every piece of loot in the room across it first.
 
+### A cast follows the camera, not the body
+
+Until 2026-09-20, `CastOrigin`/`CastDirection` used the caster's body transform — the thing that
+only yaws, per `PlayerStateMachine.Look`. Pitch lives on `CameraTransform` (the child the mouse-look
+`_xRotation` is applied to) instead, so a cast always left the caster's chest level and always went
+exactly horizontal, whatever they were actually looking at. `ItemManager`'s melee swing already
+aimed from `CameraTransform.position`/`.forward` — casting was the one path still aiming from the
+body.
+
+`SpellCastingSystem._aimSource` fixes this: it self-wires to the first child `Camera` (same
+convention as `SpellBook`'s self-wiring), and `CastOrigin`/`CastDirection` read its position and
+forward directly, with a fixed distance in front (`_castOriginForwardOffset`) and no separate height
+offset — the camera is already at eye height. This changes where the *effect* resolves from too, not
+just the visual: `SpellEffectContext.Origin` is the same value, so e.g. Ignis now looks for a target
+near where you are actually looking rather than always at chest height in front of you.
+
+For a remote caster's cast (`BroadcastCast` on another peer), `AimTransform` resolves through that
+caster's own `SpellCastingSystem._aimSource` — every player wires their own camera on `Start`, so
+this is correct for whoever cast, not just the local player.
+
 ### Two ways to cast
 
 The project contains two casting systems, and only one of them is the game's.

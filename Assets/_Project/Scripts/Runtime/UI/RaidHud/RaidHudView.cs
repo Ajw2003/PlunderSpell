@@ -13,6 +13,7 @@ namespace RogueAi.UI
     /// <see cref="RaidHudModel"/>; nothing above it has to change.
     /// </summary>
     [RequireComponent(typeof(RaidHudPresenter))]
+    [RequireComponent(typeof(CrosshairView))]
     public class RaidHudView : MonoBehaviour
     {
         [Tooltip("Hide the HUD (e.g. for screenshots).")]
@@ -22,10 +23,6 @@ namespace RogueAi.UI
         [SerializeField] private bool _showSpellbook = true;
 
         private const float k_crosshairSize = 9f;
-        private const float k_crosshairThickness = 2f;
-
-        private static readonly Color k_crosshairIdleColour = new Color(1f, 1f, 1f, 0.75f);
-        private static readonly Color k_crosshairActiveColour = new Color(1f, 0.85f, 0.35f, 1f);
 
         // Mirrors MockVoiceInputService.keybindMap; the HUD only needs the words, not the service.
         private static readonly string[] Spellbook =
@@ -36,6 +33,7 @@ namespace RogueAi.UI
 
         private RogueAi.Voice.PushToCastController _pushToCast;
         private RaidHudPresenter _presenter;
+        private CrosshairView _crosshair;
         private GUIStyle _label;
         private GUIStyle _big;
         private Texture2D _barBackground;
@@ -44,6 +42,7 @@ namespace RogueAi.UI
         private void Awake()
         {
             _presenter = GetComponent<RaidHudPresenter>();
+            _crosshair = GetComponent<CrosshairView>();
             _pushToCast = FindFirstObjectByType<RogueAi.Voice.PushToCastController>();
         }
 
@@ -94,7 +93,8 @@ namespace RogueAi.UI
             GUILayout.Label(model.HaulText, haulStyle);
             GUILayout.EndArea();
 
-            DrawCrosshair(state, model.HasInteractTarget);
+            if (_crosshair != null)
+                _crosshair.HasTarget = model.HasInteractTarget;
 
             // Centre: the interact prompt, just under the crosshair so the eye never has to leave it.
             if (!string.IsNullOrEmpty(model.InteractPrompt))
@@ -126,46 +126,6 @@ namespace RogueAi.UI
                     model.LastCastLine, style);
             }
         }
-
-        /// <summary>
-        /// The centre-screen crosshair: a cross while idle, an open bracket over something
-        /// interactable, and nothing at all outside play. Generated in code — see docs/Decisions.md,
-        /// "The crosshair is IMGUI, and therefore invisible to the screenshot test".
-        /// </summary>
-        private void DrawCrosshair(Plunderspell.Core.GameState state, bool hasTarget)
-        {
-            if (state != Plunderspell.Core.GameState.Playing)
-                return;
-
-            float centreX = Screen.width * 0.5f;
-            float centreY = Screen.height * 0.5f;
-
-            Color previous = GUI.color;
-            GUI.color = hasTarget ? k_crosshairActiveColour : k_crosshairIdleColour;
-
-            if (hasTarget)
-            {
-                // Four ticks pulled back off centre — an open bracket around what you are looking at.
-                float inner = k_crosshairSize * 0.6f;
-                float outer = k_crosshairSize * 1.5f;
-                DrawLine(centreX - outer, centreY - k_crosshairThickness * 0.5f, outer - inner, k_crosshairThickness);
-                DrawLine(centreX + inner, centreY - k_crosshairThickness * 0.5f, outer - inner, k_crosshairThickness);
-                DrawLine(centreX - k_crosshairThickness * 0.5f, centreY - outer, k_crosshairThickness, outer - inner);
-                DrawLine(centreX - k_crosshairThickness * 0.5f, centreY + inner, k_crosshairThickness, outer - inner);
-            }
-            else
-            {
-                DrawLine(centreX - k_crosshairSize, centreY - k_crosshairThickness * 0.5f,
-                    k_crosshairSize * 2f, k_crosshairThickness);
-                DrawLine(centreX - k_crosshairThickness * 0.5f, centreY - k_crosshairSize,
-                    k_crosshairThickness, k_crosshairSize * 2f);
-            }
-
-            GUI.color = previous;
-        }
-
-        private void DrawLine(float x, float y, float width, float height) =>
-            GUI.DrawTexture(new Rect(x, y, width, height), _barFill);
 
         /// <summary>
         /// The casting controls. Push-to-cast is not guessable: you hold a key to open the mic and
