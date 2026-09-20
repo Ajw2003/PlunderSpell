@@ -2,6 +2,15 @@
 // Only the callback plumbing that gameplay code touches is modelled; the generated action asset
 // (Player/Input/PlayerInputs.cs) is excluded from the headless build and stays editor-only.
 using System;
+using UnityEngine;
+
+namespace UnityEngine.InputSystem.UI
+{
+    /// <summary>Only exists so UIBootstrapper's EventSystem GameObject compiles; does nothing here.</summary>
+    public class InputSystemUIInputModule : MonoBehaviour
+    {
+    }
+}
 
 namespace UnityEngine.InputSystem
 {
@@ -92,6 +101,8 @@ namespace UnityEngine.InputSystem
     public class Keyboard : InputDevice
     {
         public static Keyboard current { get; set; } = new Keyboard();
+        public ButtonControl escapeKey { get; } = new ButtonControl();
+        public ButtonControl tabKey { get; } = new ButtonControl();
     }
 
     public class InputActionMap

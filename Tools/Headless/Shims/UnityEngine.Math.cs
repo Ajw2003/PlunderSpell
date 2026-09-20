@@ -16,6 +16,7 @@ namespace UnityEngine
         public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(a.x + b.x, a.y + b.y);
         public static Vector2 operator -(Vector2 a, Vector2 b) => new Vector2(a.x - b.x, a.y - b.y);
         public static Vector2 operator *(Vector2 a, float s) => new Vector2(a.x * s, a.y * s);
+        public static float Distance(Vector2 a, Vector2 b) => (a - b).magnitude;
         public override string ToString() => $"({x}, {y})";
     }
 
@@ -39,6 +40,9 @@ namespace UnityEngine
         public int sqrMagnitude => x * x + y * y;
         public static Vector2Int operator +(Vector2Int a, Vector2Int b) => new Vector2Int(a.x + b.x, a.y + b.y);
         public static Vector2Int operator -(Vector2Int a, Vector2Int b) => new Vector2Int(a.x - b.x, a.y - b.y);
+        public static Vector2Int operator *(Vector2Int a, int scale) => new Vector2Int(a.x * scale, a.y * scale);
+        public static Vector2Int operator *(int scale, Vector2Int a) => a * scale;
+        public static Vector2Int operator -(Vector2Int a) => new Vector2Int(-a.x, -a.y);
         public static bool operator ==(Vector2Int a, Vector2Int b) => a.x == b.x && a.y == b.y;
         public static bool operator !=(Vector2Int a, Vector2Int b) => !(a == b);
         public bool Equals(Vector2Int other) => this == other;
@@ -320,6 +324,26 @@ namespace UnityEngine
         public static Color magenta => new Color(1f, 0f, 1f);
         public static Color gray => new Color(0.5f, 0.5f, 0.5f);
         public static Color clear => new Color(0f, 0f, 0f, 0f);
+
+        public static Color operator *(Color c, float scale) => new Color(c.r * scale, c.g * scale, c.b * scale, c.a * scale);
+        public static Color operator *(float scale, Color c) => c * scale;
+
+        public static Color Lerp(Color a, Color b, float t)
+        {
+            t = t < 0f ? 0f : t > 1f ? 1f : t;
+            return new Color(a.r + (b.r - a.r) * t, a.g + (b.g - a.g) * t,
+                a.b + (b.b - a.b) * t, a.a + (b.a - a.a) * t);
+        }
+
+        public static implicit operator Color(Color32 c) =>
+            new Color(c.r / 255f, c.g / 255f, c.b / 255f, c.a / 255f);
+    }
+
+    /// <summary>Byte-channel colour. Only exists as a Color32(r,g,b,a) literal source in this codebase.</summary>
+    public struct Color32
+    {
+        public byte r, g, b, a;
+        public Color32(byte r, byte g, byte b, byte a) { this.r = r; this.g = g; this.b = b; this.a = a; }
     }
 
     public struct Bounds
@@ -335,6 +359,19 @@ namespace UnityEngine
             Vector3 lo = min, hi = max;
             return p.x >= lo.x && p.x <= hi.x && p.y >= lo.y && p.y <= hi.y && p.z >= lo.z && p.z <= hi.z;
         }
+        public void Encapsulate(Bounds other)
+        {
+            Vector3 lo = Vector3Min(min, other.min);
+            Vector3 hi = Vector3Max(max, other.max);
+            center = (lo + hi) * 0.5f;
+            extents = (hi - lo) * 0.5f;
+        }
+
+        private static Vector3 Vector3Min(Vector3 a, Vector3 b) =>
+            new Vector3(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Min(a.z, b.z));
+        private static Vector3 Vector3Max(Vector3 a, Vector3 b) =>
+            new Vector3(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y), Mathf.Max(a.z, b.z));
+
         /// <summary>Squared distance from a point to this box (0 when inside).</summary>
         public float SqrDistance(Vector3 p)
         {
