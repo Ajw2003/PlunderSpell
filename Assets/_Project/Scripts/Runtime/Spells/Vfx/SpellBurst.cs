@@ -13,6 +13,7 @@ namespace RogueAi.Spells.Vfx
         private static readonly int s_baseColor = Shader.PropertyToID("_BaseColor");
         private static readonly int s_color = Shader.PropertyToID("_Color");
         private static readonly int s_emissionColor = Shader.PropertyToID("_EmissionColor");
+        private static readonly int s_cull = Shader.PropertyToID("_Cull");
 
         private MaterialPropertyBlock m_block;
         private Renderer m_renderer;
@@ -57,6 +58,22 @@ namespace RogueAi.Spells.Vfx
         {
             m_renderer = GetComponent<Renderer>();
             EnsureGlow();
+            EnsureDoubleSided();
+        }
+
+        /// <summary>See docs/systems/spells.md, "A burst is invisible from inside itself".</summary>
+        private void EnsureDoubleSided()
+        {
+            if (m_renderer == null)
+            {
+                return;
+            }
+
+            Material material = m_renderer.material; // .material (not sharedMaterial) instances it.
+            if (material.HasProperty(s_cull))
+            {
+                material.SetFloat(s_cull, (float)UnityEngine.Rendering.CullMode.Off);
+            }
         }
 
         private void EnsureGlow()
@@ -94,7 +111,11 @@ namespace RogueAi.Spells.Vfx
 
             if (m_renderer == null)
             {
+                // Spawn() calls SetProgress before returning, and Awake does not reliably run
+                // synchronously from every AddComponent call site (editor automation in particular) —
+                // so this cannot assume Awake has already set these up.
                 m_renderer = GetComponent<Renderer>();
+                EnsureDoubleSided();
             }
 
             // Fast out, slow to a stop: a spell should arrive rather than drift outwards.

@@ -43,6 +43,20 @@ test. `ItemManager` and `EventManager` are scene-owned singletons, so the builde
 without `ItemManager` in the scene, `ItemManager.Instance` is null and a swing silently does
 nothing.
 
+### The bench carries its own spell VFX
+
+`CombatBenchSceneBuilder` gives the player the same voice-cast pipeline `RaidPlayer.prefab`
+carries — `PushToCastController` and `SpellCastingSystem`, wired to the project's one
+`SpellLexicon.asset` via `SpellCastingSystem.SetLexicon` — and builds a `SpellVfxDirector`
+(pointed at `Bolt.prefab`) directly into the scene, rather than leaving either to a manual
+"Tools ▸ Plunderspell ▸ Install Spell VFX" pass. The bench and the raid are proving the same
+system, not two different ones: a spell that works on one works on the other.
+
+This matters because the builder rebuilds the scene from `NewScene(EmptyScene)` every run — a
+component added by a separate one-off tool (like the old `SpellVfxInstaller` pass) would be
+silently wiped the next time someone rebuilds the bench. Building it in-line means the bench
+can never regress to "no caster, no VFX" just by being regenerated.
+
 ### The panel is IMGUI
 
 For the same reason `RaidHudView` is: the bench is a code-built scene with no authored prefabs, and

@@ -153,6 +153,85 @@ namespace RogueAi.EditorTools
             Debug.Log($"[SpellShots] Wrote 2 raid-scene cast images to {k_OutputFolder}.");
         }
 
+        /// <summary>
+        /// Every look, one image each, from the scene's own player camera at its own position — not
+        /// an approximation of it. Answers "does the caster see their own spell", which the bench
+        /// lineup and the single-spell raid capture do not: both put the camera further from the
+        /// burst than the real rig does. See docs/systems/spells.md, "A burst is invisible from
+        /// inside itself".
+        /// </summary>
+        [MenuItem("Tools/Plunderspell/Capture Every Cast From The Raid Scene Eye")]
+        public static void CaptureEveryCastInRaidSceneFromTheEye() =>
+            CaptureEveryCastFromTheCastersEye("Assets/_Project/Scenes/RaidScene.unity", "raid");
+
+        /// <summary>See <see cref="CaptureEveryCastInRaidSceneFromTheEye"/>; same capture, the bench
+        /// instead of the raid.</summary>
+        [MenuItem("Tools/Plunderspell/Capture Every Cast From The Combat Bench Eye")]
+        public static void CaptureEveryCastInCombatBenchFromTheEye() =>
+            CaptureEveryCastFromTheCastersEye(k_ScenePath, "bench");
+
+        private static void CaptureEveryCastFromTheCastersEye(string scenePath, string filePrefix)
+        {
+            if (!SceneScreenshot.HasGraphicsDevice)
+            {
+                Debug.LogError("[SpellShots] No graphics device. Re-run without -nographics.");
+                EditorApplication.Exit(1);
+                return;
+            }
+
+            string outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), k_OutputFolder);
+            Directory.CreateDirectory(outputDirectory);
+
+            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+
+            var casting = Object.FindFirstObjectByType<SpellCastingSystem>();
+            if (casting == null)
+            {
+                Debug.LogError($"[SpellShots] {scenePath} has no SpellCastingSystem.");
+                EditorApplication.Exit(1);
+                return;
+            }
+
+            Transform player = casting.transform;
+            var castingFields = new SerializedObject(casting);
+            float forwardOffset = castingFields.FindProperty("_castOriginForwardOffset").floatValue;
+            float castHeight = castingFields.FindProperty("_castOriginHeight").floatValue;
+            Vector3 hands = player.position + player.forward * forwardOffset + Vector3.up * castHeight;
+
+            Camera playerCamera = Camera.main;
+            Vector3 eyePos = playerCamera != null
+                ? playerCamera.transform.position
+                : player.position + Vector3.up * 1.65f;
+            Quaternion eyeRot = playerCamera != null
+                ? playerCamera.transform.rotation
+                : Quaternion.LookRotation(hands - eyePos, Vector3.up);
+
+            int written = 0;
+            foreach (SpellId spell in k_Showcase)
+            {
+                SpellLook look = SpellLookbook.For(spell);
+
+                GameObject bolt = look.Style == SpellVisualStyle.Bolt
+                    ? SpawnTintedBolt(hands + player.forward * 1.5f, look.Colour)
+                    : null;
+
+                SpellBurst burst = SpellBurst.Spawn(hands, look.Colour, look.Radius, 0.45f);
+                burst.SetProgress(k_CaptureProgress);
+
+                string path = Path.Combine(outputDirectory, $"{filePrefix}-cast-eye-{spell}.png");
+                SceneScreenshot.Capture(eyePos, eyeRot, isOrthographic: false, 10f, path);
+                written++;
+
+                Object.DestroyImmediate(burst.gameObject);
+                if (bolt != null)
+                {
+                    Object.DestroyImmediate(bolt);
+                }
+            }
+
+            Debug.Log($"[SpellShots] Wrote {written} eye-view images to {k_OutputFolder} for {scenePath}.");
+        }
+
         private static GameObject SpawnTintedBolt(Vector3 position, Color colour)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(k_BoltPath);

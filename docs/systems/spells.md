@@ -161,3 +161,15 @@ than a visual — not attempted here.
 
 - **Frango shatters your own loot too.** That is intended — it is how a raid loses its payday — but
   it means the effect must never be used as a generic "break the thing I am aiming at".
+
+- **A burst is invisible from inside itself.** `CastOrigin` puts a burst about 1m in front of the
+  caster's own eyes, and every burst-style spell's `Radius` (`SpellLookbook`) is 1.8m–4m — the sphere
+  passes the camera within roughly the first tenth of its 0.45s life (`SetProgress`'s ease-out curve
+  reaches that fast). The default primitive material back-face culls, and a camera inside a
+  back-face-culled sphere sees nothing: every surface normal points away from it. That reads exactly
+  like "the cast fired (the console logs it) but nothing appeared" — which is the failure mode a
+  first-person tester hits and a `-batchmode` capture from outside the sphere does not.
+  `SpellBurst.EnsureDoubleSided` instances the material and sets `Cull` to `Off` so the near
+  hemisphere still renders once the camera is inside it. If a future look needs single-sided
+  rendering back (e.g. for a transparent material — see the opaque-material limitation above), keep
+  this in mind: it exists specifically so the caster can see their own spell.
