@@ -17,6 +17,7 @@ namespace RogueAi.Spells.Vfx
 
         private MaterialPropertyBlock m_block;
         private Renderer m_renderer;
+        private Material m_materialInstance;
         private Light m_light;
 
         private Color m_colour = Color.white;
@@ -40,7 +41,7 @@ namespace RogueAi.Spells.Vfx
             // every piece of loot in the room across it first.
             var collider = go.GetComponent<Collider>();
             collider.enabled = false;
-            Object.Destroy(collider);
+            SafeDestroy(collider);
 
             var burst = go.AddComponent<SpellBurst>();
             burst.m_colour = colour;
@@ -64,15 +65,40 @@ namespace RogueAi.Spells.Vfx
         /// <summary>See docs/systems/spells.md, "A burst is invisible from inside itself".</summary>
         private void EnsureDoubleSided()
         {
-            if (m_renderer == null)
+            if (m_renderer == null || m_materialInstance != null)
             {
                 return;
             }
 
-            Material material = m_renderer.material; // .material (not sharedMaterial) instances it.
-            if (material.HasProperty(s_cull))
+            // Object.Instantiate + assigning to sharedMaterial gets the same per-burst instance the
+            // renderer.material getter would, without its "will leak materials" edit-mode warning —
+            // and OnDestroy below cleans the instance up so it does not actually leak either.
+            m_materialInstance = Object.Instantiate(m_renderer.sharedMaterial);
+            m_renderer.sharedMaterial = m_materialInstance;
+
+            if (m_materialInstance.HasProperty(s_cull))
             {
-                material.SetFloat(s_cull, (float)UnityEngine.Rendering.CullMode.Off);
+                m_materialInstance.SetFloat(s_cull, (float)UnityEngine.Rendering.CullMode.Off);
+            }
+        }
+
+        private void OnDestroy() => SafeDestroy(m_materialInstance);
+
+        /// <summary>Destroy is illegal outside play mode; every capture tool runs this in edit mode.</summary>
+        private static void SafeDestroy(Object obj)
+        {
+            if (obj == null)
+            {
+                return;
+            }
+
+            if (Application.isPlaying)
+            {
+                Destroy(obj);
+            }
+            else
+            {
+                DestroyImmediate(obj);
             }
         }
 
