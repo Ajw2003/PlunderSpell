@@ -1,0 +1,175 @@
+{
+  "success": true,
+  "command": "command run_tests",
+  "data": {
+    "command": "run_tests",
+    "parameters": {
+      "mode": "EditMode"
+    },
+    "result": {
+      "Summary": {
+        "Total": 20,
+        "Passed": 20,
+        "Failed": 0,
+        "Skipped": 0,
+        "Inconclusive": 0
+      },
+      "Results": [
+        {
+          "FullName": "Plunderspell.Tests.EditMode.ExtractionControllerTests.CancelExtraction_StopsExtraction",
+          "Status": "Passed",
+          "Duration": 0.0048966,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.ExtractionControllerTests.StartExtraction_SetsIsExtractingTrue",
+          "Status": "Passed",
+          "Duration": 0.0001906,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.ExtractionControllerTests.Tick_CompletesExtractionAfterDuration",
+          "Status": "Passed",
+          "Duration": 0.0002538,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.InventorySystemTests.AddItem_ReturnsFalse_WhenInventoryIsFull",
+          "Status": "Passed",
+          "Duration": 0.0017147,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.InventorySystemTests.AddItem_StacksUpToMaxStack",
+          "Status": "Passed",
+          "Duration": 0.0027651,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.InventorySystemTests.RemoveItem_RemovesAcrossMultipleStacks",
+          "Status": "Passed",
+          "Duration": 0.0003371,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.InventorySystemTests.RemoveItem_ReturnsFalse_AndLeavesInventoryUnchanged_WhenNotEnoughItems",
+          "Status": "Passed",
+          "Duration": 0.0001461,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.PlayerStatsTests.ApplyDamage_ClampsAtZero",
+          "Status": "Passed",
+          "Duration": 0.000328,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.PlayerStatsTests.Heal_ClampsAtMaxHealth",
+          "Status": "Passed",
+          "Duration": 0.0001186,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.PlayerStatsTests.SpendMana_FailsWhenInsufficient",
+          "Status": "Passed",
+          "Duration": 0.0001127,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.PlayerStatsTests.SpendMana_SucceedsAndDeducts",
+          "Status": "Passed",
+          "Duration": 0.0000663,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ArtAssetImportTests.GeneratedPropsImportCleanly",
+          "Status": "Passed",
+          "Duration": 0.0830737,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.AuthoredRaidSceneTests.Test_TheDirectorAndHudAreStillWiredToTheScene",
+          "Status": "Passed",
+          "Duration": 0.0489986,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.AuthoredRaidSceneTests.Test_ThePlayerCarriesWhatTheRaidExpectsOfIt",
+          "Status": "Passed",
+          "Duration": 0.0027083,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.AuthoredRaidSceneTests.Test_ThePlayerIsAnInstanceOfTheAuthoredPrefab",
+          "Status": "Passed",
+          "Duration": 0.0028523,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.AuthoredRaidSceneTests.Test_ThePlayerUsesTheShippingControllerNotThePlaytestHarness",
+          "Status": "Passed",
+          "Duration": 0.0022616,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_EveryEnemyStandsOnItsOwnOrigin",
+          "Status": "Passed",
+          "Duration": 0.006261,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_EveryRoomModuleClearsAStandardHuman",
+          "Status": "Passed",
+          "Duration": 0.0041236,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_NoEnemyIsTallerThanTheRoomsItIsPostedTo",
+          "Status": "Passed",
+          "Duration": 0.0041834,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_ThePlayerCapsuleIsTheStandardHuman",
+          "Status": "Passed",
+          "Duration": 0.0007143,
+          "Message": null,
+          "StackTrace": null
+        }
+      ],
+      "Duration": 0.74,
+      "StatusPath": null,
+      "Mode": "EditMode",
+      "FilterApplied": null,
+      "success": true,
+      "result": null
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

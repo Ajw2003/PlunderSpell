@@ -1,0 +1,14 @@
+Enemy stance report — each prefab instantiated at the origin, ground slab top at y=0.
+bounds  = lowest point of Renderer.bounds (what the test measures; padded for skinned meshes).
+vertex  = lowest point of the actual baked geometry (what is drawn).
+
+ArcRevenant      bounds   0.154 m   vertex   0.154 m
+CryptRisen       bounds  -0.073 m   vertex   0.000 m
+GildedColossus   bounds  -0.156 m   vertex   0.000 m
+HexTurret        bounds   0.000 m   vertex   0.000 m
+ManAtArms        bounds  -0.075 m   vertex   0.000 m
+Sergeant         bounds  -0.078 m   vertex   0.000 m
+SigilWisp        bounds   0.055 m   vertex   0.072 m
+VaultWarden      bounds  -0.116 m   vertex   0.000 m
+WarHound         bounds  -0.029 m   vertex   0.000 m
+Watchman         bounds  -0.075 m   vertex   0.000 m

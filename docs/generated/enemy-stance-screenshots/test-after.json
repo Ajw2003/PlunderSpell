@@ -1,0 +1,65 @@
+{
+  "success": true,
+  "command": "command run_tests",
+  "data": {
+    "command": "run_tests",
+    "parameters": {
+      "mode": "EditMode",
+      "filter": "RogueAi.Tests.Editor.ScaleInvariantTests",
+      "filter_type": "testName"
+    },
+    "result": {
+      "Summary": {
+        "Total": 4,
+        "Passed": 4,
+        "Failed": 0,
+        "Skipped": 0,
+        "Inconclusive": 0
+      },
+      "Results": [
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_EveryEnemyStandsOnItsOwnOrigin",
+          "Status": "Passed",
+          "Duration": 0.0114688,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_EveryRoomModuleClearsAStandardHuman",
+          "Status": "Passed",
+          "Duration": 0.3056393,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_NoEnemyIsTallerThanTheRoomsItIsPostedTo",
+          "Status": "Passed",
+          "Duration": 0.0045216,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_ThePlayerCapsuleIsTheStandardHuman",
+          "Status": "Passed",
+          "Duration": 0.0025643,
+          "Message": null,
+          "StackTrace": null
+        }
+      ],
+      "Duration": 0.48,
+      "StatusPath": null,
+      "Mode": "EditMode",
+      "FilterApplied": "testname: RogueAi.Tests.Editor.ScaleInvariantTests",
+      "success": true,
+      "result": null
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

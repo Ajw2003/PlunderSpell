@@ -359,3 +359,24 @@ show the crosshair or the interact prompt no matter how well they work. Visual p
 to wait for the uGUI/art pass that replaces `RaidHudView` against the same `RaidHudModel`.
 
 **Status.** Standing, and a known gap in the screenshot evidence.
+
+## 2026-09-21 — Enemy feet are measured on vertices, and the model is grounded, not the prefab regenerated
+
+**Context.** Issue 94 reported three enemies off the floor: `ArcRevenant` up 0.15 m, `GildedColossus`
+and `VaultWarden` down 0.16 m and 0.12 m. The measurement behind it read `Renderer.bounds`.
+
+**Decision.** Feet are measured on baked vertices (`PrefabGeometry`), not bounds. `EnemyPrefabForge`
+now grounds each model after scaling (`GroundModel`), and the one prefab that was really off the floor
+was repaired in place with `Ground Enemy Prefabs In Place` rather than by re-running the forge.
+`SigilWisp` (0.072 m up, inside the 0.10 m tolerance) was left as a hovering orb.
+
+**Why.** Photographed on a ground slab, only `ArcRevenant` floats; `GildedColossus` and `VaultWarden`
+stand exactly on the floor and the bounds were padded. A re-forge regenerates all ten prefabs and
+would discard the hand edits since commit 7a3ec27, so the repair touched one prefab and left nine
+byte-identical. Evidence: `docs/generated/enemy-stance-screenshots/`.
+
+**Not decided.** The same padding makes the forge under-scale most enemies (`WarHound` draws 0.685 m
+against a 0.85 m table entry). Correcting it resizes the whole cast against the rooms and archways, so
+it was recorded in `docs/systems/scale.md` "Traps" and left for a design call.
+
+**Status.** Standing.
