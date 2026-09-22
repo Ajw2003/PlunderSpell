@@ -124,15 +124,21 @@ namespace RogueAi.Guards
         /// <summary>Forgets every intruder. Called between raids, and by test teardown.</summary>
         public static void ClearIntruders() => Intruders.Clear();
 
+        /// <summary>Every guard currently alive. Self-registers, for the HUD's in-world health bars.</summary>
+        public static readonly List<CastleGuard> Active = new List<CastleGuard>();
+
         private void Awake()
         {
             _status = GetComponent<StatusEffectReceiver>();
             _agent = GetComponent<NavMeshAgent>();
             _health.value = _maxHealth;
+            Active.Add(this);
 
             if (_alarm == null)
                 _alarm = FindObjectOfType<AlarmFSMManager>();
         }
+
+        private void OnDestroy() => Active.Remove(this);
 
         private void Update()
         {

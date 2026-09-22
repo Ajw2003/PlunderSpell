@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Compiles and runs every test file the Unity Test Runner runs, under plain NUnit. UnityTestBridge
+    drains [UnityTest] coroutines that NUnit itself cannot execute. See Tools/Headless/README.md.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>Plunderspell.Headless.Tests</AssemblyName>
+    <RootNamespace>Plunderspell.Headless.Tests</RootNamespace>
+    <DefineConstants>HEADLESS;UNITY_EDITOR</DefineConstants>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoWarn>CS0067;CS0414;CS0169</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Plunderspell.Headless/Plunderspell.Headless.csproj" />
+    <ProjectReference Include="../Plunderspell.Headless.Editor/Plunderspell.Headless.Editor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="UnityTestBridge.cs" />
+
+    <!--
+      Every test file the Unity Test Runner would run: the two current-convention assemblies
+      (Editor/, Runtime/) and the two legacy ones kept from the pre-fork project (EditMode/,
+      PlayMode/). Linked, not copied: see Plunderspell.Headless.csproj's own comment.
+    -->
+    <Compile Include="../../../Assets/_Project/Scripts/Tests/**/*.cs">
+      <Link>Tests/%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
+</Project>

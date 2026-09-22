@@ -253,7 +253,18 @@ namespace UnityEngine
 
     // --- Rendering / presentation stubs ------------------------------------------------------
 
-    public class Renderer : Component { public bool enabled = true; public Material material; public Material sharedMaterial; }
+    public class Renderer : Component
+    {
+        public bool enabled = true;
+        public Material material;
+        public Material sharedMaterial;
+
+        /// <summary>A zero-size box at the renderer's position -- no real mesh extents headlessly.</summary>
+        public Bounds bounds => new Bounds(transform.position, Vector3.zero);
+
+        public void SetPropertyBlock(MaterialPropertyBlock block) { }
+        public void GetPropertyBlock(MaterialPropertyBlock block) { }
+    }
     public class MeshRenderer : Renderer { }
     public class SkinnedMeshRenderer : Renderer { }
     public class Material : Object
@@ -263,18 +274,50 @@ namespace UnityEngine
         public Material() { }
         public Material(Material src) { }
         public Material(Shader shader) => this.shader = shader;
+        public Texture mainTexture;
         public void SetColor(string name, Color value) => color = value;
         public void SetFloat(string name, float value) { }
+        public void EnableKeyword(string keyword) { }
+        public void DisableKeyword(string keyword) { }
+        public bool HasProperty(string name) => true;
     }
-    public class Mesh : Object { }
+    public class Mesh : Object
+    {
+        public int[] triangles = Array.Empty<int>();
+        public int vertexCount;
+    }
     public class MeshFilter : Component { public Mesh mesh; public Mesh sharedMesh; }
     public class Sprite : Object { }
     public class Texture : Object { }
+    public enum TextureFormat { RGBA32, RGB24, Alpha8 }
+
     public class Texture2D : Texture
     {
-        public Texture2D(int w, int h) { }
+        public int width { get; }
+        public int height { get; }
+
+        public Texture2D(int w, int h) { width = w; height = h; }
+        public Texture2D(int w, int h, TextureFormat format, bool mipChain) { width = w; height = h; }
         public void SetPixel(int x, int y, Color colour) { }
         public void Apply() { }
+        public void ReadPixels(Rect source, int destX, int destY) { }
+
+        /// <summary>Real encoding needs a GPU readback this shim has none of; returns an empty PNG-ish stub.</summary>
+        public byte[] EncodeToPNG() => Array.Empty<byte>();
+    }
+
+    /// <summary>No real off-screen rendering headlessly -- see Tools/Headless/README.md.</summary>
+    public class RenderTexture : Object
+    {
+        public static RenderTexture active { get; set; }
+
+        public int width;
+        public int height;
+        public int depth;
+
+        public RenderTexture(int width, int height, int depth) { this.width = width; this.height = height; this.depth = depth; }
+
+        public void Release() { }
     }
     public class ParticleSystem : Component
     {
@@ -282,6 +325,7 @@ namespace UnityEngine
         public void Play() => IsPlaying = true;
         public void Stop() => IsPlaying = false;
     }
+    public class ParticleSystemRenderer : Renderer { }
     public class Light : Behaviour
     {
         public float intensity = 1f;
@@ -297,18 +341,41 @@ namespace UnityEngine
         public Vector3 GetPoint(float distance) => origin + direction * distance;
     }
 
+    public enum CameraClearFlags { Skybox, SolidColor, Depth, Nothing }
+
     public class Camera : Behaviour
     {
         private static Camera _main;
         /// <summary>Returns the first camera in the headless scene, mirroring Camera.main's tag lookup.</summary>
         public static Camera main => _main != null ? _main : (_main = Object.FindObjectOfType<Camera>());
         public float fieldOfView = 60f;
+        public CameraClearFlags clearFlags;
+        public Color backgroundColor;
+        public bool orthographic;
+        public float orthographicSize = 5f;
+        public float nearClipPlane = 0.3f;
+        public float farClipPlane = 1000f;
+        public int cullingMask = ~0;
+        public RenderTexture targetTexture;
+
         public Ray ViewportPointToRay(Vector3 viewportPoint) => new Ray(transform.position, transform.forward);
         public Ray ScreenPointToRay(Vector3 screenPoint) => new Ray(transform.position, transform.forward);
         public Ray ScreenPointToRay(Vector2 screenPoint) => new Ray(transform.position, transform.forward);
         public Vector3 WorldToViewportPoint(Vector3 world) => new Vector3(0.5f, 0.5f, 1f);
+
+        /// <summary>Stub projection -- see Tools/Headless/README.md, "What it does and does not prove".</summary>
+        public Vector3 WorldToScreenPoint(Vector3 world) => new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 1f);
+
+        /// <summary>No off-screen rendering headlessly -- see Tools/Headless/README.md.</summary>
+        public void Render() { }
     }
-    public class Canvas : Behaviour { }
+    public class Canvas : Behaviour
+    {
+        public RenderMode renderMode;
+        public Camera worldCamera;
+        public float planeDistance = 100f;
+        public int sortingOrder;
+    }
     public class Animator : Behaviour
     {
         private readonly Dictionary<int, object> _params = new Dictionary<int, object>();
@@ -409,7 +476,7 @@ namespace UnityEngine
         public new Bounds bounds => new Bounds(transform.position + center, Vector3.one * (radius * 2f));
     }
     public class CapsuleCollider : Collider { public float radius = 0.5f; public float height = 2f; }
-    public class MeshCollider : Collider { public bool convex; }
+    public class MeshCollider : Collider { public bool convex; public Mesh sharedMesh; }
     public class CharacterController : Collider
     {
         public bool isGrounded => true;
@@ -460,6 +527,22 @@ namespace UnityEngine
         public static Collider[] OverlapSphere(Vector3 position, float radius, int layerMask = ~0,
             QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal) =>
             Live(layerMask).Where(c => c.bounds.SqrDistance(position) <= radius * radius).ToArray();
+
+        /// <summary>No-op: colliders in this shim have no deferred transform sync to flush.</summary>
+        public static void SyncTransforms() { }
+
+        /// <summary>
+        /// Approximates the capsule as its midpoint sphere of radius `radius` plus half the capsule's
+        /// own length -- looser than a true swept capsule, but this codebase only uses it as a
+        /// "would anything be jammed here" clearance check.
+        /// </summary>
+        public static bool CheckCapsule(Vector3 point0, Vector3 point1, float radius, int layerMask = ~0,
+            QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal)
+        {
+            Vector3 mid = (point0 + point1) * 0.5f;
+            float reach = radius + (point1 - point0).magnitude * 0.5f;
+            return Live(layerMask).Any(c => c.bounds.SqrDistance(mid) <= reach * reach);
+        }
 
         public static int OverlapSphereNonAlloc(Vector3 position, float radius, Collider[] results,
             int layerMask = ~0, QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal)
@@ -612,10 +695,36 @@ namespace UnityEngine.Rendering
 
 namespace UnityEngine.SceneManagement
 {
-    public struct Scene { public string name; public int buildIndex; public bool IsValid() => true; }
+    public struct Scene
+    {
+        public string name;
+        public int buildIndex;
+        public string path;
+        public bool isLoaded;
+        public bool IsValid() => true;
+
+        /// <summary>Every parentless object currently registered -- this shim has one implicit scene.</summary>
+        public GameObject[] GetRootGameObjects() =>
+            SceneRegistry.AllObjects.Where(g => g != null && g.transform.parent == null).ToArray();
+    }
+    /// <summary>No real async work headlessly; Drain() advances one frame per yield regardless.</summary>
+    public class AsyncOperation { public bool isDone => true; }
+
+    public enum LoadSceneMode { Single, Additive }
+
+    public struct LoadSceneParameters
+    {
+        public LoadSceneMode loadSceneMode;
+        public LoadSceneParameters(LoadSceneMode mode) { loadSceneMode = mode; }
+    }
+
     public static class SceneManager
     {
-        public static Scene GetActiveScene() => new Scene { name = "Headless" };
+        public static Scene GetActiveScene() => new Scene { name = "Headless", isLoaded = true };
+        public static Scene GetSceneByPath(string path) => new Scene { name = path, path = path, isLoaded = false };
+        public static Scene CreateScene(string name) => new Scene { name = name, isLoaded = true };
+        public static void SetActiveScene(Scene scene) { }
+        public static AsyncOperation UnloadSceneAsync(Scene scene) => new AsyncOperation();
         public static void LoadScene(string name) { }
         public static void LoadScene(int index) { }
         public static event Action<Scene, Scene> activeSceneChanged;
@@ -629,6 +738,7 @@ namespace UnityEngine.Events
     {
         private readonly List<Action> _calls = new List<Action>();
         public void AddListener(Action call) => _calls.Add(call);
+        public void AddListener(UnityAction call) => _calls.Add(new Action(call.Invoke));
         public void RemoveListener(Action call) => _calls.Remove(call);
         public void RemoveAllListeners() => _calls.Clear();
         public void Invoke() { foreach (Action c in _calls.ToArray()) c(); }
@@ -637,30 +747,91 @@ namespace UnityEngine.Events
     {
         private readonly List<Action<T>> _calls = new List<Action<T>>();
         public void AddListener(Action<T> call) => _calls.Add(call);
+        public void AddListener(UnityAction<T> call) => _calls.Add(new Action<T>(call.Invoke));
         public void RemoveListener(Action<T> call) => _calls.Remove(call);
         public void RemoveAllListeners() => _calls.Clear();
         public void Invoke(T arg) { foreach (Action<T> c in _calls.ToArray()) c(arg); }
     }
-    public class UnityAction { }
+    public delegate void UnityAction();
 }
 
 namespace UnityEngine.UI
 {
-    public class Graphic : Behaviour { public Color color; }
-    public class Image : Graphic { public float fillAmount = 1f; public Sprite sprite; }
-    public class Text : Graphic { public string text = string.Empty; }
-    public class Slider : Behaviour { public float value; public float minValue; public float maxValue = 1f; }
-    public class Button : Behaviour { public Events.UnityEvent onClick = new Events.UnityEvent(); }
+    public class Graphic : Behaviour
+    {
+        public Color color;
+        public RectTransform rectTransform => (RectTransform)transform;
+    }
+
+    public class Image : Graphic
+    {
+        public enum Type { Simple, Sliced, Tiled, Filled }
+        public enum FillMethod { Horizontal, Vertical, Radial90, Radial180, Radial360 }
+        public enum OriginHorizontal { Left, Right }
+        public enum OriginVertical { Bottom, Top }
+
+        public float fillAmount = 1f;
+        public Sprite sprite;
+        public Type type;
+        public FillMethod fillMethod;
+        public int fillOrigin;
+    }
+
+    public enum HorizontalWrapMode { Wrap, Overflow }
+    public enum VerticalWrapMode { Truncate, Overflow }
+
+    public class Text : Graphic
+    {
+        public string text = string.Empty;
+        public int fontSize;
+        public TextAnchor alignment;
+        public Font font;
+        public HorizontalWrapMode horizontalOverflow;
+        public VerticalWrapMode verticalOverflow;
+    }
+
+    public class Slider : Behaviour
+    {
+        public enum Direction { LeftToRight, RightToLeft, BottomToTop, TopToBottom }
+
+        public float value;
+        public float minValue;
+        public float maxValue = 1f;
+        public RectTransform fillRect;
+        public RectTransform handleRect;
+        public Graphic targetGraphic;
+        public Direction direction;
+        public Events.UnityEvent<float> onValueChanged = new Events.UnityEvent<float>();
+    }
+
+    public struct ColorBlock
+    {
+        public Color normalColor;
+        public Color highlightedColor;
+        public Color pressedColor;
+        public Color disabledColor;
+    }
+
+    public class Button : Behaviour
+    {
+        public Events.UnityEvent onClick = new Events.UnityEvent();
+        public ColorBlock colors;
+    }
 }
 
 namespace UnityEngine.AI
 {
+    public enum ObstacleAvoidanceType { NoObstacleAvoidance, LowQualityObstacleAvoidance,
+        MedQualityObstacleAvoidance, GoodQualityObstacleAvoidance, HighQualityObstacleAvoidance }
+
     public class NavMeshAgent : Behaviour
     {
         public bool isOnNavMesh => true;
         public float angularSpeed = 120f;
         public float acceleration = 8f;
         public float radius = 0.5f;
+        public float height = 2f;
+        public ObstacleAvoidanceType obstacleAvoidanceType;
         public bool updateRotation = true;
         public bool isOnOffMeshLink => false;
         public Vector3 destination { get; set; }
@@ -745,6 +916,7 @@ namespace UnityEngine
         public int fontSize;
         public FontStyle fontStyle;
         public TextAnchor alignment;
+        public bool richText;
         public GUIStyleState normal = new GUIStyleState();
         public GUIStyle() { }
         public GUIStyle(GUIStyle other)
@@ -752,6 +924,7 @@ namespace UnityEngine
             fontSize = other.fontSize;
             fontStyle = other.fontStyle;
             alignment = other.alignment;
+            richText = other.richText;
             normal = new GUIStyleState { textColor = other.normal.textColor, background = other.normal.background };
         }
     }
@@ -769,17 +942,28 @@ namespace UnityEngine
         public static void DrawTexture(Rect rect, Texture texture) { }
     }
 
+    /// <summary>Opaque layout hint. The headless shim never lays anything out, so it just carries a value.</summary>
+    public class GUILayoutOption { public float Value; }
+
     public static class GUILayout
     {
         public static void Label(string text) { }
         public static void Label(string text, GUIStyle style) { }
         public static bool Button(string text) => false;
         public static void BeginArea(Rect rect) { }
+        public static void BeginArea(Rect rect, GUIStyle style) { }
         public static void EndArea() { }
         public static void BeginHorizontal() { }
         public static void EndHorizontal() { }
         public static void BeginVertical() { }
         public static void EndVertical() { }
+        public static Vector2 BeginScrollView(Vector2 scrollPosition, params GUILayoutOption[] options) => scrollPosition;
+        public static void EndScrollView() { }
+        public static bool Toggle(bool value, string text, GUIStyle style) => value;
+        public static float HorizontalSlider(float value, float leftValue, float rightValue) => value;
+        public static int SelectionGrid(int selected, string[] texts, int columns) => selected;
+        public static GUILayoutOption Height(float height) => new GUILayoutOption { Value = height };
+        public static GUILayoutOption Width(float width) => new GUILayoutOption { Value = width };
         public static void Space(float pixels) { }
         public static void FlexibleSpace() { }
     }
@@ -804,7 +988,28 @@ namespace UnityEngine
     public class Shader : Object
     {
         public static Shader Find(string name) => new Shader { name = name };
+        public static int PropertyToID(string name) => name.GetHashCode();
     }
 
-    public class AudioListener : Behaviour { }
+    public class AudioListener : Behaviour
+    {
+        public static float volume { get; set; } = 1f;
+    }
+
+    public enum CursorLockMode { None, Locked, Confined }
+
+    public static class Cursor
+    {
+        public static CursorLockMode lockState { get; set; } = CursorLockMode.None;
+        public static bool visible { get; set; } = true;
+    }
+
+    /// <summary>Only used as a Resources.Load&lt;Font&gt; target in this codebase; never actually loaded headlessly.</summary>
+    public class Font : Object { }
+
+    public static class Resources
+    {
+        public static T Load<T>(string path) where T : class => null;
+        public static T GetBuiltinResource<T>(string path) where T : class => null;
+    }
 }

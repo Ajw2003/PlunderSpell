@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Compiles the game's editor tooling (scene builders, forges) against the shimmed UnityEditor
+    surface in ../Shims/UnityEditor.cs, plus the runtime project it calls into. Nothing here DOES
+    anything: editor tools cannot meaningfully run outside the editor, but a compile error in
+    them is caught before someone opens Unity. See Tools/Headless/README.md.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>Plunderspell.Headless.Editor</AssemblyName>
+    <RootNamespace>Plunderspell.Headless.Editor</RootNamespace>
+    <DefineConstants>HEADLESS;UNITY_EDITOR</DefineConstants>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoWarn>CS0067;CS0414;CS0169</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Plunderspell.Headless/Plunderspell.Headless.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../../../Assets/_Project/Scripts/Editor/**/*.cs">
+      <Link>Editor/%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
+</Project>

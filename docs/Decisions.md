@@ -3,6 +3,69 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-09-20 — The headless harness's own project files were never committed
+
+**Context.** `Tools/Headless/verify.sh` has existed since `5f8e336` and every PR since has cited its
+output ("Unity 6000.3.15f1 batchmode... EditMode X/X; PlayMode Y/Z" claims aside, several commit
+messages also reference the headless path). Running it in this session for the first time with a
+real .NET SDK present failed immediately: `Plunderspell.Headless/Plunderspell.Headless.csproj` does
+not exist, and never has — `git log --all --diff-filter=A -- "*.csproj"` finds no commit that ever
+added one anywhere in the repo. `.gitignore:49` has a blanket `*.csproj` rule, meant for Unity/Rider's
+auto-generated per-assembly project files at the repo root, but unanchored it also matches the
+hand-written `Tools/Headless/**/*.csproj` the harness depends on. Whoever wrote the harness had these
+files locally; they were silently gitignored from the first commit and nobody has run `verify.sh`
+against a real SDK since, in any session, ever — the shims that exist were written and reviewed by
+reading, not by compiling.
+
+**Decision.** Anchored the gitignore rule to the repo root (`/*.csproj`), reconstructed
+`Plunderspell.Headless.csproj`, `Plunderspell.Headless.Editor.csproj` and
+`Plunderspell.Headless.Tests.csproj` from `Tools/Headless/README.md`'s description of the intended
+layout plus `verify.sh`'s own invocations, and filled the substantial shim gaps that reconstructing
+and actually running it exposed (uGUI, several `UnityEditor`/`PrefabUtility`/`AssetDatabase`
+members, `Physics.CheckCapsule`/`SyncTransforms`, `RenderTexture`, `Camera` fields, `Shader.PropertyToID`,
+`Cursor`, and a `UnityAction` that was a plain class instead of a delegate — see the shim files'
+own comments for the specifics). Three Runtime files gained a third and fourth headless-build
+exclusion (`Net/PlayerNetworkOwnership.cs` alongside the existing two, `Net/SteamInviteGateway.cs`)
+rather than being shimmed, for the same "native/generated SDK, little to verify" reasoning the
+existing exclusions already used.
+
+**Why.** The harness is the only "compiles and the tests pass" check available in a container with
+no Unity install (this one, and apparently every prior session that touched this repo) — and it was
+silently unusable the entire time. Fixing the gitignore rule and committing the reconstructed files
+is the only way that stops recurring; filling the shim gaps rather than declaring the harness broken
+is what makes `verify.sh` an honest check again instead of a script that fails before it reaches any
+of the code someone actually changed.
+
+**Status.** Current. `verify.sh` now runs 148/162 tests green; the twelve failures are catalogued in
+`Tools/Headless/README.md`'s "What it does and does not prove" and are shim-fidelity gaps (real
+`.unity` scene loading, off-screen rendering, real asset import, prefab-instance correlation), not
+gameplay-logic regressions.
+
+## 2026-09-20 — Enemy health bars are IMGUI, projected from world space, not a second uGUI system
+
+**Context.** Issue #14 asks for enemy health to be readable in-world. `Assets/_Project/Scripts/Runtime/Core/UI/HealthBar.cs`
+already exists — a generic `IHealth`-driven world-space slider — but it was never placed on any
+prefab or in any scene; it's dead code. `RaidHudView` (the raid's real HUD) is deliberately all
+IMGUI (see the crosshair entry above), built this way so the game is legible before any canvas art
+is authored.
+
+**Decision.** Enemy health bars are drawn by `RaidHudView.DrawEnemyHealthBars`, projecting each
+living guard's world position (`CastleGuard.Active`, a self-registering static list mirroring the
+existing `Intruders` pattern) through `Camera.main.WorldToScreenPoint` and drawing a small IMGUI bar
+there, using the same `DrawBar` helper the alarm and player-health bars use. `HealthBar.cs` was left
+alone rather than wired up.
+
+**Why.** Standing up `HealthBar.cs` would mean authoring a uGUI canvas + slider prefab per enemy
+and placing it in every enemy prefab, which is real art/prefab work this pass isn't scoped for, and
+it would leave two parallel health-bar systems (one IMGUI, one uGUI) rather than one. Projecting
+from the existing IMGUI view costs one method and no new assets, matches `docs/Decisions.md`'s
+existing "swap for a canvas when the art pass arrives" plan for the rest of the HUD, and gives every
+enemy a bar today rather than only the ones someone remembers to wire a prefab for. When the uGUI
+art pass happens, `HealthBar.cs` is the natural component to revive — or delete, if the projected
+IMGUI bars are kept.
+
+**Status.** Current.
+
 ## 2026-09-18 — The raid scene is authored; the builder gets a scaffold path
 
 **Context.** `RaidSceneBuilder.BuildPlayer` assembled a player carrying

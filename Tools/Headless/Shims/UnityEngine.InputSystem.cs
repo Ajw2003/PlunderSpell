@@ -2,9 +2,30 @@
 // Only the callback plumbing that gameplay code touches is modelled; the generated action asset
 // (Player/Input/PlayerInputs.cs) is excluded from the headless build and stays editor-only.
 using System;
+using UnityEngine;
+
+namespace UnityEngine.InputSystem.UI
+{
+    /// <summary>Only exists so UIBootstrapper's EventSystem GameObject compiles; does nothing here.</summary>
+    public class InputSystemUIInputModule : MonoBehaviour
+    {
+    }
+}
+
+namespace UnityEngine.InputSystem.Controls
+{
+    public class KeyControl : UnityEngine.InputSystem.ButtonControl { }
+}
 
 namespace UnityEngine.InputSystem
 {
+    /// <summary>Only the keys this codebase actually binds to.</summary>
+    public enum Key
+    {
+        None, V, Digit1, Digit2, Digit3, Digit4, Digit5, Digit6, Digit7, Digit8,
+        LeftShift, RightShift, LeftCtrl, RightCtrl, Escape, Tab,
+    }
+
     public class InputControl { public string name = string.Empty; }
     public class InputDevice : InputControl { }
 
@@ -92,6 +113,25 @@ namespace UnityEngine.InputSystem
     public class Keyboard : InputDevice
     {
         public static Keyboard current { get; set; } = new Keyboard();
+        public ButtonControl escapeKey { get; } = new ButtonControl();
+        public ButtonControl tabKey { get; } = new ButtonControl();
+        public Controls.KeyControl leftShiftKey { get; } = new Controls.KeyControl();
+        public Controls.KeyControl rightShiftKey { get; } = new Controls.KeyControl();
+        public Controls.KeyControl leftCtrlKey { get; } = new Controls.KeyControl();
+        public Controls.KeyControl rightCtrlKey { get; } = new Controls.KeyControl();
+
+        private readonly System.Collections.Generic.Dictionary<Key, Controls.KeyControl> _keys =
+            new System.Collections.Generic.Dictionary<Key, Controls.KeyControl>();
+
+        public Controls.KeyControl this[Key key]
+        {
+            get
+            {
+                if (!_keys.TryGetValue(key, out Controls.KeyControl control))
+                    _keys[key] = control = new Controls.KeyControl();
+                return control;
+            }
+        }
     }
 
     public class InputActionMap
