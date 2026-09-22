@@ -699,15 +699,32 @@ namespace UnityEngine.SceneManagement
     {
         public string name;
         public int buildIndex;
+        public string path;
+        public bool isLoaded;
         public bool IsValid() => true;
 
         /// <summary>Every parentless object currently registered -- this shim has one implicit scene.</summary>
         public GameObject[] GetRootGameObjects() =>
             SceneRegistry.AllObjects.Where(g => g != null && g.transform.parent == null).ToArray();
     }
+    /// <summary>No real async work headlessly; Drain() advances one frame per yield regardless.</summary>
+    public class AsyncOperation { public bool isDone => true; }
+
+    public enum LoadSceneMode { Single, Additive }
+
+    public struct LoadSceneParameters
+    {
+        public LoadSceneMode loadSceneMode;
+        public LoadSceneParameters(LoadSceneMode mode) { loadSceneMode = mode; }
+    }
+
     public static class SceneManager
     {
-        public static Scene GetActiveScene() => new Scene { name = "Headless" };
+        public static Scene GetActiveScene() => new Scene { name = "Headless", isLoaded = true };
+        public static Scene GetSceneByPath(string path) => new Scene { name = path, path = path, isLoaded = false };
+        public static Scene CreateScene(string name) => new Scene { name = name, isLoaded = true };
+        public static void SetActiveScene(Scene scene) { }
+        public static AsyncOperation UnloadSceneAsync(Scene scene) => new AsyncOperation();
         public static void LoadScene(string name) { }
         public static void LoadScene(int index) { }
         public static event Action<Scene, Scene> activeSceneChanged;
