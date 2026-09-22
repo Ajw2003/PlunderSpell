@@ -20,6 +20,9 @@ namespace RogueAi.Spells.Vfx
         [Tooltip("How long a burst takes to expand and fade.")]
         [SerializeField] private float m_burstDuration = 0.45f;
 
+        /// <summary>Clearance past the burst's own radius, so its near edge doesn't graze the camera.</summary>
+        private const float k_burstClearance = 0.15f;
+
         private void OnEnable() => SpellCastingSystem.CastResolved += OnCastResolved;
 
         private void OnDisable() => SpellCastingSystem.CastResolved -= OnCastResolved;
@@ -34,8 +37,16 @@ namespace RogueAi.Spells.Vfx
                 return;
             }
 
-            SpellBurst.Spawn(report.Origin, look.Colour, look.Radius, m_burstDuration);
+            SpellBurst.Spawn(BurstPosition(report, look.Radius), look.Colour, look.Radius, m_burstDuration);
         }
+
+        /// <summary>
+        /// Pushes the burst's centre out from the cast origin by its own radius, so the near edge
+        /// lands at the origin rather than the caster's own camera ending up inside the sphere. See
+        /// docs/Decisions.md, "A spell burst is centred on where it lands, not where it starts".
+        /// </summary>
+        private static Vector3 BurstPosition(SpellCastingSystem.CastReport report, float radius) =>
+            report.Origin + report.Direction.normalized * (radius + k_burstClearance);
 
         /// <summary>
         /// Fires a cosmetic bolt. It carries no damage on purpose: the effect already resolved on the
@@ -63,7 +74,7 @@ namespace RogueAi.Spells.Vfx
 
             // A muzzle flash at the hands, so a bolt that flies off down a corridor still reads as
             // having come from the caster.
-            SpellBurst.Spawn(report.Origin, look.Colour, look.Radius, m_burstDuration * 0.5f);
+            SpellBurst.Spawn(BurstPosition(report, look.Radius), look.Colour, look.Radius, m_burstDuration * 0.5f);
         }
     }
 }

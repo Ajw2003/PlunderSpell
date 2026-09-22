@@ -3,6 +3,39 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-09-22 — A spell burst is centred on where it lands, not where it starts
+
+**Context.** The user reported casting still didn't visibly work in the raid scene after
+`claude/playable-loop-fixes` (PR #96) landed its Input System fix. Reviewing that PR's logic found
+nothing wrong with it — the keyboard→mic→spell-word pipeline checks out on inspection and under the
+headless harness. A separate, unopened branch (`claude/verified-issue-fixes`, built on top of PR
+#96) had already gotten further and left real Unity-rendered proof: `raid-cast-eye-Ignis.png` shows
+an orange sphere filling almost the entire frame, and `raid-cast-eye-Tonitrus.png` is blank sky.
+Both are the camera sitting inside the burst sphere — confirmed by `docs/systems/spells.md`'s own
+"burst is invisible from inside itself" entry, which already diagnosed the back-face-culling half of
+this but mitigated it with `SpellBurst.EnsureDoubleSided` rather than moving the burst.
+`CastOrigin` (`SpellCastingSystem`) places a burst only 1m in front of the caster; `SpellLookbook`'s
+burst radii run 1.8m–4m — bigger than that offset, so the camera is inside every burst regardless of
+which side of the material renders.
+
+**Decision.** `SpellVfxDirector.BurstPosition` pushes each burst's centre outward from `CastOrigin`,
+along the cast direction, by the spell's own radius plus a small clearance — so the sphere's *near
+edge* lands where the old centre was, instead of the centre itself. `CastReport.Origin` (the
+gameplay-facing cast point, also used for e.g. area-effect targeting) is untouched; only the VFX
+spawn position changes, in `SpellVfxDirector`, which already has the spell's `Radius` from
+`SpellLookbook`.
+
+**Why.** `EnsureDoubleSided` treats the symptom (nothing renders from inside a back-face-culled
+sphere) without addressing why the camera is inside a 4m sphere in the first place — and fixing only
+the culling trades invisibility for a screen-filling blob, neither of which reads as "a spell was
+cast." Moving the spawn point is the actual fix; `EnsureDoubleSided` stays as a safety net for
+whatever still grazes the near edge (a moving camera, a wide FOV), not as the primary mitigation.
+
+**Status.** Current. Not yet confirmed in a real Editor session — verified by re-deriving the
+distances by hand (for Tonitrus's 4m radius, the pushed-out sphere's near edge sits at ~1.15m from
+the caster's pivot, comfortably outside where a first-person camera sits) and by the headless
+harness (no new failures introduced), not by re-capturing the screenshots that exposed the bug.
+
 ## 2026-09-20 — The headless harness's own project files were never committed
 
 **Context.** `Tools/Headless/verify.sh` has existed since `5f8e336` and every PR since has cited its
