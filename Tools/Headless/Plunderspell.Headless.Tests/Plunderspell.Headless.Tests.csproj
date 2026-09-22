@@ -35,8 +35,15 @@
       Every test file the Unity Test Runner would run: the two current-convention assemblies
       (Editor/, Runtime/) and the two legacy ones kept from the pre-fork project (EditMode/,
       PlayMode/). Linked, not copied: see Plunderspell.Headless.csproj's own comment.
+
+      Excluded: CastingInputTests.cs, which subclasses InputTestFixture and calls
+      InputSystem.AddDevice/Press/Release: the real Input System package's own test-device
+      simulation framework (virtual devices, an event queue), not just the Keyboard/KeyControl
+      surface this harness otherwise shims. Building that is a much larger undertaking than the
+      rest of these shims and out of scope here. See Tools/Headless/README.md.
     -->
-    <Compile Include="../../../Assets/_Project/Scripts/Tests/**/*.cs">
+    <Compile Include="../../../Assets/_Project/Scripts/Tests/**/*.cs"
+              Exclude="../../../Assets/_Project/Scripts/Tests/Runtime/CastingInputTests.cs">
       <Link>Tests/%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
   </ItemGroup>

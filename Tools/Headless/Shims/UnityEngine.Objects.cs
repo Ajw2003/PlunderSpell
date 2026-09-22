@@ -388,6 +388,20 @@ namespace UnityEngine
         public Quaternion localRotation { get; set; } = Quaternion.identity;
         public Vector3 localScale { get; set; } = Vector3.one;
 
+        /// <summary>World-space scale: the product of this transform's and every ancestor's local scale.</summary>
+        public Vector3 lossyScale
+        {
+            get
+            {
+                Vector3 s = localScale;
+                Vector3 parentScale = parent != null ? parent.lossyScale : Vector3.one;
+                return new Vector3(s.x * parentScale.x, s.y * parentScale.y, s.z * parentScale.z);
+            }
+        }
+
+        /// <summary>Transforms a local point to world space, honouring position, rotation and lossy scale.</summary>
+        public Matrix4x4 localToWorldMatrix => new Matrix4x4(position, rotation, lossyScale);
+
         public IReadOnlyList<Transform> Children => _children;
         public int childCount => _children.Count;
         public Transform root => parent == null ? this : parent.root;

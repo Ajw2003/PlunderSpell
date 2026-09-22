@@ -382,4 +382,25 @@ namespace UnityEngine
             return dx * dx + dy * dy + dz * dz;
         }
     }
+
+    /// <summary>
+    /// Only what Transform.localToWorldMatrix needs to carry: position, rotation and lossy scale,
+    /// composed the same order Unity applies them (scale, then rotate, then translate).
+    /// </summary>
+    public struct Matrix4x4
+    {
+        private readonly Vector3 _position;
+        private readonly Quaternion _rotation;
+        private readonly Vector3 _scale;
+
+        public Matrix4x4(Vector3 position, Quaternion rotation, Vector3 scale)
+        {
+            _position = position;
+            _rotation = rotation;
+            _scale = scale;
+        }
+
+        public Vector3 MultiplyPoint3x4(Vector3 point) =>
+            _position + _rotation * new Vector3(point.x * _scale.x, point.y * _scale.y, point.z * _scale.z);
+    }
 }

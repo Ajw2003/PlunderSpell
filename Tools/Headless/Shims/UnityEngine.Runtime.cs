@@ -266,7 +266,17 @@ namespace UnityEngine
         public void GetPropertyBlock(MaterialPropertyBlock block) { }
     }
     public class MeshRenderer : Renderer { }
-    public class SkinnedMeshRenderer : Renderer { }
+    public class SkinnedMeshRenderer : Renderer
+    {
+        public Mesh sharedMesh;
+
+        /// <summary>No real skinning headlessly; copies sharedMesh's vertices unposed.</summary>
+        public void BakeMesh(Mesh target, bool useScale)
+        {
+            if (target != null && sharedMesh != null)
+                target.vertices = sharedMesh.vertices;
+        }
+    }
     public class Material : Object
     {
         public Color color;
@@ -276,15 +286,19 @@ namespace UnityEngine
         public Material(Shader shader) => this.shader = shader;
         public Texture mainTexture;
         public void SetColor(string name, Color value) => color = value;
+        public void SetColor(int nameID, Color value) => color = value;
         public void SetFloat(string name, float value) { }
+        public void SetFloat(int nameID, float value) { }
         public void EnableKeyword(string keyword) { }
         public void DisableKeyword(string keyword) { }
         public bool HasProperty(string name) => true;
+        public bool HasProperty(int nameID) => true;
     }
     public class Mesh : Object
     {
         public int[] triangles = Array.Empty<int>();
-        public int vertexCount;
+        public Vector3[] vertices = Array.Empty<Vector3>();
+        public int vertexCount => vertices.Length;
     }
     public class MeshFilter : Component { public Mesh mesh; public Mesh sharedMesh; }
     public class Sprite : Object { }
@@ -691,6 +705,18 @@ namespace UnityEngine
 namespace UnityEngine.Rendering
 {
     public enum GraphicsDeviceType { Null = 4, Direct3D11 = 2, OpenGLCore = 17, Vulkan = 21, Metal = 16 }
+    public enum CullMode { Off, Front, Back }
+}
+
+namespace UnityEngine
+{
+    public enum AmbientMode { Skybox, Trilight, Flat, Custom }
+
+    public static class RenderSettings
+    {
+        public static AmbientMode ambientMode { get; set; }
+        public static Color ambientLight { get; set; }
+    }
 }
 
 namespace UnityEngine.SceneManagement
@@ -701,6 +727,7 @@ namespace UnityEngine.SceneManagement
         public int buildIndex;
         public string path;
         public bool isLoaded;
+        public bool isDirty;
         public bool IsValid() => true;
 
         /// <summary>Every parentless object currently registered -- this shim has one implicit scene.</summary>
