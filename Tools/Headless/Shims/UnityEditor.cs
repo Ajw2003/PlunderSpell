@@ -242,5 +242,13 @@ namespace UnityEditor.SceneManagement
         public static Scene OpenScene(string path) => new Scene { name = path };
         public static Scene OpenScene(string path, OpenSceneMode mode) => new Scene { name = path };
         public static bool CloseScene(Scene scene, bool removeScene) => true;
+
+        /// <summary>
+        /// No real .unity deserialization headlessly, so this returns an empty stand-in scene rather
+        /// than loading RaidScene.unity's actual content. See Tools/Headless/README.md, "What it does
+        /// and does not prove" -- RaidSceneCastingTests fails on this for exactly that reason.
+        /// </summary>
+        public static AsyncOperation LoadSceneAsyncInPlayMode(string path, LoadSceneParameters parameters) =>
+            new AsyncOperation();
     }
 }
