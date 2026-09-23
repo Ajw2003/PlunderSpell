@@ -17,8 +17,9 @@ namespace RogueAi.Loot
         [Tooltip("Emissive colour added while focused.")]
         [SerializeField] private Color m_glow = new Color(1f, 0.85f, 0.35f);
 
-        [Tooltip("Strength of the added emission.")]
-        [SerializeField] private float m_intensity = 1.6f;
+        [Tooltip("Strength of the added emission. At 1.6 an item blows out to a flat colour and loses " +
+                 "its shape; around 0.5 it reads as glowing while staying recognisable.")]
+        [SerializeField] private float m_intensity = 0.5f;
 
         private static readonly int s_emissionColor = Shader.PropertyToID("_EmissionColor");
 

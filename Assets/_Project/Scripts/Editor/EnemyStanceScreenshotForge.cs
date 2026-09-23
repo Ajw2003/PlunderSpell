@@ -2,10 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.SceneManagement;
 
 namespace RogueAi.EditorTools
 {
@@ -49,36 +46,16 @@ namespace RogueAi.EditorTools
         /// </summary>
         public static string Capture(string outputFolder)
         {
-            if (!SceneScreenshot.HasGraphicsDevice)
+            using (IsolatedScene scene = IsolatedScene.Enter("EnemyStance"))
             {
-                Debug.LogError("[EnemyStance] No graphics device. Re-run without -nographics.");
-                return null;
-            }
-
-            Scene original = SceneManager.GetActiveScene();
-            if (original.isDirty)
-            {
-                Debug.LogError($"[EnemyStance] '{original.name}' has unsaved changes; save or discard " +
-                               "them first, this tool swaps scenes to photograph in a clean one.");
-                return null;
-            }
-
-            string originalPath = original.path;
-            string directory = Path.Combine(Directory.GetCurrentDirectory(), outputFolder);
-            Directory.CreateDirectory(directory);
-
-            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-
-            try
-            {
-                return CaptureInFreshScene(directory, outputFolder);
-            }
-            finally
-            {
-                if (!string.IsNullOrEmpty(originalPath))
+                if (scene == null)
                 {
-                    EditorSceneManager.OpenScene(originalPath, OpenSceneMode.Single);
+                    return null;
                 }
+
+                string directory = Path.Combine(Directory.GetCurrentDirectory(), outputFolder);
+                Directory.CreateDirectory(directory);
+                return CaptureInFreshScene(directory, outputFolder);
             }
         }
 
@@ -147,18 +124,7 @@ namespace RogueAi.EditorTools
 
         private static void BuildStage(float rowWidth)
         {
-            var sun = new GameObject("Sun").AddComponent<Light>();
-            sun.type = LightType.Directional;
-            sun.intensity = 1.4f;
-            sun.transform.rotation = Quaternion.Euler(35f, -25f, 0f);
-
-            var fill = new GameObject("Fill").AddComponent<Light>();
-            fill.type = LightType.Directional;
-            fill.intensity = 0.7f;
-            fill.transform.rotation = Quaternion.Euler(20f, 160f, 0f);
-
-            RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.55f, 0.55f, 0.6f);
+            IsolatedScene.AddStudioLighting();
 
             // The slab's top face is y=0 and its front face sits in front of every foot, so anything
             // below the line is hidden the way the real floor would hide it.
@@ -166,20 +132,13 @@ namespace RogueAi.EditorTools
             slab.name = "GroundSlab";
             slab.transform.localScale = new Vector3(rowWidth + 4f, k_SlabThickness, k_SlabDepth);
             slab.transform.position = new Vector3(rowWidth * 0.5f, -k_SlabThickness * 0.5f, 0f);
-            slab.GetComponent<Renderer>().sharedMaterial = UnlitColour(new Color(0.16f, 0.17f, 0.2f));
+            slab.GetComponent<Renderer>().sharedMaterial = IsolatedScene.UnlitColour(new Color(0.16f, 0.17f, 0.2f));
 
             GameObject line = GameObject.CreatePrimitive(PrimitiveType.Cube);
             line.name = "GroundLine";
             line.transform.localScale = new Vector3(rowWidth + 4f, 0.012f, 0.01f);
             line.transform.position = new Vector3(rowWidth * 0.5f, 0f, -k_SlabDepth * 0.5f - 0.01f);
-            line.GetComponent<Renderer>().sharedMaterial = UnlitColour(new Color(1f, 0.25f, 0.2f));
-        }
-
-        private static Material UnlitColour(Color colour)
-        {
-            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-            material.SetColor("_BaseColor", colour);
-            return material;
+            line.GetComponent<Renderer>().sharedMaterial = IsolatedScene.UnlitColour(new Color(1f, 0.25f, 0.2f));
         }
 
         /// <summary>

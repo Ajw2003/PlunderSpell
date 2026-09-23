@@ -1,0 +1,8 @@
+Loot highlight report — each prefab photographed unfocused, then with LootHighlight on.
+changed = share of the frame's pixels that moved by more than 6/255 in any channel; lift = mean brightness gain (0-255) over those pixels.
+
+AncientRelic   emission keyword on: False  changed   0.00%   lift    0.0
+CopperPot      emission keyword on: False  changed   0.00%   lift    0.0
+GoldenGoblet   emission keyword on: False  changed   0.00%   lift    0.0
+HeavyChest     emission keyword on: False  changed   0.00%   lift    0.0
+SilverPlate    emission keyword on: False  changed   0.00%   lift    0.0
