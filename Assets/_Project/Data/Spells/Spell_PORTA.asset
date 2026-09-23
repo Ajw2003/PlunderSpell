@@ -18,4 +18,10 @@ MonoBehaviour:
   - PROTA
   - PORTA A
   misfireId: 107
-  Description: 'Open a door/portal. Misfire (PROTA/PORTA-A) opens a random wrong door.'
+  HeardAs:
+  - porta
+  - porter
+  MisfireHeardAs:
+  - proto
+  - pro ta
+  Description: Open a door/portal. Misfire (PROTA/PORTA-A) opens a random wrong door.

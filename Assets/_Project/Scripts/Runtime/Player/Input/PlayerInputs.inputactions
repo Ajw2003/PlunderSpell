@@ -105,7 +105,7 @@
                 {
                     "name": "",
                     "id": "fc477377-96ad-413f-9fc6-f4aba8eeb648",
-                    "path": "",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -248,7 +248,7 @@
                 {
                     "name": "",
                     "id": "e5e97567-737b-47e9-b789-dda211872b08",
-                    "path": "<Keyboard>/leftShift",
+                    "path": "<Keyboard>/ctrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

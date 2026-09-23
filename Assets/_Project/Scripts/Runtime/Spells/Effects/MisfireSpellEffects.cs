@@ -43,7 +43,8 @@ namespace RogueAi.Spells
             var self = SelfTarget<IIgnitable>(ctx);
             if (self == null)
                 return 0;
-            self.Ignite(SpellTuning.MisfireSelfDamagePerSecond, SpellTuning.MisfireSelfBurnSeconds);
+            self.Ignite(SpellTuning.MisfireSelfDamagePerSecond, SpellTuning.MisfireSelfBurnSeconds,
+                ctx.CasterTransform != null ? ctx.CasterTransform.gameObject : null);
             return 1;
         }
     }
@@ -185,7 +186,9 @@ namespace RogueAi.Spells
             {
                 if (victim.CurrentHealth <= 0f)
                     continue;
-                victim.TakeDamage(25f);
+                GameObject caster = ctx.CasterTransform != null ? ctx.CasterTransform.gameObject : null;
+                Damage.Apply(victim, 25f, caster, caster, Damage.PointOn(victim as Component, where),
+                    DamageKind.Spell);
                 hurt++;
             }
 

@@ -35,13 +35,18 @@ namespace RogueAi.UI
         /// <summary>How many pieces are standing in the extraction zone.</summary>
         public readonly int HaulPieces;
 
+        /// <summary>"" while not holding a ranged weapon, "Loaded" while ready, or a reload
+        /// countdown otherwise. See Issue 39's completion check that ammo/reload state be visible.</summary>
+        public readonly string RangedWeaponStatus;
+
         public RaidHudModel(RaidPhase phase, float timeRemaining, AlarmState alarm, float alarmLevel,
             string carriedLootName, bool carriedNeedsTwo, string interactPrompt,
             bool hasInteractTarget, float debt, float bankedGold, string lastCastLine,
-            float haulWorth = 0f, int haulPieces = 0)
+            float haulWorth = 0f, int haulPieces = 0, string rangedWeaponStatus = "")
         {
             HaulWorth = haulWorth;
             HaulPieces = haulPieces;
+            RangedWeaponStatus = rangedWeaponStatus;
             HasInteractTarget = hasInteractTarget;
             Phase = phase;
             TimeRemaining = timeRemaining;

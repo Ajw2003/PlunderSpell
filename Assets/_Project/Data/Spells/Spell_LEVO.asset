@@ -18,4 +18,12 @@ MonoBehaviour:
   - LAVO
   - LEVO O
   misfireId: 102
-  Description: 'Levitate an object. Misfire (LAVO/LEVO-O) levitates the caster upward uncontrollably.'
+  HeardAs:
+  - level
+  - leave oh
+  - lay vo
+  MisfireHeardAs:
+  - lava
+  - la vo
+  Description: Levitate an object. Misfire (LAVO/LEVO-O) levitates the caster upward
+    uncontrollably.

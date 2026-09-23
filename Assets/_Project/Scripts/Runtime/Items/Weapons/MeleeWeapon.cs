@@ -43,16 +43,29 @@ public class MeleeWeapon : MonoBehaviour
         return true;
     }
 
+    private static readonly System.Collections.Generic.HashSet<IHealth> s_alreadyHit =
+        new System.Collections.Generic.HashSet<IHealth>();
+
     private void DealDamage(Vector3 origin, Vector3 forward)
     {
+        GameObject holder = TryGetComponent(out Item item) ? item.Holder : null;
         Vector3 hitPoint = origin + forward * m_stats.Reach;
         int count = Physics.OverlapSphereNonAlloc(hitPoint, m_hitRadius, s_hitBuffer);
+
+        // A body with several colliders is one victim, and the swinger's own capsule is not a target.
+        s_alreadyHit.Clear();
         for (int i = 0; i < count; i++)
         {
-            if (s_hitBuffer[i].TryGetComponent(out IHealth health))
-            {
-                health.TakeDamage(m_stats.Damage);
-            }
+            Collider hit = s_hitBuffer[i];
+            if (holder != null && hit.transform.root == holder.transform.root)
+                continue;
+
+            IHealth health = hit.GetComponentInParent<IHealth>();
+            if (health == null || !s_alreadyHit.Add(health))
+                continue;
+
+            Damage.Apply(health, m_stats.Damage, gameObject, holder, hit.ClosestPoint(hitPoint),
+                DamageKind.Melee);
         }
     }
 

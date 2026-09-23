@@ -19,10 +19,12 @@ namespace RogueAi.Spells
         [SerializeField] private SpellLexicon _lexicon;
 
         [Header("Cast origin")]
-        [Tooltip("How far in front of the caster a spell originates, in metres.")]
+        [Tooltip("The caster's look camera; a spell fires from here, along its forward. Self-wires " +
+                 "to the first child Camera if left empty. See docs/systems/spells.md, \"A cast " +
+                 "follows the camera, not the body\".")]
+        [SerializeField] private Transform _aimSource;
+        [Tooltip("How far in front of the aim source a spell originates, in metres.")]
         [SerializeField] private float _castOriginForwardOffset = 1.0f;
-        [Tooltip("Height above the caster's pivot a spell originates at, in metres.")]
-        [SerializeField] private float _castOriginHeight = 1.5f;
 
         [Header("Layers")]
         [Tooltip("Layers a spell effect may affect.")]
@@ -62,9 +64,17 @@ namespace RogueAi.Spells
             if (_lexicon == null)
                 Debug.LogWarning("[SpellCast] No SpellLexicon assigned — every phrase will fizzle (None).");
 
+            // Self-wires like SpellBook does, so dropping this on a player rig is enough on its own.
+            if (_aimSource == null)
+                _aimSource = GetComponentInChildren<Camera>()?.transform;
+
             _voice = VoiceServiceLocator.Current;
             if (_voice != null)
             {
+                // Real speech can only hear English, so it needs told which spellings mean which word.
+                if (_voice is IPhraseVocabularyTarget speech && _lexicon != null)
+                    speech.SetVocabulary(_lexicon.BuildHeardVocabulary());
+
                 _voice.OnPhraseRecognized += HandlePhrase;
                 _subscribed = true;
             }
@@ -76,6 +86,9 @@ namespace RogueAi.Spells
 
         /// <summary>Assigns the spellbook at runtime, for tooling-built scenes and tests.</summary>
         public void SetLexicon(SpellLexicon lexicon) => _lexicon = lexicon;
+
+        /// <summary>Assigns the aim camera at runtime, for tooling-built scenes and tests.</summary>
+        public void SetAimSource(Transform aimSource) => _aimSource = aimSource;
 
         protected override void OnDespawned()
         {
@@ -157,15 +170,21 @@ namespace RogueAi.Spells
         /// the two cannot disagree about where the spell came from.</summary>
         private Vector3 CastOrigin(NetworkIdentity caster)
         {
-            Transform origin = caster != null ? caster.transform : transform;
-            return origin.position + origin.forward * _castOriginForwardOffset
-                   + Vector3.up * _castOriginHeight;
+            Transform aim = AimTransform(caster);
+            return aim.position + aim.forward * _castOriginForwardOffset;
         }
 
-        private Vector3 CastDirection(NetworkIdentity caster)
+        private Vector3 CastDirection(NetworkIdentity caster) => AimTransform(caster).forward;
+
+        /// <summary>The transform a cast aims along: the caster's own camera when it has one (this
+        /// covers a remote caster too, since every player's SpellCastingSystem self-wires its own),
+        /// falling back to the caster's body transform for a caster with no camera at all (tests).</summary>
+        private Transform AimTransform(NetworkIdentity caster)
         {
-            Transform origin = caster != null ? caster.transform : transform;
-            return origin.forward;
+            if (caster is SpellCastingSystem casterSystem && casterSystem._aimSource != null)
+                return casterSystem._aimSource;
+
+            return caster != null ? caster.transform : transform;
         }
 
         /// <summary>

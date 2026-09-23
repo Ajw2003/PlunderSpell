@@ -60,6 +60,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3973656644959335516, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3973656644959335516, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.16955431
+      objectReference: {fileID: 0}
+    - target: {fileID: -2277725493559174916, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2277725493559174916, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.16955431
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
       propertyPath: m_Name
       value: ArcRevenant
@@ -180,10 +196,19 @@ MonoBehaviour:
   _arrivalDistance: 1
   _turnSpeed: 240
   _patrolRoute: []
+  _attackRange: 2
+  _attackDamage: 12
+  _attackCooldown: 1.4
+  _projectilePrefab: {fileID: 0}
+  _projectileSpeed: 18
   _maxHealth: 150
   _alarm: {fileID: 0}
   _shoutStrength: 0.8
   _shoutRadius: 20
+  <_health>k__BackingField:
+    _value: 100
+    _ownerAuth: 0
+    _sendIntervalInSeconds: 0
 --- !u!54 &9070506736328958086
 Rigidbody:
   m_ObjectHideFlags: 0

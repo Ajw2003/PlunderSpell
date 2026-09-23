@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6921339ee52db387f9085c3d7ee21d, type: 3}
   m_Name: CopperPot
   m_EditorClassIdentifier: 
-  Worth: 15
+  Worth: 100
   IsArtifact: 0
   Bulk: 0.8
-  Fragility: 12
+  Fragility: 3
   DisplayName: Copper Pot
   Icon: {fileID: 0}

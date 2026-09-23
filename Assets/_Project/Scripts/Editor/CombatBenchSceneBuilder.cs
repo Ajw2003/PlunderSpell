@@ -5,7 +5,11 @@ using RogueAi.Alarm;
 using RogueAi.Guards;
 using RogueAi.Playtest;
 using RogueAi.Raid;
+using RogueAi.Spells;
+using RogueAi.Spells.Vfx;
 using RogueAi.Status;
+using RogueAi.UI;
+using RogueAi.Voice;
 using StateMachine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -25,6 +29,8 @@ namespace RogueAi.EditorTools
         private const string k_ScenePath = "Assets/_Project/Scenes/CombatBench.unity";
         private const string k_RosterPath = "Assets/_Project/Data/Enemies/EnemyRoster.asset";
         private const string k_SwordPath = "Assets/_Project/Prefabs/Weapons/ArmingSword.prefab";
+        private const string k_LexiconPath = "Assets/_Project/Data/Spells/SpellLexicon.asset";
+        private const string k_BoltPath = "Assets/_Project/Prefabs/Projectiles/Bolt.prefab";
 
         private const float k_ArenaSize = 40f;
         private const float k_WallHeight = 5f;
@@ -44,6 +50,7 @@ namespace RogueAi.EditorTools
             BuildManagers();
             BuildArena();
             BuildAlarm();
+            BuildSpellVfx();
 
             GameObject player = BuildPlayer();
             BuildBench(player.transform);
@@ -111,6 +118,24 @@ namespace RogueAi.EditorTools
             go.AddComponent<AlarmFSMManager>();
         }
 
+        /// <summary>See docs/systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
+        private static void BuildSpellVfx()
+        {
+            var bolt = AssetDatabase.LoadAssetAtPath<GameObject>(k_BoltPath);
+            if (bolt == null)
+            {
+                Debug.LogWarning($"[CombatBench] No projectile at {k_BoltPath}; bolt spells will fall back to a burst.");
+                return;
+            }
+
+            var go = new GameObject("SpellVfx");
+            var director = go.AddComponent<SpellVfxDirector>();
+
+            var serialized = new SerializedObject(director);
+            serialized.FindProperty("m_boltPrefab").objectReferenceValue = bolt;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         /// <summary>The raid's rig, not the playtest harness. See docs/systems/combat-bench.md,
         /// "Why the raid's rig, not the playtest harness".</summary>
         private static GameObject BuildPlayer()
@@ -153,7 +178,24 @@ namespace RogueAi.EditorTools
             root.AddComponent<AcousticEmitter>();
             root.AddComponent<FootstepNoiseEmitter>();
             root.AddComponent<IntruderTag>();
+            WireCasting(root);
             return root;
+        }
+
+        /// <summary>See docs/systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
+        private static void WireCasting(GameObject player)
+        {
+            player.AddComponent<PushToCastController>();
+            var casting = player.AddComponent<SpellCastingSystem>();
+
+            var lexicon = AssetDatabase.LoadAssetAtPath<SpellLexicon>(k_LexiconPath);
+            if (lexicon == null)
+            {
+                Debug.LogWarning($"[CombatBench] No SpellLexicon at {k_LexiconPath}; every phrase will fizzle.");
+                return;
+            }
+
+            casting.SetLexicon(lexicon);
         }
 
         // The ground-check fields are private [SerializeField], so they need SerializedObject
@@ -173,6 +215,7 @@ namespace RogueAi.EditorTools
             var go = new GameObject("CombatBench");
             CombatBench bench = go.AddComponent<CombatBench>();
             go.AddComponent<CombatBenchHud>();
+            go.AddComponent<CrosshairView>();
 
             var serialized = new SerializedObject(bench);
             serialized.FindProperty("m_roster").objectReferenceValue =

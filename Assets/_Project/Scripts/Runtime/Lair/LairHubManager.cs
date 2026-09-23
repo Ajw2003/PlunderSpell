@@ -55,6 +55,9 @@ namespace RogueAi.Lair
             PlayerPrefs.Save();
         }
 
+        /// <summary>What the most recent raid brought home, for the Lair's "last raid" line. -1 before any raid.</summary>
+        public float LastRaidWorth { get; private set; } = -1f;
+
         /// <summary>
         /// Apply the worth extracted from a completed raid. Gold is banked, then applied toward the
         /// debt. When the accumulated gold covers the full debt the game reaches the endgame stub
@@ -62,6 +65,7 @@ namespace RogueAi.Lair
         /// </summary>
         public void ApplyExtractionResult(float worthExtracted)
         {
+            LastRaidWorth = Mathf.Max(0f, worthExtracted);
             AccumulatedGold += Mathf.Max(0f, worthExtracted);
 
             if (AccumulatedGold >= TotalDebt)

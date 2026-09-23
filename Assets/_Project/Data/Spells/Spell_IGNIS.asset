@@ -18,4 +18,11 @@ MonoBehaviour:
   - AGNIS
   - IGNISH
   misfireId: 100
-  Description: 'Fire bolt. Misfire (AGNIS/IGNISH) sets the caster on fire instead.'
+  HeardAs:
+  - igneous
+  - ignace
+  MisfireHeardAs:
+  - egg nice
+  - a nice
+  - agnes
+  Description: Fire bolt. Misfire (AGNIS/IGNISH) sets the caster on fire instead.

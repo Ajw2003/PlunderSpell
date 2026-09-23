@@ -32,6 +32,7 @@ namespace RogueAi.Status
 
         private float _burnRemaining;
         private float _burnDps;
+        private GameObject _burnInstigator;
         private float _stunRemaining;
         private float _sleepRemaining;
         private float _levitateRemaining;
@@ -107,7 +108,8 @@ namespace RogueAi.Status
                 {
                     float toApply = Mathf.Floor(_pendingBurnDamage);
                     _pendingBurnDamage -= toApply;
-                    health.TakeDamage(toApply);
+                    Damage.Apply(health, toApply, gameObject, _burnInstigator,
+                        transform.position + Vector3.up, DamageKind.Burn);
                 }
 
                 if (_burnRemaining <= 0f)
@@ -139,10 +141,12 @@ namespace RogueAi.Status
 
         // --- IIgnitable ------------------------------------------------------------------------
 
-        public void Ignite(float damagePerSecond, float duration)
+        public void Ignite(float damagePerSecond, float duration, GameObject instigator = null)
         {
             if (damagePerSecond <= 0f || duration <= 0f)
                 return;
+
+            _burnInstigator = instigator;
 
             // Hotter fire wins on rate; longer fire wins on duration. Neither stacks additively.
             _burnDps = Mathf.Max(_burnDps, damagePerSecond);

@@ -25,11 +25,25 @@ Right now, weapons in the game can only be thrown at enemies. Even though weapon
 4.  Swing the sword near an enemy who is looking away and confirm they turn around or react to the noise.
 
 ## Completion Checks
-*   [ ] A dedicated button exists for swinging weapons.
-*   [ ] Hit distance is controlled by the weapon's reach stat.
-*   [ ] Swing speed and damage are affected by the weapon's weight stat.
-*   [ ] Swinging a weapon creates a noise alert for the enemy hearing system.
-*   [ ] The Arming Sword is completely set up and working as a test example.
+*   [x] A dedicated button exists for swinging weapons. (Reuses the existing "Attack" input action —
+    already separate from throw's RMB-drag-release — since it was previously wired to nothing but a
+    dead SpellBook check. See `PlayerStateMachine.Attack()`.)
+*   [x] Hit distance is controlled by the weapon's reach stat. (`MeleeWeaponStats.Reach`,
+    `MeleeWeapon.DealDamage`.)
+*   [x] Swing speed and damage are affected by the weapon's weight stat. (`MeleeWeaponStats.Weight`
+    reads `InventoryItem.Weight`; `SwingDuration` and `Damage` are both derived from it. See
+    docs/Decisions.md, "Melee weight is read from InventoryItem".)
+*   [x] Swinging a weapon creates a noise alert for the enemy hearing system. (`MeleeWeapon.AlertNearbyListeners`
+    via the existing `AcousticEmitter`/`NoiseBroadcaster` pipeline, new `NoiseType.MeleeSwing`.)
+*   [x] The Arming Sword is completely set up and working as a test example.
+    (`Assets/_Project/Data/Inventory/ArmingSword.asset` + `ArmingSword_MeleeStats.asset` +
+    `Assets/_Project/Prefabs/Weapons/ArmingSword.prefab`, reusing the already-imported Longsword mesh
+    since no Arming Sword model exists yet — a modelling gap, not a combat-system gap.)
+
+**Verified:** compiles with 0 errors via `Tools/Headless/verify.sh --build` against the real project
+sources (2026-09-22). **Not verified:** the in-Editor verification steps above (pick up the sword,
+swing, observe enemy reaction) — no Unity Editor was available in this session; needs a real
+PlayMode pass before this is trusted beyond "compiles and the logic is sound on inspection."
 
 
 ## Technical Constraints

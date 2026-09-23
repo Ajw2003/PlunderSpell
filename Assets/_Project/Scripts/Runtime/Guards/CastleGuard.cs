@@ -407,7 +407,8 @@ namespace RogueAi.Guards
             if (shoots)
                 FireAt(origin, toTarget.normalized);
             else if (target.TryGetComponent(out IHealth health))
-                health.TakeDamage(_attackDamage);
+                Damage.Apply(health, _attackDamage, gameObject, gameObject,
+                    Damage.PointOn(target, origin), DamageKind.EnemyAttack);
         }
 
         /// <summary>
@@ -418,6 +419,11 @@ namespace RogueAi.Guards
         private void FireAt(Vector3 origin, Vector3 direction)
         {
             GameObject shot = Instantiate(_projectilePrefab, origin, Quaternion.LookRotation(direction));
+            if (shot.TryGetComponent(out NetworkedProjectile projectile))
+            {
+                projectile.Damage = Mathf.RoundToInt(_attackDamage);
+                projectile.Instigator = gameObject;
+            }
 
             foreach (Collider own in GetComponentsInChildren<Collider>())
             {

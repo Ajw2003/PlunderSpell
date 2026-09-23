@@ -42,7 +42,7 @@ namespace Interfaces
     public interface IIgnitable
     {
         bool IsBurning { get; }
-        void Ignite(float damagePerSecond, float duration);
+        void Ignite(float damagePerSecond, float duration, UnityEngine.GameObject instigator = null);
     }
 
     /// <summary>A door or portcullis Porta can open (and a misfired Porta can open by mistake).</summary>

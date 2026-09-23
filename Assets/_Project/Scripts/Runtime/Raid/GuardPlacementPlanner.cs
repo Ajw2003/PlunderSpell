@@ -57,9 +57,16 @@ namespace RogueAi.Raid
         }
 
         /// <summary>
-        /// Plans the garrison. The extraction room is deliberately left unguarded: a guard standing
-        /// on the exit would turn every raid into the same fight, rather than a choice about when to
-        /// leave.
+        /// Rooms within this many grid cells of the entrance get no guard. The players spawn just
+        /// inside the extraction room, so a guard next door sees them on frame one and kills a player
+        /// who is still reading the HUD.
+        /// </summary>
+        public const int SafeEntranceRadius = 1;
+
+        /// <summary>
+        /// Plans the garrison. The extraction room and its neighbours are deliberately left
+        /// unguarded: a guard standing on the exit would turn every raid into the same fight, rather
+        /// than a choice about when to leave.
         /// </summary>
         public static List<GuardPlacement> Plan(ProceduralCastleData castle, int seed, float densityScale = 1f)
         {
@@ -70,6 +77,9 @@ namespace RogueAi.Raid
             // A third independent stream, so changing the garrison cannot shift the castle or the loot.
             var rng = new System.Random(unchecked(seed * 31 + 6151));
 
+            bool hasEntrance = castle.ExtractionExitIndex >= 0 && castle.ExtractionExitIndex < castle.PlacedModules.Count;
+            Vector2Int entrance = hasEntrance ? castle.PlacedModules[castle.ExtractionExitIndex].GridPosition : default;
+
             for (int i = 0; i < castle.PlacedModules.Count; i++)
             {
                 ProceduralCastleData.PlacedModule module = castle.PlacedModules[i];
@@ -77,7 +87,11 @@ namespace RogueAi.Raid
                 if (module.IsExtractionExit || i == castle.ExtractionExitIndex)
                     continue;
 
+                // Rolled before the entrance check so the rest of the garrison stays where it was.
                 if (rng.NextDouble() > DensityFor(module.Zone, densityScale))
+                    continue;
+
+                if (hasEntrance && ChebyshevDistance(module.GridPosition, entrance) <= SafeEntranceRadius)
                     continue;
 
                 placements.Add(new GuardPlacement(
@@ -89,6 +103,9 @@ namespace RogueAi.Raid
 
             return placements;
         }
+
+        private static int ChebyshevDistance(Vector2Int a, Vector2Int b) =>
+            Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y));
 
         /// <summary>
         /// A patrol route: this room plus up to two adjacent rooms. Adjacency (not any room) keeps

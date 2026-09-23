@@ -9,6 +9,9 @@ public class NetworkedProjectile : MonoBehaviour
     public float lifeTime = 3f;
     public int Damage;
 
+    /// <summary>Who fired this, for damage feedback and so a shooter is never hit by their own shot.</summary>
+    public GameObject Instigator;
+
     private void Start()
     {
         StartCoroutine(DelayedDestroy());
@@ -16,9 +19,10 @@ public class NetworkedProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.TryGetComponent(out IHealth monster))
+        if (other.gameObject.TryGetComponent(out IHealth hit))
         {
-            monster.TakeDamage(Damage);
+            Vector3 point = other.contactCount > 0 ? other.GetContact(0).point : transform.position;
+            Interfaces.Damage.Apply(hit, Damage, gameObject, Instigator, point, DamageKind.Projectile);
         }
 
         DestroySelf();

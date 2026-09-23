@@ -62,6 +62,9 @@ namespace RogueAi.Raid
         /// <summary>Back to the lair once the takings are counted, so the debt can be paid down.</summary>
         private void OnRaidResolved(float worthExtracted, int playersSaved)
         {
+            // A lost raid leaves the "You died" screen up; its button goes to the Lair.
+            if (GameServices.GameState.CurrentState == GameState.GameOver)
+                return;
             GameServices.GameState.ChangeState(GameState.Lair);
         }
 
@@ -72,6 +75,12 @@ namespace RogueAi.Raid
         /// </summary>
         private void OnGameStateChanged(GameState previous, GameState next)
         {
+            if (next == GameState.GameOver)
+            {
+                _director.AbandonRaid();
+                return;
+            }
+
             if (next != GameState.Playing || previous == GameState.Paused ||
                 previous == GameState.Inventory)
                 return;

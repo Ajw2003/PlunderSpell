@@ -18,4 +18,12 @@ MonoBehaviour:
   - AURUM BOCO
   - AURUM VOCO O
   misfireId: 106
-  Description: 'Summon gold. Misfire (AURUM BOCO/AURUM VOCO-O) scatters the gold in the caster''s inventory.'
+  HeardAs:
+  - oram vulgar
+  - aurum vocal
+  - or um vocal
+  MisfireHeardAs:
+  - oram boca
+  - aura bocce
+  Description: Summon gold. Misfire (AURUM BOCO/AURUM VOCO-O) scatters the gold in
+    the caster's inventory.

@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 74181999}
   - component: {fileID: 74181998}
   - component: {fileID: 74181997}
+  - component: {fileID: 74182000}
   m_Layer: 0
   m_Name: RaidHud
   m_TagString: Untagged
@@ -184,6 +185,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &74182000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74181996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eedd0ce2df553dc4d8910bee69b62438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.UI::RogueAi.UI.CrosshairView
+  _visible: 1
 --- !u!1 &176129641
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,10 +28,29 @@ public class SpellBook : MonoBehaviour
     {
         AssignStats();
         _playerColliders = gameObject.GetComponentsInChildren<Collider>();
+
+        // Self-wire what the raid's player rig does not author, so dropping this component on a
+        // player is enough on its own. See docs/systems/spells.md, "Two ways to cast".
+        if (playerCamera == null)
+            playerCamera = GetComponentInChildren<Camera>() ?? Camera.main;
+        if (shootPoint == null)
+            shootPoint = playerCamera != null ? playerCamera.transform : transform;
     }
 
+    /// <summary>
+    /// Copies the stats asset onto this book. No asset is a valid state -- the component simply
+    /// cannot fire -- and is reported once rather than thrown, so an unconfigured spellbook does not
+    /// take the whole player down with it in Start().
+    /// </summary>
     public void AssignStats()
     {
+        if (spellStats == null)
+        {
+            Debug.LogWarning($"[SpellBook] {name} has no SpellStats assigned, so it cannot fire. " +
+                             "Voice casting (hold V) is unaffected.", this);
+            return;
+        }
+
         _fireRate = spellStats.fireRate;
         _minSpread = spellStats.minSpread;
         _maxSpread = spellStats.maxSpread;
@@ -42,14 +61,30 @@ public class SpellBook : MonoBehaviour
         _projectilePrefab = spellStats.projectilePrefab;
         _isHoming = spellStats.isHoming;
         _projectileSize = spellStats.projectileSize;
-        _projectilePrefab.GetComponent<NetworkedProjectile>().lifeTime = spellStats.lifeTime;
-        _projectilePrefab.GetComponent<NetworkedProjectile>().Damage = spellStats.damage;
-        _projectilePrefab.transform.localScale = new Vector3(spellStats.projectileSize, spellStats.projectileSize, spellStats.projectileSize);
+
+        if (_projectilePrefab == null)
+        {
+            Debug.LogWarning($"[SpellBook] {name}'s SpellStats has no projectile prefab.", this);
+            return;
+        }
+
+        // These write to the PREFAB ASSET, not to an instance: the edits persist into the project
+        // and outlive play mode. Left as-is because the stats asset is the authored source of these
+        // numbers, but it is the reason a spell's size can appear to change between sessions.
+        if (_projectilePrefab.TryGetComponent(out NetworkedProjectile projectile))
+        {
+            projectile.lifeTime = spellStats.lifeTime;
+            projectile.Damage = spellStats.damage;
+        }
+
+        _projectilePrefab.transform.localScale = Vector3.one * spellStats.projectileSize;
     }
 
     public void CastSpell()
     {
         if (_isReloading) return;
+        if (spellStats == null || _projectilePrefab == null || playerCamera == null || shootPoint == null)
+            return;
         _isReloading = true;
 
         StartCoroutine(ReloadRoutine());

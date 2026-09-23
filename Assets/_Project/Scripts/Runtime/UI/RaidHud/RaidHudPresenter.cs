@@ -61,7 +61,20 @@ namespace RogueAi.UI
                 _lair != null ? _lair.AccumulatedGold : 0f,
                 stale ? string.Empty : _lastCastLine,
                 _extractionZone != null ? _extractionZone.WorthInZone : 0f,
-                _extractionZone != null ? _extractionZone.PiecesInZone : 0);
+                _extractionZone != null ? _extractionZone.PiecesInZone : 0,
+                BuildRangedWeaponStatus());
+        }
+
+        /// <summary>What the currently held ranged weapon (if any) is doing right now.</summary>
+        private static string BuildRangedWeaponStatus()
+        {
+            RangedWeapon weapon = ItemManager.Instance != null ? ItemManager.Instance.CarriedRangedWeapon : null;
+            if (weapon == null)
+                return string.Empty;
+
+            return weapon.IsLoaded
+                ? "Loaded — hold [RMB] to aim, [G] to fire"
+                : $"Reloading… {Mathf.RoundToInt(weapon.ReloadProgress01 * 100f)}%";
         }
 
         /// <summary>

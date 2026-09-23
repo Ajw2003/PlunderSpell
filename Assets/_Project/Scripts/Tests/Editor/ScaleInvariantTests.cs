@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using RogueAi.Castle;
+using RogueAi.EditorTools;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,8 +32,8 @@ namespace RogueAi.Tests.Editor
         private const float k_Tolerance = 0.05f;
 
         /// <summary>How far an enemy's lowest vertex may sit from its own origin before it reads as
-        /// floating or sunk in play.</summary>
-        private const float k_FootTolerance = 0.10f;
+        /// floating or sunk in play. Owned by the forge so the repair tool and this test agree.</summary>
+        private const float k_FootTolerance = EnemyPrefabForge.FootTolerance;
 
         [Test]
         public void Test_ThePlayerCapsuleIsTheStandardHuman()
@@ -126,11 +127,11 @@ namespace RogueAi.Tests.Editor
 
         /// <summary>
         /// An enemy is spawned by putting its origin on the floor, so a model whose lowest vertex is
-        /// not at its own origin hovers above the ground or sinks into it.
+        /// not at its own origin hovers above the ground or sinks into it. Measured on the baked
+        /// vertices: <c>Renderer.bounds</c> on a skinned mesh is padded and made GildedColossus and
+        /// VaultWarden read as sunk while they stand exactly on the floor (issue 94).
         /// </summary>
         [Test]
-        [Ignore("Fails for real: ArcRevenant floats 0.15 m, GildedColossus sinks 0.16 m, " +
-                "VaultWarden sinks 0.12 m. Tracked as issue 94; remove this Ignore with the fix.")]
         public void Test_EveryEnemyStandsOnItsOwnOrigin()
         {
             var failures = new StringBuilder();
@@ -193,11 +194,24 @@ namespace RogueAi.Tests.Editor
             return highest > lowest ? highest - lowest : 0f;
         }
 
-        /// <summary>The lowest point a prefab renders, relative to its own origin.</summary>
+        /// <summary>
+        /// The lowest point a prefab draws, relative to its own origin, measured on the geometry
+        /// itself. Unlike <see cref="VerticalExtentOf"/> this does not read <c>Renderer.bounds</c>,
+        /// which for a rigged enemy is a padded box that does not track its feet.
+        /// </summary>
         private static float LowestRenderedPointOf(GameObject prefab)
         {
-            (float lowest, float _) = VerticalExtentOf(prefab);
-            return lowest;
+            GameObject instance = Object.Instantiate(prefab);
+            instance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+
+            try
+            {
+                return PrefabGeometry.LowestY(instance);
+            }
+            finally
+            {
+                Object.DestroyImmediate(instance);
+            }
         }
 
         /// <summary>

@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Compiles the game's runtime gameplay sources against the Unity/PurrNet shims in ../Shims, to
+    prove they compile without a Unity install. See Tools/Headless/README.md.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>Plunderspell.Headless</AssemblyName>
+    <RootNamespace>Plunderspell.Headless</RootNamespace>
+    <DefineConstants>HEADLESS</DefineConstants>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoWarn>CS0067;CS0414;CS0169</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../Shims/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Every Runtime gameplay source, linked rather than copied, so this project cannot drift from
+      what Unity compiles. Excluded: the generated Input System action wrapper and the controller
+      that binds to it (shimming a generated asset API would be a large surface with little to
+      verify), PlayerNetworkOwnership (a thin wrapper that references PlayerInputController by
+      type, so it falls with it), and the Steam invite gateway (Steamworks.NET + PurrLobby are
+      native/platform SDKs, same reasoning as the generated Input asset). See
+      Tools/Headless/README.md, "Excluded from the headless build".
+    -->
+    <Compile Include="../../../Assets/_Project/Scripts/Runtime/**/*.cs"
+              Exclude="../../../Assets/_Project/Scripts/Runtime/Player/Input/PlayerInputs.cs;
+                        ../../../Assets/_Project/Scripts/Runtime/Player/PlayerInputController.cs;
+                        ../../../Assets/_Project/Scripts/Runtime/Net/PlayerNetworkOwnership.cs;
+                        ../../../Assets/_Project/Scripts/Runtime/Net/SteamInviteGateway.cs">
+      <Link>Runtime/%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
+</Project>

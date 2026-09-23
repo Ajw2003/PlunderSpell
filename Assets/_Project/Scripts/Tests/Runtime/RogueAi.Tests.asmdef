@@ -24,7 +24,8 @@
         "RogueAi.Playtest",
         "RogueAi.Player",
         "RogueAi.Items",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.InputSystem.TestFramework"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

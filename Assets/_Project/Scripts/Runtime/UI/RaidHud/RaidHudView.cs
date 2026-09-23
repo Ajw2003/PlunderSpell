@@ -13,6 +13,7 @@ namespace RogueAi.UI
     /// <see cref="RaidHudModel"/>; nothing above it has to change.
     /// </summary>
     [RequireComponent(typeof(RaidHudPresenter))]
+    [RequireComponent(typeof(CrosshairView))]
     public class RaidHudView : MonoBehaviour
     {
         [Tooltip("Hide the HUD (e.g. for screenshots).")]
@@ -22,10 +23,6 @@ namespace RogueAi.UI
         [SerializeField] private bool _showSpellbook = true;
 
         private const float k_crosshairSize = 9f;
-        private const float k_crosshairThickness = 2f;
-
-        private static readonly Color k_crosshairIdleColour = new Color(1f, 1f, 1f, 0.75f);
-        private static readonly Color k_crosshairActiveColour = new Color(1f, 0.85f, 0.35f, 1f);
 
         // Mirrors MockVoiceInputService.keybindMap; the HUD only needs the words, not the service.
         private static readonly string[] Spellbook =
@@ -36,6 +33,7 @@ namespace RogueAi.UI
 
         private RogueAi.Voice.PushToCastController _pushToCast;
         private RaidHudPresenter _presenter;
+        private CrosshairView _crosshair;
         private GUIStyle _label;
         private GUIStyle _big;
         private Texture2D _barBackground;
@@ -44,8 +42,39 @@ namespace RogueAi.UI
         private void Awake()
         {
             _presenter = GetComponent<RaidHudPresenter>();
+            _crosshair = GetComponent<CrosshairView>();
             _pushToCast = FindFirstObjectByType<RogueAi.Voice.PushToCastController>();
         }
+
+        // The last phrase the voice service produced, so a misheard word reads differently from a
+        // dead microphone.
+        private string _lastHeard = string.Empty;
+        private float _lastHeardAt = float.NegativeInfinity;
+        private RogueAi.Voice.IVoiceInputService _listenedTo;
+
+        private void OnEnable()
+        {
+            _listenedTo = RogueAi.Voice.VoiceServiceLocator.Current;
+            if (_listenedTo != null)
+                _listenedTo.OnPhraseRecognized += OnPhrase;
+        }
+
+        private void OnDisable()
+        {
+            if (_listenedTo != null)
+                _listenedTo.OnPhraseRecognized -= OnPhrase;
+            _listenedTo = null;
+        }
+
+        private void OnPhrase(RogueAi.Voice.VoiceRecognitionResult result)
+        {
+            _lastHeard = $"Heard \"{result.RawText.ToLowerInvariant()}\"  ({result.Volume})";
+            _lastHeardAt = Time.time;
+        }
+
+        /// <summary>The live speech service, or null when casting is keyboard-only.</summary>
+        private static RogueAi.Voice.VoskVoiceInputService Speech =>
+            (RogueAi.Voice.VoiceServiceLocator.Current as RogueAi.Voice.CombinedVoiceInputService)?.Speech;
 
         private void OnGUI()
         {
@@ -94,7 +123,8 @@ namespace RogueAi.UI
             GUILayout.Label(model.HaulText, haulStyle);
             GUILayout.EndArea();
 
-            DrawCrosshair(state, model.HasInteractTarget);
+            if (_crosshair != null)
+                _crosshair.HasTarget = model.HasInteractTarget;
 
             // Centre: the interact prompt, just under the crosshair so the eye never has to leave it.
             if (!string.IsNullOrEmpty(model.InteractPrompt))
@@ -102,6 +132,13 @@ namespace RogueAi.UI
                 var promptRect = new Rect(Screen.width * 0.5f - 250f,
                     Screen.height * 0.5f + k_crosshairSize, 500f, 24f);
                 GUI.Label(promptRect, model.InteractPrompt, Centered(_label));
+            }
+
+            if (!string.IsNullOrEmpty(model.RangedWeaponStatus))
+            {
+                var ammoRect = new Rect(Screen.width * 0.5f - 250f,
+                    Screen.height * 0.5f + k_crosshairSize + 22f, 500f, 24f);
+                GUI.Label(ammoRect, model.RangedWeaponStatus, Centered(_label));
             }
 
             if (!string.IsNullOrEmpty(model.CarriedLootName))
@@ -114,6 +151,7 @@ namespace RogueAi.UI
             }
 
             DrawSpellbook();
+            DrawListening();
 
             // Bottom-centre: the last cast, so a misfire is unmissable.
             if (!string.IsNullOrEmpty(model.LastCastLine))
@@ -128,44 +166,47 @@ namespace RogueAi.UI
         }
 
         /// <summary>
-        /// The centre-screen crosshair: a cross while idle, an open bracket over something
-        /// interactable, and nothing at all outside play. Generated in code — see docs/Decisions.md,
-        /// "The crosshair is IMGUI, and therefore invisible to the screenshot test".
+        /// While the cast key is held: which microphone is open and how loud it hears you, against
+        /// the whisper and shout marks. Without it a dead or wrong microphone looks exactly like a
+        /// word the game did not understand.
         /// </summary>
-        private void DrawCrosshair(Plunderspell.Core.GameState state, bool hasTarget)
+        private void DrawListening()
         {
-            if (state != Plunderspell.Core.GameState.Playing)
-                return;
+            bool casting = _pushToCast != null && _pushToCast.IsCasting;
+            float y = Screen.height - 110f;
 
-            float centreX = Screen.width * 0.5f;
-            float centreY = Screen.height * 0.5f;
-
-            Color previous = GUI.color;
-            GUI.color = hasTarget ? k_crosshairActiveColour : k_crosshairIdleColour;
-
-            if (hasTarget)
+            if (casting)
             {
-                // Four ticks pulled back off centre — an open bracket around what you are looking at.
-                float inner = k_crosshairSize * 0.6f;
-                float outer = k_crosshairSize * 1.5f;
-                DrawLine(centreX - outer, centreY - k_crosshairThickness * 0.5f, outer - inner, k_crosshairThickness);
-                DrawLine(centreX + inner, centreY - k_crosshairThickness * 0.5f, outer - inner, k_crosshairThickness);
-                DrawLine(centreX - k_crosshairThickness * 0.5f, centreY - outer, k_crosshairThickness, outer - inner);
-                DrawLine(centreX - k_crosshairThickness * 0.5f, centreY + inner, k_crosshairThickness, outer - inner);
-            }
-            else
-            {
-                DrawLine(centreX - k_crosshairSize, centreY - k_crosshairThickness * 0.5f,
-                    k_crosshairSize * 2f, k_crosshairThickness);
-                DrawLine(centreX - k_crosshairThickness * 0.5f, centreY - k_crosshairSize,
-                    k_crosshairThickness, k_crosshairSize * 2f);
-            }
+                RogueAi.Voice.VoskVoiceInputService speech = Speech;
+                string title = speech != null && speech.IsListening
+                    ? $"Listening on {speech.CurrentDevice}"
+                    : "Keyboard casting (no microphone) - press 1-8";
+                GUI.Label(new Rect(Screen.width * 0.5f - 250f, y, 500f, 22f), title, Centered(_label));
 
-            GUI.color = previous;
+                if (speech != null && speech.IsListening)
+                {
+                    const float meterMax = 0.6f;
+                    var meter = new Rect(Screen.width * 0.5f - 160f, y + 24f, 320f, 10f);
+                    float level = Mathf.Clamp01(speech.CurrentRms / meterMax);
+                    Color colour = speech.CurrentRms > RogueAi.Voice.VoiceUtility.ShoutThreshold ? new Color(1f, 0.45f, 0.2f)
+                        : speech.CurrentRms < RogueAi.Voice.VoiceUtility.WhisperThreshold ? new Color(0.55f, 0.7f, 1f)
+                        : new Color(0.45f, 0.95f, 0.55f);
+                    DrawBar(meter, level, colour);
+
+                    // Whisper and shout marks.
+                    foreach (float mark in new[] { RogueAi.Voice.VoiceUtility.WhisperThreshold, RogueAi.Voice.VoiceUtility.ShoutThreshold })
+                        GUI.DrawTexture(new Rect(meter.x + meter.width * (mark / meterMax) - 1f, meter.y - 3f, 2f, meter.height + 6f), _barFill);
+
+                    var small = new GUIStyle(_label) { fontSize = 11 };
+                    GUI.Label(new Rect(meter.x, meter.y + 11f, 120f, 16f), "whisper", small);
+                    GUI.Label(new Rect(meter.x + meter.width * (RogueAi.Voice.VoiceUtility.ShoutThreshold / meterMax) - 20f, meter.y + 11f, 80f, 16f), "shout", small);
+                }
+            }
+            else if (Time.time - _lastHeardAt < 4f)
+            {
+                GUI.Label(new Rect(Screen.width * 0.5f - 250f, Screen.height - 56f, 500f, 22f), _lastHeard, Centered(_label));
+            }
         }
-
-        private void DrawLine(float x, float y, float width, float height) =>
-            GUI.DrawTexture(new Rect(x, y, width, height), _barFill);
 
         /// <summary>
         /// The casting controls. Push-to-cast is not guessable: you hold a key to open the mic and
@@ -188,8 +229,9 @@ namespace RogueAi.UI
             bool casting = _pushToCast != null && _pushToCast.IsCasting;
 
             style.normal.textColor = casting ? new Color(0.45f, 0.95f, 0.55f) : Color.white;
+            string castingPrompt = Speech != null ? "LISTENING - speak, or 1-8" : "CASTING - press a number";
             GUI.Label(new Rect(x + 8f, y + 6f, width - 16f, lineHeight),
-                casting ? "CASTING - press a number" : "Hold V to cast", style);
+                casting ? castingPrompt : "Hold V to cast", style);
 
             style.normal.textColor = new Color(0.75f, 0.75f, 0.75f);
             GUI.Label(new Rect(x + 8f, y + 6f + lineHeight, width - 16f, lineHeight),

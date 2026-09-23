@@ -204,6 +204,22 @@ namespace Player
             return _lookDelta;
         }
 
+        /// <summary>
+        /// Generated Input System actions are unmanaged and leak if they are only ever enabled.
+        /// Unity asserts on the leak the second time a scene carrying a player is loaded, which is
+        /// how this surfaced. See docs/systems/spells.md, "Two ways to cast".
+        /// </summary>
+        private void OnDestroy()
+        {
+            if (_input == null)
+                return;
+
+            DisableAllInputs();
+            _input.Disable();
+            _input.Dispose();
+            _input = null;
+        }
+
         private void DisableAllInputs()
         {
             WalkInputs(false);

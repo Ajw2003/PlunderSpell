@@ -9,11 +9,12 @@ namespace StateMachine
     // rotation is frozen so the body stays upright; PlayerWalkState/PlayerJumpState express
     // movement against world Vector3.up.
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerStateMachine : BaseStateMachine, IHealth, IChokeDamageSource
+    public class PlayerStateMachine : BaseStateMachine, IHealth, IChokeDamageSource, IPlayerBody
     {
         public float CurrentHealth => _health;
         public float MaxHealth => _maxHealth;
         public float ChokeDamage => _chokeDamage;
+        public bool IsAlive => !dead;
 
         public PlayerState PreviousState { get; set; }
 
@@ -27,7 +28,21 @@ namespace StateMachine
         public PlayerIdleState IdleState { get; set; }
         public PlayerJumpState JumpState { get; set; }
 
-        public SpellBook SpellBook { get; set; }
+        [Header("Casting")]
+        [Tooltip("Optional. Leave empty and the raid's voice casting (hold V) is used instead. " +
+                 "See docs/systems/spells.md, \"Two ways to cast\".")]
+        [SerializeField] private SpellBook _spellBook;
+
+        /// <summary>
+        /// The held spellbook, or null when the player casts by voice. Backed by a serialized field
+        /// so it can be assigned in the Inspector — an auto-property cannot be, which is why this
+        /// slot never appeared.
+        /// </summary>
+        public SpellBook SpellBook
+        {
+            get => _spellBook;
+            set => _spellBook = value;
+        }
 
         public Vector2 MovementDirection { get; set; }
 
@@ -122,17 +137,76 @@ namespace StateMachine
         {
             ChangeState(IdleState);
             AssignSpellBook(null);
+
+            Camera view = CameraTransform != null ? CameraTransform.GetComponent<Camera>() : null;
+            if (Local == null && view != null && view.enabled)
+                Local = this;
+
+            Plunderspell.Core.GameServices.Initialize();
+            Plunderspell.Core.GameServices.GameState.StateChanged += OnGameStateChanged;
+            PublishHealth();
         }
 
+        /// <summary>
+        /// Resolves the spellbook: an explicit one, else one already assigned in the Inspector, else
+        /// one on this object. Null is a valid outcome and means "this player casts by voice".
+        /// </summary>
         public void AssignSpellBook(SpellBook spellBook)
         {
-            SpellBook = spellBook == null ? GetComponent<SpellBook>() : spellBook;
+            if (spellBook != null)
+            {
+                _spellBook = spellBook;
+                return;
+            }
+
+            // Only fall back to a sibling component when nothing was authored, so Start() cannot
+            // wipe an Inspector assignment the moment the scene loads.
+            if (_spellBook == null)
+            {
+                _spellBook = GetComponent<SpellBook>();
+            }
         }
+
+        /// <summary>The player this machine renders through (its camera is live). Null until one exists.</summary>
+        public static PlayerStateMachine Local { get; private set; }
+
+        /// <summary>Raised when the local player dies. The raid treats it as a lost raid.</summary>
+        public static event System.Action LocalPlayerDied;
+
+        public bool IsLocal => Local == this;
 
         public void Die()
         {
-            ChangeState(DeadState);
             dead = true;
+            ChangeState(DeadState);
+            if (IsLocal)
+            {
+                LocalPlayerDied?.Invoke();
+                if (Plunderspell.Core.GameServices.GameState != null)
+                    Plunderspell.Core.GameServices.GameState.ChangeState(Plunderspell.Core.GameState.GameOver);
+            }
+        }
+
+        /// <summary>Keeps the HUD's health number in step with the body's.</summary>
+        private void PublishHealth()
+        {
+            if (IsLocal && Plunderspell.Core.GameServices.PlayerStats != null)
+                Plunderspell.Core.GameServices.PlayerStats.SetHealth(Mathf.CeilToInt(Mathf.Max(0f, _health)));
+        }
+
+        /// <summary>Setting out again after dying: a fresh body, full health.</summary>
+        private void OnGameStateChanged(Plunderspell.Core.GameState previous, Plunderspell.Core.GameState next)
+        {
+            if (next == Plunderspell.Core.GameState.Playing && previous == Plunderspell.Core.GameState.Lair && dead)
+                ReviveTo(1f);
+        }
+
+        private void OnDestroy()
+        {
+            if (Plunderspell.Core.GameServices.GameState != null)
+                Plunderspell.Core.GameServices.GameState.StateChanged -= OnGameStateChanged;
+            if (Local == this)
+                Local = null;
         }
 
         public void Walk()
@@ -150,13 +224,16 @@ namespace StateMachine
             healthFraction = Mathf.Clamp01(healthFraction);
             _health = _maxHealth * healthFraction;
             dead = false;
-            ChangeState(RespawnState);
+            // Idle, not RespawnState: that state's exit ran on a thread-pool task and never landed.
+            ChangeState(IdleState);
+            PublishHealth();
         }
 
         public void TakeDamage(float damage)
         {
             if (dead) return;
             _health -= damage;
+            PublishHealth();
             if (_health <= 0)
             {
                 Die();
@@ -169,6 +246,7 @@ namespace StateMachine
             if (impactVelocity < MinVelocityForDamage) return;
 
             _health -= damage;
+            PublishHealth();
             if (_health <= 0)
             {
                 Die();
@@ -286,7 +364,10 @@ namespace StateMachine
             }
             else if (ItemManager.Instance != null && CameraTransform != null)
             {
-                ItemManager.Instance.TryMeleeSwing(CameraTransform.position, CameraTransform.forward);
+                if (!ItemManager.Instance.TryMeleeSwing(CameraTransform.position, CameraTransform.forward))
+                {
+                    ItemManager.Instance.TryFireRanged(CameraTransform.position, CameraTransform.forward);
+                }
             }
         }
 

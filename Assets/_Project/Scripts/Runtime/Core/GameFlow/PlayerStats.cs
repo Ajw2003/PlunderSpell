@@ -28,6 +28,19 @@ namespace Plunderspell.Core
             StatsChanged?.Invoke();
         }
 
+        /// <summary>Mirrors the player body's real health, which owns the number. The HUD reads this.</summary>
+        public void SetHealth(int health)
+        {
+            int clamped = Mathf.Clamp(health, 0, MaxHealth);
+            if (clamped == Health)
+            {
+                return;
+            }
+
+            Health = clamped;
+            StatsChanged?.Invoke();
+        }
+
         public void Heal(int amount)
         {
             Health = Mathf.Clamp(Health + amount, 0, MaxHealth);

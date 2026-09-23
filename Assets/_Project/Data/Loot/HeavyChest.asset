@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6921339ee52db387f9085c3d7ee21d, type: 3}
   m_Name: HeavyChest
   m_EditorClassIdentifier: 
-  Worth: 200
+  Worth: 500
   IsArtifact: 0
-  Bulk: 15
+  Bulk: 25
   Fragility: 999
   DisplayName: Heavy Chest
   Icon: {fileID: 0}
