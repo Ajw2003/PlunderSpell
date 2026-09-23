@@ -122,3 +122,11 @@ wrong: RaidScene uses `RaidPlayer.prefab`, which is fully wired (see `docs/Decis
 done:** walking the loop in `RaidScene.unity` from the main menu; a fresh standalone build; a real
 person speaking into the mic (the Whisper/Shout thresholds are uncalibrated); commenting on and
 closing GitHub issues #14, #100, #101, #102.
+
+**2026-09-23, later: first real voice cast.** The user played `CastleBench.unity` in the Editor and
+cast spells by speaking into their own microphone, misfires included. This is the first time voice
+casting has worked for a real person in this project (before today the engine was a stub and the
+model was missing). M1 has moved from "never worked" to "works for one person on one machine".
+Its acceptance criterion (multi-accent recognition, latency) is still unmeasured, and so is the
+Whisper/Shout calibration against real voices. A standalone build has not been re-tested since the
+fixes.
