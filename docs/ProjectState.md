@@ -7,6 +7,19 @@ checked the way they're defined, and a 21-item playtesting backlog (filed 2026-0
 open — see below) is the clearest evidence of the gap between "compiles and passes tests" and
 "plays like the pitch."
 
+**2026-09-22 update — "code-complete" and "actually playable" turned out to be different claims.**
+Phase 1 of `docs/plans/GitIssues/Priority_Queue.md` was closed out this session purely against code
+and the headless test harness (`Tools/Headless/verify.sh`), which compiles and unit-tests the real
+gameplay sources but cannot load a real `.unity` scene, render anything, or drive real input — see
+`Tools/Headless/README.md`, "What it does and does not prove." The user then actually played the
+standalone build produced for #53 and found the raid itself broken: casting doesn't work by voice
+or keybind, there's no way to tell if the player or an enemy is taking damage, and extraction/return
+to the Lair doesn't work. Root-caused and filed as a new top-priority Phase 0 — see
+`docs/plans/GitIssues/Priority_Queue.md`'s Phase 0 section and issues #102 (epic), #100, #14
+(reopened), #101. The headline "65%" and the milestone table below predate this finding and should
+be read with it in mind: M2's code is not merely "acceptance unchecked," a real play session
+surfaced it as not actually functional yet.
+
 | Milestone | Status | Code | Acceptance checked? |
 |---|---|---|---|
 | M0 — Fork clean, cut gravity | Done | ✅ merged (`feature/m0-gravity-removal`) | ✅ — compiles, gravity restored, verified in the `.agent_reports`-era logs, now `docs/archive/2026-09-15-integration/` |
