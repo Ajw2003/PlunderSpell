@@ -199,11 +199,11 @@
       "summary": "Rows of man-high storage jars — grain on one side, olive oil on the other — and aisles too narrow to turn in.",
       "description": "The wealth of the palace in its plainest form: grain and oil, by the tonne, in jars taller than you are. The pithoi stand set into clay benches in four rows, each one tattooed with rope-pattern bands and a scribe's mark of what it holds and whose it is. The aisles are narrow enough that a man with a tower shield must walk them sideways. Grain burns. Oil burns better. A lit fire-pot through that door turns the magazine into the brightest room in the century for a good eleven minutes.",
       "build": [
-        "Floor slab: 12.0 × 12.0 × 0.30 m, beaten clay floor; four raised clay benches 1.20 m wide × 0.30 m high running N–S, each with 8 circular jar pits 0.30 m deep (jars stand with their lowest 0.30 m in the bench).",
+        "Floor slab: 12.0 × 12.0 × 0.30 m, beaten clay floor; four raised clay benches 1.20 m wide × 0.30 m high running N–S, each broken by the cross-aisle into two runs of 3 circular jar pits 0.30 m deep (jars stand with their lowest 0.30 m in the bench); benches stop 1.00 m short of the N and S walls.",
         "Walls: 0.70 m rubble and mud-brick, plastered plain ochre, clear height 4.00 m; interior 10.60 × 10.60 m; timber lacing beams 0.18 × 0.18 m at 1.00 m and 2.60 m; no frescoes — scratched tally marks and painted jar-row numbers (Linear-B-like signs, 0.20 m tall, haematite red) at 1.80 m.",
-        "Aisles (E–W section): wall aisle 1.30 m · row 1 (1.10) · aisle 1.20 · row 2 · aisle 1.20 · row 3 · aisle 1.20 · row 4 · wall aisle 1.30 = 10.60 m; clear between facing jar bellies is 1.20 m, pinched to 0.90 m wherever a lug handle or a lead clamp sticks out. One E–W cross-aisle 1.60 m wide at the cell centre.",
-        "Pithoi (grain, west two rows): 16 jars, ovoid, 2.00 m tall overall (1.70 m showing above the bench), max belly 1.10 m dia. at 1.00 m, mouth 0.50 m dia. with a 0.08 m rolled rim; 4 applied rope-pattern bands (0.06 m ridges) at 0.40/0.80/1.20/1.50 m; 6 vertical lug handles on the shoulder.",
-        "Pithoi (oil, east two rows): 16 jars, same body but 1.80 m tall overall, darker clay, black oil drip stains from the rim, a stone lid disc 0.56 m dia. × 0.06 m; 3 carry distinct 'OIL' scribe signs in the albedo.",
+        "Aisles (E–W section): wall aisle 1.30 m · row 1 (1.10) · aisle 1.20 · row 2 · aisle 1.20 · row 3 · aisle 1.20 · row 4 · wall aisle 1.30 = 10.60 m; clear between facing jar bellies is 1.20 m, pinched to 0.90 m wherever a lug handle or a lead clamp sticks out. One E–W cross-aisle 1.60 m wide at the cell centre, and a 1.00 m strip inside the N and S walls.",
+        "Pithoi (grain, west two rows): 12 jars, ovoid, 2.00 m tall overall (1.70 m showing above the bench), max belly 1.10 m dia. at 1.00 m, mouth 0.50 m dia. with a 0.08 m rolled rim; 4 applied rope-pattern bands (0.06 m ridges) at 0.40/0.80/1.20/1.50 m; 6 vertical lug handles on the shoulder.",
+        "Pithoi (oil, east two rows): 12 jars, same body but 1.80 m tall overall, darker clay, black oil drip stains from the rim, a stone lid disc 0.56 m dia. × 0.06 m; 3 carry distinct 'OIL' scribe signs in the albedo.",
         "Jar variety: author 3 pithos meshes (tall, squat, cracked-and-bound with lead clamps) and 2 rim variants; rotate every instance randomly ±180° about vertical.",
         "Ceiling: 0.24 m round-pole joists at 0.50 m centres under a clay roof, underside at 4.00 m; two 0.60 m square vent holes near the north wall.",
         "Ladders: 2 timber step-ladders (2.00 m, 7 rungs) left against jars for ladling; ladle and scoop props on the rims.",
@@ -216,7 +216,7 @@
         "Door, east and west faces: 2.60 × 2.88 m archways opening onto the wall aisles; each is half-choked by a stacked amphora pile 0.60 m inside it that must be broken or climbed",
         "Window: 2 vent holes in the ceiling, 0.60 × 0.60 m (smoke escape; not climbable)",
         "Stair: none — the magazine is a ground-floor room",
-        "Hide spots: 8 marked crouch spots in the shoulder hollows where the cross-aisle meets each row (jar bellies touch along a row at 1.125 m pitch, so the only cover is at row ends and the cross-aisle)"
+        "Hide spots: 8 marked crouch spots where the cross-aisle meets each row end (jar bellies nearly touch along a row at 1.17 m pitch, so the only cover is at row ends and the cross-aisle)"
       ],
       "materials": [
         {
@@ -257,7 +257,7 @@
         "Crouch-hides between jars break line of sight; the Keeper of the Flame patrols here and a missed fire-pot is the most likely way the magazine goes up.",
         "Loot spawns: sealed amphorae stacked at the south bench; oxhide ingots stored in a jar pit under the scribe's bench."
       ],
-      "budget": "≤ 25k tris for the cell (32 pithoi instanced from 3 meshes at ~350 tris = 11.2k, benches/walls/floor 6k, ladders/bench/tablets 3k, decals 2k, headroom 2.8k); terracotta tiling 2048² with rope-band trim.",
+      "budget": "≤ 25k tris for the cell (24 pithoi instanced from 3 meshes at ~350 tris = 8.4k, benches/walls/floor 6k, ladders/bench/tablets 3k, decals 2k, headroom 5.6k); terracotta tiling 2048² with rope-band trim.",
       "concept": "concept/bronze/pithos-store.svg"
     }
   ],
