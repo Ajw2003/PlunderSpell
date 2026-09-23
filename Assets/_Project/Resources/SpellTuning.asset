@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5dc7dd3c4e03004b82143ab10c15a50, type: 3}
+  m_Name: SpellTuning
+  m_EditorClassIdentifier: RogueAi.Spells::RogueAi.Spells.SpellTuningProfile
+  WhisperPower: 0.5
+  NormalPower: 1
+  ShoutPower: 1.75
+  WhisperNoiseRadius: 0.5
+  NormalNoiseRadius: 5
+  ShoutNoiseRadius: 12
+  WhisperNoiseStrength: 0.1
+  NormalNoiseStrength: 0.45
+  ShoutNoiseStrength: 1
+  DefaultEffectRadius: 6
+  IgnisDamagePerSecond: 12
+  IgnisBurnSeconds: 4
+  TonitrusStunSeconds: 3
+  TonitrusNoiseRadius: 18
+  TonitrusNoiseStrength: 1
+  SomnusSleepSeconds: 8
+  LevoImpulse: 6
+  LevoSeconds: 3
+  AurumVocoWorth: 40
+  AurumVocoNoiseRadius: 8
+  AurumVocoNoiseStrength: 0.5
+  MisfireSelfBurnSeconds: 6
+  MisfireSelfDamagePerSecond: 8
+  MisfireSelfStunSeconds: 4
+  MisfireSelfSleepSeconds: 5
+  MisfireRadius: 4

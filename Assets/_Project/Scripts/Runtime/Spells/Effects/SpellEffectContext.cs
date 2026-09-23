@@ -50,7 +50,9 @@ namespace RogueAi.Spells
         public float Power => SpellTuning.PowerMultiplier(Volume);
 
         /// <summary>Effect radius after the volume multiplier.</summary>
-        public float Radius(float baseRadius = SpellTuning.DefaultEffectRadius) => baseRadius * Power;
+        public float Radius() => Radius(SpellTuning.DefaultEffectRadius);
+
+        public float Radius(float baseRadius) => baseRadius * Power;
 
         /// <summary>True when what resolved is a misfire rather than the intended spell.</summary>
         public bool IsMisfire => SpellCatalogue.IsMisfire(Spell);

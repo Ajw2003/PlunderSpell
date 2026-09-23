@@ -358,6 +358,31 @@ namespace RogueAi.Tests
             Assert.AreNotEqual(cleanColour, fizzleColour);
         }
 
+        // --- Authored spell tuning (#105) ------------------------------------------------------
+
+        [Test]
+        public void Test_SpellNumbersComeFromTheAuthoredAsset()
+        {
+            Assert.IsNotNull(Resources.Load<RogueAi.Spells.SpellTuningProfile>(RogueAi.Spells.SpellTuning.ResourcePath),
+                "The tuning asset must ship under Resources, or builds fall back to code defaults.");
+
+            var custom = ScriptableObject.CreateInstance<RogueAi.Spells.SpellTuningProfile>();
+            custom.IgnisDamagePerSecond = 99f;
+            custom.ShoutPower = 3f;
+            try
+            {
+                RogueAi.Spells.SpellTuning.Use(custom);
+                Assert.AreEqual(99f, RogueAi.Spells.SpellTuning.IgnisDamagePerSecond);
+                Assert.AreEqual(3f, RogueAi.Spells.SpellTuning.PowerMultiplier(RogueAi.Voice.CastVolume.Shout),
+                    "Editing the asset must change the game, not a copy of the numbers in code.");
+            }
+            finally
+            {
+                RogueAi.Spells.SpellTuning.Use(null);
+                Object.Destroy(custom);
+            }
+        }
+
         // --- A guard-free entrance -------------------------------------------------------------
 
         [Test]
