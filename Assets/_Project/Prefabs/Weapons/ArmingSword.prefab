@@ -84,7 +84,7 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 21609349879468227}
   m_SourcePrefab: {fileID: 100100000, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
---- !u!1 &16131477917074563 stripped
+--- !u!1 &905311075115648840 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
   m_PrefabInstance: {fileID: 22841742964554265}
@@ -95,9 +95,9 @@ Rigidbody:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 16131477917074563}
+  m_GameObject: {fileID: 905311075115648840}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 1.1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -122,7 +122,7 @@ BoxCollider:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 16131477917074563}
+  m_GameObject: {fileID: 905311075115648840}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -143,14 +143,17 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 16131477917074563}
+  m_GameObject: {fileID: 905311075115648840}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee81d29afbf11a9478fb8230b135d419, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: RogueAi.Items::Item
   _followSpeed: 20
   _rotationSpeed: 10
+  _gripStrength: 180
+  _maxHoldSpeed: 14
+  _maxThrowSpeed: 18
   _damageMultiplier: 2
   _damageCooldown: 0.5
 --- !u!114 &13024124775164703
@@ -159,11 +162,11 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 16131477917074563}
+  m_GameObject: {fileID: 905311075115648840}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cda8b63ac315c7b1f93361f635efb5d0, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: RogueAi.Acoustics::RogueAi.Acoustics.AcousticEmitter
   BaseNoiseRadius: 3
   BaseNoiseStrength: 0.6
@@ -180,11 +183,11 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 16131477917074563}
+  m_GameObject: {fileID: 905311075115648840}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ca8219aed8a38835fd7691adabfd1a7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: RogueAi.Items::MeleeWeapon
   m_stats: {fileID: 11400000, guid: e6d0583f1463c4c14dd6060dff4d950d, type: 2}
   m_hitRadius: 1

@@ -39,6 +39,10 @@ public class ItemManager : SingletonBase<ItemManager>
 
         HandleHover();
 
+        // Shattered in your hands (fragile loot turns its collisions off when it breaks): let go.
+        if (_draggedItem != null && _draggedItem.TryGetComponent(out Rigidbody heldBody) && !heldBody.detectCollisions)
+            StopDragging();
+
         if (_draggedItem != null)
         {
             // A held ranged weapon aims on right-click-and-hold instead of throwing on right-click:
@@ -114,10 +118,12 @@ public class ItemManager : SingletonBase<ItemManager>
         }
 
         if (Mouse.current == null) return;
-        Vector2 mousePos = Mouse.current.position.ReadValue();
-        Ray ray = _mainCamera.ScreenPointToRay(mousePos);
+        Ray ray = CrosshairRay();
 
-        if (Physics.Raycast(ray, out RaycastHit hit, _raycastDistance, _itemLayerMask))
+        // Reach, not line of sight: the hover ray used to be 100 m long, so anything visible
+        // could be yanked across the room.
+        float reach = Mathf.Min(_raycastDistance, _maxDragDepth);
+        if (Physics.Raycast(ray, out RaycastHit hit, reach, _itemLayerMask))
         {
             if (hit.collider.TryGetComponent(out Item item))
             {
@@ -137,12 +143,17 @@ public class ItemManager : SingletonBase<ItemManager>
     private void UpdateDraggedItemPosition()
     {
         if (Mouse.current == null) return;
-        Vector2 mousePos = Mouse.current.position.ReadValue();
-        Ray ray = _mainCamera.ScreenPointToRay(mousePos);
+        Ray ray = CrosshairRay();
 
         Vector3 targetPoint = ray.GetPoint(_currentDragDepth);
         _draggedItem.UpdateTargetPosition(targetPoint);
     }
+
+    /// <summary>
+    /// Straight out through the crosshair. The mouse pointer is locked there in play anyway; aiming
+    /// through the camera centre means grabbing and holding never depend on the cursor state.
+    /// </summary>
+    private Ray CrosshairRay() => _mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
     public void OnInventoryClicked(InputAction.CallbackContext context)
     {

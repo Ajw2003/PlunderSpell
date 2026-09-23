@@ -35,7 +35,17 @@ namespace RogueAi.Loot
         public LootItem Item => m_item;
 
         /// <summary>Marks the piece ruined, dropping its worth to zero.</summary>
-        public void Ruin() => m_isRuined = true;
+        /// <summary>Raised the moment a piece is ruined: (the piece, the worth it just lost).</summary>
+        public static event System.Action<LootValue, float> Ruined;
+
+        public void Ruin()
+        {
+            if (m_isRuined)
+                return;
+            float lost = Worth;
+            m_isRuined = true;
+            Ruined?.Invoke(this, lost);
+        }
 
         /// <summary>Editor/tooling seam: point this at an authored definition.</summary>
         public void SetItem(LootItem item) => m_item = item;

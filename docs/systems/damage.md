@@ -48,6 +48,33 @@ numbers through `IHealth`; this system only decides how damage reaches them and 
 
 Screenshots of every case: `docs/generated/playtest-2026-09-23/05`–`12`.
 
+## Weight
+
+Added 2026-09-23. A held `Item` is a **dynamic body pulled toward the hand by a force of limited
+strength** (`Item.FixedUpdate`), not a kinematic object teleported to the crosshair:
+
+- The hand wants a velocity proportional to how far the item is from the aim point
+  (`_followSpeed`, capped at `_maxHoldSpeed`), and pays for it plus gravity out of a fixed
+  `_gripStrength` (180 N). A 1 kg pot spends 10 N staying up and has the rest to move with; a
+  15 kg chest spends 147 N and has almost nothing left, so it lags, swings wide and sags to the
+  floor when you turn. Measured (a 90° turn): pot 0.34 s to catch up, goblet 0.32 s, 5 kg relic
+  0.43 s with 0.25 m of sag, 15 kg chest 1.78 s with 1.7 m.
+- Because it stays a physics body, walls stop it and it carries momentum: **swinging a held thing
+  into someone is an impact hit** through `Item.OnCollisionEnter`, at `speed × 2 × heft` damage
+  (`heft` = ×1 at 1 kg, ×1.5 at 4 kg, ×2 at 9 kg), blamed on the holder. A held item never collides
+  with its holder (`Physics.IgnoreCollision`, restored 0.4 s after letting go).
+- Throws are impulses capped at 18 m/s, so the same arm throws a pot far and a chest barely at all.
+- Carrying slows you: `Item.CarrySpeedMultiplier` is 1 up to 2 kg, falling to 0.5 at 15 kg,
+  applied in `PlayerWalkState`.
+- Grabbing and holding aim through the screen centre (the crosshair), within `_maxDragDepth`
+  (10 m) — the hover ray used to be 100 m.
+- Weapon prefabs carry real masses (sword 1–1.5 kg, round shield 3.5, pavise 8, matchlock 4…);
+  they were all 1 kg.
+- **Fragile loot breaks in your hands.** A valuable hit harder than its `Fragility` (m/s — goblet 3,
+  plate 2) shatters even while held, shows "SHATTERED −150" where it broke, and drops out of your
+  hands (`ItemManager` lets go of anything whose collisions switched off). Swinging the goblet at a
+  guard hurts the guard and costs you the goblet — the REPO trade.
+
 ## Invariants
 
 - **Nothing calls `IHealth.TakeDamage` except `Damage.Apply`.** A direct call still hurts, but no

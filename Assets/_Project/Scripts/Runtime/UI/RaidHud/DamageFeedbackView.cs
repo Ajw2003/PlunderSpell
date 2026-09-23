@@ -22,6 +22,7 @@ namespace RogueAi.UI
         private static readonly Color k_youDealtColour = new Color(1f, 0.9f, 0.35f);
         private static readonly Color k_friendlyFireColour = new Color(1f, 0.55f, 0.1f);
         private static readonly Color k_otherColour = new Color(0.85f, 0.85f, 0.85f);
+        private static readonly Color k_shatterColour = new Color(0.75f, 0.85f, 1f);
         private static readonly Color k_enemyBarColour = new Color(0.85f, 0.15f, 0.12f);
         private static readonly Color k_friendBarColour = new Color(0.25f, 0.8f, 0.3f);
         private static readonly int k_baseColorId = Shader.PropertyToID("_BaseColor");
@@ -102,11 +103,16 @@ namespace RogueAi.UI
             _flashBlock = new MaterialPropertyBlock();
         }
 
-        private void OnEnable() => Damage.Dealt += OnDamage;
+        private void OnEnable()
+        {
+            Damage.Dealt += OnDamage;
+            RogueAi.Loot.LootValue.Ruined += OnLootRuined;
+        }
 
         private void OnDisable()
         {
             Damage.Dealt -= OnDamage;
+            RogueAi.Loot.LootValue.Ruined -= OnLootRuined;
             foreach (Flash flash in _flashes.Values)
                 Restore(flash);
             _flashes.Clear();
@@ -173,6 +179,21 @@ namespace RogueAi.UI
                 _hitMarkerUntil = Time.time + k_hitMarkerSeconds;
                 _hitMarkerKill = report.Killed;
             }
+        }
+
+        /// <summary>A valuable broke: say so where it happened, with what it cost.</summary>
+        private void OnLootRuined(RogueAi.Loot.LootValue piece, float worthLost)
+        {
+            if (piece == null)
+                return;
+            _numbers.Add(new FloatingNumber
+            {
+                World = piece.transform.position + Vector3.up * 0.3f,
+                Text = worthLost > 0f ? $"SHATTERED  -{worthLost:N0}" : "SHATTERED",
+                Colour = k_shatterColour,
+                Born = Time.time,
+                Big = true,
+            });
         }
 
         /// <summary>"Watchman", "yourself (fire)", "a thrown Golden Goblet".</summary>
@@ -366,14 +387,18 @@ namespace RogueAi.UI
             foreach (FloatingNumber number in _numbers)
             {
                 float age = (Time.time - number.Born) / k_numberSeconds;
-                Vector3 world = number.World + Vector3.up * (0.2f + age * 0.9f);
+                // Rise in screen pixels, not metres: a world-space rise flies off the top of the
+                // screen for anything hit at arm's length.
+                Vector3 world = number.World + Vector3.up * 0.15f;
                 Vector3 screen = cam.WorldToScreenPoint(world);
                 if (screen.z <= 0f)
                     continue;
 
                 GUIStyle style = number.Big ? _bigNumberStyle : _numberStyle;
                 float alpha = age < 0.7f ? 1f : 1f - (age - 0.7f) / 0.3f;
-                var rect = new Rect(screen.x - 60f, Screen.height - screen.y - 16f, 120f, 32f);
+                Vector2 size = style.CalcSize(new GUIContent(number.Text)) + new Vector2(8f, 4f);
+                float rise = age * 60f;
+                var rect = new Rect(screen.x - size.x * 0.5f, Screen.height - screen.y - size.y * 0.5f - rise, size.x, size.y);
                 Shadowed(rect, number.Text, style, new Color(number.Colour.r, number.Colour.g, number.Colour.b, alpha));
             }
         }
