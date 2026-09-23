@@ -69,6 +69,12 @@ together and what was deliberately left undocumented, and why.
   built from, including the provenance note around the excluded `feature/Owen/PCG` branch.
 - [`docs/plans/steam-coop-framework.md`](plans/steam-coop-framework.md) — the plan for porting the
   predecessor project's Steam co-op framework, which Plunderspell was forked from.
+- [`docs/art/`](art/BRIEF.md) — the art bible: per-Age handoff sheets a 3D artist builds from
+  (3 structures, 4 enemies, 5 plunder items per Age; [`bronze`](art/bronze.md) ·
+  [`high`](art/high.md) · [`late`](art/late.md) · [`powder`](art/powder.md)), concept sheets in
+  `docs/art/concept/`, specs in `docs/art/data/*.json`, and its own illustrated mood board
+  [`docs/generated/plunderspell-art-bible-moodboard.html`](generated/plunderspell-art-bible-moodboard.html).
+  Regenerate with `python3 Tools/ArtBible/build_art_bible.py` (see `Tools/ArtBible/README.md`).
 - [`docs/plans/moodboard-gap-closure.md`](plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
