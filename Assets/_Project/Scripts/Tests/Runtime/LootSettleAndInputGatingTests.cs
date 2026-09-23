@@ -199,7 +199,9 @@ namespace RogueAi.Tests
             FreeLookPlaytestController walker = MakeWalker();
             var body = walker.GetComponent<Rigidbody>();
 
-            GameServices.GameState.ChangeState(GameState.Paused);
+            // The inventory, not the pause menu: pausing now freezes time (#107), and a frozen world
+            // never reaches the physics steps this test waits on. The gate is the same for every menu.
+            GameServices.GameState.ChangeState(GameState.Inventory);
             body.linearVelocity = new Vector3(0f, 0f, 5f);
 
             yield return new WaitForFixedUpdate();

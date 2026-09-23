@@ -630,3 +630,21 @@ the map.
 
 **Status.** Standing. Regression tests: `PlayableLoopTests.Test_TheViewMovesEveryFrameAndLookTurnsTheCamera`,
 `Test_IdleStandsStill`.
+
+## 2026-09-23 — Pausing freezes the world, but only for the host (#107)
+
+**Context.** Esc swapped screens and nothing else: the raid clock, guards and physics kept running
+behind the pause menu.
+
+**Decision.** `PausePolicy` (on the persistent UI root, beside `CursorLockPolicy`) sets
+`Time.timeScale = 0` and pauses audio while the pause menu, or Settings opened from it, is up, on the
+machine that owns the simulation only (`GameServices.IsSessionAuthority`: the host or an offline
+player; the raid supplies the network check). A client's pause menu stays an overlay, because it
+cannot stop three other people's game. The inventory is not a pause.
+
+**Trap.** Anything waiting on scaled time (`WaitForSeconds`, `WaitForFixedUpdate`) never finishes
+while paused. One test did exactly that and hung the suite; it now uses the inventory to test the
+"menus block input" rule.
+
+**Status.** Standing. Verified in Play mode: the clock held at 295.00 s and a guard held still for
+2 s while paused, stayed frozen in Settings, and resumed on Esc.

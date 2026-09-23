@@ -15,6 +15,13 @@ namespace Plunderspell.Core
         /// Uninitialised counts as not playing; <see cref="Initialize"/> runs from
         /// <c>RuntimeInitializeOnLoadMethod</c> before any scene component's Update.
         /// </summary>
+        /// <summary>
+        /// True on the machine that owns the simulation: the host, or anyone playing offline. Pausing
+        /// only freezes time there. The raid replaces this with its network check once it exists;
+        /// until then (menus, benches) this machine is its own authority.
+        /// </summary>
+        public static System.Func<bool> IsSessionAuthority = () => true;
+
         public static bool IsPlaying =>
             GameState != null && GameState.CurrentState == Core.GameState.Playing;
 

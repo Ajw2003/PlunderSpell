@@ -322,6 +322,21 @@ namespace RogueAi.Tests
                 "Arriving in Idle while moving used to coast forever, off the edge of the map.");
         }
 
+        // --- Pause (#107) ----------------------------------------------------------------------
+
+        [Test]
+        public void Test_PauseFreezesTheWorldOnlyForTheHost()
+        {
+            Assert.IsTrue(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Paused, GameState.Playing, true));
+            Assert.IsTrue(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Settings, GameState.Paused, true),
+                "Settings opened from the pause menu is still paused.");
+            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Paused, GameState.Playing, false),
+                "A client's pause menu cannot stop everyone else's game.");
+            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Settings, GameState.MainMenu, true));
+            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Inventory, GameState.Playing, true),
+                "The inventory is a live overlay, not a pause.");
+        }
+
         // --- A guard-free entrance -------------------------------------------------------------
 
         [Test]
