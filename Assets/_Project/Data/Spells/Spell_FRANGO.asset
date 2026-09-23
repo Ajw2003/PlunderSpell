@@ -18,4 +18,10 @@ MonoBehaviour:
   - FRANCO
   - FRANGGO
   misfireId: 101
-  Description: 'Break/shatter a target. Misfire (FRANCO/FRANGGO) breaks a random inventory item.'
+  HeardAs:
+  - franco
+  - fran go
+  - frank go
+  MisfireHeardAs: []
+  Description: Break/shatter a target. Misfire (FRANCO/FRANGGO) breaks a random inventory
+    item.

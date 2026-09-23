@@ -18,4 +18,10 @@ MonoBehaviour:
   - TONITUS
   - TONITRIS
   misfireId: 103
-  Description: 'Thunderclap. Misfire (TONITUS/TONITRIS) briefly deafens the caster.'
+  HeardAs:
+  - tony truss
+  - tony trust
+  MisfireHeardAs:
+  - to need us
+  - tony tuss
+  Description: Thunderclap. Misfire (TONITUS/TONITRIS) briefly deafens the caster.

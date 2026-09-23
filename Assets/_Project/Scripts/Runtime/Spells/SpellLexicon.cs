@@ -17,6 +17,44 @@ namespace RogueAi.Spells
         [Tooltip("Maximum Levenshtein distance for a near-match (misfire) to be accepted.")]
         public int MaxNearMatchDistance = 2;
 
+        /// <summary>
+        /// The speech recogniser's vocabulary: every heard-as spelling mapped to the word the
+        /// lexicon matches. A correct spelling maps to <see cref="SpellWord.Word"/>; a misfire
+        /// spelling maps to the first authored mispronunciation, so it resolves as a misfire.
+        /// </summary>
+        public Dictionary<string, string> BuildHeardVocabulary()
+        {
+            var vocabulary = new Dictionary<string, string>();
+            if (Spells == null)
+                return vocabulary;
+
+            foreach (SpellWord sw in Spells)
+            {
+                if (sw == null || string.IsNullOrEmpty(sw.Word))
+                    continue;
+
+                AddHeard(vocabulary, sw.HeardAs, sw.Word);
+
+                string misfireWord = sw.AltPronunciations != null && sw.AltPronunciations.Length > 0
+                    ? sw.AltPronunciations[0].ToUpperInvariant()
+                    : null;
+                if (misfireWord != null)
+                    AddHeard(vocabulary, sw.MisfireHeardAs, misfireWord);
+            }
+            return vocabulary;
+        }
+
+        private static void AddHeard(Dictionary<string, string> vocabulary, string[] heard, string word)
+        {
+            if (heard == null)
+                return;
+            foreach (string h in heard)
+            {
+                if (!string.IsNullOrWhiteSpace(h))
+                    vocabulary[h.Trim().ToLowerInvariant()] = word;
+            }
+        }
+
         /// <summary>Exact match on the normalised trigger word. Null if none.</summary>
         public SpellWord FindByWord(string normalized)
         {

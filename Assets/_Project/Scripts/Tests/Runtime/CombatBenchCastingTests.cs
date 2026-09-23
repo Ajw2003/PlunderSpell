@@ -73,14 +73,14 @@ namespace RogueAi.Tests
 
             IVoiceInputService voice = VoiceServiceLocator.Current;
             Assert.IsNotNull(voice, "No voice provider; nothing can ever be cast.");
-            Assert.IsInstanceOf<MockVoiceInputService>(voice,
-                "The editor must use the keyboard mock, or casting needs a microphone to test.");
+            Assert.IsNotNull(VoiceServiceLocator.Keyboard,
+                "Number-key casting must always be available, or casting needs a microphone to test.");
 
             int before = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
 
             // Exactly what holding V and tapping 5 does.
             voice.StartListening();
-            ((MockVoiceInputService)voice).SimulateKeyPress(KeyCode.Alpha5);
+            VoiceServiceLocator.Keyboard.SimulateKeyPress(KeyCode.Alpha5);
             voice.StopListening();
 
             yield return null;
@@ -109,7 +109,7 @@ namespace RogueAi.Tests
             try
             {
                 IVoiceInputService voice = VoiceServiceLocator.Current;
-                var mock = (MockVoiceInputService)voice;
+                var mock = VoiceServiceLocator.Keyboard;
 
                 foreach (KeyCode key in new[]
                          {

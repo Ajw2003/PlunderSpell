@@ -539,3 +539,32 @@ against a 0.85 m table entry). Correcting it resizes the whole cast against the 
 it was recorded in `docs/systems/scale.md` "Traps" and left for a design call.
 
 **Status.** Standing.
+
+## 2026-09-22 — Voice casting listens for English spellings, and the Vosk binaries are committed
+
+**Context.** The user played the standalone build and could not cast by voice. Investigation found
+voice recognition had never worked in any build: the repo carried only a throwing compile stub for
+Vosk and an empty model folder; the capture loop called main-thread-only `Microphone` APIs from a
+worker thread and hid the exception; the mic was `devices[0]` (a virtual device on the dev machine);
+and every push-to-talk cast was classed as a Whisper. Once the real engine was installed, a test
+with synthesized speech showed the deeper problem: the English model has no Latin, so it heard
+FRANGO as "franco" and IGNIS as "agnes" — the misfire spellings.
+
+**Decision.** Commit the real `Vosk` 0.3.38 native/managed DLLs and the small English model (with
+the user's approval — reversing the old "too large to commit" note in the model folder's README, in
+line with the repo's commit-everything rule). Constrain recognition to a grammar of English
+spellings authored per `SpellWord` (`HeardAs`, `MisfireHeardAs`) and map each back to the Latin
+word. Where the model can't separate a right/wrong pair (FRANGO/FRANCO), the ambiguity resolves to
+the **correct** spell. Always offer number-key casting alongside speech.
+
+**Why.** A grammar was measured, not guessed: 16/16 correct pronunciations cast the right spell
+across two synthetic voices, versus most of them misfiring free-form. Failing toward the correct
+spell keeps "say it right and it works" true; a false misfire on a correct word would make the
+pillar feel broken. Rejected: a bigger Vosk model (still no Latin, 3–30× the size); fuzzy phonetic
+matching over free-form text (can't separate IGNIS from AGNIS when both come back "agnes").
+
+**Not decided.** The heard-as spellings are tuned against text-to-speech only. A real person, and
+the multi-accent measurement issue #50 asks for, may need different ones — tune them in the
+`SpellWord` assets and re-run `SpeechRecognitionTests`.
+
+**Status.** Standing. Mechanism: `docs/systems/voice.md`, "Latin through an English model".

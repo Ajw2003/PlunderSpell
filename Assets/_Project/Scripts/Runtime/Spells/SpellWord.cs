@@ -27,6 +27,16 @@ namespace RogueAi.Spells
         [Tooltip("Spell that fires when the player says a near-match (a misfire).")]
         public SpellId misfireId = SpellId.None;
 
+        [Header("Speech recogniser spellings")]
+        [Tooltip("English spellings the speech model outputs when this word is said correctly, e.g. " +
+                 "\"igneous\" for IGNIS. The model has no Latin, so these are what it can actually hear. " +
+                 "Tune with Plunderspell/Voice/Speech Test.")]
+        public string[] HeardAs;
+
+        [Tooltip("English spellings the speech model outputs for the mispronounced version, e.g. " +
+                 "\"egg nice\" for AGNIS. Each one misfires.")]
+        public string[] MisfireHeardAs;
+
         [TextArea]
         [Tooltip("Human-readable description of the spell and its misfire behaviour.")]
         public string Description;

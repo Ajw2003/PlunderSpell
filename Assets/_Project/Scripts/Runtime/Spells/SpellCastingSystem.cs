@@ -71,6 +71,10 @@ namespace RogueAi.Spells
             _voice = VoiceServiceLocator.Current;
             if (_voice != null)
             {
+                // Real speech can only hear English, so it needs told which spellings mean which word.
+                if (_voice is IPhraseVocabularyTarget speech && _lexicon != null)
+                    speech.SetVocabulary(_lexicon.BuildHeardVocabulary());
+
                 _voice.OnPhraseRecognized += HandlePhrase;
                 _subscribed = true;
             }
