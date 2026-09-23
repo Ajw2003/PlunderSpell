@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+<defs>
+<pattern id="grid" width="55" height="55" patternUnits="userSpaceOnUse" x="0" y="690"><path d="M55 0 H0 V55" fill="none" stroke="#262119" stroke-width="1"/></pattern>
+<radialGradient id="glow" cx="30%" cy="70%" r="60%"><stop offset="0" stop-color="#2A2012" stop-opacity=".9"/><stop offset="1" stop-color="#14120E" stop-opacity="0"/></radialGradient>
+<linearGradient id="calf" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3A2618"/><stop offset="0.4" stop-color="#6E4A30"/><stop offset="0.7" stop-color="#5A3A26"/><stop offset="1" stop-color="#2E1E12"/></linearGradient>
+<linearGradient id="calfT" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7A5236"/><stop offset="1" stop-color="#4A3020"/></linearGradient>
+<linearGradient id="pages" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B9AD8E"/><stop offset="0.5" stop-color="#D8CCAE"/><stop offset="1" stop-color="#A89C7E"/></linearGradient>
+<linearGradient id="ironV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6A6B6B"/><stop offset="0.4" stop-color="#2E2F31"/><stop offset="1" stop-color="#131416"/></linearGradient>
+<radialGradient id="boss" cx="0.35" cy="0.3" r="0.7"><stop offset="0" stop-color="#7C7D7C"/><stop offset="0.4" stop-color="#2E2F31"/><stop offset="1" stop-color="#0E0F10"/></radialGradient>
+<linearGradient id="wax" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5A2418"/><stop offset="0.5" stop-color="#8A3A2A"/><stop offset="1" stop-color="#4A1C12"/></linearGradient>
+</defs>
+<rect width="1200" height="800" fill="#14120E"/>
+<rect width="1200" height="800" fill="url(#glow)"/>
+<rect x="0" y="120" width="1200" height="570" fill="url(#grid)"/>
+<line x1="40" y1="690" x2="1160" y2="690" stroke="#635C4C" stroke-width="1.5"/>
+<rect x="12" y="12" width="1176" height="776" fill="none" stroke="#332D22" stroke-width="1"/>
+<text x="40" y="54" font-family="Overpass Mono, monospace" font-size="12" letter-spacing="3" fill="#635C4C">THE LATE MEDIEVAL · PLUNDER · 140 COIN · 1.5 ST</text>
+<text x="40" y="96" font-family="Eczar, Georgia, serif" font-size="38" font-weight="700" fill="#DCD2BA">Banker's Ledger</text>
+<text x="1160" y="54" text-anchor="end" font-family="Overpass Mono, monospace" font-size="12" fill="#9A9078">0.30 × 0.22 × 0.09 m (+ 0.60 m chain) · ≤ 1.5k tris · 1024²</text>
+<text x="1160" y="76" text-anchor="end" font-family="Overpass Mono, monospace" font-size="12" fill="#9A9078">hero 1 m = 1000 px · ortho 1 m = 560 px</text>
+<g font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078"><rect x="40" y="704" width="50.0" height="6" fill="#9A9078"/><rect x="90.0" y="704" width="50.0" height="6" fill="none" stroke="#9A9078"/><text x="150.0" y="711">0.1 m = 100 px (hero) · 56 px (ortho)</text></g><text x="380" y="730" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="11" letter-spacing="3" fill="#635C4C">THREE-QUARTER</text><text x="800" y="730" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="11" letter-spacing="3" fill="#635C4C">FRONT</text><text x="1030" y="730" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="11" letter-spacing="3" fill="#635C4C">SIDE</text>
+<g id="drawing">
+<ellipse cx="445.4" cy="572.0" rx="250" ry="50" fill="#0B0A08" opacity=".65"/>
+<ellipse cx="363.6" cy="444.0" rx="10" ry="5.5" fill="none" stroke="#2E2F31" stroke-width="3.2" transform="rotate(85.2 363.6 444.0)"/><ellipse cx="363.6" cy="444.0" rx="10" ry="5.5" fill="none" stroke="#6A6B6B" stroke-width=".8" transform="rotate(85.2 363.6 444.0)"/>
+<rect x="363.3" y="455.7" width="4" height="18" rx="2" fill="#2E2F31" stroke="#0E0F10" transform="rotate(85.2 365.3 464.7)"/>
+<ellipse cx="367.1" cy="485.3" rx="10" ry="5.5" fill="none" stroke="#2E2F31" stroke-width="3.2" transform="rotate(85.2 367.1 485.3)"/><ellipse cx="367.1" cy="485.3" rx="10" ry="5.5" fill="none" stroke="#6A6B6B" stroke-width=".8" transform="rotate(85.2 367.1 485.3)"/>
+<rect x="366.8" y="497.0" width="4" height="18" rx="2" fill="#2E2F31" stroke="#0E0F10" transform="rotate(-160.0 368.8 506.0)"/>
+<ellipse cx="352.3" cy="500.0" rx="10" ry="5.5" fill="none" stroke="#2E2F31" stroke-width="3.2" transform="rotate(-160.0 352.3 500.0)"/><ellipse cx="352.3" cy="500.0" rx="10" ry="5.5" fill="none" stroke="#6A6B6B" stroke-width=".8" transform="rotate(-160.0 352.3 500.0)"/>
+<rect x="333.8" y="485.0" width="4" height="18" rx="2" fill="#2E2F31" stroke="#0E0F10" transform="rotate(168.2 335.8 494.0)"/>
+<ellipse cx="316.7" cy="498.0" rx="10" ry="5.5" fill="none" stroke="#2E2F31" stroke-width="3.2" transform="rotate(168.2 316.7 498.0)"/><ellipse cx="316.7" cy="498.0" rx="10" ry="5.5" fill="none" stroke="#6A6B6B" stroke-width=".8" transform="rotate(168.2 316.7 498.0)"/>
+<rect x="295.6" y="493.0" width="4" height="18" rx="2" fill="#2E2F31" stroke="#0E0F10" transform="rotate(168.2 297.6 502.0)"/>
+<ellipse cx="278.5" cy="506.0" rx="10" ry="5.5" fill="none" stroke="#2E2F31" stroke-width="3.2" transform="rotate(168.2 278.5 506.0)"/><ellipse cx="278.5" cy="506.0" rx="10" ry="5.5" fill="none" stroke="#6A6B6B" stroke-width=".8" transform="rotate(168.2 278.5 506.0)"/>
+<rect x="257.4" y="501.0" width="4" height="18" rx="2" fill="#2E2F31" stroke="#0E0F10" transform="rotate(157.0 259.4 510.0)"/>
+<ellipse cx="240.5" cy="518.0" rx="10" ry="5.5" fill="none" stroke="#2E2F31" stroke-width="3.2" transform="rotate(157.0 240.5 518.0)"/><ellipse cx="240.5" cy="518.0" rx="10" ry="5.5" fill="none" stroke="#6A6B6B" stroke-width=".8" transform="rotate(157.0 240.5 518.0)"/>
+<rect x="219.7" y="517.0" width="4" height="18" rx="2" fill="#2E2F31" stroke="#0E0F10" transform="rotate(157.0 221.7 526.0)"/>
+<ellipse cx="202.8" cy="534.0" rx="10" ry="5.5" fill="none" stroke="#2E2F31" stroke-width="3.2" transform="rotate(157.0 202.8 534.0)"/><ellipse cx="202.8" cy="534.0" rx="10" ry="5.5" fill="none" stroke="#6A6B6B" stroke-width=".8" transform="rotate(157.0 202.8 534.0)"/>
+<rect x="182.0" y="533.0" width="4" height="18" rx="2" fill="#2E2F31" stroke="#0E0F10" transform="rotate(142.0 184.0 542.0)"/>
+<ellipse cx="170.3" cy="552.7" rx="10" ry="5.5" fill="none" stroke="#2E2F31" stroke-width="3.2" transform="rotate(142.0 170.3 552.7)"/><ellipse cx="170.3" cy="552.7" rx="10" ry="5.5" fill="none" stroke="#6A6B6B" stroke-width=".8" transform="rotate(142.0 170.3 552.7)"/>
+<rect x="154.7" y="554.3" width="4" height="18" rx="2" fill="#2E2F31" stroke="#0E0F10" transform="rotate(142.0 156.7 563.3)"/>
+<ellipse cx="143.0" cy="574.0" rx="10" ry="5.5" fill="none" stroke="#2E2F31" stroke-width="3.2" transform="rotate(96.7 143.0 574.0)"/><ellipse cx="143.0" cy="574.0" rx="10" ry="5.5" fill="none" stroke="#6A6B6B" stroke-width=".8" transform="rotate(96.7 143.0 574.0)"/>
+<rect x="139.6" y="577.0" width="4" height="18" rx="2" fill="#2E2F31" stroke="#0E0F10" transform="rotate(96.7 141.6 586.0)"/>
+<path d="M 136.2 598.0 L 162.2 602.0 L 166.2 592.0 L 170.2 608.0 L 144.2 606.0 Z" fill="url(#ironV)" stroke="#0E0F10"/>
+<path d="M 162.2 602.0 L 174.2 596.0 L 176.2 604.0" fill="#6B4F33" stroke="#3A2A1A"/>
+<path d="M 231.0 610.0 L 489.0 610.0 L 489.0 598.0 L 231.0 598.0 Z" fill="url(#calf)" stroke="#14120E" stroke-width="0.9" />
+<path d="M 489.0 610.0 L 625.4 522.0 L 625.4 510.0 L 489.0 598.0 Z" fill="#2E1E12" stroke="#14120E" stroke-width="0.9" />
+<path d="M 239.9 595.6 L 487.6 595.6 L 487.6 529.6 L 239.9 529.6 Z" fill="url(#pages)" stroke="#14120E" stroke-width="0.9" />
+<path d="M 487.6 595.6 L 616.5 512.4 L 616.5 446.4 L 487.6 529.6 Z" fill="#B9AD8E" stroke="#14120E" stroke-width="0.9" />
+<path d="M 239.9 590.9 L 487.6 590.9" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 590.9 L 616.5 507.7" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 586.2 L 487.6 586.2" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 586.2 L 616.5 503.0" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 581.5 L 487.6 581.5" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 581.5 L 616.5 498.3" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 576.7 L 487.6 576.7" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 576.7 L 616.5 493.5" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 572.0 L 487.6 572.0" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 572.0 L 616.5 488.8" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 567.3 L 487.6 567.3" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 567.3 L 616.5 484.1" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 562.6 L 487.6 562.6" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 562.6 L 616.5 479.4" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 557.9 L 487.6 557.9" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 557.9 L 616.5 474.7" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 553.2 L 487.6 553.2" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 553.2 L 616.5 470.0" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 548.5 L 487.6 548.5" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 548.5 L 616.5 465.3" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 543.7 L 487.6 543.7" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 543.7 L 616.5 460.5" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 539.0 L 487.6 539.0" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 539.0 L 616.5 455.8" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 239.9 534.3 L 487.6 534.3" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 487.6 534.3 L 616.5 451.1" stroke="#8F8468" stroke-width=".5"/>
+<path d="M 231.0 532.0 L 489.0 532.0 L 489.0 520.0 L 231.0 520.0 Z" fill="url(#calf)" stroke="#14120E" stroke-width="0.9" />
+<path d="M 489.0 532.0 L 625.4 444.0 L 625.4 432.0 L 489.0 520.0 Z" fill="#2E1E12" stroke="#14120E" stroke-width="0.9" />
+<path d="M 231.0 520.0 L 489.0 520.0 L 625.4 432.0 L 367.4 432.0 Z" fill="url(#calfT)" stroke="#14120E" stroke-width="1.1" />
+<path d="M 260.6 512.0 L 484.2 512.0 L 595.8 440.0 L 372.2 440.0 Z" fill="none" stroke="#2E1E12" stroke-width="0.9" />
+<path d="M 263.6 511.2 L 483.7 511.2 L 592.8 440.8 L 372.7 440.8 Z" fill="none" stroke="#8A6446" stroke-width="0.5" />
+<path d="M 282.8 506.0 L 480.6 506.0 L 573.6 446.0 L 375.8 446.0 Z" fill="none" stroke="#2E1E12" stroke-width="0.9" />
+<path d="M 285.8 505.2 L 480.1 505.2 L 570.6 446.8 L 376.3 446.8 Z" fill="none" stroke="#8A6446" stroke-width="0.5" />
+<path d="M 282.8 506.0 L 573.6 446.0" stroke="#2E1E12" stroke-width=".8"/>
+<path d="M 480.6 506.0 L 375.8 446.0" stroke="#2E1E12" stroke-width=".8"/>
+<ellipse cx="275.4" cy="508.0" rx="11" ry="7" fill="url(#boss)" stroke="#0E0F10"/>
+<ellipse cx="481.8" cy="508.0" rx="11" ry="7" fill="url(#boss)" stroke="#0E0F10"/>
+<ellipse cx="581.0" cy="444.0" rx="11" ry="7" fill="url(#boss)" stroke="#0E0F10"/>
+<ellipse cx="374.6" cy="444.0" rx="11" ry="7" fill="url(#boss)" stroke="#0E0F10"/>
+<ellipse cx="428.2" cy="476.0" rx="11" ry="7" fill="url(#boss)" stroke="#0E0F10"/>
+<path d="M 403.8 464.0 L 489.8 464.0 L 508.4 452.0 L 422.4 452.0 Z" fill="#D8CCAE" stroke="#6E6656" stroke-width="0.6" />
+<path d="M 417.4 460.8 L 477.6 460.8" stroke="#3A3024" stroke-width=".9"/>
+<path d="M 421.7 458.0 L 473.3 458.0" stroke="#3A3024" stroke-width=".9"/>
+<path d="M 426.0 455.2 L 469.0 455.2" stroke="#3A3024" stroke-width=".9"/>
+<rect x="356.6" y="435.0" width="14" height="8" fill="url(#ironV)" stroke="#0E0F10"/>
+<path d="M 302.6 506.0 L 323.2 506.0 L 301.5 520.0 L 280.9 520.0 Z" fill="#5A3A26" stroke="#14120E" stroke-width="0.9" />
+<path d="M 280.9 520.0 L 301.5 520.0 L 299.7 579.7 L 279.0 579.7 Z" fill="url(#ironV)" stroke="#14120E" stroke-width="0.9" />
+<circle cx="291.2" cy="592.0" r="3" fill="#2E2F31" stroke="#0E0F10"/>
+<path d="M 440.2 506.0 L 460.8 506.0 L 439.1 520.0 L 418.5 520.0 Z" fill="#5A3A26" stroke="#14120E" stroke-width="0.9" />
+<path d="M 418.5 520.0 L 439.1 520.0 L 437.3 579.7 L 416.6 579.7 Z" fill="url(#ironV)" stroke="#14120E" stroke-width="0.9" />
+<circle cx="428.8" cy="592.0" r="3" fill="#2E2F31" stroke="#0E0F10"/>
+<path d="M 307.8 558.1 L 368.0 558.1 L 345.7 572.5 L 285.5 572.5 Z" fill="#E4DCC6" stroke="#8F8468" stroke-width="0.7" />
+<path d="M 315.6 572.5 L 312.6 598.5" stroke="#D8CCAE" stroke-width="3"/>
+<circle cx="312.6" cy="604.5" r="8" fill="url(#wax)" stroke="#3A160E"/><circle cx="312.6" cy="604.5" r="4" fill="none" stroke="#5A2418" stroke-width="1.2"/>
+<path d="M 428.2 558.1 L 471.2 558.1 L 448.9 572.5 L 405.9 572.5 Z" fill="#E4DCC6" stroke="#8F8468" stroke-width="0.7" />
+<path d="M 427.4 572.5 L 424.4 598.5" stroke="#D8CCAE" stroke-width="3"/>
+<circle cx="424.4" cy="604.5" r="8" fill="url(#wax)" stroke="#3A160E"/><circle cx="424.4" cy="604.5" r="4" fill="none" stroke="#5A2418" stroke-width="1.2"/>
+<g fill="#2E1E12" opacity="0.5"><ellipse cx="413.6" cy="457.4" rx="1.2" ry="1.1"/><ellipse cx="233.5" cy="466.2" rx="2.3" ry="1.1"/><ellipse cx="449.6" cy="473.9" rx="1.1" ry="0.7"/><ellipse cx="508.5" cy="462.7" rx="2.1" ry="1.0"/><ellipse cx="324.9" cy="439.5" rx="1.8" ry="1.7"/><ellipse cx="463.9" cy="484.6" rx="1.6" ry="1.3"/><ellipse cx="271.1" cy="451.8" rx="2.0" ry="1.7"/><ellipse cx="397.3" cy="438.0" rx="1.4" ry="0.7"/><ellipse cx="341.9" cy="487.0" rx="1.3" ry="1.2"/><ellipse cx="577.8" cy="435.7" rx="1.6" ry="1.1"/><ellipse cx="240.3" cy="460.9" rx="2.4" ry="1.1"/><ellipse cx="466.4" cy="440.2" rx="1.9" ry="1.8"/><ellipse cx="311.1" cy="432.6" rx="1.1" ry="0.8"/><ellipse cx="237.9" cy="437.8" rx="1.7" ry="1.7"/><ellipse cx="396.7" cy="459.1" rx="2.0" ry="0.9"/><ellipse cx="459.7" cy="443.7" rx="1.9" ry="1.9"/><ellipse cx="252.4" cy="469.7" rx="1.9" ry="0.9"/><ellipse cx="336.8" cy="499.7" rx="2.5" ry="1.2"/><ellipse cx="509.2" cy="496.7" rx="1.4" ry="1.0"/><ellipse cx="248.0" cy="456.9" rx="2.0" ry="1.5"/><ellipse cx="536.5" cy="437.9" rx="1.5" ry="1.4"/><ellipse cx="461.4" cy="462.7" rx="1.6" ry="1.6"/><ellipse cx="457.6" cy="433.2" rx="2.2" ry="1.3"/><ellipse cx="402.0" cy="446.5" rx="1.7" ry="1.0"/><ellipse cx="266.0" cy="474.8" rx="1.2" ry="1.0"/><ellipse cx="241.0" cy="485.1" rx="2.2" ry="1.5"/><ellipse cx="510.8" cy="448.9" rx="2.1" ry="1.4"/><ellipse cx="322.1" cy="497.6" rx="1.6" ry="1.0"/><ellipse cx="570.1" cy="457.1" rx="2.0" ry="1.0"/><ellipse cx="563.6" cy="449.6" rx="1.1" ry="1.1"/><ellipse cx="299.1" cy="496.4" rx="2.5" ry="1.9"/><ellipse cx="235.7" cy="436.1" rx="1.3" ry="0.8"/><ellipse cx="472.2" cy="497.7" rx="1.5" ry="0.7"/><ellipse cx="452.6" cy="441.3" rx="1.1" ry="0.8"/><ellipse cx="505.5" cy="436.5" rx="1.7" ry="1.4"/><ellipse cx="532.4" cy="458.0" rx="2.3" ry="1.2"/><ellipse cx="513.2" cy="484.5" rx="2.3" ry="1.6"/><ellipse cx="270.1" cy="435.3" rx="1.8" ry="0.9"/><ellipse cx="479.3" cy="437.7" rx="2.2" ry="1.2"/><ellipse cx="236.1" cy="444.0" rx="1.7" ry="1.2"/></g>
+<path d="M 716.0 690.0 L 884.0 690.0 L 884.0 683.3 L 716.0 683.3 Z" fill="url(#calf)" stroke="#14120E" stroke-width="0.8" />
+<path d="M 719.4 683.3 L 880.6 683.3 L 880.6 646.3 L 719.4 646.3 Z" fill="url(#pages)" stroke="#14120E" stroke-width="0.6" />
+<path d="M 716.0 646.3 L 884.0 646.3 L 884.0 639.6 L 716.0 639.6 Z" fill="url(#calf)" stroke="#14120E" stroke-width="0.8" />
+<path d="M 748.5 639.6 L 761.9 639.6 L 761.9 672.4 L 748.5 672.4 Z" fill="url(#ironV)" stroke="#0E0F10" stroke-width="0.6" />
+<path d="M 838.1 639.6 L 851.5 639.6 L 851.5 672.4 L 838.1 672.4 Z" fill="url(#ironV)" stroke="#0E0F10" stroke-width="0.6" />
+<path d="M 719.4 679.6 L 880.6 679.6" fill="none" stroke="#8F8468" stroke-width="0.5" />
+<path d="M 719.4 675.9 L 880.6 675.9" fill="none" stroke="#8F8468" stroke-width="0.5" />
+<path d="M 719.4 672.2 L 880.6 672.2" fill="none" stroke="#8F8468" stroke-width="0.5" />
+<path d="M 719.4 668.5 L 880.6 668.5" fill="none" stroke="#8F8468" stroke-width="0.5" />
+<path d="M 719.4 664.8 L 880.6 664.8" fill="none" stroke="#8F8468" stroke-width="0.5" />
+<path d="M 719.4 661.1 L 880.6 661.1" fill="none" stroke="#8F8468" stroke-width="0.5" />
+<path d="M 719.4 657.4 L 880.6 657.4" fill="none" stroke="#8F8468" stroke-width="0.5" />
+<path d="M 719.4 653.7 L 880.6 653.7" fill="none" stroke="#8F8468" stroke-width="0.5" />
+<path d="M 719.4 650.0 L 880.6 650.0" fill="none" stroke="#8F8468" stroke-width="0.5" />
+<path d="M 968.4 690.0 L 1091.6 690.0 L 1091.6 683.3 L 968.4 683.3 Z" fill="url(#calf)" stroke="#14120E" stroke-width="0.8" />
+<path d="M 971.8 683.3 L 1088.2 683.3 L 1088.2 646.3 L 971.8 646.3 Z" fill="url(#pages)" stroke="#14120E" stroke-width="0.6" />
+<path d="M 968.4 646.3 L 1091.6 646.3 L 1091.6 639.6 L 968.4 639.6 Z" fill="url(#calf)" stroke="#14120E" stroke-width="0.8" />
+<path d="M 960.0 650.8 C 956.1 645.2 956.1 677.7 960.0 683.3 L 968.4 683.3 L 968.4 650.8 Z" fill="#5A3A26" stroke="#14120E" stroke-width="0.6" />
+</g>
+<g id="callouts" font-family="Overpass Mono, monospace">
+<text x="800.0" y="629.6" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078" >0.30 m</text>
+<text x="1030.0" y="629.6" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078" >0.22 m · spine left</text>
+<circle cx="428.2" cy="476.0" r="7" fill="none" stroke="#5FA288" stroke-width="2"/><circle cx="428.2" cy="476.0" r="2.2" fill="#5FA288"/><text x="444.2" y="500.0" font-family="Overpass Mono, monospace" font-size="10" letter-spacing="1.5" fill="#5FA288">GRAB · one hand</text>
+<text x="40.0" y="150.0" font-family="Overpass Mono, monospace" font-size="10.5" fill="#C4542E" letter-spacing="1">UNBREAKABLE (999) · IGNIS RUINS IT: CHARRED LEDGER = 0 COIN, CHAIN DROPS</text>
+<circle cx="374.6" cy="444.0" r="2.6" fill="#DCD2BA"/><polyline points="374.6,444.0 84.0,276.0" fill="none" stroke="#9A9078" stroke-width="0.9"/>
+<text x="90.0" y="280.0" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" >IRON BOSSES</text>
+<text x="90.0" y="294.0" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" >5, blackened, domed</text>
+<circle cx="438.9" cy="458.0" r="2.6" fill="#DCD2BA"/><polyline points="438.9,458.0 294.0,246.0" fill="none" stroke="#9A9078" stroke-width="0.9"/>
+<text x="300.0" y="250.0" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" >PAPER LABEL</text>
+<text x="300.0" y="264.0" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" >“Livre des changes”</text>
+<circle cx="259.4" cy="510.0" r="2.6" fill="#DCD2BA"/><polyline points="259.4,510.0 54.0,396.0" fill="none" stroke="#9A9078" stroke-width="0.9"/>
+<text x="60.0" y="400.0" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" >LIBRARY CHAIN</text>
+<text x="60.0" y="414.0" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" >0.60 m, 22 links</text>
+<circle cx="170.2" cy="606.0" r="2.6" fill="#DCD2BA"/><polyline points="170.2,606.0 54.0,556.0" fill="none" stroke="#9A9078" stroke-width="0.9"/>
+<text x="60.0" y="560.0" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" >WRENCHED STAPLE</text>
+<text x="60.0" y="574.0" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" >desk splinter still on</text>
+<circle cx="495.2" cy="561.0" r="2.6" fill="#DCD2BA"/><polyline points="495.2,561.0 594.0,476.0" fill="none" stroke="#9A9078" stroke-width="0.9"/>
+<text x="600.0" y="480.0" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" >FORE-EDGE</text>
+<text x="600.0" y="494.0" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" >rag paper, 480 leaves</text>
+<circle cx="427.4" cy="572.5" r="2.6" fill="#DCD2BA"/><polyline points="427.4,572.5 594.0,556.0" fill="none" stroke="#9A9078" stroke-width="0.9"/>
+<text x="600.0" y="560.0" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" >LETTERS OF CREDIT</text>
+<text x="600.0" y="574.0" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" >wax-sealed on tags</text>
+<circle cx="428.8" cy="583.0" r="2.6" fill="#DCD2BA"/><polyline points="428.8,583.0 594.0,406.0" fill="none" stroke="#9A9078" stroke-width="0.9"/>
+<text x="600.0" y="410.0" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" >IRON CLASPS</text>
+<text x="600.0" y="424.0" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" >strap + pin, 2</text>
+</g>
+<g id="palette" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078"><rect x="40" y="748" width="34" height="18" fill="#5A3A26" stroke="#332D22" stroke-width=".6"/><text x="80" y="761" font-size="10.0">#5A3A26 calf cover</text><rect x="264" y="748" width="34" height="18" fill="#6B4F33" stroke="#332D22" stroke-width=".6"/><text x="304" y="761" font-size="10.0">#6B4F33 oak boards</text><rect x="488" y="748" width="34" height="18" fill="#D8CCAE" stroke="#332D22" stroke-width=".6"/><text x="528" y="761" font-size="10.0">#D8CCAE rag paper</text><rect x="712" y="748" width="34" height="18" fill="#2E2F31" stroke="#332D22" stroke-width=".6"/><text x="752" y="761" font-size="10.0">#2E2F31 blackened iron</text><rect x="936" y="748" width="34" height="18" fill="#8A3A2A" stroke="#332D22" stroke-width=".6"/><text x="976" y="761" font-size="10.0">#8A3A2A sealing wax</text></g>
+</svg>

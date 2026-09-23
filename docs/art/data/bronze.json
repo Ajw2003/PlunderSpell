@@ -1,0 +1,572 @@
+{
+  "slug": "bronze",
+  "name": "The Bronze Age",
+  "year": "c. 1200 BC",
+  "stratum": "I",
+  "headline": "Citadels of mud-brick and smoke",
+  "intro": "Behold the oldest door in the lair, and the lowest ceiling. Here are citadels of painted plaster and mud-brick piled on stones so vast the later Greeks swore giants set them; here are grain stores, oil stores, and kings who are also gods and will say so at length, by firelight, through a haze of their own hearth-smoke. The household is many, and bravely dressed in linen, and has never in its life seen a crossbow bolt — which you may consider either a mercy or an opportunity. One warning, and I give it freely: everything in this century is dry. The rafters are dry, the oil is dry-stored, the priests carry fire about on poles. Say IGNIS here and mean it modestly.",
+  "palette": [
+    { "name": "Ochre plaster", "hex": "#B7803E", "use": "wall plaster, floors, painted dados" },
+    { "name": "Mud-brick", "hex": "#8A5A3C", "use": "upper walls over stone footings, pithos clay, amphorae" },
+    { "name": "Cast bronze", "hex": "#9B6A38", "use": "weapons, armour, cauldrons, ingots (never orpiment)" },
+    { "name": "Linen", "hex": "#CFC3A2", "use": "tunics, kilts, robes, wrapped hafts" },
+    { "name": "Hearth soot", "hex": "#2B231B", "use": "smoke staining on ceilings, jars, hearths; crevice dirt" },
+    { "name": "Fresco blue", "hex": "#3F6F86", "use": "painted frescoes, faience, hearth bands (never on enemies)" }
+  ],
+
+  "structures": [
+    {
+      "slug": "lion-gate",
+      "name": "The Lion Gate",
+      "zone": "CurtainWall",
+      "footprint": "12 × 12 m, one cell; gate passage runs north–south through the middle",
+      "height_m": 5.2,
+      "summary": "A cyclopean gateway under a corbelled triangle and two carved lions, closing on timber doors.",
+      "description": "The way in, and the citadel's opinion of you, carved in the same stone. Two stretches of cyclopean masonry — blocks so large the later Greeks credited them to one-eyed giants — pinch a passage down to a single pair of timber doors under a lintel of twenty tonnes. Above it the builders left a corbelled triangle to spare the lintel, and filled it with a relief of two lions at a column, which is a king explaining that he owns both the gate and the lions. The doors bar from inside and burn from outside; the walls do neither, and the gate is the only thing in this Age that shrugs at FRANGO.",
+      "build": [
+        "Floor slab: 12.0 × 12.0 × 0.30 m, beaten earth over a 0.60 m wide paved threshold strip of flat limestone slabs (0.8–1.2 m each) running N–S through the gate; two cart-wheel ruts 0.08 m deep, 1.40 m apart.",
+        "Flanking walls: two cyclopean masses, each 4.70 m wide (E–W) × 3.20 m thick × 5.20 m tall above slab, built of 12–18 irregular polygonal blocks per face (0.9–2.2 m across), each block a bevelled box with 3–5 cm chamfered edges; joints packed with small chinking stones (0.10–0.20 m) set 3 cm proud.",
+        "Gate passage: 2.60 m wide clear, 3.74 m tall to the lintel underside (CurtainWall archway rule), 3.20 m deep; jambs are two monoliths 0.90 × 0.70 × 3.74 m, faces dressed flat (conglomerate ashlar), inner edges rounded by 30 years of shoulders — soften to 6 cm radius from 0.9–1.6 m height.",
+        "Lintel: one block 4.40 × 3.20 × 1.00 m, top face slightly cambered (+0.08 m at centre); underside flat with a 0.12 m rebated door-stop along its north edge.",
+        "Relieving triangle: corbelled opening above the lintel, base 3.00 m, apex at 5.20 m (height 1.46 m), built as 5 stepped courses (each stepping in 0.30 m) — then filled with the lion slab.",
+        "Lion relief slab: triangular limestone slab 3.00 m base × 1.46 m tall × 0.60 m thick, carved 0.08–0.12 m relief: central tapered-down Minoan column (0.30 m top dia., 0.20 m base) on a double altar plinth, two rampant lions facing it with forepaws on the plinth; the heads are MISSING (separate dowel holes 0.06 m dia. where bronze heads once fixed) — author heads as a removable 2 × 200-tri detail if a variant is wanted.",
+        "Doors: two leaves, each 1.30 × 3.60 × 0.14 m, vertical planks (0.22 m wide) of oak on 3 horizontal battens inside, bronze-sheathed along the leading edges (0.12 m strip, dome-head nails every 0.10 m); pivot pins top and bottom set into round sockets cut in lintel and threshold (0.10 m dia.).",
+        "Bar: square oak beam 0.16 × 0.16 × 3.20 m sliding into 0.20 m square slots in both jambs, 1.10 m above slab; slot mouths worn and blackened by hands.",
+        "Wall-walk: timber parapet on top of each wall mass — 0.20 m thick mud-brick breastwork 1.10 m high on a 0.30 m plastered string-course, reached by the stair (see sockets); crenels are rounded, not square (0.60 m wide, 0.40 m deep).",
+        "Inner (north) face: plastered with ochre lime plaster from 0 to 2.40 m, then rougher mud-brick above; a painted dado band 0.30 m tall at 1.20 m (fresco blue with haematite-red running spirals, 0.25 m repeat).",
+        "Decals and wear: soot fan above the torch brackets (bronze ring brackets 0.30 m either side of the door at 2.20 m), lichen-grey on the outer (south) upper blocks, cart-scuff at 0.4–0.6 m on both jambs.",
+        "Modularity: walls stop 0.30 m inside the E and W cell edges so an adjoining curtain-wall module butts on flush; the gate passage centreline sits on the cell centreline."
+      ],
+      "sockets": [
+        "Door (gate), N–S through the cell centre: 2.60 × 3.74 m clear (CurtainWall archway), double timber leaves, barred from the north side",
+        "Door, north face of each flanking mass: none — the masses are solid; the passage is the only way through at ground level",
+        "Stair: east mass, inner (north) face — 1.00 m wide stone stair of 17 risers (0.30 m) running west-to-east up to the wall-walk at 5.20 m",
+        "Arrow-loop (sling slot): 4 slots in the parapet over the passage, 0.12 × 0.50 m, splayed to 0.40 m inside, at 5.20 + 0.50 m",
+        "Murder-hole: none (Bronze Age gates are defended from the flanking bastion, not overhead) — the bastion top is open for slingers",
+        "Torch sockets: 2 bronze ring brackets, north face, 2.20 m up, 0.30 m either side of the passage"
+      ],
+      "materials": [
+        { "name": "Cyclopean limestone", "hex": "#8C7F68", "notes": "Rough, matte (roughness 0.9); tiling 2 m; per-block tint variance ±8%; soot in every joint, lichen grey-green only on outer upper blocks — never verdigris-bright." },
+        { "name": "Dressed conglomerate", "hex": "#9A8666", "notes": "Jambs, lintel, relief slab; pebbled albedo at 0.5 m tiling, slightly smoother (0.75) where hands polish it at 0.9–1.6 m." },
+        { "name": "Ochre plaster", "hex": "#B7803E", "notes": "Inner face to 2.40 m; lime-wash streaks, chips to mud-brick along the base and corners; 1 m tiling." },
+        { "name": "Mud-brick", "hex": "#8A5A3C", "notes": "Parapet and upper inner walls; 0.40 × 0.20 m brick module, straw flecks, rain-rounded arrises." },
+        { "name": "Oak door timber", "hex": "#5A3E28", "notes": "Vertical plank grain, 0.22 m planks; soot-darkened at the top 0.5 m; roughness 0.8." },
+        { "name": "Cast bronze", "hex": "#9B6A38", "notes": "Door sheathing, nails, torch rings; warm brown with lighter rub on nail heads and the leading edges; never orpiment." },
+        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Decal fans above torch rings and in block joints; multiply layer." }
+      ],
+      "gameplay": [
+        "The doors are the weak point: IGNIS sets the timber leaves burning in 6 s and they fall off their pivots at 20 s; FRANGO splits the bar (not the stone).",
+        "The cyclopean masses are indestructible — the only structure in the Age FRANGO cannot touch; it chips a chinking stone loose for show.",
+        "Wall-walk slingers over the passage cover the approach; the corbelled triangle is a sightline gap you can throw junk through from the walk.",
+        "The cart-wheel ruts are a physics bump: a two-carrier load dragged through the gate bounces and may drop.",
+        "The lion slab can be pried out with 3 FRANGO hits and falls inward as a 1.6 t crushing prop (kills anything under it)."
+      ],
+      "budget": "≤ 25k tris for the cell (walls 12k, doors 2.5k, relief slab 4k, parapet 4k, clutter 2.5k); cyclopean tiling set 2048², trim sheet 2048² for jamb/lintel/doors.",
+      "concept": "concept/bronze/lion-gate.svg"
+    },
+    {
+      "slug": "megaron-hall",
+      "name": "The Megaron",
+      "zone": "Keep",
+      "footprint": "12 × 12 m, one cell; hall 10.4 × 10.4 m inside, porch on the south",
+      "height_m": 4.6,
+      "summary": "The king's hall: a painted circular hearth, four columns, a throne, and a hole in the roof for the smoke to find its own way out.",
+      "description": "Here is where a god-king sits to be warm and important. A great round hearth fills the middle of the floor, painted in rings of flame and running spiral; four red-painted columns of cypress hold up a roof of reed and clay, with a lantern-hole above the fire where the smoke leaves, eventually. The walls are frescoed with griffins, processions and the king's opinion of himself; the throne is plastered into the east wall so nobody can steal it, which is a challenge. Low, warm, soot-darkened and full of things that burn: the finest room in the Age and the easiest to lose.",
+      "build": [
+        "Floor slab: 12.0 × 12.0 × 0.30 m; top surface painted plaster in a 1.00 m grid of squares, each square painted with a faded octopus/dolphin motif (albedo only, not geometry); floor worn to bare lime in a path from south door to throne.",
+        "Walls: 0.80 m thick rubble core with mud-brick upper; interior clear 10.40 × 10.40 m; clear height 4.60 m to the underside of the ceiling beams; timber-laced — horizontal half-timber beams 0.20 × 0.20 m let into the plaster at 1.20 m and 3.40 m.",
+        "Central hearth: circular, 3.60 m diameter × 0.20 m raised clay rim, 0.30 m wide rim top; rim painted with a flame band (madder tongues on ochre, 0.30 m repeat) and a fresco-blue running spiral on the outer face; firebox dished 0.12 m deep, full of ash (#2B231B) and 4 cooled logs.",
+        "Columns: four, set on a 5.00 m square around the hearth; each tapered DOWN (Minoan): 0.46 m dia. at top, 0.34 m at base, 3.80 m shaft; cushion capital 0.70 m dia. × 0.36 m (echinus + square abacus 0.70 × 0.70 × 0.10 m); base a flat stone disc 0.60 m dia. × 0.10 m. Shaft painted haematite red, capital and base black; soot heaviest on the hearth-facing side.",
+        "Roof: four main beams 0.30 × 0.30 m running E–W at 4.60 m, carried on the column abaci and the walls; joists 0.12 m round poles at 0.40 m centres; reed matting and clay above (underside only in the cell — the roof is a separate tile).",
+        "Smoke-hole (lantern): 2.00 × 2.00 m opening over the hearth between the four columns, framed by a 0.30 m timber collar, rising as a 0.80 m clerestory box with louvred sides (the smoke leaves here; the light enters).",
+        "Throne: plastered into the centre of the east wall; gypsum seat 0.90 m wide × 0.60 m deep × 0.46 m high, high back 1.40 m with a wavy (undulating) crest; flanked by painted griffins couchant on the wall, 1.80 m long each, fresco on plaster.",
+        "Frescoes: continuous band 1.20–3.20 m on all walls (processions, griffins, running spirals at top and bottom borders); 0.40 m dado of imitation veined stone below; paint is flat and chalky (roughness 0.95), cracked and flaking in a 3 × 1 m patch near the south door.",
+        "Benches: plastered clay benches 0.40 m high × 0.50 m deep along the north and south walls, 6.0 m long each.",
+        "Porch (prodomos): the south 1.60 m of the cell outside the hall wall — two further columns in antis, same profile, flanking the door.",
+        "Clutter: 2 bronze tripod stands by the hearth (see items), 3 painted offering tables (0.60 m square), fleeces on the benches, a libation channel 0.08 m wide cut in the floor from hearth to throne."
+      ],
+      "sockets": [
+        "Door, south face (main, through the porch): 2.60 × 3.31 m (Keep archway), timber double leaves on pivots",
+        "Door, north face: 2.60 × 3.31 m archway, hung with a heavy wool curtain rather than doors (burns in 3 s)",
+        "Door, west face: 2.60 × 3.31 m archway to the store rooms",
+        "East face: no door — the throne wall; the archway rule is satisfied by a blind 2.60 × 3.31 m recess behind the throne holding a secret niche (1.00 × 0.60 × 1.20 m)",
+        "Window: 2 clerestory slots, north and south walls, 1.20 × 0.40 m at 3.90 m (light and smoke only, not climbable)",
+        "Smoke-hole: 2.00 × 2.00 m roof opening over the hearth — a vertical socket to the roof tile above"
+      ],
+      "materials": [
+        { "name": "Painted lime plaster", "hex": "#C9A77A", "notes": "Fresco ground; chalky, roughness 0.95; 1 m tiling for plain areas, frescoes as unique 4 × 2 m decals; crazing and flake-offs to mud-brick near doors." },
+        { "name": "Fresco blue", "hex": "#3F6F86", "notes": "Spirals, griffin wings, hearth outer band; flat chalky pigment, never glossy; muted by soot on the upper third." },
+        { "name": "Haematite red", "hex": "#8E3F2C", "notes": "Column shafts and fresco grounds; darker and browner than madder; soot-rubbed on the hearth side." },
+        { "name": "Hearth madder", "hex": "#C4542E", "notes": "Only the painted flame tongues on the hearth rim and live fire itself — the room's danger cue." },
+        { "name": "Cypress timber", "hex": "#5A3E28", "notes": "Beams, joists, lantern collar; heavily soot-blackened (blend to #2B231B toward the smoke-hole)." },
+        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Ceiling, beam undersides, column hearth-faces; vertical smoke streaks above the lantern, 0.5 m decal set." },
+        { "name": "Gypsum", "hex": "#D8CDB2", "notes": "Throne, column bases, threshold; smooth (0.6), hand-polished on the throne arms." }
+      ],
+      "gameplay": [
+        "Fire hazard: the hearth is always lit (point light, flicker 0.2 Hz); IGNIS anywhere in the room spreads to the ceiling beams within 8 s and the whole roof underside burns in 30 s — then smoke fills from the top down, 0.10 m/s.",
+        "The four columns are FRANGO-breakable (3 hits each); lose two on one side and that roof quarter drops, blocking an archway with burning debris.",
+        "The throne's secret niche holds the Age's artifact spawn (gold death-mask or faience); prying it is loud (alerts the hall).",
+        "The wool curtain on the north archway blocks line of sight but not bodies; set it alight to cut off pursuit for 12 s.",
+        "Low for a Keep and full of smoke once burning: thrown loot arcs clip the 4.60 m beams."
+      ],
+      "budget": "≤ 25k tris for the cell (walls + frescoes 8k, columns 4 × 1.2k, hearth 2k, throne 1.5k, roof underside 5k, clutter 3.7k); fresco decal atlas 4096² shared across the Age, plaster tiling 2048², timber trim 2048².",
+      "concept": "concept/bronze/megaron-hall.svg"
+    },
+    {
+      "slug": "pithos-store",
+      "name": "The Pithos Magazine",
+      "zone": "InnerWard",
+      "footprint": "12 × 12 m, one cell; three long aisles N–S between four rows of jars",
+      "height_m": 4.0,
+      "summary": "Rows of man-high storage jars — grain on one side, olive oil on the other — and aisles too narrow to turn in.",
+      "description": "The wealth of the palace in its plainest form: grain and oil, by the tonne, in jars taller than you are. The pithoi stand half-sunk in the floor in four rows, each one tattooed with rope-pattern bands and a scribe's mark of what it holds and whose it is. The aisles are narrow enough that a man with a tower shield must walk them sideways. Grain burns. Oil burns better. A lit fire-pot through that door turns the magazine into the brightest room in the century for a good eleven minutes.",
+      "build": [
+        "Floor slab: 12.0 × 12.0 × 0.30 m, beaten clay floor; 44 circular jar pits cut 0.40 m deep into a raised 0.30 m clay bench along each row (so jars stand 0.70 m 'sunk').",
+        "Walls: 0.70 m rubble and mud-brick, plastered plain ochre, clear height 4.00 m; timber lacing beams 0.18 × 0.18 m at 1.00 m and 2.60 m; no frescoes — scratched tally marks and painted jar-row numbers (Linear-B-like signs, 0.20 m tall, haematite red) at 1.80 m.",
+        "Aisles: three N–S aisles, each 1.20 m clear between jar bellies (0.90 m at the narrowest where two bellies face) — deliberately tight; one E–W cross-aisle 1.60 m wide at the cell centre.",
+        "Pithoi (grain, west two rows): 22 jars, ovoid, 1.60 m tall above floor (2.00 m total, 0.40 m buried), max belly 1.10 m dia. at 1.00 m height, mouth 0.50 m dia. with a 0.08 m rolled rim; 4 applied rope-pattern bands (0.06 m wide ridges) at 0.40/0.80/1.20/1.50 m; 6 vertical lug handles on the shoulder.",
+        "Pithoi (oil, east two rows): 22 jars, same body but shorter (1.40 m above floor), darker clay, black oil drip stains down one side from the rim, a stone lid disc 0.56 m dia. × 0.06 m; 3 carry distinct 'OIL' scribe signs in the albedo.",
+        "Jar variety: author 3 pithos meshes (tall, squat, cracked-and-bound with lead clamps) and 2 rim variants; rotate every instance randomly ±180° about vertical.",
+        "Ceiling: 0.24 m round-pole joists at 0.50 m centres under a clay roof; two 0.60 m square vent holes near the north wall.",
+        "Ladders and scaffold: 2 timber step-ladders (2.00 m, 7 rungs) left against jars for ladling; ladle and scoop props on the rims.",
+        "Scale-pans and scribe's bench: a clay bench 1.80 × 0.60 × 0.80 m at the south end with 12 unfired clay tablets (0.12 × 0.07 × 0.02 m) and a bronze balance.",
+        "Spillage decals: grain drifts at jar feet (west), black oil pools 0.4–1.2 m wide (east) — the oil pools are gameplay-flammable decals, author them as separate meshes 2 tris each."
+      ],
+      "sockets": [
+        "Door, south face: 2.60 × 2.88 m (InnerWard archway), single timber leaf, often propped",
+        "Door, north face: 2.60 × 2.88 m archway into the next magazine",
+        "Door, east and west faces: 2.60 × 2.88 m archways, but each is choked by an end jar — the archway is full-size, a pithos stands 0.60 m inside it and must be broken or rolled",
+        "Window: 2 vent holes in the ceiling, 0.60 × 0.60 m (smoke escape; not climbable)",
+        "Stair: none — the magazine is a ground-floor room",
+        "Hide spots: 8 marked gaps (0.70 m) between jars where a player can crouch out of an aisle's sight line"
+      ],
+      "materials": [
+        { "name": "Pithos terracotta", "hex": "#A0603E", "notes": "Jar bodies; coarse fired clay, roughness 0.9, 0.5 m tiling with rope-band trim; darker fire-cloud blotches; chipped rims showing pale core." },
+        { "name": "Oil-soaked clay", "hex": "#6A4430", "notes": "East-row jars; darker, faintly satin (0.6) where oil has run; black drip decals from rims." },
+        { "name": "Ochre plaster", "hex": "#B7803E", "notes": "Walls; plain, handprints and tally scratches at 1.2–1.9 m." },
+        { "name": "Beaten clay floor", "hex": "#7A5A3E", "notes": "Floor and jar benches; grain drifts and oil pools as decals; 2 m tiling." },
+        { "name": "Grain", "hex": "#C8A868", "notes": "Spilled grain decals and jar-mouth fill; small-scale noise, pale straw, not gold-bright." },
+        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Old oil-lamp soot on the ceiling and upper walls; black oil drips." }
+      ],
+      "gameplay": [
+        "Conflagration: IGNIS on any oil pithos or pool ignites the whole east half in 4 s (burning oil flows downhill along the aisles at 0.6 m/s); the grain rows follow in 15 s; fire lasts ~11 min unless the roof falls in.",
+        "Pithoi are FRANGO-breakable (1 hit): grain jars spill a drift that slows movement 30%; oil jars spill a slick that makes everyone slip on a sprint and is flammable.",
+        "Aisles 0.9–1.2 m force single file: a Dendra Champion must turn sideways (tower shield) and cannot swing his rapier in them — the room is where you fight him.",
+        "Crouch-hides between jars break line of sight; the Keeper of the Flame patrols here and a missed fire-pot is the most likely way the magazine goes up.",
+        "Loot spawns: sealed amphorae stacked at the south bench; oxhide ingots stored in a jar pit under the scribe's bench."
+      ],
+      "budget": "≤ 25k tris for the cell (44 pithoi instanced from 3 meshes at ~350 tris each = 15.4k, walls/floor/benches 5k, ladders/bench/tablets 2.6k, decals 2k); terracotta tiling 2048² with rope-band trim.",
+      "concept": "concept/bronze/pithos-store.svg"
+    }
+  ],
+
+  "enemies": [
+    {
+      "slug": "palace-levy",
+      "name": "Palace Levy",
+      "role": "patrol",
+      "zones": ["CurtainWall", "OuterBailey"],
+      "height_m": 1.70,
+      "summary": "A farmer the king has lent a spear to: linen, a leather cap and a shield the size of a door.",
+      "description": "Consider the palace levy: last week a man who kept goats, this week the first line of a god-king's defences, and in both roles chiefly concerned with his supper. He carries a figure-of-eight oxhide shield that covers him from chin to shin and a thrusting spear nearly half again his height, and he wears a linen tunic and a leather cap and that is all the armour the treasury would stand. There are a great many of him. He is slow to believe you are real, quick to shout once he does, and a crossbow bolt goes through him, his shield and the man behind.",
+      "silhouette": "A huge figure-of-eight shield like a pinched hourglass hiding the whole left side, a tall vertical spear line rising 0.7 m over the head, and a small round-capped head on a thin, bare-armed body.",
+      "build": [
+        "Body: lean labouring build, 1.70 m to the cap crown (1.66 m bare head); shoulders 0.42 m wide, bare forearms and calves, skin tone warm brown with sunburn on the shoulders.",
+        "Cap: boiled-leather skull-cap, hemispherical 0.21 m dia. × 0.12 m, sewn in 6 gores with raised seams, a 0.03 m rolled leather brim and chin-strap; small bronze boss knob 0.03 m on top.",
+        "Tunic: knee-length linen tunic, 0.62 m long from shoulder, short sleeves to mid-bicep, cinched with a 0.05 m leather belt; hem frayed with a 0.03 m haematite-red woven border stripe; sweat stain at the armpits and belt.",
+        "Shield: figure-of-eight oxhide shield 1.30 m tall × 0.72 m wide at the lobes, 0.46 m at the waist; hide stretched over a wicker frame, visible as a raised central spine and two bowed side-bars; dappled hide pattern (dark brown patches on cream), strung from a neck telamon strap 0.05 m wide and a central wooden handgrip.",
+        "Spear: 2.40 m ash shaft, 0.035 m dia., leaf-shaped cast-bronze head 0.26 m long × 0.05 m wide with a midrib and socket, bronze butt-spike 0.08 m; linen wrap at the grip (0.25 m, at 1.05 m up the shaft).",
+        "Sword (sidearm): short bronze dagger 0.38 m in a leather scabbard on a baldric, hilt with bone pommel; purely visual unless disarmed.",
+        "Belt kit: leather water skin (0.20 m ovoid) and a small linen bread bag on the right hip.",
+        "Feet: bare or rawhide sandals with ankle thongs (two variants); knees and shins dusty to 0.30 m.",
+        "Hair: dark, shoulder-length, tied at the nape under the cap; short beard on 50% of variants.",
+        "Wear: shield rim scuffed white, spear-head edge polished brighter bronze, cap scuffed along the brim, tunic soot at hem on CurtainWall variants (torch duty).",
+        "Proportions: slightly long arms and big hands/feet for readability; head 0.23 m tall (about 7.4 heads)."
+      ],
+      "materials": [
+        { "name": "Linen", "hex": "#CFC3A2", "notes": "Tunic; soft cloth, roughness 0.9, 2 cm weave tiling, dirt gradient up from the hem, sweat stains at armpits." },
+        { "name": "Oxhide", "hex": "#B79B78", "notes": "Shield face; cream hide with #4A3526 dappled patches (hand-painted, 0.15–0.30 m), short-hair normal detail, scuffed pale rim." },
+        { "name": "Boiled leather", "hex": "#6B4A2E", "notes": "Cap, belt, straps, scabbard; roughness 0.7, darker at seams, lighter where rubbed." },
+        { "name": "Cast bronze", "hex": "#9B6A38", "notes": "Spear-head, butt-spike, cap boss, dagger; warm brown bronze, brighter polish only on the cutting edge; never orpiment." },
+        { "name": "Ash haft", "hex": "#8A6A48", "notes": "Spear shaft; long grain, darker hand-grease at the grip." },
+        { "name": "Weathered skin", "hex": "#9C6E4E", "notes": "Sun-darkened, stylised painted planes, not photographic; dust on shins." }
+      ],
+      "rig": {
+        "skeleton": "Humanoid (Unity Mecanim) 1.70 m; extra bones: shield_root (child of left forearm, with a telamon_strap chain of 3 bones to the right shoulder), spear_root (right hand prop bone), tunic_hem front/back/left/right (4 short cloth bones off hips), cap (head child, detachable), waterskin (right hip, one jiggle bone).",
+        "animations": [
+          "idle_leaning — 4 s loop, leans on spear, shield rim resting on the ground, weight shifts, yawns once",
+          "patrol_walk — 1.1 s cycle, spear upright at the shoulder, shield slung across the back on the telamon",
+          "alert_turn — 0.6 s, head snaps toward the noise first, body follows, shield swung round to front",
+          "shout_alarm — 1.4 s, spear raised overhead, mouth open, stamps; broadcasts alarm to levies in 12 m",
+          "guard_stance — loop, shield forward, spear over the top of the shield at shoulder height",
+          "thrust — 0.7 s, overhand spear jab over the shield, 1.8 m reach",
+          "shield_bash — 0.8 s, steps in and shoves with the shield lobe",
+          "archway_duck — 0.5 s, dips spear point to horizontal to pass 2.59 m archways",
+          "stagger_hit — 0.5 s, recoils behind the shield",
+          "death_fall — 1.6 s, falls back, shield drops flat and slides",
+          "flee_panic — 0.9 s cycle, shield dropped, spear trailing (triggered when fire or later-Age weapons appear)"
+        ]
+      },
+      "breakables": [
+        "Shield: detachable, 3 states (whole → punctured/torn hide → frame only); dropped whole it is a physics prop (the player's oxhide shield).",
+        "Spear: snaps at the grip under FRANGO or a heavy hit, leaving a 1.1 m stub he keeps jabbing with.",
+        "Cap: pops off on a head hit (physics prop, no loot).",
+        "Water skin: bursts on fire damage, a small steam puff; no loot.",
+        "Drops nothing of value; 1 in 10 carries a copper coin pouch (worth 15)."
+      ],
+      "budget": "≤ 8k tris (body 4.5k, shield 1.2k, spear 0.4k, cap/belt/kit 1.9k), one 2048² set (Albedo, Normal, ORM).",
+      "dont": [
+        "No metal body armour or greaves — he is a levy, and the Dendra Champion must read as the only armoured man.",
+        "No round Greek hoplite shield or crested Corinthian helmet — wrong by 500 years.",
+        "No orpiment on the spear or cap boss; bronze is brown-warm, not gold.",
+        "Don't make him menacing in the face — tired, underfed, alarmed.",
+        "Don't let the spear exceed 2.40 m; it must clear archways in archway_duck."
+      ],
+      "concept": "concept/bronze/palace-levy.svg"
+    },
+    {
+      "slug": "wall-slinger",
+      "name": "Wall Slinger",
+      "role": "ranged",
+      "zones": ["CurtainWall", "InnerWard"],
+      "height_m": 1.66,
+      "summary": "A lightly-dressed youth with a sling and a pouch of river stones; silent, quick, and unkind to helmets.",
+      "description": "The slinger is the Bronze Age's answer to the question 'what if a rock, but faster'. He wears a kilt and a stone-pouch and very little else, and he stands on the wall with a cord in his hand and a lead-shaped stone in the cord, and the first you know of him is a sound like a slammed door on the side of your head. Light, quick, poorly paid and extremely accurate; he will not come down off the wall to meet you, and he runs the moment you arrive where he is.",
+      "silhouette": "A slim bare-chested figure with a long cord and cradle whirling over one shoulder in a loop, a bulging pouch on the hip, a bandana with two tails at the back of the head, and bare legs under a short wrapped kilt.",
+      "build": [
+        "Body: lean, wiry, youthful, 1.66 m to the crown of the bandana; shoulders 0.40 m; long throwing arm (right) with a leather bracer.",
+        "Head: short curly hair tied with a linen bandana, knot at the back with two 0.20 m tails; no helmet.",
+        "Kilt: wrapped linen kilt 0.42 m long from waist, front overlap with a tasselled edge (6 tassels, 0.08 m), haematite-red border stripe 0.04 m; leather belt 0.04 m.",
+        "Upper body: bare chest with a diagonal linen baldric 0.06 m wide over the right shoulder, crossing the chest to carry the second pouch on the left hip.",
+        "Sling: two braided wool cords 0.80 m each, cradle of leather 0.12 × 0.06 m; finger loop on the retained cord; in idle the sling hangs from the right wrist, in attack it whirls — author as a 4-bone chain.",
+        "Stone pouches: main pouch on the right hip, leather bag 0.22 × 0.14 × 0.24 m, bulging with visible stones; baldric pouch on the left hip 0.16 m; 3 loose stones modelled in the pouch mouth.",
+        "Sling bullets: egg-shaped river stones 0.05 m long (and 1 in 4 is a cast-lead bullet, dull grey), separate prop mesh for projectiles.",
+        "Bracer: rawhide wrist guard on the left forearm 0.14 m long, laced.",
+        "Legs and feet: bare legs, rawhide sandals with thongs to mid-calf; knees scuffed.",
+        "Sidearm: a 0.30 m bronze knife in the belt at the back (visual only).",
+        "Wear: kilt dust gradient, stone-dust whitening on the right hand and pouch mouth, sweat sheen on shoulders (spec-mask only)."
+      ],
+      "materials": [
+        { "name": "Linen", "hex": "#CFC3A2", "notes": "Kilt, bandana, baldric; fine weave at 2 cm, dirt-gradient from the hem, pale stone-dust at the right hip." },
+        { "name": "Rawhide", "hex": "#8C6A48", "notes": "Pouches, bracer, sandals, sling cradle; roughness 0.8, stretched shine on the pouch bulges." },
+        { "name": "Braided wool cord", "hex": "#6E5A44", "notes": "Sling cords; twisted-rope normal, 1 cm repeat." },
+        { "name": "River stone", "hex": "#8E8778", "notes": "Sling stones; smooth grey-buff, roughness 0.6." },
+        { "name": "Weathered skin", "hex": "#9C6E4E", "notes": "Bare torso and limbs; sunburnt shoulders; stylised painted planes." },
+        { "name": "Haematite red", "hex": "#8E3F2C", "notes": "Kilt border stripe only; dull earth red, never madder-bright." }
+      ],
+      "rig": {
+        "skeleton": "Humanoid (Unity Mecanim) 1.66 m; extra bones: sling chain (4 bones, parented to right hand, simulated in idle, keyed in attack), bandana_tail ×2, kilt_front / kilt_back cloth bones, pouch_R and pouch_L jiggle bones.",
+        "animations": [
+          "idle_scan — 3 s loop, shading eyes, sling dangling and swaying",
+          "patrol_walk — 1.0 s cycle, quick light steps along the wall-walk",
+          "alert_turn — 0.5 s, head first, drops into a crouch",
+          "reload — 0.9 s, dips into the hip pouch, fits stone to cradle",
+          "sling_windup — 1.2 s, two overhead whirls (cord blur), telegraphs the throw",
+          "sling_release — 0.4 s, underarm-to-overarm release, stone launches at 30 m/s",
+          "strafe_left / strafe_right — 0.8 s cycles, keeps range",
+          "retreat_run — 0.7 s cycle, glances back",
+          "vault_parapet — 0.9 s, hops a 1.10 m parapet or bench one-handed (1.66 m clears every archway without ducking)",
+          "hit_flinch — 0.4 s",
+          "death_fall — 1.4 s, pitches forward, pouch spills stones as physics props"
+        ]
+      },
+      "breakables": [
+        "Sling cord: cut by any bladed hit or IGNIS — he then flees for another sling (disarmed state).",
+        "Hip pouch: bursts on hit, scattering 8–12 stones across the floor (slip hazard for 5 s).",
+        "Bandana: detachable cloth prop.",
+        "Drops nothing of value; the dropped sling is pick-up-able as the player weapon (Bronze sling)."
+      ],
+      "budget": "≤ 8k tris (body 5k, kilt/bandana 0.9k, pouches 0.8k, sling 0.3k, knife/bracer 1k), one 2048² set.",
+      "dont": [
+        "No bow — the Age's ranged threat is the sling, the pitch says so.",
+        "No armour of any kind; he is the most fragile enemy in the game.",
+        "Don't make the sling a bolas or a whip — two cords and a cradle.",
+        "No verdigris or orpiment; bronze knife stays warm brown."
+      ],
+      "concept": "concept/bronze/wall-slinger.svg"
+    },
+    {
+      "slug": "dendra-champion",
+      "name": "Dendra Champion",
+      "role": "heavy",
+      "zones": ["Keep", "InnerWard"],
+      "height_m": 1.92,
+      "summary": "A nobleman sealed in a bronze bell of plates, a boar's-tusk helmet and a rapier as long as your arm and his.",
+      "description": "The king's own champion, bolted into the Dendra panoply: fifteen pieces of hammered bronze in nested rings about his chest and hips, a neck-guard to his ears and a helmet of boar's tusk that took forty boars and one very patient man. He moves like a bell being carried downstairs and he cannot turn quickly, sit, or climb a ladder; but thrown pots and furniture bounce off him like rain off a shield, and his rapier reaches a remarkably long way. Fight him in a narrow place. Better still, fetch something from a later century with a point on it.",
+      "silhouette": "A stack of wide, flaring horizontal bronze bands — a cone on a bell — with huge rounded shoulder-guards, a tall neck collar hiding the chin, a conical helmet striped in pale tusk rows with a tuft on top, and a very long thin sword held low.",
+      "build": [
+        "Body: tall, heavy, 1.92 m including helmet crest knob (1.78 m bare head); rig proportions broad (shoulder span with guards 0.72 m).",
+        "Helmet: boar's-tusk conical helmet, 0.26 m dia. × 0.30 m tall, on a felt cap; 4 rows of tusk plates (each 0.06 × 0.02 m, 12–16 per row, alternating slant direction per row); bronze top knob with a 0.08 m horsehair tuft (dark); cheek-pieces 0.14 m long × 0.08 m, tusk-plated, hinged at the temple.",
+        "Neck guard: tall bronze collar, cylinder 0.26 m dia. × 0.14 m, flaring slightly, rolled top edge, hiding the chin and jaw.",
+        "Cuirass: two-piece bronze shell (front and back plates), each hammered to a bell curve, 0.52 m wide × 0.44 m tall, laced at the sides with leather thongs; incised with 3 horizontal ridge-lines.",
+        "Shoulder guards: two large bronze pauldrons, dome-shaped 0.30 m wide, riveted to the cuirass, curving down over the upper arm.",
+        "Upper-arm guards: small curved plates 0.16 m under the pauldrons (optional LOD1 remove).",
+        "Skirt rings: three nested bronze girdle-bands below the cuirass, each a truncated cone 0.14 m tall, flaring from 0.58 m to 0.76 m diameter; laced to each other with leather through punched holes every 0.06 m; they swing as a bell.",
+        "Lower body: linen tunic visible under the rings to the knee; bronze greaves 0.32 m tall laced behind the calf with wire ties.",
+        "Rapier: long bronze sword, 0.92 m blade (Type A/B Aegean), 0.04 m wide at the hilt tapering to a needle point, strong midrib; horned/cruciform guard 0.12 m; hilt with bone pommel 0.05 m dia. Carried low in the right hand.",
+        "Tower shield (optional variant): rectangular oxhide, 1.40 × 0.70 m, curved about the vertical axis, on a telamon strap; hung on the back in patrol.",
+        "Rivets: dome-head bronze rivets 0.012 m dia. at 0.05 m spacing along every plate edge (normal map + geometry on the top row).",
+        "Wear: every bronze edge brightened by rub, raised dents on the shoulders (normal), soot in the plate overlaps and lacing holes, sweat-dark leather lacing; linen stained at the hem."
+      ],
+      "materials": [
+        { "name": "Hammered bronze plate", "hex": "#8E5E32", "notes": "Cuirass, rings, collar, greaves; warm brown, roughness 0.45, planishing-hammer normal dimples at 1 cm, brighter #B08050 on raised edges and rivet heads, darker in overlaps — never orpiment, never verdigris green." },
+        { "name": "Boar's tusk", "hex": "#D6CCB0", "notes": "Helmet plates; ivory-cream, slightly glossy (0.4), each plate with a darker enamel-line along one edge." },
+        { "name": "Felt and leather", "hex": "#5E4230", "notes": "Helmet base between plates, lacing, straps; roughness 0.8, sweat-darkened." },
+        { "name": "Linen", "hex": "#CFC3A2", "notes": "Tunic below the rings; dust and soot on the hem." },
+        { "name": "Bone and ivory", "hex": "#E0D6BE", "notes": "Sword pommel and grip plates; small, polished." },
+        { "name": "Horsehair", "hex": "#2B231B", "notes": "Helmet tuft; card-strand alpha, 20 strands." }
+      ],
+      "rig": {
+        "skeleton": "Humanoid (Unity Mecanim) 1.92 m, arms with reduced shoulder abduction (max 55°) because of the pauldrons; extra bones: ring_1/ring_2/ring_3 (skirt bands, each a child of hips with damped secondary swing), cheek_L/cheek_R hinges, tuft chain (2), sword prop bone, shield_back socket.",
+        "animations": [
+          "idle_heavy — 5 s loop, breathes shallow in the cuirass, rings settle with a clank",
+          "walk_slow — 1.6 s cycle, stiff-legged, rings swing, 1.1 m/s max",
+          "alert_turn — 1.2 s, turns whole body (cannot twist at the waist), head can't lead",
+          "rapier_lunge — 1.1 s, long thrust with full-body lean, 2.2 m reach",
+          "rapier_cut — 0.9 s, backhand slash (weak, but wide)",
+          "shield_brace — loop, braced behind the tower shield (variant only)",
+          "shrug_impact — 0.4 s, junk bounces off; barely moves (thrown items < 6 st deal no stagger)",
+          "sideways_aisle — 1.8 s cycle, shuffles side-on through aisles < 1.2 m wide, cannot attack while in it",
+          "heavy_stagger — 1.5 s, only from > 6 st impacts, FRANGO or later-Age weapons",
+          "kneel_get_up — 3 s, if knocked down he takes three seconds to stand",
+          "death_topple — 2 s, falls like a bell, plates ring"
+        ]
+      },
+      "breakables": [
+        "Helmet: knocked off by a heavy hit; tusk plates scatter as 6 decals — exposes the head to double damage.",
+        "Shoulder guards: pop off one at a time (FRANGO); each lost guard +20% arm speed.",
+        "Skirt rings: lacing burns (IGNIS) — the lowest ring drops round his ankles and he trips (knockdown 3 s).",
+        "Rapier: bends (not breaks) after 3 blocked hits against later-Age steel — becomes a hooked, slower weapon.",
+        "Loot: none on the body (the bronze is too heavy to scavenge in-raid); drops the sword as a pick-up weapon."
+      ],
+      "budget": "≤ 12k tris (body 4k, cuirass + rings 4k, helmet 1.8k, sword 0.4k, greaves/straps 1.8k), one 2048² set.",
+      "dont": [
+        "No crested Corinthian or Roman helmet — boar's-tusk cone only.",
+        "No gold or orpiment anywhere; the bronze must read as brown-warm metal and nothing on him is stealable.",
+        "No verdigris green on the bronze — patina is soot and rub, not corrosion.",
+        "Don't give him a scale or chain shirt; the plates are few and big.",
+        "Don't let him outrun a player: he is a wall that moves, not a knight."
+      ],
+      "concept": "concept/bronze/dendra-champion.svg"
+    },
+    {
+      "slug": "flame-keeper",
+      "name": "Keeper of the Flame",
+      "role": "special",
+      "zones": ["Keep", "InnerWard", "Crypt"],
+      "height_m": 1.72,
+      "summary": "A temple priestess who carries the palace fire on a yoke of clay pots and throws it at you.",
+      "description": "The keeper tends the god's fire, which in this Age means she carries it about in clay pots slung from a yoke across her shoulders, with a swinging brazier in her other hand for the incense and for emphasis. She is the only person in the palace who is entirely unafraid of you, having been raised to believe she is the fire's servant and you are merely its fuel. When alarmed she unhooks a pot and throws it; it breaks, it spills, it burns, and in a century built of dry timber and oil jars that is the end of the argument. Kill her far from anything you mean to keep.",
+      "silhouette": "A tall flounced tiered skirt like a stepped bell, a horizontal yoke across both shoulders with two round pots swinging from each end on cords, glowing orange pot-mouths, a high flat-topped headdress, and a censer on a chain in one hand.",
+      "build": [
+        "Body: slender, upright, 1.72 m to the top of the headdress (1.60 m bare head); moves with a stately, weighted gait because of the yoke.",
+        "Headdress: flat-topped linen polos (cylindrical crown) 0.18 m dia. × 0.12 m, bound with a fresco-red band; long dark hair in ringlets to mid-back, one forelock curl.",
+        "Bodice: short-sleeved fitted linen jacket, open front with a laced linen breast-band beneath (modest, covered), sleeve borders with a woven haematite-red wave band 0.03 m.",
+        "Skirt: flounced tiered skirt, 5 horizontal flounces each 0.18 m deep, flaring from 0.36 m waist to 0.96 m hem diameter, alternating linen and soot-dyed wool; each flounce edge has a 0.02 m checker border.",
+        "Apron: double-apron over the skirt (front and back), 0.40 m long, linen with a thin red border, soot-scorched at the lower edge.",
+        "Yoke: olive-wood pole 1.30 m × 0.05 m dia., curved to sit on both shoulders across the back of the neck, carved notches at each end.",
+        "Fire-pots: 4 clay pots (2 per yoke end) on doubled flax cords 0.35 m; each globular, 0.18 m dia. × 0.20 m, narrow neck 0.07 m, sealed with a clay bung pierced by a smouldering wick; madder-orange glow at the neck, soot streaks down the body.",
+        "Censer: bronze brazier bowl 0.16 m dia. × 0.10 m on three chains 0.60 m to a ring handle; perforated lid; incense smoke particle socket at the lid.",
+        "Arms: bare forearms, bronze bangles (3 per wrist, 0.07 m dia.), soot on the fingers.",
+        "Feet: bare; painted red soles (visible when walking).",
+        "Wear: skirt hem scorched in irregular bites; soot handprints on the apron; singed ends on the hair (a few strands shorter)."
+      ],
+      "materials": [
+        { "name": "Linen", "hex": "#CFC3A2", "notes": "Bodice, polos, apron, light flounces; 2 cm weave, scorch gradient on hems." },
+        { "name": "Soot-dyed wool", "hex": "#3A2E26", "notes": "Alternate flounces; felted, roughness 0.95, ash-grey fuzz on edges." },
+        { "name": "Fire-pot clay", "hex": "#A0603E", "notes": "Pots; coarse fired clay, black soot streaks down from the neck, cracked glaze-less surface." },
+        { "name": "Olive wood", "hex": "#6E5236", "notes": "Yoke; polished where the neck sits, char at the ends." },
+        { "name": "Cast bronze", "hex": "#9B6A38", "notes": "Censer, chains, bangles; warm brown, soot-blackened inside the bowl; never orpiment." },
+        { "name": "Ember madder", "hex": "#C4542E", "notes": "Pot-mouth glow, censer embers, wick tips — emissive 2.0, flicker; the only madder on her (danger cue)." },
+        { "name": "Haematite red", "hex": "#8E3F2C", "notes": "Borders, headband, painted soles; dull earth red, not emissive." }
+      ],
+      "rig": {
+        "skeleton": "Humanoid (Unity Mecanim) 1.72 m; extra bones: yoke (child of upper chest, rigid), pot_L1/L2/R1/R2 each a 2-bone cord chain + pot (detachable, physics on release), censer chain (3 bones) off left hand, skirt flounce ring bones ×5 (radial, damped), hair chain ×3.",
+        "animations": [
+          "idle_tend — 4 s loop, swings the censer in slow arcs, adjusts a pot cord",
+          "procession_walk — 1.4 s cycle, stately, pots sway counter to stride",
+          "alert_turn — 0.7 s, head then body, the pots keep swinging after she stops",
+          "chant_alarm — 2 s, raises the censer overhead and calls out; alerts everything in the room",
+          "unhook_pot — 0.5 s, right hand frees a pot from the yoke",
+          "throw_pot — 0.8 s, overarm lob, 10 m range, arcs 2 m high; pot shatters and spawns a 2.5 m fire pool",
+          "censer_swing — 0.9 s melee, burning embers in a 1.5 m arc",
+          "crypt_duck — 0.6 s, lowers the yoke and stoops to pass the 2.16 m Crypt archway (pots swing low)",
+          "retreat_walk — 1.2 s cycle, backs away while facing you",
+          "hit_flinch — 0.4 s, pots clatter",
+          "death_fall — 1.8 s, drops to her knees; any pots still hung break and ignite beneath her"
+        ]
+      },
+      "breakables": [
+        "Fire-pots: each is separately breakable (fragility 3 m/s); a hit on a pot while hung ignites her (she keeps fighting, burning, 10 s).",
+        "Yoke: snaps under FRANGO, dropping all remaining pots at her feet at once (a 4 m fire pool — the most dangerous thing you can do near oil jars).",
+        "Censer: detachable, rolls; spills embers.",
+        "Headdress: detachable cloth prop.",
+        "Loot: none of worth; her 3 bronze bangles (worth 20 total) drop as a single small pick-up."
+      ],
+      "budget": "≤ 8k tris (body 3.8k, skirt flounces 1.8k, yoke + 4 pots 1.2k, censer + chains 0.7k, hair/headdress 0.5k), one 2048² set.",
+      "dont": [
+        "No magic: the fire is real fire in pots, not a spell; no glowing eyes, no floating flames.",
+        "No orpiment jewellery; bangles are bronze.",
+        "No verdigris or lapis on her — madder is the only colour signal she carries.",
+        "Don't make the yoke a staff; it rides across both shoulders.",
+        "Don't let her exceed 1.72 m: the headdress must clear the Crypt archway (2.16 m) in crypt_duck with pots lowered."
+      ],
+      "concept": "concept/bronze/flame-keeper.svg"
+    }
+  ],
+
+  "items": [
+    {
+      "slug": "oxhide-ingot",
+      "name": "Oxhide Ingot",
+      "worth": 180,
+      "bulk": 4,
+      "fragility": 999,
+      "artifact": false,
+      "dimensions": "0.60 × 0.40 × 0.05 m (W × D × H)",
+      "summary": "A slab of Cypriot copper shaped like a flayed ox-skin, with four handles for corners.",
+      "description": "Here is money before anyone thought of coin: a slab of pure copper, cast in the shape of a stretched ox-hide so a man may carry it on his shoulder by its four horned corners. It weighs about what a small child weighs and is roughly as easy to break as a promise made to a smith. It will not shatter, it will not dent, and if you throw it at a levy he will go down and it will not notice. Merchants of three empires will take it; so will we.",
+      "build": [
+        "Body: rectangular slab 0.60 × 0.40 m, 0.05 m thick at the centre thinning to 0.035 m at the edges; the four long sides are concave (0.06 m inward curve) so the corners flare into horned lugs.",
+        "Corner lugs: four flared horns, each projecting 0.07 m, rounded 0.02 m tip radius; lugs bend slightly downward (5°) as if draped over a shoulder.",
+        "Top face (open-mould side): rough, bubbled, pocked surface — 20–30 shallow blisters (1–3 cm) and a wrinkled shrinkage skin; slightly domed.",
+        "Bottom face (mould side): smoother, flat, with a faint sand-cast grain.",
+        "Stamp: an incised Cypro-Minoan sign (a trident-like mark, 0.06 m) on the top face near one short edge.",
+        "Edges: soft-rounded 0.01 m, with a thin casting flash line on one long side.",
+        "Wear: rubbed brighter copper on the lug tips and raised blisters, darker oxide-brown in the pocks; no green patina."
+      ],
+      "materials": [
+        { "name": "Raw copper", "hex": "#9E5A36", "notes": "Main albedo; reddish-brown metal, metallic 1.0, roughness 0.55 on top face (pocked), 0.4 on rubbed lugs; brighter #C07A4E on high points." },
+        { "name": "Copper oxide", "hex": "#5A3524", "notes": "Dark brown in pocks and blisters, a cavity-map mask; roughness 0.8." },
+        { "name": "Casting grit", "hex": "#7A6A58", "notes": "Sand-cast underside micro-detail; mostly normal, a hint of grey in the albedo." },
+        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Light smudges from the storeroom, multiply 30% on the underside edge." }
+      ],
+      "grab": "Two lugs on one short side (two-hand carry, slab held against the chest) or shouldered by the near lug with one hand; the player's hands go on the diagonal lugs when thrown.",
+      "breaks": "Unbreakable (999). On hard impacts it rings, sparks and slides; it can crack flagstones and knock a levy flat, but it leaves nothing behind and loses no worth.",
+      "budget": "≤ 1.5k tris (two-hand carry but single mesh), 1024² set.",
+      "concept": "concept/bronze/oxhide-ingot.svg"
+    },
+    {
+      "slug": "sealed-amphora",
+      "name": "Sealed Amphora",
+      "worth": 120,
+      "bulk": 3,
+      "fragility": 4,
+      "artifact": false,
+      "dimensions": "0.34 × 0.34 × 0.62 m (W × D × H)",
+      "summary": "A Canaanite wine jar with a clay seal still on its mouth and the king's mark in the clay.",
+      "description": "Wine, from somewhere with better grapes than here, in a jar shaped to be packed in the hold of a ship and to be carried by two handles and no dignity. The mouth is stoppered and sealed with a lump of clay pressed with a signet, which is how a king says 'this is mine' in a century without locks. It sloshes. Carry it level. Should you drop it, you will lose the wine, the worth, and your footing, in that order.",
+      "build": [
+        "Body: Canaanite jar, 0.62 m tall, max diameter 0.34 m at the shoulder (0.42 m up), tapering to a pointed base; angular carinated shoulder, not a round belly.",
+        "Toe: solid knob foot 0.05 m dia. × 0.06 m — the jar will not stand; it rests in a ring stand or leans.",
+        "Neck and rim: short neck 0.08 m tall, 0.10 m dia., everted rolled rim 0.12 m dia.",
+        "Handles: two loop handles on the shoulder, each an oval-section strap 0.035 × 0.02 m, arching 0.08 m out from the body, set 180° apart.",
+        "Seal: clay stopper plug with a lump of sealing clay (0.09 m dia. × 0.04 m) over the mouth, cord tied round the neck under it (two turns, knot), signet impression (a seated figure, 0.03 m) in the clay.",
+        "Surface: wheel-ridged horizontal lines (normal detail, every 0.01 m), a painted haematite-red band at the shoulder with a potter's mark, drips and a wine stain on one side.",
+        "Ring stand (optional prop): woven reed ring 0.20 m dia. × 0.05 m, not part of the pick-up."
+      ],
+      "materials": [
+        { "name": "Buff terracotta", "hex": "#B88A62", "notes": "Main body; fine clay, roughness 0.85, wheel-ridges in normal, fire-cloud darkening near the toe." },
+        { "name": "Sealing clay", "hex": "#8A5A3C", "notes": "Stopper and seal lump; darker unfired clay, crisp signet impression." },
+        { "name": "Flax cord", "hex": "#9C8660", "notes": "Neck tie; twisted-cord normal." },
+        { "name": "Haematite red", "hex": "#8E3F2C", "notes": "Shoulder band and potter's mark, painted flat." },
+        { "name": "Wine stain", "hex": "#4A2A2A", "notes": "Dried run down one side from the seal, multiply decal; the spill VFX uses the same colour." }
+      ],
+      "grab": "Both loop handles (two-hand carry, jar level at the chest), or one hand on a handle and the other under the pointed toe; thrown by the neck.",
+      "breaks": "Above 4 m/s it breaks into 5–7 body sherds plus the neck-and-seal piece intact (the neck is its own chunk); spills 20 L of wine as a spreading dark decal (2 m radius) that makes the floor slippery for 20 s and puts out small fires it runs into. All worth lost.",
+      "budget": "≤ 1.5k tris (two-handed but light), 1024² set.",
+      "concept": "concept/bronze/sealed-amphora.svg"
+    },
+    {
+      "slug": "faience-hippo",
+      "name": "Faience Hippopotamus",
+      "worth": 420,
+      "bulk": 0.5,
+      "fragility": 2,
+      "artifact": false,
+      "dimensions": "0.20 × 0.08 × 0.11 m (W × D × H)",
+      "summary": "A small blue glazed hippopotamus from Egypt, painted with river plants and worth a great deal more than a real one.",
+      "description": "An Egyptian gift to a king who has never seen a hippopotamus and so has no idea how badly they behave. It is small, bright blue, glazed like a wet river stone, painted all over with lotus flowers and marsh reeds in black, and it is precisely as fragile as it looks. Hold it in one hand; hold it close; do not, under any circumstances, run down a staircase with it. It is the most valuable thing per pound in the Age.",
+      "build": [
+        "Body: barrel-shaped hippopotamus standing on four stumpy legs, 0.20 m long × 0.08 m wide × 0.11 m tall; belly a smooth ovoid (0.18 × 0.08 × 0.07 m).",
+        "Head: broad blocky muzzle 0.06 m wide, nostrils as two 0.008 m raised bumps, small ears 0.012 m, eyes as raised knobs.",
+        "Legs: four cylinders 0.022 m dia. × 0.03 m, flat feet (the figure stands).",
+        "Tail: tiny stub 0.01 m.",
+        "Painted decoration (albedo, black manganese line): lotus flowers and buds across the back and flanks (3 blooms each side, 0.03 m), reed stems up the legs, a butterfly on one hip; black outline at eyes and mouth.",
+        "Glaze: glossy vitreous surface (roughness 0.15), thicker and darker blue where it pooled in the leg crevices and under the belly; a few pale chips on the feet showing white quartz core."
+      ],
+      "materials": [
+        { "name": "Faience glaze", "hex": "#3E86A8", "notes": "Egyptian-blue glaze, glossy (0.15), slight turquoise shift; pooled darker #2E6680 in crevices. Not verdigris — a warmer, deeper blue-turquoise, and it is loot not an arcane touch cue." },
+        { "name": "Manganese black paint", "hex": "#1E1A16", "notes": "Lotus and reed line-painting, 1–2 mm lines, painted in albedo only." },
+        { "name": "Quartz frit core", "hex": "#E6DDC8", "notes": "Exposed at chips and on the fracture faces; granular, matte." },
+        { "name": "Glaze highlight", "hex": "#8CC0D0", "notes": "Hand-painted spec highlight on the back and head crown; albedo accent, subtle." }
+      ],
+      "grab": "One hand around the belly (hand-held), fingers under the chin; or cradled two-handed against the chest to halve drop chance.",
+      "breaks": "Above 2 m/s (glass-fragile) it breaks into 4 pieces: head, body split front/back, and the legs as one crumble; white core shows on every fracture face; no spill. Pieces are worthless props.",
+      "budget": "≤ 1.5k tris (hand-held; ~900 is enough), 1024² set.",
+      "concept": "concept/bronze/faience-hippo.svg"
+    },
+    {
+      "slug": "gold-death-mask",
+      "name": "Gold Death-Mask",
+      "worth": 1400,
+      "bulk": 1,
+      "fragility": 7,
+      "artifact": true,
+      "dimensions": "0.26 × 0.08 × 0.31 m (W × D × H)",
+      "summary": "A king's face beaten from a single sheet of gold, eyes shut, moustache twirled, laid over him for eternity until you arrived.",
+      "description": "Some ancestor of the house, too grand to be allowed to rot in an ordinary face, was buried under this: a sheet of gold hammered over a wooden form into his likeness, eyes closed, beard combed, moustache upturned with the confidence of a man who never paid for anything. It is the single most valuable object in the Age and — I note with enthusiasm — it is light. It will not shatter; it crumples. Drop it hard and the old king's face folds in two and so does its price.",
+      "build": [
+        "Form: a single repoussé gold sheet 0.8 mm thick (model with 2 mm shell), oval face 0.26 m wide × 0.31 m tall, dished 0.08 m deep; the back is hollow and shows the hammered reverse.",
+        "Features: closed almond eyes with raised lids and incised lashes; thin straight nose ridge; ears as flat projecting tabs 0.04 × 0.06 m with a pierced hole each (for binding cord).",
+        "Beard and moustache: moustache swept upward in two curls 0.05 m each; full beard as incised parallel lines along the jaw and chin (albedo + normal), eyebrows as raised arcs with hatch.",
+        "Mouth: thin closed lips, small, set with a faint smile.",
+        "Edge: rolled or folded rim 0.004 m around the whole outline; 4 small fixing holes at the temples and chin.",
+        "Wear: gilt rubs brightest on the nose, brows and moustache tips; tomb-dust in the incisions (soot/earth decal); a small crumple at the lower left cheek from an ancient burial collapse.",
+        "Presentation: laid face-up on a linen shroud in the megaron niche (shroud is a separate environment prop)."
+      ],
+      "materials": [
+        { "name": "Orpiment gold", "hex": "#C9A227", "notes": "The whole mask — this IS stealable gold, so orpiment is correct; metallic 1.0, roughness 0.3 on high points, 0.45 in hollows." },
+        { "name": "Deep gold shadow", "hex": "#8A6B1A", "notes": "Hollows, eye sockets, reverse side; darker orpiment family." },
+        { "name": "Gold highlight", "hex": "#E6C75A", "notes": "Rubbed high points (nose, brows, moustache, rim)." },
+        { "name": "Tomb dust", "hex": "#5A4A38", "notes": "Earth and dust in incised lines and on the reverse, multiply 60%." },
+        { "name": "Linen shroud", "hex": "#CFC3A2", "notes": "Environment prop under the mask only; not part of the pick-up." }
+      ],
+      "grab": "One hand at the chin edge (hand-held), face outward; or both hands at the ear tabs to carry it flat like a plate.",
+      "breaks": "Crumples rather than shatters: above 7 m/s it folds along the brow line into 2 joined halves (one crushed mesh swap); worth halves (to 700) on the first crumple, and a second crumple leaves a 1-piece gold ball worth 350. Spills nothing.",
+      "budget": "≤ 1.5k tris (hand-held), plus a crumpled-state swap mesh ≤ 1k; 1024² set.",
+      "concept": "concept/bronze/gold-death-mask.svg"
+    },
+    {
+      "slug": "bronze-tripod",
+      "name": "Tripod Cauldron",
+      "worth": 650,
+      "bulk": 12,
+      "fragility": 999,
+      "artifact": false,
+      "dimensions": "0.80 × 0.80 × 1.05 m (W × D × H)",
+      "summary": "A ceremonial bronze cauldron on three tall legs, ring-handled, heavy enough to need two of you and loud enough to wake everyone.",
+      "description": "This is the kind of prize kings gave to other kings, and to heroes, and to gods, and — in one unfortunate instance — as a bribe to the sea. It is a deep bronze cauldron on three cast legs with two great ring handles, and it weighs rather more than a man. It takes two of you. It does not break; it dents, and every dent rings like a temple bell, so you may as well sing while you carry it.",
+      "build": [
+        "Bowl: hemispherical hammered cauldron 0.66 m dia. × 0.36 m deep, wall 3 mm (model 6 mm), rim thickened with a rolled lip 0.02 m; the bowl rim sits at 0.88 m above the floor (1.05 m to the top of the handles).",
+        "Legs: three cast legs, each a flat-section strip 0.06 × 0.02 m with an incised zigzag, 0.88 m long, splaying outward 8°, ending in lion-paw or bovine-hoof feet (0.07 m); spread gives a 0.80 m footprint circle.",
+        "Leg joints: each leg meets the bowl at a riveted attachment plate 0.10 × 0.14 m (3 rivets 0.015 m).",
+        "Ring handles: two vertical ring handles on the rim, 180° apart, each a cast ring 0.24 m outer dia., 0.025 m round section, with a twisted-rope moulding, rising 0.17 m above the rim (total 1.05 m).",
+        "Bracing: three thin struts (0.012 m round) joining the legs 0.30 m above the floor in a triangle.",
+        "Decoration: a band of running spirals chased round the rim exterior (0.04 m tall), 3 small cast bull protomes (heads 0.05 m) at the leg joints.",
+        "Wear: soot blackened underside (it has been over fires), rubbed-bright handles and rim, raised dent normals on the bowl, darker brown in the chased lines."
+      ],
+      "materials": [
+        { "name": "Cast bronze", "hex": "#9B6A38", "notes": "Legs, handles, bowl exterior; warm brown, metallic 1.0, roughness 0.5; never orpiment (it is valuable for its bronze and craft, not gold)." },
+        { "name": "Rubbed bronze", "hex": "#B8844E", "notes": "High points: handles, rim lip, bull heads, leg edges." },
+        { "name": "Bronze shadow", "hex": "#5E3E22", "notes": "Chased lines, interior, cavities." },
+        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Bowl underside and inner lower half, multiply 80%; fire-scorch gradient." },
+        { "name": "Ash residue", "hex": "#6E665A", "notes": "Grey ash crust inside the bowl bottom." }
+      ],
+      "grab": "Two carriers: one hand each on a ring handle and the other on the nearest leg (bowl between them, carried at hip height); solo it can only be dragged by a leg, at 30% speed, clanging.",
+      "breaks": "Unbreakable (999). It dents (3 progressive dent-normal states on the bowl) and a leg can bend 20° after a > 8 m/s fall, but it never loses pieces or worth. Every impact rings and alerts enemies within 18 m.",
+      "budget": "≤ 5k tris (dual-carry), 1024² set.",
+      "concept": "concept/bronze/bronze-tripod.svg"
+    }
+  ]
+}
