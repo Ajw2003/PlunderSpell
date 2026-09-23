@@ -63,6 +63,16 @@ fail. Tune a word by editing its `SpellWord` asset and re-running the test.
   buckets RMS into `Whisper` (< 0.1) / `Normal` / `Shout` (> 0.4); `Normalize` upper-cases, strips
   punctuation and collapses whitespace before the text ever reaches the lexicon in `Spells`.
 
+### What you said, on screen
+
+Added 2026-09-23 (#49). `SpellCastingSystem.PhraseResolved` fires on the caster's machine for
+every phrase, including a fizzle (which casts nothing, so never reaches `CastResolved`). The raid
+HUD captions it for 3.5 s: green `"igneous" -> IGNIS (Normal)` for a clean cast, orange
+`"a nice" -> AGNIS - MISFIRE`, grey `"potato" - fizzled, not a spell`. The quoted text is exactly
+what the recogniser output, so a mis-recognition reads differently from a real mispronunciation.
+While V is held the same spot shows the open microphone and a live level meter with the
+whisper/shout marks.
+
 ## Invariants
 
 - **Both providers must classify and normalise identically.** `VoiceUtility` is the single place

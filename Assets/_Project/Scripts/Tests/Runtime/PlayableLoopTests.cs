@@ -337,6 +337,27 @@ namespace RogueAi.Tests
                 "The inventory is a live overlay, not a pause.");
         }
 
+        // --- Phrase caption (#49) --------------------------------------------------------------
+
+        [Test]
+        public void Test_TheCaptionTellsACastAMisfireAndAFizzleApart()
+        {
+            string clean = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
+                "igneous", "IGNIS", RogueAi.Spells.SpellId.Ignis, RogueAi.Voice.CastVolume.Normal), out Color cleanColour);
+            string misfire = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
+                "a nice", "AGNIS", RogueAi.Spells.SpellId.MisfireIgnis, RogueAi.Voice.CastVolume.Normal), out Color misfireColour);
+            string fizzle = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
+                "potato", "POTATO", RogueAi.Spells.SpellId.None, RogueAi.Voice.CastVolume.Normal), out Color fizzleColour);
+
+            StringAssert.Contains("\"igneous\"", clean, "The caption shows what was actually heard.");
+            StringAssert.Contains("IGNIS", clean);
+            StringAssert.Contains("MISFIRE", misfire);
+            StringAssert.Contains("fizzled", fizzle);
+            Assert.AreNotEqual(cleanColour, misfireColour);
+            Assert.AreNotEqual(misfireColour, fizzleColour);
+            Assert.AreNotEqual(cleanColour, fizzleColour);
+        }
+
         // --- A guard-free entrance -------------------------------------------------------------
 
         [Test]
