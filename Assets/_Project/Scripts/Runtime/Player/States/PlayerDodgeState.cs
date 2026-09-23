@@ -10,15 +10,9 @@ namespace StateMachine.States
 
         public override void Enter()
         {
-            Vector3 inputDirection = new Vector3(_stateMachine.MovementDirection.x, 0, _stateMachine.MovementDirection.y);
-            if (inputDirection.sqrMagnitude > 1f)
-            {
-                inputDirection.Normalize();
-            }
-
-            // Transform direction from local (player-relative) to world space. With standard
-            // world gravity the body stays upright, so local axes align with world axes.
-            Vector3 dodgeDirection = _stateMachine.transform.TransformDirection(inputDirection);
+            // Camera-relative like walking: the body no longer turns with the view (see
+            // PlayerStateMachine.Look), so its own axes say nothing about where "forward" is.
+            Vector3 dodgeDirection = CameraRelativeInput();
             _stateMachine._rb.AddForce(dodgeDirection * _stateMachine.DodgeForce, ForceMode.Impulse);
         }
 

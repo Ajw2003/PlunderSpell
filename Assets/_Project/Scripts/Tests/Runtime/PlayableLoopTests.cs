@@ -267,6 +267,61 @@ namespace RogueAi.Tests
             Assert.AreEqual(0.5f, chest.CarrySpeedMultiplier, 0.01f);
         }
 
+        // --- Smooth view (#104) ---------------------------------------------------------------
+
+        private StateMachine.PlayerStateMachine MakePlayer(Vector3 at)
+        {
+            var go = Track(new GameObject("Player"));
+            go.transform.position = at;
+            go.AddComponent<CapsuleCollider>();
+            go.AddComponent<Rigidbody>();
+            var player = go.AddComponent<StateMachine.PlayerStateMachine>();
+            var eye = new GameObject("Eye");
+            eye.transform.SetParent(go.transform, false);
+            player.CameraTransform = eye.transform;
+            player.MouseSensitivity = 100f;
+            return player;
+        }
+
+        [UnityTest]
+        public IEnumerator Test_TheViewMovesEveryFrameAndLookTurnsTheCamera()
+        {
+            var player = MakePlayer(new Vector3(0f, 300f, -800f));
+            yield return null;
+
+            Assert.AreEqual(RigidbodyInterpolation.Interpolate, player._rb.interpolation,
+                "An uninterpolated body moves its camera only on 50 Hz physics steps: the whole view judders (#104).");
+
+            Quaternion bodyBefore = player.transform.rotation;
+            float yawBefore = player.CameraTransform.eulerAngles.y;
+            for (int i = 0; i < 10; i++)
+            {
+                player.Look(new Vector2(5f, 0f));
+                yield return null;
+            }
+
+            Assert.AreNotEqual(yawBefore, player.CameraTransform.eulerAngles.y, "Mouse look must turn the view.");
+            Assert.AreEqual(bodyBefore, player.transform.rotation,
+                "Yaw belongs to the camera: interpolation overwrites any rotation set on the body.");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_IdleStandsStill()
+        {
+            var player = MakePlayer(new Vector3(20f, 300f, -800f));
+            player._rb.useGravity = false;
+            yield return null;
+
+            player._rb.linearVelocity = new Vector3(5f, 0f, 3f);
+            player.Idle();
+            yield return null;
+            yield return null;
+
+            Vector3 v = player._rb.linearVelocity;
+            Assert.Less(new Vector2(v.x, v.z).magnitude, 0.01f,
+                "Arriving in Idle while moving used to coast forever, off the edge of the map.");
+        }
+
         // --- A guard-free entrance -------------------------------------------------------------
 
         [Test]

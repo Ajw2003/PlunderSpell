@@ -128,6 +128,13 @@ namespace RogueAi.Guards
         {
             _status = GetComponent<StatusEffectReceiver>();
             _agent = GetComponent<NavMeshAgent>();
+
+            // The agent moves this transform every frame; a dynamic rigidbody on the same object had
+            // the physics step writing its own position back, so guards froze on about a third of
+            // rendered frames and looked like they lagged and smeared (#104). Kinematic still
+            // collides and still takes hits from thrown things.
+            if (_agent != null && TryGetComponent(out Rigidbody body))
+                body.isKinematic = true;
             _health.value = _maxHealth;
 
             if (_alarm == null)

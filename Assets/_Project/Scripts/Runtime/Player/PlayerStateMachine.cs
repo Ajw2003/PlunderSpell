@@ -76,6 +76,7 @@ namespace StateMachine
         [SerializeField] private float _chokeDamage = 5f; // Damage per second while holding an enemy
 
         private float _xRotation = 0f;
+        private float _yaw = 0f;
         private float _health;
         private float _maxHealth = 100;
         public bool dead;
@@ -102,12 +103,13 @@ namespace StateMachine
 
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
+            _yaw += mouseX;
 
-            CameraTransform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
-
-            // Space.Self: rotates around the transform's own up axis. With rotation frozen and
-            // standard world gravity the body stays upright, so local up matches world up.
-            transform.Rotate(Vector3.up * mouseX);
+            // Yaw turns the camera, not the body. The body is an interpolated rigidbody (so the view
+            // moves every rendered frame, not only on 50 Hz physics steps — issue #104), and
+            // interpolation overwrites any rotation set on its transform between steps. Movement,
+            // aiming, spells and melee all read the camera, so the capsule never needs to face anywhere.
+            CameraTransform.localRotation = Quaternion.Euler(_xRotation, _yaw, 0f);
         }
 
         public void Awake()
@@ -129,6 +131,11 @@ namespace StateMachine
             // this line the capsule tips over and rolls the first time it touches anything.
             _rb.useGravity = true;
             _rb.freezeRotation = true;
+
+            // Without this the camera (a child of this body) only moves on physics steps: at a high
+            // frame rate the whole view judders at 50 Hz while held items glide, which reads as the
+            // items and enemies lagging and smearing (#104).
+            _rb.interpolation = RigidbodyInterpolation.Interpolate;
 
             _health = _maxHealth;
         }

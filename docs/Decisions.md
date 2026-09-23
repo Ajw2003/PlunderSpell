@@ -606,3 +606,27 @@ and a machine with a microphone lost the number-key fallback — both fixed in `
 **Decision.** Leave `Player.prefab` as is; it is not what the raid spawns.
 
 **Status.** Standing.
+
+## 2026-09-23 — The player body interpolates, and mouse yaw turns the camera, not the body (#104)
+
+**Context.** #104: "items and enemies lag, a slight motion blur, ~100 ms". Measured in Play mode at
+~500 fps: the camera (a child of the player's rigidbody) was frozen on 90% of rendered frames. It
+only moved on 50 Hz physics steps, because the body had no interpolation, while interpolated held
+items moved every frame. Guards were frozen on ~35% of frames: a NavMeshAgent moved them each frame
+while a dynamic rigidbody on the same object wrote its own position back each physics step. No
+motion blur (intensity 0) or temporal anti-aliasing is involved.
+
+**Decision.** The player's rigidbody interpolates. Because interpolation overwrites any rotation set
+on the body's transform between steps (mouse look turned 2.5° instead of ~24° when tried), yaw now
+goes on the camera (`PlayerStateMachine.Look` sets the Eye's local yaw and pitch) and the capsule
+never turns. Movement, dodge, aiming, spells and melee all read the camera, so nothing needed the
+body's facing (dodge was the one exception, now camera-relative). Guards with a NavMeshAgent get a
+kinematic rigidbody: still solid, still hit by thrown things, no longer fought by physics. After the
+fix, camera, guards and held items all move on 100% of frames.
+
+**Also.** `PlayerIdleState` now zeroes horizontal speed. The body hovers on its ground snap and
+never touches the floor, so nothing else bled off speed; arriving in Idle while moving coasted off
+the map.
+
+**Status.** Standing. Regression tests: `PlayableLoopTests.Test_TheViewMovesEveryFrameAndLookTurnsTheCamera`,
+`Test_IdleStandsStill`.
