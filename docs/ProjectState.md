@@ -31,6 +31,21 @@ it's even possible, not just more content.
 
 ## The 2026-09-16 playtesting backlog
 
+**Update, 2026-09-22:** Phase 1 of `docs/plans/GitIssues/Priority_Queue.md` ("Core Game Loop,
+Mechanics & Controls") is now closed out — verify with `gh issue list --state all --repo
+Ajw2003/PlunderSpell`. Of the 16 Phase 1 issues, only #24 (the epic itself — see its own checklist,
+which now tracks Phase 2 items) and #55 (the M2 four-player playtest below, which needs real humans
+and can't be closed by a commit) remain open. That includes all nine items called out below as of
+2026-09-16: #20, #5, #19, #6, #25, #21 (still open — no portal asset yet, tracked separately from
+combat), #16/#23 (still open, Phase 4/5 art), #22 (still open, Phase 2 VFX/SFX). What's now closed
+that wasn't: #5/#19 (room connectivity/grid-exact modules), #6/#25 (player scale/spawn), #20/#15
+(loot physics/discoverability), #7/#8/#9 (crosshair/cursor/menu-input-gating), #14 (health/damage
+model + HUD), #18 (a dedicated `CombatBench` scene), #37/#39 (melee and ranged player combat, new
+this pass), #53 (a real standalone build tool, verified against a real Unity Editor install, new
+this pass). The paragraphs below are the original 2026-09-16 filing and are left as historical
+record of what the backlog looked like before this work landed — check `gh issue view <n>` for any
+individual issue's current state rather than trusting the prose here.
+
 Filed as GitHub issues #5–#25 (`Tools/mkissues.py`, manifest in
 `docs/generated/github-issues.json`) immediately after the raid scene started assembling from real
 art — so these are gaps the art exposed, not pre-art complaints. All 21 are open as of this pass
