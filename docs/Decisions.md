@@ -163,6 +163,48 @@ used (`ItemGym.unity`) and warns that changes made there do not reach the raid.
 **Status.** Standing. Supersedes the scope, not the mechanism, of "One owner for the cursor; input
 gates on the state variable" — that entry's rule was right and its coverage was incomplete.
 
+## 2026-09-17 — Melee hit detection has no enemy layer to filter on
+
+**Context.** Issue 37 asked for reach-based melee hit detection. The obvious approach —
+`Physics.OverlapSphere` filtered to an "Enemy" layer mask — doesn't work here: `ProjectSettings/TagManager.asset`
+defines no layers beyond `Default`, and every serialized `LayerMask` field found across the codebase
+(including the pre-existing, unused `PlayerStateMachine.EnemyLayers`) is `m_Bits: 0`, meaning it was
+never actually configured to select anything.
+
+**Decision.** `MeleeWeapon.DealDamage` overlaps all colliders at the swing's reach point and filters
+by `TryGetComponent(out IHealth)` rather than by layer — the same pattern `Item.OnCollisionEnter`
+already uses for physics-impact damage.
+
+**Why.** Adding a new project layer is a manual Unity Editor step (Project Settings → Tags and
+Layers) that can't be scripted from outside the Editor and that nobody would remember to do on
+every new enemy prefab. `IHealth` is already the trait that distinguishes a damageable thing from
+scenery in this codebase, so reusing it needs no scene configuration and can't silently miss an
+enemy that was never assigned to the right layer. The player's own capsule is never at risk of
+self-hits because the hit point is projected `Reach` metres in front of the swing origin, clear of
+the player's own collider radius.
+
+**Status.** Standing. Revisit if a real "Enemy" layer gets introduced for another reason (e.g.
+occlusion queries) — at that point the overlap could add the layer mask as a first-pass filter
+ahead of the `IHealth` check, purely as a performance optimization.
+
+## 2026-09-17 — Melee weight is read from InventoryItem, not duplicated onto MeleeWeaponStats
+
+**Context.** Issue 37's melee system needs a weapon's weight to drive both swing speed and damage.
+`InventoryItem.Weight` (in stone, matching the pitch's Heft column in `docs/plunderspell.md`, "I
+present the field") already exists and is already authored on every weapon asset (`BronzeSword.asset`,
+`Longsword.asset`).
+
+**Decision.** `MeleeWeaponStats` holds a reference to the weapon's `InventoryItem` and reads
+`Weight` from it (`MeleeWeaponStats.Weight => m_item.Weight`) rather than declaring its own weight
+field.
+
+**Why.** A weapon's carry weight and its swing weight are the same physical fact; a second field
+would need to be kept in sync by hand on every weapon asset and would eventually drift (DRY). The
+new `ArmingSword.asset`/`ArmingSword_MeleeStats.asset` pair follows this: `Weight: 2` (stone, per the
+pitch's "2 st" Heft for the arming sword) lives once, on the `InventoryItem`.
+
+**Status.** Standing.
+
 ## 2026-09-17 — Four doorways on every room plus plugs, rather than socket-matched placement
 
 **Context.** Issue 5 (rooms do not connect, doorways do not align) and issue 19 (modules do not
