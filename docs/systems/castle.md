@@ -63,6 +63,17 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   every door — deliberately one-way, matching the alarm's own latch, so the castle can't hand back
   a mistake the players already paid for.
 
+- **Room layout grammar (2026-09-23, castle revamp).** Every enclosed room keeps a clear cross,
+  `|x| < 1.6 m` or `|y| < 1.6 m` up to 2 m above the floor, between its four archways; furniture
+  goes in the four corner quadrants against the walls, and anything raised stands on something
+  grounded. `validate_in_blender.validate_castle_layout` fails the asset build if a room breaks it
+  or if any mesh island floats. Each zone has its own floor and trim pigment (`ZONE_FLOOR`,
+  `ZONE_ACCENT` in `castle_builders.py`). Stairwells climb to a gallery or dais, never into the sky.
+- **Navigation is audited, not assumed.** `CastlePathValidator` walks a rasterised grid and cannot
+  see furniture. `Tools/Plunderspell/Audit Castle Navigation` (`CastleAudit.cs`) checks 25 floor
+  points per room and every loot piece on the real baked NavMesh, for five seeds. Results and
+  before/after overlays: `docs/generated/castle-survey-2026-09-23/`.
+
 ## Invariants
 
 - **A raid never starts in a castle the crypt can't reach the exit from.** Generation is retried
@@ -89,6 +100,12 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   module quietly grows into its neighbour's cell, which is what issue 19 was.
 
 ## Traps
+
+- **The previous castle must leave physics before the next one is baked.** `ClearGenerated`
+  deactivates each old piece before `Destroy`, because `Destroy` lands at the end of the frame and
+  the next castle is generated and baked within that same frame. Without it the NavMesh bake saw
+  both castles overlaid and the old walls sealed the new doorways: from the second raid on, 50–99%
+  of the castle was unreachable for players' guards and the audit alike.
 
 - **The layout depends on whether a registry is assigned.** `PickWeighted` consumes a random draw
   when there is a room pool and returns early without one when there is not, so the same seed

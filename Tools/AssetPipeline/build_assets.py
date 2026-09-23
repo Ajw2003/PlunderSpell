@@ -57,6 +57,11 @@ def build_one(spec) -> tuple[object, list[str]]:
     # goblet has no cell to stay inside of.
     footprint = rk.FOOTPRINT if spec["subdir"] == "Castle" else None
     issues = val.validate_object(obj, spec["tri_budget"], max_footprint=footprint)
+    if spec["subdir"] == "Castle":
+        # The wall pieces and door plugs are not rooms; everything else is walked through.
+        enclosed = not (spec["builder"] in castle_builders.WALL_BUILDERS
+                        or spec["builder"].startswith("build_door_plug"))
+        issues += val.validate_castle_layout(obj, enclosed)
     tris = sum(len(p.vertices) - 2 for p in obj.data.polygons)
     return obj, issues, tris, manifest.fingerprint_mesh(obj)
 
