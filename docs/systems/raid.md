@@ -59,6 +59,23 @@ networked carry with two-person rules and fragility) and `Item` (the physics gra
 `PlayerStateMachine` drives through `ItemManager`). As of 2026-09-18 the `Item`/`ItemManager` path
 is the live one.
 
+### Leaving: stand on the pad
+
+Added 2026-09-23 (#101). Before this a raid could only end when its clock ran out or on the
+undocumented F5 key. Now a living player standing in the `ExtractionZone` runs an 8 s countdown
+(`GameServices.Extraction`, the same `ExtractionController` the HUD's "Extracting — 3.5s (stay on
+the pad)" bar is bound to); stepping off cancels it; finishing resolves the extraction with
+whatever loot is on the pad, and the Lair shows "Last raid: brought home N coin". The countdown
+cannot start in a raid's first 10 s, so a player who spawns beside the pad does not leave by
+accident. F5 still works for playtesting.
+
+The zone finds what is on it by **polling an overlap box four times a second**, not by trigger
+enter/exit. Unity sends no trigger events between a kinematic body and a static trigger, and loot
+is kinematic while it settles after spawning, so a piece already on the pad when it was released
+never "entered". The overlap buffer grows when full: the pad sits among the gatehouse's wall and
+floor colliders, and a fixed 128-slot buffer was silently dropping loot. Only an `IPlayerBody`
+counts as a player saved — the old `NetworkIdentity` check counted guards too.
+
 ### Worth lives on `LootValue`
 
 `Item` has no notion of value, so `LootValue` carries it: a small component beside `Item` on every
@@ -118,6 +135,10 @@ floor between two people in a large room.
 
 ## Invariants
 
+- **No guard is posted within one room of the entrance** (`GuardPlacementPlanner.SafeEntranceRadius`).
+  Players spawn just inside the extraction room; a guard next door saw them on the first frame and
+  killed an idle player in ~18 s, which read as dying for no reason. The check runs after the
+  density roll so the rest of the garrison stays seed-stable.
 - **A guard's attack is gated on a cooldown.** Contact damage per frame is not a difficulty
   setting, it is an instant death with no readable cause.
 - **Worth is tallied from `LootValue`, never from `Item` or `LootPickup`.** A piece with no

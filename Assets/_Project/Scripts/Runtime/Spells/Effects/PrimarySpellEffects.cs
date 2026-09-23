@@ -57,7 +57,8 @@ namespace RogueAi.Spells
             if (target == null)
                 return 0;
 
-            target.Ignite(SpellTuning.IgnisDamagePerSecond * ctx.Power, SpellTuning.IgnisBurnSeconds);
+            target.Ignite(SpellTuning.IgnisDamagePerSecond * ctx.Power, SpellTuning.IgnisBurnSeconds,
+                ctx.CasterTransform != null ? ctx.CasterTransform.gameObject : null);
             return 1;
         }
     }

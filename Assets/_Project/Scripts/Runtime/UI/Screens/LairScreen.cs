@@ -26,6 +26,7 @@ namespace Plunderspell.UI.Screens
         private Text _debt;
         private Text _gold;
         private Text _era;
+        private Text _lastRaid;
         private LairHubManager _lair;
 
         protected override void OnBuild()
@@ -39,6 +40,7 @@ namespace Plunderspell.UI.Screens
 
             _debt = BuildStat("DebtLabel", 0.74f);
             _gold = BuildStat("GoldLabel", 0.695f);
+            _lastRaid = BuildStat("LastRaidLabel", 0.64f);
             // Below the era buttons, not above them, or the button row covers it.
             _era = BuildStat("EraLabel", 0.31f);
 
@@ -94,6 +96,7 @@ namespace Plunderspell.UI.Screens
                 _debt.text = "No lair in this scene.";
                 _gold.text = string.Empty;
                 _era.text = string.Empty;
+                _lastRaid.text = string.Empty;
                 return;
             }
 
@@ -101,6 +104,9 @@ namespace Plunderspell.UI.Screens
             _debt.text = $"Debt owed: {state.TotalDebt:N0} coin";
             _gold.text = $"Banked: {state.AccumulatedGold:N0} coin";
             _era.text = $"Setting out in: {Label(state.SelectedEra)}";
+            _lastRaid.text = _lair.LastRaidWorth < 0f ? string.Empty
+                : _lair.LastRaidWorth > 0f ? $"Last raid: brought home {_lair.LastRaidWorth:N0} coin"
+                : "Last raid: came home with nothing";
         }
 
         private void SelectEra(HistoricalEra era)

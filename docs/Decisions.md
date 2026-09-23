@@ -568,3 +568,41 @@ the multi-accent measurement issue #50 asks for, may need different ones — tun
 `SpellWord` assets and re-run `SpeechRecognitionTests`.
 
 **Status.** Standing. Mechanism: `docs/systems/voice.md`, "Latin through an English model".
+
+## 2026-09-23 — Dying ends the raid on a "You died" screen; the scene reload is gone
+
+**Context.** `PlayerDeadState.Enter` reloaded the active scene. In play that wiped the raid with no
+explanation and left `GameState` on `MainMenu` with no menu showing; the player had no way to know
+they had died, let alone why (a guard posted next to the spawn, see `raid.md` "Invariants").
+
+**Decision.** The local player's death switches to `GameState.GameOver` ("YOU DIED — the castle
+keeps everything you didn't carry out"), `RaidBootstrapper` abandons the raid through
+`RaidDirector.AbandonRaid` (nothing banked, castle and guards cleared), and the screen's button
+goes to the Lair. Setting out again revives the player at full health. `ReviveTo` now enters Idle,
+not `PlayerRespawnState`, whose exit ran on a thread-pool task and never took effect.
+
+**Why.** A lost raid is the consequence the pitch describes — the loot stays behind, the debt still
+grows — and it keeps the Lair → raid loop intact. A reload threw away the Lair's state and the
+session's flow for no gain.
+
+**Not decided.** Co-op downing (`DownedPlayerCarryAdapter` exists) should replace instant death
+once there is more than one player; with one player, down is out.
+
+**Status.** Standing. Mechanism: `docs/systems/damage.md`, "How it works".
+
+## 2026-09-23 — #100's root cause was the voice pipeline, not a missing component
+
+**Context.** #100 said `Player.prefab` lacked `SpellCastingSystem`, `AcousticEmitter` and
+`FootstepNoiseEmitter`, and that this was why casting failed in the shipped raid.
+
+**Finding.** `RaidScene.unity` instantiates `RaidPlayer.prefab`, not `Player.prefab`, and
+`RaidPlayer.prefab` has all three plus `PushToCastController`, `StatusEffectReceiver`,
+`IntruderTag` and `LootInteractor`. `RaidSceneCastingTests` passes 2/2 in the real Editor. The
+headless harness's failure of that test is a shim-fidelity gap (it cannot load a real `.unity`
+scene), not this bug. Casting failed in the build because the speech engine was a throwing stub
+and a machine with a microphone lost the number-key fallback — both fixed in `1dae40b` (see
+"Voice casting listens for English spellings", above).
+
+**Decision.** Leave `Player.prefab` as is; it is not what the raid spawns.
+
+**Status.** Standing.

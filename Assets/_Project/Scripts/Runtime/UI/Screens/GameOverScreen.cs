@@ -8,6 +8,8 @@ namespace Plunderspell.UI.Screens
     {
         private Text _titleText;
         private Text _summaryText;
+        private Text _buttonLabel;
+        private bool _isVictory;
 
         protected override void OnBuild()
         {
@@ -23,7 +25,8 @@ namespace Plunderspell.UI.Screens
             _summaryText.rectTransform.anchorMax = new Vector2(0.5f, 0.48f);
             _summaryText.rectTransform.sizeDelta = new Vector2(700f, 60f);
 
-            var returnButton = UIFactory.CreateButton(transform, "ReturnButton", "Return to Main Menu", OnReturnClicked, new Vector2(320f, 56f));
+            var returnButton = UIFactory.CreateButton(transform, "ReturnButton", "Back to the Lair", OnReturnClicked, new Vector2(320f, 56f));
+            _buttonLabel = returnButton.GetComponentInChildren<Text>();
             var returnRect = returnButton.GetComponent<RectTransform>();
             returnRect.anchorMin = new Vector2(0.5f, 0.32f);
             returnRect.anchorMax = new Vector2(0.5f, 0.32f);
@@ -31,11 +34,17 @@ namespace Plunderspell.UI.Screens
 
         public void Configure(bool isVictory)
         {
-            _titleText.text = isVictory ? "EXTRACTION SUCCESSFUL" : "GAME OVER";
+            _isVictory = isVictory;
+            _titleText.text = isVictory ? "EXTRACTION SUCCESSFUL" : "YOU DIED";
             _titleText.color = isVictory ? UITheme.Success : UITheme.Danger;
-            _summaryText.text = $"Gold Plundered: {GameServices.PlayerStats.Gold}";
+            _summaryText.text = isVictory
+                ? $"Gold Plundered: {GameServices.PlayerStats.Gold}"
+                : "The castle keeps everything you didn't carry out.";
+            if (_buttonLabel != null)
+                _buttonLabel.text = "Back to the Lair";
         }
 
-        private void OnReturnClicked() => GameServices.GameState.ChangeState(GameState.MainMenu);
+        /// <summary>Both outcomes go back to the Lair: that is where the debt is paid and the next raid starts.</summary>
+        private void OnReturnClicked() => GameServices.GameState.ChangeState(GameState.Lair);
     }
 }

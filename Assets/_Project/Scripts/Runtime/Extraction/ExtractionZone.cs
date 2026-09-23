@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Interfaces;
+using Plunderspell.Core;
 using PurrNet;
 using RogueAi.Loot;
 using UnityEngine;
@@ -25,13 +27,32 @@ namespace RogueAi.Extraction
         [Tooltip("Length of a raid in seconds (default 10 minutes).")]
         [SerializeField] private float RaidDurationSeconds = 600f;
 
+        [Header("Leaving")]
+        [Tooltip("Seconds of the raid that must pass before standing on the pad starts the extraction " +
+                 "countdown, so a player who spawns beside it does not leave by accident.")]
+        [SerializeField] private float _minimumRaidSecondsBeforeLeaving = 10f;
+
         // Replicated state (PurrNet field-based SyncVars; inline-initialised so never null).
         private readonly SyncVar<float> _timeRemaining = new SyncVar<float>(0f);
         private readonly SyncVar<bool> _extractionComplete = new SyncVar<bool>(false);
 
         // Server-side tracking of everything currently inside the trigger.
         private readonly List<LootValue> _lootInZone = new List<LootValue>();
-        private readonly List<NetworkIdentity> _playersInZone = new List<NetworkIdentity>();
+        // Player bodies (IPlayerBody), or identities registered through TrackPlayer by tests.
+        private readonly List<Component> _playersInZone = new List<Component>();
+
+        // What TrackLoot/TrackPlayer registered by hand. The overlap poll never drops these.
+        private readonly HashSet<LootValue> _pinnedLoot = new HashSet<LootValue>();
+        private readonly HashSet<Component> _pinnedPlayers = new HashSet<Component>();
+
+        private const float k_pollInterval = 0.25f;
+        // Grows when full: the pad sits in the gatehouse among dozens of wall and floor colliders,
+        // and a capped buffer silently dropped whichever loot came after them.
+        private static Collider[] s_overlap = new Collider[256];
+        private readonly HashSet<LootValue> _seenLoot = new HashSet<LootValue>();
+        private readonly HashSet<Component> _seenPlayers = new HashSet<Component>();
+        private float _nextPoll;
+        private Collider _volume;
 
         /// <summary>Seconds left in the raid (replicated).</summary>
         public float TimeRemaining => _timeRemaining.value;
@@ -80,9 +101,72 @@ namespace RogueAi.Extraction
             _extractionComplete.value = false;
         }
 
+        /// <summary>True while someone is standing on the pad and the leaving countdown is running.</summary>
+        public bool IsPlayerExtracting => GameServices.Extraction != null && GameServices.Extraction.IsExtracting;
+
+        /// <summary>Seconds left on the leaving countdown, or 0 when none is running.</summary>
+        public float PlayerExtractionRemaining =>
+            IsPlayerExtracting ? Mathf.Max(0f, GameServices.Extraction.RemainingSeconds) : 0f;
+
+        /// <summary>Living players currently standing in the zone.</summary>
+        public int LivingPlayersInZone
+        {
+            get
+            {
+                int count = 0;
+                foreach (Component c in _playersInZone)
+                {
+                    if (c != null && (!(c is IPlayerBody body) || body.IsAlive))
+                        count++;
+                }
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// The "stand on the pad to leave" countdown. Runs while a living player is in the zone, stops
+        /// the moment the last one steps off, and resolves the extraction when it finishes. Uses the
+        /// same <see cref="ExtractionController"/> the HUD's "Extracting…" bar is bound to.
+        /// </summary>
+        private void TickPlayerExtraction()
+        {
+            ExtractionController leaving = GameServices.Extraction;
+            if (leaving == null)
+                return;
+
+            bool raidRunning = RaidDurationSeconds - _timeRemaining.value >= _minimumRaidSecondsBeforeLeaving;
+            bool someoneOnThePad = LivingPlayersInZone > 0 && GameServices.IsPlaying;
+
+            if (!someoneOnThePad || !raidRunning)
+            {
+                leaving.CancelExtraction();
+                return;
+            }
+
+            if (!leaving.IsExtracting)
+                leaving.StartExtraction();
+
+            leaving.Tick(Time.deltaTime);
+            if (!leaving.IsExtracting)
+                ResolveExtraction(); // the countdown just completed
+        }
+
+        /// <summary>Stops a leaving countdown in progress, e.g. because the raid was lost.</summary>
+        public void CancelPlayerExtraction() => GameServices.Extraction?.CancelExtraction();
+
         private void Update()
         {
             if ((isSpawned && !isServer) || _extractionComplete.value)
+                return;
+
+            if (Time.time >= _nextPoll)
+            {
+                _nextPoll = Time.time + k_pollInterval;
+                PollContents();
+            }
+
+            TickPlayerExtraction();
+            if (_extractionComplete.value)
                 return;
 
             _timeRemaining.value -= Time.deltaTime;
@@ -115,8 +199,9 @@ namespace RogueAi.Extraction
                 return;
 
             float totalWorth = ComputeWorth(_lootInZone);
-            int playersSaved = _playersInZone.Count;
+            int playersSaved = LivingPlayersInZone;
             _extractionComplete.value = true;
+            CancelPlayerExtraction();
 
             if (isSpawned && isServer)
                 BroadcastExtractionResult(totalWorth, playersSaved);
@@ -151,38 +236,89 @@ namespace RogueAi.Extraction
         }
 
         // -----------------------------------------------------------------------------------------
-        // Trigger tracking (server-authoritative)
+        // Contents tracking (server-authoritative)
         // -----------------------------------------------------------------------------------------
 
-        private void OnTriggerEnter(Collider other)
+        /// <summary>
+        /// Re-reads what is physically inside the zone. A poll rather than trigger enter/exit:
+        /// Unity sends no trigger events between a kinematic body and a static trigger, and resting
+        /// loot is kinematic while it settles, so a piece already on the pad when it was released
+        /// never "entered" and was left out of the haul.
+        /// </summary>
+        private void PollContents()
         {
-            if (isSpawned && !isServer)
+            if (_volume == null)
+                _volume = GetComponent<Collider>();
+            if (_volume == null || !_volume.enabled)
                 return;
 
-            var piece = other.GetComponentInParent<LootValue>();
-            if (piece != null && !_lootInZone.Contains(piece))
+            int count = OverlapVolume();
+            while (count == s_overlap.Length)
             {
-                _lootInZone.Add(piece);
-                OnHaulChanged();
+                s_overlap = new Collider[s_overlap.Length * 2];
+                count = OverlapVolume();
             }
 
-            var identity = other.GetComponentInParent<NetworkIdentity>();
-            if (identity != null && piece == null && !_playersInZone.Contains(identity))
-                _playersInZone.Add(identity);
+            _seenLoot.Clear();
+            _seenPlayers.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                var piece = s_overlap[i].GetComponentInParent<LootValue>();
+                if (piece != null)
+                {
+                    _seenLoot.Add(piece);
+                    continue;
+                }
+
+                if (s_overlap[i].GetComponentInParent<IPlayerBody>() is Component body)
+                    _seenPlayers.Add(body);
+            }
+
+            bool haulChanged = Sync(_lootInZone, _seenLoot, _pinnedLoot);
+            Sync(_playersInZone, _seenPlayers, _pinnedPlayers);
+            if (haulChanged)
+                OnHaulChanged();
         }
 
-        private void OnTriggerExit(Collider other)
+        private int OverlapVolume()
         {
-            if (isSpawned && !isServer)
-                return;
+            if (_volume is BoxCollider box)
+            {
+                Transform t = box.transform;
+                Vector3 centre = t.TransformPoint(box.center);
+                Vector3 halfExtents = Vector3.Scale(box.size, t.lossyScale) * 0.5f;
+                return Physics.OverlapBoxNonAlloc(centre, halfExtents, s_overlap, t.rotation,
+                    ~0, QueryTriggerInteraction.Ignore);
+            }
 
-            var piece = other.GetComponentInParent<LootValue>();
-            if (piece != null && _lootInZone.Remove(piece))
-                OnHaulChanged();
+            Bounds b = _volume.bounds;
+            return Physics.OverlapBoxNonAlloc(b.center, b.extents, s_overlap, Quaternion.identity,
+                ~0, QueryTriggerInteraction.Ignore);
+        }
 
-            var identity = other.GetComponentInParent<NetworkIdentity>();
-            if (identity != null && piece == null)
-                _playersInZone.Remove(identity);
+        /// <summary>Makes <paramref name="live"/> = seen ∪ pinned. Returns whether it changed.</summary>
+        private static bool Sync<T>(List<T> live, HashSet<T> seen, HashSet<T> pinned) where T : class
+        {
+            bool changed = false;
+            for (int i = live.Count - 1; i >= 0; i--)
+            {
+                T item = live[i];
+                if (item == null || (!seen.Contains(item) && !pinned.Contains(item)))
+                {
+                    live.RemoveAt(i);
+                    changed = true;
+                }
+            }
+
+            foreach (T item in seen)
+            {
+                if (!live.Contains(item))
+                {
+                    live.Add(item);
+                    changed = true;
+                }
+            }
+            return changed;
         }
 
         private void OnHaulChanged() => HaulInZoneChanged?.Invoke(WorthInZone, _lootInZone.Count);
@@ -214,6 +350,8 @@ namespace RogueAi.Extraction
         {
             _lootInZone.Clear();
             _playersInZone.Clear();
+            _pinnedLoot.Clear();
+            _pinnedPlayers.Clear();
             ResetClock();
             OnHaulChanged();
         }
@@ -223,6 +361,7 @@ namespace RogueAi.Extraction
         {
             if (piece != null && !_lootInZone.Contains(piece))
             {
+                _pinnedLoot.Add(piece);
                 _lootInZone.Add(piece);
                 OnHaulChanged();
             }
@@ -254,14 +393,17 @@ namespace RogueAi.Extraction
         public void TrackPlayer(NetworkIdentity identity)
         {
             if (identity != null && !_playersInZone.Contains(identity))
+            {
+                _pinnedPlayers.Add(identity);
                 _playersInZone.Add(identity);
+            }
         }
 
         /// <summary>Test seam: resolve the extraction and report what it paid out.</summary>
         public (float worth, int saved) ResolveLocally()
         {
             float worth = ComputeWorth(_lootInZone);
-            int saved = _playersInZone.Count;
+            int saved = LivingPlayersInZone;
             ResolveExtraction();
             return (worth, saved);
         }

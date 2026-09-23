@@ -238,6 +238,20 @@ namespace RogueAi.Raid
             RaidResolved?.Invoke(worthExtracted, playersSaved);
         }
 
+        /// <summary>
+        /// Ends the raid with nothing banked — everyone went down. The castle and its guards are
+        /// cleared the same way a successful extraction clears them.
+        /// </summary>
+        public void AbandonRaid()
+        {
+            if (isSpawned && !isServer)
+                return;
+            if (_phase.value != RaidPhase.Raiding && _phase.value != RaidPhase.Extracting)
+                return;
+            _extractionZone?.CancelPlayerExtraction();
+            ApplyResult(0f, 0);
+        }
+
         /// <summary>Returns to the Lair, clearing the raid's castle. Call after the summary is dismissed.</summary>
         public void ReturnToLair()
         {

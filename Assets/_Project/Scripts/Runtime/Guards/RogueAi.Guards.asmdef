@@ -6,7 +6,8 @@
         "RogueAi.Core",
         "RogueAi.Acoustics",
         "RogueAi.Alarm",
-        "RogueAi.Status"
+        "RogueAi.Status",
+        "RogueAi.Items"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

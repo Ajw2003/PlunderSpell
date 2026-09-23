@@ -73,7 +73,10 @@ public class RangedWeapon : MonoBehaviour
         GameObject shot = Instantiate(m_stats.ProjectilePrefab, spawnPoint, Quaternion.LookRotation(direction));
 
         if (shot.TryGetComponent(out NetworkedProjectile projectile))
+        {
             projectile.Damage = (int)m_stats.Damage;
+            projectile.Instigator = TryGetComponent(out Item item) ? item.Holder : null;
+        }
 
         if (shot.TryGetComponent(out Rigidbody body))
             body.linearVelocity = direction * m_stats.ProjectileSpeed;

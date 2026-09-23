@@ -164,7 +164,7 @@ public class ItemManager : SingletonBase<ItemManager>
     private void StartDragging(Item item)
     {
         _draggedItem = item;
-        _draggedItem.StartDragging();
+        _draggedItem.StartDragging(_mainCamera.transform.root.gameObject);
 
         _currentDragDepth = Vector3.Distance(_mainCamera.transform.position, item.transform.position);
         _currentDragDepth = Mathf.Clamp(_currentDragDepth, _minDragDepth, _maxDragDepth);

@@ -29,6 +29,22 @@ public class Item : MonoBehaviour
 
     private float _lastDamageTime;
 
+    /// <summary>How long after being let go an item still counts as its thrower's doing.</summary>
+    private const float k_blameSeconds = 4f;
+
+    /// <summary>Impact speed (m/s) below which an item nobody touched hurts nothing.</summary>
+    private const float k_minUnheldImpactSpeed = 4f;
+
+    /// <summary>The player holding this right now, or who last held or threw it.</summary>
+    public GameObject Holder { get; private set; }
+
+    private float _releasedAt = float.NegativeInfinity;
+
+    /// <summary>Who is to blame for what this hits: the holder while held, and for a few seconds
+    /// after a throw. Null once it is just junk on the floor.</summary>
+    public GameObject Instigator =>
+        _isDragging || Time.time - _releasedAt <= k_blameSeconds ? Holder : null;
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -66,14 +82,21 @@ public class Item : MonoBehaviour
         float impactVelocity = collision.relativeVelocity.magnitude;
         float myVelocity = _rb.linearVelocity.magnitude;
 
+        // Loot settling at spawn or rolling off a shelf is not an attack; only a real hit on its
+        // own, or anything a player swung or threw, does damage.
+        GameObject blame = Instigator;
+        if (blame == null && impactVelocity < k_minUnheldImpactSpeed) return;
+
         int damage = Mathf.RoundToInt(impactVelocity * _damageMultiplier);
         bool dealtDamage = false;
+        Vector3 point = collision.contactCount > 0 ? collision.GetContact(0).point : transform.position;
+        GameObject instigator = blame;
 
-        if (collision.gameObject.TryGetComponent(out IHealth targetHealth))
+        IHealth targetHealth = collision.gameObject.GetComponentInParent<IHealth>();
+        if (targetHealth != null)
         {
-            float healthBefore = targetHealth.CurrentHealth;
-            targetHealth.TakeDamage(damage, impactVelocity);
-            if (targetHealth.CurrentHealth < healthBefore) dealtDamage = true;
+            dealtDamage = Damage.Apply(targetHealth, damage, gameObject, instigator, point,
+                DamageKind.Impact, impactVelocity) > 0f;
         }
 
         // Damage ourselves if we are an enemy item being thrown. GetComponent<IHealth>() hands
@@ -85,9 +108,9 @@ public class Item : MonoBehaviour
             // Only take impact damage if we are NOT grounded/active.
             if (!_agent.enabled || myVelocity > 1f)
             {
-                float healthBefore = _monsterHealth.CurrentHealth;
-                _monsterHealth.TakeDamage(damage, impactVelocity);
-                if (_monsterHealth.CurrentHealth < healthBefore) dealtDamage = true;
+                if (Damage.Apply(_monsterHealth, damage, collision.gameObject, instigator, point,
+                        DamageKind.Impact, impactVelocity) > 0f)
+                    dealtDamage = true;
             }
         }
 
@@ -98,9 +121,10 @@ public class Item : MonoBehaviour
         }
     }
 
-    public void StartDragging()
+    public void StartDragging(GameObject holder = null)
     {
         _isDragging = true;
+        Holder = holder;
 
         // Kinematic while held: MovePosition follow still works, but the solver stops fighting
         // gravity and collisions to try to move the body itself.
@@ -119,6 +143,7 @@ public class Item : MonoBehaviour
     public void StopDragging()
     {
         _isDragging = false;
+        _releasedAt = Time.time;
         _rb.isKinematic = false;
 
         // Release call removed - Monster handles its own recovery via struggle routine.
@@ -127,6 +152,7 @@ public class Item : MonoBehaviour
     public void Throw(Vector3 direction, float force)
     {
         _isDragging = false;
+        _releasedAt = Time.time;
         _rb.isKinematic = false;
         _rb.AddForce(direction * force, ForceMode.Impulse);
 

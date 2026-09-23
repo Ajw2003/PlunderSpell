@@ -56,6 +56,7 @@ together and what was deliberately left undocumented, and why.
 | [`raid`](systems/raid.md) | The loop: Lair → castle → haul → extraction → Lair |
 | [`raid-scene-assembly`](systems/raid-scene-assembly.md) | Wiring the authored art (castle rooms, loot, enemies) into the playable scene |
 | [`enemy-asset-pipeline`](systems/enemy-asset-pipeline.md) | Generating the enemy roster from Python/Blender |
+| [`damage`](systems/damage.md) | One damage pathway, blame, and hit feedback you can read |
 | [`combat-bench`](systems/combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
 | [`scale`](systems/scale.md) | The 1.8m standard human, and the room, archway and enemy heights measured against it |
 
