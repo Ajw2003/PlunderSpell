@@ -315,7 +315,10 @@ namespace StateMachine
             }
             else if (ItemManager.Instance != null && CameraTransform != null)
             {
-                ItemManager.Instance.TryMeleeSwing(CameraTransform.position, CameraTransform.forward);
+                if (!ItemManager.Instance.TryMeleeSwing(CameraTransform.position, CameraTransform.forward))
+                {
+                    ItemManager.Instance.TryFireRanged(CameraTransform.position, CameraTransform.forward);
+                }
             }
         }
 

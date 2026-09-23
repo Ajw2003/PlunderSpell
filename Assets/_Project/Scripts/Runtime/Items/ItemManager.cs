@@ -41,7 +41,13 @@ public class ItemManager : SingletonBase<ItemManager>
 
         if (_draggedItem != null)
         {
-            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+            // A held ranged weapon aims on right-click-and-hold instead of throwing on right-click:
+            // nobody throws away the crossbow they are trying to fire.
+            if (_draggedItem.TryGetComponent(out RangedWeapon rangedWeapon))
+            {
+                rangedWeapon.SetAiming(Mouse.current != null && Mouse.current.rightButton.isPressed);
+            }
+            else if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
             {
                 ThrowDraggedItem();
                 return;
@@ -185,4 +191,17 @@ public class ItemManager : SingletonBase<ItemManager>
             && _draggedItem.TryGetComponent(out MeleeWeapon weapon)
             && weapon.TrySwing(origin, forward);
     }
+
+    /// <summary>Fires the currently held item if it is a <see cref="RangedWeapon"/>. Returns whether a shot was fired.</summary>
+    public bool TryFireRanged(Vector3 origin, Vector3 direction)
+    {
+        return _draggedItem != null
+            && _draggedItem.TryGetComponent(out RangedWeapon weapon)
+            && weapon.TryFire(origin, direction);
+    }
+
+    /// <summary>The currently held item's ranged-weapon component, or null. The HUD reads this to
+    /// show ammo/reload status.</summary>
+    public RangedWeapon CarriedRangedWeapon =>
+        _draggedItem != null && _draggedItem.TryGetComponent(out RangedWeapon weapon) ? weapon : null;
 }

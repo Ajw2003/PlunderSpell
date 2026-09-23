@@ -205,6 +205,27 @@ pitch's "2 st" Heft for the arming sword) lives once, on the `InventoryItem`.
 
 **Status.** Standing.
 
+## 2026-09-22 — A ranged shot spawns ahead of the wielder instead of tracking their colliders
+
+**Context.** Issue 39's Crossbow fires a real `Rigidbody` projectile (`NetworkedProjectile`, reusing
+the existing `Bolt.prefab`). `CastleGuard.FireAt` and `SpellBook.CastSpell` both solve the "don't hit
+your own collider" problem by walking the shooter's own colliders and calling
+`Physics.IgnoreCollision` against the shot — but both live on the shooter itself, where
+`GetComponentsInChildren<Collider>()` finds those colliders. `RangedWeapon` lives on the held
+*weapon* item, not on the player, so it has no direct handle on "the wielder's colliders."
+
+**Decision.** `RangedWeapon.SpawnProjectile` instantiates the shot at `origin + direction * 0.8`
+(a fixed muzzle offset) rather than at the camera/eye position, and does no collision-ignore
+bookkeeping at all.
+
+**Why.** 0.8m clears the player capsule's 0.5m radius by construction, so there is nothing to
+ignore. This is the same idea already used for spell bursts — see "A spell burst is centred on where
+it lands, not where it starts" above — moving the spawn point instead of suppressing the collision
+it would otherwise cause.
+
+**Status.** Standing. Revisit only if a future weapon's muzzle needs to differ from this fixed
+offset (e.g. a much bigger holdable prop).
+
 ## 2026-09-17 — Four doorways on every room plus plugs, rather than socket-matched placement
 
 **Context.** Issue 5 (rooms do not connect, doorways do not align) and issue 19 (modules do not

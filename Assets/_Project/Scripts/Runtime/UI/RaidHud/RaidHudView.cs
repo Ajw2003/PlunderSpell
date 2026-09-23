@@ -104,6 +104,13 @@ namespace RogueAi.UI
                 GUI.Label(promptRect, model.InteractPrompt, Centered(_label));
             }
 
+            if (!string.IsNullOrEmpty(model.RangedWeaponStatus))
+            {
+                var ammoRect = new Rect(Screen.width * 0.5f - 250f,
+                    Screen.height * 0.5f + k_crosshairSize + 22f, 500f, 24f);
+                GUI.Label(ammoRect, model.RangedWeaponStatus, Centered(_label));
+            }
+
             if (!string.IsNullOrEmpty(model.CarriedLootName))
             {
                 string carrying = model.CarriedNeedsTwo
