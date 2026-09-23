@@ -6,14 +6,37 @@
   "headline": "Citadels of mud-brick and smoke",
   "intro": "Behold the oldest door in the lair, and the lowest ceiling. Here are citadels of painted plaster and mud-brick piled on stones so vast the later Greeks swore giants set them; here are grain stores, oil stores, and kings who are also gods and will say so at length, by firelight, through a haze of their own hearth-smoke. The household is many, and bravely dressed in linen, and has never in its life seen a crossbow bolt — which you may consider either a mercy or an opportunity. One warning, and I give it freely: everything in this century is dry. The rafters are dry, the oil is dry-stored, the priests carry fire about on poles. Say IGNIS here and mean it modestly.",
   "palette": [
-    { "name": "Ochre plaster", "hex": "#B7803E", "use": "wall plaster, floors, painted dados" },
-    { "name": "Mud-brick", "hex": "#8A5A3C", "use": "upper walls over stone footings, pithos clay, amphorae" },
-    { "name": "Cast bronze", "hex": "#9B6A38", "use": "weapons, armour, cauldrons, ingots (never orpiment)" },
-    { "name": "Linen", "hex": "#CFC3A2", "use": "tunics, kilts, robes, wrapped hafts" },
-    { "name": "Hearth soot", "hex": "#2B231B", "use": "smoke staining on ceilings, jars, hearths; crevice dirt" },
-    { "name": "Fresco blue", "hex": "#3F6F86", "use": "painted frescoes, faience, hearth bands (never on enemies)" }
+    {
+      "name": "Ochre plaster",
+      "hex": "#B7803E",
+      "use": "wall plaster, floors, painted dados"
+    },
+    {
+      "name": "Mud-brick",
+      "hex": "#8A5A3C",
+      "use": "upper walls over stone footings, pithos clay, amphorae"
+    },
+    {
+      "name": "Cast bronze",
+      "hex": "#9B6A38",
+      "use": "weapons, armour, cauldrons, ingots (never orpiment)"
+    },
+    {
+      "name": "Linen",
+      "hex": "#CFC3A2",
+      "use": "tunics, kilts, robes, wrapped hafts"
+    },
+    {
+      "name": "Hearth soot",
+      "hex": "#2B231B",
+      "use": "smoke staining on ceilings, jars, hearths; crevice dirt"
+    },
+    {
+      "name": "Fresco blue",
+      "hex": "#3F6F86",
+      "use": "painted frescoes, faience, hearth bands (never on enemies)"
+    }
   ],
-
   "structures": [
     {
       "slug": "lion-gate",
@@ -24,40 +47,67 @@
       "summary": "A cyclopean gateway under a corbelled triangle and two carved lions, closing on timber doors.",
       "description": "The way in, and the citadel's opinion of you, carved in the same stone. Two stretches of cyclopean masonry — blocks so large the later Greeks credited them to one-eyed giants — pinch a passage down to a single pair of timber doors under a lintel of twenty tonnes. Above it the builders left a corbelled triangle to spare the lintel, and filled it with a relief of two lions at a column, which is a king explaining that he owns both the gate and the lions. The doors bar from inside and burn from outside; the walls do neither, and the gate is the only thing in this Age that shrugs at FRANGO.",
       "build": [
-        "Floor slab: 12.0 × 12.0 × 0.30 m, beaten earth over a 0.60 m wide paved threshold strip of flat limestone slabs (0.8–1.2 m each) running N–S through the gate; two cart-wheel ruts 0.08 m deep, 1.40 m apart.",
-        "Flanking walls: two cyclopean masses, each 4.70 m wide (E–W) × 3.20 m thick × 5.20 m tall above slab, built of 12–18 irregular polygonal blocks per face (0.9–2.2 m across), each block a bevelled box with 3–5 cm chamfered edges; joints packed with small chinking stones (0.10–0.20 m) set 3 cm proud.",
-        "Gate passage: 2.60 m wide clear, 3.74 m tall to the lintel underside (CurtainWall archway rule), 3.20 m deep; jambs are two monoliths 0.90 × 0.70 × 3.74 m, faces dressed flat (conglomerate ashlar), inner edges rounded by 30 years of shoulders — soften to 6 cm radius from 0.9–1.6 m height.",
-        "Lintel: one block 4.40 × 3.20 × 1.00 m, top face slightly cambered (+0.08 m at centre); underside flat with a 0.12 m rebated door-stop along its north edge.",
-        "Relieving triangle: corbelled opening above the lintel, base 3.00 m, apex at 5.20 m (height 1.46 m), built as 5 stepped courses (each stepping in 0.30 m) — then filled with the lion slab.",
-        "Lion relief slab: triangular limestone slab 3.00 m base × 1.46 m tall × 0.60 m thick, carved 0.08–0.12 m relief: central tapered-down Minoan column (0.30 m top dia., 0.20 m base) on a double altar plinth, two rampant lions facing it with forepaws on the plinth; the heads are MISSING (separate dowel holes 0.06 m dia. where bronze heads once fixed) — author heads as a removable 2 × 200-tri detail if a variant is wanted.",
-        "Doors: two leaves, each 1.30 × 3.60 × 0.14 m, vertical planks (0.22 m wide) of oak on 3 horizontal battens inside, bronze-sheathed along the leading edges (0.12 m strip, dome-head nails every 0.10 m); pivot pins top and bottom set into round sockets cut in lintel and threshold (0.10 m dia.).",
-        "Bar: square oak beam 0.16 × 0.16 × 3.20 m sliding into 0.20 m square slots in both jambs, 1.10 m above slab; slot mouths worn and blackened by hands.",
-        "Wall-walk: timber parapet on top of each wall mass — 0.20 m thick mud-brick breastwork 1.10 m high on a 0.30 m plastered string-course, reached by the stair (see sockets); crenels are rounded, not square (0.60 m wide, 0.40 m deep).",
-        "Inner (north) face: plastered with ochre lime plaster from 0 to 2.40 m, then rougher mud-brick above; a painted dado band 0.30 m tall at 1.20 m (fresco blue with haematite-red running spirals, 0.25 m repeat).",
-        "Decals and wear: soot fan above the torch brackets (bronze ring brackets 0.30 m either side of the door at 2.20 m), lichen-grey on the outer (south) upper blocks, cart-scuff at 0.4–0.6 m on both jambs.",
-        "Modularity: walls stop 0.30 m inside the E and W cell edges so an adjoining curtain-wall module butts on flush; the gate passage centreline sits on the cell centreline."
+        "Floor slab: 12.0 × 12.0 × 0.30 m, beaten earth with a 3.20 m wide paved strip of flat limestone slabs (0.8–1.2 m each) running N–S through the gate; two cart-wheel ruts 0.08 m deep, 1.40 m apart.",
+        "Flanking masses: two cyclopean blocks of wall, each 4.40 m wide (E–W) × 3.20 m deep (N–S) × 4.10 m to the wall-walk, set 0.30 m in from the E and W cell edges (0.30 + 4.40 + 2.60 + 4.40 + 0.30 = 12.0); 12–18 irregular polygonal blocks per face (0.9–2.2 m across), each a bevelled box with 3–5 cm chamfers; joints packed with chinking stones (0.10–0.20 m) set 3 cm proud.",
+        "Gate passage: 2.60 m wide clear × 3.74 m tall to the lintel underside (CurtainWall archway rule, min(5.20 × 0.72, 5.20 − 0.45 − 0.25)) × 3.20 m deep; jambs are two conglomerate monoliths 0.90 × 0.70 × 3.74 m (part of each mass), faces dressed flat, inner edges rounded to 6 cm radius from 0.9–1.6 m where shoulders rub.",
+        "Lintel: one conglomerate block 4.40 × 3.20 × 0.50 m (3.74–4.24 m), top face cambered +0.05 m at the centre; underside rebated 0.12 m along its north edge as the door-stop.",
+        "Relieving triangle: corbelled opening above the lintel, base 2.40 m at 4.24 m, apex at 5.20 m (0.96 m tall), built as 3 stepped courses each stepping in 0.40 m — then filled with the lion slab.",
+        "Lion relief slab: triangular limestone slab 2.40 m base × 0.96 m tall × 0.50 m thick (≈ 1.6 t), carved in 0.06–0.10 m relief: a central tapered-down Minoan column (0.16 m top dia., 0.11 m base) on a double altar plinth, two rampant lions facing it, forepaws on the plinth; the heads are MISSING (dowel holes 0.05 m dia. where separate heads once fixed).",
+        "Parapet: 1.10 m mud-brick breastwork, 0.40 m thick, on the outer (south) edge of each mass from 4.10 m to 5.20 m, with rounded merlons (0.60 m crenels, 0.40 m deep); the wall-walk behind is 2.80 m wide, plastered.",
+        "Doors: two leaves, each 1.30 × 3.70 × 0.14 m, vertical oak planks (0.22 m) on 3 horizontal battens inside, bronze-sheathed on the leading edges (0.12 m strip, dome-head nails every 0.10 m); pivot pins top and bottom in round sockets cut in lintel and threshold (0.10 m dia.).",
+        "Bar: square oak beam 0.16 × 0.16 × 3.20 m sliding into 0.20 m square slots in both jambs, 1.10 m above the slab; slot mouths worn and blackened by hands.",
+        "Inner (north) face: ochre lime plaster from 0 to 2.40 m, rougher mud-brick above; painted dado band 0.30 m tall at 1.20 m (fresco blue with haematite-red running spirals, 0.25 m repeat).",
+        "Decals and wear: soot fans above the torch rings, lichen-grey on the outer upper blocks, cart-scuff at 0.4–0.6 m on both jambs, chalky sling-stone pocks on the parapet faces.",
+        "Modularity: the passage centreline sits on the cell centreline; the masses' outer faces are flush with an adjoining curtain-wall module at 0.30 m in."
       ],
       "sockets": [
         "Door (gate), N–S through the cell centre: 2.60 × 3.74 m clear (CurtainWall archway), double timber leaves, barred from the north side",
-        "Door, north face of each flanking mass: none — the masses are solid; the passage is the only way through at ground level",
-        "Stair: east mass, inner (north) face — 1.00 m wide stone stair of 17 risers (0.30 m) running west-to-east up to the wall-walk at 5.20 m",
-        "Arrow-loop (sling slot): 4 slots in the parapet over the passage, 0.12 × 0.50 m, splayed to 0.40 m inside, at 5.20 + 0.50 m",
-        "Murder-hole: none (Bronze Age gates are defended from the flanking bastion, not overhead) — the bastion top is open for slingers",
-        "Torch sockets: 2 bronze ring brackets, north face, 2.20 m up, 0.30 m either side of the passage"
+        "Stair: east mass, inner (north) face — 1.00 m wide stone stair of 14 risers (0.293 m) rising west-to-east to the wall-walk at 4.10 m",
+        "Arrow-loop (sling slots): 3 per parapet, 0.12 × 0.50 m, splayed to 0.40 m inside, centred 0.60 m above the wall-walk (4.70 m)",
+        "Murder-hole: none — Bronze Age gates are defended from the flanking masses, not overhead; the wall-walks are open for slingers",
+        "Torch sockets: 2 bronze ring brackets on the north face, 2.20 m up, 0.30 m either side of the passage"
       ],
       "materials": [
-        { "name": "Cyclopean limestone", "hex": "#8C7F68", "notes": "Rough, matte (roughness 0.9); tiling 2 m; per-block tint variance ±8%; soot in every joint, lichen grey-green only on outer upper blocks — never verdigris-bright." },
-        { "name": "Dressed conglomerate", "hex": "#9A8666", "notes": "Jambs, lintel, relief slab; pebbled albedo at 0.5 m tiling, slightly smoother (0.75) where hands polish it at 0.9–1.6 m." },
-        { "name": "Ochre plaster", "hex": "#B7803E", "notes": "Inner face to 2.40 m; lime-wash streaks, chips to mud-brick along the base and corners; 1 m tiling." },
-        { "name": "Mud-brick", "hex": "#8A5A3C", "notes": "Parapet and upper inner walls; 0.40 × 0.20 m brick module, straw flecks, rain-rounded arrises." },
-        { "name": "Oak door timber", "hex": "#5A3E28", "notes": "Vertical plank grain, 0.22 m planks; soot-darkened at the top 0.5 m; roughness 0.8." },
-        { "name": "Cast bronze", "hex": "#9B6A38", "notes": "Door sheathing, nails, torch rings; warm brown with lighter rub on nail heads and the leading edges; never orpiment." },
-        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Decal fans above torch rings and in block joints; multiply layer." }
+        {
+          "name": "Cyclopean limestone",
+          "hex": "#8C7F68",
+          "notes": "Rough, matte (roughness 0.9); tiling 2 m; per-block tint variance ±8%; soot in every joint, lichen grey-green only on outer upper blocks — never verdigris-bright."
+        },
+        {
+          "name": "Dressed conglomerate",
+          "hex": "#9A8666",
+          "notes": "Jambs, lintel, relief slab; pebbled albedo at 0.5 m tiling, slightly smoother (0.75) where hands polish it at 0.9–1.6 m."
+        },
+        {
+          "name": "Ochre plaster",
+          "hex": "#B7803E",
+          "notes": "Inner face to 2.40 m; lime-wash streaks, chips to mud-brick along the base and corners; 1 m tiling."
+        },
+        {
+          "name": "Mud-brick",
+          "hex": "#8A5A3C",
+          "notes": "Parapet and upper inner walls; 0.40 × 0.20 m brick module, straw flecks, rain-rounded arrises."
+        },
+        {
+          "name": "Oak door timber",
+          "hex": "#5A3E28",
+          "notes": "Vertical plank grain, 0.22 m planks; soot-darkened at the top 0.5 m; roughness 0.8."
+        },
+        {
+          "name": "Cast bronze",
+          "hex": "#9B6A38",
+          "notes": "Door sheathing, nails, torch rings; warm brown with lighter rub on nail heads and the leading edges; never orpiment."
+        },
+        {
+          "name": "Hearth soot",
+          "hex": "#2B231B",
+          "notes": "Decal fans above torch rings and in block joints; multiply layer."
+        }
       ],
       "gameplay": [
         "The doors are the weak point: IGNIS sets the timber leaves burning in 6 s and they fall off their pivots at 20 s; FRANGO splits the bar (not the stone).",
         "The cyclopean masses are indestructible — the only structure in the Age FRANGO cannot touch; it chips a chinking stone loose for show.",
-        "Wall-walk slingers over the passage cover the approach; the corbelled triangle is a sightline gap you can throw junk through from the walk.",
+        "Wall-walk slingers at 4.10 m cover the approach from behind the parapet; the relief triangle has no walk over it, so junk thrown up from the gate passage lands on the walk behind.",
         "The cart-wheel ruts are a physics bump: a two-carrier load dragged through the gate bounces and may drop.",
         "The lion slab can be pried out with 3 FRANGO hits and falls inward as a 1.6 t crushing prop (kills anything under it)."
       ],
@@ -68,21 +118,21 @@
       "slug": "megaron-hall",
       "name": "The Megaron",
       "zone": "Keep",
-      "footprint": "12 × 12 m, one cell; hall 10.4 × 10.4 m inside, porch on the south",
+      "footprint": "12 × 12 m, one cell; hall 10.4 × 8.8 m inside, 1.6 m porch on the south",
       "height_m": 4.6,
       "summary": "The king's hall: a painted circular hearth, four columns, a throne, and a hole in the roof for the smoke to find its own way out.",
       "description": "Here is where a god-king sits to be warm and important. A great round hearth fills the middle of the floor, painted in rings of flame and running spiral; four red-painted columns of cypress hold up a roof of reed and clay, with a lantern-hole above the fire where the smoke leaves, eventually. The walls are frescoed with griffins, processions and the king's opinion of himself; the throne is plastered into the east wall so nobody can steal it, which is a challenge. Low, warm, soot-darkened and full of things that burn: the finest room in the Age and the easiest to lose.",
       "build": [
         "Floor slab: 12.0 × 12.0 × 0.30 m; top surface painted plaster in a 1.00 m grid of squares, each square painted with a faded octopus/dolphin motif (albedo only, not geometry); floor worn to bare lime in a path from south door to throne.",
-        "Walls: 0.80 m thick rubble core with mud-brick upper; interior clear 10.40 × 10.40 m; clear height 4.60 m to the underside of the ceiling beams; timber-laced — horizontal half-timber beams 0.20 × 0.20 m let into the plaster at 1.20 m and 3.40 m.",
-        "Central hearth: circular, 3.60 m diameter × 0.20 m raised clay rim, 0.30 m wide rim top; rim painted with a flame band (madder tongues on ochre, 0.30 m repeat) and a fresco-blue running spiral on the outer face; firebox dished 0.12 m deep, full of ash (#2B231B) and 4 cooled logs.",
-        "Columns: four, set on a 5.00 m square around the hearth; each tapered DOWN (Minoan): 0.46 m dia. at top, 0.34 m at base, 3.80 m shaft; cushion capital 0.70 m dia. × 0.36 m (echinus + square abacus 0.70 × 0.70 × 0.10 m); base a flat stone disc 0.60 m dia. × 0.10 m. Shaft painted haematite red, capital and base black; soot heaviest on the hearth-facing side.",
-        "Roof: four main beams 0.30 × 0.30 m running E–W at 4.60 m, carried on the column abaci and the walls; joists 0.12 m round poles at 0.40 m centres; reed matting and clay above (underside only in the cell — the roof is a separate tile).",
+        "Walls: 0.80 m thick rubble core with mud-brick upper; hall interior 10.40 m (E–W) × 8.80 m (N–S), from y = 2.40 to 11.20 m; clear height 4.60 m to the underside of the ceiling beams; timber-laced with horizontal beams 0.20 × 0.20 m let into the plaster at 1.20 m and 3.40 m.",
+        "Central hearth: circular, 3.60 m diameter, centred in the hall (x 6.0, y 6.8), with a 0.20 m raised clay rim 0.30 m wide; rim painted with a flame band (madder tongues on ochre, 0.30 m repeat) and a fresco-blue running spiral on the outer face; firebox dished 0.12 m deep, full of ash and 4 cooled logs.",
+        "Columns: four, on a 5.00 m square around the hearth (x 3.5 / 8.5, y 4.3 / 9.3); each tapered DOWN (Minoan): 0.46 m dia. at top, 0.34 m at base, 3.84 m shaft; cushion capital 0.70 m dia. × 0.26 m under a square abacus 0.70 × 0.70 × 0.10 m (shaft + capital + abacus = 4.20 m, beams on top to 4.60 m); base a flat gypsum disc 0.60 m dia. × 0.10 m. Shaft haematite red, capital and base black; soot heaviest on the hearth-facing side.",
+        "Roof: four main beams 0.40 × 0.40 m running E–W with their undersides at 4.60 m (the clear height), carried on the column abaci and the walls; joists 0.12 m round poles at 0.40 m centres; reed matting and clay above (underside only in the cell — the roof is a separate tile).",
         "Smoke-hole (lantern): 2.00 × 2.00 m opening over the hearth between the four columns, framed by a 0.30 m timber collar, rising as a 0.80 m clerestory box with louvred sides (the smoke leaves here; the light enters).",
         "Throne: plastered into the centre of the east wall; gypsum seat 0.90 m wide × 0.60 m deep × 0.46 m high, high back 1.40 m with a wavy (undulating) crest; flanked by painted griffins couchant on the wall, 1.80 m long each, fresco on plaster.",
         "Frescoes: continuous band 1.20–3.20 m on all walls (processions, griffins, running spirals at top and bottom borders); 0.40 m dado of imitation veined stone below; paint is flat and chalky (roughness 0.95), cracked and flaking in a 3 × 1 m patch near the south door.",
         "Benches: plastered clay benches 0.40 m high × 0.50 m deep along the north and south walls, 6.0 m long each.",
-        "Porch (prodomos): the south 1.60 m of the cell outside the hall wall — two further columns in antis, same profile, flanking the door.",
+        "Porch (prodomos): the south 1.60 m of the cell outside the hall's south wall — two further columns in antis (same profile) flanking the door, under the same beam height.",
         "Clutter: 2 bronze tripod stands by the hearth (see items), 3 painted offering tables (0.60 m square), fleeces on the benches, a libation channel 0.08 m wide cut in the floor from hearth to throne."
       ],
       "sockets": [
@@ -94,13 +144,41 @@
         "Smoke-hole: 2.00 × 2.00 m roof opening over the hearth — a vertical socket to the roof tile above"
       ],
       "materials": [
-        { "name": "Painted lime plaster", "hex": "#C9A77A", "notes": "Fresco ground; chalky, roughness 0.95; 1 m tiling for plain areas, frescoes as unique 4 × 2 m decals; crazing and flake-offs to mud-brick near doors." },
-        { "name": "Fresco blue", "hex": "#3F6F86", "notes": "Spirals, griffin wings, hearth outer band; flat chalky pigment, never glossy; muted by soot on the upper third." },
-        { "name": "Haematite red", "hex": "#8E3F2C", "notes": "Column shafts and fresco grounds; darker and browner than madder; soot-rubbed on the hearth side." },
-        { "name": "Hearth madder", "hex": "#C4542E", "notes": "Only the painted flame tongues on the hearth rim and live fire itself — the room's danger cue." },
-        { "name": "Cypress timber", "hex": "#5A3E28", "notes": "Beams, joists, lantern collar; heavily soot-blackened (blend to #2B231B toward the smoke-hole)." },
-        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Ceiling, beam undersides, column hearth-faces; vertical smoke streaks above the lantern, 0.5 m decal set." },
-        { "name": "Gypsum", "hex": "#D8CDB2", "notes": "Throne, column bases, threshold; smooth (0.6), hand-polished on the throne arms." }
+        {
+          "name": "Painted lime plaster",
+          "hex": "#C9A77A",
+          "notes": "Fresco ground; chalky, roughness 0.95; 1 m tiling for plain areas, frescoes as unique 4 × 2 m decals; crazing and flake-offs to mud-brick near doors."
+        },
+        {
+          "name": "Fresco blue",
+          "hex": "#3F6F86",
+          "notes": "Spirals, griffin wings, hearth outer band; flat chalky pigment, never glossy; muted by soot on the upper third."
+        },
+        {
+          "name": "Haematite red",
+          "hex": "#8E3F2C",
+          "notes": "Column shafts and fresco grounds; darker and browner than madder; soot-rubbed on the hearth side."
+        },
+        {
+          "name": "Hearth madder",
+          "hex": "#C4542E",
+          "notes": "Only the painted flame tongues on the hearth rim and live fire itself — the room's danger cue."
+        },
+        {
+          "name": "Cypress timber",
+          "hex": "#5A3E28",
+          "notes": "Beams, joists, lantern collar; heavily soot-blackened (blend to #2B231B toward the smoke-hole)."
+        },
+        {
+          "name": "Hearth soot",
+          "hex": "#2B231B",
+          "notes": "Ceiling, beam undersides, column hearth-faces; vertical smoke streaks above the lantern, 0.5 m decal set."
+        },
+        {
+          "name": "Gypsum",
+          "hex": "#D8CDB2",
+          "notes": "Throne, column bases, threshold; smooth (0.6), hand-polished on the throne arms."
+        }
       ],
       "gameplay": [
         "Fire hazard: the hearth is always lit (point light, flicker 0.2 Hz); IGNIS anywhere in the room spreads to the ceiling beams within 8 s and the whole roof underside burns in 30 s — then smoke fills from the top down, 0.10 m/s.",
@@ -116,57 +194,83 @@
       "slug": "pithos-store",
       "name": "The Pithos Magazine",
       "zone": "InnerWard",
-      "footprint": "12 × 12 m, one cell; three long aisles N–S between four rows of jars",
+      "footprint": "12 × 12 m, one cell; four rows of jars N–S with five aisles, one E–W cross-aisle",
       "height_m": 4.0,
       "summary": "Rows of man-high storage jars — grain on one side, olive oil on the other — and aisles too narrow to turn in.",
-      "description": "The wealth of the palace in its plainest form: grain and oil, by the tonne, in jars taller than you are. The pithoi stand half-sunk in the floor in four rows, each one tattooed with rope-pattern bands and a scribe's mark of what it holds and whose it is. The aisles are narrow enough that a man with a tower shield must walk them sideways. Grain burns. Oil burns better. A lit fire-pot through that door turns the magazine into the brightest room in the century for a good eleven minutes.",
+      "description": "The wealth of the palace in its plainest form: grain and oil, by the tonne, in jars taller than you are. The pithoi stand set into clay benches in four rows, each one tattooed with rope-pattern bands and a scribe's mark of what it holds and whose it is. The aisles are narrow enough that a man with a tower shield must walk them sideways. Grain burns. Oil burns better. A lit fire-pot through that door turns the magazine into the brightest room in the century for a good eleven minutes.",
       "build": [
-        "Floor slab: 12.0 × 12.0 × 0.30 m, beaten clay floor; 44 circular jar pits cut 0.40 m deep into a raised 0.30 m clay bench along each row (so jars stand 0.70 m 'sunk').",
-        "Walls: 0.70 m rubble and mud-brick, plastered plain ochre, clear height 4.00 m; timber lacing beams 0.18 × 0.18 m at 1.00 m and 2.60 m; no frescoes — scratched tally marks and painted jar-row numbers (Linear-B-like signs, 0.20 m tall, haematite red) at 1.80 m.",
-        "Aisles: three N–S aisles, each 1.20 m clear between jar bellies (0.90 m at the narrowest where two bellies face) — deliberately tight; one E–W cross-aisle 1.60 m wide at the cell centre.",
-        "Pithoi (grain, west two rows): 22 jars, ovoid, 1.60 m tall above floor (2.00 m total, 0.40 m buried), max belly 1.10 m dia. at 1.00 m height, mouth 0.50 m dia. with a 0.08 m rolled rim; 4 applied rope-pattern bands (0.06 m wide ridges) at 0.40/0.80/1.20/1.50 m; 6 vertical lug handles on the shoulder.",
-        "Pithoi (oil, east two rows): 22 jars, same body but shorter (1.40 m above floor), darker clay, black oil drip stains down one side from the rim, a stone lid disc 0.56 m dia. × 0.06 m; 3 carry distinct 'OIL' scribe signs in the albedo.",
+        "Floor slab: 12.0 × 12.0 × 0.30 m, beaten clay floor; four raised clay benches 1.20 m wide × 0.30 m high running N–S, each with 8 circular jar pits 0.30 m deep (jars stand with their lowest 0.30 m in the bench).",
+        "Walls: 0.70 m rubble and mud-brick, plastered plain ochre, clear height 4.00 m; interior 10.60 × 10.60 m; timber lacing beams 0.18 × 0.18 m at 1.00 m and 2.60 m; no frescoes — scratched tally marks and painted jar-row numbers (Linear-B-like signs, 0.20 m tall, haematite red) at 1.80 m.",
+        "Aisles (E–W section): wall aisle 1.30 m · row 1 (1.10) · aisle 1.20 · row 2 · aisle 1.20 · row 3 · aisle 1.20 · row 4 · wall aisle 1.30 = 10.60 m; clear between facing jar bellies is 1.20 m, pinched to 0.90 m wherever a lug handle or a lead clamp sticks out. One E–W cross-aisle 1.60 m wide at the cell centre.",
+        "Pithoi (grain, west two rows): 16 jars, ovoid, 2.00 m tall overall (1.70 m showing above the bench), max belly 1.10 m dia. at 1.00 m, mouth 0.50 m dia. with a 0.08 m rolled rim; 4 applied rope-pattern bands (0.06 m ridges) at 0.40/0.80/1.20/1.50 m; 6 vertical lug handles on the shoulder.",
+        "Pithoi (oil, east two rows): 16 jars, same body but 1.80 m tall overall, darker clay, black oil drip stains from the rim, a stone lid disc 0.56 m dia. × 0.06 m; 3 carry distinct 'OIL' scribe signs in the albedo.",
         "Jar variety: author 3 pithos meshes (tall, squat, cracked-and-bound with lead clamps) and 2 rim variants; rotate every instance randomly ±180° about vertical.",
-        "Ceiling: 0.24 m round-pole joists at 0.50 m centres under a clay roof; two 0.60 m square vent holes near the north wall.",
-        "Ladders and scaffold: 2 timber step-ladders (2.00 m, 7 rungs) left against jars for ladling; ladle and scoop props on the rims.",
-        "Scale-pans and scribe's bench: a clay bench 1.80 × 0.60 × 0.80 m at the south end with 12 unfired clay tablets (0.12 × 0.07 × 0.02 m) and a bronze balance.",
-        "Spillage decals: grain drifts at jar feet (west), black oil pools 0.4–1.2 m wide (east) — the oil pools are gameplay-flammable decals, author them as separate meshes 2 tris each."
+        "Ceiling: 0.24 m round-pole joists at 0.50 m centres under a clay roof, underside at 4.00 m; two 0.60 m square vent holes near the north wall.",
+        "Ladders: 2 timber step-ladders (2.00 m, 7 rungs) left against jars for ladling; ladle and scoop props on the rims.",
+        "Scribe's bench: clay bench 1.80 × 0.60 × 0.80 m in the south wall aisle with 12 unfired clay tablets (0.12 × 0.07 × 0.02 m) and a bronze balance.",
+        "Spillage decals: grain drifts at jar feet (west), black oil pools 0.4–1.2 m wide (east) — the oil pools are gameplay-flammable, authored as separate 2-tri meshes."
       ],
       "sockets": [
         "Door, south face: 2.60 × 2.88 m (InnerWard archway), single timber leaf, often propped",
         "Door, north face: 2.60 × 2.88 m archway into the next magazine",
-        "Door, east and west faces: 2.60 × 2.88 m archways, but each is choked by an end jar — the archway is full-size, a pithos stands 0.60 m inside it and must be broken or rolled",
+        "Door, east and west faces: 2.60 × 2.88 m archways opening onto the wall aisles; each is half-choked by a stacked amphora pile 0.60 m inside it that must be broken or climbed",
         "Window: 2 vent holes in the ceiling, 0.60 × 0.60 m (smoke escape; not climbable)",
         "Stair: none — the magazine is a ground-floor room",
-        "Hide spots: 8 marked gaps (0.70 m) between jars where a player can crouch out of an aisle's sight line"
+        "Hide spots: 8 marked crouch spots in the shoulder hollows where the cross-aisle meets each row (jar bellies touch along a row at 1.125 m pitch, so the only cover is at row ends and the cross-aisle)"
       ],
       "materials": [
-        { "name": "Pithos terracotta", "hex": "#A0603E", "notes": "Jar bodies; coarse fired clay, roughness 0.9, 0.5 m tiling with rope-band trim; darker fire-cloud blotches; chipped rims showing pale core." },
-        { "name": "Oil-soaked clay", "hex": "#6A4430", "notes": "East-row jars; darker, faintly satin (0.6) where oil has run; black drip decals from rims." },
-        { "name": "Ochre plaster", "hex": "#B7803E", "notes": "Walls; plain, handprints and tally scratches at 1.2–1.9 m." },
-        { "name": "Beaten clay floor", "hex": "#7A5A3E", "notes": "Floor and jar benches; grain drifts and oil pools as decals; 2 m tiling." },
-        { "name": "Grain", "hex": "#C8A868", "notes": "Spilled grain decals and jar-mouth fill; small-scale noise, pale straw, not gold-bright." },
-        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Old oil-lamp soot on the ceiling and upper walls; black oil drips." }
+        {
+          "name": "Pithos terracotta",
+          "hex": "#A0603E",
+          "notes": "Jar bodies; coarse fired clay, roughness 0.9, 0.5 m tiling with rope-band trim; darker fire-cloud blotches; chipped rims showing pale core."
+        },
+        {
+          "name": "Oil-soaked clay",
+          "hex": "#6A4430",
+          "notes": "East-row jars; darker, faintly satin (0.6) where oil has run; black drip decals from rims."
+        },
+        {
+          "name": "Ochre plaster",
+          "hex": "#B7803E",
+          "notes": "Walls; plain, handprints and tally scratches at 1.2–1.9 m."
+        },
+        {
+          "name": "Beaten clay floor",
+          "hex": "#7A5A3E",
+          "notes": "Floor and jar benches; grain drifts and oil pools as decals; 2 m tiling."
+        },
+        {
+          "name": "Grain",
+          "hex": "#C8A868",
+          "notes": "Spilled grain decals and jar-mouth fill; small-scale noise, pale straw, not gold-bright."
+        },
+        {
+          "name": "Hearth soot",
+          "hex": "#2B231B",
+          "notes": "Old oil-lamp soot on the ceiling and upper walls; black oil drips."
+        }
       ],
       "gameplay": [
         "Conflagration: IGNIS on any oil pithos or pool ignites the whole east half in 4 s (burning oil flows downhill along the aisles at 0.6 m/s); the grain rows follow in 15 s; fire lasts ~11 min unless the roof falls in.",
         "Pithoi are FRANGO-breakable (1 hit): grain jars spill a drift that slows movement 30%; oil jars spill a slick that makes everyone slip on a sprint and is flammable.",
-        "Aisles 0.9–1.2 m force single file: a Dendra Champion must turn sideways (tower shield) and cannot swing his rapier in them — the room is where you fight him.",
+        "Aisles 1.20 m (0.90 m at clamps) force single file: a Dendra Champion must shuffle sideways and cannot swing his rapier in them — the room is where you fight him.",
         "Crouch-hides between jars break line of sight; the Keeper of the Flame patrols here and a missed fire-pot is the most likely way the magazine goes up.",
         "Loot spawns: sealed amphorae stacked at the south bench; oxhide ingots stored in a jar pit under the scribe's bench."
       ],
-      "budget": "≤ 25k tris for the cell (44 pithoi instanced from 3 meshes at ~350 tris each = 15.4k, walls/floor/benches 5k, ladders/bench/tablets 2.6k, decals 2k); terracotta tiling 2048² with rope-band trim.",
+      "budget": "≤ 25k tris for the cell (32 pithoi instanced from 3 meshes at ~350 tris = 11.2k, benches/walls/floor 6k, ladders/bench/tablets 3k, decals 2k, headroom 2.8k); terracotta tiling 2048² with rope-band trim.",
       "concept": "concept/bronze/pithos-store.svg"
     }
   ],
-
   "enemies": [
     {
       "slug": "palace-levy",
       "name": "Palace Levy",
       "role": "patrol",
-      "zones": ["CurtainWall", "OuterBailey"],
-      "height_m": 1.70,
+      "zones": [
+        "CurtainWall",
+        "OuterBailey"
+      ],
+      "height_m": 1.7,
       "summary": "A farmer the king has lent a spear to: linen, a leather cap and a shield the size of a door.",
       "description": "Consider the palace levy: last week a man who kept goats, this week the first line of a god-king's defences, and in both roles chiefly concerned with his supper. He carries a figure-of-eight oxhide shield that covers him from chin to shin and a thrusting spear nearly half again his height, and he wears a linen tunic and a leather cap and that is all the armour the treasury would stand. There are a great many of him. He is slow to believe you are real, quick to shout once he does, and a crossbow bolt goes through him, his shield and the man behind.",
       "silhouette": "A huge figure-of-eight shield like a pinched hourglass hiding the whole left side, a tall vertical spear line rising 0.7 m over the head, and a small round-capped head on a thin, bare-armed body.",
@@ -184,12 +288,36 @@
         "Proportions: slightly long arms and big hands/feet for readability; head 0.23 m tall (about 7.4 heads)."
       ],
       "materials": [
-        { "name": "Linen", "hex": "#CFC3A2", "notes": "Tunic; soft cloth, roughness 0.9, 2 cm weave tiling, dirt gradient up from the hem, sweat stains at armpits." },
-        { "name": "Oxhide", "hex": "#B79B78", "notes": "Shield face; cream hide with #4A3526 dappled patches (hand-painted, 0.15–0.30 m), short-hair normal detail, scuffed pale rim." },
-        { "name": "Boiled leather", "hex": "#6B4A2E", "notes": "Cap, belt, straps, scabbard; roughness 0.7, darker at seams, lighter where rubbed." },
-        { "name": "Cast bronze", "hex": "#9B6A38", "notes": "Spear-head, butt-spike, cap boss, dagger; warm brown bronze, brighter polish only on the cutting edge; never orpiment." },
-        { "name": "Ash haft", "hex": "#8A6A48", "notes": "Spear shaft; long grain, darker hand-grease at the grip." },
-        { "name": "Weathered skin", "hex": "#9C6E4E", "notes": "Sun-darkened, stylised painted planes, not photographic; dust on shins." }
+        {
+          "name": "Linen",
+          "hex": "#CFC3A2",
+          "notes": "Tunic; soft cloth, roughness 0.9, 2 cm weave tiling, dirt gradient up from the hem, sweat stains at armpits."
+        },
+        {
+          "name": "Oxhide",
+          "hex": "#B79B78",
+          "notes": "Shield face; cream hide with #4A3526 dappled patches (hand-painted, 0.15–0.30 m), short-hair normal detail, scuffed pale rim."
+        },
+        {
+          "name": "Boiled leather",
+          "hex": "#6B4A2E",
+          "notes": "Cap, belt, straps, scabbard; roughness 0.7, darker at seams, lighter where rubbed."
+        },
+        {
+          "name": "Cast bronze",
+          "hex": "#9B6A38",
+          "notes": "Spear-head, butt-spike, cap boss, dagger; warm brown bronze, brighter polish only on the cutting edge; never orpiment."
+        },
+        {
+          "name": "Ash haft",
+          "hex": "#8A6A48",
+          "notes": "Spear shaft; long grain, darker hand-grease at the grip."
+        },
+        {
+          "name": "Weathered skin",
+          "hex": "#9C6E4E",
+          "notes": "Sun-darkened, stylised painted planes, not photographic; dust on shins."
+        }
       ],
       "rig": {
         "skeleton": "Humanoid (Unity Mecanim) 1.70 m; extra bones: shield_root (child of left forearm, with a telamon_strap chain of 3 bones to the right shoulder), spear_root (right hand prop bone), tunic_hem front/back/left/right (4 short cloth bones off hips), cap (head child, detachable), waterskin (right hip, one jiggle bone).",
@@ -228,7 +356,10 @@
       "slug": "wall-slinger",
       "name": "Wall Slinger",
       "role": "ranged",
-      "zones": ["CurtainWall", "InnerWard"],
+      "zones": [
+        "CurtainWall",
+        "InnerWard"
+      ],
       "height_m": 1.66,
       "summary": "A lightly-dressed youth with a sling and a pouch of river stones; silent, quick, and unkind to helmets.",
       "description": "The slinger is the Bronze Age's answer to the question 'what if a rock, but faster'. He wears a kilt and a stone-pouch and very little else, and he stands on the wall with a cord in his hand and a lead-shaped stone in the cord, and the first you know of him is a sound like a slammed door on the side of your head. Light, quick, poorly paid and extremely accurate; he will not come down off the wall to meet you, and he runs the moment you arrive where he is.",
@@ -247,12 +378,36 @@
         "Wear: kilt dust gradient, stone-dust whitening on the right hand and pouch mouth, sweat sheen on shoulders (spec-mask only)."
       ],
       "materials": [
-        { "name": "Linen", "hex": "#CFC3A2", "notes": "Kilt, bandana, baldric; fine weave at 2 cm, dirt-gradient from the hem, pale stone-dust at the right hip." },
-        { "name": "Rawhide", "hex": "#8C6A48", "notes": "Pouches, bracer, sandals, sling cradle; roughness 0.8, stretched shine on the pouch bulges." },
-        { "name": "Braided wool cord", "hex": "#6E5A44", "notes": "Sling cords; twisted-rope normal, 1 cm repeat." },
-        { "name": "River stone", "hex": "#8E8778", "notes": "Sling stones; smooth grey-buff, roughness 0.6." },
-        { "name": "Weathered skin", "hex": "#9C6E4E", "notes": "Bare torso and limbs; sunburnt shoulders; stylised painted planes." },
-        { "name": "Haematite red", "hex": "#8E3F2C", "notes": "Kilt border stripe only; dull earth red, never madder-bright." }
+        {
+          "name": "Linen",
+          "hex": "#CFC3A2",
+          "notes": "Kilt, bandana, baldric; fine weave at 2 cm, dirt-gradient from the hem, pale stone-dust at the right hip."
+        },
+        {
+          "name": "Rawhide",
+          "hex": "#8C6A48",
+          "notes": "Pouches, bracer, sandals, sling cradle; roughness 0.8, stretched shine on the pouch bulges."
+        },
+        {
+          "name": "Braided wool cord",
+          "hex": "#6E5A44",
+          "notes": "Sling cords; twisted-rope normal, 1 cm repeat."
+        },
+        {
+          "name": "River stone",
+          "hex": "#8E8778",
+          "notes": "Sling stones; smooth grey-buff, roughness 0.6."
+        },
+        {
+          "name": "Weathered skin",
+          "hex": "#9C6E4E",
+          "notes": "Bare torso and limbs; sunburnt shoulders; stylised painted planes."
+        },
+        {
+          "name": "Haematite red",
+          "hex": "#8E3F2C",
+          "notes": "Kilt border stripe only; dull earth red, never madder-bright."
+        }
       ],
       "rig": {
         "skeleton": "Humanoid (Unity Mecanim) 1.66 m; extra bones: sling chain (4 bones, parented to right hand, simulated in idle, keyed in attack), bandana_tail ×2, kilt_front / kilt_back cloth bones, pouch_R and pouch_L jiggle bones.",
@@ -289,7 +444,10 @@
       "slug": "dendra-champion",
       "name": "Dendra Champion",
       "role": "heavy",
-      "zones": ["Keep", "InnerWard"],
+      "zones": [
+        "Keep",
+        "InnerWard"
+      ],
       "height_m": 1.92,
       "summary": "A nobleman sealed in a bronze bell of plates, a boar's-tusk helmet and a rapier as long as your arm and his.",
       "description": "The king's own champion, bolted into the Dendra panoply: fifteen pieces of hammered bronze in nested rings about his chest and hips, a neck-guard to his ears and a helmet of boar's tusk that took forty boars and one very patient man. He moves like a bell being carried downstairs and he cannot turn quickly, sit, or climb a ladder; but thrown pots and furniture bounce off him like rain off a shield, and his rapier reaches a remarkably long way. Fight him in a narrow place. Better still, fetch something from a later century with a point on it.",
@@ -309,12 +467,36 @@
         "Wear: every bronze edge brightened by rub, raised dents on the shoulders (normal), soot in the plate overlaps and lacing holes, sweat-dark leather lacing; linen stained at the hem."
       ],
       "materials": [
-        { "name": "Hammered bronze plate", "hex": "#8E5E32", "notes": "Cuirass, rings, collar, greaves; warm brown, roughness 0.45, planishing-hammer normal dimples at 1 cm, brighter #B08050 on raised edges and rivet heads, darker in overlaps — never orpiment, never verdigris green." },
-        { "name": "Boar's tusk", "hex": "#D6CCB0", "notes": "Helmet plates; ivory-cream, slightly glossy (0.4), each plate with a darker enamel-line along one edge." },
-        { "name": "Felt and leather", "hex": "#5E4230", "notes": "Helmet base between plates, lacing, straps; roughness 0.8, sweat-darkened." },
-        { "name": "Linen", "hex": "#CFC3A2", "notes": "Tunic below the rings; dust and soot on the hem." },
-        { "name": "Bone and ivory", "hex": "#E0D6BE", "notes": "Sword pommel and grip plates; small, polished." },
-        { "name": "Horsehair", "hex": "#2B231B", "notes": "Helmet tuft; card-strand alpha, 20 strands." }
+        {
+          "name": "Hammered bronze plate",
+          "hex": "#8E5E32",
+          "notes": "Cuirass, rings, collar, greaves; warm brown, roughness 0.45, planishing-hammer normal dimples at 1 cm, brighter #B08050 on raised edges and rivet heads, darker in overlaps — never orpiment, never verdigris green."
+        },
+        {
+          "name": "Boar's tusk",
+          "hex": "#D6CCB0",
+          "notes": "Helmet plates; ivory-cream, slightly glossy (0.4), each plate with a darker enamel-line along one edge."
+        },
+        {
+          "name": "Felt and leather",
+          "hex": "#5E4230",
+          "notes": "Helmet base between plates, lacing, straps; roughness 0.8, sweat-darkened."
+        },
+        {
+          "name": "Linen",
+          "hex": "#CFC3A2",
+          "notes": "Tunic below the rings; dust and soot on the hem."
+        },
+        {
+          "name": "Bone and ivory",
+          "hex": "#E0D6BE",
+          "notes": "Sword pommel and grip plates; small, polished."
+        },
+        {
+          "name": "Horsehair",
+          "hex": "#2B231B",
+          "notes": "Helmet tuft; card-strand alpha, 20 strands."
+        }
       ],
       "rig": {
         "skeleton": "Humanoid (Unity Mecanim) 1.92 m, arms with reduced shoulder abduction (max 55°) because of the pauldrons; extra bones: ring_1/ring_2/ring_3 (skirt bands, each a child of hips with damped secondary swing), cheek_L/cheek_R hinges, tuft chain (2), sword prop bone, shield_back socket.",
@@ -353,7 +535,11 @@
       "slug": "flame-keeper",
       "name": "Keeper of the Flame",
       "role": "special",
-      "zones": ["Keep", "InnerWard", "Crypt"],
+      "zones": [
+        "Keep",
+        "InnerWard",
+        "Crypt"
+      ],
       "height_m": 1.72,
       "summary": "A temple priestess who carries the palace fire on a yoke of clay pots and throws it at you.",
       "description": "The keeper tends the god's fire, which in this Age means she carries it about in clay pots slung from a yoke across her shoulders, with a swinging brazier in her other hand for the incense and for emphasis. She is the only person in the palace who is entirely unafraid of you, having been raised to believe she is the fire's servant and you are merely its fuel. When alarmed she unhooks a pot and throws it; it breaks, it spills, it burns, and in a century built of dry timber and oil jars that is the end of the argument. Kill her far from anything you mean to keep.",
@@ -372,13 +558,41 @@
         "Wear: skirt hem scorched in irregular bites; soot handprints on the apron; singed ends on the hair (a few strands shorter)."
       ],
       "materials": [
-        { "name": "Linen", "hex": "#CFC3A2", "notes": "Bodice, polos, apron, light flounces; 2 cm weave, scorch gradient on hems." },
-        { "name": "Soot-dyed wool", "hex": "#3A2E26", "notes": "Alternate flounces; felted, roughness 0.95, ash-grey fuzz on edges." },
-        { "name": "Fire-pot clay", "hex": "#A0603E", "notes": "Pots; coarse fired clay, black soot streaks down from the neck, cracked glaze-less surface." },
-        { "name": "Olive wood", "hex": "#6E5236", "notes": "Yoke; polished where the neck sits, char at the ends." },
-        { "name": "Cast bronze", "hex": "#9B6A38", "notes": "Censer, chains, bangles; warm brown, soot-blackened inside the bowl; never orpiment." },
-        { "name": "Ember madder", "hex": "#C4542E", "notes": "Pot-mouth glow, censer embers, wick tips — emissive 2.0, flicker; the only madder on her (danger cue)." },
-        { "name": "Haematite red", "hex": "#8E3F2C", "notes": "Borders, headband, painted soles; dull earth red, not emissive." }
+        {
+          "name": "Linen",
+          "hex": "#CFC3A2",
+          "notes": "Bodice, polos, apron, light flounces; 2 cm weave, scorch gradient on hems."
+        },
+        {
+          "name": "Soot-dyed wool",
+          "hex": "#3A2E26",
+          "notes": "Alternate flounces; felted, roughness 0.95, ash-grey fuzz on edges."
+        },
+        {
+          "name": "Fire-pot clay",
+          "hex": "#A0603E",
+          "notes": "Pots; coarse fired clay, black soot streaks down from the neck, cracked glaze-less surface."
+        },
+        {
+          "name": "Olive wood",
+          "hex": "#6E5236",
+          "notes": "Yoke; polished where the neck sits, char at the ends."
+        },
+        {
+          "name": "Cast bronze",
+          "hex": "#9B6A38",
+          "notes": "Censer, chains, bangles; warm brown, soot-blackened inside the bowl; never orpiment."
+        },
+        {
+          "name": "Ember madder",
+          "hex": "#C4542E",
+          "notes": "Pot-mouth glow, censer embers, wick tips — emissive 2.0, flicker; the only madder on her (danger cue)."
+        },
+        {
+          "name": "Haematite red",
+          "hex": "#8E3F2C",
+          "notes": "Borders, headband, painted soles; dull earth red, not emissive."
+        }
       ],
       "rig": {
         "skeleton": "Humanoid (Unity Mecanim) 1.72 m; extra bones: yoke (child of upper chest, rigid), pot_L1/L2/R1/R2 each a 2-bone cord chain + pot (detachable, physics on release), censer chain (3 bones) off left hand, skirt flounce ring bones ×5 (radial, damped), hair chain ×3.",
@@ -414,7 +628,6 @@
       "concept": "concept/bronze/flame-keeper.svg"
     }
   ],
-
   "items": [
     {
       "slug": "oxhide-ingot",
@@ -436,10 +649,26 @@
         "Wear: rubbed brighter copper on the lug tips and raised blisters, darker oxide-brown in the pocks; no green patina."
       ],
       "materials": [
-        { "name": "Raw copper", "hex": "#9E5A36", "notes": "Main albedo; reddish-brown metal, metallic 1.0, roughness 0.55 on top face (pocked), 0.4 on rubbed lugs; brighter #C07A4E on high points." },
-        { "name": "Copper oxide", "hex": "#5A3524", "notes": "Dark brown in pocks and blisters, a cavity-map mask; roughness 0.8." },
-        { "name": "Casting grit", "hex": "#7A6A58", "notes": "Sand-cast underside micro-detail; mostly normal, a hint of grey in the albedo." },
-        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Light smudges from the storeroom, multiply 30% on the underside edge." }
+        {
+          "name": "Raw copper",
+          "hex": "#9E5A36",
+          "notes": "Main albedo; reddish-brown metal, metallic 1.0, roughness 0.55 on top face (pocked), 0.4 on rubbed lugs; brighter #C07A4E on high points."
+        },
+        {
+          "name": "Copper oxide",
+          "hex": "#5A3524",
+          "notes": "Dark brown in pocks and blisters, a cavity-map mask; roughness 0.8."
+        },
+        {
+          "name": "Casting grit",
+          "hex": "#7A6A58",
+          "notes": "Sand-cast underside micro-detail; mostly normal, a hint of grey in the albedo."
+        },
+        {
+          "name": "Hearth soot",
+          "hex": "#2B231B",
+          "notes": "Light smudges from the storeroom, multiply 30% on the underside edge."
+        }
       ],
       "grab": "Two lugs on one short side (two-hand carry, slab held against the chest) or shouldered by the near lug with one hand; the player's hands go on the diagonal lugs when thrown.",
       "breaks": "Unbreakable (999). On hard impacts it rings, sparks and slides; it can crack flagstones and knock a levy flat, but it leaves nothing behind and loses no worth.",
@@ -466,11 +695,31 @@
         "Ring stand (optional prop): woven reed ring 0.20 m dia. × 0.05 m, not part of the pick-up."
       ],
       "materials": [
-        { "name": "Buff terracotta", "hex": "#B88A62", "notes": "Main body; fine clay, roughness 0.85, wheel-ridges in normal, fire-cloud darkening near the toe." },
-        { "name": "Sealing clay", "hex": "#8A5A3C", "notes": "Stopper and seal lump; darker unfired clay, crisp signet impression." },
-        { "name": "Flax cord", "hex": "#9C8660", "notes": "Neck tie; twisted-cord normal." },
-        { "name": "Haematite red", "hex": "#8E3F2C", "notes": "Shoulder band and potter's mark, painted flat." },
-        { "name": "Wine stain", "hex": "#4A2A2A", "notes": "Dried run down one side from the seal, multiply decal; the spill VFX uses the same colour." }
+        {
+          "name": "Buff terracotta",
+          "hex": "#B88A62",
+          "notes": "Main body; fine clay, roughness 0.85, wheel-ridges in normal, fire-cloud darkening near the toe."
+        },
+        {
+          "name": "Sealing clay",
+          "hex": "#8A5A3C",
+          "notes": "Stopper and seal lump; darker unfired clay, crisp signet impression."
+        },
+        {
+          "name": "Flax cord",
+          "hex": "#9C8660",
+          "notes": "Neck tie; twisted-cord normal."
+        },
+        {
+          "name": "Haematite red",
+          "hex": "#8E3F2C",
+          "notes": "Shoulder band and potter's mark, painted flat."
+        },
+        {
+          "name": "Wine stain",
+          "hex": "#4A2A2A",
+          "notes": "Dried run down one side from the seal, multiply decal; the spill VFX uses the same colour."
+        }
       ],
       "grab": "Both loop handles (two-hand carry, jar level at the chest), or one hand on a handle and the other under the pointed toe; thrown by the neck.",
       "breaks": "Above 4 m/s it breaks into 5–7 body sherds plus the neck-and-seal piece intact (the neck is its own chunk); spills 20 L of wine as a spreading dark decal (2 m radius) that makes the floor slippery for 20 s and puts out small fires it runs into. All worth lost.",
@@ -496,10 +745,26 @@
         "Glaze: glossy vitreous surface (roughness 0.15), thicker and darker blue where it pooled in the leg crevices and under the belly; a few pale chips on the feet showing white quartz core."
       ],
       "materials": [
-        { "name": "Faience glaze", "hex": "#3E86A8", "notes": "Egyptian-blue glaze, glossy (0.15), slight turquoise shift; pooled darker #2E6680 in crevices. Not verdigris — a warmer, deeper blue-turquoise, and it is loot not an arcane touch cue." },
-        { "name": "Manganese black paint", "hex": "#1E1A16", "notes": "Lotus and reed line-painting, 1–2 mm lines, painted in albedo only." },
-        { "name": "Quartz frit core", "hex": "#E6DDC8", "notes": "Exposed at chips and on the fracture faces; granular, matte." },
-        { "name": "Glaze highlight", "hex": "#8CC0D0", "notes": "Hand-painted spec highlight on the back and head crown; albedo accent, subtle." }
+        {
+          "name": "Faience glaze",
+          "hex": "#3E86A8",
+          "notes": "Egyptian-blue glaze, glossy (0.15), slight turquoise shift; pooled darker #2E6680 in crevices. Not verdigris — a warmer, deeper blue-turquoise, and it is loot not an arcane touch cue."
+        },
+        {
+          "name": "Manganese black paint",
+          "hex": "#1E1A16",
+          "notes": "Lotus and reed line-painting, 1–2 mm lines, painted in albedo only."
+        },
+        {
+          "name": "Quartz frit core",
+          "hex": "#E6DDC8",
+          "notes": "Exposed at chips and on the fracture faces; granular, matte."
+        },
+        {
+          "name": "Glaze highlight",
+          "hex": "#8CC0D0",
+          "notes": "Hand-painted spec highlight on the back and head crown; albedo accent, subtle."
+        }
       ],
       "grab": "One hand around the belly (hand-held), fingers under the chin; or cradled two-handed against the chest to halve drop chance.",
       "breaks": "Above 2 m/s (glass-fragile) it breaks into 4 pieces: head, body split front/back, and the legs as one crumble; white core shows on every fracture face; no spill. Pieces are worthless props.",
@@ -526,11 +791,31 @@
         "Presentation: laid face-up on a linen shroud in the megaron niche (shroud is a separate environment prop)."
       ],
       "materials": [
-        { "name": "Orpiment gold", "hex": "#C9A227", "notes": "The whole mask — this IS stealable gold, so orpiment is correct; metallic 1.0, roughness 0.3 on high points, 0.45 in hollows." },
-        { "name": "Deep gold shadow", "hex": "#8A6B1A", "notes": "Hollows, eye sockets, reverse side; darker orpiment family." },
-        { "name": "Gold highlight", "hex": "#E6C75A", "notes": "Rubbed high points (nose, brows, moustache, rim)." },
-        { "name": "Tomb dust", "hex": "#5A4A38", "notes": "Earth and dust in incised lines and on the reverse, multiply 60%." },
-        { "name": "Linen shroud", "hex": "#CFC3A2", "notes": "Environment prop under the mask only; not part of the pick-up." }
+        {
+          "name": "Orpiment gold",
+          "hex": "#C9A227",
+          "notes": "The whole mask — this IS stealable gold, so orpiment is correct; metallic 1.0, roughness 0.3 on high points, 0.45 in hollows."
+        },
+        {
+          "name": "Deep gold shadow",
+          "hex": "#8A6B1A",
+          "notes": "Hollows, eye sockets, reverse side; darker orpiment family."
+        },
+        {
+          "name": "Gold highlight",
+          "hex": "#E6C75A",
+          "notes": "Rubbed high points (nose, brows, moustache, rim)."
+        },
+        {
+          "name": "Tomb dust",
+          "hex": "#5A4A38",
+          "notes": "Earth and dust in incised lines and on the reverse, multiply 60%."
+        },
+        {
+          "name": "Linen shroud",
+          "hex": "#CFC3A2",
+          "notes": "Environment prop under the mask only; not part of the pick-up."
+        }
       ],
       "grab": "One hand at the chin edge (hand-held), face outward; or both hands at the ear tabs to carry it flat like a plate.",
       "breaks": "Crumples rather than shatters: above 7 m/s it folds along the brow line into 2 joined halves (one crushed mesh swap); worth halves (to 700) on the first crumple, and a second crumple leaves a 1-piece gold ball worth 350. Spills nothing.",
@@ -557,11 +842,31 @@
         "Wear: soot blackened underside (it has been over fires), rubbed-bright handles and rim, raised dent normals on the bowl, darker brown in the chased lines."
       ],
       "materials": [
-        { "name": "Cast bronze", "hex": "#9B6A38", "notes": "Legs, handles, bowl exterior; warm brown, metallic 1.0, roughness 0.5; never orpiment (it is valuable for its bronze and craft, not gold)." },
-        { "name": "Rubbed bronze", "hex": "#B8844E", "notes": "High points: handles, rim lip, bull heads, leg edges." },
-        { "name": "Bronze shadow", "hex": "#5E3E22", "notes": "Chased lines, interior, cavities." },
-        { "name": "Hearth soot", "hex": "#2B231B", "notes": "Bowl underside and inner lower half, multiply 80%; fire-scorch gradient." },
-        { "name": "Ash residue", "hex": "#6E665A", "notes": "Grey ash crust inside the bowl bottom." }
+        {
+          "name": "Cast bronze",
+          "hex": "#9B6A38",
+          "notes": "Legs, handles, bowl exterior; warm brown, metallic 1.0, roughness 0.5; never orpiment (it is valuable for its bronze and craft, not gold)."
+        },
+        {
+          "name": "Rubbed bronze",
+          "hex": "#B8844E",
+          "notes": "High points: handles, rim lip, bull heads, leg edges."
+        },
+        {
+          "name": "Bronze shadow",
+          "hex": "#5E3E22",
+          "notes": "Chased lines, interior, cavities."
+        },
+        {
+          "name": "Hearth soot",
+          "hex": "#2B231B",
+          "notes": "Bowl underside and inner lower half, multiply 80%; fire-scorch gradient."
+        },
+        {
+          "name": "Ash residue",
+          "hex": "#6E665A",
+          "notes": "Grey ash crust inside the bowl bottom."
+        }
       ],
       "grab": "Two carriers: one hand each on a ring handle and the other on the nearest leg (bowl between them, carried at hip height); solo it can only be dragged by a leg, at 30% speed, clanging.",
       "breaks": "Unbreakable (999). It dents (3 progressive dent-normal states on the bowl) and a leg can bend 20° after a > 8 m/s fall, but it never loses pieces or worth. Every impact rings and alerts enemies within 18 m.",
