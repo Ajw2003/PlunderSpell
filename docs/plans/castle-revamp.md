@@ -31,6 +31,28 @@ Overhead: `docs/generated/castle-survey-2026-09-23/01-overhead-before.png`. Room
   the rampart and the rooms, and on bare floor rather than on furniture.
 - **No hazards.** Nothing in the castle can hurt or expose a player except guards.
 
+## The navigation audit (phase 1, done)
+
+`Tools/Plunderspell/Audit Castle Navigation (Play mode)` (`Assets/_Project/Scripts/Editor/CastleAudit.cs`)
+builds the castle for five seeds in CastleBench and checks 25 floor points per room, and every
+loot piece, against the real baked NavMesh from the spawn. `Tools/castle_overlay.py` draws the
+result over an overhead render. Before any fix (`audit-before.md`, `04-walkable-floor-before-seed12345.png`):
+
+| Seed | Rooms you cannot enter | Floor you can walk to |
+|---|---|---|
+| 777 | 4 / 44 | 88% |
+| 2024 | 33 / 44 | 22% |
+| 31337 | 33 / 44 | 23% |
+| 90210 | 38 / 44 | 13% |
+| 12345 | 43 / 44 | 1% |
+
+The cause: set-pieces are placed through the middle of rooms, so they cut the walk between
+archways. The castle is entered through one archway at the gate; when the room behind it is, say, a
+StableBlock whose stalls run wall to wall, nearly the whole castle is sealed off. Guards path on the
+same NavMesh, so they are stuck the same way. `CastlePathValidator` never saw it because it checks a
+rasterised grid, not the real geometry. Loot fares no better: 4–7 pieces per seed land outside any
+room and 5–10 inside geometry.
+
 ## Phases
 
 1. **Audit harness.** An Editor tool that generates castles for a set of seeds and reports:
