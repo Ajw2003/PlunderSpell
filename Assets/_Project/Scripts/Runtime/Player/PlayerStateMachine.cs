@@ -146,7 +146,9 @@ namespace StateMachine
             AssignSpellBook(null);
 
             Camera view = CameraTransform != null ? CameraTransform.GetComponent<Camera>() : null;
-            if (Local == null && view != null && view.enabled)
+            // isActiveAndEnabled, not enabled: a remote player's camera object is switched off by
+            // PlayerNetworkOwnership before Start, and must not claim to be this machine's player.
+            if (Local == null && view != null && view.isActiveAndEnabled)
                 Local = this;
 
             Plunderspell.Core.GameServices.Initialize();

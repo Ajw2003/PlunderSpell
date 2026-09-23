@@ -35,6 +35,9 @@ public class ItemManager : SingletonBase<ItemManager>
 
     private void Update()
     {
+        // In a session the player, and with it the camera, is spawned after this wakes.
+        if (_mainCamera == null || !_mainCamera.isActiveAndEnabled)
+            _mainCamera = Camera.main;
         if (_mainCamera == null) return;
 
         HandleHover();

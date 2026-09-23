@@ -11,6 +11,7 @@ namespace RogueAi.EditorTools
     {
         private const string k_outputDirectory = "Build/Windows";
         private const string k_executableName = "Plunderspell.exe";
+        private const string k_steamAppIdFile = "steam_appid.txt";
 
         [MenuItem("Tools/Plunderspell/Build Standalone Player")]
         public static void BuildFromMenu()
@@ -44,6 +45,10 @@ namespace RogueAi.EditorTools
                 throw new Exception($"Build failed: {report.summary.result}, " +
                     $"{report.summary.totalErrors} error(s). See the Editor log for details.");
             }
+
+            // Launched outside Steam (double-clicking the exe), Steamworks reads the App ID from this
+            // file next to the executable; without it SteamAPI.Init fails and co-op is off.
+            File.Copy(k_steamAppIdFile, Path.Combine(k_outputDirectory, k_steamAppIdFile), overwrite: true);
 
             Debug.Log($"Build succeeded: {outputPath} ({report.summary.totalSize} bytes)");
             return outputPath;

@@ -27,6 +27,9 @@ namespace Plunderspell.UI.Screens
         private Text _gold;
         private Text _era;
         private Text _lastRaid;
+        private Text _session;
+        private GameObject _setOut;
+        private GameObject _invite;
         private LairHubManager _lair;
 
         protected override void OnBuild()
@@ -65,13 +68,15 @@ namespace Plunderspell.UI.Screens
             var actions = (RectTransform)actionsGo.transform;
             actions.anchorMin = new Vector2(0.5f, 0.18f);
             actions.anchorMax = new Vector2(0.5f, 0.18f);
-            actions.sizeDelta = new Vector2(460f, 130f);
+            actions.sizeDelta = new Vector2(460f, 190f);
             UIFactory.AddVerticalLayout(actions, spacing: 12f, padding: new RectOffset(0, 0, 0, 0));
 
-            UIFactory.CreateButton(actions, "SetOutButton", "Set Out",
-                () => GameServices.GameState.ChangeState(GameState.Playing), new Vector2(460f, 56f));
-            UIFactory.CreateButton(actions, "BackButton", "Back to Menu",
-                () => GameServices.GameState.ChangeState(GameState.MainMenu), new Vector2(460f, 46f));
+            _setOut = UIFactory.CreateButton(actions, "SetOutButton", "Set Out", SetOut, new Vector2(460f, 56f)).gameObject;
+            _invite = UIFactory.CreateButton(actions, "InviteButton", "Invite Friend",
+                () => GameServices.Coop?.InviteFriends(), new Vector2(460f, 46f)).gameObject;
+            UIFactory.CreateButton(actions, "BackButton", "Back to Menu", BackToMenu, new Vector2(460f, 46f));
+
+            _session = BuildStat("SessionLabel", 0.05f);
         }
 
         private Text BuildStat(string name, float anchorY)
@@ -84,10 +89,42 @@ namespace Plunderspell.UI.Screens
         }
 
         /// <summary>Refreshed every time the screen appears, so it reflects the raid just finished.</summary>
-        protected override void OnShown() => Refresh();
+        protected override void OnShown()
+        {
+            if (GameServices.Coop != null)
+            {
+                GameServices.Coop.Changed -= Refresh;
+                GameServices.Coop.Changed += Refresh;
+            }
+            Refresh();
+        }
+
+        /// <summary>Only the host sets out; a friend who joined follows it into the raid.</summary>
+        private static void SetOut()
+        {
+            if (GameServices.Coop != null && !GameServices.Coop.IsInSession)
+                GameServices.Coop.PlaySolo();
+            GameServices.GameState.ChangeState(GameState.Playing);
+        }
+
+        private static void BackToMenu()
+        {
+            GameServices.Coop?.Leave();
+            GameServices.GameState.ChangeState(GameState.MainMenu);
+        }
 
         private void Refresh()
         {
+            if (_session == null)
+                return; // Changed can arrive before the screen is built
+
+            ICoopSession coop = GameServices.Coop;
+            bool isHostOrSolo = GameServices.IsSessionAuthority();
+            _setOut.SetActive(isHostOrSolo);
+            _invite.SetActive(coop != null && coop.CanInvite);
+            _session.text = coop == null ? string.Empty
+                : isHostOrSolo ? coop.Status : "Waiting for the host to set out.";
+
             if (_lair == null)
                 _lair = FindFirstObjectByType<LairHubManager>();
 

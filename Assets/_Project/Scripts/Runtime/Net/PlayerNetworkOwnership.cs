@@ -11,6 +11,10 @@ public class PlayerNetworkOwnership : NetworkBehaviour
     [SerializeField] private GameObject _playerCamera;
     [SerializeField] private Rigidbody _rigidbody;
 
+    [Tooltip("Components only the owning machine may run: input, the microphone, anything that " +
+             "reads this machine's keyboard or voice. Switched off on every other machine's copy.")]
+    [SerializeField] private Behaviour[] _ownerOnly = new Behaviour[0];
+
     private void Awake()
     {
         if (_inputController == null) _inputController = GetComponent<PlayerInputController>();
@@ -34,6 +38,8 @@ public class PlayerNetworkOwnership : NetworkBehaviour
         // Remote players: only the owner drives input/camera, and only one MainCamera/
         // AudioListener may be active per running instance.
         if (_inputController != null) _inputController.enabled = false;
+        foreach (Behaviour behaviour in _ownerOnly)
+            if (behaviour != null) behaviour.enabled = false;
         if (_playerCamera != null) _playerCamera.SetActive(false);
 
         // Remote position/rotation follows NetworkTransform instead - simulating physics for

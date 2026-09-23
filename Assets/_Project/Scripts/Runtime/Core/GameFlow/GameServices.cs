@@ -22,6 +22,9 @@ namespace Plunderspell.Core
         /// </summary>
         public static System.Func<bool> IsSessionAuthority = () => true;
 
+        /// <summary>The network session the menus drive, or null in scenes that play offline.</summary>
+        public static ICoopSession Coop { get; set; }
+
         public static bool IsPlaying =>
             GameState != null && GameState.CurrentState == Core.GameState.Playing;
 

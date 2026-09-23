@@ -161,7 +161,8 @@ namespace RogueAi.Raid
             }
 
             Castle = GenerateWalkable(ref seed);
-            _seed.value = seed;
+            if (!isSpawned || isServer)
+                _seed.value = seed;
 
             // Before the NavMesh bake and the spawners, so a guard or a loot pile is never dropped
             // on top of a player who is about to be moved there.
@@ -257,7 +258,8 @@ namespace RogueAi.Raid
         {
             _generator?.ClearGenerated();
             Castle = null;
-            SetPhase(RaidPhase.InLair);
+            if (!isSpawned || isServer)
+                SetPhase(RaidPhase.InLair);
         }
 
         // -----------------------------------------------------------------------------------------
@@ -271,14 +273,18 @@ namespace RogueAi.Raid
         /// </summary>
         private void PlacePlayerAtSpawn()
         {
-            if (_playerRoot == null || Castle == null)
+            // In a session the player is spawned per connection rather than placed in the scene, so
+            // each machine moves the body it controls; its position replicates to everyone else.
+            Transform player = _playerRoot != null ? _playerRoot
+                : StateMachine.PlayerStateMachine.Local != null ? StateMachine.PlayerStateMachine.Local.transform : null;
+            if (player == null || Castle == null)
                 return;
 
             // The rooms were instantiated a moment ago; without this their colliders are still at
             // their old transforms and every overlap probe reports clear.
             Physics.SyncTransforms();
 
-            _playerRoot.position = CastleSpawnResolver.ResolveSpawn(Castle);
+            player.position = CastleSpawnResolver.ResolveSpawn(Castle);
         }
 
         private void OnExtractionResolved(float worth, int saved)
@@ -324,6 +330,18 @@ namespace RogueAi.Raid
         {
             if (isServer)
                 return; // the server already raised it in SetPhase
+
+            // A client builds the same castle from the replicated seed: the geometry is local on
+            // every machine, only the seed crosses the network. Loot and guards arrive as network
+            // objects from the server instead.
+            if (phase == RaidPhase.Raiding && Castle == null && _seed.value != 0)
+                BuildCastle(_seed.value);
+            else if (phase == RaidPhase.InLair && Castle != null)
+            {
+                _generator?.ClearGenerated();
+                Castle = null;
+            }
+
             PhaseChanged?.Invoke(phase);
         }
 
