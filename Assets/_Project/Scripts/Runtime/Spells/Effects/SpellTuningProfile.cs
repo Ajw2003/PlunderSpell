@@ -45,6 +45,14 @@ namespace RogueAi.Spells
         public float IgnisDamagePerSecond = 12f;
         public float IgnisBurnSeconds = 4f;
 
+        [Header("Frango — force blast")]
+        [Tooltip("Damage to the creature you aim at, before the volume multiplier.")]
+        public float FrangoDamage = 30f;
+        [Tooltip("How long the blast staggers them (they cannot act).")]
+        public float FrangoStaggerSeconds = 1.2f;
+        [Tooltip("How far it shoves them back, in metres, before the volume multiplier.")]
+        public float FrangoKnockback = 2.5f;
+
         [Header("Tonitrus — thunderclap")]
         public float TonitrusStunSeconds = 3f;
         [Tooltip("The thunderclap's own noise, on top of the cast's.")]

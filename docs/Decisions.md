@@ -648,3 +648,33 @@ while paused. One test did exactly that and hung the suite; it now uses the inve
 
 **Status.** Standing. Verified in Play mode: the clock held at 295.00 s and a guard held still for
 2 s while paused, stayed frozen in Settings, and resumed on Esc.
+
+## 2026-09-23 — Frango is a force blast, not a loot-breaker; Levo lifts guards (#106)
+
+**Context.** #106: "make other spells actually useful, Ignis is by far the most usable." Checked
+what each spell could affect. Frango shattered every `IBreakable` within 4 m, and the only
+`IBreakable` in the game is `LootPickup`, so the spell could only destroy the players' own haul.
+Its old doc comment said so on purpose ("casting it near the haul is how a raid loses its payday").
+Levo couldn't lift a guard once guard bodies became kinematic (#104). Every spell also targeted
+whatever was nearest a point in front of the caster's face, not what they aimed at.
+
+**Decision.** Spells aim (see `spells.md`, "Spells go where you aim"). Frango now blasts what you
+aim at: 30 damage (× volume power) through `Damage.Apply`, a 1.2 s stagger and a 2.5 m shove (via
+the NavMeshAgent, so never through a wall), or it smashes an aimed door open, locked or not
+(`IHandOpenable.ForceOpen`, which is loud). It no longer touches loot. Levo on a guard suspends its
+agent, raises it 1.8 m (helpless: levitating now counts as incapacitated), then drops it under real
+gravity for 9 damage per metre, blamed on the caster, and puts it back on the navmesh. All numbers
+are in the `SpellTuning` asset.
+
+**Reverses.** Frango's "breaks your own loot" risk. That risk still exists as Frango's *misfire*
+("breaks a random inventory item"), which is where a punishment for speaking badly belongs.
+
+**Not decided (needs the user).**
+- **Cadaver Surge** raises an event nothing listens to, so it does nothing. Raising a corpse as a
+  temporary ally, or as a noisy lure, are both real designs; neither is guessed at here.
+- **Porta has nothing to open.** `CastleDoor` is never placed: no prefab or scene contains one, so
+  the alarm's lockdown locks nothing either. Doors belong in the castle revamp.
+
+**Status.** Standing. Verified in Play mode: `playtest-2026-09-23/27` (aimed Ignis), `/28` (Frango
+−30 and a 2.5 m shove), `/30` (a Levo'd guard floating 1.8 m up, then −17 on landing). A locked test
+door opened to Frango.

@@ -47,6 +47,9 @@ namespace RogueAi.Spells
         public static float AimConeDegrees => Profile.AimConeDegrees;
         public static float IgnisDamagePerSecond => Profile.IgnisDamagePerSecond;
         public static float IgnisBurnSeconds => Profile.IgnisBurnSeconds;
+        public static float FrangoDamage => Profile.FrangoDamage;
+        public static float FrangoStaggerSeconds => Profile.FrangoStaggerSeconds;
+        public static float FrangoKnockback => Profile.FrangoKnockback;
         public static float TonitrusStunSeconds => Profile.TonitrusStunSeconds;
         public static float TonitrusNoiseRadius => Profile.TonitrusNoiseRadius;
         public static float TonitrusNoiseStrength => Profile.TonitrusNoiseStrength;
