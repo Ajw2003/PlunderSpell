@@ -87,6 +87,9 @@ auto-adding dependencies before a component's `Awake` runs.
   with no other member access, so it falls with it.
 - `Net/SteamInviteGateway.cs` — Steamworks.NET and PurrLobby are native/platform SDKs, same
   reasoning as the generated Input asset.
+- `Editor/PlayerBuilder.cs` (issue #53) — calls `BuildPipeline.BuildPlayer`/`BuildReport`, which the
+  `UnityEditor` shim does not model. A shimmed "successful build" would prove nothing; this is
+  verified against the real Unity Editor directly instead.
 
 Everything else under `Assets/_Project/Scripts/Runtime` is compiled, including the
 `HEADLESS`-guarded Vosk provider.

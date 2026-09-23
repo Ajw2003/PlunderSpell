@@ -23,7 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="../../../Assets/_Project/Scripts/Editor/**/*.cs">
+    <!--
+      Excluded: PlayerBuilder (issue #53) calls BuildPipeline.BuildPlayer/BuildReport, which the
+      UnityEditor shim does not model — a shimmed "successful build" would prove nothing, since the
+      whole point of that tool is to invoke the real Editor's build pipeline. Verified against the
+      real Unity Editor directly instead (see docs/plans/GitIssues/Issue_53_Plan.md). Same
+      reasoning as the Steam invite gateway exclusion in the Runtime project.
+    -->
+    <Compile Include="../../../Assets/_Project/Scripts/Editor/**/*.cs"
+              Exclude="../../../Assets/_Project/Scripts/Editor/PlayerBuilder.cs">
       <Link>Editor/%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
   </ItemGroup>
