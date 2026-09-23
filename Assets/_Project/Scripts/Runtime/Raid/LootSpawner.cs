@@ -42,11 +42,12 @@ namespace RogueAi.Raid
         /// prefabs are assigned — a table without prefabs yields a data-only plan, exactly as the
         /// castle generator yields a data-only layout.
         /// </summary>
-        public IReadOnlyList<LootPlacement> SpawnFor(ProceduralCastleData castle, int seed)
+        public IReadOnlyList<LootPlacement> SpawnFor(ProceduralCastleData castle, int seed,
+            CastleRoomRegistry registry = null)
         {
             Clear();
 
-            List<LootPlacement> plan = LootPlacementPlanner.Plan(castle, _table, seed);
+            List<LootPlacement> plan = LootPlacementPlanner.Plan(castle, _table, seed, registry);
             _lastPlan.AddRange(plan);
 
             // The castle rooms were instantiated earlier in this same frame, and PhysX does not see a

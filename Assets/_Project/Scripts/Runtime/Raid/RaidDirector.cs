@@ -179,7 +179,7 @@ namespace RogueAi.Raid
             // objects rather than instantiating their own copies.
             if (!isSpawned || isServer)
             {
-                _lootSpawner?.SpawnFor(Castle, seed);
+                _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
                 _guardSpawner?.SpawnFor(Castle, seed);
             }
 

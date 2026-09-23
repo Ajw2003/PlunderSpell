@@ -73,6 +73,20 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   see furniture. `Tools/Plunderspell/Audit Castle Navigation` (`CastleAudit.cs`) checks 25 floor
   points per room and every loot piece on the real baked NavMesh, for five seeds. Results and
   before/after overlays: `docs/generated/castle-survey-2026-09-23/`.
+- **Loot sits on furniture, not on the floor.** Each room builder registers loot anchors (table
+  tops, chest lids, the top board of a bookcase, altars, the throne dais, crypt niches) through
+  `_anchor` in `castle_builders.py`. `build_assets.py` writes them to
+  `Assets/_Project/Data/Castle/CastleLootAnchors.json` in Blender space, and
+  `Tools/Plunderspell/Import Castle Loot Anchors` (`CastleLootAnchorImporter.cs`) copies them into
+  `CastleRoomModuleData.LootAnchors`, choosing the axis mapping that puts the most anchors on a
+  surface (it reports the hit rate; 59/59 today). `LootPlacementPlanner.Plan(..., registry)` puts
+  each piece on a random anchor of its room, 0.08 m above it, and never on a curtain-wall cell.
+  Re-run the importer after rebuilding the castle meshes. The audit counts a piece as reachable
+  when walkable floor the spawn can path to lies within 1.6 m across and 1.8 m below it, which is
+  "can a player reach it", not "can a player stand on the table".
+- **A stair's foot faces open floor.** The NavMesh does not join the side of a stair to the floor,
+  so a flight whose bottom step touches a wall cannot be climbed. The keep stairwell is an L: first
+  flight west along the south wall from the walkway, a corner landing, second flight north.
 
 ## Invariants
 

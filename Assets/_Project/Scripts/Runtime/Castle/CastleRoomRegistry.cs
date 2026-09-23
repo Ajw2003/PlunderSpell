@@ -23,6 +23,12 @@ namespace RogueAi.Castle
 
         [Tooltip("Relative spawn frequency within its zone's weighted pool (>=1).")]
         public int Weight = 1;
+
+        [Tooltip("Where loot can sit in this room (table tops, chest lids, shelves, altars), as " +
+                 "offsets from the module's position before its placement rotation. Written by " +
+                 "Tools/Plunderspell/Import Castle Loot Anchors from the asset pipeline's " +
+                 "CastleLootAnchors.json; do not edit by hand.")]
+        public Vector3[] LootAnchors = new Vector3[0];
     }
 
     /// <summary>

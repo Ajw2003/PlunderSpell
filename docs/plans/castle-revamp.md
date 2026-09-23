@@ -63,6 +63,11 @@ room and 5–10 inside geometry.
 2. **Fix what's broken.** Crenellations only where there is a wall; no free-standing slabs; stairs
    that lead somewhere or are removed; loot only inside rooms, on authored anchor points (tables,
    shelves, plinths) instead of the bare floor.
+   **Done 2026-09-23.** On seeds 777, 2024, 31337, 90210 and 12345: 0 rooms unreachable, 100% of
+   floor reachable, and 0 loot pieces unreachable, outside a room or inside geometry
+   (`docs/generated/castle-survey-2026-09-23/audit-after-loot-anchors.md`). Captures of loot on
+   furniture and the rebuilt keep stair: `docs/generated/playtest-2026-09-23/loot-*.png`,
+   `keep-stair-L.png`, `keep-gallery-chest.png`.
 3. **Themed wings.** Rooms are grouped into wings that read as places: a service wing (kitchen,
    storehouse, well, stables), a military wing (barracks, guard room, smithy, armoured yard), the
    ceremonial inner ward (great hall, chapel), the keep (throne, solar, bedchamber, treasury) and the

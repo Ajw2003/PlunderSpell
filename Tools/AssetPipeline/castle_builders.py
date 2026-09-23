@@ -197,6 +197,17 @@ def build_gatehouse_module(bm, uv):
 # validate_in_blender.validate_castle_layout enforces all three at build time.
 
 IN = rk.HALF - rk.WALL_T          # 5.5: the inner face of each wall
+
+# Where loot can sit in the room just built: a table top, a chest lid, a
+# shelf, an altar. build_assets collects these per module into
+# Assets/_Project/Data/Castle/CastleLootAnchors.json (Blender coordinates,
+# Z up); LootPlacementPlanner puts each piece on one instead of scattering
+# it across the floor.
+LOOT_ANCHORS = []
+
+
+def _anchor(x, y, z):
+    LOOT_ANCHORS.append((round(x, 3), round(y, 3), round(z, 3)))
 Q0 = 1.8                           # a quadrant starts this far from each centre line
 
 
@@ -207,6 +218,7 @@ def _box(bm, uv, pigment, center, size):
 def _table(bm, uv, pigment, x, y, fz, w, d, h=0.8, top=0.08):
     """A table on four legs, top at fz + h."""
     _box(bm, uv, pigment, (x, y, fz + h - top / 2), (w, d, top))
+    _anchor(x, y, fz + h)
     for sx in (-1, 1):
         for sy in (-1, 1):
             _box(bm, uv, pigment, (x + sx * (w / 2 - 0.1), y + sy * (d / 2 - 0.1), fz + (h - top) / 2),
@@ -252,6 +264,9 @@ def _shelf(bm, uv, x, y, fz, w, levels=3, along_x=True, depth=0.45):
             _box(bm, uv, TIMBER, (x, y + o * (w / 2 - 0.05), fz + h / 2), (depth, 0.1, h))
     for i in range(levels):
         _box(bm, uv, TIMBER, (x, y, fz + 0.35 + i * 0.55), (sx, sy, 0.06))
+    # On the top board: the lower ones have 0.5 m under the next board, too
+    # little for a chest, and the top one is still within arm's reach.
+    _anchor(x, y, fz + 0.35 + (levels - 1) * 0.55 + 0.03)
 
 
 def _pillar(bm, uv, x, y, fz, h, r=0.3):
@@ -266,33 +281,48 @@ def _brazier(bm, uv, x, y, fz, pigment="madder"):
 
 def _chest(bm, uv, x, y, fz, w=1.0, d=0.6, h=0.55, trim=None):
     _box(bm, uv, TIMBER, (x, y, fz + h / 2), (w, d, h))
+    _anchor(x, y, fz + h + (0.05 if trim else 0.0))
     if trim:
         _box(bm, uv, trim, (x, y, fz + h + 0.02), (w, d, 0.05))
 
 
 def _stair_to_gallery(bm, uv, fz, top, pigment, rail):
-    """A straight stair up the west wall of the south-west quadrant to a
-    railed gallery filling the north-west quadrant, bridged over the
-    walkway above head height. Stairs that lead somewhere, and a landing
-    worth climbing to."""
-    steps = 8
-    rise = top / steps
-    run = 3.4 / steps
+    """An L-shaped stair in the south-west quadrant up to a railed gallery
+    filling the north-west quadrant, bridged over the walkway above head
+    height. The first flight starts at the walkway's edge and climbs west
+    along the south wall to a corner landing; the second climbs north along
+    the west wall. The foot must face open floor: a stair whose bottom step
+    sits against a wall can only be mounted from the side, and the NavMesh
+    does not join a stair's side to the floor, so nobody could climb it."""
+    steps = 4                        # per flight
+    rise = top / (2 * steps)
+    x0, x_land = -Q0 - 0.1, -IN + 1.5    # first flight: east (foot) to the landing
+    run_x = (x0 - x_land) / steps
+    y_south = -IN + 0.75             # centre line of the first flight
     for i in range(steps):
-        y = -IN + 0.25 + i * run
+        x = x0 - (i + 0.5) * run_x
         z = fz + rise * (i + 1)
-        _box(bm, uv, pigment, (-IN + 0.8, y + run / 2, (fz + z) / 2), (1.5, run, z - fz))
-    y_stair_top = -IN + 0.25 + steps * run
-    # Landing on top of the stair, then a bridge over the east-west walkway, then the gallery.
-    _box(bm, uv, pigment, (-IN + 0.8, (y_stair_top + -Q0) / 2 + 0.2, fz + top - 0.1), (1.5, abs(y_stair_top + Q0) + 0.4, 0.2))
-    _box(bm, uv, TIMBER, (-IN + 0.8, 0, fz + top - 0.1), (1.5, 2 * Q0 + 0.2, 0.2))
+        _box(bm, uv, pigment, (x, y_south, (fz + z) / 2), (run_x, 1.5, z - fz))
+    # Corner landing at half height.
+    z_mid = fz + rise * steps
+    _box(bm, uv, pigment, (-IN + 0.75, -IN + 0.75, (fz + z_mid) / 2), (1.5, 1.5, z_mid - fz))
+    # Second flight north along the west wall to the bridge.
+    y0, y_top = -IN + 1.5, -Q0 - 0.2
+    run_y = (y_top - y0) / steps
+    for i in range(steps):
+        y = y0 + (i + 0.5) * run_y
+        z = z_mid + rise * (i + 1)
+        _box(bm, uv, pigment, (-IN + 0.75, y, (fz + z) / 2), (1.5, run_y, z - fz))
+    # Bridge over the east-west walkway, then the gallery.
+    _box(bm, uv, TIMBER, (-IN + 0.75, 0, fz + top - 0.1), (1.5, 2 * Q0 + 0.4, 0.2))
     _box(bm, uv, TIMBER, (-(IN + Q0) / 2, (IN + Q0) / 2, fz + top - 0.1), (IN - Q0, IN - Q0, 0.2))
     # Posts under the gallery, clear of the walkway.
     for x, y in ((-Q0 - 0.1, Q0 + 0.1), (-Q0 - 0.1, IN - 0.2), (-IN + 0.2, Q0 + 0.1)):
         _box(bm, uv, TIMBER, (x, y, fz + (top - 0.2) / 2), (0.2, 0.2, top - 0.2))
-    # Railings along the gallery's open edges.
+    # Railings along the gallery's open edges, leaving the bridge's end open.
     _box(bm, uv, rail, (-Q0 - 0.05, (IN + Q0) / 2, fz + top + 0.45), (0.08, IN - Q0, 0.9))
-    _box(bm, uv, rail, (-(IN + Q0) / 2, Q0 + 0.05, fz + top + 0.45), (IN - Q0, 0.08, 0.9))
+    x_gap = -IN + 1.5
+    _box(bm, uv, rail, ((x_gap - Q0) / 2, Q0 + 0.05, fz + top + 0.45), (abs(x_gap + Q0), 0.08, 0.9))
 
 
 # ── OuterBailey: working buildings ──────────────────────────────────────
@@ -311,6 +341,8 @@ def build_stable_block(bm, uv):
         _box(bm, uv, "vellum_dim", (x, y, fz + 0.3 + z), (1.2, 0.8, 0.6))
     _box(bm, uv, STONE, (-4.2, -4.8, fz + 0.3), (2.2, 0.8, 0.6))
     _box(bm, uv, "lapis", (-4.2, -4.8, fz + 0.62), (2.0, 0.6, 0.04))
+    _anchor(3.7, -4.6, fz + 1.2)    # on the hay stack
+    _anchor(4.6, -3.2, fz + 0.6)
 
 
 def build_blacksmith_shop(bm, uv):
@@ -322,6 +354,7 @@ def build_blacksmith_shop(bm, uv):
     # Anvil on its stump in the north-east, quench tub beside it.
     _barrel(bm, uv, 3.2, 3.4, fz, r=0.4, h=0.6)
     _box(bm, uv, METAL, (3.2, 3.4, fz + 0.75), (0.9, 0.35, 0.3))
+    _anchor(3.2, 3.4, fz + 0.9)     # on the anvil
     _barrel(bm, uv, 4.6, 4.6, fz, r=0.5, h=0.7, pigment=METAL)
     # Workbench along the south wall, rack of blades on the east wall.
     _table(bm, uv, TIMBER, 3.6, -4.9, fz, 3.0, 1.0, h=0.9)
@@ -359,6 +392,7 @@ def build_well_courtyard(bm, uv):
     _box(bm, uv, TIMBER, (3.4, -3.4, fz + 0.9 + 1.55), (2.0, 0.14, 0.14))
     # A handcart in the north-west, barrels and troughs round the edges.
     _box(bm, uv, TIMBER, (-3.8, 3.8, fz + 0.75), (2.2, 1.3, 0.35))
+    _anchor(-3.8, 3.8, fz + 0.93)   # in the cart
     for dx in (-0.8, 0.8):
         mk.paint(bm, mk.add_cylinder(bm, 0.55, 0.12, loc=(-3.8 + dx, 3.8 - 0.72, fz + 0.55),
                                      rot=Euler((math.radians(90), 0, 0)), segments=10), TIMBER, uv)
@@ -377,6 +411,7 @@ def build_storehouse_room(bm, uv):
         _barrel(bm, uv, x, y, fz)
     for (x, y, z) in ((4.5, 3.4, 0), (4.5, 3.4, 0.9), (-4.5, -3.4, 0)):
         _box(bm, uv, TIMBER, (x, y, fz + 0.45 + z), (0.9, 0.9, 0.9))
+    _anchor(-4.5, -3.4, fz + 0.9)
 
 
 # ── InnerWard: the household ────────────────────────────────────────────
@@ -406,6 +441,7 @@ def build_chapel_room(bm, uv):
     _box(bm, uv, STONE, (3.9, 3.9, fz + 0.15), (3.0, 3.0, 0.3))
     _box(bm, uv, STONE, (4.2, 4.2, fz + 0.8), (1.6, 0.9, 1.0))
     _box(bm, uv, "vellum", (4.2, 4.2, fz + 1.32), (1.7, 1.0, 0.04))
+    _anchor(4.2, 4.2, fz + 1.34)    # on the altar
     for dx in (-1.0, 1.0):
         mk.paint(bm, mk.add_cylinder(bm, 0.07, 1.1, loc=(4.2 + dx, 3.2, fz + 0.3 + 0.55), segments=6), METAL, uv)
     # Pews in the two southern quadrants, facing north.
@@ -457,6 +493,7 @@ def build_armoured_courtyard(bm, uv):
             _box(bm, uv, TIMBER, (x, y, fz + 1.4), (1.1, 0.14, 0.14))
             _box(bm, uv, "orpiment", (x, y, fz + 1.1), (0.55, 0.4, 0.7))
             _box(bm, uv, STONE, (x, y, fz + 0.06), (0.7, 0.7, 0.12))
+    _chest(bm, uv, 4.8, 0 + 4.8, fz, w=0.9, d=0.6)
     # Shields hung on the east and west walls.
     for side in ("east", "west"):
         for along in (-3.6, 3.6):
@@ -471,6 +508,8 @@ def build_throne_room_keep(bm, uv):
     _box(bm, uv, STONE, (3.8, 3.8, fz + 0.2), (3.4, 3.4, 0.4))
     _box(bm, uv, ZONE_ACCENT["Keep"], (4.4, 4.4, fz + 0.4 + 0.45), (1.2, 1.0, 0.9))
     _box(bm, uv, ZONE_ACCENT["Keep"], (4.4, 4.95, fz + 0.4 + 1.3), (1.2, 0.2, 1.8))
+    _anchor(3.2, 3.2, fz + 0.4)     # at the foot of the throne, on the dais
+    _anchor(2.6, 4.6, fz + 0.4)
     # A carpet from the crossing to the dais (flat), pillars and banners.
     _box(bm, uv, "madder", (1.9, 1.9, fz + 0.02), (1.4, 1.4, 0.04))
     for (x, y) in ((-2.2, 2.2), (-2.2, -2.2), (2.2, -2.2)):
@@ -501,6 +540,7 @@ def build_royal_bedchamber(bm, uv):
     bx, by = -3.9, 3.8
     _box(bm, uv, TIMBER, (bx, by, fz + 0.3), (2.4, 3.0, 0.6))
     _box(bm, uv, "vellum", (bx, by, fz + 0.65), (2.2, 2.8, 0.1))
+    _anchor(bx, by + 0.6, fz + 0.7)  # on the bed
     for dx in (-1.1, 1.1):
         for dy in (-1.4, 1.4):
             _box(bm, uv, TIMBER, (bx + dx, by + dy, fz + 1.1), (0.14, 0.14, 2.2))
@@ -515,9 +555,10 @@ def build_royal_bedchamber(bm, uv):
 def build_lords_solar(bm, uv):
     h, fz = _shell(bm, uv, "Keep")
     # A writing desk and chair in the north-east, a bookcase on the north wall.
-    _table(bm, uv, TIMBER, 3.6, 3.4, fz, 2.0, 1.0)
-    _box(bm, uv, TIMBER, (3.6, 2.5, fz + 0.25), (0.6, 0.6, 0.5))
-    _shelf(bm, uv, 3.8, IN - 0.3, fz, 3.0, levels=4)
+    # The desk stands clear of the bookcase so there is room to walk between them.
+    _table(bm, uv, TIMBER, 3.6, 2.9, fz, 2.0, 1.0)
+    _box(bm, uv, TIMBER, (3.6, 2.05, fz + 0.25), (0.6, 0.6, 0.5))
+    _shelf(bm, uv, 3.8, IN - 0.3, fz, 3.0, levels=3)
     # A hearth on the west wall, two chairs before it; a rug.
     _box(bm, uv, STONE, (-IN + 0.5, 3.8, fz + 0.7), (1.0, 2.4, 1.4))
     _box(bm, uv, "madder", (-IN + 0.9, 3.8, fz + 0.3), (0.3, 1.2, 0.5))
@@ -543,6 +584,7 @@ def _sarcophagus(bm, uv, x, y, fz, along_x=True):
     sx, sy = (2.0, 0.9) if along_x else (0.9, 2.0)
     _box(bm, uv, DEEP, (x, y, fz + 0.3), (sx, sy, 0.6))
     _box(bm, uv, STONE, (x, y, fz + 0.65), (sx + 0.1, sy + 0.1, 0.12))
+    _anchor(x, y, fz + 0.71)
 
 
 def build_crypt_antechamber(bm, uv):
@@ -562,6 +604,8 @@ def build_tomb_corridor(bm, uv):
             for lvl, z in enumerate((0.0, 0.9)):
                 _box(bm, uv, STONE, (sx * (IN - 0.5), y, fz + 0.1 + z), (1.0, 1.2, 0.2))
                 _box(bm, uv, DEEP, (sx * (IN - 0.5), y, fz + 0.45 + z), (0.9, 1.0, 0.5))
+                if lvl == 0 and y > 0:
+                    _anchor(sx * (IN - 0.5), y, fz + 0.7)
     _box(bm, uv, ZONE_ACCENT["Crypt"], (0, 0, fz + 0.02), (0.6, rk.FOOTPRINT - 1.2, 0.04))
 
 
@@ -575,8 +619,12 @@ def build_burial_vault(bm, uv):
                 z = 0.05 + lvl * 0.75
                 _box(bm, uv, STONE, (x, y, fz + z + 0.05), (3.0, 1.0, 0.1))
                 _box(bm, uv, DEEP, (x, y, fz + z + 0.35), (2.0, 0.8, 0.5))
+
             for dx in (-1.45, 1.45):
                 _box(bm, uv, STONE, (x + dx, y, fz + 1.2), (0.1, 1.0, 2.4))
+            # Grave goods laid on the floor in front of each rack: the shelves are
+            # too close together for anything to sit on a coffin.
+            _anchor(x, sy * (IN - 1.6), fz)
 
 
 def build_crypt_chamber_final(bm, uv):
@@ -587,6 +635,7 @@ def build_crypt_chamber_final(bm, uv):
     _box(bm, uv, STONE, (3.8, 3.8, fz + 0.15), (3.0, 3.0, 0.3))
     _box(bm, uv, DEEP, (4.0, 4.0, fz + 0.3 + 0.45), (1.6, 0.9, 0.9))
     mk.paint(bm, mk.add_sphere(bm, 0.22, loc=(4.0, 4.0, fz + 1.2 + 0.22)), ZONE_ACCENT["Crypt"], uv)
+    _anchor(3.3, 2.9, fz + 0.3)     # on the dais before the altar: the prize here is the castle's biggest
     for (x, y) in ((2.4, 4.8), (4.8, 2.4), (2.4, 2.4)):
         _brazier(bm, uv, x, y, fz + 0.3, pigment="lapis")
     for (x, y) in ((-3.8, 3.8), (-3.8, -3.8), (3.8, -3.8)):

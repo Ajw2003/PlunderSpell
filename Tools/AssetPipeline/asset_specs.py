@@ -51,7 +51,7 @@ CASTLE_SPECS = [
     dict(key="ChapelRoom",          builder="build_chapel_room",           tri_budget=900, subdir="Castle"),
     dict(key="KitchenRoom",         builder="build_kitchen_room",          tri_budget=850, subdir="Castle"),
     dict(key="GuardRoomInner",      builder="build_guard_room_inner",      tri_budget=850, subdir="Castle"),
-    dict(key="ArmouredCourtyard",   builder="build_armoured_courtyard",    tri_budget=450, subdir="Castle"),
+    dict(key="ArmouredCourtyard",   builder="build_armoured_courtyard",    tri_budget=700, subdir="Castle"),
     # Keep
     dict(key="ThroneRoomKeep",    builder="build_throne_room_keep",    tri_budget=800, subdir="Castle"),
     dict(key="TreasuryVault",     builder="build_treasury_vault",      tri_budget=850, subdir="Castle"),

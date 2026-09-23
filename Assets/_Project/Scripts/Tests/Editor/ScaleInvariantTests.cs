@@ -225,8 +225,11 @@ namespace RogueAi.Tests.Editor
         /// </summary>
         private static (float Lowest, float Highest) VerticalExtentOf(GameObject prefab)
         {
+            // Keep the prefab root's own rotation: the castle FBX roots carry the importer's 90°
+            // X turn, and the generator places them with it. Measured at identity, "height" was
+            // the module's depth, which passed only while every module had a full 12 m floor.
             GameObject instance = Object.Instantiate(prefab);
-            instance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            instance.transform.SetPositionAndRotation(Vector3.zero, prefab.transform.rotation);
 
             try
             {

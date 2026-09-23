@@ -8,10 +8,10 @@
       "tris": 212
     },
     "ArmouredCourtyard": {
-      "budget": 450,
-      "content": "35c8f985d652797f",
+      "budget": 700,
+      "content": "a0025e460fe85b88",
       "preview": "618f9273e1fe5927:23a9d68e53fd",
-      "tris": 444
+      "tris": 456
     },
     "BarracksBunk": {
       "budget": 1000,
@@ -137,7 +137,7 @@
     },
     "KeepStairwell": {
       "budget": 600,
-      "content": "79dec98a1dc3f033",
+      "content": "679427efb231e8e1",
       "preview": "0e2b34f846682118:23a9d68e53fd",
       "tris": 584
     },
@@ -155,9 +155,9 @@
     },
     "LordsSolar": {
       "budget": 750,
-      "content": "87b0778f950f4395",
+      "content": "a94b4e27f38693f4",
       "preview": "9d7f8b37efc23520:23a9d68e53fd",
-      "tris": 484
+      "tris": 472
     },
     "Matchlock": {
       "budget": 650,

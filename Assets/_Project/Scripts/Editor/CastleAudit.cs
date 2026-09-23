@@ -134,27 +134,25 @@ namespace RogueAi.EditorTools
                         pieces++;
                         Vector3 p = piece.transform.position;
                         var cell = new Vector2Int(Mathf.RoundToInt(p.x / 12f), Mathf.RoundToInt(p.z / 12f));
+                        string room = cells.TryGetValue(cell, out var inRoom) ? inRoom.RoomId : "no module";
 
                         if (!cells.TryGetValue(cell, out var at) || !ProceduralCastleGenerator.IsEnclosedRoom(at.Zone))
                         {
                             outside++;
-                            details.AppendLine($"- seed {seed}: {piece.name} at {p:F1} is not inside a room ({(cells.TryGetValue(cell, out var w) ? w.RoomId : "no module")}).");
+                            details.AppendLine($"- seed {seed}: {piece.name} at {p:F1} is not inside a room ({room}).");
                         }
 
-                        bool reach = spawnOnMesh
-                                     && NavMesh.SamplePosition(p, out NavMeshHit lootHit, 1.5f, NavMesh.AllAreas)
-                                     && NavMesh.CalculatePath(spawnHit.position, lootHit.position, NavMesh.AllAreas, path)
-                                     && path.status == NavMeshPathStatus.PathComplete;
+                        bool reach = spawnOnMesh && CanReach(spawnHit.position, p, path);
                         if (!reach)
                         {
                             unreachable++;
-                            details.AppendLine($"- seed {seed}: {piece.name} at {p:F1} cannot be walked to.");
+                            details.AppendLine($"- seed {seed}: {piece.name} at {p:F1} in {room} cannot be walked to.");
                         }
 
                         if (IsInsideGeometry(piece))
                         {
                             embedded++;
-                            details.AppendLine($"- seed {seed}: {piece.name} at {p:F1} is inside castle geometry.");
+                            details.AppendLine($"- seed {seed}: {piece.name} at {p:F1} in {room} is inside castle geometry.");
                         }
                     }
                 }
@@ -175,6 +173,27 @@ namespace RogueAi.EditorTools
             File.WriteAllText(file, report.ToString());
             Debug.Log($"[CastleAudit] {totalBadRooms} unreachable rooms, {totalBadLoot} loot problems. Report: {file}");
             return report.ToString();
+        }
+
+        /// <summary>
+        /// Can a player stand within arm's reach of this piece? Loot sits on table tops and shelves,
+        /// which carry their own little patch of NavMesh; checking the patch nearest the piece asked
+        /// whether you could stand ON the table. This asks for walkable ground within 1.6 m across and
+        /// up to 1.6 m below the piece that the spawn can path to.
+        /// </summary>
+        private static bool CanReach(Vector3 from, Vector3 loot, NavMeshPath path)
+        {
+            foreach (float drop in new[] { 0f, 0.8f, 1.4f })
+            {
+                if (!NavMesh.SamplePosition(loot + Vector3.down * drop, out NavMeshHit h, 1.6f, NavMesh.AllAreas))
+                    continue;
+                Vector3 d = h.position - loot;
+                if (new Vector2(d.x, d.z).magnitude > 1.6f || d.y > 0.3f || d.y < -1.8f)
+                    continue;
+                if (NavMesh.CalculatePath(from, h.position, NavMesh.AllAreas, path) && path.status == NavMeshPathStatus.PathComplete)
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>True when the piece overlaps solid castle geometry (not other loot, not triggers).</summary>
