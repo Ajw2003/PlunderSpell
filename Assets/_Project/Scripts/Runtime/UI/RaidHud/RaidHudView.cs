@@ -46,6 +46,36 @@ namespace RogueAi.UI
             _pushToCast = FindFirstObjectByType<RogueAi.Voice.PushToCastController>();
         }
 
+        // The last phrase the voice service produced, so a misheard word reads differently from a
+        // dead microphone.
+        private string _lastHeard = string.Empty;
+        private float _lastHeardAt = float.NegativeInfinity;
+        private RogueAi.Voice.IVoiceInputService _listenedTo;
+
+        private void OnEnable()
+        {
+            _listenedTo = RogueAi.Voice.VoiceServiceLocator.Current;
+            if (_listenedTo != null)
+                _listenedTo.OnPhraseRecognized += OnPhrase;
+        }
+
+        private void OnDisable()
+        {
+            if (_listenedTo != null)
+                _listenedTo.OnPhraseRecognized -= OnPhrase;
+            _listenedTo = null;
+        }
+
+        private void OnPhrase(RogueAi.Voice.VoiceRecognitionResult result)
+        {
+            _lastHeard = $"Heard \"{result.RawText.ToLowerInvariant()}\"  ({result.Volume})";
+            _lastHeardAt = Time.time;
+        }
+
+        /// <summary>The live speech service, or null when casting is keyboard-only.</summary>
+        private static RogueAi.Voice.VoskVoiceInputService Speech =>
+            (RogueAi.Voice.VoiceServiceLocator.Current as RogueAi.Voice.CombinedVoiceInputService)?.Speech;
+
         private void OnGUI()
         {
             if (!_visible || _presenter == null)
@@ -121,6 +151,7 @@ namespace RogueAi.UI
             }
 
             DrawSpellbook();
+            DrawListening();
 
             // Bottom-centre: the last cast, so a misfire is unmissable.
             if (!string.IsNullOrEmpty(model.LastCastLine))
@@ -131,6 +162,49 @@ namespace RogueAi.UI
                     : Color.white;
                 GUI.Label(new Rect(Screen.width * 0.5f - 200f, Screen.height - 32f, 400f, 24f),
                     model.LastCastLine, style);
+            }
+        }
+
+        /// <summary>
+        /// While the cast key is held: which microphone is open and how loud it hears you, against
+        /// the whisper and shout marks. Without it a dead or wrong microphone looks exactly like a
+        /// word the game did not understand.
+        /// </summary>
+        private void DrawListening()
+        {
+            bool casting = _pushToCast != null && _pushToCast.IsCasting;
+            float y = Screen.height - 110f;
+
+            if (casting)
+            {
+                RogueAi.Voice.VoskVoiceInputService speech = Speech;
+                string title = speech != null && speech.IsListening
+                    ? $"Listening on {speech.CurrentDevice}"
+                    : "Keyboard casting (no microphone) - press 1-8";
+                GUI.Label(new Rect(Screen.width * 0.5f - 250f, y, 500f, 22f), title, Centered(_label));
+
+                if (speech != null && speech.IsListening)
+                {
+                    const float meterMax = 0.6f;
+                    var meter = new Rect(Screen.width * 0.5f - 160f, y + 24f, 320f, 10f);
+                    float level = Mathf.Clamp01(speech.CurrentRms / meterMax);
+                    Color colour = speech.CurrentRms > RogueAi.Voice.VoiceUtility.ShoutThreshold ? new Color(1f, 0.45f, 0.2f)
+                        : speech.CurrentRms < RogueAi.Voice.VoiceUtility.WhisperThreshold ? new Color(0.55f, 0.7f, 1f)
+                        : new Color(0.45f, 0.95f, 0.55f);
+                    DrawBar(meter, level, colour);
+
+                    // Whisper and shout marks.
+                    foreach (float mark in new[] { RogueAi.Voice.VoiceUtility.WhisperThreshold, RogueAi.Voice.VoiceUtility.ShoutThreshold })
+                        GUI.DrawTexture(new Rect(meter.x + meter.width * (mark / meterMax) - 1f, meter.y - 3f, 2f, meter.height + 6f), _barFill);
+
+                    var small = new GUIStyle(_label) { fontSize = 11 };
+                    GUI.Label(new Rect(meter.x, meter.y + 11f, 120f, 16f), "whisper", small);
+                    GUI.Label(new Rect(meter.x + meter.width * (RogueAi.Voice.VoiceUtility.ShoutThreshold / meterMax) - 20f, meter.y + 11f, 80f, 16f), "shout", small);
+                }
+            }
+            else if (Time.time - _lastHeardAt < 4f)
+            {
+                GUI.Label(new Rect(Screen.width * 0.5f - 250f, Screen.height - 56f, 500f, 22f), _lastHeard, Centered(_label));
             }
         }
 
@@ -155,8 +229,9 @@ namespace RogueAi.UI
             bool casting = _pushToCast != null && _pushToCast.IsCasting;
 
             style.normal.textColor = casting ? new Color(0.45f, 0.95f, 0.55f) : Color.white;
+            string castingPrompt = Speech != null ? "LISTENING - speak, or 1-8" : "CASTING - press a number";
             GUI.Label(new Rect(x + 8f, y + 6f, width - 16f, lineHeight),
-                casting ? "CASTING - press a number" : "Hold V to cast", style);
+                casting ? castingPrompt : "Hold V to cast", style);
 
             style.normal.textColor = new Color(0.75f, 0.75f, 0.75f);
             GUI.Label(new Rect(x + 8f, y + 6f + lineHeight, width - 16f, lineHeight),

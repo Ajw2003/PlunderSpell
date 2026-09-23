@@ -1,6 +1,8 @@
+using System;
 using Plunderspell.Core;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace Plunderspell.UI.Screens
 {
@@ -13,7 +15,7 @@ namespace Plunderspell.UI.Screens
         protected override void OnBuild()
         {
             UIFactory.CreateFullStretchPanel(transform, "Overlay", new Color(0f, 0f, 0f, 0.7f));
-            var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 440f), Vector2.zero, UITheme.PanelBackground);
+            var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 540f), Vector2.zero, UITheme.PanelBackground);
 
             var title = UIFactory.CreateText(panel, "Title", "SETTINGS", UITheme.HeaderFontSize, UITheme.TextPrimary);
             title.rectTransform.anchorMin = new Vector2(0.5f, 1f);
@@ -27,13 +29,17 @@ namespace Plunderspell.UI.Screens
             var listRect = (RectTransform)listGo.transform;
             listRect.anchorMin = new Vector2(0.5f, 0.5f);
             listRect.anchorMax = new Vector2(0.5f, 0.5f);
-            listRect.sizeDelta = new Vector2(440f, 220f);
+            listRect.sizeDelta = new Vector2(440f, 300f);
             listRect.anchoredPosition = new Vector2(0f, 10f);
             UIFactory.AddVerticalLayout(listRect, 30f, new RectOffset(0, 0, 0, 0));
 
             AddVolumeRow(listRect, "Master Volume", MasterVolumeKey, OnMasterVolumeChanged);
             AddVolumeRow(listRect, "Music Volume", MusicVolumeKey, OnMusicVolumeChanged);
             AddVolumeRow(listRect, "SFX Volume", SfxVolumeKey, OnSfxVolumeChanged);
+
+            var micButton = UIFactory.CreateButton(listRect, "MicrophoneButton", string.Empty, CycleMicrophone, new Vector2(440f, 44f));
+            _microphoneLabel = micButton.GetComponentInChildren<Text>();
+            RefreshMicrophoneLabel();
 
             var backButton = UIFactory.CreateButton(panel, "BackButton", "Back", OnBackClicked, new Vector2(200f, 52f));
             var backRect = backButton.GetComponent<RectTransform>();
@@ -71,6 +77,36 @@ namespace Plunderspell.UI.Screens
         private void OnMusicVolumeChanged(float value) => PlayerPrefs.SetFloat(MusicVolumeKey, value);
 
         private void OnSfxVolumeChanged(float value) => PlayerPrefs.SetFloat(SfxVolumeKey, value);
+
+        private Text _microphoneLabel;
+
+        protected override void OnShown() => RefreshMicrophoneLabel();
+
+        /// <summary>
+        /// Steps through Automatic and every microphone Windows reports. Automatic skips virtual
+        /// inputs (a VR streaming app's silent mic was the Windows default on the dev machine).
+        /// </summary>
+        private void CycleMicrophone()
+        {
+            string[] devices = Microphone.devices ?? Array.Empty<string>();
+            string current = PlayerPrefs.GetString(AudioInputSettings.MicrophoneKey, string.Empty);
+            int index = Array.IndexOf(devices, current); // -1 = Automatic
+            index = index + 1 >= devices.Length ? -1 : index + 1;
+            PlayerPrefs.SetString(AudioInputSettings.MicrophoneKey, index < 0 ? string.Empty : devices[index]);
+            PlayerPrefs.Save();
+            RefreshMicrophoneLabel();
+        }
+
+        private void RefreshMicrophoneLabel()
+        {
+            if (_microphoneLabel == null)
+                return;
+            string[] devices = Microphone.devices ?? Array.Empty<string>();
+            string current = PlayerPrefs.GetString(AudioInputSettings.MicrophoneKey, string.Empty);
+            _microphoneLabel.text = devices.Length == 0 ? "Microphone: none found (keys still cast)"
+                : Array.IndexOf(devices, current) < 0 ? "Microphone: Automatic"
+                : $"Microphone: {current}";
+        }
 
         private void OnBackClicked() => GameServices.GameState.ChangeState(GameServices.GameState.PreviousState);
     }

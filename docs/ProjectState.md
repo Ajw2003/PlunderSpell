@@ -110,3 +110,15 @@ the 21-item backlog above.
   `BuildPipeline.BuildPlayer()` entry point anywhere in `Assets/` (confirmed by grep as of this
   pass). Whether the project actually builds and runs as a standalone player is unknown. Now
   tracked as a GitHub issue in the moodboard gap-closure backlog, above.
+
+**2026-09-23 update — Phase 0 worked in the live Editor, not headlessly.** See
+`docs/plans/phase0-playable-loop.md` for the checklist and `docs/generated/playtest-2026-09-23/` for
+the screenshots. Done and verified in Play mode: real voice recognition (Vosk binaries and model
+committed, English heard-as grammar, the right microphone picked, a live level meter while
+holding V, and a microphone choice in Settings); one damage pathway with readable feedback for
+hitting, being hit and hurting yourself; death → "YOU DIED" → Lair; held objects with weight
+and swing damage; standing on the pad to extract, then Lair → Set Out again. #100's diagnosis was
+wrong: RaidScene uses `RaidPlayer.prefab`, which is fully wired (see `docs/Decisions.md`). **Not yet
+done:** walking the loop in `RaidScene.unity` from the main menu; a fresh standalone build; a real
+person speaking into the mic (the Whisper/Shout thresholds are uncalibrated); commenting on and
+closing GitHub issues #14, #100, #101, #102.

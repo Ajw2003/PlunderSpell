@@ -36,6 +36,12 @@ namespace RogueAi.Voice
         /// <summary>The loudest moment of the last phrase (RMS, 0..1), for a loudness meter or calibration.</summary>
         public float LastPeakRms { get; private set; }
 
+        /// <summary>How loud the microphone is right now (RMS, 0..1), for a level meter while listening.</summary>
+        public float CurrentRms { get; private set; }
+
+        /// <summary>The microphone being listened on, or null when none is open.</summary>
+        public string CurrentDevice { get; private set; }
+
         /// <summary>What the recogniser literally heard last time, before the vocabulary mapped it.</summary>
         public string LastHeardText { get; private set; } = string.Empty;
 
@@ -117,9 +123,9 @@ namespace RogueAi.Voice
             if (!EnsureRecognizer())
                 return;
 
-            // null is Unity's "the system default microphone" — what the player actually set up in
-            // Windows, rather than whichever device happens to enumerate first (often a virtual one).
-            _micDevice = null;
+            // Not null: Unity's null is just the first device listed, which here was a silent virtual
+            // input. MicrophonePicker prefers the Settings choice, then Windows' own default.
+            _micDevice = MicrophonePicker.Resolve();
             _micClip = Microphone.Start(_micDevice, true, MicLoopSeconds, SampleRate);
             if (_micClip == null)
             {
@@ -130,8 +136,10 @@ namespace RogueAi.Voice
             EnsurePump();
             _lastSamplePosition = 0;
             LastPeakRms = 0f;
+            CurrentRms = 0f;
+            CurrentDevice = _micDevice;
             IsListening = true;
-            Debug.Log($"[Vosk] Listening on the default microphone @ {SampleRate}Hz.");
+            Debug.Log($"[Vosk] Listening on '{_micDevice}' @ {SampleRate}Hz.");
 #endif
         }
 
@@ -160,6 +168,8 @@ namespace RogueAi.Voice
 
             Microphone.End(_micDevice);
             _micClip = null;
+            CurrentRms = 0f;
+            CurrentDevice = null;
             Debug.Log("[Vosk] Stopped listening.");
 #endif
         }
@@ -265,7 +275,8 @@ namespace RogueAi.Voice
             _micClip.GetData(_floatBuffer, _lastSamplePosition);
             _lastSamplePosition = position;
 
-            LastPeakRms = Mathf.Max(LastPeakRms, VoiceUtility.ComputeRms(_floatBuffer, available));
+            CurrentRms = VoiceUtility.ComputeRms(_floatBuffer, available);
+            LastPeakRms = Mathf.Max(LastPeakRms, CurrentRms);
             for (int i = 0; i < available; i++)
                 _shortBuffer[i] = (short)Mathf.Clamp(_floatBuffer[i] * short.MaxValue, short.MinValue, short.MaxValue);
 
