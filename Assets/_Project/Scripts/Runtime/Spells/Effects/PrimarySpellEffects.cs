@@ -52,8 +52,7 @@ namespace RogueAi.Spells
         {
             EmitCastNoise(ctx);
 
-            var target = SpellTargeting.FindNearestExcluding<IIgnitable>(
-                ctx.Origin, ctx.Radius(), ctx.CasterTransform, ctx.TargetLayerMask);
+            var target = ctx.Aimed<IIgnitable>();
             if (target == null)
                 return 0;
 
@@ -108,8 +107,7 @@ namespace RogueAi.Spells
         {
             EmitCastNoise(ctx);
 
-            var target = SpellTargeting.FindNearestExcluding<ILevitatable>(
-                ctx.Origin, ctx.Radius(), ctx.CasterTransform, ctx.TargetLayerMask);
+            var target = ctx.Aimed<ILevitatable>();
             if (target == null)
                 return 0;
 
@@ -161,8 +159,9 @@ namespace RogueAi.Spells
 
             int stunned = 0;
             Transform caster = ctx.CasterTransform;
+            // Bursts where you aim, not on your own feet.
             foreach (IStunnable target in SpellTargeting.FindAll<IStunnable>(
-                         ctx.Origin, ctx.Radius(), ctx.TargetLayerMask))
+                         ctx.AimPoint, ctx.Radius(), ctx.TargetLayerMask))
             {
                 if (caster != null && target is Component c && c.transform.IsChildOf(caster))
                     continue;
@@ -194,7 +193,7 @@ namespace RogueAi.Spells
             int slept = 0;
             Transform caster = ctx.CasterTransform;
             foreach (ISleepable target in SpellTargeting.FindAll<ISleepable>(
-                         ctx.Origin, ctx.Radius(), ctx.TargetLayerMask))
+                         ctx.AimPoint, ctx.Radius(), ctx.TargetLayerMask))
             {
                 if (caster != null && target is Component c && c.transform.IsChildOf(caster))
                     continue;
@@ -225,8 +224,7 @@ namespace RogueAi.Spells
         {
             EmitCastNoise(ctx);
 
-            var corpse = SpellTargeting.FindNearestExcluding<IHealth>(
-                ctx.Origin, ctx.Radius(), ctx.CasterTransform, ctx.TargetLayerMask);
+            var corpse = ctx.Aimed<IHealth>();
             if (corpse == null || corpse.CurrentHealth > 0f)
                 return 0;
 
@@ -247,7 +245,7 @@ namespace RogueAi.Spells
         {
             EmitCastNoise(ctx);
 
-            var door = SpellTargeting.FindNearest<IOpenable>(ctx.Origin, ctx.Radius(), ctx.TargetLayerMask);
+            var door = ctx.Aimed<IOpenable>();
             if (door == null || door.IsOpen)
                 return 0;
 

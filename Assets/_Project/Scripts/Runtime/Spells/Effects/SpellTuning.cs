@@ -43,6 +43,8 @@ namespace RogueAi.Spells
         public static float NoiseStrength(CastVolume volume) => Profile.NoiseStrength(volume);
 
         public static float DefaultEffectRadius => Profile.DefaultEffectRadius;
+        public static float AimRange => Profile.AimRange;
+        public static float AimConeDegrees => Profile.AimConeDegrees;
         public static float IgnisDamagePerSecond => Profile.IgnisDamagePerSecond;
         public static float IgnisBurnSeconds => Profile.IgnisBurnSeconds;
         public static float TonitrusStunSeconds => Profile.TonitrusStunSeconds;

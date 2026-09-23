@@ -34,6 +34,12 @@ namespace RogueAi.Spells
         [Tooltip("Base effect radius in metres, before the volume multiplier.")]
         public float DefaultEffectRadius = 6f;
 
+        [Header("Aiming")]
+        [Tooltip("How far an aimed spell reaches, in metres, before the volume multiplier.")]
+        public float AimRange = 14f;
+        [Tooltip("How far off the crosshair (degrees) a target can be and still be picked.")]
+        [Range(1f, 60f)] public float AimConeDegrees = 22f;
+
         [Header("Ignis — fire")]
         [Tooltip("Damage per second while burning, before the volume multiplier.")]
         public float IgnisDamagePerSecond = 12f;
