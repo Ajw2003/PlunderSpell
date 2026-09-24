@@ -138,7 +138,11 @@ def plan(sh):
     for side in ("E", "W"):
         xa = x0 + (12 - 1.2) * s if side == "E" else x0
         sh.rect(xa + (0.1 * s if side == "W" else 0), P(0, 1.3)[1], 1.1 * s, 2.6 * s, BRICK, INK, 0.8, op=0.9)
-        plan_label(sh, (xa - 4) if side == "E" else (xa + 1.2 * s + 4), P(0, 0)[1] + 3, "BLIND ARCH", "end" if side == "E" else "start", VELLUM, 8.5)
+        # Label runs vertically inside the arch panel, clear of the barrel racks.
+        lx, ly = xa + (0.1 * s if side == "W" else 0) + 0.55 * s, P(0, 0)[1]
+        sh.add(f'<text x="{fmt(lx)}" y="{fmt(ly)}" transform="rotate(-90 {fmt(lx)} {fmt(ly)})" text-anchor="middle" dominant-baseline="middle" '
+               f'font-family="{MONO}" font-size="8.5" letter-spacing="0.5" fill="{VELLUM}" stroke="#14120E" stroke-width="3" '
+               f'stroke-linejoin="round" paint-order="stroke">BLIND ARCH</text>')
     # door leaves at N
     xa, ya = P(-1.3, 6)
     sh.rect(xa, ya + 1.2 * s - 3, 2.6 * s, 3, COPPER)

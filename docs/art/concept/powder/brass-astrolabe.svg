@@ -447,7 +447,6 @@
 <circle cx="770.7" cy="495.8" r="4" fill="#836919" opacity="0.6"/>
 <circle cx="840" cy="396" r="7" fill="none" stroke="#5FA288" stroke-width="1.6"/>
 <circle cx="840" cy="396" r="2.4" fill="#5FA288"/>
-<text x="840" y="396" font-family="Overpass Mono, monospace" font-size="10" letter-spacing="1" fill="#5FA288"></text>
 <ellipse cx="1080" cy="690" rx="30" ry="4" fill="#000000" opacity="0.4"/>
 <rect x="1074" y="470" width="12" height="220" fill="url(#g7)" rx="3" stroke="#0E0C0A" stroke-width="1"/>
 <rect x="1086" y="472" width="4" height="216" fill="#A1821F" stroke="#0E0C0A" stroke-width="0.6"/>
@@ -460,46 +459,47 @@
 <ellipse cx="1080" cy="410" rx="3" ry="17" fill="none" stroke="#A07E3E" stroke-width="3"/>
 <circle cx="1080" cy="410" r="7" fill="none" stroke="#5FA288" stroke-width="1.6"/>
 <circle cx="1080" cy="410" r="2.4" fill="#5FA288"/>
-<text x="1080" y="410" font-family="Overpass Mono, monospace" font-size="10" letter-spacing="1" fill="#5FA288"></text>
-<text x="1110" y="570" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078">0.03 m</text>
 <circle cx="380" cy="307.5" r="7" fill="none" stroke="#5FA288" stroke-width="1.6"/>
 <circle cx="380" cy="307.5" r="2.4" fill="#5FA288"/>
-<text x="396" y="297.5" font-family="Overpass Mono, monospace" font-size="10" letter-spacing="1" fill="#5FA288">GRAB · RING / THRONE</text>
 <circle cx="332" cy="644" r="7" fill="none" stroke="#5FA288" stroke-width="1.6"/>
 <circle cx="332" cy="644" r="2.4" fill="#5FA288"/>
-<text x="318" y="664" font-family="Overpass Mono, monospace" font-size="10" text-anchor="end" letter-spacing="1" fill="#5FA288">GRAB · PALM UNDER</text>
 <rect x="700" y="336" width="50" height="5" fill="#DCD2BA" opacity="0.8"/>
 <rect x="750" y="336" width="50" height="5" fill="none" stroke="#DCD2BA" stroke-width="0.8" opacity="0.8"/>
 <path d="M700 333 L700 344" fill="none" stroke="#DCD2BA" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/>
 <path d="M750 333 L750 344" fill="none" stroke="#DCD2BA" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/>
 <path d="M800 333 L800 344" fill="none" stroke="#DCD2BA" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/>
-<text x="700" y="356" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078">0.1 m = 100 px (orthos)</text>
 <path d="M366.4 305.8 L688 146 L696 146" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="366.4" cy="305.8" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="700" y="150" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">SUSPENSION RING</text>
-<text x="700" y="164" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">worn brass · 0.04 m</text>
 <path d="M383.2 375.4 L688 201 L696 201" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="383.2" cy="375.4" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="700" y="205" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">PIERCED THRONE</text>
-<text x="700" y="219" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">gilt, rubbed to brass</text>
 <path d="M277.6 537.7 L688 256 L696 256" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="277.6" cy="537.7" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="700" y="260" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">LIMB, 360° + 24 HOURS</text>
-<text x="700" y="274" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">engraving filled with grime</text>
 <path d="M421.6 467.7 L938 146 L946 146" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="421.6" cy="467.7" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="950" y="150" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">RETE</text>
-<text x="950" y="164" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">pierced star map · 20 pointers</text>
 <path d="M396 528.5 L938 201 L946 201" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="396" cy="528.5" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="950" y="205" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">PIN + HORSE WEDGE</text>
-<text x="950" y="219" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">blued steel</text>
 <path d="M348 558.5 L938 256 L946 256" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="348" cy="558.5" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="950" y="260" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">RULE</text>
-<text x="950" y="274" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">brass · 0.19 m</text>
-<text x="700" y="298" font-family="Overpass Mono, monospace" font-size="10.5" fill="#C4542E">- - -  snaps above 8 m/s: rete + rule free,</text>
-<text x="700" y="312" font-family="Overpass Mono, monospace" font-size="10.5" fill="#C4542E">       mater survives (3 pieces, 200 coin)</text>
+<text x="840" y="396" font-family="Overpass Mono, monospace" font-size="10" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" letter-spacing="1" fill="#5FA288"></text>
+<text x="1080" y="410" font-family="Overpass Mono, monospace" font-size="10" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" letter-spacing="1" fill="#5FA288"></text>
+<rect x="1107" y="560.3" width="42" height="14" rx="2" fill="#14120E" opacity="0.82"/><text x="1110" y="570" font-family="Overpass Mono, monospace" font-size="10" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">0.03 m</text>
+<rect x="393" y="287.8" width="146" height="14" rx="2" fill="#14120E" opacity="0.82"/><text x="396" y="297.5" font-family="Overpass Mono, monospace" font-size="10" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" letter-spacing="1" fill="#5FA288">GRAB · RING / THRONE</text>
+<rect x="196" y="654.3" width="125" height="14" rx="2" fill="#14120E" opacity="0.82"/><text x="318" y="664" font-family="Overpass Mono, monospace" font-size="10" text-anchor="end" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" letter-spacing="1" fill="#5FA288">GRAB · PALM UNDER</text>
+<rect x="697" y="346.3" width="144" height="14" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="356" font-family="Overpass Mono, monospace" font-size="10" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">0.1 m = 100 px (orthos)</text>
+<rect x="697" y="138.7" width="114" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="150" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">SUSPENSION RING</text>
+<rect x="697" y="153.9" width="125.7" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="164" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">worn brass · 0.04 m</text>
+<rect x="697" y="193.7" width="106.8" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="205" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">PIERCED THRONE</text>
+<rect x="697" y="208.9" width="138.3" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="219" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">gilt, rubbed to brass</text>
+<rect x="697" y="248.7" width="157.2" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="260" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">LIMB, 360° + 24 HOURS</text>
+<rect x="697" y="263.9" width="176.1" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="274" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">engraving filled with grime</text>
+<rect x="947" y="138.7" width="34.8" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="950" y="150" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">RETE</text>
+<rect x="947" y="153.9" width="195" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="950" y="164" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">pierced star map · 20 pointers</text>
+<rect x="947" y="193.7" width="128.4" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="950" y="205" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">PIN + HORSE WEDGE</text>
+<rect x="947" y="208.9" width="75.3" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="950" y="219" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">blued steel</text>
+<rect x="947" y="248.7" width="34.8" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="950" y="260" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">RULE</text>
+<rect x="947" y="263.9" width="94.2" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="950" y="274" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">brass · 0.19 m</text>
+<rect x="697" y="287.9" width="276.9" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="298" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#C4542E">- - -  snaps above 8 m/s: rete + rule free,</text>
+<rect x="697" y="301.9" width="270.6" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="312" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#C4542E">       mater survives (3 pieces, 200 coin)</text>
 <g font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078">
 <rect x="40" y="748" width="34" height="18" fill="#C9A227" stroke="#332D22" stroke-width="1"/><text x="80" y="761">#C9A227 gilt brass</text>
 <rect x="355.3" y="748" width="34" height="18" fill="#A07E3E" stroke="#332D22" stroke-width="1"/><text x="395.3" y="761">#A07E3E worn brass</text>

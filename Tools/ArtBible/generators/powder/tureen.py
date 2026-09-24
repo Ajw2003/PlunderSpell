@@ -109,10 +109,10 @@ def build():
     # motion arcs: lid pops
     for k in range(3):
         sh.path(f"M{cx - 150 + k * 16} {ly0 - 88 - k * 10} q 40 -26 80 -8", "none", FRAME_TXT, 1, op=0.5)
-    sh.text(cx - 210, ly0 - 120, "lid pops at > 1.5 m/s jolt", 10.5, FRAME_TXT)
-    grab(sh, cx - 0.20 * s - 0.06 * s, gy - 0.19 * s - 0.01 * s, "GRAB", -14, 4, "end")
-    grab(sh, cx + 0.20 * s + 0.06 * s, gy - 0.19 * s - 0.01 * s, "GRAB", 14, 4)
-    grab(sh, cx, ly0 - 0.08 * s - 0.032 * s, "HOLD LID", 16, -6)
+    sh.text(cx - 210, ly0 - 150, "lid pops at > 1.5 m/s jolt", 10.5, FRAME_TXT)
+    grab(sh, cx - 0.20 * s - 0.06 * s, gy - 0.19 * s - 0.01 * s, "GRAB", 0, 26, "middle")
+    grab(sh, cx + 0.20 * s + 0.06 * s, gy - 0.19 * s - 0.01 * s, "GRAB", 0, 26, "middle")
+    grab(sh, cx, ly0 - 0.08 * s - 0.032 * s, "HOLD LID", 24, -16)
     # orthos
     so = 500
     fx = 830

@@ -175,8 +175,10 @@ class Sheet:
             s += f' opacity="{op}"'
         self.add(s + "/>")
 
-    def text(self, x, y, s, size=12, fill=VELLUM, anchor="start", family=MONO, weight=None, ls=None, op=None):
+    def text(self, x, y, s, size=12, fill=VELLUM, anchor="start", family=MONO, weight=None, ls=None, op=None, halo=True):
         a = f' text-anchor="{anchor}"' if anchor != "start" else ""
+        # A dark outline painted under the glyphs keeps a label readable where a leader line or drawing passes behind it.
+        a += ' stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke"' if halo else ""
         w = f' font-weight="{weight}"' if weight else ""
         l = f' letter-spacing="{ls}"' if ls else ""
         o = f' opacity="{op}"' if op is not None else ""
@@ -251,7 +253,7 @@ class Sheet:
                        f'<text x="160" y="712" text-anchor="middle" font-family="{MONO}" font-size="10" fill="#635C4C">1.80 m</text>')
         for x, lab in (view_labels or []):
             out.append(f'<text x="{x}" y="730" text-anchor="middle" font-family="{MONO}" font-size="11" letter-spacing="3" fill="#635C4C">{lab}</text>')
-        out += self.body
+        out += labels_on_top(self.body)
         # palette
         out.append(f'<g font-family="{MONO}" font-size="10" fill="#9A9078">')
         widths = [40 + len(f"{h} {l}") * 6.1 for h, l in palette]
@@ -267,6 +269,40 @@ class Sheet:
         return "\n".join(out)
 
 
+def labels_on_top(body):
+    """Move top-level outlined labels after the drawing, so no line or shape is painted over a label."""
+    import re
+    drawing, labels, depth = [], [], 0
+    for element in body:
+        opens = len(re.findall(r"<g[\s>]", element)) - len(re.findall(r"<g[^>]*/>", element))
+        delta = opens - element.count("</g>")
+        if depth == 0 and delta == 0 and element.startswith("<text") and 'paint-order="stroke"' in element:
+            labels.append(element)
+        else:
+            drawing.append(element)
+        depth += delta
+    return drawing + [backed(label) for label in labels]
+
+
+def backed(label):
+    """Put a dark plate under a label, so a line passing behind it stops at its edge rather than showing between letters."""
+    import html, re
+    if "transform=" in label:
+        return label
+    attr = lambda name, default: (re.search(rf'\b{name}="([^"]+)"', label) or [None, default])[1]
+    x, y, size = float(attr("x", 0)), float(attr("y", 0)), float(attr("font-size", 12))
+    spacing, anchor = float(attr("letter-spacing", 0)), attr("text-anchor", "start")
+    content = html.unescape(re.sub(r"<[^>]+>", "", label))
+    if len(content.strip()) <= 2:
+        return label  # a stencil mark or tick number drawn on the object, not a label
+    width = len(content) * (size * 0.6 + spacing)
+    left = x - width if anchor == "end" else x - width / 2 if anchor == "middle" else x
+    pad = 3
+    plate = (f'<rect x="{fmt(left - pad)}" y="{fmt(y - size * 0.82 - pad / 2)}" width="{fmt(width + 2 * pad)}" '
+             f'height="{fmt(size * 1.1 + pad)}" rx="2" fill="#14120E" opacity="0.82"/>')
+    return plate + label
+
+
 def callouts(sh, items, x_label=968, y0=150, dy=None, y_max=690):
     """items: list of (tx, ty, label, sub, [lx, ly, anchor]). Right-margin labels by default."""
     auto = [it for it in items if len(it) == 4]
@@ -277,6 +313,7 @@ def callouts(sh, items, x_label=968, y0=150, dy=None, y_max=690):
     placed = {}
     for i, it in enumerate(auto_sorted):
         placed[id(it)] = (x_label, y0 + i * dy, "start")
+    labels = []
     for it in items:
         if len(it) == 4:
             lx, ly, anchor = placed[id(it)]
@@ -286,6 +323,9 @@ def callouts(sh, items, x_label=968, y0=150, dy=None, y_max=690):
         elbow = lx - 12 if anchor == "start" else lx + 12
         sh.line([(tx, ty), (elbow, ly - 4), (lx - (4 if anchor == "start" else -4), ly - 4)], FRAME_TXT, 0.8, smooth=False)
         sh.circle(tx, ty, 2.6, VELLUM, INK, 0.8)
+        labels.append((lx, ly, lab, sub, anchor))
+    # Labels go down after every leader line, so no line is drawn over a label.
+    for lx, ly, lab, sub, anchor in labels:
         sh.text(lx, ly, lab, 12, VELLUM, anchor)
         if sub:
             sh.text(lx, ly + 14, sub, 10.5, FRAME_TXT, anchor)
@@ -414,7 +454,7 @@ def struct_ladder(sh, x, floor_y, s, max_m, step=0.5, clear=None):
         y = floor_y - m * s
         major = abs(m - round(m)) < 1e-6
         sh.line([(x - (6 if major else 3), y), (x + (6 if major else 3), y)], FRAME_MID, 1, smooth=False)
-        if major:
+        if major and not (clear and abs(m - clear) < 1e-6):
             sh.text(x - 10, y + 4, f"{m:.0f}", 11, FRAME_MID, "end")
         k += 1
     if clear:

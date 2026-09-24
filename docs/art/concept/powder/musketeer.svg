@@ -435,45 +435,45 @@
 <path d="M781.4 282.9 L775.8 290.8" fill="none" stroke="#906B5E" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.7"/>
 <path d="M776.5 286.5 L770.4 294.9" fill="none" stroke="#906B5E" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.7"/>
 <path d="M66 267.6 L560 267.6" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.7" stroke-dasharray="4 4"/>
-<text x="206" y="263.6" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078">1.92 m (hat crown)</text>
 <path d="M66 349 L300 349" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.7" stroke-dasharray="4 4"/>
-<text x="304" y="345" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078">musket 1.55 m</text>
 <path d="M820 272 L956 146 L964 146" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="820" cy="272" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="968" y="150" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">BROAD HAT + PLUME</text>
-<text x="968" y="164" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">black felt · brim 0.46 m</text>
 <path d="M674.8 254.4 L712 136 L704 136" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="674.8" cy="254.4" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="700" y="140" font-family="Overpass Mono, monospace" font-size="12" text-anchor="end" fill="#DCD2BA">MATCHLOCK MUSKET</text>
-<text x="700" y="154" font-family="Overpass Mono, monospace" font-size="10.5" text-anchor="end" fill="#9A9078">barrel 1.15 m blued · muzzle sooted</text>
 <path d="M899.2 404 L956 208 L964 208" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="899.2" cy="404" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="968" y="212" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">FORKED REST</text>
-<text x="968" y="226" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">ash 1.30 m · iron U-fork</text>
 <path d="M846.4 404 L956 270 L964 270" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="846.4" cy="404" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="968" y="274" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">TWELVE APOSTLES</text>
-<text x="968" y="288" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">walnut chargers on felt band</text>
 <path d="M903.6 426 L956 332 L964 332" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="903.6" cy="426" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="968" y="336" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">SLOW MATCH, LIT BOTH ENDS</text>
-<text x="968" y="350" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">madder ember · emissive</text>
 <path d="M831 430.4 L956 394 L964 394" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="831" cy="430.4" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="968" y="398" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">BUFF COAT</text>
-<text x="968" y="412" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">oil-tanned leather · 8 mm</text>
-<path d="M784.8 487.6 L737 466 L729 466" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M784.8 487.6 L737 521 L729 521" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="784.8" cy="487.6" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="725" y="470" font-family="Overpass Mono, monospace" font-size="12" text-anchor="end" fill="#DCD2BA">BULLET BAG</text>
-<text x="725" y="484" font-family="Overpass Mono, monospace" font-size="10.5" text-anchor="end" fill="#9A9078">buff leather · ball pouch</text>
-<path d="M743 558 L737 556 L729 556" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M743 558 L737 591 L729 591" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="743" cy="558" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="725" y="560" font-family="Overpass Mono, monospace" font-size="12" text-anchor="end" fill="#DCD2BA">SHORT SWORD</text>
-<text x="725" y="574" font-family="Overpass Mono, monospace" font-size="10.5" text-anchor="end" fill="#9A9078">felt-black scabbard</text>
 <path d="M846.4 562.4 L956 456 L964 456" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="846.4" cy="562.4" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
-<text x="968" y="460" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">BUCKET-TOP BOOTS</text>
-<text x="968" y="474" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">dressed buff · turned down</text>
+<rect x="203" y="253.9" width="114" height="14" rx="2" fill="#14120E" opacity="0.82"/><text x="206" y="263.6" font-family="Overpass Mono, monospace" font-size="10" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">1.92 m (hat crown)</text>
+<rect x="301" y="335.3" width="84" height="14" rx="2" fill="#14120E" opacity="0.82"/><text x="304" y="345" font-family="Overpass Mono, monospace" font-size="10" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">musket 1.55 m</text>
+<rect x="965" y="138.7" width="128.4" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="150" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">BROAD HAT + PLUME</text>
+<rect x="965" y="153.9" width="157.2" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="164" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">black felt · brim 0.46 m</text>
+<rect x="581.8" y="128.7" width="121.2" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="140" font-family="Overpass Mono, monospace" font-size="12" text-anchor="end" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">MATCHLOCK MUSKET</text>
+<rect x="476.5" y="143.9" width="226.5" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="700" y="154" font-family="Overpass Mono, monospace" font-size="10.5" text-anchor="end" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">barrel 1.15 m blued · muzzle sooted</text>
+<rect x="965" y="200.7" width="85.2" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="212" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">FORKED REST</text>
+<rect x="965" y="215.9" width="157.2" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="226" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">ash 1.30 m · iron U-fork</text>
+<rect x="965" y="262.7" width="114" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="274" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">TWELVE APOSTLES</text>
+<rect x="965" y="277.9" width="182.4" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="288" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">walnut chargers on felt band</text>
+<rect x="965" y="324.7" width="186" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="336" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">SLOW MATCH, LIT BOTH ENDS</text>
+<rect x="965" y="339.9" width="150.9" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="350" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">madder ember · emissive</text>
+<rect x="965" y="386.7" width="70.8" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="398" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">BUFF COAT</text>
+<rect x="965" y="401.9" width="163.5" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="412" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">oil-tanned leather · 8 mm</text>
+<rect x="650" y="513.7" width="78" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="725" y="525" font-family="Overpass Mono, monospace" font-size="12" text-anchor="end" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">BULLET BAG</text>
+<rect x="564.5" y="528.9" width="163.5" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="725" y="539" font-family="Overpass Mono, monospace" font-size="10.5" text-anchor="end" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">buff leather · ball pouch</text>
+<rect x="642.8" y="583.7" width="85.2" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="725" y="595" font-family="Overpass Mono, monospace" font-size="12" text-anchor="end" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">SHORT SWORD</text>
+<rect x="602.3" y="598.9" width="125.7" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="725" y="609" font-family="Overpass Mono, monospace" font-size="10.5" text-anchor="end" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">felt-black scabbard</text>
+<rect x="965" y="448.7" width="121.2" height="16.2" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="460" font-family="Overpass Mono, monospace" font-size="12" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#DCD2BA">BUCKET-TOP BOOTS</text>
+<rect x="965" y="463.9" width="169.8" height="14.6" rx="2" fill="#14120E" opacity="0.82"/><text x="968" y="474" font-family="Overpass Mono, monospace" font-size="10.5" stroke="#14120E" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke" fill="#9A9078">dressed buff · turned down</text>
 <g font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078">
 <rect x="40" y="748" width="34" height="18" fill="#A48A60" stroke="#332D22" stroke-width="1"/><text x="80" y="761">#A48A60 buff leather</text>
 <rect x="212.9" y="748" width="34" height="18" fill="#5B3036" stroke="#332D22" stroke-width="1"/><text x="252.9" y="761">#5B3036 murrey wool</text>

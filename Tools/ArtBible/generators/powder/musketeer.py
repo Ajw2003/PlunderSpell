@@ -257,8 +257,8 @@ def build():
         (820 + 0.12 * 220, 690 - 220 * 1.30, "TWELVE APOSTLES", "walnut chargers on felt band"),
         (820 + 0.38 * 220, 690 - 220 * 1.20, "SLOW MATCH, LIT BOTH ENDS", "madder ember · emissive"),
         (820 + 0.05 * 220, 690 - 220 * 1.18, "BUFF COAT", "oil-tanned leather · 8 mm"),
-        (820 - 0.16 * 220, 690 - 220 * 0.92, "BULLET BAG", "buff leather · ball pouch", 725, 470, "end"),
-        (820 - 0.35 * 220, 690 - 220 * 0.60, "SHORT SWORD", "felt-black scabbard", 725, 560, "end"),
+        (820 - 0.16 * 220, 690 - 220 * 0.92, "BULLET BAG", "buff leather · ball pouch", 725, 525, "end"),
+        (820 - 0.35 * 220, 690 - 220 * 0.60, "SHORT SWORD", "felt-black scabbard", 725, 595, "end"),
         (820 + 0.12 * 220, 690 - 220 * 0.58, "BUCKET-TOP BOOTS", "dressed buff · turned down"),
     ], y0=150, dy=62)
     return sh.render("THE AGE OF POWDER · ENEMY · RANGED", "Musketeer", "H 1.92 m · ≤ 8k tris · 2048²",
