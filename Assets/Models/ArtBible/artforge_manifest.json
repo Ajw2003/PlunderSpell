@@ -1767,7 +1767,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/glTF/DendraChampion.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/DendraChampion.blend"
       },
-      "build_seconds": 4.3
+      "build_seconds": 3.9
     },
     {
       "key": "enemies/bronze/flame-keeper",
@@ -1882,7 +1882,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/KeeperOfTheFlame/glTF/KeeperOfTheFlame.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/KeeperOfTheFlame/KeeperOfTheFlame.blend"
       },
-      "build_seconds": 4.7
+      "build_seconds": 4.0
     },
     {
       "key": "enemies/bronze/palace-levy",
@@ -2003,7 +2003,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/glTF/PalaceLevy.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/PalaceLevy.blend"
       },
-      "build_seconds": 4.6
+      "build_seconds": 3.6
     },
     {
       "key": "enemies/bronze/wall-slinger",
@@ -2107,7 +2107,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/glTF/WallSlinger.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/WallSlinger.blend"
       },
-      "build_seconds": 4.3
+      "build_seconds": 3.4
     },
     {
       "key": "enemies/high/alaunt-hound",
@@ -2203,7 +2203,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/glTF/AlauntWarHound.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/AlauntWarHound.blend"
       },
-      "build_seconds": 3.9
+      "build_seconds": 3.0
     },
     {
       "key": "enemies/high/castle-crossbowman",
@@ -2316,7 +2316,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/glTF/CastleCrossbowman.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/CastleCrossbowman.blend"
       },
-      "build_seconds": 4.8
+      "build_seconds": 4.1
     },
     {
       "key": "enemies/high/household-knight",
@@ -2430,7 +2430,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/glTF/HouseholdKnight.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/HouseholdKnight.blend"
       },
-      "build_seconds": 4.0
+      "build_seconds": 3.3
     },
     {
       "key": "enemies/high/lantern-warden",
@@ -2535,7 +2535,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/LanternWarden/glTF/LanternWarden.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
-      "build_seconds": 4.1
+      "build_seconds": 3.6
     },
     {
       "key": "enemies/late/gothic-knight",
@@ -2636,7 +2636,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/glTF/GothicManAtArms.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/GothicManAtArms.blend"
       },
-      "build_seconds": 3.7
+      "build_seconds": 3.6
     },
     {
       "key": "enemies/late/handgunner",
@@ -2783,7 +2783,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/Handgunner/glTF/Handgunner.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/Handgunner/Handgunner.blend"
       },
-      "build_seconds": 3.5
+      "build_seconds": 3.4
     },
     {
       "key": "enemies/late/pavisier",
@@ -2897,7 +2897,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/Pavisier/glTF/Pavisier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/Pavisier/Pavisier.blend"
       },
-      "build_seconds": 3.5
+      "build_seconds": 3.3
     },
     {
       "key": "enemies/late/sallet-halberdier",
@@ -3116,7 +3116,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/glTF/Cuirassier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/Cuirassier.blend"
       },
-      "build_seconds": 3.9
+      "build_seconds": 4.2
     },
     {
       "key": "enemies/powder/musketeer",
@@ -3245,7 +3245,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/glTF/Musketeer.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/Musketeer.blend"
       },
-      "build_seconds": 3.7
+      "build_seconds": 3.5
     },
     {
       "key": "enemies/powder/partisan-guard",
@@ -3377,7 +3377,7 @@
         "height_with_props_m": 1.752,
         "rig_bones": 30,
         "skinned_bones": 29,
-        "mean_influences": 1.51
+        "mean_influences": 1.52
       },
       "spec": {
         "dims_WDH_m": null,
@@ -3480,7 +3480,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Petardier/glTF/Petardier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Petardier/Petardier.blend"
       },
-      "build_seconds": 3.6
+      "build_seconds": 3.4
     }
   ]
 }
