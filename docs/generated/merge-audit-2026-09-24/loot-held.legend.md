@@ -1,0 +1,27 @@
+| Row | Col | Item | Held by |
+|---|---|---|---|
+| 1 | 1 | Astrolabe | grip point |
+| 1 | 2 | CabinetOfCuriosities | grip point |
+| 1 | 3 | NautilusCup | grip point |
+| 1 | 4 | SilverServiceTureen | grip point |
+| 1 | 5 | VenetianMirror | grip point |
+| 1 | 6 | AncientRelic | mesh centre |
+| 2 | 1 | FaienceHippopotamus | grip point |
+| 2 | 2 | GoldDeathMask | grip point |
+| 2 | 3 | OxhideIngot | grip point |
+| 2 | 4 | SealedAmphora | grip point |
+| 2 | 5 | TripodCauldron | grip point |
+| 2 | 6 | CopperPot | mesh centre |
+| 3 | 1 | GoldenGoblet | mesh centre |
+| 3 | 2 | HeavyChest | mesh centre |
+| 3 | 3 | ArmReliquary | grip point |
+| 3 | 4 | CoinCoffer | grip point |
+| 3 | 5 | GildedAltarpiece | grip point |
+| 3 | 6 | IlluminatedPsalter | grip point |
+| 4 | 1 | SilverEwer | grip point |
+| 4 | 2 | BankersLedger | grip point |
+| 4 | 3 | GildedNef | grip point |
+| 4 | 4 | JewelledHatBadge | grip point |
+| 4 | 5 | ParadeArmourOnItsStand | grip point |
+| 4 | 6 | RolledTapestry | grip point |
+| 5 | 1 | SilverPlate | mesh centre |

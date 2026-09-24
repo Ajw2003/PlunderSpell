@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5678464920569661225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4186733268629468357}
+  m_Layer: 0
+  m_Name: GripPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4186733268629468357
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5678464920569661225}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.000016750022, z: 0.0004262501}
+  m_LocalScale: {x: 0.01, y: 0.009999997, z: 0.009999997}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7082896873396147072}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7332203586886956139
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54,7 +85,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 47d545f169ea4444597b705c1637ea75, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4186733268629468357}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 47d545f169ea4444597b705c1637ea75, type: 3}
       insertIndex: -1
@@ -75,6 +109,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6917404204036914921}
   m_SourcePrefab: {fileID: 100100000, guid: 47d545f169ea4444597b705c1637ea75, type: 3}
+--- !u!4 &7082896873396147072 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 47d545f169ea4444597b705c1637ea75, type: 3}
+  m_PrefabInstance: {fileID: 7332203586886956139}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7566136990306978106 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 47d545f169ea4444597b705c1637ea75, type: 3}
@@ -172,6 +211,7 @@ MonoBehaviour:
   _meshRenderer: {fileID: 8214756972459682031}
   _brokenVfx: {fileID: 0}
   _handLocalOffset: {x: 0, y: 0, z: 0}
+  _gripPoint: {fileID: 4186733268629468357}
 --- !u!114 &3800362598249420995
 MonoBehaviour:
   m_ObjectHideFlags: 0
