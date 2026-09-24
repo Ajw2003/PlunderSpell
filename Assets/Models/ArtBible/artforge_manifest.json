@@ -2634,7 +2634,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/glTF/GothicManAtArms.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/GothicManAtArms.blend"
       },
-      "build_seconds": 5.7
+      "build_seconds": 5.1
     },
     {
       "key": "enemies/late/handgunner",
@@ -3000,7 +3000,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/glTF/Cuirassier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/Cuirassier.blend"
       },
-      "build_seconds": 4.7
+      "build_seconds": 5.3
     },
     {
       "key": "enemies/powder/musketeer",
@@ -3129,7 +3129,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/glTF/Musketeer.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/Musketeer.blend"
       },
-      "build_seconds": 4.2
+      "build_seconds": 4.4
     },
     {
       "key": "enemies/powder/partisan-guard",
@@ -3236,7 +3236,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/glTF/PalaceGuard.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/PalaceGuard.blend"
       },
-      "build_seconds": 4.6
+      "build_seconds": 5.1
     },
     {
       "key": "enemies/powder/petardier",
@@ -3364,7 +3364,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Petardier/glTF/Petardier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Petardier/Petardier.blend"
       },
-      "build_seconds": 4.1
+      "build_seconds": 5.5
     }
   ]
 }

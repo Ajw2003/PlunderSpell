@@ -537,7 +537,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":9287,
+			"count":9282,
 			"max":[
 				0.3908006250858307,
 				1.9503968954086304,
@@ -553,25 +553,25 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":9287,
+			"count":9282,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":9287,
+			"count":9282,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":9287,
+			"count":9282,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":9287,
+			"count":9282,
 			"type":"VEC4"
 		},
 		{
@@ -590,44 +590,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":111444,
+			"byteLength":111384,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":111444,
-			"byteOffset":111444,
+			"byteLength":111384,
+			"byteOffset":111384,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":74296,
-			"byteOffset":222888,
+			"byteLength":74256,
+			"byteOffset":222768,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":37148,
-			"byteOffset":297184,
+			"byteLength":37128,
+			"byteOffset":297024,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":148592,
-			"byteOffset":334332,
+			"byteLength":148512,
+			"byteOffset":334152,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":47952,
-			"byteOffset":482924,
+			"byteOffset":482664,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1472,
-			"byteOffset":530876
+			"byteOffset":530616
 		}
 	],
 	"samplers":[
@@ -638,7 +638,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":532348,
+			"byteLength":532088,
 			"uri":"GothicManAtArms.bin"
 		}
 	]

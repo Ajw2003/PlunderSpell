@@ -1002,11 +1002,11 @@ def gothic_knight(entry: Entry):
     for k in range(7):
         t = (k - 3) / 3.0
         top = (t * 0.13 * (1.0 - 0.35 * abs(t)), 1.44 - 0.30 * abs(t) ** 1.3)
-        pts = [(t * 0.02, 1.06), (t * 0.07, 1.06 + (top[1] - 1.06) * 0.5), top]
-        path = [tuple(_plate_pt(fig, x, z, ppad + 0.008, chest)) for x, z in pts]
+        pts = [(t * 0.075, 1.075), (t * 0.10, 1.075 + (top[1] - 1.075) * 0.5), top]
+        path = [tuple(_plate_pt(fig, x, z, ppad + 0.0075, chest)) for x, z in pts]
         parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=D, bone="Spine", segments=4,
-                          extras={"path": path, "sections": [(0.003, 0.009), (0.003, 0.008),
-                                                             (0.003, 0.005)],
+                          extras={"path": path, "sections": [(0.002, 0.004), (0.002, 0.005),
+                                                             (0.002, 0.003)],
                                   "up": (0, -1, 0), "power": 4.0, "bevel": False,
                                   "smooth": True, "bones": ["Hips", "Spine", "Chest"]}))
     # lance-rest bolt hole on the right breast
