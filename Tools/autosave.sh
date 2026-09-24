@@ -66,7 +66,17 @@ for ((i = 1; i <= count; i++)); do
         echo "$changes" | sed 's/^/    /'
         continue
     fi
-    git add -- "${paths[@]}"
+    # A watched path that does not exist yet (an output folder a worker has not created)
+    # makes `git add` reject the whole command, so stage only paths that exist on disk or
+    # that git already tracks (a tracked path may have been deleted, which is a change too).
+    present=()
+    for path in "${paths[@]}"; do
+        if [ -e "$path" ] || [ -n "$(git ls-files -- "$path")" ]; then present+=("$path"); fi
+    done
+    if ! git add -- "${present[@]}"; then
+        echo "$stamp ERROR: git add failed (see above)"
+        continue
+    fi
     if ! git commit -q -m "chore: auto-checkpoint work in progress
 
 Paths watched: ${paths[*]}
