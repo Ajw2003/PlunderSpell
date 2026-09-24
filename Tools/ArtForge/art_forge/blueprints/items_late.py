@@ -175,9 +175,13 @@ def parade_armour(entry: Entry):
         keel.append((0.0, hy + 1.08 * r * math.sin(t) * 1.0 + (0.002 * math.sin(t)),
                      z + 0.003))
     parts.append(_tube(keel, (0.004, 0.004), steel, segments=4, up=(1, 0, 0)))
-    tail = [(0.0, 0.050, 1.735), (0.0, 0.120, 1.705), (0.0, 0.180, 1.678),
-            (0.0, 0.230, 1.664), (0.0, 0.262, 1.664)]
-    parts.append(_tube(tail, (0.006, 0.098), steel, segments=8, up=(0, 0, 1)))
+    # Tail: a flared skirt set back behind the skull and tipped down at the back,
+    # so it sweeps out behind the neck and flares a little at the sides; its front
+    # arc stays buried in the skull. Gilt edge continues the brow band.
+    skirt = [(0.184, -0.044), (0.182, -0.032), (0.150, 0.000), (0.112, 0.036)]
+    parts.append(_lathe(skirt, steel, loc=(0, 0.085, 1.690), size=(0.86, 1.0, 1),
+                        rot=(-14, 0, 0), segments=24,
+                        paint=[_band(gilt, -0.044, -0.032)]))
     bevor = [(0.078, 1.555), (0.094, 1.590), (0.101, 1.630), (0.100, 1.672), (0.094, 1.690)]
     parts.append(_lathe(bevor, steel, loc=(0, -0.026, 0), size=(1, 0.88, 1), segments=20))
 

@@ -18,7 +18,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"ParadeArmourOnItsStand"
+			"name":"FaienceHippopotamus"
 		}
 	],
 	"materials":[
@@ -37,7 +37,7 @@
 					"emissiveStrength":9
 				}
 			},
-			"name":"ParadeArmourOnItsStand",
+			"name":"FaienceHippopotamus",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
@@ -50,7 +50,7 @@
 	],
 	"meshes":[
 		{
-			"name":"ParadeArmourOnItsStand",
+			"name":"FaienceHippopotamus",
 			"primitives":[
 				{
 					"attributes":{
@@ -81,79 +81,79 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"ParadeArmourOnItsStand_Emission",
-			"uri":"ParadeArmourOnItsStand_Emission.png"
+			"name":"FaienceHippopotamus_Emission",
+			"uri":"FaienceHippopotamus_Emission.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"ParadeArmourOnItsStand_BaseMap",
-			"uri":"ParadeArmourOnItsStand_BaseMap.png"
+			"name":"FaienceHippopotamus_BaseMap",
+			"uri":"FaienceHippopotamus_BaseMap.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"ParadeArmourOnItsStand_ORM",
-			"uri":"ParadeArmourOnItsStand_ORM.png"
+			"name":"FaienceHippopotamus_ORM",
+			"uri":"FaienceHippopotamus_ORM.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":4272,
+			"count":1759,
 			"max":[
-				0.36709868907928467,
-				1.9075813293457031,
-				0.36000001430511475
+				0.1033441573381424,
+				0.0989999994635582,
+				0.041036900132894516
 			],
 			"min":[
-				-0.36709868907928467,
+				-0.10249999910593033,
 				0,
-				-0.36000001430511475
+				-0.041036900132894516
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":4272,
+			"count":1759,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":4272,
+			"count":1759,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":12762,
+			"count":4338,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":51264,
+			"byteLength":21108,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":51264,
-			"byteOffset":51264,
+			"byteLength":21108,
+			"byteOffset":21108,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":34176,
-			"byteOffset":102528,
+			"byteLength":14072,
+			"byteOffset":42216,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":25524,
-			"byteOffset":136704,
+			"byteLength":8676,
+			"byteOffset":56288,
 			"target":34963
 		}
 	],
@@ -165,8 +165,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":162228,
-			"uri":"ParadeArmourOnItsStand.bin"
+			"byteLength":64964,
+			"uri":"FaienceHippopotamus.bin"
 		}
 	]
 }

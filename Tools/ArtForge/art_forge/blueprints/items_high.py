@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 
-from ..kit import Part, arc_path, gable_outline, rounded_rect
+from ..kit import Part, arc_path, gable_outline, rounded_rect, spline
 from ..spec import Entry
 from . import blueprint
 
@@ -382,7 +382,118 @@ def arm_reliquary(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Silver ewer
+# --------------------------------------------------------------------------------
+
+def silver_ewer(entry: Entry):
+    """Hammered silver ewer: pear-shaped lathe body on a gilt-ringed foot, a niello
+    band at the belly, the household enamel on the front, a long straight spout on
+    +X, a C-scroll handle on -X and a domed lid with a gilt finial."""
+    W, D, H = entry.dims                      # 0.22 × 0.16 × 0.34
+    parts: list[Part] = []
+
+    band_lo, band_hi = 0.111, 0.129           # niello band, 0.018 m at the belly
+    body = [
+        (0.050, 0.000), (0.050, 0.006),       # foot 0.10 dia × 0.015
+        (0.044, 0.015), (0.034, 0.020),       # foot ring (gilt) 0.02–0.03
+        (0.030, 0.031),                       # stem 0.06 dia
+        (0.042, 0.050), (0.062, 0.071),
+        (0.075, 0.092), (0.080, band_lo),     # belly 0.16 dia at 0.12
+        (0.080, band_hi),
+        (0.074, 0.150), (0.060, 0.170),       # shoulder 0.12 dia at 0.17
+        (0.046, 0.192), (0.036, 0.222),
+        (0.035, 0.250),                       # neck 0.07 dia at 0.245
+        (0.041, 0.282), (0.046, 0.300),       # flaring to the lip, 0.092 dia at 0.30
+    ]
+    parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="silver", segments=24, extras={
+        "profile": body, "smooth": True, "bevel": False, "paint": [
+            {"mat": "tarnish", "min": (-1, -1, -1), "max": (1, 1, 0.003)},
+            {"mat": "parcel_gilt", "min": (-1, -1, 0.0195), "max": (1, 1, 0.0315)},
+            {"mat": "niello", "min": (-1, -1, band_lo - 1e-4), "max": (1, 1, band_hi + 1e-4)},
+            {"mat": "parcel_gilt", "min": (-1, -1, 0.282), "max": (1, 1, 0.301)},
+        ]}))
+
+    # Lid: silver dome seated on the gilt lip, gilt finial ball (1.6 cm) on top;
+    # hinge knuckle and gilt thumbpiece on the handle side (-X).
+    lid = [(0.047, 0.299), (0.047, 0.304), (0.043, 0.312), (0.034, 0.320),
+           (0.020, 0.325), (0.007, 0.3265), (0.0, 0.327)]
+    parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="silver", segments=12,
+                      extras={"profile": lid, "smooth": True, "bevel": False}))
+    parts.append(Part("cyl", (0, 0, 0.3285), (0.008, 0.008, 0.006), mat="parcel_gilt",
+                      segments=8, extras={"bevel": False}))
+    parts.append(Part("sphere", (0, 0, H - 0.008), (0.016, 0.016, 0.016), mat="parcel_gilt",
+                      segments=8, rings=4, extras={"smooth": True, "bevel": False}))
+    parts.append(Part("cyl", (-0.048, 0, 0.303), (0.008, 0.008, 0.022), mat="silver",
+                      segments=6, rot=(90, 0, 0), extras={"smooth": True, "bevel": False}))
+    parts.append(Part("cone", (-0.056, 0, 0.318), (0.014, 0.006, 0.024), mat="parcel_gilt",
+                      segments=4, rot=(0, -38, 0), extras={"bevel": False}))
+
+    # Spout: a straight tapered lathe along the spout axis, from a flared root on
+    # the shoulder (1.8 cm) to a 0.9 cm tip 0.12 m out and 0.275 m up; gilt sleeve at
+    # the root, a dark mouth.
+    root, tip = (0.056, 0.0, 0.140), (0.117, 0.0, 0.275)
+    dx, dz = tip[0] - root[0], tip[2] - root[2]
+    L = math.hypot(dx, dz)
+    spout = [(0.019, 0.0), (0.0125, 0.010), (0.0095, 0.022), (0.0092, 0.034),
+             (0.0065, 0.09), (0.0045, L - 0.003), (0.0052, L)]
+    parts.append(Part("lathe", root, (1, 1, 1), mat="silver", segments=8,
+                      rot=(0, math.degrees(math.atan2(dx, dz)), 0), extras={
+                          "profile": spout, "smooth": True, "bevel": False, "paint": [
+                              {"mat": "parcel_gilt", "min": (-1, -1, 0.0095), "max": (1, 1, 0.035)},
+                              {"mat": "tarnish", "min": (-1, -1, L - 1e-4), "max": (1, 1, 1)},
+                          ]}))
+
+    # Handle: C-scroll strap 1.1 × 0.8 cm from the neck (0.27 m) out to 0.11 m and
+    # down into the belly (0.11 m), with a small outward curl at the foot of the C;
+    # gilt boss at the top of the bow. Both ends are buried in the body.
+    ctrl = [(-0.030, 0.273), (-0.058, 0.281), (-0.088, 0.272), (-0.104, 0.246),
+            (-0.106, 0.205), (-0.098, 0.163), (-0.083, 0.130), (-0.076, 0.112),
+            (-0.070, 0.104)]
+    path = [(x, 0.0, z) for x, z in ctrl]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=6, extras={
+        "path": path, "section": (0.0055, 0.0042), "up": (0, 1, 0), "smooth": True,
+        "bevel": False}))
+    parts.append(Part("sphere", (-0.103, 0.0, 0.252), (0.017, 0.017, 0.017), mat="parcel_gilt",
+                      segments=8, rings=4, extras={"smooth": True, "bevel": False}))
+
+    # Medallion: champlevé roundel 5.8 cm on the belly front, tilted to the body's
+    # slope — gilt rim, woad field, silver chevron.
+    mz, tilt = 0.157, 22.0
+    ny, nz = -math.cos(math.radians(tilt)), math.sin(math.radians(tilt))
+    cy = -0.0665
+
+    def along(d: float):
+        return (0.0, cy + ny * d, mz + nz * d)
+
+    parts.append(Part("cyl", along(0.0), (0.058, 0.058, 0.010), mat="parcel_gilt",
+                      segments=16, rot=(90 - tilt, 0, 0), extras={"bevel": False}))
+    parts.append(Part("cyl", along(0.0055), (0.047, 0.047, 0.002), mat="woad_enamel",
+                      segments=16, rot=(90 - tilt, 0, 0), extras={"bevel": False}))
+    chevron = [(-0.017, -0.012), (0.0, 0.012), (0.017, -0.012),
+               (0.009, -0.012), (0.0, 0.0), (-0.009, -0.012)]
+    parts.append(Part("prism", along(0.007), (1, 1, 0.002), mat="silver",
+                      rot=(90 - tilt, 0, 0), extras={"outline": chevron, "bevel": False}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.0,
+        family_overrides={
+            # Tarnish rubbed into the hammered sheet; parcel gilt rubbed to silver.
+            "silver": {"wear_to": "#5A5850", "wear_amount": 0.22, "grain": 0.14},
+            "parcel_gilt": {"wear_to": "#B8B4A8", "wear_amount": 0.25, "grain": 0.12},
+        },
+        notes=["Medallion faces front (-Y) as the concept's hero and front views draw it; "
+               "the build bullet's 'under the spout' is the side view's reading.",
+               "Chased chevrons in the niello band, the 6 mm hammer marks and the polished "
+               "patch on the handle are normal/roughness detail EnemyForge's bake does not "
+               "make; the band is solid niello.",
+               "Dent blend shapes (states 1 and 2) are not authored by ArtForge yet."],
+    )
+
+
 BLUEPRINTS = {
     "gilded-altarpiece": gilded_altarpiece,
     "arm-reliquary": arm_reliquary,
+    "silver-ewer": silver_ewer,
 }

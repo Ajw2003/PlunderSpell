@@ -2,6 +2,78 @@
   "generated_by": "Tools/ArtForge/build.py",
   "assets": [
     {
+      "key": "items/bronze/faience-hippo",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "faience-hippo",
+      "name": "FaienceHippopotamus",
+      "title": "Faience Hippopotamus",
+      "passed": true,
+      "stats": {
+        "vertices": 789,
+        "faces": 799,
+        "triangles": 1446,
+        "islands": 33,
+        "lowest_z": 0.0,
+        "height": 0.099,
+        "width": 0.206,
+        "budget": 1500,
+        "bbox_m": "0.206x0.082x0.099",
+        "vs_spec": "W=0.206/0.200 D=0.082/0.080 H=0.099/0.110"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.2,
+          0.08,
+          0.11
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "faience_glaze": {
+          "name": "Faience glaze",
+          "base": "#3E86A8",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        },
+        "manganese_black_paint": {
+          "name": "Manganese black paint",
+          "base": "#1E1A16",
+          "rough": 0.2,
+          "metal": 0.0,
+          "emit": null
+        },
+        "quartz_frit_core": {
+          "name": "Quartz frit core",
+          "base": "#E6DDC8",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "glaze_highlight": {
+          "name": "Glaze highlight",
+          "base": "#8CC0D0",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Line-painting is modelled as hair-thin raised strokes on the glaze (the bake has no decal pass); a texture artist can move it to albedo."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/FaienceHippopotamus.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/glTF/FaienceHippopotamus.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/FaienceHippopotamus.blend"
+      },
+      "build_seconds": 3.1
+    },
+    {
       "key": "items/bronze/oxhide-ingot",
       "kind": "items",
       "age": "bronze",
@@ -357,6 +429,87 @@
       "build_seconds": 2.6
     },
     {
+      "key": "items/high/silver-ewer",
+      "kind": "items",
+      "age": "high",
+      "slug": "silver-ewer",
+      "name": "SilverEwer",
+      "title": "Silver Ewer",
+      "passed": true,
+      "stats": {
+        "vertices": 752,
+        "faces": 696,
+        "triangles": 1456,
+        "islands": 12,
+        "lowest_z": 0.0,
+        "height": 0.34,
+        "width": 0.233,
+        "budget": 1500,
+        "bbox_m": "0.233x0.162x0.340",
+        "vs_spec": "W=0.233/0.220 D=0.162/0.160 H=0.340/0.340"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.22,
+          0.16,
+          0.34
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "silver": {
+          "name": "Silver",
+          "base": "#B8B4A8",
+          "rough": 0.2,
+          "metal": 1.0,
+          "emit": null
+        },
+        "parcel_gilt": {
+          "name": "Parcel gilt",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "tarnish": {
+          "name": "Tarnish",
+          "base": "#5A5850",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "niello": {
+          "name": "Niello",
+          "base": "#2A2622",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "woad_enamel": {
+          "name": "Woad enamel",
+          "base": "#3E5470",
+          "rough": 0.1,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Medallion faces front (-Y) as the concept's hero and front views draw it; the build bullet's 'under the spout' is the side view's reading.",
+        "Chased chevrons in the niello band, the 6 mm hammer marks and the polished patch on the handle are normal/roughness detail EnemyForge's bake does not make; the band is solid niello.",
+        "Dent blend shapes (states 1 and 2) are not authored by ArtForge yet."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/SilverEwer/SilverEwer.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/SilverEwer/glTF/SilverEwer.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/SilverEwer/SilverEwer.blend"
+      },
+      "build_seconds": 3.1
+    },
+    {
       "key": "items/late/parade-armour",
       "kind": "items",
       "age": "late",
@@ -365,9 +518,9 @@
       "title": "Parade Armour on its Stand",
       "passed": true,
       "stats": {
-        "vertices": 2155,
-        "faces": 2011,
-        "triangles": 4142,
+        "vertices": 2211,
+        "faces": 2051,
+        "triangles": 4254,
         "islands": 42,
         "lowest_z": 0.0,
         "height": 1.908,
@@ -441,7 +594,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/glTF/ParadeArmourOnItsStand.gltf",
         "blend": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/ParadeArmourOnItsStand.blend"
       },
-      "build_seconds": 3.1
+      "build_seconds": 3.6
     },
     {
       "key": "items/powder/curiosity-cabinet",
@@ -523,6 +676,98 @@
         "blend": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/CabinetOfCuriosities.blend"
       },
       "build_seconds": 5.2
+    },
+    {
+      "key": "items/powder/venetian-mirror",
+      "kind": "items",
+      "age": "powder",
+      "slug": "venetian-mirror",
+      "name": "VenetianMirror",
+      "title": "Venetian Mirror",
+      "passed": false,
+      "stats": {
+        "vertices": 1334,
+        "faces": 1169,
+        "triangles": 2388,
+        "islands": 79,
+        "lowest_z": 0.0,
+        "height": 1.1,
+        "width": 0.818,
+        "budget": 3000,
+        "bbox_m": "0.818x0.078x1.100",
+        "vs_spec": "W=0.818/0.800 D=0.078/0.080 H=1.100/1.100"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.8,
+          0.08,
+          1.1
+        ],
+        "height_m": null,
+        "tri_budget": 3000
+      },
+      "families": {
+        "mirror_silvering": {
+          "name": "Mirror silvering",
+          "base": "#A8ABA2",
+          "rough": 0.08,
+          "metal": 1.0,
+          "emit": null
+        },
+        "forest_window_glass": {
+          "name": "Forest window glass (edge)",
+          "base": "#7E9377",
+          "rough": 0.12,
+          "metal": 0.0,
+          "emit": null
+        },
+        "black_walnut": {
+          "name": "Black walnut",
+          "base": "#3B2A1E",
+          "rough": 0.4,
+          "metal": 0.0,
+          "emit": null
+        },
+        "gilt": {
+          "name": "Gilt",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "pine_backboard": {
+          "name": "Pine backboard",
+          "base": "#9A8260",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "iron_ring": {
+          "name": "Iron ring (hanging ring, staple)",
+          "base": "#34404E",
+          "rough": 0.55,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [
+        "1 shells have inverted normals"
+      ],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['iron_ring']"
+      ],
+      "notes": [
+        "Frame outer 0.80 × 0.96 m plus the 0.14 m crest = 1.10 m overall: the dimension line and concept sheet win over the frame bullet's 0.80 × 1.10 outer size (which would make the mirror 1.24 m with its crest).",
+        "Live reflection (mirror shader) is an engine material; the bake gives a metallic 0.08-rough silver field.",
+        "Pre-fractured 12-shard glass is a separate break mesh, not built here."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/VenetianMirror.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/glTF/VenetianMirror.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/VenetianMirror.blend"
+      },
+      "build_seconds": 2.5
     }
   ]
 }

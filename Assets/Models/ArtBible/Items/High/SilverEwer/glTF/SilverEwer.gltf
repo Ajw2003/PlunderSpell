@@ -18,7 +18,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"ParadeArmourOnItsStand"
+			"name":"SilverEwer"
 		}
 	],
 	"materials":[
@@ -37,7 +37,7 @@
 					"emissiveStrength":9
 				}
 			},
-			"name":"ParadeArmourOnItsStand",
+			"name":"SilverEwer",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
@@ -50,7 +50,7 @@
 	],
 	"meshes":[
 		{
-			"name":"ParadeArmourOnItsStand",
+			"name":"SilverEwer",
 			"primitives":[
 				{
 					"attributes":{
@@ -81,79 +81,79 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"ParadeArmourOnItsStand_Emission",
-			"uri":"ParadeArmourOnItsStand_Emission.png"
+			"name":"SilverEwer_Emission",
+			"uri":"SilverEwer_Emission.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"ParadeArmourOnItsStand_BaseMap",
-			"uri":"ParadeArmourOnItsStand_BaseMap.png"
+			"name":"SilverEwer_BaseMap",
+			"uri":"SilverEwer_BaseMap.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"ParadeArmourOnItsStand_ORM",
-			"uri":"ParadeArmourOnItsStand_ORM.png"
+			"name":"SilverEwer_ORM",
+			"uri":"SilverEwer_ORM.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":4272,
+			"count":1334,
 			"max":[
-				0.36709868907928467,
-				1.9075813293457031,
-				0.36000001430511475
+				0.12173870205879211,
+				0.3399999737739563,
+				0.0819995105266571
 			],
 			"min":[
-				-0.36709868907928467,
+				-0.11150000244379044,
 				0,
-				-0.36000001430511475
+				-0.07999999821186066
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":4272,
+			"count":1334,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":4272,
+			"count":1334,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":12762,
+			"count":4368,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":51264,
+			"byteLength":16008,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":51264,
-			"byteOffset":51264,
+			"byteLength":16008,
+			"byteOffset":16008,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":34176,
-			"byteOffset":102528,
+			"byteLength":10672,
+			"byteOffset":32016,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":25524,
-			"byteOffset":136704,
+			"byteLength":8736,
+			"byteOffset":42688,
 			"target":34963
 		}
 	],
@@ -165,8 +165,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":162228,
-			"uri":"ParadeArmourOnItsStand.bin"
+			"byteLength":51424,
+			"uri":"SilverEwer.bin"
 		}
 	]
 }

@@ -232,6 +232,146 @@ def curiosity_cabinet(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Venetian Mirror
+# --------------------------------------------------------------------------------
+
+def _crest_outline(base_z: float, half_w: float, height: float) -> list[tuple]:
+    """A symmetric acanthus cresting in XZ: flared foot, five flame-leaf lobes with
+    the tallest in the middle (the concept's front view)."""
+    # (x fraction of half width, z fraction of height) for the right half, centre out.
+    right = [(0.00, 1.00), (0.10, 0.80), (0.20, 0.55), (0.30, 0.62), (0.40, 0.78),
+             (0.50, 0.66), (0.60, 0.42), (0.70, 0.38), (0.80, 0.46), (0.88, 0.30),
+             (0.95, 0.12), (1.00, 0.03)]
+    top = spline([(-x, z) for x, z in reversed(right[1:])] + right, 2)
+    pts = [(half_w * x, base_z + height * z) for x, z in top]
+    return [(half_w, base_z)] + pts[::-1] + [(-half_w, base_z)]
+
+
+def venetian_mirror(entry: Entry):
+    """Murano plate in a walnut cushion frame with a gilt bead-and-reel slip, four
+    gilt rosettes and a pierced gilt acanthus crest; pine back with turn-buttons and
+    an iron hanging ring. Stands on its bottom rail, glass facing -Y."""
+    W, D, H = entry.dims                           # 0.80 × 0.08 × 1.10
+    crest_h = 0.14
+    # The JSON's dimension line (H 1.10 overall) and its frame bullet (frame outer
+    # 0.80 × 1.10, crest 0.14 on top) disagree by the crest. The concept sheet sides
+    # with the dimension line: its frame is 0.80 × 0.96 with the crest bringing it
+    # to 1.10, and its plate callout (0.58 × 0.74 visible) only fits that frame.
+    fw, fh = W, H - crest_h                        # frame outer 0.80 × 0.96
+    rail = 0.09
+    parts: list[Part] = []
+
+    # Flat walnut backing frame (butt-jointed rails, hidden under the cushion).
+    back_t = 0.034
+    for lo, hi in (((-fw / 2, 0.0, 0.0), (fw / 2, back_t, rail)),
+                   ((-fw / 2, 0.0, fh - rail), (fw / 2, back_t, fh)),
+                   ((-fw / 2, 0.0, rail - 0.001), (-fw / 2 + rail, back_t, fh - rail + 0.001)),
+                   ((fw / 2 - rail, 0.0, rail - 0.001), (fw / 2, back_t, fh - rail + 0.001))):
+        parts.append(box(lo, hi, "black_walnut", extras={"bevel": False}))
+    # Cushion moulding: a flattened half-round swept round the mitred rectangle.
+    ix, iz0, iz1 = fw / 2 - rail / 2, rail / 2, fh - rail / 2
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="black_walnut", segments=14,
+                      extras={"path": rect_loop(-ix, ix, iz0, iz1, 0.0), "closed": True,
+                              "section": (rail / 2 - 0.001, 0.018), "up": (0, 0, 1),
+                              "smooth": True, "bevel": False}))
+    # A thin outer fillet so the frame edge reads square, as the concept draws it.
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="black_walnut", segments=4,
+                      extras={"path": rect_loop(-fw / 2 + 0.006, fw / 2 - 0.006, 0.006,
+                                                fh - 0.006, -0.002),
+                              "closed": True, "section": (0.006, 0.008), "up": (0, 0, 1),
+                              "bevel": False}))
+
+    # Plate: forest-green glass, the 2 cm bevel showing as a green margin round the
+    # silvered field (foxing specks from the family's wear).
+    ox, oz0, oz1 = fw / 2 - rail, rail, fh - rail          # frame opening
+    cz = fh / 2
+    parts.append(box((-ox - 0.015, 0.000, oz0 - 0.015), (ox + 0.015, 0.006, oz1 + 0.015),
+                     "forest_window_glass", extras={"bevel": False}))
+    parts.append(upright(rounded_rect(2 * ox - 0.06, oz1 - oz0 - 0.06, 0.004, 1, cy=cz),
+                         -0.001, 0.0012, "mirror_silvering", bevel=False))
+
+    # Gilt slip between the glass and the walnut, with a run of beads (bead-and-reel).
+    sx, sz0, sz1 = ox - 0.004, oz0 + 0.004, oz1 - 0.004
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="gilt", segments=6,
+                      extras={"path": rect_loop(-sx, sx, sz0, sz1, -0.004), "closed": True,
+                              "section": (0.010, 0.007), "up": (0, 0, 1), "smooth": True,
+                              "bevel": False}))
+    bead_pitch = 0.052
+    for (ax, az), (bx, bz) in (((-sx, sz0), (sx, sz0)), ((sx, sz0), (sx, sz1)),
+                               ((sx, sz1), (-sx, sz1)), ((-sx, sz1), (-sx, sz0))):
+        length = math.hypot(bx - ax, bz - az)
+        n = int(length / bead_pitch)
+        for i in range(n):
+            t = (i + 0.5) / n
+            parts.append(disc(ax + (bx - ax) * t, az + (bz - az) * t, 0.010, -0.0125, 0.003,
+                              "gilt", 6))
+
+    # Corner rosettes: little gilt domed flowers on the cushion's mitres.
+    for x in (-ix, ix):
+        for z in (iz0, iz1):
+            parts.append(Part("lathe", (x, -0.012, z), (1, 1, 1), mat="gilt", segments=8,
+                              rot=(90.0, 0.0, 0.0),
+                              extras={"profile": [(0.0, 0.0), (0.020, 0.0), (0.020, 0.003),
+                                                  (0.013, 0.007), (0.006, 0.009), (0.0, 0.010)],
+                                      "bevel": False}))
+
+    # Crest: pierced acanthus cresting on the top rail, C-scroll curls in front.
+    crest_z = fh - 0.012
+    parts.append(upright(_crest_outline(crest_z, 0.20, crest_h + 0.012), -0.012, 0.022, "gilt",
+                         bevel=False))
+    for x, z, d in ((0.0, crest_z + 0.075, 0.034), (-0.075, crest_z + 0.050, 0.028),
+                    (0.075, crest_z + 0.050, 0.028), (-0.135, crest_z + 0.030, 0.022),
+                    (0.135, crest_z + 0.030, 0.022)):
+        parts.append(Part("torus", (x, -0.015, z), (d, d, 0.008), mat="gilt", segments=10,
+                          rings=4, minor=0.22, rot=(90.0, 0.0, 0.0), extras={"bevel": False}))
+    # The piercings: dark voids behind the scrolls (the walnut shows through).
+    for x, z, d in ((0.0, crest_z + 0.075, 0.018), (-0.075, crest_z + 0.050, 0.014),
+                    (0.075, crest_z + 0.050, 0.014)):
+        parts.append(disc(x, z, d, -0.0135, 0.002, "black_walnut", 8))
+
+    # Back: pine backboard, four turn-buttons, the iron hanging ring on a staple.
+    bb_y0 = back_t
+    parts.append(box((-fw / 2 + 0.03, bb_y0, 0.03), (fw / 2 - 0.03, bb_y0 + 0.012, fh - 0.03),
+                     "pine_backboard"))
+    for x, z, rot in ((0.0, 0.05, 0.0), (0.0, fh - 0.05, 0.0),
+                      (-fw / 2 + 0.06, cz, 90.0), (fw / 2 - 0.06, cz, 90.0)):
+        parts.append(Part("box", (x, bb_y0 + 0.016, z), (0.05, 0.008, 0.016), mat="black_walnut",
+                          rot=(0.0, rot, 0.0), extras={"bevel": False}))
+    ring_z = fh - 0.11
+    parts.append(Part("torus", (0.0, bb_y0 + 0.017, ring_z), (0.05, 0.05, 0.010), mat="iron_ring",
+                      segments=10, rings=4, minor=0.12, rot=(90.0, 0.0, 0.0),
+                      extras={"bevel": False}))
+    parts.append(box((-0.008, bb_y0 + 0.010, ring_z + 0.018), (0.008, bb_y0 + 0.022, ring_z + 0.030),
+                     "iron_ring", extras={"bevel": False}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.003,
+        extra_families={
+            # The back bullet asks for a hanging iron ring; the JSON gives its hex
+            # (#34404E) only in the pine backboard's notes, not as a material.
+            "iron_ring": {"name": "Iron ring (hanging ring, staple)", "base": "#34404E",
+                          "rough": 0.55, "metal": 1.0, "grain": 0.3},
+        },
+        family_overrides={
+            # Foxing: grey specks through the silvering (JSON note).
+            "mirror_silvering": {"wear_to": "#5E5F58", "wear_amount": 0.22, "grain": 0.05},
+            "forest_window_glass": {"rough": 0.12},
+            "black_walnut": {"grain": 0.28},
+            # Gilt rubbed back to the walnut on the crest tips and corners.
+            "gilt": {"wear_to": "#3B2A1E", "wear_amount": 0.18, "grain": 0.12},
+        },
+        notes=["Frame outer 0.80 × 0.96 m plus the 0.14 m crest = 1.10 m overall: the "
+               "dimension line and concept sheet win over the frame bullet's 0.80 × 1.10 "
+               "outer size (which would make the mirror 1.24 m with its crest).",
+               "Live reflection (mirror shader) is an engine material; the bake gives a "
+               "metallic 0.08-rough silver field.",
+               "Pre-fractured 12-shard glass is a separate break mesh, not built here."],
+    )
+
+
 BLUEPRINTS = {
     "curiosity-cabinet": curiosity_cabinet,
+    "venetian-mirror": venetian_mirror,
 }

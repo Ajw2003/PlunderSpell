@@ -403,7 +403,151 @@ def oxhide_ingot(entry: Entry):
     )
 
 
+def _superellipse_ring(x, zc, hw, hh, e, n):
+    """A ring in the YZ plane at `x`: half-width hw (Y), half-height hh (Z)."""
+    ring = []
+    for j in range(n):
+        t = 2.0 * math.pi * j / n
+        c, s = math.cos(t), math.sin(t)
+        ring.append((x, math.copysign(abs(c) ** (2.0 / e), c) * hw,
+                     zc + math.copysign(abs(s) ** (2.0 / e), s) * hh))
+    return ring
+
+
+def _station_at(stations, x):
+    """Linear blend of (x, zc, hw, hh, e) stations at `x`."""
+    ordered = sorted(stations)
+    for a, b in zip(ordered, ordered[1:]):
+        if a[0] <= x <= b[0]:
+            f = (x - a[0]) / (b[0] - a[0])
+            return tuple(a[i] + (b[i] - a[i]) * f for i in range(5))
+    raise ValueError(f"x={x} is outside the stations")
+
+
+def faience_hippo(entry: Entry):
+    """Egyptian blue-glazed hippopotamus: barrel body on four stumpy legs, blocky
+    muzzle, knob eyes and ears, black-line lotus, reeds and a butterfly."""
+    W, D, H = entry.dims                      # 0.20 long × 0.08 wide × 0.11 tall
+    N = 16
+    # (x, z centre, half-width, half-height, squareness); head at -X, tail at +X.
+    stations = [
+        (0.089, 0.061, 0.020, 0.022, 2.2),
+        (0.080, 0.062, 0.032, 0.032, 2.3),
+        (0.062, 0.063, 0.039, 0.036, 2.4),
+        (0.030, 0.062, 0.040, 0.036, 2.4),    # widest: 0.08 m
+        (0.000, 0.061, 0.039, 0.035, 2.4),
+        (-0.030, 0.059, 0.036, 0.032, 2.4),
+        (-0.048, 0.060, 0.030, 0.027, 2.4),   # neck
+        (-0.062, 0.062, 0.029, 0.026, 2.6),   # back of the head
+        (-0.080, 0.058, 0.031, 0.027, 2.9),   # cheeks: muzzle 0.06 wide
+        (-0.093, 0.056, 0.030, 0.025, 3.2),
+        (-0.100, 0.056, 0.024, 0.019, 3.2),
+    ]
+    rings = [[(0.094, 0.0, 0.061)]]
+    rings += [_superellipse_ring(x, zc, hw, hh, e, N) for x, zc, hw, hh, e in stations]
+    rings.append([(-0.1025, 0.0, 0.056)])
+
+    def flank_y(x, z, side=1):
+        _, zc, hw, hh, e = _station_at(stations, x)
+        t = min(1.0, abs(z - zc) / hh)
+        return side * hw * (1.0 - t ** e) ** (1.0 / e)
+
+    body = Part(LOFT, (0, 0, 0), (1, 1, 1), mat="faience_glaze", extras={
+        "rings": rings, "smooth": True, "paint": [
+            # Hand-painted glaze highlight: a streak along the back and on the crown.
+            {"mat": "glaze_highlight", "min": (-0.005, -0.012, 0.093), "max": (0.055, 0.012, 1)},
+            {"mat": "glaze_highlight", "min": (-0.090, -0.012, 0.079), "max": (-0.066, 0.012, 1)},
+        ]})
+    parts = [body]
+
+    # Legs: stumpy lathed posts, a slightly spread flat foot, top buried in the belly.
+    leg = [(0.0112, 0.0), (0.0114, 0.004), (0.0104, 0.012), (0.0100, 0.044)]
+    for i, (lx, ly) in enumerate(((-0.047, -0.023), (-0.047, 0.023),
+                                  (0.056, -0.024), (0.056, 0.024))):
+        paint = []
+        if i in (0, 3):   # chipped feet: the white quartz core shows through
+            paint = [{"mat": "quartz_frit_core", "min": (-1, -1 if i == 0 else 0.004, -1),
+                      "max": (0.004 if i == 0 else 1, 1, 0.0041)}]
+        parts.append(Part("lathe", (lx, ly, 0.0), (1, 1, 1), mat="faience_glaze", segments=8,
+                          extras={"profile": leg, "smooth": True, "bevel": False,
+                                  "paint": paint}))
+        # Reed stem painted up the outside of each leg.
+        side = 1 if ly > 0 else -1
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="manganese_black_paint",
+                          segments=3, extras={
+                              "path": [(lx - 0.002, ly + side * 0.0106, 0.006),
+                                       (lx + 0.001, ly + side * 0.0102, 0.022),
+                                       (lx + 0.003, ly + side * 0.0098, 0.036)],
+                              "section": (0.0008, 0.0012), "up": (0, side, 0),
+                              "smooth": True, "bevel": False}))
+
+    # Tail stub, 0.01 m, drooping.
+    parts.append(Part("cone", (0.097, 0.0, 0.058), (0.008, 0.008, 0.014), mat="faience_glaze",
+                      rot=(0, 115, 0), segments=6, extras={"bevel": False, "smooth": True}))
+
+    # Head details: knob eyes with black pupils, small ears, nostril bumps.
+    for side in (1, -1):
+        ex, ez = -0.074, 0.081
+        ey = side * (flank_y(ex, ez) - 0.002)
+        parts.append(Part("sphere", (ex, ey, ez), (0.013, 0.012, 0.012), mat="faience_glaze",
+                          segments=8, rings=5, extras={"bevel": False, "smooth": True}))
+        parts.append(Part("sphere", (ex - 0.004, ey + side * 0.002, ez + 0.003),
+                          (0.006, 0.006, 0.006), mat="manganese_black_paint",
+                          segments=6, rings=4, extras={"bevel": False, "smooth": True}))
+        parts.append(Part("sphere", (-0.058, side * 0.017, 0.087), (0.007, 0.010, 0.016),
+                          mat="faience_glaze", rot=(side * 12, -10, 0), segments=6, rings=4,
+                          extras={"bevel": False, "smooth": True}))
+        parts.append(Part("sphere", (-0.096, side * 0.010, 0.074), (0.010, 0.009, 0.008),
+                          mat="faience_glaze", segments=6, rings=4,
+                          extras={"bevel": False, "smooth": True}))
+        # Black outline at the mouth: a long curve down the side of the muzzle.
+        mouth = [(-0.0985, 0.046), (-0.093, 0.0425), (-0.082, 0.0425), (-0.071, 0.047)]
+        parts.append(_painted_line(mouth, flank_y, side))
+
+    # Lotus blooms (3 each flank) and reeds; a butterfly on the near (-Y) hip.
+    for side in (1, -1):
+        for bx in (-0.024, 0.014, 0.052):
+            bloom = [(bx - 0.002, 0.036), (bx, 0.052), (bx + 0.001, 0.066),
+                     (bx - 0.010, 0.080), (bx - 0.003, 0.070),
+                     (bx + 0.001, 0.086), (bx + 0.004, 0.070),
+                     (bx + 0.012, 0.079), (bx + 0.003, 0.066)]
+            parts.append(_painted_line(bloom, flank_y, side))
+        for rx, lean in ((-0.004, 0.006), (0.034, -0.005), (0.074, 0.004)):
+            reed = [(rx, 0.036), (rx + lean * 0.5, 0.056), (rx + lean, 0.076)]
+            parts.append(_painted_line(reed, flank_y, side))
+    fly_x, fly_z = 0.070, 0.086
+    fly_y = -(flank_y(fly_x, fly_z) + 0.0006)
+    parts.append(Part("prism", (fly_x, fly_y, fly_z), (1, 1, 0.0016), mat="manganese_black_paint",
+                      rot=(90 - 32, 0, 0), extras={"bevel": False, "outline": [
+                          (-0.008, 0.005), (0.0, 0.0008), (0.008, 0.005), (0.007, -0.004),
+                          (0.0, -0.0008), (-0.007, -0.004)]}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.0,        # a moulded, glazed figure: no hard edges anywhere
+        family_overrides={
+            # Glossy vitreous glaze (JSON note: roughness 0.15), pooled darker in
+            # the crevices and under the belly.
+            "faience_glaze": {"rough": 0.15, "wear_to": "#2E6680", "wear_amount": 0.3,
+                              "grain": 0.16},
+            "glaze_highlight": {"rough": 0.15, "grain": 0.1},
+            "manganese_black_paint": {"rough": 0.2},   # painted under the glaze
+        },
+        notes=["Line-painting is modelled as hair-thin raised strokes on the glaze "
+               "(the bake has no decal pass); a texture artist can move it to albedo."],
+    )
+
+
+def _painted_line(points_xz, flank_y, side, lift=0.0004):
+    """A black manganese stroke lying on the hippo's flank, from (x, z) points."""
+    path = [(x, flank_y(x, z, side) + side * lift, z) for x, z in points_xz]
+    return Part("tube", (0, 0, 0), (1, 1, 1), mat="manganese_black_paint", segments=3,
+                extras={"path": path, "section": (0.0009, 0.0013), "up": (0, side, 0),
+                        "smooth": True, "bevel": False})
+
+
 BLUEPRINTS = {
     "sealed-amphora": sealed_amphora,
     "oxhide-ingot": oxhide_ingot,
+    "faience-hippo": faience_hippo,
 }
