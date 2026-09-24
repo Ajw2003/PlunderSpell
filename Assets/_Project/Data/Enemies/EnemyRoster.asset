@@ -15,73 +15,85 @@ MonoBehaviour:
   Entries:
   - EnemyId: Watchman
     Zone: 0
+    Era: 1
+    AnyEra: 0
     Weight: 12
     Prefab: {fileID: 7658120120646674120, guid: d02c60430c106e742bc4288e6361a875, type: 3}
   - EnemyId: Watchman
     Zone: 1
+    Era: 1
+    AnyEra: 0
     Weight: 10
     Prefab: {fileID: 7658120120646674120, guid: d02c60430c106e742bc4288e6361a875, type: 3}
   - EnemyId: ManAtArms
     Zone: 1
+    Era: 1
+    AnyEra: 0
     Weight: 8
     Prefab: {fileID: 3485968137656962782, guid: 93468a39f2146c441a0b0bc79782b84b, type: 3}
   - EnemyId: ManAtArms
     Zone: 2
+    Era: 1
+    AnyEra: 0
     Weight: 8
     Prefab: {fileID: 3485968137656962782, guid: 93468a39f2146c441a0b0bc79782b84b, type: 3}
   - EnemyId: Sergeant
     Zone: 2
+    Era: 1
+    AnyEra: 0
     Weight: 5
     Prefab: {fileID: 5362887702188169609, guid: 3122b99f11ea5aa40b53f503327b9ccd, type: 3}
   - EnemyId: Sergeant
     Zone: 3
+    Era: 1
+    AnyEra: 0
     Weight: 5
     Prefab: {fileID: 5362887702188169609, guid: 3122b99f11ea5aa40b53f503327b9ccd, type: 3}
   - EnemyId: WarHound
     Zone: 1
+    Era: 1
+    AnyEra: 0
     Weight: 6
     Prefab: {fileID: 6511764447489933774, guid: 2cd520b8156b96a4a93f4aa51f48dcb7, type: 3}
   - EnemyId: WarHound
     Zone: 2
+    Era: 1
+    AnyEra: 0
     Weight: 6
     Prefab: {fileID: 6511764447489933774, guid: 2cd520b8156b96a4a93f4aa51f48dcb7, type: 3}
   - EnemyId: SigilWisp
-    Zone: 2
-    Weight: 5
-    Prefab: {fileID: 5933718209957545553, guid: a154025561639b84391da3c82ecdd5f9, type: 3}
-  - EnemyId: SigilWisp
-    Zone: 3
+    Zone: 4
+    Era: 0
+    AnyEra: 1
     Weight: 4
     Prefab: {fileID: 5933718209957545553, guid: a154025561639b84391da3c82ecdd5f9, type: 3}
   - EnemyId: VaultWarden
-    Zone: 3
-    Weight: 6
-    Prefab: {fileID: 2440431947630686680, guid: 12f8d6189b6aefb4ea939b8acc026983, type: 3}
-  - EnemyId: VaultWarden
     Zone: 4
+    Era: 0
+    AnyEra: 1
     Weight: 5
     Prefab: {fileID: 2440431947630686680, guid: 12f8d6189b6aefb4ea939b8acc026983, type: 3}
   - EnemyId: HexTurret
-    Zone: 0
-    Weight: 4
-    Prefab: {fileID: 4218288712613178982, guid: 7699f114cfe608244884802873b49f2a, type: 3}
-  - EnemyId: HexTurret
-    Zone: 3
+    Zone: 4
+    Era: 0
+    AnyEra: 1
     Weight: 3
     Prefab: {fileID: 4218288712613178982, guid: 7699f114cfe608244884802873b49f2a, type: 3}
-  - EnemyId: ArcRevenant
-    Zone: 3
-    Weight: 3
-    Prefab: {fileID: 3553585510442637796, guid: 308b96f442c270a49b8537041ceb5738, type: 3}
   - EnemyId: ArcRevenant
     Zone: 4
+    Era: 0
+    AnyEra: 1
     Weight: 5
     Prefab: {fileID: 3553585510442637796, guid: 308b96f442c270a49b8537041ceb5738, type: 3}
   - EnemyId: CryptRisen
     Zone: 4
+    Era: 0
+    AnyEra: 1
     Weight: 12
     Prefab: {fileID: 8894736200407241835, guid: 912b8fa717c93894ba69754397fce111, type: 3}
   - EnemyId: GildedColossus
     Zone: 4
+    Era: 0
+    AnyEra: 1
     Weight: 2
     Prefab: {fileID: 9050904383365770160, guid: a1f75d6be29d11b4788605370bf70019, type: 3}
