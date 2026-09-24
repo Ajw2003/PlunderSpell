@@ -100,6 +100,9 @@ def _configure(resolution: int, samples: int) -> None:
     scene.cycles.transmission_bounces = 1
     scene.cycles.transparent_max_bounces = 2
     scene.cycles.use_auto_tile = False
+    # Three area lights and a world: the light tree only adds traversal cost here
+    # (measured: 15.7 s -> 10.2 s per 700 px view at 32 samples on 4 cores).
+    scene.cycles.use_light_tree = False
     scene.render.resolution_x = resolution
     scene.render.resolution_y = resolution
     scene.render.resolution_percentage = 100
@@ -244,6 +247,8 @@ def render_views(blend_path: str, out_dir: str, resolution: int, samples: int) -
         _ground((hi - lo).length)
         _camera(lo, hi, azimuth, elevation)
         if label == "WIREFRAME":
+            # Emissive edges over flat clay converge in far fewer samples.
+            bpy.context.scene.cycles.samples = max(8, samples // 2)
             wire = _wire_material()
             for slot in mesh.material_slots:
                 slot.material = wire
