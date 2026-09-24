@@ -99,61 +99,61 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1759,
+			"count":1761,
 			"max":[
-				0.1033441573381424,
-				0.0989999994635582,
-				0.041036900132894516
+				0.10634415596723557,
+				0.10499999672174454,
+				0.041121963411569595
 			],
 			"min":[
-				-0.10249999910593033,
+				-0.10350000113248825,
 				0,
-				-0.041036900132894516
+				-0.041121963411569595
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1759,
+			"count":1761,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1759,
+			"count":1761,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":4338,
+			"count":4434,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":21108,
+			"byteLength":21132,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":21108,
-			"byteOffset":21108,
+			"byteLength":21132,
+			"byteOffset":21132,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":14072,
-			"byteOffset":42216,
+			"byteLength":14088,
+			"byteOffset":42264,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":8676,
-			"byteOffset":56288,
+			"byteLength":8868,
+			"byteOffset":56352,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":64964,
+			"byteLength":65220,
 			"uri":"FaienceHippopotamus.bin"
 		}
 	]

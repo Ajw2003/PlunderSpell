@@ -431,21 +431,22 @@ def faience_hippo(entry: Entry):
     N = 16
     # (x, z centre, half-width, half-height, squareness); head at -X, tail at +X.
     stations = [
-        (0.089, 0.061, 0.020, 0.022, 2.2),
-        (0.080, 0.062, 0.032, 0.032, 2.3),
-        (0.062, 0.063, 0.039, 0.036, 2.4),
-        (0.030, 0.062, 0.040, 0.036, 2.4),    # widest: 0.08 m
-        (0.000, 0.061, 0.039, 0.035, 2.4),
-        (-0.030, 0.059, 0.036, 0.032, 2.4),
-        (-0.048, 0.060, 0.030, 0.027, 2.4),   # neck
-        (-0.062, 0.062, 0.029, 0.026, 2.6),   # back of the head
-        (-0.080, 0.058, 0.031, 0.027, 2.9),   # cheeks: muzzle 0.06 wide
-        (-0.093, 0.056, 0.030, 0.025, 3.2),
-        (-0.100, 0.056, 0.024, 0.019, 3.2),
+        (0.092, 0.064, 0.018, 0.020, 2.0),
+        (0.084, 0.064, 0.030, 0.032, 2.1),
+        (0.068, 0.064, 0.038, 0.039, 2.2),
+        (0.040, 0.065, 0.040, 0.040, 2.2),    # widest (0.08 m) and highest: the hump
+        (0.010, 0.064, 0.040, 0.039, 2.2),
+        (-0.020, 0.063, 0.037, 0.036, 2.2),
+        (-0.040, 0.063, 0.032, 0.031, 2.3),   # neck
+        (-0.055, 0.061, 0.031, 0.029, 2.5),   # back of the head
+        (-0.072, 0.057, 0.032, 0.030, 2.8),
+        (-0.088, 0.054, 0.032, 0.029, 3.0),   # blocky muzzle, 0.064 wide
+        (-0.098, 0.054, 0.028, 0.025, 3.0),
+        (-0.101, 0.054, 0.020, 0.017, 3.0),
     ]
-    rings = [[(0.094, 0.0, 0.061)]]
+    rings = [[(0.097, 0.0, 0.064)]]
     rings += [_superellipse_ring(x, zc, hw, hh, e, N) for x, zc, hw, hh, e in stations]
-    rings.append([(-0.1025, 0.0, 0.056)])
+    rings.append([(-0.1035, 0.0, 0.054)])
 
     def flank_y(x, z, side=1):
         _, zc, hw, hh, e = _station_at(stations, x)
@@ -455,15 +456,15 @@ def faience_hippo(entry: Entry):
     body = Part(LOFT, (0, 0, 0), (1, 1, 1), mat="faience_glaze", extras={
         "rings": rings, "smooth": True, "paint": [
             # Hand-painted glaze highlight: a streak along the back and on the crown.
-            {"mat": "glaze_highlight", "min": (-0.005, -0.012, 0.093), "max": (0.055, 0.012, 1)},
-            {"mat": "glaze_highlight", "min": (-0.090, -0.012, 0.079), "max": (-0.066, 0.012, 1)},
+            {"mat": "glaze_highlight", "min": (0.0, -0.012, 0.1), "max": (0.06, 0.012, 1)},
+            {"mat": "glaze_highlight", "min": (-0.082, -0.012, 0.083), "max": (-0.058, 0.012, 1)},
         ]})
     parts = [body]
 
     # Legs: stumpy lathed posts, a slightly spread flat foot, top buried in the belly.
-    leg = [(0.0112, 0.0), (0.0114, 0.004), (0.0104, 0.012), (0.0100, 0.044)]
-    for i, (lx, ly) in enumerate(((-0.047, -0.023), (-0.047, 0.023),
-                                  (0.056, -0.024), (0.056, 0.024))):
+    leg = [(0.0122, 0.0), (0.0124, 0.004), (0.0114, 0.012), (0.0110, 0.050)]
+    for i, (lx, ly) in enumerate(((-0.040, -0.025), (-0.040, 0.025),
+                                  (0.058, -0.026), (0.058, 0.026))):
         paint = []
         if i in (0, 3):   # chipped feet: the white quartz core shows through
             paint = [{"mat": "quartz_frit_core", "min": (-1, -1 if i == 0 else 0.004, -1),
@@ -475,47 +476,47 @@ def faience_hippo(entry: Entry):
         side = 1 if ly > 0 else -1
         parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="manganese_black_paint",
                           segments=3, extras={
-                              "path": [(lx - 0.002, ly + side * 0.0106, 0.006),
-                                       (lx + 0.001, ly + side * 0.0102, 0.022),
-                                       (lx + 0.003, ly + side * 0.0098, 0.036)],
+                              "path": [(lx - 0.002, ly + side * 0.0116, 0.006),
+                                       (lx + 0.001, ly + side * 0.0110, 0.022),
+                                       (lx + 0.003, ly + side * 0.0106, 0.036)],
                               "section": (0.0008, 0.0012), "up": (0, side, 0),
                               "smooth": True, "bevel": False}))
 
     # Tail stub, 0.01 m, drooping.
-    parts.append(Part("cone", (0.097, 0.0, 0.058), (0.008, 0.008, 0.014), mat="faience_glaze",
+    parts.append(Part("cone", (0.100, 0.0, 0.061), (0.008, 0.008, 0.014), mat="faience_glaze",
                       rot=(0, 115, 0), segments=6, extras={"bevel": False, "smooth": True}))
 
     # Head details: knob eyes with black pupils, small ears, nostril bumps.
     for side in (1, -1):
-        ex, ez = -0.074, 0.081
+        ex, ez = -0.066, 0.084
         ey = side * (flank_y(ex, ez) - 0.002)
         parts.append(Part("sphere", (ex, ey, ez), (0.013, 0.012, 0.012), mat="faience_glaze",
                           segments=8, rings=5, extras={"bevel": False, "smooth": True}))
         parts.append(Part("sphere", (ex - 0.004, ey + side * 0.002, ez + 0.003),
                           (0.006, 0.006, 0.006), mat="manganese_black_paint",
                           segments=6, rings=4, extras={"bevel": False, "smooth": True}))
-        parts.append(Part("sphere", (-0.058, side * 0.017, 0.087), (0.007, 0.010, 0.016),
+        parts.append(Part("sphere", (-0.052, side * 0.019, 0.090), (0.007, 0.010, 0.016),
                           mat="faience_glaze", rot=(side * 12, -10, 0), segments=6, rings=4,
                           extras={"bevel": False, "smooth": True}))
-        parts.append(Part("sphere", (-0.096, side * 0.010, 0.074), (0.010, 0.009, 0.008),
+        parts.append(Part("sphere", (-0.097, side * 0.011, 0.073), (0.010, 0.009, 0.008),
                           mat="faience_glaze", segments=6, rings=4,
                           extras={"bevel": False, "smooth": True}))
         # Black outline at the mouth: a long curve down the side of the muzzle.
-        mouth = [(-0.0985, 0.046), (-0.093, 0.0425), (-0.082, 0.0425), (-0.071, 0.047)]
+        mouth = [(-0.0995, 0.044), (-0.093, 0.040), (-0.080, 0.0395), (-0.066, 0.045)]
         parts.append(_painted_line(mouth, flank_y, side))
 
     # Lotus blooms (3 each flank) and reeds; a butterfly on the near (-Y) hip.
     for side in (1, -1):
         for bx in (-0.024, 0.014, 0.052):
-            bloom = [(bx - 0.002, 0.036), (bx, 0.052), (bx + 0.001, 0.066),
-                     (bx - 0.010, 0.080), (bx - 0.003, 0.070),
-                     (bx + 0.001, 0.086), (bx + 0.004, 0.070),
-                     (bx + 0.012, 0.079), (bx + 0.003, 0.066)]
+            bloom = [(bx - 0.002, 0.038), (bx, 0.050), (bx + 0.001, 0.061),
+                     (bx - 0.009, 0.074), (bx - 0.002, 0.065),
+                     (bx + 0.001, 0.080), (bx + 0.004, 0.065),
+                     (bx + 0.011, 0.073), (bx + 0.003, 0.061)]
             parts.append(_painted_line(bloom, flank_y, side))
         for rx, lean in ((-0.004, 0.006), (0.034, -0.005), (0.074, 0.004)):
-            reed = [(rx, 0.036), (rx + lean * 0.5, 0.056), (rx + lean, 0.076)]
+            reed = [(rx, 0.036), (rx + lean * 0.5, 0.054), (rx + lean, 0.072)]
             parts.append(_painted_line(reed, flank_y, side))
-    fly_x, fly_z = 0.070, 0.086
+    fly_x, fly_z = 0.072, 0.086
     fly_y = -(flank_y(fly_x, fly_z) + 0.0006)
     parts.append(Part("prism", (fly_x, fly_y, fly_z), (1, 1, 0.0016), mat="manganese_black_paint",
                       rot=(90 - 32, 0, 0), extras={"bevel": False, "outline": [
@@ -542,7 +543,7 @@ def _painted_line(points_xz, flank_y, side, lift=0.0004):
     """A black manganese stroke lying on the hippo's flank, from (x, z) points."""
     path = [(x, flank_y(x, z, side) + side * lift, z) for x, z in points_xz]
     return Part("tube", (0, 0, 0), (1, 1, 1), mat="manganese_black_paint", segments=3,
-                extras={"path": path, "section": (0.0009, 0.0013), "up": (0, side, 0),
+                extras={"path": path, "section": (0.0008, 0.0009), "up": (0, side, 0),
                         "smooth": True, "bevel": False})
 
 

@@ -18,7 +18,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"SilverEwer"
+			"name":"RolledTapestry"
 		}
 	],
 	"materials":[
@@ -37,7 +37,7 @@
 					"emissiveStrength":9
 				}
 			},
-			"name":"SilverEwer",
+			"name":"RolledTapestry",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
@@ -50,7 +50,7 @@
 	],
 	"meshes":[
 		{
-			"name":"SilverEwer",
+			"name":"RolledTapestry",
 			"primitives":[
 				{
 					"attributes":{
@@ -81,79 +81,79 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"SilverEwer_Emission",
-			"uri":"SilverEwer_Emission.png"
+			"name":"RolledTapestry_Emission",
+			"uri":"RolledTapestry_Emission.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"SilverEwer_BaseMap",
-			"uri":"SilverEwer_BaseMap.png"
+			"name":"RolledTapestry_BaseMap",
+			"uri":"RolledTapestry_BaseMap.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"SilverEwer_ORM",
-			"uri":"SilverEwer_ORM.png"
+			"name":"RolledTapestry_ORM",
+			"uri":"RolledTapestry_ORM.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1354,
+			"count":6324,
 			"max":[
-				0.1216980367898941,
-				0.3399999737739563,
-				0.0819995105266571
+				1.7034000158309937,
+				0.4784531593322754,
+				0.7097179889678955
 			],
 			"min":[
-				-0.11499999463558197,
-				0,
-				-0.07999999821186066
+				-1.7034000158309937,
+				-0.014877572655677795,
+				-0.2515832483768463
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1354,
+			"count":6324,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1354,
+			"count":6324,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":4440,
+			"count":14868,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":16248,
+			"byteLength":75888,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":16248,
-			"byteOffset":16248,
+			"byteLength":75888,
+			"byteOffset":75888,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":10832,
-			"byteOffset":32496,
+			"byteLength":50592,
+			"byteOffset":151776,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":8880,
-			"byteOffset":43328,
+			"byteLength":29736,
+			"byteOffset":202368,
 			"target":34963
 		}
 	],
@@ -165,8 +165,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":52208,
-			"uri":"SilverEwer.bin"
+			"byteLength":232104,
+			"uri":"RolledTapestry.bin"
 		}
 	]
 }

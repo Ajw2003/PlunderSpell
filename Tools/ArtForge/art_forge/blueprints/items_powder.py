@@ -271,9 +271,11 @@ def venetian_mirror(entry: Entry):
         parts.append(box(lo, hi, "black_walnut", extras={"bevel": False}))
     # Cushion moulding: a flattened half-round swept round the mitred rectangle.
     ix, iz0, iz1 = fw / 2 - rail / 2, rail / 2, fh - rail / 2
-    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="black_walnut", segments=14,
+    # (12 sides and a 0.02 half-depth: flatter or finer and Blender's whole-mesh
+    # recalc_face_normals in assemble.build_object turns this ring inside out.)
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="black_walnut", segments=12,
                       extras={"path": rect_loop(-ix, ix, iz0, iz1, 0.0), "closed": True,
-                              "section": (rail / 2 - 0.001, 0.018), "up": (0, 0, 1),
+                              "section": (rail / 2 - 0.001, 0.020), "up": (0, 0, 1),
                               "smooth": True, "bevel": False}))
     # A thin outer fillet so the frame edge reads square, as the concept draws it.
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="black_walnut", segments=4,

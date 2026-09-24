@@ -416,7 +416,9 @@ def silver_ewer(entry: Entry):
 
     # Lid: silver dome seated on the gilt lip, gilt finial ball (1.6 cm) on top;
     # hinge knuckle and gilt thumbpiece on the handle side (-X).
-    lid = [(0.047, 0.299), (0.047, 0.304), (0.043, 0.312), (0.034, 0.320),
+    # The 12-sided lid rim is kept wider than the 24-sided lip so the lip's
+    # vertices never poke through its flats.
+    lid = [(0.0485, 0.2985), (0.0485, 0.304), (0.043, 0.312), (0.034, 0.320),
            (0.020, 0.325), (0.007, 0.3265), (0.0, 0.327)]
     parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="silver", segments=12,
                       extras={"profile": lid, "smooth": True, "bevel": False}))
@@ -432,29 +434,28 @@ def silver_ewer(entry: Entry):
     # Spout: a straight tapered lathe along the spout axis, from a flared root on
     # the shoulder (1.8 cm) to a 0.9 cm tip 0.12 m out and 0.275 m up; gilt sleeve at
     # the root, a dark mouth.
-    root, tip = (0.056, 0.0, 0.140), (0.117, 0.0, 0.275)
+    root, tip = (0.052, 0.0, 0.138), (0.117, 0.0, 0.275)
     dx, dz = tip[0] - root[0], tip[2] - root[2]
     L = math.hypot(dx, dz)
-    spout = [(0.019, 0.0), (0.0125, 0.010), (0.0095, 0.022), (0.0092, 0.034),
-             (0.0065, 0.09), (0.0045, L - 0.003), (0.0052, L)]
+    spout = [(0.023, 0.0), (0.0145, 0.014), (0.0105, 0.026), (0.0098, 0.040),
+             (0.0068, 0.10), (0.0045, L - 0.003), (0.0052, L)]
     parts.append(Part("lathe", root, (1, 1, 1), mat="silver", segments=8,
                       rot=(0, math.degrees(math.atan2(dx, dz)), 0), extras={
                           "profile": spout, "smooth": True, "bevel": False, "paint": [
-                              {"mat": "parcel_gilt", "min": (-1, -1, 0.0095), "max": (1, 1, 0.035)},
+                              {"mat": "parcel_gilt", "min": (-1, -1, 0.0135), "max": (1, 1, 0.041)},
                               {"mat": "tarnish", "min": (-1, -1, L - 1e-4), "max": (1, 1, 1)},
                           ]}))
 
     # Handle: C-scroll strap 1.1 × 0.8 cm from the neck (0.27 m) out to 0.11 m and
     # down into the belly (0.11 m), with a small outward curl at the foot of the C;
     # gilt boss at the top of the bow. Both ends are buried in the body.
-    ctrl = [(-0.030, 0.273), (-0.058, 0.281), (-0.088, 0.272), (-0.104, 0.246),
-            (-0.106, 0.205), (-0.098, 0.163), (-0.083, 0.130), (-0.076, 0.112),
-            (-0.070, 0.104)]
-    path = [(x, 0.0, z) for x, z in ctrl]
+    ctrl = [(-0.030, 0.272), (-0.072, 0.281), (-0.101, 0.250), (-0.104, 0.190),
+            (-0.086, 0.136), (-0.071, 0.106)]
+    path = [(x, 0.0, z) for x, z in spline(ctrl, 2)]
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=6, extras={
-        "path": path, "section": (0.0055, 0.0042), "up": (0, 1, 0), "smooth": True,
+        "path": path, "section": (0.0055, 0.0045), "up": (0, 1, 0), "smooth": True,
         "bevel": False}))
-    parts.append(Part("sphere", (-0.103, 0.0, 0.252), (0.017, 0.017, 0.017), mat="parcel_gilt",
+    parts.append(Part("sphere", (-0.106, 0.0, 0.244), (0.018, 0.018, 0.018), mat="parcel_gilt",
                       segments=8, rings=4, extras={"smooth": True, "bevel": False}))
 
     # Medallion: champlevé roundel 5.8 cm on the belly front, tilted to the body's
@@ -480,7 +481,9 @@ def silver_ewer(entry: Entry):
         bevel=0.0,
         family_overrides={
             # Tarnish rubbed into the hammered sheet; parcel gilt rubbed to silver.
-            "silver": {"wear_to": "#5A5850", "wear_amount": 0.22, "grain": 0.14},
+            # Roughness 0.3 (JSON: 0.2 belly, 0.45 foot; one value per family here),
+            # so the hammered sheet reads pale rather than mirror-dark.
+            "silver": {"rough": 0.3, "wear_to": "#5A5850", "wear_amount": 0.22, "grain": 0.14},
             "parcel_gilt": {"wear_to": "#B8B4A8", "wear_amount": 0.25, "grain": 0.12},
         },
         notes=["Medallion faces front (-Y) as the concept's hero and front views draw it; "

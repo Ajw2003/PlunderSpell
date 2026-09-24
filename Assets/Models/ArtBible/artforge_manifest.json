@@ -10,16 +10,16 @@
       "title": "Faience Hippopotamus",
       "passed": true,
       "stats": {
-        "vertices": 789,
-        "faces": 799,
-        "triangles": 1446,
+        "vertices": 805,
+        "faces": 815,
+        "triangles": 1478,
         "islands": 33,
         "lowest_z": 0.0,
-        "height": 0.099,
-        "width": 0.206,
+        "height": 0.105,
+        "width": 0.21,
         "budget": 1500,
-        "bbox_m": "0.206x0.082x0.099",
-        "vs_spec": "W=0.206/0.200 D=0.082/0.080 H=0.099/0.110"
+        "bbox_m": "0.210x0.082x0.105",
+        "vs_spec": "W=0.210/0.200 D=0.082/0.080 H=0.105/0.110"
       },
       "spec": {
         "dims_WDH_m": [
@@ -71,7 +71,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/glTF/FaienceHippopotamus.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/FaienceHippopotamus.blend"
       },
-      "build_seconds": 3.1
+      "build_seconds": 3.8
     },
     {
       "key": "items/bronze/oxhide-ingot",
@@ -437,16 +437,16 @@
       "title": "Silver Ewer",
       "passed": true,
       "stats": {
-        "vertices": 752,
-        "faces": 696,
-        "triangles": 1456,
+        "vertices": 764,
+        "faces": 708,
+        "triangles": 1480,
         "islands": 12,
         "lowest_z": 0.0,
         "height": 0.34,
-        "width": 0.233,
+        "width": 0.237,
         "budget": 1500,
-        "bbox_m": "0.233x0.162x0.340",
-        "vs_spec": "W=0.233/0.220 D=0.162/0.160 H=0.340/0.340"
+        "bbox_m": "0.237x0.162x0.340",
+        "vs_spec": "W=0.237/0.220 D=0.162/0.160 H=0.340/0.340"
       },
       "spec": {
         "dims_WDH_m": [
@@ -461,7 +461,7 @@
         "silver": {
           "name": "Silver",
           "base": "#B8B4A8",
-          "rough": 0.2,
+          "rough": 0.3,
           "metal": 1.0,
           "emit": null
         },
@@ -597,6 +597,97 @@
       "build_seconds": 3.6
     },
     {
+      "key": "items/late/rolled-tapestry",
+      "kind": "items",
+      "age": "late",
+      "slug": "rolled-tapestry",
+      "name": "RolledTapestry",
+      "title": "Rolled Tapestry",
+      "passed": true,
+      "stats": {
+        "vertices": 2828,
+        "faces": 2699,
+        "triangles": 4956,
+        "islands": 179,
+        "lowest_z": -0.0149,
+        "height": 0.478,
+        "width": 3.407,
+        "budget": 5000,
+        "bbox_m": "3.407x0.961x0.493",
+        "vs_spec": "W=3.407/3.400 D=0.961/0.925 H=0.493/0.450"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          3.4,
+          0.45,
+          0.45
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "field_green": {
+          "name": "Field green",
+          "base": "#4F5E3A",
+          "rough": 0.95,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wool_brown": {
+          "name": "Wool brown",
+          "base": "#6B5238",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wool_buff": {
+          "name": "Wool buff",
+          "base": "#A8905E",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wool_red": {
+          "name": "Wool red",
+          "base": "#9E2A2F",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "linen_wrap": {
+          "name": "Linen wrap",
+          "base": "#C9BFA6",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hemp_cord": {
+          "name": "Hemp cord",
+          "base": "#8A7456",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "Y (D) checked against 0.925 m instead of the JSON's 0.450 m: build bullet: 0.6 m of the outer turn unrolled and hanging to the floor; lying on the floor it reaches ~0.48 m in front of the 0.45 m roll (the JSON dimension line gives the roll alone)",
+        "bbox centre is off the origin in Y by -0.229 m"
+      ],
+      "notes": [
+        "Roll kept at the drawn 3.40 m (the Great Hall variant is scaled in-engine).",
+        "The 3-bone sagging spine is left to the rig step: ArtForge's rigged path is untested, so this is built static and straight.",
+        "Millefleur is modelled as ~200 raised sprigs (no albedo tile in the bake); the spiral is 5 modelled turns of the ~14 over two insets, no normal map."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Late/RolledTapestry/RolledTapestry.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Late/RolledTapestry/glTF/RolledTapestry.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Late/RolledTapestry/RolledTapestry.blend"
+      },
+      "build_seconds": 3.1
+    },
+    {
       "key": "items/powder/curiosity-cabinet",
       "kind": "items",
       "age": "powder",
@@ -684,11 +775,11 @@
       "slug": "venetian-mirror",
       "name": "VenetianMirror",
       "title": "Venetian Mirror",
-      "passed": false,
+      "passed": true,
       "stats": {
-        "vertices": 1334,
-        "faces": 1169,
-        "triangles": 2388,
+        "vertices": 1326,
+        "faces": 1161,
+        "triangles": 2372,
         "islands": 79,
         "lowest_z": 0.0,
         "height": 1.1,
@@ -750,9 +841,7 @@
           "emit": null
         }
       },
-      "failures": [
-        "1 shells have inverted normals"
-      ],
+      "failures": [],
       "warnings": [
         "families not in the JSON (blueprint extras): ['iron_ring']"
       ],
@@ -767,7 +856,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/glTF/VenetianMirror.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/VenetianMirror.blend"
       },
-      "build_seconds": 2.5
+      "build_seconds": 3.0
     }
   ]
 }

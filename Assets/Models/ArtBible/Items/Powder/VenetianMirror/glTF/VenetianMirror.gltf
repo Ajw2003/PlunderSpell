@@ -99,7 +99,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":3486,
+			"count":3460,
 			"max":[
 				0.4089154899120331,
 				1.100000023841858,
@@ -115,45 +115,45 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":3486,
+			"count":3460,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":3486,
+			"count":3460,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":7164,
+			"count":7116,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":41832,
+			"byteLength":41520,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":41832,
-			"byteOffset":41832,
+			"byteLength":41520,
+			"byteOffset":41520,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":27888,
-			"byteOffset":83664,
+			"byteLength":27680,
+			"byteOffset":83040,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":14328,
-			"byteOffset":111552,
+			"byteLength":14232,
+			"byteOffset":110720,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":125880,
+			"byteLength":124952,
 			"uri":"VenetianMirror.bin"
 		}
 	]
