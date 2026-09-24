@@ -129,7 +129,7 @@ LATE_CASTLE_SPECS = [
     dict(key="LateBastion", builder="build_late_bastion", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
     dict(key="LateDrawbridge", builder="build_late_drawbridge", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
     # OuterBailey
-    dict(key="LateArtilleryYard", builder="build_late_artillery_yard", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateArtilleryYard", builder="build_late_artillery_yard", tri_budget=4000, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
     dict(key="LateGunFoundry", builder="build_late_gun_foundry", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
     dict(key="LateHandgunnerBarracks", builder="build_late_handgunner_barracks", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
     dict(key="LateBrewhouse", builder="build_late_brewhouse", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),

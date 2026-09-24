@@ -18,7 +18,7 @@ KEGS = [(3.2, -4.8), (3.75, -4.8), (4.3, -4.8), (3.45, -4.25), (4.0, -4.25)]
 KEG_TOP = (3.75, -4.52)                                # the keg lying on top of the others
 KEG_R, KEG_H = 0.25, 0.5
 CART = (-3.2, -3.8, 1.6, 0.9)
-ANCHORS = [(KEGS[0][0], KEGS[0][1], FZ + KEG_H), (KEGS[4][0], KEGS[4][1], FZ + KEG_H),
+ANCHORS = [(KEGS[0][0], KEGS[0][1], FZ + KEG_H), (KEGS[2][0], KEGS[2][1], FZ + KEG_H),
            (CART[0], CART[1], FZ + 0.85)]
 
 
@@ -39,7 +39,7 @@ def pyramid_balls(cx, cy, r):
 def build():
     mats = [("sandstone", SAND), ("iron", IRON), ("oak", OAK), ("gunstone", "#8A8474"), ("rope", "#9C8A60"),
             ("madder", ESTATE), ("soot", SOOT)]
-    sh = room_sheet("LateMedieval", "OuterBailey", "The Artillery Yard", mats, "≤ 2.4k tris (kit)",
+    sh = room_sheet("LateMedieval", "OuterBailey", "The Artillery Yard", mats, "≤ 4k tris (kit)",
                     "SECTION A–A · E–W THROUGH THE YARD, LOOKING NORTH")
     kit_glow(sh, 0, FZ + 1.6, "#5A5448", rx=380, ry=200, strength=.2)
 
@@ -98,7 +98,7 @@ def build():
     for dy in (-0.55, 0.55):
         plan_box(sh, cx, cy + dy, 0.9, 0.08, darken(OAK, .2))
     for dy in (-0.3, 0.3):
-        kprect(sh, cx + cw / 2, cy + dy - 0.03, cx + cw / 2 + 1.0, cy + dy + 0.03, OAK)
+        kprect(sh, cx + cw / 2 - 0.1, cy + dy - 0.03, cx + cw / 2 + 0.6, cy + dy + 0.03, OAK)
     kprect(sh, -IN, -3.9, -IN + 0.1, -2.9, darken(OAK, .2))
     kprect(sh, -5.2, -IN + 0.05, -2.2, -IN + 0.25, OAK, "#0E0C09", .5)
     kit_loot(sh, [(x, y) for x, y, _ in ANCHORS])
@@ -106,7 +106,7 @@ def build():
     kit_arch_labels(sh, "OuterBailey")
     socket_label(sh, *KP(3.75, -3.5), "POWDER KEGS")
     socket_label(sh, *KP(-3.2, -2.7), "POWDER CART")
-    socket_label(sh, *KP(-3.7, -4.85), "RAMMER + SPONGE")
+    socket_label(sh, *KP(-4.1, -4.85), "RAMMER RACK")
     kit_legend(sh, [("ARCHWAYS", "4, centred · 2.60 × 2.59 · all open"),
                     ("CLEAR CROSS", "dashed · |x|,|y| < 1.6 m kept free to 2 m"),
                     ("NW / NE", "bombard on its sledge · gunstone pyramid"),
