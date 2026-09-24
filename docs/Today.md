@@ -1,5 +1,18 @@
 # Today
 
+**2026-09-24 — the eras are different raids now.** The user asked for the existing
+enemies, items and structures to spawn in the game, so that two ages can be told apart even
+unfinished. New: `EraContentCatalogue` (runtime) and
+*Tools ▸ Plunderspell ▸ Forge Era Content* (`EraContentForge`). The forge made prefabs, loot
+items, tables, rosters and registries for all four eras, and `RaidScene` now points at the
+catalogue. Driven in the live Editor through Main menu → Lair → Set Out, each era spawned only its
+own art. Bronze Age: 20 kinds of Bronze room, Bronze loot, Levies, Slingers and Champions. High
+Medieval: the original castle, with knights, crossbowmen, wardens and hounds. Every guard was on
+the NavMesh. Screenshots: `docs/generated/era-integration-2026-09-24/`. Details and limits:
+`docs/systems/raid-scene-assembly.md`, "Eras".
+
+---
+
 **2026-09-24, end of session — enemies mid-run.** ArtForge builds rigged enemies; Lantern Warden and Alaunt War-hound are done, and 14 more were in progress when usage ran out. Resume from [`docs/art/HANDOFF.md`](art/HANDOFF.md).
 
 ---

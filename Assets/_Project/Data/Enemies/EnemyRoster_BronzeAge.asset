@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e18ecce912b050d44a86923eecb1637e, type: 3}
+  m_Name: EnemyRoster_BronzeAge
+  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.EnemyRoster
+  Entries:
+  - EnemyId: DendraChampion
+    Zone: 3
+    Weight: 6
+    Prefab: {fileID: 3017095254934927880, guid: cf87e1e50ae8eb24286ff4a94a3baa35, type: 3}
+  - EnemyId: DendraChampion
+    Zone: 2
+    Weight: 6
+    Prefab: {fileID: 3017095254934927880, guid: cf87e1e50ae8eb24286ff4a94a3baa35, type: 3}
+  - EnemyId: PalaceLevy
+    Zone: 0
+    Weight: 12
+    Prefab: {fileID: 6740531573117492425, guid: 9bacc4ad1850d5643b774c874240c777, type: 3}
+  - EnemyId: PalaceLevy
+    Zone: 1
+    Weight: 12
+    Prefab: {fileID: 6740531573117492425, guid: 9bacc4ad1850d5643b774c874240c777, type: 3}
+  - EnemyId: WallSlinger
+    Zone: 0
+    Weight: 8
+    Prefab: {fileID: 4727484997634092659, guid: bb448001472e27e48a72353a70522717, type: 3}
+  - EnemyId: WallSlinger
+    Zone: 2
+    Weight: 8
+    Prefab: {fileID: 4727484997634092659, guid: bb448001472e27e48a72353a70522717, type: 3}
+  - EnemyId: DendraChampion
+    Zone: 4
+    Weight: 6
+    Prefab: {fileID: 3017095254934927880, guid: cf87e1e50ae8eb24286ff4a94a3baa35, type: 3}
