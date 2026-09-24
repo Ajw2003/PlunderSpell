@@ -1,0 +1,268 @@
+{
+ "slug": "late",
+ "name": "The Late Medieval",
+ "year": "c. 1450",
+ "stratum": "III",
+ "headline": "Plate, powder and suspicion",
+ "intro": "Fortresses within fortresses, built by men who had you specifically in mind. The gate turns a corner so you cannot run straight through it, the vault above it has seven holes and a man with a bucket of hot sand behind each, and the guards walk to a schedule written down by a Burgundian clerk who has never once been late. This is the first century in which the defenders own powder of their own, and the first in which they hunt in pairs — so when you hear one halberd scrape the flagstones, count to two.",
+ "palette": [
+  {
+   "name": "Dressed sandstone",
+   "hex": "#A88B64",
+   "use": "barbican, hall and counting-house walls, hearth hoods, flagstones"
+  },
+  {
+   "name": "Brick lining",
+   "hex": "#8A4B32",
+   "use": "vault linings, strong room, roof tile — the new building material of the century"
+  },
+  {
+   "name": "Oak",
+   "hex": "#6B4F33",
+   "use": "gates, roof trusses, shelves, pavises, hafts, gunstocks"
+  },
+  {
+   "name": "Blackened iron",
+   "hex": "#2E2F31",
+   "use": "gate studs, door lattices, grilles, locks, gun barrels"
+  },
+  {
+   "name": "Tapestry wool",
+   "hex": "#4F5E3A",
+   "use": "verdure tapestries, counting cloths — the household green"
+  },
+  {
+   "name": "Soot",
+   "hex": "#1E1B17",
+   "use": "hearth hoods, gun-loops, murder-hole rims, powder smut"
+  }
+ ],
+ "structures": [
+  {
+   "slug": "crooked-barbican",
+   "name": "The Crooked Barbican",
+   "zone": "CurtainWall",
+   "footprint": "12 × 12 m, one cell; L-shaped gate passage (leg 1 north, leg 2 east) wrapped round a 4.7 × 3.7 m guardroom, stair block along the north face",
+   "height_m": 5.2,
+   "summary": "A gate passage that turns a right-angle under seven murder-holes, so nobody gets a straight run at the inner gate.",
+   "description": "Whoever built this had met raiders before and did not care for them. You come in by the outer gate on the south face, walk north under four murder-holes, and then the passage turns east — deliberately, so you cannot see the inner gate, cannot run at it, and must spend a second or two wondering why the vault is ticking. Three more murder-holes wait along the second leg, keyhole gun-loops stare in from the guardroom, and every one of them was built for the new hand-cannon. It is a CurtainWall cell, open to the sky above the deck, and the only way into the castle that does not involve a ladder.",
+   "build": [
+    "Passage leg 1: 2.60 m wide, running north from the outer gate on the south face (x 1.7–4.3 m) for 6.7 m, floor on the 0.30 m slab; pointed brick vault, crown at +3.80 m above the floor.",
+    "Passage leg 2: 2.60 m wide, turning east at y 6.7–9.3 m and running 7.7 m to the inner gate on the east face; same vault, crown +3.80 m. The turn is a plain groin where the two vaults meet — the corner the whole cell is named for.",
+    "Vault mass and deck: 0.50 m of rubble core (#7A6A52) over the crown, capped by a flagstone deck at +4.30 m; the parapet and outer walls rise to +5.20 m (the CurtainWall height), 1.4–1.6 m thick hatched in section.",
+    "Brick lining: the vault intrados and a 1.0 m frieze under the deck in #8A4B32 brick, 0.22 × 0.07 m, English bond, lime joints; sandstone springer blocks every 1.6 m between the murder-hole shafts.",
+    "Murder-holes: seven 0.30 × 0.30 m square shafts through the vault to the deck (4 over leg 1 at y 2.4 / 4.0 / 5.6 / 7.6 m, 3 over leg 2 at x 5.5 / 7.5 / 9.5 m), madder-scorched brick rims; iron hot-sand cauldron on the deck above the second shaft.",
+    "Guardroom: 4.7 × 3.7 m, floor level, in the crook of the L (x 5.8–10.5, y 1.5–5.2 m), reached by a 1.0 m passage from leg 2; holds two keyhole gun-loops firing west into leg 1 and one east.",
+    "Keyhole gun-loops: 0.20 m round gunport under a 0.90 m × 0.10 m sighting slit, cut through a 0.8 × 2.0 m brick-lined embrasure; soot plume above every port.",
+    "Outer gate: pair of oak leaves 1.30 × 3.00 m × 0.12 m under a sandstone lintel, studded with iron (5 × 11 rows of 4 cm nail heads), two 0.10 m iron straps across each leaf; drawbar sockets 0.20 m square in both jambs.",
+    "Inner gate: single oak leaf 2.60 × 3.00 m, pointed head, in the east face at the end of leg 2 — same stud pattern, barred from the ward side.",
+    "Stair block: straight flight along the north face (x 5.0–11.0, y 10.0–11.0 m), 1.0 m wide, 23 risers of 0.187 m up to the +4.30 m deck; oak treads on a rubble ramp.",
+    "Deck furniture: iron fire-basket (brazier) 0.6 m dia on a 0.9 m tripod at the vault crown centre — the deck's only light — and the hot-sand cauldron 0.9 × 0.5 m.",
+    "Dressed sandstone: 0.55 × 0.28 m ashlar blocks, running bond, 10 mm joints raked dark; torch sconce on the west wall of leg 1 at 2.30 m, soot fan up to the vault; arris chipping below 2 m."
+   ],
+   "sockets": [
+    "Door (outer gate), south face: 2.60 × 3.00 m, centred x 3.0 m — the way in",
+    "Door (inner gate), east face: 2.60 × 3.00 m, centred y 8.0 m — onto the ward",
+    "Murder-hole ×7 in the vault: 0.30 × 0.30 m (4 over leg 1, 3 over leg 2)",
+    "Arrow-loop (keyhole gun-loop) ×7: 0.20 m round + 0.90 × 0.10 m slit — 2 west face, 2 south face, 2 guardroom→leg 1, 1 guardroom east face",
+    "Stair (up), north face: straight flight to the +4.30 m deck",
+    "Wall-walk at +4.30 m, west and east: 2.40 m wide, joining the curtain modules"
+   ],
+   "materials": [
+    {
+     "name": "Dressed sandstone",
+     "hex": "#A88B64",
+     "notes": "Tiling 2.2 m (4 × 8 blocks), running bond; roughness 0.8, warm honey tone; arris chipping below 2 m, soot fans above sconces and gun-loops."
+    },
+    {
+     "name": "Rubble core",
+     "hex": "#7A6A52",
+     "notes": "Cut faces and vault mass only: lime-mortared rubble, tiling 1.5 m, roughness 0.9."
+    },
+    {
+     "name": "Brick lining",
+     "hex": "#8A4B32",
+     "notes": "Vault intrados, frieze, gun-loop embrasures: 0.22 × 0.07 m brick, English bond, tiling 1 m; darker overfired headers, scorched rims round the murder-holes."
+    },
+    {
+     "name": "Oak gates",
+     "hex": "#6B4F33",
+     "notes": "Gate leaves, stair treads: plank grain vertical, 1 m trim sheet; greasy dark wear at hand height and on the drawbar ends."
+    },
+    {
+     "name": "Iron",
+     "hex": "#2E2F31",
+     "notes": "Studs, straps, cauldron, fire-basket, sconce: blackened, roughness 0.55, rust bloom at every stud."
+    },
+    {
+     "name": "Soot",
+     "hex": "#1E1B17",
+     "notes": "Decal set: gun-loop plumes, murder-hole rims, torch fan on leg 1, the deck under the brazier."
+    }
+   ],
+   "gameplay": [
+    "The turn is the point: nobody in leg 1 can see the inner gate, and every guard on the deck can see them — seven murder-holes pour hot sand (2 s hiss warning, 1.5 m splash, 20 damage) once the house is up.",
+    "Keyhole gun-loops are Handgunner posts: a pair fires into leg 1 from the guardroom; FRANGO on a loop's embrasure fills it with rubble and blinds it.",
+    "Outer and inner gates can be barred; LEVO lifts the drawbar quietly, IGNIS burns an oak leaf through in 25 s.",
+    "The deck brazier is the only light up top: TONITRUS knocks it over (it spills embers down the nearest murder-hole), and a dark deck means the sand-men cannot aim.",
+    "The guardroom is a hiding place with two exits and holds a pair of Sallet Halberdiers between rounds."
+   ],
+   "budget": "≤ 25k tris for the cell (walls + parapet 8k, vaults 6k, gates 3k, stair 2k, guardroom 3k, deck props 3k); sandstone + brick tiling sets and one oak/iron trim sheet (2048²).",
+   "concept": "concept/late/crooked-barbican.svg"
+  },
+  {
+   "slug": "great-hall",
+   "name": "The Great Hall",
+   "zone": "Keep",
+   "footprint": "12 × 12 m, one cell; hall floor 10 × 10 m inside 1.0 m walls, dais along the north wall",
+   "height_m": 4.6,
+   "summary": "The lord's hall: a raised dais and high table under a cloth of estate, an arch-braced roof, a hooded hearth and an 8-metre tapestry.",
+   "description": "This is where the household eats, argues, and pretends not to be counting the silver. A high table on a dais under a crimson cloth of estate, a verdure tapestry eight metres long that cost more than the roof, a hooded hearth big enough to roast a disappointing guest, and an oak roof whose arch-braces meet so far above you that the candle wheel looks like a crown. It is full of things worth stealing and one thing worth burning, and the difficulty is telling the household which you meant.",
+   "build": [
+    "Shell: 12 × 12 m cell, walls 1.0 m thick in dressed sandstone to the 4.60 m Keep height (hall floor 10 × 10 m); archway doors centred on all four faces.",
+    "Roof: pitched oak roof on three arch-braced trusses at 3 m centres, tie at the 4.60 m wall plate, ridge at +7.52 m above the floor; rafters 0.18 × 0.12 m at 0.6 m, clad in #8A4B32 clay tile (0.27 × 0.16 m, 3 purlins per slope). The roof cap deliberately breaks through the 4.60 m module lid — a feature, authored as a separate roof piece.",
+    "Arch braces: curved oak 0.22 × 0.18 m from wall posts (0.25 m square, standing on sandstone corbels at 3.2 m) up to a collar at +6.0 m; a king post 0.20 m square from collar to ridge.",
+    "Dais: oak platform +0.35 m, 10.0 × 2.4 m along the north wall, one step 0.35 m along its front; high table 6.0 × 0.8 m at 0.78 m on trestles, dressed in a floor-length linen cloth.",
+    "Cloth of estate: crimson cloth panel 1.6 m wide × 2.6 m hung behind the lord's chair from a 1.8 m canopy tester at 3.55 m, with a fringed valance 0.30 m; lord's chair oak, round-backed, 1.25 m tall.",
+    "Dorsal tapestry: 8.0 × 2.7 m verdure (green millefleur ground, deer frieze along the foot) hung from a rod on 12 iron rings at 3.9 m along the north wall behind the dais, bottom edge at 1.2 m; split into four 2.0 m panels on the rod — a stealable piece (see Rolled Tapestry).",
+    "Hearth: on the west wall, opening 1.6 m wide × 1.8 m tall, sandstone jambs; a tapering hood 2.0 m wide rising from 1.8 m to 4.2 m into the wall, heavily sooted; iron firedogs and a 0.6 × 0.4 m log fire (emissive).",
+    "Candle wheel: iron hoop 1.1 m dia with 5 candle prickets, hung on an iron chain from the collar to 3.6 m above the floor.",
+    "Windows ×2, east wall: 0.9 × 2.0 m splayed embrasures, sill at 1.6 m, leaded glass (#2E2F31 dark read); window seats in the splays.",
+    "Floor: sandstone flags 0.60 × 0.60 m, rushes near the hearth; trestle benches along the hall (not modelled beyond two 3 m oak benches).",
+    "Wear: soot from hearth to hood and up the west rafters, candle soot rings on the ceiling above the wheel, dais edge worn pale where feet step."
+   ],
+   "sockets": [
+    "Door (archway), south face: 2.60 × 3.31 m, centred x 6.0 — the screens end",
+    "Door (archway), north face: 2.60 × 3.31 m, centred x 6.0 — behind the dorsal tapestry (a hidden way out)",
+    "Door (archway), east and west faces: 2.60 × 3.31 m, centred y 6.0 m",
+    "Window ×2, east wall: 0.9 × 2.0 m, sill 1.6 m, at y 4.5 and 9.0 m",
+    "Hearth, west wall: 1.6 × 1.8 m opening (an IGNIS source)",
+    "Candle-wheel hook on the central collar at +6.0 m"
+   ],
+   "materials": [
+    {
+     "name": "Dressed sandstone",
+     "hex": "#A88B64",
+     "notes": "Walls, hearth jambs, flags: tiling 2.2 m, roughness 0.8; soot on the hood and west wall top."
+    },
+    {
+     "name": "Oak roof",
+     "hex": "#6B4F33",
+     "notes": "Trusses, braces, dais, table trestles, chair: adzed faces on a 2 m trim sheet, darker with smoke towards the ridge."
+    },
+    {
+     "name": "Tapestry wool",
+     "hex": "#4F5E3A",
+     "notes": "Verdure field with millefleur sprigs (madder-red and cream flowers, 6 cm) and a brown deer frieze; wool weave normal, roughness 0.95; tiling 2.0 m panel."
+    },
+    {
+     "name": "Linen cloth",
+     "hex": "#D6CDB6",
+     "notes": "High-table cloth: soft folds every 0.5 m, wine stains, roughness 0.9."
+    },
+    {
+     "name": "Cloth of estate",
+     "hex": "#9E2A2F",
+     "notes": "Crimson velvet: sheen falloff, darker in the folds, fringe alpha; not a fire cue — it is the lord's colour."
+    },
+    {
+     "name": "Brick + tile",
+     "hex": "#8A4B32",
+     "notes": "Roof tiles: overlapping rows, tiling 1 m, moss-free (it is a hall roof, kept)."
+    },
+    {
+     "name": "Soot",
+     "hex": "#1E1B17",
+     "notes": "Decal set: hearth hood plume, rafter smoke gradient, candle rings."
+    }
+   ],
+   "gameplay": [
+    "The dorsal tapestry burns: IGNIS from the hearth side sets it going in 4 s and it drops in 20 s — which destroys a 900-coin loot item and lights the hall for every guard in the Keep.",
+    "The tapestry hides the north door; cut it down (or steal it) and the hall gains a fourth exit.",
+    "The candle wheel is on a chain: FRANGO drops it (1.2 m splash of hot wax, darkens the hall centre); the hearth is then the only light.",
+    "The high table carries the Gilded Nef and a silver service: the richest table in the Age, watched by the Gothic Knight from the dais.",
+    "The hall is loud: a dropped item on the flags is heard at 20 m."
+   ],
+   "budget": "≤ 25k tris for the cell (shell 6k, roof + trusses 8k, dais + table + chair 3k, hearth 2k, tapestry 2k, windows + wheel 2k, props 2k); sandstone tiling + oak trim sheet + tapestry 2048² set.",
+   "concept": "concept/late/great-hall.svg"
+  },
+  {
+   "slug": "counting-house",
+   "name": "The Counting House",
+   "zone": "InnerWard",
+   "footprint": "12 × 12 m, one cell; brick-vaulted strong room in the north-west corner, counting table centre, ledger shelves on the east wall",
+   "height_m": 4.0,
+   "summary": "The steward's office: a chequered counting table, four tiers of ledgers, a brick strong room behind an iron door and a strongbox sunk in the floor.",
+   "description": "Where the Burgundian money actually lives, looked after by men who can tell a clipped coin by the sound it makes. A counting table under a chequered cloth, a balance, piles of coin laid out for the day; four tiers of ledgers that say who owes what (and, if you read carefully, who has been stealing); a brick strong room with an iron-latticed door and three locks; and — for those who look down — a strongbox sunk half a metre into the floor under a flagstone. Every lock here was fitted by someone paid by the lock.",
+   "build": [
+    "Shell: 12 × 12 m cell, walls 1.0 m thick in dressed sandstone to the 4.00 m InnerWard height; flat oak ceiling on 7 beams (0.25 × 0.30 m) at 1.6 m centres; archway doors on all four faces.",
+    "Strong room: 3.0 × 3.2 m inside, north-west corner, 0.5 m brick walls (#8A4B32, English bond) under a brick barrel vault with its crown at +2.9 m; two iron-bound chests 0.8 × 0.5 × 0.5 m inside.",
+    "Iron-bound door: oak leaf 0.95 × 2.10 m × 0.10 m on the strong room's south side, faced with a diagonal iron lattice (strap 4 cm, 0.20 m diamonds, rivet at every crossing), a barred 0.25 × 0.15 m grille at eye height and 3 box locks (0.16 × 0.12 m) at 0.9, 1.1 and 1.4 m.",
+    "Counting table: oak board 3.6 × 1.0 m at 0.80 m on turned legs, centre of the room; counting cloth of chequered wool (0.25 m squares, green on darker green) hanging 0.25 m over the edges.",
+    "Balance: iron beam balance 0.45 m wide on a 0.55 m pillar, two pans 0.12 m dia; stacks of coin (6–10 coins per stack, 2.4 cm dia) and an open ledger beside it; a tallow candle in an iron pricket.",
+    "Counting alcove: pointed sandstone arch 2.4 m wide, crown at +2.9 m, recessed 0.6 m in the west wall behind the table.",
+    "Ledger shelves: oak case 3.0 × 0.45 × 3.1 m on the east half of the north wall, 4 tiers with pigeonholes, 60+ bound ledgers (spines 3–6 cm, red-brown and tan), rolled bills tucked in the pigeonholes.",
+    "Barred window: east wall, 0.55 × 1.30 m opening, sill 1.6 m, deep splayed embrasure; iron grille of 4 uprights × 3 bars (2 cm square).",
+    "Floor strongbox: pit 0.8 × 0.6 m sunk 0.55 m below the floor at the east side (x 8.9, y 3.0 m), lined in sandstone; iron-bound oak box inside, lid a loose 0.9 × 0.7 m flagstone with an iron lifting ring.",
+    "Coin sacks: two leather sacks 0.35 m tall slumped at the foot of the shelves.",
+    "Wear: soot on the ceiling above the candle, ink stains on the counting cloth, a pale path worn in the flags from door to table to strong room."
+   ],
+   "sockets": [
+    "Door (archway), south face: 2.60 × 2.88 m, centred x 6.0",
+    "Door (archway), north face: 2.60 × 2.88 m, centred x 6.0",
+    "Door (archway), east and west faces: 2.60 × 2.88 m, centred y 6.0 m",
+    "Door (strong room), iron-bound: 0.95 × 2.10 m, three locks (LEVO picks one lock at a time)",
+    "Window (barred), east wall: 0.55 × 1.30 m, sill 1.6 m",
+    "Floor hatch: 0.9 × 0.7 m flagstone over the 0.55 m strongbox pit"
+   ],
+   "materials": [
+    {
+     "name": "Dressed sandstone",
+     "hex": "#A88B64",
+     "notes": "Walls, alcove arch, flags, pit lining: tiling 2.2 m, roughness 0.8; worn path across the flags."
+    },
+    {
+     "name": "Brick lining",
+     "hex": "#8A4B32",
+     "notes": "Strong room walls and vault: English bond, 1 m tiling, tight lime joints (this is a safe, not a kiln)."
+    },
+    {
+     "name": "Oak",
+     "hex": "#6B4F33",
+     "notes": "Ceiling beams, table, shelves, strong room door: close grain, trim sheet 2 m; polished at table edge and shelf lips."
+    },
+    {
+     "name": "Blackened iron",
+     "hex": "#2E2F31",
+     "notes": "Door lattice, locks, grille, balance, strongbox bands: roughness 0.5, bright wear on lock escutcheons and keyholes."
+    },
+    {
+     "name": "Counting cloth",
+     "hex": "#4F5E3A",
+     "notes": "Chequered wool, 0.25 m squares alternating with a 15 % darker green; ink blots; drapes over the table edge."
+    },
+    {
+     "name": "Coin (loot)",
+     "hex": "#C9A227",
+     "notes": "Orpiment: the coin stacks and the contents of the strongbox only — stealable gold, metallic 1.0."
+    },
+    {
+     "name": "Soot",
+     "hex": "#1E1B17",
+     "notes": "Candle soot on the ceiling, crevice grime in the lattice."
+    }
+   ],
+   "gameplay": [
+    "The strong room door has three locks: each LEVO opens one (4 s, quiet); FRANGO breaks the door in one blast but wakes the ward.",
+    "The floor strongbox is invisible until the flagstone is lifted (LEVO or a crowbar, 12 st of lift for one player); it holds the Banker's Ledger and 200 coin.",
+    "The ledger shelves burn fast under IGNIS (lights the room, destroys the paper loot); the counting table's coin stacks can be swept into a sack in one grab.",
+    "The barred window is too narrow to climb but a thrown item fits through — a way to pass loot to a partner outside.",
+    "The candle is the only light: snuff it and the room is dark to the patrol pair."
+   ],
+   "budget": "≤ 25k tris for the cell (shell + ceiling 6k, strong room 4k, shelves + ledgers 6k, table + balance + coins 3k, window + door 2k, pit + strongbox 2k, props 2k); sandstone + brick tiling, oak/iron trim sheet (2048²).",
+   "concept": "concept/late/counting-house.svg"
+  }
+ ],
+ "enemies": [],
+ "items": []
+}
