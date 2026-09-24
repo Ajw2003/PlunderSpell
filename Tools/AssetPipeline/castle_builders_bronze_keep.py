@@ -12,32 +12,6 @@ from castle_builders_bronze import *  # noqa: F401,F403  palette, room_shell, cb
 
 # ── Keep: the wanax's quarters ──────────────────────────────────────────
 
-def _clay_bench(bm, uv, x, y, fz, w, d=0.5, along_x=True, pigment=None):
-    """A plastered clay bench built into the wall, 0.4 m high."""
-    size = (w, d, 0.4) if along_x else (d, w, 0.4)
-    cb._box(bm, uv, pigment or LINEN, (x, y, fz + 0.2), size)
-    cb._anchor(x, y, fz + 0.4)
-
-
-def _tripod(bm, uv, x, y, fz, h=0.9, r=0.3):
-    """A bronze tripod cauldron: a bowl on three splayed legs."""
-    for k in range(3):
-        ang = k * 2 * math.pi / 3
-        lx, ly = x + math.cos(ang) * r * 0.7, y + math.sin(ang) * r * 0.7
-        mk.paint(bm, mk.add_cylinder(bm, 0.03, h, loc=(lx, ly, fz + h / 2), segments=6), METAL, uv)
-    mk.paint(bm, mk.add_cylinder(bm, r, 0.28, loc=(x, y, fz + h + 0.1), segments=10, radius2=r * 0.7), METAL, uv)
-    cb._anchor(x, y, fz + h + 0.24)
-
-
-def _fresco_band(bm, uv, fz, sides=rk.SIDES, bottom=1.4, top=3.0):
-    """A painted procession band on each wall section either side of its
-    archway, with a haematite border above it."""
-    for side in sides:
-        for along in (-3.4, 3.4):
-            ek.wall_panel(bm, uv, FRESCO, side, along, fz + bottom, 4.1, top - bottom)
-            ek.wall_panel(bm, uv, RED, side, along, fz + top, 4.1, 0.18)
-
-
 def build_bronze_megaron(bm, uv):
     h, fz = room_shell(bm, uv, "Keep")
     # The hearth: a flat painted ring at the crossing (the art bible's raised
@@ -64,12 +38,12 @@ def build_bronze_megaron(bm, uv):
         ek.wall_panel(bm, uv, FRESCO, "east", ty + dy, fz + 0.9, 1.4, 1.1)
     # Clay benches with fleeces along the north and south walls, in the quadrants.
     for sx in (-1, 1):
-        _clay_bench(bm, uv, sx * 3.1, IN - 0.25, fz, 2.4)
-        _clay_bench(bm, uv, sx * 3.6, -IN + 0.25, fz, 3.2)
+        clay_bench(bm, uv, sx * 3.1, IN - 0.25, fz, 2.4)
+        clay_bench(bm, uv, sx * 3.6, -IN + 0.25, fz, 3.2)
     # Two tripods by the hearth, three offering tables.
-    _tripod(bm, uv, -3.5, 2.0, fz)
-    _tripod(bm, uv, 3.3, -2.0, fz)
+    tripod(bm, uv, -3.5, 2.0, fz)
+    tripod(bm, uv, 3.3, -2.0, fz)
     cb._table(bm, uv, "vellum_faint", -4.6, -3.6, fz, 0.6, 0.6, h=0.7)
     cb._table(bm, uv, "vellum_faint", -2.4, -4.3, fz, 0.6, 0.6, h=0.7)
     cb._table(bm, uv, "vellum_faint", 4.6, -3.6, fz, 0.6, 0.6, h=0.7)
-    _fresco_band(bm, uv, fz, sides=("north", "south", "west"))
+    fresco_band(bm, uv, fz, sides=("north", "south", "west"))

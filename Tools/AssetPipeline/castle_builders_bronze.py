@@ -65,3 +65,77 @@ def build_bronze_door_plug_keep(bm, uv):
 def build_bronze_door_plug_crypt(bm, uv):
     cb._door_plug(bm, uv, "Crypt", stone=WALL)
 
+
+# ── Furniture shared by the Bronze Age rooms ────────────────────────────
+# Each registers its loot anchor (where it has one) the way castle_builders'
+# _table/_chest do, so a room that places one gets the anchor its sheet shows.
+
+def clay_bench(bm, uv, x, y, fz, w, d=0.5, along_x=True, pigment=None):
+    """A plastered clay bench built into the wall, 0.4 m high."""
+    size = (w, d, 0.4) if along_x else (d, w, 0.4)
+    cb._box(bm, uv, pigment or LINEN, (x, y, fz + 0.2), size)
+    cb._anchor(x, y, fz + 0.4)
+
+
+def tripod(bm, uv, x, y, fz, h=0.9, r=0.3):
+    """A bronze tripod cauldron: a bowl on three splayed legs."""
+    for k in range(3):
+        ang = k * 2 * math.pi / 3
+        lx, ly = x + math.cos(ang) * r * 0.7, y + math.sin(ang) * r * 0.7
+        mk.paint(bm, mk.add_cylinder(bm, 0.03, h, loc=(lx, ly, fz + h / 2), segments=6), METAL, uv)
+    mk.paint(bm, mk.add_cylinder(bm, r, 0.28, loc=(x, y, fz + h + 0.1), segments=10, radius2=r * 0.7), METAL, uv)
+    cb._anchor(x, y, fz + h + 0.24)
+
+
+def fresco_band(bm, uv, fz, sides=rk.SIDES, bottom=1.4, top=3.0):
+    """A painted procession band on each wall section either side of its
+    archway, with a haematite border above it."""
+    for side in sides:
+        for along in (-3.4, 3.4):
+            ek.wall_panel(bm, uv, FRESCO, side, along, fz + bottom, 4.1, top - bottom)
+            ek.wall_panel(bm, uv, RED, side, along, fz + top, 4.1, 0.18)
+
+
+def offering_table(bm, uv, x, y, fz, w=0.6, d=0.6, h=0.7, pigment="vellum_faint"):
+    """A small painted offering table on four legs; anchor on its top."""
+    cb._table(bm, uv, pigment, x, y, fz, w, d, h=h)
+
+
+def pithos(bm, uv, x, y, z, height=1.7, belly=1.0, pigment=GRAIN_JAR, lid=False):
+    """A man-high storage jar standing on z, with rope bands (thin rings) and,
+    for oil, a stone lid disc. Anchor-free: jars are cover, not shelves."""
+    ek.jar(bm, uv, pigment, x, y, z, height, belly, mouth=belly * 0.5)
+    for zf in (0.25, 0.62):
+        r = belly / 2 * (0.93 if zf < 0.45 else 0.86)
+        mk.paint(bm, mk.add_cylinder(bm, r, 0.05, loc=(x, y, z + height * zf), segments=8), SOOT, uv)
+    if lid:
+        mk.paint(bm, mk.add_cylinder(bm, belly * 0.29, 0.06, loc=(x, y, z + height + 0.03), segments=8), "vellum_dim", uv)
+
+
+def amphora(bm, uv, x, y, z, height=0.62, belly=0.34, pigment=GRAIN_JAR):
+    """A pointed-foot amphora standing on z (in a rack or a ring stand)."""
+    ek.jar(bm, uv, pigment, x, y, z, height, belly, mouth=belly * 0.35, segments=8)
+
+
+def larnax(bm, uv, x, y, fz, along_x=True, w=1.6, d=0.6, h=0.55, pigment=GRAIN_JAR):
+    """A painted clay chest-coffin on four short legs with a gabled lid; the
+    anchor is on the lid's ridge."""
+    legs = 0.12
+    sx, sy = (w, d) if along_x else (d, w)
+    for ox in (-1, 1):
+        for oy in (-1, 1):
+            cb._box(bm, uv, pigment, (x + ox * (sx / 2 - 0.08), y + oy * (sy / 2 - 0.08), fz + legs / 2), (0.12, 0.12, legs))
+    cb._box(bm, uv, pigment, (x, y, fz + legs + h / 2), (sx, sy, h))
+    cb._box(bm, uv, RED, (x, y, fz + legs + h * 0.6), (sx + 0.01, sy + 0.01, 0.06))     # painted band
+    top = fz + legs + h
+    if along_x:
+        ek.prism(bm, uv, pigment, [(-sy / 2 - 0.03, 0), (sy / 2 + 0.03, 0), (0, 0.2)], sx + 0.06, loc=(x, y, top), along="x")
+    else:
+        ek.prism(bm, uv, pigment, [(-sx / 2 - 0.03, 0), (sx / 2 + 0.03, 0), (0, 0.2)], sy + 0.06, loc=(x, y, top), along="y")
+    cb._anchor(x, y, top + 0.2)
+
+
+def horns(bm, uv, x, y, z, size=0.8, along="x", pigment=None):
+    """Horns of consecration on z (no anchor)."""
+    ek.horns_of_consecration(bm, uv, pigment or LINEN, x, y, z, size=size, along=along)
+

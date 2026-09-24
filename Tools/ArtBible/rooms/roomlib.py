@@ -626,3 +626,69 @@ def khuman(sh, x, floor=FZ):
 def kit_legend(sh, rows, x=800, y=585):
     """legend() placed under the plan."""
     legend(sh, rows, x, y)
+
+
+# ---------------- shared section / plan pieces (every room sheet repeats these) ----------------
+
+def kit_glow(sh, x, h, colour, rx=300, ry=200, strength=.5):
+    """Warm light glow behind the section, centred on kit (x, h): the room's fire or lamp."""
+    g = sh.rad([(0, colour, strength), (0.35, darken(colour, .45), strength * .75), (1, "#14120E", 0)])
+    cx, cy = KE(x, h)
+    sh.back.append(f'<ellipse cx="{f(cx)}" cy="{f(cy - 30)}" rx="{rx}" ry="{ry}" fill="url(#{g})"/>')
+
+
+def kit_slab(sh, colour):
+    """The 0.30 m floor slab across the whole section."""
+    kerect(sh, -HALF, 0, HALF, FZ, f"url(#{sh.lin(colour, 'v', .1, .4)})", darken(colour, .6))
+
+
+def kit_back_wall(sh, zone, plaster, soot="#2B231B", trim=None, archway=True, soot_depth=1.2):
+    """The far wall's inner face seen in a section, slab top to wall top, with
+    soot darkening down from the top, the zone's archway cut in it (dark) and
+    the 0.45 m trim course along the top. Returns the wall's path."""
+    top = FZ + ZONE_CLEAR[zone]
+    wall = poly_path([KE(-IN, FZ), KE(IN, FZ), KE(IN, top), KE(-IN, top)])
+    sh.path(wall, f"url(#{sh.lin(plaster, 'v', .1, .5)})", darken(plaster, .6), 1)
+    gs = sh.lin(soot, "v", 0, 0, stops=[(0, soot), (0.45, soot), (1, plaster)])
+    sh.clipped(wall, f'<rect x="{f(KE(-IN, 0)[0])}" y="{f(KE(0, top)[1])}" width="{f(2 * IN * SK)}" '
+                     f'height="{f(soot_depth * SK)}" fill="url(#{gs})" opacity=".55"/>')
+    if archway:
+        kit_arch_section(sh, zone)
+    if trim:
+        kerect(sh, -HALF, top - 0.45, HALF, top, f"url(#{sh.lin(trim, 'v', .2, .5)})", darken(trim, .6), .8)
+    return wall
+
+
+def kit_cut_walls(sh, zone, through_archways=True, fill="#3A332A"):
+    """The east and west walls where the section plane cuts them, hatched.
+    Cut at y = 0 the plane passes through the E and W archways, so only the
+    lintel over each opening is cut (through_archways); otherwise the full wall."""
+    top = FZ + ZONE_CLEAR[zone]
+    bottom = FZ + ARCH_H[zone] if through_archways else FZ
+    for x0, x1 in ((-HALF, -IN), (IN, HALF)):
+        d = poly_path([KE(x0, bottom), KE(x1, bottom), KE(x1, top), KE(x0, top)])
+        sh.path(d, fill, "#0E0C09", 1.2)
+        a, b = KE(x0, top), KE(x1, bottom)
+        hatch(sh, d, (a[0], a[1], b[0], b[1]), "#635C4C", 5, .7)
+
+
+def kit_section_line(sh, y=0.0):
+    """Section line A–A across the plan at kit y, with its arrows and letters."""
+    sh.line(*KP(-6.6, y), *KP(6.6, y), "#9A9078", .8, dash="8 3 2 3")
+    for x in (-6.6, 6.6):
+        p = KP(x, y)
+        sh.path(f"M{f(p[0])} {f(p[1])} l0 -10 l-4 5 m4 -5 l4 5", "none", "#9A9078", 1)
+        sh.text(p[0], p[1] + 12, "A", 9, "#9A9078", "middle")
+
+
+def kit_clear_note(sh, zone, x=4.4, text=None):
+    """The clear-height note under the wall top."""
+    top = FZ + ZONE_CLEAR[zone]
+    sh.text(KE(x, 0)[0], KE(0, top - 0.62)[1], text or f"{ZONE_CLEAR[zone]:.2f} clear · open roof", 9, "#DCD2BA", "middle")
+
+
+def kit_arch_labels(sh, zone):
+    """ARCHWAY N / S labels just inside the plan's north and south archways."""
+    h = ARCH_H[zone]
+    socket_label(sh, *KP(0, 4.55), f"ARCHWAY N 2.60 × {h:.2f}")
+    socket_label(sh, *KP(0, -4.85), f"ARCHWAY S 2.60 × {h:.2f}")
