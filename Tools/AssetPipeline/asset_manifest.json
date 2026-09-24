@@ -177,6 +177,12 @@
       "preview": "2f02721eeaaea9a9:23a9d68e53fd",
       "tris": 1436
     },
+    "BronzeWallCorner": {
+      "budget": 2400,
+      "content": "700d9b89e56a5d72",
+      "preview": "700d9b89e56a5d72:23a9d68e53fd",
+      "tris": 1464
+    },
     "BronzeWallStraight": {
       "budget": 1200,
       "content": "58589df156f824ba",

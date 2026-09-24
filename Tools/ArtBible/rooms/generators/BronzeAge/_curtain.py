@@ -119,13 +119,16 @@ def ground(sh, x0=-HALF - 0.5, x1=HALF + 0.5):
 MS = 30.0                 # the small cross-section's scale, px per metre
 
 
-def mini_section(sh, ox, oy, rects, label, width=3.2):
-    """A small N–S cross-section at 1 m = 30 px: (ox, oy) is the outer face at ground,
-    north to the right. `rects` are (d0, z0, d1, z1, fill) in metres from the outer face."""
-    sh.line(ox - 12, oy, ox + width * MS + 24, oy, "#635C4C", 1)
+def mini_section(sh, ox, oy, rects, label, width=3.2, scale=MS, label_above=False):
+    """A small N–S cross-section (1 m = `scale` px, 30 by default): (ox, oy) is the outer
+    face at ground, north to the right. `rects` are (d0, z0, d1, z1, fill) in metres from
+    the outer face. The label goes under it, or over it when that space is taken."""
+    sh.line(ox - 12, oy, ox + width * scale + 24, oy, "#635C4C", 1)
+    top = oy
     for d0, z0, d1, z1, col in rects:
-        sh.add(f'<rect x="{f(ox + d0 * MS)}" y="{f(oy - z1 * MS)}" width="{f((d1 - d0) * MS)}" '
-               f'height="{f((z1 - z0) * MS)}" fill="{col}" stroke="#14120E" stroke-width=".8"/>')
-    sh.text(ox + width * MS / 2, oy + 16, label, 9, "#9A9078", "middle", ls=2)
+        sh.add(f'<rect x="{f(ox + d0 * scale)}" y="{f(oy - z1 * scale)}" width="{f((d1 - d0) * scale)}" '
+               f'height="{f((z1 - z0) * scale)}" fill="{col}" stroke="#14120E" stroke-width=".8"/>')
+        top = min(top, oy - z1 * scale)
+    sh.text(ox + width * scale / 2, top - 8 if label_above else oy + 16, label, 9, "#9A9078", "middle", ls=2)
     sh.text(ox - 8, oy - 4, "S", 8.5, "#9A9078", "end")
-    sh.text(ox + width * MS + 20, oy - 4, "N", 8.5, "#9A9078", "start")
+    sh.text(ox + width * scale + 20, oy - 4, "N", 8.5, "#9A9078", "start")

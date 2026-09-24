@@ -81,3 +81,31 @@ def build_bronze_wall_straight(bm, uv):
     _mass(bm, uv, -H, H, WALL_DEPTH, seed=0)
     _walk(bm, uv, -H, H, WALL_DEPTH)
     _parapet(bm, uv, -H, H)
+
+
+def _steps_up(bm, uv, u_face, u_dir, depth, side, low, high, n):
+    """n stone steps on a walk, climbing from `low` (the walk's top) toward a face at
+    u_face, the highest against it; the next rise lands on `high`. Each step is a
+    block standing on the walk, as wide as the walk."""
+    rise = (high - low) / (n + 1)
+    d0, d1 = PARAPET_IN + PARAPET_T, depth - 0.2
+    for k in range(n):
+        u = u_face + u_dir * 0.35 * (k + 0.5)
+        top = high - rise * (k + 1)
+        cb._box(bm, uv, ASHLAR, _at(side, u, (d0 + d1) / 2, (low + top) / 2), _size(side, 0.35, d1 - d0, top - low))
+
+
+def build_bronze_wall_corner(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeWallCorner.svg"""
+    t, top = 4.4, 5.5
+    te = -H + t                                            # the tower's east and north faces
+    _mass(bm, uv, -H, te, t, top=top, seed=3)
+    d0 = PARAPET_IN + PARAPET_T
+    cb._box(bm, uv, WALL, ((-H + d0 + te) / 2, (-H + d0 + te - 0.2) / 2, top + 0.05), (te + H - d0, te - 0.2 + H - d0, 0.1))
+    _parapet(bm, uv, -H, te, base=top)
+    _parapet(bm, uv, -H + d0, te, base=top, side="west")
+    for side, seed in (("south", 1), ("west", 2)):
+        _mass(bm, uv, te, H, WALL_DEPTH, side=side, seed=seed)
+        _walk(bm, uv, te, H, WALL_DEPTH, side=side)
+        _parapet(bm, uv, te, H, side=side)
+        _steps_up(bm, uv, te, 1, WALL_DEPTH, side, WALK_Z + 0.1, top + 0.1, 3)
