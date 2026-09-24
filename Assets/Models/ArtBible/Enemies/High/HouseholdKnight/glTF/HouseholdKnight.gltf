@@ -589,7 +589,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":6381,
+			"count":5750,
 			"max":[
 				0.5400000214576721,
 				1.9500000476837158,
@@ -605,31 +605,31 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":6381,
+			"count":5750,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":6381,
+			"count":5750,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":6381,
+			"count":5750,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":6381,
+			"count":5750,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":18018,
+			"count":16722,
 			"type":"SCALAR"
 		},
 		{
@@ -642,44 +642,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":76572,
+			"byteLength":69000,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":76572,
-			"byteOffset":76572,
+			"byteLength":69000,
+			"byteOffset":69000,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":51048,
-			"byteOffset":153144,
+			"byteLength":46000,
+			"byteOffset":138000,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":25524,
-			"byteOffset":204192,
+			"byteLength":23000,
+			"byteOffset":184000,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":102096,
-			"byteOffset":229716,
+			"byteLength":92000,
+			"byteOffset":207000,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":36036,
-			"byteOffset":331812,
+			"byteLength":33444,
+			"byteOffset":299000,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1600,
-			"byteOffset":367848
+			"byteOffset":332444
 		}
 	],
 	"samplers":[
@@ -690,7 +690,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":369448,
+			"byteLength":334044,
 			"uri":"HouseholdKnight.bin"
 		}
 	]

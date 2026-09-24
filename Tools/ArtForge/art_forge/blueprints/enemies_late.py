@@ -778,7 +778,7 @@ def _armet(fig: Human, mat: str, dark: str, strap: str, crown: float) -> list[Pa
     tip = (0.0, -0.250, zv - 0.018)
     rings.append([tip])
     pivot = Vector((0.0, -0.02, zv + 0.02))
-    fig.add_bone("Visor", pivot, tip, "Head")
+    fig.add_bone("Visor", pivot, Vector(tip) + Vector((0.0, 0.03, 0.0)), "Head")
     parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat=mat, bone="Visor", extras={
         "rings": rings, "rigid": True, "smooth": False, "bevel": False}))
     # hinge pivots at the sides

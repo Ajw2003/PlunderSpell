@@ -26,6 +26,61 @@ from ..spec import Entry
 from . import blueprint
 
 
+# --------------------------------------------------------------------------------
+# Heat-weighting retry (a workaround for a framework flake, scoped to this Age)
+# --------------------------------------------------------------------------------
+#
+# Blender's heat weighting ("Bone Heat Weighting: failed to find solution for one
+# or more bones") fails at random on the same mesh: the petardier failed on about
+# half its builds, the palace guard on about one in four. EnemyForge's
+# apply_smooth_weights then silently keeps rigid per-part weights (max 1
+# influence), validation still passes, and the POSED views show every joint
+# swinging as a block. This module may not edit the shared framework, so it wraps
+# that function at import and retries, restoring the rigid weights first, only
+# for the meshes of this Age's enemies. A retry that still fails is printed.
+
+_POWDER_MESHES = {"PalaceGuard", "Musketeer", "Cuirassier", "Petardier"}
+_HEAT_TRIES = 8
+
+
+def _install_heat_retry() -> None:
+    from enemy_forge import assemble as ef_assemble
+    original = ef_assemble.apply_smooth_weights
+    if getattr(original, "_powder_retry", False):
+        return
+
+    def apply_smooth_weights(mesh_obj, rig, *args, **kwargs):
+        if mesh_obj.name not in _POWDER_MESHES:
+            return original(mesh_obj, rig, *args, **kwargs)
+        names = [g.name for g in mesh_obj.vertex_groups]
+        rigid = [[(names[g.group], g.weight) for g in v.groups]
+                 for v in mesh_obj.data.vertices]
+        stats = {}
+        for attempt in range(1, _HEAT_TRIES + 1):
+            if attempt > 1:
+                mesh_obj.vertex_groups.clear()
+                groups = {n: mesh_obj.vertex_groups.new(name=n) for n in names}
+                for index, weights in enumerate(rigid):
+                    for n, w in weights:
+                        groups[n].add([index], w, "REPLACE")
+            stats = original(mesh_obj, rig, *args, **kwargs)
+            if not stats.get("auto_weights") or stats.get("max_influences", 0) > 1:
+                break
+            print(f"  [enemies_powder] {mesh_obj.name}: heat weighting failed "
+                  f"(attempt {attempt}/{_HEAT_TRIES}), retrying")
+        else:
+            print(f"  [enemies_powder] {mesh_obj.name}: heat weighting failed "
+                  f"{_HEAT_TRIES} times; the skin is rigid per part")
+        stats["heat_attempts"] = attempt
+        return stats
+
+    apply_smooth_weights._powder_retry = True
+    ef_assemble.apply_smooth_weights = apply_smooth_weights
+
+
+_install_heat_retry()
+
+
 SKIN = {"skin": {"name": "Skin", "base": "#B88E6E", "rough": 0.6,
                  "notes": "Not in the JSON materials; the concept sheet's skin swatch."}}
 
