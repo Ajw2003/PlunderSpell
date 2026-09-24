@@ -178,6 +178,7 @@ MonoBehaviour:
   _rotationSpeed: 10
   _gripStrength: 180
   _maxHoldSpeed: 14
+  _gripPoint: {fileID: 1697340897851183167}
   _maxThrowSpeed: 18
   _damageMultiplier: 2
   _damageCooldown: 0.5
