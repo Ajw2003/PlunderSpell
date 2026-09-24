@@ -332,10 +332,29 @@ namespace RogueAi.Guards
         // Seeing
         // -----------------------------------------------------------------------------------------
 
+        /// <summary>How long after a raid starts a calm garrison cannot see the players.</summary>
+        public const float ArrivalGraceSeconds = 20f;
+
+        private static float s_arrivalGraceEndsAt;
+
+        /// <summary>
+        /// Starts the arrival grace: until it runs out, and while the alarm is still calm, no guard
+        /// sees a player. Guards still hear, so noise still draws them. Without it a patrol passing
+        /// within sight of the gate killed players still reading the HUD (seen in co-op testing,
+        /// 2026-09-23, with the garrison posted and patrolling two cells clear of the gate).
+        /// </summary>
+        public static void BeginArrivalGrace() => s_arrivalGraceEndsAt = Time.time + ArrivalGraceSeconds;
+
+        /// <summary>Ends the arrival grace now. For tests: the grace is process-wide, so a test that
+        /// started a raid would otherwise blind the guards of the next one.</summary>
+        public static void EndArrivalGrace() => s_arrivalGraceEndsAt = 0f;
+
         /// <summary>The nearest intruder this guard can actually see, or null.</summary>
         public Transform FindVisibleIntruder(AlarmState alarm)
         {
             if (IsIncapacitated)
+                return null;
+            if (alarm == AlarmState.Calm && Time.time < s_arrivalGraceEndsAt)
                 return null;
 
             Vector3 eye = transform.position + Vector3.up * _eyeHeight;

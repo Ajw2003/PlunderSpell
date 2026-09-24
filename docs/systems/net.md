@@ -88,8 +88,15 @@ installed by `NetworkCarry`: grabbing a piece this machine does not control asks
 (`LootPickup.RequestCarry`), which hands over ownership, and `ItemManager` starts the drag once it
 is granted. The carrier then simulates the piece and its movement replicates, so the host's
 extraction pad sees it land. Only the machine simulating a piece judges its impacts; a client
-carrier asks the server to break it (`LootPickup.RequestBreak`). Weapons have no
-`NetworkTransform`: each machine has its own copies, and a friend does not see yours move.
+carrier asks the server to break it (`LootPickup.RequestBreak`). Weapons are the same:
+they are ordinary loot entries in `RaidLootTable` (one `Weapon_*` `LootItem` each, weight 1, in the
+Outer Bailey, Inner Ward and Keep), carrying `LootPickup`, `LootValue` and a `NetworkTransform`, so
+they are found, carried, swung and sold like any other piece. Whether a find is a weapon is only
+learnt by trying its right-click use.
+
+A ranged weapon's shot is a local projectile on the machine that fired it, where its hit is judged.
+`ShotRelay` shows the same shot on every other machine as a copy with no damage
+(`RangedWeapon.Fired`, `RangedWeapon.SpawnCosmeticShot`).
 
 ### Damage
 
@@ -114,7 +121,9 @@ machine's player dies and a teammate is still standing (`PlayerStateMachine.Spec
 "You died" screen is skipped; a `SpectatorCamera` follows the teammate's eye, whose rotation
 replicates through a `NetworkTransform` on the player's `Eye` (remote cameras are disabled
 components on an active object for exactly this). When the server sees every body down it tells
-every machine (`PartyDown`), and all of them go to "You died". A dead player revives on entering the
+every machine (`PartyDown`), and all of them go to "You died". A downed body is laid on the
+ground on every machine (`ShowDownPose`: only the `Visual` mesh turns, the collider and the
+replicated transform do not). A dead player revives on entering the
 next raid, from the Lair or from that screen, and a client follows the host from either.
 
 ### The host's campaign on a friend's Lair

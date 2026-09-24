@@ -143,7 +143,9 @@ microphone in the standalone build (2026-09-23). Stage 4 followed the
 same day: guards and loot replicate, a client can carry loot and extract it, hits land where the
 target's health lives, a client's spells aim where it looks, a dead player spectates a teammate and
 the raid ends when everyone is down, and a friend's Lair shows the host's campaign. All checked with
-two game windows over UDP; still untested between two Steam accounts. See
+two game windows over UDP; still untested between two Steam accounts. Then: weapons now spawn in
+the castle as networked loot (found, carried, swung, sold), a crossbow shot shows on every machine,
+downed bodies lie down, and guards give players at the gate a clear ring and a 20 second grace. See
 `docs/systems/net.md`.
 
 **2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh

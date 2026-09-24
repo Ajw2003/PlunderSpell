@@ -17,6 +17,11 @@ namespace RogueAi.Tests
     {
         private readonly List<Object> _spawned = new List<Object>();
 
+        // The arrival grace is process-wide: a test elsewhere that started a raid would otherwise
+        // leave these guards unable to see anyone.
+        [SetUp]
+        public void SetUp() => CastleGuard.EndArrivalGrace();
+
         [TearDown]
         public void TearDown()
         {
@@ -121,6 +126,19 @@ namespace RogueAi.Tests
         }
 
         // --- Seeing -------------------------------------------------------------------------
+
+        [Test]
+        public void Test_ACalmGuardSeesNobodyDuringTheArrivalGrace()
+        {
+            CastleGuard guard = MakeGuard(Vector3.zero);
+            MakeIntruder(new Vector3(0f, 0f, 6f));
+
+            CastleGuard.BeginArrivalGrace();
+            guard.Tick(0.1f);
+
+            Assert.AreEqual(GuardAlertState.Patrolling, guard.State,
+                "Players arriving at the gate need a moment before the garrison can see them.");
+        }
 
         [Test]
         public void Test_AGuardSeesAnIntruderInFrontOfIt()

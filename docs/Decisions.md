@@ -743,3 +743,21 @@ server simulating what a client holds): the carrier would feel a round trip of l
 
 **Status.** Standing. Verified over UDP with two game windows (see the plan's stage 4 list);
 regression tests in `CoopRulesTests`. Untested over Steam between two accounts.
+
+## 2026-09-23 — Weapons are loot you find; a raid starts with a short grace
+
+**Context.** The user asked for weapons to be networked, and described them: "weapons are just
+regular items but they can be used via right click instead of thrown like normal items, this way it
+is always a risk to check if its actually a weapon." No weapon existed in `RaidScene`; they were
+only in the bench scenes. Separately, guards killed players standing at the spawn.
+
+**Decision.** Weapons spawn in the raid as loot table entries, with loot's components, so they are
+networked, carried and sold exactly like loot. Ranged shots are shown on other machines as harmless
+copies. Guards keep two rooms clear of the gate, patrols included, and a calm garrison cannot see
+anyone for the first 20 seconds of a raid.
+
+**Considered and rejected.** A separate weapon-spawning system: it would duplicate the loot
+placement, and the user's point is that a weapon is found like any other item. A larger safe ring:
+the castle is about nine rooms across, so three rooms would empty most of it.
+
+**Status.** Standing. Verified with two game windows over UDP and in a solo raid (see the plan).

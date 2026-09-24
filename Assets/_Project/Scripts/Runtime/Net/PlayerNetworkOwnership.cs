@@ -76,15 +76,37 @@ public class PlayerNetworkOwnership : NetworkBehaviour
     protected override void OnSpawned(bool asServer)
     {
         if (asServer)
+        {
             _isDown.onChanged += OnDownChangedOnServer;
+        }
         else
+        {
+            _isDown.onChanged += ShowDownPose;
+            ShowDownPose(_isDown.value);
             ApplyOwnership();
+        }
     }
 
     protected override void OnDespawned(bool asServer)
     {
         if (asServer)
             _isDown.onChanged -= OnDownChangedOnServer;
+        else
+            _isDown.onChanged -= ShowDownPose;
+    }
+
+    /// <summary>
+    /// Lays a downed player's visible body on the ground, on every machine, so teammates can see who
+    /// is down; stands it back up on revive. Only the mesh moves: the collider and the replicated
+    /// transform are untouched, so nothing about movement or hits changes.
+    /// </summary>
+    private void ShowDownPose(bool down)
+    {
+        Transform visual = transform.Find("Visual");
+        if (visual == null)
+            return;
+        visual.localRotation = down ? Quaternion.Euler(90f, 0f, 0f) : Quaternion.identity;
+        visual.localPosition = down ? new Vector3(0f, -0.5f, 0f) : Vector3.zero;
     }
 
     // On a client the spawn arrives before the ownership does, so the body first looks remote and

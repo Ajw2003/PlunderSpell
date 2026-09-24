@@ -18,7 +18,11 @@ namespace RogueAi.Tests
         private readonly List<Object> m_tracked = new List<Object>();
 
         [SetUp]
-        public void SetUp() => CastleGuard.ClearIntruders();
+        public void SetUp()
+        {
+            CastleGuard.ClearIntruders();
+            CastleGuard.EndArrivalGrace();
+        }
 
         [TearDown]
         public void TearDown()
