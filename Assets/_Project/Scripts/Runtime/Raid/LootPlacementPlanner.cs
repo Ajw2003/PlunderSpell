@@ -112,8 +112,12 @@ namespace RogueAi.Raid
                         count = Mathf.Min(count, anchors.Length);
                 }
 
-                // Each item on its own anchor: a shuffled prefix of the room's anchors.
-                int[] order = hasAnchors ? ShuffledIndices(anchors.Length, rng) : null;
+                // Each item on its own anchor: a shuffled prefix of the room's anchors. The crypt
+                // centre takes its anchors in authored order, so its richest item sits on the first,
+                // the one the room's art puts at the centre (the Late crypt's floor brass).
+                int[] order = !hasAnchors ? null
+                    : isCryptFinal ? ShuffledIndices(anchors.Length, null)
+                    : ShuffledIndices(anchors.Length, rng);
                 for (int k = 0; k < count; k++)
                 {
                     RaidLootTable.Entry entry = isCryptFinal && k == 0 ? RichestOf(pool) : PickWeighted(pool, rng);
@@ -174,12 +178,13 @@ namespace RogueAi.Raid
         private static Vector3 AtAnchor(ProceduralCastleData.PlacedModule module, Vector3 anchor) =>
             module.Position + module.Rotation * anchor + Vector3.up * AnchorLift;
 
+        /// <summary>0..length-1 shuffled by <paramref name="rng"/>, or in order when it is null.</summary>
         private static int[] ShuffledIndices(int length, System.Random rng)
         {
             var order = new int[length];
             for (int i = 0; i < length; i++)
                 order[i] = i;
-            for (int i = length - 1; i > 0; i--)
+            for (int i = length - 1; rng != null && i > 0; i--)
             {
                 int j = rng.Next(0, i + 1);
                 (order[i], order[j]) = (order[j], order[i]);

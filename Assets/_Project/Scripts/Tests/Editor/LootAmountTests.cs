@@ -78,6 +78,14 @@ namespace RogueAi.Tests.Editor
                     int cryptItems = perRoom.TryGetValue(castle.CryptStartIndex, out List<Vector3> crypt) ? crypt.Count : 0;
                     Assert.AreEqual(Mathf.Max(1, cryptAnchors?.Length ?? 0), cryptItems,
                         $"{era} seed {seed}: the crypt centre should fill every one of its anchors.");
+                    if (cryptAnchors != null && cryptAnchors.Length > 0)
+                    {
+                        ProceduralCastleData.PlacedModule cryptRoom = castle.PlacedModules[castle.CryptStartIndex];
+                        Vector3 first = cryptRoom.Position + cryptRoom.Rotation * cryptAnchors[0] + Vector3.up * LootPlacementPlanner.AnchorLift;
+                        LootPlacement richest = plan.Find(p => p.ModuleIndex == castle.CryptStartIndex);
+                        Assert.Less(Vector3.Distance(first, richest.Position), 0.01f,
+                            $"{era} seed {seed}: the crypt's richest item should sit on its first anchor.");
+                    }
                     _generator.ClearGenerated();
                 }
 

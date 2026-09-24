@@ -131,10 +131,42 @@ def build_late_charnel_house(bm, uv):
 
 
 def build_late_effigy_crypt(bm, uv):
-    """docs/art/rooms/concept/LateMedieval/LateEffigyCrypt.svg"""
+    """docs/art/rooms/concept/LateMedieval/LateEffigyCrypt.svg, re-laid 2026-09-24 so the centre reads
+    as the castle's destination (docs/plans/staging-playtest-2-2026-09-24.md, part 3).
+
+    The castle's centre cell is always this room, and the kit keeps a clear cross between the
+    archways (validate_in_blender: nothing below 2.0 m within 1.6 m of either centre line), so the
+    centre is marked flat on the floor and overhead rather than with a tomb in the way."""
     h, fz = room_shell(bm, uv, "Crypt")
-    # NE: the founder's tomb chest and his gilded effigy.
-    fx, fy, fh = 3.6, 4.2, 0.9
+    # Centre, on the floor: the founder's monumental brass, his effigy laid into it, in a gilt border.
+    cb._box(bm, uv, "bronze", (0.0, 0.0, fz + 0.015), (1.2, 2.3, 0.03))
+    cb._box(bm, uv, GOLD, (0.0, 0.1, fz + 0.04), (0.5, 1.7, 0.02))
+    cb._box(bm, uv, GOLD, (0.0, 1.05, fz + 0.04), (0.28, 0.28, 0.02))
+    # The border: the long sides run full length, the ends fit between them.
+    for dx, dy, sx, sy in ((0.0, 1.35, 1.48, 0.06), (0.0, -1.35, 1.48, 0.06), (0.77, 0.0, 0.06, 2.76), (-0.77, 0.0, 0.06, 2.76)):
+        cb._box(bm, uv, GOLD, (dx, dy, fz + 0.01), (sx, sy, 0.02))
+    cb._anchor(0.0, 0.0, fz + 0.03)
+    # Overhead: the hearse, a madder tester with a gilt fringe on four tall oak posts standing just
+    # outside the walkway, and a crown of candles hung beneath it, all above head height.
+    ph, post = fz + 3.2, 1.8
+    for dx in (-post, post):
+        for dy in (-post, post):
+            cb._box(bm, uv, TIMBER, (dx, dy, (fz + ph) / 2), (0.14, 0.14, ph - fz))
+            mk.paint(bm, mk.add_cylinder(bm, 0.05, 0.25, loc=(dx, dy, ph + 0.125), segments=6), LINEN, uv)
+    cb._box(bm, uv, CLOTH, (0.0, 0.0, ph + 0.075), (2 * post + 0.3, 2 * post + 0.3, 0.15))
+    for dx, dy, sx, sy in ((0.0, post + 0.15, 2 * post + 0.27, 0.03), (0.0, -post - 0.15, 2 * post + 0.27, 0.03),
+                           (post + 0.15, 0.0, 0.03, 2 * post + 0.3), (-post - 0.15, 0.0, 0.03, 2 * post + 0.3)):
+        cb._box(bm, uv, GOLD, (dx, dy, ph - 0.05), (sx, sy, 0.12))
+    crown = fz + 2.4
+    cb._box(bm, uv, IRON, (0.0, 0.0, (crown + ph) / 2), (0.04, 0.04, ph - crown))
+    for dx, dy, sx, sy in ((0.0, 0.7, 1.36, 0.04), (0.0, -0.7, 1.36, 0.04), (0.7, 0.0, 0.04, 1.44), (-0.7, 0.0, 0.04, 1.44)):
+        cb._box(bm, uv, IRON, (dx, dy, crown), (sx, sy, 0.04))
+    cb._box(bm, uv, IRON, (0.0, 0.0, crown), (1.36, 0.04, 0.04))
+    for x, y in ((-0.7, -0.7), (0.0, -0.7), (0.7, -0.7), (0.7, 0.0), (0.7, 0.7), (0.0, 0.7), (-0.7, 0.7), (-0.7, 0.0)):
+        mk.paint(bm, mk.add_cylinder(bm, 0.02, 0.16, loc=(x, y, crown + 0.1), segments=6), LINEN, uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.014, 0.05, loc=(x, y, crown + 0.205), segments=4, radius2=0.003), CLOTH, uv)
+    # NE, beside the walkway: the founder's raised tomb chest and his gilded effigy.
+    fx, fy, fh = 3.0, 2.9, 0.9
     cb._box(bm, uv, WALL, (fx, fy, fz + fh / 2), (2.2, 1.0, fh))
     cb._box(bm, uv, "vellum_faint", (fx, fy, fz + fh - 0.04), (2.28, 1.08, 0.08))
     top = fz + fh
@@ -142,33 +174,8 @@ def build_late_effigy_crypt(bm, uv):
     ek.sphere(bm, uv, GOLD, fx + 0.8, fy, top + 0.02, 0.11, segments=8, rings=4)
     ek.prism(bm, uv, GOLD, [(-0.1, 0.0), (0.1, 0.0), (0.0, 0.16)], 0.12, loc=(fx + 0.15, fy, top + 0.2), along="y")
     cb._anchor(fx, fy + 0.36, top)
-    # The canopy: four oak posts, the madder tester and its gilt fringe, hangings at the back.
-    ch = fz + 2.6
-    for dx in (-1.3, 1.3):
-        for dy in (-0.7, 0.7):
-            cb._box(bm, uv, TIMBER, (fx + dx, fy + dy, (fz + ch) / 2), (0.14, 0.14, ch - fz))
-    cb._box(bm, uv, CLOTH, (fx, fy, ch + 0.075), (2.8, 1.6, 0.15))
-    cb._box(bm, uv, GOLD, (fx, fy - 0.815, ch - 0.03), (2.8, 0.03, 0.08))
-    cb._box(bm, uv, CLOTH, (fx, fy + 0.7, (top + 0.3 + ch) / 2), (2.6, 0.04, ch - top - 0.3))
-    # The candle hearse before the tomb: legs, base bar, two sloped bars, seven candles.
-    hx, hy, hw, hh = 3.6, 2.5, 1.2, 1.1
-    base = fz + 0.4
-    for dx in (-hw / 2 + 0.1, hw / 2 - 0.1):
-        cb._box(bm, uv, IRON, (hx + dx, hy, fz + 0.2), (0.04, 0.04, 0.4))
-    cb._box(bm, uv, IRON, (hx, hy, base), (hw, 0.04, 0.04))
-    tilt = math.atan2(hw / 2, hh)
-    length = math.hypot(hw / 2, hh)
-    for s in (-1, 1):
-        mk.paint(bm, mk.add_box(bm, (0.04, 0.04, length), loc=(hx + s * hw / 4, hy, base + hh / 2),
-                                rot=Euler((0, -s * tilt, 0))), IRON, uv)
-    for k in range(7):
-        t = k / 6
-        x = hx - hw / 2 + t * hw
-        z = base + hh * (1 - abs(2 * t - 1))
-        mk.paint(bm, mk.add_cylinder(bm, 0.018, 0.16, loc=(x, hy, z + 0.08), segments=6), LINEN, uv)
-        mk.paint(bm, mk.add_cylinder(bm, 0.014, 0.05, loc=(x, hy, z + 0.185), segments=4, radius2=0.003), CLOTH, uv)
-    # NW, SE, SW: lesser tomb chests, a brass plate let into each lid.
-    for x, y in ((-3.6, 4.6), (3.6, -4.6), (-3.6, -4.6)):
+    # The four corners: lesser tomb chests, a brass plate let into each lid.
+    for x, y in ((3.6, 4.6), (-3.6, 4.6), (3.6, -4.6), (-3.6, -4.6)):
         cb._box(bm, uv, WALL, (x, y, fz + 0.4), (2.0, 0.8, 0.8))
         cb._box(bm, uv, "bronze", (x - 0.55, y, fz + 0.805), (0.5, 0.35, 0.01))
         cb._anchor(x, y, fz + 0.8)

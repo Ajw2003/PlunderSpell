@@ -1176,29 +1176,36 @@ When the churchyard fills, the old graves are dug up and the bones come here. Th
 
 The family that built the castle is buried under it, and the man who began it lies in the north-east corner in gilt. His tomb chest is arcaded sandstone with a moulded lid, and on it his effigy lies in beaten gold, head on a pillow, hands joined, under a canopy of oak posts hung in madder with a gilt fringe. Before him a candle hearse, an iron triangle of seven candles, burns on the anniversary of his death and on every other day the chaplain is paid for. His descendants were buried more cheaply: plain chests in the other three corners with engraved brass plates let into their lids. The effigy is the richest thing in the Late castle and the hardest to carry.
 
+**Re-laid 2026-09-24** (docs/plans/staging-playtest-2-2026-09-24.md, part 3): this room is always
+the castle's centre cell, and with the founder's tomb in the north-east corner nothing marked the
+middle as the goal. The kit keeps a clear cross between the archways (nothing below 2.0 m within
+1.60 m of either centre line), so the centre is marked on the floor and overhead, and the raised
+tomb moves in beside it. The concept drawing above still shows the old corner layout.
+
 **Build** (kit metres: x east, y north, from the cell centre; heights above ground, floor top at 0.30)
 
 - Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 3.00 m clear, a 0.45 m dark trim course, an archway 2.60 × 2.16 m centred on every wall.
-- Founder's tomb (NE): sandstone chest 2.20 × 1.00 × 0.90 m at (3.60, 4.20), long axis east–west, arcaded sides (albedo), a moulded lid 2.28 × 1.08 × 0.08 m.
-- Gilded effigy: a gilt body 1.60 × 0.45 × 0.20 m on the lid, head r 0.11 m at the east end, hands at prayer.
-- Canopy: four oak posts 0.14 m square at the tomb's corners plus 0.20 m (x 2.30 / 4.90, y 3.50 / 4.90) to 2.60 m above the floor; a madder tester 2.80 × 1.60 × 0.15 m on them; a gilt fringe strip along its south edge; a madder hanging 2.60 m wide between the north posts from 1.50 m to the tester.
-- Candle hearse: iron, before the tomb at (3.60, 2.50): two legs 0.40 m, a base bar 1.20 m, two sloped bars meeting at 1.80 m above ground, seven candles up its edges with flames.
-- Lesser tombs: three sandstone chests 2.00 × 0.80 × 0.80 m at (−3.60, 4.60), (3.60, −4.60), (−3.60, −4.60), long axis east–west.
-- Brass plates: an engraved brass plate 0.50 × 0.35 m let into each lesser lid, west of centre.
-- The crossing: bare floor between all four archways.
+- Founder's brass (centre, flush): a monumental brass 1.20 × 2.30 × 0.03 m at (0, 0), long axis north–south, the effigy laid into it in gilt (body 0.50 × 1.70 m, head a 0.28 m square to the north), a gilt border strip round it. Walkable.
+- The hearse (overhead): four oak posts 0.14 m square at (±1.80, ±1.80), just outside the walkway, to 3.20 m above the floor, a candle on each post top; a madder tester 3.90 × 3.90 × 0.15 m on them; a gilt fringe 0.12 m deep round it; a square iron candle crown 1.44 m across hung from the tester's centre at 2.40 m, eight candles on it.
+- Founder's tomb (NE, beside the walkway): sandstone chest 2.20 × 1.00 × 0.90 m at (3.00, 2.90), long axis east–west, a moulded lid 2.28 × 1.08 × 0.08 m, the gilded effigy on it (1.60 × 0.45 × 0.20 m, head r 0.11 m at the east end, hands at prayer).
+- Lesser tombs: four sandstone chests 2.00 × 0.80 × 0.80 m at (±3.60, ±4.60), long axis east–west, an engraved brass plate 0.50 × 0.35 m let into each lid, west of centre.
+- The crossing: clear below 2.0 m between all four archways; only the flush brass lies in it.
 
 **Sockets**
 
 - Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open
+- The founder's brass: a loot anchor at its centre, on the floor
 - Founder's lid: a loot anchor beside the effigy at 1.20 m
-- Lesser tomb lids: three loot anchors at 1.10 m
+- Lesser tomb lids: four loot anchors at 1.10 m
 
-**Loot anchors**
+**Loot anchors** (in this order; the raid puts the crypt's richest item on L1)
 
-- L1: the founder's lid, beside the effigy at (3.60, 4.56, 1.20)
-- L2: the NW lesser tomb at (-3.60, 4.60, 1.10)
-- L3: the SE lesser tomb at (3.60, -4.60, 1.10)
-- L4: the SW lesser tomb at (-3.60, -4.60, 1.10)
+- L1: the founder's brass, at the room's centre (0.00, 0.00, 0.33)
+- L2: the founder's lid, beside the effigy at (3.00, 3.26, 1.20)
+- L3: the NE lesser tomb at (3.60, 4.60, 1.10)
+- L4: the NW lesser tomb at (-3.60, 4.60, 1.10)
+- L5: the SE lesser tomb at (3.60, -4.60, 1.10)
+- L6: the SW lesser tomb at (-3.60, -4.60, 1.10)
 
 **Materials** (art-pass colour, then the kit's atlas pigment)
 
@@ -1213,9 +1220,9 @@ The family that built the castle is buried under it, and the man who began it li
 
 **In play**
 
-- The Late crypt's final room: the gilded effigy is the headline loot, lit by the hearse and visible from the north and east archways.
-- The canopy posts and hanging screen the founder's tomb from the north.
-- Four loot anchors, one per quadrant.
+- The Late crypt's final room and the castle's centre: from any archway you look straight at the
+  gilt brass under the madder hearse and its crown of candles, where the richest item lies.
+- Six loot anchors, all filled in a raid: the brass, the founder's lid and the four lesser tombs.
 
 ### LateUndercroftStair
 

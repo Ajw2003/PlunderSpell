@@ -53,7 +53,7 @@ try
         var prev = RenderTexture.active; RenderTexture.active = rt;
         tex.ReadPixels(new Rect(0, 0, Tile, Tile), i * Tile, 0);
         RenderTexture.active = prev;
-        legend.AppendLine($"{i + 1}. {rows[i].label}: {d.Prefab.name}, {d.LootAnchors.Length} loot anchors, 1 item placed (the table's richest)");
+        legend.AppendLine($"{i + 1}. {rows[i].label}: {d.Prefab.name}, {d.LootAnchors.Length} loot anchors, all filled, the richest on the first");
         foreach (var m in markers) UnityEngine.Object.DestroyImmediate(m);
         UnityEngine.Object.DestroyImmediate(go);
     }

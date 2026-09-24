@@ -187,7 +187,9 @@ MonoBehaviour:
     Prefab: {fileID: 1873998323953926945, guid: afe551786c9f2f54e9b32c6967efe39f, type: 3}
     Weight: 1
     LootAnchors:
-    - {x: 3.6, y: 1.2, z: 4.56}
+    - {x: 0, y: 0.33, z: 0}
+    - {x: 3, y: 1.2, z: 3.26}
+    - {x: 3.6, y: 1.1, z: 4.6}
     - {x: -3.6, y: 1.1, z: 4.6}
     - {x: 3.6, y: 1.1, z: -4.6}
     - {x: -3.6, y: 1.1, z: -4.6}
