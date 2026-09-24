@@ -126,6 +126,12 @@ def check_model(d, built):
     y north, z up, module-local; the sheet uses the same frame)."""
     key = d["key"]
     got = built.get(key)
+    if got is None and not d["loot_anchors"]:
+        # build_assets writes no entry for a module without anchors (a wall piece), so
+        # the exported model is the proof it was built.
+        spec = next(s for s in asset_specs.ERA_CASTLE_SPECS if s["key"] == key)
+        fbx = os.path.join(REPO, "Assets", "_Project", "Art", "Models", spec["subdir"], key + ".fbx")
+        return [] if os.path.isfile(fbx) else [f"{key}: no model built yet (no {os.path.relpath(fbx, REPO)})"]
     if got is None:
         return [f"{key}: no model built yet (no entry in CastleLootAnchors.json)"]
     want = [a["xyz"] for a in d["loot_anchors"]]

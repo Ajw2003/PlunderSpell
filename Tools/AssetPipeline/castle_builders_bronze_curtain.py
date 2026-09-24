@@ -1,8 +1,8 @@
 """
 Bronze Age CurtainWall pieces: BronzeLionGate, BronzeWallStraight, BronzeWallCorner, BronzeBastion, BronzeGateApproach.
 
-Built from the room sheets in docs/art/rooms/ (spec: docs/art/rooms/data/bronze/<Key>.json,
-drawing: docs/art/rooms/concept/bronze/<Key>.svg). The sheet is the reference: the
+Built from the room sheets in docs/art/rooms/ (spec: docs/art/rooms/data/BronzeAge/<Key>.json,
+drawing: docs/art/rooms/concept/BronzeAge/<Key>.svg). The sheet is the reference: the
 dimensions, placements and loot anchors here match it. Palette, zone tables and
 room_shell come from castle_builders_bronze.py; the rules are in its docstring and in
 docs/plans/era-castle-rooms.md.
@@ -15,91 +15,69 @@ from castle_builders_bronze import *  # noqa: F401,F403  palette, room_shell, cb
 # Bronze Age walls are thick rather than tall: a 2.4 m mass of huge
 # irregular blocks up to a plastered wall-walk at 4.1 m, then a 1.1 m
 # mud-brick parapet with rounded merlons to the shared 5.2 m CurtainWall
-# height (art bible, the Lion Gate).
+# height (art bible, the Lion Gate). The block layout is cyclopean.py's, the
+# same one the sheets draw. A run is described along its wall (u) and inward
+# from the cell edge (d): "south" puts u on x and d on +y from y = -HALF,
+# "west" puts u on y and d on +x from x = -HALF.
 
+import cyclopean as cy  # noqa: E402
+
+H = rk.HALF
 WALL_DEPTH = 2.4
 WALK_Z = 4.1
 PARAPET_T = 0.4
-
-# Block widths along a run, reused (offset) per course so the joints never
-# line up vertically. Fixed lists, not random: the build must be identical
-# on every run.
-_COURSE_WIDTHS = ((2.2, 1.4, 1.9, 1.1, 2.4, 1.6, 1.4), (1.3, 2.3, 1.2, 2.0, 1.5, 2.1, 1.6))
-_COURSE_HEIGHTS = (2.2, 1.9)
-_DEPTH_JITTER = (0.0, -0.15, 0.1, -0.05, 0.12, -0.1, 0.05)
+PARAPET_IN = 0.04          # the parapet's outer face, inside the cell line so the slots stay in the footprint
+LOW = 0.5                  # the breastwork under the merlons
+PITCH = 1.2                # merlon + crenel
+CONGLOM = ASHLAR = "vellum_faint"
 
 
-def _cyclopean_run(bm, uv, x0, x1, y_out, depth, top=WALK_Z, along="x"):
-    """A run of irregular blocks from x0 to x1 (or y0 to y1 when along == "y"),
-    its outer face flush on y_out (x_out) and `depth` thick inward, in two
-    courses up to `top`. Inner faces are ragged; the outer face stays on the
-    cell line so neighbouring modules meet."""
-    sign = 1 if y_out < 0 else -1          # inward direction
-    z = 0.0
-    for c, (widths, ch) in enumerate(zip(_COURSE_WIDTHS, _COURSE_HEIGHTS)):
-        ch = ch if c < len(_COURSE_HEIGHTS) - 1 else top - z
-        pos, i = x0, 0
-        while pos < x1 - 0.05:
-            w = min(widths[i % len(widths)], x1 - pos)
-            d = depth + _DEPTH_JITTER[(i + c * 3) % len(_DEPTH_JITTER)]
-            cu = pos + w / 2
-            cv = y_out + sign * d / 2
-            if along == "x":
-                cb._box(bm, uv, CURTAIN, (cu, cv, z + ch / 2), (w, d, ch))
-            else:
-                cb._box(bm, uv, CURTAIN, (cv, cu, z + ch / 2), (d, w, ch))
-            pos += w
-            i += 1
-        z += ch
+def _at(side, u, d, z):
+    return (u, -H + d, z) if side == "south" else (-H + d, u, z)
 
 
-def _mudbrick_parapet(bm, uv, x0, x1, y_out, along="x"):
-    """A 1.1 m mud-brick breastwork on the outer edge of the wall-walk, with
-    rounded merlons (a box under a half-sunk cylinder) and sling slots."""
-    sign = 1 if y_out < 0 else -1
-    cv = y_out + sign * PARAPET_T / 2
-    length = x1 - x0
-    mid = (x0 + x1) / 2
-    low_h = 0.5
-    if along == "x":
-        cb._box(bm, uv, MUDBRICK, (mid, cv, WALK_Z + low_h / 2), (length, PARAPET_T, low_h))
-    else:
-        cb._box(bm, uv, MUDBRICK, (cv, mid, WALK_Z + low_h / 2), (PARAPET_T, length, low_h))
-    step = 1.2
-    n = int(length // step)
-    start = mid - (n - 1) * step / 2
-    for k in range(n):
-        u = start + k * step
-        box_z = WALK_Z + low_h + 0.15
-        cyl_rot = Euler((math.radians(90), 0, 0)) if along == "x" else Euler((0, math.radians(90), 0))
-        if along == "x":
-            cb._box(bm, uv, MUDBRICK, (u, cv, box_z), (0.6, PARAPET_T, 0.3))
-            mk.paint(bm, mk.add_cylinder(bm, 0.3, PARAPET_T, loc=(u, cv, WALK_Z + 0.8), rot=cyl_rot,
-                                         segments=8), MUDBRICK, uv)
-            if k < n - 1:          # sling slots between merlons, never past the run's end
-                cb._box(bm, uv, SOOT, (u + step / 2, cv + sign * (PARAPET_T / 2 + 0.02), WALK_Z + 0.3),
-                        (0.12, 0.06, 0.4))
-        else:
-            cb._box(bm, uv, MUDBRICK, (cv, u, box_z), (PARAPET_T, 0.6, 0.3))
-            mk.paint(bm, mk.add_cylinder(bm, 0.3, PARAPET_T, loc=(cv, u, WALK_Z + 0.8), rot=cyl_rot,
-                                         segments=8), MUDBRICK, uv)
-            if k < n - 1:
-                cb._box(bm, uv, SOOT, (cv + sign * (PARAPET_T / 2 + 0.02), u + step / 2, WALK_Z + 0.3),
-                        (0.06, 0.12, 0.4))
+def _size(side, su, sd, sz):
+    return (su, sd, sz) if side == "south" else (sd, su, sz)
 
 
-def _wall_walk(bm, uv, x0, x1, y_out, depth, along="x"):
-    """The plastered walk on top of the mass, inside the parapet."""
-    sign = 1 if y_out < 0 else -1
-    walk_d = depth - PARAPET_T - 0.2
-    cv = y_out + sign * (PARAPET_T + walk_d / 2)
-    mid, length = (x0 + x1) / 2, x1 - x0
-    size = (length, walk_d, 0.1) if along == "x" else (walk_d, length, 0.1)
-    loc = (mid, cv, WALK_Z + 0.05) if along == "x" else (cv, mid, WALK_Z + 0.05)
-    cb._box(bm, uv, "vellum_faint", loc, size)
+def _merlon_centres(u0, u1):
+    n = int((u1 - u0 + 1e-6) // PITCH)
+    mid = (u0 + u1) / 2
+    return [mid - (n - 1) * PITCH / 2 + k * PITCH for k in range(n)]
+
+
+def _mass(bm, uv, u0, u1, depth, top=WALK_Z, side="south", seed=0, bottom=0.0, pigment=CURTAIN):
+    """A cyclopean run from u0 to u1, `depth` thick from the cell edge, bottom..top."""
+    for b in cy.blocks(u0, u1, top, seed=seed, bottom=bottom):
+        d0, d1 = b["inset"], depth + b["dj"]
+        cb._box(bm, uv, pigment, _at(side, (b["u0"] + b["u1"]) / 2, (d0 + d1) / 2, (b["z0"] + b["z1"]) / 2),
+                _size(side, b["u1"] - b["u0"], d1 - d0, b["z1"] - b["z0"]))
+
+
+def _walk(bm, uv, u0, u1, depth, z=WALK_Z, side="south"):
+    """The plastered walk on top of a run, from behind the parapet to 0.2 m short of the
+    ragged inner face (the shallowest block reaches depth - 0.15)."""
+    d0, d1 = PARAPET_IN + PARAPET_T, depth - 0.2
+    cb._box(bm, uv, WALL, _at(side, (u0 + u1) / 2, (d0 + d1) / 2, z + 0.05), _size(side, u1 - u0, d1 - d0, 0.1))
+
+
+def _parapet(bm, uv, u0, u1, base=WALK_Z, side="south", slots=True):
+    """The 1.1 m mud-brick breastwork on the outer edge: a 0.5 m low wall, rounded merlons
+    (a box under a half-sunk cylinder) at 1.2 m pitch, and a sling slot, a dark inset on
+    the outer face, in every other merlon from the first."""
+    d = PARAPET_IN + PARAPET_T / 2
+    cb._box(bm, uv, MUDBRICK, _at(side, (u0 + u1) / 2, d, base + LOW / 2), _size(side, u1 - u0, PARAPET_T, LOW))
+    rot = Euler((math.radians(90), 0, 0)) if side == "south" else Euler((0, math.radians(90), 0))
+    for k, u in enumerate(_merlon_centres(u0, u1)):
+        cb._box(bm, uv, MUDBRICK, _at(side, u, d, base + LOW + 0.15), _size(side, 0.6, PARAPET_T, 0.3))
+        mk.paint(bm, mk.add_cylinder(bm, 0.3, PARAPET_T, loc=_at(side, u, d, base + LOW + 0.3), rot=rot, segments=8),
+                 MUDBRICK, uv)
+        if slots and k % 2 == 0:
+            cb._box(bm, uv, SOOT, _at(side, u, PARAPET_IN, base + 0.6), _size(side, 0.12, 0.06, 0.5))
 
 
 def build_bronze_wall_straight(bm, uv):
-    _cyclopean_run(bm, uv, -rk.HALF, rk.HALF, -rk.HALF, WALL_DEPTH)
-    _wall_walk(bm, uv, -rk.HALF, rk.HALF, -rk.HALF, WALL_DEPTH)
-    _mudbrick_parapet(bm, uv, -rk.HALF, rk.HALF, -rk.HALF)
+    """docs/art/rooms/concept/BronzeAge/BronzeWallStraight.svg"""
+    _mass(bm, uv, -H, H, WALL_DEPTH, seed=0)
+    _walk(bm, uv, -H, H, WALL_DEPTH)
+    _parapet(bm, uv, -H, H)

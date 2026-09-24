@@ -1,8 +1,8 @@
 """
 Bronze Age InnerWard pieces: BronzePithosMagazine, BronzeFrescoCourt, BronzeShrine, BronzePalaceKitchen, BronzeTabletArchive.
 
-Built from the room sheets in docs/art/rooms/ (spec: docs/art/rooms/data/bronze/<Key>.json,
-drawing: docs/art/rooms/concept/bronze/<Key>.svg). The sheet is the reference: the
+Built from the room sheets in docs/art/rooms/ (spec: docs/art/rooms/data/BronzeAge/<Key>.json,
+drawing: docs/art/rooms/concept/BronzeAge/<Key>.svg). The sheet is the reference: the
 dimensions, placements and loot anchors here match it. Palette, zone tables and
 room_shell come from castle_builders_bronze.py; the rules are in its docstring and in
 docs/plans/era-castle-rooms.md.
