@@ -80,7 +80,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/glTF/TripodCauldron.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/TripodCauldron.blend"
       },
-      "build_seconds": 3.3
+      "build_seconds": 2.8
     },
     {
       "key": "items/bronze/faience-hippo",
@@ -229,7 +229,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/glTF/GoldDeathMask.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/GoldDeathMask.blend"
       },
-      "build_seconds": 2.5
+      "build_seconds": 2.3
     },
     {
       "key": "items/bronze/oxhide-ingot",
@@ -488,7 +488,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/ArmReliquary/glTF/ArmReliquary.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.blend"
       },
-      "build_seconds": 2.8
+      "build_seconds": 2.6
     },
     {
       "key": "items/high/coin-coffer",
@@ -566,7 +566,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/CoinCoffer/glTF/CoinCoffer.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/CoinCoffer/CoinCoffer.blend"
       },
-      "build_seconds": 3.3
+      "build_seconds": 2.9
     },
     {
       "key": "items/high/gilded-altarpiece",
@@ -662,7 +662,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/glTF/GildedAltarpiece.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/GildedAltarpiece.blend"
       },
-      "build_seconds": 3.1
+      "build_seconds": 2.8
     },
     {
       "key": "items/high/illuminated-psalter",
@@ -750,7 +750,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/glTF/IlluminatedPsalter.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/IlluminatedPsalter.blend"
       },
-      "build_seconds": 2.4
+      "build_seconds": 2.3
     },
     {
       "key": "items/high/silver-ewer",
@@ -831,7 +831,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/SilverEwer/glTF/SilverEwer.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/SilverEwer/SilverEwer.blend"
       },
-      "build_seconds": 2.4
+      "build_seconds": 2.3
     },
     {
       "key": "items/late/bankers-ledger",
@@ -916,7 +916,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Late/BankersLedger/glTF/BankersLedger.gltf",
         "blend": "Assets/Models/ArtBible/Items/Late/BankersLedger/BankersLedger.blend"
       },
-      "build_seconds": 2.7
+      "build_seconds": 2.5
     },
     {
       "key": "items/late/gilded-nef",
@@ -1080,7 +1080,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Late/JewelledHatBadge/glTF/JewelledHatBadge.gltf",
         "blend": "Assets/Models/ArtBible/Items/Late/JewelledHatBadge/JewelledHatBadge.blend"
       },
-      "build_seconds": 2.4
+      "build_seconds": 2.3
     },
     {
       "key": "items/late/parade-armour",
@@ -1167,7 +1167,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/glTF/ParadeArmourOnItsStand.gltf",
         "blend": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/ParadeArmourOnItsStand.blend"
       },
-      "build_seconds": 3.0
+      "build_seconds": 2.8
     },
     {
       "key": "items/late/rolled-tapestry",
@@ -1258,7 +1258,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Late/RolledTapestry/glTF/RolledTapestry.gltf",
         "blend": "Assets/Models/ArtBible/Items/Late/RolledTapestry/RolledTapestry.blend"
       },
-      "build_seconds": 3.2
+      "build_seconds": 3.3
     },
     {
       "key": "items/powder/brass-astrolabe",
@@ -1333,7 +1333,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/Astrolabe/glTF/Astrolabe.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/Astrolabe/Astrolabe.blend"
       },
-      "build_seconds": 2.2
+      "build_seconds": 2.4
     },
     {
       "key": "items/powder/curiosity-cabinet",
@@ -1414,7 +1414,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/glTF/CabinetOfCuriosities.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/CabinetOfCuriosities.blend"
       },
-      "build_seconds": 3.0
+      "build_seconds": 2.9
     },
     {
       "key": "items/powder/nautilus-cup",
@@ -1571,7 +1571,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/glTF/SilverServiceTureen.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/SilverServiceTureen.blend"
       },
-      "build_seconds": 2.4
+      "build_seconds": 2.5
     },
     {
       "key": "items/powder/venetian-mirror",
