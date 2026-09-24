@@ -1,0 +1,87 @@
+{
+  "key": "LateSpitKitchen",
+  "name": "The Spit Kitchen",
+  "age": "LateMedieval",
+  "zone": "InnerWard",
+  "role": "KitchenRoom",
+  "summary": "A hearth big enough to roast a boar on a long iron spit, a dresser of pewter, a chopping block, a work table, a flour bin and barrels.",
+  "description": "The kitchen is organised around its fire. The hearth on the west wall is two and a half metres across under a sandstone hood black to the ceiling, and across its mouth a long iron spit turns on two tall firedogs with a whole boar on it, basted by a boy who will be deaf by forty. The dresser on the north wall holds the household's pewter, plate by plate on its shelves, with jugs on the cupboard below. In the south the cooks work at a heavy table and a round chopping block scarred by a generation of cleavers; flour is kept in a lidded bin against the west wall, ale in the barrels beside it. Kitchens burn often, and this one has.",
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.00 m clear, a 0.45 m verdure-green trim course, an archway 2.60 × 2.88 m centred on every wall.",
+    "Hearth (NW): the Age's hooded hearth on the west wall centred y 3.60, 2.40 m wide, 1.00 m deep, a 1.50 m mouth, the hood to 3.80 m above ground; sooted back, firedogs, fire.",
+    "Spit: two iron firedogs 0.06 m square, 0.78 m tall, at y 2.70 and 4.50 inside the mouth (x −5.00); an iron spit 2.10 m on them at 1.00 m above ground; a boar on it, a spheroid 0.40 × 0.88 × 0.40 m.",
+    "Dresser (NE): oak cupboard base 2.00 × 0.50 × 0.90 m against the north wall centred x 3.60; a back board 2.00 × 1.20 m above it; two shelves 0.26 m deep at 1.70 and 2.10 m above ground, five pewter plates r 0.14 m standing on each; three pewter jugs on the base.",
+    "Chopping block (SE): an oak round r 0.35 m, 0.80 m tall at (4.60, −4.30), a cleaver bedded in its top.",
+    "Work table (SE): oak 1.80 × 0.80 m, top 0.85 m at (3.00, −3.60), two loaves and a cleaver on it.",
+    "Flour bin (SW): oak 0.70 × 1.20 × 0.80 m against the west wall at y −4.00, a sloped lid rising 0.12 m to the wall.",
+    "Barrels (SW): two upright oak barrels r 0.40 m, 0.90 m, two iron hoops each, at (−3.30, −4.90) and (−2.40, −4.95)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Work table and dresser base: loot anchors",
+    "Hearth: a fire source on the west wall"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the work table",
+      "xyz": [
+        3.0,
+        -3.6,
+        1.15
+      ]
+    },
+    {
+      "at": "the dresser's cupboard base",
+      "xyz": [
+        3.6,
+        5.15,
+        1.2
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls, hearth."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Dresser, table, block, bin, barrels."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Spit, firedogs, cleavers, hoops."
+    },
+    {
+      "name": "Pewter",
+      "hex": "#9A9A90",
+      "pigment": "iron",
+      "notes": "Plates and jugs."
+    },
+    {
+      "name": "Roast",
+      "hex": "#6A3A22",
+      "pigment": "leather",
+      "notes": "The boar."
+    },
+    {
+      "name": "Fire",
+      "hex": "#C4542E",
+      "pigment": "madder",
+      "notes": "The hearth fire."
+    }
+  ],
+  "gameplay": [
+    "The fire lights the whole west side; the east side is in its shadow.",
+    "A kitchen fire spreads to the flour bin; flour dust is a Late Age hazard.",
+    "Two loot anchors: the pewter is the kitchen's only portable value."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateSpitKitchen.svg"
+}

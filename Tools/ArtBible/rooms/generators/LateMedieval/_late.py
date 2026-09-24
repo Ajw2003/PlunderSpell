@@ -210,3 +210,25 @@ def armour(sh, x, base=FZ, col=STEEL, stand=OAK):
     sh.path(f"M{f(hx - 7)} {f(hy + 5)} a8 9 0 0 1 16 0 l6 5 l-24 0 z", f"url(#{sh.lin(col, 'h', .4, .6)})",
             darken(col, .6), .8)
     sh.line(hx - 6, hy + 2, hx + 7, hy + 2, "#0E0C09", 1.2)
+
+
+def jar(sh, x, base, height, belly, col, rim=None, bands=(), lid=None, lugs=True):
+    """A turned jar in elevation (pithos, amphora, hydria), standing on `base`."""
+    r = belly / 2
+    m = (rim if rim is not None else belly * 0.45) / 2
+    prof = [(0, r * .45), (height * .2, r * .85), (height * .45, r), (height * .75, r * .8), (height * .92, m),
+            (height * .97, m * 1.15), (height, m * 1.1)]
+    left = [KE(x - rr, base + z) for z, rr in prof]
+    right = [KE(x + rr, base + z) for z, rr in reversed(prof)]
+    d = smooth_path(left + right, tension=.3)
+    sh.path(d, f"url(#{sh.lin(col, 'h', .35, .55)})", darken(col, .6), 1.1)
+    for z in bands:
+        rr = r * (1 - abs(z / height - .45) * .7)
+        sh.line(*KE(x - rr * .96, base + z), *KE(x + rr * .96, base + z), darken(col, .35), 1.6, op=.8)
+    if lugs:
+        for s in (-1, 1):
+            a = KE(x + s * r * .78, base + height * .72)
+            sh.path(f"M{f(a[0])} {f(a[1])} q{f(s * 7)} 4 0 12", "none", darken(col, .4), 2)
+    if lid:
+        kerect(sh, x - m * 1.25, base + height, x + m * 1.25, base + height + 0.06, lid, darken(lid, .5), .8)
+    return d

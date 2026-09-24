@@ -130,3 +130,50 @@ def build_late_armoury_hall(bm, uv):
     for dx in (-0.25, -0.05):
         cb._box(bm, uv, STEEL, (-3.3 + dx, -3.8, top + 0.03), (0.12, 0.2, 0.06))
     iron_chest(bm, uv, -3.4, -5.0, fz, w=1.2, d=0.6, h=0.6)
+
+
+def _hooped_barrel(bm, uv, x, y, fz, r=0.4, h=0.9):
+    """An upright oak barrel with two iron hoops."""
+    mk.paint(bm, mk.add_cylinder(bm, r, h, loc=(x, y, fz + h / 2), segments=10), TIMBER, uv)
+    for f in (0.2, 0.8):
+        mk.paint(bm, mk.add_cylinder(bm, r + 0.015, 0.05, loc=(x, y, fz + h * f), segments=10), IRON, uv)
+
+
+def build_late_spit_kitchen(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateSpitKitchen.svg"""
+    h, fz = room_shell(bm, uv, "InnerWard")
+    # NW: the great hearth, a long spit on two tall firedogs across its mouth, a boar on the spit.
+    hy = 3.6
+    wall_hearth(bm, uv, -IN, hy, fz, width=2.4, depth=1.0, mouth=1.5, hood_top=3.5)
+    sx, sz = -IN + 0.5, 0.7
+    for dy in (-0.9, 0.9):
+        cb._box(bm, uv, IRON, (sx, hy + dy, fz + (sz + 0.08) / 2), (0.06, 0.06, sz + 0.08))
+    mk.paint(bm, mk.add_cylinder(bm, 0.02, 2.1, loc=(sx, hy, fz + sz), rot=Euler((math.radians(90), 0, 0)),
+                                 segments=4), IRON, uv)
+    mk.paint(bm, mk.add_sphere(bm, 0.2, loc=(sx, hy, fz + sz), segments=8, rings=5, scale=(1.0, 2.2, 1.0)),
+             "leather", uv)
+    # NE: the dresser: cupboard base, back board, two shelves of standing pewter plates, jugs on the base.
+    dx = 3.6
+    cb._box(bm, uv, TIMBER, (dx, IN - 0.25, fz + 0.45), (2.0, 0.5, 0.9))
+    cb._anchor(dx, IN - 0.35, fz + 0.9)
+    cb._box(bm, uv, TIMBER, (dx, IN - 0.03, fz + 1.5), (2.0, 0.06, 1.2))
+    for z in (1.4, 1.8):
+        cb._box(bm, uv, TIMBER, (dx, IN - 0.16, fz + z - 0.015), (2.0, 0.26, 0.03))
+        for k in range(5):
+            mk.paint(bm, mk.add_cylinder(bm, 0.14, 0.02, loc=(dx - 0.8 + k * 0.4, IN - 0.12, fz + z + 0.14),
+                                         rot=Euler((math.radians(90), 0, 0)), segments=10), STEEL, uv)
+    for k in range(3):
+        ek.jar(bm, uv, STEEL, dx - 0.6 + k * 0.6, IN - 0.2, fz + 0.9, 0.26, 0.16, mouth=0.08, segments=8)
+    # SE: the chopping block and the work table with a cleaver and loaves.
+    mk.paint(bm, mk.add_cylinder(bm, 0.35, 0.8, loc=(4.6, -4.3, fz + 0.4), segments=10), TIMBER, uv)
+    cb._box(bm, uv, IRON, (4.6, -4.3, fz + 0.85), (0.08, 0.3, 0.1))
+    cb._table(bm, uv, TIMBER, 3.0, -3.6, fz, 1.8, 0.8, h=0.85)
+    for dx2 in (-0.6, -0.35):
+        mk.paint(bm, mk.add_sphere(bm, 0.1, loc=(3.0 + dx2, -3.6, fz + 0.85 + 0.07), segments=6, rings=4,
+                                   scale=(1.3, 1.0, 0.7)), "bronze", uv)
+    cb._box(bm, uv, IRON, (3.5, -3.7, fz + 0.86), (0.3, 0.12, 0.02))
+    # SW: the flour bin against the west wall and two hooped barrels.
+    cb._box(bm, uv, TIMBER, (-5.1, -4.0, fz + 0.4), (0.7, 1.2, 0.8))
+    ek.prism(bm, uv, TIMBER, [(-0.35, 0.0), (0.35, 0.0), (-0.35, 0.12)], 1.2, loc=(-5.1, -4.0, fz + 0.8), along="y")
+    for x, y in ((-3.3, -4.9), (-2.4, -4.95)):
+        _hooped_barrel(bm, uv, x, y, fz)

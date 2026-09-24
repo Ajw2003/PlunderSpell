@@ -137,7 +137,7 @@ LATE_CASTLE_SPECS = [
     # InnerWard
     dict(key="LateCountingHouse", builder="build_late_counting_house", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
     dict(key="LateArmouryHall", builder="build_late_armoury_hall", tri_budget=3200, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
-    dict(key="LateSpitKitchen", builder="build_late_spit_kitchen", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
+    dict(key="LateSpitKitchen", builder="build_late_spit_kitchen", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
     dict(key="LateChantryChapel", builder="build_late_chantry_chapel", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
     dict(key="LateLibrary", builder="build_late_library", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
     # Keep
