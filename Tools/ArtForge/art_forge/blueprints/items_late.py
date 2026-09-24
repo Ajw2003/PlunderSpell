@@ -337,8 +337,6 @@ def rolled_tapestry(entry: Entry):
     # --- Loose end: 0.6 m of the outer turn peeled off the front-bottom at the left
     # end, draping to the floor and lying flat, border and fringe at its free edge.
     fx0, fx1 = -half + 0.04, -half + 0.64
-    drape = [(-0.10, 0.012), (-0.180, 0.070), (-0.214, 0.120)]      # (y, z) in world
-    a0 = math.atan2(-0.214, 0.120 - cz)
     drape = [(-(R + 0.003) * math.sin(math.radians(d)), cz + (R + 0.003) * math.cos(math.radians(d)))
              for d in (120, 108)]
     drape += [(-0.236, 0.075), (-0.258, 0.030), (-0.300, 0.008), (-0.360, 0.004)]

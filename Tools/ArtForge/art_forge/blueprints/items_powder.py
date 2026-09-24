@@ -922,16 +922,17 @@ def nautilus_cup(entry: Entry):
 
     # --- Stem: the triton on his sea-monster, an S of silver with a gilt fin
     # and a pearl.
-    stem = spline([(0.0, 0.0, 0.026), (-0.009, 0.0, 0.048), (0.008, 0.0, 0.072),
-                   (-0.004, 0.0, 0.094), (0.0, 0.0, 0.112)], 2)
+    # Chunky, as the concept draws it (~0.03 m through the coils).
+    stem = spline([(0.0, 0.0, 0.026), (-0.011, 0.0, 0.048), (0.010, 0.0, 0.072),
+                   (-0.005, 0.0, 0.094), (0.0, 0.0, 0.112)], 2)
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=6,
-                      extras={"path": stem, "section": (0.0125, 0.011), "up": (0, 1, 0),
+                      extras={"path": stem, "section": (0.016, 0.014), "up": (0, 1, 0),
                               "smooth": True, "bevel": False}))
-    parts.append(Part("sphere", (0.010, -0.004, 0.090), (0.020, 0.018, 0.017), mat="silver",
+    parts.append(Part("sphere", (0.012, -0.004, 0.088), (0.024, 0.022, 0.020), mat="silver",
                       segments=6, rings=4, extras={"bevel": False, "smooth": True}))
-    parts.append(Part("sphere", (0.006, -0.013, 0.104), (0.009, 0.009, 0.009), mat="nacre",
+    parts.append(Part("sphere", (0.006, -0.016, 0.104), (0.010, 0.010, 0.010), mat="nacre",
                       segments=5, rings=3, extras={"bevel": False, "smooth": True}))
-    fin = [(-0.012, -0.009, 0.040), (-0.004, -0.013, 0.058), (0.009, -0.011, 0.070)]
+    fin = [(-0.015, -0.011, 0.040), (-0.005, -0.016, 0.058), (0.011, -0.014, 0.070)]
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=3,
                       extras={"path": fin, "section": (0.0018, 0.0026), "smooth": True,
                               "bevel": False}))
