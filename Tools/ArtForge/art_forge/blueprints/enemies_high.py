@@ -389,7 +389,351 @@ def alaunt_hound(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Shared: a Human whose fists can be placed by two-bone IK.
+# --------------------------------------------------------------------------------
+
+class _ReachHuman(Human):
+    """figures.Human with optional two-bone IK per arm.
+
+    ArmPose can only bend the forearm forward in the arm's own plane, so two fists
+    can never meet on a centred crossbow tiller. Rather than edit the shared
+    figures.py, this subclass overrides `_arm_points`: `reach={"R": (x, y, z)}`
+    puts that fist's grip (figures.Human.grip) exactly on the point, with the
+    elbow bent toward `pole` (a direction; default out, back and down). Arms not
+    named keep their ArmPose. Bone lengths are the base class's."""
+
+    def __init__(self, *args, reach: dict | None = None, pole: dict | None = None,
+                 **kwargs):
+        self._reach = {k: Vector(v) for k, v in (reach or {}).items()}
+        self._pole = {k: Vector(v) for k, v in (pole or {}).items()}
+        super().__init__(*args, **kwargs)
+
+    def _arm_points(self, side):
+        if side not in self._reach:
+            return super()._arm_points(side)
+        s, h = figures.SIDES[side], self.h
+        shoulder = self.lean((s * self.shoulder_x, 0.0, self.shoulder_z))
+        target = self._reach[side]
+        a, b = 0.172 * h, (0.145 + 0.045) * h        # shoulder->elbow, elbow->grip
+        axis = target - shoulder
+        d = min(axis.length, (a + b) * 0.995)
+        axis.normalize()
+        pole = self._pole.get(side, Vector((s * 1.0, 0.35, -0.6)))
+        perp = (pole - axis * pole.dot(axis)).normalized()
+        x = (a * a - b * b + d * d) / (2.0 * d)
+        y = math.sqrt(max(0.0, a * a - x * x))
+        elbow = shoulder + axis * x + perp * y
+        fore = (shoulder + axis * d - elbow).normalized()
+        wrist = elbow + fore * (0.145 * h)
+        return shoulder, elbow, wrist, wrist + fore * (0.090 * h), fore
+
+
+def _ring_path(centre: Vector, u: Vector, v: Vector, ru: float, rv: float,
+               n: int) -> list[tuple]:
+    return [tuple(centre + u * (math.cos(2 * math.pi * k / n) * ru)
+                  + v * (math.sin(2 * math.pi * k / n) * rv)) for k in range(n)]
+
+
+# --------------------------------------------------------------------------------
+# Castle Crossbowman (ranged) — grey rounded mail head on red shoulders, the
+# crossbow's prod a horizontal bar across the hips: a T at waist height.
+# --------------------------------------------------------------------------------
+
+def _cervelliere(fig: Human, top: float) -> list[Part]:
+    """Hemispherical iron skull cap, 0.22 m across and 0.10 m tall, over the coif.
+    Its own bone under Head (it detaches on a head hit)."""
+    base = fig.lean((0.0, 0.002 * fig.h, top - 0.10))
+    fig.add_bone("SkullCap", base, base + Vector((0, 0, 0.10)), "Head")
+    r = 0.112
+    profile = [(0.0, 0.100), (0.036, 0.096), (0.066, 0.084), (0.090, 0.064),
+               (0.105, 0.038), (0.111, 0.012), (r + 0.003, 0.002), (r - 0.004, -0.006)]
+    return [Part("lathe", tuple(base), (1, 1, 1), mat="cap_iron", bone="SkullCap",
+                 segments=18, extras={"profile": profile, "rigid": True, "smooth": True})]
+
+
+def _mail_mantle(fig: Human, jack_pad: float) -> Part:
+    """The coif's mantle: mail falling from under the chin over the shoulders to
+    about 1.38 m, a flared collar-cape over the jack. One closed loft whose last
+    ring tucks back into the jack so the cap is hidden."""
+    h = fig.h
+    n = 28
+    rows = [   # (z frac, half-width frac, half-depth frac, y shift frac)
+        (0.874, 0.050, 0.052, 0.004),
+        (0.858, 0.064, 0.058, 0.004),
+        (0.842, 0.090, 0.064, 0.005),
+        (0.826, 0.114, 0.070, 0.004),
+        (0.810, 0.130, 0.075, 0.002),
+        (0.795, 0.136, 0.078, 0.000),
+        (0.790, 0.108, 0.066, 0.000),   # tuck into the jack
+    ]
+    rings = []
+    for zf, hw, hd, dy in rows:
+        c = fig.lean((0.0, dy * h, zf * h))
+        ring = []
+        for j in range(n):
+            a = 2 * math.pi * j / n
+            ca, sa = math.cos(a), math.sin(a)
+            e = 2.0 / 2.6
+            ring.append((c.x + math.copysign(abs(ca) ** e, ca) * hw * h,
+                         c.y + math.copysign(abs(sa) ** e, sa) * hd * h, c.z))
+        rings.append(ring)
+    return Part("loft", (0, 0, 0), (1, 1, 1), mat="mail_steel", bone="Chest", extras={
+        "rings": rings, "smooth": True, "bevel": False,
+        "bones": ["Chest", "Neck", "Head", "Shoulder.L", "Shoulder.R",
+                  "UpperArm.L", "UpperArm.R"]})
+
+
+def _diamond_quilting(fig: Human, pad: float, z0: float, z1: float,
+                      lines: int) -> list[Part]:
+    """45° diamond quilting on the jack: two families of helical seams wound in
+    opposite directions over the torso surface, each a thin raised cord in the
+    jack's own red, so the lattice reads by shading, not by a second colour."""
+    parts = []
+    steps = 9
+    for sense in (1.0, -1.0):
+        for k in range(lines):
+            a0 = 360.0 * k / lines
+            path = []
+            for i in range(steps):
+                z = z0 + (z1 - z0) * i / (steps - 1)
+                hw, hd, _dy = fig.torso_dims(z)
+                r = (hw + hd) / 2 + pad
+                ang = a0 + sense * math.degrees((z - z0) / r)
+                path.append(tuple(fig.surface(z, ang, pad=pad + 0.002)))
+            parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="kermes_jack",
+                              bone="Spine", segments=3, extras={
+                                  "path": path, "section": (0.004, 0.004),
+                                  "smooth": True, "bevel": False,
+                                  "bones": ["Hips", "Spine", "Chest"]}))
+    return parts
+
+
+def _crossbow(fig: Human, butt: Vector, d: Vector, t_nut: float) -> list[Part]:
+    """Stirrup crossbow c. 1250: oak tiller 0.72 m, composite horn prod 0.76 m with
+    four leather wraps, hemp string spanned to a horn nut, iron tickler 0.20 m
+    under the tiller, iron stirrup 0.16 m at the front. Prop on Hand.R; the string
+    is its own bone (drawn/slack)."""
+    L = 0.72
+    front = butt + d * L
+    side = Vector((1.0, 0.0, 0.0))
+    up = side.cross(d).normalized() * -1.0          # tiller's top (perpendicular, upward)
+    if up.z < 0:
+        up = -up
+    fig.prop_bone("Crossbow", "R", head=tuple(butt), tail=tuple(front))
+    prop = {"prop": True}
+    tilt = math.degrees(math.atan2(-d.z, -d.y))     # box along Y, pitched down
+    parts = []
+    # Tiller: a slimmer fore-stock and a deeper butt.
+    mid = butt + d * (L * 0.62)
+    parts.append(Part("box", tuple(mid - up * 0.004), (0.040, L * 0.76, 0.046),
+                      mat="oak_stock", bone="Crossbow", rot=(tilt, 0, 0), extras=dict(prop)))
+    rear = butt + d * 0.13
+    parts.append(Part("box", tuple(rear - up * 0.010), (0.046, 0.26, 0.066),
+                      mat="oak_stock", bone="Crossbow", rot=(tilt, 0, 0), extras=dict(prop)))
+    # Nut (horn, 3 cm) set in the top of the tiller, and the tickler under it.
+    nut = butt + d * t_nut + up * 0.024
+    parts.append(Part("cyl", tuple(nut), (0.030, 0.030, 0.036), mat="horn_prod",
+                      bone="Crossbow", rot=(0, 90, 0), segments=8,
+                      extras={**prop, "bevel": False, "smooth": True}))
+    t0 = butt + d * (t_nut + 0.02) - up * 0.030
+    t1 = butt + d * max(0.0, t_nut - 0.17) - up * 0.070
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="cap_iron", bone="Crossbow",
+                      segments=4, extras={"path": [tuple(t0), tuple((t0 + t1) / 2 - up * 0.01),
+                                                   tuple(t1)],
+                                          "section": (0.006, 0.005), **prop,
+                                          "bevel": False, "smooth": True}))
+    # Prod: across X at the front, tips swept back toward the shooter (braced).
+    pc = butt + d * (L - 0.07) + up * 0.012
+    span = 0.38
+    path, secs = [], []
+    for i in range(11):
+        u = -1.0 + 2.0 * i / 10
+        back = 0.075 * abs(u) ** 1.7
+        path.append(tuple(pc + side * (u * span) - d * back))
+        w = 0.024 - 0.012 * abs(u)
+        secs.append((w * 0.72, w))
+    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat="horn_prod", bone="Crossbow",
+                      segments=8, extras={"path": path, "sections": secs, "up": tuple(up),
+                                          "power": 2.4, "smooth": True, "bevel": False,
+                                          **prop}))
+    for u in (-0.66, -0.30, 0.30, 0.66):            # leather wraps at four points
+        back = 0.075 * abs(u) ** 1.7
+        at = pc + side * (u * span) - d * back
+        w = 0.024 - 0.012 * abs(u)
+        parts.append(Part("cyl", tuple(at), (w * 1.9, w * 1.6, 0.030), mat="leather",
+                          bone="Crossbow", rot=(0, 90, 0), segments=8,
+                          extras={**prop, "bevel": False, "smooth": True}))
+    # Spanned string: tip -> nut -> tip, on its own bone.
+    tips = [pc + side * (s * span) - d * 0.075 for s in (-1.0, 1.0)]
+    fig.add_bone("CrossbowString", tuple(nut + up * 0.004), tuple(pc), "Crossbow")
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="leather", bone="CrossbowString",
+                      segments=4, extras={
+                          "path": [tuple(tips[0]), tuple(nut + up * 0.006), tuple(tips[1])],
+                          "section": (0.003, 0.003), **prop, "bevel": False,
+                          "smooth": True}))
+    # Stirrup: a D of forged iron hanging from the tiller's nose.
+    down = -up
+    sp = [front + side * 0.030, front + side * 0.060 + down * 0.07 + d * 0.02,
+          front + side * 0.052 + down * 0.15 + d * 0.035,
+          front - side * 0.052 + down * 0.15 + d * 0.035,
+          front - side * 0.060 + down * 0.07 + d * 0.02, front - side * 0.030]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="cap_iron", bone="Crossbow",
+                      segments=5, extras={"path": [tuple(p) for p in sp],
+                                          "section": (0.008, 0.008), **prop,
+                                          "bevel": False, "smooth": True}))
+    return parts
+
+
+def _bolt_quiver(fig: Human, pad: float) -> list[Part]:
+    """Stiff leather box 0.10 × 0.08 × 0.36 m at the right hip, two tooled bands,
+    twelve 0.35 m bolts standing fletch-up. On a Quiver bone under Hips."""
+    at = fig.surface(fig.belt_z - 0.14, 185.0, pad=pad + 0.06)
+    at.y += 0.01
+    top = at + Vector((0, 0, 0.18))
+    fig.add_bone("Quiver", top, at - Vector((0, 0, 0.18)), "Hips")
+    rig = {"rigid": True}
+    parts = [Part("box", tuple(at), (0.08, 0.10, 0.36), mat="leather", bone="Quiver",
+                  rot=(0, -6, 0), extras=dict(rig))]
+    for dz in (0.11, -0.12):
+        parts.append(Part("box", tuple(at + Vector((0.0, 0, dz))), (0.088, 0.108, 0.022),
+                          mat="leather", bone="Quiver", rot=(0, -6, 0),
+                          extras={**rig, "bevel": False}))
+    # Bolts: 4 cm of shaft and the wooden fletching showing above the mouth.
+    for k in range(12):
+        gx = (k % 3 - 1) * 0.022
+        gy = (k // 3 - 1.5) * 0.022
+        base = top + Vector((gx - 0.018, gy, 0.0))
+        parts.append(Part("cyl", tuple(base + Vector((0, 0, 0.02))), (0.009, 0.009, 0.06),
+                          mat="oak_stock", bone="Quiver", segments=4,
+                          extras={**rig, "bevel": False}))
+        parts.append(Part("box", tuple(base + Vector((0, 0, 0.055))), (0.020, 0.003, 0.040),
+                          mat="horn_prod", bone="Quiver", rot=(0, 0, 45.0 + 30 * k),
+                          extras={**rig, "bevel": False}))
+    return parts
+
+
+def _belt_hook(fig: Human, pad: float) -> list[Part]:
+    """Spanning belt-hook: a double iron claw 8 cm on a 7 cm strap, front-right."""
+    top = fig.surface(fig.belt_z - 0.015, -118.0, pad=pad + 0.012)
+    fig.add_bone("BeltHook", top, top - Vector((0, 0, 0.15)), "Hips")
+    parts = [Part("box", tuple(top - Vector((0, 0, 0.035))), (0.028, 0.008, 0.07),
+                  mat="leather", bone="BeltHook", rot=(0, 0, 28.0),
+                  extras={"rigid": True})]
+    bar = top - Vector((0, 0.004, 0.072))
+    parts.append(Part("box", tuple(bar), (0.050, 0.010, 0.012), mat="cap_iron",
+                      bone="BeltHook", rot=(0, 0, 28.0), extras={"rigid": True}))
+    for s in (-1.0, 1.0):
+        base = bar + Vector((s * 0.018, s * 0.009, 0.0))
+        claw = [base, base - Vector((0, 0.0, 0.04)), base - Vector((0, 0.022, 0.07)),
+                base - Vector((0, 0.030, 0.050))]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="cap_iron", bone="BeltHook",
+                          segments=4, extras={"path": [tuple(p) for p in claw],
+                                              "section": (0.005, 0.005), "rigid": True,
+                                              "smooth": True, "bevel": False}))
+    return parts
+
+
+def castle_crossbowman(entry: Entry):
+    # 1.78 m to the top of the skull cap; the cap (0.10 m) sits on the coif, so the
+    # skull crown (figure height) is ~1.73 m. Lean: bulk 0.95, shoulders 0.46 m.
+    h = 1.73
+    # Carry pose: tiller pitched 30° down, both fists on it at the waist, the
+    # stirrup forward at knee height. Fists are placed by IK on the tiller.
+    d = Vector((0.0, -math.cos(math.radians(30)), -math.sin(math.radians(30))))
+    butt = Vector((0.0, -0.15, 1.08))
+    t_r, t_nut, t_l = 0.06, 0.17, 0.29
+    grip_r = butt + d * t_r + Vector((0, 0, -0.012))
+    grip_l = butt + d * t_l + Vector((0, 0, -0.012))
+    fig = _ReachHuman(height=h, bulk=0.95, shoulders=0.46,
+                      reach={"R": grip_r, "L": grip_l},
+                      pole={"R": Vector((-1.0, 0.5, -0.5)), "L": Vector((1.0, 0.5, -0.5))})
+    pad = 0.018   # padded jack
+    parts = [fig.torso_part("kermes_jack", pad=pad, hem=0.78, hem_flare=1.18,
+                            collar=0.05, quilt=0.0, segments=32)]
+    for side in ("L", "R"):
+        parts.append(fig.arm_part(side, "kermes_jack", pad=pad * 0.8, quilt_rings=13))
+        parts += fig.hand_part(side, "skin")
+        parts.append(fig.leg_part(side, "hose_wool", paint=[
+            {"mat": "hose_mud", "min": (-1, -1, -1), "max": (1, 1, 0.30)}]))
+        parts.append(fig.foot_part(side, "leather", length=0.26, point=0.25))
+        # Ankle boot shaft to 0.17 m, a button on the outer side.
+        ankle = fig.joint(f"ankle.{side}")
+        s = figures.SIDES[side]
+        parts.append(Part("cyl", (ankle.x, ankle.y + 0.006, 0.105), (0.088, 0.096, 0.13),
+                          mat="leather", bone=f"LowerLeg.{side}", segments=12, taper=0.94,
+                          extras={"smooth": True, "bevel": False,
+                                  "bones": [f"LowerLeg.{side}", f"Foot.{side}"]}))
+        parts.append(Part("sphere", (ankle.x + s * 0.046, ankle.y, 0.13), (0.014, 0.014, 0.014),
+                          mat="cap_iron", bone=f"LowerLeg.{side}", segments=6, rings=4,
+                          extras={"rigid": True, "bevel": False}))
+    # Mail coif: the hood loft in mail with the face open, the mantle over it.
+    parts += fig.head_part("mail_steel", face="skin", hood=True, features="leather")
+    parts.append(_mail_mantle(fig, pad))
+    # Ventail thong laced across the chin.
+    chin = [fig.lean((sx * 0.034 * h, -0.052 * h + abs(sx) * 0.012 * h,
+                      0.874 * h - (1 - abs(sx)) * 0.006 * h)) for sx in (-1, -0.5, 0, 0.5, 1)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="leather", bone="Head", segments=4,
+                      extras={"path": [tuple(p) for p in chin], "section": (0.004, 0.004),
+                              "rigid": True, "smooth": True, "bevel": False}))
+    parts += _cervelliere(fig, entry.height_m)
+
+    parts += _diamond_quilting(fig, pad, 0.80, 1.34, lines=16)
+    parts.append(fig.band(fig.belt_z, "leather", height=0.04, pad=0.008, torso_pad=pad))
+    buckle = fig.surface(fig.belt_z, -90.0, pad=pad + 0.012)
+    parts.append(Part("torus", tuple(buckle), (0.048, 0.048, 0.042), mat="cap_iron",
+                      bone="Hips", rot=(90, 0, 0), segments=4, rings=4, minor=0.2,
+                      extras={"rigid": True, "bevel": False}))
+    parts += _belt_hook(fig, pad)
+    parts += _bolt_quiver(fig, pad)
+    parts += _crossbow(fig, butt, d, t_nut)
+
+    # Review pose: aim_hold's first beat. Both upper arms rotate by the same
+    # world-X angle about pivots that differ only in X, so the two fists stay on
+    # the tiller as it comes up; the right knee lifts as for the stirrup.
+    pose = {
+        "UpperArm.L": (-28.0, 0.0, 0.0), "UpperArm.R": (-28.0, 0.0, 0.0),
+        "Head": (0.0, 0.0, 30.0), "Spine": (0.0, 0.0, -8.0),
+        "UpperLeg.R": (-35.0, 0.0, 0.0), "LowerLeg.R": (55.0, 0.0, 0.0),
+    }
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(pose),
+        family_overrides={
+            # 8 mm riveted rings: the bake has no normal map, so ring rows are
+            # albedo bands (ridges) and rust blooms in patches.
+            "mail_steel": {"ridges": (0.010, 0.45), "wear_to": "#5A4638",
+                           "wear_amount": 0.22, "rough": 0.5},
+            # Sun-faded toward pink in patches (strongest read on the shoulders).
+            "kermes_jack": {"wear_to": "#94463C", "wear_amount": 0.30, "grain": 0.28},
+            # Banded horn laminate.
+            "horn_prod": {"wear_to": "#7A6A50", "wear_amount": 0.45},
+            "oak_stock": {"wear_to": "#3A2A1C", "wear_amount": 0.2},
+        },
+        extra_families={
+            "cap_iron": {"name": "Cap iron", "base": "#7C8288", "rough": 0.38, "metal": 1.0,
+                         "wear_to": "#4A4C50", "wear_amount": 0.30,
+                         "notes": "The skull cap, stirrup, tickler, belt hook and buckle "
+                                  "are plain iron (JSON build bullets); the JSON lists "
+                                  "only 'Mail steel', whose ring banding must not land "
+                                  "on plate. Same hex, no ridges."},
+            "hose_mud": {"name": "Hose wool, muddied", "base": "#4A3F30", "rough": 0.95,
+                         "notes": "Brown hose darkened to the shin (JSON: 'mud to the "
+                                  "shin')."},
+        },
+        notes=[
+            "Crossbow (0.72 m tiller, 0.76 m prod) is a prop on Hand.R; the string is "
+            "its own bone (CrossbowString) for drawn/slack. Both fists are placed on "
+            "the tiller by two-bone IK in the blueprint (_ReachHuman).",
+            "SkullCap (detachable), Quiver (child of Hips) and BeltHook are their own "
+            "bones.",
+            "Not built: coif_mantle x2 spring bones, the stirrup-foot IK target, "
+            "ring-pattern normal map (mail rows are albedo bands), jack damage states, "
+            "the purse.",
+        ])
+
+
 BLUEPRINTS = {
     "lantern-warden": lantern_warden,
     "alaunt-hound": alaunt_hound,
+    "castle-crossbowman": castle_crossbowman,
 }

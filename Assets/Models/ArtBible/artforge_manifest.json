@@ -1664,6 +1664,127 @@
       "build_seconds": 2.5
     },
     {
+      "key": "enemies/bronze/palace-levy",
+      "kind": "enemies",
+      "age": "bronze",
+      "slug": "palace-levy",
+      "name": "PalaceLevy",
+      "title": "Palace Levy",
+      "passed": true,
+      "stats": {
+        "vertices": 2991,
+        "faces": 2829,
+        "triangles": 5758,
+        "islands": 56,
+        "lowest_z": 0.0,
+        "height": 2.398,
+        "width": 1.005,
+        "budget": 8000,
+        "bbox_m": "1.005x0.759x2.398",
+        "height_body_m": 1.709,
+        "height_spec_m": 1.7,
+        "height_with_props_m": 2.398,
+        "rig_bones": 23,
+        "skinned_bones": 22,
+        "mean_influences": 1.45
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.7,
+        "tri_budget": 8000
+      },
+      "families": {
+        "linen": {
+          "name": "Linen",
+          "base": "#CFC3A2",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "oxhide": {
+          "name": "Oxhide",
+          "base": "#B79B78",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "boiled_leather": {
+          "name": "Boiled leather",
+          "base": "#6B4A2E",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "cast_bronze": {
+          "name": "Cast bronze",
+          "base": "#9B6A38",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "ash_haft": {
+          "name": "Ash haft",
+          "base": "#8A6A48",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "weathered_skin": {
+          "name": "Weathered skin",
+          "base": "#9C6E4E",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "oxhide_dapple": {
+          "name": "Oxhide dapple",
+          "base": "#4A3526",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hem_red": {
+          "name": "Haematite red",
+          "base": "#8E3F2C",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hair": {
+          "name": "Dark hair",
+          "base": "#2B231B",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
+        "bone_pommel": {
+          "name": "Bone pommel",
+          "base": "#E0D6BE",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "28 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
+        "families not in the JSON (blueprint extras): ['bone_pommel', 'hair', 'hem_red', 'oxhide_dapple']"
+      ],
+      "notes": [
+        "Spear (2.40 m, SpearRoot on Hand.R) and shield (ShieldRoot on LowerArm.L) are props, left out of the 1.70 m height check.",
+        "Cap is its own bone under Head (detachable).",
+        "Dagger hangs from the belt on the left hip, not a separate baldric; the one diagonal strap is the shield's telamon.",
+        "Not built: telamon_strap 3-bone chain, tunic_hem x4 cloth bones, waterskin jiggle bone; bread bag is a plain box; sandals are shoes with two thongs."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/PalaceLevy.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/glTF/PalaceLevy.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/PalaceLevy.blend"
+      },
+      "build_seconds": 3.4
+    },
+    {
       "key": "enemies/high/alaunt-hound",
       "kind": "enemies",
       "age": "high",
@@ -1758,6 +1879,120 @@
         "blend": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/AlauntWarHound.blend"
       },
       "build_seconds": 3.0
+    },
+    {
+      "key": "enemies/high/castle-crossbowman",
+      "kind": "enemies",
+      "age": "high",
+      "slug": "castle-crossbowman",
+      "name": "CastleCrossbowman",
+      "title": "Castle Crossbowman",
+      "passed": false,
+      "stats": {
+        "vertices": 3326,
+        "faces": 3091,
+        "triangles": 6264,
+        "islands": 98,
+        "lowest_z": 0.0,
+        "height": 1.78,
+        "width": 0.767,
+        "budget": 8000,
+        "bbox_m": "0.767x0.925x1.780",
+        "height_body_m": 1.78,
+        "height_spec_m": 1.78,
+        "height_with_props_m": 1.78,
+        "rig_bones": 25,
+        "skinned_bones": 19,
+        "mean_influences": 1.03
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.78,
+        "tri_budget": 8000
+      },
+      "families": {
+        "mail_steel": {
+          "name": "Mail steel",
+          "base": "#7C8288",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "kermes_jack": {
+          "name": "Kermes jack",
+          "base": "#7E2A26",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hose_wool": {
+          "name": "Hose wool",
+          "base": "#6A5A45",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "leather": {
+          "name": "Leather",
+          "base": "#5A4030",
+          "rough": 0.6,
+          "metal": 0.0,
+          "emit": null
+        },
+        "oak_stock": {
+          "name": "Oak stock",
+          "base": "#5E4630",
+          "rough": 0.4,
+          "metal": 0.0,
+          "emit": null
+        },
+        "horn_prod": {
+          "name": "Horn prod",
+          "base": "#A89878",
+          "rough": 0.35,
+          "metal": 0.0,
+          "emit": null
+        },
+        "skin": {
+          "name": "Skin",
+          "base": "#A07A5C",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "cap_iron": {
+          "name": "Cap iron",
+          "base": "#7C8288",
+          "rough": 0.38,
+          "metal": 1.0,
+          "emit": null
+        },
+        "hose_mud": {
+          "name": "Hose wool, muddied",
+          "base": "#4A3F30",
+          "rough": 0.95,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [
+        "model is not centred on the origin in Y (bbox centre -0.319 m)"
+      ],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['cap_iron', 'hose_mud']"
+      ],
+      "notes": [
+        "Crossbow (0.72 m tiller, 0.76 m prod) is a prop on Hand.R; the string is its own bone (CrossbowString) for drawn/slack. Both fists are placed on the tiller by two-bone IK in the blueprint (_ReachHuman).",
+        "SkullCap (detachable), Quiver (child of Hips) and BeltHook are their own bones.",
+        "Not built: coif_mantle x2 spring bones, the stirrup-foot IK target, ring-pattern normal map (mail rows are albedo bands), jack damage states, the purse."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/CastleCrossbowman.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/glTF/CastleCrossbowman.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/CastleCrossbowman.blend"
+      },
+      "build_seconds": 4.0
     },
     {
       "key": "enemies/high/lantern-warden",
