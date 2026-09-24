@@ -983,7 +983,7 @@ def _flounced_skirt(fig: Human, top_z: float, top_rx: float, top_ry: float,
                           "min": (cx - w, cy - w, bz + 0.004),
                           "max": (cx + w, cy + w, bz + band - 0.004)})
         prev_z, prev_r = bz, rb
-    skirt = {"top": fig.hip_z, "bottom": 0.0, "strength": 0.45, "split": 0.22}
+    skirt = {"top": fig.hip_z, "bottom": 0.0, "strength": 0.45, "split": 0.35}
     return Part("loft", (0, 0, 0), (1, 1, 1), mat="linen", bone="Hips", extras={
         "rings": rings, "smooth": True, "bevel": False, "paint": paint, "skirt": skirt,
         "bones": ["Hips"]})
@@ -1019,7 +1019,7 @@ def _apron(fig: Human, top_z: float, bottom_z: float, front: bool,
         for hx, hz in ((-0.09, top_z - 0.22), (0.06, top_z - 0.30)):
             paint.insert(1, {"mat": "soot_dyed_wool", "min": (hx - 0.025, -2, hz - 0.03),
                              "max": (hx + 0.025, 2, hz + 0.03)})
-    skirt = {"top": fig.hip_z, "bottom": 0.0, "strength": 0.45, "split": 0.22}
+    skirt = {"top": fig.hip_z, "bottom": 0.0, "strength": 0.45, "split": 0.35}
     return Part("loft", (0, 0, 0), (1, 1, 1), mat="linen", bone="Hips", extras={
         "rings": rings, "smooth": True, "bevel": False, "paint": paint, "skirt": skirt,
         "bones": ["Hips"]})

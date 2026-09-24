@@ -1766,7 +1766,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/glTF/DendraChampion.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/DendraChampion.blend"
       },
-      "build_seconds": 4.5
+      "build_seconds": 4.3
     },
     {
       "key": "enemies/bronze/flame-keeper",
@@ -1791,7 +1791,7 @@
         "height_with_props_m": 1.72,
         "rig_bones": 33,
         "skinned_bones": 32,
-        "mean_influences": 1.52
+        "mean_influences": 1.54
       },
       "spec": {
         "dims_WDH_m": null,
@@ -1905,8 +1905,8 @@
         "height_spec_m": 1.7,
         "height_with_props_m": 2.398,
         "rig_bones": 23,
-        "skinned_bones": 17,
-        "mean_influences": 1.03
+        "skinned_bones": 22,
+        "mean_influences": 1.41
       },
       "spec": {
         "dims_WDH_m": null,
@@ -1987,6 +1987,7 @@
       },
       "failures": [],
       "warnings": [
+        "28 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['bone_pommel', 'hair', 'hem_red', 'oxhide_dapple']"
       ],
       "notes": [
@@ -2001,7 +2002,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/glTF/PalaceLevy.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/PalaceLevy.blend"
       },
-      "build_seconds": 3.7
+      "build_seconds": 3.6
     },
     {
       "key": "enemies/bronze/wall-slinger",
@@ -2105,7 +2106,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/glTF/WallSlinger.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/WallSlinger.blend"
       },
-      "build_seconds": 3.3
+      "build_seconds": 3.1
     },
     {
       "key": "enemies/high/alaunt-hound",
@@ -2314,7 +2315,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/glTF/CastleCrossbowman.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/CastleCrossbowman.blend"
       },
-      "build_seconds": 3.9
+      "build_seconds": 4.8
     },
     {
       "key": "enemies/high/household-knight",
@@ -2427,7 +2428,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/glTF/HouseholdKnight.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/HouseholdKnight.blend"
       },
-      "build_seconds": 4.2
+      "build_seconds": 4.8
     },
     {
       "key": "enemies/high/lantern-warden",
@@ -2532,7 +2533,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/LanternWarden/glTF/LanternWarden.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
-      "build_seconds": 3.3
+      "build_seconds": 4.1
     },
     {
       "key": "enemies/late/gothic-knight",
@@ -3245,21 +3246,21 @@
       "title": "Petardier",
       "passed": true,
       "stats": {
-        "vertices": 3101,
-        "faces": 2946,
-        "triangles": 5938,
-        "islands": 72,
+        "vertices": 3105,
+        "faces": 2954,
+        "triangles": 5942,
+        "islands": 73,
         "lowest_z": 0.0,
-        "height": 1.781,
+        "height": 1.752,
         "width": 0.612,
         "budget": 8000,
-        "bbox_m": "0.612x1.062x1.781",
-        "height_body_m": 1.781,
+        "bbox_m": "0.612x1.062x1.752",
+        "height_body_m": 1.752,
         "height_spec_m": 1.76,
-        "height_with_props_m": 1.781,
+        "height_with_props_m": 1.752,
         "rig_bones": 30,
-        "skinned_bones": 29,
-        "mean_influences": 1.48
+        "skinned_bones": 24,
+        "mean_influences": 1.05
       },
       "spec": {
         "dims_WDH_m": null,
@@ -3347,7 +3348,6 @@
       },
       "failures": [],
       "warnings": [
-        "164 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['ash_haft', 'bronze_patina', 'soot', 'sooted_skin']"
       ],
       "notes": [
@@ -3362,7 +3362,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Petardier/glTF/Petardier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Petardier/Petardier.blend"
       },
-      "build_seconds": 4.0
+      "build_seconds": 3.8
     }
   ]
 }

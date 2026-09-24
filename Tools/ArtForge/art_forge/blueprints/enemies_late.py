@@ -833,7 +833,8 @@ def _fan_wing(centre: Vector, out: Vector, up: Vector, size: float, mat: str, bo
                           "bevel": False})]
     if dark:
         for v in (0.18, 0.0, -0.18):   # flute grooves
-            a = centre + out * (0.05 * size) + normal * 0.0055
+            # separate roots: coincident vertices break the heat solve
+            a = centre + out * (0.12 * size) + up * (v * 0.35 * size) + normal * 0.0055
             b = centre + out * (0.80 * size) + up * (v * size) + normal * 0.0055
             parts.append(_seg("cyl", a, b, 0.0035, dark, bone, segments=4,
                               extras={"rigid": True, "bevel": False}))

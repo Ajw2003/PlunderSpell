@@ -1288,7 +1288,7 @@ def petardier(entry: Entry):
                                                         f"LowerArm.{side}"]}))
         # the jerkin's padded armhole roll (it is sleeveless)
         wing = sh + (el - sh) * 0.05
-        parts.append(Part("torus", tuple(wing), (0.15, 0.13, 0.13), mat=canvas,
+        parts.append(Part("torus", tuple(wing), (0.135, 0.12, 0.11), mat=canvas,
                           bone=f"UpperArm.{side}", rot=_track(axis), segments=12, rings=5,
                           minor=0.26, extras={"bevel": False, "smooth": True,
                                               "bones": [f"UpperArm.{side}",
@@ -1319,14 +1319,16 @@ def petardier(entry: Entry):
     # Shoulder straps from the plank over the shoulders, down the front to the belt.
     for side in ("L", "R"):
         sx = figures.SIDES[side] * 0.105
+        # surface() has no chest bulge (torso_ring's `chest`), so the front points
+        # sit further out than the jerkin pad alone.
         pts = [_torso_x(fig, fig.shoulder_z - 0.02, sx, pad + 0.03, back=True),
-               fig.lean((sx, 0.012 * h, 0.826 * h + 0.018)),
-               _torso_x(fig, fig.shoulder_z - 0.01, sx, pad + 0.006),
-               _torso_x(fig, fig.chest_z, sx, pad + 0.006),
-               _torso_x(fig, fig.waist_z, sx, pad + 0.004),
-               _torso_x(fig, fig.belt_z + 0.03, sx, pad + 0.004)]
+               fig.lean((sx, 0.012 * h, 0.826 * h + 0.022)),
+               _torso_x(fig, fig.shoulder_z - 0.01, sx, pad + 0.016),
+               _torso_x(fig, fig.chest_z, sx, pad + 0.030),
+               _torso_x(fig, fig.waist_z, sx, pad + 0.012),
+               _torso_x(fig, fig.belt_z + 0.03, sx, pad + 0.010)]
         parts.append(_strip(spline([tuple(p) for p in pts], 3), leather, "Chest", 0.05,
-                            0.008, up=(0.0, -1.0, 0.3),
+                            0.008, up=(0.0, 1.0, 0.0),
                             bones=["Chest", "Spine", f"Shoulder.{side}"]))
 
     parts += _madrier(fig, pad, oak, iron, bronze, patina, leather, soot)
@@ -1475,7 +1477,10 @@ def _sapper_cap(fig: Human, leather: str) -> list[Part]:
     low hemispherical crown, ear flaps tied up at the sides. Rigid on Cap."""
     h = fig.h
     base = fig.lean((0.0, 0.0, 0.948 * h))
-    fig.add_bone("Cap", base, base + Vector((0, 0, 0.16)), "Head")   # tail clears the cap
+    # The Cap bone lies across, just above the dome, from ear flap to ear flap:
+    # heat weighting needs the flaps and the dome to see a bone (see _madrier).
+    fig.add_bone("Cap", fig.lean((0.075, 0.004 * h, h + 0.022)),
+                 fig.lean((-0.075, 0.004 * h, h + 0.022)), "Head")
     n = 16
     # (z, half-width, half-depth, y shift) in metres, from the skull + padding
     rows = [(0.946 * h, 0.046 * h + 0.008, 0.058 * h + 0.008, 0.0),
@@ -1495,17 +1500,16 @@ def _sapper_cap(fig: Human, leather: str) -> list[Part]:
                        c.y + math.sin(2 * math.pi * j / n) * hd, c.z) for j in range(n)])
     parts = [Part("loft", (0, 0, 0), (1, 1, 1), mat=leather, bone="Cap",
                   extras={"rings": rings, "smooth": True, "bevel": False, "rigid": True})]
-    # Ear flaps turned up and tied over the crown with a knot on top.
-    top = fig.lean((0.0, 0.004 * h, h + 0.030))
+    # Ear flaps turned up against the sides of the crown, tied at the top.
     for s in (1.0, -1.0):
-        path = [fig.lean((s * (0.046 * h + 0.024), 0.004 * h, 0.946 * h + 0.030)),
-                fig.lean((s * (0.042 * h + 0.022), 0.004 * h, 0.975 * h)),
-                fig.lean((s * (0.028 * h + 0.018), 0.004 * h, 0.995 * h + 0.008)),
-                top + Vector((s * 0.012, 0.0, -0.004))]
+        path = [fig.lean((s * (0.046 * h + 0.026), 0.004 * h, 0.946 * h + 0.030)),
+                fig.lean((s * (0.044 * h + 0.026), 0.004 * h, 0.970 * h)),
+                fig.lean((s * (0.036 * h + 0.026), 0.004 * h, 0.990 * h))]
         parts.append(_strip(spline([tuple(p) for p in path], 2), leather, "Cap", 0.055,
-                            0.008, up=(s, 0.0, 0.4), rigid=True))
-    parts.append(Part("sphere", tuple(top), (0.03, 0.026, 0.022), mat=leather, bone="Cap",
-                      segments=6, rings=4, extras={"rigid": True, "bevel": False}))
+                            0.010, up=(s, 0.0, 0.3), rigid=True))
+        parts.append(Part("sphere", tuple(path[-1]), (0.022, 0.022, 0.022), mat=leather,
+                          bone="Cap", segments=6, rings=4,
+                          extras={"rigid": True, "bevel": False}))
     return parts
 
 

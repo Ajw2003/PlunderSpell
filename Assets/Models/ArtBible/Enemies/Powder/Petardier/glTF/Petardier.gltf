@@ -19,15 +19,20 @@
 		{
 			"name":"Cap",
 			"rotation":[
-				-0.06975369900465012,
-				0,
-				0,
-				0.9975642561912537
+				-0.5336589217185974,
+				0.5336589813232422,
+				0.46390530467033386,
+				0.46390530467033386
+			],
+			"scale":[
+				0.9999999403953552,
+				1,
+				0.9999999403953552
 			],
 			"translation":[
-				0,
-				0.13354037702083588,
-				5.558133125305176e-06
+				0.07500000298023224,
+				0.24615596234798431,
+				-0.006894014775753021
 			]
 		},
 		{
@@ -725,10 +730,10 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":6316,
+			"count":6330,
 			"max":[
 				0.3059999942779541,
-				1.781000018119812,
+				1.7519999742507935,
 				0.5113032460212708
 			],
 			"min":[
@@ -741,31 +746,31 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":6316,
+			"count":6330,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":6316,
+			"count":6330,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":6316,
+			"count":6330,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":6316,
+			"count":6330,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":17814,
+			"count":17826,
 			"type":"SCALAR"
 		},
 		{
@@ -778,44 +783,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":75792,
+			"byteLength":75960,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":75792,
-			"byteOffset":75792,
+			"byteLength":75960,
+			"byteOffset":75960,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":50528,
-			"byteOffset":151584,
+			"byteLength":50640,
+			"byteOffset":151920,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":25264,
-			"byteOffset":202112,
+			"byteLength":25320,
+			"byteOffset":202560,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":101056,
-			"byteOffset":227376,
+			"byteLength":101280,
+			"byteOffset":227880,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":35628,
-			"byteOffset":328432,
+			"byteLength":35652,
+			"byteOffset":329160,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1920,
-			"byteOffset":364060
+			"byteOffset":364812
 		}
 	],
 	"samplers":[
@@ -826,7 +831,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":365980,
+			"byteLength":366732,
 			"uri":"Petardier.bin"
 		}
 	]

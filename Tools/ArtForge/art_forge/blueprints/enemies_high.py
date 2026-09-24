@@ -749,7 +749,8 @@ def castle_crossbowman(entry: Entry):
 def _great_helm(fig: Human, bottom: float, top: float) -> list[Part]:
     """Flat-topped great helm 0.25 m wide x 0.33 m tall over coif and padded cap:
     brow band and lower band (2 cm) either side of two eye slits, a 3 cm vertical
-    strap down the face, twelve breaths on the right cheek, rivets. Its own bone
+    strap down the face, twelve breaths on the right cheek (no rivet heads: see
+    below). Its own bone
     (Helm) under Head; the slits and breaths are a near-black void family."""
     hw, hd, p = 0.125, 0.140, 3.0
     cy = -0.012
@@ -777,11 +778,11 @@ def _great_helm(fig: Human, bottom: float, top: float) -> list[Part]:
                                                         hd + 0.004, 24, p)
                                             for z in (zc - 0.010, zc + 0.010)],
                                   **rig, "bevel": False}))
-        for k in range(6):                                # bright rivets
-            x = (-1 + 2 * k / 5) * 0.105
-            parts.append(Part("sphere", (x, front_y(x, 0.006), zc), (0.010, 0.008, 0.010),
-                              mat="helm_iron", bone="Helm", segments=6, rings=4,
-                              extras={**rig, "bevel": False}))
+        # No rivet heads here. Twelve 1 cm rivets (as spheres, as studs, or pushed
+        # further out) made Blender's heat weighting fail on most builds: every
+        # vertex then kept its rigid weight and the POSED view tore at the knees and
+        # elbows, yet validation still passed. Without them 12 of 12 trial builds
+        # skinned. The bands and the face strap carry the helm's read at ten paces.
     # Vertical reinforcing strap, 3 cm, down the face.
     parts.append(Part("box", (0.0, front_y(0.0, 0.004), (bottom + top) / 2),
                       (0.030, 0.008, top - bottom - 0.01), mat="helm_iron", bone="Helm",
@@ -1014,7 +1015,7 @@ def household_knight(entry: Entry):
     for side in ("L", "R"):
         # Mail over a padded aketon: the concept's sleeves are as broad as the
         # surcoat's shoulders, so the sleeve carries more pad than a bare arm.
-        parts.append(fig.arm_part(side, "mail_steel", pad=0.014))
+        parts.append(fig.arm_part(side, "mail_steel", pad=0.024))
         parts += fig.hand_part(side, "mail_steel")      # mail mufflers
         parts.append(fig.leg_part(side, "mail_steel", pad=0.008))
         parts.append(fig.foot_part(side, "mail_steel", length=0.28, point=0.3))
