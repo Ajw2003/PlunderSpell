@@ -661,7 +661,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":11816,
+			"count":8629,
 			"max":[
 				0.4889849126338959,
 				1.947474479675293,
@@ -670,38 +670,38 @@
 			"min":[
 				-0.5796103477478027,
 				0,
-				-0.2942221760749817
+				-0.2951599955558777
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":11816,
+			"count":8629,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":11816,
+			"count":8629,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":11816,
+			"count":8629,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":11816,
+			"count":8629,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":29646,
+			"count":23382,
 			"type":"SCALAR"
 		},
 		{
@@ -714,44 +714,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":141792,
+			"byteLength":103548,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":141792,
-			"byteOffset":141792,
+			"byteLength":103548,
+			"byteOffset":103548,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":94528,
-			"byteOffset":283584,
+			"byteLength":69032,
+			"byteOffset":207096,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":47264,
-			"byteOffset":378112,
+			"byteLength":34516,
+			"byteOffset":276128,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":189056,
-			"byteOffset":425376,
+			"byteLength":138064,
+			"byteOffset":310644,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":59292,
-			"byteOffset":614432,
+			"byteLength":46764,
+			"byteOffset":448708,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1920,
-			"byteOffset":673724
+			"byteOffset":495472
 		}
 	],
 	"samplers":[
@@ -762,7 +762,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":675644,
+			"byteLength":497392,
 			"uri":"DendraChampion.bin"
 		}
 	]

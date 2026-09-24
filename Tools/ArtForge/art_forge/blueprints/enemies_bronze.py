@@ -658,39 +658,36 @@ def _tusk_helmet(fig: Human, base_z: float, top_z: float) -> list[Part]:
                 return ra + (rb - ra) * (zr - za) / (zb - za)
         return prof[1][0]
 
-    # Each row of tusk plates is ONE closed loft band round the cone, not a box per
-    # plate: 80 separate 16 x 8 x 34 mm boxes made Blender's heat weighting fail on
-    # every build (every vertex left on one bone, so knees/elbows/neck did not blend).
+    # Each row of tusk plates is ONE loft band round the cone, not a box per plate:
+    # 80 separate 16 x 8 x 34 mm boxes made Blender's heat weighting fail on every
+    # build (every vertex left on one bone, so knees/elbows/neck did not blend).
     # The band's outer face is ridged: each plate is a raised facet, and between
     # plates the band dips under the felt cap, so the felt shows through as the dark
-    # seam. The top edge is turned by the row's slant, alternating per row.
+    # seam. The top edge is turned by the row's slant, alternating per row. Two rings
+    # with flat caps (hidden inside the cap) keep the band to 4 vertices a plate: the
+    # rigid helmet vertices otherwise drag the mesh's mean bone influences down.
     rows = [(0.024, 24), (0.064, 22), (0.104, 19), (0.142, 15)]
     half = 0.017                                   # plates are 0.034 m tall
     for k, (zr, count) in enumerate(rows):
         slant = 22.0 if k % 2 == 0 else -22.0
         shift = math.tan(math.radians(slant)) * 2 * half   # metres along the ring
 
-        def ring(z, lift, turn, gap_lift):
+        def ring(z, turn):
             r = radius_at(z)
             da = turn / max(r, 1e-3)
+            step = 2 * math.pi / count
             pts = []
             for i in range(count):
-                a0 = 2 * math.pi * (i + 0.5 * (k % 2)) / count + da
-                step = 2 * math.pi / count
-                for f, dl in ((0.0, gap_lift), (0.18, lift), (0.82, lift)):
-                    a = a0 + f * step
-                    rr = r + dl
+                a0 = step * (i + 0.5 * (k % 2)) + da
+                for f, dl in ((0.0, -0.003), (0.5, 0.008)):   # seam, plate crown
+                    a, rr = a0 + f * step, r + dl
                     pts.append(tuple(base + Vector((math.cos(a) * rr,
                                                     math.sin(a) * rr * sy, z))))
             return pts
 
-        z0, z1 = zr - half, zr + half
         parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat="boar_s_tusk", bone="Helmet",
-                          extras={"rings": [ring(z0, -0.004, 0.0, -0.004),
-                                            ring(z0, 0.008, 0.0, -0.003),
-                                            ring(z1, 0.008, shift, -0.003),
-                                            ring(z1, -0.004, shift, -0.004)],
-                                  "closed": True, "rigid": True, "bevel": False}))
+                          extras={"rings": [ring(zr - half, 0.0), ring(zr + half, shift)],
+                                  "rigid": True, "bevel": False}))
     # knob and tuft
     knob = base + Vector((0, 0, cone_h + 0.016))
     parts.append(Part("sphere", tuple(knob), (0.040, 0.040, 0.036), mat="hammered_bronze_plate",
@@ -725,8 +722,8 @@ def _tusk_helmet(fig: Human, base_z: float, top_z: float) -> list[Part]:
 
 
 def _rapier(fig: Human) -> list[Part]:
-    """0.92 m bronze blade, 4 cm at the hilt tapering to a needle, strong midrib;
-    horned guard 0.12 m; bone grip and 5 cm pommel. Carried low in the right fist,
+    """0.92 m bronze blade, 4 cm at the hilt tapering to a needle, 8 mm thick (no
+    separate midrib); horned guard 0.12 m; bone grip and 5 cm pommel. Carried low in the right fist,
     point forward and down; prop bone Sword on Hand.R."""
     g = fig.grip("R")
     d = Vector((-0.16, -0.42, -0.89)).normalized()      # blade direction
@@ -851,8 +848,10 @@ def dendra_champion(entry: Entry):
         for k in range(n):
             a = 2 * math.pi * (k + 0.5) / n
             at = (math.cos(a) * r, 0.004 + math.sin(a) * r * 0.74, zb + 0.022)
+            # 4 x 2 (6 vertices): at 14 mm it still reads as a dome dot, and 66
+            # rigid rivets at 12 vertices each pulled mean influences under 1.4.
             parts.append(Part("sphere", at, (0.014, 0.014, 0.014),
-                              mat="rivet_bronze", bone=bone, segments=5, rings=3,
+                              mat="rivet_bronze", bone=bone, segments=4, rings=2,
                               extras={"rigid": True, "bevel": False}))
 
     # The JSON's 0.30 m cone would sit on the eyes; the concept's (and this) base is

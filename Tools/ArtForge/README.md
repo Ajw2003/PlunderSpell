@@ -473,6 +473,23 @@ These cost time while building the two samples, and they will cost you too.
 - **The glTF exporter warns** "More than one shader node tex image used for a
   texture". That comes from EnemyForge's shipping material (ORM feeds both roughness
   and metallic). It's harmless, and it happens on the EnemyForge enemies too.
+- **Heat weighting can fail silently.** Blender prints only "Bone Heat Weighting:
+  failed to find solution for one or more bones", `parent_set` still succeeds, and
+  every vertex keeps a single bone, so knees, elbows and neck hinge like a puppet on
+  the POSED views. The triggers found so far are small, thin parts near or pushed
+  through other surfaces: the household knight's 12 helm rivet spheres; the Dendra
+  champion's 80 separate tusk-plate boxes (16 x 8 x 34 mm) floating 2 mm off the
+  helmet cone, and a 5.5 mm midrib rod pushed through its 6 mm rapier blade (each
+  alone was enough). Fix by merging such detail into one part (the tusk rows are now
+  one ridged `loft` band each) or dropping it. To find the trigger, bisect: import
+  the blueprint, filter `bp.parts`, run `assemble.prepare` +
+  `ef_assemble.build_armature` + `apply_smooth_weights`, and read `mean_influences`
+  (about 1.0 = failed); name the scratch script something other than `bisect.py`,
+  which shadows the stdlib module and crashes `bpy` on import. `validate.py` now
+  fails the build with "heat weighting silently failed" when the heat pass leaves
+  every vertex on one bone (`max_influences <= 1`). Watch the final
+  `mean_influences` stat too: many rigid vertices (rivets, plates) pull it down; a
+  healthy humanoid sits around 1.4-1.6.
 
 ## Not done yet
 
