@@ -188,3 +188,25 @@ def plan_cask(sh, x, y, length, r, along_x=True, col=OAK):
         else:
             yy = y - d / 2 + u * d
             sh.line(*KP(x - w / 2, yy), *KP(x + w / 2, yy), IRON, 1.2)
+
+
+def armour(sh, x, base=FZ, col=STEEL, stand=OAK):
+    """A harness of plate on its stand, face-on: base, legs, faulds, breastplate,
+    pauldrons, arms and a sallet with its tail."""
+    kerect(sh, x - 0.3, base, x + 0.3, base + 0.06, stand, darken(stand, .6), .6)
+    for dx in (-0.1, 0.1):
+        kerect(sh, x + dx - 0.07, base + 0.06, x + dx + 0.07, base + 0.92, f"url(#{sh.lin(col, 'h', .35, .55)})",
+               darken(col, .6), .7)
+        sh.ellipse(*KE(x + dx, base + 0.5), 5, 4, lighten(col, .2), darken(col, .6), .5)
+    kerect(sh, x - 0.2, base + 0.92, x + 0.2, base + 1.1, darken(col, .1), darken(col, .6), .7)
+    torso = poly_path([KE(x - 0.2, base + 1.1), KE(x + 0.2, base + 1.1), KE(x + 0.23, base + 1.5),
+                       KE(x + 0.18, base + 1.62), KE(x - 0.18, base + 1.62), KE(x - 0.23, base + 1.5)])
+    sh.path(torso, f"url(#{sh.lin(col, 'h', .4, .6)})", darken(col, .6), .8)
+    sh.line(*KE(x, base + 1.15), *KE(x, base + 1.58), lighten(col, .3), 1)
+    for s in (-1, 1):
+        sh.ellipse(*KE(x + s * 0.24, base + 1.58), 0.1 * SK, 0.07 * SK, col, darken(col, .6), .7)
+        kerect(sh, x + s * 0.28 - 0.05, base + 1.05, x + s * 0.28 + 0.05, base + 1.52, darken(col, .05), darken(col, .6), .6)
+    hx, hy = KE(x, base + 1.78)
+    sh.path(f"M{f(hx - 7)} {f(hy + 5)} a8 9 0 0 1 16 0 l6 5 l-24 0 z", f"url(#{sh.lin(col, 'h', .4, .6)})",
+            darken(col, .6), .8)
+    sh.line(hx - 6, hy + 2, hx + 7, hy + 2, "#0E0C09", 1.2)

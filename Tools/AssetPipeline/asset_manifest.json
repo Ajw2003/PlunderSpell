@@ -317,6 +317,12 @@
       "preview": "3005cd95684fe80c:23a9d68e53fd",
       "tris": 564
     },
+    "LateArmouryHall": {
+      "budget": 3200,
+      "content": "9550bfdeeb3e5586",
+      "preview": "9550bfdeeb3e5586:23a9d68e53fd",
+      "tris": 2096
+    },
     "LateCountingHouse": {
       "budget": 2400,
       "content": "148d534bdedcc557",

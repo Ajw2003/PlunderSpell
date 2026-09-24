@@ -74,3 +74,59 @@ def build_late_counting_house(bm, uv):
     cb._box(bm, uv, "vellum_faint", (-3.6, -3.6, fz + 0.02), (0.8, 0.6, 0.04))
     mk.paint(bm, mk.add_cylinder(bm, 0.08, 0.02, loc=(-3.6, -3.6, fz + 0.05), segments=8), IRON, uv)
     _coin_sacks(bm, uv, ((-4.8, -4.6), (-4.4, -4.9), (-5.0, -4.1)), fz)
+
+
+def _harness(bm, uv, x, y, fz):
+    """A harness of plate on its stand: base, legs, faulds, breastplate, pauldrons,
+    arms and a sallet, each part touching the next."""
+    cb._box(bm, uv, TIMBER, (x, y, fz + 0.03), (0.6, 0.45, 0.06))
+    for dx in (-0.1, 0.1):
+        mk.paint(bm, mk.add_cylinder(bm, 0.07, 0.86, loc=(x + dx, y, fz + 0.49), segments=6), STEEL, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.2, 0.18, loc=(x, y, fz + 1.01), segments=8), STEEL, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.21, 0.52, loc=(x, y, fz + 1.36), segments=8, radius2=0.18), STEEL, uv)
+    for s in (-1, 1):
+        mk.paint(bm, mk.add_sphere(bm, 0.1, loc=(x + s * 0.24, y, fz + 1.53), segments=6, rings=3), STEEL, uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.05, 0.47, loc=(x + s * 0.28, y, fz + 1.285), segments=6), STEEL, uv)
+    mk.paint(bm, mk.add_sphere(bm, 0.13, loc=(x, y, fz + 1.75), segments=6, rings=4), STEEL, uv)
+    cb._box(bm, uv, "line", (x, y - 0.12, fz + 1.77), (0.16, 0.04, 0.03))
+
+
+def build_late_armoury_hall(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateArmouryHall.svg"""
+    h, fz = room_shell(bm, uv, "InnerWard")
+    # North: a madder banner over each pair of harnesses, the harnesses on their stands.
+    for x in (-3.8, 3.8):
+        ek.wall_panel(bm, uv, CLOTH, "north", x, fz + 2.1, 1.0, 1.3, depth=0.03)
+        ek.wall_panel(bm, uv, LINEN, "north", x, fz + 2.1, 0.15, 1.3, depth=0.02, proud=0.03)
+        cb._box(bm, uv, IRON, (x, IN - 0.04, fz + 3.42), (1.1, 0.05, 0.04))
+    for x in (-4.6, -3.0, 3.0, 4.6):
+        _harness(bm, uv, x, 4.8, fz)
+    # East and west walls: halberd and poleaxe racks, two rails and five hafts each.
+    for sgn in (-1, 1):
+        for z in (0.35, 1.5):
+            cb._box(bm, uv, TIMBER, (sgn * (IN - 0.08), 3.1, fz + z), (0.16, 2.0, 0.1))
+        for y in (2.3, 2.7, 3.1, 3.5, 3.9):
+            hx = sgn * (IN - 0.1)
+            mk.paint(bm, mk.add_cylinder(bm, 0.025, 2.3, loc=(hx, y, fz + 1.15), segments=6), TIMBER, uv)
+            cb._box(bm, uv, STEEL, (hx - sgn * 0.1, y, fz + 2.45), (0.2, 0.03, 0.25))
+            mk.paint(bm, mk.add_cylinder(bm, 0.012, 0.22, loc=(hx, y, fz + 2.66), segments=4, radius2=0.002), STEEL, uv)
+    # SE: the grinding wheel on its uprights, dipping into its trough.
+    wx, wy = 3.8, -3.8
+    cb._box(bm, uv, TIMBER, (wx, wy, fz + 0.1), (1.0, 0.3, 0.2))
+    cb._box(bm, uv, "verdigris_lo", (wx, wy, fz + 0.19), (0.9, 0.22, 0.02))
+    for dy in (-0.2, 0.2):
+        cb._box(bm, uv, TIMBER, (wx, wy + dy, fz + 0.375), (0.08, 0.08, 0.75))
+    mk.paint(bm, mk.add_cylinder(bm, 0.45, 0.12, loc=(wx, wy, fz + 0.6), rot=Euler((math.radians(90), 0, 0)),
+                                 segments=12), "vellum_faint", uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.03, 0.5, loc=(wx, wy, fz + 0.6), rot=Euler((math.radians(90), 0, 0)),
+                                 segments=6), IRON, uv)
+    cb._box(bm, uv, IRON, (wx, wy - 0.26, fz + 0.5), (0.02, 0.02, 0.2))
+    # SW: the armourer's table with a sallet, a hammer and gauntlets; the plate chest against the south wall.
+    cb._table(bm, uv, TIMBER, -3.6, -3.6, fz, 1.8, 0.8, h=0.85)
+    top = fz + 0.85
+    mk.paint(bm, mk.add_sphere(bm, 0.13, loc=(-4.1, -3.6, top + 0.13), segments=8, rings=5), STEEL, uv)
+    cb._box(bm, uv, TIMBER, (-3.1, -3.5, top + 0.015), (0.3, 0.03, 0.03))
+    cb._box(bm, uv, IRON, (-2.96, -3.5, top + 0.03), (0.04, 0.1, 0.06))
+    for dx in (-0.25, -0.05):
+        cb._box(bm, uv, STEEL, (-3.3 + dx, -3.8, top + 0.03), (0.12, 0.2, 0.06))
+    iron_chest(bm, uv, -3.4, -5.0, fz, w=1.2, d=0.6, h=0.6)
