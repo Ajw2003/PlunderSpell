@@ -320,13 +320,18 @@ namespace RogueAi.EditorTools
                 var body = instance.AddComponent<Rigidbody>();
                 body.mass = Mathf.Max(0.5f, data.Bulk);
 
-                instance.AddComponent<Item>();
+                var carried = instance.AddComponent<Item>();
                 var pickup = instance.AddComponent<LootPickup>();
                 pickup.SetData(data);
                 var pickupSo = new SerializedObject(pickup);
                 pickupSo.FindProperty("_meshRenderer").objectReferenceValue = instance.GetComponentInChildren<MeshRenderer>();
-                pickupSo.FindProperty("_gripPoint").objectReferenceValue = AddGripPoint(instance, slug);
+                Transform grip = AddGripPoint(instance, slug);
+                pickupSo.FindProperty("_gripPoint").objectReferenceValue = grip;
                 pickupSo.ApplyModifiedPropertiesWithoutUndo();
+                // The raid carries items through Item (ItemManager's drag), so it needs the grip too.
+                var carriedSo = new SerializedObject(carried);
+                carriedSo.FindProperty("_gripPoint").objectReferenceValue = grip;
+                carriedSo.ApplyModifiedPropertiesWithoutUndo();
 
                 instance.AddComponent<LootValue>().SetItem(data);
                 instance.AddComponent<PurrNet.NetworkTransform>();
