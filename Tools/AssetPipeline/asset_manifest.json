@@ -359,6 +359,12 @@
       "preview": "148d534bdedcc557:23a9d68e53fd",
       "tris": 1600
     },
+    "LateDrawbridge": {
+      "budget": 1600,
+      "content": "e4333f8f247077c3",
+      "preview": "e4333f8f247077c3:23a9d68e53fd",
+      "tris": 868
+    },
     "LateEffigyCrypt": {
       "budget": 1600,
       "content": "cbfb52e75dbdf736",

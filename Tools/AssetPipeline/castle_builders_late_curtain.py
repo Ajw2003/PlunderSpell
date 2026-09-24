@@ -183,3 +183,42 @@ def build_late_bastion(bm, uv):
     # The machicolated runs on from both flanks.
     late_run(bm, uv, -H, -2.6, loops=(-4.45,))
     late_run(bm, uv, 2.6, H, loops=(4.45,))
+
+
+def build_late_drawbridge(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateDrawbridge.svg"""
+    g, jamb, gate_h = 1.5, 0.4, 3.4
+    # The wall: two masses, dressed jambs, a lintel carrying the walk over the gate; the crown and
+    # timber walk run on unbroken.
+    for u0, u1 in ((-H, -g - jamb), (g + jamb, H)):
+        _box(bm, uv, WALL, "south", u0, u1, FACE, FACE + MASS, 0.0, WALK_Z)
+    for sgn in (-1, 1):
+        a, b = sorted((sgn * g, sgn * (g + jamb)))
+        _box(bm, uv, "vellum_faint", "south", a, b, FACE, FACE + MASS, 0.0, gate_h)
+    _box(bm, uv, WALL, "south", -g - jamb, g + jamb, FACE, FACE + MASS, gate_h, WALK_Z)
+    crown(bm, uv, -H, H)
+    for u in (-4.2, 4.2):
+        keyhole_loop(bm, uv, "south", u)
+    d0, d1, under = TIMBER_WALK
+    _box(bm, uv, TIMBER, "south", -H, H, d0, d1, under, WALK_Z)
+    for u in _centres(-H, H, 1.5):
+        if abs(u) > g + 0.2:
+            _box(bm, uv, WALL, "south", u - 0.15, u + 0.15, d0 - 0.02, d0 + 0.4, under - 0.5, under)
+    # The deck, lowered, from the gate 5 m inward; an iron hinge bar at its south end.
+    _box(bm, uv, TIMBER, "south", -g, g, 0.2, 5.2, 0.0, 0.22)
+    _box(bm, uv, IRON, "south", -g, g, 0.2, 0.32, 0.22, 0.28)
+    # The flèches: oak arms pivoting on posts on the walk, weighted at the south end,
+    # chained at the north end to the deck's inner end.
+    (s_d, s_z), (n_d, n_z), p_d = (0.15, 5.7), (5.2, 2.4), 1.2
+    p_z = s_z + (n_z - s_z) * (p_d - s_d) / (n_d - s_d)
+    length = math.hypot(n_d - s_d, n_z - s_z)
+    tilt = math.atan2(n_z - s_z, n_d - s_d)
+    for x in (-1.3, 1.3):
+        mk.paint(bm, mk.add_box(bm, (0.2, length, 0.2), loc=(x, -H + (s_d + n_d) / 2, (s_z + n_z) / 2),
+                                rot=Euler((tilt, 0, 0))), TIMBER, uv)
+        cb._box(bm, uv, IRON, (x, -H + s_d + 0.15, s_z + 0.28), (0.45, 0.45, 0.45))
+        for dx in (-0.2, 0.2):
+            cb._box(bm, uv, TIMBER, (x + dx, -H + p_d, (WALK_Z + p_z + 0.1) / 2), (0.14, 0.14, p_z + 0.1 - WALK_Z))
+        mk.paint(bm, mk.add_cylinder(bm, 0.04, 0.54, loc=(x, -H + p_d, p_z), rot=Euler((0, math.radians(90), 0)),
+                                     segments=6), IRON, uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.03, n_z - 0.22, loc=(x, -H + n_d, (n_z + 0.22) / 2), segments=6), IRON, uv)
