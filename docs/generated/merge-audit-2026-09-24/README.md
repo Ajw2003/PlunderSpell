@@ -46,7 +46,9 @@ The four flat slabs are the door plugs. Tile names: [`rooms-late-medieval.legend
 ## Loot as held — upright, gripped where the art bible says
 
 After the follow-ups, every loot item as it sits in the hand (`audit_grip_render.cs`), with a red
-dot at the hand socket. A dot inside a model doesn't show. Tile names and grip source:
+dot at the hand socket. **Note (playtest 2):** this is `LootPickup`'s hand-socket path, which raids
+don't use; raids carry through `ItemManager`/`Item`, fixed to hold the same grip points in
+`docs/plans/staging-playtest-2-2026-09-24.md`. The grip placements shown are the ones both use. A dot inside a model doesn't show. Tile names and grip source:
 [`loot-held.legend.md`](loot-held.legend.md).
 
 ![Loot as held](loot-held.png)
