@@ -123,3 +123,38 @@ def build_late_jewel_house(bm, uv):
     for (x, y), r in zip(((-4.8, -3.6), (-4.4, -3.2), (-5.0, -3.1)), (0.2, 0.18, 0.16)):
         mk.paint(bm, mk.add_cylinder(bm, r, r * 2.2, loc=(x, y, fz + r * 1.1), segments=6, radius2=r * 0.55),
                  "leather", uv)
+
+
+def build_late_state_bedchamber(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateStateBedchamber.svg"""
+    h, fz = room_shell(bm, uv, "Keep")
+    # NW: the tester bed, head to the north wall.
+    bx, by, bw, bl = -3.8, 4.3, 1.8, 2.2
+    x0, x1, y0, y1 = bx - bw / 2, bx + bw / 2, by - bl / 2, by + bl / 2
+    post_h = 2.75
+    cb._box(bm, uv, TIMBER, (bx, by, fz + 0.225), (bw, bl, 0.45))
+    cb._box(bm, uv, CLOTH, (bx, by - 0.1, fz + 0.5), (bw + 0.04, bl - 0.2, 0.1))
+    cb._box(bm, uv, LINEN, (bx, 5.0, fz + 0.61), (1.5, 0.35, 0.12))
+    cb._anchor(bx, 4.1, fz + 0.55)
+    for px in (x0 + 0.05, x1 - 0.05):
+        for py in (y0 + 0.05, y1 - 0.05):
+            cb._box(bm, uv, TIMBER, (px, py, fz + post_h / 2), (0.12, 0.12, post_h))
+    cb._box(bm, uv, CLOTH, (bx, by, fz + post_h + 0.075), (bw + 0.1, bl + 0.1, 0.15))
+    ek.wall_panel(bm, uv, CLOTH, "north", bx, fz + 0.45, bw, post_h - 0.45, depth=0.04)
+    for py in (3.55, 5.05):
+        cb._box(bm, uv, CLOTH, (x1 + 0.05, py, fz + 0.5 + (post_h - 0.5) / 2), (0.06, 0.6, post_h - 0.5))
+    _iron_chest(bm, uv, -3.8, 2.8, fz, w=1.2, d=0.5, h=0.55)
+    # NE: a verdure tapestry and the prie-dieu before it.
+    ek.wall_panel(bm, uv, TAPESTRY, "north", 3.65, fz + 0.9, 3.3, 2.7, depth=0.04)
+    cb._box(bm, uv, TIMBER, (3.6, 4.95, fz + 0.425), (0.6, 0.35, 0.85))
+    ek.prism(bm, uv, TIMBER, [(-0.2, 0.0), (0.2, 0.0), (0.2, 0.12)], 0.66, loc=(3.6, 4.95, fz + 0.85), along="x")
+    cb._box(bm, uv, CLOTH, (3.6, 4.5, fz + 0.075), (0.6, 0.3, 0.15))
+    # SE: the table with ewer and basin, the close-stool in the corner.
+    cb._table(bm, uv, TIMBER, 3.4, -3.4, fz, 1.0, 0.7, h=0.75)
+    mk.paint(bm, mk.add_cylinder(bm, 0.18, 0.08, loc=(3.6, -3.4, fz + 0.79), segments=10, radius2=0.12), STEEL, uv)
+    ek.jar(bm, uv, STEEL, 3.1, -3.4, fz + 0.75, 0.3, 0.16, mouth=0.07, segments=8)
+    cb._box(bm, uv, TIMBER, (4.9, -4.9, fz + 0.225), (0.5, 0.45, 0.45))
+    cb._box(bm, uv, CLOTH, (4.9, -4.9, fz + 0.47), (0.52, 0.47, 0.04))
+    # SW: a small hooded hearth; east: a window.
+    _wall_hearth(bm, uv, -IN, -3.2, fz, width=1.3, depth=0.7, hood_top=3.6)
+    ek.framed_panel(bm, uv, "vellum_faint", "line", "east", 3.0, fz + 1.4, 1.4, 1.6)

@@ -329,6 +329,12 @@
       "preview": "930d37497b852128:23a9d68e53fd",
       "tris": 1088
     },
+    "LateStateBedchamber": {
+      "budget": 2000,
+      "content": "5683dae7091d1d81",
+      "preview": "5683dae7091d1d81:23a9d68e53fd",
+      "tris": 828
+    },
     "Longsword": {
       "budget": 450,
       "content": "2abf76a1be12ecb0",
