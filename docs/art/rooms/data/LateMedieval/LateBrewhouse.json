@@ -1,0 +1,95 @@
+{
+  "key": "LateBrewhouse",
+  "name": "The Brewhouse",
+  "age": "LateMedieval",
+  "zone": "OuterBailey",
+  "role": "StorehouseRoom",
+  "summary": "A copper kettle set into a brick furnace, an open mash tun with its paddle, a cooling trough, and ale casks lying on cradles along the south wall.",
+  "description": "A garrison drinks more ale than water, and brews it here. The copper kettle sits sunk into the top of a round brick furnace in the corner, the wort boiling over a fire fed from the mouth on its south side, a short flue carrying the smoke up the wall. The mash tun across the room is an open oak tub as wide as a cart, the grain steeping in it and a paddle left standing upright in the mash. When the wort has boiled it runs into the cooling trough on the east wall, and from there into the casks that lie on their cradles along the south wall. The malt comes in sacks, stacked in the south-west corner.",
+  "build": [
+    "Shell: the kit's OuterBailey shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 3.60 m clear, a 0.45 m brick trim course, an archway 2.60 × 2.59 m centred on every wall.",
+    "Furnace (NW): brick 1.60 × 1.60 × 0.80 m in the corner at (−4.50, 4.50), a madder fire mouth 0.60 × 0.35 m on its south face; a brick flue 0.60 × 0.50 m from its back corner to 2.70 m above ground.",
+    "Copper kettle: r 0.60 m tapering to 0.54 m, 0.60 m deep, set into the furnace's top so its rim (r 0.64 m) stands at 1.55 m above ground; the wort in it.",
+    "Mash tun (NE): an open oak tub r 0.80 m, 0.90 m tall at (3.60, 4.10), two iron hoops, the mash 0.02 m below the rim; an oak paddle 1.30 m standing in it, leaning 15°.",
+    "Cooling trough: oak 0.70 × 2.00 × 0.35 m on four legs 0.60 m, along the east wall at (5.05, 2.90), the wort in it.",
+    "Ale casks (south): five casks r 0.40 m, 1.00 m long, lying north–south on two oak cradle blocks 0.20 m high each, two iron hoops; at x 2.60 / 3.60 / 4.60 and −2.60 / −3.60, y −4.70; tops at 1.25 m above ground.",
+    "Malt sacks (SW): three linen sacks, two on the floor at (−4.90, −4.90) and (−4.90, −4.30), one on top between them.",
+    "The crossing: bare floor between all four archways."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.59 m (OuterBailey), all open",
+    "Cask tops: three loot anchors at 1.25 m",
+    "Furnace: a fire source, NW"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the middle SE cask",
+      "xyz": [
+        3.6,
+        -4.7,
+        1.25
+      ]
+    },
+    {
+      "at": "the east SE cask",
+      "xyz": [
+        4.6,
+        -4.7,
+        1.25
+      ]
+    },
+    {
+      "at": "the west SW cask",
+      "xyz": [
+        -3.6,
+        -4.7,
+        1.25
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls."
+    },
+    {
+      "name": "Brick",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "Furnace and flue; the mash and wort share it."
+    },
+    {
+      "name": "Copper",
+      "hex": "#B87333",
+      "pigment": "bronze",
+      "notes": "The kettle."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Tun, paddle, trough, casks, cradles."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Hoops."
+    },
+    {
+      "name": "Sacking",
+      "hex": "#D6CDB6",
+      "pigment": "vellum",
+      "notes": "Malt sacks."
+    }
+  ],
+  "gameplay": [
+    "The casks are knee-to-waist cover along the whole south wall.",
+    "The furnace is a fire source; the mash and casks are not flammable, the malt sacks are.",
+    "Three loot anchors on the cask tops."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateBrewhouse.svg"
+}

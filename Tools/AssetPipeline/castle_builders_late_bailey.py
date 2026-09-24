@@ -180,3 +180,58 @@ def build_late_handgunner_barracks(bm, uv):
     for x in (2.4, 3.1, 3.8):
         cb._box(bm, uv, TIMBER, (x, -IN + 0.05, fz + 0.65), (0.6, 0.08, 1.3))
         cb._box(bm, uv, CLOTH, (x, -IN + 0.1, fz + 0.7), (0.5, 0.02, 1.1))
+
+
+COPPER = "bronze"
+
+
+def cask_on_cradle(bm, uv, x, y, fz, r=0.4, length=1.0, cradle=0.2, along_x=False):
+    """An ale cask lying on its side on two oak cradle blocks, two iron hoops; registers
+    nothing (the room decides which casks carry loot)."""
+    rot = Euler((0, math.radians(90), 0)) if along_x else Euler((math.radians(90), 0, 0))
+    cz = fz + cradle + r - 0.05
+    for o in (-1, 1):
+        off = o * (length / 2 - 0.15)
+        loc = (x + off, y, fz + cradle / 2) if along_x else (x, y + off, fz + cradle / 2)
+        size = (0.12, 2 * r - 0.1, cradle) if along_x else (2 * r - 0.1, 0.12, cradle)
+        cb._box(bm, uv, TIMBER, loc, size)
+    mk.paint(bm, mk.add_cylinder(bm, r, length, loc=(x, y, cz), rot=rot, segments=12), TIMBER, uv)
+    for f in (-0.3, 0.3):
+        loc = (x + f * length, y, cz) if along_x else (x, y + f * length, cz)
+        mk.paint(bm, mk.add_cylinder(bm, r + 0.015, 0.05, loc=loc, rot=rot, segments=12), IRON, uv)
+    return cz + r
+
+
+def build_late_brewhouse(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateBrewhouse.svg"""
+    h, fz = room_shell(bm, uv, "OuterBailey")
+    # NW: the brick furnace, its fire mouth, the copper kettle set into its top, the flue.
+    fx, fy = -4.5, 4.5
+    cb._box(bm, uv, BRICK, (fx, fy, fz + 0.4), (1.6, 1.6, 0.8))
+    cb._box(bm, uv, CLOTH, (fx, fy - 0.81, fz + 0.275), (0.6, 0.02, 0.35))
+    mk.paint(bm, mk.add_cylinder(bm, 0.6, 0.6, loc=(fx, fy, fz + 0.9), segments=12, radius2=0.54), COPPER, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.64, 0.05, loc=(fx, fy, fz + 1.225), segments=12), COPPER, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.52, 0.02, loc=(fx, fy, fz + 1.19), segments=12), "leather", uv)
+    cb._box(bm, uv, BRICK, (fx - 0.4, fy + 0.5, fz + 1.6), (0.6, 0.5, 1.6))
+    # NE: the mash tun with its mash and paddle; the cooling trough on legs along the east wall.
+    ux, uy = 3.6, 4.1
+    mk.paint(bm, mk.add_cylinder(bm, 0.8, 0.9, loc=(ux, uy, fz + 0.45), segments=14), TIMBER, uv)
+    for z in (0.15, 0.75):
+        mk.paint(bm, mk.add_cylinder(bm, 0.815, 0.06, loc=(ux, uy, fz + z), segments=14), IRON, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.74, 0.02, loc=(ux, uy, fz + 0.91), segments=14), "leather", uv)
+    mk.paint(bm, mk.add_box(bm, (0.06, 0.06, 1.3), loc=(ux + 0.42, uy, fz + 1.1), rot=Euler((0, math.radians(15), 0))),
+             TIMBER, uv)
+    tx, ty = 5.05, 2.9
+    cb._box(bm, uv, TIMBER, (tx, ty, fz + 0.775), (0.7, 2.0, 0.35))
+    cb._box(bm, uv, "leather", (tx, ty, fz + 0.955), (0.6, 1.9, 0.02))
+    for dy in (-0.85, 0.85):
+        for dx in (-0.28, 0.28):
+            cb._box(bm, uv, TIMBER, (tx + dx, ty + dy, fz + 0.3), (0.06, 0.06, 0.6))
+    # South: ale casks on cradles, three SE and two SW; malt sacks in the SW corner.
+    for x in (2.6, 3.6, 4.6, -2.6, -3.6):
+        top = cask_on_cradle(bm, uv, x, -4.7, fz)
+    for x in (3.6, 4.6, -3.6):
+        cb._anchor(x, -4.7, top)
+    for (x, y, z), r in zip(((-4.9, -4.9, 0.0), (-4.9, -4.3, 0.0), (-4.9, -4.6, 0.36)), (0.28, 0.27, 0.26)):
+        mk.paint(bm, mk.add_sphere(bm, r, loc=(x, y, fz + z + r * 0.65), segments=6, rings=4, scale=(1.0, 1.0, 0.65)),
+                 LINEN, uv)
