@@ -6,6 +6,8 @@ parapet can project out to the cell line and stay inside the cell.
 
 Distances `d` are measured inward from the cell edge of the wall's side; `u` runs
 along the wall (x for the south wall, y for the west)."""
+import math
+
 from _late import *  # noqa: F401,F403
 
 KH = 6.05                 # the kit's cell half-width
@@ -138,3 +140,42 @@ def wall_section_rects():
         (TIMBER_WALK[0], TIMBER_WALK[2] - 0.4, TIMBER_WALK[0] + 0.4, TIMBER_WALK[2], darken(SAND, .1)),
         (TIMBER_WALK[0], TIMBER_WALK[2], TIMBER_WALK[1], WALK_Z, OAK),
     ]
+
+
+def elev_oct_tower(sh, cx, r, lift=1.6, roof=2.4, loop=True):
+    """An octagonal tower (flats facing the axes) in south elevation: the drum's south flat
+    face-on between its foreshortened diagonals, the brick frieze, corbels, the parapet
+    ring (r + 0.40) and the conical tile roof (r + 0.45) with a finial; a keyhole loop."""
+    c22 = math.cos(math.radians(22.5))
+    apo, flat = r * c22, r * math.sin(math.radians(22.5))
+    for x0, x1, shade in ((cx - apo, cx - flat, .18), (cx - flat, cx + flat, 0.0), (cx + flat, cx + apo, .18)):
+        elev_ashlar(sh, x0, x1, lift + FRIEZE[0], col=darken(SAND, shade))
+    kerect(sh, cx - apo - 0.02, lift + FRIEZE[0], cx + apo + 0.02, lift + FRIEZE[1],
+           f"url(#{sh.lin(BRICK, 'v', .25, .5)})", darken(BRICK, .6), .8)
+    kerect(sh, cx - apo, lift + CORBEL[0], cx + apo, lift + CORBEL[2], "#14120E", op=.55)
+    for u in (cx - apo + 0.3, cx - flat + 0.2, cx, cx + flat - 0.2, cx + apo - 0.3):
+        kerect(sh, u - 0.15, lift + CORBEL[0], u + 0.15, lift + CORBEL[1], darken(SAND, .08), darken(SAND, .6), .6)
+        kerect(sh, u - 0.18, lift + CORBEL[1], u + 0.18, lift + CORBEL[2], SAND, darken(SAND, .6), .6)
+    ap = (r + 0.4) * c22
+    kerect(sh, cx - ap, lift + CORBEL[2], cx + ap, lift + LOW_TOP, f"url(#{sh.lin(SAND, 'v', .2, .5)})", darken(SAND, .6), 1)
+    ar = (r + 0.45) * c22
+    base, top = lift + LOW_TOP, lift + LOW_TOP + roof
+    sh.path(poly_path([KE(cx - ar, base), KE(cx + ar, base), KE(cx, top)]), f"url(#{sh.lin(BRICK, 'h', .3, .55)})",
+            darken(BRICK, .6), 1.2)
+    for k in range(1, 5):
+        z = base + k * roof / 5.3
+        w = ar * (1 - (z - base) / roof)
+        sh.line(*KE(cx - w, z), *KE(cx + w, z), darken(BRICK, .35), .8, op=.7)
+    sh.line(*KE(cx, top), *KE(cx, top + 0.3), IRON, 1.6)
+    if loop:
+        keyhole(sh, cx, LOOP_Z)
+
+
+def plan_oct_roof(sh, cx, cy, r):
+    """An octagonal tower's conical roof in plan (r + 0.45), hips drawn to the apex."""
+    rr = r + 0.45
+    pts = [KP(cx + rr * math.cos(math.radians(22.5 + 45 * k)), cy + rr * math.sin(math.radians(22.5 + 45 * k)))
+           for k in range(8)]
+    sh.path(poly_path(pts), BRICK, "#2A251D", .8)
+    for p in pts:
+        sh.line(*p, *KP(cx, cy), darken(BRICK, .45), .8)

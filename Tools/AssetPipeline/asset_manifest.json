@@ -329,6 +329,12 @@
       "preview": "55f32ef8dc3d1285:23a9d68e53fd",
       "tris": 2556
     },
+    "LateBarbican": {
+      "budget": 2400,
+      "content": "6b3ec18cd19e4088",
+      "preview": "6b3ec18cd19e4088:23a9d68e53fd",
+      "tris": 1464
+    },
     "LateBastion": {
       "budget": 2000,
       "content": "ad70705564586131",

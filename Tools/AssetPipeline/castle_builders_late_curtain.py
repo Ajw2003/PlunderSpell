@@ -109,7 +109,7 @@ def octagonal_tower(bm, uv, cx, cy, r=2.2, lift=1.6, roof=2.4, outward=(), doors
     apo = r * math.cos(math.radians(22.5))
     octagon(bm, uv, WALL, cx, cy, 0.0, lift + FRIEZE[0], r)
     octagon(bm, uv, BRICK, cx, cy, lift + FRIEZE[0], lift + FRIEZE[1], r + 0.03)
-    rp = 2.6
+    rp = r + 0.4                                       # parapet ring, 0.40 m out beyond the drum
     ap = rp * math.cos(math.radians(22.5))
     for ang in outward:
         t = math.radians(ang)
@@ -120,7 +120,7 @@ def octagonal_tower(bm, uv, cx, cy, r=2.2, lift=1.6, roof=2.4, outward=(), doors
             mk.paint(bm, mk.add_box(bm, (d1 - d0, w, z1 - z0), loc=(cx + c * dm, cy + s * dm, lift + (z0 + z1) / 2),
                                     rot=Euler((0, 0, t))), WALL, uv)
     octagon(bm, uv, WALL, cx, cy, lift + CORBEL[1], lift + LOW_TOP, rp)
-    octagon(bm, uv, ROOF, cx, cy, lift + LOW_TOP, lift + LOW_TOP + roof, 2.65, r_top=0.02)
+    octagon(bm, uv, ROOF, cx, cy, lift + LOW_TOP, lift + LOW_TOP + roof, r + 0.45, r_top=0.02)
     mk.paint(bm, mk.add_cylinder(bm, 0.02, 0.3, loc=(cx, cy, lift + LOW_TOP + roof + 0.13), segments=4), IRON, uv)
     for ang in doors:
         t = math.radians(ang)
@@ -222,3 +222,43 @@ def build_late_drawbridge(bm, uv):
         mk.paint(bm, mk.add_cylinder(bm, 0.04, 0.54, loc=(x, -H + p_d, p_z), rot=Euler((0, math.radians(90), 0)),
                                      segments=6), IRON, uv)
         mk.paint(bm, mk.add_cylinder(bm, 0.03, n_z - 0.22, loc=(x, -H + n_d, (n_z + 0.22) / 2), segments=6), IRON, uv)
+
+
+def build_late_barbican(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateBarbican.svg (the art bible's Crooked Barbican, kit-built)."""
+    tr = 1.8
+    tapo = tr * math.cos(math.radians(22.5))
+    tflat = tr * math.sin(math.radians(22.5))
+    tx, ty = 3.2, -H + FACE + tapo
+    g, gate_h = 1.3, 3.0
+    inner = FACE + MASS                                   # d of the wall's inner face
+    c = tx - tflat
+    # Two octagonal towers, doors off the walks on their east and west flats.
+    for sgn in (-1, 1):
+        octagonal_tower(bm, uv, sgn * tx, ty, r=tr, outward=(225, 270, 315, 45, 90, 135), doors=(0, 180))
+        keyhole_loop(bm, uv, "south", sgn * tx)
+    # The runs outside the towers, and the gate wall between them with the gate and its lintel.
+    late_run(bm, uv, -H, -tx - tflat, loops=(-5.0,))
+    late_run(bm, uv, tx + tflat, H, loops=(5.0,))
+    for u0, u1 in ((-c, -g), (g, c)):
+        _box(bm, uv, WALL, "south", u0, u1, FACE, inner, 0.0, WALK_Z)
+    _box(bm, uv, WALL, "south", -g, g, FACE, inner, gate_h, WALK_Z)
+    crown(bm, uv, -c, c)
+    # Inside: the oak leaves folded back against the first leg's sides.
+    for sgn in (-1, 1):
+        cb._box(bm, uv, TIMBER, (sgn * 1.41, -3.3, gate_h / 2), (0.12, 1.3, gate_h))
+        cb._box(bm, uv, IRON, (sgn * 1.41, -3.3, 2.2), (0.14, 1.3, 0.1))
+    # The east side wall and the baffle that turn the passage west.
+    cb._box(bm, uv, WALL, (1.7, (-H + inner + 0.85) / 2, 1.9), (0.4, 0.85 - (-H + inner), 3.8))
+    cb._box(bm, uv, WALL, (-0.8, 0.7, 1.5), (5.4, 0.4, 3.0))
+    # The deck over the first leg at walk level, in three strips: the gaps are the murder-holes.
+    for y0, y1 in ((-4.0, -3.3), (-3.0, -2.6), (-2.3, -2.0)):
+        cb._box(bm, uv, TIMBER, (0.2, (y0 + y1) / 2, 3.9), (3.4, y1 - y0, 0.2))
+    # On the walk above the gate: the hot-sand cauldron and the fire basket on its tripod.
+    mk.paint(bm, mk.add_cylinder(bm, 0.3, 0.45, loc=(0.9, -4.4, WALK_Z + 0.225), segments=10, radius2=0.24), IRON, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.26, 0.02, loc=(0.9, -4.4, WALK_Z + 0.44), segments=10), "vellum_faint", uv)
+    for k in range(3):
+        a = k * 2 * math.pi / 3
+        cb._box(bm, uv, IRON, (-0.8 + math.cos(a) * 0.2, -4.4 + math.sin(a) * 0.2, WALK_Z + 0.45), (0.04, 0.04, 0.9))
+    mk.paint(bm, mk.add_cylinder(bm, 0.3, 0.2, loc=(-0.8, -4.4, WALK_Z + 1.0), segments=8, radius2=0.2), IRON, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.18, 0.35, loc=(-0.8, -4.4, WALK_Z + 1.27), segments=6, radius2=0.02), CLOTH, uv)

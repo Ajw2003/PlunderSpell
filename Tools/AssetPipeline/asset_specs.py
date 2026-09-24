@@ -123,7 +123,7 @@ BRONZE_CASTLE_SPECS = [
 
 LATE_CASTLE_SPECS = [
     # CurtainWall
-    dict(key="LateBarbican", builder="build_late_barbican", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    dict(key="LateBarbican", builder="build_late_barbican", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
     dict(key="LateWallStraight", builder="build_late_wall_straight", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
     dict(key="LateWallCorner", builder="build_late_wall_corner", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
     dict(key="LateBastion", builder="build_late_bastion", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),

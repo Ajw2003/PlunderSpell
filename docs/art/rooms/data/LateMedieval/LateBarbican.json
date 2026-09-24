@@ -1,0 +1,76 @@
+{
+  "key": "LateBarbican",
+  "name": "The Crooked Barbican",
+  "age": "LateMedieval",
+  "zone": "CurtainWall",
+  "role": "GatehouseModule",
+  "summary": "A gate between two octagonal towers whose passage turns a corner behind a baffle wall under a deck of murder-holes: the art bible's Crooked Barbican, built to the kit.",
+  "description": "Whoever built this had met raiders before and did not care for them. You come in by the gate between two roofed octagonal towers and walk north under an oak deck, and before you have gone two strides a wall stands across your way, so the passage turns west, deliberately, and nobody gets a straight run at the bailey. The deck overhead is broken by two slots through which the guards pour hot sand from the cauldron on the walk, by the light of the fire basket beside it. The towers' keyhole loops cover the approach, the oak leaves stand folded back ready to close, and every one of those defences was built for the new hand-cannon.",
+  "kit_changes": [
+    "The art bible's enclosed L-shaped passage, its vault, stair block and guardroom become an open dog-leg: the kit's wall pieces are open to the bailey and the sky, so a baffle wall across the end of a short first leg forces the turn.",
+    "The passage turns west rather than east, and the art bible's outer gate moves to the centre of the south wall between two octagonal towers (the plan's gatehouse form).",
+    "The seven vault murder-holes become two slots in an oak deck over the first leg, at walk level."
+  ],
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; the wall on the south edge, the bailey open to the north.",
+    "Towers: two octagonal sandstone towers (flats facing the axes, circumradius 1.80 m, apothem 1.66 m) centred (±3.20, −3.94), their south flats on the wall's face line 0.45 m in from the cell edge; drum to 4.60 m, brick frieze ring, corbels on the six outward flats, a parapet ring (circumradius 2.20 m) to 6.20 m, a conical tile roof (circumradius 2.25 m) to 8.60 m with a finial; doorways on the east and west flats off the walks; a keyhole gun-loop in each south flat.",
+    "Runs: the Late wall section (sandstone 1.60 m, walk 4.00 m, frieze, corbels, parapet out to d 0.05, merlons to 5.20 m, timber walk) from each cell edge to the towers' south-flat corners (x ±3.89), a keyhole gun-loop in each at x ±5.00.",
+    "Gate wall: the section between the towers (x ±2.51) with a gate 2.60 × 3.00 m at the centre under a sandstone lintel (3.00–4.00 m); the crown runs over it.",
+    "Leaves: two oak leaves 0.12 × 1.30 × 3.00 m folded back inside against the first leg's sides at x ±1.41, y −3.95 … −2.65, an iron strap across each.",
+    "East side wall: sandstone 0.40 m thick (x 1.50 … 1.90), 3.80 m tall, from the wall's inner face (y −4.00) into the baffle (y 0.85).",
+    "Baffle: sandstone 5.40 × 0.40 × 3.00 m across the passage at y 0.50 … 0.90, x −3.50 … 1.90; the first leg runs north 1.7 m from the towers, then the passage turns west between the west tower (north flat at y −2.28) and the baffle, 2.78 m wide.",
+    "Deck: oak at walk level (3.80–4.00 m), x −1.50 … 1.90, in three strips (y −4.00 … −3.30, −3.00 … −2.60, −2.30 … −2.00) resting on the wall, the east side wall and the west tower; the two 0.30 m gaps are the murder-holes.",
+    "On the walk above the gate: an iron hot-sand cauldron r 0.30 m, 0.45 m, with its sand, at (0.90, −4.40); an iron fire basket on a 0.90 m tripod with a flame at (−0.80, −4.40)."
+  ],
+  "sockets": [
+    "Gate: 2.60 × 3.00 m, centred on the south wall, leaves folded back (open)",
+    "Passage: north 1.7 m then west, 2.78 m wide, under the murder-hole deck",
+    "Wall-walks: 4.00 m, the deck continuing them over the first leg; tower doorways east and west; keyhole gun-loops: four"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Towers, walls, baffle, crowns."
+    },
+    {
+      "name": "Brick",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "Friezes."
+    },
+    {
+      "name": "Roof tile",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "The conical roofs."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Leaves, deck, timber walks."
+    },
+    {
+      "name": "Iron",
+      "hex": "#2E2F31",
+      "pigment": "iron",
+      "notes": "Cauldron, fire basket, straps."
+    },
+    {
+      "name": "Fire",
+      "hex": "#C4542E",
+      "pigment": "madder",
+      "notes": "The fire basket's flame."
+    }
+  ],
+  "gameplay": [
+    "The turn is the point: nobody in the first leg can see the bailey, and every guard on the deck can see them; the murder-holes pour hot sand.",
+    "The keyhole loops in the towers are handgunner posts covering the approach.",
+    "The fire basket is the deck's only light: knock it over and the sand-men cannot aim."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateBarbican.svg"
+}
