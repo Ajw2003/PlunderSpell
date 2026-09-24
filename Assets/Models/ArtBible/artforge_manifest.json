@@ -10,16 +10,16 @@
       "title": "Faience Hippopotamus",
       "passed": true,
       "stats": {
-        "vertices": 805,
-        "faces": 815,
-        "triangles": 1478,
+        "vertices": 795,
+        "faces": 801,
+        "triangles": 1458,
         "islands": 33,
         "lowest_z": 0.0,
-        "height": 0.105,
+        "height": 0.107,
         "width": 0.21,
         "budget": 1500,
-        "bbox_m": "0.210x0.082x0.105",
-        "vs_spec": "W=0.210/0.200 D=0.082/0.080 H=0.105/0.110"
+        "bbox_m": "0.210x0.082x0.107",
+        "vs_spec": "W=0.210/0.200 D=0.082/0.080 H=0.107/0.110"
       },
       "spec": {
         "dims_WDH_m": [
@@ -71,7 +71,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/glTF/FaienceHippopotamus.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/FaienceHippopotamus.blend"
       },
-      "build_seconds": 3.8
+      "build_seconds": 2.7
     },
     {
       "key": "items/bronze/oxhide-ingot",
@@ -429,6 +429,97 @@
       "build_seconds": 2.6
     },
     {
+      "key": "items/high/illuminated-psalter",
+      "kind": "items",
+      "age": "high",
+      "slug": "illuminated-psalter",
+      "name": "IlluminatedPsalter",
+      "title": "Illuminated Psalter",
+      "passed": false,
+      "stats": {
+        "vertices": 1108,
+        "faces": 1092,
+        "triangles": 2012,
+        "islands": 52,
+        "lowest_z": -0.0015,
+        "height": 0.089,
+        "width": 0.202,
+        "budget": 1500,
+        "bbox_m": "0.202x0.260x0.090",
+        "vs_spec": "W=0.202/0.190 D=0.260/0.260 H=0.090/0.080"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.19,
+          0.26,
+          0.08
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "gilt": {
+          "name": "Gilt (orpiment)",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "ivory": {
+          "name": "Ivory",
+          "base": "#D8CDB0",
+          "rough": 0.45,
+          "metal": 0.0,
+          "emit": null
+        },
+        "tawed_leather": {
+          "name": "Tawed leather",
+          "base": "#5E3A2A",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "vellum": {
+          "name": "Vellum",
+          "base": "#DCD2BA",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "garnet": {
+          "name": "Garnet",
+          "base": "#6E1F2A",
+          "rough": 0.12,
+          "metal": 0.0,
+          "emit": null
+        },
+        "sapphire": {
+          "name": "Sapphire",
+          "base": "#3E5470",
+          "rough": 0.12,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [
+        "2012 triangles exceeds the 1500 budget",
+        "Z (H) extent 0.090 m is +12 % off the expected 0.080 m (tolerance ±10 %)"
+      ],
+      "warnings": [],
+      "notes": [
+        "Text-block edges are vellum with painted page lines, as the concept draws them; the build bullet's gilt edges would turn the whole block gold.",
+        "Filigree S-scrolls, the carved Christ's detail, cracked hinges and the wax drop are normal-map / atlas detail; the mandorla rim and figure silhouette are geometry.",
+        "The 2-tri loose-leaf card and its 256² page atlas are not made by ArtForge."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/IlluminatedPsalter.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/glTF/IlluminatedPsalter.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/IlluminatedPsalter.blend"
+      },
+      "build_seconds": 2.7
+    },
+    {
       "key": "items/high/silver-ewer",
       "kind": "items",
       "age": "high",
@@ -605,16 +696,16 @@
       "title": "Rolled Tapestry",
       "passed": true,
       "stats": {
-        "vertices": 2828,
-        "faces": 2699,
-        "triangles": 4956,
-        "islands": 179,
-        "lowest_z": -0.0149,
-        "height": 0.478,
+        "vertices": 2728,
+        "faces": 2607,
+        "triangles": 4756,
+        "islands": 183,
+        "lowest_z": -0.0156,
+        "height": 0.474,
         "width": 3.407,
         "budget": 5000,
-        "bbox_m": "3.407x0.961x0.493",
-        "vs_spec": "W=3.407/3.400 D=0.961/0.925 H=0.493/0.450"
+        "bbox_m": "3.407x0.959x0.489",
+        "vs_spec": "W=3.407/3.400 D=0.959/0.925 H=0.489/0.450"
       },
       "spec": {
         "dims_WDH_m": [
@@ -672,7 +763,7 @@
       "failures": [],
       "warnings": [
         "Y (D) checked against 0.925 m instead of the JSON's 0.450 m: build bullet: 0.6 m of the outer turn unrolled and hanging to the floor; lying on the floor it reaches ~0.48 m in front of the 0.45 m roll (the JSON dimension line gives the roll alone)",
-        "bbox centre is off the origin in Y by -0.229 m"
+        "bbox centre is off the origin in Y by -0.230 m"
       ],
       "notes": [
         "Roll kept at the drawn 3.40 m (the Great Hall variant is scaled in-engine).",
@@ -685,7 +776,84 @@
         "gltf": "Assets/Models/ArtBible/Items/Late/RolledTapestry/glTF/RolledTapestry.gltf",
         "blend": "Assets/Models/ArtBible/Items/Late/RolledTapestry/RolledTapestry.blend"
       },
-      "build_seconds": 3.1
+      "build_seconds": 3.7
+    },
+    {
+      "key": "items/powder/brass-astrolabe",
+      "kind": "items",
+      "age": "powder",
+      "slug": "brass-astrolabe",
+      "name": "Astrolabe",
+      "title": "Astrolabe",
+      "passed": false,
+      "stats": {
+        "vertices": 1036,
+        "faces": 1024,
+        "triangles": 1896,
+        "islands": 47,
+        "lowest_z": 0.0,
+        "height": 0.3,
+        "width": 0.22,
+        "budget": 1500,
+        "bbox_m": "0.220x0.032x0.300",
+        "vs_spec": "W=0.220/0.240 D=0.032/0.030 H=0.300/0.300"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.24,
+          0.03,
+          0.3
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "gilt_brass": {
+          "name": "Gilt brass",
+          "base": "#C9A227",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "worn_brass": {
+          "name": "Worn brass",
+          "base": "#A07E3E",
+          "rough": 0.35,
+          "metal": 1.0,
+          "emit": null
+        },
+        "engraving_grime": {
+          "name": "Engraving grime",
+          "base": "#3A2E18",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "steel_pin": {
+          "name": "Steel pin",
+          "base": "#34404E",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [
+        "1896 triangles exceeds the 1500 budget"
+      ],
+      "warnings": [],
+      "notes": [
+        "Hangs face-on, mater foot at z = 0; the throne and ring give the height.",
+        "Mater is 0.22 m (the build bullet); the dimension line's 0.24 m W is not reached by anything the bullets list, and 0.225 m is inside tolerance.",
+        "Degree ticks, hour letters and star names are below mesh resolution: the limb step, two almucantar grooves and three azimuth lines carry the engraving at game distance; the rest belongs in the albedo/normal.",
+        "Rete and rule are modelled in place; the break state splits them off."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/Astrolabe/Astrolabe.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/Astrolabe/glTF/Astrolabe.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/Astrolabe/Astrolabe.blend"
+      },
+      "build_seconds": 2.5
     },
     {
       "key": "items/powder/curiosity-cabinet",

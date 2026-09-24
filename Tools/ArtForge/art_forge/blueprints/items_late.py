@@ -240,7 +240,6 @@ def rolled_tapestry(entry: Entry):
     prof = [(0.0, -half + 0.04), (core, -half + 0.04), (core, -half + e2), (r2, -half + e2),
             (r2, -half + e1), (r1, -half + e1), (r1, -half), (R - 0.004, -half),
             (R, -half + 0.006)]
-    prof += [(R, z) for z in (-1.10, -0.55, 0.0, 0.60, 1.10)]
     prof += [(R, half - 0.006), (R - 0.004, half), (r1, half), (r1, half - e1),
              (r2, half - e1), (r2, half - e2), (core, half - e2), (core, half - 0.04),
              (0.0, half - 0.04)]
@@ -250,23 +249,23 @@ def rolled_tapestry(entry: Entry):
     # turns, stepping down the insets as it winds out.
     for side in (1, -1):
         pts = []
-        turns, n = 5.0, 50
+        turns, n = 5.0, 70
         for i in range(n + 1):
             t = i / n
             r = core + 0.008 + (R - 0.014 - core) * t
             ang = 2 * math.pi * turns * t * side
             depth = e2 if r < r2 else (e1 if r < r1 else 0.0)
             pts.append((side * (half - depth + 0.0012), math.cos(ang) * r, cz + math.sin(ang) * r))
-        parts.append(_tube(pts, (0.0022, 0.0045), "wool_brown", segments=4, up=(side, 0, 0)))
+        parts.append(_tube(pts, (0.0024, 0.0050), "wool_brown", segments=3, up=(side, 0, 0)))
 
     # --- Linen wrapper: a loose sleeve over the middle third (0.40 + 0.75 m in
     # from the left, 1.15 m long), with slack folds along it.
     lx0, lx1 = -half + 1.15, -half + 2.30
     sleeve = [(R + 0.002, lx0)]
-    for i in range(1, 12):
-        sleeve.append((R + (0.009 if i % 2 else 0.005), lx0 + (lx1 - lx0) * i / 12))
+    for i in range(1, 8):
+        sleeve.append((R + (0.010 if i % 2 else 0.005), lx0 + (lx1 - lx0) * i / 8))
     sleeve.append((R + 0.002, lx1))
-    parts.append(_lathe(sleeve, "linen_wrap", loc=(0, 0, cz), rot=(0, 90, 0), segments=28))
+    parts.append(_lathe(sleeve, "linen_wrap", loc=(0, 0, cz), rot=(0, 90, 0), segments=22))
     # Mildew spots and stains on the linen.
     for i in range(9):
         x = lx0 + 0.1 + rnd.random() * (lx1 - lx0 - 0.2)
@@ -314,12 +313,15 @@ def rolled_tapestry(entry: Entry):
             a = 2 * math.pi * i / 14
             # The loose one stands off the top and front and skews along the roll;
             # underneath, the roll's weight still pins it to the floor.
-            slack = 0.022 * max(0.0, math.cos(a - 0.5)) if loose else 0.0
+            slack = 0.016 * max(0.0, math.cos(a - 0.5)) if loose else 0.0
             ring.append((tx + (0.03 * math.sin(a) if loose else 0.0),
                          -math.sin(a) * (rr + slack), cz + math.cos(a) * (rr + slack)))
-        parts.append(_tube(ring, (0.005, 0.005), "hemp_cord", segments=5, closed=True))
+        # Each lashing is two turns of the cord, side by side.
+        for dx in (-0.0055, 0.0055):
+            parts.append(_tube([(p[0] + dx, p[1], p[2]) for p in ring], (0.0055, 0.0055),
+                               "hemp_cord", segments=4, closed=True))
         ka = math.radians(-38)
-        kr = rr + (0.022 * math.cos(ka - 0.5) if loose else 0.0) + 0.006
+        kr = rr + (0.016 * math.cos(ka - 0.5) if loose else 0.0) + 0.006
         knot = (tx, -math.sin(ka) * kr, cz + math.cos(ka) * kr)
         parts.append(Part("sphere", knot, (0.028, 0.022, 0.022), mat="hemp_cord", segments=6,
                           rings=4, extras={"bevel": False}))

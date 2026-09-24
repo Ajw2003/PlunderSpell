@@ -495,8 +495,112 @@ def silver_ewer(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Illuminated psalter
+# --------------------------------------------------------------------------------
+
+def illuminated_psalter(entry: Entry):
+    """A treasure-bound psalter lying flat, cover up: leather boards, vellum text
+    block, rounded spine with four raised bands on -X, a gilt frame set with 16
+    cabochons round a carved ivory plaque (mandorla in geometry), and two leather
+    clasps over the fore-edge (+X) to gilt catches."""
+    W, D, H = entry.dims                      # 0.19 × 0.26 × 0.08
+    board_t, block_h = 0.012, 0.056
+    top = 2 * board_t + block_h               # 0.080: the front board's face
+    hw, hd = W / 2.0, D / 2.0
+    parts: list[Part] = []
+
+    # --- Boards, text block, spine.
+    for z in (board_t / 2.0, top - board_t / 2.0):
+        parts.append(Part("prism", (0, 0, z), (1, 1, board_t), mat="tawed_leather",
+                          extras={"outline": rounded_rect(W, D, 0.004, 1)}))
+    parts.append(Part("box", (0.001, 0, board_t + block_h / 2.0), (0.180, 0.252, block_h),
+                      mat="vellum", extras={"bevel": False}))
+    parts.append(Part("cyl", (-hw + 0.005, 0, top / 2.0), (0.024, top, D - 0.002),
+                      mat="tawed_leather", segments=10, rot=(90, 0, 0),
+                      extras={"smooth": True, "bevel": False}))
+    for y in (-0.078, -0.026, 0.026, 0.078):  # four raised bands
+        parts.append(Part("cyl", (-hw + 0.005, y, top / 2.0), (0.029, top + 0.003, 0.008),
+                          mat="tawed_leather", segments=10, rot=(90, 0, 0),
+                          extras={"smooth": True, "bevel": False}))
+
+    # --- Front cover: gilt frame 22 mm wide, inset 8 mm from the board edge.
+    fw, fx, fy, ft = 0.022, hw - 0.008, hd - 0.008, 0.002
+    fz = top + ft / 2.0
+    for s in (1, -1):
+        parts.append(Part("box", (0, s * (fy - fw / 2.0), fz), (2 * fx, fw, ft), mat="gilt"))
+        parts.append(Part("box", (s * (fx - fw / 2.0), 0, fz), (fw, 2 * fy - 2 * fw, ft),
+                          mat="gilt"))
+
+    # Ivory plaque 0.114 × 0.18 in the frame's leather margin, 3 mm relief: the
+    # mandorla rim kept in geometry, Christ enthroned inside it.
+    parts.append(Part("prism", (0, 0, top + 0.0012), (1, 1, 0.0024), mat="ivory",
+                      extras={"outline": rounded_rect(0.114, 0.18, 0.003, 1), "bevel": False}))
+    pz = top + 0.0024
+    a, b = 0.038, 0.074                       # mandorla half-width, half-height
+    # Vesica: x = a·cos t·|cos t| closes to a point at each end (y = ±b).
+    vesica = [(a * math.cos(t) * abs(math.cos(t)), b * math.sin(t), pz + 0.0008)
+              for t in (2 * math.pi * i / 14 for i in range(14))]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="ivory", segments=4, extras={
+        "path": vesica, "closed": True, "section": (0.0022, 0.0022), "up": (0, 0, 1),
+        "smooth": True, "bevel": False}))
+    parts.append(Part("prism", (0, 0, pz + 0.0007), (1, 1, 0.0014), mat="ivory",
+                      extras={"outline": figure_outline(0.0, -0.058, 0.086, 0.052),
+                              "bevel": False}))
+    parts.append(Part("cyl", (0, 0.043, pz + 0.001), (0.024, 0.024, 0.002), mat="ivory",
+                      segments=10, extras={"bevel": False}))
+
+    # Sixteen cabochons on the frame: 1.6 cm at the corners, 1.1 cm between,
+    # garnet and sapphire alternating round the frame.
+    cx, cy = fx - fw / 2.0, fy - fw / 2.0
+    ring = ([(-cx, cy, 0.016)] + [(x, cy, 0.011) for x in (-0.038, 0.0, 0.038)]
+            + [(cx, cy, 0.016)] + [(cx, y, 0.011) for y in (0.05, 0.0, -0.05)]
+            + [(cx, -cy, 0.016)] + [(x, -cy, 0.011) for x in (0.038, 0.0, -0.038)]
+            + [(-cx, -cy, 0.016)] + [(-cx, y, 0.011) for y in (-0.05, 0.0, 0.05)])
+    for i, (x, y, d) in enumerate(ring):
+        parts.append(Part("cyl", (x, y, top + ft + 0.0012), (d + 0.004, d + 0.004, 0.0024),
+                          mat="gilt", segments=8, extras={"bevel": False}))
+        parts.append(Part("sphere", (x, y, top + ft + 0.0022), (d, d, 0.4 * d + 0.0026),
+                          mat="garnet" if i % 2 == 0 else "sapphire", segments=8, rings=4,
+                          extras={"smooth": True, "bevel": False}))
+
+    # --- Clasps: leather straps 1.6 cm wide from the back board, up the fore-edge
+    # and over onto the front board, ending in gilt catches on pins.
+    for y in (-0.078, 0.078):
+        strap = [(hw - 0.006, y, 0.006), (hw + 0.0015, y, 0.007), (hw + 0.0015, y, top + 0.0015),
+                 (hw - 0.012, y, top + ft + 0.0012), (hw - 0.026, y, top + ft + 0.0012)]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="tawed_leather", segments=4,
+                          extras={"path": strap, "section": (0.008, 0.0013), "up": (0, 1, 0),
+                                  "bevel": False}))
+        parts.append(Part("box", (hw - 0.030, y, top + ft + 0.0026), (0.012, 0.016, 0.004),
+                          mat="gilt", extras={"bevel": False}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.002,
+        family_overrides={
+            # Page lines on the text block's edges (the brief puts them in a normal
+            # map, which EnemyForge's bake does not make).
+            "vellum": {"ridges": (0.0024, 0.22), "grain": 0.12},
+            # Gilt rubbed back to the leather where hands hold the frame.
+            "gilt": {"wear_to": "#5E3A2A", "wear_amount": 0.2, "grain": 0.14},
+            "tawed_leather": {"wear_to": "#3E261B", "wear_amount": 0.3, "grain": 0.3},
+            "ivory": {"wear_to": "#9C8E6C", "wear_amount": 0.25, "grain": 0.2},
+            "garnet": {"rough": 0.12, "grain": 0.1},
+            "sapphire": {"rough": 0.12, "grain": 0.1},
+        },
+        notes=["Text-block edges are vellum with painted page lines, as the concept draws "
+               "them; the build bullet's gilt edges would turn the whole block gold.",
+               "Filigree S-scrolls, the carved Christ's detail, cracked hinges and the wax "
+               "drop are normal-map / atlas detail; the mandorla rim and figure silhouette "
+               "are geometry.",
+               "The 2-tri loose-leaf card and its 256² page atlas are not made by ArtForge."],
+    )
+
+
 BLUEPRINTS = {
     "gilded-altarpiece": gilded_altarpiece,
     "arm-reliquary": arm_reliquary,
     "silver-ewer": silver_ewer,
+    "illuminated-psalter": illuminated_psalter,
 }

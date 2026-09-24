@@ -373,7 +373,175 @@ def venetian_mirror(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Astrolabe
+# --------------------------------------------------------------------------------
+
+def _circle_xz(cx: float, cz: float, r: float, y: float, n: int) -> list[tuple]:
+    return [(cx + r * math.cos(2 * math.pi * i / n), y, cz + r * math.sin(2 * math.pi * i / n))
+            for i in range(n)]
+
+
+def brass_astrolabe(entry: Entry):
+    """Planispheric astrolabe hanging face-on (-Y): mater with a raised limb, the
+    climate plate sunk inside it, the pierced rete and the front rule lying in the
+    recess, pin and horse, the pierced throne, shackle and suspension ring on top,
+    and the alidade with its two sighting vanes on the back."""
+    W, D, H = entry.dims                        # 0.24 × 0.03 × 0.30
+    R = 0.11                                    # mater 0.22 dia
+    zc = R                                      # hangs with the mater's foot at z = 0
+    limb_in = R - 0.015                         # limb 0.015 wide
+    plate_z, limb_z = 0.006, 0.012              # recess depth / mater thickness (local z = -Y)
+    parts: list[Part] = []
+
+    # Mater: one lathe, local +Z turned to face -Y. Engraved circles on the plate are
+    # shallow grooves, and the grooves, the limb's inner wall and the degree-scale
+    # step are painted with grime by their z level (each sits at its own depth).
+    groove = 0.0006
+    prof = [(0.0, 0.0), (R, 0.0), (R, 0.0115),                       # back, outer wall
+            (R - 0.0055, 0.0115), (R - 0.0055, limb_z),              # degree scale step
+            (limb_in, limb_z), (limb_in, plate_z)]                   # limb, inner wall
+    for r in (0.078, 0.050):                                         # almucantar circles
+        prof += [(r + 0.0012, plate_z), (r, plate_z - groove), (r - 0.0012, plate_z)]
+    prof += [(0.0, plate_z)]
+    parts.append(Part("lathe", (0.0, 0.0, zc), (1, 1, 1), mat="gilt_brass", segments=28,
+                      rot=(90.0, 0.0, 0.0), extras={"profile": prof, "paint": [
+                          # outer edge rubbed back to brass
+                          {"mat": "worn_brass", "min": (-1, -1, 0.001), "max": (1, 1, 0.0114)},
+                          # grooves (centroid below the plate face)
+                          {"mat": "engraving_grime", "min": (-1, -1, plate_z - groove),
+                           "max": (1, 1, plate_z - 1e-5)},
+                          # limb inner wall
+                          {"mat": "engraving_grime", "min": (-limb_in - 1e-4, -1, plate_z + 1e-4),
+                           "max": (limb_in + 1e-4, 1, limb_z - 1e-4)},
+                          # degree/hour dividing step
+                          {"mat": "engraving_grime", "min": (-1, -1, 0.01151), "max": (1, 1, 0.01199)},
+                      ]}))
+    # Azimuth / hour lines: fine grime bars across the plate.
+    for a in (90.0, 30.0, -30.0):
+        t = math.radians(a)
+        dx, dz = math.cos(t) * limb_in, math.sin(t) * limb_in
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="engraving_grime", segments=3,
+                          extras={"path": [(-dx, -plate_z + 0.0002, zc - dz),
+                                           (dx, -plate_z + 0.0002, zc + dz)],
+                                  "section": (0.0004, 0.0007), "up": (0, 1, 0), "bevel": False}))
+
+    # Rete: rim ring, the eccentric zodiac ring, four spokes and 20 flame pointers.
+    ry = -(plate_z + 0.0012)
+    rete = [
+        Part("tube", (0, 0, 0), (1, 1, 1), mat="gilt_brass", segments=4,
+             extras={"path": _circle_xz(0.0, zc, limb_in - 0.004, ry, 24), "closed": True,
+                     "section": (0.0012, 0.003), "up": (0, 1, 0), "bevel": False}),
+        Part("tube", (0, 0, 0), (1, 1, 1), mat="gilt_brass", segments=4,
+             extras={"path": _circle_xz(0.0, zc + 0.024, 0.058, ry, 20), "closed": True,
+                     "section": (0.0012, 0.0055), "up": (0, 1, 0), "bevel": False}),
+    ]
+    for a in (80.0, 160.0, 250.0, 335.0):
+        t = math.radians(a)
+        rete.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="gilt_brass", segments=4,
+                         extras={"path": [(0.0, ry, zc), (math.cos(t) * (limb_in - 0.004), ry,
+                                                           zc + math.sin(t) * (limb_in - 0.004))],
+                                 "section": (0.001, 0.0022), "up": (0, 1, 0), "bevel": False}))
+    stars = [(0.040, 20), (0.052, 55), (0.084, 38), (0.070, 100), (0.060, 128), (0.086, 150),
+             (0.045, 175), (0.078, 198), (0.064, 215), (0.088, 232), (0.036, 245),
+             (0.074, 262), (0.058, 283), (0.086, 300), (0.046, 318), (0.070, 345),
+             (0.083, 8), (0.030, 120), (0.080, 80), (0.052, 290)]
+    for i, (r, a) in enumerate(stars):
+        t = math.radians(a)
+        tip = (math.cos(t) * r, zc + math.sin(t) * r)
+        back = math.radians(a + (150 if i % 2 else 210))       # flames lean alternately
+        bx, bz = tip[0] + math.cos(back) * 0.013, tip[1] + math.sin(back) * 0.013
+        nx, nz = -math.sin(back) * 0.0032, math.cos(back) * 0.0032
+        rete.append(upright([tip, (bx + nx, bz + nz), (bx - nx, bz - nz)],
+                            ry - 0.0012, 0.0024, "gilt_brass", bevel=False))
+    parts += rete
+
+    # Front rule, lying in the recess over the rete: fiducial-edged bar 0.19 m.
+    rule_a = math.radians(24.0)
+    ru = (math.cos(rule_a), math.sin(rule_a))
+    rn = (-ru[1], ru[0])
+    L, w = 0.094, 0.0065
+    rule = [(ru[0] * L, zc + ru[1] * L), (ru[0] * (L - 0.012) + rn[0] * w, zc + ru[1] * (L - 0.012) + rn[1] * w),
+            (-ru[0] * (L - 0.012) + rn[0] * w, zc - ru[1] * (L - 0.012) + rn[1] * w),
+            (-ru[0] * L, zc - ru[1] * L),
+            (-ru[0] * (L - 0.012) - rn[0] * w, zc - ru[1] * (L - 0.012) - rn[1] * w),
+            (ru[0] * (L - 0.012) - rn[0] * w, zc + ru[1] * (L - 0.012) - rn[1] * w)]
+    rule_y = ry - 0.0012 - 0.0022
+    parts.append(upright(rule, rule_y, 0.0022, "worn_brass", bevel=False))
+    # Graduation ticks on the rule (grime).
+    parts.append(upright([(-ru[0] * 0.08 + rn[0] * 0.002, zc - ru[1] * 0.08 + rn[1] * 0.002),
+                          (ru[0] * 0.08 + rn[0] * 0.002, zc + ru[1] * 0.08 + rn[1] * 0.002),
+                          (ru[0] * 0.08 + rn[0] * 0.0032, zc + ru[1] * 0.08 + rn[1] * 0.0032),
+                          (-ru[0] * 0.08 + rn[0] * 0.0032, zc - ru[1] * 0.08 + rn[1] * 0.0032)],
+                         rule_y - 0.0003, 0.0004, "engraving_grime", bevel=False))
+
+    # Pin through everything, and the horse-head wedge through its slot.
+    pin_front = rule_y - 0.0045
+    parts.append(Part("cyl", (0.0, (pin_front + 0.004) / 2.0, zc), (0.005, 0.004 - pin_front, 0.005),
+                      mat="steel_pin", segments=8, rot=(90.0, 0.0, 0.0), extras={"bevel": False}))
+    parts.append(Part("sphere", (0.0, pin_front + 0.0005, zc), (0.0075, 0.004, 0.0075),
+                      mat="steel_pin", segments=8, rings=4, extras={"bevel": False}))
+    horse = spline([(0.004, zc + 0.003), (0.012, zc + 0.006), (0.024, zc + 0.004),
+                    (0.030, zc - 0.001), (0.022, zc - 0.004), (0.010, zc - 0.004),
+                    (0.004, zc - 0.003)], 2)
+    parts.append(upright(horse, rule_y - 0.0032, 0.0032, "steel_pin", bevel=False))
+
+    # Throne: pierced scrollwork shoulder standing on the top of the mater.
+    right = [(0.0105, 0.233), (0.014, 0.226), (0.024, 0.216), (0.040, 0.206),
+             (0.055, 0.199), (0.066, 0.190), (0.071, 0.178)]
+    throne = spline(right, 2)
+    outline = ([(-x, z) for x, z in reversed(throne)] + throne +
+               [(0.060, 0.168), (-0.060, 0.168)])
+    outline = [(-x, z) for x, z in reversed(throne)] + throne + [(0.066, 0.170), (-0.066, 0.170)]
+    parts.append(upright(outline, -0.010, 0.008, "gilt_brass", bevel=False))
+    for x, z, d in ((0.0, 0.217, 0.010), (-0.035, 0.200, 0.013), (0.035, 0.200, 0.013)):
+        for y0 in (-0.0104, -0.0021):                          # the piercing, front and back
+            parts.append(disc(x, z, d, y0, 0.0005, "engraving_grime", 8))
+    # Shackle and suspension ring (worn brass, 5 mm stock, 0.05 dia).
+    parts.append(Part("box", (0.0, -0.006, 0.2405), (0.012, 0.006, 0.017), mat="worn_brass",
+                      extras={"bevel": False}))
+    ring_d = 0.05
+    parts.append(Part("torus", (0.0, -0.006, H - ring_d / 2.0), (ring_d - 0.005,) * 3,
+                      mat="worn_brass", segments=16, rings=5, minor=0.005 / (ring_d - 0.005),
+                      rot=(90.0, 0.0, 0.0), extras={"bevel": False, "smooth": True}))
+
+    # Alidade on the back, with its two sighting vanes standing proud.
+    al_a = math.radians(78.0)
+    au = (math.cos(al_a), math.sin(al_a))
+    an = (-au[1], au[0])
+    Lb, wb = 0.100, 0.006
+    alidade = [(au[0] * Lb + an[0] * wb * 0.4, zc + au[1] * Lb + an[1] * wb * 0.4),
+               (-au[0] * Lb + an[0] * wb * 0.4, zc - au[1] * Lb + an[1] * wb * 0.4),
+               (-au[0] * Lb - an[0] * wb, zc - au[1] * Lb - an[1] * wb),
+               (au[0] * Lb - an[0] * wb, zc + au[1] * Lb - an[1] * wb)]
+    parts.append(upright(alidade, 0.0, 0.0022, "gilt_brass", bevel=False))
+    for s in (-1, 1):
+        cx, cz = s * au[0] * 0.070, zc + s * au[1] * 0.070
+        parts.append(Part("box", (cx, 0.0022 + 0.0065, cz), (0.011, 0.013, 0.0022),
+                          mat="gilt_brass", rot=(0.0, -math.degrees(al_a) + 90.0, 0.0),
+                          extras={"bevel": False}))
+        parts[-1].rot = (0.0, 90.0 - math.degrees(al_a), 0.0)
+
+    return blueprint(
+        entry, parts,
+        bevel=0.0,          # coin-thin brass: the bevel would triple the rims for nothing
+        family_overrides={
+            # Gilt rubbed back to brass on high points (JSON: rim, throne, ring).
+            "gilt_brass": {"wear_to": "#A07E3E", "wear_amount": 0.22, "grain": 0.10},
+            "worn_brass": {"grain": 0.16},
+        },
+        notes=["Hangs face-on, mater foot at z = 0; the throne and ring give the height.",
+               "Mater is 0.22 m (the build bullet); the dimension line's 0.24 m W is not "
+               "reached by anything the bullets list, and 0.225 m is inside tolerance.",
+               "Degree ticks, hour letters and star names are below mesh resolution: the "
+               "limb step, two almucantar grooves and three azimuth lines carry the "
+               "engraving at game distance; the rest belongs in the albedo/normal.",
+               "Rete and rule are modelled in place; the break state splits them off."],
+    )
+
+
 BLUEPRINTS = {
     "curiosity-cabinet": curiosity_cabinet,
     "venetian-mirror": venetian_mirror,
+    "brass-astrolabe": brass_astrolabe,
 }

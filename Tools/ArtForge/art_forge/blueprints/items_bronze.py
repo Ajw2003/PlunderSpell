@@ -428,25 +428,25 @@ def faience_hippo(entry: Entry):
     """Egyptian blue-glazed hippopotamus: barrel body on four stumpy legs, blocky
     muzzle, knob eyes and ears, black-line lotus, reeds and a butterfly."""
     W, D, H = entry.dims                      # 0.20 long × 0.08 wide × 0.11 tall
-    N = 16
+    N = 14
     # (x, z centre, half-width, half-height, squareness); head at -X, tail at +X.
     stations = [
-        (0.092, 0.064, 0.018, 0.020, 2.0),
-        (0.084, 0.064, 0.030, 0.032, 2.1),
-        (0.068, 0.064, 0.038, 0.039, 2.2),
-        (0.040, 0.065, 0.040, 0.040, 2.2),    # widest (0.08 m) and highest: the hump
-        (0.010, 0.064, 0.040, 0.039, 2.2),
-        (-0.020, 0.063, 0.037, 0.036, 2.2),
-        (-0.040, 0.063, 0.032, 0.031, 2.3),   # neck
-        (-0.055, 0.061, 0.031, 0.029, 2.5),   # back of the head
-        (-0.072, 0.057, 0.032, 0.030, 2.8),
-        (-0.088, 0.054, 0.032, 0.029, 3.0),   # blocky muzzle, 0.064 wide
-        (-0.098, 0.054, 0.028, 0.025, 3.0),
-        (-0.101, 0.054, 0.020, 0.017, 3.0),
+        (0.092, 0.061, 0.018, 0.019, 2.0),    # rounded rump
+        (0.084, 0.063, 0.030, 0.029, 2.1),
+        (0.068, 0.0645, 0.038, 0.0375, 2.2),
+        (0.040, 0.0665, 0.040, 0.0415, 2.2),  # widest (0.08 m) and highest: the hump
+        (0.010, 0.065, 0.040, 0.041, 2.2),    # belly sags lowest mid-body
+        (-0.020, 0.062, 0.037, 0.036, 2.2),
+        (-0.040, 0.061, 0.031, 0.029, 2.3),   # neck dip
+        (-0.055, 0.059, 0.030, 0.027, 2.5),   # back of the head
+        (-0.072, 0.0575, 0.031, 0.0255, 2.8),
+        (-0.088, 0.0555, 0.031, 0.0245, 3.0), # blocky muzzle, 0.062 wide
+        (-0.098, 0.055, 0.027, 0.021, 3.0),
+        (-0.101, 0.055, 0.020, 0.015, 3.0),
     ]
-    rings = [[(0.097, 0.0, 0.064)]]
+    rings = [[(0.097, 0.0, 0.061)]]
     rings += [_superellipse_ring(x, zc, hw, hh, e, N) for x, zc, hw, hh, e in stations]
-    rings.append([(-0.1035, 0.0, 0.054)])
+    rings.append([(-0.1035, 0.0, 0.055)])
 
     def flank_y(x, z, side=1):
         _, zc, hw, hh, e = _station_at(stations, x)
@@ -488,30 +488,31 @@ def faience_hippo(entry: Entry):
 
     # Head details: knob eyes with black pupils, small ears, nostril bumps.
     for side in (1, -1):
-        ex, ez = -0.066, 0.084
+        ex, ez = -0.066, 0.080
         ey = side * (flank_y(ex, ez) - 0.002)
-        parts.append(Part("sphere", (ex, ey, ez), (0.013, 0.012, 0.012), mat="faience_glaze",
-                          segments=8, rings=5, extras={"bevel": False, "smooth": True}))
-        parts.append(Part("sphere", (ex - 0.004, ey + side * 0.002, ez + 0.003),
-                          (0.006, 0.006, 0.006), mat="manganese_black_paint",
+        parts.append(Part("sphere", (ex, ey, ez), (0.016, 0.015, 0.015), mat="faience_glaze",
+                          segments=7, rings=4, extras={"bevel": False, "smooth": True}))
+        parts.append(Part("sphere", (ex - 0.0055, ey + side * 0.002, ez + 0.004),
+                          (0.007, 0.007, 0.007), mat="manganese_black_paint",
                           segments=6, rings=4, extras={"bevel": False, "smooth": True}))
-        parts.append(Part("sphere", (-0.052, side * 0.019, 0.090), (0.007, 0.010, 0.016),
+        parts.append(Part("sphere", (-0.052, side * 0.019, 0.087), (0.007, 0.010, 0.016),
                           mat="faience_glaze", rot=(side * 12, -10, 0), segments=6, rings=4,
                           extras={"bevel": False, "smooth": True}))
-        parts.append(Part("sphere", (-0.097, side * 0.011, 0.073), (0.010, 0.009, 0.008),
+        parts.append(Part("sphere", (-0.097, side * 0.011, 0.072), (0.010, 0.009, 0.008),
                           mat="faience_glaze", segments=6, rings=4,
                           extras={"bevel": False, "smooth": True}))
         # Black outline at the mouth: a long curve down the side of the muzzle.
-        mouth = [(-0.0995, 0.044), (-0.093, 0.040), (-0.080, 0.0395), (-0.066, 0.045)]
+        mouth = [(-0.0995, 0.045), (-0.093, 0.041), (-0.080, 0.0405), (-0.066, 0.046)]
         parts.append(_painted_line(mouth, flank_y, side))
 
     # Lotus blooms (3 each flank) and reeds; a butterfly on the near (-Y) hip.
     for side in (1, -1):
         for bx in (-0.024, 0.014, 0.052):
-            bloom = [(bx - 0.002, 0.038), (bx, 0.050), (bx + 0.001, 0.061),
-                     (bx - 0.009, 0.074), (bx - 0.002, 0.065),
-                     (bx + 0.001, 0.080), (bx + 0.004, 0.065),
-                     (bx + 0.011, 0.073), (bx + 0.003, 0.061)]
+            # stem, then an open fan of three curved petals round the calyx
+            bloom = [(bx - 0.002, 0.038), (bx + 0.0005, 0.058),
+                     (bx - 0.008, 0.063), (bx - 0.013, 0.073), (bx - 0.004, 0.067),
+                     (bx - 0.003, 0.076), (bx + 0.001, 0.082), (bx + 0.004, 0.068),
+                     (bx + 0.012, 0.071), (bx + 0.013, 0.062), (bx + 0.002, 0.059)]
             parts.append(_painted_line(bloom, flank_y, side))
         for rx, lean in ((-0.004, 0.006), (0.034, -0.005), (0.074, 0.004)):
             reed = [(rx, 0.036), (rx + lean * 0.5, 0.054), (rx + lean, 0.072)]

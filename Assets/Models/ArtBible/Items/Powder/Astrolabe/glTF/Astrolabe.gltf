@@ -18,7 +18,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"RolledTapestry"
+			"name":"Astrolabe"
 		}
 	],
 	"materials":[
@@ -37,7 +37,7 @@
 					"emissiveStrength":9
 				}
 			},
-			"name":"RolledTapestry",
+			"name":"Astrolabe",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
@@ -50,7 +50,7 @@
 	],
 	"meshes":[
 		{
-			"name":"RolledTapestry",
+			"name":"Astrolabe",
 			"primitives":[
 				{
 					"attributes":{
@@ -81,79 +81,79 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"RolledTapestry_Emission",
-			"uri":"RolledTapestry_Emission.png"
+			"name":"Astrolabe_Emission",
+			"uri":"Astrolabe_Emission.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"RolledTapestry_BaseMap",
-			"uri":"RolledTapestry_BaseMap.png"
+			"name":"Astrolabe_BaseMap",
+			"uri":"Astrolabe_BaseMap.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"RolledTapestry_ORM",
-			"uri":"RolledTapestry_ORM.png"
+			"name":"Astrolabe_ORM",
+			"uri":"Astrolabe_ORM.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":6865,
+			"count":2308,
 			"max":[
-				1.7036000490188599,
-				0.47369715571403503,
-				0.7097179889678955
+				0.10999999940395355,
+				0.30000001192092896,
+				0.016599999740719795
 			],
 			"min":[
-				-1.7036000490188599,
-				-0.01564144156873226,
-				-0.24920609593391418
+				-0.10999999940395355,
+				0,
+				-0.015200000256299973
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":6865,
+			"count":2308,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":6865,
+			"count":2308,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":14268,
+			"count":5688,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":82380,
+			"byteLength":27696,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":82380,
-			"byteOffset":82380,
+			"byteLength":27696,
+			"byteOffset":27696,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":54920,
-			"byteOffset":164760,
+			"byteLength":18464,
+			"byteOffset":55392,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":28536,
-			"byteOffset":219680,
+			"byteLength":11376,
+			"byteOffset":73856,
 			"target":34963
 		}
 	],
@@ -165,8 +165,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":248216,
-			"uri":"RolledTapestry.bin"
+			"byteLength":85232,
+			"uri":"Astrolabe.bin"
 		}
 	]
 }
