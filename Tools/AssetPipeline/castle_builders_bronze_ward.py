@@ -151,3 +151,40 @@ def build_bronze_palace_kitchen(bm, uv):
     cb._anchor(-5.1, -3.6, fz + 0.5)
     for x, y in ((-2.6, -4.8), (-3.3, -4.9)):
         amphora(bm, uv, x, y, fz)
+
+
+def build_bronze_tablet_archive(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeTabletArchive.svg"""
+    h, fz = room_shell(bm, uv, "InnerWard")
+    for side in rk.SIDES:
+        for along in (-3.4, 3.4):
+            ek.wall_panel(bm, uv, RED, side, along, fz, 4.1, 0.40)
+    # North wall: clay benches with baskets of tablets, a clear space in the middle of each.
+    for sx in (-1, 1):
+        x = sx * 3.6
+        cb._box(bm, uv, GRAIN_JAR, (x, IN - 0.3, fz + 0.3), (3.2, 0.6, 0.6))
+        for dx in (-1.0, 1.0):
+            mk.paint(bm, mk.add_cylinder(bm, 0.22, 0.30, loc=(x + dx, IN - 0.3, fz + 0.75), segments=8), TIMBER, uv)
+            for k in range(4):
+                cb._box(bm, uv, "vellum_dim", (x + dx - 0.15 + k * 0.1, IN - 0.3, fz + 0.92), (0.07, 0.12, 0.06))
+        cb._anchor(x, IN - 0.3, fz + 0.6)
+    # East wall: the tablet shelf, tablets laid along every board.
+    cb._shelf(bm, uv, 5.2, 3.2, fz, 2.2, levels=3, along_x=False)
+    for z in (0.35, 0.90, 1.45):
+        cb._box(bm, uv, "vellum_dim", (5.2, 2.7, fz + z + 0.075), (0.35, 0.9, 0.09))
+    # SE: the scribe's table, tablets on it, and his stool.
+    cb._table(bm, uv, TIMBER, 3.6, -3.4, fz, 1.4, 0.8, h=0.75)
+    for k in range(4):
+        cb._box(bm, uv, "vellum_dim", (3.2 + k * 0.25, -3.1, fz + 0.785), (0.12, 0.07, 0.02))
+    mk.paint(bm, mk.add_cylinder(bm, 0.2, 0.45, loc=(3.6, -4.2, fz + 0.225), segments=8), TIMBER, uv)
+    # SW: the archive guard's post: a spear rack on the west wall, his stool, a row of sealed jars.
+    for y in (-4.4, -2.8):
+        cb._box(bm, uv, TIMBER, (-5.3, y, fz + 0.75), (0.1, 0.1, 1.5))
+    cb._box(bm, uv, TIMBER, (-5.3, -3.6, fz + 1.4), (0.15, 1.8, 0.12))
+    for y in (-4.2, -3.8, -3.4, -3.0):
+        mk.paint(bm, mk.add_cylinder(bm, 0.025, 2.4, loc=(-5.3, y, fz + 1.2), segments=6), METAL, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.22, 0.45, loc=(-4.2, -3.2, fz + 0.225), segments=8), TIMBER, uv)
+    cb._anchor(-4.2, -3.2, fz + 0.45)
+    for x in (-4.8, -4.1, -3.4, -2.7):
+        ek.jar(bm, uv, GRAIN_JAR, x, -5.1, fz, 0.60, 0.36, mouth=0.14, segments=6)
+        mk.paint(bm, mk.add_cylinder(bm, 0.09, 0.03, loc=(x, -5.1, fz + 0.615), segments=6), LINEN, uv)

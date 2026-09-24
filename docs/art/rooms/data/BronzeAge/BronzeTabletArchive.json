@@ -1,0 +1,46 @@
+{
+  "key": "BronzeTabletArchive",
+  "name": "The Tablet Archive",
+  "age": "BronzeAge",
+  "zone": "InnerWard",
+  "role": "GuardRoomInner",
+  "summary": "Baskets of clay tablets, a scribe's table, and one bored guard with a rack of spears watching over the palace's accounts.",
+  "description": "Every jar of oil, every sheep, every bronze spearhead the palace owns is written down somewhere, and the somewhere is here: baskets of unfired clay tablets on the benches, more on a shelf, and a scribe's table under the light with the day's accounts drying on it. The palace thinks this room important enough to post a guard, who sits by his spears in the corner and watches the door rather than the tablets, which no thief has ever wanted. The sealed jars by his stool are another matter.",
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m ochre plaster walls 4.00 m clear, 0.45 m fresco-blue capstone band, an archway 2.60 × 2.88 m centred on every wall.",
+    "Dado: a haematite panel 0.40 m tall at the foot of every wall section.",
+    "Tablet benches: clay, 3.20 × 0.60 × 0.60 m, against the north wall at x ±3.60, y 5.20; on each, two wicker baskets r 0.22 × 0.30 m at x ±1.00 from the bench's centre, four tablets standing in each.",
+    "Tablet shelf: a cypress shelf unit 2.20 m long × 0.45 m deep against the east wall at (5.20, 3.20), three boards (0.35, 0.90, 1.45 m), a row of tablets 0.90 m long on each board.",
+    "Scribe's table (SE): cypress, 1.40 × 0.80 m, 0.75 m high, at (3.60, −3.40), four tablets on it; his stool r 0.20 × 0.45 m at (3.60, −4.20).",
+    "Spear rack (SW): two uprights 0.10 × 0.10 × 1.50 m and a rail 1.80 m at 1.70 m above ground against the west wall at y −3.60; four bronze-tipped spears r 0.025 × 2.40 m standing in it.",
+    "Guard's stool: r 0.22 × 0.45 m at (−4.20, −3.20).",
+    "Sealed jars: four, 0.60 m tall, belly 0.36 m, with clay seals, along the south wall at x −4.80, −4.10, −3.40, −2.70, y −5.10.",
+    "Tally marks: scratched and painted on the north wall at 1.50–1.75 m (albedo only)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Guard post: SW, a stool facing the south and west archways"
+  ],
+  "loot_anchors": [
+    {"at": "west tablet bench, between the baskets", "xyz": [-3.6, 5.2, 0.90]},
+    {"at": "east tablet bench, between the baskets", "xyz": [3.6, 5.2, 0.90]},
+    {"at": "scribe's table", "xyz": [3.6, -3.4, 1.05]},
+    {"at": "tablet shelf, top board", "xyz": [5.2, 3.2, 1.78]},
+    {"at": "guard's stool", "xyz": [-4.2, -3.2, 0.75]}
+  ],
+  "materials": [
+    {"name": "Ochre plaster", "hex": "#B7803E", "pigment": "bronze", "notes": "Walls; tally marks in haematite."},
+    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "Dado."},
+    {"name": "Terracotta", "hex": "#A0603E", "pigment": "leather", "notes": "Benches and the sealed jars."},
+    {"name": "Unfired tablets", "hex": "#B89A70", "pigment": "vellum_dim", "notes": "The tablets; they crumble when dropped."},
+    {"name": "Cypress / wicker", "hex": "#5A3E28", "pigment": "oak", "notes": "Baskets, shelf, table, stools, spear rack."},
+    {"name": "Cast bronze", "hex": "#9B6A38", "pigment": "bronze", "notes": "The spears."}
+  ],
+  "gameplay": [
+    "A guard is posted here: the stool faces the south and west archways.",
+    "The tablets are worthless loot (and crumble if dropped); the sealed jars and the stool's anchor are the prizes.",
+    "The spear rack is where the guard arms himself when the alarm goes up."
+  ],
+  "budget": "≤ 2.4k tris (kit); 1.50k built",
+  "concept": "concept/BronzeAge/BronzeTabletArchive.svg"
+}

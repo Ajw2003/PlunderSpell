@@ -101,7 +101,7 @@ BRONZE_CASTLE_SPECS = [
     dict(key="BronzeFrescoCourt", builder="build_bronze_fresco_court", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
     dict(key="BronzeShrine", builder="build_bronze_shrine", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
     dict(key="BronzePalaceKitchen", builder="build_bronze_palace_kitchen", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
-    dict(key="BronzeTabletArchive", builder="build_bronze_tablet_archive", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
+    dict(key="BronzeTabletArchive", builder="build_bronze_tablet_archive", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
     # Keep
     dict(key="BronzeMegaron", builder="build_bronze_megaron", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
     dict(key="BronzeTreasury", builder="build_bronze_treasury", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),

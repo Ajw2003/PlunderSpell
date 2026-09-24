@@ -105,6 +105,12 @@
       "preview": "415b1b204fe7d963:23a9d68e53fd",
       "tris": 220
     },
+    "BronzeTabletArchive": {
+      "budget": 2400,
+      "content": "967e38d2c75e0c11",
+      "preview": "967e38d2c75e0c11:23a9d68e53fd",
+      "tris": 1500
+    },
     "BronzeTreasury": {
       "budget": 2000,
       "content": "6a665b2499872ce8",
