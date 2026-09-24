@@ -91,6 +91,9 @@ together and what was deliberately left undocumented, and why.
   needs a decision, not just more art.
 - [`docs/prompts/plunderspell-fable.md`](prompts/plunderspell-fable.md) — the build-and-test
   prompt used to drive an agent session on this project.
+- [`docs/prompts/house-rules-versioncheck-fix.md`](prompts/house-rules-versioncheck-fix.md) — a
+  handoff for an agent in `Ajw2003/AjsClaudeCodeTools`: the house-rules version check went silent
+  when it couldn't reach GitHub (found 2026-09-24). Not PlunderSpell work.
 - [`docs/generated/`](generated/README.md) — the castle-generator and UI HTML previews, and the
   live GitHub issues backlog (`gh issue list` is the source of truth for current status; the JSON
   is a point-in-time manifest of what's been filed).

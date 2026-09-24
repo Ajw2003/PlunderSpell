@@ -1,5 +1,14 @@
 # Today
 
+**2026-09-24, evening — audit of the day's three art branches, and a merge plan.** Checked
+`dreamy-curie-jnrkbu`, `era-content-integration` and `castle-bench-rooms-mwucab` in a live Editor
+against a trial merge of all three (`claude/trial-merge-2026-09-24`); it compiles. All 16 enemies
+are modelled and none is animated. 10 are in raid rosters; 6 are in none. The 20 loot items and 29
+Bronze rooms are wired in. 19 of the 29 Late Medieval rooms are model-only. The one piece of
+duplicate work is era replication in `RaidDirector`, written on two branches. Plan, awaiting
+approval: [`docs/plans/merge-2026-09-24-art-branches.md`](plans/merge-2026-09-24-art-branches.md).
+Screenshots and scripts: `docs/generated/merge-audit-2026-09-24/`.
+
 **2026-09-24, later — art-bible enemies in the engine, E0–E4, as code (not yet run in Unity).**
 `docs/plans/artbible-enemies-in-engine.md`: an import postprocessor (`ArtBibleModelImporter`:
 Humanoid with an explicit bone map, the hound Generic, URP Lit with ×9 emission, linear data maps),
