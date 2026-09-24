@@ -53,6 +53,9 @@ namespace RogueAi.Raid
                  "is rolled per raid, so a spawn baked into the scene is only right for one of them.")]
         [SerializeField] private Transform _playerRoot;
 
+        [Tooltip("Per-era rooms, loot and garrison. Empty: every era raids with the scene defaults.")]
+        [SerializeField] private EraContentCatalogue _eraContent;
+
         [Header("Raid setup")]
         [Tooltip("Seed for the next raid. Left at 0, a fresh one is rolled per raid.")]
         [SerializeField] private int _fixedSeed;
@@ -61,8 +64,7 @@ namespace RogueAi.Raid
         private readonly SyncVar<RaidPhase> _phase = new SyncVar<RaidPhase>(RaidPhase.InLair);
         private readonly SyncVar<int> _seed = new SyncVar<int>(0);
 
-        // Replicated so a client's castle can be built for the right Age once era-specific rooms
-        // exist (docs/plans/era-castle-rooms.md, step 1). Set before the seed in StartRaid.
+        // Replicated because every peer builds its own castle geometry, and the era picks the rooms.
         private readonly SyncVar<HistoricalEra> _era = new SyncVar<HistoricalEra>(HistoricalEra.BronzeAge);
 
         // The host's campaign, so a friend's Lair shows the debt they are paying off together.
@@ -101,6 +103,7 @@ namespace RogueAi.Raid
             base.OnSpawned();
             _phase.onChanged += OnPhaseReplicated;
             _seed.onChanged += OnSeedReplicated;
+            _era.onChanged += OnEraReplicated;
             _hostDebt.onChanged += OnHostCampaignReplicated;
             _hostGold.onChanged += OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged += OnHostCampaignReplicated;
@@ -117,6 +120,7 @@ namespace RogueAi.Raid
             base.OnDespawned();
             _phase.onChanged -= OnPhaseReplicated;
             _seed.onChanged -= OnSeedReplicated;
+            _era.onChanged -= OnEraReplicated;
             _hostDebt.onChanged -= OnHostCampaignReplicated;
             _hostGold.onChanged -= OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged -= OnHostCampaignReplicated;
@@ -198,6 +202,8 @@ namespace RogueAi.Raid
                 return null;
             }
 
+            ApplyEraContent(Era);
+
             Debug.Log($"[Raid] Building the castle from seed {seed}, {Era} ({(isSpawned && !isServer ? "client" : "host")}).");
 
             // Published before generating, so anything below the raid in the dependency graph (the
@@ -209,7 +215,10 @@ namespace RogueAi.Raid
             if (!isSpawned || isServer)
                 _seed.value = seed;
             else
+            {
                 _clientBuiltSeed = seed;
+                _clientBuiltEra = Era;
+            }
 
             // Before the NavMesh bake and the spawners, so a guard or a loot pile is never dropped
             // on top of a player who is about to be moved there.
@@ -320,6 +329,39 @@ namespace RogueAi.Raid
         /// the seed this raid actually rolled, rather than baked into the scene — a baked spawn is
         /// only in the right place for the one seed it was baked from.
         /// </summary>
+        private void ApplyEraContent(HistoricalEra era)
+        {
+            // The scene's own assignments are the fallback, captured once so that raiding a
+            // catalogued era and then an uncatalogued one does not keep the first era's content.
+            if (!_capturedDefaults)
+            {
+                _defaultRooms = _generator != null ? _generator.Registry : null;
+                _defaultLoot = _lootSpawner != null ? _lootSpawner.Table : null;
+                _defaultEnemies = _guardSpawner != null ? _guardSpawner.Roster : null;
+                _capturedDefaults = true;
+            }
+
+            EraContentCatalogue.Entry entry = _eraContent != null ? _eraContent.For(era) : null;
+            CastleRoomRegistry rooms = entry?.Rooms != null ? entry.Rooms : _defaultRooms;
+            RaidLootTable loot = entry?.Loot != null ? entry.Loot : _defaultLoot;
+            EnemyRoster enemies = entry?.Enemies != null ? entry.Enemies : _defaultEnemies;
+
+            if (_generator != null)
+                _generator.Registry = rooms;
+            if (_lootSpawner != null)
+                _lootSpawner.Table = loot;
+            if (_guardSpawner != null)
+                _guardSpawner.Roster = enemies;
+
+            Debug.Log($"[Raid] {era} content: rooms {(rooms != null ? rooms.name : "none")}, " +
+                      $"loot {(loot != null ? loot.name : "none")}, enemies {(enemies != null ? enemies.name : "none")}.");
+        }
+
+        private bool _capturedDefaults;
+        private CastleRoomRegistry _defaultRooms;
+        private RaidLootTable _defaultLoot;
+        private EnemyRoster _defaultEnemies;
+
         private void PlacePlayerAtSpawn()
         {
             // In a session the player is spawned per connection rather than placed in the scene, so
@@ -409,9 +451,17 @@ namespace RogueAi.Raid
         /// castle being null: the host can go from a finished raid straight into the next in one
         /// frame, so a client may never see the Lair phase that would have cleared the old one.
         /// </summary>
-        private bool NeedsClientBuild(int seed) => seed != 0 && (Castle == null || _clientBuiltSeed != seed);
+        private bool NeedsClientBuild(int seed) =>
+            seed != 0 && (Castle == null || _clientBuiltSeed != seed || _clientBuiltEra != Era);
 
         private int _clientBuiltSeed;
+        private HistoricalEra _clientBuiltEra;
+
+        private void OnEraReplicated(HistoricalEra era)
+        {
+            if (!isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(_seed.value))
+                BuildCastle(_seed.value);
+        }
 
         private void OnSeedReplicated(int seed)
         {
@@ -498,7 +548,8 @@ namespace RogueAi.Raid
         public void Configure(ProceduralCastleGenerator generator, LootSpawner spawner,
             ExtractionZone zone, LairHubManager lair, AlarmFSMManager alarm = null,
             CastleNetworkManager castleNetwork = null, GuardSpawner guardSpawner = null,
-            CastleNavMeshBaker navigation = null, Transform playerRoot = null)
+            CastleNavMeshBaker navigation = null, Transform playerRoot = null,
+            EraContentCatalogue eraContent = null)
         {
             UnsubscribeFromZone();
 
@@ -511,6 +562,8 @@ namespace RogueAi.Raid
             _guardSpawner = guardSpawner;
             _navigation = navigation;
             _playerRoot = playerRoot;
+            _eraContent = eraContent;
+            _capturedDefaults = false;
 
             SubscribeToZone();
         }

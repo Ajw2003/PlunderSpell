@@ -126,5 +126,6 @@ Then:
   - The Lantern Warden's lantern glow is stored darker (`#4A1E0C`), because the material
     multiplies emission by 9.
   - The warden uses one extra colour (`woad_mud`).
-- **In Unity:** nothing has been imported into Unity. There are no `.meta` files, and the items
-  aren't in any loot table.
+- **In Unity:** imported and wired into raids on 2026-09-24 by *Forge Era Content*; see
+  `docs/systems/raid-scene-assembly.md`, "Eras". Re-run it after new models land. (Was: nothing imported, and the items
+  weren't in any loot table.)
