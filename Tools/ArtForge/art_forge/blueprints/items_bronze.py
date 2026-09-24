@@ -12,57 +12,15 @@ from . import blueprint
 
 
 # --------------------------------------------------------------------------------
-# Loft: a closed solid skinned through a stack of rings (a lathe whose rings need
-# not be circles). kit.py has no such kind and it is a shared framework file, so
-# this module registers one into kit's builder table on import, under a
-# bronze-prefixed name so it cannot collide with anything another module adds.
+# Loft: this module wrote the first loft kind and registered it as "bronze_loft".
+# It now lives in kit.py as the shared "loft" kind (same code); the old name is
+# kept as an alias so these blueprints build exactly as before.
 #   extras["rings"] = [ring, ...], each ring a list of (x, y, z) in metres with the
-#   same point count, or a single point (a pole; only first/last). An end ring with
-#   more than one point is capped flat with an n-gon. Keep the point order the same
-#   rotational sense on every ring. extras["closed"] = True joins the last ring
-#   back to the first (a torus-like loop, no poles, no caps).
+#   same point count, or a single point (a pole; only first/last).
 # --------------------------------------------------------------------------------
 
 LOFT = "bronze_loft"
-
-
-def _loft(bm, part: Part):
-    rings = [[tuple(map(float, p)) for p in ring] for ring in part.extras["rings"]]
-    width = max(len(r) for r in rings)
-    rows, verts = [], []
-    for i, ring in enumerate(rings):
-        if len(ring) == 1:
-            if 0 < i < len(rings) - 1:
-                raise ValueError(f"loft ring {i} is a pole mid-stack")
-        elif len(ring) != width:
-            raise ValueError(f"loft ring {i} has {len(ring)} points, expected {width}")
-        row = [bm.verts.new(p) for p in ring]
-        rows.append(row)
-        verts.extend(row)
-    closed = bool(part.extras.get("closed", False))
-    if closed and any(len(r) == 1 for r in rows):
-        raise ValueError("a closed loft cannot have poles")
-    faces = []
-    for a, b in zip(rows, rows[1:] + (rows[:1] if closed else [])):
-        for j in range(width):
-            k = (j + 1) % width
-            if len(a) == 1 and len(b) == 1:
-                raise ValueError("loft has two consecutive poles")
-            if len(a) == 1:
-                quad = (a[0], b[k], b[j])
-            elif len(b) == 1:
-                quad = (a[j], a[k], b[0])
-            else:
-                quad = (a[j], a[k], b[k], b[j])
-            faces.append(bm.faces.new(quad))
-    if not closed and len(rows[0]) > 1:
-        faces.append(bm.faces.new(list(reversed(rows[0]))))
-    if not closed and len(rows[-1]) > 1:
-        faces.append(bm.faces.new(rows[-1]))
-    kit._orient_outward(bm, faces)
-    return verts, faces
-
-
+_loft = kit._loft
 kit._NEW_BUILDERS.setdefault(LOFT, _loft)
 
 

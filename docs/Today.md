@@ -1,5 +1,9 @@
 # Today
 
+**2026-09-24, end of session — enemies mid-run.** ArtForge builds rigged enemies; Lantern Warden and Alaunt War-hound are done, and 14 more were in progress when usage ran out. Resume from [`docs/art/HANDOFF.md`](art/HANDOFF.md).
+
+---
+
 **2026-09-24, later — the art bible's 20 plunder items are real models.** New tool
 `Tools/ArtForge/`, built on EnemyForge's parts, bake, rig and export code, turns
 `docs/art/data/*.json` into game models. All 20 items (5 per Age) are built:

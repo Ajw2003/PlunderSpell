@@ -23,7 +23,15 @@ class Blueprint:
     parts: list[Part]
     entry: Entry
     # Rig (enemies only). EnemyForge bone dicts: name, head, tail, parent, mirror.
+    # Setting it selects the rigged path. figures.Human / figures.Quadruped fill
+    # bones, forward_bones and pose for you via `**figure.rig()`.
     bones: list[dict] | None = None
+    # Bones whose head->tail must point toward -Y (feet, a beast's head): how the
+    # validator proves the model faces the front.
+    forward_bones: list[str] = field(default_factory=list)
+    # Review pose for render.py's POSED view: {bone: (rx, ry, rz)} world-space
+    # degrees about the bone's head (see rig.apply_pose). Stored on the rig.
+    pose: dict[str, tuple[float, float, float]] = field(default_factory=dict)
     # Per-family overrides merged over the JSON-derived family spec, e.g.
     # {"gilt": {"rough": 0.22, "wear_to": "#7E2A26"}}. See materials.py for keys.
     family_overrides: dict[str, dict] = field(default_factory=dict)

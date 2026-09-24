@@ -8,7 +8,11 @@ message; nothing else it reports is filtered. Then, per kind:
 - items: bounding box within ±10 % of the JSON `dimensions` on each axis.
   W is X, D is Y, H is Z; the model stands on z = 0 and faces -Y.
 - structures: footprint inside the 12 × 12 m cell (|x|, |y| ≤ 6 m).
-- enemies: height within ±5 % of the JSON height_m.
+- enemies: body height (parts marked extras["prop"] excluded, so a glaive does not
+  count) within ±5 % of the JSON height_m; centred; facing -Y (Blueprint.
+  forward_bones point -Y); one Armature modifier; <= 4 influences per vertex;
+  rig and skinned bone counts reported. EnemyForge's own checks cover every
+  vertex weighted and normalised, grounded, budget and the rest.
 """
 
 from __future__ import annotations
@@ -98,11 +102,57 @@ def validate(obj: bpy.types.Object, bp: Blueprint) -> Report:
             report.warnings.append(f"height {size[2]:.2f} m exceeds the spec's "
                                    f"{bp.entry.height_m:.2f} m by more than 10 %")
     elif bp.kind == "enemies":
-        target = float(bp.entry.height_m)
-        if abs(size[2] - target) > target * ENEMY_HEIGHT_TOLERANCE:
-            report.failures.append(f"height {size[2]:.3f} m is not within ±5 % of the "
-                                   f"spec's {target:.2f} m")
+        _check_enemy(report, obj, bp, lo, hi)
     return report
+
+
+def _check_enemy(report: Report, obj, bp: Blueprint, lo, hi) -> None:
+    """Height (props excluded), stance, facing, rig and skin facts."""
+    from . import rig as rigmod   # rig imports blueprint; keep validate importable alone
+
+    target = float(bp.entry.height_m)
+    props = rigmod.prop_part_ids(bp)
+    part_ids = rigmod.vertex_parts(obj)
+    body_z = [v.co.z for v in obj.data.vertices if part_ids[v.index] not in props]
+    body_h = max(body_z) - min(body_z)
+    report.stats["height_body_m"] = round(body_h, 3)
+    report.stats["height_spec_m"] = target
+    if props:
+        report.stats["height_with_props_m"] = round(hi[2] - lo[2], 3)
+    if abs(body_h - target) > target * ENEMY_HEIGHT_TOLERANCE:
+        report.failures.append(f"body height {body_h:.3f} m (props excluded) is not within "
+                               f"±5 % of the spec's {target:.2f} m")
+    # EnemyForge's ±0.12 m height warning measures the props too; ours replaces it.
+    report.warnings = [w for w in report.warnings if not w.startswith("height ")]
+
+    for axis, i in (("X", 0), ("Y", 1)):
+        centre = (lo[i] + hi[i]) / 2.0
+        if abs(centre) > 0.25 * (hi[i] - lo[i]) + 0.05:
+            report.failures.append(f"model is not centred on the origin in {axis} "
+                                   f"(bbox centre {centre:.3f} m)")
+    report.failures += rigmod.facing_problems(bp)
+
+    armature = next((m.object for m in obj.modifiers if m.type == "ARMATURE"), None)
+    if armature is not None:
+        report.stats["rig_bones"] = len(armature.data.bones)
+        report.stats["skinned_bones"] = len(obj.vertex_groups)
+        report.stats.pop("bones", None)
+        if sum(1 for m in obj.modifiers if m.type == "ARMATURE") != 1:
+            report.failures.append("mesh has more than one Armature modifier")
+    over = sum(1 for v in obj.data.vertices
+               if len([g for g in v.groups if g.weight > 1e-6]) > rigmod.MAX_INFLUENCES)
+    if over:
+        report.failures.append(f"{over} vertices have more than {rigmod.MAX_INFLUENCES} "
+                               f"bone influences")
+    skin = obj.get("artforge_skin")
+    if skin:
+        import json
+        rules = json.loads(skin).get("rules", {})
+        report.stats["mean_influences"] = rules.get("mean_influences")
+        if rules.get("fallback_vertices"):
+            report.warnings.append(f"{rules['fallback_vertices']} vertices got no allowed "
+                                   f"heat weight and were blended to the nearest allowed "
+                                   f"bones by distance")
 
 
 def _check_item_dims(report: Report, bp: Blueprint, size) -> None:

@@ -7,8 +7,11 @@
 
 For each built model: opens its exported .blend, renders three-quarter, front and
 side views plus a wireframe (Cycles, CPU) on a dark studio, then writes ONE sheet
-docs/art/models/<age>/<slug>.png — the concept sheet on the left, the four renders
-on the right, a caption with name, triangles/budget and bbox vs spec underneath.
+docs/art/models/<age>/<slug>.png — the concept sheet on the left, the renders on
+the right, a caption with name, triangles/budget and bbox vs spec underneath.
+Enemies get six views: three-quarter, front (beside a faint 1.80 m reference
+human), side, two POSED views (the rig's review pose, to show the skin deforming)
+and the wireframe.
 Build first (build.py); this reads Assets/Models/ArtBible/.
 Needs Pillow (`pip install pillow`) for the sheet.
 """
@@ -49,6 +52,22 @@ VIEWS = [
     ("SIDE", 90.0, 0.0),
     ("WIREFRAME", -35.0, 16.0),
 ]
+# Enemies: three columns. POSED views apply the blueprint's review pose (stored on
+# the rig as `artforge_pose`) to prove the skinning deforms without tearing. FRONT
+# carries a faint 1.80 m reference human beside the model.
+ENEMY_VIEWS = [
+    ("THREE-QUARTER", -35.0, 16.0),
+    ("FRONT", 0.0, 0.0),
+    ("SIDE", 90.0, 0.0),
+    ("POSED", -35.0, 16.0),
+    ("POSED FRONT", 20.0, 6.0),
+    ("WIREFRAME", -35.0, 16.0),
+]
+REFERENCE_HEIGHT = 1.80
+
+
+def views_for(kind: str) -> list[tuple[str, float, float]]:
+    return ENEMY_VIEWS if kind == "enemies" else VIEWS
 
 FONT_PATHS = ["/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
               "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"]
@@ -66,6 +85,11 @@ def _linear(hex_colour: str) -> tuple[float, float, float]:
 def _open(blend_path: str) -> bpy.types.Object:
     """Open the built .blend itself, so its relative texture paths resolve."""
     bpy.ops.wm.open_mainfile(filepath=blend_path)
+    # Opening a file runs its scene; a rig left posed would skew every view.
+    for rig in [o for o in bpy.context.scene.objects if o.type == "ARMATURE"]:
+        for pose_bone in rig.pose.bones:
+            pose_bone.matrix_basis.identity()
+    bpy.context.view_layer.update()
     meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
     if len(meshes) != 1:
         raise RuntimeError(f"{blend_path}: expected one mesh, found {[o.name for o in meshes]}")
@@ -77,7 +101,10 @@ def _open(blend_path: str) -> bpy.types.Object:
 
 
 def _bounds(obj) -> tuple[Vector, Vector]:
-    points = [obj.matrix_world @ v.co for v in obj.data.vertices]
+    """World bounds of the mesh as it is drawn (armature deformation included)."""
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    evaluated = obj.evaluated_get(depsgraph)
+    points = [evaluated.matrix_world @ v.co for v in evaluated.data.vertices]
     lo = Vector((min(p.x for p in points), min(p.y for p in points), min(p.z for p in points)))
     hi = Vector((max(p.x for p in points), max(p.y for p in points), max(p.z for p in points)))
     return lo, hi
@@ -208,6 +235,63 @@ def _camera(lo: Vector, hi: Vector, azimuth: float, elevation: float) -> None:
     bpy.context.scene.camera = camera
 
 
+def _rig_of(mesh):
+    return next((m.object for m in mesh.modifiers if m.type == "ARMATURE" and m.object), None)
+
+
+def _pose(mesh) -> list[str]:
+    """Apply the review pose stored on the mesh's rig. Loud if there is none."""
+    from art_forge import rig as rigmod
+    rig = _rig_of(mesh)
+    if rig is None:
+        raise RuntimeError(f"{mesh.name}: POSED view needs a rig, and the mesh has none")
+    posed = rigmod.apply_pose(rig)
+    if not posed:
+        raise RuntimeError(f"{mesh.name}: the rig carries no artforge_pose; the POSED "
+                           f"view would just repeat the rest pose")
+    return posed
+
+
+def _reference_human(beside_x: float) -> tuple[Vector, Vector]:
+    """A faint 1.80 m figure (figures.Human, the same body enemies are built on)
+    standing to the model's right in a front view (-X). Returns its bounds."""
+    import bmesh
+    from art_forge import figures, kit
+
+    fig = figures.Human(height=REFERENCE_HEIGHT / 1.0)
+    parts = [p for p in fig.body("ref", "ref") if p.kind != "sphere"]
+    bm, _bones = kit.build_bmesh(parts, {"ref": 0})
+    mesh = bpy.data.meshes.new("ReferenceHuman")
+    bm.to_mesh(mesh)
+    bm.free()
+    for poly in mesh.polygons:
+        poly.use_smooth = True
+    obj = bpy.data.objects.new("ReferenceHuman", mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    xs = [v.co.x for v in mesh.vertices]
+    obj.location.x = beside_x - max(xs) - 0.12
+    mat = bpy.data.materials.new("ReferenceHuman")
+    mat.use_nodes = True
+    nodes, links = mat.node_tree.nodes, mat.node_tree.links
+    nodes.clear()
+    glow = nodes.new("ShaderNodeEmission")
+    glow.inputs["Color"].default_value = (*_linear("#DCD2BA"), 1.0)
+    glow.inputs["Strength"].default_value = 0.06
+    clear = nodes.new("ShaderNodeBsdfTransparent")
+    mix = nodes.new("ShaderNodeMixShader")
+    mix.inputs["Fac"].default_value = 0.35
+    links.new(clear.outputs["BSDF"], mix.inputs[1])
+    links.new(glow.outputs["Emission"], mix.inputs[2])
+    out = nodes.new("ShaderNodeOutputMaterial")
+    links.new(mix.outputs["Shader"], out.inputs["Surface"])
+    mesh.materials.append(mat)
+    obj.visible_shadow = False
+    lo = Vector((obj.location.x + min(xs), min(v.co.y for v in mesh.vertices), 0.0))
+    hi = Vector((obj.location.x + max(xs), max(v.co.y for v in mesh.vertices),
+                 max(v.co.z for v in mesh.vertices)))
+    return lo, hi
+
+
 def _wire_material() -> bpy.types.Material:
     """Clay with a Wireframe-node edge overlay (Freestyle aborts headless here)."""
     mat = bpy.data.materials.new("ReviewWire")
@@ -232,19 +316,30 @@ def _wire_material() -> bpy.types.Material:
     return mat
 
 
-def render_views(blend_path: str, out_dir: str, resolution: int, samples: int) -> dict:
+def render_views(blend_path: str, out_dir: str, resolution: int, samples: int,
+                 kind: str = "items") -> dict:
     tiles = {}
     stats = {}
-    for label, azimuth, elevation in VIEWS:
+    for label, azimuth, elevation in views_for(kind):
         mesh = _open(blend_path)
         lo, hi = _bounds(mesh)
         if not stats:
             tris = sum(len(p.vertices) - 2 for p in mesh.data.polygons)
             stats = {"triangles": tris, "bbox": tuple(round(hi[i] - lo[i], 3) for i in range(3))}
+        if label.startswith("POSED"):
+            posed = _pose(mesh)
+            stats["posed_bones"] = posed
+            plo, phi = _bounds(mesh)
+            lo = Vector([min(a, b) for a, b in zip(lo, plo)])
+            hi = Vector([max(a, b) for a, b in zip(hi, phi)])
         _configure(resolution, samples)
         _world()
         _studio((lo + hi) / 2.0, (hi - lo).length)
         _ground((hi - lo).length)
+        if kind == "enemies" and label == "FRONT":
+            rlo, rhi = _reference_human(lo.x)
+            lo = Vector([min(a, b) for a, b in zip(lo, rlo)])
+            hi = Vector([max(a, b) for a, b in zip(hi, rhi)])
         _camera(lo, hi, azimuth, elevation)
         if label == "WIREFRAME":
             # Emissive edges over flat clay converge in far fewer samples.
@@ -252,7 +347,7 @@ def render_views(blend_path: str, out_dir: str, resolution: int, samples: int) -
             wire = _wire_material()
             for slot in mesh.material_slots:
                 slot.material = wire
-        path = os.path.join(out_dir, f"{label.lower()}.png")
+        path = os.path.join(out_dir, f"{label.lower().replace(' ', '_')}.png")
         bpy.context.scene.render.filepath = path
         bpy.ops.render.render(write_still=True)
         if not os.path.exists(path):
@@ -275,15 +370,18 @@ def _font(size: int):
 
 def compose_sheet(entry: spec.Entry, rendered: dict, manifest_entry: dict | None,
                   out_path: str, tile: int) -> str:
+    views = views_for(entry.kind)
+    columns = 3 if len(views) > 4 else 2
     gap = max(6, tile // 80)
     grid = tile * 2 + gap
+    grid_w = tile * columns + gap * (columns - 1)
     caption_h = max(56, tile // 9)
 
     concept = Image.open(entry.concept_png).convert("RGB")
     scale = grid / concept.height
     concept = concept.resize((int(concept.width * scale), grid), Image.LANCZOS)
 
-    width = gap + concept.width + gap + grid + gap
+    width = gap + concept.width + gap + grid_w + gap
     height = gap + grid + gap + caption_h
     sheet = Image.new("RGB", (width, height), BONE_BLACK)
     sheet.paste(concept, (gap, gap))
@@ -291,8 +389,8 @@ def compose_sheet(entry: spec.Entry, rendered: dict, manifest_entry: dict | None
     draw = ImageDraw.Draw(sheet)
     label_font = _font(max(12, tile // 34))
     left = gap + concept.width + gap
-    for index, (label, _az, _el) in enumerate(VIEWS):
-        row, column = divmod(index, 2)
+    for index, (label, _az, _el) in enumerate(views):
+        row, column = divmod(index, columns)
         x, y = left + column * (tile + gap), gap + row * (tile + gap)
         sheet.paste(Image.open(rendered["tiles"][label]).convert("RGB"), (x, y))
         draw.text((x + 12, y + 10), label, fill="#9A9078", font=label_font)
@@ -307,6 +405,13 @@ def compose_sheet(entry: spec.Entry, rendered: dict, manifest_entry: dict | None
     else:
         size_text = (f"bbox {bx:.2f} × {by:.2f} × {bz:.2f} m  vs spec height "
                      f"{entry.height_m} m")
+        stats = (manifest_entry or {}).get("stats", {})
+        if "height_body_m" in stats:
+            size_text = (f"body height {stats['height_body_m']:.3f} m vs spec "
+                         f"{entry.height_m} m (±5 %)  ·  with props {bz:.2f} m  ·  "
+                         f"bbox {bx:.2f} × {by:.2f} m  ·  {stats.get('rig_bones')} bones "
+                         f"({stats.get('skinned_bones')} skinned)  ·  posed: "
+                         f"{', '.join(rendered.get('posed_bones', []))}")
     status = ""
     if manifest_entry is not None:
         status = "  ·  validation PASS" if manifest_entry.get("passed") else "  ·  validation FAIL"
@@ -370,7 +475,8 @@ def main() -> int:
         step = time.time()
         scratch = tempfile.mkdtemp(prefix=f"artforge_{slug}_")
         try:
-            rendered = render_views(blend, scratch, args.resolution, args.samples)
+            rendered = render_views(blend, scratch, args.resolution, args.samples,
+                                    args.kind)
             out = compose_sheet(entry, rendered, manifest.get(f"{args.kind}/{age}/{slug}"),
                                 os.path.join(SHEETS_ROOT, age, f"{slug}.png"), args.resolution)
         finally:

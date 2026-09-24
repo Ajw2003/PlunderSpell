@@ -3,13 +3,14 @@
 Two paths share everything up to the bake:
 
 - static (items, structures): one mesh, no rig, no vertex groups;
-- rigged (enemies, `Blueprint.bones` set): EnemyForge's armature, smooth weights
-  and exporter, called unchanged. `build_rigged` is the hook — no enemy has been
-  built through it yet, so the first one to use it should expect to find edges.
+- rigged (enemies, `Blueprint.bones` set): EnemyForge's armature, heat weights and
+  exporter, called unchanged, then ArtForge's per-part bind rules (rig.py) so props
+  stay rigid and nothing is weighted to a bone it has no business following.
 """
 
 from __future__ import annotations
 
+import json
 import math
 import os
 from types import SimpleNamespace
@@ -22,6 +23,7 @@ from enemy_forge import materials as ef_materials
 from enemy_forge.assemble import _dissolve_degenerate, finish_geometry, reset_scene  # noqa: F401
 
 from . import kit, materials
+from . import rig as rigmod
 from .blueprint import Blueprint
 
 
@@ -244,24 +246,39 @@ def build_static(bp: Blueprint, model_dir: str, resolution: int):
 
 
 def build_rigged(bp: Blueprint, model_dir: str, resolution: int):
-    """Enemies: EnemyForge's rig + smooth weights. Returns (obj, rig).
+    """Enemies: EnemyForge's armature + heat weights, then ArtForge's bind rules.
 
-    Blueprint quacks like an EnemyForge Archetype for everything these functions
-    read (name, bones, bevel). Bones follow EnemyForge's dict format, including
-    `mirror=True` for .L bones.
+    Order matters: bevel and unwrap first (prepare), because the bevel adds vertices
+    and interpolates vertex groups; then the armature and the weights on the final
+    topology; then the bake (the armature modifier sits at rest, so it bakes the
+    bind pose). Blueprint quacks like an EnemyForge Archetype for what
+    build_armature reads (name, bones). Returns (obj, rig).
     """
     obj, _ordered = prepare(bp)
     rig = ef_assemble.build_armature(bp, obj)
-    skin = ef_assemble.apply_smooth_weights(obj, rig)
+    heat = ef_assemble.apply_smooth_weights(obj, rig, max_influences=rigmod.MAX_INFLUENCES)
+    rigmod.dedupe_armature_modifiers(obj, rig)
+    rules = rigmod.apply_bind_rules(obj, bp)
     bake(obj, bp, _authoring(obj), os.path.join(model_dir, "Textures"), resolution)
     del obj["artforge_authoring"]
-    rig["artforge_skin"] = str(skin)
+    rig["artforge_skin"] = json.dumps({"heat": heat, "rules": rules})
+    rigmod.store_pose(rig, bp.pose)
+    obj["artforge_skin"] = rig["artforge_skin"]
     return obj, rig
 
 
 def export(obj, rig, bp: Blueprint, model_dir: str) -> dict:
     if rig is None:
         return export_static(obj, bp, model_dir)
+    # EnemyForge's exporter: FBX with armature + mesh (Unity axes, no leaf bones),
+    # glTF with the skin, and a .blend that save_blend then re-saves with relative
+    # texture paths.
+    bpy.context.view_layer.objects.active = rig
+    for pose_bone in rig.pose.bones:   # export the bind pose, whatever happened before
+        pose_bone.matrix_basis.identity()
+    # EnemyForge's exporter saves the .blend itself; with backups on, a rebuild
+    # leaves a stale <Name>.blend1 next to it.
+    bpy.context.preferences.filepaths.save_version = 0
     files = ef_assemble.export(obj, rig, bp, model_dir)
-    files["blend"] = save_blend(bp, model_dir)   # re-save with relative texture paths
+    files["blend"] = save_blend(bp, model_dir)
     return files
