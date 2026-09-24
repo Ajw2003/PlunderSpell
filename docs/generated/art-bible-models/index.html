@@ -1,0 +1,120 @@
+<title>Plunderspell Model Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Eczar:wght@600;700&family=Spectral:wght@400&family=Overpass+Mono:wght@400;600&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#14120E;--ash:#1E1A14;--ash-hi:#282318;--line:#332D22;--vellum:#DCD2BA;--dim:#9A9078;--faint:#635C4C;--verdigris:#5FA288;--orpiment:#C9A227;
+--display:"Eczar",Georgia,serif;--body:"Spectral",Georgia,serif;--mono:"Overpass Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--vellum);font-family:var(--body);line-height:1.55}
+.wrap{max-width:1500px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 28px;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:8px}
+.top h1{font-family:var(--display);font-size:clamp(1.8rem,4vw,2.6rem);margin:0;letter-spacing:-.01em}
+.top p{margin:0;color:var(--dim);font-size:.95rem;flex:1 1 320px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;flex-wrap:wrap;gap:6px;padding-block:12px;border-bottom:1px solid var(--line)}
+nav a{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;border:1px solid var(--line);padding:6px 11px}
+nav a:hover,nav a:focus-visible{color:var(--vellum);border-color:var(--faint);outline:none}
+section{padding-top:34px}
+section header{display:grid;gap:2px;margin-bottom:6px}
+.yr{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+h2{font-family:var(--display);font-size:1.9rem;margin:0}
+section header p{margin:0;color:var(--dim)}
+h3{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--verdigris);margin:22px 0 10px;font-weight:600}
+h3 span{color:var(--faint);margin-left:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,560px),1fr));gap:14px}
+figure{margin:0;background:var(--ash);border:1px solid var(--line);display:flex;flex-direction:column}
+.open{all:unset;cursor:zoom-in;display:block}
+.open:focus-visible{outline:2px solid var(--verdigris);outline-offset:-2px}
+.open img{display:block;width:100%;height:auto;max-width:100%;background:#0E0C09}
+figcaption{padding:12px 14px 14px;display:grid;gap:3px}
+figcaption b{font-family:var(--display);font-size:1.15rem;font-weight:600}
+.meta{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--orpiment)}
+.sum{font-size:.9rem;color:var(--dim)}
+dialog{border:0;padding:0;background:#0B0A08;max-width:100vw;max-height:100vh;width:100vw;height:100vh}
+dialog::backdrop{background:rgba(0,0,0,.85)}
+.viewer{height:100%;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--dim)}
+.bar strong{color:var(--vellum);font-family:var(--display);font-size:1.05rem;flex:1}
+.bar button{font:inherit;color:var(--vellum);background:var(--ash);border:1px solid var(--line);padding:6px 12px;cursor:pointer}
+.bar button:hover,.bar button:focus-visible{border-color:var(--verdigris);outline:none}
+.pane{flex:1;overflow:auto}
+.pane img{display:block;width:100%;min-width:1200px;height:auto}
+@media (max-width:640px){.pane img{min-width:1000px}}
+</style>
+<div class="wrap">
+  <div class="top"><h1>Model review</h1>
+  <p>36 review sheets from ArtForge: each concept sheet sits on the left, with renders of the finished model on the right. Enemies also show two posed views, to prove the skin bends. Select a sheet to see it full size.</p></div>
+  <nav aria-label="Ages"><a href="#bronze">The Bronze Age</a><a href="#high">The High Medieval</a><a href="#late">The Late Medieval</a><a href="#powder">The Age of Powder</a></nav>
+  <section id="bronze"><header><span class="yr">c. 1200 BC · Stratum I</span><h2>The Bronze Age</h2><p>Citadels of mud-brick and smoke</p></header>
+<h3>Plunder <span>5</span></h3><div class="grid">
+<figure><button type="button" class="open" data-src="img/bronze-oxhide-ingot.jpg" data-title="Oxhide Ingot"><img src="img/bronze-oxhide-ingot.jpg" loading="lazy" alt="Oxhide Ingot: concept sheet beside renders of the model"></button><figcaption><b>Oxhide Ingot</b><span class="meta">180 coin · 4 st</span><span class="sum">A slab of Cypriot copper shaped like a flayed ox-skin, with four handles for corners.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/bronze-sealed-amphora.jpg" data-title="Sealed Amphora"><img src="img/bronze-sealed-amphora.jpg" loading="lazy" alt="Sealed Amphora: concept sheet beside renders of the model"></button><figcaption><b>Sealed Amphora</b><span class="meta">120 coin · 3 st</span><span class="sum">A Canaanite wine jar with a clay seal still on its mouth and the king&#x27;s mark in the clay.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/bronze-faience-hippo.jpg" data-title="Faience Hippopotamus"><img src="img/bronze-faience-hippo.jpg" loading="lazy" alt="Faience Hippopotamus: concept sheet beside renders of the model"></button><figcaption><b>Faience Hippopotamus</b><span class="meta">420 coin · 0.5 st</span><span class="sum">A small blue glazed hippopotamus from Egypt, painted with river plants and worth a great deal more than a real one.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/bronze-gold-death-mask.jpg" data-title="Gold Death-Mask"><img src="img/bronze-gold-death-mask.jpg" loading="lazy" alt="Gold Death-Mask: concept sheet beside renders of the model"></button><figcaption><b>Gold Death-Mask</b><span class="meta">1400 coin · 1 st · artifact</span><span class="sum">A king&#x27;s face beaten from a single sheet of gold, eyes shut, moustache twirled, laid over him for eternity until you arrived.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/bronze-bronze-tripod.jpg" data-title="Tripod Cauldron"><img src="img/bronze-bronze-tripod.jpg" loading="lazy" alt="Tripod Cauldron: concept sheet beside renders of the model"></button><figcaption><b>Tripod Cauldron</b><span class="meta">650 coin · 12 st</span><span class="sum">A ceremonial bronze cauldron on three tall legs, ring-handled, heavy enough to need two of you and loud enough to wake everyone.</span></figcaption></figure>
+</div>
+<h3>The household <span>4</span></h3><div class="grid">
+<figure><button type="button" class="open" data-src="img/bronze-palace-levy.jpg" data-title="Palace Levy"><img src="img/bronze-palace-levy.jpg" loading="lazy" alt="Palace Levy: concept sheet beside renders of the model"></button><figcaption><b>Palace Levy</b><span class="meta">patrol · 1.70 m</span><span class="sum">A farmer the king has lent a spear to: linen, a leather cap and a shield the size of a door.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/bronze-wall-slinger.jpg" data-title="Wall Slinger"><img src="img/bronze-wall-slinger.jpg" loading="lazy" alt="Wall Slinger: concept sheet beside renders of the model"></button><figcaption><b>Wall Slinger</b><span class="meta">ranged · 1.66 m</span><span class="sum">A lightly-dressed youth with a sling and a pouch of river stones; silent, quick, and unkind to helmets.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/bronze-dendra-champion.jpg" data-title="Dendra Champion"><img src="img/bronze-dendra-champion.jpg" loading="lazy" alt="Dendra Champion: concept sheet beside renders of the model"></button><figcaption><b>Dendra Champion</b><span class="meta">heavy · 1.92 m</span><span class="sum">A nobleman sealed in a bronze bell of plates, a boar&#x27;s-tusk helmet and a rapier as long as your arm and his.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/bronze-flame-keeper.jpg" data-title="Keeper of the Flame"><img src="img/bronze-flame-keeper.jpg" loading="lazy" alt="Keeper of the Flame: concept sheet beside renders of the model"></button><figcaption><b>Keeper of the Flame</b><span class="meta">special · 1.72 m</span><span class="sum">A temple priestess who carries the palace fire on a yoke of clay pots and throws it at you.</span></figcaption></figure>
+</div>
+</section>
+<section id="high"><header><span class="yr">c. 1250 · Stratum II</span><h2>The High Medieval</h2><p>Stone keeps and reliquaries</p></header>
+<h3>Plunder <span>5</span></h3><div class="grid">
+<figure><button type="button" class="open" data-src="img/high-arm-reliquary.jpg" data-title="Arm Reliquary"><img src="img/high-arm-reliquary.jpg" loading="lazy" alt="Arm Reliquary: concept sheet beside renders of the model"></button><figcaption><b>Arm Reliquary</b><span class="meta">600 coin · 1 st · artifact</span><span class="sum">A silver-gilt forearm raised in blessing, with a rock-crystal window onto a saint&#x27;s bone.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/high-silver-ewer.jpg" data-title="Silver Ewer"><img src="img/high-silver-ewer.jpg" loading="lazy" alt="Silver Ewer: concept sheet beside renders of the model"></button><figcaption><b>Silver Ewer</b><span class="meta">180 coin · 2 st</span><span class="sum">A hammered silver ewer with a long spout, hinged lid and the household&#x27;s enamel medallion; it dents, it never breaks.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/high-illuminated-psalter.jpg" data-title="Illuminated Psalter"><img src="img/high-illuminated-psalter.jpg" loading="lazy" alt="Illuminated Psalter: concept sheet beside renders of the model"></button><figcaption><b>Illuminated Psalter</b><span class="meta">350 coin · 1 st</span><span class="sum">A painted psalter in a jewelled treasure binding: ivory, gilt and cabochons on the cover, a hundred and eighty leaves inside.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/high-coin-coffer.jpg" data-title="Coin Coffer"><img src="img/high-coin-coffer.jpg" loading="lazy" alt="Coin Coffer: concept sheet beside renders of the model"></button><figcaption><b>Coin Coffer</b><span class="meta">450 coin · 8 st</span><span class="sum">An iron-banded oak strongbox full of silver pennies in linen bags; heavy, sturdy, and it bursts spectacularly.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/high-gilded-altarpiece.jpg" data-title="Gilded Altarpiece"><img src="img/high-gilded-altarpiece.jpg" loading="lazy" alt="Gilded Altarpiece: concept sheet beside renders of the model"></button><figcaption><b>Gilded Altarpiece</b><span class="meta">1400 coin · 14 st · artifact</span><span class="sum">The chapel&#x27;s painted and gilded triptych — fourteen stone, two carriers, and it dies on the first stair.</span></figcaption></figure>
+</div>
+<h3>The household <span>4</span></h3><div class="grid">
+<figure><button type="button" class="open" data-src="img/high-lantern-warden.jpg" data-title="Lantern Warden"><img src="img/high-lantern-warden.jpg" loading="lazy" alt="Lantern Warden: concept sheet beside renders of the model"></button><figcaption><b>Lantern Warden</b><span class="meta">patrol · 1.80 m</span><span class="sum">The night watch: a quilted man with a horn lantern and a glaive, walking a fixed round.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/high-castle-crossbowman.jpg" data-title="Castle Crossbowman"><img src="img/high-castle-crossbowman.jpg" loading="lazy" alt="Castle Crossbowman: concept sheet beside renders of the model"></button><figcaption><b>Castle Crossbowman</b><span class="meta">ranged · 1.78 m</span><span class="sum">A hired marksman in mail coif and red padded jack, with a stirrup crossbow that takes an age to span.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/high-household-knight.jpg" data-title="Household Knight"><img src="img/high-household-knight.jpg" loading="lazy" alt="Household Knight: concept sheet beside renders of the model"></button><figcaption><b>Household Knight</b><span class="meta">heavy · 1.95 m</span><span class="sum">The lord&#x27;s own knight in full mail, great helm and the household&#x27;s arms — the one you go around.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/high-alaunt-hound.jpg" data-title="Alaunt War-hound"><img src="img/high-alaunt-hound.jpg" loading="lazy" alt="Alaunt War-hound: concept sheet beside renders of the model"></button><figcaption><b>Alaunt War-hound</b><span class="meta">special · 0.85 m</span><span class="sum">A heavy-jawed fawn war-dog in a spiked collar and the household&#x27;s padded coat, which hears you first.</span></figcaption></figure>
+</div>
+</section>
+<section id="late"><header><span class="yr">c. 1450 · Stratum III</span><h2>The Late Medieval</h2><p>Plate, powder and suspicion</p></header>
+<h3>Plunder <span>5</span></h3><div class="grid">
+<figure><button type="button" class="open" data-src="img/late-parade-armour.jpg" data-title="Parade Armour on its Stand"><img src="img/late-parade-armour.jpg" loading="lazy" alt="Parade Armour on its Stand: concept sheet beside renders of the model"></button><figcaption><b>Parade Armour on its Stand</b><span class="meta">900 coin · 13 st</span><span class="sum">A lord&#x27;s parade harness of white steel with gilt-etched bands, mounted on an oak cross-foot stand — a two-carrier prize.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/late-rolled-tapestry.jpg" data-title="Rolled Tapestry"><img src="img/late-rolled-tapestry.jpg" loading="lazy" alt="Rolled Tapestry: concept sheet beside renders of the model"></button><figcaption><b>Rolled Tapestry</b><span class="meta">650 coin · 11 st</span><span class="sum">A millefleur verdure tapestry rolled on itself, tied with hemp and part-wrapped in linen — a 3.4 m log of wool that needs two carriers.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/late-bankers-ledger.jpg" data-title="Banker&#x27;s Ledger"><img src="img/late-bankers-ledger.jpg" loading="lazy" alt="Banker&#x27;s Ledger: concept sheet beside renders of the model"></button><figcaption><b>Banker&#x27;s Ledger</b><span class="meta">140 coin · 1.5 st</span><span class="sum">The house&#x27;s Livre des changes: a chained, iron-bossed account book with wax-sealed letters of credit tucked in the fore-edge.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/late-jewelled-hat-badge.jpg" data-title="Jewelled Hat-Badge"><img src="img/late-jewelled-hat-badge.jpg" loading="lazy" alt="Jewelled Hat-Badge: concept sheet beside renders of the model"></button><figcaption><b>Jewelled Hat-Badge</b><span class="meta">1200 coin · 0.2 st · artifact</span><span class="sum">A gold quatrefoil hat jewel set with a balas ruby, white enamel roses, seed pearls and a pearl drop — the Age&#x27;s artifact, small enough to lose in a glove.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/late-gilded-nef.jpg" data-title="Gilded Nef"><img src="img/late-gilded-nef.jpg" loading="lazy" alt="Gilded Nef: concept sheet beside renders of the model"></button><figcaption><b>Gilded Nef</b><span class="meta">1100 coin · 4 st</span><span class="sum">A silver-gilt ship on a lobed foot that holds the lord&#x27;s salt at the high table — three masts, silver-wire rigging and a hinged salt lid.</span></figcaption></figure>
+</div>
+<h3>The household <span>4</span></h3><div class="grid">
+<figure><button type="button" class="open" data-src="img/late-sallet-halberdier.jpg" data-title="Sallet Halberdier"><img src="img/late-sallet-halberdier.jpg" loading="lazy" alt="Sallet Halberdier: concept sheet beside renders of the model"></button><figcaption><b>Sallet Halberdier</b><span class="meta">patrol · 1.82 m</span><span class="sum">The common guard of the Burgundian house: blackened sallet and bevor, brigandine under a saltire tabard, halberd at the slope — always walking with a partner.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/late-handgunner.jpg" data-title="Handgunner"><img src="img/late-handgunner.jpg" loading="lazy" alt="Handgunner: concept sheet beside renders of the model"></button><figcaption><b>Handgunner</b><span class="meta">ranged · 1.78 m</span><span class="sum">A quilted man in a kettle hat with a hand-gonne on an oak tiller and a lit slow match — slow to load, loud, and very bad news at twelve paces.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/late-gothic-knight.jpg" data-title="Gothic Man-at-Arms"><img src="img/late-gothic-knight.jpg" loading="lazy" alt="Gothic Man-at-Arms: concept sheet beside renders of the model"></button><figcaption><b>Gothic Man-at-Arms</b><span class="meta">heavy · 1.95 m</span><span class="sum">A full harness of fluted white Gothic plate, armet and sparrow-beak visor, with a poleaxe — the thing in the Keep you walk around.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/late-pavisier.jpg" data-title="Pavisier"><img src="img/late-pavisier.jpg" loading="lazy" alt="Pavisier: concept sheet beside renders of the model"></button><figcaption><b>Pavisier</b><span class="meta">special · 1.80 m</span><span class="sum">A liveried man with a 1.30 m pavise painted with the house saltire, who plants it for the Handgunner — the two of them are one enemy.</span></figcaption></figure>
+</div>
+</section>
+<section id="powder"><header><span class="yr">c. 1620 · Stratum IV</span><h2>The Age of Powder</h2><p>Palaces, cabinets and gunpowder</p></header>
+<h3>Plunder <span>5</span></h3><div class="grid">
+<figure><button type="button" class="open" data-src="img/powder-curiosity-cabinet.jpg" data-title="Cabinet of Curiosities"><img src="img/powder-curiosity-cabinet.jpg" loading="lazy" alt="Cabinet of Curiosities: concept sheet beside renders of the model"></button><figcaption><b>Cabinet of Curiosities</b><span class="meta">1200 coin · 12 st</span><span class="sum">An ebony Kunstschrank of forty drawers on a turned stand — two carriers, very dear, and it rains curios if you drop it.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/powder-venetian-mirror.jpg" data-title="Venetian Mirror"><img src="img/powder-venetian-mirror.jpg" loading="lazy" alt="Venetian Mirror: concept sheet beside renders of the model"></button><figcaption><b>Venetian Mirror</b><span class="meta">700 coin · 6 st</span><span class="sum">A large Venetian glass mirror in a walnut-and-gilt frame — two hands, extremely fragile, and it shows you the guard behind you.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/powder-brass-astrolabe.jpg" data-title="Astrolabe"><img src="img/powder-brass-astrolabe.jpg" loading="lazy" alt="Astrolabe: concept sheet beside renders of the model"></button><figcaption><b>Astrolabe</b><span class="meta">320 coin · 1.5 st</span><span class="sum">A gilt-brass planispheric astrolabe with rete, plates and alidade — sturdy, and it dents before it breaks.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/powder-silver-tureen.jpg" data-title="Silver Service Tureen"><img src="img/powder-silver-tureen.jpg" loading="lazy" alt="Silver Service Tureen: concept sheet beside renders of the model"></button><figcaption><b>Silver Service Tureen</b><span class="meta">260 coin · 3 st</span><span class="sum">A silver tureen with a domed lid and a ladle — the lid pops off at the slightest excuse.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/powder-nautilus-cup.jpg" data-title="Nautilus Cup"><img src="img/powder-nautilus-cup.jpg" loading="lazy" alt="Nautilus Cup: concept sheet beside renders of the model"></button><figcaption><b>Nautilus Cup</b><span class="meta">1600 coin · 1 st · artifact</span><span class="sum">A pearly nautilus shell in a silver-gilt mount on a sea-monster stem — the most valuable, most fragile thing in the palace.</span></figcaption></figure>
+</div>
+<h3>The household <span>4</span></h3><div class="grid">
+<figure><button type="button" class="open" data-src="img/powder-partisan-guard.jpg" data-title="Palace Guard"><img src="img/powder-partisan-guard.jpg" loading="lazy" alt="Palace Guard: concept sheet beside renders of the model"></button><figcaption><b>Palace Guard</b><span class="meta">patrol · 1.85 m</span><span class="sum">A liveried halberdier-turned-doorman: murrey doublet, crested morion, and a partisan that is two-thirds ceremony and one-third very sharp.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/powder-musketeer.jpg" data-title="Musketeer"><img src="img/powder-musketeer.jpg" loading="lazy" alt="Musketeer: concept sheet beside renders of the model"></button><figcaption><b>Musketeer</b><span class="meta">ranged · 1.92 m</span><span class="sum">A matchlock musketeer in a broad hat with a forked rest, a bandolier of twelve apostles and a lit match — slow, deafening, and wreathed in smoke.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/powder-cuirassier.jpg" data-title="Cuirassier"><img src="img/powder-cuirassier.jpg" loading="lazy" alt="Cuirassier: concept sheet beside renders of the model"></button><figcaption><b>Cuirassier</b><span class="meta">heavy · 1.95 m</span><span class="sum">A cuirassier dismounted into the cabinet rooms: blackened three-quarter armour, a closed burgonet, a brace of wheellock pistols and a heavy sword.</span></figcaption></figure>
+<figure><button type="button" class="open" data-src="img/powder-petardier.jpg" data-title="Petardier"><img src="img/powder-petardier.jpg" loading="lazy" alt="Petardier: concept sheet beside renders of the model"></button><figcaption><b>Petardier</b><span class="meta">special · 1.76 m</span><span class="sum">A sapper carrying a bell-shaped bronze petard bolted to a plank, and a belt of grenados — he blows doors, and himself, near magazines.</span></figcaption></figure>
+</div>
+</section>
+</div>
+<dialog id="viewer" aria-label="Full-size review sheet"><div class="viewer">
+  <div class="bar"><strong id="vt"></strong><button type="button" id="prev">‹ Prev</button><button type="button" id="next">Next ›</button><button type="button" id="close">Close</button></div>
+  <div class="pane"><img id="vi" alt=""></div></div></dialog>
+<script>
+const buttons=[...document.querySelectorAll('.open')];const dlg=document.getElementById('viewer');
+const vi=document.getElementById('vi'),vt=document.getElementById('vt');let at=0;
+function show(i){at=(i+buttons.length)%buttons.length;const b=buttons[at];vi.src=b.dataset.src;vi.alt=b.dataset.title+' review sheet';vt.textContent=b.dataset.title+'  ·  '+(at+1)+' / '+buttons.length;}
+buttons.forEach((b,i)=>b.addEventListener('click',()=>{show(i);dlg.showModal();}));
+document.getElementById('prev').onclick=()=>show(at-1);document.getElementById('next').onclick=()=>show(at+1);
+document.getElementById('close').onclick=()=>dlg.close();
+dlg.addEventListener('keydown',e=>{if(e.key==='ArrowRight')show(at+1);if(e.key==='ArrowLeft')show(at-1);});
+</script>
