@@ -3,10 +3,90 @@
 from __future__ import annotations
 
 import math
+import random
 
+from .. import kit
 from ..kit import Part, spline
 from ..spec import Entry
 from . import blueprint
+
+
+# --------------------------------------------------------------------------------
+# Loft: a closed solid skinned through a stack of rings (a lathe whose rings need
+# not be circles). kit.py has no such kind and it is a shared framework file, so
+# this module registers one into kit's builder table on import, under a
+# bronze-prefixed name so it cannot collide with anything another module adds.
+#   extras["rings"] = [ring, ...], each ring a list of (x, y, z) in metres with the
+#   same point count, or a single point (a pole; only first/last). An end ring with
+#   more than one point is capped flat with an n-gon. Keep the point order the same
+#   rotational sense on every ring.
+# --------------------------------------------------------------------------------
+
+LOFT = "bronze_loft"
+
+
+def _loft(bm, part: Part):
+    rings = [[tuple(map(float, p)) for p in ring] for ring in part.extras["rings"]]
+    width = max(len(r) for r in rings)
+    rows, verts = [], []
+    for i, ring in enumerate(rings):
+        if len(ring) == 1:
+            if 0 < i < len(rings) - 1:
+                raise ValueError(f"loft ring {i} is a pole mid-stack")
+        elif len(ring) != width:
+            raise ValueError(f"loft ring {i} has {len(ring)} points, expected {width}")
+        row = [bm.verts.new(p) for p in ring]
+        rows.append(row)
+        verts.extend(row)
+    faces = []
+    for a, b in zip(rows, rows[1:]):
+        for j in range(width):
+            k = (j + 1) % width
+            if len(a) == 1 and len(b) == 1:
+                raise ValueError("loft has two consecutive poles")
+            if len(a) == 1:
+                quad = (a[0], b[k], b[j])
+            elif len(b) == 1:
+                quad = (a[j], a[k], b[0])
+            else:
+                quad = (a[j], a[k], b[k], b[j])
+            faces.append(bm.faces.new(quad))
+    if len(rows[0]) > 1:
+        faces.append(bm.faces.new(list(reversed(rows[0]))))
+    if len(rows[-1]) > 1:
+        faces.append(bm.faces.new(rows[-1]))
+    kit._orient_outward(bm, faces)
+    return verts, faces
+
+
+kit._NEW_BUILDERS.setdefault(LOFT, _loft)
+
+
+def _ray_radius(outline, angle: float) -> float:
+    """Distance from the origin to a star-shaped closed outline along `angle`."""
+    dx, dy = math.cos(angle), math.sin(angle)
+    best = None
+    for (x0, y0), (x1, y1) in zip(outline, outline[1:] + outline[:1]):
+        ex, ey = x1 - x0, y1 - y0
+        det = dx * (-ey) - dy * (-ex)
+        if abs(det) < 1e-12:
+            continue
+        t = (x0 * (-ey) - y0 * (-ex)) / det          # along the ray
+        u = (dx * y0 - dy * x0) / det                  # along the edge
+        if t > 0 and -1e-9 <= u <= 1 + 1e-9:
+            best = t if best is None else min(best, t)
+    return best or 0.0
+
+
+def _interp(table, s: float) -> float:
+    """Piecewise-linear lookup in [(key, value), ...] sorted by key."""
+    table = sorted(table)
+    if s <= table[0][0]:
+        return table[0][1]
+    for (k0, v0), (k1, v1) in zip(table, table[1:]):
+        if k0 <= s <= k1:
+            return v0 + (v1 - v0) * (s - k0) / (k1 - k0)
+    return table[-1][1]
 
 
 def _radius_at(profile, z: float) -> float:
@@ -158,6 +238,138 @@ def sealed_amphora(entry: Entry):
     )
 
 
+def oxhide_ingot(entry: Entry):
+    """Cypriot copper oxhide: a slab with four concave sides flaring into horned
+    corner lugs, domed and blistered on the open-mould top, flat below."""
+    W, D, H = entry.dims                       # 0.60 × 0.40 × 0.05, lug tip to lug tip
+    A, B = W / 2.0, D / 2.0
+    bow, p = 0.06, 3.0                         # 0.06 m inward curve on every side
+    tip_r = 0.016
+
+    # Outline, counter-clockwise from +Z: east side, NE lug, north side, NW lug ...
+    def long_side(x):                          # |y| of the north/south edges
+        return B - bow * (1.0 - abs(x / A) ** p)
+
+    def short_side(y):                         # |x| of the east/west edges
+        return A - bow * (1.0 - abs(y / B) ** p)
+
+    ts_short = [-0.86, -0.6, -0.3, 0.0, 0.3, 0.6, 0.86]
+    ts_long = [0.88, 0.66, 0.4, 0.14, -0.14, -0.4, -0.66, -0.88]
+    tip = [(A - tip_r + tip_r * math.cos(math.radians(a)),
+            B - tip_r + tip_r * math.sin(math.radians(a))) for a in (8, 45, 82)]
+    east = [(short_side(B * t), B * t) for t in ts_short]
+    north = [(A * t, long_side(A * t)) for t in ts_long]
+    west = [(-short_side(B * t), -B * t) for t in ts_short]
+    south = [(-A * t, -long_side(A * t)) for t in ts_long]
+    ne = tip
+    nw = [(-x, y) for x, y in reversed(tip)]
+    sw = [(-x, -y) for x, y in tip]
+    se = [(x, -y) for x, y in reversed(tip)]
+    outline = east + ne + north + nw + west + sw + south + se
+
+    droop_max = 0.0045                          # lugs bend ~5° down over their last 0.05 m
+
+    def droop(x, y):
+        c = (abs(x) / A) * (abs(y) / B)
+        return droop_max * max(0.0, min(1.0, (c - 0.45) / 0.5)) ** 1.5
+
+    # (scale about the centre, z) from the flat mould-side bottom up the soft
+    # 0.01 m edge round, to the 0.035 m edge and the domed 0.05 m centre.
+    bottom = [(0.90, 0.0), (0.978, 0.0025), (1.0, 0.011), (1.0, 0.023)]
+    top = [(0.982, 0.0315), (0.935, 0.0355), (0.72, 0.0435), (0.42, 0.0485)]
+    rings = [[(0.0, 0.0, droop_max)]]
+    for s, z in bottom + top:
+        rings.append([(s * x, s * y, z + droop_max - droop(s * x, s * y)) for x, y in outline])
+    rings.append([(0.0, 0.0, 0.05 + droop_max)])
+
+    top_table = [(1.0, 0.023)] + top + [(0.0, 0.05)]
+
+    def surface(x, y):
+        angle = math.atan2(y, x)
+        s = math.hypot(x, y) / _ray_radius(outline, angle)
+        return _interp(top_table, s) + droop_max - droop(x, y)
+
+    grit_z = droop_max + 0.0012
+    paint = [
+        {"mat": "hearth_soot", "min": (-0.22, 0.12, -1), "max": (0.22, 1, droop_max + 0.013)},
+        {"mat": "casting_grit", "min": (-1, -1, -1), "max": (1, 1, grit_z)},
+    ]
+    for sx in (1, -1):
+        for sy in (1, -1):
+            lo = (0.255 if sx > 0 else -1, 0.158 if sy > 0 else -1, -1)
+            hi = (1 if sx > 0 else -0.255, 1 if sy > 0 else -0.158, 1)
+            paint.append({"mat": "rubbed_copper", "min": lo, "max": hi})
+    parts = [Part(LOFT, (0, 0, 0), (1, 1, 1), mat="raw_copper",
+                  extras={"rings": rings, "paint": paint})]
+
+    # Blisters and pocks on the open-mould face: dark oxide pits, and a few raised
+    # bubbles rubbed bright. Seeded so every build is identical.
+    rng = random.Random(1187)
+    placed = []
+    stamp = (0.19, 0.0)
+    while len(placed) < 24:
+        x, y = rng.uniform(-0.22, 0.22), rng.uniform(-0.13, 0.13)
+        if math.hypot(x - stamp[0], y - stamp[1]) < 0.05:
+            continue
+        d = rng.uniform(0.012, 0.03)
+        if any(math.hypot(x - px, y - py) < (d + pd) * 0.6 for px, py, pd in placed):
+            continue
+        placed.append((x, y, d))
+    for i, (x, y, d) in enumerate(placed):
+        raised = i % 3 == 0
+        z = surface(x, y)
+        h = 0.007 if raised else 0.005
+        parts.append(Part("sphere", (x, y, z - h * (0.25 if raised else 0.36)),
+                          (d, d * rng.uniform(0.7, 0.95), h),
+                          mat="rubbed_copper" if raised else "copper_oxide",
+                          rot=(0, 0, rng.uniform(0, 180)), segments=6, rings=3,
+                          extras={"bevel": False, "smooth": True}))
+
+    # Stamped Cypro-Minoan sign near the east short edge: a trident, 0.06 m.
+    def on_top(pts):
+        return [(x, y, surface(x, y) - 0.0004) for x, y in pts]
+
+    sign = [
+        [(0.160, 0.0), (0.222, 0.0)],
+        [(0.222, -0.021), (0.200, -0.021), (0.190, -0.012), (0.188, 0.0),
+         (0.190, 0.012), (0.200, 0.021), (0.222, 0.021)],
+    ]
+    for path in sign:
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="copper_oxide", segments=4,
+                          extras={"path": on_top(path), "section": (0.0012, 0.0026),
+                                  "up": (0, 0, 1), "bevel": False, "smooth": True}))
+
+    # Casting flash: a thin fin along the front (-Y) long side at mid-edge height.
+    flash = [(x * 1.004, y * 1.004 - 0.001, 0.017 + droop_max - droop(x, y))
+             for x, y in south[1:-1]]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="raw_copper", segments=4,
+                      extras={"path": flash, "section": (0.0022, 0.0016),
+                              "up": (0, 0, 1), "bevel": False, "smooth": True}))
+
+    return blueprint(
+        entry, parts,
+        # The soft 0.01 m edge round is modelled in the loft rings; the asset bevel
+        # would only multiply the 44-point outline.
+        bevel=0.0,
+        extra_families={
+            # The wear bullet asks for brighter rubbed copper on the lug tips and
+            # raised blisters; the JSON gives that colour only inside Raw copper's
+            # notes ("brighter #C07A4E on high points"), not as its own material.
+            "rubbed_copper": {"name": "Rubbed copper (high points)", "base": "#C07A4E",
+                              "rough": 0.4, "metal": 1.0, "grain": 0.12},
+        },
+        family_overrides={
+            "raw_copper": {"wear_to": "#5A3524", "wear_amount": 0.25, "grain": 0.28},
+            "copper_oxide": {"rough": 0.8},
+            # "multiply 30 %" over raw copper: the smudge is baked as its result.
+            "hearth_soot": {"base": "#6E4028", "rough": 0.7},
+        },
+        notes=["Shrinkage wrinkles and sand-cast grain are left to the normal map, "
+               "which EnemyForge's bake does not make; blisters and pocks are modelled."],
+    )
+
+
 BLUEPRINTS = {
     "sealed-amphora": sealed_amphora,
+    "oxhide-ingot": oxhide_ingot,
 }

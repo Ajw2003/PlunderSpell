@@ -2,6 +2,87 @@
   "generated_by": "Tools/ArtForge/build.py",
   "assets": [
     {
+      "key": "items/bronze/oxhide-ingot",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "oxhide-ingot",
+      "name": "OxhideIngot",
+      "title": "Oxhide Ingot",
+      "passed": true,
+      "stats": {
+        "vertices": 734,
+        "faces": 864,
+        "triangles": 1356,
+        "islands": 28,
+        "lowest_z": 0.0021,
+        "height": 0.055,
+        "width": 0.6,
+        "budget": 1500,
+        "bbox_m": "0.600x0.400x0.053",
+        "vs_spec": "W=0.600/0.600 D=0.400/0.400 H=0.053/0.050"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.6,
+          0.4,
+          0.05
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "raw_copper": {
+          "name": "Raw copper",
+          "base": "#9E5A36",
+          "rough": 0.55,
+          "metal": 1.0,
+          "emit": null
+        },
+        "copper_oxide": {
+          "name": "Copper oxide",
+          "base": "#5A3524",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
+        "casting_grit": {
+          "name": "Casting grit",
+          "base": "#7A6A58",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hearth_soot": {
+          "name": "Hearth soot",
+          "base": "#6E4028",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "rubbed_copper": {
+          "name": "Rubbed copper (high points)",
+          "base": "#C07A4E",
+          "rough": 0.4,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['rubbed_copper']"
+      ],
+      "notes": [
+        "Shrinkage wrinkles and sand-cast grain are left to the normal map, which EnemyForge's bake does not make; blisters and pocks are modelled."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/OxhideIngot.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/glTF/OxhideIngot.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/OxhideIngot.blend"
+      },
+      "build_seconds": 3.3
+    },
+    {
       "key": "items/bronze/sealed-amphora",
       "kind": "items",
       "age": "bronze",
@@ -82,6 +163,104 @@
         "blend": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/SealedAmphora.blend"
       },
       "build_seconds": 2.5
+    },
+    {
+      "key": "items/high/arm-reliquary",
+      "kind": "items",
+      "age": "high",
+      "slug": "arm-reliquary",
+      "name": "ArmReliquary",
+      "title": "Arm Reliquary",
+      "passed": false,
+      "stats": {
+        "vertices": 1513,
+        "faces": 1537,
+        "triangles": 2786,
+        "islands": 62,
+        "lowest_z": 0.0,
+        "height": 0.52,
+        "width": 0.16,
+        "budget": 1500,
+        "bbox_m": "0.160x0.144x0.520",
+        "vs_spec": "W=0.160/0.160 D=0.144/0.140 H=0.520/0.520"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.16,
+          0.14,
+          0.52
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "silver": {
+          "name": "Silver",
+          "base": "#B8B4A8",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "gilt": {
+          "name": "Gilt (orpiment)",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "rock_crystal": {
+          "name": "Rock crystal",
+          "base": "#CBD3CF",
+          "rough": 0.08,
+          "metal": 0.0,
+          "emit": null
+        },
+        "garnet": {
+          "name": "Garnet",
+          "base": "#6E1F2A",
+          "rough": 0.1,
+          "metal": 0.0,
+          "emit": null
+        },
+        "relic_bone": {
+          "name": "Relic bone",
+          "base": "#DCD2BA",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        },
+        "niello_soot": {
+          "name": "Niello / soot",
+          "base": "#2A2622",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "red_silk": {
+          "name": "Red silk (relic wrap)",
+          "base": "#7E2A26",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [
+        "2786 triangles exceeds the 1500 budget"
+      ],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['red_silk']"
+      ],
+      "notes": [
+        "Rock crystal is opaque in this bake (no refraction mask yet); the relic bone and its red silk wrap are laid on the crystal's face so they read through the window.",
+        "Felt underside and the vellum ground behind the relic are not modelled (never seen at game distance / hidden by the opaque crystal)."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/ArmReliquary/glTF/ArmReliquary.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.blend"
+      },
+      "build_seconds": 4.8
     },
     {
       "key": "items/high/gilded-altarpiece",
@@ -178,6 +357,174 @@
         "blend": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/GildedAltarpiece.blend"
       },
       "build_seconds": 2.6
+    },
+    {
+      "key": "items/late/parade-armour",
+      "kind": "items",
+      "age": "late",
+      "slug": "parade-armour",
+      "name": "ParadeArmourOnItsStand",
+      "title": "Parade Armour on its Stand",
+      "passed": true,
+      "stats": {
+        "vertices": 2119,
+        "faces": 1981,
+        "triangles": 4070,
+        "islands": 42,
+        "lowest_z": 0.0,
+        "height": 1.908,
+        "width": 0.734,
+        "budget": 5000,
+        "bbox_m": "0.734x0.720x1.908",
+        "vs_spec": "W=0.734/0.720 D=0.720/0.720 H=1.908/1.900"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.72,
+          0.72,
+          1.9
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "white_harness": {
+          "name": "White harness",
+          "base": "#8E9194",
+          "rough": 0.18,
+          "metal": 1.0,
+          "emit": null
+        },
+        "gilt_etching": {
+          "name": "Gilt etching",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "oak_stand": {
+          "name": "Oak stand",
+          "base": "#6B4F33",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "velvet_facing": {
+          "name": "Velvet facing",
+          "base": "#7A2228",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "stand_iron": {
+          "name": "Stand iron",
+          "base": "#3F3C38",
+          "rough": 0.6,
+          "metal": 1.0,
+          "emit": null
+        },
+        "leathers": {
+          "name": "Leathers",
+          "base": "#5A4331",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Etched foliage in the gilt bands and the flute dust are texture/normal detail; EnemyForge's bake makes no normal map, so bands are flat gilt.",
+        "Gauntlets omitted, as the JSON says (stolen last year)."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/ParadeArmourOnItsStand.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/glTF/ParadeArmourOnItsStand.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/ParadeArmourOnItsStand.blend"
+      },
+      "build_seconds": 3.6
+    },
+    {
+      "key": "items/powder/curiosity-cabinet",
+      "kind": "items",
+      "age": "powder",
+      "slug": "curiosity-cabinet",
+      "name": "CabinetOfCuriosities",
+      "title": "Cabinet of Curiosities",
+      "passed": true,
+      "stats": {
+        "vertices": 2600,
+        "faces": 2501,
+        "triangles": 4684,
+        "islands": 135,
+        "lowest_z": 0.0,
+        "height": 1.322,
+        "width": 0.981,
+        "budget": 5000,
+        "bbox_m": "0.981x0.567x1.322",
+        "vs_spec": "W=0.981/0.950 D=0.567/0.550 H=1.322/1.300"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.95,
+          0.55,
+          1.3
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "ebony_veneer": {
+          "name": "Ebony veneer",
+          "base": "#1A1714",
+          "rough": 0.35,
+          "metal": 0.0,
+          "emit": null
+        },
+        "black_walnut": {
+          "name": "Black walnut",
+          "base": "#3B2A1E",
+          "rough": 0.5,
+          "metal": 0.0,
+          "emit": null
+        },
+        "gilt_bronze": {
+          "name": "Gilt bronze",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "painted_copper_panel": {
+          "name": "Painted copper panel",
+          "base": "#6E7A62",
+          "rough": 0.4,
+          "metal": 0.0,
+          "emit": null
+        },
+        "drawer_bone_inlay": {
+          "name": "Drawer bone inlay",
+          "base": "#DCD2BA",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Built closed (the carry state); the 40-drawer bank is modelled under the doors so the open-door and burst-open states reuse it.",
+        "Landscape sky on the door panels uses the vellum bone-inlay family (the pale ground of the concept's panels); the palette has no other light tone.",
+        "Drawer faces are one box each here; the JSON's instancing (one drawer mesh, 40 instances) is an engine-side import step."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/CabinetOfCuriosities.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/glTF/CabinetOfCuriosities.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/CabinetOfCuriosities.blend"
+      },
+      "build_seconds": 3.0
     }
   ]
 }

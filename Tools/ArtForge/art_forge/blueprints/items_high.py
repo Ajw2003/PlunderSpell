@@ -217,6 +217,179 @@ def gilded_altarpiece(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Arm reliquary
+# --------------------------------------------------------------------------------
+
+def _oval_point(r: float, k: float, theta_deg: float, z: float, lift: float = 0.0):
+    """A point on an oval section (x radius r, y radius k*r) at angle theta, pushed
+    `lift` metres out along the section's outward normal; returns (point, normal)."""
+    t = math.radians(theta_deg)
+    nx, ny = math.cos(t), math.sin(t) / k
+    n = math.hypot(nx, ny)
+    nx, ny = nx / n, ny / n
+    return (r * math.cos(t) + nx * lift, k * r * math.sin(t) + ny * lift, z), (nx, ny, 0.0)
+
+
+def arm_reliquary(entry: Entry):
+    """A silver forearm raised in blessing on a stepped plinth: oval tapered sleeve
+    with chased folds and gilt edge bands, a rock-crystal window on the relic, a
+    jewelled cuff, and a hand with index and middle fingers raised."""
+    W, D, H = entry.dims                      # 0.16 × 0.14 × 0.52
+    parts: list[Part] = []
+
+    # --- Plinth: lower gilt step with seven garnets on the front, upper silver step,
+    # a niello moulding line between them.
+    parts.append(Part("prism", (0, 0, 0.015), (1, 1, 0.03), mat="gilt",
+                      extras={"outline": rounded_rect(W, D, 0.018, 2)}))
+    parts.append(Part("prism", (0, 0, 0.0315), (1, 1, 0.003), mat="niello_soot",
+                      extras={"outline": rounded_rect(0.136, 0.116, 0.012, 2), "bevel": False}))
+    parts.append(Part("prism", (0, 0, 0.0465), (1, 1, 0.027), mat="silver",
+                      extras={"outline": rounded_rect(0.13, 0.11, 0.012, 2)}))
+    for i in range(7):
+        parts.append(Part("sphere", ((i - 3) * 0.02, -D / 2.0 - 0.001, 0.015),
+                          (0.010, 0.006, 0.010), mat="garnet", segments=6, rings=4,
+                          extras={"bevel": False}))
+
+    # --- Sleeve: oval section (depth/width 0.10/0.12), tapering 0.12 -> 0.086 wide
+    # over 0.32 m, flared a little into the plinth.
+    k = 0.10 / 0.12
+    z0, z1 = 0.058, 0.382
+    r0, r1 = 0.060, 0.043
+
+    def r_at(z: float) -> float:
+        return r0 + (r1 - r0) * (z - 0.06) / 0.32
+
+    parts.append(Part("lathe", (0, 0, 0), (1.0, k, 1.0), mat="silver", segments=16,
+                      extras={"profile": [(0.063, z0), (0.061, 0.068), (r_at(0.22), 0.22),
+                                          (r1, z1)], "smooth": True, "bevel": False}))
+    # Seven chased drapery folds (4 mm proud ribs) with a niello groove beside each,
+    # avoiding the window on the front (-90°) and the gilt edge bands (0°, 180°).
+    for theta in (-152, -127, -53, -28, 52, 90, 128):
+        rib, groove = [], []
+        for z in (0.066, 0.22, 0.372):
+            p, n = _oval_point(r_at(z), k, theta, z, lift=0.0005)
+            rib.append(p)
+            g, _ = _oval_point(r_at(z), k, theta + 9, z, lift=0.0003)
+            groove.append(g)
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=5,
+                          extras={"path": rib, "section": (0.0042, 0.0065), "up": n,
+                                  "smooth": True, "bevel": False}))
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="niello_soot", segments=3,
+                          extras={"path": groove, "section": (0.0012, 0.0016), "up": n,
+                                  "bevel": False}))
+    # Gilt edge bands down both sides.
+    for theta in (0, 180):
+        band = [_oval_point(r_at(z), k, theta, z, lift=0.0005)[0] for z in (0.064, 0.22, 0.378)]
+        n = _oval_point(r1, k, theta, 0.3)[1]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="gilt", segments=4,
+                          extras={"path": band, "section": (0.0025, 0.0045), "up": n,
+                                  "smooth": True, "bevel": False}))
+
+    # --- Window: oval rock crystal 0.05 × 0.09 m, 15 mm proud, in a gilt collet with
+    # 12 beads; the wrapped relic bone shows at the crystal's face.
+    wz = 0.21
+    front = -k * r_at(wz)
+    parts.append(Part("torus", (0, front - 0.002, wz), (0.064, 0.104, 0.014), mat="gilt",
+                      rot=(90, 0, 0), segments=16, rings=4, minor=0.16,
+                      extras={"smooth": True, "bevel": False}))
+    cr = (0.025, 0.015, 0.045)                  # crystal semi-axes
+    parts.append(Part("sphere", (0, front, wz), (2 * cr[0], 2 * cr[1], 2 * cr[2]),
+                      mat="rock_crystal", segments=12, rings=7,
+                      extras={"smooth": True, "bevel": False}))
+    for i in range(12):
+        a = 2 * math.pi * i / 12
+        parts.append(Part("sphere", (0.032 * math.cos(a), front - 0.006, wz + 0.052 * math.sin(a)),
+                          (0.0075, 0.0075, 0.0075), mat="gilt", segments=5, rings=3,
+                          extras={"smooth": True, "bevel": False}))
+
+    def on_crystal(x: float, z: float, lift: float):
+        u = 1.0 - (x / cr[0]) ** 2 - ((z - wz) / cr[2]) ** 2
+        return (x, front - cr[1] * math.sqrt(max(u, 0.0)) - lift, z)
+
+    bone = [on_crystal(x, wz + dz, 0.0006) for x, dz in
+            ((-0.004, 0.034), (0.006, 0.016), (-0.003, -0.004), (0.004, -0.022), (-0.002, -0.034))]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="relic_bone", segments=4,
+                      extras={"path": bone, "section": (0.0012, 0.0055), "up": (0, -1, 0),
+                              "smooth": True, "bevel": False}))
+    silk = [on_crystal(x, wz + dz, 0.0012) for x, dz in ((-0.015, -0.020), (0.0, -0.012), (0.016, -0.004))]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="red_silk", segments=4,
+                      extras={"path": silk, "section": (0.0010, 0.0045), "up": (0, -1, 0),
+                              "smooth": True, "bevel": False}))
+
+    # --- Cuff: gilt band 0.04 m × 0.11 m, five oval garnets in collets on the front
+    # half, a beaded top edge.
+    kc = 0.09 / 0.11
+    parts.append(Part("lathe", (0, 0, 0), (1.0, kc, 1.0), mat="gilt", segments=16,
+                      extras={"profile": [(0.050, 0.378), (0.055, 0.383), (0.055, 0.414),
+                                          (0.050, 0.419)], "smooth": True}))
+    parts.append(Part("torus", (0, 0, 0.419), (0.106, 0.106 * kc, 0.010), mat="gilt",
+                      segments=20, rings=4, minor=0.09, extras={"bevel": False}))
+    for theta in (-150, -120, -90, -60, -30):
+        (x, y, z), (nx, ny, _) = _oval_point(0.055, kc, theta, 0.3985, lift=0.001)
+        yaw = math.degrees(math.atan2(ny, nx)) + 90.0
+        parts.append(Part("cyl", (x, y, z), (0.015, 0.020, 0.004), mat="gilt", segments=8,
+                          rot=(90, 0, yaw), extras={"bevel": False}))
+        parts.append(Part("sphere", (x + nx * 0.002, y + ny * 0.002, z), (0.011, 0.007, 0.016),
+                          mat="garnet", segments=6, rings=4, rot=(0, 0, yaw),
+                          extras={"smooth": True, "bevel": False}))
+
+    # --- Hand: palm facing the viewer; ring and little fingers folded on the
+    # viewer's left, index and middle raised, thumb out to the viewer's right.
+    parts.append(Part("lathe", (0.004, 0, 0), (1.0, 0.07 / 0.084, 1.0), mat="silver", segments=10,
+                      extras={"profile": [(0.041, 0.416), (0.043, 0.440), (0.042, 0.458),
+                                          (0.034, 0.468), (0.0, 0.471)], "smooth": True,
+                              "bevel": False}))
+    for x in (-0.028, -0.010):                 # folded ring + little fingers (curled knuckles)
+        curl = [(x, 0.006, 0.462), (x, -0.012, 0.470), (x, -0.030, 0.464), (x, -0.034, 0.448)]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=6,
+                          extras={"path": curl, "section": (0.0085, 0.0085), "up": (1, 0, 0),
+                                  "smooth": True, "bevel": False}))
+    for x, ring in ((0.004, False), (0.024, True)):  # middle, index (gilt ring on index)
+        prof = [(0.0092, 0.455), (0.0095, 0.474), (0.0098, 0.477), (0.0098, 0.482),
+                (0.0095, 0.485), (0.0090, 0.496), (0.0090, 0.498), (0.0086, 0.508),
+                (0.0062, 0.516), (0.0, H)]
+        # Knuckle lines (niello) at the two bulges; on the index the lower one is the
+        # gilt ring instead.
+        paint = [{"mat": "gilt" if ring else "niello_soot",
+                  "min": (-1, -1, 0.4765), "max": (1, 1, 0.4825)},
+                 {"mat": "niello_soot", "min": (-1, -1, 0.4955), "max": (1, 1, 0.4985)}]
+        parts.append(Part("lathe", (x, -0.004, 0), (1.0, 0.9, 1.0), mat="silver", segments=8,
+                          extras={"profile": prof, "paint": paint, "smooth": True,
+                                  "bevel": False}))
+    thumb = [(0.034, -0.006, 0.428), (0.050, -0.010, 0.444), (0.058, -0.012, 0.462),
+             (0.057, -0.012, 0.476)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=6,
+                      extras={"path": thumb, "section": (0.0095, 0.0080), "up": (0, 1, 0),
+                              "smooth": True, "bevel": False}))
+    parts.append(Part("sphere", (0.057, -0.012, 0.476), (0.016, 0.014, 0.014), mat="silver",
+                      segments=6, rings=4, extras={"smooth": True, "bevel": False}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.002,
+        extra_families={
+            # The build bullet wraps the relic bone in red silk; the JSON palette has
+            # no silk. Kermes red from the High palette.
+            "red_silk": {"name": "Red silk (relic wrap)", "base": "#7E2A26", "rough": 0.7,
+                         "metal": 0.0, "grain": 0.2},
+        },
+        family_overrides={
+            # Tarnish in the chasing; gilt rubbed back to the silver under it.
+            "silver": {"wear_to": "#5A5850", "wear_amount": 0.25, "grain": 0.16},
+            "gilt": {"wear_to": "#B8B4A8", "wear_amount": 0.25, "grain": 0.14},
+            "rock_crystal": {"rough": 0.08, "grain": 0.12},
+            "garnet": {"grain": 0.1},
+        },
+        notes=["Rock crystal is opaque in this bake (no refraction mask yet); the relic "
+               "bone and its red silk wrap are laid on the crystal's face so they read "
+               "through the window.",
+               "Felt underside and the vellum ground behind the relic are not modelled "
+               "(never seen at game distance / hidden by the opaque crystal)."],
+    )
+
+
 BLUEPRINTS = {
     "gilded-altarpiece": gilded_altarpiece,
+    "arm-reliquary": arm_reliquary,
 }
