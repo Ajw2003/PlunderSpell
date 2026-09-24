@@ -1221,54 +1221,81 @@ def _pavise(fig: Human, c: Vector, grip: Vector) -> list[Part]:
     weighting to choke on). Prop bone Pavise on Hand.L; PaviseProp (hinge) under it
     carries the 0.85 m poplar prop leg."""
     cx, cy = c.x, c.y
-    zs = [_PAV_Z0, 0.06] + [0.06 + (1.28 - 0.06) * k / 24 for k in range(1, 24)] + [1.28, _PAV_Z1]
-    rings = []
-    for z in zs:
-        front = [(cx + x, cy + _pav_front(x), z) for x in _PAV_XS]
-        back = [(cx + x, cy + _pav_back(x), z) for x in reversed(_PAV_XS)]
-        rings.append(front + back)
-    # Paint: a cell map on the front face, then the rim on every face.
-    paint = []
-
-    def cell(x0, x1, z0, z1, mat, front_only=True):
-        xm = (x0 + x1) / 2
-        ymax = cy + _pav_front(xm) + 0.012 if front_only else 1.0
-        paint.append({"mat": mat, "min": (cx + x0 - 0.001, -1.0, z0 - 0.001),
-                      "max": (cx + x1 + 0.001, ymax, z1 + 0.001)})
     half = _PAV_W / 2
-    diag = Vector((2 * half, -(_PAV_Z1 - _PAV_Z0), 0)).normalized()   # top-left -> bottom-right
-    ragged = [0.0, 0.012, -0.010, 0.016, -0.006, 0.010, -0.014, 0.004]
-    for i in range(len(_PAV_XS) - 1):
-        for j in range(len(zs) - 1):
-            x0, x1, z0, z1 = _PAV_XS[i], _PAV_XS[i + 1], zs[j], zs[j + 1]
-            xm, zm = (x0 + x1) / 2, (z0 + z1) / 2
-            best = 9.0
-            for sx in (1.0, -1.0):   # both bars of the saltire, corner to corner
-                p = Vector((sx * xm + half, zm - _PAV_Z1, 0.0))
-                best = min(best, abs(p.x * diag.y - p.y * diag.x))
-            if best < 0.062 + ragged[(i * 3 + j) % len(ragged)]:
-                cell(x0, x1, z0, z1, "livery_red")
-    # The briquet (fire-steel) device at the crossing, 0.16 m wide: a bow and two
-    # hooked ends in iron-black paint, with the flint below.
-    for x0, x1, z0, z1 in ((-0.085, 0.085, 0.70, 0.7508), (-0.085, -0.052, 0.649, 0.70),
-                           (0.052, 0.085, 0.649, 0.70), (-0.047, 0.047, 0.598, 0.649)):
-        cell(x0, x1, z0, z1, "iron_binding")
-    # 4 ball-shot dents and a few gesso chips showing poplar.
-    for x0, x1, z0, z1 in ((0.15, 0.22, 1.04, 1.09), (-0.22, -0.15, 0.39, 0.445),
-                              (0.15, 0.22, 0.24, 0.29), (-0.15, -0.085, 1.14, 1.19)):
-        cell(x0, x1, z0, z1, "iron_binding")
-    for x0, x1, z0, z1 in ((0.22, 0.29, 1.19, 1.24), (-0.29, -0.22, 0.09, 0.14),
-                           (0.085, 0.15, 0.44, 0.50), (-0.29, -0.22, 0.85, 0.90),
-                           (0.22, 0.29, 0.55, 0.60)):
-        cell(x0, x1, z0, z1, "poplar")
-    # Iron binding strip 2 cm round the rim (front, back and edges).
-    for x0, x1 in ((-half - 0.01, -0.29), (0.29, half + 0.01)):
-        cell(x0, x1, -1.0, 3.0, "iron_binding", front_only=False)
-    for z0, z1 in ((-1.0, 0.06), (1.28, 3.0)):
-        cell(-half - 0.01, half + 0.01, z0, z1, "iron_binding", front_only=False)
-    # The back is bare poplar (inside the rim).
-    paint.insert(0, {"mat": "poplar", "min": (cx - half, cy - 0.02, -1.0),
-                     "max": (cx + half, cy + 0.2, 3.0)})
+    zc = (_PAV_Z0 + _PAV_Z1) / 2          # the saltire crossing
+    # Rows: even steps, plus the rim and the briquet device's edges.
+    zs = [_PAV_Z0, 0.06, 1.28, _PAV_Z1] + [0.06 + (1.28 - 0.06) * k / 22 for k in range(1, 22)]
+    zs += [zc + dz for dz in (-0.075, -0.025, 0.025, 0.075)]
+    zs = sorted(zs)
+    zs = [z for i, z in enumerate(zs) if i == 0 or z - zs[i - 1] > 0.012]
+    # Columns: fixed (rim, spine, device) plus, per row, the four edges of the two
+    # saltire bars, so the bars' sides run as mesh edges instead of a staircase.
+    # The ragged edge is a per-row jitter of those columns.
+    fixed = [-half, -0.29, -0.085, -0.052, -0.047, 0.0, 0.047, 0.052, 0.085, 0.29, half]
+    bar_len = math.hypot(2 * half, _PAV_Z1 - _PAV_Z0)
+    bar_hw = 0.05 * bar_len / (_PAV_Z1 - _PAV_Z0)       # horizontal half-width of a bar
+    jitter = [0.000, 0.009, -0.006, 0.012, -0.010, 0.004, -0.004, 0.010, -0.012, 0.006]
+
+    def bar_x(z):   # centre of the bar from top-left to bottom-right, at height z
+        return -half + 2 * half * (_PAV_Z1 - z) / (_PAV_Z1 - _PAV_Z0)
+
+    def columns(j, z):
+        b = bar_x(z)
+        edges = [b - bar_hw + jitter[j % 10], b + bar_hw - jitter[(j + 3) % 10],
+                 -b - bar_hw + jitter[(j + 5) % 10], -b + bar_hw - jitter[(j + 7) % 10]]
+        edges = [max(-0.282, min(0.282, e)) for e in edges]
+        xs = sorted(fixed + edges)
+        for i in range(1, len(xs)):          # never two points closer than 4 mm
+            xs[i] = max(xs[i], xs[i - 1] + 0.004)
+        return xs
+    cols = [columns(j, z) for j, z in enumerate(zs)]
+    rings = []
+    for z, xs in zip(zs, cols):
+        front = [(cx + x, cy + _pav_front(x), z) for x in xs]
+        back = [(cx + x, cy + _pav_back(x), z) for x in reversed(xs)]
+        rings.append(front + back)
+
+    # Paint, face by face (each quad's centroid gets its own tiny box).
+    def red(x, z, j):
+        for sx in (1.0, -1.0):
+            if abs(sx * x - bar_x(z)) < bar_hw:
+                return True
+        return False
+
+    def device(x, z):   # a briquet: a bow with hooked ends, a flint below
+        dz = z - zc
+        return ((0.025 < dz < 0.075 and abs(x) < 0.085) or
+                (-0.025 < dz < 0.025 and 0.052 < abs(x) < 0.085) or
+                (-0.075 < dz < -0.025 and abs(x) < 0.047))
+    dents = [(0.185, 1.06), (-0.185, 0.42), (0.18, 0.27), (-0.12, 1.16)]
+    chips = [(0.25, 1.21), (-0.25, 0.12), (0.12, 0.47), (-0.25, 0.87), (0.25, 0.58)]
+    paint = []
+    width = len(rings[0])
+    nf = len(cols[0])
+    for j in range(len(rings) - 1):
+        for k in range(width):
+            q = [Vector(rings[j][k]), Vector(rings[j][(k + 1) % width]),
+                 Vector(rings[j + 1][(k + 1) % width]), Vector(rings[j + 1][k])]
+            m = sum(q, Vector()) / 4.0
+            x, z = m.x - cx, m.z
+            if abs(x) > 0.29 or z < 0.06 or z > 1.28 or k == nf - 1 or k == width - 1:
+                mat = "iron_binding"            # the 2 cm rim binding, and the edges
+            elif k >= nf:
+                mat = "poplar"                  # the bare back
+            elif device(x, z) or any(abs(x - dx) < 0.03 and abs(z - dz) < 0.028
+                                     for dx, dz in dents):
+                mat = "iron_binding"
+            elif any(abs(x - dx) < 0.035 and abs(z - dz) < 0.03 for dx, dz in chips):
+                mat = "poplar"
+            elif red(x, z, j):
+                mat = "livery_red"
+            else:
+                continue
+            paint.append({"mat": mat, "min": tuple(m - Vector((0.0005,) * 3)),
+                          "max": tuple(m + Vector((0.0005,) * 3))})
+    for z0, z1 in ((-1.0, _PAV_Z0 + 0.001), (_PAV_Z1 - 0.001, 3.0)):   # the end caps
+        paint.append({"mat": "iron_binding", "min": (cx - 1, cy - 1, z0),
+                      "max": (cx + 1, cy + 1, z1)})
 
     ymid = cy + _PAV_T / 2 - _PAV_SAG
     fig.prop_bone("Pavise", "L", head=(cx, ymid, 1.22), tail=(cx, ymid, 0.10))
@@ -1367,6 +1394,9 @@ def pavisier(entry: Entry):
     # painted bands of the same shell (no second torso layer under the coat).
     parts = [fig.torso_part("livery_red", pad=pad, hem=0.76, hem_flare=1.24, collar=0.075,
                             quilt=0.06, segments=36, paint=[white] + mail)]
+    # the skirt follows the thighs fully at the hem (a lifted knee pushed through the
+    # pleats at the default 0.8)
+    parts[0].extras["skirt"].update({"top": fig.hip_z + 0.05, "strength": 1.0, "split": 0.06})
     for side in ("L", "R"):
         # sleeves counterchanged: red on the white side, white on the red side
         sleeve = "gesso_white" if side == "L" else "livery_red"

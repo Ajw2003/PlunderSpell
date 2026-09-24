@@ -611,7 +611,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":5210,
+			"count":4494,
 			"max":[
 				0.976351261138916,
 				1.8063592910766602,
@@ -627,31 +627,31 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":5210,
+			"count":4494,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":5210,
+			"count":4494,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":5210,
+			"count":4494,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":5210,
+			"count":4494,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":15816,
+			"count":15456,
 			"type":"SCALAR"
 		},
 		{
@@ -664,44 +664,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":62520,
+			"byteLength":53928,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":62520,
-			"byteOffset":62520,
+			"byteLength":53928,
+			"byteOffset":53928,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":41680,
-			"byteOffset":125040,
+			"byteLength":35952,
+			"byteOffset":107856,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":20840,
-			"byteOffset":166720,
+			"byteLength":17976,
+			"byteOffset":143808,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":83360,
-			"byteOffset":187560,
+			"byteLength":71904,
+			"byteOffset":161784,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":31632,
-			"byteOffset":270920,
+			"byteLength":30912,
+			"byteOffset":233688,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1536,
-			"byteOffset":302552
+			"byteOffset":264600
 		}
 	],
 	"samplers":[
@@ -712,7 +712,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":304088,
+			"byteLength":266136,
 			"uri":"Pavisier.bin"
 		}
 	]

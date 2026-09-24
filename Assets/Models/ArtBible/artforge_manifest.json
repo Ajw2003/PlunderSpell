@@ -2648,10 +2648,10 @@
       "title": "Handgunner",
       "passed": true,
       "stats": {
-        "vertices": 2929,
-        "faces": 2781,
-        "triangles": 5626,
-        "islands": 61,
+        "vertices": 3105,
+        "faces": 2977,
+        "triangles": 6050,
+        "islands": 43,
         "lowest_z": 0.0,
         "height": 1.779,
         "width": 0.678,
@@ -2661,8 +2661,8 @@
         "height_spec_m": 1.78,
         "height_with_props_m": 1.779,
         "rig_bones": 25,
-        "skinned_bones": 19,
-        "mean_influences": 1.06
+        "skinned_bones": 24,
+        "mean_influences": 1.63
       },
       "spec": {
         "dims_WDH_m": null,
@@ -2784,7 +2784,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/Handgunner/glTF/Handgunner.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/Handgunner/Handgunner.blend"
       },
-      "build_seconds": 3.4
+      "build_seconds": 3.7
     },
     {
       "key": "enemies/late/pavisier",
@@ -2795,10 +2795,10 @@
       "title": "Pavisier",
       "passed": true,
       "stats": {
-        "vertices": 2728,
-        "faces": 2694,
-        "triangles": 5272,
-        "islands": 47,
+        "vertices": 2644,
+        "faces": 2514,
+        "triangles": 5152,
+        "islands": 35,
         "lowest_z": 0.0,
         "height": 1.806,
         "width": 1.285,
@@ -2809,7 +2809,7 @@
         "height_with_props_m": 1.806,
         "rig_bones": 24,
         "skinned_bones": 23,
-        "mean_influences": 1.62
+        "mean_influences": 1.6
       },
       "spec": {
         "dims_WDH_m": null,
@@ -2898,7 +2898,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/Pavisier/glTF/Pavisier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/Pavisier/Pavisier.blend"
       },
-      "build_seconds": 3.8
+      "build_seconds": 3.6
     },
     {
       "key": "enemies/late/sallet-halberdier",
