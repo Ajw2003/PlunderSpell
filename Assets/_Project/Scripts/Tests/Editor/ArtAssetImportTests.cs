@@ -15,5 +15,17 @@ namespace RogueAi.Tests.Editor
             var report = ArtAssetImportValidator.Validate();
             Assert.That(report.Failures, Is.Empty, string.Join("\n", report.Lines));
         }
+
+        /// <summary>
+        /// The art-bible models and textures carry the settings ArtBibleModelImporter owns: rig type
+        /// per model, a valid Humanoid avatar for every human, the hound's Generic root, URP Lit with
+        /// the ×9 emission, linear data maps. docs/plans/artbible-enemies-in-engine.md, E0.
+        /// </summary>
+        [Test]
+        public void ArtBibleModelsImportWithTheirOwnedSettings()
+        {
+            var report = ArtAssetImportValidator.ValidateArtBible();
+            Assert.That(report.Failures, Is.Empty, string.Join("\n", report.Lines));
+        }
     }
 }

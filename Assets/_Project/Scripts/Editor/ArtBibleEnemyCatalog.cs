@@ -263,6 +263,21 @@ namespace RogueAi.EditorTools
         public static string AgeFolderFor(string ageSlug) =>
             string.IsNullOrEmpty(ageSlug) ? "Unknown" : char.ToUpperInvariant(ageSlug[0]) + ageSlug.Substring(1);
 
+        /// <summary>
+        /// The project root: the nearest folder at or above <c>Application.dataPath</c> that holds the
+        /// ArtForge manifest. In the Editor that is the parent of Assets; walking up also finds it
+        /// from the headless test runner's output folder. Null when there is none.
+        /// </summary>
+        public static string FindProjectRoot()
+        {
+            for (DirectoryInfo dir = new DirectoryInfo(Application.dataPath); dir != null; dir = dir.Parent)
+            {
+                if (File.Exists(Path.Combine(dir.FullName, ManifestPath)))
+                    return dir.FullName;
+            }
+            return null;
+        }
+
         /// <summary>Reads every Age's JSON and the manifest from a project root on disk.</summary>
         public static List<ArtBibleEnemySpec> Load(string projectRoot, List<string> problems)
         {

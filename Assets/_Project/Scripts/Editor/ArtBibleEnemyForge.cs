@@ -37,7 +37,12 @@ namespace RogueAi.EditorTools
         [MenuItem("Tools/Plunderspell/Forge Art Bible Enemies + Roster")]
         public static void Forge()
         {
-            string projectRoot = Directory.GetParent(Application.dataPath).FullName;
+            string projectRoot = ArtBibleEnemyCatalog.FindProjectRoot();
+            if (projectRoot == null)
+            {
+                Debug.LogError($"[ArtBible] No {ArtBibleEnemyCatalog.ManifestPath} found above {Application.dataPath}.");
+                return;
+            }
             var problems = new List<string>();
             List<ArtBibleEnemySpec> specs = ArtBibleEnemyCatalog.Load(projectRoot, problems);
 
