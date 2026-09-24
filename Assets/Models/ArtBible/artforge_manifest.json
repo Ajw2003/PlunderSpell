@@ -177,7 +177,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/glTF/GildedAltarpiece.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/GildedAltarpiece.blend"
       },
-      "build_seconds": 2.8
+      "build_seconds": 2.6
     }
   ]
 }

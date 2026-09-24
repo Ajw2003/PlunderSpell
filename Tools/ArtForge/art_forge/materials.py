@@ -153,6 +153,9 @@ def build_authoring_material(asset: str, family: str, fam: dict,
     return mat
 
 
+_SINGULAR = {"items": "item", "structures": "structure", "enemies": "enemy"}
+
+
 def discipline_violations(kind: str, name: str, families: dict[str, dict],
                           gold_reason: str | None = None) -> list[str]:
     """The mood board's pigment rules, applied to the families an asset uses.
@@ -170,7 +173,7 @@ def discipline_violations(kind: str, name: str, families: dict[str, dict],
             stealable = any(w in text for w in ("plunder", "loot", "stealable"))
             if not stealable and not gold_reason:
                 problems.append(
-                    f"{name}: {kind[:-1]} uses orpiment-gold family {key!r} "
+                    f"{name}: {_SINGULAR.get(kind, kind)} uses orpiment-gold family {key!r} "
                     f"({fam['base']}); gold is for plunder only — mark it stealable "
                     f"in the art bible or set Blueprint.gold_reason")
         if kind == "enemies" and spec_mod.is_reserved_arcane(fam):

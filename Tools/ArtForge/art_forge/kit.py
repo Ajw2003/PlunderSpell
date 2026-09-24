@@ -336,6 +336,11 @@ def build_bmesh(parts: list[Part], family_index: dict[str, int]):
             # Families are decided in local space, before placement moves the verts.
             stamps = [_face_family(f, regions, default, family_index) if regions else default
                       for f in faces]
+            for region in regions:
+                if family_index[region["mat"]] not in stamps and region["mat"] != part.mat:
+                    raise ValueError(
+                        f"part {number} ({part.kind}): paint region {region} contains no "
+                        f"face centroid — add profile/outline points on the band edges")
             _place(bm, part, verts, mirrored)
             # A negative size is a reflection too, and would turn the island inside out.
             negative = sum(1 for s in part.size if s < 0.0) % 2 == 1

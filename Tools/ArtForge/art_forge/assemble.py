@@ -229,6 +229,8 @@ def save_blend(bp: Blueprint, model_dir: str) -> str:
         if raw and not raw.startswith("//"):
             image.filepath_raw = bpy.path.relpath(bpy.path.abspath(raw), start=model_dir)
     blend_path = os.path.join(model_dir, f"{bp.name}.blend")
+    # No .blend1 backups: a rebuild regenerates the file, the backup is only noise.
+    bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=blend_path, copy=True)
     return blend_path
 
