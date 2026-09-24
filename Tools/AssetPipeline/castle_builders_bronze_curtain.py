@@ -126,3 +126,32 @@ def build_bronze_bastion(bm, uv):
         _walk(bm, uv, u0, u1, WALL_DEPTH)
         _parapet(bm, uv, u0, u1)
         _steps_up(bm, uv, sgn * tw, sgn, WALL_DEPTH, "south", WALK_Z + 0.1, top + 0.1, 3)
+
+
+def build_bronze_gate_approach(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeGateApproach.svg"""
+    half, jamb, beam_z = 2.1, 0.6, 3.8
+    d0, d1 = PARAPET_IN + PARAPET_T, WALL_DEPTH - 0.2
+    for u0, u1, seed in ((-H, -half - jamb, 7), (half + jamb, H, 8)):
+        _mass(bm, uv, u0, u1, WALL_DEPTH, seed=seed)
+        _walk(bm, uv, u0, u1, WALL_DEPTH)
+    # The jambs: dressed conglomerate, full depth and height; the beams pocket into them.
+    for sgn in (-1, 1):
+        cb._box(bm, uv, CONGLOM, (sgn * (half + jamb / 2), -H + WALL_DEPTH / 2, WALK_Z / 2), (jamb, WALL_DEPTH, WALK_Z))
+    for d in (0.25, 1.2, 2.0):
+        cb._box(bm, uv, TIMBER, (0, -H + d, beam_z + 0.15), (2 * half + 0.6, 0.3, 0.3))
+    # The deck: oak planks over the beams under the breastwork and the walk, jamb to jamb.
+    cb._box(bm, uv, TIMBER, (0, -H + (PARAPET_IN + d1) / 2, WALK_Z + 0.05), (2 * (half + jamb), d1 - PARAPET_IN, 0.1))
+    _parapet(bm, uv, -H, H)
+    # The road: staggered limestone slabs 0.06 m thick through the gate and 5 m in, two cart ruts on them.
+    for k in range(5):
+        cuts = (-1.8, -0.6, 0.6, 1.8) if k % 2 == 0 else (-1.8, -0.9, 0.9, 1.8)
+        for a, b in zip(cuts, cuts[1:]):
+            cb._box(bm, uv, "vellum_dim", ((a + b) / 2, -H + k + 0.5, 0.03), (b - a - 0.04, 0.96, 0.06))
+    for x in (-0.7, 0.7):
+        cb._box(bm, uv, SOOT, (x, -H + 2.5, 0.065), (0.12, 5.0, 0.01))
+    # The stele beside the road, its carved face to the road.
+    sx, sy = 2.8, -2.6
+    cb._box(bm, uv, CONGLOM, (sx, sy, 0.15), (0.5, 0.9, 0.30))
+    ek.prism(bm, uv, "vellum_dim", [(-0.30, 0.0), (0.30, 0.0), (0.27, 1.30), (-0.27, 1.30)], 0.15,
+             loc=(sx + 0.1, sy, 0.30), along="x")

@@ -1,0 +1,71 @@
+{
+  "key": "BronzeGateApproach",
+  "name": "The Cart Gate",
+  "age": "BronzeAge",
+  "zone": "CurtainWall",
+  "role": "Drawbridge",
+  "summary": "The citadel's working gate: a plain opening in the cyclopean wall with an oak deck carrying the walk over it, and a rutted paved road running in past a carved stele.",
+  "description": "The Lion Gate is for kings. Carts come in here, through a gap in the wall between two dressed jambs, under an oak deck that carries the wall-walk and its breastwork straight across so the slingers never have to come down. The road through is paved in limestone slabs worn into two ruts by a few hundred years of oxcarts, and beside it a carved stele reminds the drivers whose road it is. There are no gate leaves; there were once, and the pivot sockets are still in the jambs. Bronze Age builders had no drawbridge to raise, so the gate is only as shut as the men standing on the deck above it.",
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; the wall on the south edge, the bailey open to the north.",
+    "Masses: the straight wall's section, 2.40 m thick, three courses to 4.10 m and a plastered walk, from each cell edge to the jambs: west x −6.05 … −2.70 (seed 7), east x 2.70 … 6.05 (seed 8).",
+    "Jambs: dressed conglomerate, 0.60 m wide (x ±2.10 … ±2.70), the wall's full 2.40 m depth and 4.10 m height, flat-faced; the opening between them is 4.20 m wide.",
+    "Beams: three oak beams 0.30 × 0.30 m at 3.80–4.10 m, 0.25 / 1.20 / 2.00 m in from the cell line, 4.80 m long, pocketed 0.30 m into each jamb; the opening is 3.80 m clear under them.",
+    "Deck: oak planking 0.10 m thick (4.10–4.20 m) from jamb to jamb (x ±2.70), 0.04 to 2.20 m in, carrying the walk and the breastwork across the opening.",
+    "Parapet: the Age's breastwork along the whole run, ten merlons, sling slots in every other one; over the opening it stands on the deck.",
+    "Road: limestone slabs 0.06 m thick, 3.60 m wide (x ±1.80), in five rows of 0.96 m from the cell line to 5.00 m in, three slabs a row with the joints staggered row to row and 0.04 m joints (the kit's paint-box overlap would close anything narrower).",
+    "Ruts: two dark strips 0.12 m wide, 0.01 m thick on the slabs at x ±0.70, the road's full length.",
+    "Stele: conglomerate base 0.50 × 0.90 × 0.30 m at (2.80, −2.60), a tapering limestone slab 0.60 → 0.54 m wide, 1.30 m tall, 0.15 m thick on its east half, carved face west to the road."
+  ],
+  "sockets": [
+    "Gate: 4.20 m wide × 3.80 m clear, centred on the south edge, open (no leaves)",
+    "Wall-walk: continuous at 4.10 m (plaster and deck top 4.20 m), open at the east and west cell edges",
+    "Road: flat (≤ 0.07 m), walkable, 5.00 m in from the cell line"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Cyclopean limestone",
+      "hex": "#8C7F68",
+      "pigment": "vellum_dim",
+      "notes": "Masses, road slabs, stele."
+    },
+    {
+      "name": "Dressed conglomerate",
+      "hex": "#9A8666",
+      "pigment": "vellum_faint",
+      "notes": "Jambs and the stele base."
+    },
+    {
+      "name": "Oak",
+      "hex": "#5A3E28",
+      "pigment": "oak",
+      "notes": "Beams and deck."
+    },
+    {
+      "name": "Mud-brick",
+      "hex": "#8A5A3C",
+      "pigment": "leather",
+      "notes": "The breastwork."
+    },
+    {
+      "name": "Ochre plaster",
+      "hex": "#B7803E",
+      "pigment": "bronze",
+      "notes": "The walk."
+    },
+    {
+      "name": "Soot",
+      "hex": "#2B231B",
+      "pigment": "bone_black",
+      "notes": "Cart ruts and sling slots."
+    }
+  ],
+  "gameplay": [
+    "An open way in: no leaves to bar, but the deck overhead is a slinger post directly above the road.",
+    "The oak deck burns: a FRANGO on it drops the walk and opens the wall-top to the bailey.",
+    "No loot: terrain; the stele is scenery."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeGateApproach.svg"
+}
