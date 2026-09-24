@@ -89,10 +89,17 @@ def _configure(resolution: int, samples: int) -> None:
     scene.cycles.device = "CPU"
     scene.cycles.samples = samples
     scene.cycles.use_adaptive_sampling = True
-    scene.cycles.adaptive_threshold = 0.02
+    # Review renders, not beauty shots: a dark studio with a denoiser needs few
+    # bounces and a loose noise threshold. Each of these roughly halves a view.
+    scene.cycles.adaptive_threshold = 0.04
     scene.cycles.use_denoising = True
-    scene.cycles.max_bounces = 4
+    scene.cycles.denoiser = "OPENIMAGEDENOISE"
+    scene.cycles.max_bounces = 3
+    scene.cycles.diffuse_bounces = 1
+    scene.cycles.glossy_bounces = 2
+    scene.cycles.transmission_bounces = 1
     scene.cycles.transparent_max_bounces = 2
+    scene.cycles.use_auto_tile = False
     scene.render.resolution_x = resolution
     scene.render.resolution_y = resolution
     scene.render.resolution_percentage = 100
