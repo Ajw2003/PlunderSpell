@@ -27,6 +27,12 @@ surfaced it as not actually functional yet.
 | M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
 | M3 — Open the other Ages | Scaffold only | 🟡 `HistoricalEra` enum + plumbing only | ❌ — see below, the data model can't produce era-specific content yet |
 
+**2026-09-24 — art bible plunder modelled.** All 20 plunder items from the art bible
+(`docs/art/`) now exist as validated, textured models under `Assets/Models/ArtBible/Items/`,
+built by `Tools/ArtForge/`. They are not wired into any loot table or prefab yet, and have
+no Unity `.meta` files (Unity creates them on first import). The art bible's 12 structures
+and 16 enemies are specified and drawn but not modelled.
+
 ## The one thing that is not what it looks like
 
 **Choosing an era in the Lair does nothing to the raid you get.** `RaidDirector.StartRaid(era)`

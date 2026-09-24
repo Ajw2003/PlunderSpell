@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <!-- Plunderspell art bible sheet frame. Copy this, keep the frame, replace the DRAWING group.
+       Enemy scale: 1 m = 220 px, ground line at y = 690 (so y = 690 - metres * 220).
+       Rules: docs/art/BRIEF.md. Ids must be unique within the file; the builder prefixes them. -->
+  <defs>
+    <pattern id="grid" width="55" height="55" patternUnits="userSpaceOnUse" x="0" y="690">
+      <path d="M55 0 H0 V55" fill="none" stroke="#262119" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="glow" cx="50%" cy="70%" r="60%">
+      <stop offset="0" stop-color="#2A2012" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#14120E" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- frame -->
+  <rect width="1200" height="800" fill="#14120E"/>
+  <rect width="1200" height="800" fill="url(#glow)"/>
+  <rect x="0" y="120" width="1200" height="570" fill="url(#grid)"/>
+  <line x1="40" y1="690" x2="1160" y2="690" stroke="#635C4C" stroke-width="1.5"/>
+  <rect x="12" y="12" width="1176" height="776" fill="none" stroke="#332D22" stroke-width="1"/>
+
+  <!-- title block -->
+  <text x="40" y="54" font-family="Overpass Mono, monospace" font-size="12" letter-spacing="3" fill="#635C4C">THE BRONZE AGE · ENEMY · PATROL</text>
+  <text x="40" y="96" font-family="Eczar, Georgia, serif" font-size="38" font-weight="700" fill="#DCD2BA">Name Of The Thing</text>
+  <text x="1160" y="54" text-anchor="end" font-family="Overpass Mono, monospace" font-size="12" fill="#9A9078">H 1.70 m · ≤ 8k tris · 2048²</text>
+  <text x="1160" y="76" text-anchor="end" font-family="Overpass Mono, monospace" font-size="12" fill="#9A9078">1 m = 220 px · ground y 690</text>
+
+  <!-- metre ladder -->
+  <g font-family="Overpass Mono, monospace" font-size="11" fill="#635C4C" stroke="#635C4C">
+    <line x1="60" y1="690" x2="60" y2="140" stroke-width="1"/>
+    <line x1="54" y1="690" x2="66" y2="690"/><text x="72" y="694" stroke="none">0</text>
+    <line x1="54" y1="580" x2="66" y2="580"/><text x="72" y="584" stroke="none">0.5</text>
+    <line x1="54" y1="470" x2="66" y2="470"/><text x="72" y="474" stroke="none">1.0</text>
+    <line x1="54" y1="360" x2="66" y2="360"/><text x="72" y="364" stroke="none">1.5</text>
+    <line x1="54" y1="250" x2="66" y2="250"/><text x="72" y="254" stroke="none">2.0</text>
+    <line x1="54" y1="140" x2="66" y2="140"/><text x="72" y="144" stroke="none">2.5</text>
+  </g>
+
+  <!-- 1.80 m standard human, for scale (feet at 690, crown at 294) -->
+  <g fill="#635C4C" opacity=".45">
+    <ellipse cx="160" cy="320" rx="20" ry="26"/>
+    <path d="M160 346 C138 350 126 360 124 380 L118 500 L130 502 L138 410 L140 520 L142 690 L156 690 L160 540 L164 690 L178 690 L180 520 L182 410 L190 502 L202 500 L196 380 C194 360 182 350 160 346 Z"/>
+  </g>
+  <text x="160" y="712" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="10" fill="#635C4C">1.80 m</text>
+
+  <!-- view labels -->
+  <text x="470" y="730" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="11" letter-spacing="3" fill="#635C4C">FRONT</text>
+  <text x="820" y="730" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="11" letter-spacing="3" fill="#635C4C">SIDE</text>
+
+  <!-- DRAWING: replace with the front view (centred x≈470) and side view (centred x≈820) -->
+  <g id="drawing"></g>
+
+  <!-- CALLOUTS: leader line in #9A9078, dot at the part, label in Overpass Mono 12 #DCD2BA, sub-label 10.5 #9A9078 -->
+  <g id="callouts" font-family="Overpass Mono, monospace"></g>
+
+  <!-- palette strip: one 34×18 chip per material, hex under it -->
+  <g id="palette" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078">
+    <rect x="40" y="748" width="34" height="18" fill="#B7803E"/><text x="80" y="761">#B7803E ochre</text>
+  </g>
+</svg>
