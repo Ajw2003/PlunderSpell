@@ -982,7 +982,9 @@ def household_knight(entry: Entry):
     hem, flare = 0.54, 1.42
     paint = [{"mat": "kermes_gules", "min": (-1, -1, -1), "max": (1, 1, hem + 0.05)},
              {"mat": "kermes_gules", "min": (-1, -1, 0.812 * h), "max": (1, 1, 3)},
-             {"mat": "kermes_gules", "min": (-0.024, -1, -1), "max": (0.024, 0.0, 0.72)}]
+             # Front riding split, bordured both sides: the two faces either side
+             # of the front-centre vertex (centroids at x ~ +-0.028 m), hem to 0.84 m.
+             {"mat": "kermes_gules", "min": (-0.036, -1, -1), "max": (0.036, 0.0, 0.84)}]
     zs = [hem + 0.05 + 0.06 * i for i in range(15)]
     for z0, z1 in zip(zs, zs[1:]):
         zm = (z0 + z1) / 2
@@ -998,11 +1000,22 @@ def household_knight(entry: Entry):
                 y0, y1 = sorted((sy * hd * 0.45, sy * 2.0))
                 paint.append({"mat": "kermes_gules", "min": (x0, y0, z0),
                               "max": (x1, y1, z1)})
-    parts.append(fig.torso_part("woad_field", pad=coat_pad, hem=hem, hem_flare=flare,
-                                segments=32, paint=paint))
+    surcoat = fig.torso_part("woad_field", pad=coat_pad, hem=hem, hem_flare=flare,
+                             segments=32, paint=paint)
+    # torso_part's first face row runs hem -> 0.68 m, so its centroid sits above
+    # the 5 cm bordure and the hem came out blue. Split that row with a ring 5 cm
+    # up (lerped between the first two rings, same vertex count) so the bordure
+    # band has faces of its own.
+    r0, r1 = surcoat.extras["rings"][0], surcoat.extras["rings"][1]
+    t = 0.05 / (r1[0][2] - r0[0][2])
+    surcoat.extras["rings"].insert(1, [tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
+                                       for a, b in zip(r0, r1)])
+    parts.append(surcoat)
     parts += _chevron(fig, coat_pad)
     for side in ("L", "R"):
-        parts.append(fig.arm_part(side, "mail_steel", pad=0.014))
+        # Mail over a padded aketon: the concept's sleeves are as broad as the
+        # surcoat's shoulders, so the sleeve carries more pad than a bare arm.
+        parts.append(fig.arm_part(side, "mail_steel", pad=0.024))
         parts += fig.hand_part(side, "mail_steel")      # mail mufflers
         parts.append(fig.leg_part(side, "mail_steel", pad=0.008))
         parts.append(fig.foot_part(side, "mail_steel", length=0.28, point=0.3))

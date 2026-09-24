@@ -2210,9 +2210,9 @@
       "title": "Household Knight",
       "passed": true,
       "stats": {
-        "vertices": 3123,
-        "faces": 3042,
-        "triangles": 5942,
+        "vertices": 3155,
+        "faces": 3074,
+        "triangles": 6006,
         "islands": 78,
         "lowest_z": 0.0,
         "height": 1.95,
@@ -2313,7 +2313,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/glTF/HouseholdKnight.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/HouseholdKnight.blend"
       },
-      "build_seconds": 3.4
+      "build_seconds": 3.6
     },
     {
       "key": "enemies/high/lantern-warden",
