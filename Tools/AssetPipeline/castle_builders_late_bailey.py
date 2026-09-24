@@ -135,3 +135,48 @@ def build_late_gun_foundry(bm, uv):
     cb._box(bm, uv, TIMBER, (-IN + 0.05, -2.5, fz + 1.4), (0.1, 1.0, 0.1))
     for k in range(4):
         cb._box(bm, uv, IRON, (-IN + 0.12, -2.85 + k * 0.23, fz + 1.05), (0.03, 0.03, 0.7))
+
+
+STRAW = "bronze"
+
+
+def pallet(bm, uv, x, y0, y1, fz, w=0.9, blanket_at_south=True):
+    """A straw pallet on a low oak frame, long axis north-south from y0 to y1, a wool
+    blanket over one half."""
+    cy, l = (y0 + y1) / 2, y1 - y0
+    cb._box(bm, uv, TIMBER, (x, cy, fz + 0.1), (w, l, 0.2))
+    cb._box(bm, uv, STRAW, (x, cy, fz + 0.26), (w - 0.06, l - 0.06, 0.12))
+    by = y0 + 0.5 if blanket_at_south else y1 - 0.5
+    cb._box(bm, uv, TAPESTRY, (x, by, fz + 0.35), (w - 0.02, 0.95, 0.06))
+
+
+def build_late_handgunner_barracks(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateHandgunnerBarracks.svg"""
+    h, fz = room_shell(bm, uv, "OuterBailey")
+    # Eight pallets, two per quadrant against the east and west walls.
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            y0, y1 = sorted((sy * 2.6, sy * 4.6))
+            for bx in (3.9, 5.0):
+                pallet(bm, uv, sx * bx, y0, y1, fz, blanket_at_south=sy > 0)
+    # NW: the handgun rack on the north wall; footlockers NW and SW.
+    for z in (0.29, 1.55):
+        cb._box(bm, uv, TIMBER, (-3.3, IN - 0.05, fz + z), (2.2, 0.1, 0.1))
+    for x in (-4.1, -3.6, -3.1, -2.6):
+        cb._box(bm, uv, TIMBER, (x, IN - 0.14, fz + 0.475), (0.1, 0.08, 0.95))
+        mk.paint(bm, mk.add_cylinder(bm, 0.03, 0.85, loc=(x, IN - 0.14, fz + 1.375), segments=6), IRON, uv)
+    for y in (5.05, -5.05):
+        iron_chest(bm, uv, -5.0, y, fz, w=0.8, d=0.5, h=0.5)
+    # NE: the dice table, stools, dice, cups and a stake of coin.
+    cb._table(bm, uv, TIMBER, 2.5, 3.6, fz, 1.0, 0.7, h=0.75)
+    for (x, y), r in zip(((2.5, 2.95), (2.5, 4.25)), (0.18, 0.18)):
+        mk.paint(bm, mk.add_cylinder(bm, r, 0.45, loc=(x, y, fz + 0.225), segments=8), TIMBER, uv)
+    for dy in (-0.15, 0.1):
+        mk.paint(bm, mk.add_cylinder(bm, 0.04, 0.1, loc=(2.5, 3.6 + dy + 0.2, fz + 0.8), segments=6), STEEL, uv)
+    for dx in (-0.1, 0.05):
+        cb._box(bm, uv, LINEN, (2.5 + dx, 3.3, fz + 0.77), (0.04, 0.04, 0.04))
+    mk.paint(bm, mk.add_cylinder(bm, 0.04, 0.03, loc=(2.35, 3.45, fz + 0.765), segments=6), GOLD, uv)
+    # SE: three pavises propped against the south wall.
+    for x in (2.4, 3.1, 3.8):
+        cb._box(bm, uv, TIMBER, (x, -IN + 0.05, fz + 0.65), (0.6, 0.08, 1.3))
+        cb._box(bm, uv, CLOTH, (x, -IN + 0.1, fz + 0.7), (0.5, 0.02, 1.1))

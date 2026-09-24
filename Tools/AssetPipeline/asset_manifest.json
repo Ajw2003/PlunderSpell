@@ -353,6 +353,12 @@
       "preview": "e44b0e9affefc372:23a9d68e53fd",
       "tris": 988
     },
+    "LateHandgunnerBarracks": {
+      "budget": 2400,
+      "content": "fb823de8ee4ed3a6",
+      "preview": "fb823de8ee4ed3a6:23a9d68e53fd",
+      "tris": 1036
+    },
     "LateJewelHouse": {
       "budget": 2000,
       "content": "930d37497b852128",
