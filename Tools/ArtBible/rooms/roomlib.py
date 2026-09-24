@@ -619,6 +619,9 @@ def kit_loot(sh, points, label=True):
     """Loot anchors on the plan: small orpiment diamonds, numbered. `points`
     is [(x, y), ...] in kit metres; the same points (with heights) go in the
     room's JSON `loot_anchors` and are registered by the builder."""
+    # Invisible record of the numbering, so build_room_sheets.py can check the spec lists
+    # its loot anchors in the same L1…Ln order as the drawing.
+    sh.add('<g id="loot-anchors" data-xy="' + ";".join(f"{x:.2f},{y:.2f}" for x, y in points) + '"/>')
     for i, (x, y) in enumerate(points, 1):
         cx, cy = KP(x, y)
         sh.add(f'<path d="M{f(cx)} {f(cy - 5)} l5 5 l-5 5 l-5 -5 z" fill="{LOOT}" stroke="#14120E" stroke-width=".8"/>')

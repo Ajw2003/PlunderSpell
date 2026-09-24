@@ -107,6 +107,13 @@ def validate(spec, pigments):
         for bad in ("<image", "<script", "foreignObject"):
             if bad in svg:
                 issues.append(f"{key}: concept sheet contains {bad}")
+        import re
+        m = re.search(r'id="loot-anchors" data-xy="([^"]*)"', svg)
+        drawn = [tuple(float(v) for v in p.split(",")) for p in m.group(1).split(";") if p] if m else []
+        listed = [tuple(a["xyz"][:2]) for a in d["loot_anchors"] if isinstance(a, dict) and "xyz" in a]
+        if len(drawn) != len(listed) or any(math.dist(p, q) > 0.02 for p, q in zip(drawn, listed)):
+            issues.append(f"{key}: the sheet's L1…L{len(drawn)} and the spec's loot_anchors are not the same points "
+                          f"in the same order")
         if 'viewBox="0 0 1200 800"' not in svg:
             issues.append(f"{key}: concept sheet is not viewBox 0 0 1200 800")
         if not os.path.isfile(concept[:-4] + ".png"):

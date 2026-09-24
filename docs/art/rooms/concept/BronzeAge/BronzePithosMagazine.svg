@@ -164,6 +164,7 @@
     <rect x="1125.5" y="273.5" width="15" height="15" fill="#7A6A58" stroke="#0E0C09" stroke-width="0.6"/>
     <circle cx="830" cy="281" r="8.4" fill="#C8A868" stroke="#0E0C09" stroke-width="0.6"/>
     <rect x="822.5" y="249.5" width="27" height="10.5" fill="#5A3E28" stroke="#0E0C09" stroke-width="0.5"/>
+    <g id="loot-anchors" data-xy="-5.20,-3.50;5.10,2.30;-5.00,2.30"/>
     <path d="M824 450 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>
     <text x="831" y="458.5" font-family="Overpass Mono, monospace" font-size="8.5" fill="#C9A227" stroke="#14120E" stroke-width="2.4" paint-order="stroke">L1</text>
     <path d="M1133 276 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>

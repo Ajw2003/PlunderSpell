@@ -116,6 +116,7 @@
     <circle cx="839" cy="452" r="10.5" fill="#A0603E" stroke="#573624" stroke-width="0.7"/>
     <circle cx="839" cy="452" r="4.6" fill="#5E3A26"/>
     <rect x="893" y="443" width="18" height="18" fill="#5A3E28" stroke="#0E0C09" stroke-width="0.6"/>
+    <g id="loot-anchors" data-xy="-2.95,3.75;3.60,5.10;3.60,-5.10;-2.60,-3.40"/>
     <path d="M891.5 232.5 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>
     <text x="898.5" y="241" font-family="Overpass Mono, monospace" font-size="8.5" fill="#C9A227" stroke="#14120E" stroke-width="2.4" paint-order="stroke">L1</text>
     <path d="M1088 192 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>

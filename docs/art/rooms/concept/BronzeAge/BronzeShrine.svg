@@ -108,6 +108,7 @@
     <rect x="1043" y="416" width="90" height="12" fill="#B0A690" stroke="#0E0C09" stroke-width="0.6"/>
     <rect x="1043" y="452" width="90" height="12" fill="#B0A690" stroke="#0E0C09" stroke-width="0.6"/>
     <rect x="1043" y="488" width="90" height="12" fill="#B0A690" stroke="#0E0C09" stroke-width="0.6"/>
+    <g id="loot-anchors" data-xy="4.60,4.75;3.60,3.30;-3.60,-2.40;3.60,-2.40"/>
     <path d="M1118 202.5 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>
     <text x="1125" y="211" font-family="Overpass Mono, monospace" font-size="8.5" fill="#C9A227" stroke="#14120E" stroke-width="2.4" paint-order="stroke">L1</text>
     <path d="M1088 246 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>
