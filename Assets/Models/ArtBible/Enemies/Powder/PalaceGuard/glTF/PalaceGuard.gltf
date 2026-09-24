@@ -546,7 +546,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":9107,
+			"count":9122,
 			"max":[
 				0.330709844827652,
 				2.617058277130127,
@@ -562,25 +562,25 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":9107,
+			"count":9122,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":9107,
+			"count":9122,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":9107,
+			"count":9122,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":9107,
+			"count":9122,
 			"type":"VEC4"
 		},
 		{
@@ -599,44 +599,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":109284,
+			"byteLength":109464,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":109284,
-			"byteOffset":109284,
+			"byteLength":109464,
+			"byteOffset":109464,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":72856,
-			"byteOffset":218568,
+			"byteLength":72976,
+			"byteOffset":218928,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":36428,
-			"byteOffset":291424,
+			"byteLength":36488,
+			"byteOffset":291904,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":145712,
-			"byteOffset":327852,
+			"byteLength":145952,
+			"byteOffset":328392,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":44508,
-			"byteOffset":473564,
+			"byteOffset":474344,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1472,
-			"byteOffset":518072
+			"byteOffset":518852
 		}
 	],
 	"samplers":[
@@ -647,7 +647,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":519544,
+			"byteLength":520324,
 			"uri":"PalaceGuard.bin"
 		}
 	]

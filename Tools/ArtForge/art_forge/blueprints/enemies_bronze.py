@@ -396,6 +396,215 @@ def palace_levy(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Wall Slinger (ranged) — slim, bare-chested, sling cord hanging from the right
+# fist, bulging hip pouch, bandana with two tails, short wrapped kilt.
+# --------------------------------------------------------------------------------
+
+def _bar(a, b, r: float, mat: str, bone: str, segments: int = 8, **extras) -> Part:
+    """A short straight tube from a to b (bracers, thongs, hilts)."""
+    return Part("tube", (0, 0, 0), (1, 1, 1), mat=mat, bone=bone, segments=segments,
+                extras={"path": [tuple(a), tuple(b)], "section": (r, r), "smooth": True,
+                        "bevel": False, **extras})
+
+
+def _curly_cap(fig: Human, mat: str, top_z: float, tilt: float = -18.0) -> Part:
+    """Short hair as a tilted dome over the skull: low at the nape, high over the
+    forehead so the face stays clear."""
+    h = fig.h
+    c = fig.lean((0.0, 0.010 * h, 0.938 * h))
+    dome = top_z - c.z
+    prof = [(0.0, dome), (0.030, dome - 0.004), (0.058, dome - 0.020), (0.078, dome - 0.050),
+            (0.086, dome - 0.085), (0.084, 0.0), (0.070, -0.012)]
+    return Part("lathe", tuple(c), (0.94, 1.12, 1.0), mat=mat, bone="Head", segments=14,
+                rot=(tilt, 0.0, 0.0),
+                extras={"profile": prof, "rigid": True, "smooth": True, "bevel": False})
+
+
+def _pouch(fig: Human, name: str, at: Vector, dims: tuple, stones: int,
+           mat: str = "rawhide") -> list[Part]:
+    """A bulging leather bag on its own jiggle bone (child of Hips) with a rolled
+    mouth and `stones` river stones showing in it."""
+    w, d, hgt = dims
+    fig.add_bone(name, at + Vector((0, 0, hgt * 0.5)), at - Vector((0, 0, hgt * 0.4)), "Hips")
+    prof = [(0.0, -hgt * 0.5), (w * 0.30, -hgt * 0.48), (w * 0.47, -hgt * 0.30),
+            (w * 0.50, 0.0), (w * 0.46, hgt * 0.30), (w * 0.40, hgt * 0.44),
+            (w * 0.42, hgt * 0.50), (w * 0.34, hgt * 0.50)]
+    parts = [Part("lathe", tuple(at), (1.0, d / w, 1.0), mat=mat, bone=name, segments=12,
+                  extras={"profile": prof, "rigid": True, "smooth": True, "bevel": False})]
+    for k in range(stones):
+        a = 2 * math.pi * k / max(1, stones) + 0.4
+        p = at + Vector((math.cos(a) * w * 0.16, math.sin(a) * d * 0.16, hgt * 0.52))
+        parts.append(Part("sphere", tuple(p), (0.05, 0.036, 0.034), mat="river_stone",
+                          bone=name, rot=(0, 0, math.degrees(a)), segments=8, rings=5,
+                          extras={"rigid": True, "bevel": False}))
+    return parts
+
+
+def _sling(fig: Human) -> list[Part]:
+    """Two braided cords 0.80 m from the right fist to a 0.12 x 0.06 m leather
+    cradle holding a stone; a finger loop on the retained cord. A four-bone chain
+    (Sling1..Sling4) off Hand.R; in idle it hangs from the fist."""
+    g = fig.grip("R")
+    top = g + Vector((0.0, 0.0, -0.035))
+    cradle = Vector((g.x - 0.05, g.y - 0.03, 0.17))
+    chain = [top.lerp(cradle, t) for t in (0.0, 0.25, 0.5, 0.75, 1.0)]
+    chain[-1] = cradle - Vector((0, 0, 0.03))
+    fig.prop_bone("Sling1", "R", chain[0], chain[1])
+    for i in range(2, 5):
+        fig.add_bone(f"Sling{i}", chain[i - 1], chain[i], f"Sling{i - 1}")
+    bones = ["Sling1", "Sling2", "Sling3", "Sling4"]
+    parts = []
+    for s in (1.0, -1.0):
+        end = cradle + Vector((s * 0.055, 0.0, 0.012))
+        path = []
+        for k in range(9):
+            t = k / 8
+            p = top.lerp(end, t)
+            p.x += s * 0.012 * math.sin(math.pi * t)    # the two cords part a little
+            path.append(tuple(p))
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="braided_wool_cord",
+                          bone="Sling2", segments=5, extras={
+                              "path": path, "section": (0.0045, 0.0045), "smooth": True,
+                              "bevel": False, "bones": bones}))
+    # cradle: a shallow leather cup open upward, the stone sitting in it
+    parts.append(Part("sphere", tuple(cradle), (0.12, 0.06, 0.035), mat="rawhide",
+                      bone="Sling4", segments=10, rings=5,
+                      extras={"rigid": True, "bevel": False}))
+    parts.append(Part("sphere", tuple(cradle + Vector((0, 0, 0.018))), (0.05, 0.036, 0.034),
+                      mat="river_stone", bone="Sling4", segments=8, rings=5,
+                      extras={"rigid": True, "bevel": False}))
+    # finger loop round the fist
+    parts.append(Part("torus", tuple(g + Vector((0, 0, -0.01))), (0.07, 0.07, 0.07),
+                      mat="braided_wool_cord", bone="Sling1", rot=(0, 90, 0), segments=10,
+                      rings=4, minor=0.1, extras={"rigid": True, "bevel": False}))
+    return parts
+
+
+def wall_slinger(entry: Entry):
+    # 1.66 m to the crown of the bandana/curls; skull 1.62 m. Wiry youth, 0.40 m
+    # shoulders; both arms hang (the sling dangles from the right fist in idle).
+    fig = Human(height=1.62, bulk=0.88, shoulders=0.40,
+                arm_r=ArmPose(spread=12.0, swing=3.0, elbow=14.0),
+                arm_l=ArmPose(spread=11.0, swing=2.0, elbow=18.0))
+    h = fig.h
+    kilt_top = fig.belt_z
+    hem = kilt_top - 0.42
+    # Bare torso; the wrapped kilt is the same loft painted linen below the belt,
+    # with its skirt flare and skirt skinning rule.
+    parts = [fig.torso_part("weathered_skin", hem=hem, hem_flare=1.22, segments=24,
+                            paint=[{"mat": "linen", "min": (-1, -1, -1),
+                                    "max": (1, 1, kilt_top)}])]
+    parts.append(_hem_band(fig, hem, 1.22, 0.0, "haematite_red", 0.004, 0.044, over=0.003))
+    for side in ("L", "R"):
+        parts.append(fig.arm_part(side, "weathered_skin"))
+        parts += fig.hand_part(side, "weathered_skin")
+        parts.append(fig.leg_part(side, "weathered_skin"))
+        parts.append(fig.foot_part(side, "rawhide", length=0.25, point=0.0))
+        # sandal thongs to mid-calf
+        ank, knee = fig.joint(f"ankle.{side}"), fig.joint(f"knee.{side}")
+        for t, r in ((0.06, 0.036), (0.30, 0.037), (0.55, 0.043)):
+            p = ank.lerp(knee, t)
+            parts.append(Part("cyl", (p.x, p.y + 0.004, p.z), (r * 2 * fig.bulk ** 0.5 + 0.004,
+                                                               r * 2 + 0.006, 0.012),
+                              mat="rawhide", bone=f"LowerLeg.{side}", segments=10,
+                              extras={"bevel": False, "smooth": True,
+                                      "bones": [f"LowerLeg.{side}", f"Foot.{side}"]}))
+    parts += fig.head_part("weathered_skin", face="weathered_skin", features="hair")
+    parts.append(_curly_cap(fig, "hair", 1.662))
+
+    # Bandana: a rolled linen band round the brow, knotted at the back, two 0.20 m
+    # tails on their own bones.
+    bc = fig.lean((0.0, 0.006 * h, 0.962 * h))
+    parts.append(Part("torus", tuple(bc), (0.172, 0.212, 0.05), mat="linen", bone="Head",
+                      rot=(-14.0, 0.0, 0.0), segments=16, rings=6, minor=0.13,
+                      extras={"rigid": True, "bevel": False}))
+    knot = bc + Vector((0.0, 0.110, -0.024))
+    parts.append(Part("sphere", tuple(knot), (0.05, 0.035, 0.04), mat="linen", bone="Head",
+                      segments=8, rings=5, extras={"rigid": True, "bevel": False}))
+    for s, side in ((1.0, "L"), (-1.0, "R")):
+        a = knot + Vector((s * 0.012, 0.010, -0.010))
+        tip = a + Vector((s * 0.05, 0.05, -0.19))
+        bone = fig.add_bone(f"BandanaTail.{side}", a, tip, "Head")
+        path = [tuple(a.lerp(tip, t) + Vector((0, 0.02 * math.sin(math.pi * t), 0)))
+                for t in (0.0, 0.33, 0.66, 1.0)]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="linen", bone=bone, segments=4,
+                          extras={"path": path, "section": (0.004, 0.018),
+                                  "up": (0, 1, 0), "smooth": True, "bevel": False,
+                                  "rigid": True}))
+
+    # 4 cm belt; front overlap edge of the kilt with six tassels
+    parts.append(fig.band(fig.belt_z, "rawhide", height=0.04, pad=0.006))
+    for k in range(6):
+        z = kilt_top - 0.06 - k * 0.063
+        f = max(0.0, min(1.0, (z - hem) / (fig.crotch_z - hem)))
+        p = fig.surface(max(z, fig.crotch_z), -62.0, pad=0.02 + (1 - f) * 0.05)
+        p.z = z
+        parts.append(Part("cone", tuple(p - Vector((0, 0, 0.04))), (0.018, 0.018, 0.08),
+                          mat="linen", bone="Hips", rot=(180.0, 0.0, 0.0), segments=5,
+                          taper=0.2, extras={"bevel": False, "bones": ["Hips",
+                                             "UpperLeg.L", "UpperLeg.R"]}))
+    # linen baldric: left hip, up across the chest, over the right shoulder, down
+    # the back to the left hip.
+    front = [(fig.belt_z + 0.04, -20.0), (fig.belt_z + 0.16, -55.0), (fig.chest_z, -100.0),
+             (fig.chest_z + 0.12, -128.0)]
+    back = [(fig.chest_z + 0.12, 128.0), (fig.chest_z, 100.0), (fig.belt_z + 0.16, 55.0),
+            (fig.belt_z + 0.04, 20.0)]
+    pts = ([tuple(fig.surface(z, a, pad=0.004)) for z, a in front]
+           + [(-p[0], p[1], p[2]) for p in _over_shoulder(fig, "L", 0.006)]
+           + [tuple(fig.surface(z, a, pad=0.004)) for z, a in back])
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="linen", bone="Chest", segments=4,
+                      extras={"path": pts, "section": (0.004, 0.030), "smooth": True,
+                              "bevel": False, "bones": ["Spine", "Chest", "Shoulder.R"]}))
+    # stone pouches: main on the right hip (0.22 x 0.14 x 0.24), baldric pouch
+    # on the left hip (0.16)
+    pr = fig.surface(fig.belt_z - 0.14, -150.0, pad=0.085)
+    parts += _pouch(fig, "Pouch.R", pr, (0.20, 0.14, 0.24), 3)
+    pl = fig.surface(fig.belt_z - 0.11, -25.0, pad=0.075)
+    parts += _pouch(fig, "Pouch.L", pl, (0.15, 0.11, 0.16), 2)
+    # rawhide bracer, laced, on the left forearm (0.14 m)
+    el, wr = fig.joint("elbow.L"), fig.joint("wrist.L")
+    b0, b1 = wr.lerp(el, 0.08), wr.lerp(el, 0.08 + 0.14 / (el - wr).length)
+    parts.append(_bar(b0, b1, 0.036 * fig.bulk ** 0.5, "rawhide", "LowerArm.L", segments=10,
+                      bones=["LowerArm.L", "Hand.L"]))
+    # bronze knife in the belt at the back
+    kb = fig.surface(fig.belt_z - 0.02, 70.0, pad=0.02)
+    parts.append(_bar(kb + Vector((0.0, 0.0, -0.14)), kb + Vector((0.02, 0.0, 0.03)),
+                      0.018, "rawhide", "Hips", segments=6, rigid=True))
+    parts.append(_bar(kb + Vector((0.02, 0.0, 0.03)), kb + Vector((0.03, 0.0, 0.13)),
+                      0.014, "knife_bronze", "Hips", segments=6, rigid=True))
+
+    parts += _sling(fig)
+
+    pose = dict(figures.HUMAN_TEST_POSE)
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(pose),
+        family_overrides={
+            "linen": {"grain": 0.25, "wear_to": "#A89A7A", "wear_amount": 0.3},
+            "rawhide": {"grain": 0.2},
+        },
+        extra_families={
+            "hair": {"name": "Dark hair", "base": "#2B231B", "rough": 0.8,
+                     "notes": "Short curly dark hair (build bullet); no hair family in "
+                              "the slinger's list."},
+            "knife_bronze": {"name": "Cast bronze", "base": "#9B6A38", "rough": 0.45,
+                             "metal": 1.0,
+                             "notes": "The 0.30 m bronze knife (build bullet, 'warm brown'); "
+                                      "the slinger's list has no bronze. Hex from the levy's "
+                                      "cast bronze."},
+        },
+        notes=[
+            "Sling is a four-bone chain Sling1..Sling4 off Hand.R, hanging in idle; the "
+            "cords are weighted along the chain, cradle and stone rigid on Sling4.",
+            "Kilt is the torso loft painted linen below the belt (so it takes the skirt "
+            "rule), with a separate haematite border band; overlap edge shown by six "
+            "tassels only.",
+            "Bones added: BandanaTail.L/R, Pouch.R/L (jiggle). Not built: kilt_front/"
+            "kilt_back cloth bones; spare sling bullets as separate projectile mesh.",
+        ])
+
+
 BLUEPRINTS = {
     "palace-levy": palace_levy,
+    "wall-slinger": wall_slinger,
 }

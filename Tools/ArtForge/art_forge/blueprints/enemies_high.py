@@ -460,12 +460,12 @@ def _mail_mantle(fig: Human, jack_pad: float) -> Part:
     n = 28
     rows = [   # (z frac, half-width frac, half-depth frac, y shift frac)
         (0.874, 0.050, 0.052, 0.004),
-        (0.858, 0.064, 0.058, 0.004),
-        (0.842, 0.090, 0.064, 0.005),
-        (0.826, 0.114, 0.070, 0.004),
-        (0.810, 0.130, 0.075, 0.002),
-        (0.795, 0.136, 0.078, 0.000),
-        (0.790, 0.108, 0.066, 0.000),   # tuck into the jack
+        (0.856, 0.066, 0.060, 0.004),
+        (0.836, 0.098, 0.070, 0.004),
+        (0.815, 0.124, 0.079, 0.002),
+        (0.795, 0.134, 0.083, 0.000),
+        (0.776, 0.136, 0.083, -0.001),  # hem, ~1.34 m
+        (0.771, 0.110, 0.068, 0.000),   # tuck into the jack
     ]
     rings = []
     for zf, hw, hd, dy in rows:
@@ -500,7 +500,13 @@ def _diamond_quilting(fig: Human, pad: float, z0: float, z1: float,
                 hw, hd, _dy = fig.torso_dims(z)
                 r = (hw + hd) / 2 + pad
                 ang = a0 + sense * math.degrees((z - z0) / r)
-                path.append(tuple(fig.surface(z, ang, pad=pad + 0.002)))
+                # torso_part pushes the chest rings (0.66-0.8 h) out at the front
+                # by up to 8 %; follow it or the front seams sink into the jack.
+                zf = z / fig.h
+                w = max(0.0, min(1.0, (zf - 0.64) / 0.04, (0.82 - zf) / 0.04))
+                front = max(0.0, -math.sin(math.radians(ang))) ** 2
+                bulge = 0.08 * w * front * (hd + pad)
+                path.append(tuple(fig.surface(z, ang, pad=pad + 0.003 + bulge)))
             parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="kermes_jack",
                               bone="Spine", segments=3, extras={
                                   "path": path, "section": (0.004, 0.004),
@@ -681,7 +687,7 @@ def castle_crossbowman(entry: Entry):
                               "rigid": True, "smooth": True, "bevel": False}))
     parts += _cervelliere(fig, entry.height_m)
 
-    parts += _diamond_quilting(fig, pad, 0.80, 1.34, lines=16)
+    parts += _diamond_quilting(fig, pad, 0.86, 1.34, lines=16)
     parts.append(fig.band(fig.belt_z, "leather", height=0.04, pad=0.008, torso_pad=pad))
     buckle = fig.surface(fig.belt_z, -90.0, pad=pad + 0.012)
     parts.append(Part("torus", tuple(buckle), (0.048, 0.048, 0.042), mat="cap_iron",

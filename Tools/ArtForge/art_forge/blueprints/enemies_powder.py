@@ -342,13 +342,14 @@ def _trunk_hose(fig: Human, side: str, mat: str, lining: str, width: float,
     axis = (knee - hip).normalized()
     top_z = fig.belt_z + 0.01
     cx = s * (width / 2 - 0.13)
-    stations = [   # (z, half-width x, half-depth y)
-        (top_z, 0.10, 0.090),
-        (top_z - 0.06, 0.125, 0.110),
-        (fig.hip_z + 0.02, 0.138, 0.122),
-        (fig.hip_z - 0.07, 0.133, 0.118),
-        (bottom_z + 0.06, 0.105, 0.095),
-        (bottom_z + 0.015, 0.075, 0.072),
+    span = top_z - bottom_z
+    stations = [   # (z, half-width x, half-depth y): widest low, round as a gourd
+        (top_z, 0.095, 0.085),
+        (top_z - 0.18 * span, 0.122, 0.112),
+        (top_z - 0.42 * span, 0.146, 0.132),
+        (top_z - 0.66 * span, 0.140, 0.126),
+        (top_z - 0.86 * span, 0.108, 0.100),
+        (bottom_z + 0.012, 0.074, 0.072),
         (bottom_z, 0.062, 0.062),
     ]
     pts, secs = [], []
@@ -408,7 +409,7 @@ def partisan_guard(entry: Entry):
                               bone=f"LowerLeg.{side}", segments=6, rings=4,
                               extras={"rigid": True, "bevel": False}))
         parts += _trunk_hose(fig, side, wool, lining, width=0.55,
-                             bottom_z=fig.hip_z - 0.45 * (fig.hip_z - fig.knee_z))
+                             bottom_z=fig.hip_z - 0.52 * (fig.hip_z - fig.knee_z))
         # slashed upper sleeve: 5 lining panes, and a 5 cm shoulder-wing roll
         sh, el, _wr, axis, out, fwd = _arm_frame(fig, side)
         for k in range(5):
@@ -505,7 +506,9 @@ def partisan_guard(entry: Entry):
         entry, parts, bevel=0.003, **fig.rig(),
         family_overrides={
             "horn_pane": {"emit": "#4A1E0C", "rough": 0.45},
-            "blued_steel": {"rough": 0.35, "wear_to": "#6E7E92", "wear_amount": 0.35},
+            # JSON roughness 0.35 renders near-black in the review studio (README
+            # Traps: metals render dark); 0.5 lets the blue read as on the concept.
+            "blued_steel": {"rough": 0.5, "wear_to": "#6E7E92", "wear_amount": 0.35},
         },
         extra_families={
             **SKIN,

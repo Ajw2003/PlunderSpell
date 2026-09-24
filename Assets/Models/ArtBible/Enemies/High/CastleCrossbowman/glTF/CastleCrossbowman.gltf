@@ -611,7 +611,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":7219,
+			"count":7218,
 			"max":[
 				0.38356924057006836,
 				1.7799999713897705,
@@ -620,32 +620,32 @@
 			"min":[
 				-0.38356924057006836,
 				0,
-				-0.1433524340391159
+				-0.14359000325202942
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":7219,
+			"count":7218,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":7219,
+			"count":7218,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":7219,
+			"count":7218,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":7219,
+			"count":7218,
 			"type":"VEC4"
 		},
 		{
@@ -664,44 +664,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":86628,
+			"byteLength":86616,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":86628,
-			"byteOffset":86628,
+			"byteLength":86616,
+			"byteOffset":86616,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":57752,
-			"byteOffset":173256,
+			"byteLength":57744,
+			"byteOffset":173232,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":28876,
-			"byteOffset":231008,
+			"byteLength":28872,
+			"byteOffset":230976,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":115504,
-			"byteOffset":259884,
+			"byteLength":115488,
+			"byteOffset":259848,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":37704,
-			"byteOffset":375388,
+			"byteOffset":375336,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1600,
-			"byteOffset":413092
+			"byteOffset":413040
 		}
 	],
 	"samplers":[
@@ -712,7 +712,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":414692,
+			"byteLength":414640,
 			"uri":"CastleCrossbowman.bin"
 		}
 	]

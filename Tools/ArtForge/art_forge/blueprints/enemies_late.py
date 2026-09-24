@@ -64,7 +64,12 @@ def _torso_y(fig: Human, x: float, z: float, pad: float, back: bool = False,
     zf = zz / fig.h
     k = 1.08 if (0.66 < zf < 0.8 and not back) else 1.0
     a, b = hw * k + pad, hd * k + pad
-    xe = math.copysign(min(abs(x), 0.97 * a), x)
+    # Saturate smoothly (never clamp): clamped columns would stack on one point,
+    # and duplicate vertices make Blender's heat weighting fail for the whole mesh.
+    u = abs(x) / a
+    if u > 0.8:
+        u = 0.8 + 0.17 * math.tanh((u - 0.8) / 0.17)
+    xe = math.copysign(u * a, x)
     e = 2.0 / 2.4
     ca = (abs(xe) / a) ** (1.0 / e)
     sa = math.sqrt(max(0.0, 1.0 - ca * ca))

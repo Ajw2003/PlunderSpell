@@ -606,7 +606,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":8599,
+			"count":8583,
 			"max":[
 				0.33286458253860474,
 				2.051645278930664,
@@ -622,25 +622,25 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":8599,
+			"count":8583,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":8599,
+			"count":8583,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":8599,
+			"count":8583,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":8599,
+			"count":8583,
 			"type":"VEC4"
 		},
 		{
@@ -659,44 +659,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":103188,
+			"byteLength":102996,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":103188,
-			"byteOffset":103188,
+			"byteLength":102996,
+			"byteOffset":102996,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":68792,
-			"byteOffset":206376,
+			"byteLength":68664,
+			"byteOffset":205992,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":34396,
-			"byteOffset":275168,
+			"byteLength":34332,
+			"byteOffset":274656,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":137584,
-			"byteOffset":309564,
+			"byteLength":137328,
+			"byteOffset":308988,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":38496,
-			"byteOffset":447148,
+			"byteOffset":446316,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1536,
-			"byteOffset":485644
+			"byteOffset":484812
 		}
 	],
 	"samplers":[
@@ -707,7 +707,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":487180,
+			"byteLength":486348,
 			"uri":"SalletHalberdier.bin"
 		}
 	]
