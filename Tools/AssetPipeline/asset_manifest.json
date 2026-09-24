@@ -31,6 +31,12 @@
       "preview": "fc3daed51c05ef61:23a9d68e53fd",
       "tris": 468
     },
+    "BronzeBathRoom": {
+      "budget": 2000,
+      "content": "444ba063dc35a59e",
+      "preview": "444ba063dc35a59e:23a9d68e53fd",
+      "tris": 1260
+    },
     "BronzeDoorPlugCrypt": {
       "budget": 40,
       "content": "94853190d2043cb7",
@@ -56,6 +62,18 @@
       "content": "a405bc6aa586fc8c",
       "preview": "a405bc6aa586fc8c:23a9d68e53fd",
       "tris": 1572
+    },
+    "BronzeMegaronStair": {
+      "budget": 1600,
+      "content": "bb41b8853f9830c1",
+      "preview": "bb41b8853f9830c1:23a9d68e53fd",
+      "tris": 888
+    },
+    "BronzeQueensHall": {
+      "budget": 1800,
+      "content": "30b56effeb2329c4",
+      "preview": "30b56effeb2329c4:23a9d68e53fd",
+      "tris": 940
     },
     "BronzeSword": {
       "budget": 400,

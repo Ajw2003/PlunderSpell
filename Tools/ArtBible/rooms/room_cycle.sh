@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One castle room, end to end: its sheet (SVG, then PNG), its model (build + validate),
-# its preview render, then the check that the model matches the sheet.
+# its preview and overhead renders, then the check that the model matches the sheet.
 #
 #   Tools/ArtBible/rooms/room_cycle.sh BronzeTreasury [--no-preview]
 #
@@ -16,6 +16,7 @@ echo "== model: $KEY"
 blender -b -P Tools/AssetPipeline/build_assets.py -- --only "$KEY" 2>&1 | grep -E "^\[|^ +- |Traceback|Error" || true
 if [ "${2:-}" != "--no-preview" ]; then
   blender -b -P Tools/AssetPipeline/render_previews_only.py -- "$KEY" 2>&1 | grep -E "^rendered|^unchanged|Error" || true
+  blender -b -P Tools/AssetPipeline/render_room_overhead.py -- "$KEY" 2>&1 | grep -E "^rendered|Error" || true
 fi
 echo "== sheet vs model: $KEY"
 python3 Tools/ArtBible/build_room_sheets.py --only "$KEY" --check --models

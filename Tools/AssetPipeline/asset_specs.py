@@ -105,8 +105,8 @@ BRONZE_CASTLE_SPECS = [
     # Keep
     dict(key="BronzeMegaron", builder="build_bronze_megaron", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
     dict(key="BronzeTreasury", builder="build_bronze_treasury", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
-    dict(key="BronzeQueensHall", builder="build_bronze_queens_hall", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
-    dict(key="BronzeBathRoom", builder="build_bronze_bath_room", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
+    dict(key="BronzeQueensHall", builder="build_bronze_queens_hall", tri_budget=1800, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
+    dict(key="BronzeBathRoom", builder="build_bronze_bath_room", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
     dict(key="BronzeMegaronStair", builder="build_bronze_megaron_stair", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
     # Crypt
     dict(key="BronzeDromos", builder="build_bronze_dromos", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
