@@ -61,6 +61,10 @@ namespace RogueAi.Raid
         private readonly SyncVar<RaidPhase> _phase = new SyncVar<RaidPhase>(RaidPhase.InLair);
         private readonly SyncVar<int> _seed = new SyncVar<int>(0);
 
+        // Replicated so a client's castle can be built for the right Age once era-specific rooms
+        // exist (docs/plans/era-castle-rooms.md, step 1). Set before the seed in StartRaid.
+        private readonly SyncVar<HistoricalEra> _era = new SyncVar<HistoricalEra>(HistoricalEra.BronzeAge);
+
         // The host's campaign, so a friend's Lair shows the debt they are paying off together.
         private readonly SyncVar<float> _hostDebt = new SyncVar<float>(0f);
         private readonly SyncVar<float> _hostGold = new SyncVar<float>(0f);
@@ -72,8 +76,8 @@ namespace RogueAi.Raid
         /// <summary>The seed the current (or most recent) raid was built from.</summary>
         public int Seed => _seed.value;
 
-        /// <summary>The era the current raid is set in.</summary>
-        public HistoricalEra Era { get; private set; } = HistoricalEra.BronzeAge;
+        /// <summary>The era the current raid is set in. Replicated, so a client reads the host's.</summary>
+        public HistoricalEra Era => _era.value;
 
         /// <summary>The layout the current raid is being played in, or null in the Lair.</summary>
         public ProceduralCastleData Castle { get; private set; }
@@ -158,7 +162,7 @@ namespace RogueAi.Raid
                 return;
             }
 
-            Era = era;
+            _era.value = era;
             _lair?.SelectEra(era);
 
             // Debt grows every time you set out, which is what puts a clock on the whole campaign.
@@ -194,8 +198,14 @@ namespace RogueAi.Raid
                 return null;
             }
 
-            Debug.Log($"[Raid] Building the castle from seed {seed} ({(isSpawned && !isServer ? "client" : "host")}).");
+            Debug.Log($"[Raid] Building the castle from seed {seed}, {Era} ({(isSpawned && !isServer ? "client" : "host")}).");
+
+            // Published before generating, so anything below the raid in the dependency graph (the
+            // castle generator's era rooms, when they land) reads the same Age the garrison is drawn for.
+            RaidContext.Publish(new RaidContext(seed, Era));
             Castle = GenerateWalkable(ref seed);
+            if (RaidContext.Current.Seed != seed)
+                RaidContext.Publish(new RaidContext(seed, Era));
             if (!isSpawned || isServer)
                 _seed.value = seed;
             else
@@ -218,7 +228,7 @@ namespace RogueAi.Raid
             if (!isSpawned || isServer)
             {
                 _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
-                _guardSpawner?.SpawnFor(Castle, seed);
+                _guardSpawner?.SpawnFor(Castle, seed, Era);
             }
 
             return Castle;
@@ -296,6 +306,7 @@ namespace RogueAi.Raid
         {
             _generator?.ClearGenerated();
             Castle = null;
+            RaidContext.Clear();
             if (!isSpawned || isServer)
                 SetPhase(RaidPhase.InLair);
         }

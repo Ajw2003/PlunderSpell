@@ -1,0 +1,5176 @@
+{
+ "about": "AnimForge clip taxonomy (plan docs/plans/artbible-enemy-animations.md, phase A0). 'clips' = what AnimForge authors; 'enemies' = every clip each art-bible JSON (docs/art/data/*.json, enemies[].rig.animations) asks for, mapped to a source clip or dropped with a reason. Event t is normalized (0..1) clip time. Check coverage with python3 Tools/ArtForge/anim_spec_check.py.",
+ "fps": 30,
+ "root_motion": "none: every clip is in place; the NavMeshAgent moves the guard (decision 'Motion')",
+ "event_types": {
+  "Footstep": "a foot plants; drives FootstepNoiseEmitter (param foot L/R)",
+  "AttackHit": "the frame damage applies",
+  "ProjectileRelease": "the missile leaves the hand/weapon",
+  "PropDetach": "a prop leaves the rig (param prop = bone name): lantern, helm, shield, match"
+ },
+ "layers": {
+  "base": "shared humanoid motion on the reference skeleton (Humanoid_Base.fbx)",
+  "carry": "a base clip with the enemy's carry pose on the upper-body mask (arms, shoulders, prop bones)",
+  "family": "one weapon-family clip shared by every enemy with that weapon, on the reference skeleton",
+  "signature": "a motion only one enemy has, in that enemy's own FBX (moves its prop bones)",
+  "hound": "the hound's Generic rig"
+ },
+ "playback": "An enemy clip plays its source at playback_rate. Locomotion: rate = agent speed / authored speed, which keeps the feet planted; the Animator speed parameter should drive it.",
+ "clips": {
+  "idle": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 3.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": null,
+   "notes": "weight shift L->R->L, breathing, head glance"
+  },
+  "walk_slow": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 1.2,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 1.1,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "the JSON patrol pace (walk_round 1.1 m/s); heavies' 0.9-1.5 m/s blends between walk_slow and walk"
+  },
+  "walk": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 1.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 2.0,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "engine patrol agent speed (role table: patrol 2.0 m/s)"
+  },
+  "run": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 0.7,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 4.2,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "engine chase agent speed (role table: patrol chase 4.2 m/s)"
+  },
+  "alert_turn": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 0.6,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.55,
+     "param": {
+      "foot": "L"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "head leads, chest follows, hips last; authored turning LEFT, mirror for right. The agent does the actual yaw over the same 0.6 s"
+  },
+  "shout": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 1.2,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": null,
+   "notes": "cups the left hand to the mouth, chest out, bellows. The noise is gameplay (driver), not a clip event"
+  },
+  "hit_react": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 0.4,
+   "loop": false,
+   "additive": true,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": null,
+   "notes": "additive flinch over any state"
+  },
+  "stagger": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.45,
+     "param": {
+      "foot": "R"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.7,
+     "param": {
+      "foot": "L"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "full-body recoil, two catch steps back"
+  },
+  "knock_down": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 1.2,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": null,
+   "notes": "non-lethal fall onto the back (stun, knock-down); killed/thrown guards use the ragdoll"
+  },
+  "get_up": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 2.4,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.8,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "from knock_down's last pose to standing"
+  },
+  "archway_duck": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 0.5,
+   "loop": false,
+   "additive": true,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": null,
+   "notes": "dips head and shoulders ~0.12 m; additive over walk"
+  },
+  "sleep": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 4.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": null,
+   "notes": "Somnus: dozes on his feet, knees soft, chin on chest, slow breathing"
+  },
+  "levitate_struggle": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 1.2,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": null,
+   "notes": "Levo: held off the ground, legs kick, arms flail"
+  },
+  "alert_turn_body": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 1.0,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.3,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.7,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "whole-body turn for helmed heavies who cannot turn the head"
+  },
+  "shrug": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 0.5,
+   "loop": false,
+   "additive": true,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "small additive rock for hits that do not stagger"
+  },
+  "walk_back": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 1.2,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 1.0,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "backs away facing the threat"
+  },
+  "strafe": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 0.8,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 1.4,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "sidestep left; mirror for right"
+  },
+  "crouch_cover": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 2.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "crouched to 1.25 m behind cover, peeks"
+  },
+  "cower": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 2.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "crouched, arms over the head"
+  },
+  "kneel": {
+   "layer": "base",
+   "family": null,
+   "fbx": "Humanoid_Base.fbx",
+   "length_s": 1.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "drops to one knee (heavy stagger, stagger_back)"
+  },
+  "polearm_guard": {
+   "layer": "family",
+   "family": "polearm",
+   "fbx": "Humanoid_Polearm.fbx",
+   "length_s": 2.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": null,
+   "notes": "two-handed ready stance, haft levelled at the hip, point at chest height; the family's rest pose"
+  },
+  "polearm_thrust": {
+   "layer": "family",
+   "family": "polearm",
+   "fbx": "Humanoid_Polearm.fbx",
+   "length_s": 0.9,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.5
+    },
+    {
+     "type": "Footstep",
+     "t": 0.42,
+     "param": {
+      "foot": "L"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "draw back (anticipation) 0-0.38, lunge-thrust peak 0.5, overshoot, recover"
+  },
+  "polearm_sweep": {
+   "layer": "family",
+   "family": "polearm",
+   "fbx": "Humanoid_Polearm.fbx",
+   "length_s": 1.1,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.5
+    },
+    {
+     "type": "Footstep",
+     "t": 0.4,
+     "param": {
+      "foot": "L"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "wind-up to the right, wide horizontal cut at knee height across to the left"
+  },
+  "polearm_hook": {
+   "layer": "family",
+   "family": "polearm",
+   "fbx": "Humanoid_Polearm.fbx",
+   "length_s": 1.2,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.42
+    },
+    {
+     "type": "Footstep",
+     "t": 0.35,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.78,
+     "param": {
+      "foot": "L"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "reach past, hook (hit) at 0.42, drag back 1 m by 0.8"
+  },
+  "polearm_chop": {
+   "layer": "family",
+   "family": "polearm",
+   "fbx": "Humanoid_Polearm.fbx",
+   "length_s": 1.1,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.55
+    },
+    {
+     "type": "Footstep",
+     "t": 0.48,
+     "param": {
+      "foot": "L"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": null,
+   "notes": "raise overhead (0.4 s tell), chop down"
+  },
+  "polearm_cant": {
+   "layer": "family",
+   "family": "polearm",
+   "fbx": "Humanoid_Polearm.fbx",
+   "length_s": 0.4,
+   "loop": false,
+   "additive": true,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": null,
+   "notes": "additive: tilts the pole 35 deg forward from the carry (doors, vault ribs, archways)"
+  },
+  "polearm_cant_back": {
+   "layer": "family",
+   "family": "polearm",
+   "fbx": "Humanoid_Polearm.fbx",
+   "length_s": 0.4,
+   "loop": false,
+   "additive": true,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "additive: tilts a sloped pole back so its tip drops (halberd under arches)"
+  },
+  "polearm_thrust_overhand": {
+   "layer": "family",
+   "family": "polearm",
+   "fbx": "Humanoid_Polearm.fbx",
+   "length_s": 0.7,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.5
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "overhand spear jab over a shield"
+  },
+  "shield_guard": {
+   "layer": "family",
+   "family": "sword_shield",
+   "fbx": "Humanoid_SwordShield.fbx",
+   "length_s": 3.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "shield forward, weapon over the rim (loop)"
+  },
+  "sword_cut": {
+   "layer": "family",
+   "family": "sword_shield",
+   "fbx": "Humanoid_SwordShield.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.5
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "forehand cut"
+  },
+  "sword_overhead": {
+   "layer": "family",
+   "family": "sword_shield",
+   "fbx": "Humanoid_SwordShield.fbx",
+   "length_s": 1.2,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.6
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "heavy downward cut, 0.4 s wind-up tell"
+  },
+  "sword_lunge": {
+   "layer": "family",
+   "family": "sword_shield",
+   "fbx": "Humanoid_SwordShield.fbx",
+   "length_s": 1.1,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.55
+    },
+    {
+     "type": "Footstep",
+     "t": 0.45,
+     "param": {
+      "foot": "L"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "long thrust with full-body lean"
+  },
+  "shield_bash": {
+   "layer": "family",
+   "family": "sword_shield",
+   "fbx": "Humanoid_SwordShield.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.45
+    },
+    {
+     "type": "Footstep",
+     "t": 0.35,
+     "param": {
+      "foot": "L"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "steps in and shoves with the shield"
+  },
+  "shield_brace": {
+   "layer": "family",
+   "family": "sword_shield",
+   "fbx": "Humanoid_SwordShield.fbx",
+   "length_s": 2.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "braced behind the shield (loop)"
+  },
+  "draw_sword": {
+   "layer": "family",
+   "family": "sword_shield",
+   "fbx": "Humanoid_SwordShield.fbx",
+   "length_s": 0.6,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "draws from the hip"
+  },
+  "crossbow_aim": {
+   "layer": "family",
+   "family": "crossbow",
+   "fbx": "Humanoid_Crossbow.fbx",
+   "length_s": 1.2,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "raise to the shoulder, then hold (loop the last 0.2 s)"
+  },
+  "crossbow_shoot": {
+   "layer": "family",
+   "family": "crossbow",
+   "fbx": "Humanoid_Crossbow.fbx",
+   "length_s": 0.3,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "ProjectileRelease",
+     "t": 0.1
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "release and recoil"
+  },
+  "crossbow_span": {
+   "layer": "family",
+   "family": "crossbow",
+   "fbx": "Humanoid_Crossbow.fbx",
+   "length_s": 6.0,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.1,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "tip down, foot in stirrup, belt-hook span, seat bolt"
+  },
+  "crossbow_abort": {
+   "layer": "family",
+   "family": "crossbow",
+   "fbx": "Humanoid_Crossbow.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "abandons the span, draws a knife"
+  },
+  "crossbow_butt": {
+   "layer": "family",
+   "family": "crossbow",
+   "fbx": "Humanoid_Crossbow.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.5
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "clubs with the tiller"
+  },
+  "sling_reload": {
+   "layer": "family",
+   "family": "sling",
+   "fbx": "Humanoid_Sling.fbx",
+   "length_s": 0.9,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "dips into the pouch, fits a stone"
+  },
+  "sling_windup": {
+   "layer": "family",
+   "family": "sling",
+   "fbx": "Humanoid_Sling.fbx",
+   "length_s": 1.2,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "two overhead whirls"
+  },
+  "sling_release": {
+   "layer": "family",
+   "family": "sling",
+   "fbx": "Humanoid_Sling.fbx",
+   "length_s": 0.4,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "ProjectileRelease",
+     "t": 0.45
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "underarm-to-overarm release"
+  },
+  "gun_brace_aim": {
+   "layer": "family",
+   "family": "long_gun",
+   "fbx": "Humanoid_LongGun.fbx",
+   "length_s": 1.2,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "rests the gun, sights along the barrel (loop the hold)"
+  },
+  "gun_fire": {
+   "layer": "family",
+   "family": "long_gun",
+   "fbx": "Humanoid_LongGun.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "ProjectileRelease",
+     "t": 0.5
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "match to the pan, hang-fire, bang, recoil 0.2 m"
+  },
+  "gun_reload": {
+   "layer": "family",
+   "family": "long_gun",
+   "fbx": "Humanoid_LongGun.fbx",
+   "length_s": 9.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "swab, powder, ram, prime (interruptible; the handgunner loops it to 40 s)"
+  },
+  "gun_club": {
+   "layer": "family",
+   "family": "long_gun",
+   "fbx": "Humanoid_LongGun.fbx",
+   "length_s": 1.0,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.55
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "swings the gun by the stock"
+  },
+  "gun_plant_rest": {
+   "layer": "family",
+   "family": "long_gun",
+   "fbx": "Humanoid_LongGun.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "spikes the musket rest into the floor"
+  },
+  "pistol_draw": {
+   "layer": "family",
+   "family": "pistol",
+   "fbx": "Humanoid_Pistol.fbx",
+   "length_s": 0.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "butt-first from the holster"
+  },
+  "pistol_fire": {
+   "layer": "family",
+   "family": "pistol",
+   "fbx": "Humanoid_Pistol.fbx",
+   "length_s": 0.3,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "ProjectileRelease",
+     "t": 0.15
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "no warning glow, flash"
+  },
+  "throw_unhook": {
+   "layer": "family",
+   "family": "throw",
+   "fbx": "Humanoid_Throw.fbx",
+   "length_s": 0.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": null,
+   "notes": "frees the missile from the yoke/belt"
+  },
+  "throw_lob": {
+   "layer": "family",
+   "family": "throw",
+   "fbx": "Humanoid_Throw.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "ProjectileRelease",
+     "t": 0.6
+    }
+   ],
+   "status": "planned",
+   "enemy": null,
+   "notes": "overarm/underarm lob; 10 m, 2 m arc"
+  },
+  "warden_carry": {
+   "layer": "carry",
+   "family": null,
+   "fbx": "LanternWarden_Signature.fbx",
+   "length_s": 1.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": "lantern-warden",
+   "notes": "upper-body mask pose: glaive upright in the right fist, lantern hanging from the left"
+  },
+  "warden_carry_run": {
+   "layer": "carry",
+   "family": null,
+   "fbx": "LanternWarden_Signature.fbx",
+   "length_s": 1.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": "lantern-warden",
+   "notes": "upper-body mask pose for run_to_noise: lantern held out in front, glaive angled forward"
+  },
+  "wall_vault_parapet": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "WallSlinger_Signature.fbx",
+   "length_s": 0.9,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.1,
+     "param": {
+      "foot": "R"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.85,
+     "param": {
+      "foot": "L"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": "wall-slinger",
+   "notes": "one-handed hop over 1.10 m; needs root motion over the parapet (the agent's off-mesh link moves him)"
+  },
+  "dendra_sideways_aisle": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "DendraChampion_Signature.fbx",
+   "length_s": 1.8,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": "dendra-champion",
+   "notes": "side-on shuffle through aisles < 1.2 m; strafe gait with the cuirass square"
+  },
+  "flame_censer_swing": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "KeeperoftheFlame_Signature.fbx",
+   "length_s": 0.9,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.5
+    }
+   ],
+   "status": "planned",
+   "enemy": "flame-keeper",
+   "notes": "1.5 m ember arc with the censer"
+  },
+  "lantern_raise_search": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "LanternWarden_Signature.fbx",
+   "length_s": 2.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "a1",
+   "enemy": "lantern-warden",
+   "notes": ""
+  },
+  "death_drop_lantern": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "LanternWarden_Signature.fbx",
+   "length_s": 1.6,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "PropDetach",
+     "t": 0.16,
+     "param": {
+      "prop": "LanternRing"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.3,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "a1",
+   "enemy": "lantern-warden",
+   "notes": "the one death authored as a clip: it lets go of the lantern (PropDetach) and crumples; the ragdoll may take over from 0.5"
+  },
+  "household_helm_knocked_off": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "HouseholdKnight_Signature.fbx",
+   "length_s": 0.9,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "PropDetach",
+     "t": 0.1,
+     "param": {
+      "prop": "Helm"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": "household-knight",
+   "notes": "clutches his head"
+  },
+  "hound_sleep_curl": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 4.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_wake_to_noise": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_sniff_track": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 0.9,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 1.4,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0
+    },
+    {
+     "type": "Footstep",
+     "t": 0.25
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5
+    },
+    {
+     "type": "Footstep",
+     "t": 0.75
+    }
+   ],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_alert_point": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 0.6,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_bark_alarm": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 1.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_gallop": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 0.45,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 7.5,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5
+    }
+   ],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_stairs_run": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 0.5,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 5.0,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5
+    }
+   ],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_lunge_bite": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 0.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.7
+    }
+   ],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_worry_shake": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 1.2,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.5
+    }
+   ],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_yelp_hit": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 0.4,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": ""
+  },
+  "hound_death_fall": {
+   "layer": "hound",
+   "family": null,
+   "fbx": "AlauntHound_Generic.fbx",
+   "length_s": 1.3,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "alaunt-hound",
+   "notes": "the hound has no ragdoll in the engine plan yet: a clip"
+  },
+  "sallet_search_pair": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "SalletHalberdier_Signature.fbx",
+   "length_s": 3.0,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "sallet-halberdier",
+   "notes": "sweeps the halberd tip low through shadows"
+  },
+  "gothic_visor_raise": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "GothicManatArms_Signature.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "gothic-knight",
+   "notes": "pushes the visor up (Visor bone)"
+  },
+  "pavisier_plant_pavise": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "Pavisier_Signature.fbx",
+   "length_s": 1.0,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "PropDetach",
+     "t": 0.6,
+     "param": {
+      "prop": "Pavise"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.55,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": "pavisier",
+   "notes": "stamps the spikes in; the pavise becomes world cover"
+  },
+  "pavisier_advance_pavise": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "Pavisier_Signature.fbx",
+   "length_s": 1.6,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.3,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.8,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": "pavisier",
+   "notes": "lift, step 1 m, re-plant"
+  },
+  "partisan_raise_lantern": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "PalaceGuard_Signature.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "partisan-guard",
+   "notes": "unhooks the lantern to eye height: shares the warden's lantern_raise pose"
+  },
+  "cuirassier_shoulder_barge": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "Cuirassier_Signature.fbx",
+   "length_s": 0.8,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.5
+    },
+    {
+     "type": "Footstep",
+     "t": 0.2,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.45,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": "cuirassier",
+   "notes": "2 m lunge; the agent moves him"
+  },
+  "petardier_plant_petard": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "Petardier_Signature.fbx",
+   "length_s": 3.0,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "PropDetach",
+     "t": 0.6,
+     "param": {
+      "prop": "Petard"
+     }
+    }
+   ],
+   "status": "planned",
+   "enemy": "petardier",
+   "notes": "unslings, hooks, lights"
+  },
+  "petardier_self_detonate": {
+   "layer": "signature",
+   "family": null,
+   "fbx": "Petardier_Signature.fbx",
+   "length_s": 1.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "petardier",
+   "notes": "ends in the ragdoll/gib; no event (the blast is gameplay)"
+  }
+ },
+ "carry_variants": [
+  "castle_carry",
+  "cuirassier_carry",
+  "dendra_carry",
+  "flame_carry",
+  "gothic_carry",
+  "gothic_levelled",
+  "halberdier_grounded",
+  "halberdier_levelled",
+  "handgunner_carry",
+  "household_carry",
+  "knight_shield_forward",
+  "levy_leaning",
+  "levy_panic",
+  "musketeer_carry",
+  "palace_carry",
+  "partisan_carry",
+  "partisan_levelled",
+  "pavisier_carry",
+  "pavisier_front",
+  "petardier_carry",
+  "petardier_flee",
+  "sallet_carry",
+  "wall_carry",
+  "warden_carry",
+  "warden_carry_run"
+ ],
+ "enemies": {
+  "palace-levy": {
+   "age": "bronze",
+   "name": "Palace Levy",
+   "role": "patrol",
+   "height_m": 1.7,
+   "family": "polearm",
+   "carry": {
+    "pose": "palace_carry",
+    "describes": "spear upright at the right shoulder, shield slung across the back",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_leaning",
+     "json": "idle_leaning — 4 s loop, leans on spear, shield rim resting on the ground, weight shifts, yawns once",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "levy_leaning",
+     "status_why": "source idle is a1; carry pose levy_leaning is planned",
+     "length_s": 4.0,
+     "playback_rate": 0.75,
+     "events": [],
+     "note": "idle + a leaning carry variant (spear as a prop, shield rim grounded)"
+    },
+    {
+     "clip": "patrol_walk",
+     "json": "patrol_walk — 1.1 s cycle, spear upright at the shoulder, shield slung across the back on the telamon",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "palace_carry",
+     "status_why": "source walk is a1; carry pose palace_carry is planned",
+     "json_speed_mps": null,
+     "agent_speed_mps": 2.0,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.6 s, head snaps toward the noise first, body follows, shield swung round to front",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.6,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "shout_alarm",
+     "json": "shout_alarm — 1.4 s, spear raised overhead, mouth open, stamps; broadcasts alarm to levies in 12 m",
+     "layer": "base",
+     "family": null,
+     "source": "shout",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.4,
+     "playback_rate": 0.857,
+     "events": []
+    },
+    {
+     "clip": "guard_stance",
+     "json": "guard_stance — loop, shield forward, spear over the top of the shield at shoulder height",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "shield_guard",
+     "status": "planned",
+     "loop": true,
+     "length_s": 3.0,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "thrust",
+     "json": "thrust — 0.7 s, overhand spear jab over the shield, 1.8 m reach",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_thrust_overhand",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "shield_bash",
+     "json": "shield_bash — 0.8 s, steps in and shoves with the shield lobe",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "shield_bash",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.35,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.45
+      }
+     ]
+    },
+    {
+     "clip": "archway_duck",
+     "json": "archway_duck — 0.5 s, dips spear point to horizontal to pass 2.59 m archways",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_cant",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 0.8,
+     "events": [],
+     "note": "dips the spear point: the polearm cant, not a body duck (1.70 m man, 2.59 m arch)"
+    },
+    {
+     "clip": "stagger_hit",
+     "json": "stagger_hit — 0.5 s, recoils behind the shield",
+     "layer": "base",
+     "family": null,
+     "source": "stagger",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 1.6,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.6 s, falls back, shield drops flat and slides",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored",
+     "loop": false,
+     "length_s": 1.6,
+     "events": []
+    },
+    {
+     "clip": "flee_panic",
+     "json": "flee_panic — 0.9 s cycle, shield dropped, spear trailing (triggered when fire or later-Age weapons appear)",
+     "layer": "carry",
+     "family": null,
+     "source": "run",
+     "status": "planned",
+     "loop": true,
+     "carry": "levy_panic",
+     "status_why": "source run is a1; carry pose levy_panic is planned",
+     "json_speed_mps": null,
+     "agent_speed_mps": 4.2,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "PropDetach",
+       "t": 0.0,
+       "param": {
+        "prop": "Shield"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "run + a panic carry (spear trailing); shield dropped at entry"
+    }
+   ]
+  },
+  "wall-slinger": {
+   "age": "bronze",
+   "name": "Wall Slinger",
+   "role": "ranged",
+   "height_m": 1.66,
+   "family": "sling",
+   "carry": {
+    "pose": "wall_carry",
+    "describes": "sling dangling from the right hand, left hand free",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_scan",
+     "json": "idle_scan — 3 s loop, shading eyes, sling dangling and swaying",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "wall_carry",
+     "status_why": "source idle is a1; carry pose wall_carry is planned",
+     "length_s": 3.0,
+     "playback_rate": 1.0,
+     "events": [],
+     "note": "shading the eyes is the carry variant's left arm"
+    },
+    {
+     "clip": "patrol_walk",
+     "json": "patrol_walk — 1.0 s cycle, quick light steps along the wall-walk",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "wall_carry",
+     "status_why": "source walk is a1; carry pose wall_carry is planned",
+     "json_speed_mps": null,
+     "agent_speed_mps": 1.9,
+     "playback_rate": 0.95,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.5 s, head first, drops into a crouch",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 1.2,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "note": "ends crouched: blend to crouch_cover"
+    },
+    {
+     "clip": "reload",
+     "json": "reload — 0.9 s, dips into the hip pouch, fits stone to cradle",
+     "layer": "family",
+     "family": "sling",
+     "source": "sling_reload",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.9,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "sling_windup",
+     "json": "sling_windup — 1.2 s, two overhead whirls (cord blur), telegraphs the throw",
+     "layer": "family",
+     "family": "sling",
+     "source": "sling_windup",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.2,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "sling_release",
+     "json": "sling_release — 0.4 s, underarm-to-overarm release, stone launches at 30 m/s",
+     "layer": "family",
+     "family": "sling",
+     "source": "sling_release",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "ProjectileRelease",
+       "t": 0.45
+      }
+     ]
+    },
+    {
+     "clip": "strafe_left",
+     "json": "strafe_left / strafe_right — 0.8 s cycles, keeps range",
+     "layer": "base",
+     "family": null,
+     "source": "strafe",
+     "status": "planned",
+     "loop": true,
+     "json_speed_mps": null,
+     "agent_speed_mps": 1.9,
+     "playback_rate": 1.357,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "strafe_right",
+     "json": "strafe_left / strafe_right — 0.8 s cycles, keeps range",
+     "layer": "base",
+     "family": null,
+     "source": "strafe",
+     "status": "planned",
+     "loop": true,
+     "json_speed_mps": null,
+     "agent_speed_mps": 1.9,
+     "playback_rate": 1.357,
+     "length_s": null,
+     "mirror": true,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "retreat_run",
+     "json": "retreat_run — 0.7 s cycle, glances back",
+     "layer": "carry",
+     "family": null,
+     "source": "run",
+     "status": "planned",
+     "loop": true,
+     "carry": "wall_carry",
+     "status_why": "source run is a1; carry pose wall_carry is planned",
+     "json_speed_mps": null,
+     "agent_speed_mps": 3.6,
+     "playback_rate": 0.857,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "vault_parapet",
+     "json": "vault_parapet — 0.9 s, hops a 1.10 m parapet or bench one-handed (1.66 m clears every archway without ducking)",
+     "layer": "signature",
+     "family": null,
+     "source": "wall_vault_parapet",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.9,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.1,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.85,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "note": "one-handed hop over 1.10 m; needs root motion over the parapet (the agent's off-mesh link moves him)"
+    },
+    {
+     "clip": "hit_flinch",
+     "json": "hit_flinch — 0.4 s",
+     "layer": "base",
+     "family": null,
+     "source": "hit_react",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.4 s, pitches forward, pouch spills stones as physics props",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored; the pouch spills stones as physics props at the switch",
+     "loop": false,
+     "length_s": 1.4,
+     "events": []
+    }
+   ]
+  },
+  "dendra-champion": {
+   "age": "bronze",
+   "name": "Dendra Champion",
+   "role": "heavy",
+   "height_m": 1.92,
+   "family": "sword_shield",
+   "carry": {
+    "pose": "dendra_carry",
+    "describes": "rapier low in the right hand, arms held out by the cuirass",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_heavy",
+     "json": "idle_heavy — 5 s loop, breathes shallow in the cuirass, rings settle with a clank",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "dendra_carry",
+     "status_why": "source idle is a1; carry pose dendra_carry is planned",
+     "length_s": 5.0,
+     "playback_rate": 0.6,
+     "events": []
+    },
+    {
+     "clip": "walk_slow",
+     "json": "walk_slow — 1.6 s cycle, stiff-legged, rings swing, 1.1 m/s max",
+     "layer": "carry",
+     "family": null,
+     "source": "walk_slow",
+     "status": "planned",
+     "loop": true,
+     "carry": "dendra_carry",
+     "status_why": "source walk_slow is a1; carry pose dendra_carry is planned",
+     "json_speed_mps": 1.1,
+     "agent_speed_mps": 1.1,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "1.1 m/s max: walk_slow at 1.0x"
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 1.2 s, turns whole body (cannot twist at the waist), head can't lead",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn_body",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.2,
+     "playback_rate": 0.833,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.3,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "rapier_lunge",
+     "json": "rapier_lunge — 1.1 s, long thrust with full-body lean, 2.2 m reach",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "sword_lunge",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.1,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.55
+      }
+     ]
+    },
+    {
+     "clip": "rapier_cut",
+     "json": "rapier_cut — 0.9 s, backhand slash (weak, but wide)",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "sword_cut",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.9,
+     "playback_rate": 0.889,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "shield_brace",
+     "json": "shield_brace — loop, braced behind the tower shield (variant only)",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "shield_brace",
+     "status": "planned",
+     "loop": true,
+     "length_s": 2.0,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "shrug_impact",
+     "json": "shrug_impact — 0.4 s, junk bounces off; barely moves (thrown items < 6 st deal no stagger)",
+     "layer": "base",
+     "family": null,
+     "source": "shrug",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.25,
+     "events": []
+    },
+    {
+     "clip": "sideways_aisle",
+     "json": "sideways_aisle — 1.8 s cycle, shuffles side-on through aisles < 1.2 m wide, cannot attack while in it",
+     "layer": "signature",
+     "family": null,
+     "source": "dendra_sideways_aisle",
+     "status": "planned",
+     "loop": true,
+     "length_s": 1.8,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "side-on shuffle through aisles < 1.2 m; strafe gait with the cuirass square"
+    },
+    {
+     "clip": "heavy_stagger",
+     "json": "heavy_stagger — 1.5 s, only from > 6 st impacts, FRANGO or later-Age weapons",
+     "layer": "base",
+     "family": null,
+     "source": "stagger",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.5,
+     "playback_rate": 0.533,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "kneel_get_up",
+     "json": "kneel_get_up — 3 s, if knocked down he takes three seconds to stand",
+     "layer": "base",
+     "family": null,
+     "source": "get_up",
+     "status": "a1",
+     "loop": false,
+     "length_s": 3.0,
+     "playback_rate": 0.8,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.8,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "3 s: get_up at 0.8x from the kneel"
+    },
+    {
+     "clip": "death_topple",
+     "json": "death_topple — 2 s, falls like a bell, plates ring",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored",
+     "loop": false,
+     "length_s": 2.0,
+     "events": []
+    }
+   ]
+  },
+  "flame-keeper": {
+   "age": "bronze",
+   "name": "Keeper of the Flame",
+   "role": "special",
+   "height_m": 1.72,
+   "family": "throw",
+   "carry": {
+    "pose": "flame_carry",
+    "describes": "censer in the right hand, yoke of fire-pots across the shoulders",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_tend",
+     "json": "idle_tend — 4 s loop, swings the censer in slow arcs, adjusts a pot cord",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "flame_carry",
+     "status_why": "source idle is a1; carry pose flame_carry is planned",
+     "length_s": 4.0,
+     "playback_rate": 0.75,
+     "events": [],
+     "note": "slow censer arcs are the carry's right arm (a swing prop, later a damped transform)"
+    },
+    {
+     "clip": "procession_walk",
+     "json": "procession_walk — 1.4 s cycle, stately, pots sway counter to stride",
+     "layer": "carry",
+     "family": null,
+     "source": "walk_slow",
+     "status": "planned",
+     "loop": true,
+     "carry": "flame_carry",
+     "status_why": "source walk_slow is a1; carry pose flame_carry is planned",
+     "json_speed_mps": null,
+     "agent_speed_mps": 1.0,
+     "playback_rate": 0.909,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.7 s, head then body, the pots keep swinging after she stops",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 0.857,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "chant_alarm",
+     "json": "chant_alarm — 2 s, raises the censer overhead and calls out; alerts everything in the room",
+     "layer": "base",
+     "family": null,
+     "source": "shout",
+     "status": "a1",
+     "loop": false,
+     "length_s": 2.0,
+     "playback_rate": 0.6,
+     "events": [],
+     "note": "censer raised overhead: the carry variant; 2 s = shout at 0.6x"
+    },
+    {
+     "clip": "unhook_pot",
+     "json": "unhook_pot — 0.5 s, right hand frees a pot from the yoke",
+     "layer": "family",
+     "family": "throw",
+     "source": "throw_unhook",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.7,
+       "param": {
+        "prop": "FirePot"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "throw_pot",
+     "json": "throw_pot — 0.8 s, overarm lob, 10 m range, arcs 2 m high; pot shatters and spawns a 2.5 m fire pool",
+     "layer": "family",
+     "family": "throw",
+     "source": "throw_lob",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "ProjectileRelease",
+       "t": 0.6
+      }
+     ]
+    },
+    {
+     "clip": "censer_swing",
+     "json": "censer_swing — 0.9 s melee, burning embers in a 1.5 m arc",
+     "layer": "signature",
+     "family": null,
+     "source": "flame_censer_swing",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.9,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ],
+     "note": "1.5 m ember arc with the censer"
+    },
+    {
+     "clip": "crypt_duck",
+     "json": "crypt_duck — 0.6 s, lowers the yoke and stoops to pass the 2.16 m Crypt archway (pots swing low)",
+     "layer": "base",
+     "family": null,
+     "source": "archway_duck",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.6,
+     "playback_rate": 0.833,
+     "events": []
+    },
+    {
+     "clip": "retreat_walk",
+     "json": "retreat_walk — 1.2 s cycle, backs away while facing you",
+     "layer": "base",
+     "family": null,
+     "source": "walk_back",
+     "status": "planned",
+     "loop": true,
+     "json_speed_mps": null,
+     "agent_speed_mps": 1.0,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "hit_flinch",
+     "json": "hit_flinch — 0.4 s, pots clatter",
+     "layer": "base",
+     "family": null,
+     "source": "hit_react",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.8 s, drops to her knees; any pots still hung break and ignite beneath her",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored; hung pots break and ignite at the switch",
+     "loop": false,
+     "length_s": 1.8,
+     "events": []
+    }
+   ]
+  },
+  "lantern-warden": {
+   "age": "high",
+   "name": "Lantern Warden",
+   "role": "patrol",
+   "height_m": 1.8,
+   "family": "polearm",
+   "carry": {
+    "pose": "warden_carry",
+    "describes": "glaive upright in the right fist (butt just off the floor), lantern hanging from the left fist",
+    "status": "a1"
+   },
+   "clips": [
+    {
+     "clip": "idle_lantern",
+     "json": "idle_lantern — 3 s loop, weight shifts, lantern sways ±8°, glaive rests on the shoulder",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "a1",
+     "loop": true,
+     "carry": "warden_carry",
+     "length_s": 3.0,
+     "playback_rate": 1.0,
+     "events": [],
+     "note": "the concept holds the glaive upright; the JSON's 'rests on the shoulder' is not used (see the carry pose)"
+    },
+    {
+     "clip": "walk_round",
+     "json": "walk_round — 1.1 m/s patrol walk, lantern swing phase-locked to the stride",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "a1",
+     "loop": true,
+     "carry": "warden_carry",
+     "json_speed_mps": 1.1,
+     "agent_speed_mps": 2.0,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "JSON 1.1 m/s vs engine patrol 2.0 m/s: walk at the agent speed; walk_slow covers 1.1"
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.6 s, lantern snaps up to face height first, head follows, body last",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.6,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "lantern_raise_search",
+     "json": "lantern_raise_search — 2.5 s, holds the lantern out at arm's length and sweeps 90°",
+     "layer": "signature",
+     "family": null,
+     "source": "lantern_raise_search",
+     "status": "a1",
+     "loop": false,
+     "length_s": 2.5,
+     "events": []
+    },
+    {
+     "clip": "cant_glaive",
+     "json": "cant_glaive — 0.4 s additive, tilts the glaive 35° forward under the 2.10 m doors and the gatehouse vault ribs (tip drops to 1.70 m)",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_cant",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "shout_alarm",
+     "json": "shout_alarm — 1.2 s, cups the hand, bellows; emits a noise event",
+     "layer": "base",
+     "family": null,
+     "source": "shout",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.2,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "run_to_noise",
+     "json": "run_to_noise — 3.4 m/s, lantern held in front, light jittering",
+     "layer": "carry",
+     "family": null,
+     "source": "run",
+     "status": "a1",
+     "loop": true,
+     "carry": "warden_carry_run",
+     "json_speed_mps": 3.4,
+     "agent_speed_mps": 4.2,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "JSON 3.4 m/s vs engine chase 4.2 m/s: run at the agent speed; lantern held in front"
+    },
+    {
+     "clip": "attack_glaive_thrust",
+     "json": "attack_glaive_thrust — 0.9 s, two-handed thrust, lantern set down first (0.3 s drop)",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_thrust",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.9,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.08,
+       "param": {
+        "prop": "LanternRing"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.42,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ],
+     "note": "the lantern is let go as the left hand goes to the haft; the driver drops the prop once per engagement"
+    },
+    {
+     "clip": "attack_glaive_sweep",
+     "json": "attack_glaive_sweep — 1.1 s, wide cut at knee height",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_sweep",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.1,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.4,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "hit_react",
+     "json": "hit_react — 0.5 s stagger, the lantern swings wildly",
+     "layer": "base",
+     "family": null,
+     "source": "stagger",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 1.6,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "note": "0.5 s stagger: stagger at 1.6x"
+    },
+    {
+     "clip": "death_drop_lantern",
+     "json": "death_drop_lantern — 1.6 s, falls; the lantern rolls and keeps burning 30 s",
+     "layer": "signature",
+     "family": null,
+     "source": "death_drop_lantern",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.6,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.16,
+       "param": {
+        "prop": "LanternRing"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.3,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "the one death authored as a clip: it lets go of the lantern (PropDetach) and crumples; the ragdoll may take over from 0.5"
+    }
+   ]
+  },
+  "castle-crossbowman": {
+   "age": "high",
+   "name": "Castle Crossbowman",
+   "role": "ranged",
+   "height_m": 1.78,
+   "family": "crossbow",
+   "carry": {
+    "pose": "castle_carry",
+    "describes": "crossbow held low at the port, thumb on the nut",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_ready",
+     "json": "idle_ready — 3 s loop, bow held low, thumb on the nut",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "castle_carry",
+     "status_why": "source idle is a1; carry pose castle_carry is planned",
+     "length_s": 3.0,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "walk_patrol",
+     "json": "walk_patrol — 1.0 m/s, bow at port",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "castle_carry",
+     "status_why": "source walk is a1; carry pose castle_carry is planned",
+     "json_speed_mps": 1.0,
+     "agent_speed_mps": 1.9,
+     "playback_rate": 0.95,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.6 s, head first then shoulders, bow comes up",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.6,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "aim_hold",
+     "json": "aim_hold — 1.2 s raise to shoulder, holds up to 4 s tracking a target",
+     "layer": "family",
+     "family": "crossbow",
+     "source": "crossbow_aim",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.2,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "shoot",
+     "json": "shoot — 0.3 s release, recoil kick, string snaps forward",
+     "layer": "family",
+     "family": "crossbow",
+     "source": "crossbow_shoot",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.3,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "ProjectileRelease",
+       "t": 0.1
+      }
+     ]
+    },
+    {
+     "clip": "reload_span",
+     "json": "reload_span — 6.0 s: tip down, foot in stirrup, bend, hook the string with the belt hook, straighten, draw a bolt, seat it",
+     "layer": "family",
+     "family": "crossbow",
+     "source": "crossbow_span",
+     "status": "planned",
+     "loop": false,
+     "length_s": 6.0,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.1,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "reload_interrupted",
+     "json": "reload_interrupted — 0.8 s, abandons the span and draws his knife",
+     "layer": "family",
+     "family": "crossbow",
+     "source": "crossbow_abort",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "strafe_to_loop",
+     "json": "strafe_to_loop — 1.4 m/s sidestep into an arrow-loop's cover",
+     "layer": "base",
+     "family": null,
+     "source": "strafe",
+     "status": "planned",
+     "loop": true,
+     "json_speed_mps": 1.4,
+     "agent_speed_mps": 1.9,
+     "playback_rate": 1.357,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "melee_bow_butt",
+     "json": "melee_bow_butt — 0.8 s, clubs with the tiller",
+     "layer": "family",
+     "family": "crossbow",
+     "source": "crossbow_butt",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "hit_react",
+     "json": "hit_react — 0.5 s",
+     "layer": "base",
+     "family": null,
+     "source": "stagger",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 1.6,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "death_forward",
+     "json": "death_forward — 1.5 s, bow skitters away",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored; the bow skitters away at the switch",
+     "loop": false,
+     "length_s": 1.5,
+     "events": []
+    }
+   ]
+  },
+  "household-knight": {
+   "age": "high",
+   "name": "Household Knight",
+   "role": "heavy",
+   "height_m": 1.95,
+   "family": "sword_shield",
+   "carry": {
+    "pose": "household_carry",
+    "describes": "shield up on the left arm, sword sheathed/low",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_guard",
+     "json": "idle_guard — 4 s loop, shield up, weight settled, helm turns slowly",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "household_carry",
+     "status_why": "source idle is a1; carry pose household_carry is planned",
+     "length_s": 4.0,
+     "playback_rate": 0.75,
+     "events": []
+    },
+    {
+     "clip": "wake_slow",
+     "json": "wake_slow — 2.0 s, the household wakes by degrees: he rises, takes up the shield, then the sword",
+     "layer": "base",
+     "family": null,
+     "source": "get_up",
+     "status": "a1",
+     "loop": false,
+     "length_s": 2.0,
+     "playback_rate": 1.2,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.8,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "wakes by degrees: get_up's second half + draw_sword; 2 s"
+    },
+    {
+     "clip": "walk_heavy",
+     "json": "walk_heavy — 0.9 m/s, audible mail jingle every step",
+     "layer": "carry",
+     "family": null,
+     "source": "walk_slow",
+     "status": "planned",
+     "loop": true,
+     "carry": "household_carry",
+     "status_why": "source walk_slow is a1; carry pose household_carry is planned",
+     "json_speed_mps": 0.9,
+     "agent_speed_mps": 1.5,
+     "playback_rate": 1.364,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 1.0 s, turns the whole body (he cannot turn his head in the helm)",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn_body",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.0,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.3,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "advance_shield",
+     "json": "advance_shield — 1.4 m/s with shield forward; frontal hits deflect",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "knight_shield_forward",
+     "status_why": "source walk is a1; carry pose knight_shield_forward is planned",
+     "json_speed_mps": 1.4,
+     "agent_speed_mps": 1.5,
+     "playback_rate": 0.75,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "attack_overhead",
+     "json": "attack_overhead — 1.2 s, heavy downward cut, 0.4 s wind-up tell",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "sword_overhead",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.2,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.6
+      }
+     ]
+    },
+    {
+     "clip": "attack_shield_bash",
+     "json": "attack_shield_bash — 0.7 s, shoves 3 m, knocks carried items loose",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "shield_bash",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 1.143,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.35,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.45
+      }
+     ]
+    },
+    {
+     "clip": "duck_door",
+     "json": "duck_door — 0.5 s additive, dips the crest 0.10 m under the 0.90 × 2.10 m stair and sacristy doors (0.15 m clearance; never needed for the 2.88 / 3.31 m archways)",
+     "layer": "base",
+     "family": null,
+     "source": "archway_duck",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "stagger_heavy",
+     "json": "stagger_heavy — 0.8 s, only from 12 st impacts or TONITRUS",
+     "layer": "base",
+     "family": null,
+     "source": "stagger",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.8,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "helm_knocked_off",
+     "json": "helm_knocked_off — 0.9 s, clutches his head, fights on bareheaded",
+     "layer": "signature",
+     "family": null,
+     "source": "household_helm_knocked_off",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.9,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.1,
+       "param": {
+        "prop": "Helm"
+       }
+      }
+     ],
+     "note": "clutches his head"
+    },
+    {
+     "clip": "death_kneel",
+     "json": "death_kneel — 2.2 s, kneels, then topples; shield falls flat",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored; kneel-then-topple could become a signature clip later; ragdoll for now",
+     "loop": false,
+     "length_s": 2.2,
+     "events": []
+    }
+   ]
+  },
+  "alaunt-hound": {
+   "age": "high",
+   "name": "Alaunt War-hound",
+   "role": "special",
+   "height_m": 0.85,
+   "family": null,
+   "carry": null,
+   "clips": [
+    {
+     "clip": "sleep_curl",
+     "json": "sleep_curl — loop, breathing, ear flick on distant noise",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_sleep_curl",
+     "status": "planned",
+     "loop": true,
+     "length_s": 4.0,
+     "speed_mps": null,
+     "events": [],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "wake_to_noise",
+     "json": "wake_to_noise — 0.8 s, head up, ears forward, rises; noise events above 40 % loudness wake it at up to 20 m",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_wake_to_noise",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "speed_mps": null,
+     "events": [],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "sniff_track",
+     "json": "sniff_track — 1.4 m/s nose-down walk along the players' scent trail",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_sniff_track",
+     "status": "planned",
+     "loop": true,
+     "length_s": 0.9,
+     "speed_mps": 1.4,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0
+      },
+      {
+       "type": "Footstep",
+       "t": 0.25
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5
+      },
+      {
+       "type": "Footstep",
+       "t": 0.75
+      }
+     ],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "alert_point",
+     "json": "alert_point — 0.6 s, freezes, head toward the noise, low growl (noise event)",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_alert_point",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.6,
+     "speed_mps": null,
+     "events": [],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "bark_alarm",
+     "json": "bark_alarm — 1.5 s, three barks; wakes guards in the cell and neighbours",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_bark_alarm",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.5,
+     "speed_mps": null,
+     "events": [],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "gallop",
+     "json": "gallop — 7.5 m/s, faster than a running player (5.5 m/s)",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_gallop",
+     "status": "planned",
+     "loop": true,
+     "length_s": 0.45,
+     "speed_mps": 7.5,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5
+      }
+     ],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "stairs_run",
+     "json": "stairs_run — gallop variant on the Newel Stair, 5.0 m/s",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_stairs_run",
+     "status": "planned",
+     "loop": true,
+     "length_s": 0.5,
+     "speed_mps": 5.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5
+      }
+     ],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "lunge_bite",
+     "json": "lunge_bite — 0.5 s, leap 2 m, bites a leg; pins a player for 1.5 s",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_lunge_bite",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.5,
+     "speed_mps": null,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.7
+      }
+     ],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "worry_shake",
+     "json": "worry_shake — 1.2 s, shakes a held player or a carried item loose",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_worry_shake",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.2,
+     "speed_mps": null,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "yelp_hit",
+     "json": "yelp_hit — 0.4 s",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_yelp_hit",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.4,
+     "speed_mps": null,
+     "events": [],
+     "fbx": "AlauntHound_Generic.fbx"
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.3 s",
+     "layer": "hound",
+     "family": null,
+     "source": "hound_death_fall",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.3,
+     "speed_mps": null,
+     "events": [],
+     "fbx": "AlauntHound_Generic.fbx",
+     "note": "the hound has no ragdoll in the engine plan yet: a clip"
+    }
+   ]
+  },
+  "sallet-halberdier": {
+   "age": "late",
+   "name": "Sallet Halberdier",
+   "role": "patrol",
+   "height_m": 1.82,
+   "family": "polearm",
+   "carry": {
+    "pose": "sallet_carry",
+    "describes": "halberd at the slope on the right shoulder",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_slope",
+     "json": "idle_slope — 3 s loop, halberd grounded, weight shifts, head turns to check on his partner every 6 s",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "halberdier_grounded",
+     "status_why": "source idle is a1; carry pose halberdier_grounded is planned",
+     "length_s": 3.0,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "walk_round",
+     "json": "walk_round — 1.1 m/s, halberd at the slope on the right shoulder, paced to a partner 10 m behind (shared timeline)",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "sallet_carry",
+     "status_why": "source walk is a1; carry pose sallet_carry is planned",
+     "json_speed_mps": 1.1,
+     "agent_speed_mps": 2.0,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "slope_halberd_arch",
+     "json": "slope_halberd_arch — 0.4 s additive, tilts the halberd back so its tip drops from 2.08 to 1.95 m under the 2.59 m OuterBailey arches",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_cant_back",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.6 s, head snaps to noise first, the halberd comes off the shoulder as the body follows",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.6,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "call_partner",
+     "json": "call_partner — 1.0 s, raises the left hand and calls; the partner's AI is alerted even out of sight",
+     "layer": "base",
+     "family": null,
+     "source": "shout",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.0,
+     "playback_rate": 1.2,
+     "events": []
+    },
+    {
+     "clip": "search_pair",
+     "json": "search_pair — 3 s, sweeps the halberd tip low through shadows while the partner covers",
+     "layer": "signature",
+     "family": null,
+     "source": "sallet_search_pair",
+     "status": "planned",
+     "loop": false,
+     "length_s": 3.0,
+     "events": [],
+     "note": "sweeps the halberd tip low through shadows"
+    },
+    {
+     "clip": "run_to_noise",
+     "json": "run_to_noise — 3.3 m/s, halberd levelled at the hip",
+     "layer": "carry",
+     "family": null,
+     "source": "run",
+     "status": "planned",
+     "loop": true,
+     "carry": "halberdier_levelled",
+     "status_why": "source run is a1; carry pose halberdier_levelled is planned",
+     "json_speed_mps": 3.3,
+     "agent_speed_mps": 4.2,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "attack_thrust",
+     "json": "attack_thrust — 0.8 s, two-handed thrust with the spike, 2.4 m reach",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_thrust",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.8,
+     "playback_rate": 1.125,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.42,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "attack_hook",
+     "json": "attack_hook — 1.2 s, reaches past the target, hooks with the fluke and drags back (pulls a player 1 m)",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_hook",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.2,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.35,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.42
+      },
+      {
+       "type": "Footstep",
+       "t": 0.78,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "attack_chop",
+     "json": "attack_chop — 1.1 s, overhead cut with the axe blade",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_chop",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.1,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.48,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.55
+      }
+     ]
+    },
+    {
+     "clip": "hit_react",
+     "json": "hit_react — 0.5 s stagger, the sallet tail knocks askew",
+     "layer": "base",
+     "family": null,
+     "source": "stagger",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 1.6,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.5 s, drops to the knees then forward; the halberd falls clear",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored; the halberd falls clear at the switch",
+     "loop": false,
+     "length_s": 1.5,
+     "events": []
+    }
+   ]
+  },
+  "handgunner": {
+   "age": "late",
+   "name": "Handgunner",
+   "role": "ranged",
+   "height_m": 1.78,
+   "family": "long_gun",
+   "carry": {
+    "pose": "handgunner_carry",
+    "describes": "handgonne on the right shoulder, match hand held away",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_shoulder",
+     "json": "idle_shoulder — 3 s loop, gun on the shoulder, blows on the match every 5 s (tip brightens)",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "handgunner_carry",
+     "status_why": "source idle is a1; carry pose handgunner_carry is planned",
+     "length_s": 3.0,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "walk_post",
+     "json": "walk_post — 1.0 m/s, gun at the shoulder, match hand held away from the flask",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "handgunner_carry",
+     "status_why": "source walk is a1; carry pose handgunner_carry is planned",
+     "json_speed_mps": 1.0,
+     "agent_speed_mps": 1.9,
+     "playback_rate": 0.95,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.7 s, swings round toward noise, gun comes down to the hip",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 0.857,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "brace_and_aim",
+     "json": "brace_and_aim — 1.2 s, rests the hook lug on a merlon, pavise rim or table edge, tiller under the arm, sights along the barrel",
+     "layer": "family",
+     "family": "long_gun",
+     "source": "gun_brace_aim",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.2,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "fire",
+     "json": "fire — 0.8 s, match to the touch-hole, 0.4 s hang-fire hiss, bang, recoil shoves him back 0.2 m; smoke cloud 3 m that lingers 6 s",
+     "layer": "family",
+     "family": "long_gun",
+     "source": "gun_fire",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "ProjectileRelease",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "reload",
+     "json": "reload — 40 s loop (interruptible): swabs, pours powder from the horn, rams wad and ball with a rod from his belt, primes the pan",
+     "layer": "family",
+     "family": "long_gun",
+     "source": "gun_reload",
+     "status": "planned",
+     "loop": true,
+     "length_s": 40.0,
+     "playback_rate": 0.225,
+     "events": []
+    },
+    {
+     "clip": "call_pavisier",
+     "json": "call_pavisier — 1.0 s, shouts for his shield partner, who moves to cover him",
+     "layer": "base",
+     "family": null,
+     "source": "shout",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.0,
+     "playback_rate": 1.2,
+     "events": []
+    },
+    {
+     "clip": "retreat_behind_pavise",
+     "json": "retreat_behind_pavise — 1.2 s, crouches to 1.25 m behind the 1.30 m pavise",
+     "layer": "base",
+     "family": null,
+     "source": "crouch_cover",
+     "status": "planned",
+     "loop": true,
+     "length_s": 1.2,
+     "playback_rate": 1.667,
+     "events": []
+    },
+    {
+     "clip": "club",
+     "json": "club — 1.0 s, melee: swings the gun by the tiller like a club",
+     "layer": "family",
+     "family": "long_gun",
+     "source": "gun_club",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.0,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.55
+      }
+     ]
+    },
+    {
+     "clip": "hit_react",
+     "json": "hit_react — 0.5 s, stumbles, the match may drop (see breakables)",
+     "layer": "base",
+     "family": null,
+     "source": "stagger",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 1.6,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.3,
+       "param": {
+        "prop": "Match"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "note": "the match may drop (breakables)"
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.6 s, backwards; the lit match lands and can ignite spilled powder",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored; the lit match drops at the switch",
+     "loop": false,
+     "length_s": 1.6,
+     "events": []
+    }
+   ]
+  },
+  "gothic-knight": {
+   "age": "late",
+   "name": "Gothic Man-at-Arms",
+   "role": "heavy",
+   "height_m": 1.95,
+   "family": "polearm",
+   "carry": {
+    "pose": "gothic_carry",
+    "describes": "poleaxe grounded/upright in both hands",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_stand",
+     "json": "idle_stand — 4 s loop, poleaxe grounded, a slow breath visible in the pauldrons",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "gothic_carry",
+     "status_why": "source idle is a1; carry pose gothic_carry is planned",
+     "length_s": 4.0,
+     "playback_rate": 0.75,
+     "events": []
+    },
+    {
+     "clip": "walk_heavy",
+     "json": "walk_heavy — 0.9 m/s, steel-on-steel footstep audio events every step",
+     "layer": "carry",
+     "family": null,
+     "source": "walk_slow",
+     "status": "planned",
+     "loop": true,
+     "carry": "gothic_carry",
+     "status_why": "source walk_slow is a1; carry pose gothic_carry is planned",
+     "json_speed_mps": 0.9,
+     "agent_speed_mps": 1.5,
+     "playback_rate": 1.364,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn_slow",
+     "json": "alert_turn_slow — 1.1 s, turns the whole body (he cannot turn his head in the armet)",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn_body",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.1,
+     "playback_rate": 0.909,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.3,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "visor_raise",
+     "json": "visor_raise — 0.8 s, pushes the visor up to look closer (face exposed for 3 s)",
+     "layer": "signature",
+     "family": null,
+     "source": "gothic_visor_raise",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "events": [],
+     "note": "pushes the visor up (Visor bone)"
+    },
+    {
+     "clip": "charge",
+     "json": "charge — 3.0 m/s, poleaxe levelled, 4 s max, can't turn more than 20°/s",
+     "layer": "carry",
+     "family": null,
+     "source": "run",
+     "status": "planned",
+     "loop": true,
+     "carry": "gothic_levelled",
+     "status_why": "source run is a1; carry pose gothic_levelled is planned",
+     "json_speed_mps": 3.0,
+     "agent_speed_mps": 3.0,
+     "playback_rate": 0.714,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "3.0 m/s: run at 0.71x playback"
+    },
+    {
+     "clip": "attack_spike_thrust",
+     "json": "attack_spike_thrust — 0.9 s, top-spike thrust, 2.0 m reach",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_thrust",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.9,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.42,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "attack_hammer",
+     "json": "attack_hammer — 1.4 s, overhead blow with the hammer face; staggers and knocks down",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_chop",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.4,
+     "playback_rate": 0.786,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.48,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.55
+      }
+     ]
+    },
+    {
+     "clip": "attack_axe_sweep",
+     "json": "attack_axe_sweep — 1.3 s, wide horizontal sweep at waist height",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_sweep",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.3,
+     "playback_rate": 0.846,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.4,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "shrug_spell",
+     "json": "shrug_spell — 0.6 s additive, flinches and keeps coming when hit by a light spell",
+     "layer": "base",
+     "family": null,
+     "source": "shrug",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.6,
+     "playback_rate": 0.833,
+     "events": []
+    },
+    {
+     "clip": "hit_react_heavy",
+     "json": "hit_react_heavy — 0.7 s, rocks back only on a heavy blow (TONITRUS, a dropped portcullis)",
+     "layer": "base",
+     "family": null,
+     "source": "stagger",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 1.143,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "stand_up",
+     "json": "stand_up — 2.4 s, struggles up from prone (his window of vulnerability)",
+     "layer": "base",
+     "family": null,
+     "source": "get_up",
+     "status": "a1",
+     "loop": false,
+     "length_s": 2.4,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.8,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "death_topple",
+     "json": "death_topple — 2.0 s, falls straight like a tree, 1.2 m radius crash noise",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored",
+     "loop": false,
+     "length_s": 2.0,
+     "events": []
+    }
+   ]
+  },
+  "pavisier": {
+   "age": "late",
+   "name": "Pavisier",
+   "role": "special",
+   "height_m": 1.8,
+   "family": "sword_shield",
+   "carry": {
+    "pose": "pavisier_carry",
+    "describes": "pavise carried upright at the left side, hand on the rim",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_shield",
+     "json": "idle_shield — 3 s loop, pavise carried upright at the left side, hand on the rim",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "pavisier_carry",
+     "status_why": "source idle is a1; carry pose pavisier_carry is planned",
+     "length_s": 3.0,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "walk_carry",
+     "json": "walk_carry — 1.0 m/s, pavise held in front at 20° lean; keeps within 2 m of his Handgunner",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "pavisier_front",
+     "status_why": "source walk is a1; carry pose pavisier_front is planned",
+     "json_speed_mps": 1.0,
+     "agent_speed_mps": 1.0,
+     "playback_rate": 0.5,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.7 s, swings the pavise round toward the noise before his head",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 0.857,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "plant_pavise",
+     "json": "plant_pavise — 1.0 s, stamps the spiked feet in, kicks the prop down; creates 0.62 m of full cover for two",
+     "layer": "signature",
+     "family": null,
+     "source": "pavisier_plant_pavise",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.0,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.6,
+       "param": {
+        "prop": "Pavise"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "stamps the spikes in; the pavise becomes world cover"
+    },
+    {
+     "clip": "crouch_behind",
+     "json": "crouch_behind — 0.8 s, drops to 1.25 m behind the 1.30 m pavise, peeks round the edge",
+     "layer": "base",
+     "family": null,
+     "source": "crouch_cover",
+     "status": "planned",
+     "loop": true,
+     "length_s": 0.8,
+     "playback_rate": 2.5,
+     "events": []
+    },
+    {
+     "clip": "advance_pavise",
+     "json": "advance_pavise — 1.6 s cycle, lifts, steps 1 m forward, re-plants — the pair creeps up on a hiding place",
+     "layer": "signature",
+     "family": null,
+     "source": "pavisier_advance_pavise",
+     "status": "planned",
+     "loop": true,
+     "length_s": 1.6,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.3,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.8,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "lift, step 1 m, re-plant"
+    },
+    {
+     "clip": "shove",
+     "json": "shove — 0.9 s, pavise bash, pushes a player 1.5 m and staggers",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "shield_bash",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.9,
+     "playback_rate": 0.889,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.35,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.45
+      }
+     ]
+    },
+    {
+     "clip": "draw_falchion",
+     "json": "draw_falchion — 0.6 s, when his gunner is down or the target is within 2 m",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "draw_sword",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.6,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "attack_falchion",
+     "json": "attack_falchion — 0.8 s, forehand cut",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "sword_cut",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "hit_react",
+     "json": "hit_react — 0.5 s; hits on the pavise play a thud and a chip VFX instead",
+     "layer": "base",
+     "family": null,
+     "source": "hit_react",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 0.8,
+     "events": []
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.6 s; a planted pavise stays standing as cover the players can use",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored; a planted pavise stays standing",
+     "loop": false,
+     "length_s": 1.6,
+     "events": []
+    }
+   ]
+  },
+  "partisan-guard": {
+   "age": "powder",
+   "name": "Palace Guard",
+   "role": "patrol",
+   "height_m": 1.85,
+   "family": "polearm",
+   "carry": {
+    "pose": "partisan_carry",
+    "describes": "partisan sloped on the right shoulder, left hand on the sword hilt",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_shoulder",
+     "json": "idle_shoulder — 4 s loop, partisan sloped on the right shoulder, weight shifts, left hand on sword hilt.",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "partisan_carry",
+     "status_why": "source idle is a1; carry pose partisan_carry is planned",
+     "length_s": 4.0,
+     "playback_rate": 0.75,
+     "events": []
+    },
+    {
+     "clip": "patrol_walk",
+     "json": "patrol_walk — 1.2 m/s, partisan at the slope, measured parade step.",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "partisan_carry",
+     "status_why": "source walk is a1; carry pose partisan_carry is planned",
+     "json_speed_mps": 1.2,
+     "agent_speed_mps": 2.0,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "raise_lantern",
+     "json": "raise_lantern — 0.8 s, unhooks the lantern and lifts it to eye height, head leans in.",
+     "layer": "signature",
+     "family": null,
+     "source": "partisan_raise_lantern",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "events": [],
+     "note": "unhooks the lantern to eye height: shares the warden's lantern_raise pose"
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.6 s, head snaps toward the noise first, body follows, partisan comes down to the port.",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.6,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "challenge_shout",
+     "json": "challenge_shout — 1.2 s, partisan grounded, free hand raised, mouth open (barks 'Who goes?').",
+     "layer": "base",
+     "family": null,
+     "source": "shout",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.2,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "charge_run",
+     "json": "charge_run — 3.8 m/s, partisan levelled at hip height.",
+     "layer": "carry",
+     "family": null,
+     "source": "run",
+     "status": "planned",
+     "loop": true,
+     "carry": "partisan_levelled",
+     "status_why": "source run is a1; carry pose partisan_levelled is planned",
+     "json_speed_mps": 3.8,
+     "agent_speed_mps": 4.2,
+     "playback_rate": 1.0,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "thrust",
+     "json": "thrust — 0.7 s, long thrust with 1.6 m reach through a doorway, 0.3 s recovery.",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_thrust",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 1.286,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.42,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "sweep",
+     "json": "sweep — 1.0 s, horizontal cut with the flukes, knocks carried loot out of hands.",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_sweep",
+     "status": "a1",
+     "loop": false,
+     "length_s": 1.0,
+     "playback_rate": 1.1,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.4,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "archway_tilt",
+     "json": "archway_tilt — 0.5 s, dips the partisan to 45° to pass any archway under 2.9 m (the upright partisan tops out at ~2.6 m).",
+     "layer": "family",
+     "family": "polearm",
+     "source": "polearm_cant",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 0.8,
+     "events": []
+    },
+    {
+     "clip": "hit_react",
+     "json": "hit_react — 0.4 s, recoil; morion can fly off.",
+     "layer": "base",
+     "family": null,
+     "source": "hit_react",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.2,
+       "param": {
+        "prop": "Morion"
+       }
+      }
+     ],
+     "note": "the morion can fly off (driver decides)"
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.6 s, collapses backwards, partisan clatters free.",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored",
+     "loop": false,
+     "length_s": 1.6,
+     "events": []
+    }
+   ]
+  },
+  "musketeer": {
+   "age": "powder",
+   "name": "Musketeer",
+   "role": "ranged",
+   "height_m": 1.92,
+   "family": "long_gun",
+   "carry": {
+    "pose": "musketeer_carry",
+    "describes": "musket shouldered, rest trailing from the left wrist",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_carry",
+     "json": "idle_carry — 4 s loop, musket shouldered, rest trailing from the left wrist, blows on the match.",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "musketeer_carry",
+     "status_why": "source idle is a1; carry pose musketeer_carry is planned",
+     "length_s": 4.0,
+     "playback_rate": 0.75,
+     "events": []
+    },
+    {
+     "clip": "patrol_walk",
+     "json": "patrol_walk — 1.1 m/s, chargers swing and click.",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "musketeer_carry",
+     "status_why": "source walk is a1; carry pose musketeer_carry is planned",
+     "json_speed_mps": 1.1,
+     "agent_speed_mps": 1.9,
+     "playback_rate": 0.95,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.7 s, head first, then the musket comes off the shoulder.",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 0.857,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "plant_rest",
+     "json": "plant_rest — 0.8 s, spikes the rest into the floor at 1.2 m.",
+     "layer": "family",
+     "family": "long_gun",
+     "source": "gun_plant_rest",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "aim",
+     "json": "aim — 1.5 s, lays the barrel in the fork, blows the match, fits it to the serpentine; a readable wind-up the player can dodge.",
+     "layer": "family",
+     "family": "long_gun",
+     "source": "gun_brace_aim",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.5,
+     "playback_rate": 0.8,
+     "events": []
+    },
+    {
+     "clip": "fire_volley",
+     "json": "fire_volley — 0.4 s, huge muzzle flash (madder), recoil 0.15 m, spawns a 4 m smoke cloud that blocks sight for 6 s.",
+     "layer": "family",
+     "family": "long_gun",
+     "source": "gun_fire",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 2.0,
+     "events": [
+      {
+       "type": "ProjectileRelease",
+       "t": 0.5
+      }
+     ]
+    },
+    {
+     "clip": "reload",
+     "json": "reload — 9 s, five readable beats: charger, ball, ram, prime, match; he is vulnerable throughout.",
+     "layer": "family",
+     "family": "long_gun",
+     "source": "gun_reload",
+     "status": "planned",
+     "loop": true,
+     "length_s": 9.0,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "club_melee",
+     "json": "club_melee — 0.9 s, reverses the musket and swings the butt when a thief is within 1.5 m.",
+     "layer": "family",
+     "family": "long_gun",
+     "source": "gun_club",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.9,
+     "playback_rate": 1.111,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.55
+      }
+     ]
+    },
+    {
+     "clip": "draw_sword",
+     "json": "draw_sword — 0.6 s, drops the musket for the sword when out of time.",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "draw_sword",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.6,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.1,
+       "param": {
+        "prop": "Musket"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "hit_react",
+     "json": "hit_react — 0.4 s, recoil; hat may fly off.",
+     "layer": "base",
+     "family": null,
+     "source": "hit_react",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.2,
+       "param": {
+        "prop": "Hat"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.8 s, falls forward; match drops still lit (spark source).",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored; the match drops lit at the switch",
+     "loop": false,
+     "length_s": 1.8,
+     "events": []
+    }
+   ]
+  },
+  "cuirassier": {
+   "age": "powder",
+   "name": "Cuirassier",
+   "role": "heavy",
+   "height_m": 1.95,
+   "family": "pistol",
+   "carry": {
+    "pose": "cuirassier_carry",
+    "describes": "arms held out by the plate, hands free near the holsters",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_heavy",
+     "json": "idle_heavy — 5 s loop, weight settles, visor slit tracks the room slowly.",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "cuirassier_carry",
+     "status_why": "source idle is a1; carry pose cuirassier_carry is planned",
+     "length_s": 5.0,
+     "playback_rate": 0.6,
+     "events": []
+    },
+    {
+     "clip": "patrol_walk",
+     "json": "patrol_walk — 0.9 m/s, heavy steps with an armour rattle on each footfall.",
+     "layer": "carry",
+     "family": null,
+     "source": "walk_slow",
+     "status": "planned",
+     "loop": true,
+     "carry": "cuirassier_carry",
+     "status_why": "source walk_slow is a1; carry pose cuirassier_carry is planned",
+     "json_speed_mps": 0.9,
+     "agent_speed_mps": 1.5,
+     "playback_rate": 1.364,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 1.0 s, turns the whole torso (he cannot turn his head in the helmet).",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn_body",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.0,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.3,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "draw_pistol",
+     "json": "draw_pistol — 0.5 s, pulls a wheellock butt-first from the holster.",
+     "layer": "family",
+     "family": "pistol",
+     "source": "pistol_draw",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.5,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "pistol_fire",
+     "json": "pistol_fire — 0.3 s, no warning glow; flash and 1.5 m smoke puff; two per engagement then draws the sword.",
+     "layer": "family",
+     "family": "pistol",
+     "source": "pistol_fire",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.3,
+     "playback_rate": 1.0,
+     "events": [
+      {
+       "type": "ProjectileRelease",
+       "t": 0.15
+      }
+     ]
+    },
+    {
+     "clip": "draw_sword",
+     "json": "draw_sword — 0.7 s.",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "draw_sword",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 0.857,
+     "events": []
+    },
+    {
+     "clip": "overhead_cut",
+     "json": "overhead_cut — 1.1 s, heavy committed swing, 1.9 m reach, breaks carried fragile loot on hit.",
+     "layer": "family",
+     "family": "sword_shield",
+     "source": "sword_overhead",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.1,
+     "playback_rate": 1.091,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.6
+      }
+     ]
+    },
+    {
+     "clip": "shoulder_barge",
+     "json": "shoulder_barge — 0.8 s, 2 m lunge, knocks a thief flat and a carried item loose.",
+     "layer": "signature",
+     "family": null,
+     "source": "cuirassier_shoulder_barge",
+     "status": "planned",
+     "loop": false,
+     "length_s": 0.8,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      },
+      {
+       "type": "Footstep",
+       "t": 0.2,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "note": "2 m lunge; the agent moves him"
+    },
+    {
+     "clip": "archway_duck",
+     "json": "archway_duck — 0.4 s, dips the head 0.10 m when passing any archway under 2.10 m (none in his zones; kept for safety).",
+     "layer": "base",
+     "family": null,
+     "source": "archway_duck",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.25,
+     "events": []
+    },
+    {
+     "clip": "stagger_back",
+     "json": "stagger_back — 1.2 s, when hit in the back of the knees; he kneels and is exposed.",
+     "layer": "base",
+     "family": null,
+     "source": "kneel",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.2,
+     "playback_rate": 1.25,
+     "events": []
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 2.0 s, topples forward with a crash of plate.",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored",
+     "loop": false,
+     "length_s": 2.0,
+     "events": []
+    }
+   ]
+  },
+  "petardier": {
+   "age": "powder",
+   "name": "Petardier",
+   "role": "special",
+   "height_m": 1.76,
+   "family": "throw",
+   "carry": {
+    "pose": "petardier_carry",
+    "describes": "madrier plank on the back, stooped, hands on the straps",
+    "status": "planned"
+   },
+   "clips": [
+    {
+     "clip": "idle_burdened",
+     "json": "idle_burdened — 4 s loop, shrugs the plank higher, checks the fuse.",
+     "layer": "carry",
+     "family": null,
+     "source": "idle",
+     "status": "planned",
+     "loop": true,
+     "carry": "petardier_carry",
+     "status_why": "source idle is a1; carry pose petardier_carry is planned",
+     "length_s": 4.0,
+     "playback_rate": 0.75,
+     "events": []
+    },
+    {
+     "clip": "walk_burdened",
+     "json": "walk_burdened — 1.0 m/s, stooped, plank sways.",
+     "layer": "carry",
+     "family": null,
+     "source": "walk",
+     "status": "planned",
+     "loop": true,
+     "carry": "petardier_carry",
+     "status_why": "source walk is a1; carry pose petardier_carry is planned",
+     "json_speed_mps": 1.0,
+     "agent_speed_mps": 1.0,
+     "playback_rate": 0.5,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "json": "alert_turn — 0.7 s, head first, then he backs away from the thief rather than toward.",
+     "layer": "base",
+     "family": null,
+     "source": "alert_turn",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.7,
+     "playback_rate": 0.857,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "plant_petard",
+     "json": "plant_petard — 3.0 s, unslings the madrier, hooks it on a door/wall socket at 1.2 m, lights the fuse; the fuse burns 4 s.",
+     "layer": "signature",
+     "family": null,
+     "source": "petardier_plant_petard",
+     "status": "planned",
+     "loop": false,
+     "length_s": 3.0,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.6,
+       "param": {
+        "prop": "Petard"
+       }
+      }
+     ],
+     "note": "unslings, hooks, lights"
+    },
+    {
+     "clip": "flee_run",
+     "json": "flee_run — 3.6 m/s, hunched, hands over his head (runs from his own petard).",
+     "layer": "carry",
+     "family": null,
+     "source": "run",
+     "status": "planned",
+     "loop": true,
+     "carry": "petardier_flee",
+     "status_why": "source run is a1; carry pose petardier_flee is planned",
+     "json_speed_mps": 3.6,
+     "agent_speed_mps": 3.6,
+     "playback_rate": 0.857,
+     "length_s": null,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ]
+    },
+    {
+     "clip": "throw_grenado",
+     "json": "throw_grenado — 1.0 s, lights from the linstock and lobs underarm; lands and rolls, 3 s fuse, 3 m radius.",
+     "layer": "family",
+     "family": "throw",
+     "source": "throw_lob",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.0,
+     "playback_rate": 0.8,
+     "events": [
+      {
+       "type": "ProjectileRelease",
+       "t": 0.6
+      }
+     ]
+    },
+    {
+     "clip": "cower",
+     "json": "cower — loop, crouched with arms over the head, when a blast is imminent.",
+     "layer": "base",
+     "family": null,
+     "source": "cower",
+     "status": "planned",
+     "loop": true,
+     "length_s": 2.0,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "hit_react",
+     "json": "hit_react — 0.4 s; a hit to the back risks the petard (see breakables).",
+     "layer": "base",
+     "family": null,
+     "source": "hit_react",
+     "status": "a1",
+     "loop": false,
+     "length_s": 0.4,
+     "playback_rate": 1.0,
+     "events": []
+    },
+    {
+     "clip": "self_detonate",
+     "json": "self_detonate — 1.5 s, the petard goes off on his back: 4 m blast; he does not survive.",
+     "layer": "signature",
+     "family": null,
+     "source": "petardier_self_detonate",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.5,
+     "events": [],
+     "note": "ends in the ragdoll/gib; no event (the blast is gameplay)"
+    },
+    {
+     "clip": "death_fall",
+     "json": "death_fall — 1.6 s, falls sideways under the plank.",
+     "layer": "base",
+     "family": null,
+     "source": null,
+     "status": "dropped",
+     "reason": "ragdoll (decision 3): a killed guard switches to the ragdoll; the driver fires the death consequences (props drop, sparks) at the switch, so no clip is authored",
+     "loop": false,
+     "length_s": 1.6,
+     "events": []
+    }
+   ]
+  }
+ }
+}

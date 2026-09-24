@@ -1,4 +1,4 @@
-# Art bible enemies in the engine (plan, 2026-09-24): awaiting approval
+# Art bible enemies in the engine (plan, 2026-09-24): approved, in progress
 
 Getting the 16 ArtForge enemies (`Assets/Models/ArtBible/Enemies/`) into a raid as working guards:
 imported, prefabbed, posted to the castle, and checked in the engine the same way they were checked
@@ -25,6 +25,19 @@ before work starts.
 | Era-specific castle rooms are being built by another agent, also not yet wired to era | `docs/plans/era-castle-rooms.md` |
 | Attacks run on the server only. Clients see a projectile or a health change, but get no event saying "this guard swung" | `CastleGuard.TryAttack` (`:536`), with no RPC in the file |
 | Nothing animates any enemy today | No `Animator` anywhere under `Runtime/Guards` or `Runtime/Raid` |
+
+## Decisions recorded (2026-09-24, from the user)
+
+- **Old roster:** the art-bible set replaces the household four (Watchman, Man-at-Arms, Sergeant,
+  War-hound). The five supernatural enemies stay for the Crypt.
+- **Era gating:** enemies spawn only in their own Age. The era pass-through is built once, shared
+  with the era-rooms work.
+- **Animation source:** AnimForge keyframes, authored in Blender by code.
+- **Ragdoll:** yes, for killed or thrown guards. Clips cover sleep, stun and knock-down.
+- **Motion:** in-place clips. The NavMesh agent moves the guard, and that movement is what the
+  network syncs. The clips only animate.
+- **Textures:** stay at 1024.
+- **LODs and spring bones:** after the first playtest.
 
 ## Decisions for the user **[DECIDE]**
 

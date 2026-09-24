@@ -13,6 +13,24 @@ using UnityEngine;
 namespace PurrNet.Transports
 {
     public enum Channel { ReliableOrdered, ReliableUnordered, Unreliable, UnreliableSequenced }
+
+    /// <summary>PurrNet 1.15's connection lifecycle, as reported by NetworkManager.serverState/clientState.</summary>
+    public enum ConnectionState { Connecting, Connected, Disconnecting, Disconnected }
+
+    /// <summary>
+    /// Base of every PurrNet transport. Headlessly a transport is only a field type CoopSession
+    /// assigns to NetworkManager.transport: nothing is sent, the harness is a single host.
+    /// </summary>
+    public abstract class GenericTransport : UnityEngine.MonoBehaviour { }
+
+    /// <summary>In-process transport, used for solo play.</summary>
+    public class LocalTransport : GenericTransport { }
+
+    /// <summary>LAN transport. Only its <c>address</c> is modelled.</summary>
+    public class UDPTransport : GenericTransport
+    {
+        public string address = "127.0.0.1";
+    }
 }
 
 namespace PurrNet.Modules
@@ -329,10 +347,23 @@ namespace PurrNet
 
         private void Awake() => main = this;
 
-        public void StartServer() { NetworkHarness.IsRunning = true; NetworkHarness.IsServer = true; }
-        public void StartClient() { NetworkHarness.IsRunning = true; NetworkHarness.IsClient = true; }
-        public void StartHost() => NetworkHarness.ResetToHost();
-        public void StopServer() => NetworkHarness.IsServer = false;
-        public void StopClient() => NetworkHarness.IsClient = false;
+        /// <summary>The transport the next Start* call uses. Headlessly nothing reads it.</summary>
+        public PurrNet.Transports.GenericTransport transport { get; set; }
+
+        public PurrNet.Transports.ConnectionState serverState => NetworkHarness.IsServer
+            ? PurrNet.Transports.ConnectionState.Connected : PurrNet.Transports.ConnectionState.Disconnected;
+        public PurrNet.Transports.ConnectionState clientState => NetworkHarness.IsClient
+            ? PurrNet.Transports.ConnectionState.Connected : PurrNet.Transports.ConnectionState.Disconnected;
+
+        // Raised synchronously on each Start/Stop here; the real transport raises them a frame or
+        // more later, after Connecting/Disconnecting, which a headless single host never sees.
+        public event Action<PurrNet.Transports.ConnectionState> onServerConnectionState;
+        public event Action<PurrNet.Transports.ConnectionState> onClientConnectionState;
+
+        public void StartServer() { NetworkHarness.IsRunning = true; NetworkHarness.IsServer = true; onServerConnectionState?.Invoke(serverState); }
+        public void StartClient() { NetworkHarness.IsRunning = true; NetworkHarness.IsClient = true; onClientConnectionState?.Invoke(clientState); }
+        public void StartHost() { NetworkHarness.ResetToHost(); onServerConnectionState?.Invoke(serverState); onClientConnectionState?.Invoke(clientState); }
+        public void StopServer() { NetworkHarness.IsServer = false; onServerConnectionState?.Invoke(serverState); }
+        public void StopClient() { NetworkHarness.IsClient = false; onClientConnectionState?.Invoke(clientState); }
     }
 }

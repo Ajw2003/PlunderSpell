@@ -1,4 +1,4 @@
-# Art bible enemy animations (plan, 2026-09-24): awaiting approval
+# Art bible enemy animations (plan, 2026-09-24): approved, in progress
 
 Animating the 16 ArtForge enemies, and importing and driving those animations in Unity. It depends
 on [`artbible-enemies-in-engine.md`](artbible-enemies-in-engine.md) (phases E0, E1 and E4) and
@@ -28,6 +28,19 @@ Grouping them cuts the work to about **80 authored clips**. By the matrix's own 
 
 The full enemy-by-clip matrix is on the review page (`docs/generated/enemy-animation-plan.html`),
 with each clip tagged Base, Family or Signature.
+
+## Decisions recorded (2026-09-24, from the user)
+
+- **Old roster:** the art-bible set replaces the household four (Watchman, Man-at-Arms, Sergeant,
+  War-hound). The five supernatural enemies stay for the Crypt.
+- **Era gating:** enemies spawn only in their own Age. The era pass-through is built once, shared
+  with the era-rooms work.
+- **Animation source:** AnimForge keyframes, authored in Blender by code.
+- **Ragdoll:** yes, for killed or thrown guards. Clips cover sleep, stun and knock-down.
+- **Motion:** in-place clips. The NavMesh agent moves the guard, and that movement is what the
+  network syncs. The clips only animate.
+- **Textures:** stay at 1024.
+- **LODs and spring bones:** after the first playtest.
 
 ## Decisions for the user **[DECIDE]**
 
