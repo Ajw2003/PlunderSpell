@@ -1417,6 +1417,91 @@
       "build_seconds": 5.2
     },
     {
+      "key": "items/powder/nautilus-cup",
+      "kind": "items",
+      "age": "powder",
+      "slug": "nautilus-cup",
+      "name": "NautilusCup",
+      "title": "Nautilus Cup",
+      "passed": false,
+      "stats": {
+        "vertices": 1121,
+        "faces": 1156,
+        "triangles": 2078,
+        "islands": 42,
+        "lowest_z": 0.0,
+        "height": 0.346,
+        "width": 0.188,
+        "budget": 1500,
+        "bbox_m": "0.188x0.116x0.346",
+        "vs_spec": "W=0.188/0.200 D=0.116/0.120 H=0.346/0.340"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.2,
+          0.12,
+          0.34
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "nacre": {
+          "name": "Nacre",
+          "base": "#D8CFC0",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        },
+        "silver_gilt": {
+          "name": "Silver-gilt",
+          "base": "#C9A227",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "silver": {
+          "name": "Silver",
+          "base": "#B8B4A8",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "tarnish": {
+          "name": "Tarnish",
+          "base": "#6A665C",
+          "rough": 0.55,
+          "metal": 0.6,
+          "emit": null
+        },
+        "shell_stripe": {
+          "name": "Shell stripe (tiger-stripe remnant)",
+          "base": "#8A6A4E",
+          "rough": 0.35,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [
+        "2078 triangles exceeds the 1500 budget"
+      ],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['shell_stripe']"
+      ],
+      "notes": [
+        "Shell swept by a module-local 'powder_whorl' part kind (a growing elliptical section on a log spiral); kit's tube keeps its section constant.",
+        "Nacre thin-film iridescence is an engine shader; the bake carries the pale base colour at roughness 0.15.",
+        "Pre-fractured shard mesh for the break state is not built here."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/NautilusCup/NautilusCup.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/NautilusCup/glTF/NautilusCup.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/NautilusCup/NautilusCup.blend"
+      },
+      "build_seconds": 3.4
+    },
+    {
       "key": "items/powder/silver-tureen",
       "kind": "items",
       "age": "powder",

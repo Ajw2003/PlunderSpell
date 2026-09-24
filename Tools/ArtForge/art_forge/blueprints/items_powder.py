@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import math
 
+from mathutils import Vector
+
+from .. import kit
 from ..kit import Part, arc_path, rounded_rect, spline
 from ..spec import Entry
 from . import blueprint
@@ -714,9 +717,264 @@ def silver_tureen(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Nautilus Cup
+# --------------------------------------------------------------------------------
+#
+# A nautilus whorl is a sweep whose section grows along a log spiral. kit's `tube`
+# holds its section constant, so this module registers one extra part kind,
+# "powder_whorl", in kit's builder table: a planar sweep with a per-point elliptical
+# section, the start capped and the end opened into a hollow mouth (a lip ring, a
+# recessed inner ring, then the cavity floor). It follows kit's invariants (one
+# closed island, oriented outward by signed volume) and touches nothing else in kit;
+# the shared framework files are not edited. The key is prefixed so no other
+# module's kinds can collide with it.
+
+def _whorl(bm, part: Part):
+    path = [Vector(p) for p in part.extras["path"]]
+    sections = part.extras["sections"]
+    centre = Vector(part.extras["centre"])
+    axis = Vector(part.extras.get("axis", (0.0, 1.0, 0.0))).normalized()
+    sides = max(3, part.segments)
+    lip = float(part.extras.get("lip", 0.003))
+    depth = float(part.extras.get("mouth_depth", 0.0))
+    if len(path) != len(sections) or len(path) < 2:
+        raise ValueError("powder_whorl needs matching path and sections (>= 2 points)")
+
+    def frame(i):
+        if i == 0:
+            t = path[1] - path[0]
+        elif i == len(path) - 1:
+            t = path[-1] - path[-2]
+        else:
+            t = (path[i + 1] - path[i]).normalized() + (path[i] - path[i - 1]).normalized()
+        t.normalize()
+        n = t.cross(axis).normalized()
+        if (path[i] - centre).dot(n) < 0.0:
+            n = -n
+        return t, n
+
+    def ring(p, n, rn, rb):
+        return [bm.verts.new(p + n * (math.cos(2 * math.pi * j / sides) * rn)
+                             + axis * (math.sin(2 * math.pi * j / sides) * rb))
+                for j in range(sides)]
+
+    rings = []
+    for i, p in enumerate(path):
+        _t, n = frame(i)
+        rn, rb = sections[i]
+        rings.append(ring(p, n, rn, rb))
+    if depth > 0.0:
+        t, n = frame(len(path) - 1)
+        rn, rb = sections[-1]
+        rings.append(ring(path[-1], n, rn - lip, rb - lip))                       # lip
+        rings.append(ring(path[-1] - t * depth, n, (rn - lip) * 0.8, (rb - lip) * 0.8))  # cavity
+    faces = []
+    for a, b in zip(rings, rings[1:]):
+        for j in range(sides):
+            k = (j + 1) % sides
+            faces.append(bm.faces.new((a[j], a[k], b[k], b[j])))
+    faces.append(bm.faces.new(list(reversed(rings[0]))))
+    faces.append(bm.faces.new(rings[-1]))
+    verts = [v for r in rings for v in r]
+    kit._orient_outward(bm, faces)
+    return verts, faces
+
+
+kit._NEW_BUILDERS.setdefault("powder_whorl", _whorl)
+
+
+def nautilus_cup(entry: Entry):
+    """Pearl-stripped nautilus shell (spiral axis along Y, so the coil shows in the
+    front view) in a silver-gilt mount: scalloped rim band round the mouth, three
+    straps with cartouches down to a calyx cup, a silver triton-and-sea-monster
+    stem, a domed embossed gilt foot, and Neptune with his trident on the volute."""
+    W, D, H = entry.dims                          # 0.20 × 0.12 × 0.34
+    parts: list[Part] = []
+
+    # --- The shell. r(θ) = R·e^{b(θ-θ_end)}, whorls expanding ×3 per turn; the
+    # section's radial half-depth is K·r so each whorl just laps the one before
+    # (an involute coil), and its half-width along Y grows to 0.052 at the mouth.
+    b = math.log(3.0) / (2.0 * math.pi)
+    K = 0.52
+    R = 0.079
+    t_end = math.radians(25.0)                     # the mouth's radial line: up-right
+    half_w = 0.052
+
+    def r_at(t):
+        return R * math.exp(b * (t - t_end))
+
+    # Place the umbilicus so the shell's lowest point sits over the stem (x = 0)
+    # and rests in the calyx cup at z = 0.132.
+    samples = [t_end - 2 * math.pi + i * 2 * math.pi / 720 for i in range(721)]
+    low_t = min(samples, key=lambda t: r_at(t) * (1 + K) * math.sin(t))
+    cx = -r_at(low_t) * (1 + K) * math.cos(low_t)
+    cz = 0.132 - r_at(low_t) * (1 + K) * math.sin(low_t)
+
+    def centre_pt(t, y=0.0):
+        return (cx + r_at(t) * math.cos(t), y, cz + r_at(t) * math.sin(t))
+
+    def surface(t, phi, lift=0.0):
+        """A point on the whorl: phi = 0 on the venter (outside), ±pi/2 on the flanks."""
+        c = Vector(centre_pt(t))
+        n = Vector((math.cos(t), 0.0, math.sin(t)))           # near enough the normal
+        rn, rb = K * r_at(t), half_w * r_at(t) / R
+        return tuple(c + n * ((rn + lift) * math.cos(phi)) + Vector((0, 1, 0)) * ((rb + lift) * math.sin(phi)))
+
+    def sweep(t0, t1, n, sides, mouth):
+        ts = [t0 + (t1 - t0) * i / (n - 1) for i in range(n)]
+        return Part("powder_whorl", (0, 0, 0), (1, 1, 1), mat="nacre", segments=sides,
+                    extras={"path": [centre_pt(t) for t in ts],
+                            "sections": [(K * r_at(t), half_w * r_at(t) / R) for t in ts],
+                            "centre": (cx, 0.0, cz), "lip": 0.004,
+                            "mouth_depth": 0.045 if mouth else 0.0, "smooth": True,
+                            "bevel": False})
+
+    parts.append(sweep(t_end - 2 * math.pi * 1.45, t_end - 2 * math.pi * 0.90, 6, 8, False))
+    parts.append(sweep(t_end - 2 * math.pi * 0.95, t_end, 19, 12, True))
+
+    # Umbilical bosses: silver domes over the coil's centre on both flanks.
+    for sy in (-1, 1):
+        y0 = sy * half_w * r_at(t_end - 2 * math.pi) / R
+        parts.append(Part("lathe", (cx, y0, cz), (1, 1, 1), mat="silver", segments=10,
+                          rot=(sy * -90.0, 0.0, 0.0),
+                          extras={"profile": [(0.0, 0.0), (0.019, 0.0), (0.017, 0.004),
+                                              (0.010, 0.008), (0.0, 0.0095)],
+                                  "smooth": True, "bevel": False,
+                                  "paint": [{"mat": "tarnish", "min": (-0.006, -0.006, 0.0),
+                                             "max": (0.006, 0.006, 0.02)}]}))
+
+    # Tiger-stripe remnants near the mouth: short brown flames across both flanks.
+    for sy in (-1, 1):
+        for dt in (0.35, 0.75, 1.15):
+            t = t_end - dt
+            path = [surface(t + 0.06 * (1 - q), sy * (0.35 + 0.9 * q), 0.0012)
+                    for q in (0.0, 0.5, 1.0)]
+            parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="shell_stripe", segments=3,
+                              extras={"path": path, "section": (0.0014, 0.0032),
+                                      "up": (0, 1, 0), "bevel": False}))
+
+    # --- Rim mount: a gilt band 0.015 wide round the lip, with a cresting of 12
+    # scallop teeth standing out of the mouth.
+    tan = Vector((-math.sin(t_end) - b * math.cos(t_end) * 0, 0.0, math.cos(t_end))).normalized()
+    p_end = Vector(centre_pt(t_end))
+    n_end = Vector((math.cos(t_end), 0.0, math.sin(t_end)))
+    rn_e, rb_e = K * R, half_w
+    band = [tuple(p_end - tan * 0.007 + n_end * ((rn_e + 0.0015) * math.cos(2 * math.pi * j / 16))
+                  + Vector((0, 1, 0)) * ((rb_e + 0.0015) * math.sin(2 * math.pi * j / 16)))
+            for j in range(16)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=4,
+                      extras={"path": band, "closed": True, "section": (0.0075, 0.0022),
+                              "up": tuple(tan), "bevel": False}))
+    yaw = math.degrees(math.atan2(tan.x, tan.z))
+    for j in range(12):
+        phi = 2 * math.pi * (j + 0.5) / 12
+        q = (p_end + n_end * ((rn_e + 0.001) * math.cos(phi))
+             + Vector((0, 1, 0)) * ((rb_e + 0.001) * math.sin(phi)) + tan * 0.004)
+        parts.append(Part("cone", tuple(q), (0.011, 0.004, 0.014), mat="silver_gilt",
+                          segments=3, rot=(0.0, yaw, 0.0), extras={"bevel": False}))
+
+    # --- Straps: two on the flanks, up the body chamber from the cup to the rim;
+    # one on the venter, round the back of the coil to the lip's inner end. Each
+    # has a hinged cartouche (a gilt oval boss).
+    for sy in (-1, 1):
+        ts = [low_t + (t_end - 0.12 - low_t) * i / 6 for i in range(7)]
+        path = [(0.0, sy * 0.022, 0.134)] + [surface(t, sy * math.pi / 2, 0.0015) for t in ts]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=4,
+                          extras={"path": path, "section": (0.006, 0.0016), "up": (0, 1, 0),
+                                  "smooth": True, "bevel": False}))
+        cart = surface(ts[3], sy * math.pi / 2, 0.003)
+        parts.append(Part("sphere", cart, (0.014, 0.006, 0.018), mat="silver_gilt",
+                          segments=6, rings=4, extras={"bevel": False, "smooth": True}))
+    ts = [low_t - (low_t - (t_end - 2 * math.pi + 0.20)) * i / 9 for i in range(10)]
+    path = [(0.0, 0.0, 0.130)] + [surface(t, 0.0, 0.0015) for t in ts]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=4,
+                      extras={"path": path, "section": (0.0016, 0.006), "up": (0, 1, 0),
+                              "smooth": True, "bevel": False}))
+    cart = surface(ts[4], 0.0, 0.003)
+    parts.append(Part("sphere", cart, (0.016, 0.014, 0.016), mat="silver_gilt",
+                      segments=6, rings=4, extras={"bevel": False, "smooth": True}))
+
+    # --- Neptune on the volute: robed body, head, trident.
+    nt = math.radians(108.0) - 2 * math.pi
+    nx, _ny, nz = surface(nt, 0.0, -0.003)
+    parts.append(Part("lathe", (nx, 0.0, nz), (1, 1, 1), mat="silver_gilt", segments=8,
+                      extras={"profile": [(0.0, 0.0), (0.011, 0.0), (0.011, 0.004), (0.009, 0.016),
+                                          (0.0075, 0.032), (0.0095, 0.040), (0.005, 0.047),
+                                          (0.0, 0.048)], "smooth": True, "bevel": False}))
+    parts.append(Part("sphere", (nx, 0.0, nz + 0.054), (0.012, 0.012, 0.013), mat="silver_gilt",
+                      segments=8, rings=5, extras={"bevel": False, "smooth": True}))
+    tx = nx + 0.014
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=4,
+                      extras={"path": [(tx, 0.0, nz + 0.004), (tx + 0.002, 0.0, nz + 0.072)],
+                              "section": (0.0012, 0.0012), "bevel": False}))
+    for dx in (-0.004, 0.0, 0.004):
+        parts.append(Part("cone", (tx + 0.002 + dx, 0.0, nz + 0.077), (0.0022, 0.0022, 0.010),
+                          mat="silver_gilt", segments=3, extras={"bevel": False}))
+    parts.append(Part("box", (tx + 0.002, 0.0, nz + 0.072), (0.010, 0.002, 0.002),
+                      mat="silver_gilt", extras={"bevel": False}))
+
+    # --- Calyx cup under the shell.
+    parts.append(Part("lathe", (0, 0, 0), (1.0, 0.8, 1.0), mat="silver_gilt", segments=12,
+                      extras={"profile": [(0.0, 0.106), (0.010, 0.106), (0.016, 0.114),
+                                          (0.030, 0.126), (0.038, 0.140), (0.030, 0.138),
+                                          (0.0, 0.128)], "smooth": True, "bevel": False}))
+
+    # --- Stem: the triton on his sea-monster, an S of silver with a gilt fin
+    # and a pearl.
+    stem = spline([(0.0, 0.0, 0.026), (-0.009, 0.0, 0.048), (0.008, 0.0, 0.072),
+                   (-0.004, 0.0, 0.094), (0.0, 0.0, 0.112)], 2)
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=8,
+                      extras={"path": stem, "section": (0.0125, 0.011), "up": (0, 1, 0),
+                              "smooth": True, "bevel": False}))
+    parts.append(Part("sphere", (0.010, -0.004, 0.090), (0.020, 0.018, 0.017), mat="silver",
+                      segments=8, rings=5, extras={"bevel": False, "smooth": True}))
+    parts.append(Part("sphere", (0.006, -0.013, 0.104), (0.009, 0.009, 0.009), mat="nacre",
+                      segments=6, rings=4, extras={"bevel": False, "smooth": True}))
+    fin = [(-0.012, -0.009, 0.040), (-0.004, -0.013, 0.058), (0.009, -0.011, 0.070)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=3,
+                      extras={"path": fin, "section": (0.0018, 0.0026), "smooth": True,
+                              "bevel": False}))
+
+    # --- Foot: domed and round, 0.11 dia × 0.03, gilt rubbed to silver at the edge,
+    # tarnish in the embossed wave band.
+    foot = [(0.0, 0.0), (0.055, 0.0), (0.055, 0.004), (0.050, 0.008), (0.044, 0.012),
+            (0.032, 0.020), (0.018, 0.027), (0.011, 0.031), (0.0, 0.031)]
+    parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=16,
+                      extras={"profile": foot, "smooth": True, "bevel": False, "paint": [
+                          {"mat": "silver", "min": (-1, -1, 0.0005), "max": (1, 1, 0.0035)},
+                          {"mat": "tarnish", "min": (-1, -1, 0.0085), "max": (1, 1, 0.0105)},
+                      ]}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.0,
+        extra_families={
+            # The shell bullet leaves the outer tiger-stripe as a thin band near the
+            # aperture; the JSON gives its hex (#8A6A4E) only in the nacre notes.
+            "shell_stripe": {"name": "Shell stripe (tiger-stripe remnant)", "base": "#8A6A4E",
+                             "rough": 0.35, "metal": 0.0, "grain": 0.2},
+        },
+        family_overrides={
+            # Gilt rubbed to silver on high points (JSON note).
+            "silver_gilt": {"wear_to": "#B8B4A8", "wear_amount": 0.22, "grain": 0.10},
+            "silver": {"wear_to": "#6A665C", "wear_amount": 0.18},
+            "tarnish": {"metal": 0.6, "rough": 0.55},
+            # Growth lines: faint bands (a stand-in for the normal-map lines).
+            "nacre": {"grain": 0.12, "ridges": (0.012, 0.06)},
+        },
+        notes=["Shell swept by a module-local 'powder_whorl' part kind (a growing "
+               "elliptical section on a log spiral); kit's tube keeps its section constant.",
+               "Nacre thin-film iridescence is an engine shader; the bake carries the "
+               "pale base colour at roughness 0.15.",
+               "Pre-fractured shard mesh for the break state is not built here."],
+    )
+
+
 BLUEPRINTS = {
     "curiosity-cabinet": curiosity_cabinet,
     "venetian-mirror": venetian_mirror,
     "brass-astrolabe": brass_astrolabe,
     "silver-tureen": silver_tureen,
+    "nautilus-cup": nautilus_cup,
 }
