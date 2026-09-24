@@ -1,0 +1,100 @@
+{
+  "key": "LateGreatHall",
+  "name": "The Great Hall",
+  "age": "LateMedieval",
+  "zone": "Keep",
+  "role": "ThroneRoomKeep",
+  "summary": "The lord's hall: a high table on an oak dais under a cloth of estate, a verdure tapestry behind it, a hooded hearth, and the gilded nef on a side table.",
+  "description": "Everything in the great hall is arranged to be looked at from the door. The lord sits on a raised dais at a table under linen, his chair backed by a cloth of estate and roofed by a little canopy with a gilt fringe, and behind him hangs a dorsal tapestry of millefleurs, eight metres of green wool that took a workshop two years. On the other dais a side table holds the gilded nef, a golden ship that carries the lord's salt and knife and exists chiefly to be seen. The hearth on the west wall is big enough to stand in and has blackened its hood to the ceiling. The tapestry burns. The nef does not, and weighs about as much as a child.",
+  "kit_changes": [
+    "The art bible's single dais and 8 m tapestry are split in two by the kit's clear cross: a dais in each north corner and the tapestry in halves either side of the north archway.",
+    "The art bible's roof trusses, arch braces and candle wheel go: kit rooms are open-roofed and nothing hangs from a ceiling.",
+    "The hearth sits on the west wall just south of the NW dais (the art bible's plan puts it further south)."
+  ],
+  "build": [
+    "Shell: the kit's Keep shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.60 m clear, a 0.45 m madder trim course, an archway 2.60 × 3.31 m centred on every wall.",
+    "Daises: oak platforms 0.35 m high in the NW and NE corners, each x ±1.80 … ±5.50, y 3.30 … 5.50; tops at 0.65 m.",
+    "Dorsal tapestry: two verdure wool panels 3.90 × 2.55 m on the north wall centred at x ±3.40, 0.04 m thick, from 1.80 to 4.35 m above ground.",
+    "High table (NE dais): oak, 3.00 × 0.80 m, top 0.75 m above the dais (1.40 m) at (3.60, 4.20), a linen cloth 0.02 m on it; three pewter cups and a gilt salt.",
+    "Lord's chair: oak seat block 0.60 × 0.50 × 0.45 m at (3.60, 5.05) with a back 1.60 m high.",
+    "Cloth of estate: a madder panel 1.40 m wide on the north wall behind the chair, from 1.55 m to 4.00 m, 0.04 m proud of the tapestry; a canopy 1.60 × 0.90 × 0.12 m over it at 4.00 m with a gilt fringe strip along its front.",
+    "Side table (NW dais): oak 1.20 × 0.60 m, top 0.80 m above the dais at (−3.60, 4.50); the gilded nef on it, a hull 0.60 m long, 0.28 m wide, 0.13 m high with a mast and a linen sail.",
+    "Hearth (west wall, centred y 2.50): sandstone jambs 0.18 × 0.90 × 1.30 m either side of a 0.94 m opening, a mantel 1.00 × 1.50 × 0.25 m, and a hood tapering from the mantel back to the wall at 4.40 m; a sooted back panel, two iron firedogs and a fire.",
+    "Windows (east wall): two framed embrasure panels 1.40 × 1.60 m at y ±3.60, from 1.90 m, dark glass in a sandstone frame.",
+    "Benches and light: oak benches 2.60 × 0.35 m at (3.40, −3.00) and (−3.20, −3.40); an iron pricket candle stand 1.50 m in the SE corner (4.80, −4.80)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "High table top: loot anchor at 1.40 m",
+    "Side table top (the nef): loot anchor at 1.45 m"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the high table",
+      "xyz": [
+        3.6,
+        4.2,
+        1.4
+      ]
+    },
+    {
+      "at": "the side table with the nef",
+      "xyz": [
+        -3.6,
+        4.5,
+        1.45
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls and the hearth."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Daises, tables, chair, benches."
+    },
+    {
+      "name": "Tapestry wool",
+      "hex": "#4F5E3A",
+      "pigment": "verdigris_lo",
+      "notes": "The dorsal tapestry."
+    },
+    {
+      "name": "Cloth of estate",
+      "hex": "#9E2A2F",
+      "pigment": "madder",
+      "notes": "The estate cloth, canopy and the fire."
+    },
+    {
+      "name": "Linen",
+      "hex": "#D6CDB6",
+      "pigment": "vellum",
+      "notes": "Table cloth, sail, candle."
+    },
+    {
+      "name": "Gilt",
+      "hex": "#C9A227",
+      "pigment": "orpiment",
+      "notes": "The nef, the salt, the canopy fringe."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Firedogs, candle stand, window glass."
+    }
+  ],
+  "gameplay": [
+    "The Late keep's showpiece: the nef is headline loot and sits in full view of the south door.",
+    "The daises put the high table 0.35 m up: guards on it see over the benches.",
+    "The tapestry and the cloth of estate burn; a fire here fills the hall with smoke."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateGreatHall.svg"
+}
