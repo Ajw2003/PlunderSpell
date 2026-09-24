@@ -75,6 +75,12 @@
       "preview": "bb41b8853f9830c1:23a9d68e53fd",
       "tris": 888
     },
+    "BronzePalaceKitchen": {
+      "budget": 1600,
+      "content": "f71cab5ec136e688",
+      "preview": "f71cab5ec136e688:23a9d68e53fd",
+      "tris": 1128
+    },
     "BronzePithosMagazine": {
       "budget": 4800,
       "content": "f25a5a8cdb6d5104",
@@ -86,6 +92,12 @@
       "content": "30b56effeb2329c4",
       "preview": "30b56effeb2329c4:23a9d68e53fd",
       "tris": 940
+    },
+    "BronzeShrine": {
+      "budget": 1600,
+      "content": "f4c7d6935debf0d4",
+      "preview": "f4c7d6935debf0d4:23a9d68e53fd",
+      "tris": 876
     },
     "BronzeSword": {
       "budget": 400,

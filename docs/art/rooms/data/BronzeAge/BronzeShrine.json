@@ -1,0 +1,44 @@
+{
+  "key": "BronzeShrine",
+  "name": "The Shrine",
+  "age": "BronzeAge",
+  "zone": "InnerWard",
+  "role": "ChapelRoom",
+  "summary": "A stepped altar crowned with horns of consecration, clay idols with their arms up, and a bronze double axe on its pole.",
+  "description": "The palace keeps its gods close and its gods keep their offerings closer. A stepped bench altar stands in the corner under a pair of gypsum horns, clay idols lined up along its lower step with their arms raised in the gesture that means either blessing or surrender, and across the room a bronze double axe stands on its pole, the sign of the house, taller than a man. The worshippers sit on low benches at the back and face the altar. The idols are small, light and unlucky; the offering table is usually worth the risk.",
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m painted plaster walls 4.00 m clear, 0.45 m fresco-blue capstone band, an archway 2.60 × 2.88 m centred on every wall.",
+    "Procession fresco: a panel 4.10 m wide × 1.40 m tall, 1.60–3.00 m above the floor, on each section of the north, east and west walls, haematite border on top.",
+    "Stepped altar (NE): gypsum lower step 2.60 × 0.90 × 0.45 m at (3.80, 5.05) with a haematite band 0.08 m along its front top edge; upper step 1.80 × 0.45 × 0.35 m at (3.80, 5.27) against the north wall.",
+    "Horns of consecration: gypsum, 0.80 m across, on the upper step at (3.80, 5.27).",
+    "Clay idols: three, 0.45 m tall (a bell skirt r 0.10 → 0.03 m, a head r 0.06 m, arms raised), on the lower step at x 3.00, 3.35, 4.25, y 4.75.",
+    "Offering table: a painted table 0.60 × 0.60 m, 0.70 m high, at (3.60, 3.30), before the altar.",
+    "Double axe (NW): a stepped gypsum stand 0.80 × 0.80 × 0.30 m and 0.50 × 0.50 × 0.30 m at (−3.80, 4.20); a bronze pole r 0.03 × 1.40 m; the axe head at 2.30 m above ground, two curved blades each 0.45 m long × 0.50 m tall × 0.04 m.",
+    "Worshippers' benches: plastered, 3.00 × 0.40 × 0.40 m, three rows each side at x ±3.60, y −2.40, −3.60, −4.80, facing north."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Altar: NE, lower step at 0.75 m above ground"
+  ],
+  "loot_anchors": [
+    {"at": "altar, lower step (by the idols)", "xyz": [4.6, 4.75, 0.75]},
+    {"at": "offering table", "xyz": [3.6, 3.3, 1.00]},
+    {"at": "front bench, west", "xyz": [-3.6, -2.4, 0.70]},
+    {"at": "front bench, east", "xyz": [3.6, -2.4, 0.70]}
+  ],
+  "materials": [
+    {"name": "Painted lime plaster", "hex": "#C9A77A", "pigment": "bronze", "notes": "Walls; lamp soot over the altar."},
+    {"name": "Fresco blue", "hex": "#3F6F86", "pigment": "verdigris_lo", "notes": "The procession band, capstone."},
+    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "Band on the altar step, fresco border."},
+    {"name": "Gypsum", "hex": "#D8CDB2", "pigment": "vellum", "notes": "Altar, horns, the axe stand, benches."},
+    {"name": "Cast bronze", "hex": "#9B6A38", "pigment": "bronze", "notes": "The double axe and its pole."},
+    {"name": "Idol clay", "hex": "#C9A77A", "pigment": "vellum_dim", "notes": "The idols; painted eyes and necklaces in albedo."}
+  ],
+  "gameplay": [
+    "The idols are light, quick loot that the household notices missing.",
+    "The double axe stand and the altar are the only cover north of the cross; the benches are low cover to the south.",
+    "A quiet room: no fire, lit from the archways."
+  ],
+  "budget": "≤ 1.6k tris (kit); 0.88k built",
+  "concept": "concept/BronzeAge/BronzeShrine.svg"
+}

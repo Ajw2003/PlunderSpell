@@ -75,3 +75,79 @@ def build_bronze_fresco_court(bm, uv):
     # Two offering tables to the south.
     for x in (-3.2, 3.2):
         offering_table(bm, uv, x, -3.4, fz)
+
+
+def _idol(bm, uv, x, y, z, h=0.45):
+    """A clay idol with raised arms, standing on z."""
+    mk.paint(bm, mk.add_cylinder(bm, 0.10, h * 0.72, loc=(x, y, z + h * 0.36), segments=6, radius2=0.03),
+             "vellum_dim", uv)
+    ek.sphere(bm, uv, "vellum_dim", x, y, z + h * 0.72 - 0.01, 0.06, segments=6, rings=4)
+    for s in (-1, 1):
+        mk.paint(bm, mk.add_box(bm, (0.03, 0.03, 0.16), loc=(x + s * 0.07, y, z + h * 0.72 + 0.02),
+                                rot=Euler((0, s * 0.5, 0))), "vellum_dim", uv)
+
+
+def build_bronze_shrine(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeShrine.svg"""
+    h, fz = room_shell(bm, uv, "InnerWard")
+    for side in ("north", "east", "west"):
+        for along in (-3.4, 3.4):
+            ek.wall_panel(bm, uv, FRESCO, side, along, fz + 1.6, 4.1, 1.4)
+            ek.wall_panel(bm, uv, RED, side, along, fz + 3.0, 4.1, 0.18)
+    # NE: the stepped bench altar, the horns on its top step, idols along the lower one.
+    cb._box(bm, uv, LINEN, (3.8, 5.05, fz + 0.225), (2.6, 0.9, 0.45))
+    cb._box(bm, uv, RED, (3.8, 4.6, fz + 0.40), (2.61, 0.04, 0.08))          # band on the step's front edge
+    cb._box(bm, uv, LINEN, (3.8, 5.27, fz + 0.625), (1.8, 0.45, 0.35))
+    horns(bm, uv, 3.8, 5.27, fz + 0.8, size=0.8, along="x")
+    for x in (3.0, 3.35, 4.25):
+        _idol(bm, uv, x, 4.75, fz + 0.45)
+    cb._anchor(4.6, 4.75, fz + 0.45)
+    offering_table(bm, uv, 3.6, 3.3, fz)
+    # NW: the double axe on a bronze pole, on its stepped stand.
+    cb._box(bm, uv, LINEN, (-3.8, 4.2, fz + 0.15), (0.8, 0.8, 0.30))
+    cb._box(bm, uv, LINEN, (-3.8, 4.2, fz + 0.45), (0.5, 0.5, 0.30))
+    mk.paint(bm, mk.add_cylinder(bm, 0.03, 1.4, loc=(-3.8, 4.2, fz + 1.3), segments=6), METAL, uv)
+    ek.prism(bm, uv, METAL, [(-0.5, -0.25), (-0.05, -0.06), (-0.05, 0.06), (-0.5, 0.25)], 0.04,
+             loc=(-3.8, 4.2, fz + 2.0), along="y")
+    ek.prism(bm, uv, METAL, [(0.05, -0.06), (0.5, -0.25), (0.5, 0.25), (0.05, 0.06)], 0.04,
+             loc=(-3.8, 4.2, fz + 2.0), along="y")
+    # Worshippers' benches: three low rows each side in the south quadrants, facing north.
+    for sx in (-1, 1):
+        for y in (-2.4, -3.6, -4.8):
+            cb._box(bm, uv, LINEN, (sx * 3.6, y, fz + 0.2), (3.0, 0.4, 0.4))
+        cb._anchor(sx * 3.6, -2.4, fz + 0.4)
+
+
+def build_bronze_palace_kitchen(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzePalaceKitchen.svg"""
+    h, fz = room_shell(bm, uv, "InnerWard")
+    # Soot: the upper walls blackened 2.2 m down from the top by the hearth and oven.
+    for side in rk.SIDES:
+        for along in (-3.4, 3.4):
+            ek.wall_panel(bm, uv, SOOT, side, along, fz + h - 2.2, 4.1, 2.2 - 0.45)
+    # NW: the round hearth, fire on it, the tripod cauldron standing over the fire.
+    mk.paint(bm, mk.add_cylinder(bm, 0.8, 0.35, loc=(-3.8, 3.8, fz + 0.175), segments=12), GRAIN_JAR, uv)
+    for dx, hh in ((-0.25, 0.35), (0.0, 0.5), (0.25, 0.4)):
+        mk.paint(bm, mk.add_cylinder(bm, 0.12, hh, loc=(-3.8 + dx, 3.8, fz + 0.35 + hh / 2), segments=6,
+                                     radius2=0.02), RED, uv)
+    tripod(bm, uv, -3.8, 3.8, fz + 0.35)
+    # NE: the domed bread oven with its mouth to the south, and the loaf table.
+    mk.paint(bm, mk.add_cylinder(bm, 0.9, 1.2, loc=(4.2, 4.2, fz + 0.6), segments=12, radius2=0.25), GRAIN_JAR, uv)
+    cb._box(bm, uv, SOOT, (4.2, 3.47, fz + 0.275), (0.5, 0.12, 0.35))
+    cb._table(bm, uv, TIMBER, 2.4, 4.9, fz, 1.0, 0.6, h=0.8)
+    for dx in (-0.3, 0.3):
+        mk.paint(bm, mk.add_sphere(bm, 0.16, loc=(2.4 + dx, 4.9, fz + 0.86), segments=6, rings=4,
+                                   scale=(1.0, 1.0, 0.4)), "vellum_dim", uv)
+    # SE: the quern bench along the south wall, a saddle quern at each end.
+    cb._box(bm, uv, "vellum_faint", (3.6, -5.1, fz + 0.25), (3.0, 0.7, 0.5))
+    for x in (2.5, 4.7):
+        cb._box(bm, uv, "vellum_dim", (x, -5.1, fz + 0.55), (0.5, 0.3, 0.1))
+    cb._anchor(3.6, -5.1, fz + 0.5)
+    # SW: the pot bench along the west wall, pots on it; two amphorae on the floor.
+    cb._box(bm, uv, GRAIN_JAR, (-5.1, -3.6, fz + 0.25), (0.7, 3.0, 0.5))
+    for y in (-4.7, -4.1, -3.1, -2.5):
+        mk.paint(bm, mk.add_cylinder(bm, 0.2, 0.3, loc=(-5.1, y, fz + 0.5 + 0.15), segments=8, radius2=0.15),
+                 SOOT, uv)
+    cb._anchor(-5.1, -3.6, fz + 0.5)
+    for x, y in ((-2.6, -4.8), (-3.3, -4.9)):
+        amphora(bm, uv, x, y, fz)
