@@ -205,7 +205,9 @@ def compose(clip_id: str, tiles: list[tuple[str, str]], caption: list[str], pane
     for k, line in enumerate(caption[1:]):
         d.text((gap + 6, y + 34 + 24 * k), line, fill=DIM, font=studio._font(16))
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    sheet.save(out_path, optimize=True)
+    partial = out_path + ".partial.png"      # atomic: autosave never sees half a PNG
+    sheet.save(partial, optimize=True)
+    os.replace(partial, out_path)
     return out_path
 
 
@@ -269,7 +271,7 @@ def _encode(folder, names, out_path, resolution) -> str:
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
         if os.path.exists(out_path):
             os.remove(out_path)
-        base = out_path[:-4]
+        base = out_path[:-4] + ".partial"
         scene.render.filepath = base
         scene.render.use_file_extension = True
         bpy.ops.render.render(animation=True, scene=scene.name)

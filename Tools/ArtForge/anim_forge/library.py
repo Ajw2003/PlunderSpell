@@ -375,9 +375,9 @@ def clips(ref, warden) -> dict[str, ClipDef]:
         "run": ClipDef(GaitClip("run", RUN, ref, notes="engine chase speed 4.2 m/s; flight phase, heel kick"),
                       carry_mask=both, carry="warden_carry_run"),
         "alert_turn": ClipDef(alert_turn(ref), carry_mask=both, agent_yaw=alert_turn_yaw),
-        "shout": ClipDef(shout(ref), carry_mask=right),
+        "shout": ClipDef(shout(ref), carry_mask=both),   # the warden has no free hand to cup
         "hit_react": ClipDef(hit_react(ref), carry_mask=both),
-        "stagger": ClipDef(stagger(ref)),
+        "stagger": ClipDef(stagger(ref), carry_mask=right),   # glaive held, lantern arm flails
         "knock_down": ClipDef(knock_down(ref)),
         "get_up": ClipDef(get_up(ref)),
         "archway_duck": ClipDef(archway_duck(ref), carry_mask=both),

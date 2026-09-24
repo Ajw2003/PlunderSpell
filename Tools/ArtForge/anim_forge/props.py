@@ -39,7 +39,7 @@ def _set(skel: Skeleton, solved: Solved, direction: Vector) -> None:
 
 
 def hang(skel: Skeleton, frames: list[Solved], fps: int, loop: bool,
-         damping: float = 0.015, until: int | None = None) -> list[float]:
+         damping: float = 0.03, until: int | None = None, limit: float = 55.0) -> list[float]:
     """Swing the lantern under the fist. Returns the swing angle (deg) per frame."""
     if RING not in skel.head:
         return []
@@ -65,8 +65,14 @@ def hang(skel: Skeleton, frames: list[Solved], fps: int, loop: bool,
             vel = (bob - prev) * (1.0 - damping)
             prev = bob.copy()
             bob = bob + vel + Vector((0.0, 0.0, -G)) * dt * dt
-            d = bob - p
-            bob = p + d.normalized() * ROD
+            d = (bob - p).normalized()
+            # The bail stops the lantern swinging past `limit` from hanging.
+            if d.angle(DOWN) > math.radians(limit):
+                side = (d - DOWN * d.dot(DOWN)).normalized()
+                a = math.radians(limit)
+                d = DOWN * math.cos(a) + side * math.sin(a)
+                prev = p + d * ROD            # the stop kills the swing's speed
+            bob = p + d * ROD
         out_dirs.append((bob - b).normalized())
     dirs = [(seq[0] - seq[0] + DOWN)] + out_dirs
     dirs = dirs[pre:pre + n]
