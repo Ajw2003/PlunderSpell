@@ -1,0 +1,97 @@
+{
+  "key": "LateCharnelHouse",
+  "name": "The Charnel House",
+  "age": "LateMedieval",
+  "zone": "Crypt",
+  "role": "BurialVault",
+  "summary": "Four oak ossuary racks of stacked long bones and rows of skulls, a small altar with a candle, and the charnel cart that brings more.",
+  "description": "When the churchyard fills, the old graves are dug up and the bones come here. They are stacked with a clerk's tidiness: long bones laid lengthwise on the shelves of four oak racks, a row of skulls along the front of each shelf looking out at the room. A small altar against the east wall keeps a candle burning for all of them at once. The charnel cart in the south-west corner is loaded for the next shelf. The dead were buried with rings and the diggers were not always thorough, so here and there a gap in a skull row holds something small and bright that a relative left, or a digger hid.",
+  "build": [
+    "Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 3.00 m clear, a 0.45 m dark trim course, an archway 2.60 × 2.16 m centred on every wall.",
+    "Racks: four oak ossuary racks 3.00 m long (|x| 2.20 … 5.20), 0.50 m deep against the north and south walls, 2.10 m tall: two end posts and three shelves 0.05 m at 0.10, 0.80 and 1.50 m above the floor.",
+    "Bone stacks: on every shelf a stack of long bones 2.70 × 0.34 × 0.15 m laid lengthwise at the back.",
+    "Skulls: seven to a shelf along the front edge on top of the stack, each an eight-sided drum r 0.10 m, 0.16 m deep, facing the room.",
+    "Gaps: on one shelf of each rack (NE and SW the top, NW and SE the middle) the middle skull is missing; the loot anchor sits in the gap on the bone stack.",
+    "Altar (NE): sandstone 0.60 × 0.90 × 1.00 m against the east wall at y 2.90, an iron candlestick and candle on it.",
+    "Charnel cart (SW): an oak bed 1.20 × 0.70 m, 0.10 m thick, top 0.95 m above ground at (−3.60, −3.00), two spoked wheels r 0.30 m on an iron axle, a leg and a handle to the west; a load of bones 1.00 × 0.50 m on it.",
+    "The crossing: bare floor between all four archways."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open",
+    "Skull-row gaps: four loot anchors, one per rack",
+    "Altar: a candle, NE"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the NE rack, top shelf gap",
+      "xyz": [
+        3.7,
+        5.12,
+        2.0
+      ]
+    },
+    {
+      "at": "the NW rack, middle shelf gap",
+      "xyz": [
+        -3.7,
+        5.12,
+        1.3
+      ]
+    },
+    {
+      "at": "the SE rack, middle shelf gap",
+      "xyz": [
+        3.7,
+        -5.12,
+        1.3
+      ]
+    },
+    {
+      "at": "the SW rack, top shelf gap",
+      "xyz": [
+        -3.7,
+        -5.12,
+        2.0
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls, altar."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Racks, cart."
+    },
+    {
+      "name": "Bone",
+      "hex": "#D6CDB6",
+      "pigment": "vellum",
+      "notes": "Bone stacks, skulls, the cart's load, the candle."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Axle, candlestick."
+    },
+    {
+      "name": "Madder",
+      "hex": "#9E2A2F",
+      "pigment": "madder",
+      "notes": "The candle flame."
+    }
+  ],
+  "gameplay": [
+    "Four loot anchors hidden among bones: the skull gaps reward a thief who looks closely.",
+    "The racks line the north and south walls; the crossing is open and exposed.",
+    "Disturbing the bones is noisy: a Late crypt alarm point."
+  ],
+  "budget": "≤ 5k tris (kit)",
+  "concept": "concept/LateMedieval/LateCharnelHouse.svg"
+}

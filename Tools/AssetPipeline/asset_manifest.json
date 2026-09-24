@@ -341,6 +341,12 @@
       "preview": "ebd645e551f7d8a6:23a9d68e53fd",
       "tris": 1212
     },
+    "LateCharnelHouse": {
+      "budget": 5000,
+      "content": "42c8888c5634cbe2",
+      "preview": "42c8888c5634cbe2:23a9d68e53fd",
+      "tris": 3248
+    },
     "LateCountingHouse": {
       "budget": 2400,
       "content": "148d534bdedcc557",

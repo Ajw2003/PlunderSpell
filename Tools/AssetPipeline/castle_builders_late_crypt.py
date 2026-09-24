@@ -87,3 +87,44 @@ def build_late_oubliette(bm, uv):
     cb._box(bm, uv, SOOT, (gx, gy, fz + 0.015), (1.2, 1.2, 0.03))
     for k in range(1, 6):
         cb._box(bm, uv, IRON, (gx - 0.6 + k * 0.2, gy, fz + 0.045), (0.04, 1.2, 0.03))
+
+
+BONE = "vellum"
+
+
+def build_late_charnel_house(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateCharnelHouse.svg"""
+    h, fz = room_shell(bm, uv, "Crypt")
+    anchored = {(1, 1): 1.5, (-1, 1): 0.8, (1, -1): 0.8, (-1, -1): 1.5}
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            a, b = sorted((sx * 2.2, sx * 5.2))
+            cx, cy = (a + b) / 2, sy * (IN - 0.25)
+            for x in (a + 0.04, b - 0.04):
+                cb._box(bm, uv, TIMBER, (x, cy, fz + 1.05), (0.08, 0.5, 2.1))
+            for z in (0.1, 0.8, 1.5):
+                cb._box(bm, uv, TIMBER, (cx, cy, fz + z + 0.025), (2.92, 0.5, 0.05))
+                cb._box(bm, uv, BONE, (cx, sy * (IN - 0.28), fz + z + 0.125), (2.7, 0.34, 0.15))
+                for k in range(7):
+                    if k == 3 and anchored[(sx, sy)] == z:
+                        continue
+                    x = a + 0.25 + k * (b - a - 0.5) / 6
+                    # An eight-sided drum facing the room: round from the front, and quads, not a sphere's fans.
+                    mk.paint(bm, mk.add_cylinder(bm, 0.1, 0.16, loc=(x, sy * (IN - 0.38), fz + z + 0.29),
+                                                 rot=Euler((math.radians(90), 0, 0)), segments=8), BONE, uv)
+            cb._anchor(sx * 3.7, sy * (IN - 0.38), fz + anchored[(sx, sy)] + 0.2)
+    # NE: the little altar against the east wall, a candle on it.
+    cb._box(bm, uv, WALL, (IN - 0.3, 2.9, fz + 0.5), (0.6, 0.9, 1.0))
+    mk.paint(bm, mk.add_cylinder(bm, 0.05, 0.03, loc=(5.1, 2.9, fz + 1.015), segments=6), IRON, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.025, 0.2, loc=(5.1, 2.9, fz + 1.13), segments=6), LINEN, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.018, 0.06, loc=(5.1, 2.9, fz + 1.26), segments=4, radius2=0.004), CLOTH, uv)
+    # SW: the charnel cart, its load of bones, a shovel.
+    kx, ky = -3.6, -3.0
+    cb._box(bm, uv, TIMBER, (kx, ky, fz + 0.6), (1.2, 0.7, 0.1))
+    cb._box(bm, uv, BONE, (kx, ky, fz + 0.72), (1.0, 0.5, 0.14))
+    mk.paint(bm, mk.add_cylinder(bm, 0.03, 0.9, loc=(kx + 0.2, ky, fz + 0.3), rot=Euler((math.radians(90), 0, 0)),
+                                 segments=6), IRON, uv)
+    for dy in (-0.42, 0.42):
+        ek.wheel(bm, uv, TIMBER, kx + 0.2, ky + dy, fz + 0.3, 0.3, along="y")
+    cb._box(bm, uv, TIMBER, (kx - 0.45, ky, fz + 0.28), (0.08, 0.08, 0.56))
+    cb._box(bm, uv, TIMBER, (kx - 1.0, ky, fz + 0.6), (0.8, 0.04, 0.04))
