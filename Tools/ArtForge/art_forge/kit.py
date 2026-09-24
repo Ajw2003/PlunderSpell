@@ -57,15 +57,20 @@ from mathutils.geometry import tessellate_polygon
 from enemy_forge.parts import BONE_LAYER, Part, _bone_name, _place, _primitive
 
 __all__ = ["Part", "build_bmesh", "families_used", "ring_of", "arc_path", "spline",
-           "rounded_rect", "gable_outline", "BONE_LAYER", "SMOOTH_LAYER", "NOBEVEL_LAYER"]
+           "rounded_rect", "gable_outline", "section", "BONE_LAYER", "SMOOTH_LAYER",
+           "NOBEVEL_LAYER", "PART_LAYER"]
 
 # Face layer: 1 where the owning part asked for extras["smooth"]. An integer face
 # layer, like material_index, survives the bevel intact.
 SMOOTH_LAYER = "af_smooth"
 # Face layer: 1 where the owning part asked for extras["bevel"] = False.
 NOBEVEL_LAYER = "af_nobevel"
+# Face layer: which part made this face, as part_number * 2 + mirrored. The rigged
+# path reads it after bevel/unwrap (an integer face layer survives both) to apply
+# per-part skinning rules and to leave props out of the height check.
+PART_LAYER = "af_part"
 
-NEW_KINDS = {"lathe", "prism", "tube"}
+NEW_KINDS = {"lathe", "prism", "tube", "loft", "sweep"}
 
 
 # --------------------------------------------------------------------------------
@@ -261,7 +266,151 @@ def _tube(bm, part: Part):
     return verts, faces
 
 
-_NEW_BUILDERS = {"lathe": _lathe, "prism": _prism, "tube": _tube}
+def _loft(bm, part: Part):
+    """Skin a stack of rings (any shape, same point count) into one closed solid.
+
+    Promoted from items_bronze.py's module-local `bronze_loft` (identical code, so
+    the amphora-family items build the same). A ring of one point is a pole and may
+    only sit at either end; `closed=True` joins the last ring back to the first
+    (a torus-like loop, no caps). Open ends with r > 0 are capped flat.
+    """
+    rings = [[tuple(map(float, p)) for p in ring] for ring in part.extras["rings"]]
+    width = max(len(r) for r in rings)
+    rows, verts = [], []
+    for i, ring in enumerate(rings):
+        if len(ring) == 1:
+            if 0 < i < len(rings) - 1:
+                raise ValueError(f"loft ring {i} is a pole mid-stack")
+        elif len(ring) != width:
+            raise ValueError(f"loft ring {i} has {len(ring)} points, expected {width}")
+        row = [bm.verts.new(p) for p in ring]
+        rows.append(row)
+        verts.extend(row)
+    closed = bool(part.extras.get("closed", False))
+    if closed and any(len(r) == 1 for r in rows):
+        raise ValueError("a closed loft cannot have poles")
+    faces = []
+    for a, b in zip(rows, rows[1:] + (rows[:1] if closed else [])):
+        for j in range(width):
+            k = (j + 1) % width
+            if len(a) == 1 and len(b) == 1:
+                raise ValueError("loft has two consecutive poles")
+            if len(a) == 1:
+                quad = (a[0], b[k], b[j])
+            elif len(b) == 1:
+                quad = (a[j], a[k], b[0])
+            else:
+                quad = (a[j], a[k], b[k], b[j])
+            faces.append(bm.faces.new(quad))
+    if not closed and len(rows[0]) > 1:
+        faces.append(bm.faces.new(list(reversed(rows[0]))))
+    if not closed and len(rows[-1]) > 1:
+        faces.append(bm.faces.new(rows[-1]))
+    _orient_outward(bm, faces)
+    return verts, faces
+
+
+def _sweep(bm, part: Part):
+    """A tube whose section changes along its path: limbs, tails, necks, horns.
+
+    extras["path"]     [(x, y, z), ...] in metres (>= 2 points)
+    extras["sections"] one (rn, rb) per path point: half-extents along the frame
+                       normal and binormal. A section of (0, 0) at either END makes
+                       that end a pole (a pointed tip) instead of a flat cap.
+    extras["up"]       hint for the frame normal (as `tube`); rn lies along it.
+    extras["power"]    superellipse exponent of the section (2 = ellipse, 4 = a
+                       rounded box — sleeves, planks). Default 2.
+    extras["offsets"]  optional [(dn, db), ...] shifts each ring's centre along its
+                       normal/binormal: a calf that bulges backward, a belly that
+                       hangs, without bending the path (and so the bone) itself.
+    Frames are parallel-transported like `tube`, but corners are not mitred: a
+    sweep is meant for smooth, well-sampled paths (use kit.spline).
+    """
+    path = [Vector(p) for p in part.extras["path"]]
+    sections = [tuple(map(float, s)) for s in part.extras["sections"]]
+    offsets = part.extras.get("offsets") or [(0.0, 0.0)] * len(path)
+    if len(path) < 2 or len(sections) != len(path) or len(offsets) != len(path):
+        raise ValueError(f"sweep needs >= 2 path points with one section/offset each "
+                         f"(path {len(path)}, sections {len(sections)}, offsets {len(offsets)})")
+    for i, (rn, rb) in enumerate(sections):
+        pole = rn <= 1e-6 and rb <= 1e-6
+        if pole and 0 < i < len(path) - 1:
+            raise ValueError(f"sweep section {i} is zero mid-path; only ends may be poles")
+        if not pole and (rn <= 1e-6 or rb <= 1e-6):
+            raise ValueError(f"sweep section {i} {sections[i]} is flat on one axis")
+    sides = max(3, part.segments)
+    power = float(part.extras.get("power", 2.0))
+
+    def tangent(i):
+        if i == 0:
+            t = path[1] - path[0]
+        elif i == len(path) - 1:
+            t = path[-1] - path[-2]
+        else:
+            t = (path[i + 1] - path[i]).normalized() + (path[i] - path[i - 1]).normalized()
+        if t.length < 1e-9:
+            raise ValueError(f"sweep path doubles back on itself at point {i}")
+        return t.normalized()
+
+    t0 = tangent(0)
+    hint = part.extras.get("up")
+    if hint is None:
+        axes = [Vector((1, 0, 0)), Vector((0, 1, 0)), Vector((0, 0, 1))]
+        hint = min(axes, key=lambda a: abs(a.dot(t0)))
+    normal = Vector(hint) - Vector(hint).dot(t0) * t0
+    if normal.length < 1e-6:
+        raise ValueError("sweep 'up' hint is parallel to the path")
+    normal.normalize()
+
+    def superellipse(phi):
+        c, s = math.cos(phi), math.sin(phi)
+        e = 2.0 / power
+        return (math.copysign(abs(c) ** e, c), math.copysign(abs(s) ** e, s))
+
+    rows, verts = [], []
+    for i, p in enumerate(path):
+        t = tangent(i)
+        normal = normal - normal.dot(t) * t
+        if normal.length < 1e-6:
+            raise ValueError(f"sweep frame collapsed at point {i}")
+        normal.normalize()
+        binormal = t.cross(normal)
+        rn, rb = sections[i]
+        dn, db = offsets[i]
+        centre = p + normal * dn + binormal * db
+        if rn <= 1e-6 and rb <= 1e-6:
+            pole = bm.verts.new(centre)
+            rows.append([pole])
+            verts.append(pole)
+            continue
+        row = []
+        for j in range(sides):
+            u, v = superellipse(2.0 * math.pi * j / sides)
+            row.append(bm.verts.new(centre + normal * (u * rn) + binormal * (v * rb)))
+        rows.append(row)
+        verts.extend(row)
+
+    faces = []
+    for a, b in zip(rows, rows[1:]):
+        for j in range(sides):
+            k = (j + 1) % sides
+            if len(a) == 1:
+                quad = (a[0], b[k], b[j])
+            elif len(b) == 1:
+                quad = (a[j], a[k], b[0])
+            else:
+                quad = (a[j], a[k], b[k], b[j])
+            faces.append(bm.faces.new(quad))
+    if len(rows[0]) > 1:
+        faces.append(bm.faces.new(list(reversed(rows[0]))))
+    if len(rows[-1]) > 1:
+        faces.append(bm.faces.new(rows[-1]))
+    _orient_outward(bm, faces)
+    return verts, faces
+
+
+_NEW_BUILDERS = {"lathe": _lathe, "prism": _prism, "tube": _tube,
+                 "loft": _loft, "sweep": _sweep}
 
 
 # --------------------------------------------------------------------------------
@@ -306,6 +455,7 @@ def build_bmesh(parts: list[Part], family_index: dict[str, int]):
     bone_layer = bm.verts.layers.int.new(BONE_LAYER)
     smooth_layer = bm.faces.layers.int.new(SMOOTH_LAYER)
     nobevel_layer = bm.faces.layers.int.new(NOBEVEL_LAYER)
+    part_layer = bm.faces.layers.int.new(PART_LAYER)
     bone_names: list[str] = []
     bone_lookup: dict[str, int] = {}
 
@@ -350,10 +500,12 @@ def build_bmesh(parts: list[Part], family_index: dict[str, int]):
                 vert[bone_layer] = bone_id
             smooth = 1 if part.extras.get("smooth") else 0
             nobevel = 0 if part.extras.get("bevel", True) else 1
+            part_id = number * 2 + (1 if mirrored else 0)
             for face, family in zip(faces, stamps):
                 face.material_index = family
                 face[smooth_layer] = smooth
                 face[nobevel_layer] = nobevel
+                face[part_layer] = part_id
 
     bm.verts.index_update()
     bm.faces.index_update()
@@ -438,4 +590,27 @@ def spline(points, per_segment: int = 3) -> list[tuple]:
                        + (-p0 + 3 * p1 - 3 * p2 + p3) * t3)
             out.append(tuple(q)[:dim])
     out.append(tuple(pts[-1])[:dim])
+    return out
+
+
+def section(centre, half_u: float, half_v: float, n: int, u_axis=(1.0, 0.0, 0.0),
+            v_axis=(0.0, 1.0, 0.0), power: float = 2.0, start_deg: float = 0.0,
+            bulge=None) -> list[tuple]:
+    """One loft ring: a superellipse of `n` points around `centre`.
+
+    `half_u` / `half_v` are half-extents along `u_axis` / `v_axis` (default: a
+    horizontal ring, u = X, v = Y). `power` 2 is an ellipse, 3-4 a rounded box.
+    `bulge(angle_rad) -> factor` scales the radius per direction (a chest that
+    projects forward, a flat back). Every ring in one loft must use the same `n`
+    and `start_deg` so point j lines up with point j.
+    """
+    c, u, v = Vector(centre), Vector(u_axis), Vector(v_axis)
+    e = 2.0 / power
+    out = []
+    for j in range(n):
+        a = math.radians(start_deg) + 2.0 * math.pi * j / n
+        ca, sa = math.cos(a), math.sin(a)
+        k = bulge(a) if bulge else 1.0
+        out.append(tuple(c + u * (math.copysign(abs(ca) ** e, ca) * half_u * k)
+                         + v * (math.copysign(abs(sa) ** e, sa) * half_v * k)))
     return out
