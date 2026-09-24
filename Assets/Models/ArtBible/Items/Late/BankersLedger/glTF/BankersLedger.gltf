@@ -99,14 +99,14 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":2317,
+			"count":2311,
 			"max":[
 				0.15000000596046448,
 				0.09549999982118607,
 				0.22999796271324158
 			],
 			"min":[
-				-0.3672288656234741,
+				-0.36610034108161926,
 				-0.0020000003278255463,
 				-0.12299999594688416
 			],
@@ -115,13 +115,13 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":2317,
+			"count":2311,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":2317,
+			"count":2311,
 			"type":"VEC2"
 		},
 		{
@@ -134,26 +134,26 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":27804,
+			"byteLength":27732,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":27804,
-			"byteOffset":27804,
+			"byteLength":27732,
+			"byteOffset":27732,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":18536,
-			"byteOffset":55608,
+			"byteLength":18488,
+			"byteOffset":55464,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":8604,
-			"byteOffset":74144,
+			"byteOffset":73952,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":82748,
+			"byteLength":82556,
 			"uri":"BankersLedger.bin"
 		}
 	]

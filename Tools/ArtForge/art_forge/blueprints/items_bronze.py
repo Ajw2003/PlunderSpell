@@ -547,7 +547,7 @@ def gold_death_mask(entry: Entry):
     W, D, H = entry.dims                      # face 0.26 × dish 0.08 × 0.31
     hw, top_h, bot_h = W / 2.0, 0.148, 0.158
     z0 = bot_h * 1.012                        # rolled rim's lowest point at z = 0
-    M = 22
+    M = 24
 
     # Face outline in XZ about (0, z0): broad brow, tapering to the chin.
     outline = []
@@ -561,7 +561,7 @@ def gold_death_mask(entry: Entry):
         outline.append((x, z))
 
     def y_front(u):                            # the dish: rim at +Y, face bulges to -Y
-        return 0.030 - 0.052 * (1.0 - min(u, 1.0) ** 2.2)
+        return 0.030 - 0.052 * (1.0 - min(u, 1.0) ** 1.7)
 
     def ring(u, y):
         return [(u * x, y, z0 + u * z) for x, z in outline]
@@ -670,12 +670,12 @@ def gold_death_mask(entry: Entry):
         parts.append(line(pts, "tomb_dust", (0.0012, 0.0013), sides=3, lift=0.0003))
 
     # The old burial crumple on the lower left cheek: two creased facets.
-    cx, cz = -0.078, 0.062
+    cx, cz = -0.066, 0.072
     px, py, pz = surf(cx, cz, 0.0)
     qx, qy, _ = surf(cx - 0.01, cz, 0.0)
     yaw = math.degrees(math.atan2(qy - py, 0.01))
-    for mat, pts, dy in (("deep_gold_shadow", [(-0.018, -0.016), (0.012, -0.020), (-0.004, 0.024)], 0.0),
-                         ("gold_highlight", [(-0.004, 0.024), (0.012, -0.020), (0.020, 0.012)], 0.0006)):
+    for mat, pts, dy in (("deep_gold_shadow", [(-0.013, -0.012), (0.009, -0.015), (-0.003, 0.018)], 0.0),
+                         ("gold_highlight", [(-0.003, 0.018), (0.009, -0.015), (0.015, 0.009)], 0.0006)):
         parts.append(Part("prism", (px, py - 0.0008 - dy, pz), (1, 1, 0.0016), mat=mat,
                           rot=(90, 0, yaw), extras={"bevel": False, "outline": pts}))
 

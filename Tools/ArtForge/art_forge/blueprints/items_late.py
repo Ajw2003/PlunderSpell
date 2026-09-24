@@ -503,7 +503,7 @@ def bankers_ledger(entry: Entry):
         dx, dy = b[0] - a[0], b[1] - a[1]
         n = math.hypot(dx, dy)
         dx, dy = dx / n, dy / n
-        half_l, half_w, wire = 0.019, 0.008, 0.0022
+        half_l, half_w, wire = 0.0195, 0.0062, 0.0022
         if k % 2 == 0:                          # lying flat
             side, cz, normal = (-dy, dx, 0.0), wire, (0.0, 0.0, 1.0)
         else:                                   # standing on edge (clear of the mitred corners)

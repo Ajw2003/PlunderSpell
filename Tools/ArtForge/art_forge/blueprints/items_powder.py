@@ -499,12 +499,15 @@ def brass_astrolabe(entry: Entry):
     right = [(0.0095, 0.247), (0.013, 0.241), (0.022, 0.233), (0.036, 0.223),
              (0.050, 0.213), (0.062, 0.201), (0.071, 0.187)]
     throne = spline(right, 2)
-    outline = [(-x, z) for x, z in reversed(throne)] + throne + [(0.066, 0.176), (-0.066, 0.176)]
-    parts.append(upright(outline, -0.010, 0.008, "gilt_brass", bevel=False))
-    for x, z, d in ((0.0, 0.234, 0.009), (-0.036, 0.216, 0.012), (0.036, 0.216, 0.012)):
+    # Its foot follows the limb (r = 0.099) so it never covers the sunken plate.
+    foot = [(0.099 * math.cos(math.radians(a)), zc + 0.099 * math.sin(math.radians(a)))
+            for a in (44, 58, 74, 90, 106, 122, 136)]
+    outline = [(-x, z) for x, z in reversed(throne)] + throne + foot
+    parts.append(upright(outline, -0.0115, 0.010, "gilt_brass", bevel=False))
+    for x, z, d in ((0.0, 0.237, 0.008), (-0.029, 0.226, 0.011), (0.029, 0.226, 0.011)):
         # The piercing, shown on the face only (the back of the throne sits
         # against the hand; the triangles went to the rete's 20 pointers instead).
-        parts.append(disc(x, z, d, -0.0104, 0.0005, "engraving_grime", 6))
+        parts.append(disc(x, z, d, -0.0119, 0.0005, "engraving_grime", 6))
     # Shackle and suspension ring (worn brass, 5 mm stock, 0.05 dia).
     parts.append(Part("box", (0.0, -0.006, 0.2515), (0.011, 0.006, 0.013), mat="worn_brass",
                       extras={"bevel": False}))

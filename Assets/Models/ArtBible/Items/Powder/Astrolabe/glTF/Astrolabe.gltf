@@ -99,7 +99,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1846,
+			"count":1862,
 			"max":[
 				0.10999999940395355,
 				0.30000001192092896,
@@ -115,45 +115,45 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1846,
+			"count":1862,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1846,
+			"count":1862,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":4368,
+			"count":4428,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":22152,
+			"byteLength":22344,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":22152,
-			"byteOffset":22152,
+			"byteLength":22344,
+			"byteOffset":22344,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":14768,
-			"byteOffset":44304,
+			"byteLength":14896,
+			"byteOffset":44688,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":8736,
-			"byteOffset":59072,
+			"byteLength":8856,
+			"byteOffset":59584,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":67808,
+			"byteLength":68440,
 			"uri":"Astrolabe.bin"
 		}
 	]

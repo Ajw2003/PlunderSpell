@@ -18,7 +18,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"GoldDeathMask"
+			"name":"CoinCoffer"
 		}
 	],
 	"materials":[
@@ -37,7 +37,7 @@
 					"emissiveStrength":9
 				}
 			},
-			"name":"GoldDeathMask",
+			"name":"CoinCoffer",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
@@ -50,7 +50,7 @@
 	],
 	"meshes":[
 		{
-			"name":"GoldDeathMask",
+			"name":"CoinCoffer",
 			"primitives":[
 				{
 					"attributes":{
@@ -81,79 +81,79 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"GoldDeathMask_Emission",
-			"uri":"GoldDeathMask_Emission.png"
+			"name":"CoinCoffer_Emission",
+			"uri":"CoinCoffer_Emission.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"GoldDeathMask_BaseMap",
-			"uri":"GoldDeathMask_BaseMap.png"
+			"name":"CoinCoffer_BaseMap",
+			"uri":"CoinCoffer_BaseMap.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"GoldDeathMask_ORM",
-			"uri":"GoldDeathMask_ORM.png"
+			"name":"CoinCoffer_ORM",
+			"uri":"CoinCoffer_ORM.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1778,
+			"count":6631,
 			"max":[
-				0.16300000250339508,
-				0.3096719980239868,
-				0.04043696075677872
+				0.2654210925102234,
+				0.3062499761581421,
+				0.19238197803497314
 			],
 			"min":[
-				-0.16300000250339508,
+				-0.2654789984226227,
 				0,
-				-0.039500001817941666
+				-0.16899999976158142
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1778,
+			"count":6631,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1778,
+			"count":6631,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":4212,
+			"count":8808,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":21336,
+			"byteLength":79572,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":21336,
-			"byteOffset":21336,
+			"byteLength":79572,
+			"byteOffset":79572,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":14224,
-			"byteOffset":42672,
+			"byteLength":53048,
+			"byteOffset":159144,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":8424,
-			"byteOffset":56896,
+			"byteLength":17616,
+			"byteOffset":212192,
 			"target":34963
 		}
 	],
@@ -165,8 +165,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":65320,
-			"uri":"GoldDeathMask.bin"
+			"byteLength":229808,
+			"uri":"CoinCoffer.bin"
 		}
 	]
 }

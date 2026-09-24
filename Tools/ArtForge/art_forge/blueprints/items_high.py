@@ -586,7 +586,7 @@ def illuminated_psalter(entry: Entry):
             # map, which EnemyForge's bake does not make).
             "vellum": {"ridges": (0.0024, 0.22), "grain": 0.12},
             # Gilt rubbed back to the leather where hands hold the frame.
-            "gilt": {"wear_to": "#5E3A2A", "wear_amount": 0.2, "grain": 0.14},
+            "gilt": {"wear_to": "#5E3A2A", "wear_amount": 0.12, "grain": 0.12},
             "tawed_leather": {"wear_to": "#3E261B", "wear_amount": 0.3, "grain": 0.3},
             "ivory": {"wear_to": "#9C8E6C", "wear_amount": 0.25, "grain": 0.2},
             "garnet": {"rough": 0.12, "grain": 0.1},
@@ -601,9 +601,163 @@ def illuminated_psalter(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Coin coffer
+# --------------------------------------------------------------------------------
+
+def coin_coffer(entry: Entry):
+    """Iron-bound oak strongbox, closed: planked carcass and lid, three strap-iron
+    bands over front, top and back, top and bottom bands, angle irons on the
+    corners, clench nails, a hasp and barrel padlock on the front and drop-ring
+    handles on both ends."""
+    W, D, H = entry.dims                      # 0.50 × 0.32 × 0.30
+    hw, hd = W / 2.0, D / 2.0
+    plank, seam = 0.025, 0.20                 # 25 mm planks; carcass 0.20, lid 0.10
+    gap = 0.002                               # the lid seam
+    parts: list[Part] = []
+
+    def box(loc, size, mat="oak", bevel=True):
+        parts.append(Part("box", loc, size, mat=mat, extras={"bevel": bevel}))
+
+    # --- Carcass: a hidden core, front and back of two planks each, one-plank ends.
+    box((0, 0, seam / 2.0), (W - 2 * plank + 0.004, D - 2 * plank + 0.004, seam - 0.004),
+        bevel=False)
+    for s in (1, -1):
+        for z0 in (0.0, 0.1):
+            box((0, s * (hd - plank / 2.0), z0 + 0.05 - gap / 4.0),
+                (W, plank, 0.1 - gap / 2.0))
+        box((s * (hw - plank / 2.0), 0, seam / 2.0 - gap / 4.0),
+            (plank, D - 2 * plank + 0.002, seam - gap / 2.0))
+
+    # --- Lid: a 75 mm skirt under a 25 mm top of three planks along the length.
+    skirt_z0 = seam + gap / 2.0
+    box((0, 0, skirt_z0 + 0.0375), (W, D, 0.075))
+    for i in (-1, 0, 1):
+        box((0, i * D / 3.0, H - plank / 2.0), (W, D / 3.0 - 0.002, plank))
+
+    # --- Iron: 30 × 4 mm straps (x = -0.175, 0, 0.175: the JSON's 0.06 / 0.235 /
+    # 0.41 m are their left edges) down the front and back and across the top,
+    # split at the lid seam; 14 mm bands round the top and bottom; angle irons on
+    # the four vertical corners, also split at the seam.
+    t = 0.004
+    straps_x = (-0.175, 0.0, 0.175)
+    for x in straps_x:
+        for s in (1, -1):
+            y = s * (hd + t / 2.0)
+            # Thin straps stay unbevelled: the bevel would near-double their cost.
+            box((x, y, (seam - gap / 2.0) / 2.0), (0.030, t, seam - gap / 2.0), "strap_iron",
+                bevel=False)
+            box((x, y, (skirt_z0 + H + t) / 2.0), (0.030, t, H + t - skirt_z0), "strap_iron",
+                bevel=False)
+        box((x, 0, H + t / 2.0), (0.030, D + 2 * t, t), "strap_iron", bevel=False)
+    for z in (0.007, H - 0.007):
+        for s in (1, -1):
+            box((0, s * (hd + t / 2.0), z), (W - 0.06, t, 0.014), "strap_iron", bevel=False)
+            box((s * (hw + t / 2.0), 0, z), (t, D - 0.06, 0.014), "strap_iron", bevel=False)
+    ai = 0.034                                # angle-iron leg width
+    for sx in (1, -1):
+        for sy in (1, -1):
+            cx, cy = sx * (hw + t - ai / 2.0), sy * (hd + t - ai / 2.0)
+            box((cx, cy, (seam - gap / 2.0) / 2.0), (ai, ai, seam - gap / 2.0), "strap_iron")
+            box((cx, cy, (skirt_z0 + H + t) / 2.0), (ai, ai, H + t - skirt_z0), "strap_iron")
+
+    # Clench nails every 22 mm (6 mm dome heads) down each strap and angle iron,
+    # as four-sided studs.
+    def nail(x, y, z, axis):
+        rot = {"-y": (90, 0, 45), "+y": (-90, 0, 45), "+z": (0, 0, 45),
+               "+x": (0, 90, 45), "-x": (0, -90, 45)}[axis]
+        parts.append(Part("cone", (x, y, z), (0.0068, 0.0068, 0.0045), mat="strap_iron",
+                          segments=4, rot=rot, extras={"bevel": False}))
+
+    def column(z0, z1):
+        n = max(1, int(round((z1 - z0) / 0.022)))
+        return [z0 + (z1 - z0) * i / n for i in range(n + 1)]
+
+    lower, upper = column(0.018, seam - 0.012), column(skirt_z0 + 0.012, H - 0.018)
+    face_y = hd + t
+    for x in straps_x:
+        for z in lower + upper:
+            nail(x, -face_y, z, "-y")
+            nail(x, face_y, z, "+y")
+        for y in column(-hd + 0.012, hd - 0.012):
+            nail(x, y, H + t, "+z")
+    for sx in (1, -1):
+        for sy in (1, -1):
+            for z in lower + upper:
+                nail(sx * (hw + t - ai / 2.0), sy * face_y, z, "-y" if sy < 0 else "+y")
+                nail(sx * (hw + t), sy * (hd + t - ai / 2.0), z, "+x" if sx > 0 else "-x")
+
+    # --- Hasp (36 × 90 mm, tapering) hanging from the lid over the centre strap,
+    # a staple through its slot, and a barrel padlock (56 × 28 mm) hanging below.
+    fy = -(hd + t)
+    parts.append(Part("prism", (0, fy - 0.0025, 0), (1, 1, 0.004), mat="strap_iron",
+                      rot=(90, 0, 0), extras={"outline": [
+                          (-0.018, 0.268), (0.018, 0.268), (0.013, 0.185), (0.0, 0.176),
+                          (-0.013, 0.185)]}))
+    staple = [(-0.006, fy + 0.002, 0.188), (-0.006, fy - 0.010, 0.188),
+              (0.006, fy - 0.010, 0.188), (0.006, fy + 0.002, 0.188)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="strap_iron", segments=4, extras={
+        "path": staple, "section": (0.0025, 0.0025), "up": (0, 0, 1), "smooth": True,
+        "bevel": False}))
+    lock_y, lock_z = fy - 0.015, 0.150
+    shackle = [(-0.012, lock_y, lock_z + 0.008), (-0.012, lock_y, 0.186),
+               (0.012, lock_y, 0.186), (0.012, lock_y, lock_z + 0.008)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="strap_iron", segments=4, extras={
+        "path": shackle, "section": (0.003, 0.003), "up": (0, 1, 0), "smooth": True,
+        "bevel": False}))
+    parts.append(Part("cyl", (0.004, lock_y, lock_z), (0.028, 0.028, 0.056), mat="strap_iron",
+                      segments=10, rot=(0, 90, 0), extras={"smooth": True}))
+    parts.append(Part("cyl", (0.033, lock_y, lock_z), (0.010, 0.004, 0.003), mat="rust",
+                      segments=6, rot=(0, 90, 0), extras={"bevel": False}))   # key slot
+
+    # --- Drop handles: an 80 mm iron ring hanging from a staple plate on each end.
+    for s in (1, -1):
+        x = s * (hw + t)
+        box((x + s * 0.002, 0, 0.165), (0.004, 0.060, 0.022), "strap_iron")
+        ring = [(x + s * 0.007, y, z) for y, z in
+                ((-0.036, 0.166), (-0.040, 0.140), (-0.030, 0.118), (0.0, 0.108),
+                 (0.030, 0.118), (0.040, 0.140), (0.036, 0.166))]
+        ring = [(x + s * 0.002, -0.030, 0.168)] + ring + [(x + s * 0.002, 0.030, 0.168)]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="strap_iron", segments=5, extras={
+            "path": ring, "section": (0.0045, 0.0045), "up": (1, 0, 0), "smooth": True,
+            "bevel": False}))
+
+    # Hinge knuckles on the back edge, where the two outer top straps pivot.
+    for x in (-0.175, 0.175):
+        parts.append(Part("cyl", (x, hd + 0.003, seam), (0.012, 0.012, 0.040),
+                          mat="strap_iron", segments=8, rot=(0, 90, 0),
+                          extras={"smooth": True, "bevel": False}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.003,
+        bbox_overrides={
+            "Y": (0.36, "the 28 mm barrel padlock hangs on the hasp staple in front of "
+                  "the strapped face (build bullet), ~0.03 m ahead of the 0.32 m box, and "
+                  "the hinge knuckles stand proud at the back; the JSON dimension line "
+                  "gives the box only"),
+        },
+        family_overrides={
+            # Straight grain along the planks, darker toward the edges.
+            "oak": {"ridges": (0.012, 0.10), "wear_to": "#4A3522", "wear_amount": 0.25,
+                    "grain": 0.3},
+            # Blackened iron with rust blooming through it.
+            "strap_iron": {"wear_to": "#7A4A2A", "wear_amount": 0.22, "grain": 0.25},
+        },
+        notes=["Modelled closed. The four linen bags and 40 penny stacks only appear when "
+               "it bursts, as separate pickups, so the silver_penny and linen_bag families "
+               "are not on this mesh.",
+               "The strap x positions in the JSON (0.06, 0.235, 0.41 m) are read as left "
+               "edges, which centres the three straps symmetrically as the concept draws them.",
+               "Dovetails, pitch sealing and the lid's pale polished patch are texture "
+               "detail; rust blooms come from the iron's wear mask, not per-nail decals."],
+    )
+
+
 BLUEPRINTS = {
     "gilded-altarpiece": gilded_altarpiece,
     "arm-reliquary": arm_reliquary,
     "silver-ewer": silver_ewer,
     "illuminated-psalter": illuminated_psalter,
+    "coin-coffer": coin_coffer,
 }

@@ -82,16 +82,16 @@
       "title": "Gold Death-Mask",
       "passed": true,
       "stats": {
-        "vertices": 772,
-        "faces": 795,
-        "triangles": 1364,
+        "vertices": 792,
+        "faces": 817,
+        "triangles": 1404,
         "islands": 45,
         "lowest_z": 0.0,
         "height": 0.31,
         "width": 0.326,
         "budget": 1500,
-        "bbox_m": "0.326x0.081x0.310",
-        "vs_spec": "W=0.326/0.330 D=0.081/0.080 H=0.310/0.310"
+        "bbox_m": "0.326x0.080x0.310",
+        "vs_spec": "W=0.326/0.330 D=0.080/0.080 H=0.310/0.310"
       },
       "spec": {
         "dims_WDH_m": [
@@ -148,7 +148,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/glTF/GoldDeathMask.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/GoldDeathMask.blend"
       },
-      "build_seconds": 3.3
+      "build_seconds": 3.2
     },
     {
       "key": "items/bronze/oxhide-ingot",
@@ -408,6 +408,76 @@
         "blend": "Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.blend"
       },
       "build_seconds": 2.8
+    },
+    {
+      "key": "items/high/coin-coffer",
+      "kind": "items",
+      "age": "high",
+      "slug": "coin-coffer",
+      "name": "CoinCoffer",
+      "title": "Coin Coffer",
+      "passed": true,
+      "stats": {
+        "vertices": 2022,
+        "faces": 1996,
+        "triangles": 2936,
+        "islands": 277,
+        "lowest_z": 0.0,
+        "height": 0.306,
+        "width": 0.531,
+        "budget": 3000,
+        "bbox_m": "0.531x0.361x0.306",
+        "vs_spec": "W=0.531/0.500 D=0.361/0.360 H=0.306/0.300"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.5,
+          0.32,
+          0.3
+        ],
+        "height_m": null,
+        "tri_budget": 3000
+      },
+      "families": {
+        "oak": {
+          "name": "Oak",
+          "base": "#6B4E33",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "strap_iron": {
+          "name": "Strap iron",
+          "base": "#3A3632",
+          "rough": 0.55,
+          "metal": 1.0,
+          "emit": null
+        },
+        "rust": {
+          "name": "Rust",
+          "base": "#7A4A2A",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "Y (D) checked against 0.360 m instead of the JSON's 0.320 m: the 28 mm barrel padlock hangs on the hasp staple in front of the strapped face (build bullet), ~0.03 m ahead of the 0.32 m box, and the hinge knuckles stand proud at the back; the JSON dimension line gives the box only",
+        "JSON materials not used by any part: ['silver_penny', 'linen_bag']"
+      ],
+      "notes": [
+        "Modelled closed. The four linen bags and 40 penny stacks only appear when it bursts, as separate pickups, so the silver_penny and linen_bag families are not on this mesh.",
+        "The strap x positions in the JSON (0.06, 0.235, 0.41 m) are read as left edges, which centres the three straps symmetrically as the concept draws them.",
+        "Dovetails, pitch sealing and the lid's pale polished patch are texture detail; rust blooms come from the iron's wear mask, not per-nail decals."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/CoinCoffer/CoinCoffer.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/CoinCoffer/glTF/CoinCoffer.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/CoinCoffer/CoinCoffer.blend"
+      },
+      "build_seconds": 3.0
     },
     {
       "key": "items/high/gilded-altarpiece",
@@ -689,10 +759,10 @@
         "islands": 54,
         "lowest_z": -0.002,
         "height": 0.095,
-        "width": 0.517,
+        "width": 0.516,
         "budget": 1500,
-        "bbox_m": "0.517x0.353x0.098",
-        "vs_spec": "W=0.517/0.520 D=0.353/0.350 H=0.098/0.090"
+        "bbox_m": "0.516x0.353x0.098",
+        "vs_spec": "W=0.516/0.520 D=0.353/0.350 H=0.098/0.090"
       },
       "spec": {
         "dims_WDH_m": [
@@ -744,7 +814,7 @@
       "warnings": [
         "X (W) checked against 0.520 m instead of the JSON's 0.300 m: the dimension line adds 'plus a 0.60 m chain': 22 links trailing from the head of the back board reach 0.21 m past the book's head on the floor",
         "Y (D) checked against 0.350 m instead of the JSON's 0.220 m: the trailing chain and staple curl 0.12 m in front of the fore-edge (dimension line: 'plus a 0.60 m chain')",
-        "bbox centre is off the origin in X by -0.109 m",
+        "bbox centre is off the origin in X by -0.108 m",
         "bbox centre is off the origin in Y by -0.053 m"
       ],
       "notes": [
@@ -946,9 +1016,9 @@
       "title": "Astrolabe",
       "passed": true,
       "stats": {
-        "vertices": 810,
-        "faces": 816,
-        "triangles": 1456,
+        "vertices": 820,
+        "faces": 831,
+        "triangles": 1476,
         "islands": 44,
         "lowest_z": 0.0,
         "height": 0.3,
@@ -1010,7 +1080,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/Astrolabe/glTF/Astrolabe.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/Astrolabe/Astrolabe.blend"
       },
-      "build_seconds": 2.4
+      "build_seconds": 2.6
     },
     {
       "key": "items/powder/curiosity-cabinet",
