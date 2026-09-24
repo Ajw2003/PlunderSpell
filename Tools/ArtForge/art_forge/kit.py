@@ -52,7 +52,7 @@ from mathutils.geometry import tessellate_polygon
 
 from enemy_forge.parts import BONE_LAYER, Part, _bone_name, _place, _primitive
 
-__all__ = ["Part", "build_bmesh", "families_used", "ring_of", "arc_path",
+__all__ = ["Part", "build_bmesh", "families_used", "ring_of", "arc_path", "spline",
            "rounded_rect", "gable_outline", "BONE_LAYER", "SMOOTH_LAYER"]
 
 # Face layer: 1 where the owning part asked for extras["smooth"]. An integer face
@@ -401,3 +401,27 @@ def gable_outline(width: float, shoulder: float, apex: float,
     gable rising to a point at `apex`. For panels, pediments and shrine roofs."""
     hw = width / 2.0
     return [(-hw, base), (hw, base), (hw, shoulder), (0.0, apex), (-hw, shoulder)]
+
+
+def spline(points, per_segment: int = 3) -> list[tuple]:
+    """Catmull-Rom through `points` (2D or 3D), `per_segment` samples per span.
+
+    For tube paths and lathe profiles that should read as curves: pass a handful of
+    control points and let this add the in-betweens. Endpoints are kept exactly.
+    """
+    pts = [Vector(p) if len(p) == 3 else Vector((p[0], p[1], 0.0)) for p in points]
+    dim = len(points[0])
+    if len(pts) < 3:
+        return [tuple(p) for p in points]
+    ext = [pts[0] * 2 - pts[1]] + pts + [pts[-1] * 2 - pts[-2]]
+    out = []
+    for i in range(1, len(ext) - 2):
+        p0, p1, p2, p3 = ext[i - 1], ext[i], ext[i + 1], ext[i + 2]
+        for step in range(per_segment):
+            t = step / per_segment
+            t2, t3 = t * t, t * t * t
+            q = 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2
+                       + (-p0 + 3 * p1 - 3 * p2 + p3) * t3)
+            out.append(tuple(q)[:dim])
+    out.append(tuple(pts[-1])[:dim])
+    return out

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 
-from ..kit import Part, arc_path
+from ..kit import Part, spline
 from ..spec import Entry
 from . import blueprint
 
@@ -32,22 +32,28 @@ def sealed_amphora(entry: Entry):
     # Profile points sit on each band edge so the colour changes on an edge loop.
     band_lo, band_hi = shoulder_z - 0.034, shoulder_z + 0.006
     rim_top = 0.586
+    # The taper from toe to shoulder bows outward (a full belly narrowing to a
+    # stem), not a straight cone: r = pinch + (body_r - pinch) * (1 - (1 - t)^1.6).
+    pinch_r, pinch_z = 0.021, 0.064
+
+    def belly(t: float) -> tuple[float, float]:
+        z = pinch_z + (band_lo - pinch_z) * t
+        return pinch_r + (0.166 - pinch_r) * (1.0 - (1.0 - t) ** 1.6), z
+
     profile = [
         (0.000, 0.000),              # toe tip
         (0.015, 0.006),
         (0.025, 0.022),              # knob toe, 0.05 dia
         (0.025, 0.048),
-        (0.021, 0.064),              # pinch above the knob
-        (0.046, 0.110),
-        (0.090, 0.200),              # the taper bows out slightly
-        (0.126, 0.290),
-        (0.152, 0.350),
-        (0.160, band_lo),            # band bottom
+        (pinch_r, pinch_z),          # pinch above the knob
+        *[belly(t) for t in (0.14, 0.34, 0.56, 0.78)],
+        belly(1.0),                  # band bottom
         (body_r, shoulder_z),        # carination: max diameter
         (0.166, band_hi),            # band top
-        (0.130, 0.466),              # angular shoulder slopes in
-        (0.074, 0.497),
-        (neck_r, 0.514),             # neck, 0.08 m tall
+        (0.150, 0.455),              # rounded shoulder dome up to the neck
+        (0.118, 0.482),
+        (0.076, 0.503),
+        (neck_r, 0.516),             # neck, 0.08 m tall
         (neck_r - 0.002, 0.560),
         (rim_r, 0.568),              # rolled rim
         (rim_r + 0.002, 0.577),
@@ -71,14 +77,23 @@ def sealed_amphora(entry: Entry):
                       mat="sealing_clay", segments=8, rings=4, minor=0.22,
                       rot=(-12, 0, 0)))
 
-    # Loop handles: oval-section straps (0.035 wide × 0.02 thick) on ±X, arching
-    # 0.08 m out. The arc's ends are buried in the body, so each handle is its own
-    # closed island that visibly grows out of the jar.
-    arc_centre_x, arc_centre_z, arc_r = body_r + 0.005, shoulder_z - 0.03, 0.068
+    # Loop handles: oval-section straps (0.035 wide × 0.02 thick) on ±X, springing
+    # from the shoulder just above the band, arching 0.08 m out and down into the
+    # belly — ear-shaped, as the concept's front view draws them. Both ends are
+    # buried in the body, so each handle is its own closed island.
+    top_z, low_z = band_hi + 0.010, band_lo - 0.064
+    reach = body_r + 0.08
+    mid_z = (top_z + low_z) / 2.0
+    half = (top_z - low_z) / 2.0
+    ear = [(body_r - 0.012 + (reach - body_r + 0.012) * math.cos(math.radians(a)) ** 0.8
+            * (1 if math.cos(math.radians(a)) >= 0 else -1),
+            mid_z + half * math.sin(math.radians(a)))
+           for a in (88, 62, 34, 6, -24, -52, -80)]
+    loop = ([(_radius_at(profile, top_z) - 0.022, top_z + 0.004)]     # buried end
+            + [(x, z) for x, z in spline(ear, 2)]
+            + [(_radius_at(profile, low_z) - 0.020, low_z - 0.004)])  # buried end
     for side in (1, -1):
-        path = arc_path((side * arc_centre_x, 0.0, arc_centre_z), arc_r,
-                        128.0, -128.0, 10,
-                        axis_u=(side, 0.0, 0.0), axis_v=(0.0, 0.0, 1.0))
+        path = [(side * x, 0.0, z) for x, z in loop]
         parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="buff_terracotta", segments=6,
                           extras={"path": path, "section": (0.0175, 0.010),
                                   "up": (0.0, 1.0, 0.0), "smooth": True}))
@@ -101,7 +116,9 @@ def sealed_amphora(entry: Entry):
         end_r = _radius_at(profile, end_z) + 0.004
         parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="flax_cord", segments=4,
                           extras={"path": [start,
-                                           (start[0] + tip[0] * 0.5, -end_r - 0.002, 0.530 + tip[1] * 0.5),
+                                           (start[0] + tip[0] * 0.5,
+                                            -(_radius_at(profile, 0.530 + tip[1] * 0.5) + 0.004),
+                                            0.530 + tip[1] * 0.5),
                                            (start[0] + tip[0], -end_r, end_z)],
                                   "section": (0.0035, 0.0035), "up": (0, 1, 0),
                                   "smooth": True}))
@@ -109,13 +126,13 @@ def sealed_amphora(entry: Entry):
     # Wine stain: a dried run from the seal down one side (front-right), over the
     # band, following the surface. Sits a hair proud of the facets.
     run = []
-    for i, z in enumerate((0.575, 0.556, 0.520, 0.500, 0.480, 0.455, 0.430, 0.400,
-                           0.370, 0.335, 0.300, 0.270)):
+    for i, z in enumerate((0.575, 0.552, 0.515, 0.492, 0.470, 0.445, 0.418, 0.385,
+                           0.350, 0.312, 0.275)):
         r = _radius_at(profile, z) + 0.0022
-        angle = math.radians(-62.0 + 9.0 * math.sin(i * 0.9))
+        angle = math.radians(-60.0 + 11.0 * math.sin(i * 1.1))
         run.append((math.cos(angle) * r, math.sin(angle) * r, z))
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="wine_stain", segments=4,
-                      extras={"path": run, "section": (0.0030, 0.0085), "smooth": True}))
+                      extras={"path": run, "section": (0.0028, 0.0065), "smooth": True}))
 
     return blueprint(
         entry, parts,

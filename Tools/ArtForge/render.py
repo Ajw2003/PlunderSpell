@@ -129,11 +129,11 @@ def _studio(centre: Vector, span: float) -> None:
     d = max(span, 0.25) * 2.2
     energy = d * d
     _area_light("Key", centre + Vector((d * 0.75, -d * 0.95, d * 0.85)), centre,
-                energy * 110.0, d * 0.5, (1.0, 0.80, 0.58))
+                energy * 48.0, d * 0.5, (1.0, 0.82, 0.62))
     _area_light("Fill", centre + Vector((-d * 1.1, -d * 0.55, d * 0.25)), centre,
-                energy * 26.0, d * 1.0, (1.0, 0.72, 0.50))
+                energy * 10.0, d * 1.0, (1.0, 0.74, 0.52))
     _area_light("Rim", centre + Vector((-d * 0.3, d * 1.2, d * 1.0)), centre,
-                energy * 55.0, d * 0.6, (0.70, 0.76, 0.90))
+                energy * 30.0, d * 0.6, (0.70, 0.76, 0.90))
 
 
 def _ground(span: float) -> None:
@@ -188,14 +188,14 @@ def _wire_material() -> bpy.types.Material:
     nodes, links = mat.node_tree.nodes, mat.node_tree.links
     nodes.clear()
     clay = nodes.new("ShaderNodeBsdfPrincipled")
-    clay.inputs["Base Color"].default_value = (0.20, 0.19, 0.17, 1.0)
+    clay.inputs["Base Color"].default_value = (0.10, 0.095, 0.085, 1.0)
     clay.inputs["Roughness"].default_value = 0.75
     edge = nodes.new("ShaderNodeEmission")
     edge.inputs["Color"].default_value = (*_linear("#DCD2BA"), 1.0)
     edge.inputs["Strength"].default_value = 1.4
     wire = nodes.new("ShaderNodeWireframe")
     wire.use_pixel_size = True
-    wire.inputs["Size"].default_value = 1.0
+    wire.inputs["Size"].default_value = 0.8
     mix = nodes.new("ShaderNodeMixShader")
     links.new(wire.outputs["Fac"], mix.inputs["Fac"])
     links.new(clay.outputs["BSDF"], mix.inputs[1])

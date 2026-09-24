@@ -99,14 +99,14 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1390,
+			"count":1542,
 			"max":[
-				0.251880943775177,
+				0.25832322239875793,
 				0.6200000047683716,
 				0.17000000178813934
 			],
 			"min":[
-				-0.251880943775177,
+				-0.25832322239875793,
 				0,
 				-0.17000000178813934
 			],
@@ -115,45 +115,45 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1390,
+			"count":1542,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1390,
+			"count":1542,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":3960,
+			"count":4320,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":16680,
+			"byteLength":18504,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":16680,
-			"byteOffset":16680,
+			"byteLength":18504,
+			"byteOffset":18504,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":11120,
-			"byteOffset":33360,
+			"byteLength":12336,
+			"byteOffset":37008,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":7920,
-			"byteOffset":44480,
+			"byteLength":8640,
+			"byteOffset":49344,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":52400,
+			"byteLength":57984,
 			"uri":"SealedAmphora.bin"
 		}
 	]
