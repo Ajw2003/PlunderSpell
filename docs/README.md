@@ -76,6 +76,9 @@ together and what was deliberately left undocumented, and why.
   `docs/art/concept/`, specs in `docs/art/data/*.json`, and its own illustrated mood board
   [`docs/generated/plunderspell-art-bible-moodboard.html`](generated/plunderspell-art-bible-moodboard.html).
   Regenerate with `python3 Tools/ArtBible/build_art_bible.py` (see `Tools/ArtBible/README.md`).
+  The step-by-step loop from brief to validated model (plan → sheet → audit → fix → model beside
+  sheet → audit → fix → commit) is [`docs/art/WORKFLOW.md`](art/WORKFLOW.md); long runs are protected
+  by `Tools/autosave.sh`.
 - [`docs/plans/moodboard-gap-closure.md`](plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
