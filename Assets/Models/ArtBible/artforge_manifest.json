@@ -1672,21 +1672,21 @@
       "title": "Lantern Warden",
       "passed": true,
       "stats": {
-        "vertices": 2588,
-        "faces": 2516,
-        "triangles": 4952,
+        "vertices": 2620,
+        "faces": 2548,
+        "triangles": 5016,
         "islands": 58,
         "lowest_z": 0.0,
         "height": 2.048,
-        "width": 0.708,
+        "width": 0.709,
         "budget": 8000,
-        "bbox_m": "0.708x0.626x2.048",
+        "bbox_m": "0.709x0.621x2.048",
         "height_body_m": 1.796,
         "height_spec_m": 1.8,
         "height_with_props_m": 2.048,
         "rig_bones": 24,
         "skinned_bones": 23,
-        "mean_influences": 1.53
+        "mean_influences": 1.55
       },
       "spec": {
         "dims_WDH_m": null,
@@ -1734,7 +1734,7 @@
           "base": "#BFA57A",
           "rough": 0.45,
           "metal": 0.0,
-          "emit": "#C4542E"
+          "emit": "#4A1E0C"
         },
         "skin": {
           "name": "Skin",
@@ -1766,7 +1766,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/LanternWarden/glTF/LanternWarden.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
-      "build_seconds": 3.3
+      "build_seconds": 3.2
     }
   ]
 }

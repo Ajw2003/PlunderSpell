@@ -184,10 +184,11 @@ _TORSO = [
     (0.625, 0.083, 0.057, 0.002),   # waist
     (0.680, 0.091, 0.062, -0.002),  # lower ribs
     (0.730, 0.099, 0.066, -0.004),  # chest
-    (0.775, 0.102, 0.063, -0.002),  # upper chest
-    (0.803, 0.092, 0.055, 0.004),   # shoulder line
-    (0.826, 0.050, 0.040, 0.006),   # neck base
-    (0.838, 0.036, 0.032, 0.006),   # collar top (cap; the neck passes through it)
+    (0.775, 0.104, 0.063, -0.002),  # upper chest
+    (0.806, 0.100, 0.057, 0.004),   # shoulder line
+    (0.822, 0.078, 0.048, 0.005),   # shoulder slope
+    (0.832, 0.046, 0.038, 0.006),   # neck base
+    (0.842, 0.036, 0.032, 0.006),   # collar top (cap; the neck passes through it)
 ]
 
 _HEAD_BARE = [   # (z, half-width, half-depth, y shift); last is the crown pole
@@ -394,8 +395,12 @@ class Human(Figure):
             zf, hw, hd, dy = rows[-2]
             rings[-1] = self.torso_ring(zf, hw * 0.92, hd * 0.95, dy, n, pad * 0.5,
                                         z=zf * self.h + collar)
+        skirt = {"top": self.hip_z + 0.02 * self.h,
+                 "bottom": hem if hem is not None else self.crotch_z,
+                 "strength": 0.8 if hem is not None else 0.5}
         return Part("loft", (0, 0, 0), (1, 1, 1), mat=mat, bone="Spine", extras={
             "rings": rings, "smooth": True, "paint": paint or [], "bevel": False,
+            "skirt": skirt,
             "bones": ["Hips", "Spine", "Chest", "Neck", "Shoulder.L", "Shoulder.R",
                       "UpperLeg.L", "UpperLeg.R"]})
 
@@ -444,14 +449,16 @@ class Human(Figure):
         h, b = self.h, self.bulk
         s = SIDES[side]
         shoulder, elbow, wrist, _tip, _fore = self._arm[side]
-        start = shoulder + Vector((-s * 0.028 * h, 0.0, 0.010 * h))
+        # Start inside the chest, below the joint: a start ring level with the joint
+        # stands up out of the shoulder line as a peak.
+        start = shoulder + Vector((-s * 0.036 * h, 0.0, -0.024 * h))
         up_dir = (elbow - shoulder).normalized()
         fore_dir = (wrist - elbow).normalized()
         pts = [start, shoulder,
                shoulder + up_dir * 0.172 * h * 0.35, shoulder + up_dir * 0.172 * h * 0.70,
                elbow,
                elbow + fore_dir * 0.145 * h * 0.35, elbow + fore_dir * 0.145 * h * 0.72, wrist]
-        radii = [0.030, 0.034, 0.030, 0.026, 0.0225, 0.024, 0.021, 0.0165]
+        radii = [0.024, 0.030, 0.029, 0.026, 0.0225, 0.024, 0.021, 0.0165]
         if quilt_rings:
             pts, radii = _resample(pts, radii, quilt_rings)
         sections = []
@@ -501,12 +508,12 @@ class Human(Figure):
         h, b = self.h, self.bulk
         s = SIDES[side]
         hip, knee, ankle, _ball = self._leg[side]
-        start = hip + Vector((-s * 0.020 * h, 0.0, 0.045 * h))
+        start = hip + Vector((-s * 0.030 * h, 0.0, 0.040 * h))
         thigh = (knee - hip)
         shin = (ankle - knee)
         pts = [start, hip, hip + thigh * 0.35, hip + thigh * 0.72, knee,
                knee + shin * 0.28, knee + shin * 0.62, ankle, ankle - Vector((0, 0, 0.018 * h))]
-        radii = [0.050, 0.049, 0.043, 0.035, 0.030, 0.032, 0.025, 0.0195, 0.0185]
+        radii = [0.040, 0.045, 0.041, 0.034, 0.030, 0.032, 0.025, 0.0195, 0.0185]
         back = [0.0, 0.0, 0.0, 0.0, 0.0, 0.007, 0.004, 0.0, 0.0]
         sections = [(r * h * b + pad, r * h * b * 1.02 + pad) for r in radii]
         offsets = [(o * h, 0.0) for o in back]

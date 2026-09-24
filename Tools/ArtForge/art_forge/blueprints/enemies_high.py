@@ -85,8 +85,9 @@ def _glaive(fig: Human) -> list[Part]:
     outline = [(-0.014, 0.0), (0.022, 0.0), (0.056, 0.07), (0.062, 0.17), (0.046, 0.26),
                (0.0, blade_len), (-0.012, 0.27), (-0.013, 0.15), (-0.052, 0.125),
                (-0.016, 0.095), (-0.014, 0.0)]
+    # Yawed 35° off pure edge-forward so the blade reads in the front view too.
     parts.append(Part("prism", (x, y, overall - blade_len), (1, 1, 0.009),
-                      mat="blackened_iron", bone="Glaive", rot=(90.0, 0.0, -90.0),
+                      mat="blackened_iron", bone="Glaive", rot=(90.0, 0.0, -90.0 + 35.0),
                       extras={"outline": outline, **prop}))
     return parts
 
@@ -99,7 +100,7 @@ def _lantern(fig: Human) -> list[Part]:
     ring_c = g + Vector((0.0, 0.0, -0.012))
     cap_top = ring_c.z - 0.030
     body_top = cap_top - 0.060
-    body_bot = body_top - 0.24 + 0.06
+    body_bot = body_top - 0.24
     c = Vector((ring_c.x, ring_c.y, 0.0))
     fig.prop_bone("LanternRing", "L", head=ring_c, tail=(c.x, c.y, cap_top))
     fig.add_bone("LanternBody", (c.x, c.y, cap_top), (c.x, c.y, body_bot), "LanternRing")
@@ -207,11 +208,18 @@ def lantern_warden(entry: Entry):
     parts += _glaive(fig)
     parts += _lantern(fig)
 
+    # Review pose: the lantern_raise_search beat. The lantern chain counter-rotates
+    # so it hangs from the raised fist instead of pointing along the forearm.
+    pose = dict(figures.HUMAN_TEST_POSE)
+    pose["LanternRing"] = (105.0, 0.0, 0.0)
     return blueprint(
-        entry, parts, bevel=0.004, **fig.rig(),
+        entry, parts, bevel=0.004, **fig.rig(pose),
         family_overrides={
             # "emissive when lit (#C4542E flame at the core)": the panes carry the glow.
-            "horn_pane": {"emit": "#C4542E", "rough": 0.45},
+            # The emit hex is scaled by EnemyForge's EMISSION_STRENGTH (9x) in the
+            # shipping material; #C4542E at 9x blows out to pink-white, so the
+            # baked mask stores madder at ~35 % and the multiplier brings it back.
+            "horn_pane": {"emit": "#4A1E0C", "rough": 0.45},
             "blackened_iron": {"rough": 0.55, "wear_to": "#2A2826", "wear_amount": 0.4},
             "gambeson_wool": {"grain": 0.30},
         },

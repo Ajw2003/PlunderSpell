@@ -14,6 +14,8 @@ picks up Root. `apply_bind_rules` runs after it and enforces what each Part says
                                 weights on any other bone are dropped and the rest
                                 renormalised. `.L` names swap to `.R` on the
                                 mirrored copy, exactly as `part.bone` does.
+- extras["skirt"] = {...}      the part below a height is handed to the thighs
+                                (a gambeson or surcoat skirt): see _skirt_weights.
 - neither                       the part may blend with its own bone, that bone's
                                 parent and its children (never Root, unless the part
                                 is on Root). Good for single-bone parts.
@@ -115,6 +117,12 @@ def apply_bind_rules(obj: bpy.types.Object, bp: Blueprint) -> dict:
         if bone not in by_name:
             by_name[bone] = obj.vertex_groups.new(name=bone)
 
+    skirts = {}
+    for pid in set(part_ids):
+        part = bp.parts[pid // 2]
+        if "skirt" in part.extras:
+            skirts[pid] = part.extras["skirt"]
+
     rigid_verts = fallback = trimmed = 0
     new_weights: list[dict[str, float]] = []
     for vert in obj.data.vertices:
@@ -127,6 +135,9 @@ def apply_bind_rules(obj: bpy.types.Object, bp: Blueprint) -> dict:
                    if g.weight > MIN_WEIGHT and groups[g.group] in allowed}
         if len(weights) < len([g for g in vert.groups if g.weight > MIN_WEIGHT]):
             trimmed += 1
+        skirt = skirts.get(part_ids[vert.index])
+        if skirt:
+            weights = _skirt_weights(weights, vert.co, skirt)
         top = sorted(weights.items(), key=lambda kv: -kv[1])[:MAX_INFLUENCES]
         total = sum(w for _n, w in top)
         if total < 1e-4:
@@ -152,6 +163,37 @@ def apply_bind_rules(obj: bpy.types.Object, bp: Blueprint) -> dict:
     return {"rigid_vertices": rigid_verts, "fallback_vertices": fallback,
             "filtered_vertices": trimmed, "max_influences": max(influences),
             "mean_influences": round(sum(influences) / len(influences), 2)}
+
+
+def _smoothstep(a: float, b: float, x: float) -> float:
+    t = max(0.0, min(1.0, (x - a) / (b - a)))
+    return t * t * (3.0 - 2.0 * t)
+
+
+def _skirt_weights(weights: dict[str, float], co, skirt: dict) -> dict[str, float]:
+    """Hand the lower part of a coat/skirt to the thighs so it follows a stride.
+
+    extras["skirt"] = {"top": z, "bottom": z, "left": "UpperLeg.L",
+    "right": "UpperLeg.R", "strength": 0.75, "split": 0.05}. Below `top` the thigh
+    share grows to `strength` at `bottom`; across the centre line it is split
+    between the legs over +/- `split` metres of X. Heat weighting alone leaves a
+    skirt on the Hips, and a lifted knee then goes straight through it.
+    """
+    top, bottom = skirt["top"], skirt["bottom"]
+    if co.z >= top:
+        return weights
+    left, right = skirt.get("left", "UpperLeg.L"), skirt.get("right", "UpperLeg.R")
+    share = skirt.get("strength", 0.75) * _smoothstep(top, bottom, co.z)
+    split = skirt.get("split", 0.05)
+    to_left = _smoothstep(-split, split, co.x)
+    rest = {n: w for n, w in weights.items() if n not in (left, right)}
+    total = sum(rest.values())
+    out = {n: w / total * (1.0 - share) for n, w in rest.items()} if total > 1e-6 else {}
+    if not out:
+        share = 1.0
+    out[left] = out.get(left, 0.0) + share * to_left
+    out[right] = out.get(right, 0.0) + share * (1.0 - to_left)
+    return {n: w for n, w in out.items() if w > MIN_WEIGHT}
 
 
 def dedupe_armature_modifiers(obj: bpy.types.Object, rig: bpy.types.Object) -> None:
