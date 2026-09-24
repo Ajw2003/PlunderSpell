@@ -341,6 +341,12 @@
       "preview": "518e76754b272872:23a9d68e53fd",
       "tris": 816
     },
+    "LateTurretStair": {
+      "budget": 2000,
+      "content": "e1e0e96487030909",
+      "preview": "e1e0e96487030909:23a9d68e53fd",
+      "tris": 804
+    },
     "Longsword": {
       "budget": 450,
       "content": "2abf76a1be12ecb0",

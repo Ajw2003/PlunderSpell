@@ -1,0 +1,87 @@
+{
+  "key": "LateTurretStair",
+  "name": "The Turret Stair",
+  "age": "LateMedieval",
+  "zone": "Keep",
+  "role": "KeepStairwell",
+  "summary": "A sandstone stair turning up to an oak gallery with a keyhole gun-loop and an iron-bound chest; a rack of hand-cannon and a pavise below.",
+  "description": "The keep's stair turns a corner on a landing and climbs to an oak gallery that bridges the passage, where a handgunner can kneel at a keyhole loop cut through the north wall. The chest on the gallery holds his powder and shot and, because nobody below can see into it, whatever else the garrison would rather keep off the books. Under the gallery's far side the guards keep their hand-cannon in a rack on the wall, a painted pavise stood against the east wall for the next sally, and a table where they play dice by lantern light and listen for the stair.",
+  "build": [
+    "Shell: the kit's Keep shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.60 m clear, a 0.45 m madder trim course, an archway 2.60 × 3.31 m centred on every wall.",
+    "Stair: the kit's L-stair in dressed sandstone: four steps 1.50 m wide west along the south wall from x −1.90 to the corner landing (1.50 m square at 1.30 m), four steps north along the west wall to the bridge; rises 0.325 m.",
+    "Bridge and gallery: oak, 0.20 m thick at 2.60 m (top 2.90 m above ground): the bridge 1.50 m wide over the east–west walkway, the gallery filling the NW quadrant (x −5.50 … −1.80, y 1.80 … 5.50), three oak posts 0.20 m square under it, oak rails 0.90 m on its east and south edges.",
+    "Chest on the gallery: iron-bound oak 1.00 × 0.60 × 0.55 m at (−4.30, 4.40).",
+    "Gun-loop: a dressed surround 0.60 × 1.30 m on the north wall at x −2.60 from the gallery deck (3.00 m), a soot slit 0.10 × 0.90 m and a round 0.20 m hole under it.",
+    "Handgun rack (NE): two oak rails 2.40 m on the north wall at 0.59 and 1.90 m above ground, centred x 3.60; four hand-cannon at x 2.70 / 3.30 / 3.90 / 4.50, oak stocks 0.95 m standing on the floor, iron barrels 0.90 m above them.",
+    "Pavise: oak 0.08 × 0.60 × 1.30 m stood against the east wall at y 3.20, a madder painted face 0.50 × 1.10 m.",
+    "Guards' table (SE): oak 1.20 × 0.70 m, top 0.75 m at (3.60, −3.60), a steel lantern 0.16 × 0.16 × 0.22 m with a lit madder window, two dice; an oak stool 0.35 m at (3.60, −2.90)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "Gallery: 2.60 m above the floor, reached by the stair, its bridge 2.40 m over the walkway",
+    "Gallery chest and guards' table: loot anchors"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the chest on the gallery",
+      "xyz": [
+        -4.3,
+        4.4,
+        3.5
+      ]
+    },
+    {
+      "at": "the guards' table",
+      "xyz": [
+        3.6,
+        -3.6,
+        1.05
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls and stair flights."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Bridge, gallery, rails, rack, pavise, table."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Gun barrels, chest straps."
+    },
+    {
+      "name": "Steel",
+      "hex": "#8C9096",
+      "pigment": "iron",
+      "notes": "The lantern."
+    },
+    {
+      "name": "Madder",
+      "hex": "#9E2A2F",
+      "pigment": "madder",
+      "notes": "The pavise face, the lantern's light."
+    },
+    {
+      "name": "Soot",
+      "hex": "#1E1B17",
+      "pigment": "bone_black",
+      "notes": "The gun-loop."
+    }
+  ],
+  "gameplay": [
+    "The gallery is a handgunner's post over both the passage and the stair's foot.",
+    "The hand-cannon on the rack are the Late Age's first guns: a thief who takes one leaves the guards short.",
+    "Two loot anchors, one up the stair and one by the guards."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/LateMedieval/LateTurretStair.svg"
+}

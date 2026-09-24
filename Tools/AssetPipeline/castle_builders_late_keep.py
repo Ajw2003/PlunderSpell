@@ -192,3 +192,39 @@ def build_late_tapestry_solar(bm, uv):
     ek.wall_panel(bm, uv, TAPESTRY, "south", -3.55, fz + 0.8, 3.5, 2.8, depth=0.04)
     _iron_chest(bm, uv, -3.6, -4.9, fz, w=1.2, d=0.6, h=0.6)
     ek.framed_panel(bm, uv, "vellum_faint", "line", "east", 2.6, fz + 1.4, 1.4, 1.6)
+
+
+def _gun_loop(bm, uv, side, along, bottom):
+    """A keyhole gun-loop on a wall: a dressed surround, a 0.90 m slit and a 0.20 m round
+    hole under it, both soot-dark."""
+    ek.wall_panel(bm, uv, "vellum_faint", side, along, bottom, 0.6, 1.3, depth=0.06)
+    ek.wall_panel(bm, uv, SOOT, side, along, bottom + 0.3, 0.1, 0.9, depth=0.04, proud=0.05)
+    off = IN - 0.09
+    loc = {"north": (along, off), "south": (along, -off), "east": (off, along), "west": (-off, along)}[side]
+    rot = Euler((math.radians(90), 0, 0)) if side in ("north", "south") else Euler((0, math.radians(90), 0))
+    mk.paint(bm, mk.add_cylinder(bm, 0.1, 0.04, loc=(*loc, bottom + 0.25), rot=rot, segments=8), SOOT, uv)
+
+
+def build_late_turret_stair(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateTurretStair.svg"""
+    h, fz = room_shell(bm, uv, "Keep")
+    top = 2.6
+    # The kit's L-stair to a railed gallery in the NW quadrant: sandstone flights, oak bridge, deck and rail.
+    cb._stair_to_gallery(bm, uv, fz, top, WALL, TIMBER, deck=TIMBER)
+    _iron_chest(bm, uv, -4.3, 4.4, fz + top, w=1.0, d=0.6, h=0.55)
+    _gun_loop(bm, uv, "north", -2.6, fz + top + 0.1)
+    # NE: the handgun rack on the north wall, the pavise stood against the east wall.
+    for z in (0.29, 1.6):
+        cb._box(bm, uv, TIMBER, (3.6, IN - 0.05, fz + z), (2.4, 0.1, 0.1))
+    for x in (2.7, 3.3, 3.9, 4.5):
+        cb._box(bm, uv, TIMBER, (x, IN - 0.14, fz + 0.475), (0.1, 0.08, 0.95))
+        mk.paint(bm, mk.add_cylinder(bm, 0.03, 0.9, loc=(x, IN - 0.14, fz + 1.4), segments=6), IRON, uv)
+    cb._box(bm, uv, TIMBER, (IN - 0.05, 3.2, fz + 0.65), (0.08, 0.6, 1.3))
+    cb._box(bm, uv, CLOTH, (IN - 0.1, 3.2, fz + 0.7), (0.02, 0.5, 1.1))
+    # SE: the guards' table with a lantern and dice, and a stool.
+    cb._table(bm, uv, TIMBER, 3.6, -3.6, fz, 1.2, 0.7, h=0.75)
+    cb._box(bm, uv, STEEL, (3.9, -3.6, fz + 0.86), (0.16, 0.16, 0.22))
+    cb._box(bm, uv, CLOTH, (3.9, -3.69, fz + 0.86), (0.1, 0.02, 0.12))
+    for dx in (-0.2, -0.1):
+        cb._box(bm, uv, LINEN, (3.6 + dx, -3.5, fz + 0.77), (0.04, 0.04, 0.04))
+    cb._box(bm, uv, TIMBER, (3.6, -2.9, fz + 0.225), (0.35, 0.35, 0.45))
