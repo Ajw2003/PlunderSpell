@@ -325,7 +325,21 @@ EXTRA_CSS = """<style>
 .folio .facts{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-dim); line-height:1.9; }
 .folio .facts b{ color:var(--vellum); font-weight:400; }
 .folio .rail .stat{ grid-template-columns: 74px 1fr 64px; }
-.folio a.sheetlink{ font-family:var(--ff-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; text-decoration:none; }
+.spec{ border-top:1px solid var(--line-soft); padding-top:12px; }
+.spec summary{ cursor:pointer; font-family:var(--ff-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--verdigris); list-style:none; }
+.spec summary::-webkit-details-marker{ display:none; }
+.spec summary::after{ content:" ▸"; }
+.spec[open] summary::after{ content:" ▾"; }
+.spec summary:focus-visible{ outline:1px solid var(--verdigris); outline-offset:3px; }
+.spec .k{ font-family:var(--ff-mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--vellum-faint); margin:16px 0 6px; }
+.spec ul{ margin:0; padding-left:1.1em; font-size:.84rem; line-height:1.55; color:var(--vellum-dim); }
+.spec li{ margin-bottom:.3em; }
+.spec p{ font-size:.84rem; }
+.spec .mats{ display:grid; gap:6px; font-size:.82rem; color:var(--vellum-dim); }
+.spec .mat{ display:grid; grid-template-columns:18px 1fr; gap:10px; align-items:start; }
+.spec .mat i{ width:18px; height:18px; border:1px solid var(--line); margin-top:2px; }
+.spec .mat b{ color:var(--vellum); font-weight:400; }
+.spec .mat code, .spec code{ font-family:var(--ff-mono); font-size:.9em; color:var(--vellum-faint); }
 .role{ font-family:var(--ff-mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; padding:2px 8px; border:1px solid var(--line); margin-left:8px; vertical-align:middle; }
 .role.patrol{ color:var(--vellum-dim) } .role.ranged{ color:var(--verdigris) } .role.heavy{ color:var(--madder) } .role.special{ color:var(--lapis) }
 .artifact{ color:var(--orpiment); }
@@ -368,6 +382,31 @@ def stat(label, fraction, value, kind=""):
             f"<b>{e(value)}</b></div>")
 
 
+def spec_details(entry, kind):
+    """The whole handoff sheet for one entry, folded under the card, so it travels with the page wherever it is opened."""
+    def bullets(title, lines):
+        return f'<div class="k">{e(title)}</div><ul>' + "".join(f"<li>{e(line)}</li>" for line in lines) + "</ul>"
+
+    def para(title, text):
+        return f'<div class="k">{e(title)}</div><p>{e(text)}</p>'
+
+    materials = '<div class="k">Materials</div><div class="mats">' + "".join(
+        f'<div class="mat"><i style="background:{e(m["hex"])}"></i><div><b>{e(m["name"])}</b> <code>{e(m["hex"])}</code><br>{e(m.get("notes", ""))}</div></div>'
+        for m in entry["materials"]) + "</div>"
+    parts = [para("Budget", entry["budget"]), bullets("Build", entry["build"]), materials]
+    if kind == "structure":
+        parts += [bullets("Sockets", entry["sockets"]), bullets("In play", entry["gameplay"])]
+    elif kind == "enemy":
+        parts += [para("Skeleton", entry["rig"]["skeleton"]), bullets("Animations", entry["rig"]["animations"]),
+                  bullets("Breakables and damage states", entry["breakables"]), bullets("Do not", entry["dont"])]
+    else:
+        parts += [para("Grab points", entry["grab"]), para("When it breaks", entry["breaks"]),
+                  '<div class="k">LootItem asset values</div><p><code>'
+                  + e(f"Worth = {entry['worth']:g} · Bulk = {entry['bulk']:g} · Fragility = {entry['fragility']:g} · "
+                      f"IsArtifact = {'true' if entry['artifact'] else 'false'}") + "</code></p>"]
+    return f'<details class="spec"><summary>Full handoff sheet</summary>{"".join(parts)}</details>'
+
+
 def render_structure(age, structure):
     return f"""
     <article class="folio" id="{e(age['slug'])}-{e(structure['slug'])}">
@@ -379,7 +418,7 @@ def render_structure(age, structure):
         <p>{e(structure['description'])}</p>
         <div class="facts"><b>Footprint:</b> {e(structure['footprint'])} · <b>Height:</b> {structure['height_m']:.2f} m<br>
         <b>Sockets:</b> {e(' · '.join(structure['sockets']))}<br><b>In play:</b> {e(' · '.join(structure['gameplay']))}</div>
-        <a class="sheetlink" href="../art/{e(age['slug'])}.md#{e(structure['slug'])}">Full handoff sheet →</a>
+        {spec_details(structure, 'structure')}
       </div>
     </article>"""
 
@@ -399,7 +438,7 @@ def render_enemy(age, enemy):
           {stat('Height', enemy['height_m'] / 3.0, f"{enemy['height_m']:.2f} m")}
           {stat('Headroom', (tightest - enemy['height_m']) / tightest, f"{tightest - enemy['height_m']:.2f} m", 'heft')}
         </div>
-        <a class="sheetlink" href="../art/{e(age['slug'])}.md#{e(enemy['slug'])}">Full handoff sheet →</a>
+        {spec_details(enemy, 'enemy')}
       </div>
     </article>"""
 
@@ -421,7 +460,7 @@ def render_item(age, item, max_worth):
           {stat('Bulk', item['bulk'] / 25, f"{item['bulk']:g} st", 'heft')}
           {stat('Breaks', fragile, fragility_text, 'risk')}
         </div>
-        <a class="sheetlink" href="../art/{e(age['slug'])}.md#{e(item['slug'])}">Full handoff sheet →</a>
+        {spec_details(item, 'item')}
       </div>
     </article>"""
 
