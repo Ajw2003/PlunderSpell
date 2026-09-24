@@ -99,15 +99,15 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1545,
+			"count":1494,
 			"max":[
 				0.29984429478645325,
-				0.055133428424596786,
+				0.05382154509425163,
 				0.19984428584575653
 			],
 			"min":[
 				-0.29984429478645325,
-				0.002101798076182604,
+				0,
 				-0.19984428584575653
 			],
 			"type":"VEC3"
@@ -115,13 +115,13 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1545,
+			"count":1494,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1545,
+			"count":1494,
 			"type":"VEC2"
 		},
 		{
@@ -134,26 +134,26 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":18540,
+			"byteLength":17928,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":18540,
-			"byteOffset":18540,
+			"byteLength":17928,
+			"byteOffset":17928,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":12360,
-			"byteOffset":37080,
+			"byteLength":11952,
+			"byteOffset":35856,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":8136,
-			"byteOffset":49440,
+			"byteOffset":47808,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":57576,
+			"byteLength":55944,
 			"uri":"OxhideIngot.bin"
 		}
 	]

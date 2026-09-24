@@ -14,12 +14,12 @@
         "faces": 864,
         "triangles": 1356,
         "islands": 28,
-        "lowest_z": 0.0021,
-        "height": 0.055,
+        "lowest_z": 0.0,
+        "height": 0.054,
         "width": 0.6,
         "budget": 1500,
-        "bbox_m": "0.600x0.400x0.053",
-        "vs_spec": "W=0.600/0.600 D=0.400/0.400 H=0.053/0.050"
+        "bbox_m": "0.600x0.400x0.054",
+        "vs_spec": "W=0.600/0.600 D=0.400/0.400 H=0.054/0.050"
       },
       "spec": {
         "dims_WDH_m": [
@@ -80,7 +80,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/glTF/OxhideIngot.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/OxhideIngot.blend"
       },
-      "build_seconds": 3.3
+      "build_seconds": 3.1
     },
     {
       "key": "items/bronze/sealed-amphora",
@@ -171,12 +171,12 @@
       "slug": "arm-reliquary",
       "name": "ArmReliquary",
       "title": "Arm Reliquary",
-      "passed": false,
+      "passed": true,
       "stats": {
-        "vertices": 1513,
-        "faces": 1537,
-        "triangles": 2786,
-        "islands": 62,
+        "vertices": 839,
+        "faces": 865,
+        "triangles": 1462,
+        "islands": 55,
         "lowest_z": 0.0,
         "height": 0.52,
         "width": 0.16,
@@ -244,9 +244,7 @@
           "emit": null
         }
       },
-      "failures": [
-        "2786 triangles exceeds the 1500 budget"
-      ],
+      "failures": [],
       "warnings": [
         "families not in the JSON (blueprint extras): ['red_silk']"
       ],
@@ -260,7 +258,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/ArmReliquary/glTF/ArmReliquary.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.blend"
       },
-      "build_seconds": 4.8
+      "build_seconds": 2.8
     },
     {
       "key": "items/high/gilded-altarpiece",
@@ -367,9 +365,9 @@
       "title": "Parade Armour on its Stand",
       "passed": true,
       "stats": {
-        "vertices": 2119,
-        "faces": 1981,
-        "triangles": 4070,
+        "vertices": 2155,
+        "faces": 2011,
+        "triangles": 4142,
         "islands": 42,
         "lowest_z": 0.0,
         "height": 1.908,
@@ -391,7 +389,7 @@
         "white_harness": {
           "name": "White harness",
           "base": "#8E9194",
-          "rough": 0.18,
+          "rough": 0.3,
           "metal": 1.0,
           "emit": null
         },
@@ -443,7 +441,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/glTF/ParadeArmourOnItsStand.gltf",
         "blend": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/ParadeArmourOnItsStand.blend"
       },
-      "build_seconds": 3.6
+      "build_seconds": 3.1
     },
     {
       "key": "items/powder/curiosity-cabinet",
@@ -524,7 +522,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/glTF/CabinetOfCuriosities.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/CabinetOfCuriosities.blend"
       },
-      "build_seconds": 3.0
+      "build_seconds": 5.2
     }
   ]
 }

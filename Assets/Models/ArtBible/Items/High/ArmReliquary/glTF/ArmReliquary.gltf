@@ -99,7 +99,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":3395,
+			"count":1953,
 			"max":[
 				0.07999999821186066,
 				0.5199999809265137,
@@ -115,45 +115,45 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":3395,
+			"count":1953,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":3395,
+			"count":1953,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":8358,
+			"count":4386,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":40740,
+			"byteLength":23436,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":40740,
-			"byteOffset":40740,
+			"byteLength":23436,
+			"byteOffset":23436,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":27160,
-			"byteOffset":81480,
+			"byteLength":15624,
+			"byteOffset":46872,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":16716,
-			"byteOffset":108640,
+			"byteLength":8772,
+			"byteOffset":62496,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":125356,
+			"byteLength":71268,
 			"uri":"ArmReliquary.bin"
 		}
 	]

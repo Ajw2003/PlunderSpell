@@ -277,21 +277,54 @@ def oxhide_ingot(entry: Entry):
     # 0.01 m edge round, to the 0.035 m edge and the domed 0.05 m centre.
     bottom = [(0.90, 0.0), (0.978, 0.0025), (1.0, 0.011), (1.0, 0.023)]
     top = [(0.982, 0.0315), (0.935, 0.0355), (0.72, 0.0435), (0.42, 0.0485)]
-    rings = [[(0.0, 0.0, droop_max)]]
-    for s, z in bottom + top:
-        rings.append([(s * x, s * y, z + droop_max - droop(s * x, s * y)) for x, y in outline])
-    rings.append([(0.0, 0.0, 0.05 + droop_max)])
+
+    # Inner rings relax from the horned outline towards a plain oval, so the dome
+    # rises as one smooth swell instead of ridging along the diagonals to the lugs.
+    oval = (0.25, 0.155)
+
+    def round_to(s):
+        return max(0.0, min(1.0, (0.985 - s) / 0.5))
+
+    def ring_point(s, x, y):
+        a = math.atan2(y, x)
+        r_oval = 1.0 / math.hypot(math.cos(a) / oval[0], math.sin(a) / oval[1])
+        k = round_to(s)
+        r = math.hypot(x, y)
+        f = s * ((1 - k) + k * r_oval / r)
+        return f * x, f * y
+
+    def stack(lift):
+        out = [[(0.0, 0.0, lift)]]
+        for s, z in bottom + top:
+            ring = []
+            for x, y in outline:
+                px, py = ring_point(s, x, y) if (s, z) in top else (s * x, s * y)
+                ring.append((px, py, z + lift - droop(px, py)))
+            out.append(ring)
+        return out + [[(0.0, 0.0, 0.05 + lift)]]
+
+    # Rest it on its drooped lug tips: lift the slab so the lowest point is z = 0.
+    lift = -min(pt[2] for ring in stack(0.0) for pt in ring)
+    rings = stack(lift)
 
     top_table = [(1.0, 0.023)] + top + [(0.0, 0.05)]
 
     def surface(x, y):
-        angle = math.atan2(y, x)
-        s = math.hypot(x, y) / _ray_radius(outline, angle)
-        return _interp(top_table, s) + droop_max - droop(x, y)
+        """Top-face height at (x, y): bisect for the ring scale passing through it."""
+        a = math.atan2(y, x)
+        ox, oy = math.cos(a) * _ray_radius(outline, a), math.sin(a) * _ray_radius(outline, a)
+        r, lo, hi = math.hypot(x, y), 0.0, 1.0
+        for _ in range(40):
+            mid = (lo + hi) / 2.0
+            if math.hypot(*ring_point(mid, ox, oy)) < r:
+                lo = mid
+            else:
+                hi = mid
+        return _interp(top_table, lo) + lift - droop(x, y)
 
-    grit_z = droop_max + 0.0012
+    grit_z = lift + 0.0012
     paint = [
-        {"mat": "hearth_soot", "min": (-0.22, 0.12, -1), "max": (0.22, 1, droop_max + 0.013)},
+        {"mat": "hearth_soot", "min": (-0.22, 0.12, -1), "max": (0.22, 1, lift + 0.013)},
         {"mat": "casting_grit", "min": (-1, -1, -1), "max": (1, 1, grit_z)},
     ]
     for sx in (1, -1):
@@ -300,7 +333,7 @@ def oxhide_ingot(entry: Entry):
             hi = (1 if sx > 0 else -0.255, 1 if sy > 0 else -0.158, 1)
             paint.append({"mat": "rubbed_copper", "min": lo, "max": hi})
     parts = [Part(LOFT, (0, 0, 0), (1, 1, 1), mat="raw_copper",
-                  extras={"rings": rings, "paint": paint})]
+                  extras={"rings": rings, "paint": paint, "smooth": True})]
 
     # Blisters and pocks on the open-mould face: dark oxide pits, and a few raised
     # bubbles rubbed bright. Seeded so every build is identical.
@@ -311,15 +344,16 @@ def oxhide_ingot(entry: Entry):
         x, y = rng.uniform(-0.22, 0.22), rng.uniform(-0.13, 0.13)
         if math.hypot(x - stamp[0], y - stamp[1]) < 0.05:
             continue
-        d = rng.uniform(0.012, 0.03)
+        d = rng.uniform(0.016, 0.034)
         if any(math.hypot(x - px, y - py) < (d + pd) * 0.6 for px, py, pd in placed):
             continue
         placed.append((x, y, d))
     for i, (x, y, d) in enumerate(placed):
-        raised = i % 3 == 0
         z = surface(x, y)
-        h = 0.007 if raised else 0.005
-        parts.append(Part("sphere", (x, y, z - h * (0.25 if raised else 0.36)),
+        # Raised bubbles only off the crown, so they never lift the 0.05 m height.
+        raised = i % 3 == 0 and z < lift + 0.046
+        h = 0.009 if raised else 0.006
+        parts.append(Part("sphere", (x, y, z - h * (0.1 if raised else 0.2)),
                           (d, d * rng.uniform(0.7, 0.95), h),
                           mat="rubbed_copper" if raised else "copper_oxide",
                           rot=(0, 0, rng.uniform(0, 180)), segments=6, rings=3,
@@ -340,7 +374,7 @@ def oxhide_ingot(entry: Entry):
                                   "up": (0, 0, 1), "bevel": False, "smooth": True}))
 
     # Casting flash: a thin fin along the front (-Y) long side at mid-edge height.
-    flash = [(x * 1.004, y * 1.004 - 0.001, 0.017 + droop_max - droop(x, y))
+    flash = [(x * 1.004, y * 1.004 - 0.001, 0.017 + lift - droop(x, y))
              for x, y in south[1:-1]]
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="raw_copper", segments=4,
                       extras={"path": flash, "section": (0.0022, 0.0016),

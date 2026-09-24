@@ -99,7 +99,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":4025,
+			"count":4129,
 			"max":[
 				0.36709868907928467,
 				1.9075813293457031,
@@ -115,45 +115,45 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":4025,
+			"count":4129,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":4025,
+			"count":4129,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":12210,
+			"count":12426,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":48300,
+			"byteLength":49548,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":48300,
-			"byteOffset":48300,
+			"byteLength":49548,
+			"byteOffset":49548,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":32200,
-			"byteOffset":96600,
+			"byteLength":33032,
+			"byteOffset":99096,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":24420,
-			"byteOffset":128800,
+			"byteLength":24852,
+			"byteOffset":132128,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":153220,
+			"byteLength":156980,
 			"uri":"ParadeArmourOnItsStand.bin"
 		}
 	]

@@ -241,15 +241,15 @@ def arm_reliquary(entry: Entry):
     # --- Plinth: lower gilt step with seven garnets on the front, upper silver step,
     # a niello moulding line between them.
     parts.append(Part("prism", (0, 0, 0.015), (1, 1, 0.03), mat="gilt",
-                      extras={"outline": rounded_rect(W, D, 0.018, 2)}))
+                      extras={"outline": rounded_rect(W, D, 0.018, 1)}))
     parts.append(Part("prism", (0, 0, 0.0315), (1, 1, 0.003), mat="niello_soot",
-                      extras={"outline": rounded_rect(0.136, 0.116, 0.012, 2), "bevel": False}))
+                      extras={"outline": rounded_rect(0.136, 0.116, 0.012, 1), "bevel": False}))
     parts.append(Part("prism", (0, 0, 0.0465), (1, 1, 0.027), mat="silver",
-                      extras={"outline": rounded_rect(0.13, 0.11, 0.012, 2)}))
+                      extras={"outline": rounded_rect(0.13, 0.11, 0.012, 1), "bevel": False}))
     for i in range(7):
         parts.append(Part("sphere", ((i - 3) * 0.02, -D / 2.0 - 0.001, 0.015),
-                          (0.010, 0.006, 0.010), mat="garnet", segments=6, rings=4,
-                          extras={"bevel": False}))
+                          (0.010, 0.006, 0.010), mat="garnet", segments=6, rings=2,
+                          extras={"smooth": True, "bevel": False}))
 
     # --- Sleeve: oval section (depth/width 0.10/0.12), tapering 0.12 -> 0.086 wide
     # over 0.32 m, flared a little into the plinth.
@@ -261,13 +261,12 @@ def arm_reliquary(entry: Entry):
         return r0 + (r1 - r0) * (z - 0.06) / 0.32
 
     parts.append(Part("lathe", (0, 0, 0), (1.0, k, 1.0), mat="silver", segments=16,
-                      extras={"profile": [(0.063, z0), (0.061, 0.068), (r_at(0.22), 0.22),
-                                          (r1, z1)], "smooth": True, "bevel": False}))
+                      extras={"profile": [(0.063, z0), (0.061, 0.068), (r1, z1)], "smooth": True, "bevel": False}))
     # Seven chased drapery folds (4 mm proud ribs) with a niello groove beside each,
     # avoiding the window on the front (-90°) and the gilt edge bands (0°, 180°).
     for theta in (-152, -127, -53, -28, 52, 90, 128):
         rib, groove = [], []
-        for z in (0.066, 0.22, 0.372):
+        for z in (0.068, 0.372):
             p, n = _oval_point(r_at(z), k, theta, z, lift=0.0005)
             rib.append(p)
             g, _ = _oval_point(r_at(z), k, theta + 9, z, lift=0.0003)
@@ -280,7 +279,7 @@ def arm_reliquary(entry: Entry):
                                   "bevel": False}))
     # Gilt edge bands down both sides.
     for theta in (0, 180):
-        band = [_oval_point(r_at(z), k, theta, z, lift=0.0005)[0] for z in (0.064, 0.22, 0.378)]
+        band = [_oval_point(r_at(z), k, theta, z, lift=0.0005)[0] for z in (0.068, 0.378)]
         n = _oval_point(r1, k, theta, 0.3)[1]
         parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="gilt", segments=4,
                           extras={"path": band, "section": (0.0025, 0.0045), "up": n,
@@ -291,16 +290,16 @@ def arm_reliquary(entry: Entry):
     wz = 0.21
     front = -k * r_at(wz)
     parts.append(Part("torus", (0, front - 0.002, wz), (0.064, 0.104, 0.014), mat="gilt",
-                      rot=(90, 0, 0), segments=16, rings=4, minor=0.16,
+                      rot=(90, 0, 0), segments=12, rings=4, minor=0.16,
                       extras={"smooth": True, "bevel": False}))
     cr = (0.025, 0.015, 0.045)                  # crystal semi-axes
     parts.append(Part("sphere", (0, front, wz), (2 * cr[0], 2 * cr[1], 2 * cr[2]),
-                      mat="rock_crystal", segments=12, rings=7,
+                      mat="rock_crystal", segments=10, rings=5,
                       extras={"smooth": True, "bevel": False}))
     for i in range(12):
         a = 2 * math.pi * i / 12
         parts.append(Part("sphere", (0.032 * math.cos(a), front - 0.006, wz + 0.052 * math.sin(a)),
-                          (0.0075, 0.0075, 0.0075), mat="gilt", segments=5, rings=3,
+                          (0.0075, 0.0075, 0.0075), mat="gilt", segments=4, rings=2,
                           extras={"smooth": True, "bevel": False}))
 
     def on_crystal(x: float, z: float, lift: float):
@@ -317,44 +316,40 @@ def arm_reliquary(entry: Entry):
                       extras={"path": silk, "section": (0.0010, 0.0045), "up": (0, -1, 0),
                               "smooth": True, "bevel": False}))
 
-    # --- Cuff: gilt band 0.04 m × 0.11 m, five oval garnets in collets on the front
-    # half, a beaded top edge.
+    # --- Cuff: gilt band 0.04 m × 0.11 m, five oval garnets on the front half, a
+    # rolled top edge (the beading is below mesh resolution at this budget).
     kc = 0.09 / 0.11
-    parts.append(Part("lathe", (0, 0, 0), (1.0, kc, 1.0), mat="gilt", segments=16,
-                      extras={"profile": [(0.050, 0.378), (0.055, 0.383), (0.055, 0.414),
-                                          (0.050, 0.419)], "smooth": True}))
-    parts.append(Part("torus", (0, 0, 0.419), (0.106, 0.106 * kc, 0.010), mat="gilt",
-                      segments=20, rings=4, minor=0.09, extras={"bevel": False}))
+    parts.append(Part("lathe", (0, 0, 0), (1.0, kc, 1.0), mat="gilt", segments=14,
+                      extras={"profile": [(0.050, 0.378), (0.055, 0.383), (0.055, 0.412),
+                                          (0.0585, 0.4155), (0.054, 0.4195), (0.046, 0.4195)],
+                              "smooth": True, "bevel": False}))
     for theta in (-150, -120, -90, -60, -30):
-        (x, y, z), (nx, ny, _) = _oval_point(0.055, kc, theta, 0.3985, lift=0.001)
+        (x, y, z), (nx, ny, _) = _oval_point(0.055, kc, theta, 0.3975, lift=0.0)
         yaw = math.degrees(math.atan2(ny, nx)) + 90.0
-        parts.append(Part("cyl", (x, y, z), (0.015, 0.020, 0.004), mat="gilt", segments=8,
-                          rot=(90, 0, yaw), extras={"bevel": False}))
-        parts.append(Part("sphere", (x + nx * 0.002, y + ny * 0.002, z), (0.011, 0.007, 0.016),
-                          mat="garnet", segments=6, rings=4, rot=(0, 0, yaw),
+        parts.append(Part("sphere", (x, y, z), (0.011, 0.009, 0.016),
+                          mat="garnet", segments=6, rings=3, rot=(0, 0, yaw),
                           extras={"smooth": True, "bevel": False}))
 
     # --- Hand: palm facing the viewer; ring and little fingers folded on the
     # viewer's left, index and middle raised, thumb out to the viewer's right.
-    parts.append(Part("lathe", (0.004, 0, 0), (1.0, 0.07 / 0.084, 1.0), mat="silver", segments=10,
-                      extras={"profile": [(0.041, 0.416), (0.043, 0.440), (0.042, 0.458),
-                                          (0.034, 0.468), (0.0, 0.471)], "smooth": True,
+    parts.append(Part("lathe", (0.004, 0, 0), (1.0, 0.07 / 0.084, 1.0), mat="silver", segments=8,
+                      extras={"profile": [(0.041, 0.416), (0.044, 0.438), (0.046, 0.461),
+                                          (0.040, 0.469), (0.0, 0.471)], "smooth": True,
                               "bevel": False}))
     for x in (-0.028, -0.010):                 # folded ring + little fingers (curled knuckles)
-        curl = [(x, 0.006, 0.462), (x, -0.012, 0.470), (x, -0.030, 0.464), (x, -0.034, 0.448)]
+        curl = [(x, 0.006, 0.466), (x, -0.024, 0.473), (x, -0.036, 0.452)]
         parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=6,
                           extras={"path": curl, "section": (0.0085, 0.0085), "up": (1, 0, 0),
                                   "smooth": True, "bevel": False}))
     for x, ring in ((0.004, False), (0.024, True)):  # middle, index (gilt ring on index)
-        prof = [(0.0092, 0.455), (0.0095, 0.474), (0.0098, 0.477), (0.0098, 0.482),
-                (0.0095, 0.485), (0.0090, 0.496), (0.0090, 0.498), (0.0086, 0.508),
-                (0.0062, 0.516), (0.0, H)]
+        prof = [(0.0092, 0.455), (0.0098, 0.477), (0.0098, 0.482), (0.0090, 0.496),
+                (0.0090, 0.498), (0.0084, 0.509), (0.0055, 0.516), (0.0, H)]
         # Knuckle lines (niello) at the two bulges; on the index the lower one is the
         # gilt ring instead.
         paint = [{"mat": "gilt" if ring else "niello_soot",
                   "min": (-1, -1, 0.4765), "max": (1, 1, 0.4825)},
                  {"mat": "niello_soot", "min": (-1, -1, 0.4955), "max": (1, 1, 0.4985)}]
-        parts.append(Part("lathe", (x, -0.004, 0), (1.0, 0.9, 1.0), mat="silver", segments=8,
+        parts.append(Part("lathe", (x, -0.004, 0), (1.0, 0.9, 1.0), mat="silver", segments=6,
                           extras={"profile": prof, "paint": paint, "smooth": True,
                                   "bevel": False}))
     thumb = [(0.034, -0.006, 0.428), (0.050, -0.010, 0.444), (0.058, -0.012, 0.462),
@@ -362,8 +357,6 @@ def arm_reliquary(entry: Entry):
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=6,
                       extras={"path": thumb, "section": (0.0095, 0.0080), "up": (0, 1, 0),
                               "smooth": True, "bevel": False}))
-    parts.append(Part("sphere", (0.057, -0.012, 0.476), (0.016, 0.014, 0.014), mat="silver",
-                      segments=6, rings=4, extras={"smooth": True, "bevel": False}))
 
     return blueprint(
         entry, parts,

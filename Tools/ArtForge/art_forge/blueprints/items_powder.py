@@ -214,6 +214,9 @@ def curiosity_cabinet(entry: Entry):
             # Worn edges lighter, per the ebony note.
             "ebony_veneer": {"wear_to": "#3A3430", "wear_amount": 0.18, "grain": 0.12},
             "black_walnut": {"grain": 0.30},
+            # Aged bone / the panels' hazy sky: blotched so it reads as the concept's
+            # warm grey-khaki sky rather than clean white.
+            "drawer_bone_inlay": {"grain": 0.45},
             # Gilt rubbed back to bronze on high points (JSON note).
             "gilt_bronze": {"wear_to": "#8A6A3E", "wear_amount": 0.25, "grain": 0.12},
             # "Copper" in the name makes spec.py call it metal, but the surface is

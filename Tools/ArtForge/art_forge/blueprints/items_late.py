@@ -71,7 +71,7 @@ def parade_armour(entry: Entry):
     parts.append(Part("box", (0, 0, post_top - 0.02), (0.40, 0.04, 0.03), mat="stand_iron"))
     # Padded leather dummy torso inside the plates (seen only at the gaps) and
     # the leather neck under the bevor.
-    parts.append(Part("box", (0, 0.0, 1.36), (0.36, 0.20, 0.30), mat="leathers",
+    parts.append(Part("box", (0, 0.0, 1.36), (0.28, 0.14, 0.24), mat="leathers",
                       extras={"bevel": False}))
     parts.append(Part("cyl", (0, 0.0, 1.555), (0.13, 0.12, 0.10), mat="leathers",
                       segments=12, extras={"bevel": False}))
@@ -92,7 +92,7 @@ def parade_armour(entry: Entry):
     for x in (-0.075, 0.0, 0.075):
         path = [front(x * (0.85 + 0.15 * (z - 1.24) / 0.26), z)
                 for z in (1.235, 1.29, 1.35, 1.41, 1.47, 1.505)]
-        parts.append(_tube(path, (0.0035, 0.0125), gilt, segments=4, up=(0, -1, 0)))
+        parts.append(_tube(path, (0.003, 0.0145), gilt, segments=6, up=(0, -1, 0)))
     for x0, x1 in ((-0.030, -0.045), (-0.018, -0.028), (0.030, 0.045), (0.018, 0.028),
                    (-0.110, -0.135), (0.110, 0.135)):
         path = [front(x0 + (x1 - x0) * t, 1.235 + 0.23 * t, 0.001) for t in (0, 0.35, 0.7, 1.0)]
@@ -146,16 +146,16 @@ def parade_armour(entry: Entry):
                           extras={"bevel": False}))
 
     # --- Arms: rerebrace, fan couter and vambrace, gilt cuff band, to 0.95 m.
-    arm = [(0.044, 0.950), (0.045, 0.972), (0.039, 0.976), (0.037, 1.06), (0.040, 1.17),
-           (0.036, 1.19), (0.036, 1.25), (0.042, 1.27), (0.044, 1.44), (0.030, 1.46)]
-    ax = 0.252
+    arm = [(0.052, 0.950), (0.053, 0.972), (0.047, 0.976), (0.044, 1.06), (0.048, 1.17),
+           (0.042, 1.19), (0.042, 1.25), (0.050, 1.27), (0.052, 1.44), (0.036, 1.46)]
+    ax = 0.258
     parts.append(_lathe(arm, steel, loc=(ax, 0.0, 0.0), segments=12, mirror=True,
                         paint=[_band(gilt, 0.950, 0.972)]))
-    parts.append(Part("sphere", (ax, 0.004, 1.222), (0.098, 0.096, 0.090), mat=steel,
+    parts.append(Part("sphere", (ax, 0.004, 1.222), (0.112, 0.108, 0.100), mat=steel,
                       segments=12, rings=6, mirror=True, extras={"bevel": False}))
     fan = [(0.0, -0.045), (0.030, -0.020), (0.045, 0.020), (0.030, 0.042), (0.0, 0.030),
            (-0.022, 0.040), (-0.034, 0.018), (-0.020, -0.020)]
-    parts.append(Part("prism", (ax + 0.046, 0.004, 1.222), (1, 1, 0.008), mat=steel,
+    parts.append(Part("prism", (ax + 0.054, 0.004, 1.222), (1.15, 1.15, 0.008), mat=steel,
                       rot=(90, 0, 90), mirror=True, extras={"outline": fan, "bevel": False}))
 
     # --- Sallet: rounded skull, gilt brow band, dark sight-slit, keel, long tail;
@@ -187,7 +187,9 @@ def parade_armour(entry: Entry):
         family_overrides={
             # Gilt rubbed back to bright steel where hands have admired it.
             gilt: {"wear_to": "#8E9194", "wear_amount": 0.22, "grain": 0.12},
-            steel: {"grain": 0.12},
+            # The JSON's 0.18 (high points) to 0.4 (flutes), averaged: a single
+            # 0.18 value mirrors the black studio and renders the plate near-black.
+            steel: {"grain": 0.12, "rough": 0.30},
             "oak_stand": {"grain": 0.3},
         },
         notes=["Etched foliage in the gilt bands and the flute dust are texture/normal "
