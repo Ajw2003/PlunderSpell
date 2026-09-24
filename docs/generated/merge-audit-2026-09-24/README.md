@@ -23,9 +23,9 @@ unity command eval_file --project-path "C:\Users\Ayden's mini\Desktop\GameDev\Pl
 | `audit_enemy_prefab_pairs.cs` | Hand-made AllEnemies prefabs vs era-forged gameplay prefabs, side by side |
 | `audit_render.cs` | The four contact sheets below, plus a `.legend.md` per sheet naming every tile |
 
-## Enemies — all 16 modelled, 10 in a roster, none animated
+## Enemies — all 16 modelled and in a roster, none animated
 
-Green = spawned by a raid roster, amber = modelled but in no roster. Every one is a static
+Re-rendered after the follow-ups (all green). Green = spawned by a raid roster, amber = modelled but in no roster. Every one is a static
 bind pose: no Animator on any of them. Tile names: [`enemies.legend.md`](enemies.legend.md).
 
 ![Enemies](enemies.png)
@@ -36,12 +36,20 @@ Tile names: [`loot-items.legend.md`](loot-items.legend.md).
 
 ![Loot items](loot-items.png)
 
-## Late Medieval rooms — 10 prefabbed, 19 model-only
+## Late Medieval rooms — all 29 prefabbed and registered
 
-Green = prefab in the Late registry (era branch), amber = castle-bench FBX with no prefab yet.
+Re-rendered after the follow-ups (all green; the original run had 19 amber). Green = prefab in the Late registry, amber = FBX with no prefab.
 The four flat slabs are the door plugs. Tile names: [`rooms-late-medieval.legend.md`](rooms-late-medieval.legend.md).
 
 ![Late Medieval rooms](rooms-late-medieval.png)
+
+## Loot as held — upright, gripped where the art bible says
+
+After the follow-ups, every loot item as it sits in the hand (`audit_grip_render.cs`), with a red
+dot at the hand socket. A dot inside a model doesn't show. Tile names and grip source:
+[`loot-held.legend.md`](loot-held.legend.md).
+
+![Loot as held](loot-held.png)
 
 ## Bronze Age rooms — all 29 prefabbed and registered
 

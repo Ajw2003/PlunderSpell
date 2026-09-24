@@ -1,6 +1,8 @@
 # Staging follow-ups — 2026-09-24
 
-Status: **approved by the user 2026-09-24, in progress on `claude/staging-2026-09-24`.**
+Status: **done on `claude/staging-2026-09-24`, 2026-09-24; awaiting the user's retest.** Results
+at the end.
+
 Follows [`merge-2026-09-24-art-branches.md`](merge-2026-09-24-art-branches.md). Enemy animation
 is deliberately **out of scope** (the user's call: a separate job, next).
 
@@ -76,3 +78,43 @@ era served by its own entries; `audit_inventory.cs` shows all 16 enemies rostere
 without a prefab; `audit_render.cs` re-rendered (the sheets update). EditMode and PlayMode suites
 pass (baseline: 26/26 and 183/183; inventory tests removed will lower the counts, so say by how
 much). Record results here and in `docs/Today.md`, then commit and push.
+
+## Results (2026-09-24)
+
+Done by the planning session directly, at the user's request (two executor agents had been
+launched by mistake for one request and were stopped before changing anything).
+
+| Commit | What |
+|---|---|
+| `61cd41b` | A1-A3: forged roster entries carry their era; the warning names the real menu item; the full Late Medieval set (25 rooms and wall pieces, 4 door plugs, stand-in roles incl. Effigy Crypt as `CryptChamberFinal`) |
+| `8d8d455` | A4: Forge Era Content re-run: the 6 missing enemies posted, 19 Late prefabs built, era weapons in the loot tables |
+| `acb96fb` | B: `LootPickup.AttachToSocket` keeps the spawn rotation (the Z-up correction) and puts the `GripPoint`, or the mesh centre, on the socket; the forge places `GripPoint` per item from `GripFractions`; `LootGripTests` |
+| `67a326a` | B: loot re-forged with grip points; `loot-held.png` renders every item as held |
+| `d579b58` | The 6 new enemy prefabs registered as network prefabs (PurrNet did it on refresh) |
+| `c8d7752` | `HistoricalEra` registered with PurrNet in its own assembly (`Inventory/NetworkTypes.cs`) |
+| `a22f982` | C: old inventory removed (also `ItemDefinition` and `ItemStack`, which only it used) |
+
+Found along the way:
+
+- **Items were also held tipped over.** `ParentToHandSocket` zeroed the rotation, which dropped
+  the ArtForge models' 270° X import correction. Reproduced in the Editor: the Arm Reliquary,
+  0.52 m tall as placed, was 0.14 m tall and 0.52 m long in the hand. Fixed with the grip change.
+- **Removing `PlayerInventory` broke era replication.** It was the only network class in
+  `RogueAi.Inventory`, and PurrNet generates a type's serializer only in the assembly that declares
+  it (`Assets/PurrNet/Codegen/GenerateSerializersProcessor.cs:95`) and only if that assembly sends
+  it. Without it, `RaidSceneCastingTests` failed with "Failed to write value of type
+  HistoricalEra". The attribute on `RaidDirector` did not help (wrong assembly). Verified both
+  ways: the 2 tests pass with `PlayerInventory` restored, fail without it, and pass without it
+  once `NetworkTypes.cs` registers the type.
+- A5 stands: High Medieval raids use the scene default rooms, and Age of Powder has no room art.
+
+Verified in the live Editor on the final code:
+
+- `audit_era_filter.cs`: every era's 5 zones served by its own enemies, 0 fallback warnings (was 15).
+- `audit_inventory.cs`: all 16 enemies rostered; Late Medieval 29 models, 29 prefabs.
+- Forge report: Bronze and Late 25 era rooms + 4 door plugs each; 4 enemy types per era.
+- **EditMode 24/24** (26 before, minus the 4 `InventorySystemTests`, plus the 2 `LootGripTests`).
+  **PlayMode 183/183.** Raw results: `docs/generated/merge-audit-2026-09-24/followups-*-tests.json`.
+
+Not verified by a person yet: how the grips feel in play. Where the prose names a handle but not
+which side it is on (ewer, amphora and similar), the grip sits at the handle's height on the centre line.

@@ -3,7 +3,7 @@
 // holds, into docs/generated/merge-audit-2026-09-24/. Read-only on the project: every object is
 // instantiated into a PreviewRenderUtility scene and destroyed afterwards.
 const int Tile = 320;
-string outDir = @"C:\Users\Ayden's mini\Desktop\GameDev\PlunderSpell\docs\generated\merge-audit-2026-09-24\";
+string outDir = @"C:\Users\Ayden's mini\Desktop\GameDev\PlunderSpell-trialmerge\docs\generated\merge-audit-2026-09-24\";
 var log = new System.Text.StringBuilder();
 
 System.Func<string, string[], System.Collections.Generic.List<string>> find = (filter, folders) =>

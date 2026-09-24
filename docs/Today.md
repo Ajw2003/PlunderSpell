@@ -1,5 +1,17 @@
 # Today
 
+**2026-09-24, evening — staging follow-ups done: every enemy and room wired in, grips fixed, old
+inventory gone.** On `claude/staging-2026-09-24`, at the user's request after their first test. All 16
+enemies are in their era's roster, with no fallback warnings, and all 29 Late Medieval pieces are
+registered. Carried items were held by their base *and* tipped on their side; they're now upright
+and held at a grip point placed from the art bible. The Tab grid inventory is removed. That removal
+exposed a hidden dependency: PurrNet had only been generating `HistoricalEra`'s serializer because
+of the unused `PlayerInventory`, so the type is now registered explicitly. EditMode 24/24, PlayMode
+183/183. Next: the user retests staging; enemy animation is the next job. Details:
+[`docs/plans/staging-followups-2026-09-24.md`](plans/staging-followups-2026-09-24.md).
+
+---
+
 **2026-09-24, evening — the three art branches are merged to staging.** Merged era, then dreamy,
 then castle-bench into `claude/staging-2026-09-24` rather than `main`, so the user can playtest
 before `main` changes. In the live Editor it compiles, and EditMode 26/26 and PlayMode 183/183
