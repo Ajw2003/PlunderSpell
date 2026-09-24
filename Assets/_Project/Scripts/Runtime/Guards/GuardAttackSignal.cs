@@ -10,15 +10,10 @@ namespace RogueAi.Guards
         Projectile = 1,
     }
 
-    // doc-ref docs/systems/net.md ("Guard attacks reach every peer")
+    // doc-ref 51f2 docs/systems/net.md
     /// <summary>
-    /// One replicated integer that says "this guard attacked, this many times, and the last one was
-    /// this kind". Packed into a single value so a client can never see a new count with a stale
-    /// kind: two SyncVars may arrive in either order (the same race <c>RaidDirector</c> handles for
-    /// its phase and seed).
-    ///
-    /// Layout: the attack count in the high bits, the kind in the low <see cref="KindBits"/> bits.
-    /// Pure, so the packing is asserted in EditMode tests without a network.
+    /// One replicated integer: the attack count in the high bits, the kind of the latest attack in
+    /// the low <see cref="KindBits"/> bits. Pure, so the packing is tested without a network.
     /// </summary>
     public static class GuardAttackSignal
     {

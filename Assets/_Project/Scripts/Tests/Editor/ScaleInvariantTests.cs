@@ -237,12 +237,14 @@ namespace RogueAi.Tests.Editor
         [Test]
         public void Test_NoArtBibleEnemyIsTallerThanTheRoomsItIsPostedTo()
         {
+            // First, so the test is ignored (not failed) until the prefabs have been forged.
+            List<(ArtBibleEnemySpec Spec, GameObject Prefab)> forged = ForgedArtBibleEnemies();
             var registry = AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>(k_RegistryPath);
             Assert.IsNotNull(registry, $"No room registry at {k_RegistryPath}.");
             Dictionary<CastleZone, float> shortestByZone = ShortestClearHeightPerZone(registry);
             var failures = new StringBuilder();
 
-            foreach ((ArtBibleEnemySpec spec, GameObject prefab) in ForgedArtBibleEnemies())
+            foreach ((ArtBibleEnemySpec spec, GameObject prefab) in forged)
             {
                 float height = MeasuredHeightOf(prefab);
                 foreach (CastleZone zone in spec.Zones)

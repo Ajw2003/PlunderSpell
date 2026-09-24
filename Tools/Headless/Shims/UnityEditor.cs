@@ -77,6 +77,9 @@ namespace UnityEditor
         public bool boolValue { get; set; }
         public string stringValue { get; set; }
         public UnityEngine.Object objectReferenceValue { get; set; }
+        /// <summary>No serialized enum metadata headlessly: an empty name list and index 0.</summary>
+        public string[] enumNames { get; set; } = Array.Empty<string>();
+        public int enumValueIndex { get; set; }
     }
 
     public static class EditorGUILayout

@@ -156,6 +156,9 @@ namespace PurrNet
 
     public abstract class NetworkBehaviour : NetworkIdentity { }
 
+    /// <summary>PurrNet's per-connection player spawner. Only a scene test looks it up, by type.</summary>
+    public class PlayerSpawner : MonoBehaviour { }
+
     /// <summary>PurrNet's transform sync. Only who controls it is modelled; nothing is sent.</summary>
     public class NetworkTransform : NetworkIdentity
     {
