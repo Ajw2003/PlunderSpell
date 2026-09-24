@@ -24,18 +24,27 @@ def main():
     # The original sheet (props + the High Medieval castle) keeps exactly its
     # old contents; each other Age gets a sheet of its own, so one image
     # shows one Age's castle side by side (docs/plans/era-castle-rooms.md).
+    # Door plugs are single boxes the size of an archway: nothing to see, and no
+    # preview is rendered for them, so they stay off every sheet.
     era_keys = {spec["key"] for spec in asset_specs.ERA_CASTLE_SPECS}
-    write_sheet([s["key"] for s in asset_specs.ALL_SPECS if s["key"] not in era_keys], "_contact_sheet.png")
+    write_sheet([s["key"] for s in asset_specs.ALL_SPECS if s["key"] not in era_keys and "DoorPlug" not in s["key"]],
+                "_contact_sheet.png")
     for era in dict.fromkeys(s["era"] for s in asset_specs.ERA_CASTLE_SPECS):
-        keys = [s["key"] for s in asset_specs.ERA_CASTLE_SPECS if s["era"] == era]
-        write_sheet(keys, f"_contact_sheet_{era}.png")
+        keys = [s["key"] for s in asset_specs.ERA_CASTLE_SPECS if s["era"] == era and s["kind"] != "plug"]
+        write_sheet(keys, f"_contact_sheet_{era}.png", required=False)
 
 
-def write_sheet(keys, filename):
+def write_sheet(keys, filename, required=True):
+    """required=False (an Age still being built) skips the sheet, saying which renders
+    it is waiting for, instead of stopping the run."""
     paths = [os.path.join(PREVIEWS_DIR, f"{k}.png") for k in keys]
     missing = [p for p in paths if not os.path.isfile(p)]
-    if missing:
+    if missing and required:
         raise SystemExit(f"missing renders, run render_previews.py first: {missing}")
+    if missing:
+        print(f"skipped {filename}: {len(missing)} of {len(paths)} renders missing "
+              f"({', '.join(os.path.basename(p)[:-4] for p in missing[:3])}{', ...' if len(missing) > 3 else ''})")
+        return
 
     cols = 4
     rows = math.ceil(len(paths) / cols)
