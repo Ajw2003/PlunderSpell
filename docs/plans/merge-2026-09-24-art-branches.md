@@ -1,6 +1,30 @@
 # Merge plan — the three art branches of 2026-09-24
 
-Status: **proposed, awaiting approval.** Nothing below has been merged into `main`.
+Status: **merged to `claude/staging-2026-09-24` for testing; not in `main`.** Approved by the user
+on 2026-09-24, with two changes: merge into a staging branch first so `main` stays in a working
+state until it has been playtested, and keep the AllEnemies prefabs.
+
+## Staging result (2026-09-24)
+
+`claude/staging-2026-09-24`, branched from `origin/main` (`30bbd94`):
+
+| Commit | What |
+|---|---|
+| `817184c` | merge `era-content-integration` (no conflicts) |
+| `3c84958` | merge `dreamy-curie-jnrkbu` (`RaidDirector.cs` resolved as in the trial; `ProjectState.md` entries rewritten as one, since each contradicted the other; `Today.md` kept every entry) |
+| `9612057` | merge `castle-bench-rooms-mwucab` (only `ProjectState.md`'s M3 row conflicted; both halves kept) |
+| `d951c12` | `.meta` files for castle-bench's 19 FBX, which that branch never committed |
+| `fecf85b` | UI verification screenshots the PlayMode run re-captured |
+
+Before the merge, `dreamy-curie-jnrkbu` got `90b02bf`, which tracks the `.meta` files for
+`ArtBibleJson.cs` and `EnemyBodyProfile.cs`.
+
+Checked in the live Editor on the staging branch: no compile errors
+(`compilationFailed: false`, 0 console errors), both branches' code present (`ApplyEraContent`,
+`RaidContext`, `EnemyRoster.Entry.Era`). **EditMode 26/26 passed. PlayMode 183/183 passed.** The raw
+results are in `docs/generated/merge-audit-2026-09-24/staging-*-tests.json`. None of the follow-up
+work below has been done, so testing will show the 15 roster fallback warnings, the 6 unrostered
+enemies and the 19 unprefabbed Late rooms.
 
 Three branches had commits on 2026-09-24. This plan says what each one holds, what overlaps,
 the order to merge them in, and what still has to happen once they are in. Every claim marked
@@ -69,9 +93,8 @@ Nothing else overlaps. Castle-bench shares no files with era or dreamy apart fro
 | 5 | Era's own unfinished items: re-run the forge change that keeps each era's weapons in its loot table, and run the EditMode tests | Its commit `463949d` says neither was done |
 | 6 | Animation: nothing is implemented | No enemy prefab has an Animator, and no AnimatorController exists under `Assets/_Project` or `Assets/Models` **(Editor)**. The 16 clips Unity sees are each `.blend`'s whole 10.38 s Blender timeline, imported as one take named `Scene`, not game clips. The approved plan is in `docs/generated/enemy-animation-plan/` |
 
-## Decisions needed from you
+## Decisions
 
-- **The AllEnemies prefabs:** keep them as the art/scale reference, or delete them now that the
-  forged gameplay prefabs exist?
-- **Do this merge now,** in the order above? The trial branch shows the result; I'd redo the same
-  steps on `main` rather than merge the trial branch, which exists only for verification.
+- **The AllEnemies prefabs:** kept, as the art/scale reference (user, 2026-09-24).
+- **Where to merge:** `claude/staging-2026-09-24` first; `main` only after the user has tested
+  staging (user, 2026-09-24).

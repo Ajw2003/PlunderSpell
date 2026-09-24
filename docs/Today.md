@@ -1,5 +1,13 @@
 # Today
 
+**2026-09-24, evening — the three art branches are merged to staging.** Merged era, then dreamy,
+then castle-bench into `claude/staging-2026-09-24` rather than `main`, so the user can playtest
+before `main` changes. In the live Editor it compiles, and EditMode 26/26 and PlayMode 183/183
+pass. Next: the user tests staging. The follow-ups (roster era tags, the 6 new enemies, 19 Late
+rooms) are listed in the [plan](plans/merge-2026-09-24-art-branches.md) and not started.
+
+---
+
 **2026-09-24, evening — audit of the day's three art branches, and a merge plan.** Checked
 `dreamy-curie-jnrkbu`, `era-content-integration` and `castle-bench-rooms-mwucab` in a live Editor
 against a trial merge of all three (`claude/trial-merge-2026-09-24`); it compiles. All 16 enemies
