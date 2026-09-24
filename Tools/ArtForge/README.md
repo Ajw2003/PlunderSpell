@@ -241,6 +241,20 @@ These cost time while building the two samples, and they will cost you too.
   `assemble.save_blend` rewrites them relative to the `.blend` as the last step,
   after FBX/glTF export, so the file opens from any checkout. `render.py` opens the
   `.blend` itself (not an append) so those relative paths resolve.
+- **Whole-mesh normal recalculation can turn a thin, flattened ring inside out.**
+  The Venetian mirror's cushion frame (a closed-ring `tube`, 14 sides, 0.018 m
+  half-depth) failed with "1 shells have inverted normals" after
+  `recalc_face_normals` in `assemble.build_object`. 12 sides at 0.020 m fixed it.
+  If a thin ring fails this way, thicken it or drop sides before touching the pass.
+- **Keyword PBR guesses can be wrong.** `spec.py` reads "copper" as metallic, but the
+  cabinet's *painted* copper panel is paint. Override the family (`metal: 0`) in the
+  blueprint when the name describes a substrate, not a surface.
+- **Silver and polished steel still render warm or dark on the review sheets.** The
+  warm reflection environment that fixed gilt makes silver read bronze-brown and a
+  mirror read taupe, even though the baked base colours hold the JSON hex. Workers
+  raised roughness slightly on a few families (ewer silver 0.3, armour steel 0.3,
+  badge gold 0.32) to lighten them. A neutral-reflection pass in `render.py` would
+  be the real fix.
 - **The glTF exporter warns** "More than one shader node tex image used for a
   texture". That comes from EnemyForge's shipping material (ORM feeds both roughness
   and metallic). It's harmless, and it happens on the EnemyForge enemies too.
@@ -253,4 +267,12 @@ These cost time while building the two samples, and they will cost you too.
 - No painted-panel atlas. The altarpiece's figures are shaped relief in flat family
   colours. Faces have no features.
 - No LOD1/LOD2 (50 % / 20 %), even though the brief asks for them.
-- The rigged enemy path (`assemble.build_rigged`) has not been run.
+- The rigged enemy path (`assemble.build_rigged`) has not been run. Structures and
+  enemies have no blueprints: only the 20 items are built.
+- Two part kinds live in blueprint modules rather than `kit.py`, because the item
+  workers were told not to edit the shared framework: `bronze_loft` (a lathe whose
+  rings need not be circles; `items_bronze.py`) and `powder_whorl` (a sweep whose
+  section grows along its path; `items_powder.py`). Both register themselves into
+  `kit._NEW_BUILDERS` on import. They belong in `kit.py`.
+- No damage or alternate-state meshes (crumpled mask, dented tripod, open cabinet,
+  lid-off tureen, ewer dent blend shapes), even where the JSON describes them.

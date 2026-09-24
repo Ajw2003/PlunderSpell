@@ -1,5 +1,21 @@
 # Today
 
+**2026-09-24, later — the art bible's 20 plunder items are real models.** New tool
+`Tools/ArtForge/`, built on EnemyForge's parts, bake, rig and export code, turns
+`docs/art/data/*.json` into game models. All 20 items (5 per Age) are built:
+`python3 Tools/ArtForge/build.py items` prints `20 built, 0 crashed` / `All models passed
+validation.` on two consecutive runs. Output is FBX + glTF + `.blend` + baked textures in
+`Assets/Models/ArtBible/Items/<Age>/<Name>/`, listed in `artforge_manifest.json`. Each
+item has a review sheet in `docs/art/models/<age>/<slug>.png`, with the concept sheet
+beside four renders of the model; every sheet was checked by eye against its concept.
+Structures and enemies were deliberately not built (the user has another agent on
+structures). Known gaps: no normal maps, LODs or damage-state meshes; silver and steel
+render too warm on the review sheets. The full list is in `Tools/ArtForge/README.md`
+under "Not done yet". Also: `__pycache__/` and `*.pyc` are now gitignored and
+untracked, because EnemyForge's tracked caches dirtied the tree on every import.
+
+---
+
 **2026-09-24 — the art bible: structures, enemies and plunder for all four Ages.**
 Built from the pitch mood board, per the user's request. Each Age has 3 structures, 4 enemies and
 5 plunder items, and every one has a concept sheet (SVG + 2400×1600 PNG) and a handoff spec
