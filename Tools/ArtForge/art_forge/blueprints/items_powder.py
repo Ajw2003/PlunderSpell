@@ -588,7 +588,8 @@ def silver_tureen(entry: Entry):
                           # bright polish on the rolled rim
                           {"mat": "bright_polish", "min": (-1, -1, 0.201), "max": (1, 1, 0.215)},
                           # dried soup on the floor inside
-                          {"mat": "soup_residue", "min": (-0.13, -0.13, 0.069), "max": (0.13, 0.13, 0.080)},
+                          # (a tight z window: the outer belly passes through the same box lower down)
+                          {"mat": "soup_residue", "min": (-0.13, -0.13, 0.069), "max": (0.13, 0.13, 0.0735)},
                       ]}))
 
     # Skirt: a shaped oval foot-ring under the bowl, the paws beneath it.

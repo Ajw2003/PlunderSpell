@@ -764,9 +764,7 @@ def gilded_nef(entry: Entry):
     # concept's side view), rather than the bowl's rounded end.
     parts.append(Part("prism", (0, 0, 0), (1, 1, 0.128), mat=gilt, rot=(90, 0, 0),
                       extras={"outline": [(sx0, 0.215), (sx0 + 0.030, 0.196), (sx1 + 0.020, 0.200),
-                                          (sx1 + 0.020, deck), (sx0, deck)],
-                              "paint": [{"mat": "niello", "min": (-1, 0.252, -1),
-                                         "max": (1, 0.271, 1)}]}))
+                                          (sx1 + 0.020, deck), (sx0, deck)]}))
     parts.append(Part("box", ((sx0 + sx1) / 2, 0, deck + 0.022), (0.100, 0.140, 0.052),
                       mat=silver, extras={"paint": [{"mat": "tarnish", "min": (-1, -1, -1),
                                                      "max": (1, 1, -0.49)}]}))
