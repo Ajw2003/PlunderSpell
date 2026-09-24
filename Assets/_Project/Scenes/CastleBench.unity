@@ -243,7 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.GuardSpawner
   _roster: {fileID: 11400000, guid: 13b9eb649aa2acf4bb2be962b0d7622e, type: 2}
   _guardPrefab: {fileID: 0}
-  _densityScale: 1
+  _densityScale: 0.5
   _container: {fileID: 0}
 --- !u!4 &122750406
 Transform:
@@ -768,6 +768,7 @@ MonoBehaviour:
   _invertedPathToNearestParent: 
   _directChildren: []
   RaidDurationSeconds: 300
+  _minimumRaidSecondsBeforeLeaving: 10
 --- !u!65 &620742465
 BoxCollider:
   m_ObjectHideFlags: 0
