@@ -13,23 +13,57 @@ MonoBehaviour:
   m_Name: EnemyRoster_LateMedieval
   m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.EnemyRoster
   Entries:
+  - EnemyId: GothicManAtArms
+    Zone: 2
+    Era: 2
+    AnyEra: 0
+    Weight: 6
+    Prefab: {fileID: 3015542532123342474, guid: b664b09133c64fa458fa5c30a325d416, type: 3}
+  - EnemyId: GothicManAtArms
+    Zone: 3
+    Era: 2
+    AnyEra: 0
+    Weight: 6
+    Prefab: {fileID: 3015542532123342474, guid: b664b09133c64fa458fa5c30a325d416, type: 3}
+  - EnemyId: Handgunner
+    Zone: 0
+    Era: 2
+    AnyEra: 0
+    Weight: 8
+    Prefab: {fileID: 1891920095005416341, guid: bbb6f8a3899e6da4a97079f5e6b66b25, type: 3}
+  - EnemyId: Handgunner
+    Zone: 2
+    Era: 2
+    AnyEra: 0
+    Weight: 8
+    Prefab: {fileID: 1891920095005416341, guid: bbb6f8a3899e6da4a97079f5e6b66b25, type: 3}
+  - EnemyId: Pavisier
+    Zone: 0
+    Era: 2
+    AnyEra: 0
+    Weight: 5
+    Prefab: {fileID: 1301011979685859898, guid: ebbe2acfb9458094f979775d21ad6bc1, type: 3}
+  - EnemyId: Pavisier
+    Zone: 1
+    Era: 2
+    AnyEra: 0
+    Weight: 5
+    Prefab: {fileID: 1301011979685859898, guid: ebbe2acfb9458094f979775d21ad6bc1, type: 3}
   - EnemyId: SalletHalberdier
     Zone: 0
+    Era: 2
+    AnyEra: 0
     Weight: 12
     Prefab: {fileID: 1023950195078477989, guid: 895ee312b4ea6714c8a4a1dc6b806c94, type: 3}
   - EnemyId: SalletHalberdier
     Zone: 1
+    Era: 2
+    AnyEra: 0
     Weight: 12
     Prefab: {fileID: 1023950195078477989, guid: 895ee312b4ea6714c8a4a1dc6b806c94, type: 3}
-  - EnemyId: SalletHalberdier
-    Zone: 2
-    Weight: 6
-    Prefab: {fileID: 1023950195078477989, guid: 895ee312b4ea6714c8a4a1dc6b806c94, type: 3}
-  - EnemyId: SalletHalberdier
-    Zone: 3
-    Weight: 6
-    Prefab: {fileID: 1023950195078477989, guid: 895ee312b4ea6714c8a4a1dc6b806c94, type: 3}
-  - EnemyId: SalletHalberdier
+  - EnemyId: GothicManAtArms
     Zone: 4
+    Era: 2
+    AnyEra: 0
     Weight: 6
-    Prefab: {fileID: 1023950195078477989, guid: 895ee312b4ea6714c8a4a1dc6b806c94, type: 3}
+    Prefab: {fileID: 3015542532123342474, guid: b664b09133c64fa458fa5c30a325d416, type: 3}

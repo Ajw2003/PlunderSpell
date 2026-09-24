@@ -15,37 +15,55 @@ MonoBehaviour:
   Entries:
   - EnemyId: AlauntWarHound
     Zone: 1
+    Era: 1
+    AnyEra: 0
     Weight: 6
     Prefab: {fileID: 6540720969360085854, guid: 488cc6b2883331e4fb491e9bea9713b3, type: 3}
   - EnemyId: AlauntWarHound
     Zone: 2
+    Era: 1
+    AnyEra: 0
     Weight: 6
     Prefab: {fileID: 6540720969360085854, guid: 488cc6b2883331e4fb491e9bea9713b3, type: 3}
   - EnemyId: CastleCrossbowman
     Zone: 0
+    Era: 1
+    AnyEra: 0
     Weight: 8
     Prefab: {fileID: 3119278428026274572, guid: 3e7a9a8e949eaa544a0a83bae23f3c3f, type: 3}
   - EnemyId: CastleCrossbowman
     Zone: 2
+    Era: 1
+    AnyEra: 0
     Weight: 8
     Prefab: {fileID: 3119278428026274572, guid: 3e7a9a8e949eaa544a0a83bae23f3c3f, type: 3}
   - EnemyId: HouseholdKnight
     Zone: 3
+    Era: 1
+    AnyEra: 0
     Weight: 6
     Prefab: {fileID: 8323443369169586797, guid: cd9faf65f57d3264ab19226c4ba3d7b0, type: 3}
   - EnemyId: HouseholdKnight
     Zone: 2
+    Era: 1
+    AnyEra: 0
     Weight: 6
     Prefab: {fileID: 8323443369169586797, guid: cd9faf65f57d3264ab19226c4ba3d7b0, type: 3}
   - EnemyId: LanternWarden
     Zone: 0
+    Era: 1
+    AnyEra: 0
     Weight: 12
     Prefab: {fileID: 8485756894605829434, guid: aed034d81aeb57e4d89bc3b9ec339b06, type: 3}
   - EnemyId: LanternWarden
     Zone: 1
+    Era: 1
+    AnyEra: 0
     Weight: 12
     Prefab: {fileID: 8485756894605829434, guid: aed034d81aeb57e4d89bc3b9ec339b06, type: 3}
   - EnemyId: HouseholdKnight
     Zone: 4
+    Era: 1
+    AnyEra: 0
     Weight: 6
     Prefab: {fileID: 8323443369169586797, guid: cd9faf65f57d3264ab19226c4ba3d7b0, type: 3}

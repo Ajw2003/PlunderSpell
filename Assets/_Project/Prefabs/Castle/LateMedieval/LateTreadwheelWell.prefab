@@ -1,0 +1,323 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &570405078924700559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3699020813947824731}
+  - component: {fileID: 6124815703108173997}
+  m_Layer: 0
+  m_Name: Socket_south
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3699020813947824731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570405078924700559}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.452, z: 5.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2069620417825014134}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6124815703108173997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570405078924700559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 644620259e38985d96708a3f28b07bf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.SocketPoint
+  Type: 0
+  Facing: 0
+  IsOccupied: 0
+  ConnectedTo: {fileID: 0}
+--- !u!1 &3571562579370221452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8825566115107877233}
+  - component: {fileID: 357898824650060024}
+  m_Layer: 0
+  m_Name: Socket_west
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8825566115107877233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3571562579370221452}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.35, y: 1.452, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2069620417825014134}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &357898824650060024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3571562579370221452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 644620259e38985d96708a3f28b07bf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.SocketPoint
+  Type: 0
+  Facing: 3
+  IsOccupied: 0
+  ConnectedTo: {fileID: 0}
+--- !u!1 &4895261980613182596
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6990873788258698100}
+  - component: {fileID: 7700695939861589843}
+  m_Layer: 0
+  m_Name: Socket_north
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6990873788258698100
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4895261980613182596}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.452, z: -5.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2069620417825014134}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7700695939861589843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4895261980613182596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 644620259e38985d96708a3f28b07bf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.SocketPoint
+  Type: 0
+  Facing: 1
+  IsOccupied: 0
+  ConnectedTo: {fileID: 0}
+--- !u!1 &8451920664313204176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5422758624225909201}
+  - component: {fileID: 8414765304156492208}
+  m_Layer: 0
+  m_Name: Socket_east
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5422758624225909201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8451920664313204176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.35, y: 1.452, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2069620417825014134}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8414765304156492208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8451920664313204176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 644620259e38985d96708a3f28b07bf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.SocketPoint
+  Type: 0
+  Facing: 2
+  IsOccupied: 0
+  ConnectedTo: {fileID: 0}
+--- !u!1001 &1959766997741233821
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      propertyPath: m_Name
+      value: LateTreadwheelWell
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6990873788258698100}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3699020813947824731}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5422758624225909201}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8825566115107877233}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6369244744622450266}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2131902985110885690}
+  m_SourcePrefab: {fileID: 100100000, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+--- !u!1 &1725745495951498188 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+  m_PrefabInstance: {fileID: 1959766997741233821}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &6369244744622450266
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725745495951498188}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -792104118203320974, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+--- !u!114 &2131902985110885690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725745495951498188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1271bb0bc296be02d9bc55a769045dd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.CastleRoomModule
+  Zone: 1
+  RoomId: LateTreadwheelWell
+  Sockets:
+  - {fileID: 7700695939861589843}
+  - {fileID: 6124815703108173997}
+  - {fileID: 8414765304156492208}
+  - {fileID: 357898824650060024}
+  GridPosition: {x: 0, y: 0}
+  IsExtractionExit: 0
+  IsCryptEntry: 0
+--- !u!4 &2069620417825014134 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1a955c58cfc1d3443abb9c7d3e5b7005, type: 3}
+  m_PrefabInstance: {fileID: 1959766997741233821}
+  m_PrefabAsset: {fileID: 0}

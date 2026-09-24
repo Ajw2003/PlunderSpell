@@ -13,27 +13,57 @@ MonoBehaviour:
   m_Name: EnemyRoster_AgeOfPowder
   m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.EnemyRoster
   Entries:
+  - EnemyId: Cuirassier
+    Zone: 3
+    Era: 3
+    AnyEra: 0
+    Weight: 6
+    Prefab: {fileID: 9104726747238159758, guid: 0d3d5e224f6cbbd4abb10a1298e35003, type: 3}
+  - EnemyId: Cuirassier
+    Zone: 2
+    Era: 3
+    AnyEra: 0
+    Weight: 6
+    Prefab: {fileID: 9104726747238159758, guid: 0d3d5e224f6cbbd4abb10a1298e35003, type: 3}
   - EnemyId: Musketeer
     Zone: 0
+    Era: 3
+    AnyEra: 0
     Weight: 8
     Prefab: {fileID: 9017855570135048887, guid: d8c86683f701e744b978cbfeea517f61, type: 3}
   - EnemyId: Musketeer
     Zone: 2
+    Era: 3
+    AnyEra: 0
     Weight: 8
     Prefab: {fileID: 9017855570135048887, guid: d8c86683f701e744b978cbfeea517f61, type: 3}
   - EnemyId: PalaceGuard
     Zone: 0
+    Era: 3
+    AnyEra: 0
     Weight: 12
     Prefab: {fileID: 174596893331185770, guid: 17c63902435a1404aa0f2da018b09bf2, type: 3}
   - EnemyId: PalaceGuard
     Zone: 1
+    Era: 3
+    AnyEra: 0
     Weight: 12
     Prefab: {fileID: 174596893331185770, guid: 17c63902435a1404aa0f2da018b09bf2, type: 3}
-  - EnemyId: Musketeer
+  - EnemyId: Petardier
+    Zone: 2
+    Era: 3
+    AnyEra: 0
+    Weight: 5
+    Prefab: {fileID: 8597379898618775645, guid: 2078ff64ca530c74ba07bb40a56863f5, type: 3}
+  - EnemyId: Petardier
     Zone: 3
-    Weight: 6
-    Prefab: {fileID: 9017855570135048887, guid: d8c86683f701e744b978cbfeea517f61, type: 3}
-  - EnemyId: Musketeer
+    Era: 3
+    AnyEra: 0
+    Weight: 5
+    Prefab: {fileID: 8597379898618775645, guid: 2078ff64ca530c74ba07bb40a56863f5, type: 3}
+  - EnemyId: Cuirassier
     Zone: 4
+    Era: 3
+    AnyEra: 0
     Weight: 6
-    Prefab: {fileID: 9017855570135048887, guid: d8c86683f701e744b978cbfeea517f61, type: 3}
+    Prefab: {fileID: 9104726747238159758, guid: 0d3d5e224f6cbbd4abb10a1298e35003, type: 3}

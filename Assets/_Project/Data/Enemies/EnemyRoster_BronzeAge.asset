@@ -15,29 +15,55 @@ MonoBehaviour:
   Entries:
   - EnemyId: DendraChampion
     Zone: 3
+    Era: 0
+    AnyEra: 0
     Weight: 6
     Prefab: {fileID: 3017095254934927880, guid: cf87e1e50ae8eb24286ff4a94a3baa35, type: 3}
   - EnemyId: DendraChampion
     Zone: 2
+    Era: 0
+    AnyEra: 0
     Weight: 6
     Prefab: {fileID: 3017095254934927880, guid: cf87e1e50ae8eb24286ff4a94a3baa35, type: 3}
+  - EnemyId: KeeperOfTheFlame
+    Zone: 3
+    Era: 0
+    AnyEra: 0
+    Weight: 5
+    Prefab: {fileID: 5045645518563901171, guid: 599049ade018d0b45aa705d947689912, type: 3}
+  - EnemyId: KeeperOfTheFlame
+    Zone: 2
+    Era: 0
+    AnyEra: 0
+    Weight: 5
+    Prefab: {fileID: 5045645518563901171, guid: 599049ade018d0b45aa705d947689912, type: 3}
+  - EnemyId: KeeperOfTheFlame
+    Zone: 4
+    Era: 0
+    AnyEra: 0
+    Weight: 5
+    Prefab: {fileID: 5045645518563901171, guid: 599049ade018d0b45aa705d947689912, type: 3}
   - EnemyId: PalaceLevy
     Zone: 0
+    Era: 0
+    AnyEra: 0
     Weight: 12
     Prefab: {fileID: 6740531573117492425, guid: 9bacc4ad1850d5643b774c874240c777, type: 3}
   - EnemyId: PalaceLevy
     Zone: 1
+    Era: 0
+    AnyEra: 0
     Weight: 12
     Prefab: {fileID: 6740531573117492425, guid: 9bacc4ad1850d5643b774c874240c777, type: 3}
   - EnemyId: WallSlinger
     Zone: 0
+    Era: 0
+    AnyEra: 0
     Weight: 8
     Prefab: {fileID: 4727484997634092659, guid: bb448001472e27e48a72353a70522717, type: 3}
   - EnemyId: WallSlinger
     Zone: 2
+    Era: 0
+    AnyEra: 0
     Weight: 8
     Prefab: {fileID: 4727484997634092659, guid: bb448001472e27e48a72353a70522717, type: 3}
-  - EnemyId: DendraChampion
-    Zone: 4
-    Weight: 6
-    Prefab: {fileID: 3017095254934927880, guid: cf87e1e50ae8eb24286ff4a94a3baa35, type: 3}
