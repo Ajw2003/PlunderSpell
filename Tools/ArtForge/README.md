@@ -11,11 +11,11 @@ and the geometry validator are EnemyForge's own code, imported through `sys.path
 EnemyForge's files are untouched. Read `docs/systems/enemy-asset-pipeline.md`,
 especially **Traps**: every trap there applies here too.
 
-**Status:** the framework handles all three kinds (`items`, `structures`,
-`enemies`), but only two **items** exist and have been tested: `bronze/sealed-amphora`
-and `high/gilded-altarpiece`. No structure or enemy blueprints exist yet. The rigged
-(enemy) path is a hook that calls EnemyForge's rig code and has never been run
-through ArtForge.
+**Status:** all 20 **items** are built. The rigged **enemy** path works end to end
+and has two samples that set the bar for the other 14: `high/lantern-warden` (a
+humanoid on `figures.Human`) and `high/alaunt-hound` (a quadruped on
+`figures.Quadruped`). No structure blueprints exist in this module yet (another
+agent owns structures).
 
 ## Requirements
 
@@ -34,6 +34,10 @@ python3 Tools/ArtForge/build.py items --only sealed-amphora gilded-altarpiece --
 
 python3 Tools/ArtForge/render.py items --only sealed-amphora gilded-altarpiece
 python3 Tools/ArtForge/render.py items --age high --samples 64 --resolution 900
+
+python3 Tools/ArtForge/build.py enemies                                 # every enemy with a blueprint
+python3 Tools/ArtForge/build.py enemies --age high --only lantern-warden
+python3 Tools/ArtForge/render.py enemies --only lantern-warden alaunt-hound
 ```
 
 | Flag | build.py | render.py |
@@ -50,7 +54,8 @@ fails, crashes, or is named in `--only` without a blueprint. `render.py` exits
 non-zero if a model has not been built.
 
 Timings on 4 CPU cores: about 3 s to build an item (bake included), and about 40 s
-to render its sheet at the defaults.
+to render its sheet at the defaults. An enemy builds in about 3 s (heat weighting
+included) and its six-view sheet renders in about 58 s.
 
 ## Where outputs go
 
@@ -61,9 +66,12 @@ to render its sheet at the defaults.
 | `…/<PascalName>/<PascalName>.blend` | source, with texture paths relative to it |
 | `…/<PascalName>/Textures/` | `_BaseMap`, `_Roughness`, `_Metallic`, `_Emission`, packed `_MetallicGloss` (URP) and `_ORM` (glTF) |
 | `Assets/Models/ArtBible/artforge_manifest.json` | one entry per asset; a `--only` run merges and keeps the others |
-| `docs/art/models/<age>/<slug>.png` | review sheet: concept on the left, three-quarter / front / side / wireframe renders on the right, caption with tris/budget and bbox vs spec |
+| `docs/art/models/<age>/<slug>.png` | review sheet: concept on the left, three-quarter / front / side / wireframe renders on the right, caption with tris/budget and bbox vs spec. Enemies get six views (see "Enemies") |
 
 Example: `Assets/Models/ArtBible/Items/Bronze/SealedAmphora/SealedAmphora.fbx`.
+Enemies: `Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.fbx`, which
+holds the armature and the skinned mesh (EnemyForge's exporter: `-Z` forward, `Y` up,
+no leaf bones), and a glTF with one skin.
 
 ## Layout
 
@@ -71,14 +79,17 @@ Example: `Assets/Models/ArtBible/Items/Bronze/SealedAmphora/SealedAmphora.fbx`.
 art_forge/
   __init__.py     puts Tools/EnemyForge on sys.path; KINDS, AGES, REPO_ROOT
   spec.py         JSON entry -> Entry (dims, budget, material families with PBR defaults)
-  kit.py          build_bmesh + new part kinds (lathe, prism, tube) + authoring helpers
+  kit.py          build_bmesh + new part kinds (lathe, prism, tube, loft, sweep) + helpers
+  figures.py      rigged figures for enemies: Human (Unity Humanoid bones), Quadruped
+  rig.py          per-part skinning rules after heat weighting; review-pose application
   materials.py    per-family authoring material, registered for EnemyForge's bake; pigment rules
   blueprint.py    the Blueprint dataclass
   assemble.py     build object, weighted bevel, EnemyForge shade/unwrap, bake, export
-  validate.py     EnemyForge validate() via an adapter, plus art-bible size checks
+  validate.py     EnemyForge validate() via an adapter, plus art-bible size and rig checks
   blueprints/
     __init__.py   registry: make(kind, age, slug), available(kind)
     items_bronze.py, items_high.py, ...   one module per (kind, age)
+    enemies_high.py   the two enemy samples: lantern-warden, alaunt-hound
 build.py          entry point: build + validate + export + manifest
 render.py         entry point: review sheets
 ```
@@ -119,7 +130,9 @@ so on), and any `roughness 0.x` / `metallic 1.0` written in the JSON notes wins.
 | `grounded` | True | lowest point must be within 2 cm of z = 0 |
 | `bbox_overrides` | `{}` | `{"X": (0.52, "why")}`, for when the JSON's own build bullets contradict its dimension line. The reason is printed on every build and on the sheet. |
 | `gold_reason` | None | a structure or enemy that carries orpiment must say why, unless the JSON already marks it plunder/loot/stealable |
-| `bones` | None | enemies: EnemyForge bone dicts. Setting this selects the rigged path. |
+| `bones` | None | enemies: EnemyForge bone dicts. Setting this selects the rigged path. Pass `**figure.rig()` rather than writing them. |
+| `forward_bones` | `[]` | enemies: bones whose head→tail must point to −Y (feet, a beast's head); how validation proves the model faces the front |
+| `pose` | `{}` | enemies: the review pose for the sheet's POSED views, `{bone: (rx, ry, rz)}` world-space degrees (see `rig.apply_pose`) |
 | `notes` | `[]` | written to the manifest (what was left out, and why) |
 
 ### Worked example
@@ -174,6 +187,8 @@ reflects across YZ. The new kinds are:
 | `lathe` | `profile=[(r, z), ...]` in metres, bottom to top | Revolved about local Z into a closed solid. An end with r = 0 becomes a pole. An end with r > 0 gets a flat cap. Interior points need r > 0, and the profile may turn back down (a cup's inside). `segments` = number of sides. Use `size=(1,1,1)`. |
 | `prism` | `outline=[(x, y), ...]` in metres | Extruded along local Z by `size[2]` (centred). Any winding, and concave outlines work because the caps are triangulated by polygon fill. `rot=(90,0,0)` stands it up in world XZ, facing −Y. |
 | `tube` | `path=[(x,y,z), ...]`, `section=(rn, rb)`, `up=`, `closed=` | Swept elliptical section with parallel-transport frames and mitred corners. Open ends are capped. `closed=True` makes a ring. `segments` = number of sides. |
+| `loft` | `rings=[[(x,y,z), ...], ...]`, `closed=` | Skins a stack of rings (any shape, same point count; a 1-point ring is a pole, ends only) into one solid. Torsos, heads, shoes, a dog's body, the hound's C-section coat. Build rings with `kit.section()` or by hand. Promoted from `items_bronze.py`'s `bronze_loft`, which is now an alias of it. |
+| `sweep` | `path`, `sections=[(rn, rb), ...]` (one per point), `up=`, `power=`, `offsets=` | A tube whose section changes along the path: limbs, tails, necks, fists. A `(0, 0)` section at either end makes a pointed pole. `power` 2 = ellipse, 4 = rounded box. `offsets=[(dn, db)]` shift ring centres (a calf bulging back). Not mitred: sample the path smoothly. |
 
 Options that work on any part:
 
@@ -184,8 +199,179 @@ Options that work on any part:
   angle is 34°, so a tube with fewer than 11 sides renders faceted without it.
 - `extras["bevel"] = False` keeps the asset bevel off this part.
 
+- `extras["rigid"]`, `extras["prop"]`, `extras["bones"]`, `extras["skirt"]`: skinning
+  rules on the rigged path, see "Skinning" below.
+
 Helpers in `kit.py`: `spline(points, n)` (Catmull-Rom, for tube paths and profiles),
-`arc_path`, `rounded_rect`, `gable_outline`, `ring_of`.
+`arc_path`, `rounded_rect`, `gable_outline`, `ring_of`, `section(centre, half_u,
+half_v, n, u_axis, v_axis, power, start_deg, bulge)` (one superellipse loft ring).
+
+`items_powder.py` still registers its own `powder_whorl` kind (a sweep that opens
+into a hollow mouth). It is too specific to promote; use `sweep` for anything new.
+
+## Enemies
+
+An enemy blueprint builds a **figure** (`art_forge/figures.py`), asks it for body
+parts in the JSON's materials, adds clothing, armour and props against the figure's
+landmarks, and hands `**figure.rig()` to `blueprint(...)`. `rig()` supplies
+`bones`, `forward_bones` and the review `pose`. Everything stands on z = 0, centred,
+facing −Y. `.L` is the figure's own left, which is +X (the viewer's right in a front
+view). Props go in the right hand (`.R`, −X) unless the JSON says otherwise.
+
+### `figures.Human`
+
+```python
+Human(height=1.76, bulk=1.0, shoulders=None, stoop=0.0,
+      arm_l=ArmPose(), arm_r=ArmPose(), stance=2.5, segments=12)
+ArmPose(spread=9.0, swing=3.0, elbow=12.0)    # degrees: out, forward, forearm bend
+```
+
+`height` is the stature to the crown of the skull, **not** the hat. Eyes land at
+0.936 × height, so a JSON "eyes 1.65 m" means `height=1.763`. Proportions are
+EnemyForge's (`ANKLE, KNEE, HIP, WAIST, CHEST, SHOULDER, NECK` fractions), so ArtForge
+and EnemyForge guards are the same species. `bulk` scales girth (torso and limbs),
+`shoulders` is the outer deltoid width in metres, `stoop` leans everything above the
+waist forward. Arms are posed in the bind pose, so a hand can hold its prop where
+the concept shows it; keep `spread` 6-16° so sleeves stay clear of the torso.
+
+Body parts (each already bound to its bones, smooth-shaded, bevel off):
+
+| Method | What |
+|---|---|
+| `body(skin, torso, sleeves, legs, feet, head=None, hood=False, **torso_kwargs)` | everything below in one call |
+| `torso_part(mat, pad, hem, hem_flare, collar, quilt, paint, segments, chest)` | one loft, crotch (or a skirt `hem`, metres) to collar. `pad` = padding in metres; `quilt` 0-0.1 pinches every other ring point (vertical quilting); a hem adds the skirt rule below |
+| `arm_part(side, mat, pad, quilt_rings, quilt, segments, paint)` | shoulder to wrist as one sweep (no elbow seam); `quilt_rings` = ringed quilting |
+| `hand_part(side, mat)` | closed fist + thumb, on `Hand.<side>` |
+| `leg_part(side, mat, pad, segments, paint)` | hip to ankle as one sweep, calf bulging back |
+| `foot_part(side, mat, length, segments, point)` | a shoe: flat sole on z = 0, `point` 0-1 sharpens the toe |
+| `head_part(mat, face, hood, segments, features)` | neck + skull loft and a nose. `hood=True`: a coif draped onto the shoulders in `mat`, the face painted `face`. `features`: a dark family for eyes |
+| `band(z, mat, height, pad, torso_pad, bone)` | a belt/girdle hugging the torso at height z |
+
+Landmarks for layers and props: `joint("wrist.R" | "elbow.L" | "knee.R" | "ankle.L" |
+"shoulder.R" | "hip.L" | "ball.R" | "crown" | "chin" | "eyes" | "neck" | "belt")`,
+`grip(side)` (centre of the fist), `surface(z, angle_deg, pad)` (a point on the torso:
+0° = left, −90° = front, 90° = back, 180° = right), `torso_dims(z)`, `bone(name)`,
+`along(bone, t)`, `lean(point)`, and the attributes `h, belt_z, knee_z, hip_z,
+waist_z, chest_z, shoulder_z, neck_z, chin_z, eye_z, crotch_z, leg_x`.
+
+Extra bones: `add_bone(name, head, tail, parent)` (hats, cloth springs, a swing chain)
+and `prop_bone(name, side, head, tail)` (parented to `Hand.<side>`). Bind props with
+`extras={"prop": True}`: rigid, and excluded from the height check.
+
+### Bone naming (Human)
+
+Unity Humanoid (Mecanim) names with Blender side suffixes, so EnemyForge's mirror
+and the FBX exporter both work:
+
+```
+Root > Hips > Spine > Chest > Neck > Head
+Chest > Shoulder.L > UpperArm.L > LowerArm.L > Hand.L        (and .R)
+Hips  > UpperLeg.L > LowerLeg.L > Foot.L                      (and .R)
+```
+
+`figures.UNITY_HUMANOID` maps Unity's `HumanBodyBones` names (`LeftUpperArm`, ...) to
+these, for building the Avatar explicitly if the importer's auto-mapping misreads
+`.L`/`.R`. The bind pose is an A-pose with the arms where the blueprint put them;
+use "Enforce T-Pose" in Unity's Avatar configuration. The warden adds `Hat` (child of
+Head), `Glaive` (prop on Hand.R) and `LanternRing > LanternBody` (a swing chain on
+Hand.L): 24 bones, 23 skinned (`Root` carries no vertices).
+
+### `figures.Quadruped`
+
+```python
+Quadruped(withers=0.72, length=1.42, chest_width=0.30, segments=10)
+```
+
+A reference hound scaled per axis (Z by withers, Y by nose-to-tail, X by chest).
+`body(coat, mask, nose=None, teeth=None)` gives the barrel (loft), neck, tail, skull
+and muzzle (front painted `mask`), lower jaw, rose ears, eyes, nose, fangs, legs and
+paws. Pieces: `body_part`, `neck_part`, `head_parts`, `foreleg_part`, `hindleg_part`,
+`paw_part`, `tail_part`. For layers: `body_at(y)` (the barrel's centre z, half-width,
+half-height, keel at reference y), `body_ring(y, cz, hw, hh, keel, n, pad, a0, a1,
+closed)` (points on the barrel surface, or an arc of it), `neck_frame(t)` (centre,
+tangent, radius along the neck, for collars) and `p(x, y, z)` (a reference point,
+scaled). Bones (Unity Generic):
+
+```
+Root > Pelvis > Spine1 > Spine2 > Spine3 > Chest > Neck1 > Neck2 > Head > Jaw, Ear.L/R
+Pelvis > Tail1 > ... > Tail5
+Chest  > Scapula.L > Humerus.L > Radius.L > Carpus.L > ForePaw.L   (and .R)
+Pelvis > Femur.L > Tibia.L > Hock.L > HindPaw.L                    (and .R)
+```
+
+The hound adds `CollarRing` (a spring under Neck1): 36 bones, 35 skinned.
+
+### Skinning
+
+`assemble.build_rigged` runs EnemyForge's `build_armature` and
+`apply_smooth_weights` unchanged (heat weighting, smoothing, 4-influence limit,
+normalise, rigid fallback), then `rig.apply_bind_rules`, which enforces what each
+Part says. The part a vertex came from is read from `kit.PART_LAYER`, an integer face
+layer that survives the bevel and unwrap.
+
+| Part extras | Effect |
+|---|---|
+| `"rigid": True` | every vertex bound 1.0 to `part.bone` (hats, buckles, fists' thumbs, paws) |
+| `"prop": True` | rigid, and left out of the enemy height check (weapons, lanterns) |
+| `"bones": [...]` | the only bones the part may be weighted to; `.L` swaps to `.R` on mirrored copies |
+| `"skirt": {"top", "bottom", "strength", "split", "left", "right"}` | below `top`, hand a growing share (up to `strength` at `bottom`) to the thighs, split across the centre line. `torso_part` sets it; without it a lifted knee goes straight through a coat |
+| none | the part's bone, its parent and its children (never Root) |
+
+A vertex whose heat weights are all on disallowed bones (a layer hidden inside another
+island) is blended between the two nearest allowed bones by distance and counted in
+the warning "N vertices got no allowed heat weight"; that is expected on the hound's
+coat and harness, not a failure.
+
+### Review sheet
+
+`render.py enemies` renders six views: three-quarter, front (beside a faint 1.80 m
+reference `figures.Human`), side, **POSED** and **POSED FRONT** (the rig's review
+pose, to show the skin deforming without tearing), and wireframe. The default poses
+are `figures.HUMAN_TEST_POSE` (left arm raised forward to face height, head turned,
+right knee lifted and bent, a slight spine twist) and `figures.QUADRUPED_TEST_POSE`
+(head and neck turned, jaw open, right foreleg lifted and folded, tail raised). Pass
+your own to `fig.rig(pose)` when a prop needs it: the warden adds `LanternRing:
+(105, 0, 0)` so the lantern hangs from the raised fist instead of pointing along the
+forearm. The caption lists body height vs spec, bones and the posed bones.
+
+### Worked example
+
+```python
+# art_forge/blueprints/enemies_late.py (sketch)
+from mathutils import Vector
+from ..figures import ArmPose, Human
+from ..kit import Part
+from . import blueprint
+
+def sallet_halberdier(entry):
+    fig = Human(height=1.76, bulk=1.05, shoulders=0.47,
+                arm_r=ArmPose(spread=14, swing=4, elbow=80))     # halberd hand
+    parts = fig.body(skin="skin", torso="brigandine", sleeves="linen",
+                     legs="hose", feet="leather", hem=0.70, pad=0.015)
+    parts.append(fig.band(fig.belt_z, "leather", torso_pad=0.015))
+
+    # A sallet on its own bone so it can come off.
+    base = fig.lean((0, 0.004 * fig.h, 0.95 * fig.h))
+    fig.add_bone("Helm", base, base + Vector((0, 0, 0.15)), "Head")
+    parts.append(Part("lathe", tuple(base), (1, 1, 1), mat="steel", bone="Helm",
+                      extras={"profile": [...], "rigid": True}))
+
+    # The halberd: a prop bone on the right hand, upright through the fist.
+    g = fig.grip("R")
+    fig.prop_bone("Halberd", "R", head=g, tail=(g.x, g.y, 2.3))
+    parts.append(Part("cyl", (g.x, g.y, 1.1), (0.03, 0.03, 2.2), mat="ash",
+                      bone="Halberd", extras={"prop": True}))
+    return blueprint(entry, parts, **fig.rig())
+
+BLUEPRINTS = {"sallet-halberdier": sallet_halberdier}
+```
+
+Then `build.py enemies --only sallet-halberdier` and `render.py enemies --only
+sallet-halberdier`, open `docs/art/models/late/sallet-halberdier.png`, and iterate
+until the stills read as the concept **and** the POSED views deform cleanly.
+`enemies_high.py` is the complete reference: hat lathe, glaive prism, lantern swing
+chain, quilted gambeson, laced front, belt kit (warden); C-section quilted coat with
+painted bordure, chevron strips, harness straps, spiked collar (hound).
 
 ## Validation
 
@@ -200,7 +386,13 @@ really has no vertex groups or armature. It then adds:
   H = Z), unless the blueprint sets `bbox_overrides`.
 - **structures**: footprint within the 12 × 12 m cell (|x|, |y| ≤ 6 m). Warns if the
   model is more than 10 % taller than `height_m`.
-- **enemies**: height within ±5 % of `height_m`.
+- **enemies**: body height within ±5 % of `height_m`, measured with parts marked
+  `extras["prop"]` left out (a 2.05 m glaive must not fail a 1.80 m man); bbox
+  centred; every `forward_bones` bone points to −Y; exactly one Armature modifier;
+  at most 4 influences per vertex. EnemyForge's own checks add every vertex
+  weighted, weights summing to 1, vertex groups matching bones, grounded and the
+  triangle budget. Stats report `rig_bones`, `skinned_bones`, `mean_influences`,
+  `height_body_m`, `height_with_props_m`.
 
 Pigment rules are enforced before building (`materials.discipline_violations`):
 orpiment-gold families only on items, unless the material is marked stealable or the
@@ -255,6 +447,29 @@ These cost time while building the two samples, and they will cost you too.
   raised roughness slightly on a few families (ewer silver 0.3, armour steel 0.3,
   badge gold 0.32) to lighten them. A neutral-reflection pass in `render.py` would
   be the real fix.
+- **Heat weighting hands out bones by proximity, not intent.** On the first warden
+  build the glaive haft picked up UpperLeg, the hat brim picked up Shoulder and the
+  gambeson skirt stayed on Hips, so a lifted knee went straight through it.
+  `rig.apply_bind_rules` (rigid/prop, allowed bones, the skirt rule) fixes each.
+- **A rigid lantern follows the forearm.** Raising the arm swung the lantern
+  horizontal. A swing chain (LanternRing > LanternBody) plus a counter-rotation in
+  the review pose shows it hanging; in game that chain is a spring.
+- **A sweep's first ring stands perpendicular to its first segment.** Starting the
+  sleeve at the shoulder joint and heading outward put a vertical ring above the
+  shoulder line: peaks on both shoulders. The sleeve now starts inside the chest,
+  below the joint.
+- **Emission is multiplied by 9 in the shipping material** (EnemyForge's
+  `EMISSION_STRENGTH`). Madder `#C4542E` at 9× rendered pink-white; the warden's horn
+  panes store `#4A1E0C` so the result reads as a warm flame.
+- **JSON notes can set PBR for a whole family.** The hound's "Dark mask" notes say
+  "wet nose roughness 0.2", which `spec.py` applied to the entire mask and made the
+  muzzle look lacquered. Override the family (`rough: 0.7`).
+- **A figure's height is not the enemy's height.** `height_m` is to the top of the
+  hat (warden) or head (hound); the figure's `height` is the skull crown. Place the
+  hat to reach the JSON height and mark weapons `prop` so they do not count.
+- **Organic parts must opt out of the bevel.** Quilting pinches exceed the 32° bevel
+  angle; bevelled, the torso alone would triple. Every figure part sets
+  `"bevel": False`.
 - **The glTF exporter warns** "More than one shader node tex image used for a
   texture". That comes from EnemyForge's shipping material (ORM feeds both roughness
   and metallic). It's harmless, and it happens on the EnemyForge enemies too.
@@ -267,12 +482,14 @@ These cost time while building the two samples, and they will cost you too.
 - No painted-panel atlas. The altarpiece's figures are shaped relief in flat family
   colours. Faces have no features.
 - No LOD1/LOD2 (50 % / 20 %), even though the brief asks for them.
-- The rigged enemy path (`assemble.build_rigged`) has not been run. Structures and
-  enemies have no blueprints: only the 20 items are built.
-- Two part kinds live in blueprint modules rather than `kit.py`, because the item
-  workers were told not to edit the shared framework: `bronze_loft` (a lathe whose
-  rings need not be circles; `items_bronze.py`) and `powder_whorl` (a sweep whose
-  section grows along its path; `items_powder.py`). Both register themselves into
-  `kit._NEW_BUILDERS` on import. They belong in `kit.py`.
+- Only 2 of the 16 enemies exist (`high/lantern-warden`, `high/alaunt-hound`).
+- Cloth and jiggle spring bones the JSON rigs ask for are not built: the warden's
+  gambeson_skirt ×4 and coif_back, the hound's coat_front/rear/L/R and jowl_L/R.
+  The hound has 2 neck and 5 tail bones, not the JSON's exact chain names.
+- No blend shapes, no separate jaw/mouth for humans, no fingers (fists only).
+- Enemy textures bake at 1024² by default; the brief asks 2048² for enemies
+  (`--resolution 2048` works but was not used for the samples).
+- `powder_whorl` stays in `items_powder.py` (too specific to promote); `loft` is now
+  in `kit.py` and `bronze_loft` is an alias of it.
 - No damage or alternate-state meshes (crumpled mask, dented tripod, open cabinet,
   lid-off tureen, ewer dent blend shapes), even where the JSON describes them.
