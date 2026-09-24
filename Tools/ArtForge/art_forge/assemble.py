@@ -276,6 +276,9 @@ def export(obj, rig, bp: Blueprint, model_dir: str) -> dict:
     bpy.context.view_layer.objects.active = rig
     for pose_bone in rig.pose.bones:   # export the bind pose, whatever happened before
         pose_bone.matrix_basis.identity()
+    # EnemyForge's exporter saves the .blend itself; with backups on, a rebuild
+    # leaves a stale <Name>.blend1 next to it.
+    bpy.context.preferences.filepaths.save_version = 0
     files = ef_assemble.export(obj, rig, bp, model_dir)
     files["blend"] = save_blend(bp, model_dir)
     return files
