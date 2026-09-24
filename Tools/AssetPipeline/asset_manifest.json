@@ -37,6 +37,12 @@
       "preview": "444ba063dc35a59e:23a9d68e53fd",
       "tris": 1260
     },
+    "BronzeChariotShed": {
+      "budget": 1600,
+      "content": "c341d88faa7e8b21",
+      "preview": "c341d88faa7e8b21:23a9d68e53fd",
+      "tris": 800
+    },
     "BronzeDoorPlugCrypt": {
       "budget": 40,
       "content": "94853190d2043cb7",
