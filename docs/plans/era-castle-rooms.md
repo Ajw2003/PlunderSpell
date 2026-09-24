@@ -101,7 +101,7 @@ The pitch bible keeps orpiment for gold and value, madder for fire, blood and al
 and lapis for the arcane. So the new pieces use orpiment only on things worth stealing (and Powder
 gilt), madder for hearths, red cloth and painted columns, and never lapis or bright verdigris.
 
-**Progress and how to continue:** [`era-castle-rooms-handoff.md`](era-castle-rooms-handoff.md) (the Bronze Age is complete; the Late Keep and InnerWard are done).
+**Progress and how to continue:** [`era-castle-rooms-handoff.md`](era-castle-rooms-handoff.md) (the Bronze Age and Late Medieval sets are complete; the Age of Powder is next).
 
 ## Order of work: a sheet for every room first, then the model
 

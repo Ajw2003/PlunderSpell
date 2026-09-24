@@ -365,6 +365,26 @@
       "preview": "148d534bdedcc557:23a9d68e53fd",
       "tris": 1600
     },
+    "LateDoorPlugCrypt": {
+      "budget": 40,
+      "content": "55ec4899c773a8d3",
+      "tris": 12
+    },
+    "LateDoorPlugInnerWard": {
+      "budget": 40,
+      "content": "7356d7a6c9be4690",
+      "tris": 12
+    },
+    "LateDoorPlugKeep": {
+      "budget": 40,
+      "content": "67a4c8214d45ad81",
+      "tris": 12
+    },
+    "LateDoorPlugOuterBailey": {
+      "budget": 40,
+      "content": "5df3f960e1b9b63c",
+      "tris": 12
+    },
     "LateDrawbridge": {
       "budget": 1600,
       "content": "e4333f8f247077c3",
