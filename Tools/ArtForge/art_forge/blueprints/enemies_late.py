@@ -1072,8 +1072,9 @@ def gothic_knight(entry: Entry):
         hip, knee, ank = fig.joint(f"hip.{side}"), fig.joint(f"knee.{side}"), \
             fig.joint(f"ankle.{side}")
         ul, ll = f"UpperLeg.{side}", f"LowerLeg.{side}"
-        # Cuisse and greave are the leg (no hose under them; see the arms). The
-        # cuisse's 2 flutes and the hinge straps are painted.
+        # Cuisse and greave are the leg (no hose under them; see the arms). Their
+        # flutes and hinge straps are left out (a 2-ring sweep has no faces to paint
+        # a band on, and separate strips would be hidden islands again).
         r_th = 0.041 * fig.h * fig.bulk + 0.012
         parts.append(_rod(knee.lerp(hip, 1.10), knee.lerp(hip, -0.02), r_th * 0.86,
                           H, ul, segments=12, taper=1.14,
@@ -1081,8 +1082,7 @@ def gothic_knight(entry: Entry):
         r_sh = 0.031 * fig.h * fig.bulk + 0.012
         parts.append(_rod(ank.lerp(knee, -0.02), ank.lerp(knee, 0.96), r_sh * 0.82,
                           H, ll, segments=12, taper=1.30,
-                          extras={"rigid": True, "bevel": False, "smooth": True, "paint": [
-                              {"mat": S, "min": (-1, -1, ank.z + 0.18), "max": (1, 1, ank.z + 0.22)}]}))
+                          extras={"rigid": True, "bevel": False, "smooth": True}))
         # poleyn: knee cop and a fluted side wing 0.10 m
         parts.append(Part("sphere", tuple(knee + Vector((0, -0.045, 0.01))), (0.13, 0.10, 0.13),
                           mat=H, bone=ll, segments=12, rings=6,

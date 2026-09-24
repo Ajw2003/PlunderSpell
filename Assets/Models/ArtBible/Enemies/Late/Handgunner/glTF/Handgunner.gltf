@@ -20,7 +20,7 @@
 			"name":"Hat",
 			"translation":[
 				0,
-				0.11226010322570801,
+				0.14726006984710693,
 				-0.007009999826550484
 			]
 		},
@@ -575,10 +575,10 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":6244,
+			"count":6351,
 			"max":[
 				0.33545973896980286,
-				1.7792210578918457,
+				1.7797527313232422,
 				0.32239165902137756
 			],
 			"min":[
@@ -591,31 +591,31 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":6244,
+			"count":6351,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":6244,
+			"count":6351,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":6244,
+			"count":6351,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":6244,
+			"count":6351,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":18918,
+			"count":19182,
 			"type":"SCALAR"
 		},
 		{
@@ -628,44 +628,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":74928,
+			"byteLength":76212,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":74928,
-			"byteOffset":74928,
+			"byteLength":76212,
+			"byteOffset":76212,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":49952,
-			"byteOffset":149856,
+			"byteLength":50808,
+			"byteOffset":152424,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":24976,
-			"byteOffset":199808,
+			"byteLength":25404,
+			"byteOffset":203232,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":99904,
-			"byteOffset":224784,
+			"byteLength":101616,
+			"byteOffset":228636,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":37836,
-			"byteOffset":324688,
+			"byteLength":38364,
+			"byteOffset":330252,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1600,
-			"byteOffset":362524
+			"byteOffset":368616
 		}
 	],
 	"samplers":[
@@ -676,7 +676,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":364124,
+			"byteLength":370216,
 			"uri":"Handgunner.bin"
 		}
 	]
