@@ -167,6 +167,7 @@ To drive the client too, build a Development player with the Pipeline runtime on
 (`set_runtime_pipeline_settings enableInBuilds true`, build to `Build/DevTest` with the
 `Development` option, then set it back to false) and send it commands with
 `unity command --runtime Plunderspell eval`. Its code sees the game's types only through
-reflection. Never ship a build with the runtime on.
+reflection. Never ship a build with the runtime on. Building through the Pipeline's `build` command leaves the Input System's
+actions asset in `ProjectSettings.asset`'s `preloadedAssets`; revert that line before committing.
 
 Screenshots of each checked step: `docs/generated/coop-2026-09-23/`.
