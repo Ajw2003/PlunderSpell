@@ -433,20 +433,20 @@
 		{
 			"name":"Falchion",
 			"rotation":[
-				-0.9778819680213928,
-				-0.025446593761444092,
-				-0.025446468964219093,
-				0.2060384452342987
+				-0.9778823256492615,
+				-0.025440949946641922,
+				-0.025441011413931847,
+				0.20603801310062408
 			],
 			"scale":[
-				0.9999998807907104,
 				1,
-				0.9999987483024597
+				1.0000001192092896,
+				1.0000009536743164
 			],
 			"translation":[
-				0.14229999482631683,
+				0.149399995803833,
 				0.1779300421476364,
-				0.11421000957489014
+				0.11870000511407852
 			]
 		},
 		{
@@ -611,7 +611,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":4494,
+			"count":4495,
 			"max":[
 				0.976351261138916,
 				1.8063592910766602,
@@ -627,25 +627,25 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":4494,
+			"count":4495,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":4494,
+			"count":4495,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":4494,
+			"count":4495,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":4494,
+			"count":4495,
 			"type":"VEC4"
 		},
 		{
@@ -664,44 +664,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":53928,
+			"byteLength":53940,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":53928,
-			"byteOffset":53928,
+			"byteLength":53940,
+			"byteOffset":53940,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":35952,
-			"byteOffset":107856,
+			"byteLength":35960,
+			"byteOffset":107880,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":17976,
-			"byteOffset":143808,
+			"byteLength":17980,
+			"byteOffset":143840,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":71904,
-			"byteOffset":161784,
+			"byteLength":71920,
+			"byteOffset":161820,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":30912,
-			"byteOffset":233688,
+			"byteOffset":233740,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1536,
-			"byteOffset":264600
+			"byteOffset":264652
 		}
 	],
 	"samplers":[
@@ -712,7 +712,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":266136,
+			"byteLength":266188,
 			"uri":"Pavisier.bin"
 		}
 	]

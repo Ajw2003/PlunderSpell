@@ -450,26 +450,52 @@ def _front_lacing(fig: Human, pad: float, mat: str, z0: float, z1: float,
 
 
 def _badge(fig: Human, side: str, z: float, white: str, red: str) -> list[Part]:
-    """A 0.10 x 0.12 m livery patch with a red saltire, stitched to the outside of
-    the upper sleeve at height z. Rigid on UpperArm."""
+    """A 0.10 x 0.12 m white livery patch with a red saltire, stitched to the upper
+    sleeve at height z, facing out and forward (the concept shows both from the
+    front). One loft: its columns follow the saltire's bar edges row by row and the
+    bars are painted face by face, so the badge is a single island (stacked bar
+    boxes were detached studs of the kind that break heat weighting). Rigid on
+    UpperArm."""
     shoulder, elbow, _w = _arm_axis(fig, side)
     t = (shoulder.z - z) / max(1e-6, shoulder.z - elbow.z)
     c = shoulder.lerp(elbow, t)
     s = 1.0 if side == "L" else -1.0
-    axis = (shoulder - elbow).normalized()
-    out = Vector((s, 0.0, 0.0))
-    out = (out - axis * out.dot(axis)).normalized()
+    v = (shoulder - elbow).normalized()                  # up the arm
+    n = Vector((s * 0.80, -0.60, 0.0))
+    n = (n - v * n.dot(v)).normalized()                  # out of the sleeve
+    u = v.cross(n).normalized() * s                      # across the patch
     r = 0.030 * fig.h * fig.bulk + 0.018
-    at = c + out * (r + 0.002)
-    yaw = 90.0 if side == "L" else -90.0
-    bone = f"UpperArm.{side}"
-    parts = [Part("box", tuple(at), (0.10, 0.12, 0.006), mat=white, bone=bone,
-                  rot=(0.0, yaw, 0.0), extras={"rigid": True, "bevel": False})]
-    for lean in (38.0, -38.0):
-        parts.append(Part("box", tuple(at + out * 0.004), (0.016, 0.12, 0.004), mat=red,
-                          bone=bone, rot=(lean, yaw, 0.0),
-                          extras={"rigid": True, "bevel": False}))
-    return parts
+    at = c + n * (r + 0.002)
+    w, hgt, th, bar = 0.10, 0.12, 0.006, 0.009
+    bar_hw = bar * math.hypot(w, hgt) / hgt
+
+    def bar_x(y):   # bar from the top-left to the bottom-right corner
+        return -w / 2 + w * (hgt / 2 - y) / hgt
+    rows = [-hgt / 2 + hgt * k / 6 for k in range(7)]
+    rings = []
+    for y in rows:
+        b = bar_x(y)
+        xs = [-w / 2, w / 2] + [max(-w / 2 + 0.003, min(w / 2 - 0.003, e))
+                                for e in (b - bar_hw, b + bar_hw, -b - bar_hw, -b + bar_hw)]
+        xs.sort()
+        for i in range(1, len(xs)):
+            xs[i] = max(xs[i], xs[i - 1] + 0.002)
+        front = [tuple(at + u * x + v * y + n * (th / 2)) for x in xs]
+        back = [tuple(at + u * x + v * y - n * (th / 2)) for x in reversed(xs)]
+        rings.append(front + back)
+    paint = []
+    nf, width = len(rings[0]) // 2, len(rings[0])
+    for j in range(len(rings) - 1):
+        for k in range(nf - 1):
+            q = [Vector(rings[j][k]), Vector(rings[j][k + 1]), Vector(rings[j + 1][k + 1]),
+                 Vector(rings[j + 1][k])]
+            m = sum(q, Vector()) / 4.0
+            x, y = (m - at).dot(u), (m - at).dot(v)
+            if min(abs(x - bar_x(y)), abs(-x - bar_x(y))) < bar_hw:
+                paint.append({"mat": red, "min": tuple(m - Vector((0.0004,) * 3)),
+                              "max": tuple(m + Vector((0.0004,) * 3))})
+    return [Part("loft", (0, 0, 0), (1, 1, 1), mat=white, bone=f"UpperArm.{side}",
+                 extras={"rings": rings, "paint": paint, "rigid": True, "bevel": False})]
 
 
 def _handgonne(fig: Human, g: Vector, aim: Vector) -> list[Part]:
@@ -619,7 +645,8 @@ def handgunner(entry: Entry):
                       extras={"prop": True, "bevel": False}))
 
     g = fig.grip("R")
-    parts += _handgonne(fig, g, Vector((0.30, 0.0, 0.62)))
+    # sloped over the left shoulder, the muzzle beside the hat (not across the face)
+    parts += _handgonne(fig, g, Vector((0.585, 0.08, 0.81)))
 
     pose = dict(figures.HUMAN_TEST_POSE)
     return blueprint(
@@ -1268,7 +1295,7 @@ def _pavise(fig: Human, c: Vector, grip: Vector) -> list[Part]:
                 (-0.025 < dz < 0.025 and 0.052 < abs(x) < 0.085) or
                 (-0.075 < dz < -0.025 and abs(x) < 0.047))
     dents = [(0.185, 1.06), (-0.185, 0.42), (0.18, 0.27), (-0.12, 1.16)]
-    chips = [(0.25, 1.21), (-0.25, 0.12), (0.12, 0.47), (-0.25, 0.87), (0.25, 0.58)]
+    chips = [(0.25, 1.21), (-0.25, 0.12), (0.25, 0.10)]
     paint = []
     width = len(rings[0])
     nf = len(cols[0])
@@ -1385,7 +1412,7 @@ def pavisier(entry: Entry):
     fig = _ReachHuman(height=h, bulk=1.02, shoulders=0.48, stance=3.0,
                       arm_r=ArmPose(spread=10.0, swing=4.0, elbow=16.0),
                       reach={"L": grip_l}, pole={"L": Vector((1.0, 0.5, -0.9))})
-    pad = 0.014
+    pad = 0.022
     white = {"mat": "gesso_white", "min": (-1.0, -1.0, -1.0), "max": (0.0, 1.0, 3.0)}
     mail = [{"mat": "mail", "min": (-1, -1, 1.425), "max": (1, 1, 3)},
             {"mat": "mail", "min": (-1, -1, -1), "max": (1, 1, 0.80)}]
@@ -1396,7 +1423,7 @@ def pavisier(entry: Entry):
                             quilt=0.06, segments=36, paint=[white] + mail)]
     # the skirt follows the thighs fully at the hem (a lifted knee pushed through the
     # pleats at the default 0.8)
-    parts[0].extras["skirt"].update({"top": fig.hip_z + 0.05, "strength": 1.0, "split": 0.06})
+    parts[0].extras["skirt"].update({"top": fig.hip_z + 0.09, "strength": 1.0, "split": 0.06})
     for side in ("L", "R"):
         # sleeves counterchanged: red on the white side, white on the red side
         sleeve = "gesso_white" if side == "L" else "livery_red"
@@ -1419,7 +1446,9 @@ def pavisier(entry: Entry):
                      front_reach=0.128, half_w=0.121, rivets=False)
 
     # Belt 4 cm at 1.02 m, iron buckle; falchion on the left hip.
-    parts.append(fig.band(1.02, "leather", height=0.04, pad=0.004, torso_pad=pad))
+    belt = fig.band(1.02, "leather", height=0.04, pad=0.004, torso_pad=pad)
+    belt.extras["bones"] = ["Hips", "Spine"]   # a lifted thigh was pulling it apart
+    parts.append(belt)
     buckle = fig.surface(1.02, -90.0, pad=pad + 0.008)
     parts.append(Part("torus", tuple(buckle), (0.05, 0.05, 0.045), mat="iron_binding",
                       bone="Hips", rot=(90, 0, 0), segments=4, rings=4, minor=0.2,

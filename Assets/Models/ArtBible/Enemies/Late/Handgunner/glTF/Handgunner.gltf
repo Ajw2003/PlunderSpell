@@ -146,15 +146,15 @@
 		{
 			"name":"Gun",
 			"rotation":[
-				-0.8929993510246277,
-				-0.16523252427577972,
-				0.24852892756462097,
-				0.33687350153923035
+				-0.8825844526290894,
+				-0.2602823078632355,
+				0.2896161377429962,
+				0.2634774446487427
 			],
 			"scale":[
 				0.9999998211860657,
-				1.0000001192092896,
-				1.0000005960464478
+				0.9999998211860657,
+				0.9999998211860657
 			],
 			"translation":[
 				8.009374141693115e-07,
@@ -575,14 +575,14 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":6115,
+			"count":6244,
 			"max":[
 				0.33545973896980286,
 				1.7792210578918457,
 				0.32239165902137756
 			],
 			"min":[
-				-0.34259718656539917,
+				-0.3579419255256653,
 				0,
 				-0.22662591934204102
 			],
@@ -591,31 +591,31 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":6115,
+			"count":6244,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":6115,
+			"count":6244,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":6115,
+			"count":6244,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":6115,
+			"count":6244,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":18150,
+			"count":18918,
 			"type":"SCALAR"
 		},
 		{
@@ -628,44 +628,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":73380,
+			"byteLength":74928,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":73380,
-			"byteOffset":73380,
+			"byteLength":74928,
+			"byteOffset":74928,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":48920,
-			"byteOffset":146760,
+			"byteLength":49952,
+			"byteOffset":149856,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":24460,
-			"byteOffset":195680,
+			"byteLength":24976,
+			"byteOffset":199808,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":97840,
-			"byteOffset":220140,
+			"byteLength":99904,
+			"byteOffset":224784,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":36300,
-			"byteOffset":317980,
+			"byteLength":37836,
+			"byteOffset":324688,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1600,
-			"byteOffset":354280
+			"byteOffset":362524
 		}
 	],
 	"samplers":[
@@ -676,7 +676,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":355880,
+			"byteLength":364124,
 			"uri":"Handgunner.bin"
 		}
 	]
