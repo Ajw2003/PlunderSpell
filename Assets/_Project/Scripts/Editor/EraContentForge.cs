@@ -124,6 +124,34 @@ namespace RogueAi.EditorTools
             ("LateDoorPlugKeep", CastleZone.Keep), ("LateDoorPlugCrypt", CastleZone.Crypt),
         };
 
+        // Where the hand closes on each plunder item, as a fraction of its upright bounds (x across,
+        // y up from the base, z depth), read off the art bible's "grab" line for the primary hand
+        // (docs/art/data/<age>.json). Where the side a handle is on isn't known, the grip sits at the
+        // handle's height on the centre line. An item not listed is held by its mesh centre.
+        private static readonly Dictionary<string, Vector3> GripFractions = new Dictionary<string, Vector3>
+        {
+            { "oxhide-ingot", new Vector3(0.05f, 0.5f, 0.5f) },        // the lug on a short side
+            { "sealed-amphora", new Vector3(0.08f, 0.72f, 0.5f) },     // a loop handle at the shoulder
+            { "faience-hippo", new Vector3(0.5f, 0.5f, 0.5f) },        // around the belly
+            { "gold-death-mask", new Vector3(0.5f, 0.08f, 0.5f) },     // the chin edge
+            { "bronze-tripod", new Vector3(0.05f, 0.9f, 0.5f) },       // a ring handle on the rim
+            { "arm-reliquary", new Vector3(0.5f, 0.43f, 0.5f) },       // mid-sleeve, 0.15-0.30 m up
+            { "silver-ewer", new Vector3(0.5f, 0.6f, 0.5f) },          // handle height
+            { "illuminated-psalter", new Vector3(0.5f, 0.5f, 0.5f) },  // spine and fore-edge
+            { "coin-coffer", new Vector3(0.03f, 0.65f, 0.5f) },        // an end drop handle
+            { "gilded-altarpiece", new Vector3(0.05f, 0.1f, 0.5f) },   // the left end of the predella
+            { "parade-armour", new Vector3(0.5f, 0.33f, 0.5f) },       // the post, 0.55-0.70 m up
+            { "rolled-tapestry", new Vector3(0.044f, 0.5f, 0.5f) },    // 0.15 m in from an end
+            { "bankers-ledger", new Vector3(0.29f, 0.5f, 0.5f) },      // the spine boss (the chain trails)
+            { "jewelled-hat-badge", new Vector3(0.5f, 0.5f, 0.5f) },   // pinch grab
+            { "gilded-nef", new Vector3(0.57f, 0.2f, 0.5f) },          // the stem at the knop
+            { "curiosity-cabinet", new Vector3(0.02f, 0.76f, 0.5f) },  // a side bail, 1.00 m up
+            { "venetian-mirror", new Vector3(0.02f, 0.5f, 0.5f) },     // a side rail, 0.45-0.65 m up
+            { "brass-astrolabe", new Vector3(0.5f, 0.95f, 0.5f) },     // by the ring
+            { "silver-tureen", new Vector3(0.02f, 0.6f, 0.5f) },       // an end loop handle
+            { "nautilus-cup", new Vector3(0.5f, 0.23f, 0.5f) },        // the stem, 0.08 m above the foot
+        };
+
         // Worth climbs inward, as in RaidLootTableForge: the cheapest piece at the wall, the dearest
         // in the crypt. Indexed by the item's rank by worth within its era.
         private static readonly (CastleZone Zone, int Weight)[][] LootPostsByRank =
@@ -219,7 +247,7 @@ namespace RogueAi.EditorTools
                 data.IsArtifact = item.artifact;
                 EditorUtility.SetDirty(data);
 
-                built.Add((data, BuildLootPrefab(model, data, $"Assets/_Project/Prefabs/Loot/{era}/{asset.name}.prefab")));
+                built.Add((data, BuildLootPrefab(model, data, asset.slug, $"Assets/_Project/Prefabs/Loot/{era}/{asset.name}.prefab")));
             }
 
             built.Sort((a, b) => a.Item.Worth.CompareTo(b.Item.Worth));
@@ -277,7 +305,7 @@ namespace RogueAi.EditorTools
         /// The ArtForge models are exported in metres with the Z-up correction on their root, so the
         /// root rotation and scale are kept as imported.
         /// </summary>
-        private static GameObject BuildLootPrefab(GameObject model, LootItem data, string path)
+        private static GameObject BuildLootPrefab(GameObject model, LootItem data, string slug, string path)
         {
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(model);
             try
@@ -297,6 +325,7 @@ namespace RogueAi.EditorTools
                 pickup.SetData(data);
                 var pickupSo = new SerializedObject(pickup);
                 pickupSo.FindProperty("_meshRenderer").objectReferenceValue = instance.GetComponentInChildren<MeshRenderer>();
+                pickupSo.FindProperty("_gripPoint").objectReferenceValue = AddGripPoint(instance, slug);
                 pickupSo.ApplyModifiedPropertiesWithoutUndo();
 
                 instance.AddComponent<LootValue>().SetItem(data);
@@ -309,6 +338,35 @@ namespace RogueAi.EditorTools
             {
                 UnityEngine.Object.DestroyImmediate(instance);
             }
+        }
+
+        /// <summary>
+        /// A "GripPoint" child where the hand closes on the item, from <see cref="GripFractions"/>;
+        /// null (held by the mesh centre) for an item the table doesn't list. Placed in the upright,
+        /// as-imported pose the instance is in here.
+        /// </summary>
+        private static Transform AddGripPoint(GameObject instance, string slug)
+        {
+            if (!GripFractions.TryGetValue(slug, out Vector3 fraction))
+                return null;
+
+            bool any = false;
+            var bounds = new Bounds();
+            foreach (MeshRenderer meshRenderer in instance.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                if (!any)
+                    bounds = meshRenderer.bounds;
+                else
+                    bounds.Encapsulate(meshRenderer.bounds);
+                any = true;
+            }
+            if (!any)
+                return null;
+
+            var grip = new GameObject("GripPoint").transform;
+            grip.position = bounds.min + Vector3.Scale(bounds.size, fraction);
+            grip.SetParent(instance.transform, true);
+            return grip;
         }
 
         /// <summary>Bounds of every mesh under <paramref name="root"/>, in the root's local space.</summary>
