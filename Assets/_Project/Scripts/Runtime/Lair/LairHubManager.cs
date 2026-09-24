@@ -99,6 +99,18 @@ namespace RogueAi.Lair
             }
         }
 
+        /// <summary>
+        /// Shows the host's campaign on a client in someone else's session: the debt and bank
+        /// everyone is paying off together. Deliberately not saved, so joining a friend never
+        /// overwrites this machine's own campaign; <see cref="Load"/> puts it back afterwards.
+        /// </summary>
+        public void ShowHostCampaign(float debt, float gold, float lastRaidWorth)
+        {
+            TotalDebt = debt;
+            AccumulatedGold = gold;
+            LastRaidWorth = lastRaidWorth;
+        }
+
         /// <summary>Snapshot the current lair meta-state.</summary>
         public LairState GetLairState() => new LairState(TotalDebt, AccumulatedGold, SelectedEra);
     }

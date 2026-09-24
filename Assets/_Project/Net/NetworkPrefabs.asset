@@ -17,6 +17,57 @@ MonoBehaviour:
   poolByDefault: 0
   folder: {fileID: 102900000, guid: 3a3a303b71539fb4294630648c433a78, type: 3}
   prefabs:
-  - prefab: {fileID: 8511867752775346080, guid: 0121c273067c6a943a18ce8ccd0c84ab, type: 3}
+  - prefab: {fileID: 5792966157314537543, guid: 046e7dcdc26464e43bdeb96ed3dab445, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 2440431947630686680, guid: 12f8d6189b6aefb4ea939b8acc026983, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 6511764447489933774, guid: 2cd520b8156b96a4a93f4aa51f48dcb7, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 3553585510442637796, guid: 308b96f442c270a49b8537041ceb5738, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 5362887702188169609, guid: 3122b99f11ea5aa40b53f503327b9ccd, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 6246938865165151804, guid: 3cd06647bd138044d82e569e492e0b47, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 6484770831777660367, guid: 3d3a4d19ff5b64641b21765e31bee59c, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 7184054742281660173, guid: 3ef0dafca8cbff642a29d350ff693332, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 5313939541763710443, guid: 545c4c828845406488c404a25374a82e, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 4218288712613178982, guid: 7699f114cfe608244884802873b49f2a, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 8894736200407241835, guid: 912b8fa717c93894ba69754397fce111, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 3485968137656962782, guid: 93468a39f2146c441a0b0bc79782b84b, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 5933718209957545553, guid: a154025561639b84391da3c82ecdd5f9, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 9050904383365770160, guid: a1f75d6be29d11b4788605370bf70019, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 6816389412842675621, guid: ba45e493e9152b945baac5a7f48877d6, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 5718070715567320153, guid: be95e564919da944e96adf1ba0e947d5, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 3106342062324146821, guid: cea5b906054d6b5429e3aaddc886fd08, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 7658120120646674120, guid: d02c60430c106e742bc4288e6361a875, type: 3}
     pooled: 0
     warmupCount: 5

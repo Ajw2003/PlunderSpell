@@ -132,7 +132,9 @@ namespace RogueAi.Spells
                 return;
             }
 
-            ServerCast(resolved, result.Volume, this);
+            // Aim is read here, on the caster's machine: the server never sees a remote player's
+            // camera pitch, so its own reading of their aim would point along the horizon.
+            ServerCast(resolved, (byte)result.Volume, this, CastOrigin(this), CastDirection(this));
         }
 
         /// <summary>
@@ -140,14 +142,18 @@ namespace RogueAi.Spells
         /// observer for presentation. Running the effect here (not in the observers RPC) is what
         /// stops four clients each applying the same damage.
         /// </summary>
+        // The volume crosses the network as a byte: CastVolume lives in the Voice assembly, which
+        // PurrNet's code generation never registers, so sending the enum itself failed to pack and
+        // every networked cast was lost (caught by RaidSceneCastingTests once solo became a host).
         [ServerRpc(requireOwnership: true)]
-        private void ServerCast(SpellId spellId, CastVolume volume, NetworkIdentity caster, RPCInfo info = default)
+        private void ServerCast(SpellId spellId, byte volumeByte, NetworkIdentity caster, Vector3 origin,
+            Vector3 direction, RPCInfo info = default)
         {
-            int affected = ExecuteEffect(spellId, volume, caster);
+            var volume = (CastVolume)volumeByte;
+            int affected = ExecuteEffect(spellId, volume, caster, origin, direction);
 
             // info.sender is the player that requested the cast.
-            BroadcastCast(spellId, volume, caster, info.sender, affected,
-                CastOrigin(caster), CastDirection(caster));
+            BroadcastCast(spellId, volumeByte, caster, info.sender, affected, origin, direction);
         }
 
         /// <summary>
@@ -155,11 +161,16 @@ namespace RogueAi.Spells
         /// Public and network-free so the whole voice → misfire → consequence chain is testable
         /// without a transport.
         /// </summary>
-        public int ExecuteEffect(SpellId spellId, CastVolume volume, NetworkIdentity caster)
+        public int ExecuteEffect(SpellId spellId, CastVolume volume, NetworkIdentity caster) =>
+            ExecuteEffect(spellId, volume, caster, CastOrigin(caster), CastDirection(caster));
+
+        /// <summary>Runs the effect from an aim measured on the caster's own machine.</summary>
+        public int ExecuteEffect(SpellId spellId, CastVolume volume, NetworkIdentity caster, Vector3 origin,
+            Vector3 direction)
         {
             var ctx = new SpellEffectContext(
                 spellId, volume,
-                CastOrigin(caster), CastDirection(caster),
+                origin, direction,
                 caster,
                 _targetLayers,
                 _geometryLayers);
@@ -193,9 +204,9 @@ namespace RogueAi.Spells
         /// server, so this must stay side-effect-free apart from logging and the local event.
         /// </summary>
         [ObserversRpc(bufferLast: false)]
-        private void BroadcastCast(SpellId spellId, CastVolume volume, NetworkIdentity caster,
+        private void BroadcastCast(SpellId spellId, byte volumeByte, NetworkIdentity caster,
             PlayerID sender, int affected, Vector3 origin, Vector3 direction) =>
-            PresentCast(spellId, volume, caster, sender, affected, origin, direction);
+            PresentCast(spellId, (CastVolume)volumeByte, caster, sender, affected, origin, direction);
 
         /// <summary>
         /// Presentation half, callable without an RPC. Must stay side-effect-free apart from logging

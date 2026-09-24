@@ -69,6 +69,21 @@ namespace Interfaces
         /// synchronously.</summary>
         public static event Action<DamageReport> Dealt;
 
+        /// <summary>Signature of <see cref="Forward"/>; the arguments are <see cref="Apply"/>'s.</summary>
+        public delegate bool ForwardHit(IHealth target, float amount, GameObject source, GameObject instigator,
+            Vector3 point, DamageKind kind, float impactVelocity);
+
+        /// <summary>
+        /// Installed by RogueAi.Net during a session. Returns true when the target's health lives on
+        /// another machine (a guard, on the server; a friend's body, on their machine) and the hit
+        /// has been sent there, in which case <see cref="Apply"/> does nothing here. Null offline.
+        /// </summary>
+        public static ForwardHit Forward;
+
+        /// <summary>Raises <see cref="Dealt"/> for a hit applied on another machine, so the player who
+        /// landed it still sees the numbers and the flash.</summary>
+        public static void ReportRemote(DamageReport report) => Dealt?.Invoke(report);
+
         /// <summary>
         /// Hurts <paramref name="target"/>. <paramref name="impactVelocity"/> routes to the
         /// impact overload of <see cref="IHealth.TakeDamage(float, float)"/>, which lets the target
@@ -80,6 +95,9 @@ namespace Interfaces
             // IHealth is an interface, so Unity's destroyed-object check needs the concrete Object.
             var component = target as Component;
             if (target == null || component == null || amount <= 0f)
+                return 0f;
+
+            if (Forward != null && Forward(target, amount, source, instigator, point, kind, impactVelocity))
                 return 0f;
 
             float before = target.CurrentHealth;

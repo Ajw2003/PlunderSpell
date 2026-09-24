@@ -131,6 +131,21 @@ Its acceptance criterion (multi-accent recognition, latency) is still unmeasured
 Whisper/Shout calibration against real voices. A standalone build has not been re-tested since the
 fixes.
 
+**2026-09-23, Steam co-op wired into the shipping raid (stages 1–3 of
+`docs/plans/steam-coop-raid.md`).** Before this, the build could not do co-op at all: `RaidScene`
+had no network manager and nothing started Steam. Now every session runs through PurrNet (solo is
+a local host), Host Co-op creates a Steam lobby, the Lair invites online friends, and each player
+gets their own body. Checked on this machine with two game windows over UDP, and Steam hosting in
+the build. **A real Steam join between two accounts has not been tried;** that is the user's test
+with a friend. The raid player now copies the CastleBench player; before that, casting in the
+built raid did nothing (push-to-cast was on F19) and the camera sat too high. The user then confirmed voice casting by
+microphone in the standalone build (2026-09-23). Stage 4 followed the
+same day: guards and loot replicate, a client can carry loot and extract it, hits land where the
+target's health lives, a client's spells aim where it looks, a dead player spectates a teammate and
+the raid ends when everyone is down, and a friend's Lair shows the host's campaign. All checked with
+two game windows over UDP; still untested between two Steam accounts. See
+`docs/systems/net.md`.
+
 **2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh
 (`CastleAudit.cs`). Every room and all floor are reachable on five seeds, and loot now spawns on
 furniture (tables, chests, shelves, altars) inside rooms, all of it reachable. Phases 3–5 (themed

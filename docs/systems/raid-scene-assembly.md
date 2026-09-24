@@ -141,15 +141,21 @@ path.
 
 A generated scene had its references re-wired on every run, so a dropped reference fixed itself. An
 authored one keeps whatever was last saved. `AuthoredRaidSceneTests` (EditMode) is what catches that
-now: it opens the scene and asserts the player is an instance of `RaidPlayer.prefab`, that it
-carries the shipping controller and *not* `FreeLookPlaytestController`, that it has the
-`IntruderTag`, `LootInteractor` and camera the raid expects, and that every serialised reference on
-`RaidDirector` and `RaidHudPresenter` is still assigned.
+now: it opens the scene and asserts that the network spawns the player from `RaidPlayer.prefab`
+(no player is placed in the scene; see `net.md`), that the prefab carries the shipping controller
+and *not* `FreeLookPlaytestController`, the `IntruderTag`, push-to-cast, camera and network
+components the raid expects, that it matches the CastleBench player's setup, and that every
+serialised reference on `RaidDirector` and `RaidHudPresenter` is still assigned.
 
 ### Editing the player
 
-Edit `Prefabs/RaidPlayer.prefab`. Both the authored scene and the scaffold instance it, so the two
-cannot disagree about what a player is again.
+Edit `Prefabs/RaidPlayer.prefab`; the raid's `PlayerSpawner` creates one per connection from it.
+Its setup copies the player built into `CastleBench.unity`, which is the reference because voice
+casting was confirmed on it: push-to-cast on V, eye 0.75 m above the capsule's centre, hand socket
+under the eye, mass 1, no `LootInteractor` (pickup is `ItemManager`'s mouse drag). Until
+2026-09-23 the prefab had push-to-cast on F19 and the eye 1.65 m above centre, so casting in the
+raid did nothing and the view sat in door lintels. `AuthoredRaidSceneTests` checks the key and the
+eye height.
 
 `Prefabs/Player.prefab` is a *different*, older rig — third-person, 2.0 m × 0.5 m — built by
 `TestSceneBuilder` for `TestScene.unity`. It is not the raid player and does not meet the 1.80 m

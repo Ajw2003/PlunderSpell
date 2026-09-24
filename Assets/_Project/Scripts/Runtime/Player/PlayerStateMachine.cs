@@ -146,7 +146,9 @@ namespace StateMachine
             AssignSpellBook(null);
 
             Camera view = CameraTransform != null ? CameraTransform.GetComponent<Camera>() : null;
-            if (Local == null && view != null && view.enabled)
+            // isActiveAndEnabled, not enabled: a remote player's camera object is switched off by
+            // PlayerNetworkOwnership before Start, and must not claim to be this machine's player.
+            if (!LocalDecidedByNetwork && Local == null && view != null && view.isActiveAndEnabled)
                 Local = this;
 
             Plunderspell.Core.GameServices.Initialize();
@@ -177,10 +179,34 @@ namespace StateMachine
         /// <summary>The player this machine renders through (its camera is live). Null until one exists.</summary>
         public static PlayerStateMachine Local { get; private set; }
 
+        /// <summary>
+        /// Asked when this machine's player dies: true when a teammate is still alive to watch.
+        /// Installed by RogueAi.Net; offline there is nobody to watch, so it is always false.
+        /// </summary>
+        public static System.Func<bool> SpectateOnDeath = () => false;
+
         /// <summary>Raised when the local player dies. The raid treats it as a lost raid.</summary>
         public static event System.Action LocalPlayerDied;
 
         public bool IsLocal => Local == this;
+
+        /// <summary>Makes this body the one this machine plays as. Called by the network ownership
+        /// component when this machine turns out to own it, which can happen after Start.</summary>
+        public void ClaimLocal() => Local = this;
+
+        /// <summary>Undoes <see cref="ClaimLocal"/> when this machine turns out not to own the body.</summary>
+        public void ReleaseLocal()
+        {
+            if (Local == this)
+                Local = null;
+        }
+
+        /// <summary>
+        /// Set by the network ownership component on a networked body, so that only ownership decides
+        /// which body is this machine's. Without it, Start claimed whichever body woke first with a
+        /// live camera, and on a host that could be a friend's.
+        /// </summary>
+        public bool LocalDecidedByNetwork { get; set; }
 
         public void Die()
         {
@@ -188,8 +214,11 @@ namespace StateMachine
             ChangeState(DeadState);
             if (IsLocal)
             {
+                bool spectate = SpectateOnDeath();
                 LocalPlayerDied?.Invoke();
-                if (Plunderspell.Core.GameServices.GameState != null)
+                // In co-op with a teammate still standing, the network layer hands the view to them
+                // and ends the raid only when everyone is down; otherwise this is a lost raid now.
+                if (!spectate && Plunderspell.Core.GameServices.GameState != null)
                     Plunderspell.Core.GameServices.GameState.ChangeState(Plunderspell.Core.GameState.GameOver);
             }
         }
@@ -204,7 +233,8 @@ namespace StateMachine
         /// <summary>Setting out again after dying: a fresh body, full health.</summary>
         private void OnGameStateChanged(Plunderspell.Core.GameState previous, Plunderspell.Core.GameState next)
         {
-            if (next == Plunderspell.Core.GameState.Playing && previous == Plunderspell.Core.GameState.Lair && dead)
+            bool freshRaid = previous == Plunderspell.Core.GameState.Lair || previous == Plunderspell.Core.GameState.GameOver;
+            if (next == Plunderspell.Core.GameState.Playing && freshRaid && dead)
                 ReviveTo(1f);
         }
 

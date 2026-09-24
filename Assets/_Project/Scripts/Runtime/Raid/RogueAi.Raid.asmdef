@@ -15,7 +15,8 @@
         "RogueAi.Status",
         "RogueAi.Spells",
         "RogueAi.Voice",
-        "Plunderspell.Core"
+        "Plunderspell.Core",
+        "RogueAi.Player"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

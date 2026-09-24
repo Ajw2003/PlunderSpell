@@ -23,6 +23,7 @@ namespace RogueAi.Tests
         private const string k_ScenePath = "Assets/_Project/Scenes/RaidScene.unity";
 
         private GameState m_stateBeforeTest;
+        private string m_sessionReport;
 
         [UnitySetUp]
         public IEnumerator SetUp()
@@ -35,6 +36,15 @@ namespace RogueAi.Tests
 
             GameServices.Initialize();
             m_stateBeforeTest = GameServices.GameState.CurrentState;
+
+            // The player is spawned by the network, solo included, exactly as Play Solo does it.
+            Assert.IsNotNull(GameServices.Coop, $"{k_ScenePath} has no co-op session to start.");
+            GameServices.Coop.PlaySolo();
+            for (int frame = 0; frame < 120 && Object.FindFirstObjectByType<SpellCastingSystem>() == null; frame++)
+                yield return null;
+            var manager = PurrNet.NetworkManager.main;
+            m_sessionReport = $"session: {GameServices.Coop.Status} inSession={GameServices.Coop.IsInSession} " +
+                              $"server={(manager != null && manager.isServer)} client={(manager != null && manager.isClient)}";
         }
 
         /// <summary>
@@ -51,6 +61,8 @@ namespace RogueAi.Tests
             }
 
             VoiceServiceLocator.Clear();
+            GameServices.Coop?.Leave();
+            yield return null;
 
             Scene raid = SceneManager.GetSceneByPath(k_ScenePath);
             if (raid.IsValid() && raid.isLoaded)
@@ -74,7 +86,7 @@ namespace RogueAi.Tests
             yield return null;
 
             var casting = Object.FindFirstObjectByType<SpellCastingSystem>();
-            Assert.IsNotNull(casting, $"{k_ScenePath} has no SpellCastingSystem on its player.");
+            Assert.IsNotNull(casting, $"{k_ScenePath} has no SpellCastingSystem on its player ({m_sessionReport}).");
 
             var director = Object.FindFirstObjectByType<SpellVfxDirector>();
             Assert.IsNotNull(director, $"{k_ScenePath} has no SpellVfxDirector.");
@@ -91,7 +103,11 @@ namespace RogueAi.Tests
             VoiceServiceLocator.Keyboard.SimulateKeyPress(KeyCode.Alpha5);
             voice.StopListening();
 
-            yield return null;
+            // Round trip through the server: allow a few network ticks.
+            float deadline = Time.realtimeSinceStartup + 0.5f;
+            while (Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length <= before
+                   && Time.realtimeSinceStartup < deadline)
+                yield return null;
 
             int after = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
             Assert.Greater(after, before,
@@ -132,7 +148,11 @@ namespace RogueAi.Tests
                     mock.SimulateKeyPress(key);
                     voice.StopListening();
 
-                    yield return null;
+                    // The cast goes to the server and comes back as a network message, which lands
+                    // on the next network tick rather than the next frame.
+                    float deadline = Time.realtimeSinceStartup + 0.5f;
+                    while (lastResolved == SpellId.None && Time.realtimeSinceStartup < deadline)
+                        yield return null;
 
                     Assert.AreNotEqual(SpellId.None, lastResolved,
                         $"{key} fizzled: the scene's lexicon does not resolve that word.");

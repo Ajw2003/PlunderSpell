@@ -97,6 +97,10 @@ namespace RogueAi.Extraction
 
         private void ResetClock()
         {
+            // Awake runs before the network spawns this object, so isSpawned cannot tell a client
+            // here; the manager can. A client's clock is the server's, replicated.
+            if (NetworkManager.main != null && NetworkManager.main.isClientOnly)
+                return;
             _timeRemaining.value = RaidDurationSeconds;
             _extractionComplete.value = false;
         }

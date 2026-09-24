@@ -35,7 +35,13 @@ public class ItemManager : SingletonBase<ItemManager>
 
     private void Update()
     {
+        // In a session the player, and with it the camera, is spawned after this wakes.
+        if (_mainCamera == null || !_mainCamera.isActiveAndEnabled)
+            _mainCamera = Camera.main;
         if (_mainCamera == null) return;
+
+        if (_pendingDrag != null && _draggedItem == null && Item.CanDriveHere(_pendingDrag))
+            StartDragging(_pendingDrag);
 
         HandleHover();
 
@@ -174,6 +180,16 @@ public class ItemManager : SingletonBase<ItemManager>
 
     private void StartDragging(Item item)
     {
+        // In a session another machine may be driving this body; ask for it and pick it up once
+        // granted (Update), rather than fighting the replicated position meanwhile.
+        if (!Item.CanDriveHere(item))
+        {
+            _pendingDrag = item;
+            Item.RequestDrive?.Invoke(item);
+            return;
+        }
+
+        _pendingDrag = null;
         _draggedItem = item;
         _draggedItem.StartDragging(_mainCamera.transform.root.gameObject);
 
@@ -183,12 +199,15 @@ public class ItemManager : SingletonBase<ItemManager>
 
     private void StopDragging()
     {
+        _pendingDrag = null;
         if (_draggedItem != null)
         {
             _draggedItem.StopDragging();
             _draggedItem = null;
         }
     }
+
+    private Item _pendingDrag;
 
     public Item HoveredItem => _hoveredItem;
 
