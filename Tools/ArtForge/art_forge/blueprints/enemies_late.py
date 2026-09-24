@@ -1327,7 +1327,7 @@ def _pavise(fig: Human, c: Vector, grip: Vector) -> list[Part]:
                            (0.052, 0.085, 0.649, 0.70), (-0.047, 0.047, 0.598, 0.649)):
         cell(x0, x1, z0, z1, "iron_binding")
     # 4 ball-shot dents and a few gesso chips showing poplar.
-    for x0, x1, z0, z1, m in ((0.15, 0.22, 1.04, 1.09), (-0.22, -0.15, 0.39, 0.445),
+    for x0, x1, z0, z1 in ((0.15, 0.22, 1.04, 1.09), (-0.22, -0.15, 0.39, 0.445),
                               (0.15, 0.22, 0.24, 0.29), (-0.15, -0.085, 1.14, 1.19)):
         cell(x0, x1, z0, z1, "iron_binding")
     for x0, x1, z0, z1 in ((0.22, 0.29, 1.19, 1.24), (-0.29, -0.22, 0.09, 0.14),
@@ -1373,8 +1373,8 @@ def _pavise(fig: Human, c: Vector, grip: Vector) -> list[Part]:
                       0.009, "iron_binding", "PaviseProp", segments=6, extras=dict(pr)))
     # The stuck crossbow bolt, 0.35 m, buried in the outer side edge at 0.65 m.
     ex = cx + half
-    root = Vector((ex - 0.05, cy + 0.0, 0.65))
-    d = Vector((1.0, -0.18, 0.10)).normalized()
+    root = Vector((ex - 0.012, cy + 0.02, 0.65))
+    d = Vector((0.40, -0.90, 0.08)).normalized()   # sticking out toward the front
     tail = root + d * 0.35
     parts.append(_rod(root, tail, 0.0065, "poplar", "Pavise", segments=5, extras=dict(pr)))
     for ang in (0.0, 90.0):   # two crossed fletching vanes near the nock
@@ -1425,7 +1425,7 @@ def pavisier(entry: Entry):
     # 0.48 m shoulders. The pavise stands at his left front, his left fist on its
     # rim (placed by IK); the right arm hangs by the falchion side.
     h = 1.763
-    pav = Vector((0.56, -0.12, 0.0))
+    pav = Vector((0.53, -0.12, 0.0))
     grip_l = Vector((pav.x - 0.19, pav.y + (_pav_front(-0.19) + _pav_back(-0.19)) / 2,
                      _PAV_Z1 + 0.015))
     fig = _ReachHuman(height=h, bulk=1.02, shoulders=0.48, stance=3.0,

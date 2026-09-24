@@ -1670,7 +1670,7 @@
       "slug": "dendra-champion",
       "name": "DendraChampion",
       "title": "Dendra Champion",
-      "passed": true,
+      "passed": false,
       "stats": {
         "vertices": 4837,
         "faces": 4936,
@@ -1751,7 +1751,9 @@
           "emit": null
         }
       },
-      "failures": [],
+      "failures": [
+        "heat weighting silently failed: every vertex ended on a single bone, so joints will not bend smoothly (check small detached parts near joints, e.g. rivet spheres; see Tools/ArtForge/README.md, Traps)"
+      ],
       "warnings": [
         "families not in the JSON (blueprint extras): ['rivet_bronze', 'skin']"
       ],
@@ -1766,7 +1768,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/glTF/DendraChampion.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/DendraChampion.blend"
       },
-      "build_seconds": 5.2
+      "build_seconds": 5.1
     },
     {
       "key": "enemies/bronze/flame-keeper",
@@ -1881,7 +1883,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/KeeperOfTheFlame/glTF/KeeperOfTheFlame.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/KeeperOfTheFlame/KeeperOfTheFlame.blend"
       },
-      "build_seconds": 4.1
+      "build_seconds": 4.7
     },
     {
       "key": "enemies/bronze/palace-levy",
@@ -2002,7 +2004,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/glTF/PalaceLevy.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/PalaceLevy.blend"
       },
-      "build_seconds": 3.8
+      "build_seconds": 4.6
     },
     {
       "key": "enemies/bronze/wall-slinger",
@@ -2106,7 +2108,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/glTF/WallSlinger.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/WallSlinger.blend"
       },
-      "build_seconds": 3.7
+      "build_seconds": 4.3
     },
     {
       "key": "enemies/high/alaunt-hound",
@@ -2202,7 +2204,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/glTF/AlauntWarHound.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/AlauntWarHound.blend"
       },
-      "build_seconds": 3.5
+      "build_seconds": 3.9
     },
     {
       "key": "enemies/high/castle-crossbowman",
@@ -2315,7 +2317,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/glTF/CastleCrossbowman.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/CastleCrossbowman.blend"
       },
-      "build_seconds": 4.6
+      "build_seconds": 4.8
     },
     {
       "key": "enemies/high/household-knight",
@@ -2429,7 +2431,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/glTF/HouseholdKnight.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/HouseholdKnight.blend"
       },
-      "build_seconds": 3.8
+      "build_seconds": 4.0
     },
     {
       "key": "enemies/high/lantern-warden",
@@ -2534,7 +2536,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/LanternWarden/glTF/LanternWarden.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
-      "build_seconds": 3.9
+      "build_seconds": 4.1
     },
     {
       "key": "enemies/late/gothic-knight",
@@ -2782,6 +2784,120 @@
         "blend": "Assets/Models/ArtBible/Enemies/Late/Handgunner/Handgunner.blend"
       },
       "build_seconds": 3.4
+    },
+    {
+      "key": "enemies/late/pavisier",
+      "kind": "enemies",
+      "age": "late",
+      "slug": "pavisier",
+      "name": "Pavisier",
+      "title": "Pavisier",
+      "passed": true,
+      "stats": {
+        "vertices": 2728,
+        "faces": 2694,
+        "triangles": 5272,
+        "islands": 47,
+        "lowest_z": 0.0,
+        "height": 1.806,
+        "width": 1.285,
+        "budget": 8000,
+        "bbox_m": "1.285x0.663x1.806",
+        "height_body_m": 1.806,
+        "height_spec_m": 1.8,
+        "height_with_props_m": 1.806,
+        "rig_bones": 24,
+        "skinned_bones": 23,
+        "mean_influences": 1.62
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.8,
+        "tri_budget": 8000
+      },
+      "families": {
+        "poplar": {
+          "name": "Poplar",
+          "base": "#B09A74",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
+        "gesso_white": {
+          "name": "Gesso white",
+          "base": "#D6CDB6",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "livery_red": {
+          "name": "Livery red",
+          "base": "#9E2A2F",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "iron_binding": {
+          "name": "Iron binding",
+          "base": "#3F3C38",
+          "rough": 0.6,
+          "metal": 1.0,
+          "emit": null
+        },
+        "sallet": {
+          "name": "Sallet",
+          "base": "#2E2F31",
+          "rough": 0.45,
+          "metal": 0.0,
+          "emit": null
+        },
+        "mail": {
+          "name": "Mail",
+          "base": "#6D6E6C",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "leather": {
+          "name": "Leather",
+          "base": "#5A4331",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "skin": {
+          "name": "Skin",
+          "base": "#9C7A5E",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hose": {
+          "name": "Dark wool hose",
+          "base": "#3A2F26",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "48 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
+        "families not in the JSON (blueprint extras): ['hose', 'skin']"
+      ],
+      "notes": [
+        "The pavise (1.30 m) is a prop bone Pavise on Hand.L, left out of the 1.80 m height; PaviseProp is its hinge bone. In game the pavise re-parents to the world when planted.",
+        "Sallet is its own bone under Head (detachable); Falchion is a bone under Hips.",
+        "The saltire, briquet device, rim binding, dents and chips are painted cells on the pavise shell (a coarse, ragged staircase at this resolution).",
+        "Not built: coat_skirt spring chains (the skirt rule hands the skirt to the thighs), the painted red sparks, mud on the lower 0.2 m, gesso crazing, damage states."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Late/Pavisier/Pavisier.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Late/Pavisier/glTF/Pavisier.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Late/Pavisier/Pavisier.blend"
+      },
+      "build_seconds": 3.8
     },
     {
       "key": "enemies/late/sallet-halberdier",
