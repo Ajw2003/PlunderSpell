@@ -10,30 +10,6 @@ docs/plans/era-castle-rooms.md.
 from castle_builders_late import *  # noqa: F401,F403  palette, room_shell, cb, ek, mk, rk, math, Euler
 
 
-def _candle_stand(bm, uv, x, y, fz, h=1.5):
-    """A standing iron pricket: foot, stem, drip pan, a candle and its flame."""
-    mk.paint(bm, mk.add_cylinder(bm, 0.2, 0.05, loc=(x, y, fz + 0.025), segments=8), IRON, uv)
-    mk.paint(bm, mk.add_cylinder(bm, 0.03, h, loc=(x, y, fz + h / 2), segments=6), IRON, uv)
-    mk.paint(bm, mk.add_cylinder(bm, 0.12, 0.03, loc=(x, y, fz + h + 0.015), segments=8), IRON, uv)
-    mk.paint(bm, mk.add_cylinder(bm, 0.035, 0.18, loc=(x, y, fz + h + 0.12), segments=6), LINEN, uv)
-    mk.paint(bm, mk.add_cylinder(bm, 0.025, 0.08, loc=(x, y, fz + h + 0.25), segments=6, radius2=0.005), CLOTH, uv)
-
-
-def _wall_hearth(bm, uv, side_x, y, fz, width=1.3, depth=0.9, mouth=1.3, hood_top=4.1):
-    """A hooded hearth against the west wall (side_x = -IN) centred at y: jambs, a
-    mantel, a sandstone hood tapering back to the wall, a sooted back, a fire."""
-    x_face = side_x + depth
-    for o in (-1, 1):
-        cb._box(bm, uv, WALL, ((side_x + x_face) / 2, y + o * (width / 2 - 0.09), fz + mouth / 2), (depth, 0.18, mouth))
-    cb._box(bm, uv, WALL, ((side_x + x_face + 0.1) / 2, y, fz + mouth + 0.125), (depth + 0.1, width + 0.2, 0.25))
-    ek.prism(bm, uv, WALL, [(side_x, mouth + 0.25), (x_face + 0.1, mouth + 0.25), (side_x + 0.3, hood_top),
-                            (side_x, hood_top)], width, loc=(0, y, fz), along="y")
-    ek.wall_panel(bm, uv, SOOT, "west", y, fz, width - 0.36, mouth, depth=0.04)
-    for o in (-1, 1):
-        cb._box(bm, uv, IRON, (side_x + 0.45, y + o * 0.25, fz + 0.12), (0.5, 0.06, 0.24))
-    mk.paint(bm, mk.add_cylinder(bm, 0.25, 0.55, loc=(side_x + 0.4, y, fz + 0.275), segments=6, radius2=0.03), CLOTH, uv)
-
-
 def build_late_great_hall(bm, uv):
     """docs/art/rooms/concept/LateMedieval/LateGreatHall.svg"""
     h, fz = room_shell(bm, uv, "Keep")
@@ -61,25 +37,13 @@ def build_late_great_hall(bm, uv):
     mk.paint(bm, mk.add_cylinder(bm, 0.015, 0.4, loc=(-3.6, 4.5, top + 0.33), segments=4), GOLD, uv)
     cb._box(bm, uv, LINEN, (-3.5, 4.5, top + 0.4), (0.18, 0.02, 0.2))
     # West: the hooded hearth south of the NW dais. East: two window embrasures.
-    _wall_hearth(bm, uv, -IN, 2.5, fz)
+    wall_hearth(bm, uv, -IN, 2.5, fz)
     for y in (3.6, -3.6):
         ek.framed_panel(bm, uv, "vellum_faint", "line", "east", y, fz + 1.6, 1.4, 1.6)
     # South: two benches and a standing candle stand.
     cb._bench(bm, uv, 3.4, -3.0, fz, 2.6, 0.35, True, TIMBER)
     cb._bench(bm, uv, -3.2, -3.4, fz, 2.6, 0.35, True, TIMBER)
-    _candle_stand(bm, uv, 4.8, -4.8, fz)
-
-
-def _iron_chest(bm, uv, x, y, fz, w=1.2, d=0.7, h=0.7, along_x=True):
-    """An oak chest bound in blackened iron: lid band, three straps over it, a lock
-    plate; registers its loot anchor on the lid."""
-    sx, sy = (w, d) if along_x else (d, w)
-    cb._chest(bm, uv, x, y, fz, w=sx, d=sy, h=h, trim=IRON, body=TIMBER)
-    for o in (-0.375, 0.0, 0.375):
-        if along_x:
-            cb._box(bm, uv, IRON, (x + o * w, y, fz + h / 2 + 0.01), (0.06, d + 0.02, h + 0.02))
-        else:
-            cb._box(bm, uv, IRON, (x, y + o * w, fz + h / 2 + 0.01), (d + 0.02, 0.06, h + 0.02))
+    candle_stand(bm, uv, 4.8, -4.8, fz)
 
 
 def build_late_jewel_house(bm, uv):
@@ -103,7 +67,7 @@ def build_late_jewel_house(bm, uv):
     for dx in (-0.7, 0.7):
         mk.paint(bm, mk.add_cylinder(bm, 0.05, 0.14, loc=(3.6 + dx, IN - 0.15, fz + 1.87), segments=6, radius2=0.035),
                  GOLD, uv)
-    _candle_stand(bm, uv, 1.95, 4.0, fz)
+    candle_stand(bm, uv, 1.95, 4.0, fz)
     # NW: the strong cupboard behind a lattice of iron straps, a lock plate on it.
     cb._box(bm, uv, TIMBER, (-3.6, IN - 0.3, fz + 1.1), (1.6, 0.6, 2.2))
     face = IN - 0.61
@@ -116,7 +80,7 @@ def build_late_jewel_house(bm, uv):
     # and its casket SE, coin sacks SW.
     for sgn in (-1, 1):
         ek.wall_panel(bm, uv, BRICK, "south", sgn * 3.6, fz, 3.4, 2.4, depth=0.04)
-        _iron_chest(bm, uv, sgn * 3.4, -5.0, fz)
+        iron_chest(bm, uv, sgn * 3.4, -5.0, fz)
     cb._table(bm, uv, TIMBER, 4.4, -2.9, fz, 0.9, 0.6, h=0.8)
     cb._box(bm, uv, TIMBER, (4.65, -2.9, fz + 0.9), (0.3, 0.2, 0.2))
     cb._box(bm, uv, GOLD, (4.65, -2.9, fz + 1.015), (0.32, 0.22, 0.03))
@@ -143,7 +107,7 @@ def build_late_state_bedchamber(bm, uv):
     ek.wall_panel(bm, uv, CLOTH, "north", bx, fz + 0.45, bw, post_h - 0.45, depth=0.04)
     for py in (3.55, 5.05):
         cb._box(bm, uv, CLOTH, (x1 + 0.05, py, fz + 0.5 + (post_h - 0.5) / 2), (0.06, 0.6, post_h - 0.5))
-    _iron_chest(bm, uv, -3.8, 2.8, fz, w=1.2, d=0.5, h=0.55)
+    iron_chest(bm, uv, -3.8, 2.8, fz, w=1.2, d=0.5, h=0.55)
     # NE: a verdure tapestry and the prie-dieu before it.
     ek.wall_panel(bm, uv, TAPESTRY, "north", 3.65, fz + 0.9, 3.3, 2.7, depth=0.04)
     cb._box(bm, uv, TIMBER, (3.6, 4.95, fz + 0.425), (0.6, 0.35, 0.85))
@@ -156,7 +120,7 @@ def build_late_state_bedchamber(bm, uv):
     cb._box(bm, uv, TIMBER, (4.9, -4.9, fz + 0.225), (0.5, 0.45, 0.45))
     cb._box(bm, uv, CLOTH, (4.9, -4.9, fz + 0.47), (0.52, 0.47, 0.04))
     # SW: a small hooded hearth; east: a window.
-    _wall_hearth(bm, uv, -IN, -3.2, fz, width=1.3, depth=0.7, hood_top=3.6)
+    wall_hearth(bm, uv, -IN, -3.2, fz, width=1.3, depth=0.7, hood_top=3.6)
     ek.framed_panel(bm, uv, "vellum_faint", "line", "east", 3.0, fz + 1.4, 1.4, 1.6)
 
 
@@ -177,7 +141,7 @@ def build_late_tapestry_solar(bm, uv):
         x += w + 0.04
     # NW: the north tapestry, the hearth on the west wall, and the settle facing it.
     ek.wall_panel(bm, uv, TAPESTRY, "north", -3.45, fz + 1.0, 3.1, 2.6, depth=0.04)
-    _wall_hearth(bm, uv, -IN, 3.4, fz, width=1.3, depth=0.8, mouth=1.2, hood_top=3.8)
+    wall_hearth(bm, uv, -IN, 3.4, fz, width=1.3, depth=0.8, mouth=1.2, hood_top=3.8)
     cb._box(bm, uv, TIMBER, (-3.35, 3.4, fz + 0.225), (0.5, 1.6, 0.45))
     cb._box(bm, uv, TIMBER, (-3.05, 3.4, fz + 0.675), (0.08, 1.6, 1.35))
     cb._box(bm, uv, CLOTH, (-3.39, 3.4, fz + 0.485), (0.44, 1.5, 0.07))
@@ -190,19 +154,8 @@ def build_late_tapestry_solar(bm, uv):
     mk.paint(bm, mk.add_cylinder(bm, 0.12, 0.03, loc=(5.2, -3.3, fz + 1.315), segments=10), STEEL, uv)
     # SW: the south tapestry and an iron-bound chest before it; east: a window.
     ek.wall_panel(bm, uv, TAPESTRY, "south", -3.55, fz + 0.8, 3.5, 2.8, depth=0.04)
-    _iron_chest(bm, uv, -3.6, -4.9, fz, w=1.2, d=0.6, h=0.6)
+    iron_chest(bm, uv, -3.6, -4.9, fz, w=1.2, d=0.6, h=0.6)
     ek.framed_panel(bm, uv, "vellum_faint", "line", "east", 2.6, fz + 1.4, 1.4, 1.6)
-
-
-def _gun_loop(bm, uv, side, along, bottom):
-    """A keyhole gun-loop on a wall: a dressed surround, a 0.90 m slit and a 0.20 m round
-    hole under it, both soot-dark."""
-    ek.wall_panel(bm, uv, "vellum_faint", side, along, bottom, 0.6, 1.3, depth=0.06)
-    ek.wall_panel(bm, uv, SOOT, side, along, bottom + 0.3, 0.1, 0.9, depth=0.04, proud=0.05)
-    off = IN - 0.09
-    loc = {"north": (along, off), "south": (along, -off), "east": (off, along), "west": (-off, along)}[side]
-    rot = Euler((math.radians(90), 0, 0)) if side in ("north", "south") else Euler((0, math.radians(90), 0))
-    mk.paint(bm, mk.add_cylinder(bm, 0.1, 0.04, loc=(*loc, bottom + 0.25), rot=rot, segments=8), SOOT, uv)
 
 
 def build_late_turret_stair(bm, uv):
@@ -211,8 +164,8 @@ def build_late_turret_stair(bm, uv):
     top = 2.6
     # The kit's L-stair to a railed gallery in the NW quadrant: sandstone flights, oak bridge, deck and rail.
     cb._stair_to_gallery(bm, uv, fz, top, WALL, TIMBER, deck=TIMBER)
-    _iron_chest(bm, uv, -4.3, 4.4, fz + top, w=1.0, d=0.6, h=0.55)
-    _gun_loop(bm, uv, "north", -2.6, fz + top + 0.1)
+    iron_chest(bm, uv, -4.3, 4.4, fz + top, w=1.0, d=0.6, h=0.55)
+    gun_loop(bm, uv, "north", -2.6, fz + top + 0.1)
     # NE: the handgun rack on the north wall, the pavise stood against the east wall.
     for z in (0.29, 1.6):
         cb._box(bm, uv, TIMBER, (3.6, IN - 0.05, fz + z), (2.4, 0.1, 0.1))
