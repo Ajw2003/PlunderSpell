@@ -1230,8 +1230,284 @@ def gothic_knight(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Pavisier (special) — a tall pale rectangle with a big red X beside a man in a
+# half-white half-red coat: the shield reads first.
+# --------------------------------------------------------------------------------
+
+class _ReachHuman(Human):
+    """figures.Human with two-bone IK for chosen fists: reach={"L": (x, y, z)} puts
+    that fist's grip exactly on the point, the elbow bent toward `pole`. Copied from
+    enemies_high._ReachHuman (a shared-framework change would be figures.py's),
+    so this module does not depend on another Age's module importing cleanly."""
+
+    def __init__(self, *args, reach: dict | None = None, pole: dict | None = None,
+                 **kwargs):
+        self._reach = {k: Vector(v) for k, v in (reach or {}).items()}
+        self._pole = {k: Vector(v) for k, v in (pole or {}).items()}
+        super().__init__(*args, **kwargs)
+
+    def _arm_points(self, side):
+        if side not in self._reach:
+            return super()._arm_points(side)
+        s, h = figures.SIDES[side], self.h
+        shoulder = self.lean((s * self.shoulder_x, 0.0, self.shoulder_z))
+        target = self._reach[side]
+        a, b = 0.172 * h, (0.145 + 0.045) * h        # shoulder->elbow, elbow->grip
+        axis = target - shoulder
+        d = min(axis.length, (a + b) * 0.995)
+        axis.normalize()
+        pole = self._pole.get(side, Vector((s * 1.0, 0.35, -0.6)))
+        perp = (pole - axis * pole.dot(axis)).normalized()
+        x = (a * a - b * b + d * d) / (2.0 * d)
+        y = math.sqrt(max(0.0, a * a - x * x))
+        elbow = shoulder + axis * x + perp * y
+        fore = (shoulder + axis * d - elbow).normalized()
+        wrist = elbow + fore * (0.145 * h)
+        return shoulder, elbow, wrist, wrist + fore * (0.090 * h), fore
+
+
+_PAV_W, _PAV_SAG, _PAV_T = 0.62, 0.05, 0.04
+_PAV_Z0, _PAV_Z1 = 0.04, 1.30
+_PAV_XS = [-0.31, -0.29, -0.22, -0.15, -0.085, -0.052, -0.047, 0.0, 0.047, 0.052, 0.085,
+           0.15, 0.22, 0.29, 0.31]
+
+
+def _pav_front(x: float) -> float:
+    """Front face y of the pavise (local, spine centred on 0), -Y = front: curved in
+    plan with a 0.05 m sagitta, a raised spine 0.10 m wide standing 0.015 proud."""
+    y = -_PAV_SAG * (1.0 - (x / (_PAV_W / 2)) ** 2)
+    if abs(x) < 0.05:
+        y -= 0.015 * (1.0 - (x / 0.05) ** 4)
+    return y
+
+
+def _pav_back(x: float) -> float:
+    return -_PAV_SAG * (1.0 - (x / (_PAV_W / 2)) ** 2) + _PAV_T
+
+
+def _pavise(fig: Human, c: Vector, grip: Vector) -> list[Part]:
+    """1.30 x 0.62 x 0.04 m pavise standing on two spiked iron feet, its centre
+    line at c (x, y). One loft whose rings are the curved plan section, so the whole
+    face is one shell: the ragged saltire, the briquet device, the iron rim and the
+    dents are painted cells on it (flat colour, and no floating islands for heat
+    weighting to choke on). Prop bone Pavise on Hand.L; PaviseProp (hinge) under it
+    carries the 0.85 m poplar prop leg."""
+    cx, cy = c.x, c.y
+    zs = [_PAV_Z0, 0.06] + [0.06 + (1.28 - 0.06) * k / 24 for k in range(1, 24)] + [1.28, _PAV_Z1]
+    rings = []
+    for z in zs:
+        front = [(cx + x, cy + _pav_front(x), z) for x in _PAV_XS]
+        back = [(cx + x, cy + _pav_back(x), z) for x in reversed(_PAV_XS)]
+        rings.append(front + back)
+    # Paint: a cell map on the front face, then the rim on every face.
+    paint = []
+
+    def cell(x0, x1, z0, z1, mat, front_only=True):
+        xm = (x0 + x1) / 2
+        ymax = cy + _pav_front(xm) + 0.012 if front_only else 1.0
+        paint.append({"mat": mat, "min": (cx + x0 - 0.001, -1.0, z0 - 0.001),
+                      "max": (cx + x1 + 0.001, ymax, z1 + 0.001)})
+    half = _PAV_W / 2
+    diag = Vector((2 * half, -(_PAV_Z1 - _PAV_Z0), 0)).normalized()   # top-left -> bottom-right
+    ragged = [0.0, 0.012, -0.010, 0.016, -0.006, 0.010, -0.014, 0.004]
+    for i in range(len(_PAV_XS) - 1):
+        for j in range(len(zs) - 1):
+            x0, x1, z0, z1 = _PAV_XS[i], _PAV_XS[i + 1], zs[j], zs[j + 1]
+            xm, zm = (x0 + x1) / 2, (z0 + z1) / 2
+            best = 9.0
+            for sx in (1.0, -1.0):   # both bars of the saltire, corner to corner
+                p = Vector((sx * xm + half, zm - _PAV_Z1, 0.0))
+                best = min(best, abs(p.x * diag.y - p.y * diag.x))
+            if best < 0.062 + ragged[(i * 3 + j) % len(ragged)]:
+                cell(x0, x1, z0, z1, "livery_red")
+    # The briquet (fire-steel) device at the crossing, 0.16 m wide: a bow and two
+    # hooked ends in iron-black paint, with the flint below.
+    for x0, x1, z0, z1 in ((-0.085, 0.085, 0.70, 0.7508), (-0.085, -0.052, 0.649, 0.70),
+                           (0.052, 0.085, 0.649, 0.70), (-0.047, 0.047, 0.598, 0.649)):
+        cell(x0, x1, z0, z1, "iron_binding")
+    # 4 ball-shot dents and a few gesso chips showing poplar.
+    for x0, x1, z0, z1, m in ((0.15, 0.22, 1.04, 1.09), (-0.22, -0.15, 0.39, 0.445),
+                              (0.15, 0.22, 0.24, 0.29), (-0.15, -0.085, 1.14, 1.19)):
+        cell(x0, x1, z0, z1, "iron_binding")
+    for x0, x1, z0, z1 in ((0.22, 0.29, 1.19, 1.24), (-0.29, -0.22, 0.09, 0.14),
+                           (0.085, 0.15, 0.44, 0.50), (-0.29, -0.22, 0.85, 0.90),
+                           (0.22, 0.29, 0.55, 0.60)):
+        cell(x0, x1, z0, z1, "poplar")
+    # Iron binding strip 2 cm round the rim (front, back and edges).
+    for x0, x1 in ((-half - 0.01, -0.29), (0.29, half + 0.01)):
+        cell(x0, x1, -1.0, 3.0, "iron_binding", front_only=False)
+    for z0, z1 in ((-1.0, 0.06), (1.28, 3.0)):
+        cell(-half - 0.01, half + 0.01, z0, z1, "iron_binding", front_only=False)
+    # The back is bare poplar (inside the rim).
+    paint.insert(0, {"mat": "poplar", "min": (cx - half, cy - 0.02, -1.0),
+                     "max": (cx + half, cy + 0.2, 3.0)})
+
+    ymid = cy + _PAV_T / 2 - _PAV_SAG
+    fig.prop_bone("Pavise", "L", head=(cx, ymid, 1.22), tail=(cx, ymid, 0.10))
+    pr = {"prop": True}
+    parts = [Part("loft", (0, 0, 0), (1, 1, 1), mat="gesso_white", bone="Pavise",
+                  extras={"rings": rings, "paint": paint, "bevel": False, **pr})]
+    # Two spiked iron feet at the base corners, their roots buried in the board.
+    for sx in (1.0, -1.0):
+        x = cx + sx * 0.265
+        yb = cy + (_pav_front(sx * 0.265) + _pav_back(sx * 0.265)) / 2
+        parts.append(_rod((x, yb, 0.075), (x, yb, 0.0), 0.012, "iron_binding", "Pavise",
+                          segments=4, taper=0.0, extras=dict(pr)))
+    # Three rawhide grip loops on the back of the spine (ends sunk in the board).
+    yb0 = cy + _pav_back(0.0)
+    for z in (0.35, 0.75, 1.10):
+        loop = [(cx - 0.045, yb0 - 0.006, z), (cx - 0.035, yb0 + 0.030, z),
+                (cx + 0.035, yb0 + 0.030, z), (cx + 0.045, yb0 - 0.006, z)]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="leather", bone="Pavise",
+                          segments=4, extras={"path": loop, "section": (0.006, 0.012),
+                                              "up": (0, 0, 1), "smooth": True,
+                                              "bevel": False, **pr}))
+    # The hinged prop leg, swung down to the turf behind.
+    hinge = Vector((cx, yb0 - 0.010, 0.86))
+    foot = Vector((cx, yb0 + 0.30, 0.0))
+    fig.add_bone("PaviseProp", hinge, foot, "Pavise")
+    parts.append(_rod(hinge, foot + Vector((0, 0, 0.012)), 0.018, "poplar", "PaviseProp",
+                      segments=6, rx=0.012, extras=dict(pr)))
+    parts.append(_rod(hinge + Vector((-0.03, 0.012, 0.0)), hinge + Vector((0.03, 0.012, 0.0)),
+                      0.009, "iron_binding", "PaviseProp", segments=6, extras=dict(pr)))
+    # The stuck crossbow bolt, 0.35 m, buried in the outer side edge at 0.65 m.
+    ex = cx + half
+    root = Vector((ex - 0.05, cy + 0.0, 0.65))
+    d = Vector((1.0, -0.18, 0.10)).normalized()
+    tail = root + d * 0.35
+    parts.append(_rod(root, tail, 0.0065, "poplar", "Pavise", segments=5, extras=dict(pr)))
+    for ang in (0.0, 90.0):   # two crossed fletching vanes near the nock
+        v = Vector((0.0, math.cos(math.radians(ang)), math.sin(math.radians(ang))))
+        v = (v - d * v.dot(d)).normalized()
+        a = tail - d * 0.085
+        parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat="leather", bone="Pavise",
+                          segments=4, extras={"path": [tuple(a), tuple(tail - d * 0.01)],
+                                              "sections": [(0.022, 0.0015), (0.012, 0.0015)],
+                                              "up": tuple(v), "power": 4.0, "bevel": False,
+                                              **pr}))
+    return parts
+
+
+def _falchion(fig: Human, pad: float) -> list[Part]:
+    """0.75 m falchion in a leather scabbard on the left hip, hanging back: a broad
+    single-edged blade (0.06 m widening to the clipped point) inside a scabbard of
+    the same shape, a 0.11 m leather grip, iron cross and pommel. Its own bone
+    under Hips (the rig swaps it to Hand.R when drawn). The scabbard's mouth is sunk
+    into the coat so heat weighting can see it."""
+    mouth = fig.surface(0.99, -30.0, pad=pad - 0.004)
+    d = Vector((0.06, 0.40, -0.91)).normalized()
+    tip = mouth + d * 0.62
+    fig.add_bone("Falchion", mouth - d * 0.13, tip, "Hips")
+    out = Vector((1.0, 0.0, 0.0))
+    out = (out - d * out.dot(d)).normalized()
+    path = [mouth + out * 0.004 + d * t for t in (0.0, 0.20, 0.42, 0.56, 0.62)]
+    parts = [Part("sweep", (0, 0, 0), (1, 1, 1), mat="leather", bone="Falchion", segments=6,
+                  extras={"path": [tuple(p) for p in path],
+                          "sections": [(0.012, 0.034), (0.012, 0.038), (0.012, 0.045),
+                                       (0.010, 0.040), (0.004, 0.012)],
+                          "up": tuple(out), "power": 3.0, "rigid": True, "bevel": False,
+                          "smooth": True})]
+    guard = mouth - d * 0.012
+    parts.append(_rod(guard - out * 0.05, guard + out * 0.05, 0.008, "iron_binding",
+                      "Falchion", segments=6, extras={"rigid": True, "bevel": False}))
+    grip_end = guard - d * 0.11
+    parts.append(_rod(guard, grip_end, 0.014, "leather", "Falchion", segments=6,
+                      extras={"rigid": True, "bevel": False, "smooth": True}))
+    parts.append(Part("ico", tuple(grip_end - d * 0.012), (0.034, 0.034, 0.030),
+                      mat="iron_binding", bone="Falchion", subdivisions=1,
+                      extras={"rigid": True, "bevel": False}))
+    return parts
+
+
+def pavisier(entry: Entry):
+    # Eyes 1.65 m -> stature 1.763 m; the open sallet's crown reaches 1.80 m.
+    # 0.48 m shoulders. The pavise stands at his left front, his left fist on its
+    # rim (placed by IK); the right arm hangs by the falchion side.
+    h = 1.763
+    pav = Vector((0.56, -0.12, 0.0))
+    grip_l = Vector((pav.x - 0.19, pav.y + (_pav_front(-0.19) + _pav_back(-0.19)) / 2,
+                     _PAV_Z1 + 0.015))
+    fig = _ReachHuman(height=h, bulk=1.02, shoulders=0.48, stance=3.0,
+                      arm_r=ArmPose(spread=10.0, swing=4.0, elbow=16.0),
+                      reach={"L": grip_l}, pole={"L": Vector((1.0, 0.5, -0.9))})
+    pad = 0.014
+    white = {"mat": "gesso_white", "min": (-1.0, -1.0, -1.0), "max": (0.0, 1.0, 3.0)}
+    mail = [{"mat": "mail", "min": (-1, -1, 1.425), "max": (1, 1, 3)},
+            {"mat": "mail", "min": (-1, -1, -1), "max": (1, 1, 0.80)}]
+    # Pied coat: white on his right (-X), red on his left, pleated skirt to 0.80 m;
+    # the mail shirt's hem 4 cm below it and the mail standard round the neck are
+    # painted bands of the same shell (no second torso layer under the coat).
+    parts = [fig.torso_part("livery_red", pad=pad, hem=0.76, hem_flare=1.24, collar=0.075,
+                            quilt=0.06, segments=36, paint=[white] + mail)]
+    for side in ("L", "R"):
+        # sleeves counterchanged: red on the white side, white on the red side
+        sleeve = "gesso_white" if side == "L" else "livery_red"
+        parts.append(fig.arm_part(side, sleeve, pad=0.008, paint=[
+            {"mat": "mail", "min": (-1, -1, 1.425), "max": (1, 1, 3)}]))
+        parts += fig.hand_part(side, "leather")
+        parts.append(fig.leg_part(side, "hose", paint=[
+            {"mat": "leather", "min": (-1, -1, -1), "max": (1, 1, 0.50)}]))
+        parts.append(fig.foot_part(side, "leather", length=0.27, point=0.1))
+        knee, ank = fig.joint(f"knee.{side}"), fig.joint(f"ankle.{side}")
+        cuff = ank.lerp(knee, (0.495 - ank.z) / (knee.z - ank.z))
+        parts.append(Part("cyl", tuple(cuff), (0.090, 0.094, 0.05), mat="leather",
+                          bone=f"LowerLeg.{side}", segments=12, taper=1.12,
+                          extras={"bevel": False, "smooth": True,
+                                  "bones": [f"LowerLeg.{side}", f"UpperLeg.{side}"]}))
+    parts += fig.head_part("skin", features="leather")
+    # Open sallet: blackened, 0.24 m wide, face open from brow to chin, 0.18 m tail.
+    parts += _sallet(fig, "sallet", "iron_binding", crown=1.80, rim_front=1.700,
+                     rim_side=1.600, rim_back=1.560, back_reach=0.235, slit=None,
+                     front_reach=0.128, half_w=0.121)
+
+    # Belt 4 cm at 1.02 m, iron buckle; falchion on the left hip.
+    parts.append(fig.band(1.02, "leather", height=0.04, pad=0.004, torso_pad=pad))
+    buckle = fig.surface(1.02, -90.0, pad=pad + 0.008)
+    parts.append(Part("torus", tuple(buckle), (0.05, 0.05, 0.045), mat="iron_binding",
+                      bone="Hips", rot=(90, 0, 0), segments=4, rings=4, minor=0.2,
+                      extras={"rigid": True, "bevel": False}))
+    parts += _falchion(fig, pad)
+    parts += _pavise(fig, pav, grip_l)
+
+    # Review pose: the default test pose mirrored onto the free right arm, and the
+    # left fist swinging the pavise a little forward, so the POSED views prove the
+    # pavise follows the hand.
+    pose = dict(figures.HUMAN_TEST_POSE)
+    pose.pop("UpperArm.L"); pose.pop("LowerArm.L")
+    pose.update({"UpperArm.R": (-80.0, 0.0, 0.0), "LowerArm.R": (-25.0, 0.0, 0.0),
+                 "UpperArm.L": (-14.0, 0.0, 0.0)})
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(pose),
+        family_overrides={
+            "sallet": {"rough": 0.45},
+            "mail": {"rough": 0.5, "ridges": (0.010, 0.40)},
+            "livery_red": {"rough": 0.9},
+        },
+        extra_families={
+            "skin": {"name": "Skin", "base": "#9C7A5E", "rough": 0.7,
+                     "notes": "The open face: the JSON lists no skin family (hex as the "
+                              "handgunner's)."},
+            "hose": {"name": "Dark wool hose", "base": "#3A2F26", "rough": 0.85,
+                     "notes": "Build: 'dark wool hose'; hex from the halberdier's Hose, "
+                              "the JSON lists none here."},
+        },
+        notes=[
+            "The pavise (1.30 m) is a prop bone Pavise on Hand.L, left out of the 1.80 m "
+            "height; PaviseProp is its hinge bone. In game the pavise re-parents to the "
+            "world when planted.",
+            "Sallet is its own bone under Head (detachable); Falchion is a bone under Hips.",
+            "The saltire, briquet device, rim binding, dents and chips are painted cells "
+            "on the pavise shell (a coarse, ragged staircase at this resolution).",
+            "Not built: coat_skirt spring chains (the skirt rule hands the skirt to the "
+            "thighs), the painted red sparks, mud on the lower 0.2 m, gesso crazing, "
+            "damage states.",
+        ])
+
+
 BLUEPRINTS = {
     "sallet-halberdier": sallet_halberdier,
     "handgunner": handgunner,
     "gothic-knight": gothic_knight,
+    "pavisier": pavisier,
 }
