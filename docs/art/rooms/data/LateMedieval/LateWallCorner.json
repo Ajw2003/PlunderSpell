@@ -1,0 +1,64 @@
+{
+  "key": "LateWallCorner",
+  "name": "The Corner Tower",
+  "age": "LateMedieval",
+  "zone": "CurtainWall",
+  "role": "WallCorner",
+  "summary": "An octagonal sandstone tower with a machicolated crown and a conical tile roof where the south and west machicolated walls meet.",
+  "description": "The Burgundian builders turned their corners with octagons: an eight-sided sandstone drum that sees along both walls, crowned like the curtain with a brick frieze and a corbelled parapet over machicolation slots, but roofed against the rain with a steep cone of clay tile. The walks on both walls lead in through doorways in the tower's inner flats; from the outer flats keyhole gun-loops cover the foot of both walls. The roof makes it a landmark and a dry place for the watch; it also makes it the one part of the wall that burns.",
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; walls on the south and west edges, the bailey open to the north-east.",
+    "Tower drum: dressed sandstone, octagonal with flats facing the axes, circumradius 2.20 m (apothem 2.03 m), centred (−3.57, −3.57) so its south and west flats lie on the walls' face line 0.45 m in from the cell edge; 0 to 4.60 m.",
+    "Tower crown: a brick frieze ring 4.60–5.00 m; two-stage corbels on the five outward flats (S, SW, W, SE, NW), 5.00–5.60 m; a sandstone parapet ring, circumradius 2.60 m, 5.30–6.20 m.",
+    "Conical roof: clay tile, eight facets, circumradius 2.65 m at 6.20 m tapering to an iron finial at 8.60 m.",
+    "Doorways: soot panels 0.90 × 1.90 m on the tower's north and east flats from 4.00 m, off the walks.",
+    "South run: the Late wall section (sandstone 1.60 m, face 0.45 m in, walk 4.00 m, brick frieze, corbels, parapet out to d 0.05, merlons to 5.20 m, timber walk on the inner face) from the tower's south flat corner (x −2.73) to the east cell edge.",
+    "West run: the same along the west edge from y −2.73 to the north cell edge.",
+    "Keyhole gun-loops: one in each run at 2.10 m along it, and one in each of the tower's south and west flats."
+  ],
+  "sockets": [
+    "Wall-walks: 4.00 m, stone plus timber, open at the east and north cell edges",
+    "Tower doorways: from both walks into the north and east flats",
+    "Keyhole gun-loops: four, on the outer faces"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Drum, runs, corbels, parapets."
+    },
+    {
+      "name": "Brick",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "Friezes."
+    },
+    {
+      "name": "Roof tile",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "The conical roof."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Timber walks."
+    },
+    {
+      "name": "Soot",
+      "hex": "#1E1B17",
+      "pigment": "bone_black",
+      "notes": "Doorways and gun-loops."
+    }
+  ],
+  "gameplay": [
+    "The tower is a lookout over both walks; its doorways are the only way from one walk to the other.",
+    "The roof is the Late wall's one flammable part.",
+    "No loot: terrain."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/LateMedieval/LateWallCorner.svg"
+}

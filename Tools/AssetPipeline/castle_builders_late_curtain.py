@@ -90,3 +90,53 @@ def late_run(bm, uv, u0, u1, side="south", loops=(), timber=True):
 def build_late_wall_straight(bm, uv):
     """docs/art/rooms/concept/LateMedieval/LateWallStraight.svg"""
     late_run(bm, uv, -H, H, loops=(-3.6, 0.0, 3.6))
+
+
+OCT = Euler((0, 0, math.radians(22.5)))    # an 8-sided cylinder turned so its flats face the axes
+
+
+def octagon(bm, uv, pigment, cx, cy, z0, z1, r, r_top=None):
+    """An octagonal prism (or frustum) with flats facing the axes, circumradius r."""
+    return mk.paint(bm, mk.add_cylinder(bm, r, z1 - z0, loc=(cx, cy, (z0 + z1) / 2), rot=OCT, segments=8,
+                                        radius2=r if r_top is None else r_top), pigment, uv)
+
+
+def octagonal_tower(bm, uv, cx, cy, r=2.2, lift=1.6, roof=2.4, outward=(), doors=()):
+    """An octagonal sandstone tower with a machicolated crown and a conical tile roof: the
+    drum to lift + frieze, a brick frieze ring, corbels on the `outward` flats (angles in
+    degrees, 0 = east), a parapet ring to lift + LOW_TOP, the roof on it; soot doorways
+    on the `doors` flats at walk level."""
+    apo = r * math.cos(math.radians(22.5))
+    octagon(bm, uv, WALL, cx, cy, 0.0, lift + FRIEZE[0], r)
+    octagon(bm, uv, BRICK, cx, cy, lift + FRIEZE[0], lift + FRIEZE[1], r + 0.03)
+    rp = 2.6
+    ap = rp * math.cos(math.radians(22.5))
+    for ang in outward:
+        t = math.radians(ang)
+        c, s = math.cos(t), math.sin(t)
+        for (d0, d1, z0, z1, w) in ((apo - 0.02, apo + 0.2, CORBEL[0], CORBEL[1], 0.3),
+                                    (apo - 0.02, ap - 0.02, CORBEL[1], CORBEL[2], 0.36)):
+            dm = (d0 + d1) / 2
+            mk.paint(bm, mk.add_box(bm, (d1 - d0, w, z1 - z0), loc=(cx + c * dm, cy + s * dm, lift + (z0 + z1) / 2),
+                                    rot=Euler((0, 0, t))), WALL, uv)
+    octagon(bm, uv, WALL, cx, cy, lift + CORBEL[1], lift + LOW_TOP, rp)
+    octagon(bm, uv, ROOF, cx, cy, lift + LOW_TOP, lift + LOW_TOP + roof, 2.65, r_top=0.02)
+    mk.paint(bm, mk.add_cylinder(bm, 0.02, 0.3, loc=(cx, cy, lift + LOW_TOP + roof + 0.13), segments=4), IRON, uv)
+    for ang in doors:
+        t = math.radians(ang)
+        c, s = math.cos(t), math.sin(t)
+        mk.paint(bm, mk.add_box(bm, (0.06, 0.9, 1.9), loc=(cx + c * (apo + 0.02), cy + s * (apo + 0.02), WALK_Z + 0.95),
+                                rot=Euler((0, 0, t))), SOOT, uv)
+
+
+def build_late_wall_corner(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateWallCorner.svg"""
+    r = 2.2
+    apo = r * math.cos(math.radians(22.5))
+    c = -H + FACE + apo
+    run0 = c + r * math.sin(math.radians(22.5))
+    octagonal_tower(bm, uv, c, c, r=r, outward=(180, 225, 270, 135, 315), doors=(0, 90))
+    keyhole_loop(bm, uv, "south", c)
+    keyhole_loop(bm, uv, "west", c)
+    for side in ("south", "west"):
+        late_run(bm, uv, run0, H, side=side, loops=(2.1,))

@@ -437,6 +437,12 @@
       "preview": "c8ccb9c0732710b9:23a9d68e53fd",
       "tris": 1528
     },
+    "LateWallCorner": {
+      "budget": 2000,
+      "content": "137095e247bc4e35",
+      "preview": "137095e247bc4e35:23a9d68e53fd",
+      "tris": 1220
+    },
     "LateWallStraight": {
       "budget": 1200,
       "content": "486f6daaa3894e5e",
