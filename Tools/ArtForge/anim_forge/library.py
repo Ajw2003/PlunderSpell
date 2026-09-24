@@ -31,6 +31,7 @@ class ClipDef:
     carry_mask: set = field(default_factory=set)   # review: warden carry over these bones
     agent_yaw: object = None         # review: t -> degrees the agent turns (alert_turn)
     review_lift: float = 0.0         # review: metres the engine lifts him (levitate)
+    carry: str = "warden_carry"      # review: which warden carry pose the layer plays
 
 
 def _loop_close(c: Clip, pose, **kw):
@@ -202,12 +203,12 @@ def _n(v):
 
 # Stance: right (lead) foot forward, left back and turned out.
 POLE_FEET = {"R": FootKey(y=-0.20, yaw=10), "L": FootKey(x=0.16, y=0.20, yaw=-22)}
-READY = WeaponKey(grip=(-0.08, -0.36, 1.00), dir=_n((0.12, -1.0, 0.38)), edge=(0.0, 0.0, -1.0))
+READY = WeaponKey(grip=(-0.10, -0.38, 1.00), dir=_n((-0.26, -1.0, 0.36)), edge=(0.0, 0.0, -1.0))
 
 
 def polearm_guard(ref) -> Clip:
     c = Clip("polearm_guard", 2.0, loop=True, notes="ready stance, haft levelled at the hip")
-    breathe = WeaponKey(grip=(-0.08, -0.36, 1.01), dir=_n((0.12, -1.0, 0.40)), edge=(0, 0, -1))
+    breathe = WeaponKey(grip=(-0.10, -0.38, 1.01), dir=_n((-0.26, -1.0, 0.38)), edge=(0, 0, -1))
     c.key(0.0, P.POLE_READY, hips=(0, 0.0, -0.06), feet=POLE_FEET, weapon=READY)
     c.key(1.0, add(P.POLE_READY, P.BREATH_IN), hips=(0, 0.0, -0.055), feet=POLE_FEET,
           weapon=breathe)
@@ -217,9 +218,9 @@ def polearm_guard(ref) -> Clip:
 
 def polearm_thrust(ref) -> Clip:
     c = Clip("polearm_thrust", 0.9, notes="draw back, lunge-thrust (hit 0.45 s), recover")
-    draw = WeaponKey(grip=(-0.10, -0.12, 1.02), dir=_n((0.10, -1.0, 0.30)), edge=(0, 0, -1))
-    ext = WeaponKey(grip=(-0.04, -0.80, 1.07), dir=_n((0.04, -1.0, 0.12)), edge=(0, 0, -1))
-    over = WeaponKey(grip=(-0.04, -0.85, 1.06), dir=_n((0.03, -1.0, 0.10)), edge=(0, 0, -1))
+    draw = WeaponKey(grip=(-0.12, -0.16, 1.02), dir=_n((-0.24, -1.0, 0.30)), edge=(0, 0, -1))
+    ext = WeaponKey(grip=(-0.05, -0.80, 1.07), dir=_n((-0.12, -1.0, 0.12)), edge=(0, 0, -1))
+    over = WeaponKey(grip=(-0.05, -0.85, 1.06), dir=_n((-0.12, -1.0, 0.10)), edge=(0, 0, -1))
     lunge = {"R": FootKey(y=-0.52, yaw=6), "L": FootKey(x=0.16, y=0.24, yaw=-22, pitch=14)}
     c.key(0.00, P.POLE_READY, hips=(0, 0.0, -0.06), feet=POLE_FEET, weapon=READY)
     c.key(0.30, P.POLE_DRAW, hips=(0, 0.06, -0.07), feet=POLE_FEET, weapon=draw,
@@ -235,13 +236,13 @@ def polearm_sweep(ref) -> Clip:
     c = Clip("polearm_sweep", 1.1, notes="wind up right, cut across at knee height (hit 0.55 s)")
     wind = WeaponKey(grip=(-0.30, -0.22, 1.02), dir=_n((-0.85, -0.45, 0.10)), edge=_n((0.3, -0.6, 0)))
     cut = WeaponKey(grip=(-0.04, -0.48, 0.86), dir=_n((0.05, -1.0, -0.42)), edge=(1, 0, 0))
-    follow = WeaponKey(grip=(0.22, -0.34, 0.86), dir=_n((0.85, -0.50, -0.30)), edge=_n((0.4, 0.8, 0)))
+    follow = WeaponKey(grip=(0.12, -0.36, 0.88), dir=_n((0.85, -0.50, -0.30)), edge=_n((0.4, 0.8, 0)))
     step = {"R": FootKey(y=-0.40, yaw=0), "L": FootKey(x=0.16, y=0.20, yaw=-22, pitch=10)}
     c.key(0.00, P.POLE_READY, hips=(0, 0.0, -0.06), feet=POLE_FEET, weapon=READY)
     c.key(0.38, P.SWEEP_WIND, hips=(-0.02, 0.04, -0.08), feet=POLE_FEET, weapon=wind,
           ease="inout")
     c.key(0.55, P.SWEEP_CUT, hips=(0.0, -0.10, -0.14), feet=step, weapon=cut, ease="in")
-    c.key(0.74, P.SWEEP_FOLLOW, hips=(0.03, -0.10, -0.13), feet=step, weapon=follow,
+    c.key(0.74, P.SWEEP_FOLLOW, hips=(0.03, -0.12, -0.13), feet=step, weapon=follow,
           ease="overshoot")
     c.key(1.10, P.POLE_READY, hips=(0, 0.0, -0.06), feet=POLE_FEET, weapon=READY, ease="inout")
     return c
@@ -249,9 +250,9 @@ def polearm_sweep(ref) -> Clip:
 
 def polearm_hook(ref) -> Clip:
     c = Clip("polearm_hook", 1.2, notes="reach past, hook with the back fluke (hit 0.5 s), drag back")
-    reach = WeaponKey(grip=(-0.04, -0.76, 1.16), dir=_n((0.04, -1.0, 0.22)), edge=(0, 0, -1))
-    hook = WeaponKey(grip=(-0.05, -0.62, 1.00), dir=_n((0.04, -1.0, -0.12)), edge=(0, 0, -1))
-    drag = WeaponKey(grip=(-0.08, -0.14, 0.98), dir=_n((0.08, -1.0, -0.05)), edge=(0, 0, -1))
+    reach = WeaponKey(grip=(-0.05, -0.76, 1.16), dir=_n((-0.12, -1.0, 0.22)), edge=(0, 0, -1))
+    hook = WeaponKey(grip=(-0.06, -0.62, 1.00), dir=_n((-0.12, -1.0, -0.12)), edge=(0, 0, -1))
+    drag = WeaponKey(grip=(-0.10, -0.18, 0.98), dir=_n((-0.22, -1.0, -0.05)), edge=(0, 0, -1))
     lunge = {"R": FootKey(y=-0.46, yaw=6), "L": FootKey(x=0.16, y=0.24, yaw=-22, pitch=12)}
     back = {"R": FootKey(y=-0.20, yaw=10), "L": FootKey(x=0.16, y=0.42, yaw=-22)}
     c.key(0.00, P.POLE_READY, hips=(0, 0.0, -0.06), feet=POLE_FEET, weapon=READY)
@@ -265,8 +266,8 @@ def polearm_hook(ref) -> Clip:
 def polearm_chop(ref) -> Clip:
     c = Clip("polearm_chop", 1.1, notes="raise overhead (0.45 s tell), chop down (hit 0.6 s)")
     raise_ = WeaponKey(grip=(-0.10, -0.14, 1.58), dir=_n((0.05, 0.25, 1.0)), edge=(0, -1, 0))
-    strike = WeaponKey(grip=(-0.05, -0.55, 1.02), dir=_n((0.02, -0.85, -0.55)), edge=(0, 0, -1))
-    over = WeaponKey(grip=(-0.05, -0.55, 0.96), dir=_n((0.02, -0.78, -0.63)), edge=(0, 0, -1))
+    strike = WeaponKey(grip=(-0.06, -0.55, 1.02), dir=_n((-0.10, -0.85, -0.55)), edge=(0, 0, -1))
+    over = WeaponKey(grip=(-0.06, -0.55, 0.96), dir=_n((-0.10, -0.78, -0.63)), edge=(0, 0, -1))
     step = {"R": FootKey(y=-0.44, yaw=6), "L": FootKey(x=0.16, y=0.22, yaw=-22, pitch=10)}
     c.key(0.00, P.POLE_READY, hips=(0, 0.0, -0.06), feet=POLE_FEET, weapon=READY)
     c.key(0.45, P.CHOP_RAISE, hips=(0, 0.04, -0.03), feet=POLE_FEET, weapon=raise_,
@@ -367,9 +368,12 @@ def clips(ref, warden) -> dict[str, ClipDef]:
     right = RIGHT_ARM | {"Glaive"}
     out = {
         "idle": ClipDef(idle(ref), carry_mask=both),
-        "walk_slow": ClipDef(GaitClip("walk_slow", WALK_SLOW, ref), carry_mask=both),
-        "walk": ClipDef(GaitClip("walk", WALK, ref), carry_mask=both),
-        "run": ClipDef(GaitClip("run", RUN, ref), carry_mask=both),
+        "walk_slow": ClipDef(GaitClip("walk_slow", WALK_SLOW, ref,
+                                      notes="the JSON patrol pace 1.1 m/s"), carry_mask=both),
+        "walk": ClipDef(GaitClip("walk", WALK, ref, notes="engine patrol speed 2.0 m/s"),
+                        carry_mask=both),
+        "run": ClipDef(GaitClip("run", RUN, ref, notes="engine chase speed 4.2 m/s; flight phase, heel kick"),
+                      carry_mask=both, carry="warden_carry_run"),
         "alert_turn": ClipDef(alert_turn(ref), carry_mask=both, agent_yaw=alert_turn_yaw),
         "shout": ClipDef(shout(ref), carry_mask=right),
         "hit_react": ClipDef(hit_react(ref), carry_mask=both),

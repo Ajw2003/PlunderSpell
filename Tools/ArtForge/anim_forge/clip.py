@@ -176,18 +176,16 @@ def foot_geometry(ref, side: str) -> dict:
 def foot_pose(ref, side: str, heel_xy: Vector, pitch: float, lift: float = 0.0,
               yaw: float = 0.0) -> tuple[Vector, Quaternion]:
     """Ankle position and foot rotation for a flat-foot heel point on the ground,
-    rolled by `pitch` about the heel (toe up, pitch < 0) or the ball (heel up)."""
+    rolled by `pitch` about the heel (toe up, pitch < 0) or the toe tip (heel up).
+
+    The rigs have no toe bone, so a heel-up foot rolls on the tip of the shoe: rolling
+    on the ball would push the rigid toe through the floor."""
     g = foot_geometry(ref, side)
     rot = mathx.euler_q((pitch, 0.0, yaw))
     yaw_q = mathx.euler_q((0.0, 0.0, yaw))
-    offset = Vector((heel_xy.x, heel_xy.y, lift)) - g["heel"]
-    if pitch >= 0.0:
-        pivot = g["heel"] + yaw_q @ (g["ball"] - g["heel"])
-    else:
-        pivot = g["heel"].copy()
-    pivot = pivot + offset
-    # rest vector from pivot to ankle (rest pivot = heel or ball)
-    rest_pivot = g["heel"] if pitch < 0.0 else g["ball"]
+    rest_pivot = g["heel"] if pitch < 0.0 else g["toe"]
+    pivot = g["heel"] + yaw_q @ (rest_pivot - g["heel"])
+    pivot = pivot + Vector((heel_xy.x, heel_xy.y, lift)) - g["heel"]
     ankle = pivot + rot @ (g["ankle"] - rest_pivot)
     return ankle, rot
 

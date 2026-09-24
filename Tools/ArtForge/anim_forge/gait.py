@@ -44,6 +44,7 @@ class GaitParams:
     toe_rocker: float = 0.42    # stance fraction (from the end) rolling on the ball
     clearance: float = 0.06     # extra ankle lift mid-swing (m)
     kick: float = 0.0           # heel kicks back toward the seat (run), m
+    world_lock: float = 0.3     # swing interpolation: 0 clip space .. 1 world space
     ahead: float = -0.03        # ankle y at mid-stance relative to the hip (- = ahead)
     width: float = 0.9          # heel x as a fraction of rest
     bob: float = 0.018          # hip bob amplitude (m)
@@ -106,12 +107,18 @@ class GaitClip(Clip):
         u = (psi - p.duty) / (1.0 - p.duty)
         a0, _q0 = foot_pose(self.ref, side, Vector((x, y0 + p.speed * p.duty * p.cycle, 0.0)),
                             p.toe_pitch)
-        a1, _q1 = foot_pose(self.ref, side, Vector((x, y0 + p.speed * p.cycle, 0.0)), -p.heel_pitch)
-        a1.y -= p.speed * p.cycle           # the next strike is one stride further forward
+        a1, _q1 = foot_pose(self.ref, side, Vector((x, y0, 0.0)), -p.heel_pitch)
+        # Interpolate in the WORLD (the agent travels `travel` along -Y during the
+        # swing), with a minimum-jerk curve: zero world velocity at lift-off and at
+        # the strike, so a foot still brushing the floor does not smear.
+        # `world_lock` 1 = pure world-space (no smear, but the foot overshoots
+        # forward before the strike and costs hip height); 0 = clip space.
+        travel = p.speed * (1.0 - p.duty) * p.cycle
         m = mathx.ease("smooth", u)
-        ankle = a0.lerp(a1, m)
-        bump = math.sin(math.pi * min(1.0, u * 1.15)) if u < 1 / 1.15 else 0.0
-        ankle.z += p.clearance * bump
+        ankle = a0.lerp(a1, m) + Vector((0.0, p.world_lock * travel * (u - m), 0.0))
+        # The lift arc spans the whole swing, so the foot is clear of the floor on
+        # every swing frame and meets it only at the strike.
+        ankle.z += p.clearance * math.sin(math.pi * u) ** 0.8
         ankle.y += p.kick * math.sin(math.pi * u) * (1.0 - u) * 1.6
         ankle.z += p.kick * 0.9 * math.sin(math.pi * u) * (1.0 - u) * 1.6
         pitch = p.toe_pitch + (-p.heel_pitch - p.toe_pitch) * mathx.ease("inout", u)

@@ -81,6 +81,11 @@ def solve_native(d: library.ClipDef, rig: Skeleton) -> list[Solved]:
     return [solve(rig, d.clip.sample(t, rig), None) for t in times(d.clip)]
 
 
+def carries(defs: dict, warden: Skeleton) -> dict:
+    """Every warden carry pose as parent-relative rotations, by name."""
+    return {n: carry_local(defs, warden, n) for n in ("warden_carry", "warden_carry_run")}
+
+
 def carry_local(defs: dict, warden: Skeleton, name: str = "warden_carry") -> dict:
     solved = solve_native(defs[name], warden)[0]
     props.hang(warden, [solved], FPS, loop=False)
@@ -116,7 +121,8 @@ def on_warden(cid: str, d: library.ClipDef, ref: Skeleton, warden: Skeleton, def
             w = retarget(warden, s, weapon_bone="Glaive" if d.weapon else None,
                          lhand=lh if hand_ik else 0.0)
             if d.carry_mask:
-                w = layer_override(warden, w, carry or carry_local(defs, warden), d.carry_mask)
+                local = (carry or {}).get(d.carry) or carry_local(defs, warden, d.carry)
+                w = layer_override(warden, w, local, d.carry_mask)
             frames.append(w)
     at = detach_time(spec, cid)
     if at is not None:

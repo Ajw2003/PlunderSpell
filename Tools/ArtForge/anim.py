@@ -114,7 +114,7 @@ def measure(cid, d, ref, warden, defs, spec, carry):
 
 def cmd_metrics(args) -> int:
     ref, warden, _r, _m, defs, spec, ids = gather(args.only)
-    carry = forge.carry_local(defs, warden)
+    carry = forge.carries(defs, warden)
     for cid in ids:
         _rf, _wf, m = measure(cid, defs[cid], ref, warden, defs, spec, carry)
         print(cid, json.dumps({k: v for k, v in m.items() if not k.startswith("_")}))
@@ -124,7 +124,7 @@ def cmd_metrics(args) -> int:
 def cmd_build(args) -> int:
     started = time.time()
     ref, warden, _r, _m, defs, spec, ids = gather(None)
-    carry = forge.carry_local(defs, warden)
+    carry = forge.carries(defs, warden)
     groups = {forge.FBX_BASE: [], forge.FBX_POLE: [], forge.FBX_WARDEN: []}
     solved, metrics = {}, {}
     for cid in ids:
@@ -200,7 +200,7 @@ def d_mismatch(want, got, c) -> bool:
 def cmd_review(args) -> int:
     from anim_forge import review
     ref, warden, wrig, wmesh, defs, spec, ids = gather(args.only)
-    carry = forge.carry_local(defs, warden)
+    carry = forge.carries(defs, warden)
     stage = review.Stage(wrig, wmesh, warden)
     failures = []
     for cid in ids:

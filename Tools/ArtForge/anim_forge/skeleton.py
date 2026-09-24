@@ -192,7 +192,7 @@ def reference_bones(with_weapon: bool = False) -> list[dict]:
 WEAPON = "Weapon"          # prop bone on Hand.R: head = right grip, tail = up the haft
 WEAPON_GRIP_L = "Weapon_GripL"   # child of Weapon at the left hand's grip: the IK target
 WEAPON_UP = 0.95           # grip to blade tip (the warden: 2.05 m glaive gripped at 1.10 m)
-LEFT_GRIP_OFFSET = -0.55   # metres along the haft from the right grip to the left (toward the butt)
+LEFT_GRIP_OFFSET = -0.45   # metres along the haft from the right grip to the left (toward the butt)
 
 
 def weapon_bones(fig) -> list[dict]:

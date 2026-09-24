@@ -151,7 +151,7 @@ SWEEP_WIND = {"Hips": (0.0, 0.0, 40.0), "Spine": (4.0, 0.0, 14.0), "Chest": (2.0
               "Neck": (-2.0, 0.0, -28.0), "Head": (0.0, 0.0, -26.0)}
 SWEEP_CUT = {"Hips": (6.0, 0.0, 6.0), "Spine": (14.0, 0.0, -10.0), "Chest": (8.0, 0.0, -12.0),
              "Neck": (-10.0, 0.0, 8.0), "Head": (-8.0, 0.0, 6.0)}
-SWEEP_FOLLOW = {"Hips": (6.0, 0.0, -14.0), "Spine": (10.0, 0.0, -16.0), "Chest": (4.0, 0.0, -14.0),
+SWEEP_FOLLOW = {"Hips": (6.0, 0.0, -20.0), "Spine": (10.0, 0.0, -20.0), "Chest": (4.0, 0.0, -18.0),
                 "Neck": (-8.0, 0.0, 20.0), "Head": (-6.0, 0.0, 18.0)}
 HOOK_REACH = {"Hips": (6.0, 0.0, 16.0), "Spine": (16.0, 0.0, -10.0), "Chest": (6.0, 0.0, -8.0),
               "Neck": (-14.0, 0.0, 0.0), "Head": (-10.0, 0.0, 0.0)}
@@ -164,8 +164,8 @@ CHOP_STRIKE = {"Hips": (8.0, 0.0, 16.0), "Spine": (18.0, 0.0, -8.0), "Chest": (1
 
 # ---- the Lantern Warden (signature, on its own rig: its arms' rest IS the carry) ----
 
-WARDEN_CARRY = {"UpperArm.R": (-7.0, 0.0, 0.0), "LowerArm.R": (-3.0, 0.0, 0.0),
-                "UpperArm.L": (-4.0, 0.0, 0.0)}
+WARDEN_CARRY = {"UpperArm.R": (-12.0, 0.0, 0.0), "LowerArm.R": (-14.0, 0.0, 0.0),
+                "Hand.R": (29.0, 0.0, 0.0), "UpperArm.L": (-4.0, 0.0, 0.0)}
 WARDEN_CARRY_RUN = {"UpperArm.R": (-14.0, 4.0, 0.0), "LowerArm.R": (-18.0, 0.0, 0.0),
                     "Hand.R": (26.0, 0.0, 0.0),
                     "UpperArm.L": (-58.0, 10.0, -12.0), "LowerArm.L": (-58.0, 0.0, 0.0)}

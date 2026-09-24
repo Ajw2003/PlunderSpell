@@ -84,6 +84,24 @@ def _mirror(v: Vector) -> Vector:
     return Vector((-v.x, v.y, v.z))
 
 
+def _follow(skel: Skeleton, Qx: dict, bone: str) -> None:
+    """Props under `bone` (weapon, grip target) turn rigidly with it again."""
+    for name in skel.order:
+        par = skel.parent[name]
+        if name not in HUMAN_BONES and par is not None and (par == bone or par in _desc(skel, bone)):
+            Qx[name] = Qx[par]
+
+
+def _desc(skel: Skeleton, bone: str) -> set:
+    out, todo = set(), [bone]
+    while todo:
+        b = todo.pop()
+        for c in skel.children(b):
+            out.add(c)
+            todo.append(c)
+    return out
+
+
 def left_grip_axis(skel: Skeleton, weapon_bone: str) -> Vector:
     """The haft axis through the LEFT fist at rest: the right fist's rest grip
     (hand direction + weapon axis) mirrored across YZ, then swung onto the left
@@ -111,6 +129,7 @@ def arms_to_weapon(skel: Skeleton, Qx: dict, hips: Vector, grip: Vector, wq: Qua
         hint = Vector(elbows.get("R", ELBOW_HINT["R"]))
         q_up, q_lo, short = chain_ik(skel, posed, "UpperArm.R", "LowerArm.R", wrist, hint)
         Qx["UpperArm.R"], Qx["LowerArm.R"], Qx["Hand.R"] = q_up, q_lo, q_hand
+        _follow(skel, Qx, "Hand.R")
         shortfall["hand.R"] = max(shortfall.get("hand.R", 0.0), short)
     if lhand <= 1e-3:
         return
@@ -133,6 +152,7 @@ def arms_to_weapon(skel: Skeleton, Qx: dict, hips: Vector, grip: Vector, wq: Qua
     shortfall["hand.L"] = max(shortfall.get("hand.L", 0.0), short)
     for bone, q in (("UpperArm.L", q_up), ("LowerArm.L", q_lo), ("Hand.L", q_hand)):
         Qx[bone] = mathx.slerp(Qx[bone], q, lhand) if lhand < 1.0 else q
+    _follow(skel, Qx, "Hand.L")
 
 
 def solve(ref: Skeleton, frame: Frame, weapon_bone: str | None = WEAPON) -> Solved:
