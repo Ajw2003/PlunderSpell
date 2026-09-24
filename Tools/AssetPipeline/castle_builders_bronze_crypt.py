@@ -43,3 +43,30 @@ def build_bronze_dromos(bm, uv):
         ek.jar(bm, uv, GRAIN_JAR, x, y, fz, 0.62, 0.34, mouth=0.12, segments=8)
     cb._table(bm, uv, ASHLAR, -3.2, 3.6, fz, 0.6, 0.6, h=0.7)
     cb._box(bm, uv, RED, (0, 0, fz + 0.015), (1.2, 2 * IN - 0.1, 0.03))
+
+
+def build_bronze_grave_circle(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeGraveCircle.svg"""
+    h, fz = room_shell(bm, uv, "Crypt")
+    r, angles = 5.0, [25 + k * 8 for k in range(6)]
+    # The ring: four arcs of upright slabs at r 5.00 m, set tangentially, capped pair by pair.
+    for qx, qy in ((1, 1), (-1, 1), (-1, -1), (1, -1)):
+        pts = []
+        for a in angles:
+            t = math.radians(a)
+            x, y = qx * r * math.cos(t), qy * r * math.sin(t)
+            pts.append((x, y))
+            mk.paint(bm, mk.add_box(bm, (0.2, 0.6, 1.0), loc=(x, y, fz + 0.5), rot=Euler((0, 0, math.atan2(y, x)))),
+                     "vellum_dim", uv)
+        for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+            mx, my = (x0 + x1) / 2, (y0 + y1) / 2
+            mk.paint(bm, mk.add_box(bm, (0.3, math.hypot(x1 - x0, y1 - y0) + 0.3, 0.12), loc=(mx, my, fz + 1.06),
+                                    rot=Euler((0, 0, math.atan2(my, mx)))), ASHLAR, uv)
+    # A shaft grave's cover slab inside each arc, a gold cup left on each.
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            x, y = sx * 2.7, sy * 2.7
+            cb._box(bm, uv, ASHLAR, (x, y, fz + 0.1), (1.2, 0.8, 0.2))
+            mk.paint(bm, mk.add_cylinder(bm, 0.08, 0.10, loc=(x - 0.3, y, fz + 0.25), segments=8, radius2=0.05),
+                     GOLD, uv)
+            cb._anchor(x, y, fz + 0.2)

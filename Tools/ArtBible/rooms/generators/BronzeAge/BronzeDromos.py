@@ -59,7 +59,7 @@ def build():
         (*KE(-2.4, FZ + 0.4), "AMPHORA OFFERINGS", "wine and oil for the dead"),
         (*KE(0.0, FZ + 0.02), "PAINTED RUNNER", "1.20 m, haematite, flat"),
     ], 330, 230, 300, anchor="end")
-    kit_clear_note(sh, "Crypt", x=0.0, text="3.00 clear · open roof")
+    kit_clear_note(sh, "Crypt", x=2.6, text="3.00 clear · open roof")
 
     # ---- plan ----
     kit_plan(sh, "Crypt", floor="#1E1B16", wall="#3A332A", trim=ASHLAR)

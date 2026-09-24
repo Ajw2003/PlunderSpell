@@ -1,0 +1,43 @@
+{
+  "key": "BronzeGraveCircle",
+  "name": "The Grave Circle",
+  "age": "BronzeAge",
+  "zone": "Crypt",
+  "role": "TombCorridor",
+  "summary": "A ring of upright slabs round four shaft graves, the old kings' burial ground, walled in by the new kings' citadel.",
+  "description": "Before there was a citadel there were these graves, and when the citadel was built its lords were careful to wall them in rather than build over them: four shafts cut into the rock, each capped with a stone slab, and round them a ring of upright stones topped with flat ones, a fence to keep the dead in. The ring has four gaps where the passages run through, and in each gap a draught that smells of old earth. The families still leave gold cups on the covers. They are still there.",
+  "source": "Grave Circle A at Mycenae (plan and ring)",
+  "build": [
+    "Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m limestone walls 3.00 m clear, 0.45 m ashlar capstone band, an archway 2.60 × 2.16 m centred on every wall.",
+    "Ring: 24 upright limestone slabs 0.60 m wide (tangential) × 0.20 m thick × 1.00 m tall, on a circle of radius 5.00 m about the cell centre.",
+    "Arcs: six uprights per quadrant at 25°, 33°, 41°, 49°, 57° and 65° from the east–west axis, so each arc stops short of the axes and the clear cross runs through the four gaps.",
+    "Cap slabs: flat ashlar slabs 0.30 m wide × 0.12 m, each bridging a neighbouring pair of uprights, top at 1.42 m above ground.",
+    "Shaft grave covers: four ashlar slabs 1.20 × 0.80 × 0.20 m at (±2.70, ±2.70), inside the arcs.",
+    "Gold cups: one on each cover, r 0.08 → 0.05 × 0.10 m, 0.30 m west of the cover's centre.",
+    "Floor: the Crypt's dark floor; earth darker inside the ring (albedo only).",
+    "Nothing stands in the cross: between the arcs and the archways is open floor."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open",
+    "Ring gaps: four, on the axes, each at least 3.2 m wide"
+  ],
+  "loot_anchors": [
+    {"at": "NE grave cover", "xyz": [2.7, 2.7, 0.50]},
+    {"at": "NW grave cover", "xyz": [-2.7, 2.7, 0.50]},
+    {"at": "SE grave cover", "xyz": [2.7, -2.7, 0.50]},
+    {"at": "SW grave cover", "xyz": [-2.7, -2.7, 0.50]}
+  ],
+  "materials": [
+    {"name": "Limestone", "hex": "#8C7F68", "pigment": "vellum_dim", "notes": "Walls and the uprights; weathered, rounded at the top."},
+    {"name": "Dressed ashlar", "hex": "#9A8C72", "pigment": "vellum_faint", "notes": "Cap slabs, grave covers, capstone band."},
+    {"name": "Gold", "hex": "#C9A227", "pigment": "orpiment", "notes": "The cups on the covers: loot."},
+    {"name": "Floor", "hex": "#2B231B", "pigment": "bone_black", "notes": "The Crypt floor."}
+  ],
+  "gameplay": [
+    "Four gold cups in plain sight on the covers: easy loot, and the ring's uprights are the only cover.",
+    "The ring is waist-to-chest high (1.42 m): a crouching player can hide behind it from the archways.",
+    "The four gaps funnel movement across the room along the axes."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeGraveCircle.svg"
+}

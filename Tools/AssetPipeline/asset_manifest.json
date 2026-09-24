@@ -87,6 +87,12 @@
       "preview": "f83162ec29b09066:23a9d68e53fd",
       "tris": 1288
     },
+    "BronzeGraveCircle": {
+      "budget": 1600,
+      "content": "4303d728dcaf5aad",
+      "preview": "4303d728dcaf5aad:23a9d68e53fd",
+      "tris": 892
+    },
     "BronzeLevyBarracks": {
       "budget": 1600,
       "content": "602c3fca82705959",

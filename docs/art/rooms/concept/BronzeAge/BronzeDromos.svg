@@ -154,7 +154,7 @@
     <circle cx="430" cy="672.4" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
     <text x="330" y="300" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" text-anchor="end">PAINTED RUNNER</text>
     <text x="330" y="314" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" text-anchor="end">1.20 m, haematite, flat</text>
-    <text x="430" y="542.6" font-family="Overpass Mono, monospace" font-size="9" fill="#DCD2BA" text-anchor="middle">3.00 clear · open roof</text>
+    <text x="573" y="542.6" font-family="Overpass Mono, monospace" font-size="9" fill="#DCD2BA" text-anchor="middle">3.00 clear · open roof</text>
     <text x="800" y="548" font-family="Overpass Mono, monospace" font-size="9" fill="#635C4C" text-anchor="middle">0</text>
     <text x="980" y="548" font-family="Overpass Mono, monospace" font-size="9" fill="#635C4C" text-anchor="middle">6</text>
     <text x="1160" y="548" font-family="Overpass Mono, monospace" font-size="9" fill="#635C4C" text-anchor="middle">12 m</text>
