@@ -431,6 +431,12 @@
       "preview": "af6a23be49c24262:23a9d68e53fd",
       "tris": 1868
     },
+    "LateUndercroftStair": {
+      "budget": 2400,
+      "content": "c8ccb9c0732710b9",
+      "preview": "c8ccb9c0732710b9:23a9d68e53fd",
+      "tris": 1528
+    },
     "Longsword": {
       "budget": 450,
       "content": "2abf76a1be12ecb0",

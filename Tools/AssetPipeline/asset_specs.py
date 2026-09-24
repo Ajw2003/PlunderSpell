@@ -151,7 +151,7 @@ LATE_CASTLE_SPECS = [
     dict(key="LateOubliette", builder="build_late_oubliette", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
     dict(key="LateCharnelHouse", builder="build_late_charnel_house", tri_budget=5000, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
     dict(key="LateEffigyCrypt", builder="build_late_effigy_crypt", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
-    dict(key="LateUndercroftStair", builder="build_late_undercroft_stair", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateUndercroftStair", builder="build_late_undercroft_stair", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
     # Door plugs, one per enclosed zone: the High Medieval size, this Age's stone.
     dict(key="LateDoorPlugOuterBailey", builder="build_late_door_plug_outer_bailey", tri_budget=40, subdir="Castle/LateMedieval", module="castle_builders_late", era="LateMedieval", zone="OuterBailey", kind="plug"),
     dict(key="LateDoorPlugInnerWard", builder="build_late_door_plug_inner_ward", tri_budget=40, subdir="Castle/LateMedieval", module="castle_builders_late", era="LateMedieval", zone="InnerWard", kind="plug"),

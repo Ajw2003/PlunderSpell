@@ -172,3 +172,33 @@ def build_late_effigy_crypt(bm, uv):
         cb._box(bm, uv, WALL, (x, y, fz + 0.4), (2.0, 0.8, 0.8))
         cb._box(bm, uv, "bronze", (x - 0.55, y, fz + 0.805), (0.5, 0.35, 0.01))
         cb._anchor(x, y, fz + 0.8)
+
+
+def build_late_undercroft_stair(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateUndercroftStair.svg"""
+    h, fz = room_shell(bm, uv, "Crypt")
+    # NW: the kit stair up the west wall to the dais; the great tun on it, a spigot, a jug.
+    cb._stair_to_dais(bm, uv, fz, 1.0, WALL)
+    d = fz + 1.0
+    bailey.cask_on_cradle(bm, uv, -4.6, 4.4, d, r=0.55, length=1.4)
+    cb._box(bm, uv, IRON, (-4.6, 3.66, d + 0.45), (0.06, 0.1, 0.06))
+    ek.jar(bm, uv, STEEL, -3.7, 4.9, d, 0.28, 0.16, mouth=0.08, segments=8)
+    cb._anchor(-3.7, 4.9, d)
+    # NE: two casks on cradles along the north wall.
+    for x in (2.8, 4.4):
+        bailey.cask_on_cradle(bm, uv, x, 5.0, fz, along_x=True)
+    # SE: the butler's table, a lantern, two jugs, tally sticks; a stool.
+    cb._table(bm, uv, TIMBER, 3.6, -3.6, fz, 1.2, 0.7, h=0.8)
+    top = fz + 0.8
+    cb._box(bm, uv, STEEL, (3.95, -3.6, top + 0.11), (0.16, 0.16, 0.22))
+    cb._box(bm, uv, CLOTH, (3.95, -3.69, top + 0.11), (0.1, 0.02, 0.12))
+    for dx in (-0.4, -0.2):
+        ek.jar(bm, uv, STEEL, 3.6 + dx, -3.5, top, 0.26, 0.15, mouth=0.07, segments=8)
+    for k in range(3):
+        cb._box(bm, uv, TIMBER, (3.55 + k * 0.06, -3.8, top + 0.01), (0.03, 0.25, 0.02))
+    mk.paint(bm, mk.add_cylinder(bm, 0.18, 0.45, loc=(3.6, -2.95, fz + 0.225), segments=8), TIMBER, uv)
+    # SW: two upright barrels.
+    for x, y in ((-4.8, -4.8), (-3.9, -4.9)):
+        mk.paint(bm, mk.add_cylinder(bm, 0.4, 0.9, loc=(x, y, fz + 0.45), segments=10), TIMBER, uv)
+        for f in (0.2, 0.8):
+            mk.paint(bm, mk.add_cylinder(bm, 0.415, 0.05, loc=(x, y, fz + 0.9 * f), segments=10), IRON, uv)
