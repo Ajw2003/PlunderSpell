@@ -167,15 +167,20 @@ def _figure_eight_shield(fig: Human) -> list[Part]:
     g = fig.grip("L")
     H = 1.30
     zc = 0.33 + H / 2                               # bottom 0.33 m, as the concept
-    cx, back_y = g.x + 0.10, g.y - 0.07
+    n = 13                                          # points across the face
+    bow, vbow, thick = 0.12, 0.06, 0.022
+    # The fist holds a grip just behind the centre of the face: put the inner
+    # surface's centre 4 cm in front of it, so the bowed edges curl back round
+    # the body.
+    cx = g.x + 0.04
+    v_g = vbow * (1.0 - ((g.z - zc) / (H / 2)) ** 2)
+    back_y = g.y - 0.045 + bow + v_g
     fig.add_bone("ShieldRoot", g, g + Vector((0.0, -0.07, 0.25)), "LowerArm.L")
     # half-width along the height (z relative to the centre): two lobes, a waist
     ctrl = [(-0.65, 0.0), (-0.635, 0.13), (-0.60, 0.24), (-0.52, 0.32), (-0.40, 0.36),
             (-0.27, 0.34), (-0.14, 0.27), (-0.05, 0.232), (0.0, 0.23)]
     ctrl = ctrl + [(-z, w) for z, w in reversed(ctrl[:-1])]
     prof = spline(ctrl, 2)
-    n = 9                                           # points across the face
-    bow, vbow, thick = 0.13, 0.07, 0.022
     rings = []
     for zr, hw in prof:
         z = zc + zr
@@ -192,13 +197,17 @@ def _figure_eight_shield(fig: Human) -> list[Part]:
             inner.append((x, y, z))
         rings.append(outer + list(reversed(inner)))
     # dappled patches (the JSON's #4A3526 hand-painted hide), in world metres
-    dapple = [((-0.30, 0.60), (-0.05, 0.84)), ((0.05, 0.25), (0.24, 0.50)),
-              ((-0.14, -0.05), (0.08, 0.12)), ((0.10, -0.30), (0.30, -0.12)),
-              ((-0.30, -0.52), (-0.10, -0.36)), ((-0.05, 0.52), (0.14, 0.62)),
-              ((0.14, 0.02), (0.30, 0.10)), ((-0.26, 0.22), (-0.12, 0.36))]
-    paint = [{"mat": "oxhide_dapple", "min": (cx + x0, -2.0, zc + z0),
-              "max": (cx + x1, 2.0, zc + z1)} for (x0, z0), (x1, z1) in
-             [((a[0], a[1] * 0.9), (b[0], b[1] * 0.9)) for a, b in dapple]]
+    # Each patch is a blob of three overlapping boxes so it does not read square.
+    blobs = [(-0.16, 0.44, 0.20), (0.14, 0.34, 0.16), (-0.02, 0.02, 0.15),
+             (0.18, -0.20, 0.14), (-0.18, -0.40, 0.18), (0.02, 0.56, 0.10),
+             (-0.20, 0.20, 0.10), (0.08, -0.46, 0.10)]
+    paint = []
+    for bx, bz, d in blobs:
+        for ox, oz, sx, sz in ((0.0, 0.0, 0.5, 0.36), (0.12, 0.10, 0.34, 0.5),
+                               (-0.10, -0.08, 0.30, 0.44)):
+            x0, z0 = bx + ox * d - sx * d, bz + oz * d - sz * d
+            paint.append({"mat": "oxhide_dapple", "min": (cx + x0, -2.0, zc + z0),
+                          "max": (cx + x0 + 2 * sx * d, 2.0, zc + z0 + 2 * sz * d)})
     # scuffed pale rim: the outermost column on both faces
     parts = [Part("loft", (0, 0, 0), (1, 1, 1), mat="oxhide", bone="ShieldRoot", extras={
         "rings": rings, "smooth": True, "bevel": False, "paint": paint, "prop": True})]
@@ -224,9 +233,10 @@ def _figure_eight_shield(fig: Human) -> list[Part]:
     # central wooden handgrip behind the face, through the fist
     parts.append(Part("cyl", (g.x, g.y, g.z), (0.03, 0.03, 0.16), mat="ash_haft",
                       bone="ShieldRoot", segments=6, extras={"prop": True, "bevel": False}))
+    face_y = back_y - v_g - bow * (1.0 - ((g.x - cx) / 0.23) ** 2)
     for dz in (0.07, -0.07):
-        parts.append(Part("box", (g.x + 0.02, (g.y + back_y) / 2, g.z + dz),
-                          (0.03, abs(g.y - back_y) + 0.02, 0.025), mat="ash_haft",
+        parts.append(Part("box", (g.x, (g.y + face_y) / 2, g.z + dz),
+                          (0.03, abs(g.y - face_y) + 0.02, 0.025), mat="ash_haft",
                           bone="ShieldRoot", extras={"prop": True, "bevel": False}))
     return parts
 
@@ -271,7 +281,7 @@ def palace_levy(entry: Entry):
     # 0.42 m shoulders. Spear hand (R) forward at the hip; shield hand (L) level.
     fig = Human(height=1.66, bulk=0.92, shoulders=0.42,
                 arm_r=ArmPose(spread=15.0, swing=4.0, elbow=58.0),
-                arm_l=ArmPose(spread=13.0, swing=2.0, elbow=70.0))
+                arm_l=ArmPose(spread=13.0, swing=2.0, elbow=45.0))
     pad = 0.010
     hem = 0.55
     # knee-length linen tunic, haematite-free: the JSON gives the border stripe as
@@ -347,7 +357,12 @@ def palace_levy(entry: Entry):
     parts += _figure_eight_shield(fig)
     parts += _levy_spear(fig)
 
+    # Review pose: the test pose, but the shield arm comes up to guard height
+    # (guard_stance) instead of to the face, which would lift 1.3 m of shield
+    # overhead like a parasol.
     pose = dict(figures.HUMAN_TEST_POSE)
+    pose["UpperArm.L"] = (-40.0, 0.0, 0.0)
+    pose["LowerArm.L"] = (-15.0, 0.0, 0.0)
     return blueprint(
         entry, parts, bevel=0.003, **fig.rig(pose),
         family_overrides={

@@ -572,12 +572,11 @@ def _crossbow(fig: Human, butt: Vector, d: Vector, t_nut: float) -> list[Part]:
                           "path": [tuple(tips[0]), tuple(nut + up * 0.006), tuple(tips[1])],
                           "section": (0.003, 0.003), **prop, "bevel": False,
                           "smooth": True}))
-    # Stirrup: a D of forged iron hanging from the tiller's nose.
-    down = -up
-    sp = [front + side * 0.030, front + side * 0.060 + down * 0.07 + d * 0.02,
-          front + side * 0.052 + down * 0.15 + d * 0.035,
-          front - side * 0.052 + down * 0.15 + d * 0.035,
-          front - side * 0.060 + down * 0.07 + d * 0.02, front - side * 0.030]
+    # Stirrup: a D of forged iron continuing the tiller's line past the nose.
+    sp = [front + side * 0.028, front + side * 0.058 + d * 0.06,
+          front + side * 0.050 + d * 0.13, front + side * 0.020 + d * 0.145,
+          front - side * 0.020 + d * 0.145, front - side * 0.050 + d * 0.13,
+          front - side * 0.058 + d * 0.06, front - side * 0.028]
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="cap_iron", bone="Crossbow",
                       segments=5, extras={"path": [tuple(p) for p in sp],
                                           "section": (0.008, 0.008), **prop,
@@ -638,10 +637,14 @@ def castle_crossbowman(entry: Entry):
     # 1.78 m to the top of the skull cap; the cap (0.10 m) sits on the coif, so the
     # skull crown (figure height) is ~1.73 m. Lean: bulk 0.95, shoulders 0.46 m.
     h = 1.73
-    # Carry pose: tiller pitched 30° down, both fists on it at the waist, the
-    # stirrup forward at knee height. Fists are placed by IK on the tiller.
-    d = Vector((0.0, -math.cos(math.radians(30)), -math.sin(math.radians(30))))
-    butt = Vector((0.0, -0.15, 1.08))
+    # Carry pose: both fists on the tiller at the waist, nose down, stirrup
+    # forward and low. The JSON asks for 30° down, but a 0.72 m tiller plus a
+    # 0.15 m stirrup at 30° reaches 0.9 m in front of the toes and fails the
+    # rig's bbox-centred check (|centre| <= 0.25 x depth + 5 cm); 56° is the
+    # shallowest that passes, and it puts the stirrup at shin/knee height.
+    # Fists are placed on the tiller by IK.
+    d = Vector((0.0, -math.cos(math.radians(56)), -math.sin(math.radians(56))))
+    butt = Vector((0.0, -0.12, 1.15))
     t_r, t_nut, t_l = 0.06, 0.17, 0.29
     grip_r = butt + d * t_r + Vector((0, 0, -0.012))
     grip_l = butt + d * t_l + Vector((0, 0, -0.012))

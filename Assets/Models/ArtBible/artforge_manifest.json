@@ -1672,21 +1672,21 @@
       "title": "Palace Levy",
       "passed": true,
       "stats": {
-        "vertices": 2991,
-        "faces": 2829,
-        "triangles": 5758,
+        "vertices": 3239,
+        "faces": 3085,
+        "triangles": 6254,
         "islands": 56,
         "lowest_z": 0.0,
         "height": 2.398,
-        "width": 1.005,
+        "width": 0.971,
         "budget": 8000,
-        "bbox_m": "1.005x0.759x2.398",
+        "bbox_m": "0.971x0.492x2.398",
         "height_body_m": 1.709,
         "height_spec_m": 1.7,
         "height_with_props_m": 2.398,
         "rig_bones": 23,
         "skinned_bones": 22,
-        "mean_influences": 1.45
+        "mean_influences": 1.41
       },
       "spec": {
         "dims_WDH_m": null,
@@ -1887,23 +1887,23 @@
       "slug": "castle-crossbowman",
       "name": "CastleCrossbowman",
       "title": "Castle Crossbowman",
-      "passed": false,
+      "passed": true,
       "stats": {
-        "vertices": 3326,
-        "faces": 3091,
-        "triangles": 6264,
+        "vertices": 3336,
+        "faces": 3101,
+        "triangles": 6284,
         "islands": 98,
         "lowest_z": 0.0,
         "height": 1.78,
         "width": 0.767,
         "budget": 8000,
-        "bbox_m": "0.767x0.925x1.780",
+        "bbox_m": "0.767x0.755x1.780",
         "height_body_m": 1.78,
         "height_spec_m": 1.78,
         "height_with_props_m": 1.78,
         "rig_bones": 25,
-        "skinned_bones": 19,
-        "mean_influences": 1.03
+        "skinned_bones": 24,
+        "mean_influences": 1.6
       },
       "spec": {
         "dims_WDH_m": null,
@@ -1975,10 +1975,9 @@
           "emit": null
         }
       },
-      "failures": [
-        "model is not centred on the origin in Y (bbox centre -0.319 m)"
-      ],
+      "failures": [],
       "warnings": [
+        "567 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['cap_iron', 'hose_mud']"
       ],
       "notes": [
@@ -1992,7 +1991,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/glTF/CastleCrossbowman.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/CastleCrossbowman.blend"
       },
-      "build_seconds": 4.0
+      "build_seconds": 5.9
     },
     {
       "key": "enemies/high/lantern-warden",
@@ -2098,6 +2097,225 @@
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
       "build_seconds": 3.4
+    },
+    {
+      "key": "enemies/late/sallet-halberdier",
+      "kind": "enemies",
+      "age": "late",
+      "slug": "sallet-halberdier",
+      "name": "SalletHalberdier",
+      "title": "Sallet Halberdier",
+      "passed": true,
+      "stats": {
+        "vertices": 3416,
+        "faces": 3729,
+        "triangles": 6416,
+        "islands": 105,
+        "lowest_z": 0.0,
+        "height": 2.052,
+        "width": 0.832,
+        "budget": 8000,
+        "bbox_m": "0.832x0.619x2.052",
+        "height_body_m": 1.825,
+        "height_spec_m": 1.82,
+        "height_with_props_m": 2.052,
+        "rig_bones": 24,
+        "skinned_bones": 17,
+        "mean_influences": 1.05
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.82,
+        "tri_budget": 8000
+      },
+      "families": {
+        "plate_steel": {
+          "name": "Plate steel",
+          "base": "#2E2F31",
+          "rough": 0.55,
+          "metal": 1.0,
+          "emit": null
+        },
+        "livery_white": {
+          "name": "Livery white",
+          "base": "#D6CDB6",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "livery_red": {
+          "name": "Livery red",
+          "base": "#9E2A2F",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "brigandine": {
+          "name": "Brigandine",
+          "base": "#4A3A2C",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "mail": {
+          "name": "Mail",
+          "base": "#6D6E6C",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "hose": {
+          "name": "Hose",
+          "base": "#3A2F26",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "ash": {
+          "name": "Ash",
+          "base": "#8A7456",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "russet_leather": {
+          "name": "Russet leather",
+          "base": "#5A3F2C",
+          "rough": 0.65,
+          "metal": 0.0,
+          "emit": null
+        },
+        "livery_grime": {
+          "name": "Livery white, grubby hem",
+          "base": "#A69C86",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['livery_grime', 'russet_leather']"
+      ],
+      "notes": [
+        "Halberd (2.08 m) is a prop bone on Hand.R, left out of the 1.82 m height.",
+        "Sallet is its own bone under Head (detachable); SalletTail is a bone for the knock-back with no vertices of its own (the sallet is one rigid piece).",
+        "Not built: tabard_front/back spring chains (the skirt rule hands the tabard hem to the thighs instead), the pierced trefoil in the axe blade, the sight-slit as a true opening (a pinched groove), rust bloom decals."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Late/SalletHalberdier/SalletHalberdier.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Late/SalletHalberdier/glTF/SalletHalberdier.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Late/SalletHalberdier/SalletHalberdier.blend"
+      },
+      "build_seconds": 6.1
+    },
+    {
+      "key": "enemies/powder/partisan-guard",
+      "kind": "enemies",
+      "age": "powder",
+      "slug": "partisan-guard",
+      "name": "PalaceGuard",
+      "title": "Palace Guard",
+      "passed": true,
+      "stats": {
+        "vertices": 3931,
+        "faces": 3910,
+        "triangles": 7418,
+        "islands": 120,
+        "lowest_z": 0.0,
+        "height": 2.617,
+        "width": 0.724,
+        "budget": 8000,
+        "bbox_m": "0.724x0.701x2.617",
+        "height_body_m": 1.869,
+        "height_spec_m": 1.85,
+        "height_with_props_m": 2.617,
+        "rig_bones": 23,
+        "skinned_bones": 22,
+        "mean_influences": 1.47
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.85,
+        "tri_budget": 8000
+      },
+      "families": {
+        "murrey_livery_wool": {
+          "name": "Murrey livery wool",
+          "base": "#5B3036",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "blued_steel": {
+          "name": "Blued steel",
+          "base": "#34404E",
+          "rough": 0.35,
+          "metal": 1.0,
+          "emit": null
+        },
+        "linen_collar": {
+          "name": "Linen collar",
+          "base": "#D2C7AC",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "black_leather": {
+          "name": "Black leather",
+          "base": "#221C18",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        },
+        "ash_haft": {
+          "name": "Ash haft",
+          "base": "#8A7254",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "horn_pane": {
+          "name": "Horn pane",
+          "base": "#B09A62",
+          "rough": 0.45,
+          "metal": 0.0,
+          "emit": "#4A1E0C"
+        },
+        "skin": {
+          "name": "Skin",
+          "base": "#B88E6E",
+          "rough": 0.6,
+          "metal": 0.0,
+          "emit": null
+        },
+        "pane_lining": {
+          "name": "Murrey pane lining",
+          "base": "#8A5A5E",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "68 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
+        "families not in the JSON (blueprint extras): ['pane_lining', 'skin']"
+      ],
+      "notes": [
+        "Partisan (2.62 m upright) is a prop bone on Hand.R, left out of the height check; carried grounded as on the concept sheet, not sloped.",
+        "Morion is its own bone under Head (detachable). Its 12 lining rivets are blued steel, not brass: brass reads as orpiment and he carries no plunder.",
+        "Lantern hangs on its own bone under Hips (the belt socket).",
+        "Sash is a single murrey band (no black stripe). Not built: sash_01-03 and breech_L/R spring bones, the purse's coin, IK target for the left hand."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/PalaceGuard.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/glTF/PalaceGuard.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/PalaceGuard.blend"
+      },
+      "build_seconds": 4.0
     }
   ]
 }
