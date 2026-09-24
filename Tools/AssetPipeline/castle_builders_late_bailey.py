@@ -80,3 +80,58 @@ def build_late_artillery_yard(bm, uv):
                  TIMBER, uv)
         mk.paint(bm, mk.add_cylinder(bm, 0.12, 0.25, loc=(-5.1, -IN + 0.15, fz + z), rot=along, segments=8),
                  head, uv)
+
+
+def a_frame(bm, uv, x, y, fz, top, spread=0.8, pigment=TIMBER):
+    """Two oak legs splayed north and south, meeting under a beam at `top`."""
+    lean = math.atan2(spread, top)
+    length = math.hypot(spread, top)
+    for s in (-1, 1):
+        mk.paint(bm, mk.add_box(bm, (0.12, 0.12, length), loc=(x, y + s * spread / 2, fz + top / 2),
+                                rot=Euler((s * lean, 0, 0))), pigment, uv)
+
+
+def build_late_gun_foundry(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateGunFoundry.svg"""
+    h, fz = room_shell(bm, uv, "OuterBailey")
+    # NW: the brick furnace, its glowing mouth, the chimney to the wall top, bellows, charcoal.
+    cb._box(bm, uv, BRICK, (-4.6, 4.7, fz + 0.7), (1.8, 1.6, 1.4))
+    cb._box(bm, uv, CLOTH, (-4.6, 3.89, fz + 0.55), (0.7, 0.02, 0.5))
+    cb._box(bm, uv, BRICK, (-4.6, 5.15, fz + 2.5), (0.9, 0.7, 2.2))
+    ek.prism(bm, uv, "leather", [(-0.2, 0.0), (0.2, 0.0), (0.2, 0.3)], 0.6, loc=(-3.4, 4.6, fz + 0.45), along="x")
+    cb._box(bm, uv, TIMBER, (-3.4, 4.6, fz + 0.225), (0.1, 0.1, 0.45))
+    mk.paint(bm, mk.add_cylinder(bm, 0.4, 0.3, loc=(-4.6, 3.3, fz + 0.15), segments=8, radius2=0.1), SOOT, uv)
+    # NE: the casting pit's kerb, its dark fill, the upright mould, the A-frame crane and its chain.
+    px, py = 3.4, 3.8
+    for oy in (-0.7, 0.7):
+        cb._box(bm, uv, WALL, (px, py + oy, fz + 0.125), (1.6, 0.2, 0.25))
+    for ox in (-0.7, 0.7):
+        cb._box(bm, uv, WALL, (px + ox, py, fz + 0.125), (0.2, 1.2, 0.25))
+    cb._box(bm, uv, SOOT, (px, py, fz + 0.01), (1.22, 1.22, 0.02))
+    mk.paint(bm, mk.add_cylinder(bm, 0.3, 1.8, loc=(px, py, fz + 0.9), segments=10), "leather", uv)
+    for k in range(1, 6):
+        mk.paint(bm, mk.add_cylinder(bm, 0.315, 0.04, loc=(px, py, fz + k * 0.3), segments=10), IRON, uv)
+    for x in (2.4, 4.4):
+        a_frame(bm, uv, x, py, fz, 2.8)
+    cb._box(bm, uv, TIMBER, (px, py, fz + 2.79), (2.3, 0.18, 0.18))
+    mk.paint(bm, mk.add_cylinder(bm, 0.02, 0.9, loc=(px, py, fz + 2.25), segments=4), IRON, uv)
+    # SE: two trestles, two gun barrels across them, a tool plank beside them.
+    for x in (2.6, 4.4):
+        cb._box(bm, uv, TIMBER, (x, -3.8, fz + 0.72), (0.15, 1.2, 0.1))
+        for dy in (-0.5, 0.5):
+            cb._box(bm, uv, TIMBER, (x, -3.8 + dy, fz + 0.335), (0.1, 0.1, 0.67))
+    along = Euler((0, math.radians(90), 0))
+    for y, r in ((-4.1, 0.15), (-3.7, 0.18)):
+        mk.paint(bm, mk.add_cylinder(bm, r, 2.4, loc=(3.5, y, fz + 0.77 + r), rot=along, segments=10,
+                                     radius2=r * 0.8), IRON, uv)
+    cb._box(bm, uv, TIMBER, (3.5, -3.3, fz + 0.805), (2.2, 0.3, 0.07))
+    cb._anchor(3.5, -3.3, fz + 0.84)
+    # SW: the anvil on its stump, the quench tub, a rack of tongs on the west wall.
+    mk.paint(bm, mk.add_cylinder(bm, 0.3, 0.6, loc=(-3.4, -3.4, fz + 0.3), segments=10), TIMBER, uv)
+    cb._box(bm, uv, IRON, (-3.4, -3.4, fz + 0.725), (0.5, 0.18, 0.25))
+    cb._anchor(-3.4, -3.4, fz + 0.85)
+    mk.paint(bm, mk.add_cylinder(bm, 0.45, 0.6, loc=(-4.7, -4.5, fz + 0.3), segments=12), TIMBER, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.4, 0.02, loc=(-4.7, -4.5, fz + 0.55), segments=12), "verdigris_lo", uv)
+    cb._box(bm, uv, TIMBER, (-IN + 0.05, -2.5, fz + 1.4), (0.1, 1.0, 0.1))
+    for k in range(4):
+        cb._box(bm, uv, IRON, (-IN + 0.12, -2.85 + k * 0.23, fz + 1.05), (0.03, 0.03, 0.7))
