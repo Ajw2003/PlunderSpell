@@ -7,6 +7,8 @@ dimensions, placements and loot anchors here match it. Palette, zone tables and
 room_shell come from castle_builders_bronze.py; the rules are in its docstring and in
 docs/plans/era-castle-rooms.md.
 """
+import bmesh
+
 from castle_builders_bronze import *  # noqa: F401,F403  palette, room_shell, cb, ek, mk, rk, math, Euler
 
 
@@ -84,3 +86,58 @@ def build_bronze_larnax_vault(bm, uv):
     for sx in (-1, 1):
         for sy in (-1, 1):
             pithos(bm, uv, sx * 4.9, sy * 4.9, fz, height=1.0, belly=0.6)
+
+
+THOLOS_COURSES = [(4.90, 0.00), (4.55, 0.65), (4.20, 1.30), (3.85, 1.95)]   # (inner radius, bottom)
+THOLOS_HC = 0.65
+
+
+def _beehive_quadrant(bm, uv, qx, qy, fz, a0=28.0, a1=62.0, facets=6):
+    """One quadrant's corbelled courses: each course a closed block whose inner face is
+    the ring arc from a0 to a1 degrees off the x axis, facing the centre, and whose
+    back runs out to just short of the walls (the 45° facet corner lands on the room's
+    corner), so the corner reads packed solid. Each course above the first sinks
+    room_kit.OVERLAP into the one below rather than sharing its vertices."""
+    w = IN - 0.02
+    angles = [a0 + k * (a1 - a0) / facets for k in range(facets + 1)]
+    for k, (r, bottom) in enumerate(THOLOS_COURSES):
+        z0 = fz + bottom - (rk.OVERLAP if k else 0.0)
+        z1 = fz + bottom + THOLOS_HC
+        rings = []                                  # [inner bottom, inner top, outer top, outer bottom] per angle
+        for a in angles:
+            c, s = math.cos(math.radians(a)), math.sin(math.radians(a))
+            d = w / max(c, s)
+            rings.append([bm.verts.new((qx * rr * c, qy * rr * s, z)) for rr, z in ((r, z0), (r, z1), (d, z1), (d, z0))])
+        faces = [bm.faces.new(rings[0]), bm.faces.new(list(reversed(rings[-1])))]
+        for ra, rb in zip(rings, rings[1:]):
+            for m in range(4):
+                n = (m + 1) % 4
+                faces.append(bm.faces.new((ra[m], rb[m], rb[n], ra[n])))
+        bmesh.ops.recalc_face_normals(bm, faces=faces)
+        mk.paint(bm, faces, ASHLAR if k % 2 == 0 else "vellum_dim", uv)
+
+
+def build_bronze_tholos(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeTholos.svg"""
+    h, fz = room_shell(bm, uv, "Crypt")
+    for qx in (-1, 1):
+        for qy in (-1, 1):
+            _beehive_quadrant(bm, uv, qx, qy, fz)
+    # NE: the king on his bier under a gold mask, a tripod brazier at his feet.
+    cb._box(bm, uv, ASHLAR, (2.7, 2.35, fz + 0.25), (1.8, 0.7, 0.5))
+    cb._box(bm, uv, RED, (2.7, 2.35, fz + 0.41), (1.82, 0.72, 0.06))
+    cb._box(bm, uv, LINEN, (2.7, 2.35, fz + 0.53), (1.7, 0.6, 0.06))
+    cb._box(bm, uv, GOLD, (3.3, 2.35, fz + 0.585), (0.22, 0.18, 0.05))
+    cb._anchor(2.7, 2.35, fz + 0.56)
+    tripod(bm, uv, 2.0, 3.35, fz)
+    # NW: the offering table and its gold cups.
+    offering_table(bm, uv, -2.6, 2.6, fz, w=0.9, d=0.6, h=0.7, pigment=ASHLAR)
+    for dx, r in ((-0.3, 0.05), (0.0, 0.055), (0.25, 0.045)):
+        mk.paint(bm, mk.add_cylinder(bm, r, 0.10, loc=(-2.6 + dx, 2.6, fz + 0.75), segments=8, radius2=r * 0.8),
+                 GOLD, uv)
+    # SW: the bronze-bound chest and two amphorae.
+    cb._chest(bm, uv, -2.8, -2.3, fz, w=1.0, d=0.6, h=0.55, trim=METAL, body=TIMBER)
+    amphora(bm, uv, -2.0, -3.2, fz)
+    amphora(bm, uv, -2.6, -3.4, fz)
+    # SE: the standing brazier.
+    cb._brazier(bm, uv, 2.7, -2.7, fz, pigment=RED, metal=METAL)

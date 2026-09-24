@@ -159,6 +159,12 @@
       "preview": "967e38d2c75e0c11:23a9d68e53fd",
       "tris": 1500
     },
+    "BronzeTholos": {
+      "budget": 2400,
+      "content": "6d055a5fd8d65d1c",
+      "preview": "6d055a5fd8d65d1c:23a9d68e53fd",
+      "tris": 1704
+    },
     "BronzeTreasury": {
       "budget": 2000,
       "content": "6a665b2499872ce8",
