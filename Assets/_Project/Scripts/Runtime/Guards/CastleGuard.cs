@@ -141,6 +141,15 @@ namespace RogueAi.Guards
                 _alarm = FindObjectOfType<AlarmFSMManager>();
         }
 
+        protected override void OnSpawned()
+        {
+            base.OnSpawned();
+            // A client's guard is moved by the server's replicated transform. Its own agent would
+            // fight that, and has no NavMesh to stand on until the client has built the castle.
+            if (!isServer && _agent != null)
+                _agent.enabled = false;
+        }
+
         private void Update()
         {
             // Clients render what the server decided; only the server runs the AI.

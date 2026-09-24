@@ -126,6 +126,9 @@ namespace RogueAi.Loot
         /// </summary>
         public void BreakItem()
         {
+            // A client's copy only shows what the server decided; its own collisions break nothing.
+            if (isSpawned && !isServer)
+                return;
             if (isSpawned && isServer)
                 BreakItemObservers();
             else
@@ -137,7 +140,8 @@ namespace RogueAi.Loot
 
         private void ApplyBrokenState()
         {
-            _isBroken.value = true;
+            if (!isSpawned || isServer)
+                _isBroken.value = true;
 
             // Transition bridge: extraction tallies LootValue now, so breaking through the old
             // system has to reach the new one or a smashed piece still pays out. Goes away with

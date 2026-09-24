@@ -11,8 +11,14 @@ public class PlayerNetworkOwnership : NetworkBehaviour
     [SerializeField] private GameObject _playerCamera;
     [SerializeField] private Rigidbody _rigidbody;
 
+    [Tooltip("Components only the owning machine may run: input, the microphone, anything that " +
+             "reads this machine's keyboard or voice. Switched off on every other machine's copy.")]
+    [SerializeField] private Behaviour[] _ownerOnly = new Behaviour[0];
+
     private void Awake()
     {
+        if (TryGetComponent(out StateMachine.PlayerStateMachine stateMachine))
+            stateMachine.LocalDecidedByNetwork = true;
         if (_inputController == null) _inputController = GetComponent<PlayerInputController>();
         if (_rigidbody == null) _rigidbody = GetComponent<Rigidbody>();
         if (_playerCamera == null)
@@ -26,18 +32,44 @@ public class PlayerNetworkOwnership : NetworkBehaviour
         }
     }
 
-    protected override void OnSpawned()
+    // Both callbacks fire twice on a host, once as the server and once as its own client. Ownership
+    // is a client-side question ("is this my body?"), so only the client-side call applies it; the
+    // server-side one would switch the host's own body off.
+    protected override void OnSpawned(bool asServer)
     {
-        if (isOwner)
+        if (!asServer)
+            ApplyOwnership();
+    }
+
+    // On a client the spawn arrives before the ownership does, so the body first looks remote and
+    // must be switched back on when it turns out to be this machine's.
+    protected override void OnOwnerChanged(PlayerID? oldOwner, PlayerID? newOwner, bool asServer)
+    {
+        if (!asServer)
+            ApplyOwnership();
+    }
+
+    /// <summary>Only the owner drives input and the camera, and there may be only one MainCamera
+    /// and AudioListener per machine. Everyone else's copy follows NetworkTransform, so its
+    /// physics would fight the replicated transform and is switched off.</summary>
+    private void ApplyOwnership()
+    {
+        bool mine = isOwner;
+        if (_inputController != null) _inputController.enabled = mine;
+        foreach (Behaviour behaviour in _ownerOnly)
+            if (behaviour != null) behaviour.enabled = mine;
+        if (_playerCamera != null) _playerCamera.SetActive(mine);
+        if (_rigidbody != null) _rigidbody.isKinematic = !mine;
+        if (!TryGetComponent(out StateMachine.PlayerStateMachine body))
             return;
-
-        // Remote players: only the owner drives input/camera, and only one MainCamera/
-        // AudioListener may be active per running instance.
-        if (_inputController != null) _inputController.enabled = false;
-        if (_playerCamera != null) _playerCamera.SetActive(false);
-
-        // Remote position/rotation follows NetworkTransform instead - simulating physics for
-        // it locally would fight the replicated transform.
-        if (_rigidbody != null) _rigidbody.isKinematic = true;
+        if (mine)
+        {
+            body.ClaimLocal();
+            Debug.Log($"[Coop] This machine plays as {name} (owner {owner}).");
+        }
+        else
+        {
+            body.ReleaseLocal();
+        }
     }
 }

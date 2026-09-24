@@ -678,3 +678,48 @@ are in the `SpellTuning` asset.
 **Status.** Standing. Verified in Play mode: `playtest-2026-09-23/27` (aimed Ignis), `/28` (Frango
 −30 and a 2.5 m shove), `/30` (a Levo'd guard floating 1.8 m up, then −17 on landing). A locked test
 door opened to Frango.
+
+## 2026-09-23 — Every session is networked; solo is a host nobody can join
+
+**Context.** The user asked to invite a friend over Steam from a standalone build. The build ships
+`RaidScene` alone, and that scene had no `NetworkManager`, no transport and nothing that started
+Steam; its player was placed in the scene. Wiring co-op on beside a scene-placed player does not
+work: that player's network components have the same scene ID on every machine, so a friend's
+casts and pickups would land on the host's body.
+
+**Decision.** `RaidScene` gets a `Network` object (`NetworkManager`, Local/UDP/Steam transports,
+`PlayerSpawner`, `CoopSession`). Every session starts through `CoopSession`: Play Solo hosts on
+`LocalTransport`, Host Co-op hosts on Steam (UDP without Steam), and a friend joins as a client. The
+player is spawned per connection from `RaidPlayer.prefab`, and ownership decides which body each
+machine drives. Mechanism: `docs/systems/net.md`.
+
+**Considered and rejected.** Keeping solo offline and adding network "avatars" for remote players.
+Two code paths for the raid, and the scene player's collision with itself across machines would
+still need removing. Solo as a local host costs one path through the server/client split the raid
+was already written for, and that path now runs in every test that loads `RaidScene`.
+
+**Reverses.** "The player is a prefab instance placed in `RaidScene`"
+(`AuthoredRaidSceneTests`, `raid-scene-assembly.md`). The tests now check the spawner instead.
+
+**Status.** Standing. Checked on one machine: Editor host + built client over UDP (both build the
+same castle, each sees the other, both directions replicate), solo raid (spawn, cast, carry,
+extract 800), and Steam in the build (signed in, lobby created, hosting on `SteamTransport`, the
+invite list shows online friends). **Not yet checked:** a second Steam account joining, which needs
+the user and a friend.
+
+## 2026-09-23 — The raid player copies the CastleBench player
+
+**Context.** Playing the co-op build, the user found spells did nothing and the view sat inside
+door lintels. The build spawns `RaidPlayer.prefab`, which had differed from the player built into
+`CastleBench.unity` since `5052c97`: push-to-cast on F19 instead of V, the eye 1.65 m above the
+capsule's centre instead of 0.75 m, mass 70 instead of 1, and other controller values. The user
+had tested voice on the CastleBench player, so the fault never showed until the raid scene shipped.
+
+**Decision.** The user named the CastleBench player as correct. `RaidPlayer.prefab` now matches it
+field for field, keeping only `NetworkTransform` and `PlayerNetworkOwnership` on top. That removed
+`LootInteractor` (E to pick up, Q to drop), which the bench player does not have; pickup is
+`ItemManager`'s mouse drag. The prefab asset was edited in place rather than replaced, so the
+network spawner's reference to it holds.
+
+**Status.** Standing. Verified in a solo raid: V + 1 cast Ignis, V + 5 cast Tonitrus, and the
+spawned player stands exactly as the bench player does (eye 1.94 m above the floor in both).

@@ -146,7 +146,9 @@ namespace StateMachine
             AssignSpellBook(null);
 
             Camera view = CameraTransform != null ? CameraTransform.GetComponent<Camera>() : null;
-            if (Local == null && view != null && view.enabled)
+            // isActiveAndEnabled, not enabled: a remote player's camera object is switched off by
+            // PlayerNetworkOwnership before Start, and must not claim to be this machine's player.
+            if (!LocalDecidedByNetwork && Local == null && view != null && view.isActiveAndEnabled)
                 Local = this;
 
             Plunderspell.Core.GameServices.Initialize();
@@ -181,6 +183,24 @@ namespace StateMachine
         public static event System.Action LocalPlayerDied;
 
         public bool IsLocal => Local == this;
+
+        /// <summary>Makes this body the one this machine plays as. Called by the network ownership
+        /// component when this machine turns out to own it, which can happen after Start.</summary>
+        public void ClaimLocal() => Local = this;
+
+        /// <summary>Undoes <see cref="ClaimLocal"/> when this machine turns out not to own the body.</summary>
+        public void ReleaseLocal()
+        {
+            if (Local == this)
+                Local = null;
+        }
+
+        /// <summary>
+        /// Set by the network ownership component on a networked body, so that only ownership decides
+        /// which body is this machine's. Without it, Start claimed whichever body woke first with a
+        /// live camera, and on a host that could be a friend's.
+        /// </summary>
+        public bool LocalDecidedByNetwork { get; set; }
 
         public void Die()
         {

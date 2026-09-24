@@ -19,7 +19,8 @@
         "RogueAi.Castle",
         "RogueAi.Editor",
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "RogueAi.Net"
     ],
     "includePlatforms": [
         "Editor"

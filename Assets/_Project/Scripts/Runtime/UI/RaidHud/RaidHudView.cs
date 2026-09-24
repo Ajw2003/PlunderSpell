@@ -32,6 +32,18 @@ namespace RogueAi.UI
         };
 
         private RogueAi.Voice.PushToCastController _pushToCast;
+
+        /// <summary>This machine's player's push-to-cast, looked up once that player exists: it is
+        /// spawned by the network after the HUD wakes.</summary>
+        private RogueAi.Voice.PushToCastController PushToCast
+        {
+            get
+            {
+                if (_pushToCast == null && StateMachine.PlayerStateMachine.Local != null)
+                    _pushToCast = StateMachine.PlayerStateMachine.Local.GetComponentInChildren<RogueAi.Voice.PushToCastController>();
+                return _pushToCast;
+            }
+        }
         private RaidHudPresenter _presenter;
         private CrosshairView _crosshair;
         private GUIStyle _label;
@@ -43,7 +55,6 @@ namespace RogueAi.UI
         {
             _presenter = GetComponent<RaidHudPresenter>();
             _crosshair = GetComponent<CrosshairView>();
-            _pushToCast = FindFirstObjectByType<RogueAi.Voice.PushToCastController>();
         }
 
         // The last phrase the voice service produced, so a misheard word reads differently from a
@@ -181,7 +192,7 @@ namespace RogueAi.UI
         /// </summary>
         private void DrawListening()
         {
-            bool casting = _pushToCast != null && _pushToCast.IsCasting;
+            bool casting = PushToCast != null && PushToCast.IsCasting;
             float y = Screen.height - 110f;
 
             if (casting)
@@ -239,7 +250,7 @@ namespace RogueAi.UI
             GUI.DrawTexture(new Rect(x, y, width, height), _barBackground);
 
             var style = new GUIStyle(_label) { alignment = TextAnchor.MiddleLeft };
-            bool casting = _pushToCast != null && _pushToCast.IsCasting;
+            bool casting = PushToCast != null && PushToCast.IsCasting;
 
             style.normal.textColor = casting ? new Color(0.45f, 0.95f, 0.55f) : Color.white;
             string castingPrompt = Speech != null ? "LISTENING - speak, or 1-8" : "CASTING - press a number";
