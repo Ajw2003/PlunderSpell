@@ -80,7 +80,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/glTF/TripodCauldron.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/TripodCauldron.blend"
       },
-      "build_seconds": 3.8
+      "build_seconds": 3.3
     },
     {
       "key": "items/bronze/faience-hippo",
@@ -152,7 +152,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/glTF/FaienceHippopotamus.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/FaienceHippopotamus.blend"
       },
-      "build_seconds": 3.1
+      "build_seconds": 2.6
     },
     {
       "key": "items/bronze/gold-death-mask",
@@ -229,7 +229,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/glTF/GoldDeathMask.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/GoldDeathMask.blend"
       },
-      "build_seconds": 3.3
+      "build_seconds": 2.5
     },
     {
       "key": "items/bronze/oxhide-ingot",
@@ -310,7 +310,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/glTF/OxhideIngot.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/OxhideIngot.blend"
       },
-      "build_seconds": 2.7
+      "build_seconds": 2.4
     },
     {
       "key": "items/bronze/sealed-amphora",
@@ -392,7 +392,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/glTF/SealedAmphora.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/SealedAmphora.blend"
       },
-      "build_seconds": 2.7
+      "build_seconds": 2.4
     },
     {
       "key": "items/high/arm-reliquary",
@@ -1423,12 +1423,12 @@
       "slug": "nautilus-cup",
       "name": "NautilusCup",
       "title": "Nautilus Cup",
-      "passed": false,
+      "passed": true,
       "stats": {
-        "vertices": 1121,
-        "faces": 1156,
-        "triangles": 2078,
-        "islands": 42,
+        "vertices": 801,
+        "faces": 820,
+        "triangles": 1446,
+        "islands": 40,
         "lowest_z": 0.0,
         "height": 0.346,
         "width": 0.188,
@@ -1482,9 +1482,7 @@
           "emit": null
         }
       },
-      "failures": [
-        "2078 triangles exceeds the 1500 budget"
-      ],
+      "failures": [],
       "warnings": [
         "families not in the JSON (blueprint extras): ['shell_stripe']"
       ],
@@ -1499,7 +1497,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/NautilusCup/glTF/NautilusCup.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/NautilusCup/NautilusCup.blend"
       },
-      "build_seconds": 3.4
+      "build_seconds": 3.3
     },
     {
       "key": "items/powder/silver-tureen",

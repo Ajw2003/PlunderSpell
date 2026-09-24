@@ -830,13 +830,13 @@ def nautilus_cup(entry: Entry):
                             "mouth_depth": 0.045 if mouth else 0.0, "smooth": True,
                             "bevel": False})
 
-    parts.append(sweep(t_end - 2 * math.pi * 1.45, t_end - 2 * math.pi * 0.90, 6, 8, False))
-    parts.append(sweep(t_end - 2 * math.pi * 0.95, t_end, 19, 12, True))
+    parts.append(sweep(t_end - 2 * math.pi * 1.45, t_end - 2 * math.pi * 0.90, 5, 6, False))
+    parts.append(sweep(t_end - 2 * math.pi * 0.95, t_end, 14, 10, True))
 
     # Umbilical bosses: silver domes over the coil's centre on both flanks.
     for sy in (-1, 1):
         y0 = sy * half_w * r_at(t_end - 2 * math.pi) / R
-        parts.append(Part("lathe", (cx, y0, cz), (1, 1, 1), mat="silver", segments=10,
+        parts.append(Part("lathe", (cx, y0, cz), (1, 1, 1), mat="silver", segments=8,
                           rot=(sy * -90.0, 0.0, 0.0),
                           extras={"profile": [(0.0, 0.0), (0.019, 0.0), (0.017, 0.004),
                                               (0.010, 0.008), (0.0, 0.0095)],
@@ -846,7 +846,7 @@ def nautilus_cup(entry: Entry):
 
     # Tiger-stripe remnants near the mouth: short brown flames across both flanks.
     for sy in (-1, 1):
-        for dt in (0.35, 0.75, 1.15):
+        for dt in (0.40, 0.95):
             t = t_end - dt
             path = [surface(t + 0.06 * (1 - q), sy * (0.35 + 0.9 * q), 0.0012)
                     for q in (0.0, 0.5, 1.0)]
@@ -860,9 +860,9 @@ def nautilus_cup(entry: Entry):
     p_end = Vector(centre_pt(t_end))
     n_end = Vector((math.cos(t_end), 0.0, math.sin(t_end)))
     rn_e, rb_e = K * R, half_w
-    band = [tuple(p_end - tan * 0.007 + n_end * ((rn_e + 0.0015) * math.cos(2 * math.pi * j / 16))
-                  + Vector((0, 1, 0)) * ((rb_e + 0.0015) * math.sin(2 * math.pi * j / 16)))
-            for j in range(16)]
+    band = [tuple(p_end - tan * 0.007 + n_end * ((rn_e + 0.0015) * math.cos(2 * math.pi * j / 12))
+                  + Vector((0, 1, 0)) * ((rb_e + 0.0015) * math.sin(2 * math.pi * j / 12)))
+            for j in range(12)]
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=4,
                       extras={"path": band, "closed": True, "section": (0.0075, 0.0022),
                               "up": tuple(tan), "bevel": False}))
@@ -885,25 +885,25 @@ def nautilus_cup(entry: Entry):
                                   "smooth": True, "bevel": False}))
         cart = surface(ts[3], sy * math.pi / 2, 0.003)
         parts.append(Part("sphere", cart, (0.014, 0.006, 0.018), mat="silver_gilt",
-                          segments=6, rings=4, extras={"bevel": False, "smooth": True}))
-    ts = [low_t - (low_t - (t_end - 2 * math.pi + 0.20)) * i / 9 for i in range(10)]
+                          segments=5, rings=3, extras={"bevel": False, "smooth": True}))
+    ts = [low_t - (low_t - (t_end - 2 * math.pi + 0.20)) * i / 6 for i in range(7)]
     path = [(0.0, 0.0, 0.130)] + [surface(t, 0.0, 0.0015) for t in ts]
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=4,
                       extras={"path": path, "section": (0.0016, 0.006), "up": (0, 1, 0),
                               "smooth": True, "bevel": False}))
-    cart = surface(ts[4], 0.0, 0.003)
+    cart = surface(ts[3], 0.0, 0.003)
     parts.append(Part("sphere", cart, (0.016, 0.014, 0.016), mat="silver_gilt",
-                      segments=6, rings=4, extras={"bevel": False, "smooth": True}))
+                      segments=5, rings=3, extras={"bevel": False, "smooth": True}))
 
     # --- Neptune on the volute: robed body, head, trident.
     nt = math.radians(108.0) - 2 * math.pi
     nx, _ny, nz = surface(nt, 0.0, -0.003)
-    parts.append(Part("lathe", (nx, 0.0, nz), (1, 1, 1), mat="silver_gilt", segments=8,
+    parts.append(Part("lathe", (nx, 0.0, nz), (1, 1, 1), mat="silver_gilt", segments=6,
                       extras={"profile": [(0.0, 0.0), (0.011, 0.0), (0.011, 0.004), (0.009, 0.016),
                                           (0.0075, 0.032), (0.0095, 0.040), (0.005, 0.047),
                                           (0.0, 0.048)], "smooth": True, "bevel": False}))
     parts.append(Part("sphere", (nx, 0.0, nz + 0.054), (0.012, 0.012, 0.013), mat="silver_gilt",
-                      segments=8, rings=5, extras={"bevel": False, "smooth": True}))
+                      segments=6, rings=4, extras={"bevel": False, "smooth": True}))
     tx = nx + 0.014
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=4,
                       extras={"path": [(tx, 0.0, nz + 0.004), (tx + 0.002, 0.0, nz + 0.072)],
@@ -915,7 +915,7 @@ def nautilus_cup(entry: Entry):
                       mat="silver_gilt", extras={"bevel": False}))
 
     # --- Calyx cup under the shell.
-    parts.append(Part("lathe", (0, 0, 0), (1.0, 0.8, 1.0), mat="silver_gilt", segments=12,
+    parts.append(Part("lathe", (0, 0, 0), (1.0, 0.8, 1.0), mat="silver_gilt", segments=8,
                       extras={"profile": [(0.0, 0.106), (0.010, 0.106), (0.016, 0.114),
                                           (0.030, 0.126), (0.038, 0.140), (0.030, 0.138),
                                           (0.0, 0.128)], "smooth": True, "bevel": False}))
@@ -924,13 +924,13 @@ def nautilus_cup(entry: Entry):
     # and a pearl.
     stem = spline([(0.0, 0.0, 0.026), (-0.009, 0.0, 0.048), (0.008, 0.0, 0.072),
                    (-0.004, 0.0, 0.094), (0.0, 0.0, 0.112)], 2)
-    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=8,
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver", segments=6,
                       extras={"path": stem, "section": (0.0125, 0.011), "up": (0, 1, 0),
                               "smooth": True, "bevel": False}))
     parts.append(Part("sphere", (0.010, -0.004, 0.090), (0.020, 0.018, 0.017), mat="silver",
-                      segments=8, rings=5, extras={"bevel": False, "smooth": True}))
-    parts.append(Part("sphere", (0.006, -0.013, 0.104), (0.009, 0.009, 0.009), mat="nacre",
                       segments=6, rings=4, extras={"bevel": False, "smooth": True}))
+    parts.append(Part("sphere", (0.006, -0.013, 0.104), (0.009, 0.009, 0.009), mat="nacre",
+                      segments=5, rings=3, extras={"bevel": False, "smooth": True}))
     fin = [(-0.012, -0.009, 0.040), (-0.004, -0.013, 0.058), (0.009, -0.011, 0.070)]
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=3,
                       extras={"path": fin, "section": (0.0018, 0.0026), "smooth": True,
@@ -940,7 +940,7 @@ def nautilus_cup(entry: Entry):
     # tarnish in the embossed wave band.
     foot = [(0.0, 0.0), (0.055, 0.0), (0.055, 0.004), (0.050, 0.008), (0.044, 0.012),
             (0.032, 0.020), (0.018, 0.027), (0.011, 0.031), (0.0, 0.031)]
-    parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=16,
+    parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="silver_gilt", segments=10,
                       extras={"profile": foot, "smooth": True, "bevel": False, "paint": [
                           {"mat": "silver", "min": (-1, -1, 0.0005), "max": (1, 1, 0.0035)},
                           {"mat": "tarnish", "min": (-1, -1, 0.0085), "max": (1, 1, 0.0105)},
