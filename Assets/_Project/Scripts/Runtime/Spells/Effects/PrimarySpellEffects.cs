@@ -52,46 +52,80 @@ namespace RogueAi.Spells
         {
             EmitCastNoise(ctx);
 
-            var target = SpellTargeting.FindNearestExcluding<IIgnitable>(
-                ctx.Origin, ctx.Radius(), ctx.CasterTransform, ctx.TargetLayerMask);
+            var target = ctx.Aimed<IIgnitable>();
             if (target == null)
                 return 0;
 
-            target.Ignite(SpellTuning.IgnisDamagePerSecond * ctx.Power, SpellTuning.IgnisBurnSeconds);
+            target.Ignite(SpellTuning.IgnisDamagePerSecond * ctx.Power, SpellTuning.IgnisBurnSeconds,
+                ctx.CasterTransform != null ? ctx.CasterTransform.gameObject : null);
             return 1;
         }
     }
 
-    /// <summary>
-    /// Frango — shatters breakables in range. Note what this means for a heist: Frango destroys the
-    /// loot it hits, so casting it near the haul is how a raid loses its payday.
-    /// </summary>
+    /// <summary>Frango — a force blast at what you aim at: hurts, staggers and shoves a creature, or
+    /// smashes a door open. See docs/Decisions.md, 2026-09-23, on why it no longer breaks loot.</summary>
     public sealed class FrangoEffect : SpellEffectBase
     {
         public override SpellId Id => SpellId.Frango;
 
         public override string Describe(in SpellEffectContext ctx) =>
-            $"Frango: shatter within {ctx.Radius(4f):0.0}m";
+            $"Frango: force blast, {SpellTuning.FrangoDamage * ctx.Power:0} damage and a {SpellTuning.FrangoKnockback * ctx.Power:0.0}m shove";
 
+        /// <summary>
+        /// Breaks what you aim at: a creature takes a hit, staggers and is shoved back; a door is
+        /// smashed open, locked or not. It used to shatter every breakable within 4 m, and the only
+        /// breakable things were the players' own valuables, so the spell could only cost you (#106).
+        /// </summary>
         public override int Execute(in SpellEffectContext ctx)
         {
             EmitCastNoise(ctx);
 
-            int broken = 0;
-            foreach (IBreakable breakable in SpellTargeting.FindAll<IBreakable>(
-                         ctx.Origin, ctx.Radius(4f), ctx.TargetLayerMask))
+            IHealth creature = ctx.Aimed<IHealth>();
+            IHandOpenable door = ctx.Aimed<IHandOpenable>();
+            Vector3 eye = ctx.Origin - ctx.Direction;
+
+            // Whichever of the two is nearer the crosshair's line of fire wins.
+            if (door != null && !door.IsOpen && door is Component dc &&
+                (creature == null || !(creature is Component cc) ||
+                 Vector3.Distance(eye, dc.transform.position) < Vector3.Distance(eye, cc.transform.position)))
             {
-                if (breakable.IsBroken)
-                    continue;
-                breakable.Break();
-                broken++;
+                door.ForceOpen();
+                EmitEffectNoise(ctx, 10f, 0.6f, NoiseType.GlassBreak);
+                return 1;
             }
 
-            // Breaking things is loud regardless of how quietly the words were spoken.
-            if (broken > 0)
-                EmitEffectNoise(ctx, 10f, 0.6f, NoiseType.GlassBreak);
+            if (creature == null || creature.CurrentHealth <= 0f || !(creature is Component target))
+                return 0;
 
-            return broken;
+            GameObject caster = ctx.CasterTransform != null ? ctx.CasterTransform.gameObject : null;
+            Damage.Apply(creature, SpellTuning.FrangoDamage * ctx.Power, caster, caster,
+                Damage.PointOn(target, eye), DamageKind.Spell);
+
+            if (target.GetComponentInParent<IStunnable>() is IStunnable stunnable)
+                stunnable.Stun(SpellTuning.FrangoStaggerSeconds);
+
+            Shove(target.transform.root, ctx.Direction, SpellTuning.FrangoKnockback * ctx.Power);
+            EmitEffectNoise(ctx, 10f, 0.6f, NoiseType.GlassBreak);
+            return 1;
+        }
+
+        /// <summary>
+        /// Pushes a body back along the blast. A guard is moved through its NavMeshAgent so it cannot
+        /// be shoved through a wall; anything else physical gets an impulse.
+        /// </summary>
+        private static void Shove(Transform body, Vector3 direction, float metres)
+        {
+            Vector3 flat = new Vector3(direction.x, 0f, direction.z).normalized * metres;
+            var agent = body.GetComponent<UnityEngine.AI.NavMeshAgent>();
+            if (agent != null && agent.enabled && agent.isOnNavMesh)
+            {
+                agent.Move(flat);
+                return;
+            }
+
+            var rb = body.GetComponent<Rigidbody>();
+            if (rb != null && !rb.isKinematic)
+                rb.AddForce(flat * 4f, ForceMode.VelocityChange);
         }
     }
 
@@ -107,12 +141,12 @@ namespace RogueAi.Spells
         {
             EmitCastNoise(ctx);
 
-            var target = SpellTargeting.FindNearestExcluding<ILevitatable>(
-                ctx.Origin, ctx.Radius(), ctx.CasterTransform, ctx.TargetLayerMask);
+            var target = ctx.Aimed<ILevitatable>();
             if (target == null)
                 return 0;
 
-            target.Levitate(Vector3.up * (SpellTuning.LevoImpulse * ctx.Power), SpellTuning.LevoSeconds);
+            target.Levitate(Vector3.up * (SpellTuning.LevoImpulse * ctx.Power), SpellTuning.LevoSeconds,
+                ctx.CasterTransform != null ? ctx.CasterTransform.gameObject : null);
             return 1;
         }
     }
@@ -160,8 +194,9 @@ namespace RogueAi.Spells
 
             int stunned = 0;
             Transform caster = ctx.CasterTransform;
+            // Bursts where you aim, not on your own feet.
             foreach (IStunnable target in SpellTargeting.FindAll<IStunnable>(
-                         ctx.Origin, ctx.Radius(), ctx.TargetLayerMask))
+                         ctx.AimPoint, ctx.Radius(), ctx.TargetLayerMask))
             {
                 if (caster != null && target is Component c && c.transform.IsChildOf(caster))
                     continue;
@@ -193,7 +228,7 @@ namespace RogueAi.Spells
             int slept = 0;
             Transform caster = ctx.CasterTransform;
             foreach (ISleepable target in SpellTargeting.FindAll<ISleepable>(
-                         ctx.Origin, ctx.Radius(), ctx.TargetLayerMask))
+                         ctx.AimPoint, ctx.Radius(), ctx.TargetLayerMask))
             {
                 if (caster != null && target is Component c && c.transform.IsChildOf(caster))
                     continue;
@@ -224,8 +259,7 @@ namespace RogueAi.Spells
         {
             EmitCastNoise(ctx);
 
-            var corpse = SpellTargeting.FindNearestExcluding<IHealth>(
-                ctx.Origin, ctx.Radius(), ctx.CasterTransform, ctx.TargetLayerMask);
+            var corpse = ctx.Aimed<IHealth>();
             if (corpse == null || corpse.CurrentHealth > 0f)
                 return 0;
 
@@ -246,7 +280,7 @@ namespace RogueAi.Spells
         {
             EmitCastNoise(ctx);
 
-            var door = SpellTargeting.FindNearest<IOpenable>(ctx.Origin, ctx.Radius(), ctx.TargetLayerMask);
+            var door = ctx.Aimed<IOpenable>();
             if (door == null || door.IsOpen)
                 return 0;
 

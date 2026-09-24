@@ -1,0 +1,1667 @@
+{
+  "generated_by": "Tools/ArtForge/build.py",
+  "assets": [
+    {
+      "key": "items/bronze/bronze-tripod",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "bronze-tripod",
+      "name": "TripodCauldron",
+      "title": "Tripod Cauldron",
+      "passed": true,
+      "stats": {
+        "vertices": 2419,
+        "faces": 2576,
+        "triangles": 4650,
+        "islands": 60,
+        "lowest_z": 0.0,
+        "height": 1.05,
+        "width": 0.833,
+        "budget": 5000,
+        "bbox_m": "0.833x0.811x1.050",
+        "vs_spec": "W=0.833/0.800 D=0.811/0.800 H=1.050/1.050"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.8,
+          0.8,
+          1.05
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "cast_bronze": {
+          "name": "Cast bronze",
+          "base": "#9B6A38",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "rubbed_bronze": {
+          "name": "Rubbed bronze",
+          "base": "#B8844E",
+          "rough": 0.4,
+          "metal": 1.0,
+          "emit": null
+        },
+        "bronze_shadow": {
+          "name": "Bronze shadow",
+          "base": "#5E3E22",
+          "rough": 0.6,
+          "metal": 1.0,
+          "emit": null
+        },
+        "hearth_soot": {
+          "name": "Hearth soot",
+          "base": "#2B231B",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        },
+        "ash_residue": {
+          "name": "Ash residue",
+          "base": "#6E665A",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Dent states (3) and the bent-leg state are separate swaps, not built here.",
+        "Legs splay about 5.6° rather than 8°: at 8° from the bowl wall the feet would stand well outside the 0.80 m footprint the same bullet gives.",
+        "Spiral chasing is modelled as raised coils; fine chased lines are left to the normal map, which EnemyForge's bake does not make."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/TripodCauldron.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/glTF/TripodCauldron.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/TripodCauldron.blend"
+      },
+      "build_seconds": 2.9
+    },
+    {
+      "key": "items/bronze/faience-hippo",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "faience-hippo",
+      "name": "FaienceHippopotamus",
+      "title": "Faience Hippopotamus",
+      "passed": true,
+      "stats": {
+        "vertices": 795,
+        "faces": 801,
+        "triangles": 1458,
+        "islands": 33,
+        "lowest_z": 0.0,
+        "height": 0.107,
+        "width": 0.21,
+        "budget": 1500,
+        "bbox_m": "0.210x0.082x0.107",
+        "vs_spec": "W=0.210/0.200 D=0.082/0.080 H=0.107/0.110"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.2,
+          0.08,
+          0.11
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "faience_glaze": {
+          "name": "Faience glaze",
+          "base": "#3E86A8",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        },
+        "manganese_black_paint": {
+          "name": "Manganese black paint",
+          "base": "#1E1A16",
+          "rough": 0.2,
+          "metal": 0.0,
+          "emit": null
+        },
+        "quartz_frit_core": {
+          "name": "Quartz frit core",
+          "base": "#E6DDC8",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "glaze_highlight": {
+          "name": "Glaze highlight",
+          "base": "#8CC0D0",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Line-painting is modelled as hair-thin raised strokes on the glaze (the bake has no decal pass); a texture artist can move it to albedo."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/FaienceHippopotamus.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/glTF/FaienceHippopotamus.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/FaienceHippopotamus/FaienceHippopotamus.blend"
+      },
+      "build_seconds": 2.4
+    },
+    {
+      "key": "items/bronze/gold-death-mask",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "gold-death-mask",
+      "name": "GoldDeathMask",
+      "title": "Gold Death-Mask",
+      "passed": true,
+      "stats": {
+        "vertices": 792,
+        "faces": 817,
+        "triangles": 1404,
+        "islands": 45,
+        "lowest_z": 0.0,
+        "height": 0.31,
+        "width": 0.326,
+        "budget": 1500,
+        "bbox_m": "0.326x0.080x0.310",
+        "vs_spec": "W=0.326/0.330 D=0.080/0.080 H=0.310/0.310"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.26,
+          0.08,
+          0.31
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "orpiment_gold": {
+          "name": "Orpiment gold",
+          "base": "#C9A227",
+          "rough": 0.32,
+          "metal": 1.0,
+          "emit": null
+        },
+        "deep_gold_shadow": {
+          "name": "Deep gold shadow",
+          "base": "#8A6B1A",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "gold_highlight": {
+          "name": "Gold highlight",
+          "base": "#E6C75A",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "tomb_dust": {
+          "name": "Tomb dust",
+          "base": "#5A4A38",
+          "rough": 0.95,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "X (W) checked against 0.330 m instead of the JSON's 0.260 m: the 0.26 m width is the face oval (the concept's front view dimensions the face only); the 0.04 m ear tabs of the build bullets stand out beyond it on both sides",
+        "JSON materials not used by any part: ['linen_shroud']"
+      ],
+      "notes": [
+        "The linen shroud is an environment prop (JSON), not modelled here.",
+        "Crumpled-state swap mesh (≤ 1k) not built yet.",
+        "Brow hatching is below mesh resolution; left to the normal map."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/GoldDeathMask.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/glTF/GoldDeathMask.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/GoldDeathMask.blend"
+      },
+      "build_seconds": 2.5
+    },
+    {
+      "key": "items/bronze/oxhide-ingot",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "oxhide-ingot",
+      "name": "OxhideIngot",
+      "title": "Oxhide Ingot",
+      "passed": true,
+      "stats": {
+        "vertices": 734,
+        "faces": 864,
+        "triangles": 1356,
+        "islands": 28,
+        "lowest_z": 0.0,
+        "height": 0.054,
+        "width": 0.6,
+        "budget": 1500,
+        "bbox_m": "0.600x0.400x0.054",
+        "vs_spec": "W=0.600/0.600 D=0.400/0.400 H=0.054/0.050"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.6,
+          0.4,
+          0.05
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "raw_copper": {
+          "name": "Raw copper",
+          "base": "#9E5A36",
+          "rough": 0.55,
+          "metal": 1.0,
+          "emit": null
+        },
+        "copper_oxide": {
+          "name": "Copper oxide",
+          "base": "#5A3524",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
+        "casting_grit": {
+          "name": "Casting grit",
+          "base": "#7A6A58",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hearth_soot": {
+          "name": "Hearth soot",
+          "base": "#6E4028",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "rubbed_copper": {
+          "name": "Rubbed copper (high points)",
+          "base": "#C07A4E",
+          "rough": 0.4,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['rubbed_copper']"
+      ],
+      "notes": [
+        "Shrinkage wrinkles and sand-cast grain are left to the normal map, which EnemyForge's bake does not make; blisters and pocks are modelled."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/OxhideIngot.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/glTF/OxhideIngot.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/OxhideIngot/OxhideIngot.blend"
+      },
+      "build_seconds": 2.3
+    },
+    {
+      "key": "items/bronze/sealed-amphora",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "sealed-amphora",
+      "name": "SealedAmphora",
+      "title": "Sealed Amphora",
+      "passed": true,
+      "stats": {
+        "vertices": 734,
+        "faces": 738,
+        "triangles": 1440,
+        "islands": 10,
+        "lowest_z": 0.0,
+        "height": 0.62,
+        "width": 0.517,
+        "budget": 1500,
+        "bbox_m": "0.517x0.340x0.620",
+        "vs_spec": "W=0.517/0.520 D=0.340/0.340 H=0.620/0.620"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.34,
+          0.34,
+          0.62
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "buff_terracotta": {
+          "name": "Buff terracotta",
+          "base": "#B88A62",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        },
+        "sealing_clay": {
+          "name": "Sealing clay",
+          "base": "#8A5A3C",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "flax_cord": {
+          "name": "Flax cord",
+          "base": "#9C8660",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "haematite_red": {
+          "name": "Haematite red",
+          "base": "#8E3F2C",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wine_stain": {
+          "name": "Wine stain",
+          "base": "#4A2A2A",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "X (W) checked against 0.520 m instead of the JSON's 0.340 m: handles arch 0.08 m out from the 0.34 m body on ±X (build bullet); the JSON dimension line gives the body only"
+      ],
+      "notes": [
+        "Ring stand omitted: the JSON marks it optional and not part of the pick-up.",
+        "Signet figure and potter's mark are below mesh resolution; left to a decal."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/SealedAmphora.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/glTF/SealedAmphora.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/SealedAmphora.blend"
+      },
+      "build_seconds": 2.3
+    },
+    {
+      "key": "items/high/arm-reliquary",
+      "kind": "items",
+      "age": "high",
+      "slug": "arm-reliquary",
+      "name": "ArmReliquary",
+      "title": "Arm Reliquary",
+      "passed": true,
+      "stats": {
+        "vertices": 839,
+        "faces": 865,
+        "triangles": 1462,
+        "islands": 55,
+        "lowest_z": 0.0,
+        "height": 0.52,
+        "width": 0.16,
+        "budget": 1500,
+        "bbox_m": "0.160x0.144x0.520",
+        "vs_spec": "W=0.160/0.160 D=0.144/0.140 H=0.520/0.520"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.16,
+          0.14,
+          0.52
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "silver": {
+          "name": "Silver",
+          "base": "#B8B4A8",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "gilt": {
+          "name": "Gilt (orpiment)",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "rock_crystal": {
+          "name": "Rock crystal",
+          "base": "#CBD3CF",
+          "rough": 0.08,
+          "metal": 0.0,
+          "emit": null
+        },
+        "garnet": {
+          "name": "Garnet",
+          "base": "#6E1F2A",
+          "rough": 0.1,
+          "metal": 0.0,
+          "emit": null
+        },
+        "relic_bone": {
+          "name": "Relic bone",
+          "base": "#DCD2BA",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        },
+        "niello_soot": {
+          "name": "Niello / soot",
+          "base": "#2A2622",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "red_silk": {
+          "name": "Red silk (relic wrap)",
+          "base": "#7E2A26",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['red_silk']"
+      ],
+      "notes": [
+        "Rock crystal is opaque in this bake (no refraction mask yet); the relic bone and its red silk wrap are laid on the crystal's face so they read through the window.",
+        "Felt underside and the vellum ground behind the relic are not modelled (never seen at game distance / hidden by the opaque crystal)."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/ArmReliquary/glTF/ArmReliquary.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.blend"
+      },
+      "build_seconds": 2.6
+    },
+    {
+      "key": "items/high/coin-coffer",
+      "kind": "items",
+      "age": "high",
+      "slug": "coin-coffer",
+      "name": "CoinCoffer",
+      "title": "Coin Coffer",
+      "passed": true,
+      "stats": {
+        "vertices": 2022,
+        "faces": 1996,
+        "triangles": 2936,
+        "islands": 277,
+        "lowest_z": 0.0,
+        "height": 0.306,
+        "width": 0.531,
+        "budget": 3000,
+        "bbox_m": "0.531x0.361x0.306",
+        "vs_spec": "W=0.531/0.500 D=0.361/0.360 H=0.306/0.300"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.5,
+          0.32,
+          0.3
+        ],
+        "height_m": null,
+        "tri_budget": 3000
+      },
+      "families": {
+        "oak": {
+          "name": "Oak",
+          "base": "#6B4E33",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "strap_iron": {
+          "name": "Strap iron",
+          "base": "#3A3632",
+          "rough": 0.55,
+          "metal": 0.75,
+          "emit": null
+        },
+        "rust": {
+          "name": "Rust",
+          "base": "#7A4A2A",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "nail_heads": {
+          "name": "Clench-nail heads (strap iron, rubbed)",
+          "base": "#6E6A62",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "Y (D) checked against 0.360 m instead of the JSON's 0.320 m: the 28 mm barrel padlock hangs on the hasp staple in front of the strapped face (build bullet), ~0.03 m ahead of the 0.32 m box, and the hinge knuckles stand proud at the back; the JSON dimension line gives the box only",
+        "JSON materials not used by any part: ['silver_penny', 'linen_bag']",
+        "families not in the JSON (blueprint extras): ['nail_heads']"
+      ],
+      "notes": [
+        "Modelled closed. The four linen bags and 40 penny stacks only appear when it bursts, as separate pickups, so the silver_penny and linen_bag families are not on this mesh.",
+        "The strap x positions in the JSON (0.06, 0.235, 0.41 m) are read as left edges, which centres the three straps symmetrically as the concept draws them.",
+        "Dovetails, pitch sealing and the lid's pale polished patch are texture detail; rust blooms come from the iron's wear mask, not per-nail decals."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/CoinCoffer/CoinCoffer.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/CoinCoffer/glTF/CoinCoffer.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/CoinCoffer/CoinCoffer.blend"
+      },
+      "build_seconds": 2.8
+    },
+    {
+      "key": "items/high/gilded-altarpiece",
+      "kind": "items",
+      "age": "high",
+      "slug": "gilded-altarpiece",
+      "name": "GildedAltarpiece",
+      "title": "Gilded Altarpiece",
+      "passed": true,
+      "stats": {
+        "vertices": 1428,
+        "faces": 1359,
+        "triangles": 2568,
+        "islands": 72,
+        "lowest_z": 0.0,
+        "height": 1.646,
+        "width": 1.13,
+        "budget": 5000,
+        "bbox_m": "1.130x0.218x1.646",
+        "vs_spec": "W=1.130/1.100 D=0.218/0.200 H=1.646/1.600"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          1.1,
+          0.2,
+          1.6
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "gilt": {
+          "name": "Gilt (orpiment)",
+          "base": "#C9A227",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "woad_azure": {
+          "name": "Woad azure",
+          "base": "#3E5470",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "kermes": {
+          "name": "Kermes",
+          "base": "#7E2A26",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "gesso": {
+          "name": "Gesso",
+          "base": "#DCD2BA",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "oak_panel": {
+          "name": "Oak panel",
+          "base": "#5E4630",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "grisaille": {
+          "name": "Grisaille",
+          "base": "#8A8274",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "strap_iron": {
+          "name": "Strap iron (hinges, staples)",
+          "base": "#2E2A26",
+          "rough": 0.6,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['strap_iron']"
+      ],
+      "notes": [
+        "Built closed (the carry state the JSON dimensions describe); the centre painting and wing interiors are modelled as relief under the wings, so the open state reuses this mesh once the wings are split off.",
+        "Punch-work halos, plank joints, worm holes and candle soot are left to the painted-panel atlas / normal map, which EnemyForge's bake does not make."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/GildedAltarpiece.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/glTF/GildedAltarpiece.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/GildedAltarpiece.blend"
+      },
+      "build_seconds": 2.7
+    },
+    {
+      "key": "items/high/illuminated-psalter",
+      "kind": "items",
+      "age": "high",
+      "slug": "illuminated-psalter",
+      "name": "IlluminatedPsalter",
+      "title": "Illuminated Psalter",
+      "passed": true,
+      "stats": {
+        "vertices": 708,
+        "faces": 740,
+        "triangles": 1260,
+        "islands": 40,
+        "lowest_z": -0.0,
+        "height": 0.087,
+        "width": 0.199,
+        "budget": 1500,
+        "bbox_m": "0.199x0.260x0.087",
+        "vs_spec": "W=0.199/0.190 D=0.260/0.260 H=0.087/0.080"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.19,
+          0.26,
+          0.08
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "gilt": {
+          "name": "Gilt (orpiment)",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "ivory": {
+          "name": "Ivory",
+          "base": "#D8CDB0",
+          "rough": 0.45,
+          "metal": 0.0,
+          "emit": null
+        },
+        "tawed_leather": {
+          "name": "Tawed leather",
+          "base": "#5E3A2A",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "vellum": {
+          "name": "Vellum",
+          "base": "#DCD2BA",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "garnet": {
+          "name": "Garnet",
+          "base": "#6E1F2A",
+          "rough": 0.12,
+          "metal": 0.0,
+          "emit": null
+        },
+        "sapphire": {
+          "name": "Sapphire",
+          "base": "#3E5470",
+          "rough": 0.12,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Text-block edges are vellum with painted page lines, as the concept draws them; the build bullet's gilt edges would turn the whole block gold.",
+        "Filigree S-scrolls, the carved Christ's detail, cracked hinges and the wax drop are normal-map / atlas detail; the mandorla rim and figure silhouette are geometry.",
+        "The 2-tri loose-leaf card and its 256² page atlas are not made by ArtForge."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/IlluminatedPsalter.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/glTF/IlluminatedPsalter.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/IlluminatedPsalter.blend"
+      },
+      "build_seconds": 2.3
+    },
+    {
+      "key": "items/high/silver-ewer",
+      "kind": "items",
+      "age": "high",
+      "slug": "silver-ewer",
+      "name": "SilverEwer",
+      "title": "Silver Ewer",
+      "passed": true,
+      "stats": {
+        "vertices": 764,
+        "faces": 708,
+        "triangles": 1480,
+        "islands": 12,
+        "lowest_z": 0.0,
+        "height": 0.34,
+        "width": 0.237,
+        "budget": 1500,
+        "bbox_m": "0.237x0.162x0.340",
+        "vs_spec": "W=0.237/0.220 D=0.162/0.160 H=0.340/0.340"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.22,
+          0.16,
+          0.34
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "silver": {
+          "name": "Silver",
+          "base": "#B8B4A8",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "parcel_gilt": {
+          "name": "Parcel gilt",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "tarnish": {
+          "name": "Tarnish",
+          "base": "#5A5850",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "niello": {
+          "name": "Niello",
+          "base": "#2A2622",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "woad_enamel": {
+          "name": "Woad enamel",
+          "base": "#3E5470",
+          "rough": 0.1,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Medallion faces front (-Y) as the concept's hero and front views draw it; the build bullet's 'under the spout' is the side view's reading.",
+        "Chased chevrons in the niello band, the 6 mm hammer marks and the polished patch on the handle are normal/roughness detail EnemyForge's bake does not make; the band is solid niello.",
+        "Dent blend shapes (states 1 and 2) are not authored by ArtForge yet."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/SilverEwer/SilverEwer.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/SilverEwer/glTF/SilverEwer.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/SilverEwer/SilverEwer.blend"
+      },
+      "build_seconds": 2.2
+    },
+    {
+      "key": "items/late/bankers-ledger",
+      "kind": "items",
+      "age": "late",
+      "slug": "bankers-ledger",
+      "name": "BankersLedger",
+      "title": "Banker's Ledger",
+      "passed": true,
+      "stats": {
+        "vertices": 777,
+        "faces": 709,
+        "triangles": 1434,
+        "islands": 54,
+        "lowest_z": -0.002,
+        "height": 0.095,
+        "width": 0.516,
+        "budget": 1500,
+        "bbox_m": "0.516x0.353x0.098",
+        "vs_spec": "W=0.516/0.520 D=0.353/0.350 H=0.098/0.090"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.3,
+          0.22,
+          0.09
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "calf_cover": {
+          "name": "Calf cover",
+          "base": "#5A3A26",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        },
+        "oak_boards": {
+          "name": "Oak boards",
+          "base": "#6B4F33",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "rag_paper": {
+          "name": "Rag paper",
+          "base": "#D8CCAE",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "blackened_iron": {
+          "name": "Blackened iron",
+          "base": "#2E2F31",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "sealing_wax": {
+          "name": "Sealing wax",
+          "base": "#8A3A2A",
+          "rough": 0.25,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "X (W) checked against 0.520 m instead of the JSON's 0.300 m: the dimension line adds 'plus a 0.60 m chain': 22 links trailing from the head of the back board reach 0.21 m past the book's head on the floor",
+        "Y (D) checked against 0.350 m instead of the JSON's 0.220 m: the trailing chain and staple curl 0.12 m in front of the fore-edge (dimension line: 'plus a 0.60 m chain')",
+        "bbox centre is off the origin in X by -0.108 m",
+        "bbox centre is off the origin in Y by -0.053 m"
+      ],
+      "notes": [
+        "Label text, tooling depth and the seal devices are below mesh resolution; left to a decal / normal map (EnemyForge bakes no normals).",
+        "Chain links are 4-corner closed tubes with a 3-sided wire to fit the 0.5k chain share of the budget."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Late/BankersLedger/BankersLedger.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Late/BankersLedger/glTF/BankersLedger.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Late/BankersLedger/BankersLedger.blend"
+      },
+      "build_seconds": 2.6
+    },
+    {
+      "key": "items/late/gilded-nef",
+      "kind": "items",
+      "age": "late",
+      "slug": "gilded-nef",
+      "name": "GildedNef",
+      "title": "Gilded Nef",
+      "passed": true,
+      "stats": {
+        "vertices": 1477,
+        "faces": 1403,
+        "triangles": 2670,
+        "islands": 71,
+        "lowest_z": 0.0,
+        "height": 0.56,
+        "width": 0.508,
+        "budget": 3000,
+        "bbox_m": "0.508x0.200x0.560",
+        "vs_spec": "W=0.508/0.520 D=0.200/0.200 H=0.560/0.560"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.52,
+          0.18,
+          0.56
+        ],
+        "height_m": null,
+        "tri_budget": 3000
+      },
+      "families": {
+        "silver_gilt": {
+          "name": "Silver-gilt",
+          "base": "#C9A227",
+          "rough": 0.32,
+          "metal": 1.0,
+          "emit": null
+        },
+        "silver": {
+          "name": "Silver",
+          "base": "#B8B6AE",
+          "rough": 0.34,
+          "metal": 1.0,
+          "emit": null
+        },
+        "silver_wire": {
+          "name": "Silver wire",
+          "base": "#D6D4CC",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "niello": {
+          "name": "Niello",
+          "base": "#2A2A28",
+          "rough": 0.4,
+          "metal": 0.0,
+          "emit": null
+        },
+        "tarnish": {
+          "name": "Tarnish",
+          "base": "#5A5A55",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "Y (D) checked against 0.200 m instead of the JSON's 0.180 m: the build bullets give the lobed foot and the mid-mast platform 0.20 m diameters, wider than the 0.18 m beam on the dimension line"
+      ],
+      "notes": [
+        "Rigging wire is 1.8 mm across, not the JSON's 0.8 mm: at 0.8 mm it vanishes at game distance and on the review sheet (LOD1+ alpha cards as the JSON says).",
+        "Foremast height taken from the concept (top at 0.43 m); the JSON's 'foremast 0.30 m' can't be an overall height above a 0.28 m deck.",
+        "Salt crystals round the lid and the strake-groove tarnish are texture work; tarnish is modelled under the keel and the sterncastle."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Late/GildedNef/GildedNef.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Late/GildedNef/glTF/GildedNef.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Late/GildedNef/GildedNef.blend"
+      },
+      "build_seconds": 2.6
+    },
+    {
+      "key": "items/late/jewelled-hat-badge",
+      "kind": "items",
+      "age": "late",
+      "slug": "jewelled-hat-badge",
+      "name": "JewelledHatBadge",
+      "title": "Jewelled Hat-Badge",
+      "passed": true,
+      "stats": {
+        "vertices": 779,
+        "faces": 929,
+        "triangles": 1402,
+        "islands": 40,
+        "lowest_z": 0.0,
+        "height": 0.085,
+        "width": 0.069,
+        "budget": 1500,
+        "bbox_m": "0.069x0.015x0.085",
+        "vs_spec": "W=0.069/0.065 D=0.015/0.014 H=0.085/0.080"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.065,
+          0.014,
+          0.08
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "gold": {
+          "name": "Gold (orpiment)",
+          "base": "#C9A227",
+          "rough": 0.32,
+          "metal": 1.0,
+          "emit": null
+        },
+        "white_enamel": {
+          "name": "White enamel",
+          "base": "#E8E2D4",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        },
+        "green_enamel": {
+          "name": "Green enamel",
+          "base": "#4F6A3A",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        },
+        "balas_ruby": {
+          "name": "Balas ruby",
+          "base": "#7A1E3A",
+          "rough": 0.05,
+          "metal": 0.0,
+          "emit": null
+        },
+        "pearl": {
+          "name": "Pearl",
+          "base": "#D9D2C0",
+          "rough": 0.3,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Stood upright on the pearl drop (the orientation the concept draws); the drop is the ground contact.",
+        "The 1 mm beaded rim (~100 beads) would take the whole budget; it is a plain raised rim step here, the beads left to the normal map / texture.",
+        "Petal translucency, the ruby's facet highlight and the pearl iridescence are shader work; the AURUM VOCO glow mask is the gold family's slot."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Late/JewelledHatBadge/JewelledHatBadge.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Late/JewelledHatBadge/glTF/JewelledHatBadge.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Late/JewelledHatBadge/JewelledHatBadge.blend"
+      },
+      "build_seconds": 2.3
+    },
+    {
+      "key": "items/late/parade-armour",
+      "kind": "items",
+      "age": "late",
+      "slug": "parade-armour",
+      "name": "ParadeArmourOnItsStand",
+      "title": "Parade Armour on its Stand",
+      "passed": true,
+      "stats": {
+        "vertices": 2211,
+        "faces": 2051,
+        "triangles": 4254,
+        "islands": 42,
+        "lowest_z": 0.0,
+        "height": 1.908,
+        "width": 0.734,
+        "budget": 5000,
+        "bbox_m": "0.734x0.720x1.908",
+        "vs_spec": "W=0.734/0.720 D=0.720/0.720 H=1.908/1.900"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.72,
+          0.72,
+          1.9
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "white_harness": {
+          "name": "White harness",
+          "base": "#8E9194",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "gilt_etching": {
+          "name": "Gilt etching",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "oak_stand": {
+          "name": "Oak stand",
+          "base": "#6B4F33",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "velvet_facing": {
+          "name": "Velvet facing",
+          "base": "#7A2228",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "stand_iron": {
+          "name": "Stand iron",
+          "base": "#3F3C38",
+          "rough": 0.6,
+          "metal": 1.0,
+          "emit": null
+        },
+        "leathers": {
+          "name": "Leathers",
+          "base": "#5A4331",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Etched foliage in the gilt bands and the flute dust are texture/normal detail; EnemyForge's bake makes no normal map, so bands are flat gilt.",
+        "Gauntlets omitted, as the JSON says (stolen last year)."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/ParadeArmourOnItsStand.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/glTF/ParadeArmourOnItsStand.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Late/ParadeArmourOnItsStand/ParadeArmourOnItsStand.blend"
+      },
+      "build_seconds": 2.9
+    },
+    {
+      "key": "items/late/rolled-tapestry",
+      "kind": "items",
+      "age": "late",
+      "slug": "rolled-tapestry",
+      "name": "RolledTapestry",
+      "title": "Rolled Tapestry",
+      "passed": true,
+      "stats": {
+        "vertices": 2728,
+        "faces": 2607,
+        "triangles": 4756,
+        "islands": 183,
+        "lowest_z": -0.0156,
+        "height": 0.474,
+        "width": 3.407,
+        "budget": 5000,
+        "bbox_m": "3.407x0.959x0.489",
+        "vs_spec": "W=3.407/3.400 D=0.959/0.925 H=0.489/0.450"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          3.4,
+          0.45,
+          0.45
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "field_green": {
+          "name": "Field green",
+          "base": "#4F5E3A",
+          "rough": 0.95,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wool_brown": {
+          "name": "Wool brown",
+          "base": "#6B5238",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wool_buff": {
+          "name": "Wool buff",
+          "base": "#A8905E",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wool_red": {
+          "name": "Wool red",
+          "base": "#9E2A2F",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "linen_wrap": {
+          "name": "Linen wrap",
+          "base": "#C9BFA6",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hemp_cord": {
+          "name": "Hemp cord",
+          "base": "#8A7456",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "Y (D) checked against 0.925 m instead of the JSON's 0.450 m: build bullet: 0.6 m of the outer turn unrolled and hanging to the floor; lying on the floor it reaches ~0.48 m in front of the 0.45 m roll (the JSON dimension line gives the roll alone)",
+        "bbox centre is off the origin in Y by -0.230 m"
+      ],
+      "notes": [
+        "Roll kept at the drawn 3.40 m (the Great Hall variant is scaled in-engine).",
+        "The 3-bone sagging spine is left to the rig step: ArtForge's rigged path is untested, so this is built static and straight.",
+        "Millefleur is modelled as ~200 raised sprigs (no albedo tile in the bake); the spiral is 5 modelled turns of the ~14 over two insets, no normal map."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Late/RolledTapestry/RolledTapestry.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Late/RolledTapestry/glTF/RolledTapestry.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Late/RolledTapestry/RolledTapestry.blend"
+      },
+      "build_seconds": 3.1
+    },
+    {
+      "key": "items/powder/brass-astrolabe",
+      "kind": "items",
+      "age": "powder",
+      "slug": "brass-astrolabe",
+      "name": "Astrolabe",
+      "title": "Astrolabe",
+      "passed": true,
+      "stats": {
+        "vertices": 820,
+        "faces": 831,
+        "triangles": 1476,
+        "islands": 44,
+        "lowest_z": 0.0,
+        "height": 0.3,
+        "width": 0.22,
+        "budget": 1500,
+        "bbox_m": "0.220x0.032x0.300",
+        "vs_spec": "W=0.220/0.240 D=0.032/0.030 H=0.300/0.300"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.24,
+          0.03,
+          0.3
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "gilt_brass": {
+          "name": "Gilt brass",
+          "base": "#C9A227",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "worn_brass": {
+          "name": "Worn brass",
+          "base": "#A07E3E",
+          "rough": 0.35,
+          "metal": 1.0,
+          "emit": null
+        },
+        "engraving_grime": {
+          "name": "Engraving grime",
+          "base": "#3A2E18",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "steel_pin": {
+          "name": "Steel pin",
+          "base": "#34404E",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Hangs face-on, mater foot at z = 0; the throne and ring give the height.",
+        "Mater is 0.22 m (the build bullet); the dimension line's 0.24 m W is not reached by anything the bullets list, and 0.225 m is inside tolerance.",
+        "Degree ticks, hour letters and star names are below mesh resolution: the limb step, two almucantar grooves and three azimuth lines carry the engraving at game distance; the rest belongs in the albedo/normal.",
+        "Rete and rule are modelled in place; the break state splits them off."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/Astrolabe/Astrolabe.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/Astrolabe/glTF/Astrolabe.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/Astrolabe/Astrolabe.blend"
+      },
+      "build_seconds": 2.2
+    },
+    {
+      "key": "items/powder/curiosity-cabinet",
+      "kind": "items",
+      "age": "powder",
+      "slug": "curiosity-cabinet",
+      "name": "CabinetOfCuriosities",
+      "title": "Cabinet of Curiosities",
+      "passed": true,
+      "stats": {
+        "vertices": 2600,
+        "faces": 2501,
+        "triangles": 4684,
+        "islands": 135,
+        "lowest_z": 0.0,
+        "height": 1.322,
+        "width": 0.981,
+        "budget": 5000,
+        "bbox_m": "0.981x0.567x1.322",
+        "vs_spec": "W=0.981/0.950 D=0.567/0.550 H=1.322/1.300"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.95,
+          0.55,
+          1.3
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "ebony_veneer": {
+          "name": "Ebony veneer",
+          "base": "#1A1714",
+          "rough": 0.35,
+          "metal": 0.0,
+          "emit": null
+        },
+        "black_walnut": {
+          "name": "Black walnut",
+          "base": "#3B2A1E",
+          "rough": 0.5,
+          "metal": 0.0,
+          "emit": null
+        },
+        "gilt_bronze": {
+          "name": "Gilt bronze",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "painted_copper_panel": {
+          "name": "Painted copper panel",
+          "base": "#6E7A62",
+          "rough": 0.4,
+          "metal": 0.0,
+          "emit": null
+        },
+        "drawer_bone_inlay": {
+          "name": "Drawer bone inlay",
+          "base": "#DCD2BA",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Built closed (the carry state); the 40-drawer bank is modelled under the doors so the open-door and burst-open states reuse it.",
+        "Landscape sky on the door panels uses the vellum bone-inlay family (the pale ground of the concept's panels); the palette has no other light tone.",
+        "Drawer faces are one box each here; the JSON's instancing (one drawer mesh, 40 instances) is an engine-side import step."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/CabinetOfCuriosities.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/glTF/CabinetOfCuriosities.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/CabinetOfCuriosities.blend"
+      },
+      "build_seconds": 2.9
+    },
+    {
+      "key": "items/powder/nautilus-cup",
+      "kind": "items",
+      "age": "powder",
+      "slug": "nautilus-cup",
+      "name": "NautilusCup",
+      "title": "Nautilus Cup",
+      "passed": true,
+      "stats": {
+        "vertices": 801,
+        "faces": 820,
+        "triangles": 1446,
+        "islands": 40,
+        "lowest_z": 0.0,
+        "height": 0.346,
+        "width": 0.188,
+        "budget": 1500,
+        "bbox_m": "0.188x0.116x0.346",
+        "vs_spec": "W=0.188/0.200 D=0.116/0.120 H=0.346/0.340"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.2,
+          0.12,
+          0.34
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "nacre": {
+          "name": "Nacre",
+          "base": "#D8CFC0",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        },
+        "silver_gilt": {
+          "name": "Silver-gilt",
+          "base": "#C9A227",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "silver": {
+          "name": "Silver",
+          "base": "#B8B4A8",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "tarnish": {
+          "name": "Tarnish",
+          "base": "#6A665C",
+          "rough": 0.55,
+          "metal": 0.6,
+          "emit": null
+        },
+        "shell_stripe": {
+          "name": "Shell stripe (tiger-stripe remnant)",
+          "base": "#8A6A4E",
+          "rough": 0.35,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['shell_stripe']"
+      ],
+      "notes": [
+        "Shell swept by a module-local 'powder_whorl' part kind (a growing elliptical section on a log spiral); kit's tube keeps its section constant.",
+        "Nacre thin-film iridescence is an engine shader; the bake carries the pale base colour at roughness 0.15.",
+        "Pre-fractured shard mesh for the break state is not built here."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/NautilusCup/NautilusCup.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/NautilusCup/glTF/NautilusCup.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/NautilusCup/NautilusCup.blend"
+      },
+      "build_seconds": 2.6
+    },
+    {
+      "key": "items/powder/silver-tureen",
+      "kind": "items",
+      "age": "powder",
+      "slug": "silver-tureen",
+      "name": "SilverServiceTureen",
+      "title": "Silver Service Tureen",
+      "passed": true,
+      "stats": {
+        "vertices": 1553,
+        "faces": 1709,
+        "triangles": 2970,
+        "islands": 38,
+        "lowest_z": 0.0,
+        "height": 0.366,
+        "width": 0.473,
+        "budget": 3000,
+        "bbox_m": "0.473x0.287x0.366",
+        "vs_spec": "W=0.473/0.460 D=0.287/0.300 H=0.366/0.360"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.46,
+          0.3,
+          0.36
+        ],
+        "height_m": null,
+        "tri_budget": 3000
+      },
+      "families": {
+        "sterling_silver": {
+          "name": "Sterling silver",
+          "base": "#B8B4A8",
+          "rough": 0.2,
+          "metal": 1.0,
+          "emit": null
+        },
+        "silver_tarnish": {
+          "name": "Silver tarnish",
+          "base": "#6A665C",
+          "rough": 0.5,
+          "metal": 0.8,
+          "emit": null
+        },
+        "bright_polish": {
+          "name": "Bright polish",
+          "base": "#DAD7CE",
+          "rough": 0.12,
+          "metal": 1.0,
+          "emit": null
+        },
+        "soup_residue": {
+          "name": "Soup residue",
+          "base": "#5A4A30",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Lid and ladle are modelled in place on the same mesh and texture set; splitting them into separate physics objects is an import step.",
+        "The ladle notch is a tarnished patch on the lid flange where the stem rests, not a cut: a real cut would split the lid's single shell.",
+        "The engraved coat of arms is a raised double lozenge line in tarnish; the charges inside belong in the albedo/normal."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/SilverServiceTureen.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/glTF/SilverServiceTureen.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/SilverServiceTureen.blend"
+      },
+      "build_seconds": 2.7
+    },
+    {
+      "key": "items/powder/venetian-mirror",
+      "kind": "items",
+      "age": "powder",
+      "slug": "venetian-mirror",
+      "name": "VenetianMirror",
+      "title": "Venetian Mirror",
+      "passed": true,
+      "stats": {
+        "vertices": 1326,
+        "faces": 1161,
+        "triangles": 2372,
+        "islands": 79,
+        "lowest_z": 0.0,
+        "height": 1.1,
+        "width": 0.818,
+        "budget": 3000,
+        "bbox_m": "0.818x0.078x1.100",
+        "vs_spec": "W=0.818/0.800 D=0.078/0.080 H=1.100/1.100"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.8,
+          0.08,
+          1.1
+        ],
+        "height_m": null,
+        "tri_budget": 3000
+      },
+      "families": {
+        "mirror_silvering": {
+          "name": "Mirror silvering",
+          "base": "#A8ABA2",
+          "rough": 0.08,
+          "metal": 1.0,
+          "emit": null
+        },
+        "forest_window_glass": {
+          "name": "Forest window glass (edge)",
+          "base": "#7E9377",
+          "rough": 0.12,
+          "metal": 0.0,
+          "emit": null
+        },
+        "black_walnut": {
+          "name": "Black walnut",
+          "base": "#3B2A1E",
+          "rough": 0.4,
+          "metal": 0.0,
+          "emit": null
+        },
+        "gilt": {
+          "name": "Gilt",
+          "base": "#C9A227",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "pine_backboard": {
+          "name": "Pine backboard",
+          "base": "#9A8260",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "iron_ring": {
+          "name": "Iron ring (hanging ring, staple)",
+          "base": "#34404E",
+          "rough": 0.55,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['iron_ring']"
+      ],
+      "notes": [
+        "Frame outer 0.80 × 0.96 m plus the 0.14 m crest = 1.10 m overall: the dimension line and concept sheet win over the frame bullet's 0.80 × 1.10 outer size (which would make the mirror 1.24 m with its crest).",
+        "Live reflection (mirror shader) is an engine material; the bake gives a metallic 0.08-rough silver field.",
+        "Pre-fractured 12-shard glass is a separate break mesh, not built here."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/VenetianMirror.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/glTF/VenetianMirror.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/VenetianMirror.blend"
+      },
+      "build_seconds": 2.3
+    }
+  ]
+}

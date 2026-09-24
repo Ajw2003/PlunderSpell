@@ -20,7 +20,9 @@ this document, not a reason to go grep the repo.
 | `Tools/Headless/` | headless build + test harness — compiles/tests without a Unity install |
 | `Tools/AssetPipeline/` | Blender-driven generation of weapon/loot/castle-module props |
 | `Tools/EnemyForge/` | Blender-driven generation of the enemy roster (mesh, rig, textures) |
+| `Tools/ArtForge/` | Blender-driven generation of the art bible's plunder, structures and enemies, built on EnemyForge; review sheets in `docs/art/models/` ([README](../Tools/ArtForge/README.md)) |
 | `Tools/mkissues.py` | files the playtesting backlog to GitHub issues; see `docs/generated/github-issues.json` |
+| `Plans/` | one exhaustive plan per GitHub issue, plus `Priority_Queue.md`, the live execution order |
 | `docs/` | this tree |
 
 ## The tiers
@@ -47,7 +49,7 @@ together and what was deliberately left undocumented, and why.
 | System | Owns |
 |---|---|
 | [`core`](systems/core.md) | Singleton base, event bus, state machine contract |
-| [`net`](systems/net.md) | Steam invite plumbing (cold launch, rich presence) |
+| [`net`](systems/net.md) | Sessions (solo, host, join), Steam lobbies and invites, one body per connection |
 | [`voice`](systems/voice.md) | Held-key + microphone audio → a recognised phrase |
 | [`spells`](systems/spells.md) | Resolving a phrase into a spell, a misfire, or a fizzle |
 | [`castle`](systems/castle.md) | Deterministic seed-driven castle layout and path validation |
@@ -55,6 +57,8 @@ together and what was deliberately left undocumented, and why.
 | [`raid`](systems/raid.md) | The loop: Lair → castle → haul → extraction → Lair |
 | [`raid-scene-assembly`](systems/raid-scene-assembly.md) | Wiring the authored art (castle rooms, loot, enemies) into the playable scene |
 | [`enemy-asset-pipeline`](systems/enemy-asset-pipeline.md) | Generating the enemy roster from Python/Blender |
+| [`damage`](systems/damage.md) | One damage pathway, blame, and hit feedback you can read |
+| [`combat-bench`](systems/combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
 | [`scale`](systems/scale.md) | The 1.8m standard human, and the room, archway and enemy heights measured against it |
 
 ## Everything else worth reaching
@@ -66,6 +70,12 @@ together and what was deliberately left undocumented, and why.
   built from, including the provenance note around the excluded `feature/Owen/PCG` branch.
 - [`docs/plans/steam-coop-framework.md`](plans/steam-coop-framework.md) — the plan for porting the
   predecessor project's Steam co-op framework, which Plunderspell was forked from.
+- [`docs/art/`](art/BRIEF.md) — the art bible: per-Age handoff sheets a 3D artist builds from
+  (3 structures, 4 enemies, 5 plunder items per Age; [`bronze`](art/bronze.md) ·
+  [`high`](art/high.md) · [`late`](art/late.md) · [`powder`](art/powder.md)), concept sheets in
+  `docs/art/concept/`, specs in `docs/art/data/*.json`, and its own illustrated mood board
+  [`docs/generated/plunderspell-art-bible-moodboard.html`](generated/plunderspell-art-bible-moodboard.html).
+  Regenerate with `python3 Tools/ArtBible/build_art_bible.py` (see `Tools/ArtBible/README.md`).
 - [`docs/plans/moodboard-gap-closure.md`](plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,

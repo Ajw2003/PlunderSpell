@@ -83,6 +83,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9bca712ec5a2d66409543c104e157089, type: 3}
       insertIndex: -1
       addedObject: {fileID: 681276093627290247}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9bca712ec5a2d66409543c104e157089, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2118414432379931282}
   m_SourcePrefab: {fileID: 100100000, guid: 9bca712ec5a2d66409543c104e157089, type: 3}
 --- !u!1 &7658120120646674120 stripped
 GameObject:
@@ -180,10 +183,19 @@ MonoBehaviour:
   _arrivalDistance: 1
   _turnSpeed: 240
   _patrolRoute: []
+  _attackRange: 2
+  _attackDamage: 12
+  _attackCooldown: 1.4
+  _projectilePrefab: {fileID: 0}
+  _projectileSpeed: 18
   _maxHealth: 70
   _alarm: {fileID: 0}
   _shoutStrength: 0.8
   _shoutRadius: 20
+  <_health>k__BackingField:
+    _value: 100
+    _ownerAuth: 0
+    _sendIntervalInSeconds: 0
 --- !u!54 &681276093627290247
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -211,3 +223,34 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2118414432379931282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7658120120646674120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _syncPosition: 1
+  _syncRotation: 1
+  _syncScale: 1
+  _syncParent: 1
+  _interpolateSettings: 7
+  _minBufferSize: 1
+  _maxBufferSize: 2
+  _characterControllerPatch: 0
+  _ownerAuth: 1
+  _interpolationTiming: 0

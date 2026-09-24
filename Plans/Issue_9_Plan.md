@@ -1,5 +1,12 @@
 # Plan: Issue 9 - Input Blocking During Menus
 
+> **Correction (2026-09-18).** Steps 1-2 below name `FreeLookPlaytestController` and
+> `PushToCastController`. `FreeLookPlaytestController` is not in `RaidScene.unity` — it is the
+> ItemGym bench harness. The raid's player is `PlayerStateMachine` plus `PlayerInputController`,
+> and that is where the gate has to go. Gating the two scripts named below, as originally written,
+> leaves the shipping player ungated. See docs/Decisions.md, "Issue 9's gate belongs on the raid's
+> player, not only on the playtest harness".
+
 ## Exhaustive Outline
 Currently, the player character can still walk around and look around even when the main menu or other screens are open. This causes the game world to move in the background while the player is trying to navigate a menu. The goal of this task is to ensure that all player movement, camera movement, spell casting, and object interaction are completely disabled whenever a menu is open. These controls should only function when the player is actively playing the game.
 

@@ -51,6 +51,23 @@ namespace RogueAi.Guards
         [Tooltip("Points walked in order. With fewer than two, the guard stands its post.")]
         [SerializeField] private List<Transform> _patrolRoute = new List<Transform>();
 
+        [Header("Attack")]
+        [Tooltip("How close this guard must be to strike, in metres. Ignored when it fires instead.")]
+        [SerializeField] private float _attackRange = 2.0f;
+
+        [Tooltip("Damage per hit.")]
+        [SerializeField] private float _attackDamage = 12f;
+
+        [Tooltip("Seconds between attacks.")]
+        [SerializeField] private float _attackCooldown = 1.4f;
+
+        [Tooltip("Leave empty for a melee guard. Assign a projectile and this guard shoots instead, " +
+                 "at its sight range rather than its attack range — this is what makes a turret a turret.")]
+        [SerializeField] private GameObject _projectilePrefab;
+
+        [Tooltip("Speed the projectile leaves at, in metres per second.")]
+        [SerializeField] private float _projectileSpeed = 18f;
+
         [Header("Health")]
         [SerializeField] private float _maxHealth = 100f;
 
@@ -75,6 +92,7 @@ namespace RogueAi.Guards
         private float _timeSinceLastContact;
         private int _patrolIndex;
         private bool _hasShoutedThisChase;
+        private float _lastAttackTime = float.NegativeInfinity;
 
         /// <summary>What this guard is currently doing.</summary>
         public GuardAlertState State => _state.value;
@@ -110,10 +128,26 @@ namespace RogueAi.Guards
         {
             _status = GetComponent<StatusEffectReceiver>();
             _agent = GetComponent<NavMeshAgent>();
+
+            // The agent moves this transform every frame; a dynamic rigidbody on the same object had
+            // the physics step writing its own position back, so guards froze on about a third of
+            // rendered frames and looked like they lagged and smeared (#104). Kinematic still
+            // collides and still takes hits from thrown things.
+            if (_agent != null && TryGetComponent(out Rigidbody body))
+                body.isKinematic = true;
             _health.value = _maxHealth;
 
             if (_alarm == null)
                 _alarm = FindObjectOfType<AlarmFSMManager>();
+        }
+
+        protected override void OnSpawned()
+        {
+            base.OnSpawned();
+            // A client's guard is moved by the server's replicated transform. Its own agent would
+            // fight that, and has no NavMesh to stand on until the client has built the castle.
+            if (!isServer && _agent != null)
+                _agent.enabled = false;
         }
 
         private void Update()
@@ -121,7 +155,116 @@ namespace RogueAi.Guards
             // Clients render what the server decided; only the server runs the AI.
             if (isSpawned && !isServer)
                 return;
+            if (UpdateLevitation(Time.deltaTime))
+                return;
             Tick(Time.deltaTime);
+        }
+
+        // -----------------------------------------------------------------------------------------
+        // Levitation (Levo)
+        // -----------------------------------------------------------------------------------------
+
+        private const float k_liftHeight = 1.8f;
+        private const float k_liftSpeed = 3f;
+        private const float k_fallDamagePerMetre = 9f;
+
+        private bool _floating;
+        private bool _falling;
+        private float _floatBaseY;
+        private float _fallFromY;
+        private float _fallStartedAt;
+
+        /// <summary>True while Levo holds this guard up or it is still falling back down.</summary>
+        public bool IsAirborne => _floating || _falling;
+
+        /// <summary>
+        /// Lifts the guard while it levitates and drops it when the spell ends. The guard's body is
+        /// kinematic (the NavMeshAgent owns its position), so an impulse cannot lift it: the agent is
+        /// suspended and the transform raised directly, then the body falls under real gravity and
+        /// takes damage for the height. Returns true while the AI must not run.
+        /// </summary>
+        private bool UpdateLevitation(float deltaTime)
+        {
+            bool levitating = _status != null && _status.IsLevitating;
+            TryGetComponent(out Rigidbody body);
+
+            if (levitating)
+            {
+                if (!_floating)
+                {
+                    _floating = true;
+                    _falling = false;
+                    _floatBaseY = transform.position.y;
+                    if (_agent != null)
+                        _agent.enabled = false;
+                    if (body != null)
+                    {
+                        body.isKinematic = true;
+                        body.freezeRotation = true;
+                    }
+                }
+
+                Vector3 p = transform.position;
+                p.y = Mathf.MoveTowards(p.y, _floatBaseY + k_liftHeight, k_liftSpeed * deltaTime);
+                transform.position = p;
+                transform.Rotate(Vector3.up, 45f * deltaTime, Space.World);
+                return true;
+            }
+
+            if (_floating)
+            {
+                _floating = false;
+                _falling = true;
+                _fallFromY = transform.position.y;
+                _fallStartedAt = Time.time;
+                if (body != null)
+                {
+                    body.isKinematic = false;
+                    body.useGravity = true;
+                    body.freezeRotation = true;
+                    body.linearVelocity = Vector3.zero;
+                }
+                else
+                {
+                    Land(body);
+                    return false;
+                }
+                return true;
+            }
+
+            if (_falling)
+            {
+                bool settled = body == null || (Time.time - _fallStartedAt > 0.25f && Mathf.Abs(body.linearVelocity.y) < 0.05f);
+                bool timedOut = Time.time - _fallStartedAt > 3f;
+                if (!settled && !timedOut)
+                    return true;
+                Land(body);
+                return false;
+            }
+
+            return false;
+        }
+
+        private void Land(Rigidbody body)
+        {
+            _falling = false;
+            if (body != null)
+                body.isKinematic = true;
+
+            float height = Mathf.Max(0f, _fallFromY - transform.position.y);
+            if (height > 0.5f)
+            {
+                GameObject blame = _status != null ? _status.LevitatedBy : null;
+                Damage.Apply(this, height * k_fallDamagePerMetre, gameObject, blame,
+                    transform.position + Vector3.up * 0.2f, DamageKind.Impact);
+            }
+
+            if (_agent != null && _health.value > 0f)
+            {
+                _agent.enabled = true;
+                if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+                    _agent.Warp(hit.position);
+            }
         }
 
         /// <summary>
@@ -189,10 +332,29 @@ namespace RogueAi.Guards
         // Seeing
         // -----------------------------------------------------------------------------------------
 
+        /// <summary>How long after a raid starts a calm garrison cannot see the players.</summary>
+        public const float ArrivalGraceSeconds = 20f;
+
+        private static float s_arrivalGraceEndsAt;
+
+        /// <summary>
+        /// Starts the arrival grace: until it runs out, and while the alarm is still calm, no guard
+        /// sees a player. Guards still hear, so noise still draws them. Without it a patrol passing
+        /// within sight of the gate killed players still reading the HUD (seen in co-op testing,
+        /// 2026-09-23, with the garrison posted and patrolling two cells clear of the gate).
+        /// </summary>
+        public static void BeginArrivalGrace() => s_arrivalGraceEndsAt = Time.time + ArrivalGraceSeconds;
+
+        /// <summary>Ends the arrival grace now. For tests: the grace is process-wide, so a test that
+        /// started a raid would otherwise blind the guards of the next one.</summary>
+        public static void EndArrivalGrace() => s_arrivalGraceEndsAt = 0f;
+
         /// <summary>The nearest intruder this guard can actually see, or null.</summary>
         public Transform FindVisibleIntruder(AlarmState alarm)
         {
             if (IsIncapacitated)
+                return null;
+            if (alarm == AlarmState.Calm && Time.time < s_arrivalGraceEndsAt)
                 return null;
 
             Vector3 eye = transform.position + Vector3.up * _eyeHeight;
@@ -242,6 +404,8 @@ namespace RogueAi.Guards
 
                 case GuardAlertState.Chasing:
                     MoveTo(seen != null ? seen.position : _lastKnownIntruderPosition);
+                    if (seen != null)
+                        TryAttack(seen);
                     break;
 
                 case GuardAlertState.Searching:
@@ -364,6 +528,71 @@ namespace RogueAi.Guards
         }
 
         /// <summary>
+        /// Strikes or fires at <paramref name="target"/> when in range and off cooldown. A guard that
+        /// could chase but never hurt anyone is what made the castle harmless.
+        ///
+        /// See docs/systems/raid.md, "Guards that can actually hurt you".
+        /// </summary>
+        private void TryAttack(Transform target)
+        {
+            if (IsIncapacitated || Time.time < _lastAttackTime + _attackCooldown)
+                return;
+
+            bool shoots = _projectilePrefab != null;
+            float reach = shoots ? GuardBrain.SightRange(_sightRange, CurrentAlarm) : _attackRange;
+
+            Vector3 origin = transform.position + Vector3.up * _eyeHeight;
+            Vector3 toTarget = target.position + Vector3.up * 0.9f - origin;
+            if (toTarget.magnitude > reach)
+                return;
+
+            _lastAttackTime = Time.time;
+
+            if (shoots)
+                FireAt(origin, toTarget.normalized);
+            else if (target.TryGetComponent(out IHealth health))
+                Damage.Apply(health, _attackDamage, gameObject, gameObject,
+                    Damage.PointOn(target, origin), DamageKind.EnemyAttack);
+        }
+
+        /// <summary>
+        /// Spawns a projectile carrying this guard's damage, reusing the same
+        /// <c>NetworkedProjectile</c> the player's spells fire so there is one projectile in the game
+        /// rather than two.
+        /// </summary>
+        private void FireAt(Vector3 origin, Vector3 direction)
+        {
+            GameObject shot = Instantiate(_projectilePrefab, origin, Quaternion.LookRotation(direction));
+            if (shot.TryGetComponent(out NetworkedProjectile projectile))
+            {
+                projectile.Damage = Mathf.RoundToInt(_attackDamage);
+                projectile.Instigator = gameObject;
+            }
+
+            foreach (Collider own in GetComponentsInChildren<Collider>())
+            {
+                if (shot.TryGetComponent(out Collider shotCollider))
+                    Physics.IgnoreCollision(shotCollider, own);
+            }
+
+            if (shot.TryGetComponent(out Rigidbody body))
+                body.linearVelocity = direction * _projectileSpeed;
+        }
+
+        /// <summary>The castle-wide alert level, or Calm when this guard has no alarm to read.</summary>
+        private AlarmState CurrentAlarm => _alarm != null ? _alarm.State : AlarmState.Calm;
+
+        /// <summary>
+        /// Forces this guard into <paramref name="next"/>. A dev and test seam in the same spirit as
+        /// <see cref="Tick"/> being public: it lets a bench drop a guard straight into a chase rather
+        /// than waiting for it to notice anyone. Not for gameplay — the AI owns its own transitions.
+        /// </summary>
+        public void SetAlertState(GuardAlertState next)
+        {
+            EnterState(next, _alarm != null ? _alarm.State : AlarmState.Calm);
+        }
+
+        /// <summary>
         /// The guard shouts. This goes through the ordinary acoustic path, so it reaches the alarm
         /// and every other guard in earshot — one guard spotting you is how a castle wakes up.
         /// </summary>
@@ -391,6 +620,11 @@ namespace RogueAi.Guards
                 _status?.ClearAll();
                 EnterState(GuardAlertState.Incapacitated,
                     _alarm != null ? _alarm.State : AlarmState.Calm);
+            }
+
+            if (IsDead)
+            {
+                Destroy(this.gameObject);
             }
         }
 

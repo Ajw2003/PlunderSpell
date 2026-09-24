@@ -29,10 +29,24 @@ namespace RogueAi.UI
         public readonly float BankedGold;
         public readonly string LastCastLine;
 
+        /// <summary>Worth of the loot currently standing in the extraction zone.</summary>
+        public readonly float HaulWorth;
+
+        /// <summary>How many pieces are standing in the extraction zone.</summary>
+        public readonly int HaulPieces;
+
+        /// <summary>"" while not holding a ranged weapon, "Loaded" while ready, or a reload
+        /// countdown otherwise. See Issue 39's completion check that ammo/reload state be visible.</summary>
+        public readonly string RangedWeaponStatus;
+
         public RaidHudModel(RaidPhase phase, float timeRemaining, AlarmState alarm, float alarmLevel,
             string carriedLootName, bool carriedNeedsTwo, string interactPrompt,
-            bool hasInteractTarget, float debt, float bankedGold, string lastCastLine)
+            bool hasInteractTarget, float debt, float bankedGold, string lastCastLine,
+            float haulWorth = 0f, int haulPieces = 0, string rangedWeaponStatus = "")
         {
+            HaulWorth = haulWorth;
+            HaulPieces = haulPieces;
+            RangedWeaponStatus = rangedWeaponStatus;
             HasInteractTarget = hasInteractTarget;
             Phase = phase;
             TimeRemaining = timeRemaining;
@@ -72,6 +86,14 @@ namespace RogueAi.UI
 
         /// <summary>Alarm level as a 0..1 bar fill.</summary>
         public float AlarmFill => Mathf.Clamp01(AlarmLevel / 100f);
+
+        /// <summary>
+        /// What the haul readout says. Nothing on the pad reads as an instruction rather than a
+        /// zero, because "0 gold" looks like a broken counter and "carry it here" does not.
+        /// </summary>
+        public string HaulText => HaulPieces == 0
+            ? "Haul: bring loot to the pad"
+            : $"Haul: {HaulWorth:N0} gold ({HaulPieces} piece{(HaulPieces == 1 ? string.Empty : "s")})";
 
         public static string FormatTime(float seconds)
         {

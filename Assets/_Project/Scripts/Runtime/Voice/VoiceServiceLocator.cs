@@ -6,8 +6,8 @@ namespace RogueAi.Voice
     /// Static access point for the active <see cref="IVoiceInputService"/>.
     ///
     /// Auto-registration policy (runs before the first scene loads):
-    ///   - In the editor, on a headless/batch build, or with no audio device  -> <see cref="MockVoiceInputService"/>
-    ///   - Otherwise (a real Windows x64 player)                              -> <see cref="VoskVoiceInputService"/>
+    ///   - Headless/batch, no microphone, or no speech model  -> <see cref="MockVoiceInputService"/> (number keys)
+    ///   - Otherwise, Editor or player                        -> <see cref="CombinedVoiceInputService"/> (speech + number keys)
     ///
     /// Any code may override the choice by calling <see cref="Register"/> before use
     /// (tests do exactly this).
@@ -57,33 +57,41 @@ namespace RogueAi.Voice
             if (_current != null)
                 return;
 
-            if (ShouldUseMock())
+            if (CanUseSpeech())
             {
-                _current = MockVoiceInputService.GetOrCreate();
-                Debug.Log("[VoiceServiceLocator] Auto-registered MockVoiceInputService (editor/headless/no-mic).");
+                _current = new CombinedVoiceInputService(new VoskVoiceInputService(),
+                    MockVoiceInputService.GetOrCreate());
+                Debug.Log("[VoiceServiceLocator] Auto-registered speech + keyboard casting.");
             }
             else
             {
-                _current = new VoskVoiceInputService();
-                Debug.Log("[VoiceServiceLocator] Auto-registered VoskVoiceInputService (Windows x64).");
+                _current = MockVoiceInputService.GetOrCreate();
+                Debug.Log("[VoiceServiceLocator] Auto-registered keyboard-only casting (headless/no-mic/no model).");
             }
         }
 
-        private static bool ShouldUseMock()
+        /// <summary>
+        /// The number-key casting fallback, whichever provider is current. It is always present:
+        /// alone when there is no speech, or alongside it inside <see cref="CombinedVoiceInputService"/>.
+        /// </summary>
+        public static MockVoiceInputService Keyboard =>
+            Current as MockVoiceInputService
+            ?? (Current as CombinedVoiceInputService)?.Keyboard
+            ?? MockVoiceInputService.GetOrCreate();
+
+        private static bool CanUseSpeech()
         {
-#if UNITY_EDITOR
-            return true;
-#elif HEADLESS
-            return true;
-#else
-            // Batch-mode / dedicated-server style launch, or a machine with no microphone.
-            if (Application.isBatchMode)
-                return true;
-            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
-                return true;
-            if (Microphone.devices == null || Microphone.devices.Length == 0)
-                return true;
+#if HEADLESS
             return false;
+#else
+            // Batch mode (tests, CI, dedicated server) must never depend on a microphone.
+            if (Application.isBatchMode)
+                return false;
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+                return false;
+            if (Microphone.devices == null || Microphone.devices.Length == 0)
+                return false;
+            return VoskVoiceInputService.IsModelInstalled;
 #endif
         }
     }

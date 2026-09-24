@@ -5,7 +5,8 @@
         "RogueAi.Voice",
         "RogueAi.Core",
         "RogueAi.Acoustics",
-        "PurrNet.Runtime"
+        "PurrNet.Runtime",
+        "RogueAi.Items"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

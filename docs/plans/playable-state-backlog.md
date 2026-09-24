@@ -8,8 +8,21 @@ paint the project into a corner?**
 Live until the backlog below is closed out or re-triaged; supersedes ad hoc issue-by-issue work.
 Companion to [`docs/plans/moodboard-gap-closure.md`](moodboard-gap-closure.md) (the audit that
 produced 34 of these 55 issues) and [`docs/ProjectState.md`](../ProjectState.md) (the milestone
-scorecard this backlog moves). Each issue below has its own exhaustive plan in
-[`docs/plans/issues/`](issues/); this document is the map, not the territory.
+scorecard this backlog moves). Each issue below has its own exhaustive plan in [`Plans/`](../../Plans/) at the repo root
+(`Plans/Issue_<n>_Plan.md`), alongside [`Plans/Priority_Queue.md`](../../Plans/Priority_Queue.md);
+this document is the map, not the territory.
+
+## Its ordering is superseded (2026-09-18)
+
+`Plans/Priority_Queue.md` is the live execution order, not the phases below. It was written later,
+against the directive "get each individual feature completed first to see if the game is fun
+mechanically before doing any more artwork," and it orders the same 55 issues differently: all VFX,
+SFX, animation and art land in its Phase 4-5, where this document's Phase 2 puts feedback work
+ahead of the milestone measurements.
+
+What stays useful here is the **map** — the dedup record, the issue-to-plan index, and the
+reasoning about what blocks what. Read the phase tables below as groupings, and take the order to
+work in from `Plans/Priority_Queue.md`.
 
 ## Dedup pass (2026-09-17)
 
@@ -127,15 +140,15 @@ hygiene that costs nothing to fix and blocks nothing else.
 
 | # | Title | Labels | Plan |
 |---|---|---|---|
-| [5](https://github.com/Ajw2003/PlunderSpell/issues/5) | PCG: rooms don't connect | `pcg` `bug` | [issues/005-pcg-rooms-dont-connect.md](issues/005-pcg-rooms-dont-connect.md) |
-| [19](https://github.com/Ajw2003/PlunderSpell/issues/19) | Modules float and snap inconsistently | `pcg` `bug` | [issues/019-modules-float-and-snap.md](issues/019-modules-float-and-snap.md) |
-| [6](https://github.com/Ajw2003/PlunderSpell/issues/6) | Player too tall for the rooms | `gameplay` `bug` | [issues/006-player-too-tall.md](issues/006-player-too-tall.md) |
-| [25](https://github.com/Ajw2003/PlunderSpell/issues/25) | Player spawn inside castle geometry | `gameplay` `bug` | [issues/025-player-spawn-in-geometry.md](issues/025-player-spawn-in-geometry.md) |
-| [20](https://github.com/Ajw2003/PlunderSpell/issues/20) | Loot flung across the map by physics | `physics` `bug` | [issues/020-loot-flung-by-physics.md](issues/020-loot-flung-by-physics.md) |
-| [15](https://github.com/Ajw2003/PlunderSpell/issues/15) | No carryable objects discoverable | `gameplay` `bug` | [issues/015-loot-not-discoverable.md](issues/015-loot-not-discoverable.md) |
-| [8](https://github.com/Ajw2003/PlunderSpell/issues/8) | Mouse not locked or hidden | `ui` `bug` | [issues/008-mouse-not-locked.md](issues/008-mouse-not-locked.md) |
-| [9](https://github.com/Ajw2003/PlunderSpell/issues/9) | Player moves while main menu open | `ui` `bug` | [issues/009-input-not-gated-by-menu.md](issues/009-input-not-gated-by-menu.md) |
-| [7](https://github.com/Ajw2003/PlunderSpell/issues/7) | No crosshair | `ui` `enhancement` | [issues/007-no-crosshair.md](issues/007-no-crosshair.md) |
+| [5](https://github.com/Ajw2003/PlunderSpell/issues/5) | PCG: rooms don't connect | `pcg` `bug` | [Issue_5_Plan.md](../../Plans/Issue_5_Plan.md) |
+| [19](https://github.com/Ajw2003/PlunderSpell/issues/19) | Modules float and snap inconsistently | `pcg` `bug` | [Issue_19_Plan.md](../../Plans/Issue_19_Plan.md) |
+| [6](https://github.com/Ajw2003/PlunderSpell/issues/6) | Player too tall for the rooms | `gameplay` `bug` | [Issue_6_Plan.md](../../Plans/Issue_6_Plan.md) |
+| [25](https://github.com/Ajw2003/PlunderSpell/issues/25) | Player spawn inside castle geometry | `gameplay` `bug` | [Issue_25_Plan.md](../../Plans/Issue_25_Plan.md) |
+| [20](https://github.com/Ajw2003/PlunderSpell/issues/20) | Loot flung across the map by physics | `physics` `bug` | [Issue_20_Plan.md](../../Plans/Issue_20_Plan.md) |
+| [15](https://github.com/Ajw2003/PlunderSpell/issues/15) | No carryable objects discoverable | `gameplay` `bug` | [Issue_15_Plan.md](../../Plans/Issue_15_Plan.md) |
+| [8](https://github.com/Ajw2003/PlunderSpell/issues/8) | Mouse not locked or hidden | `ui` `bug` | [Issue_8_Plan.md](../../Plans/Issue_8_Plan.md) |
+| [9](https://github.com/Ajw2003/PlunderSpell/issues/9) | Player moves while main menu open | `ui` `bug` | [Issue_9_Plan.md](../../Plans/Issue_9_Plan.md) |
+| [7](https://github.com/Ajw2003/PlunderSpell/issues/7) | No crosshair | `ui` `enhancement` | [Issue_7_Plan.md](../../Plans/Issue_7_Plan.md) |
 
 ## Phase 1 — Close the loop
 
@@ -144,12 +157,12 @@ turn "walk around a pretty castle" into "raid it."
 
 | # | Title | Labels | Plan |
 |---|---|---|---|
-| [14](https://github.com/Ajw2003/PlunderSpell/issues/14) | No usable health or damage model | `gameplay` `enhancement` | [issues/014-no-health-damage-model.md](issues/014-no-health-damage-model.md) |
-| [18](https://github.com/Ajw2003/PlunderSpell/issues/18) | No way to test combat | `gameplay` `enhancement` | [issues/018-no-combat-test-scene.md](issues/018-no-combat-test-scene.md) |
-| [37](https://github.com/Ajw2003/PlunderSpell/issues/37) | No melee combat system | `gameplay` `combat` | [issues/037-no-melee-combat-system.md](issues/037-no-melee-combat-system.md) |
-| [39](https://github.com/Ajw2003/PlunderSpell/issues/39) | Ranged weapons have no aim/fire | `gameplay` `enhancement` | [issues/039-ranged-weapons-no-aim-fire.md](issues/039-ranged-weapons-no-aim-fire.md) |
-| [21](https://github.com/Ajw2003/PlunderSpell/issues/21) | No portal asset | `art` `gameplay` | [issues/021-no-portal-asset.md](issues/021-no-portal-asset.md) |
-| [24](https://github.com/Ajw2003/PlunderSpell/issues/24) | EPIC: build the game loop end to end | `epic` `gameplay` | [issues/024-epic-full-game-loop.md](issues/024-epic-full-game-loop.md) |
+| [14](https://github.com/Ajw2003/PlunderSpell/issues/14) | No usable health or damage model | `gameplay` `enhancement` | [Issue_14_Plan.md](../../Plans/Issue_14_Plan.md) |
+| [18](https://github.com/Ajw2003/PlunderSpell/issues/18) | No way to test combat | `gameplay` `enhancement` | [Issue_18_Plan.md](../../Plans/Issue_18_Plan.md) |
+| [37](https://github.com/Ajw2003/PlunderSpell/issues/37) | No melee combat system | `gameplay` `combat` | [Issue_37_Plan.md](../../Plans/Issue_37_Plan.md) |
+| [39](https://github.com/Ajw2003/PlunderSpell/issues/39) | Ranged weapons have no aim/fire | `gameplay` `enhancement` | [Issue_39_Plan.md](../../Plans/Issue_39_Plan.md) |
+| [21](https://github.com/Ajw2003/PlunderSpell/issues/21) | No portal asset | `art` `gameplay` | [Issue_21_Plan.md](../../Plans/Issue_21_Plan.md) |
+| [24](https://github.com/Ajw2003/PlunderSpell/issues/24) | EPIC: build the game loop end to end | `epic` `gameplay` | [Issue_24_Plan.md](../../Plans/Issue_24_Plan.md) |
 
 ## Phase 2 — Make it readable
 
@@ -159,18 +172,18 @@ both source audits.
 
 | # | Title | Labels | Plan |
 |---|---|---|---|
-| [12](https://github.com/Ajw2003/PlunderSpell/issues/12) | No visual feedback for damage | `vfx` `enhancement` | [issues/012-no-damage-feedback.md](issues/012-no-damage-feedback.md) |
-| [13](https://github.com/Ajw2003/PlunderSpell/issues/13) | No visual feedback for spells | `vfx` `enhancement` | [issues/013-no-spell-vfx.md](issues/013-no-spell-vfx.md) |
-| [22](https://github.com/Ajw2003/PlunderSpell/issues/22) | No VFX or SFX anywhere | `vfx` `audio` | [issues/022-no-vfx-sfx-anywhere.md](issues/022-no-vfx-sfx-anywhere.md) |
-| [10](https://github.com/Ajw2003/PlunderSpell/issues/10) | Enemies have no animations | `animation` `enhancement` | [issues/010-enemy-animations.md](issues/010-enemy-animations.md) |
-| [11](https://github.com/Ajw2003/PlunderSpell/issues/11) | No player/door animations | `animation` `enhancement` | [issues/011-player-door-animations.md](issues/011-player-door-animations.md) |
-| [47](https://github.com/Ajw2003/PlunderSpell/issues/47) | No loudness meter | `ui` `audio` | [issues/047-no-loudness-meter.md](issues/047-no-loudness-meter.md) |
-| [49](https://github.com/Ajw2003/PlunderSpell/issues/49) | Recognised phrase has no caption | `ui` `accessibility` | [issues/049-no-recognised-phrase-caption.md](issues/049-no-recognised-phrase-caption.md) |
-| [48](https://github.com/Ajw2003/PlunderSpell/issues/48) | Casting invisible to teammates | `networking` `vfx` `audio` | [issues/048-casting-invisible-to-teammates.md](issues/048-casting-invisible-to-teammates.md) |
-| [46](https://github.com/Ajw2003/PlunderSpell/issues/46) | Portal has no closing-countdown feedback | `vfx` `audio` `gameplay` | [issues/046-portal-no-countdown-feedback.md](issues/046-portal-no-countdown-feedback.md) |
-| [42](https://github.com/Ajw2003/PlunderSpell/issues/42) | Guards are silent | `audio` `enhancement` | [issues/042-guards-are-silent.md](issues/042-guards-are-silent.md) |
-| [51](https://github.com/Ajw2003/PlunderSpell/issues/51) | No camera shake, hit-stop, or juice | `juice` `vfx` | [issues/051-no-camera-shake-hitstop.md](issues/051-no-camera-shake-hitstop.md) |
-| [52](https://github.com/Ajw2003/PlunderSpell/issues/52) | Throwing/swinging have no wind-up weight | `animation` `juice` | [issues/052-no-throw-swing-weight.md](issues/052-no-throw-swing-weight.md) |
+| [12](https://github.com/Ajw2003/PlunderSpell/issues/12) | No visual feedback for damage | `vfx` `enhancement` | [Issue_12_Plan.md](../../Plans/Issue_12_Plan.md) |
+| [13](https://github.com/Ajw2003/PlunderSpell/issues/13) | No visual feedback for spells | `vfx` `enhancement` | [Issue_13_Plan.md](../../Plans/Issue_13_Plan.md) |
+| [22](https://github.com/Ajw2003/PlunderSpell/issues/22) | No VFX or SFX anywhere | `vfx` `audio` | [Issue_22_Plan.md](../../Plans/Issue_22_Plan.md) |
+| [10](https://github.com/Ajw2003/PlunderSpell/issues/10) | Enemies have no animations | `animation` `enhancement` | [Issue_10_Plan.md](../../Plans/Issue_10_Plan.md) |
+| [11](https://github.com/Ajw2003/PlunderSpell/issues/11) | No player/door animations | `animation` `enhancement` | [Issue_11_Plan.md](../../Plans/Issue_11_Plan.md) |
+| [47](https://github.com/Ajw2003/PlunderSpell/issues/47) | No loudness meter | `ui` `audio` | [Issue_47_Plan.md](../../Plans/Issue_47_Plan.md) |
+| [49](https://github.com/Ajw2003/PlunderSpell/issues/49) | Recognised phrase has no caption | `ui` `accessibility` | [Issue_49_Plan.md](../../Plans/Issue_49_Plan.md) |
+| [48](https://github.com/Ajw2003/PlunderSpell/issues/48) | Casting invisible to teammates | `networking` `vfx` `audio` | [Issue_48_Plan.md](../../Plans/Issue_48_Plan.md) |
+| [46](https://github.com/Ajw2003/PlunderSpell/issues/46) | Portal has no closing-countdown feedback | `vfx` `audio` `gameplay` | [Issue_46_Plan.md](../../Plans/Issue_46_Plan.md) |
+| [42](https://github.com/Ajw2003/PlunderSpell/issues/42) | Guards are silent | `audio` `enhancement` | [Issue_42_Plan.md](../../Plans/Issue_42_Plan.md) |
+| [51](https://github.com/Ajw2003/PlunderSpell/issues/51) | No camera shake, hit-stop, or juice | `juice` `vfx` | [Issue_51_Plan.md](../../Plans/Issue_51_Plan.md) |
+| [52](https://github.com/Ajw2003/PlunderSpell/issues/52) | Throwing/swinging have no wind-up weight | `animation` `juice` | [Issue_52_Plan.md](../../Plans/Issue_52_Plan.md) |
 
 ## Phase 3 — Measure the milestones
 
@@ -179,12 +192,12 @@ enough that a failed measurement is informative rather than a re-discovery of Ph
 
 | # | Title | Labels | Plan |
 |---|---|---|---|
-| [50](https://github.com/Ajw2003/PlunderSpell/issues/50) | M1 acceptance never measured | `testing` `audio` | [issues/050-m1-acceptance-unmeasured.md](issues/050-m1-acceptance-unmeasured.md) |
-| [55](https://github.com/Ajw2003/PlunderSpell/issues/55) | M2 acceptance never run | `testing` `gameplay` | [issues/055-m2-acceptance-unrun.md](issues/055-m2-acceptance-unrun.md) |
-| [53](https://github.com/Ajw2003/PlunderSpell/issues/53) | No standalone player build | `testing` `build` | [issues/053-no-standalone-build.md](issues/053-no-standalone-build.md) |
-| [54](https://github.com/Ajw2003/PlunderSpell/issues/54) | No performance budget/profiling | `testing` `performance` | [issues/054-no-performance-budget.md](issues/054-no-performance-budget.md) |
-| [56](https://github.com/Ajw2003/PlunderSpell/issues/56) | Settings menu completeness unverified | `ui` `settings` | [issues/056-settings-menu-completeness.md](issues/056-settings-menu-completeness.md) |
-| [57](https://github.com/Ajw2003/PlunderSpell/issues/57) | No keyboard-casting accessibility mode | `accessibility` | [issues/057-no-keyboard-casting-mode.md](issues/057-no-keyboard-casting-mode.md) |
+| [50](https://github.com/Ajw2003/PlunderSpell/issues/50) | M1 acceptance never measured | `testing` `audio` | [Issue_50_Plan.md](../../Plans/Issue_50_Plan.md) |
+| [55](https://github.com/Ajw2003/PlunderSpell/issues/55) | M2 acceptance never run | `testing` `gameplay` | [Issue_55_Plan.md](../../Plans/Issue_55_Plan.md) |
+| [53](https://github.com/Ajw2003/PlunderSpell/issues/53) | No standalone player build | `testing` `build` | [Issue_53_Plan.md](../../Plans/Issue_53_Plan.md) |
+| [54](https://github.com/Ajw2003/PlunderSpell/issues/54) | No performance budget/profiling | `testing` `performance` | [Issue_54_Plan.md](../../Plans/Issue_54_Plan.md) |
+| [56](https://github.com/Ajw2003/PlunderSpell/issues/56) | Settings menu completeness unverified | `ui` `settings` | [Issue_56_Plan.md](../../Plans/Issue_56_Plan.md) |
+| [57](https://github.com/Ajw2003/PlunderSpell/issues/57) | No keyboard-casting accessibility mode | `accessibility` | [Issue_57_Plan.md](../../Plans/Issue_57_Plan.md) |
 
 ## Phase 4 — Look and sound like the pitch
 
@@ -193,12 +206,12 @@ enough that a failed measurement is informative rather than a re-discovery of Ph
 
 | # | Title | Labels | Plan |
 |---|---|---|---|
-| [16](https://github.com/Ajw2003/PlunderSpell/issues/16) | Main menu has no art | `art` `ui` | [issues/016-main-menu-no-art.md](issues/016-main-menu-no-art.md) |
-| [23](https://github.com/Ajw2003/PlunderSpell/issues/23) | Castles look bland | `art` `enhancement` | [issues/023-castles-look-bland.md](issues/023-castles-look-bland.md) |
-| [58](https://github.com/Ajw2003/PlunderSpell/issues/58) | Steam lobby has no art/branding | `ui` `art` `networking` | [issues/058-steam-lobby-no-art.md](issues/058-steam-lobby-no-art.md) |
-| [59](https://github.com/Ajw2003/PlunderSpell/issues/59) | Six reference lighting frames missing | `art` `lighting` `design` | [issues/059-six-lighting-frames-missing.md](issues/059-six-lighting-frames-missing.md) |
-| [34](https://github.com/Ajw2003/PlunderSpell/issues/34) | EPIC: no icon set exists | `epic` `art` `ui` | [issues/034-epic-no-icon-set.md](issues/034-epic-no-icon-set.md) |
-| [40](https://github.com/Ajw2003/PlunderSpell/issues/40) | Weapon and loot icons don't exist | `art` `ui` | [issues/040-weapon-loot-icons.md](issues/040-weapon-loot-icons.md) |
+| [16](https://github.com/Ajw2003/PlunderSpell/issues/16) | Main menu has no art | `art` `ui` | [Issue_16_Plan.md](../../Plans/Issue_16_Plan.md) |
+| [23](https://github.com/Ajw2003/PlunderSpell/issues/23) | Castles look bland | `art` `enhancement` | [Issue_23_Plan.md](../../Plans/Issue_23_Plan.md) |
+| [58](https://github.com/Ajw2003/PlunderSpell/issues/58) | Steam lobby has no art/branding | `ui` `art` `networking` | [Issue_58_Plan.md](../../Plans/Issue_58_Plan.md) |
+| [59](https://github.com/Ajw2003/PlunderSpell/issues/59) | Six reference lighting frames missing | `art` `lighting` `design` | [Issue_59_Plan.md](../../Plans/Issue_59_Plan.md) |
+| [34](https://github.com/Ajw2003/PlunderSpell/issues/34) | EPIC: no icon set exists | `epic` `art` `ui` | [Issue_34_Plan.md](../../Plans/Issue_34_Plan.md) |
+| [40](https://github.com/Ajw2003/PlunderSpell/issues/40) | Weapon and loot icons don't exist | `art` `ui` | [Issue_40_Plan.md](../../Plans/Issue_40_Plan.md) |
 
 ## Phase 5 — Content decisions and missing pillars
 
@@ -209,22 +222,22 @@ the project; both are pitch-critical but neither blocks a raid from being playab
 
 | # | Title | Labels | Plan |
 |---|---|---|---|
-| [41](https://github.com/Ajw2003/PlunderSpell/issues/41) | Bestiary thematic divergence — **decide first** | `decision-needed` | [issues/041-bestiary-thematic-divergence.md](issues/041-bestiary-thematic-divergence.md) |
-| [38](https://github.com/Ajw2003/PlunderSpell/issues/38) | Weapon roster doesn't match the pitch | `art` `content` `design` | [issues/038-weapon-roster-mismatch.md](issues/038-weapon-roster-mismatch.md) |
-| [17](https://github.com/Ajw2003/PlunderSpell/issues/17) | Only one era has art and models | `art` `enhancement` | [issues/017-only-one-era-has-art.md](issues/017-only-one-era-has-art.md) |
-| [35](https://github.com/Ajw2003/PlunderSpell/issues/35) | Era-specific hazards unimplemented | `gameplay` `content` `design` | [issues/035-era-specific-hazards.md](issues/035-era-specific-hazards.md) |
-| [36](https://github.com/Ajw2003/PlunderSpell/issues/36) | Era-specific loot catalogue unauthored | `content` `art` `design` | [issues/036-era-specific-loot-catalogue.md](issues/036-era-specific-loot-catalogue.md) |
-| [43](https://github.com/Ajw2003/PlunderSpell/issues/43) | GildedColossus boss has no behaviour | `gameplay` `design` | [issues/043-gildedcolossus-boss-behaviour.md](issues/043-gildedcolossus-boss-behaviour.md) |
-| [44](https://github.com/Ajw2003/PlunderSpell/issues/44) | Door/socket types aren't functional hazards | `gameplay` `design` | [issues/044-door-socket-functional-hazards.md](issues/044-door-socket-functional-hazards.md) |
-| [45](https://github.com/Ajw2003/PlunderSpell/issues/45) | Drawbridge has no operable mechanism | `gameplay` `animation` | [issues/045-drawbridge-no-mechanism.md](issues/045-drawbridge-no-mechanism.md) |
-| [26](https://github.com/Ajw2003/PlunderSpell/issues/26) | EPIC: The Mystical Market pillar | `epic` `market` | [issues/026-epic-mystical-market.md](issues/026-epic-mystical-market.md) |
-| [27](https://github.com/Ajw2003/PlunderSpell/issues/27) | Build the market hub | `market` `ui` | [issues/027-build-market-hub.md](issues/027-build-market-hub.md) |
-| [28](https://github.com/Ajw2003/PlunderSpell/issues/28) | Author wares/pricing for all stalls | `market` `content` `design` | [issues/028-author-market-wares.md](issues/028-author-market-wares.md) |
-| [29](https://github.com/Ajw2003/PlunderSpell/issues/29) | Market mark-up / leftover-spend rules | `market` `gameplay` | [issues/029-market-rules-unimplemented.md](issues/029-market-rules-unimplemented.md) |
-| [30](https://github.com/Ajw2003/PlunderSpell/issues/30) | EPIC: The Lair is a menu, not a place | `epic` `lair` `art` | [issues/030-epic-lair-is-a-menu.md](issues/030-epic-lair-is-a-menu.md) |
-| [31](https://github.com/Ajw2003/PlunderSpell/issues/31) | Build a 3D Lair space | `lair` `art` | [issues/031-build-3d-lair-space.md](issues/031-build-3d-lair-space.md) |
-| [32](https://github.com/Ajw2003/PlunderSpell/issues/32) | Lair lighting and mood pass | `lair` `art` `lighting` | [issues/032-lair-lighting-mood-pass.md](issues/032-lair-lighting-mood-pass.md) |
-| [33](https://github.com/Ajw2003/PlunderSpell/issues/33) | Debt/hoard have no in-fiction representation | `lair` `ui` | [issues/033-debt-hoard-no-in-fiction-representation.md](issues/033-debt-hoard-no-in-fiction-representation.md) |
+| [41](https://github.com/Ajw2003/PlunderSpell/issues/41) | Bestiary thematic divergence — **decide first** | `decision-needed` | [Issue_41_Plan.md](../../Plans/Issue_41_Plan.md) |
+| [38](https://github.com/Ajw2003/PlunderSpell/issues/38) | Weapon roster doesn't match the pitch | `art` `content` `design` | [Issue_38_Plan.md](../../Plans/Issue_38_Plan.md) |
+| [17](https://github.com/Ajw2003/PlunderSpell/issues/17) | Only one era has art and models | `art` `enhancement` | [Issue_17_Plan.md](../../Plans/Issue_17_Plan.md) |
+| [35](https://github.com/Ajw2003/PlunderSpell/issues/35) | Era-specific hazards unimplemented | `gameplay` `content` `design` | [Issue_35_Plan.md](../../Plans/Issue_35_Plan.md) |
+| [36](https://github.com/Ajw2003/PlunderSpell/issues/36) | Era-specific loot catalogue unauthored | `content` `art` `design` | [Issue_36_Plan.md](../../Plans/Issue_36_Plan.md) |
+| [43](https://github.com/Ajw2003/PlunderSpell/issues/43) | GildedColossus boss has no behaviour | `gameplay` `design` | [Issue_43_Plan.md](../../Plans/Issue_43_Plan.md) |
+| [44](https://github.com/Ajw2003/PlunderSpell/issues/44) | Door/socket types aren't functional hazards | `gameplay` `design` | [Issue_44_Plan.md](../../Plans/Issue_44_Plan.md) |
+| [45](https://github.com/Ajw2003/PlunderSpell/issues/45) | Drawbridge has no operable mechanism | `gameplay` `animation` | [Issue_45_Plan.md](../../Plans/Issue_45_Plan.md) |
+| [26](https://github.com/Ajw2003/PlunderSpell/issues/26) | EPIC: The Mystical Market pillar | `epic` `market` | [Issue_26_Plan.md](../../Plans/Issue_26_Plan.md) |
+| [27](https://github.com/Ajw2003/PlunderSpell/issues/27) | Build the market hub | `market` `ui` | [Issue_27_Plan.md](../../Plans/Issue_27_Plan.md) |
+| [28](https://github.com/Ajw2003/PlunderSpell/issues/28) | Author wares/pricing for all stalls | `market` `content` `design` | [Issue_28_Plan.md](../../Plans/Issue_28_Plan.md) |
+| [29](https://github.com/Ajw2003/PlunderSpell/issues/29) | Market mark-up / leftover-spend rules | `market` `gameplay` | [Issue_29_Plan.md](../../Plans/Issue_29_Plan.md) |
+| [30](https://github.com/Ajw2003/PlunderSpell/issues/30) | EPIC: The Lair is a menu, not a place | `epic` `lair` `art` | [Issue_30_Plan.md](../../Plans/Issue_30_Plan.md) |
+| [31](https://github.com/Ajw2003/PlunderSpell/issues/31) | Build a 3D Lair space | `lair` `art` | [Issue_31_Plan.md](../../Plans/Issue_31_Plan.md) |
+| [32](https://github.com/Ajw2003/PlunderSpell/issues/32) | Lair lighting and mood pass | `lair` `art` `lighting` | [Issue_32_Plan.md](../../Plans/Issue_32_Plan.md) |
+| [33](https://github.com/Ajw2003/PlunderSpell/issues/33) | Debt/hoard have no in-fiction representation | `lair` `ui` | [Issue_33_Plan.md](../../Plans/Issue_33_Plan.md) |
 
 ## Status
 

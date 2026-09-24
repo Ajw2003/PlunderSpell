@@ -48,7 +48,13 @@ namespace RogueAi.Raid
 
             GameServices.GameState.StateChanged += OnGameStateChanged;
             if (_director != null)
+            {
                 _director.RaidResolved += OnRaidResolved;
+                _director.PhaseChanged += OnPhaseChanged;
+            }
+
+            // Offline the director is its own authority; networked, only the host may freeze time.
+            GameServices.IsSessionAuthority = () => _director == null || !_director.isSpawned || _director.isServer;
         }
 
         private void OnDisable()
@@ -56,12 +62,33 @@ namespace RogueAi.Raid
             if (GameServices.GameState != null)
                 GameServices.GameState.StateChanged -= OnGameStateChanged;
             if (_director != null)
+            {
                 _director.RaidResolved -= OnRaidResolved;
+                _director.PhaseChanged -= OnPhaseChanged;
+            }
+            GameServices.IsSessionAuthority = () => true;
+        }
+
+        /// <summary>
+        /// A client does not choose when to set out: the host does, and the client follows it from
+        /// the Lair into the raid once the castle has been built from the replicated seed.
+        /// </summary>
+        private void OnPhaseChanged(RaidPhase phase)
+        {
+            bool isClient = _director.isSpawned && !_director.isServer;
+            // From the "You died" screen as well as the Lair: after a party wipe the host may set out
+            // again before a friend has clicked through to the Lair.
+            GameState current = GameServices.GameState.CurrentState;
+            if (isClient && phase == RaidPhase.Raiding && (current == GameState.Lair || current == GameState.GameOver))
+                GameServices.GameState.ChangeState(GameState.Playing);
         }
 
         /// <summary>Back to the lair once the takings are counted, so the debt can be paid down.</summary>
         private void OnRaidResolved(float worthExtracted, int playersSaved)
         {
+            // A lost raid leaves the "You died" screen up; its button goes to the Lair.
+            if (GameServices.GameState.CurrentState == GameState.GameOver)
+                return;
             GameServices.GameState.ChangeState(GameState.Lair);
         }
 
@@ -72,6 +99,12 @@ namespace RogueAi.Raid
         /// </summary>
         private void OnGameStateChanged(GameState previous, GameState next)
         {
+            if (next == GameState.GameOver)
+            {
+                _director.AbandonRaid();
+                return;
+            }
+
             if (next != GameState.Playing || previous == GameState.Paused ||
                 previous == GameState.Inventory)
                 return;

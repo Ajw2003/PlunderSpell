@@ -2,9 +2,25 @@
     "name": "RogueAi.Tests.Editor",
     "rootNamespace": "RogueAi.Tests.Editor",
     "references": [
+        "RogueAi.Status",
+        "RogueAi.Voice",
+        "RogueAi.Lair",
+        "RogueAi.Extraction",
+        "RogueAi.Alarm",
+        "RogueAi.Acoustics",
+        "PurrNet.Runtime",
+        "RogueAi.Core",
+        "RogueAi.Playtest",
+        "RogueAi.UI",
+        "RogueAi.Guards",
+        "RogueAi.Raid",
+        "RogueAi.Loot",
+        "RogueAi.Player",
+        "RogueAi.Castle",
         "RogueAi.Editor",
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "RogueAi.Net"
     ],
     "includePlatforms": [
         "Editor"

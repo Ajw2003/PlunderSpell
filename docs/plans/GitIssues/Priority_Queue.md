@@ -1,11 +1,23 @@
 # PlunderSpell - Execution Priority Queue
 
-This document orders the 55 open backlog issues based on the core directive: **"Get each individual feature completed first to see if the game is fun mechanically before doing any more artwork."**
+This document orders the open backlog issues based on the core directive: **"Get each individual feature completed first to see if the game is fun mechanically before doing any more artwork."**
 
-The backlog is broken down into 5 phases. Work should be completed sequentially from Phase 1 through Phase 5.
+The backlog is broken down into phases. Work should be completed sequentially from Phase 0 through Phase 5.
 
-## Phase 1: Core Game Loop, Mechanics & Controls 
-*These items must be fixed immediately. Without them, the game literally cannot be played, tested, or evaluated for mechanical fun.*
+## Phase 0: Make the shipped build actually playable
+*Added 2026-09-22, after the user played the real standalone build produced for #53 and found the raid
+itself broken in ways no automated check (headless or otherwise) had caught. This supersedes Phase 1
+as the top of the queue: everything in Phase 1 was verified against code and the headless suite, not
+against an actual play session, and it turns out those are different claims. Fix these before
+anything else — including before re-attempting #55, which cannot succeed while these are broken.*
+
+*   **#102** EPIC: the shipped standalone build is not actually playable (ties the three below together)
+*   **#100** Player.prefab is missing SpellCastingSystem/AcousticEmitter/FootstepNoiseEmitter — casting doesn't work in the shipped raid
+*   **#14** No usable health or damage model — reopened, the fix landed on an unmerged branch (PR #97) and was never on the branch that ships
+*   **#101** Extraction and return-to-Lair don't work when actually played in the built RaidScene
+
+## Phase 1: Core Game Loop, Mechanics & Controls
+*These items must be fixed immediately. Without them, the game literally cannot be played, tested, or evaluated for mechanical fun. As of 2026-09-22 this phase's own issues are closed except #24 (superseded by Phase 0's #102, see above) and #55 (blocked on Phase 0).*
 
 *   **#24** EPIC: build the game loop end to end so there is something to actually play
 *   **#5** PCG: rooms do not connect and the floor plan does not read as a castle

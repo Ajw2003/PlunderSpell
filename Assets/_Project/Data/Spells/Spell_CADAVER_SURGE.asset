@@ -18,4 +18,12 @@ MonoBehaviour:
   - CADAVER SURJ
   - CADVER SURGE
   misfireId: 105
-  Description: 'Raise a corpse. Misfire (CADAVER SURJ/CADVER SURGE) makes the nearest corpse explode.'
+  HeardAs:
+  - cadaver surge
+  - cadavers surge
+  MisfireHeardAs:
+  - cad ver surge
+  - cadbury surge
+  - cad verse surge
+  Description: Raise a corpse. Misfire (CADAVER SURJ/CADVER SURGE) makes the nearest
+    corpse explode.

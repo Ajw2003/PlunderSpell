@@ -3,7 +3,9 @@
     "rootNamespace": "RogueAi.Extraction",
     "references": [
         "PurrNet.Runtime",
-        "RogueAi.Loot"
+        "RogueAi.Loot",
+        "RogueAi.Core",
+        "Plunderspell.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

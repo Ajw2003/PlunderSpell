@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Player;
 using RogueAi.Acoustics;
 using RogueAi.Alarm;
 using RogueAi.Castle;
@@ -14,6 +15,7 @@ using RogueAi.Spells;
 using RogueAi.Status;
 using RogueAi.UI;
 using RogueAi.Voice;
+using StateMachine;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -24,15 +26,12 @@ using UnityEngine.SceneManagement;
 namespace RogueAi.EditorTools
 {
     /// <summary>
-    /// Assembles the playable raid scene from the project's authored assets: the 25 castle room
-    /// prefabs, the 5 loot prefabs, the 10 enemy prefabs, extraction, HUD and a player who can walk,
-    /// grab and cast.
+    /// Assembles a raid-scene **scaffold** from the project's authored assets: the 25 castle room
+    /// prefabs, the 5 loot prefabs, the 10 enemy prefabs, extraction, HUD and the authored player.
     ///
-    /// It wires references only. Every mesh it places is a committed prefab built from a .blend, and
-    /// the scene it saves is a normal authored scene — open it, move things, save. Re-running
-    /// re-wires from scratch, so it can never leave a second castle behind.
-    ///
-    /// See docs/systems/raid-scene-assembly.md for what this builds and the order it builds it in.
+    /// It writes `RaidScene.Scaffold.unity`, never `RaidScene.unity` — the raid scene is hand-authored
+    /// now. See docs/systems/raid-scene-assembly.md, "Authored, not generated", for what that means
+    /// for this tool, and for what this builds and the order it builds it in.
     /// </summary>
     public static class RaidSceneBuilder
     {
@@ -43,7 +42,18 @@ namespace RogueAi.EditorTools
 
         private const string SceneDirectory = "Assets/_Project/Scenes";
         private const string DataDirectory = "Assets/_Project/Data/Generated";
-        private const string ScenePath = SceneDirectory + "/RaidScene.unity";
+
+        /// <summary>
+        /// The scaffold this writes — deliberately NOT the authored scene. See
+        /// docs/systems/raid-scene-assembly.md, "Authored, not generated".
+        /// </summary>
+        private const string ScenePath = SceneDirectory + "/RaidScene.Scaffold.unity";
+
+        /// <summary>The hand-edited scene this tool must never write to.</summary>
+        private const string AuthoredScenePath = SceneDirectory + "/RaidScene.unity";
+
+        /// <summary>The authored player rig the scaffold instances, so both scenes share one player.</summary>
+        private const string RaidPlayerPrefabPath = "Assets/_Project/Prefabs/RaidPlayer.prefab";
 
         // The authored assets this scene is assembled from. A missing one is a hard error, not a
         // silent fallback to primitives — that fallback is exactly how the art stopped being used.
@@ -53,9 +63,18 @@ namespace RogueAi.EditorTools
         private const string ConjuredCoinItemPath = "Assets/_Project/Data/Loot/Loot_Conjured_Coin.asset";
         private const string ConjuredCoinPrefabPath = "Assets/_Project/Prefabs/Loot/GoldenGoblet.prefab";
 
-        [MenuItem("Tools/Plunderspell/Build Playable Raid Scene")]
+        [MenuItem("Tools/Plunderspell/Build Raid Scene Scaffold")]
         public static void BuildRaidScene()
         {
+            // Belt and braces. The path is a constant, but this is the one mistake in this file that
+            // silently destroys a day of hand-authoring, so it is asserted rather than assumed.
+            if (ScenePath == AuthoredScenePath)
+            {
+                Debug.LogError($"[RaidScaffold] Refusing to run: the output path is the authored " +
+                               $"scene {AuthoredScenePath}.");
+                return;
+            }
+
             EnsureFolder(SceneDirectory);
             EnsureFolder(DataDirectory);
 
@@ -277,14 +296,36 @@ namespace RogueAi.EditorTools
             return spawn;
         }
 
+        /// <summary>
+        /// Instances the authored raid player. See docs/systems/raid-scene-assembly.md, "Authored,
+        /// not generated", for why this is an instance rather than a rig assembled here.
+        /// </summary>
         private static GameObject BuildPlayer(Vector3 spawn)
         {
-            var root = new GameObject("Player");
-            root.transform.position = spawn;
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RaidPlayerPrefabPath);
+            if (prefab == null)
+            {
+                Debug.LogError($"[RaidScaffold] No raid player at {RaidPlayerPrefabPath}. Run " +
+                               "Tools > Plunderspell > Extract Raid Player Prefab first.");
+                return BuildFallbackPlayer(spawn);
+            }
 
-            var body = root.AddComponent<Rigidbody>();
-            body.freezeRotation = true;
-            body.mass = 70f;
+            var root = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            root.transform.position = spawn;
+            return root;
+        }
+
+        /// <summary>
+        /// A body good enough to keep the scaffold openable when the authored prefab is missing. It
+        /// carries the shipping controller, not <c>FreeLookPlaytestController</c>: building the
+        /// harness here is what let the scaffold and the authored scene disagree about what a player
+        /// even is. See docs/Decisions.md, 2026-09-18.
+        /// </summary>
+        private static GameObject BuildFallbackPlayer(Vector3 spawn)
+        {
+            var root = new GameObject("Player");
+            root.tag = "Player";
+            root.transform.position = spawn;
 
             var collider = root.AddComponent<CapsuleCollider>();
             collider.height = CastleSpawnResolver.PlayerHeight;
@@ -293,28 +334,36 @@ namespace RogueAi.EditorTools
             GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             visual.name = "Visual";
             visual.transform.SetParent(root.transform, false);
+            visual.transform.localScale = new Vector3(
+                CastleSpawnResolver.PlayerRadius * 2f,
+                CastleSpawnResolver.PlayerHeight * 0.5f,
+                CastleSpawnResolver.PlayerRadius * 2f);
             Object.DestroyImmediate(visual.GetComponent<CapsuleCollider>());
             visual.GetComponent<Renderer>().sharedMaterial = MakeMaterial("PlayerMaterial",
                 new Color(0.25f, 0.45f, 0.75f));
 
+            // PlayerStateMachine pulls in Rigidbody through its [RequireComponent].
+            PlayerStateMachine stateMachine = root.AddComponent<PlayerStateMachine>();
+
             var eye = new GameObject("Eye");
             eye.transform.SetParent(root.transform, false);
-            eye.transform.localPosition = new Vector3(0f, EyeHeight, 0f);
+            eye.transform.localPosition = new Vector3(0f, EyeHeight - CastleSpawnResolver.PlayerHeight * 0.5f, 0f);
             Camera camera = eye.AddComponent<Camera>();
             camera.tag = "MainCamera";
             eye.AddComponent<AudioListener>();
+            stateMachine.CameraTransform = eye.transform;
 
             var hand = new GameObject("HandSocket");
-            hand.transform.SetParent(root.transform, false);
-            hand.transform.localPosition = new Vector3(0.4f, 1.2f, 0.6f);
+            hand.transform.SetParent(eye.transform, false);
+            hand.transform.localPosition = new Vector3(0.4f, -0.3f, 0.6f);
 
+            root.AddComponent<PlayerInputController>();
             root.AddComponent<StatusEffectReceiver>();
             root.AddComponent<AcousticEmitter>();
             root.AddComponent<FootstepNoiseEmitter>();
             root.AddComponent<PushToCastController>();
             SpellCastingSystem casting = root.AddComponent<SpellCastingSystem>();
             casting.SetLexicon(LoadLexicon());
-            root.AddComponent<FreeLookPlaytestController>();
 
             LootInteractor interactor = root.AddComponent<LootInteractor>();
             interactor.SetEye(eye.transform);

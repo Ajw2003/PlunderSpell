@@ -24,6 +24,18 @@ namespace RogueAi.UI
         [SerializeField] private LairHubManager _lair;
         [SerializeField] private LootInteractor _interactor;
 
+        /// <summary>This machine's player's interactor. The player is spawned by the network after
+        /// the HUD wakes, so it is looked up on first use rather than wired in the scene.</summary>
+        private LootInteractor Interactor
+        {
+            get
+            {
+                if (_interactor == null && StateMachine.PlayerStateMachine.Local != null)
+                    _interactor = StateMachine.PlayerStateMachine.Local.GetComponentInChildren<LootInteractor>();
+                return _interactor;
+            }
+        }
+
         [Header("Cast feed")]
         [Tooltip("Seconds the most recent cast stays on screen.")]
         [SerializeField] private float _castLineDuration = 4f;
@@ -45,11 +57,7 @@ namespace RogueAi.UI
         /// <summary>Collects the current state. Public so tests call it directly.</summary>
         public RaidHudModel Build()
         {
-            LootPickup carried = _interactor != null ? _interactor.Carried : null;
-            string carriedName = carried != null && carried.Data != null
-                ? carried.Data.DisplayName
-                : string.Empty;
-
+            LootPickup carried = Interactor != null ? Interactor.Carried : null;
             bool stale = Time.time - _lastCastAt > _castLineDuration;
 
             return new RaidHudModel(
@@ -57,13 +65,45 @@ namespace RogueAi.UI
                 _extractionZone != null ? _extractionZone.TimeRemaining : 0f,
                 _alarm != null ? _alarm.State : AlarmState.Calm,
                 _alarm != null ? _alarm.AlarmLevel : 0f,
-                carriedName,
+                CarriedName(carried),
                 carried != null && carried.Data != null && carried.Data.RequiresDualCarry,
                 BuildInteractPrompt(carried),
                 HasInteractTarget(),
                 _lair != null ? _lair.TotalDebt : 0f,
                 _lair != null ? _lair.AccumulatedGold : 0f,
-                stale ? string.Empty : _lastCastLine);
+                stale ? string.Empty : _lastCastLine,
+                _extractionZone != null ? _extractionZone.WorthInZone : 0f,
+                _extractionZone != null ? _extractionZone.PiecesInZone : 0,
+                BuildRangedWeaponStatus());
+        }
+
+        /// <summary>What the currently held ranged weapon (if any) is doing right now.</summary>
+        private static string BuildRangedWeaponStatus()
+        {
+            RangedWeapon weapon = ItemManager.Instance != null ? ItemManager.Instance.CarriedRangedWeapon : null;
+            if (weapon == null)
+                return string.Empty;
+
+            return weapon.IsLoaded
+                ? "Loaded — hold [RMB] to aim, [G] to fire"
+                : $"Reloading… {Mathf.RoundToInt(weapon.ReloadProgress01 * 100f)}%";
+        }
+
+        /// <summary>
+        /// What the player is holding. Reads <c>ItemManager</c> first — that is the live pickup
+        /// system — and falls back to the old interactor while both still exist.
+        /// </summary>
+        private static string CarriedName(LootPickup legacyCarried)
+        {
+            Item held = ItemManager.Instance != null ? ItemManager.Instance.CarriedItem : null;
+            if (held != null)
+            {
+                return held.TryGetComponent(out LootValue value) ? value.DisplayName : held.name;
+            }
+
+            return legacyCarried != null && legacyCarried.Data != null
+                ? legacyCarried.Data.DisplayName
+                : string.Empty;
         }
 
         /// <summary>
@@ -72,13 +112,13 @@ namespace RogueAi.UI
         /// </summary>
         private string BuildInteractPrompt(LootPickup carried)
         {
-            if (_interactor == null)
+            if (Interactor == null)
                 return string.Empty;
 
-            if (_interactor.FocusDoor != null)
+            if (Interactor.FocusDoor != null)
                 return "Press [E] to open the door";
 
-            LootPickup focus = _interactor.Focus;
+            LootPickup focus = Interactor.Focus;
             if (focus == null)
                 return carried != null ? "Press [Q] to drop" : string.Empty;
 
@@ -100,9 +140,9 @@ namespace RogueAi.UI
         /// <summary>True while the crosshair is over something the interact key would act on.</summary>
         private bool HasInteractTarget()
         {
-            if (_interactor == null)
+            if (Interactor == null)
                 return false;
-            return _interactor.FocusDoor != null || _interactor.Focus != null;
+            return Interactor.FocusDoor != null || Interactor.Focus != null;
         }
 
         private static string NameOf(LootPickup pickup) =>
@@ -125,7 +165,8 @@ namespace RogueAi.UI
             if (_extractionZone == null) _extractionZone = FindObjectOfType<ExtractionZone>();
             if (_alarm == null) _alarm = FindObjectOfType<AlarmFSMManager>();
             if (_lair == null) _lair = FindObjectOfType<LairHubManager>();
-            if (_interactor == null) _interactor = FindObjectOfType<LootInteractor>();
+            // No scene search for the interactor: in a session every player's body has one, and only
+            // this machine's player (resolved lazily in Interactor) is the one the HUD describes.
         }
 
         /// <summary>Wires the presenter from code, for tests and tooling-built scenes.</summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace RogueAi.Voice
 {
@@ -81,17 +82,41 @@ namespace RogueAi.Voice
             Debug.Log("[MockVoice] StopListening");
         }
 
+        /// <summary>
+        /// Which new-Input-System key stands in for each legacy <see cref="KeyCode"/> the maps are
+        /// written in. The maps stay keyed by KeyCode because SimulateKeyPress is part of the test
+        /// surface and several suites already call it that way.
+        /// </summary>
+        private static readonly Dictionary<KeyCode, Key> s_newInputKeys = new Dictionary<KeyCode, Key>
+        {
+            { KeyCode.Alpha1, Key.Digit1 },
+            { KeyCode.Alpha2, Key.Digit2 },
+            { KeyCode.Alpha3, Key.Digit3 },
+            { KeyCode.Alpha4, Key.Digit4 },
+            { KeyCode.Alpha5, Key.Digit5 },
+            { KeyCode.Alpha6, Key.Digit6 },
+            { KeyCode.Alpha7, Key.Digit7 },
+            { KeyCode.Alpha8, Key.Digit8 },
+        };
+
         private void Update()
         {
             if (!IsListening)
                 return;
 
-            bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-            bool ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null)
+                return;
+
+            bool shift = keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed;
+            bool ctrl = keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed;
 
             foreach (var kv in keybindMap)
             {
-                if (Input.GetKeyDown(kv.Key))
+                if (!s_newInputKeys.TryGetValue(kv.Key, out Key key))
+                    continue;
+
+                if (keyboard[key].wasPressedThisFrame)
                 {
                     string word = shift && misfireMap.TryGetValue(kv.Key, out var mis) ? mis : kv.Value;
                     EmitPhrase(word, ctrl, shift);

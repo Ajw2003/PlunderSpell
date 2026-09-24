@@ -56,7 +56,17 @@ namespace RogueAi.Raid
         /// Plans the haul for a castle. Returns an empty list (never null) when the table is empty,
         /// which is the data-only case the generator itself already supports.
         /// </summary>
-        public static List<LootPlacement> Plan(ProceduralCastleData castle, RaidLootTable table, int seed)
+        public static List<LootPlacement> Plan(ProceduralCastleData castle, RaidLootTable table, int seed) =>
+            Plan(castle, table, seed, null);
+
+        /// <summary>
+        /// Plans the haul, putting each piece on one of its room's authored loot anchors (a table
+        /// top, a chest lid, an altar) when <paramref name="registry"/> knows the room's anchors,
+        /// and never on a curtain-wall cell: those are the open strips between the rampart and the
+        /// rooms, and loot there read as dropped rather than kept.
+        /// </summary>
+        public static List<LootPlacement> Plan(ProceduralCastleData castle, RaidLootTable table, int seed,
+            CastleRoomRegistry registry)
         {
             var placements = new List<LootPlacement>();
             if (castle == null || castle.PlacedModules == null || table == null)
@@ -74,6 +84,12 @@ namespace RogueAi.Raid
                 if (module.IsExtractionExit || i == castle.ExtractionExitIndex)
                     continue;
 
+                // Only in rooms (see the summary above).
+                if (registry != null && module.Zone == CastleZone.CurtainWall)
+                    continue;
+
+                Vector3[] anchors = registry?.GetById(module.RoomId)?.LootAnchors;
+
                 List<RaidLootTable.Entry> pool = table.EntriesFor(module.Zone);
                 if (pool.Count == 0)
                     continue;
@@ -83,7 +99,7 @@ namespace RogueAi.Raid
                 // The crypt final chamber is guaranteed, and guaranteed to be the best thing there.
                 if (isCryptFinal)
                 {
-                    placements.Add(new LootPlacement(i, Scatter(module.Position, rng, 0f),
+                    placements.Add(new LootPlacement(i, PlaceIn(module, anchors, rng, 0f),
                         RichestOf(pool), module.Zone));
                     continue;
                 }
@@ -91,7 +107,7 @@ namespace RogueAi.Raid
                 if (rng.NextDouble() > table.DensityFor(module.Zone))
                     continue;
 
-                placements.Add(new LootPlacement(i, Scatter(module.Position, rng, ScatterRadius),
+                placements.Add(new LootPlacement(i, PlaceIn(module, anchors, rng, ScatterRadius),
                     PickWeighted(pool, rng), module.Zone));
             }
 
@@ -136,6 +152,19 @@ namespace RogueAi.Raid
                     return pool[i];
             }
             return pool[pool.Count - 1];
+        }
+
+        /// <summary>Above an anchor lift loot only this far: a fragile piece dropped from the old
+        /// 0.5 m spawn height onto a table could break on landing.</summary>
+        public const float AnchorLift = 0.08f;
+
+        private static Vector3 PlaceIn(ProceduralCastleData.PlacedModule module, Vector3[] anchors,
+            System.Random rng, float scatterRadius)
+        {
+            if (anchors == null || anchors.Length == 0)
+                return Scatter(module.Position, rng, scatterRadius);
+            Vector3 anchor = anchors[rng.Next(0, anchors.Length)];
+            return module.Position + module.Rotation * anchor + Vector3.up * AnchorLift;
         }
 
         private static Vector3 Scatter(Vector3 centre, System.Random rng, float radius)

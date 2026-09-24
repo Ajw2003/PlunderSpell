@@ -21,7 +21,11 @@
         "UnityEditor.TestRunner",
         "Plunderspell.Core",
         "Plunderspell.UI",
-        "RogueAi.Playtest"
+        "RogueAi.Playtest",
+        "RogueAi.Player",
+        "RogueAi.Items",
+        "Unity.InputSystem",
+        "Unity.InputSystem.TestFramework"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

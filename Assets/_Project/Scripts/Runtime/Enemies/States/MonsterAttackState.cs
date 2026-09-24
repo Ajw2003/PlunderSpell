@@ -50,7 +50,10 @@ namespace StateMachine.States
             // compile-time reference to Player.
             if (_stateMachine.PlayerTarget.TryGetComponent(out IHealth targetHealth))
             {
-                targetHealth.TakeDamage(_stateMachine.AttackDamage);
+                GameObject attacker = _stateMachine.gameObject;
+                Damage.Apply(targetHealth, _stateMachine.AttackDamage, attacker, attacker,
+                    Damage.PointOn(_stateMachine.PlayerTarget, attacker.transform.position + Vector3.up),
+                    DamageKind.EnemyAttack);
             }
         }
     }

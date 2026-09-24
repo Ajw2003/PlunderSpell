@@ -32,6 +32,7 @@ namespace RogueAi.Status
 
         private float _burnRemaining;
         private float _burnDps;
+        private GameObject _burnInstigator;
         private float _stunRemaining;
         private float _sleepRemaining;
         private float _levitateRemaining;
@@ -45,7 +46,8 @@ namespace RogueAi.Status
         public bool IsLevitating => _levitateRemaining > 0f;
 
         /// <summary>True while the actor cannot act — asleep or stunned. AI and input check this.</summary>
-        public bool IsIncapacitated => IsStunned || IsAsleep;
+        // Floating counts: a guard held in the air by Levo cannot see, chase or strike.
+        public bool IsIncapacitated => IsStunned || IsAsleep || IsLevitating;
 
         public float BurnRemaining => _burnRemaining;
         public float StunRemaining => _stunRemaining;
@@ -107,7 +109,8 @@ namespace RogueAi.Status
                 {
                     float toApply = Mathf.Floor(_pendingBurnDamage);
                     _pendingBurnDamage -= toApply;
-                    health.TakeDamage(toApply);
+                    Damage.Apply(health, toApply, gameObject, _burnInstigator,
+                        transform.position + Vector3.up, DamageKind.Burn);
                 }
 
                 if (_burnRemaining <= 0f)
@@ -139,10 +142,12 @@ namespace RogueAi.Status
 
         // --- IIgnitable ------------------------------------------------------------------------
 
-        public void Ignite(float damagePerSecond, float duration)
+        public void Ignite(float damagePerSecond, float duration, GameObject instigator = null)
         {
             if (damagePerSecond <= 0f || duration <= 0f)
                 return;
+
+            _burnInstigator = instigator;
 
             // Hotter fire wins on rate; longer fire wins on duration. Neither stacks additively.
             _burnDps = Mathf.Max(_burnDps, damagePerSecond);
@@ -195,10 +200,15 @@ namespace RogueAi.Status
 
         // --- ILevitatable ----------------------------------------------------------------------
 
-        public void Levitate(Vector3 impulse, float duration)
+        /// <summary>Who most recently levitated this, for blame when it falls.</summary>
+        public GameObject LevitatedBy { get; private set; }
+
+        public void Levitate(Vector3 impulse, float duration, GameObject instigator = null)
         {
             if (duration <= 0f)
                 return;
+
+            LevitatedBy = instigator;
 
             _levitateRemaining = Mathf.Max(_levitateRemaining, duration);
 

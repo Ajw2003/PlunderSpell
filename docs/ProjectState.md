@@ -7,12 +7,31 @@ checked the way they're defined, and a 21-item playtesting backlog (filed 2026-0
 open — see below) is the clearest evidence of the gap between "compiles and passes tests" and
 "plays like the pitch."
 
+**2026-09-22 update — "code-complete" and "actually playable" turned out to be different claims.**
+Phase 1 of `docs/plans/GitIssues/Priority_Queue.md` was closed out this session purely against code
+and the headless test harness (`Tools/Headless/verify.sh`), which compiles and unit-tests the real
+gameplay sources but cannot load a real `.unity` scene, render anything, or drive real input — see
+`Tools/Headless/README.md`, "What it does and does not prove." The user then actually played the
+standalone build produced for #53 and found the raid itself broken: casting doesn't work by voice
+or keybind, there's no way to tell if the player or an enemy is taking damage, and extraction/return
+to the Lair doesn't work. Root-caused and filed as a new top-priority Phase 0 — see
+`docs/plans/GitIssues/Priority_Queue.md`'s Phase 0 section and issues #102 (epic), #100, #14
+(reopened), #101. The headline "65%" and the milestone table below predate this finding and should
+be read with it in mind: M2's code is not merely "acceptance unchecked," a real play session
+surfaced it as not actually functional yet.
+
 | Milestone | Status | Code | Acceptance checked? |
 |---|---|---|---|
 | M0 — Fork clean, cut gravity | Done | ✅ merged (`feature/m0-gravity-removal`) | ✅ — compiles, gravity restored, verified in the `.agent_reports`-era logs, now `docs/archive/2026-09-15-integration/` |
 | M1 — Prove the voice | Code complete, acceptance unchecked | ✅ merged (`feature/m1-voice-casting`) | ❌ — no real-microphone, multi-accent, latency measurement exists anywhere in the repo |
 | M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
 | M3 — Open the other Ages | Scaffold only | 🟡 `HistoricalEra` enum + plumbing only | ❌ — see below, the data model can't produce era-specific content yet |
+
+**2026-09-24 — art bible plunder modelled.** All 20 plunder items from the art bible
+(`docs/art/`) now exist as validated, textured models under `Assets/Models/ArtBible/Items/`,
+built by `Tools/ArtForge/`. They are not wired into any loot table or prefab yet, and have
+no Unity `.meta` files (Unity creates them on first import). The art bible's 12 structures
+and 16 enemies are specified and drawn but not modelled.
 
 ## The one thing that is not what it looks like
 
@@ -30,6 +49,21 @@ met; it needs a schema change (`CastleRoomModuleData.Era`, era-keyed loot/guard 
 it's even possible, not just more content.
 
 ## The 2026-09-16 playtesting backlog
+
+**Update, 2026-09-22:** Phase 1 of `docs/plans/GitIssues/Priority_Queue.md` ("Core Game Loop,
+Mechanics & Controls") is now closed out — verify with `gh issue list --state all --repo
+Ajw2003/PlunderSpell`. Of the 16 Phase 1 issues, only #24 (the epic itself — see its own checklist,
+which now tracks Phase 2 items) and #55 (the M2 four-player playtest below, which needs real humans
+and can't be closed by a commit) remain open. That includes all nine items called out below as of
+2026-09-16: #20, #5, #19, #6, #25, #21 (still open — no portal asset yet, tracked separately from
+combat), #16/#23 (still open, Phase 4/5 art), #22 (still open, Phase 2 VFX/SFX). What's now closed
+that wasn't: #5/#19 (room connectivity/grid-exact modules), #6/#25 (player scale/spawn), #20/#15
+(loot physics/discoverability), #7/#8/#9 (crosshair/cursor/menu-input-gating), #14 (health/damage
+model + HUD), #18 (a dedicated `CombatBench` scene), #37/#39 (melee and ranged player combat, new
+this pass), #53 (a real standalone build tool, verified against a real Unity Editor install, new
+this pass). The paragraphs below are the original 2026-09-16 filing and are left as historical
+record of what the backlog looked like before this work landed — check `gh issue view <n>` for any
+individual issue's current state rather than trusting the prose here.
 
 Filed as GitHub issues #5–#25 (`Tools/mkissues.py`, manifest in
 `docs/generated/github-issues.json`) immediately after the raid scene started assembling from real
@@ -82,3 +116,47 @@ the 21-item backlog above.
   `BuildPipeline.BuildPlayer()` entry point anywhere in `Assets/` (confirmed by grep as of this
   pass). Whether the project actually builds and runs as a standalone player is unknown. Now
   tracked as a GitHub issue in the moodboard gap-closure backlog, above.
+
+**2026-09-23 update — Phase 0 worked in the live Editor, not headlessly.** See
+`docs/plans/phase0-playable-loop.md` for the checklist and `docs/generated/playtest-2026-09-23/` for
+the screenshots. Done and verified in Play mode: real voice recognition (Vosk binaries and model
+committed, English heard-as grammar, the right microphone picked, a live level meter while
+holding V, and a microphone choice in Settings); one damage pathway with readable feedback for
+hitting, being hit and hurting yourself; death → "YOU DIED" → Lair; held objects with weight
+and swing damage; standing on the pad to extract, then Lair → Set Out again. #100's diagnosis was
+wrong: RaidScene uses `RaidPlayer.prefab`, which is fully wired (see `docs/Decisions.md`). **Not yet
+done:** walking the loop in `RaidScene.unity` from the main menu; a fresh standalone build; a real
+person speaking into the mic (the Whisper/Shout thresholds are uncalibrated); commenting on and
+closing GitHub issues #14, #100, #101, #102.
+
+**2026-09-23, later: first real voice cast.** The user played `CastleBench.unity` in the Editor and
+cast spells by speaking into their own microphone, misfires included. This is the first time voice
+casting has worked for a real person in this project (before today the engine was a stub and the
+model was missing). M1 has moved from "never worked" to "works for one person on one machine".
+Its acceptance criterion (multi-accent recognition, latency) is still unmeasured, and so is the
+Whisper/Shout calibration against real voices. A standalone build has not been re-tested since the
+fixes.
+
+**2026-09-23, Steam co-op wired into the shipping raid (stages 1–3 of
+`docs/plans/steam-coop-raid.md`).** Before this, the build could not do co-op at all: `RaidScene`
+had no network manager and nothing started Steam. Now every session runs through PurrNet (solo is
+a local host), Host Co-op creates a Steam lobby, the Lair invites online friends, and each player
+gets their own body. Checked on this machine with two game windows over UDP, and Steam hosting in
+the build. **A real Steam join between two accounts has not been tried;** that is the user's test
+with a friend. The raid player now copies the CastleBench player; before that, casting in the
+built raid did nothing (push-to-cast was on F19) and the camera sat too high. The user then confirmed voice casting by
+microphone in the standalone build (2026-09-23). Stage 4 followed the
+same day: guards and loot replicate, a client can carry loot and extract it, hits land where the
+target's health lives, a client's spells aim where it looks, a dead player spectates a teammate and
+the raid ends when everyone is down, and a friend's Lair shows the host's campaign. All checked with
+two game windows over UDP; still untested between two Steam accounts. Then: weapons now spawn in
+the castle as networked loot (found, carried, swung, sold), a crossbow shot shows on every machine,
+downed bodies lie down, and guards give players at the gate a clear ring and a 20 second grace. See
+`docs/systems/net.md`.
+
+**2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh
+(`CastleAudit.cs`). Every room and all floor are reachable on five seeds, and loot now spawns on
+furniture (tables, chests, shelves, altars) inside rooms, all of it reachable. Phases 3–5 (themed
+wings, a sunken crypt, real doors and hazards) are not started; see `docs/plans/castle-revamp.md`.
+`ScaleInvariantTests` had measured castle modules on the wrong axis since they were written and
+passed only by accident; it now measures height.

@@ -65,7 +65,9 @@ namespace StateMachine.States
             _damageTickTimer += Time.deltaTime;
             if (_damageTickTimer >= 1.0f)
             {
-                _stateMachine.TakeDamage(chokeSource.ChokeDamage);
+                GameObject choker = _stateMachine.PlayerTarget.gameObject;
+                Damage.Apply(_stateMachine, chokeSource.ChokeDamage, choker, choker,
+                    _stateMachine.transform.position + Vector3.up, DamageKind.Choke);
                 _damageTickTimer = 0f;
                 Debug.Log($"{_stateMachine.gameObject.name} taking choke damage: {chokeSource.ChokeDamage}");
             }

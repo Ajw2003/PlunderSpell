@@ -20,7 +20,7 @@ namespace Interfaces
     public interface ILevitatable
     {
         /// <summary>Lift with the given upward impulse for <paramref name="duration"/> seconds.</summary>
-        void Levitate(Vector3 impulse, float duration);
+        void Levitate(Vector3 impulse, float duration, UnityEngine.GameObject instigator = null);
     }
 
     /// <summary>Something Somnus can put to sleep. Implemented by guards.</summary>
@@ -42,7 +42,7 @@ namespace Interfaces
     public interface IIgnitable
     {
         bool IsBurning { get; }
-        void Ignite(float damagePerSecond, float duration);
+        void Ignite(float damagePerSecond, float duration, UnityEngine.GameObject instigator = null);
     }
 
     /// <summary>A door or portcullis Porta can open (and a misfired Porta can open by mistake).</summary>

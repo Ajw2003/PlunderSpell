@@ -4,7 +4,10 @@
     "references": [
         "RogueAi.Core",
         "RogueAi.Acoustics",
-        "Plunderspell.Core"
+        "Plunderspell.Core",
+        "RogueAi.Guards",
+        "RogueAi.Raid",
+        "PurrNet.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

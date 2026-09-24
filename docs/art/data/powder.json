@@ -1,0 +1,886 @@
+{
+  "slug": "powder",
+  "name": "The Age of Powder",
+  "year": "c. 1620",
+  "stratum": "IV",
+  "headline": "Palaces, cabinets and gunpowder",
+  "intro": "Wide halls, enormous windows, glass by the acre — and, somewhere below the ballroom, a vaulted room full of black powder that turns any argument into demolition. This is an early-seventeenth-century Habsburg palace: lime-washed walls, black walnut, blued steel, and the richest, most delicate and most flammable plunder in the game, all under one roof. The household has learned from three centuries of you. It posts musketeers at the windows, sappers at the doors, and men in blackened plate in the cabinet rooms. One stray IGNIS near the magazine ends the evening, for them and for you.",
+  "palette": [
+    {
+      "name": "Lime plaster",
+      "hex": "#D2C7AC",
+      "use": "wall faces, ceilings, window reveals — a warm vellum-grey, never pure white; soot-dark toward the cornice"
+    },
+    {
+      "name": "Black walnut",
+      "hex": "#3B2A1E",
+      "use": "parquet, panelling, cabinets, door leaves, musket stocks, frames"
+    },
+    {
+      "name": "Blued steel",
+      "hex": "#34404E",
+      "use": "armour, gun barrels, locks, window ironwork"
+    },
+    {
+      "name": "Murrey livery wool",
+      "hex": "#5B3036",
+      "use": "the household's livery coats, sashes, hangings — a dark mulberry, kept well away from madder"
+    },
+    {
+      "name": "Forest window glass",
+      "hex": "#7E9377",
+      "use": "every pane of the acre of glass; bottle-green at the edges, paler at the centre"
+    },
+    {
+      "name": "Powder black",
+      "hex": "#1E1C1A",
+      "use": "powder kegs' contents, spills, burnt match, blackened armour"
+    },
+    {
+      "name": "Soot",
+      "hex": "#2E2923",
+      "use": "smoke staining above sconces and on magazine brick, ash drifts after a blast"
+    }
+  ],
+  "structures": [
+    {
+      "slug": "mirror-gallery",
+      "name": "The Long Gallery",
+      "zone": "Keep",
+      "footprint": "12 × 12 m, one cell; gallery axis north–south, designed to chain into an enfilade with neighbouring cells",
+      "height_m": 4.6,
+      "summary": "An enfilade gallery of tall mullioned windows, mirrors between the piers, parquet underfoot — every surface in it is glass or wants to be.",
+      "description": "The Long Gallery is where the family walks when it wishes to be seen walking: tall windows down one side, Venetian mirrors down the other, so that the light comes in twice and the thief is visible four times. It is a single Keep cell, laid on the north–south axis so that four of them in a row make the enfilade the architect was paid for. Parquet, portraits, a chandelier, and several thousand panes of forest glass — everything glass here shatters loudly, and the guards two rooms away hear it. Walk softly, carry nothing wider than the doorway, and do not cast anything bright.",
+      "build": [
+        "Shell: 12.0 × 12.0 m cell on the kit's 0.30 m slab; walls 0.60 m thick rising 4.60 m clear; ceiling a shallow cove (quarter-round, 0.60 m radius) running into a flat plaster ceiling at 4.60 m.",
+        "East wall (window wall): two tall mullioned windows either side of the central archway, openings 1.50 m wide × 3.40 m tall, sills 0.70 m above the floor, heads at 4.10 m; stone mullion 0.12 × 0.14 m and one transom at 3.10 m; each light glazed with leaded quarries (diamond panes 0.12 × 0.18 m, lead cames 8 mm).",
+        "Window reveals splayed 15° inward, 0.60 m deep, lime plaster; oak window seat in each 0.45 m deep at sill height, with a walnut lid that opens (hide-socket).",
+        "West wall (mirror wall): two Venetian mirrors mounted on the piers opposite the windows, each glass 1.10 × 2.20 m in a 0.12 m walnut-and-gilt frame, bottom edge 0.90 m above the floor; the frames reuse the Venetian Mirror plunder mesh scaled up — the small one hung between them is stealable.",
+        "Pilasters: flat plaster pilasters 0.50 m wide × 0.08 m proud between every opening, walnut base 0.30 m, simple Tuscan capital at 3.90 m; entablature/cornice band 0.40 m deep at the top of the wall.",
+        "Floor: walnut-and-oak parquet in a 0.60 m square basket-weave (strips 0.60 × 0.10 m), laid over the slab top as a separate 0.03 m thick floor mesh so it can take scorch decals.",
+        "Wainscot: walnut panelling to 1.10 m on the north, south and west walls, raised-and-fielded panels 0.60 × 0.80 m, dado rail 0.06 m.",
+        "Portraits: four full-length portraits (1.00 × 1.80 m canvas, 0.10 m walnut frame, bottom at 1.20 m) on the north and south walls either side of the archways; canvas is a separate quad for swap-able painted textures.",
+        "Chandelier: one brass-and-glass chandelier on a 1.20 m chain from the ceiling centre, body 0.90 m dia × 0.80 m tall, 12 candle arms, glass drops; it is the room's light source — warm key light from 3.4 m.",
+        "Archways: four kit archways 2.60 × 3.31 m on the centre of each face, with walnut door-case architrave 0.18 m wide and a broken pediment over the north and south (enfilade) doors.",
+        "Soot and wear: soot fans above each candle arm on the ceiling, gilt rubbed off frame corners where hands have adjusted them, parquet lighter along the 1.8 m wide walking line down the centre."
+      ],
+      "sockets": [
+        "Archway, north face (enfilade): 2.60 × 3.31 m, centred.",
+        "Archway, south face (enfilade): 2.60 × 3.31 m, centred.",
+        "Archway, east face: 2.60 × 3.31 m, centred between the two windows.",
+        "Archway, west face: 2.60 × 3.31 m, centred between the two mirrors.",
+        "Window ×2, east face: 1.50 × 3.40 m openings, sill 0.70 m, centres 3.60 m either side of the archway centreline; breakable glazing, climbable exit.",
+        "Hide socket ×2: window seats in the east reveals, 1.40 × 0.45 × 0.45 m, lid opens.",
+        "Loot socket: small Venetian Mirror on the west wall between the two big ones, hook at 1.60 m; plus one table socket (walnut side table 1.20 × 0.50 × 0.80 m) under each portrait."
+      ],
+      "materials": [
+        {
+          "name": "Lime plaster",
+          "hex": "#D2C7AC",
+          "notes": "tiling 2 m; matte (roughness 0.85); soft hand-trowelled undulation in the normal; darkens to #9E9580 toward the cornice with soot."
+        },
+        {
+          "name": "Black walnut",
+          "hex": "#3B2A1E",
+          "notes": "trim sheet 0.25 m band set; roughness 0.45 waxed; figure runs along the long axis; worn paler on dado rail and door-case at hand height."
+        },
+        {
+          "name": "Parquet oak",
+          "hex": "#6B4E32",
+          "notes": "tiling 1.2 m (two basket-weave repeats); roughness 0.4; scuffed lighter along the centre walking line; separate scorch-decal channel."
+        },
+        {
+          "name": "Forest window glass",
+          "hex": "#7E9377",
+          "notes": "transparent, IOR 1.5; tinted bottle-green at pane edges, paler #A9B6A0 at centres; tiny seed bubbles in the normal; shattered state is its own mesh."
+        },
+        {
+          "name": "Mirror silvering",
+          "hex": "#A8ABA2",
+          "notes": "metallic 1, roughness 0.12; foxed dark #5E5F58 at the edges in a 6 cm band; reflection probe per mirror."
+        },
+        {
+          "name": "Gilt (frames)",
+          "hex": "#C9A227",
+          "notes": "only on the stealable mirror frames and chandelier; worn to walnut on corners; roughness 0.3."
+        }
+      ],
+      "gameplay": [
+        "Every pane of glass is breakable: a broken window is a new exit and an alarm heard two cells away; a broken wall mirror is an alarm and a sheet of 6–8 shards on the floor that crunch under anyone walking.",
+        "Mirrors double sight-lines: a guard at the north arch can see a thief reflected in the west-wall mirrors, so the AI sight test also traces one reflection bounce off each mirror socket.",
+        "The chandelier can be dropped (hit its chain with any strike or spell): it falls 3.4 m, stuns whoever it lands on, and puts the room into darkness.",
+        "IGNIS on the curtains (a 3.4 m drape at each window) sets the window wall burning; the parquet takes scorch but does not spread fire.",
+        "Nothing wider than 2.60 m leaves by the archways; the big wall mirrors are fixed and do not come off the wall."
+      ],
+      "budget": "≤ 25k tris for the cell (shell 6k, windows 6k, mirrors/frames 4k, chandelier 3k, wainscot/portraits 4k, door cases 2k); one 2048² trim sheet (walnut/plaster/gilt), tiling sets for plaster, parquet and glass; windows share one glazing atlas.",
+      "concept": "concept/powder/mirror-gallery.svg"
+    },
+    {
+      "slug": "powder-magazine",
+      "name": "The Powder Magazine",
+      "zone": "InnerWard",
+      "footprint": "12 × 12 m, one cell; a 9.6 × 9.6 m magazine chamber inside 1.20 m brick walls",
+      "height_m": 4.0,
+      "summary": "A vaulted brick chamber of barrels and kegs on racks, behind a copper-nailed door, lit only through glass from outside — the Age's hazard.",
+      "description": "The magazine is the reason this palace can hold a siege, and the reason it may not survive one. Barrels of black powder stand on timber racks under a brick barrel-vault, the door is nailed with copper so nothing in the room can strike a spark, and the only light comes through a glazed lamp-box in the wall, fed from a passage outside. Everything in it is flammable; everything in it is, in a sense, a weapon. One stray IGNIS in here ends the evening: the whole cell detonates, and so do its neighbours.",
+      "build": [
+        "Shell: 12.0 × 12.0 m cell on the 0.30 m slab; outer walls 1.20 m thick English-bond brick (bricks 0.23 × 0.11 × 0.07 m, 10 mm lime joints), leaving a 9.60 × 9.60 m chamber.",
+        "Vault: brick barrel-vault spanning east–west, springing at 2.40 m from a 0.15 m stone impost band, semicircular to a crown at 3.95 m (clear height 4.00 m to the soffit); vault bricks laid as headers so the soffit reads as rings.",
+        "Floor: close-laid oak boards 0.20 m wide over the slab, fixed with oak treenails (no iron) — readable dowel dots 25 mm every 0.60 m; a 1.60 m wide canvas runner down the aisle.",
+        "Racks: two double-sided timber racks, each 7.20 m long × 1.20 m deep × 1.80 m tall, oak posts 0.15 × 0.15 m, rails 0.10 × 0.12 m, three tiers; barrels chocked with wedges; 1.20 m aisles between racks and walls.",
+        "Barrels: 48 whole barrels (0.55 m dia × 0.75 m tall, 8 hoops of split hazel, not iron) on the racks plus 12 half-kegs (0.40 m dia × 0.50 m) on the floor by the door; three variants of stencilled cooper's mark; a single barrel mesh at ≤ 400 tris instanced.",
+        "Door: the north archway (2.60 × 2.88 m) holds a two-leaf oak door 0.10 m thick, face-studded with 120 copper nails (25 mm domed heads) in a lozenge grid, bronze strap-hinges, bronze drop-bar; opening swings outward.",
+        "Lamp-box: in the east wall at 2.20 m, a glazed niche 0.60 × 0.80 m, two sheets of glass with a 0.30 m air gap, a lamp behind it in the outer passage — the only light source, warm, dim, seen through glass.",
+        "Ventilators: six zig-zag vent slots 0.10 × 0.45 m through the walls at 0.60 m and 3.20 m (baffled so no ember can fly straight in), copper mesh faces.",
+        "Blind arches: the east and west kit archways are filled with 0.24 m brick infill panels, recessed 0.10 m, with a stone relieving arch — authored as separate breakable meshes.",
+        "South archway: open, with a 0.60 m high canvas-covered sand bank (fire-sand) either side and two leather water buckets on pegs.",
+        "Clutter: copper powder scoop and measure on a barrel head, canvas slippers on a peg (no hob-nails allowed), a dropped trail of spilt powder along the aisle as a decal.",
+        "Soot and wear: soot bloom above the lamp-box on the vault, damp tide-mark 0.40 m up the brick, polished bronze on the drop-bar, powder-black grime in floorboard joints."
+      ],
+      "sockets": [
+        "Door, north face: kit archway 2.60 × 2.88 m holding a two-leaf copper-nailed door (openable, petard-breakable).",
+        "Archway, south face: 2.60 × 2.88 m, open, into the lighting passage.",
+        "Blind archway, east face: 2.60 × 2.88 m filled with a breakable 0.24 m brick panel.",
+        "Blind archway, west face: 2.60 × 2.88 m filled with a breakable 0.24 m brick panel.",
+        "Lamp-box window, east wall: 0.60 × 0.80 m glazed niche, sill 2.20 m, 1.8 m north of the east archway.",
+        "Vent ×6: 0.10 × 0.45 m zig-zag slots, two per east/west/south wall, at 0.60 m and 3.20 m.",
+        "Hazard socket: the magazine volume itself — one trigger box 9.6 × 9.6 × 4.0 m, blast radius 18 m (1.5 cells) when any open flame, spark or IGNIS enters it."
+      ],
+      "materials": [
+        {
+          "name": "Magazine brick",
+          "hex": "#7A4A36",
+          "notes": "tiling 1 m (English bond); roughness 0.9; individual bricks vary ±8% in value; soot to #3F2A22 over the lamp-box and vault crown."
+        },
+        {
+          "name": "Lime mortar",
+          "hex": "#B7AC92",
+          "notes": "joint colour in the brick set; recessed 4 mm in the normal; damp-darkened band 0.40 m high."
+        },
+        {
+          "name": "Oak (racks, floor)",
+          "hex": "#6A5034",
+          "notes": "tiling 2 m boards; roughness 0.75 unwaxed; treenail dots; powder-black grime in joints and around barrel bases."
+        },
+        {
+          "name": "Cooper's oak (barrels)",
+          "hex": "#7C5A38",
+          "notes": "1024² barrel atlas; staves vary in value; hazel hoops #8A6E48 with bark flecks; chalk cooper's marks in #D2C7AC."
+        },
+        {
+          "name": "Copper nail-heads",
+          "hex": "#9A5B38",
+          "notes": "metallic 1, roughness 0.35 on the domes; tarnish toward #4F5A48 in the recesses (dull patina, not glowing verdigris)."
+        },
+        {
+          "name": "Powder black",
+          "hex": "#1E1C1A",
+          "notes": "grainy, roughness 0.95; used for spill decals and the open keg contents; a faint sheen speck in the normal."
+        }
+      ],
+      "gameplay": [
+        "Any flame, spark or IGNIS inside the trigger volume detonates the magazine: 18 m blast radius (reaches 1.5 cells in every direction), destroys the vault, the racks and every breakable within the radius, and kills anyone inside the chamber. Musket fire into the room counts as a spark.",
+        "The copper-nailed door is the safe way in; a petard on it breaks it in one blast but the petard's own flash has a 40% chance to reach the nearest keg (a Petardier near here is a threat to everyone).",
+        "Half-kegs are carry-able plunder-weapons (bulk 3, can be lit and thrown as a bomb with a 4 m radius); stealing them is legal and unwise.",
+        "Spilt powder trails on the floor are fuses: a spark at one end runs along the decal at 1.5 m/s to whatever is at the other end.",
+        "The blind archways are the Age's breach points — a petard or a lit half-keg against them opens a new 2.60 × 2.88 m hole into the neighbouring cell."
+      ],
+      "budget": "≤ 25k tris for the cell (shell and vault 7k, racks 3k, 60 instanced barrels/kegs at ≤ 400 = counted once 0.4k + instances, door 2k, lamp-box and vents 1k); brick, oak and mortar tiling sets; one 1024² barrel atlas; door on the shared 2048² trim sheet.",
+      "concept": "concept/powder/powder-magazine.svg"
+    },
+    {
+      "slug": "kunstkammer",
+      "name": "The Kunstkammer",
+      "zone": "Keep",
+      "footprint": "12 × 12 m, one cell",
+      "height_m": 4.6,
+      "summary": "A cabinet-of-curiosities room: glazed shelving cases, a stuffed crocodile hung from the ceiling, globes, and specimen jars by the hundred.",
+      "description": "The Kunstkammer is the family's argument that it owns the whole world, arranged by size. Shelved cases line the walls from floor to cornice, glazed doors over coral, horn, shells and things in jars; two great globes stand on the floor like planets that have come down to be admired; and a stuffed crocodile hangs by chains from the ceiling, looking at you as though it has seen thieves before. Almost everything here is small, dear and breakable — the best plunder by weight in the palace, and the most delicate. Specimen jars are full of spirit, which burns.",
+      "build": [
+        "Shell: 12.0 × 12.0 m on the 0.30 m slab; walls 0.60 m thick, 4.60 m clear; flat ceiling of painted walnut coffers (1.20 × 1.20 m, 0.15 m deep) on 0.25 × 0.30 m beams running east–west.",
+        "Wall cases: continuous walnut cases around all four walls between archways and windows, 0.45 m deep; a closed cupboard base 0.90 m tall, then a glazed upper case to 3.60 m with five shelves at 0.50 m spacing; glazed doors 0.60 × 2.60 m with 6 × 3 small panes.",
+        "Case cornice: moulded walnut cornice 0.25 m at 3.60–3.85 m, carrying a crest of curios (antlers, a narwhal tusk 2.20 m long laid along the north cornice, two turtle shells).",
+        "Crocodile: a stuffed Nile crocodile 3.40 m long, hung belly-down from the central beam on two iron chains (0.60 m long) so its underside is at 3.20 m — above any head, below the ceiling; body a tapered capsule 0.45 m wide, jaws slightly open, glass eyes.",
+        "Globes: pair of celestial and terrestrial globes, each 0.70 m dia sphere in a walnut stand with a brass meridian ring and a horizon ring at 0.95 m, total height 1.25 m; stand on four turned legs.",
+        "Central table: walnut table 2.40 × 1.10 × 0.82 m on bulbous turned legs, green baize top; carries the curiosity-cabinet (Kunstschrank) socket at its centre and two astrolabe/instrument sockets.",
+        "Specimen jars: glass jars in three sizes (0.12, 0.20, 0.32 m tall; wax-and-bladder lids) with spirit fill and floating specimens as swap-able cards; ~140 instances along the shelves.",
+        "Windows: two windows on the south face either side of the archway, 1.40 × 3.00 m, sills 0.80 m, leaded quarries; heavy murrey curtains.",
+        "Archways: four kit archways 2.60 × 3.31 m, centred; the case run stops 0.30 m short of each archway and returns into it.",
+        "Light: one iron candle-crown (1.00 m dia, 8 candles) hanging at 3.0 m between the crocodile's tail and the table — warm key light; plus window moonlight on the south.",
+        "Soot and wear: soot above the crown on the coffers, glass case doors fingerprinted at the lock height (1.10 m), the crocodile dusty on its back and polished on the snout where visitors touch it."
+      ],
+      "sockets": [
+        "Archway ×4, one centred on each face: 2.60 × 3.31 m.",
+        "Window ×2, south face: 1.40 × 3.00 m, sill 0.80 m, centres 3.40 m either side of the archway centreline.",
+        "Loot socket: central table — Cabinet of Curiosities (0.95 × 0.55 m footprint) plus two small plunder slots (astrolabe, nautilus cup) on the table ends.",
+        "Loot sockets ×12: case shelves at 1.10–2.60 m, each a 0.55 × 0.40 m slot for small plunder, behind glazed doors (door must be opened or broken).",
+        "Hang socket: two ceiling hooks on the central beam at ±1.00 m for the crocodile chains (can be cut; crocodile drops).",
+        "Hide socket ×4: the closed cupboard bases under the cases, 1.20 × 0.45 × 0.90 m, doors open."
+      ],
+      "materials": [
+        {
+          "name": "Black walnut (cases)",
+          "hex": "#3B2A1E",
+          "notes": "trim sheet; roughness 0.45 waxed; paler worn edges at 1.10 m where doors are opened; dust grey #5A5245 on top surfaces of the cornice."
+        },
+        {
+          "name": "Lime plaster",
+          "hex": "#D2C7AC",
+          "notes": "tiling 2 m; only seen above the cornice and in window reveals; soot toward ceiling."
+        },
+        {
+          "name": "Case glass",
+          "hex": "#7E9377",
+          "notes": "thin forest glass, transparent, faint green; fingerprint smudge mask at 1.0–1.3 m; shatter mesh per door."
+        },
+        {
+          "name": "Crocodile hide",
+          "hex": "#4E4A36",
+          "notes": "1024² unique; scute plates in the normal, roughness 0.8; dust-grey on the back, polished dark on the snout; belly paler #8A8266."
+        },
+        {
+          "name": "Globe gesso",
+          "hex": "#BFAE86",
+          "notes": "printed gores (12) on a 1024² map; varnish yellowed; roughness 0.35; brass rings #8D7340 (not gold — instruments on the globe are fixtures)."
+        },
+        {
+          "name": "Baize",
+          "hex": "#3E4A30",
+          "notes": "table top only; felt, roughness 1.0; tiling 0.5 m; worn shiny patch at centre."
+        },
+        {
+          "name": "Specimen spirit",
+          "hex": "#B6A56A",
+          "notes": "translucent yellowed liquid in jars, roughness 0.05; burns with madder flame when ignited."
+        }
+      ],
+      "gameplay": [
+        "Case glass shatters on any hit or thrown item (loud); smashing a case door is faster than opening it (3 s lockpick) and triggers alarm.",
+        "Specimen jars hold spirit: IGNIS or a broken lantern turns a shelf run into a fire that spreads along the cases at 0.5 m/s and destroys the small plunder on it.",
+        "The crocodile's chains can be cut: it drops 3.2 m, pins anyone below (stun 2 s) and blocks the table aisle as a 3.4 m obstacle.",
+        "Globes are rollable physics objects (not plunder); pushed through an archway they block pursuit for a few seconds.",
+        "The closed cupboard bases are hide sockets; the cuirassier's patrol walks the table loop, so a hider watches his boots go by."
+      ],
+      "budget": "≤ 25k tris for the cell (shell and coffers 5k, case run 7k, crocodile 2.5k, globes 2k, table 1k, jars instanced 0.3k + instances, candle-crown 1k); walnut trim sheet shared with the Long Gallery; 1024² crocodile and globe sets.",
+      "concept": "concept/powder/kunstkammer.svg"
+    }
+  ],
+  "enemies": [
+    {
+      "slug": "partisan-guard",
+      "name": "Palace Guard",
+      "role": "patrol",
+      "zones": [
+        "CurtainWall",
+        "OuterBailey"
+      ],
+      "height_m": 1.85,
+      "summary": "A liveried halberdier-turned-doorman: murrey doublet, crested morion, and a partisan that is two-thirds ceremony and one-third very sharp.",
+      "description": "The Palace Guard walks the terraces and the courts in the family's murrey livery, a morion on his head and a partisan on his shoulder, looking the way a palace wishes to look at night. He is mostly ornament, and he knows it, which makes him diligent. He walks a route, lifts his lantern to anything odd, and shouts before he strikes — the partisan's wide blade gives him reach through a doorway, and he will hold one alone rather than chase you into the dark. A cheap man to fool, and an expensive one to kill quietly.",
+      "silhouette": "A narrow upright figure with a crested helmet — the morion's tall comb and upturned brim make a boat shape on the head — a flared, slashed pair of breeches, and a pole 1.2 times his height rising over the shoulder with a wide leaf-and-wings blade. The pole is what you see first.",
+      "build": [
+        "Body: standard 1.80 m human proportions, slim; morion comb brings total height to 1.85 m.",
+        "Morion: blued steel, skull a half-ellipsoid 0.24 m long × 0.20 m wide × 0.13 m tall, raised comb 0.07 m high running front-to-back, brim upturned to points at front and back (0.40 m tip to tip), brass-headed lining rivets (12, 1.5 cm dia) around the base; cheek-pieces 0.12 m, tied under the chin.",
+        "Gorget: small steel gorget 0.28 m wide at the collar, two lames, over a white linen falling collar 0.08 m deep.",
+        "Doublet: murrey livery wool, close-fitting, 12 small buttons down the front, peascod point at the belly; shoulder wings 0.05 m rolls; sleeves slashed in 5 vertical panes per upper arm showing a paler lining (#8A5A5E).",
+        "Sash: murrey-and-black silk sash 0.18 m wide over the right shoulder to the left hip, knotted with a 0.30 m fringed tail.",
+        "Breeches: full paned trunk-hose, 0.55 m wide at the widest (hips), panes 0.06 m, to mid-thigh; canions to the knee; wool stockings; latchet shoes with 3 cm heel and ribbon rosettes.",
+        "Partisan: ash haft 2.20 m long, 32 mm dia, octagonal, with two murrey tassels at the socket; blued-steel head 0.42 m long — central blade 0.07 m wide, two upturned flukes 0.20 m across — etched (no gilt), socket with 2 langets 0.30 m nailed to the haft; iron ferrule 0.08 m.",
+        "Sword: plain cut-and-thrust sword on a hanger at the left hip, blade 0.85 m, simple swept hilt in blued steel, black leather scabbard with a steel chape.",
+        "Belt: black leather waist-belt 4 cm with a steel buckle, carrying a lantern hook and the hanger.",
+        "Lantern: small horn lantern 0.12 × 0.12 × 0.22 m on the belt hook; warm light through horn panes, becomes a held prop in 'raise_lantern'.",
+        "Wear: soot on the lantern top and the right glove; polish on the partisan haft where the hands grip at 0.9 and 1.4 m; morion brim scratched to bright steel at the points."
+      ],
+      "materials": [
+        {
+          "name": "Murrey livery wool",
+          "hex": "#5B3036",
+          "notes": "broadcloth; roughness 0.9; fine twill in the normal at 4 mm; lighter pane lining #8A5A5E; darker in folds and under the sash."
+        },
+        {
+          "name": "Blued steel",
+          "hex": "#34404E",
+          "notes": "metallic 1, roughness 0.35; highlight toward #6E7E92 on edges; rubbed to bright #9AA3A8 on points and brim edge; soot in rivet recesses."
+        },
+        {
+          "name": "Linen collar",
+          "hex": "#D2C7AC",
+          "notes": "matte; slightly grimy at the fold."
+        },
+        {
+          "name": "Black leather",
+          "hex": "#221C18",
+          "notes": "belt, shoes, scabbard; roughness 0.55; cracked at bends; worn brown #4A3A2C at edges."
+        },
+        {
+          "name": "Ash haft",
+          "hex": "#8A7254",
+          "notes": "straight grain along 2.2 m; hand-polished darker bands at the grip points."
+        },
+        {
+          "name": "Horn pane",
+          "hex": "#B09A62",
+          "notes": "translucent lantern panes, emissive warm when lit; not gold, not metallic."
+        }
+      ],
+      "rig": {
+        "skeleton": "Humanoid (Unity Mecanim) 22 bones + extras: morion (child of head, detachable), sash_01–03 chain (cloth sim or spring), breech_L/R (flare jiggle), partisan prop bone on right hand with IK target for the left hand, lantern prop bone on belt socket / left hand.",
+        "animations": [
+          "idle_shoulder — 4 s loop, partisan sloped on the right shoulder, weight shifts, left hand on sword hilt.",
+          "patrol_walk — 1.2 m/s, partisan at the slope, measured parade step.",
+          "raise_lantern — 0.8 s, unhooks the lantern and lifts it to eye height, head leans in.",
+          "alert_turn — 0.6 s, head snaps toward the noise first, body follows, partisan comes down to the port.",
+          "challenge_shout — 1.2 s, partisan grounded, free hand raised, mouth open (barks 'Who goes?').",
+          "charge_run — 3.8 m/s, partisan levelled at hip height.",
+          "thrust — 0.7 s, long thrust with 1.6 m reach through a doorway, 0.3 s recovery.",
+          "sweep — 1.0 s, horizontal cut with the flukes, knocks carried loot out of hands.",
+          "archway_tilt — 0.5 s, dips the partisan to 45° to pass any archway under 2.9 m (the upright partisan tops out at ~2.6 m).",
+          "hit_react — 0.4 s, recoil; morion can fly off.",
+          "death_fall — 1.6 s, collapses backwards, partisan clatters free."
+        ]
+      },
+      "breakables": [
+        "Morion: knocked off by a head hit (spins off as a physics prop); bare head shows cropped hair and a linen coif.",
+        "Partisan haft: snaps at the middle under a heavy blow, leaving a 1.1 m staff; the head half is a pick-up weapon.",
+        "Lantern: shatters on a hit — spills a small fire decal (flame is madder) and leaves him in the dark.",
+        "Sash: tears free on a grab, drops as cloth.",
+        "No loot on him beyond a purse (15 coin) on the belt."
+      ],
+      "budget": "≤ 8k tris (body and clothes 5k, morion 0.6k, partisan 0.5k, sword/lantern 0.9k, sash 0.4k); one 2048² set (Albedo, Normal, ORM); partisan and lantern on a shared 1024² props sheet.",
+      "dont": [
+        "Don't gild the morion or partisan — orpiment is only for stealable gold; use etched steel.",
+        "Don't make the livery red: murrey is a dark mulberry-brown, not madder, which means fire.",
+        "Don't give him plate beyond the morion and gorget; he is a doorman, not a knight.",
+        "Don't let the partisan tower over archways — it slopes on the shoulder (top ~2.35 m) and tilts to pass under 2.59 m.",
+        "Don't make him comic — ceremonial, but a real threat at door range."
+      ],
+      "concept": "concept/powder/partisan-guard.svg"
+    },
+    {
+      "slug": "musketeer",
+      "name": "Musketeer",
+      "role": "ranged",
+      "zones": [
+        "CurtainWall",
+        "InnerWard"
+      ],
+      "height_m": 1.92,
+      "summary": "A matchlock musketeer in a broad hat with a forked rest, a bandolier of twelve apostles and a lit match — slow, deafening, and wreathed in smoke.",
+      "description": "The Musketeer is the household's argument at forty paces. He carries a matchlock taller than his shoulder and a forked rest to lay it on, a bandolier of twelve wooden powder chargers that click like teeth when he walks, and a slow match smouldering at both ends. He is slow — the volley takes him the better part of a minute to load — but it is heard across the palace, it fills the room with smoke, and it hits like a thrown door. His lit match is a travelling spark: keep him away from the magazine, or make sure he is near it and you are not.",
+      "silhouette": "A wide-brimmed felt hat with a plume over a buff coat, a long straight musket line (1.55 m) slanting over the shoulder, a forked stick in the other hand, and a ring of hanging bottles at chest height. Two tiny glowing points (the match ends) are the first thing you see in the dark.",
+      "build": [
+        "Body: 1.80 m human, broader-shouldered; the hat crown brings total height to 1.92 m.",
+        "Hat: black felt, crown a truncated cone 0.16 m tall × 0.18 m dia at top, brim 0.46 m dia, cocked up on the left side with a pin; one dyed ostrich plume (murrey, 0.35 m) curling to the back.",
+        "Buff coat: thick oil-tanned leather coat to mid-thigh, 8 mm thick, skirts in 4 panels, short wings on the shoulders; closed with hooks; murrey wool sleeves showing from the elbow.",
+        "Bandolier: black leather baldric 5 cm over the left shoulder carrying 12 turned-wood powder chargers ('apostles', each 0.10 m tall × 0.035 m dia, with leather caps on cords), plus a priming flask (0.14 m, horn), a bullet bag (0.12 × 0.10 m) and a spare match coil.",
+        "Musket: matchlock, overall 1.55 m; barrel 1.15 m, octagonal-to-round, 22 mm bore, blued steel; walnut stock with a fish-tail butt; serpentine (S-shaped cock, 0.10 m) holding the match; flat lockplate 0.18 × 0.04 m; iron ramrod under the barrel.",
+        "Rest: forked musket rest, ash staff 1.30 m, iron U-fork 0.08 m at the top, iron spike at the foot; hangs from the left wrist by a cord loop.",
+        "Match: slow match (hemp cord 8 mm) looped in the left hand, lit at both ends — two glowing madder ember points (emissive) with a thin smoke ribbon.",
+        "Breeches and boots: murrey wool breeches, soft brown leather bucket-top boots to the knee (top turned down 0.15 m) with spur leathers but no spurs.",
+        "Sword: short, plain sword on a waist-belt, blade 0.70 m, iron hilt.",
+        "Collar: a plain falling linen band collar over the buff coat.",
+        "Wear: powder-black smudges on the right cheek, right hand and the lock; buff coat darkened with rain on the shoulders; soot on the muzzle 0.10 m back from the end."
+      ],
+      "materials": [
+        {
+          "name": "Buff leather",
+          "hex": "#A48A60",
+          "notes": "oil-tanned; roughness 0.8; suede nap; darkened and stiff at creases; rain-dark on shoulders #7C6848."
+        },
+        {
+          "name": "Murrey livery wool",
+          "hex": "#5B3036",
+          "notes": "sleeves and breeches; roughness 0.9; twill normal."
+        },
+        {
+          "name": "Black felt",
+          "hex": "#221E1A",
+          "notes": "hat; roughness 1.0; soft brim with a wavy edge; dusty grey on top."
+        },
+        {
+          "name": "Black walnut",
+          "hex": "#3B2A1E",
+          "notes": "musket stock; roughness 0.5; worn pale at the wrist and butt; powder-black around the lock."
+        },
+        {
+          "name": "Blued steel",
+          "hex": "#34404E",
+          "notes": "barrel and lock; roughness 0.35; muzzle sooted to powder black; bright rub on the serpentine."
+        },
+        {
+          "name": "Turned wood chargers",
+          "hex": "#6A5034",
+          "notes": "apostles; painted dark caps; each slightly different value."
+        },
+        {
+          "name": "Match ember",
+          "hex": "#C4542E",
+          "notes": "madder, emissive 2.0 at the two tips only; smoke ribbon is a card."
+        }
+      ],
+      "rig": {
+        "skeleton": "Humanoid (Unity Mecanim) 22 bones + extras: hat and plume_01–02 (spring), bandolier ring of 12 charger bones (short springs so they swing and click), coat skirt_F/B/L/R, musket prop bone (right hand, left-hand IK), rest prop bone (left hand / ground), match bone (left hand) with 2 ember sockets.",
+        "animations": [
+          "idle_carry — 4 s loop, musket shouldered, rest trailing from the left wrist, blows on the match.",
+          "patrol_walk — 1.1 m/s, chargers swing and click.",
+          "alert_turn — 0.7 s, head first, then the musket comes off the shoulder.",
+          "plant_rest — 0.8 s, spikes the rest into the floor at 1.2 m.",
+          "aim — 1.5 s, lays the barrel in the fork, blows the match, fits it to the serpentine; a readable wind-up the player can dodge.",
+          "fire_volley — 0.4 s, huge muzzle flash (madder), recoil 0.15 m, spawns a 4 m smoke cloud that blocks sight for 6 s.",
+          "reload — 9 s, five readable beats: charger, ball, ram, prime, match; he is vulnerable throughout.",
+          "club_melee — 0.9 s, reverses the musket and swings the butt when a thief is within 1.5 m.",
+          "draw_sword — 0.6 s, drops the musket for the sword when out of time.",
+          "hit_react — 0.4 s, recoil; hat may fly off.",
+          "death_fall — 1.8 s, falls forward; match drops still lit (spark source)."
+        ]
+      },
+      "breakables": [
+        "Hat: knocked off by a head hit; plume detaches separately.",
+        "Match: a hit to the left hand drops the lit match — it stays a spark source on the floor for 20 s (near a powder trail or keg, that is a fuse).",
+        "Bandolier: a cut or IGNIS on the chest pops chargers — each hit on the bandolier has a 30% chance to flash one apostle (small 0.8 m burst, damages him).",
+        "Rest: breaks at the fork under a heavy blow; he then fires unrested (half accuracy).",
+        "Loot: none; the powder chargers can be taken as throwable grenado-lite (1 st)."
+      ],
+      "budget": "≤ 8k tris (body and coat 4.8k, hat and plume 0.6k, musket 0.9k, rest 0.2k, bandolier with 12 chargers 1.2k, sword 0.3k); one 2048² set; musket and rest on the shared props sheet.",
+      "dont": [
+        "Don't put a flintlock on him — c. 1620 this is a matchlock with a visible serpentine and lit cord.",
+        "Don't let the hat push him over 1.92 m; the crown is short and the brim wide.",
+        "Don't colour anything but the match ends and the muzzle flash madder.",
+        "Don't give him armour; the buff coat is all he has.",
+        "Don't make the smoke a particle smear — it is a dense grey-white cloud that hangs for seconds."
+      ],
+      "concept": "concept/powder/musketeer.svg"
+    },
+    {
+      "slug": "cuirassier",
+      "name": "Cuirassier",
+      "role": "heavy",
+      "zones": [
+        "Keep",
+        "InnerWard"
+      ],
+      "height_m": 1.95,
+      "summary": "A cuirassier dismounted into the cabinet rooms: blackened three-quarter armour, a closed burgonet, a brace of wheellock pistols and a heavy sword.",
+      "description": "The Cuirassier is the last of the armoured men, a heavy horseman who has been told to walk the Kunstkammer at night and has been sulking about it for years. He is blackened plate from crown to knee, heavy and slow and very nearly bullet-proof, with a pair of wheellocks in his holsters — no burning match to warn you, two shots, and then the sword. He does not chase so much as arrive. Avoid him; if you cannot, make him turn, because the plate that saves his front has nothing to say about the backs of his knees.",
+      "silhouette": "A broad, dark, armoured column: a closed helmet with a peaked falling visor and a comb, huge layered shoulder-lames, a long skirt of steel tassets to the knee, and big soft leather boots below. Two pistol butts jut from the hip holsters like ball-ended antlers.",
+      "build": [
+        "Body: heavy build, 1.80 m man in 0.06–0.10 m of armour and padding; burgonet comb brings the total to 1.95 m; shoulders 0.62 m wide across the pauldrons.",
+        "Burgonet (close helmet): blackened steel skull 0.26 m long × 0.22 m wide, roped comb 0.05 m high, falling buff and peaked visor with 3 horizontal sight-slits (1 cm) and a grille of breaths, neck lames ×3 behind; plume holder empty; 18 dome rivets.",
+        "Gorget: two-plate gorget 0.34 m wide, rolled edge.",
+        "Cuirass: breastplate with a medial ridge and a peascod point, 0.42 m wide × 0.46 m tall; back-plate; rolled neck and arm edges; a single bullet-proof 'proof mark' dent on the breast (shallow 2 cm dimple).",
+        "Pauldrons: large asymmetric pauldrons of 6 lames each, 0.28 m wide, overlapping down to the elbow; couters with fan wings; vambraces full.",
+        "Tassets: long laminated tassets from waist to knee, 12 lames each (lames 4 cm), 0.26 m wide at the top, ending in poleyn knee-cops with a small fan.",
+        "Gauntlets: fingered gauntlets with long cuffs 0.14 m, blackened.",
+        "Lower legs: no greaves — tall soft brown leather riding boots to over the knee (top 0.60 m above the floor, turned down), square toes, butterfly spur leathers.",
+        "Pistols ×2: wheellock pistols 0.62 m overall, barrel 0.45 m blued, walnut stock ending in a 0.07 m ball pommel with a steel cap; external wheel 0.04 m dia on the lockplate; carried butt-forward in saddle holsters (black leather, 0.40 m) hung from the sword belt either side.",
+        "Sword: heavy broadsword (Pallasch), blade 0.95 m × 4 cm, basket-ish shell hilt in blackened steel, black leather scabbard on a hanger at the left.",
+        "Sash: a murrey field sash 0.16 m wide, tied at the right hip, bow with 0.35 m tails — the only colour on him.",
+        "Wear: armour blackened (fire-blued to near black) with bright steel showing only on the edges of the lames, the ridge of the breastplate and the visor peak; rust spots at joints; soot and a powder burn across the right gauntlet."
+      ],
+      "materials": [
+        {
+          "name": "Blackened steel",
+          "hex": "#23282E",
+          "notes": "metallic 1, roughness 0.5 (oiled black); every edge rubbed to #7E8A94 in a 3–5 mm band; rust spots #5A3A24 at lame overlaps."
+        },
+        {
+          "name": "Blued steel (pistols)",
+          "hex": "#34404E",
+          "notes": "pistol barrels and wheel; roughness 0.35; muzzles sooted."
+        },
+        {
+          "name": "Riding-boot leather",
+          "hex": "#5E4430",
+          "notes": "soft, roughness 0.7; slouched folds at the ankle; mud to 0.10 m."
+        },
+        {
+          "name": "Black leather",
+          "hex": "#221C18",
+          "notes": "holsters, straps, scabbard; buckles in blackened steel."
+        },
+        {
+          "name": "Black walnut",
+          "hex": "#3B2A1E",
+          "notes": "pistol stocks; pale wear at the ball pommel."
+        },
+        {
+          "name": "Murrey livery wool",
+          "hex": "#5B3036",
+          "notes": "field sash; slightly shiny silk-wool; tails cloth-simmed."
+        }
+      ],
+      "rig": {
+        "skeleton": "Humanoid (Unity Mecanim) 22 bones + extras: visor (hinge), tasset_L/R_01–03 (stiff chain following the thigh), pauldron_L/R (driven by upper-arm twist), sash_tail_01–02, pistol_L/R holster sockets and a right-hand pistol prop bone, sword prop bone.",
+        "animations": [
+          "idle_heavy — 5 s loop, weight settles, visor slit tracks the room slowly.",
+          "patrol_walk — 0.9 m/s, heavy steps with an armour rattle on each footfall.",
+          "alert_turn — 1.0 s, turns the whole torso (he cannot turn his head in the helmet).",
+          "draw_pistol — 0.5 s, pulls a wheellock butt-first from the holster.",
+          "pistol_fire — 0.3 s, no warning glow; flash and 1.5 m smoke puff; two per engagement then draws the sword.",
+          "draw_sword — 0.7 s.",
+          "overhead_cut — 1.1 s, heavy committed swing, 1.9 m reach, breaks carried fragile loot on hit.",
+          "shoulder_barge — 0.8 s, 2 m lunge, knocks a thief flat and a carried item loose.",
+          "archway_duck — 0.4 s, dips the head 0.10 m when passing any archway under 2.10 m (none in his zones; kept for safety).",
+          "stagger_back — 1.2 s, when hit in the back of the knees; he kneels and is exposed.",
+          "death_fall — 2.0 s, topples forward with a crash of plate."
+        ]
+      },
+      "breakables": [
+        "Visor: a heavy blow flips the visor open, exposing the face (head hits then do full damage).",
+        "Pauldron (left): the strap can be cut; the pauldron falls away, exposing the arm.",
+        "Pistols: each fired pistol is dropped on the floor as a pick-up (a wheellock the player can take — one shot).",
+        "Sash: tears free (cloth).",
+        "Armour damage state: two stages of dents and scratched-bright gouges on the breastplate (decal set)."
+      ],
+      "budget": "≤ 12k tris (armour 7k, body/boots 2.5k, helmet 1k, pistols 0.8k, sword 0.4k, sash 0.3k); one 2048² set; pistols on the shared props sheet.",
+      "dont": [
+        "Don't make the armour shiny silver — it is blackened, bright only at the edges.",
+        "Don't give him full-leg plate; below the knee he is in boots.",
+        "Don't put gold on him; etched lines only.",
+        "Don't let the tassets clip the boots in the walk — the lames are a stiff chain on their own bones.",
+        "Don't give his pistols a match: wheellocks have a wheel, no glowing cord."
+      ],
+      "concept": "concept/powder/cuirassier.svg"
+    },
+    {
+      "slug": "petardier",
+      "name": "Petardier",
+      "role": "special",
+      "zones": [
+        "InnerWard",
+        "Keep"
+      ],
+      "height_m": 1.76,
+      "summary": "A sapper carrying a bell-shaped bronze petard bolted to a plank, and a belt of grenados — he blows doors, and himself, near magazines.",
+      "description": "The Petardier is the household's locksmith for doors it does not have the key to. He carries a bronze petard — a bell of powder bolted to a heavy oak plank — which he hangs on any door you have barred, lights, and walks briskly away from; and a belt of grenados, which he throws after you when you run. He is an engineer and a coward in equal parts, which keeps him alive most nights. He is the Age's explosive special: his fuses are hazards to everyone, near a magazine he is a catastrophe, and the petard on his back goes off if you hit it with anything hot.",
+      "silhouette": "A short, stooped figure bowed under a big square plank on his back with a bell-shaped bronze pot fixed to it (mouth outward), a round leather cap, and a row of dark spheres on his belt. The plank and bell make a unique square-plus-dome hump at shoulder height.",
+      "build": [
+        "Body: 1.76 m, slightly stooped (spine 8° forward under load), stocky legs; cap is flat, adds nothing to height.",
+        "Cap: soft leather sapper's cap, hemispherical 0.20 m dia with a 0.04 m turned-up band and ear flaps tied up.",
+        "Jerkin: thick padded canvas-and-leather jerkin, sleeveless, 12 quilting rows, scorched at the hem; over a murrey wool shirt with sleeves rolled to the elbow.",
+        "Leather apron: heavy leather front apron 0.50 × 0.60 m, from waist to knee, scorched and pitted by sparks.",
+        "Petard: bronze bell 0.30 m tall × 0.26 m mouth dia, walls 1.5 cm, cast with 2 raised mouldings and a touch-hole with a fuse stub; bolted mouth-down to the madrier by 4 iron straps.",
+        "Madrier (plank): oak plank 0.60 × 0.60 × 0.08 m with a hanging iron hook at the top and 2 iron bands; carried on the back by leather shoulder straps (5 cm) so the bell points behind him.",
+        "Grenados ×5: cast-iron spheres 0.09 m dia, each with a wooden fuse plug and 0.06 m fuse, hung from a waist-belt in leather cups.",
+        "Linstock: short linstock 0.60 m (ash) with a slow match coiled round it, one lit end (madder ember) — tucked in the belt when walking.",
+        "Tools: sapper's mallet (0.30 m) and a coil of fuse cord on the right hip; a water-flask (leather, 0.2 m) on the left.",
+        "Legs: canvas breeches to the knee, grey wool stockings, heavy shoes with no hob-nails (magazine rule), canvas gaiters.",
+        "Face: soot-blackened face and forearms, missing eyebrows; singed beard.",
+        "Wear: soot and scorch everywhere, bronze bell polished on the rim where it is handled; powder-black spill on the apron."
+      ],
+      "materials": [
+        {
+          "name": "Petard bronze",
+          "hex": "#8A6A3E",
+          "notes": "cast bronze, metallic 1, roughness 0.45; dark brown patina #4A3A26 in the mouldings, rubbed brighter on the rim; never orpiment-gold."
+        },
+        {
+          "name": "Oak plank",
+          "hex": "#6A5034",
+          "notes": "rough-sawn, roughness 0.85; iron straps #3A3A36; scorched on the lower edge."
+        },
+        {
+          "name": "Padded canvas",
+          "hex": "#8A7E62",
+          "notes": "quilted jerkin; roughness 0.95; soot to #3E382E at the hem and pockets."
+        },
+        {
+          "name": "Scorched leather",
+          "hex": "#4A3628",
+          "notes": "apron, cap, straps; pitted burn flecks #1E1C1A."
+        },
+        {
+          "name": "Cast iron",
+          "hex": "#2F2E2C",
+          "notes": "grenados and straps; roughness 0.7; flaky."
+        },
+        {
+          "name": "Murrey livery wool",
+          "hex": "#5B3036",
+          "notes": "shirt sleeves; soot-greyed."
+        },
+        {
+          "name": "Fuse ember",
+          "hex": "#C4542E",
+          "notes": "madder emissive at the linstock tip and lit grenado fuses only."
+        }
+      ],
+      "rig": {
+        "skeleton": "Humanoid (Unity Mecanim) 22 bones + extras: madrier/petard prop bone on the upper chest (backpack socket, detachable to hand sockets), strap_L/R, apron_01–02, grenado_01–05 belt sockets, linstock prop bone (belt / right hand), cap.",
+        "animations": [
+          "idle_burdened — 4 s loop, shrugs the plank higher, checks the fuse.",
+          "walk_burdened — 1.0 m/s, stooped, plank sways.",
+          "alert_turn — 0.7 s, head first, then he backs away from the thief rather than toward.",
+          "plant_petard — 3.0 s, unslings the madrier, hooks it on a door/wall socket at 1.2 m, lights the fuse; the fuse burns 4 s.",
+          "flee_run — 3.6 m/s, hunched, hands over his head (runs from his own petard).",
+          "throw_grenado — 1.0 s, lights from the linstock and lobs underarm; lands and rolls, 3 s fuse, 3 m radius.",
+          "cower — loop, crouched with arms over the head, when a blast is imminent.",
+          "hit_react — 0.4 s; a hit to the back risks the petard (see breakables).",
+          "self_detonate — 1.5 s, the petard goes off on his back: 4 m blast; he does not survive.",
+          "death_fall — 1.6 s, falls sideways under the plank."
+        ]
+      },
+      "breakables": [
+        "Petard: hit by fire, a spell like IGNIS, or musket shot — lights and explodes after 1.5 s on his back (4 m radius); inside the magazine it detonates the magazine.",
+        "Grenados: each can be knocked off the belt as a live pick-up (unlit), a throwable for the player (1 st).",
+        "Madrier straps: cut them and the petard drops (unlit) and becomes a carry-able breaching charge (bulk 6).",
+        "Linstock: knocked from his hand it stays lit on the floor for 15 s (spark source).",
+        "Cap and apron: burn away in a fire state (charred decal set)."
+      ],
+      "budget": "≤ 8k tris (body and clothes 4.4k, petard and madrier 1.2k, grenados 0.6k, apron/tools/linstock 1.2k, cap 0.2k); one 2048² set; petard/grenados on the shared props sheet so the dropped charge reuses them.",
+      "dont": [
+        "Don't give the petard a modern bomb look (no round black fizz-bomb) — it is a bronze bell on a plank.",
+        "Don't make him a soldier in armour; he is an engineer in scorched leather.",
+        "Don't make the bronze orpiment gold — it is brown bronze with patina.",
+        "Don't let the plank exceed shoulder height (top at 1.65 m) — he passes archways without ducking.",
+        "Don't light every grenado — only the one in hand burns."
+      ],
+      "concept": "concept/powder/petardier.svg"
+    }
+  ],
+  "items": [
+    {
+      "slug": "curiosity-cabinet",
+      "name": "Cabinet of Curiosities",
+      "worth": 1200,
+      "bulk": 12,
+      "fragility": 4,
+      "artifact": false,
+      "dimensions": "0.95 × 0.55 × 1.30 m (W × D × H), on its own stand",
+      "summary": "An ebony Kunstschrank of forty drawers on a turned stand — two carriers, very dear, and it rains curios if you drop it.",
+      "description": "The Kunstschrank is a whole Kunstkammer shrunk to a piece of furniture: ebony and walnut, forty little drawers, gilt mounts, painted panels, and in every drawer something rare enough to have been worth a ship. It is far too heavy for one thief and far too delicate for two — tilt it and the drawers slide, drop it and they burst open and scatter coral, cameos and small silver over the floor. It is the best haul in the Age that a crew can actually carry, and it will make them walk slowly.",
+      "build": [
+        "Carcass: rectangular box 0.95 × 0.55 × 0.80 m (drawer body), ebony-veneered walnut, 0.02 m veneer edges showing; sits on a stand.",
+        "Stand: walnut table-stand 0.95 × 0.55 × 0.42 m on six turned bulb legs (0.07 m dia, bulb 0.12 m) with a stretcher 0.05 m above the floor.",
+        "Crown: stepped cornice 0.08 m with a small architectural pediment 0.40 m wide × 0.08 m, topped by a gilt finial ball 0.05 m dia.",
+        "Doors: two front doors 0.45 × 0.72 m hinged at the sides, opening on 40 drawers (8 rows × 5, each 0.17 × 0.08 m face, gilt ring-pull 1.5 cm); doors modelled as separate open/closed meshes.",
+        "Door panels: each door has an inset painted panel 0.30 × 0.45 m (landscape on copper, in soft earths) inside an ebony moulding.",
+        "Mounts: gilt-bronze corner mounts (8, each 0.06 m) and a central lock escutcheon 0.07 m; keyhole.",
+        "Carry handles: two drop handles on the sides, iron-core gilt bails 0.14 m wide, at 1.00 m height — the grab points.",
+        "Wear: gilt rubbed back to bronze on the escutcheon and handles; ebony dull at the edges; dust in the pediment."
+      ],
+      "materials": [
+        {
+          "name": "Ebony veneer",
+          "hex": "#1A1714",
+          "notes": "roughness 0.35, faint straight figure; lighter #3A3430 at worn edges; 1024² set."
+        },
+        {
+          "name": "Black walnut",
+          "hex": "#3B2A1E",
+          "notes": "stand and inner carcass; roughness 0.5."
+        },
+        {
+          "name": "Gilt bronze",
+          "hex": "#C9A227",
+          "notes": "stealable gold — orpiment; mounts and handles; roughness 0.3; worn to #8A6A3E bronze on high points."
+        },
+        {
+          "name": "Painted copper panel",
+          "hex": "#6E7A62",
+          "notes": "oil landscape in muted green-earths; varnish crackle in the normal."
+        },
+        {
+          "name": "Drawer bone inlay",
+          "hex": "#DCD2BA",
+          "notes": "vellum-toned bone stringing around each drawer face, 3 mm."
+        }
+      ],
+      "grab": "Two carriers: one at each side drop-handle (gilt bails at 1.00 m height, 0.95 m apart). Tilting past 25° lets drawers slide out.",
+      "breaks": "Above 4 m/s impact the carcass splits into 5 pieces (two sides, top with pediment, drawer bank, stand) and 12–18 drawers spill 6–10 small curios (coral branch, cameo, silver medal, shell) as loose loot worth 20–40 coin each; the stand breaks off at the legs.",
+      "budget": "≤ 5k tris (dual-carry); 1024² set; drawers instanced (one drawer mesh, 40 instances); broken-state pieces share the set.",
+      "concept": "concept/powder/curiosity-cabinet.svg"
+    },
+    {
+      "slug": "venetian-mirror",
+      "name": "Venetian Mirror",
+      "worth": 700,
+      "bulk": 6,
+      "fragility": 2,
+      "artifact": false,
+      "dimensions": "0.80 × 0.08 × 1.10 m (W × D × H)",
+      "summary": "A large Venetian glass mirror in a walnut-and-gilt frame — two hands, extremely fragile, and it shows you the guard behind you.",
+      "description": "Murano plate, tin-and-mercury silvered, in a walnut frame with a gilt inner moulding: a thing so valuable in 1620 that it cost more than the painting next to it. It is big, flat, two-handed and extremely fragile — the slightest knock and it goes in a sheet of shards and a sound heard two rooms off. While you carry it, it is also a mirror: you will see what is following you.",
+      "build": [
+        "Glass: flat plate 0.62 × 0.92 × 0.006 m with a 2 cm bevel all round; mirror shader (live reflection at LOD0, probe at LOD1).",
+        "Frame: walnut frame 0.09 m wide × 0.05 m deep, cushion (ogee) moulding, mitred corners; outer size 0.80 × 1.10 m.",
+        "Inner gilt moulding: 0.02 m gilt bead-and-reel slip between the glass and walnut.",
+        "Crest: pierced carved crest 0.40 × 0.14 m on the top rail — acanthus scroll, gilt.",
+        "Back: pine backboard 0.01 m with 4 turn-buttons and a hanging iron ring at the top; 2 cm deep total.",
+        "Corner mounts: small gilt rosettes 0.04 m at each corner of the frame front.",
+        "Wear: gilt rubbed on the crest and lower corners where it is lifted; silvering foxed at the edges in an 3–5 cm band."
+      ],
+      "materials": [
+        {
+          "name": "Mirror silvering",
+          "hex": "#A8ABA2",
+          "notes": "metallic 1, roughness 0.08; foxing mask #5E5F58 near the edges; faint green edge tint from the glass."
+        },
+        {
+          "name": "Forest window glass (edge)",
+          "hex": "#7E9377",
+          "notes": "visible only at the bevel; transparent green."
+        },
+        {
+          "name": "Black walnut",
+          "hex": "#3B2A1E",
+          "notes": "frame; roughness 0.4 waxed; straight figure along each rail."
+        },
+        {
+          "name": "Gilt",
+          "hex": "#C9A227",
+          "notes": "stealable gold, orpiment; crest, slip and rosettes; worn to walnut on the crest tips."
+        },
+        {
+          "name": "Pine backboard",
+          "hex": "#9A8260",
+          "notes": "unfinished; roughness 0.9; iron ring #34404E."
+        }
+      ],
+      "grab": "Two hands on the side rails at 0.45 m and 0.65 m from the bottom (held upright, glass facing out); carrying it face-forward gives the carrier a rear-view reflection.",
+      "breaks": "Above 2 m/s the glass shatters into 8–12 shards (4 large wedges from the centre, the rest slivers) that fall out of the frame and stay on the floor as crunch-hazard debris; the frame survives as one piece (worth 90 coin, bulk 3).",
+      "budget": "≤ 3k tris (two-hand); 1024² set; shattered glass as a pre-fractured 12-piece mesh.",
+      "concept": "concept/powder/venetian-mirror.svg"
+    },
+    {
+      "slug": "brass-astrolabe",
+      "name": "Astrolabe",
+      "worth": 320,
+      "bulk": 1.5,
+      "fragility": 8,
+      "artifact": false,
+      "dimensions": "0.24 × 0.03 × 0.30 m (W × D × H) including the throne and ring",
+      "summary": "A gilt-brass planispheric astrolabe with rete, plates and alidade — sturdy, and it dents before it breaks.",
+      "description": "An astrolabe is the sky in your hand — a brass disc engraved with the stars, a pierced rete that turns over it, and a sighting rule on the back — and this one was gilt by a Nuremberg maker so that it would look as expensive as it was. It is one-handed, dense, and sturdy; you can drop it and it will only dent. Hit it hard enough and the rete snaps loose, and then it is only a very handsome plate.",
+      "build": [
+        "Mater: disc 0.22 m dia × 0.012 m thick with a raised rim (limb) 0.015 m wide graduated in 360 degree ticks and 24 hour letters.",
+        "Throne: decorative throne 0.07 m tall on top of the mater, pierced scrollwork, joined to the shackle.",
+        "Shackle and ring: shackle 0.02 m, suspension ring 0.05 m dia, 5 mm stock.",
+        "Plate: engraved climate plate inside the limb (flat, texture-only lines: almucantars and azimuths).",
+        "Rete: pierced star-map disc 0.19 m dia × 0.002 m, with a zodiac ring offset from centre and 20 flame-shaped star pointers; separate mesh, rotates.",
+        "Pin and horse: central pin 5 mm dia with a wedge (the 'horse') in a horse-head shape, 0.03 m.",
+        "Rule: front rule 0.19 m, and alidade on the back 0.20 m with two sighting vanes 0.015 m tall.",
+        "Wear: gilt rubbed to brass on the rim, the throne and the ring; small dents on the limb edge; engraving dark with grime."
+      ],
+      "materials": [
+        {
+          "name": "Gilt brass",
+          "hex": "#C9A227",
+          "notes": "stealable gold (orpiment) — the whole face; metallic 1, roughness 0.25; engraving lines filled dark #3A2E18."
+        },
+        {
+          "name": "Worn brass",
+          "hex": "#A07E3E",
+          "notes": "where the gilt has gone: rim, throne, ring; roughness 0.35."
+        },
+        {
+          "name": "Engraving grime",
+          "hex": "#3A2E18",
+          "notes": "in the cut lines and pierced edges; ambient occlusion–driven."
+        },
+        {
+          "name": "Steel pin",
+          "hex": "#34404E",
+          "notes": "blued pin and horse wedge; tiny."
+        }
+      ],
+      "grab": "One hand by the ring and throne, or palm-under the mater; hangs from the belt by the ring.",
+      "breaks": "Dents (normal-map decal) at 5–8 m/s; above 8 m/s the rete and rule snap free as 2 pieces and the mater survives: 3 pieces total, worth drops to 200.",
+      "budget": "≤ 1.5k tris (hand-held); 1024² set with engraving in albedo and normal; rete uses alpha-cut on a flat quad plus a rim ring.",
+      "concept": "concept/powder/brass-astrolabe.svg"
+    },
+    {
+      "slug": "silver-tureen",
+      "name": "Silver Service Tureen",
+      "worth": 260,
+      "bulk": 3,
+      "fragility": 6,
+      "artifact": false,
+      "dimensions": "0.46 × 0.30 × 0.36 m (W × D × H) with lid, finial and ladle",
+      "summary": "A silver tureen with a domed lid and a ladle — the lid pops off at the slightest excuse.",
+      "description": "The tureen is the centrepiece of the silver service, an oval pot of hammered silver on four lion's feet with a domed lid and a ladle that sticks out of a notch like a flag. It is a respectable haul, a comfortable two-hand carry, and treacherous in one respect: the lid pops off at any jolt, clangs on the floor, and rolls away making the noise of a small bell. Hold the lid, or leave it.",
+      "build": [
+        "Bowl: oval bowl 0.40 × 0.26 m at the rim, 0.18 m deep, hammered surface, everted rim 0.01 m.",
+        "Feet: four cast lion's-paw feet 0.05 m tall on a shaped skirt.",
+        "Handles: two loop handles 0.10 m wide at the short ends, cast scroll with a leaf thumb-piece.",
+        "Lid: domed oval lid 0.40 × 0.26 m × 0.08 m high with a ladle notch 0.03 m wide at one end; separate physics object.",
+        "Finial: cast pomegranate finial 0.05 m on the lid.",
+        "Ladle: silver ladle 0.30 m, bowl 0.07 m dia, stem resting in the notch; separate physics object.",
+        "Engraving: a coat of arms (lozenge 0.08 m) engraved on each long side — texture-only.",
+        "Wear: tarnish grey-brown in the hammer marks and under the handles; bright polish on the dome and rim."
+      ],
+      "materials": [
+        {
+          "name": "Sterling silver",
+          "hex": "#B8B4A8",
+          "notes": "metallic 1, roughness 0.2 polished; hammer facets in the normal; tarnish #6A665C in recesses — silver is not orpiment, no gilt."
+        },
+        {
+          "name": "Silver tarnish",
+          "hex": "#6A665C",
+          "notes": "AO-driven in the paw feet, handle joints, engraving."
+        },
+        {
+          "name": "Bright polish",
+          "hex": "#DAD7CE",
+          "notes": "highlight band on the dome and rim."
+        },
+        {
+          "name": "Soup residue",
+          "hex": "#5A4A30",
+          "notes": "inside the bowl only, dried; visible when the lid is off."
+        }
+      ],
+      "grab": "Both hands on the end loop handles (0.46 m apart); the lid pops off on any carrier bump over 1.5 m/s unless the second hand is on the finial.",
+      "breaks": "Does not shatter; above 6 m/s the bowl dents (mesh blend shape) and the lid, ladle and one foot fly off: 4 pieces, each separately stealable (lid 60 coin, ladle 40 coin); a jolt over 1.5 m/s pops only the lid.",
+      "budget": "≤ 3k tris (two-hand); 1024² set; lid and ladle separate meshes on the same set.",
+      "concept": "concept/powder/silver-tureen.svg"
+    },
+    {
+      "slug": "nautilus-cup",
+      "name": "Nautilus Cup",
+      "worth": 1600,
+      "bulk": 1,
+      "fragility": 2.5,
+      "artifact": true,
+      "dimensions": "0.20 × 0.12 × 0.34 m (W × D × H)",
+      "summary": "A pearly nautilus shell in a silver-gilt mount on a sea-monster stem — the most valuable, most fragile thing in the palace.",
+      "description": "The Nautilus Cup is the Age's crown jewel: a real shell from the far side of the world, stripped to its pearl, mounted in silver-gilt on a stem of a triton riding a sea-monster, and never once drunk from. It is small, light, and so fragile that sneezing near it is a gamble. It is also the most valuable thing in the palace, and the family will know within the hour that it has gone.",
+      "build": [
+        "Shell: nautilus shell 0.18 m long × 0.10 m wide × 0.15 m tall (log-spiral, 1.5 visible turns), outer layer stripped to nacre, thin 3 mm wall; aperture facing up-forward as the cup's mouth.",
+        "Rim mount: silver-gilt band 0.015 m around the lip with a cresting of 12 small scallop-shaped teeth.",
+        "Straps: three vertical silver-gilt straps (0.012 m wide) holding the shell from the foot-cup to the rim, each with a hinged cartouche.",
+        "Crest: a small gilt figure of Neptune 0.06 m tall on the shell's volute, holding a trident.",
+        "Stem: cast triton 0.09 m riding a coiled sea-monster, silver with gilt highlights.",
+        "Foot: domed round foot 0.11 m dia × 0.03 m, embossed with waves and shells, gilt.",
+        "Wear: gilt rubbed at the rim and foot edge; nacre scratched faintly; tarnish in the embossing."
+      ],
+      "materials": [
+        {
+          "name": "Nacre",
+          "hex": "#D8CFC0",
+          "notes": "iridescent pearl — use a thin-film shader with a pale rose-green shift; roughness 0.15; growth lines in the normal; the outer tiger-stripe left as a thin band #8A6A4E near the aperture."
+        },
+        {
+          "name": "Silver-gilt",
+          "hex": "#C9A227",
+          "notes": "stealable gold, orpiment; mounts, crest, foot; roughness 0.25; rubbed to silver #B8B4A8 on high points."
+        },
+        {
+          "name": "Silver",
+          "hex": "#B8B4A8",
+          "notes": "stem and under-gilt showing through; tarnish #6A665C in recesses."
+        },
+        {
+          "name": "Tarnish",
+          "hex": "#6A665C",
+          "notes": "embossing recesses only."
+        }
+      ],
+      "grab": "One hand around the stem (triton) at 0.08 m above the foot; the other hand must not be carrying anything else or fragility halves.",
+      "breaks": "Above 2.5 m/s the shell shatters into 10–14 nacre shards and falls out of the mount; the mount survives as 2 pieces (foot-and-stem, rim band with straps) — worth drops to 220 coin; the artifact is lost.",
+      "budget": "≤ 1.5k tris (hand-held); 1024² set; nacre thin-film shader; pre-fractured shell mesh.",
+      "concept": "concept/powder/nautilus-cup.svg"
+    }
+  ]
+}

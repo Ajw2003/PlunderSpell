@@ -24,6 +24,13 @@ namespace RogueAi.EditorTools
         private const string PrefabDirectory = "Assets/_Project/Prefabs/Enemies";
         private const string RosterPath = "Assets/_Project/Data/Enemies/EnemyRoster.asset";
 
+        /// <summary>
+        /// How far an enemy's lowest vertex may sit from its own origin before it reads as floating
+        /// or sunk in play. Shared with <c>ScaleInvariantTests</c> so the tool that repairs a prefab
+        /// and the test that judges it cannot disagree about what "repaired" means.
+        /// </summary>
+        public const float FootTolerance = 0.10f;
+
         /// <summary>One enemy's tuning and the zones it garrisons.</summary>
         private readonly struct EnemySpec
         {
@@ -144,12 +151,16 @@ namespace RogueAi.EditorTools
             float scale = spec.StandingHeight / localHeight;
             instance.transform.localScale = Vector3.one * scale;
 
+            // Not every model is exported feet-on-origin (ArcRevenant's lowest point is 0.154 m up),
+            // so measure where the geometry actually is and move it, rather than trusting the export.
+            GroundModel(instance);
+
             float height = spec.StandingHeight;
             float radius = Mathf.Max(0.3f, localRadius * scale);
 
             // A CapsuleCollider's numbers are local, so they are the *unscaled* measurements; the
             // transform scale above then carries them to the same metres as `height`/`radius`.
-            // The models are exported feet-on-origin, so the collider is centred on half its height.
+            // GroundModel has put the feet on the origin, so the collider is centred on half its height.
             var capsule = instance.AddComponent<CapsuleCollider>();
             capsule.radius = radius / scale;
             capsule.height = localHeight;
@@ -177,6 +188,76 @@ namespace RogueAi.EditorTools
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(instance, path);
             Object.DestroyImmediate(instance);
             return prefab;
+        }
+
+        /// <summary>
+        /// Moves the model's children up or down so the lowest thing it draws sits on the root's own
+        /// origin, and returns the world-space distance moved. The root itself stays put, so the
+        /// components on it (collider, agent, guard) and every spawner that places the root on the
+        /// floor keep working unchanged. Measures real geometry, not <c>Renderer.bounds</c> — see
+        /// <see cref="PrefabGeometry"/> for why the bounds cannot be trusted on a rigged mesh.
+        /// </summary>
+        public static float GroundModel(GameObject root)
+        {
+            if (!PrefabGeometry.TryMeasureVerticalExtent(root, out float lowest, out _))
+            {
+                return 0f;
+            }
+
+            float worldShift = root.transform.position.y - lowest;
+            float localShift = worldShift / Mathf.Max(0.0001f, root.transform.lossyScale.y);
+
+            foreach (Transform child in root.transform)
+            {
+                child.localPosition += new Vector3(0f, localShift, 0f);
+            }
+
+            return worldShift;
+        }
+
+        /// <summary>
+        /// Grounds the enemy prefabs that already exist, in place, without re-forging them. A re-forge
+        /// regenerates all ten and would discard the hand edits made since (commit 7a3ec27 alone
+        /// touched every one), so this repairs only the prefabs outside <see cref="FootTolerance"/>
+        /// and leaves everything else on them untouched. Safe to run repeatedly: a prefab already
+        /// inside the tolerance is skipped.
+        /// </summary>
+        [MenuItem("Tools/Plunderspell/Ground Enemy Prefabs In Place")]
+        public static string GroundExistingPrefabs()
+        {
+            var report = new System.Text.StringBuilder();
+
+            foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { PrefabDirectory }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                GameObject contents = PrefabUtility.LoadPrefabContents(path);
+
+                try
+                {
+                    PrefabGeometry.TryMeasureVerticalExtent(contents, out float before, out _);
+                    float offset = before - contents.transform.position.y;
+
+                    if (Mathf.Abs(offset) <= FootTolerance)
+                    {
+                        report.AppendLine($"{contents.name,-16} lowest {offset,+7:F3} m  within tolerance, left alone");
+                        continue;
+                    }
+
+                    GroundModel(contents);
+                    PrefabGeometry.TryMeasureVerticalExtent(contents, out float after, out _);
+                    PrefabUtility.SaveAsPrefabAsset(contents, path);
+                    report.AppendLine($"{contents.name,-16} lowest {offset,+7:F3} m  grounded, now " +
+                                      $"{after - contents.transform.position.y,+7:F3} m");
+                }
+                finally
+                {
+                    PrefabUtility.UnloadPrefabContents(contents);
+                }
+            }
+
+            AssetDatabase.SaveAssets();
+            Debug.Log($"Plunderspell: grounded enemy prefabs in place.\n{report}");
+            return report.ToString();
         }
 
         /// <summary>

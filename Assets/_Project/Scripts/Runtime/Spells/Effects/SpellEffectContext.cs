@@ -50,7 +50,19 @@ namespace RogueAi.Spells
         public float Power => SpellTuning.PowerMultiplier(Volume);
 
         /// <summary>Effect radius after the volume multiplier.</summary>
-        public float Radius(float baseRadius = SpellTuning.DefaultEffectRadius) => baseRadius * Power;
+        public float Radius() => Radius(SpellTuning.DefaultEffectRadius);
+
+        public float Radius(float baseRadius) => baseRadius * Power;
+
+        /// <summary>How far an aimed spell reaches at this volume.</summary>
+        public float AimRange => SpellTuning.AimRange * Power;
+
+        /// <summary>The target of this type under the caster's crosshair, or null.</summary>
+        public T Aimed<T>() where T : class =>
+            SpellTargeting.FindAimed<T>(Origin, Direction, AimRange, SpellTuning.AimConeDegrees, CasterTransform, TargetLayerMask);
+
+        /// <summary>The point the crosshair lands on, for spells that burst there.</summary>
+        public Vector3 AimPoint => SpellTargeting.AimPoint(Origin, Direction, AimRange, CasterTransform);
 
         /// <summary>True when what resolved is a misfire rather than the intended spell.</summary>
         public bool IsMisfire => SpellCatalogue.IsMisfire(Spell);

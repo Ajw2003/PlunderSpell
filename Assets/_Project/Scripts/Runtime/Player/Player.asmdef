@@ -6,7 +6,8 @@
         "RogueAi.Items",
         "RogueAi.Voice",
         "RogueAi.Spells",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Plunderspell.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

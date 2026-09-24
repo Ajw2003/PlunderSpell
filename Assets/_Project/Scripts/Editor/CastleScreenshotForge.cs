@@ -215,40 +215,12 @@ namespace RogueAi.EditorTools
             return 1;
         }
 
+        /// <summary>Delegates to the shared capture path; see <see cref="SceneScreenshot"/>.</summary>
         private static void RenderFrom(Vector3 position, Quaternion rotation, bool isOrthographic,
             float orthographicSize, string filePath)
         {
-            var cameraGo = new GameObject("CastleScreenshotCamera");
-            cameraGo.transform.SetPositionAndRotation(position, rotation);
-
-            var camera = cameraGo.AddComponent<Camera>();
-            camera.clearFlags = CameraClearFlags.SolidColor;
-            camera.backgroundColor = new Color(0.06f, 0.06f, 0.08f);
-            camera.orthographic = isOrthographic;
-            camera.orthographicSize = orthographicSize;
-            camera.fieldOfView = 70f;
-            camera.nearClipPlane = 0.05f;
-            camera.farClipPlane = 1000f;
-
-            var renderTexture = new RenderTexture(k_CaptureWidth, k_CaptureHeight, 24);
-            camera.targetTexture = renderTexture;
-            camera.Render();
-
-            RenderTexture previousActive = RenderTexture.active;
-            RenderTexture.active = renderTexture;
-
-            var texture = new Texture2D(k_CaptureWidth, k_CaptureHeight, TextureFormat.RGB24, false);
-            texture.ReadPixels(new Rect(0f, 0f, k_CaptureWidth, k_CaptureHeight), 0, 0);
-            texture.Apply();
-
-            RenderTexture.active = previousActive;
-            File.WriteAllBytes(filePath, texture.EncodeToPNG());
-
-            Object.DestroyImmediate(texture);
-            camera.targetTexture = null;
-            renderTexture.Release();
-            Object.DestroyImmediate(renderTexture);
-            Object.DestroyImmediate(cameraGo);
+            SceneScreenshot.Capture(position, rotation, isOrthographic, orthographicSize, filePath,
+                k_CaptureWidth, k_CaptureHeight);
         }
 
         private static void SetGroundVisible(GameObject ground, bool isVisible)

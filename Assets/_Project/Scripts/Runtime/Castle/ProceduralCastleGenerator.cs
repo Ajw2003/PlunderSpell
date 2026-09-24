@@ -539,7 +539,14 @@ namespace RogueAi.Castle
                 if (go == null)
                     continue;
                 if (Application.isPlaying)
+                {
+                    // Destroy only lands at the end of the frame, and the next castle is generated
+                    // and its NavMesh baked in this same frame: without this the bake saw both
+                    // castles at once and the old walls sealed the new doorways, so every raid after
+                    // the first was largely unwalkable. Inactive objects leave physics and the bake now.
+                    go.SetActive(false);
                     Destroy(go);
+                }
                 else
                     DestroyImmediate(go);
             }

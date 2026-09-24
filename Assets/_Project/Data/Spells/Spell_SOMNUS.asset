@@ -18,4 +18,11 @@ MonoBehaviour:
   - SONUS
   - SOMNIS
   misfireId: 104
-  Description: 'Sleep. Misfire (SONUS/SOMNIS) puts the caster to sleep.'
+  HeardAs:
+  - some nus
+  - some this
+  - some nurse
+  MisfireHeardAs:
+  - sonus
+  - saunas
+  Description: Sleep. Misfire (SONUS/SOMNIS) puts the caster to sleep.

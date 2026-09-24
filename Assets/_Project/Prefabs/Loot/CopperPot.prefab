@@ -80,6 +80,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 893e65063672fd64ea526eec4a5f25c0, type: 3}
       insertIndex: -1
       addedObject: {fileID: -1047688489085833015}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 893e65063672fd64ea526eec4a5f25c0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4921910923987143191}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 893e65063672fd64ea526eec4a5f25c0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 862830804076983319}
   m_SourcePrefab: {fileID: 100100000, guid: 893e65063672fd64ea526eec4a5f25c0, type: 3}
 --- !u!23 &5014848887632378992 stripped
 MeshRenderer:
@@ -178,5 +184,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: RogueAi.Items::Item
   _followSpeed: 20
   _rotationSpeed: 10
+  _gripStrength: 180
+  _maxHoldSpeed: 14
+  _maxThrowSpeed: 18
   _damageMultiplier: 2
   _damageCooldown: 0.5
+--- !u!114 &4921910923987143191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6816389412842675621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc187acd8d1fa74f838b8e9e0030bd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootValue
+  m_item: {fileID: 11400000, guid: 2b5f2b30b465417552a86b09232744d1, type: 2}
+  m_worth: 50
+  m_displayName: Loot
+  m_isRuined: 0
+--- !u!114 &862830804076983319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6816389412842675621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _syncPosition: 1
+  _syncRotation: 1
+  _syncScale: 1
+  _syncParent: 1
+  _interpolateSettings: 7
+  _minBufferSize: 1
+  _maxBufferSize: 2
+  _characterControllerPatch: 0
+  _ownerAuth: 1
+  _interpolationTiming: 0

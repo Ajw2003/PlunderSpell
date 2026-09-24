@@ -153,7 +153,7 @@ def room_shell(bm, uv, height, stone, trim=None, floor_pigment=None,
 
 
 def crenellations(bm, uv, base_z, pigment, size=FOOTPRINT, merlon=0.9, gap=0.7, height=0.7, inset=0.15,
-                   center=(0.0, 0.0)):
+                   center=(0.0, 0.0), sides=SIDES):
     """A ring of battlement teeth (merlons) around a flat roof edge of
     `size`, centred on `center` — pass the same (x, y) used to place the
     tower/wall this caps, or every ring renders at the room origin, and
@@ -164,7 +164,9 @@ def crenellations(bm, uv, base_z, pigment, size=FOOTPRINT, merlon=0.9, gap=0.7, 
     step = merlon + gap
     n = max(1, int((size - inset * 2) // step))
     start = -half + merlon / 2
-    for side in SIDES:
+    # Only the sides that actually have a wall under them: a one-sided wall
+    # run capped on all four sides left three rows of merlons in mid-air.
+    for side in sides:
         # north/south and east/west run the same `start` formula, so
         # without a stagger every side's first tooth lands on exactly the
         # same corner point as its neighbour's first tooth (two boxes

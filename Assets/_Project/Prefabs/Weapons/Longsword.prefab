@@ -77,6 +77,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7657764312251513654}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7335962328010421568}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8570261200391488921}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 30659954981373737}
   m_SourcePrefab: {fileID: 100100000, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
 --- !u!1 &6589327813404355734 stripped
 GameObject:
@@ -91,7 +100,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6589327813404355734}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 1.5
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -145,5 +154,80 @@ MonoBehaviour:
   m_EditorClassIdentifier: RogueAi.Items::Item
   _followSpeed: 20
   _rotationSpeed: 10
+  _gripStrength: 180
+  _maxHoldSpeed: 14
+  _maxThrowSpeed: 18
   _damageMultiplier: 2
   _damageCooldown: 0.5
+--- !u!114 &7335962328010421568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6589327813404355734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b2863e9b62bfe054dde624400cad5af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootPickup
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _data: {fileID: 0}
+  _meshRenderer: {fileID: 0}
+  _brokenVfx: {fileID: 0}
+  _handLocalOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &8570261200391488921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6589327813404355734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc187acd8d1fa74f838b8e9e0030bd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootValue
+  m_item: {fileID: 0}
+  m_worth: 50
+  m_displayName: Loot
+  m_isRuined: 0
+--- !u!114 &30659954981373737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6589327813404355734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _syncPosition: 1
+  _syncRotation: 1
+  _syncScale: 1
+  _syncParent: 1
+  _interpolateSettings: 7
+  _minBufferSize: 1
+  _maxBufferSize: 2
+  _characterControllerPatch: 0
+  _ownerAuth: 1
+  _interpolationTiming: 0

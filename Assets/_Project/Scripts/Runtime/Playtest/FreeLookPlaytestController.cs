@@ -7,10 +7,10 @@ namespace RogueAi.Playtest
     /// A minimal first-person controller for playtesting: WASD, mouse look, jump, and a crouch/sprint
     /// stance that feeds the footstep noise the whole stealth game runs on.
     ///
-    /// This is a harness, not the shipping controller — that is <c>PlayerStateMachine</c>, which is
-    /// bound to the Input System's generated action asset and to a player prefab that does not exist
-    /// yet. Rather than block playability on that wiring, this gets a body into the castle so the
-    /// raid loop can actually be played and felt. Delete it once the real controller is in a prefab.
+    /// A harness, not the shipping controller: this is used by ItemGym.unity only. RaidScene carries
+    /// <c>PlayerStateMachine</c> plus <c>PlayerInputController</c>, so a behaviour change made here
+    /// does not reach the raid — see docs/Decisions.md, "Issue 9's gate belongs on the raid's player,
+    /// not only on the playtest harness".
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
     public class FreeLookPlaytestController : MonoBehaviour

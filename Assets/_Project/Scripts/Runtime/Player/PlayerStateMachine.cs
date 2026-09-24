@@ -9,11 +9,12 @@ namespace StateMachine
     // rotation is frozen so the body stays upright; PlayerWalkState/PlayerJumpState express
     // movement against world Vector3.up.
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerStateMachine : BaseStateMachine, IHealth, IChokeDamageSource
+    public class PlayerStateMachine : BaseStateMachine, IHealth, IChokeDamageSource, IPlayerBody
     {
         public float CurrentHealth => _health;
         public float MaxHealth => _maxHealth;
         public float ChokeDamage => _chokeDamage;
+        public bool IsAlive => !dead;
 
         public PlayerState PreviousState { get; set; }
 
@@ -27,7 +28,21 @@ namespace StateMachine
         public PlayerIdleState IdleState { get; set; }
         public PlayerJumpState JumpState { get; set; }
 
-        public SpellBook SpellBook { get; set; }
+        [Header("Casting")]
+        [Tooltip("Optional. Leave empty and the raid's voice casting (hold V) is used instead. " +
+                 "See docs/systems/spells.md, \"Two ways to cast\".")]
+        [SerializeField] private SpellBook _spellBook;
+
+        /// <summary>
+        /// The held spellbook, or null when the player casts by voice. Backed by a serialized field
+        /// so it can be assigned in the Inspector — an auto-property cannot be, which is why this
+        /// slot never appeared.
+        /// </summary>
+        public SpellBook SpellBook
+        {
+            get => _spellBook;
+            set => _spellBook = value;
+        }
 
         public Vector2 MovementDirection { get; set; }
 
@@ -61,6 +76,7 @@ namespace StateMachine
         [SerializeField] private float _chokeDamage = 5f; // Damage per second while holding an enemy
 
         private float _xRotation = 0f;
+        private float _yaw = 0f;
         private float _health;
         private float _maxHealth = 100;
         public bool dead;
@@ -87,12 +103,13 @@ namespace StateMachine
 
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
+            _yaw += mouseX;
 
-            CameraTransform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
-
-            // Space.Self: rotates around the transform's own up axis. With rotation frozen and
-            // standard world gravity the body stays upright, so local up matches world up.
-            transform.Rotate(Vector3.up * mouseX);
+            // Yaw turns the camera, not the body. The body is an interpolated rigidbody (so the view
+            // moves every rendered frame, not only on 50 Hz physics steps — issue #104), and
+            // interpolation overwrites any rotation set on its transform between steps. Movement,
+            // aiming, spells and melee all read the camera, so the capsule never needs to face anywhere.
+            CameraTransform.localRotation = Quaternion.Euler(_xRotation, _yaw, 0f);
         }
 
         public void Awake()
@@ -115,6 +132,11 @@ namespace StateMachine
             _rb.useGravity = true;
             _rb.freezeRotation = true;
 
+            // Without this the camera (a child of this body) only moves on physics steps: at a high
+            // frame rate the whole view judders at 50 Hz while held items glide, which reads as the
+            // items and enemies lagging and smearing (#104).
+            _rb.interpolation = RigidbodyInterpolation.Interpolate;
+
             _health = _maxHealth;
         }
 
@@ -122,17 +144,106 @@ namespace StateMachine
         {
             ChangeState(IdleState);
             AssignSpellBook(null);
+
+            Camera view = CameraTransform != null ? CameraTransform.GetComponent<Camera>() : null;
+            // isActiveAndEnabled, not enabled: a remote player's camera object is switched off by
+            // PlayerNetworkOwnership before Start, and must not claim to be this machine's player.
+            if (!LocalDecidedByNetwork && Local == null && view != null && view.isActiveAndEnabled)
+                Local = this;
+
+            Plunderspell.Core.GameServices.Initialize();
+            Plunderspell.Core.GameServices.GameState.StateChanged += OnGameStateChanged;
+            PublishHealth();
         }
 
+        /// <summary>
+        /// Resolves the spellbook: an explicit one, else one already assigned in the Inspector, else
+        /// one on this object. Null is a valid outcome and means "this player casts by voice".
+        /// </summary>
         public void AssignSpellBook(SpellBook spellBook)
         {
-            SpellBook = spellBook == null ? GetComponent<SpellBook>() : spellBook;
+            if (spellBook != null)
+            {
+                _spellBook = spellBook;
+                return;
+            }
+
+            // Only fall back to a sibling component when nothing was authored, so Start() cannot
+            // wipe an Inspector assignment the moment the scene loads.
+            if (_spellBook == null)
+            {
+                _spellBook = GetComponent<SpellBook>();
+            }
         }
+
+        /// <summary>The player this machine renders through (its camera is live). Null until one exists.</summary>
+        public static PlayerStateMachine Local { get; private set; }
+
+        /// <summary>
+        /// Asked when this machine's player dies: true when a teammate is still alive to watch.
+        /// Installed by RogueAi.Net; offline there is nobody to watch, so it is always false.
+        /// </summary>
+        public static System.Func<bool> SpectateOnDeath = () => false;
+
+        /// <summary>Raised when the local player dies. The raid treats it as a lost raid.</summary>
+        public static event System.Action LocalPlayerDied;
+
+        public bool IsLocal => Local == this;
+
+        /// <summary>Makes this body the one this machine plays as. Called by the network ownership
+        /// component when this machine turns out to own it, which can happen after Start.</summary>
+        public void ClaimLocal() => Local = this;
+
+        /// <summary>Undoes <see cref="ClaimLocal"/> when this machine turns out not to own the body.</summary>
+        public void ReleaseLocal()
+        {
+            if (Local == this)
+                Local = null;
+        }
+
+        /// <summary>
+        /// Set by the network ownership component on a networked body, so that only ownership decides
+        /// which body is this machine's. Without it, Start claimed whichever body woke first with a
+        /// live camera, and on a host that could be a friend's.
+        /// </summary>
+        public bool LocalDecidedByNetwork { get; set; }
 
         public void Die()
         {
-            ChangeState(DeadState);
             dead = true;
+            ChangeState(DeadState);
+            if (IsLocal)
+            {
+                bool spectate = SpectateOnDeath();
+                LocalPlayerDied?.Invoke();
+                // In co-op with a teammate still standing, the network layer hands the view to them
+                // and ends the raid only when everyone is down; otherwise this is a lost raid now.
+                if (!spectate && Plunderspell.Core.GameServices.GameState != null)
+                    Plunderspell.Core.GameServices.GameState.ChangeState(Plunderspell.Core.GameState.GameOver);
+            }
+        }
+
+        /// <summary>Keeps the HUD's health number in step with the body's.</summary>
+        private void PublishHealth()
+        {
+            if (IsLocal && Plunderspell.Core.GameServices.PlayerStats != null)
+                Plunderspell.Core.GameServices.PlayerStats.SetHealth(Mathf.CeilToInt(Mathf.Max(0f, _health)));
+        }
+
+        /// <summary>Setting out again after dying: a fresh body, full health.</summary>
+        private void OnGameStateChanged(Plunderspell.Core.GameState previous, Plunderspell.Core.GameState next)
+        {
+            bool freshRaid = previous == Plunderspell.Core.GameState.Lair || previous == Plunderspell.Core.GameState.GameOver;
+            if (next == Plunderspell.Core.GameState.Playing && freshRaid && dead)
+                ReviveTo(1f);
+        }
+
+        private void OnDestroy()
+        {
+            if (Plunderspell.Core.GameServices.GameState != null)
+                Plunderspell.Core.GameServices.GameState.StateChanged -= OnGameStateChanged;
+            if (Local == this)
+                Local = null;
         }
 
         public void Walk()
@@ -150,13 +261,16 @@ namespace StateMachine
             healthFraction = Mathf.Clamp01(healthFraction);
             _health = _maxHealth * healthFraction;
             dead = false;
-            ChangeState(RespawnState);
+            // Idle, not RespawnState: that state's exit ran on a thread-pool task and never landed.
+            ChangeState(IdleState);
+            PublishHealth();
         }
 
         public void TakeDamage(float damage)
         {
             if (dead) return;
             _health -= damage;
+            PublishHealth();
             if (_health <= 0)
             {
                 Die();
@@ -169,6 +283,7 @@ namespace StateMachine
             if (impactVelocity < MinVelocityForDamage) return;
 
             _health -= damage;
+            PublishHealth();
             if (_health <= 0)
             {
                 Die();
@@ -286,7 +401,10 @@ namespace StateMachine
             }
             else if (ItemManager.Instance != null && CameraTransform != null)
             {
-                ItemManager.Instance.TryMeleeSwing(CameraTransform.position, CameraTransform.forward);
+                if (!ItemManager.Instance.TryMeleeSwing(CameraTransform.position, CameraTransform.forward))
+                {
+                    ItemManager.Instance.TryFireRanged(CameraTransform.position, CameraTransform.forward);
+                }
             }
         }
 

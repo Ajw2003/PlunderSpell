@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using Player;
 using Plunderspell.Core;
 using Plunderspell.UI;
 using RogueAi.Castle;
 using RogueAi.Loot;
 using RogueAi.Playtest;
 using RogueAi.Raid;
+using StateMachine;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -197,7 +199,9 @@ namespace RogueAi.Tests
             FreeLookPlaytestController walker = MakeWalker();
             var body = walker.GetComponent<Rigidbody>();
 
-            GameServices.GameState.ChangeState(GameState.Paused);
+            // The inventory, not the pause menu: pausing now freezes time (#107), and a frozen world
+            // never reaches the physics steps this test waits on. The gate is the same for every menu.
+            GameServices.GameState.ChangeState(GameState.Inventory);
             body.linearVelocity = new Vector3(0f, 0f, 5f);
 
             yield return new WaitForFixedUpdate();
@@ -269,6 +273,81 @@ namespace RogueAi.Tests
             policy.SetWindowFocused(true);
             Assert.AreEqual(CursorLockMode.None, Cursor.lockState,
                 "Coming back to a pause menu must leave the cursor alone.");
+        }
+
+        // --- Issue 9, on the controller the raid actually uses ------------------------------------
+
+        /// <summary>
+        /// The raid's player, not the ItemGym harness: a body carrying the real
+        /// <see cref="PlayerStateMachine"/> and <see cref="PlayerInputController"/>, with the camera
+        /// transform the look path dereferences.
+        /// </summary>
+        private PlayerStateMachine MakeRaidPlayer()
+        {
+            var go = Track(new GameObject("RaidPlayer"));
+            go.AddComponent<Rigidbody>().useGravity = false;
+
+            var stateMachine = go.AddComponent<PlayerStateMachine>();
+            stateMachine.CameraTransform = Track(new GameObject("Eye")).transform;
+            stateMachine.CameraTransform.SetParent(go.transform, false);
+
+            go.AddComponent<PlayerInputController>();
+            return stateMachine;
+        }
+
+        /// <summary>
+        /// Guards the specific regression this pass fixed: issue #9 was closed against
+        /// <see cref="FreeLookPlaytestController"/>, which RaidScene does not contain, so the raid's
+        /// own player kept walking behind an open menu.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator Test_TheRaidPlayerStopsMovingWhileAMenuIsOpen()
+        {
+            PlayerStateMachine player = MakeRaidPlayer();
+
+            GameServices.GameState.ChangeState(GameState.Playing);
+            player.Move(new Vector2(0f, 1f));
+            yield return null;
+
+            Assert.AreEqual(1f, player.MovementDirection.y, 0.01f,
+                "While playing, the gate must not touch movement the input system delivered.");
+
+            GameServices.GameState.ChangeState(GameState.Paused);
+            yield return null;
+
+            Assert.AreEqual(Vector2.zero, player.MovementDirection,
+                "A paused game must clear held movement; the last delivered value was kept instead.");
+
+            GameServices.GameState.ChangeState(GameState.Playing);
+            player.Move(new Vector2(0f, 1f));
+            yield return null;
+
+            Assert.AreEqual(1f, player.MovementDirection.y, 0.01f,
+                "Returning to play must resume input without any restart logic.");
+        }
+
+        /// <summary>
+        /// The same states the cursor rule uses, asserted against the input rule, so the two cannot
+        /// drift into disagreeing about what "playing" means — a menu the cursor is free on but the
+        /// player still walks behind is exactly what #9 was.
+        /// </summary>
+        [Test]
+        public void Test_InputIsAcceptedOnlyWhilePlaying()
+        {
+            Assert.IsTrue(PlayerInputController.AcceptsInputIn(GameState.Playing));
+
+            foreach (GameState state in new[]
+                     {
+                         GameState.MainMenu, GameState.Lair, GameState.Paused,
+                         GameState.Inventory, GameState.Settings,
+                     })
+            {
+                Assert.IsFalse(PlayerInputController.AcceptsInputIn(state),
+                    $"{state} is a screen the player clicks; the world must not react to input.");
+                Assert.AreEqual(CursorLockPolicy.ShouldCapture(state),
+                    PlayerInputController.AcceptsInputIn(state),
+                    $"The cursor rule and the input rule disagree about {state}.");
+            }
         }
     }
 }

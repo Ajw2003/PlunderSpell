@@ -1,0 +1,586 @@
+import json
+
+M = lambda name, hx, notes: {"name": name, "hex": hx, "notes": notes}
+
+age = {
+    "slug": "high",
+    "name": "The High Medieval",
+    "year": "c. 1250",
+    "stratum": "II",
+    "headline": "Stone keeps and reliquaries",
+    "intro": ("My own century, and the one you will learn on — so mind it. Curtain walls of honest limestone, "
+              "spiral stairs that turn clockwise (not in your favour), and a chapel worth more than everything "
+              "around it put together. The garrison is small and well-dressed in steel; the household wakes by "
+              "degrees, a lantern here, a hound there, a knight last of all — which is precisely the order in "
+              "which you will come to regret waking them."),
+    "palette": [
+        {"name": "Limestone ashlar", "hex": "#A89F8A", "use": "curtain walls, vaults, stair drums, altar mensa"},
+        {"name": "Oak", "hex": "#5E4630", "use": "doors, portcullis timbers, drawbars, panel backs, hafts"},
+        {"name": "Mail steel", "hex": "#7C8288", "use": "hauberks, coifs, chausses — the garrison's grey"},
+        {"name": "Undyed wool", "hex": "#C4B89C", "use": "gambesons, the argent of the household arms, linen bags"},
+        {"name": "Woad blue", "hex": "#3E5470", "use": "the household's azure field — surcoats, hound coats, enamel, glass; kermes red #7E2A26 is its second tincture"},
+        {"name": "Soot", "hex": "#1E1B17", "use": "torch-smoke on vaults, crevice dirt, belly grime"},
+    ],
+    "structures": [
+        {
+            "slug": "gatehouse-portcullis", "name": "The Gatehouse", "zone": "CurtainWall",
+            "footprint": "12 × 12 m, one cell; block 9.0 × 10.0 m with two D-towers, curtain stubs east and west", "height_m": 5.2,
+            "summary": "Twin-towered gate passage with a portcullis, murder-holes in the vault and a barred pair of doors.",
+            "description": ("Here is the castle's one front door, and it has been designed by a man who assumed you would be "
+                            "rude enough to use it. Two D-shaped towers crowd a vaulted passage; a portcullis waits in its "
+                            "groove, three murder-holes squint down from the vault, and a pair of oak doors take a drawbar "
+                            "the size of a felled tree. It is also your way home: the extraction exit sits in this cell, so "
+                            "every raid ends by walking back under that portcullis and trusting nobody upstairs says TONITRUS."),
+            "build": [
+                "Passage: 2.60 m wide × 10.0 m long (north face to south face), floor on the 0.30 m slab; pointed barrel vault springing at 2.60 m, crown at 3.31 m above the floor — the Keep archway figure, so everything that walks the castle fits.",
+                "Vault mass: 0.69 m of rubble core (#7D7566) over the crown, capped by a 0.30 m deck at 4.30–4.60 m above floor; the vault intrados is 0.60 × 0.30 m ashlar voussoirs, soot-blackened over the torch.",
+                "Towers: two D-plan masses 3.2 m wide (x 1.5–4.7 and 7.3–10.5 m), round fronts projecting 1.6 m north; each holds a 1.6 × 3.2 m guard room at floor level with two arrow-loops.",
+                "Parapet: towers and gate front rise to 5.20 m above floor at merlon tops (the CurtainWall height) — 4 merlons per tower, 0.50 m wide × 0.60 m tall, 0.32 m crenels; parapet base and wall-walk at 4.60 m, joining the curtain stubs.",
+                "Portcullis: oak lattice 2.50 × 3.60 m, 6 uprights × 11 rails of 0.14 m square oak, iron straps at every crossing and 3 iron-shod points at the foot; runs in a 0.20 × 0.20 m groove at y 1.2 m cut into both jambs and up through a 0.20 m slot in the vault to the deck.",
+                "Windlass: oak drum 0.35 m dia × 1.2 m on two A-frame trestles over the slot, 4-spoke capstan wheel 0.50 m dia, hemp rope; this is the TONITRUS target.",
+                "Murder-holes: three 0.30 × 0.30 m square shafts through the vault at y 3.0, 4.2, 5.4 m, iron grilles removable; oil-scorched rims.",
+                "Doors: pair of oak leaves at y 7.0 m, each 1.30 × 3.31 m × 0.10 m, three iron strap hinges each, pointed head; drawbar 3.00 × 0.18 × 0.14 m oak slides from a 3.0 m socket in the east jamb into a 0.35 m pocket in the west.",
+                "Stair: 2.2 m newel stair in the south-east of the east tower mass, rising to the deck (reuse The Newel Stair's tread kit at 0.19 m rise).",
+                "Torch sconce: forged iron cup on a wall hook at 2.30 m above floor, y 5.6 m, west wall of the passage; soot plume up the vault.",
+                "Ashlar: coursed limestone 0.60 × 0.30 m blocks, running bond, 10 mm mortar joints raked dark; edge-wear chips on every arris below 2 m (carts, shoulders).",
+            ],
+            "sockets": [
+                "Door (archway), north face: 2.60 × 3.31 m, centred x 6.0 — the way in and the way home",
+                "Door (archway), south face: 2.60 × 3.31 m, centred x 6.0 — onto the bailey",
+                "Arrow-loop ×2, north tower faces: 0.10 × 1.10 m slit, sill 1.1 m, cross-oillet 0.40 m",
+                "Arrow-loop ×2, into the passage from each guard room at y 3.3 m: 0.10 × 1.10 m",
+                "Murder-hole ×3 in the vault at y 3.0 / 4.2 / 5.4 m: 0.30 × 0.30 m",
+                "Portcullis slot in the vault at y 1.2 m: 2.60 × 0.20 m",
+                "Stair (up), east tower: newel stair to the 4.60 m deck",
+                "Wall-walk ×2 at 4.60 m, east and west: 2.40 m wide, joining the curtain modules",
+            ],
+            "materials": [
+                M("Limestone ashlar", "#A89F8A", "Tiling 2.4 m (4 × 8 blocks), running bond; rough-honed, mid roughness 0.75; arris chipping below 2 m; lichen-free (it is inside the wall)."),
+                M("Rubble core", "#7D7566", "Only on cut faces and the vault mass: lime-mortared rubble, tiling 1.5 m, roughness 0.9."),
+                M("Oak", "#5E4630", "Portcullis, doors, drawbar, windlass: open grain along the length, 1 m tiling on a trim sheet; greasy dark wear on the drawbar ends."),
+                M("Wrought iron", "#3A3632", "Straps, hinges, grilles, portcullis shoes: blackened, roughness 0.55, rust bloom (#7A4A2A) at every nail."),
+                M("Soot", "#1E1B17", "Decal set: torch plume up the vault, murder-hole rims, a sooty band at 2.5–3.3 m along the passage."),
+                M("Torch fire", "#C4542E", "Emissive only: the sconce flame and its warm bounce; a fire cue, never a surface colour."),
+            ],
+            "gameplay": [
+                "TONITRUS at the windlass (or FRANGO on its rope) drops the portcullis: 0.9 t falling 2 m, lethal to anything under it, and it seals the extraction path until LEVO or a crew hauls it back.",
+                "Murder-holes are sight-lines and pour points: guards on the deck drop boiling oil once the house is up (3 s warning hiss, madder splash decal).",
+                "The drawbar can be LEVO-lifted quietly or FRANGO-split loudly; once barred, the inner doors need 12 st of shove to force.",
+                "The torch is the only light in the passage: IGNIS on the doors burns them in 20 s; TONITRUS's fumble puts the torch out.",
+                "Guard rooms hide one Castle Crossbowman each behind the passage arrow-loops.",
+            ],
+            "budget": "≤ 25k tris for the cell (towers 9k, passage + vault 6k, portcullis 2k, doors + drawbar 2k, windlass 1k, parapet 3k); limestone tiling set + one oak/iron trim sheet (2048²).",
+            "concept": "concept/high/gatehouse-portcullis.svg",
+        },
+        {
+            "slug": "spiral-stair", "name": "The Newel Stair", "zone": "Keep",
+            "footprint": "12 × 12 m, one cell; stair drum Ø 4.0 m outside / 2.4 m inside in the north-east corner, lobby room around it", "height_m": 4.6,
+            "summary": "A clockwise newel stair in a stone drum, linking one floor to the next — built for a right-handed defender coming down.",
+            "description": ("Behold the stair that turns clockwise, as every good castle stair does, so that the man above has "
+                            "his sword arm free and you have yours jammed against a pillar. It is a stone drum in the corner "
+                            "of a lobby, twenty-six worn treads around a single newel, with slits for light and a rope for "
+                            "your hand. It links one floor to the next, and it is where the altarpiece will be dropped, "
+                            "because it is always dropped on the stairs."),
+            "build": [
+                "Drum: cylinder 4.00 m outside diameter, 0.80 m ashlar wall, 2.40 m inside diameter; centre at (8.6, 3.4) m in the cell. Rises from the floor slab through the ceiling to the next storey (+4.90 m floor-to-floor).",
+                "Newel: solid limestone column 0.25 m dia, built in drums 0.188 m tall — each drum is carved in one piece with its tread (the period method), so the newel shows a joint every riser.",
+                "Treads: 26 wedge treads per storey, 15° each, rise 0.188 m; going 0.35 m at the wall, 0.03 m at the newel; tread 1.20 m long from newel to wall; nosing worn into a dip 0.02 m deep where feet land, pale and polished.",
+                "Handedness: ascent turns clockwise seen from above — a climber's right hand is on the newel side. Author the helix clockwise; mirroring it is the one mistake that ruins the module.",
+                "Soffit: helical underside 0.28–0.34 m below each tread line, rough-tooled, soot-streaked above the rushlight niche.",
+                "Doorways: 0.90 × 2.10 m pointed door from the lobby at the bottom (south-west of the drum) with an oak leaf 0.08 m thick and two strap hinges; matching opening at the top onto the next floor.",
+                "Slit windows ×3 in the drum wall: outer slit 0.10 × 0.90 m, splayed to 0.50 m inside, at 1.4 m and 3.6 m and one per next half-turn; iron bar across each.",
+                "Rope handrail: 40 mm hemp rope on forged iron eyes every 3 treads, 0.90 m above tread line on the outer wall; sags 3 cm between eyes.",
+                "Rushlight niche: 0.30 × 0.45 m pointed recess at 2.9 m, soot plume above.",
+                "Lobby: the rest of the cell is a plain room — 0.80 m perimeter walls, standard archways on all four faces (the north and east ones flank the drum).",
+            ],
+            "sockets": [
+                "Stair-down: bottom doorway 0.90 × 2.10 m at floor level (0.30 m) — connects the stair from the floor below",
+                "Stair-up: top landing at +4.90 m, 0.90 m wide — onto the next floor's module",
+                "Door (archway) ×4, lobby, centred on each face: 2.60 × 3.31 m",
+                "Slit window ×3 in the drum: 0.10 × 0.90 m outside",
+                "Door, drum: 0.90 × 2.10 m oak leaf (lockable)",
+            ],
+            "materials": [
+                M("Limestone ashlar", "#A89F8A", "Drum and lobby walls: curved-block variant 0.45 × 0.23 m on the drum (tiling around the circumference ×28), roughness 0.8."),
+                M("Worn tread", "#B5AC96", "Treads and newel: paler, smoother limestone, roughness 0.45 in the foot-dip, 0.75 elsewhere; polish mask along the walking line 0.3–0.9 m from the newel."),
+                M("Oak", "#5E4630", "Drum door: vertical boards, trim-sheet grain; darkened at hand height."),
+                M("Iron", "#3A3632", "Rope eyes, door straps, slit bars: blackened, rust at the wall entry."),
+                M("Rope rail", "#C4B89C", "Hemp: tube mesh with a twisted-strand normal, grubby darker band where hands slide."),
+                M("Soot", "#1E1B17", "Plume decal over the niche, soffit streaks, crevice AO boost in the tread joints."),
+            ],
+            "gameplay": [
+                "Anything dropped on the stair rolls to the bottom and takes impact every tread: the Gilded Altarpiece arrives worth 0, the Silver Ewer arrives dented.",
+                "Two players carrying a dual-carry item must go single-file: the inner (newel) carrier moves at 60 % speed on the 0.03 m going.",
+                "Enemies coming down fight at full reach; players going up take a −20 % swing arc (the newel is in the way) — the pitch's clockwise joke, made mechanical.",
+                "The slits are too narrow to leave by; the rope rail can be burned (IGNIS), after which a TONITRUS on the stair knocks a player down the helix.",
+            ],
+            "budget": "≤ 25k tris for the cell (drum + 26 treads + newel 12k, lobby shell 8k, door + rope 2k); tread/newel trim sheet 2048², limestone tiling set shared with the gatehouse.",
+            "concept": "concept/high/spiral-stair.svg",
+        },
+        {
+            "slug": "castle-chapel", "name": "The Chapel", "zone": "Keep",
+            "footprint": "12 × 12 m, one cell; nave 8.4 × 5.4 m inside, sacristy strip to the north", "height_m": 4.6,
+            "summary": "A small two-bay vaulted chapel with a painted altar, a gilded retable and five stained-glass lancets.",
+            "description": ("Here, friends, is where the money is kept, though the priest would call it something else. A "
+                            "two-bay rib-vaulted room of limewashed stone, an altar dressed in red, the gilded retable on "
+                            "top, candles either side, and five windows of coloured glass that will announce your visit "
+                            "to the entire household the moment anything is thrown near them. It is the richest room in the "
+                            "Age, and the most fragile."),
+            "build": [
+                "Nave: 8.4 m east–west × 5.4 m north–south inside 0.90 m ashlar walls (x 1.8–10.2, y 3.3–8.7 m in the cell); the rest of the cell is 0.60 m perimeter wall and a 1.8 m sacristy strip on the north.",
+                "Vault: two quadripartite bays 4.2 × 5.4 m; ribs 0.20 × 0.25 m chamfered limestone springing at 2.90 m, pointed crown at 4.30–4.50 m, carved gilt boss 0.18 m dia at each crossing; webbing limewashed.",
+                "Walls: limewash over ashlar with painted false-joint lines (0.60 × 0.30 m) in faint red ochre; a painted dado 0.30–1.50 m of kermes-red hanging-drape pattern with a woad band on top.",
+                "East lancets ×3: 0.45 m wide (centre 0.50 m), sill 1.80 m, heads at 3.90 / 4.20 / 3.90 m, pointed; stained glass in 0.22 m panes of ruby, woad and pale glass in lead cames 6 mm, a roundel medallion in each; iron saddle bars every 0.45 m.",
+                "South lancets ×2: same section, 0.45 × 2.10 m, x 4.0 and 7.0 m.",
+                "Altar: stone mensa 1.80 × 0.90 × 1.00 m on a 0.15 m step (3.4 × 1.3 m platform), kermes-red frontal cloth with woad and wool orphrey bands, hanging 0.75 m.",
+                "Retable: socket for the Gilded Altarpiece (1.10 × 0.20 × 1.60 m) standing on the back of the mensa — the plunder item IS the retable; author an empty-mensa variant for when it has been taken.",
+                "Candle stands ×2: forged iron prickets 1.30 m, tripod feet 0.30 m, drip-pan 0.24 m dia, beeswax candle 0.30 m; emissive flame.",
+                "Benches: 8 oak benches 1.6 × 0.40 m in two ranks, pegged, one tipped over for readability.",
+                "Sacristy: 10.2 × 1.8 m strip with a 0.90 × 2.10 m door into the nave (north wall, x 8.2 m); an oak vestment chest 0.9 × 0.5 × 0.7 m.",
+            ],
+            "sockets": [
+                "Door (archway), west: 2.60 × 3.31 m into the nave — the main way in",
+                "Door (archway), north and south of the cell: 2.60 × 3.31 m (north into the sacristy strip, south into the side passage)",
+                "Door (archway), east of the cell: 2.60 × 3.31 m, opens into the passage behind the altar wall, not the nave",
+                "Window ×5 (stained-glass lancets): 3 east 0.45–0.50 × 2.10–2.40 m, 2 south 0.45 × 2.10 m, sill 1.80 m",
+                "Door, sacristy: 0.90 × 2.10 m",
+                "Prop socket: retable on the mensa (Gilded Altarpiece), 2 candle stands, altar plate on the mensa front",
+            ],
+            "materials": [
+                M("Limestone", "#A89F8A", "Ribs, mensa, step, window reveals: honed, roughness 0.65, tiling 2.4 m."),
+                M("Limewash", "#CFC5AE", "Wall and web plaster over ashlar: matte 0.9 roughness, painted joint lines, candle-soot gradient toward the vault crown."),
+                M("Ruby glass", "#7E2A26", "Stained glass: translucent, emissive at night from inside candles, 0.22 m pane grid; hairline crack decals on break state."),
+                M("Woad glass", "#3E5470", "Stained glass, blue panes and roundel grounds; same shader as the ruby."),
+                M("Lead came", "#2A2622", "Cames, saddle bars, candle prickets: dull, roughness 0.6."),
+                M("Oak", "#5E4630", "Benches, sacristy door and chest: trim sheet; seat tops polished."),
+                M("Gilt (plunder)", "#C9A227", "Only on things you can steal: the retable and the vault bosses (bosses are not stealable, so keep them to a rubbed gilt trace on stone)."),
+            ],
+            "gameplay": [
+                "Each lancet shatters at 2 m/s impact (a thrown ewer does it) — the loudest single noise in the Age, waking every guard within two cells.",
+                "The retable is the Gilded Altarpiece: taking it off the mensa is silent; dropping it on the step is not.",
+                "IGNIS burns the frontal cloth and benches (candles make it easy to do by accident); the stone vault does not burn.",
+                "AURUM VOCO lights the whole east end — the altarpiece, the plate, the reliquary in the sacristy chest.",
+                "The one Household Knight posted in the Keep stands his watch here.",
+            ],
+            "budget": "≤ 25k tris for the cell (shell + vault 12k, lancets 3k, altar + step 2k, benches 4k, candle stands 1k, sacristy 3k); limestone set shared, one glass atlas 1024², one oak trim 2048².",
+            "concept": "concept/high/castle-chapel.svg",
+        },
+    ],
+    "enemies": [
+        {
+            "slug": "lantern-warden", "name": "Lantern Warden", "role": "patrol",
+            "zones": ["CurtainWall", "OuterBailey"], "height_m": 1.80,
+            "summary": "The night watch: a quilted man with a horn lantern and a glaive, walking a fixed round.",
+            "description": ("The humblest man in the household and the most useful, for he carries the only light on the "
+                            "walls. A padded wool coat, an iron kettle hat, a glaive over one shoulder and a horn lantern "
+                            "swinging in the other hand — you will see the lantern long before you see him, which is "
+                            "the whole point of him and your only advantage. He walks a round; if the lantern stops "
+                            "moving, he has heard something."),
+            "silhouette": "A warm glowing box at hip height, a broad-brimmed hat like an upturned bowl, and a pole rising 25 cm above his head — light, brim, pole, in that order.",
+            "build": [
+                "Body: standard human 1.80 m (crown of the kettle hat), eyes 1.65 m, shoulders 0.48 m wide; a stocky, slightly stooped posture.",
+                "Kettle hat: one-piece blackened iron, crown dome 0.21 m dia × 0.12 m, raised central ridge; brim 0.40 m dia sloping 10° down, rolled edge; 4 rivets for the lining band.",
+                "Arming coif: undyed wool padded hood 0.22 m wide, open face, laced at the nape; tuck the hat on top.",
+                "Gambeson: quilted wool coat to mid-thigh (hem at 0.66 m), vertical quilting channels 4 cm apart, stand collar 5 cm, front laced with leather thong (6 crossings); sleeves quilted in rings every 5 cm.",
+                "Belt: veg-tanned leather 4 cm wide at 1.03 m, iron frame buckle, belt purse 8 × 13 cm with flap, ballock knife 0.20 m in a leather sheath at the right hip.",
+                "Hose: woad-dyed wool, gartered below the knee with a 3 cm leather garter, darker from the knee down (mud).",
+                "Turnshoes: black leather, flat soles 1 cm, ankle-high, toe slightly pointed; 0.27 m long.",
+                "Glaive: 2.05 m overall; ash haft 3 cm dia, iron socket with 2 langets 0.14 m; blade 0.35 m single-edged, 6 cm deep, back fluke 5 cm; carried upright in the right hand, butt ferrule 5 cm.",
+                "Lantern: horn-paned iron box 14 × 14 × 24 cm, conical vented cap, carrying ring 5 cm; three iron frame bars per face; horn panes scraped thin; tallow candle inside. Held in the left hand at hip height, swinging.",
+                "Wear: soot on the hat brim underside, grime band along the gambeson hem, the lantern hand's sleeve scorched brown.",
+            ],
+            "materials": [
+                M("Gambeson wool", "#C4B89C", "Undyed wool, quilting channels in the normal map, roughness 0.9; grime gradient to the hem; 0.5 m tiling on a cloth trim."),
+                M("Woad hose", "#3E5470", "Wool knit, mud to the knee (darken 30 %), faint pilling noise."),
+                M("Leather", "#5A4030", "Belt, purse, sheath, shoes: roughness 0.6, cracks at bends, edges burnished lighter."),
+                M("Blackened iron", "#6F7479", "Kettle hat, glaive head, lantern frame: dark oxide with bright edges (brim rim, blade edge) and soot on the undersides."),
+                M("Ash haft", "#6B5238", "Straight grain; hand-polished band at 1.0–1.3 m."),
+                M("Horn pane", "#BFA57A", "Translucent, emissive when lit (#C4542E flame at the core); the flame and its bounce are the only madder on him."),
+                M("Skin", "#A07A5C", "Weathered, stubble on the jaw, cold-red nose tip; face read mostly by lantern under-light."),
+            ],
+            "rig": {
+                "skeleton": "Unity Humanoid (Mecanim) with extra bones: lantern_ring (child of LeftHand, 1 bone swing chain + lantern_body), glaive (prop bone on RightHand), gambeson_skirt ×4 (front/back/left/right, spring), coif_back (spring), hat (child of Head, detachable).",
+                "animations": [
+                    "idle_lantern — 3 s loop, weight shifts, lantern sways ±8°, glaive rests on the shoulder",
+                    "walk_round — 1.1 m/s patrol walk, lantern swing phase-locked to the stride",
+                    "alert_turn — 0.6 s, lantern snaps up to face height first, head follows, body last",
+                    "lantern_raise_search — 2.5 s, holds the lantern out at arm's length and sweeps 90°",
+                    "cant_glaive — 0.4 s additive, tilts the glaive 35° forward under the 2.10 m doors and the gatehouse vault ribs (tip drops to 1.70 m)",
+                    "shout_alarm — 1.2 s, cups the hand, bellows; emits a noise event",
+                    "run_to_noise — 3.4 m/s, lantern held in front, light jittering",
+                    "attack_glaive_thrust — 0.9 s, two-handed thrust, lantern set down first (0.3 s drop)",
+                    "attack_glaive_sweep — 1.1 s, wide cut at knee height",
+                    "hit_react — 0.5 s stagger, the lantern swings wildly",
+                    "death_drop_lantern — 1.6 s, falls; the lantern rolls and keeps burning 30 s",
+                ],
+            },
+            "breakables": [
+                "Kettle hat: detaches on a head hit above 6 m/s, rolls; underneath is the wool coif.",
+                "Lantern: drops when he dies or is hit on the arm; horn panes crack (damage state) at 4 m/s, and at 8 m/s it breaks and IGNIS-ignites whatever it lands in.",
+                "Glaive: drops as a physics prop (the players can use it: 3 st, two-handed).",
+                "Gambeson: two damage states — slashed (quilting torn, wool tufts) and scorched.",
+                "Loot: his purse drops 6–14 coin as a small pickup.",
+            ],
+            "budget": "≤ 8k tris (body 5.5k, glaive 0.8k, lantern 0.9k, hat 0.5k), one 2048² set (Albedo, Normal, packed ORM) + lantern emissive mask.",
+            "dont": [
+                "Don't make the lantern a modern box with glass panes — horn panes, cone cap, candle.",
+                "Don't give him plate armour or a surcoat with arms; he is a servant, not a man-at-arms.",
+                "Don't let the glaive's height drive his collider: he is 1.80 m; the glaive cants for low doors.",
+                "Don't put madder anywhere but the flame and its light.",
+            ],
+            "concept": "concept/high/lantern-warden.svg",
+        },
+        {
+            "slug": "castle-crossbowman", "name": "Castle Crossbowman", "role": "ranged",
+            "zones": ["CurtainWall", "InnerWard"], "height_m": 1.78,
+            "summary": "A hired marksman in mail coif and red padded jack, with a stirrup crossbow that takes an age to span.",
+            "description": ("A professional, which is to say a man paid by the bolt and careful with every one. He wears a "
+                            "mail coif under an iron skull cap, a red quilted jack in the household's colour, and carries "
+                            "a stirrup crossbow that will put a bolt through a door. It then takes him six long seconds, a "
+                            "foot in the stirrup and a belt hook, to span it again — which is when you run at him."),
+            "silhouette": "A grey rounded mail head on red shoulders, and the crossbow's wide horizontal prod across his hips — a T at waist height.",
+            "build": [
+                "Body: 1.78 m to the top of the skull cap; lean build, shoulders 0.46 m.",
+                "Cervellière: hemispherical iron skull cap 0.22 m dia, 0.10 m tall, worn over the coif; bright rubbed crown.",
+                "Mail coif: riveted rings 8 mm, hood with an oval face opening 0.15 × 0.17 m, mantle to the shoulders (0.24 m skirt), ventail laced across the chin with a leather thong.",
+                "Padded jack: kermes-red wool, 45° diamond quilting 4.5 cm, hip length (hem at 0.78 m), quilted sleeves with ring channels; high collar under the coif.",
+                "Belt: 4 cm leather at 1.03 m, iron buckle; spanning belt-hook (double iron claw 8 cm) hanging front-right on a 7 cm strap.",
+                "Quiver: stiff leather box 0.10 × 0.08 × 0.36 m at the right hip, two tooled bands, 12 bolts fletch-up (bolts 0.35 m, wooden fletching 4 cm).",
+                "Crossbow: oak tiller 0.72 m, composite prod 0.76 m span (horn and sinew, wrapped with leather at 4 points), hemp string, horn revolving nut 3 cm, iron tickler trigger 0.20 m under the tiller; iron stirrup 0.16 m at the front.",
+                "Carry pose: tiller angled 30° down, stirrup forward at knee height, both hands on the tiller at the waist.",
+                "Hose brown wool; ankle boots 0.17 m tall, black leather, one-button side closure.",
+                "Wear: mail rust in the coif folds, red jack faded to pink on the shoulders, a grease smear from the nut down the tiller.",
+            ],
+            "materials": [
+                M("Mail steel", "#7C8288", "Riveted mail: ring pattern in normal + opacity-free albedo, tiling 8 mm rings, roughness 0.45, rust bloom in folds."),
+                M("Kermes jack", "#7E2A26", "Quilted wool, 45° diamond channels in the normal map; sun-faded lighter on the shoulders; not madder — a deeper livery red."),
+                M("Hose wool", "#6A5A45", "Brown wool, mud to the shin."),
+                M("Leather", "#5A4030", "Belt, quiver, boots, prod bindings: roughness 0.6, cracked at the quiver mouth."),
+                M("Oak stock", "#5E4630", "Tiller: fine grain, oiled, roughness 0.4; grease stain around the nut."),
+                M("Horn prod", "#A89878", "Composite horn laminate: banded pale-dark stripes along the length, lacquered, roughness 0.35."),
+                M("Skin", "#A07A5C", "Face only, shaved; squint lines."),
+            ],
+            "rig": {
+                "skeleton": "Unity Humanoid (Mecanim) with extra bones: crossbow (prop on RightHand, IK target for LeftHand on the tiller), crossbow_string (1 bone, drawn/slack), stirrup_foot_IK target, quiver (child of Hips), belt_hook (spring), coif_mantle ×2 (spring).",
+                "animations": [
+                    "idle_ready — 3 s loop, bow held low, thumb on the nut",
+                    "walk_patrol — 1.0 m/s, bow at port",
+                    "alert_turn — 0.6 s, head first then shoulders, bow comes up",
+                    "aim_hold — 1.2 s raise to shoulder, holds up to 4 s tracking a target",
+                    "shoot — 0.3 s release, recoil kick, string snaps forward",
+                    "reload_span — 6.0 s: tip down, foot in stirrup, bend, hook the string with the belt hook, straighten, draw a bolt, seat it",
+                    "reload_interrupted — 0.8 s, abandons the span and draws his knife",
+                    "strafe_to_loop — 1.4 m/s sidestep into an arrow-loop's cover",
+                    "melee_bow_butt — 0.8 s, clubs with the tiller",
+                    "hit_react — 0.5 s",
+                    "death_forward — 1.5 s, bow skitters away",
+                ],
+            },
+            "breakables": [
+                "Crossbow: drops spanned (if it was) — a player can LEVO it and trigger one free shot.",
+                "Skull cap: detaches on a head hit above 6 m/s; coif stays.",
+                "Quiver: tears loose at 8 m/s, spilling bolts (physics props, 0 worth).",
+                "Jack damage states: slashed (quilting burst) and scorched.",
+                "Loot: purse 8–16 coin.",
+            ],
+            "budget": "≤ 8k tris (body 5.5k, crossbow 1.2k, quiver + bolts 0.7k, cap 0.3k), one 2048² set.",
+            "dont": [
+                "Don't give him a steel prod or a cranequin — composite prod and belt hook, c. 1250.",
+                "Don't use madder on the jack; it is kermes livery red, a deeper, cooler colour.",
+                "Don't make the reload fast or skippable: the six seconds are his whole weakness.",
+                "Don't draw the mail as a flat grey texture — rings must read at 3 m.",
+            ],
+            "concept": "concept/high/castle-crossbowman.svg",
+        },
+        {
+            "slug": "household-knight", "name": "Household Knight", "role": "heavy",
+            "zones": ["Keep", "InnerWard"], "height_m": 1.95,
+            "summary": "The lord's own knight in full mail, great helm and the household's arms — the one you go around.",
+            "description": ("And here, at last, is the gentleman the whole household is dressed to imitate: mail from crown "
+                            "to toe, a flat-topped great helm with a painted crest, the lord's arms on his surcoat and his "
+                            "shield. He is slow to wake and slower to turn, but he does not stop, and he does not care "
+                            "what you throw at him. Everything else in this castle can be outwitted; him, you avoid."),
+            "silhouette": "A flat-topped bucket head with a little fan on top, a long blue coat with a white chevron, and a big kite-like shield on the left — a rectangle, a chevron, a shield.",
+            "build": [
+                "Body: 1.83 m at the helm top, 1.95 m at the crest top; broad, 0.52 m shoulders, heavy-footed stance 0.30 m apart.",
+                "Great helm: flat-topped cylinder 0.25 m wide × 0.33 m tall, 5 riveted plates, cross-shaped reinforcing strap (vertical 3 cm, horizontal brow band 2 cm), two eye slits 0.11 × 0.025 m, breaths ×12 on the right cheek; worn over a mail coif and padded cap.",
+                "Crest: boiled-leather fan 0.18 m wide × 0.12 m tall on a wooden core, painted kermes with wool ribs, on a wool torse (wreath) 0.20 m long.",
+                "Hauberk: riveted mail 8 mm rings, long sleeves ending in mail mufflers (palm slit, leather palm), skirt to the knee (hem 0.47 m), split front and back for riding.",
+                "Chausses: mail leggings laced behind the calf, mail over the feet; domed plate poleyns 0.12 m dia at the knees; iron prick spurs.",
+                "Surcoat: sleeveless woad-blue wool to 0.54 m, argent (undyed wool) chevron across the chest, kermes bordure 5 cm around every edge, split at the front; belted.",
+                "Shield: heater 0.60 × 0.78 m, limewood 12 mm, gesso and paint: woad field, wool chevron, kermes bordure; leather enarmes and guige strap; worn edges show wood.",
+                "Weapon: arming sword 0.95 m (blade 0.78 m, 5 cm wide, cross 0.20 m, wheel pommel 5 cm) — or a flanged mace 0.70 m as the variant; leather scabbard on the left hip on a two-strap belt.",
+                "Belt: sword belt 4 cm at the hips, iron buckle, lace-knot scabbard hanger.",
+                "Wear: mail rust in the armpits and behind the knees, surcoat hem muddy and frayed, helm top dented once, paint chipped on the shield's lower point.",
+            ],
+            "materials": [
+                M("Mail steel", "#7C8288", "Riveted mail tiling 8 mm, roughness 0.45, rust bloom (darken + warm) in folds and armpits."),
+                M("Helm iron", "#6F7479", "Plate: dark oxide with polished highlights on the brow and crown edge; rivets bright."),
+                M("Woad field", "#3E5470", "Surcoat and shield field: wool (cloth normal) and gesso (smooth) versions; faded on the shoulders."),
+                M("Wool argent", "#C4B89C", "The chevron and crest ribs; soiled at the hem."),
+                M("Kermes gules", "#7E2A26", "Bordure, crest paint; livery red, not madder."),
+                M("Leather", "#5A4030", "Belt, scabbard, enarmes, muffler palms."),
+                M("Limewood", "#5E4630", "Shield core showing at chips and edges; the crest's wooden core."),
+            ],
+            "rig": {
+                "skeleton": "Unity Humanoid (Mecanim) with extra bones: helm (child of Head, detachable), crest (child of helm), shield (prop on LeftLowerArm with guige spring), sword/mace (prop on RightHand), scabbard (child of Hips, spring), surcoat_front ×2 / surcoat_back ×2 (spring chains, 3 bones each), hauberk_skirt ×4 (spring).",
+                "animations": [
+                    "idle_guard — 4 s loop, shield up, weight settled, helm turns slowly",
+                    "wake_slow — 2.0 s, the household wakes by degrees: he rises, takes up the shield, then the sword",
+                    "walk_heavy — 0.9 m/s, audible mail jingle every step",
+                    "alert_turn — 1.0 s, turns the whole body (he cannot turn his head in the helm)",
+                    "advance_shield — 1.4 m/s with shield forward; frontal hits deflect",
+                    "attack_overhead — 1.2 s, heavy downward cut, 0.4 s wind-up tell",
+                    "attack_shield_bash — 0.7 s, shoves 3 m, knocks carried items loose",
+                    "duck_door — 0.5 s additive, dips the crest 0.10 m under the 0.90 × 2.10 m stair and sacristy doors (0.15 m clearance; never needed for the 2.88 / 3.31 m archways)",
+                    "stagger_heavy — 0.8 s, only from 12 st impacts or TONITRUS",
+                    "helm_knocked_off — 0.9 s, clutches his head, fights on bareheaded",
+                    "death_kneel — 2.2 s, kneels, then topples; shield falls flat",
+                ],
+            },
+            "breakables": [
+                "Great helm: detaches on a head impact above 9 m/s — underneath, a mail coif and a very angry face; the helm is a 3 st physics prop.",
+                "Shield: 3 damage states (painted, split to the boss line, broken in two); falls when broken; a 4 st prop that blocks bolts if carried.",
+                "Surcoat: tear and scorch states (IGNIS burns it off in 6 s, leaving the hauberk).",
+                "Crest snaps off the helm at 5 m/s (cosmetic).",
+                "Loot: a silver belt-purse worth 40 coin.",
+            ],
+            "budget": "≤ 12k tris (body + mail 7k, helm + crest 1.5k, shield 1k, sword/mace 0.8k, surcoat 1.7k), one 2048² set + a shared mail detail tiling.",
+            "dont": [
+                "Don't give him plate arms and legs — this is 1250: mail, poleyns, a great helm, nothing more.",
+                "Don't make the surcoat heraldry anything but the household arms (woad, wool chevron, kermes bordure) — it must match the hound's coat and the enamel on the ewer.",
+                "Don't put gold on him: nothing on him is worth stealing except the purse.",
+                "Don't let the crest push him past 1.95 m: the stair and sacristy doors are 2.10 m and he must still clear them.",
+            ],
+            "concept": "concept/high/household-knight.svg",
+        },
+        {
+            "slug": "alaunt-hound", "name": "Alaunt War-hound", "role": "special",
+            "zones": ["OuterBailey", "InnerWard"], "height_m": 0.85,
+            "summary": "A heavy-jawed fawn war-dog in a spiked collar and the household's padded coat, which hears you first.",
+            "description": ("I have been bitten by a great many things, and I tell you plainly that the alaunt is the worst "
+                            "of them: a broad-skulled hunting dog bred to hold a boar, wearing a spiked collar and a quilted "
+                            "coat in the lord's colours. It sleeps in the bailey and it wakes to noise — any noise — and "
+                            "it does not stop to think about it. It is faster than you, it knows the stairs, and it will "
+                            "have your ankle before the knight has found his helm."),
+            "silhouette": "A low, deep-chested dog shape with a blocky head held forward, a blue saddle-blanket shape on its back and a jagged ring of spikes at the neck.",
+            "build": [
+                "Body: 0.85 m at the top of the head standing, 0.72 m at the withers, 1.42 m nose to tail tip, 0.30 m across the chest; deep keel (brisket at 0.38 m), tucked belly.",
+                "Head: broad alaunt skull 0.30 m long × 0.22 m wide, short square muzzle 0.12 m, heavy flews, dark mask; rose ears folded back 8 cm; amber-dark eyes set wide.",
+                "Neck: thick, 0.36 m around; collar 5 cm wide black leather with 8 iron spikes (3 cm, cone-shaped) and an iron ring for the leash.",
+                "Forelegs: straight, 0.10 m thick at the forearm, big round paws 9 cm; dewclaw.",
+                "Hind legs: heavy thighs 0.22 m deep, long hock, sickle stance; the gallop driver.",
+                "Tail: 0.45 m, thick at the root, carried low in a curve.",
+                "Coat: short fawn hair with faint brindle stripes on the flanks, darker along the spine, soot and mud on the belly and legs.",
+                "Padded coat: quilted woad wool 0.90 m long on the back, down to mid-rib (hem at 0.49 m), vertical quilting 5 cm; argent chevron on each flank and a kermes bordure 3 cm; held by a leather breast strap and girth.",
+                "Wear: torn ear notch, scar across the muzzle, collar leather cracked, coat hem ragged where it drags.",
+            ],
+            "materials": [
+                M("Fawn coat", "#9C7B55", "Short hair: fur-direction normal, faint brindle stripes (#3A3026 at 30 %), roughness 0.8; grime gradient to the belly."),
+                M("Dark mask", "#3A3026", "Muzzle, ears, nose (wet nose roughness 0.2); mask blends into fawn behind the eyes."),
+                M("Collar leather", "#5A4030", "Collar, breast strap, girth: cracked, stiff."),
+                M("Spike iron", "#6F7479", "Collar spikes and ring: dark, sharp bright tips."),
+                M("Woad coat", "#3E5470", "Quilted wool, 5 cm channels; faded at the spine."),
+                M("Wool argent", "#C4B89C", "The chevron on the coat."),
+                M("Kermes gules", "#7E2A26", "The coat's bordure."),
+            ],
+            "rig": {
+                "skeleton": "Custom quadruped (Unity Generic): root, pelvis, spine ×3, chest, neck ×2, head, jaw, ear_L/R, tail ×5, per leg upper/lower/foot/toe (front: scapula, humerus, radius, carpus, paw; hind: femur, tibia, hock, paw); extra: collar ring (spring), coat_front/coat_rear/coat_L/coat_R (spring cloth), jowl_L/R (jiggle).",
+                "animations": [
+                    "sleep_curl — loop, breathing, ear flick on distant noise",
+                    "wake_to_noise — 0.8 s, head up, ears forward, rises; noise events above 40 % loudness wake it at up to 20 m",
+                    "sniff_track — 1.4 m/s nose-down walk along the players' scent trail",
+                    "alert_point — 0.6 s, freezes, head toward the noise, low growl (noise event)",
+                    "bark_alarm — 1.5 s, three barks; wakes guards in the cell and neighbours",
+                    "gallop — 7.5 m/s, faster than a running player (5.5 m/s)",
+                    "stairs_run — gallop variant on the Newel Stair, 5.0 m/s",
+                    "lunge_bite — 0.5 s, leap 2 m, bites a leg; pins a player for 1.5 s",
+                    "worry_shake — 1.2 s, shakes a held player or a carried item loose",
+                    "yelp_hit — 0.4 s",
+                    "death_fall — 1.3 s",
+                ],
+            },
+            "breakables": [
+                "Padded coat: tears off after two hits, leaving the bare dog.",
+                "Collar: detaches at death (a 0-worth prop — but it clanks, a noise source).",
+                "Damage state: limp (after a 6 m/s hit to a leg, gallop drops to 5.0 m/s).",
+                "A thrown item it catches is held in its jaws until it is struck (the worry_shake drops it and applies one impact).",
+            ],
+            "budget": "≤ 6k tris (dog 4.6k, coat 0.8k, collar + spikes 0.6k), one 2048² set with a fur-direction normal.",
+            "dont": [
+                "Don't make it a wolf or a mastiff cartoon — alaunt: long-legged, broad-skulled, short-coated, a hunting dog.",
+                "Don't give it glowing eyes or anything supernatural; it is a dog.",
+                "Don't use a humanoid rig; it's a custom quadruped with its own locomotion set.",
+                "Don't use madder on it except for blood decals.",
+            ],
+            "concept": "concept/high/alaunt-hound.svg",
+        },
+    ],
+    "items": [
+        {
+            "slug": "arm-reliquary", "name": "Arm Reliquary",
+            "worth": 600, "bulk": 1, "fragility": 3, "artifact": True,
+            "dimensions": "0.16 × 0.14 × 0.52 m (W × D × H)",
+            "summary": "A silver-gilt forearm raised in blessing, with a rock-crystal window onto a saint's bone.",
+            "description": ("Somebody's saint is in there, and somebody's lord paid a great deal to keep him in silver. A "
+                            "forearm and hand in chased silver-gilt, two fingers raised in blessing, standing on a stepped "
+                            "plinth, with a little oval of rock crystal through which you may inspect the relic — and "
+                            "through which, if you drop it, the whole enterprise will come apart. It is the second most "
+                            "valuable thing in the chapel and by far the easiest to carry off."),
+            "build": [
+                "Plinth: two stepped boxes — lower 0.16 × 0.14 × 0.03 m silver-gilt with a row of 7 garnet cabochons (1 cm), upper 0.13 × 0.11 × 0.03 m silver; felt underside.",
+                "Sleeve: tapered tube 0.12 m wide at the base to 0.086 m at the wrist, 0.32 m tall, oval section (depth 0.10 m); chased with 7 vertical drapery folds 4 mm deep; gilt edge bands 6 mm on both sides.",
+                "Window: oval rock-crystal cabochon 0.05 × 0.09 m, 15 mm proud, in a gilt collet with 12 beads; behind it a bone relic wrapped in red silk on a vellum ground.",
+                "Cuff: band 0.04 m tall × 0.11 m wide, silver-gilt, 5 oval garnets 1.1 × 1.6 cm in collets, beaded top edge.",
+                "Hand: palm 0.084 × 0.07 m, ring and little fingers folded, index and middle raised to 0.52 m (fingers 1.9 cm wide, two knuckle lines each), thumb out to the side; a gilt ring on the index finger.",
+                "Core: oak armature inside (not modelled); the sheet silver is 0.8 mm — model the silver as a shell with 3 mm thickness at openings.",
+                "Wear: gilt rubbed to silver on the plinth corners and the sleeve's forward folds; black tarnish in every chased groove.",
+            ],
+            "materials": [
+                M("Silver", "#B8B4A8", "Metallic 1.0, roughness 0.25 on high points, 0.5 in folds; tarnish AO multiplier ×1.5 in grooves."),
+                M("Gilt (orpiment)", "#C9A227", "Metallic 1.0, roughness 0.3; the only gold in the item — plinth, bands, cuff, collet; rubbed off at the corners."),
+                M("Rock crystal", "#CBD3CF", "Transparent, refraction 1.54, faint internal fractures; the fragile part."),
+                M("Garnet", "#6E1F2A", "Cabochons: glossy, roughness 0.1, deep red with a bright spec dot."),
+                M("Relic bone", "#DCD2BA", "Seen only through the window: matte bone on red silk."),
+                M("Niello / soot", "#2A2622", "Black fill in the grooves and plinth mouldings."),
+            ],
+            "grab": "One hand around the sleeve's middle (0.15–0.30 m up), or both hands on the plinth; a thrown reliquary flies window-first.",
+            "breaks": "At 3 m/s the crystal window stars (damage state, worth 450); a second impact at 3 m/s shatters it and the two raised fingers snap at the knuckle — 3 pieces (arm, two-finger piece, the bone), worth drops to 150 on the arm alone, the finger piece 50. The relic bone is a 0-worth prop that the household will be very upset about.",
+            "budget": "≤ 1.5k tris, 1024² set (Albedo, Normal, packed ORM) + crystal refraction mask.",
+            "concept": "concept/high/arm-reliquary.svg",
+        },
+        {
+            "slug": "silver-ewer", "name": "Silver Ewer",
+            "worth": 180, "bulk": 2, "fragility": 999, "artifact": False,
+            "dimensions": "0.22 × 0.16 × 0.34 m (W × D × H)",
+            "summary": "A hammered silver ewer with a long spout, hinged lid and the household's enamel medallion; it dents, it never breaks.",
+            "description": ("Two stone of silver that sits nicely under one arm and pours wine for the lord at table. It "
+                            "has a long elegant spout, a hinged lid with a gilt knob, a band of black niello, and a small "
+                            "enamel of the household arms in case anyone forgets whose it is. It will not break — silver "
+                            "does not break — but it dents, and every dent is a small, permanent confession."),
+            "build": [
+                "Body: lathe profile — foot 0.10 m dia × 0.015 m, stem 0.06 m dia, belly 0.16 m dia at 0.12 m high, shoulder 0.12 m at 0.17 m, neck 0.07 m at 0.245 m, lip 0.092 m at 0.30 m; 24 radial segments.",
+                "Foot ring: parcel-gilt band 6 mm at 0.02–0.03 m, rubbed silver on its outer edge.",
+                "Niello band: 0.018 m tall at 0.12 m, chased chevrons filled with black niello.",
+                "Medallion: champlevé enamel roundel 5.8 cm dia on the belly under the spout — woad field, silver chevron, gilt rim.",
+                "Spout: tapered tube from the shoulder (1.8 cm dia) to the tip (0.9 cm) reaching 0.12 m out and 0.275 m up, gilt sleeve at the root.",
+                "Handle: C-scroll strap 1.1 cm × 0.8 cm from the neck at 0.27 m to the belly at 0.11 m, reaching 0.13 m out; gilt boss at the top.",
+                "Lid: domed 0.092 m dia hinged at the handle side, gilt thumbpiece and a 1.6 cm gilt finial ball.",
+                "Wear: tarnish in the base and every crevice, a bright polished patch where the hand holds the handle.",
+            ],
+            "materials": [
+                M("Silver", "#B8B4A8", "Metallic 1.0, roughness 0.2 on the belly, 0.45 at the foot; hammer-mark normal at 6 mm."),
+                M("Parcel gilt", "#C9A227", "Rim, finial, foot ring, spout sleeve, handle boss: metallic, roughness 0.3, rubbed silver at edges."),
+                M("Tarnish", "#5A5850", "Dark film in the lower third and crevices, AO-driven."),
+                M("Niello", "#2A2622", "Black inlay in the chased band."),
+                M("Woad enamel", "#3E5470", "Glassy enamel in the medallion, roughness 0.1."),
+            ],
+            "grab": "One hand on the handle, or under one arm by the neck; thrown, it tumbles handle-over.",
+            "breaks": "Unbreakable (fragility 999). Dents instead: shape-key state 1 above 5 m/s (two dents on the belly), state 2 above 9 m/s (crushed shoulder, lid bent open). Worth is unchanged; the lid never detaches. Every impact is loud — a bell-like clang that is a noise event.",
+            "budget": "≤ 1.5k tris, 1024² set; 2 blend shapes for the dent states.",
+            "concept": "concept/high/silver-ewer.svg",
+        },
+        {
+            "slug": "illuminated-psalter", "name": "Illuminated Psalter",
+            "worth": 350, "bulk": 1, "fragility": 5, "artifact": False,
+            "dimensions": "0.19 × 0.26 × 0.08 m (W × D × H, closed, lying flat)",
+            "summary": "A painted psalter in a jewelled treasure binding: ivory, gilt and cabochons on the cover, a hundred and eighty leaves inside.",
+            "description": ("A book of the psalms, painted by men who spent a year on it, bound by men who spent another "
+                            "year making sure you would want to steal it. The cover is a carved ivory panel in a gilt frame "
+                            "studded with garnets and sapphires; the leaves inside are gilded and coloured. Keep it dry, "
+                            "keep it away from IGNIS, and do not drop it — for if it lands hard, the pages go everywhere, "
+                            "and the pages are where the worth was."),
+            "build": [
+                "Boards: two oak boards 0.19 × 0.26 × 0.012 m covered in red-brown tawed leather, corners rounded 4 mm.",
+                "Text block: 0.18 × 0.252 × 0.056 m, 180 vellum leaves; gilt edges on three sides; page-edge lines in the normal map.",
+                "Front cover frame: silver-gilt 22 mm border with soldered filigree scrolls (S-scroll pattern, 16 mm pitch), inset 8 mm from the edge.",
+                "Cabochons: 16 stones in raised collets — 4 corner stones 1.6 cm, 12 at 1.1 cm; alternating garnet and sapphire.",
+                "Ivory plaque: 0.114 × 0.18 m, carved Christ in Majesty in a mandorla, relief 3 mm (bake into the normal, keep the silhouette of the mandorla in geometry).",
+                "Clasps: two tawed-leather straps 1.6 cm wide from the back board over the fore-edge, gilt catches 1.2 × 1.6 cm on pins in the front board.",
+                "Spine: rounded, 4 raised bands; leather cracked along the hinges (where it breaks).",
+                "Wear: gilt rubbed back to leather at the frame's side centres where hands hold it; candle-wax drop on the back board.",
+            ],
+            "materials": [
+                M("Gilt (orpiment)", "#C9A227", "Frame, catches, page edges: metallic, roughness 0.3."),
+                M("Ivory", "#D8CDB0", "Carved plaque: subsurface-ish warm, roughness 0.45, dirt in the carved lines."),
+                M("Tawed leather", "#5E3A2A", "Boards and straps: roughness 0.7, cracked hinges, darker at the edges."),
+                M("Vellum", "#DCD2BA", "Page edges and the loose-leaf sprites: matte 0.85."),
+                M("Garnet", "#6E1F2A", "Cabochons: glossy 0.1."),
+                M("Sapphire", "#3E5470", "Cabochons: glossy 0.1 (a woad-blue stone, not lapis)."),
+            ],
+            "grab": "Two hands on the spine and fore-edge, or tucked under one arm (it rides flat against the body); thrown, it spins flat.",
+            "breaks": "Above 5 m/s the spine hinge splits: 3 pieces — the jewelled front board (keeps 150 coin), the back board with the text block (0), and 24 loose illuminated leaves that scatter as flat physics cards (0 each). Fire (IGNIS or a candle, 4 s contact) or water (dropped in the moat, a font, a spilled ewer) ruins the text block in place: worth falls to 150 without breaking.",
+            "budget": "≤ 1.5k tris, 1024² set; 1 leaf card mesh (2 tris) with a 256² illuminated-page atlas of 4 variants.",
+            "concept": "concept/high/illuminated-psalter.svg",
+        },
+        {
+            "slug": "coin-coffer", "name": "Coin Coffer",
+            "worth": 450, "bulk": 8, "fragility": 8, "artifact": False,
+            "dimensions": "0.50 × 0.32 × 0.30 m (W × D × H)",
+            "summary": "An iron-banded oak strongbox full of silver pennies in linen bags; heavy, sturdy, and it bursts spectacularly.",
+            "description": ("The lord's ready money: four linen bags of silver pennies in an oak chest bound with more iron "
+                            "than a prison door, with a padlock the size of a fist. It weighs eight stone, so one of you "
+                            "can carry it, slowly, and complain about it the whole way. It is sturdy — but drop it from the "
+                            "wall-walk and the lid comes off, the bags split, and four hundred pennies go skittering "
+                            "across the flagstones like a hailstorm announcing your exact position."),
+            "build": [
+                "Carcass: oak box 0.50 × 0.32 × 0.20 m of 25 mm planks (front and back 2 planks each, dovetailed corners), pitch-sealed inside.",
+                "Lid: flat oak lid 0.50 × 0.32 × 0.10 m (one 25 mm plank top + 75 mm skirt), hinged on two long strap hinges across the top.",
+                "Bands: blackened strap iron 30 × 4 mm — 3 vertical straps over the front, top and back (x 0.06, 0.235, 0.41 m), top and bottom horizontal bands 14 mm, angle irons on all 4 vertical corners; clench nails every 22 mm (dome heads 6 mm).",
+                "Hasp: iron hasp 36 × 90 mm from the lid over a staple; barrel padlock 56 × 28 mm, key slot in the end.",
+                "Drop handles: iron ring handles 80 mm wide on both ends, hanging from staple plates 60 × 22 mm.",
+                "Contents (visible when burst): 4 linen bags 0.18 m, and 400 silver pennies (19 mm, instanced as 40 stacks).",
+                "Wear: rust bloom at every nail, oak pale and polished where the lid is lifted, deep scuffs on the bottom edges.",
+            ],
+            "materials": [
+                M("Oak", "#6B4E33", "Planks: straight grain along the length, roughness 0.75, darker end grain; tiling 0.5 m on a trim."),
+                M("Strap iron", "#3A3632", "Blackened, roughness 0.55, nail heads brighter."),
+                M("Rust", "#7A4A2A", "Blooms around nails and along strap edges (mask), not madder."),
+                M("Silver penny", "#B8B4A8", "Instanced coins: metallic, roughness 0.35, 1 atlas tile."),
+                M("Linen bag", "#C4B89C", "Bags inside: cloth normal, tied necks; split variant."),
+            ],
+            "grab": "Both drop handles (one carrier, 8 st: heavy-carry walk at 70 % speed); or one hand on each end corner. Two players may share it to carry at full speed.",
+            "breaks": "Sturdy to 8 m/s. Above that it bursts: 3 pieces (lid, carcass, padlock + hasp) and the 4 bags split, spilling 40 penny-stack pickups of 10 coin each (400) across a 3 m fan; the empty carcass keeps 50 as oak and iron. The spill is a loud noise event (like a lancet).",
+            "budget": "≤ 3k tris (box + lid + bands 2.2k, padlock 0.3k, handles 0.3k, bag 0.2k; coins instanced), 1024² set.",
+            "concept": "concept/high/coin-coffer.svg",
+        },
+        {
+            "slug": "gilded-altarpiece", "name": "Gilded Altarpiece",
+            "worth": 1400, "bulk": 14, "fragility": 3, "artifact": True,
+            "dimensions": "1.10 × 0.20 × 1.60 m closed (W × D × H); 2.20 m wide open",
+            "summary": "The chapel's painted and gilded triptych — fourteen stone, two carriers, and it dies on the first stair.",
+            "description": ("And here it is, the one the pitch promised you: a triptych of painted saints on a ground of "
+                            "beaten gold, a gabled centre panel with the Virgin enthroned, two wings that fold shut, and a "
+                            "predella of little roundels along the bottom. It is fourteen stone, it wants two of you, and it "
+                            "will not fit through the window you came in by. The instant either of you lets go on the "
+                            "stairs it goes down them, and ceases to be worth anything at all."),
+            "build": [
+                "Predella: oak box 1.10 × 0.20 × 0.22 m, front face gilt with 5 painted roundels (0.12 m dia, woad ground, gesso bust).",
+                "Centre panel: oak board 1.10 × 1.38 m × 0.05 m made of 3 vertical planks (joints at x ±0.18 m — the fracture lines), with a gable 0.18 m rising to a point at 1.60 m; carved frame moulding 0.04 m, gilt.",
+                "Centre painting: tempera on gesso over gold leaf: the Virgin enthroned (figure 0.88 m) with the Child, woad mantle, kermes robe, punched halos 0.15 m dia (punch marks every 15°), trefoil arch in raised gesso.",
+                "Gable: carved limewood crockets ×4 per side (0.05 m), central roundel 0.12 m dia, woad with a gesso emblem.",
+                "Wings ×2: oak 0.55 × 1.20 × 0.03 m, hung on 2 iron strap hinges each; inner faces a standing saint on gold under a round arch; outer faces grisaille (stone-grey painted figures) seen when closed.",
+                "Closed: wings fold over the centre panel to a 1.10 × 0.12 m slab on the predella — the carry state.",
+                "Back: plain oak with two iron carrying staples 0.20 m from each end of the predella.",
+                "Wear: gilt rubbed to red bole at the lower corners and wing edges, candle soot at the top of the gable, a flake of paint missing from the Virgin's hem, worm holes on the back.",
+            ],
+            "materials": [
+                M("Gilt (orpiment)", "#C9A227", "Gold-leaf ground: metallic 1.0, roughness 0.25, punch-work normal; rubbed to bole (#7E2A26 at 40 %) at edges."),
+                M("Woad azure", "#3E5470", "Painted mantles, roundels: matte tempera 0.8."),
+                M("Kermes", "#7E2A26", "Painted robes and the bole under the gilt."),
+                M("Gesso", "#DCD2BA", "Faces, the Child, emblem: chalky 0.9."),
+                M("Oak panel", "#5E4630", "Frames, backs, predella box, wood at chips; worm-hole decals on the back."),
+                M("Grisaille", "#8A8274", "Outer faces of the wings: grey monochrome painted figures."),
+            ],
+            "grab": "Two carriers: carrier A at the left end of the predella, carrier B at the right (the iron carrying staples); a single player can only drag it (it scrapes, loud, and takes 1 m/s impacts). Carried closed.",
+            "breaks": "Fragility 3 m/s: any drop from carry height, any stair tumble, any hard doorframe clip. It breaks into 5 pieces — two wings (torn at the hinges), the centre panel split along its two plank joints (3 boards), the predella, and the gable pinnacle — and every piece is worth 0: gilt kindling. No coin spills.",
+            "budget": "≤ 5k tris (dual-carry), 1024² set + a 1024² painted-panel atlas for the four painted faces.",
+            "concept": "concept/high/gilded-altarpiece.svg",
+        },
+    ],
+}
+
+with open("/home/user/PlunderSpell/docs/art/data/high.json", "w") as f:
+    json.dump(age, f, ensure_ascii=False, indent=2)
+    f.write("\n")
+print("ok")

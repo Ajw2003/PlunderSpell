@@ -89,8 +89,67 @@ metre of air above it, and no clipping through the room it fights in.
 - **Floors sit at ground level in every zone.** A taller zone is taller at the ceiling, never
   lower at the floor, so a player crossing a zone boundary never steps up or down.
 
+## Verification
+
+`ScaleInvariantTests` (EditMode) measures the shipped art against this document rather than
+restating its numbers: it instantiates each prefab and reads real world-space measurements, so a
+mesh that disagrees with the table fails rather than passing on a copied constant. Rooms are rigid
+meshes and are read from renderer bounds; enemies are rigged and are read from their baked vertices
+(see "Measuring a rigged model" below).
+
+| Test | Asserts |
+|---|---|
+| `Test_ThePlayerCapsuleIsTheStandardHuman` | `CastleSpawnResolver` is sized 1.80 m × 0.40 m |
+| `Test_EveryRoomModuleClearsAStandardHuman` | every registry room's clear height exceeds 1.80 m |
+| `Test_NoEnemyIsTallerThanTheRoomsItIsPostedTo` | no enemy exceeds the shortest zone's clear height |
+| `Test_EveryEnemyStandsOnItsOwnOrigin` | every enemy's lowest drawn vertex is within 0.10 m of its origin |
+
+`Tools ▸ Plunderspell ▸ Capture Enemy Stance Screenshots` photographs the roster on a ground slab and
+writes `stance-report.txt` beside the images. The committed before/after set for issue 94 is in
+[`docs/generated/enemy-stance-screenshots/`](../generated/enemy-stance-screenshots/).
+
+Archway clearance is **not** covered: the opening is a hole in a mesh rather than an object, so
+nothing here measures it. The archway figures above are still derived from
+`Tools/AssetPipeline/room_kit.opening_size()`, not verified against the art.
+
+## Measuring a rigged model
+
+<!-- ref:892b -->
+
+An enemy is a `SkinnedMeshRenderer`, and its `Renderer.bounds` is the box the FBX importer stored for
+it: padded, and not fitted to the vertices. On this roster it put `GildedColossus` 0.156 m below its
+own feet while the geometry sat exactly on the origin, and it made most of the cast read taller than
+they draw. Anything that decides where a foot is, or how tall a model stands, must measure the
+vertices instead — `RogueAi.EditorTools.PrefabGeometry.TryMeasureVerticalExtent`, used by the forge,
+the stance screenshot tool and `Test_EveryEnemyStandsOnItsOwnOrigin` so they cannot disagree.
+
+Getting the vertices wrong is quiet. `SkinnedMeshRenderer.BakeMesh` must be called with
+`useScale: true` and its result placed through the renderer's full `localToWorldMatrix`; the other
+pairings land about 100x too large or too small (the FBX import scale), and the too-small one reads as
+"feet exactly on the origin" for every model, which is precisely the answer you were hoping for. Check
+any new measurement against a height you already know before believing it.
+
+`EnemyPrefabForge.GroundModel` moves the model's children so the lowest drawn vertex sits on the
+root's origin. The root stays put, so the collider, agent and guard components, and every spawner that
+places the root on the floor, are unaffected. `SigilWisp` draws 0.072 m up, inside the tolerance, and
+was deliberately left as the hovering orb it reads as.
+
 ## Traps
 
+- **`Renderer.bounds` lies about a rigged enemy.** It read `GildedColossus` 0.16 m and
+  `VaultWarden` 0.12 m below the floor when both stand exactly on it. Only `ArcRevenant` was really
+  off the floor (0.154 m up), and it is fixed. Measure `PrefabGeometry`, never the bounds — see
+  "Measuring a rigged model".
+- **The forge's standing heights are not what draws.** `EnemyPrefabForge.BuildPrefab` scales each
+  model to its table height using those same padded bounds, so the geometry comes out short of the
+  table: `WarHound` draws 0.685 m against 0.85 m, `Watchman` 1.725 m against 1.80 m, `GildedColossus`
+  2.344 m against 2.50 m (`stance-report.txt`, "height" column, has all ten). Nothing has been
+  rescaled — doing so resizes every enemy against the rooms and archways above, which is a design
+  call, not a measurement. Left open.
+- **Re-forging discards hand edits.** `Forge Enemy Prefabs + Roster` regenerates all ten prefabs and
+  the roster. To repair a prefab's stance without that, run
+  `Tools ▸ Plunderspell ▸ Ground Enemy Prefabs In Place`; it only touches prefabs outside the 0.10 m
+  tolerance and is safe to repeat.
 - **The `GildedColossus` fits in the Crypt but not through its archway.** At 2.50 m tall and
   1.57 m wide it cannot pass a 2.60 × 2.16 m opening standing up. It is a room-bound boss: it
   fights where it spawns. Anything that expects it to patrol between rooms needs either a taller

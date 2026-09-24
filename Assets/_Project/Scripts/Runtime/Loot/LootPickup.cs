@@ -96,6 +96,11 @@ namespace RogueAi.Loot
             if (IsBeingCarried || IsBroken || _data == null)
                 return;
 
+            // Only the machine simulating this body judges its impacts. Elsewhere the body is moved
+            // by the replicated transform, and those teleports read as violent collisions.
+            if (isSpawned && TryGetComponent(out NetworkTransform synced) && !synced.IsController(synced.ownerAuth))
+                return;
+
             ApplyImpact(col.relativeVelocity.magnitude);
         }
 
@@ -126,6 +131,14 @@ namespace RogueAi.Loot
         /// </summary>
         public void BreakItem()
         {
+            // A client carrying the piece simulates it, so it judges the impact and asks the server
+            // to break it; the server is the only one that marks it broken.
+            if (isSpawned && !isServer)
+            {
+                if (isOwner)
+                    RequestBreak();
+                return;
+            }
             if (isSpawned && isServer)
                 BreakItemObservers();
             else
@@ -135,9 +148,31 @@ namespace RogueAi.Loot
         [ObserversRpc(bufferLast: true)]
         private void BreakItemObservers() => ApplyBrokenState();
 
+        [ServerRpc(requireOwnership: true)]
+        private void RequestBreak() => BreakItem();
+
+        /// <summary>
+        /// A player wants to pick this up: hand them the body, so their machine simulates it while it
+        /// is carried and their movement of it replicates. Ownership then stays with them until
+        /// someone else picks it up.
+        /// </summary>
+        [ServerRpc(requireOwnership: false)]
+        public void RequestCarry(RPCInfo info = default)
+        {
+            if (!IsBroken)
+                GiveOwnership(info.sender);
+        }
+
         private void ApplyBrokenState()
         {
-            _isBroken.value = true;
+            if (!isSpawned || isServer)
+                _isBroken.value = true;
+
+            // Transition bridge: extraction tallies LootValue now, so breaking through the old
+            // system has to reach the new one or a smashed piece still pays out. Goes away with
+            // LootPickup. See docs/systems/raid.md, "Carrying and extracting".
+            if (TryGetComponent(out LootValue value))
+                value.Ruin();
             if (_meshRenderer != null) _meshRenderer.enabled = false;
             if (_brokenVfx != null) _brokenVfx.Play();
             if (_rb != null)
@@ -331,7 +366,7 @@ namespace RogueAi.Loot
         /// <see cref="ILevitatable"/>: lift the item. A carried item is not liftable — it is already
         /// kinematic and parented, and un-sticking it from a carrier's hand mid-carry would strand it.
         /// </summary>
-        public void Levitate(Vector3 impulse, float duration)
+        public void Levitate(Vector3 impulse, float duration, GameObject instigator = null)
         {
             if (IsBroken || IsBeingCarried || _rb == null || _rb.isKinematic)
                 return;

@@ -23,8 +23,29 @@ namespace Player
             EnableAllInputs();
         }
 
+        /// <summary>
+        /// Whether the world reacts to input in this state. Pure, so it can be asserted against
+        /// <c>CursorLockPolicy.ShouldCapture</c>, which has to agree with it. See docs/Decisions.md,
+        /// "Issue 9's gate belongs on the raid's player, not only on the playtest harness".
+        /// </summary>
+        public static bool AcceptsInputIn(Plunderspell.Core.GameState state) =>
+            state == Plunderspell.Core.GameState.Playing;
+
+        /// <summary>Whether the world should react to input right now.</summary>
+        private bool AcceptsInput => Plunderspell.Core.GameServices.IsPlaying;
+
         private void Update()
         {
+            // A menu is open: stop looking and stop walking. Movement is held in MovementDirection
+            // between callbacks, so it has to be cleared here or the body keeps travelling on the
+            // last value the Input System delivered before the menu opened.
+            if (!AcceptsInput)
+            {
+                _stateMachine.Look(Vector2.zero);
+                _stateMachine.Move(Vector2.zero);
+                return;
+            }
+
             // Lock player rotation while rotating a held item.
             if (ItemManager.Instance != null && ItemManager.Instance.IsRotatingObject)
             {
@@ -76,11 +97,17 @@ namespace Player
 
         private void OnItemClickedPerformed(InputAction.CallbackContext context)
         {
+            if (!AcceptsInput)
+                return;
+
             ItemManager.Instance.OnInventoryClicked(context);
         }
 
         private void OnMovePerformed(InputAction.CallbackContext context)
         {
+            if (!AcceptsInput)
+                return;
+
             _stateMachine.ChangeState(_stateMachine.WalkState);
             _stateMachine.Move(context.ReadValue<Vector2>());
         }
@@ -104,6 +131,9 @@ namespace Player
 
         private void OnAttackPerformed(InputAction.CallbackContext context)
         {
+            if (!AcceptsInput)
+                return;
+
             _stateMachine.Attack();
             EventManager.Instance?.Publish(new PlayerAttackEvent());
         }
@@ -122,6 +152,9 @@ namespace Player
 
         private void OnJumpPerformed(InputAction.CallbackContext context)
         {
+            if (!AcceptsInput)
+                return;
+
             _stateMachine.Jump();
         }
 
@@ -139,6 +172,9 @@ namespace Player
 
         private void OnDodgePerformed(InputAction.CallbackContext context)
         {
+            if (!AcceptsInput)
+                return;
+
             _stateMachine.Dodge();
         }
 
@@ -158,12 +194,30 @@ namespace Player
 
         private void OnLookPerformed(InputAction.CallbackContext context)
         {
-            _lookDelta = context.ReadValue<Vector2>();
+            // Dropped rather than stored while a menu is open, so returning to play does not apply a
+            // frame of mouse movement the player made over a menu button.
+            _lookDelta = AcceptsInput ? context.ReadValue<Vector2>() : Vector2.zero;
         }
 
         public Vector2 GetLookDelta()
         {
             return _lookDelta;
+        }
+
+        /// <summary>
+        /// Generated Input System actions are unmanaged and leak if they are only ever enabled.
+        /// Unity asserts on the leak the second time a scene carrying a player is loaded, which is
+        /// how this surfaced. See docs/systems/spells.md, "Two ways to cast".
+        /// </summary>
+        private void OnDestroy()
+        {
+            if (_input == null)
+                return;
+
+            DisableAllInputs();
+            _input.Disable();
+            _input.Dispose();
+            _input = null;
         }
 
         private void DisableAllInputs()

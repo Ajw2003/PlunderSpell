@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace RogueAi.Voice
 {
@@ -16,7 +18,7 @@ namespace RogueAi.Voice
     {
         [Header("Input")]
         [Tooltip("Hold to capture voice, release to cast.")]
-        [SerializeField] private KeyCode _pushToCastKey = KeyCode.V;
+        [SerializeField] private Key _pushToCastKey = Key.V;
 
         [Header("Visual feedback (optional)")]
         [Tooltip("Animator whose bool parameter is toggled while casting (e.g. hand raise).")]
@@ -31,6 +33,9 @@ namespace RogueAi.Voice
 
         /// <summary>True while the push-to-cast key is held and the mic is open.</summary>
         public bool IsCasting { get; private set; }
+
+        /// <summary>The key the player holds to cast, so the HUD can name it instead of guessing.</summary>
+        public Key PushToCastKey => _pushToCastKey;
 
         private int _isCastingHash;
 
@@ -51,9 +56,14 @@ namespace RogueAi.Voice
                 return;
             }
 
-            if (Input.GetKeyDown(_pushToCastKey))
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null)
+                return;
+
+            KeyControl key = keyboard[_pushToCastKey];
+            if (key.wasPressedThisFrame)
                 BeginCasting();
-            else if (Input.GetKeyUp(_pushToCastKey))
+            else if (key.wasReleasedThisFrame)
                 EndCasting();
         }
 

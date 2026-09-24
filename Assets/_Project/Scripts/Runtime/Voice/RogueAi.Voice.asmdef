@@ -3,7 +3,8 @@
     "rootNamespace": "RogueAi.Voice",
     "references": [
         "PurrNet.Runtime",
-        "Plunderspell.Core"
+        "Plunderspell.Core",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
