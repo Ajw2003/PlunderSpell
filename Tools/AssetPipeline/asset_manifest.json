@@ -57,6 +57,12 @@
       "content": "52863aac2d1f84e7",
       "tris": 12
     },
+    "BronzeFrescoCourt": {
+      "budget": 2000,
+      "content": "f83162ec29b09066",
+      "preview": "f83162ec29b09066:23a9d68e53fd",
+      "tris": 1288
+    },
     "BronzeMegaron": {
       "budget": 2400,
       "content": "a405bc6aa586fc8c",
@@ -68,6 +74,12 @@
       "content": "bb41b8853f9830c1",
       "preview": "bb41b8853f9830c1:23a9d68e53fd",
       "tris": 888
+    },
+    "BronzePithosMagazine": {
+      "budget": 4800,
+      "content": "f25a5a8cdb6d5104",
+      "preview": "?:23a9d68e53fd",
+      "tris": 3232
     },
     "BronzeQueensHall": {
       "budget": 1800,

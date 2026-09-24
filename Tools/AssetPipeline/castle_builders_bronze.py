@@ -101,15 +101,18 @@ def offering_table(bm, uv, x, y, fz, w=0.6, d=0.6, h=0.7, pigment="vellum_faint"
     cb._table(bm, uv, pigment, x, y, fz, w, d, h=h)
 
 
-def pithos(bm, uv, x, y, z, height=1.7, belly=1.0, pigment=GRAIN_JAR, lid=False):
-    """A man-high storage jar standing on z, with rope bands (thin rings) and,
-    for oil, a stone lid disc. Anchor-free: jars are cover, not shelves."""
-    ek.jar(bm, uv, pigment, x, y, z, height, belly, mouth=belly * 0.5)
-    for zf in (0.25, 0.62):
-        r = belly / 2 * (0.93 if zf < 0.45 else 0.86)
-        mk.paint(bm, mk.add_cylinder(bm, r, 0.05, loc=(x, y, z + height * zf), segments=8), SOOT, uv)
+def pithos(bm, uv, x, y, z, height=1.7, belly=1.0, pigment=GRAIN_JAR, lid=False, segments=6):
+    """A man-high storage jar standing on z: foot, ovoid belly, rolled rim, one
+    rope band at the shoulder, and for oil a stone lid disc. A six-sided
+    profile by default: a magazine holds two dozen of these."""
+    r, m = belly / 2, belly * 0.25
+    profile = [(0.001, 0.0), (r * 0.5, 0.0), (r, height * 0.42), (r * 0.72, height * 0.8),
+               (m, height * 0.94), (m * 1.15, height), (0.001, height)]
+    mk.paint(bm, mk.add_lathe(bm, profile, segments=segments, loc=(x, y, z)), pigment, uv)
+    mk.paint(bm, mk.add_cylinder(bm, r * 0.93, 0.05, loc=(x, y, z + height * 0.62), segments=segments), SOOT, uv)
     if lid:
-        mk.paint(bm, mk.add_cylinder(bm, belly * 0.29, 0.06, loc=(x, y, z + height + 0.03), segments=8), "vellum_dim", uv)
+        mk.paint(bm, mk.add_cylinder(bm, m * 1.2, 0.06, loc=(x, y, z + height + 0.03), segments=segments),
+                 "vellum_dim", uv)
 
 
 def amphora(bm, uv, x, y, z, height=0.62, belly=0.34, pigment=GRAIN_JAR):
