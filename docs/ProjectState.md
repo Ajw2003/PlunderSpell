@@ -138,8 +138,12 @@ a local host), Host Co-op creates a Steam lobby, the Lair invites online friends
 gets their own body. Checked on this machine with two game windows over UDP, and Steam hosting in
 the build. **A real Steam join between two accounts has not been tried;** that is the user's test
 with a friend. The raid player now copies the CastleBench player; before that, casting in the
-built raid did nothing (push-to-cast was on F19) and the camera sat too high. Shared loot, guards
-and extraction for a client (stage 4) are next. See
+built raid did nothing (push-to-cast was on F19) and the camera sat too high. The user then confirmed voice casting by
+microphone in the standalone build (2026-09-23). Stage 4 followed the
+same day: guards and loot replicate, a client can carry loot and extract it, hits land where the
+target's health lives, a client's spells aim where it looks, a dead player spectates a teammate and
+the raid ends when everyone is down, and a friend's Lair shows the host's campaign. All checked with
+two game windows over UDP; still untested between two Steam accounts. See
 `docs/systems/net.md`.
 
 **2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh

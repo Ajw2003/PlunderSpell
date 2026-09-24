@@ -77,6 +77,52 @@ and cannot set out itself; the Lair shows it "Waiting for the host to set out."
 Each machine places only its own player, offset around the gate by owner number, so two bodies
 are never placed inside each other. The placement moves the rigidbody as well as the transform.
 
+### Guards, loot and carrying
+
+Every enemy and loot prefab carries a `NetworkTransform`, so a client sees guards walk and loot
+move as the host simulates them. A client's guards switch their own `NavMeshAgent` off
+(`CastleGuard.OnSpawned`); the server's copy runs the AI.
+
+To carry loot a machine must control its transform. `Item.CanDriveHere` and `Item.RequestDrive` are
+installed by `NetworkCarry`: grabbing a piece this machine does not control asks the server
+(`LootPickup.RequestCarry`), which hands over ownership, and `ItemManager` starts the drag once it
+is granted. The carrier then simulates the piece and its movement replicates, so the host's
+extraction pad sees it land. Only the machine simulating a piece judges its impacts; a client
+carrier asks the server to break it (`LootPickup.RequestBreak`). Weapons have no
+`NetworkTransform`: each machine has its own copies, and a friend does not see yours move.
+
+### Damage
+
+`Damage.Apply` offers every hit to `Damage.Forward`, which `DamageRelay` (on the `Network` object)
+installs while spawned. A hit goes where the target's health lives:
+
+- a guard, loot or anything else the server spawned: the server;
+- a player's body: that player's own machine, where their health, HUD and death are.
+
+A client hitting a guard sends the hit to the server (`HitOnServer`), which applies it and sends
+the result back (`TellHitter`, then `Damage.ReportRemote`), so the hitter still sees the number.
+The host's guards hitting a friend's body send it to the friend (`HitOwnedBody`). `DamageKind`
+travels as an `int` for the same reason `CastVolume` does.
+
+A client's spell carries its origin and direction in the cast RPC (`ServerCast`), because the host
+never sees a friend's camera pitch.
+
+### Spectating and a party wipe
+
+Each body replicates an owner-set "down" flag (`PlayerNetworkOwnership._isDown`). When this
+machine's player dies and a teammate is still standing (`PlayerStateMachine.SpectateOnDeath`), the
+"You died" screen is skipped; a `SpectatorCamera` follows the teammate's eye, whose rotation
+replicates through a `NetworkTransform` on the player's `Eye` (remote cameras are disabled
+components on an active object for exactly this). When the server sees every body down it tells
+every machine (`PartyDown`), and all of them go to "You died". A dead player revives on entering the
+next raid, from the Lair or from that screen, and a client follows the host from either.
+
+### The host's campaign on a friend's Lair
+
+`RaidDirector` replicates the host's debt, bank and last haul; a client shows them with
+`LairHubManager.ShowHostCampaign`, which does not save, and reloads its own campaign when it leaves
+the session. A friend's own save is never touched by joining.
+
 ## Traps
 
 - **The Steam overlay is off when the game is not started by Steam.** Steam hooks its overlay into
@@ -104,11 +150,23 @@ are never placed inside each other. The placement moves the rigidbody as well as
 - **`SteamInviteGateway` is unused.** It drove PurrLobby's `SteamLobbyProvider`, which no scene
   contains; `CoopSession` replaced both.
 
+- **The host can finish one raid and start the next in a single frame,** so a client may never see
+  the Lair phase in between. The client rebuilds whenever the replicated seed differs from the one
+  its castle came from (`RaidDirector.NeedsClientBuild`), not when its castle is null.
+- **Standing on the extraction pad starts the leave countdown.** A test that parks a player on the
+  pad ends the raid within seconds, with whatever is on it.
+
 ## Testing it
 
 On one machine without Steam: host from the Editor (Play → Host Co-op), then run the build with
 `-coop-join 127.0.0.1` (and `-screen-fullscreen 0 -screen-width 960 -screen-height 540` for a
 window). The reverse also works: the build with `-coop-host` hosts. Each side logs `[Coop]` and
 `[Raid]` lines: who it plays as, the seed arriving, the castle built, where its player was placed.
+
+To drive the client too, build a Development player with the Pipeline runtime on
+(`set_runtime_pipeline_settings enableInBuilds true`, build to `Build/DevTest` with the
+`Development` option, then set it back to false) and send it commands with
+`unity command --runtime Plunderspell eval`. Its code sees the game's types only through
+reflection. Never ship a build with the runtime on.
 
 Screenshots of each checked step: `docs/generated/coop-2026-09-23/`.

@@ -61,6 +61,11 @@ namespace RogueAi.Raid
         private readonly SyncVar<RaidPhase> _phase = new SyncVar<RaidPhase>(RaidPhase.InLair);
         private readonly SyncVar<int> _seed = new SyncVar<int>(0);
 
+        // The host's campaign, so a friend's Lair shows the debt they are paying off together.
+        private readonly SyncVar<float> _hostDebt = new SyncVar<float>(0f);
+        private readonly SyncVar<float> _hostGold = new SyncVar<float>(0f);
+        private readonly SyncVar<float> _hostLastRaidWorth = new SyncVar<float>(-1f);
+
         /// <summary>Where the session is in the loop.</summary>
         public RaidPhase Phase => _phase.value;
 
@@ -92,6 +97,13 @@ namespace RogueAi.Raid
             base.OnSpawned();
             _phase.onChanged += OnPhaseReplicated;
             _seed.onChanged += OnSeedReplicated;
+            _hostDebt.onChanged += OnHostCampaignReplicated;
+            _hostGold.onChanged += OnHostCampaignReplicated;
+            _hostLastRaidWorth.onChanged += OnHostCampaignReplicated;
+            if (isServer)
+                PublishCampaign();
+            else
+                OnHostCampaignReplicated(0f);
             SubscribeToZone();
             Debug.Log($"[Raid] Director spawned as {(isServer ? "server" : "client")}: phase {_phase.value}, seed {_seed.value}.");
         }
@@ -101,6 +113,13 @@ namespace RogueAi.Raid
             base.OnDespawned();
             _phase.onChanged -= OnPhaseReplicated;
             _seed.onChanged -= OnSeedReplicated;
+            _hostDebt.onChanged -= OnHostCampaignReplicated;
+            _hostGold.onChanged -= OnHostCampaignReplicated;
+            _hostLastRaidWorth.onChanged -= OnHostCampaignReplicated;
+
+            // Leaving a friend's session: back to this machine's own saved campaign.
+            if (!isServer)
+                _lair?.Load();
             UnsubscribeFromZone();
         }
 
@@ -112,7 +131,7 @@ namespace RogueAi.Raid
         /// </summary>
         private void Update()
         {
-            if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && Castle == null && _seed.value != 0)
+            if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(_seed.value))
                 BuildCastle(_seed.value);
         }
 
@@ -144,6 +163,7 @@ namespace RogueAi.Raid
 
             // Debt grows every time you set out, which is what puts a clock on the whole campaign.
             _lair?.OnNewSession();
+            PublishCampaign();
 
             SetPhase(RaidPhase.Generating);
 
@@ -177,6 +197,8 @@ namespace RogueAi.Raid
             Castle = GenerateWalkable(ref seed);
             if (!isSpawned || isServer)
                 _seed.value = seed;
+            else
+                _clientBuiltSeed = seed;
 
             // Before the NavMesh bake and the spawners, so a guard or a loot pile is never dropped
             // on top of a player who is about to be moved there.
@@ -242,6 +264,7 @@ namespace RogueAi.Raid
             LastPlayersSaved = playersSaved;
 
             _lair?.ApplyExtractionResult(worthExtracted);
+            PublishCampaign();
             _lootSpawner?.Clear();
             _guardSpawner?.Clear();
 
@@ -369,11 +392,35 @@ namespace RogueAi.Raid
         /// The seed and the phase are separate SyncVars and a client can receive "raiding" before
         /// the seed, so whichever of the two arrives second builds the castle.
         /// </summary>
+        /// <summary>
+        /// Whether a client's castle is missing or from an older raid. Keyed on the seed, not on the
+        /// castle being null: the host can go from a finished raid straight into the next in one
+        /// frame, so a client may never see the Lair phase that would have cleared the old one.
+        /// </summary>
+        private bool NeedsClientBuild(int seed) => seed != 0 && (Castle == null || _clientBuiltSeed != seed);
+
+        private int _clientBuiltSeed;
+
         private void OnSeedReplicated(int seed)
         {
             Debug.Log($"[Raid] Host's seed arrived: {seed} (phase {_phase.value}).");
-            if (!isServer && _phase.value == RaidPhase.Raiding && Castle == null && seed != 0)
+            if (!isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(seed))
                 BuildCastle(seed);
+        }
+
+        private void PublishCampaign()
+        {
+            if (!isSpawned || !isServer || _lair == null)
+                return;
+            _hostDebt.value = _lair.TotalDebt;
+            _hostGold.value = _lair.AccumulatedGold;
+            _hostLastRaidWorth.value = _lair.LastRaidWorth;
+        }
+
+        private void OnHostCampaignReplicated(float _)
+        {
+            if (!isServer && _lair != null)
+                _lair.ShowHostCampaign(_hostDebt.value, _hostGold.value, _hostLastRaidWorth.value);
         }
 
         /// <summary>Mirrors a server-driven phase change onto a client's local event.</summary>
@@ -386,7 +433,7 @@ namespace RogueAi.Raid
             // A client builds the same castle from the replicated seed: the geometry is local on
             // every machine, only the seed crosses the network. Loot and guards arrive as network
             // objects from the server instead.
-            if (phase == RaidPhase.Raiding && Castle == null && _seed.value != 0)
+            if (phase == RaidPhase.Raiding && NeedsClientBuild(_seed.value))
                 BuildCastle(_seed.value);
             else if (phase == RaidPhase.InLair && Castle != null)
             {

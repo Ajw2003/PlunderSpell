@@ -76,7 +76,10 @@ namespace RogueAi.Raid
         private void OnPhaseChanged(RaidPhase phase)
         {
             bool isClient = _director.isSpawned && !_director.isServer;
-            if (isClient && phase == RaidPhase.Raiding && GameServices.GameState.CurrentState == GameState.Lair)
+            // From the "You died" screen as well as the Lair: after a party wipe the host may set out
+            // again before a friend has clicked through to the Lair.
+            GameState current = GameServices.GameState.CurrentState;
+            if (isClient && phase == RaidPhase.Raiding && (current == GameState.Lair || current == GameState.GameOver))
                 GameServices.GameState.ChangeState(GameState.Playing);
         }
 

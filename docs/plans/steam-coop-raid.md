@@ -58,6 +58,37 @@ The user chose stages 1–3 first; stage 4 is the next pass.
   see loot move; guard and loot physics on a client are not reconciled; damage to a remote player
   and extraction counting of a client's body are unverified.
 
+### Stage 4 checklist (started and done 2026-09-23)
+
+Surveyed: loot and guard prefabs carry no `NetworkTransform`, so a client sees guards frozen where
+they spawned and loot that never moves. Weapons are plain local `Item`s on each machine.
+
+1. **Guards move on clients:** `NetworkTransform` on every enemy prefab (server-driven).
+2. **Loot moves on clients, and a client can carry it:** `NetworkTransform` on loot; grabbing a
+   piece asks the server for ownership, and the drag starts once it is granted.
+3. **Damage goes to whoever owns the target:** a client hitting a guard sends the hit to the
+   server; the server hitting a friend's body sends it to that friend's machine, where their health
+   lives. The hitter still sees the damage numbers.
+4. **A client's spells aim where the client looks:** the cast carries its origin and direction,
+   because the host never sees a friend's camera pitch.
+5. **The Lair shows the host's debt and bank on every machine** after a raid.
+6. **A dead player spectates** (asked 2026-09-23): in co-op, dying hands the view to a living
+   teammate instead of the "You died" screen, and the raid is only lost when every player is down.
+   Solo keeps the current screen.
+7. **Checked end to end over UDP with two windows,** the Editor hosting and a Development build
+   as the client, driven through the Pipeline runtime:
+   - guards match on both machines by network ID;
+   - the client picks up loot (ownership 001 to 002), sets it on the pad, and the host's extraction
+     banks it (150; debt 700 to 550), with the client's Lair showing 550 and "last raid 150";
+   - the client hits a Sergeant (130 to 105 on the host) and sees the damage number;
+   - a Watchman kills the client (health on the client's machine), which spectates the host;
+     killing the host too ends the raid for both;
+   - the host goes down while the client stands, and watches through the client's eyes;
+   - a client's aimed Frango hits the aimed Watchman on the host (70 to 40);
+   - the next raid rebuilds on the client and places it at the new gate.
+
+   **Still untested:** any of this over Steam between two accounts.
+
 Found along the way, not fixed: guards are posted within sight of the gate, and a player standing
 still at the spawn is killed in about 20 seconds.
 

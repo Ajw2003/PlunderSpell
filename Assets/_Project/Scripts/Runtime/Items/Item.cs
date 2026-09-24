@@ -7,6 +7,17 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Rigidbody))]
 public class Item : MonoBehaviour
 {
+    /// <summary>
+    /// Whether this machine may move the item's body. Always true offline; in a session
+    /// RogueAi.Net installs a check that this machine controls the item's NetworkTransform, since a
+    /// body driven here while another machine drives it would snap back every frame.
+    /// </summary>
+    public static System.Func<Item, bool> CanDriveHere = _ => true;
+
+    /// <summary>Asks for the right to move the item; installed by RogueAi.Net. The drag starts once
+    /// <see cref="CanDriveHere"/> turns true.</summary>
+    public static System.Action<Item> RequestDrive;
+
     private Rigidbody _rb;
     private bool _isDragging = false;
     private Vector3 _targetPosition;

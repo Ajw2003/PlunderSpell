@@ -723,3 +723,23 @@ network spawner's reference to it holds.
 
 **Status.** Standing. Verified in a solo raid: V + 1 cast Ignis, V + 5 cast Tonitrus, and the
 spawned player stands exactly as the bench player does (eye 1.94 m above the floor in both).
+
+## 2026-09-23 — Hits go to whoever owns the target's health; the dead watch a teammate
+
+**Context.** Stage 4 of `docs/plans/steam-coop-raid.md`. Health lives on one machine per target,
+and `Damage.Apply` is the one path every hit takes, so the question was where a hit is applied.
+The user also asked that a player who dies in co-op spectates rather than ending the raid.
+
+**Decision.** `Damage.Apply` offers each hit to `Damage.Forward`, installed by `DamageRelay`: hits on
+server-spawned things are applied on the server, hits on a player's body on that player's machine.
+The hitter gets the result back for its feedback. In co-op a dead player watches a standing
+teammate through their eye, and the raid is lost only when the server sees every body down; solo
+death is unchanged. A client shows the host's campaign without saving it.
+
+**Considered and rejected.** Server-authoritative player health: the HUD, the damage flash and the
+death screen all live on the owner's machine, and the raid's player code was written for local
+health, so each would have needed a replicated mirror. Loot carried with no ownership change (the
+server simulating what a client holds): the carrier would feel a round trip of lag on every swing.
+
+**Status.** Standing. Verified over UDP with two game windows (see the plan's stage 4 list);
+regression tests in `CoopRulesTests`. Untested over Steam between two accounts.
