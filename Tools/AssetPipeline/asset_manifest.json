@@ -100,7 +100,10 @@
       "tris": 888
     },
     "BronzeOilPress": {
-      "preview": "?:23a9d68e53fd"
+      "budget": 3200,
+      "content": "dc1cc073bfa32b8c",
+      "preview": "dc1cc073bfa32b8c:23a9d68e53fd",
+      "tris": 2484
     },
     "BronzePalaceKitchen": {
       "budget": 1600,

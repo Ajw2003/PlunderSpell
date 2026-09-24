@@ -160,14 +160,15 @@ def build_bronze_oil_press(bm, uv):
     cb._box(bm, uv, "line", (-3.9, 4.2, fz + 0.01), (3.0, 2.4, 0.02))
     cb._box(bm, uv, "vellum_faint", (-3.4, 4.2, fz + 0.2), (1.4, 1.4, 0.4))
     for k in range(2):
-        mk.paint(bm, mk.add_cylinder(bm, 0.4, 0.12, loc=(-3.6, 4.3, fz + 0.46 + k * 0.12), segments=10), "leather", uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.4 - k * 0.03, 0.12, loc=(-3.6, 4.3, fz + 0.46 + k * 0.12), segments=10),
+                 "leather", uv)
     cb._anchor(-2.95, 3.75, fz + 0.4)
     length, tilt = math.hypot(3.45, 0.45), math.atan2(0.45, 3.45)
     mk.paint(bm, mk.add_box(bm, (length, 0.2, 0.2), loc=(-3.725, 4.2, fz + 1.475), rot=Euler((0, tilt, 0))), TIMBER, uv)
     cb._box(bm, uv, TIMBER, (-3.6, 4.3, fz + 1.035), (0.16, 0.16, 0.79))        # post from the frails to the beam
     mk.paint(bm, mk.add_cylinder(bm, 0.02, 0.75, loc=(-2.05, 4.2, fz + 0.875), segments=6), "vellum_dim", uv)
     for k in range(2):
-        mk.paint(bm, mk.add_cylinder(bm, 0.3, 0.25, loc=(-2.05, 4.2, fz + 0.125 + k * 0.25), segments=10),
+        mk.paint(bm, mk.add_cylinder(bm, 0.3 - k * 0.03, 0.25, loc=(-2.05, 4.2, fz + 0.125 + k * 0.25), segments=10),
                  "vellum_faint", uv)
     cb._box(bm, uv, "vellum_faint", (-3.4, 3.35, fz + 0.3), (0.12, 0.3, 0.08))  # spout to the jar
     ek.jar(bm, uv, GRAIN_JAR, -3.4, 3.1, fz, 0.55, 0.5, mouth=0.28, segments=8)

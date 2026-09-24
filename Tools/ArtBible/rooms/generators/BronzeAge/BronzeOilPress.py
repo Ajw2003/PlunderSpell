@@ -25,7 +25,7 @@ def amphora_rack(sh, x0, x1, base=FZ, col=CYP):
 def build():
     mats = [("plaster", OCHRE), ("limestone", STONE), ("cypress", CYP), ("clay", TERRA),
             ("olive oil", OLIVE), ("rope", "#9C8A60"), ("mud-brick", MUD)]
-    sh = room_sheet("BronzeAge", "OuterBailey", "The Oil Press", mats, "≤ 2k tris (kit)",
+    sh = room_sheet("BronzeAge", "OuterBailey", "The Oil Press", mats, "≤ 3.2k tris (kit)",
                     "SECTION A–A · E–W THROUGH THE PRESS, LOOKING NORTH")
     kit_glow(sh, 0, FZ + 1.6, "#5A5030", rx=380, ry=200, strength=.3)
 

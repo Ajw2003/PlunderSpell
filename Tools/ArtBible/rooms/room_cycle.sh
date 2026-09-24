@@ -13,7 +13,13 @@ echo "== sheet: $KEY"
 python3 Tools/ArtBible/rooms/make_rooms.py "$KEY"
 NODE_PATH="$(npm root -g)" node Tools/ArtBible/render_png.cjs --rooms "$KEY" | tail -1
 echo "== model: $KEY"
-blender -b -P Tools/AssetPipeline/build_assets.py -- --only "$KEY" 2>&1 | grep -E "^\[|^ +- |Traceback|Error" || true
+BUILD="$(blender -b -P Tools/AssetPipeline/build_assets.py -- --only "$KEY" 2>&1)" || true
+echo "$BUILD" | grep -E "^\[|^ +- |Traceback|Error" || true
+# A failed or crashed build must stop the cycle (and anything chained after it with &&).
+if ! echo "$BUILD" | grep -q "^\[PASS\]" || echo "$BUILD" | grep -qE "^\[FAIL\]|Traceback"; then
+  echo "== model FAILED: $KEY"
+  exit 1
+fi
 if [ "${2:-}" != "--no-preview" ]; then
   blender -b -P Tools/AssetPipeline/render_previews_only.py -- "$KEY" 2>&1 | grep -E "^rendered|^unchanged|Error" || true
   blender -b -P Tools/AssetPipeline/render_room_overhead.py -- "$KEY" 2>&1 | grep -E "^rendered|Error" || true

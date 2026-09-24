@@ -41,6 +41,6 @@
     "IGNIS on the oil pithoi or the racks lights the room.",
     "The press beam and the racks are cover; the amphorae are loot but fragile."
   ],
-  "budget": "≤ 2k tris (kit)",
+  "budget": "≤ 3.2k tris (kit); 2.48k built",
   "concept": "concept/BronzeAge/BronzeOilPress.svg"
 }
