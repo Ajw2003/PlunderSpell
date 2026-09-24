@@ -396,7 +396,156 @@ def rolled_tapestry(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Banker's ledger
+# --------------------------------------------------------------------------------
+
+def _resample(points, step: float) -> list[tuple]:
+    """Points every `step` metres along a 3D polyline (for chain links)."""
+    out = [tuple(points[0])]
+    carry = 0.0
+    for a, b in zip(points, points[1:]):
+        seg = math.dist(a, b)
+        t = step - carry
+        while t <= seg:
+            f = t / seg
+            out.append(tuple(a[i] + (b[i] - a[i]) * f for i in range(3)))
+            t += step
+        carry = seg - (t - step)
+    return out
+
+
+def bankers_ledger(entry: Entry):
+    """The Livre des changes lying front board up: calf over oak boards, spine along
+    the back (+Y), fore-edge facing the viewer with two iron strap clasps and two
+    letters of credit on wax-sealed tags; five iron bosses and a paper label on the
+    front board; a 22-link library chain from the head of the back board trailing
+    on the floor to a wrenched staple with a splinter of desk on it."""
+    W, D, _H = entry.dims                      # 0.30 × 0.22 × 0.09 (+ 0.60 m chain)
+    hw, hd = W / 2.0, D / 2.0
+    board = 0.008
+    block_h = 0.070
+    top = board * 2 + block_h                   # 0.086: top of the front board
+    parts: list[Part] = []
+    calf, iron, paper = "calf_cover", "blackened_iron", "rag_paper"
+
+    # --- Boards and text block. The block sits 5 mm in from the head, tail and
+    # fore-edge (the boards' squares); the calf spine rounds over the back.
+    parts.append(Part("box", (0, 0, board / 2), (W, D, board), mat=calf))
+    parts.append(Part("box", (0, 0, top - board / 2), (W, D, board), mat=calf))
+    parts.append(Part("box", (0, 0.004, board + block_h / 2), (W - 0.010, D - 0.012, block_h),
+                      mat=paper, extras={"bevel": False}))
+    parts.append(Part("cyl", (0, hd - 0.006, top / 2), (top, 0.026, W), mat=calf,
+                      rot=(0, 90, 0), segments=12, extras={"bevel": False}))
+    for x in (-0.085, 0.0, 0.085):                      # three raised bands
+        parts.append(Part("cyl", (x, hd - 0.004, top / 2), (top + 0.004, 0.034, 0.012), mat=calf,
+                          rot=(0, 90, 0), segments=8, extras={"bevel": False}))
+
+    # --- Blind tooling on the front board: double fillet frame and diagonals.
+    z_tool = top + 0.0003
+    for inset in (0.018, 0.026):
+        frame = [(-hw + inset, -hd + inset, z_tool), (hw - inset, -hd + inset, z_tool),
+                 (hw - inset, hd - inset, z_tool), (-hw + inset, hd - inset, z_tool)]
+        parts.append(_tube(frame, (0.0012, 0.0012), calf, segments=3, closed=True,
+                           up=(0, 0, 1)))
+    i0 = 0.026
+    for sx in (1, -1):
+        parts.append(_tube([(sx * (-hw + i0), -hd + i0, z_tool), (sx * (hw - i0), hd - i0, z_tool)],
+                           (0.0012, 0.0012), calf, segments=3, up=(0, 0, 1)))
+
+    # --- Five blackened domed bosses, 3 cm × 1 cm: corners and centre (the grab).
+    dome = [(0.015, 0.0), (0.0135, 0.004), (0.008, 0.0085), (0.0, 0.010)]
+    for x, y in ((-hw + 0.035, -hd + 0.035), (hw - 0.035, -hd + 0.035),
+                 (-hw + 0.035, hd - 0.035), (hw - 0.035, hd - 0.035), (0.0, 0.0)):
+        parts.append(_lathe(dome, iron, loc=(x, y, top - 0.0005), segments=8))
+
+    # --- Paper label with a clerk's inked title (two ink strokes).
+    lx, ly = 0.0, hd - 0.055
+    parts.append(Part("box", (lx, ly, top + 0.0007), (0.080, 0.030, 0.0015), mat=paper,
+                      extras={"bevel": False}))
+    for dy, w in ((0.005, 0.060), (-0.006, 0.042)):
+        parts.append(Part("box", (lx - (0.060 - w) / 2, ly + dy, top + 0.0016), (w, 0.0025, 0.0006),
+                          mat=iron, extras={"bevel": False}))
+
+    # --- Two strap-and-pin clasps over the fore-edge (front, -Y).
+    for x in (-0.075, 0.075):
+        strap = [(x, -hd + 0.030, top + 0.0012), (x, -hd - 0.002, top + 0.0012),
+                 (x, -hd - 0.0035, top - 0.012), (x, -hd - 0.0035, board + 0.010)]
+        parts.append(_tube(strap, (0.0015, 0.0125), iron, segments=4, up=(0, 0, 1), smooth=False))
+        parts.append(Part("cyl", (x, -hd - 0.004, board / 2 + 0.002), (0.008, 0.008, 0.010),
+                          mat=iron, rot=(90, 0, 0), segments=6, extras={"bevel": False}))
+
+    # --- Letters of credit tucked in the fore-edge, each with a parchment tag and
+    # a red wax seal hanging over the edge.
+    for x, z in ((-0.030, 0.052), (0.035, 0.040)):
+        parts.append(Part("box", (x, -hd + 0.004 - 0.018, z), (0.070, 0.040, 0.002), mat=paper,
+                          rot=(0, 0, 4 if x < 0 else -6), extras={"bevel": False}))
+        tag_x, tag_y = x - 0.012, -hd - 0.030
+        parts.append(_tube([(tag_x, tag_y + 0.004, z - 0.001), (tag_x, tag_y - 0.001, z - 0.012),
+                            (tag_x + 0.002, tag_y - 0.002, 0.022)],
+                           (0.0008, 0.006), paper, segments=4, up=(0, -1, 0), smooth=False))
+        parts.append(Part("cyl", (tag_x + 0.002, tag_y - 0.006, 0.0115), (0.022, 0.022, 0.006),
+                          mat="sealing_wax", rot=(90, 0, 0), segments=10,
+                          extras={"bevel": False}))
+
+    # --- Library chain: riveted hasp at the head of the back board, 22 links
+    # (0.60 m) trailing on the floor in an arc to the wrenched staple.
+    parts.append(Part("box", (-hw - 0.004, hd - 0.050, board / 2), (0.014, 0.024, 0.010), mat=iron))
+    route = spline([(-hw - 0.010, hd - 0.050, 0.0), (-hw - 0.090, hd - 0.060, 0.0),
+                    (-hw - 0.175, hd - 0.115, 0.0), (-hw - 0.205, -0.030, 0.0),
+                    (-hw - 0.170, -hd - 0.060, 0.0), (-hw - 0.080, -hd - 0.095, 0.0),
+                    (-hw + 0.065, -hd - 0.085, 0.0)], 6)
+    pitch = 0.60 / 22
+    centres = _resample(route, pitch)[:23]
+    for k in range(22):
+        a, b = centres[k], centres[k + 1]
+        cxk, cyk = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        n = math.hypot(dx, dy)
+        dx, dy = dx / n, dy / n
+        half_l, half_w, wire = 0.019, 0.008, 0.0022
+        if k % 2 == 0:                          # lying flat
+            side, cz, normal = (-dy, dx, 0.0), wire, (0.0, 0.0, 1.0)
+        else:                                   # standing on edge (clear of the mitred corners)
+            side, cz, normal = (0.0, 0.0, 1.0), half_w + wire * 1.45, (dy, -dx, 0.0)
+        link = [(cxk + dx * sl * half_l + side[0] * sw * half_w,
+                 cyk + dy * sl * half_l + side[1] * sw * half_w,
+                 cz + side[2] * sw * half_w)
+                for sl, sw in ((1, 1), (-1, 1), (-1, -1), (1, -1))]
+        parts.append(_tube(link, (wire, wire), iron, segments=3, closed=True, up=normal))
+    # The staple: a 6 cm U wrenched from the desk, bent, with its oak splinter.
+    ex, ey, _ = centres[22]
+    staple = [(ex - 0.004, ey - 0.020, 0.004), (ex - 0.002, ey - 0.002, 0.014),
+              (ex + 0.030, ey + 0.004, 0.012), (ex + 0.052, ey - 0.012, 0.004)]
+    parts.append(_tube(staple, (0.0035, 0.0035), iron, segments=4))
+    parts.append(Part("box", (ex + 0.040, ey - 0.020, 0.008), (0.040, 0.015, 0.012),
+                      mat="oak_boards", rot=(0, 0, -20)))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.0015,
+        family_overrides={
+            # Calf rubbed through to the oak at the corners and clasp edges.
+            calf: {"wear_to": "#6B4F33", "wear_amount": 0.30, "grain": 0.25},
+            # Leaf lines on the fore-edge (albedo bands: no normal map is baked).
+            paper: {"ridges": (0.0025, 0.22), "grain": 0.18},
+        },
+        bbox_overrides={
+            "X": (0.52, "the dimension line adds 'plus a 0.60 m chain': 22 links "
+                             "trailing from the head of the back board reach 0.21 m past the "
+                             "book's head on the floor"),
+            "Y": (0.35, "the trailing chain and staple curl 0.12 m in front of the "
+                        "fore-edge (dimension line: 'plus a 0.60 m chain')"),
+        },
+        notes=["Label text, tooling depth and the seal devices are below mesh resolution; "
+               "left to a decal / normal map (EnemyForge bakes no normals).",
+               "Chain links are 4-corner closed tubes with a 3-sided wire to fit the 0.5k "
+               "chain share of the budget."],
+    )
+
+
 BLUEPRINTS = {
     "parade-armour": parade_armour,
     "rolled-tapestry": rolled_tapestry,
+    "bankers-ledger": bankers_ledger,
 }

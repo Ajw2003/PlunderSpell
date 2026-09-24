@@ -99,15 +99,15 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":2856,
+			"count":1910,
 			"max":[
 				0.09780000150203705,
-				0.08870000392198563,
+				0.08709999918937683,
 				0.12999999523162842
 			],
 			"min":[
-				-0.10379032045602798,
-				-0.001499999314546585,
+				-0.101500004529953,
+				-7.450580596923828e-09,
 				-0.12999999523162842
 			],
 			"type":"VEC3"
@@ -115,45 +115,45 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":2856,
+			"count":1910,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":2856,
+			"count":1910,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":6036,
+			"count":3780,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":34272,
+			"byteLength":22920,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":34272,
-			"byteOffset":34272,
+			"byteLength":22920,
+			"byteOffset":22920,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":22848,
-			"byteOffset":68544,
+			"byteLength":15280,
+			"byteOffset":45840,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":12072,
-			"byteOffset":91392,
+			"byteLength":7560,
+			"byteOffset":61120,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":103464,
+			"byteLength":68680,
 			"uri":"IlluminatedPsalter.bin"
 		}
 	]

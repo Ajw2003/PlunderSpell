@@ -394,23 +394,31 @@ def brass_astrolabe(entry: Entry):
     plate_z, limb_z = 0.006, 0.012              # recess depth / mater thickness (local z = -Y)
     parts: list[Part] = []
 
-    # Mater: one lathe, local +Z turned to face -Y. Engraved circles on the plate are
-    # shallow grooves, and the grooves, the limb's inner wall and the degree-scale
-    # step are painted with grime by their z level (each sits at its own depth).
-    groove = 0.0006
+    # Mater: one lathe, local +Z turned to face -Y. The plate steps down twice
+    # towards the centre on narrow slopes (engraved circles, one span each); those
+    # slopes, the limb's inner wall and the degree-scale step are painted with grime
+    # by their z level, since each sits at its own depth.
+    g = 0.0006
     prof = [(0.0, 0.0), (R, 0.0), (R, 0.0115),                       # back, outer wall
             (R - 0.0055, 0.0115), (R - 0.0055, limb_z),              # degree scale step
-            (limb_in, limb_z), (limb_in, plate_z)]                   # limb, inner wall
-    for r in (0.078, 0.050):                                         # almucantar circles
-        prof += [(r + 0.0012, plate_z), (r, plate_z - groove), (r - 0.0012, plate_z)]
-    prof += [(0.0, plate_z)]
-    parts.append(Part("lathe", (0.0, 0.0, zc), (1, 1, 1), mat="gilt_brass", segments=28,
+            (limb_in, limb_z), (limb_in, plate_z),                   # limb, inner wall
+            (0.0795, plate_z), (0.078, plate_z - g),                 # almucantar circles
+            (0.0515, plate_z - g), (0.050, plate_z - 2 * g),
+            (0.0, plate_z - 2 * g)]
+    parts.append(Part("lathe", (0.0, 0.0, zc), (1, 1, 1), mat="gilt_brass", segments=24,
                       rot=(90.0, 0.0, 0.0), extras={"profile": prof, "paint": [
                           # outer edge rubbed back to brass
                           {"mat": "worn_brass", "min": (-1, -1, 0.001), "max": (1, 1, 0.0114)},
-                          # grooves (centroid below the plate face)
-                          {"mat": "engraving_grime", "min": (-1, -1, plate_z - groove),
-                           "max": (1, 1, plate_z - 1e-5)},
+                          # The climate plate reads a shade darker than the rete over it
+                          # (the concept's grimy engraved plate under the bright rete):
+                          # it takes the worn-brass tone rather than the full gilt.
+                          {"mat": "worn_brass", "min": (-limb_in, -limb_in, plate_z - 2 * g - 1e-5),
+                           "max": (limb_in, limb_in, plate_z + 1e-5)},
+                          # the two engraved slopes (centroids half a step down)
+                          {"mat": "engraving_grime", "min": (-1, -1, plate_z - 0.6 * g),
+                           "max": (1, 1, plate_z - 0.4 * g)},
+                          {"mat": "engraving_grime", "min": (-1, -1, plate_z - 1.6 * g),
+                           "max": (1, 1, plate_z - 1.4 * g)},
                           # limb inner wall
                           {"mat": "engraving_grime", "min": (-limb_in - 1e-4, -1, plate_z + 1e-4),
                            "max": (limb_in + 1e-4, 1, limb_z - 1e-4)},
@@ -430,10 +438,10 @@ def brass_astrolabe(entry: Entry):
     ry = -(plate_z + 0.0012)
     rete = [
         Part("tube", (0, 0, 0), (1, 1, 1), mat="gilt_brass", segments=4,
-             extras={"path": _circle_xz(0.0, zc, limb_in - 0.004, ry, 24), "closed": True,
+             extras={"path": _circle_xz(0.0, zc, limb_in - 0.004, ry, 20), "closed": True,
                      "section": (0.0012, 0.003), "up": (0, 1, 0), "bevel": False}),
         Part("tube", (0, 0, 0), (1, 1, 1), mat="gilt_brass", segments=4,
-             extras={"path": _circle_xz(0.0, zc + 0.024, 0.058, ry, 20), "closed": True,
+             extras={"path": _circle_xz(0.0, zc + 0.024, 0.058, ry, 16), "closed": True,
                      "section": (0.0012, 0.0055), "up": (0, 1, 0), "bevel": False}),
     ]
     for a in (80.0, 160.0, 250.0, 335.0):
@@ -480,29 +488,29 @@ def brass_astrolabe(entry: Entry):
     parts.append(Part("cyl", (0.0, (pin_front + 0.004) / 2.0, zc), (0.005, 0.004 - pin_front, 0.005),
                       mat="steel_pin", segments=8, rot=(90.0, 0.0, 0.0), extras={"bevel": False}))
     parts.append(Part("sphere", (0.0, pin_front + 0.0005, zc), (0.0075, 0.004, 0.0075),
-                      mat="steel_pin", segments=8, rings=4, extras={"bevel": False}))
+                      mat="steel_pin", segments=6, rings=4, extras={"bevel": False}))
     horse = spline([(0.004, zc + 0.003), (0.012, zc + 0.006), (0.024, zc + 0.004),
                     (0.030, zc - 0.001), (0.022, zc - 0.004), (0.010, zc - 0.004),
                     (0.004, zc - 0.003)], 2)
     parts.append(upright(horse, rule_y - 0.0032, 0.0032, "steel_pin", bevel=False))
 
     # Throne: pierced scrollwork shoulder standing on the top of the mater.
-    right = [(0.0105, 0.233), (0.014, 0.226), (0.024, 0.216), (0.040, 0.206),
-             (0.055, 0.199), (0.066, 0.190), (0.071, 0.178)]
+    # Rises from the mater's shoulders (z ~ 0.19 at x = ±0.07) to a neck at 0.247.
+    right = [(0.0095, 0.247), (0.013, 0.241), (0.022, 0.233), (0.036, 0.223),
+             (0.050, 0.213), (0.062, 0.201), (0.071, 0.187)]
     throne = spline(right, 2)
-    outline = ([(-x, z) for x, z in reversed(throne)] + throne +
-               [(0.060, 0.168), (-0.060, 0.168)])
-    outline = [(-x, z) for x, z in reversed(throne)] + throne + [(0.066, 0.170), (-0.066, 0.170)]
+    outline = [(-x, z) for x, z in reversed(throne)] + throne + [(0.066, 0.176), (-0.066, 0.176)]
     parts.append(upright(outline, -0.010, 0.008, "gilt_brass", bevel=False))
-    for x, z, d in ((0.0, 0.217, 0.010), (-0.035, 0.200, 0.013), (0.035, 0.200, 0.013)):
-        for y0 in (-0.0104, -0.0021):                          # the piercing, front and back
-            parts.append(disc(x, z, d, y0, 0.0005, "engraving_grime", 8))
+    for x, z, d in ((0.0, 0.234, 0.009), (-0.036, 0.216, 0.012), (0.036, 0.216, 0.012)):
+        # The piercing, shown on the face only (the back of the throne sits
+        # against the hand; the triangles went to the rete's 20 pointers instead).
+        parts.append(disc(x, z, d, -0.0104, 0.0005, "engraving_grime", 6))
     # Shackle and suspension ring (worn brass, 5 mm stock, 0.05 dia).
-    parts.append(Part("box", (0.0, -0.006, 0.2405), (0.012, 0.006, 0.017), mat="worn_brass",
+    parts.append(Part("box", (0.0, -0.006, 0.2515), (0.011, 0.006, 0.013), mat="worn_brass",
                       extras={"bevel": False}))
-    ring_d = 0.05
+    ring_d = 0.046     # 0.05 in the bullet, 0.04 on the concept callout; 0.046 fits H 0.30
     parts.append(Part("torus", (0.0, -0.006, H - ring_d / 2.0), (ring_d - 0.005,) * 3,
-                      mat="worn_brass", segments=16, rings=5, minor=0.005 / (ring_d - 0.005),
+                      mat="worn_brass", segments=12, rings=4, minor=0.005 / (ring_d - 0.005),
                       rot=(90.0, 0.0, 0.0), extras={"bevel": False, "smooth": True}))
 
     # Alidade on the back, with its two sighting vanes standing proud.
@@ -518,9 +526,8 @@ def brass_astrolabe(entry: Entry):
     for s in (-1, 1):
         cx, cz = s * au[0] * 0.070, zc + s * au[1] * 0.070
         parts.append(Part("box", (cx, 0.0022 + 0.0065, cz), (0.011, 0.013, 0.0022),
-                          mat="gilt_brass", rot=(0.0, -math.degrees(al_a) + 90.0, 0.0),
+                          mat="gilt_brass", rot=(0.0, 90.0 - math.degrees(al_a), 0.0),
                           extras={"bevel": False}))
-        parts[-1].rot = (0.0, 90.0 - math.degrees(al_a), 0.0)
 
     return blueprint(
         entry, parts,

@@ -18,7 +18,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Astrolabe"
+			"name":"BankersLedger"
 		}
 	],
 	"materials":[
@@ -37,7 +37,7 @@
 					"emissiveStrength":9
 				}
 			},
-			"name":"Astrolabe",
+			"name":"BankersLedger",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
@@ -50,7 +50,7 @@
 	],
 	"meshes":[
 		{
-			"name":"Astrolabe",
+			"name":"BankersLedger",
 			"primitives":[
 				{
 					"attributes":{
@@ -81,79 +81,79 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"Astrolabe_Emission",
-			"uri":"Astrolabe_Emission.png"
+			"name":"BankersLedger_Emission",
+			"uri":"BankersLedger_Emission.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"Astrolabe_BaseMap",
-			"uri":"Astrolabe_BaseMap.png"
+			"name":"BankersLedger_BaseMap",
+			"uri":"BankersLedger_BaseMap.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"Astrolabe_ORM",
-			"uri":"Astrolabe_ORM.png"
+			"name":"BankersLedger_ORM",
+			"uri":"BankersLedger_ORM.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1846,
+			"count":2317,
 			"max":[
-				0.10999999940395355,
-				0.30000001192092896,
-				0.016599999740719795
+				0.15000000596046448,
+				0.09549999982118607,
+				0.22999796271324158
 			],
 			"min":[
-				-0.10999999940395355,
-				0,
-				-0.015200000256299973
+				-0.3672288656234741,
+				-0.0020000003278255463,
+				-0.12299999594688416
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1846,
+			"count":2317,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1846,
+			"count":2317,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":4368,
+			"count":4302,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":22152,
+			"byteLength":27804,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":22152,
-			"byteOffset":22152,
+			"byteLength":27804,
+			"byteOffset":27804,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":14768,
-			"byteOffset":44304,
+			"byteLength":18536,
+			"byteOffset":55608,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":8736,
-			"byteOffset":59072,
+			"byteLength":8604,
+			"byteOffset":74144,
 			"target":34963
 		}
 	],
@@ -165,8 +165,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":67808,
-			"uri":"Astrolabe.bin"
+			"byteLength":82748,
+			"uri":"BankersLedger.bin"
 		}
 	]
 }

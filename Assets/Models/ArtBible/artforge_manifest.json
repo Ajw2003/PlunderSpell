@@ -74,6 +74,83 @@
       "build_seconds": 2.7
     },
     {
+      "key": "items/bronze/gold-death-mask",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "gold-death-mask",
+      "name": "GoldDeathMask",
+      "title": "Gold Death-Mask",
+      "passed": true,
+      "stats": {
+        "vertices": 772,
+        "faces": 795,
+        "triangles": 1364,
+        "islands": 45,
+        "lowest_z": 0.0,
+        "height": 0.31,
+        "width": 0.326,
+        "budget": 1500,
+        "bbox_m": "0.326x0.081x0.310",
+        "vs_spec": "W=0.326/0.330 D=0.081/0.080 H=0.310/0.310"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.26,
+          0.08,
+          0.31
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "orpiment_gold": {
+          "name": "Orpiment gold",
+          "base": "#C9A227",
+          "rough": 0.32,
+          "metal": 1.0,
+          "emit": null
+        },
+        "deep_gold_shadow": {
+          "name": "Deep gold shadow",
+          "base": "#8A6B1A",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "gold_highlight": {
+          "name": "Gold highlight",
+          "base": "#E6C75A",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "tomb_dust": {
+          "name": "Tomb dust",
+          "base": "#5A4A38",
+          "rough": 0.95,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "X (W) checked against 0.330 m instead of the JSON's 0.260 m: the 0.26 m width is the face oval (the concept's front view dimensions the face only); the 0.04 m ear tabs of the build bullets stand out beyond it on both sides",
+        "JSON materials not used by any part: ['linen_shroud']"
+      ],
+      "notes": [
+        "The linen shroud is an environment prop (JSON), not modelled here.",
+        "Crumpled-state swap mesh (≤ 1k) not built yet.",
+        "Brow hatching is below mesh resolution; left to the normal map."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/GoldDeathMask.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/glTF/GoldDeathMask.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/GoldDeathMask/GoldDeathMask.blend"
+      },
+      "build_seconds": 3.3
+    },
+    {
       "key": "items/bronze/oxhide-ingot",
       "kind": "items",
       "age": "bronze",
@@ -435,18 +512,18 @@
       "slug": "illuminated-psalter",
       "name": "IlluminatedPsalter",
       "title": "Illuminated Psalter",
-      "passed": false,
+      "passed": true,
       "stats": {
-        "vertices": 1108,
-        "faces": 1092,
-        "triangles": 2012,
-        "islands": 52,
-        "lowest_z": -0.0015,
-        "height": 0.089,
-        "width": 0.202,
+        "vertices": 708,
+        "faces": 740,
+        "triangles": 1260,
+        "islands": 40,
+        "lowest_z": -0.0,
+        "height": 0.087,
+        "width": 0.199,
         "budget": 1500,
-        "bbox_m": "0.202x0.260x0.090",
-        "vs_spec": "W=0.202/0.190 D=0.260/0.260 H=0.090/0.080"
+        "bbox_m": "0.199x0.260x0.087",
+        "vs_spec": "W=0.199/0.190 D=0.260/0.260 H=0.087/0.080"
       },
       "spec": {
         "dims_WDH_m": [
@@ -501,10 +578,7 @@
           "emit": null
         }
       },
-      "failures": [
-        "2012 triangles exceeds the 1500 budget",
-        "Z (H) extent 0.090 m is +12 % off the expected 0.080 m (tolerance ±10 %)"
-      ],
+      "failures": [],
       "warnings": [],
       "notes": [
         "Text-block edges are vellum with painted page lines, as the concept draws them; the build bullet's gilt edges would turn the whole block gold.",
@@ -517,7 +591,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/glTF/IlluminatedPsalter.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/IlluminatedPsalter.blend"
       },
-      "build_seconds": 2.7
+      "build_seconds": 3.6
     },
     {
       "key": "items/high/silver-ewer",
@@ -599,6 +673,91 @@
         "blend": "Assets/Models/ArtBible/Items/High/SilverEwer/SilverEwer.blend"
       },
       "build_seconds": 3.1
+    },
+    {
+      "key": "items/late/bankers-ledger",
+      "kind": "items",
+      "age": "late",
+      "slug": "bankers-ledger",
+      "name": "BankersLedger",
+      "title": "Banker's Ledger",
+      "passed": true,
+      "stats": {
+        "vertices": 777,
+        "faces": 709,
+        "triangles": 1434,
+        "islands": 54,
+        "lowest_z": -0.002,
+        "height": 0.095,
+        "width": 0.517,
+        "budget": 1500,
+        "bbox_m": "0.517x0.353x0.098",
+        "vs_spec": "W=0.517/0.520 D=0.353/0.350 H=0.098/0.090"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.3,
+          0.22,
+          0.09
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "calf_cover": {
+          "name": "Calf cover",
+          "base": "#5A3A26",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        },
+        "oak_boards": {
+          "name": "Oak boards",
+          "base": "#6B4F33",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "rag_paper": {
+          "name": "Rag paper",
+          "base": "#D8CCAE",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "blackened_iron": {
+          "name": "Blackened iron",
+          "base": "#2E2F31",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "sealing_wax": {
+          "name": "Sealing wax",
+          "base": "#8A3A2A",
+          "rough": 0.25,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "X (W) checked against 0.520 m instead of the JSON's 0.300 m: the dimension line adds 'plus a 0.60 m chain': 22 links trailing from the head of the back board reach 0.21 m past the book's head on the floor",
+        "Y (D) checked against 0.350 m instead of the JSON's 0.220 m: the trailing chain and staple curl 0.12 m in front of the fore-edge (dimension line: 'plus a 0.60 m chain')",
+        "bbox centre is off the origin in X by -0.109 m",
+        "bbox centre is off the origin in Y by -0.053 m"
+      ],
+      "notes": [
+        "Label text, tooling depth and the seal devices are below mesh resolution; left to a decal / normal map (EnemyForge bakes no normals).",
+        "Chain links are 4-corner closed tubes with a 3-sided wire to fit the 0.5k chain share of the budget."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Late/BankersLedger/BankersLedger.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Late/BankersLedger/glTF/BankersLedger.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Late/BankersLedger/BankersLedger.blend"
+      },
+      "build_seconds": 3.4
     },
     {
       "key": "items/late/parade-armour",
@@ -785,12 +944,12 @@
       "slug": "brass-astrolabe",
       "name": "Astrolabe",
       "title": "Astrolabe",
-      "passed": false,
+      "passed": true,
       "stats": {
-        "vertices": 1036,
-        "faces": 1024,
-        "triangles": 1896,
-        "islands": 47,
+        "vertices": 810,
+        "faces": 816,
+        "triangles": 1456,
+        "islands": 44,
         "lowest_z": 0.0,
         "height": 0.3,
         "width": 0.22,
@@ -837,9 +996,7 @@
           "emit": null
         }
       },
-      "failures": [
-        "1896 triangles exceeds the 1500 budget"
-      ],
+      "failures": [],
       "warnings": [],
       "notes": [
         "Hangs face-on, mater foot at z = 0; the throne and ring give the height.",
@@ -853,7 +1010,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/Astrolabe/glTF/Astrolabe.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/Astrolabe/Astrolabe.blend"
       },
-      "build_seconds": 2.5
+      "build_seconds": 2.4
     },
     {
       "key": "items/powder/curiosity-cabinet",

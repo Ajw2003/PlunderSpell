@@ -6,7 +6,7 @@ import math
 import random
 
 from .. import kit
-from ..kit import Part, spline
+from ..kit import Part, rounded_rect, spline
 from ..spec import Entry
 from . import blueprint
 
@@ -540,6 +540,167 @@ def faience_hippo(entry: Entry):
     )
 
 
+def gold_death_mask(entry: Entry):
+    """Repoussé gold face: an oval dished sheet with a rolled rim, hollow behind,
+    closed almond eyes, a thin nose ridge, upturned moustache, beard incisions and
+    pierced ear tabs. Stands upright facing -Y (as the concept's front view)."""
+    W, D, H = entry.dims                      # face 0.26 × dish 0.08 × 0.31
+    hw, top_h, bot_h = W / 2.0, 0.148, 0.158
+    z0 = bot_h * 1.012                        # rolled rim's lowest point at z = 0
+    M = 22
+
+    # Face outline in XZ about (0, z0): broad brow, tapering to the chin.
+    outline = []
+    for j in range(M):
+        t = 2.0 * math.pi * j / M - math.pi / 2.0
+        c, sn = math.cos(t), math.sin(t)
+        e = 2.5 if sn > 0 else 2.0
+        x = math.copysign(abs(c) ** (2.0 / e), c) * hw
+        x *= 1.0 - 0.26 * max(0.0, -sn) ** 2          # chin narrower than temples
+        z = math.copysign(abs(sn) ** (2.0 / e), sn) * (top_h if sn > 0 else bot_h)
+        outline.append((x, z))
+
+    def y_front(u):                            # the dish: rim at +Y, face bulges to -Y
+        return 0.030 - 0.052 * (1.0 - min(u, 1.0) ** 2.2)
+
+    def ring(u, y):
+        return [(u * x, y, z0 + u * z) for x, z in outline]
+
+    shell = 0.002                              # 0.8 mm sheet, modelled 2 mm
+    rings = [[(0.0, y_front(0) + shell, z0)]]
+    rings += [ring(u * 0.985, y_front(u) + shell) for u in (0.4, 0.8, 0.975)]
+    rings += [ring(0.995, 0.0395), ring(1.012, 0.0360)]          # rolled rim
+    rings += [ring(u, y_front(u)) for u in (1.0, 0.92, 0.78, 0.56, 0.30)]
+    rings.append([(0.0, y_front(0), z0)])
+    parts = [Part(LOFT, (0, 0, 0), (1, 1, 1), mat="orpiment_gold", extras={
+        "rings": rings, "smooth": True,
+        "paint": [{"mat": "gold_highlight", "min": (-1, 0.0345, -1), "max": (1, 1, 1)}]})]
+
+    def surf(x, z, lift=0.0005):
+        """Point on the front face at (x, z), `lift` metres proud of it."""
+        dz = z - z0
+        r = math.hypot(x, dz)
+        u = 0.0 if r < 1e-9 else r / _ray_radius(outline, math.atan2(dz, x))
+        return (x, y_front(u) - lift, z)
+
+    def line(points, mat, section, sides=4, lift=0.0005):
+        return Part("tube", (0, 0, 0), (1, 1, 1), mat=mat, segments=sides,
+                    extras={"path": [surf(x, z, lift) for x, z in points],
+                            "section": section, "up": (0, -1, 0),
+                            "smooth": True, "bevel": False})
+
+    for side in (1, -1):
+        # Brows: raised arcs, rubbed bright.
+        brow = [(side * (0.014 + 0.078 * t), 0.212 + 0.016 * math.sin(math.pi * (0.25 + 0.75 * t))
+                 - 0.006 * t) for t in (0.0, 0.2, 0.4, 0.6, 0.8, 1.0)]
+        parts.append(line(brow, "gold_highlight", (0.0035, 0.0045), lift=0.001))
+        # Closed almond eyes: a sunk dark socket, a raised upper lid, lashes below.
+        ex, ez = side * 0.050, 0.180
+        sx, sy, sz = surf(ex, ez, 0.0)
+        parts.append(Part("sphere", (sx, sy + 0.002, sz), (0.060, 0.012, 0.019),
+                          mat="deep_gold_shadow", segments=6, rings=4,
+                          extras={"bevel": False, "smooth": True}))
+        lid = [(ex + side * 0.030 * a, ez + 0.0085 * math.cos(math.pi * a / 2.0) - 0.001)
+               for a in (-1.0, -0.6, -0.2, 0.2, 0.6, 1.0)]
+        parts.append(line(lid, "gold_highlight", (0.003, 0.0032), lift=0.002))
+        for a in (-0.45, 0.0, 0.45):
+            lx = ex + side * 0.028 * a
+            lz = ez - 0.006 * math.cos(math.pi * a / 2.0) - 0.003
+            parts.append(line([(lx, lz), (lx, lz - 0.008)], "tomb_dust", (0.001, 0.0012),
+                              sides=3, lift=0.0))
+        # Upturned moustache, 0.05 m each side, tips rubbed bright.
+        stache = [(side * 0.003, 0.108), (side * 0.014, 0.1025), (side * 0.029, 0.100),
+                  (side * 0.043, 0.1035), (side * 0.053, 0.112), (side * 0.057, 0.124),
+                  (side * 0.053, 0.132)]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="orpiment_gold", segments=5,
+                          extras={"path": [surf(x, z, 0.001) for x, z in stache],
+                                  "section": (0.004, 0.0055), "up": (0, -1, 0),
+                                  "smooth": True, "bevel": False, "paint": [
+                                      {"mat": "gold_highlight",
+                                       "min": (0.046 if side > 0 else -1, -1, -1),
+                                       "max": (1 if side > 0 else -0.046, 1, 1)}]}))
+        # Ear tab: a flat rounded plate on the rim, pierced for the binding cord.
+        ear_x = side * (hw + 0.012)
+        parts.append(Part("prism", (0.0, 0.027, 0.0), (1, 1, 0.005), mat="orpiment_gold",
+                          rot=(90, 0, 0), extras={"bevel": False, "outline":
+                              rounded_rect(0.042, 0.062, 0.016, 2, cx=ear_x, cy=0.170)}))
+        parts.append(Part("cyl", (ear_x + side * 0.006, 0.0243, 0.170), (0.009, 0.009, 0.002),
+                          mat="tomb_dust", rot=(90, 0, 0), segments=6,
+                          extras={"bevel": False}))
+        # Fixing holes at the temple and beside the chin.
+        for fx, fz in ((0.106, 0.250), (0.030, 0.022)):
+            px, py, pz = surf(side * fx, fz, 0.0)
+            parts.append(Part("sphere", (px, py, pz), (0.007, 0.004, 0.007), mat="tomb_dust",
+                              segments=4, rings=3, extras={"bevel": False}))
+        # Nostril.
+        parts.append(Part("sphere", (side * 0.0075, surf(0, 0.121)[1] - 0.014, 0.1205),
+                          (0.007, 0.005, 0.005), mat="deep_gold_shadow", segments=5,
+                          rings=3, extras={"bevel": False}))
+
+    # Nose: a thin ridge from between the brows widening to the tip.
+    nose = [[surf(0, 0.222, -0.004)]]
+    for z, w, p in ((0.212, 0.0055, 0.004), (0.185, 0.0065, 0.010), (0.155, 0.0085, 0.016),
+                    (0.133, 0.0125, 0.021), (0.121, 0.0135, 0.018)):
+        yc = surf(0, z, 0.0)[1]
+        nose.append([(w * math.cos(a), yc - p * max(0.0, -math.sin(a)) + 0.004 * max(0.0, math.sin(a)), z)
+                     for a in (2.0 * math.pi * k / 8 for k in range(8))])
+    nose.append([(0.0, surf(0, 0.113)[1] - 0.004, 0.112)])
+    parts.append(Part(LOFT, (0, 0, 0), (1, 1, 1), mat="orpiment_gold", extras={
+        "rings": nose, "smooth": True, "bevel": False,
+        "paint": [{"mat": "gold_highlight", "min": (-1, -1, 0.128), "max": (1, 1, 0.2)}]}))
+
+    # Mouth: thin closed lips with a faint smile line.
+    mx, my, mz = surf(0, 0.084, 0.0)
+    parts.append(Part("sphere", (mx, my + 0.001, mz), (0.042, 0.010, 0.013),
+                      mat="orpiment_gold", segments=7, rings=3,
+                      extras={"bevel": False, "smooth": True}))
+    parts.append(line([(-0.021, 0.0855), (-0.008, 0.0835), (0.008, 0.0835), (0.021, 0.0855)],
+                      "deep_gold_shadow", (0.0012, 0.0014), sides=3, lift=0.005))
+
+    # Beard: parallel incisions along the jaw and chin, dusted with tomb earth.
+    for i in range(-7, 8):
+        bx = i * 0.0135
+        edge = 1.0 - 0.26 * 0.9                                # chin taper near the bottom
+        z_hi = 0.070 if abs(bx) < 0.034 else (0.098 if abs(bx) < 0.075 else 0.135)
+        # lowest z inside the outline at this x, less a margin
+        lo_z = z0 - bot_h * (1.0 - (abs(bx) / (hw * edge)) ** 2) ** 0.5 + 0.018 \
+            if abs(bx) < hw * edge else z_hi - 0.02
+        lo_z = min(lo_z, z_hi - 0.02)
+        pts = [(bx, z_hi), (bx * 1.04, lo_z)]
+        parts.append(line(pts, "tomb_dust", (0.0012, 0.0013), sides=3, lift=0.0003))
+
+    # The old burial crumple on the lower left cheek: two creased facets.
+    cx, cz = -0.078, 0.062
+    px, py, pz = surf(cx, cz, 0.0)
+    qx, qy, _ = surf(cx - 0.01, cz, 0.0)
+    yaw = math.degrees(math.atan2(qy - py, 0.01))
+    for mat, pts, dy in (("deep_gold_shadow", [(-0.018, -0.016), (0.012, -0.020), (-0.004, 0.024)], 0.0),
+                         ("gold_highlight", [(-0.004, 0.024), (0.012, -0.020), (0.020, 0.012)], 0.0006)):
+        parts.append(Part("prism", (px, py - 0.0008 - dy, pz), (1, 1, 0.0016), mat=mat,
+                          rot=(90, 0, yaw), extras={"bevel": False, "outline": pts}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.0,          # a beaten sheet: the rolled rim is modelled, nothing is machined
+        family_overrides={
+            "orpiment_gold": {"rough": 0.32, "wear_to": "#E6C75A", "wear_amount": 0.2,
+                              "grain": 0.12},
+            # Deep gold is still gold (metallic), just darker and duller in the hollows.
+            "deep_gold_shadow": {"metal": 1.0, "rough": 0.45},
+            "gold_highlight": {"rough": 0.25},
+            "tomb_dust": {"rough": 0.95},
+        },
+        bbox_overrides={
+            "X": (0.33, "the 0.26 m width is the face oval (the concept's front view "
+                        "dimensions the face only); the 0.04 m ear tabs of the build "
+                        "bullets stand out beyond it on both sides"),
+        },
+        notes=["The linen shroud is an environment prop (JSON), not modelled here.",
+               "Crumpled-state swap mesh (≤ 1k) not built yet.",
+               "Brow hatching is below mesh resolution; left to the normal map."],
+    )
+
+
 def _painted_line(points_xz, flank_y, side, lift=0.0004):
     """A black manganese stroke lying on the hippo's flank, from (x, z) points."""
     path = [(x, flank_y(x, z, side) + side * lift, z) for x, z in points_xz]
@@ -552,4 +713,5 @@ BLUEPRINTS = {
     "sealed-amphora": sealed_amphora,
     "oxhide-ingot": oxhide_ingot,
     "faience-hippo": faience_hippo,
+    "gold-death-mask": gold_death_mask,
 }

@@ -18,7 +18,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Astrolabe"
+			"name":"GoldDeathMask"
 		}
 	],
 	"materials":[
@@ -37,7 +37,7 @@
 					"emissiveStrength":9
 				}
 			},
-			"name":"Astrolabe",
+			"name":"GoldDeathMask",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
@@ -50,7 +50,7 @@
 	],
 	"meshes":[
 		{
-			"name":"Astrolabe",
+			"name":"GoldDeathMask",
 			"primitives":[
 				{
 					"attributes":{
@@ -81,79 +81,79 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"Astrolabe_Emission",
-			"uri":"Astrolabe_Emission.png"
+			"name":"GoldDeathMask_Emission",
+			"uri":"GoldDeathMask_Emission.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"Astrolabe_BaseMap",
-			"uri":"Astrolabe_BaseMap.png"
+			"name":"GoldDeathMask_BaseMap",
+			"uri":"GoldDeathMask_BaseMap.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"Astrolabe_ORM",
-			"uri":"Astrolabe_ORM.png"
+			"name":"GoldDeathMask_ORM",
+			"uri":"GoldDeathMask_ORM.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1846,
+			"count":1748,
 			"max":[
-				0.10999999940395355,
-				0.30000001192092896,
-				0.016599999740719795
+				0.16300000250339508,
+				0.3096719980239868,
+				0.041942521929740906
 			],
 			"min":[
-				-0.10999999940395355,
+				-0.16300000250339508,
 				0,
-				-0.015200000256299973
+				-0.039500001817941666
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1846,
+			"count":1748,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1846,
+			"count":1748,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":4368,
+			"count":4092,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":22152,
+			"byteLength":20976,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":22152,
-			"byteOffset":22152,
+			"byteLength":20976,
+			"byteOffset":20976,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":14768,
-			"byteOffset":44304,
+			"byteLength":13984,
+			"byteOffset":41952,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":8736,
-			"byteOffset":59072,
+			"byteLength":8184,
+			"byteOffset":55936,
 			"target":34963
 		}
 	],
@@ -165,8 +165,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":67808,
-			"uri":"Astrolabe.bin"
+			"byteLength":64120,
+			"uri":"GoldDeathMask.bin"
 		}
 	]
 }

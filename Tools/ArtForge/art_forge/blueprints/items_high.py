@@ -516,12 +516,12 @@ def illuminated_psalter(entry: Entry):
                           extras={"outline": rounded_rect(W, D, 0.004, 1)}))
     parts.append(Part("box", (0.001, 0, board_t + block_h / 2.0), (0.180, 0.252, block_h),
                       mat="vellum", extras={"bevel": False}))
-    parts.append(Part("cyl", (-hw + 0.005, 0, top / 2.0), (0.024, top, D - 0.002),
+    parts.append(Part("cyl", (-hw + 0.006, 0, top / 2.0), (0.020, top, D - 0.002),
                       mat="tawed_leather", segments=10, rot=(90, 0, 0),
                       extras={"smooth": True, "bevel": False}))
     for y in (-0.078, -0.026, 0.026, 0.078):  # four raised bands
-        parts.append(Part("cyl", (-hw + 0.005, y, top / 2.0), (0.029, top + 0.003, 0.008),
-                          mat="tawed_leather", segments=10, rot=(90, 0, 0),
+        parts.append(Part("cyl", (-hw + 0.006, y, top / 2.0), (0.025, top, 0.008),
+                          mat="tawed_leather", segments=8, rot=(90, 0, 0),
                           extras={"smooth": True, "bevel": False}))
 
     # --- Front cover: gilt frame 22 mm wide, inset 8 mm from the board edge.
@@ -544,10 +544,10 @@ def illuminated_psalter(entry: Entry):
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="ivory", segments=4, extras={
         "path": vesica, "closed": True, "section": (0.0022, 0.0022), "up": (0, 0, 1),
         "smooth": True, "bevel": False}))
-    parts.append(Part("prism", (0, 0, pz + 0.0007), (1, 1, 0.0014), mat="ivory",
+    parts.append(Part("prism", (0, 0, pz + 0.0014), (1, 1, 0.0028), mat="ivory",
                       extras={"outline": figure_outline(0.0, -0.058, 0.086, 0.052),
                               "bevel": False}))
-    parts.append(Part("cyl", (0, 0.043, pz + 0.001), (0.024, 0.024, 0.002), mat="ivory",
+    parts.append(Part("cyl", (0, 0.043, pz + 0.0015), (0.024, 0.024, 0.003), mat="ivory",
                       segments=10, extras={"bevel": False}))
 
     # Sixteen cabochons on the frame: 1.6 cm at the corners, 1.1 cm between,
@@ -557,11 +557,14 @@ def illuminated_psalter(entry: Entry):
             + [(cx, cy, 0.016)] + [(cx, y, 0.011) for y in (0.05, 0.0, -0.05)]
             + [(cx, -cy, 0.016)] + [(x, -cy, 0.011) for x in (0.038, 0.0, -0.038)]
             + [(-cx, -cy, 0.016)] + [(-cx, y, 0.011) for y in (-0.05, 0.0, 0.05)])
+    # Raised collets are modelled on the four corner stones only (budget); the small
+    # stones sit straight on the gilt frame, which reads the same at game distance.
     for i, (x, y, d) in enumerate(ring):
-        parts.append(Part("cyl", (x, y, top + ft + 0.0012), (d + 0.004, d + 0.004, 0.0024),
-                          mat="gilt", segments=8, extras={"bevel": False}))
-        parts.append(Part("sphere", (x, y, top + ft + 0.0022), (d, d, 0.4 * d + 0.0026),
-                          mat="garnet" if i % 2 == 0 else "sapphire", segments=8, rings=4,
+        if d > 0.012:
+            parts.append(Part("cyl", (x, y, top + ft + 0.0008), (d + 0.004, d + 0.004, 0.0016),
+                              mat="gilt", segments=8, extras={"bevel": False}))
+        parts.append(Part("sphere", (x, y, top + ft + 0.0006), (d, d, 0.5 * d + 0.001),
+                          mat="garnet" if i % 2 == 0 else "sapphire", segments=6, rings=3,
                           extras={"smooth": True, "bevel": False}))
 
     # --- Clasps: leather straps 1.6 cm wide from the back board, up the fore-edge
