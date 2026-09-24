@@ -1757,7 +1757,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/glTF/AlauntWarHound.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/AlauntWarHound.blend"
       },
-      "build_seconds": 3.0
+      "build_seconds": 2.8
     },
     {
       "key": "enemies/high/lantern-warden",
@@ -1862,7 +1862,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/LanternWarden/glTF/LanternWarden.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
-      "build_seconds": 3.3
+      "build_seconds": 3.4
     }
   ]
 }

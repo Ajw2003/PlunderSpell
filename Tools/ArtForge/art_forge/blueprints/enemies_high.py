@@ -307,7 +307,7 @@ def _harness(fig: Quadruped, y_front: float, hem_z: float) -> list[Part]:
     for k in range(16):
         a = 2 * math.pi * k / 16
         z_here = (cz + math.sin(a) * hh) * fig.sz
-        pad = 0.024 if z_here > hem_z - 0.01 else 0.008
+        pad = 0.019 if z_here > hem_z - 0.01 else 0.008
         ring.append(fig.body_ring(y, cz, hw, hh, keel, 1, pad=pad, a0=a, a1=a,
                                   closed=False)[0])
     parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="collar_leather", bone="Spine3",
@@ -349,9 +349,9 @@ def _collar(fig: Quadruped) -> list[Part]:
     for k in range(8):
         a = 2 * math.pi * (k + 0.5) / 8
         n = side * math.cos(a) + top * math.sin(a)
-        base = centre + n * (r + 0.012)
+        base = centre + n * (r + 0.016)
         spike_rot = n.to_track_quat("Z", "Y").to_euler()
-        parts.append(Part("cone", tuple(base), (0.022, 0.022, 0.030), mat="spike_iron",
+        parts.append(Part("cone", tuple(base), (0.026, 0.026, 0.036), mat="spike_iron",
                           bone="Neck1", rot=tuple(math.degrees(v) for v in spike_rot),
                           segments=5, extras={"rigid": True, "bevel": False}))
     ring_at = centre - top * (r + 0.022)
