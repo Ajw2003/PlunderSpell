@@ -1,5 +1,20 @@
 # Today
 
+**2026-09-24, evening — playtest 2 on staging: carrying, loot amount, the Late centre.** The user's
+second test on `claude/staging-2026-09-24` found three things, all fixed there.
+- **Carrying.** Held items lagged and swung when walking. Raids carry through `ItemManager`/`Item`,
+  a strength-capped pull toward the crosshair, and walking was going through the same pull as the
+  mouse. Now the body carries the item and only the mouse is weighted. This is also where the grip
+  fix belonged; last round's was in a path raids don't use.
+- **Loot.** Raids held about 22 items, one per room at most. Now 44-53: several per room, one per
+  anchor, and the crypt centre is full.
+- **The Late Medieval centre.** The Effigy Crypt's tomb sat in a corner. It's re-laid with a gilt
+  floor brass under a candle hearse. The walkway rule rules out a tomb in the middle.
+EditMode 25/25, PlayMode 186/186. Details:
+[`docs/plans/staging-playtest-2-2026-09-24.md`](plans/staging-playtest-2-2026-09-24.md).
+
+---
+
 **2026-09-24, evening — staging follow-ups done: every enemy and room wired in, grips fixed, old
 inventory gone.** On `claude/staging-2026-09-24`, at the user's request after their first test. All 16
 enemies are in their era's roster, with no fallback warnings, and all 29 Late Medieval pieces are

@@ -32,7 +32,7 @@ All 20 plunder items and all 16 enemies from the art bible (`docs/art/`) exist a
 textured models under `Assets/Models/ArtBible/`, built by `Tools/ArtForge/`. The enemies are rigged
 with Unity-Humanoid bone names and skins blended across at most 4 bones. The era chosen in the Lair
 now decides which rooms, loot and enemies a raid uses (`EraContentCatalogue`, filled by
-`Tools/Plunderspell/Forge Era Content`). Wired in: the 20 items (held upright at a per-item grip point),
+`Tools/Plunderspell/Forge Era Content`). Wired in: the 20 items (carried by their per-item grip point, riding with the body; 44-53 placed per raid),
 the Bronze Age and Late Medieval room sets, and all 16 enemies, 4 per era. Not yet: rooms of their
 own for High Medieval (it uses the original set) and Age of Powder (no room art). No enemy is animated: no
 Animator, no clips, no spring bones. `Assets/Models/ArtBible/AllEnemies/` holds a bare model prefab

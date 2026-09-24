@@ -94,6 +94,10 @@ launched by mistake for one request and were stopped before changing anything).
 | `c8d7752` | `HistoricalEra` registered with PurrNet in its own assembly (`Inventory/NetworkTypes.cs`) |
 | `a22f982` | C: old inventory removed (also `ItemDefinition` and `ItemStack`, which only it used) |
 
+**Correction, 2026-09-24 (playtest 2):** part B's grip fix went into `LootPickup`'s hand-socket
+path, which raids don't use. Raids carry items through `ItemManager`/`Item`, so the user still saw
+items held by their base. Fixed there in `staging-playtest-2-2026-09-24.md`, part 1.
+
 Found along the way:
 
 - **Items were also held tipped over.** `ParentToHandSocket` zeroed the rotation, which dropped

@@ -157,8 +157,15 @@ floor between two people in a large room.
 - **The extraction room holds no loot and no guards.** Free treasure at the exit would delete the
   carry, and a guard standing on it would turn every raid into the same fight.
 
-- **The crypt final chamber always holds the richest entry in its zone.** There must always be a
-  reason to go all the way in.
+- **The crypt final chamber always holds the richest entry in its zone, and fills every loot anchor
+  it has.** The richest goes on the room's first anchor, which the art puts at its centre. There
+  must always be a reason to go all the way in.
+
+- **A looted room holds several items, one per anchor** (2026-09-24). `LootPlacementPlanner` rolls
+  the zone's density for whether a room has anything, then 1 to `RaidLootTable.MaxPerRoomFor(zone)`
+  items (outer bailey 1, inner ward 2, keep 3), never more than the room's anchors and never two on
+  one anchor. Inner ward and keep are always looted, the outer bailey half the time: 44-53 items a
+  raid across the four eras, up from about 22 at one per room (`LootAmountTests`).
 
 - **The zone is re-armed on every `StartRaid`.** It carries the previous raid's result until then;
   a raid that starts against a completed zone cannot be left.

@@ -59,6 +59,14 @@ strength** (`Item.FixedUpdate`), not a kinematic object teleported to the crossh
   15 kg chest spends 147 N and has almost nothing left, so it lags, swings wide and sags to the
   floor when you turn. Measured (a 90° turn): pot 0.34 s to catch up, goblet 0.32 s, 5 kg relic
   0.43 s with 0.25 m of sag, 15 kg chest 1.78 s with 1.7 m.
+- **Only the hand pays for weight; walking does not** (2026-09-24). The holder's body carries the
+  item: each step its change of velocity is added to the item outright, and the aim point is kept
+  relative to the body, so the strength-capped pull above only answers the mouse (aim, reach,
+  turning). Before this, an 8 kg item strafed at 4 m/s trailed 0.447 m. `CarryFeelTests` holds it
+  within 5 cm, and still asserts that a heavy item lags a light one on a mouse swing.
+- **The hand holds the item's grip, not its base.** The point pulled to the aim point is the item's
+  `GripPoint` (placed per plunder item by `EraContentForge.GripFractions` from the art bible's grab
+  notes), or its mesh centre when it has none; `ItemManager` measures reach to the same point.
 - Because it stays a physics body, walls stop it and it carries momentum: **swinging a held thing
   into someone is an impact hit** through `Item.OnCollisionEnter`, at `speed × 2 × heft` damage
   (`heft` = ×1 at 1 kg, ×1.5 at 4 kg, ×2 at 9 kg), blamed on the holder. A held item never collides

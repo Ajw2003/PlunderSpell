@@ -1,7 +1,7 @@
 # Staging playtest 2 — carry feel, loot amount, Late centre room
 
-Status: **approved by the user 2026-09-24, in progress on `claude/staging-2026-09-24`.** Choices
-are the user's, from three questions asked after investigation.
+Status: **done on `claude/staging-2026-09-24`, 2026-09-24; awaiting the user's retest.** Choices
+are the user's, from three questions asked after investigation. Results at the end.
 
 ## 1. Carrying: body rigid, mouse weighted
 
@@ -52,3 +52,31 @@ gets reported, not worked around silently.
 
 Compile clean; EditMode and PlayMode suites pass; `audit_loot_counts.cs` shows about double;
 `centre-rooms.png` re-rendered; the carry tests above. Record results here and in `docs/Today.md`.
+
+## Results (2026-09-24)
+
+| Commit | What |
+|---|---|
+| `e4fcb8b` | 1: `Item` rides with the holder's body and steers its grip; `ItemManager` measures reach to the grip; `CarryFeelTests` |
+| `9b182c0` | 1: loot re-forged so `Item` has the grip point too |
+| `833815a` | 2: several items per looted room, one per anchor; crypt centre full; `LootAmountTests` |
+| `804d12b` | 3: Effigy Crypt re-laid; crypt's richest item on its first anchor |
+
+- **1, carrying.** Red first: an 8 kg item strafed at 4 m/s trailed 0.447 m; the grip ended 0.400 m
+  from the hand point (the base was being steered). After: within 5 cm, grip on the point, and a
+  14 kg item still lags a 1 kg one on a mouse swing. The walking test's holder interpolates, as the
+  real player does (`PlayerStateMachine.cs:138`); without that it measured 0.080 m, which is exactly
+  one physics step of an interpolated item against a raw holder, not lag.
+- **2, loot.** `audit_loot_counts.cs`, 5 seeds per era, after part 3: Bronze 48.2, High Medieval
+  43.8, Late 52.6, Powder 43.8 items per raid (all about 22 before). Crypt 4 (Late 6), keep 11-15,
+  inner ward 18-23, outer bailey 8-10.
+- **3, Late centre.** A tomb in the middle is not possible in this kit: `validate_in_blender.py`
+  rejects any prop below 2.0 m within 1.60 m of either centre line, the walkway between archways.
+  So the user's "effigy centred" became: the founder's effigy as a flush gilt monumental brass at
+  the centre, a madder hearse with a candle crown over it above head height on four posts at the
+  walkway's edge, and the raised effigy tomb beside the walkway. Blender 5.2 rebuilt the unchanged
+  room byte-identically first, so the version is not a factor. The new room: 992/1600 tris, all
+  checks pass, a second build byte-identical. `render_previews.py` has no staleness check and
+  re-rendered every preview (and stopped at a Powder room with no model); only this room's preview
+  was kept, the rest restored.
+- **Tests:** EditMode 25/25, PlayMode 186/186 (`playtest2-*-tests.json`).
