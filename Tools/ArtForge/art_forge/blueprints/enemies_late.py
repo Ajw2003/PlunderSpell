@@ -131,7 +131,7 @@ def _lerp(a, b, t):
 def _sallet(fig: Human, mat: str, rivet: str, crown: float, rim_front: float,
             rim_side: float, rim_back: float, back_reach: float, slit: float | None,
             front_reach: float = 0.132, half_w: float = 0.126, n: int = 20,
-            bone: str = "Sallet") -> list[Part]:
+            bone: str = "Sallet", rivets: bool = True) -> list[Part]:
     """A one-piece sallet: a solid dome loft whose rim dips from the brow to a tail
     that sweeps out behind the neck. Rings run rim -> crown pole. With `slit` (the
     z of the sight-slit) three rings pinch the brow inward there; a low ridge rises
@@ -173,7 +173,9 @@ def _sallet(fig: Human, mat: str, rivet: str, crown: float, rim_front: float,
     rings.append([(0.0, cy, crown)])
     parts = [Part("loft", (0, 0, 0), (1, 1, 1), mat=mat, bone=bone, extras={
         "rings": rings, "smooth": False, "rigid": True, "bevel": False})]
-    for k in range(12):   # lining rivets round the rim
+    # Lining rivets round the rim. Optional: detached studs on a helmet are hidden
+    # from the Head bone, and enough of them make heat weighting fail outright.
+    for k in range(12 if rivets else 0):
         j = (k + 0.5) * n / 12
         p = Vector(point(j, math.radians(6.0)))
         out = Vector((p.x, p.y - cy, 0.0)).normalized() * 0.004
@@ -540,17 +542,10 @@ def handgunner(entry: Entry):
         parts.append(fig.leg_part(side, "hose", paint=[
             {"mat": "leather", "min": (-1, -1, -1), "max": (1, 1, 0.50)}]))
         parts.append(fig.foot_part(side, "leather", length=0.27, point=0.2))
-        knee = fig.joint(f"knee.{side}")
-        ank = fig.joint(f"ankle.{side}")
-        cuff = ank.lerp(knee, (0.475 - ank.z) / (knee.z - ank.z))
-        parts.append(Part("cyl", tuple(cuff), (0.090, 0.094, 0.05), mat="leather",
-                          bone=f"LowerLeg.{side}", segments=12, taper=1.12,
-                          extras={"bevel": False, "smooth": True,
-                                  "bones": [f"LowerLeg.{side}", f"UpperLeg.{side}"]}))
         parts += _badge(fig, side, 1.35, "livery_white", "livery_red")
     parts += fig.head_part("skin", features="leather")
     parts += _kettle(fig, "kettle_steel", crown=1.78, r_dome=0.111, dome_h=0.14,
-                     r_brim=0.215, droop=12.0, rivets=8)
+                     r_brim=0.215, droop=12.0, rivets=0)
     parts.append(_front_lacing(fig, pad, "leather", fig.belt_z + 0.05, 0.815 * h))
 
     # Belt at 1.02 m, iron buckle; shot pouch (right hip), horn flask (left hip).
@@ -1391,7 +1386,7 @@ def pavisier(entry: Entry):
     # Open sallet: blackened, 0.24 m wide, face open from brow to chin, 0.18 m tail.
     parts += _sallet(fig, "sallet", "iron_binding", crown=1.80, rim_front=1.700,
                      rim_side=1.600, rim_back=1.560, back_reach=0.235, slit=None,
-                     front_reach=0.128, half_w=0.121)
+                     front_reach=0.128, half_w=0.121, rivets=False)
 
     # Belt 4 cm at 1.02 m, iron buckle; falchion on the left hip.
     parts.append(fig.band(1.02, "leather", height=0.04, pad=0.004, torso_pad=pad))
