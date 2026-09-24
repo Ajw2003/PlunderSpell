@@ -49,6 +49,30 @@ MonoBehaviour:
     Zone: 4
     Weight: 10
     Prefab: {fileID: 990183969874016047, guid: 7b3f78dde34f9e540afde8b935eb325b, type: 3}
+  - Item: {fileID: 11400000, guid: 69dcc869fe227814eb7db3820cebf128, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 2973063209351107579, guid: 5c2a0e6dfb9303f498ed7d9b4fb2a725, type: 3}
+  - Item: {fileID: 11400000, guid: 69dcc869fe227814eb7db3820cebf128, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 2973063209351107579, guid: 5c2a0e6dfb9303f498ed7d9b4fb2a725, type: 3}
+  - Item: {fileID: 11400000, guid: 69dcc869fe227814eb7db3820cebf128, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 2973063209351107579, guid: 5c2a0e6dfb9303f498ed7d9b4fb2a725, type: 3}
+  - Item: {fileID: 11400000, guid: a332490699fd7f24ba4206337a1ae490, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 205228437905608243, guid: 83b0e4e2755bcd844a623a9a5786f84b, type: 3}
+  - Item: {fileID: 11400000, guid: a332490699fd7f24ba4206337a1ae490, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 205228437905608243, guid: 83b0e4e2755bcd844a623a9a5786f84b, type: 3}
+  - Item: {fileID: 11400000, guid: a332490699fd7f24ba4206337a1ae490, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 205228437905608243, guid: 83b0e4e2755bcd844a623a9a5786f84b, type: 3}
   CurtainWallDensity: 0.15
   OuterBaileyDensity: 0.35
   InnerWardDensity: 0.5
