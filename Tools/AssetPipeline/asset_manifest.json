@@ -395,6 +395,12 @@
       "preview": "518e76754b272872:23a9d68e53fd",
       "tris": 816
     },
+    "LateTreadwheelWell": {
+      "budget": 2400,
+      "content": "5d1940cb6388c7b1",
+      "preview": "5d1940cb6388c7b1:23a9d68e53fd",
+      "tris": 1596
+    },
     "LateTurretStair": {
       "budget": 2000,
       "content": "e1e0e96487030909",

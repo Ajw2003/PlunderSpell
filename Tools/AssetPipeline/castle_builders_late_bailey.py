@@ -235,3 +235,66 @@ def build_late_brewhouse(bm, uv):
     for (x, y, z), r in zip(((-4.9, -4.9, 0.0), (-4.9, -4.3, 0.0), (-4.9, -4.6, 0.36)), (0.28, 0.27, 0.26)):
         mk.paint(bm, mk.add_sphere(bm, r, loc=(x, y, fz + z + r * 0.65), segments=6, rings=4, scale=(1.0, 1.0, 0.65)),
                  LINEN, uv)
+
+
+def build_late_treadwheel_well(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateTreadwheelWell.svg"""
+    h, fz = room_shell(bm, uv, "OuterBailey")
+    # NE: the treadwheel against the north wall: two rims, treads between them, the axle, two A-frames.
+    wx, wr, wz = 3.6, 1.4, fz + 1.55
+    rims = (4.7, 5.3)
+    for y in rims:
+        ek.wheel(bm, uv, TIMBER, wx, y, wz, wr, along="y")
+    for k in range(10):
+        a = (k + 0.5) / 10 * 2 * math.pi
+        mk.paint(bm, mk.add_box(bm, (0.12, 0.66, 0.04), loc=(wx + math.cos(a) * 1.3, sum(rims) / 2, wz + math.sin(a) * 1.3),
+                                rot=Euler((0, -(a + math.pi / 2), 0))), TIMBER, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.08, 0.95, loc=(wx, 4.975, wz), rot=Euler((math.radians(90), 0, 0)), segments=8),
+             IRON, uv)
+    lean = math.atan2(0.9, wz - fz)
+    leg = math.hypot(0.9, wz - fz)
+    for y in (4.55, 5.42):
+        for s in (-1, 1):
+            mk.paint(bm, mk.add_box(bm, (0.1, 0.1, leg), loc=(wx + s * 0.45, y, fz + (wz - fz) / 2),
+                                    rot=Euler((0, -s * lean, 0))), TIMBER, uv)
+    # The well-head, its posts and beam, the pulley, the rope to the bucket and back to the axle.
+    ux, uy = 3.6, 3.0
+    mk.paint(bm, mk.add_cylinder(bm, 0.6, 0.7, loc=(ux, uy, fz + 0.35), segments=12), "vellum_faint", uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.45, 0.02, loc=(ux, uy, fz + 0.71), segments=12), "verdigris_lo", uv)
+    beam_z = fz + 2.3
+    for x in (2.9, 4.3):
+        cb._box(bm, uv, TIMBER, (x, uy, fz + 1.15), (0.14, 0.14, 2.3))
+    cb._box(bm, uv, TIMBER, (ux, uy, beam_z + 0.08), (1.64, 0.16, 0.16))
+    mk.paint(bm, mk.add_cylinder(bm, 0.12, 0.08, loc=(ux, uy, beam_z - 0.1), rot=Euler((math.radians(90), 0, 0)),
+                                 segments=8), IRON, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.015, 0.8, loc=(ux, uy, (beam_z - 0.2 + fz + 1.3) / 2), segments=4),
+             "leather", uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.15, 0.32, loc=(ux, uy, fz + 1.14), segments=8, radius2=0.12), TIMBER, uv)
+    dy, dz = 1.6, (beam_z - 0.1) - wz
+    phi = math.atan2(-dy, dz)
+    mk.paint(bm, mk.add_cylinder(bm, 0.015, math.hypot(dy, dz), loc=(ux, uy + dy / 2, (beam_z - 0.1 + wz) / 2),
+                                 rot=Euler((phi, 0, 0)), segments=4), "leather", uv)
+    # NW: the handcart, a water barrel lying on it.
+    kx, ky = -3.4, 4.0
+    cb._box(bm, uv, TIMBER, (kx, ky, fz + 0.685), (1.4, 0.8, 0.13))
+    cb._anchor(kx - 0.35, ky, fz + 0.75)
+    mk.paint(bm, mk.add_cylinder(bm, 0.04, 1.0, loc=(kx - 0.3, ky, fz + 0.35), rot=Euler((math.radians(90), 0, 0)),
+                                 segments=6), IRON, uv)
+    for dy2 in (-0.45, 0.45):
+        ek.wheel(bm, uv, TIMBER, kx - 0.3, ky + dy2, fz + 0.35, 0.35, along="y")
+        cb._box(bm, uv, TIMBER, (kx - 0.3, ky + dy2 * 0.8, fz + 0.49), (0.08, 0.08, 0.28))
+    for dy2 in (-0.25, 0.25):
+        cb._box(bm, uv, TIMBER, (kx + 1.0, ky + dy2, fz + 0.7), (0.6, 0.06, 0.06))
+        cb._box(bm, uv, TIMBER, (kx + 0.6, ky + dy2, fz + 0.31), (0.06, 0.06, 0.62))
+    mk.paint(bm, mk.add_cylinder(bm, 0.3, 0.7, loc=(kx + 0.35, ky, fz + 1.03), rot=Euler((math.radians(90), 0, 0)),
+                                 segments=10), TIMBER, uv)
+    # SW: the stone trough along the west wall, buckets beside it. SE: the water butt and a bench.
+    cb._box(bm, uv, "vellum_faint", (-5.0, -3.6, fz + 0.3), (0.8, 2.0, 0.6))
+    cb._box(bm, uv, "verdigris_lo", (-5.0, -3.6, fz + 0.61), (0.6, 1.8, 0.02))
+    cb._anchor(-4.7, -3.6, fz + 0.6)
+    for x, y in ((-4.1, -2.7), (-4.2, -4.6), (-3.8, -4.4)):
+        mk.paint(bm, mk.add_cylinder(bm, 0.16, 0.3, loc=(x, y, fz + 0.15), segments=8, radius2=0.13), TIMBER, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.5, 1.0, loc=(4.8, -4.7, fz + 0.5), segments=12), TIMBER, uv)
+    for f in (0.2, 0.8):
+        mk.paint(bm, mk.add_cylinder(bm, 0.515, 0.05, loc=(4.8, -4.7, fz + f), segments=12), IRON, uv)
+    cb._bench(bm, uv, 3.0, -5.1, fz, 1.8)
