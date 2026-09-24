@@ -167,6 +167,11 @@ the session. A friend's own save is never touched by joining.
 
 ## Testing it
 
+The window is resizable (Player Settings, Resizable Window), and `-screen-width` / `-screen-height`
+are real pixels: on a 4K screen at 200% scaling, 1280x720 fills a quarter of the screen. Two windows
+side by side on 4K fit at `-screen-width 1900 -screen-height 1060`.
+
+
 On one machine without Steam: host from the Editor (Play → Host Co-op), then run the build with
 `-coop-join 127.0.0.1` (and `-screen-fullscreen 0 -screen-width 960 -screen-height 540` for a
 window). The reverse also works: the build with `-coop-host` hosts. Each side logs `[Coop]` and
