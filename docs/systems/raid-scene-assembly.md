@@ -45,6 +45,76 @@ not a copy, so re-exporting the `.blend` flows through to the prefab. Onto that 
 found in. Worth climbs inward — Copper Pot (15) at the wall, Ancient Relic (500) in the crypt — so
 the long carry out is what the valuable things cost.
 
+### Eras
+
+<!-- ref:da27 -->
+
+The era picked in the Lair decides which rooms, loot and garrison a raid is built from. Added
+2026-09-24.
+
+`Data/Eras/EraContentCatalogue.asset` has one entry per `HistoricalEra`. Each entry names a room
+registry, a loot table and an enemy roster. `RaidDirector.ApplyEraContent`
+(`Runtime/Raid/RaidDirector.cs`) swaps them onto the generator, the loot spawner and the guard
+spawner at the start of `BuildCastle`. An empty field keeps the scene's own assignment, which the
+director records the first time it runs. The era is a replicated `SyncVar`, because every peer
+builds its own castle geometry and the era decides which rooms that is. A client rebuilds if the
+era arrives after the seed.
+
+**`Tools/Plunderspell/Forge Era Content (rooms, loot, enemies)`** (`Editor/EraContentForge.cs`)
+writes the catalogue and everything in it from the art that exists. Run it again when new art
+lands. It writes to fixed paths, so a second run overwrites and does not duplicate.
+
+| Era | Rooms | Loot | Enemies |
+|---|---|---|---|
+| Bronze Age | own set: 25 rooms and wall pieces, 4 door plugs | 5 ArtForge items, 2 weapons | Palace Levy, Wall Slinger, Dendra Champion |
+| High Medieval | the default `CastleRoomRegistry` | 5 ArtForge items, 4 weapons | Lantern Warden, Castle Crossbowman, Household Knight, Alaunt War-hound |
+| Late Medieval | own InnerWard and Keep (10 rooms); other zones use High Medieval | 5 ArtForge items, 2 weapons | Sallet Halberdier (the only one modelled) |
+| Age of Powder | the default registry (no rooms built yet) | 5 ArtForge items, 2 weapons | Palace Guard, Musketeer |
+
+How each part is built:
+
+- **Rooms.** Each room is a prefab variant of its FBX, set up like the High Medieval rooms: root at
+  `(90,0,0)`, a `MeshCollider`, a `CastleRoomModule` and door sockets. The generator asks for six
+  pieces by id (`GatehouseModule`, `WallStraight`, `WallCorner`, `Bastion`, `Drawbridge`,
+  `CryptChamberFinal`). An era's own piece takes the id of the piece it replaces, for example
+  `BronzeLionGate` becomes `GatehouseModule` and `BronzeTholos` becomes `CryptChamberFinal`. So
+  the generator needs no knowledge of eras. Loot anchors come from `CastleLootAnchors.json`, using
+  the `(x, z, y)` axis mapping measured for the High Medieval set. A zone with no era rooms, and a
+  zone with no era door plug, keep the default registry's.
+- **Loot.** Each item gets a `LootItem` in `Data/Loot/<Era>/`, with worth, bulk, fragility and
+  artifact flag read from `docs/art/data/<age>.json`. It also gets a prefab in
+  `Prefabs/Loot/<Era>/`, a variant of the ArtForge FBX with a fitted `BoxCollider`, a `Rigidbody`,
+  `Item`, `LootPickup`, `LootValue` and `NetworkTransform`. Worth decides the zone: the cheapest
+  item goes to the wall and the dearest to the crypt, with the same weights as
+  `RaidLootTableForge`. Weapons are found as loot, so each era also gets the default table's
+  weapon entries whose `InventoryItem.EraAcquired` is that era.
+- **Enemies.** Each enemy gets a prefab in `Prefabs/Enemies/<Era>/`, set up like
+  `EnemyPrefabForge`'s. The capsule and agent are sized to the spec's body `height_m`. Guard tuning
+  comes from the spec's `role` (patrol, ranged, heavy, special). Ranged soldiers fire the
+  crossbow `Bolt`. They are posted to the zones in their spec. Every zone must have an enemy, so a
+  zone with none gets the era's heavy soldier (Keep, Crypt) or patrol (elsewhere). If the era has
+  neither, it gets any soldier taller than 1.2 m.
+
+`EraContentTests` checks that every era has loot (with weapons) and enemies in every zone. It checks
+that every era's room set has every zone, fixed piece and door plug, that era room roots are
+upright, and that the Bronze Age and High Medieval share no room, item or enemy.
+
+What the era content does not do yet:
+
+- The ArtForge enemies have no animation clips. They move in their bind pose, as the original
+  roster did.
+- The Tripod Cauldron and other odd shapes use a box collider, so they can tip over when they
+  land.
+- A `special` enemy that is not a hound (the Keeper of the Flame, the Pavisier, the Petardier) is
+  not modelled yet.
+- The legacy roster (`EnemyRoster.asset`) and loot table (`RaidLootTable.asset`) are no longer
+  used for any era. They stay as the scene's fallback.
+
+Verified on 2026-09-24 in the live Editor, through the real Main menu → Lair → Set Out flow, with
+seed 4242 in each era. Every era had 20 guards, all 20 on the NavMesh, and 22 loot pieces, none
+thrown out of the world. Bronze Age built only Bronze rooms, and the same seed built the same raid
+twice. The screenshots are in `docs/generated/era-integration-2026-09-24/`.
+
 ### Enemy postings
 
 Every zone draws from a mix, with the common soldiery outside and the rare, dangerous things deep:

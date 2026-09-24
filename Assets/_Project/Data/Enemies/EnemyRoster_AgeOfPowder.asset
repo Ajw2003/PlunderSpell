@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e18ecce912b050d44a86923eecb1637e, type: 3}
+  m_Name: EnemyRoster_AgeOfPowder
+  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.EnemyRoster
+  Entries:
+  - EnemyId: Musketeer
+    Zone: 0
+    Weight: 8
+    Prefab: {fileID: 9017855570135048887, guid: d8c86683f701e744b978cbfeea517f61, type: 3}
+  - EnemyId: Musketeer
+    Zone: 2
+    Weight: 8
+    Prefab: {fileID: 9017855570135048887, guid: d8c86683f701e744b978cbfeea517f61, type: 3}
+  - EnemyId: PalaceGuard
+    Zone: 0
+    Weight: 12
+    Prefab: {fileID: 174596893331185770, guid: 17c63902435a1404aa0f2da018b09bf2, type: 3}
+  - EnemyId: PalaceGuard
+    Zone: 1
+    Weight: 12
+    Prefab: {fileID: 174596893331185770, guid: 17c63902435a1404aa0f2da018b09bf2, type: 3}
+  - EnemyId: Musketeer
+    Zone: 3
+    Weight: 6
+    Prefab: {fileID: 9017855570135048887, guid: d8c86683f701e744b978cbfeea517f61, type: 3}
+  - EnemyId: Musketeer
+    Zone: 4
+    Weight: 6
+    Prefab: {fileID: 9017855570135048887, guid: d8c86683f701e744b978cbfeea517f61, type: 3}

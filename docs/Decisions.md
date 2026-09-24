@@ -779,3 +779,24 @@ placement, and the user's point is that a weapon is found like any other item. A
 the castle is about nine rooms across, so three rooms would empty most of it.
 
 **Status.** Standing. Verified with two game windows over UDP and in a solo raid (see the plan).
+
+## 2026-09-24 — Eras swap whole catalogues; they do not tag rooms
+
+**Context.** The Lair's era selection reached `RaidDirector` and stopped there. The earlier
+ProjectState note said era content would need a schema change: an `Era` field on
+`CastleRoomModuleData`, and era-keyed loot and guard tables. The user asked for the art that
+exists to spawn, so that two eras can be told apart.
+
+**Decision.** Each era gets its own room registry, loot table and enemy roster. An
+`EraContentCatalogue` maps each era to those three, and `RaidDirector` assigns them to the
+generator and spawners before it builds. An era's curtain-wall piece and crypt centre take the
+role id of the High Medieval piece they replace (`BronzeLionGate` registers as
+`GatehouseModule`), so the generator has no era logic. A missing field or zone falls back to the
+scene's defaults, so a half-built era still makes a whole castle.
+
+**Considered and rejected.** An `Era` field on every registry entry, filtered in the planners.
+That changes three planners and their tests, and every placement would need an era argument, for
+the same result. Making the generator ask for a per-era gatehouse id: the role-id alias gives the
+same result without code changes.
+
+**Status.** Standing. See `docs/systems/raid-scene-assembly.md`, "Eras".

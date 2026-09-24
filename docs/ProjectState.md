@@ -25,28 +25,21 @@ surfaced it as not actually functional yet.
 | M0 — Fork clean, cut gravity | Done | ✅ merged (`feature/m0-gravity-removal`) | ✅ — compiles, gravity restored, verified in the `.agent_reports`-era logs, now `docs/archive/2026-09-15-integration/` |
 | M1 — Prove the voice | Code complete, acceptance unchecked | ✅ merged (`feature/m1-voice-casting`) | ❌ — no real-microphone, multi-accent, latency measurement exists anywhere in the repo |
 | M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
-| M3 — Open the other Ages | Scaffold only; Bronze Age castle art built | 🟡 `HistoricalEra` enum + plumbing only. Castle art: the Bronze Age set is built — 25 rooms and wall pieces plus 4 door plugs, each modelled to a reference sheet ([`docs/art/rooms/BronzeAge.md`](art/rooms/BronzeAge.md)); Late Medieval and Age of Powder are in progress ([`docs/plans/era-castle-rooms.md`](plans/era-castle-rooms.md)). None of it is wired into the generator yet | ❌ — see below, the data model can't produce era-specific content yet |
+| M3 — Open the other Ages | Era content wired in; Bronze Age and High Medieval raids differ | 🟡 The Lair's era now picks the raid's rooms, loot and garrison through `EraContentCatalogue` ([`raid-scene-assembly.md`, "Eras"](systems/raid-scene-assembly.md)). Bronze Age has its own full room set, 5 items, 3 enemies. High Medieval: the original rooms, 5 items, 4 enemies. Late Medieval: its own InnerWard and Keep, 5 items, 1 enemy. Age of Powder: High Medieval rooms, 5 items, 2 enemies. Unfinished art: 12 enemies, 15 Late rooms, all 26 Powder rooms | 🟡 — verified 2026-09-24 in the live Editor through Lair → Set Out, one seed per era; not yet playtested by a person |
 
-**2026-09-24 — art bible plunder modelled.** All 20 plunder items from the art bible
-(`docs/art/`) now exist as validated, textured models under `Assets/Models/ArtBible/Items/`,
-built by `Tools/ArtForge/`. They are not wired into any loot table or prefab yet, and have
-no Unity `.meta` files (Unity creates them on first import). The art bible's 12 structures
-and 16 enemies are specified and drawn but not modelled.
+**2026-09-24 — per-era raid content is wired in.** The 20 ArtForge plunder items, the 10
+ArtForge enemies built so far, the Bronze Age room set and the 10 Late Medieval rooms now spawn in
+raids. The era chosen in the Lair decides which of them a raid uses. The 6 other art-bible enemies
+are not modelled yet.
 
-## The one thing that is not what it looks like
+## What used to be not what it looked like
 
-**Choosing an era in the Lair does nothing to the raid you get.** `RaidDirector.StartRaid(era)`
-takes a `HistoricalEra`, stores it, and forwards it to `LairHubManager.SelectEra`. It reads as a
-finished feature — the Lair has era selection UI-adjacent state, `RaidDirector` has an `Era`
-property, everything compiles and the tests pass. But `CastleRoomRegistry` (see
-`docs/systems/castle.md`) tags every room module only by `CastleZone`, with no era field at all,
-and neither the loot planner nor the guard planner branch on era anywhere (`grep -rn
-"HistoricalEra" Assets/_Project/Scripts/Runtime/Castle Assets/_Project/Scripts/Runtime/Loot
-Assets/_Project/Scripts/Runtime/Guards` returns nothing — still true as of this pass). Every raid,
-in every era, currently builds from the same single room set, loot table and guard roster. M3's
-acceptance criterion — "a different era produces a measurably different raid" — is not close to
-met; it needs a schema change (`CastleRoomModuleData.Era`, era-keyed loot/guard tables) before
-it's even possible, not just more content.
+Until 2026-09-24, choosing an era in the Lair did nothing to the raid: every era built from one
+room set, loot table and guard roster. That is fixed. `RaidDirector` now swaps in the era's
+catalogue entry before it builds the castle (see `docs/systems/raid-scene-assembly.md`, "Eras").
+No schema change was needed. Each era has its own registry, table and roster, so the planners
+still branch only on `CastleZone`. What M3 still lacks is art, plus a person playing the eras side
+by side.
 
 ## The 2026-09-16 playtesting backlog
 

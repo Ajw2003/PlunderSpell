@@ -1,0 +1,230 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8206880190444363750
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1453087741677885440, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1453087741677885440, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.00000012739015
+      objectReference: {fileID: 0}
+    - target: {fileID: 346839079750796314, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 346839079750796314, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.00000012739015
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      propertyPath: m_Name
+      value: Musketeer
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3003631688433372500}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2993146613406694040}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6765198049784933901}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 549816047249288350}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7479769086361098344}
+  m_SourcePrefab: {fileID: 100100000, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+--- !u!1 &9017855570135048887 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c9c0996dba0eaa14a81030860e76933e, type: 3}
+  m_PrefabInstance: {fileID: 8206880190444363750}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &3003631688433372500
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9017855570135048887}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.40269744
+  m_Height: 1.92
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.96, z: 0}
+--- !u!195 &2993146613406694040
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9017855570135048887}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.40269744
+  m_Speed: 1.8
+  m_Acceleration: 12
+  avoidancePriority: 50
+  m_AngularSpeed: 240
+  m_StoppingDistance: 0.8
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.92
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 1
+--- !u!114 &6765198049784933901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9017855570135048887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb201dad623c262478779bf36ad01883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Status::RogueAi.Status.StatusEffectReceiver
+  _healthSource: {fileID: 0}
+  _body: {fileID: 0}
+--- !u!114 &549816047249288350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9017855570135048887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7316eefc8d4f86c43b94afb39386487a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Guards::RogueAi.Guards.CastleGuard
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _sightRange: 20
+  _fieldOfView: 110
+  _eyeHeight: 1.7279999
+  _geometryLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  _patrolSpeed: 1.8
+  _chaseSpeed: 3.8
+  _arrivalDistance: 1
+  _turnSpeed: 240
+  _patrolRoute: []
+  _attackRange: 2
+  _attackDamage: 12
+  _attackCooldown: 1.4
+  _projectilePrefab: {fileID: 8541296174138858501, guid: eef694f7f1ca617469908d761fde4588, type: 3}
+  _projectileSpeed: 18
+  _maxHealth: 60
+  _alarm: {fileID: 0}
+  _shoutStrength: 0.8
+  _shoutRadius: 20
+  <_health>k__BackingField:
+    _value: 100
+    _ownerAuth: 0
+    _sendIntervalInSeconds: 0
+--- !u!114 &7479769086361098344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9017855570135048887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _syncPosition: 1
+  _syncRotation: 1
+  _syncScale: 1
+  _syncParent: 1
+  _interpolateSettings: 7
+  _minBufferSize: 1
+  _maxBufferSize: 2
+  _characterControllerPatch: 0
+  _ownerAuth: 1
+  _interpolationTiming: 0

@@ -1050,6 +1050,7 @@ MonoBehaviour:
   _alarm: {fileID: 176129642}
   _navigation: {fileID: 1179797330}
   _playerRoot: {fileID: 0}
+  _eraContent: {fileID: 11400000, guid: 16651ca49cf3b3343860c409be2a00f3, type: 2}
   _fixedSeed: 0
 --- !u!114 &1029301708
 MonoBehaviour:
