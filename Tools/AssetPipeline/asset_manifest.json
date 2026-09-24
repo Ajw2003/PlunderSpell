@@ -63,6 +63,12 @@
       "preview": "415b1b204fe7d963:23a9d68e53fd",
       "tris": 220
     },
+    "BronzeTreasury": {
+      "budget": 2000,
+      "content": "6a665b2499872ce8",
+      "preview": "2f02721eeaaea9a9:23a9d68e53fd",
+      "tris": 1436
+    },
     "BronzeWallStraight": {
       "budget": 1200,
       "content": "2c76fe2ed38c65c6",

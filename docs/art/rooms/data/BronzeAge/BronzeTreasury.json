@@ -1,0 +1,55 @@
+{
+  "key": "BronzeTreasury",
+  "name": "The Treasury",
+  "age": "BronzeAge",
+  "zone": "Keep",
+  "role": "TreasuryVault",
+  "summary": "Bronze by the ingot, gold by the face: the wanax's wealth, stacked and shelved in a plain red-footed room.",
+  "description": "Here is where a king keeps the things that make him one. Oxhide ingots lie in crosswise stacks on their pallets like loaves in a bakery nobody is allowed to eat from, faience figures crowd a shelf in the corner, and on a stepped plinth of gypsum the gold death-mask of some earlier king looks out at the door with an expression of permanent disappointment. The room is plain on purpose: no frescoes, only a red dado, because nobody comes here to look at the walls. Everything in it is loot, and most of it is heavy.",
+  "build": [
+    "Shell: the kit's Keep shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m ochre plaster walls 4.60 m clear, 0.45 m haematite capstone band, an archway 2.60 × 3.31 m centred on every wall.",
+    "Dado: a haematite panel 0.40 m tall at the foot of every wall section (4.10 m wide, centred ±3.40 along each wall), flat against the wall.",
+    "Death-mask plinth (NE): gypsum block 1.40 × 1.40 × 0.50 m centred (4.30, 4.30), a second block 0.80 × 0.80 × 0.40 m on top (top at 1.20 m above ground).",
+    "Gold death-mask: an oval 0.28 wide × 0.13 deep × 0.39 m tall, standing on the upper plinth at (4.30, 4.30).",
+    "Ingot stack SE: a timber pallet 1.80 × 1.20 × 0.12 m at (4.00, −4.30), four crosswise layers of oxhide ingots 0.56 × 0.36 × 0.06 m (alternate layers 0.52 × 0.40), 2 × 2 per layer; top at 0.66 m.",
+    "Ingot stack SW: a pallet 1.20 × 0.90 × 0.12 m at (−3.90, −2.90), three layers, 1 × 2 per layer; top at 0.60 m.",
+    "Chests: two cypress chests 1.00 × 0.60 × 0.55 m with bronze-bound lids 0.05 m, against the south wall at x −4.60 and −2.90, y −4.90.",
+    "Faience shelf (NW): a timber shelf unit 3.00 m wide × 0.45 m deep, three boards at 0.35, 0.90 and 1.45 m above the floor, backed against the north wall at x −3.70, y 5.20; small faience flasks (0.26 m tall, 0.16 m belly) on every board.",
+    "Tripods: two bronze tripods, legs 0.90 m, bowl r 0.30 m, at (−2.40, 2.60) and (2.60, 4.60), the second standing guard by the plinth.",
+    "Cauldrons (SE): two bronze cauldrons r 0.34 → 0.26 m × 0.45 m on the floor at (4.20, −2.30) and (5.00, −2.30), soot inside.",
+    "Everything stands in the corner quadrants; the clear cross between the archways is bare floor."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "Death-mask plinth: NE, the room's prize at 1.20 m"
+  ],
+  "loot_anchors": [
+    {"at": "death-mask plinth, upper step", "xyz": [4.3, 4.3, 1.20]},
+    {"at": "SE ingot stack", "xyz": [4.0, -4.3, 0.66]},
+    {"at": "SW ingot stack", "xyz": [-3.9, -2.9, 0.60]},
+    {"at": "west chest, south wall", "xyz": [-4.6, -4.9, 0.90]},
+    {"at": "east chest, south wall", "xyz": [-2.9, -4.9, 0.90]},
+    {"at": "faience shelf, top board", "xyz": [-3.7, 5.2, 1.78]},
+    {"at": "west tripod bowl", "xyz": [-2.4, 2.6, 1.44]},
+    {"at": "east tripod bowl, by the plinth", "xyz": [2.6, 4.6, 1.44]},
+    {"at": "cauldron, SE (west)", "xyz": [4.2, -2.3, 0.75]},
+    {"at": "cauldron, SE (east)", "xyz": [5.0, -2.3, 0.75]}
+  ],
+  "materials": [
+    {"name": "Ochre plaster", "hex": "#B7803E", "pigment": "bronze", "notes": "Walls; chalky, soot only faintly at the top (no hearth here)."},
+    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "Dado and capstone band; scuffed pale at knee height by the stacks."},
+    {"name": "Cast bronze", "hex": "#9B6A38", "pigment": "bronze", "notes": "Ingots, tripods, cauldrons, chest bindings; ingot edges bright, faces dull and pitted."},
+    {"name": "Cypress timber", "hex": "#5A3E28", "pigment": "oak", "notes": "Pallets, chests, the shelf."},
+    {"name": "Faience", "hex": "#3F6F86", "pigment": "verdigris_lo", "notes": "Flasks and figures on the shelf; glossy, crazed."},
+    {"name": "Gypsum", "hex": "#D8CDB2", "pigment": "vellum", "notes": "The stepped plinth; worn at the front edge."},
+    {"name": "Gold", "hex": "#C9A227", "pigment": "orpiment", "notes": "The death-mask only: it is the loot."}
+  ],
+  "gameplay": [
+    "Ten loot anchors, most of them heavy: an ingot stack is several trips or a two-player carry.",
+    "The death-mask is the room's prize and sits in plain sight of the north and east archways.",
+    "No hearth and no frescoes: the room is dim, lit only from the doorways, so it is a good place to hide and a bad place to be found.",
+    "The ingot stacks are low cover (0.60–0.66 m); the plinth and shelf are the only tall cover."
+  ],
+  "budget": "≤ 2k tris (kit); 1.20k built",
+  "concept": "concept/BronzeAge/BronzeTreasury.svg"
+}
