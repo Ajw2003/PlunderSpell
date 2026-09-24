@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import math
 
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 from .. import figures
 from ..figures import ArmPose, Human
@@ -515,10 +515,13 @@ def wall_slinger(entry: Entry):
 
     # Bandana: a rolled linen band round the brow, knotted at the back, two 0.20 m
     # tails on their own bones.
-    bc = fig.lean((0.0, 0.006 * h, 0.962 * h))
-    parts.append(Part("torus", tuple(bc), (0.172, 0.212, 0.05), mat="linen", bone="Head",
-                      rot=(-14.0, 0.0, 0.0), segments=16, rings=6, minor=0.13,
-                      extras={"rigid": True, "bevel": False}))
+    bc = fig.lean((0.0, 0.008 * h, 0.958 * h))
+    band = [(0.084, -0.024), (0.100, -0.022), (0.106, -0.008), (0.107, 0.008),
+            (0.101, 0.022), (0.084, 0.024)]
+    parts.append(Part("lathe", tuple(bc), (0.84, 1.0, 1.0), mat="linen", bone="Head",
+                      rot=(-16.0, 0.0, 0.0), segments=18,
+                      extras={"profile": band, "rigid": True, "smooth": True,
+                              "bevel": False}))
     knot = bc + Vector((0.0, 0.110, -0.024))
     parts.append(Part("sphere", tuple(knot), (0.05, 0.035, 0.04), mat="linen", bone="Head",
                       segments=8, rings=5, extras={"rigid": True, "bevel": False}))
@@ -604,7 +607,282 @@ def wall_slinger(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Dendra Champion (heavy) — a cone on a bell: stacked flaring bronze bands, huge
+# domed shoulder-guards, a tall collar hiding the chin, a pale-striped tusk cone
+# with a tuft, a long thin sword held low.
+# --------------------------------------------------------------------------------
+
+def _euler_from_axes(x_axis: Vector, y_axis: Vector) -> tuple:
+    """XYZ degrees for a rotation taking local X -> x_axis, local Y -> y_axis."""
+    x = x_axis.normalized()
+    y = (y_axis - x * y_axis.dot(x)).normalized()
+    z = x.cross(y)
+    m = Matrix((x, y, z)).transposed()
+    return tuple(math.degrees(a) for a in m.to_euler("XYZ"))
+
+
+def _shell_ring(z_top: float, z_bot: float, r_top: float, r_bot: float, t: float,
+                roll: float = 0.0) -> list[tuple]:
+    """Lathe profile for an open truncated-cone band `t` thick, hollow below, with
+    a thin lid at the top (hidden inside whatever it hangs from) and an optional
+    rolled lower edge. Coordinates relative to the lathe origin (z = 0 at z_bot)."""
+    h = z_top - z_bot
+    out = [(0.0, h), (r_top + t, h), (r_bot + t, roll * 0.5)]
+    if roll:
+        out += [(r_bot + t + roll * 0.6, 0.0), (r_bot + t * 0.5, -roll * 0.4)]
+    out += [(r_bot, 0.0), (r_top, h - 0.012), (0.0, h - 0.012)]
+    return out
+
+
+def _tusk_helmet(fig: Human, base_z: float, top_z: float) -> list[Part]:
+    """Boar's-tusk cone 0.26 m dia. on a felt cap: 4 rows of tusk plates
+    alternating slant, bronze top knob with a dark horsehair tuft (2-bone chain),
+    tusk-plated cheek-pieces hinged at the temples (Cheek.L/R)."""
+    h = fig.h
+    base = fig.lean((0.0, 0.004 * h, base_z))
+    cone_h = top_z - 0.035 - base.z
+    r0 = 0.132
+    fig.add_bone("Helmet", base, base + Vector((0, 0, cone_h)), "Head")
+    prof = [(r0 - 0.010, -0.012), (r0, 0.0), (r0 * 0.93, cone_h * 0.25),
+            (r0 * 0.80, cone_h * 0.50), (r0 * 0.58, cone_h * 0.75), (0.035, cone_h * 0.95),
+            (0.024, cone_h), (0.0, cone_h)]
+    sy = 1.08
+    parts = [Part("lathe", tuple(base), (1.0, sy, 1.0), mat="felt_and_leather", bone="Helmet",
+                  segments=18, extras={"profile": prof, "rigid": True, "smooth": True,
+                                       "bevel": False})]
+
+    def radius_at(zr):
+        for (ra, za), (rb, zb) in zip(prof[1:], prof[2:]):
+            if za <= zr <= zb:
+                return ra + (rb - ra) * (zr - za) / (zb - za)
+        return prof[1][0]
+
+    rows = [(0.035, 16), (0.095, 15), (0.155, 13), (0.205, 11)]
+    for k, (zr, count) in enumerate(rows):
+        slant = 22.0 if k % 2 == 0 else -22.0
+        r = radius_at(zr) + 0.006
+        slope = Vector((0.0, 0.0, 1.0))
+        for i in range(count):
+            a = 2 * math.pi * (i + 0.5 * (k % 2)) / count
+            n = Vector((math.cos(a), math.sin(a) * sy, 0.0)).normalized()
+            t = Vector((-math.sin(a), math.cos(a), 0.0))
+            # up the cone surface: mostly Z, tipped inward by the cone slope
+            dr = radius_at(zr + 0.02) - radius_at(zr - 0.02)
+            up = (slope * 0.04 + n * dr).normalized()
+            q = Matrix.Rotation(math.radians(slant), 3, n)
+            up_s = q @ up
+            at = base + Vector((math.cos(a) * r, math.sin(a) * r * sy, zr))
+            parts.append(Part("box", tuple(at), (0.012, 0.008, 0.052), mat="boar_s_tusk",
+                              bone="Helmet", rot=_euler_from_axes(q @ t, n),
+                              extras={"rigid": True, "bevel": False,
+                                      "_up": tuple(up_s)}))
+    for part in parts[1:]:
+        # the box's long side must follow the slanted up-slope direction: rebuild
+        # the rotation from (width = up x normal, depth = normal)
+        up_s = Vector(part.extras.pop("_up"))
+        at = Vector(part.loc) - base
+        n = Vector((at.x, at.y / sy, 0.0)).normalized()
+        n = Vector((n.x, n.y * sy, 0.0)).normalized()
+        width = up_s.cross(n)
+        part.rot = _euler_from_axes(width, n)
+    # knob and tuft
+    knob = base + Vector((0, 0, cone_h + 0.016))
+    parts.append(Part("sphere", tuple(knob), (0.040, 0.040, 0.036), mat="hammered_bronze_plate",
+                      bone="Helmet", segments=8, rings=5, extras={"rigid": True,
+                                                                  "bevel": False}))
+    t0 = knob + Vector((0, 0.004, 0.016))
+    t1 = t0 + Vector((0.0, 0.035, 0.04))
+    t2 = t1 + Vector((0.0, 0.06, -0.01))
+    fig.add_bone("Tuft1", t0, t1, "Helmet")
+    fig.add_bone("Tuft2", t1, t2, "Tuft1")
+    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat="horsehair", bone="Tuft1",
+                      segments=6, extras={
+                          "path": [tuple(t0), tuple(t0.lerp(t1, 0.5)), tuple(t1),
+                                   tuple(t1.lerp(t2, 0.5)), tuple(t2)],
+                          "sections": [(0.012, 0.016), (0.018, 0.022), (0.020, 0.022),
+                                       (0.016, 0.014), (0.0, 0.0)],
+                          "smooth": True, "bevel": False, "bones": ["Tuft1", "Tuft2"]}))
+    # cheek-pieces hanging from the temples, 0.14 x 0.08 m
+    for s, side in ((1.0, "L"), (-1.0, "R")):
+        hinge = base + Vector((s * 0.112, -0.030, -0.010))
+        fig.add_bone(f"Cheek.{side}", hinge, hinge + Vector((0, -0.01, -0.14)), "Helmet")
+        c = hinge + Vector((s * 0.004, -0.012, -0.072))
+        parts.append(Part("sphere", tuple(c), (0.028, 0.080, 0.145), mat="boar_s_tusk",
+                          bone=f"Cheek.{side}", rot=(0.0, 0.0, s * -18.0), segments=10,
+                          rings=6, extras={"rigid": True, "bevel": False}))
+        for dz in (0.03, -0.01, -0.05):             # rows on the cheek-piece
+            parts.append(Part("box", tuple(c + Vector((s * 0.014, 0.0, dz))),
+                              (0.006, 0.066, 0.008), mat="felt_and_leather",
+                              bone=f"Cheek.{side}", rot=(0.0, 0.0, s * -18.0),
+                              extras={"rigid": True, "bevel": False}))
+    return parts
+
+
+def _rapier(fig: Human) -> list[Part]:
+    """0.92 m bronze blade, 4 cm at the hilt tapering to a needle, strong midrib;
+    horned guard 0.12 m; bone grip and 5 cm pommel. Carried low in the right fist,
+    point forward and down; prop bone Sword on Hand.R."""
+    g = fig.grip("R")
+    d = Vector((-0.18, -0.62, -0.76)).normalized()      # blade direction
+    side = d.cross(Vector((0.0, 0.0, 1.0))).normalized()  # blade width axis
+    guard = g + d * 0.055
+    tip = guard + d * 0.92
+    fig.prop_bone("Sword", "R", guard, tip)
+    prop = {"prop": True}
+    parts = [
+        _bar(g - d * 0.06, guard, 0.016, "bone_and_ivory", "Sword", segments=8, **prop),
+        Part("sphere", tuple(g - d * 0.085), (0.05, 0.05, 0.05), mat="bone_and_ivory",
+             bone="Sword", segments=8, rings=5, extras={**prop, "bevel": False}),
+    ]
+    # horned guard: a short bar bent back toward the hand at both ends
+    horn = [guard + side * 0.06 - d * 0.03, guard + side * 0.045, guard,
+            guard - side * 0.045, guard - side * 0.06 - d * 0.03]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="hammered_bronze_plate", bone="Sword",
+                      segments=6, extras={"path": [tuple(p) for p in horn],
+                                          "section": (0.010, 0.014), "smooth": True,
+                                          "bevel": False, **prop}))
+    outline = [(-0.020, 0.0), (0.020, 0.0), (0.017, 0.25), (0.012, 0.60), (0.006, 0.82),
+               (0.0, 0.92), (-0.006, 0.82), (-0.012, 0.60), (-0.017, 0.25)]
+    # prism: outline X -> width (side), outline Y -> d, extrusion Z -> thickness
+    parts.append(Part("prism", tuple(guard), (1, 1, 0.006), mat="hammered_bronze_plate",
+                      bone="Sword", rot=_euler_from_axes(side, d),
+                      extras={"outline": outline, **prop}))
+    parts.append(_bar(guard, guard + d * 0.80, 0.0055, "hammered_bronze_plate", "Sword",
+                      segments=5, **prop))
+    return parts
+
+
+def dendra_champion(entry: Entry):
+    # 1.92 m to the helmet knob, 1.78 m bare head. Broad (bulk 1.18); arms spread
+    # wide so they hang outside the bell of plates.
+    fig = Human(height=1.78, bulk=1.18, shoulders=0.58,
+                arm_r=ArmPose(spread=24.0, swing=6.0, elbow=35.0),
+                arm_l=ArmPose(spread=24.0, swing=2.0, elbow=20.0))
+    h = fig.h
+    hem = 0.50
+    parts = [fig.torso_part("linen", pad=0.01, hem=hem, hem_flare=1.55, segments=24)]
+    for side in ("L", "R"):
+        parts.append(fig.arm_part(side, "skin"))
+        parts.append(_sleeve(fig, side, "linen", reach=0.95, pad=0.010, flare=1.1))
+        parts.append(_sleeve(fig, side, "hammered_bronze_plate", reach=0.62, pad=0.022))
+        parts += fig.hand_part(side, "skin")
+        parts.append(fig.leg_part(side, "skin"))
+        parts.append(fig.foot_part(side, "felt_and_leather", length=0.29, point=0.0))
+        # greaves 0.32 m: a bronze sleeve round the shin, laced behind
+        knee, ank = fig.joint(f"knee.{side}"), fig.joint(f"ankle.{side}")
+        shin = ank - knee
+        g0 = ank - shin.normalized() * 0.03
+        g1 = g0 - shin.normalized() * 0.32
+        pts = [g0, g0.lerp(g1, 0.35), g0.lerp(g1, 0.7), g1]
+        secs = [(0.052, 0.056), (0.064, 0.070), (0.072, 0.080), (0.070, 0.078)]
+        parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat="hammered_bronze_plate",
+                          bone=f"LowerLeg.{side}", segments=12, extras={
+                              "path": [tuple(p) for p in pts], "sections": secs,
+                              "offsets": [(0.0, 0.0), (0.006, 0.0), (0.008, 0.0), (0.0, 0.0)],
+                              "up": (0.0, 1.0, 0.0), "rigid": True, "bevel": False}))
+    parts += fig.head_part("skin", face="skin", features="horsehair")
+
+    # Cuirass: a bell of hammered bronze, front + back as one shell, three incised
+    # ridge-lines; hung on Chest/Spine.
+    cz = fig.belt_z - 0.005
+    ridge = []
+    for zr in (0.10, 0.19, 0.28):
+        ridge += [(None, zr - 0.006), ("r", zr), (None, zr + 0.006)]
+    body = [(0.286, 0.0), (0.268, 0.05), (0.256, 0.12), (0.252, 0.22), (0.250, 0.30),
+            (0.240, 0.36), (0.212, 0.41), (0.160, 0.445), (0.120, 0.455), (0.0, 0.455)]
+    prof = [(0.0, 0.02), (0.270, 0.02)] + body[:-1] + [(0.0, body[-1][1])]
+    prof = [(0.0, 0.02), (0.272, 0.024), (0.296, 0.0)] + body[1:]
+    cuirass_paint = []
+    parts.append(Part("lathe", (0.0, 0.004, cz), (1.0, 0.70, 1.0), mat="hammered_bronze_plate",
+                      bone="Chest", segments=28, extras={
+                          "profile": prof, "smooth": True, "bevel": False,
+                          "paint": cuirass_paint,
+                          "bones": ["Spine", "Chest", "Hips"]}))
+    for zr, rr in ((0.10, 0.258), (0.19, 0.254), (0.28, 0.252)):
+        parts.append(Part("torus", (0.0, 0.004, cz + zr), (2 * rr, 2 * rr * 0.70, 0.012),
+                          mat="hammered_bronze_plate", bone="Chest", segments=28, rings=4,
+                          minor=0.02, extras={"bevel": False, "smooth": True,
+                                              "bones": ["Spine", "Chest", "Hips"]}))
+
+    # Neck guard: tall collar 0.26 m dia. x 0.14 m, flaring, rolled top edge.
+    col_z = fig.shoulder_z - 0.005
+    fig.add_bone("Collar", (0, 0.004, col_z), (0, 0.004, col_z + 0.14), "Chest")
+    parts.append(Part("lathe", (0.0, 0.004, col_z), (1.0, 0.92, 1.0),
+                      mat="hammered_bronze_plate", bone="Collar", segments=20, extras={
+                          "profile": [(0.0, 0.03), (0.150, 0.03), (0.128, 0.05),
+                                      (0.132, 0.12), (0.142, 0.14), (0.146, 0.152),
+                                      (0.134, 0.156), (0.118, 0.14), (0.0, 0.14)],
+                          "rigid": True, "smooth": True, "bevel": False}))
+
+    # Shoulder guards: domes 0.30 m wide over each shoulder, curving down the arm.
+    for s, side in ((1.0, "L"), (-1.0, "R")):
+        sh = fig.joint(f"shoulder.{side}")
+        c = sh + Vector((s * 0.02, 0.004, 0.02))
+        dome = [(0.0, 0.10), (0.06, 0.094), (0.11, 0.07), (0.145, 0.02), (0.152, -0.02),
+                (0.148, -0.045), (0.128, -0.01), (0.09, 0.04), (0.0, 0.05)]
+        parts.append(Part("lathe", tuple(c), (1.0, 1.0, 1.0), mat="hammered_bronze_plate",
+                          bone=f"Shoulder.{side}", rot=(0.0, s * 38.0, 0.0), segments=18,
+                          extras={"profile": dome, "smooth": True, "bevel": False,
+                                  "bones": [f"Shoulder.{side}", f"UpperArm.{side}",
+                                            "Chest"]}))
+
+    # Skirt rings: three nested truncated cones, 0.14 m each, 0.58 -> 0.76 m dia.,
+    # each on its own bone under Hips (they swing as a bell).
+    tops = [cz + 0.02, cz - 0.10, cz - 0.22]
+    dias = [(0.58, 0.64), (0.64, 0.70), (0.70, 0.76)]
+    for i, (zt, (d0, d1)) in enumerate(zip(tops, dias), start=1):
+        zb = zt - 0.14
+        bone = fig.add_bone(f"Ring{i}", (0, 0, zt), (0, 0, zb), "Hips")
+        prof = _shell_ring(zt, zb, d0 / 2 - 0.012, d1 / 2 - 0.012, 0.010, roll=0.012)
+        parts.append(Part("lathe", (0.0, 0.004, zb), (1.0, 0.74, 1.0),
+                          mat="hammered_bronze_plate", bone=bone, segments=28,
+                          extras={"profile": prof, "rigid": True, "smooth": True,
+                                  "bevel": False}))
+        # dome-head rivets along the lower edge, every ~0.1 m
+        n = 22
+        r = d1 / 2 + 0.004
+        for k in range(n):
+            a = 2 * math.pi * (k + 0.5) / n
+            at = (math.cos(a) * r, 0.004 + math.sin(a) * r * 0.74, zb + 0.022)
+            parts.append(Part("sphere", at, (0.014, 0.014, 0.014),
+                              mat="rivet_bronze", bone=bone, segments=5, rings=3,
+                              extras={"rigid": True, "bevel": False}))
+
+    parts += _tusk_helmet(fig, base_z=0.935 * h, top_z=1.92)
+    parts += _rapier(fig)
+
+    # Review pose: the test pose, with the arm raise capped to 55° (the JSON's
+    # pauldron limit on shoulder abduction).
+    pose = dict(figures.HUMAN_TEST_POSE)
+    pose["UpperArm.L"] = (-55.0, 0.0, 0.0)
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(pose),
+        family_overrides={
+            "hammered_bronze_plate": {"wear_to": "#B08050", "wear_amount": 0.35,
+                                      "grain": 0.25},
+            "boar_s_tusk": {"rough": 0.4},
+        },
+        extra_families={
+            "skin": {"name": "Weathered skin", "base": "#9C6E4E", "rough": 0.75,
+                     "notes": "Face, forearms and knees (the concept shows them bare); "
+                              "the champion's list has no skin. Hex from the levy."},
+            "rivet_bronze": {"name": "Rubbed bronze rivets", "base": "#B08050",
+                             "rough": 0.35, "metal": 1.0,
+                             "notes": "The JSON's 'brighter #B08050 on raised edges and "
+                                      "rivet heads' as geometry on the top row."},
+        },
+        notes=[
+            "Rapier (Sword prop bone on Hand.R) is left out of the height check.",
+            "Bones added: Helmet (detachable), Tuft1-2, Cheek.L/R, Collar, Ring1-3 "
+            "(skirt bands under Hips, rigid, for damped secondary swing).",
+            "Not built: tower shield variant and its shield_back socket; lacing "
+            "between the rings; rivets only on the rings' lower edges.",
+        ])
+
+
 BLUEPRINTS = {
     "palace-levy": palace_levy,
     "wall-slinger": wall_slinger,
+    "dendra-champion": dendra_champion,
 }

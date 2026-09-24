@@ -204,6 +204,30 @@ def _horn_lantern(fig: Human, ring: Vector, size: tuple, frame: str, pane: str,
     return parts
 
 
+def _band_z(side_hi: str, z_hi: float, z_lo: float, angle_deg: float) -> float:
+    """Height of a shoulder-to-hip band at a torso angle (see _diag_band)."""
+    zc, amp = (z_hi + z_lo) / 2, (z_hi - z_lo) / 2
+    a_hi = 0.0 if side_hi == "L" else math.pi
+    return zc + amp * math.cos(math.radians(angle_deg) - a_hi)
+
+
+def _diag_band(fig: Human, mat: str, side_hi: str, z_hi: float, z_lo: float, pad: float,
+               width: float, thick: float, n: int = 20) -> Part:
+    """A sash or baldric: a closed flat band round the torso, high (z_hi) over the
+    `side_hi` shoulder, low (z_lo) at the opposite hip."""
+    ring = []
+    for k in range(n):
+        a = 360.0 * k / n
+        ring.append(tuple(fig.surface(_band_z(side_hi, z_hi, z_lo, a), a, pad=pad)))
+    amp = (z_hi - z_lo) / 2
+    s = 1.0 if side_hi == "L" else -1.0
+    tilt = Vector((-s * amp / 0.17, 0.0, 1.0)).normalized()
+    return Part("tube", (0, 0, 0), (1, 1, 1), mat=mat, bone="Chest", segments=4,
+                extras={"path": ring, "closed": True, "section": (width / 2, thick / 2),
+                        "up": tuple(tilt), "bevel": False, "smooth": True,
+                        "bones": ["Hips", "Spine", "Chest", f"Shoulder.{side_hi}"]})
+
+
 def _buttons(fig: Human, z0: float, z1: float, count: int, mat: str, pad: float,
              size: float = 0.014) -> list[Part]:
     out = []
@@ -454,18 +478,7 @@ def partisan_guard(entry: Entry):
 
     # Sash, right shoulder to left hip, knotted with a fringed tail.
     z_hi, z_lo = fig.shoulder_z - 0.03, fig.belt_z - 0.02
-    zc, amp = (z_hi + z_lo) / 2, (z_hi - z_lo) / 2
-    ring = []
-    for k in range(20):
-        a = 2.0 * math.pi * k / 20
-        z = zc - amp * math.cos(a)
-        ring.append(tuple(fig.surface(z, math.degrees(a), pad=pad + 0.012)))
-    tilt = Vector((amp / 0.17, 0.0, 1.0)).normalized()
-    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=wool, bone="Chest", segments=4,
-                      extras={"path": ring, "closed": True, "section": (0.09, 0.005),
-                              "up": tuple(tilt), "bevel": False, "smooth": True,
-                              "paint": [],
-                              "bones": ["Hips", "Spine", "Chest", "Shoulder.R"]}))
+    parts.append(_diag_band(fig, wool, "R", z_hi, z_lo, pad + 0.012, 0.18, 0.010))
     knot = fig.surface(z_lo, -20.0, pad=pad + 0.03)
     parts.append(Part("sphere", tuple(knot), (0.08, 0.05, 0.07), mat=wool, bone="Hips",
                       segments=8, rings=5, extras={"rigid": True, "bevel": False}))
@@ -528,6 +541,303 @@ def partisan_guard(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Musketeer (ranged) — two glowing match ends, the broad plumed hat, the long
+# musket line, the forked rest, the ring of hanging apostles.
+# --------------------------------------------------------------------------------
+
+def _broad_hat(fig: Human, base: Vector, felt: str, band: str, plume: str,
+               crown_h: float = 0.16) -> list[Part]:
+    """Black felt hat: truncated-cone crown (0.18 m across the top), a 0.46 m brim
+    with a soft wavy edge, cocked up on the figure's left, a murrey band and one
+    ostrich plume curling from the cocked side to the back. On its own Hat bone."""
+    fig.add_bone("Hat", base, base + Vector((0, 0, crown_h)), "Head")
+    rigid = {"rigid": True}
+    profile = [(0.098, -0.01), (0.104, 0.02), (0.100, crown_h * 0.6), (0.092, crown_h - 0.01),
+               (0.085, crown_h), (0.0, crown_h + 0.004)]
+    parts = [Part("lathe", tuple(base), (1, 1.08, 1), mat=felt, bone="Hat", segments=16,
+                  extras={"profile": profile, "smooth": True, "bevel": False, **rigid})]
+    parts.append(Part("lathe", tuple(base), (1, 1.08, 1), mat=band, bone="Hat", segments=16,
+                      extras={"profile": [(0.107, 0.012), (0.108, 0.045), (0.101, 0.045),
+                                          (0.100, 0.012)],
+                              "smooth": True, "bevel": False, **rigid}))
+    n = 28
+    rings = [[], [], [], []]
+    for j in range(n):
+        a = 2.0 * math.pi * j / n
+        ca, sa = math.cos(a), math.sin(a)
+        cock = max(0.0, ca) ** 3          # the left side (+X) turned up
+        r_out = 0.23 - 0.03 * cock
+        wave = 0.006 * math.sin(5 * a)
+        lift = -0.010 + wave + 0.13 * cock + 0.015 * sa ** 2
+        inner = Vector((ca * 0.097, sa * 0.105, 0.0))
+        outer = Vector((ca * r_out, sa * r_out * 1.02, lift))
+        if cock > 0.3:   # turned-up brim leans back against the crown
+            outer.x = ca * (0.20 - 0.07 * (cock - 0.3))
+        rings[0].append(tuple(base + inner + Vector((0, 0, 0.008))))
+        rings[1].append(tuple(base + outer + Vector((0, 0, 0.005))))
+        rings[2].append(tuple(base + outer + Vector((0, 0, -0.005))))
+        rings[3].append(tuple(base + inner + Vector((0, 0, -0.006))))
+    parts.append(_ring_loft(rings, felt, "Hat", **rigid))
+    # the pin holding the cocked side, and the plume from it, curling to the back
+    pin = base + Vector((0.115, -0.02, 0.07))
+    parts.append(Part("sphere", tuple(pin), (0.022, 0.016, 0.022), mat=band, bone="Hat",
+                      segments=6, rings=4, extras={**rigid, "bevel": False}))
+    ctrl = [pin, pin + Vector((0.01, -0.03, 0.10)), pin + Vector((-0.04, 0.02, 0.16)),
+            pin + Vector((-0.10, 0.11, 0.14)), pin + Vector((-0.13, 0.20, 0.06)),
+            pin + Vector((-0.12, 0.25, -0.02))]
+    path = spline([tuple(p) for p in ctrl], 2)
+    m = len(path)
+    secs = []
+    for i in range(m):
+        t = i / (m - 1)
+        w = 0.012 + 0.05 * math.sin(math.pi * min(1.0, t * 1.15)) if i < m - 1 else 0.0
+        secs.append((w, w * 0.35) if i < m - 1 else (0.0, 0.0))
+    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=plume, bone="Hat", segments=6,
+                      extras={"path": path, "sections": secs, "up": (1.0, 0.0, 0.0),
+                              "smooth": True, "bevel": False, **rigid}))
+    return parts
+
+
+def _matchlock(fig: Human, stock: str, steel: str, match_mat: str) -> list[Part]:
+    """Matchlock musket, 1.55 m: 1.15 m blued barrel (octagonal breech, round
+    muzzle), walnut stock with a fish-tail butt, flat lockplate, S-shaped
+    serpentine holding the match, ramrod under the barrel. Held grounded at the
+    order in the right fist, lock outward; a prop bone on Hand.R."""
+    g = fig.grip("R")
+    x, y = g.x, g.y + 0.012
+    overall, barrel = 1.55, 1.15
+    breech = overall - barrel
+    fig.prop_bone("Musket", "R", head=g, tail=(x, y, overall))
+    prop = {"prop": True}
+    # stock profile in (u = toward the front of the gun = -Y, v = up)
+    outline = [(-0.05, 0.0), (0.075, 0.0), (0.06, 0.05), (0.035, 0.20), (0.03, 0.34),
+               (0.022, breech + 0.02), (0.025, breech + 0.58), (0.012, breech + 0.62),
+               (-0.018, breech + 0.62), (-0.020, breech + 0.02), (-0.018, 0.34),
+               (-0.020, 0.30), (-0.045, 0.06)]
+    # rot (90, 0, 90): u -> +Y, v -> +Z, extrusion along X. Negate u for -Y front.
+    parts = [Part("prism", (x, y, 0.0), (1, 1, 0.045), mat=stock, bone="Musket",
+                  rot=(90.0, 0.0, 90.0),
+                  extras={"outline": [(-u, v) for u, v in outline], **prop})]
+    parts.append(Part("cyl", (x, y - 0.004, breech + 0.20), (0.034, 0.034, 0.40),
+                      mat=steel, bone="Musket", segments=8, taper=0.9,
+                      extras={**prop, "bevel": False}))
+    parts.append(Part("cyl", (x, y - 0.004, breech + 0.40 + (barrel - 0.40) / 2),
+                      (0.028, 0.028, barrel - 0.40), mat=steel, bone="Musket", segments=8,
+                      taper=0.92, extras={**prop, "bevel": False, "smooth": True}))
+    parts.append(Part("cyl", (x, y - 0.004, overall - 0.012), (0.032, 0.032, 0.024),
+                      mat=steel, bone="Musket", segments=8, extras={**prop, "bevel": False}))
+    # ramrod in front of the barrel (under it, as the gun is held)
+    parts.append(Part("cyl", (x, y - 0.034, breech + 0.55), (0.009, 0.009, 1.0), mat=steel,
+                      bone="Musket", segments=5, extras={**prop, "bevel": False}))
+    # lockplate on the outer (right, -X) side and the S serpentine
+    lx = x - 0.026
+    parts.append(Part("box", (lx, y + 0.005, breech + 0.02), (0.008, 0.04, 0.18), mat=steel,
+                      bone="Musket", extras=dict(prop)))
+    serp = [(lx - 0.006, y + 0.02, breech - 0.04), (lx - 0.010, y + 0.045, breech - 0.01),
+            (lx - 0.010, y + 0.035, breech + 0.03), (lx - 0.008, y + 0.005, breech + 0.04),
+            (lx - 0.008, y - 0.01, breech + 0.07)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=steel, bone="Musket", segments=5,
+                      extras={"path": spline(serp, 2), "section": (0.005, 0.005),
+                              "smooth": True, "bevel": False, **prop}))
+    return parts
+
+
+def _rest(fig: Human, staff: str, iron: str) -> list[Part]:
+    """Forked musket rest: 1.30 m ash staff, 0.08 m iron U-fork at the top, iron
+    spike at the foot, upright in the left fist."""
+    g = fig.grip("L")
+    x, y = g.x, g.y
+    fig.prop_bone("Rest", "L", head=g, tail=(x, y, 1.30))
+    prop = {"prop": True}
+    parts = [Part("cyl", (x, y, 0.65), (0.026, 0.026, 1.18), mat=staff, bone="Rest",
+                  segments=6, extras={**prop, "bevel": False, "smooth": True}),
+             Part("cone", (x, y, 0.035), (0.03, 0.03, 0.07), mat=iron, bone="Rest",
+                  segments=5, rot=(180.0, 0.0, 0.0), taper=0.05,
+                  extras={**prop, "bevel": False})]
+    fork = [(x - 0.045, y, 1.33), (x - 0.042, y, 1.27), (x - 0.02, y, 1.24),
+            (x + 0.02, y, 1.24), (x + 0.042, y, 1.27), (x + 0.045, y, 1.33)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=iron, bone="Rest", segments=5,
+                      extras={"path": spline(fork, 2), "section": (0.008, 0.008),
+                              "smooth": True, "bevel": False, **prop}))
+    parts.append(Part("cyl", (x, y, 1.23), (0.03, 0.03, 0.03), mat=iron, bone="Rest",
+                      segments=6, extras={**prop, "bevel": False}))
+    return parts
+
+
+def _slow_match(fig: Human, cord: str, ember: str) -> list[Part]:
+    """The slow match looped over the left fist, lit at both ends: a hanging loop
+    of 8 mm cord and two glowing ember tips. On its own bone under Hand.L."""
+    g = fig.grip("L")
+    s = 1.0
+    fig.prop_bone("Match", "L", head=g, tail=g + Vector((0, 0, -0.25)))
+    prop = {"prop": True}
+    loop = [g + Vector((s * 0.05, -0.02, 0.06)), g + Vector((s * 0.045, 0.0, -0.02)),
+            g + Vector((s * 0.06, 0.01, -0.15)), g + Vector((s * 0.03, 0.02, -0.26)),
+            g + Vector((s * -0.02, 0.01, -0.22)), g + Vector((s * -0.005, -0.02, -0.10)),
+            g + Vector((s * 0.03, -0.05, -0.04))]
+    path = spline([tuple(p) for p in loop], 2)
+    parts = [Part("tube", (0, 0, 0), (1, 1, 1), mat=cord, bone="Match", segments=5,
+                  extras={"path": path, "section": (0.005, 0.005), "smooth": True,
+                          "bevel": False, **prop})]
+    tail = Vector(path[-1]) + Vector((0.0, -0.06, -0.12))
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=cord, bone="Match", segments=5,
+                      extras={"path": [path[-1], tuple(tail)], "section": (0.005, 0.005),
+                              "smooth": True, "bevel": False, **prop}))
+    for tip in (Vector(path[0]), tail):
+        parts.append(Part("sphere", tuple(tip), (0.022, 0.022, 0.022), mat=ember,
+                          bone="Match", segments=6, rings=4, extras={**prop, "bevel": False}))
+    return parts
+
+
+def musketeer(entry: Entry):
+    # A 1.80 m man, broader-shouldered; the hat crown and plume reach ~1.92 m.
+    fig = Human(height=1.79, bulk=1.05, shoulders=0.52,
+                arm_r=ArmPose(spread=12.0, swing=-4.0, elbow=38.0),
+                arm_l=ArmPose(spread=14.0, swing=-2.0, elbow=40.0))
+    buff, wool, felt = "buff_leather", "murrey_livery_wool", "black_felt"
+    walnut, steel = "black_walnut", "blued_steel"
+    pad = 0.016   # the 8 mm buff coat over a doublet
+    rain = {"mat": "buff_rain", "min": (-1, -1, fig.shoulder_z - 0.03), "max": (1, 1, 3)}
+    parts = [fig.torso_part(buff, pad=pad, hem=0.70, hem_flare=1.30, collar=0.02,
+                            segments=24, paint=[rain])]
+    for side in ("L", "R"):
+        s = figures.SIDES[side]
+        el = fig.joint(f"elbow.{side}")
+        # buff coat sleeve to the elbow, murrey wool sleeve below it
+        parts.append(fig.arm_part(side, buff, pad=0.010, paint=[
+            {"mat": wool, "min": (-1, -1, -1), "max": (1, 1, el.z - 0.03)},
+            {"mat": "buff_rain", "min": (-1, -1, fig.shoulder_z - 0.02), "max": (1, 1, 3)}]))
+        parts += fig.hand_part(side, "skin")
+        knee = fig.joint(f"knee.{side}")
+        parts.append(fig.leg_part(side, wool, pad=0.006, paint=[
+            {"mat": buff, "min": (-1, -1, -1), "max": (1, 1, knee.z - 0.04)}]))
+        parts.append(fig.foot_part(side, buff, length=0.29, point=0.05))
+        # bucket-top boot: a flared cuff turned down 0.15 m below the knee
+        cuff = knee + (fig.joint(f"ankle.{side}") - knee) * 0.08
+        parts.append(Part("lathe", tuple(cuff), (1, 1, 1), mat=buff, bone=f"LowerLeg.{side}",
+                          segments=12, extras={
+                              "profile": [(0.058, -0.15), (0.074, -0.14), (0.098, -0.02),
+                                          (0.100, 0.0), (0.090, 0.004), (0.060, -0.02)],
+                              "smooth": True, "bevel": False,
+                              "bones": [f"LowerLeg.{side}", f"UpperLeg.{side}"]}))
+        # short buff wings on the shoulders
+        sh, _el, _wr, axis, _out, _fwd = _arm_frame(fig, side)
+        wing = sh + (el - sh) * 0.08
+        parts.append(Part("torus", tuple(wing), (0.15, 0.13, 0.14), mat="buff_rain",
+                          bone=f"UpperArm.{side}", rot=_track(axis), segments=12, rings=5,
+                          minor=0.24, extras={"bevel": False, "smooth": True,
+                                              "bones": [f"UpperArm.{side}",
+                                                        f"Shoulder.{side}", "Chest"]}))
+
+    # Head: moustache, goatee and shoulder-length hair under the hat.
+    parts += fig.head_part("skin", face="skin", features=felt)
+    chin = fig.lean((0.0, -0.050 * fig.h, 0.880 * fig.h))
+    parts.append(Part("cone", tuple(chin), (0.026, 0.02, 0.05), mat=walnut, bone="Head",
+                      rot=(180.0, 0.0, 0.0), segments=6, taper=0.3,
+                      extras={"rigid": True, "bevel": False}))
+    lip = fig.lean((0.0, -0.057 * fig.h, 0.898 * fig.h))
+    parts.append(Part("box", tuple(lip), (0.06, 0.012, 0.010), mat=walnut, bone="Head",
+                      rot=(0, 0, 0), extras={"rigid": True, "bevel": False}))
+    for s in (1.0, -1.0):
+        top = fig.lean((s * 0.070, 0.010, 0.955 * fig.h))
+        bot = fig.lean((s * 0.078, 0.022, 0.878 * fig.h))
+        parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=walnut, bone="Head", segments=6,
+                          extras={"path": [tuple(top), tuple(top.lerp(bot, 0.5)), tuple(bot)],
+                                  "sections": [(0.030, 0.050), (0.026, 0.050), (0.018, 0.040)],
+                                  "up": (1.0, 0.0, 0.0), "smooth": True, "bevel": False,
+                                  "rigid": True}))
+    base = fig.lean((0.0, 0.004 * fig.h, 0.952 * fig.h))
+    parts += _broad_hat(fig, base, felt, wool, wool, crown_h=0.19)
+
+    # Falling linen band collar.
+    parts.append(_drape(fig, "linen_collar", fig.neck_z + 0.045, (0.064, 0.058),
+                        fig.neck_z - 0.03, pad=pad + 0.03, thick=0.008, front_drop=0.02))
+    # Hooks down the coat front.
+    for i in range(5):
+        z = fig.belt_z + 0.08 + i * 0.075
+        p = fig.surface(z, -90.0, pad=pad + 0.012)
+        parts.append(Part("box", tuple(p), (0.03, 0.008, 0.008), mat=steel, bone="Spine",
+                          extras={"rigid": True, "bevel": False}))
+
+    # Waist-belt (black felt-black leather) with a short sword on the left.
+    parts.append(fig.band(fig.belt_z, felt, height=0.045, pad=0.012, torso_pad=pad))
+    buckle = fig.surface(fig.belt_z, -90.0, pad=pad + 0.022)
+    parts.append(Part("torus", tuple(buckle), (0.05, 0.05, 0.05), mat=steel, bone="Hips",
+                      rot=(90, 0, 0), segments=4, rings=4, minor=0.2,
+                      extras={"rigid": True, "bevel": False}))
+    hilt = fig.surface(fig.belt_z - 0.04, -20.0, pad=pad + 0.07)
+    parts += _sword(fig, hilt, (0.14, 0.50, -0.85), 0.70, steel, felt, walnut, swept=False)
+    # Bullet bag at the right front hip, priming flask beside it.
+    bag = fig.surface(fig.belt_z - 0.09, -128.0, pad=pad + 0.05)
+    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=buff, bone="Hips", segments=8,
+                      extras={"path": [tuple(bag + Vector((0, 0, 0.06))), tuple(bag),
+                                       tuple(bag - Vector((0, 0, 0.05)))],
+                              "sections": [(0.03, 0.045), (0.045, 0.06), (0.0, 0.0)],
+                              "up": (0.0, 1.0, 0.0), "power": 2.5, "smooth": True,
+                              "bevel": False, "rigid": True}))
+    flask = fig.surface(fig.belt_z - 0.10, -100.0, pad=pad + 0.04)
+    parts.append(Part("cone", tuple(flask), (0.05, 0.03, 0.14), mat="buff_rain", bone="Hips",
+                      segments=6, taper=0.35, rot=(180.0, 0.0, 10.0),
+                      extras={"rigid": True, "bevel": False}))
+
+    # Bandolier: 5 cm felt baldric over the left shoulder to the right hip,
+    # twelve apostles hanging off the front and flanks.
+    z_hi, z_lo = fig.shoulder_z - 0.02, fig.belt_z + 0.02
+    parts.append(_diag_band(fig, felt, "L", z_hi, z_lo, pad + 0.010, 0.05, 0.008))
+    for k in range(12):
+        ang = -30.0 - 120.0 * k / 11            # left-front round to the right flank
+        zb = _band_z("L", z_hi, z_lo, ang)
+        top = fig.surface(zb - 0.02, ang, pad=pad + 0.03)
+        c = top - Vector((0, 0, 0.055))
+        bone = "Chest" if zb > fig.chest_z else "Spine"
+        parts.append(Part("cyl", tuple(c), (0.035, 0.035, 0.10),
+                          mat="turned_wood_chargers", bone=bone, segments=6,
+                          extras={"rigid": True, "bevel": False}))
+        parts.append(Part("cyl", tuple(c + Vector((0, 0, 0.058))), (0.040, 0.040, 0.022),
+                          mat=walnut, bone=bone, segments=6,
+                          extras={"rigid": True, "bevel": False}))
+
+    parts += _matchlock(fig, walnut, steel, "turned_wood_chargers")
+    parts += _rest(fig, "ash_haft", steel)
+    parts += _slow_match(fig, "turned_wood_chargers", "match_ember")
+
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(),
+        family_overrides={
+            # 9x shipping emission blows #C4542E out to white; store it dimmer so
+            # the ember reads as the madder glow on the concept.
+            "match_ember": {"emit": "#5A2410", "rough": 0.8},
+            "blued_steel": {"rough": 0.5, "wear_to": "#6E7E92", "wear_amount": 0.3},
+            "buff_leather": {"grain": 0.35},
+        },
+        extra_families={
+            **SKIN,
+            "buff_rain": {"name": "Buff leather, rain-darkened", "base": "#7C6848",
+                          "rough": 0.85, "notes": "JSON buff-leather note: 'rain-dark on "
+                          "shoulders #7C6848'. Also the horn priming flask."},
+            "linen_collar": {"name": "Linen collar", "base": "#D2C7AC", "rough": 0.9,
+                             "notes": "Build bullet 'plain falling linen band collar'; the "
+                                      "musketeer's JSON lists no linen (hex from the "
+                                      "guard's)."},
+            "ash_haft": {"name": "Ash haft", "base": "#8A7254", "rough": 0.7,
+                         "notes": "Build bullet 'ash staff 1.30 m' for the rest; the "
+                                  "musketeer's JSON lists no ash (hex from the guard's)."},
+        },
+        notes=[
+            "Musket (1.55 m), rest (1.30 m) and slow match are prop bones on Hand.R / "
+            "Hand.L / Hand.L. The musket is held grounded at the order as on the "
+            "concept's front view, not shouldered.",
+            "Hat is its own bone under Head; the plume is rigid on it (no plume springs).",
+            "Baldric is black felt (the concept labels the chargers 'on felt band'); "
+            "the JSON lists no black leather for him. The sword scabbard is felt-black too.",
+            "Bucket-top boots are buff leather (concept: 'dressed buff').",
+            "Not built: the 12 charger spring bones, coat skirt_F/B/L/R, ember sockets, "
+            "the smoke ribbon card, the spare match coil, powder smudges.",
+        ])
+
+
 BLUEPRINTS = {
     "partisan-guard": partisan_guard,
+    "musketeer": musketeer,
 }

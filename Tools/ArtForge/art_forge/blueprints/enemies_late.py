@@ -130,7 +130,7 @@ def _lerp(a, b, t):
 
 def _sallet(fig: Human, mat: str, rivet: str, crown: float, rim_front: float,
             rim_side: float, rim_back: float, back_reach: float, slit: float | None,
-            front_reach: float = 0.130, half_w: float = 0.120, n: int = 20,
+            front_reach: float = 0.132, half_w: float = 0.126, n: int = 20,
             bone: str = "Sallet") -> list[Part]:
     """A one-piece sallet: a solid dome loft whose rim dips from the brow to a tail
     that sweeps out behind the neck. Rings run rim -> crown pole. With `slit` (the
@@ -272,14 +272,18 @@ def sallet_halberdier(entry: Entry):
             parts.append(_strip(fig, pts, spad, widths, "livery_red", "Spine", back,
                                 floor=fig.hip_z, extras={k: v for k, v in tab_rules.items()
                                                          if k != "smooth"}))
-            for t in (0.2, 0.45, 0.8):
+            # Knotted stubs: short lopped branches off alternate edges of the bar.
+            # (Flattened icospheres here broke the whole heat solve; strips don't.)
+            dl = math.hypot(0.34, 0.51)
+            px, pz = 0.51 / dl, 0.34 * sx / dl
+            for t, side in ((0.15, 1.0), (0.32, -1.0), (0.70, 1.0), (0.86, -1.0)):   # clear of the crossing
                 x, z = sx * (-0.17 + 0.34 * t), 1.37 - (1.37 - 0.86) * t
-                xs, ys = _torso_y(fig, x + 0.035, z + 0.03, spad + 0.004, back, fig.hip_z)
-                parts.append(Part("ico", (xs, ys, z + 0.03), (0.022, 0.014, 0.022),
-                                  mat="livery_red", bone="Spine", subdivisions=1,
-                                  extras={"bevel": False,
-                                          "bones": ["Hips", "Spine", "Chest",
-                                                    "UpperLeg.L", "UpperLeg.R"]}))
+                stub = [(x + side * px * r, z + side * pz * r + 0.01 * (r > 0.04))
+                        for r in (0.026, 0.045, 0.064)]
+                parts.append(_strip(fig, stub, spad + 0.001, [0.013, 0.011, 0.006],
+                                    "livery_red", "Spine", back, floor=fig.hip_z,
+                                    extras={k: v for k, v in tab_rules.items()
+                                            if k != "smooth"}))
 
     # Belt at 1.02 m over the tabard, iron frame buckle, baselard on the right hip.
     parts.append(fig.band(1.02, "russet_leather", height=0.04, pad=0.006,
@@ -330,10 +334,10 @@ def sallet_halberdier(entry: Entry):
         up = (shoulder - elbow).normalized()
         s = 1.0 if side == "L" else -1.0
         cap_base = shoulder - up * 0.035 + Vector((s * 0.008, 0, 0))
-        parts.append(_dome(cap_base, up + Vector((s * 0.25, 0, 0)), 0.085, 0.085,
+        parts.append(_dome(cap_base, up + Vector((s * 0.25, 0, 0)), 0.095, 0.090,
                            "plate_steel", f"UpperArm.{side}", segments=12,
                            extras={"rigid": True, "bevel": False}))
-        for k, (t, r) in enumerate(((0.12, 0.078), (0.22, 0.070))):
+        for k, (t, r) in enumerate(((0.13, 0.086), (0.24, 0.076))):
             a = shoulder + (elbow - shoulder) * (t - 0.05)
             b = shoulder + (elbow - shoulder) * (t + 0.07)
             parts.append(_seg("cyl", b, a, r, "plate_steel", f"UpperArm.{side}",

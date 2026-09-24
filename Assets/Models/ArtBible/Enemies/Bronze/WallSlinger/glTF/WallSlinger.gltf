@@ -20,38 +20,38 @@
 			"name":"BandanaTail.L",
 			"rotation":[
 				-0.9779581427574158,
-				-0.11044598370790482,
-				-0.1104457676410675,
-				0.13856853544712067
+				-0.11044604331254959,
+				-0.11044599860906601,
+				0.13856858015060425
 			],
 			"scale":[
-				0.9999995231628418,
 				0.9999998807907104,
-				0.9999995231628418
+				1,
+				0.9999999403953552
 			],
 			"translation":[
 				0.012000000104308128,
-				0.11180007457733154,
-				-0.12972000241279602
+				0.10531997680664062,
+				-0.1329600065946579
 			]
 		},
 		{
 			"name":"BandanaTail.R",
 			"rotation":[
 				-0.9779581427574158,
-				0.11044598370790482,
-				0.1104457676410675,
-				0.13856853544712067
+				0.11044604331254959,
+				0.11044599860906601,
+				0.13856858015060425
 			],
 			"scale":[
-				0.9999995231628418,
 				0.9999998807907104,
-				0.9999995231628418
+				1,
+				0.9999999403953552
 			],
 			"translation":[
 				-0.012000000104308128,
-				0.11180007457733154,
-				-0.12972000241279602
+				0.10531997680664062,
+				-0.1329600065946579
 			]
 		},
 		{
@@ -653,7 +653,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":4435,
+			"count":4468,
 			"max":[
 				0.29403963685035706,
 				1.6613469123840332,
@@ -662,38 +662,38 @@
 			"min":[
 				-0.3828650116920471,
 				0,
-				-0.184250146150589
+				-0.18749016523361206
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":4435,
+			"count":4468,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":4435,
+			"count":4468,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":4435,
+			"count":4468,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":4435,
+			"count":4468,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":13068,
+			"count":13128,
 			"type":"SCALAR"
 		},
 		{
@@ -706,44 +706,44 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":53220,
+			"byteLength":53616,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":53220,
-			"byteOffset":53220,
+			"byteLength":53616,
+			"byteOffset":53616,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":35480,
-			"byteOffset":106440,
+			"byteLength":35744,
+			"byteOffset":107232,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":17740,
-			"byteOffset":141920,
+			"byteLength":17872,
+			"byteOffset":142976,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":70960,
-			"byteOffset":159660,
+			"byteLength":71488,
+			"byteOffset":160848,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":26136,
-			"byteOffset":230620,
+			"byteLength":26256,
+			"byteOffset":232336,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":1792,
-			"byteOffset":256756
+			"byteOffset":258592
 		}
 	],
 	"samplers":[
@@ -754,7 +754,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":258548,
+			"byteLength":260384,
 			"uri":"WallSlinger.bin"
 		}
 	]

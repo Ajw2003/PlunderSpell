@@ -1664,6 +1664,112 @@
       "build_seconds": 2.5
     },
     {
+      "key": "enemies/bronze/dendra-champion",
+      "kind": "enemies",
+      "age": "bronze",
+      "slug": "dendra-champion",
+      "name": "DendraChampion",
+      "title": "Dendra Champion",
+      "passed": true,
+      "stats": {
+        "vertices": 4637,
+        "faces": 4786,
+        "triangles": 8614,
+        "islands": 168,
+        "lowest_z": 0.0,
+        "height": 1.975,
+        "width": 1.088,
+        "budget": 12000,
+        "bbox_m": "1.088x1.152x1.975",
+        "height_body_m": 1.975,
+        "height_spec_m": 1.92,
+        "height_with_props_m": 1.975,
+        "rig_bones": 30,
+        "skinned_bones": 29,
+        "mean_influences": 1.37
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.92,
+        "tri_budget": 12000
+      },
+      "families": {
+        "hammered_bronze_plate": {
+          "name": "Hammered bronze plate",
+          "base": "#8E5E32",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "boar_s_tusk": {
+          "name": "Boar's tusk",
+          "base": "#D6CCB0",
+          "rough": 0.4,
+          "metal": 0.0,
+          "emit": null
+        },
+        "felt_and_leather": {
+          "name": "Felt and leather",
+          "base": "#5E4230",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
+        "linen": {
+          "name": "Linen",
+          "base": "#CFC3A2",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "bone_and_ivory": {
+          "name": "Bone and ivory",
+          "base": "#E0D6BE",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        },
+        "horsehair": {
+          "name": "Horsehair",
+          "base": "#2B231B",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "skin": {
+          "name": "Weathered skin",
+          "base": "#9C6E4E",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "rivet_bronze": {
+          "name": "Rubbed bronze rivets",
+          "base": "#B08050",
+          "rough": 0.35,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "480 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
+        "families not in the JSON (blueprint extras): ['rivet_bronze', 'skin']"
+      ],
+      "notes": [
+        "Rapier (Sword prop bone on Hand.R) is left out of the height check.",
+        "Bones added: Helmet (detachable), Tuft1-2, Cheek.L/R, Collar, Ring1-3 (skirt bands under Hips, rigid, for damped secondary swing).",
+        "Not built: tower shield variant and its shield_back socket; lacing between the rings; rivets only on the rings' lower edges."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/DendraChampion.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/glTF/DendraChampion.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/DendraChampion.blend"
+      },
+      "build_seconds": 5.1
+    },
+    {
       "key": "enemies/bronze/palace-levy",
       "kind": "enemies",
       "age": "bronze",
@@ -1793,15 +1899,15 @@
       "title": "Wall Slinger",
       "passed": true,
       "stats": {
-        "vertices": 2274,
-        "faces": 2160,
-        "triangles": 4356,
+        "vertices": 2286,
+        "faces": 2156,
+        "triangles": 4376,
         "islands": 50,
         "lowest_z": 0.0,
         "height": 1.661,
         "width": 0.677,
         "budget": 8000,
-        "bbox_m": "0.677x0.361x1.661",
+        "bbox_m": "0.677x0.365x1.661",
         "height_body_m": 1.661,
         "height_spec_m": 1.66,
         "rig_bones": 28,
@@ -1886,7 +1992,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/glTF/WallSlinger.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/WallSlinger.blend"
       },
-      "build_seconds": 3.5
+      "build_seconds": 3.8
     },
     {
       "key": "enemies/high/alaunt-hound",
@@ -2211,10 +2317,10 @@
       "title": "Sallet Halberdier",
       "passed": true,
       "stats": {
-        "vertices": 3416,
-        "faces": 3729,
-        "triangles": 6416,
-        "islands": 105,
+        "vertices": 3464,
+        "faces": 3649,
+        "triangles": 6496,
+        "islands": 109,
         "lowest_z": 0.0,
         "height": 2.052,
         "width": 0.832,
@@ -2224,8 +2330,8 @@
         "height_spec_m": 1.82,
         "height_with_props_m": 2.052,
         "rig_bones": 24,
-        "skinned_bones": 17,
-        "mean_influences": 1.05
+        "skinned_bones": 22,
+        "mean_influences": 1.5
       },
       "spec": {
         "dims_WDH_m": null,
@@ -2299,6 +2405,7 @@
       },
       "failures": [],
       "warnings": [
+        "441 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['livery_grime', 'russet_leather']"
       ],
       "notes": [
@@ -2312,7 +2419,136 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/SalletHalberdier/glTF/SalletHalberdier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/SalletHalberdier/SalletHalberdier.blend"
       },
-      "build_seconds": 5.4
+      "build_seconds": 4.3
+    },
+    {
+      "key": "enemies/powder/musketeer",
+      "kind": "enemies",
+      "age": "powder",
+      "slug": "musketeer",
+      "name": "Musketeer",
+      "title": "Musketeer",
+      "passed": true,
+      "stats": {
+        "vertices": 2847,
+        "faces": 2611,
+        "triangles": 5390,
+        "islands": 82,
+        "lowest_z": -0.0,
+        "height": 1.967,
+        "width": 0.718,
+        "budget": 8000,
+        "bbox_m": "0.718x0.618x1.967",
+        "height_body_m": 1.967,
+        "height_spec_m": 1.92,
+        "height_with_props_m": 1.967,
+        "rig_bones": 24,
+        "skinned_bones": 23,
+        "mean_influences": 1.54
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.92,
+        "tri_budget": 8000
+      },
+      "families": {
+        "buff_leather": {
+          "name": "Buff leather",
+          "base": "#A48A60",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
+        "murrey_livery_wool": {
+          "name": "Murrey livery wool",
+          "base": "#5B3036",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "black_felt": {
+          "name": "Black felt",
+          "base": "#221E1A",
+          "rough": 1.0,
+          "metal": 0.0,
+          "emit": null
+        },
+        "black_walnut": {
+          "name": "Black walnut",
+          "base": "#3B2A1E",
+          "rough": 0.5,
+          "metal": 0.0,
+          "emit": null
+        },
+        "blued_steel": {
+          "name": "Blued steel",
+          "base": "#34404E",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "turned_wood_chargers": {
+          "name": "Turned wood chargers",
+          "base": "#6A5034",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "match_ember": {
+          "name": "Match ember",
+          "base": "#C4542E",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": "#5A2410"
+        },
+        "skin": {
+          "name": "Skin",
+          "base": "#B88E6E",
+          "rough": 0.6,
+          "metal": 0.0,
+          "emit": null
+        },
+        "buff_rain": {
+          "name": "Buff leather, rain-darkened",
+          "base": "#7C6848",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        },
+        "linen_collar": {
+          "name": "Linen collar",
+          "base": "#D2C7AC",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "ash_haft": {
+          "name": "Ash haft",
+          "base": "#8A7254",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "96 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
+        "families not in the JSON (blueprint extras): ['ash_haft', 'buff_rain', 'linen_collar', 'skin']"
+      ],
+      "notes": [
+        "Musket (1.55 m), rest (1.30 m) and slow match are prop bones on Hand.R / Hand.L / Hand.L. The musket is held grounded at the order as on the concept's front view, not shouldered.",
+        "Hat is its own bone under Head; the plume is rigid on it (no plume springs).",
+        "Baldric is black felt (the concept labels the chargers 'on felt band'); the JSON lists no black leather for him. The sword scabbard is felt-black too.",
+        "Bucket-top boots are buff leather (concept: 'dressed buff').",
+        "Not built: the 12 charger spring bones, coat skirt_F/B/L/R, ember sockets, the smoke ribbon card, the spare match coil, powder smudges."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/Musketeer.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/glTF/Musketeer.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/Musketeer.blend"
+      },
+      "build_seconds": 3.8
     },
     {
       "key": "enemies/powder/partisan-guard",
