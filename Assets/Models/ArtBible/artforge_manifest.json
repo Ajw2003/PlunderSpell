@@ -1672,21 +1672,21 @@
       "title": "Dendra Champion",
       "passed": true,
       "stats": {
-        "vertices": 4637,
-        "faces": 4786,
-        "triangles": 8614,
-        "islands": 168,
+        "vertices": 4837,
+        "faces": 4936,
+        "triangles": 8914,
+        "islands": 193,
         "lowest_z": 0.0,
-        "height": 1.975,
-        "width": 1.088,
+        "height": 1.947,
+        "width": 1.068,
         "budget": 12000,
-        "bbox_m": "1.088x1.152x1.975",
-        "height_body_m": 1.975,
+        "bbox_m": "1.068x0.958x1.947",
+        "height_body_m": 1.947,
         "height_spec_m": 1.92,
-        "height_with_props_m": 1.975,
+        "height_with_props_m": 1.947,
         "rig_bones": 30,
-        "skinned_bones": 29,
-        "mean_influences": 1.37
+        "skinned_bones": 24,
+        "mean_influences": 1.01
       },
       "spec": {
         "dims_WDH_m": null,
@@ -1753,7 +1753,6 @@
       },
       "failures": [],
       "warnings": [
-        "480 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['rivet_bronze', 'skin']"
       ],
       "notes": [
@@ -1767,7 +1766,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/glTF/DendraChampion.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/DendraChampion/DendraChampion.blend"
       },
-      "build_seconds": 5.1
+      "build_seconds": 4.5
     },
     {
       "key": "enemies/bronze/palace-levy",
@@ -1791,8 +1790,8 @@
         "height_spec_m": 1.7,
         "height_with_props_m": 2.398,
         "rig_bones": 23,
-        "skinned_bones": 22,
-        "mean_influences": 1.41
+        "skinned_bones": 17,
+        "mean_influences": 1.03
       },
       "spec": {
         "dims_WDH_m": null,
@@ -1873,7 +1872,6 @@
       },
       "failures": [],
       "warnings": [
-        "28 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['bone_pommel', 'hair', 'hem_red', 'oxhide_dapple']"
       ],
       "notes": [
@@ -1888,7 +1886,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/glTF/PalaceLevy.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/PalaceLevy/PalaceLevy.blend"
       },
-      "build_seconds": 3.4
+      "build_seconds": 3.7
     },
     {
       "key": "enemies/bronze/wall-slinger",
@@ -1992,7 +1990,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/glTF/WallSlinger.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/WallSlinger/WallSlinger.blend"
       },
-      "build_seconds": 3.8
+      "build_seconds": 3.3
     },
     {
       "key": "enemies/high/alaunt-hound",
@@ -2088,7 +2086,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/glTF/AlauntWarHound.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/AlauntWarHound.blend"
       },
-      "build_seconds": 3.0
+      "build_seconds": 2.8
     },
     {
       "key": "enemies/high/castle-crossbowman",
@@ -2201,7 +2199,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/glTF/CastleCrossbowman.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/CastleCrossbowman/CastleCrossbowman.blend"
       },
-      "build_seconds": 4.6
+      "build_seconds": 3.9
     },
     {
       "key": "enemies/high/household-knight",
@@ -2225,8 +2223,8 @@
         "height_spec_m": 1.95,
         "height_with_props_m": 1.95,
         "rig_bones": 25,
-        "skinned_bones": 18,
-        "mean_influences": 1.04
+        "skinned_bones": 24,
+        "mean_influences": 1.54
       },
       "spec": {
         "dims_WDH_m": null,
@@ -2300,6 +2298,7 @@
       },
       "failures": [],
       "warnings": [
+        "389 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['helm_void', 'mail_blade']"
       ],
       "notes": [
@@ -2314,7 +2313,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/glTF/HouseholdKnight.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/HouseholdKnight.blend"
       },
-      "build_seconds": 5.2
+      "build_seconds": 3.4
     },
     {
       "key": "enemies/high/lantern-warden",
@@ -2419,7 +2418,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/LanternWarden/glTF/LanternWarden.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
-      "build_seconds": 3.4
+      "build_seconds": 3.3
     },
     {
       "key": "enemies/late/handgunner",
@@ -2566,7 +2565,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/Handgunner/glTF/Handgunner.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/Handgunner/Handgunner.blend"
       },
-      "build_seconds": 3.9
+      "build_seconds": 3.4
     },
     {
       "key": "enemies/late/sallet-halberdier",
@@ -2679,7 +2678,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/SalletHalberdier/glTF/SalletHalberdier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/SalletHalberdier/SalletHalberdier.blend"
       },
-      "build_seconds": 4.3
+      "build_seconds": 3.3
     },
     {
       "key": "enemies/powder/cuirassier",
@@ -2785,7 +2784,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/glTF/Cuirassier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/Cuirassier.blend"
       },
-      "build_seconds": 4.1
+      "build_seconds": 4.0
     },
     {
       "key": "enemies/powder/musketeer",
@@ -2914,7 +2913,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/glTF/Musketeer.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/Musketeer.blend"
       },
-      "build_seconds": 4.3
+      "build_seconds": 3.4
     },
     {
       "key": "enemies/powder/partisan-guard",
@@ -3021,7 +3020,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/glTF/PalaceGuard.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/PalaceGuard.blend"
       },
-      "build_seconds": 4.1
+      "build_seconds": 3.6
     }
   ]
 }
