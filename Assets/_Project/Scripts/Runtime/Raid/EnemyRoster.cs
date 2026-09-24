@@ -123,7 +123,7 @@ namespace RogueAi.Raid
                 return;
             Debug.LogWarning($"[Roster] No {era} enemy garrisons {zone} in '{name}'; falling back to " +
                              $"the zone's {poolSize} entr{(poolSize == 1 ? "y" : "ies")} from any Age. " +
-                             "Run Tools/Plunderspell/Forge Art Bible Enemies to post that Age's enemies.");
+                             "Run Tools/Plunderspell/Forge Era Content (rooms, loot, enemies) to post that Age's enemies.");
         }
     }
 }

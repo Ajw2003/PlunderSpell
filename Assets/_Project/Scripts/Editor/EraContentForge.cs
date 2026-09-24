@@ -85,15 +85,43 @@ namespace RogueAi.EditorTools
             ("BronzeDoorPlugKeep", CastleZone.Keep), ("BronzeDoorPlugCrypt", CastleZone.Crypt),
         };
 
-        // Late Medieval has its InnerWard and Keep so far; the other zones stay High Medieval.
+        // The Late Medieval curtain-wall stand-ins, by the High Medieval id each replaces
+        // (docs/art/rooms/LateMedieval.md, "Stands in for").
+        private static readonly Dictionary<string, string> LateWallRoles = new Dictionary<string, string>
+        {
+            { "LateBarbican", "GatehouseModule" },
+            { "LateWallStraight", "WallStraight" },
+            { "LateWallCorner", "WallCorner" },
+            { "LateBastion", "Bastion" },
+            { "LateDrawbridge", "Drawbridge" },
+            // The one room the generator always puts at the crypt's centre.
+            { "LateEffigyCrypt", "CryptChamberFinal" },
+        };
+
+        /// <summary>Every Late Medieval room model, by the zone it was built for (asset_specs.py).</summary>
         private static readonly (string Key, CastleZone Zone)[] LateRooms =
         {
+            ("LateBarbican", CastleZone.CurtainWall), ("LateWallStraight", CastleZone.CurtainWall),
+            ("LateWallCorner", CastleZone.CurtainWall), ("LateBastion", CastleZone.CurtainWall),
+            ("LateDrawbridge", CastleZone.CurtainWall),
+            ("LateArtilleryYard", CastleZone.OuterBailey), ("LateGunFoundry", CastleZone.OuterBailey),
+            ("LateHandgunnerBarracks", CastleZone.OuterBailey), ("LateBrewhouse", CastleZone.OuterBailey),
+            ("LateTreadwheelWell", CastleZone.OuterBailey),
             ("LateCountingHouse", CastleZone.InnerWard), ("LateArmouryHall", CastleZone.InnerWard),
             ("LateSpitKitchen", CastleZone.InnerWard), ("LateChantryChapel", CastleZone.InnerWard),
             ("LateLibrary", CastleZone.InnerWard),
             ("LateGreatHall", CastleZone.Keep), ("LateJewelHouse", CastleZone.Keep),
             ("LateStateBedchamber", CastleZone.Keep), ("LateTapestrySolar", CastleZone.Keep),
             ("LateTurretStair", CastleZone.Keep),
+            ("LateUndercroft", CastleZone.Crypt), ("LateOubliette", CastleZone.Crypt),
+            ("LateCharnelHouse", CastleZone.Crypt), ("LateEffigyCrypt", CastleZone.Crypt),
+            ("LateUndercroftStair", CastleZone.Crypt),
+        };
+
+        private static readonly (string Key, CastleZone Zone)[] LatePlugs =
+        {
+            ("LateDoorPlugOuterBailey", CastleZone.OuterBailey), ("LateDoorPlugInnerWard", CastleZone.InnerWard),
+            ("LateDoorPlugKeep", CastleZone.Keep), ("LateDoorPlugCrypt", CastleZone.Crypt),
         };
 
         // Worth climbs inward, as in RaidLootTableForge: the cheapest piece at the wall, the dearest
@@ -361,7 +389,7 @@ namespace RogueAi.EditorTools
                 foreach (string zoneName in enemy.zones)
                 {
                     if (Enum.TryParse(zoneName, out CastleZone zone))
-                        roster.Entries.Add(new EnemyRoster.Entry { EnemyId = asset.name, Zone = zone, Weight = weight, Prefab = prefab });
+                        roster.Entries.Add(new EnemyRoster.Entry { EnemyId = asset.name, Zone = zone, Era = era, Weight = weight, Prefab = prefab });
                 }
             }
 
@@ -378,7 +406,7 @@ namespace RogueAi.EditorTools
                     pick = built.FindIndex(b => b.Spec.height_m >= 1.2f);
                 if (pick < 0)
                     pick = 0;
-                roster.Entries.Add(new EnemyRoster.Entry { EnemyId = built[pick].Name, Zone = zone, Weight = 6, Prefab = built[pick].Prefab });
+                roster.Entries.Add(new EnemyRoster.Entry { EnemyId = built[pick].Name, Zone = zone, Era = era, Weight = 6, Prefab = built[pick].Prefab });
                 report.AppendLine($"  {era} enemies: {zone} had no posting; filled with {built[pick].Name}");
             }
 
@@ -482,8 +510,8 @@ namespace RogueAi.EditorTools
                     return ForgeRegistry(era, "BronzeAge", BronzeRooms, BronzePlugs, BronzeWallRoles,
                         defaults, keepDefaultZones: false, anchors, report);
                 case HistoricalEra.LateMedieval:
-                    return ForgeRegistry(era, "LateMedieval", LateRooms, Array.Empty<(string, CastleZone)>(),
-                        new Dictionary<string, string>(), defaults, keepDefaultZones: true, anchors, report);
+                    return ForgeRegistry(era, "LateMedieval", LateRooms, LatePlugs, LateWallRoles,
+                        defaults, keepDefaultZones: false, anchors, report);
                 default:
                     // High Medieval is the default registry; the Age of Powder has no rooms yet.
                     report.AppendLine($"  {era} rooms: scene default ({(defaults != null ? defaults.name : "none")})");
