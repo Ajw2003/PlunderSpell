@@ -2535,6 +2535,112 @@
       "build_seconds": 4.3
     },
     {
+      "key": "enemies/powder/cuirassier",
+      "kind": "enemies",
+      "age": "powder",
+      "slug": "cuirassier",
+      "name": "Cuirassier",
+      "title": "Cuirassier",
+      "passed": true,
+      "stats": {
+        "vertices": 4092,
+        "faces": 3917,
+        "triangles": 7740,
+        "islands": 115,
+        "lowest_z": 0.0,
+        "height": 1.915,
+        "width": 0.886,
+        "budget": 12000,
+        "bbox_m": "0.886x0.996x1.915",
+        "height_body_m": 1.915,
+        "height_spec_m": 1.95,
+        "rig_bones": 22,
+        "skinned_bones": 21,
+        "mean_influences": 1.49
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.95,
+        "tri_budget": 12000
+      },
+      "families": {
+        "blackened_steel": {
+          "name": "Blackened steel",
+          "base": "#23282E",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "blued_steel": {
+          "name": "Blued steel (pistols)",
+          "base": "#34404E",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "riding_boot_leather": {
+          "name": "Riding-boot leather",
+          "base": "#5E4430",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "black_leather": {
+          "name": "Black leather",
+          "base": "#221C18",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "black_walnut": {
+          "name": "Black walnut",
+          "base": "#3B2A1E",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "murrey_livery_wool": {
+          "name": "Murrey livery wool",
+          "base": "#5B3036",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "skin": {
+          "name": "Skin",
+          "base": "#B88E6E",
+          "rough": 0.6,
+          "metal": 0.0,
+          "emit": null
+        },
+        "bright_steel": {
+          "name": "Blackened steel, rubbed bright",
+          "base": "#7E8A94",
+          "rough": 0.35,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "329 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
+        "families not in the JSON (blueprint extras): ['bright_steel', 'skin']"
+      ],
+      "notes": [
+        "Helm and Visor (hinge) are their own bones under Head; the face inside is modelled (skin) for the open-visor state.",
+        "Tassets are 12 lames per leg bound to Hips + UpperLeg (a stiff shell), not the JSON's tasset_L/R_01-03 chain; pauldrons follow UpperArm, not twist.",
+        "Pistols sit in holsters on Hips; no right-hand pistol prop bone and no sword prop bone yet (both would be sockets for the draw animations).",
+        "Not built: proof-mark dent, rust spots, sash_tail springs, butterfly spur leathers (a plain strap), mud to 0.10 m."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/Cuirassier.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/glTF/Cuirassier.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/Cuirassier.blend"
+      },
+      "build_seconds": 4.1
+    },
+    {
       "key": "enemies/powder/musketeer",
       "kind": "enemies",
       "age": "powder",
