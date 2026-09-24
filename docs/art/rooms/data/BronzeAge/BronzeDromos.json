@@ -1,0 +1,90 @@
+{
+  "key": "BronzeDromos",
+  "name": "The Dromos",
+  "age": "BronzeAge",
+  "zone": "Crypt",
+  "role": "CryptAntechamber",
+  "summary": "The walled passage down to the tombs: corbelled ashlar, carved grave stelae, and the offerings of people who wanted the dead to stay put.",
+  "description": "Every tholos has its dromos, a stone passage cut down into the hill with walls of dressed blocks that lean inward course by course as if to keep the living out. Here the dead are announced before they are met: a grave stele stands in each corner carved with a chariot and a running spiral, amphorae of wine and oil stand at their feet, and a red runner is painted down the floor toward whatever lies beyond. The offerings on the stele bases are the first loot in the crypt, and the last anyone was meant to touch.",
+  "build": [
+    "Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m limestone walls 3.00 m clear, 0.45 m ashlar capstone band, an archway 2.60 × 2.16 m centred on every wall.",
+    "Corbelled courses, where: along the east and west walls in each of the four quadrants, y ±2.00 to ±5.45 (3.45 m long), so the archway axes stay open.",
+    "First course: ashlar 0.00–1.00 m above the floor, standing 0.80 m out from the wall.",
+    "Second course: 1.00–2.00 m, standing 1.00 m out: 0.20 m further in than the course below.",
+    "Third course: 2.00–2.70 m, standing 1.20 m out; above 2 m the passage between the east and west courses narrows to 3.10 m.",
+    "Stele bases: four ashlar blocks 0.90 × 0.50 × 0.30 m, one per quadrant at (±3.20, ±4.80); offerings are laid on their front halves.",
+    "Stele slabs: limestone, tapering 0.60 → 0.54 m wide, 1.30 m tall, 0.15 m thick, standing at the back of each base (toward the north or south wall), carved with a chariot and a running spiral (albedo).",
+    "Amphora offerings: three amphorae 0.62 m tall at (2.30, 4.40), (−2.40, 4.30) and (2.40, −4.20).",
+    "Offering table: ashlar, 0.60 × 0.60 m, 0.70 m high, at (−3.20, 3.60).",
+    "Runner: a haematite band 1.20 m wide painted down the north–south axis, flat (0.03 m)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open",
+    "The passage: east–west it narrows to 3.10 m between the upper courses, above 2.00 m"
+  ],
+  "loot_anchors": [
+    {
+      "at": "NE stele base",
+      "xyz": [
+        3.2,
+        4.65,
+        0.6
+      ]
+    },
+    {
+      "at": "SW stele base",
+      "xyz": [
+        -3.2,
+        -4.65,
+        0.6
+      ]
+    },
+    {
+      "at": "offering table",
+      "xyz": [
+        -3.2,
+        3.6,
+        1.0
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Limestone",
+      "hex": "#8C7F68",
+      "pigment": "vellum_dim",
+      "notes": "Walls and the stele slabs; lichen-free, lamp-sooted at the top."
+    },
+    {
+      "name": "Dressed ashlar",
+      "hex": "#9A8C72",
+      "pigment": "vellum_faint",
+      "notes": "The corbelled courses, bases, capstone band."
+    },
+    {
+      "name": "Terracotta",
+      "hex": "#A0603E",
+      "pigment": "leather",
+      "notes": "Amphorae."
+    },
+    {
+      "name": "Haematite red",
+      "hex": "#8E3F2C",
+      "pigment": "madder",
+      "notes": "The runner."
+    },
+    {
+      "name": "Floor",
+      "hex": "#2B231B",
+      "pigment": "bone_black",
+      "notes": "The Crypt floor."
+    }
+  ],
+  "gameplay": [
+    "The first crypt room: dark, low (3.00 m), and the corbelled courses make it feel narrower still.",
+    "Three loot anchors, all offerings: taking them is the kind of thing that wakes the dead in stories.",
+    "The stelae and courses give cover along the walls; the runner leads the eye (and the guards) down the middle."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeDromos.svg"
+}

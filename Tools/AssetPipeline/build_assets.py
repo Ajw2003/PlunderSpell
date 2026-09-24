@@ -19,6 +19,7 @@ after `--` to re-export everything regardless.
 Exits 1 if any asset fails any check, printing every issue found so the
 next edit knows exactly what to fix.
 """
+import importlib
 import os
 import sys
 
@@ -42,11 +43,17 @@ ANCHORS_JSON = os.path.join(REPO_ROOT, "Assets", "_Project", "Data", "Castle", "
 LOOT_ANCHORS_BY_KEY = {}
 
 
-def write_loot_anchors():
+def write_loot_anchors(partial=False):
     """Blender coordinates (X right, Y forward, Z up) relative to the module
-    origin, rounded so a no-op rebuild writes an identical file."""
+    origin, rounded so a no-op rebuild writes an identical file. A partial
+    (--only) build keeps the anchors of every module it did not rebuild."""
     import json
-    rooms = {k: [list(a) for a in v] for k, v in sorted(LOOT_ANCHORS_BY_KEY.items()) if v}
+    rooms = {}
+    if partial and os.path.isfile(ANCHORS_JSON):
+        with open(ANCHORS_JSON, encoding="utf8") as f:
+            rooms = {k: v for k, v in json.load(f)["rooms"].items() if k not in LOOT_ANCHORS_BY_KEY}
+    rooms.update({k: [list(a) for a in v] for k, v in LOOT_ANCHORS_BY_KEY.items() if v})
+    rooms = dict(sorted(rooms.items()))
     with open(ANCHORS_JSON, "w", encoding="utf8") as f:
         json.dump({"space": "blender_z_up_module_local", "rooms": rooms}, f, indent=1, sort_keys=True)
         f.write("\n")
@@ -61,21 +68,28 @@ def build_one(spec) -> tuple[object, list[str]]:
     uv = bm.loops.layers.uv.new("UVMap")
     mk.reset_material_order()
 
-    builder_fn = getattr(builders, spec["builder"], None) or getattr(castle_builders, spec["builder"])
+    if "module" in spec:
+        builder_fn = getattr(importlib.import_module(spec["module"]), spec["builder"])
+    else:
+        builder_fn = getattr(builders, spec["builder"], None) or getattr(castle_builders, spec["builder"])
     castle_builders.LOOT_ANCHORS.clear()
     builder_fn(bm, uv)
-    if spec["subdir"] == "Castle":
+    is_castle = spec["subdir"].startswith("Castle")
+    if is_castle:
         LOOT_ANCHORS_BY_KEY[spec["key"]] = list(castle_builders.LOOT_ANCHORS)
 
     obj = mk.finalize_to_object(bm, spec["key"], mk.used_pigments(), PALETTE_PNG)
     # Only castle modules are placed on the generator's grid; a weapon or a
     # goblet has no cell to stay inside of.
-    footprint = rk.FOOTPRINT if spec["subdir"] == "Castle" else None
+    footprint = rk.FOOTPRINT if is_castle else None
     issues = val.validate_object(obj, spec["tri_budget"], max_footprint=footprint)
-    if spec["subdir"] == "Castle":
+    if is_castle:
         # The wall pieces and door plugs are not rooms; everything else is walked through.
-        enclosed = not (spec["builder"] in castle_builders.WALL_BUILDERS
-                        or spec["builder"].startswith("build_door_plug"))
+        if "kind" in spec:
+            enclosed = spec["kind"] == "room"
+        else:
+            enclosed = not (spec["builder"] in castle_builders.WALL_BUILDERS
+                            or spec["builder"].startswith("build_door_plug"))
         issues += val.validate_castle_layout(obj, enclosed)
     tris = sum(len(p.vertices) - 2 for p in obj.data.polygons)
     return obj, issues, tris, manifest.fingerprint_mesh(obj)
@@ -173,6 +187,15 @@ def reimport_and_diff(fbx_path: str, obj) -> list[str]:
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     force = "--force" in argv
+    # --only <token>[,<token>...]: build just the matching assets, leaving
+    # every other FBX, manifest entry and anchor alone. A token that is a
+    # whole key matches only that key; any other token is a key prefix
+    # (e.g. "Bronze" for the whole Bronze Age set).
+    only = argv[argv.index("--only") + 1] if "--only" in argv else None
+    specs = [s for s in asset_specs.ALL_SPECS if only is None or asset_specs.key_matches(s["key"], only)]
+    if only is not None and not specs:
+        print(f"ERROR: --only {only!r} matches no asset key")
+        sys.exit(1)
 
     if os.environ.get("PYTHONHASHSEED") != "0":
         print("WARNING: PYTHONHASHSEED is not 0 — Blender's FBX exporter derives "
@@ -184,7 +207,7 @@ def main():
     results = []
     any_failed = False
 
-    for spec in asset_specs.ALL_SPECS:
+    for spec in specs:
         key = spec["key"]
         obj, issues, tris, fingerprint = build_one(spec)
         fbx_path = fbx_path_for(spec)
@@ -209,7 +232,7 @@ def main():
         results.append((key, ok, issues, tris, spec["tri_budget"], unchanged))
 
     manifest.save(recorded)
-    write_loot_anchors()
+    write_loot_anchors(partial=only is not None)
 
     print("\n" + "=" * 70)
     print("PLUNDERSPELL ASSET PIPELINE — build report")

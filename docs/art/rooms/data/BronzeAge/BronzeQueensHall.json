@@ -1,0 +1,48 @@
+{
+  "key": "BronzeQueensHall",
+  "name": "The Queen's Hall",
+  "age": "BronzeAge",
+  "zone": "Keep",
+  "role": "RoyalBedchamber",
+  "summary": "The queen's own hall: a linen bed, a loom with the week's weaving on it, dolphins on the walls and a small fire.",
+  "description": "The wanax has his megaron; the queen has this, and prefers it. Dolphins leap along the walls above a painted sea, a warp-weighted loom stands against the north wall with a half-woven cloth and a row of clay weights keeping the threads in order, and the bed in the corner is made up in linen with a fleece thrown over the foot. A small round hearth in the far corner keeps the room warm and lights it badly. The loom's weaving and the dressing table's oil flasks are small, light and quick to take; the chest is the heavy prize.",
+  "build": [
+    "Shell: the kit's Keep shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m painted plaster walls 4.60 m clear, 0.45 m haematite capstone band, an archway 2.60 × 3.31 m centred on every wall.",
+    "Dolphin fresco: a sea-band panel 4.10 m wide × 1.60 m tall, 1.60–3.20 m above the floor, on each section of the north, east and west walls, with a 0.18 m haematite spiral border on top.",
+    "Bed (NW): cypress frame 1.50 × 2.30 × 0.15 m on four legs 0.50 m tall, centred (−4.60, 3.90), long axis north–south; linen mattress 1.40 × 2.10 × 0.12 m (top at 0.92 m); a fleece 0.90 × 0.50 m over the foot; headboard 0.20 × 2.20 × 0.95 m against the west wall.",
+    "Rug: a flat wool rug 1.60 × 2.40 × 0.03 m at (−2.80, 3.40), in front of the bed.",
+    "Loom (NE): two cypress uprights 0.12 × 0.12 × 2.30 m at x 2.60 and 4.80, 0.30 m off the north wall; top beam 2.40 m at 2.24 m; the web 1.96 × 1.38 m from the beam down to 0.80 m above the floor, a haematite woven band near the top; seven clay loom weights (cones r 0.06 × 0.12 m) hanging on the warp's foot.",
+    "Weaver's stool: a cypress block 0.50 × 0.50 × 0.45 m at (3.70, 4.20), before the loom; a wool basket r 0.25 × 0.35 m at (2.30, 4.20).",
+    "Hearth (SE): a round clay hearth r 0.60 × 0.20 m at (4.20, −4.20), the fire bed r 0.40 m on top.",
+    "Bench: a plastered clay bench 0.50 × 1.60 × 0.40 m against the east wall at (5.25, −2.60).",
+    "Chest (SW): a cypress chest 1.00 × 0.60 × 0.55 m with a bronze-bound lid at (−4.50, −4.90).",
+    "Dressing table (SW): a painted table 0.90 × 0.50 m, 0.75 m high, at (−2.60, −4.80), three faience oil flasks on it."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "Hearth: SE, a fire bed at floor level (an IGNIS source)"
+  ],
+  "loot_anchors": [
+    {"at": "the bed", "xyz": [-4.6, 3.9, 0.92]},
+    {"at": "weaver's stool", "xyz": [3.7, 4.2, 0.75]},
+    {"at": "chest, SW", "xyz": [-4.5, -4.9, 0.90]},
+    {"at": "dressing table", "xyz": [-2.6, -4.8, 1.05]},
+    {"at": "bench, east wall", "xyz": [5.25, -2.6, 0.70]}
+  ],
+  "materials": [
+    {"name": "Painted lime plaster", "hex": "#C9A77A", "pigment": "bronze", "notes": "Walls; soot faint, gathered over the hearth corner."},
+    {"name": "Fresco blue", "hex": "#3F6F86", "pigment": "verdigris_lo", "notes": "The sea band and dolphins; flasks."},
+    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "Spiral border, capstone, the woven band, the fire bed."},
+    {"name": "Cypress timber", "hex": "#5A3E28", "pigment": "oak", "notes": "Bed, loom, stool, chest."},
+    {"name": "Linen", "hex": "#CFC3A2", "pigment": "vellum", "notes": "Mattress and the web on the loom."},
+    {"name": "Undyed wool", "hex": "#6E4A3A", "pigment": "leather", "notes": "Rug, basket; the fleece is vellum_dim."},
+    {"name": "Terracotta", "hex": "#A0603E", "pigment": "leather", "notes": "Loom weights and the hearth."}
+  ],
+  "gameplay": [
+    "The loom's web and the flasks are light, quick loot; the chest is the heavy prize.",
+    "The hearth is the room's only light and an IGNIS source; the linen bed and the loom's web burn fast.",
+    "Cover: the bed and the loom frame; the rest of the hall is open floor under the dolphins."
+  ],
+  "budget": "≤ 1.8k tris (kit); 0.94k built",
+  "concept": "concept/BronzeAge/BronzeQueensHall.svg"
+}

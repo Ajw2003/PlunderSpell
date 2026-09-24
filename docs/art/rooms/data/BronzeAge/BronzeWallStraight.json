@@ -1,0 +1,58 @@
+{
+  "key": "BronzeWallStraight",
+  "name": "The Cyclopean Wall",
+  "age": "BronzeAge",
+  "zone": "CurtainWall",
+  "role": "WallStraight",
+  "summary": "A wall 2.4 m thick of stones so big the later Greeks said giants laid them, with a plastered walk on top and a mud-brick breastwork of rounded merlons.",
+  "description": "The citadel's wall is thick rather than tall. Three courses of limestone blocks, some longer than a man is tall, sit on one another with no mortar and not much dressing, their faces left rough and each one set back a little from its neighbour so the wall reads as a pile of boulders that decided to stand in a line. On top the builders laid a plastered walk wide enough for two slingers to pass, and along its outer edge a breastwork of mud-brick with rounded merlons and narrow sling slots. The stone will outlast everything. The brick will not, and the wall's defenders know which half of it to stand behind.",
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; the wall stands on the ground on the south edge, the bailey open to the north.",
+    "Mass: cyclopean limestone, 2.40 m thick from the south cell line, x −6.05 … 6.05, three courses 1.50 / 1.40 / 1.20 m to 4.10 m.",
+    "Blocks: cyclopean.blocks(−6.05, 6.05, 4.10, seed = 0): widths 1.1–2.4 m from fixed lists, each course starting at a different place in its list so no vertical joint runs through two courses; a remainder under 0.60 m joins the block before it.",
+    "Faces: each block's outer face set back 0.00–0.07 m and its inner face ragged by −0.15 … +0.12 m, so the stones read separately from both sides; the outer face never passes the cell line.",
+    "Wall-walk: ochre lime plaster 0.10 m thick on the mass, 4.10–4.20 m, from 0.44 m to 2.20 m in (1.76 m wide), full length, open at both ends to the neighbouring pieces.",
+    "Parapet: mud-brick breastwork 0.40 m thick, its outer face 0.04 m inside the cell line; a 0.50 m low wall (4.10–4.60 m) along the whole run.",
+    "Merlons: ten, 0.60 m wide at 1.20 m pitch centred on the run, each a 0.30 m box (4.60–4.90 m) under a half-round top of radius 0.30 m to 5.20 m.",
+    "Sling slots: a dark inset 0.12 × 0.50 m on the outer face of every other merlon from the west, centred at 4.70 m.",
+    "Joins: the run reaches both cell edges at full height, so a straight, corner, gate or bastion piece meets it without a gap."
+  ],
+  "sockets": [
+    "Wall-walk: 4.10 m (plaster top 4.20 m), 1.76 m wide, open at the east and west cell edges",
+    "Sling slots: five, on the outer (south) face at 4.70 m"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Cyclopean limestone",
+      "hex": "#8C7F68",
+      "pigment": "vellum_dim",
+      "notes": "The mass; per-block value from the set-back."
+    },
+    {
+      "name": "Mud-brick",
+      "hex": "#8A5A3C",
+      "pigment": "leather",
+      "notes": "The breastwork and merlons."
+    },
+    {
+      "name": "Ochre plaster",
+      "hex": "#B7803E",
+      "pigment": "bronze",
+      "notes": "The wall-walk."
+    },
+    {
+      "name": "Soot",
+      "hex": "#2B231B",
+      "pigment": "bone_black",
+      "notes": "The sling slots."
+    }
+  ],
+  "gameplay": [
+    "Wall Slingers patrol the walk and fire through the slots and crenels; the walk is 1.76 m wide, room to pass one another.",
+    "The stone ignores FRANGO; the mud-brick breastwork is the part that can be knocked down.",
+    "No loot: the wall is terrain, the thing between the thief and the town."
+  ],
+  "budget": "≤ 1.2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeWallStraight.svg"
+}

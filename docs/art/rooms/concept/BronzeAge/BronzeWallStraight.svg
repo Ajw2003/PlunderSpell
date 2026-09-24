@@ -1,0 +1,236 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <!-- Plunderspell castle room sheet · THE BRONZE AGE · CASTLE ROOM · CURTAINWALL · generated. Rules: docs/art/rooms/README.md -->
+  <defs>
+    <pattern id="grid" width="55" height="55" patternUnits="userSpaceOnUse" x="0" y="690"><path d="M55 0 H0 V55" fill="none" stroke="#262119" stroke-width="1"/></pattern>
+    <radialGradient id="glow" cx="50%" cy="70%" r="60%"><stop offset="0" stop-color="#2A2012" stop-opacity=".9"/><stop offset="1" stop-color="#14120E" stop-opacity="0"/></radialGradient>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A2967F"/><stop offset="0.38" stop-color="#8C7F68"/><stop offset="1" stop-color="#4D4638"/></linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#988C77"/><stop offset="0.38" stop-color="#7E725E"/><stop offset="1" stop-color="#463F34"/></linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9E927C"/><stop offset="0.38" stop-color="#867A64"/><stop offset="1" stop-color="#4A4336"/></linearGradient>
+    <linearGradient id="g4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#948873"/><stop offset="0.38" stop-color="#796D59"/><stop offset="1" stop-color="#443C31"/></linearGradient>
+    <linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9C907A"/><stop offset="0.38" stop-color="#847762"/><stop offset="1" stop-color="#494236"/></linearGradient>
+    <linearGradient id="g6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#958A75"/><stop offset="0.38" stop-color="#7B705B"/><stop offset="1" stop-color="#443E32"/></linearGradient>
+    <linearGradient id="g7" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A0947D"/><stop offset="0.38" stop-color="#897C66"/><stop offset="1" stop-color="#4C4438"/></linearGradient>
+    <linearGradient id="g8" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A47E61"/><stop offset="0.38" stop-color="#8A5A3C"/><stop offset="1" stop-color="#4C3322"/></linearGradient>
+    <linearGradient id="g9" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#A98568"/><stop offset="0.38" stop-color="#8A5A3C"/><stop offset="1" stop-color="#4C3322"/></linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="#14120E"/>
+  <rect width="1200" height="800" fill="url(#glow)"/>
+  <rect x="0" y="120" width="1200" height="570" fill="url(#grid)"/>
+  <line x1="40" y1="690" x2="1160" y2="690" stroke="#635C4C" stroke-width="1.5"/>
+  <rect x="12" y="12" width="1176" height="776" fill="none" stroke="#332D22" stroke-width="1"/>
+  <text x="40" y="54" font-family="Overpass Mono, monospace" font-size="12" letter-spacing="3" fill="#635C4C">THE BRONZE AGE · CASTLE ROOM · CURTAINWALL</text>
+  <text x="40" y="96" font-family="Eczar, Georgia, serif" font-size="38" font-weight="700" fill="#DCD2BA">The Cyclopean Wall</text>
+  <text x="1160" y="54" text-anchor="end" font-family="Overpass Mono, monospace" font-size="12" fill="#9A9078">12 × 12 m cell · clear 5.20 m · ≤ 1.2k tris (kit)</text>
+  <text x="1160" y="76" text-anchor="end" font-family="Overpass Mono, monospace" font-size="12" fill="#9A9078">section 1 m = 55 px · plan 1 m = 30 px</text>
+  <g font-family="Overpass Mono, monospace" font-size="10" fill="#635C4C" stroke="#635C4C"><line x1="60" y1="690" x2="60" y2="332" stroke-width="1"/><line x1="54" y1="673.5" x2="66" y2="673.5"/><text x="30" y="677.5" stroke="none">0</text><line x1="54" y1="618.5" x2="66" y2="618.5"/><text x="30" y="622.5" stroke="none">1</text><line x1="54" y1="563.5" x2="66" y2="563.5"/><text x="30" y="567.5" stroke="none">2</text><line x1="54" y1="508.5" x2="66" y2="508.5"/><text x="30" y="512.5" stroke="none">3</text><line x1="54" y1="453.5" x2="66" y2="453.5"/><text x="30" y="457.5" stroke="none">4</text><line x1="54" y1="398.5" x2="66" y2="398.5"/><text x="30" y="402.5" stroke="none">5</text><line x1="54" y1="343.5" x2="66" y2="343.5"/><text x="30" y="347.5" stroke="none">6</text><text x="24" y="319" stroke="none">m</text></g>
+  <text x="430" y="730" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="11" letter-spacing="3" fill="#635C4C">SOUTH ELEVATION · OUTSIDE FACE, LOOKING NORTH</text>
+  <text x="980" y="156" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="11" letter-spacing="3" fill="#635C4C">PLAN · 12 × 12 m CELL</text>
+  <g id="drawing">
+    <rect x="72.5" y="690" width="715" height="4.4" fill="#3A332A"/>
+    <rect x="101.5" y="609" width="115.2" height="79.5" rx="7" fill="url(#g1)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="105.9" cy="677.6" rx="3" ry="2" fill="#665C4C" opacity="0.7"/>
+    <ellipse cx="168.6" cy="643.8" rx="4" ry="2" fill="#665C4C" opacity="0.7"/>
+    <ellipse cx="126" cy="668.5" rx="3" ry="2" fill="#665C4C" opacity="0.7"/>
+    <rect x="219.8" y="609" width="74" height="79.5" rx="7" fill="url(#g2)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="250.6" cy="653.7" rx="3" ry="2" fill="#5C5344" opacity="0.7"/>
+    <ellipse cx="222.9" cy="619.9" rx="4" ry="2" fill="#5C5344" opacity="0.7"/>
+    <ellipse cx="263.7" cy="644.6" rx="3" ry="2" fill="#5C5344" opacity="0.7"/>
+    <rect x="296.8" y="609" width="101.5" height="79.5" rx="7" fill="url(#g3)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="377.8" cy="629.8" rx="3" ry="2" fill="#625949" opacity="0.7"/>
+    <ellipse cx="340.2" cy="654.5" rx="4" ry="2" fill="#625949" opacity="0.7"/>
+    <ellipse cx="302.6" cy="620.7" rx="3" ry="2" fill="#625949" opacity="0.7"/>
+    <rect x="401.2" y="609" width="57.5" height="79.5" rx="7" fill="url(#g4)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="416.1" cy="664.4" rx="3" ry="2" fill="#595041" opacity="0.7"/>
+    <ellipse cx="448.1" cy="630.6" rx="4" ry="2" fill="#595041" opacity="0.7"/>
+    <ellipse cx="426.4" cy="655.4" rx="3" ry="2" fill="#595041" opacity="0.7"/>
+    <rect x="461.8" y="609" width="129" height="79.5" rx="7" fill="url(#g5)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="544.7" cy="640.5" rx="3" ry="2" fill="#615747" opacity="0.7"/>
+    <ellipse cx="497.2" cy="665.2" rx="4" ry="2" fill="#615747" opacity="0.7"/>
+    <ellipse cx="567.2" cy="631.4" rx="3" ry="2" fill="#615747" opacity="0.7"/>
+    <rect x="593.8" y="609" width="85" height="79.5" rx="7" fill="url(#g6)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="602.8" cy="675.1" rx="3" ry="2" fill="#5A5242" opacity="0.7"/>
+    <ellipse cx="649.5" cy="641.3" rx="4" ry="2" fill="#5A5242" opacity="0.7"/>
+    <ellipse cx="617.8" cy="666.1" rx="3" ry="2" fill="#5A5242" opacity="0.7"/>
+    <rect x="681.8" y="609" width="76.8" height="79.5" rx="7" fill="url(#g7)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="719.3" cy="651.2" rx="3" ry="2" fill="#645A4A" opacity="0.7"/>
+    <ellipse cx="690.6" cy="676" rx="4" ry="2" fill="#645A4A" opacity="0.7"/>
+    <ellipse cx="732.9" cy="642.1" rx="3" ry="2" fill="#645A4A" opacity="0.7"/>
+    <rect x="101.5" y="532" width="60.3" height="74" rx="7" fill="url(#g4)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="154.4" cy="549" rx="3" ry="2" fill="#595041" opacity="0.7"/>
+    <ellipse cx="131.6" cy="572.1" rx="4" ry="2" fill="#595041" opacity="0.7"/>
+    <ellipse cx="108.9" cy="595.2" rx="3" ry="2" fill="#595041" opacity="0.7"/>
+    <rect x="164.8" y="532" width="107" height="74" rx="7" fill="url(#g5)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="200.7" cy="581.3" rx="3" ry="2" fill="#615747" opacity="0.7"/>
+    <ellipse cx="259" cy="549.8" rx="4" ry="2" fill="#615747" opacity="0.7"/>
+    <ellipse cx="219.4" cy="572.9" rx="3" ry="2" fill="#615747" opacity="0.7"/>
+    <rect x="274.8" y="532" width="79.5" height="74" rx="7" fill="url(#g6)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="331.8" cy="559" rx="3" ry="2" fill="#5A5242" opacity="0.7"/>
+    <ellipse cx="302.1" cy="582.1" rx="4" ry="2" fill="#5A5242" opacity="0.7"/>
+    <ellipse cx="345.9" cy="550.5" rx="3" ry="2" fill="#5A5242" opacity="0.7"/>
+    <rect x="357.2" y="532" width="112.5" height="74" rx="7" fill="url(#g7)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="377.7" cy="591.3" rx="3" ry="2" fill="#645A4A" opacity="0.7"/>
+    <ellipse cx="438.9" cy="559.8" rx="4" ry="2" fill="#645A4A" opacity="0.7"/>
+    <ellipse cx="397.3" cy="582.9" rx="3" ry="2" fill="#645A4A" opacity="0.7"/>
+    <rect x="472.8" y="532" width="85" height="74" rx="7" fill="url(#g1)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="520.5" cy="569" rx="3" ry="2" fill="#665C4C" opacity="0.7"/>
+    <ellipse cx="488.9" cy="592.1" rx="4" ry="2" fill="#665C4C" opacity="0.7"/>
+    <ellipse cx="535.5" cy="560.5" rx="3" ry="2" fill="#665C4C" opacity="0.7"/>
+    <rect x="560.8" y="532" width="90.5" height="74" rx="7" fill="url(#g2)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="646.2" cy="546.7" rx="3" ry="2" fill="#5C5344" opacity="0.7"/>
+    <ellipse cx="612.5" cy="569.8" rx="4" ry="2" fill="#5C5344" opacity="0.7"/>
+    <ellipse cx="578.9" cy="592.9" rx="3" ry="2" fill="#5C5344" opacity="0.7"/>
+    <rect x="654.2" y="532" width="68.5" height="74" rx="7" fill="url(#g3)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="682.1" cy="579" rx="3" ry="2" fill="#625949" opacity="0.7"/>
+    <ellipse cx="656.3" cy="547.4" rx="4" ry="2" fill="#625949" opacity="0.7"/>
+    <ellipse cx="694.2" cy="570.5" rx="3" ry="2" fill="#625949" opacity="0.7"/>
+    <rect x="725.8" y="532" width="32.7" height="74" rx="7" fill="url(#g4)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="752.1" cy="556.7" rx="3" ry="2" fill="#595041" opacity="0.7"/>
+    <ellipse cx="739.3" cy="579.8" rx="4" ry="2" fill="#595041" opacity="0.7"/>
+    <ellipse cx="726.4" cy="548.2" rx="3" ry="2" fill="#595041" opacity="0.7"/>
+    <rect x="101.5" y="466" width="65.8" height="63" rx="7" fill="url(#g7)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="117.9" cy="514.7" rx="3" ry="2" fill="#645A4A" opacity="0.7"/>
+    <ellipse cx="154.3" cy="487.6" rx="4" ry="2" fill="#645A4A" opacity="0.7"/>
+    <ellipse cx="129.6" cy="507.4" rx="3" ry="2" fill="#645A4A" opacity="0.7"/>
+    <rect x="170.2" y="466" width="107" height="63" rx="7" fill="url(#g1)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="238" cy="495.5" rx="3" ry="2" fill="#665C4C" opacity="0.7"/>
+    <ellipse cx="198.4" cy="515.3" rx="4" ry="2" fill="#665C4C" opacity="0.7"/>
+    <ellipse cx="256.8" cy="488.3" rx="3" ry="2" fill="#665C4C" opacity="0.7"/>
+    <rect x="280.2" y="466" width="74" height="63" rx="7" fill="url(#g2)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="287.2" cy="476.4" rx="3" ry="2" fill="#5C5344" opacity="0.7"/>
+    <ellipse cx="328" cy="496.2" rx="4" ry="2" fill="#5C5344" opacity="0.7"/>
+    <ellipse cx="300.3" cy="516" rx="3" ry="2" fill="#5C5344" opacity="0.7"/>
+    <rect x="357.2" y="466" width="101.5" height="63" rx="7" fill="url(#g3)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="405.9" cy="504.1" rx="3" ry="2" fill="#625949" opacity="0.7"/>
+    <ellipse cx="368.3" cy="477" rx="4" ry="2" fill="#625949" opacity="0.7"/>
+    <ellipse cx="423.7" cy="496.8" rx="3" ry="2" fill="#625949" opacity="0.7"/>
+    <rect x="461.8" y="466" width="96" height="63" rx="7" fill="url(#g4)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="544.4" cy="485" rx="3" ry="2" fill="#595041" opacity="0.7"/>
+    <ellipse cx="508.8" cy="504.8" rx="4" ry="2" fill="#595041" opacity="0.7"/>
+    <ellipse cx="473.1" cy="477.7" rx="3" ry="2" fill="#595041" opacity="0.7"/>
+    <rect x="560.8" y="466" width="63" height="63" rx="7" fill="url(#g5)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="581" cy="512.7" rx="3" ry="2" fill="#615747" opacity="0.7"/>
+    <ellipse cx="616" cy="485.6" rx="4" ry="2" fill="#615747" opacity="0.7"/>
+    <ellipse cx="592.2" cy="505.4" rx="3" ry="2" fill="#615747" opacity="0.7"/>
+    <rect x="626.8" y="466" width="131.8" height="63" rx="7" fill="url(#g6)" stroke="#2A251D" stroke-width="1.6"/>
+    <ellipse cx="719.6" cy="493.5" rx="3" ry="2" fill="#5A5242" opacity="0.7"/>
+    <ellipse cx="671.1" cy="513.3" rx="4" ry="2" fill="#5A5242" opacity="0.7"/>
+    <ellipse cx="742.5" cy="486.3" rx="3" ry="2" fill="#5A5242" opacity="0.7"/>
+    <rect x="100" y="437" width="660" height="27.5" fill="url(#g8)" stroke="#402B1D" stroke-width="1"/>
+    <line x1="100" y1="455.3" x2="760" y2="455.3" stroke="#5F3F2A" stroke-width="0.7" stroke-linecap="round" opacity="0.7"/>
+    <line x1="100" y1="446.2" x2="760" y2="446.2" stroke="#5F3F2A" stroke-width="0.7" stroke-linecap="round" opacity="0.7"/>
+    <path d="M116.5 437 L116.5 420.5 A16.5 16.5 0 0 1 149.5 420.5 L149.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <rect x="129.7" y="417.8" width="6.6" height="27.5" fill="#14100C"/>
+    <path d="M182.5 437 L182.5 420.5 A16.5 16.5 0 0 1 215.5 420.5 L215.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M248.5 437 L248.5 420.5 A16.5 16.5 0 0 1 281.5 420.5 L281.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <rect x="261.7" y="417.8" width="6.6" height="27.5" fill="#14100C"/>
+    <path d="M314.5 437 L314.5 420.5 A16.5 16.5 0 0 1 347.5 420.5 L347.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M380.5 437 L380.5 420.5 A16.5 16.5 0 0 1 413.5 420.5 L413.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <rect x="393.7" y="417.8" width="6.6" height="27.5" fill="#14100C"/>
+    <path d="M446.5 437 L446.5 420.5 A16.5 16.5 0 0 1 479.5 420.5 L479.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M512.5 437 L512.5 420.5 A16.5 16.5 0 0 1 545.5 420.5 L545.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <rect x="525.7" y="417.8" width="6.6" height="27.5" fill="#14100C"/>
+    <path d="M578.5 437 L578.5 420.5 A16.5 16.5 0 0 1 611.5 420.5 L611.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M644.5 437 L644.5 420.5 A16.5 16.5 0 0 1 677.5 420.5 L677.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <rect x="657.7" y="417.8" width="6.6" height="27.5" fill="#14100C"/>
+    <path d="M710.5 437 L710.5 420.5 A16.5 16.5 0 0 1 743.5 420.5 L743.5 437 Z" fill="url(#g9)" stroke="#402B1D" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <g transform="translate(357 517.5) scale(0.25000)" fill="#DCD2BA" opacity=".5"><ellipse cx="160" cy="320" rx="20" ry="26"/><path d="M160 346 C138 350 126 360 124 380 L118 500 L130 502 L138 410 L140 520 L142 690 L156 690 L160 540 L164 690 L178 690 L180 520 L182 410 L190 502 L202 500 L196 380 C194 360 182 350 160 346 Z"/></g>
+    <line x1="68" y1="330" x2="176" y2="330" stroke="#635C4C" stroke-width="1" stroke-linecap="round"/>
+    <rect x="80" y="207" width="72" height="123" fill="#8C7F68" stroke="#14120E" stroke-width=".8"/>
+    <rect x="93.2" y="204" width="52.8" height="3" fill="#B7803E" stroke="#14120E" stroke-width=".8"/>
+    <rect x="81.2" y="174" width="12" height="33" fill="#8A5A3C" stroke="#14120E" stroke-width=".8"/>
+    <rect x="800" y="170" width="360" height="360" fill="#1B1813" stroke="#635C4C" stroke-width="1"/>
+    <g stroke="#635C4C" stroke-width="1"><line x1="800" y1="530" x2="800" y2="536"/><line x1="800" y1="530" x2="794" y2="530"/><line x1="830" y1="530" x2="830" y2="533"/><line x1="800" y1="500" x2="797" y2="500"/><line x1="860" y1="530" x2="860" y2="533"/><line x1="800" y1="470" x2="797" y2="470"/><line x1="890" y1="530" x2="890" y2="533"/><line x1="800" y1="440" x2="797" y2="440"/><line x1="920" y1="530" x2="920" y2="533"/><line x1="800" y1="410" x2="797" y2="410"/><line x1="950" y1="530" x2="950" y2="533"/><line x1="800" y1="380" x2="797" y2="380"/><line x1="980" y1="530" x2="980" y2="536"/><line x1="800" y1="350" x2="794" y2="350"/><line x1="1010" y1="530" x2="1010" y2="533"/><line x1="800" y1="320" x2="797" y2="320"/><line x1="1040" y1="530" x2="1040" y2="533"/><line x1="800" y1="290" x2="797" y2="290"/><line x1="1070" y1="530" x2="1070" y2="533"/><line x1="800" y1="260" x2="797" y2="260"/><line x1="1100" y1="530" x2="1100" y2="533"/><line x1="800" y1="230" x2="797" y2="230"/><line x1="1130" y1="530" x2="1130" y2="533"/><line x1="800" y1="200" x2="797" y2="200"/><line x1="1160" y1="530" x2="1160" y2="536"/><line x1="800" y1="170" x2="794" y2="170"/></g>
+    <path d="M1187 180 l6 16 l-6 -4 l-6 4 z" fill="#9A9078"/>
+    <rect x="800" y="170" width="360" height="360" fill="#3A3226"/>
+    <rect x="800" y="459.5" width="64.5" height="72" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="864.5" y="464" width="42" height="67.5" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="906.5" y="456.5" width="57" height="75" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="963.5" y="461" width="33" height="70.5" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="996.5" y="455.9" width="72" height="75.6" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="1068.5" y="462.5" width="48" height="69" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="1116.5" y="458" width="43.5" height="73.5" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="800" y="461" width="34.5" height="70.5" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="834.5" y="455.9" width="60" height="75.6" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="894.5" y="462.5" width="45" height="69" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="939.5" y="458" width="63" height="73.5" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="1002.5" y="459.5" width="48" height="72" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="1050.5" y="464" width="51" height="67.5" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="1101.5" y="456.5" width="39" height="75" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="1140.5" y="461" width="19.5" height="70.5" fill="#8C7F68" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="800" y="458" width="37.5" height="73.5" fill="#948770" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="837.5" y="459.5" width="60" height="72" fill="#948770" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="897.5" y="464" width="42" height="67.5" fill="#948770" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="939.5" y="456.5" width="57" height="75" fill="#948770" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="996.5" y="461" width="54" height="70.5" fill="#948770" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="1050.5" y="455.9" width="36" height="75.6" fill="#948770" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="1086.5" y="462.5" width="73.5" height="69" fill="#948770" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="800" y="465.5" width="360" height="52.8" fill="#BA8545" stroke="#2A251D" stroke-width="0.5"/>
+    <rect x="800" y="518.3" width="360" height="12" fill="#8A5A3C" stroke="#2A251D" stroke-width="0.6"/>
+    <rect x="809" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="845" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="881" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="917" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="953" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="989" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="1025" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="1061" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="1097" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="1133" y="518.3" width="18" height="12" fill="#6B462F"/>
+    <rect x="816.2" y="529.1" width="3.6" height="1.8" fill="#14100C"/>
+    <rect x="888.2" y="529.1" width="3.6" height="1.8" fill="#14100C"/>
+    <rect x="960.2" y="529.1" width="3.6" height="1.8" fill="#14100C"/>
+    <rect x="1032.2" y="529.1" width="3.6" height="1.8" fill="#14100C"/>
+    <rect x="1104.2" y="529.1" width="3.6" height="1.8" fill="#14100C"/>
+  </g>
+  <g id="callouts" font-family="Overpass Mono, monospace">
+    <text x="397" y="585" font-family="Overpass Mono, monospace" font-size="9" fill="#9A9078" text-anchor="middle">1.80 m</text>
+    <path d="M727 450.8 L590 196 L604 196" fill="none" stroke="#9A9078" stroke-width=".8" opacity=".85"/>
+    <circle cx="727" cy="450.8" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
+    <text x="610" y="200" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">MUD-BRICK BREASTWORK</text>
+    <text x="610" y="214" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">0.40 m thick, 1.10 m tall</text>
+    <path d="M661 415 L590 261 L604 261" fill="none" stroke="#9A9078" stroke-width=".8" opacity=".85"/>
+    <circle cx="661" cy="415" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
+    <text x="610" y="265" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">ROUNDED MERLONS</text>
+    <text x="610" y="279" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">0.60 m, 1.20 m pitch, to</text>
+    <text x="610" y="292" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">5.20 m</text>
+    <path d="M622.5 569 L590 326 L604 326" fill="none" stroke="#9A9078" stroke-width=".8" opacity=".85"/>
+    <circle cx="622.5" cy="569" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
+    <text x="610" y="330" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">CYCLOPEAN BLOCKS</text>
+    <text x="610" y="344" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">3 courses to 4.10 m,</text>
+    <text x="610" y="357" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">1.1–2.4 m long</text>
+    <path d="M265 431.5 L490 196 L476 196" fill="none" stroke="#9A9078" stroke-width=".8" opacity=".85"/>
+    <circle cx="265" cy="431.5" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
+    <text x="470" y="200" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" text-anchor="end">SLING SLOT</text>
+    <text x="470" y="214" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" text-anchor="end">0.12 × 0.50 m, every other merlon</text>
+    <path d="M210 646 L490 266 L476 266" fill="none" stroke="#9A9078" stroke-width=".8" opacity=".85"/>
+    <circle cx="210" cy="646" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
+    <text x="470" y="270" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" text-anchor="end">SET-BACK FACES</text>
+    <text x="470" y="284" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078" text-anchor="end">stones recessed 0–0.07 m</text>
+    <text x="116" y="346" font-family="Overpass Mono, monospace" font-size="9" fill="#9A9078" text-anchor="middle" letter-spacing="2">SECTION B–B</text>
+    <text x="72" y="326" font-family="Overpass Mono, monospace" font-size="8.5" fill="#9A9078" text-anchor="end">S</text>
+    <text x="172" y="326" font-family="Overpass Mono, monospace" font-size="8.5" fill="#9A9078">N</text>
+    <text x="800" y="548" font-family="Overpass Mono, monospace" font-size="9" fill="#635C4C" text-anchor="middle">0</text>
+    <text x="980" y="548" font-family="Overpass Mono, monospace" font-size="9" fill="#635C4C" text-anchor="middle">6</text>
+    <text x="1160" y="548" font-family="Overpass Mono, monospace" font-size="9" fill="#635C4C" text-anchor="middle">12 m</text>
+    <text x="1187" y="210" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078" text-anchor="middle">N</text>
+    <text x="980" y="200" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">BAILEY (NORTH) · OUTSIDE IS BEYOND THE SOUTH EDGE</text>
+    <text x="980" y="483.5" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">WALL-WALK 4.10 · 1.80 m WIDE</text>
+    <text x="800" y="585" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">WALL</text>
+    <text x="892" y="585" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">cyclopean, 2.40 m thick on the south edge</text>
+    <text x="800" y="600" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">WALK</text>
+    <text x="892" y="600" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">plastered, 4.10 m, 1.80 m wide, open both ends</text>
+    <text x="800" y="615" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">PARAPET</text>
+    <text x="892" y="615" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">mud-brick, 1.10 m, rounded merlons, outer edge</text>
+    <text x="800" y="630" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">JOINS</text>
+    <text x="892" y="630" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">runs to both cell edges; any neighbour meets it</text>
+    <text x="800" y="645" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">LOOT</text>
+    <text x="892" y="645" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">none: a wall piece carries no loot</text>
+  </g>
+  <g id="palette" font-family="Overpass Mono, monospace" font-size="10" fill="#9A9078">
+    <rect x="40" y="748" width="34" height="18" fill="#8C7F68" stroke="#332D22" stroke-width=".6"/><text x="80" y="761">#8C7F68 limestone</text>
+    <rect x="264" y="748" width="34" height="18" fill="#8A5A3C" stroke="#332D22" stroke-width=".6"/><text x="304" y="761">#8A5A3C mud-brick</text>
+    <rect x="488" y="748" width="34" height="18" fill="#B7803E" stroke="#332D22" stroke-width=".6"/><text x="528" y="761">#B7803E plaster</text>
+    <rect x="712" y="748" width="34" height="18" fill="#2B231B" stroke="#332D22" stroke-width=".6"/><text x="752" y="761">#2B231B soot</text>
+    <rect x="936" y="748" width="34" height="18" fill="#4A3C2C" stroke="#332D22" stroke-width=".6"/><text x="976" y="761">#4A3C2C earth</text>
+  </g>
+</svg>

@@ -1,0 +1,45 @@
+{
+  "key": "BronzePalaceKitchen",
+  "name": "The Palace Kitchen",
+  "age": "BronzeAge",
+  "zone": "InnerWard",
+  "role": "KitchenRoom",
+  "summary": "A round hearth with a tripod cauldron on it, a domed bread oven, querns and pots, and walls black with a century of smoke.",
+  "description": "The palace eats well and this is why: a round clay hearth with a bronze tripod cauldron standing in the fire, a domed oven in the far corner baking bread for a household of two hundred, querns along the wall for the grinding, and pots and amphorae wherever there was room. The walls have not been ochre for a generation; the smoke has seen to that. Two fires burn here at all hours, so the kitchen is the brightest room in the ward and the most likely to catch.",
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m plaster walls 4.00 m clear, 0.45 m fresco-blue capstone band, an archway 2.60 × 2.88 m centred on every wall.",
+    "Soot: a soot panel over the top 1.75 m of every wall section, below the capstone (the walls black from 2.2 m under the top).",
+    "Hearth (NW): a clay drum r 0.80 × 0.35 m at (−3.80, 3.80), three flame cones on it.",
+    "Tripod cauldron: a bronze tripod (legs 0.90 m, bowl r 0.30 m) standing on the hearth over the fire; its bowl at 1.79 m above ground.",
+    "Bread oven (NE): a clay dome r 0.90 → 0.25 m × 1.20 m at (4.20, 4.20); its mouth 0.50 × 0.35 m on the south face, dark.",
+    "Loaf table: cypress, 1.00 × 0.60 m, 0.80 m high, at (2.40, 4.90), two loaves on it.",
+    "Quern bench (SE): stone, 3.00 × 0.70 × 0.50 m against the south wall at x 3.60; a saddle quern 0.50 × 0.30 × 0.10 m at each end (x 2.50 and 4.70).",
+    "Pot bench (SW): clay, 0.70 × 3.00 × 0.50 m against the west wall at y −3.60; four soot-black cooking pots r 0.20 × 0.30 m on it at y −4.70, −4.10, −3.10, −2.50.",
+    "Amphorae: two, 0.62 m tall, on the floor at (−2.60, −4.80) and (−3.30, −4.90)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Hearth NW and oven NE: both IGNIS sources, always lit"
+  ],
+  "loot_anchors": [
+    {"at": "tripod cauldron over the hearth", "xyz": [-3.8, 3.8, 1.79]},
+    {"at": "loaf table", "xyz": [2.4, 4.9, 1.10]},
+    {"at": "quern bench, between the querns", "xyz": [3.6, -5.1, 0.80]},
+    {"at": "pot bench, between the pots", "xyz": [-5.1, -3.6, 0.80]}
+  ],
+  "materials": [
+    {"name": "Painted lime plaster", "hex": "#C9A77A", "pigment": "bronze", "notes": "Walls, under the soot."},
+    {"name": "Hearth soot", "hex": "#2B231B", "pigment": "bone_black", "notes": "The upper walls, the cooking pots, the oven mouth."},
+    {"name": "Terracotta", "hex": "#A0603E", "pigment": "leather", "notes": "Hearth, oven, pot bench, amphorae."},
+    {"name": "Cast bronze", "hex": "#9B6A38", "pigment": "bronze", "notes": "The tripod cauldron."},
+    {"name": "Cypress timber", "hex": "#5A3E28", "pigment": "oak", "notes": "Loaf table."},
+    {"name": "Grinding stone", "hex": "#8C7F68", "pigment": "vellum_faint", "notes": "Quern bench; the querns are vellum_dim."}
+  ],
+  "gameplay": [
+    "The brightest room in the ward: two fires, always lit, so nobody hides here.",
+    "The tripod cauldron is loot, but it stands in the fire.",
+    "Hearth and oven are IGNIS sources; the soot-dry walls burn slowly, the amphorae of oil quickly."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzePalaceKitchen.svg"
+}

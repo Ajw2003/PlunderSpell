@@ -1,0 +1,47 @@
+{
+  "key": "BronzeFrescoCourt",
+  "name": "The Fresco Court",
+  "age": "BronzeAge",
+  "zone": "InnerWard",
+  "role": "GreatHallMain",
+  "summary": "The palace's painted court: four red columns, a procession on every wall, benches all round and a fire on the altar.",
+  "description": "Here the household gathers when the wanax is not in the mood for it to gather in his megaron: a court open to the sky, four red columns standing round its crossing, and on every wall a painted procession of women carrying gifts toward a king who is never shown. Plastered benches run along the walls with fleeces thrown over them, offerings wait on painted tables, and a round altar in the corner keeps a fire going for whichever god is currently owed one. It is the ward's crossroads, lit by the altar and by the sky.",
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m painted plaster walls 4.00 m clear, 0.45 m fresco-blue capstone band, an archway 2.60 × 2.88 m centred on every wall.",
+    "Procession fresco: a panel 4.10 m wide × 1.60 m tall, 1.40–3.00 m above the floor, on every wall section, with a 0.18 m haematite border on top.",
+    "Columns: four down-tapering columns at (±2.40, ±2.40), 4.00 m to the wall top: black base disc r 0.30 × 0.10 m, haematite shaft r 0.17 → 0.23 m, black cushion capital 0.36 m, abacus 0.69 × 0.69 × 0.10 m.",
+    "North and south benches: plastered clay, 3.20 × 0.50 × 0.40 m, backed against the walls at x ±3.60, y ±5.25, fleeces on them.",
+    "East and west benches: 0.50 × 2.40 × 0.40 m against the walls at x ±5.25, y ±3.40.",
+    "Fire altar (NE): a gypsum drum r 0.60 × 0.90 m at (3.60, 3.60), three haematite bands r 0.61 × 0.05 m; the fire (a flame cone r 0.16 × 0.45 m) at its west side, (3.35, 3.60).",
+    "Offering tables: two painted tables 0.60 × 0.60 m, 0.70 m high, at (±3.20, −3.40).",
+    "Floor: the court's paving grid is painted (albedo only)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Fire altar: NE, an IGNIS source at 0.90 m"
+  ],
+  "loot_anchors": [
+    {"at": "north bench, west", "xyz": [-3.6, 5.25, 0.70]},
+    {"at": "north bench, east", "xyz": [3.6, 5.25, 0.70]},
+    {"at": "south bench, west", "xyz": [-3.6, -5.25, 0.70]},
+    {"at": "south bench, east", "xyz": [3.6, -5.25, 0.70]},
+    {"at": "offering table, west", "xyz": [-3.2, -3.4, 1.00]},
+    {"at": "offering table, east", "xyz": [3.2, -3.4, 1.00]},
+    {"at": "fire altar top", "xyz": [3.6, 3.6, 1.20]}
+  ],
+  "materials": [
+    {"name": "Painted lime plaster", "hex": "#C9A77A", "pigment": "bronze", "notes": "Walls; soot over the altar corner."},
+    {"name": "Fresco blue", "hex": "#3F6F86", "pigment": "verdigris_lo", "notes": "Procession band and capstone."},
+    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "Column shafts, borders, altar bands, the fire."},
+    {"name": "Gypsum", "hex": "#D8CDB2", "pigment": "vellum", "notes": "Benches and the altar drum."},
+    {"name": "Hearth soot", "hex": "#2B231B", "pigment": "bone_black", "notes": "Column bases and capitals."},
+    {"name": "Painted floor", "hex": "#7A6A58", "pigment": "vellum_faint", "notes": "Offering tables; the floor is the zone's ash_hi."}
+  ],
+  "gameplay": [
+    "The ward's crossroads: every archway opens onto the court, so guards pass through it often.",
+    "Seven loot anchors, spread round the walls: easy pickings, in the open.",
+    "The columns are the only cover in the middle; the altar fire lights the whole court."
+  ],
+  "budget": "≤ 2k tris (kit); 1.29k built",
+  "concept": "concept/BronzeAge/BronzeFrescoCourt.svg"
+}

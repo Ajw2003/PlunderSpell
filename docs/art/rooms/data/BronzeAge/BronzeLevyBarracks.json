@@ -1,0 +1,44 @@
+{
+  "key": "BronzeLevyBarracks",
+  "name": "The Levy Barracks",
+  "age": "BronzeAge",
+  "zone": "OuterBailey",
+  "role": "BarracksBunk",
+  "summary": "Where the palace levy sleeps: reed mats on clay benches, spears racked on one wall and oxhide shields hung on the other.",
+  "description": "The palace levy are farmers for most of the year and soldiers when told, and they sleep here in rows on clay benches spread with reed mats, eight to a room and all of them snoring. Their spears stand in racks along the north wall, bronze heads catching whatever light comes in, and their great figure-of-eight shields of oxhide hang on the south wall like drying laundry. A low table in the corner has a gaming board scratched into it and a set of knucklebones nobody has put away. Kit bags and the chest hold what little they own.",
+  "build": [
+    "Shell: the kit's OuterBailey shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m ochre plaster walls 3.60 m clear, 0.45 m mud-brick capstone band, an archway 2.60 × 2.59 m centred on every wall.",
+    "Sleeping benches: four clay benches 0.90 × 3.00 × 0.35 m against the east and west walls at x ±5.00, y ±3.50; a reed mat 0.80 × 2.90 × 0.03 m on each; a rolled kit bag 0.60 × 0.50 × 0.14 m at the north end of the two northern benches.",
+    "Spear racks: two on the north wall at x ±3.40, each two uprights 0.10 × 0.10 × 1.50 m and a rail 2.10 m at 1.71 m above ground; five spears per rack, ash shafts r 0.02 × 2.10 m with bronze heads 0.30 m, at 0.40 m spacing.",
+    "Shields: four figure-of-eight oxhide shields hung flat on the south wall at x ±3.00 and ±4.20, each two discs (r 0.35 m at 1.60 m, r 0.30 m at 2.20 m above ground), 0.06 m thick.",
+    "Water jars: two, 0.60 m tall, belly 0.36 m, at (±2.20, −5.00).",
+    "Gaming table (SE): cypress, 0.90 × 0.60 m, 0.50 m high, at (3.20, −3.00).",
+    "Kit chest (SW): cypress 1.00 × 0.60 × 0.55 m with a bronze-bound lid at (−3.20, −3.20).",
+    "Walls: plaster fallen away low down to the mud-brick in places (albedo only)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.59 m (OuterBailey), all open",
+    "Spear racks: where the levy arm themselves when the alarm goes up"
+  ],
+  "loot_anchors": [
+    {"at": "NE sleeping bench", "xyz": [5.0, 3.5, 0.68]},
+    {"at": "NW sleeping bench", "xyz": [-5.0, 3.5, 0.68]},
+    {"at": "gaming table", "xyz": [3.2, -3.0, 0.80]},
+    {"at": "kit chest", "xyz": [-3.2, -3.2, 0.90]}
+  ],
+  "materials": [
+    {"name": "Ochre plaster", "hex": "#B7803E", "pigment": "bronze", "notes": "Walls."},
+    {"name": "Mud-brick", "hex": "#8A5A3C", "pigment": "leather", "notes": "Capstone band, bench clay, the kit bags."},
+    {"name": "Reed mat", "hex": "#B8A070", "pigment": "vellum_dim", "notes": "On every bench; burns."},
+    {"name": "Oxhide", "hex": "#8A6A4A", "pigment": "leather", "notes": "The shields, hair side out."},
+    {"name": "Ash wood / cypress", "hex": "#5A3E28", "pigment": "oak", "notes": "Spear shafts, racks, table, chest."},
+    {"name": "Cast bronze", "hex": "#9B6A38", "pigment": "bronze", "notes": "Spearheads, chest binding."}
+  ],
+  "gameplay": [
+    "Eight levymen sleep here: the room wakes all at once, and arms from the racks.",
+    "The benches are low cover; the chest and table are in the open south half.",
+    "The reed mats burn quickly."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeLevyBarracks.svg"
+}

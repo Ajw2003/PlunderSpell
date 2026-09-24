@@ -1,0 +1,83 @@
+{
+  "key": "BronzeLionGate",
+  "name": "The Lion Gate",
+  "age": "BronzeAge",
+  "zone": "CurtainWall",
+  "role": "GatehouseModule",
+  "summary": "A cyclopean gateway under a corbelled triangle and two carved lions, closing on oak doors: the art bible's Lion Gate, built to the kit.",
+  "description": "The way in, and the citadel's opinion of you, carved in the same stone. Two masses of cyclopean masonry pinch the road down to a single passage between dressed conglomerate jambs, under a lintel of some twenty tonnes. Above it the builders corbelled a triangle to spare the lintel and filled its face with a relief of two lions at a column, a king explaining that he owns both the gate and the lions; their heads, fixed on separately, are long gone. Inside, the oak leaves stand folded back against the plastered walls with the bar lying where it was dropped, torches burn in bronze rings either side of the passage, and a stone stair climbs the east mass to the walk. The doors burn; the walls do not, and the gate is the only thing in this Age that shrugs at FRANGO.",
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; the gate passage runs north–south through the cell centre.",
+    "Masses: cyclopean limestone 3.20 m deep from the south cell line, x −6.05 … −2.20 (seed 9) and 2.20 … 6.05 (seed 10), three courses to 4.10 m, outer faces set back per block, inner (north) faces flat at y −2.85. Kit override: the art bible's masses stop 0.30 m short of the E/W edges; the kit runs them to the edges so a neighbour meets them.",
+    "Jambs: dressed conglomerate 0.90 m wide (x ±1.30 … ±2.20), 3.20 m deep, 3.74 m tall; the passage between them is 2.60 m wide × 3.74 m (the CurtainWall archway).",
+    "Lintel: one conglomerate block 4.40 × 3.20 × 0.50 m, 3.74–4.24 m, over both jambs.",
+    "Relieving triangle: three corbelled conglomerate courses 0.32 m high, full depth, from 4.24 to 5.20 m, leaving an opening 2.40 / 1.60 / 0.80 m wide course by course.",
+    "Lion slab: a limestone triangular prism, base 2.40 m at 4.24 m, apex 5.20 m, 0.50 m thick, its face 0.10 m behind the corbels'; relief 0.08 m proud in front of it: altar plinth 0.50 × 0.14 m, a down-tapering column 0.11 → 0.16 m wide to 0.76 m with a 0.22 m capital, and two rampant lions leaning in, headless.",
+    "Walk and parapets: plastered walk 4.10–4.20 m on each mass, 0.44 to 3.00 m in; the Age's mud-brick breastwork on each mass's south edge, three merlons a side, sling slots in the first and third.",
+    "Inner face: ochre plaster 0.04 m on the west mass's north face from the ground to 2.40 m, a fresco-blue dado 0.30 m tall at 1.20 m.",
+    "Doors: two oak leaves 1.30 × 3.70 × 0.14 m folded back flat against the north faces (x ±1.30 … ±2.60), three battens each, a bronze strip 0.12 m on each leading edge.",
+    "Bar: an oak beam 0.16 × 0.16 × 3.20 m lying by the west mass (x −5.80 … −2.60).",
+    "Torches: two bronze ring brackets on the north faces at x ±2.90, 2.20 m up, each holding an oak torch with a flame.",
+    "Stair: fourteen ashlar steps 1.00 m wide against the east mass's north face, 0.30 m rises and 0.236 m treads, west to east from x 2.75 to the cell edge, the top step at the walk's 4.20 m.",
+    "Road: limestone slabs 0.06 m thick, 3.20 m wide (x ±1.60), twelve rows through the whole cell, joints staggered, 0.04 m joints; two cart ruts at x ±0.70 its full length."
+  ],
+  "sockets": [
+    "Gate: 2.60 × 3.74 m clear, north–south through the cell centre, double oak leaves (open), barred from the north",
+    "Stair: east mass, north face, 1.00 m wide, 14 rises of 0.30 m to the walk at 4.10 m (plaster top 4.20 m)",
+    "Wall-walks: 4.10 m on each mass, open at the east and west cell edges",
+    "Torch sockets: 2 bronze rings on the north face, 2.20 m up, at x ±2.90",
+    "Murder-hole: none; the gate is defended from the flanking masses"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Cyclopean limestone",
+      "hex": "#8C7F68",
+      "pigment": "vellum_dim",
+      "notes": "Masses, lion slab, road."
+    },
+    {
+      "name": "Dressed conglomerate",
+      "hex": "#9A8666",
+      "pigment": "vellum_faint",
+      "notes": "Jambs, lintel, corbels, relief, stair."
+    },
+    {
+      "name": "Ochre plaster",
+      "hex": "#B7803E",
+      "pigment": "bronze",
+      "notes": "The west inner face and the walks."
+    },
+    {
+      "name": "Fresco blue",
+      "hex": "#3F6F86",
+      "pigment": "verdigris_lo",
+      "notes": "The dado band."
+    },
+    {
+      "name": "Mud-brick",
+      "hex": "#8A5A3C",
+      "pigment": "leather",
+      "notes": "The breastworks."
+    },
+    {
+      "name": "Oak",
+      "hex": "#5A3E28",
+      "pigment": "oak",
+      "notes": "Leaves, battens, bar, torches."
+    },
+    {
+      "name": "Bronze",
+      "hex": "#9B6A38",
+      "pigment": "bronze",
+      "notes": "Leaf edges and the torch rings."
+    }
+  ],
+  "gameplay": [
+    "The citadel's front door: the passage is the only way through the south wall here, and the slingers on both masses cover it.",
+    "The leaves stand open; closing and barring them is a guard action, and a FRANGO on them opens the gate for good.",
+    "The stair on the east mass is the thief's way onto the walls from inside."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeLionGate.svg"
+}

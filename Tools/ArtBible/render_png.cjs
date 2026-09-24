@@ -1,5 +1,7 @@
 // Render every concept SVG in docs/art/concept/<age>/ to a 2400×1600 PNG beside it.
 // Run from anywhere:  NODE_PATH="$(npm root -g)" node Tools/ArtBible/render_png.cjs [age ...]
+// --rooms renders the castle room sheets in docs/art/rooms/concept/<Age>/ instead, and then
+// each remaining argument may be an Age folder (BronzeAge) or a sheet key prefix (BronzeMeg).
 // Needs Playwright with a Chromium it can find (PLAYWRIGHT_BROWSERS_PATH, or /opt/pw-browsers).
 
 // CommonJS on purpose: require() honours NODE_PATH, so a globally installed Playwright is found.
@@ -8,14 +10,16 @@ const { readdirSync, readFileSync, statSync } = require('node:fs');
 const { join, resolve } = require('node:path');
 
 const repo = resolve(__dirname, '..', '..');
-const conceptRoot = join(repo, 'docs', 'art', 'concept');
-const onlyAges = process.argv.slice(2);
+const rooms = process.argv.includes('--rooms');
+const conceptRoot = rooms ? join(repo, 'docs', 'art', 'rooms', 'concept') : join(repo, 'docs', 'art', 'concept');
+const onlyAges = process.argv.slice(2).filter((a) => a !== '--rooms');
+const wanted = (age, name) => onlyAges.length === 0 || onlyAges.includes(age)
+  || (rooms && onlyAges.some((p) => name.startsWith(p)));
 
 const svgs = readdirSync(conceptRoot)
   .filter((age) => statSync(join(conceptRoot, age)).isDirectory())
-  .filter((age) => onlyAges.length === 0 || onlyAges.includes(age))
   .flatMap((age) => readdirSync(join(conceptRoot, age))
-    .filter((name) => name.endsWith('.svg'))
+    .filter((name) => name.endsWith('.svg') && wanted(age, name))
     .map((name) => join(conceptRoot, age, name)));
 
 if (svgs.length === 0) {
