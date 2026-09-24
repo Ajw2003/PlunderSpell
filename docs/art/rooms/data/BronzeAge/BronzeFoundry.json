@@ -1,0 +1,46 @@
+{
+  "key": "BronzeFoundry",
+  "name": "The Foundry",
+  "age": "BronzeAge",
+  "zone": "OuterBailey",
+  "role": "BlacksmithShop",
+  "summary": "A clay shaft furnace fed by goat-hide bellows, stone moulds and crucibles, and a stack of cast ingots waiting for the palace.",
+  "description": "Bronze is poured, not beaten, and here is where it happens: a clay shaft furnace taller than a boy, two goat-hide bellows panting into it through clay nozzles, and a stone bench of moulds for spearheads and double axes, with the crucibles still black from the last pour. The finished work leaves as oxhide ingots, stacked crosswise on a pallet and weighed by the scribes before anyone is allowed to touch them. The furnace never quite goes out, and the charcoal heap by the wall is waiting for someone careless.",
+  "build": [
+    "Shell: the kit's OuterBailey shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m ochre plaster walls 3.60 m clear, 0.45 m mud-brick capstone band, an archway 2.60 × 2.59 m centred on every wall; soot over the top 1.35 m of the north and west walls' furnace sections.",
+    "Shaft furnace (NW): a clay cone r 0.80 → 0.35 × 1.40 m at (−4.20, 4.20); a glowing mouth 0.50 × 0.35 m on its south face; a soot ring and a flame cone at its top.",
+    "Bag bellows: two goat hides (flattened ellipsoids 0.70 × 0.49 × 0.35 m) on the floor at (−3.00, 4.60) and (−3.00, 3.80), a clay nozzle r 0.04 × 0.35 m from each toward the furnace.",
+    "Mould bench (NE): stone, 2.60 × 0.70 × 0.80 m against the north wall at x 3.60; two stone moulds 0.40 × 0.30 × 0.12 m at x 2.60 and 3.10, two crucibles r 0.12 × 0.15 m at x 4.20 and 4.60.",
+    "Tool shelf: a cypress shelf unit 1.60 m long against the east wall at (5.20, 2.90), two boards (0.35, 0.90 m), tongs and ladles on the lower.",
+    "Ingot stack (SE): a pallet 1.80 × 1.20 × 0.12 m at (4.00, −4.30), four crosswise layers of oxhide ingots (0.56 × 0.36 × 0.06 m, alternate layers 0.52 × 0.38), top at 0.66 m.",
+    "Charcoal heap (SW): a black cone r 0.90 → 0.25 × 0.60 m at (−4.20, −4.30).",
+    "Water trough: stone, 1.40 × 0.60 × 0.50 m against the south wall at x −2.60, water in it.",
+    "Anvil stone: 0.60 × 0.60 × 0.50 m at (−2.60, −3.00)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.59 m (OuterBailey), all open",
+    "Furnace: NW, always lit (an IGNIS source); the charcoal heap burns"
+  ],
+  "loot_anchors": [
+    {"at": "mould bench, between moulds and crucibles", "xyz": [3.6, 5.15, 1.10]},
+    {"at": "ingot stack", "xyz": [4.0, -4.3, 0.66]},
+    {"at": "anvil stone", "xyz": [-2.6, -3.0, 0.80]},
+    {"at": "tool shelf, top board", "xyz": [5.2, 2.9, 1.23]}
+  ],
+  "materials": [
+    {"name": "Ochre plaster", "hex": "#B7803E", "pigment": "bronze", "notes": "Walls; soot heavy over the furnace."},
+    {"name": "Terracotta", "hex": "#A0603E", "pigment": "leather", "notes": "Furnace, nozzles."},
+    {"name": "Hearth soot / charcoal", "hex": "#2B231B", "pigment": "bone_black", "notes": "Charcoal heap, crucibles, soot."},
+    {"name": "Cast bronze", "hex": "#9B6A38", "pigment": "bronze", "notes": "Ingots and tools."},
+    {"name": "Stone", "hex": "#8C7F68", "pigment": "vellum_faint", "notes": "Mould bench, trough, anvil; moulds darker (line)."},
+    {"name": "Goat hide", "hex": "#6E4A3A", "pigment": "leather", "notes": "The bellows."},
+    {"name": "Fire", "hex": "#C4542E", "pigment": "madder", "notes": "The furnace mouth and flame."}
+  ],
+  "gameplay": [
+    "The furnace is always lit and the charcoal heap is right beside the wall: IGNIS here spreads fast.",
+    "The ingot stack is heavy loot (several trips); the mould bench and shelf hold small pieces.",
+    "Bright and hot: nobody hides here, and the bellows are noisy if kicked."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeFoundry.svg"
+}

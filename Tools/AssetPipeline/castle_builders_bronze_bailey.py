@@ -44,3 +44,41 @@ def build_bronze_chariot_shed(bm, uv):
     for y in (-4.3, -3.8, -3.3, -2.8):
         cb._box(bm, uv, "leather", (-IN + 0.12, y, fz + 1.05), (0.04, 0.08, 0.9))
     cb._chest(bm, uv, -4.4, -4.9, fz, w=1.0, d=0.6, h=0.55, trim=METAL)
+
+
+def build_bronze_foundry(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeFoundry.svg"""
+    h, fz = room_shell(bm, uv, "OuterBailey")
+    # Soot over the furnace corner: the top of the north and west walls.
+    for side, along in (("north", -3.4), ("west", 3.4)):
+        ek.wall_panel(bm, uv, SOOT, side, along, fz + h - 1.8, 4.1, 1.8 - 0.45)
+    # NW: the shaft furnace, its glowing mouth to the south, fire at its top.
+    mk.paint(bm, mk.add_cylinder(bm, 0.8, 1.4, loc=(-4.2, 4.2, fz + 0.7), segments=12, radius2=0.35), GRAIN_JAR, uv)
+    cb._box(bm, uv, RED, (-4.2, 3.47, fz + 0.275), (0.5, 0.12, 0.35))
+    mk.paint(bm, mk.add_cylinder(bm, 0.36, 0.05, loc=(-4.2, 4.2, fz + 1.425), segments=12), SOOT, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.14, 0.40, loc=(-4.2, 4.2, fz + 1.45 + 0.2), segments=6, radius2=0.02), RED, uv)
+    # Two bag bellows on the floor east of it, a clay nozzle from each toward the furnace.
+    for y in (4.6, 3.8):
+        mk.paint(bm, mk.add_sphere(bm, 0.35, loc=(-3.0, y, fz + 0.175), segments=8, rings=6, scale=(1.0, 0.7, 0.5)),
+                 "leather", uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.04, 0.35, loc=(-3.45, y, fz + 0.22), rot=Euler((0, math.radians(90), 0)),
+                                     segments=6), GRAIN_JAR, uv)
+    # NE: the stone mould bench against the north wall, moulds and crucibles on it.
+    cb._box(bm, uv, "vellum_faint", (3.6, 5.15, fz + 0.4), (2.6, 0.7, 0.8))
+    for x in (2.6, 3.1):
+        cb._box(bm, uv, "line", (x, 5.15, fz + 0.86), (0.4, 0.3, 0.12))
+    for x in (4.2, 4.6):
+        mk.paint(bm, mk.add_cylinder(bm, 0.12, 0.15, loc=(x, 5.15, fz + 0.875), segments=8, radius2=0.09), SOOT, uv)
+    cb._anchor(3.6, 5.15, fz + 0.8)
+    # East wall: the tool shelf, tongs and ladles on it.
+    cb._shelf(bm, uv, 5.2, 2.9, fz, 1.6, levels=2, along_x=False)
+    for y in (2.5, 3.3):
+        cb._box(bm, uv, METAL, (5.2, y, fz + 0.41), (0.3, 0.05, 0.04))
+    # SE: a stack of cast ingots on its pallet.
+    ingot_stack(bm, uv, 4.0, -4.3, fz, 1.8, 1.2, 4)
+    # SW: the charcoal heap, the water trough, the stone anvil.
+    mk.paint(bm, mk.add_cylinder(bm, 0.9, 0.6, loc=(-4.2, -4.3, fz + 0.3), segments=10, radius2=0.25), SOOT, uv)
+    cb._box(bm, uv, "vellum_faint", (-2.6, -5.0, fz + 0.25), (1.4, 0.6, 0.5))
+    cb._box(bm, uv, FRESCO, (-2.6, -5.0, fz + 0.51), (1.2, 0.4, 0.02))
+    cb._box(bm, uv, "vellum_faint", (-2.6, -3.0, fz + 0.25), (0.6, 0.6, 0.5))
+    cb._anchor(-2.6, -3.0, fz + 0.5)

@@ -64,15 +64,7 @@ def build_bronze_treasury(bm, uv):
     cb._anchor(4.3, 4.3, fz + 0.90)
     # Two ingot stacks on timber pallets, crosswise layers of 0.60 × 0.40 × 0.06 slabs.
     for x, y, w, d, layers in ((4.0, -4.3, 1.8, 1.2, 4), (-3.9, -2.9, 1.2, 0.9, 3)):
-        cb._box(bm, uv, TIMBER, (x, y, fz + 0.06), (w, d, 0.12))
-        nx, ny = int(w / 0.62), int(d / 0.42)
-        for k in range(layers):
-            z = fz + 0.12 + k * 0.06 + 0.03
-            for j in range(nx):
-                for i in range(ny):
-                    cb._box(bm, uv, METAL, (x - w / 2 + 0.33 + j * 0.62, y - d / 2 + 0.24 + i * 0.42, z),
-                            (0.56 if k % 2 == 0 else 0.52, 0.36 if k % 2 == 0 else 0.38, 0.06))
-        cb._anchor(x, y, fz + 0.12 + layers * 0.06)
+        ingot_stack(bm, uv, x, y, fz, w, d, layers)
     # Two bronze-bound timber chests along the south wall, west of the archway.
     for x in (-4.6, -2.9):
         cb._chest(bm, uv, x, -4.9, fz, w=1.0, d=0.6, h=0.55, trim=METAL)

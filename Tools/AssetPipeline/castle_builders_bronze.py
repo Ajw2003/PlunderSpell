@@ -142,3 +142,17 @@ def horns(bm, uv, x, y, z, size=0.8, along="x", pigment=None):
     """Horns of consecration on z (no anchor)."""
     ek.horns_of_consecration(bm, uv, pigment or LINEN, x, y, z, size=size, along=along)
 
+
+def ingot_stack(bm, uv, x, y, fz, w, d, layers):
+    """Oxhide ingots stacked crosswise on a timber pallet w × d × 0.12 m, the
+    ingots 0.56 × 0.36 × 0.06 m (alternate layers 0.52 × 0.38, so no two rows
+    ever touch face to face); the anchor sits on top of the stack."""
+    cb._box(bm, uv, TIMBER, (x, y, fz + 0.06), (w, d, 0.12))
+    nx, ny = int(w / 0.62), int(d / 0.42)
+    for k in range(layers):
+        z = fz + 0.12 + k * 0.06 + 0.03
+        for j in range(nx):
+            for i in range(ny):
+                cb._box(bm, uv, METAL, (x - w / 2 + 0.33 + j * 0.62, y - d / 2 + 0.24 + i * 0.42, z),
+                        (0.56 if k % 2 == 0 else 0.52, 0.36 if k % 2 == 0 else 0.38, 0.06))
+    cb._anchor(x, y, fz + 0.12 + layers * 0.06)
