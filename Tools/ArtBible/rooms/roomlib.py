@@ -568,12 +568,17 @@ def room_sheet(age, zone, name, materials, budget, section_label, seed=7):
     return sh
 
 
-def kit_plan(sh, zone, floor, wall, trim=None, archways=True, title="PLAN · 12 × 12 m CELL"):
+def kit_plan(sh, zone, floor, wall, trim=None, archways=True, title="PLAN · 12 × 12 m CELL", shell=True):
     """The plan frame with the kit's room shell drawn in: floor, four 0.5 m
     walls, an archway 2.60 m wide centred on every side, and the clear cross
-    as a faint dashed band. Draw furniture after this, then kit_loot()."""
+    as a faint dashed band. Draw furniture after this, then kit_loot().
+    shell=False (curtain-wall pieces) draws only the frame and the ground:
+    a wall piece has no room shell and no clear cross; draw its wall on the
+    south side yourself, and mark "OUTSIDE" (south) and "BAILEY" (north)."""
     plan_frame(sh, title)
     kprect(sh, -HALF, -HALF, HALF, HALF, floor)
+    if not shell:
+        return
     for x0, y0, x1, y1 in ((-HALF, IN, HALF, HALF), (-HALF, -HALF, HALF, -IN),
                            (-HALF, -IN, -IN, IN), (IN, -IN, HALF, IN)):
         kprect(sh, x0, y0, x1, y1, wall, darken(wall, .5), .8)
