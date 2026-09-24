@@ -1,0 +1,97 @@
+{
+  "key": "LateUndercroft",
+  "name": "The Undercroft",
+  "age": "LateMedieval",
+  "zone": "Crypt",
+  "role": "CryptAntechamber",
+  "summary": "A low vaulted cellar on four squat octagonal piers, its great wine casks lying on cradles along the east and west walls.",
+  "description": "Below the hall the castle keeps its wine, in a cellar built to carry the weight of everything above it. Four squat piers hold up the vault, octagonal shafts on square bases with moulded capitals and the stubs of the ribs springing off them in four directions. Between them the floor is flagged and clear from door to door; along the side walls the great casks lie on their cradles with their heads to the room, two to a corner, each the size of a small cart. The butler's men come down with jugs; the cellar is cool, dark and almost always empty.",
+  "build": [
+    "Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 3.00 m clear, a 0.45 m dark trim course, an archway 2.60 × 2.16 m centred on every wall.",
+    "Piers: four at (±2.50, ±2.50): a sandstone base 1.00 m square, 0.20 m; an octagonal shaft r 0.40 m to 2.10 m above the floor; a moulded capital flaring to r 0.60 m, 2.10–2.35 m; an abacus 1.10 m square, 2.35–2.50 m.",
+    "Springers: on each abacus two crossing rib stubs, 1.60 × 0.30 × 0.30 m east–west and 0.32 × 1.60 × 0.28 m north–south, to 2.80 m; the vault they would carry is left open.",
+    "Casks: eight, r 0.50 m, 1.20 m long, lying east–west against the east and west walls (x ±4.25 … ±5.45) at |y| 2.70 and 4.20, heads to the room.",
+    "Cradles: two oak blocks 0.12 × 0.90 × 0.20 m under each cask; two iron hoops per cask.",
+    "Cask tops: 1.45 m above ground.",
+    "The crossing: bare flagged floor between the piers and all four archways.",
+    "Walls: coursed ashlar joints (albedo), soot darkening down from the top."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open",
+    "Cask tops: four loot anchors, one per quadrant, at 1.45 m",
+    "Piers: cover at (±2.50, ±2.50)"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the NE cask nearer the crossing",
+      "xyz": [
+        4.85,
+        2.7,
+        1.45
+      ]
+    },
+    {
+      "at": "the NW cask by the north wall",
+      "xyz": [
+        -4.85,
+        4.2,
+        1.45
+      ]
+    },
+    {
+      "at": "the SE cask by the south wall",
+      "xyz": [
+        4.85,
+        -4.2,
+        1.45
+      ]
+    },
+    {
+      "at": "the SW cask nearer the crossing",
+      "xyz": [
+        -4.85,
+        -2.7,
+        1.45
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls, piers, springers."
+    },
+    {
+      "name": "Abacus stone",
+      "hex": "#635C4C",
+      "pigment": "vellum_faint",
+      "notes": "The abaci."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Casks and cradles."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Hoops."
+    },
+    {
+      "name": "Floor",
+      "hex": "#1E1B17",
+      "pigment": "bone_black",
+      "notes": "The Crypt floor."
+    }
+  ],
+  "gameplay": [
+    "The four piers break every sightline: the undercroft is the Late crypt's hiding room.",
+    "The casks are waist-high cover along both side walls.",
+    "Four loot anchors, one per quadrant."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateUndercroft.svg"
+}

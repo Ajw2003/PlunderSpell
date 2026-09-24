@@ -23,7 +23,7 @@
   <rect x="12" y="12" width="1176" height="776" fill="none" stroke="#332D22" stroke-width="1"/>
   <text x="40" y="54" font-family="Overpass Mono, monospace" font-size="12" letter-spacing="3" fill="#635C4C">THE LATE MEDIEVAL · CASTLE ROOM · OUTERBAILEY</text>
   <text x="40" y="96" font-family="Eczar, Georgia, serif" font-size="38" font-weight="700" fill="#DCD2BA">The Artillery Yard</text>
-  <text x="1160" y="54" text-anchor="end" font-family="Overpass Mono, monospace" font-size="12" fill="#9A9078">12 × 12 m cell · clear 3.60 m · ≤ 2.4k tris (kit)</text>
+  <text x="1160" y="54" text-anchor="end" font-family="Overpass Mono, monospace" font-size="12" fill="#9A9078">12 × 12 m cell · clear 3.60 m · ≤ 4k tris (kit)</text>
   <text x="1160" y="76" text-anchor="end" font-family="Overpass Mono, monospace" font-size="12" fill="#9A9078">section 1 m = 55 px · plan 1 m = 30 px</text>
   <g font-family="Overpass Mono, monospace" font-size="10" fill="#635C4C" stroke="#635C4C"><line x1="60" y1="690" x2="60" y2="332" stroke-width="1"/><line x1="54" y1="673.5" x2="66" y2="673.5"/><text x="30" y="677.5" stroke="none">0</text><line x1="54" y1="618.5" x2="66" y2="618.5"/><text x="30" y="622.5" stroke="none">1</text><line x1="54" y1="563.5" x2="66" y2="563.5"/><text x="30" y="567.5" stroke="none">2</text><line x1="54" y1="508.5" x2="66" y2="508.5"/><text x="30" y="512.5" stroke="none">3</text><line x1="54" y1="453.5" x2="66" y2="453.5"/><text x="30" y="457.5" stroke="none">4</text><line x1="54" y1="398.5" x2="66" y2="398.5"/><text x="30" y="402.5" stroke="none">5</text><line x1="54" y1="343.5" x2="66" y2="343.5"/><text x="30" y="347.5" stroke="none">6</text><text x="24" y="319" stroke="none">m</text></g>
   <text x="430" y="730" text-anchor="middle" font-family="Overpass Mono, monospace" font-size="11" letter-spacing="3" fill="#635C4C">SECTION A–A · E–W THROUGH THE YARD, LOOKING NORTH</text>
@@ -194,15 +194,15 @@
     <rect x="860" y="450.5" width="48" height="27" fill="#6B4F33" stroke="#0E0C09" stroke-width="0.6"/>
     <rect x="870.5" y="479.3" width="27" height="2.4" fill="#58422B" stroke="#0E0C09" stroke-width="0.6"/>
     <rect x="870.5" y="446.3" width="27" height="2.4" fill="#58422B" stroke="#0E0C09" stroke-width="0.6"/>
-    <rect x="908" y="472.1" width="30" height="1.8" fill="#6B4F33"/>
-    <rect x="908" y="454.1" width="30" height="1.8" fill="#6B4F33"/>
+    <rect x="905" y="472.1" width="21" height="1.8" fill="#6B4F33"/>
+    <rect x="905" y="454.1" width="21" height="1.8" fill="#6B4F33"/>
     <rect x="815" y="437" width="3" height="30" fill="#58422B"/>
     <rect x="824" y="507.5" width="90" height="6" fill="#6B4F33" stroke="#0E0C09" stroke-width="0.5"/>
-    <g id="loot-anchors" data-xy="3.20,-4.80;4.00,-4.25;-3.20,-3.80"/>
+    <g id="loot-anchors" data-xy="3.20,-4.80;4.30,-4.80;-3.20,-3.80"/>
     <path d="M1076 489 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>
     <text x="1083" y="497.5" font-family="Overpass Mono, monospace" font-size="8.5" fill="#C9A227" stroke="#14120E" stroke-width="2.4" paint-order="stroke">L1</text>
-    <path d="M1100 472.5 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>
-    <text x="1107" y="481" font-family="Overpass Mono, monospace" font-size="8.5" fill="#C9A227" stroke="#14120E" stroke-width="2.4" paint-order="stroke">L2</text>
+    <path d="M1109 489 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>
+    <text x="1116" y="497.5" font-family="Overpass Mono, monospace" font-size="8.5" fill="#C9A227" stroke="#14120E" stroke-width="2.4" paint-order="stroke">L2</text>
     <path d="M884 459 l5 5 l-5 5 l-5 -5 z" fill="#C9A227" stroke="#14120E" stroke-width=".8"/>
     <text x="891" y="467.5" font-family="Overpass Mono, monospace" font-size="8.5" fill="#C9A227" stroke="#14120E" stroke-width="2.4" paint-order="stroke">L3</text>
     <line x1="782" y1="350" x2="1178" y2="350" stroke="#9A9078" stroke-width="0.8" stroke-linecap="round" stroke-dasharray="8 3 2 3"/>
@@ -239,7 +239,7 @@
     <text x="980" y="495.5" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">ARCHWAY S 2.60 × 2.59</text>
     <text x="1092.5" y="455" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">POWDER KEGS</text>
     <text x="884" y="431" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">POWDER CART</text>
-    <text x="869" y="495.5" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">RAMMER + SPONGE</text>
+    <text x="857" y="495.5" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">RAMMER RACK</text>
     <text x="800" y="585" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">ARCHWAYS</text>
     <text x="892" y="585" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">4, centred · 2.60 × 2.59 · all open</text>
     <text x="800" y="600" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">CLEAR CROSS</text>

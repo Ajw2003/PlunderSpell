@@ -1,0 +1,64 @@
+{
+  "key": "LateBastion",
+  "name": "The Artillery Bulwark",
+  "age": "LateMedieval",
+  "zone": "CurtainWall",
+  "role": "Bastion",
+  "summary": "A low, wide round bulwark of sandstone with a gun platform level with the walks, a thick parapet ring, a ring of gunports at its base, and a bombard aimed out through its embrasure.",
+  "description": "By the middle of the century the Burgundians were building for guns rather than against ladders. The bulwark is a squat round tower as wide as a house, its thick wall rising only to the level of the walks, so that its flat top becomes a gun platform. A parapet ring nearly a metre thick protects the gunners; a single wide embrasure faces the approach, with a bombard on its timber bed laid in it and its stone shot stacked beside. Lower down, five gunports pierce the base for hand-cannon that sweep the ditch. The walks run straight onto the platform through gaps in the parapet on either side.",
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; the wall on the south edge, the bailey open to the north.",
+    "Drum: dressed sandstone, sixteen flats (circumradius 3.40 m, apothem 3.34 m), turned so a flat faces south, centred (0, −2.27) so the south flat lies on the walls' face line 0.45 m in from the cell edge; solid from the ground to the platform at 4.00 m, level with the walks.",
+    "Platform: a flagged disc r 2.45 m, 0.02 m, on the drum top.",
+    "Parapet ring: one sandstone block per flat, 0.84 m thick (radius 2.53 … 3.37), 4.00–5.00 m, alternate blocks 0.03 m higher; the four blocks facing 202.5°, 225°, 315° and 337.5° are left out where the walks come in.",
+    "Embrasure: the south block cut down to a sill 0.40 m high (4.00–4.40 m).",
+    "Gunports: five soot ports 0.30 × 0.30 m at 0.60–0.90 m on the flats facing 225°–315°.",
+    "Bombard: an oak bed 0.70 × 1.80 × 0.30 m at (0, −3.37) on the platform; an iron chamber r 0.20 m and bore r 0.30 m, 1.20 m long, along y with the muzzle south in the embrasure; two iron hoops; three stone balls r 0.20 m beside it.",
+    "Wall runs: the Late wall section (sandstone 1.60 m, face 0.45 m in, walk 4.00 m, brick frieze, corbels, parapet out to d 0.05, merlons to 5.20 m, timber walk) from each cell edge to x ±2.60, a keyhole gun-loop in each at x ±4.45."
+  ],
+  "sockets": [
+    "Gun platform: 4.00 m, level with the walks, entered through the parapet gaps from both",
+    "Embrasure: south, sill at 4.40 m, the bombard laid in it",
+    "Gunports: five in the drum's base; keyhole gun-loops: one per run"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Drum, parapet ring, runs; flagstones in vellum_faint."
+    },
+    {
+      "name": "Brick",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "The runs' friezes."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "The bombard's bed, timber walks."
+    },
+    {
+      "name": "Iron",
+      "hex": "#2E2F31",
+      "pigment": "iron",
+      "notes": "The bombard; hoops in line."
+    },
+    {
+      "name": "Soot",
+      "hex": "#1E1B17",
+      "pigment": "bone_black",
+      "notes": "Gunports and gun-loops."
+    }
+  ],
+  "gameplay": [
+    "The platform is the Late wall's gun post: the bombard covers the approach, handgunners the base.",
+    "The walks run straight onto the platform, so guards can reinforce it from either side.",
+    "No loot: terrain."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/LateMedieval/LateBastion.svg"
+}

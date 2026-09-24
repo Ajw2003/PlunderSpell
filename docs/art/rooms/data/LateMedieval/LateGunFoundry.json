@@ -1,0 +1,87 @@
+{
+  "key": "LateGunFoundry",
+  "name": "The Gun Foundry",
+  "age": "LateMedieval",
+  "zone": "OuterBailey",
+  "role": "BlacksmithShop",
+  "summary": "A brick furnace and chimney with its bellows, a casting pit with a clay gun mould standing under an A-frame crane, new barrels on trestles, and the anvil.",
+  "description": "The castle casts its own guns now. Bronze is melted in the brick furnace in the corner, blown hot by the leather bellows, and poured into a clay mould stood upright in the casting pit, a long cylinder of clay banded in iron and hung from an A-frame crane so it can be lifted out and broken open. What comes out is a gun barrel: two lie across the trestles by the south wall waiting to be bored and filed. The smith keeps his anvil, tongs and quench tub in the other corner for the ironwork. The foundry is the hottest room in the castle and smells of it.",
+  "build": [
+    "Shell: the kit's OuterBailey shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 3.60 m clear, a 0.45 m brick trim course, an archway 2.60 × 2.59 m centred on every wall.",
+    "Furnace (NW): brick 1.80 × 1.60 × 1.40 m in the corner at (−4.60, 4.70), a glowing madder fire mouth 0.70 × 0.50 m on its south face; a brick chimney 0.90 × 0.70 m from its back rising to the wall top (3.90 m above ground).",
+    "Bellows and charcoal: a leather wedge 0.60 × 0.40 m rising 0.30 m on an oak post, on the furnace's east side at (−3.40, 4.60); a charcoal heap r 0.40 m at (−4.60, 3.30).",
+    "Casting pit (NE): a sandstone kerb 1.60 m square, 0.20 m thick, 0.25 m high, centred (3.40, 3.80), a dark fill inside.",
+    "Gun mould: clay, r 0.30 m, 1.80 m tall, standing in the pit, five iron bands.",
+    "A-frame crane: two oak A-frames (legs 0.12 m, splayed 0.80 m north–south) at x 2.40 and 4.40, a beam 2.30 m at 2.80 m above the floor, an iron chain down to the mould's head.",
+    "Barrels (SE): two oak trestles 1.20 m wide, 0.77 m high at x 2.60 and 4.40, y −3.80; two iron gun barrels 2.40 m long, r 0.15 and 0.18 m tapering to the muzzle, across them at y −4.10 and −3.70; an oak tool plank 2.20 × 0.30 m on the trestles at y −3.30.",
+    "Anvil (SW): an iron anvil 0.50 × 0.18 × 0.25 m on an oak stump r 0.30 m, 0.60 m tall, at (−3.40, −3.40); an oak quench tub r 0.45 m with water at (−4.70, −4.50); a tong rack on the west wall at y −2.50, four tongs."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.59 m (OuterBailey), all open",
+    "Trestle plank and anvil: loot anchors",
+    "Furnace: a fire source, NW"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the tool plank on the trestles",
+      "xyz": [
+        3.5,
+        -3.3,
+        1.14
+      ]
+    },
+    {
+      "at": "the anvil",
+      "xyz": [
+        -3.4,
+        -3.4,
+        1.15
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls, the pit kerb."
+    },
+    {
+      "name": "Brick",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "Furnace and chimney; the mould and bellows share it."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Barrels, anvil, bands, chain, tongs."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Crane, trestles, stump, tub."
+    },
+    {
+      "name": "Fire",
+      "hex": "#C4542E",
+      "pigment": "madder",
+      "notes": "The furnace mouth."
+    },
+    {
+      "name": "Soot",
+      "hex": "#1E1B17",
+      "pigment": "bone_black",
+      "notes": "Pit fill, charcoal."
+    }
+  ],
+  "gameplay": [
+    "The furnace lights the NW corner; the crane's A-frames are the only cover in the NE.",
+    "The finished barrels are scenery: too heavy to carry, but a guard behind them is hard to see.",
+    "Two loot anchors, both in the south half."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/LateMedieval/LateGunFoundry.svg"
+}
