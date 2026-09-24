@@ -1662,6 +1662,111 @@
         "blend": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/VenetianMirror.blend"
       },
       "build_seconds": 2.3
+    },
+    {
+      "key": "enemies/high/lantern-warden",
+      "kind": "enemies",
+      "age": "high",
+      "slug": "lantern-warden",
+      "name": "LanternWarden",
+      "title": "Lantern Warden",
+      "passed": true,
+      "stats": {
+        "vertices": 2588,
+        "faces": 2516,
+        "triangles": 4952,
+        "islands": 58,
+        "lowest_z": 0.0,
+        "height": 2.048,
+        "width": 0.708,
+        "budget": 8000,
+        "bbox_m": "0.708x0.626x2.048",
+        "height_body_m": 1.796,
+        "height_spec_m": 1.8,
+        "height_with_props_m": 2.048,
+        "rig_bones": 24,
+        "skinned_bones": 23,
+        "mean_influences": 1.53
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.8,
+        "tri_budget": 8000
+      },
+      "families": {
+        "gambeson_wool": {
+          "name": "Gambeson wool",
+          "base": "#C4B89C",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "woad_hose": {
+          "name": "Woad hose",
+          "base": "#3E5470",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "leather": {
+          "name": "Leather",
+          "base": "#5A4030",
+          "rough": 0.6,
+          "metal": 0.0,
+          "emit": null
+        },
+        "blackened_iron": {
+          "name": "Blackened iron",
+          "base": "#6F7479",
+          "rough": 0.55,
+          "metal": 1.0,
+          "emit": null
+        },
+        "ash_haft": {
+          "name": "Ash haft",
+          "base": "#6B5238",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "horn_pane": {
+          "name": "Horn pane",
+          "base": "#BFA57A",
+          "rough": 0.45,
+          "metal": 0.0,
+          "emit": "#C4542E"
+        },
+        "skin": {
+          "name": "Skin",
+          "base": "#A07A5C",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "woad_mud": {
+          "name": "Woad hose, muddied",
+          "base": "#2B3A4E",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['woad_mud']"
+      ],
+      "notes": [
+        "Glaive (2.05 m) and lantern are prop bones (Glaive on Hand.R; LanternRing -> LanternBody on Hand.L) and are left out of the 1.80 m height check.",
+        "Hat is its own bone under Head (detachable per the JSON rig).",
+        "Not built: gambeson_skirt x4 and coif_back spring bones, the candle inside the lantern (the horn panes carry the emissive), the scorched sleeve."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/High/LanternWarden/glTF/LanternWarden.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
+      },
+      "build_seconds": 3.3
     }
   ]
 }
