@@ -28,6 +28,10 @@ Any part may set extras["smooth"] = True: every edge inside that part shades
 smooth whatever its angle. EnemyForge's auto-smooth is 34°, so without this a
 cord or strap with fewer than 11 sides renders visibly faceted.
 
+Any part may set extras["bevel"] = False to keep the asset's edge bevel off it.
+Worth it on small discs, low-sided tubes and hidden relief, where the bevel
+roughly triples the triangles for no visible gain.
+
 Any part may also carry extras["paint"]: a list of regions that restamp faces with
 another family, so a band of paint is part of the same closed shell (no floating
 decal geometry). Each region is {"mat": family, "min": (x, y, z), "max": (x, y, z)}
@@ -53,11 +57,13 @@ from mathutils.geometry import tessellate_polygon
 from enemy_forge.parts import BONE_LAYER, Part, _bone_name, _place, _primitive
 
 __all__ = ["Part", "build_bmesh", "families_used", "ring_of", "arc_path", "spline",
-           "rounded_rect", "gable_outline", "BONE_LAYER", "SMOOTH_LAYER"]
+           "rounded_rect", "gable_outline", "BONE_LAYER", "SMOOTH_LAYER", "NOBEVEL_LAYER"]
 
 # Face layer: 1 where the owning part asked for extras["smooth"]. An integer face
 # layer, like material_index, survives the bevel intact.
 SMOOTH_LAYER = "af_smooth"
+# Face layer: 1 where the owning part asked for extras["bevel"] = False.
+NOBEVEL_LAYER = "af_nobevel"
 
 NEW_KINDS = {"lathe", "prism", "tube"}
 
@@ -299,6 +305,7 @@ def build_bmesh(parts: list[Part], family_index: dict[str, int]):
     bm = bmesh.new()
     bone_layer = bm.verts.layers.int.new(BONE_LAYER)
     smooth_layer = bm.faces.layers.int.new(SMOOTH_LAYER)
+    nobevel_layer = bm.faces.layers.int.new(NOBEVEL_LAYER)
     bone_names: list[str] = []
     bone_lookup: dict[str, int] = {}
 
@@ -337,9 +344,11 @@ def build_bmesh(parts: list[Part], family_index: dict[str, int]):
             for vert in verts:
                 vert[bone_layer] = bone_id
             smooth = 1 if part.extras.get("smooth") else 0
+            nobevel = 0 if part.extras.get("bevel", True) else 1
             for face, family in zip(faces, stamps):
                 face.material_index = family
                 face[smooth_layer] = smooth
+                face[nobevel_layer] = nobevel
 
     bm.verts.index_update()
     bm.faces.index_update()

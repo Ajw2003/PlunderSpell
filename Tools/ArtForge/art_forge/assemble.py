@@ -10,14 +10,16 @@ Two paths share everything up to the bake:
 
 from __future__ import annotations
 
+import math
 import os
+from types import SimpleNamespace
 
 import bmesh
 import bpy
 
 from enemy_forge import assemble as ef_assemble
 from enemy_forge import materials as ef_materials
-from enemy_forge.assemble import finish_geometry, reset_scene  # noqa: F401  (re-exported)
+from enemy_forge.assemble import _dissolve_degenerate, finish_geometry, reset_scene  # noqa: F401
 
 from . import kit, materials
 from .blueprint import Blueprint
@@ -87,6 +89,47 @@ def bake(obj: bpy.types.Object, bp: Blueprint, authoring: list[bpy.types.Materia
     return final
 
 
+BEVEL_ANGLE = 32.0   # degrees; the same angle limit EnemyForge's bevel uses
+
+
+def _bevel(obj: bpy.types.Object, width: float) -> None:
+    """EnemyForge's bevel, but weight-limited so parts can opt out (kit.NOBEVEL_LAYER).
+
+    Settings match enemy_forge.assemble.finish_geometry: one segment, arc mitres,
+    clamped overlap, then dissolve the slivers the clamp leaves ("A clamped bevel
+    still leaves slivers" in docs/systems/enemy-asset-pipeline.md). The only
+    difference is which edges qualify: sharper than BEVEL_ANGLE AND not on a part
+    that set extras["bevel"] = False.
+    """
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    nobevel = bm.faces.layers.int.get(kit.NOBEVEL_LAYER)
+    weight = bm.edges.layers.float.get("bevel_weight_edge") or \
+        bm.edges.layers.float.new("bevel_weight_edge")
+    limit = math.radians(BEVEL_ANGLE)
+    for edge in bm.edges:
+        faces = edge.link_faces
+        ok = (len(faces) == 2 and edge.calc_face_angle(0.0) > limit
+              and not (nobevel and any(f[nobevel] for f in faces)))
+        edge[weight] = 1.0 if ok else 0.0
+    bm.to_mesh(obj.data)
+    bm.free()
+
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.select_all(action="DESELECT")
+    obj.select_set(True)
+    bevel = obj.modifiers.new("Bevel", "BEVEL")
+    bevel.width = width
+    bevel.segments = 1
+    bevel.limit_method = "WEIGHT"
+    bevel.edge_weight = "bevel_weight_edge"
+    bevel.miter_outer = "MITER_ARC"
+    bevel.harden_normals = False
+    bevel.use_clamp_overlap = True
+    bpy.ops.object.modifier_apply(modifier=bevel.name)
+    _dissolve_degenerate(obj)
+
+
 def _force_smooth_parts(obj: bpy.types.Object) -> None:
     """Clear sharp edges inside parts flagged extras["smooth"] (see kit.SMOOTH_LAYER).
 
@@ -124,7 +167,10 @@ def prepare(bp: Blueprint) -> tuple[bpy.types.Object, list[tuple[str, dict]]]:
     family_index = {key: i for i, (key, _fam) in enumerate(ordered)}
     authoring = materials.build_authoring_set(bp.name, ordered, bp.wear)
     obj = build_object(bp, authoring, family_index)
-    finish_geometry(obj, bp)
+    if bp.bevel > 0.0:
+        _bevel(obj, bp.bevel)
+    # EnemyForge's shade + unwrap, with its own bevel off: ours already ran.
+    finish_geometry(obj, SimpleNamespace(bevel=0.0))
     _force_smooth_parts(obj)
     obj["artforge_authoring"] = [m.name for m in authoring]
     return obj, ordered
