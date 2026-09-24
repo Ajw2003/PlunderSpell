@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import math
 
+import bpy
 from mathutils import Vector
 
 from .. import figures
@@ -63,7 +64,18 @@ def _install_heat_retry() -> None:
                 for index, weights in enumerate(rigid):
                     for n, w in weights:
                         groups[n].add([index], w, "REPLACE")
+                # Same input, same failure: nudge both objects so the solve sees
+                # slightly different floats, then put them back exactly.
+                offset = (0.00037 * attempt, -0.00021 * attempt, 0.00013 * attempt)
+                mesh_obj.location = offset
+                rig.location = offset
+                bpy.context.view_layer.update()
             stats = original(mesh_obj, rig, *args, **kwargs)
+            if attempt > 1:
+                mesh_obj.location = (0.0, 0.0, 0.0)
+                rig.location = (0.0, 0.0, 0.0)
+                mesh_obj.matrix_parent_inverse.identity()
+                bpy.context.view_layer.update()
             if not stats.get("auto_weights") or stats.get("max_influences", 0) > 1:
                 break
             print(f"  [enemies_powder] {mesh_obj.name}: heat weighting failed "
