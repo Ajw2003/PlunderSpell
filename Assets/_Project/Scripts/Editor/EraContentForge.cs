@@ -292,6 +292,10 @@ namespace RogueAi.EditorTools
                 table.InnerWardDensity = defaults.InnerWardDensity;
                 table.KeepDensity = defaults.KeepDensity;
                 table.CryptDensity = defaults.CryptDensity;
+                table.CurtainWallMaxPerRoom = defaults.CurtainWallMaxPerRoom;
+                table.OuterBaileyMaxPerRoom = defaults.OuterBaileyMaxPerRoom;
+                table.InnerWardMaxPerRoom = defaults.InnerWardMaxPerRoom;
+                table.KeepMaxPerRoom = defaults.KeepMaxPerRoom;
             }
             EditorUtility.SetDirty(table);
 

@@ -98,7 +98,11 @@ MonoBehaviour:
     Weight: 1
     Prefab: {fileID: 7409009544048913022, guid: d1f174a751db12747af42bd367cc5958, type: 3}
   CurtainWallDensity: 0.15
-  OuterBaileyDensity: 0.35
-  InnerWardDensity: 0.5
-  KeepDensity: 0.7
+  OuterBaileyDensity: 0.5
+  InnerWardDensity: 1
+  KeepDensity: 1
   CryptDensity: 1
+  CurtainWallMaxPerRoom: 1
+  OuterBaileyMaxPerRoom: 1
+  InnerWardMaxPerRoom: 2
+  KeepMaxPerRoom: 3
