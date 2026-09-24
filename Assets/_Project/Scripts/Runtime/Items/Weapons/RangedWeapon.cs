@@ -60,6 +60,28 @@ public class RangedWeapon : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Raised on the firing machine after a real shot: (weapon, where the shot left the muzzle, its
+    /// direction). RogueAi.Net shows the same shot on every other machine with
+    /// <see cref="SpawnCosmeticShot"/>.
+    /// </summary>
+    public static event System.Action<RangedWeapon, Vector3, Vector3> Fired;
+
+    /// <summary>
+    /// A copy of another machine's shot: the same projectile flying the same way, carrying no damage.
+    /// The real shot already hit, or missed, on the machine that fired it.
+    /// </summary>
+    public void SpawnCosmeticShot(Vector3 spawnPoint, Vector3 direction)
+    {
+        if (m_stats == null || m_stats.ProjectilePrefab == null)
+            return;
+        GameObject shot = Instantiate(m_stats.ProjectilePrefab, spawnPoint, Quaternion.LookRotation(direction));
+        if (shot.TryGetComponent(out NetworkedProjectile projectile))
+            projectile.Damage = 0;
+        if (shot.TryGetComponent(out Rigidbody body))
+            body.linearVelocity = direction * m_stats.ProjectileSpeed;
+    }
+
     private void SpawnProjectile(Vector3 origin, Vector3 direction)
     {
         if (m_stats.ProjectilePrefab == null)
@@ -80,6 +102,8 @@ public class RangedWeapon : MonoBehaviour
 
         if (shot.TryGetComponent(out Rigidbody body))
             body.linearVelocity = direction * m_stats.ProjectileSpeed;
+
+        Fired?.Invoke(this, spawnPoint, direction);
     }
 
     private void AlertNearbyListeners()

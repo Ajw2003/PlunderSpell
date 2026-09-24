@@ -174,6 +174,7 @@ namespace RogueAi.Raid
             BuildCastle(_seed.value);
 
             _alarm?.SetAlarmLevel(0f);
+            CastleGuard.BeginArrivalGrace();
 
             SetPhase(RaidPhase.Raiding);
         }

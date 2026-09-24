@@ -135,7 +135,14 @@ floor between two people in a large room.
 
 ## Invariants
 
-- **No guard is posted within one room of the entrance** (`GuardPlacementPlanner.SafeEntranceRadius`).
+- **No guard is posted, or patrols, within two rooms of the entrance**
+  (`GuardPlacementPlanner.SafeEntranceRadius`, and `BuildRoute` leaves those rooms out of every
+  route). One room was not enough: a guard next door walked its route through the gate.
+- **For the first 20 seconds of a raid a calm garrison sees nobody** (`CastleGuard.ArrivalGraceSeconds`,
+  started by `RaidDirector.StartRaid`). Guards still hear, and a raised alarm ends the grace. A
+  player standing still at the spawn was first hit at about 10 seconds before this and the wider
+  ring, and at 37 seconds after. Tests that tick guards call `CastleGuard.EndArrivalGrace()` first,
+  because the grace is process-wide.
   Players spawn just inside the extraction room; a guard next door saw them on the first frame and
   killed an idle player in ~18 s, which read as dying for no reason. The check runs after the
   density roll so the rest of the garrison stays seed-stable.
