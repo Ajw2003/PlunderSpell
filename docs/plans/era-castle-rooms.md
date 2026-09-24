@@ -86,7 +86,7 @@ because its rules are what make the generated castle walkable
 
 | Role | Bronze Age | Late Medieval | Age of Powder |
 |---|---|---|---|
-| Room walls | `bronze` (ochre plaster) | `vellum_dim` (dressed sandstone) | `vellum` (lime plaster) |
+| Room walls | `bronze` (ochre plaster); the Crypt `vellum_dim` (limestone tombs) | `vellum_dim` (dressed sandstone) | `vellum` (lime plaster) |
 | Curtain-wall stone | `vellum_dim` (cyclopean limestone) | `vellum_dim` | `vellum_faint` (rampart stone) |
 | Brick / mud-brick | `leather` | `leather` | `leather` |
 | Timber | `oak` | `oak` | `line` (black walnut); `oak` for parquet and rough work |

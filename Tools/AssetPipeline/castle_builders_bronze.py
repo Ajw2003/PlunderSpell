@@ -43,9 +43,13 @@ ZONE_FLOOR = {"OuterBailey": "leather", "InnerWard": "ash_hi", "Keep": "vellum_f
 ZONE_TRIM = {"CurtainWall": "leather", "OuterBailey": "leather", "InnerWard": "verdigris_lo", "Keep": "madder", "Crypt": "vellum_dim"}
 
 
+# The tombs under the citadel are built of limestone, not plastered mud-brick.
+ZONE_WALL = {"Crypt": CURTAIN}
+
+
 def room_shell(bm, uv, zone):
     """This Age's walls, floor and trim on the shared room shell."""
-    return cb._shell(bm, uv, zone, stone=WALL, trim=ZONE_TRIM[zone], floor=ZONE_FLOOR[zone])
+    return cb._shell(bm, uv, zone, stone=ZONE_WALL.get(zone, WALL), trim=ZONE_TRIM[zone], floor=ZONE_FLOOR[zone])
 
 
 # ── Door plugs: the High Medieval size (same archway), this Age's stone ──
@@ -63,7 +67,7 @@ def build_bronze_door_plug_keep(bm, uv):
 
 
 def build_bronze_door_plug_crypt(bm, uv):
-    cb._door_plug(bm, uv, "Crypt", stone=WALL)
+    cb._door_plug(bm, uv, "Crypt", stone=ZONE_WALL["Crypt"])
 
 
 # ── Furniture shared by the Bronze Age rooms ────────────────────────────
