@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 
 namespace UnityEngine
 {
+    public enum Space { World, Self }
+
     [Flags]
     public enum HideFlags
     {
@@ -483,6 +485,12 @@ namespace UnityEngine
         public void Rotate(Vector3 eulerAngles) => localRotation = localRotation * Quaternion.Euler(eulerAngles);
         public void Rotate(Vector3 axis, float angle) => localRotation = localRotation * Quaternion.AngleAxis(angle, axis);
         public void Rotate(float x, float y, float z) => Rotate(new Vector3(x, y, z));
+        /// <summary>Space.Self as Rotate(axis, angle); Space.World pre-multiplies, as Unity does.</summary>
+        public void Rotate(Vector3 axis, float angle, Space relativeTo)
+        {
+            if (relativeTo == Space.Self) Rotate(axis, angle);
+            else rotation = Quaternion.AngleAxis(angle, axis) * rotation;
+        }
         public void RotateAround(Vector3 point, Vector3 axis, float angle)
         {
             Quaternion q = Quaternion.AngleAxis(angle, axis);
@@ -529,6 +537,8 @@ namespace UnityEngine
         public void StopAllCoroutines() { }
         public void Invoke(string method, float delay) => InvokeMessage(method);
         public void CancelInvoke() { }
+        /// <summary>Invoke runs its target immediately here, so there is never a pending call to cancel.</summary>
+        public void CancelInvoke(string methodName) { }
         public bool IsInvoking() => false;
         public void print(object message) => Debug.Log(message);
     }

@@ -154,6 +154,15 @@ namespace UnityEngine
 
         public static Quaternion identity => new Quaternion(0f, 0f, 0f, 1f);
 
+        /// <summary>Angle in degrees (0..360) and unit axis, as Unity returns them.</summary>
+        public void ToAngleAxis(out float angle, out Vector3 axis)
+        {
+            float qw = w < -1f ? -1f : (w > 1f ? 1f : w);
+            angle = 2f * (float)Math.Acos(qw) * Mathf.Rad2Deg;
+            float s = (float)Math.Sqrt(1f - qw * qw);
+            axis = s < 1e-6f ? new Vector3(1f, 0f, 0f) : new Vector3(x / s, y / s, z / s);
+        }
+
         public static Quaternion operator *(Quaternion a, Quaternion b) => new Quaternion(
             a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
             a.w * b.y + a.y * b.w + a.z * b.x - a.x * b.z,
@@ -288,6 +297,13 @@ namespace UnityEngine
         public static float Clamp(float v, float lo, float hi) => v < lo ? lo : (v > hi ? hi : v);
         public static int Clamp(int v, int lo, int hi) => v < lo ? lo : (v > hi ? hi : v);
         public static float Clamp01(float v) => Clamp(v, 0f, 1f);
+        /// <summary>Unity's SmoothStep: Hermite interpolation from a to b.</summary>
+        public static float SmoothStep(float from, float to, float t)
+        {
+            t = Clamp01(t);
+            t = -2f * t * t * t + 3f * t * t;
+            return to * t + from * (1f - t);
+        }
         public static float Pow(float a, float b) => (float)Math.Pow(a, b);
         public static float Sqrt(float v) => (float)Math.Sqrt(v);
         public static float Sin(float v) => (float)Math.Sin(v);
@@ -314,6 +330,8 @@ namespace UnityEngine
     {
         public float r, g, b, a;
         public Color(float r, float g, float b, float a = 1f) { this.r = r; this.g = g; this.b = b; this.a = a; }
+        /// <summary>The largest of r, g and b (alpha excluded), as Unity defines it.</summary>
+        public float maxColorComponent => Math.Max(Math.Max(r, g), b);
         public static Color red => new Color(1f, 0f, 0f);
         public static Color green => new Color(0f, 1f, 0f);
         public static Color blue => new Color(0f, 0f, 1f);
@@ -371,6 +389,13 @@ namespace UnityEngine
             new Vector3(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Min(a.z, b.z));
         private static Vector3 Vector3Max(Vector3 a, Vector3 b) =>
             new Vector3(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y), Mathf.Max(a.z, b.z));
+
+        /// <summary>The point in or on this box nearest to <paramref name="p"/>.</summary>
+        public Vector3 ClosestPoint(Vector3 p)
+        {
+            Vector3 lo = min, hi = max;
+            return new Vector3(Mathf.Clamp(p.x, lo.x, hi.x), Mathf.Clamp(p.y, lo.y, hi.y), Mathf.Clamp(p.z, lo.z, hi.z));
+        }
 
         /// <summary>Squared distance from a point to this box (0 when inside).</summary>
         public float SqrDistance(Vector3 p)

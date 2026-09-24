@@ -33,7 +33,6 @@
     <Compile Include="../../../Assets/_Project/Scripts/Runtime/**/*.cs"
               Exclude="../../../Assets/_Project/Scripts/Runtime/Player/Input/PlayerInputs.cs;
                         ../../../Assets/_Project/Scripts/Runtime/Player/PlayerInputController.cs;
-                        ../../../Assets/_Project/Scripts/Runtime/Net/PlayerNetworkOwnership.cs;
                         ../../../Assets/_Project/Scripts/Runtime/Net/SteamInviteGateway.cs">
       <Link>Runtime/%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>

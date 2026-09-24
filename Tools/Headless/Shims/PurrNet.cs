@@ -124,6 +124,8 @@ namespace PurrNet
         public bool hasConnectedOwner => _owner.HasValue;
         public PlayerID? owner => _owner;
         public PlayerID? localPlayer => NetworkHarness.LocalPlayer;
+        /// <summary>PurrNet's non-null local player; the harness's, or player 0 when it has none.</summary>
+        public PlayerID localPlayerForced => NetworkHarness.LocalPlayer ?? default;
 
         public bool IsController(bool ownerHasAuthority) => ownerHasAuthority ? isController : isServer;
         public bool IsSpawned(bool asServer) => isSpawned;
@@ -153,6 +155,12 @@ namespace PurrNet
     }
 
     public abstract class NetworkBehaviour : NetworkIdentity { }
+
+    /// <summary>PurrNet's transform sync. Only who controls it is modelled; nothing is sent.</summary>
+    public class NetworkTransform : NetworkIdentity
+    {
+        public bool ownerAuth = true;
+    }
 
     /// <summary>
     /// Global switch describing the simulated peer. Defaults to a listen-server host with local
@@ -343,6 +351,7 @@ namespace PurrNet
         public bool isClient => NetworkHarness.IsClient;
         public bool isHost => isServer && isClient;
         public bool isServerOnly => isServer && !isClient;
+        public bool isClientOnly => isClient && !isServer;
         public bool isOffline => !NetworkHarness.IsRunning;
 
         private void Awake() => main = this;
