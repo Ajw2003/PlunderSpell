@@ -21,21 +21,102 @@
     "Larnax lids: eight, each a loot anchor at 1.17 m"
   ],
   "loot_anchors": [
-    {"at": "NW larnax (north wall)", "xyz": [-3.3, 4.9, 1.17]},
-    {"at": "SW larnax (south wall)", "xyz": [-3.3, -4.9, 1.17]},
-    {"at": "NE larnax (north wall)", "xyz": [3.3, 4.9, 1.17]},
-    {"at": "SE larnax (south wall)", "xyz": [3.3, -4.9, 1.17]},
-    {"at": "west larnax, north", "xyz": [-4.95, 2.9, 1.17]},
-    {"at": "west larnax, south", "xyz": [-4.95, -2.9, 1.17]},
-    {"at": "east larnax, north", "xyz": [4.95, 2.9, 1.17]},
-    {"at": "east larnax, south", "xyz": [4.95, -2.9, 1.17]}
+    {
+      "at": "SW larnax (south wall)",
+      "xyz": [
+        -3.3,
+        -4.9,
+        1.17
+      ]
+    },
+    {
+      "at": "NW larnax (north wall)",
+      "xyz": [
+        -3.3,
+        4.9,
+        1.17
+      ]
+    },
+    {
+      "at": "SE larnax (south wall)",
+      "xyz": [
+        3.3,
+        -4.9,
+        1.17
+      ]
+    },
+    {
+      "at": "NE larnax (north wall)",
+      "xyz": [
+        3.3,
+        4.9,
+        1.17
+      ]
+    },
+    {
+      "at": "west larnax, south",
+      "xyz": [
+        -4.95,
+        -2.9,
+        1.17
+      ]
+    },
+    {
+      "at": "west larnax, north",
+      "xyz": [
+        -4.95,
+        2.9,
+        1.17
+      ]
+    },
+    {
+      "at": "east larnax, south",
+      "xyz": [
+        4.95,
+        -2.9,
+        1.17
+      ]
+    },
+    {
+      "at": "east larnax, north",
+      "xyz": [
+        4.95,
+        2.9,
+        1.17
+      ]
+    }
   ],
   "materials": [
-    {"name": "Limestone", "hex": "#8C7F68", "pigment": "vellum_dim", "notes": "Walls."},
-    {"name": "Larnax clay", "hex": "#A0603E", "pigment": "leather", "notes": "Coffins and jars; painted in haematite and fresco blue."},
-    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "The larnax bands."},
-    {"name": "Dressed ashlar", "hex": "#9A8C72", "pigment": "vellum_faint", "notes": "Capstone band."},
-    {"name": "Floor", "hex": "#2B231B", "pigment": "bone_black", "notes": "The Crypt floor."}
+    {
+      "name": "Limestone",
+      "hex": "#8C7F68",
+      "pigment": "vellum_dim",
+      "notes": "Walls."
+    },
+    {
+      "name": "Larnax clay",
+      "hex": "#A0603E",
+      "pigment": "leather",
+      "notes": "Coffins and jars; painted in haematite and fresco blue."
+    },
+    {
+      "name": "Haematite red",
+      "hex": "#8E3F2C",
+      "pigment": "madder",
+      "notes": "The larnax bands."
+    },
+    {
+      "name": "Dressed ashlar",
+      "hex": "#9A8C72",
+      "pigment": "vellum_faint",
+      "notes": "Capstone band."
+    },
+    {
+      "name": "Floor",
+      "hex": "#2B231B",
+      "pigment": "bone_black",
+      "notes": "The Crypt floor."
+    }
   ],
   "gameplay": [
     "Eight loot anchors, the most in the Bronze crypt: small grave goods on every lid.",
