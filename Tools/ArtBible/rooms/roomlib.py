@@ -201,7 +201,20 @@ class Sheet:
         self.call.append(f'<circle cx="{f(px)}" cy="{f(py)}" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>')
         self.text(lx, ly, label, 12, "#DCD2BA", anchor)
         if sub:
-            self.text(lx, ly + 14, sub, 10.5, "#9A9078", anchor)
+            # A room sheet's plan starts at x = 790: a left-anchored subtitle that would run
+            # into it wraps onto a second line at a word break (10.5 px mono ≈ 6.3 px a char).
+            limit = int((790 - lx) / 6.3) if anchor == "start" and lx < 790 else 10 ** 6
+            lines, line = [], ""
+            for word in sub.split(" "):
+                if line and len(line) + 1 + len(word) > limit:
+                    lines.append(line)
+                    line = word
+                else:
+                    line = f"{line} {word}" if line else word
+            lines.append(line)
+            lines = [ln[:-2] if ln.endswith(" ·") else ln for ln in lines]    # no dangling separator at a break
+            for i, text in enumerate(lines):
+                self.text(lx, ly + 14 + i * 13, text, 10.5, "#9A9078", anchor)
 
     def callouts(self, items, lx, ytop, ybot, anchor="start", slope=0.0):
         """items: (px, py, label, sub). Sorted by part height (skewed by slope for spread-out parts) so

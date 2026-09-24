@@ -170,7 +170,8 @@
     <path d="M683 626.8 L590 316 L604 316" fill="none" stroke="#9A9078" stroke-width=".8" opacity=".85"/>
     <circle cx="683" cy="626.8" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
     <text x="610" y="320" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">TABLET BASKETS</text>
-    <text x="610" y="334" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">wicker, on clay benches · loot</text>
+    <text x="610" y="334" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">wicker, on clay benches</text>
+    <text x="610" y="347" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">loot</text>
     <path d="M182.5 584.4 L350 186 L336 186" fill="none" stroke="#9A9078" stroke-width=".8" opacity=".85"/>
     <circle cx="182.5" cy="584.4" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
     <text x="330" y="190" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA" text-anchor="end">TALLY MARKS</text>
