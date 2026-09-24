@@ -177,3 +177,68 @@ def build_late_spit_kitchen(bm, uv):
     ek.prism(bm, uv, TIMBER, [(-0.35, 0.0), (0.35, 0.0), (-0.35, 0.12)], 1.2, loc=(-5.1, -4.0, fz + 0.8), along="y")
     for x, y in ((-3.3, -4.9), (-2.4, -4.95)):
         _hooped_barrel(bm, uv, x, y, fz)
+
+
+ALABASTER = "vellum"
+
+
+def _screen_run(bm, uv, x0, y0, x1, y1, fz, dado=0.9, top=2.2, pitch=0.3):
+    """A straight run of parclose screen: a solid oak dado, open mullions above it at
+    `pitch`, and a top rail. Axis-aligned; the run's ends are posts."""
+    along_x = abs(x1 - x0) >= abs(y1 - y0)
+    length = abs(x1 - x0) if along_x else abs(y1 - y0)
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    size = (lambda l, t, h: (l, t, h)) if along_x else (lambda l, t, h: (t, l, h))
+    cb._box(bm, uv, TIMBER, (cx, cy, fz + dado / 2), size(length, 0.06, dado))
+    cb._box(bm, uv, TIMBER, (cx, cy, fz + top - 0.04), size(length + 0.1, 0.1, 0.08))
+    n = int(round(length / pitch))
+    for k in range(n + 1):
+        t = k / n
+        mx, my = x0 + (x1 - x0) * t, y0 + (y1 - y0) * t
+        w = 0.1 if k in (0, n) else 0.04
+        bottom = 0.0 if k in (0, n) else dado
+        cb._box(bm, uv, TIMBER, (mx, my, fz + (bottom + top - 0.08) / 2), (w, w, top - 0.08 - bottom))
+
+
+def build_late_chantry_chapel(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateChantryChapel.svg"""
+    h, fz = room_shell(bm, uv, "InnerWard")
+    # NE: the altar, its frontal and cloth, the triptych standing open, two candlesticks.
+    ax, ay = 3.6, 5.1
+    cb._box(bm, uv, WALL, (ax, ay, fz + 0.5), (2.0, 0.8, 1.0))
+    cb._box(bm, uv, CLOTH, (ax, ay - 0.41, fz + 0.49), (1.8, 0.02, 0.78))
+    cb._box(bm, uv, LINEN, (ax, ay, fz + 0.99), (2.06, 0.86, 0.02))
+    cb._anchor(ax, ay - 0.2, fz + 1.0)
+    t0 = fz + 1.0
+    for dx, w, th in ((-0.675, 0.45, 0.88), (0.0, 0.9, 1.1), (0.675, 0.45, 0.88)):
+        cb._box(bm, uv, GOLD, (ax + dx, IN - 0.08, t0 + th / 2 + 0.01), (w, 0.06, th))
+        cb._box(bm, uv, TAPESTRY, (ax + dx, IN - 0.12, t0 + th / 2 + 0.01), (w - 0.1, 0.02, th - 0.1))
+    cb._box(bm, uv, CLOTH, (ax, IN - 0.14, t0 + 0.36), (0.2, 0.02, 0.52))
+    for dx in (-0.85, 0.85):
+        mk.paint(bm, mk.add_cylinder(bm, 0.06, 0.04, loc=(ax + dx, ay - 0.1, t0 + 0.04), segments=8), GOLD, uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.02, 0.31, loc=(ax + dx, ay - 0.1, t0 + 0.215), segments=6), GOLD, uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.025, 0.2, loc=(ax + dx, ay - 0.1, t0 + 0.47), segments=6), LINEN, uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.018, 0.06, loc=(ax + dx, ay - 0.1, t0 + 0.6), segments=4, radius2=0.004),
+                 CLOTH, uv)
+    # NW: the founder's tomb chest, his effigy on its lid.
+    mx, my, mh = -3.6, 4.6, 0.8
+    cb._box(bm, uv, WALL, (mx, my, fz + mh / 2), (2.1, 0.9, mh))
+    top = fz + mh
+    cb._box(bm, uv, ALABASTER, (mx - 0.05, my, top + 0.1), (1.6, 0.45, 0.2))
+    cb._box(bm, uv, ALABASTER, (mx + 0.85, my, top + 0.06), (0.2, 0.4, 0.12))
+    mk.paint(bm, mk.add_sphere(bm, 0.11, loc=(mx + 0.85, my, top + 0.23), segments=6, rings=4), ALABASTER, uv)
+    ek.prism(bm, uv, ALABASTER, [(-0.1, 0.0), (0.1, 0.0), (0.0, 0.16)], 0.12, loc=(mx - 0.1, my, top + 0.2), along="y")
+    mk.paint(bm, mk.add_sphere(bm, 0.12, loc=(mx - 0.95, my, top + 0.1), segments=6, rings=4, scale=(1.0, 1.3, 0.8)),
+             "vellum_faint", uv)
+    cb._anchor(mx + 0.85, my, top)
+    # SE: the parclose screen closing the corner, its entrance facing the crossing; a lectern inside.
+    _screen_run(bm, uv, 2.8, -2.3, IN, -2.3, fz)
+    _screen_run(bm, uv, 2.0, -2.3, 2.0, -IN, fz)
+    cb._box(bm, uv, TIMBER, (3.9, -4.0, fz + 0.5), (0.3, 0.3, 1.0))
+    ek.prism(bm, uv, TIMBER, [(-0.2, 0.0), (0.2, 0.0), (0.2, 0.15)], 0.5, loc=(3.9, -4.0, fz + 1.0), along="x")
+    # SW: the prie-dieu facing a devotional panel on the west wall, two candle stands.
+    cb._box(bm, uv, TIMBER, (-4.6, -3.6, fz + 0.425), (0.35, 0.6, 0.85))
+    cb._box(bm, uv, CLOTH, (-4.2, -3.6, fz + 0.075), (0.3, 0.6, 0.15))
+    ek.framed_panel(bm, uv, GOLD, TAPESTRY, "west", -3.6, fz + 1.2, 1.0, 1.3)
+    for x, y in ((-4.8, -2.6), (-4.8, -4.6)):
+        candle_stand(bm, uv, x, y, fz)

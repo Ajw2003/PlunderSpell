@@ -323,6 +323,12 @@
       "preview": "9550bfdeeb3e5586:23a9d68e53fd",
       "tris": 2096
     },
+    "LateChantryChapel": {
+      "budget": 2400,
+      "content": "ebd645e551f7d8a6",
+      "preview": "ebd645e551f7d8a6:23a9d68e53fd",
+      "tris": 1212
+    },
     "LateCountingHouse": {
       "budget": 2400,
       "content": "148d534bdedcc557",
