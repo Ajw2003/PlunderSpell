@@ -105,8 +105,7 @@ namespace RogueAi.Raid
                 return;
             }
 
-            if (next != GameState.Playing || previous == GameState.Paused ||
-                previous == GameState.Inventory)
+            if (next != GameState.Playing || previous == GameState.Paused)
                 return;
 
             if (_director.Phase == RaidPhase.Resolved)

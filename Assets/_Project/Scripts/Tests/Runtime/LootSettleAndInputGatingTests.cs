@@ -199,9 +199,9 @@ namespace RogueAi.Tests
             FreeLookPlaytestController walker = MakeWalker();
             var body = walker.GetComponent<Rigidbody>();
 
-            // The inventory, not the pause menu: pausing now freezes time (#107), and a frozen world
-            // never reaches the physics steps this test waits on. The gate is the same for every menu.
-            GameServices.GameState.ChangeState(GameState.Inventory);
+            // Settings opened mid-play, not the pause menu: pausing freezes time (#107), and a frozen
+            // world never reaches the physics steps this test waits on. The gate is the same for every menu.
+            GameServices.GameState.ChangeState(GameState.Settings);
             body.linearVelocity = new Vector3(0f, 0f, 5f);
 
             yield return new WaitForFixedUpdate();
@@ -237,7 +237,7 @@ namespace RogueAi.Tests
             foreach (GameState state in new[]
                      {
                          GameState.MainMenu, GameState.Lair, GameState.Paused,
-                         GameState.Inventory, GameState.Settings,
+                         GameState.Settings,
                      })
             {
                 Assert.IsFalse(CursorLockPolicy.ShouldCapture(state),
@@ -339,7 +339,7 @@ namespace RogueAi.Tests
             foreach (GameState state in new[]
                      {
                          GameState.MainMenu, GameState.Lair, GameState.Paused,
-                         GameState.Inventory, GameState.Settings,
+                         GameState.Settings,
                      })
             {
                 Assert.IsFalse(PlayerInputController.AcceptsInputIn(state),

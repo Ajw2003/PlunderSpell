@@ -108,8 +108,7 @@ namespace RogueAi.UI
 
             Plunderspell.Core.GameState state = Plunderspell.Core.GameServices.GameState.CurrentState;
             if (state != Plunderspell.Core.GameState.Playing &&
-                state != Plunderspell.Core.GameState.Paused &&
-                state != Plunderspell.Core.GameState.Inventory)
+                state != Plunderspell.Core.GameState.Paused)
                 return;
 
             EnsureStyles();

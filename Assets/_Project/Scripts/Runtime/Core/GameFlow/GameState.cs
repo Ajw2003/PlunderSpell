@@ -6,7 +6,6 @@ namespace Plunderspell.Core
         Lair,
         Playing,
         Paused,
-        Inventory,
         Settings,
         GameOver,
         Victory

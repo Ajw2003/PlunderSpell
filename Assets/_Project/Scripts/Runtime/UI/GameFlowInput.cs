@@ -28,18 +28,6 @@ namespace Plunderspell.UI
                     GameServices.GameState.ChangeState(GameState.Playing);
                 }
             }
-
-            if (keyboard.tabKey.wasPressedThisFrame)
-            {
-                if (state == GameState.Playing)
-                {
-                    GameServices.GameState.ChangeState(GameState.Inventory);
-                }
-                else if (state == GameState.Inventory)
-                {
-                    GameServices.GameState.ChangeState(GameState.Playing);
-                }
-            }
         }
     }
 }

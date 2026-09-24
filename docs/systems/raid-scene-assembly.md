@@ -173,13 +173,13 @@ The raid no longer starts on scene load. The flow is
 - `LairScreen` shows the debt, the banked gold and the four eras, and reads `LairHubManager`
   directly. Set Out moves to `GameState.Playing`.
 - `RaidBootstrapper` listens for that transition and calls `RaidDirector.StartRaid()`, taking the
-  era from the lair. It ignores Paused/Inventory -> Playing, which are returns, not departures.
+  era from the lair. It ignores Paused -> Playing, which are returns, not departures.
 - When `RaidDirector.RaidResolved` fires, the bootstrapper puts the game back in `GameState.Lair`
   so the takings land against the debt.
 - `_autoStart` still exists on `RaidBootstrapper` but defaults to **false**. Turn it on to skip the
   menu while iterating on the raid itself.
 
-`RaidHudView` only draws in `Playing`, `Paused` or `Inventory`. It is IMGUI, which renders over the
+`RaidHudView` only draws in `Playing` or `Paused`. It is IMGUI, which renders over the
 uGUI canvas, so an always-on HUD sits on top of the menu and the lair.
 
 ## Authored, not generated

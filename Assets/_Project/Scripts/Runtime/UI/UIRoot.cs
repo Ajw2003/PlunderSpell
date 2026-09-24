@@ -12,7 +12,6 @@ namespace Plunderspell.UI
         private LairScreen _lair;
         private PauseMenuScreen _pauseMenu;
         private HUDScreen _hud;
-        private InventoryScreen _inventory;
         private SettingsScreen _settings;
         private GameOverScreen _gameOver;
 
@@ -25,7 +24,6 @@ namespace Plunderspell.UI
             _lair = BuildScreen<LairScreen>(root, "LairScreen");
             _pauseMenu = BuildScreen<PauseMenuScreen>(root, "PauseMenuScreen");
             _hud = BuildScreen<HUDScreen>(root, "HUDScreen");
-            _inventory = BuildScreen<InventoryScreen>(root, "InventoryScreen");
             _settings = BuildScreen<SettingsScreen>(root, "SettingsScreen");
             _gameOver = BuildScreen<GameOverScreen>(root, "GameOverScreen");
 
@@ -71,8 +69,7 @@ namespace Plunderspell.UI
             _mainMenu.SetVisible(state == GameState.MainMenu);
             _lair.SetVisible(state == GameState.Lair);
             _pauseMenu.SetVisible(state == GameState.Paused);
-            _hud.SetVisible(state == GameState.Playing || state == GameState.Paused || state == GameState.Inventory);
-            _inventory.SetVisible(state == GameState.Inventory);
+            _hud.SetVisible(state == GameState.Playing || state == GameState.Paused);
             _settings.SetVisible(state == GameState.Settings);
             _gameOver.SetVisible(state == GameState.GameOver || state == GameState.Victory);
 
