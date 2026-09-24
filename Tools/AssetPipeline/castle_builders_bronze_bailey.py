@@ -150,3 +150,37 @@ def build_bronze_cistern(bm, uv):
     # SW: a stone trough against the south wall.
     cb._box(bm, uv, "vellum_faint", (-3.8, -5.0, fz + 0.3), (2.2, 0.7, 0.6))
     cb._box(bm, uv, FRESCO, (-3.8, -5.0, fz + 0.61), (2.0, 0.5, 0.02))
+
+
+def build_bronze_oil_press(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeOilPress.svg"""
+    h, fz = room_shell(bm, uv, "OuterBailey")
+    # NW: the lever press. An oil-dark floor under it, the stone bed with olive frails,
+    # the beam socketed in the west wall and running east down to its weights.
+    cb._box(bm, uv, "line", (-3.9, 4.2, fz + 0.01), (3.0, 2.4, 0.02))
+    cb._box(bm, uv, "vellum_faint", (-3.4, 4.2, fz + 0.2), (1.4, 1.4, 0.4))
+    for k in range(2):
+        mk.paint(bm, mk.add_cylinder(bm, 0.4, 0.12, loc=(-3.6, 4.3, fz + 0.46 + k * 0.12), segments=10), "leather", uv)
+    cb._anchor(-2.95, 3.75, fz + 0.4)
+    length, tilt = math.hypot(3.45, 0.45), math.atan2(0.45, 3.45)
+    mk.paint(bm, mk.add_box(bm, (length, 0.2, 0.2), loc=(-3.725, 4.2, fz + 1.475), rot=Euler((0, tilt, 0))), TIMBER, uv)
+    cb._box(bm, uv, TIMBER, (-3.6, 4.3, fz + 1.035), (0.16, 0.16, 0.79))        # post from the frails to the beam
+    mk.paint(bm, mk.add_cylinder(bm, 0.02, 0.75, loc=(-2.05, 4.2, fz + 0.875), segments=6), "vellum_dim", uv)
+    for k in range(2):
+        mk.paint(bm, mk.add_cylinder(bm, 0.3, 0.25, loc=(-2.05, 4.2, fz + 0.125 + k * 0.25), segments=10),
+                 "vellum_faint", uv)
+    cb._box(bm, uv, "vellum_faint", (-3.4, 3.35, fz + 0.3), (0.12, 0.3, 0.08))  # spout to the jar
+    ek.jar(bm, uv, GRAIN_JAR, -3.4, 3.1, fz, 0.55, 0.5, mouth=0.28, segments=8)
+    # NE and SE: amphora racks against the north and south walls, a board over five amphorae.
+    for y in (5.1, -5.1):
+        for x in (2.1, 5.1):
+            cb._box(bm, uv, TIMBER, (x, y, fz + 0.375), (0.08, 0.4, 0.75))
+        cb._box(bm, uv, TIMBER, (3.6, y, fz + 0.75), (3.0, 0.45, 0.06))
+        cb._box(bm, uv, TIMBER, (3.6, y, fz + 0.32), (3.0, 0.06, 0.04))
+        for k in range(5):
+            amphora(bm, uv, 2.4 + k * 0.55, y, fz)
+        cb._anchor(3.6, y, fz + 0.78)
+    # SW: small pithoi of oil, and a jug table.
+    for x, y in ((-4.6, -4.6), (-3.5, -4.8), (-4.7, -3.4)):
+        pithos(bm, uv, x, y, fz, height=1.2, belly=0.7, pigment=OIL_JAR, lid=True)
+    cb._table(bm, uv, TIMBER, -2.6, -3.4, fz, 0.6, 0.6, h=0.7)
