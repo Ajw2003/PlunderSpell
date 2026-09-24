@@ -1,0 +1,87 @@
+{
+  "generated_by": "Tools/ArtForge/build.py",
+  "assets": [
+    {
+      "key": "items/bronze/sealed-amphora",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "sealed-amphora",
+      "name": "SealedAmphora",
+      "title": "Sealed Amphora",
+      "passed": true,
+      "stats": {
+        "vertices": 674,
+        "faces": 678,
+        "triangles": 1320,
+        "islands": 10,
+        "lowest_z": 0.0,
+        "height": 0.62,
+        "width": 0.504,
+        "budget": 1500,
+        "bbox_m": "0.504x0.340x0.620",
+        "vs_spec": "W=0.504/0.520 D=0.340/0.340 H=0.620/0.620"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.34,
+          0.34,
+          0.62
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "buff_terracotta": {
+          "name": "Buff terracotta",
+          "base": "#B88A62",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        },
+        "sealing_clay": {
+          "name": "Sealing clay",
+          "base": "#8A5A3C",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "flax_cord": {
+          "name": "Flax cord",
+          "base": "#9C8660",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "haematite_red": {
+          "name": "Haematite red",
+          "base": "#8E3F2C",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wine_stain": {
+          "name": "Wine stain",
+          "base": "#4A2A2A",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "X (W) checked against 0.520 m instead of the JSON's 0.340 m: handles arch 0.08 m out from the 0.34 m body on ±X (build bullet); the JSON dimension line gives the body only"
+      ],
+      "notes": [
+        "Ring stand omitted: the JSON marks it optional and not part of the pick-up.",
+        "Signet figure and potter's mark are below mesh resolution; left to a decal."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/SealedAmphora.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/glTF/SealedAmphora.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/SealedAmphora.blend"
+      },
+      "build_seconds": 2.8
+    }
+  ]
+}
