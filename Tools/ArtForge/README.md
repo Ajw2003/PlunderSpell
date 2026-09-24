@@ -490,6 +490,15 @@ These cost time while building the two samples, and they will cost you too.
   every vertex on one bone (`max_influences <= 1`). Watch the final
   `mean_influences` stat too: many rigid vertices (rivets, plates) pull it down; a
   healthy humanoid sits around 1.4-1.6.
+- **It also fails at random on an unchanged mesh.** The Petardier failed on about
+  half its builds, and the Palace Guard on about one in four. Retrying identical
+  input fails identically, so `rig.smooth_weights_with_retry` (called from
+  `assemble.build_rigged`) restores the rigid weights, nudges mesh and rig by under
+  1 mm, retries up to 8 times, and puts both back exactly. Each retry prints
+  "heat weighting collapsed to one bone (attempt n/8), retrying". Every failure seen
+  so far recovered on the second attempt. The retry does not fix a mesh that fails
+  every time (the knight's rivets, the Dendra tusks): those still need the part fix
+  above.
 
 ## Not done yet
 
@@ -499,7 +508,8 @@ These cost time while building the two samples, and they will cost you too.
 - No painted-panel atlas. The altarpiece's figures are shaped relief in flat family
   colours. Faces have no features.
 - No LOD1/LOD2 (50 % / 20 %), even though the brief asks for them.
-- Only 2 of the 16 enemies exist (`high/lantern-warden`, `high/alaunt-hound`).
+- All 16 enemies are built, but several dropped small detail (rivets, flutes, straps)
+  to keep heat weighting stable; see each blueprint's comments.
 - Cloth and jiggle spring bones the JSON rigs ask for are not built: the warden's
   gambeson_skirt ×4 and coif_back, the hound's coat_front/rear/L/R and jowl_L/R.
   The hound has 2 neck and 5 tail bones, not the JSON's exact chain names.

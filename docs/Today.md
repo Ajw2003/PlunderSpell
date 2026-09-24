@@ -1,6 +1,12 @@
 # Today
 
-**2026-09-24, end of session — enemies mid-run.** ArtForge builds rigged enemies; Lantern Warden and Alaunt War-hound are done, and 14 more were in progress when usage ran out. Resume from [`docs/art/HANDOFF.md`](art/HANDOFF.md).
+**2026-09-24, later — all 16 art bible enemies are modelled.** The session resumed from
+`docs/art/HANDOFF.md`. Every enemy passes two consecutive full builds, and every review sheet was
+checked against its concept. The main find: Blender's heat weighting can silently leave every vertex
+on one bone, and validation used to pass that. `validate.py` now fails it. It caught the Dendra
+Champion, which had never blended; the champion is fixed. A shared retry
+(`rig.smooth_weights_with_retry`) covers the random form of the failure. Details are in the Traps
+section of `Tools/ArtForge/README.md`.
 
 ---
 

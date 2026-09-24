@@ -31,7 +31,14 @@ surfaced it as not actually functional yet.
 (`docs/art/`) now exist as validated, textured models under `Assets/Models/ArtBible/Items/`,
 built by `Tools/ArtForge/`. They are not wired into any loot table or prefab yet, and have
 no Unity `.meta` files (Unity creates them on first import). The art bible's 12 structures
-and 16 enemies are specified and drawn but not modelled.
+are specified and drawn but not modelled here (another agent owns them).
+
+**2026-09-24, later — art bible enemies modelled.** All 16 enemies are rigged, textured models under
+`Assets/Models/ArtBible/Enemies/`, built by ArtForge. They have Unity-Humanoid bone names, skins
+blended across at most 4 bones, and posed review sheets in `docs/art/models/`. `python3
+Tools/ArtForge/build.py enemies` gives `16 built, 0 crashed` / `All models passed validation.` on two
+consecutive runs. They are not wired into the roster or any prefab. They have no animation clips,
+spring bones or `.meta` files.
 
 ## The one thing that is not what it looks like
 

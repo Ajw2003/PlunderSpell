@@ -1,5 +1,8 @@
 # Handoff — art bible enemies (ArtForge), 2026-09-24
 
+> **Status: complete.** All 16 enemies were finished after this handoff was written. It is kept
+> as the record of the resume procedure; the procedure still applies to adding new enemies.
+
 Written because the session was about to run out of usage while four enemy workers were
 mid-run. Everything below is committed on `claude/dreamy-curie-jnrkbu`. `Tools/autosave.sh`
 was committing every 3 minutes, so at most about 3 minutes of worker output is missing.
