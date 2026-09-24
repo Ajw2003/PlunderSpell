@@ -1014,7 +1014,7 @@ def _apron(fig: Human, top_z: float, bottom_z: float, front: bool,
               "max": (2, 2, bottom_z + 0.022)}]
     # soot scorch on the lowest band, and two soot handprints on the front
     paint.insert(0, {"mat": "soot_dyed_wool", "min": (-2, -2, bottom_z - 0.01),
-                     "max": (2, 2, bottom_z + 0.075)})
+                     "max": (2, 2, bottom_z + 0.050)})
     if front:
         for hx, hz in ((-0.09, top_z - 0.22), (0.06, top_z - 0.30)):
             paint.insert(1, {"mat": "soot_dyed_wool", "min": (hx - 0.025, -2, hz - 0.03),
@@ -1089,12 +1089,13 @@ def _yoke_and_pots(fig: Human) -> list[Part]:
                     (0.074, 0.140), (0.036, 0.170), (0.034, 0.186), (0.040, 0.196),
                     (0.028, 0.200), (0.0, 0.200)]
             paint = [{"mat": "ember_madder", "min": (-1, -1, 0.186), "max": (1, 1, 1)}]
-            for j in range(5):                      # soot streaks down from the neck
-                a = 2 * math.pi * j / 5 + (0.3 if side == "L" else 0.9) + float(k)
-                cx, cy = math.cos(a) * 0.085, math.sin(a) * 0.085
+            for j in range(3):          # soot streaks: single face columns, neck down
+                col = (3 * j + int(k) + (0 if side == "L" else 5)) % 10
+                a = 2 * math.pi * (col + 0.5) / 10      # a face column's centre
+                cx, cy = math.cos(a) * 0.075, math.sin(a) * 0.075
                 paint.append({"mat": "soot_dyed_wool",
-                              "min": (cx - 0.022, cy - 0.022, 0.07 + 0.012 * (j % 3)),
-                              "max": (cx + 0.022, cy + 0.022, 0.172)})
+                              "min": (cx - 0.012, cy - 0.012, 0.02 + 0.04 * (j % 2)),
+                              "max": (cx + 0.012, cy + 0.012, 0.185)})
             parts.append(Part("lathe", tuple(bottom), (1, 1, 1), mat="fire_pot_clay",
                               bone=pot, segments=10, extras={
                                   "profile": prof, "smooth": True, "bevel": False,
@@ -1198,8 +1199,9 @@ def flame_keeper(entry: Entry):
 
     # Bodice: fitted linen jacket to the waist (the torso loft runs on to the
     # crotch inside the skirt), open V at the throat.
-    vneck = [{"mat": "skin", "min": (-0.055, -1.0, fig.shoulder_z - 0.035), "max": (0.055, -0.02, 2.0)},
-             {"mat": "skin", "min": (-0.030, -1.0, fig.chest_z + 0.035), "max": (0.030, -0.02, 2.0)}]
+    vneck = [{"mat": "skin", "min": (-w, -1.0, z), "max": (w, -0.02, 2.0)}
+             for w, z in ((0.062, fig.shoulder_z - 0.02), (0.042, fig.shoulder_z - 0.06),
+                          (0.024, fig.shoulder_z - 0.10))]
     parts = [fig.torso_part("linen", pad=pad, segments=24, paint=vneck)]
     # breast-band under the open front: a linen panel with red lacing
     bb = fig.surface(fig.chest_z - 0.035, -90.0, pad=pad + 0.010)

@@ -1205,7 +1205,12 @@ def _madrier(fig: Human, pad: float, oak: str, iron: str, bronze: str, patina: s
             if z < fig.shoulder_z + 0.02 for a in (60.0, 90.0, 120.0))
     d_c = d + 0.006 + thick / 2
     c = Vector((0.0, (d_c - cz * n.z) / n.y, cz))
-    fig.add_bone("Madrier", c - up * 0.25, c + up * 0.25, "Chest")
+    # The bone sits in the air just past the bell's crown, pointing out along its
+    # axis. Heat weighting needs every mesh island to see some bone (a fully
+    # hidden island makes the solve singular and it fails for the whole mesh);
+    # buried in the plank, this bone was hidden from the bell and the straps.
+    crown_out = c + n * (thick / 2 + 0.40)
+    fig.add_bone("Madrier", crown_out, crown_out + n * 0.25, "Chest")
     rig = {"rigid": True}
     rot = (fig.stoop, 0.0, 0.0)      # local Z -> up the back, local Y -> n
     parts = [Part("box", tuple(c), (side, thick, side), mat=oak, bone="Madrier", rot=rot,
@@ -1251,9 +1256,6 @@ def _madrier(fig: Human, pad: float, oak: str, iron: str, bronze: str, patina: s
         p2 = base + n * 0.004 + r * 0.235
         parts.append(_strip([p0, p1, p2], iron, "Madrier", 0.03, 0.008,
                             up=tuple((r + n).normalized()), rigid=True))
-        parts.append(Part("cyl", tuple(p2 + n * 0.006), (0.03, 0.03, 0.014), mat=iron,
-                          bone="Madrier", rot=_track(n), segments=6,
-                          extras={**rig, "bevel": False}))
     return parts
 
 
@@ -1331,9 +1333,6 @@ def petardier(entry: Entry):
 
     # Waist-belt with four grenados in leather cups across the front.
     parts.append(fig.band(fig.belt_z, leather, height=0.05, pad=0.012, torso_pad=pad))
-    buckle = fig.surface(fig.belt_z, -90.0, pad=pad + 0.022)
-    parts.append(Part("box", tuple(buckle), (0.05, 0.012, 0.045), mat=iron, bone="Hips",
-                      extras={"rigid": True, "bevel": False}))
 
     # Heavy leather apron from the belt to the knee, a curved slab.
     top, bot = fig.belt_z - 0.01, fig.knee_z + 0.01
@@ -1360,27 +1359,37 @@ def petardier(entry: Entry):
     for k, ang in enumerate((-58.0, -76.0, -104.0, -122.0)):
         z = fig.belt_z - 0.035
         at = fig.surface(z, ang, pad=pad + 0.075)
-        name = fig.add_bone(f"Grenado.{k + 1}", at, at + Vector((0, 0, 0.09)), "Hips")
+        # socket bone from above the fuse, through the grenado, back toward the
+        # belt: the fuse, the plug and the belt can all see it (see _madrier)
+        inward = (fig.surface(z, ang, pad=0.0) - at).normalized()
+        name = fig.add_bone(f"Grenado.{k + 1}", at + Vector((0.0, 0.0, 0.11)),
+                            at + inward * 0.07, "Hips")
         parts += _grenado(at, iron, oak, leather, name, cup=leather)
 
     # Right hip: sapper's mallet and a coil of fuse cord; left hip: water-flask.
+    # Tools.R and Flask.L: hip sockets (the JSON's tools on the right hip, flask on
+    # the left), sticking out past the kit so heat weighting can see them.
+    t0 = fig.surface(fig.belt_z - 0.06, 135.0, pad=0.0)
+    fig.add_bone("Tools.R", t0, fig.surface(fig.belt_z - 0.12, 135.0, pad=pad + 0.20), "Hips")
+    f0 = fig.surface(fig.belt_z - 0.08, 20.0, pad=0.0)
+    fig.add_bone("Flask.L", f0, fig.surface(fig.belt_z - 0.10, 20.0, pad=pad + 0.18), "Hips")
     m0 = fig.surface(fig.belt_z - 0.02, 150.0, pad=pad + 0.03)
     m1 = m0 + Vector((-0.03, 0.04, -0.24))
-    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=oak, bone="Hips", segments=6,
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=oak, bone="Tools.R", segments=6,
                       extras={"path": [tuple(m0), tuple(m1)], "section": (0.014, 0.014),
                               "smooth": True, "bevel": False, "rigid": True}))
     parts.append(Part("cyl", tuple(m1 + (m1 - m0).normalized() * 0.03), (0.07, 0.07, 0.13),
-                      mat=oak, bone="Hips", rot=(0.0, 90.0, 20.0), segments=8,
+                      mat=oak, bone="Tools.R", rot=(0.0, 90.0, 20.0), segments=8,
                       extras={"rigid": True, "bevel": False}))
     coil = fig.surface(fig.belt_z - 0.10, 118.0, pad=pad + 0.03)
-    parts.append(Part("torus", tuple(coil), (0.14, 0.14, 0.04), mat=canvas, bone="Hips",
+    parts.append(Part("torus", tuple(coil), (0.14, 0.14, 0.04), mat=canvas, bone="Tools.R",
                       rot=(90.0, 0.0, -30.0), segments=12, rings=5, minor=0.22,
                       extras={"rigid": True, "bevel": False, "smooth": True}))
-    parts.append(Part("torus", tuple(coil), (0.10, 0.10, 0.03), mat=canvas, bone="Hips",
+    parts.append(Part("torus", tuple(coil), (0.10, 0.10, 0.03), mat=canvas, bone="Tools.R",
                       rot=(90.0, 0.0, -30.0), segments=10, rings=4, minor=0.22,
                       extras={"rigid": True, "bevel": False, "smooth": True}))
     fl = fig.surface(fig.belt_z - 0.11, 20.0, pad=pad + 0.05)
-    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=leather, bone="Hips", segments=8,
+    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=leather, bone="Flask.L", segments=8,
                       extras={"path": [tuple(fl + Vector((0, 0, 0.10))),
                                        tuple(fl + Vector((0, 0, 0.07))), tuple(fl),
                                        tuple(fl - Vector((0, 0, 0.09))),
@@ -1395,7 +1404,7 @@ def petardier(entry: Entry):
     gl = fig.grip("L")
     fore_l = (fig.joint("wrist.L") - fig.joint("elbow.L")).normalized()
     g_at = gl + fore_l * 0.035 + Vector((0, 0, 0.045))
-    fig.prop_bone("Grenado.5", "L", head=gl, tail=g_at + Vector((0, 0, 0.05)))
+    fig.prop_bone("Grenado.5", "L", head=gl, tail=g_at + Vector((0, 0, 0.11)))
     parts += _grenado(g_at, iron, oak, leather, "Grenado.5", ember=ember, prop=True)
 
     gr = fig.grip("R")
@@ -1466,7 +1475,7 @@ def _sapper_cap(fig: Human, leather: str) -> list[Part]:
     low hemispherical crown, ear flaps tied up at the sides. Rigid on Cap."""
     h = fig.h
     base = fig.lean((0.0, 0.0, 0.948 * h))
-    fig.add_bone("Cap", base, base + Vector((0, 0, 0.08)), "Head")
+    fig.add_bone("Cap", base, base + Vector((0, 0, 0.16)), "Head")   # tail clears the cap
     n = 16
     # (z, half-width, half-depth, y shift) in metres, from the skull + padding
     rows = [(0.946 * h, 0.046 * h + 0.008, 0.058 * h + 0.008, 0.0),
@@ -1486,13 +1495,17 @@ def _sapper_cap(fig: Human, leather: str) -> list[Part]:
                        c.y + math.sin(2 * math.pi * j / n) * hd, c.z) for j in range(n)])
     parts = [Part("loft", (0, 0, 0), (1, 1, 1), mat=leather, bone="Cap",
                   extras={"rings": rings, "smooth": True, "bevel": False, "rigid": True})]
+    # Ear flaps turned up and tied over the crown with a knot on top.
+    top = fig.lean((0.0, 0.004 * h, h + 0.030))
     for s in (1.0, -1.0):
-        at = fig.lean((s * (0.046 * h + 0.026), 0.004, 0.946 * h + 0.05))
-        parts.append(Part("box", tuple(at), (0.014, 0.06, 0.07), mat=leather, bone="Cap",
-                          rot=(0.0, s * 28.0, 0.0), extras={"rigid": True}))
-        knot = at + Vector((s * 0.02, 0.0, 0.035))
-        parts.append(Part("sphere", tuple(knot), (0.02, 0.02, 0.02), mat=leather, bone="Cap",
-                          segments=6, rings=4, extras={"rigid": True, "bevel": False}))
+        path = [fig.lean((s * (0.046 * h + 0.024), 0.004 * h, 0.946 * h + 0.030)),
+                fig.lean((s * (0.042 * h + 0.022), 0.004 * h, 0.975 * h)),
+                fig.lean((s * (0.028 * h + 0.018), 0.004 * h, 0.995 * h + 0.008)),
+                top + Vector((s * 0.012, 0.0, -0.004))]
+        parts.append(_strip(spline([tuple(p) for p in path], 2), leather, "Cap", 0.055,
+                            0.008, up=(s, 0.0, 0.4), rigid=True))
+    parts.append(Part("sphere", tuple(top), (0.03, 0.026, 0.022), mat=leather, bone="Cap",
+                      segments=6, rings=4, extras={"rigid": True, "bevel": False}))
     return parts
 
 

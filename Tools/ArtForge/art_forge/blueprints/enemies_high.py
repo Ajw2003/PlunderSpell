@@ -1014,7 +1014,7 @@ def household_knight(entry: Entry):
     for side in ("L", "R"):
         # Mail over a padded aketon: the concept's sleeves are as broad as the
         # surcoat's shoulders, so the sleeve carries more pad than a bare arm.
-        parts.append(fig.arm_part(side, "mail_steel", pad=0.024))
+        parts.append(fig.arm_part(side, "mail_steel", pad=0.014))
         parts += fig.hand_part(side, "mail_steel")      # mail mufflers
         parts.append(fig.leg_part(side, "mail_steel", pad=0.008))
         parts.append(fig.foot_part(side, "mail_steel", length=0.28, point=0.3))

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import math
 
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 from .. import figures
 from ..figures import ArmPose, Human
@@ -662,6 +662,39 @@ def handgunner(entry: Entry):
 # fluted shoulders, a pointed waist, a short axe on a pole at his side.
 # --------------------------------------------------------------------------------
 
+def _plate_pt(fig: Human, x: float, z: float, pad: float, chest: float) -> Vector:
+    """A point on the front of `fig.torso_part(pad=pad, chest=chest)` at (x, z),
+    following the loft exactly (ring points at one angle, lerped between rows), so
+    a plate laid on a strongly globose breastplate is not buried in it. _torso_y
+    assumes the default chest bulge and misses by centimetres at chest=0.17."""
+    rows = figures._TORSO
+    h, b, e = fig.h, fig.bulk, 2.0 / 2.4
+
+    def ring_pt(row, a):
+        zf, hw, hd, dy = row
+        sa, ca = math.sin(a), math.cos(a)
+        k = 1.0 + (chest if 0.66 < zf < 0.8 else 0.0) * max(0.0, -sa) ** 2
+        return Vector((math.copysign(abs(ca) ** e, ca) * (hw * h * b + pad) * k,
+                       dy * h + math.copysign(abs(sa) ** e, sa) * (hd * h * b + pad) * k,
+                       zf * h))
+    zf = z / h
+    i = max(0, min(len(rows) - 2, next((j for j in range(len(rows) - 1)
+                                        if rows[j + 1][0] >= zf), len(rows) - 2)))
+    f = (zf - rows[i][0]) / (rows[i + 1][0] - rows[i][0])
+
+    def at(a):
+        return ring_pt(rows[i], a).lerp(ring_pt(rows[i + 1], a), f)
+    lo, hi = -math.pi / 2, -math.pi / 2 + math.copysign(math.pi / 2 * 0.98, x)
+    for _ in range(40):   # bisect the ring angle for the wanted x
+        mid = (lo + hi) / 2
+        if abs(at(mid).x) < abs(x):
+            lo = mid
+        else:
+            hi = mid
+    p = at((lo + hi) / 2)
+    return Vector((p.x, p.y, z))
+
+
 def _ellipsoid_pt(base: Vector, axis: Vector, radius: float, height: float,
                   theta: float, phi: float, out: float = 0.0) -> Vector:
     """A point on a dome (see _dome) at polar angle theta (0 = pole, 90 = rim) and
@@ -725,10 +758,10 @@ def _armet(fig: Human, mat: str, dark: str, strap: str, crown: float) -> list[Pa
                               "rigid": True, "smooth": True, "bevel": False}))
 
     # Sparrow-beak visor: loft from inside the skull front out to the beak tip.
-    zv = z0 + 0.105          # visor centre line
-    stations = [(-0.080, 0.118, 0.068, 0.0), (-0.128, 0.114, 0.066, 0.0),
-                (-0.160, 0.098, 0.058, -0.003), (-0.195, 0.064, 0.042, -0.008),
-                (-0.225, 0.028, 0.022, -0.013)]
+    zv = z0 + 0.100          # visor centre line
+    stations = [(-0.080, 0.124, 0.078, 0.0), (-0.128, 0.120, 0.075, 0.0),
+                (-0.162, 0.102, 0.064, -0.004), (-0.197, 0.066, 0.044, -0.009),
+                (-0.226, 0.028, 0.022, -0.014)]
     n = 16
 
     def vis_ring(y, hw, hz, dz):
@@ -756,19 +789,19 @@ def _armet(fig: Human, mat: str, dark: str, strap: str, crown: float) -> list[Pa
     # Breaths: six holes on the wearer's right cheek of the visor.
     for i, (y, dz) in enumerate(((-0.140, 0.010), (-0.140, -0.012), (-0.160, 0.016),
                                  (-0.160, -0.004), (-0.178, 0.008), (-0.178, -0.012))):
-        hw = 0.114 + (0.098 - 0.114) * (y + 0.128) / (-0.032) if y > -0.160 else \
-            0.098 + (0.064 - 0.098) * (y + 0.160) / (-0.035)
+        hw = 0.120 + (0.102 - 0.120) * (y + 0.128) / (-0.034) if y > -0.162 else \
+            0.102 + (0.066 - 0.102) * (y + 0.162) / (-0.035)
         parts.append(Part("sphere", (-(hw * 0.93), y, zv + dz), (0.012, 0.012, 0.012),
                           mat=dark, bone="Visor", segments=6, rings=4,
                           extras={"rigid": True, "bevel": False}))
     # Twin sight slits, 0.08 x 0.01 m, on the skull front just above the visor.
-    zs = zv + 0.078
+    zs = zv + 0.090
     rs = skull_r(zs - z0)
     for s in (1.0, -1.0):
         xc = s * 0.048
         yc = -math.sqrt(max(0.0, 1.0 - (xc / rs) ** 2)) * rs * sy
         slope = (xc / rs) / max(1e-3, math.sqrt(1.0 - (xc / rs) ** 2)) * sy
-        parts.append(Part("box", (xc, yc + 0.003, zs), (0.080, 0.014, 0.011), mat=dark,
+        parts.append(Part("box", (xc, yc + 0.003, zs), (0.080, 0.016, 0.013), mat=dark,
                           bone="Head", rot=(0, 0, -math.degrees(math.atan(slope))),
                           extras={"rigid": True, "bevel": False}))
     # Rondel on its stem at the back.
@@ -790,12 +823,14 @@ def _fan_wing(centre: Vector, out: Vector, up: Vector, size: float, mat: str, bo
     normal = out.cross(up).normalized()
     fan = [(-0.45, 0.10), (0.05, 0.02), (0.55, 0.30), (0.95, 0.00), (0.55, -0.30),
            (0.05, -0.02), (-0.45, -0.10)]
-    parts = []
-    # the outline as a loft of two rings (front and back face)
-    ring_a = [tuple(centre + out * (u * size) + up * (v * size) + normal * 0.005) for u, v in fan]
-    ring_b = [tuple(centre + out * (u * size) + up * (v * size) - normal * 0.005) for u, v in fan]
-    parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat=mat, bone=bone, extras={
-        "rings": [ring_a, ring_b], "rigid": True, "bevel": False}))
+    # A prism (its caps are polygon-filled; a two-ring loft fans a concave cap
+    # into overlapping triangles, which broke heat weighting for the whole mesh).
+    up = normal.cross(out).normalized()
+    basis = Matrix((out, up, normal)).transposed()
+    rot = tuple(math.degrees(a) for a in basis.to_euler("XYZ"))
+    parts = [Part("prism", tuple(centre), (1.0, 1.0, 0.010), mat=mat, bone=bone, rot=rot,
+                  extras={"outline": [(u * size, v * size) for u, v in fan], "rigid": True,
+                          "bevel": False})]
     if dark:
         for v in (0.18, 0.0, -0.18):   # flute grooves
             a = centre + out * (0.05 * size) + normal * 0.0055
@@ -869,18 +904,31 @@ def gothic_knight(entry: Entry):
                                 {"mat": M, "min": (-1, -1, -1), "max": (1, 1, 0.955)}])]
 
     # Cusped plackart rising from the waist to a point at 1.52 m, 7 fan flutes.
-    ppad = bpad + 0.010
+    chest = 0.17
+    ppad = bpad + 0.004
     rows = [(1.04, 0.175), (1.10, 0.165), (1.18, 0.135), (1.27, 0.095), (1.36, 0.058),
             (1.44, 0.028), (1.52, 0.006)]
+    prings = []
+    for z, hw in rows:
+        outer, inner = [], []
+        for c in range(11):
+            x = -hw + 2.0 * hw * c / 10
+            outer.append(tuple(_plate_pt(fig, x, z, ppad + 0.007, chest)))
+            inner.append(tuple(_plate_pt(fig, x, z, ppad, chest)))
+        prings.append(outer + list(reversed(inner)))
     parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat=H, bone="Spine", extras={
-        "rings": _panel(fig, rows, ppad, 0.006, cols=11), "bevel": False, "smooth": True,
+        "rings": prings, "bevel": False, "smooth": True,
         "bones": ["Hips", "Spine", "Chest"]}))
     for k in range(7):
         t = (k - 3) / 3.0
-        top = (t * 0.13 * (1.0 - 0.35 * abs(t)), 1.40 - 0.28 * abs(t) ** 1.3)
+        top = (t * 0.13 * (1.0 - 0.35 * abs(t)), 1.44 - 0.30 * abs(t) ** 1.3)
         pts = [(t * 0.02, 1.06), (t * 0.07, 1.06 + (top[1] - 1.06) * 0.5), top]
-        parts.append(_strip(fig, pts, ppad + 0.007, [0.006, 0.006, 0.004], D, "Spine",
-                            extras={"bones": ["Hips", "Spine", "Chest"]}))
+        path = [tuple(_plate_pt(fig, x, z, ppad + 0.008, chest)) for x, z in pts]
+        parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=D, bone="Spine", segments=4,
+                          extras={"path": path, "sections": [(0.003, 0.009), (0.003, 0.008),
+                                                             (0.003, 0.005)],
+                                  "up": (0, -1, 0), "power": 4.0, "bevel": False,
+                                  "smooth": True, "bones": ["Hips", "Spine", "Chest"]}))
     # lance-rest bolt hole on the right breast
     lr = fig.surface(1.30, -130.0, pad=bpad + 0.004)
     parts.append(Part("cyl", tuple(lr), (0.018, 0.018, 0.02), mat=D, bone="Chest",
@@ -1052,7 +1100,7 @@ def gothic_knight(entry: Entry):
                               "up": (0, 0, 1), "smooth": True, "bevel": False,
                               "bones": ["Hips", "Spine", "Chest", "Shoulder.R"]}))
     knot = fig.surface(1.00, -18.0, pad=sp + 0.02)
-    parts.append(Part("sphere", tuple(knot), (0.075, 0.05, 0.06), mat=R, bone="Hips",
+    parts.append(Part("sphere", tuple(knot), (0.055, 0.035, 0.045), mat=R, bone="Hips",
                       segments=8, rings=5, extras={"bevel": False, "smooth": True,
                                                    "bones": ["Hips", "Spine"]}))
     for dx, dz in ((0.015, 0.30), (-0.02, 0.27)):
@@ -1060,7 +1108,7 @@ def gothic_knight(entry: Entry):
                 knot + Vector((dx * 1.6, -0.035, -dz))]
         parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=R, bone="Hips", segments=4,
                           extras={"path": [tuple(p) for p in tail],
-                                  "sections": [(0.012, 0.030), (0.008, 0.036), (0.006, 0.030)],
+                                  "sections": [(0.008, 0.018), (0.006, 0.022), (0.005, 0.020)],
                                   "up": (0, -1, 0), "power": 4.0, "smooth": True,
                                   "bevel": False, "bones": ["Hips", "UpperLeg.L"]}))
 
@@ -1081,7 +1129,7 @@ def gothic_knight(entry: Entry):
         family_overrides={
             # Polished white harness, a little rougher so the review studio shows it
             # pale rather than as a warm mirror (see README Traps).
-            "white_harness": {"rough": 0.30, "wear_to": "#5E6064", "wear_amount": 0.18},
+            "white_harness": {"rough": 0.42, "wear_to": "#5E6064", "wear_amount": 0.18},
             "mail_voiders": {"rough": 0.5, "ridges": (0.010, 0.40)},
         },
         extra_families={

@@ -1881,7 +1881,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Bronze/KeeperOfTheFlame/glTF/KeeperOfTheFlame.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Bronze/KeeperOfTheFlame/KeeperOfTheFlame.blend"
       },
-      "build_seconds": 4.9
+      "build_seconds": 4.0
     },
     {
       "key": "enemies/bronze/palace-levy",
@@ -2427,7 +2427,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/glTF/HouseholdKnight.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/HouseholdKnight.blend"
       },
-      "build_seconds": 3.5
+      "build_seconds": 4.2
     },
     {
       "key": "enemies/high/lantern-warden",
@@ -2551,7 +2551,7 @@
         "height": 1.95,
         "width": 0.928,
         "budget": 12000,
-        "bbox_m": "0.928x0.478x1.950",
+        "bbox_m": "0.928x0.472x1.950",
         "height_body_m": 1.95,
         "height_spec_m": 1.95,
         "height_with_props_m": 1.95,
@@ -2568,7 +2568,7 @@
         "white_harness": {
           "name": "White harness",
           "base": "#8E9194",
-          "rough": 0.3,
+          "rough": 0.42,
           "metal": 1.0,
           "emit": null
         },
@@ -2632,7 +2632,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/glTF/GothicManAtArms.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/GothicManAtArms.blend"
       },
-      "build_seconds": 4.5
+      "build_seconds": 4.2
     },
     {
       "key": "enemies/late/handgunner",
@@ -3245,21 +3245,21 @@
       "title": "Petardier",
       "passed": true,
       "stats": {
-        "vertices": 3169,
-        "faces": 3008,
-        "triangles": 6050,
-        "islands": 78,
+        "vertices": 3101,
+        "faces": 2946,
+        "triangles": 5938,
+        "islands": 72,
         "lowest_z": 0.0,
-        "height": 1.752,
+        "height": 1.781,
         "width": 0.612,
         "budget": 8000,
-        "bbox_m": "0.612x1.062x1.752",
-        "height_body_m": 1.752,
+        "bbox_m": "0.612x1.062x1.781",
+        "height_body_m": 1.781,
         "height_spec_m": 1.76,
-        "height_with_props_m": 1.752,
-        "rig_bones": 28,
-        "skinned_bones": 22,
-        "mean_influences": 1.05
+        "height_with_props_m": 1.781,
+        "rig_bones": 30,
+        "skinned_bones": 29,
+        "mean_influences": 1.48
       },
       "spec": {
         "dims_WDH_m": null,
@@ -3347,6 +3347,7 @@
       },
       "failures": [],
       "warnings": [
+        "164 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['ash_haft', 'bronze_patina', 'soot', 'sooted_skin']"
       ],
       "notes": [
@@ -3361,7 +3362,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Petardier/glTF/Petardier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Petardier/Petardier.blend"
       },
-      "build_seconds": 3.6
+      "build_seconds": 4.0
     }
   ]
 }
