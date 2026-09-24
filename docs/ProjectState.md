@@ -25,7 +25,7 @@ surfaced it as not actually functional yet.
 | M0 — Fork clean, cut gravity | Done | ✅ merged (`feature/m0-gravity-removal`) | ✅ — compiles, gravity restored, verified in the `.agent_reports`-era logs, now `docs/archive/2026-09-15-integration/` |
 | M1 — Prove the voice | Code complete, acceptance unchecked | ✅ merged (`feature/m1-voice-casting`) | ❌ — no real-microphone, multi-accent, latency measurement exists anywhere in the repo |
 | M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
-| M3 — Open the other Ages | Scaffold only | 🟡 `HistoricalEra` enum + plumbing only | ❌ — see below, the data model can't produce era-specific content yet |
+| M3 — Open the other Ages | Scaffold only; Bronze Age castle art built | 🟡 `HistoricalEra` enum + plumbing only. Castle art: the Bronze Age set is built — 25 rooms and wall pieces plus 4 door plugs, each modelled to a reference sheet ([`docs/art/rooms/BronzeAge.md`](art/rooms/BronzeAge.md)); Late Medieval and Age of Powder are in progress ([`docs/plans/era-castle-rooms.md`](plans/era-castle-rooms.md)). None of it is wired into the generator yet | ❌ — see below, the data model can't produce era-specific content yet |
 
 **2026-09-24 — art bible plunder modelled.** All 20 plunder items from the art bible
 (`docs/art/`) now exist as validated, textured models under `Assets/Models/ArtBible/Items/`,
@@ -156,7 +156,9 @@ microphone in the standalone build (2026-09-23). Stage 4 followed the
 same day: guards and loot replicate, a client can carry loot and extract it, hits land where the
 target's health lives, a client's spells aim where it looks, a dead player spectates a teammate and
 the raid ends when everyone is down, and a friend's Lair shows the host's campaign. All checked with
-two game windows over UDP; still untested between two Steam accounts. See
+two game windows over UDP; still untested between two Steam accounts. Then: weapons now spawn in
+the castle as networked loot (found, carried, swung, sold), a crossbow shot shows on every machine,
+downed bodies lie down, and guards give players at the gate a clear ring and a 20 second grace. See
 `docs/systems/net.md`.
 
 **2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh

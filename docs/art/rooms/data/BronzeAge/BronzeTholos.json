@@ -1,0 +1,105 @@
+{
+  "key": "BronzeTholos",
+  "name": "The Tholos",
+  "age": "BronzeAge",
+  "zone": "Crypt",
+  "role": "CryptChamberFinal",
+  "summary": "The beehive tomb's chamber: four rings of corbelled ashlar stepping inward overhead, a king on his bier under a gold mask, gold cups set out for him.",
+  "description": "The tholos is the last room of the tomb and the reason for all the others. Its ashlar courses were laid in rings, each ring a hand's breadth further in than the one below, so the walls lean over you as they rise toward a dome that closes somewhere out of sight; behind them the earth of the mound is packed solid to the old walls. The rings break at the four doorways where the diggers came through. In the north-east corner the king lies on a painted bier with a beaten gold mask over his face, a tripod brazier still standing at his feet. Across from him an offering table holds his cups, and a bronze-bound chest in the south-west keeps what his heirs did not dare to take back. Everything in here was meant to be left alone, which is why it is still here.",
+  "build": [
+    "Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m limestone walls 3.00 m clear, 0.45 m ashlar capstone band, an archway 2.60 × 2.16 m centred on every wall.",
+    "Corbelled courses: four rings of ashlar, each 0.65 m high, inner radius 4.90 / 4.55 / 4.20 / 3.85 m from the cell centre, bottoms at 0.00 / 0.65 / 1.30 / 1.95 m above the floor; the top course ends at 2.60 m.",
+    "Arcs: each ring built as four arcs, one per quadrant, from 28° to 62° off the nearer axis in six facets (45° is a facet corner); the gaps at the axes leave the archways and the clear cross open.",
+    "Fill: behind each arc the course runs solid out to 0.02 m short of the walls, into the corner, so from above the stepped treads read as the mound's packing; one stepped mesh per quadrant, courses sharing their edges.",
+    "Bier (NE): ashlar block 1.80 × 0.70 × 0.50 m at (2.70, 2.35), long axis east–west, a haematite band 1.82 × 0.72 × 0.06 m round it at 0.38 m, a linen shroud 1.70 × 0.60 × 0.06 m on top and a gold death-mask 0.22 × 0.18 × 0.05 m at the head (east) end; it sits under the upper courses' overhang with 0.74 m to spare.",
+    "Tripod brazier (NE): the Age's bronze tripod, legs 0.90 m, bowl r 0.30 m, at (2.00, 3.35), at the bier's foot.",
+    "Offering table (NW): ashlar, 0.90 × 0.60 m, top at 0.70 m, at (−2.60, 2.60), three gold cups on it.",
+    "Chest (SW): timber, 1.00 × 0.60 × 0.55 m with a 0.05 m bronze lid band, at (−2.80, −2.30); two amphorae 0.62 m beside it at (−2.00, −3.20) and (−2.60, −3.40).",
+    "Standing brazier (SE): the kit brazier in bronze with a haematite fire bed, at (2.70, −2.70).",
+    "Paint: alternate courses a shade apart so the rings read from above (albedo only)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open",
+    "Bier top: loot anchor at 0.86 m",
+    "Tripod bowl, offering table and chest lid: loot anchors"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the bier, on the shroud",
+      "xyz": [
+        2.7,
+        2.35,
+        0.86
+      ]
+    },
+    {
+      "at": "the tripod brazier's bowl",
+      "xyz": [
+        2.0,
+        3.35,
+        1.44
+      ]
+    },
+    {
+      "at": "the offering table",
+      "xyz": [
+        -2.6,
+        2.6,
+        1.0
+      ]
+    },
+    {
+      "at": "the bronze-bound chest",
+      "xyz": [
+        -2.8,
+        -2.3,
+        0.9
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Limestone",
+      "hex": "#8C7F68",
+      "pigment": "vellum_dim",
+      "notes": "Walls, and alternate courses."
+    },
+    {
+      "name": "Dressed ashlar",
+      "hex": "#9A8C72",
+      "pigment": "vellum_faint",
+      "notes": "Courses, bier, offering table, capstone band."
+    },
+    {
+      "name": "Gold",
+      "hex": "#C9A227",
+      "pigment": "orpiment",
+      "notes": "The death-mask and the cups."
+    },
+    {
+      "name": "Bronze",
+      "hex": "#9B6A38",
+      "pigment": "bronze",
+      "notes": "Braziers and the chest's lid band."
+    },
+    {
+      "name": "Linen",
+      "hex": "#CFC3A2",
+      "pigment": "vellum",
+      "notes": "The shroud."
+    },
+    {
+      "name": "Floor",
+      "hex": "#2B231B",
+      "pigment": "bone_black",
+      "notes": "The Crypt floor."
+    }
+  ],
+  "gameplay": [
+    "The final chamber: the death-mask on the bier is the Bronze crypt's headline loot.",
+    "The overhanging rings make the corners dark nooks under a low stone ceiling; the cross stays open end to end.",
+    "Four loot anchors across three quadrants, so a thief crosses the room's centre to clear it; the tripod is bronze worth carrying."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeTholos.svg"
+}

@@ -1,0 +1,113 @@
+{
+  "key": "LateJewelHouse",
+  "name": "The Jewel House",
+  "age": "LateMedieval",
+  "zone": "Keep",
+  "role": "TreasuryVault",
+  "summary": "The household's plate on a stepped buffet, a strong cupboard behind an iron lattice, iron-bound chests against brick-lined walls, and a jeweller's casket.",
+  "description": "A Burgundian lord kept his wealth where it could be admired and counted. On the stepped buffet against the north wall the gilt plate stands tier above tier under a green dosser: cups, standing dishes, a ewer, everything the household would bring out for a feast and then carry back here under guard. The strong cupboard beside it is oak behind a lattice of iron straps with a lock the size of a hand. To the south the walls are lined in brick, the century's new fire-proof material, and the chests in front of them are bound in iron; a jeweller's table holds a casket, and sacks of coin sit on the floor as if nobody had got round to counting them. Somebody has.",
+  "build": [
+    "Shell: the kit's Keep shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.60 m clear, a 0.45 m madder trim course, an archway 2.60 × 3.31 m centred on every wall.",
+    "Stepped buffet (NE): three oak tiers 2.40 m wide against the north wall, centred x 3.60: 0.90 deep × 0.90 m, then 0.60 deep × 0.45 m, then 0.30 deep × 0.45 m; tier tops at 1.20 / 1.65 / 2.10 m.",
+    "Plate: three gilt cups on the first tier, two gilt dishes 0.30 m standing on edge on the second, a gilt ewer 0.34 m and two cups on the third.",
+    "Dosser: a verdure wool panel 2.60 × 1.60 m on the north wall above the buffet, from 2.10 m.",
+    "Strong cupboard (NW): oak 1.60 × 0.60 × 2.20 m against the north wall at x −3.60; four vertical and four horizontal iron straps 0.04 m over its doors, a steel lock plate.",
+    "Brick lining (south wall): two brick panels 3.40 × 2.40 m, centred x ±3.60, 0.04 m thick.",
+    "Iron-bound chests: oak 1.20 × 0.70 × 0.70 m at (±3.40, −5.00), an iron lid band and three iron straps over each.",
+    "Jeweller's table (SE): oak 0.90 × 0.60 m, top 0.80 m at (4.40, −2.90); a casket 0.30 × 0.20 × 0.20 m with a gilt lid on its east half.",
+    "Coin sacks (SW): three leather sacks 0.35–0.44 m tall at (−4.80, −3.60), (−4.40, −3.20), (−5.00, −3.10).",
+    "Light: an iron pricket candle stand 1.50 m at (1.95, 4.00), by the buffet."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "Buffet tiers: loot anchors on the first (1.20 m) and second (1.65 m) tiers",
+    "Chest lids and the jeweller's table: loot anchors"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the buffet's first tier",
+      "xyz": [
+        3.6,
+        4.75,
+        1.2
+      ]
+    },
+    {
+      "at": "the buffet's second tier",
+      "xyz": [
+        3.6,
+        5.05,
+        1.65
+      ]
+    },
+    {
+      "at": "the SE iron-bound chest",
+      "xyz": [
+        3.4,
+        -5.0,
+        1.05
+      ]
+    },
+    {
+      "at": "the SW iron-bound chest",
+      "xyz": [
+        -3.4,
+        -5.0,
+        1.05
+      ]
+    },
+    {
+      "at": "the jeweller's table",
+      "xyz": [
+        4.4,
+        -2.9,
+        1.1
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Buffet, cupboard, chests, table."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Lattice, straps, candle stand."
+    },
+    {
+      "name": "Gilt",
+      "hex": "#C9A227",
+      "pigment": "orpiment",
+      "notes": "The plate and the casket lid."
+    },
+    {
+      "name": "Brick lining",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "The south wall panels, coin sacks."
+    },
+    {
+      "name": "Tapestry wool",
+      "hex": "#4F5E3A",
+      "pigment": "verdigris_lo",
+      "notes": "The dosser."
+    }
+  ],
+  "gameplay": [
+    "Five loot anchors: the richest Late keep room, plate in full view on the buffet.",
+    "The strong cupboard is scenery with a lock on it: it promises more than it holds.",
+    "The chests sit against the south wall, so a thief looting them has their back to the north archway."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/LateMedieval/LateJewelHouse.svg"
+}

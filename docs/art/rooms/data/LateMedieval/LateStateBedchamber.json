@@ -1,0 +1,97 @@
+{
+  "key": "LateStateBedchamber",
+  "name": "The State Bedchamber",
+  "age": "LateMedieval",
+  "zone": "Keep",
+  "role": "RoyalBedchamber",
+  "summary": "A tester bed hung in red under a gilt-fringed canopy, a chest at its foot, a prie-dieu before a verdure tapestry, and a small hearth.",
+  "description": "The state bed is as much a throne as a bed: a box of oak raised under a tester on four posts, hung in madder cloth with a gilt fringe, the curtains gathered back on the side that faces the room so visitors can see who lies in it. The lord received petitions here as readily as in the hall. A chest at the foot holds the bed's own hangings, which are worth more than most houses, and across the room a prie-dieu stands before a verdure tapestry where he pretends to pray. A small hearth warms the south-west corner; a table carries the ewer and basin, and the close-stool in the corner is exactly what it looks like.",
+  "build": [
+    "Shell: the kit's Keep shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.60 m clear, a 0.45 m madder trim course, an archway 2.60 × 3.31 m centred on every wall.",
+    "Bed (NW): oak box 1.80 × 2.20 × 0.45 m at (−3.80, 4.30), head to the north wall (x −4.70 … −2.90, y 3.20 … 5.40); a madder coverlet 0.10 m and a linen bolster 1.50 × 0.35 m on it.",
+    "Posts and tester: four oak posts 0.12 m square, 2.75 m tall, at the bed's corners; a madder tester 1.90 × 2.30 × 0.15 m on them.",
+    "Dosser: a madder panel 1.80 m wide on the north wall behind the head, from 0.75 to 3.05 m.",
+    "Curtains: two madder panels 0.60 × 2.25 m, 0.06 m thick, gathered at the room-side (east) posts, hanging from the tester to 0.50 m above the floor.",
+    "Chest at the foot: iron-bound oak 1.20 × 0.50 × 0.55 m at (−3.80, 2.80).",
+    "Tapestry and prie-dieu (NE): a verdure panel 3.30 × 2.70 m on the north wall from 1.20 m; an oak prie-dieu 0.60 × 0.35 × 0.85 m with a sloped top at (3.60, 4.95) and a madder kneeler before it.",
+    "Table (SE): oak 1.00 × 0.70 m, top 0.75 m at (3.40, −3.40), a pewter basin and ewer on it; an oak close-stool 0.50 × 0.45 × 0.45 m with a madder cushion at (4.90, −4.90).",
+    "Hearth (SW): the Age's hooded hearth on the west wall at y −3.20, 1.30 m wide, 0.70 m deep, hood to 3.90 m.",
+    "Window: a framed embrasure panel 1.40 × 1.60 m on the east wall at y 3.00, from 1.70 m."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "Bed: loot anchor on the coverlet at 0.85 m",
+    "Chest lid and table top: loot anchors"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the bed",
+      "xyz": [
+        -3.8,
+        4.1,
+        0.85
+      ]
+    },
+    {
+      "at": "the chest at the bed's foot",
+      "xyz": [
+        -3.8,
+        2.8,
+        0.9
+      ]
+    },
+    {
+      "at": "the SE table",
+      "xyz": [
+        3.4,
+        -3.4,
+        1.05
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls, hearth."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Bed, posts, chest, prie-dieu, table."
+    },
+    {
+      "name": "Madder hangings",
+      "hex": "#9E2A2F",
+      "pigment": "madder",
+      "notes": "Tester, curtains, coverlet, dosser, kneeler."
+    },
+    {
+      "name": "Tapestry wool",
+      "hex": "#4F5E3A",
+      "pigment": "verdigris_lo",
+      "notes": "The NE tapestry."
+    },
+    {
+      "name": "Linen",
+      "hex": "#D6CDB6",
+      "pigment": "vellum",
+      "notes": "The bolster."
+    },
+    {
+      "name": "Pewter",
+      "hex": "#9A9A90",
+      "pigment": "iron",
+      "notes": "Ewer and basin."
+    }
+  ],
+  "gameplay": [
+    "The bed's hangings and the tapestry burn; the curtains hide whoever is standing behind the bed.",
+    "Three loot anchors on the west and south-east sides; the NE corner is scenery.",
+    "The prie-dieu is where the Gothic Man-at-Arms stops on his round."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/LateMedieval/LateStateBedchamber.svg"
+}

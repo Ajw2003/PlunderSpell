@@ -1,0 +1,48 @@
+{
+  "key": "BronzeBathRoom",
+  "name": "The Bath",
+  "age": "BronzeAge",
+  "zone": "Keep",
+  "role": "LordsSolar",
+  "summary": "A painted clay tub on its plinth, a stone basin, painted lilies and a great deal of scented oil, all of it for one person.",
+  "description": "Kings bathe, and this king bathes in a painted clay tub on a gypsum plinth, with water jars stood ready at either end and a channel cut in the floor to carry the water away out of the south door. A stone basin on its pedestal waits in the other corner for the washing of hands before an offering, and the walls are painted with lilies at a sitting height, since nobody stands up in a bath. The shelf of scented oil is worth more than it looks, and every flask on it will break if dropped.",
+  "source": "the bathroom at Pylos (plan); art bible palette (docs/art/bronze.md)",
+  "build": [
+    "Shell: the kit's Keep shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m painted plaster walls 4.60 m clear, 0.45 m haematite capstone band, an archway 2.60 × 3.31 m centred on every wall.",
+    "Lily fresco: a panel 4.10 m wide × 1.20 m tall, 1.20–2.40 m above the floor, on each section of the north, east and west walls, with a 0.16 m haematite spiral border on top.",
+    "Lustral basin (NW): a gypsum foot r 0.25 × 0.10 m, a tapered pedestal 0.72 m, and a bowl r 0.45 → 0.55 × 0.20 m on top (rim at 1.30 m above ground), water in it, at (−4.20, 4.20).",
+    "Tub plinth (NE): gypsum 2.00 × 1.10 × 0.15 m at (3.80, 4.80).",
+    "Tub: painted clay 1.60 × 0.70 × 0.60 m on the plinth, a 0.14 m haematite spiral band round it, water 0.03 m below the rim (at 1.05 m above ground).",
+    "Hydriae: two water jars 0.62 m tall, belly 0.40 m, at (2.45, 5.00) and (5.10, 3.60).",
+    "Water channel: a flat 0.10 m strip in the floor, south from the tub's plinth at x 3.05 to the crossing, west along y 0 to the centre, then south to the south archway.",
+    "Bench (SE): a plastered clay bench 3.20 × 0.50 × 0.40 m against the south wall at x 3.60; two folded towels 0.45 × 0.35 × 0.10 m on it.",
+    "Oil shelf (SW): a timber shelf unit 2.60 m wide against the south wall at x −3.70, three boards (0.35, 0.90, 1.45 m); four oil flasks 0.22 m tall on each board.",
+    "Oil stand: a painted offering table 0.60 × 0.60 m, 0.70 m high, at (−4.80, −2.60)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "Water channel: exits through the south archway at floor level"
+  ],
+  "loot_anchors": [
+    {"at": "in the tub", "xyz": [3.8, 4.8, 1.05]},
+    {"at": "lustral basin", "xyz": [-4.2, 4.2, 1.30]},
+    {"at": "bench, with the towels", "xyz": [3.6, -5.25, 0.70]},
+    {"at": "oil shelf, top board", "xyz": [-3.7, -5.2, 1.78]},
+    {"at": "oil stand", "xyz": [-4.8, -2.6, 1.00]}
+  ],
+  "materials": [
+    {"name": "Painted lime plaster", "hex": "#C9A77A", "pigment": "bronze", "notes": "Walls; damp-darkened near the tub."},
+    {"name": "Lily ground", "hex": "#D8C49A", "pigment": "vellum_dim", "notes": "The fresco band's pale ground."},
+    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "Spiral borders, the tub's band, capstone."},
+    {"name": "Terracotta", "hex": "#A0603E", "pigment": "leather", "notes": "Tub, hydriae, oil flasks."},
+    {"name": "Gypsum", "hex": "#D8CDB2", "pigment": "vellum", "notes": "Plinth, basin, bench."},
+    {"name": "Water", "hex": "#5E8A96", "pigment": "verdigris_lo", "notes": "In the tub, the basin and the floor channel."}
+  ],
+  "gameplay": [
+    "The oil flasks are fragile, flammable loot: dropped they break, and spilled oil takes IGNIS.",
+    "The tub is waist-high cover in the NE; the rest of the room is open.",
+    "The floor channel leads to the south archway, so this room usually sits beside a service room."
+  ],
+  "budget": "≤ 2k tris (kit); 1.26k built",
+  "concept": "concept/BronzeAge/BronzeBathRoom.svg"
+}

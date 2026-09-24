@@ -31,11 +31,181 @@
       "preview": "fc3daed51c05ef61:23a9d68e53fd",
       "tris": 468
     },
+    "BronzeBastion": {
+      "budget": 2000,
+      "content": "2819691189493347",
+      "preview": "2819691189493347:23a9d68e53fd",
+      "tris": 912
+    },
+    "BronzeBathRoom": {
+      "budget": 2000,
+      "content": "444ba063dc35a59e",
+      "preview": "444ba063dc35a59e:23a9d68e53fd",
+      "tris": 1260
+    },
+    "BronzeChariotShed": {
+      "budget": 1600,
+      "content": "c341d88faa7e8b21",
+      "preview": "c341d88faa7e8b21:23a9d68e53fd",
+      "tris": 800
+    },
+    "BronzeCistern": {
+      "budget": 1600,
+      "content": "5597b85fbaa4545f",
+      "preview": "5597b85fbaa4545f:23a9d68e53fd",
+      "tris": 1044
+    },
+    "BronzeDoorPlugCrypt": {
+      "budget": 40,
+      "content": "55ec4899c773a8d3",
+      "tris": 12
+    },
+    "BronzeDoorPlugInnerWard": {
+      "budget": 40,
+      "content": "060668c6a0f19b83",
+      "tris": 12
+    },
+    "BronzeDoorPlugKeep": {
+      "budget": 40,
+      "content": "c9de847543c1d1e1",
+      "tris": 12
+    },
+    "BronzeDoorPlugOuterBailey": {
+      "budget": 40,
+      "content": "52863aac2d1f84e7",
+      "tris": 12
+    },
+    "BronzeDromos": {
+      "budget": 1600,
+      "content": "848cdea486cbb666",
+      "preview": "848cdea486cbb666:23a9d68e53fd",
+      "tris": 936
+    },
+    "BronzeFoundry": {
+      "budget": 1600,
+      "content": "160c2547bc9e9919",
+      "preview": "160c2547bc9e9919:23a9d68e53fd",
+      "tris": 988
+    },
+    "BronzeFrescoCourt": {
+      "budget": 2000,
+      "content": "f83162ec29b09066",
+      "preview": "f83162ec29b09066:23a9d68e53fd",
+      "tris": 1288
+    },
+    "BronzeGateApproach": {
+      "budget": 2000,
+      "content": "aad3287f2b3115aa",
+      "preview": "aad3287f2b3115aa:23a9d68e53fd",
+      "tris": 940
+    },
+    "BronzeGraveCircle": {
+      "budget": 1600,
+      "content": "4303d728dcaf5aad",
+      "preview": "4303d728dcaf5aad:23a9d68e53fd",
+      "tris": 892
+    },
+    "BronzeLarnaxVault": {
+      "budget": 1600,
+      "content": "9230a90cd1865a34",
+      "preview": "9230a90cd1865a34:23a9d68e53fd",
+      "tris": 1244
+    },
+    "BronzeLevyBarracks": {
+      "budget": 1600,
+      "content": "602c3fca82705959",
+      "preview": "602c3fca82705959:23a9d68e53fd",
+      "tris": 1376
+    },
+    "BronzeLionGate": {
+      "budget": 2400,
+      "content": "b40f0bc04f5779a1",
+      "preview": "b40f0bc04f5779a1:23a9d68e53fd",
+      "tris": 1480
+    },
+    "BronzeMegaron": {
+      "budget": 2400,
+      "content": "a405bc6aa586fc8c",
+      "preview": "a405bc6aa586fc8c:23a9d68e53fd",
+      "tris": 1572
+    },
+    "BronzeMegaronStair": {
+      "budget": 1600,
+      "content": "bb41b8853f9830c1",
+      "preview": "bb41b8853f9830c1:23a9d68e53fd",
+      "tris": 888
+    },
+    "BronzeOilPress": {
+      "budget": 3200,
+      "content": "dc1cc073bfa32b8c",
+      "preview": "dc1cc073bfa32b8c:23a9d68e53fd",
+      "tris": 2484
+    },
+    "BronzePalaceKitchen": {
+      "budget": 1600,
+      "content": "f71cab5ec136e688",
+      "preview": "f71cab5ec136e688:23a9d68e53fd",
+      "tris": 1128
+    },
+    "BronzePithosMagazine": {
+      "budget": 4800,
+      "content": "f25a5a8cdb6d5104",
+      "preview": "?:23a9d68e53fd",
+      "tris": 3232
+    },
+    "BronzeQueensHall": {
+      "budget": 1800,
+      "content": "30b56effeb2329c4",
+      "preview": "30b56effeb2329c4:23a9d68e53fd",
+      "tris": 940
+    },
+    "BronzeShaftStair": {
+      "budget": 2000,
+      "content": "ae734224e854b1f4",
+      "preview": "ae734224e854b1f4:23a9d68e53fd",
+      "tris": 1560
+    },
+    "BronzeShrine": {
+      "budget": 1600,
+      "content": "f4c7d6935debf0d4",
+      "preview": "f4c7d6935debf0d4:23a9d68e53fd",
+      "tris": 876
+    },
     "BronzeSword": {
       "budget": 400,
       "content": "415b1b204fe7d963",
       "preview": "415b1b204fe7d963:23a9d68e53fd",
       "tris": 220
+    },
+    "BronzeTabletArchive": {
+      "budget": 2400,
+      "content": "967e38d2c75e0c11",
+      "preview": "967e38d2c75e0c11:23a9d68e53fd",
+      "tris": 1500
+    },
+    "BronzeTholos": {
+      "budget": 2400,
+      "content": "6d055a5fd8d65d1c",
+      "preview": "6d055a5fd8d65d1c:23a9d68e53fd",
+      "tris": 1704
+    },
+    "BronzeTreasury": {
+      "budget": 2000,
+      "content": "6a665b2499872ce8",
+      "preview": "2f02721eeaaea9a9:23a9d68e53fd",
+      "tris": 1436
+    },
+    "BronzeWallCorner": {
+      "budget": 2400,
+      "content": "700d9b89e56a5d72",
+      "preview": "700d9b89e56a5d72:23a9d68e53fd",
+      "tris": 1464
+    },
+    "BronzeWallStraight": {
+      "budget": 1200,
+      "content": "58589df156f824ba",
+      "preview": "58589df156f824ba:23a9d68e53fd",
+      "tris": 736
     },
     "BurialVault": {
       "budget": 900,
@@ -146,6 +316,66 @@
       "content": "0261002a64d77a4f",
       "preview": "3005cd95684fe80c:23a9d68e53fd",
       "tris": 564
+    },
+    "LateArmouryHall": {
+      "budget": 3200,
+      "content": "9550bfdeeb3e5586",
+      "preview": "9550bfdeeb3e5586:23a9d68e53fd",
+      "tris": 2096
+    },
+    "LateChantryChapel": {
+      "budget": 2400,
+      "content": "ebd645e551f7d8a6",
+      "preview": "ebd645e551f7d8a6:23a9d68e53fd",
+      "tris": 1212
+    },
+    "LateCountingHouse": {
+      "budget": 2400,
+      "content": "148d534bdedcc557",
+      "preview": "148d534bdedcc557:23a9d68e53fd",
+      "tris": 1600
+    },
+    "LateGreatHall": {
+      "budget": 2400,
+      "content": "3cccba9e890ed511",
+      "preview": "3cccba9e890ed511:23a9d68e53fd",
+      "tris": 908
+    },
+    "LateJewelHouse": {
+      "budget": 2000,
+      "content": "930d37497b852128",
+      "preview": "930d37497b852128:23a9d68e53fd",
+      "tris": 1088
+    },
+    "LateLibrary": {
+      "budget": 2400,
+      "content": "9b4ca636a37f77f2",
+      "preview": "9b4ca636a37f77f2:23a9d68e53fd",
+      "tris": 1464
+    },
+    "LateSpitKitchen": {
+      "budget": 2400,
+      "content": "4f4e4f7aaa7a2e71",
+      "preview": "4f4e4f7aaa7a2e71:23a9d68e53fd",
+      "tris": 1664
+    },
+    "LateStateBedchamber": {
+      "budget": 2000,
+      "content": "5683dae7091d1d81",
+      "preview": "5683dae7091d1d81:23a9d68e53fd",
+      "tris": 828
+    },
+    "LateTapestrySolar": {
+      "budget": 2000,
+      "content": "518e76754b272872",
+      "preview": "518e76754b272872:23a9d68e53fd",
+      "tris": 816
+    },
+    "LateTurretStair": {
+      "budget": 2000,
+      "content": "e1e0e96487030909",
+      "preview": "e1e0e96487030909:23a9d68e53fd",
+      "tris": 804
     },
     "Longsword": {
       "budget": 450,

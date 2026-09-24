@@ -1,0 +1,87 @@
+{
+  "key": "LateArmouryHall",
+  "name": "The Armoury Hall",
+  "age": "LateMedieval",
+  "zone": "InnerWard",
+  "role": "ArmouredCourtyard",
+  "summary": "Four harnesses of plate on their stands under madder banners, racks of halberds and poleaxes, a grinding wheel, and the armourer's table.",
+  "description": "The household's armour stands along the north wall like a row of guests who have been told to wait: four full harnesses of Gothic plate on oak stands, each sallet's visor slit staring at the door, a madder banner over each pair. The racks on either side hold the halberds and poleaxes of the watch, hafts up, blades out. In the south the armourer works: a grinding wheel dips into its trough to keep the edges bright, and on his table a sallet waits for its lining next to a hammer and a pair of gauntlets. The chest against the south wall holds spare plates and straps. A harness is too heavy to carry off whole; a thief who takes a helm leaves a gap in the row the guards will notice.",
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.00 m clear, a 0.45 m verdure-green trim course, an archway 2.60 × 2.88 m centred on every wall.",
+    "Harnesses (NW, NE): four on oak stands 0.60 × 0.45 m at x −4.60 / −3.00 / 3.00 / 4.60, y 4.80: steel legs 0.86 m, faulds, a breastplate 0.52 m tapering to the shoulders, pauldrons, arms, and a sallet r 0.13 m with a visor slit; 1.93 m to the crown.",
+    "Banners: two madder panels 1.00 × 1.30 m on the north wall centred x ±3.80, from 2.40 m, a linen pale 0.15 m down each, hung from iron rods.",
+    "Harness construction: each part a primitive touching the next (legs into the faulds, faulds under the breastplate, pauldrons on its shoulders with the arms hanging from them, the sallet sitting on its top), so nothing floats.",
+    "Racks (east and west walls): two oak rails 2.00 m long, 0.16 m deep at 0.35 and 1.50 m above the floor, centred y 3.10; five hafts 2.30 m in each at y 2.30 … 3.90, each with a steel blade 0.20 × 0.25 m and a spike to 2.95 m.",
+    "Grinding wheel (SE): a whetstone r 0.45 m, 0.12 m thick, on an iron axle between two oak uprights 0.75 m at (3.80, −3.80), its rim dipping into an oak water trough 1.00 × 0.30 × 0.20 m; an iron crank.",
+    "Armourer's table (SW): oak 1.80 × 0.80 m, top 0.85 m at (−3.60, −3.60): a steel sallet, a hammer, a pair of gauntlets.",
+    "Plate chest: iron-bound oak 1.20 × 0.60 × 0.60 m against the south wall at (−3.40, −5.00)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Armourer's table and plate chest: loot anchors",
+    "Racks: ten hafts, the watch's weapons"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the armourer's table",
+      "xyz": [
+        -3.6,
+        -3.6,
+        1.15
+      ]
+    },
+    {
+      "at": "the plate chest",
+      "xyz": [
+        -3.4,
+        -5.0,
+        0.95
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls."
+    },
+    {
+      "name": "Bright plate",
+      "hex": "#8C9096",
+      "pigment": "iron",
+      "notes": "Harnesses, blades, the sallet."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Stands, racks, hafts, table, wheel frame."
+    },
+    {
+      "name": "Whetstone",
+      "hex": "#8A8070",
+      "pigment": "vellum_faint",
+      "notes": "The grinding wheel."
+    },
+    {
+      "name": "Madder",
+      "hex": "#9E2A2F",
+      "pigment": "madder",
+      "notes": "The banners."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Rods, axle, crank, hammer head, chest straps."
+    }
+  ],
+  "gameplay": [
+    "The harnesses read as guards at a glance: a thief entering from the south door sees four armed men.",
+    "The racks arm the watch: a halberdier who reaches this room comes back armed.",
+    "Two loot anchors in the working corner; the parade armour is Late plunder the guards will miss."
+  ],
+  "budget": "≤ 3.2k tris (kit)",
+  "concept": "concept/LateMedieval/LateArmouryHall.svg"
+}

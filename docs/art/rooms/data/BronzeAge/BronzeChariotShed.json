@@ -1,0 +1,46 @@
+{
+  "key": "BronzeChariotShed",
+  "name": "The Chariot Shed",
+  "age": "BronzeAge",
+  "zone": "OuterBailey",
+  "role": "StableBlock",
+  "summary": "A war chariot on its stand, two stalls for the team, fodder and harness: the citadel's pride, parked in a mud-brick shed.",
+  "description": "A chariot is the most expensive thing a Bronze Age noble owns that he cannot eat, and this one is parked with its pole on a forked stand as though the horses might be brought round at any moment. Its wheels are cypress with bronze naves, its car is wicker screened in hide, and the two stalls against the north wall hold the team that pulls it, or would if the grooms were not asleep. The harness hangs on a rail by the tack chest. The car is a fine place to leave something, and a finer place to find it.",
+  "build": [
+    "Shell: the kit's OuterBailey shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m ochre plaster walls 3.60 m clear (mud-brick showing low down), 0.45 m mud-brick capstone band, an archway 2.60 × 2.59 m centred on every wall.",
+    "Chariot (NW): two four-spoked cypress wheels r 0.45 m at (−4.40, 3.15) and (−4.40, 4.45) on a bronze axle r 0.04 × 1.40 m running north–south at 0.75 m above ground.",
+    "Chariot car: a cypress floor 0.90 × 1.10 × 0.06 m at 0.88 m, a wicker screen 0.50 m tall across its east (front) edge and 0.35 m side screens.",
+    "Pole: cypress 1.95 × 0.08 × 0.08 m running east from the car to x −2.00, at 0.92 m; a forked stand post 0.58 m at (−2.10, 3.80) and a yoke bar 1.00 m across at (−2.20, 3.80).",
+    "Stalls (NE): two cypress partitions 0.12 × 2.20 × 1.30 m at x 2.20 and 3.80, from the north wall to y 3.30.",
+    "Mangers: clay, 1.20 × 0.50 × 0.60 m against the north wall at x 3.00 and 4.60, hay in them.",
+    "Fodder (SE): four bundles 1.20 × 0.80 × 0.60 m: three by the south wall at x 3.00, 3.70 (on top) and 4.40, one at (4.60, −3.20).",
+    "Harness rail (SW): cypress 2.00 m on the west wall at 1.80 m above ground, four leather straps 0.90 m hanging from it.",
+    "Tack chest: cypress 1.00 × 0.60 × 0.55 m with a bronze-bound lid at (−4.40, −4.90)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.59 m (OuterBailey), all open",
+    "Chariot pole: ends at x −1.95 on its stand, clear of the north–south walkway"
+  ],
+  "loot_anchors": [
+    {"at": "in the chariot car", "xyz": [-4.4, 3.8, 0.91]},
+    {"at": "east manger, on the hay", "xyz": [4.6, 5.2, 0.95]},
+    {"at": "top fodder bundle", "xyz": [3.7, -4.6, 1.50]},
+    {"at": "tack chest", "xyz": [-4.4, -4.9, 0.90]}
+  ],
+  "materials": [
+    {"name": "Ochre plaster", "hex": "#B7803E", "pigment": "bronze", "notes": "Walls, fallen away low down to the mud-brick."},
+    {"name": "Mud-brick", "hex": "#8A5A3C", "pigment": "leather", "notes": "Capstone band, patches, the harness straps."},
+    {"name": "Cypress timber", "hex": "#5A3E28", "pigment": "oak", "notes": "Wheels, car floor, pole, stalls, chest."},
+    {"name": "Wicker and hide", "hex": "#9C7A48", "pigment": "vellum_dim", "notes": "The car's screens."},
+    {"name": "Terracotta", "hex": "#A0603E", "pigment": "leather", "notes": "Mangers."},
+    {"name": "Hay", "hex": "#C8A868", "pigment": "vellum_dim", "notes": "Fodder bundles, manger hay; very flammable."},
+    {"name": "Cast bronze", "hex": "#9B6A38", "pigment": "bronze", "notes": "Axle, naves, the chest binding."}
+  ],
+  "gameplay": [
+    "The fodder and the hay are dry: IGNIS here burns the shed out in seconds.",
+    "The chariot and the fodder stack are the only tall cover.",
+    "The stalls are empty in the kit: a horse (if the game ever adds one) is noise."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeChariotShed.svg"
+}

@@ -73,4 +73,143 @@ CASTLE_SPECS = [
     dict(key="DoorPlugCrypt",       builder="build_door_plug_crypt",        tri_budget=40, subdir="Castle"),
 ]
 
-ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS
+# ── The other three Ages (docs/plans/era-castle-rooms.md) ──────────────────
+# Same zones, heights and archways as CASTLE_SPECS above (the High Medieval
+# set), one builder file per Age. `kind` says how build_assets validates the
+# piece: "wall" (curtain wall, no walkway to keep clear), "room" (enclosed,
+# walkway enforced) or "plug" (a door plug). Keys carry the Age prefix
+# because the manifest, previews, loot anchors and RoomIds are keyed by name.
+# `module` names the builder file (one per Age and zone, so the zones can be
+# built in parallel without touching each other's files; the door plugs sit
+# in the Age's base file), `era` the HistoricalEra enum value.
+
+BRONZE_CASTLE_SPECS = [
+    # CurtainWall
+    dict(key="BronzeLionGate", builder="build_bronze_lion_gate", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
+    dict(key="BronzeWallStraight", builder="build_bronze_wall_straight", tri_budget=1200, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
+    dict(key="BronzeWallCorner", builder="build_bronze_wall_corner", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
+    dict(key="BronzeBastion", builder="build_bronze_bastion", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
+    dict(key="BronzeGateApproach", builder="build_bronze_gate_approach", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
+    # OuterBailey
+    dict(key="BronzeChariotShed", builder="build_bronze_chariot_shed", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_bailey", era="BronzeAge", zone="OuterBailey", kind="room"),
+    dict(key="BronzeFoundry", builder="build_bronze_foundry", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_bailey", era="BronzeAge", zone="OuterBailey", kind="room"),
+    dict(key="BronzeLevyBarracks", builder="build_bronze_levy_barracks", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_bailey", era="BronzeAge", zone="OuterBailey", kind="room"),
+    dict(key="BronzeCistern", builder="build_bronze_cistern", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_bailey", era="BronzeAge", zone="OuterBailey", kind="room"),
+    dict(key="BronzeOilPress", builder="build_bronze_oil_press", tri_budget=3200, subdir="Castle/BronzeAge", module="castle_builders_bronze_bailey", era="BronzeAge", zone="OuterBailey", kind="room"),
+    # InnerWard
+    dict(key="BronzePithosMagazine", builder="build_bronze_pithos_magazine", tri_budget=4800, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
+    dict(key="BronzeFrescoCourt", builder="build_bronze_fresco_court", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
+    dict(key="BronzeShrine", builder="build_bronze_shrine", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
+    dict(key="BronzePalaceKitchen", builder="build_bronze_palace_kitchen", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
+    dict(key="BronzeTabletArchive", builder="build_bronze_tablet_archive", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_ward", era="BronzeAge", zone="InnerWard", kind="room"),
+    # Keep
+    dict(key="BronzeMegaron", builder="build_bronze_megaron", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
+    dict(key="BronzeTreasury", builder="build_bronze_treasury", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
+    dict(key="BronzeQueensHall", builder="build_bronze_queens_hall", tri_budget=1800, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
+    dict(key="BronzeBathRoom", builder="build_bronze_bath_room", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
+    dict(key="BronzeMegaronStair", builder="build_bronze_megaron_stair", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_keep", era="BronzeAge", zone="Keep", kind="room"),
+    # Crypt
+    dict(key="BronzeDromos", builder="build_bronze_dromos", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
+    dict(key="BronzeGraveCircle", builder="build_bronze_grave_circle", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
+    dict(key="BronzeLarnaxVault", builder="build_bronze_larnax_vault", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
+    dict(key="BronzeTholos", builder="build_bronze_tholos", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
+    dict(key="BronzeShaftStair", builder="build_bronze_shaft_stair", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
+    # Door plugs, one per enclosed zone: the High Medieval size, this Age's stone.
+    dict(key="BronzeDoorPlugOuterBailey", builder="build_bronze_door_plug_outer_bailey", tri_budget=40, subdir="Castle/BronzeAge", module="castle_builders_bronze", era="BronzeAge", zone="OuterBailey", kind="plug"),
+    dict(key="BronzeDoorPlugInnerWard", builder="build_bronze_door_plug_inner_ward", tri_budget=40, subdir="Castle/BronzeAge", module="castle_builders_bronze", era="BronzeAge", zone="InnerWard", kind="plug"),
+    dict(key="BronzeDoorPlugKeep", builder="build_bronze_door_plug_keep", tri_budget=40, subdir="Castle/BronzeAge", module="castle_builders_bronze", era="BronzeAge", zone="Keep", kind="plug"),
+    dict(key="BronzeDoorPlugCrypt", builder="build_bronze_door_plug_crypt", tri_budget=40, subdir="Castle/BronzeAge", module="castle_builders_bronze", era="BronzeAge", zone="Crypt", kind="plug"),
+]
+
+LATE_CASTLE_SPECS = [
+    # CurtainWall
+    dict(key="LateBarbican", builder="build_late_barbican", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    dict(key="LateWallStraight", builder="build_late_wall_straight", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    dict(key="LateWallCorner", builder="build_late_wall_corner", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    dict(key="LateBastion", builder="build_late_bastion", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    dict(key="LateDrawbridge", builder="build_late_drawbridge", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    # OuterBailey
+    dict(key="LateArtilleryYard", builder="build_late_artillery_yard", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateGunFoundry", builder="build_late_gun_foundry", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateHandgunnerBarracks", builder="build_late_handgunner_barracks", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateBrewhouse", builder="build_late_brewhouse", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateTreadwheelWell", builder="build_late_treadwheel_well", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    # InnerWard
+    dict(key="LateCountingHouse", builder="build_late_counting_house", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
+    dict(key="LateArmouryHall", builder="build_late_armoury_hall", tri_budget=3200, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
+    dict(key="LateSpitKitchen", builder="build_late_spit_kitchen", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
+    dict(key="LateChantryChapel", builder="build_late_chantry_chapel", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
+    dict(key="LateLibrary", builder="build_late_library", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
+    # Keep
+    dict(key="LateGreatHall", builder="build_late_great_hall", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
+    dict(key="LateJewelHouse", builder="build_late_jewel_house", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
+    dict(key="LateStateBedchamber", builder="build_late_state_bedchamber", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
+    dict(key="LateTapestrySolar", builder="build_late_tapestry_solar", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
+    dict(key="LateTurretStair", builder="build_late_turret_stair", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
+    # Crypt
+    dict(key="LateUndercroft", builder="build_late_undercroft", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateOubliette", builder="build_late_oubliette", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateCharnelHouse", builder="build_late_charnel_house", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateEffigyCrypt", builder="build_late_effigy_crypt", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateUndercroftStair", builder="build_late_undercroft_stair", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    # Door plugs, one per enclosed zone: the High Medieval size, this Age's stone.
+    dict(key="LateDoorPlugOuterBailey", builder="build_late_door_plug_outer_bailey", tri_budget=40, subdir="Castle/LateMedieval", module="castle_builders_late", era="LateMedieval", zone="OuterBailey", kind="plug"),
+    dict(key="LateDoorPlugInnerWard", builder="build_late_door_plug_inner_ward", tri_budget=40, subdir="Castle/LateMedieval", module="castle_builders_late", era="LateMedieval", zone="InnerWard", kind="plug"),
+    dict(key="LateDoorPlugKeep", builder="build_late_door_plug_keep", tri_budget=40, subdir="Castle/LateMedieval", module="castle_builders_late", era="LateMedieval", zone="Keep", kind="plug"),
+    dict(key="LateDoorPlugCrypt", builder="build_late_door_plug_crypt", tri_budget=40, subdir="Castle/LateMedieval", module="castle_builders_late", era="LateMedieval", zone="Crypt", kind="plug"),
+]
+
+POWDER_CASTLE_SPECS = [
+    # CurtainWall
+    dict(key="PowderRavelinGate", builder="build_powder_ravelin_gate", tri_budget=1200, subdir="Castle/AgeOfPowder", module="castle_builders_powder_curtain", era="AgeOfPowder", zone="CurtainWall", kind="wall"),
+    dict(key="PowderRampart", builder="build_powder_rampart", tri_budget=1200, subdir="Castle/AgeOfPowder", module="castle_builders_powder_curtain", era="AgeOfPowder", zone="CurtainWall", kind="wall"),
+    dict(key="PowderSalientCorner", builder="build_powder_salient_corner", tri_budget=1200, subdir="Castle/AgeOfPowder", module="castle_builders_powder_curtain", era="AgeOfPowder", zone="CurtainWall", kind="wall"),
+    dict(key="PowderArrowheadBastion", builder="build_powder_arrowhead_bastion", tri_budget=1200, subdir="Castle/AgeOfPowder", module="castle_builders_powder_curtain", era="AgeOfPowder", zone="CurtainWall", kind="wall"),
+    dict(key="PowderGabionBridge", builder="build_powder_gabion_bridge", tri_budget=1200, subdir="Castle/AgeOfPowder", module="castle_builders_powder_curtain", era="AgeOfPowder", zone="CurtainWall", kind="wall"),
+    # OuterBailey
+    dict(key="PowderCoachHouse", builder="build_powder_coach_house", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_bailey", era="AgeOfPowder", zone="OuterBailey", kind="room"),
+    dict(key="PowderGunPark", builder="build_powder_gun_park", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_bailey", era="AgeOfPowder", zone="OuterBailey", kind="room"),
+    dict(key="PowderMusketeerBarracks", builder="build_powder_musketeer_barracks", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_bailey", era="AgeOfPowder", zone="OuterBailey", kind="room"),
+    dict(key="PowderCooperage", builder="build_powder_cooperage", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_bailey", era="AgeOfPowder", zone="OuterBailey", kind="room"),
+    dict(key="PowderOrangery", builder="build_powder_orangery", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_bailey", era="AgeOfPowder", zone="OuterBailey", kind="room"),
+    # InnerWard
+    dict(key="PowderMagazine", builder="build_powder_magazine", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_ward", era="AgeOfPowder", zone="InnerWard", kind="room"),
+    dict(key="PowderBallroom", builder="build_powder_ballroom", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_ward", era="AgeOfPowder", zone="InnerWard", kind="room"),
+    dict(key="PowderBaroqueChapel", builder="build_powder_baroque_chapel", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_ward", era="AgeOfPowder", zone="InnerWard", kind="room"),
+    dict(key="PowderCopperKitchen", builder="build_powder_copper_kitchen", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_ward", era="AgeOfPowder", zone="InnerWard", kind="room"),
+    dict(key="PowderParterreCourt", builder="build_powder_parterre_court", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_ward", era="AgeOfPowder", zone="InnerWard", kind="room"),
+    # Keep
+    dict(key="PowderLongGallery", builder="build_powder_long_gallery", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_keep", era="AgeOfPowder", zone="Keep", kind="room"),
+    dict(key="PowderKunstkammer", builder="build_powder_kunstkammer", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_keep", era="AgeOfPowder", zone="Keep", kind="room"),
+    dict(key="PowderAudienceChamber", builder="build_powder_audience_chamber", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_keep", era="AgeOfPowder", zone="Keep", kind="room"),
+    dict(key="PowderParadeBedchamber", builder="build_powder_parade_bedchamber", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_keep", era="AgeOfPowder", zone="Keep", kind="room"),
+    dict(key="PowderSilverVault", builder="build_powder_silver_vault", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_keep", era="AgeOfPowder", zone="Keep", kind="room"),
+    dict(key="PowderGrandStair", builder="build_powder_grand_stair", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_keep", era="AgeOfPowder", zone="Keep", kind="room"),
+    # Crypt
+    dict(key="PowderCasemate", builder="build_powder_casemate", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_crypt", era="AgeOfPowder", zone="Crypt", kind="room"),
+    dict(key="PowderCountermine", builder="build_powder_countermine", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_crypt", era="AgeOfPowder", zone="Crypt", kind="room"),
+    dict(key="PowderFamilyVault", builder="build_powder_family_vault", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_crypt", era="AgeOfPowder", zone="Crypt", kind="room"),
+    dict(key="PowderImperialTomb", builder="build_powder_imperial_tomb", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_crypt", era="AgeOfPowder", zone="Crypt", kind="room"),
+    dict(key="PowderCryptStair", builder="build_powder_crypt_stair", tri_budget=1600, subdir="Castle/AgeOfPowder", module="castle_builders_powder_crypt", era="AgeOfPowder", zone="Crypt", kind="room"),
+    # Door plugs, one per enclosed zone: the High Medieval size, this Age's stone.
+    dict(key="PowderDoorPlugOuterBailey", builder="build_powder_door_plug_outer_bailey", tri_budget=40, subdir="Castle/AgeOfPowder", module="castle_builders_powder", era="AgeOfPowder", zone="OuterBailey", kind="plug"),
+    dict(key="PowderDoorPlugInnerWard", builder="build_powder_door_plug_inner_ward", tri_budget=40, subdir="Castle/AgeOfPowder", module="castle_builders_powder", era="AgeOfPowder", zone="InnerWard", kind="plug"),
+    dict(key="PowderDoorPlugKeep", builder="build_powder_door_plug_keep", tri_budget=40, subdir="Castle/AgeOfPowder", module="castle_builders_powder", era="AgeOfPowder", zone="Keep", kind="plug"),
+    dict(key="PowderDoorPlugCrypt", builder="build_powder_door_plug_crypt", tri_budget=40, subdir="Castle/AgeOfPowder", module="castle_builders_powder", era="AgeOfPowder", zone="Crypt", kind="plug"),
+]
+
+ERA_CASTLE_SPECS = BRONZE_CASTLE_SPECS + LATE_CASTLE_SPECS + POWDER_CASTLE_SPECS
+
+ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS
+
+
+
+def key_matches(key: str, only: str) -> bool:
+    """The --only filter shared by build_assets, validate_asset and
+    render_previews_only: `only` is comma-separated tokens; a token that is a
+    whole key matches just that key, any other token is a key prefix."""
+    all_keys = {s["key"] for s in ALL_SPECS}
+    for token in only.split(","):
+        if key == token or (token not in all_keys and key.startswith(token)):
+            return True
+    return False

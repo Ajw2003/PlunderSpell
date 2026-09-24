@@ -89,6 +89,18 @@ they spawned and loot that never moves. Weapons are plain local `Item`s on each 
 
    **Still untested:** any of this over Steam between two accounts.
 
+### After stage 4 (2026-09-23)
+
+Asked for: network the weapons and close the gaps found in stage 4.
+
+- **Weapons** spawn in the castle as loot and are networked like it. Checked: a client picked up
+  the Arming Sword and the host saw it move with the client (client (9.10, 2.25, -7.50), host
+  (9.05, 2.26, -7.41)); a client's crossbow shot appeared on the host.
+- **A downed body lies down** on every machine. Checked with both players down.
+- **Guards at the gate:** the safe ring is two rooms and patrols stay out of it; a 20 second arrival
+  grace keeps a calm garrison from seeing players. Checked: an idle solo player was first hit at
+  36.9 s, against about 10 s before. `PlayableLoopTests` now fails on the old planner.
+
 Found along the way, not fixed: guards are posted within sight of the gate, and a player standing
 still at the spawn is killed in about 20 seconds.
 

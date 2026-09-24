@@ -401,6 +401,21 @@ namespace RogueAi.Tests
                     int distance = Mathf.Max(Mathf.Abs(at.x - entrance.x), Mathf.Abs(at.y - entrance.y));
                     Assert.Greater(distance, GuardPlacementPlanner.SafeEntranceRadius,
                         $"Seed {seed}: a guard next to the spawn kills a player still reading the HUD.");
+                
+                    // Nor may its patrol lead it there: a route through the gate killed an idle
+                    // player at the spawn in co-op testing even with no guard posted next door.
+                    foreach (Vector3 stop in guard.PatrolRoute)
+                    {
+                        foreach (ProceduralCastleData.PlacedModule module in castle.PlacedModules)
+                        {
+                            if ((module.Position - stop).sqrMagnitude > 0.01f)
+                                continue;
+                            int stopDistance = Mathf.Max(Mathf.Abs(module.GridPosition.x - entrance.x),
+                                Mathf.Abs(module.GridPosition.y - entrance.y));
+                            Assert.Greater(stopDistance, GuardPlacementPlanner.SafeEntranceRadius,
+                                $"Seed {seed}: a patrol walks into the safe ring around the spawn.");
+                        }
+                    }
                 }
             }
         }

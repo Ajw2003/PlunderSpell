@@ -59,9 +59,11 @@ namespace RogueAi.Raid
         /// <summary>
         /// Rooms within this many grid cells of the entrance get no guard. The players spawn just
         /// inside the extraction room, so a guard next door sees them on frame one and kills a player
-        /// who is still reading the HUD.
+        /// who is still reading the HUD. Two cells, and patrols stay out of it too: at one cell a
+        /// guard next door still walked its route through the gate and killed a player standing at
+        /// the spawn within about twenty seconds (seen in co-op testing, 2026-09-23).
         /// </summary>
-        public const int SafeEntranceRadius = 1;
+        public const int SafeEntranceRadius = 2;
 
         /// <summary>
         /// Plans the garrison. The extraction room and its neighbours are deliberately left
@@ -97,7 +99,7 @@ namespace RogueAi.Raid
                 placements.Add(new GuardPlacement(
                     i,
                     module.Position + Vector3.up * 0.1f,
-                    BuildRoute(castle, i, rng),
+                    BuildRoute(castle, i, rng, hasEntrance, entrance),
                     module.Zone));
             }
 
@@ -113,7 +115,7 @@ namespace RogueAi.Raid
         /// always reachable from one another.
         /// </summary>
         private static List<Vector3> BuildRoute(ProceduralCastleData castle, int moduleIndex,
-            System.Random rng)
+            System.Random rng, bool hasEntrance, Vector2Int entrance)
         {
             ProceduralCastleData.PlacedModule home = castle.PlacedModules[moduleIndex];
             var route = new List<Vector3> { home.Position };
@@ -125,8 +127,12 @@ namespace RogueAi.Raid
                     continue;
 
                 Vector2Int delta = castle.PlacedModules[i].GridPosition - home.GridPosition;
-                if (Math.Abs(delta.x) + Math.Abs(delta.y) == 1)
-                    neighbours.Add(castle.PlacedModules[i].Position);
+                if (Math.Abs(delta.x) + Math.Abs(delta.y) != 1)
+                    continue;
+                // A patrol never walks into the safe ring around the entrance.
+                if (hasEntrance && ChebyshevDistance(castle.PlacedModules[i].GridPosition, entrance) <= SafeEntranceRadius)
+                    continue;
+                neighbours.Add(castle.PlacedModules[i].Position);
             }
 
             int take = Mathf.Min(2, neighbours.Count);

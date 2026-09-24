@@ -49,6 +49,126 @@ MonoBehaviour:
     Zone: 4
     Weight: 10
     Prefab: {fileID: 6484770831777660367, guid: 3d3a4d19ff5b64641b21765e31bee59c, type: 3}
+  - Item: {fileID: 11400000, guid: 1647d8add3e1041428cf4b0f361a8d15, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 905311075115648840, guid: ef23c0dc492261d5cfee2711e0f3c4e6, type: 3}
+  - Item: {fileID: 11400000, guid: 1647d8add3e1041428cf4b0f361a8d15, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 905311075115648840, guid: ef23c0dc492261d5cfee2711e0f3c4e6, type: 3}
+  - Item: {fileID: 11400000, guid: 1647d8add3e1041428cf4b0f361a8d15, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 905311075115648840, guid: ef23c0dc492261d5cfee2711e0f3c4e6, type: 3}
+  - Item: {fileID: 11400000, guid: 69dcc869fe227814eb7db3820cebf128, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 2973063209351107579, guid: 5c2a0e6dfb9303f498ed7d9b4fb2a725, type: 3}
+  - Item: {fileID: 11400000, guid: 69dcc869fe227814eb7db3820cebf128, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 2973063209351107579, guid: 5c2a0e6dfb9303f498ed7d9b4fb2a725, type: 3}
+  - Item: {fileID: 11400000, guid: 69dcc869fe227814eb7db3820cebf128, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 2973063209351107579, guid: 5c2a0e6dfb9303f498ed7d9b4fb2a725, type: 3}
+  - Item: {fileID: 11400000, guid: 07fad9ba27f30314ea46ccb9d6ff3f89, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 922978749779615470, guid: ea633e3f8a6ad6cbe25dbaaeafbbea22, type: 3}
+  - Item: {fileID: 11400000, guid: 07fad9ba27f30314ea46ccb9d6ff3f89, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 922978749779615470, guid: ea633e3f8a6ad6cbe25dbaaeafbbea22, type: 3}
+  - Item: {fileID: 11400000, guid: 07fad9ba27f30314ea46ccb9d6ff3f89, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 922978749779615470, guid: ea633e3f8a6ad6cbe25dbaaeafbbea22, type: 3}
+  - Item: {fileID: 11400000, guid: 67e5ff402aa04cc4e94778857d24f9db, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 8423761089164201314, guid: 504f372631708e74eb6ce2962b0d96f2, type: 3}
+  - Item: {fileID: 11400000, guid: 67e5ff402aa04cc4e94778857d24f9db, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 8423761089164201314, guid: 504f372631708e74eb6ce2962b0d96f2, type: 3}
+  - Item: {fileID: 11400000, guid: 67e5ff402aa04cc4e94778857d24f9db, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 8423761089164201314, guid: 504f372631708e74eb6ce2962b0d96f2, type: 3}
+  - Item: {fileID: 11400000, guid: 0888f152a98bbde49a1778b9d8088b5b, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 6589327813404355734, guid: ebbd038952d9be548830d6f0c029ee33, type: 3}
+  - Item: {fileID: 11400000, guid: 0888f152a98bbde49a1778b9d8088b5b, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 6589327813404355734, guid: ebbd038952d9be548830d6f0c029ee33, type: 3}
+  - Item: {fileID: 11400000, guid: 0888f152a98bbde49a1778b9d8088b5b, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 6589327813404355734, guid: ebbd038952d9be548830d6f0c029ee33, type: 3}
+  - Item: {fileID: 11400000, guid: 7c2b7548643cbb8419bb827b5f8da666, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 3578460608274390883, guid: 6c31ab66e5f36eb4ea3d37c36ba0a011, type: 3}
+  - Item: {fileID: 11400000, guid: 7c2b7548643cbb8419bb827b5f8da666, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 3578460608274390883, guid: 6c31ab66e5f36eb4ea3d37c36ba0a011, type: 3}
+  - Item: {fileID: 11400000, guid: 7c2b7548643cbb8419bb827b5f8da666, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 3578460608274390883, guid: 6c31ab66e5f36eb4ea3d37c36ba0a011, type: 3}
+  - Item: {fileID: 11400000, guid: fe8bca9926c4c3743844af9b6d5cf808, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 8135723570870496741, guid: fd1f8fa65050abc4a86700b0e2d76a53, type: 3}
+  - Item: {fileID: 11400000, guid: fe8bca9926c4c3743844af9b6d5cf808, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 8135723570870496741, guid: fd1f8fa65050abc4a86700b0e2d76a53, type: 3}
+  - Item: {fileID: 11400000, guid: fe8bca9926c4c3743844af9b6d5cf808, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 8135723570870496741, guid: fd1f8fa65050abc4a86700b0e2d76a53, type: 3}
+  - Item: {fileID: 11400000, guid: fd6bcc300a3693a48b2cdc08bcb46eed, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 7409009544048913022, guid: d1f174a751db12747af42bd367cc5958, type: 3}
+  - Item: {fileID: 11400000, guid: fd6bcc300a3693a48b2cdc08bcb46eed, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 7409009544048913022, guid: d1f174a751db12747af42bd367cc5958, type: 3}
+  - Item: {fileID: 11400000, guid: fd6bcc300a3693a48b2cdc08bcb46eed, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 7409009544048913022, guid: d1f174a751db12747af42bd367cc5958, type: 3}
+  - Item: {fileID: 11400000, guid: 8d7c3025214820c4d847faabbab92a81, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 4101657387665280160, guid: b80917b46f040aa4d8b3203b6d415188, type: 3}
+  - Item: {fileID: 11400000, guid: 8d7c3025214820c4d847faabbab92a81, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 4101657387665280160, guid: b80917b46f040aa4d8b3203b6d415188, type: 3}
+  - Item: {fileID: 11400000, guid: 8d7c3025214820c4d847faabbab92a81, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 4101657387665280160, guid: b80917b46f040aa4d8b3203b6d415188, type: 3}
+  - Item: {fileID: 11400000, guid: a332490699fd7f24ba4206337a1ae490, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 205228437905608243, guid: 83b0e4e2755bcd844a623a9a5786f84b, type: 3}
+  - Item: {fileID: 11400000, guid: a332490699fd7f24ba4206337a1ae490, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 205228437905608243, guid: 83b0e4e2755bcd844a623a9a5786f84b, type: 3}
+  - Item: {fileID: 11400000, guid: a332490699fd7f24ba4206337a1ae490, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 205228437905608243, guid: 83b0e4e2755bcd844a623a9a5786f84b, type: 3}
   CurtainWallDensity: 0.15
   OuterBaileyDensity: 0.35
   InnerWardDensity: 0.5

@@ -1,0 +1,46 @@
+{
+  "key": "BronzeOilPress",
+  "name": "The Oil Press",
+  "age": "BronzeAge",
+  "zone": "OuterBailey",
+  "role": "StorehouseRoom",
+  "summary": "A lever press worked by stone weights, racks of sealed amphorae, and a floor you will slip on.",
+  "description": "Olives go in at one end of this room and oil goes out at the other in sealed amphorae stamped for the palace. Between the two stands the press: a cypress beam socketed into the wall, bearing down on baskets of crushed olives on a stone bed while two stones on a rope do the work of a man who would rather be elsewhere, and the oil runs from the bed's spout into a jar. Everything here is slippery, the racks are full, and one spark turns the whole room into a lamp.",
+  "build": [
+    "Shell: the kit's OuterBailey shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m ochre plaster walls 3.60 m clear, 0.45 m mud-brick capstone band, an archway 2.60 × 2.59 m centred on every wall.",
+    "Oil stain: a dark flat patch 3.00 × 2.40 m on the floor under the press, (−3.90, 4.20).",
+    "Press bed (NW): limestone 1.40 × 1.40 × 0.40 m at (−3.40, 4.20); two olive frails (woven baskets r 0.40 × 0.12 m) stacked on it at (−3.60, 4.30).",
+    "Press beam: cypress 3.48 × 0.20 × 0.20 m, socketed into the west wall at 2.00 m above ground and running east, falling to 1.55 m at its free end, x −2.00.",
+    "Pressing post: cypress 0.16 × 0.16 m from the frails up to the beam at (−3.60, 4.30).",
+    "Weights: a rope r 0.02 × 0.75 m from the beam's end to two stone discs r 0.30 × 0.25 m stacked on the floor at (−2.05, 4.20).",
+    "Collecting jar: 0.55 m tall, belly 0.50 m, at (−3.40, 3.10), a stone spout from the bed into it.",
+    "Amphora racks (NE, SE): against the north and south walls at x 3.60 (y ±5.10): two posts 0.75 m, a board 3.00 × 0.45 × 0.06 m on top at 1.05 m, a rail at 0.62 m; five amphorae 0.62 m tall under each board at x 2.40–4.60.",
+    "Small pithoi (SW): three, 1.20 m tall, belly 0.70 m, lidded, at (−4.60, −4.60), (−3.50, −4.80), (−4.70, −3.40).",
+    "Jug table: cypress 0.60 × 0.60 m, 0.70 m high, at (−2.60, −3.40)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.59 m (OuterBailey), all open",
+    "Press beam socket: west wall, 2.00 m above ground"
+  ],
+  "loot_anchors": [
+    {"at": "press bed, beside the frails", "xyz": [-2.95, 3.75, 0.70]},
+    {"at": "NE amphora rack board", "xyz": [3.6, 5.1, 1.08]},
+    {"at": "SE amphora rack board", "xyz": [3.6, -5.1, 1.08]},
+    {"at": "jug table", "xyz": [-2.6, -3.4, 1.00]}
+  ],
+  "materials": [
+    {"name": "Ochre plaster", "hex": "#B7803E", "pigment": "bronze", "notes": "Walls; oil-stained low behind the press."},
+    {"name": "Limestone", "hex": "#8C7F68", "pigment": "vellum_faint", "notes": "Press bed, weights, spout."},
+    {"name": "Cypress timber", "hex": "#5A3E28", "pigment": "oak", "notes": "Beam, post, racks, table."},
+    {"name": "Terracotta", "hex": "#A0603E", "pigment": "leather", "notes": "Amphorae, the collecting jar; frails are leather too."},
+    {"name": "Oil-soaked clay", "hex": "#6A4430", "pigment": "madder", "notes": "The oil pithoi (the fire colour)."},
+    {"name": "Olive oil stain", "hex": "#3A3420", "pigment": "line", "notes": "The floor patch under the press."}
+  ],
+  "gameplay": [
+    "Slippery: the oil patch under the press makes a running player slide (a hazard hook for later).",
+    "IGNIS on the oil pithoi or the racks lights the room.",
+    "The press beam and the racks are cover; the amphorae are loot but fragile."
+  ],
+  "budget": "≤ 3.2k tris (kit); 2.48k built",
+  "concept": "concept/BronzeAge/BronzeOilPress.svg"
+}

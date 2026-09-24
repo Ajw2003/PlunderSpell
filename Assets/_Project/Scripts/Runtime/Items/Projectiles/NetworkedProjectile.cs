@@ -19,7 +19,8 @@ public class NetworkedProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.TryGetComponent(out IHealth hit))
+        // Damage 0 is another machine's shot shown here (RangedWeapon.SpawnCosmeticShot).
+        if (Damage > 0 && other.gameObject.TryGetComponent(out IHealth hit))
         {
             Vector3 point = other.contactCount > 0 ? other.GetContact(0).point : transform.position;
             Interfaces.Damage.Apply(hit, Damage, gameObject, Instigator, point, DamageKind.Projectile);

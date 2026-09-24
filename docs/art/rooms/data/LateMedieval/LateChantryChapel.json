@@ -1,0 +1,88 @@
+{
+  "key": "LateChantryChapel",
+  "name": "The Chantry Chapel",
+  "age": "LateMedieval",
+  "zone": "InnerWard",
+  "role": "ChapelRoom",
+  "summary": "A sandstone altar with a gilded triptych, the founder's tomb and alabaster effigy, a parclose screen closing off a private chantry, and a prie-dieu between candles.",
+  "description": "The family paid for this chapel so that a priest would say masses for the founder's soul until the end of the world, and the founder lies in it to make sure. His tomb chest stands in the north-west corner, arcaded sandstone under an alabaster effigy, hands joined in prayer, head on a cushion, feet on a small lion. On the altar across the room a gilded triptych stands open on a madder frontal between two gilt candlesticks. The south-east corner is closed off by a parclose screen of oak, a chantry within the chantry for the family's own prayers; a prie-dieu in the south-west faces a painted panel between two candles. The triptych is the richest thing in the ward that can be carried by one person, just.",
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.00 m clear, a 0.45 m verdure-green trim course, an archway 2.60 × 2.88 m centred on every wall.",
+    "Altar (NE): sandstone 2.00 × 0.80 × 1.00 m against the north wall at (3.60, 5.10), a madder frontal 1.80 × 0.78 m on its front, a linen cloth 0.02 m on top.",
+    "Triptych: three gilt-framed panels standing open on the altar's back edge: the centre 0.90 × 1.10 m, the wings 0.45 × 0.88 m, painted green grounds, a madder figure in the centre.",
+    "Candlesticks: two gilt, 0.35 m, at x 2.75 and 4.45 on the altar, candles and flames.",
+    "Tomb chest (NW): sandstone 2.10 × 0.90 × 0.80 m at (−3.60, 4.60), long axis east–west, arcaded sides (albedo).",
+    "Effigy: alabaster 1.60 × 0.45 × 0.20 m on the lid, a pillow 0.20 × 0.40 m and head r 0.11 m at the east end, hands at prayer, a lion under the feet at the west end.",
+    "Parclose screen (SE): oak, 2.20 m tall: a north run from x 2.80 to the east wall at y −2.30 and a west run from y −2.30 to the south wall at x 2.00, each a solid dado 0.90 m under mullions at 0.30 m and a top rail; the gap x 2.00 … 2.80 on the north run is the entrance, facing the crossing.",
+    "Lectern (inside the parclose): oak post 0.30 × 0.30 × 1.00 m with a sloped top at (3.90, −4.00).",
+    "Prie-dieu (SW): oak 0.35 × 0.60 × 0.85 m at (−4.60, −3.60) facing west, a madder kneeler before it; a gilt-framed devotional panel 1.00 × 1.30 m on the west wall at y −3.60 from 1.50 m; iron candle stands at (−4.80, −2.60) and (−4.80, −4.60)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Parclose entrance: 0.80 m, on its north run, facing the crossing",
+    "Altar top and tomb chest: loot anchors"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the altar",
+      "xyz": [
+        3.6,
+        4.9,
+        1.3
+      ]
+    },
+    {
+      "at": "the tomb chest, by the effigy's head",
+      "xyz": [
+        -2.75,
+        4.6,
+        1.1
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls, altar, tomb chest."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Parclose screen, lectern, prie-dieu."
+    },
+    {
+      "name": "Gilt",
+      "hex": "#C9A227",
+      "pigment": "orpiment",
+      "notes": "Triptych frames, candlesticks, the panel's frame."
+    },
+    {
+      "name": "Madder",
+      "hex": "#9E2A2F",
+      "pigment": "madder",
+      "notes": "Frontal, kneeler, flames."
+    },
+    {
+      "name": "Alabaster",
+      "hex": "#D8D0BE",
+      "pigment": "vellum",
+      "notes": "The effigy."
+    },
+    {
+      "name": "Tapestry green",
+      "hex": "#4F5E3A",
+      "pigment": "verdigris_lo",
+      "notes": "Painted panel grounds."
+    }
+  ],
+  "gameplay": [
+    "The triptych is a heavy prize: gold, awkward, and visible from both east and north archways.",
+    "The parclose is a room within the room: a thief inside is hidden to the waist and boxed in.",
+    "Two loot anchors: altar and tomb."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateChantryChapel.svg"
+}

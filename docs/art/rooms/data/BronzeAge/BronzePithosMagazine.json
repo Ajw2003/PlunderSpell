@@ -1,0 +1,54 @@
+{
+  "key": "BronzePithosMagazine",
+  "name": "The Pithos Magazine",
+  "age": "BronzeAge",
+  "zone": "InnerWard",
+  "role": "StorehouseRoom (palace)",
+  "summary": "Two dozen jars taller than you, grain on one side and oil on the other, and aisles too narrow to turn round in.",
+  "description": "The wealth of the palace in its plainest form: grain and oil, by the tonne, in jars taller than a man. The pithoi stand on clay benches in rows, rope-banded and marked by the scribes, and between them run aisles so narrow that a man carrying anything must go sideways. The oil side is darker, sticky underfoot and lidded against the mice, and one careless spark there lights the whole east half of the room. There is little here worth carrying except the scribe's tablets and whatever was left on the ladling table; the room's value is as cover, and as a very large fire waiting to happen.",
+  "source": "Pithos Magazine (docs/art/concept/bronze/pithos-store.svg, docs/art/bronze.md)",
+  "kit_changes": [
+    "The art bible's four N–S jar rows cut across both archway axes; the kit puts one bench of two rows per quadrant (the same 24 jars) and keeps the cross clear.",
+    "The half-choking amphora piles inside the east and west archways would block the walkway: left out.",
+    "Jar belly 0.90 m instead of 1.10 m, and 1.70 m tall on a 0.30 m bench, so two rows fit a quadrant with a 1.15 m wall aisle.",
+    "No ceiling vents (kit rooms are open-roofed); the pithoi are six-sided in the kit (24 of them)."
+  ],
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m ochre plaster walls 4.00 m clear, 0.45 m fresco-blue capstone band, an archway 2.60 × 2.88 m centred on every wall.",
+    "Benches: one clay bench per quadrant, 2.50 (E–W) × 3.20 (N–S) × 0.30 m, spanning x 1.90–4.40 and y 1.90–5.10 (mirrored in each quadrant).",
+    "Pithoi: two rows of three per bench, rows at x ±2.50 and ±3.80, jars at y ±2.40, ±3.50, ±4.60. Each 1.70 m tall on the bench (top 2.30 m above ground), belly 0.90 m at 0.42 of the height, mouth 0.45 m with a rolled rim, one dark rope band at 0.62 of the height.",
+    "Grain jars on the west benches (terracotta); oil jars on the east benches (darker oil-soaked clay) with a stone lid disc 0.54 m and black drips from the rim.",
+    "Oil pools: flat dark ellipses on the floor, 1.10 × 0.66 m at (3.20, 1.90) and 0.80 × 0.48 m at (4.80, −2.90).",
+    "Step-ladder: two rails 0.06 m and six rungs, leaning from the floor at x −5.20 to the NW front jar's shoulder at x −4.35, 1.95 m up, at y 3.05–3.30.",
+    "Scribe's bench: clay, 0.60 × 1.80 × 0.80 m against the west wall at (−5.20, −3.50), six clay tablets 0.12 × 0.07 m on it.",
+    "Ladle table: a painted table 0.50 × 0.50 m, 0.70 m high, in the NE wall aisle at (5.10, 2.30).",
+    "Grain basket: r 0.28–0.32 × 0.40 m in the NW wall aisle at (−5.00, 2.30).",
+    "Row marks: scribes' signs painted on the north wall at 1.80 m over each bench (albedo only)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Wall aisles: 1.15 m between the benches and the walls; the scribe's bench pinches the SW one to 0.50 m",
+    "Hide spots: the row ends at the cross-aisles, where the jar bellies give cover"
+  ],
+  "loot_anchors": [
+    {"at": "scribe's bench, tablets", "xyz": [-5.2, -3.5, 1.10]},
+    {"at": "ladle table, NE aisle", "xyz": [5.1, 2.3, 1.00]},
+    {"at": "grain basket, NW aisle", "xyz": [-5.0, 2.3, 0.70]}
+  ],
+  "materials": [
+    {"name": "Ochre plaster", "hex": "#B7803E", "pigment": "bronze", "notes": "Walls; row marks in haematite at 1.80 m."},
+    {"name": "Pithos terracotta", "hex": "#A0603E", "pigment": "leather", "notes": "Grain jars and the benches; fire-cloud blotches, chipped rims."},
+    {"name": "Oil-soaked clay", "hex": "#6A4430", "pigment": "madder", "notes": "Oil jars: the atlas's fire colour, since this is what burns."},
+    {"name": "Beaten clay floor", "hex": "#7A5A3E", "pigment": "ash_hi", "notes": "Floor; grain drifts at the west jars' feet."},
+    {"name": "Hearth soot / oil", "hex": "#2B231B", "pigment": "bone_black", "notes": "Rope bands, oil pools, drips."},
+    {"name": "Fresco blue", "hex": "#3F6F86", "pigment": "verdigris_lo", "notes": "The capstone band only."}
+  ],
+  "gameplay": [
+    "IGNIS on an oil jar or pool lights the east half; the grain side follows.",
+    "The jars are FRANGO-breakable in play: grain spills a drift that slows, oil spills a pool that burns.",
+    "The best cover in the ward: the row ends at the cross-aisles hide a crouching player completely.",
+    "Little loot (tablets, ladle table, basket): the room is a route and a trap, not a prize."
+  ],
+  "budget": "≤ 4.8k tris (kit); 3.23k built",
+  "concept": "concept/BronzeAge/BronzePithosMagazine.svg"
+}

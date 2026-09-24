@@ -1,0 +1,102 @@
+{
+  "key": "BronzeShaftStair",
+  "name": "The Shaft Stair",
+  "age": "BronzeAge",
+  "zone": "Crypt",
+  "role": "CryptStairwell",
+  "summary": "Four steps up to a dais where a painted larnax lies in state, and in the far corner the open mouth of a shaft grave with the diggers' sheerlegs still over it.",
+  "description": "Someone was digging here when the palace fell. A short ashlar stair climbs the west wall to a dais where the family's most honoured dead lies in a painted larnax, raised above the floor so the lamps of visitors would fall on it. Across the room a new shaft grave gapes inside its stone kerb, the sheerlegs still standing over it and a basket still hanging on its rope, full of whatever the diggers brought up or meant to send down. Storage jars stand along the north wall for the funeral feast, and bronze braziers on either side of the north doorway have burned down to embers. The shaft is too deep to see the bottom of, which is the point of a shaft.",
+  "build": [
+    "Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m limestone walls 3.00 m clear, 0.45 m ashlar capstone band, an archway 2.60 × 2.16 m centred on every wall.",
+    "Stair and dais (NW): the kit's stair-to-dais in ashlar: four steps 2.20 m wide, 0.35 m tread, 0.25 m rise, climbing north along the west wall from y 1.90 to 3.30, then the dais 2.20 × 2.20 × 1.00 m filling the corner (x −5.50…−3.30, y 3.30…5.50).",
+    "Dais larnax: the Age's painted larnax, 1.60 × 0.60 × 0.55 m on 0.12 m legs with a gabled lid, long axis north–south at (−4.40, 4.55) on the dais; lid ridge at 2.17 m.",
+    "Storage jars (NE): three pithoi 1.20 m tall, belly 0.70 m, with stone lids, along the north wall at x 2.40 / 3.50 / 4.60, y 4.90.",
+    "Braziers: the kit brazier in bronze with a haematite fire bed, 1.31 m, at (−2.40, 2.80) and (4.40, 2.60), either side of the north archway.",
+    "Shaft kerb (SE): four limestone blocks 0.35 m high, 0.20 m thick, round a 1.80 × 1.00 m opening, outer 2.20 × 1.40 m, centred (3.70, −3.40); a black void slab 0.02 m thick fills the opening at floor level.",
+    "Sheerlegs (SE): two timber A-frames just outside the kerb's ends at x 2.40 and 5.00, legs 0.10 × 0.10 m from y −4.00 and −2.80 meeting at 2.20 m over y −3.40, and a crossbar r 0.06 m from x 2.30 to 5.10 at 2.15 m.",
+    "Basket (SE): a wicker basket r 0.22 m, 0.30 m tall, hanging on a rope from the crossbar over the shaft's centre, its bottom at 0.50 m and top at 0.80 m above the floor.",
+    "Offering table (SW): ashlar 0.60 × 0.60 m, top at 0.70 m, at (−3.40, −3.40), two gold cups; three amphorae 0.62 m round it at (−4.60, −4.60), (−4.80, −3.80), (−3.80, −4.80)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open",
+    "Dais larnax lid: loot anchor at 2.17 m",
+    "Offering table and the hanging basket: loot anchors"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the dais larnax's lid",
+      "xyz": [
+        -4.4,
+        4.55,
+        2.17
+      ]
+    },
+    {
+      "at": "the offering table",
+      "xyz": [
+        -3.4,
+        -3.4,
+        1.0
+      ]
+    },
+    {
+      "at": "the basket over the shaft",
+      "xyz": [
+        3.7,
+        -3.4,
+        1.1
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Limestone",
+      "hex": "#8C7F68",
+      "pigment": "vellum_dim",
+      "notes": "Walls and the shaft kerb."
+    },
+    {
+      "name": "Dressed ashlar",
+      "hex": "#9A8C72",
+      "pigment": "vellum_faint",
+      "notes": "Stair, dais, offering table, capstone band."
+    },
+    {
+      "name": "Larnax clay",
+      "hex": "#A0603E",
+      "pigment": "leather",
+      "notes": "The larnax, jars and amphorae."
+    },
+    {
+      "name": "Timber",
+      "hex": "#5A3E28",
+      "pigment": "oak",
+      "notes": "Sheerlegs, crossbar and basket."
+    },
+    {
+      "name": "Bronze",
+      "hex": "#9B6A38",
+      "pigment": "bronze",
+      "notes": "The braziers."
+    },
+    {
+      "name": "Gold",
+      "hex": "#C9A227",
+      "pigment": "orpiment",
+      "notes": "The cups."
+    },
+    {
+      "name": "Void",
+      "hex": "#2B231B",
+      "pigment": "bone_black",
+      "notes": "The shaft's opening, and the Crypt floor."
+    }
+  ],
+  "gameplay": [
+    "The dais larnax is the prize and the stair its only approach: a thief on the dais is on show to both north and west archways.",
+    "The basket hangs over the open shaft: reachable across the knee-high kerb, but it swings in the story, not in physics.",
+    "The shaft reads as a drop but is a flat void slab; the kerb keeps the NavMesh from walking over it."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeShaftStair.svg"
+}

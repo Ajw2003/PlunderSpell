@@ -1,0 +1,48 @@
+{
+  "key": "BronzeMegaronStair",
+  "name": "The Megaron Stair",
+  "age": "BronzeAge",
+  "zone": "Keep",
+  "role": "KeepStairwell",
+  "summary": "A gypsum stair to a railed gallery, horns of consecration on the rail and a chest waiting at the top.",
+  "description": "The palace has an upstairs, and this is the way to it: two short flights of gypsum steps turning at a landing in the corner, a timber bridge over the passage below, and a railed gallery where the household keeps what it does not want the kitchen to see. Horns of consecration stand on the gallery rail to remind you whose house this is, tripods burn in the far corners, and a bronze-bound chest sits on the gallery, which is the whole reason anybody climbs. Coming down with it is slower than going up.",
+  "build": [
+    "Shell: the kit's Keep shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m ochre plaster walls 4.60 m clear, 0.45 m haematite capstone band, an archway 2.60 × 3.31 m centred on every wall.",
+    "Stair (castle_builders._stair_to_gallery, top 2.60 m): first flight of 4 gypsum steps 1.50 m wide, west along the south wall from x −1.90 to −4.00 (centre line y −4.75); a 1.50 m corner landing at half height; second flight of 4 steps north along the west wall from y −4.00 to −2.00. The foot faces open floor.",
+    "Bridge: cypress, 1.50 m wide × 4.00 m long × 0.20 m, at x −4.75 over the east–west walkway, underside 2.40 m above the floor.",
+    "Gallery: cypress deck 3.70 × 3.70 × 0.20 m filling the NW quadrant at 2.60 m, on three posts 0.20 × 0.20 m at (−1.90, 1.90), (−1.90, 5.30), (−5.30, 1.90).",
+    "Rail: cypress, 0.90 m high, along the gallery's east edge (x −1.85) and south edge (y 1.85, from x −4.00 to −1.80), leaving the bridge end open.",
+    "Horns of consecration: two gypsum horns 0.50 m across on the south rail's top at x −3.60 and −2.40.",
+    "Chest: cypress 1.00 × 0.60 × 0.55 m with a bronze-bound lid, on the gallery at (−4.30, 4.40).",
+    "Fresco: a band 1.40–3.00 m above the floor on the east half of the north wall and both sections of the east wall, haematite border on top.",
+    "Tripod braziers: bronze tripods (legs 0.90 m, bowl r 0.30 m) at (3.80, 3.80) and (3.80, −3.80), a fire cone in each bowl.",
+    "Stand: a painted offering table 0.60 × 0.60 m, 0.70 m high, at (4.60, −2.40)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "Stair up: foot at (−1.90, −4.75), facing east onto open floor; gallery at +2.60 m",
+    "Bridge over the east–west walkway: 2.40 m clear underneath"
+  ],
+  "loot_anchors": [
+    {"at": "chest on the gallery", "xyz": [-4.3, 4.4, 3.50]},
+    {"at": "NE tripod bowl", "xyz": [3.8, 3.8, 1.44]},
+    {"at": "SE tripod bowl", "xyz": [3.8, -3.8, 1.44]},
+    {"at": "stand, SE", "xyz": [4.6, -2.4, 1.00]}
+  ],
+  "materials": [
+    {"name": "Ochre plaster", "hex": "#B7803E", "pigment": "bronze", "notes": "Walls; soot above the tripods."},
+    {"name": "Gypsum", "hex": "#D8CDB2", "pigment": "vellum", "notes": "Steps (worn to a dip in the middle of each tread), the horns."},
+    {"name": "Cypress timber", "hex": "#5A3E28", "pigment": "oak", "notes": "Bridge, gallery, posts, rail, chest."},
+    {"name": "Fresco blue", "hex": "#3F6F86", "pigment": "verdigris_lo", "notes": "The fresco band."},
+    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "Capstone, fresco border, the fire in the bowls."},
+    {"name": "Cast bronze", "hex": "#9B6A38", "pigment": "bronze", "notes": "Tripods and the chest's binding."}
+  ],
+  "gameplay": [
+    "The chest on the gallery is the prize, and carrying it down the stair is slow.",
+    "The gallery sees the whole room and both east–west archways: a lookout for a guard or for you.",
+    "Anyone under the bridge can't be seen from the gallery.",
+    "The tripods are the room's light and its fire hazard."
+  ],
+  "budget": "≤ 1.6k tris (kit); 0.89k built",
+  "concept": "concept/BronzeAge/BronzeMegaronStair.svg"
+}

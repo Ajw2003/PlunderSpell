@@ -1,0 +1,45 @@
+{
+  "key": "BronzeCistern",
+  "name": "The Cistern Court",
+  "age": "BronzeAge",
+  "zone": "OuterBailey",
+  "role": "WellCourtyard",
+  "summary": "A paved court round the citadel's cistern: a stone drum, its lid half drawn, a winch over it, and jars waiting to be filled.",
+  "description": "A citadel on a rock lives or dies by its water, and this court is where the water is kept: a stone drum over the cistern shaft with its lid dragged half aside, a timber winch on the rim for the rope, and a bucket left beside it by whoever was last on duty. Water jars stand on a stand against the north wall, a clay basin waits on its pedestal for washing, and a trough by the south wall serves the animals. The court is paved and open to the sky, and on a still night you can hear the cistern breathing.",
+  "build": [
+    "Shell: the kit's OuterBailey shell, 12.0 × 12.0 × 0.30 m slab (paved), 0.50 m ochre plaster walls 3.60 m clear, 0.45 m mud-brick capstone band, an archway 2.60 × 2.59 m centred on every wall.",
+    "Cistern head (SE): a limestone drum r 1.10 × 0.80 m at (3.60, −3.60), the water surface r 0.88 m on top, ringed by a stone lip 0.22 m wide × 0.12 m (twelve blocks) so the water sits below it.",
+    "Lid: a stone slab 1.60 × 0.80 × 0.12 m resting on the lip's north half at (3.60, −3.00), half drawn off the shaft (top at 1.34 m).",
+    "Winch: two cypress posts 0.14 × 0.14 × 1.44 m standing on the lip at x 2.60 and 4.60, a beam 2.10 m across them at 2.65 m above ground.",
+    "Bucket: cypress r 0.20 × 0.35 m on the floor at (2.20, −4.80).",
+    "Hydria stand (NW): cypress, 1.60 × 0.50 m, 0.50 m high, against the north wall at x −3.80; a water jar 0.62 m tall at each end (x −4.35, −3.25).",
+    "Basin (NE): a clay bowl r 0.45 → 0.55 × 0.20 m on a pedestal r 0.08 × 0.72 m and a gypsum foot, water in it, at (3.80, 4.20); rim at 1.30 m above ground.",
+    "Trough (SW): stone, 2.20 × 0.70 × 0.60 m against the south wall at x −3.80, water in it.",
+    "Paving: limestone flags in a 1.00 m chequer (albedo only)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.59 m (OuterBailey), all open",
+    "Cistern shaft: SE, open under the half-drawn lid (a drop to water)"
+  ],
+  "loot_anchors": [
+    {"at": "cistern lid", "xyz": [3.6, -2.9, 1.34]},
+    {"at": "hydria stand, between the jars", "xyz": [-3.8, 4.9, 0.80]},
+    {"at": "clay basin", "xyz": [3.8, 4.2, 1.30]},
+    {"at": "bucket", "xyz": [2.2, -4.8, 0.65]}
+  ],
+  "materials": [
+    {"name": "Ochre plaster", "hex": "#B7803E", "pigment": "bronze", "notes": "Walls; damp-dark at the foot."},
+    {"name": "Limestone", "hex": "#8C7F68", "pigment": "vellum_faint", "notes": "Cistern drum, trough; the lid is vellum_dim."},
+    {"name": "Terracotta", "hex": "#A0603E", "pigment": "leather", "notes": "Hydriae and the basin."},
+    {"name": "Water", "hex": "#5E8A96", "pigment": "verdigris_lo", "notes": "Cistern, basin, trough."},
+    {"name": "Cypress timber", "hex": "#5A3E28", "pigment": "oak", "notes": "Winch, stand, bucket."},
+    {"name": "Mud-brick", "hex": "#8A5A3C", "pigment": "leather", "notes": "Capstone band."}
+  ],
+  "gameplay": [
+    "Water for IGNIS fires: the court is where a burning raid can be put out, and where guards run for buckets.",
+    "The cistern head is waist-high cover; the rest of the court is open to the sky and bright.",
+    "The open shaft under the lid is a drop (a thrown item, or a player, is gone)."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeCistern.svg"
+}

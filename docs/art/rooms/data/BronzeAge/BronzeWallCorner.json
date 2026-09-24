@@ -1,0 +1,64 @@
+{
+  "key": "BronzeWallCorner",
+  "name": "The Corner Tower",
+  "age": "BronzeAge",
+  "zone": "CurtainWall",
+  "role": "WallCorner",
+  "summary": "Where two cyclopean walls meet, a square tower of the same giant stones stands a course higher, with steps up from both walks.",
+  "description": "The citadel turns its corners with a tower rather than a curve: a square of cyclopean masonry 4.4 m on a side, laid in the same rough courses as the walls and then one more, so its top stands a man's reach above the walk. Slingers on it see along both walls at once. Its mud-brick parapet faces only outward; on the inside it is open to the walks, and three stone steps on each walk climb the last of the height. It is the obvious place to put a lookout and the obvious place for a thief to expect one.",
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; walls on the south and west edges, the bailey open to the north-east.",
+    "Tower: cyclopean limestone, 4.40 × 4.40 m in the SW corner (x and y −6.05 … −1.65), four courses 1.50 / 1.40 / 1.20 / 1.40 m to 5.50 m; blocks cyclopean.blocks(−6.05, −1.65, 5.50, seed = 3), set-backs on the south face.",
+    "Tower top: ochre plaster 0.10 m (5.50–5.60 m) inside the parapets, to 0.20 m short of the north face.",
+    "Tower parapet: the Age's mud-brick breastwork on the tower's south and west edges only, base 5.50 m, top 6.60 m, three merlons a side, sling slots in the first and third.",
+    "South run: the straight wall's section, 2.40 m thick, x −1.65 … 6.05, seed 1: three courses to 4.10 m, plastered walk, breastwork with six merlons.",
+    "West run: the same, along the west edge, y −1.65 … 6.05, seed 2, its outer face on x = −6.05.",
+    "Steps: three ashlar steps on each walk against the tower (0.35 m treads, 0.35 m rises, tops 4.55 / 4.90 / 5.25 m), the fourth rise onto the tower top at 5.60 m.",
+    "Joins: the south run reaches the east cell edge and the west run the north cell edge at full height and section, meeting any straight piece."
+  ],
+  "sockets": [
+    "Wall-walks: 4.10 m (plaster top 4.20 m), 1.76 m wide, open at the east and north cell edges",
+    "Tower top: 5.60 m, reached by three steps from each walk",
+    "Sling slots: on the outer faces, 0.60 m above each walk or the tower top"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Cyclopean limestone",
+      "hex": "#8C7F68",
+      "pigment": "vellum_dim",
+      "notes": "Tower and runs."
+    },
+    {
+      "name": "Mud-brick",
+      "hex": "#8A5A3C",
+      "pigment": "leather",
+      "notes": "Breastworks and merlons."
+    },
+    {
+      "name": "Ochre plaster",
+      "hex": "#B7803E",
+      "pigment": "bronze",
+      "notes": "Walks and the tower top."
+    },
+    {
+      "name": "Dressed ashlar",
+      "hex": "#9A8C72",
+      "pigment": "vellum_faint",
+      "notes": "The steps."
+    },
+    {
+      "name": "Soot",
+      "hex": "#2B231B",
+      "pigment": "bone_black",
+      "notes": "Sling slots."
+    }
+  ],
+  "gameplay": [
+    "A lookout post: a Wall Slinger on the tower sees along both walks; the steps are the only way up.",
+    "The tower's inner sides are open, so a thief who reaches the walk can climb it too.",
+    "No loot: terrain."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeWallCorner.svg"
+}
