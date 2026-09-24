@@ -2547,10 +2547,10 @@
       "title": "Gothic Man-at-Arms",
       "passed": true,
       "stats": {
-        "vertices": 4292,
-        "faces": 3865,
-        "triangles": 7992,
-        "islands": 150,
+        "vertices": 3464,
+        "faces": 3189,
+        "triangles": 6592,
+        "islands": 86,
         "lowest_z": 0.0,
         "height": 1.95,
         "width": 0.928,
@@ -2560,8 +2560,8 @@
         "height_spec_m": 1.95,
         "height_with_props_m": 1.95,
         "rig_bones": 23,
-        "skinned_bones": 20,
-        "mean_influences": 1.02
+        "skinned_bones": 22,
+        "mean_influences": 1.41
       },
       "spec": {
         "dims_WDH_m": null,
@@ -2621,6 +2621,7 @@
       },
       "failures": [],
       "warnings": [
+        "24 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['signet_gold']"
       ],
       "notes": [
@@ -2636,7 +2637,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/glTF/GothicManAtArms.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/GothicManAtArms.blend"
       },
-      "build_seconds": 5.1
+      "build_seconds": 4.1
     },
     {
       "key": "enemies/late/handgunner",
@@ -3116,7 +3117,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/glTF/Cuirassier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Cuirassier/Cuirassier.blend"
       },
-      "build_seconds": 5.3
+      "build_seconds": 3.9
     },
     {
       "key": "enemies/powder/musketeer",
@@ -3245,7 +3246,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/glTF/Musketeer.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/Musketeer.blend"
       },
-      "build_seconds": 4.4
+      "build_seconds": 3.7
     },
     {
       "key": "enemies/powder/partisan-guard",
@@ -3352,7 +3353,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/glTF/PalaceGuard.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/PalaceGuard.blend"
       },
-      "build_seconds": 5.1
+      "build_seconds": 4.0
     },
     {
       "key": "enemies/powder/petardier",
@@ -3377,7 +3378,7 @@
         "height_with_props_m": 1.752,
         "rig_bones": 30,
         "skinned_bones": 29,
-        "mean_influences": 1.52
+        "mean_influences": 1.51
       },
       "spec": {
         "dims_WDH_m": null,
@@ -3480,7 +3481,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Petardier/glTF/Petardier.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Petardier/Petardier.blend"
       },
-      "build_seconds": 5.5
+      "build_seconds": 3.6
     }
   ]
 }
