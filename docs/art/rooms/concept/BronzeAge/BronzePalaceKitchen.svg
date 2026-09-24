@@ -111,7 +111,7 @@
     <path d="M661 624 L590 226 L604 226" fill="none" stroke="#9A9078" stroke-width=".8" opacity=".85"/>
     <circle cx="661" cy="624" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
     <text x="610" y="230" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">BREAD OVEN</text>
-    <text x="610" y="244" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">clay dome 1.80 m across, 1.20 m</text>
+    <text x="610" y="244" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">clay dome, 1.80 × 1.20 m</text>
     <path d="M562 626.8 L590 306 L604 306" fill="none" stroke="#9A9078" stroke-width=".8" opacity=".85"/>
     <circle cx="562" cy="626.8" r="2.6" fill="#DCD2BA" stroke="#14120E" stroke-width="1"/>
     <text x="610" y="310" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">LOAF TABLE</text>

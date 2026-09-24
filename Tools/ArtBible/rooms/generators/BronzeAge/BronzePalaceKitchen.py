@@ -46,7 +46,7 @@ def build():
     kit_cut_walls(sh, "InnerWard")
     khuman(sh, -1.0)
     sh.callouts([
-        (*KE(4.2, FZ + 0.9), "BREAD OVEN", "clay dome 1.80 m across, 1.20 m"),
+        (*KE(4.2, FZ + 0.9), "BREAD OVEN", "clay dome, 1.80 × 1.20 m"),
         (*KE(2.4, FZ + 0.85), "LOAF TABLE", "1.00 × 0.60 m · loot"),
     ], 610, 230, 310, slope=1.0)
     sh.callouts([
