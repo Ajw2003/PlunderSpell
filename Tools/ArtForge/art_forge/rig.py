@@ -299,3 +299,46 @@ def apply_pose(rig: bpy.types.Object, pose: dict | None = None) -> list[str]:
         pb.matrix = Matrix.Translation(head) @ rot @ Matrix.Translation(-head) @ pb.matrix
     bpy.context.view_layer.update()
     return sorted(pose, key=depth)
+
+
+HEAT_TRIES = 8
+
+
+def smooth_weights_with_retry(apply_smooth_weights, mesh_obj, rig, tries: int = HEAT_TRIES, **kwargs) -> dict:
+    """Run EnemyForge's heat weighting, retrying when it silently collapses to one bone.
+
+    Blender's bone heat weighting ("failed to find solution for one or more bones")
+    fails at random on the same mesh, and on failure EnemyForge keeps the rigid
+    per-part weights. Retrying unchanged input fails the same way, so each retry
+    first restores the rigid weights, nudges mesh and rig by under a millimetre
+    (different floats for the solver), then puts both back exactly. Adopted from
+    the Age of Powder enemy worker, which measured failures on about half of
+    Petardier builds, all recovered on the second attempt. A mesh that still fails
+    after `tries` attempts is left rigid, and validate.py fails it loudly.
+    """
+    names = [g.name for g in mesh_obj.vertex_groups]
+    rigid = [[(names[g.group], g.weight) for g in v.groups] for v in mesh_obj.data.vertices]
+    stats: dict = {}
+    for attempt in range(1, tries + 1):
+        if attempt > 1:
+            mesh_obj.vertex_groups.clear()
+            groups = {n: mesh_obj.vertex_groups.new(name=n) for n in names}
+            for index, weights in enumerate(rigid):
+                for name, weight in weights:
+                    groups[name].add([index], weight, "REPLACE")
+            offset = (0.00037 * attempt, -0.00021 * attempt, 0.00013 * attempt)
+            mesh_obj.location = offset
+            rig.location = offset
+            bpy.context.view_layer.update()
+        stats = apply_smooth_weights(mesh_obj, rig, **kwargs)
+        if attempt > 1:
+            mesh_obj.location = (0.0, 0.0, 0.0)
+            rig.location = (0.0, 0.0, 0.0)
+            mesh_obj.matrix_parent_inverse.identity()
+            bpy.context.view_layer.update()
+        if not stats.get("auto_weights") or stats.get("max_influences", 0) > 1:
+            break
+        print(f"  {mesh_obj.name}: heat weighting collapsed to one bone "
+              f"(attempt {attempt}/{tries}), retrying")
+    stats["heat_attempts"] = attempt
+    return stats

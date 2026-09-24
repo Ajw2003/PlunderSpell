@@ -27,10 +27,19 @@ surfaced it as not actually functional yet.
 | M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
 | M3 — Open the other Ages | Era content wired in; Bronze Age and High Medieval raids differ | 🟡 The Lair's era now picks the raid's rooms, loot and garrison through `EraContentCatalogue` ([`raid-scene-assembly.md`, "Eras"](systems/raid-scene-assembly.md)). Bronze Age has its own full room set, 5 items, 3 enemies. High Medieval: the original rooms, 5 items, 4 enemies. Late Medieval: its own InnerWard and Keep, 5 items, 1 enemy. Age of Powder: High Medieval rooms, 5 items, 2 enemies. Unfinished art: 12 enemies, 15 Late rooms, all 26 Powder rooms | 🟡 — verified 2026-09-24 in the live Editor through Lair → Set Out, one seed per era; not yet playtested by a person |
 
-**2026-09-24 — per-era raid content is wired in.** The 20 ArtForge plunder items, the 10
-ArtForge enemies built so far, the Bronze Age room set and the 10 Late Medieval rooms now spawn in
-raids. The era chosen in the Lair decides which of them a raid uses. The 6 other art-bible enemies
-are not modelled yet.
+**2026-09-24 — art bible plunder and enemies modelled, and per-era raid content wired in.**
+All 20 plunder items and all 16 enemies from the art bible (`docs/art/`) exist as validated,
+textured models under `Assets/Models/ArtBible/`, built by `Tools/ArtForge/`. The enemies are rigged
+with Unity-Humanoid bone names and skins blended across at most 4 bones. The era chosen in the Lair
+now decides which rooms, loot and enemies a raid uses (`EraContentCatalogue`, filled by
+`Tools/Plunderspell/Forge Era Content`). Wired in: the 20 items, the Bronze Age room set, 10 of the
+29 Late Medieval rooms, and 10 of the 16 enemies. Not yet: the other 6 enemies (Keeper of the
+Flame, Gothic Man-at-Arms, Handgunner, Pavisier, Cuirassier, Petardier), the other 19 Late Medieval
+rooms, and rooms of their own for High Medieval and Age of Powder. No enemy is animated: no
+Animator, no clips, no spring bones. `Assets/Models/ArtBible/AllEnemies/` holds a bare model prefab
+per enemy as the art and scale reference; the prefabs raids spawn are
+`Assets/_Project/Prefabs/Enemies/<Era>/`. Merged together on `claude/staging-2026-09-24` for testing
+before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
 
 ## What used to be not what it looked like
 

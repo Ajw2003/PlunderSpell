@@ -78,7 +78,7 @@ namespace RogueAi.Raid
         /// <summary>The seed the current (or most recent) raid was built from.</summary>
         public int Seed => _seed.value;
 
-        /// <summary>The era the current raid is set in.</summary>
+        /// <summary>The era the current raid is set in. Replicated, so a client reads the host's.</summary>
         public HistoricalEra Era => _era.value;
 
         /// <summary>The layout the current raid is being played in, or null in the Lair.</summary>
@@ -204,8 +204,14 @@ namespace RogueAi.Raid
 
             ApplyEraContent(Era);
 
-            Debug.Log($"[Raid] Building the {Era} castle from seed {seed} ({(isSpawned && !isServer ? "client" : "host")}).");
+            Debug.Log($"[Raid] Building the castle from seed {seed}, {Era} ({(isSpawned && !isServer ? "client" : "host")}).");
+
+            // Published before generating, so anything below the raid in the dependency graph (the
+            // castle generator's era rooms, when they land) reads the same Age the garrison is drawn for.
+            RaidContext.Publish(new RaidContext(seed, Era));
             Castle = GenerateWalkable(ref seed);
+            if (RaidContext.Current.Seed != seed)
+                RaidContext.Publish(new RaidContext(seed, Era));
             if (!isSpawned || isServer)
                 _seed.value = seed;
             else
@@ -231,7 +237,7 @@ namespace RogueAi.Raid
             if (!isSpawned || isServer)
             {
                 _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
-                _guardSpawner?.SpawnFor(Castle, seed);
+                _guardSpawner?.SpawnFor(Castle, seed, Era);
             }
 
             return Castle;
@@ -309,6 +315,7 @@ namespace RogueAi.Raid
         {
             _generator?.ClearGenerated();
             Castle = null;
+            RaidContext.Clear();
             if (!isSpawned || isServer)
                 SetPhase(RaidPhase.InLair);
         }

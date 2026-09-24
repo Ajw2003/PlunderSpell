@@ -1,5 +1,26 @@
 # Today
 
+**2026-09-24, evening — audit of the day's three art branches, and a merge plan.** Checked
+`dreamy-curie-jnrkbu`, `era-content-integration` and `castle-bench-rooms-mwucab` in a live Editor
+against a trial merge of all three (`claude/trial-merge-2026-09-24`); it compiles. All 16 enemies
+are modelled and none is animated. 10 are in raid rosters; 6 are in none. The 20 loot items and 29
+Bronze rooms are wired in. 19 of the 29 Late Medieval rooms are model-only. The one piece of
+duplicate work is era replication in `RaidDirector`, written on two branches. Plan, awaiting
+approval: [`docs/plans/merge-2026-09-24-art-branches.md`](plans/merge-2026-09-24-art-branches.md).
+Screenshots and scripts: `docs/generated/merge-audit-2026-09-24/`.
+
+---
+
+**2026-09-24, later — all 16 art bible enemies are modelled.** The session resumed from
+`docs/art/HANDOFF.md`. Every enemy passes two consecutive full builds, and every review sheet was
+checked against its concept. The main find: Blender's heat weighting can silently leave every vertex
+on one bone, and validation used to pass that. `validate.py` now fails it. It caught the Dendra
+Champion, which had never blended; the champion is fixed. A shared retry
+(`rig.smooth_weights_with_retry`) covers the random form of the failure. Details are in the Traps
+section of `Tools/ArtForge/README.md`.
+
+---
+
 **2026-09-24 — the eras are different raids now.** The user asked for the existing
 enemies, items and structures to spawn in the game, so that two ages can be told apart even
 unfinished. New: `EraContentCatalogue` (runtime) and

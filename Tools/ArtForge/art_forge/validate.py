@@ -147,8 +147,20 @@ def _check_enemy(report: Report, obj, bp: Blueprint, lo, hi) -> None:
     skin = obj.get("artforge_skin")
     if skin:
         import json
-        rules = json.loads(skin).get("rules", {})
+        record = json.loads(skin)
+        rules, heat = record.get("rules", {}), record.get("heat", {})
         report.stats["mean_influences"] = rules.get("mean_influences")
+        # Heat weighting can fail without raising: it reports success but leaves every
+        # vertex on a single bone, so joints do not blend and the posed view tears (the
+        # household knight's helm rivets triggered it on 3 builds in 4). Refuse that
+        # binding instead of shipping it.
+        if not heat.get("auto_weights", False):
+            report.failures.append(f"heat weighting did not run: {heat.get('reason', 'no reason given')}")
+        elif heat.get("max_influences", 0) <= 1:
+            report.failures.append(
+                "heat weighting silently failed: every vertex ended on a single bone, so "
+                "joints will not bend smoothly (check small detached parts near joints, "
+                "e.g. rivet spheres; see Tools/ArtForge/README.md, Traps)")
         if rules.get("fallback_vertices"):
             report.warnings.append(f"{rules['fallback_vertices']} vertices got no allowed "
                                    f"heat weight and were blended to the nearest allowed "

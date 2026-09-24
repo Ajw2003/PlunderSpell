@@ -473,6 +473,32 @@ These cost time while building the two samples, and they will cost you too.
 - **The glTF exporter warns** "More than one shader node tex image used for a
   texture". That comes from EnemyForge's shipping material (ORM feeds both roughness
   and metallic). It's harmless, and it happens on the EnemyForge enemies too.
+- **Heat weighting can fail silently.** Blender prints only "Bone Heat Weighting:
+  failed to find solution for one or more bones", `parent_set` still succeeds, and
+  every vertex keeps a single bone, so knees, elbows and neck hinge like a puppet on
+  the POSED views. The triggers found so far are small, thin parts near or pushed
+  through other surfaces: the household knight's 12 helm rivet spheres; the Dendra
+  champion's 80 separate tusk-plate boxes (16 x 8 x 34 mm) floating 2 mm off the
+  helmet cone, and a 5.5 mm midrib rod pushed through its 6 mm rapier blade (each
+  alone was enough). Fix by merging such detail into one part (the tusk rows are now
+  one ridged `loft` band each) or dropping it. To find the trigger, bisect: import
+  the blueprint, filter `bp.parts`, run `assemble.prepare` +
+  `ef_assemble.build_armature` + `apply_smooth_weights`, and read `mean_influences`
+  (about 1.0 = failed); name the scratch script something other than `bisect.py`,
+  which shadows the stdlib module and crashes `bpy` on import. `validate.py` now
+  fails the build with "heat weighting silently failed" when the heat pass leaves
+  every vertex on one bone (`max_influences <= 1`). Watch the final
+  `mean_influences` stat too: many rigid vertices (rivets, plates) pull it down; a
+  healthy humanoid sits around 1.4-1.6.
+- **It also fails at random on an unchanged mesh.** The Petardier failed on about
+  half its builds, and the Palace Guard on about one in four. Retrying identical
+  input fails identically, so `rig.smooth_weights_with_retry` (called from
+  `assemble.build_rigged`) restores the rigid weights, nudges mesh and rig by under
+  1 mm, retries up to 8 times, and puts both back exactly. Each retry prints
+  "heat weighting collapsed to one bone (attempt n/8), retrying". Every failure seen
+  so far recovered on the second attempt. The retry does not fix a mesh that fails
+  every time (the knight's rivets, the Dendra tusks): those still need the part fix
+  above.
 
 ## Not done yet
 
@@ -482,7 +508,8 @@ These cost time while building the two samples, and they will cost you too.
 - No painted-panel atlas. The altarpiece's figures are shaped relief in flat family
   colours. Faces have no features.
 - No LOD1/LOD2 (50 % / 20 %), even though the brief asks for them.
-- Only 2 of the 16 enemies exist (`high/lantern-warden`, `high/alaunt-hound`).
+- All 16 enemies are built, but several dropped small detail (rivets, flutes, straps)
+  to keep heat weighting stable; see each blueprint's comments.
 - Cloth and jiggle spring bones the JSON rigs ask for are not built: the warden's
   gambeson_skirt ×4 and coif_back, the hound's coat_front/rear/L/R and jowl_L/R.
   The hound has 2 neck and 5 tail bones, not the JSON's exact chain names.
