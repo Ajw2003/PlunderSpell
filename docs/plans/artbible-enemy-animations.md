@@ -1,4 +1,4 @@
-# Art bible enemy animations (plan, 2026-09-24): decisions recorded, three still open
+# Art bible enemy animations (plan, 2026-09-24): approved, in progress
 
 Animating the 16 ArtForge enemies, and importing and driving those animations in Unity. It depends
 on [`artbible-enemies-in-engine.md`](artbible-enemies-in-engine.md) (phases E0, E1 and E4) and
@@ -37,8 +37,10 @@ with each clip tagged Base, Family or Signature.
   with the era-rooms work.
 - **Animation source:** AnimForge keyframes, authored in Blender by code.
 - **Ragdoll:** yes, for killed or thrown guards. Clips cover sleep, stun and knock-down.
-- **Still open:** in-place clips versus root motion, 1024 versus 2048 textures, and LODs and
-  spring bones now versus later. These were not selected, so they are not assumed.
+- **Motion:** in-place clips. The NavMesh agent moves the guard, and that movement is what the
+  network syncs. The clips only animate.
+- **Textures:** stay at 1024.
+- **LODs and spring bones:** after the first playtest.
 
 ## Decisions for the user **[DECIDE]**
 
