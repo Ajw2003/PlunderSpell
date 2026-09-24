@@ -950,7 +950,7 @@
 <circle cx="457.2" cy="438" r="11" fill="url(#g32)"/>
 <path d="M457.2 433 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
 <path d="M129.6 449.5 L370.4 449.5" fill="none" stroke="#9A9078" stroke-width="0.7" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="3 3"/>
-<text x="253.5" y="405.6" font-family="Overpass Mono, monospace" font-size="8.5" text-anchor="middle" fill="#9A9078">3.40 m · underside 3.20</text>
+<text x="253.5" y="405.6" font-family="Overpass Mono, monospace" font-size="9" text-anchor="middle" fill="#2A2622">3.40 m · underside 3.20</text>
 <path d="M624.5 341 L635 341" fill="none" stroke="#DCD2BA" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M218.5 421.5 L118 144 L126 144" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="218.5" cy="421.5" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
