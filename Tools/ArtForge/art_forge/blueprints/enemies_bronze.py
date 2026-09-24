@@ -883,8 +883,417 @@ def dendra_champion(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Keeper of the Flame (special) — a stepped bell of five flounces, a yoke across
+# both shoulders with two fire-pots swinging from each end, a flat polos, and a
+# censer on chains in the right hand.
+# --------------------------------------------------------------------------------
+
+class _ReachingHuman(Human):
+    """A Human whose arms can be placed by a target grip point (two-bone IK) rather
+    than by ArmPose angles. ArmPose only bends the elbow forward, so a hand raised
+    to grip a yoke beside the shoulder cannot be reached with it. Worked around here
+    (figures.py is shared): `grips` = {side: (grip point, elbow hint direction)}."""
+
+    def __init__(self, *args, grips: dict | None = None, **kwargs):
+        self._grips = grips or {}
+        super().__init__(*args, **kwargs)
+
+    def _arm_points(self, side: str):
+        if side not in self._grips:
+            return super()._arm_points(side)
+        h, s = self.h, figures.SIDES[side]
+        target, hint = (Vector(v) for v in self._grips[side])
+        shoulder = self.lean((s * self.shoulder_x, 0.0, self.shoulder_z))
+        l1, l2 = 0.172 * h, 0.145 * h + 0.045 * h        # upper arm; elbow -> grip
+        d = target - shoulder
+        dist = min(d.length, l1 + l2 - 1e-3)
+        dn = d.normalized()
+        perp = (hint - dn * hint.dot(dn)).normalized()
+        a = math.acos(max(-1.0, min(1.0, (l1 * l1 + dist * dist - l2 * l2) / (2 * l1 * dist))))
+        upper = dn * math.cos(a) + perp * math.sin(a)
+        elbow = shoulder + upper * l1
+        fore = (target - elbow).normalized()
+        wrist = elbow + fore * (0.145 * h)
+        return shoulder, elbow, wrist, wrist + fore * (0.090 * h), fore
+
+
+def _ellipse(z: float, rx: float, ry: float, n: int, cy: float = 0.0,
+             a0: float = 0.0) -> list[tuple]:
+    return [(math.cos(a0 + 2 * math.pi * j / n) * rx,
+             cy + math.sin(a0 + 2 * math.pi * j / n) * ry, z) for j in range(n)]
+
+
+# Flounce edges read off the concept (1 m = 367 px): bottom z and bottom diameter
+# of each tier. Waist 0.36 m -> hem 0.96 m, as the JSON.
+_TIERS = [(0.81, 0.50), (0.62, 0.62), (0.42, 0.76), (0.23, 0.86), (0.02, 0.96)]
+_SKIRT_DEPTH = 0.86        # front-to-back / side-to-side
+_SKIRT_DY = 0.012
+
+
+def _skirt_radius(z: float, top_z: float, top_r: float) -> float:
+    """Outer half-width of the skirt at z (the widest flounce edge at or above z
+    included, so a layer laid over it clears every edge)."""
+    r_prev_z, r_prev = top_z, top_r
+    best = top_r
+    for bz, bd in _TIERS:
+        rb = bd / 2
+        if z >= bz:
+            f = (r_prev_z - z) / max(r_prev_z - bz, 1e-6)
+            return max(best, r_prev * 0.92 + (rb - r_prev * 0.92) * max(0.0, f))
+        best = max(best, rb)
+        r_prev_z, r_prev = bz, rb
+    return best
+
+
+def _flounced_skirt(fig: Human, top_z: float, top_rx: float, top_ry: float,
+                    n: int = 36) -> Part:
+    """Five stepped flounces as one closed loft: each tier flares down to a lipped
+    edge, then the surface steps in under the edge and the next tier starts. Tiers
+    alternate linen / soot wool; each edge carries a 2.5 cm red-and-linen checker.
+    Skinned to Hips only, then the skirt rule hands the lower bell to the thighs
+    by position (deterministic, so the apron laid over it moves the same way)."""
+    rings, paint = [], []
+    prev_z, prev_r = top_z, top_rx
+    rings.append(_ellipse(top_z, top_rx, top_ry, n, _SKIRT_DY))
+    band = 0.025
+    for k, (bz, bd) in enumerate(_TIERS):
+        rb = bd / 2
+        rt = prev_r * 0.92 if k else prev_r
+        if k:           # step in under the previous edge
+            rings.append(_ellipse(prev_z, rt, rt * _SKIRT_DEPTH, n, _SKIRT_DY))
+        mid_z = (prev_z + bz + band) / 2
+        rm = rt + (rb - rt) * 0.55
+        rings.append(_ellipse(mid_z, rm, rm * _SKIRT_DEPTH, n, _SKIRT_DY))
+        rings.append(_ellipse(bz + band, rb - 0.004, (rb - 0.004) * _SKIRT_DEPTH, n,
+                              _SKIRT_DY))
+        rings.append(_ellipse(bz, rb + 0.006, (rb + 0.006) * _SKIRT_DEPTH, n, _SKIRT_DY))
+        if k % 2 == 1:          # soot-wool tier body (above its border)
+            paint.append({"mat": "soot_dyed_wool", "min": (-2, -2, bz + band + 0.002),
+                          "max": (2, 2, prev_z - 0.001)})
+        # checker: every other face of the border band red, the rest linen
+        paint.append({"mat": "linen", "min": (-2, -2, bz + 0.004),
+                      "max": (2, 2, bz + band - 0.004)})
+        rr = rb + 0.001
+        for j in range(0, n, 2):
+            a = 2 * math.pi * (j + 0.5) / n
+            cx, cy = math.cos(a) * rr, _SKIRT_DY + math.sin(a) * rr * _SKIRT_DEPTH
+            w = math.pi * rr / n * 0.6
+            paint.append({"mat": "haematite_red",
+                          "min": (cx - w, cy - w, bz + 0.004),
+                          "max": (cx + w, cy + w, bz + band - 0.004)})
+        prev_z, prev_r = bz, rb
+    skirt = {"top": fig.hip_z, "bottom": 0.0, "strength": 0.45, "split": 0.22}
+    return Part("loft", (0, 0, 0), (1, 1, 1), mat="linen", bone="Hips", extras={
+        "rings": rings, "smooth": True, "bevel": False, "paint": paint, "skirt": skirt,
+        "bones": ["Hips"]})
+
+
+def _apron(fig: Human, top_z: float, bottom_z: float, front: bool,
+           top_r: float) -> Part:
+    """One panel of the double apron: a thin curved sheet hanging from the belt over
+    the flounces, rounded at the bottom; red border down the sides, scorched
+    (soot) along the lower edge. Same Hips + skirt rule as the skirt."""
+    sgn = -1.0 if front else 1.0
+    m, thick = 7, 0.008
+    rings = []
+    rows = 7
+    for i in range(rows):
+        t = i / (rows - 1)
+        z = top_z + (bottom_z - top_z) * t
+        r = max(top_r + 0.012 + (0.33 - top_r) * t ** 1.3,
+                _skirt_radius(z, top_z + 0.03, top_r) + 0.014)
+        half = math.radians(40.0) * (1.0 - 0.55 * max(0.0, (t - 0.7) / 0.3) ** 1.5)
+        outer, inner = [], []
+        for j in range(m):
+            a = sgn * math.pi / 2 + half * (-1.0 + 2.0 * j / (m - 1))
+            for lst, rr in ((outer, r + thick), (inner, r)):
+                lst.append((math.cos(a) * rr, _SKIRT_DY + math.sin(a) * rr * _SKIRT_DEPTH, z))
+        rings.append(outer + list(reversed(inner)))
+    paint = [{"mat": "haematite_red", "min": (-2, -2, bottom_z - 0.01),
+              "max": (2, 2, bottom_z + 0.022)}]
+    # soot scorch on the lowest band, and two soot handprints on the front
+    paint.insert(0, {"mat": "soot_dyed_wool", "min": (-2, -2, bottom_z - 0.01),
+                     "max": (2, 2, bottom_z + 0.075)})
+    if front:
+        for hx, hz in ((-0.09, top_z - 0.22), (0.06, top_z - 0.30)):
+            paint.insert(1, {"mat": "soot_dyed_wool", "min": (hx - 0.025, -2, hz - 0.03),
+                             "max": (hx + 0.025, 2, hz + 0.03)})
+    skirt = {"top": fig.hip_z, "bottom": 0.0, "strength": 0.45, "split": 0.22}
+    return Part("loft", (0, 0, 0), (1, 1, 1), mat="linen", bone="Hips", extras={
+        "rings": rings, "smooth": True, "bevel": False, "paint": paint, "skirt": skirt,
+        "bones": ["Hips"]})
+
+
+def _yoke_path(n: int = 13) -> list[Vector]:
+    """Olive-wood pole 1.30 m: over both shoulders, bowed back round the neck."""
+    ctrl = [(-0.65, 0.030, 1.382), (-0.40, 0.030, 1.370), (-0.17, 0.040, 1.366),
+            (0.0, 0.088, 1.372), (0.17, 0.040, 1.366), (0.40, 0.030, 1.370),
+            (0.65, 0.030, 1.382)]
+    return [Vector(p) for p in spline(ctrl, 3)]
+
+
+def _yoke_at(x: float) -> Vector:
+    path = _yoke_path()
+    for a, b in zip(path, path[1:]):
+        if a.x <= x <= b.x:
+            return a.lerp(b, (x - a.x) / max(b.x - a.x, 1e-6))
+    return path[-1] if x > 0 else path[0]
+
+
+def _yoke_and_pots(fig: Human) -> list[Part]:
+    """The yoke (rigid on Yoke, child of Chest) and four fire-pots, each on a cord
+    bone (PotCord<n>.<side>, child of Yoke) and a pot bone (Pot<n>.<side>)."""
+    path = _yoke_path()
+    y0 = Vector((0.0, 0.088, 1.372))
+    fig.add_bone("Yoke", y0 + Vector((0, -0.06, -0.06)), y0 + Vector((0, 0, 0.02)), "Chest")
+    parts = [Part("tube", (0, 0, 0), (1, 1, 1), mat="olive_wood", bone="Yoke", segments=8,
+                  extras={"path": [tuple(p) for p in path], "section": (0.025, 0.025),
+                          "smooth": True, "bevel": False, "rigid": True,
+                          "paint": [{"mat": "soot_dyed_wool", "min": (0.60, -1, 0),
+                                     "max": (1, 1, 2)},
+                                    {"mat": "soot_dyed_wool", "min": (-1, -1, 0),
+                                     "max": (-0.60, 1, 2)}]})]
+    # carved notches: a raised collar either side of each cord seat
+    for x in (-0.62, -0.48, 0.48, 0.62):
+        for dx in ((0.028,) if x > 0 else (-0.028,)):
+            p = _yoke_at(x + dx)
+            parts.append(Part("cyl", tuple(p), (0.058, 0.058, 0.010), mat="olive_wood",
+                              bone="Yoke", rot=(0, 90, 0), segments=8,
+                              extras={"rigid": True, "bevel": False, "smooth": True}))
+    # pots: (x on the yoke, y offset of the pot so pairs clear each other)
+    specs = [(0.48, -0.050, "1"), (0.62, 0.070, "2")]
+    for side, s in (("L", 1.0), ("R", -1.0)):
+        for x, dy, k in specs:
+            top = _yoke_at(s * x)
+            neck = Vector((s * x, top.y + dy, top.z - 0.35))
+            bottom = neck - Vector((0, 0, 0.20))
+            cord = fig.add_bone(f"PotCord{k}.{side}", top, neck, "Yoke")
+            pot = fig.add_bone(f"Pot{k}.{side}", neck, bottom, cord)
+            for sx in (-1.0, 1.0):     # doubled flax cord, to either side of the neck
+                a = top + Vector((sx * 0.010, 0.0, -0.022))
+                b = neck + Vector((sx * 0.036, 0.0, -0.012))
+                parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="linen", bone=cord,
+                                  segments=4, extras={
+                                      "path": [tuple(a), tuple(a.lerp(b, 0.5)), tuple(b)],
+                                      "section": (0.0035, 0.0035), "smooth": True,
+                                      "bevel": False, "rigid": True}))
+            parts.append(Part("torus", tuple(top + Vector((0, 0, 0.0))), (0.062, 0.062, 0.062),
+                              mat="linen", bone=cord, rot=(0, 90, 0), segments=8, rings=4,
+                              minor=0.08, extras={"rigid": True, "bevel": False}))
+            parts.append(Part("torus", tuple(neck + Vector((0, 0, -0.018))),
+                              (0.080, 0.080, 0.012), mat="linen", bone=cord, segments=10,
+                              rings=4, minor=0.1, extras={"rigid": True, "bevel": False}))
+            # globular pot 0.18 x 0.20, neck 0.07; bottom at `bottom`
+            prof = [(0.0, 0.0), (0.050, 0.006), (0.084, 0.050), (0.090, 0.095),
+                    (0.074, 0.140), (0.036, 0.170), (0.034, 0.186), (0.040, 0.196),
+                    (0.028, 0.200), (0.0, 0.200)]
+            paint = [{"mat": "ember_madder", "min": (-1, -1, 0.186), "max": (1, 1, 1)}]
+            for j in range(5):                      # soot streaks down from the neck
+                a = 2 * math.pi * j / 5 + (0.3 if side == "L" else 0.9) + float(k)
+                cx, cy = math.cos(a) * 0.085, math.sin(a) * 0.085
+                paint.append({"mat": "soot_dyed_wool",
+                              "min": (cx - 0.022, cy - 0.022, 0.07 + 0.012 * (j % 3)),
+                              "max": (cx + 0.022, cy + 0.022, 0.172)})
+            parts.append(Part("lathe", tuple(bottom), (1, 1, 1), mat="fire_pot_clay",
+                              bone=pot, segments=10, extras={
+                                  "profile": prof, "smooth": True, "bevel": False,
+                                  "rigid": True, "paint": paint}))
+            # clay bung and its smouldering wick
+            parts.append(Part("cone", tuple(bottom + Vector((0, 0, 0.212))),
+                              (0.014, 0.014, 0.034), mat="ember_madder", bone=pot,
+                              segments=5, taper=0.2, extras={"rigid": True, "bevel": False}))
+    return parts
+
+
+def _censer(fig: Human) -> list[Part]:
+    """Bronze brazier bowl 0.16 x 0.10 with a perforated lid on three chains 0.60 m
+    to a ring handle in the right fist. Chain bones Censer1..3 (Censer1 on Hand.R);
+    the bowl is rigid on Censer3. Hung mid-swing, forward of the skirt, as the
+    concept's side view."""
+    g = fig.grip("R")
+    ring = g + Vector((0.0, 0.0, -0.030))
+    rim = ring + Vector((-0.025, -0.165, -0.575))        # 0.60 m of chain
+    pts = [ring.lerp(rim, t) for t in (0.0, 1 / 3, 2 / 3, 1.0)]
+    fig.prop_bone("Censer1", "R", pts[0], pts[1])
+    fig.add_bone("Censer2", pts[1], pts[2], "Censer1")
+    fig.add_bone("Censer3", pts[2], pts[3] - Vector((0, 0, 0.06)), "Censer2")
+    bones = ["Censer1", "Censer2", "Censer3"]
+    parts = [Part("torus", tuple(g + Vector((0.0, 0.0, -0.005))), (0.075, 0.075, 0.075),
+                  mat="cast_bronze", bone="Censer1", rot=(0, 90, 0), segments=10, rings=4,
+                  minor=0.12, extras={"prop": True, "bevel": False})]
+    for j in range(3):                      # three chains to three lugs on the rim
+        a = 2 * math.pi * j / 3 + 0.5
+        lug = rim + Vector((math.cos(a) * 0.080, math.sin(a) * 0.080, 0.0))
+        path = [tuple(ring.lerp(lug, t)) for t in (0.0, 0.2, 0.4, 0.6, 0.8, 1.0)]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="cast_bronze", bone="Censer2",
+                          segments=4, extras={"path": path, "section": (0.0035, 0.0035),
+                                              "smooth": True, "bevel": False,
+                                              "bones": bones}))
+    base = rim - Vector((0, 0, 0.085))
+    bowl = [(0.0, 0.0), (0.030, 0.0), (0.030, 0.012), (0.052, 0.020), (0.072, 0.045),
+            (0.080, 0.075), (0.084, 0.085), (0.070, 0.085), (0.0, 0.085)]
+    parts.append(Part("lathe", tuple(base), (1, 1, 1), mat="cast_bronze", bone="Censer3",
+                      segments=14, extras={"profile": bowl, "smooth": True, "bevel": False,
+                                           "prop": True}))
+    # perforated domed lid: ember glow through the holes and at the knob
+    lid = [(0.0, 0.0), (0.078, 0.0), (0.074, 0.018), (0.058, 0.036), (0.030, 0.048),
+           (0.012, 0.052), (0.012, 0.066), (0.0, 0.068)]
+    paint = [{"mat": "ember_madder", "min": (-1, -1, 0.049), "max": (1, 1, 1)}]
+    for j in range(6):
+        a = 2 * math.pi * j / 6
+        cx, cy = math.cos(a) * 0.060, math.sin(a) * 0.060
+        paint.append({"mat": "ember_madder", "min": (cx - 0.016, cy - 0.016, 0.012),
+                      "max": (cx + 0.016, cy + 0.016, 0.034)})
+    parts.append(Part("lathe", tuple(base + Vector((0, 0, 0.084))), (1, 1, 1),
+                      mat="cast_bronze", bone="Censer3", segments=14,
+                      extras={"profile": lid, "smooth": True, "bevel": False, "prop": True,
+                              "paint": paint}))
+    return parts
+
+
+def _polos(fig: Human, top_z: float) -> list[Part]:
+    """Flat-topped linen polos 0.18 m dia., seated on the skull and reaching
+    `top_z`, bound low with a fresco-red band. Own bone (detachable)."""
+    base = fig.lean((0.0, 0.006 * fig.h, fig.h - 0.030))
+    hgt = top_z - base.z
+    fig.add_bone("Polos", base, base + Vector((0, 0, hgt)), "Head")
+    prof = [(0.0, 0.0), (0.084, 0.0), (0.088, 0.010), (0.091, 0.022), (0.091, 0.052),
+            (0.090, hgt - 0.008),
+            (0.086, hgt), (0.0, hgt)]
+    return [Part("lathe", tuple(base), (1.0, 1.0, 1.0), mat="linen", bone="Polos",
+                 segments=18, extras={
+                     "profile": prof, "rigid": True, "smooth": True, "bevel": False,
+                     "paint": [{"mat": "haematite_red", "min": (-1, -1, 0.022),
+                                "max": (1, 1, 0.052)}]})]
+
+
+def _ring_round(centre: Vector, axis: Vector, radius: float, section: float, mat: str,
+                bone: str, **extras) -> Part:
+    """A closed tube ring round `axis` (bangles, sleeve borders)."""
+    axis = axis.normalized()
+    u = axis.cross(Vector((0, 0, 1)) if abs(axis.z) < 0.9 else Vector((1, 0, 0))).normalized()
+    v = axis.cross(u)
+    pts = [tuple(centre + (u * math.cos(a) + v * math.sin(a)) * radius)
+           for a in (2 * math.pi * j / 9 for j in range(9))]
+    return Part("tube", (0, 0, 0), (1, 1, 1), mat=mat, bone=bone, segments=4,
+                extras={"path": pts, "section": (section, section), "closed": True,
+                        "smooth": True, "bevel": False, **extras})
+
+
+def flame_keeper(entry: Entry):
+    # 1.72 m to the top of the polos, 1.60 m bare head. Slender (bulk 0.86). Left
+    # fist grips the yoke outboard of the shoulder; right fist forward at the hip
+    # carrying the censer (the concept: the JSON rig puts the censer chain on the
+    # left hand, but the concept's front view has it in her right; followed the
+    # concept, and the unhook/throw beats then use the free left hand).
+    grip_l = _yoke_at(0.40)
+    fig = _ReachingHuman(height=1.60, bulk=0.86, shoulders=0.38, grips={
+        "L": (tuple(grip_l), (0.55, -0.25, -1.0)),
+        "R": ((-0.27, -0.33, 0.93), (-0.4, 0.3, -1.0)),
+    })
+    h = fig.h
+    pad = 0.006
+    top_z = fig.waist_z + 0.035
+
+    # Bodice: fitted linen jacket to the waist (the torso loft runs on to the
+    # crotch inside the skirt), open V at the throat.
+    vneck = [{"mat": "skin", "min": (-0.055, -1.0, fig.shoulder_z - 0.035), "max": (0.055, -0.02, 2.0)},
+             {"mat": "skin", "min": (-0.030, -1.0, fig.chest_z + 0.035), "max": (0.030, -0.02, 2.0)}]
+    parts = [fig.torso_part("linen", pad=pad, segments=24, paint=vneck)]
+    # breast-band under the open front: a linen panel with red lacing
+    bb = fig.surface(fig.chest_z - 0.035, -90.0, pad=pad + 0.010)
+    parts.append(Part("sphere", tuple(bb), (0.15, 0.030, 0.070), mat="linen", bone="Chest",
+                      segments=12, rings=6, extras={"rigid": True, "bevel": False,
+                                                    "smooth": True}))
+    for k in range(4):
+        x = -0.045 + 0.030 * k
+        parts.append(_bar(bb + Vector((x - 0.010, -0.014, 0.022)),
+                          bb + Vector((x + 0.010, -0.014, -0.022)), 0.004, "haematite_red",
+                          "Chest", segments=4, rigid=True))
+    for side in ("L", "R"):
+        parts.append(fig.arm_part(side, "skin"))
+        parts.append(_sleeve(fig, side, "linen", reach=0.42, pad=0.010, flare=1.25))
+        sh, el = fig.joint(f"shoulder.{side}"), fig.joint(f"elbow.{side}")
+        cuff = sh + (el - sh) * 0.40
+        parts.append(_ring_round(cuff, el - sh, 0.027 * h * fig.bulk * 1.25 + 0.012, 0.009,
+                                 "haematite_red", f"UpperArm.{side}",
+                                 bones=[f"UpperArm.{side}", f"Shoulder.{side}"]))
+        parts += fig.hand_part(side, "skin")
+        parts.append(fig.leg_part(side, "skin"))
+        parts.append(fig.foot_part(side, "skin", length=0.24, point=0.0))
+        # bronze bangles, 3 per wrist, 0.07 m
+        wr = fig.joint(f"wrist.{side}")
+        fore = (wr - fig.joint(f"elbow.{side}")).normalized()
+        for k, d in enumerate((0.018, 0.034, 0.050)):
+            parts.append(_ring_round(wr - fore * d, fore, 0.029, 0.0055, "cast_bronze",
+                                     f"LowerArm.{side}", rigid=True))
+    parts += fig.head_part("skin", face="skin", features="hair")
+    parts.append(_hair(fig, "hair", length_z=fig.chest_z - 0.02, width=1.05, back=1.1))
+    # forelock curl
+    fl = fig.lean((0.028, -0.060, 0.978 * h))
+    parts.append(Part("torus", tuple(fl), (0.034, 0.034, 0.034), mat="hair", bone="Head",
+                      rot=(0, 90, 0), segments=8, rings=4, minor=0.22,
+                      extras={"rigid": True, "bevel": False}))
+    parts += _polos(fig, 1.72)
+
+    parts.append(_flounced_skirt(fig, top_z, fig.torso_dims(top_z)[0] + 0.016,
+                                 fig.torso_dims(top_z)[1] + 0.016))
+    top_r = fig.torso_dims(top_z)[0] + 0.020
+    for front in (True, False):
+        parts.append(_apron(fig, top_z - 0.005, top_z - 0.44, front, top_r))
+    # fresco-red sash over the skirt top
+    parts.append(fig.band(fig.waist_z + 0.01, "haematite_red", height=0.055, pad=0.030))
+
+    parts += _yoke_and_pots(fig)
+    parts += _censer(fig)
+
+    # Review pose: chant_alarm-ish. The censer arm comes up instead of the yoke arm
+    # (which stays on the yoke); the censer chain counter-rotates so it hangs; the
+    # left pots swing forward, the right ones back (they keep swinging).
+    pose = {k: v for k, v in figures.HUMAN_TEST_POSE.items()
+            if k not in ("UpperArm.L", "LowerArm.L")}
+    pose["UpperArm.R"] = (-80.0, 0.0, 0.0)
+    pose["LowerArm.R"] = (-25.0, 0.0, 0.0)
+    pose["Censer1"] = (105.0, 0.0, 0.0)
+    pose["PotCord1.L"] = (-18.0, 0.0, 0.0)
+    pose["PotCord2.L"] = (-12.0, 0.0, 0.0)
+    pose["PotCord1.R"] = (14.0, 0.0, 0.0)
+    pose["PotCord2.R"] = (20.0, 0.0, 0.0)
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(pose),
+        family_overrides={
+            "linen": {"grain": 0.22, "wear_to": "#A89A7A", "wear_amount": 0.25},
+            # Emission is multiplied by 9 in the shipping material (README, Traps):
+            # store madder at ~35 % so the glow reads as a coal, not pink-white.
+            "ember_madder": {"emit": "#4A1E0C", "rough": 0.6},
+            "cast_bronze": {"rough": 0.45, "wear_to": "#4A3220", "wear_amount": 0.3},
+            "soot_dyed_wool": {"rough": 0.95},
+        },
+        extra_families={
+            "skin": {"name": "Skin", "base": "#9C6E4E", "rough": 0.7,
+                     "notes": "Face, bare forearms and feet (build bullets); the keeper's "
+                              "list has no skin. Hex from the levy's weathered skin."},
+            "hair": {"name": "Dark hair", "base": "#2B231B", "rough": 0.8,
+                     "notes": "Long dark ringlets (build bullet); no hair family in her "
+                              "list. Hex from the champion's horsehair."},
+        },
+        notes=[
+            "Censer (Censer1 prop bone on Hand.R -> Censer2 -> Censer3, bowl rigid on "
+            "Censer3) is in the RIGHT hand as the concept draws it; the JSON rig says left.",
+            "Yoke is rigid on its own bone under Chest; four pots each hang on "
+            "PotCord<n>.<side> -> Pot<n>.<side> (one cord bone, not the JSON's two).",
+            "Polos is its own bone under Head (detachable).",
+            "Skirt and aprons are weighted to Hips, then the skirt rule shares the lower "
+            "bell with the thighs (45 %).",
+            "Not built: skirt flounce ring bones x5 and hair chain x3 (springs); "
+            "painted soles; scorched bites in the hem; singed hair strands.",
+        ])
+
+
 BLUEPRINTS = {
     "palace-levy": palace_levy,
     "wall-slinger": wall_slinger,
     "dendra-champion": dendra_champion,
+    "flame-keeper": flame_keeper,
 }

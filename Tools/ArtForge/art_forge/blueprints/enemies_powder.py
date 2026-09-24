@@ -1144,9 +1144,361 @@ def cuirassier(entry: Entry):
             "leathers (a plain strap), mud to 0.10 m.",
         ])
 
+# --------------------------------------------------------------------------------
+# Petardier
+# --------------------------------------------------------------------------------
+
+def _torso_x(fig: Human, z: float, x0: float, pad: float, back: bool = False) -> Vector:
+    """The torso-surface point (plus pad) at height z whose x is nearest x0, on
+    the front (or the back)."""
+    best = None
+    for k in range(91):
+        a = (-90.0 if not back else 90.0) + (90.0 if x0 >= 0 else -90.0) * (k / 90.0) \
+            * (1.0 if not back else -1.0)
+        p = fig.surface(z, a, pad=pad)
+        if best is None or abs(p.x - x0) < abs(best.x - x0):
+            best = p
+    return best
+
+
+def _grenado(at: Vector, iron: str, plug: str, fuse: str, bone: str,
+             ember: str | None = None, cup: str | None = None, prop: bool = False) -> list[Part]:
+    """A 0.09 m cast-iron grenado with a wooden fuse plug and a 0.06 m fuse; a
+    leather cup under it when it hangs on the belt, an ember on the fuse when lit."""
+    ex = {"prop": True} if prop else {"rigid": True}
+    parts = [Part("sphere", tuple(at), (0.09, 0.09, 0.09), mat=iron, bone=bone,
+                  segments=10, rings=6, extras={**ex, "bevel": False, "smooth": True}),
+             Part("cyl", tuple(at + Vector((0, 0, 0.048))), (0.022, 0.022, 0.018), mat=plug,
+                  bone=bone, segments=6, extras={**ex, "bevel": False})]
+    f0 = at + Vector((0, 0, 0.056))
+    path = [f0, f0 + Vector((0.006, -0.004, 0.03)), f0 + Vector((0.018, -0.012, 0.055))]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=fuse, bone=bone, segments=4,
+                      extras={"path": [tuple(p) for p in path], "section": (0.0035, 0.0035),
+                              "smooth": True, "bevel": False, **ex}))
+    if ember:
+        parts.append(Part("sphere", tuple(path[-1]), (0.018, 0.018, 0.018), mat=ember,
+                          bone=bone, segments=6, rings=4, extras={**ex, "bevel": False}))
+    if cup:
+        parts.append(Part("cyl", tuple(at - Vector((0, 0, 0.02))), (0.100, 0.100, 0.055),
+                          mat=cup, bone=bone, segments=10, taper=0.8,
+                          rot=(180.0, 0.0, 0.0), extras={**ex, "bevel": False,
+                                                          "smooth": True}))
+    return parts
+
+
+def _madrier(fig: Human, pad: float, oak: str, iron: str, bronze: str, patina: str,
+             fuse: str, soot: str) -> list[Part]:
+    """The madrier (0.60 x 0.60 x 0.08 m oak plank, top at 1.65 m) on the back,
+    tilted with the stoop, two iron bands and a hanging hook; the bronze bell
+    (0.30 m tall, 0.26 m mouth) bolted mouth-down to its outer face by four iron
+    straps, so it points behind him. All rigid on the Madrier bone (Chest), the
+    backpack socket the plant_petard animation detaches."""
+    s = math.radians(fig.stoop)
+    n = Vector((0.0, math.cos(s), math.sin(s)))          # out of the back
+    up = Vector((0.0, -math.sin(s), math.cos(s)))        # up the back
+    top_z, side, thick = 1.65, 0.60, 0.08
+    cz = top_z - up.z * side / 2
+    # push the plank's inner face just clear of the jerkin between its bottom and
+    # the shoulder line
+    d = max(fig.surface(z, a, pad=pad + 0.012).dot(n)
+            for z in [cz - 0.28 + 0.04 * i for i in range(12)]
+            if z < fig.shoulder_z + 0.02 for a in (60.0, 90.0, 120.0))
+    d_c = d + 0.006 + thick / 2
+    c = Vector((0.0, (d_c - cz * n.z) / n.y, cz))
+    fig.add_bone("Madrier", c - up * 0.25, c + up * 0.25, "Chest")
+    rig = {"rigid": True}
+    rot = (fig.stoop, 0.0, 0.0)      # local Z -> up the back, local Y -> n
+    parts = [Part("box", tuple(c), (side, thick, side), mat=oak, bone="Madrier", rot=rot,
+                  extras={**rig, "paint": [{"mat": soot, "min": (-1, -1, -1),
+                                            "max": (1, 1, -side / 2 + 0.035)}]})]
+    for f in (-0.34, 0.34):         # two iron bands wrapped round the plank
+        parts.append(Part("box", tuple(c + up * (f * side)), (side + 0.012, thick + 0.012, 0.04),
+                          mat=iron, bone="Madrier", rot=rot, extras=dict(rig)))
+    # hanging hook at the top edge
+    t = c + up * (side / 2)
+    hook = [t - n * 0.005, t + up * 0.05 - n * 0.005, t + up * 0.075 - n * 0.03,
+            t + up * 0.06 - n * 0.055, t + up * 0.035 - n * 0.05]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=iron, bone="Madrier", segments=5,
+                      extras={"path": spline([tuple(p) for p in hook], 2),
+                              "section": (0.008, 0.008), "smooth": True, "bevel": False,
+                              **rig}))
+    # the bell: lathe along n from the plank's outer face
+    base = c + n * (thick / 2 - 0.002)
+    prof = [(0.130, 0.0), (0.138, 0.012), (0.132, 0.026), (0.122, 0.030),
+            (0.116, 0.090), (0.124, 0.100), (0.124, 0.112), (0.112, 0.120),
+            (0.100, 0.190), (0.106, 0.200), (0.104, 0.212), (0.092, 0.218),
+            (0.074, 0.262), (0.046, 0.290), (0.0, 0.300)]
+    parts.append(Part("lathe", tuple(base), (1, 1, 1), mat=bronze, bone="Madrier",
+                      rot=_track(n), segments=16, extras={
+                          "profile": prof, "smooth": True, "bevel": False, **rig,
+                          "paint": [{"mat": patina, "min": (-1, -1, 0.089), "max": (1, 1, 0.121)},
+                                    {"mat": patina, "min": (-1, -1, 0.189), "max": (1, 1, 0.219)}]}))
+    # touch-hole boss and fuse stub at the crown
+    crown = base + n * 0.30
+    parts.append(Part("cyl", tuple(crown + n * 0.006), (0.036, 0.036, 0.02), mat=bronze,
+                      bone="Madrier", rot=_track(n), segments=8, extras={**rig, "bevel": False}))
+    fz = [crown + n * 0.015, crown + n * 0.05 + up * 0.02, crown + n * 0.07 + up * 0.06]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=fuse, bone="Madrier", segments=4,
+                      extras={"path": [tuple(p) for p in fz], "section": (0.005, 0.005),
+                              "smooth": True, "bevel": False, **rig}))
+    # four iron straps from the bell's shoulder out to bolts on the plank
+    x = Vector((1.0, 0.0, 0.0))
+    for k in range(4):
+        a = math.radians(45.0 + 90.0 * k)
+        r = x * math.cos(a) + up * math.sin(a)
+        p0 = base + n * 0.16 + r * 0.113
+        p1 = base + n * 0.035 + r * 0.150
+        p2 = base + n * 0.004 + r * 0.235
+        parts.append(_strip([p0, p1, p2], iron, "Madrier", 0.03, 0.008,
+                            up=tuple((r + n).normalized()), rigid=True))
+        parts.append(Part("cyl", tuple(p2 + n * 0.006), (0.03, 0.03, 0.014), mat=iron,
+                          bone="Madrier", rot=_track(n), segments=6,
+                          extras={**rig, "bevel": False}))
+    return parts
+
+
+def petardier(entry: Entry):
+    # Stooped 8 deg under the plank; skull crown 1.74 m, the flat cap adds ~0.015.
+    fig = Human(height=1.74, bulk=1.07, shoulders=0.47, stoop=8.0,
+                arm_l=ArmPose(spread=11.0, swing=10.0, elbow=70.0),   # lit grenado
+                arm_r=ArmPose(spread=11.0, swing=4.0, elbow=45.0))    # linstock
+    canvas, leather, iron = "padded_canvas", "scorched_leather", "cast_iron"
+    wool, oak, bronze, ember = "murrey_livery_wool", "oak_plank", "petard_bronze", "fuse_ember"
+    skin, soot, patina = "sooted_skin", "soot", "bronze_patina"
+    pad = 0.022          # the thick padded jerkin
+    hem_soot = {"mat": soot, "min": (-1, -1, -1), "max": (1, 1, fig.hip_z - 0.01)}
+    parts = [fig.torso_part(canvas, pad=pad, quilt=0.06, segments=24, collar=0.012,
+                            paint=[hem_soot])]
+    for side in ("L", "R"):
+        s = figures.SIDES[side]
+        el = fig.joint(f"elbow.{side}")
+        sh, _el, _wr, axis, _out, _fwd = _arm_frame(fig, side)
+        # murrey shirt sleeve rolled to the elbow, sooted forearm below
+        parts.append(fig.arm_part(side, wool, pad=0.006, paint=[
+            {"mat": skin, "min": (-1, -1, -1), "max": (1, 1, el.z - 0.035)}]
+            if el.z - 0.035 > fig.joint(f"wrist.{side}").z else [
+            {"mat": skin, "min": (-1, -1, -1), "max": (1, 1, 3)}]))
+        roll = el + (sh - el).normalized() * 0.02
+        parts.append(Part("torus", tuple(roll), (0.105, 0.105, 0.09), mat=wool,
+                          bone=f"UpperArm.{side}", rot=_track(axis), segments=10, rings=4,
+                          minor=0.25, extras={"bevel": False, "smooth": True,
+                                              "bones": [f"UpperArm.{side}",
+                                                        f"LowerArm.{side}"]}))
+        # the jerkin's padded armhole roll (it is sleeveless)
+        wing = sh + (el - sh) * 0.05
+        parts.append(Part("torus", tuple(wing), (0.15, 0.13, 0.13), mat=canvas,
+                          bone=f"UpperArm.{side}", rot=_track(axis), segments=12, rings=5,
+                          minor=0.26, extras={"bevel": False, "smooth": True,
+                                              "bones": [f"UpperArm.{side}",
+                                                        f"Shoulder.{side}", "Chest"]}))
+        parts += fig.hand_part(side, skin)
+        # canvas breeches and canvas gaiters, leather garters at the knee and ankle
+        parts.append(fig.leg_part(side, canvas, pad=0.010))
+        parts.append(fig.foot_part(side, leather, length=0.29, point=0.0))
+        knee, ank = fig.joint(f"knee.{side}"), fig.joint(f"ankle.{side}")
+        for at, r in ((knee + (ank - knee) * 0.10, 0.066), (ank + (knee - ank) * 0.12, 0.052)):
+            parts.append(Part("cyl", tuple(at), (2 * r, 2 * r, 0.03), mat=leather,
+                              bone=f"LowerLeg.{side}", rot=_track(knee - ank), segments=10,
+                              extras={"bevel": False, "smooth": True,
+                                      "bones": [f"LowerLeg.{side}", f"UpperLeg.{side}"]}))
+
+    # Head: sooted face, singed beard and moustache, the round sapper's cap.
+    parts += fig.head_part(skin, face=skin, features=soot)
+    h = fig.h
+    beard = fig.lean((0.0, -0.036 * h, 0.878 * h))
+    parts.append(Part("sphere", tuple(beard), (0.088, 0.075, 0.07), mat=soot, bone="Head",
+                      segments=10, rings=5, extras={"rigid": True, "bevel": False,
+                                                    "smooth": True}))
+    lip = fig.lean((0.0, -0.058 * h, 0.899 * h))
+    parts.append(Part("box", tuple(lip), (0.065, 0.014, 0.012), mat=soot, bone="Head",
+                      extras={"rigid": True, "bevel": False}))
+    parts += _sapper_cap(fig, leather)
+
+    # Shoulder straps from the plank over the shoulders, down the front to the belt.
+    for side in ("L", "R"):
+        sx = figures.SIDES[side] * 0.105
+        pts = [_torso_x(fig, fig.shoulder_z - 0.02, sx, pad + 0.03, back=True),
+               fig.lean((sx, 0.012 * h, 0.826 * h + 0.018)),
+               _torso_x(fig, fig.shoulder_z - 0.01, sx, pad + 0.006),
+               _torso_x(fig, fig.chest_z, sx, pad + 0.006),
+               _torso_x(fig, fig.waist_z, sx, pad + 0.004),
+               _torso_x(fig, fig.belt_z + 0.03, sx, pad + 0.004)]
+        parts.append(_strip(spline([tuple(p) for p in pts], 3), leather, "Chest", 0.05,
+                            0.008, up=(0.0, -1.0, 0.3),
+                            bones=["Chest", "Spine", f"Shoulder.{side}"]))
+
+    parts += _madrier(fig, pad, oak, iron, bronze, patina, leather, soot)
+
+    # Waist-belt with four grenados in leather cups across the front.
+    parts.append(fig.band(fig.belt_z, leather, height=0.05, pad=0.012, torso_pad=pad))
+    buckle = fig.surface(fig.belt_z, -90.0, pad=pad + 0.022)
+    parts.append(Part("box", tuple(buckle), (0.05, 0.012, 0.045), mat=iron, bone="Hips",
+                      extras={"rigid": True, "bevel": False}))
+
+    # Heavy leather apron from the belt to the knee, a curved slab.
+    top, bot = fig.belt_z - 0.01, fig.knee_z + 0.01
+    rings = []
+    for i in range(7):
+        z = top + (bot - top) * i / 6
+        yf = fig.surface(z, -90.0, pad=pad + 0.012).y if z > fig.crotch_z else \
+            fig.surface(fig.crotch_z + 0.01, -90.0, pad=pad + 0.012).y - 0.012
+        hw = 0.235 + 0.02 * i / 6
+        outer, inner = [], []
+        for k in range(9):
+            u = -1.0 + 2.0 * k / 8
+            x = u * hw
+            y = yf + 0.07 * u * u - (0.004 * i)
+            outer.append((x, y - 0.012, z))
+            inner.append((x, y, z))
+        rings.append(outer + inner[::-1])
+    parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat=leather, bone="Hips", extras={
+        "rings": rings, "smooth": True, "bevel": False,
+        "paint": [{"mat": soot, "min": (-0.12, -1, bot + 0.05), "max": (0.05, 1, bot + 0.22)}],
+        "skirt": {"top": fig.crotch_z + 0.08, "bottom": bot, "strength": 0.85, "split": 0.08},
+        "bones": ["Hips", "UpperLeg.L", "UpperLeg.R"]}))
+
+    for k, ang in enumerate((-58.0, -76.0, -104.0, -122.0)):
+        z = fig.belt_z - 0.035
+        at = fig.surface(z, ang, pad=pad + 0.075)
+        name = fig.add_bone(f"Grenado.{k + 1}", at, at + Vector((0, 0, 0.09)), "Hips")
+        parts += _grenado(at, iron, oak, leather, name, cup=leather)
+
+    # Right hip: sapper's mallet and a coil of fuse cord; left hip: water-flask.
+    m0 = fig.surface(fig.belt_z - 0.02, 150.0, pad=pad + 0.03)
+    m1 = m0 + Vector((-0.03, 0.04, -0.24))
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=oak, bone="Hips", segments=6,
+                      extras={"path": [tuple(m0), tuple(m1)], "section": (0.014, 0.014),
+                              "smooth": True, "bevel": False, "rigid": True}))
+    parts.append(Part("cyl", tuple(m1 + (m1 - m0).normalized() * 0.03), (0.07, 0.07, 0.13),
+                      mat=oak, bone="Hips", rot=(0.0, 90.0, 20.0), segments=8,
+                      extras={"rigid": True, "bevel": False}))
+    coil = fig.surface(fig.belt_z - 0.10, 118.0, pad=pad + 0.03)
+    parts.append(Part("torus", tuple(coil), (0.14, 0.14, 0.04), mat=canvas, bone="Hips",
+                      rot=(90.0, 0.0, -30.0), segments=12, rings=5, minor=0.22,
+                      extras={"rigid": True, "bevel": False, "smooth": True}))
+    parts.append(Part("torus", tuple(coil), (0.10, 0.10, 0.03), mat=canvas, bone="Hips",
+                      rot=(90.0, 0.0, -30.0), segments=10, rings=4, minor=0.22,
+                      extras={"rigid": True, "bevel": False, "smooth": True}))
+    fl = fig.surface(fig.belt_z - 0.11, 20.0, pad=pad + 0.05)
+    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=leather, bone="Hips", segments=8,
+                      extras={"path": [tuple(fl + Vector((0, 0, 0.10))),
+                                       tuple(fl + Vector((0, 0, 0.07))), tuple(fl),
+                                       tuple(fl - Vector((0, 0, 0.09))),
+                                       tuple(fl - Vector((0, 0, 0.10)))],
+                              "sections": [(0.012, 0.012), (0.03, 0.03), (0.06, 0.035),
+                                           (0.055, 0.032), (0.0, 0.0)],
+                              "up": (1.0, 0.0, 0.0), "power": 2.4, "smooth": True,
+                              "bevel": False, "rigid": True}))
+
+    # Left hand: the one lit grenado. Right hand: the linstock, slow match coiled
+    # round it, its tip glowing.
+    gl = fig.grip("L")
+    fore_l = (fig.joint("wrist.L") - fig.joint("elbow.L")).normalized()
+    g_at = gl + fore_l * 0.035 + Vector((0, 0, 0.045))
+    fig.prop_bone("Grenado.5", "L", head=gl, tail=g_at + Vector((0, 0, 0.05)))
+    parts += _grenado(g_at, iron, oak, leather, "Grenado.5", ember=ember, prop=True)
+
+    gr = fig.grip("R")
+    d = Vector((0.0, -0.18, 1.0)).normalized()
+    lo, hi = gr - d * 0.16, gr + d * 0.44
+    fig.prop_bone("Linstock", "R", head=gr, tail=hi)
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="ash_haft", bone="Linstock",
+                      segments=6, extras={"path": [tuple(lo), tuple(hi)],
+                                          "section": (0.013, 0.013), "smooth": True,
+                                          "bevel": False, "prop": True}))
+    x = Vector((1.0, 0.0, 0.0))
+    y = d.cross(x).normalized()
+    helix = []
+    for i in range(22):
+        t = 0.10 + 0.30 * i / 21
+        a = i * 0.9
+        helix.append(tuple(gr + d * t + (x * math.cos(a) + y * math.sin(a)) * 0.019))
+    tip = hi + y * 0.02 + d * 0.02
+    helix += [tuple(hi - d * 0.02 + y * 0.018), tuple(tip)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=canvas, bone="Linstock", segments=4,
+                      extras={"path": helix, "section": (0.006, 0.006), "smooth": True,
+                              "bevel": False, "prop": True}))
+    parts.append(Part("sphere", tuple(tip), (0.024, 0.024, 0.024), mat=ember,
+                      bone="Linstock", segments=6, rings=4,
+                      extras={"prop": True, "bevel": False}))
+
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(),
+        family_overrides={
+            # 9x shipping emission: store the madder ember dimmer (see musketeer).
+            "fuse_ember": {"emit": "#5A2410", "rough": 0.8},
+            # patina patches in the casting, per the JSON bronze note
+            "petard_bronze": {"wear_to": "#4A3A26", "wear_amount": 0.3},
+            "scorched_leather": {"wear_to": "#1E1C1A", "wear_amount": 0.3},
+        },
+        extra_families={
+            "sooted_skin": {"name": "Sooted skin", "base": "#8E6A52", "rough": 0.65,
+                            "notes": "Not in the JSON materials; the concept sheet's "
+                                     "'sooted skin' swatch (build: soot-blackened face "
+                                     "and forearms)."},
+            "soot": {"name": "Soot", "base": "#3E382E", "rough": 0.95,
+                     "notes": "JSON padded-canvas note 'soot to #3E382E at the hem'; also "
+                              "the singed beard, the plank's scorched edge and the "
+                              "powder spill on the apron."},
+            "bronze_patina": {"name": "Bronze patina", "base": "#4A3A26", "rough": 0.6,
+                              "metal": 1.0, "notes": "JSON petard-bronze note: 'dark brown "
+                              "patina #4A3A26 in the mouldings'."},
+            "ash_haft": {"name": "Ash haft", "base": "#8A7254", "rough": 0.7,
+                         "notes": "Build bullet 'short linstock 0.60 m (ash)'; the "
+                                  "petardier's JSON lists no ash (hex from the guard's)."},
+        },
+        notes=[
+            "Madrier + petard are rigid on a Madrier bone under Chest (backpack socket); "
+            "Grenado.1-4 are belt-socket bones on Hips, Grenado.5 (the lit one) and the "
+            "Linstock are prop bones on Hand.L / Hand.R.",
+            "The linstock is modelled in the right hand (JSON: 'belt / right hand'); tucked "
+            "in the belt it would clash with the plank.",
+            "Apron is one slab on Hips with the skirt rule (thighs), not apron_01-02 bones; "
+            "the straps are weighted to Chest/Shoulder, not strap_L/R bones; the cap is "
+            "rigid on a Cap bone.",
+            "Not built: burn-fleck decals, powder-spill decal (a soot patch instead), the "
+            "gaiter buttons, the water-flask stopper, the fuse-cord ends.",
+        ])
+
+
+def _sapper_cap(fig: Human, leather: str) -> list[Part]:
+    """Soft round leather cap: a 0.04 m turned-up band over the brow and a
+    low hemispherical crown, ear flaps tied up at the sides. Rigid on Cap."""
+    h = fig.h
+    base = fig.lean((0.0, 0.0, 0.948 * h))
+    fig.add_bone("Cap", base, base + Vector((0, 0, 0.08)), "Head")
+    n = 16
+    # (z, half-width, half-depth, y shift) in metres, from the skull + padding
+    rows = [(0.946 * h, 0.046 * h + 0.008, 0.058 * h + 0.008, 0.0),
+            (0.944 * h, 0.046 * h + 0.020, 0.058 * h + 0.020, 0.0),
+            (0.946 * h + 0.040, 0.045 * h + 0.022, 0.057 * h + 0.022, 0.001),
+            (0.946 * h + 0.044, 0.045 * h + 0.010, 0.057 * h + 0.010, 0.001),
+            (0.978 * h, 0.040 * h + 0.012, 0.051 * h + 0.012, 0.002),
+            (0.992 * h, 0.028 * h + 0.012, 0.036 * h + 0.012, 0.004),
+            (1.000 * h + 0.012, 0.0, 0.0, 0.004)]
+    rings = []
+    for z, hw, hd, dy in rows:
+        c = fig.lean((0.0, dy * h, z))
+        if hw == 0.0:
+            rings.append([tuple(c)])
+            continue
+        rings.append([(c.x + math.cos(2 * math.pi * j / n) * hw,
+                       c.y + math.sin(2 * math.pi * j / n) * hd, c.z) for j in range(n)])
+    parts = [Part("loft", (0, 0, 0), (1, 1, 1), mat=leather, bone="Cap",
+                  extras={"rings": rings, "smooth": True, "bevel": False, "rigid": True})]
+    for s in (1.0, -1.0):
+        at = fig.lean((s * (0.046 * h + 0.026), 0.004, 0.946 * h + 0.05))
+        parts.append(Part("box", tuple(at), (0.014, 0.06, 0.07), mat=leather, bone="Cap",
+                          rot=(0.0, s * 28.0, 0.0), extras={"rigid": True}))
+        knot = at + Vector((s * 0.02, 0.0, 0.035))
+        parts.append(Part("sphere", tuple(knot), (0.02, 0.02, 0.02), mat=leather, bone="Cap",
+                          segments=6, rings=4, extras={"rigid": True, "bevel": False}))
+    return parts
+
 
 BLUEPRINTS = {
     "partisan-guard": partisan_guard,
     "musketeer": musketeer,
     "cuirassier": cuirassier,
+    "petardier": petardier,
 }

@@ -1769,6 +1769,121 @@
       "build_seconds": 4.5
     },
     {
+      "key": "enemies/bronze/flame-keeper",
+      "kind": "enemies",
+      "age": "bronze",
+      "slug": "flame-keeper",
+      "name": "KeeperOfTheFlame",
+      "title": "Keeper of the Flame",
+      "passed": true,
+      "stats": {
+        "vertices": 4027,
+        "faces": 3893,
+        "triangles": 7838,
+        "islands": 72,
+        "lowest_z": 0.0,
+        "height": 1.72,
+        "width": 1.42,
+        "budget": 8000,
+        "bbox_m": "1.420x1.008x1.720",
+        "height_body_m": 1.72,
+        "height_spec_m": 1.72,
+        "height_with_props_m": 1.72,
+        "rig_bones": 33,
+        "skinned_bones": 32,
+        "mean_influences": 1.52
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.72,
+        "tri_budget": 8000
+      },
+      "families": {
+        "linen": {
+          "name": "Linen",
+          "base": "#CFC3A2",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "soot_dyed_wool": {
+          "name": "Soot-dyed wool",
+          "base": "#3A2E26",
+          "rough": 0.95,
+          "metal": 0.0,
+          "emit": null
+        },
+        "fire_pot_clay": {
+          "name": "Fire-pot clay",
+          "base": "#A0603E",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "olive_wood": {
+          "name": "Olive wood",
+          "base": "#6E5236",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "cast_bronze": {
+          "name": "Cast bronze",
+          "base": "#9B6A38",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "ember_madder": {
+          "name": "Ember madder",
+          "base": "#C4542E",
+          "rough": 0.6,
+          "metal": 0.0,
+          "emit": "#4A1E0C"
+        },
+        "haematite_red": {
+          "name": "Haematite red",
+          "base": "#8E3F2C",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "skin": {
+          "name": "Skin",
+          "base": "#9C6E4E",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hair": {
+          "name": "Dark hair",
+          "base": "#2B231B",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "64 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
+        "families not in the JSON (blueprint extras): ['hair', 'skin']"
+      ],
+      "notes": [
+        "Censer (Censer1 prop bone on Hand.R -> Censer2 -> Censer3, bowl rigid on Censer3) is in the RIGHT hand as the concept draws it; the JSON rig says left.",
+        "Yoke is rigid on its own bone under Chest; four pots each hang on PotCord<n>.<side> -> Pot<n>.<side> (one cord bone, not the JSON's two).",
+        "Polos is its own bone under Head (detachable).",
+        "Skirt and aprons are weighted to Hips, then the skirt rule shares the lower bell with the thighs (45 %).",
+        "Not built: skirt flounce ring bones x5 and hair chain x3 (springs); painted soles; scorched bites in the hem; singed hair strands."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Bronze/KeeperOfTheFlame/KeeperOfTheFlame.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Bronze/KeeperOfTheFlame/glTF/KeeperOfTheFlame.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Bronze/KeeperOfTheFlame/KeeperOfTheFlame.blend"
+      },
+      "build_seconds": 4.9
+    },
+    {
       "key": "enemies/bronze/palace-levy",
       "kind": "enemies",
       "age": "bronze",
@@ -2223,8 +2338,8 @@
         "height_spec_m": 1.95,
         "height_with_props_m": 1.95,
         "rig_bones": 25,
-        "skinned_bones": 24,
-        "mean_influences": 1.54
+        "skinned_bones": 18,
+        "mean_influences": 1.05
       },
       "spec": {
         "dims_WDH_m": null,
@@ -2298,7 +2413,6 @@
       },
       "failures": [],
       "warnings": [
-        "389 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance",
         "families not in the JSON (blueprint extras): ['helm_void', 'mail_blade']"
       ],
       "notes": [
@@ -2313,7 +2427,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/glTF/HouseholdKnight.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/HouseholdKnight.blend"
       },
-      "build_seconds": 3.6
+      "build_seconds": 3.5
     },
     {
       "key": "enemies/high/lantern-warden",
@@ -2419,6 +2533,106 @@
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
       "build_seconds": 3.3
+    },
+    {
+      "key": "enemies/late/gothic-knight",
+      "kind": "enemies",
+      "age": "late",
+      "slug": "gothic-knight",
+      "name": "GothicManAtArms",
+      "title": "Gothic Man-at-Arms",
+      "passed": true,
+      "stats": {
+        "vertices": 4296,
+        "faces": 3805,
+        "triangles": 8016,
+        "islands": 146,
+        "lowest_z": 0.0,
+        "height": 1.95,
+        "width": 0.928,
+        "budget": 12000,
+        "bbox_m": "0.928x0.478x1.950",
+        "height_body_m": 1.95,
+        "height_spec_m": 1.95,
+        "height_with_props_m": 1.95,
+        "rig_bones": 23,
+        "skinned_bones": 20,
+        "mean_influences": 1.02
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.95,
+        "tri_budget": 12000
+      },
+      "families": {
+        "white_harness": {
+          "name": "White harness",
+          "base": "#8E9194",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        },
+        "mail_voiders": {
+          "name": "Mail voiders",
+          "base": "#6D6E6C",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "livery_sash": {
+          "name": "Livery sash",
+          "base": "#9E2A2F",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "ash_haft": {
+          "name": "Ash haft",
+          "base": "#8A7456",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "straps": {
+          "name": "Straps",
+          "base": "#5A4331",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "soot": {
+          "name": "Soot",
+          "base": "#1E1B17",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "signet_gold": {
+          "name": "Gilt (orpiment) signet",
+          "base": "#C9A13A",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['signet_gold']"
+      ],
+      "notes": [
+        "Poleaxe (1.70 m) is a prop bone on Hand.R, left out of the 1.95 m height.",
+        "Visor is its own hinge bone under Head (opens 70 deg); Rondel under Head.",
+        "Plates are rigid on their limb bones over mail sleeves and hose, so a bent elbow or knee shows mail between plates rather than stretched steel.",
+        "The sash follows the JSON (over the right shoulder to the left hip); the concept front draws it as a waist sash.",
+        "Not built: pauldron twist helper bones, tasset and sash-tail springs (tassets are rigid on the thighs), a true slit opening and breaths (dark studs), scratch and soot decals."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/GothicManAtArms.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/glTF/GothicManAtArms.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Late/GothicManAtArms/GothicManAtArms.blend"
+      },
+      "build_seconds": 4.5
     },
     {
       "key": "enemies/late/handgunner",
@@ -3019,6 +3233,133 @@
         "fbx": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/PalaceGuard.fbx",
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/glTF/PalaceGuard.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/PalaceGuard/PalaceGuard.blend"
+      },
+      "build_seconds": 3.6
+    },
+    {
+      "key": "enemies/powder/petardier",
+      "kind": "enemies",
+      "age": "powder",
+      "slug": "petardier",
+      "name": "Petardier",
+      "title": "Petardier",
+      "passed": true,
+      "stats": {
+        "vertices": 3169,
+        "faces": 3008,
+        "triangles": 6050,
+        "islands": 78,
+        "lowest_z": 0.0,
+        "height": 1.752,
+        "width": 0.612,
+        "budget": 8000,
+        "bbox_m": "0.612x1.062x1.752",
+        "height_body_m": 1.752,
+        "height_spec_m": 1.76,
+        "height_with_props_m": 1.752,
+        "rig_bones": 28,
+        "skinned_bones": 22,
+        "mean_influences": 1.05
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.76,
+        "tri_budget": 8000
+      },
+      "families": {
+        "petard_bronze": {
+          "name": "Petard bronze",
+          "base": "#8A6A3E",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "oak_plank": {
+          "name": "Oak plank",
+          "base": "#6A5034",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        },
+        "padded_canvas": {
+          "name": "Padded canvas",
+          "base": "#8A7E62",
+          "rough": 0.95,
+          "metal": 0.0,
+          "emit": null
+        },
+        "scorched_leather": {
+          "name": "Scorched leather",
+          "base": "#4A3628",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "cast_iron": {
+          "name": "Cast iron",
+          "base": "#2F2E2C",
+          "rough": 0.7,
+          "metal": 1.0,
+          "emit": null
+        },
+        "murrey_livery_wool": {
+          "name": "Murrey livery wool",
+          "base": "#5B3036",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "fuse_ember": {
+          "name": "Fuse ember",
+          "base": "#C4542E",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": "#5A2410"
+        },
+        "sooted_skin": {
+          "name": "Sooted skin",
+          "base": "#8E6A52",
+          "rough": 0.65,
+          "metal": 0.0,
+          "emit": null
+        },
+        "soot": {
+          "name": "Soot",
+          "base": "#3E382E",
+          "rough": 0.95,
+          "metal": 0.0,
+          "emit": null
+        },
+        "bronze_patina": {
+          "name": "Bronze patina",
+          "base": "#4A3A26",
+          "rough": 0.6,
+          "metal": 1.0,
+          "emit": null
+        },
+        "ash_haft": {
+          "name": "Ash haft",
+          "base": "#8A7254",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['ash_haft', 'bronze_patina', 'soot', 'sooted_skin']"
+      ],
+      "notes": [
+        "Madrier + petard are rigid on a Madrier bone under Chest (backpack socket); Grenado.1-4 are belt-socket bones on Hips, Grenado.5 (the lit one) and the Linstock are prop bones on Hand.L / Hand.R.",
+        "The linstock is modelled in the right hand (JSON: 'belt / right hand'); tucked in the belt it would clash with the plank.",
+        "Apron is one slab on Hips with the skirt rule (thighs), not apron_01-02 bones; the straps are weighted to Chest/Shoulder, not strap_L/R bones; the cap is rigid on a Cap bone.",
+        "Not built: burn-fleck decals, powder-spill decal (a soot patch instead), the gaiter buttons, the water-flask stopper, the fuse-cord ends."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Powder/Petardier/Petardier.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Powder/Petardier/glTF/Petardier.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Powder/Petardier/Petardier.blend"
       },
       "build_seconds": 3.6
     }

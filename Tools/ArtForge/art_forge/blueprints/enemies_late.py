@@ -657,7 +657,454 @@ def handgunner(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Gothic Man-at-Arms (heavy) — glitter before shape: round armet with a beak, big
+# fluted shoulders, a pointed waist, a short axe on a pole at his side.
+# --------------------------------------------------------------------------------
+
+def _ellipsoid_pt(base: Vector, axis: Vector, radius: float, height: float,
+                  theta: float, phi: float, out: float = 0.0) -> Vector:
+    """A point on a dome (see _dome) at polar angle theta (0 = pole, 90 = rim) and
+    azimuth phi, `out` metres proud of it. The dome is treated as an ellipsoid cap,
+    which runs a few millimetres inside _dome's fuller profile (hence `out`)."""
+    a = Vector(axis).normalized()
+    u = a.cross(Vector((0.0, 1.0, 0.0)))
+    if u.length < 1e-3:
+        u = a.cross(Vector((1.0, 0.0, 0.0)))
+    u.normalize()
+    v = a.cross(u).normalized()
+    t, p = math.radians(theta), math.radians(phi)
+    radial = u * math.cos(p) + v * math.sin(p)
+    pt = base + a * (height * math.cos(t)) + radial * (radius * math.sin(t))
+    n = (a * (math.cos(t) / max(height, 1e-6)) + radial * (math.sin(t) / radius)).normalized()
+    return pt + n * out
+
+
+def _armet(fig: Human, mat: str, dark: str, strap: str, crown: float) -> list[Part]:
+    """Armet: a rounded skull 0.25 m wide closing under the chin, a low comb, a
+    wrapper strapped over the jaw, a sparrow-beak visor projecting 0.10 m on its own
+    hinge bone (Visor, opens 70 deg), twin sight slits above it, six breaths on the
+    wearer's right, and a 0.07 m rondel on a 0.05 m stem at the back (Rondel)."""
+    z0 = crown - 0.39
+    sy = 1.12   # skull depth / width
+    prof = [(0.086, 0.0), (0.100, 0.020), (0.112, 0.060), (0.122, 0.130), (0.125, 0.200),
+            (0.119, 0.270), (0.101, 0.322), (0.071, 0.360), (0.036, 0.383), (0.0, 0.390)]
+    parts = [Part("lathe", (0.0, 0.0, z0), (1.0, sy, 1.0), mat=mat, bone="Head", segments=24,
+                  extras={"profile": prof, "rigid": True, "smooth": True, "bevel": False})]
+
+    def skull_r(dz):
+        for (ra, za), (rb, zb) in zip(prof, prof[1:]):
+            if za <= dz <= zb:
+                return ra + (rb - ra) * (dz - za) / (zb - za)
+        return 0.0
+
+    # Low comb over the skull from brow to nape.
+    comb = []
+    for deg in range(-70, 71, 14):
+        a = math.radians(deg)
+        dz = 0.20 + 0.19 * math.cos(a)
+        y = math.copysign(skull_r(dz) * sy, a) if abs(deg) > 1 else 0.0
+        comb.append((0.0, y * 0.985, z0 + dz - 0.004))
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=mat, bone="Head", segments=6,
+                      extras={"path": comb, "section": (0.012, 0.005), "up": (1, 0, 0),
+                              "rigid": True, "smooth": True, "bevel": False}))
+
+    # Wrapper plate over the jaw, strapped round the back of the neck.
+    zw = z0 + 0.045
+    rw = skull_r(0.045) + 0.010
+    wrap = [(math.cos(math.radians(d)) * rw, math.sin(math.radians(d)) * rw * sy, zw)
+            for d in range(200, 341, 20)]
+    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=mat, bone="Head", segments=4,
+                      extras={"path": wrap, "sections": [(0.006, 0.030)] * len(wrap),
+                              "up": (0, 0, 1), "power": 4.0, "rigid": True,
+                              "smooth": True, "bevel": False}))
+    back = [(math.cos(math.radians(d)) * (rw - 0.004), math.sin(math.radians(d)) * (rw - 0.004) * sy,
+             zw) for d in range(-10, 191, 25)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=strap, bone="Head", segments=4,
+                      extras={"path": back, "section": (0.004, 0.012), "up": (0, 0, 1),
+                              "rigid": True, "smooth": True, "bevel": False}))
+
+    # Sparrow-beak visor: loft from inside the skull front out to the beak tip.
+    zv = z0 + 0.105          # visor centre line
+    stations = [(-0.080, 0.118, 0.068, 0.0), (-0.128, 0.114, 0.066, 0.0),
+                (-0.160, 0.098, 0.058, -0.003), (-0.195, 0.064, 0.042, -0.008),
+                (-0.225, 0.028, 0.022, -0.013)]
+    n = 16
+
+    def vis_ring(y, hw, hz, dz):
+        # keel: the centre line pushed forward so the beak has a horizontal ridge
+        ring = []
+        for j in range(n):
+            a = 2.0 * math.pi * j / n
+            ca, sa = math.cos(a), math.sin(a)
+            x = math.copysign(abs(ca) ** 0.9, ca) * hw
+            z = zv + dz + math.copysign(abs(sa) ** 1.1, sa) * hz
+            ring.append((x, y - 0.018 * (1.0 - abs(ca)) * (abs(sa) < 0.99), z))
+        return ring
+    rings = [vis_ring(*st) for st in stations]
+    tip = (0.0, -0.250, zv - 0.018)
+    rings.append([tip])
+    pivot = Vector((0.0, -0.02, zv + 0.02))
+    fig.add_bone("Visor", pivot, tip, "Head")
+    parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat=mat, bone="Visor", extras={
+        "rings": rings, "rigid": True, "smooth": False, "bevel": False}))
+    # hinge pivots at the sides
+    for s in (1.0, -1.0):
+        parts.append(Part("cyl", (s * 0.121, -0.060, zv + 0.005), (0.026, 0.026, 0.014),
+                          mat=mat, bone="Visor", rot=(0, 90, 0), segments=8,
+                          extras={"rigid": True, "bevel": False}))
+    # Breaths: six holes on the wearer's right cheek of the visor.
+    for i, (y, dz) in enumerate(((-0.140, 0.010), (-0.140, -0.012), (-0.160, 0.016),
+                                 (-0.160, -0.004), (-0.178, 0.008), (-0.178, -0.012))):
+        hw = 0.114 + (0.098 - 0.114) * (y + 0.128) / (-0.032) if y > -0.160 else \
+            0.098 + (0.064 - 0.098) * (y + 0.160) / (-0.035)
+        parts.append(Part("sphere", (-(hw * 0.93), y, zv + dz), (0.012, 0.012, 0.012),
+                          mat=dark, bone="Visor", segments=6, rings=4,
+                          extras={"rigid": True, "bevel": False}))
+    # Twin sight slits, 0.08 x 0.01 m, on the skull front just above the visor.
+    zs = zv + 0.078
+    rs = skull_r(zs - z0)
+    for s in (1.0, -1.0):
+        xc = s * 0.048
+        yc = -math.sqrt(max(0.0, 1.0 - (xc / rs) ** 2)) * rs * sy
+        slope = (xc / rs) / max(1e-3, math.sqrt(1.0 - (xc / rs) ** 2)) * sy
+        parts.append(Part("box", (xc, yc + 0.003, zs), (0.080, 0.014, 0.011), mat=dark,
+                          bone="Head", rot=(0, 0, -math.degrees(math.atan(slope))),
+                          extras={"rigid": True, "bevel": False}))
+    # Rondel on its stem at the back.
+    zr = z0 + 0.150
+    yb = skull_r(0.150) * sy
+    fig.add_bone("Rondel", (0.0, yb - 0.01, zr), (0.0, yb + 0.06, zr), "Head")
+    parts.append(_seg("cyl", (0.0, yb - 0.01, zr), (0.0, yb + 0.050, zr), 0.009, mat,
+                      "Rondel", segments=6, extras={"rigid": True, "bevel": False}))
+    parts.append(_seg("cyl", (0.0, yb + 0.048, zr), (0.0, yb + 0.058, zr), 0.035, mat,
+                      "Rondel", segments=14, extras={"rigid": True}))
+    return parts
+
+
+def _fan_wing(centre: Vector, out: Vector, up: Vector, size: float, mat: str, bone: str,
+              dark: str | None = None) -> list[Part]:
+    """A fluted fan wing (couter/poleyn): a flat fan standing off `centre` toward
+    `out`, in the plane of `out` and `up`, with ridges radiating from its root."""
+    out, up = out.normalized(), up.normalized()
+    normal = out.cross(up).normalized()
+    fan = [(-0.45, 0.10), (0.05, 0.02), (0.55, 0.30), (0.95, 0.00), (0.55, -0.30),
+           (0.05, -0.02), (-0.45, -0.10)]
+    parts = []
+    # the outline as a loft of two rings (front and back face)
+    ring_a = [tuple(centre + out * (u * size) + up * (v * size) + normal * 0.005) for u, v in fan]
+    ring_b = [tuple(centre + out * (u * size) + up * (v * size) - normal * 0.005) for u, v in fan]
+    parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat=mat, bone=bone, extras={
+        "rings": [ring_a, ring_b], "rigid": True, "bevel": False}))
+    if dark:
+        for v in (0.18, 0.0, -0.18):   # flute grooves
+            a = centre + out * (0.05 * size) + normal * 0.0055
+            b = centre + out * (0.80 * size) + up * (v * size) + normal * 0.0055
+            parts.append(_seg("cyl", a, b, 0.0035, dark, bone, segments=4,
+                              extras={"rigid": True, "bevel": False}))
+    return parts
+
+
+def _poleaxe(fig: Human, g: Vector, mat: str, haft: str, strap: str) -> list[Part]:
+    """1.70 m overall, grounded at the right side through the right fist: ash haft
+    3.5 cm, square iron butt spike; a 0.32 m head (axe 0.14 x 0.18 m outboard, a
+    4-point hammer inboard, 0.18 m top spike), 0.20 m langets and a 0.11 m rondel
+    guard at 1.10 m. Prop bone Poleaxe on Hand.R."""
+    x, y = g.x, g.y
+    overall, head = 1.70, 0.32
+    sock = overall - head          # 1.38
+    fig.prop_bone("Poleaxe", "R", head=(x, y, g.z), tail=(x, y, overall))
+    pr = {"prop": True}
+    parts = [
+        Part("cyl", (x, y, (0.08 + sock) / 2), (0.035, 0.035, sock - 0.08), mat=haft,
+             bone="Poleaxe", segments=8, extras={**pr, "smooth": True, "bevel": False}),
+        Part("cone", (x, y, 0.05), (0.036, 0.036, 0.10), mat=mat, bone="Poleaxe",
+             segments=4, rot=(180, 0, 45), extras=dict(pr)),
+        Part("cyl", (x, y, sock + 0.05), (0.042, 0.042, 0.12), mat=mat, bone="Poleaxe",
+             segments=8, extras=dict(pr)),
+        Part("cone", (x, y, overall - 0.09), (0.032, 0.032, 0.18), mat=mat, bone="Poleaxe",
+             segments=4, rot=(0, 0, 45), extras=dict(pr)),
+        Part("cyl", (x, y, 1.10), (0.11, 0.11, 0.010), mat=mat, bone="Poleaxe", segments=12,
+             extras=dict(pr)),
+    ]
+    for sgn in (1.0, -1.0):
+        parts.append(Part("box", (x, y + sgn * 0.019, sock - 0.10), (0.012, 0.004, 0.20),
+                          mat=mat, bone="Poleaxe", extras=dict(pr)))
+    for zg in (0.90, 1.30):   # leather grip wraps at the two polished grips
+        parts.append(Part("cyl", (x, y, zg), (0.039, 0.039, 0.07), mat=strap,
+                          bone="Poleaxe", segments=8, extras={**pr, "bevel": False,
+                                                              "smooth": True}))
+    # Axe blade outboard (-X), 0.14 deep x 0.18 tall, flared crescent edge.
+    blade = [(0.015, 0.060), (0.080, 0.075), (0.140, 0.010), (0.150, 0.100),
+             (0.140, 0.190), (0.080, 0.125), (0.015, 0.140)]
+    parts.append(Part("prism", (x, y, sock + 0.02), (1.0, 1.0, 0.009), mat=mat, bone="Poleaxe",
+                      rot=(90.0, 0.0, 180.0), extras={"outline": blade, **pr}))
+    # Hammer inboard (+X): a short square neck and a four-point face.
+    hz = sock + 0.10
+    parts.append(Part("box", (x + 0.045, y, hz), (0.06, 0.030, 0.030), mat=mat,
+                      bone="Poleaxe", extras=dict(pr)))
+    parts.append(Part("box", (x + 0.080, y, hz), (0.014, 0.050, 0.050), mat=mat,
+                      bone="Poleaxe", extras=dict(pr)))
+    for dy in (-0.013, 0.013):
+        for dz in (-0.013, 0.013):
+            parts.append(Part("cone", (x + 0.094, y + dy, hz + dz), (0.018, 0.018, 0.018),
+                              mat=mat, bone="Poleaxe", rot=(0, 90, 0), segments=4,
+                              extras={**pr, "bevel": False}))
+    return parts
+
+
+def gothic_knight(entry: Entry):
+    # Eyes 1.72 m -> stature 1.838 m; the armet crown reaches 1.95 m. Stands
+    # square, poleaxe grounded at the right side, left gauntlet hanging.
+    fig = Human(height=1.838, bulk=1.10, shoulders=0.50, stance=3.5,
+                arm_r=ArmPose(spread=20.0, swing=0.0, elbow=30.0),
+                arm_l=ArmPose(spread=16.0, swing=2.0, elbow=20.0))
+    H, M, S, R, A, D = ("white_harness", "mail_voiders", "straps", "livery_sash",
+                        "ash_haft", "soot")
+    bpad = 0.036   # breastplate over the arming doublet
+    # Breastplate as the torso: globose chest, plate collar (gorget) under the
+    # armet, mail skirt below the fauld painted in voiders mail.
+    parts = [fig.torso_part(H, pad=bpad, hem=0.82, hem_flare=1.16, collar=0.05,
+                            chest=0.17, segments=24, paint=[
+                                {"mat": M, "min": (-1, -1, -1), "max": (1, 1, 0.955)}])]
+
+    # Cusped plackart rising from the waist to a point at 1.52 m, 7 fan flutes.
+    ppad = bpad + 0.010
+    rows = [(1.04, 0.175), (1.10, 0.165), (1.18, 0.135), (1.27, 0.095), (1.36, 0.058),
+            (1.44, 0.028), (1.52, 0.006)]
+    parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat=H, bone="Spine", extras={
+        "rings": _panel(fig, rows, ppad, 0.006, cols=11), "bevel": False, "smooth": True,
+        "bones": ["Hips", "Spine", "Chest"]}))
+    for k in range(7):
+        t = (k - 3) / 3.0
+        top = (t * 0.13 * (1.0 - 0.35 * abs(t)), 1.40 - 0.28 * abs(t) ** 1.3)
+        pts = [(t * 0.02, 1.06), (t * 0.07, 1.06 + (top[1] - 1.06) * 0.5), top]
+        parts.append(_strip(fig, pts, ppad + 0.007, [0.006, 0.006, 0.004], D, "Spine",
+                            extras={"bones": ["Hips", "Spine", "Chest"]}))
+    # lance-rest bolt hole on the right breast
+    lr = fig.surface(1.30, -130.0, pad=bpad + 0.004)
+    parts.append(Part("cyl", tuple(lr), (0.018, 0.018, 0.02), mat=D, bone="Chest",
+                      rot=(90, 0, -40), segments=6, extras={"rigid": True, "bevel": False}))
+
+    # Fauld: 3 lames 1.03-0.95 m, each a little proud of the one above.
+    for i, z in enumerate((1.03, 0.99, 0.955)):
+        parts.append(fig.band(z, H, height=0.045, pad=0.006 + 0.007 * i, torso_pad=bpad))
+
+    # Tassets: two pointed plates 0.18 m wide, 1.06 -> 0.82 m, 3 flutes each.
+    for side in ("L", "R"):
+        s = figures.SIDES[side]
+        cx = s * 0.105
+        trs = []
+        for z, hw, yf in ((1.06, 0.090, -0.176), (0.98, 0.090, -0.186), (0.92, 0.088, -0.196),
+                          (0.88, 0.060, -0.204), (0.845, 0.030, -0.212), (0.82, 0.006, -0.218)):
+            outer, inner = [], []
+            for c in range(7):
+                u = -1.0 + 2.0 * c / 6
+                yy = yf - 0.018 * (1.0 - u * u)
+                outer.append((cx + u * hw, yy - 0.008, z))
+                inner.append((cx + u * hw, yy, z))
+            trs.append(outer + list(reversed(inner)))
+        parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat=H, bone=f"UpperLeg.{side}",
+                          extras={"rings": trs, "rigid": True, "bevel": False}))
+        for u in (-0.45, 0.0, 0.45):
+            a = Vector((cx + u * 0.085, -0.176 - 0.018 * (1 - u * u) - 0.010, 1.05))
+            b = Vector((cx + u * 0.030, -0.206 - 0.018 * (1 - u * u) - 0.010, 0.875))
+            parts.append(_seg("cyl", a, b, 0.004, D, f"UpperLeg.{side}", segments=4,
+                              extras={"rigid": True, "bevel": False}))
+        # buckle strap hanging the tasset from the fauld
+        parts.append(Part("box", (cx, -0.200, 1.045), (0.030, 0.012, 0.050), mat=S,
+                          bone=f"UpperLeg.{side}", extras={"rigid": True, "bevel": False}))
+
+    # Arms: mail sleeves (voiders show at the armpit and elbow) under rigid plate.
+    for side in ("L", "R"):
+        s = figures.SIDES[side]
+        shoulder, elbow, wrist = _arm_axis(fig, side)
+        fore = (wrist - elbow).normalized()
+        upv = (shoulder - elbow).normalized()
+        parts.append(fig.arm_part(side, M, pad=0.004))
+        parts += fig.hand_part(side, H)
+        ua, la = f"UpperArm.{side}", f"LowerArm.{side}"
+        rb = 0.029 * fig.h * fig.bulk + 0.010
+        # rerebrace and vambrace
+        parts.append(_seg("cyl", shoulder.lerp(elbow, 0.40), shoulder.lerp(elbow, 0.90), rb,
+                          H, ua, segments=12, taper=0.90,
+                          extras={"rigid": True, "bevel": False, "smooth": True}))
+        parts.append(_seg("cyl", elbow + fore * 0.05, wrist - fore * 0.01, rb * 0.95,
+                          H, la, segments=12, taper=0.80,
+                          extras={"rigid": True, "bevel": False, "smooth": True}))
+        # couter: a cop and a fluted fan wing on the outside of the elbow
+        parts.append(Part("sphere", tuple(elbow + Vector((s * 0.006, 0.012, 0.0))),
+                          (0.105, 0.105, 0.105), mat=H, bone=ua, segments=10, rings=6,
+                          extras={"rigid": True, "bevel": False}))
+        outw = Vector((s, 0.25, 0.0))
+        parts += _fan_wing(elbow + Vector((s * 0.035, 0.02, 0.0)), outw, upv, 0.10, H, ua, D)
+        # gauntlet cuff: flared and fluted, 0.11 m back over the forearm
+        parts.append(_seg("cyl", wrist + fore * 0.012, wrist - fore * 0.10, 0.043, H,
+                          f"Hand.{side}", segments=10, taper=1.40,
+                          extras={"rigid": True, "bevel": False}))
+        # pauldron: a fluted dome 0.24 m wide and two lames to ~1.30 m
+        cap_axis = upv + Vector((s * 0.35, 0.0, 0.0))
+        cap_base = shoulder - upv * 0.045 + Vector((s * 0.010, 0.0, 0.0))
+        parts.append(_dome(cap_base, cap_axis, 0.122, 0.105, H, ua, segments=14,
+                           extras={"rigid": True, "bevel": False}))
+        for t, r in ((0.20, 0.108), (0.34, 0.096), (0.47, 0.085)):
+            a = shoulder + (elbow - shoulder) * (t - 0.07)
+            b = shoulder + (elbow - shoulder) * (t + 0.07)
+            parts.append(_seg("cyl", b, a, r, H, ua, segments=14, taper=1.10,
+                              extras={"rigid": True, "bevel": False, "smooth": True}))
+        # 4 radiating flutes over the cap (outer half), ridges in plate
+        ax = cap_axis.normalized()
+        for az in (30.0, 75.0, 105.0, 150.0):
+            path = [tuple(_ellipsoid_pt(cap_base, ax, 0.122, 0.105, th,
+                                        az if s > 0 else 180.0 - az, 0.006))
+                    for th in (18.0, 40.0, 62.0, 84.0)]
+            parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=H, bone=ua, segments=4,
+                              extras={"path": path, "section": (0.008, 0.005),
+                                      "rigid": True, "smooth": True, "bevel": False}))
+        # besagew disc at the front of the armpit
+        bz = shoulder + Vector((-s * 0.005, -0.125, -0.10))
+        parts.append(_seg("cyl", bz + Vector((0, 0.01, 0)), bz, 0.045, H, ua, segments=12,
+                          extras={"rigid": True}))
+        parts.append(Part("sphere", tuple(bz - Vector((0, 0.004, 0))), (0.022, 0.012, 0.022),
+                          mat=H, bone=ua, segments=6, rings=4,
+                          extras={"rigid": True, "bevel": False}))
+        # buckle strap across the top of the pauldron
+        parts.append(Part("box", tuple(_ellipsoid_pt(cap_base, ax, 0.122, 0.105, 25.0,
+                                                     90.0 if s > 0 else 90.0, 0.004)),
+                          (0.030, 0.050, 0.010), mat=S, bone=ua,
+                          extras={"rigid": True, "bevel": False}))
+
+    # Legs: mail under cuisses, fan poleyns at 0.50 m and full greaves.
+    for side in ("L", "R"):
+        s = figures.SIDES[side]
+        hip, knee, ank = fig.joint(f"hip.{side}"), fig.joint(f"knee.{side}"), \
+            fig.joint(f"ankle.{side}")
+        ul, ll = f"UpperLeg.{side}", f"LowerLeg.{side}"
+        parts.append(fig.leg_part(side, M, pad=0.004))
+        r_th = 0.041 * fig.h * fig.bulk + 0.012
+        parts.append(_seg("cyl", knee.lerp(hip, 0.88), knee.lerp(hip, 0.12), r_th * 0.86,
+                          H, ul, segments=12, taper=1.14,
+                          extras={"rigid": True, "bevel": False, "smooth": True}))
+        for dx in (-0.025, 0.025):   # 2 flutes down the cuisse front
+            a = knee.lerp(hip, 0.80) + Vector((dx, -r_th * 1.02, 0.0))
+            b = knee.lerp(hip, 0.20) + Vector((dx * 0.8, -r_th * 0.88, 0.0))
+            parts.append(_seg("cyl", a, b, 0.005, H, ul, segments=4,
+                              extras={"rigid": True, "bevel": False}))
+        parts.append(Part("box", tuple(knee.lerp(hip, 0.55) + Vector((s * r_th * 0.97, 0, 0))),
+                          (0.012, 0.030, 0.045), mat=S, bone=ul,
+                          extras={"rigid": True, "bevel": False}))
+        r_sh = 0.031 * fig.h * fig.bulk + 0.012
+        parts.append(_seg("cyl", ank.lerp(knee, 0.10), ank.lerp(knee, 0.86), r_sh * 0.82,
+                          H, ll, segments=12, taper=1.30,
+                          extras={"rigid": True, "bevel": False, "smooth": True}))
+        parts.append(Part("box", tuple(ank.lerp(knee, 0.45) + Vector((s * r_sh * 0.95, 0.01, 0))),
+                          (0.012, 0.028, 0.040), mat=S, bone=ll,
+                          extras={"rigid": True, "bevel": False}))
+        # poleyn: knee cop and a fluted side wing 0.10 m
+        parts.append(Part("sphere", tuple(knee + Vector((0, -0.045, 0.01))), (0.13, 0.10, 0.13),
+                          mat=H, bone=ll, segments=12, rings=6,
+                          extras={"rigid": True, "bevel": False}))
+        parts += _fan_wing(knee + Vector((s * 0.050, -0.02, 0.01)), Vector((s, -0.2, 0.0)),
+                           Vector((0, 0, 1)), 0.10, H, ll, D)
+        # sabaton with a poulaine toe, 0.34 m long, with lame ridges
+        foot = fig.foot_part(side, H, length=0.34, point=1.0, segments=10)
+        parts.append(foot)
+        heel_y = ank.y + 0.045 * fig.h
+        for k in range(7):
+            t = 0.30 + 0.085 * k
+            yy = heel_y - t * 0.34
+            hw = (0.030 + (0.033 - 0.030) * min(1, (t - 0.32) / 0.23) if t < 0.55 else
+                  0.033 + (0.030 - 0.033) * (t - 0.55) / 0.23 if t < 0.78 else
+                  0.030 - 0.016 * (t - 0.78) / 0.15) * fig.h
+            top = (0.062 + (0.042 - 0.062) * min(1, max(0, (t - 0.32) / 0.23)) if t < 0.55
+                   else 0.042 + (0.030 - 0.042) * (t - 0.55) / 0.23 if t < 0.78
+                   else 0.030 + (0.020 - 0.030) * (t - 0.78) / 0.15) * fig.h
+            if hw <= 0.012:
+                continue
+            cx = ank.x + s * 0.006 * fig.h * t
+            hh = top / 2.0
+            arc = []
+            for d in range(15, 166, 30):
+                a = math.radians(d)
+                arc.append((cx + math.cos(a) * hw * 1.02, yy,
+                            hh + math.sin(a) * hh * 1.15 + 0.003))
+            parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=H, bone=f"Foot.{side}",
+                              segments=4, extras={"path": arc, "section": (0.004, 0.006),
+                                                  "rigid": True, "smooth": True,
+                                                  "bevel": False}))
+
+    # Neck: a mail standard between the gorget collar and the armet.
+    parts.append(_seg("cyl", (0, 0.004, fig.neck_z + 0.02), (0, 0.004, fig.chin_z + 0.03),
+                      0.058, M, "Neck", segments=12,
+                      extras={"bevel": False, "smooth": True, "bones": ["Neck", "Head", "Chest"]}))
+    parts += _armet(fig, H, D, S, crown=1.95)
+
+    # Livery sash: over the right shoulder to the left hip, knot and 0.30 m tails.
+    sp = ppad + 0.012
+    sash = []
+    for z, ang in ((0.99, -35.0), (1.10, -58.0), (1.22, -85.0), (1.33, -112.0),
+                   (1.43, -140.0), (1.50, -165.0), (1.51, 165.0), (1.46, 130.0),
+                   (1.34, 95.0), (1.20, 60.0), (1.06, 25.0), (1.00, -5.0)):
+        sash.append(tuple(fig.surface(z, ang, pad=sp + (0.02 if 1.45 < z else 0.0))))
+    sash.append(sash[0])
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=R, bone="Chest", segments=4,
+                      extras={"path": sash[:-1], "closed": True, "section": (0.006, 0.040),
+                              "up": (0, 0, 1), "smooth": True, "bevel": False,
+                              "bones": ["Hips", "Spine", "Chest", "Shoulder.R"]}))
+    knot = fig.surface(1.00, -18.0, pad=sp + 0.02)
+    parts.append(Part("sphere", tuple(knot), (0.075, 0.05, 0.06), mat=R, bone="Hips",
+                      segments=8, rings=5, extras={"bevel": False, "smooth": True,
+                                                   "bones": ["Hips", "Spine"]}))
+    for dx, dz in ((0.015, 0.30), (-0.02, 0.27)):
+        tail = [knot + Vector((0, -0.01, -0.03)), knot + Vector((dx, -0.03, -0.15)),
+                knot + Vector((dx * 1.6, -0.035, -dz))]
+        parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=R, bone="Hips", segments=4,
+                          extras={"path": [tuple(p) for p in tail],
+                                  "sections": [(0.012, 0.030), (0.008, 0.036), (0.006, 0.030)],
+                                  "up": (0, -1, 0), "power": 4.0, "smooth": True,
+                                  "bevel": False, "bones": ["Hips", "UpperLeg.L"]}))
+
+    # The signet ring (orpiment, stealable) on the right gauntlet's finger.
+    _s, _e, wr, _t, fr = fig._arm["R"]
+    ring_at = wr + fr * (0.060 * fig.h) + Vector((0.0, -0.028, 0.0))
+    parts.append(Part("torus", tuple(ring_at), (0.036, 0.036, 0.018), mat="signet_gold",
+                      bone="Hand.R", rot=_rot_to(fr), segments=10, rings=4, minor=0.22,
+                      extras={"rigid": True, "bevel": False}))
+
+    parts += _poleaxe(fig, fig.grip("R"), H, A, S)
+
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(),
+        gold_reason="The signet ring on the right gauntlet is loot: 'a gold signet ring "
+                    "(orpiment, 40 coin) ... the only gold on him, and only because you "
+                    "can steal it'.",
+        family_overrides={
+            # Polished white harness, a little rougher so the review studio shows it
+            # pale rather than as a warm mirror (see README Traps).
+            "white_harness": {"rough": 0.30, "wear_to": "#5E6064", "wear_amount": 0.18},
+            "mail_voiders": {"rough": 0.5, "ridges": (0.010, 0.40)},
+        },
+        extra_families={
+            "signet_gold": {"name": "Gilt (orpiment) signet", "base": "#C9A13A",
+                            "rough": 0.3, "metal": 1.0,
+                            "notes": "Breakables: a gold signet ring on the right "
+                                     "gauntlet, stealable loot (40 coin)."},
+        },
+        notes=[
+            "Poleaxe (1.70 m) is a prop bone on Hand.R, left out of the 1.95 m height.",
+            "Visor is its own hinge bone under Head (opens 70 deg); Rondel under Head.",
+            "Plates are rigid on their limb bones over mail sleeves and hose, so a bent "
+            "elbow or knee shows mail between plates rather than stretched steel.",
+            "The sash follows the JSON (over the right shoulder to the left hip); the "
+            "concept front draws it as a waist sash.",
+            "Not built: pauldron twist helper bones, tasset and sash-tail springs (tassets "
+            "are rigid on the thighs), a true slit opening and breaths (dark studs), "
+            "scratch and soot decals.",
+        ])
+
+
 BLUEPRINTS = {
     "sallet-halberdier": sallet_halberdier,
     "handgunner": handgunner,
+    "gothic-knight": gothic_knight,
 }

@@ -981,35 +981,34 @@ def household_knight(entry: Entry):
     # Surcoat: to 0.54 m, over the hauberk, bordured in kermes on every edge.
     hem, flare = 0.54, 1.42
     paint = [{"mat": "kermes_gules", "min": (-1, -1, -1), "max": (1, 1, hem + 0.05)},
-             {"mat": "kermes_gules", "min": (-1, -1, 0.812 * h), "max": (1, 1, 3)},
-             # Front riding split, bordured both sides: the two faces either side
-             # of the front-centre vertex (centroids at x ~ +-0.028 m), hem to 0.84 m.
-             {"mat": "kermes_gules", "min": (-0.036, -1, -1), "max": (0.036, 0.0, 0.84)}]
-    zs = [hem + 0.05 + 0.06 * i for i in range(15)]
-    for z0, z1 in zip(zs, zs[1:]):
-        zm = (z0 + z1) / 2
-        if zm > fig.crotch_z:
-            hw, hd, _dy = fig.torso_dims(zm)
-        else:
-            f = flare + (1.0 - flare) * (zm - hem) / (fig.crotch_z - hem)
-            hw, hd = 0.092 * h * fig.bulk * f, 0.064 * h * fig.bulk * f
-        hw, hd = hw + coat_pad, hd + coat_pad
-        for s in (1.0, -1.0):         # side edges, front and back corners only
-            for sy in (1.0, -1.0):
-                x0, x1 = sorted((s * (hw - 0.05), s * 2.0))
-                y0, y1 = sorted((sy * hd * 0.45, sy * 2.0))
-                paint.append({"mat": "kermes_gules", "min": (x0, y0, z0),
-                              "max": (x1, y1, z1)})
+             {"mat": "kermes_gules", "min": (-1, -1, 0.812 * h), "max": (1, 1, 3)}]
     surcoat = fig.torso_part("woad_field", pad=coat_pad, hem=hem, hem_flare=flare,
                              segments=32, paint=paint)
     # torso_part's first face row runs hem -> 0.68 m, so its centroid sits above
     # the 5 cm bordure and the hem came out blue. Split that row with a ring 5 cm
     # up (lerped between the first two rings, same vertex count) so the bordure
     # band has faces of its own.
-    r0, r1 = surcoat.extras["rings"][0], surcoat.extras["rings"][1]
+    rings = surcoat.extras["rings"]
+    r0, r1 = rings[0], rings[1]
     t = 0.05 / (r1[0][2] - r0[0][2])
-    surcoat.extras["rings"].insert(1, [tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
-                                       for a, b in zip(r0, r1)])
+    rings.insert(1, [tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
+                     for a, b in zip(r0, r1)])
+    # Side and split bordures are painted per face column, not by x/y boxes: a
+    # box threshold catches one column on some rows and two on others, which
+    # stair-stepped the edges. Columns 2-3 / 12-13 / 18-19 / 28-29 are the four
+    # corners of the 32-sided ring (the side slits' front and back edges);
+    # 23-24 flank the front-centre vertex: the riding split, hem to 0.84 m.
+    n = len(r0)
+    for r in range(len(rings) - 1):
+        lo, hi = rings[r], rings[r + 1]
+        for k in range(n):
+            quad = (lo[k], lo[(k + 1) % n], hi[k], hi[(k + 1) % n])
+            c = [sum(v[i] for v in quad) / 4.0 for i in range(3)]
+            if (k in (2, 3, 12, 13, 18, 19, 28, 29) and c[2] < 0.812 * h) or \
+                    (k in (23, 24) and c[2] < 0.84):
+                paint.append({"mat": "kermes_gules",
+                              "min": tuple(x - 0.004 for x in c),
+                              "max": tuple(x + 0.004 for x in c)})
     parts.append(surcoat)
     parts += _chevron(fig, coat_pad)
     for side in ("L", "R"):
