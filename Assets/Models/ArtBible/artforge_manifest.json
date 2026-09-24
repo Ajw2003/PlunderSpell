@@ -1333,7 +1333,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/Astrolabe/glTF/Astrolabe.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/Astrolabe/Astrolabe.blend"
       },
-      "build_seconds": 2.6
+      "build_seconds": 2.4
     },
     {
       "key": "items/powder/curiosity-cabinet",
@@ -1414,7 +1414,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/glTF/CabinetOfCuriosities.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/CabinetOfCuriosities.blend"
       },
-      "build_seconds": 5.2
+      "build_seconds": 3.0
     },
     {
       "key": "items/powder/nautilus-cup",
@@ -1497,7 +1497,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/NautilusCup/glTF/NautilusCup.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/NautilusCup/NautilusCup.blend"
       },
-      "build_seconds": 2.6
+      "build_seconds": 2.4
     },
     {
       "key": "items/powder/silver-tureen",
@@ -1571,7 +1571,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/glTF/SilverServiceTureen.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/SilverServiceTureen.blend"
       },
-      "build_seconds": 3.5
+      "build_seconds": 2.6
     },
     {
       "key": "items/powder/venetian-mirror",
@@ -1661,7 +1661,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/glTF/VenetianMirror.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/VenetianMirror/VenetianMirror.blend"
       },
-      "build_seconds": 3.0
+      "build_seconds": 2.4
     }
   ]
 }
