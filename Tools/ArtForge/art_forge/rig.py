@@ -20,8 +20,10 @@ picks up Root. `apply_bind_rules` runs after it and enforces what each Part says
                                 parent and its children (never Root, unless the part
                                 is on Root). Good for single-bone parts.
 
-A vertex left with no weight after filtering falls back to rigid on its part's bone
-(EnemyForge's fallback, applied a second time), so every vertex is always weighted.
+A vertex left with no allowed weight after filtering is blended between the two
+nearest allowed bones by distance (reported as fallback_vertices); only if that
+somehow yields nothing does it go rigid on its part's bone (EnemyForge's fallback).
+Every vertex is always weighted.
 The part of each vertex is read from kit.PART_LAYER, an integer face layer written
 by build_bmesh that survives the bevel and unwrap.
 """
@@ -117,6 +119,8 @@ def apply_bind_rules(obj: bpy.types.Object, bp: Blueprint) -> dict:
         if bone not in by_name:
             by_name[bone] = obj.vertex_groups.new(name=bone)
 
+    segments = {spec["name"]: (Vector(spec["head"]), Vector(spec["tail"]))
+                for spec in _expand_bones(bp.bones)}
     skirts = {}
     for pid in set(part_ids):
         part = bp.parts[pid // 2]
@@ -138,11 +142,16 @@ def apply_bind_rules(obj: bpy.types.Object, bp: Blueprint) -> dict:
         skirt = skirts.get(part_ids[vert.index])
         if skirt:
             weights = _skirt_weights(weights, vert.co, skirt)
+        if not weights:
+            # Heat weighting missed this vertex (typically a layer hidden inside
+            # another island). Blend the nearest allowed bones by distance rather
+            # than going rigid, so a coat still bends with the spine under it.
+            weights = _nearest_weights(vert.co, allowed, segments)
+            fallback += 1
         top = sorted(weights.items(), key=lambda kv: -kv[1])[:MAX_INFLUENCES]
         total = sum(w for _n, w in top)
         if total < 1e-4:
             new_weights.append({bone: 1.0})
-            fallback += 1
             continue
         new_weights.append({n: w / total for n, w in top})
 
@@ -163,6 +172,21 @@ def apply_bind_rules(obj: bpy.types.Object, bp: Blueprint) -> dict:
     return {"rigid_vertices": rigid_verts, "fallback_vertices": fallback,
             "filtered_vertices": trimmed, "max_influences": max(influences),
             "mean_influences": round(sum(influences) / len(influences), 2)}
+
+
+def _nearest_weights(co, allowed: set[str], segments: dict) -> dict[str, float]:
+    """Inverse-distance (power 4) weights to the two nearest allowed bone segments."""
+    scored = []
+    for name in allowed:
+        head, tail = segments[name]
+        axis = tail - head
+        t = max(0.0, min(1.0, (co - head).dot(axis) / max(axis.length_squared, 1e-12)))
+        scored.append(((co - (head + axis * t)).length, name))
+    scored.sort()
+    near = scored[:2]
+    raw = {name: 1.0 / max(d, 1e-3) ** 4 for d, name in near}
+    total = sum(raw.values())
+    return {name: w / total for name, w in raw.items()}
 
 
 def _smoothstep(a: float, b: float, x: float) -> float:

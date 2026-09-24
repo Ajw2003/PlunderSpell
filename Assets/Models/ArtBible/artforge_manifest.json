@@ -1664,6 +1664,102 @@
       "build_seconds": 2.3
     },
     {
+      "key": "enemies/high/alaunt-hound",
+      "kind": "enemies",
+      "age": "high",
+      "slug": "alaunt-hound",
+      "name": "AlauntWarHound",
+      "title": "Alaunt War-hound",
+      "passed": true,
+      "stats": {
+        "vertices": 1796,
+        "faces": 1795,
+        "triangles": 3452,
+        "islands": 37,
+        "lowest_z": -0.002,
+        "height": 0.858,
+        "width": 0.365,
+        "budget": 6000,
+        "bbox_m": "0.365x1.430x0.860",
+        "height_body_m": 0.86,
+        "height_spec_m": 0.85,
+        "rig_bones": 36,
+        "skinned_bones": 35,
+        "mean_influences": 1.97
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 0.85,
+        "tri_budget": 6000
+      },
+      "families": {
+        "fawn_coat": {
+          "name": "Fawn coat",
+          "base": "#9C7B55",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
+        "dark_mask": {
+          "name": "Dark mask",
+          "base": "#3A3026",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "collar_leather": {
+          "name": "Collar leather",
+          "base": "#5A4030",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "spike_iron": {
+          "name": "Spike iron",
+          "base": "#6F7479",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "woad_coat": {
+          "name": "Woad coat",
+          "base": "#3E5470",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wool_argent": {
+          "name": "Wool argent",
+          "base": "#C4B89C",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "kermes_gules": {
+          "name": "Kermes gules",
+          "base": "#7E2A26",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "180 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance"
+      ],
+      "notes": [
+        "Teeth use the 'Wool argent' vellum (#C4B89C): the JSON lists no tooth material and the concept draws the fangs in that off-white.",
+        "Rig follows the JSON's quadruped chain but with 5 tail and 2 neck bones and no coat/jowl spring bones (not built); CollarRing is the one spring."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/AlauntWarHound.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/glTF/AlauntWarHound.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/High/AlauntWarHound/AlauntWarHound.blend"
+      },
+      "build_seconds": 3.0
+    },
+    {
       "key": "enemies/high/lantern-warden",
       "kind": "enemies",
       "age": "high",
@@ -1766,7 +1862,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/LanternWarden/glTF/LanternWarden.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
-      "build_seconds": 3.2
+      "build_seconds": 3.3
     }
   ]
 }

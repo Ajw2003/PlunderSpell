@@ -237,6 +237,159 @@ def lantern_warden(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Alaunt War-hound (special) — low, deep-chested, blocky head forward, a blue
+# blanket on its back and a jagged ring of spikes at the neck.
+# --------------------------------------------------------------------------------
+
+def _coat(fig: Quadruped, y_front: float, y_back: float, hem_z: float) -> list[Part]:
+    """The padded woad coat: a quilted shell draped over the back from withers to
+    croup down to `hem_z`, a kermes bordure along every edge, an argent chevron on
+    each flank. Built as a loft of C-shaped sections (outer arc, then inner arc
+    back), so it is one closed shell standing a few cm off the body."""
+    stations = 18
+    arc = 12
+    rings = []
+    ys = [y_front + (y_back - y_front) * i / (stations - 1) for i in range(stations)]
+    for i, y in enumerate(ys):
+        cz, hw, hh, keel = fig.body_at(y)
+        # angle where the body surface reaches the hem height
+        s = max(-0.95, min(0.95, (hem_z / fig.sz - cz) / hh))
+        a0 = math.asin(s)
+        quilt = 0.017 if i % 2 == 0 else 0.012      # 5 cm channels, every other station
+        edge = i in (0, stations - 1)
+        outer = fig.body_ring(y, cz, hw, hh, keel, arc, pad=0.006 if edge else quilt,
+                              a0=a0, a1=math.pi - a0, closed=False)
+        inner = fig.body_ring(y, cz, hw, hh, keel, 5, pad=-0.004,
+                              a0=a0, a1=math.pi - a0, closed=False)
+        rings.append(outer + list(reversed(inner)))
+    band = 0.03
+    paint = [
+        {"mat": "kermes_gules", "min": (-1, -2, -1), "max": (1, 2, hem_z + band)},
+        {"mat": "kermes_gules", "min": (-1, -2, -1), "max": (1, ys[0] * fig.sy + band, 2)},
+        {"mat": "kermes_gules", "min": (-1, ys[-1] * fig.sy - band, -1), "max": (1, 2, 2)},
+    ]
+    parts = [Part("loft", (0, 0, 0), (1, 1, 1), mat="woad_coat", bone="Spine2", extras={
+        "rings": rings, "paint": paint, "bevel": False,
+        "bones": ["Pelvis", "Spine1", "Spine2", "Spine3", "Chest", "Scapula.L",
+                  "Scapula.R", "Femur.L", "Femur.R"]})]
+
+    # Argent chevron on each flank: an inverted V strip laid on the coat.
+    y_mid = (y_front + y_back) / 2
+    for side in (1.0, -1.0):
+        path = []
+        for k in range(9):
+            t = k / 8.0
+            y = y_mid + (t - 0.5) * 0.46
+            z = 0.66 - abs(t - 0.5) * 2.0 * (0.66 - hem_z - 0.045)
+            cz, hw, hh, keel = fig.body_at(y)
+            a = math.asin(max(-0.95, min(0.95, (z - cz) / hh)))
+            ring = fig.body_ring(y, cz, hw, hh, keel, 1, pad=0.022, a0=a, a1=a,
+                                 closed=False)
+            px, py, pz = ring[0]
+            path.append((side * px, py * 1.0, pz))
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="wool_argent", bone="Spine2",
+                          segments=4, extras={
+                              "path": path, "section": (0.004, 0.028),
+                              "up": (side, 0.0, 0.0), "bevel": False,
+                              "bones": ["Spine1", "Spine2", "Spine3", "Chest"]}))
+    return parts
+
+
+def _harness(fig: Quadruped, y_front: float, hem_z: float) -> list[Part]:
+    """Leather breast strap round the chest front and a girth behind the forelegs."""
+    parts = []
+    # girth: a closed ring round the ribs just behind the elbows, over the coat on
+    # the back and on the hair under the belly. Width runs along the body (Y).
+    y = -0.08
+    cz, hw, hh, keel = fig.body_at(y)
+    ring = []
+    for k in range(16):
+        a = 2 * math.pi * k / 16
+        z_here = (cz + math.sin(a) * hh) * fig.sz
+        pad = 0.024 if z_here > hem_z - 0.01 else 0.008
+        ring.append(fig.body_ring(y, cz, hw, hh, keel, 1, pad=pad, a0=a, a1=a,
+                                  closed=False)[0])
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="collar_leather", bone="Spine3",
+                      segments=4, extras={
+                          "path": ring, "closed": True, "section": (0.022, 0.005),
+                          "up": (0.0, 1.0, 0.0), "bevel": False, "smooth": True,
+                          "bones": ["Spine2", "Spine3", "Chest"]}))
+    # breast strap: from the coat's front edge on the left flank, round the chest
+    # front at mid height, back along the right flank.
+    z = 0.575 * fig.sz
+    left = []
+    for yy in (y_front + 0.02, -0.34, -0.38, -0.405):
+        _cz, hw_y, _hh, _k = fig.body_at(yy)
+        left.append((hw_y * fig.sx + 0.012, yy * fig.sy, z))
+    left.append((0.052 * fig.sx, -0.428 * fig.sy, z))
+    tip = (0.0, -0.442 * fig.sy, z)
+    path = left + [tip] + [(-x, y2, z2) for x, y2, z2 in reversed(left)]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="collar_leather", bone="Chest",
+                      segments=4, extras={
+                          "path": path, "section": (0.020, 0.005), "up": (0, 0, 1),
+                          "bevel": False, "smooth": True,
+                          "bones": ["Chest", "Spine3", "Neck1", "Scapula.L", "Scapula.R"]}))
+    return parts
+
+
+def _collar(fig: Quadruped) -> list[Part]:
+    """5 cm black leather collar, eight 3 cm iron cone spikes, a leash ring (on its
+    own spring bone, CollarRing)."""
+    centre, tangent, radius = fig.neck_frame(0.42)
+    up = Vector((0, 0, 1))
+    side = tangent.cross(up).normalized()
+    top = side.cross(tangent).normalized()
+    rot = tangent.to_track_quat("Z", "Y").to_euler()
+    deg = tuple(math.degrees(a) for a in rot)
+    r = radius + 0.010
+    parts = [Part("cyl", tuple(centre), (2 * r, 2 * r, 0.05), mat="collar_leather",
+                  bone="Neck1", rot=deg, segments=16,
+                  extras={"rigid": True, "smooth": False})]
+    for k in range(8):
+        a = 2 * math.pi * (k + 0.5) / 8
+        n = side * math.cos(a) + top * math.sin(a)
+        base = centre + n * (r + 0.012)
+        spike_rot = n.to_track_quat("Z", "Y").to_euler()
+        parts.append(Part("cone", tuple(base), (0.022, 0.022, 0.030), mat="spike_iron",
+                          bone="Neck1", rot=tuple(math.degrees(v) for v in spike_rot),
+                          segments=5, extras={"rigid": True, "bevel": False}))
+    ring_at = centre - top * (r + 0.022)
+    fig.add_bone("CollarRing", ring_at + top * 0.012, ring_at - top * 0.03, "Neck1")
+    parts.append(Part("torus", tuple(ring_at - top * 0.012), (0.045, 0.045, 0.045),
+                      mat="spike_iron", bone="CollarRing", rot=deg, segments=10, rings=5,
+                      minor=0.18, extras={"rigid": True, "bevel": False}))
+    return parts
+
+
+def alaunt_hound(entry: Entry):
+    # JSON: 0.85 m at the top of the head, 0.72 m withers, 1.42 m nose to tail
+    # tip, 0.30 m across the chest.
+    fig = Quadruped(withers=0.72, length=1.42, chest_width=0.30)
+    parts = fig.body("fawn_coat", "dark_mask", teeth="wool_argent")
+    y_front, y_back, hem = -0.30, 0.34, 0.49
+    parts += _coat(fig, y_front, y_back, hem)
+    parts += _harness(fig, y_front, hem)
+    parts += _collar(fig)
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(),
+        family_overrides={
+            # "faint brindle stripes on the flanks": dark stripes rubbed into the fawn.
+            "fawn_coat": {"wear_to": "#3A3026", "wear_amount": 0.30, "grain": 0.30},
+            "spike_iron": {"rough": 0.5},
+            # The JSON's "wet nose roughness 0.2" is parsed for the whole family and
+            # made the mask read as lacquer; the nose alone is wet.
+            "dark_mask": {"rough": 0.7},
+        },
+        notes=[
+            "Teeth use the 'Wool argent' vellum (#C4B89C): the JSON lists no tooth "
+            "material and the concept draws the fangs in that off-white.",
+            "Rig follows the JSON's quadruped chain but with 5 tail and 2 neck bones "
+            "and no coat/jowl spring bones (not built); CollarRing is the one spring.",
+        ])
+
+
 BLUEPRINTS = {
     "lantern-warden": lantern_warden,
+    "alaunt-hound": alaunt_hound,
 }

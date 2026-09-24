@@ -822,14 +822,15 @@ class Quadruped(Figure):
             "rings": jaw, "smooth": True, "rigid": True, "bevel": False}))
 
         for side, s in SIDES.items():
-            ear = [p(s * 0.070, -0.505, 0.838), p(s * 0.100, -0.470, 0.842),
-                   p(s * 0.118, -0.438, 0.815), p(s * 0.120, -0.425, 0.790)]
+            # Rose ears: folded back and down against the skull, not pricked.
+            ear = [p(s * 0.066, -0.505, 0.836), p(s * 0.098, -0.478, 0.836),
+                   p(s * 0.118, -0.452, 0.806), p(s * 0.121, -0.445, 0.770)]
             parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat=mask, bone=f"Ear.{side}",
                               segments=6, extras={
                                   "path": [tuple(q) for q in ear],
-                                  "sections": [(0.030, 0.009), (0.034, 0.008),
-                                               (0.024, 0.006), (0.0, 0.0)],
-                                  "up": (0.0, 0.3, 1.0), "smooth": True, "rigid": True,
+                                  "sections": [(0.028, 0.008), (0.036, 0.007),
+                                               (0.026, 0.006), (0.0, 0.0)],
+                                  "up": (s * 1.0, 0.0, 0.6), "smooth": True, "rigid": True,
                                   "bevel": False}))
             eye = p(s * 0.058, -0.622, 0.790)
             parts.append(Part("sphere", tuple(eye), (0.024, 0.016, 0.018), mat=mask,

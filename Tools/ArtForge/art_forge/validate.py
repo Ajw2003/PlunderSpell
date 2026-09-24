@@ -150,8 +150,9 @@ def _check_enemy(report: Report, obj, bp: Blueprint, lo, hi) -> None:
         rules = json.loads(skin).get("rules", {})
         report.stats["mean_influences"] = rules.get("mean_influences")
         if rules.get("fallback_vertices"):
-            report.warnings.append(f"{rules['fallback_vertices']} vertices fell back to "
-                                   f"rigid weights (heat weighting gave them no allowed bone)")
+            report.warnings.append(f"{rules['fallback_vertices']} vertices got no allowed "
+                                   f"heat weight and were blended to the nearest allowed "
+                                   f"bones by distance")
 
 
 def _check_item_dims(report: Report, bp: Blueprint, size) -> None:
