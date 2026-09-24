@@ -1,5 +1,20 @@
 # Today
 
+**2026-09-24, later — art-bible enemies in the engine, E0–E4, as code (not yet run in Unity).**
+`docs/plans/artbible-enemies-in-engine.md`: an import postprocessor (`ArtBibleModelImporter`:
+Humanoid with an explicit bone map, the hound Generic, URP Lit with ×9 emission, linear data maps),
+a prefab + roster forge that reads the art bible's JSON (`Tools/Plunderspell/Forge Art Bible Enemies +
+Roster`), era gating (`EnemyRoster.PickForZone(zone, era, rng)`, `RaidDirector.Era` replicated,
+`RaidContext` for the castle generator later), and a replicated attack signal on `CastleGuard`.
+The household four leave the roster when the forge runs; the supernatural six stay, Crypt only, in
+every Age. `Tools/Headless/verify.sh` had stopped compiling since the co-op work; the shims were
+extended and it now builds and runs (217 tests: 187 pass, 26 fail in known fidelity gaps, 4
+skipped); every new test passes. Nothing was run in the Editor: importer, forge, the avatar check,
+the scale tests on forged prefabs, CombatBench and co-op are all UNTESTED. Steps are in
+`docs/systems/raid-scene-assembly.md`, "Verification".
+
+---
+
 **2026-09-24, later — all 16 art bible enemies are modelled.** The session resumed from
 `docs/art/HANDOFF.md`. Every enemy passes two consecutive full builds, and every review sheet was
 checked against its concept. The main find: Blender's heat weighting can silently leave every vertex
