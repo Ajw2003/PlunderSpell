@@ -242,3 +242,51 @@ def build_late_chantry_chapel(bm, uv):
     ek.framed_panel(bm, uv, GOLD, TAPESTRY, "west", -3.6, fz + 1.2, 1.0, 1.3)
     for x, y in ((-4.8, -2.6), (-4.8, -4.6)):
         candle_stand(bm, uv, x, y, fz)
+
+
+def book_press(bm, uv, x0, x1, side_sign, fz, h=2.6, d=0.45, tiers=4, seed=0):
+    """A tall oak press against the north (side_sign 1) or south (-1) wall from x0 to
+    x1: back, sides, a top, `tiers` shelves, and blocks of books on each shelf (three
+    runs per shelf, 0.06 m apart so no two touch)."""
+    w = x1 - x0
+    cx = (x0 + x1) / 2
+    wall = side_sign * IN
+    cy = wall - side_sign * d / 2
+    cb._box(bm, uv, TIMBER, (cx, wall - side_sign * 0.02, fz + (h - 0.06) / 2), (w - 0.12, 0.04, h - 0.06))
+    for x in (x0 + 0.03, x1 - 0.03):
+        cb._box(bm, uv, TIMBER, (x, cy, fz + (h - 0.06) / 2), (0.06, d, h - 0.06))
+    cb._box(bm, uv, TIMBER, (cx, cy - side_sign * 0.01, fz + h - 0.03), (w + 0.08, d + 0.02, 0.06))
+    step = (h - 0.15) / tiers
+    run = (w - 0.2) / 3 - 0.06
+    for t in range(tiers):
+        z = fz + 0.1 + t * step
+        cb._box(bm, uv, TIMBER, (cx, cy, z), (w - 0.12, d - 0.06, 0.04))
+        for k in range(3):
+            bh = 0.3 + ((t + k + seed) % 3) * 0.05
+            bx = x0 + 0.13 + run / 2 + k * (run + 0.06)
+            cb._box(bm, uv, (CLOTH, TAPESTRY, LINEN, TIMBER)[(t + k + seed) % 4],
+                    (bx, cy + side_sign * 0.02, z + 0.02 + bh / 2), (run, 0.3, bh))
+
+
+def build_late_library(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateLibrary.svg"""
+    h, fz = room_shell(bm, uv, "InnerWard")
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            x0, x1 = sorted((sx * 2.0, sx * 5.3))
+            book_press(bm, uv, x0, x1, sy, fz, seed=(sx + 1) + (sy + 1) * 2)
+            # The lectern before it: carcass, sloped top rising toward the press, a chained book.
+            lx, ly = sx * 3.2, sy * 3.5
+            cb._box(bm, uv, TIMBER, (lx, ly, fz + 0.425), (1.2, 0.6, 0.85))
+            prof = [(-0.33, 0.0), (0.33, 0.0), (0.33 * sy, 0.15)]           # high edge toward the press
+            ek.prism(bm, uv, TIMBER, prof, 1.26, loc=(lx, ly, fz + 0.85), along="x")
+            cb._box(bm, uv, CLOTH, (lx, ly, fz + 0.92), (0.4, 0.3, 0.05))
+            mk.paint(bm, mk.add_cylinder(bm, 0.008, 0.36, loc=(lx + 0.35, ly, fz + 0.91),
+                                         rot=Euler((0, math.radians(90), 0)), segments=4), IRON, uv)
+            cb._anchor(lx, ly, fz + 0.95)
+    # NE: the reading table against the east wall, a book open on it, a candle.
+    cb._table(bm, uv, TIMBER, 4.9, 2.9, fz, 0.8, 1.6, h=0.8)
+    cb._box(bm, uv, LINEN, (4.9, 3.2, fz + 0.815), (0.3, 0.25, 0.03))
+    mk.paint(bm, mk.add_cylinder(bm, 0.05, 0.03, loc=(4.9, 2.4, fz + 0.815), segments=6), IRON, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.02, 0.16, loc=(4.9, 2.4, fz + 0.91), segments=6), LINEN, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.015, 0.05, loc=(4.9, 2.4, fz + 1.015), segments=4, radius2=0.003), CLOTH, uv)
