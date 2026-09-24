@@ -46,10 +46,11 @@ def _merlon_centres(u0, u1):
     return [mid - (n - 1) * PITCH / 2 + k * PITCH for k in range(n)]
 
 
-def _mass(bm, uv, u0, u1, depth, top=WALK_Z, side="south", seed=0, bottom=0.0, pigment=CURTAIN):
-    """A cyclopean run from u0 to u1, `depth` thick from the cell edge, bottom..top."""
+def _mass(bm, uv, u0, u1, depth, top=WALK_Z, side="south", seed=0, bottom=0.0, pigment=CURTAIN, ragged=True):
+    """A cyclopean run from u0 to u1, `depth` thick from the cell edge, bottom..top.
+    ragged=False keeps the inner face flat (a face that is plastered or built against)."""
     for b in cy.blocks(u0, u1, top, seed=seed, bottom=bottom):
-        d0, d1 = b["inset"], depth + b["dj"]
+        d0, d1 = b["inset"], depth + (b["dj"] if ragged else 0.0)
         cb._box(bm, uv, pigment, _at(side, (b["u0"] + b["u1"]) / 2, (d0 + d1) / 2, (b["z0"] + b["z1"]) / 2),
                 _size(side, b["u1"] - b["u0"], d1 - d0, b["z1"] - b["z0"]))
 
@@ -155,3 +156,61 @@ def build_bronze_gate_approach(bm, uv):
     cb._box(bm, uv, CONGLOM, (sx, sy, 0.15), (0.5, 0.9, 0.30))
     ek.prism(bm, uv, "vellum_dim", [(-0.30, 0.0), (0.30, 0.0), (0.27, 1.30), (-0.27, 1.30)], 0.15,
              loc=(sx + 0.1, sy, 0.30), along="x")
+
+
+def build_bronze_lion_gate(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeLionGate.svg (the art bible's Lion Gate, kit-built)."""
+    depth, pas, jo = 3.2, 1.3, 2.2
+    l0, l1 = 3.74, 4.24
+    face = -H + depth                                      # the masses' flat north face
+    for u0, u1, seed in ((-H, -jo, 9), (jo, H, 10)):
+        _mass(bm, uv, u0, u1, depth, seed=seed, ragged=False)
+        _walk(bm, uv, u0, u1, depth)
+        _parapet(bm, uv, u0, u1)
+    # Jambs, lintel, and the corbelled courses that leave the relieving triangle over it.
+    for sgn in (-1, 1):
+        cb._box(bm, uv, CONGLOM, (sgn * (pas + jo) / 2, -H + depth / 2, l0 / 2), (jo - pas, depth, l0))
+    cb._box(bm, uv, CONGLOM, (0, -H + depth / 2, (l0 + l1) / 2), (2 * jo, depth, l1 - l0))
+    for c, g in enumerate((1.2, 0.8, 0.4)):
+        z = l1 + 0.32 * c
+        for sgn in (-1, 1):
+            cb._box(bm, uv, CONGLOM, (sgn * (g + jo) / 2, -H + depth / 2, z + 0.16), (jo - g, depth, 0.32))
+    # The lion slab, 0.10 m behind the corbels' face, and its relief in front of it: the altar
+    # plinth, the down-tapering column and its capital, two lions (headless, as found).
+    ek.prism(bm, uv, "vellum_dim", [(-1.2, 0.0), (1.2, 0.0), (0.0, 0.96)], 0.5, loc=(0, -H + 0.35, l1), along="y")
+    cb._box(bm, uv, ASHLAR, (0, -H + 0.06, l1 + 0.07), (0.5, 0.08, 0.14))
+    ek.prism(bm, uv, ASHLAR, [(-0.055, 0.14), (0.055, 0.14), (0.08, 0.76), (-0.08, 0.76)], 0.08,
+             loc=(0, -H + 0.06, l1), along="y")
+    cb._box(bm, uv, ASHLAR, (0, -H + 0.06, l1 + 0.79), (0.22, 0.08, 0.06))
+    lion = [(0.35, 0.04), (0.85, 0.04), (0.40, 0.60), (0.26, 0.56)]
+    for sgn in (-1, 1):
+        prof = lion if sgn > 0 else [(-u, z) for u, z in reversed(lion)]
+        ek.prism(bm, uv, ASHLAR, prof, 0.08, loc=(0, -H + 0.06, l1), along="y")
+    # Inside: ochre plaster and a painted dado on the west mass; the oak leaves folded back.
+    cb._box(bm, uv, WALL, (-(H + jo) / 2, face + 0.02, 1.2), (H - jo, 0.04, 2.4))
+    cb._box(bm, uv, FRESCO, (-(H + jo) / 2, face + 0.05, 1.35), (H - jo, 0.02, 0.3))
+    for sgn in (-1, 1):
+        cb._box(bm, uv, TIMBER, (sgn * (pas + 0.65), face + 0.12, 1.85), (1.3, 0.14, 3.7))
+        cb._box(bm, uv, METAL, (sgn * (pas + 1.24), face + 0.2, 1.85), (0.12, 0.02, 3.7))
+        for z in (0.5, 1.85, 3.2):
+            cb._box(bm, uv, TIMBER, (sgn * (pas + 0.6), face + 0.21, z), (1.1, 0.04, 0.16))
+        # A bronze torch ring on the north face, 2.20 m up, the torch in it.
+        x = sgn * 2.9
+        cb._box(bm, uv, METAL, (x, face + 0.125, 2.2), (0.08, 0.25, 0.08))
+        mk.paint(bm, mk.add_cylinder(bm, 0.04, 0.5, loc=(x, face + 0.22, 2.35), segments=6), TIMBER, uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.07, 0.18, loc=(x, face + 0.22, 2.69), segments=6, radius2=0.01), RED, uv)
+    cb._box(bm, uv, TIMBER, (-4.2, face + 0.35, 0.08), (3.2, 0.16, 0.16))           # the bar, down
+    # The stair: fourteen 0.30 m rises west to east up the east mass's north face to the walk.
+    x0, steps = 2.75, 14
+    tread = (H - x0) / steps
+    for k in range(steps):
+        top = 0.3 * (k + 1)
+        cb._box(bm, uv, ASHLAR, (x0 + tread * (k + 0.5), face + 0.5, top / 2), (tread, 1.0, top))
+    # The road: twelve rows of limestone slabs through the cell, joints staggered, two ruts.
+    row = 2 * H / 12
+    for k in range(12):
+        cuts = (-1.6, 0.0, 1.6) if k % 2 == 0 else (-1.6, -0.8, 0.8, 1.6)
+        for a, b in zip(cuts, cuts[1:]):
+            cb._box(bm, uv, "vellum_dim", ((a + b) / 2, -H + row * (k + 0.5), 0.03), (b - a - 0.04, row - 0.04, 0.06))
+    for x in (-0.7, 0.7):
+        cb._box(bm, uv, SOOT, (x, 0, 0.065), (0.12, 2 * H, 0.01))

@@ -74,7 +74,7 @@ def elev_walk(sh, u0, u1, z=WALK_Z):
     kerect(sh, clip(u0), z, clip(u1), z + 0.1, lighten(PLASTER, .1), darken(PLASTER, .5), .6)
 
 
-def plan_run(sh, bl, depth, side="south", fill=STONE):
+def plan_run(sh, bl, depth, side="south", fill=STONE, ragged=True):
     """A run's footprint in plan, course by course from the bottom (a lower course that
     reaches further in shows beyond the one above it)."""
     top_course = max(b["z0"] for b in bl)
@@ -83,7 +83,7 @@ def plan_run(sh, bl, depth, side="south", fill=STONE):
         for b in bl:
             if round(b["z0"], 3) != level:
                 continue
-            d = depth + b["dj"]
+            d = depth + (b["dj"] if ragged else 0.0)
             plan_strip(sh, b["u0"], b["u1"], 0.0, d, side, shade, "#2A251D", .6)
 
 

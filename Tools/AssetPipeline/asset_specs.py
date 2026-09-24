@@ -85,7 +85,7 @@ CASTLE_SPECS = [
 
 BRONZE_CASTLE_SPECS = [
     # CurtainWall
-    dict(key="BronzeLionGate", builder="build_bronze_lion_gate", tri_budget=1200, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
+    dict(key="BronzeLionGate", builder="build_bronze_lion_gate", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
     dict(key="BronzeWallStraight", builder="build_bronze_wall_straight", tri_budget=1200, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
     dict(key="BronzeWallCorner", builder="build_bronze_wall_corner", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
     dict(key="BronzeBastion", builder="build_bronze_bastion", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
