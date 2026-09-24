@@ -437,6 +437,12 @@
       "preview": "c8ccb9c0732710b9:23a9d68e53fd",
       "tris": 1528
     },
+    "LateWallStraight": {
+      "budget": 1200,
+      "content": "486f6daaa3894e5e",
+      "preview": "486f6daaa3894e5e:23a9d68e53fd",
+      "tris": 684
+    },
     "Longsword": {
       "budget": 450,
       "content": "2abf76a1be12ecb0",
