@@ -329,6 +329,12 @@
       "preview": "55f32ef8dc3d1285:23a9d68e53fd",
       "tris": 2556
     },
+    "LateBastion": {
+      "budget": 2000,
+      "content": "ad70705564586131",
+      "preview": "ad70705564586131:23a9d68e53fd",
+      "tris": 1112
+    },
     "LateBrewhouse": {
       "budget": 2400,
       "content": "e91f92bf6ee705fd",

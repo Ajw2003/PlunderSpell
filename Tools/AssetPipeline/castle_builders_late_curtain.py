@@ -140,3 +140,46 @@ def build_late_wall_corner(bm, uv):
     keyhole_loop(bm, uv, "west", c)
     for side in ("south", "west"):
         late_run(bm, uv, run0, H, side=side, loops=(2.1,))
+
+
+def build_late_bastion(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateBastion.svg"""
+    n, r = 16, 3.4
+    apo = r * math.cos(math.radians(180 / n))
+    cy = -H + FACE + apo
+    plat = WALK_Z
+    # The drum, sixteen flats (turned so a flat faces south), its platform flagged.
+    mk.paint(bm, mk.add_cylinder(bm, r, plat, loc=(0, cy, plat / 2), rot=Euler((0, 0, math.radians(180 / n))),
+                                 segments=n), WALL, uv)
+    ek.disc(bm, uv, "vellum_faint", 0, cy, plat, 2.45, thickness=0.02, segments=n)
+    # The parapet ring: one block per flat, open at the walk entries; a low sill in the embrasure.
+    gaps, embrasure = {202.5, 225.0, 315.0, 337.5}, 270.0
+    r0, r1, top = 2.5, r, plat + 1.0
+    for k in range(n):
+        ang = 22.5 * k
+        if ang in gaps:
+            continue
+        t = math.radians(ang)
+        chord = 2 * r1 * math.sin(math.radians(11.25)) + 0.14
+        rm = (r0 + r1) / 2 - 0.03
+        z1 = plat + 0.4 if ang == embrasure else top + (0.03 if k % 2 else 0.0)   # no two overlapping tops coplanar
+        mk.paint(bm, mk.add_box(bm, (r1 - r0 - 0.06, chord, z1 - plat), loc=(math.cos(t) * rm, cy + math.sin(t) * rm,
+                                                                        (plat + z1) / 2), rot=Euler((0, 0, t))), WALL, uv)
+    # Five gunports in the base, on the outward flats.
+    for ang in (225.0, 247.5, 270.0, 292.5, 315.0):
+        t = math.radians(ang)
+        mk.paint(bm, mk.add_box(bm, (0.06, 0.3, 0.3), loc=(math.cos(t) * (apo + 0.01), cy + math.sin(t) * (apo + 0.01),
+                                                           0.75), rot=Euler((0, 0, t))), SOOT, uv)
+    # The bombard on its bed, muzzle south in the embrasure; gunstones beside it.
+    by = cy - 1.1
+    cb._box(bm, uv, TIMBER, (0, by, plat + 0.15), (0.7, 1.8, 0.3))
+    along_y = Euler((math.radians(90), 0, 0))
+    mk.paint(bm, mk.add_cylinder(bm, 0.2, 0.5, loc=(0, by + 0.55, plat + 0.52), rot=along_y, segments=10), IRON, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.3, 1.2, loc=(0, by - 0.3, plat + 0.6), rot=along_y, segments=12), IRON, uv)
+    for dy in (-0.7, -0.1):
+        mk.paint(bm, mk.add_cylinder(bm, 0.32, 0.06, loc=(0, by + dy, plat + 0.6), rot=along_y, segments=12), "line", uv)
+    for x, y in ((1.2, cy - 0.4), (1.6, cy - 0.1), (1.35, cy + 0.25)):
+        ek.sphere(bm, uv, "vellum_faint", x, y, plat + 0.02, 0.2, segments=8, rings=5)
+    # The machicolated runs on from both flanks.
+    late_run(bm, uv, -H, -2.6, loops=(-4.45,))
+    late_run(bm, uv, 2.6, H, loops=(4.45,))
