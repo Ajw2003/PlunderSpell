@@ -714,3 +714,52 @@ def kit_arch_labels(sh, zone):
     h = ARCH_H[zone]
     socket_label(sh, *KP(0, 4.55), f"ARCHWAY N 2.60 × {h:.2f}")
     socket_label(sh, *KP(0, -4.85), f"ARCHWAY S 2.60 × {h:.2f}")
+
+
+# ---------------- the kit's stairs (castle_builders._stair_to_gallery / _stair_to_dais) ----------------
+
+def kit_gallery_section(sh, top, deck, rail, label=True):
+    """The kit L-stair's railed gallery in a section at y = 0 looking north: the NW
+    quadrant's deck at `top` above the floor, its posts, the east and south rails,
+    and the bridge over the walkway cut by the section plane (hatched)."""
+    g0 = FZ + top
+    kerect(sh, -IN, g0 - 0.20, -Q0, g0, f"url(#{sh.lin(deck, 'v', .25, .5)})", darken(deck, .6), .8)
+    for x in (-5.3, -1.9):
+        kerect(sh, x - 0.1, FZ, x + 0.1, g0 - 0.20, f"url(#{sh.lin(deck, 'h', .25, .5)})", darken(deck, .6), .7)
+    kerect(sh, -Q0 - 0.09, g0, -Q0 - 0.01, g0 + 0.90, rail, darken(rail, .6), .6)
+    kerect(sh, -IN + 1.5, g0 + 0.82, -Q0, g0 + 0.90, rail, darken(rail, .6), .6)
+    d = poly_path([KE(-IN, g0 - 0.20), KE(-IN + 1.5, g0 - 0.20), KE(-IN + 1.5, g0), KE(-IN, g0)])
+    sh.path(d, deck, "#0E0C09", 1.2)
+    a, b = KE(-IN, g0), KE(-IN + 1.5, g0 - 0.2)
+    hatch(sh, d, (a[0], a[1], b[0], b[1]), "#635C4C", 4, .8)
+    if label:
+        sh.text(*KE(-3.0, g0 + 0.25), f"GALLERY +{top:.2f}", 9, "#DCD2BA", "middle")
+
+
+def kit_l_stair_plan(sh, top, flight, deck, rail="#DCD2BA"):
+    """The kit L-stair in plan: four steps west along the south wall from the walkway,
+    the corner landing, four steps north along the west wall, the bridge over the
+    walkway and the railed gallery filling the NW quadrant; posts and the climb line."""
+    steps = 4
+    x0, x_land = -Q0 - 0.1, -IN + 1.5
+    run_x = (x0 - x_land) / steps
+    for i in range(steps):
+        xa = x0 - i * run_x
+        kprect(sh, xa - run_x, -IN, xa, -IN + 1.5, mix(flight, "#14120E", .45 - i * .06), "#0E0C09", .6)
+    kprect(sh, -IN, -IN, -IN + 1.5, -IN + 1.5, mix(flight, "#14120E", .15), "#0E0C09", .6)
+    y0, y_top = -IN + 1.5, -Q0 - 0.2
+    run_y = (y_top - y0) / steps
+    for i in range(steps):
+        ya = y0 + i * run_y
+        kprect(sh, -IN, ya, -IN + 1.5, ya + run_y, mix(flight, "#14120E", .1 - i * .02), "#0E0C09", .6)
+    kprect(sh, -IN, -Q0 - 0.2, -IN + 1.5, Q0 + 0.2, deck, "#0E0C09", .6)
+    kprect(sh, -IN, Q0, -Q0, IN, lighten(deck, .1), "#0E0C09", .8)
+    for x, y in ((-Q0 - 0.1, Q0 + 0.1), (-Q0 - 0.1, IN - 0.2), (-IN + 0.2, Q0 + 0.1)):
+        kprect(sh, x - 0.1, y - 0.1, x + 0.1, y + 0.1, darken(deck, .3), "#0E0C09", .6)
+    kprect(sh, -Q0 - 0.1, Q0, -Q0, IN, rail)
+    kprect(sh, -IN + 1.5, Q0, -Q0, Q0 + 0.1, rail)
+    sh.path(f"M{f(KP(-2.9, -4.75)[0])} {f(KP(-2.9, -4.75)[1])} L{f(KP(-4.6, -4.75)[0])} {f(KP(-4.6, -4.75)[1])} "
+            f"L{f(KP(-4.75, -4.6)[0])} {f(KP(-4.75, -4.6)[1])} L{f(KP(-4.75, -2.6)[0])} {f(KP(-4.75, -2.6)[1])}",
+            "none", "#DCD2BA", 1, extra='stroke-dasharray="3 2"')
+    socket_label(sh, *KP(-3.2, -3.6), "STAIR UP")
+    socket_label(sh, *KP(-3.6, 3.0), f"GALLERY +{top:.2f}")

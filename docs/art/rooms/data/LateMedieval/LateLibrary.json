@@ -1,0 +1,111 @@
+{
+  "key": "LateLibrary",
+  "name": "The Library",
+  "age": "LateMedieval",
+  "zone": "InnerWard",
+  "role": "GreatHallMain",
+  "summary": "Four tall presses of books against the north and south walls, a sloped lectern with a chained book in every quadrant, and a reading table by the east wall.",
+  "description": "A Burgundian household measured itself in books as much as in plate, and this is where it keeps them: four oak presses, floor to well above head height, each shelf a run of bindings in madder, green and pale vellum. The best books are not on the shelves at all but chained to sloped lectern desks, one in each quadrant, open to be read standing and fixed so that they cannot walk. A reading table by the east wall holds a candle and whatever the chaplain was copying. The chains are iron and short; a thief with a file and five quiet minutes is richer than one with a sack.",
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.00 m clear, a 0.45 m verdure-green trim course, an archway 2.60 × 2.88 m centred on every wall.",
+    "Book presses: four, oak, 3.30 m wide (|x| 2.00 … 5.30), 0.45 m deep, 2.60 m tall, against the north and south walls either side of the archways: back, sides, a top, four shelves.",
+    "Books: three runs of bindings on every shelf, each run 0.97 m long, 0.30 m deep, 0.30–0.40 m tall, 0.06 m apart, madder, green, vellum and oak in turn.",
+    "Lectern desks: four, oak carcasses 1.20 × 0.60 × 0.85 m at (±3.20, ±3.50), sloped tops rising 0.15 m toward the press behind them.",
+    "Chained books: a madder-bound book 0.40 × 0.30 m on each lectern, an iron chain 0.36 m from its edge to the desk.",
+    "Reading table (NE): oak 0.80 × 1.60 m, top 0.80 m, against the east wall at (4.90, 2.90); a book open on it and an iron candlestick with a candle.",
+    "The crossing: bare floor between all four archways.",
+    "Walls: coursed ashlar joints (albedo); no hangings, the books are the decoration."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Lecterns: four loot anchors, one per quadrant, at 1.25 m",
+    "Reading table: a loot anchor at 1.10 m"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the NE lectern",
+      "xyz": [
+        3.2,
+        3.5,
+        1.25
+      ]
+    },
+    {
+      "at": "the NW lectern",
+      "xyz": [
+        -3.2,
+        3.5,
+        1.25
+      ]
+    },
+    {
+      "at": "the SE lectern",
+      "xyz": [
+        3.2,
+        -3.5,
+        1.25
+      ]
+    },
+    {
+      "at": "the SW lectern",
+      "xyz": [
+        -3.2,
+        -3.5,
+        1.25
+      ]
+    },
+    {
+      "at": "the reading table",
+      "xyz": [
+        4.9,
+        2.9,
+        1.1
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Presses, lecterns, table, oak bindings."
+    },
+    {
+      "name": "Madder bindings",
+      "hex": "#9E2A2F",
+      "pigment": "madder",
+      "notes": "Bindings, the candle flame."
+    },
+    {
+      "name": "Green bindings",
+      "hex": "#4F5E3A",
+      "pigment": "verdigris_lo",
+      "notes": "Bindings."
+    },
+    {
+      "name": "Vellum",
+      "hex": "#D6CDB6",
+      "pigment": "vellum",
+      "notes": "Pale bindings, open pages, candle."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Chains, candlestick."
+    }
+  ],
+  "gameplay": [
+    "Five loot anchors, one in every quadrant: the room rewards a thief who clears it methodically.",
+    "The presses are 2.60 m walls of fuel: a fire here is the Late ward's worst.",
+    "Every lectern faces its press, so a reader has their back to the crossing."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateLibrary.svg"
+}

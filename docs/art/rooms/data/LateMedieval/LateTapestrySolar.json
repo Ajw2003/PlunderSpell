@@ -1,0 +1,96 @@
+{
+  "key": "LateTapestrySolar",
+  "name": "The Tapestry Solar",
+  "age": "LateMedieval",
+  "zone": "Keep",
+  "role": "LordsSolar",
+  "summary": "The lord's private room: a sloped writing desk under a shelf of books, a high-backed settle by the fire, a livery cupboard, and two verdure tapestries.",
+  "description": "Above the noise of the hall the lord keeps a room of his own. He writes at a sloped oak desk under a shelf of books that he has mostly read, and when he stops he sits in a high-backed settle with its back to the draught and its front to the fire. Two verdure tapestries warm the walls, green wool thick enough to stop a draught and valuable enough to be rolled up and carried out when the household moves. The livery cupboard holds the evening's wine and a pewter flagon; the iron-bound chest under the south tapestry holds the letters he would rather nobody read.",
+  "build": [
+    "Shell: the kit's Keep shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.60 m clear, a 0.45 m madder trim course, an archway 2.60 × 3.31 m centred on every wall.",
+    "Desk (NE): oak carcass 1.20 × 0.60 × 0.75 m at (3.60, 4.90) with a sloped top rising 0.15 m to the north; a linen sheet on it; an oak stool 0.40 m square, 0.45 m tall, at (3.60, 4.20).",
+    "Book shelf: an oak board 1.20 × 0.25 m on the north wall over the desk at 2.00 m, eight books 0.07–0.11 m wide, 0.04 m apart, 0.24–0.33 m tall on it.",
+    "North tapestry (NW): a verdure panel 3.10 × 2.60 m on the north wall centred x −3.45, from 1.30 m.",
+    "Hearth (NW): the Age's hooded hearth on the west wall at y 3.40, 1.30 m wide, 0.80 m deep, 1.20 m mouth, hood to 4.10 m.",
+    "Settle: oak seat 0.50 × 1.60 × 0.45 m at (−3.35, 3.40) facing the hearth, a back 1.35 m high on its east side, a madder cushion.",
+    "Livery cupboard (SE): oak 0.60 × 1.40 × 1.30 m against the east wall at y −3.60, two iron hinge straps, a pewter flagon and dish on top.",
+    "South tapestry (SW): a verdure panel 3.50 × 2.80 m on the south wall centred x −3.55, from 1.10 m; an iron-bound oak chest 1.20 × 0.60 × 0.60 m before it at (−3.60, −4.90).",
+    "Window: a framed embrasure panel 1.40 × 1.60 m on the east wall at y 2.60, from 1.70 m."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "Desk top: loot anchor at 1.13 m",
+    "Chest lid and cupboard top: loot anchors"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the sloped desk",
+      "xyz": [
+        3.6,
+        4.9,
+        1.13
+      ]
+    },
+    {
+      "at": "the chest under the south tapestry",
+      "xyz": [
+        -3.6,
+        -4.9,
+        0.95
+      ]
+    },
+    {
+      "at": "the livery cupboard",
+      "xyz": [
+        5.2,
+        -3.6,
+        1.6
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls, hearth."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Desk, shelf, settle, cupboard, chest."
+    },
+    {
+      "name": "Tapestry wool",
+      "hex": "#4F5E3A",
+      "pigment": "verdigris_lo",
+      "notes": "Two tapestries."
+    },
+    {
+      "name": "Madder",
+      "hex": "#9E2A2F",
+      "pigment": "madder",
+      "notes": "Cushion, book covers, the fire."
+    },
+    {
+      "name": "Pewter",
+      "hex": "#9A9A90",
+      "pigment": "iron",
+      "notes": "Flagon and dish."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Hinges, chest straps, window."
+    }
+  ],
+  "gameplay": [
+    "Both tapestries are rolled-tapestry plunder in waiting: big, light, burnable.",
+    "The settle's high back hides a crouching thief from the east archway.",
+    "Three loot anchors in three corners."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/LateMedieval/LateTapestrySolar.svg"
+}

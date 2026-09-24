@@ -1,0 +1,109 @@
+{
+  "key": "LateCountingHouse",
+  "name": "The Counting House",
+  "age": "LateMedieval",
+  "zone": "InnerWard",
+  "role": "GuardRoomInner",
+  "summary": "The steward's office: a brick strong room with an iron-latticed door, a ledger case of four tiers, and a counting table under a chequered cloth with a balance and stacks of coin.",
+  "description": "Every coin the estate takes in passes across the counting table, laid out in rows on the squares of a chequered wool cloth, weighed on the balance and written into the ledger by candlelight. The steward trusts none of it to the house. What has been counted goes into the brick strong room in the corner, fire-proof under its low vault, behind a door of iron lattice with three locks, and today, for once, the door is standing open. The ledger case on the north wall holds the record of every debt in the county, which is worth more to the right buyer than the gold. Under a flagstone in the south-west corner there is a strongbox the steward believes nobody knows about.",
+  "kit_changes": [
+    "The art bible's floor strongbox is sunk 0.55 m into a pit; kit rooms keep one floor level, so it becomes a flat flagstone lid with an iron ring.",
+    "The strong room's iron-latticed door stands open against its front, so the two chests inside are reachable (the kit has no door interaction).",
+    "The art bible's single wall of ledger shelves and the table move into the kit's quadrants: strong room NW, ledger case NE, table SE, strongbox SW."
+  ],
+  "build": [
+    "Shell: the kit's InnerWard shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 4.00 m clear, a 0.45 m verdure-green trim course, an archway 2.60 × 2.88 m centred on every wall.",
+    "Strong room (NW): brick walls 0.30 m thick, 2.60 m tall on its south and east sides, enclosing x −5.50 … −2.20, y 2.20 … 5.50 against the room's north and west walls; a doorway 0.90 × 2.00 m in its south wall at x −4.30 … −3.40 under a brick lintel.",
+    "Vault cap: a brick segmental barrel vault over the strong room, axis north–south, 0.60 m rise, from 2.90 to 3.50 m above ground.",
+    "Lattice door: an iron grille 0.90 × 2.00 m (five uprights, six rails, 0.04 m bars) standing open flat against the strong room's front east of the doorway.",
+    "Strong-room chests: two iron-bound oak chests 1.00 × 0.60 × 0.60 m inside against the north wall at x −4.55 and −3.30, y 5.10.",
+    "Ledger case (NE): oak, 2.40 m wide, 0.45 m deep, 2.40 m tall against the north wall centred x 3.60: back, sides, top and four shelves; five ledgers on each shelf, the middle of each shelf left clear.",
+    "Counting table (SE): oak 2.00 × 1.00 m, top 0.80 m at (3.60, −3.40), under a verdure-green cloth chequered in 0.25 m squares; a balance with two steel pans, three gilt coin stacks, an open ledger and a candle on it; an oak bench 2.00 m before it at y −4.25.",
+    "Barred window: a framed embrasure panel 1.20 × 1.30 m on the east wall at y −3.40, from 1.60 m, four iron bars across it.",
+    "Floor strongbox (SW): a flagstone lid 0.80 × 0.60 × 0.04 m at (−3.60, −3.60) with an iron ring; three leather coin sacks beside it."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.88 m (InnerWard), all open",
+    "Strong room: doorway 0.90 × 2.00 m in its south face, the lattice door open",
+    "Loot anchors: the counting table, both strong-room chests, the ledger case's third shelf"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the counting table",
+      "xyz": [
+        3.6,
+        -3.4,
+        1.12
+      ]
+    },
+    {
+      "at": "the strong room's west chest",
+      "xyz": [
+        -4.55,
+        5.1,
+        0.95
+      ]
+    },
+    {
+      "at": "the strong room's east chest",
+      "xyz": [
+        -3.3,
+        5.1,
+        0.95
+      ]
+    },
+    {
+      "at": "the ledger case, third shelf",
+      "xyz": [
+        3.6,
+        5.25,
+        1.53
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls; flagstones in vellum_faint."
+    },
+    {
+      "name": "Brick lining",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "The strong room and its vault, coin sacks."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Ledger case, table, bench, chests."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Lattice door, bars, balance, chest straps."
+    },
+    {
+      "name": "Counting cloth",
+      "hex": "#4F5E3A",
+      "pigment": "verdigris_lo",
+      "notes": "The chequered cloth."
+    },
+    {
+      "name": "Coin",
+      "hex": "#C9A227",
+      "pigment": "orpiment",
+      "notes": "The coin stacks."
+    }
+  ],
+  "gameplay": [
+    "The strong room is a dead end with one door: the richest corner of the ward and the easiest place to be trapped.",
+    "The ledgers are Banker's Ledger plunder: light, flammable, and worth a fortune to the right fence.",
+    "Four loot anchors; the floor strongbox is scenery the steward thinks is secret."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateCountingHouse.svg"
+}
