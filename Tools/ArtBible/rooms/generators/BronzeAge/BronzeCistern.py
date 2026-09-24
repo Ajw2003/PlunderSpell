@@ -7,7 +7,7 @@ the wall line. Paved floor, a trough in the SW.
 """
 from _bronze import *
 
-ANCHORS = [(3.6, -2.9, 1.22), (-3.8, 4.9, 0.80), (3.8, 4.2, 1.30), (2.2, -4.8, 0.65)]
+ANCHORS = [(3.6, -2.9, 1.34), (-3.8, 4.9, 0.80), (3.8, 4.2, 1.30), (2.2, -4.8, 0.65)]
 WATER = "#5E8A96"
 
 
@@ -61,6 +61,7 @@ def build():
         plan_box(sh, x, -3.6, 0.14, 0.14, CYP)
     plan_box(sh, 3.6, -3.6, 2.1, 0.12, CYP)
     sh.circle(*KP(2.2, -4.8), 0.2 * PK, CYP, "#0E0C09", .6)
+    sh.circle(*KP(3.6, -3.6), 1.0 * PK, "none", darken(STONE, .3), 3)            # the stone lip
     plan_box(sh, -3.8, 4.9, 1.6, 0.5, CYP)
     for dx in (-0.55, 0.55):
         plan_jar(sh, -3.8 + dx, 4.9, 0.40, TERRA)
@@ -70,7 +71,8 @@ def build():
     plan_box(sh, -3.8, -5.0, 2.0, 0.5, WATER)
     kit_loot(sh, [(x, y) for x, y, _ in ANCHORS])
     kit_section_line(sh, 0)
-    kit_arch_labels(sh, "OuterBailey")
+    socket_label(sh, *KP(0, 4.55), "ARCHWAY N 2.60 × 2.59")
+    socket_label(sh, *KP(-0.6, -4.85), "ARCHWAY S 2.60 × 2.59")
     socket_label(sh, *KP(3.6, -1.9), "CISTERN")
     socket_label(sh, *KP(-3.8, -4.2), "TROUGH")
     kit_legend(sh, [("ARCHWAYS", "4, centred · 2.60 × 2.59 · all open"),

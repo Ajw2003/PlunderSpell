@@ -142,6 +142,7 @@
     <rect x="1115.9" y="455.9" width="4.2" height="4.2" fill="#5A3E28" stroke="#0E0C09" stroke-width="0.6"/>
     <rect x="1056.5" y="456.2" width="63" height="3.6" fill="#5A3E28" stroke="#0E0C09" stroke-width="0.6"/>
     <circle cx="1046" cy="494" r="6" fill="#5A3E28" stroke="#0E0C09" stroke-width="0.6"/>
+    <circle cx="1088" cy="458" r="30" fill="none" stroke="#665C4C" stroke-width="3"/>
     <rect x="842" y="195.5" width="48" height="15" fill="#5A3E28" stroke="#0E0C09" stroke-width="0.6"/>
     <circle cx="849.5" cy="203" r="6" fill="#A0603E" stroke="#573624" stroke-width="0.7"/>
     <circle cx="849.5" cy="203" r="2.6" fill="#5E3A26"/>
@@ -192,7 +193,7 @@
     <text x="782" y="362" font-family="Overpass Mono, monospace" font-size="9" fill="#9A9078" text-anchor="middle">A</text>
     <text x="1178" y="362" font-family="Overpass Mono, monospace" font-size="9" fill="#9A9078" text-anchor="middle">A</text>
     <text x="980" y="213.5" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">ARCHWAY N 2.60 × 2.59</text>
-    <text x="980" y="495.5" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">ARCHWAY S 2.60 × 2.59</text>
+    <text x="962" y="495.5" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">ARCHWAY S 2.60 × 2.59</text>
     <text x="1088" y="407" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">CISTERN</text>
     <text x="866" y="476" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" text-anchor="middle" letter-spacing="1">TROUGH</text>
     <text x="800" y="585" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">ARCHWAYS</text>

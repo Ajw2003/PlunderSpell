@@ -125,11 +125,15 @@ def build_bronze_cistern(bm, uv):
     h, fz = room_shell(bm, uv, "OuterBailey")
     # SE: the cistern head, water below its rim, the lid half drawn, a winch beam on posts over it.
     mk.paint(bm, mk.add_cylinder(bm, 1.1, 0.8, loc=(3.6, -3.6, fz + 0.4), segments=14), "vellum_faint", uv)
-    mk.paint(bm, mk.add_cylinder(bm, 0.85, 0.02, loc=(3.6, -3.6, fz + 0.72), segments=14), FRESCO, uv)
-    cb._box(bm, uv, "vellum_dim", (3.6, -3.0, fz + 0.86), (1.6, 0.8, 0.12))
-    cb._anchor(3.6, -2.9, fz + 0.92)
+    mk.paint(bm, mk.add_cylinder(bm, 0.88, 0.02, loc=(3.6, -3.6, fz + 0.81), segments=14), FRESCO, uv)
+    for k in range(12):                                    # a stone lip round the water, so it reads recessed
+        a = (k + 0.5) * 2 * math.pi / 12
+        mk.paint(bm, mk.add_box(bm, (0.2, 0.55, 0.12), loc=(3.6 + math.cos(a) * 0.99, -3.6 + math.sin(a) * 0.99,
+                                                            fz + 0.86), rot=Euler((0, 0, a))), "vellum_faint", uv)
+    cb._box(bm, uv, "vellum_dim", (3.6, -3.0, fz + 0.98), (1.6, 0.8, 0.12))
+    cb._anchor(3.6, -2.9, fz + 1.04)
     for x in (2.6, 4.6):
-        cb._box(bm, uv, TIMBER, (x, -3.6, fz + 0.8 + 0.775), (0.14, 0.14, 1.55))
+        cb._box(bm, uv, TIMBER, (x, -3.6, fz + 0.92 + 0.72), (0.14, 0.14, 1.44))
     cb._box(bm, uv, TIMBER, (3.6, -3.6, fz + 2.35), (2.1, 0.12, 0.12))
     mk.paint(bm, mk.add_cylinder(bm, 0.2, 0.35, loc=(2.2, -4.8, fz + 0.175), segments=8), TIMBER, uv)   # bucket
     cb._anchor(2.2, -4.8, fz + 0.35)
