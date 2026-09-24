@@ -110,3 +110,4 @@ InitTestScene*.unity*
 # Headless verification harness build output
 Tools/Headless/**/bin/
 Tools/Headless/**/obj/
+.claude/worktrees/
