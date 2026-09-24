@@ -17,7 +17,7 @@
 *.blend1.meta
 
 # Tools/AssetPipeline is plain python run via `blender -b -P`, not a Unity asset.
-Tools/AssetPipeline/__pycache__/
+__pycache__/
 
 # CI test output (GameCI writes it into the workspace; uploaded as an artifact).
 /test-results/
