@@ -570,7 +570,9 @@ def handgunner(entry: Entry):
         parts.append(fig.foot_part(side, "leather", length=0.27, point=0.2))
         parts += _badge(fig, side, 1.35, "livery_white", "livery_red")
     parts += fig.head_part("skin", features="leather")
-    parts += _kettle(fig, "kettle_steel", crown=1.78, r_dome=0.111, dome_h=0.14,
+    # dome 0.105 m: the brim sits at the brow, so the face shows under it (0.14 put
+    # the brim across the eyes)
+    parts += _kettle(fig, "kettle_steel", crown=1.78, r_dome=0.111, dome_h=0.105,
                      r_brim=0.215, droop=12.0, rivets=0)
     parts.append(_front_lacing(fig, pad, "leather", fig.belt_z + 0.05, 0.815 * h))
 
