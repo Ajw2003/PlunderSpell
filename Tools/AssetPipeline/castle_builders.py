@@ -71,7 +71,7 @@ HIDE = "leather"
 UP = None  # no rotation
 
 
-def _shell(bm, uv, zone):
+def _shell(bm, uv, zone, stone=STONE, trim=None, floor=None):
     """An enclosed room's floor and four walls, with an archway on every
     side — no per-room door list. The generator places modules on a grid
     without consulting their geometry, so any room that opens on only
@@ -79,14 +79,17 @@ def _shell(bm, uv, zone):
     neighbour. Four openings everywhere makes every 4-adjacency a real
     connection; the sides that end up facing nothing are sealed at
     placement time with that zone's door plug (see _door_plug below and
-    ProceduralCastleGenerator.SealOpenArchways)."""
+    ProceduralCastleGenerator.SealOpenArchways).
+
+    `stone`/`trim`/`floor` default to this file's High Medieval tables; the
+    other Ages' builders pass their own pigments (docs/plans/era-castle-rooms.md)."""
     h = ZONE_HEIGHT[zone]
-    floor_z = rk.room_shell(bm, uv, h, STONE, trim=ZONE_ACCENT[zone], floor_pigment=ZONE_FLOOR[zone],
-                            door_sides=rk.SIDES)
+    floor_z = rk.room_shell(bm, uv, h, stone, trim=trim or ZONE_ACCENT[zone],
+                            floor_pigment=floor or ZONE_FLOOR[zone], door_sides=rk.SIDES)
     return h, floor_z
 
 
-def _door_plug(bm, uv, zone):
+def _door_plug(bm, uv, zone, stone=STONE):
     """A plain stone slab that exactly fills one of `zone`'s archways.
     One per zone rather than one for the whole castle because the opening
     is derived from the zone's wall height (room_kit.opening_size), so a
@@ -97,7 +100,7 @@ def _door_plug(bm, uv, zone):
     positions it at the archway's sill, which is the floor slab's top."""
     ow, oh = rk.opening_size(ZONE_HEIGHT[zone])
     size = (ow + rk.OVERLAP, rk.WALL_T + rk.OVERLAP, oh + rk.OVERLAP)
-    mk.paint(bm, mk.add_box(bm, size, loc=(0, 0, size[2] / 2)), STONE, uv)
+    mk.paint(bm, mk.add_box(bm, size, loc=(0, 0, size[2] / 2)), stone, uv)
 
 
 def build_door_plug_outer_bailey(bm, uv):
@@ -225,14 +228,14 @@ def _table(bm, uv, pigment, x, y, fz, w, d, h=0.8, top=0.08):
                  (0.1, 0.1, h - top))
 
 
-def _bench(bm, uv, x, y, fz, w, d=0.35, along_x=True):
+def _bench(bm, uv, x, y, fz, w, d=0.35, along_x=True, pigment=TIMBER):
     sx, sy = (w, d) if along_x else (d, w)
-    _box(bm, uv, TIMBER, (x, y, fz + 0.4), (sx, sy, 0.08))
+    _box(bm, uv, pigment, (x, y, fz + 0.4), (sx, sy, 0.08))
     for o in (-1, 1):
         if along_x:
-            _box(bm, uv, TIMBER, (x + o * (w / 2 - 0.1), y, fz + 0.18), (0.08, d, 0.36))
+            _box(bm, uv, pigment, (x + o * (w / 2 - 0.1), y, fz + 0.18), (0.08, d, 0.36))
         else:
-            _box(bm, uv, TIMBER, (x, y + o * (w / 2 - 0.1), fz + 0.18), (d, 0.08, 0.36))
+            _box(bm, uv, pigment, (x, y + o * (w / 2 - 0.1), fz + 0.18), (d, 0.08, 0.36))
 
 
 def _barrel(bm, uv, x, y, fz, r=0.45, h=0.95, pigment=TIMBER):
@@ -253,40 +256,40 @@ def _banner(bm, uv, side, along, fz, pigment, width=1.2, height=2.2, drop=0.6):
         _box(bm, uv, pigment, (-IN + t / 2 - 0.01, along, z), (t, width, height))
 
 
-def _shelf(bm, uv, x, y, fz, w, levels=3, along_x=True, depth=0.45):
+def _shelf(bm, uv, x, y, fz, w, levels=3, along_x=True, depth=0.45, pigment=TIMBER):
     """A standing shelf unit against a wall: two uprights and `levels` boards."""
     h = 0.5 + levels * 0.55
     sx, sy = (w, depth) if along_x else (depth, w)
     for o in (-1, 1):
         if along_x:
-            _box(bm, uv, TIMBER, (x + o * (w / 2 - 0.05), y, fz + h / 2), (0.1, depth, h))
+            _box(bm, uv, pigment, (x + o * (w / 2 - 0.05), y, fz + h / 2), (0.1, depth, h))
         else:
-            _box(bm, uv, TIMBER, (x, y + o * (w / 2 - 0.05), fz + h / 2), (depth, 0.1, h))
+            _box(bm, uv, pigment, (x, y + o * (w / 2 - 0.05), fz + h / 2), (depth, 0.1, h))
     for i in range(levels):
-        _box(bm, uv, TIMBER, (x, y, fz + 0.35 + i * 0.55), (sx, sy, 0.06))
+        _box(bm, uv, pigment, (x, y, fz + 0.35 + i * 0.55), (sx, sy, 0.06))
     # On the top board: the lower ones have 0.5 m under the next board, too
     # little for a chest, and the top one is still within arm's reach.
     _anchor(x, y, fz + 0.35 + (levels - 1) * 0.55 + 0.03)
 
 
-def _pillar(bm, uv, x, y, fz, h, r=0.3):
-    mk.paint(bm, mk.add_cylinder(bm, r, h, loc=(x, y, fz + h / 2), segments=8), STONE, uv)
+def _pillar(bm, uv, x, y, fz, h, r=0.3, pigment=STONE):
+    mk.paint(bm, mk.add_cylinder(bm, r, h, loc=(x, y, fz + h / 2), segments=8), pigment, uv)
 
 
-def _brazier(bm, uv, x, y, fz, pigment="madder"):
-    mk.paint(bm, mk.add_cylinder(bm, 0.08, 1.0, loc=(x, y, fz + 0.5), segments=6), METAL, uv)
-    mk.paint(bm, mk.add_cylinder(bm, 0.35, 0.25, loc=(x, y, fz + 1.12), segments=8, radius2=0.2), METAL, uv)
+def _brazier(bm, uv, x, y, fz, pigment="madder", metal=METAL):
+    mk.paint(bm, mk.add_cylinder(bm, 0.08, 1.0, loc=(x, y, fz + 0.5), segments=6), metal, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.35, 0.25, loc=(x, y, fz + 1.12), segments=8, radius2=0.2), metal, uv)
     mk.paint(bm, mk.add_cylinder(bm, 0.25, 0.08, loc=(x, y, fz + 1.27), segments=8), pigment, uv)
 
 
-def _chest(bm, uv, x, y, fz, w=1.0, d=0.6, h=0.55, trim=None):
-    _box(bm, uv, TIMBER, (x, y, fz + h / 2), (w, d, h))
+def _chest(bm, uv, x, y, fz, w=1.0, d=0.6, h=0.55, trim=None, body=TIMBER):
+    _box(bm, uv, body, (x, y, fz + h / 2), (w, d, h))
     _anchor(x, y, fz + h + (0.05 if trim else 0.0))
     if trim:
         _box(bm, uv, trim, (x, y, fz + h + 0.02), (w, d, 0.05))
 
 
-def _stair_to_gallery(bm, uv, fz, top, pigment, rail):
+def _stair_to_gallery(bm, uv, fz, top, pigment, rail, deck=TIMBER):
     """An L-shaped stair in the south-west quadrant up to a railed gallery
     filling the north-west quadrant, bridged over the walkway above head
     height. The first flight starts at the walkway's edge and climbs west
@@ -314,11 +317,11 @@ def _stair_to_gallery(bm, uv, fz, top, pigment, rail):
         z = z_mid + rise * (i + 1)
         _box(bm, uv, pigment, (-IN + 0.75, y, (fz + z) / 2), (1.5, run_y, z - fz))
     # Bridge over the east-west walkway, then the gallery.
-    _box(bm, uv, TIMBER, (-IN + 0.75, 0, fz + top - 0.1), (1.5, 2 * Q0 + 0.4, 0.2))
-    _box(bm, uv, TIMBER, (-(IN + Q0) / 2, (IN + Q0) / 2, fz + top - 0.1), (IN - Q0, IN - Q0, 0.2))
+    _box(bm, uv, deck, (-IN + 0.75, 0, fz + top - 0.1), (1.5, 2 * Q0 + 0.4, 0.2))
+    _box(bm, uv, deck, (-(IN + Q0) / 2, (IN + Q0) / 2, fz + top - 0.1), (IN - Q0, IN - Q0, 0.2))
     # Posts under the gallery, clear of the walkway.
     for x, y in ((-Q0 - 0.1, Q0 + 0.1), (-Q0 - 0.1, IN - 0.2), (-IN + 0.2, Q0 + 0.1)):
-        _box(bm, uv, TIMBER, (x, y, fz + (top - 0.2) / 2), (0.2, 0.2, top - 0.2))
+        _box(bm, uv, deck, (x, y, fz + (top - 0.2) / 2), (0.2, 0.2, top - 0.2))
     # Railings along the gallery's open edges, leaving the bridge's end open.
     _box(bm, uv, rail, (-Q0 - 0.05, (IN + Q0) / 2, fz + top + 0.45), (0.08, IN - Q0, 0.9))
     x_gap = -IN + 1.5
@@ -580,10 +583,10 @@ def build_keep_stairwell(bm, uv):
 
 # ── Crypt: under the keep ───────────────────────────────────────────────
 
-def _sarcophagus(bm, uv, x, y, fz, along_x=True):
+def _sarcophagus(bm, uv, x, y, fz, along_x=True, body=DEEP, lid=STONE):
     sx, sy = (2.0, 0.9) if along_x else (0.9, 2.0)
-    _box(bm, uv, DEEP, (x, y, fz + 0.3), (sx, sy, 0.6))
-    _box(bm, uv, STONE, (x, y, fz + 0.65), (sx + 0.1, sy + 0.1, 0.12))
+    _box(bm, uv, body, (x, y, fz + 0.3), (sx, sy, 0.6))
+    _box(bm, uv, lid, (x, y, fz + 0.65), (sx + 0.1, sy + 0.1, 0.12))
     _anchor(x, y, fz + 0.71)
 
 

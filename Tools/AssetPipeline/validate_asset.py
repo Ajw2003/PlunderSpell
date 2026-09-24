@@ -99,7 +99,11 @@ def main():
     if sys.argv[1] == "--all":
         glb_dir = os.environ.get("PLUNDERSPELL_SCRATCH_GLB", "/tmp/plunderspell_glb")
         any_failed = False
+        # --all --only <prefix>: just the keys build_assets.py --only rebuilt.
+        only = sys.argv[sys.argv.index("--only") + 1] if "--only" in sys.argv else None
         for spec in asset_specs.ALL_SPECS:
+            if only is not None and not asset_specs.key_matches(spec["key"], only):
+                continue
             path = os.path.join(glb_dir, f"{spec['key']}.glb")
             issues = validate_glb(path, spec["tri_budget"])
             status = "PASS" if not issues else "FAIL"

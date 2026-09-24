@@ -31,11 +31,43 @@
       "preview": "fc3daed51c05ef61:23a9d68e53fd",
       "tris": 468
     },
+    "BronzeDoorPlugCrypt": {
+      "budget": 40,
+      "content": "94853190d2043cb7",
+      "tris": 12
+    },
+    "BronzeDoorPlugInnerWard": {
+      "budget": 40,
+      "content": "060668c6a0f19b83",
+      "tris": 12
+    },
+    "BronzeDoorPlugKeep": {
+      "budget": 40,
+      "content": "c9de847543c1d1e1",
+      "tris": 12
+    },
+    "BronzeDoorPlugOuterBailey": {
+      "budget": 40,
+      "content": "52863aac2d1f84e7",
+      "tris": 12
+    },
+    "BronzeMegaron": {
+      "budget": 1600,
+      "content": "a405bc6aa586fc8c",
+      "preview": "a405bc6aa586fc8c:23a9d68e53fd",
+      "tris": 1572
+    },
     "BronzeSword": {
       "budget": 400,
       "content": "415b1b204fe7d963",
       "preview": "415b1b204fe7d963:23a9d68e53fd",
       "tris": 220
+    },
+    "BronzeWallStraight": {
+      "budget": 1200,
+      "content": "2c76fe2ed38c65c6",
+      "preview": "2c76fe2ed38c65c6:23a9d68e53fd",
+      "tris": 700
     },
     "BurialVault": {
       "budget": 900,

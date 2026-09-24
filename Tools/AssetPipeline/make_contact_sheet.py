@@ -21,7 +21,17 @@ LABEL_H = 26
 
 
 def main():
-    keys = [spec["key"] for spec in asset_specs.ALL_SPECS]
+    # The original sheet (props + the High Medieval castle) keeps exactly its
+    # old contents; each other Age gets a sheet of its own, so one image
+    # shows one Age's castle side by side (docs/plans/era-castle-rooms.md).
+    era_keys = {spec["key"] for spec in asset_specs.ERA_CASTLE_SPECS}
+    write_sheet([s["key"] for s in asset_specs.ALL_SPECS if s["key"] not in era_keys], "_contact_sheet.png")
+    for era in dict.fromkeys(s["era"] for s in asset_specs.ERA_CASTLE_SPECS):
+        keys = [s["key"] for s in asset_specs.ERA_CASTLE_SPECS if s["era"] == era]
+        write_sheet(keys, f"_contact_sheet_{era}.png")
+
+
+def write_sheet(keys, filename):
     paths = [os.path.join(PREVIEWS_DIR, f"{k}.png") for k in keys]
     missing = [p for p in paths if not os.path.isfile(p)]
     if missing:
@@ -49,7 +59,7 @@ def main():
         sheet.paste(img, (x, y))
         draw.text((x + 4, y + THUMB + 4), key, fill=(220, 210, 186), font=font)
 
-    out = os.path.join(PREVIEWS_DIR, "_contact_sheet.png")
+    out = os.path.join(PREVIEWS_DIR, filename)
     sheet.save(out)
     print(f"wrote {out}")
 
