@@ -18,7 +18,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"SilverServiceTureen"
+			"name":"GildedNef"
 		}
 	],
 	"materials":[
@@ -37,7 +37,7 @@
 					"emissiveStrength":9
 				}
 			},
-			"name":"SilverServiceTureen",
+			"name":"GildedNef",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
@@ -50,7 +50,7 @@
 	],
 	"meshes":[
 		{
-			"name":"SilverServiceTureen",
+			"name":"GildedNef",
 			"primitives":[
 				{
 					"attributes":{
@@ -81,79 +81,79 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"SilverServiceTureen_Emission",
-			"uri":"SilverServiceTureen_Emission.png"
+			"name":"GildedNef_Emission",
+			"uri":"GildedNef_Emission.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"SilverServiceTureen_BaseMap",
-			"uri":"SilverServiceTureen_BaseMap.png"
+			"name":"GildedNef_BaseMap",
+			"uri":"GildedNef_BaseMap.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"SilverServiceTureen_ORM",
-			"uri":"SilverServiceTureen_ORM.png"
+			"name":"GildedNef_ORM",
+			"uri":"GildedNef_ORM.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":2897,
+			"count":3571,
 			"max":[
-				0.23751181364059448,
-				0.3660772144794464,
-				0.14350000023841858
+				0.2938251495361328,
+				0.5600000023841858,
+				0.10000000149011612
 			],
 			"min":[
-				-0.23583409190177917,
+				-0.21400000154972076,
 				0,
-				-0.14350000023841858
+				-0.10000000149011612
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":2897,
+			"count":3571,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":2897,
+			"count":3571,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":8910,
+			"count":8010,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":34764,
+			"byteLength":42852,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":34764,
-			"byteOffset":34764,
+			"byteLength":42852,
+			"byteOffset":42852,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":23176,
-			"byteOffset":69528,
+			"byteLength":28568,
+			"byteOffset":85704,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":17820,
-			"byteOffset":92704,
+			"byteLength":16020,
+			"byteOffset":114272,
 			"target":34963
 		}
 	],
@@ -165,8 +165,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":110524,
-			"uri":"SilverServiceTureen.bin"
+			"byteLength":130292,
+			"uri":"GildedNef.bin"
 		}
 	]
 }

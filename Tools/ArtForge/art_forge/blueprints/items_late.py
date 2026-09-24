@@ -691,9 +691,190 @@ def jewelled_hat_badge(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Gilded nef
+# --------------------------------------------------------------------------------
+
+def gilded_nef(entry: Entry):
+    """A silver-gilt carrack salt on a lobed foot and baluster stem: round-bellied
+    hull with silver strakes and a niello band under the gunwale, silver deck with
+    a gilt salt lid, crenellated sterncastle (stern at -X) and raked forecastle,
+    three silver masts with a mid-mast platform, a gilt fighting top with two cast
+    sailors and a pennant, a gilt bowsprit (bow at +X) and silver-wire rigging."""
+    W, D, H = entry.dims                       # 0.52 × 0.18 × 0.56
+    gilt, silver, wire = "silver_gilt", "silver", "silver_wire"
+    parts: list[Part] = []
+
+    # --- Lobed foot, baluster stem with knop, niello ring at the stem's base: one
+    # lathe from the floor to the hull.
+    foot = [(0.100, 0.000), (0.100, 0.006), (0.090, 0.022), (0.070, 0.042),
+            (0.045, 0.058), (0.026, 0.068),                        # foot dome, 0.07 tall
+            (0.017, 0.070), (0.017, 0.078),                        # niello ring
+            (0.012, 0.090), (0.030, 0.103), (0.030, 0.113),        # knop, 0.06 dia
+            (0.011, 0.126), (0.014, 0.140), (0.034, 0.150)]        # stem into the hull
+    parts.append(_lathe(foot, gilt, segments=16, smooth=False,
+                        paint=[_band("niello", 0.070, 0.078)]))
+    # Eight chased radial ribs raise the eight lobes.
+    for k in range(8):
+        t = math.radians(22.5 + 45 * k)
+        c, s = math.cos(t), math.sin(t)
+        rib = [(c * r, s * r, z + 0.0025) for r, z in ((0.101, 0.004), (0.090, 0.022),
+                                                          (0.070, 0.042), (0.040, 0.061))]
+        parts.append(_tube(rib, (0.004, 0.006), gilt, segments=3, up=(c, s, 0)))
+
+    # --- Hull: a round-bellied bowl, 0.40 long × 0.18 beam, keel at 0.14 m and the
+    # deck at 0.28 m; five silver strakes, the niello band, tarnish underneath.
+    xc, sy = -0.01, 0.45
+    keel, deck = 0.140, 0.280
+    strakes = [0.158, 0.180, 0.201, 0.221, 0.240]
+    prof = [(0.0, keel), (0.070, keel + 0.004)]
+    body = {0.158: 0.128, 0.180: 0.160, 0.201: 0.180, 0.221: 0.192, 0.240: 0.198}
+    for z in strakes:
+        r = body[z]
+        prof += [(r, z - 0.0025), (r + 0.0015, z), (r, z + 0.0025)]
+    prof += [(0.200, 0.252), (0.200, 0.271), (0.203, 0.274), (0.201, deck)]
+    paint = [_band("tarnish", keel, keel + 0.004)]
+    paint += [_band(silver, z - 0.0025, z + 0.0025) for z in strakes]
+    paint += [_band("niello", 0.252, 0.271), _band(silver, deck - 1e-3, deck + 1e-3)]
+    parts.append(_lathe(prof, gilt, loc=(xc, 0, 0), size=(1, sy, 1), segments=20, paint=paint))
+
+    def side(x: float, z: float, sign: int, lift: float = 0.0015) -> tuple:
+        r = _radius_at(prof[1:], z)
+        u = max(-0.999, min(0.999, (x - xc) / r))
+        return (x, sign * (sy * r * math.sqrt(1 - u * u) + lift), z)
+
+    # Silver wave scroll along the niello band.
+    for sign in (1, -1):
+        wave = [side(x, 0.2615 + 0.0045 * math.sin(i * math.pi / 2), sign)
+                for i, x in enumerate([xc - 0.15 + 0.3 * j / 14 for j in range(15)])]
+        parts.append(_tube(wave, (0.0012, 0.0016), silver, segments=3, up=(0, sign, 0)))
+
+    # --- Deck: the gilt salt lid over the oval well, hinged at the mainmast foot.
+    main_x = 0.0
+    parts.append(Part("cyl", (main_x - 0.035, 0, deck + 0.002), (0.14, 0.06, 0.004), mat=gilt,
+                      segments=14, extras={"bevel": False}))
+    parts.append(Part("cyl", (main_x - 0.035, 0, deck + 0.0045), (0.012, 0.012, 0.003), mat=gilt,
+                      segments=6, extras={"bevel": False}))                # lid knob
+
+    # --- Sterncastle: crenellated silver box 0.10 × 0.14 × 0.05, four square
+    # gunports, a gilt rail with five merlons on each side.
+    sx0, sx1 = -0.212, -0.112
+    s_top = deck + 0.050
+    # The stern rises as a flat gilt wall from the belly to the castle (the
+    # concept's side view), rather than the bowl's rounded end.
+    parts.append(Part("prism", (0, 0, 0), (1, 1, 0.128), mat=gilt, rot=(90, 0, 0),
+                      extras={"outline": [(sx0, 0.215), (sx0 + 0.030, 0.196), (sx1 + 0.020, 0.200),
+                                          (sx1 + 0.020, deck), (sx0, deck)],
+                              "paint": [{"mat": "niello", "min": (-1, 0.252, -1),
+                                         "max": (1, 0.271, 1)}]}))
+    parts.append(Part("box", ((sx0 + sx1) / 2, 0, deck + 0.022), (0.100, 0.140, 0.052),
+                      mat=silver, extras={"paint": [{"mat": "tarnish", "min": (-1, -1, -1),
+                                                     "max": (1, 1, -0.49)}]}))
+    parts.append(Part("box", ((sx0 + sx1) / 2, 0, s_top), (0.104, 0.144, 0.008), mat=gilt))
+    for sign in (1, -1):
+        for x in (sx0 + 0.030, sx0 + 0.068):
+            parts.append(Part("box", (x, sign * 0.0705, deck + 0.022), (0.016, 0.003, 0.016),
+                              mat="niello", extras={"bevel": False}))
+        for i in range(5):
+            x = sx0 + 0.008 + i * 0.021
+            parts.append(Part("box", (x, sign * 0.066, s_top + 0.009), (0.010, 0.008, 0.012),
+                              mat=gilt, extras={"bevel": False}))
+
+    # --- Forecastle: a smaller silver castle raked forward, with its own gilt rail.
+    f_out = [(0.105, 0.0), (0.170, 0.0), (0.200, 0.045), (0.095, 0.045)]
+    parts.append(Part("prism", (0, 0, deck - 0.004), (1, 1, 0.12), mat=silver, rot=(90, 0, 0),
+                      extras={"outline": f_out}))
+    f_top = deck - 0.004 + 0.045
+    parts.append(Part("prism", (0, 0, f_top + 0.003), (1, 1, 0.124), mat=gilt, rot=(90, 0, 0),
+                      extras={"outline": [(0.093, 0.0), (0.202, 0.0), (0.202, 0.006),
+                                          (0.093, 0.006)]}))
+    for sign in (1, -1):
+        for i in range(4):
+            x = 0.100 + i * 0.030
+            parts.append(Part("box", (x, sign * 0.056, f_top + 0.013), (0.010, 0.008, 0.012),
+                              mat=gilt, extras={"bevel": False}))
+
+    # --- Masts. Mainmast to 0.56 m overall with the mid-mast platform (0.20 dia),
+    # the gilt fighting top (0.05 cup) with two cast sailors, and a pennant.
+    main_top = 0.535
+    parts.append(Part("cyl", (main_x, 0, (deck + main_top) / 2), (0.006, 0.006, main_top - deck),
+                      mat=silver, segments=6, extras={"bevel": False, "smooth": True}))
+    platform_z = 0.440
+    parts.append(_lathe([(0.0, 0.0), (0.100, 0.006), (0.097, 0.009), (0.0, 0.011)], silver,
+                        loc=(main_x, 0, platform_z), segments=16))
+    parts.append(_lathe([(0.012, 0.0), (0.025, 0.014), (0.026, 0.034), (0.022, 0.035)], gilt,
+                        loc=(main_x, 0, 0.490), segments=10))
+    for dx in (-0.009, 0.009):                                  # the two cast sailors
+        parts.append(Part("cone", (main_x + dx, 0.006, 0.490 + 0.030), (0.008, 0.008, 0.011),
+                          mat=gilt, segments=5, extras={"bevel": False}))
+        parts.append(Part("ico", (main_x + dx, 0.006, 0.490 + 0.039), (0.0065, 0.0065, 0.0065),
+                          mat=gilt, subdivisions=1, extras={"bevel": False, "smooth": True}))
+    parts.append(Part("cyl", (main_x, 0, (main_top + H) / 2), (0.003, 0.003, H - main_top),
+                      mat=silver, segments=5, extras={"bevel": False}))
+    parts.append(Part("prism", (0, 0, 0), (1, 1, 0.0015), mat=silver, rot=(90, 0, 0),
+                      extras={"outline": [(main_x + 0.001, H - 0.002), (main_x + 0.050, H - 0.009),
+                                          (main_x + 0.040, H - 0.012), (main_x + 0.050, H - 0.016),
+                                          (main_x + 0.001, H - 0.018)], "bevel": False}))
+    # Foremast on the forecastle with a small top; mizzen on the sterncastle with a
+    # gilt lateen yard.
+    fore_x, fore_top = 0.140, 0.430
+    parts.append(Part("cyl", (fore_x, 0, (f_top + fore_top) / 2), (0.005, 0.005, fore_top - f_top),
+                      mat=silver, segments=6, extras={"bevel": False, "smooth": True}))
+    parts.append(_lathe([(0.0, 0.0), (0.050, 0.004), (0.048, 0.007), (0.0, 0.008)], silver,
+                        loc=(fore_x, 0, 0.395), segments=12))
+    parts.append(_lathe([(0.008, 0.0), (0.014, 0.012), (0.012, 0.018)], gilt,
+                        loc=(fore_x, 0, 0.405), segments=8))
+    miz_x, miz_top = -0.160, 0.440
+    parts.append(Part("cyl", (miz_x, 0, (s_top + miz_top) / 2), (0.005, 0.005, miz_top - s_top),
+                      mat=silver, segments=6, extras={"bevel": False, "smooth": True}))
+    parts.append(_tube([(miz_x - 0.052, 0.004, 0.388), (miz_x + 0.080, 0.004, 0.452)],
+                       (0.0028, 0.0028), gilt, segments=4))
+    # Bowsprit: gilt spar 0.12 m raked 30° up from the forecastle.
+    b0 = (0.188, 0.0, f_top - 0.010)
+    b1 = (b0[0] + 0.12 * math.cos(math.radians(30)), 0.0, b0[2] + 0.12 * math.sin(math.radians(30)))
+    parts.append(_tube([b0, b1], (0.004, 0.004), gilt, segments=5))
+
+    # --- Rigging: silver wire from the tops to the gunwales, soldered each end.
+    def gun(x, sign):
+        return side(x, deck - 0.004, sign, 0.001)
+    stays = []
+    for sign in (1, -1):
+        for x in (-0.070, -0.035, 0.035, 0.070):                # main shrouds
+            stays.append(((main_x, 0, 0.492), gun(x, sign)))
+        stays.append(((fore_x, 0, 0.400), gun(fore_x - 0.050, sign)))   # fore shrouds
+        stays.append(((miz_x, 0, 0.425), (miz_x + sign * 0.0, sign * 0.068, s_top)))
+    stays.append(((main_x, 0, 0.520), (fore_x, 0, 0.425)))      # main stay to the fore top
+    stays.append(((fore_x, 0, 0.425), b1))                      # fore stay to the bowsprit
+    stays.append(((main_x, 0, 0.520), (miz_x, 0, 0.438)))       # main to the mizzen
+    for a, b in stays:
+        parts.append(_tube([a, b], (0.0009, 0.0009), wire, segments=3))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.0015,
+        family_overrides={
+            # Gilt rubbed through to silver on the gunwale and the foot lobes.
+            gilt: {"wear_to": "#B8B6AE", "wear_amount": 0.20, "grain": 0.10, "rough": 0.32},
+            silver: {"rough": 0.34, "wear_to": "#5A5A55", "wear_amount": 0.12},
+        },
+        bbox_overrides={
+            "Y": (0.20, "the build bullets give the lobed foot and the mid-mast platform "
+                        "0.20 m diameters, wider than the 0.18 m beam on the dimension line"),
+        },
+        notes=["Rigging wire is 1.8 mm across, not the JSON's 0.8 mm: at 0.8 mm it "
+               "vanishes at game distance and on the review sheet (LOD1+ alpha cards "
+               "as the JSON says).",
+               "Foremast height taken from the concept (top at 0.43 m); the JSON's "
+               "'foremast 0.30 m' can't be an overall height above a 0.28 m deck.",
+               "Salt crystals round the lid and the strake-groove tarnish are texture "
+               "work; tarnish is modelled under the keel and the sterncastle."],
+    )
+
+
 BLUEPRINTS = {
     "parade-armour": parade_armour,
     "rolled-tapestry": rolled_tapestry,
     "bankers-ledger": bankers_ledger,
     "jewelled-hat-badge": jewelled_hat_badge,
+    "gilded-nef": gilded_nef,
 }

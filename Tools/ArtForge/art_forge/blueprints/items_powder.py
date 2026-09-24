@@ -619,7 +619,7 @@ def silver_tureen(entry: Entry):
                    (0.228, 0.0, 0.180), (0.223, 0.0, 0.155), (0.206, 0.0, 0.141),
                    (0.168, 0.0, 0.134)], 2)
     for side in (-1, 1):
-        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="sterling_silver", segments=7,
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="sterling_silver", segments=6,
                           extras={"path": [(side * x, y, z) for x, y, z in loop],
                                   "section": (0.0065, 0.009), "up": (0, 1, 0),
                                   "smooth": True, "bevel": False}))
