@@ -158,3 +158,37 @@ def build_late_state_bedchamber(bm, uv):
     # SW: a small hooded hearth; east: a window.
     _wall_hearth(bm, uv, -IN, -3.2, fz, width=1.3, depth=0.7, hood_top=3.6)
     ek.framed_panel(bm, uv, "vellum_faint", "line", "east", 3.0, fz + 1.4, 1.4, 1.6)
+
+
+def build_late_tapestry_solar(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateTapestrySolar.svg"""
+    h, fz = room_shell(bm, uv, "Keep")
+    # NE: the sloped writing desk, a stool, and a shelf of books on the north wall.
+    cb._box(bm, uv, TIMBER, (3.6, 4.9, fz + 0.375), (1.2, 0.6, 0.75))
+    ek.prism(bm, uv, TIMBER, [(-0.33, 0.0), (0.33, 0.0), (0.33, 0.15)], 1.26, loc=(3.6, 4.9, fz + 0.75), along="x")
+    cb._box(bm, uv, LINEN, (3.55, 4.75, fz + 0.82), (0.3, 0.22, 0.02))
+    cb._anchor(3.6, 4.9, fz + 0.83)
+    cb._box(bm, uv, TIMBER, (3.6, 4.2, fz + 0.225), (0.4, 0.4, 0.45))
+    cb._box(bm, uv, TIMBER, (3.6, IN - 0.125, fz + 1.72), (1.2, 0.25, 0.04))
+    x = 3.05
+    for k in range(8):                        # 0.04 m apart: the paint-box overlap closes anything narrower
+        w, bh = 0.07 + (k % 3) * 0.02, 0.24 + (k % 4) * 0.03
+        cb._box(bm, uv, (CLOTH, TIMBER, TAPESTRY, LINEN)[k % 4], (x + w / 2, IN - 0.13, fz + 1.74 + bh / 2), (w, 0.18, bh))
+        x += w + 0.04
+    # NW: the north tapestry, the hearth on the west wall, and the settle facing it.
+    ek.wall_panel(bm, uv, TAPESTRY, "north", -3.45, fz + 1.0, 3.1, 2.6, depth=0.04)
+    _wall_hearth(bm, uv, -IN, 3.4, fz, width=1.3, depth=0.8, mouth=1.2, hood_top=3.8)
+    cb._box(bm, uv, TIMBER, (-3.35, 3.4, fz + 0.225), (0.5, 1.6, 0.45))
+    cb._box(bm, uv, TIMBER, (-3.05, 3.4, fz + 0.675), (0.08, 1.6, 1.35))
+    cb._box(bm, uv, CLOTH, (-3.39, 3.4, fz + 0.485), (0.44, 1.5, 0.07))
+    # SE: the livery cupboard against the east wall, pewter on it.
+    cb._box(bm, uv, TIMBER, (5.2, -3.6, fz + 0.65), (0.6, 1.4, 1.3))
+    for dy in (-0.35, 0.35):
+        cb._box(bm, uv, IRON, (4.89, -3.6 + dy, fz + 0.65), (0.02, 0.06, 1.0))
+    cb._anchor(5.2, -3.6, fz + 1.3)
+    ek.jar(bm, uv, STEEL, 5.2, -3.95, fz + 1.3, 0.3, 0.16, mouth=0.07, segments=8)
+    mk.paint(bm, mk.add_cylinder(bm, 0.12, 0.03, loc=(5.2, -3.3, fz + 1.315), segments=10), STEEL, uv)
+    # SW: the south tapestry and an iron-bound chest before it; east: a window.
+    ek.wall_panel(bm, uv, TAPESTRY, "south", -3.55, fz + 0.8, 3.5, 2.8, depth=0.04)
+    _iron_chest(bm, uv, -3.6, -4.9, fz, w=1.2, d=0.6, h=0.6)
+    ek.framed_panel(bm, uv, "vellum_faint", "line", "east", 2.6, fz + 1.4, 1.4, 1.6)
