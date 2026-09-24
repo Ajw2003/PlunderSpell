@@ -2,6 +2,87 @@
   "generated_by": "Tools/ArtForge/build.py",
   "assets": [
     {
+      "key": "items/bronze/bronze-tripod",
+      "kind": "items",
+      "age": "bronze",
+      "slug": "bronze-tripod",
+      "name": "TripodCauldron",
+      "title": "Tripod Cauldron",
+      "passed": true,
+      "stats": {
+        "vertices": 2419,
+        "faces": 2576,
+        "triangles": 4650,
+        "islands": 60,
+        "lowest_z": 0.0,
+        "height": 1.05,
+        "width": 0.833,
+        "budget": 5000,
+        "bbox_m": "0.833x0.811x1.050",
+        "vs_spec": "W=0.833/0.800 D=0.811/0.800 H=1.050/1.050"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.8,
+          0.8,
+          1.05
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "cast_bronze": {
+          "name": "Cast bronze",
+          "base": "#9B6A38",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "rubbed_bronze": {
+          "name": "Rubbed bronze",
+          "base": "#B8844E",
+          "rough": 0.4,
+          "metal": 1.0,
+          "emit": null
+        },
+        "bronze_shadow": {
+          "name": "Bronze shadow",
+          "base": "#5E3E22",
+          "rough": 0.6,
+          "metal": 1.0,
+          "emit": null
+        },
+        "hearth_soot": {
+          "name": "Hearth soot",
+          "base": "#2B231B",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        },
+        "ash_residue": {
+          "name": "Ash residue",
+          "base": "#6E665A",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Dent states (3) and the bent-leg state are separate swaps, not built here.",
+        "Legs splay about 5.6° rather than 8°: at 8° from the bowl wall the feet would stand well outside the 0.80 m footprint the same bullet gives.",
+        "Spiral chasing is modelled as raised coils; fine chased lines are left to the normal map, which EnemyForge's bake does not make."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/TripodCauldron.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/glTF/TripodCauldron.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/TripodCauldron.blend"
+      },
+      "build_seconds": 3.1
+    },
+    {
       "key": "items/bronze/faience-hippo",
       "kind": "items",
       "age": "bronze",
@@ -450,7 +531,7 @@
           "name": "Strap iron",
           "base": "#3A3632",
           "rough": 0.55,
-          "metal": 1.0,
+          "metal": 0.75,
           "emit": null
         },
         "rust": {
@@ -459,12 +540,20 @@
           "rough": 0.75,
           "metal": 0.0,
           "emit": null
+        },
+        "nail_heads": {
+          "name": "Clench-nail heads (strap iron, rubbed)",
+          "base": "#6E6A62",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
         }
       },
       "failures": [],
       "warnings": [
         "Y (D) checked against 0.360 m instead of the JSON's 0.320 m: the 28 mm barrel padlock hangs on the hasp staple in front of the strapped face (build bullet), ~0.03 m ahead of the 0.32 m box, and the hinge knuckles stand proud at the back; the JSON dimension line gives the box only",
-        "JSON materials not used by any part: ['silver_penny', 'linen_bag']"
+        "JSON materials not used by any part: ['silver_penny', 'linen_bag']",
+        "families not in the JSON (blueprint extras): ['nail_heads']"
       ],
       "notes": [
         "Modelled closed. The four linen bags and 40 penny stacks only appear when it bursts, as separate pickups, so the silver_penny and linen_bag families are not on this mesh.",
@@ -477,7 +566,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/CoinCoffer/glTF/CoinCoffer.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/CoinCoffer/CoinCoffer.blend"
       },
-      "build_seconds": 3.0
+      "build_seconds": 4.0
     },
     {
       "key": "items/high/gilded-altarpiece",
@@ -830,6 +919,87 @@
       "build_seconds": 3.4
     },
     {
+      "key": "items/late/jewelled-hat-badge",
+      "kind": "items",
+      "age": "late",
+      "slug": "jewelled-hat-badge",
+      "name": "JewelledHatBadge",
+      "title": "Jewelled Hat-Badge",
+      "passed": true,
+      "stats": {
+        "vertices": 779,
+        "faces": 929,
+        "triangles": 1402,
+        "islands": 40,
+        "lowest_z": 0.0,
+        "height": 0.085,
+        "width": 0.069,
+        "budget": 1500,
+        "bbox_m": "0.069x0.015x0.085",
+        "vs_spec": "W=0.069/0.065 D=0.015/0.014 H=0.085/0.080"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.065,
+          0.014,
+          0.08
+        ],
+        "height_m": null,
+        "tri_budget": 1500
+      },
+      "families": {
+        "gold": {
+          "name": "Gold (orpiment)",
+          "base": "#C9A227",
+          "rough": 0.32,
+          "metal": 1.0,
+          "emit": null
+        },
+        "white_enamel": {
+          "name": "White enamel",
+          "base": "#E8E2D4",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        },
+        "green_enamel": {
+          "name": "Green enamel",
+          "base": "#4F6A3A",
+          "rough": 0.15,
+          "metal": 0.0,
+          "emit": null
+        },
+        "balas_ruby": {
+          "name": "Balas ruby",
+          "base": "#7A1E3A",
+          "rough": 0.05,
+          "metal": 0.0,
+          "emit": null
+        },
+        "pearl": {
+          "name": "Pearl",
+          "base": "#D9D2C0",
+          "rough": 0.3,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Stood upright on the pearl drop (the orientation the concept draws); the drop is the ground contact.",
+        "The 1 mm beaded rim (~100 beads) would take the whole budget; it is a plain raised rim step here, the beads left to the normal map / texture.",
+        "Petal translucency, the ruby's facet highlight and the pearl iridescence are shader work; the AURUM VOCO glow mask is the gold family's slot."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Late/JewelledHatBadge/JewelledHatBadge.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Late/JewelledHatBadge/glTF/JewelledHatBadge.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Late/JewelledHatBadge/JewelledHatBadge.blend"
+      },
+      "build_seconds": 3.7
+    },
+    {
       "key": "items/late/parade-armour",
       "kind": "items",
       "age": "late",
@@ -1162,6 +1332,80 @@
         "blend": "Assets/Models/ArtBible/Items/Powder/CabinetOfCuriosities/CabinetOfCuriosities.blend"
       },
       "build_seconds": 5.2
+    },
+    {
+      "key": "items/powder/silver-tureen",
+      "kind": "items",
+      "age": "powder",
+      "slug": "silver-tureen",
+      "name": "SilverServiceTureen",
+      "title": "Silver Service Tureen",
+      "passed": true,
+      "stats": {
+        "vertices": 1531,
+        "faces": 1685,
+        "triangles": 2926,
+        "islands": 38,
+        "lowest_z": 0.0,
+        "height": 0.366,
+        "width": 0.474,
+        "budget": 3000,
+        "bbox_m": "0.474x0.287x0.366",
+        "vs_spec": "W=0.474/0.460 D=0.287/0.300 H=0.366/0.360"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          0.46,
+          0.3,
+          0.36
+        ],
+        "height_m": null,
+        "tri_budget": 3000
+      },
+      "families": {
+        "sterling_silver": {
+          "name": "Sterling silver",
+          "base": "#B8B4A8",
+          "rough": 0.2,
+          "metal": 1.0,
+          "emit": null
+        },
+        "silver_tarnish": {
+          "name": "Silver tarnish",
+          "base": "#6A665C",
+          "rough": 0.5,
+          "metal": 0.8,
+          "emit": null
+        },
+        "bright_polish": {
+          "name": "Bright polish",
+          "base": "#DAD7CE",
+          "rough": 0.12,
+          "metal": 1.0,
+          "emit": null
+        },
+        "soup_residue": {
+          "name": "Soup residue",
+          "base": "#5A4A30",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Lid and ladle are modelled in place on the same mesh and texture set; splitting them into separate physics objects is an import step.",
+        "The ladle notch is a tarnished patch on the lid flange where the stem rests, not a cut: a real cut would split the lid's single shell.",
+        "The engraved coat of arms is a raised double lozenge line in tarnish; the charges inside belong in the albedo/normal."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/SilverServiceTureen.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/glTF/SilverServiceTureen.gltf",
+        "blend": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/SilverServiceTureen.blend"
+      },
+      "build_seconds": 3.1
     },
     {
       "key": "items/powder/venetian-mirror",

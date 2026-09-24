@@ -550,8 +550,171 @@ def brass_astrolabe(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Silver Service Tureen
+# --------------------------------------------------------------------------------
+
+def _profile_r(profile, z: float) -> float:
+    """Radius of a lathe profile at height z (first rising span that contains z)."""
+    for (r0, z0), (r1, z1) in zip(profile, profile[1:]):
+        if z0 <= z <= z1 and z1 > z0:
+            return r0 + (r1 - r0) * (z - z0) / (z1 - z0)
+    raise ValueError(f"z={z} is outside the profile")
+
+
+def silver_tureen(entry: Entry):
+    """Oval hammered-silver tureen on a shaped skirt and four lion's-paw feet, scroll
+    loop handles with leaf thumb-pieces on the short (X) ends, domed lid with a
+    pomegranate finial and a ladle standing out of the lid's notch. The long sides
+    face ±Y; the model faces -Y."""
+    W, D, H = entry.dims                          # 0.46 × 0.30 × 0.36 with lid, finial, ladle
+    # Rim 0.40 × 0.26 in the bullet; 0.70 (0.40 × 0.28) so the lid flange reaches
+    # the dimension line's 0.30 m D within tolerance.
+    OVAL = 0.70
+    oval = (1.0, OVAL, 1.0)
+    parts: list[Part] = []
+
+    # --- Bowl: one lathe, squashed oval. Outer wall, everted 0.01 m rim, then the
+    # inside back down to a floor of dried soup (visible with the lid off).
+    rim_z = 0.210
+    outer = [(0.120, 0.052), (0.150, 0.060), (0.170, 0.085), (0.178, 0.115),
+             (0.176, 0.145), (0.184, 0.180), (0.192, 0.198), (0.200, 0.204),
+             (0.200, rim_z)]
+    bowl_profile = ([(0.0, 0.052)] + outer +
+                    [(0.188, rim_z), (0.180, 0.196), (0.166, 0.140), (0.150, 0.095),
+                     (0.110, 0.074), (0.0, 0.070)])
+    parts.append(Part("lathe", (0, 0, 0), oval, mat="sterling_silver", segments=24,
+                      extras={"profile": bowl_profile, "smooth": True, "paint": [
+                          # bright polish on the rolled rim
+                          {"mat": "bright_polish", "min": (-1, -1, 0.201), "max": (1, 1, 0.215)},
+                          # tarnish where the bowl meets the skirt
+                          {"mat": "silver_tarnish", "min": (-1, -1, 0.0), "max": (1, 1, 0.061)},
+                          # dried soup on the floor inside
+                          {"mat": "soup_residue", "min": (-0.13, -0.13, 0.069), "max": (0.13, 0.13, 0.080)},
+                      ]}))
+
+    # Skirt: a shaped oval foot-ring under the bowl, the paws beneath it.
+    skirt = [(0.0, 0.036), (0.140, 0.036), (0.158, 0.042), (0.160, 0.050), (0.148, 0.058),
+             (0.118, 0.062), (0.0, 0.062)]
+    parts.append(Part("lathe", (0, 0, 0), (1.0, 0.70, 1.0), mat="sterling_silver", segments=24,
+                      extras={"profile": skirt, "smooth": True}))
+
+    # Lion's-paw feet: a tarnished ankle flaring to a pad, three silver toes in front.
+    paw = [(0.0, 0.0), (0.024, 0.0), (0.024, 0.006), (0.018, 0.016), (0.013, 0.030),
+           (0.016, 0.040), (0.0, 0.040)]
+    for fx in (-0.105, 0.105):
+        for fy in (-0.068, 0.068):
+            parts.append(Part("lathe", (fx, fy, 0.0), (1, 1, 1), mat="silver_tarnish", segments=8,
+                              extras={"profile": paw, "smooth": True, "bevel": False}))
+            ax, ay = fx / math.hypot(fx, fy), fy / math.hypot(fx, fy)   # outward
+            px, py = -ay, ax
+            for k in (-1, 0, 1):
+                parts.append(Part("sphere", (fx + ax * 0.018 + px * 0.011 * k,
+                                             fy + ay * 0.018 + py * 0.011 * k, 0.008),
+                                  (0.013, 0.013, 0.016), mat="sterling_silver",
+                                  segments=6, rings=3, extras={"bevel": False, "smooth": True}))
+
+    # Scroll loop handles on the short ends, each with a leaf thumb-piece on top.
+    loop = spline([(0.186, 0.0, 0.207), (0.206, 0.0, 0.218), (0.222, 0.0, 0.205),
+                   (0.228, 0.0, 0.180), (0.223, 0.0, 0.155), (0.206, 0.0, 0.141),
+                   (0.168, 0.0, 0.134)], 2)
+    for side in (-1, 1):
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="sterling_silver", segments=7,
+                          extras={"path": [(side * x, y, z) for x, y, z in loop],
+                                  "section": (0.0065, 0.009), "up": (0, 1, 0),
+                                  "smooth": True, "bevel": False}))
+        parts.append(Part("cone", (side * 0.208, 0.0, 0.232), (0.016, 0.012, 0.030),
+                          mat="sterling_silver", segments=5, rot=(0.0, side * 12.0, 0.0),
+                          extras={"bevel": False}))
+        # tarnish where the handle joins the belly
+        parts.append(Part("sphere", (side * 0.172, 0.0, 0.134), (0.018, 0.022, 0.016),
+                          mat="silver_tarnish", segments=6, rings=4,
+                          extras={"bevel": False, "smooth": True}))
+
+    # Engraved arms: a double lozenge on each long side, riding the belly.
+    def on_belly(x: float, z: float, sign: float) -> tuple:
+        r = _profile_r(outer, z)
+        return (x, sign * (OVAL * math.sqrt(max(r * r - x * x, 0.0)) + 0.0008), z)
+
+    for sign in (-1, 1):
+        for half_w, half_h in ((0.030, 0.042), (0.017, 0.024)):
+            corners = [(0.0, 0.120 + half_h), (half_w, 0.120), (0.0, 0.120 - half_h),
+                       (-half_w, 0.120)]
+            path = []
+            for (x0, z0), (x1, z1) in zip(corners, corners[1:] + corners[:1]):
+                for t in (0.0, 0.5):
+                    path.append(on_belly(x0 + (x1 - x0) * t, z0 + (z1 - z0) * t, sign))
+            parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="silver_tarnish", segments=3,
+                              extras={"path": path, "closed": True, "section": (0.0012, 0.0016),
+                                      "up": (0, sign, 0), "bevel": False}))
+
+    # --- Lid: domed oval with a stepped flange, polished crown, the ladle notch
+    # (a dark cut at the +X end), and the pomegranate finial.
+    lid_profile = [(0.0, 0.206), (0.203, 0.206), (0.205, 0.214), (0.196, 0.218),
+                   (0.190, 0.224), (0.170, 0.242), (0.140, 0.262), (0.100, 0.276),
+                   (0.050, 0.284), (0.0, 0.286)]
+    parts.append(Part("lathe", (0, 0, 0), oval, mat="sterling_silver", segments=24,
+                      extras={"profile": lid_profile, "smooth": True, "paint": [
+                          {"mat": "bright_polish", "min": (-0.13, -0.13, 0.250), "max": (0.13, 0.13, 0.29)},
+                          {"mat": "bright_polish", "min": (-1, -1, 0.2065), "max": (1, 1, 0.2155)},
+                          {"mat": "silver_tarnish", "min": (0.140, -0.030, 0.2065), "max": (1, 0.030, 0.245)},
+                      ]}))
+    fin = [(0.0, 0.284), (0.009, 0.284), (0.007, 0.293), (0.010, 0.298), (0.018, 0.308),
+           (0.020, 0.318), (0.015, 0.328), (0.007, 0.332), (0.0, 0.333)]
+    parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="sterling_silver", segments=10,
+                      extras={"profile": fin, "smooth": True, "bevel": False,
+                              "paint": [{"mat": "silver_tarnish", "min": (-1, -1, 0.284),
+                                         "max": (1, 1, 0.296)}]}))
+    for k in range(5):                                         # the pomegranate's crown
+        a = 2 * math.pi * k / 5
+        parts.append(Part("cone", (math.cos(a) * 0.006, math.sin(a) * 0.006, 0.337),
+                          (0.006, 0.006, 0.012), mat="sterling_silver", segments=4,
+                          rot=(math.degrees(-math.sin(a)) * 0.3, math.degrees(math.cos(a)) * 0.3, 0.0),
+                          extras={"bevel": False}))
+
+    # --- Ladle: stem out of the notch at 28° from vertical, a flat oval terminal,
+    # and its 0.07 m bowl down inside the tureen.
+    notch = (0.160, 0.0, 0.228)
+    lean = 28.0
+    dx, dz = math.sin(math.radians(lean)), math.cos(math.radians(lean))
+    tip = (notch[0] + dx * 0.130, 0.0, notch[2] + dz * 0.130)
+    heel = (notch[0] - dx * 0.125, 0.0, notch[2] - dz * 0.125)
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="sterling_silver", segments=6,
+                      extras={"path": [heel, notch, tip], "section": (0.0045, 0.0035),
+                                "up": (0, 1, 0), "smooth": True, "bevel": False}))
+    parts.append(Part("sphere", (tip[0] + dx * 0.010, 0.0, tip[2] + dz * 0.010),
+                      (0.022, 0.010, 0.032), mat="bright_polish", segments=8, rings=5,
+                      rot=(0.0, lean, 0.0), extras={"bevel": False, "smooth": True}))
+    cup = [(0.0, 0.0), (0.020, 0.004), (0.032, 0.014), (0.035, 0.024), (0.031, 0.026),
+           (0.028, 0.017), (0.018, 0.009), (0.0, 0.006)]
+    parts.append(Part("lathe", (heel[0] - 0.012, 0.0, heel[2] - 0.020), (1, 1, 1),
+                      mat="sterling_silver", segments=10,
+                      extras={"profile": cup, "smooth": True, "bevel": False}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.0,          # all turned and cast work; smooth shading carries the curves
+        family_overrides={
+            # Hammer marks: patches rubbed toward tarnish across the silver (the
+            # facets themselves belong in the normal map EnemyForge does not bake).
+            "sterling_silver": {"wear_to": "#8E8A7E", "wear_amount": 0.30, "grain": 0.10},
+            # Polish and tarnish are states of the same metal, not paints.
+            "bright_polish": {"metal": 1.0, "rough": 0.12},
+            "silver_tarnish": {"metal": 0.8, "rough": 0.5},
+            "soup_residue": {"rough": 0.85},
+        },
+        notes=["Lid and ladle are modelled in place on the same mesh and texture set; "
+               "splitting them into separate physics objects is an import step.",
+               "The ladle notch is a tarnished patch on the lid flange where the stem "
+               "rests, not a cut: a real cut would split the lid's single shell.",
+               "The engraved coat of arms is a raised double lozenge line in tarnish; "
+               "the charges inside belong in the albedo/normal."],
+    )
+
+
 BLUEPRINTS = {
     "curiosity-cabinet": curiosity_cabinet,
     "venetian-mirror": venetian_mirror,
     "brass-astrolabe": brass_astrolabe,
+    "silver-tureen": silver_tureen,
 }

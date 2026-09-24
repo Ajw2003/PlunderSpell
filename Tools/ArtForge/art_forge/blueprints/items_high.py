@@ -647,13 +647,14 @@ def coin_coffer(entry: Entry):
             # Thin straps stay unbevelled: the bevel would near-double their cost.
             box((x, y, (seam - gap / 2.0) / 2.0), (0.030, t, seam - gap / 2.0), "strap_iron",
                 bevel=False)
-            box((x, y, (skirt_z0 + H + t) / 2.0), (0.030, t, H + t - skirt_z0), "strap_iron",
+            box((x, y, (skirt_z0 + H) / 2.0), (0.030, t, H - skirt_z0), "strap_iron",
                 bevel=False)
         box((x, 0, H + t / 2.0), (0.030, D + 2 * t, t), "strap_iron", bevel=False)
     for z in (0.007, H - 0.007):
         for s in (1, -1):
-            box((0, s * (hd + t / 2.0), z), (W - 0.06, t, 0.014), "strap_iron", bevel=False)
-            box((s * (hw + t / 2.0), 0, z), (t, D - 0.06, 0.014), "strap_iron", bevel=False)
+            # 3 mm proud, so the 4 mm straps lie over them without coplanar faces.
+            box((0, s * (hd + 0.0015), z), (W - 0.06, 0.003, 0.014), "strap_iron", bevel=False)
+            box((s * (hw + 0.0015), 0, z), (0.003, D - 0.06, 0.014), "strap_iron", bevel=False)
     ai = 0.034                                # angle-iron leg width
     for sx in (1, -1):
         for sy in (1, -1):
@@ -666,7 +667,7 @@ def coin_coffer(entry: Entry):
     def nail(x, y, z, axis):
         rot = {"-y": (90, 0, 45), "+y": (-90, 0, 45), "+z": (0, 0, 45),
                "+x": (0, 90, 45), "-x": (0, -90, 45)}[axis]
-        parts.append(Part("cone", (x, y, z), (0.0068, 0.0068, 0.0045), mat="strap_iron",
+        parts.append(Part("cone", (x, y, z), (0.0068, 0.0068, 0.0045), mat="nail_heads",
                           segments=4, rot=rot, extras={"bevel": False}))
 
     def column(z0, z1):
@@ -731,6 +732,12 @@ def coin_coffer(entry: Entry):
     return blueprint(
         entry, parts,
         bevel=0.003,
+        extra_families={
+            # The JSON's strap-iron note asks for "nail heads brighter"; one family
+            # has one albedo, so the clench-nail heads get their own, rubbed brighter.
+            "nail_heads": {"name": "Clench-nail heads (strap iron, rubbed)", "base": "#6E6A62",
+                           "rough": 0.45, "metal": 1.0, "grain": 0.2},
+        },
         bbox_overrides={
             "Y": (0.36, "the 28 mm barrel padlock hangs on the hasp staple in front of "
                   "the strapped face (build bullet), ~0.03 m ahead of the 0.32 m box, and "
@@ -742,7 +749,10 @@ def coin_coffer(entry: Entry):
             "oak": {"ridges": (0.012, 0.10), "wear_to": "#4A3522", "wear_amount": 0.25,
                     "grain": 0.3},
             # Blackened iron with rust blooming through it.
-            "strap_iron": {"wear_to": "#7A4A2A", "wear_amount": 0.22, "grain": 0.25},
+            # Metallic 0.75: blackened (oxide-finished) iron takes some diffuse
+            # light, which keeps the straps from reading as black voids.
+            "strap_iron": {"metal": 0.75, "wear_to": "#7A4A2A", "wear_amount": 0.22,
+                           "grain": 0.25},
         },
         notes=["Modelled closed. The four linen bags and 40 penny stacks only appear when "
                "it bursts, as separate pickups, so the silver_penny and linen_bag families "

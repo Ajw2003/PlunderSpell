@@ -19,7 +19,8 @@ from . import blueprint
 #   extras["rings"] = [ring, ...], each ring a list of (x, y, z) in metres with the
 #   same point count, or a single point (a pole; only first/last). An end ring with
 #   more than one point is capped flat with an n-gon. Keep the point order the same
-#   rotational sense on every ring.
+#   rotational sense on every ring. extras["closed"] = True joins the last ring
+#   back to the first (a torus-like loop, no poles, no caps).
 # --------------------------------------------------------------------------------
 
 LOFT = "bronze_loft"
@@ -38,8 +39,11 @@ def _loft(bm, part: Part):
         row = [bm.verts.new(p) for p in ring]
         rows.append(row)
         verts.extend(row)
+    closed = bool(part.extras.get("closed", False))
+    if closed and any(len(r) == 1 for r in rows):
+        raise ValueError("a closed loft cannot have poles")
     faces = []
-    for a, b in zip(rows, rows[1:]):
+    for a, b in zip(rows, rows[1:] + (rows[:1] if closed else [])):
         for j in range(width):
             k = (j + 1) % width
             if len(a) == 1 and len(b) == 1:
@@ -51,9 +55,9 @@ def _loft(bm, part: Part):
             else:
                 quad = (a[j], a[k], b[k], b[j])
             faces.append(bm.faces.new(quad))
-    if len(rows[0]) > 1:
+    if not closed and len(rows[0]) > 1:
         faces.append(bm.faces.new(list(reversed(rows[0]))))
-    if len(rows[-1]) > 1:
+    if not closed and len(rows[-1]) > 1:
         faces.append(bm.faces.new(rows[-1]))
     kit._orient_outward(bm, faces)
     return verts, faces
@@ -701,6 +705,196 @@ def gold_death_mask(entry: Entry):
     )
 
 
+def _lathe_face_boxes(profile, segments, bands, mat, pad=0.0015):
+    """Paint regions that each catch exactly one lathe face: a tiny box round the
+    centroid of every face in the given profile bands (band i spans profile
+    points i and i+1). Lets the inside of a thin-walled vessel take a different
+    family from the outside at the same height, which a single box cannot."""
+    regions = []
+    for i in bands:
+        (r0, z0), (r1, z1) = profile[i], profile[i + 1]
+        for j in range(segments):
+            angles = (2.0 * math.pi * j / segments, 2.0 * math.pi * (j + 1) / segments)
+            pts = []
+            for r, z in ((r0, z0), (r1, z1)):
+                if r <= 1e-6:
+                    pts.append((0.0, 0.0, z))
+                else:
+                    pts += [(math.cos(t) * r, math.sin(t) * r, z) for t in angles]
+            c = [sum(p[k] for p in pts) / len(pts) for k in range(3)]
+            regions.append({"mat": mat, "min": tuple(v - pad for v in c),
+                            "max": tuple(v + pad for v in c)})
+    return regions
+
+
+def bronze_tripod(entry: Entry):
+    """Tripod cauldron: deep hammered bowl with a rolled lip, three splayed strip
+    legs on riveted plates ending in paw feet, twisted-rope ring handles, bracing
+    struts, a chased spiral band and bull protomes at the leg joints."""
+    W, D, H = entry.dims                      # 0.80 × 0.80 × 1.05
+    rim_z, bowl_r, depth = 0.88, 0.33, 0.36
+    wall = 0.006                              # 3 mm wall, modelled 6 mm
+    S = 28
+    parts: list[Part] = []
+
+    def outer_pt(theta_deg):
+        t = math.radians(theta_deg)
+        return (bowl_r * math.sin(t), rim_z - depth * math.cos(t))
+
+    def inner_pt(theta_deg):
+        t = math.radians(theta_deg)
+        return ((bowl_r - wall) * math.sin(t), rim_z - (depth - wall) * math.cos(t))
+
+    def bowl_radius(z):
+        return bowl_r * math.sqrt(max(0.0, 1.0 - ((rim_z - z) / depth) ** 2))
+
+    soot_top = 0.68                            # underside and inner lower half
+    band_lo, band_hi = 0.815, 0.855           # chased spiral band, 0.04 m
+    soot_t = math.degrees(math.acos((rim_z - soot_top) / depth))
+    band_t = [math.degrees(math.acos((rim_z - z) / depth)) for z in (band_lo, band_hi)]
+    outer = [(0.0, rim_z - depth)] + [outer_pt(t) for t in
+                                      (12, 26, 40, soot_t, 68, band_t[0], band_t[1], 89)]
+    lip = [(0.336, 0.873), (0.344, 0.881), (0.342, 0.890), (0.332, 0.893), (0.324, 0.886)]
+    inner_t = (84, 70, soot_t, 40, 25, 10)
+    inner = [inner_pt(t) for t in inner_t] + [(0.0, rim_z - depth + wall)]
+    profile = outer + lip + inner
+    first_inner_band = len(outer) + len(lip) - 1          # lip end -> first inner point
+    inside = _lathe_face_boxes(profile, S, range(first_inner_band, len(profile) - 1),
+                               "bronze_shadow")
+    parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="cast_bronze", segments=S, extras={
+        "profile": profile, "smooth": True, "bevel": False,
+        "paint": inside + [
+            {"mat": "hearth_soot", "min": (-1, -1, -1), "max": (1, 1, soot_top + 1e-4)},
+            {"mat": "bronze_shadow", "min": (-1, -1, band_lo - 1e-4), "max": (1, 1, band_hi + 1e-4)},
+            {"mat": "rubbed_bronze", "min": (-1, -1, 0.870), "max": (1, 1, 1)},
+        ]}))
+
+    # Grey ash crust lying in the bottom of the bowl.
+    parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="ash_residue", segments=16, extras={
+        "profile": [(0.0, 0.535), (0.15, 0.568), (0.158, 0.5755), (0.0, 0.577)],
+        "bevel": False}))
+
+    # Legs at the front (-Y) and ±120°.
+    leg_angles = (-90.0, 30.0, 150.0)
+    top_r, top_z, foot_r, foot_z = 0.334, 0.845, 0.415, 0.035
+    alpha = math.atan2(foot_r - top_r, top_z - foot_z)          # outward splay
+    length = math.hypot(foot_r - top_r, top_z - foot_z)
+    strut_z = 0.30
+    strut_pts = []
+    for phi_deg in leg_angles:
+        phi = math.radians(phi_deg)
+        radial = (math.cos(phi), math.sin(phi))
+        tangent = (-math.sin(phi), math.cos(phi))
+
+        def at(r, z, t=0.0):
+            return (radial[0] * r + tangent[0] * t, radial[1] * r + tangent[1] * t, z)
+
+        mid_r, mid_z = (top_r + foot_r) / 2.0, (top_z + foot_z) / 2.0
+        parts.append(Part("box", at(mid_r, mid_z), (0.06, 0.02, length), mat="cast_bronze",
+                          rot=(math.degrees(alpha), 0.0, phi_deg - 90.0),
+                          extras={"paint": [{"mat": "rubbed_bronze", "min": (-1, 0.0095, -1),
+                                             "max": (1, 1, 1)}] if False else []}))
+        # Incised zigzag down the leg's outer face.
+        zig = []
+        for k in range(11):
+            f = 0.12 + 0.76 * k / 10
+            r = top_r + (foot_r - top_r) * f + 0.0105 * math.cos(alpha)
+            z = top_z - (top_z - foot_z) * f + 0.0105 * math.sin(alpha)
+            zig.append(at(r, z, 0.016 if k % 2 else -0.016))
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="bronze_shadow", segments=3,
+                          extras={"path": zig, "section": (0.0025, 0.0028),
+                                  "up": (radial[0], radial[1], 0.0), "bevel": False}))
+        # Riveted attachment plate over the leg top, tilted to lie on the bowl.
+        parts.append(Part("box", at(0.340, 0.800), (0.10, 0.034, 0.14), mat="cast_bronze",
+                          rot=(-11.0, 0.0, phi_deg - 90.0)))
+        for rz in (0.755, 0.800, 0.845):
+            plate_face = 0.340 + 0.017 + (rz - 0.800) * math.tan(math.radians(11.0))
+            parts.append(Part("sphere", at(plate_face, rz), (0.015, 0.015, 0.015),
+                              mat="rubbed_bronze", segments=6, rings=4,
+                              extras={"bevel": False, "smooth": True}))
+        # Paw foot: a pad and three toes, flat on the floor.
+        parts.append(Part("sphere", at(foot_r + 0.008, 0.0225), (0.075, 0.068, 0.045),
+                          mat="cast_bronze", rot=(0, 0, phi_deg), segments=8, rings=5,
+                          extras={"bevel": False, "smooth": True}))
+        for t in (-0.022, 0.0, 0.022):
+            parts.append(Part("sphere", at(foot_r + 0.040, 0.013, t), (0.026, 0.024, 0.026),
+                              mat="rubbed_bronze", segments=6, rings=4,
+                              extras={"bevel": False, "smooth": True}))
+        # Bull protome on the rim above the plate: head, muzzle, two horns.
+        parts.append(Part("sphere", at(0.352, 0.892), (0.052, 0.042, 0.040), mat="rubbed_bronze",
+                          rot=(0, 18, phi_deg), segments=8, rings=5,
+                          extras={"bevel": False, "smooth": True}))
+        parts.append(Part("sphere", at(0.377, 0.882), (0.022, 0.030, 0.022), mat="rubbed_bronze",
+                          rot=(0, 0, phi_deg), segments=6, rings=4,
+                          extras={"bevel": False, "smooth": True}))
+        for side in (1, -1):
+            parts.append(Part("cone", at(0.345, 0.915, side * 0.018), (0.012, 0.012, 0.036),
+                              mat="rubbed_bronze", rot=(-side * 40.0, 0.0, phi_deg),
+                              segments=5, extras={"bevel": False, "smooth": True}))
+        f = (top_z - strut_z) / (top_z - foot_z)
+        strut_pts.append(at(top_r + (foot_r - top_r) * f, strut_z))
+
+    # Bracing struts in a triangle 0.30 m up, ends buried in the legs.
+    for a, b in zip(strut_pts, strut_pts[1:] + strut_pts[:1]):
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="cast_bronze", segments=6,
+                          extras={"path": [a, b], "section": (0.006, 0.006), "up": (0, 0, 1),
+                                  "smooth": True, "bevel": False}))
+
+    # Chased running spirals: small raised coils round the band, clear of the
+    # handles and leg joints.
+    band_z = (band_lo + band_hi) / 2.0
+    for k in range(18):
+        phi_deg = k * 20.0 + 10.0
+        near = [abs((phi_deg - a + 180.0) % 360.0 - 180.0) for a in leg_angles + (0.0, 180.0)]
+        if min(near) < 11.0:
+            continue
+        phi = math.radians(phi_deg)
+        r = bowl_radius(band_z) + 0.002
+        parts.append(Part("torus", (math.cos(phi) * r, math.sin(phi) * r, band_z),
+                          (0.028, 0.028, 0.008), mat="rubbed_bronze",
+                          rot=(90.0, 0.0, phi_deg + 90.0), segments=8, rings=4, minor=0.28,
+                          extras={"bevel": False, "smooth": True}))
+
+    # Ring handles on ±X, in the YZ plane: 0.24 m outer, 0.025 m twisted-rope section.
+    ring_r, sec_r, K, P = 0.12 - 0.0125, 0.0125, 40, 7
+    ring_z = rim_z + 0.17 - 0.12 + 0.0            # top of the ring at 1.05 m
+    for sx in (1, -1):
+        x0 = sx * (bowl_r + 0.010)
+        rings = []
+        for i in range(K):
+            phi = 2.0 * math.pi * i / K
+            cy, cz = ring_r * math.cos(phi), ring_z + ring_r * math.sin(phi)
+            n1 = (0.0, math.cos(phi), math.sin(phi))
+            twist = 4.0 * phi
+            ring = []
+            for j in range(P):
+                psi = 2.0 * math.pi * j / P
+                rr = sec_r * (0.86 + 0.14 * math.cos(3.0 * (psi - twist)))
+                ring.append((x0 + rr * math.sin(psi),
+                             cy + rr * math.cos(psi) * n1[1],
+                             cz + rr * math.cos(psi) * n1[2]))
+            rings.append(ring)
+        parts.append(Part(LOFT, (0, 0, 0), (1, 1, 1), mat="rubbed_bronze",
+                          extras={"rings": rings, "closed": True, "smooth": True,
+                                  "bevel": False}))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.004,        # cast legs and plates keep a small edge bevel
+        family_overrides={
+            "cast_bronze": {"wear_to": "#5E3E22", "wear_amount": 0.2, "grain": 0.22},
+            # Chased lines and the interior are still bronze, only darker.
+            "bronze_shadow": {"metal": 1.0, "rough": 0.6},
+            "hearth_soot": {"rough": 0.85},
+        },
+        notes=["Dent states (3) and the bent-leg state are separate swaps, not built here.",
+               "Legs splay about 5.6° rather than 8°: at 8° from the bowl wall the feet "
+               "would stand well outside the 0.80 m footprint the same bullet gives.",
+               "Spiral chasing is modelled as raised coils; fine chased lines are left "
+               "to the normal map, which EnemyForge's bake does not make."],
+    )
+
+
 def _painted_line(points_xz, flank_y, side, lift=0.0004):
     """A black manganese stroke lying on the hippo's flank, from (x, z) points."""
     path = [(x, flank_y(x, z, side) + side * lift, z) for x, z in points_xz]
@@ -714,4 +908,5 @@ BLUEPRINTS = {
     "oxhide-ingot": oxhide_ingot,
     "faience-hippo": faience_hippo,
     "gold-death-mask": gold_death_mask,
+    "bronze-tripod": bronze_tripod,
 }

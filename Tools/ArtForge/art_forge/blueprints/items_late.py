@@ -544,8 +544,156 @@ def bankers_ledger(entry: Entry):
     )
 
 
+# --------------------------------------------------------------------------------
+# Jewelled hat-badge
+# --------------------------------------------------------------------------------
+
+def _facing(kind: str, loc, size, mat: str, **kwargs) -> Part:
+    """A part whose local +Z points at the viewer (-Y): lathes, discs and prisms
+    drawn in world XZ. Rot X 90 maps local (x, y, z) to world (x, -z, y)."""
+    extras = kwargs.pop("extras", {})
+    extras.setdefault("bevel", False)
+    return Part(kind, loc, size, mat=mat, rot=(90.0, 0.0, 0.0), extras=extras, **kwargs)
+
+
+def _quatrefoil(lobe_offset: float, lobe_r: float, per_lobe: int) -> list[tuple]:
+    """Outer boundary of four overlapping circles on the X and Z axes (XZ outline)."""
+    a, r = lobe_offset, lobe_r
+    half_chord = math.sqrt(r * r - (a * math.sqrt(2) / 2) ** 2)
+    cusp = a / math.sqrt(2) + half_chord                # distance of an outer cusp
+    out = []
+    for k, (cx, cz) in enumerate(((a, 0), (0, a), (-a, 0), (0, -a))):
+        base = math.radians(90 * k)
+        # This lobe's arc runs from the cusp at base-45° to the cusp at base+45°.
+        p0 = (cusp * math.cos(base - math.pi / 4), cusp * math.sin(base - math.pi / 4))
+        p1 = (cusp * math.cos(base + math.pi / 4), cusp * math.sin(base + math.pi / 4))
+        t0 = math.atan2(p0[1] - cz, p0[0] - cx)
+        t1 = math.atan2(p1[1] - cz, p1[0] - cx)
+        while t1 < t0:
+            t1 += 2 * math.pi
+        for i in range(per_lobe):
+            t = t0 + (t1 - t0) * i / per_lobe
+            out.append((cx + math.cos(t) * r, cz + math.sin(t) * r))
+    return out, cusp
+
+
+def jewelled_hat_badge(entry: Entry):
+    """A gold quatrefoil standing upright on its pearl drop: four white enamel roses
+    with gold bosses, green leaves between them, a table-cut balas ruby set as a
+    lozenge in a clawed gold collet, seven seed pearls at the tips and cusps, a pear
+    pearl on a loop below, and the hinged pin 6 mm behind the plate."""
+    W, D, H = entry.dims                       # 0.065 × 0.014 × 0.080
+    gold, pearl = "gold", "pearl"
+    parts: list[Part] = []
+    z0 = 0.0505                                # plate centre height
+    lobe_r = 0.014                             # 4 lobes, 0.028 dia
+    a = W / 2.0 - lobe_r                       # lobe centre offset: 0.0185
+    plate_t = 0.002
+
+    # --- Quatrefoil plate (front face at y = 0).
+    outline, cusp = _quatrefoil(a, lobe_r, 8)
+    parts.append(_facing("prism", (0, plate_t / 2, z0), (1, 1, plate_t), gold,
+                         extras={"outline": outline}))
+
+    # --- Four white enamel roses in the round: five-petalled flower, domed heart,
+    # gold boss 4 mm.
+    petals = [(math.cos(t) * 0.0110 * (0.80 + 0.20 * abs(math.cos(2.5 * t))),
+               math.sin(t) * 0.0110 * (0.80 + 0.20 * abs(math.cos(2.5 * t))))
+              for t in (2 * math.pi * i / 15 + math.pi / 2 for i in range(15))]
+    heart = [(0.0070, 0.0), (0.0058, 0.0010), (0.0030, 0.0017), (0.0, 0.0019)]
+    for lx, lz in ((a, 0), (0, a), (-a, 0), (0, -a)):
+        parts.append(_facing("prism", (lx, -0.0009, z0 + lz), (1, 1, 0.0014), "white_enamel",
+                             extras={"outline": petals}))
+        parts.append(_facing("lathe", (lx, -0.0015, z0 + lz), (1, 1, 1), "white_enamel",
+                             segments=8, extras={"profile": heart}))
+        parts.append(Part("ico", (lx, -0.0034, z0 + lz), (0.004, 0.003, 0.004), mat=gold,
+                          subdivisions=1, extras={"bevel": False, "smooth": True}))
+
+    # --- Green enamel leaves on the diagonals, pointing out from the collet.
+    leaf = [(-0.005, 0.0), (-0.002, 0.0022), (0.002, 0.0022), (0.005, 0.0),
+            (0.002, -0.0022), (-0.002, -0.0022)]
+    for k in range(4):
+        t = math.radians(45 + 90 * k)
+        c, s = math.cos(t), math.sin(t)
+        pts = [(x * c - y * s, x * s + y * c) for x, y in leaf]
+        d = 0.0115
+        parts.append(_facing("prism", (c * d, -0.0010, z0 + s * d), (1, 1, 0.0012),
+                             "green_enamel", extras={"outline": pts}))
+
+    # --- Balas ruby: 12 mm table-cut stone set as a lozenge in a 16 mm raised gold
+    # collet, four claws each tipped with a bead; the stone stands 5 mm proud.
+    collet = [(0.0080, 0.0), (0.0080, 0.0012), (0.0068, 0.0024)]
+    parts.append(_facing("lathe", (0, -0.0002, z0), (1, 1, 1), gold, segments=4,
+                         extras={"profile": collet}))
+    stone = [(0.0060, 0.0), (0.0060, 0.0012), (0.0036, 0.0030)]
+    parts.append(_facing("lathe", (0, -0.0024, z0), (1, 1, 1), "balas_ruby", segments=4,
+                         extras={"profile": stone}))
+    for k in range(4):
+        t = math.radians(90 * k)
+        cx, cz = math.cos(t) * 0.0056, math.sin(t) * 0.0056
+        parts.append(_tube([(cx * 1.25, -0.0024, z0 + cz * 1.25), (cx, -0.0046, z0 + cz)],
+                           (0.0007, 0.0007), gold, segments=3))
+        parts.append(Part("sphere", (cx, -0.0048, z0 + cz), (0.0019, 0.0019, 0.0019),
+                          mat=gold, segments=6, rings=4, extras={"bevel": False}))
+
+    # --- Seven seed pearls, 5.5 mm: three lobe tips (the bottom tip carries the
+    # drop) and the four cusps, each seated on the rim.
+    spots = [(0.0, a + lobe_r - 0.0005), (a + lobe_r - 0.0005, 0.0),
+             (-(a + lobe_r - 0.0005), 0.0)]
+    spots += [(math.cos(t) * (cusp + 0.0008), math.sin(t) * (cusp + 0.0008))
+              for t in (math.radians(45 + 90 * k) for k in range(4))]
+    for px, pz in spots:
+        parts.append(Part("sphere", (px, 0.0008, z0 + pz), (0.0055, 0.0055, 0.0055), mat=pearl,
+                          segments=6, rings=4, extras={"bevel": False, "smooth": True}))
+
+    # --- Pearl drop: gold loop 5 mm under the bottom lobe, a small gold cap, and a
+    # pear-shaped pearl 9 × 13 mm reaching the ground.
+    bottom = z0 - a - lobe_r                   # bottom lobe tip
+    loop_z = bottom - 0.0012
+    parts.append(Part("torus", (0, 0.0010, loop_z), (0.0052, 0.0052, 0.0052), mat=gold,
+                      rot=(90, 0, 0), segments=8, rings=4, minor=0.28,
+                      extras={"bevel": False, "smooth": True}))
+    cap_top = loop_z - 0.0020
+    parts.append(Part("cone", (0, 0.0010, cap_top - 0.0011), (0.0048, 0.0048, 0.0022), mat=gold,
+                      rot=(180, 0, 0), segments=8, extras={"bevel": False}))
+    pear = [(0.0, 0.0), (0.0026, 0.0006), (0.0040, 0.0024), (0.0045, 0.0048),
+            (0.0040, 0.0074), (0.0027, 0.0100), (0.0012, 0.0120), (0.0, cap_top - 0.0015)]
+    parts.append(_lathe(pear, pearl, loc=(0, 0.0010, 0.0), segments=10, smooth=True))
+
+    # --- Back: the hinged pin, 0.07 m, 6 mm behind the plate: hinge block at the
+    # top, the pin running down to a hooked catch.
+    back = plate_t
+    pin_y = back + 0.006
+    parts.append(Part("box", (0.004, back + 0.0035, z0 + 0.030), (0.006, 0.007, 0.005),
+                      mat=gold, extras={"bevel": False}))
+    parts.append(_tube([(0.004, pin_y, z0 + 0.030), (0.0035, pin_y, z0 - 0.040 + 0.030)],
+                       (0.0008, 0.0008), gold, segments=4))
+    parts.append(_tube([(0.0035, back, z0 - 0.034), (0.0035, pin_y, z0 - 0.034),
+                        (0.0035, pin_y, z0 - 0.042)],
+                       (0.0011, 0.0011), gold, segments=4, up=(1, 0, 0)))
+
+    return blueprint(
+        entry, parts,
+        bevel=0.0,
+        family_overrides={
+            # Polished bright on the rim, darker in the recesses behind the roses.
+            # Roughness 0.32 rather than the JSON's 0.2: at 0.2 the plate mirrors the
+            # black studio and reads brown on the sheet (see README trap on metals).
+            gold: {"wear_to": "#8A6A18", "wear_amount": 0.12, "grain": 0.08, "rough": 0.32},
+            pearl: {"grain": 0.10},
+        },
+        notes=["Stood upright on the pearl drop (the orientation the concept draws); the "
+               "drop is the ground contact.",
+               "The 1 mm beaded rim (~100 beads) would take the whole budget; it is a plain "
+               "raised rim step here, the beads left to the normal map / texture.",
+               "Petal translucency, the ruby's facet highlight and the pearl iridescence "
+               "are shader work; the AURUM VOCO glow mask is the gold family's slot."],
+    )
+
+
 BLUEPRINTS = {
     "parade-armour": parade_armour,
     "rolled-tapestry": rolled_tapestry,
     "bankers-ledger": bankers_ledger,
+    "jewelled-hat-badge": jewelled_hat_badge,
 }
