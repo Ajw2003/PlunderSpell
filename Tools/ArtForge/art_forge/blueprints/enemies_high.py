@@ -741,8 +741,369 @@ def castle_crossbowman(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Household Knight (heavy) — a flat-topped bucket head with a little fan on top,
+# a long blue coat with a white chevron, a big shield on the left.
+# --------------------------------------------------------------------------------
+
+def _great_helm(fig: Human, bottom: float, top: float) -> list[Part]:
+    """Flat-topped great helm 0.25 m wide x 0.33 m tall over coif and padded cap:
+    brow band and lower band (2 cm) either side of two eye slits, a 3 cm vertical
+    strap down the face, twelve breaths on the right cheek, rivets. Its own bone
+    (Helm) under Head; the slits and breaths are a near-black void family."""
+    hw, hd, p = 0.125, 0.140, 3.0
+    cy = -0.012
+    base = fig.lean((0.0, cy, bottom))
+    fig.add_bone("Helm", base, base + Vector((0, 0, top - bottom)), "Head")
+    rig = {"rigid": True}
+
+    def ring(z, sx, sy, n=24):
+        c = fig.lean((0.0, cy, z))
+        return kit_section(c, hw * sx, hd * sy, n, p)
+
+    rows = [(bottom, 0.97, 0.97), (bottom + 0.06, 1.0, 1.0), (top - 0.10, 1.0, 1.0),
+            (top - 0.018, 0.97, 0.97), (top, 0.90, 0.90)]
+    parts = [Part("loft", (0, 0, 0), (1, 1, 1), mat="helm_iron", bone="Helm", extras={
+        "rings": [ring(z, sx, sy) for z, sx, sy in rows], **rig, "smooth": False})]
+
+    def front_y(x, pad=0.0):
+        f = min(0.999, abs(x) / (hw + pad))
+        return cy - (hd + pad) * (1.0 - f ** p) ** (1.0 / p)
+
+    slit_z = fig.eye_z + 0.002
+    for zc in (slit_z + 0.025, slit_z - 0.025):          # brow band and lower band
+        parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat="helm_iron", bone="Helm",
+                          extras={"rings": [kit_section(fig.lean((0, cy, z)), hw + 0.004,
+                                                        hd + 0.004, 24, p)
+                                            for z in (zc - 0.010, zc + 0.010)],
+                                  **rig, "bevel": False}))
+        for k in range(6):                                # bright rivets
+            x = (-1 + 2 * k / 5) * 0.105
+            parts.append(Part("sphere", (x, front_y(x, 0.006), zc), (0.010, 0.008, 0.010),
+                              mat="helm_iron", bone="Helm", segments=6, rings=4,
+                              extras={**rig, "bevel": False}))
+    # Vertical reinforcing strap, 3 cm, down the face.
+    parts.append(Part("box", (0.0, front_y(0.0, 0.004), (bottom + top) / 2),
+                      (0.030, 0.008, top - bottom - 0.01), mat="helm_iron", bone="Helm",
+                      extras=dict(rig)))
+    # Eye slits 0.11 x 0.025, either side of the strap.
+    for s in (1.0, -1.0):
+        x = s * 0.072
+        parts.append(Part("box", (x, front_y(x) + 0.004, slit_z), (0.100, 0.020, 0.024),
+                          mat="helm_void", bone="Helm", rot=(0, 0, -s * 12.0),
+                          extras={**rig, "bevel": False}))
+    # Breaths x12 on the wearer's right cheek (-X), 3 rows of 4.
+    for r in range(3):
+        for c in range(4):
+            x = -0.035 - c * 0.020
+            z = bottom + 0.045 + r * 0.028
+            parts.append(Part("box", (x, front_y(x) + 0.002, z), (0.007, 0.012, 0.018),
+                              mat="helm_void", bone="Helm", rot=(0, 0, 20.0 * (c / 3)),
+                              extras={**rig, "bevel": False}))
+    return parts
+
+
+def kit_section(centre, hu, hv, n, power):
+    from ..kit import section
+    return section(tuple(centre), hu, hv, n, power=power)
+
+
+def _crest(fig: Human, helm_top: float, crest_top: float) -> list[Part]:
+    """Boiled-leather fan 0.18 x 0.12 m painted kermes with argent ribs, on a wool
+    torse. Crest bone under Helm (it snaps off)."""
+    c = fig.lean((0.0, -0.012, helm_top))
+    fig.add_bone("Crest", c, c + Vector((0, 0, crest_top - helm_top)), "Helm")
+    rig = {"rigid": True}
+    parts = [Part("torus", (c.x, c.y, c.z + 0.012), (0.20, 0.13, 0.20), mat="wool_argent",
+                  bone="Crest", segments=14, rings=6, minor=0.16,
+                  extras={**rig, "smooth": True, "bevel": False,
+                          "paint": [{"mat": "kermes_gules", "min": (-1, -1, -1),
+                                     "max": (0.0, 0.0, 9)},
+                                    {"mat": "kermes_gules", "min": (0.0, 0.0, -1),
+                                     "max": (1, 1, 9)}]})]
+    fan_h = crest_top - helm_top
+    fan = [(0.09 * math.cos(math.radians(a)), fan_h * math.sin(math.radians(a)))
+           for a in range(0, 181, 15)]
+    parts.append(Part("prism", (c.x, c.y, c.z), (1, 1, 0.018), mat="kermes_gules",
+                      bone="Crest", rot=(90, 0, 0), extras={"outline": fan, **rig}))
+    for a in range(20, 161, 20):     # wool ribs radiating from the base
+        ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
+        path = [(c.x + 0.012 * ca, c.y - 0.010, c.z + 0.010 * sa),
+                (c.x + 0.082 * ca, c.y - 0.010, c.z + (fan_h - 0.010) * sa)]
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="wool_argent", bone="Crest",
+                          segments=3, extras={"path": path, "section": (0.004, 0.004),
+                                              **rig, "bevel": False, "smooth": True}))
+    return parts
+
+
+def _heater_outline(n_side: int = 10):
+    """Heater shield outline (x, z-from-top), 0.60 x 0.78 m, top edge at 0."""
+    def half(zd):                     # zd = depth below the top, metres (positive)
+        if zd <= 0.33:
+            return 0.30
+        t = (zd - 0.33) / 0.45
+        return 0.30 * max(0.0, math.cos(math.pi / 2 * t)) ** 0.75
+    right = [(half(zd), -zd) for zd in
+             [0.0, 0.33] + [0.33 + 0.45 * i / n_side for i in range(1, n_side)]]
+    return half, right + [(0.0, -0.78)] + [(-x, z) for x, z in reversed(right)]
+
+
+def _shield(fig: Human, grip: Vector) -> list[Part]:
+    """Heater 0.60 x 0.78 m, limewood core, painted with the household arms (woad
+    field, argent chevron, kermes bordure 5 cm); enarmes on the back. On a Shield
+    bone parented to LowerArm.L (the JSON's rig)."""
+    half, outline = _heater_outline()
+    top = grip.z + 0.30
+    back_y = grip.y - 0.055
+    cx = grip.x + 0.02
+    elbow = fig.joint("elbow.L")
+    fig.add_bone("Shield", elbow, grip, "LowerArm.L")
+    prop = {"prop": True}
+
+    def slab(pts, mat, y, thick, bevel=True):
+        return Part("prism", (cx, y, top), (1, 1, thick), mat=mat, bone="Shield",
+                    rot=(90, 0, 0), extras={"outline": pts, **prop,
+                                            **({} if bevel else {"bevel": False})})
+
+    parts = [slab(outline, "limewood", back_y - 0.008, 0.014),
+             slab(outline, "kermes_gules", back_y - 0.017, 0.004, False)]
+    inset = []
+    for x, z in outline:              # the woad field: 5 cm inside the bordure
+        zd = -z
+        zi = min(0.78 - 0.07, max(0.05, zd))
+        hx = max(0.0, half(zi) - 0.05)
+        inset.append((math.copysign(hx, x) if abs(x) > 1e-6 else 0.0, -zi))
+    clean = []
+    for pnt in inset:
+        if not clean or (abs(pnt[0] - clean[-1][0]) > 1e-4 or abs(pnt[1] - clean[-1][1]) > 1e-4):
+            clean.append(pnt)
+    if abs(clean[0][0] - clean[-1][0]) < 1e-4 and abs(clean[0][1] - clean[-1][1]) < 1e-4:
+        clean.pop()
+    parts.append(slab(clean, "woad_field", back_y - 0.021, 0.004, False))
+    # Argent chevron: apex 0.24 m below the top, legs to the field's edges.
+    za, band = 0.47, 0.10
+    xa, xb = half(za) - 0.06, half(za + band) - 0.06
+    chev = [(-xa, -za), (0.0, -0.22), (xa, -za), (xb, -(za + band)),
+            (0.0, -(0.22 + band * 1.25)), (-xb, -(za + band))]
+    parts.append(slab(chev, "wool_argent", back_y - 0.024, 0.004, False))
+    # Enarmes: two leather straps across the back where the forearm passes.
+    for dz in (0.06, -0.10):
+        parts.append(Part("box", (cx, back_y + 0.012, grip.z + dz), (0.20, 0.012, 0.035),
+                          mat="leather", bone="Shield", extras=dict(prop)))
+    return parts
+
+
+def _arming_sword(fig: Human) -> list[Part]:
+    """0.95 m: blade 0.78 x 5 cm, cross 0.20 m, leather grip, wheel pommel 5 cm.
+    Held point-down and a little forward and out in the right fist; prop on
+    Hand.R."""
+    g = fig.grip("R")
+    d = Vector((-0.10, -0.22, -1.0)).normalized()     # grip -> point
+    across = Vector((0.0, 1.0, 0.0)).cross(d).normalized()
+    fig.prop_bone("Sword", "R", head=tuple(g), tail=tuple(g + d * 0.80))
+    prop = {"prop": True}
+
+    def rot_to(v):
+        return tuple(math.degrees(a) for a in v.to_track_quat("Z", "Y").to_euler())
+
+    cross_at = g + d * 0.065
+    parts = [
+        Part("cyl", tuple(g - d * 0.005), (0.030, 0.030, 0.12), mat="leather", bone="Sword",
+             rot=rot_to(d), segments=6, extras={**prop, "bevel": False, "smooth": True}),
+        Part("cyl", tuple(g - d * 0.085), (0.050, 0.050, 0.018), mat="helm_iron",
+             bone="Sword", rot=rot_to(across), segments=10, extras=dict(prop)),
+        Part("box", tuple(cross_at), (0.20, 0.022, 0.018), mat="helm_iron", bone="Sword",
+             rot=rot_to(d), extras=dict(prop)),
+    ]
+    blade = [(-0.025, 0.0), (0.025, 0.0), (0.021, 0.60), (0.0, 0.78), (-0.021, 0.60)]
+    # Prism in its local XY, extruded on Z; stand it along d with the flat facing Y.
+    parts.append(Part("prism", tuple(cross_at + d * 0.010), (1, 1, 0.006),
+                      mat="mail_blade", bone="Sword", rot=_blade_rot(d),
+                      extras={"outline": blade, **prop}))
+    # Fuller: a raised midrib keeps the blade from reading as a flat card.
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="mail_blade", bone="Sword",
+                      segments=4, extras={"path": [tuple(cross_at + d * 0.02),
+                                                   tuple(cross_at + d * 0.60)],
+                                          "section": (0.006, 0.004), **prop,
+                                          "bevel": False}))
+    return parts
+
+
+def _blade_rot(d: Vector) -> tuple:
+    """Euler (deg) mapping local +Y to `d` and local +Z (the extrusion) to the
+    horizontal perpendicular, so a prism outline in XY becomes a blade along d."""
+    y = d.normalized()
+    z = Vector((0.0, 0.0, 1.0)).cross(y)
+    if z.length < 1e-4:
+        z = Vector((1.0, 0.0, 0.0))
+    z.normalize()
+    x = y.cross(z).normalized()
+    from mathutils import Matrix
+    m = Matrix((x, y, z)).transposed()
+    return tuple(math.degrees(a) for a in m.to_euler("XYZ"))
+
+
+def _scabbard(fig: Human, pad: float) -> list[Part]:
+    """Leather scabbard 0.84 m on the left hip, hung point-back from the sword
+    belt by two straps; a spring bone (Scabbard) under Hips."""
+    top = fig.surface(fig.belt_z - 0.08, 20.0, pad=pad + 0.03)
+    d = Vector((0.06, 0.42, -0.905)).normalized()
+    fig.add_bone("Scabbard", top, top + d * 0.84, "Hips")
+    rot = tuple(math.degrees(a) for a in d.to_track_quat("Z", "Y").to_euler())
+    rig = {"rigid": True}
+    parts = [Part("cyl", tuple(top + d * 0.42), (0.064, 0.030, 0.84), mat="leather",
+                  bone="Scabbard", rot=rot, segments=8, taper=0.55, extras=dict(rig)),
+             Part("cyl", tuple(top + d * 0.84), (0.034, 0.020, 0.04), mat="helm_iron",
+                  bone="Scabbard", rot=rot, segments=6, taper=0.4, extras=dict(rig))]
+    # Hilt of a second (sheathed) sword is not shown: the sword is in his hand.
+    for t in (0.04, 0.20):
+        at = top + d * t
+        parts.append(Part("cyl", tuple(at), (0.074, 0.040, 0.03), mat="leather",
+                          bone="Scabbard", rot=rot, segments=8,
+                          extras={**rig, "bevel": False}))
+    return parts
+
+
+def household_knight(entry: Entry):
+    # 1.83 m at the helm top, 1.95 m at the crest top. Stature 1.76 m (the padded
+    # cap and coif fill the 7 cm to the helm's flat top). Broad: 0.52 m shoulders,
+    # feet ~0.32 m apart. Left fist carries the shield in front of the left side,
+    # placed by IK; the right arm hangs with the sword point-down.
+    h = 1.76
+    helm_bottom, helm_top, crest_top = 1.50, 1.83, 1.95
+    fig = _ReachHuman(height=h, bulk=1.12, shoulders=0.52, stance=4.0,
+                      arm_r=ArmPose(spread=12.0, swing=6.0, elbow=24.0),
+                      reach={"L": Vector((0.22, -0.26, 1.05))},
+                      pole={"L": Vector((1.0, 0.6, -0.4))})
+    mail_pad, coat_pad = 0.018, 0.034
+    parts = [fig.torso_part("mail_steel", pad=mail_pad, hem=0.47, hem_flare=1.30,
+                            segments=28)]
+    # Surcoat: to 0.54 m, over the hauberk, bordured in kermes on every edge.
+    hem, flare = 0.54, 1.42
+    paint = [{"mat": "kermes_gules", "min": (-1, -1, -1), "max": (1, 1, hem + 0.05)},
+             {"mat": "kermes_gules", "min": (-1, -1, 0.812 * h), "max": (1, 1, 3)},
+             {"mat": "kermes_gules", "min": (-0.024, -1, -1), "max": (0.024, 0.0, 0.72)}]
+    zs = [hem + 0.05 + 0.06 * i for i in range(15)]
+    for z0, z1 in zip(zs, zs[1:]):
+        zm = (z0 + z1) / 2
+        if zm > fig.crotch_z:
+            hw, hd, _dy = fig.torso_dims(zm)
+        else:
+            f = flare + (1.0 - flare) * (zm - hem) / (fig.crotch_z - hem)
+            hw, hd = 0.092 * h * fig.bulk * f, 0.064 * h * fig.bulk * f
+        hw, hd = hw + coat_pad, hd + coat_pad
+        for s in (1.0, -1.0):         # side edges, front and back corners only
+            for sy in (1.0, -1.0):
+                x0, x1 = sorted((s * (hw - 0.05), s * 2.0))
+                y0, y1 = sorted((sy * hd * 0.45, sy * 2.0))
+                paint.append({"mat": "kermes_gules", "min": (x0, y0, z0),
+                              "max": (x1, y1, z1)})
+    parts.append(fig.torso_part("woad_field", pad=coat_pad, hem=hem, hem_flare=flare,
+                                segments=32, paint=paint))
+    parts += _chevron(fig, coat_pad)
+    for side in ("L", "R"):
+        parts.append(fig.arm_part(side, "mail_steel", pad=0.014))
+        parts += fig.hand_part(side, "mail_steel")      # mail mufflers
+        parts.append(fig.leg_part(side, "mail_steel", pad=0.008))
+        parts.append(fig.foot_part(side, "mail_steel", length=0.28, point=0.3))
+        s = figures.SIDES[side]
+        knee = fig.joint(f"knee.{side}")
+        parts.append(Part("sphere", (knee.x, knee.y - 0.048, knee.z + 0.01),
+                          (0.12, 0.07, 0.12), mat="helm_iron", bone=f"LowerLeg.{side}",
+                          segments=12, rings=6, extras={"rigid": True, "bevel": False}))
+        ankle = fig.joint(f"ankle.{side}")
+        heel = Vector((ankle.x, ankle.y + 0.085, 0.06))
+        parts.append(Part("cone", tuple(heel + Vector((0, 0.03, 0))), (0.016, 0.016, 0.05),
+                          mat="helm_iron", bone=f"Foot.{side}", rot=(-90, 0, 0),
+                          segments=5, extras={"rigid": True, "bevel": False}))
+        parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="leather",
+                          bone=f"Foot.{side}", segments=4, extras={
+                              "path": [(ankle.x + s * 0.052, ankle.y - 0.02, 0.05),
+                                       (ankle.x + s * 0.044, ankle.y + 0.07, 0.06),
+                                       (ankle.x, heel.y + 0.012, 0.062),
+                                       (ankle.x - s * 0.044, ankle.y + 0.07, 0.06),
+                                       (ankle.x - s * 0.052, ankle.y - 0.02, 0.05)],
+                              "section": (0.004, 0.008), "rigid": True, "bevel": False,
+                              "smooth": True}))
+    # Coif under the helm: the face is never seen with the helm on (the JSON lists
+    # no skin for him), so the whole hood is mail.
+    parts += fig.head_part("mail_steel", hood=True)
+    parts += _great_helm(fig, helm_bottom, helm_top)
+    parts += _crest(fig, helm_top, crest_top)
+
+    # Sword belt at the hips over the surcoat, iron buckle.
+    parts.append(fig.band(fig.belt_z, "leather", height=0.04, pad=0.010, torso_pad=coat_pad))
+    buckle = fig.surface(fig.belt_z, -90.0, pad=coat_pad + 0.014)
+    parts.append(Part("torus", tuple(buckle), (0.05, 0.05, 0.045), mat="helm_iron",
+                      bone="Hips", rot=(90, 0, 0), segments=4, rings=4, minor=0.2,
+                      extras={"rigid": True, "bevel": False}))
+    parts += _scabbard(fig, coat_pad)
+    parts += _shield(fig, fig.grip("L"))
+    parts += _arming_sword(fig)
+
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(),
+        family_overrides={
+            # 8 mm riveted rings: albedo ring rows (no normal map is baked) with
+            # rust bloom in patches.
+            "mail_steel": {"ridges": (0.010, 0.45), "wear_to": "#5A4638",
+                           "wear_amount": 0.22, "rough": 0.5},
+            "helm_iron": {"rough": 0.42, "wear_to": "#3E4044", "wear_amount": 0.35},
+            "woad_field": {"wear_to": "#4E6480", "wear_amount": 0.25},
+            "wool_argent": {"wear_to": "#8E8068", "wear_amount": 0.25},
+        },
+        extra_families={
+            "helm_void": {"name": "Helm slit shadow", "base": "#141210", "rough": 0.9,
+                          "notes": "The eye slits and breaths are holes into a dark "
+                                   "helm; the JSON has no black, and a hole must read "
+                                   "as one at ten paces."},
+            "mail_blade": {"name": "Blade steel", "base": "#7C8288", "rough": 0.3,
+                           "metal": 1.0,
+                           "notes": "The sword blade: 'Mail steel' hex without the "
+                                    "mail ring banding, which must not land on a "
+                                    "polished blade."},
+        },
+        notes=[
+            "Helm (detachable) is its own bone under Head; Crest under Helm; Shield "
+            "is a prop bone on LowerArm.L; Sword a prop on Hand.R; Scabbard under Hips.",
+            "The left fist is placed behind the shield by two-bone IK (_ReachHuman).",
+            "Breaths are on the wearer's right cheek per the JSON (the concept front "
+            "view draws them on the other side).",
+            "Not built: surcoat_front/back and hauberk_skirt spring chains, guige strap, "
+            "the hauberk's riding split, the mace variant, the purse, damage states.",
+        ])
+
+
+def _chevron(fig: Human, pad: float) -> list[Part]:
+    """The argent chevron across the surcoat's chest: an inverted-V strip laid on
+    the surface (apex ~1.30 m, legs to the flanks at ~0.98 m)."""
+    parts = []
+    apex, drop = 1.30, 0.32
+    e = 2.0 / 2.4
+    path = []
+    for i in range(13):
+        t = -1.0 + 2.0 * i / 12
+        z = apex - abs(t) * drop
+        hw, hd, _dy = fig.torso_dims(z)
+        f = t * 0.82
+        ca = math.copysign(abs(f) ** (1 / e), f)
+        ang = -math.degrees(math.acos(max(-1.0, min(1.0, ca))))
+        zf = z / fig.h
+        w = max(0.0, min(1.0, (zf - 0.64) / 0.04, (0.82 - zf) / 0.04))
+        front = max(0.0, -math.sin(math.radians(ang))) ** 2
+        bulge = 0.08 * w * front * (hd + pad)
+        path.append(tuple(fig.surface(z, ang, pad=pad + 0.006 + bulge)))
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="wool_argent", bone="Spine",
+                      segments=4, extras={"path": path, "section": (0.004, 0.05),
+                                          "up": (0.0, -1.0, 0.0), "smooth": True,
+                                          "bevel": False,
+                                          "bones": ["Hips", "Spine", "Chest"]}))
+    return parts
+
+
 BLUEPRINTS = {
     "lantern-warden": lantern_warden,
     "alaunt-hound": alaunt_hound,
     "castle-crossbowman": castle_crossbowman,
+    "household-knight": household_knight,
 }

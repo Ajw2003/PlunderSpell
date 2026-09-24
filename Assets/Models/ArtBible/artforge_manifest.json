@@ -2204,6 +2204,119 @@
       "build_seconds": 4.6
     },
     {
+      "key": "enemies/high/household-knight",
+      "kind": "enemies",
+      "age": "high",
+      "slug": "household-knight",
+      "name": "HouseholdKnight",
+      "title": "Household Knight",
+      "passed": true,
+      "stats": {
+        "vertices": 3123,
+        "faces": 3042,
+        "triangles": 5942,
+        "islands": 78,
+        "lowest_z": 0.0,
+        "height": 1.95,
+        "width": 0.936,
+        "budget": 12000,
+        "bbox_m": "0.936x0.828x1.950",
+        "height_body_m": 1.95,
+        "height_spec_m": 1.95,
+        "height_with_props_m": 1.95,
+        "rig_bones": 25,
+        "skinned_bones": 18,
+        "mean_influences": 1.04
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.95,
+        "tri_budget": 12000
+      },
+      "families": {
+        "mail_steel": {
+          "name": "Mail steel",
+          "base": "#7C8288",
+          "rough": 0.5,
+          "metal": 1.0,
+          "emit": null
+        },
+        "helm_iron": {
+          "name": "Helm iron",
+          "base": "#6F7479",
+          "rough": 0.42,
+          "metal": 1.0,
+          "emit": null
+        },
+        "woad_field": {
+          "name": "Woad field",
+          "base": "#3E5470",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "wool_argent": {
+          "name": "Wool argent",
+          "base": "#C4B89C",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "kermes_gules": {
+          "name": "Kermes gules",
+          "base": "#7E2A26",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "leather": {
+          "name": "Leather",
+          "base": "#5A4030",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "limewood": {
+          "name": "Limewood",
+          "base": "#5E4630",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "helm_void": {
+          "name": "Helm slit shadow",
+          "base": "#141210",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "mail_blade": {
+          "name": "Blade steel",
+          "base": "#7C8288",
+          "rough": 0.3,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['helm_void', 'mail_blade']"
+      ],
+      "notes": [
+        "Helm (detachable) is its own bone under Head; Crest under Helm; Shield is a prop bone on LowerArm.L; Sword a prop on Hand.R; Scabbard under Hips.",
+        "The left fist is placed behind the shield by two-bone IK (_ReachHuman).",
+        "Breaths are on the wearer's right cheek per the JSON (the concept front view draws them on the other side).",
+        "Not built: surcoat_front/back and hauberk_skirt spring chains, guige strap, the hauberk's riding split, the mace variant, the purse, damage states."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/HouseholdKnight.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/glTF/HouseholdKnight.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/High/HouseholdKnight/HouseholdKnight.blend"
+      },
+      "build_seconds": 5.2
+    },
+    {
       "key": "enemies/high/lantern-warden",
       "kind": "enemies",
       "age": "high",
@@ -2435,13 +2548,13 @@
         "triangles": 5390,
         "islands": 82,
         "lowest_z": -0.0,
-        "height": 1.967,
+        "height": 1.932,
         "width": 0.718,
         "budget": 8000,
-        "bbox_m": "0.718x0.618x1.967",
-        "height_body_m": 1.967,
+        "bbox_m": "0.718x0.618x1.932",
+        "height_body_m": 1.932,
         "height_spec_m": 1.92,
-        "height_with_props_m": 1.967,
+        "height_with_props_m": 1.932,
         "rig_bones": 24,
         "skinned_bones": 23,
         "mean_influences": 1.54
@@ -2548,7 +2661,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/glTF/Musketeer.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Musketeer/Musketeer.blend"
       },
-      "build_seconds": 3.8
+      "build_seconds": 4.3
     },
     {
       "key": "enemies/powder/partisan-guard",

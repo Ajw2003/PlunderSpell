@@ -583,8 +583,8 @@ def _broad_hat(fig: Human, base: Vector, felt: str, band: str, plume: str,
     pin = base + Vector((0.115, -0.02, 0.07))
     parts.append(Part("sphere", tuple(pin), (0.022, 0.016, 0.022), mat=band, bone="Hat",
                       segments=6, rings=4, extras={**rigid, "bevel": False}))
-    ctrl = [pin, pin + Vector((0.01, -0.03, 0.10)), pin + Vector((-0.04, 0.02, 0.16)),
-            pin + Vector((-0.10, 0.11, 0.14)), pin + Vector((-0.13, 0.20, 0.06)),
+    ctrl = [pin, pin + Vector((0.01, -0.03, 0.08)), pin + Vector((-0.04, 0.02, 0.125)),
+            pin + Vector((-0.10, 0.11, 0.11)), pin + Vector((-0.13, 0.20, 0.06)),
             pin + Vector((-0.12, 0.25, -0.02))]
     path = spline([tuple(p) for p in ctrl], 2)
     m = len(path)
@@ -748,7 +748,7 @@ def musketeer(entry: Entry):
                                   "up": (1.0, 0.0, 0.0), "smooth": True, "bevel": False,
                                   "rigid": True}))
     base = fig.lean((0.0, 0.004 * fig.h, 0.952 * fig.h))
-    parts += _broad_hat(fig, base, felt, wool, wool, crown_h=0.19)
+    parts += _broad_hat(fig, base, felt, wool, wool, crown_h=0.165)
 
     # Falling linen band collar.
     parts.append(_drape(fig, "linen_collar", fig.neck_z + 0.045, (0.064, 0.058),
