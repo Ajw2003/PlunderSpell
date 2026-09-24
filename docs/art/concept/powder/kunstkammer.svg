@@ -145,7 +145,7 @@
 <ellipse cx="565" cy="330.5" rx="5" ry="2.4" fill="#BFAE86" opacity="0.35"/>
 <ellipse cx="594.4" cy="330.5" rx="5" ry="2.4" fill="#BFAE86" opacity="0.35"/>
 <ellipse cx="623.8" cy="330.5" rx="5" ry="2.4" fill="#BFAE86" opacity="0.35"/>
-<circle cx="411" cy="334" r="120" fill="url(#g7)"/>
+<circle cx="425" cy="334" r="120" fill="url(#g7)"/>
 <rect x="628" y="295.5" width="42" height="135.8" fill="url(#h4)" stroke="#8A8070" stroke-width="1"/>
 <rect x="628" y="431.3" width="42" height="231.7" fill="url(#g8)" stroke="#0E0C0A" stroke-width="1"/>
 <text x="649" y="547.5" font-family="Overpass Mono, monospace" font-size="8" text-anchor="middle" fill="#9A9078">ARCH E</text>
@@ -922,35 +922,35 @@
 <path d="M320 412.8 L320 418.8" fill="none" stroke="#665C4A" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
 <ellipse cx="320" cy="420.8" rx="2.3" ry="3.6" fill="none" stroke="#706551" stroke-width="1.2"/>
 <rect x="314" y="426.8" width="12" height="3" fill="#2A2622"/>
-<circle cx="411" cy="446" r="280" fill="url(#g25)"/>
-<circle cx="411" cy="446" r="130" fill="url(#g26)"/>
-<path d="M411 341 L411 409.6" fill="none" stroke="#2A2622" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-<path d="M411 409.6 L376 451.6" fill="none" stroke="#2A2622" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
-<path d="M411 409.6 L399.1 451.6" fill="none" stroke="#2A2622" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
-<path d="M411 409.6 L422.9 451.6" fill="none" stroke="#2A2622" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
-<path d="M411 409.6 L446 451.6" fill="none" stroke="#2A2622" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
-<ellipse cx="411" cy="453" rx="35" ry="4" fill="none" stroke="#2A2622" stroke-width="2.6"/>
-<ellipse cx="411" cy="452.4" rx="35" ry="4" fill="none" stroke="#706551" stroke-width="0.6" opacity="0.8"/>
-<rect x="377" y="442" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
-<circle cx="378.8" cy="438" r="11" fill="url(#g27)"/>
-<path d="M378.8 433 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
-<rect x="386.1" y="442" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
-<circle cx="387.9" cy="438" r="11" fill="url(#g28)"/>
-<path d="M387.9 433 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
-<rect x="400.8" y="441.3" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
-<circle cx="402.6" cy="437.3" r="11" fill="url(#g29)"/>
-<path d="M402.6 432.3 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
-<rect x="417.6" y="441.3" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
-<circle cx="419.4" cy="437.3" r="11" fill="url(#g30)"/>
-<path d="M419.4 432.3 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
-<rect x="432.3" y="442" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
-<circle cx="434.1" cy="438" r="11" fill="url(#g31)"/>
-<path d="M434.1 433 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
-<rect x="441.4" y="442" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
-<circle cx="443.2" cy="438" r="11" fill="url(#g32)"/>
-<path d="M443.2 433 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
+<circle cx="425" cy="446" r="280" fill="url(#g25)"/>
+<circle cx="425" cy="446" r="130" fill="url(#g26)"/>
+<path d="M425 341 L425 409.6" fill="none" stroke="#2A2622" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M425 409.6 L390 451.6" fill="none" stroke="#2A2622" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<path d="M425 409.6 L413.1 451.6" fill="none" stroke="#2A2622" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<path d="M425 409.6 L436.9 451.6" fill="none" stroke="#2A2622" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<path d="M425 409.6 L460 451.6" fill="none" stroke="#2A2622" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<ellipse cx="425" cy="453" rx="35" ry="4" fill="none" stroke="#2A2622" stroke-width="2.6"/>
+<ellipse cx="425" cy="452.4" rx="35" ry="4" fill="none" stroke="#706551" stroke-width="0.6" opacity="0.8"/>
+<rect x="391" y="442" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
+<circle cx="392.8" cy="438" r="11" fill="url(#g27)"/>
+<path d="M392.8 433 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
+<rect x="400.1" y="442" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
+<circle cx="401.9" cy="438" r="11" fill="url(#g28)"/>
+<path d="M401.9 433 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
+<rect x="414.8" y="441.3" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
+<circle cx="416.6" cy="437.3" r="11" fill="url(#g29)"/>
+<path d="M416.6 432.3 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
+<rect x="431.6" y="441.3" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
+<circle cx="433.4" cy="437.3" r="11" fill="url(#g30)"/>
+<path d="M433.4 432.3 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
+<rect x="446.3" y="442" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
+<circle cx="448.1" cy="438" r="11" fill="url(#g31)"/>
+<path d="M448.1 433 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
+<rect x="455.4" y="442" width="3.6" height="11" fill="#D2C7AC" stroke="#0E0C0A" stroke-width="0.4"/>
+<circle cx="457.2" cy="438" r="11" fill="url(#g32)"/>
+<path d="M457.2 433 q3 4 0 7 q-3 -3 0 -7 z" fill="#F2D9A8"/>
 <path d="M129.6 449.5 L370.4 449.5" fill="none" stroke="#9A9078" stroke-width="0.7" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="3 3"/>
-<text x="222" y="460.9" font-family="Overpass Mono, monospace" font-size="8.5" text-anchor="middle" fill="#9A9078">3.40 m · underside 3.20</text>
+<text x="253.5" y="405.6" font-family="Overpass Mono, monospace" font-size="8.5" text-anchor="middle" fill="#9A9078">3.40 m · underside 3.20</text>
 <path d="M624.5 341 L635 341" fill="none" stroke="#DCD2BA" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M218.5 421.5 L118 144 L126 144" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="218.5" cy="421.5" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
@@ -964,16 +964,16 @@
 <circle cx="197.5" cy="607.7" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
 <text x="130" y="248" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">CENTRAL TABLE</text>
 <text x="130" y="262" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">2.40 × 1.10 × 0.82 · baize</text>
-<path d="M411 453 L338 144 L346 144" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
-<circle cx="411" cy="453" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
+<path d="M425 453 L338 144 L346 144" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="425" cy="453" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
 <text x="350" y="148" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">CANDLE-CROWN (KEY LIGHT)</text>
 <text x="350" y="162" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">1.00 m · 8 candles · at 3.00</text>
 <path d="M453 498.5 L338 194 L346 194" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="453" cy="498.5" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
 <text x="350" y="198" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">WALL CASE · 12 LOOT SLOTS</text>
 <text x="350" y="212" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">glazed doors 0.60 × 2.60</text>
-<path d="M404 628 L338 244 L346 244" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
-<circle cx="404" cy="628" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
+<path d="M379.5 642 L338 244 L346 244" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="379.5" cy="642" r="2.6" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8"/>
 <text x="350" y="248" font-family="Overpass Mono, monospace" font-size="12" fill="#DCD2BA">CUPBOARD BASE (HIDE ×4)</text>
 <text x="350" y="262" font-family="Overpass Mono, monospace" font-size="10.5" fill="#9A9078">1.20 × 0.45 × 0.90 m</text>
 <path d="M481 390 L563 144 L571 144" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
@@ -1138,16 +1138,16 @@
 <path d="M905.6 428 C905.6 426.9 914.1 425.9 918.4 424.8 C922.7 423.7 926.4 422.3 931.2 421.6 C936 420.9 940.8 420.7 947.2 420.8 C953.6 420.9 962.1 421.5 969.6 422.2 C977.1 423 984.5 424.5 992 425.4 C999.5 426.4 1014.4 427.1 1014.4 428 C1014.4 428.9 999.5 429.6 992 430.6 C984.5 431.5 977.1 433 969.6 433.8 C962.1 434.5 953.6 435.1 947.2 435.2 C940.8 435.3 936 435.1 931.2 434.4 C926.4 433.7 922.7 432.3 918.4 431.2 C914.1 430.1 905.6 429.1 905.6 428 Z" fill="#4E4A36" stroke="#DCD2BA" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.85" stroke-dasharray="3 2"/>
 <circle cx="928" cy="428" r="2.6" fill="#2A2622" stroke="#DCD2BA" stroke-width="0.8"/>
 <circle cx="992" cy="428" r="2.6" fill="#2A2622" stroke="#DCD2BA" stroke-width="0.8"/>
-<circle cx="1033.6" cy="399.2" r="60" fill="url(#g36)"/>
-<circle cx="1033.6" cy="399.2" r="16" fill="none" stroke="#2A2622" stroke-width="2"/>
-<circle cx="1049.6" cy="399.2" r="1.6" fill="#F2D9A8"/>
-<circle cx="1044.9" cy="410.5" r="1.6" fill="#F2D9A8"/>
-<circle cx="1033.6" cy="415.2" r="1.6" fill="#F2D9A8"/>
-<circle cx="1022.3" cy="410.5" r="1.6" fill="#F2D9A8"/>
-<circle cx="1017.6" cy="399.2" r="1.6" fill="#F2D9A8"/>
-<circle cx="1022.3" cy="387.9" r="1.6" fill="#F2D9A8"/>
-<circle cx="1033.6" cy="383.2" r="1.6" fill="#F2D9A8"/>
-<circle cx="1044.9" cy="387.9" r="1.6" fill="#F2D9A8"/>
+<circle cx="1040" cy="399.2" r="60" fill="url(#g36)"/>
+<circle cx="1040" cy="399.2" r="16" fill="none" stroke="#2A2622" stroke-width="2"/>
+<circle cx="1056" cy="399.2" r="1.6" fill="#F2D9A8"/>
+<circle cx="1051.3" cy="410.5" r="1.6" fill="#F2D9A8"/>
+<circle cx="1040" cy="415.2" r="1.6" fill="#F2D9A8"/>
+<circle cx="1028.7" cy="410.5" r="1.6" fill="#F2D9A8"/>
+<circle cx="1024" cy="399.2" r="1.6" fill="#F2D9A8"/>
+<circle cx="1028.7" cy="387.9" r="1.6" fill="#F2D9A8"/>
+<circle cx="1040" cy="383.2" r="1.6" fill="#F2D9A8"/>
+<circle cx="1051.3" cy="387.9" r="1.6" fill="#F2D9A8"/>
 <path d="M754 437.6 L1166 437.6" fill="none" stroke="#9A9078" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="8 3 2 3"/>
 <path d="M754 437.6 l0 -10 l-4 5 m4 -5 l4 5" fill="none" stroke="#9A9078" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="754" y="449.6" font-family="Overpass Mono, monospace" font-size="9" text-anchor="middle" fill="#9A9078">A</text>
@@ -1160,7 +1160,7 @@
 <text x="960" y="327" font-family="Overpass Mono, monospace" font-size="8.5" text-anchor="middle" letter-spacing="0.5" fill="#9A9078">TABLE · CABINET SOCKET</text>
 <text x="928" y="461.4" font-family="Overpass Mono, monospace" font-size="8.5" text-anchor="middle" letter-spacing="0.5" fill="#9A9078">CROCODILE OVERHEAD · HOOKS ±1.00</text>
 <text x="1068.8" y="379.8" font-family="Overpass Mono, monospace" font-size="8.5" text-anchor="middle" letter-spacing="0.5" fill="#9A9078">GLOBE</text>
-<text x="1067.6" y="402.2" font-family="Overpass Mono, monospace" font-size="8.5" letter-spacing="0.5" fill="#9A9078">CROWN</text>
+<text x="1074" y="402.2" font-family="Overpass Mono, monospace" font-size="8.5" letter-spacing="0.5" fill="#9A9078">CROWN</text>
 <text x="960" y="495" font-family="Overpass Mono, monospace" font-size="8.5" text-anchor="middle" letter-spacing="0.5" fill="#C4542E">cuirassier patrol loop</text>
 <text x="960" y="290.2" font-family="Overpass Mono, monospace" font-size="8.5" text-anchor="middle" letter-spacing="0.5" fill="#9A9078">□ LOOT ×12 (SHELF)  × HIDE ×4</text>
 <path d="M1138 252 L1144 270 L1138 266 L1132 270 Z" fill="#DCD2BA" stroke="#0E0C0A" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
