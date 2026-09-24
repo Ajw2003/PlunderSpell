@@ -118,3 +118,31 @@ def build_bronze_levy_barracks(bm, uv):
     # SE: a low gaming table; SW: a kit chest.
     cb._table(bm, uv, TIMBER, 3.2, -3.0, fz, 0.9, 0.6, h=0.5)
     cb._chest(bm, uv, -3.2, -3.2, fz, w=1.0, d=0.6, h=0.55, trim=METAL)
+
+
+def build_bronze_cistern(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeCistern.svg"""
+    h, fz = room_shell(bm, uv, "OuterBailey")
+    # SE: the cistern head, water below its rim, the lid half drawn, a winch beam on posts over it.
+    mk.paint(bm, mk.add_cylinder(bm, 1.1, 0.8, loc=(3.6, -3.6, fz + 0.4), segments=14), "vellum_faint", uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.85, 0.02, loc=(3.6, -3.6, fz + 0.72), segments=14), FRESCO, uv)
+    cb._box(bm, uv, "vellum_dim", (3.6, -3.0, fz + 0.86), (1.6, 0.8, 0.12))
+    cb._anchor(3.6, -2.9, fz + 0.92)
+    for x in (2.6, 4.6):
+        cb._box(bm, uv, TIMBER, (x, -3.6, fz + 0.8 + 0.775), (0.14, 0.14, 1.55))
+    cb._box(bm, uv, TIMBER, (3.6, -3.6, fz + 2.35), (2.1, 0.12, 0.12))
+    mk.paint(bm, mk.add_cylinder(bm, 0.2, 0.35, loc=(2.2, -4.8, fz + 0.175), segments=8), TIMBER, uv)   # bucket
+    cb._anchor(2.2, -4.8, fz + 0.35)
+    # NW: the hydria stand against the north wall, a water jar at each end.
+    cb._table(bm, uv, TIMBER, -3.8, 4.9, fz, 1.6, 0.5, h=0.5)
+    for dx in (-0.55, 0.55):
+        ek.jar(bm, uv, GRAIN_JAR, -3.8 + dx, 4.9, fz + 0.5, 0.62, 0.40, mouth=0.16, segments=8)
+    # NE: a clay basin on its pedestal.
+    mk.paint(bm, mk.add_cylinder(bm, 0.25, 0.10, loc=(3.8, 4.2, fz + 0.05), segments=10), LINEN, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.08, 0.72, loc=(3.8, 4.2, fz + 0.44), segments=8), GRAIN_JAR, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.45, 0.20, loc=(3.8, 4.2, fz + 0.90), segments=12, radius2=0.55), GRAIN_JAR, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.42, 0.03, loc=(3.8, 4.2, fz + 0.99), segments=12), FRESCO, uv)
+    cb._anchor(3.8, 4.2, fz + 1.0)
+    # SW: a stone trough against the south wall.
+    cb._box(bm, uv, "vellum_faint", (-3.8, -5.0, fz + 0.3), (2.2, 0.7, 0.6))
+    cb._box(bm, uv, FRESCO, (-3.8, -5.0, fz + 0.61), (2.0, 0.5, 0.02))

@@ -43,6 +43,12 @@
       "preview": "c341d88faa7e8b21:23a9d68e53fd",
       "tris": 800
     },
+    "BronzeCistern": {
+      "budget": 1600,
+      "content": "8f9f0d87cfba8013",
+      "preview": "8f9f0d87cfba8013:23a9d68e53fd",
+      "tris": 900
+    },
     "BronzeDoorPlugCrypt": {
       "budget": 40,
       "content": "94853190d2043cb7",
