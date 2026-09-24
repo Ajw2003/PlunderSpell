@@ -82,3 +82,39 @@ def build_bronze_foundry(bm, uv):
     cb._box(bm, uv, FRESCO, (-2.6, -5.0, fz + 0.51), (1.2, 0.4, 0.02))
     cb._box(bm, uv, "vellum_faint", (-2.6, -3.0, fz + 0.25), (0.6, 0.6, 0.5))
     cb._anchor(-2.6, -3.0, fz + 0.5)
+
+
+def build_bronze_levy_barracks(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeLevyBarracks.svg"""
+    h, fz = room_shell(bm, uv, "OuterBailey")
+    # Four low clay sleeping benches along the east and west walls, reed mats on them;
+    # the two northern ones have kit bags rolled at their north ends.
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            x, y = sx * 5.0, sy * 3.5
+            cb._box(bm, uv, GRAIN_JAR, (x, y, fz + 0.175), (0.9, 3.0, 0.35))
+            cb._box(bm, uv, "vellum_dim", (x, y, fz + 0.365), (0.8, 2.9, 0.03))
+            if sy > 0:
+                cb._box(bm, uv, "leather", (x, y + 1.1, fz + 0.45), (0.6, 0.5, 0.14))
+                cb._anchor(x, y, fz + 0.38)
+    # Spear racks on the north wall either side of the archway.
+    for sx in (-1, 1):
+        x0 = sx * 3.4
+        for dx in (-1.0, 1.0):
+            cb._box(bm, uv, TIMBER, (x0 + dx, IN - 0.25, fz + 0.75), (0.1, 0.1, 1.5))
+        cb._box(bm, uv, TIMBER, (x0, IN - 0.25, fz + 1.41), (2.1, 0.1, 0.1))
+        for k in range(5):
+            x = x0 - 0.8 + k * 0.4
+            mk.paint(bm, mk.add_cylinder(bm, 0.02, 2.1, loc=(x, IN - 0.25, fz + 1.05), segments=6), TIMBER, uv)
+            mk.paint(bm, mk.add_cylinder(bm, 0.05, 0.3, loc=(x, IN - 0.25, fz + 2.25), segments=6, radius2=0.005),
+                     METAL, uv)
+    # Figure-of-eight oxhide shields hung on the south wall, a water jar below each pair.
+    for sx in (-1, 1):
+        for x in (sx * 3.0, sx * 4.2):
+            for z, r in ((1.3, 0.35), (1.9, 0.30)):
+                mk.paint(bm, mk.add_cylinder(bm, r, 0.06, loc=(x, -IN + 0.04, fz + z), rot=Euler((math.radians(90), 0, 0)),
+                                             segments=10), "leather", uv)
+        ek.jar(bm, uv, GRAIN_JAR, sx * 2.2, -5.0, fz, 0.6, 0.36, mouth=0.14, segments=6)
+    # SE: a low gaming table; SW: a kit chest.
+    cb._table(bm, uv, TIMBER, 3.2, -3.0, fz, 0.9, 0.6, h=0.5)
+    cb._chest(bm, uv, -3.2, -3.2, fz, w=1.0, d=0.6, h=0.55, trim=METAL)

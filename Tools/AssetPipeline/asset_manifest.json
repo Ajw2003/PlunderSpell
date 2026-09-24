@@ -75,6 +75,12 @@
       "preview": "f83162ec29b09066:23a9d68e53fd",
       "tris": 1288
     },
+    "BronzeLevyBarracks": {
+      "budget": 1600,
+      "content": "602c3fca82705959",
+      "preview": "602c3fca82705959:23a9d68e53fd",
+      "tris": 1376
+    },
     "BronzeMegaron": {
       "budget": 2400,
       "content": "a405bc6aa586fc8c",
