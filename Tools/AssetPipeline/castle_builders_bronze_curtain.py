@@ -109,3 +109,20 @@ def build_bronze_wall_corner(bm, uv):
         _walk(bm, uv, te, H, WALL_DEPTH, side=side)
         _parapet(bm, uv, te, H, side=side)
         _steps_up(bm, uv, te, 1, WALL_DEPTH, side, WALK_Z + 0.1, top + 0.1, 3)
+
+
+def build_bronze_bastion(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeBastion.svg"""
+    tw, td, top = 3.5, 4.5, 5.5
+    _mass(bm, uv, -tw, tw, td, top=top, seed=4)
+    d0 = PARAPET_IN + PARAPET_T
+    cb._box(bm, uv, WALL, (0, -H + (d0 + td - 0.2) / 2, top + 0.05), (2 * tw, td - 0.2 - d0, 0.1))
+    # The crest: a low mud-brick wall on the outer edge and five horns of consecration on it.
+    cb._box(bm, uv, MUDBRICK, (0, -H + PARAPET_IN + PARAPET_T / 2, top + LOW / 2), (2 * tw, PARAPET_T, LOW))
+    for x in (-2.8, -1.4, 0.0, 1.4, 2.8):
+        horns(bm, uv, x, -H + PARAPET_IN + 0.2, top + LOW, size=0.8, along="x")
+    for u0, u1, seed, sgn in ((-H, -tw, 5, -1), (tw, H, 6, 1)):
+        _mass(bm, uv, u0, u1, WALL_DEPTH, seed=seed)
+        _walk(bm, uv, u0, u1, WALL_DEPTH)
+        _parapet(bm, uv, u0, u1)
+        _steps_up(bm, uv, sgn * tw, sgn, WALL_DEPTH, "south", WALK_Z + 0.1, top + 0.1, 3)

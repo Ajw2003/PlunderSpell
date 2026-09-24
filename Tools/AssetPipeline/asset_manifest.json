@@ -31,6 +31,12 @@
       "preview": "fc3daed51c05ef61:23a9d68e53fd",
       "tris": 468
     },
+    "BronzeBastion": {
+      "budget": 2000,
+      "content": "2819691189493347",
+      "preview": "2819691189493347:23a9d68e53fd",
+      "tris": 912
+    },
     "BronzeBathRoom": {
       "budget": 2000,
       "content": "444ba063dc35a59e",

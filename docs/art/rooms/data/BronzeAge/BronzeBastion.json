@@ -1,0 +1,64 @@
+{
+  "key": "BronzeBastion",
+  "name": "The Horned Bastion",
+  "age": "BronzeAge",
+  "zone": "CurtainWall",
+  "role": "Bastion",
+  "summary": "A great rectangular tower of cyclopean stone standing out from the wall, crowned with a row of white horns of consecration.",
+  "description": "Where the wall needs to be seen from the plain, the builders pushed out a bastion: a block of cyclopean masonry seven metres long and four and a half deep, a course higher than the wall on either side. Along its outer edge a low mud-brick wall carries five horns of consecration, plastered white, the sign that the gods live inside and the palace speaks for them. From a distance they are what you see first; up close they are waist-high and make poor cover. Steps on the walks climb onto the bastion from both sides, and the slingers who hold it have the best field of fire on the wall.",
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; the wall on the south edge, the bailey open to the north.",
+    "Bastion: cyclopean limestone, x −3.50 … 3.50, 4.50 m in from the south cell line (to y −1.55), four courses 1.50 / 1.40 / 1.20 / 1.40 m to 5.50 m; blocks cyclopean.blocks(−3.50, 3.50, 5.50, seed = 4), set-backs on the south face.",
+    "Bastion top: ochre plaster 0.10 m (5.50–5.60 m), from behind the low wall to 0.20 m short of the north face.",
+    "Low wall: mud-brick 0.40 m thick, its outer face 0.04 m inside the cell line, 5.50–6.00 m, the bastion's full width.",
+    "Horns of consecration: five, the kit's horns at size 0.80 m (plinth 0.80 × 0.24 × 0.20 m, two up-curving horns), plastered white, on the low wall at x −2.80 / −1.40 / 0 / 1.40 / 2.80; tips at about 6.70 m.",
+    "Wall runs: the straight wall's section (2.40 m, three courses to 4.10 m, plastered walk, breastwork with two merlons a side) from each of the bastion's east and west faces to the cell edges; west seed 5, east seed 6.",
+    "Steps: three ashlar steps on each walk against the bastion (0.35 m treads and rises, tops 4.55 / 4.90 / 5.25 m), the fourth rise onto the top at 5.60 m.",
+    "Joins: both runs reach their cell edges at full height and section."
+  ],
+  "sockets": [
+    "Wall-walks: 4.10 m (plaster top 4.20 m), 1.76 m wide, open at the east and west cell edges",
+    "Bastion top: 5.60 m, reached by three steps from each walk",
+    "Sling slots: in the first merlon of each run, 4.70 m, outer face"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Cyclopean limestone",
+      "hex": "#8C7F68",
+      "pigment": "vellum_dim",
+      "notes": "Bastion and runs."
+    },
+    {
+      "name": "Mud-brick",
+      "hex": "#8A5A3C",
+      "pigment": "leather",
+      "notes": "The low wall and the runs' breastworks."
+    },
+    {
+      "name": "White plaster",
+      "hex": "#D8CDB2",
+      "pigment": "vellum",
+      "notes": "The horns of consecration."
+    },
+    {
+      "name": "Ochre plaster",
+      "hex": "#B7803E",
+      "pigment": "bronze",
+      "notes": "Walks and the bastion top."
+    },
+    {
+      "name": "Dressed ashlar",
+      "hex": "#9A8C72",
+      "pigment": "vellum_faint",
+      "notes": "The steps."
+    }
+  ],
+  "gameplay": [
+    "The horns are the Bronze skyline's landmark: a thief can navigate the citadel by them.",
+    "The bastion top is the Wall Slingers' best post, but the crest is only waist-high: poor cover against return fire.",
+    "No loot: terrain."
+  ],
+  "budget": "≤ 2k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeBastion.svg"
+}

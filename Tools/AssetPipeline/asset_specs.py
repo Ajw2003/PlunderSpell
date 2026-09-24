@@ -88,7 +88,7 @@ BRONZE_CASTLE_SPECS = [
     dict(key="BronzeLionGate", builder="build_bronze_lion_gate", tri_budget=1200, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
     dict(key="BronzeWallStraight", builder="build_bronze_wall_straight", tri_budget=1200, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
     dict(key="BronzeWallCorner", builder="build_bronze_wall_corner", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
-    dict(key="BronzeBastion", builder="build_bronze_bastion", tri_budget=1200, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
+    dict(key="BronzeBastion", builder="build_bronze_bastion", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
     dict(key="BronzeGateApproach", builder="build_bronze_gate_approach", tri_budget=1200, subdir="Castle/BronzeAge", module="castle_builders_bronze_curtain", era="BronzeAge", zone="CurtainWall", kind="wall"),
     # OuterBailey
     dict(key="BronzeChariotShed", builder="build_bronze_chariot_shed", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_bailey", era="BronzeAge", zone="OuterBailey", kind="room"),
