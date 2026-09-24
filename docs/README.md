@@ -79,6 +79,10 @@ together and what was deliberately left undocumented, and why.
   The step-by-step loop from brief to validated model (plan → sheet → audit → fix → model beside
   sheet → audit → fix → commit) is [`docs/art/WORKFLOW.md`](art/WORKFLOW.md); long runs are protected
   by `Tools/autosave.sh`.
+- [`docs/plans/artbible-enemies-in-engine.md`](plans/artbible-enemies-in-engine.md) and
+  [`docs/plans/artbible-enemy-animations.md`](plans/artbible-enemy-animations.md): **awaiting
+  approval.** How the 16 ArtForge enemies get into a raid, and how they get animated. Review page:
+  [`docs/generated/enemy-animation-plan/`](generated/enemy-animation-plan/index.html).
 - [`docs/plans/moodboard-gap-closure.md`](plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
