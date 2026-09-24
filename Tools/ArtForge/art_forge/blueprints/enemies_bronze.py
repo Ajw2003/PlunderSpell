@@ -658,34 +658,39 @@ def _tusk_helmet(fig: Human, base_z: float, top_z: float) -> list[Part]:
                 return ra + (rb - ra) * (zr - za) / (zb - za)
         return prof[1][0]
 
+    # Each row of tusk plates is ONE closed loft band round the cone, not a box per
+    # plate: 80 separate 16 x 8 x 34 mm boxes made Blender's heat weighting fail on
+    # every build (every vertex left on one bone, so knees/elbows/neck did not blend).
+    # The band's outer face is ridged: each plate is a raised facet, and between
+    # plates the band dips under the felt cap, so the felt shows through as the dark
+    # seam. The top edge is turned by the row's slant, alternating per row.
     rows = [(0.024, 24), (0.064, 22), (0.104, 19), (0.142, 15)]
+    half = 0.017                                   # plates are 0.034 m tall
     for k, (zr, count) in enumerate(rows):
         slant = 22.0 if k % 2 == 0 else -22.0
-        r = radius_at(zr) + 0.006
-        slope = Vector((0.0, 0.0, 1.0))
-        for i in range(count):
-            a = 2 * math.pi * (i + 0.5 * (k % 2)) / count
-            n = Vector((math.cos(a), math.sin(a) * sy, 0.0)).normalized()
-            t = Vector((-math.sin(a), math.cos(a), 0.0))
-            # up the cone surface: mostly Z, tipped inward by the cone slope
-            dr = radius_at(zr + 0.02) - radius_at(zr - 0.02)
-            up = (slope * 0.04 + n * dr).normalized()
-            q = Matrix.Rotation(math.radians(slant), 3, n)
-            up_s = q @ up
-            at = base + Vector((math.cos(a) * r, math.sin(a) * r * sy, zr))
-            parts.append(Part("box", tuple(at), (0.016, 0.008, 0.034), mat="boar_s_tusk",
-                              bone="Helmet", rot=_euler_from_axes(q @ t, n),
-                              extras={"rigid": True, "bevel": False,
-                                      "_up": tuple(up_s)}))
-    for part in parts[1:]:
-        # the box's long side must follow the slanted up-slope direction: rebuild
-        # the rotation from (width = up x normal, depth = normal)
-        up_s = Vector(part.extras.pop("_up"))
-        at = Vector(part.loc) - base
-        n = Vector((at.x, at.y / sy, 0.0)).normalized()
-        n = Vector((n.x, n.y * sy, 0.0)).normalized()
-        width = up_s.cross(n)
-        part.rot = _euler_from_axes(width, n)
+        shift = math.tan(math.radians(slant)) * 2 * half   # metres along the ring
+
+        def ring(z, lift, turn, gap_lift):
+            r = radius_at(z)
+            da = turn / max(r, 1e-3)
+            pts = []
+            for i in range(count):
+                a0 = 2 * math.pi * (i + 0.5 * (k % 2)) / count + da
+                step = 2 * math.pi / count
+                for f, dl in ((0.0, gap_lift), (0.18, lift), (0.82, lift)):
+                    a = a0 + f * step
+                    rr = r + dl
+                    pts.append(tuple(base + Vector((math.cos(a) * rr,
+                                                    math.sin(a) * rr * sy, z))))
+            return pts
+
+        z0, z1 = zr - half, zr + half
+        parts.append(Part("loft", (0, 0, 0), (1, 1, 1), mat="boar_s_tusk", bone="Helmet",
+                          extras={"rings": [ring(z0, -0.004, 0.0, -0.004),
+                                            ring(z0, 0.008, 0.0, -0.003),
+                                            ring(z1, 0.008, shift, -0.003),
+                                            ring(z1, -0.004, shift, -0.004)],
+                                  "closed": True, "rigid": True, "bevel": False}))
     # knob and tuft
     knob = base + Vector((0, 0, cone_h + 0.016))
     parts.append(Part("sphere", tuple(knob), (0.040, 0.040, 0.036), mat="hammered_bronze_plate",
@@ -745,11 +750,12 @@ def _rapier(fig: Human) -> list[Part]:
     outline = [(-0.020, 0.0), (0.020, 0.0), (0.017, 0.25), (0.012, 0.60), (0.006, 0.82),
                (0.0, 0.92), (-0.006, 0.82), (-0.012, 0.60), (-0.017, 0.25)]
     # prism: outline X -> width (side), outline Y -> d, extrusion Z -> thickness
-    parts.append(Part("prism", tuple(guard), (1, 1, 0.006), mat="hammered_bronze_plate",
+    # No separate midrib bar: a 5.5 mm rod pushed through this 6 mm blade made
+    # Blender's heat weighting fail on every build (the whole mesh stayed on single
+    # bones). The blade is 8 mm thick instead, which carries the "strong" read.
+    parts.append(Part("prism", tuple(guard), (1, 1, 0.008), mat="hammered_bronze_plate",
                       bone="Sword", rot=_euler_from_axes(side, d),
                       extras={"outline": outline, **prop}))
-    parts.append(_bar(guard, guard + d * 0.80, 0.0055, "hammered_bronze_plate", "Sword",
-                      segments=5, **prop))
     return parts
 
 
