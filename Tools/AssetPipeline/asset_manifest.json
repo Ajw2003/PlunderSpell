@@ -141,6 +141,12 @@
       "preview": "30b56effeb2329c4:23a9d68e53fd",
       "tris": 940
     },
+    "BronzeShaftStair": {
+      "budget": 2000,
+      "content": "ae734224e854b1f4",
+      "preview": "ae734224e854b1f4:23a9d68e53fd",
+      "tris": 1560
+    },
     "BronzeShrine": {
       "budget": 1600,
       "content": "f4c7d6935debf0d4",

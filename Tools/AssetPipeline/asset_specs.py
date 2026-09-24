@@ -113,7 +113,7 @@ BRONZE_CASTLE_SPECS = [
     dict(key="BronzeGraveCircle", builder="build_bronze_grave_circle", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
     dict(key="BronzeLarnaxVault", builder="build_bronze_larnax_vault", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
     dict(key="BronzeTholos", builder="build_bronze_tholos", tri_budget=2400, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
-    dict(key="BronzeShaftStair", builder="build_bronze_shaft_stair", tri_budget=1600, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
+    dict(key="BronzeShaftStair", builder="build_bronze_shaft_stair", tri_budget=2000, subdir="Castle/BronzeAge", module="castle_builders_bronze_crypt", era="BronzeAge", zone="Crypt", kind="room"),
     # Door plugs, one per enclosed zone: the High Medieval size, this Age's stone.
     dict(key="BronzeDoorPlugOuterBailey", builder="build_bronze_door_plug_outer_bailey", tri_budget=40, subdir="Castle/BronzeAge", module="castle_builders_bronze", era="BronzeAge", zone="OuterBailey", kind="plug"),
     dict(key="BronzeDoorPlugInnerWard", builder="build_bronze_door_plug_inner_ward", tri_budget=40, subdir="Castle/BronzeAge", module="castle_builders_bronze", era="BronzeAge", zone="InnerWard", kind="plug"),

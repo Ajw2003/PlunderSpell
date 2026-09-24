@@ -141,3 +141,40 @@ def build_bronze_tholos(bm, uv):
     amphora(bm, uv, -2.6, -3.4, fz)
     # SE: the standing brazier.
     cb._brazier(bm, uv, 2.7, -2.7, fz, pigment=RED, metal=METAL)
+
+
+def build_bronze_shaft_stair(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeShaftStair.svg"""
+    h, fz = room_shell(bm, uv, "Crypt")
+    # NW: the kit stair up the west wall to the dais, the larnax lying in state on it.
+    cb._stair_to_dais(bm, uv, fz, 1.0, ASHLAR)
+    larnax(bm, uv, -4.4, 4.55, fz + 1.0, along_x=False)
+    # SW: the offering table with gold cups, amphorae round it.
+    offering_table(bm, uv, -3.4, -3.4, fz, w=0.6, d=0.6, h=0.7, pigment=ASHLAR)
+    for dx, r in ((-0.15, 0.05), (0.15, 0.045)):
+        mk.paint(bm, mk.add_cylinder(bm, r, 0.10, loc=(-3.4 + dx, -3.4, fz + 0.75), segments=8, radius2=r * 0.8),
+                 GOLD, uv)
+    for x, y in ((-4.6, -4.6), (-4.8, -3.8), (-3.8, -4.8)):
+        amphora(bm, uv, x, y, fz)
+    # SE: the kerbed shaft, its void, the sheerlegs and the basket hanging over it.
+    sx, sy = 3.7, -3.4
+    for oy in (-0.6, 0.6):
+        cb._box(bm, uv, "vellum_dim", (sx, sy + oy, fz + 0.175), (2.2, 0.2, 0.35))
+    for ox in (-1.0, 1.0):
+        cb._box(bm, uv, "vellum_dim", (sx + ox, sy, fz + 0.175), (0.2, 1.0, 0.35))
+    cb._box(bm, uv, SOOT, (sx, sy, fz + 0.01), (1.82, 1.02, 0.02))
+    lean = math.atan2(0.6, 2.2)
+    for x in (2.4, 5.0):
+        for side in (-1, 1):
+            mk.paint(bm, mk.add_box(bm, (0.1, 0.1, math.hypot(0.6, 2.2)), loc=(x, sy + side * 0.3, fz + 1.1),
+                                    rot=Euler((side * lean, 0, 0))), TIMBER, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.06, 2.8, loc=(sx, sy, fz + 2.15), rot=Euler((0, math.pi / 2, 0)), segments=6),
+             TIMBER, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.015, 1.39, loc=(sx, sy, fz + 1.47), segments=4), LINEN, uv)
+    mk.paint(bm, mk.add_cylinder(bm, 0.22, 0.30, loc=(sx, sy, fz + 0.65), segments=8, radius2=0.18), TIMBER, uv)
+    cb._anchor(sx, sy, fz + 0.80)
+    # NE: storage jars along the north wall; braziers either side of the north archway.
+    for x in (2.4, 3.5, 4.6):
+        pithos(bm, uv, x, 4.9, fz, height=1.2, belly=0.7, lid=True)
+    cb._brazier(bm, uv, -2.4, 2.8, fz, pigment=RED, metal=METAL)
+    cb._brazier(bm, uv, 4.4, 2.6, fz, pigment=RED, metal=METAL)
