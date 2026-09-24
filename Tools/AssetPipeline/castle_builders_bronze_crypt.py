@@ -70,3 +70,17 @@ def build_bronze_grave_circle(bm, uv):
             mk.paint(bm, mk.add_cylinder(bm, 0.08, 0.10, loc=(x - 0.3, y, fz + 0.25), segments=8, radius2=0.05),
                      GOLD, uv)
             cb._anchor(x, y, fz + 0.2)
+
+
+def build_bronze_larnax_vault(bm, uv):
+    """docs/art/rooms/concept/BronzeAge/BronzeLarnaxVault.svg"""
+    h, fz = room_shell(bm, uv, "Crypt")
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            larnax(bm, uv, sx * 3.3, sy * 4.9, fz, along_x=True)          # along the north / south wall
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            larnax(bm, uv, sx * 4.95, sy * 2.9, fz, along_x=False)        # along the east / west wall
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            pithos(bm, uv, sx * 4.9, sy * 4.9, fz, height=1.0, belly=0.6)

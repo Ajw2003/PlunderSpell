@@ -1,0 +1,47 @@
+{
+  "key": "BronzeLarnaxVault",
+  "name": "The Larnax Vault",
+  "age": "BronzeAge",
+  "zone": "Crypt",
+  "role": "BurialVault",
+  "summary": "Eight painted clay coffins on little legs, their gabled lids heaped with grave goods, and a storage jar in every corner.",
+  "description": "The household's dead lie here in larnakes, clay chests painted with bands and octopus and birds by potters who knew exactly who would be inside them. Each stands on four stubby legs like furniture, which in a sense it is, under a gabled lid heaped with whatever the family could spare: a cup, a pin, a string of beads. Storage jars in the corners hold the food the dead were expected to want. The lids come off easily. The larnakes themselves are too heavy to move and too fragile to drop.",
+  "build": [
+    "Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m limestone walls 3.00 m clear, 0.45 m ashlar capstone band, an archway 2.60 × 2.16 m centred on every wall.",
+    "Larnax form: a painted clay chest 1.60 × 0.60 × 0.55 m on four legs 0.12 × 0.12 × 0.12 m, a haematite band round it at 0.33 m, and a gabled lid (a prism 0.66 m across, 0.20 m high) on top; lid ridge at 1.17 m above ground.",
+    "North and south larnakes: four, long axis east–west, against the north and south walls at (±3.30, ±4.90).",
+    "East and west larnakes: four, long axis north–south, against the east and west walls at (±4.95, ±2.90).",
+    "Storage jars: four, 1.00 m tall, belly 0.60 m, one in each corner at (±4.90, ±4.90).",
+    "Paint: bands, running octopus and birds on the larnax sides (albedo only).",
+    "The cross: bare floor from archway to archway.",
+    "Walls: coursed limestone joints every 0.55 m (albedo only)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open",
+    "Larnax lids: eight, each a loot anchor at 1.17 m"
+  ],
+  "loot_anchors": [
+    {"at": "NW larnax (north wall)", "xyz": [-3.3, 4.9, 1.17]},
+    {"at": "SW larnax (south wall)", "xyz": [-3.3, -4.9, 1.17]},
+    {"at": "NE larnax (north wall)", "xyz": [3.3, 4.9, 1.17]},
+    {"at": "SE larnax (south wall)", "xyz": [3.3, -4.9, 1.17]},
+    {"at": "west larnax, north", "xyz": [-4.95, 2.9, 1.17]},
+    {"at": "west larnax, south", "xyz": [-4.95, -2.9, 1.17]},
+    {"at": "east larnax, north", "xyz": [4.95, 2.9, 1.17]},
+    {"at": "east larnax, south", "xyz": [4.95, -2.9, 1.17]}
+  ],
+  "materials": [
+    {"name": "Limestone", "hex": "#8C7F68", "pigment": "vellum_dim", "notes": "Walls."},
+    {"name": "Larnax clay", "hex": "#A0603E", "pigment": "leather", "notes": "Coffins and jars; painted in haematite and fresco blue."},
+    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "The larnax bands."},
+    {"name": "Dressed ashlar", "hex": "#9A8C72", "pigment": "vellum_faint", "notes": "Capstone band."},
+    {"name": "Floor", "hex": "#2B231B", "pigment": "bone_black", "notes": "The Crypt floor."}
+  ],
+  "gameplay": [
+    "Eight loot anchors, the most in the Bronze crypt: small grave goods on every lid.",
+    "The larnakes are knee-high cover along every wall; the cross is open.",
+    "Larnakes are fragile in play: a FRANGO or a dropped body breaks one."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/BronzeAge/BronzeLarnaxVault.svg"
+}
