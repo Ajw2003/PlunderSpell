@@ -99,7 +99,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":4906,
+			"count":4920,
 			"max":[
 				0.41629987955093384,
 				1.0499999523162842,
@@ -115,13 +115,13 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":4906,
+			"count":4920,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":4906,
+			"count":4920,
 			"type":"VEC2"
 		},
 		{
@@ -134,26 +134,26 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":58872,
+			"byteLength":59040,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":58872,
-			"byteOffset":58872,
+			"byteLength":59040,
+			"byteOffset":59040,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":39248,
-			"byteOffset":117744,
+			"byteLength":39360,
+			"byteOffset":118080,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":27900,
-			"byteOffset":156992,
+			"byteOffset":157440,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":184892,
+			"byteLength":185340,
 			"uri":"TripodCauldron.bin"
 		}
 	]

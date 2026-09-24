@@ -80,7 +80,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/glTF/TripodCauldron.gltf",
         "blend": "Assets/Models/ArtBible/Items/Bronze/TripodCauldron/TripodCauldron.blend"
       },
-      "build_seconds": 3.1
+      "build_seconds": 3.6
     },
     {
       "key": "items/bronze/faience-hippo",
@@ -488,7 +488,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/ArmReliquary/glTF/ArmReliquary.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.blend"
       },
-      "build_seconds": 2.8
+      "build_seconds": 2.6
     },
     {
       "key": "items/high/coin-coffer",
@@ -566,7 +566,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/CoinCoffer/glTF/CoinCoffer.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/CoinCoffer/CoinCoffer.blend"
       },
-      "build_seconds": 4.0
+      "build_seconds": 3.0
     },
     {
       "key": "items/high/gilded-altarpiece",
@@ -662,7 +662,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/glTF/GildedAltarpiece.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/GildedAltarpiece.blend"
       },
-      "build_seconds": 2.6
+      "build_seconds": 2.8
     },
     {
       "key": "items/high/illuminated-psalter",
@@ -750,7 +750,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/glTF/IlluminatedPsalter.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/IlluminatedPsalter/IlluminatedPsalter.blend"
       },
-      "build_seconds": 3.6
+      "build_seconds": 2.6
     },
     {
       "key": "items/high/silver-ewer",
@@ -831,7 +831,7 @@
         "gltf": "Assets/Models/ArtBible/Items/High/SilverEwer/glTF/SilverEwer.gltf",
         "blend": "Assets/Models/ArtBible/Items/High/SilverEwer/SilverEwer.blend"
       },
-      "build_seconds": 3.1
+      "build_seconds": 2.4
     },
     {
       "key": "items/late/bankers-ledger",
@@ -1340,11 +1340,11 @@
       "slug": "silver-tureen",
       "name": "SilverServiceTureen",
       "title": "Silver Service Tureen",
-      "passed": true,
+      "passed": false,
       "stats": {
-        "vertices": 1531,
-        "faces": 1685,
-        "triangles": 2926,
+        "vertices": 1579,
+        "faces": 1733,
+        "triangles": 3022,
         "islands": 38,
         "lowest_z": 0.0,
         "height": 0.366,
@@ -1392,7 +1392,9 @@
           "emit": null
         }
       },
-      "failures": [],
+      "failures": [
+        "3022 triangles exceeds the 3000 budget"
+      ],
       "warnings": [],
       "notes": [
         "Lid and ladle are modelled in place on the same mesh and texture set; splitting them into separate physics objects is an import step.",
@@ -1405,7 +1407,7 @@
         "gltf": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/glTF/SilverServiceTureen.gltf",
         "blend": "Assets/Models/ArtBible/Items/Powder/SilverServiceTureen/SilverServiceTureen.blend"
       },
-      "build_seconds": 3.1
+      "build_seconds": 2.7
     },
     {
       "key": "items/powder/venetian-mirror",

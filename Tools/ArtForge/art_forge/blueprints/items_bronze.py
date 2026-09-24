@@ -748,14 +748,16 @@ def bronze_tripod(entry: Entry):
     def bowl_radius(z):
         return bowl_r * math.sqrt(max(0.0, 1.0 - ((rim_z - z) / depth) ** 2))
 
-    soot_top = 0.68                            # underside and inner lower half
+    soot_top = 0.61                            # underside and inner lower half
+    scorch_top = 0.68                          # fire-scorch fade above the soot
     band_lo, band_hi = 0.815, 0.855           # chased spiral band, 0.04 m
     soot_t = math.degrees(math.acos((rim_z - soot_top) / depth))
+    scorch_t = math.degrees(math.acos((rim_z - scorch_top) / depth))
     band_t = [math.degrees(math.acos((rim_z - z) / depth)) for z in (band_lo, band_hi)]
     outer = [(0.0, rim_z - depth)] + [outer_pt(t) for t in
-                                      (12, 26, 40, soot_t, 68, band_t[0], band_t[1], 89)]
+                                      (14, 30, soot_t, scorch_t, 68, band_t[0], band_t[1], 89)]
     lip = [(0.336, 0.873), (0.344, 0.881), (0.342, 0.890), (0.332, 0.893), (0.324, 0.886)]
-    inner_t = (84, 70, soot_t, 40, 25, 10)
+    inner_t = (84, 70, scorch_t, soot_t, 30, 12)
     inner = [inner_pt(t) for t in inner_t] + [(0.0, rim_z - depth + wall)]
     profile = outer + lip + inner
     first_inner_band = len(outer) + len(lip) - 1          # lip end -> first inner point
@@ -764,6 +766,7 @@ def bronze_tripod(entry: Entry):
     parts.append(Part("lathe", (0, 0, 0), (1, 1, 1), mat="cast_bronze", segments=S, extras={
         "profile": profile, "smooth": True, "bevel": False,
         "paint": inside + [
+            {"mat": "bronze_shadow", "min": (-1, -1, -1), "max": (1, 1, scorch_top + 1e-4)},
             {"mat": "hearth_soot", "min": (-1, -1, -1), "max": (1, 1, soot_top + 1e-4)},
             {"mat": "bronze_shadow", "min": (-1, -1, band_lo - 1e-4), "max": (1, 1, band_hi + 1e-4)},
             {"mat": "rubbed_bronze", "min": (-1, -1, 0.870), "max": (1, 1, 1)},
@@ -791,9 +794,7 @@ def bronze_tripod(entry: Entry):
 
         mid_r, mid_z = (top_r + foot_r) / 2.0, (top_z + foot_z) / 2.0
         parts.append(Part("box", at(mid_r, mid_z), (0.06, 0.02, length), mat="cast_bronze",
-                          rot=(math.degrees(alpha), 0.0, phi_deg - 90.0),
-                          extras={"paint": [{"mat": "rubbed_bronze", "min": (-1, 0.0095, -1),
-                                             "max": (1, 1, 1)}] if False else []}))
+                          rot=(math.degrees(alpha), 0.0, phi_deg - 90.0)))
         # Incised zigzag down the leg's outer face.
         zig = []
         for k in range(11):

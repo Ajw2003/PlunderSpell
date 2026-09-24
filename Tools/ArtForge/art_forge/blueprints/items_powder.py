@@ -577,25 +577,25 @@ def silver_tureen(entry: Entry):
     # --- Bowl: one lathe, squashed oval. Outer wall, everted 0.01 m rim, then the
     # inside back down to a floor of dried soup (visible with the lid off).
     rim_z = 0.210
-    outer = [(0.120, 0.052), (0.150, 0.060), (0.170, 0.085), (0.178, 0.115),
+    outer = [(0.120, 0.056), (0.142, 0.062), (0.158, 0.071), (0.170, 0.085), (0.178, 0.115),
              (0.176, 0.145), (0.184, 0.180), (0.192, 0.198), (0.200, 0.204),
              (0.200, rim_z)]
-    bowl_profile = ([(0.0, 0.052)] + outer +
+    bowl_profile = ([(0.0, 0.056)] + outer +
                     [(0.188, rim_z), (0.180, 0.196), (0.166, 0.140), (0.150, 0.095),
                      (0.110, 0.074), (0.0, 0.070)])
     parts.append(Part("lathe", (0, 0, 0), oval, mat="sterling_silver", segments=24,
                       extras={"profile": bowl_profile, "smooth": True, "paint": [
                           # bright polish on the rolled rim
                           {"mat": "bright_polish", "min": (-1, -1, 0.201), "max": (1, 1, 0.215)},
-                          # tarnish where the bowl meets the skirt
-                          {"mat": "silver_tarnish", "min": (-1, -1, 0.0), "max": (1, 1, 0.061)},
                           # dried soup on the floor inside
                           {"mat": "soup_residue", "min": (-0.13, -0.13, 0.069), "max": (0.13, 0.13, 0.080)},
                       ]}))
 
     # Skirt: a shaped oval foot-ring under the bowl, the paws beneath it.
-    skirt = [(0.0, 0.036), (0.140, 0.036), (0.158, 0.042), (0.160, 0.050), (0.148, 0.058),
-             (0.118, 0.062), (0.0, 0.062)]
+    # The top is rolled (no flat step), or it mirrors the studio's area lights as
+    # bright rectangles.
+    skirt = [(0.0, 0.036), (0.140, 0.036), (0.158, 0.042), (0.161, 0.050), (0.154, 0.057),
+             (0.140, 0.061), (0.122, 0.064), (0.0, 0.064)]
     parts.append(Part("lathe", (0, 0, 0), (1.0, 0.70, 1.0), mat="sterling_silver", segments=24,
                       extras={"profile": skirt, "smooth": True}))
 
@@ -655,7 +655,8 @@ def silver_tureen(entry: Entry):
                    (0.050, 0.284), (0.0, 0.286)]
     parts.append(Part("lathe", (0, 0, 0), oval, mat="sterling_silver", segments=24,
                       extras={"profile": lid_profile, "smooth": True, "paint": [
-                          {"mat": "bright_polish", "min": (-0.13, -0.13, 0.250), "max": (0.13, 0.13, 0.29)},
+                          # polished crown: every face above the 0.262 m row (an oval cap)
+                          {"mat": "bright_polish", "min": (-1, -1, 0.260), "max": (1, 1, 0.29)},
                           {"mat": "bright_polish", "min": (-1, -1, 0.2065), "max": (1, 1, 0.2155)},
                           {"mat": "silver_tarnish", "min": (0.140, -0.030, 0.2065), "max": (1, 0.030, 0.245)},
                       ]}))
