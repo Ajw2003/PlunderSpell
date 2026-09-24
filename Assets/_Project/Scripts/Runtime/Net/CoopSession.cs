@@ -14,25 +14,11 @@ using UnityEngine;
 
 namespace RogueAi.Net
 {
+    // doc-ref 4e69 docs/systems/net.md
     /// <summary>
-    /// The one place a network session starts and ends. Every session, solo included, runs through
-    /// PurrNet's <see cref="NetworkManager"/>, so the raid has a single code path: solo is a host on
-    /// <see cref="LocalTransport"/> that nobody else can reach, co-op is a host on Steam (or UDP on a
-    /// LAN when Steam is not running), and a friend is a client. See docs/systems/net.md.
-    ///
-    /// Joining over Steam, from any of the three ways Steam delivers a join:
-    /// <list type="bullet">
-    /// <item>an invite accepted in the overlay while the game runs (<c>GameLobbyJoinRequested_t</c>),</item>
-    /// <item>"Join Game" in the friends list while it runs (<c>GameRichPresenceJoinRequested_t</c>,
-    /// carrying the rich presence <c>connect</c> string this class sets), and</item>
-    /// <item>either of those while the game is closed, which launches it with
-    /// <c>+connect_lobby &lt;id&gt;</c> on the command line.</item>
-    /// </list>
-    /// Each of them enters the lobby; the lobby's owner is the host, and the client connects to the
-    /// owner's Steam ID over Steam's peer-to-peer relay. No IP addresses or ports are involved.
-    ///
-    /// Local testing without Steam: <c>-coop-host</c> hosts over UDP, and
-    /// <c>-coop-join &lt;address&gt;</c> joins one.
+    /// The one place a network session starts and ends: solo on LocalTransport, co-op on Steam (UDP
+    /// on a LAN without Steam), and joining a friend's Steam lobby. Command line for local testing:
+    /// <c>-coop-host</c>, <c>-coop-join &lt;address&gt;</c>; Steam cold launch: <c>+connect_lobby &lt;id&gt;</c>.
     /// </summary>
     public sealed class CoopSession : MonoBehaviour, ICoopSession
     {
@@ -103,8 +89,8 @@ namespace RogueAi.Net
 
         public void HostCoop()
         {
-            if (IsInSession)
-                Leave();
+            if (LeaveThenRetry(HostCoop))
+                return;
 
             if (SteamBootstrap.IsReady && _steamTransport != null)
             {
@@ -126,6 +112,30 @@ namespace RogueAi.Net
             SetStatus("Not connected.");
         }
 
+        /// <summary>
+        /// Ends the current session and runs <paramref name="retry"/> once PurrNet has actually
+        /// stopped. Starting again in the same frame as stopping left the server down (seen when
+        /// hosting from inside a solo session), and accepting an invite mid-game is the same case.
+        /// Returns false when there was no session to leave, so the caller carries straight on.
+        /// </summary>
+        private bool LeaveThenRetry(Action retry)
+        {
+            if (!IsInSession && _manager.serverState == ConnectionState.Disconnected
+                             && _manager.clientState == ConnectionState.Disconnected)
+                return false;
+            Leave();
+            StartCoroutine(RetryWhenStopped(retry));
+            return true;
+        }
+
+        private System.Collections.IEnumerator RetryWhenStopped(Action retry)
+        {
+            while (_manager.serverState != ConnectionState.Disconnected || _manager.clientState != ConnectionState.Disconnected)
+                yield return null;
+            yield return null;
+            retry();
+        }
+
         private void StartHost(GenericTransport transport, string status)
         {
             _manager.transport = transport;
@@ -135,8 +145,8 @@ namespace RogueAi.Net
 
         private void JoinUdp(string address)
         {
-            if (IsInSession)
-                Leave();
+            if (LeaveThenRetry(() => JoinUdp(address)))
+                return;
             _udpTransport.address = address;
             _manager.transport = _udpTransport;
             _manager.StartClient();
@@ -243,7 +253,7 @@ namespace RogueAi.Net
             SteamMatchmaking.SetLobbyData(_lobby, "name", $"{SteamFriends.GetPersonaName()}'s raid");
             SteamFriends.SetRichPresence("connect", $"{ConnectLobbyArg} {_lobby.m_SteamID}");
 
-            StartHost(_steamTransport, "Hosting. Invite a friend from the Lair or with Shift+Tab.");
+            StartHost(_steamTransport, "Hosting. Invite a friend with the Invite Friend button.");
             GameServices.GameState.ChangeState(GameState.Lair);
         }
 
@@ -252,6 +262,35 @@ namespace RogueAi.Net
             if (!_hostingLobby)
                 return;
             SteamFriends.ActivateGameOverlayInviteDialog(_lobby);
+        }
+
+        public bool OverlayAvailable => SteamBootstrap.IsReady && SteamUtils.IsOverlayEnabled();
+
+        public System.Collections.Generic.IReadOnlyList<(string Name, ulong Id)> OnlineFriends()
+        {
+            var friends = new System.Collections.Generic.List<(string Name, ulong Id)>();
+            if (!SteamBootstrap.IsReady)
+                return friends;
+            int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
+            for (int i = 0; i < count; i++)
+            {
+                CSteamID friend = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+                if (SteamFriends.GetFriendPersonaState(friend) == EPersonaState.k_EPersonaStateOffline)
+                    continue;
+                friends.Add((SteamFriends.GetFriendPersonaName(friend), friend.m_SteamID));
+            }
+            friends.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+            return friends;
+        }
+
+        public void InviteFriend(ulong friendId)
+        {
+            if (!_hostingLobby)
+                return;
+            bool sent = SteamMatchmaking.InviteUserToLobby(_lobby, new CSteamID(friendId));
+            SetStatus(sent
+                ? $"Invited {SteamFriends.GetFriendPersonaName(new CSteamID(friendId))}. They accept it in Steam chat with the game open."
+                : "Steam would not send that invite.");
         }
 
         private void OnRichPresenceJoinRequested(GameRichPresenceJoinRequested_t request)
@@ -273,8 +312,8 @@ namespace RogueAi.Net
 
         private void JoinSteamLobby(ulong lobby)
         {
-            if (IsInSession)
-                Leave();
+            if (LeaveThenRetry(() => JoinSteamLobby(lobby)))
+                return;
             SetStatus("Joining your friend's lobby...");
             _lobbyEntered.Set(SteamMatchmaking.JoinLobby(new CSteamID(lobby)));
         }
@@ -311,6 +350,9 @@ namespace RogueAi.Net
         private void RegisterSteamCallbacks() { }
         private void HostSteamLobby() => StartHost(_udpTransport, "Hosting on the local network.");
         public void InviteFriends() { }
+        public bool OverlayAvailable => false;
+        public System.Collections.Generic.IReadOnlyList<(string Name, ulong Id)> OnlineFriends() => Array.Empty<(string, ulong)>();
+        public void InviteFriend(ulong friendId) { }
         private void JoinSteamLobbyWhenReady(ulong lobby) => SetStatus("This platform cannot join Steam invites.");
         private void LeaveSteamLobby() => _hostingLobby = false;
 #endif

@@ -30,6 +30,8 @@ namespace Plunderspell.UI.Screens
         private Text _session;
         private GameObject _setOut;
         private GameObject _invite;
+        private RectTransform _friendList;
+        private const int MaxFriendsShown = 12;
         private LairHubManager _lair;
 
         protected override void OnBuild()
@@ -72,11 +74,16 @@ namespace Plunderspell.UI.Screens
             UIFactory.AddVerticalLayout(actions, spacing: 12f, padding: new RectOffset(0, 0, 0, 0));
 
             _setOut = UIFactory.CreateButton(actions, "SetOutButton", "Set Out", SetOut, new Vector2(460f, 56f)).gameObject;
-            _invite = UIFactory.CreateButton(actions, "InviteButton", "Invite Friend",
-                () => GameServices.Coop?.InviteFriends(), new Vector2(460f, 46f)).gameObject;
+            _invite = UIFactory.CreateButton(actions, "InviteButton", "Invite Friend", OnInviteClicked,
+                new Vector2(460f, 46f)).gameObject;
             UIFactory.CreateButton(actions, "BackButton", "Back to Menu", BackToMenu, new Vector2(460f, 46f));
 
             _session = BuildStat("SessionLabel", 0.05f);
+
+            _friendList = UIFactory.CreatePanel(transform, "FriendList", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f),
+                new Vector2(340f, 620f), new Vector2(-200f, 0f), UITheme.PanelBackground);
+            UIFactory.AddVerticalLayout(_friendList, spacing: 6f, padding: new RectOffset(10, 10, 10, 10));
+            _friendList.gameObject.SetActive(false);
         }
 
         private Text BuildStat(string name, float anchorY)
@@ -97,6 +104,54 @@ namespace Plunderspell.UI.Screens
                 GameServices.Coop.Changed += Refresh;
             }
             Refresh();
+        }
+
+        /// <summary>
+        /// Steam's own invite dialog when its overlay is hooked in; otherwise (a build started outside
+        /// Steam, the usual way to test) a list of online friends, each invited with one click.
+        /// </summary>
+        private void OnInviteClicked()
+        {
+            ICoopSession coop = GameServices.Coop;
+            if (coop == null)
+                return;
+            if (coop.OverlayAvailable)
+            {
+                coop.InviteFriends();
+                return;
+            }
+
+            bool show = !_friendList.gameObject.activeSelf;
+            _friendList.gameObject.SetActive(show);
+            if (show)
+                BuildFriendList(coop);
+        }
+
+        private void BuildFriendList(ICoopSession coop)
+        {
+            for (int i = _friendList.childCount - 1; i >= 0; i--)
+                Destroy(_friendList.GetChild(i).gameObject);
+
+            UIFactory.CreateText(_friendList, "Heading", "Invite a friend", UITheme.BodyFontSize, UITheme.Accent)
+                .rectTransform.sizeDelta = new Vector2(320f, 40f);
+            var friends = coop.OnlineFriends();
+            if (friends.Count == 0)
+            {
+                UIFactory.CreateText(_friendList, "None", "No Steam friends are online.", UITheme.SmallFontSize, UITheme.TextSecondary);
+                return;
+            }
+
+            // Sized to the rows rather than fixed, so the background stays behind every name. The
+            // layout group does not control child heights, so a ContentSizeFitter would read zero.
+            int rows = Mathf.Min(friends.Count, MaxFriendsShown);
+            _friendList.sizeDelta = new Vector2(_friendList.sizeDelta.x, 20f + 40f + rows * (40f + 6f));
+
+            for (int i = 0; i < rows; i++)
+            {
+                ulong id = friends[i].Id;
+                UIFactory.CreateButton(_friendList, $"Invite_{id}", friends[i].Name,
+                    () => coop.InviteFriend(id), new Vector2(320f, 40f));
+            }
         }
 
         /// <summary>Only the host sets out; a friend who joined follows it into the raid.</summary>
@@ -122,6 +177,8 @@ namespace Plunderspell.UI.Screens
             bool isHostOrSolo = GameServices.IsSessionAuthority();
             _setOut.SetActive(isHostOrSolo);
             _invite.SetActive(coop != null && coop.CanInvite);
+            if (!_invite.activeSelf)
+                _friendList.gameObject.SetActive(false);
             _session.text = coop == null ? string.Empty
                 : isHostOrSolo ? coop.Status : "Waiting for the host to set out.";
 

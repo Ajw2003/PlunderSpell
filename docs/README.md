@@ -48,7 +48,7 @@ together and what was deliberately left undocumented, and why.
 | System | Owns |
 |---|---|
 | [`core`](systems/core.md) | Singleton base, event bus, state machine contract |
-| [`net`](systems/net.md) | Steam invite plumbing (cold launch, rich presence) |
+| [`net`](systems/net.md) | Sessions (solo, host, join), Steam lobbies and invites, one body per connection |
 | [`voice`](systems/voice.md) | Held-key + microphone audio → a recognised phrase |
 | [`spells`](systems/spells.md) | Resolving a phrase into a spell, a misfire, or a fizzle |
 | [`castle`](systems/castle.md) | Deterministic seed-driven castle layout and path validation |

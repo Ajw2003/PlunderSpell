@@ -52,29 +52,39 @@ namespace RogueAi.Tests.Editor
             return null;
         }
 
+        private GameObject PlayerPrefab() => AssetDatabase.LoadAssetAtPath<GameObject>(k_PlayerPrefabPath);
+
+        /// <summary>
+        /// The player is not placed in the scene: the network spawns one per connection, solo
+        /// included, from the prefab the spawner names. See docs/systems/net.md.
+        /// </summary>
         [Test]
-        public void Test_ThePlayerIsAnInstanceOfTheAuthoredPrefab()
+        public void Test_ThePlayerIsSpawnedFromTheAuthoredPrefab()
         {
-            var stateMachine = Find<PlayerStateMachine>();
-            Assert.IsNotNull(stateMachine, $"{k_ScenePath} has no PlayerStateMachine.");
+            Assert.IsNull(Find<PlayerStateMachine>(),
+                "A player placed in the scene shares one network ID across every machine, so a " +
+                "friend's actions would land on the host's body. Players come from the spawner.");
 
-            Assert.IsTrue(PrefabUtility.IsPartOfPrefabInstance(stateMachine.gameObject),
-                "The player must be a prefab instance, or editing RaidPlayer.prefab does not " +
-                "reach the raid.");
+            var spawner = Find<PurrNet.PlayerSpawner>();
+            Assert.IsNotNull(spawner, $"{k_ScenePath} has no PlayerSpawner, so nobody would have a body.");
+            var prefab = new SerializedObject(spawner).FindProperty("_playerPrefab").objectReferenceValue;
+            Assert.AreEqual(k_PlayerPrefabPath, AssetDatabase.GetAssetPath(prefab));
 
-            string source = AssetDatabase.GetAssetPath(
-                PrefabUtility.GetCorrespondingObjectFromSource(stateMachine.gameObject));
-            Assert.AreEqual(k_PlayerPrefabPath, source);
+            var session = Find<RogueAi.Net.CoopSession>();
+            Assert.IsNotNull(session, $"{k_ScenePath} has no CoopSession, so no session can start.");
+            var wiring = new SerializedObject(session);
+            foreach (string field in new[] { "_manager", "_localTransport", "_udpTransport", "_steamTransport" })
+                Assert.IsNotNull(wiring.FindProperty(field).objectReferenceValue, $"CoopSession.{field} is unassigned.");
         }
 
         /// <summary>
-        /// The regression that started all this: the scene carries the shipping controller, and the
+        /// The regression that started all this: the player carries the shipping controller, and the
         /// playtest harness is not in the raid.
         /// </summary>
         [Test]
         public void Test_ThePlayerUsesTheShippingControllerNotThePlaytestHarness()
         {
-            Assert.IsNotNull(Find<PlayerInputController>(),
+            Assert.IsNotNull(PlayerPrefab().GetComponent<PlayerInputController>(),
                 "The raid player needs PlayerInputController; without it nothing drives the " +
                 "state machine and the player reads as unresponsive.");
             Assert.IsNull(Find<RogueAi.Playtest.FreeLookPlaytestController>(),
@@ -85,9 +95,13 @@ namespace RogueAi.Tests.Editor
         [Test]
         public void Test_ThePlayerCarriesWhatTheRaidExpectsOfIt()
         {
-            Assert.IsNotNull(Find<IntruderTag>(), "Guards find intruders through IntruderTag.");
-            Assert.IsNotNull(Find<LootInteractor>(), "Nothing can be picked up without a LootInteractor.");
-            Assert.IsNotNull(Find<Camera>(), "The raid scene has no camera to see out of.");
+            GameObject player = PlayerPrefab();
+            Assert.IsNotNull(player.GetComponentInChildren<IntruderTag>(true), "Guards find intruders through IntruderTag.");
+            Assert.IsNotNull(player.GetComponentInChildren<LootInteractor>(true), "Nothing can be picked up without a LootInteractor.");
+            Assert.IsNotNull(player.GetComponentInChildren<Camera>(true), "The player has no camera to see out of.");
+            Assert.IsNotNull(player.GetComponent<PurrNet.NetworkTransform>(), "Nobody else would see this player move.");
+            Assert.IsNotNull(player.GetComponent<PlayerNetworkOwnership>(),
+                "Without ownership gating every machine drives every body and runs every camera.");
         }
 
         /// <summary>
@@ -105,7 +119,7 @@ namespace RogueAi.Tests.Editor
             foreach (string field in new[]
                      {
                          "_generator", "_lootSpawner", "_guardSpawner", "_extractionZone",
-                         "_lair", "_alarm", "_navigation", "_playerRoot",
+                         "_lair", "_alarm", "_navigation",
                      })
             {
                 SerializedProperty property = serialized.FindProperty(field);
@@ -118,7 +132,7 @@ namespace RogueAi.Tests.Editor
             Assert.IsNotNull(presenter, $"{k_ScenePath} has no RaidHudPresenter.");
 
             var hud = new SerializedObject(presenter);
-            foreach (string field in new[] { "_director", "_extractionZone", "_alarm", "_lair", "_interactor" })
+            foreach (string field in new[] { "_director", "_extractionZone", "_alarm", "_lair" })
             {
                 SerializedProperty property = hud.FindProperty(field);
                 Assert.IsNotNull(property, $"RaidHudPresenter has no field {field}.");

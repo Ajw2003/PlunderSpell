@@ -30,6 +30,18 @@ namespace Plunderspell.Core
         /// <summary>Opens Steam's invite dialog for the current lobby.</summary>
         void InviteFriends();
 
+        /// <summary>True when Steam's overlay is hooked into this game, so <see cref="InviteFriends"/>
+        /// shows something. It is not when the game was started outside Steam, which is how a
+        /// development build is usually run; the Lair then offers <see cref="OnlineFriends"/>.</summary>
+        bool OverlayAvailable { get; }
+
+        /// <summary>Steam friends who are online now, by display name and Steam ID.</summary>
+        System.Collections.Generic.IReadOnlyList<(string Name, ulong Id)> OnlineFriends();
+
+        /// <summary>Sends one friend a Steam invite to the current lobby. It arrives in their Steam
+        /// chat; accepting it while the game is open joins this session.</summary>
+        void InviteFriend(ulong friendId);
+
         /// <summary>Ends the session and leaves any lobby.</summary>
         void Leave();
     }

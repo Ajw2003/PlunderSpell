@@ -132,7 +132,7 @@ namespace RogueAi.Spells
                 return;
             }
 
-            ServerCast(resolved, result.Volume, this);
+            ServerCast(resolved, (byte)result.Volume, this);
         }
 
         /// <summary>
@@ -140,13 +140,17 @@ namespace RogueAi.Spells
         /// observer for presentation. Running the effect here (not in the observers RPC) is what
         /// stops four clients each applying the same damage.
         /// </summary>
+        // The volume crosses the network as a byte: CastVolume lives in the Voice assembly, which
+        // PurrNet's code generation never registers, so sending the enum itself failed to pack and
+        // every networked cast was lost (caught by RaidSceneCastingTests once solo became a host).
         [ServerRpc(requireOwnership: true)]
-        private void ServerCast(SpellId spellId, CastVolume volume, NetworkIdentity caster, RPCInfo info = default)
+        private void ServerCast(SpellId spellId, byte volumeByte, NetworkIdentity caster, RPCInfo info = default)
         {
+            var volume = (CastVolume)volumeByte;
             int affected = ExecuteEffect(spellId, volume, caster);
 
             // info.sender is the player that requested the cast.
-            BroadcastCast(spellId, volume, caster, info.sender, affected,
+            BroadcastCast(spellId, volumeByte, caster, info.sender, affected,
                 CastOrigin(caster), CastDirection(caster));
         }
 
@@ -193,9 +197,9 @@ namespace RogueAi.Spells
         /// server, so this must stay side-effect-free apart from logging and the local event.
         /// </summary>
         [ObserversRpc(bufferLast: false)]
-        private void BroadcastCast(SpellId spellId, CastVolume volume, NetworkIdentity caster,
+        private void BroadcastCast(SpellId spellId, byte volumeByte, NetworkIdentity caster,
             PlayerID sender, int affected, Vector3 origin, Vector3 direction) =>
-            PresentCast(spellId, volume, caster, sender, affected, origin, direction);
+            PresentCast(spellId, (CastVolume)volumeByte, caster, sender, affected, origin, direction);
 
         /// <summary>
         /// Presentation half, callable without an RPC. Must stay side-effect-free apart from logging

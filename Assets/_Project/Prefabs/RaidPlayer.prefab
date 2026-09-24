@@ -247,6 +247,8 @@ GameObject:
   - component: {fileID: 4429915726505113692}
   - component: {fileID: 6388949961367640457}
   - component: {fileID: 3153026314507338630}
+  - component: {fileID: 4651255249886544541}
+  - component: {fileID: 4760078615528847383}
   m_Layer: 0
   m_Name: RaidPlayer
   m_TagString: Untagged
@@ -419,8 +421,8 @@ MonoBehaviour:
   _invertedPathToNearestParent: 
   _directChildren: []
   _lexicon: {fileID: 11400000, guid: c4bb00d31e2cd44cdebf6389275ec22c, type: 2}
+  _aimSource: {fileID: 0}
   _castOriginForwardOffset: 1
-  _castOriginHeight: 1.5
   _targetLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -479,6 +481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61f50616b7ae63244b170a2a9c4323cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: RogueAi.Player::StateMachine.PlayerStateMachine
+  _spellBook: {fileID: 0}
   _rb: {fileID: 4736100138716452366}
   walkSpeed: 5
   JumpForce: 5
@@ -510,6 +513,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c2c8881fd52f75439f527c4f4c0f10a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: RogueAi.Player::Player.PlayerInputController
+--- !u!114 &4651255249886544541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7184054742281660173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _syncPosition: 1
+  _syncRotation: 1
+  _syncScale: 1
+  _syncParent: 1
+  _interpolateSettings: 7
+  _minBufferSize: 1
+  _maxBufferSize: 2
+  _characterControllerPatch: 0
+  _ownerAuth: 1
+  _interpolationTiming: 0
+--- !u!114 &4760078615528847383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7184054742281660173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd2b0608b472452abb69ae0b4a8473fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Net::PlayerNetworkOwnership
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _inputController: {fileID: 3153026314507338630}
+  _playerCamera: {fileID: 3853391410362165357}
+  _rigidbody: {fileID: 4736100138716452366}
+  _ownerOnly:
+  - {fileID: 6240598286512211357}
+  - {fileID: 6388949961367640457}
 --- !u!1 &7665378923298313893
 GameObject:
   m_ObjectHideFlags: 0

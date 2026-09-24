@@ -91,17 +91,30 @@ namespace RogueAi.Raid
         {
             base.OnSpawned();
             _phase.onChanged += OnPhaseReplicated;
+            _seed.onChanged += OnSeedReplicated;
             SubscribeToZone();
+            Debug.Log($"[Raid] Director spawned as {(isServer ? "server" : "client")}: phase {_phase.value}, seed {_seed.value}.");
         }
 
         protected override void OnDespawned()
         {
             base.OnDespawned();
             _phase.onChanged -= OnPhaseReplicated;
+            _seed.onChanged -= OnSeedReplicated;
             UnsubscribeFromZone();
         }
 
         private void Awake() => SubscribeToZone();
+
+        /// <summary>
+        /// A client's fallback for building the castle: the phase and seed change events can arrive
+        /// in either order, so this checks the pair once per frame until the castle exists.
+        /// </summary>
+        private void Update()
+        {
+            if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && Castle == null && _seed.value != 0)
+                BuildCastle(_seed.value);
+        }
 
         private void OnDestroy() => UnsubscribeFromZone();
 
@@ -160,6 +173,7 @@ namespace RogueAi.Raid
                 return null;
             }
 
+            Debug.Log($"[Raid] Building the castle from seed {seed} ({(isSpawned && !isServer ? "client" : "host")}).");
             Castle = GenerateWalkable(ref seed);
             if (!isSpawned || isServer)
                 _seed.value = seed;
@@ -278,13 +292,39 @@ namespace RogueAi.Raid
             Transform player = _playerRoot != null ? _playerRoot
                 : StateMachine.PlayerStateMachine.Local != null ? StateMachine.PlayerStateMachine.Local.transform : null;
             if (player == null || Castle == null)
+            {
+                Debug.LogWarning($"[Raid] Not placing a player: player {(player == null ? "missing" : "found")}, castle {(Castle == null ? "missing" : "built")}.");
                 return;
+            }
 
             // The rooms were instantiated a moment ago; without this their colliders are still at
             // their old transforms and every overlap probe reports clear.
             Physics.SyncTransforms();
 
-            player.position = CastleSpawnResolver.ResolveSpawn(Castle);
+            Vector3 spawn = CastleSpawnResolver.ResolveSpawn(Castle);
+
+            // Each player stands at a different point around the gate, by owner number, so two
+            // bodies are never placed inside each other: a client places itself as soon as its
+            // castle is built, before the host's body has arrived there on its screen.
+            int index = player.TryGetComponent(out NetworkIdentity identity) && identity.owner.HasValue
+                ? Mathf.Max(0, (int)(ulong)identity.owner.Value.id - 1)
+                : 0;
+            if (index > 0)
+            {
+                float angle = index * Mathf.PI * 0.5f;
+                var anchor = new Vector3(spawn.x + Mathf.Cos(angle) * 1.5f, 0f, spawn.z + Mathf.Sin(angle) * 1.5f);
+                spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
+            }
+
+            // Through the rigidbody as well as the transform: an interpolated body writes its old
+            // position back over a transform-only move on the next physics step.
+            if (player.TryGetComponent(out Rigidbody body))
+            {
+                body.position = spawn;
+                body.linearVelocity = Vector3.zero;
+            }
+            player.position = spawn;
+            Debug.Log($"[Raid] Placed {player.name} at {player.position}.");
         }
 
         private void OnExtractionResolved(float worth, int saved)
@@ -325,11 +365,23 @@ namespace RogueAi.Raid
             PhaseChanged?.Invoke(phase);
         }
 
+        /// <summary>
+        /// The seed and the phase are separate SyncVars and a client can receive "raiding" before
+        /// the seed, so whichever of the two arrives second builds the castle.
+        /// </summary>
+        private void OnSeedReplicated(int seed)
+        {
+            Debug.Log($"[Raid] Host's seed arrived: {seed} (phase {_phase.value}).");
+            if (!isServer && _phase.value == RaidPhase.Raiding && Castle == null && seed != 0)
+                BuildCastle(seed);
+        }
+
         /// <summary>Mirrors a server-driven phase change onto a client's local event.</summary>
         private void OnPhaseReplicated(RaidPhase phase)
         {
             if (isServer)
                 return; // the server already raised it in SetPhase
+            Debug.Log($"[Raid] Host moved the raid to {phase} (seed {_seed.value}).");
 
             // A client builds the same castle from the replicated seed: the geometry is local on
             // every machine, only the seed crosses the network. Loot and guards arrive as network

@@ -65,7 +65,8 @@ namespace RogueAi.Net
 
             Problem = string.Empty;
             Debug.Log($"[Steam] Ready. Signed in as {SteamFriends.GetPersonaName()} " +
-                      $"({SteamUser.GetSteamID().m_SteamID}), app {SteamUtils.GetAppID().m_AppId}.");
+                      $"({SteamUser.GetSteamID().m_SteamID}), app {SteamUtils.GetAppID().m_AppId}, " +
+                      $"overlay {(SteamUtils.IsOverlayEnabled() ? "on" : "off (the game was not started by Steam)")}.");
         }
 
         private void Update()
