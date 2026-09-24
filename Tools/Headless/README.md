@@ -57,6 +57,19 @@ correlation (`PrefabUtility.GetCorrespondingObjectFromSource` always returns nul
 writing the full suite runs 148/162 green headlessly; the twelve failures are all in these four
 categories, not in gameplay logic.
 
+**2026-09-24:** the harness had stopped compiling (the co-op work used PurrNet transports,
+`NetworkTransform`, `localPlayerForced` and a dozen Unity APIs the shims lacked), so `verify.sh`
+had been failing at the build step. The shims were extended for each missing member, keeping the
+semantics honest and noting each approximation inline, and `PlayerNetworkOwnership.cs` is now
+compiled (it builds against the `PlayerInputController` stub). Result: **217 tests, 187 pass,
+4 skipped, 26 fail.** The failures are fidelity gaps, not gameplay regressions: scene loading
+(`AuthoredRaidSceneTests`, `RaidSceneCastingTests`, `CombatBenchCastingTests`), the real importer
+(`ArtAssetImportTests`), prefab/asset loading (`ScaleInvariantTests`), no `FixedUpdate` or rigidbody
+simulation (`PlayableLoopTests`, `LootSettleAndInputGatingTests`, `Test_SpawnedLootIsFrozen…`),
+`GameObject.CreatePrimitive` adding no collider (`SpellVfxTests`), and `Resources.Load`
+(`Test_SpellNumbersComeFromTheAuthoredAsset`). Which of those were already failing before the
+harness broke is not known: there was no green run to compare against.
+
 **Two deliberate compromises on faithfulness**, both flagged inline where they matter:
 - `Renderer.bounds` returns a zero-size box at the renderer's position rather than the mesh's real
   extents, since there is no real mesh data to measure headlessly. Anything that reasons about an
@@ -83,8 +96,6 @@ auto-adding dependencies before a component's `Awake` runs.
   (`AcceptsInputIn`) is mirrored — not re-derived — in `Shims/Player.PlayerInputController.cs`,
   which is how `LootSettleAndInputGatingTests` still exercises the actual predicate headlessly. Keep
   the two in sync if that predicate ever changes.
-- `Net/PlayerNetworkOwnership.cs` — a thin wrapper that references `PlayerInputController` by type
-  with no other member access, so it falls with it.
 - `Net/SteamInviteGateway.cs` — Steamworks.NET and PurrLobby are native/platform SDKs, same
   reasoning as the generated Input asset.
 - `Editor/PlayerBuilder.cs` (issue #53) — calls `BuildPipeline.BuildPlayer`/`BuildReport`, which the

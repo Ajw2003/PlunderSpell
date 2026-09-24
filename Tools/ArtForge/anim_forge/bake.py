@@ -23,10 +23,10 @@ from .solve import Solved
 
 
 def pose_matrices(skel: Skeleton, solved: Solved) -> dict[str, Matrix]:
-    posed = skel.fk(solved.Qx, solved.hips)
+    posed = skel.fk(solved.Qx, solved.hips, solved.free)
     out = {}
     for name in skel.order:
-        head = solved.free.get(name, posed.heads[name])
+        head = posed.heads[name]
         rot = (solved.Qx.get(name, posed.world[name]) @ skel.rest_q[name]).to_matrix().to_4x4()
         out[name] = Matrix.Translation(head) @ rot
     return out

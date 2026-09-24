@@ -7,20 +7,11 @@ using UnityEngine;
 
 namespace RogueAi.EditorTools
 {
+    // doc-ref d1ef docs/systems/raid-scene-assembly.md
     /// <summary>
-    /// Owns the import settings of everything ArtForge writes under <c>Assets/Models/ArtBible/</c>,
-    /// so nobody sets them by hand in the Inspector and a re-export cannot quietly undo them
-    /// (docs/plans/artbible-enemies-in-engine.md, E0; docs/systems/raid-scene-assembly.md,
-    /// "Art-bible enemies").
-    ///
-    /// - The fifteen human enemies: Humanoid, avatar from this model, bones mapped explicitly from
-    ///   <see cref="HumanBoneMap"/> so a renamed bone fails the avatar loudly instead of being guessed.
-    /// - The hound: Generic, root node <c>Root</c>.
-    /// - Items: static, no rig.
-    /// - Materials: URP Lit rebuilt from the baked maps, emission ×<see cref="EmissionStrength"/> HDR.
-    /// - Textures: compressed, mipmapped, at most <see cref="TextureSize"/>; data maps linear.
-    ///
-    /// <see cref="ArtAssetImportValidator.ValidateArtBible"/> checks that every one of these holds.
+    /// Owns the import settings of everything under <c>Assets/Models/ArtBible/</c>: rig per model,
+    /// URP Lit materials from the baked maps, texture settings. Checked by
+    /// <see cref="ArtAssetImportValidator.ValidateArtBible"/>.
     /// </summary>
     public class ArtBibleModelImporter : AssetPostprocessor
     {
@@ -162,10 +153,8 @@ namespace RogueAi.EditorTools
         }
 
         /// <summary>
-        /// A Humanoid avatar needs the model's rest pose (<see cref="HumanDescription.skeleton"/>),
-        /// which only exists once the hierarchy has been imported. The first import of a model that
-        /// was Generic has none, so it is recorded here from the imported hierarchy and the model is
-        /// imported once more. The second pass finds a skeleton and does nothing, so this cannot loop.
+        /// Records the rest pose a Humanoid avatar needs and imports once more when the model has
+        /// none yet (raid-scene-assembly.md, Traps). A second pass finds it and returns: no loop.
         /// </summary>
         private void OnPostprocessModel(GameObject root)
         {

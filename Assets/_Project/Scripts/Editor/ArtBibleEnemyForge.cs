@@ -11,14 +11,10 @@ using UnityEngine.AI;
 
 namespace RogueAi.EditorTools
 {
+    // doc-ref d1ef docs/systems/raid-scene-assembly.md
     /// <summary>
-    /// Authors one prefab variant per art-bible enemy and posts them to the <see cref="EnemyRoster"/>,
-    /// from the numbers in <see cref="ArtBibleEnemyCatalog"/>. The sibling of
-    /// <see cref="EnemyPrefabForge"/>, following the same rules (docs/systems/raid-scene-assembly.md,
-    /// "Enemy prefabs" and "Art-bible enemies").
-    ///
-    /// Unlike the EnemyForge models, ArtForge builds at true scale, so nothing is rescaled: a model
-    /// that is the wrong height is an ArtForge bug, and <c>ScaleInvariantTests</c> reports it.
+    /// Authors one prefab variant per art-bible enemy from <see cref="ArtBibleEnemyCatalog"/> and
+    /// posts them to the <see cref="EnemyRoster"/>. The sibling of <see cref="EnemyPrefabForge"/>.
     /// </summary>
     public static class ArtBibleEnemyForge
     {

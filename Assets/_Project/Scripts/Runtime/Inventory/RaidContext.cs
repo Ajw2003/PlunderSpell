@@ -2,18 +2,11 @@ using System;
 
 namespace RogueAi.Inventory
 {
-    // doc-ref docs/systems/raid-scene-assembly.md ("Era reaches the raid")
+    // doc-ref 7655 docs/systems/raid-scene-assembly.md
     /// <summary>
-    /// The facts every system building a raid needs to agree on: which seed, and which Age. Set by
-    /// <c>RaidDirector.BuildCastle</c> on every peer before the castle, the loot and the garrison
-    /// are built, and read by anything that has to pick era-appropriate content.
-    ///
-    /// Lives here, beside <see cref="HistoricalEra"/>, because this assembly depends only on PurrNet:
-    /// the castle generator can reference it without a cycle (Raid already depends on Castle), which
-    /// is how the era-specific rooms in docs/plans/era-castle-rooms.md (step 1) will read the Age.
-    ///
-    /// Callers that are handed the era explicitly (<c>GuardSpawner.SpawnFor</c>) should use that; this
-    /// is for code that sits below the raid in the dependency graph and cannot be handed it.
+    /// The seed and Age of the raid being built on this peer, published by
+    /// <c>RaidDirector.BuildCastle</c>. For code below the raid in the dependency graph (the castle
+    /// generator); anything handed the era explicitly should use that instead.
     /// </summary>
     public readonly struct RaidContext : IEquatable<RaidContext>
     {

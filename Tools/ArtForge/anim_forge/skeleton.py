@@ -91,9 +91,11 @@ class Skeleton:
 
     # ---- forward kinematics ------------------------------------------------------
 
-    def fk(self, Qx: dict[str, Quaternion], hips: Vector) -> "Posed":
+    def fk(self, Qx: dict[str, Quaternion], hips: Vector,
+           free: dict[str, Vector] | None = None) -> "Posed":
         """Posed heads and tails from world-delta rotations (missing bones follow
-        their parent rigidly) and the Hips offset (armature space, metres)."""
+        their parent rigidly) and the Hips offset (armature space, metres). `free`
+        pins a bone's posed head (a detached prop); its children follow it."""
         world: dict[str, Quaternion] = {}
         heads: dict[str, Vector] = {}
         for name in self.order:
@@ -108,6 +110,8 @@ class Skeleton:
                 heads[name] = heads[par] + world[par] @ (self.head[name] - self.head[par])
             if name == "Hips":
                 heads[name] = heads[name] + hips
+            if free and name in free:
+                heads[name] = free[name].copy()
         return Posed(self, world, heads)
 
     def point(self, posed: "Posed", bone: str, rest_point: Vector) -> Vector:

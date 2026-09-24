@@ -25,8 +25,7 @@
       Every Runtime gameplay source, linked rather than copied, so this project cannot drift from
       what Unity compiles. Excluded: the generated Input System action wrapper and the controller
       that binds to it (shimming a generated asset API would be a large surface with little to
-      verify), PlayerNetworkOwnership (a thin wrapper that references PlayerInputController by
-      type, so it falls with it), and the Steam invite gateway (Steamworks.NET + PurrLobby are
+      verify), and the Steam invite gateway (Steamworks.NET + PurrLobby are
       native/platform SDKs, same reasoning as the generated Input asset). See
       Tools/Headless/README.md, "Excluded from the headless build".
     -->

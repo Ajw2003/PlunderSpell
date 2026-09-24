@@ -13,6 +13,7 @@ _ARTFORGE = os.path.dirname(_HERE)
 if _ARTFORGE not in sys.path:
     sys.path.insert(0, _ARTFORGE)
 
+import bpy  # noqa: E402,F401  (must precede mathutils)
 import art_forge  # noqa: E402,F401
 
 REPO_ROOT = art_forge.REPO_ROOT
