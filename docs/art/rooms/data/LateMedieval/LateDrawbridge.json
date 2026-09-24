@@ -1,0 +1,64 @@
+{
+  "key": "LateDrawbridge",
+  "name": "The Bascule Bridge",
+  "age": "LateMedieval",
+  "zone": "CurtainWall",
+  "role": "Drawbridge",
+  "summary": "A gate through the machicolated wall with its oak deck lowered, worked by two counterweighted arms that pivot on the walk above and hold the deck's inner end on chains.",
+  "description": "The Burgundian drawbridge is a balance. Two long oak arms pivot on posts on the walk above the gate, their outer ends loaded with iron counterweights that stand up over the parapet, their inner ends hanging over the deck on chains. With the deck down the gate is a plain opening 3 m wide; let the counterweights fall and the arms swing, the chains draw the deck's inner end up, and the gate is shut from inside by its own bridge. The wall's walk and crown run straight over the gate on a sandstone lintel, so the men who work the arms stand among the handgunners.",
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; the wall on the south edge, the bailey open to the north.",
+    "Wall: the Late section (sandstone 1.60 m, outer face 0.45 m in from the cell line, walk 4.00 m) in two masses from each cell edge to x ±1.90.",
+    "Gate: 3.00 m wide (x ±1.50) and 3.40 m high between dressed jambs 0.40 m wide, the wall's full depth; a sandstone lintel over it from 3.40 to 4.00 m carries the walk.",
+    "Crown and walk: the brick frieze, corbels, parapet and merlons run the full width, unbroken over the gate; the timber walk on corbels on the inner face likewise; two keyhole gun-loops at x ±4.20.",
+    "Deck: oak 3.00 m wide, 0.22 m thick, lowered, from d 0.20 (in the gate) to d 5.20 inward; an iron hinge bar across its south end.",
+    "Arms (flèches): two oak beams 0.20 m square, 6.03 m long, at x ±1.30, sloping from their south ends (d 0.15, 5.70 m) down to their north ends (d 5.20, 2.40 m) over the deck.",
+    "Pivots and counterweights: two oak posts 0.14 m square on the walk either side of each arm at d 1.20, an iron pin through them and the arm at 5.01 m; an iron counterweight 0.45 m cube on each arm's south end, standing above the merlons.",
+    "Chains: an iron chain from each arm's north end straight down to the deck's inner end."
+  ],
+  "sockets": [
+    "Gate: 3.00 × 3.40 m through the south wall, the deck lowered (open)",
+    "Wall-walk: 4.00 m, unbroken over the gate, open at the east and west cell edges",
+    "Arms: two pivots on the walk above the gate; keyhole gun-loops: two"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Masses, lintel, crown; jambs in vellum_faint."
+    },
+    {
+      "name": "Brick",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "The frieze."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Deck, arms, pivot posts, timber walk."
+    },
+    {
+      "name": "Iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Counterweights, pins, chains, hinge bar."
+    },
+    {
+      "name": "Soot",
+      "hex": "#1E1B17",
+      "pigment": "bone_black",
+      "notes": "Gun-loops."
+    }
+  ],
+  "gameplay": [
+    "The gate is open with the deck down; raising it (the arms swinging) shuts the gate from inside.",
+    "The counterweights stand above the parapet: a landmark from outside and a target for TONITRUS.",
+    "No loot: terrain."
+  ],
+  "budget": "≤ 1.6k tris (kit)",
+  "concept": "concept/LateMedieval/LateDrawbridge.svg"
+}

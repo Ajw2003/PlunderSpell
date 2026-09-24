@@ -1,0 +1,58 @@
+{
+  "key": "LateWallStraight",
+  "name": "The Machicolated Wall",
+  "age": "LateMedieval",
+  "zone": "CurtainWall",
+  "role": "WallStraight",
+  "summary": "A dressed-sandstone curtain with a brick frieze and a corbelled, crenellated parapet carried out over machicolation slots, keyhole gun-loops in its face and a timber walk on its inner side.",
+  "description": "The Burgundian wall is built to be defended from the top. Its sandstone face rises plain and dressed to a band of brick, and above that a row of stepped corbels carries the parapet forward, leaving a slot between each pair through which a defender can drop stones or hot sand straight down onto anyone at the foot of the wall. The crenellated parapet above gives cover to the handgunners on the walk; lower down, keyhole gun-loops cut through the face let others fire at head height from inside. The stone walk on top is widened on the inner side by timber boards on corbels, so two men can pass with a gun between them.",
+  "build": [
+    "Cell: 12.1 × 12.1 m (±6.05), no floor slab; the wall on the south edge, the bailey open to the north.",
+    "Mass: dressed sandstone 1.60 m thick, its outer face 0.45 m in from the south cell line (d 0.45 … 2.05), x −6.05 … 6.05, 4.00 m to the stone walk.",
+    "Brick frieze: a brick band 0.40 m tall (3.00–3.40 m) on the outer face, 0.04 m proud.",
+    "Corbels: thirteen two-stage corbels at 0.90 m pitch centred on the run: a lower block 0.30 m wide projecting 0.20 m (3.40–3.70 m) under an upper block 0.36 m wide projecting out to d 0.05 (3.70–4.00 m).",
+    "Parapet: sandstone 0.28 m thick from d 0.05 to 0.33, on the corbels, 4.00–4.60 m, leaving a 0.12 m machicolation slot (d 0.33 … 0.45) between each pair of corbels.",
+    "Merlons: nine, 0.80 m wide at 1.30 m pitch centred on the run, 4.60–5.20 m.",
+    "Keyhole gun-loops: three on the outer face at x −3.60 / 0 / 3.60: a soot slit 0.10 × 0.90 m (1.30–2.20 m) over a round port r 0.10 m at 1.15 m.",
+    "Timber walk: oak boards 1.00 m wide (d 2.05 … 3.05), 3.90–4.00 m, flush with the stone walk, on stone corbels 0.30 × 0.40 × 0.50 m at 1.50 m pitch on the inner face."
+  ],
+  "sockets": [
+    "Wall-walk: 4.00 m, stone d 0.45–2.05 plus timber d 2.05–3.05, open at the east and west cell edges",
+    "Machicolation slots: twelve, 0.12 m, between the corbels along the outer face",
+    "Keyhole gun-loops: three in the outer face"
+  ],
+  "loot_anchors": [],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Mass, corbels, parapet, merlons."
+    },
+    {
+      "name": "Brick",
+      "hex": "#8A4B32",
+      "pigment": "leather",
+      "notes": "The frieze."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "The timber walk."
+    },
+    {
+      "name": "Soot",
+      "hex": "#1E1B17",
+      "pigment": "bone_black",
+      "notes": "Gun-loop slits and ports."
+    }
+  ],
+  "gameplay": [
+    "The machicolation slots let the walk's guards drop sand on a thief climbing the face.",
+    "Handgunners fire from the merlons and the gun-loops; the parapet is full cover to a crouching figure.",
+    "No loot: terrain."
+  ],
+  "budget": "≤ 1.2k tris (kit)",
+  "concept": "concept/LateMedieval/LateWallStraight.svg"
+}

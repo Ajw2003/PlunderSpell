@@ -1,0 +1,91 @@
+{
+  "key": "LateTreadwheelWell",
+  "name": "The Treadwheel Well",
+  "age": "LateMedieval",
+  "zone": "OuterBailey",
+  "role": "WellCourtyard",
+  "summary": "A great oak treadwheel against the north wall winding a rope over a pulley to a bucket above the well-head, a handcart with a water barrel, a stone trough and buckets.",
+  "description": "The castle's well is deep enough that a windlass will not do, so a man walks inside a wheel. The treadwheel stands against the north wall, two oak rims taller than a man joined by treads, turning on an iron axle between two A-frames; the rope it winds runs south over a pulley on a beam and drops to the bucket hanging above the stone well-head. Water goes into the trough along the west wall for the horses, into buckets for the kitchen, into the barrel on the handcart for anywhere further, and into the butt in the south-east corner for fire. In a siege this room decides how long the castle lasts.",
+  "kit_changes": [
+    "The plan put the treadwheel along the east wall in the SE quadrant; it stands against the north wall in the NE, its plane east–west, so the section shows it face-on and the well sits in front of it."
+  ],
+  "build": [
+    "Shell: the kit's OuterBailey shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 3.60 m clear, a 0.45 m brick trim course, an archway 2.60 × 2.59 m centred on every wall.",
+    "Treadwheel (NE): two oak spoked rims r 1.40 m at y 4.70 and 5.30, centred x 3.60, axle at 1.85 m above ground, ten oak treads 0.12 × 0.66 m joining them; an iron axle r 0.08 m from y 4.50 to the north wall.",
+    "A-frames: oak legs 0.10 m square, splayed 0.90 m east and west from the axle to the floor, at y 4.55 and 5.42.",
+    "Well-head: a stone kerb r 0.60 m, 0.70 m high at (3.60, 3.00), dark water inside its rim.",
+    "Beam and pulley: two oak posts 0.14 m square, 2.30 m, at x 2.90 and 4.30, y 3.00; an oak beam 1.64 m on them; an iron pulley r 0.12 m hanging under its middle.",
+    "Rope and bucket: a rope from the pulley down to an oak bucket (r 0.15 m, 0.32 m) hanging over the kerb at 1.28–1.60 m above ground, and a rope from the pulley back to the axle.",
+    "Handcart (NW): an oak bed 1.40 × 0.80 m, top 0.75 m above the floor, at (−3.40, 4.00), two spoked wheels r 0.35 m on an iron axle, two handles and two legs to the east; a water barrel r 0.30 m lying on its east half.",
+    "Trough and buckets (SW): a stone trough 0.80 × 2.00 × 0.60 m along the west wall at y −3.60, water in it; three oak buckets beside it.",
+    "Water butt and bench (SE): an oak butt r 0.50 m, 1.00 m, two iron hoops, at (4.80, −4.70); an oak bench 1.80 m at (3.00, −5.10)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.59 m (OuterBailey), all open",
+    "Handcart bed: a loot anchor at 1.05 m",
+    "Trough rim: a loot anchor at 0.90 m"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the handcart",
+      "xyz": [
+        -3.75,
+        4.0,
+        1.05
+      ]
+    },
+    {
+      "at": "the trough's east rim",
+      "xyz": [
+        -4.7,
+        -3.6,
+        0.9
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Wheel, frames, posts, beam, cart, buckets, butt."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "iron",
+      "notes": "Axles, pulley, hoops."
+    },
+    {
+      "name": "Stone",
+      "hex": "#8A8474",
+      "pigment": "vellum_faint",
+      "notes": "Kerb and trough."
+    },
+    {
+      "name": "Water",
+      "hex": "#3A4A50",
+      "pigment": "verdigris_lo",
+      "notes": "Well and trough."
+    },
+    {
+      "name": "Rope",
+      "hex": "#9C8A60",
+      "pigment": "leather",
+      "notes": "The ropes."
+    }
+  ],
+  "gameplay": [
+    "The treadwheel is a siege landmark: a thief can hide behind its rims against the north wall.",
+    "The water butt SE is the castle's fire bucket store.",
+    "Two loot anchors: the handcart and the trough."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateTreadwheelWell.svg"
+}

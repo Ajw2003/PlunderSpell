@@ -9,8 +9,8 @@ and pushing after each room. Branch: `claude/castle-bench-rooms-mwucab`. Written
 | Age | Done | Left |
 |---|---|---|
 | Bronze Age | All 25 rooms and wall pieces, 4 door plugs, contact sheet, [`docs/art/rooms/BronzeAge.md`](../art/rooms/BronzeAge.md) | nothing |
-| Late Medieval | Keep (5): GreatHall, JewelHouse, StateBedchamber, TapestrySolar, TurretStair. InnerWard (5): CountingHouse, ArmouryHall, SpitKitchen, ChantryChapel, Library | **OuterBailey:** ArtilleryYard (the sheet generator is written and rendered but not reviewed; no JSON spec, no builder yet), GunFoundry, HandgunnerBarracks, Brewhouse, TreadwheelWell. **Crypt:** Undercroft, Oubliette, CharnelHouse, EffigyCrypt, UndercroftStair. **CurtainWall:** Barbican, WallStraight, WallCorner, Bastion, Drawbridge. The 4 Late door plugs (builders exist in `castle_builders_late.py`; build them). Then `LateMedieval.md`, the contact sheet, ProjectState |
-| Age of Powder | nothing | all 26 (see the plan's tables); a `_powder.py` sheet-helper module and a Powder palette |
+| Late Medieval | All 25 rooms and wall pieces, 4 door plugs, contact sheet, [`docs/art/rooms/LateMedieval.md`](../art/rooms/LateMedieval.md) | nothing |
+| Age of Powder | nothing | all 26 (see the plan's tables); a `_powder.py` sheet-helper module (copy `_late.py`'s shape), a Powder wall-sheet helper if its curtain pieces share a section (as `_late_wall.py` does) |
 
 What each room contains (quadrant by quadrant, and its loot anchors) is in the plan's per-Age
 tables. The art bible for each Age is commit `4de86a9`:

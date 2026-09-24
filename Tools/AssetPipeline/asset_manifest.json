@@ -323,11 +323,41 @@
       "preview": "9550bfdeeb3e5586:23a9d68e53fd",
       "tris": 2096
     },
+    "LateArtilleryYard": {
+      "budget": 4000,
+      "content": "55f32ef8dc3d1285",
+      "preview": "55f32ef8dc3d1285:23a9d68e53fd",
+      "tris": 2556
+    },
+    "LateBarbican": {
+      "budget": 2400,
+      "content": "6b3ec18cd19e4088",
+      "preview": "6b3ec18cd19e4088:23a9d68e53fd",
+      "tris": 1464
+    },
+    "LateBastion": {
+      "budget": 2000,
+      "content": "ad70705564586131",
+      "preview": "ad70705564586131:23a9d68e53fd",
+      "tris": 1112
+    },
+    "LateBrewhouse": {
+      "budget": 2400,
+      "content": "e91f92bf6ee705fd",
+      "preview": "e91f92bf6ee705fd:23a9d68e53fd",
+      "tris": 1552
+    },
     "LateChantryChapel": {
       "budget": 2400,
       "content": "ebd645e551f7d8a6",
       "preview": "ebd645e551f7d8a6:23a9d68e53fd",
       "tris": 1212
+    },
+    "LateCharnelHouse": {
+      "budget": 5000,
+      "content": "42c8888c5634cbe2",
+      "preview": "42c8888c5634cbe2:23a9d68e53fd",
+      "tris": 3248
     },
     "LateCountingHouse": {
       "budget": 2400,
@@ -335,11 +365,55 @@
       "preview": "148d534bdedcc557:23a9d68e53fd",
       "tris": 1600
     },
+    "LateDoorPlugCrypt": {
+      "budget": 40,
+      "content": "55ec4899c773a8d3",
+      "tris": 12
+    },
+    "LateDoorPlugInnerWard": {
+      "budget": 40,
+      "content": "7356d7a6c9be4690",
+      "tris": 12
+    },
+    "LateDoorPlugKeep": {
+      "budget": 40,
+      "content": "67a4c8214d45ad81",
+      "tris": 12
+    },
+    "LateDoorPlugOuterBailey": {
+      "budget": 40,
+      "content": "5df3f960e1b9b63c",
+      "tris": 12
+    },
+    "LateDrawbridge": {
+      "budget": 1600,
+      "content": "e4333f8f247077c3",
+      "preview": "e4333f8f247077c3:23a9d68e53fd",
+      "tris": 868
+    },
+    "LateEffigyCrypt": {
+      "budget": 1600,
+      "content": "cbfb52e75dbdf736",
+      "preview": "cbfb52e75dbdf736:23a9d68e53fd",
+      "tris": 736
+    },
     "LateGreatHall": {
       "budget": 2400,
       "content": "3cccba9e890ed511",
       "preview": "3cccba9e890ed511:23a9d68e53fd",
       "tris": 908
+    },
+    "LateGunFoundry": {
+      "budget": 2000,
+      "content": "e44b0e9affefc372",
+      "preview": "e44b0e9affefc372:23a9d68e53fd",
+      "tris": 988
+    },
+    "LateHandgunnerBarracks": {
+      "budget": 2400,
+      "content": "fb823de8ee4ed3a6",
+      "preview": "fb823de8ee4ed3a6:23a9d68e53fd",
+      "tris": 1036
     },
     "LateJewelHouse": {
       "budget": 2000,
@@ -352,6 +426,12 @@
       "content": "9b4ca636a37f77f2",
       "preview": "9b4ca636a37f77f2:23a9d68e53fd",
       "tris": 1464
+    },
+    "LateOubliette": {
+      "budget": 2400,
+      "content": "b77b3f48783d56bb",
+      "preview": "b77b3f48783d56bb:23a9d68e53fd",
+      "tris": 1164
     },
     "LateSpitKitchen": {
       "budget": 2400,
@@ -371,11 +451,41 @@
       "preview": "518e76754b272872:23a9d68e53fd",
       "tris": 816
     },
+    "LateTreadwheelWell": {
+      "budget": 2400,
+      "content": "5d1940cb6388c7b1",
+      "preview": "5d1940cb6388c7b1:23a9d68e53fd",
+      "tris": 1596
+    },
     "LateTurretStair": {
       "budget": 2000,
       "content": "e1e0e96487030909",
       "preview": "e1e0e96487030909:23a9d68e53fd",
       "tris": 804
+    },
+    "LateUndercroft": {
+      "budget": 2400,
+      "content": "af6a23be49c24262",
+      "preview": "af6a23be49c24262:23a9d68e53fd",
+      "tris": 1868
+    },
+    "LateUndercroftStair": {
+      "budget": 2400,
+      "content": "c8ccb9c0732710b9",
+      "preview": "c8ccb9c0732710b9:23a9d68e53fd",
+      "tris": 1528
+    },
+    "LateWallCorner": {
+      "budget": 2000,
+      "content": "137095e247bc4e35",
+      "preview": "137095e247bc4e35:23a9d68e53fd",
+      "tris": 1220
+    },
+    "LateWallStraight": {
+      "budget": 1200,
+      "content": "486f6daaa3894e5e",
+      "preview": "486f6daaa3894e5e:23a9d68e53fd",
+      "tris": 684
     },
     "Longsword": {
       "budget": 450,
