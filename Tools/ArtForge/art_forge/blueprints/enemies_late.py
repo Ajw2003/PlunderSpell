@@ -485,25 +485,34 @@ def _handgonne(fig: Human, g: Vector, aim: Vector) -> list[Part]:
     # "up" for the gun: world up with the aim removed (the lug hangs below it).
     up = Vector((0.0, 0.0, 1.0))
     up = (up - d * up.dot(d)).normalized()
+    # Tiller and barrel are each ONE sweep, their bands and hoops bulges of the same
+    # shell, the bore and the sooted pan painted on: separate hoop rings around the
+    # barrel are islands hidden from the Gun bone, and they made Blender's heat
+    # weighting fail for the whole handgunner.
+    def banded(a, length, r_n, r_b, bands, bump, half, power):
+        stations, secs = [], []
+        pts = [0.0] + sorted(t + e for t in bands for e in (-half, -half * 0.4, half * 0.4, half)) \
+            + [length]
+        for t in pts:
+            k = 1.0 + (bump if any(abs(t - b) < half * 0.9 for b in bands) else 0.0)
+            stations.append(tuple(a + d * t))
+            secs.append((r_n * k, r_b * k))
+        return stations, secs
+    t_pts, t_secs = banded(tail, 0.80, 0.025, 0.021, [0.20, 0.40, 0.60], 0.16, 0.010, 4.0)
+    g_pts, g_secs = banded(b0, 0.32, 0.0375, 0.0375, [0.02, 0.166, 0.30], 0.15, 0.012, 2.0)
+    pan = b0 + d * 0.06 + up * 0.037
     parts = [
-        _seg("cyl", tail, tiller_end, 0.025, "oak_tiller", "Gun", segments=4, rx=0.021,
-             extras={**prop}),
-        _seg("cyl", b0, b1, 0.0375, "gun_iron", "Gun", segments=8, extras={**prop}),
-        # muzzle mouth darkened (bore) and the breech pan
-        _seg("cyl", b1 - d * 0.004, b1 + d * 0.002, 0.024, "soot_bore", "Gun", segments=8,
-             extras={**prop, "bevel": False}),
+        Part("sweep", (0, 0, 0), (1, 1, 1), mat="oak_tiller", bone="Gun", segments=4,
+             extras={"path": t_pts, "sections": t_secs, "up": tuple(up), "power": 4.0,
+                     **prop}),
+        Part("sweep", (0, 0, 0), (1, 1, 1), mat="gun_iron", bone="Gun", segments=8,
+             extras={"path": g_pts, "sections": g_secs, "up": tuple(up), "power": 2.0,
+                     "paint": [{"mat": "soot_bore", "min": tuple(b1 - Vector((0.017,) * 3)),
+                                "max": tuple(b1 + Vector((0.017,) * 3))},
+                               {"mat": "soot_bore", "min": tuple(pan - Vector((0.02,) * 3)),
+                                "max": tuple(pan + Vector((0.02,) * 3))}],
+                     **prop}),
     ]
-    for t in (0.06, 0.52, 0.94):   # the 3 reinforcing hoops
-        c = b0 + d * (0.32 * t)
-        parts.append(_seg("cyl", c - d * 0.012, c + d * 0.012, 0.043, "gun_iron", "Gun",
-                          segments=8, extras={**prop, "bevel": False}))
-    for t in (0.25, 0.50, 0.75):   # tiller bands
-        c = tail + d * (0.80 * t)
-        parts.append(_seg("cyl", c - d * 0.010, c + d * 0.010, 0.029, "gun_iron", "Gun",
-                          segments=4, rx=0.025, extras={**prop, "bevel": False}))
-    pan = b0 + d * 0.04 + up * 0.040
-    parts.append(Part("box", tuple(pan), (0.03, 0.03, 0.012), mat="soot_bore", bone="Gun",
-                      rot=_rot_to(up), extras={**prop, "bevel": False}))
     lug = b1 - d * 0.03 - up * 0.065
     parts.append(_seg("cyl", b1 - d * 0.03 - up * 0.03, lug, 0.012, "gun_iron", "Gun",
                       segments=4, extras={**prop, "bevel": False}))
