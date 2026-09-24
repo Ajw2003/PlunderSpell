@@ -130,3 +130,10 @@ model was missing). M1 has moved from "never worked" to "works for one person on
 Its acceptance criterion (multi-accent recognition, latency) is still unmeasured, and so is the
 Whisper/Shout calibration against real voices. A standalone build has not been re-tested since the
 fixes.
+
+**2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh
+(`CastleAudit.cs`). Every room and all floor are reachable on five seeds, and loot now spawns on
+furniture (tables, chests, shelves, altars) inside rooms, all of it reachable. Phases 3–5 (themed
+wings, a sunken crypt, real doors and hazards) are not started; see `docs/plans/castle-revamp.md`.
+`ScaleInvariantTests` had measured castle modules on the wrong axis since they were written and
+passed only by accident; it now measures height.

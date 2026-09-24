@@ -38,6 +38,18 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 MODELS_ROOT = os.path.join(REPO_ROOT, "Assets", "_Project", "Art", "Models")
 PALETTE_PNG = os.path.join(REPO_ROOT, "Assets", "_Project", "Art", "Textures", "PlunderspellPalette.png")
 SCRATCH_GLB_DIR = os.environ.get("PLUNDERSPELL_SCRATCH_GLB", "/tmp/plunderspell_glb")
+ANCHORS_JSON = os.path.join(REPO_ROOT, "Assets", "_Project", "Data", "Castle", "CastleLootAnchors.json")
+LOOT_ANCHORS_BY_KEY = {}
+
+
+def write_loot_anchors():
+    """Blender coordinates (X right, Y forward, Z up) relative to the module
+    origin, rounded so a no-op rebuild writes an identical file."""
+    import json
+    rooms = {k: [list(a) for a in v] for k, v in sorted(LOOT_ANCHORS_BY_KEY.items()) if v}
+    with open(ANCHORS_JSON, "w", encoding="utf8") as f:
+        json.dump({"space": "blender_z_up_module_local", "rooms": rooms}, f, indent=1, sort_keys=True)
+        f.write("\n")
 
 
 def clear_scene():
@@ -50,13 +62,21 @@ def build_one(spec) -> tuple[object, list[str]]:
     mk.reset_material_order()
 
     builder_fn = getattr(builders, spec["builder"], None) or getattr(castle_builders, spec["builder"])
+    castle_builders.LOOT_ANCHORS.clear()
     builder_fn(bm, uv)
+    if spec["subdir"] == "Castle":
+        LOOT_ANCHORS_BY_KEY[spec["key"]] = list(castle_builders.LOOT_ANCHORS)
 
     obj = mk.finalize_to_object(bm, spec["key"], mk.used_pigments(), PALETTE_PNG)
     # Only castle modules are placed on the generator's grid; a weapon or a
     # goblet has no cell to stay inside of.
     footprint = rk.FOOTPRINT if spec["subdir"] == "Castle" else None
     issues = val.validate_object(obj, spec["tri_budget"], max_footprint=footprint)
+    if spec["subdir"] == "Castle":
+        # The wall pieces and door plugs are not rooms; everything else is walked through.
+        enclosed = not (spec["builder"] in castle_builders.WALL_BUILDERS
+                        or spec["builder"].startswith("build_door_plug"))
+        issues += val.validate_castle_layout(obj, enclosed)
     tris = sum(len(p.vertices) - 2 for p in obj.data.polygons)
     return obj, issues, tris, manifest.fingerprint_mesh(obj)
 
@@ -189,6 +209,7 @@ def main():
         results.append((key, ok, issues, tris, spec["tri_budget"], unchanged))
 
     manifest.save(recorded)
+    write_loot_anchors()
 
     print("\n" + "=" * 70)
     print("PLUNDERSPELL ASSET PIPELINE — build report")

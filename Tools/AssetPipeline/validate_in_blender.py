@@ -109,6 +109,94 @@ def validate_object(obj, tri_budget: int, max_footprint: float | None = None) ->
     return issues
 
 
+# ── castle layout (castle revamp, docs/plans/castle-revamp.md) ────────────
+# A module is built by stacking separate primitives, so every prop, wall
+# segment and merlon is its own connected mesh island. Two rules the old
+# pieces broke, checked per island:
+#   * nothing floats: every island must rest on the ground or touch
+#     something that does (the battlements used to ring cells whose wall was
+#     on one side only, so three sides of merlons hung in the air);
+#   * an enclosed room keeps a clear cross-shaped walkway between its four
+#     archways (set-pieces through the middle of rooms sealed off most of the
+#     castle on the NavMesh — see the navigation audit).
+
+TOUCH = 0.06            # metres: boxes this close count as touching
+WALKWAY_HALF = 1.6      # half-width of each arm of the clear cross
+WALKWAY_HEAD = 2.0      # headroom above the floor that must stay clear
+FLAT_DECOR = 0.12       # a rug or runner this thin is walkable
+ROOM_INNER = 5.4        # anything reaching past this is the room's wall, not a prop
+
+
+def _islands(bm):
+    """Connected face islands as (min_xyz, max_xyz) boxes."""
+    seen = set()
+    boxes = []
+    for f in bm.faces:
+        if f.index in seen:
+            continue
+        stack = [f]
+        seen.add(f.index)
+        lo = [1e9, 1e9, 1e9]
+        hi = [-1e9, -1e9, -1e9]
+        while stack:
+            face = stack.pop()
+            for v in face.verts:
+                for a in range(3):
+                    lo[a] = min(lo[a], v.co[a])
+                    hi[a] = max(hi[a], v.co[a])
+                for linked in v.link_faces:
+                    if linked.index not in seen:
+                        seen.add(linked.index)
+                        stack.append(linked)
+        boxes.append((tuple(lo), tuple(hi)))
+    return boxes
+
+
+def _touch(a, b, tol=TOUCH):
+    return all(a[0][i] <= b[1][i] + tol and b[0][i] <= a[1][i] + tol for i in range(3))
+
+
+def validate_castle_layout(obj, enclosed: bool, floor_top: float = 0.3) -> list[str]:
+    issues = []
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.faces.ensure_lookup_table()
+    boxes = _islands(bm)
+    bm.free()
+
+    # Floating: flood from everything standing on the ground.
+    grounded = {i for i, b in enumerate(boxes) if b[0][2] < 0.05}
+    frontier = list(grounded)
+    while frontier:
+        i = frontier.pop()
+        for j, other in enumerate(boxes):
+            if j not in grounded and _touch(boxes[i], other):
+                grounded.add(j)
+                frontier.append(j)
+    floating = [b for i, b in enumerate(boxes) if i not in grounded]
+    if floating:
+        lo, hi = floating[0]
+        issues.append(f"{len(floating)} floating piece(s), e.g. one spanning "
+                      f"x[{lo[0]:.1f},{hi[0]:.1f}] y[{lo[1]:.1f},{hi[1]:.1f}] z[{lo[2]:.1f},{hi[2]:.1f}]")
+
+    if enclosed:
+        blocking = []
+        for lo, hi in boxes:
+            is_shell = (max(abs(lo[0]), abs(hi[0]), abs(lo[1]), abs(hi[1])) > ROOM_INNER)
+            if is_shell or hi[2] <= floor_top + FLAT_DECOR or lo[2] >= floor_top + WALKWAY_HEAD:
+                continue
+            in_x_arm = lo[0] < WALKWAY_HALF and hi[0] > -WALKWAY_HALF
+            in_y_arm = lo[1] < WALKWAY_HALF and hi[1] > -WALKWAY_HALF
+            if in_x_arm or in_y_arm:
+                blocking.append((lo, hi))
+        if blocking:
+            lo, hi = blocking[0]
+            issues.append(f"{len(blocking)} prop(s) block the walkway between archways, e.g. "
+                          f"x[{lo[0]:.1f},{hi[0]:.1f}] y[{lo[1]:.1f},{hi[1]:.1f}] "
+                          f"(keep |x| and |y| >= {WALKWAY_HALF} below {WALKWAY_HEAD}m)")
+    return issues
+
+
 def _duplicate_vert_count(bm, dist=1e-5) -> int:
     seen = {}
     dupes = 0

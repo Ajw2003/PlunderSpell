@@ -606,3 +606,75 @@ and a machine with a microphone lost the number-key fallback — both fixed in `
 **Decision.** Leave `Player.prefab` as is; it is not what the raid spawns.
 
 **Status.** Standing.
+
+## 2026-09-23 — The player body interpolates, and mouse yaw turns the camera, not the body (#104)
+
+**Context.** #104: "items and enemies lag, a slight motion blur, ~100 ms". Measured in Play mode at
+~500 fps: the camera (a child of the player's rigidbody) was frozen on 90% of rendered frames. It
+only moved on 50 Hz physics steps, because the body had no interpolation, while interpolated held
+items moved every frame. Guards were frozen on ~35% of frames: a NavMeshAgent moved them each frame
+while a dynamic rigidbody on the same object wrote its own position back each physics step. No
+motion blur (intensity 0) or temporal anti-aliasing is involved.
+
+**Decision.** The player's rigidbody interpolates. Because interpolation overwrites any rotation set
+on the body's transform between steps (mouse look turned 2.5° instead of ~24° when tried), yaw now
+goes on the camera (`PlayerStateMachine.Look` sets the Eye's local yaw and pitch) and the capsule
+never turns. Movement, dodge, aiming, spells and melee all read the camera, so nothing needed the
+body's facing (dodge was the one exception, now camera-relative). Guards with a NavMeshAgent get a
+kinematic rigidbody: still solid, still hit by thrown things, no longer fought by physics. After the
+fix, camera, guards and held items all move on 100% of frames.
+
+**Also.** `PlayerIdleState` now zeroes horizontal speed. The body hovers on its ground snap and
+never touches the floor, so nothing else bled off speed; arriving in Idle while moving coasted off
+the map.
+
+**Status.** Standing. Regression tests: `PlayableLoopTests.Test_TheViewMovesEveryFrameAndLookTurnsTheCamera`,
+`Test_IdleStandsStill`.
+
+## 2026-09-23 — Pausing freezes the world, but only for the host (#107)
+
+**Context.** Esc swapped screens and nothing else: the raid clock, guards and physics kept running
+behind the pause menu.
+
+**Decision.** `PausePolicy` (on the persistent UI root, beside `CursorLockPolicy`) sets
+`Time.timeScale = 0` and pauses audio while the pause menu, or Settings opened from it, is up, on the
+machine that owns the simulation only (`GameServices.IsSessionAuthority`: the host or an offline
+player; the raid supplies the network check). A client's pause menu stays an overlay, because it
+cannot stop three other people's game. The inventory is not a pause.
+
+**Trap.** Anything waiting on scaled time (`WaitForSeconds`, `WaitForFixedUpdate`) never finishes
+while paused. One test did exactly that and hung the suite; it now uses the inventory to test the
+"menus block input" rule.
+
+**Status.** Standing. Verified in Play mode: the clock held at 295.00 s and a guard held still for
+2 s while paused, stayed frozen in Settings, and resumed on Esc.
+
+## 2026-09-23 — Frango is a force blast, not a loot-breaker; Levo lifts guards (#106)
+
+**Context.** #106: "make other spells actually useful, Ignis is by far the most usable." Checked
+what each spell could affect. Frango shattered every `IBreakable` within 4 m, and the only
+`IBreakable` in the game is `LootPickup`, so the spell could only destroy the players' own haul.
+Its old doc comment said so on purpose ("casting it near the haul is how a raid loses its payday").
+Levo couldn't lift a guard once guard bodies became kinematic (#104). Every spell also targeted
+whatever was nearest a point in front of the caster's face, not what they aimed at.
+
+**Decision.** Spells aim (see `spells.md`, "Spells go where you aim"). Frango now blasts what you
+aim at: 30 damage (× volume power) through `Damage.Apply`, a 1.2 s stagger and a 2.5 m shove (via
+the NavMeshAgent, so never through a wall), or it smashes an aimed door open, locked or not
+(`IHandOpenable.ForceOpen`, which is loud). It no longer touches loot. Levo on a guard suspends its
+agent, raises it 1.8 m (helpless: levitating now counts as incapacitated), then drops it under real
+gravity for 9 damage per metre, blamed on the caster, and puts it back on the navmesh. All numbers
+are in the `SpellTuning` asset.
+
+**Reverses.** Frango's "breaks your own loot" risk. That risk still exists as Frango's *misfire*
+("breaks a random inventory item"), which is where a punishment for speaking badly belongs.
+
+**Not decided (needs the user).**
+- **Cadaver Surge** raises an event nothing listens to, so it does nothing. Raising a corpse as a
+  temporary ally, or as a noisy lure, are both real designs; neither is guessed at here.
+- **Porta has nothing to open.** `CastleDoor` is never placed: no prefab or scene contains one, so
+  the alarm's lockdown locks nothing either. Doors belong in the castle revamp.
+
+**Status.** Standing. Verified in Play mode: `playtest-2026-09-23/27` (aimed Ignis), `/28` (Frango
+−30 and a 2.5 m shove), `/30` (a Levo'd guard floating 1.8 m up, then −17 on landing). A locked test
+door opened to Frango.

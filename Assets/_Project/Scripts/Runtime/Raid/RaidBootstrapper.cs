@@ -49,6 +49,9 @@ namespace RogueAi.Raid
             GameServices.GameState.StateChanged += OnGameStateChanged;
             if (_director != null)
                 _director.RaidResolved += OnRaidResolved;
+
+            // Offline the director is its own authority; networked, only the host may freeze time.
+            GameServices.IsSessionAuthority = () => _director == null || !_director.isSpawned || _director.isServer;
         }
 
         private void OnDisable()
@@ -57,6 +60,7 @@ namespace RogueAi.Raid
                 GameServices.GameState.StateChanged -= OnGameStateChanged;
             if (_director != null)
                 _director.RaidResolved -= OnRaidResolved;
+            GameServices.IsSessionAuthority = () => true;
         }
 
         /// <summary>Back to the lair once the takings are counted, so the debt can be paid down.</summary>

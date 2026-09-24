@@ -46,7 +46,8 @@ namespace RogueAi.Status
         public bool IsLevitating => _levitateRemaining > 0f;
 
         /// <summary>True while the actor cannot act — asleep or stunned. AI and input check this.</summary>
-        public bool IsIncapacitated => IsStunned || IsAsleep;
+        // Floating counts: a guard held in the air by Levo cannot see, chase or strike.
+        public bool IsIncapacitated => IsStunned || IsAsleep || IsLevitating;
 
         public float BurnRemaining => _burnRemaining;
         public float StunRemaining => _stunRemaining;
@@ -199,10 +200,15 @@ namespace RogueAi.Status
 
         // --- ILevitatable ----------------------------------------------------------------------
 
-        public void Levitate(Vector3 impulse, float duration)
+        /// <summary>Who most recently levitated this, for blame when it falls.</summary>
+        public GameObject LevitatedBy { get; private set; }
+
+        public void Levitate(Vector3 impulse, float duration, GameObject instigator = null)
         {
             if (duration <= 0f)
                 return;
+
+            LevitatedBy = instigator;
 
             _levitateRemaining = Mathf.Max(_levitateRemaining, duration);
 

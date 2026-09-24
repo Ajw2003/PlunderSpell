@@ -135,31 +135,44 @@ namespace RogueAi.Tests
 
         // --- Frango -------------------------------------------------------------------------
 
-        [Test]
-        public void Test_FrangoShattersLoot()
+        /// <summary>A target with health, for spells that hurt.</summary>
+        private class Target : MonoBehaviour, Interfaces.IHealth
         {
-            LootPickup vase = MakeLoot(new Vector3(0f, 0f, 2f));
-
-            int broken = SpellEffectRegistry.Execute(
-                Context(SpellId.Frango, CastVolume.Normal, Vector3.zero));
-
-            Assert.AreEqual(1, broken, "Frango should have broken the vase in range.");
-            Assert.IsTrue(vase.IsBroken, "Frango must shatter loot — including your own.");
+            public float Health = 100f;
+            public float CurrentHealth => Health;
+            public float MaxHealth => 100f;
+            public void TakeDamage(float damage) => Health = Mathf.Max(0f, Health - damage);
+            public void TakeDamage(float damage, float impactVelocity) => TakeDamage(damage);
         }
 
         [Test]
-        public void Test_FrangoIsIdempotentOnAlreadyBrokenLoot()
+        public void Test_FrangoLeavesYourLootAlone()
         {
+            // Frango used to shatter every breakable in range, and the only breakables were the
+            // players' own valuables, so it could only ever cost you (#106).
             LootPickup vase = MakeLoot(new Vector3(0f, 0f, 2f));
-            vase.Break();
 
-            int broken = SpellEffectRegistry.Execute(
+            int hit = SpellEffectRegistry.Execute(
                 Context(SpellId.Frango, CastVolume.Normal, Vector3.zero));
 
-            Assert.AreEqual(0, broken, "Already-broken loot must not be counted again.");
+            Assert.AreEqual(0, hit);
+            Assert.IsFalse(vase.IsBroken, "A force blast at your own haul must not smash it.");
         }
 
-        // --- Somnus / Tonitrus --------------------------------------------------------------
+        [Test]
+        public void Test_FrangoHurtsAndStaggersWhatYouAimAt()
+        {
+            StatusEffectReceiver guard = MakeActor("Guard", new Vector3(0f, 0f, 3f));
+            var health = guard.gameObject.AddComponent<Target>();
+
+            int hit = SpellEffectRegistry.Execute(
+                Context(SpellId.Frango, CastVolume.Normal, Vector3.zero));
+
+            Assert.AreEqual(1, hit);
+            Assert.AreEqual(100f - SpellTuning.FrangoDamage, health.Health, 0.01f,
+                "The blast must hurt what it hits.");
+            Assert.IsTrue(guard.IsStunned, "The blast must stagger what it hits.");
+        }
 
         [Test]
         public void Test_SomnusSleepsGuardsButNotTheCaster()

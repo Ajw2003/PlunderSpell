@@ -48,28 +48,37 @@ namespace RogueAi.UI
 
         // The last phrase the voice service produced, so a misheard word reads differently from a
         // dead microphone.
-        private string _lastHeard = string.Empty;
-        private float _lastHeardAt = float.NegativeInfinity;
-        private RogueAi.Voice.IVoiceInputService _listenedTo;
+        private const float k_captionSeconds = 3.5f;
+        private string _caption = string.Empty;
+        private Color _captionColour = Color.white;
+        private float _captionAt = float.NegativeInfinity;
 
-        private void OnEnable()
+        private void OnEnable() => RogueAi.Spells.SpellCastingSystem.PhraseResolved += OnPhrase;
+
+        private void OnDisable() => RogueAi.Spells.SpellCastingSystem.PhraseResolved -= OnPhrase;
+
+        /// <summary>The caption text for a phrase, and how it is coloured. Pure, for tests.</summary>
+        public static string CaptionFor(RogueAi.Spells.SpellCastingSystem.PhraseReport phrase, out Color colour)
         {
-            _listenedTo = RogueAi.Voice.VoiceServiceLocator.Current;
-            if (_listenedTo != null)
-                _listenedTo.OnPhraseRecognized += OnPhrase;
+            string heard = $"\"{phrase.Heard.ToLowerInvariant()}\"";
+            if (phrase.Fizzled)
+            {
+                colour = new Color(0.65f, 0.65f, 0.65f);
+                return $"{heard}  -  fizzled, not a spell";
+            }
+            if (phrase.IsMisfire)
+            {
+                colour = new Color(1f, 0.45f, 0.2f);
+                return $"{heard}  ->  {phrase.Word}  -  MISFIRE";
+            }
+            colour = new Color(0.55f, 1f, 0.6f);
+            return $"{heard}  ->  {phrase.Word}  ({phrase.Volume})";
         }
 
-        private void OnDisable()
+        private void OnPhrase(RogueAi.Spells.SpellCastingSystem.PhraseReport phrase)
         {
-            if (_listenedTo != null)
-                _listenedTo.OnPhraseRecognized -= OnPhrase;
-            _listenedTo = null;
-        }
-
-        private void OnPhrase(RogueAi.Voice.VoiceRecognitionResult result)
-        {
-            _lastHeard = $"Heard \"{result.RawText.ToLowerInvariant()}\"  ({result.Volume})";
-            _lastHeardAt = Time.time;
+            _caption = CaptionFor(phrase, out _captionColour);
+            _captionAt = Time.time;
         }
 
         /// <summary>The live speech service, or null when casting is keyboard-only.</summary>
@@ -202,9 +211,13 @@ namespace RogueAi.UI
                     GUI.Label(new Rect(meter.x + meter.width * (RogueAi.Voice.VoiceUtility.ShoutThreshold / meterMax) - 20f, meter.y + 11f, 80f, 16f), "shout", small);
                 }
             }
-            else if (Time.time - _lastHeardAt < 4f)
+            else if (Time.time - _captionAt < k_captionSeconds)
             {
-                GUI.Label(new Rect(Screen.width * 0.5f - 250f, Screen.height - 56f, 500f, 22f), _lastHeard, Centered(_label));
+                // What you said, and what it became: a clean cast, a misfire, or a fizzle (#49).
+                GUIStyle caption = Centered(_label);
+                caption.fontSize = 16;
+                caption.normal.textColor = _captionColour;
+                GUI.Label(new Rect(Screen.width * 0.5f - 300f, Screen.height - 58f, 600f, 24f), _caption, caption);
             }
         }
 

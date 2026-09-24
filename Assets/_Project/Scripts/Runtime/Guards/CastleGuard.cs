@@ -128,6 +128,13 @@ namespace RogueAi.Guards
         {
             _status = GetComponent<StatusEffectReceiver>();
             _agent = GetComponent<NavMeshAgent>();
+
+            // The agent moves this transform every frame; a dynamic rigidbody on the same object had
+            // the physics step writing its own position back, so guards froze on about a third of
+            // rendered frames and looked like they lagged and smeared (#104). Kinematic still
+            // collides and still takes hits from thrown things.
+            if (_agent != null && TryGetComponent(out Rigidbody body))
+                body.isKinematic = true;
             _health.value = _maxHealth;
 
             if (_alarm == null)
@@ -139,7 +146,116 @@ namespace RogueAi.Guards
             // Clients render what the server decided; only the server runs the AI.
             if (isSpawned && !isServer)
                 return;
+            if (UpdateLevitation(Time.deltaTime))
+                return;
             Tick(Time.deltaTime);
+        }
+
+        // -----------------------------------------------------------------------------------------
+        // Levitation (Levo)
+        // -----------------------------------------------------------------------------------------
+
+        private const float k_liftHeight = 1.8f;
+        private const float k_liftSpeed = 3f;
+        private const float k_fallDamagePerMetre = 9f;
+
+        private bool _floating;
+        private bool _falling;
+        private float _floatBaseY;
+        private float _fallFromY;
+        private float _fallStartedAt;
+
+        /// <summary>True while Levo holds this guard up or it is still falling back down.</summary>
+        public bool IsAirborne => _floating || _falling;
+
+        /// <summary>
+        /// Lifts the guard while it levitates and drops it when the spell ends. The guard's body is
+        /// kinematic (the NavMeshAgent owns its position), so an impulse cannot lift it: the agent is
+        /// suspended and the transform raised directly, then the body falls under real gravity and
+        /// takes damage for the height. Returns true while the AI must not run.
+        /// </summary>
+        private bool UpdateLevitation(float deltaTime)
+        {
+            bool levitating = _status != null && _status.IsLevitating;
+            TryGetComponent(out Rigidbody body);
+
+            if (levitating)
+            {
+                if (!_floating)
+                {
+                    _floating = true;
+                    _falling = false;
+                    _floatBaseY = transform.position.y;
+                    if (_agent != null)
+                        _agent.enabled = false;
+                    if (body != null)
+                    {
+                        body.isKinematic = true;
+                        body.freezeRotation = true;
+                    }
+                }
+
+                Vector3 p = transform.position;
+                p.y = Mathf.MoveTowards(p.y, _floatBaseY + k_liftHeight, k_liftSpeed * deltaTime);
+                transform.position = p;
+                transform.Rotate(Vector3.up, 45f * deltaTime, Space.World);
+                return true;
+            }
+
+            if (_floating)
+            {
+                _floating = false;
+                _falling = true;
+                _fallFromY = transform.position.y;
+                _fallStartedAt = Time.time;
+                if (body != null)
+                {
+                    body.isKinematic = false;
+                    body.useGravity = true;
+                    body.freezeRotation = true;
+                    body.linearVelocity = Vector3.zero;
+                }
+                else
+                {
+                    Land(body);
+                    return false;
+                }
+                return true;
+            }
+
+            if (_falling)
+            {
+                bool settled = body == null || (Time.time - _fallStartedAt > 0.25f && Mathf.Abs(body.linearVelocity.y) < 0.05f);
+                bool timedOut = Time.time - _fallStartedAt > 3f;
+                if (!settled && !timedOut)
+                    return true;
+                Land(body);
+                return false;
+            }
+
+            return false;
+        }
+
+        private void Land(Rigidbody body)
+        {
+            _falling = false;
+            if (body != null)
+                body.isKinematic = true;
+
+            float height = Mathf.Max(0f, _fallFromY - transform.position.y);
+            if (height > 0.5f)
+            {
+                GameObject blame = _status != null ? _status.LevitatedBy : null;
+                Damage.Apply(this, height * k_fallDamagePerMetre, gameObject, blame,
+                    transform.position + Vector3.up * 0.2f, DamageKind.Impact);
+            }
+
+            if (_agent != null && _health.value > 0f)
+            {
+                _agent.enabled = true;
+                if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+                    _agent.Warp(hit.position);
+            }
         }
 
         /// <summary>

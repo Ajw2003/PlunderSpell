@@ -20,7 +20,7 @@ namespace Interfaces
     public interface ILevitatable
     {
         /// <summary>Lift with the given upward impulse for <paramref name="duration"/> seconds.</summary>
-        void Levitate(Vector3 impulse, float duration);
+        void Levitate(Vector3 impulse, float duration, UnityEngine.GameObject instigator = null);
     }
 
     /// <summary>Something Somnus can put to sleep. Implemented by guards.</summary>

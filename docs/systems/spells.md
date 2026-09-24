@@ -157,6 +157,27 @@ Making the bolt the thing that deals the damage would mean moving Ignis's resolu
 `IgnisEffect` and into a projectile hit, which is a change to how the spell system works rather
 than a visual — not attempted here.
 
+
+### Spells go where you aim
+
+Added 2026-09-23 (#106). Single-target spells (Ignis, Levo, Porta, Cadaver Surge) take the target
+closest to the crosshair within `AimConeDegrees` (22°) and `AimRange` (14 m × the volume power),
+preferring centred over near; anything within 1.5 m counts even off-centre. Area spells (Tonitrus,
+Somnus) burst at the crosshair's aim point, not on the caster's feet. Before, every spell took
+whatever was nearest a point 1 m in front of the caster's face, often something beside or behind
+them. The overlap buffer grows instead of capping at 128 colliders. Misfires still centre on the
+caster, on purpose.
+
+### Tuning is an asset
+
+Added 2026-09-23 (#105). Every spell number (the volume dial's power/noise, each spell's damage,
+durations, radii, the misfire penalties) lives in `Assets/_Project/Resources/SpellTuning.asset`, a
+`SpellTuningProfile`, grouped by spell with tooltips. Edit it in the Inspector; no code change or
+recompile needed. `SpellTuning` reads it (from Resources, so it ships in builds); if the asset is
+missing it falls back to the values the game had when they were constants. `SpellTuning.Use` swaps
+in another profile for tests or balance experiments. Spell *behaviour* (what Ignis does) is still
+code in `PrimarySpellEffects` / `MisfireSpellEffects`.
+
 ## Invariants
 
 - **An intended spell never hits the caster; a misfire always aims at them.** Primary effects

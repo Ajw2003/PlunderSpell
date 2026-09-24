@@ -109,6 +109,7 @@ namespace RogueAi.Spells
         private void HandlePhrase(VoiceRecognitionResult result)
         {
             SpellId resolved = MisfireEngine.Resolve(result, _lexicon);
+            PhraseResolved?.Invoke(new PhraseReport(result.RawText, result.NormalizedText, resolved, result.Volume));
             if (resolved == SpellId.None)
             {
                 Debug.Log($"[SpellCast] Phrase \"{result.NormalizedText}\" fizzled (no match).");
@@ -239,6 +240,34 @@ namespace RogueAi.Spells
 
             public bool IsMisfire => SpellCatalogue.IsMisfire(Spell);
         }
+
+        /// <summary>What the local player said and what it became — including a fizzle, which casts
+        /// nothing and so never reaches <see cref="CastResolved"/>. The phrase caption reads this.</summary>
+        public readonly struct PhraseReport
+        {
+            /// <summary>Exactly what the recogniser output ("igneous"), or the key's word.</summary>
+            public readonly string Heard;
+
+            /// <summary>The lexicon word it was taken as ("IGNIS").</summary>
+            public readonly string Word;
+
+            public readonly SpellId Result;
+            public readonly CastVolume Volume;
+
+            public PhraseReport(string heard, string word, SpellId result, CastVolume volume)
+            {
+                Heard = heard ?? string.Empty;
+                Word = word ?? string.Empty;
+                Result = result;
+                Volume = volume;
+            }
+
+            public bool Fizzled => Result == SpellId.None;
+            public bool IsMisfire => SpellCatalogue.IsMisfire(Result);
+        }
+
+        /// <summary>Raised on the caster's machine for every phrase, cast or not.</summary>
+        public static event System.Action<PhraseReport> PhraseResolved;
 
         /// <summary>Raised on every peer when a cast resolves. UI and audio subscribe.</summary>
         public static event System.Action<CastReport> CastResolved;

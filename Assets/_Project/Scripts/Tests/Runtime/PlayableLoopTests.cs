@@ -267,6 +267,122 @@ namespace RogueAi.Tests
             Assert.AreEqual(0.5f, chest.CarrySpeedMultiplier, 0.01f);
         }
 
+        // --- Smooth view (#104) ---------------------------------------------------------------
+
+        private StateMachine.PlayerStateMachine MakePlayer(Vector3 at)
+        {
+            var go = Track(new GameObject("Player"));
+            go.transform.position = at;
+            go.AddComponent<CapsuleCollider>();
+            go.AddComponent<Rigidbody>();
+            var player = go.AddComponent<StateMachine.PlayerStateMachine>();
+            var eye = new GameObject("Eye");
+            eye.transform.SetParent(go.transform, false);
+            player.CameraTransform = eye.transform;
+            player.MouseSensitivity = 100f;
+            return player;
+        }
+
+        [UnityTest]
+        public IEnumerator Test_TheViewMovesEveryFrameAndLookTurnsTheCamera()
+        {
+            var player = MakePlayer(new Vector3(0f, 300f, -800f));
+            yield return null;
+
+            Assert.AreEqual(RigidbodyInterpolation.Interpolate, player._rb.interpolation,
+                "An uninterpolated body moves its camera only on 50 Hz physics steps: the whole view judders (#104).");
+
+            Quaternion bodyBefore = player.transform.rotation;
+            float yawBefore = player.CameraTransform.eulerAngles.y;
+            for (int i = 0; i < 10; i++)
+            {
+                player.Look(new Vector2(5f, 0f));
+                yield return null;
+            }
+
+            Assert.AreNotEqual(yawBefore, player.CameraTransform.eulerAngles.y, "Mouse look must turn the view.");
+            Assert.AreEqual(bodyBefore, player.transform.rotation,
+                "Yaw belongs to the camera: interpolation overwrites any rotation set on the body.");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_IdleStandsStill()
+        {
+            var player = MakePlayer(new Vector3(20f, 300f, -800f));
+            player._rb.useGravity = false;
+            yield return null;
+
+            player._rb.linearVelocity = new Vector3(5f, 0f, 3f);
+            player.Idle();
+            yield return null;
+            yield return null;
+
+            Vector3 v = player._rb.linearVelocity;
+            Assert.Less(new Vector2(v.x, v.z).magnitude, 0.01f,
+                "Arriving in Idle while moving used to coast forever, off the edge of the map.");
+        }
+
+        // --- Pause (#107) ----------------------------------------------------------------------
+
+        [Test]
+        public void Test_PauseFreezesTheWorldOnlyForTheHost()
+        {
+            Assert.IsTrue(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Paused, GameState.Playing, true));
+            Assert.IsTrue(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Settings, GameState.Paused, true),
+                "Settings opened from the pause menu is still paused.");
+            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Paused, GameState.Playing, false),
+                "A client's pause menu cannot stop everyone else's game.");
+            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Settings, GameState.MainMenu, true));
+            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Inventory, GameState.Playing, true),
+                "The inventory is a live overlay, not a pause.");
+        }
+
+        // --- Phrase caption (#49) --------------------------------------------------------------
+
+        [Test]
+        public void Test_TheCaptionTellsACastAMisfireAndAFizzleApart()
+        {
+            string clean = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
+                "igneous", "IGNIS", RogueAi.Spells.SpellId.Ignis, RogueAi.Voice.CastVolume.Normal), out Color cleanColour);
+            string misfire = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
+                "a nice", "AGNIS", RogueAi.Spells.SpellId.MisfireIgnis, RogueAi.Voice.CastVolume.Normal), out Color misfireColour);
+            string fizzle = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
+                "potato", "POTATO", RogueAi.Spells.SpellId.None, RogueAi.Voice.CastVolume.Normal), out Color fizzleColour);
+
+            StringAssert.Contains("\"igneous\"", clean, "The caption shows what was actually heard.");
+            StringAssert.Contains("IGNIS", clean);
+            StringAssert.Contains("MISFIRE", misfire);
+            StringAssert.Contains("fizzled", fizzle);
+            Assert.AreNotEqual(cleanColour, misfireColour);
+            Assert.AreNotEqual(misfireColour, fizzleColour);
+            Assert.AreNotEqual(cleanColour, fizzleColour);
+        }
+
+        // --- Authored spell tuning (#105) ------------------------------------------------------
+
+        [Test]
+        public void Test_SpellNumbersComeFromTheAuthoredAsset()
+        {
+            Assert.IsNotNull(Resources.Load<RogueAi.Spells.SpellTuningProfile>(RogueAi.Spells.SpellTuning.ResourcePath),
+                "The tuning asset must ship under Resources, or builds fall back to code defaults.");
+
+            var custom = ScriptableObject.CreateInstance<RogueAi.Spells.SpellTuningProfile>();
+            custom.IgnisDamagePerSecond = 99f;
+            custom.ShoutPower = 3f;
+            try
+            {
+                RogueAi.Spells.SpellTuning.Use(custom);
+                Assert.AreEqual(99f, RogueAi.Spells.SpellTuning.IgnisDamagePerSecond);
+                Assert.AreEqual(3f, RogueAi.Spells.SpellTuning.PowerMultiplier(RogueAi.Voice.CastVolume.Shout),
+                    "Editing the asset must change the game, not a copy of the numbers in code.");
+            }
+            finally
+            {
+                RogueAi.Spells.SpellTuning.Use(null);
+                Object.Destroy(custom);
+            }
+        }
+
         // --- A guard-free entrance -------------------------------------------------------------
 
         [Test]

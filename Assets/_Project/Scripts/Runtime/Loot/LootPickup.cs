@@ -337,7 +337,7 @@ namespace RogueAi.Loot
         /// <see cref="ILevitatable"/>: lift the item. A carried item is not liftable — it is already
         /// kinematic and parented, and un-sticking it from a carrier's hand mid-carry would strand it.
         /// </summary>
-        public void Levitate(Vector3 impulse, float duration)
+        public void Levitate(Vector3 impulse, float duration, GameObject instigator = null)
         {
             if (IsBroken || IsBeingCarried || _rb == null || _rb.isKinematic)
                 return;

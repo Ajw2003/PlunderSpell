@@ -4,82 +4,65 @@ using UnityEngine;
 namespace RogueAi.Spells
 {
     /// <summary>
-    /// Every number that decides how a cast feels, in one pure static table.
+    /// Every number that decides how a cast feels, read from the authored
+    /// <see cref="SpellTuningProfile"/> asset (#105) — edit <c>Assets/_Project/Resources/SpellTuning.asset</c>,
+    /// not this file.
     ///
-    /// The central trade-off of Plunderspell lives here: <see cref="CastVolume"/> scales a spell's
-    /// power AND the noise it makes, in the same direction. A whisper is weak and nearly silent; a
-    /// shout is strong and wakes the castle. Nothing else in the game gives the player that dial, so
-    /// it is deliberately steep — a shouted Tonitrus alone is over a third of the way to Roused.
-    ///
-    /// All of it is side-effect-free so the balance can be asserted in tests rather than eyeballed
-    /// in play.
+    /// The central trade-off of Plunderspell lives in that asset: <see cref="CastVolume"/> scales a
+    /// spell's power AND the noise it makes, in the same direction. A whisper is weak and nearly
+    /// silent; a shout is strong and wakes the castle.
     /// </summary>
     public static class SpellTuning
     {
-        /// <summary>Power/damage/radius multiplier for the volume a phrase was spoken at.</summary>
-        public static float PowerMultiplier(CastVolume volume)
+        /// <summary>Where the live asset is loaded from (a Resources path, so it ships in every build).</summary>
+        public const string ResourcePath = "SpellTuning";
+
+        private static SpellTuningProfile _profile;
+
+        /// <summary>
+        /// The profile in use: one set with <see cref="Use"/>, else the Resources asset, else the
+        /// built-in defaults (the values the game had as constants).
+        /// </summary>
+        public static SpellTuningProfile Profile
         {
-            switch (volume)
+            get
             {
-                case CastVolume.Whisper: return 0.5f;
-                case CastVolume.Shout: return 1.75f;
-                default: return 1.0f;
+                if (_profile == null)
+                    _profile = Resources.Load<SpellTuningProfile>(ResourcePath);
+                if (_profile == null)
+                    _profile = ScriptableObject.CreateInstance<SpellTuningProfile>();
+                return _profile;
             }
         }
 
-        /// <summary>Radius of the noise a cast makes, in metres. A whisper barely carries.</summary>
-        public static float NoiseRadius(CastVolume volume)
-        {
-            switch (volume)
-            {
-                case CastVolume.Whisper: return 0.5f;
-                case CastVolume.Shout: return 12.0f;
-                default: return 5.0f;
-            }
-        }
+        /// <summary>Swaps the profile — for tests and balance experiments. Null reverts to the asset.</summary>
+        public static void Use(SpellTuningProfile profile) => _profile = profile;
 
-        /// <summary>Loudness (0..1) of the noise a cast makes before wall attenuation.</summary>
-        public static float NoiseStrength(CastVolume volume)
-        {
-            switch (volume)
-            {
-                case CastVolume.Whisper: return 0.1f;
-                case CastVolume.Shout: return 1.0f;
-                default: return 0.45f;
-            }
-        }
+        public static float PowerMultiplier(CastVolume volume) => Profile.PowerMultiplier(volume);
+        public static float NoiseRadius(CastVolume volume) => Profile.NoiseRadius(volume);
+        public static float NoiseStrength(CastVolume volume) => Profile.NoiseStrength(volume);
 
-        /// <summary>Base effect radius in metres, before the volume multiplier.</summary>
-        public const float DefaultEffectRadius = 6f;
-
-        /// <summary>Ignis: damage per second while burning, and how long the fire lasts.</summary>
-        public const float IgnisDamagePerSecond = 12f;
-        public const float IgnisBurnSeconds = 4f;
-
-        /// <summary>Tonitrus: stun duration and the extra noise a thunderclap adds on top of the cast.</summary>
-        public const float TonitrusStunSeconds = 3f;
-        public const float TonitrusNoiseRadius = 18f;
-        public const float TonitrusNoiseStrength = 1f;
-
-        /// <summary>Somnus: how long a guard sleeps. Whisper-cast it, or the noise wakes them anyway.</summary>
-        public const float SomnusSleepSeconds = 8f;
-
-        /// <summary>Levo: upward impulse applied to a levitated object, and how long it floats.</summary>
-        public const float LevoImpulse = 6f;
-        public const float LevoSeconds = 3f;
-
-        /// <summary>AurumVoco: coin value conjured, and the racket a pile of coins makes on landing.</summary>
-        public const float AurumVocoWorth = 40f;
-        public const float AurumVocoNoiseRadius = 8f;
-        public const float AurumVocoNoiseStrength = 0.5f;
-
-        /// <summary>Misfire outcomes are punishing on purpose — that is the whole risk of speaking badly.</summary>
-        public const float MisfireSelfBurnSeconds = 6f;
-        public const float MisfireSelfDamagePerSecond = 8f;
-        public const float MisfireSelfStunSeconds = 4f;
-        public const float MisfireSelfSleepSeconds = 5f;
-
-        /// <summary>Radius a misfire searches for its (wrong) victim — tighter than an intended cast.</summary>
-        public const float MisfireRadius = 4f;
+        public static float DefaultEffectRadius => Profile.DefaultEffectRadius;
+        public static float AimRange => Profile.AimRange;
+        public static float AimConeDegrees => Profile.AimConeDegrees;
+        public static float IgnisDamagePerSecond => Profile.IgnisDamagePerSecond;
+        public static float IgnisBurnSeconds => Profile.IgnisBurnSeconds;
+        public static float FrangoDamage => Profile.FrangoDamage;
+        public static float FrangoStaggerSeconds => Profile.FrangoStaggerSeconds;
+        public static float FrangoKnockback => Profile.FrangoKnockback;
+        public static float TonitrusStunSeconds => Profile.TonitrusStunSeconds;
+        public static float TonitrusNoiseRadius => Profile.TonitrusNoiseRadius;
+        public static float TonitrusNoiseStrength => Profile.TonitrusNoiseStrength;
+        public static float SomnusSleepSeconds => Profile.SomnusSleepSeconds;
+        public static float LevoImpulse => Profile.LevoImpulse;
+        public static float LevoSeconds => Profile.LevoSeconds;
+        public static float AurumVocoWorth => Profile.AurumVocoWorth;
+        public static float AurumVocoNoiseRadius => Profile.AurumVocoNoiseRadius;
+        public static float AurumVocoNoiseStrength => Profile.AurumVocoNoiseStrength;
+        public static float MisfireSelfBurnSeconds => Profile.MisfireSelfBurnSeconds;
+        public static float MisfireSelfDamagePerSecond => Profile.MisfireSelfDamagePerSecond;
+        public static float MisfireSelfStunSeconds => Profile.MisfireSelfStunSeconds;
+        public static float MisfireSelfSleepSeconds => Profile.MisfireSelfSleepSeconds;
+        public static float MisfireRadius => Profile.MisfireRadius;
     }
 }
