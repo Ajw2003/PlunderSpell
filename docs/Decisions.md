@@ -3,6 +3,24 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-09-24 — The new per-Age bestiary is the household: people and animals, no monsters
+
+**Context.** `docs/plans/moodboard-gap-closure.md` §2.6 left the bestiary's register open: five of
+the ten existing enemies (SigilWisp, VaultWarden, HexTurret, ArcRevenant, GildedColossus) are
+supernatural, while the pitch promises a human household. The user asked for four enemies per Age,
+based on the pitch's mood board.
+
+**Decision.** The sixteen enemies in the art bible (`docs/art/`, `docs/art/data/*.json`) are all
+people or animals that plausibly guarded a building in their century. Each Age has one each of
+patrol, ranged, heavy and special. The validator (`Tools/ArtBible/build_art_bible.py`) enforces the
+roles and the heights allowed in each zone.
+
+**Why.** Every line of the mood board the user pointed to describes a human threat: guards, a
+garrison, a war-hound. The art bible follows it.
+
+**What it does not decide.** The five existing supernatural enemies are not deleted or reworked.
+Whether they stay, alongside the household or in place of it, is still open.
+
 ## 2026-09-22 — A spell burst is centred on where it lands, not where it starts
 
 **Context.** The user reported casting still didn't visibly work in the raid scene after
