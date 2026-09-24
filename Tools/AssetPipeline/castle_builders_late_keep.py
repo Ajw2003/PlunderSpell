@@ -68,3 +68,58 @@ def build_late_great_hall(bm, uv):
     cb._bench(bm, uv, 3.4, -3.0, fz, 2.6, 0.35, True, TIMBER)
     cb._bench(bm, uv, -3.2, -3.4, fz, 2.6, 0.35, True, TIMBER)
     _candle_stand(bm, uv, 4.8, -4.8, fz)
+
+
+def _iron_chest(bm, uv, x, y, fz, w=1.2, d=0.7, h=0.7, along_x=True):
+    """An oak chest bound in blackened iron: lid band, three straps over it, a lock
+    plate; registers its loot anchor on the lid."""
+    sx, sy = (w, d) if along_x else (d, w)
+    cb._chest(bm, uv, x, y, fz, w=sx, d=sy, h=h, trim=IRON, body=TIMBER)
+    for o in (-0.375, 0.0, 0.375):
+        if along_x:
+            cb._box(bm, uv, IRON, (x + o * w, y, fz + h / 2 + 0.01), (0.06, d + 0.02, h + 0.02))
+        else:
+            cb._box(bm, uv, IRON, (x, y + o * w, fz + h / 2 + 0.01), (d + 0.02, 0.06, h + 0.02))
+
+
+def build_late_jewel_house(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateJewelHouse.svg"""
+    h, fz = room_shell(bm, uv, "Keep")
+    # NE: the stepped buffet, each tier standing on the one below against the north wall.
+    z = fz
+    for dep, th in ((0.9, 0.9), (0.6, 0.45), (0.3, 0.45)):
+        cb._box(bm, uv, TIMBER, (3.6, IN - dep / 2, z + th / 2), (2.4, dep, th))
+        z += th
+    cb._anchor(3.6, IN - 0.75, fz + 0.9)
+    cb._anchor(3.6, IN - 0.45, fz + 1.35)
+    ek.wall_panel(bm, uv, TAPESTRY, "north", 3.6, fz + 1.8, 2.6, 1.6, depth=0.04, proud=0.02)
+    for dx in (-0.8, -0.2, 0.5):
+        mk.paint(bm, mk.add_cylinder(bm, 0.05, 0.16, loc=(3.6 + dx, IN - 0.75, fz + 0.98), segments=6, radius2=0.035),
+                 GOLD, uv)
+    for dx in (-0.6, 0.6):
+        mk.paint(bm, mk.add_cylinder(bm, 0.15, 0.02, loc=(3.6 + dx, IN - 0.4, fz + 1.5), rot=Euler((math.radians(90), 0, 0)),
+                                     segments=10), GOLD, uv)
+    ek.jar(bm, uv, GOLD, 3.6, IN - 0.15, fz + 1.8, 0.34, 0.2, mouth=0.08, segments=8)
+    for dx in (-0.7, 0.7):
+        mk.paint(bm, mk.add_cylinder(bm, 0.05, 0.14, loc=(3.6 + dx, IN - 0.15, fz + 1.87), segments=6, radius2=0.035),
+                 GOLD, uv)
+    _candle_stand(bm, uv, 1.95, 4.0, fz)
+    # NW: the strong cupboard behind a lattice of iron straps, a lock plate on it.
+    cb._box(bm, uv, TIMBER, (-3.6, IN - 0.3, fz + 1.1), (1.6, 0.6, 2.2))
+    face = IN - 0.61
+    for dx in (-0.6, -0.2, 0.2, 0.6):
+        cb._box(bm, uv, IRON, (-3.6 + dx, face, fz + 1.1), (0.04, 0.02, 2.0))
+    for dz in (0.4, 0.9, 1.4, 1.9):
+        cb._box(bm, uv, IRON, (-3.6, face - 0.02, fz + dz), (1.5, 0.02, 0.04))
+    cb._box(bm, uv, STEEL, (-3.475, face - 0.04, fz + 1.15), (0.15, 0.02, 0.2))
+    # South: brick-lined walls with an iron-bound chest before each; the jeweller's table
+    # and its casket SE, coin sacks SW.
+    for sgn in (-1, 1):
+        ek.wall_panel(bm, uv, BRICK, "south", sgn * 3.6, fz, 3.4, 2.4, depth=0.04)
+        _iron_chest(bm, uv, sgn * 3.4, -5.0, fz)
+    cb._table(bm, uv, TIMBER, 4.4, -2.9, fz, 0.9, 0.6, h=0.8)
+    cb._box(bm, uv, TIMBER, (4.65, -2.9, fz + 0.9), (0.3, 0.2, 0.2))
+    cb._box(bm, uv, GOLD, (4.65, -2.9, fz + 1.015), (0.32, 0.22, 0.03))
+    for (x, y), r in zip(((-4.8, -3.6), (-4.4, -3.2), (-5.0, -3.1)), (0.2, 0.18, 0.16)):
+        mk.paint(bm, mk.add_cylinder(bm, r, r * 2.2, loc=(x, y, fz + r * 1.1), segments=6, radius2=r * 0.55),
+                 "leather", uv)

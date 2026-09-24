@@ -323,6 +323,12 @@
       "preview": "3cccba9e890ed511:23a9d68e53fd",
       "tris": 908
     },
+    "LateJewelHouse": {
+      "budget": 2000,
+      "content": "930d37497b852128",
+      "preview": "930d37497b852128:23a9d68e53fd",
+      "tris": 1088
+    },
     "Longsword": {
       "budget": 450,
       "content": "2abf76a1be12ecb0",

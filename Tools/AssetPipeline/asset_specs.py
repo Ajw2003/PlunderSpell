@@ -142,7 +142,7 @@ LATE_CASTLE_SPECS = [
     dict(key="LateLibrary", builder="build_late_library", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
     # Keep
     dict(key="LateGreatHall", builder="build_late_great_hall", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
-    dict(key="LateJewelHouse", builder="build_late_jewel_house", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
+    dict(key="LateJewelHouse", builder="build_late_jewel_house", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
     dict(key="LateStateBedchamber", builder="build_late_state_bedchamber", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
     dict(key="LateTapestrySolar", builder="build_late_tapestry_solar", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
     dict(key="LateTurretStair", builder="build_late_turret_stair", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
