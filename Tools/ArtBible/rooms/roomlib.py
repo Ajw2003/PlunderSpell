@@ -205,7 +205,13 @@ class Sheet:
             # into it wraps onto a second line at a word break (10.5 px mono ≈ 6.3 px a char).
             limit = int((790 - lx) / 6.3) if anchor == "start" and lx < 790 else 10 ** 6
             lines, line = [], ""
-            for word in sub.split(" "):
+            words = []
+            for word in sub.split(" "):          # keep a unit with its number ("2.40 m" never splits)
+                if words and word in ("m", "m,", "m.", "tris", "st"):
+                    words[-1] += " " + word
+                else:
+                    words.append(word)
+            for word in words:
                 if line and len(line) + 1 + len(word) > limit:
                     lines.append(line)
                     line = word
