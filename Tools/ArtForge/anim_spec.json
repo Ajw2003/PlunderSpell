@@ -172,16 +172,16 @@
    "events": [
     {
      "type": "Footstep",
-     "t": 0.45,
+     "t": 0.4,
      "param": {
       "foot": "R"
      }
     },
     {
      "type": "Footstep",
-     "t": 0.7,
+     "t": 0.98,
      "param": {
-      "foot": "L"
+      "foot": "R"
      }
     }
    ],
@@ -213,7 +213,21 @@
    "events": [
     {
      "type": "Footstep",
-     "t": 0.8,
+     "t": 0.23,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.23,
+     "param": {
+      "foot": "R"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.85,
      "param": {
       "foot": "R"
      }
@@ -421,14 +435,21 @@
    "speed_mps": null,
    "events": [
     {
+     "type": "Footstep",
+     "t": 0.48,
+     "param": {
+      "foot": "R"
+     }
+    },
+    {
      "type": "AttackHit",
      "t": 0.5
     },
     {
      "type": "Footstep",
-     "t": 0.42,
+     "t": 0.98,
      "param": {
-      "foot": "L"
+      "foot": "R"
      }
     }
    ],
@@ -451,9 +472,16 @@
     },
     {
      "type": "Footstep",
-     "t": 0.4,
+     "t": 0.51,
      "param": {
-      "foot": "L"
+      "foot": "R"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.98,
+     "param": {
+      "foot": "R"
      }
     }
    ],
@@ -471,21 +499,28 @@
    "speed_mps": null,
    "events": [
     {
-     "type": "AttackHit",
-     "t": 0.42
+     "type": "Footstep",
+     "t": 0.3,
+     "param": {
+      "foot": "R"
+     }
     },
     {
-     "type": "Footstep",
-     "t": 0.35,
-     "param": {
-      "foot": "L"
-     }
+     "type": "AttackHit",
+     "t": 0.42
     },
     {
      "type": "Footstep",
      "t": 0.78,
      "param": {
       "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.98,
+     "param": {
+      "foot": "R"
      }
     }
    ],
@@ -508,9 +543,16 @@
     },
     {
      "type": "Footstep",
-     "t": 0.48,
+     "t": 0.55,
      "param": {
-      "foot": "L"
+      "foot": "R"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.98,
+     "param": {
+      "foot": "R"
      }
     }
    ],
@@ -1086,6 +1128,13 @@
      "param": {
       "foot": "R"
      }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "L"
+     }
     }
    ],
    "status": "a1",
@@ -1660,16 +1709,16 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.45,
+       "t": 0.4,
        "param": {
         "foot": "R"
        }
       },
       {
        "type": "Footstep",
-       "t": 0.7,
+       "t": 0.98,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       }
      ]
@@ -2180,16 +2229,16 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.45,
+       "t": 0.4,
        "param": {
         "foot": "R"
        }
       },
       {
        "type": "Footstep",
-       "t": 0.7,
+       "t": 0.98,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       }
      ]
@@ -2207,7 +2256,21 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.8,
+       "t": 0.23,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.23,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.85,
        "param": {
         "foot": "R"
        }
@@ -2604,14 +2667,21 @@
       },
       {
        "type": "Footstep",
-       "t": 0.42,
+       "t": 0.48,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
        "type": "AttackHit",
        "t": 0.5
+      },
+      {
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
+       }
       }
      ],
      "note": "the lantern is let go as the left hand goes to the haft; the driver drops the prop once per engagement"
@@ -2628,15 +2698,22 @@
      "playback_rate": 1.0,
      "events": [
       {
+       "type": "AttackHit",
+       "t": 0.5
+      },
+      {
        "type": "Footstep",
-       "t": 0.4,
+       "t": 0.51,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
-       "type": "AttackHit",
-       "t": 0.5
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
+       }
       }
      ]
     },
@@ -2653,16 +2730,16 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.45,
+       "t": 0.4,
        "param": {
         "foot": "R"
        }
       },
       {
        "type": "Footstep",
-       "t": 0.7,
+       "t": 0.98,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       }
      ],
@@ -2690,6 +2767,13 @@
        "t": 0.3,
        "param": {
         "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "L"
        }
       }
      ],
@@ -2894,16 +2978,16 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.45,
+       "t": 0.4,
        "param": {
         "foot": "R"
        }
       },
       {
        "type": "Footstep",
-       "t": 0.7,
+       "t": 0.98,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       }
      ]
@@ -2961,7 +3045,21 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.8,
+       "t": 0.23,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.23,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.85,
        "param": {
         "foot": "R"
        }
@@ -3124,16 +3222,16 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.45,
+       "t": 0.4,
        "param": {
         "foot": "R"
        }
       },
       {
        "type": "Footstep",
-       "t": 0.7,
+       "t": 0.98,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       }
      ]
@@ -3528,14 +3626,21 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.42,
+       "t": 0.48,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
        "type": "AttackHit",
        "t": 0.5
+      },
+      {
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
+       }
       }
      ]
     },
@@ -3552,9 +3657,9 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.35,
+       "t": 0.3,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
@@ -3566,6 +3671,13 @@
        "t": 0.78,
        "param": {
         "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
        }
       }
      ]
@@ -3582,15 +3694,22 @@
      "playback_rate": 1.0,
      "events": [
       {
+       "type": "AttackHit",
+       "t": 0.55
+      },
+      {
        "type": "Footstep",
-       "t": 0.48,
+       "t": 0.55,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
-       "type": "AttackHit",
-       "t": 0.55
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
+       }
       }
      ]
     },
@@ -3607,16 +3726,16 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.45,
+       "t": 0.4,
        "param": {
         "foot": "R"
        }
       },
       {
        "type": "Footstep",
-       "t": 0.7,
+       "t": 0.98,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       }
      ]
@@ -3814,16 +3933,16 @@
       },
       {
        "type": "Footstep",
-       "t": 0.45,
+       "t": 0.4,
        "param": {
         "foot": "R"
        }
       },
       {
        "type": "Footstep",
-       "t": 0.7,
+       "t": 0.98,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       }
      ],
@@ -3984,14 +4103,21 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.42,
+       "t": 0.48,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
        "type": "AttackHit",
        "t": 0.5
+      },
+      {
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
+       }
       }
      ]
     },
@@ -4007,15 +4133,22 @@
      "playback_rate": 0.786,
      "events": [
       {
+       "type": "AttackHit",
+       "t": 0.55
+      },
+      {
        "type": "Footstep",
-       "t": 0.48,
+       "t": 0.55,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
-       "type": "AttackHit",
-       "t": 0.55
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
+       }
       }
      ]
     },
@@ -4031,15 +4164,22 @@
      "playback_rate": 0.846,
      "events": [
       {
+       "type": "AttackHit",
+       "t": 0.5
+      },
+      {
        "type": "Footstep",
-       "t": 0.4,
+       "t": 0.51,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
-       "type": "AttackHit",
-       "t": 0.5
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
+       }
       }
      ]
     },
@@ -4068,16 +4208,16 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.45,
+       "t": 0.4,
        "param": {
         "foot": "R"
        }
       },
       {
        "type": "Footstep",
-       "t": 0.7,
+       "t": 0.98,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       }
      ]
@@ -4095,7 +4235,21 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.8,
+       "t": 0.23,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.23,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.85,
        "param": {
         "foot": "R"
        }
@@ -4483,14 +4637,21 @@
      "events": [
       {
        "type": "Footstep",
-       "t": 0.42,
+       "t": 0.48,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
        "type": "AttackHit",
        "t": 0.5
+      },
+      {
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
+       }
       }
      ]
     },
@@ -4506,15 +4667,22 @@
      "playback_rate": 1.1,
      "events": [
       {
+       "type": "AttackHit",
+       "t": 0.5
+      },
+      {
        "type": "Footstep",
-       "t": 0.4,
+       "t": 0.51,
        "param": {
-        "foot": "L"
+        "foot": "R"
        }
       },
       {
-       "type": "AttackHit",
-       "t": 0.5
+       "type": "Footstep",
+       "t": 0.98,
+       "param": {
+        "foot": "R"
+       }
       }
      ]
     },

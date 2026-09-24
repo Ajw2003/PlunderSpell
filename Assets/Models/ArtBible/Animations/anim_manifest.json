@@ -1,0 +1,698 @@
+{
+ "about": "Written by Tools/ArtForge/anim.py build. One entry per exported FBX; events are copied from anim_spec.json (normalized time).",
+ "fps": 30,
+ "fbx": [
+  {
+   "file": "Assets/Models/ArtBible/Animations/Humanoid_Base.fbx",
+   "skeleton": "reference human: figures.Human() 1.76 m",
+   "bones": 20,
+   "clips": [
+    {
+     "clip": "idle",
+     "take": "ReferenceHuman|idle",
+     "layer": "base",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 91,
+     "length_s": 3.0,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0001,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "walk_slow",
+     "take": "ReferenceHuman|walk_slow",
+     "layer": "base",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "frames": 34,
+     "length_s": 1.1,
+     "ik_shortfall_m": 0.0,
+     "speed_mps": 1.1,
+     "stride_m": 1.21,
+     "hip_drop_m": 0.038,
+     "foot_slide_ref_max_m": 0.0002,
+     "foot_slide_warden_max_m": 0.0016,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.515
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "walk",
+     "take": "ReferenceHuman|walk",
+     "layer": "base",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "frames": 27,
+     "length_s": 0.8667,
+     "ik_shortfall_m": 0.0,
+     "speed_mps": 2.0,
+     "stride_m": 1.733,
+     "hip_drop_m": 0.056,
+     "foot_slide_ref_max_m": 0.0001,
+     "foot_slide_warden_max_m": 0.0022,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.5
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "run",
+     "take": "ReferenceHuman|run",
+     "layer": "base",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "frames": 21,
+     "length_s": 0.6667,
+     "ik_shortfall_m": 0.0,
+     "speed_mps": 4.2,
+     "stride_m": 2.8,
+     "hip_drop_m": 0.076,
+     "foot_slide_ref_max_m": 0.0,
+     "foot_slide_warden_max_m": 0.0018,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": 0.0001,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.5
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "alert_turn",
+     "take": "ReferenceHuman|alert_turn",
+     "layer": "base",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.55,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "frames": 19,
+     "length_s": 0.6,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.556
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "shout",
+     "take": "ReferenceHuman|shout",
+     "layer": "base",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [],
+     "frames": 37,
+     "length_s": 1.2,
+     "ik_shortfall_m": 0.0052,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "hit_react",
+     "take": "ReferenceHuman|hit_react",
+     "layer": "base",
+     "family": null,
+     "loop": false,
+     "additive": true,
+     "events": [],
+     "frames": 13,
+     "length_s": 0.4,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "stagger",
+     "take": "ReferenceHuman|stagger",
+     "layer": "base",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.45,
+       "param": {
+        "foot": "R"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.7,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "frames": 25,
+     "length_s": 0.8,
+     "ik_shortfall_m": 0.0034,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.417
+      },
+      {
+       "foot": "R",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "knock_down",
+     "take": "ReferenceHuman|knock_down",
+     "layer": "base",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [],
+     "frames": 37,
+     "length_s": 1.2,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.556
+      },
+      {
+       "foot": "R",
+       "t": 0.556
+      }
+     ]
+    },
+    {
+     "clip": "get_up",
+     "take": "ReferenceHuman|get_up",
+     "layer": "base",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.8,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "frames": 73,
+     "length_s": 2.4,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.236
+      },
+      {
+       "foot": "R",
+       "t": 0.236
+      },
+      {
+       "foot": "R",
+       "t": 0.847
+      }
+     ]
+    },
+    {
+     "clip": "archway_duck",
+     "take": "ReferenceHuman|archway_duck",
+     "layer": "base",
+     "family": null,
+     "loop": false,
+     "additive": true,
+     "events": [],
+     "frames": 16,
+     "length_s": 0.5,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "sleep",
+     "take": "ReferenceHuman|sleep",
+     "layer": "base",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 121,
+     "length_s": 4.0,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "levitate_struggle",
+     "take": "ReferenceHuman|levitate_struggle",
+     "layer": "base",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 37,
+     "length_s": 1.2,
+     "ik_shortfall_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.056
+      },
+      {
+       "foot": "R",
+       "t": 0.583
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "file": "Assets/Models/ArtBible/Animations/Humanoid_Polearm.fbx",
+   "skeleton": "reference human: figures.Human() 1.76 m + Weapon, Weapon_GripL",
+   "bones": 22,
+   "clips": [
+    {
+     "clip": "polearm_guard",
+     "take": "ReferenceHuman|polearm_guard",
+     "layer": "family",
+     "family": "polearm",
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 61,
+     "length_s": 2.0,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "haft_error_ref_m": 0.0,
+     "haft_error_warden_ik_m": 0.0,
+     "haft_error_warden_retarget_only_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "polearm_thrust",
+     "take": "ReferenceHuman|polearm_thrust",
+     "layer": "family",
+     "family": "polearm",
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      },
+      {
+       "type": "Footstep",
+       "t": 0.42,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "frames": 28,
+     "length_s": 0.9,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "haft_error_ref_m": 0.0,
+     "haft_error_warden_ik_m": 0.0,
+     "haft_error_warden_retarget_only_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.481
+      },
+      {
+       "foot": "R",
+       "t": 0.481
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      },
+      {
+       "foot": "R",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "polearm_sweep",
+     "take": "ReferenceHuman|polearm_sweep",
+     "layer": "family",
+     "family": "polearm",
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.5
+      },
+      {
+       "type": "Footstep",
+       "t": 0.4,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "frames": 34,
+     "length_s": 1.1,
+     "ik_shortfall_m": 0.0244,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "haft_error_ref_m": 0.0,
+     "haft_error_warden_ik_m": 0.0,
+     "haft_error_warden_retarget_only_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.515
+      },
+      {
+       "foot": "R",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "polearm_hook",
+     "take": "ReferenceHuman|polearm_hook",
+     "layer": "family",
+     "family": "polearm",
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.42
+      },
+      {
+       "type": "Footstep",
+       "t": 0.35,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.78,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "frames": 37,
+     "length_s": 1.2,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "haft_error_ref_m": 0.0,
+     "haft_error_warden_ik_m": 0.0,
+     "haft_error_warden_retarget_only_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.278
+      },
+      {
+       "foot": "R",
+       "t": 0.306
+      },
+      {
+       "foot": "L",
+       "t": 0.778
+      },
+      {
+       "foot": "R",
+       "t": 0.778
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "polearm_chop",
+     "take": "ReferenceHuman|polearm_chop",
+     "layer": "family",
+     "family": "polearm",
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.55
+      },
+      {
+       "type": "Footstep",
+       "t": 0.48,
+       "param": {
+        "foot": "L"
+       }
+      }
+     ],
+     "frames": 34,
+     "length_s": 1.1,
+     "ik_shortfall_m": 0.0077,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "haft_error_ref_m": 0.0,
+     "haft_error_warden_ik_m": 0.0,
+     "haft_error_warden_retarget_only_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.545
+      },
+      {
+       "foot": "R",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "polearm_cant",
+     "take": "ReferenceHuman|polearm_cant",
+     "layer": "family",
+     "family": "polearm",
+     "loop": false,
+     "additive": true,
+     "events": [],
+     "frames": 13,
+     "length_s": 0.4,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": 0.0002,
+     "lowest_sole_warden_m": 0.0002,
+     "haft_error_ref_m": 0.0,
+     "haft_error_warden_ik_m": 0.0,
+     "haft_error_warden_retarget_only_m": 0.0,
+     "detected_footsteps": []
+    }
+   ]
+  },
+  {
+   "file": "Assets/Models/ArtBible/Animations/LanternWarden_Signature.fbx",
+   "skeleton": "Lantern Warden rig (Assets/Models/ArtBible/Enemies/High/LanternWarden)",
+   "bones": 24,
+   "clips": [
+    {
+     "clip": "warden_carry",
+     "take": "LanternWarden_Rig|warden_carry",
+     "layer": "carry",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 31,
+     "length_s": 1.0,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": 0.0002,
+     "lowest_sole_warden_m": 0.0002,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "warden_carry_run",
+     "take": "LanternWarden_Rig|warden_carry_run",
+     "layer": "carry",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 31,
+     "length_s": 1.0,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": 0.0002,
+     "lowest_sole_warden_m": 0.0002,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "lantern_raise_search",
+     "take": "LanternWarden_Rig|lantern_raise_search",
+     "layer": "signature",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [],
+     "frames": 76,
+     "length_s": 2.5,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "death_drop_lantern",
+     "take": "LanternWarden_Rig|death_drop_lantern",
+     "layer": "signature",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.16,
+       "param": {
+        "prop": "LanternRing"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.3,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "frames": 49,
+     "length_s": 1.6,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_sole_warden_m": -0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.5
+      },
+      {
+       "foot": "R",
+       "t": 0.5
+      },
+      {
+       "foot": "L",
+       "t": 0.771
+      },
+      {
+       "foot": "R",
+       "t": 0.771
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

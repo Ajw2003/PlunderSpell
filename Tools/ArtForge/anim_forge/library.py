@@ -51,7 +51,7 @@ WALK_SLOW = GaitParams(speed=1.1, cycle=1.1, duty=0.60, ahead=0.02, toe_pitch=40
                        sway=0.018)
 RUN = GaitParams(speed=4.2, cycle=0.6667, duty=0.32, ahead=0.12, toe_pitch=55.0,
                  heel_pitch=5.0, heel_rocker=0.10, toe_rocker=0.5, run=True, bob=0.03,
-                 clearance=0.10, kick=0.20, max_extension=0.96, lean=11.0, pelvis_yaw=9.0,
+                 clearance=0.10, kick=0.20, max_extension=0.96, lean=14.0, pelvis_yaw=9.0,
                  pelvis_roll=4.0, sway=0.012, width=0.7, arm_swing=34.0, arm_spread=8.0,
                  elbow=78.0, elbow_swing=18.0, head_bob=1.5)
 

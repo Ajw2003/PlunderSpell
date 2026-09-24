@@ -68,7 +68,7 @@ LOOK_RIGHT = mirror(LOOK_LEFT)
 TENSE = {"Spine": (4.0, 0.0, 0.0), "Chest": (2.0, 0.0, 0.0), "Neck": (2.0, 0.0, 0.0),
          "UpperArm.L": (-6.0, -6.0, 0.0), "UpperArm.R": (-6.0, 6.0, 0.0),
          "LowerArm.L": (-20.0, 0.0, 0.0), "LowerArm.R": (-20.0, 0.0, 0.0)}
-HEAD_SNAP_LEFT = {"Neck": (0.0, 0.0, 22.0), "Head": (-6.0, 0.0, 36.0), "Chest": (0.0, 0.0, 6.0)}
+HEAD_SNAP_LEFT = {"Neck": (0.0, 0.0, 30.0), "Head": (-8.0, 0.0, 44.0), "Chest": (0.0, 0.0, 8.0)}
 TURN_CHEST_LEFT = {"Spine": (2.0, 0.0, 10.0), "Chest": (0.0, 0.0, 14.0),
                    "Neck": (0.0, 0.0, 12.0), "Head": (-3.0, 0.0, 14.0)}
 
@@ -166,8 +166,8 @@ CHOP_STRIKE = {"Hips": (8.0, 0.0, 16.0), "Spine": (18.0, 0.0, -8.0), "Chest": (1
 
 WARDEN_CARRY = {"UpperArm.R": (-12.0, 0.0, 0.0), "LowerArm.R": (-14.0, 0.0, 0.0),
                 "Hand.R": (29.0, 0.0, 0.0), "UpperArm.L": (-4.0, 0.0, 0.0)}
-WARDEN_CARRY_RUN = {"UpperArm.R": (-14.0, 4.0, 0.0), "LowerArm.R": (-18.0, 0.0, 0.0),
-                    "Hand.R": (26.0, 0.0, 0.0),
+WARDEN_CARRY_RUN = {"UpperArm.R": (-22.0, 4.0, 0.0), "LowerArm.R": (-22.0, 0.0, 0.0),
+                    "Hand.R": (58.0, 0.0, 0.0),
                     "UpperArm.L": (-58.0, 10.0, -12.0), "LowerArm.L": (-58.0, 0.0, 0.0)}
 LANTERN_RAISE = {"UpperArm.L": (-84.0, 6.0, 10.0), "LowerArm.L": (-4.0, 0.0, 0.0),
                  "Spine": (2.0, 0.0, 0.0), "Chest": (-2.0, 0.0, 0.0), "Neck": (4.0, 0.0, 0.0),

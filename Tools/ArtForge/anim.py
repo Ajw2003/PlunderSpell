@@ -211,8 +211,8 @@ def cmd_review(args) -> int:
         offsets = [((d.agent_yaw(t) if d.agent_yaw else 0.0), d.review_lift) for t in ts]
         lo, hi = review._bounds(warden, frames, offsets)
         stage.frame(lo, hi, args.tile, args.samples)
-        scratch = os.path.join(REVIEW_DIR, f".{cid}_tiles")
-        os.makedirs(scratch, exist_ok=True)
+        import tempfile
+        scratch = tempfile.mkdtemp(prefix=f"animforge_{cid}_")   # never inside the autosaved docs
         events = spec["clips"][cid]["events"] + [
             e for r in spec["enemies"]["lantern-warden"]["clips"] if r.get("source") == cid
             for e in r.get("events", []) if e not in spec["clips"][cid]["events"]]

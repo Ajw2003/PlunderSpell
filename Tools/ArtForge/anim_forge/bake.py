@@ -82,7 +82,11 @@ def bake_action(rig: bpy.types.Object, skel: Skeleton, name: str,
             pb.rotation_quaternion = rot
             pb.keyframe_insert("location", frame=i, group=bone)
             pb.keyframe_insert("rotation_quaternion", frame=i, group=bone)
-    for fc in _fcurves(action):
+    curves = _fcurves(action)
+    if len(curves) != 7 * len(skel.order):
+        raise RuntimeError(f"{name}: expected {7 * len(skel.order)} F-curves after keying, found "
+                           f"{len(curves)}; the Action API may have changed (see _fcurves)")
+    for fc in curves:
         for kp in fc.keyframe_points:
             kp.interpolation = "LINEAR"
     action.frame_range = (0, len(frames) - 1)

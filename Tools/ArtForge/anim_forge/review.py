@@ -54,7 +54,7 @@ def _bounds(skel, frames, rig_obj_offsets) -> tuple[Vector, Vector]:
                 q.z += lift
                 lo = Vector((min(lo.x, q.x), min(lo.y, q.y), min(lo.z, q.z)))
                 hi = Vector((max(hi.x, q.x), max(hi.y, q.y), max(hi.z, q.z)))
-    pad = Vector((0.22, 0.22, 0.10))
+    pad = Vector((0.10, 0.10, 0.06))
     lo, hi = lo - pad, hi + pad
     lo.z = min(lo.z, 0.0)
     return lo, hi
