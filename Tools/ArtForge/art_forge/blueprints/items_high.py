@@ -151,11 +151,25 @@ def gilded_altarpiece(entry: Entry):
         parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="oak_panel", segments=4,
                           extras={"path": niche, "section": (0.006, 0.006), "smooth": True,
                                   "up": (0.0, 1.0, 0.0), "bevel": False}))
-        parts.append(upright(figure_outline(cx, pred_h + 0.08, 0.80, 0.30),
+        fig_z, fig_h, hem = pred_h + 0.08, 0.80, 0.30
+        parts.append(upright(figure_outline(cx, fig_z, fig_h, hem),
                              wing_y0 - 0.011, 0.008, "grisaille"))
-        head_z = pred_h + 0.08 + 0.80 + 0.07
-        parts.append(disc(cx, head_z + 0.005, 0.15, wing_y0 - 0.006, 0.003, "gilt", 16))
-        parts.append(disc(cx, head_z, 0.085, wing_y0 - 0.012, 0.009, "gesso", 10))
+        # Grisaille modelling as the concept paints it: a pale lit fold down the
+        # robe's right side and dark fold lines on its left.
+        parts.append(upright([(cx + 0.02, fig_z), (cx + 0.5 * hem - 0.012, fig_z),
+                              (cx + 0.37 * hem - 0.010, fig_z + 0.82 * fig_h),
+                              (cx + 0.10 * hem, fig_z + 0.96 * fig_h),
+                              (cx + 0.06, fig_z + 0.55 * fig_h)],
+                             wing_y0 - 0.013, 0.003, "gesso", bevel=False))
+        for fx, top in ((-0.085, 0.70), (-0.045, 0.78), (-0.005, 0.62)):
+            parts.append(upright([(cx + fx - 0.004, fig_z + 0.01), (cx + fx + 0.004, fig_z + 0.01),
+                                  (cx + fx * 0.55 + 0.002, fig_z + top * fig_h),
+                                  (cx + fx * 0.55 - 0.002, fig_z + top * fig_h)],
+                                 wing_y0 - 0.0125, 0.002, "oak_panel", bevel=False))
+        # Head on the shoulders; the gilt halo only just larger than the face.
+        head_z = fig_z + fig_h + 0.045
+        parts.append(disc(cx, head_z + 0.012, 0.155, wing_y0 - 0.006, 0.003, "gilt", 16))
+        parts.append(disc(cx, head_z, 0.105, wing_y0 - 0.013, 0.010, "gesso", 12))
         # Inner face (towards the centre panel): a saint on gold, hidden until opened.
         inner_y = wing_y0 + wing_t
         parts.append(upright(rounded_rect(x1 - x0, wing_h - 0.08, 0.006, 1, cx=cx,

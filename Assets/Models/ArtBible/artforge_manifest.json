@@ -82,6 +82,102 @@
         "blend": "Assets/Models/ArtBible/Items/Bronze/SealedAmphora/SealedAmphora.blend"
       },
       "build_seconds": 2.5
+    },
+    {
+      "key": "items/high/gilded-altarpiece",
+      "kind": "items",
+      "age": "high",
+      "slug": "gilded-altarpiece",
+      "name": "GildedAltarpiece",
+      "title": "Gilded Altarpiece",
+      "passed": true,
+      "stats": {
+        "vertices": 1428,
+        "faces": 1359,
+        "triangles": 2568,
+        "islands": 72,
+        "lowest_z": 0.0,
+        "height": 1.646,
+        "width": 1.13,
+        "budget": 5000,
+        "bbox_m": "1.130x0.218x1.646",
+        "vs_spec": "W=1.130/1.100 D=0.218/0.200 H=1.646/1.600"
+      },
+      "spec": {
+        "dims_WDH_m": [
+          1.1,
+          0.2,
+          1.6
+        ],
+        "height_m": null,
+        "tri_budget": 5000
+      },
+      "families": {
+        "gilt": {
+          "name": "Gilt (orpiment)",
+          "base": "#C9A227",
+          "rough": 0.25,
+          "metal": 1.0,
+          "emit": null
+        },
+        "woad_azure": {
+          "name": "Woad azure",
+          "base": "#3E5470",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "kermes": {
+          "name": "Kermes",
+          "base": "#7E2A26",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "gesso": {
+          "name": "Gesso",
+          "base": "#DCD2BA",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "oak_panel": {
+          "name": "Oak panel",
+          "base": "#5E4630",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "grisaille": {
+          "name": "Grisaille",
+          "base": "#8A8274",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "strap_iron": {
+          "name": "Strap iron (hinges, staples)",
+          "base": "#2E2A26",
+          "rough": 0.6,
+          "metal": 1.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['strap_iron']"
+      ],
+      "notes": [
+        "Built closed (the carry state the JSON dimensions describe); the centre painting and wing interiors are modelled as relief under the wings, so the open state reuses this mesh once the wings are split off.",
+        "Punch-work halos, plank joints, worm holes and candle soot are left to the painted-panel atlas / normal map, which EnemyForge's bake does not make."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/GildedAltarpiece.fbx",
+        "gltf": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/glTF/GildedAltarpiece.gltf",
+        "blend": "Assets/Models/ArtBible/Items/High/GildedAltarpiece/GildedAltarpiece.blend"
+      },
+      "build_seconds": 2.8
     }
   ]
 }

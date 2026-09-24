@@ -99,7 +99,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":3885,
+			"count":4073,
 			"max":[
 				0.5649999976158142,
 				1.6460000276565552,
@@ -115,45 +115,45 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":3885,
+			"count":4073,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":3885,
+			"count":4073,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":7344,
+			"count":7704,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":46620,
+			"byteLength":48876,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":46620,
-			"byteOffset":46620,
+			"byteLength":48876,
+			"byteOffset":48876,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":31080,
-			"byteOffset":93240,
+			"byteLength":32584,
+			"byteOffset":97752,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":14688,
-			"byteOffset":124320,
+			"byteLength":15408,
+			"byteOffset":130336,
 			"target":34963
 		}
 	],
@@ -165,7 +165,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":139008,
+			"byteLength":145744,
 			"uri":"GildedAltarpiece.bin"
 		}
 	]

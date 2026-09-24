@@ -98,17 +98,34 @@ def _configure(resolution: int, samples: int) -> None:
     scene.render.resolution_percentage = 100
     scene.render.film_transparent = False
     scene.view_settings.view_transform = "AgX"
-    scene.view_settings.look = "AgX - Medium High Contrast"
+    scene.view_settings.look = "AgX - Base Contrast"
     scene.render.image_settings.file_format = "PNG"
 
 
 def _world() -> None:
+    """Near-black to the camera, a warm dim room to everything else.
+
+    Metals are mostly reflection; in a pure-black world orpiment gilt renders as
+    brown lacquer. So camera rays see bone-black, but glossy/diffuse rays see a warm
+    environment — the same trick as a studio HDRI behind a black backdrop.
+    """
     world = bpy.data.worlds.new("ReviewWorld")
     bpy.context.scene.world = world
     world.use_nodes = True
-    background = world.node_tree.nodes["Background"]
-    background.inputs["Color"].default_value = (0.010, 0.008, 0.006, 1.0)
-    background.inputs["Strength"].default_value = 1.0
+    nodes, links = world.node_tree.nodes, world.node_tree.links
+    nodes.clear()
+    path = nodes.new("ShaderNodeLightPath")
+    seen = nodes.new("ShaderNodeBackground")
+    seen.inputs["Color"].default_value = (0.006, 0.005, 0.004, 1.0)
+    room = nodes.new("ShaderNodeBackground")
+    room.inputs["Color"].default_value = (0.30, 0.22, 0.14, 1.0)
+    room.inputs["Strength"].default_value = 0.9
+    mix = nodes.new("ShaderNodeMixShader")
+    out = nodes.new("ShaderNodeOutputWorld")
+    links.new(path.outputs["Is Camera Ray"], mix.inputs["Fac"])
+    links.new(room.outputs["Background"], mix.inputs[1])
+    links.new(seen.outputs["Background"], mix.inputs[2])
+    links.new(mix.outputs["Shader"], out.inputs["Surface"])
 
 
 def _area_light(name, location, target, energy, size, color):
@@ -129,11 +146,11 @@ def _studio(centre: Vector, span: float) -> None:
     d = max(span, 0.25) * 2.2
     energy = d * d
     _area_light("Key", centre + Vector((d * 0.75, -d * 0.95, d * 0.85)), centre,
-                energy * 48.0, d * 0.5, (1.0, 0.82, 0.62))
+                energy * 26.0, d * 0.6, (1.0, 0.84, 0.66))
     _area_light("Fill", centre + Vector((-d * 1.1, -d * 0.55, d * 0.25)), centre,
-                energy * 10.0, d * 1.0, (1.0, 0.74, 0.52))
+                energy * 5.0, d * 1.0, (1.0, 0.74, 0.52))
     _area_light("Rim", centre + Vector((-d * 0.3, d * 1.2, d * 1.0)), centre,
-                energy * 30.0, d * 0.6, (0.70, 0.76, 0.90))
+                energy * 22.0, d * 0.6, (0.70, 0.76, 0.90))
 
 
 def _ground(span: float) -> None:
