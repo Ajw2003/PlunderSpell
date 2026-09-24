@@ -2422,6 +2422,153 @@
       "build_seconds": 3.4
     },
     {
+      "key": "enemies/late/handgunner",
+      "kind": "enemies",
+      "age": "late",
+      "slug": "handgunner",
+      "name": "Handgunner",
+      "title": "Handgunner",
+      "passed": true,
+      "stats": {
+        "vertices": 2929,
+        "faces": 2781,
+        "triangles": 5626,
+        "islands": 61,
+        "lowest_z": 0.0,
+        "height": 1.779,
+        "width": 0.678,
+        "budget": 8000,
+        "bbox_m": "0.678x0.549x1.779",
+        "height_body_m": 1.779,
+        "height_spec_m": 1.78,
+        "height_with_props_m": 1.779,
+        "rig_bones": 25,
+        "skinned_bones": 19,
+        "mean_influences": 1.06
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.78,
+        "tri_budget": 8000
+      },
+      "families": {
+        "padded_jack": {
+          "name": "Padded jack",
+          "base": "#8C7A5E",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "kettle_steel": {
+          "name": "Kettle steel",
+          "base": "#2E2F31",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "gun_iron": {
+          "name": "Gun iron",
+          "base": "#3F3C38",
+          "rough": 0.6,
+          "metal": 1.0,
+          "emit": null
+        },
+        "oak_tiller": {
+          "name": "Oak tiller",
+          "base": "#6B4F33",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "leather": {
+          "name": "Leather",
+          "base": "#5A4331",
+          "rough": 0.6,
+          "metal": 0.0,
+          "emit": null
+        },
+        "livery_red": {
+          "name": "Livery red",
+          "base": "#9E2A2F",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "match": {
+          "name": "Match",
+          "base": "#C4542E",
+          "rough": 0.6,
+          "metal": 0.0,
+          "emit": "#5A2210"
+        },
+        "skin": {
+          "name": "Skin",
+          "base": "#9C7A5E",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hose": {
+          "name": "Dark wool hose",
+          "base": "#3A2F26",
+          "rough": 0.85,
+          "metal": 0.0,
+          "emit": null
+        },
+        "livery_white": {
+          "name": "Livery white",
+          "base": "#D6CDB6",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "buff_leather": {
+          "name": "Buff leather",
+          "base": "#8A6A4C",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "horn": {
+          "name": "Cow horn",
+          "base": "#B8A07A",
+          "rough": 0.45,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hemp_match": {
+          "name": "Hemp match cord",
+          "base": "#7A6A50",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "soot_bore": {
+          "name": "Soot",
+          "base": "#1C1A18",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [
+        "families not in the JSON (blueprint extras): ['buff_leather', 'hemp_match', 'horn', 'hose', 'livery_white', 'skin', 'soot_bore']"
+      ],
+      "notes": [
+        "Handgonne (tiller + barrel) is a prop bone Gun on Hand.R; MatchCord is a prop bone on Hand.L carrying the lit tip. Both are left out of the height.",
+        "Hat is its own bone under Head (detachable); Pouch and Flask are bones under Hips (rigid, not springs).",
+        "Not built: the 4-bone match_cord chain (one bone), jack_skirt springs, the smoke plume (VFX), the switchable shoulder socket for the gun, powder smut and singe decals."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Late/Handgunner/Handgunner.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Late/Handgunner/glTF/Handgunner.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Late/Handgunner/Handgunner.blend"
+      },
+      "build_seconds": 3.9
+    },
+    {
       "key": "enemies/late/sallet-halberdier",
       "kind": "enemies",
       "age": "late",

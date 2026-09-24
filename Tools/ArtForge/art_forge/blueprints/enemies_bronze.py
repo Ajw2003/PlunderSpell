@@ -658,7 +658,7 @@ def _tusk_helmet(fig: Human, base_z: float, top_z: float) -> list[Part]:
                 return ra + (rb - ra) * (zr - za) / (zb - za)
         return prof[1][0]
 
-    rows = [(0.035, 16), (0.095, 15), (0.155, 13), (0.205, 11)]
+    rows = [(0.024, 24), (0.064, 22), (0.104, 19), (0.142, 15)]
     for k, (zr, count) in enumerate(rows):
         slant = 22.0 if k % 2 == 0 else -22.0
         r = radius_at(zr) + 0.006
@@ -673,7 +673,7 @@ def _tusk_helmet(fig: Human, base_z: float, top_z: float) -> list[Part]:
             q = Matrix.Rotation(math.radians(slant), 3, n)
             up_s = q @ up
             at = base + Vector((math.cos(a) * r, math.sin(a) * r * sy, zr))
-            parts.append(Part("box", tuple(at), (0.012, 0.008, 0.052), mat="boar_s_tusk",
+            parts.append(Part("box", tuple(at), (0.016, 0.008, 0.034), mat="boar_s_tusk",
                               bone="Helmet", rot=_euler_from_axes(q @ t, n),
                               extras={"rigid": True, "bevel": False,
                                       "_up": tuple(up_s)}))
@@ -692,8 +692,8 @@ def _tusk_helmet(fig: Human, base_z: float, top_z: float) -> list[Part]:
                       bone="Helmet", segments=8, rings=5, extras={"rigid": True,
                                                                   "bevel": False}))
     t0 = knob + Vector((0, 0.004, 0.016))
-    t1 = t0 + Vector((0.0, 0.035, 0.04))
-    t2 = t1 + Vector((0.0, 0.06, -0.01))
+    t1 = t0 + Vector((0.0, 0.040, 0.012))
+    t2 = t1 + Vector((0.0, 0.045, -0.045))
     fig.add_bone("Tuft1", t0, t1, "Helmet")
     fig.add_bone("Tuft2", t1, t2, "Tuft1")
     parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat="horsehair", bone="Tuft1",
@@ -724,7 +724,7 @@ def _rapier(fig: Human) -> list[Part]:
     horned guard 0.12 m; bone grip and 5 cm pommel. Carried low in the right fist,
     point forward and down; prop bone Sword on Hand.R."""
     g = fig.grip("R")
-    d = Vector((-0.18, -0.62, -0.76)).normalized()      # blade direction
+    d = Vector((-0.16, -0.42, -0.89)).normalized()      # blade direction
     side = d.cross(Vector((0.0, 0.0, 1.0))).normalized()  # blade width axis
     guard = g + d * 0.055
     tip = guard + d * 0.92
@@ -794,25 +794,25 @@ def dendra_champion(entry: Entry):
     prof = [(0.0, 0.02), (0.270, 0.02)] + body[:-1] + [(0.0, body[-1][1])]
     prof = [(0.0, 0.02), (0.272, 0.024), (0.296, 0.0)] + body[1:]
     cuirass_paint = []
-    parts.append(Part("lathe", (0.0, 0.004, cz), (1.0, 0.70, 1.0), mat="hammered_bronze_plate",
+    parts.append(Part("lathe", (0.0, 0.004, cz), (1.0, 0.80, 1.0), mat="hammered_bronze_plate",
                       bone="Chest", segments=28, extras={
                           "profile": prof, "smooth": True, "bevel": False,
                           "paint": cuirass_paint,
                           "bones": ["Spine", "Chest", "Hips"]}))
     for zr, rr in ((0.10, 0.258), (0.19, 0.254), (0.28, 0.252)):
-        parts.append(Part("torus", (0.0, 0.004, cz + zr), (2 * rr, 2 * rr * 0.70, 0.012),
+        parts.append(Part("torus", (0.0, 0.004, cz + zr), (2 * rr, 2 * rr * 0.80, 0.012),
                           mat="hammered_bronze_plate", bone="Chest", segments=28, rings=4,
                           minor=0.02, extras={"bevel": False, "smooth": True,
                                               "bones": ["Spine", "Chest", "Hips"]}))
 
     # Neck guard: tall collar 0.26 m dia. x 0.14 m, flaring, rolled top edge.
-    col_z = fig.shoulder_z - 0.005
+    col_z = fig.shoulder_z - 0.030
     fig.add_bone("Collar", (0, 0.004, col_z), (0, 0.004, col_z + 0.14), "Chest")
     parts.append(Part("lathe", (0.0, 0.004, col_z), (1.0, 0.92, 1.0),
                       mat="hammered_bronze_plate", bone="Collar", segments=20, extras={
-                          "profile": [(0.0, 0.03), (0.150, 0.03), (0.128, 0.05),
-                                      (0.132, 0.12), (0.142, 0.14), (0.146, 0.152),
-                                      (0.134, 0.156), (0.118, 0.14), (0.0, 0.14)],
+                          "profile": [(0.0, 0.03), (0.150, 0.03), (0.126, 0.05),
+                                      (0.130, 0.125), (0.140, 0.145), (0.144, 0.157),
+                                      (0.132, 0.161), (0.116, 0.145), (0.0, 0.145)],
                           "rigid": True, "smooth": True, "bevel": False}))
 
     # Shoulder guards: domes 0.30 m wide over each shoulder, curving down the arm.
@@ -849,7 +849,9 @@ def dendra_champion(entry: Entry):
                               mat="rivet_bronze", bone=bone, segments=5, rings=3,
                               extras={"rigid": True, "bevel": False}))
 
-    parts += _tusk_helmet(fig, base_z=0.935 * h, top_z=1.92)
+    # The JSON's 0.30 m cone would sit on the eyes; the concept's (and this) base is
+    # at the brow, 1.71 m, so the cone is 0.18 m tall to reach the 1.92 m knob.
+    parts += _tusk_helmet(fig, base_z=0.960 * h, top_z=1.92)
     parts += _rapier(fig)
 
     # Review pose: the test pose, with the arm raise capped to 55° (the JSON's

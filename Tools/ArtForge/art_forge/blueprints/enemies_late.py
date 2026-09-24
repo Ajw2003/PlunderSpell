@@ -397,6 +397,267 @@ def sallet_halberdier(entry: Entry):
         ])
 
 
+# --------------------------------------------------------------------------------
+# Handgunner (ranged) — the spark first, then the brim and the stick.
+# --------------------------------------------------------------------------------
+
+def _kettle(fig: Human, mat: str, crown: float, r_dome: float, dome_h: float,
+            r_brim: float, droop: float, rivets: int, bone: str = "Hat") -> list[Part]:
+    """A one-piece kettle hat: dome with a raised ridge, a brim turned down `droop`
+    degrees ending in a rolled edge, lining rivets round the crown base. Rigid on
+    its own bone under Head (it gets knocked off)."""
+    cy = 0.004 * fig.h
+    base = Vector((0.0, cy, crown - dome_h))
+    drop = math.tan(math.radians(droop)) * (r_brim - r_dome)
+    profile = [
+        (0.0, dome_h - 0.003), (0.032, dome_h - 0.010), (0.064, dome_h - 0.030),
+        (0.090, dome_h - 0.062), (r_dome - 0.004, 0.040), (r_dome, 0.004),
+        ((r_dome + r_brim) / 2, -drop * 0.45), (r_brim - 0.008, -drop),
+        (r_brim, -drop - 0.007), (r_brim - 0.006, -drop - 0.016),
+        ((r_dome + r_brim) / 2, -drop * 0.5 - 0.011), (r_dome - 0.010, -0.010)]
+    fig.add_bone(bone, base, base + Vector((0, 0, dome_h)), "Head")
+    parts = [Part("lathe", tuple(base), (1.0, 1.04, 1.0), mat=mat, bone=bone, segments=22,
+                  extras={"profile": profile, "rigid": True, "smooth": True})]
+    ridge = [base + Vector((0.0, math.cos(a) * (r_dome - 0.010) * 1.04,
+                            0.006 + math.sin(a) * (dome_h - 0.010)))
+             for a in [math.radians(d) for d in range(20, 161, 20)]]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat=mat, bone=bone, segments=6,
+                      extras={"path": [tuple(p) for p in ridge], "section": (0.008, 0.006),
+                              "rigid": True, "smooth": True, "bevel": False}))
+    for k in range(rivets):
+        a = 2.0 * math.pi * (k + 0.5) / rivets
+        at = base + Vector((math.cos(a) * (r_dome + 0.001), math.sin(a) * (r_dome + 0.001) * 1.04,
+                            0.022))
+        parts.append(Part("sphere", tuple(at), (0.012, 0.012, 0.012), mat=mat, bone=bone,
+                          segments=6, rings=4, extras={"rigid": True, "bevel": False}))
+    return parts
+
+
+def _front_lacing(fig: Human, pad: float, mat: str, z0: float, z1: float,
+                  crossings: int = 6) -> Part:
+    """A leather thong zig-zagging up the front opening, laid on the surface."""
+    pts = []
+    steps = 2 * crossings
+    for i in range(steps + 1):
+        z = z0 + (z1 - z0) * i / steps
+        side = -1.0 if i % 2 else 1.0
+        pts.append(tuple(fig.surface(z, -90.0 + side * 6.0, pad=pad + 0.004)))
+    return Part("tube", (0, 0, 0), (1, 1, 1), mat=mat, bone="Chest", segments=4,
+                extras={"path": pts, "section": (0.004, 0.006), "smooth": True,
+                        "bevel": False, "bones": ["Spine", "Chest", "Hips"]})
+
+
+def _badge(fig: Human, side: str, z: float, white: str, red: str) -> list[Part]:
+    """A 0.10 x 0.12 m livery patch with a red saltire, stitched to the outside of
+    the upper sleeve at height z. Rigid on UpperArm."""
+    shoulder, elbow, _w = _arm_axis(fig, side)
+    t = (shoulder.z - z) / max(1e-6, shoulder.z - elbow.z)
+    c = shoulder.lerp(elbow, t)
+    s = 1.0 if side == "L" else -1.0
+    axis = (shoulder - elbow).normalized()
+    out = Vector((s, 0.0, 0.0))
+    out = (out - axis * out.dot(axis)).normalized()
+    r = 0.030 * fig.h * fig.bulk + 0.018
+    at = c + out * (r + 0.002)
+    yaw = 90.0 if side == "L" else -90.0
+    bone = f"UpperArm.{side}"
+    parts = [Part("box", tuple(at), (0.10, 0.12, 0.006), mat=white, bone=bone,
+                  rot=(0.0, yaw, 0.0), extras={"rigid": True, "bevel": False})]
+    for lean in (38.0, -38.0):
+        parts.append(Part("box", tuple(at + out * 0.004), (0.016, 0.12, 0.004), mat=red,
+                          bone=bone, rot=(lean, yaw, 0.0),
+                          extras={"rigid": True, "bevel": False}))
+    return parts
+
+
+def _handgonne(fig: Human, g: Vector, aim: Vector) -> list[Part]:
+    """Oak tiller 0.80 m (5 x 4 cm, tail cut flat) held in the right fist near its
+    tail, the fat octagonal wrought-iron barrel (0.32 m, 7.5 cm across, 3 hoops,
+    sooted touch-hole pan, hook lug under the muzzle) bound on by 3 bands, the
+    whole thing sloped up over the left shoulder along `aim`."""
+    d = aim.normalized()
+    tail = g - d * 0.12
+    tiller_end = tail + d * 0.80
+    b0 = tiller_end - d * 0.10
+    b1 = b0 + d * 0.32
+    fig.prop_bone("Gun", "R", head=g, tail=b1)
+    prop = {"prop": True}
+    # "up" for the gun: world up with the aim removed (the lug hangs below it).
+    up = Vector((0.0, 0.0, 1.0))
+    up = (up - d * up.dot(d)).normalized()
+    parts = [
+        _seg("cyl", tail, tiller_end, 0.025, "oak_tiller", "Gun", segments=4, rx=0.021,
+             extras={**prop}),
+        _seg("cyl", b0, b1, 0.0375, "gun_iron", "Gun", segments=8, extras={**prop}),
+        # muzzle mouth darkened (bore) and the breech pan
+        _seg("cyl", b1 - d * 0.004, b1 + d * 0.002, 0.024, "soot_bore", "Gun", segments=8,
+             extras={**prop, "bevel": False}),
+    ]
+    for t in (0.06, 0.52, 0.94):   # the 3 reinforcing hoops
+        c = b0 + d * (0.32 * t)
+        parts.append(_seg("cyl", c - d * 0.012, c + d * 0.012, 0.043, "gun_iron", "Gun",
+                          segments=8, extras={**prop, "bevel": False}))
+    for t in (0.25, 0.50, 0.75):   # tiller bands
+        c = tail + d * (0.80 * t)
+        parts.append(_seg("cyl", c - d * 0.010, c + d * 0.010, 0.029, "gun_iron", "Gun",
+                          segments=4, rx=0.025, extras={**prop, "bevel": False}))
+    pan = b0 + d * 0.04 + up * 0.040
+    parts.append(Part("box", tuple(pan), (0.03, 0.03, 0.012), mat="soot_bore", bone="Gun",
+                      rot=_rot_to(up), extras={**prop, "bevel": False}))
+    lug = b1 - d * 0.03 - up * 0.065
+    parts.append(_seg("cyl", b1 - d * 0.03 - up * 0.03, lug, 0.012, "gun_iron", "Gun",
+                      segments=4, extras={**prop, "bevel": False}))
+    parts.append(_seg("cyl", lug, lug - d * 0.035, 0.010, "gun_iron", "Gun", segments=4,
+                      extras={**prop, "bevel": False}))
+    return parts
+
+
+def handgunner(entry: Entry):
+    # Eyes 1.64 m -> stature 1.752 m; the kettle hat's crown is at 1.78 m. Slightly
+    # stocky (bulk 1.12), 0.48 m shoulders. The right fist holds the tiller near
+    # its tail at the hip, the barrel on the left shoulder; the left fist holds the
+    # lit match low at the side.
+    fig = Human(height=1.752, bulk=1.10, shoulders=0.48,
+                arm_r=ArmPose(spread=11.0, swing=8.0, elbow=34.0),
+                arm_l=ArmPose(spread=13.0, swing=2.0, elbow=26.0))
+    h = fig.h
+    pad = 0.022
+    parts = [fig.torso_part("padded_jack", pad=pad, hem=0.815, hem_flare=1.22, collar=0.08,
+                            quilt=0.07, segments=56)]
+    for side in ("L", "R"):
+        parts.append(fig.arm_part(side, "padded_jack", pad=pad * 0.8, quilt_rings=13))
+        parts += fig.hand_part(side, "skin")
+        # knee boots to 0.50 m, cuff turned down
+        parts.append(fig.leg_part(side, "hose", paint=[
+            {"mat": "leather", "min": (-1, -1, -1), "max": (1, 1, 0.50)}]))
+        parts.append(fig.foot_part(side, "leather", length=0.27, point=0.2))
+        knee = fig.joint(f"knee.{side}")
+        ank = fig.joint(f"ankle.{side}")
+        cuff = ank.lerp(knee, (0.475 - ank.z) / (knee.z - ank.z))
+        parts.append(Part("cyl", tuple(cuff), (0.090, 0.094, 0.05), mat="leather",
+                          bone=f"LowerLeg.{side}", segments=12, taper=1.12,
+                          extras={"bevel": False, "smooth": True,
+                                  "bones": [f"LowerLeg.{side}", f"UpperLeg.{side}"]}))
+        parts += _badge(fig, side, 1.35, "livery_white", "livery_red")
+    parts += fig.head_part("skin", features="leather")
+    parts += _kettle(fig, "kettle_steel", crown=1.78, r_dome=0.111, dome_h=0.14,
+                     r_brim=0.215, droop=12.0, rivets=8)
+    parts.append(_front_lacing(fig, pad, "leather", fig.belt_z + 0.05, 0.815 * h))
+
+    # Belt at 1.02 m, iron buckle; shot pouch (right hip), horn flask (left hip).
+    parts.append(fig.band(1.02, "leather", height=0.04, pad=0.008, torso_pad=pad))
+    buckle = fig.surface(1.02, -90.0, pad=pad + 0.012)
+    parts.append(Part("torus", tuple(buckle), (0.05, 0.05, 0.045), mat="gun_iron",
+                      bone="Hips", rot=(90, 0, 0), segments=4, rings=4, minor=0.2,
+                      extras={"rigid": True, "bevel": False}))
+    pouch = fig.surface(0.95, -140.0, pad=pad + 0.03)
+    fig.add_bone("Pouch", pouch + Vector((0, 0, 0.07)), pouch - Vector((0, 0, 0.07)), "Hips")
+    parts.append(Part("box", tuple(pouch), (0.12, 0.05, 0.14), mat="leather", bone="Pouch",
+                      rot=(0, 0, 40.0), extras={"rigid": True}))
+    parts.append(Part("box", tuple(pouch + Vector((-0.006, -0.008, 0.05))), (0.126, 0.03, 0.06),
+                      mat="leather", bone="Pouch", rot=(10, 0, 40.0), extras={"rigid": True}))
+    parts.append(Part("cyl", tuple(pouch + Vector((-0.02, -0.03, 0.02))), (0.012, 0.012, 0.03),
+                      mat="oak_tiller", bone="Pouch", rot=(0, 90, 40.0), segments=6,
+                      extras={"rigid": True, "bevel": False}))
+    top = fig.surface(0.98, -20.0, pad=pad + 0.03)
+    fig.add_bone("Flask", top, top + Vector((0.03, 0.0, -0.24)), "Hips")
+    horn = [top + Vector((0.0, 0.0, 0.0)), top + Vector((0.035, -0.01, -0.09)),
+            top + Vector((0.035, -0.02, -0.18)), top + Vector((0.0, -0.03, -0.25))]
+    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat="horn", bone="Flask", segments=8,
+                      extras={"path": [tuple(p) for p in horn],
+                              "sections": [(0.036, 0.036), (0.032, 0.032), (0.022, 0.022),
+                                           (0.010, 0.010)],
+                              "rigid": True, "smooth": True, "bevel": False}))
+    parts.append(_seg("cyl", horn[0] + Vector((0, 0, -0.012)), horn[0] + Vector((0, 0, 0.012)),
+                      0.039, "gun_iron", "Flask", segments=8, extras={"rigid": True}))
+    parts.append(_seg("cyl", horn[3], horn[3] + Vector((-0.01, -0.01, -0.04)), 0.010,
+                      "gun_iron", "Flask", segments=6, extras={"rigid": True, "bevel": False}))
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="leather", bone="Flask", segments=4,
+                      extras={"path": [tuple(fig.surface(1.02, -30.0, pad + 0.012)),
+                                       tuple(top + Vector((0.0, 0.0, 0.01)))],
+                              "section": (0.004, 0.004), "rigid": True, "bevel": False}))
+
+    # Bandolier: buff strap over the left shoulder to the right hip, round the back.
+    band = []
+    for z, ang in ((0.96, -150.0), (1.10, -125.0), (1.24, -95.0), (1.36, -62.0),
+                   (1.43, -30.0), (1.45, 10.0), (1.40, 55.0), (1.28, 90.0),
+                   (1.14, 125.0), (1.00, 160.0)):
+        band.append(tuple(fig.surface(z, ang, pad=pad + 0.012)))
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="buff_leather", bone="Chest",
+                      segments=4, extras={
+                          "path": band, "section": (0.005, 0.025), "up": (0, 0, 1),
+                          "smooth": True, "bevel": False,
+                          "bones": ["Hips", "Spine", "Chest", "Shoulder.L"]}))
+
+    # Slow match: a coil on a toggle at the chest, the lit end in the left fist.
+    coil = fig.surface(1.25, -105.0, pad=pad + 0.02)
+    parts.append(Part("torus", tuple(coil), (0.10, 0.10, 0.10), mat="hemp_match", bone="Chest",
+                      rot=(80, 0, 0), segments=12, rings=5, minor=0.16,
+                      extras={"rigid": True, "bevel": False}))
+    parts.append(Part("torus", tuple(coil + Vector((0, -0.01, 0))), (0.07, 0.07, 0.07),
+                      mat="hemp_match", bone="Chest", rot=(80, 0, 0), segments=10, rings=5,
+                      minor=0.2, extras={"rigid": True, "bevel": False}))
+    gl = fig.grip("L")
+    _s, _e, _w, _t, fore_l = fig._arm["L"]
+    tip = gl + fore_l * 0.10 + Vector((0.0, -0.02, 0.02))
+    fig.prop_bone("MatchCord", "L", head=gl, tail=tip)
+    loop = [gl + Vector((0.0, 0.0, 0.01)), gl + Vector((0.01, 0.02, -0.10)),
+            gl + Vector((0.0, 0.03, -0.18)), gl + Vector((-0.02, 0.01, -0.10)),
+            gl - fore_l * 0.01]
+    parts.append(Part("tube", (0, 0, 0), (1, 1, 1), mat="hemp_match", bone="MatchCord",
+                      segments=5, extras={"path": [tuple(p) for p in loop],
+                                          "section": (0.005, 0.005), "prop": True,
+                                          "smooth": True, "bevel": False}))
+    parts.append(_seg("cyl", gl, tip, 0.005, "hemp_match", "MatchCord", segments=5,
+                      extras={"prop": True, "bevel": False}))
+    parts.append(Part("sphere", tuple(tip), (0.022, 0.022, 0.03), mat="match",
+                      bone="MatchCord", rot=_rot_to(tip - gl), segments=8, rings=5,
+                      extras={"prop": True, "bevel": False}))
+
+    g = fig.grip("R")
+    parts += _handgonne(fig, g, Vector((0.30, 0.0, 0.62)))
+
+    pose = dict(figures.HUMAN_TEST_POSE)
+    return blueprint(
+        entry, parts, bevel=0.003, **fig.rig(pose),
+        family_overrides={
+            # "Emissive tip of the slow match": EnemyForge multiplies emission by 9,
+            # so the mask stores the madder dimmed (the warden's horn-pane trick).
+            "match": {"emit": "#5A2210", "rough": 0.6},
+            "kettle_steel": {"rough": 0.45},
+            "padded_jack": {"grain": 0.30},
+        },
+        extra_families={
+            "skin": {"name": "Skin", "base": "#9C7A5E", "rough": 0.7,
+                     "notes": "Face and bare hands: the JSON lists no skin family."},
+            "hose": {"name": "Dark wool hose", "base": "#3A2F26", "rough": 0.85,
+                     "notes": "Build: 'dark wool hose'; hex from the halberdier's Hose "
+                              "(same livery), the JSON lists none here."},
+            "livery_white": {"name": "Livery white", "base": "#D6CDB6", "rough": 0.9,
+                             "notes": "The sleeve badge's 'white cloth patch'; hex from "
+                                      "the halberdier's Livery white."},
+            "buff_leather": {"name": "Buff leather", "base": "#8A6A4C", "rough": 0.7,
+                             "notes": "JSON Leather notes: 'bandolier (buff, lighter)'."},
+            "horn": {"name": "Cow horn", "base": "#B8A07A", "rough": 0.45,
+                     "notes": "The powder flask is cow horn; no horn family in the JSON."},
+            "hemp_match": {"name": "Hemp match cord", "base": "#7A6A50", "rough": 0.9,
+                           "notes": "The 1.2 m slow-match cord itself (only its tip is "
+                                    "madder)."},
+            "soot_bore": {"name": "Soot", "base": "#1C1A18", "rough": 0.9,
+                          "notes": "The bore and the sooted flash-pan at the touch-hole."},
+        },
+        notes=[
+            "Handgonne (tiller + barrel) is a prop bone Gun on Hand.R; MatchCord is a "
+            "prop bone on Hand.L carrying the lit tip. Both are left out of the height.",
+            "Hat is its own bone under Head (detachable); Pouch and Flask are bones "
+            "under Hips (rigid, not springs).",
+            "Not built: the 4-bone match_cord chain (one bone), jack_skirt springs, the "
+            "smoke plume (VFX), the switchable shoulder socket for the gun, powder smut "
+            "and singe decals.",
+        ])
+
+
 BLUEPRINTS = {
     "sallet-halberdier": sallet_halberdier,
+    "handgunner": handgunner,
 }
