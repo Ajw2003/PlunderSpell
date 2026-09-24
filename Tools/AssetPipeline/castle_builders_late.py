@@ -1,14 +1,14 @@
 """
-Late Medieval: a Burgundian fortress, c. 1450. The LateMedieval castle set, one function per module in
-asset_specs.LATE_CASTLE_SPECS. See docs/plans/era-castle-rooms.md for the plan
-of every piece (set-pieces by quadrant, loot anchors, the High Medieval room each
-one stands in for) and for where the kit's rules override the art bible.
+Late Medieval: a Burgundian fortress, c. 1450. The LateMedieval castle set's shared base: its palette, zone tables,
+room_shell and door plugs. The pieces themselves are in
+castle_builders_late_<zone>.py (curtain, bailey, ward, keep, crypt), each built to
+its room sheet in docs/art/rooms/. Plan: docs/plans/era-castle-rooms.md.
 
 Fortresses within fortresses: dressed sandstone lined with brick, machicolations,
 keyhole gun-loops, conical tower roofs, pavises and the first guns.
 
-Same convention as castle_builders.py (the High Medieval set): the zone heights
-and archways are shared, rooms start from _shell and keep the clear cross,
+Every piece follows the same convention as castle_builders.py (the High Medieval set): the zone heights
+and archways are shared, rooms start from room_shell and keep the clear cross,
 furniture goes in the corner quadrants, nothing floats, and every room
 registers at least two loot anchors on furniture. Wall pieces put their wall on
 the local south side (corner: south + west) and their gate in the south wall.
@@ -47,7 +47,7 @@ ZONE_FLOOR = {"OuterBailey": "ash_hi", "InnerWard": "vellum_faint", "Keep": "oak
 ZONE_TRIM = {"CurtainWall": "leather", "OuterBailey": "leather", "InnerWard": "verdigris_lo", "Keep": "madder", "Crypt": "ash"}
 
 
-def _shell(bm, uv, zone):
+def room_shell(bm, uv, zone):
     """This Age's walls, floor and trim on the shared room shell."""
     return cb._shell(bm, uv, zone, stone=WALL, trim=ZONE_TRIM[zone], floor=ZONE_FLOOR[zone])
 

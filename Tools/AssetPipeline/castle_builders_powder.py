@@ -1,14 +1,14 @@
 """
-Age of Powder: a Habsburg palace-fortress, c. 1620. The AgeOfPowder castle set, one function per module in
-asset_specs.POWDER_CASTLE_SPECS. See docs/plans/era-castle-rooms.md for the plan
-of every piece (set-pieces by quadrant, loot anchors, the High Medieval room each
-one stands in for) and for where the kit's rules override the art bible.
+Age of Powder: a Habsburg palace-fortress, c. 1620. The AgeOfPowder castle set's shared base: its palette, zone tables,
+room_shell and door plugs. The pieces themselves are in
+castle_builders_powder_<zone>.py (curtain, bailey, ward, keep, crypt), each built to
+its room sheet in docs/art/rooms/. Plan: docs/plans/era-castle-rooms.md.
 
 Lime plaster, black walnut, blued steel, glass by the acre, gilt everywhere, and black
 powder under the ballroom. The walls are low, sloped and angular, built to take cannon.
 
-Same convention as castle_builders.py (the High Medieval set): the zone heights
-and archways are shared, rooms start from _shell and keep the clear cross,
+Every piece follows the same convention as castle_builders.py (the High Medieval set): the zone heights
+and archways are shared, rooms start from room_shell and keep the clear cross,
 furniture goes in the corner quadrants, nothing floats, and every room
 registers at least two loot anchors on furniture. Wall pieces put their wall on
 the local south side (corner: south + west) and their gate in the south wall.
@@ -43,7 +43,7 @@ ZONE_FLOOR = {"OuterBailey": "ash_hi", "InnerWard": "vellum_faint", "Keep": "oak
 ZONE_TRIM = {"CurtainWall": "vellum_dim", "OuterBailey": "oak", "InnerWard": "line", "Keep": "orpiment", "Crypt": "iron"}
 
 
-def _shell(bm, uv, zone):
+def room_shell(bm, uv, zone):
     """This Age's walls, floor and trim on the shared room shell."""
     return cb._shell(bm, uv, zone, stone=WALL, trim=ZONE_TRIM[zone], floor=ZONE_FLOOR[zone])
 

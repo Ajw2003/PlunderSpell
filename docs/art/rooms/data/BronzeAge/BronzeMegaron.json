@@ -1,0 +1,63 @@
+{
+  "key": "BronzeMegaron",
+  "name": "The Megaron",
+  "age": "BronzeAge",
+  "zone": "Keep",
+  "role": "ThroneRoomKeep",
+  "summary": "The king's hall: a painted hearth ring, four red columns tapering the wrong way, and a gypsum throne in the corner.",
+  "description": "Here a god-king sits to be warm and important, and here you will find him out. A great painted ring marks the hearth at the crossing of the hall, four haematite columns stand guard round it, widening as they rise in the manner of the island palaces, and the throne sits plastered against the east wall with griffins painted either side to explain who owns the room. Fleeces lie on clay benches along the walls, tripods of bronze stand by the fire, and every one of them is worth carrying. In the kit the hearth is inlaid flat so the whole castle can walk across the hall.",
+  "source": "Megaron (docs/art/concept/bronze/megaron-hall.svg, docs/art/bronze.md)",
+  "kit_changes": [
+    "The hearth's 0.20 m raised rim would sit across the clear cross: the hearth is a flat inlaid ring (0.04 / 0.07 / 0.10 m) instead.",
+    "The throne cannot fill the east archway (every kit room opens on four sides): it stands against the east wall in the NE quadrant, facing west.",
+    "No roof, smoke lantern or porch columns: kit rooms are open-roofed shells, and the porch would cut the south archway.",
+    "The frescoes are flat colour panels in the kit (the atlas has no fresco blue; verdigris_lo stands in)."
+  ],
+  "build": [
+    "Shell: the kit's Keep shell. 12.0 × 12.0 × 0.30 m floor slab, 0.50 m walls rising 4.60 m clear from the slab top (to 4.90 m), ochre plaster, a 0.45 m haematite capstone band at the top; an archway 2.60 × 3.31 m centred on every wall.",
+    "Hearth: three flat discs centred at (0, 0) on the floor: fresco-blue ring r 1.80 m × 0.04 m, flame-painted ring r 1.50 m × 0.07 m, soot ash bed r 1.05 m × 0.10 m (16 segments). All under 0.12 m, so walkable.",
+    "Columns: four at (±2.50, ±2.50), 4.60 m to the wall top. Black base disc r 0.30 × 0.10 m; haematite shaft 3.78 m tapering from r 0.17 at the foot to r 0.23 at the top; black cushion capital 0.36 m (r 0.25 → 0.35); square abacus 0.69 × 0.69 × 0.10 m.",
+    "Throne: gypsum seat 0.70 (E–W) × 1.00 (N–S) × 0.46 m, centred (5.05, 3.70); back slab 0.25 × 1.00 × 1.80 m against the east wall at x 5.40; wavy crest of three cylinders r 0.14 m lying E–W on the back's top edge, the middle one 0.06 m higher.",
+    "Footstool step: 1.20 × 1.60 × 0.12 m at (4.15, 3.70), in front of the throne.",
+    "Griffin panels: two fresco panels 1.40 wide × 1.10 m tall on the east wall, bottom 0.90 m above the floor, centred y 2.20 and 5.10, either side of the throne.",
+    "Clay benches: plastered, 0.40 m high × 0.50 m deep, backed against the walls. North: 2.40 m long at x ±3.10, y 5.25. South: 3.20 m long at x ±3.60, y −5.25.",
+    "Tripods: two bronze tripods, three legs r 0.03 × 0.90 m splayed on a 0.21 m radius, bowl r 0.30 → 0.21 × 0.28 m on top; at (−3.50, 2.00) and (3.30, −2.00).",
+    "Offering tables: three 0.60 × 0.60 m tables 0.70 m high on four legs, faded plaster colour, at (−4.60, −3.60), (−2.40, −4.30) and (4.60, −3.60).",
+    "Fresco band: on the north, south and west walls, one panel per wall section (4.10 m wide, centred ±3.40 along the wall), 1.40–3.00 m above the floor, with a 0.18 m haematite border on top."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 3.31 m (Keep), all open",
+    "Throne: NE quadrant, seat top 0.76 m above ground, faces west into the hall",
+    "Hearth: a flat ring at the crossing (an IGNIS source in play; no geometry above 0.10 m)"
+  ],
+  "loot_anchors": [
+    {"at": "north bench, west (fleece)", "xyz": [-3.1, 5.25, 0.70]},
+    {"at": "north bench, east (fleece)", "xyz": [3.1, 5.25, 0.70]},
+    {"at": "south bench, west", "xyz": [-3.6, -5.25, 0.70]},
+    {"at": "south bench, east", "xyz": [3.6, -5.25, 0.70]},
+    {"at": "west tripod bowl", "xyz": [-3.5, 2.0, 1.44]},
+    {"at": "east tripod bowl", "xyz": [3.3, -2.0, 1.44]},
+    {"at": "throne seat", "xyz": [5.05, 3.7, 0.76]},
+    {"at": "footstool step before the throne", "xyz": [4.15, 3.7, 0.42]},
+    {"at": "offering table, SW corner", "xyz": [-4.6, -3.6, 1.0]},
+    {"at": "offering table, by the south bench", "xyz": [-2.4, -4.3, 1.0]},
+    {"at": "offering table, SE corner", "xyz": [4.6, -3.6, 1.0]}
+  ],
+  "materials": [
+    {"name": "Painted lime plaster", "hex": "#C9A77A", "pigment": "bronze", "notes": "Walls; chalky, roughness 0.95; soot gradient from the wall top down 1.2 m."},
+    {"name": "Haematite red", "hex": "#8E3F2C", "pigment": "madder", "notes": "Column shafts and the capstone band; soot heaviest on the hearth side."},
+    {"name": "Fresco blue", "hex": "#3F6F86", "pigment": "verdigris_lo", "notes": "Fresco bands, griffin panels, the hearth's outer ring."},
+    {"name": "Hearth soot", "hex": "#2B231B", "pigment": "bone_black", "notes": "Column bases and capitals, the hearth's ash bed."},
+    {"name": "Gypsum", "hex": "#D8CDB2", "pigment": "vellum", "notes": "Throne and the clay benches' plaster skin; worn pale where sat on."},
+    {"name": "Cast bronze", "hex": "#9B6A38", "pigment": "bronze", "notes": "Tripods; darker in the bowl, bright on the rim where handled."},
+    {"name": "Painted floor", "hex": "#7A6A58", "pigment": "vellum_faint", "notes": "Floor slab and offering tables; the art bible's octopus grid is albedo only."}
+  ],
+  "gameplay": [
+    "The hearth ring is always lit in play: IGNIS in this room spreads quickly (the Bronze Age is dry).",
+    "Eleven loot anchors, the most in the Keep: fleeces on the benches, the tripod bowls, the throne and its step, three offering tables.",
+    "The four columns and the throne are the only cover; the clear cross between the archways is wide open under the hearth's light.",
+    "All four archways are open, so the hall is a crossroads of the Keep: guards pass through it."
+  ],
+  "budget": "≤ 2.4k tris (kit); 1.57k built",
+  "concept": "concept/BronzeAge/BronzeMegaron.svg"
+}

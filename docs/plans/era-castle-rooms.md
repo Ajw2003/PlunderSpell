@@ -101,11 +101,25 @@ The pitch bible keeps orpiment for gold and value, madder for fire, blood and al
 and lapis for the arcane. So the new pieces use orpiment only on things worth stealing (and Powder
 gilt), madder for hearths, red cloth and painted columns, and never lapis or bright verdigris.
 
+## Order of work: a sheet for every room first, then the model
+
+Added 2026-09-24 at the user's request, after the first kit Megaron came out a painted box next to
+the art bible's Megaron sheet. Every room and curtain-wall piece gets a reference sheet before it
+is modelled, at art-bible depth: a section and a plan, a 1.80 m figure for scale, labelled sockets
+and loot points, a palette strip, and a JSON spec with real dimensions. The model is then built to
+the sheet, and `build_room_sheets.py --models` holds it there by comparing the loot anchors. Rules
+and commands: [`docs/art/rooms/README.md`](../art/rooms/README.md). Door plugs are plain slabs and
+have no sheet.
+
 ## File layout
 
 - `Tools/AssetPipeline/castle_builders_bronze.py`, `castle_builders_late.py`,
-  `castle_builders_powder.py`: one file per Age. Each reuses `castle_builders`' helpers and zone
-  tables.
+  `castle_builders_powder.py`: each Age's palette, zone tables, `room_shell` and door plugs.
+- `Tools/AssetPipeline/castle_builders_<age>_<zone>.py` (`curtain`, `bailey`, `ward`, `keep`,
+  `crypt`): that Age's pieces for one zone, so zones can be built in parallel without touching
+  each other's files.
+- `docs/art/rooms/`: the room sheets (`data/<Age>/<Key>.json`, `concept/<Age>/<Key>.svg`), drawn
+  by `Tools/ArtBible/rooms/generators/<Age>/<Key>.py`.
 - `Tools/AssetPipeline/asset_specs.py`: `BRONZE_CASTLE_SPECS`, `LATE_CASTLE_SPECS` and
   `POWDER_CASTLE_SPECS`, each entry with a `kind` of `wall` / `room` / `plug` and its `zone`.
 - FBX go to `Assets/_Project/Art/Models/Castle/<HistoricalEra>/`. Keys carry the Age prefix
@@ -296,11 +310,13 @@ in that Age's wall pigment.
 
 ## Verification
 
-1. `Tools/AssetPipeline/run_pipeline.sh` passes for all modules: gate 1 (Blender: transforms,
+1. `python3 Tools/ArtBible/build_room_sheets.py --models` passes: every sheet validates, and every
+   model's loot anchors match its sheet.
+2. `Tools/AssetPipeline/run_pipeline.sh` passes for all modules: gate 1 (Blender: transforms,
    manifold, UV, budget, footprint, floating islands, walkway), gate 2 (trimesh), previews, and the
    contact sheets.
-2. The High Medieval set does not change: all 42 pre-existing assets report `unchanged`.
-3. The per-Age contact sheets are reviewed by eye, and each Age reads as its own place.
+3. The High Medieval set does not change: all 42 pre-existing assets report `unchanged`.
+4. The per-Age contact sheets are reviewed by eye, beside the room sheets, and each Age reads as its own place.
 
 ## Not in this pass (needs the Unity Editor)
 
