@@ -353,6 +353,12 @@
       "preview": "148d534bdedcc557:23a9d68e53fd",
       "tris": 1600
     },
+    "LateEffigyCrypt": {
+      "budget": 1600,
+      "content": "cbfb52e75dbdf736",
+      "preview": "cbfb52e75dbdf736:23a9d68e53fd",
+      "tris": 736
+    },
     "LateGreatHall": {
       "budget": 2400,
       "content": "3cccba9e890ed511",

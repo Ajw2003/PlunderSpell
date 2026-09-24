@@ -128,3 +128,47 @@ def build_late_charnel_house(bm, uv):
         ek.wheel(bm, uv, TIMBER, kx + 0.2, ky + dy, fz + 0.3, 0.3, along="y")
     cb._box(bm, uv, TIMBER, (kx - 0.45, ky, fz + 0.28), (0.08, 0.08, 0.56))
     cb._box(bm, uv, TIMBER, (kx - 1.0, ky, fz + 0.6), (0.8, 0.04, 0.04))
+
+
+def build_late_effigy_crypt(bm, uv):
+    """docs/art/rooms/concept/LateMedieval/LateEffigyCrypt.svg"""
+    h, fz = room_shell(bm, uv, "Crypt")
+    # NE: the founder's tomb chest and his gilded effigy.
+    fx, fy, fh = 3.6, 4.2, 0.9
+    cb._box(bm, uv, WALL, (fx, fy, fz + fh / 2), (2.2, 1.0, fh))
+    cb._box(bm, uv, "vellum_faint", (fx, fy, fz + fh - 0.04), (2.28, 1.08, 0.08))
+    top = fz + fh
+    cb._box(bm, uv, GOLD, (fx - 0.1, fy, top + 0.1), (1.6, 0.45, 0.2))
+    ek.sphere(bm, uv, GOLD, fx + 0.8, fy, top + 0.02, 0.11, segments=8, rings=4)
+    ek.prism(bm, uv, GOLD, [(-0.1, 0.0), (0.1, 0.0), (0.0, 0.16)], 0.12, loc=(fx + 0.15, fy, top + 0.2), along="y")
+    cb._anchor(fx, fy + 0.36, top)
+    # The canopy: four oak posts, the madder tester and its gilt fringe, hangings at the back.
+    ch = fz + 2.6
+    for dx in (-1.3, 1.3):
+        for dy in (-0.7, 0.7):
+            cb._box(bm, uv, TIMBER, (fx + dx, fy + dy, (fz + ch) / 2), (0.14, 0.14, ch - fz))
+    cb._box(bm, uv, CLOTH, (fx, fy, ch + 0.075), (2.8, 1.6, 0.15))
+    cb._box(bm, uv, GOLD, (fx, fy - 0.815, ch - 0.03), (2.8, 0.03, 0.08))
+    cb._box(bm, uv, CLOTH, (fx, fy + 0.7, (top + 0.3 + ch) / 2), (2.6, 0.04, ch - top - 0.3))
+    # The candle hearse before the tomb: legs, base bar, two sloped bars, seven candles.
+    hx, hy, hw, hh = 3.6, 2.5, 1.2, 1.1
+    base = fz + 0.4
+    for dx in (-hw / 2 + 0.1, hw / 2 - 0.1):
+        cb._box(bm, uv, IRON, (hx + dx, hy, fz + 0.2), (0.04, 0.04, 0.4))
+    cb._box(bm, uv, IRON, (hx, hy, base), (hw, 0.04, 0.04))
+    tilt = math.atan2(hw / 2, hh)
+    length = math.hypot(hw / 2, hh)
+    for s in (-1, 1):
+        mk.paint(bm, mk.add_box(bm, (0.04, 0.04, length), loc=(hx + s * hw / 4, hy, base + hh / 2),
+                                rot=Euler((0, -s * tilt, 0))), IRON, uv)
+    for k in range(7):
+        t = k / 6
+        x = hx - hw / 2 + t * hw
+        z = base + hh * (1 - abs(2 * t - 1))
+        mk.paint(bm, mk.add_cylinder(bm, 0.018, 0.16, loc=(x, hy, z + 0.08), segments=6), LINEN, uv)
+        mk.paint(bm, mk.add_cylinder(bm, 0.014, 0.05, loc=(x, hy, z + 0.185), segments=4, radius2=0.003), CLOTH, uv)
+    # NW, SE, SW: lesser tomb chests, a brass plate let into each lid.
+    for x, y in ((-3.6, 4.6), (3.6, -4.6), (-3.6, -4.6)):
+        cb._box(bm, uv, WALL, (x, y, fz + 0.4), (2.0, 0.8, 0.8))
+        cb._box(bm, uv, "bronze", (x - 0.55, y, fz + 0.805), (0.5, 0.35, 0.01))
+        cb._anchor(x, y, fz + 0.8)
