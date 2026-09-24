@@ -148,7 +148,7 @@ LATE_CASTLE_SPECS = [
     dict(key="LateTurretStair", builder="build_late_turret_stair", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
     # Crypt
     dict(key="LateUndercroft", builder="build_late_undercroft", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
-    dict(key="LateOubliette", builder="build_late_oubliette", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateOubliette", builder="build_late_oubliette", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
     dict(key="LateCharnelHouse", builder="build_late_charnel_house", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
     dict(key="LateEffigyCrypt", builder="build_late_effigy_crypt", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
     dict(key="LateUndercroftStair", builder="build_late_undercroft_stair", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),

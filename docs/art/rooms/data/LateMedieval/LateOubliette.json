@@ -1,0 +1,89 @@
+{
+  "key": "LateOubliette",
+  "name": "The Oubliette",
+  "age": "LateMedieval",
+  "zone": "Crypt",
+  "role": "TombCorridor",
+  "summary": "Four barred cells behind stone partitions, stocks, shackles on the wall, and an iron grate over the pit where the castle forgets people.",
+  "description": "The castle's prison is kept below the undercroft where the damp climbs the walls. Four cells take the corners, each a stone-walled pen with a barred front facing the passage and a doorway whose door went for firewood long ago; straw on the floor and a plank shelf where the prisoner keeps whatever the guards let him keep. The stocks stand in front of one cell for the petty offenders, and iron shackles hang from the north wall for the ones who need persuading. The oubliette itself is only a grate in the floor of the south-east corner: the name means 'place of forgetting', and under the grate is a shaft with no stair.",
+  "build": [
+    "Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 3.00 m clear, a 0.45 m dark trim course, an archway 2.60 × 2.16 m centred on every wall.",
+    "Cells: four, one per quadrant, from x ±3.50 to the east or west wall and from |y| 2.20 to the north or south wall.",
+    "Partitions: sandstone 0.30 m thick on each cell's inner side (x ±3.50 … ±3.80), 2.45 m tall, running back from the front to the wall.",
+    "Barred fronts: at |y| 2.20 facing the crossing, from the partition to the wall: iron bars 0.04 m square at 0.18 m, 2.30 m tall, three iron rails at 0.30 / 1.20 / 2.00 m, an iron lintel 0.10 × 0.15 m on top; a 0.70 m doorway at |x| 4.25 … 4.95, its door gone.",
+    "Inside each cell: a straw bed 0.12 m on the floor and an oak plank shelf 0.45 × 1.20 m against the outer wall at |y| 3.90, top 0.85 m above ground.",
+    "Stocks (NW, before the cell): two oak posts 0.12 m square, 0.75 m, and a board 1.60 × 0.12 × 0.20 m at 0.72–0.92 m above ground, two dark holes; a kit bench 1.40 × 0.30 m for the prisoner behind it, seat at 0.74 m.",
+    "Shackles: three iron wall plates with a short chain each on the north wall at x 2.00, 2.60 and −2.20.",
+    "Oubliette grate (SE): a dark slab 1.20 m square, 0.03 m, at (2.60, −3.40), five iron bars across it; flat and walkable (0.06 m)."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open",
+    "Cell doorways: 0.70 m in each barred front, facing the crossing",
+    "Loot anchors: the stocks bench, the NE and SW cell shelves"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the stocks bench",
+      "xyz": [
+        -2.6,
+        3.05,
+        0.74
+      ]
+    },
+    {
+      "at": "the NE cell's shelf",
+      "xyz": [
+        5.275,
+        3.9,
+        0.85
+      ]
+    },
+    {
+      "at": "the SW cell's shelf",
+      "xyz": [
+        -5.275,
+        -3.9,
+        0.85
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls and partitions."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "Bars, rails, lintels, shackles, grate bars."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Shelves, stocks, bench."
+    },
+    {
+      "name": "Straw",
+      "hex": "#B98A34",
+      "pigment": "bronze",
+      "notes": "The cell floors."
+    },
+    {
+      "name": "Soot",
+      "hex": "#1E1B17",
+      "pigment": "bone_black",
+      "notes": "The grate's shaft, the stocks' holes."
+    }
+  ],
+  "gameplay": [
+    "Each cell is a dead end with one 0.70 m doorway: a thief looting a shelf is trapped by a guard in the door.",
+    "The barred fronts are see-through cover: a guard in the passage sees into every cell.",
+    "Three loot anchors; the grate is scenery, flat and walkable."
+  ],
+  "budget": "≤ 2.4k tris (kit)",
+  "concept": "concept/LateMedieval/LateOubliette.svg"
+}
