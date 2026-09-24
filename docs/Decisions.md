@@ -706,3 +706,20 @@ same castle, each sees the other, both directions replicate), solo raid (spawn, 
 extract 800), and Steam in the build (signed in, lobby created, hosting on `SteamTransport`, the
 invite list shows online friends). **Not yet checked:** a second Steam account joining, which needs
 the user and a friend.
+
+## 2026-09-23 — The raid player copies the CastleBench player
+
+**Context.** Playing the co-op build, the user found spells did nothing and the view sat inside
+door lintels. The build spawns `RaidPlayer.prefab`, which had differed from the player built into
+`CastleBench.unity` since `5052c97`: push-to-cast on F19 instead of V, the eye 1.65 m above the
+capsule's centre instead of 0.75 m, mass 70 instead of 1, and other controller values. The user
+had tested voice on the CastleBench player, so the fault never showed until the raid scene shipped.
+
+**Decision.** The user named the CastleBench player as correct. `RaidPlayer.prefab` now matches it
+field for field, keeping only `NetworkTransform` and `PlayerNetworkOwnership` on top. That removed
+`LootInteractor` (E to pick up, Q to drop), which the bench player does not have; pickup is
+`ItemManager`'s mouse drag. The prefab asset was edited in place rather than replaced, so the
+network spawner's reference to it holds.
+
+**Status.** Standing. Verified in a solo raid: V + 1 cast Ignis, V + 5 cast Tonitrus, and the
+spawned player stands exactly as the bench player does (eye 1.94 m above the floor in both).

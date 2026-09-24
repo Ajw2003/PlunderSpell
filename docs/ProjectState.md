@@ -137,7 +137,9 @@ had no network manager and nothing started Steam. Now every session runs through
 a local host), Host Co-op creates a Steam lobby, the Lair invites online friends, and each player
 gets their own body. Checked on this machine with two game windows over UDP, and Steam hosting in
 the build. **A real Steam join between two accounts has not been tried;** that is the user's test
-with a friend. Shared loot, guards and extraction for a client (stage 4) are next. See
+with a friend. The raid player now copies the CastleBench player; before that, casting in the
+built raid did nothing (push-to-cast was on F19) and the camera sat too high. Shared loot, guards
+and extraction for a client (stage 4) are next. See
 `docs/systems/net.md`.
 
 **2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh

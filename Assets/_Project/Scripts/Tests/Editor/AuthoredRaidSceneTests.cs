@@ -92,12 +92,30 @@ namespace RogueAi.Tests.Editor
                 "replaces the real player and undoes the issue 9 input gate.");
         }
 
+        /// <summary>
+        /// The CastleBench player is the reference: it is the one voice casting was confirmed on. The
+        /// raid prefab once differed (push-to-cast on F19, the eye 1.65 m above the capsule's centre),
+        /// so casting did nothing and the view sat in door lintels.
+        /// </summary>
+        [Test]
+        public void Test_ThePlayerMatchesTheCastleBenchSetup()
+        {
+            GameObject player = PlayerPrefab();
+            var pushToCast = new SerializedObject(player.GetComponent<RogueAi.Voice.PushToCastController>());
+            SerializedProperty key = pushToCast.FindProperty("_pushToCastKey");
+            Assert.AreEqual("V", key.enumNames[key.enumValueIndex], "The HUD says Hold V to cast.");
+            Assert.AreEqual(0.75f, player.transform.Find("Eye").localPosition.y, 0.001f,
+                "The eye sits 0.75 m above the capsule's centre, as on the CastleBench player.");
+        }
+
         [Test]
         public void Test_ThePlayerCarriesWhatTheRaidExpectsOfIt()
         {
             GameObject player = PlayerPrefab();
             Assert.IsNotNull(player.GetComponentInChildren<IntruderTag>(true), "Guards find intruders through IntruderTag.");
-            Assert.IsNotNull(player.GetComponentInChildren<LootInteractor>(true), "Nothing can be picked up without a LootInteractor.");
+            // Picking things up is ItemManager's mouse drag, as on the CastleBench player this prefab
+            // now copies; the E/Q LootInteractor was removed with the rest of the old setup.
+            Assert.IsNotNull(player.GetComponent<RogueAi.Voice.PushToCastController>(), "Nothing can be cast without push-to-cast.");
             Assert.IsNotNull(player.GetComponentInChildren<Camera>(true), "The player has no camera to see out of.");
             Assert.IsNotNull(player.GetComponent<PurrNet.NetworkTransform>(), "Nobody else would see this player move.");
             Assert.IsNotNull(player.GetComponent<PlayerNetworkOwnership>(),
