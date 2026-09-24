@@ -110,3 +110,7 @@ InitTestScene*.unity*
 # Headless verification harness build output
 Tools/Headless/**/bin/
 Tools/Headless/**/obj/
+
+# Python bytecode caches: regenerated on every import, carry nothing a source file does not.
+__pycache__/
+*.pyc
