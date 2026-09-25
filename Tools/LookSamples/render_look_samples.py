@@ -9,7 +9,7 @@ yet.
 
 Run from the repo root:
     blender -b --python Tools/LookSamples/render_look_samples.py -- [look ...]
-With no looks named, all four render. Output: docs/generated/look-samples-2026-09-24/<look>.png
+With no looks named, every look renders (the four references, then calm and alert). Output: docs/generated/look-samples-2026-09-24/<look>.png
 """
 
 import math
@@ -44,6 +44,10 @@ LAYOUT = [
 # World-space spots for fire. Braziers stand in the bailey; torches hang on the wall's inner face.
 BRAZIERS = [(-4.0, 4.0), (4.0, 4.0), (-14.0, 12.0)]
 TORCHES = [(-8.0, -4.2, 3.2), (8.0, -4.2, 3.2), (-20.0, -4.2, 3.2), (20.0, -4.2, 3.2)]
+
+# Lit only when the castle is alerted: beacons on the wall walk and a bonfire in the bailey.
+ALARM_BEACONS = [(-8.0, -5.0, 6.2), (8.0, -5.0, 6.2), (-20.0, -5.0, 6.2), (20.0, -5.0, 6.2)]
+ALARM_BONFIRES = [(-1.0, 10.0)]
 
 CAMERA_POS = Vector((9.0, 17.0, 1.7))
 CAMERA_TARGET = Vector((-3.0, -1.0, 4.2))
@@ -91,6 +95,29 @@ LOOKS = {
         bloom=1.0, bloom_threshold=0.8, vignette=0.35, exposure=-0.2,
         pixelate=3,
     ),
+    # The chosen direction (2026-09-24): the castle holds two states. Warmth comes from fire lighting
+    # the fog; the moon is a faint cool fill that the fog mostly swallows.
+    "calm": dict(
+        title="Calm - the castle asleep: low fires glowing through warm fog",
+        moon_color=(0.45, 0.58, 0.9), moon_strength=0.8, moon_elevation=26,
+        sky_color=(0.02, 0.022, 0.03), sky_strength=1.0,
+        fire_color=(1.0, 0.52, 0.2), fire_power=800, ember_strength=30,
+        fog_color=(0.35, 0.42, 0.55), fog_density=0.035, fog_anisotropy=0.6,
+        saturation=0.95, contrast=1.1,
+        lift=(0.98, 0.98, 1.02), gamma=(1.0, 0.99, 0.98), gain=(1.06, 1.0, 0.9),
+        bloom=0.8, bloom_threshold=0.8, vignette=0.45, exposure=0.35,
+    ),
+    "alert": dict(
+        title="Alert - alarm raised: beacons lit, braziers roaring, redder flame",
+        moon_color=(0.45, 0.58, 0.9), moon_strength=0.8, moon_elevation=26,
+        sky_color=(0.03, 0.018, 0.015), sky_strength=1.0,
+        fire_color=(1.0, 0.36, 0.1), fire_power=1100, ember_strength=70,
+        fog_color=(0.35, 0.42, 0.55), fog_density=0.028, fog_anisotropy=0.6,
+        saturation=1.05, contrast=1.3,
+        lift=(1.0, 0.97, 0.97), gamma=(1.02, 0.98, 0.96), gain=(1.1, 0.97, 0.86),
+        bloom=1.0, bloom_threshold=0.7, vignette=0.55, exposure=0.0,
+        brazier_scale=1.6, alarm_fires=True,
+    ),
 }
 
 
@@ -128,7 +155,7 @@ def add_ground():
     path.data.materials.append(flat_material("Path", (0.16, 0.14, 0.11)))
 
 
-def add_fire(location, look, pole_height):
+def add_fire(location, look, pole_height, scale=1.0):
     x, y, z = location
     ember = flat_material("Ember", (0.1, 0.05, 0.02), look["fire_color"], look["ember_strength"])
     iron = flat_material("Iron", (0.06, 0.06, 0.065))
@@ -136,17 +163,20 @@ def add_fire(location, look, pole_height):
         bpy.ops.mesh.primitive_cylinder_add(radius=0.08, depth=pole_height,
                                             location=(x, y, pole_height / 2))
         bpy.context.object.data.materials.append(iron)
-        bpy.ops.mesh.primitive_cone_add(radius1=0.25, radius2=0.45, depth=0.35,
+        bpy.ops.mesh.primitive_cone_add(radius1=0.25 * scale, radius2=0.45 * scale, depth=0.35,
                                         location=(x, y, pole_height + 0.1))
         bpy.context.object.data.materials.append(iron)
         z = pole_height + 0.35
-    bpy.ops.mesh.primitive_ico_sphere_add(radius=0.22 if pole_height else 0.12, subdivisions=2,
+    bpy.ops.mesh.primitive_ico_sphere_add(radius=(0.22 if pole_height else 0.12) * scale,
+                                          subdivisions=2,
                                           location=(x, y, z))
     bpy.context.object.data.materials.append(ember)
-    bpy.ops.object.light_add(type="POINT", location=(x, y, z + 0.25))
+    bpy.context.object.visible_shadow = False  # the flame must not shadow its own light
+    # The flame stands above the bowl; a light level with the rim would be shadowed by it.
+    bpy.ops.object.light_add(type="POINT", location=(x, y, z + 0.45 * scale))
     light = bpy.context.object.data
     light.color = look["fire_color"]
-    light.energy = look["fire_power"] * (1.0 if pole_height else 0.55)
+    light.energy = look["fire_power"] * (1.0 if pole_height else 0.55) * scale * scale
     light.shadow_soft_size = 0.3
 
 
@@ -234,6 +264,7 @@ def setup_render(look, width=1600, height=900):
     scene.eevee.volumetric_tile_size = "4"
     scene.eevee.volumetric_end = 200
     scene.eevee.use_volumetric_shadows = True
+    scene.eevee.shadow_pool_size = "1024"  # the alert state's extra fires overflow the default
     scene.view_settings.view_transform = "AgX"
     scene.view_settings.look = "AgX - Punchy" if look["contrast"] > 1.15 else "None"
     scene.view_settings.exposure = look["exposure"]
@@ -294,9 +325,14 @@ def render(key, look):
     add_ground()
     add_props()
     for x, y in BRAZIERS:
-        add_fire((x, y, 0.0), look, pole_height=1.2)
+        add_fire((x, y, 0.0), look, pole_height=1.2, scale=look.get("brazier_scale", 1.0))
     for torch in TORCHES:
         add_fire(torch, look, pole_height=0)
+    if look.get("alarm_fires"):
+        for beacon in ALARM_BEACONS:
+            add_fire(beacon, look, pole_height=0, scale=2.0)
+        for x, y in ALARM_BONFIRES:
+            add_fire((x, y, 0.0), look, pole_height=0.4, scale=2.5)
     setup_world(look)
     setup_camera()
     setup_render(look)

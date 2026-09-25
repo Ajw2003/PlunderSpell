@@ -32,6 +32,23 @@ def main():
     path = os.path.join(OUT, "contact-sheet.png")
     sheet.save(path)
     print(f"[LookSamples] wrote {os.path.abspath(path)}")
+    write_state_pair()
+
+
+def write_state_pair():
+    """The chosen direction: the same castle calm, then alerted, stacked."""
+    width, height = 960, 540
+    sheet = Image.new("RGB", (width, height * 2))
+    for i, (name, label) in enumerate([("calm", "CALM  castle asleep"),
+                                       ("alert", "ALERT  alarm raised")]):
+        tile = Image.open(os.path.join(OUT, name + ".png")).convert("RGB").resize((width, height))
+        draw = ImageDraw.Draw(tile)
+        draw.rectangle((0, 0, 230, 30), fill=(0, 0, 0))
+        draw.text((10, 9), label, fill=(230, 220, 190))
+        sheet.paste(tile, (0, i * height))
+    path = os.path.join(OUT, "calm-vs-alert.png")
+    sheet.save(path)
+    print(f"[LookSamples] wrote {os.path.abspath(path)}")
 
 
 if __name__ == "__main__":
