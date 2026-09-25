@@ -3,6 +3,26 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-09-24 — The castle's look: warm fire in fog, calm until the alarm
+
+**Context.** The raid rendered with Unity's defaults: default sky, one sun, no fog, an untouched
+Volume profile and flat palette colours. The user asked to anchor the project's aesthetic before
+building more rooms or enemies. Four reference looks (Dishonored, Sea of Thieves, Thief/Hunt,
+Valheim) were rendered on the same bailey (`docs/generated/look-samples-2026-09-24/contact-sheet.png`).
+
+**Decision.** None of the four. The user chose the warm, fire-lit fog of two earlier test renders:
+night, a faint moon, fire as the only warmth. The castle holds two moods. It is calm and
+unsuspecting, then comes alive in steps with each alarm state: more fires lit, bigger braziers and
+redder flame. The full design is `docs/plans/night-atmosphere.md`.
+
+**Why.** It fits the heist. A sleeping castle rewards sneaking, and a burning one tells every
+player at a glance how much trouble they are in. It also keeps madder red meaning "alarm", as the
+art bible's pigment rules intend.
+
+**Considered and rejected.** The four references. Sea of Thieves read as blue daytime. Thief/Hunt
+was too dark to read a co-op fight. Dishonored and Valheim were closer, but cooler and flatter than
+the fire-in-fog renders the user pointed to.
+
 ## 2026-09-24 — The new per-Age bestiary is the household: people and animals, no monsters
 
 **Context.** `docs/plans/moodboard-gap-closure.md` §2.6 left the bestiary's register open: five of

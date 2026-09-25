@@ -1,5 +1,16 @@
 # Today
 
+**2026-09-24, night — the look is anchored.** The user asked to polish before building more, and to
+settle the aesthetic first. Decided, section by section: night, warm fire glowing in fog under a
+faint moon; a castle that is calm, then lights up and reddens with each alarm state; one stylised
+surface shader; an outer bailey dressed inside the wall; fog, post-processing and Low/Medium/High
+quality levels that run on a Steam Deck. The spec is [`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md);
+nothing is built yet. The look samples were rendered in Blender (`Tools/LookSamples/`) because the
+Unity Editor was stuck on a "Recovering Scene Backups" dialog, which still needs a person to click
+Yes.
+
+---
+
 **2026-09-24 — the eras are different raids now.** The user asked for the existing
 enemies, items and structures to spawn in the game, so that two ages can be told apart even
 unfinished. New: `EraContentCatalogue` (runtime) and

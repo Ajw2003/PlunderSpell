@@ -79,6 +79,10 @@ together and what was deliberately left undocumented, and why.
   The step-by-step loop from brief to validated model (plan → sheet → audit → fix → model beside
   sheet → audit → fix → commit) is [`docs/art/WORKFLOW.md`](art/WORKFLOW.md); long runs are protected
   by `Tools/autosave.sh`.
+- [`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md) — the anchored aesthetic: night,
+  warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
+  the surface shader, post-processing and the Low/Medium/High quality levels. Look samples in
+  `docs/generated/look-samples-2026-09-24/`.
 - [`docs/plans/moodboard-gap-closure.md`](plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
