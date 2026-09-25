@@ -118,7 +118,7 @@
     <span class="eyebrow">Plunderspell · design spec · 2026-09-24</span>
     <h1>Night atmosphere</h1>
     <p>The castle's look, anchored before any more rooms or enemies are built, plus the second pass on the High Medieval outer area.</p>
-    <span class="status">Approved section by section · not built yet</span>
+    <span class="status">Approved · portal section added at approval · not built yet</span>
   </header>
 
   <section>
@@ -144,6 +144,8 @@
         <tr><td>Calm to alert</td><td>Steps with each alarm stage, easing over about 2 seconds.</td></tr>
         <tr><td>Placing fires</td><td>Authored fire points per room, the same pipeline as loot points.</td></tr>
         <tr><td>Audio</td><td>Out of scope. This pass is visual only.</td></tr>
+        <tr><td>Leaving the castle</td><td>Players can't. They arrive by portal at a random spot inside, and the outside is cut entirely.</td></tr>
+        <tr><td>Getting out</td><td>The same portal. When the raid timer runs out it closes, and anyone outside is stuck.</td></tr>
       </table>
     </div>
   </section>
@@ -249,10 +251,20 @@
   </section>
 
   <section>
+    <span class="eyebrow">Section 6 · added at approval</span>
+    <h2>Arriving and leaving</h2>
+    <p><strong>Arrival.</strong> The team steps out of one lapis-glowing portal at a random spot inside the walls, picked from the raid's seed so every player's machine agrees. It's never in the crypt, the keep or the sealed gate, and never near a guard post. Everyone stands in a ring round it.</p>
+    <p><strong>Leaving.</strong> The portal is the extraction zone. Stand in it to start the leaving countdown, as today. When the raid timer runs out it closes: only loot and living players inside it count. <strong>Anyone outside is stuck</strong>, their haul is lost, and the summary names them as left behind. In the last minute the portal flickers and shrinks, so you can see it closing.</p>
+    <p><strong>No way out.</strong> The gatehouse becomes a sealed set piece, portcullis down. An invisible boundary along the wall top stops a spell throwing anyone over. <strong>The outside is gone:</strong> no ground beyond the wall, no pad by the gate, just fog and night sky past the battlements.</p>
+    <p>Harsher penalties for being left behind, like losing gear, are a separate decision and not part of this.</p>
+  </section>
+
+  <section>
     <span class="eyebrow">Order of work</span>
     <h2>Build order</h2>
     <p>Each step is committed on its own and ends with in-engine screenshots of the bailey and an interior, calm and alerted, on Low and High, plus frame timings.</p>
     <ol>
+      <li><strong>Portal and sealed castle:</strong> random portal arrival, extraction moved to the portal, the gate sealed, the outside removed. First, so every screenshot after it is taken inside a castle with no outside.</li>
       <li><strong>Night baseline:</strong> quality levels, moon, sky, fog, the four post-processing profiles and the alarm-driven director. Visible in the existing castle straight away.</li>
       <li><strong>Fire:</strong> fire prefabs, fire points through the pipeline, per-stage lighting, shadow budget, halos.</li>
       <li><strong>Surfaces:</strong> detail textures, the soot bake, the shader, banded light on enemies and loot.</li>
@@ -269,7 +281,7 @@
       <p><strong>Banded lighting</strong> needs a custom light loop inside Unity's renderer. If it can't be made to work, the fallback is standard lighting plus the colour grade: no banding, everything else kept.</p>
       <p><strong>Rebuilding every castle piece</strong> for the soot bake. The rebuild is scripted, and the loot-point check and navigation audit must pass afterwards.</p>
     </div>
-    <p><strong>Not in this pass:</strong> audio, stealth by light, the wall walk, anything outside the wall, loot in the bailey, themed wings, the crypt below, doors and hazards, hero textures, and bailey kits for other eras.</p>
+    <p><strong>Not in this pass:</strong> audio, stealth by light, the wall walk, extra penalties for being left behind, loot in the bailey, themed wings, the crypt below, doors and hazards, hero textures, and bailey kits for other eras.</p>
   </section>
 
   <section>

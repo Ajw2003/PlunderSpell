@@ -1,6 +1,7 @@
 # Night atmosphere: the castle's look, and the outer bailey (design, 2026-09-24)
 
-Status: **design approved section by section on 2026-09-24; not built.** This document is the
+Status: **design approved on 2026-09-24, with section 6 (the portal, no outside) added at
+approval; not built.** This document is the
 spec. The implementation plan that executes it will be written from it, and this file stays the
 reference for *what* and *why*.
 
@@ -25,6 +26,8 @@ a flat palette colour. The strip between the curtain wall and the rooms was a fl
 | How calm becomes alert | Step with each alarm state (`Calm` → `Stirred` → `Roused` → `HueAndCry`), easing over ~2 s. |
 | How fires get into a generated castle | Authored fire anchors per module, the same pipeline loot anchors use. |
 | Audio | Out of scope. This pass is visual only; bells and ambience come later. |
+| Leaving the castle (added at approval) | Players cannot leave. They arrive through a portal at a random spot inside the walls, and the outside is cut entirely. |
+| How the team gets out | The same portal they arrived by. When the raid timer runs out it closes, and anyone outside it is stuck. |
 
 The look samples were rendered in Blender (`Tools/LookSamples/`) because the Unity Editor was
 blocked on a scene-recovery dialog that session. They compare light, fog and grade only.
@@ -191,6 +194,53 @@ garden near the keep. Each has fire anchors.
 A Graphics setting joins the existing Settings screen. The default is Medium; Low is selected
 automatically on a Steam Deck.
 
+## 6. Arriving and leaving: the portal, and no outside
+
+Added when the spec was approved (2026-09-24). The user: "explicitly prevent the player from leaving
+the castle for now, spawn them randomly in the castle via the portal instead of the baked spawn
+location currently outside, and then we cut the need for an outside wholesale."
+
+**Today.** `CastleSpawnResolver.ResolveSpawn` places the team just inside the gatehouse
+(`Assets/_Project/Scripts/Runtime/Castle/CastleSpawnResolver.cs:56`), and
+`RaidDirector.PlacePlayerAtSpawn` fans the players round that point
+(`Assets/_Project/Scripts/Runtime/Raid/RaidDirector.cs:374`). The `ExtractionZone` pad stands by the
+gate, outside the wall. The gatehouse is the castle's "extraction exit", which the guard and loot
+planners keep clear (`GuardPlacementPlanner.cs:89`, `LootPlacementPlanner.cs:84`).
+
+**Arrival.** The team steps out of one portal at a random, reachable spot inside the walls:
+
+- Chosen from the raid's seed, so every peer computes the same spot with no new networking.
+- Candidates: open floor in the outer bailey strip and in outer-bailey and inner-ward rooms. Never
+  the crypt or the keep, never the sealed gatehouse, and never within a set distance of a guard
+  post. The navigation audit's reachability check must pass from the chosen spot.
+- The players stand in a ring round the portal, reusing the existing per-owner offset.
+- The portal is lapis, the art bible's portal and voice colour, and carries its own light and fog
+  halo, so it reads as a landmark from across the bailey.
+
+**Leaving.** The portal is the `ExtractionZone`. It spawns with the portal instead of sitting in the
+scene by the gate. Its rules are unchanged: standing in it starts the leaving countdown, and when the
+raid timer runs out it resolves, banking only the loot inside it and counting only the living players
+in it (`Assets/_Project/Scripts/Runtime/Extraction/ExtractionZone.cs:200`). **Once it closes, anyone
+outside is stuck:** they are not counted as saved, whatever they carry is lost, and the summary names
+them as left behind. Any harsher cost for being left behind (lost gear, death) is a separate gameplay
+decision, not made here. In the last minute of the timer the portal visibly falters (it flickers and
+shrinks), so the closing is readable without a HUD glance.
+
+**No way out.**
+
+- The gatehouse becomes a sealed set piece: portcullis down, gate barred. It keeps its role id, so the
+  generator and planners are untouched, but it is no longer an exit and never a spawn.
+- A boundary collider runs along the top of the curtain wall, so a spell that launches a player
+  (Levo, a Frango blast) cannot throw anyone over it.
+- **The outside is gone.** No ground plane beyond the wall, no pad by the gate. The ground ends a
+  short margin past the wall's foot, and past the battlements there is only fog and the night sky.
+  This removes the "anything outside the wall" work altogether.
+
+**Rules that must hold:** every seed yields an arrival spot (with a logged fallback to the old
+gate-inside point if none qualifies); the arrival spot is reachable to every room on the NavMesh; the
+extraction tests still pass with the zone spawned at runtime; a player launched upward at the wall
+lands back inside.
+
 ## Verification
 
 Every step is checked by eye in the real Editor, not only by tests:
@@ -202,12 +252,19 @@ Every step is checked by eye in the real Editor, not only by tests:
   Deck-class performance.
 - The navigation audit, unchanged pass criteria, after the bailey dressing lands.
 - EditMode tests for the pure logic: which anchors are lit per alarm state, the shadow budget's
-  nearest-N selection, variant selection by seed (determinism, no repeats, gate yard placement).
+  nearest-N selection, variant selection by seed (determinism, no repeats, gate yard placement),
+  and arrival-spot selection by seed (determinism, excluded zones, distance from guard posts,
+  fallback).
+- A Play-mode run through Lair → Set Out → portal arrival → carry loot back → leave, and one where
+  the timer runs out with a player outside the portal.
 
 ## Build order
 
 Each step is committed and pushed on its own and ends with captures.
 
+0. **Portal and the sealed castle.** Seeded arrival spot, the portal carrying the `ExtractionZone`,
+   the sealed gatehouse, the wall-top boundary, the outside removed. Comes first because every
+   capture after it should be taken from inside a castle with no outside.
 1. **Night baseline.** Quality levels, moon, sky, base fog, the four Volume profiles and
    `CastleAtmosphere` blending them on `AlarmStateChanged`. Visible in the existing castle at once.
 2. **Fire.** `FireSource` prefabs, fire anchors through the asset pipeline and importer, the
@@ -221,7 +278,8 @@ Each step is committed and pushed on its own and ends with captures.
 ## Out of scope
 
 Audio (bells, ambience); stealth detection by light; the wall walk; anything outside the curtain
-wall; loot in bailey dressing; castle-revamp phases 3–5 (themed wings, the crypt below, doors and
+wall (now removed rather than deferred, see section 6); any penalty for being left behind beyond
+today's; loot in bailey dressing; castle-revamp phases 3–5 (themed wings, the crypt below, doors and
 hazards in `docs/plans/castle-revamp.md`), which this pass neither does nor blocks; bespoke hero
 textures (the later B pass); dressing kits for eras other than High Medieval.
 
