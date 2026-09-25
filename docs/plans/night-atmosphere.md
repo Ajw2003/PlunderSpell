@@ -221,8 +221,8 @@ planners keep clear (`GuardPlacementPlanner.cs:89`, `LootPlacementPlanner.cs:84`
 scene by the gate. Its rules are unchanged: standing in it starts the leaving countdown, and when the
 raid timer runs out it resolves, banking only the loot inside it and counting only the living players
 in it (`Assets/_Project/Scripts/Runtime/Extraction/ExtractionZone.cs:200`). **Once it closes, anyone
-outside is stuck:** they are not counted as saved, whatever they carry is lost, and the summary names
-them as left behind. Any harsher cost for being left behind (lost gear, death) is a separate gameplay
+outside is stuck:** they are not counted as saved, whatever they carry is lost, and the Lair's last-raid line says
+how many were left behind (naming them is a later change). Any harsher cost for being left behind (lost gear, death) is a separate gameplay
 decision, not made here. In the last minute of the timer the portal visibly falters (it flickers and
 shrinks), so the closing is readable without a HUD glance.
 
