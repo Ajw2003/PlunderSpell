@@ -403,6 +403,7 @@ namespace UnityEngine
 
         /// <summary>Transforms a local point to world space, honouring position, rotation and lossy scale.</summary>
         public Matrix4x4 localToWorldMatrix => new Matrix4x4(position, rotation, lossyScale);
+        public Matrix4x4 worldToLocalMatrix => localToWorldMatrix.inverse;
 
         public IReadOnlyList<Transform> Children => _children;
         public int childCount => _children.Count;

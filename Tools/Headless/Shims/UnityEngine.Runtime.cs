@@ -307,6 +307,18 @@ namespace UnityEngine
         public int[] triangles = Array.Empty<int>();
         public Vector3[] vertices = Array.Empty<Vector3>();
         public int vertexCount => vertices.Length;
+
+        /// <summary>Axis-aligned bounds of the vertices, as Unity recalculates them.</summary>
+        public Bounds bounds
+        {
+            get
+            {
+                if (vertices.Length == 0) return new Bounds(Vector3.zero, Vector3.zero);
+                var b = new Bounds(vertices[0], Vector3.zero);
+                for (int i = 1; i < vertices.Length; i++) b.Encapsulate(vertices[i]);
+                return b;
+            }
+        }
     }
     public class MeshFilter : Component { public Mesh mesh; public Mesh sharedMesh; }
     public class Sprite : Object { }

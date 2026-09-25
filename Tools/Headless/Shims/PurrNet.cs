@@ -379,3 +379,17 @@ namespace PurrNet
         public void StopClient() { NetworkHarness.IsClient = false; onClientConnectionState?.Invoke(clientState); }
     }
 }
+
+namespace PurrNet
+{
+    /// <summary>
+    /// Stand-in for PurrNet's attribute that registers a type for serializer generation by name.
+    /// Headless builds never pack network messages, so it carries the type and does nothing else.
+    /// </summary>
+    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Struct | System.AttributeTargets.Assembly, AllowMultiple = true)]
+    public sealed class RegisterNetworkTypeAttribute : System.Attribute
+    {
+        public RegisterNetworkTypeAttribute(System.Type type) { Type = type; }
+        public System.Type Type { get; }
+    }
+}

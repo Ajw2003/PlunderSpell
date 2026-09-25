@@ -377,6 +377,17 @@ namespace UnityEngine
             Vector3 lo = min, hi = max;
             return p.x >= lo.x && p.x <= hi.x && p.y >= lo.y && p.y <= hi.y && p.z >= lo.z && p.z <= hi.z;
         }
+        public void Expand(float amount) => extents += new Vector3(amount, amount, amount) * 0.5f;
+        public void Expand(Vector3 amount) => extents += amount * 0.5f;
+
+        public void Encapsulate(Vector3 point)
+        {
+            Vector3 lo = Vector3Min(min, point);
+            Vector3 hi = Vector3Max(max, point);
+            center = (lo + hi) * 0.5f;
+            extents = (hi - lo) * 0.5f;
+        }
+
         public void Encapsulate(Bounds other)
         {
             Vector3 lo = Vector3Min(min, other.min);
@@ -409,23 +420,111 @@ namespace UnityEngine
     }
 
     /// <summary>
-    /// Only what Transform.localToWorldMatrix needs to carry: position, rotation and lossy scale,
-    /// composed the same order Unity applies them (scale, then rotate, then translate).
+    /// A general 4x4 affine/projective matrix, row-major (m[row, col]), matching Unity's layout.
+    /// Exact math: multiplication, inversion and point transforms are real, so code that composes
+    /// transforms (e.g. EraContentForge's bounds in a root's space) is checked, not faked.
     /// </summary>
     public struct Matrix4x4
     {
-        private readonly Vector3 _position;
-        private readonly Quaternion _rotation;
-        private readonly Vector3 _scale;
+        private float[] _m;
 
-        public Matrix4x4(Vector3 position, Quaternion rotation, Vector3 scale)
+        private float[] M => _m ??= new float[16];
+
+        public float this[int row, int col]
         {
-            _position = position;
-            _rotation = rotation;
-            _scale = scale;
+            get => M[row * 4 + col];
+            set => M[row * 4 + col] = value;
         }
 
-        public Vector3 MultiplyPoint3x4(Vector3 point) =>
-            _position + _rotation * new Vector3(point.x * _scale.x, point.y * _scale.y, point.z * _scale.z);
+        public static Matrix4x4 identity
+        {
+            get
+            {
+                var r = new Matrix4x4();
+                for (int i = 0; i < 4; i++) r[i, i] = 1f;
+                return r;
+            }
+        }
+
+        /// <summary>Scale, then rotate, then translate, the order Unity applies them.</summary>
+        public Matrix4x4(Vector3 position, Quaternion rotation, Vector3 scale)
+        {
+            _m = new float[16];
+            Vector3 x = rotation * new Vector3(scale.x, 0f, 0f);
+            Vector3 y = rotation * new Vector3(0f, scale.y, 0f);
+            Vector3 z = rotation * new Vector3(0f, 0f, scale.z);
+            this[0, 0] = x.x; this[1, 0] = x.y; this[2, 0] = x.z;
+            this[0, 1] = y.x; this[1, 1] = y.y; this[2, 1] = y.z;
+            this[0, 2] = z.x; this[1, 2] = z.y; this[2, 2] = z.z;
+            this[0, 3] = position.x; this[1, 3] = position.y; this[2, 3] = position.z;
+            this[3, 3] = 1f;
+        }
+
+        public static Matrix4x4 TRS(Vector3 position, Quaternion rotation, Vector3 scale) =>
+            new Matrix4x4(position, rotation, scale);
+
+        public static Matrix4x4 operator *(Matrix4x4 a, Matrix4x4 b)
+        {
+            var r = new Matrix4x4();
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
+                {
+                    float sum = 0f;
+                    for (int k = 0; k < 4; k++) sum += a[i, k] * b[k, j];
+                    r[i, j] = sum;
+                }
+            return r;
+        }
+
+        public Vector3 MultiplyPoint3x4(Vector3 p) => new Vector3(
+            this[0, 0] * p.x + this[0, 1] * p.y + this[0, 2] * p.z + this[0, 3],
+            this[1, 0] * p.x + this[1, 1] * p.y + this[1, 2] * p.z + this[1, 3],
+            this[2, 0] * p.x + this[2, 1] * p.y + this[2, 2] * p.z + this[2, 3]);
+
+        public Vector3 MultiplyPoint(Vector3 p)
+        {
+            Vector3 v = MultiplyPoint3x4(p);
+            float w = this[3, 0] * p.x + this[3, 1] * p.y + this[3, 2] * p.z + this[3, 3];
+            return w == 0f ? v : v * (1f / w);
+        }
+
+        public Vector3 MultiplyVector(Vector3 v) => new Vector3(
+            this[0, 0] * v.x + this[0, 1] * v.y + this[0, 2] * v.z,
+            this[1, 0] * v.x + this[1, 1] * v.y + this[1, 2] * v.z,
+            this[2, 0] * v.x + this[2, 1] * v.y + this[2, 2] * v.z);
+
+        /// <summary>Full 4x4 inverse by Gauss-Jordan elimination; zero matrix when singular, as Unity.</summary>
+        public Matrix4x4 inverse
+        {
+            get
+            {
+                var a = new double[4, 8];
+                for (int i = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 4; j++) a[i, j] = this[i, j];
+                    a[i, i + 4] = 1.0;
+                }
+                for (int col = 0; col < 4; col++)
+                {
+                    int pivot = col;
+                    for (int r = col + 1; r < 4; r++)
+                        if (System.Math.Abs(a[r, col]) > System.Math.Abs(a[pivot, col])) pivot = r;
+                    if (System.Math.Abs(a[pivot, col]) < 1e-12) return new Matrix4x4 { _m = new float[16] };
+                    for (int j = 0; j < 8; j++) { double t = a[col, j]; a[col, j] = a[pivot, j]; a[pivot, j] = t; }
+                    double d = a[col, col];
+                    for (int j = 0; j < 8; j++) a[col, j] /= d;
+                    for (int r = 0; r < 4; r++)
+                    {
+                        if (r == col) continue;
+                        double f = a[r, col];
+                        for (int j = 0; j < 8; j++) a[r, j] -= f * a[col, j];
+                    }
+                }
+                var result = new Matrix4x4();
+                for (int i = 0; i < 4; i++)
+                    for (int j = 0; j < 4; j++) result[i, j] = (float)a[i, j + 4];
+                return result;
+            }
+        }
     }
 }
