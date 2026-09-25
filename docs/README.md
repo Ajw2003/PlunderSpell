@@ -83,6 +83,10 @@ together and what was deliberately left undocumented, and why.
   [`docs/plans/artbible-enemy-animations.md`](plans/artbible-enemy-animations.md): **awaiting
   approval.** How the 16 ArtForge enemies get into a raid, and how they get animated. Review page:
   [`docs/generated/enemy-animation-plan/`](generated/enemy-animation-plan/index.html).
+- [`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md) — the anchored aesthetic: night,
+  warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
+  the surface shader, post-processing and the Low/Medium/High quality levels. Look samples in
+  `docs/generated/look-samples-2026-09-24/`.
 - [`docs/plans/moodboard-gap-closure.md`](plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
