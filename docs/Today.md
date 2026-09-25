@@ -1,6 +1,13 @@
 # Today
 
-<<<<<<< HEAD
+**2026-09-24, night — the look is anchored.** The user asked to polish before building more, and to
+settle the aesthetic first. Decided, section by section: night, warm fire glowing in fog under a
+faint moon; a castle that is calm, then lights up and reddens with each alarm state; one stylised
+surface shader; an outer bailey dressed inside the wall; fog, post-processing and Low/Medium/High
+quality levels that run on a Steam Deck. The spec is [`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md);
+nothing is built yet. The look samples were rendered in Blender (`Tools/LookSamples/`) because the
+Unity Editor was stuck on a "Recovering Scene Backups" dialog, which still needs a person to click
+Yes.
 **2026-09-24, evening — playtest 2 on staging: carrying, loot amount, the Late centre.** The user's
 second test on `claude/staging-2026-09-24` found three things, all fixed there.
 - **Carrying.** Held items lagged and swung when walking. Raids carry through `ItemManager`/`Item`,
@@ -67,16 +74,6 @@ on one bone, and validation used to pass that. `validate.py` now fails it. It ca
 Champion, which had never blended; the champion is fixed. A shared retry
 (`rig.smooth_weights_with_retry`) covers the random form of the failure. Details are in the Traps
 section of `Tools/ArtForge/README.md`.
-=======
-**2026-09-24, night — the look is anchored.** The user asked to polish before building more, and to
-settle the aesthetic first. Decided, section by section: night, warm fire glowing in fog under a
-faint moon; a castle that is calm, then lights up and reddens with each alarm state; one stylised
-surface shader; an outer bailey dressed inside the wall; fog, post-processing and Low/Medium/High
-quality levels that run on a Steam Deck. The spec is [`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md);
-nothing is built yet. The look samples were rendered in Blender (`Tools/LookSamples/`) because the
-Unity Editor was stuck on a "Recovering Scene Backups" dialog, which still needs a person to click
-Yes.
->>>>>>> claude/era-content-integration
 
 ---
 
