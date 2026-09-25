@@ -285,12 +285,20 @@ namespace UnityEngine
         public Material(Material src) { }
         public Material(Shader shader) => this.shader = shader;
         public Texture mainTexture;
-        public void SetColor(string name, Color value) => color = value;
+        public void SetColor(string name, Color value) { _colors[name] = value; if (name == "_Color" || name == "_BaseColor") color = value; }
         public void SetColor(int nameID, Color value) => color = value;
         public void SetFloat(string name, float value) { }
         public void SetFloat(int nameID, float value) { }
-        public void EnableKeyword(string keyword) { }
-        public void DisableKeyword(string keyword) { }
+        public MaterialGlobalIlluminationFlags globalIlluminationFlags;
+        private readonly Dictionary<string, Color> _colors = new Dictionary<string, Color>();
+        private readonly Dictionary<string, Texture> _textures = new Dictionary<string, Texture>();
+        private readonly HashSet<string> _keywords = new HashSet<string>();
+        public void SetTexture(string name, Texture value) => _textures[name] = value;
+        public Texture GetTexture(string name) => _textures.TryGetValue(name, out Texture t) ? t : null;
+        public Color GetColor(string name) => _colors.TryGetValue(name, out Color c) ? c : color;
+        public void EnableKeyword(string keyword) => _keywords.Add(keyword);
+        public void DisableKeyword(string keyword) => _keywords.Remove(keyword);
+        public bool IsKeywordEnabled(string keyword) => _keywords.Contains(keyword);
         public bool HasProperty(string name) => true;
         public bool HasProperty(int nameID) => true;
     }
@@ -299,16 +307,36 @@ namespace UnityEngine
         public int[] triangles = Array.Empty<int>();
         public Vector3[] vertices = Array.Empty<Vector3>();
         public int vertexCount => vertices.Length;
+
+        /// <summary>Axis-aligned bounds of the vertices, as Unity recalculates them.</summary>
+        public Bounds bounds
+        {
+            get
+            {
+                if (vertices.Length == 0) return new Bounds(Vector3.zero, Vector3.zero);
+                var b = new Bounds(vertices[0], Vector3.zero);
+                for (int i = 1; i < vertices.Length; i++) b.Encapsulate(vertices[i]);
+                return b;
+            }
+        }
     }
     public class MeshFilter : Component { public Mesh mesh; public Mesh sharedMesh; }
     public class Sprite : Object { }
     public class Texture : Object { }
     public enum TextureFormat { RGBA32, RGB24, Alpha8 }
 
+    public enum TextureWrapMode { Repeat, Clamp, Mirror, MirrorOnce }
+
     public class Texture2D : Texture
     {
         public int width { get; }
         public int height { get; }
+        public TextureWrapMode wrapMode { get; set; }
+
+        /// <summary>Unity's built-in 4×4 white texture.</summary>
+        public static Texture2D whiteTexture { get; } = new Texture2D(4, 4);
+        /// <summary>No pixel storage headlessly; nothing reads pixels back.</summary>
+        public void SetPixels(Color[] colours) { }
 
         public Texture2D(int w, int h) { width = w; height = h; }
         public Texture2D(int w, int h, TextureFormat format, bool mipChain) { width = w; height = h; }
@@ -340,12 +368,64 @@ namespace UnityEngine
         public void Stop() => IsPlaying = false;
     }
     public class ParticleSystemRenderer : Renderer { }
+    public enum LightShadows { None, Hard, Soft }
+
     public class Light : Behaviour
     {
         public float intensity = 1f;
         public Color color;
         public LightType type = LightType.Point;
         public float range = 10f;
+        public LightShadows shadows = LightShadows.None;
+    }
+
+    [Flags]
+    public enum MaterialGlobalIlluminationFlags { None = 0, RealtimeEmissive = 1, BakedEmissive = 2, EmissiveIsBlack = 4, AnyEmissive = 3 }
+
+    // Humanoid avatar description, as ModelImporter.humanDescription carries it. Data only.
+    public struct HumanLimit
+    {
+        public bool useDefaultValues;
+        public Vector3 min;
+        public Vector3 max;
+        public Vector3 center;
+        public float axisLength;
+    }
+
+    public struct HumanBone
+    {
+        public string humanName;
+        public string boneName;
+        public HumanLimit limit;
+    }
+
+    public struct SkeletonBone
+    {
+        public string name;
+        public Vector3 position;
+        public Quaternion rotation;
+        public Vector3 scale;
+    }
+
+    public struct HumanDescription
+    {
+        public HumanBone[] human;
+        public SkeletonBone[] skeleton;
+        public float upperArmTwist;
+        public float lowerArmTwist;
+        public float upperLegTwist;
+        public float lowerLegTwist;
+        public float armStretch;
+        public float legStretch;
+        public float feetSpacing;
+        public bool hasTranslationDoF;
+    }
+
+    /// <summary>Only the two flags the import validator reads. No avatar is ever built headlessly.</summary>
+    public class Avatar : Object
+    {
+        public bool isHuman { get; set; }
+        public bool isValid { get; set; }
     }
     public struct Ray
     {
@@ -449,6 +529,9 @@ namespace UnityEngine
         public bool freezeRotation;
         public void MovePosition(Vector3 p) => transform.position = p;
         public void MoveRotation(Quaternion r) => transform.rotation = r;
+        /// <summary>No sleeping bodies in this shim, so waking one does nothing.</summary>
+        public void WakeUp() { }
+        public bool IsSleeping() => false;
     }
 
     public class Joint : Component
@@ -480,6 +563,9 @@ namespace UnityEngine
         public Bounds bounds => new Bounds(transform.position + center, size);
         public Rigidbody attachedRigidbody => GetComponentInParent<Rigidbody>();
 
+        /// <summary>Nearest point on the collider's axis-aligned box (every shim collider is one).</summary>
+        public Vector3 ClosestPoint(Vector3 position) => bounds.ClosestPoint(position);
+
         protected Collider() => Physics.Register(this);
     }
 
@@ -508,10 +594,20 @@ namespace UnityEngine
         public Rigidbody rigidbody => collider?.attachedRigidbody;
     }
 
+    public struct ContactPoint
+    {
+        public Vector3 point;
+        public Vector3 normal;
+    }
+
     public class Collision
     {
         public Collider collider;
         public Vector3 relativeVelocity;
+        /// <summary>Contacts a test chose to supply; empty unless set, since nothing is simulated.</summary>
+        public ContactPoint[] contacts = Array.Empty<ContactPoint>();
+        public int contactCount => contacts.Length;
+        public ContactPoint GetContact(int index) => contacts[index];
         public GameObject gameObject => collider?.gameObject;
         public Transform transform => collider?.transform;
         public Collision() { }
@@ -556,6 +652,37 @@ namespace UnityEngine
             Vector3 mid = (point0 + point1) * 0.5f;
             float reach = radius + (point1 - point0).magnitude * 0.5f;
             return Live(layerMask).Any(c => c.bounds.SqrDistance(mid) <= reach * reach);
+        }
+
+        /// <summary>
+        /// Treats the box as axis-aligned (orientation ignored): the only caller, ExtractionZone,
+        /// passes an unrotated zone volume in every test.
+        /// </summary>
+        /// <summary>Axis-aligned, like <see cref="OverlapBoxNonAlloc"/>.</summary>
+        public static Collider[] OverlapBox(Vector3 center, Vector3 halfExtents, Quaternion orientation,
+            int layerMask = ~0, QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal)
+        {
+            var results = new Collider[_colliders.Count];
+            int count = OverlapBoxNonAlloc(center, halfExtents, results, orientation, layerMask, q);
+            Array.Resize(ref results, count);
+            return results;
+        }
+
+        public static int OverlapBoxNonAlloc(Vector3 center, Vector3 halfExtents, Collider[] results,
+            Quaternion orientation, int layerMask = ~0, QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal)
+        {
+            var box = new Bounds(center, halfExtents * 2f);
+            int count = 0;
+            foreach (Collider c in Live(layerMask))
+            {
+                if (count >= results.Length) break;
+                Bounds other = c.bounds;
+                bool overlaps = Mathf.Abs(other.center.x - box.center.x) <= other.extents.x + box.extents.x
+                                && Mathf.Abs(other.center.y - box.center.y) <= other.extents.y + box.extents.y
+                                && Mathf.Abs(other.center.z - box.center.z) <= other.extents.z + box.extents.z;
+                if (overlaps) results[count++] = c;
+            }
+            return count;
         }
 
         public static int OverlapSphereNonAlloc(Vector3 position, float radius, Collider[] results,
@@ -873,6 +1000,8 @@ namespace UnityEngine.AI
         public bool SetDestination(Vector3 target) { destination = target; return true; }
         public void ResetPath() { }
         public void Warp(Vector3 position) => transform.position = position;
+        /// <summary>Moves by the offset; there is no mesh edge to clamp against headlessly.</summary>
+        public void Move(Vector3 offset) => transform.position += offset;
     }
 
     public struct NavMeshHit { public Vector3 position; public float distance; public bool hit; }
@@ -885,6 +1014,24 @@ namespace UnityEngine.AI
             hit = new NavMeshHit { position = source, distance = 0f, hit = true };
             return true;
         }
+
+        /// <summary>No baked mesh headlessly: every path is the straight segment, and complete,
+        /// matching SamplePosition's "everywhere is on the mesh".</summary>
+        public static bool CalculatePath(Vector3 source, Vector3 target, int areaMask, NavMeshPath path)
+        {
+            path.corners = new[] { source, target };
+            path.status = NavMeshPathStatus.PathComplete;
+            return true;
+        }
+    }
+
+    public enum NavMeshPathStatus { PathComplete, PathPartial, PathInvalid }
+
+    public class NavMeshPath
+    {
+        public Vector3[] corners = Array.Empty<Vector3>();
+        public NavMeshPathStatus status = NavMeshPathStatus.PathInvalid;
+        public void ClearCorners() => corners = Array.Empty<Vector3>();
     }
 }
 
@@ -938,8 +1085,29 @@ namespace UnityEngine
 
     public class GUIStyleState { public Color textColor = Color.white; public Texture2D background; }
 
+    public class GUIContent
+    {
+        public string text;
+        public GUIContent(string text) => this.text = text;
+    }
+
+    public enum ScaleMode { StretchToFill, ScaleAndCrop, ScaleToFit }
+
+    public static class GUIUtility
+    {
+        /// <summary>Would rotate GUI.matrix; nothing is drawn headlessly, so the matrix is left as is.</summary>
+        public static void RotateAroundPivot(float angle, Vector2 pivot) { }
+    }
+
     public class GUIStyle
     {
+        /// <summary>No font metrics headlessly: a rough monospace estimate, only ever used for layout.</summary>
+        public Vector2 CalcSize(GUIContent content)
+        {
+            int size = fontSize > 0 ? fontSize : 13;
+            return new Vector2((content?.text?.Length ?? 0) * size * 0.6f, size * 1.2f);
+        }
+
         public int fontSize;
         public FontStyle fontStyle;
         public TextAnchor alignment;
@@ -967,6 +1135,8 @@ namespace UnityEngine
         public static void Box(Rect rect, string text) { }
         public static bool Button(Rect rect, string text) => false;
         public static void DrawTexture(Rect rect, Texture texture) { }
+        public static void DrawTexture(Rect rect, Texture texture, ScaleMode scaleMode) { }
+        public static Matrix4x4 matrix { get; set; }
     }
 
     /// <summary>Opaque layout hint. The headless shim never lays anything out, so it just carries a value.</summary>
@@ -1021,6 +1191,7 @@ namespace UnityEngine
     public class AudioListener : Behaviour
     {
         public static float volume { get; set; } = 1f;
+        public static bool pause { get; set; }
     }
 
     public enum CursorLockMode { None, Locked, Confined }

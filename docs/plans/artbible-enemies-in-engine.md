@@ -10,8 +10,22 @@ in Blender. Animation has its own plan:
 plan → build → audit (in-engine sheet beside the concept) → fix → audit → commit
 ```
 
-Status: **plan only. Nothing here is built.** The decisions marked **[DECIDE]** need the user
-before work starts.
+Status (2026-09-24): **E0–E4 written as code and tests; nothing has been run in the Unity Editor.**
+The decisions below were made by the user (see "Decisions recorded"). Per phase:
+
+| Phase | Code | Checked headlessly (`Tools/Headless/verify.sh`) | Needs the Editor (UNTESTED) |
+|---|---|---|---|
+| E0 import | `Editor/ArtBibleModelImporter.cs`, `ArtAssetImportValidator.ValidateArtBible` | compiles; bone map = `UNITY_HUMANOID`, ×9 = `EMISSION_STRENGTH`, path/texture rules (`ArtBibleEnemyCatalogTests`) | reimport `Assets/Models/ArtBible`; `ArtAssetImportTests.ArtBibleModelsImportWithTheirOwnedSettings` (rig types, `Avatar.isHuman && isValid`) |
+| E1 prefabs | `Editor/ArtBibleEnemyForge.cs`, `ArtBibleEnemyCatalog.cs`, `ArtBibleJson.cs`, `Runtime/Guards/EnemyBodyProfile.cs` | compiles; JSON→spec parsing, role table, archway cap, ±5 % body height (`ArtBibleEnemyCatalogTests`) | `Tools/Plunderspell/Forge Art Bible Enemies + Roster`; `ScaleInvariantTests` ArtBible cases (ignored until forged); in-engine review sheets |
+| E2 roster | same forge; `EnemyPrefabForge` now posts the supernatural six to the Crypt only, `AnyEra`, and the household four nowhere | role weights, every Age covers every non-Crypt zone | the forge writes the roster; five-seed sweep table |
+| E3 era | `EnemyRoster.Entry.Era`/`AnyEra`, `PickForZone(zone, era, rng)`, `GuardSpawner.SpawnFor(castle, seed, era)`, `RaidDirector.Era` replicated, `Runtime/Inventory/RaidContext.cs` | `EnemyRosterEraTests` (Bronze seed plan only Bronze, fallback reported, weights) | a raid per Age in the Editor |
+| E4 attack signal | `CastleGuard._attackSignal`, `Attacked`, `Runtime/Guards/GuardAttackSignal.cs` | `GuardAttackSignalTests`, `GuardAttackTests` (count per attack, none on cooldown or out of reach) | CombatBench with each enemy; two-player co-op raid (the client's `Attacked`) |
+
+Where it is documented: `docs/systems/raid-scene-assembly.md` ("Enemy postings", "Era reaches the
+raid", "Art-bible enemies"), `docs/systems/net.md` ("Guard attacks reach every peer").
+
+The original status line read: "plan only. Nothing here is built. The decisions marked
+**[DECIDE]** need the user before work starts." 
 
 ## Where things stand (checked against the code, 2026-09-24)
 

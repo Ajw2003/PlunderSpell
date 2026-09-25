@@ -77,6 +77,9 @@ namespace UnityEditor
         public bool boolValue { get; set; }
         public string stringValue { get; set; }
         public UnityEngine.Object objectReferenceValue { get; set; }
+        /// <summary>No serialized enum metadata headlessly: an empty name list and index 0.</summary>
+        public string[] enumNames { get; set; } = Array.Empty<string>();
+        public int enumValueIndex { get; set; }
     }
 
     public static class EditorGUILayout
@@ -191,7 +194,8 @@ namespace UnityEditor
         public static bool isPlaying { get; set; }
         public static bool isCompiling => false;
         public static event Action update;
-        public static void delayCall(Action call) => call?.Invoke();
+        /// <summary>A delegate field, as in Unity (subscribe with +=). Nothing drains it headlessly.</summary>
+        public static Action delayCall;
 
         /// <summary>No real process to exit headlessly -- a no-op, not Environment.Exit.</summary>
         public static void Exit(int returnValue) { }
@@ -209,21 +213,57 @@ namespace UnityEditor
     }
 
     /// <summary>
-    /// Only exists so CastleMeshImportSettings compiles headlessly; a postprocessor's callbacks are
-    /// never invoked outside a real asset import, so nothing here does anything.
+    /// Only exists so the postprocessors (CastleMeshImportSettings, ArtBibleModelImporter) compile
+    /// headlessly; a postprocessor's callbacks are never invoked outside a real asset import, so
+    /// nothing here does anything.
     /// </summary>
     public class AssetPostprocessor
     {
         public string assetPath { get; set; } = string.Empty;
         public AssetImporter assetImporter { get; set; }
+        public UnityEditor.AssetImporters.AssetImportContext context { get; set; }
     }
 
-    public class AssetImporter { }
+    /// <summary>
+    /// No importer exists headlessly: GetAtPath always returns null, so a validator reading import
+    /// settings reports every asset as not imported (see Tools/Headless/README.md).
+    /// </summary>
+    public class AssetImporter
+    {
+        public string assetPath { get; set; } = string.Empty;
+        public static AssetImporter GetAtPath(string path) => null;
+        public void SaveAndReimport() { }
+    }
+
+    public enum ModelImporterAnimationType { None, Legacy, Generic, Human }
+    public enum ModelImporterAvatarSetup { NoAvatar, CreateFromThisModel, CopyFromOther }
+    public enum ModelImporterMaterialImportMode { None, ImportStandard, ImportViaMaterialDescription }
 
     public class ModelImporter : AssetImporter
     {
         public bool isReadable;
         public bool bakeAxisConversion;
+        public float globalScale = 1f;
+        public bool useFileScale = true;
+        public bool importAnimation = true;
+        public string motionNodeName = string.Empty;
+        public ModelImporterAnimationType animationType = ModelImporterAnimationType.Generic;
+        public ModelImporterAvatarSetup avatarSetup = ModelImporterAvatarSetup.NoAvatar;
+        public ModelImporterMaterialImportMode materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
+        public HumanDescription humanDescription;
+    }
+
+    public enum TextureImporterType { Default, NormalMap, GUI, Sprite, Cursor, Cookie, Lightmap, SingleChannel }
+    public enum TextureImporterCompression { Uncompressed, Compressed, CompressedHQ, CompressedLQ }
+
+    public class TextureImporter : AssetImporter
+    {
+        public TextureImporterType textureType;
+        public bool sRGBTexture = true;
+        public bool mipmapEnabled = true;
+        public bool isReadable;
+        public int maxTextureSize = 2048;
+        public TextureImporterCompression textureCompression = TextureImporterCompression.Compressed;
     }
 }
 
@@ -250,5 +290,15 @@ namespace UnityEditor.SceneManagement
         /// </summary>
         public static AsyncOperation LoadSceneAsyncInPlayMode(string path, LoadSceneParameters parameters) =>
             new AsyncOperation();
+    }
+}
+
+namespace UnityEditor.AssetImporters
+{
+    /// <summary>Import dependencies are recorded by the real importer only; nothing is tracked here.</summary>
+    public class AssetImportContext
+    {
+        public void DependsOnArtifact(string path) { }
+        public void DependsOnSourceAsset(string path) { }
     }
 }

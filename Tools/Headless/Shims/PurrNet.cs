@@ -124,6 +124,8 @@ namespace PurrNet
         public bool hasConnectedOwner => _owner.HasValue;
         public PlayerID? owner => _owner;
         public PlayerID? localPlayer => NetworkHarness.LocalPlayer;
+        /// <summary>PurrNet's non-null local player; the harness's, or player 0 when it has none.</summary>
+        public PlayerID localPlayerForced => NetworkHarness.LocalPlayer ?? default;
 
         public bool IsController(bool ownerHasAuthority) => ownerHasAuthority ? isController : isServer;
         public bool IsSpawned(bool asServer) => isSpawned;
@@ -153,6 +155,15 @@ namespace PurrNet
     }
 
     public abstract class NetworkBehaviour : NetworkIdentity { }
+
+    /// <summary>PurrNet's per-connection player spawner. Only a scene test looks it up, by type.</summary>
+    public class PlayerSpawner : MonoBehaviour { }
+
+    /// <summary>PurrNet's transform sync. Only who controls it is modelled; nothing is sent.</summary>
+    public class NetworkTransform : NetworkIdentity
+    {
+        public bool ownerAuth = true;
+    }
 
     /// <summary>
     /// Global switch describing the simulated peer. Defaults to a listen-server host with local
@@ -343,6 +354,7 @@ namespace PurrNet
         public bool isClient => NetworkHarness.IsClient;
         public bool isHost => isServer && isClient;
         public bool isServerOnly => isServer && !isClient;
+        public bool isClientOnly => isClient && !isServer;
         public bool isOffline => !NetworkHarness.IsRunning;
 
         private void Awake() => main = this;
@@ -365,5 +377,19 @@ namespace PurrNet
         public void StartHost() { NetworkHarness.ResetToHost(); onServerConnectionState?.Invoke(serverState); onClientConnectionState?.Invoke(clientState); }
         public void StopServer() { NetworkHarness.IsServer = false; onServerConnectionState?.Invoke(serverState); }
         public void StopClient() { NetworkHarness.IsClient = false; onClientConnectionState?.Invoke(clientState); }
+    }
+}
+
+namespace PurrNet
+{
+    /// <summary>
+    /// Stand-in for PurrNet's attribute that registers a type for serializer generation by name.
+    /// Headless builds never pack network messages, so it carries the type and does nothing else.
+    /// </summary>
+    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Struct | System.AttributeTargets.Assembly, AllowMultiple = true)]
+    public sealed class RegisterNetworkTypeAttribute : System.Attribute
+    {
+        public RegisterNetworkTypeAttribute(System.Type type) { Type = type; }
+        public System.Type Type { get; }
     }
 }

@@ -500,7 +500,162 @@ These cost time while building the two samples, and they will cost you too.
   every time (the knight's rivets, the Dendra tusks): those still need the part fix
   above.
 
-## Not done yet
+## AnimForge (enemy animation)
+
+Keyframed clips for the art-bible humans, authored by code in Blender and exported as
+animation-only FBX (plan: `docs/plans/artbible-enemy-animations.md`, phases A0-A1).
+Phase A1 proves the pipeline on one enemy, the Lantern Warden: the base clips, the
+polearm family, and the warden's carry poses and signature clips.
+
+### Commands
+
+```bash
+python3 Tools/ArtForge/anim_spec_check.py            # A0 audit: every JSON clip mapped or dropped
+python3 Tools/ArtForge/anim_spec_check.py --built    # + every a1 clip is in an exported FBX
+python3 Tools/ArtForge/anim.py metrics               # solve every clip, print the numbers (seconds)
+python3 Tools/ArtForge/anim.py build                 # FBX files + anim_manifest.json, re-imported to verify
+python3 Tools/ArtForge/anim.py review                # sheet + MP4 per clip in docs/art/anim/
+python3 Tools/ArtForge/anim.py review --only walk polearm_thrust --no-mp4 --samples 16
+```
+
+`build` takes about 5 s. `review` takes about 30 s a clip for the sheet (8 Cycles frames
+at 420 px) plus about 2 s a frame for the MP4 (360 px, 8 samples), about 25 minutes for
+all 23. Every command exits non-zero when `anim_spec.json` and `library.py` disagree
+(clip missing, length or loop flag different), when a re-imported FBX lacks a take or
+has the wrong frame count, or when a render is not written. `build` also prints a note
+for any clip whose `Footstep` events are not where a foot actually lands.
+
+### Outputs
+
+| Path | What |
+|---|---|
+| `Tools/ArtForge/anim_spec.json` | A0: the clip taxonomy. `clips` = what AnimForge authors (layer, family, FBX, length, loop, additive, speed, events, status `a1`/`planned`). `enemies` = all 178 clip names the 16 JSON specs list, each mapped to a source clip (plus a carry pose and a playback rate) or dropped with a reason. **The source of truth**: edit it by hand. `anim_spec_seed.py` wrote the first version and refuses to run again without `--force`. |
+| `Assets/Models/ArtBible/Animations/Humanoid_Base.fbx` | the 13 base clips on the reference human (20 bones) |
+| `…/Humanoid_Polearm.fbx` | the 6 polearm clips on the reference human + `Weapon` (prop on `Hand.R`) and `Weapon_GripL` (the left hand's IK target on the haft), 22 bones |
+| `…/LanternWarden_Signature.fbx` | `warden_carry`, `warden_carry_run`, `lantern_raise_search`, `death_drop_lantern` on the warden's own 24-bone rig (they key `Glaive`, `LanternRing`, `LanternBody`) |
+| `…/anim_manifest.json` | per FBX: clips, take names, frames, loop, additive, events, and the measured numbers (slide, IK shortfall, fist-to-haft error, lowest sole point, detected landings) |
+| `docs/art/anim/<clip>.png` / `.mp4` | review sheet and movie per clip, on the Lantern Warden |
+
+The FBX files carry no Unity import settings, events or loop flags; the engine's importer
+reads those from `anim_spec.json`. FBX takes are named `<armature>|<clip>`
+(`ReferenceHuman|walk`, `LanternWarden_Rig|lantern_raise_search`); strip the prefix.
+Every bone is keyed on every frame at 30 fps with linear interpolation. `Hips` carries
+location (bob, sway, the fall); nothing else translates except a detached prop. `Root` never
+moves: **every clip is in place** and the NavMeshAgent moves the guard.
+
+### Layout
+
+```
+anim.py                     CLI: build | review | metrics
+anim_spec.json              A0 taxonomy (source of truth); anim_spec_check.py audits it
+anim_forge/
+  mathx.py      world-axis rotations, frame_rot, two-bone IK, easing (inout, in, out,
+                smooth, overshoot, anticipate)
+  skeleton.py   Skeleton (rest data from an armature), Python FK, the retarget corrections,
+                the reference human and its Weapon bones
+  poses.py      the pose library: named poses + merge / add / scale / mirror
+  clip.py       Clip = timed keys (pose, hips, feet, weapon, left-hand weight, elbow hints);
+                FootKey, WeaponKey; foot rolling geometry
+  gait.py       GaitClip: parametric in-place walk/run matched to the agent speed
+  solve.py      Frame -> world-delta rotations with leg and arm IK; retarget(); layer_override()
+  props.py      the warden's lantern: simulated swing (baked) and the drop on PropDetach
+  library.py    every A1 clip
+  bake.py       Actions (every bone, every frame), animation-only FBX export, read-back
+  forge.py      rigs, solving on each rig, metrics, export
+  review.py     sheets and MP4s
+```
+
+### How a clip is made
+
+A **pose** is `{bone: (rx, ry, rz)}` degrees: each bone's rotation relative to its parent,
+written in the rest pose's world axes, applied Z·Y·X. +X tips an upright bone (spine, neck)
+forward and swings a hanging bone (arm, thigh) *back*; so a thigh lifting forward is −X.
+Y rolls sideways (a left arm abducts with −Y, a right arm with +Y). +Z turns the front toward
+the figure's own left. Bones a pose doesn't name are at rest. `poses.merge` (later wins),
+`add` (sums, for layered tweaks), `scale`, `mirror` (.L↔.R, Y and Z negated).
+
+A **clip** is timed keys. Each key is a full pose, plus `hips=(x, y, z)` (metres), `feet=`
+per side `FootKey(x, y, pitch, lift, yaw)` (the flat-foot heel point on the floor; the legs
+reach it by IK, so feet stay planted while the hips move), `weapon=WeaponKey(grip, dir, edge)`
+(the right fist carries the haft; the left fist grips it `LEFT_GRIP_OFFSET` = −0.45 m along
+the haft, weight `lhand`), and `elbows=` pole hints. The key's `ease` shapes the segment
+arriving at it: `anticipate` dips back before leaving, `overshoot` passes the key and
+settles, `in` is a strike, `out` a recovery. A foot that changes position between keys
+steps on an arc.
+
+```python
+c = Clip("polearm_thrust", 0.9)
+c.key(0.00, P.POLE_READY, hips=(0, 0, -0.06), feet=POLE_FEET, weapon=READY)
+c.key(0.30, P.POLE_DRAW,  hips=(0, 0.06, -0.07), feet=POLE_FEET, weapon=draw)          # anticipation
+c.key(0.43, P.POLE_EXTEND, hips=(0, -0.20, -0.11), feet=lunge, weapon=ext, ease="in")   # strike
+c.key(0.50, P.POLE_EXTEND, hips=(0, -0.22, -0.12), feet=lunge, weapon=over, ease="out") # overshoot
+```
+
+Add the clip to `library.clips()` and to `anim_spec.json` (same id, length, loop, FBX,
+events), then `anim.py build` and `anim.py review --only <id>`, and open the sheet.
+
+**Locomotion** is `GaitClip(name, GaitParams(speed, cycle, duty, ...), ref)`. Planted feet
+move backward at exactly `speed` (in the world, with the agent's travel added back, they stand
+still). The stance rolls heel → flat → toe tip; the swing is a minimum-jerk curve with a lift
+arc across the whole swing. The hip drop that keeps every leg within `max_extension` of its
+length is solved, so the IK never falls short. Left heel strikes at 0, right at 0.5.
+
+| Clip | Speed | Cycle | Stride | Hip drop |
+|---|---|---|---|---|
+| `walk_slow` | 1.1 m/s (the JSON patrol pace) | 1.10 s | 1.21 m | see the manifest |
+| `walk` | 2.0 m/s (engine patrol agent) | 0.867 s | 1.73 m | |
+| `run` | 4.2 m/s (engine chase agent) | 0.667 s | 2.80 m | |
+
+Another speed plays the nearest clip at `agent speed / authored speed` (the spec's
+`playback_rate`); keep it within about 0.75-1.3 or the cadence reads wrong.
+
+### Rigs and retargeting
+
+Clips are solved on the **reference human**, `figures.Human()` at its defaults (1.76 m,
+default A-pose arms). The solver works in world-delta rotations (how far each bone turned
+from its rest, about its posed head), which are independent of bone roll. To play a clip on
+another human (the warden), each bone is turned to point where the reference bone points:
+`Qx @ C⁻¹`, with `C` the swing between the two rests. That is what Unity's Humanoid retarget
+does, so the review renders show what the engine will show. The hips offset scales by hip
+height.
+
+The warden's arms rest in its carry (right forearm level for the glaive): its **carry pose**
+is its rest arms plus small tweaks (`poses.WARDEN_CARRY`). In the review, base clips play with
+the carry as an **override layer** over the arms and prop bones (`solve.layer_override`),
+like the Animator's upper-body mask; `library.ClipDef.carry_mask` says which bones per clip.
+
+**Two-handed weapons.** The reference's `Weapon` bone sits in the right fist exactly as the
+warden's glaive does (measured from the warden rig). After a Humanoid retarget the left hand
+misses the haft by up to 0.5 m on another body; `Weapon_GripL` is the IK target, and the
+review applies that IK (standing in for Unity's `SetIKPosition`) and plots both.
+
+### Traps
+
+- **`import bpy` before `mathutils`.** The `anim_forge` package imports `bpy` first;
+  a script that imports `mathutils` before it fails with "No module named 'mathutils'".
+- **No toe bone.** A heel-up foot rolling on the ball pushes the rigid toe 3 cm through the
+  floor. `clip.foot_pose` rolls on the toe tip.
+- **A swing interpolated in clip space smears.** The foot stops dead in the clip while it
+  still brushes the floor, which is a 6-12 cm slide in the world. A world-space swing
+  (zero world velocity at both ends) fixes the smear, but the foot then reaches past the
+  strike point and the run's hips had to drop 27 cm to reach. The fix: a lift arc across
+  the whole swing (`sin(πu)^0.8`), so the foot is off the floor on every swing frame, plus
+  a 30 % world blend (`GaitParams.world_lock`). Slide is now at most 0.22 cm.
+- **A prop bone's rotation goes stale after IK.** Moving `Hand.R` by IK does not move the
+  explicitly keyed `Weapon` rotation; the left hand then grips a haft that is no longer
+  there (7-50 cm off). `solve._follow` re-parents props after every arm solve.
+- **The carry pose tips the glaive.** Raising the right fist (so the butt clears the floor
+  when the walk lowers the hips 6 cm) tips the haft 10°; `Hand.R +29°` straightens it.
+- **Blender 5 video output:** `image_settings.media_type = "VIDEO"` must be set before
+  `file_format = "FFMPEG"`, or the enum rejects it. Playwright's bundled ffmpeg
+  (`/opt/pw-browsers/ffmpeg-*`) encodes only VP8/WebM and cannot write MP4, so the MP4s
+  come from Blender's own FFmpeg (H.264) through the sequencer.
+- **Blender 5 layered Actions** keep F-curves in `action.layers[].strips[].channelbags`;
+  `bake._fcurves` handles both APIs and the bake fails if it finds fewer curves than
+  7 per bone.
+- **The JSON's speeds are not the agent's.** The warden's JSON walks at 1.1 m/s and runs at
+  3.4; the engine role table moves a patrol guard at 2.0 and 4.2. Clips match the agent.
+
 
 - No normal map is baked. The JSON asks for wheel ridges and punch-work as normal
   detail, but EnemyForge's bake makes BaseMap / Roughness / Metallic / Emission only.

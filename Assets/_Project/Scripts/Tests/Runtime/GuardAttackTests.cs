@@ -148,5 +148,60 @@ namespace RogueAi.Tests
             Assert.AreEqual(0f, victim.Taken,
                 "Somnus has to actually stop a guard, or the spell is decorative.");
         }
+
+        // --- The replicated attack signal (docs/plans/artbible-enemies-in-engine.md, E4) ----------
+
+        [UnityTest]
+        public IEnumerator Test_EveryAttackBumpsTheReplicatedSignal()
+        {
+            CastleGuard guard = MakeGuard(Vector3.zero);
+            Victim victim = MakeVictim(new Vector3(0f, 0f, 1.2f));
+            guard.transform.LookAt(victim.transform);
+            var heard = new List<GuardAttackKind>();
+            guard.Attacked += heard.Add;
+
+            yield return null;
+
+            Assert.AreEqual(0, guard.AttackCount, "No attack yet.");
+            guard.Tick(0.1f);
+
+            Assert.Greater(victim.Taken, 0f, "Sanity: the blow landed.");
+            Assert.AreEqual(1, guard.AttackCount, "One blow, one count: this is what every client sees.");
+            Assert.AreEqual(GuardAttackKind.Melee, guard.LastAttackKind);
+            CollectionAssert.AreEqual(new[] { GuardAttackKind.Melee }, heard,
+                "The server raises Attacked as the blow lands.");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_AnAttackOnCooldownSignalsNothing()
+        {
+            CastleGuard guard = MakeGuard(Vector3.zero);
+            Victim victim = MakeVictim(new Vector3(0f, 0f, 1.2f));
+            guard.transform.LookAt(victim.transform);
+
+            yield return null;
+
+            for (int i = 0; i < 10; i++)
+            {
+                guard.Tick(0.01f);
+            }
+
+            Assert.AreEqual(1, guard.AttackCount,
+                "Ten ticks inside one cooldown are one attack; a swing per tick would be an animation per frame.");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_AGuardOutOfReachSignalsNoAttack()
+        {
+            CastleGuard guard = MakeGuard(Vector3.zero);
+            Victim victim = MakeVictim(new Vector3(0f, 0f, 8f));
+            guard.transform.LookAt(victim.transform);
+
+            yield return null;
+
+            guard.Tick(0.1f);
+
+            Assert.AreEqual(0, guard.AttackCount, "No swing at thin air.");
+        }
     }
 }

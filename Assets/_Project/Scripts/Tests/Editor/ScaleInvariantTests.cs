@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using RogueAi.Castle;
@@ -157,6 +158,130 @@ namespace RogueAi.Tests.Editor
 
             Assert.Greater(measured, 0, "No enemy prefabs found, so this asserted nothing.");
             Assert.IsEmpty(failures.ToString(), $"Enemies not standing on the floor:\n{failures}");
+        }
+
+        // --- Art-bible enemies (docs/plans/artbible-enemies-in-engine.md, E1 audit) ---------------
+
+        /// <summary>
+        /// The forged art-bible prefabs that exist, with their specs. Ignores the test, with the menu
+        /// path to fix it, while none have been forged: forging needs the Unity Editor.
+        /// </summary>
+        private static List<(ArtBibleEnemySpec Spec, GameObject Prefab)> ForgedArtBibleEnemies()
+        {
+            string root = ArtBibleEnemyCatalog.FindProjectRoot();
+            Assert.IsNotNull(root, $"No {ArtBibleEnemyCatalog.ManifestPath} above the test's data path.");
+            var problems = new List<string>();
+            List<ArtBibleEnemySpec> specs = ArtBibleEnemyCatalog.Load(root, problems);
+            Assert.IsEmpty(problems, string.Join("\n", problems));
+
+            var forged = new List<(ArtBibleEnemySpec, GameObject)>();
+            foreach (ArtBibleEnemySpec spec in specs)
+            {
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(spec.PrefabPath);
+                if (prefab != null)
+                {
+                    forged.Add((spec, prefab));
+                }
+            }
+
+            if (forged.Count == 0)
+            {
+                Assert.Ignore("No art-bible enemy prefabs under " + ArtBibleEnemyCatalog.PrefabRoot +
+                              " yet. Forge them in the Unity Editor: Tools/Plunderspell/Forge Art Bible Enemies + Roster.");
+            }
+
+            Assert.AreEqual(specs.Count, forged.Count,
+                "Some art-bible enemies are forged and some are not: " + string.Join(", ",
+                    specs.Where(s => forged.All(f => f.Item1 != s)).Select(s => s.Name)) + ". Re-run the forge.");
+            return forged;
+        }
+
+        /// <summary>ArtForge builds at true scale; the prefab must still draw what the manifest measured.</summary>
+        [Test]
+        public void Test_EveryArtBibleEnemyIsTheHeightItWasBuiltAt()
+        {
+            var failures = new StringBuilder();
+            foreach ((ArtBibleEnemySpec spec, GameObject prefab) in ForgedArtBibleEnemies())
+            {
+                float height = MeasuredHeightOf(prefab);
+                if (Mathf.Abs(height - spec.HeightWithProps) > spec.HeightWithProps * 0.05f)
+                {
+                    failures.AppendLine($"  {spec.Name}: draws {height:F2} m, built at {spec.HeightWithProps:F2} m " +
+                                        $"(art bible body {spec.BodyHeight:F2} m).");
+                }
+            }
+
+            Assert.IsEmpty(failures.ToString(), $"Art-bible enemies off their height by more than 5 %:\n{failures}");
+        }
+
+        [Test]
+        public void Test_EveryArtBibleEnemyStandsOnItsOwnOrigin()
+        {
+            var failures = new StringBuilder();
+            foreach ((ArtBibleEnemySpec spec, GameObject prefab) in ForgedArtBibleEnemies())
+            {
+                float lowest = LowestRenderedPointOf(prefab);
+                if (Mathf.Abs(lowest) > k_FootTolerance)
+                {
+                    failures.AppendLine($"  {spec.Name}: lowest point at {lowest:F2} m.");
+                }
+            }
+
+            Assert.IsEmpty(failures.ToString(), $"Art-bible enemies not standing on the floor:\n{failures}");
+        }
+
+        /// <summary>
+        /// Against the rooms it is actually posted to (the art bible's zones), not every zone: the
+        /// posting is known here, unlike for the EnemyForge set. Its agent must also fit their archways.
+        /// </summary>
+        [Test]
+        public void Test_NoArtBibleEnemyIsTallerThanTheRoomsItIsPostedTo()
+        {
+            // First, so the test is ignored (not failed) until the prefabs have been forged.
+            List<(ArtBibleEnemySpec Spec, GameObject Prefab)> forged = ForgedArtBibleEnemies();
+            var registry = AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>(k_RegistryPath);
+            Assert.IsNotNull(registry, $"No room registry at {k_RegistryPath}.");
+            Dictionary<CastleZone, float> shortestByZone = ShortestClearHeightPerZone(registry);
+            var failures = new StringBuilder();
+
+            foreach ((ArtBibleEnemySpec spec, GameObject prefab) in forged)
+            {
+                float height = MeasuredHeightOf(prefab);
+                foreach (CastleZone zone in spec.Zones)
+                {
+                    if (shortestByZone.TryGetValue(zone, out float clear) && height > clear)
+                    {
+                        failures.AppendLine($"  {spec.Name}: {height:F2} m, over {zone}'s {clear:F2} m clear height.");
+                    }
+                }
+
+                if (prefab.TryGetComponent(out UnityEngine.AI.NavMeshAgent agent) &&
+                    agent.height > spec.ArchwayClearance + 0.001f)
+                {
+                    failures.AppendLine($"  {spec.Name}: agent {agent.height:F2} m, over its lowest archway " +
+                                        $"{spec.ArchwayClearance:F2} m.");
+                }
+            }
+
+            Assert.IsEmpty(failures.ToString(), $"Art-bible enemies too tall for their posts:\n{failures}");
+        }
+
+        /// <summary>Height from the baked vertices, as <see cref="LowestRenderedPointOf"/> measures feet.</summary>
+        private static float MeasuredHeightOf(GameObject prefab)
+        {
+            GameObject instance = Object.Instantiate(prefab);
+            instance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+
+            try
+            {
+                return PrefabGeometry.TryMeasureVerticalExtent(instance, out float lowest, out float highest)
+                    ? highest - lowest
+                    : 0f;
+            }
+            finally
+            {
+                Object.DestroyImmediate(instance);
+            }
         }
 
         private static Dictionary<CastleZone, float> ShortestClearHeightPerZone(

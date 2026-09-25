@@ -6,14 +6,10 @@ using System.Text;
 namespace RogueAi.EditorTools
 {
     /// <summary>
-    /// A small, strict JSON reader for the art bible's data files (<c>docs/art/data/*.json</c>) and
-    /// the ArtForge manifest. <c>JsonUtility</c> cannot read them: they nest objects inside arrays
-    /// and a field such as <c>rig</c> is an object in one entry and a string in another.
-    ///
-    /// Objects become <see cref="Dictionary{TKey,TValue}"/> of string to object, arrays
-    /// <see cref="List{T}"/> of object, numbers <see cref="double"/>, and true/false/null their C#
-    /// values. Malformed input throws <see cref="FormatException"/> naming the offset, never returns
-    /// a partial tree.
+    /// A small strict JSON reader for docs/art/data/*.json and the ArtForge manifest, which
+    /// <c>JsonUtility</c> cannot read (nested arrays of objects, fields that change type). Objects
+    /// become Dictionary&lt;string, object&gt;, arrays List&lt;object&gt;, numbers double. Malformed input
+    /// throws <see cref="FormatException"/>.
     /// </summary>
     public static class ArtBibleJson
     {

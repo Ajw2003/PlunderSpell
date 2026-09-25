@@ -96,6 +96,11 @@ namespace RogueAi.Raid
             return PickWeighted(pool, rng).Prefab;
         }
 
+        /// <summary>The (zone, Age) gaps reported since the last <see cref="ResetWarnings"/>.</summary>
+        public IReadOnlyCollection<(CastleZone, HistoricalEra)> ReportedFallbacks =>
+            (IReadOnlyCollection<(CastleZone, HistoricalEra)>)_warnedFallbacks
+            ?? Array.Empty<(CastleZone, HistoricalEra)>();
+
         /// <summary>Forgets which fallbacks were already reported, so the next raid reports its own.</summary>
         public void ResetWarnings() => _warnedFallbacks?.Clear();
 

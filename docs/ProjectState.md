@@ -49,6 +49,14 @@ No schema change was needed. Each era has its own registry, table and roster, so
 still branch only on `CastleZone`. What M3 still lacks is art, plus a person playing the eras side
 by side.
 
+**Update, 2026-09-24 (code only, not yet run in the Editor):** the era now reaches the garrison.
+`EnemyRoster.Entry` carries an `Era`, `GuardSpawner.SpawnFor` passes `RaidDirector.Era` (now
+replicated) to `EnemyRoster.PickForZone(zone, era, rng)`, and `RaidContext` is published for the
+castle generator to read later. Rooms and loot still ignore the era, and until
+`Tools/Plunderspell/Forge Art Bible Enemies + Roster` is run in the Editor the roster holds no
+Bronze, Late or Powder enemies, so those raids fall back (with a warning) to the old High Medieval
+guards outside the Crypt. See `docs/systems/raid-scene-assembly.md`, "Era reaches the raid".
+
 ## The 2026-09-16 playtesting backlog
 
 **Update, 2026-09-22:** Phase 1 of `docs/plans/GitIssues/Priority_Queue.md` ("Core Game Loop,
