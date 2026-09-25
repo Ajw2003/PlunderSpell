@@ -21,8 +21,7 @@
         "RogueAi.Editor",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "RogueAi.Net",
-        "RogueAi.Inventory"
+        "RogueAi.Net"
     ],
     "includePlatforms": [
         "Editor"
