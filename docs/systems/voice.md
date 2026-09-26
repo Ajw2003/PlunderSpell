@@ -17,9 +17,14 @@ means or what happens when one misfires.
   it, chosen automatically:
   - **`VoskVoiceInputService`** — the real path. The 68 MB model
     (`Assets/StreamingAssets/VoskModels/small-en-us/`) loads once, off the main thread, when the
-    service is created. Holding the cast key opens the **system default** microphone at 16 kHz; a
-    hidden `MainThreadPump` reads the new samples every frame on the main thread and feeds them to
-    one reused recogniser; releasing flushes `FinalResult()`. Loudness is the **peak** RMS across
+    service is created. The microphone (`MicrophonePicker`: the Settings choice, else Windows'
+    default) is opened at 16 kHz **once**, by `WarmUp()` when the caster hands over its vocabulary
+    as the player spawns, and stays open until the pump is destroyed (leaving Play mode, quitting).
+    Holding the cast key only marks where in the recording to start listening; a hidden
+    `MainThreadPump` reads the new samples every frame on the main thread and feeds them to one
+    reused recogniser; releasing flushes `FinalResult()`. Opening and closing the device per press
+    froze the game for ~1.2 s on the first press (recogniser build plus open) and ~90 ms on every
+    release (`Microphone.End`); now press and release take 2–9 ms (measured 2026-09-25). Loudness is the **peak** RMS across
     the whole hold. All Vosk and `Microphone` calls are wrapped in `#if !HEADLESS`.
   - **`MockVoiceInputService`** — the keyboard: `1`–`8` while holding the cast key (Shift for the
     misfire word, Ctrl to whisper).
@@ -87,6 +92,10 @@ whisper/shout marks.
   `SpeechRecognitionTests` fails if a correctly spoken word stops resolving.
 
 ## Traps
+
+- **Never call `Microphone.Start` or `Microphone.End` on the cast key.** Both block the main
+  thread (about 90 ms each on a USB headset). That was the lag on releasing V. The device stays
+  open for the whole session; the Windows "microphone in use" indicator is on while playing.
 
 - **`VoiceServiceLocator` never auto-registers at editor load**, on purpose — doing so would spawn
   a hidden driver `GameObject` in every edit-mode session with no play running. It only
