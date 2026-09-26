@@ -99,10 +99,11 @@ namespace Plunderspell.Tests
             guard.Configure(alarm);
 
             SpellEffectRegistry.Execute(new SpellEffectContext(
-                SpellId.Tonitrus, CastVolume.Shout, Vector3.zero, Vector3.forward));
+                SpellId.Saltus, CastVolume.Shout, Vector3.zero, Vector3.forward));
+            SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, null, ~0, 0);
 
             Assert.GreaterOrEqual((int)alarm.State, (int)AlarmState.Stirred,
-                "A shouted thunderclap must wake the castle.");
+                "A shouted leap and its slam must wake the castle.");
             Assert.AreEqual(GuardAlertState.Investigating, guard.State,
                 "…and bring a guard to look.");
         }

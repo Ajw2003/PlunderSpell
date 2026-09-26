@@ -95,11 +95,11 @@ namespace Plunderspell.Tests
         }
 
         /// <summary>
-        /// The whole thing, from keystroke to something on screen: hold V, tap 5, release, and the
+        /// The whole thing, from keystroke to something on screen: hold V, tap 6, release, and the
         /// chant runs its course (#116). Nothing fires before it does, and the cast costs mana.
         /// </summary>
         [UnityTest]
-        public IEnumerator Test_HoldVAndPressFiveCastsTonitrusAndShowsIt()
+        public IEnumerator Test_HoldVAndPressSixCastsSomnusAndShowsIt()
         {
             SpellId resolved = SpellId.None;
             void Record(SpellCastingSystem.CastReport report) => resolved = report.Spell;
@@ -112,10 +112,10 @@ namespace Plunderspell.Tests
                 Press(m_keyboard.vKey);
                 yield return null;
 
-                Press(m_keyboard.digit5Key);
+                Press(m_keyboard.digit6Key);
                 yield return null;
 
-                Release(m_keyboard.digit5Key);
+                Release(m_keyboard.digit6Key);
                 Release(m_keyboard.vKey);
                 yield return null;
 
@@ -123,14 +123,14 @@ namespace Plunderspell.Tests
                 int manaBefore = GameServices.PlayerStats.Mana;
                 Assert.AreEqual(SpellId.None, resolved,
                     "A keyed cast must be chanted first, never faster than saying the word (#116).");
-                Assert.IsTrue(caster.IsChanting, "Pressing 5 must start a chant.");
+                Assert.IsTrue(caster.IsChanting, "Pressing 6 must start a chant.");
 
                 yield return new WaitForSeconds(SpellTuning.KeyboardCastSeconds + 0.2f);
 
-                Assert.AreEqual(SpellId.Tonitrus, resolved,
-                    "Holding V and pressing 5 must resolve to Tonitrus once the chant ends.");
-                int cost = caster.ManaCostOf(SpellId.Tonitrus);
-                Assert.Greater(cost, 0, "Tonitrus must cost mana.");
+                Assert.AreEqual(SpellId.Somnus, resolved,
+                    "Holding V and pressing 6 must resolve to Somnus once the chant ends.");
+                int cost = caster.ManaCostOf(SpellId.Somnus);
+                Assert.Greater(cost, 0, "Somnus must cost mana.");
                 Assert.LessOrEqual(GameServices.PlayerStats.Mana, manaBefore - cost + 1,
                     "The cast must spend its mana (allowing a point of regeneration).");
 
@@ -159,9 +159,9 @@ namespace Plunderspell.Tests
             {
                 Press(m_keyboard.vKey);
                 yield return null;
-                Press(m_keyboard.digit5Key);
+                Press(m_keyboard.digit6Key);
                 yield return null;
-                Release(m_keyboard.digit5Key);
+                Release(m_keyboard.digit6Key);
                 Release(m_keyboard.vKey);
                 yield return null;
 
@@ -179,10 +179,10 @@ namespace Plunderspell.Tests
 
         /// <summary>
         /// The trap that makes casting look broken: the number keys do nothing unless the mic is
-        /// open, so a player who taps 5 without holding V sees no spell, no error and no log line.
+        /// open, so a player who taps 6 without holding V sees no spell, no error and no log line.
         /// </summary>
         [UnityTest]
-        public IEnumerator Test_PressingFiveWithoutHoldingVDoesNothing()
+        public IEnumerator Test_PressingSixWithoutHoldingVDoesNothing()
         {
             SpellId resolved = SpellId.None;
             void Record(SpellCastingSystem.CastReport report) => resolved = report.Spell;
@@ -190,9 +190,9 @@ namespace Plunderspell.Tests
 
             try
             {
-                Press(m_keyboard.digit5Key);
+                Press(m_keyboard.digit6Key);
                 yield return null;
-                Release(m_keyboard.digit5Key);
+                Release(m_keyboard.digit6Key);
                 yield return null;
 
                 Assert.AreEqual(SpellId.None, resolved,

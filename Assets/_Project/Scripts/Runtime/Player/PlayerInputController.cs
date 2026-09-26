@@ -158,26 +158,6 @@ namespace Player
             _stateMachine.Jump();
         }
 
-        private void DodgeInputs(bool enable)
-        {
-            if (enable)
-            {
-                _input.PlayerActions.Dodge.performed += OnDodgePerformed;
-            }
-            else
-            {
-                _input.PlayerActions.Dodge.performed -= OnDodgePerformed;
-            }
-        }
-
-        private void OnDodgePerformed(InputAction.CallbackContext context)
-        {
-            if (!AcceptsInput)
-                return;
-
-            _stateMachine.Dodge();
-        }
-
         private void LookInputs(bool enable)
         {
             if (enable)
@@ -223,7 +203,6 @@ namespace Player
         private void DisableAllInputs()
         {
             WalkInputs(false);
-            DodgeInputs(false);
             JumpInputs(false);
             AttackInputs(false);
             LookInputs(false);
@@ -238,7 +217,7 @@ namespace Player
 
             OpenInventoryInput(true);
             WalkInputs(true);
-            DodgeInputs(true);
+            // No dodge key: dodging is the Velox spell (docs/4-systems/spells.md, "Velox and Saltus").
             JumpInputs(true);
             AttackInputs(true);
             LookInputs(true);

@@ -41,7 +41,7 @@ namespace Plunderspell.Tests
             SpellId[] primaries =
             {
                 SpellId.Ignis, SpellId.Frango, SpellId.Levo, SpellId.AurumVoco,
-                SpellId.Tonitrus, SpellId.Somnus, SpellId.CadaverSurge, SpellId.Porta,
+                SpellId.Velox, SpellId.Somnus, SpellId.Saltus, SpellId.Porta,
             };
 
             var seen = new List<Color>();
@@ -73,7 +73,7 @@ namespace Plunderspell.Tests
             SpellId[] misfires =
             {
                 SpellId.MisfireIgnis, SpellId.MisFireFrango, SpellId.MisfireLevo,
-                SpellId.MisfireTonitrus, SpellId.MisFireSomnus, SpellId.MisFireCadaverSurge,
+                SpellId.MisfireVelox, SpellId.MisFireSomnus, SpellId.MisfireSaltus,
                 SpellId.MisfireAurumVoco, SpellId.MisfirePorta,
             };
 
@@ -89,8 +89,8 @@ namespace Plunderspell.Tests
         {
             Assert.AreEqual(SpellVisualStyle.Bolt, SpellLookbook.For(SpellId.Ignis).Style,
                 "Ignis is the fire bolt; it should fly rather than bloom at the hands.");
-            Assert.AreEqual(SpellVisualStyle.Burst, SpellLookbook.For(SpellId.Tonitrus).Style,
-                "A thunderclap happens where you are standing.");
+            Assert.AreEqual(SpellVisualStyle.Burst, SpellLookbook.For(SpellId.Saltus).Style,
+                "A leap happens where you are standing.");
         }
 
         [UnityTest]
@@ -127,7 +127,7 @@ namespace Plunderspell.Tests
             int before = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
 
             SpellCastingSystem.AnnounceForTesting(new SpellCastingSystem.CastReport(
-                SpellId.Tonitrus, Plunderspell.Voice.CastVolume.Normal, 1, "Tester",
+                SpellId.Somnus, Plunderspell.Voice.CastVolume.Normal, 1, "Tester",
                 Vector3.zero, Vector3.forward));
 
             int after = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;

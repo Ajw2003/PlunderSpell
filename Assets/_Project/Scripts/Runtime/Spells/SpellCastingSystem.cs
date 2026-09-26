@@ -1,3 +1,4 @@
+using Interfaces;
 using Plunderspell.Core;
 using PurrNet;
 using Plunderspell.Voice;
@@ -40,6 +41,9 @@ namespace Plunderspell.Spells
 
         private IVoiceInputService _voice;
         private bool _subscribed;
+
+        // The caster's own body, which Saltus launches; its slam landing is resolved from here.
+        private ISpellMovable _body;
 
         // The keyboard chant in progress, if any. Owner-side only, like the rest of the input half.
         private SpellId _chantSpell = SpellId.None;
@@ -106,6 +110,14 @@ namespace Plunderspell.Spells
             if (_aimSource == null)
                 _aimSource = GetComponentInChildren<Camera>()?.transform;
 
+            // The slam lands whether or not anything is listening for words.
+            if (_body == null)
+            {
+                _body = GetComponentInParent<ISpellMovable>();
+                if (_body != null)
+                    _body.SlamLanded += HandleSlamLanded;
+            }
+
             _voice = VoiceServiceLocator.Current;
             if (_voice != null)
             {
@@ -145,6 +157,9 @@ namespace Plunderspell.Spells
         {
             if (_subscribed && _voice != null)
                 _voice.OnPhraseRecognized -= HandlePhrase;
+            if (_body != null)
+                _body.SlamLanded -= HandleSlamLanded;
+            _body = null;
             _subscribed = false;
             _chantSpell = SpellId.None;
             if (Local == this)
@@ -237,7 +252,19 @@ namespace Plunderspell.Spells
         /// <summary>Owner-side: pay for the cast, then resolve it (offline) or ask the server to.</summary>
         private void Cast(SpellId resolved, CastVolume volume)
         {
+            // A spell that moves its caster moves it here, where the body is simulated; the server
+            // only hears it (ICasterMovementSpell). One that cannot move now fizzles for free.
+            var mover = SpellEffectRegistry.Find(resolved) as ICasterMovementSpell;
+            var local = new SpellEffectContext(resolved, volume, CastOrigin(this), CastDirection(this), this,
+                _targetLayers, _geometryLayers);
+            if (mover != null && !mover.CanMove(local))
+            {
+                Debug.Log($"[SpellCast] {resolved} fizzled: it cannot move you from here (no mana spent).");
+                return;
+            }
+
             GameServices.PlayerStats?.SpendMana(ManaCostOf(resolved));
+            mover?.MoveCaster(local);
 
             bool isMisfire = IsMisfire(resolved);
             if (isMisfire)
@@ -278,6 +305,24 @@ namespace Plunderspell.Spells
             // info.sender is the player that requested the cast.
             BroadcastCast(spellId, volumeByte, caster, info.sender, affected, origin, direction);
         }
+
+        /// <summary>Owner-side: a Saltus slam hit the ground; its damage is resolved authoritatively.</summary>
+        private void HandleSlamLanded(Vector3 where, float speed)
+        {
+            if (!isSpawned)
+            {
+                ResolveSlam(where, speed);
+                return;
+            }
+            ServerSlam(where, speed);
+        }
+
+        [ServerRpc(requireOwnership: true)]
+        private void ServerSlam(Vector3 where, float speed) => ResolveSlam(where, speed);
+
+        /// <summary>Runs a slam landing's damage, shove and noise. Public so tests need no transport.</summary>
+        public int ResolveSlam(Vector3 where, float speed) =>
+            SaltusEffect.ResolveSlam(where, speed, transform.root, _targetLayers, _geometryLayers);
 
         /// <summary>
         /// Builds the effect context from the caster's transform and runs the registered effect.

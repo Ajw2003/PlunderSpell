@@ -14,9 +14,9 @@ namespace Plunderspell.Spells
         Frango = 2,         // break / shatter
         Levo = 3,           // levitate object
         AurumVoco = 4,      // summon gold
-        Tonitrus = 5,       // thunderclap
+        // 5 retired, do not reuse (was Tonitrus)
         Somnus = 6,         // sleep
-        CadaverSurge = 7,   // raise corpse
+        // 7 retired, do not reuse (was CadaverSurge)
         Porta = 8,          // open door / portal
 
         // --- Extended lexicon ---
@@ -58,15 +58,18 @@ namespace Plunderspell.Spells
         Ferrum = 44,
         IgnisMagna = 45,
         TonitrusMagna = 46,
+        Saltus = 47,        // a leap (high jump / slam)
 
         // --- Misfire outcomes (near-match failures) ---
         MisfireIgnis = 100,        // sets caster on fire
         MisFireFrango = 101,       // breaks a random inventory item
         MisfireLevo = 102,         // levitates the caster uncontrollably
-        MisfireTonitrus = 103,     // deafens the caster
+        // 103 retired, do not reuse (was MisfireTonitrus)
         MisFireSomnus = 104,       // puts the caster to sleep
-        MisFireCadaverSurge = 105, // nearest corpse explodes
+        // 105 retired, do not reuse (was MisFireCadaverSurge)
         MisfireAurumVoco = 106,    // gold scatters
         MisfirePorta = 107,        // opens a random wrong door
+        MisfireVelox = 108,        // dashes the caster randomly at full force
+        MisfireSaltus = 109,       // feeble hop, stuns the caster
     }
 }

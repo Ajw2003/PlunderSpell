@@ -123,7 +123,7 @@ namespace Plunderspell.Tests
 
             int after = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
             Assert.Greater(after, before,
-                "Casting Tonitrus in the raid scene produced no visible effect.");
+                "Casting Velox in the raid scene produced no visible effect.");
         }
 
         /// <summary>

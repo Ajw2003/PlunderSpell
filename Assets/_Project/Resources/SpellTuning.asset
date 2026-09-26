@@ -31,9 +31,15 @@ MonoBehaviour:
   FrangoDamage: 30
   FrangoStaggerSeconds: 1.2
   FrangoKnockback: 2.5
-  TonitrusStunSeconds: 3
-  TonitrusNoiseRadius: 18
-  TonitrusNoiseStrength: 1
+  VeloxDashSpeed: 14
+  VeloxDashSeconds: 0.25
+  SaltusLaunchSpeed: 14
+  SaltusSlamSpeed: 22
+  SlamRadius: 3
+  SlamDamage: 30
+  SlamKnockback: 2.5
+  SlamNoiseRadius: 14
+  SlamNoiseStrength: 1
   SomnusSleepSeconds: 8
   LevoImpulse: 6
   LevoSeconds: 3
@@ -42,6 +48,7 @@ MonoBehaviour:
   AurumVocoNoiseStrength: 0.5
   MisfireSelfBurnSeconds: 6
   MisfireSelfDamagePerSecond: 8
-  MisfireSelfStunSeconds: 4
   MisfireSelfSleepSeconds: 5
+  MisfireSaltusHop: 0.25
+  MisfireSaltusStaggerSeconds: 1
   MisfireRadius: 4

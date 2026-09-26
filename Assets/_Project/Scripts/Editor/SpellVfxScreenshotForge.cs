@@ -28,7 +28,7 @@ namespace Plunderspell.EditorTools
         private static readonly SpellId[] k_Showcase =
         {
             SpellId.Ignis, SpellId.Frango, SpellId.Levo, SpellId.AurumVoco,
-            SpellId.Tonitrus, SpellId.Somnus, SpellId.CadaverSurge, SpellId.Porta,
+            SpellId.Velox, SpellId.Somnus, SpellId.Saltus, SpellId.Porta,
             SpellId.MisfireIgnis,
         };
 
@@ -136,7 +136,7 @@ namespace Plunderspell.EditorTools
             Transform aim = Camera.main != null ? Camera.main.transform : player;
             Vector3 hands = aim.position + aim.forward * 1.0f;
 
-            SpellLook look = SpellLookbook.For(SpellId.Tonitrus);
+            SpellLook look = SpellLookbook.For(SpellId.Saltus);
             SpellBurst burst = SpellBurst.Spawn(hands, look.Colour, look.Radius, 0.45f);
             burst.SetProgress(k_CaptureProgress);
 

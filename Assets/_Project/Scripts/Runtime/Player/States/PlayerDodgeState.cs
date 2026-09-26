@@ -4,6 +4,10 @@ namespace StateMachine.States
 {
     public class PlayerDodgeState : PlayerState
     {
+        private Vector3 _direction;
+        private float _speed;
+        private float _endsAt;
+
         public PlayerDodgeState(PlayerStateMachine stateMachine) : base(stateMachine)
         {
         }
@@ -12,16 +16,29 @@ namespace StateMachine.States
         {
             // Camera-relative like walking: the body no longer turns with the view (see
             // PlayerStateMachine.Look), so its own axes say nothing about where "forward" is.
-            Vector3 dodgeDirection = CameraRelativeInput();
-            _stateMachine._rb.AddForce(dodgeDirection * _stateMachine.DodgeForce, ForceMode.Impulse);
+            // Only Velox dodges now (the dodge key is gone), so a dash always goes somewhere.
+            _direction = _stateMachine.TakeDashDirection(CameraRelativeInput(), out _speed, out float seconds);
+            _endsAt = Time.time + seconds;
+            Hold();
         }
 
+        // The dash holds its speed for its whole length. It used to be one impulse and an exit once
+        // the body was slower than 1 m/s, which the very first physics step always was, before the
+        // impulse had been applied, so the dodge ended at once and went nowhere.
         public override void FixedUpdate()
         {
-            if (_stateMachine._rb.linearVelocity.magnitude < 1.0f)
+            if (Time.time >= _endsAt)
             {
                 Exit();
+                return;
             }
+            Hold();
+        }
+
+        private void Hold()
+        {
+            float vertical = _stateMachine._rb.linearVelocity.y;
+            _stateMachine._rb.linearVelocity = _direction * _speed + Vector3.up * vertical;
         }
 
         public override void Exit()

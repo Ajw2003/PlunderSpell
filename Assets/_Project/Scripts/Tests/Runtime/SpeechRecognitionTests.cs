@@ -22,15 +22,16 @@ namespace Plunderspell.Tests
         private static readonly Dictionary<string, SpellId> s_correct = new Dictionary<string, SpellId>
         {
             { "IGNIS", SpellId.Ignis }, { "FRANGO", SpellId.Frango }, { "LEVO", SpellId.Levo },
-            { "AURUMVOCO", SpellId.AurumVoco }, { "TONITRUS", SpellId.Tonitrus },
-            { "SOMNUS", SpellId.Somnus }, { "CADAVERSURGE", SpellId.CadaverSurge },
+            { "AURUMVOCO", SpellId.AurumVoco }, { "VELOX", SpellId.Velox },
+            { "SOMNUS", SpellId.Somnus }, { "SALTUS", SpellId.Saltus },
             { "PORTA", SpellId.Porta },
         };
 
-        // Pairs the small English model can tell apart. FRANGO/FRANCO (g vs k), and one voice each
-        // of LEVO and AURUM VOCO, cannot be separated by it and fall back to the correct spell.
+        // Pairs the small English model can tell apart. FRANGO/FRANCO (g vs k), one voice each of
+        // LEVO and AURUM VOCO, and Zira's SULTUS (heard as "salt is", like SALTUS) cannot be
+        // separated by it and fall back to the correct spell.
         private static readonly string[] s_separableMisfires =
-            { "IGNIS", "TONITRUS", "SOMNUS", "CADAVERSURGE", "PORTA" };
+            { "IGNIS", "VELOX", "SOMNUS", "PORTA" };
 
         private static VoskVoiceInputService s_speech;
         private static SpellLexicon s_lexicon;
@@ -64,7 +65,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_EverySpellSaidCorrectlyCastsThatSpell(
             [Values("David", "Zira")] string voice,
-            [Values("IGNIS", "FRANGO", "LEVO", "AURUMVOCO", "TONITRUS", "SOMNUS", "CADAVERSURGE", "PORTA")] string word)
+            [Values("IGNIS", "FRANGO", "LEVO", "AURUMVOCO", "VELOX", "SOMNUS", "SALTUS", "PORTA")] string word)
         {
             SpellId cast = Recognise($"OK_{word}_{voice}");
             Assert.AreEqual(s_correct[word], cast,

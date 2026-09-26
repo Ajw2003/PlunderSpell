@@ -29,7 +29,7 @@ namespace Plunderspell.UI
         private static readonly string[] Spellbook =
         {
             "IGNIS", "FRANGO", "LEVO", "AURUM VOCO",
-            "TONITRUS", "SOMNUS", "CADAVER SURGE", "PORTA",
+            "VELOX", "SOMNUS", "SALTUS", "PORTA",
         };
 
         private Plunderspell.Voice.PushToCastController _pushToCast;

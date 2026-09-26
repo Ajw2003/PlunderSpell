@@ -6,7 +6,7 @@ namespace Plunderspell.Status
 {
     /// <summary>
     /// One component that makes anything a valid target for the status-inflicting spells: burning
-    /// (Ignis), stun (Tonitrus), sleep (Somnus) and levitation (Levo). Attach it to players, guards
+    /// (Ignis), stun (Frango), sleep (Somnus) and levitation (Levo). Attach it to players, guards
     /// and anything else a spell should be able to affect.
     ///
     /// Why one component rather than an implementation per actor: the spell layer must not know what

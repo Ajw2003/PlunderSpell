@@ -116,29 +116,56 @@ namespace Plunderspell.Spells
         }
     }
 
-    /// <summary>Misfired Tonitrus — deafens and stuns the caster, and still wakes the castle.</summary>
-    public sealed class MisfireTonitrusEffect : MisfireEffectBase
+    /// <summary>Misfired Velox — a full-force dash, in a direction nobody chose.</summary>
+    public sealed class MisfireVeloxEffect : MisfireEffectBase, ICasterMovementSpell
     {
-        public override SpellId Id => SpellId.MisfireTonitrus;
+        public override SpellId Id => SpellId.MisfireVelox;
 
-        public override string Describe(in SpellEffectContext ctx) => "Misfire: deafening thunderclap on yourself";
+        public override string Describe(in SpellEffectContext ctx) => "Misfire: you dash the wrong way";
 
         public override int Execute(in SpellEffectContext ctx)
         {
             EmitCastNoise(ctx);
+            return 1;
+        }
 
-            int affected = 0;
-            var self = SelfTarget<IStunnable>(ctx);
-            if (self != null)
-            {
-                self.Stun(SpellTuning.MisfireSelfStunSeconds);
-                affected = 1;
-            }
+        public bool CanMove(in SpellEffectContext ctx) => MovableCaster.Of(ctx) != null;
 
-            // The clap happens whether or not it found someone to stun — the noise is the real cost.
-            EmitEffectNoise(ctx, SpellTuning.TonitrusNoiseRadius, SpellTuning.TonitrusNoiseStrength,
-                NoiseType.Explosion);
-            return affected;
+        public void MoveCaster(in SpellEffectContext ctx)
+        {
+            Vector2 flat = Random.insideUnitCircle;
+            if (flat.sqrMagnitude < 0.01f)
+                flat = Vector2.right;
+            ISpellMovable body = MovableCaster.Of(ctx);
+            if (body != null)
+                body.SpellDash(new Vector3(flat.x, 0f, flat.y), SpellTuning.VeloxDashSpeed,
+                    SpellTuning.VeloxDashSeconds);
+        }
+    }
+
+    /// <summary>Misfired Saltus — a feeble hop, and the legs lock.</summary>
+    public sealed class MisfireSaltusEffect : MisfireEffectBase, ICasterMovementSpell
+    {
+        public override SpellId Id => SpellId.MisfireSaltus;
+
+        public override string Describe(in SpellEffectContext ctx) => "Misfire: a feeble hop, and you stumble";
+
+        public override int Execute(in SpellEffectContext ctx)
+        {
+            EmitCastNoise(ctx);
+            return 1;
+        }
+
+        // A misfire is never free, so it is paid for even in mid-air, where the hop does nothing.
+        public bool CanMove(in SpellEffectContext ctx) => MovableCaster.Of(ctx) != null;
+
+        public void MoveCaster(in SpellEffectContext ctx)
+        {
+            ISpellMovable body = MovableCaster.Of(ctx);
+            if (body == null)
+                return;
+            body.SpellLaunch(SpellTuning.SaltusLaunchSpeed * SpellTuning.MisfireSaltusHop, 0f);
+            body.Stagger(SpellTuning.MisfireSaltusStaggerSeconds);
         }
     }
 
@@ -157,43 +184,6 @@ namespace Plunderspell.Spells
                 return 0;
             self.Sleep(SpellTuning.MisfireSelfSleepSeconds);
             return 1;
-        }
-    }
-
-    /// <summary>Misfired Cadaver Surge — the corpse detonates instead of rising.</summary>
-    public sealed class MisfireCadaverSurgeEffect : MisfireEffectBase
-    {
-        public override SpellId Id => SpellId.MisFireCadaverSurge;
-
-        /// <summary>Raised at the position of the corpse that exploded, with its damage radius.</summary>
-        public static event System.Action<Vector3, float> CorpseExploded;
-
-        public override string Describe(in SpellEffectContext ctx) => "Misfire: the corpse explodes";
-
-        public override int Execute(in SpellEffectContext ctx)
-        {
-            EmitCastNoise(ctx);
-
-            var corpse = SpellTargeting.FindNearest<IHealth>(ctx.Origin, ctx.Radius(),
-                ctx.TargetLayerMask);
-            Vector3 where = corpse is Component c ? c.transform.position : ctx.Origin;
-            const float blastRadius = 5f;
-
-            CorpseExploded?.Invoke(where, blastRadius);
-
-            int hurt = 0;
-            foreach (IHealth victim in SpellTargeting.FindAll<IHealth>(where, blastRadius, ctx.TargetLayerMask))
-            {
-                if (victim.CurrentHealth <= 0f)
-                    continue;
-                GameObject caster = ctx.CasterTransform != null ? ctx.CasterTransform.gameObject : null;
-                Damage.Apply(victim, 25f, caster, caster, Damage.PointOn(victim as Component, where),
-                    DamageKind.Spell);
-                hurt++;
-            }
-
-            EmitEffectNoise(ctx, 15f, 1f, NoiseType.Explosion);
-            return hurt;
         }
     }
 

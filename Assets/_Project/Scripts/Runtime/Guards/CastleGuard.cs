@@ -14,7 +14,7 @@ namespace Plunderspell.Guards
     /// A castle guard: the thing that makes noise matter.
     ///
     /// It hears (<see cref="INoiseListener"/>), it sees (a cone check with a line-of-sight raycast),
-    /// and it can be shut down by the spells that target the living — Somnus, Tonitrus and Ignis all
+    /// and it can be shut down by the spells that target the living — Somnus, Frango and Ignis all
     /// reach it through <see cref="StatusEffectReceiver"/>. Every decision it makes is delegated to
     /// <see cref="GuardBrain"/>, so its behaviour is asserted in tests rather than observed in play.
     ///

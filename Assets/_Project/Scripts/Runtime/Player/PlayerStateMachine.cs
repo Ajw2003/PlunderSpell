@@ -9,7 +9,7 @@ namespace StateMachine
     // rotation is frozen so the body stays upright; PlayerWalkState/PlayerJumpState express
     // movement against world Vector3.up.
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerStateMachine : BaseStateMachine, IHealth, IChokeDamageSource, IPlayerBody
+    public class PlayerStateMachine : BaseStateMachine, IHealth, IChokeDamageSource, IPlayerBody, ISpellMovable
     {
         public float CurrentHealth => _health;
         public float MaxHealth => _maxHealth;
@@ -74,6 +74,30 @@ namespace StateMachine
 
         [Header("Item Interaction Settings")]
         [SerializeField] private float _chokeDamage = 5f; // Damage per second while holding an enemy
+
+        // Velox and Saltus (docs/4-systems/spells.md, "Velox and Saltus"). A dash waits here for
+        // PlayerDodgeState to pick up; a Saltus launch skips the jump state's own impulse and arms
+        // the slam until the body lands.
+        private Vector3 _pendingDash;
+        private float _pendingDashSpeed;
+        private float _pendingDashSeconds;
+        private bool _launchedBySpell;
+        private float _launchedAt;
+        private float _slamSpeed;
+        private bool _slamming;
+        private float _staggeredUntil;
+
+        /// <summary>Raised on this machine when a Saltus slam reaches the ground: (where, speed).</summary>
+        public event System.Action<Vector3, float> SlamLanded;
+
+        /// <summary>True while a misfired Saltus has the legs locked.</summary>
+        public bool IsStaggered => Time.time < _staggeredUntil;
+
+        /// <summary>True from a Saltus launch until the body lands.</summary>
+        public bool IsSlamArmed => _slamSpeed > 0f;
+
+        /// <summary>True while a slam is driving the body into the ground.</summary>
+        public bool IsSlamming => _slamming;
 
         private float _xRotation = 0f;
         private float _yaw = 0f;
@@ -327,9 +351,93 @@ namespace StateMachine
 
         public override void FixedUpdate()
         {
+            float fallSpeed = -_rb.linearVelocity.y;
             GroundCheck();
+            UpdateSlam(fallSpeed);
             base.FixedUpdate();
             ApplyExtraFallGravity();
+        }
+
+        /// <summary>
+        /// Holds a slam straight down until it lands, then reports the landing. A launch that lands
+        /// without slamming disarms, once it has had time to leave the ground.
+        /// </summary>
+        private void UpdateSlam(float fallSpeed)
+        {
+            if (_slamming)
+            {
+                if (IsGrounded)
+                {
+                    _slamming = false;
+                    _slamSpeed = 0f;
+                    SlamLanded?.Invoke(_rb.position, Mathf.Max(fallSpeed, 0f));
+                    return;
+                }
+                _rb.linearVelocity = Vector3.down * _slamSpeed;
+                return;
+            }
+
+            if (_slamSpeed > 0f && IsGrounded && Time.time > _launchedAt + 0.2f)
+                _slamSpeed = 0f;
+        }
+
+        public void SpellDash(Vector3 direction, float speed, float seconds)
+        {
+            _pendingDash = Vector3.ProjectOnPlane(direction, Vector3.up);
+            _pendingDashSpeed = speed;
+            _pendingDashSeconds = seconds;
+            if (CurrentState == DodgeState)
+                DodgeState.Enter();
+            else
+                ChangeState(DodgeState);
+        }
+
+        /// <summary>
+        /// Where, how fast and how long the dodge state should dash: a direction a spell asked for,
+        /// else the steering input, else the way the camera looks, so a dash always goes somewhere.
+        /// A dash nobody set up (<see cref="Dodge"/>) uses <see cref="DodgeForce"/> for 0.2 s.
+        /// </summary>
+        public Vector3 TakeDashDirection(Vector3 steering, out float speed, out float seconds)
+        {
+            Vector3 direction = _pendingDash.sqrMagnitude > 0.01f ? _pendingDash : steering;
+            speed = _pendingDashSpeed > 0f ? _pendingDashSpeed : DodgeForce;
+            seconds = _pendingDashSeconds > 0f ? _pendingDashSeconds : 0.2f;
+            _pendingDash = Vector3.zero;
+            _pendingDashSpeed = 0f;
+            _pendingDashSeconds = 0f;
+            if (direction.sqrMagnitude <= 0.01f && CameraTransform != null)
+                direction = Vector3.ProjectOnPlane(CameraTransform.forward, Vector3.up);
+            return direction.normalized;
+        }
+
+        public void SpellLaunch(float upwardSpeed, float slamSpeed)
+        {
+            if (!IsGrounded)
+                return;
+
+            Vector3 velocity = _rb.linearVelocity;
+            _rb.linearVelocity = new Vector3(velocity.x, upwardSpeed, velocity.z);
+            _slamSpeed = slamSpeed;
+            _slamming = false;
+            _launchedAt = Time.time;
+            _launchedBySpell = true;
+            if (CurrentState == JumpState)
+                _launchedBySpell = false;
+            else
+                ChangeState(JumpState);
+        }
+
+        /// <summary>True once after a Saltus launch, so the jump state adds no impulse of its own.</summary>
+        public bool TakeSpellLaunch()
+        {
+            bool launched = _launchedBySpell;
+            _launchedBySpell = false;
+            return launched;
+        }
+
+        public void Stagger(float seconds)
+        {
+            _staggeredUntil = Mathf.Max(_staggeredUntil, Time.time + seconds);
         }
 
         // Ground check against world up: a SphereCast along -Y, with proportional
@@ -395,6 +503,14 @@ namespace StateMachine
 
         public void Jump()
         {
+            // In the air after a Saltus launch, jump is the slam.
+            if (!IsGrounded && _slamSpeed > 0f && !_slamming)
+            {
+                _slamming = true;
+                _rb.linearVelocity = Vector3.down * _slamSpeed;
+                return;
+            }
+
             if (IsGrounded && CurrentState != JumpState)
             {
                 ChangeState(JumpState);

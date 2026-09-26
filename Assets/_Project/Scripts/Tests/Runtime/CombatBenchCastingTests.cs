@@ -99,7 +99,7 @@ namespace Plunderspell.Tests
 
             int after = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
             Assert.Greater(after, before,
-                "Casting Tonitrus on the bench produced no visible effect.");
+                "Casting Velox on the bench produced no visible effect.");
         }
 
         /// <summary>

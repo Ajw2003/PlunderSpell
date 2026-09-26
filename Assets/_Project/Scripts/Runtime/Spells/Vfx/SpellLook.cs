@@ -58,12 +58,12 @@ namespace Plunderspell.Spells.Vfx
                     return new SpellLook(new Color(0.6f, 0.45f, 1f), SpellVisualStyle.Burst, 2f);
                 case SpellId.AurumVoco:
                     return new SpellLook(new Color(1f, 0.85f, 0.25f), SpellVisualStyle.Burst, 2.4f);
-                case SpellId.Tonitrus:
-                    return new SpellLook(new Color(0.75f, 0.85f, 1f), SpellVisualStyle.Burst, 4f);
+                case SpellId.Velox:
+                    return new SpellLook(new Color(0.85f, 0.95f, 1f), SpellVisualStyle.Burst, 1.6f);
                 case SpellId.Somnus:
                     return new SpellLook(new Color(0.35f, 0.55f, 0.85f), SpellVisualStyle.Burst, 2.6f);
-                case SpellId.CadaverSurge:
-                    return new SpellLook(new Color(0.45f, 0.75f, 0.4f), SpellVisualStyle.Burst, 2.4f);
+                case SpellId.Saltus:
+                    return new SpellLook(new Color(0.95f, 0.75f, 0.45f), SpellVisualStyle.Burst, 2f);
                 case SpellId.Porta:
                     return new SpellLook(new Color(0.55f, 0.8f, 1f), SpellVisualStyle.Burst, 1.8f);
                 default:

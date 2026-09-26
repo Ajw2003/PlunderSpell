@@ -52,9 +52,15 @@ namespace Plunderspell.Spells
         public static float FrangoDamage => Profile.FrangoDamage;
         public static float FrangoStaggerSeconds => Profile.FrangoStaggerSeconds;
         public static float FrangoKnockback => Profile.FrangoKnockback;
-        public static float TonitrusStunSeconds => Profile.TonitrusStunSeconds;
-        public static float TonitrusNoiseRadius => Profile.TonitrusNoiseRadius;
-        public static float TonitrusNoiseStrength => Profile.TonitrusNoiseStrength;
+        public static float VeloxDashSpeed => Profile.VeloxDashSpeed;
+        public static float VeloxDashSeconds => Profile.VeloxDashSeconds;
+        public static float SaltusLaunchSpeed => Profile.SaltusLaunchSpeed;
+        public static float SaltusSlamSpeed => Profile.SaltusSlamSpeed;
+        public static float SlamRadius => Profile.SlamRadius;
+        public static float SlamDamage => Profile.SlamDamage;
+        public static float SlamKnockback => Profile.SlamKnockback;
+        public static float SlamNoiseRadius => Profile.SlamNoiseRadius;
+        public static float SlamNoiseStrength => Profile.SlamNoiseStrength;
         public static float SomnusSleepSeconds => Profile.SomnusSleepSeconds;
         public static float LevoImpulse => Profile.LevoImpulse;
         public static float LevoSeconds => Profile.LevoSeconds;
@@ -63,8 +69,9 @@ namespace Plunderspell.Spells
         public static float AurumVocoNoiseStrength => Profile.AurumVocoNoiseStrength;
         public static float MisfireSelfBurnSeconds => Profile.MisfireSelfBurnSeconds;
         public static float MisfireSelfDamagePerSecond => Profile.MisfireSelfDamagePerSecond;
-        public static float MisfireSelfStunSeconds => Profile.MisfireSelfStunSeconds;
         public static float MisfireSelfSleepSeconds => Profile.MisfireSelfSleepSeconds;
+        public static float MisfireSaltusHop => Profile.MisfireSaltusHop;
+        public static float MisfireSaltusStaggerSeconds => Profile.MisfireSaltusStaggerSeconds;
         public static float MisfireRadius => Profile.MisfireRadius;
     }
 }
