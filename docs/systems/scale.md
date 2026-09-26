@@ -182,3 +182,11 @@ Two callers, one probe:
 **Trap.** `Physics.SyncTransforms()` must run between instantiating the castle and probing it, or
 the colliders are still at their previous transforms and every candidate reads as clear. Both
 callers do this.
+
+**Trap: a clear capsule can be standing on nothing.** `FirstClearStandingPoint` also needs a floor
+within 1 m below the feet (`HasFloorUnder`). Before 2026-09-26 it checked only that the capsule was
+clear. On Late Medieval seed 43 the arrival room is the Drawbridge, and one player's slot was over
+the moat: clear all the way down, so that player fell through the world (#147). A sweep of 80 Late
+Medieval seeds (320 player slots) found that one slot and none after the fix. A clear point with
+no floor is still used, with a warning, when no candidate has one, so floorless test layouts still
+spawn. `CastleArrivalTests.Test_NoOneIsStoodOverAHole` covers it.

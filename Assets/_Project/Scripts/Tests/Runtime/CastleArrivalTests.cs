@@ -129,6 +129,33 @@ namespace RogueAi.Tests
         }
 
         [Test]
+        public void Test_NoOneIsStoodOverAHole()
+        {
+            // A floor slab (top at FloorHeight) with a 4 m square hole round the anchor, like the
+            // moat under the drawbridge that dropped a player on seed 43 (#147).
+            var anchor = new Vector3(100f, 0f, 100f);
+            float top = CastleSpawnResolver.FloorHeight;
+            void Slab(Vector3 centre, Vector3 size)
+            {
+                GameObject slab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                _spawned.Add(slab);
+                slab.transform.position = centre + new Vector3(0f, top - 0.5f, 0f);
+                slab.transform.localScale = new Vector3(size.x, 1f, size.z);
+            }
+            Slab(anchor + new Vector3(-7f, 0f, 0f), new Vector3(10f, 1f, 20f));
+            Slab(anchor + new Vector3(7f, 0f, 0f), new Vector3(10f, 1f, 20f));
+            Slab(anchor + new Vector3(0f, 0f, -7f), new Vector3(4f, 1f, 10f));
+            Slab(anchor + new Vector3(0f, 0f, 7f), new Vector3(4f, 1f, 10f));
+            Physics.SyncTransforms();
+
+            Vector3 point = CastleSpawnResolver.FirstClearStandingPoint(anchor);
+
+            float feet = point.y - CastleSpawnResolver.PlayerHeight * 0.5f;
+            Assert.IsTrue(Physics.Raycast(new Vector3(point.x, feet + 0.1f, point.z), Vector3.down, 1f),
+                $"Stood at {point}, over the hole: the player falls through the floor.");
+        }
+
+        [Test]
         public void Test_ResolveArrivalFallsBackToTheGateWhenNothingQualifies()
         {
             var layout = new ProceduralCastleData(5);
