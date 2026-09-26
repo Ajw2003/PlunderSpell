@@ -273,6 +273,27 @@ namespace RogueAi.Tests
         }
 
         [Test]
+        public void Test_AGuardShoutsAgainOnItsNextChase()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            CastleGuard guard = MakeGuard(Vector3.zero, alarm);
+            Transform intruder = MakeIntruder(new Vector3(0f, 0f, 5f));
+
+            guard.Tick(0.1f);
+            CastleGuard.UnregisterIntruder(intruder);
+            guard.Tick(0.1f);
+            guard.Tick(GuardBrain.SearchPatience + 1f);
+            Assert.AreEqual(GuardAlertState.Patrolling, guard.State, "Sanity: the first chase is over.");
+
+            alarm.SetAlarmLevel(0f);
+            CastleGuard.RegisterIntruder(intruder);
+            guard.Tick(0.1f);
+
+            Assert.AreEqual(GuardAlertState.Chasing, guard.State);
+            Assert.Greater(alarm.AlarmLevel, 0f, "A guard back on patrol must shout again when it spots someone.");
+        }
+
+        [Test]
         public void Test_ThreeGuardsChasingIsHueAndCry()
         {
             AlarmFSMManager alarm = MakeAlarm();

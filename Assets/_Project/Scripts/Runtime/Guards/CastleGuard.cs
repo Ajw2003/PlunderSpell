@@ -552,13 +552,13 @@ namespace RogueAi.Guards
                     _hasShoutedThisChase = true;
                 }
             }
-
-            if (next == GuardAlertState.Chasing || previous == GuardAlertState.Chasing)
-                _alarm?.ReportChase(GetInstanceID(), next == GuardAlertState.Chasing);
             else if (next == GuardAlertState.Patrolling)
             {
                 _hasShoutedThisChase = false;
             }
+
+            if (next == GuardAlertState.Chasing || previous == GuardAlertState.Chasing)
+                _alarm?.ReportChase(GetInstanceID(), next == GuardAlertState.Chasing);
 
             StateChanged?.Invoke(next);
         }
