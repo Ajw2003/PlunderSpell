@@ -60,7 +60,12 @@ namespace RogueAi.Tests
             var go = Track(new GameObject("Guard"));
             go.transform.position = position;
             go.AddComponent<StatusEffectReceiver>();
-            return go.AddComponent<CastleGuard>();
+            var guard = go.AddComponent<CastleGuard>();
+            // Disabled so the guard's own Update cannot tick it during the test's yield frame: with
+            // the victim in reach it would swing there, and the test would be counting that blow
+            // instead of the one its explicit Tick lands. Awake has already run.
+            guard.enabled = false;
+            return guard;
         }
 
         private Victim MakeVictim(Vector3 position)
