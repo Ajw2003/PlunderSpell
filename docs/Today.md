@@ -1,5 +1,15 @@
 # Today
 
+**2026-09-25, night — the night atmosphere is built (steps 0-4 of five) on `claude/night-atmosphere`.**
+Fog with fire halos, alarm-state blending, fires from pipeline anchors, the `Plunderspell/Surface`
+shader, the dressed outer bailey and courtyards, the sealed gate, Low/Medium/High with a Deck
+default and a Graphics setting. Looks checked by eye against the Blender renders:
+`docs/generated/night-atmosphere-2026-09-25/wip11/`. Navigation audit with dressing: 44/44 rooms,
+100% floor. Not done: volumetric fog (step 5), vertex soot bake, profiler timings, a play-through
+by a person. PlayMode suite not run. How it works: `docs/systems/atmosphere.md`.
+
+---
+
 **2026-09-25, evening — night atmosphere build started on `claude/night-atmosphere`; step 0
 (portal, sealed castle) done.** Branched off `claude/staging-2026-09-24` to build all of
 [`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md). Step 0: raids arrive at a seeded

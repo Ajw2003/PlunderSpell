@@ -820,3 +820,16 @@ the same result. Making the generator ask for a per-era gatehouse id: the role-i
 same result without code changes.
 
 **Status.** Standing. See `docs/systems/raid-scene-assembly.md`, "Eras".
+
+## 2026-09-25 — how the night atmosphere was built, where it departs from the spec
+
+- **Fire halos are computed, not sprites.** One full-screen fog pass integrates each nearby fire's
+  light along the view ray in closed form, so halos respect depth and fade behind walls. Replaces
+  the spec's additive halo sprites (section 5, layer 2).
+- **The surface shader is HLSL, not Shader Graph** — the spec's own fallback for banded light over
+  URP 17.3's Forward+ loop.
+- **Bailey dressing is laid over the wall modules**, not built as wall variants, so every Age's
+  walls take it. **Courtyards stay sealed** by the generator's archway plugs: seen and lit, not
+  walked. Opening them is a gameplay decision.
+- **No vertex soot bake yet.** Grime at wall feet plus SSAO stand in; baking would re-export every
+  castle FBX for little gain on 4-vertex faces. Open for a decision.

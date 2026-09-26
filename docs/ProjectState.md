@@ -40,6 +40,12 @@ per enemy as the art and scale reference; the prefabs raids spawn are
 `Assets/_Project/Prefabs/Enemies/<Era>/`. Merged together on `claude/staging-2026-09-24` for testing
 before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
 
+**2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
+of `docs/plans/night-atmosphere.md` built: see `docs/systems/atmosphere.md`. Open: volumetric fog
+(High), vertex soot bake, Deck profiling, enemies/loot on the surface shader unseen in play,
+PlayMode suite not re-run, `ArtAssetImportTests` fails (art-bible animations, enemy emissive HDR;
+predates this branch).
+
 **2026-09-25 — raids arrive and leave by portal; the castle is sealed** (branch
 `claude/night-atmosphere`, night atmosphere step 0). The team arrives at a seeded spot in the outer
 rings, the `ExtractionZone` is stood up there as the portal, players outside it when the clock ends
