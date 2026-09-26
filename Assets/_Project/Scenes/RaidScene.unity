@@ -589,7 +589,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.GuardSpawner
   _roster: {fileID: 11400000, guid: 13b9eb649aa2acf4bb2be962b0d7622e, type: 2}
   _guardPrefab: {fileID: 0}
-  _densityScale: 1
+  _densityScale: 0.5
+  _speedScale: 0.8
+  _damageScale: 0.65
   _container: {fileID: 0}
 --- !u!4 &298889176
 Transform:

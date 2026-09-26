@@ -23,6 +23,16 @@ namespace RogueAi.Raid
         [Range(0f, 2f)]
         [SerializeField] private float _densityScale = 1f;
 
+        [Tooltip("Scales every spawned guard's patrol and chase speed. Applied once at spawn, on top " +
+                 "of the prefab's own tuning, so one number balances the whole roster (#117).")]
+        [Range(0.25f, 2f)]
+        [SerializeField] private float _speedScale = 0.8f;
+
+        [Tooltip("Scales every spawned guard's damage per hit. Applied once at spawn, on top of the " +
+                 "prefab's own tuning (#118).")]
+        [Range(0.1f, 2f)]
+        [SerializeField] private float _damageScale = 0.65f;
+
         [Tooltip("Parent for spawned guards. Auto-created if left null.")]
         [SerializeField] private Transform _container;
 
@@ -36,6 +46,8 @@ namespace RogueAi.Raid
         public IReadOnlyList<GameObject> Spawned => _spawned;
 
         public float DensityScale { get => _densityScale; set => _densityScale = value; }
+        public float SpeedScale { get => _speedScale; set => _speedScale = value; }
+        public float DamageScale { get => _damageScale; set => _damageScale = value; }
         public GameObject GuardPrefab { get => _guardPrefab; set => _guardPrefab = value; }
         public EnemyRoster Roster { get => _roster; set => _roster = value; }
 
@@ -114,6 +126,7 @@ namespace RogueAi.Raid
             }
 
             guard.Configure(null, route);
+            guard.ScaleTuning(_speedScale, _damageScale);
         }
 
         /// <summary>Removes the garrison. Called when a raid ends.</summary>

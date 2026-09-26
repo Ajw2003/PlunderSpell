@@ -686,6 +686,21 @@ namespace RogueAi.Guards
                 _patrolRoute = patrolRoute;
         }
 
+        /// <summary>
+        /// Scales this guard's movement speeds and damage per hit. Call once, on a freshly spawned
+        /// guard: it multiplies the prefab's values, so a second call compounds.
+        /// </summary>
+        public void ScaleTuning(float speedScale, float damageScale)
+        {
+            _patrolSpeed *= speedScale;
+            _chaseSpeed *= speedScale;
+            _attackDamage *= damageScale;
+        }
+
+        public float PatrolSpeed => _patrolSpeed;
+        public float ChaseSpeed => _chaseSpeed;
+        public float AttackDamage => _attackDamage;
+
         /// <summary>Where the guard is currently heading to investigate, if anywhere.</summary>
         public Vector3? InvestigationTarget => _investigationTarget;
     }
