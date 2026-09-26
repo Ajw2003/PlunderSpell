@@ -404,11 +404,11 @@ namespace RogueAi.EditorTools
                 new FireSpec("Fire_Sconce", FireKind.Sconce, 0, sconce, new Vector3(0f, 0.34f, 0.34f),
                     new Vector2(0.34f, 0.6f), 3.2f, 9f, 3f, false),
                 new FireSpec("Fire_Brazier", FireKind.Brazier, 0, brazier, new Vector3(0f, 1.42f, 0f),
-                    new Vector2(0.7f, 1.05f), 6f, 13f, 7f, true),
+                    new Vector2(0.7f, 1.05f), 4.5f, 12f, 7f, true),
                 new FireSpec("Fire_Hearth", FireKind.Hearth, 0, null, new Vector3(0f, 0.05f, 0f),
                     new Vector2(0.9f, 0.95f), 5f, 11f, 6f, false),
                 new FireSpec("Fire_Beacon", FireKind.Beacon, 2, beacon, new Vector3(0f, 0.72f, 0f),
-                    new Vector2(1.5f, 2.2f), 12f, 20f, 14f, true),
+                    new Vector2(1.5f, 2.2f), 9f, 18f, 14f, true),
             };
 
             foreach (FireSpec spec in specs)

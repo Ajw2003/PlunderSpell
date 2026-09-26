@@ -16,6 +16,7 @@ namespace RogueAi.EditorTools
     public static class CastleFireAnchorImporter
     {
         private const string JsonPath = "Assets/_Project/Data/Castle/CastleFireAnchors.json";
+        public const string DressingSetPath = "Assets/_Project/Data/Castle/CastleDressingSet.asset";
 
         private static readonly string[] s_registryPaths =
         {
@@ -56,8 +57,20 @@ namespace RogueAi.EditorTools
                 }
                 EditorUtility.SetDirty(registry);
             }
+            var dressing = AssetDatabase.LoadAssetAtPath<CastleDressingSet>(DressingSetPath);
+            int dressed = 0;
+            if (dressing != null)
+            {
+                foreach (CastleDressingSet.Entry entry in dressing.Entries)
+                {
+                    entry.FireAnchors = rooms.TryGetValue(entry.Id, out CastleFireAnchor[] found) ? found : new CastleFireAnchor[0];
+                    dressed += entry.FireAnchors.Length;
+                }
+                EditorUtility.SetDirty(dressing);
+            }
             AssetDatabase.SaveAssets();
-            return $"[FireAnchors] {registries} registries, {modules} modules with fire, {anchors} anchors.";
+            return $"[FireAnchors] {registries} registries, {modules} modules with fire, {anchors} anchors; " +
+                   $"{dressed} dressing anchors.";
         }
 
         /// <summary>Blender module-local (X right, Y forward, Z up) to the generator's module space.</summary>

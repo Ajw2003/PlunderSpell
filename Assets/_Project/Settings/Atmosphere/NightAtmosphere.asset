@@ -30,7 +30,7 @@ MonoBehaviour:
     SkyHorizon: {r: 0.05, g: 0.04, b: 0.035, a: 1}
     FlameColor: {r: 1, g: 0.5, b: 0.18, a: 1}
     FireIntensity: 1.4
-    FireScatter: 3
+    FireScatter: 1.9
     FireAnisotropy: 0.6
     Post: {fileID: 11400000, guid: 1db009312a0e94f4ab2974c41b81121a, type: 2}
   Stirred:
@@ -50,7 +50,7 @@ MonoBehaviour:
     SkyHorizon: {r: 0.06, g: 0.045, b: 0.035, a: 1}
     FlameColor: {r: 1, g: 0.49, b: 0.18, a: 1}
     FireIntensity: 1.5
-    FireScatter: 3.4
+    FireScatter: 2.1
     FireAnisotropy: 0.6
     Post: {fileID: 11400000, guid: f51f9cc2ce10a9947b166e8aaae3ef8f, type: 2}
   Roused:
@@ -70,7 +70,7 @@ MonoBehaviour:
     SkyHorizon: {r: 0.09, g: 0.05, b: 0.03, a: 1}
     FlameColor: {r: 1, g: 0.42, b: 0.13, a: 1}
     FireIntensity: 1.5
-    FireScatter: 3.2
+    FireScatter: 2.3
     FireAnisotropy: 0.6
     Post: {fileID: 11400000, guid: 945011df1d6fd094c8ebdbf74a673966, type: 2}
   HueAndCry:
@@ -90,7 +90,7 @@ MonoBehaviour:
     SkyHorizon: {r: 0.12, g: 0.045, b: 0.025, a: 1}
     FlameColor: {r: 1, g: 0.34, b: 0.1, a: 1}
     FireIntensity: 1.55
-    FireScatter: 3.2
+    FireScatter: 2.4
     FireAnisotropy: 0.6
     Post: {fileID: 11400000, guid: d582a3cdf61de364e87d6d159d6fd06f, type: 2}
   BronzeAge:

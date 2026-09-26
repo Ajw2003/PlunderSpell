@@ -887,6 +887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.ProceduralCastleGenerator
   registry: {fileID: 11400000, guid: d89396c4b851d67c8a7be3752b5d9f73, type: 2}
+  m_dressing: {fileID: 11400000, guid: 4fb2f60de7f278441abbb91421f26c82, type: 2}
   defaultSeed: 12345
   cellSize: 12
   roomContainer: {fileID: 545191289}

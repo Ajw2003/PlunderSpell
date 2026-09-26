@@ -202,8 +202,8 @@ MonoBehaviour:
   _flameRoot: {fileID: 4307679143549438162}
   _embers: {fileID: 5408254534732548114}
   _lightSource: {fileID: 4782375360672048968}
-  _intensity: 12
-  _range: 20
+  _intensity: 9
+  _range: 18
   _flameOffset: {x: 0, y: 1.6000001, z: 0}
   _flickerAmount: 0.18
   _flickerSpeed: 2.2
@@ -286,8 +286,8 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.52, b: 0.2, a: 1}
-  m_Intensity: 12
-  m_Range: 20
+  m_Intensity: 9
+  m_Range: 18
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}

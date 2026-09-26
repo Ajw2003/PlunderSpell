@@ -44,8 +44,8 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.52, b: 0.2, a: 1}
-  m_Intensity: 6
-  m_Range: 13
+  m_Intensity: 4.5
+  m_Range: 12
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -5255,8 +5255,8 @@ MonoBehaviour:
   _flameRoot: {fileID: 2290325381657471182}
   _embers: {fileID: 877380356232498618}
   _lightSource: {fileID: 7158136043147758807}
-  _intensity: 6
-  _range: 13
+  _intensity: 4.5
+  _range: 12
   _flameOffset: {x: 0, y: 1.8399999, z: 0}
   _flickerAmount: 0.18
   _flickerSpeed: 2.2

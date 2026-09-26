@@ -68,6 +68,18 @@ namespace RogueAi.Atmosphere
                 foreach (CastleFireAnchor anchor in entry.FireAnchors)
                     Spawn(anchor, module.Position, module.Rotation);
             }
+
+            CastleDressingSet dressing = _generator != null ? _generator.Dressing : null;
+            if (dressing == null || castle.Dressings == null)
+                return;
+            foreach (PlacedDressing placed in castle.Dressings)
+            {
+                CastleDressingSet.Entry entry = dressing.GetById(placed.Id);
+                if (entry?.FireAnchors == null)
+                    continue;
+                foreach (CastleFireAnchor anchor in entry.FireAnchors)
+                    Spawn(anchor, placed.Position, placed.Rotation);
+            }
         }
 
         /// <summary>Spawns one fire at an anchor of a module placed at <paramref name="position"/>.</summary>

@@ -43,7 +43,7 @@ namespace RogueAi.EditorTools
             SkyHorizon = new Color(0.05f, 0.04f, 0.035f),
             FlameColor = new Color(1.0f, 0.5f, 0.18f),
             FireIntensity = 1.4f,
-            FireScatter = 3f,
+            FireScatter = 1.9f,
             FireAnisotropy = 0.6f,
             Post = post,
         };
@@ -54,7 +54,7 @@ namespace RogueAi.EditorTools
             look.FogColor = new Color(0.17f, 0.11f, 0.07f);
             look.FlameColor = new Color(1.0f, 0.49f, 0.18f);
             look.FireIntensity = 1.5f;
-            look.FireScatter = 3.4f;
+            look.FireScatter = 2.1f;
             look.SkyHorizon = new Color(0.06f, 0.045f, 0.035f);
             return look;
         }
@@ -66,7 +66,7 @@ namespace RogueAi.EditorTools
             look.FogDensity = 0.034f;
             look.FlameColor = new Color(1.0f, 0.42f, 0.13f);
             look.FireIntensity = 1.5f;
-            look.FireScatter = 3.2f;
+            look.FireScatter = 2.3f;
             look.SkyHorizon = new Color(0.09f, 0.05f, 0.03f);
             look.AmbientEquator = new Color(0.15f, 0.09f, 0.055f);
             return look;
@@ -79,7 +79,7 @@ namespace RogueAi.EditorTools
             look.FogDensity = 0.030f;
             look.FlameColor = new Color(1.0f, 0.34f, 0.10f);
             look.FireIntensity = 1.55f;
-            look.FireScatter = 3.2f;
+            look.FireScatter = 2.4f;
             look.SkyZenith = new Color(0.03f, 0.012f, 0.01f);
             look.SkyHorizon = new Color(0.12f, 0.045f, 0.025f);
             look.AmbientEquator = new Color(0.17f, 0.08f, 0.05f);

@@ -200,7 +200,27 @@ POWDER_CASTLE_SPECS = [
 
 ERA_CASTLE_SPECS = BRONZE_CASTLE_SPECS + LATE_CASTLE_SPECS + POWDER_CASTLE_SPECS
 
-ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS
+# The outer bailey's dressing and the courtyard yards (docs/plans/night-atmosphere.md,
+# section 4), built in castle_builders_dressing.py. Not rooms: a curtain dressing
+# shares a cell with the wall module, a courtyard fills a carved interior cell, and
+# neither is walked through a room's archways, so they validate as "wall" pieces.
+DRESSING_SPECS = [
+    dict(key="DressingLeanTo", builder="build_dressing_lean_to", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingWoodpile", builder="build_dressing_woodpile", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingPens", builder="build_dressing_pens", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingTraining", builder="build_dressing_training", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingGateYard", builder="build_dressing_gate_yard", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingPlain", builder="build_dressing_plain", tri_budget=400, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingGateSealed", builder="build_dressing_gate_sealed", tri_budget=400, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="CourtyardHerbGarden", builder="build_courtyard_herb_garden", tri_budget=800, subdir="Castle/Dressing", module="castle_builders_dressing", zone="OuterBailey", kind="wall"),
+    dict(key="CourtyardMidden", builder="build_courtyard_midden", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="OuterBailey", kind="wall"),
+    dict(key="CourtyardWellYard", builder="build_courtyard_well_yard", tri_budget=1200, subdir="Castle/Dressing", module="castle_builders_dressing", zone="OuterBailey", kind="wall"),
+    dict(key="CourtyardTiltyard", builder="build_courtyard_tiltyard", tri_budget=800, subdir="Castle/Dressing", module="castle_builders_dressing", zone="InnerWard", kind="wall"),
+    dict(key="CourtyardCloisterGarth", builder="build_courtyard_cloister_garth", tri_budget=800, subdir="Castle/Dressing", module="castle_builders_dressing", zone="InnerWard", kind="wall"),
+    dict(key="CourtyardFormalGarden", builder="build_courtyard_formal_garden", tri_budget=1200, subdir="Castle/Dressing", module="castle_builders_dressing", zone="Keep", kind="wall"),
+]
+
+ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS + DRESSING_SPECS
 
 
 

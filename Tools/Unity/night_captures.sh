@@ -37,6 +37,10 @@ views=(
     "overview 0 22 -40 20 28"
 )
 
+# Always leave Play mode afterwards: the parked player is held kinematic, and the controller
+# complains every frame about setting velocity on it.
+trap 'unity command editor_stop "${cli[@]}" > /dev/null' EXIT
+
 for state in "${states[@]}"; do
     level=0
     case "$state" in

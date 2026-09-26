@@ -225,6 +225,36 @@
       "preview": "650ea3226a8dfbf8:23a9d68e53fd",
       "tris": 112
     },
+    "CourtyardCloisterGarth": {
+      "budget": 800,
+      "content": "cbfdb8a7ec1bf081",
+      "tris": 84
+    },
+    "CourtyardFormalGarden": {
+      "budget": 1200,
+      "content": "66999dd0afd92c5d",
+      "tris": 224
+    },
+    "CourtyardHerbGarden": {
+      "budget": 800,
+      "content": "03cbd72ebd13cb09",
+      "tris": 108
+    },
+    "CourtyardMidden": {
+      "budget": 1600,
+      "content": "92d48187bafd5bc5",
+      "tris": 336
+    },
+    "CourtyardTiltyard": {
+      "budget": 800,
+      "content": "5d8717e0349af559",
+      "tris": 160
+    },
+    "CourtyardWellYard": {
+      "budget": 1200,
+      "content": "8b7e62f2d2c41d27",
+      "tris": 172
+    },
     "CryptAntechamber": {
       "budget": 600,
       "content": "3b9ba47edc2a5c56",
@@ -268,6 +298,41 @@
       "content": "90bcb7810125cd8d",
       "preview": "9849e63d1c4e394d:23a9d68e53fd",
       "tris": 208
+    },
+    "DressingGateSealed": {
+      "budget": 400,
+      "content": "f870eb372edbc4ef",
+      "tris": 180
+    },
+    "DressingGateYard": {
+      "budget": 1600,
+      "content": "eb18abccb9cff54e",
+      "tris": 324
+    },
+    "DressingLeanTo": {
+      "budget": 1600,
+      "content": "971afe8e64e88f27",
+      "tris": 616
+    },
+    "DressingPens": {
+      "budget": 1600,
+      "content": "71c2189ba5243bd4",
+      "tris": 288
+    },
+    "DressingPlain": {
+      "budget": 400,
+      "content": "29d56ca8746f6be4",
+      "tris": 48
+    },
+    "DressingTraining": {
+      "budget": 1600,
+      "content": "2d759e51de7e31d8",
+      "tris": 376
+    },
+    "DressingWoodpile": {
+      "budget": 1600,
+      "content": "fc7a92c15c48d4b0",
+      "tris": 432
     },
     "FlintlockPistol": {
       "budget": 600,
