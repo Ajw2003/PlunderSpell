@@ -81,7 +81,9 @@ back. And, because each one breaks or undermines a real raid:
 - A raid leaves no state behind for the next one (#143).
 - Players never spawn somewhere with no entrance in sight (#140).
 - Combat reads: melee damage scales sensibly (#110), and more spells than Ignis are worth casting
-  (#106).
+  (#106). Velox (a dodge) and Saltus (a high jump that turns into a slam) replace Tonitrus and
+  Cadaver Surge, and the slam replaces the accidental ride on a held item (#152); plan:
+  [`docs/plans/dodge-and-leap-spells.md`](../plans/dodge-and-leap-spells.md).
 - Every item is held at a sensible grip point (#134), and carrying is not floppy (#155).
 - Loot near the portal neither moves nor takes damage (#158).
 - Enemy numbers and strength scale with the lobby size (#154), so a four-player raid is not tuned
@@ -133,8 +135,7 @@ haul mean something between raids.
 - The Mystical Market: a place, a shop, and purchases that stay bought (#26, #27); wares and
   prices for all four stalls (#28); the mark-up and "spend what is left after the debt" rules
   (#29).
-- Progression: start with fewer spells and unlock more over time (#108), including the
-  high-jump-and-slam as a real spell instead of the accidental ride on a held item (#152).
+- Progression: start with fewer spells and unlock more over time (#108).
 
 **Acceptance:** across three consecutive sessions, with the game quit and relaunched between
 them, a player pays their debt, spends what is left at a stall, and finds both the purchase and
