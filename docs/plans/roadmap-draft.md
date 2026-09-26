@@ -23,8 +23,14 @@ plus the other Ages. Everything past that point has no home in it:
   catch that.
 
 The draft keeps M0-M3 and their acceptance criteria, changes one criterion (M3, marked below),
-and adds four milestones after them. Each milestone gets a weight, so that "X% done" can be
+and adds three milestones after them. Each milestone gets a weight, so that "X% done" can be
 worked out rather than guessed.
+
+**Ordering rule (the owner, 2026-09-26):** game systems come before expensive presentation. The
+Lair and Market (M4) and the castle's hazards (M5) come first. Animation, audio, art and
+performance work wait for one final art and performance pass (M6). The exception is cheap feel,
+such as screen shake, hit-stop and simple impact effects, which can go in at any time and is
+listed under M2.
 
 ## The milestones
 
@@ -37,10 +43,9 @@ checked, not when its code exists. That rule is unchanged.
 | M1 | Prove the voice | 10 | 1: say the word |
 | M2 | The vertical slice | 25 | 2: nothing is a menu |
 | M3 | Open the other Ages | 15 | 3: rob every century |
-| M4 | It feels like something | 10 | all |
-| M5 | The Lair and the Market | 15 | 4: the Mystical Market |
-| M6 | The castle fights back | 10 | 2 and 3 |
-| M7 | A stranger can play it | 10 | (release) |
+| M4 | The Lair and the Market | 15 | 4: the Mystical Market |
+| M5 | The castle fights back | 10 | 2 and 3 |
+| M6 | Final art and performance pass | 20 | all, plus release |
 
 ### M0 — Fork clean, cut gravity (5)
 
@@ -84,6 +89,8 @@ back. Added, because each one breaks or undermines a real raid today:
   is tuned for one.
 - The spell shader renders in the standalone build (#127). The menu flow works in the Editor
   (#131).
+- Cheap feel only: camera shake, hit-stop and simple impact effects (#51). Anything that needs
+  new art, animation or recorded audio waits for M6.
 - Two different Steam accounts can join each other. So far this is checked only between two game
   windows on one machine.
 
@@ -114,45 +121,30 @@ borrowed from another era, and a person has played all four eras side by side. *
 wording is already met while High Medieval uses the original generic rooms and Age of Powder
 borrows High Medieval's. That is exactly what #151 and #135 complain about.
 
-### M4 — It feels like something (10) — new
-
-Every action has weight, sound and a body behind it. The pitch's physical, slapstick promise
-depends on this, and the mechanics are now good enough to be worth dressing.
-
-**Contains:**
-
-- Camera shake, hit-stop and impact juice (#51). Wind-up and follow-through on throws and swings
-  (#52).
-- Animations: the player and doors (#11), and every enemy in every state it has (#141).
-- Movement: crouch with a visible slowdown and a lower posture (#153), and sprint (#103).
-- The high-jump-and-slam as a real spell, replacing the accidental ride on a held item (#152).
-- Sound that carries meaning: guards murmur on patrol, bark on alert and shout on a chase (#42),
-  and teammates hear a word half a heartbeat before it resolves (#48).
-
-**Acceptance:** in a recorded play session, every swing, throw, hit, cast and death has both a
-visible and an audible response, and no enemy is seen sliding or T-posing in any state.
-
-### M5 — The Lair and the Market (15) — new
+### M4 — The Lair and the Market (15) — new
 
 The pitch's fourth pillar, and the "damp, yours, and permanent" Lair. This is what makes a raid's
 haul mean something between raids.
 
 **Contains:**
 
-- The Lair as a walkable 3D place instead of a menu screen (#30, #31), with its own lighting
-  (#32).
+- The Lair as a walkable 3D place instead of a menu screen (#30, #31). Its look is blockout
+  here; the lighting pass (#32) waits for M6.
 - Debt and hoard shown in the world, not only as numbers (#33). Debt is clearly per player, so
   players can either split the cost or turn on each other (#130).
 - The Mystical Market: a place, a shop, and purchases that stay bought (#26, #27). Wares and
   prices for all four stalls (#28). The mark-up and "spend what is left after the debt" rules
   (#29).
-- Progression: start with fewer spells and unlock more over time (#108).
+- Progression: start with fewer spells and unlock more over time (#108). The spell set it
+  unlocks from gains the high-jump-and-slam as a real spell, replacing the accidental ride on a
+  held item (#152), and sprint and crouch as moves (#103, #153). The crouch's lowered posture
+  is animation and waits for M6.
 
 **Acceptance:** across three consecutive sessions, with the game quit and relaunched between
 them, a player pays their debt, spends what is left at a stall, and finds both the purchase and
 the hoard still there, shown in the Lair itself.
 
-### M6 — The castle fights back (10) — new
+### M5 — The castle fights back (10) — new
 
 The castle stops being a backdrop. This covers the castle revamp's unstarted phases 3-5
 (`docs/plans/castle-revamp.md`) and the hazards the pitch promises.
@@ -165,26 +157,38 @@ The castle stops being a backdrop. This covers the castle revamp's unstarted pha
 - Era-specific hazards (#35).
 - The Gilded Colossus as a real vault boss, with a telegraph and an arena (#43).
 
+Mechanism first: a door may swing without an animation clip, and a hazard may use placeholder
+effects until M6.
+
 **Acceptance:** on five seeds per era, every door and stair in the layout can be used, and at
 least one working hazard of that era appears in each raid.
 
-### M7 — A stranger can play it (10) — new
+### M6 — Final art and performance pass (20) — new
 
-What stands between a friends-only build and one you hand to someone who was not there.
+Everything expensive, done once, after the systems it dresses have stopped changing. Then the
+build goes to someone who was not there.
 
 **Contains:**
 
+- Animation: the player and doors (#11), every enemy in every state it has (#141), wind-up and
+  follow-through on throws and swings (#52), and the crouch posture (#153).
+- Audio that carries meaning: guards murmur on patrol, bark on alert and shout on a chase (#42),
+  and teammates hear a word half a heartbeat before it resolves (#48).
+- Art: main menu art (#16), an icon set (#34, #40), Steam lobby and invite branding (#58), the
+  pitch's lighting frames (#59), post-processing (#121), castles that no longer look bland (#23),
+  and the Lair's lighting (#32).
 - Performance: a budget and a profiling pass for full-art raids (#54), with a Steam Deck as the
   low end (the night atmosphere's quality levels already target it).
 - Settings: complete audio mix, keybinds and microphone device (#56), and every word bindable to
   a key (#57).
-- Presentation: main menu art (#16), an icon set (#34, #40), Steam lobby and invite branding
-  (#58), the pitch's lighting frames (#59) and post-processing (#121), and castles that no longer
-  look bland (#23).
 
-**Acceptance:** someone who has never seen the game installs a standalone build on a PC and on a
-Steam Deck, joins a friend through a Steam invite, and finishes a raid. Both machines hold the
-frame budget set in #54 for the whole raid.
+**Acceptance:** two checks, both needed.
+
+- In a recorded play session, every swing, throw, hit, cast and death has both a visible and an
+  audible response, and no enemy is seen sliding or T-posing in any state.
+- Someone who has never seen the game installs a standalone build on a PC and on a Steam Deck,
+  joins a friend through a Steam invite, and finishes a raid. Both machines hold the frame budget
+  set in #54 for the whole raid.
 
 ## Issues with no milestone
 
@@ -203,7 +207,7 @@ frame budget set in #54 for the whole raid.
 
 A rough estimate only, to show the scale of the change. The real figure would be measured in
 `docs/3-state/ProjectState.md`, milestone by milestone. Against the current four milestones the
-headline says about 65%. Against these eight it comes out near 40%:
+headline says about 65%. Against these seven it comes out near 43%:
 
 | Milestone | Weight | Rough share done | Why |
 |---|---:|---:|---|
@@ -211,17 +215,14 @@ headline says about 65%. Against these eight it comes out near 40%:
 | M1 | 10 | ~70% | Works for one person on one machine; #50 never measured |
 | M2 | 25 | ~70% | Loop plays solo and over UDP; #55 never run; the M2 issues above are open |
 | M3 | 15 | ~60% | Two of four eras have their own rooms; the other two borrow |
-| M4 | 10 | ~15% | Hit and spell feedback exist; no animation, no juice |
-| M5 | 15 | ~5% | Debt exists as a Lair number; no market, no 3D Lair |
-| M6 | 10 | ~5% | Doors and hazards are tags; revamp phases 3-5 not started |
-| M7 | 10 | ~15% | Build tool, quality levels and a partial settings menu exist |
-| | | **≈ 42%** | |
+| M4 | 15 | ~5% | Debt exists as a Lair number; no market, no 3D Lair |
+| M5 | 10 | ~5% | Doors and hazards are tags; revamp phases 3-5 not started |
+| M6 | 20 | ~15% | Hit and spell feedback, the build tool, quality levels and a partial settings menu exist; no animation |
+| | | **≈ 43%** | |
 
 The drop is not lost progress. It is the same work, measured against a larger definition of done.
 
 ## Not decided here, for the owner
 
-- The order of M4 to M7. They are listed by what the pitch leans on hardest. M5 could reasonably
-  come before M4, because the Market changes what a raid is worth playing for.
 - Whether to mirror these milestones as GitHub milestones and assign the issues to them. Doing so
   would replace the priority queue's phases as the working order.
