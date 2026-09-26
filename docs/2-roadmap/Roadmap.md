@@ -34,8 +34,12 @@ stranger can play". The draft it was adopted from is
 | M6 | The castle fights back | 10 | 2 and 3 |
 | M7 | Final art and performance pass | 15 | all, plus release |
 
-The issue numbers are GitHub issues on `Ajw2003/PlunderSpell`. Every issue open on 2026-09-26 is
-placed in a milestone except #24 (the loop epic, superseded by M2) and #159 (no description).
+The issue numbers are GitHub issues on `Ajw2003/PlunderSpell`, and each milestone exists there
+as a GitHub milestone with the same title and issues. Every issue open on 2026-09-26 is placed;
+#24 (the loop epic, superseded by M2) and #159 (no description) were closed instead. To change
+which issue belongs where, edit this file, then the list in `Tools/github/sync_milestones.py`,
+and run `python Tools/github/sync_milestones.py`; it updates milestones rather than duplicating
+them.
 
 ## M0 — Fork clean, cut gravity (5)
 
