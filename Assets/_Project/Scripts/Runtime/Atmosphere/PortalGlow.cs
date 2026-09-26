@@ -84,25 +84,38 @@ namespace RogueAi.Atmosphere
                 _light.gameObject.SetActive(open);
         }
 
+        /// <summary>
+        /// The portal's brightness, 0 to 1, at <paramref name="closing"/> (0 with a minute or more
+        /// left, 1 as it shuts) and <paramref name="time"/> in seconds. It dims steadily and gutters
+        /// slowly, about two dips a second at most: the old falter strobed at up to nine, past the
+        /// three flashes a second that photosensitivity guidance allows (#145).
+        /// </summary>
+        public static float FalterStrength(float closing, float time)
+        {
+            closing = Mathf.Clamp01(closing);
+            if (closing <= 0f)
+                return 1f;
+            float fade = Mathf.Lerp(1f, 0.35f, closing);
+            float gutter = Mathf.PerlinNoise(time * Mathf.Lerp(0.8f, 2f, closing), 3.7f);
+            return fade * Mathf.Lerp(1f, gutter, 0.15f + 0.25f * closing);
+        }
+
         private void Update()
         {
             if (!_open)
                 return;
 
-            float strength = 1f;
-            if (_zone != null && _zone.TimeRemaining < _falterSeconds && !_zone.ExtractionComplete)
-            {
-                // Deeper, faster gutters as the end nears, and a shrink toward nothing.
-                float closing = 1f - Mathf.Clamp01(_zone.TimeRemaining / _falterSeconds);
-                float gutter = Mathf.PerlinNoise(Time.time * Mathf.Lerp(2f, 9f, closing), 3.7f);
-                strength = Mathf.Lerp(1f, 0.25f, closing) * Mathf.Lerp(1f, gutter, 0.3f + 0.6f * closing);
-            }
+            float closing = 0f;
+            if (_zone != null && _falterSeconds > 0f && _zone.TimeRemaining < _falterSeconds && !_zone.ExtractionComplete)
+                closing = 1f - Mathf.Clamp01(_zone.TimeRemaining / _falterSeconds);
+            float strength = FalterStrength(closing, Time.time);
 
             if (_swirl != null)
             {
                 _block.SetFloat(s_strength, strength);
                 _swirl.SetPropertyBlock(_block);
-                _swirl.transform.localScale = _swirlScale * Mathf.Lerp(0.55f, 1f, strength);
+                // The shrink follows the clock only, so the portal's size never jitters with the gutter.
+                _swirl.transform.localScale = _swirlScale * Mathf.Lerp(1f, 0.6f, closing);
             }
             if (_light != null)
                 _light.Strength = strength;

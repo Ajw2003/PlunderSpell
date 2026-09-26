@@ -31,6 +31,12 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
 - **Bailey.** `CastleDressingPlanner` (own seed stream) dresses straight curtain cells, the gate
   yards, the sealed gate and carved courtyards from `CastleDressingSet`; the generator places them
   before the NavMesh bake.
+- **Portal.** `PortalGlow` (`Assets/_Project/Scripts/Runtime/Atmosphere/PortalGlow.cs`) stands the
+  lapis swirl and its own `FireSource` wherever the raid opened the portal. In the last minute it
+  falters: it dims to 35 % and shrinks to 60 % with the clock, and gutters slowly on top
+  (`PortalGlow.FalterStrength`). The gutter stays under one flash a second; the first version
+  strobed at up to 4.6 a second, past the 3 a second photosensitivity guidance allows (#145).
+  `NightAtmosphereTests.Test_TheClosingPortalNeverFlashesMoreThanThreeTimesASecond` counts them.
 - **Quality.** Low/Medium/High URP assets in `Assets/Settings/`; `AtmosphereQuality` applies the
   saved level or the machine default (Deck → Low) before the first scene.
 

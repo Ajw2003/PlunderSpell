@@ -48,6 +48,41 @@ namespace RogueAi.Tests.Editor
         }
 
         [Test]
+        public void Test_TheClosingPortalNeverFlashesMoreThanThreeTimesASecond()
+        {
+            Assert.AreEqual(1f, PortalGlow.FalterStrength(0f, 12.3f), "An open portal with time left is steady.");
+
+            foreach (float closing in new[] { 0.25f, 0.5f, 0.75f, 1f })
+            {
+                // A flash is a swing down then back up (or up then down), each at least a tenth of
+                // the portal's brightness at that point, the way photosensitivity guidance counts them.
+                const float seconds = 60f, step = 1f / 120f;
+                float threshold = 0.1f * PortalGlow.FalterStrength(closing, 0f);
+                float extreme = PortalGlow.FalterStrength(closing, 0f);
+                int direction = 1, swings = 0;
+                for (float t = step; t < seconds; t += step)
+                {
+                    float value = PortalGlow.FalterStrength(closing, t);
+                    if (direction >= 0 && value > extreme || direction <= 0 && value < extreme)
+                    {
+                        extreme = value;
+                        continue;
+                    }
+                    if (Mathf.Abs(value - extreme) >= threshold)
+                    {
+                        swings++;
+                        direction = value > extreme ? 1 : -1;
+                        extreme = value;
+                    }
+                }
+
+                float flashesPerSecond = swings / 2f / seconds;
+                Assert.LessOrEqual(flashesPerSecond, 3f, $"At closing {closing} the portal flashes {flashesPerSecond:0.00} times a second.");
+                Assert.Greater(swings, 0, $"At closing {closing} the portal should still visibly falter.");
+            }
+        }
+
+        [Test]
         public void Test_TheNearestLitFiresGetShadowsThenLightThenNothing()
         {
             var distances = new List<float> { 25f, 1f, 9f, 4f, 16f, 0.5f };
