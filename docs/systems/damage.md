@@ -116,6 +116,15 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
 - **Unheld items only hurt above 4 m/s** (`Item.k_minUnheldImpactSpeed`). Loot settling at spawn
   was ticking 1-point hits off guards it landed on. Anything a player is holding or threw in the
   last 4 s still hurts at any speed.
+- **Only the item's own speed counts** (#146). A contact's relative velocity includes the speed of
+  whatever ran into the item, so a player walking (5 m/s) into a 12 kg cauldron on the floor took
+  24 damage from it. `Item.OnCollisionEnter` now uses the smaller of the relative speed and the
+  item's own speed going into that physics step (`_velocityIntoStep`, recorded in `FixedUpdate`;
+  after the step the contact has already spent it). `ImpactDamageTests` covers walking into loot
+  and a thrown cauldron.
+- **Cooldown clocks start at minus infinity.** `_lastDamageTime` started at 0, so no item could hurt
+  anything in the first half second of a session. That matters in PlayMode tests, which start
+  fresh.
 - **"Local player" is whoever owns `Camera.main`.** The feedback view and
   `PlayerStateMachine.Local` both assume one rendering camera per machine. A spectator or split
   screen camera would need that rule revisited.

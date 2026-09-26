@@ -76,7 +76,11 @@ public class Item : MonoBehaviour
     [SerializeField] private float _damageMultiplier = 2f;
     [SerializeField] private float _damageCooldown = 0.5f;
 
-    private float _lastDamageTime;
+    private float _lastDamageTime = float.NegativeInfinity;
+
+    // The body's velocity going into the physics step, before any contact changes it. An impact
+    // only counts the item's own motion (#146), and after the step its velocity is already spent.
+    private Vector3 _velocityIntoStep;
 
     /// <summary>How long after being let go an item still counts as its thrower's doing.</summary>
     private const float k_blameSeconds = 4f;
@@ -130,6 +134,7 @@ public class Item : MonoBehaviour
 
     private void FixedUpdate()
     {
+        _velocityIntoStep = _rb.linearVelocity;
         if (!_isDragging)
             return;
 
@@ -174,7 +179,9 @@ public class Item : MonoBehaviour
     {
         if (Time.time < _lastDamageTime + _damageCooldown) return;
 
-        float impactVelocity = collision.relativeVelocity.magnitude;
+        // Only the item's own motion hurts: walking into a cauldron on the floor is not being hit
+        // by it, though the contact's relative speed is the walker's speed (#146).
+        float impactVelocity = Mathf.Min(collision.relativeVelocity.magnitude, _velocityIntoStep.magnitude);
         float myVelocity = _rb.linearVelocity.magnitude;
 
         // Loot settling at spawn or rolling off a shelf is not an attack; only a real hit on its
