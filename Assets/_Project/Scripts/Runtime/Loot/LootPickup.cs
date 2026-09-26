@@ -151,7 +151,24 @@ namespace RogueAi.Loot
             if (isSpawned && TryGetComponent(out NetworkTransform synced) && !synced.IsController(synced.ownerAuth))
                 return;
 
-            ApplyImpact(col.relativeVelocity.magnitude);
+            // A creature bumping into it never breaks it. Players set their velocity every step, so
+            // walking into loot shoves it and then strikes it again while it moves, which shattered
+            // a 2 m/s item on the second bump (#142). It still breaks if the shove sends it into a wall.
+            if (col.gameObject.GetComponentInParent<IHealth>() != null)
+                return;
+
+            ApplyImpact(ImpactSpeed(col));
+        }
+
+        /// <summary>
+        /// How hard a contact struck this item: the closing speed along the contact normal, so
+        /// sliding or tumbling along the floor after a knock is not a fresh blow.
+        /// </summary>
+        private static float ImpactSpeed(Collision col)
+        {
+            if (col.contactCount == 0)
+                return col.relativeVelocity.magnitude;
+            return Mathf.Abs(Vector3.Dot(col.relativeVelocity, col.GetContact(0).normal));
         }
 
         /// <summary>Pure fragility test — does an impact of this magnitude break the item?</summary>

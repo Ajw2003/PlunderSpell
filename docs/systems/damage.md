@@ -101,6 +101,12 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   plate 2) shatters even while held, shows "SHATTERED −150" where it broke, and drops out of your
   hands (`ItemManager` lets go of anything whose collisions switched off). Swinging the goblet at a
   guard hurts the guard and costs you the goblet — the REPO trade.
+- **Bodies bumping into loot never break it** (#142, `LootPickup.OnCollisionEnter`). Players set
+  their velocity every physics step, so walking into loot shoved it and then struck it again while
+  it moved: the faience hippopotamus (Fragility 2) shattered on the second bump. A kicked item still
+  breaks if it hits a wall hard enough. Breaks are judged on the closing speed **along the contact
+  normal**, so an item tumbling along the floor after a knock is not struck afresh at every
+  corner. `ImpactDamageTests` covers both, and a 3 m drop still shattering it.
 
 ## Invariants
 

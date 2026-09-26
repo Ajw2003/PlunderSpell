@@ -81,6 +81,51 @@ namespace RogueAi.Tests
             Assert.AreEqual(100f, health.CurrentHealth, "Walking into a cauldron on the floor hurt the walker.");
         }
 
+        /// <summary>Fragile loot, as the faience hippopotamus (Fragility 2 m/s), with a box collider.</summary>
+        private RogueAi.Loot.LootPickup MakeFragileLoot(Vector3 position)
+        {
+            GameObject go = Make(PrimitiveType.Cube, position);
+            go.transform.localScale = Vector3.one * 0.4f;
+            var pickup = go.AddComponent<RogueAi.Loot.LootPickup>();
+            var data = ScriptableObject.CreateInstance<RogueAi.Loot.LootItem>();
+            data.Worth = 420f;
+            data.Bulk = 0.5f;
+            data.Fragility = 2f;
+            pickup.SetData(data);
+            go.GetComponent<Rigidbody>().mass = 0.5f;
+            return pickup;
+        }
+
+        [UnityTest]
+        public IEnumerator Test_WalkingIntoFragileLootDoesNotBreakIt()
+        {
+            GameObject floor = Make(PrimitiveType.Cube, new Vector3(0f, -0.5f, 0f));
+            floor.transform.localScale = new Vector3(20f, 1f, 20f);
+            (Rigidbody walker, Body _) = MakeWalker(new Vector3(0f, 1f, 0f));
+            RogueAi.Loot.LootPickup loot = MakeFragileLoot(new Vector3(0f, 0.2f, 2f));
+
+            for (float t = 0f; t < 1f; t += Time.fixedDeltaTime)
+            {
+                walker.linearVelocity = new Vector3(0f, 0f, 5f);
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.IsFalse(loot.IsBroken, "Walking into fragile loot on the floor shattered it.");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_FragileLootDroppedFromHighStillBreaks()
+        {
+            GameObject floor = Make(PrimitiveType.Cube, new Vector3(0f, -0.5f, 0f));
+            floor.transform.localScale = new Vector3(20f, 1f, 20f);
+            RogueAi.Loot.LootPickup loot = MakeFragileLoot(new Vector3(0f, 3f, 0f));
+
+            for (float t = 0f; t < 1.5f; t += Time.fixedDeltaTime)
+                yield return new WaitForFixedUpdate();
+
+            Assert.IsTrue(loot.IsBroken, "Fragile loot dropped from 3 m should shatter.");
+        }
+
         [UnityTest]
         public IEnumerator Test_AThrownCauldronStillHurts()
         {
