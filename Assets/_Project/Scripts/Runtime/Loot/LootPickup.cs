@@ -18,9 +18,9 @@ namespace Plunderspell.Loot
     /// behaviour:
     /// <list type="bullet">
     /// <item>Fragility: a hard collision above <see cref="LootItem.Fragility"/> shatters the item.</item>
-    /// <item>Single carry: <see cref="LootItem.Bulk"/> ≤ 10 stone → one carrier owns and kinematically
+    /// <item>Single carry: <see cref="LootItem.WeightKg"/> ≤ 10 kg → one carrier owns and kinematically
     /// parents the object to their hand socket.</item>
-    /// <item>Dual carry: Bulk &gt; 10 stone → a primary carrier plus a secondary carrier chained via a
+    /// <item>Dual carry: WeightKg &gt; 10 kg → a primary carrier plus a secondary carrier chained via a
     /// <see cref="ConfigurableJoint"/> (linear axes locked, angular free so it swings naturally).</item>
     /// </list>
     ///
@@ -83,6 +83,7 @@ namespace Plunderspell.Loot
             CaptureUprightRotation();
             _rb = GetComponent<Rigidbody>();
             _rb.useGravity = true;
+            ApplyWeight();
             if (_meshRenderer == null)
                 _meshRenderer = GetComponentInChildren<MeshRenderer>();
         }
@@ -91,7 +92,23 @@ namespace Plunderspell.Loot
         /// Injects a data source at runtime. Used by <c>DownedPlayerCarryAdapter</c> to turn a downed
         /// player into a carryable object, and by tests to drive fragility/bulk logic.
         /// </summary>
-        public void SetData(LootItem data) => _data = data;
+        public void SetData(LootItem data)
+        {
+            _data = data;
+            ApplyWeight();
+        }
+
+        /// <summary>
+        /// Gives the body its <see cref="LootItem.WeightKg"/>, the one weight to tune: everything a
+        /// held or towed item does scales from the body's mass. Not for a downed player, whose body
+        /// is carried as loot but must keep a player's mass.
+        /// </summary>
+        private void ApplyWeight()
+        {
+            if (_data == null || _rb == null || _data.WeightKg <= 0f || TryGetComponent(out IPlayerBody _))
+                return;
+            _rb.mass = _data.WeightKg;
+        }
 
         /// <summary>The point the hand holds, or null when the item is held by its mesh centre.</summary>
         public Transform GripPoint => _gripPoint;
@@ -262,7 +279,7 @@ namespace Plunderspell.Loot
         }
 
         /// <summary>
-        /// Primary pickup request. Bulk ≤ 10 → single carry; Bulk &gt; 10 → begins a dual carry that
+        /// Primary pickup request. WeightKg ≤ 10 kg → single carry; WeightKg &gt; 10 kg → begins a dual carry that
         /// waits for a second carrier. Server-authoritative so ownership transfer cannot race.
         /// </summary>
         [ServerRpc(requireOwnership: false)]

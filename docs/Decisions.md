@@ -915,3 +915,15 @@ further while the piece lags. The piece is driven toward your pace, never yanked
 **Replaces.** For towing only, "the walking slowdown is removed" from the #144 decision
 (2026-09-25). Carrying anything you can lift still never slows you.
 
+## 2026-09-26 — One weight per loot item, in kg; towing scales from it
+
+**Context.** The owner wanted to make an item heavier by changing one kg number and have the
+slowdown scale. Loot carried two weights: `LootItem.Bulk` ("stone", read by nothing in a raid)
+and the prefab's Rigidbody mass (what the physics used), and they disagreed for four items.
+
+**Decision.** `LootItem.Bulk` is now `WeightKg` and sets the body's mass at spawn. The per-item
+Tow Pace and Tow Strength fields added earlier the same day are gone: pace is 6 / mass and the
+rope's pull rises with mass. A towed piece's friction is off and its speed is driven directly,
+since friction made forces untunable across shapes and weights. How:
+`docs/systems/damage.md`, "Weight".
+

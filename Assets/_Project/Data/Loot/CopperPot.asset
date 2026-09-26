@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Worth: 100
   IsArtifact: 0
-  Bulk: 0.8
+  WeightKg: 1
   Fragility: 4.5
   DisplayName: Copper Pot
   Icon: {fileID: 0}

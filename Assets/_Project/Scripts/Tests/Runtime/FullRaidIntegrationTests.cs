@@ -291,7 +291,7 @@ namespace Plunderspell.Tests
                 var item = Track(ScriptableObject.CreateInstance<LootItem>());
                 item.DisplayName = $"{zone} Treasure";
                 item.Worth = 50f + (int)zone * 25f;
-                item.Bulk = 3f;
+                item.WeightKg = 3f;
                 item.Fragility = 8f;
 
                 table.Entries.Add(new RaidLootTable.Entry { Item = item, Zone = zone, Weight = 10 });

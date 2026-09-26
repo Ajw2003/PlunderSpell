@@ -60,6 +60,10 @@ public class Item : MonoBehaviour
     private ICarryableCreature _carryableCreature;
     private NavMeshAgent _agent;
 
+    // The one weight knob: for loot, its LootItem's Weight (kg), which the pickup gives the body at
+    // spawn; for anything else (weapons), the Rigidbody's Mass. Lifting or towing, the tow pace and
+    // pull, throws and impact damage all scale from the body's mass.
+    [Header("Weight: loot uses its LootItem's Weight (kg); else the Rigidbody's Mass.")]
     [Header("Physics Settings")]
     [Tooltip("Stiffness of the beam's spring, per metre of error (1/s^2). Higher: the held point " +
              "snaps to the target faster.")]
@@ -78,18 +82,6 @@ public class Item : MonoBehaviour
              "is easier than lifting: a heavy thing still follows you, only slower.")]
     [SerializeField] private float _haulStrength = 250f;
 
-    [Header("Towing (only for items too heavy to lift)")]
-    [Tooltip("Set this item's own walking pace while it is towed. Off: worked out from its weight " +
-             "(6 / mass, kept between 0.3 and 0.6).")]
-    [SerializeField] private bool _customTowPace;
-
-    [Tooltip("The holder's walking pace while towing this, as a fraction of their normal walk: " +
-             "1 = no slowdown, 0.5 = half speed. Used when Custom Tow Pace is on.")]
-    [Range(0.1f, 1f)] [SerializeField] private float _towPace = 0.5f;
-
-    [Tooltip("The most force (N) the rope can tow this with. Lower: slower to get moving and " +
-             "more likely to lag and hold the holder back.")]
-    [SerializeField] private float _towStrength = 160f;
 
     [Tooltip("Angular damping while held and not being turned, so it hangs and settles, not spins.")]
     [SerializeField] private float _heldAngularDamping = 3f;
@@ -147,7 +139,8 @@ public class Item : MonoBehaviour
         _targetRotation = transform.rotation;
     }
 
-    /// <summary>Mass in kg, which is what makes it heavy to carry and hard to swing.</summary>
+    /// <summary>Mass in kg, the body's: for loot, set from its LootItem's Weight at spawn. Lifting or
+    /// towing, the tow pace and pull, throws and impact damage all scale from it.</summary>
     public float Mass => _rb != null ? _rb.mass : 1f;
 
     /// <summary>How much of the beam's strength holding this up takes: 0 weightless, 1 at the limit.
@@ -159,8 +152,7 @@ public class Item : MonoBehaviour
 
     /// <summary>
     /// How fast the holder may walk, as a fraction of their normal pace, while towing this: 1 for
-    /// anything they can lift, else <see cref="TowPace"/> (set per item in the Inspector, or about
-    /// 6 / mass). A rope does not stretch: while the piece lags past the rope's length the
+    /// anything they can lift, else <see cref="TowPace"/> (6 / mass). A rope does not stretch: while the piece lags past the rope's length the
     /// holder is held back further, down to a fifth of that pace at a metre of strain.
     /// </summary>
     public float TowSpeedMultiplier
@@ -174,17 +166,25 @@ public class Item : MonoBehaviour
         }
     }
 
-    /// <summary>The holder's walking pace while towing this, before any holding back: the item's
-    /// own Tow Pace when set in the Inspector, else about 6 / mass. 1 for anything liftable.</summary>
-    public float TowPace
-    {
-        get
-        {
-            if (!IsTooHeavyToLift)
-                return 1f;
-            return _customTowPace ? _towPace : Mathf.Clamp(k_towPaceKg / Mass, 0.3f, 0.6f);
-        }
-    }
+    /// <summary>
+    /// The holder's walking pace while towing this, before any holding back: 6 / mass, so it scales
+    /// with the one weight knob, the Rigidbody's Mass (0.5 at 12 kg, 0.4 at 15 kg, 0.2 at 30 kg),
+    /// never under 0.15. 1 for anything liftable.
+    /// </summary>
+    public float TowPace => IsTooHeavyToLift ? Mathf.Clamp(k_towPaceKg / Mass, 0.15f, 1f) : 1f;
+
+    /// <summary>
+    /// The tow rope's pull (N), which sets how quickly a towed piece gets up to speed: TowStrength / mass
+    /// m/s per second. At least 160 N, more for a piece heavy enough that the floor's friction on the
+    /// weight the grip cannot bear would otherwise hold it.
+    /// </summary>
+    public float TowStrength =>
+        Mathf.Max(k_minTowStrength, k_floorFriction * Mathf.Max(0f, Mass * -Physics.gravity.y - _gripStrength) + 80f);
+
+    private const float k_minTowStrength = 160f;
+
+    /// <summary>Unity's default friction, which the castle floors and loot colliders use.</summary>
+    private const float k_floorFriction = 0.6f;
 
     /// <summary>How far past the rope's length the towed piece is lagging, in metres (0 when slack).
     /// Past <see cref="k_ropeBreaksAt"/> the piece is caught on something and the holder lets go.</summary>
@@ -201,7 +201,10 @@ public class Item : MonoBehaviour
     private Vector3 _towVelocity;
     private float _towRope;
     private float _towStampedAt = float.NegativeInfinity;
-    private float _grabHeight;
+    private Vector3 _uprightLocalUp = Vector3.up;
+
+    /// <summary>How fast a towed piece rights itself (1/s): a tilt of 0.1 rad closes at 0.8 rad/s.</summary>
+    private const float k_uprightRate = 8f;
 
     /// <summary>How much faster than the holder a towed piece may close a stretched rope, per metre of
     /// stretch (1/s).</summary>
@@ -237,32 +240,82 @@ public class Item : MonoBehaviour
         return along * (holderPace + (distance - rope) * k_ropeCatchUp);
     }
 
-    /// <summary>One physics step of towing. The grip still bears what weight it can (up to the lift
-    /// limit), holding its height, so a tall piece held by its top stays upright and slides rather
-    /// than toppling; without it an altarpiece fell on its face and stuck. The haul is a horizontal
-    /// force at the centre of mass, capped at the rope's strength, toward <see cref="TowVelocity"/>,
-    /// so the piece never outpaces the holder.</summary>
+    /// <summary>One physics step of towing: the grip bears what weight it can, the piece is kept
+    /// upright, and it is hauled toward <see cref="TowVelocity"/>, with at most
+    /// <see cref="TowStrength"/>, so it never outpaces the holder.</summary>
     private void Tow()
     {
-        Vector3 held = HeldPointWorld;
-        float damping = 2f * Mathf.Sqrt(_springRate) * _dampingRatio;
-        float upAccel = (_grabHeight - held.y) * _springRate - _rb.GetPointVelocity(held).y * damping;
-        float up = Mathf.Clamp((upAccel - Physics.gravity.y) * _rb.mass, 0f, _gripStrength);
-        _rb.AddForceAtPosition(Vector3.up * up, held, ForceMode.Force);
-
+        // The grip bears what it can of the weight, straight up through the centre of mass: borne
+        // at the grip on a cauldron's rim, it tipped a 25 kg cauldron over onto its rim, where it stuck.
         Vector3 centre = _rb.worldCenterOfMass;
+        _rb.AddForce(Vector3.up * Mathf.Min(_gripStrength, _rb.mass * -Physics.gravity.y), ForceMode.Force);
+
+        // Kept upright as it was picked up, free to turn about the vertical so it swings round to
+        // trail: a towed altarpiece otherwise fell on its face, and a cauldron onto its rim.
+        Vector3 up = _rb.rotation * _uprightLocalUp;
+        Vector3 tiltAxis = Vector3.Cross(up, Vector3.up);
+        float tilt = Vector3.Angle(up, Vector3.up) * Mathf.Deg2Rad;
+        Vector3 spinAboutUp = Vector3.Project(_rb.angularVelocity, Vector3.up);
+        _rb.angularVelocity = spinAboutUp + (tiltAxis.sqrMagnitude > 1e-8f ? tiltAxis.normalized * tilt * k_uprightRate : Vector3.zero);
+
         Vector3 fromHolder = centre - _towFeet;
         fromHolder.y = 0f;
         TowStrain = Mathf.Max(0f, fromHolder.magnitude - _towRope);
         Vector3 wanted = TowVelocity(_towFeet, centre, _towVelocity, _towRope);
+        // Its ground speed is eased toward that, at most TowStrength / mass per second, so heavier
+        // pieces are slower to get going; with the rope slack it slows at k_towBrake. Its own
+        // friction is off while towed (SetTowFriction) and this does the braking instead: the
+        // floor's friction on a 25 kg cauldron took back 0.14 m/s of every 0.15 m/s step, more
+        // than its whole weight should, and varied too much by shape to tune against.
+        SetTowFriction(true);
         Vector3 velocity = _rb.linearVelocity;
-        velocity.y = 0f;
-        Vector3 force = (wanted - velocity) * (_rb.mass / 0.05f);
-        force.y = 0f;
-        // Only ever pulled toward the holder: with the rope slack, friction does the stopping.
-        if (wanted == Vector3.zero)
+        var ground = new Vector3(velocity.x, 0f, velocity.z);
+        ground = wanted == Vector3.zero
+            ? Vector3.MoveTowards(ground, Vector3.zero, k_towBrake * Time.fixedDeltaTime)
+            : Vector3.MoveTowards(ground, wanted, TowStrength / _rb.mass * Time.fixedDeltaTime);
+        _rb.linearVelocity = new Vector3(ground.x, velocity.y, ground.z);
+    }
+
+    /// <summary>How fast a towed piece slows on a slack rope (m/s per second), standing in for the
+    /// floor's friction, which is off while towed.</summary>
+    private const float k_towBrake = 4f;
+
+    private static PhysicsMaterial s_towMaterial;
+    private PhysicsMaterial[] _materialsWhenFree;
+    private bool _towFrictionOff;
+
+    /// <summary>Turns the item's own friction off while towed (true) and back as it was (false).</summary>
+    private void SetTowFriction(bool off)
+    {
+        if (off == _towFrictionOff)
             return;
-        _rb.AddForce(Vector3.ClampMagnitude(force, _towStrength), ForceMode.Force);
+        if (_ownColliders == null)
+            _ownColliders = GetComponentsInChildren<Collider>();
+        if (off)
+        {
+            if (s_towMaterial == null)
+                s_towMaterial = new PhysicsMaterial("Towed")
+                {
+                    staticFriction = 0f,
+                    dynamicFriction = 0f,
+                    frictionCombine = PhysicsMaterialCombine.Minimum,
+                };
+            _materialsWhenFree = new PhysicsMaterial[_ownColliders.Length];
+            for (int i = 0; i < _ownColliders.Length; i++)
+            {
+                _materialsWhenFree[i] = _ownColliders[i].sharedMaterial;
+                _ownColliders[i].sharedMaterial = s_towMaterial;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < _ownColliders.Length; i++)
+            {
+                if (_ownColliders[i] != null)
+                    _ownColliders[i].sharedMaterial = _materialsWhenFree[i];
+            }
+        }
+        _towFrictionOff = off;
     }
 
     /// <summary>Where the beam is pulling the held point to, extrapolated to now.</summary>
@@ -310,7 +363,7 @@ public class Item : MonoBehaviour
 
         // A towed piece gets no lift at all, so the floor's full friction holds it back, and a
         // weaker pull, so it is slow to get going: it should feel like a weight on a rope.
-        var sideways = Vector3.ClampMagnitude(new Vector3(force.x, 0f, force.z), towed ? _towStrength : _haulStrength);
+        var sideways = Vector3.ClampMagnitude(new Vector3(force.x, 0f, force.z), towed ? TowStrength : _haulStrength);
         float up = towed ? 0f : Mathf.Clamp(force.y, -_gripStrength, _gripStrength);
         _rb.AddForceAtPosition(sideways + Vector3.up * up, pulled, ForceMode.Force);
 
@@ -404,7 +457,8 @@ public class Item : MonoBehaviour
         _angularDampingWhenFree = _rb.angularDamping;
         _rb.angularDamping = _heldAngularDamping;
         _gripOffset = Quaternion.Inverse(_rb.rotation) * (grabPoint - _rb.position);
-        _grabHeight = grabPoint.y;
+        // Which of its own axes points up now, so towing can keep it that way up.
+        _uprightLocalUp = Quaternion.Inverse(_rb.rotation) * Vector3.up;
         // Hold it where it is until the hand says otherwise.
         _hasTargetVelocity = false;
         UpdateTargetPosition(grabPoint);
@@ -418,6 +472,7 @@ public class Item : MonoBehaviour
     public void StopDragging()
     {
         TowStrain = 0f;
+        SetTowFriction(false);
         HoldInHand(false);
         _isDragging = false;
         _releasedAt = Time.time;
@@ -430,6 +485,7 @@ public class Item : MonoBehaviour
 
     public void Throw(Vector3 direction, float force)
     {
+        SetTowFriction(false);
         HoldInHand(false);
         _isDragging = false;
         _releasedAt = Time.time;

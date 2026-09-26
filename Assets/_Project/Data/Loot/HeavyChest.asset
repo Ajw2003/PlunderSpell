@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Worth: 500
   IsArtifact: 0
-  Bulk: 25
+  WeightKg: 15
   Fragility: 999
   DisplayName: Heavy Chest
   Icon: {fileID: 0}

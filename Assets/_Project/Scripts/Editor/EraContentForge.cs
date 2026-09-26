@@ -242,7 +242,7 @@ namespace Plunderspell.EditorTools
                 LootItem data = LoadOrCreate<LootItem>($"Assets/_Project/Data/Loot/{era}/{asset.name}.asset");
                 data.DisplayName = asset.title;
                 data.Worth = item.worth;
-                data.Bulk = item.bulk;
+                data.WeightKg = item.bulk;
                 data.Fragility = item.fragility;
                 data.IsArtifact = item.artifact;
                 EditorUtility.SetDirty(data);
@@ -322,7 +322,7 @@ namespace Plunderspell.EditorTools
                 box.size = local.size;
 
                 var body = instance.AddComponent<Rigidbody>();
-                body.mass = Mathf.Max(0.5f, data.Bulk);
+                body.mass = Mathf.Max(0.5f, data.WeightKg);
 
                 var carried = instance.AddComponent<Item>();
                 var pickup = instance.AddComponent<LootPickup>();

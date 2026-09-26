@@ -29,7 +29,7 @@ namespace Plunderspell.Tests
         {
             var item = ScriptableObject.CreateInstance<LootItem>();
             item.Worth = worth;
-            item.Bulk = bulk;
+            item.WeightKg = bulk;
             item.Fragility = fragility;
             return item;
         }
@@ -73,7 +73,7 @@ namespace Plunderspell.Tests
             var pickup = CreatePickup(item);
 
             Assert.AreEqual(CarryMode.Dual, pickup.EvaluatePickup(),
-                "Bulk 11 (> 10 stone) must require a dual carry.");
+                "11 kg (> 10 kg) must require a dual carry.");
 
             Object.DestroyImmediate(pickup.gameObject);
             Object.DestroyImmediate(item);
@@ -86,7 +86,7 @@ namespace Plunderspell.Tests
             var pickup = CreatePickup(item);
 
             Assert.AreEqual(CarryMode.Single, pickup.EvaluatePickup(),
-                "Bulk 9 (≤ 10 stone) should be a single carry.");
+                "9 kg (≤ 10 kg) should be a single carry.");
 
             Object.DestroyImmediate(pickup.gameObject);
             Object.DestroyImmediate(item);

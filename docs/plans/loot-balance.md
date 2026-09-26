@@ -43,7 +43,7 @@ the deep slots.
 
 ## Proposed numbers
 
-Changed values are **bold**. Mass equals Bulk throughout.
+Changed values are **bold**. Since 2026-09-26 the weight lives only in the LootItem's Weight (kg), which sets the body's mass at spawn (`docs/systems/damage.md`, "Weight").
 
 | Era | Item | kg | Worth | Fragility |
 |---|---|---|---|---|

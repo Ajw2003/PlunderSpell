@@ -421,7 +421,7 @@ namespace Plunderspell.EditorTools
             var gold = ScriptableObject.CreateInstance<LootItem>();
             gold.DisplayName = "Conjured Coin";
             gold.Worth = 40f;
-            gold.Bulk = 1f;
+            gold.WeightKg = 1f;
             gold.Fragility = 999f;   // coin does not shatter
             return SaveAsset(gold, ConjuredCoinItemPath);
         }

@@ -56,9 +56,9 @@ namespace Plunderspell.Tests.Editor
                     Assert.IsNotNull(item, entry.Prefab.name);
                     // Item.Load needs Awake to have run; on a prefab asset, read its parts directly.
                     float grip = new SerializedObject(item).FindProperty("_gripStrength").floatValue;
-                    float load = body.mass * -Physics.gravity.y / grip;
+                    float load = entry.Item.WeightKg * -Physics.gravity.y / grip;
                     Assert.LessOrEqual(load, 1f,
-                        $"{entry.Item.name} ({body.mass} kg) is too heavy to lift but spawns in the {entry.Zone} of {table.name}.");
+                        $"{entry.Item.name} ({entry.Item.WeightKg} kg) is too heavy to lift but spawns in the {entry.Zone} of {table.name}.");
                 }
             }
         }

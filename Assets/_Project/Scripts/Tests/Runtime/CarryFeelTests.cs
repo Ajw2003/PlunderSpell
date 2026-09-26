@@ -340,6 +340,47 @@ namespace Plunderspell.Tests
 
 #if UNITY_EDITOR
         [UnityTest]
+        public IEnumerator Test_MakingAPieceHeavierTowsItSlowerButItStillMoves()
+        {
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            floor.transform.position = new Vector3(0f, -0.5f, 400f);
+            floor.transform.localScale = new Vector3(60f, 1f, 60f);
+            _made.Add(floor);
+
+            // The heavy chest, tuned up to 30 kg by its weight alone.
+            var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Loot/HeavyChest.prefab");
+            GameObject piece = Object.Instantiate(prefab, new Vector3(0f, 0.05f, 400f), prefab.transform.rotation);
+            _made.Add(piece);
+            var pickup = piece.GetComponent<Plunderspell.Loot.LootPickup>();
+            var heavier = Object.Instantiate(pickup.Data);
+            heavier.WeightKg = 30f;
+            pickup.SetData(heavier);
+            for (int i = 0; i < 30; i++)
+                yield return new WaitForFixedUpdate();
+
+            var item = piece.GetComponent<Item>();
+            Assert.AreEqual(30f, piece.GetComponent<Rigidbody>().mass, 1e-4f, "Setting the weight sets the body's mass.");
+            Assert.AreEqual(0.2f, item.TowPace, 1e-4f, "At 30 kg the holder tows at a fifth of their walk (6 / 30).");
+
+            Rigidbody holder = MakeHolder(piece.transform.position + new Vector3(0f, 1f, -3f));
+            Vector3 start = piece.transform.position;
+            item.StartDragging(holder.gameObject);
+            for (float t = 0f; t < 3f; t += Time.fixedDeltaTime)
+            {
+                float now = 5f * item.TowSpeedMultiplier;
+                holder.MovePosition(holder.position + new Vector3(0f, 0f, -now) * Time.fixedDeltaTime);
+                item.SetTow(holder.position + Vector3.down, new Vector3(0f, 0f, -now), 3f);
+                yield return new WaitForFixedUpdate();
+            }
+            item.StopDragging();
+
+            float moved = start.z - piece.transform.position.z;
+            Debug.Log($"[CarryFeel] 30 kg chest: moved {moved:F2} m in 3 s");
+            Assert.That(moved, Is.GreaterThan(1f), "A 30 kg piece must still be towable.");
+            Assert.That(moved, Is.LessThan(4f), "A 30 kg piece should tow slower than a 15 kg one (4.6 m in 3 s).");
+        }
+
+        [UnityTest]
         public IEnumerator Test_OnePlayerCanDragEveryTwoPersonPieceBehindThem()
         {
             // Two-person pieces (LootItem.RequiresDualCarry) are heavy, not immovable: one player
@@ -372,11 +413,10 @@ namespace Plunderspell.Tests
                 item.StartDragging(holder.gameObject);
                 // The holder walks away at the pace towing allows them (PlayerWalkState: the
                 // RaidPlayer's 5 m/s walk times the piece's TowSpeedMultiplier), pulling it behind.
-                // The pace is each prefab's own, set in its Inspector (Item > Towing).
-                var authored = new UnityEditor.SerializedObject(prefab.GetComponent<Item>());
-                Assert.IsTrue(authored.FindProperty("_customTowPace").boolValue, $"{prefab.name} has no tow pace of its own.");
-                Assert.AreEqual(authored.FindProperty("_towPace").floatValue, item.TowPace, 1e-4f,
-                    $"{prefab.name} tows at a pace other than the one set on it.");
+                // One weight knob: the body takes its LootItem's Weight, and the pace scales from it.
+                float weight = pickup.Data.WeightKg;
+                Assert.AreEqual(weight, piece.GetComponent<Rigidbody>().mass, 1e-4f, $"{prefab.name}'s body did not take its LootItem's weight.");
+                Assert.AreEqual(Mathf.Clamp(6f / weight, 0.15f, 1f), item.TowPace, 1e-4f, $"{prefab.name}'s tow pace does not follow its weight.");
                 float pace = 5f * item.TowSpeedMultiplier;
                 Assert.That(pace, Is.LessThanOrEqualTo(3f), $"Towing {prefab.name} should slow the holder to at most 60 %.");
                 float topSpeed = 0f;

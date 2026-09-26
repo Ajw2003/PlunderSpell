@@ -89,7 +89,7 @@ namespace Plunderspell.Tests
             var pickup = go.AddComponent<Plunderspell.Loot.LootPickup>();
             var data = ScriptableObject.CreateInstance<Plunderspell.Loot.LootItem>();
             data.Worth = 420f;
-            data.Bulk = 0.5f;
+            data.WeightKg = 0.5f;
             data.Fragility = 2f;
             pickup.SetData(data);
             go.GetComponent<Rigidbody>().mass = 0.5f;

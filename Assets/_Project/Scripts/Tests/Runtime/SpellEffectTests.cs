@@ -57,7 +57,7 @@ namespace Plunderspell.Tests
             var data = Track(ScriptableObject.CreateInstance<LootItem>());
             data.Worth = worth;
             data.Fragility = fragility;
-            data.Bulk = 2f;
+            data.WeightKg = 2f;
             pickup.SetData(data);
             return pickup;
         }

@@ -13,7 +13,7 @@ namespace Plunderspell.Loot
     /// <item>Ragdoll bones (limb rigidbodies + colliders) are enabled, the <see cref="Animator"/> is
     /// disabled, and the movement rigidbody / <see cref="CharacterController"/> are switched off.</item>
     /// <item>A <see cref="LootPickup"/> is added (or re-used) on the root with a runtime
-    /// <see cref="LootItem"/>: Bulk = 12 stone (forces a dual carry), Worth = 0, Fragility =
+    /// <see cref="LootItem"/>: WeightKg = 12 stone (forces a dual carry), Worth = 0, Fragility =
     /// float.MaxValue (a body cannot shatter).</item>
     /// </list>
     /// On reaching the extraction point <see cref="RevivePlayer"/> reverses the process and restores
@@ -23,7 +23,7 @@ namespace Plunderspell.Loot
     public class DownedPlayerCarryAdapter : NetworkBehaviour
     {
         [Header("Downed body loot profile")]
-        [Tooltip("Weight in stone of a downed body — 12 forces a two-player carry.")]
+        [Tooltip("Weight in kg of a downed body — 12 forces a two-player carry.")]
         [SerializeField] private float _downedBulk = 12f;
 
         [Tooltip("Fraction of max HP restored on lair revival (0.25 = 25%).")]
@@ -94,7 +94,7 @@ namespace Plunderspell.Loot
         private LootItem BuildBodyLootData()
         {
             var data = ScriptableObject.CreateInstance<LootItem>();
-            data.Bulk = _downedBulk;                       // 12 stone → dual carry
+            data.WeightKg = _downedBulk;                       // 12 kg → too heavy to lift
             data.Worth = 0f;                                // a body is not treasure
             data.Fragility = float.MaxValue;               // a body cannot shatter
             data.IsArtifact = false;

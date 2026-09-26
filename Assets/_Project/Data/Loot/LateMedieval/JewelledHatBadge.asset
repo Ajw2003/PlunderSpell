@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 1200
   IsArtifact: 1
-  Bulk: 0.2
+  WeightKg: 0.5
   Fragility: 999
   DisplayName: Jewelled Hat-Badge
   Icon: {fileID: 0}

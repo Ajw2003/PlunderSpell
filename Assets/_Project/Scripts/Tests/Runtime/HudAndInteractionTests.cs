@@ -53,7 +53,7 @@ namespace Plunderspell.Tests
             var pickup = go.AddComponent<LootPickup>();
             var data = Track(ScriptableObject.CreateInstance<LootItem>());
             data.DisplayName = name;
-            data.Bulk = bulk;
+            data.WeightKg = bulk;
             data.Worth = 100f;
             data.Fragility = 8f;
             pickup.SetData(data);

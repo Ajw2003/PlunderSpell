@@ -93,31 +93,36 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   the body is kinematic and its colliders are triggers on the Ignore Raycast layer. On the beam a
   crossbow hung on the crosshair line more than 0.8 m out, and its own bolt hit it. No beam is
   drawn for a weapon. Capture: `docs/generated/held-weapons-2026-09-26/crossbow-in-hand.png`.
-- **Two-person pieces are towed behind you, slowly** (2026-09-26, the owner's call). Anything too
-  heavy to lift (`LootItem.RequiresDualCarry` pieces are 12-15 kg) is not pulled toward the
-  crosshair. It is towed on a rope as long as the reach it was grabbed at (1.5-3 m), from wherever
-  the holder's body is, so you walk forward and it scrapes along behind (`Item.SetTow`, fed by
-  `ItemManager`):
-  - **Tuning, per item.** On the item's prefab, `Item` > *Towing*: **Custom Tow Pace** on, then
-    **Tow Pace** (the holder's walk while towing it: 1 = no slowdown, 0.5 = half speed) and **Tow
-    Strength** (the most the rope pulls it with, N; lower is slower to get going). The five
-    two-person pieces have their own values (cabinet and cauldron 0.5, parade armour 0.46,
-    altarpiece 0.43, chest 0.4, all at 160 N); with Custom Tow Pace off, an item uses 6 / mass.
-  - **You walk slower.** `Item.TowSpeedMultiplier` is the item's `TowPace`, and a rope does not
-    stretch: while the piece lags past the rope's length
-    you are held back further, down to a fifth of that at a metre of strain. `PlayerWalkState`
-    applies it. Past 2 m of strain the piece is stuck on something and you let go.
-  - **It plods.** Once the rope is taut the piece is driven toward your own pace along the rope,
-    plus a gentle catch-up for any strain (`Item.TowVelocity`), with at most 160 N
-    (`_towStrength`), at its centre of mass. A slack rope pulls nothing and friction stops it. The
-    grip still bears what weight it can (up to the 100 N lift limit) at the height it was grabbed,
-    so a tall piece held by its top stays upright and slides instead of falling on its face.
-  - Earlier versions, both measured: a spring toward a point behind you let pieces lurch to
-    4-6 m/s behind a player walking 2-2.5 m/s, and towing with no lift toppled the altarpiece,
-    which then stuck. Measured now with the real prefabs
-    (`CarryFeelTests.Test_OnePlayerCanDragEveryTwoPersonPieceBehindThem`): each of the five trails
-    3.1-4.2 m behind on a 3 m rope, at a top ground speed of 2.1-2.7 m/s behind a holder slowed
-    to 2.0-2.5 m/s.
+- **One weight knob: Weight (kg) on the item's LootItem asset** (2026-09-26, the owner's ask).
+  `LootItem.WeightKg` (the field was `Bulk`, "stone", which nothing in a raid read; renamed with
+  `FormerlySerializedAs`, so old values load). `LootPickup` gives the body that mass when it spawns
+  or its data is set, except on a downed player. Everything scales from the body's mass: lift or
+  tow (over about 10 kg), the tow pace, how quickly a towed piece gets going, throws, impact
+  damage. Weapons have no LootItem and use their Rigidbody's Mass. Three data weights disagreed
+  with the mass the game actually used and were set to it: copper pot 1, heavy chest 15, jewelled
+  hat badge 0.5.
+- **Pieces too heavy to lift are towed behind you, slowly** (2026-09-26, the owner's call). Not
+  pulled toward the crosshair: towed on a rope as long as the reach they were grabbed at (1.5-3 m),
+  from wherever the holder's body is, so you walk forward and they follow (`Item.SetTow`, fed by
+  `ItemManager`).
+  - **You walk slower**: `Item.TowPace` = 6 / mass of your walk (0.5 at 12 kg, 0.4 at 15 kg, 0.24
+    at 25 kg, 0.2 at 30 kg; never under 0.15), applied by `PlayerWalkState`. A rope does not
+    stretch: while the piece lags past the rope's length you are held back further, down to a
+    fifth of that. Past 2 m of strain it is stuck on something and you let go.
+  - **It plods**: once the rope is taut its ground speed is eased toward your pace along the rope,
+    plus a gentle catch-up for any strain (`Item.TowVelocity`), gaining at most
+    `TowStrength / mass` m/s each second (`TowStrength` is 160 N, more for pieces heavy enough to
+    need it). With the rope slack it slows at 4 m/s².
+  - **No friction while towed** (`Item.SetTowFriction`): the code does the braking instead, and
+    the colliders' own material comes back when let go. With friction on, a 25 kg cauldron lost
+    0.14 m/s of every 0.15 m/s step to the floor and did not move; how much a shape lost varied
+    too much to tune a force against.
+  - **Kept upright**, free to turn about the vertical to trail, with the grip bearing up to 100 N
+    of its weight straight up through its centre. Borne at the grip instead, a cauldron tipped
+    onto its rim; with no support, an altarpiece fell on its face.
+  - Measured with the real prefabs (`CarryFeelTests.Test_OnePlayerCanDragEveryTwoPersonPieceBehindThem`
+    and `Test_MakingAPieceHeavierTowsItSlowerButItStillMoves`): every piece trails 2.9-3.0 m behind
+    on a 3 m rope at about the holder's pace; a chest set to 30 kg follows at 1 m/s.
 - **The beam.** `GrabBeam` is a `LineRenderer` drawn as a quadratic curve. It starts at the hand
   (low right of the view, `ItemManager.BeamHand`) and ends at the held point, bent through the
   aim target. When the item keeps up the line is straight; when it lags or sags the line bends.

@@ -80,7 +80,7 @@ namespace Plunderspell.Tests
             var item = Track(ScriptableObject.CreateInstance<LootItem>());
             item.DisplayName = name;
             item.Worth = worth;
-            item.Bulk = 2f;
+            item.WeightKg = 2f;
             item.Fragility = 8f;
             return item;
         }
