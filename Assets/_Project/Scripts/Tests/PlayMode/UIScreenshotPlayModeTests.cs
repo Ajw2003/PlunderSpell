@@ -65,12 +65,6 @@ namespace Plunderspell.Tests.PlayMode
             yield return CaptureState(GameState.Playing, "02_HUD", directory);
             yield return CaptureState(GameState.Paused, "03_PauseMenu", directory);
 
-            var demoItem = ScriptableObject.CreateInstance<ItemDefinition>();
-            demoItem.ItemName = "Cursed Doubloon";
-            demoItem.MaxStack = 8;
-            GameServices.Inventory.AddItem(demoItem, 5);
-            yield return CaptureState(GameState.Inventory, "04_Inventory", directory);
-
             yield return CaptureState(GameState.Settings, "05_Settings", directory);
 
             GameServices.PlayerStats.AddGold(250);

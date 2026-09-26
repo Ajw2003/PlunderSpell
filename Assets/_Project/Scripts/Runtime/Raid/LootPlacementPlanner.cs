@@ -37,11 +37,11 @@ namespace RogueAi.Raid
     ///
     /// <list type="bullet">
     /// <item>Loot density rises toward the centre — the Crypt always has something, the curtain wall
-    /// rarely does.</item>
+    /// rarely does — and so does the number of items a looted room holds, each on its own anchor.</item>
     /// <item>The extraction room never holds loot. Free treasure at the exit would delete the carry,
     /// which is the whole game.</item>
-    /// <item>The crypt final chamber always gets its richest eligible entry, so there is always a
-    /// reason to go all the way in.</item>
+    /// <item>The crypt final chamber always gets its richest eligible entry, and fills every anchor
+    /// it has, so there is always a reason to go all the way in.</item>
     /// </list>
     /// </summary>
     public static class LootPlacementPlanner
@@ -95,20 +95,37 @@ namespace RogueAi.Raid
                     continue;
 
                 bool isCryptFinal = module.IsCryptEntry || i == castle.CryptStartIndex;
+                bool hasAnchors = anchors != null && anchors.Length > 0;
 
-                // The crypt final chamber is guaranteed, and guaranteed to be the best thing there.
+                // The crypt final chamber is guaranteed, full, and holds the best thing there.
+                int count;
                 if (isCryptFinal)
                 {
-                    placements.Add(new LootPlacement(i, PlaceIn(module, anchors, rng, 0f),
-                        RichestOf(pool), module.Zone));
-                    continue;
+                    count = hasAnchors ? anchors.Length : 1;
+                }
+                else
+                {
+                    if (rng.NextDouble() > table.DensityFor(module.Zone))
+                        continue;
+                    count = rng.Next(1, table.MaxPerRoomFor(module.Zone) + 1);
+                    if (hasAnchors)
+                        count = Mathf.Min(count, anchors.Length);
                 }
 
-                if (rng.NextDouble() > table.DensityFor(module.Zone))
-                    continue;
-
-                placements.Add(new LootPlacement(i, PlaceIn(module, anchors, rng, ScatterRadius),
-                    PickWeighted(pool, rng), module.Zone));
+                // Each item on its own anchor: a shuffled prefix of the room's anchors. The crypt
+                // centre takes its anchors in authored order, so its richest item sits on the first,
+                // the one the room's art puts at the centre (the Late crypt's floor brass).
+                int[] order = !hasAnchors ? null
+                    : isCryptFinal ? ShuffledIndices(anchors.Length, null)
+                    : ShuffledIndices(anchors.Length, rng);
+                for (int k = 0; k < count; k++)
+                {
+                    RaidLootTable.Entry entry = isCryptFinal && k == 0 ? RichestOf(pool) : PickWeighted(pool, rng);
+                    Vector3 position = hasAnchors
+                        ? AtAnchor(module, anchors[order[k]])
+                        : Scatter(module.Position, rng, isCryptFinal && k == 0 ? 0f : ScatterRadius);
+                    placements.Add(new LootPlacement(i, position, entry, module.Zone));
+                }
             }
 
             return placements;
@@ -158,13 +175,21 @@ namespace RogueAi.Raid
         /// 0.5 m spawn height onto a table could break on landing.</summary>
         public const float AnchorLift = 0.08f;
 
-        private static Vector3 PlaceIn(ProceduralCastleData.PlacedModule module, Vector3[] anchors,
-            System.Random rng, float scatterRadius)
+        private static Vector3 AtAnchor(ProceduralCastleData.PlacedModule module, Vector3 anchor) =>
+            module.Position + module.Rotation * anchor + Vector3.up * AnchorLift;
+
+        /// <summary>0..length-1 shuffled by <paramref name="rng"/>, or in order when it is null.</summary>
+        private static int[] ShuffledIndices(int length, System.Random rng)
         {
-            if (anchors == null || anchors.Length == 0)
-                return Scatter(module.Position, rng, scatterRadius);
-            Vector3 anchor = anchors[rng.Next(0, anchors.Length)];
-            return module.Position + module.Rotation * anchor + Vector3.up * AnchorLift;
+            var order = new int[length];
+            for (int i = 0; i < length; i++)
+                order[i] = i;
+            for (int i = length - 1; rng != null && i > 0; i--)
+            {
+                int j = rng.Next(0, i + 1);
+                (order[i], order[j]) = (order[j], order[i]);
+            }
+            return order;
         }
 
         private static Vector3 Scatter(Vector3 centre, System.Random rng, float radius)

@@ -79,6 +79,14 @@ together and what was deliberately left undocumented, and why.
   The step-by-step loop from brief to validated model (plan → sheet → audit → fix → model beside
   sheet → audit → fix → commit) is [`docs/art/WORKFLOW.md`](art/WORKFLOW.md); long runs are protected
   by `Tools/autosave.sh`.
+- [`docs/plans/artbible-enemies-in-engine.md`](plans/artbible-enemies-in-engine.md) and
+  [`docs/plans/artbible-enemy-animations.md`](plans/artbible-enemy-animations.md): **awaiting
+  approval.** How the 16 ArtForge enemies get into a raid, and how they get animated. Review page:
+  [`docs/generated/enemy-animation-plan/`](generated/enemy-animation-plan/index.html).
+- [`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md) — the anchored aesthetic: night,
+  warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
+  the surface shader, post-processing and the Low/Medium/High quality levels. Look samples in
+  `docs/generated/look-samples-2026-09-24/`.
 - [`docs/plans/moodboard-gap-closure.md`](plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
@@ -87,6 +95,9 @@ together and what was deliberately left undocumented, and why.
   needs a decision, not just more art.
 - [`docs/prompts/plunderspell-fable.md`](prompts/plunderspell-fable.md) — the build-and-test
   prompt used to drive an agent session on this project.
+- [`docs/prompts/house-rules-versioncheck-fix.md`](prompts/house-rules-versioncheck-fix.md) — a
+  handoff for an agent in `Ajw2003/AjsClaudeCodeTools`: the house-rules version check went silent
+  when it couldn't reach GitHub (found 2026-09-24). Not PlunderSpell work.
 - [`docs/generated/`](generated/README.md) — the castle-generator and UI HTML previews, and the
   live GitHub issues backlog (`gh issue list` is the source of truth for current status; the JSON
   is a point-in-time manifest of what's been filed).

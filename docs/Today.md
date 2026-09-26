@@ -1,5 +1,136 @@
 # Today
 
+**2026-09-25, night — the night atmosphere is built (steps 0-4 of five) on `claude/night-atmosphere`.**
+Fog with fire halos, alarm-state blending, fires from pipeline anchors, the `Plunderspell/Surface`
+shader, the dressed outer bailey and courtyards, the sealed gate, Low/Medium/High with a Deck
+default and a Graphics setting. Looks checked by eye against the Blender renders:
+`docs/generated/night-atmosphere-2026-09-25/wip11/`. Navigation audit with dressing: 44/44 rooms,
+100% floor. Not done: volumetric fog (step 5), vertex soot bake, profiler timings, a play-through
+by a person. PlayMode suite not run. How it works: `docs/systems/atmosphere.md`.
+
+---
+
+**2026-09-25, evening — night atmosphere build started on `claude/night-atmosphere`; step 0
+(portal, sealed castle) done.** Branched off `claude/staging-2026-09-24` to build all of
+[`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md). Step 0: raids arrive at a seeded
+spot inside the walls through a portal that is also the way out, anyone outside it when the clock
+runs out is left behind, the gatehouse and wall tops are sealed, and the outside is gone. Verified
+in the live Editor by playing solo raids through the menu calls: arrival, extraction (saved 1),
+left behind (Lair line "· 1 left behind"), and the navigation audit from the portal (44/44 rooms,
+100% floor, 5 seeds). Captures: `docs/generated/portal-arrival-2026-09-25/`. Also fixed
+`Tools/Unity/run_tests.sh` (a Python 3.13 syntax error), and added `recompile.sh` and
+`capture.sh` beside it.
+
+---
+
+**2026-09-25 — a throwaway "calm" night-look preview in RaidScene.** Built the quick preview asked
+for after the look-anchoring session below: `RogueAi.Atmosphere.NightLookPreview`
+(`Assets/_Project/Scripts/Runtime/Atmosphere/NightLookPreview.cs`, new `RogueAi.Atmosphere` asmdef)
+darkens RaidScene, adds a runtime URP Volume (ACES, bloom, colour grade, vignette), and places
+primitive braziers, wall torches and stand-in props along the generated castle's curtain wall,
+values taken from `Tools/LookSamples/render_look_samples.py`'s `LOOKS["calm"]`. Wired into
+`RaidScene` and saved via the live Editor (`unity` CLI). Verified in Play mode: `RaidDirector.Castle`
+built and the scene rendered dark with warm fire pools and no compile/runtime errors from this
+code (one pre-existing, unrelated PurrNet loot-spawn error appears because this scene's solo Play
+mode never starts a NetworkManager or spawns a player — captures below use a temporary camera at
+`CastleSpawnResolver.ResolveSpawn`, not the player's own camera). Two tuning rounds against
+`docs/generated/look-samples-2026-09-24/calm.png` (fog/ambient/exposure warmed up). Captures:
+`docs/generated/night-look-preview-2026-09-25/spawn-view.png` and `bailey-view.png`. Stand-in only —
+see `docs/ProjectState.md` for what it doesn't do; superseded once
+`docs/plans/night-atmosphere.md` steps 1-2 are built.
+
+---
+
+**2026-09-24, night — the look is anchored.** The user asked to polish before building more, and to
+settle the aesthetic first. Decided, section by section: night, warm fire glowing in fog under a
+faint moon; a castle that is calm, then lights up and reddens with each alarm state; one stylised
+surface shader; an outer bailey dressed inside the wall; fog, post-processing and Low/Medium/High
+quality levels that run on a Steam Deck. The spec is [`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md);
+nothing is built yet. The look samples were rendered in Blender (`Tools/LookSamples/`) because the
+Unity Editor was stuck on a "Recovering Scene Backups" dialog, which still needs a person to click
+Yes.
+**2026-09-24, evening — playtest 2 on staging: carrying, loot amount, the Late centre.** The user's
+second test on `claude/staging-2026-09-24` found three things, all fixed there.
+- **Carrying.** Held items lagged and swung when walking. Raids carry through `ItemManager`/`Item`,
+  a strength-capped pull toward the crosshair, and walking was going through the same pull as the
+  mouse. Now the body carries the item and only the mouse is weighted. This is also where the grip
+  fix belonged; last round's was in a path raids don't use.
+- **Loot.** Raids held about 22 items, one per room at most. Now 44-53: several per room, one per
+  anchor, and the crypt centre is full.
+- **The Late Medieval centre.** The Effigy Crypt's tomb sat in a corner. It's re-laid with a gilt
+  floor brass under a candle hearse. The walkway rule rules out a tomb in the middle.
+EditMode 25/25, PlayMode 186/186. Details:
+[`docs/plans/staging-playtest-2-2026-09-24.md`](plans/staging-playtest-2-2026-09-24.md).
+
+---
+
+**2026-09-24, evening — staging follow-ups done: every enemy and room wired in, grips fixed, old
+inventory gone.** On `claude/staging-2026-09-24`, at the user's request after their first test. All 16
+enemies are in their era's roster, with no fallback warnings, and all 29 Late Medieval pieces are
+registered. Carried items were held by their base *and* tipped on their side; they're now upright
+and held at a grip point placed from the art bible. The Tab grid inventory is removed. That removal
+exposed a hidden dependency: PurrNet had only been generating `HistoricalEra`'s serializer because
+of the unused `PlayerInventory`, so the type is now registered explicitly. EditMode 24/24, PlayMode
+183/183. Next: the user retests staging; enemy animation is the next job. Details:
+[`docs/plans/staging-followups-2026-09-24.md`](plans/staging-followups-2026-09-24.md).
+
+---
+
+**2026-09-24, evening — the three art branches are merged to staging.** Merged era, then dreamy,
+then castle-bench into `claude/staging-2026-09-24` rather than `main`, so the user can playtest
+before `main` changes. In the live Editor it compiles, and EditMode 26/26 and PlayMode 183/183
+pass. Next: the user tests staging. The follow-ups (roster era tags, the 6 new enemies, 19 Late
+rooms) are listed in the [plan](plans/merge-2026-09-24-art-branches.md) and not started.
+
+---
+
+**2026-09-24, evening — audit of the day's three art branches, and a merge plan.** Checked
+`dreamy-curie-jnrkbu`, `era-content-integration` and `castle-bench-rooms-mwucab` in a live Editor
+against a trial merge of all three (`claude/trial-merge-2026-09-24`); it compiles. All 16 enemies
+are modelled and none is animated. 10 are in raid rosters; 6 are in none. The 20 loot items and 29
+Bronze rooms are wired in. 19 of the 29 Late Medieval rooms are model-only. The one piece of
+duplicate work is era replication in `RaidDirector`, written on two branches. Plan, awaiting
+approval: [`docs/plans/merge-2026-09-24-art-branches.md`](plans/merge-2026-09-24-art-branches.md).
+Screenshots and scripts: `docs/generated/merge-audit-2026-09-24/`.
+
+**2026-09-24, later — art-bible enemies in the engine, E0–E4, as code (not yet run in Unity).**
+`docs/plans/artbible-enemies-in-engine.md`: an import postprocessor (`ArtBibleModelImporter`:
+Humanoid with an explicit bone map, the hound Generic, URP Lit with ×9 emission, linear data maps),
+a prefab + roster forge that reads the art bible's JSON (`Tools/Plunderspell/Forge Art Bible Enemies +
+Roster`), era gating (`EnemyRoster.PickForZone(zone, era, rng)`, `RaidDirector.Era` replicated,
+`RaidContext` for the castle generator later), and a replicated attack signal on `CastleGuard`.
+The household four leave the roster when the forge runs; the supernatural six stay, Crypt only, in
+every Age. `Tools/Headless/verify.sh` had stopped compiling since the co-op work; the shims were
+extended and it now builds and runs (217 tests: 187 pass, 26 fail in known fidelity gaps, 4
+skipped); every new test passes. Nothing was run in the Editor: importer, forge, the avatar check,
+the scale tests on forged prefabs, CombatBench and co-op are all UNTESTED. Steps are in
+`docs/systems/raid-scene-assembly.md`, "Verification".
+
+---
+
+**2026-09-24, later — all 16 art bible enemies are modelled.** The session resumed from
+`docs/art/HANDOFF.md`. Every enemy passes two consecutive full builds, and every review sheet was
+checked against its concept. The main find: Blender's heat weighting can silently leave every vertex
+on one bone, and validation used to pass that. `validate.py` now fails it. It caught the Dendra
+Champion, which had never blended; the champion is fixed. A shared retry
+(`rig.smooth_weights_with_retry`) covers the random form of the failure. Details are in the Traps
+section of `Tools/ArtForge/README.md`.
+
+---
+
+**2026-09-24 — the eras are different raids now.** The user asked for the existing
+enemies, items and structures to spawn in the game, so that two ages can be told apart even
+unfinished. New: `EraContentCatalogue` (runtime) and
+*Tools ▸ Plunderspell ▸ Forge Era Content* (`EraContentForge`). The forge made prefabs, loot
+items, tables, rosters and registries for all four eras, and `RaidScene` now points at the
+catalogue. Driven in the live Editor through Main menu → Lair → Set Out, each era spawned only its
+own art. Bronze Age: 20 kinds of Bronze room, Bronze loot, Levies, Slingers and Champions. High
+Medieval: the original castle, with knights, crossbowmen, wardens and hounds. Every guard was on
+the NavMesh. Screenshots: `docs/generated/era-integration-2026-09-24/`. Details and limits:
+`docs/systems/raid-scene-assembly.md`, "Eras".
+
+---
+
 **2026-09-24, end of session — enemies mid-run.** ArtForge builds rigged enemies; Lantern Warden and Alaunt War-hound are done, and 14 more were in progress when usage ran out. Resume from [`docs/art/HANDOFF.md`](art/HANDOFF.md).
 
 ---

@@ -98,6 +98,29 @@ A ranged weapon's shot is a local projectile on the machine that fired it, where
 `ShotRelay` shows the same shot on every other machine as a copy with no damage
 (`RangedWeapon.Fired`, `RangedWeapon.SpawnCosmeticShot`).
 
+### Guard attacks reach every peer
+
+<!-- ref:51f2 -->
+Attacks are resolved on the server (`CastleGuard.TryAttack`), so a client used to learn of one only
+from its effect: a health change or a projectile. Each attack now also bumps one replicated integer,
+`CastleGuard._attackSignal`, packed by `GuardAttackSignal`
+(`Assets/_Project/Scripts/Runtime/Guards/GuardAttackSignal.cs`): the attack count in the high bits
+and the kind (`GuardAttackKind.Melee` or `Projectile`) in the low two. One value rather than a count
+and a kind in two `SyncVar`s, because two SyncVars can arrive in either order (the race
+`RaidDirector` handles for its phase and seed) and a client would pair a new count with the last
+attack's kind. The count makes two identical swings two different values, so neither is dropped as
+"unchanged".
+
+`CastleGuard.Attacked` is raised on every peer: on the server inside `SignalAttack`, as the blow
+lands; on a client from the SyncVar's `onChanged` (`OnAttackSignalReplicated`), which the server
+skips so a host never hears its own attack twice. `AttackCount` and `LastAttackKind` read the
+replicated value. This is the hook the animation plan
+([`artbible-enemy-animations.md`](../plans/artbible-enemy-animations.md)) plays swings from; no
+animation reads it yet.
+
+A late joiner receives the current value, not a replay: `Attacked` does not fire for attacks that
+happened before it joined.
+
 ### Damage
 
 `Damage.Apply` offers every hit to `Damage.Forward`, which `DamageRelay` (on the `Network` object)

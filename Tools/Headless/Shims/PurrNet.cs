@@ -13,6 +13,24 @@ using UnityEngine;
 namespace PurrNet.Transports
 {
     public enum Channel { ReliableOrdered, ReliableUnordered, Unreliable, UnreliableSequenced }
+
+    /// <summary>PurrNet 1.15's connection lifecycle, as reported by NetworkManager.serverState/clientState.</summary>
+    public enum ConnectionState { Connecting, Connected, Disconnecting, Disconnected }
+
+    /// <summary>
+    /// Base of every PurrNet transport. Headlessly a transport is only a field type CoopSession
+    /// assigns to NetworkManager.transport: nothing is sent, the harness is a single host.
+    /// </summary>
+    public abstract class GenericTransport : UnityEngine.MonoBehaviour { }
+
+    /// <summary>In-process transport, used for solo play.</summary>
+    public class LocalTransport : GenericTransport { }
+
+    /// <summary>LAN transport. Only its <c>address</c> is modelled.</summary>
+    public class UDPTransport : GenericTransport
+    {
+        public string address = "127.0.0.1";
+    }
 }
 
 namespace PurrNet.Modules
@@ -106,6 +124,8 @@ namespace PurrNet
         public bool hasConnectedOwner => _owner.HasValue;
         public PlayerID? owner => _owner;
         public PlayerID? localPlayer => NetworkHarness.LocalPlayer;
+        /// <summary>PurrNet's non-null local player; the harness's, or player 0 when it has none.</summary>
+        public PlayerID localPlayerForced => NetworkHarness.LocalPlayer ?? default;
 
         public bool IsController(bool ownerHasAuthority) => ownerHasAuthority ? isController : isServer;
         public bool IsSpawned(bool asServer) => isSpawned;
@@ -135,6 +155,15 @@ namespace PurrNet
     }
 
     public abstract class NetworkBehaviour : NetworkIdentity { }
+
+    /// <summary>PurrNet's per-connection player spawner. Only a scene test looks it up, by type.</summary>
+    public class PlayerSpawner : MonoBehaviour { }
+
+    /// <summary>PurrNet's transform sync. Only who controls it is modelled; nothing is sent.</summary>
+    public class NetworkTransform : NetworkIdentity
+    {
+        public bool ownerAuth = true;
+    }
 
     /// <summary>
     /// Global switch describing the simulated peer. Defaults to a listen-server host with local
@@ -325,14 +354,42 @@ namespace PurrNet
         public bool isClient => NetworkHarness.IsClient;
         public bool isHost => isServer && isClient;
         public bool isServerOnly => isServer && !isClient;
+        public bool isClientOnly => isClient && !isServer;
         public bool isOffline => !NetworkHarness.IsRunning;
 
         private void Awake() => main = this;
 
-        public void StartServer() { NetworkHarness.IsRunning = true; NetworkHarness.IsServer = true; }
-        public void StartClient() { NetworkHarness.IsRunning = true; NetworkHarness.IsClient = true; }
-        public void StartHost() => NetworkHarness.ResetToHost();
-        public void StopServer() => NetworkHarness.IsServer = false;
-        public void StopClient() => NetworkHarness.IsClient = false;
+        /// <summary>The transport the next Start* call uses. Headlessly nothing reads it.</summary>
+        public PurrNet.Transports.GenericTransport transport { get; set; }
+
+        public PurrNet.Transports.ConnectionState serverState => NetworkHarness.IsServer
+            ? PurrNet.Transports.ConnectionState.Connected : PurrNet.Transports.ConnectionState.Disconnected;
+        public PurrNet.Transports.ConnectionState clientState => NetworkHarness.IsClient
+            ? PurrNet.Transports.ConnectionState.Connected : PurrNet.Transports.ConnectionState.Disconnected;
+
+        // Raised synchronously on each Start/Stop here; the real transport raises them a frame or
+        // more later, after Connecting/Disconnecting, which a headless single host never sees.
+        public event Action<PurrNet.Transports.ConnectionState> onServerConnectionState;
+        public event Action<PurrNet.Transports.ConnectionState> onClientConnectionState;
+
+        public void StartServer() { NetworkHarness.IsRunning = true; NetworkHarness.IsServer = true; onServerConnectionState?.Invoke(serverState); }
+        public void StartClient() { NetworkHarness.IsRunning = true; NetworkHarness.IsClient = true; onClientConnectionState?.Invoke(clientState); }
+        public void StartHost() { NetworkHarness.ResetToHost(); onServerConnectionState?.Invoke(serverState); onClientConnectionState?.Invoke(clientState); }
+        public void StopServer() { NetworkHarness.IsServer = false; onServerConnectionState?.Invoke(serverState); }
+        public void StopClient() { NetworkHarness.IsClient = false; onClientConnectionState?.Invoke(clientState); }
+    }
+}
+
+namespace PurrNet
+{
+    /// <summary>
+    /// Stand-in for PurrNet's attribute that registers a type for serializer generation by name.
+    /// Headless builds never pack network messages, so it carries the type and does nothing else.
+    /// </summary>
+    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Struct | System.AttributeTargets.Assembly, AllowMultiple = true)]
+    public sealed class RegisterNetworkTypeAttribute : System.Attribute
+    {
+        public RegisterNetworkTypeAttribute(System.Type type) { Type = type; }
+        public System.Type Type { get; }
     }
 }

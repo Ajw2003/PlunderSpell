@@ -1,0 +1,2409 @@
+{
+ "rooms": {
+  "ArmouredCourtyard": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BarracksBunk": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "Bastion": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Beacon",
+    "lit": 2,
+    "p": [
+     0.0,
+     -1.2,
+     7.2
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     0.0,
+     2.4,
+     2.9
+    ]
+   }
+  ],
+  "BlacksmithShop": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Hearth",
+    "lit": 0,
+    "p": [
+     -4.3,
+     4.3,
+     1.35
+    ]
+   }
+  ],
+  "BronzeBathRoom": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeChariotShed": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeCistern": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeDromos": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeFoundry": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeFrescoCourt": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeGraveCircle": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeLarnaxVault": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeLevyBarracks": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeMegaron": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeMegaronStair": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeOilPress": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzePalaceKitchen": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzePithosMagazine": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeQueensHall": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeShaftStair": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -2.4,
+     2.8,
+     1.61
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     4.4,
+     2.6,
+     1.61
+    ]
+   }
+  ],
+  "BronzeShrine": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeTabletArchive": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BronzeTholos": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     2.7,
+     -2.7,
+     1.61
+    ]
+   }
+  ],
+  "BronzeTreasury": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "BurialVault": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "ChapelRoom": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -4.6,
+     4.6,
+     1.61
+    ]
+   }
+  ],
+  "CourtyardCloisterGarth": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -4.6,
+     -4.6,
+     0.04
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     4.6,
+     4.6,
+     0.04
+    ]
+   }
+  ],
+  "CourtyardFormalGarden": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -4.8,
+     0,
+     0.04
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     4.8,
+     0,
+     0.04
+    ]
+   }
+  ],
+  "CourtyardHerbGarden": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     0.0,
+     0.0,
+     0.04
+    ]
+   }
+  ],
+  "CourtyardMidden": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 1,
+    "p": [
+     3.6,
+     3.6,
+     0.04
+    ]
+   }
+  ],
+  "CourtyardTiltyard": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -4.6,
+     -4.2,
+     0.04
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 1,
+    "p": [
+     4.6,
+     4.2,
+     0.04
+    ]
+   }
+  ],
+  "CourtyardWellYard": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -3.6,
+     3.6,
+     0.04
+    ]
+   }
+  ],
+  "CryptAntechamber": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -2.4,
+     -2.4,
+     1.61
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     2.4,
+     -2.4,
+     1.61
+    ]
+   }
+  ],
+  "CryptChamberFinal": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     2.4,
+     4.8,
+     1.91
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     4.8,
+     2.4,
+     1.91
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     2.4,
+     2.4,
+     1.91
+    ]
+   }
+  ],
+  "CryptStairwell": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     3.8,
+     3.8,
+     1.61
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     3.8,
+     -3.8,
+     1.61
+    ]
+   }
+  ],
+  "DressingGateYard": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     0.9,
+     -1.6,
+     0.0
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -0.9,
+     -1.6,
+     0.0
+    ]
+   }
+  ],
+  "DressingLeanTo": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     2.6,
+     -1.9,
+     0.0
+    ]
+   }
+  ],
+  "DressingPens": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     1.3,
+     -1.9,
+     0.0
+    ]
+   }
+  ],
+  "DressingTraining": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -0.9,
+     -1.0,
+     0.0
+    ]
+   }
+  ],
+  "DressingWoodpile": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     -1.6,
+     -1.0,
+     0.0
+    ]
+   }
+  ],
+  "GatehouseModule": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     -3.6,
+     1.0,
+     2.8
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     3.6,
+     1.0,
+     2.8
+    ]
+   }
+  ],
+  "GreatHallMain": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "GuardRoomInner": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     2.4,
+     2.4,
+     1.61
+    ]
+   }
+  ],
+  "KeepStairwell": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     3.8,
+     3.8,
+     1.61
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     3.8,
+     -3.8,
+     1.61
+    ]
+   }
+  ],
+  "KitchenRoom": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Hearth",
+    "lit": 0,
+    "p": [
+     -4.3,
+     4.0,
+     1.54
+    ]
+   }
+  ],
+  "LateArmouryHall": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateArtilleryYard": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateBrewhouse": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateChantryChapel": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateCharnelHouse": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateCountingHouse": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateEffigyCrypt": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateGreatHall": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateGunFoundry": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateHandgunnerBarracks": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateJewelHouse": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateLibrary": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateOubliette": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateSpitKitchen": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateStateBedchamber": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateTapestrySolar": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateTreadwheelWell": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateTurretStair": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateUndercroft": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LateUndercroftStair": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "LordsSolar": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     1.0,
+     0.0
+    ],
+    "holder": false,
+    "kind": "Hearth",
+    "lit": 0,
+    "p": [
+     -4.3,
+     3.8,
+     0.35
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     3.8,
+     -4.4,
+     1.61
+    ]
+   }
+  ],
+  "RoyalBedchamber": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "StableBlock": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "StorehouseRoom": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "ThroneRoomKeep": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     2.2,
+     5.0,
+     1.61
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     5.0,
+     2.2,
+     1.61
+    ]
+   }
+  ],
+  "TombCorridor": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "TreasuryVault": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ],
+  "WallCorner": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Beacon",
+    "lit": 2,
+    "p": [
+     -3.7,
+     -3.7,
+     6.6
+    ]
+   }
+  ],
+  "WallStraight": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     0.0,
+     -5.5,
+     2.9
+    ]
+   }
+  ],
+  "WellCourtyard": [
+   {
+    "facing": [
+     0.0,
+     -1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     1.85,
+     5.5,
+     2.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 1,
+    "p": [
+     -1.85,
+     -5.5,
+     2.6
+    ]
+   }
+  ]
+ },
+ "space": "blender_z_up_module_local"
+}

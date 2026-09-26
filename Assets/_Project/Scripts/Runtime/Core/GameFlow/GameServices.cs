@@ -5,7 +5,6 @@ namespace Plunderspell.Core
     {
         public static GameStateManager GameState { get; private set; }
         public static PlayerStats PlayerStats { get; private set; }
-        public static InventorySystem Inventory { get; private set; }
         public static ExtractionController Extraction { get; private set; }
         public static bool IsInitialized { get; private set; }
 
@@ -37,7 +36,6 @@ namespace Plunderspell.Core
 
             GameState = new GameStateManager();
             PlayerStats = new PlayerStats();
-            Inventory = new InventorySystem(capacity: 20);
             Extraction = new ExtractionController(extractionDurationSeconds: 8f);
             IsInitialized = true;
         }

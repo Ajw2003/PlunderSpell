@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d2bc58b041d0984486880217349b189, type: 3}
+  m_Name: NightAtmosphere
+  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.NightAtmosphereProfile
+  TransitionSeconds: 2
+  Calm:
+    FogColor: {r: 0.15, g: 0.1, b: 0.068, a: 1}
+    FogDensity: 0.038
+    FogBaseHeight: 0
+    FogHeightFalloff: 0.075
+    SkyDistance: 140
+    MoonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
+    MoonIntensity: 0.035
+    MoonScatter: 0.02
+    MoonAnisotropy: 0.55
+    AmbientSky: {r: 0.075, g: 0.072, b: 0.08, a: 1}
+    AmbientEquator: {r: 0.12, g: 0.085, b: 0.06, a: 1}
+    AmbientGround: {r: 0.07, g: 0.05, b: 0.036, a: 1}
+    SkyZenith: {r: 0.012, g: 0.012, b: 0.016, a: 1}
+    SkyHorizon: {r: 0.05, g: 0.04, b: 0.035, a: 1}
+    FlameColor: {r: 1, g: 0.5, b: 0.18, a: 1}
+    FireIntensity: 1.4
+    FireScatter: 1.9
+    FireAnisotropy: 0.6
+    Post: {fileID: 11400000, guid: 1db009312a0e94f4ab2974c41b81121a, type: 2}
+  Stirred:
+    FogColor: {r: 0.17, g: 0.11, b: 0.07, a: 1}
+    FogDensity: 0.038
+    FogBaseHeight: 0
+    FogHeightFalloff: 0.075
+    SkyDistance: 140
+    MoonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
+    MoonIntensity: 0.035
+    MoonScatter: 0.02
+    MoonAnisotropy: 0.55
+    AmbientSky: {r: 0.075, g: 0.072, b: 0.08, a: 1}
+    AmbientEquator: {r: 0.12, g: 0.085, b: 0.06, a: 1}
+    AmbientGround: {r: 0.07, g: 0.05, b: 0.036, a: 1}
+    SkyZenith: {r: 0.012, g: 0.012, b: 0.016, a: 1}
+    SkyHorizon: {r: 0.06, g: 0.045, b: 0.035, a: 1}
+    FlameColor: {r: 1, g: 0.49, b: 0.18, a: 1}
+    FireIntensity: 1.5
+    FireScatter: 2.1
+    FireAnisotropy: 0.6
+    Post: {fileID: 11400000, guid: f51f9cc2ce10a9947b166e8aaae3ef8f, type: 2}
+  Roused:
+    FogColor: {r: 0.22, g: 0.12, b: 0.06, a: 1}
+    FogDensity: 0.034
+    FogBaseHeight: 0
+    FogHeightFalloff: 0.075
+    SkyDistance: 140
+    MoonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
+    MoonIntensity: 0.035
+    MoonScatter: 0.02
+    MoonAnisotropy: 0.55
+    AmbientSky: {r: 0.075, g: 0.072, b: 0.08, a: 1}
+    AmbientEquator: {r: 0.15, g: 0.09, b: 0.055, a: 1}
+    AmbientGround: {r: 0.07, g: 0.05, b: 0.036, a: 1}
+    SkyZenith: {r: 0.012, g: 0.012, b: 0.016, a: 1}
+    SkyHorizon: {r: 0.09, g: 0.05, b: 0.03, a: 1}
+    FlameColor: {r: 1, g: 0.42, b: 0.13, a: 1}
+    FireIntensity: 1.5
+    FireScatter: 2.3
+    FireAnisotropy: 0.6
+    Post: {fileID: 11400000, guid: 945011df1d6fd094c8ebdbf74a673966, type: 2}
+  HueAndCry:
+    FogColor: {r: 0.25, g: 0.1, b: 0.05, a: 1}
+    FogDensity: 0.03
+    FogBaseHeight: 0
+    FogHeightFalloff: 0.075
+    SkyDistance: 140
+    MoonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
+    MoonIntensity: 0.035
+    MoonScatter: 0.02
+    MoonAnisotropy: 0.55
+    AmbientSky: {r: 0.075, g: 0.072, b: 0.08, a: 1}
+    AmbientEquator: {r: 0.17, g: 0.08, b: 0.05, a: 1}
+    AmbientGround: {r: 0.08, g: 0.04, b: 0.028, a: 1}
+    SkyZenith: {r: 0.03, g: 0.012, b: 0.01, a: 1}
+    SkyHorizon: {r: 0.12, g: 0.045, b: 0.025, a: 1}
+    FlameColor: {r: 1, g: 0.34, b: 0.1, a: 1}
+    FireIntensity: 1.55
+    FireScatter: 2.4
+    FireAnisotropy: 0.6
+    Post: {fileID: 11400000, guid: d582a3cdf61de364e87d6d159d6fd06f, type: 2}
+  BronzeAge:
+    Stone: {r: 0.72, g: 0.62, b: 0.52, a: 1}
+    Flame: {r: 1, g: 1.04, b: 1.08, a: 1}
+  HighMedieval:
+    Stone: {r: 1.12, g: 0.97, b: 0.82, a: 1}
+    Flame: {r: 1, g: 1, b: 1, a: 1}
+  LateMedieval:
+    Stone: {r: 0.74, g: 0.64, b: 0.54, a: 1}
+    Flame: {r: 1, g: 1, b: 1, a: 1}
+  AgeOfPowder:
+    Stone: {r: 0.66, g: 0.6, b: 0.54, a: 1}
+    Flame: {r: 1, g: 0.97, b: 0.92, a: 1}

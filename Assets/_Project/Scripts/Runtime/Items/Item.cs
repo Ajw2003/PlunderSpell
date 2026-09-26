@@ -23,6 +23,15 @@ public class Item : MonoBehaviour
     private Vector3 _targetPosition;
     private Quaternion _targetRotation = Quaternion.identity;
 
+    // The holder's body, when it has one. The item rides along with it rigidly; only the hand's own
+    // movement relative to the body (the mouse) goes through the weighted grip below.
+    private Rigidbody _holderBody;
+    private Vector3 _holderVelocityLastStep;
+    private Vector3 _targetOffsetFromHolder;
+
+    // The grip, relative to the item's position and in its rotation frame, measured at pickup.
+    private Vector3 _gripOffset;
+
     // References for enemy handling. Resolved through Core interfaces, not MonsterStateMachine
     // directly, so Items does not depend on Enemies (Enemies already depends on Items via Item
     // references in the Monster FSM, and a direct reference back would create a cycle).
@@ -42,6 +51,9 @@ public class Item : MonoBehaviour
 
     [Tooltip("Fastest a held item is pulled toward the hand, m/s.")]
     [SerializeField] private float _maxHoldSpeed = 14f;
+
+    [Tooltip("Where the hand holds this item. Empty: the centre of its meshes.")]
+    [SerializeField] private Transform _gripPoint;
 
     [Tooltip("Fastest a throw can launch anything, m/s. A light cup is not a bullet.")]
     [SerializeField] private float _maxThrowSpeed = 18f;
@@ -102,8 +114,18 @@ public class Item : MonoBehaviour
 
         // A real body pulled by a hand of limited strength, not a teleport: the solver keeps it out
         // of walls, it carries momentum into whatever it hits, and weight shows as lag and sag.
+        // Walking is not the hand moving: the body's change of velocity reaches the item whole, and
+        // the target is kept relative to the body, so strength and weight only act on the hand's
+        // own movement (aim, reach). See docs/plans/staging-playtest-2-2026-09-24.md, part 1.
         float dt = Time.fixedDeltaTime;
-        Vector3 wantedVelocity = Vector3.ClampMagnitude((_targetPosition - _rb.position) * _followSpeed, _maxHoldSpeed);
+        Vector3 holderVelocity = _holderBody != null ? _holderBody.linearVelocity : Vector3.zero;
+        _rb.linearVelocity += holderVelocity - _holderVelocityLastStep;
+        _holderVelocityLastStep = holderVelocity;
+
+        Vector3 target = _holderBody != null ? _holderBody.position + _targetOffsetFromHolder : _targetPosition;
+        Vector3 grip = _rb.position + _rb.rotation * _gripOffset;
+        Vector3 wantedVelocity = holderVelocity +
+            Vector3.ClampMagnitude((target - grip) * _followSpeed, _maxHoldSpeed);
         Vector3 force = (wantedVelocity - _rb.linearVelocity) / dt * _rb.mass - Physics.gravity * _rb.mass;
         _rb.AddForce(Vector3.ClampMagnitude(force, _gripStrength), ForceMode.Force);
 
@@ -182,6 +204,11 @@ public class Item : MonoBehaviour
         SetIgnoreHolder(true);
 
         _targetRotation = transform.rotation;
+        _holderBody = holder != null ? holder.GetComponent<Rigidbody>() : null;
+        _holderVelocityLastStep = Vector3.zero;
+        MeasureGrip();
+        // Hold it where it is until the hand says otherwise.
+        UpdateTargetPosition(GripWorldPosition);
 
         if (_carryableCreature != null && (Object)_carryableCreature != null)
         {
@@ -260,11 +287,44 @@ public class Item : MonoBehaviour
     public void UpdateTargetPosition(Vector3 position)
     {
         _targetPosition = position;
+        // Against the same (rendered) holder pose the camera placed this point from.
+        if (_holderBody != null)
+            _targetOffsetFromHolder = position - _holderBody.transform.position;
     }
 
     public void UpdateRotation(Quaternion rotation)
     {
         _targetRotation = rotation;
+    }
+
+    /// <summary>Sets where the hand holds this item; null holds it by its mesh centre.</summary>
+    public void SetGripPoint(Transform gripPoint)
+    {
+        _gripPoint = gripPoint;
+        MeasureGrip();
+    }
+
+    private void MeasureGrip() =>
+        _gripOffset = Quaternion.Inverse(transform.rotation) * (GripWorldPosition - transform.position);
+
+    /// <summary>Where the hand is holding the item right now, in world space.</summary>
+    public Vector3 GripWorldPosition => _gripPoint != null ? _gripPoint.position : MeshCentre();
+
+    private Vector3 MeshCentre()
+    {
+        bool any = false;
+        var bounds = new Bounds(transform.position, Vector3.zero);
+        foreach (Renderer meshRenderer in GetComponentsInChildren<Renderer>())
+        {
+            if (meshRenderer is ParticleSystemRenderer)
+                continue;
+            if (!any)
+                bounds = meshRenderer.bounds;
+            else
+                bounds.Encapsulate(meshRenderer.bounds);
+            any = true;
+        }
+        return bounds.center;
     }
 
     public Quaternion TargetRotation => _targetRotation;

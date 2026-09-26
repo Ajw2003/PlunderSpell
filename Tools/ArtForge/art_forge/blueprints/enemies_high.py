@@ -749,7 +749,8 @@ def castle_crossbowman(entry: Entry):
 def _great_helm(fig: Human, bottom: float, top: float) -> list[Part]:
     """Flat-topped great helm 0.25 m wide x 0.33 m tall over coif and padded cap:
     brow band and lower band (2 cm) either side of two eye slits, a 3 cm vertical
-    strap down the face, twelve breaths on the right cheek, rivets. Its own bone
+    strap down the face, twelve breaths on the right cheek (no rivet heads: see
+    below). Its own bone
     (Helm) under Head; the slits and breaths are a near-black void family."""
     hw, hd, p = 0.125, 0.140, 3.0
     cy = -0.012
@@ -777,11 +778,11 @@ def _great_helm(fig: Human, bottom: float, top: float) -> list[Part]:
                                                         hd + 0.004, 24, p)
                                             for z in (zc - 0.010, zc + 0.010)],
                                   **rig, "bevel": False}))
-        for k in range(6):                                # bright rivets
-            x = (-1 + 2 * k / 5) * 0.105
-            parts.append(Part("sphere", (x, front_y(x, 0.006), zc), (0.010, 0.008, 0.010),
-                              mat="helm_iron", bone="Helm", segments=6, rings=4,
-                              extras={**rig, "bevel": False}))
+        # No rivet heads here. Twelve 1 cm rivets (as spheres, as studs, or pushed
+        # further out) made Blender's heat weighting fail on most builds: every
+        # vertex then kept its rigid weight and the POSED view tore at the knees and
+        # elbows, yet validation still passed. Without them 12 of 12 trial builds
+        # skinned. The bands and the face strap carry the helm's read at ten paces.
     # Vertical reinforcing strap, 3 cm, down the face.
     parts.append(Part("box", (0.0, front_y(0.0, 0.004), (bottom + top) / 2),
                       (0.030, 0.008, top - bottom - 0.01), mat="helm_iron", bone="Helm",
@@ -981,28 +982,40 @@ def household_knight(entry: Entry):
     # Surcoat: to 0.54 m, over the hauberk, bordured in kermes on every edge.
     hem, flare = 0.54, 1.42
     paint = [{"mat": "kermes_gules", "min": (-1, -1, -1), "max": (1, 1, hem + 0.05)},
-             {"mat": "kermes_gules", "min": (-1, -1, 0.812 * h), "max": (1, 1, 3)},
-             {"mat": "kermes_gules", "min": (-0.024, -1, -1), "max": (0.024, 0.0, 0.72)}]
-    zs = [hem + 0.05 + 0.06 * i for i in range(15)]
-    for z0, z1 in zip(zs, zs[1:]):
-        zm = (z0 + z1) / 2
-        if zm > fig.crotch_z:
-            hw, hd, _dy = fig.torso_dims(zm)
-        else:
-            f = flare + (1.0 - flare) * (zm - hem) / (fig.crotch_z - hem)
-            hw, hd = 0.092 * h * fig.bulk * f, 0.064 * h * fig.bulk * f
-        hw, hd = hw + coat_pad, hd + coat_pad
-        for s in (1.0, -1.0):         # side edges, front and back corners only
-            for sy in (1.0, -1.0):
-                x0, x1 = sorted((s * (hw - 0.05), s * 2.0))
-                y0, y1 = sorted((sy * hd * 0.45, sy * 2.0))
-                paint.append({"mat": "kermes_gules", "min": (x0, y0, z0),
-                              "max": (x1, y1, z1)})
-    parts.append(fig.torso_part("woad_field", pad=coat_pad, hem=hem, hem_flare=flare,
-                                segments=32, paint=paint))
+             {"mat": "kermes_gules", "min": (-1, -1, 0.812 * h), "max": (1, 1, 3)}]
+    surcoat = fig.torso_part("woad_field", pad=coat_pad, hem=hem, hem_flare=flare,
+                             segments=32, paint=paint)
+    # torso_part's first face row runs hem -> 0.68 m, so its centroid sits above
+    # the 5 cm bordure and the hem came out blue. Split that row with a ring 5 cm
+    # up (lerped between the first two rings, same vertex count) so the bordure
+    # band has faces of its own.
+    rings = surcoat.extras["rings"]
+    r0, r1 = rings[0], rings[1]
+    t = 0.05 / (r1[0][2] - r0[0][2])
+    rings.insert(1, [tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
+                     for a, b in zip(r0, r1)])
+    # Side and split bordures are painted per face column, not by x/y boxes: a
+    # box threshold catches one column on some rows and two on others, which
+    # stair-stepped the edges. Columns 2-3 / 12-13 / 18-19 / 28-29 are the four
+    # corners of the 32-sided ring (the side slits' front and back edges);
+    # 23-24 flank the front-centre vertex: the riding split, hem to 0.84 m.
+    n = len(r0)
+    for r in range(len(rings) - 1):
+        lo, hi = rings[r], rings[r + 1]
+        for k in range(n):
+            quad = (lo[k], lo[(k + 1) % n], hi[k], hi[(k + 1) % n])
+            c = [sum(v[i] for v in quad) / 4.0 for i in range(3)]
+            if (k in (2, 3, 12, 13, 18, 19, 28, 29) and c[2] < 0.812 * h) or \
+                    (k in (23, 24) and c[2] < 0.84):
+                paint.append({"mat": "kermes_gules",
+                              "min": tuple(x - 0.004 for x in c),
+                              "max": tuple(x + 0.004 for x in c)})
+    parts.append(surcoat)
     parts += _chevron(fig, coat_pad)
     for side in ("L", "R"):
-        parts.append(fig.arm_part(side, "mail_steel", pad=0.014))
+        # Mail over a padded aketon: the concept's sleeves are as broad as the
+        # surcoat's shoulders, so the sleeve carries more pad than a bare arm.
+        parts.append(fig.arm_part(side, "mail_steel", pad=0.024))
         parts += fig.hand_part(side, "mail_steel")      # mail mufflers
         parts.append(fig.leg_part(side, "mail_steel", pad=0.008))
         parts.append(fig.foot_part(side, "mail_steel", length=0.28, point=0.3))

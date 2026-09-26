@@ -1,5 +1,8 @@
 # Handoff — art bible enemies (ArtForge), 2026-09-24
 
+> **Status: complete.** All 16 enemies were finished after this handoff was written. It is kept
+> as the record of the resume procedure; the procedure still applies to adding new enemies.
+
 Written because the session was about to run out of usage while four enemy workers were
 mid-run. Everything below is committed on `claude/dreamy-curie-jnrkbu`. `Tools/autosave.sh`
 was committing every 3 minutes, so at most about 3 minutes of worker output is missing.
@@ -123,5 +126,6 @@ Then:
   - The Lantern Warden's lantern glow is stored darker (`#4A1E0C`), because the material
     multiplies emission by 9.
   - The warden uses one extra colour (`woad_mud`).
-- **In Unity:** nothing has been imported into Unity. There are no `.meta` files, and the items
-  aren't in any loot table.
+- **In Unity:** imported and wired into raids on 2026-09-24 by *Forge Era Content*; see
+  `docs/systems/raid-scene-assembly.md`, "Eras". Re-run it after new models land. (Was: nothing imported, and the items
+  weren't in any loot table.)

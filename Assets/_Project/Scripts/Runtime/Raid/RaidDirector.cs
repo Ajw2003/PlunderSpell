@@ -1,4 +1,5 @@
 using System;
+using Interfaces;
 using PurrNet;
 using RogueAi.Alarm;
 using RogueAi.Castle;
@@ -53,6 +54,9 @@ namespace RogueAi.Raid
                  "is rolled per raid, so a spawn baked into the scene is only right for one of them.")]
         [SerializeField] private Transform _playerRoot;
 
+        [Tooltip("Per-era rooms, loot and garrison. Empty: every era raids with the scene defaults.")]
+        [SerializeField] private EraContentCatalogue _eraContent;
+
         [Header("Raid setup")]
         [Tooltip("Seed for the next raid. Left at 0, a fresh one is rolled per raid.")]
         [SerializeField] private int _fixedSeed;
@@ -60,6 +64,9 @@ namespace RogueAi.Raid
         // Replicated so a late-joining client knows what is going on without asking.
         private readonly SyncVar<RaidPhase> _phase = new SyncVar<RaidPhase>(RaidPhase.InLair);
         private readonly SyncVar<int> _seed = new SyncVar<int>(0);
+
+        // Replicated because every peer builds its own castle geometry, and the era picks the rooms.
+        private readonly SyncVar<HistoricalEra> _era = new SyncVar<HistoricalEra>(HistoricalEra.BronzeAge);
 
         // The host's campaign, so a friend's Lair shows the debt they are paying off together.
         private readonly SyncVar<float> _hostDebt = new SyncVar<float>(0f);
@@ -72,8 +79,8 @@ namespace RogueAi.Raid
         /// <summary>The seed the current (or most recent) raid was built from.</summary>
         public int Seed => _seed.value;
 
-        /// <summary>The era the current raid is set in.</summary>
-        public HistoricalEra Era { get; private set; } = HistoricalEra.BronzeAge;
+        /// <summary>The era the current raid is set in. Replicated, so a client reads the host's.</summary>
+        public HistoricalEra Era => _era.value;
 
         /// <summary>The layout the current raid is being played in, or null in the Lair.</summary>
         public ProceduralCastleData Castle { get; private set; }
@@ -83,6 +90,27 @@ namespace RogueAi.Raid
 
         /// <summary>Players saved by the most recent extraction.</summary>
         public int LastPlayersSaved { get; private set; }
+
+        /// <summary>Where the team stepped out of the portal: a capsule centre, as the spawn resolver returns.</summary>
+        public Vector3 ArrivalPoint { get; private set; }
+
+        /// <summary>The module the team arrived in, or <see cref="CastleArrivalPlanner.NoArrival"/>.</summary>
+        public int ArrivalModuleIndex { get; private set; } = CastleArrivalPlanner.NoArrival;
+
+        /// <summary>Living players who were outside the portal when the most recent raid ended.</summary>
+        public int LastPlayersLeftBehind { get; private set; }
+
+        /// <summary>
+        /// How far from the portal's centre each player stands on arrival. Outside the 4 m portal, so
+        /// arriving does not start the leaving countdown.
+        /// </summary>
+        public const float PlayerRingRadius = 3.5f;
+
+        /// <summary>
+        /// Raised on every peer once the portal stands for a raid, with the floor point under it.
+        /// The portal's light and glow listen for it.
+        /// </summary>
+        public event Action<Vector3> PortalOpened;
 
         /// <summary>Raised on every phase change. HUD and scene loading subscribe.</summary>
         public event Action<RaidPhase> PhaseChanged;
@@ -97,6 +125,7 @@ namespace RogueAi.Raid
             base.OnSpawned();
             _phase.onChanged += OnPhaseReplicated;
             _seed.onChanged += OnSeedReplicated;
+            _era.onChanged += OnEraReplicated;
             _hostDebt.onChanged += OnHostCampaignReplicated;
             _hostGold.onChanged += OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged += OnHostCampaignReplicated;
@@ -113,6 +142,7 @@ namespace RogueAi.Raid
             base.OnDespawned();
             _phase.onChanged -= OnPhaseReplicated;
             _seed.onChanged -= OnSeedReplicated;
+            _era.onChanged -= OnEraReplicated;
             _hostDebt.onChanged -= OnHostCampaignReplicated;
             _hostGold.onChanged -= OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged -= OnHostCampaignReplicated;
@@ -158,7 +188,7 @@ namespace RogueAi.Raid
                 return;
             }
 
-            Era = era;
+            _era.value = era;
             _lair?.SelectEra(era);
 
             // Debt grows every time you set out, which is what puts a clock on the whole campaign.
@@ -194,12 +224,34 @@ namespace RogueAi.Raid
                 return null;
             }
 
-            Debug.Log($"[Raid] Building the castle from seed {seed} ({(isSpawned && !isServer ? "client" : "host")}).");
+            ApplyEraContent(Era);
+
+            Debug.Log($"[Raid] Building the castle from seed {seed}, {Era} ({(isSpawned && !isServer ? "client" : "host")}).");
+
+            // Published before generating, so anything below the raid in the dependency graph (the
+            // castle generator's era rooms, when they land) reads the same Age the garrison is drawn for.
+            RaidContext.Publish(new RaidContext(seed, Era));
             Castle = GenerateWalkable(ref seed);
+            if (RaidContext.Current.Seed != seed)
+                RaidContext.Publish(new RaidContext(seed, Era));
             if (!isSpawned || isServer)
                 _seed.value = seed;
             else
+            {
                 _clientBuiltSeed = seed;
+                _clientBuiltEra = Era;
+            }
+
+            // The rooms were instantiated a moment ago; without this their colliders are still at
+            // their old transforms and every overlap probe reports clear.
+            Physics.SyncTransforms();
+
+            // Every peer derives the same arrival from the seed, so the portal and the team land in
+            // the same place on every screen without it being sent.
+            ArrivalPoint = CastleSpawnResolver.ResolveArrival(Castle, seed, out int arrivalModule);
+            ArrivalModuleIndex = arrivalModule;
+            OpenPortal();
+            SealCastle();
 
             // Before the NavMesh bake and the spawners, so a guard or a loot pile is never dropped
             // on top of a player who is about to be moved there.
@@ -218,7 +270,7 @@ namespace RogueAi.Raid
             if (!isSpawned || isServer)
             {
                 _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
-                _guardSpawner?.SpawnFor(Castle, seed);
+                _guardSpawner?.SpawnFor(Castle, seed, Era, ArrivalModuleIndex);
             }
 
             return Castle;
@@ -296,6 +348,7 @@ namespace RogueAi.Raid
         {
             _generator?.ClearGenerated();
             Castle = null;
+            RaidContext.Clear();
             if (!isSpawned || isServer)
                 SetPhase(RaidPhase.InLair);
         }
@@ -304,8 +357,42 @@ namespace RogueAi.Raid
         // Plumbing
         // -----------------------------------------------------------------------------------------
 
+        /// <summary>Points the generator, loot and garrison at the chosen era's content.</summary>
+        private void ApplyEraContent(HistoricalEra era)
+        {
+            // The scene's own assignments are the fallback, captured once so that raiding a
+            // catalogued era and then an uncatalogued one does not keep the first era's content.
+            if (!_capturedDefaults)
+            {
+                _defaultRooms = _generator != null ? _generator.Registry : null;
+                _defaultLoot = _lootSpawner != null ? _lootSpawner.Table : null;
+                _defaultEnemies = _guardSpawner != null ? _guardSpawner.Roster : null;
+                _capturedDefaults = true;
+            }
+
+            EraContentCatalogue.Entry entry = _eraContent != null ? _eraContent.For(era) : null;
+            CastleRoomRegistry rooms = entry?.Rooms != null ? entry.Rooms : _defaultRooms;
+            RaidLootTable loot = entry?.Loot != null ? entry.Loot : _defaultLoot;
+            EnemyRoster enemies = entry?.Enemies != null ? entry.Enemies : _defaultEnemies;
+
+            if (_generator != null)
+                _generator.Registry = rooms;
+            if (_lootSpawner != null)
+                _lootSpawner.Table = loot;
+            if (_guardSpawner != null)
+                _guardSpawner.Roster = enemies;
+
+            Debug.Log($"[Raid] {era} content: rooms {(rooms != null ? rooms.name : "none")}, " +
+                      $"loot {(loot != null ? loot.name : "none")}, enemies {(enemies != null ? enemies.name : "none")}.");
+        }
+
+        private bool _capturedDefaults;
+        private CastleRoomRegistry _defaultRooms;
+        private RaidLootTable _defaultLoot;
+        private EnemyRoster _defaultEnemies;
+
         /// <summary>
-        /// Stands the player just inside the gatehouse of the castle just built. Derived here, from
+        /// Stands the player beside the arrival portal of the castle just built. Derived here, from
         /// the seed this raid actually rolled, rather than baked into the scene — a baked spawn is
         /// only in the right place for the one seed it was baked from.
         /// </summary>
@@ -321,24 +408,23 @@ namespace RogueAi.Raid
                 return;
             }
 
-            // The rooms were instantiated a moment ago; without this their colliders are still at
-            // their old transforms and every overlap probe reports clear.
-            Physics.SyncTransforms();
-
-            Vector3 spawn = CastleSpawnResolver.ResolveSpawn(Castle);
-
-            // Each player stands at a different point around the gate, by owner number, so two
-            // bodies are never placed inside each other: a client places itself as soon as its
-            // castle is built, before the host's body has arrived there on its screen.
+            // Each player stands at their own point on a ring round the portal, by owner number, so
+            // two bodies are never placed inside each other (a client places itself as soon as its
+            // castle is built, before the host's body has arrived there on its screen) and nobody
+            // arrives standing in the exit.
             int index = player.TryGetComponent(out NetworkIdentity identity) && identity.owner.HasValue
                 ? Mathf.Max(0, (int)(ulong)identity.owner.Value.id - 1)
                 : 0;
-            if (index > 0)
-            {
-                float angle = index * Mathf.PI * 0.5f;
-                var anchor = new Vector3(spawn.x + Mathf.Cos(angle) * 1.5f, 0f, spawn.z + Mathf.Sin(angle) * 1.5f);
-                spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
-            }
+            float angle = index * Mathf.PI * 0.5f;
+            var anchor = new Vector3(ArrivalPoint.x + Mathf.Cos(angle) * PlayerRingRadius, 0f,
+                ArrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
+            Vector3 spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
+
+            // Face the portal, so the first thing a player sees is the way home.
+            Vector3 toPortal = ArrivalPoint - spawn;
+            toPortal.y = 0f;
+            if (toPortal.sqrMagnitude > 0.01f && player.TryGetComponent(out StateMachine.PlayerStateMachine look))
+                look.FaceYaw(Quaternion.LookRotation(toPortal.normalized, Vector3.up).eulerAngles.y);
 
             // Through the rigidbody as well as the transform: an interpolated body writes its old
             // position back over a transform-only move on the next physics step.
@@ -351,8 +437,47 @@ namespace RogueAi.Raid
             Debug.Log($"[Raid] Placed {player.name} at {player.position}.");
         }
 
+        /// <summary>Stands the extraction zone on the floor under the arrival point: the way in is the way out.</summary>
+        private void OpenPortal()
+        {
+            float feet = ArrivalPoint.y - CastleSpawnResolver.PlayerHeight * 0.5f - CastleSpawnResolver.FloorClearance;
+            var floorPoint = new Vector3(ArrivalPoint.x, feet, ArrivalPoint.z);
+            if (_extractionZone != null)
+                _extractionZone.PlaceAsPortal(floorPoint);
+            PortalOpened?.Invoke(floorPoint);
+        }
+
+        /// <summary>Puts the invisible boundary round the castle just built.</summary>
+        private void SealCastle()
+        {
+            if (_generator == null)
+                return;
+
+            CastleBoundary.EnsureOn(_generator.gameObject)
+                .Rebuild(_generator.CurtainWallRadius, k_CellSize);
+        }
+
+        /// <summary>The castle kit's cell size. The generator's own field is private; they must match.</summary>
+        private const float k_CellSize = 12f;
+
+        /// <summary>Living player bodies in the scene. Only called once, when a raid ends.</summary>
+        private static int CountLivingPlayers()
+        {
+            int living = 0;
+            foreach (MonoBehaviour behaviour in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+            {
+                if (behaviour is IPlayerBody body && body.IsAlive)
+                    living++;
+            }
+            return living;
+        }
+
         private void OnExtractionResolved(float worth, int saved)
         {
+            // Every peer counts for itself: the bodies are replicated, the count is not.
+            LastPlayersLeftBehind = ExtractionZone.CountLeftBehind(CountLivingPlayers(), saved);
+            _lair?.RecordLeftBehind(LastPlayersLeftBehind);
+
             if (isSpawned && !isServer)
             {
                 // A client only mirrors the summary; the server owns the economy.
@@ -398,9 +523,17 @@ namespace RogueAi.Raid
         /// castle being null: the host can go from a finished raid straight into the next in one
         /// frame, so a client may never see the Lair phase that would have cleared the old one.
         /// </summary>
-        private bool NeedsClientBuild(int seed) => seed != 0 && (Castle == null || _clientBuiltSeed != seed);
+        private bool NeedsClientBuild(int seed) =>
+            seed != 0 && (Castle == null || _clientBuiltSeed != seed || _clientBuiltEra != Era);
 
         private int _clientBuiltSeed;
+        private HistoricalEra _clientBuiltEra;
+
+        private void OnEraReplicated(HistoricalEra era)
+        {
+            if (!isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(_seed.value))
+                BuildCastle(_seed.value);
+        }
 
         private void OnSeedReplicated(int seed)
         {
@@ -487,7 +620,8 @@ namespace RogueAi.Raid
         public void Configure(ProceduralCastleGenerator generator, LootSpawner spawner,
             ExtractionZone zone, LairHubManager lair, AlarmFSMManager alarm = null,
             CastleNetworkManager castleNetwork = null, GuardSpawner guardSpawner = null,
-            CastleNavMeshBaker navigation = null, Transform playerRoot = null)
+            CastleNavMeshBaker navigation = null, Transform playerRoot = null,
+            EraContentCatalogue eraContent = null)
         {
             UnsubscribeFromZone();
 
@@ -500,6 +634,8 @@ namespace RogueAi.Raid
             _guardSpawner = guardSpawner;
             _navigation = navigation;
             _playerRoot = playerRoot;
+            _eraContent = eraContent;
+            _capturedDefaults = false;
 
             SubscribeToZone();
         }

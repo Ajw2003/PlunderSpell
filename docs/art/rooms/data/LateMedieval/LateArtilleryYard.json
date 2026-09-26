@@ -1,0 +1,95 @@
+{
+  "key": "LateArtilleryYard",
+  "name": "The Artillery Yard",
+  "age": "LateMedieval",
+  "zone": "OuterBailey",
+  "role": "StableBlock",
+  "summary": "A great hooped bombard lashed into its sledge, a pyramid of stone gunstones, powder kegs, and the powder cart with its spare wheel and rammer rack.",
+  "description": "Where the old castle stabled horses, the new one stables guns. The bombard in the north-west corner is wrought-iron staves hooped like a barrel, with a narrower powder chamber behind the bore, and it lies roped into a timber sledge because nothing on wheels could carry it. Its ammunition is stone, cut round by masons and stacked in a pyramid across the yard; each ball is the weight of a man. Powder lives in kegs in the far corner, as far from anything that burns as the gunners can manage, and the two-wheeled cart that brings it stands ready with a spare wheel against the wall and the rammer and sponge racked above. One spark in the south-east corner and the yard is a crater.",
+  "build": [
+    "Shell: the kit's OuterBailey shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 3.60 m clear, a 0.45 m brick trim course, an archway 2.60 × 2.59 m centred on every wall.",
+    "Sledge (NW): oak 3.00 × 0.90 × 0.35 m at (−3.60, 4.20), long axis east–west; three oak cleats 0.12 × 0.90 × 0.50 m across it at x −4.74 / −3.54 / −2.34.",
+    "Bombard: an iron powder chamber r 0.25 m, 1.00 m long (x −5.10 … −4.10), and the bore r 0.36 m, 1.90 m long (x −4.10 … −2.20), axis at 0.95 m above ground, muzzle east; seven iron hoops r 0.38 m along the bore; a soot disc in the muzzle; two rope lashings round barrel and sledge.",
+    "Gunstones (NE): stone balls r 0.22 m in a 3-2-1 square pyramid centred (3.60, 4.20), each layer settled 0.02 m into the one below; two loose balls at (2.30, 3.20) and (2.75, 3.20).",
+    "Powder kegs (SE): five oak kegs r 0.25 m, 0.50 m tall, two iron hoops each, at (3.20, −4.80), (3.75, −4.80), (4.30, −4.80), (3.45, −4.25), (4.00, −4.25); a sixth lying east–west across three of them at (3.75, −4.52), 0.80–1.30 m above ground.",
+    "Powder cart (SW): an oak bed 1.60 × 0.90 × 0.10 m, top 0.85 m above the floor, at (−3.20, −3.80) on two supports and an iron axle; two spoked wheels r 0.45 m; two short shafts 0.70 m pointing east, ending at x −1.85.",
+    "Spare wheel: a spoked oak wheel r 0.45 m standing against the west wall at y −3.40.",
+    "Rammer rack: two iron brackets on the south wall at x −4.80 and −2.60; an oak rammer and a linen-headed sponge, each on a 3.00 m pole, at 1.55 and 1.90 m above ground."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.59 m (OuterBailey), all open",
+    "Keg tops: two loot anchors at 0.80 m",
+    "Powder cart bed: a loot anchor at 1.15 m"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the west powder keg",
+      "xyz": [
+        3.2,
+        -4.8,
+        0.8
+      ]
+    },
+    {
+      "at": "the east powder keg",
+      "xyz": [
+        4.3,
+        -4.8,
+        0.8
+      ]
+    },
+    {
+      "at": "the powder cart",
+      "xyz": [
+        -3.2,
+        -3.8,
+        1.15
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls."
+    },
+    {
+      "name": "Wrought iron",
+      "hex": "#2E2F31",
+      "pigment": "iron",
+      "notes": "Bombard barrel and chamber; hoops in line."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Sledge, kegs, cart, wheels, rammer."
+    },
+    {
+      "name": "Gunstone",
+      "hex": "#8A8474",
+      "pigment": "vellum_faint",
+      "notes": "The balls, the lashings."
+    },
+    {
+      "name": "Linen",
+      "hex": "#D6CDB6",
+      "pigment": "vellum",
+      "notes": "The sponge head."
+    },
+    {
+      "name": "Soot",
+      "hex": "#1E1B17",
+      "pigment": "bone_black",
+      "notes": "The muzzle."
+    }
+  ],
+  "gameplay": [
+    "The powder kegs are the Late bailey's bomb: fire in the SE corner detonates them.",
+    "The bombard is scenery too heavy to move, and the best cover in the yard.",
+    "Three loot anchors: two kegs and the cart."
+  ],
+  "budget": "≤ 4k tris (kit)",
+  "concept": "concept/LateMedieval/LateArtilleryYard.svg"
+}

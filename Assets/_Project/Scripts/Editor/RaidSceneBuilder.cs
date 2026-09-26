@@ -155,8 +155,9 @@ namespace RogueAi.EditorTools
         {
             GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "Ground";
-            // The castle spans roughly 11 cells across; a plane is 10 units, hence the scale.
-            ground.transform.localScale = Vector3.one * (CellSize * 14f / 10f);
+            // The castle is the whole world: ground under the curtain ring plus a 4 m apron, and
+            // nothing further. 9 cells of 12 m; a plane is 10 units across.
+            ground.transform.localScale = Vector3.one * ((CellSize * 9f + 8f) / 10f);
             ground.GetComponent<Renderer>().sharedMaterial = MakeMaterial("GroundMaterial",
                 new Color(0.18f, 0.20f, 0.18f));
         }
@@ -183,8 +184,9 @@ namespace RogueAi.EditorTools
         private static ExtractionZone BuildExtractionZone()
         {
             var go = new GameObject("ExtractionZone");
-            // Just outside the curtain wall: the carry out has to be earned.
-            go.transform.position = new Vector3(CellSize * 6f, 0f, 0f);
+            // RaidDirector stands the zone up as the arrival portal each raid; until then it waits
+            // at the castle's centre rather than outside the wall.
+            go.transform.position = Vector3.zero;
 
             var collider = go.AddComponent<BoxCollider>();
             collider.isTrigger = true;

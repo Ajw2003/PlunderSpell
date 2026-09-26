@@ -55,10 +55,12 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   out. Plugs come from `CastleRoomRegistry.GetDoorPlugForZone` (authored by `CastleDoorPlugForge`),
   one per enclosed zone because the archway size is derived from the zone's wall height — see
   `scale.md` ("Archways").
-- **The gatehouse is the extraction exit.** `AssignExtractionExit` marks it, so `ExtractionExitIndex`
-  points at a `CurtainWall` module rather than an `OuterBailey` room. `LootPlacementPlanner` and
-  `GuardPlacementPlanner` both skip that index, and the raid starts there too — see `scale.md`
-  ("Spawning").
+- **The gatehouse is sealed (2026-09-25).** `AssignExtractionExit` still marks it, so
+  `ExtractionExitIndex` points at a `CurtainWall` module and `LootPlacementPlanner` and
+  `GuardPlacementPlanner` still skip it, but it is no longer the way out or the spawn: raids arrive
+  and leave by a portal inside the walls (`raid.md`, "Arriving and leaving by portal").
+  `CastleBoundary` (`Assets/_Project/Scripts/Runtime/Castle/CastleBoundary.cs:29`) closes the gate
+  arch and the wall tops with four invisible walls on the curtain's outer face.
 - **`CastleLockdown`** subscribes to `AlarmState` and locks (`Roused`) then bars (`HueAndCry`)
   every door — deliberately one-way, matching the alarm's own latch, so the castle can't hand back
   a mistake the players already paid for.

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using RogueAi.Castle;
 using RogueAi.Guards;
+using RogueAi.Inventory;
 using UnityEngine;
 
 namespace RogueAi.Raid
@@ -38,12 +39,22 @@ namespace RogueAi.Raid
         public GameObject GuardPrefab { get => _guardPrefab; set => _guardPrefab = value; }
         public EnemyRoster Roster { get => _roster; set => _roster = value; }
 
-        /// <summary>Plans and spawns the garrison for a castle. Returns the plan.</summary>
-        public IReadOnlyList<GuardPlacement> SpawnFor(ProceduralCastleData castle, int seed)
+        /// <summary>The Age the current garrison was drawn for.</summary>
+        public HistoricalEra LastEra { get; private set; }
+
+        /// <summary>
+        /// Plans and spawns the garrison for a castle, drawing only enemies of
+        /// <paramref name="era"/> where the roster has them. Returns the plan.
+        /// <paramref name="safeModuleIndex"/> is the arrival room guards keep clear of; -1 keeps the
+        /// old gatehouse ring.
+        /// </summary>
+        public IReadOnlyList<GuardPlacement> SpawnFor(ProceduralCastleData castle, int seed,
+            HistoricalEra era, int safeModuleIndex = -1)
         {
             Clear();
+            LastEra = era;
 
-            List<GuardPlacement> plan = GuardPlacementPlanner.Plan(castle, seed, _densityScale);
+            List<GuardPlacement> plan = GuardPlacementPlanner.Plan(castle, seed, _densityScale, safeModuleIndex);
             _lastPlan.AddRange(plan);
 
             if (_roster == null && _guardPrefab == null)
@@ -53,28 +64,29 @@ namespace RogueAi.Raid
             // must not shift the castle, the loot, or where the garrison stands.
             var rng = new System.Random(unchecked(seed * 31 + 24593));
 
+            _roster?.ResetWarnings();
             EnsureContainer();
             for (int i = 0; i < plan.Count; i++)
-                Spawn(plan[i], rng);
+                Spawn(plan[i], era, rng);
 
             return _lastPlan;
         }
 
         /// <summary>The enemy prefab for a placement: the roster's pick, else the fallback prefab.</summary>
-        private GameObject PrefabFor(GuardPlacement placement, System.Random rng)
+        private GameObject PrefabFor(GuardPlacement placement, HistoricalEra era, System.Random rng)
         {
             if (_roster != null)
             {
-                GameObject fromRoster = _roster.PickForZone(placement.Zone, rng);
+                GameObject fromRoster = _roster.PickForZone(placement.Zone, era, rng);
                 if (fromRoster != null)
                     return fromRoster;
             }
             return _guardPrefab;
         }
 
-        private void Spawn(GuardPlacement placement, System.Random rng)
+        private void Spawn(GuardPlacement placement, HistoricalEra era, System.Random rng)
         {
-            GameObject prefab = PrefabFor(placement, rng);
+            GameObject prefab = PrefabFor(placement, era, rng);
             if (prefab == null)
                 return;
 

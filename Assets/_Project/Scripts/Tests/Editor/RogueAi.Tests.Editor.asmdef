@@ -17,10 +17,12 @@
         "RogueAi.Loot",
         "RogueAi.Player",
         "RogueAi.Castle",
+        "RogueAi.Inventory",
         "RogueAi.Editor",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "RogueAi.Net"
+        "RogueAi.Net",
+        "RogueAi.Atmosphere"
     ],
     "includePlatforms": [
         "Editor"

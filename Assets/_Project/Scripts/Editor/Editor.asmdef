@@ -20,7 +20,10 @@
         "RogueAi.Raid",
         "RogueAi.Status",
         "RogueAi.UI",
-        "Unity.AI.Navigation"
+        "Unity.AI.Navigation",
+        "RogueAi.Atmosphere",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Core.Runtime"
     ],
     "includePlatforms": [
         "Editor"

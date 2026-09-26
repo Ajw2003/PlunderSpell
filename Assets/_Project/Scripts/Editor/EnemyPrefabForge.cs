@@ -55,29 +55,30 @@ namespace RogueAi.EditorTools
             }
         }
 
-        // Tuned from the roles recorded in Assets/Models/Enemies/enemy_manifest.json. Weights put the
-        // common soldiery on the outside and the rare, dangerous things in the Keep and the Crypt.
+        // Tuned from the roles recorded in Assets/Models/Enemies/enemy_manifest.json.
+        //
+        // Posts (2026-09-24, docs/plans/artbible-enemies-in-engine.md, decision 1): the household
+        // four (Watchman, ManAtArms, Sergeant, WarHound) are replaced in the roster by the art-bible
+        // set, so they are forged but posted nowhere (ArtBibleEnemyForge.ReplacedEnemies). The
+        // supernatural five and CryptRisen belong to no century, so they garrison only the Crypt and
+        // are posted to every Age (EnemyRoster.Entry.AnyEra).
         // The second column is standing height in metres, against the 1.8m human standard in
         // docs/systems/scale.md; BuildPrefab scales each model to it.
         private static readonly EnemySpec[] Specs =
         {
-            new EnemySpec("Watchman",       1.80f, 2.0f, 4.0f, 14f,  70f,
-                (CastleZone.CurtainWall, 12), (CastleZone.OuterBailey, 10)),
-            new EnemySpec("ManAtArms",      1.85f, 2.0f, 4.5f, 15f, 100f,
-                (CastleZone.OuterBailey, 8), (CastleZone.InnerWard, 8)),
-            new EnemySpec("Sergeant",       1.90f, 2.2f, 5.0f, 17f, 130f,
-                (CastleZone.InnerWard, 5), (CastleZone.Keep, 5)),
-            new EnemySpec("WarHound",       0.85f, 2.8f, 6.5f, 12f,  55f,
-                (CastleZone.OuterBailey, 6), (CastleZone.InnerWard, 6)),
+            new EnemySpec("Watchman",       1.80f, 2.0f, 4.0f, 14f,  70f),
+            new EnemySpec("ManAtArms",      1.85f, 2.0f, 4.5f, 15f, 100f),
+            new EnemySpec("Sergeant",       1.90f, 2.2f, 5.0f, 17f, 130f),
+            new EnemySpec("WarHound",       0.85f, 2.8f, 6.5f, 12f,  55f),
             new EnemySpec("SigilWisp",      1.20f, 3.0f, 5.5f, 16f,  35f,
-                (CastleZone.InnerWard, 5), (CastleZone.Keep, 4)),
+                (CastleZone.Crypt, 4)),
             new EnemySpec("VaultWarden",    2.10f, 1.4f, 3.2f, 13f, 200f,
-                (CastleZone.Keep, 6), (CastleZone.Crypt, 5)),
+                (CastleZone.Crypt, 5)),
             // A sentry that never leaves its post: speed 0 means it tracks and fires without walking.
             new EnemySpec("HexTurret",      1.60f, 0f,   0f,   20f,  90f,
-                (CastleZone.CurtainWall, 4), (CastleZone.Keep, 3)),
+                (CastleZone.Crypt, 3)),
             new EnemySpec("ArcRevenant",    2.10f, 1.8f, 3.8f, 18f, 150f,
-                (CastleZone.Keep, 3), (CastleZone.Crypt, 5)),
+                (CastleZone.Crypt, 5)),
             new EnemySpec("CryptRisen",     1.75f, 1.6f, 4.2f, 12f,  80f,
                 (CastleZone.Crypt, 12)),
             // Head and shoulders over everything else, but under the Crypt's clear height — the
@@ -93,7 +94,11 @@ namespace RogueAi.EditorTools
             EnsureFolder(Path.GetDirectoryName(RosterPath).Replace('\\', '/'));
 
             var roster = LoadOrCreate<EnemyRoster>(RosterPath);
-            roster.Entries.Clear();
+            // Only this forge's own postings are replaced; ArtBibleEnemyForge's stay.
+            var ownIds = new HashSet<string>();
+            foreach (EnemySpec spec in Specs)
+                ownIds.Add(spec.Name);
+            roster.Entries.RemoveAll(entry => entry == null || ownIds.Contains(entry.EnemyId));
 
             var built = new List<string>();
             var missing = new List<string>();
@@ -116,6 +121,7 @@ namespace RogueAi.EditorTools
                     roster.Entries.Add(new EnemyRoster.Entry
                     {
                         EnemyId = spec.Name,
+                        AnyEra = true,
                         Zone = zone,
                         Weight = weight,
                         Prefab = prefab

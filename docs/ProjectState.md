@@ -25,28 +25,62 @@ surfaced it as not actually functional yet.
 | M0 — Fork clean, cut gravity | Done | ✅ merged (`feature/m0-gravity-removal`) | ✅ — compiles, gravity restored, verified in the `.agent_reports`-era logs, now `docs/archive/2026-09-15-integration/` |
 | M1 — Prove the voice | Code complete, acceptance unchecked | ✅ merged (`feature/m1-voice-casting`) | ❌ — no real-microphone, multi-accent, latency measurement exists anywhere in the repo |
 | M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
-| M3 — Open the other Ages | Scaffold only; Bronze Age castle art built | 🟡 `HistoricalEra` enum + plumbing only. Castle art: the Bronze Age set is built — 25 rooms and wall pieces plus 4 door plugs, each modelled to a reference sheet ([`docs/art/rooms/BronzeAge.md`](art/rooms/BronzeAge.md)); Late Medieval and Age of Powder are in progress ([`docs/plans/era-castle-rooms.md`](plans/era-castle-rooms.md)). None of it is wired into the generator yet | ❌ — see below, the data model can't produce era-specific content yet |
+| M3 — Open the other Ages | Era content wired in; Bronze Age and High Medieval raids differ | 🟡 The Lair's era now picks the raid's rooms, loot and garrison through `EraContentCatalogue` ([`raid-scene-assembly.md`, "Eras"](systems/raid-scene-assembly.md)). Bronze Age has its own full room set, 5 items, 3 enemies. High Medieval: the original rooms, 5 items, 4 enemies. Late Medieval: its own InnerWard and Keep, 5 items, 1 enemy. Age of Powder: High Medieval rooms, 5 items, 2 enemies. Castle art: the Bronze Age and Late Medieval sets are fully modelled, 25 rooms and wall pieces plus 4 door plugs each ([`BronzeAge.md`](art/rooms/BronzeAge.md), [`LateMedieval.md`](art/rooms/LateMedieval.md)); Enemies: all 16 modelled and rostered. Unfinished art: all 26 Powder rooms ([`docs/plans/era-castle-rooms.md`](plans/era-castle-rooms.md)) | 🟡 — verified 2026-09-24 in the live Editor through Lair → Set Out, one seed per era; not yet playtested by a person |
 
-**2026-09-24 — art bible plunder modelled.** All 20 plunder items from the art bible
-(`docs/art/`) now exist as validated, textured models under `Assets/Models/ArtBible/Items/`,
-built by `Tools/ArtForge/`. They are not wired into any loot table or prefab yet, and have
-no Unity `.meta` files (Unity creates them on first import). The art bible's 12 structures
-and 16 enemies are specified and drawn but not modelled.
+**2026-09-24 — art bible plunder and enemies modelled, and per-era raid content wired in.**
+All 20 plunder items and all 16 enemies from the art bible (`docs/art/`) exist as validated,
+textured models under `Assets/Models/ArtBible/`, built by `Tools/ArtForge/`. The enemies are rigged
+with Unity-Humanoid bone names and skins blended across at most 4 bones. The era chosen in the Lair
+now decides which rooms, loot and enemies a raid uses (`EraContentCatalogue`, filled by
+`Tools/Plunderspell/Forge Era Content`). Wired in: the 20 items (carried by their per-item grip point, riding with the body; 44-53 placed per raid),
+the Bronze Age and Late Medieval room sets, and all 16 enemies, 4 per era. Not yet: rooms of their
+own for High Medieval (it uses the original set) and Age of Powder (no room art). No enemy is animated: no
+Animator, no clips, no spring bones. `Assets/Models/ArtBible/AllEnemies/` holds a bare model prefab
+per enemy as the art and scale reference; the prefabs raids spawn are
+`Assets/_Project/Prefabs/Enemies/<Era>/`. Merged together on `claude/staging-2026-09-24` for testing
+before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
 
-## The one thing that is not what it looks like
+**2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
+of `docs/plans/night-atmosphere.md` built: see `docs/systems/atmosphere.md`. Open: volumetric fog
+(High), vertex soot bake, Deck profiling, enemies/loot on the surface shader unseen in play,
+PlayMode suite not re-run, `ArtAssetImportTests` fails (art-bible animations, enemy emissive HDR;
+predates this branch).
 
-**Choosing an era in the Lair does nothing to the raid you get.** `RaidDirector.StartRaid(era)`
-takes a `HistoricalEra`, stores it, and forwards it to `LairHubManager.SelectEra`. It reads as a
-finished feature — the Lair has era selection UI-adjacent state, `RaidDirector` has an `Era`
-property, everything compiles and the tests pass. But `CastleRoomRegistry` (see
-`docs/systems/castle.md`) tags every room module only by `CastleZone`, with no era field at all,
-and neither the loot planner nor the guard planner branch on era anywhere (`grep -rn
-"HistoricalEra" Assets/_Project/Scripts/Runtime/Castle Assets/_Project/Scripts/Runtime/Loot
-Assets/_Project/Scripts/Runtime/Guards` returns nothing — still true as of this pass). Every raid,
-in every era, currently builds from the same single room set, loot table and guard roster. M3's
-acceptance criterion — "a different era produces a measurably different raid" — is not close to
-met; it needs a schema change (`CastleRoomModuleData.Era`, era-keyed loot/guard tables) before
-it's even possible, not just more content.
+**2026-09-25 — raids arrive and leave by portal; the castle is sealed** (branch
+`claude/night-atmosphere`, night atmosphere step 0). The team arrives at a seeded spot in the outer
+rings, the `ExtractionZone` is stood up there as the portal, players outside it when the clock ends
+are left behind, `CastleBoundary` seals the gate and wall tops, and RaidScene has no ground beyond
+the wall. Verified in the live Editor; see `docs/systems/raid.md`, "Arriving and leaving by portal".
+
+**2026-09-25 — a throwaway preview of the "calm" night look exists in RaidScene.** A
+`NightLookPreview` GameObject (`RogueAi.Atmosphere.NightLookPreview`,
+`Assets/_Project/Scripts/Runtime/Atmosphere/NightLookPreview.cs`) darkens `RaidScene`, retints the
+DirectionalLight as a faint moon, adds a runtime URP Volume (ACES tonemapping, bloom, colour grade,
+vignette), and drops primitive braziers, wall torches and stand-in props (cart+hay, crates, hay
+bale) along every generated castle's curtain wall, matching the chosen look at
+`docs/generated/look-samples-2026-09-24/calm.png`. It rebuilds itself whenever
+`RaidDirector.Castle` changes. Turn it off by disabling the `NightLookPreview` GameObject in
+`RaidScene`. **This is a stand-in only** — no alarm-state blending, no FireSource prefabs, no fire
+anchors, no quality levels, no shader — and is meant to be replaced once
+`docs/plans/night-atmosphere.md` steps 1-2 are actually built. Captures:
+`docs/generated/night-look-preview-2026-09-25/`.
+
+## What used to be not what it looked like
+
+Until 2026-09-24, choosing an era in the Lair did nothing to the raid: every era built from one
+room set, loot table and guard roster. That is fixed. `RaidDirector` now swaps in the era's
+catalogue entry before it builds the castle (see `docs/systems/raid-scene-assembly.md`, "Eras").
+No schema change was needed. Each era has its own registry, table and roster, so the planners
+still branch only on `CastleZone`. What M3 still lacks is art, plus a person playing the eras side
+by side.
+
+**Update, 2026-09-24 (code only, not yet run in the Editor):** the era now reaches the garrison.
+`EnemyRoster.Entry` carries an `Era`, `GuardSpawner.SpawnFor` passes `RaidDirector.Era` (now
+replicated) to `EnemyRoster.PickForZone(zone, era, rng)`, and `RaidContext` is published for the
+castle generator to read later. Rooms and loot still ignore the era, and until
+`Tools/Plunderspell/Forge Art Bible Enemies + Roster` is run in the Editor the roster holds no
+Bronze, Late or Powder enemies, so those raids fall back (with a warning) to the old High Medieval
+guards outside the Crypt. See `docs/systems/raid-scene-assembly.md`, "Era reaches the raid".
 
 ## The 2026-09-16 playtesting backlog
 

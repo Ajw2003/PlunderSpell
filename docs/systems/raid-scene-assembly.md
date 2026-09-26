@@ -14,7 +14,13 @@ Owns: `Assets/_Project/Scripts/Editor/RaidSceneBuilder.cs`,
 `Assets/_Project/Scripts/Editor/EnemyPrefabForge.cs`,
 `Assets/_Project/Scripts/Editor/RaidLootTableForge.cs`,
 `Assets/_Project/Scripts/Editor/CastleMeshImportSettings.cs`,
+`Assets/_Project/Scripts/Editor/ArtBibleModelImporter.cs`,
+`Assets/_Project/Scripts/Editor/ArtBibleEnemyForge.cs`,
+`Assets/_Project/Scripts/Editor/ArtBibleEnemyCatalog.cs`,
+`Assets/_Project/Scripts/Editor/ArtBibleJson.cs`,
 `Assets/_Project/Scripts/Runtime/Raid/EnemyRoster.cs`,
+`Assets/_Project/Scripts/Runtime/Inventory/RaidContext.cs`,
+`Assets/_Project/Scripts/Runtime/Guards/EnemyBodyProfile.cs`,
 `Assets/_Project/Scripts/Runtime/Castle/CastleNavMeshBaker.cs`.
 
 ## How it works
@@ -26,7 +32,7 @@ generated at runtime.
 |---|---|---|
 | Rooms | `Data/Castle/CastleRoomRegistry.asset` | 25 room prefabs, 5 per zone |
 | Loot | `Data/Loot/RaidLootTable.asset` | 9 postings over 5 loot prefabs |
-| Enemies | `Data/Enemies/EnemyRoster.asset` | 18 postings over 10 enemy prefabs |
+| Enemies | `Data/Enemies/EnemyRoster.asset` | 14 postings over 10 enemy prefabs today; 41 over 22 once the art-bible forge has run (see "Enemy postings") |
 
 **`Tools/Plunderspell/Build Playable Raid Scene`** wires those three into a scene and saves it. It
 places no geometry of its own beyond a ground plane, a light and the extraction pad — every mesh in a
@@ -45,21 +51,198 @@ not a copy, so re-exporting the `.blend` flows through to the prefab. Onto that 
 found in. Worth climbs inward — Copper Pot (15) at the wall, Ancient Relic (500) in the crypt — so
 the long carry out is what the valuable things cost.
 
+### Eras
+
+<!-- ref:da27 -->
+
+The era picked in the Lair decides which rooms, loot and garrison a raid is built from. Added
+2026-09-24.
+
+`Data/Eras/EraContentCatalogue.asset` has one entry per `HistoricalEra`. Each entry names a room
+registry, a loot table and an enemy roster. `RaidDirector.ApplyEraContent`
+(`Runtime/Raid/RaidDirector.cs`) swaps them onto the generator, the loot spawner and the guard
+spawner at the start of `BuildCastle`. An empty field keeps the scene's own assignment, which the
+director records the first time it runs. The era is a replicated `SyncVar`, because every peer
+builds its own castle geometry and the era decides which rooms that is. A client rebuilds if the
+era arrives after the seed.
+
+**`Tools/Plunderspell/Forge Era Content (rooms, loot, enemies)`** (`Editor/EraContentForge.cs`)
+writes the catalogue and everything in it from the art that exists. Run it again when new art
+lands. It writes to fixed paths, so a second run overwrites and does not duplicate.
+
+| Era | Rooms | Loot | Enemies |
+|---|---|---|---|
+| Bronze Age | own set: 25 rooms and wall pieces, 4 door plugs | 5 ArtForge items, 2 weapons | Palace Levy, Wall Slinger, Dendra Champion |
+| High Medieval | the default `CastleRoomRegistry` | 5 ArtForge items, 4 weapons | Lantern Warden, Castle Crossbowman, Household Knight, Alaunt War-hound |
+| Late Medieval | own InnerWard and Keep (10 rooms); other zones use High Medieval | 5 ArtForge items, 2 weapons | Sallet Halberdier (the only one modelled) |
+| Age of Powder | the default registry (no rooms built yet) | 5 ArtForge items, 2 weapons | Palace Guard, Musketeer |
+
+How each part is built:
+
+- **Rooms.** Each room is a prefab variant of its FBX, set up like the High Medieval rooms: root at
+  `(90,0,0)`, a `MeshCollider`, a `CastleRoomModule` and door sockets. The generator asks for six
+  pieces by id (`GatehouseModule`, `WallStraight`, `WallCorner`, `Bastion`, `Drawbridge`,
+  `CryptChamberFinal`). An era's own piece takes the id of the piece it replaces, for example
+  `BronzeLionGate` becomes `GatehouseModule` and `BronzeTholos` becomes `CryptChamberFinal`. So
+  the generator needs no knowledge of eras. Loot anchors come from `CastleLootAnchors.json`, using
+  the `(x, z, y)` axis mapping measured for the High Medieval set. A zone with no era rooms, and a
+  zone with no era door plug, keep the default registry's.
+- **Loot.** Each item gets a `LootItem` in `Data/Loot/<Era>/`, with worth, bulk, fragility and
+  artifact flag read from `docs/art/data/<age>.json`. It also gets a prefab in
+  `Prefabs/Loot/<Era>/`, a variant of the ArtForge FBX with a fitted `BoxCollider`, a `Rigidbody`,
+  `Item`, `LootPickup`, `LootValue` and `NetworkTransform`. Worth decides the zone: the cheapest
+  item goes to the wall and the dearest to the crypt, with the same weights as
+  `RaidLootTableForge`. Weapons are found as loot, so each era also gets the default table's
+  weapon entries whose `InventoryItem.EraAcquired` is that era.
+- **Enemies.** Each enemy gets a prefab in `Prefabs/Enemies/<Era>/`, set up like
+  `EnemyPrefabForge`'s. The capsule and agent are sized to the spec's body `height_m`. Guard tuning
+  comes from the spec's `role` (patrol, ranged, heavy, special). Ranged soldiers fire the
+  crossbow `Bolt`. They are posted to the zones in their spec. Every zone must have an enemy, so a
+  zone with none gets the era's heavy soldier (Keep, Crypt) or patrol (elsewhere). If the era has
+  neither, it gets any soldier taller than 1.2 m.
+
+`EraContentTests` checks that every era has loot (with weapons) and enemies in every zone. It checks
+that every era's room set has every zone, fixed piece and door plug, that era room roots are
+upright, and that the Bronze Age and High Medieval share no room, item or enemy.
+
+What the era content does not do yet:
+
+- The ArtForge enemies have no animation clips. They move in their bind pose, as the original
+  roster did.
+- The Tripod Cauldron and other odd shapes use a box collider, so they can tip over when they
+  land.
+- A `special` enemy that is not a hound (the Keeper of the Flame, the Pavisier, the Petardier) is
+  not modelled yet.
+- The legacy roster (`EnemyRoster.asset`) and loot table (`RaidLootTable.asset`) are no longer
+  used for any era. They stay as the scene's fallback.
+
+Verified on 2026-09-24 in the live Editor, through the real Main menu → Lair → Set Out flow, with
+seed 4242 in each era. Every era had 20 guards, all 20 on the NavMesh, and 22 loot pieces, none
+thrown out of the world. Bronze Age built only Bronze rooms, and the same seed built the same raid
+twice. The screenshots are in `docs/generated/era-integration-2026-09-24/`.
+
 ### Enemy postings
 
-Every zone draws from a mix, with the common soldiery outside and the rare, dangerous things deep:
+Each posting is tagged with an Age (`EnemyRoster.Entry.Era`) or marked `AnyEra`, and a raid draws
+only from its own Age (see "Era reaches the raid"). Since 2026-09-24
+(`docs/plans/artbible-enemies-in-engine.md`, decisions 1 and 2):
 
-| Zone | Roster |
-|---|---|
-| CurtainWall | Watchman (12), HexTurret (4) |
-| OuterBailey | Watchman (10), ManAtArms (8), WarHound (6) |
-| InnerWard | ManAtArms (8), Sergeant (5), WarHound (6), SigilWisp (5) |
-| Keep | Sergeant (5), SigilWisp (4), VaultWarden (6), HexTurret (3), ArcRevenant (3) |
-| Crypt | VaultWarden (5), ArcRevenant (5), CryptRisen (12), GildedColossus (2) |
+- the **16 art-bible enemies** garrison the castle, four per Age, posted to the zones their
+  `docs/art/data/<age>.json` entry lists, weighted by role: patrol 10, ranged 7, heavy 4, special 3;
+- the **household four** (Watchman, ManAtArms, Sergeant, WarHound) are replaced: still forged, posted
+  nowhere;
+- the **supernatural five** (SigilWisp, VaultWarden, HexTurret, ArcRevenant, GildedColossus) and
+  **CryptRisen** belong to no century: they garrison **only the Crypt**, in **every** Age
+  (`AnyEra`), at SigilWisp 4, VaultWarden 5, HexTurret 3, ArcRevenant 5, CryptRisen 12,
+  GildedColossus 2. CryptRisen is not one of the five the decision names, but it was already
+  Crypt-only and is neither household nor replaced, so it stays with them.
+
+The committed `EnemyRoster.asset` is **between the two states** until someone runs the art-bible
+forge in the Editor (it needs the prefabs, which need Unity): the supernatural six are already
+Crypt-only and `AnyEra`, and the household four are still posted, tagged High Medieval, so the
+outer zones are not empty in the meantime. A Bronze, Late or Powder raid therefore falls back
+(with a warning) to the household four outside the Crypt until the forge runs.
+
+After `Tools/Plunderspell/Forge Art Bible Enemies + Roster`, the Age-specific postings are (the
+Crypt also holds the supernatural six in every Age):
+
+| Zone | Bronze Age | High Medieval | Late Medieval | Age of Powder |
+|---|---|---|---|---|
+| CurtainWall | PalaceLevy (10), WallSlinger (7) | LanternWarden (10), CastleCrossbowman (7) | SalletHalberdier (10), Handgunner (7), Pavisier (3) | PalaceGuard (10), Musketeer (7) |
+| OuterBailey | PalaceLevy (10) | LanternWarden (10), AlauntWarHound (3) | SalletHalberdier (10), Pavisier (3) | PalaceGuard (10) |
+| InnerWard | WallSlinger (7), DendraChampion (4), KeeperOfTheFlame (3) | CastleCrossbowman (7), HouseholdKnight (4), AlauntWarHound (3) | Handgunner (7), GothicManAtArms (4) | Musketeer (7), Cuirassier (4), Petardier (3) |
+| Keep | DendraChampion (4), KeeperOfTheFlame (3) | HouseholdKnight (4) | GothicManAtArms (4) | Cuirassier (4), Petardier (3) |
+| Crypt | KeeperOfTheFlame (3) | — | — | — |
+
+The two forges share the roster without clobbering each other: each removes only the entries whose
+`EnemyId` it owns (the art-bible forge also removes the household four) and appends its own.
 
 `GuardPlacementPlanner` still decides *how many* guards stand *where* and what they walk; the roster
 only answers *which one*, from a fourth seed-derived RNG stream (`seed * 31 + 24593`) so picking an
 enemy cannot shift the castle, the loot, or where the garrison stands.
+
+### Era reaches the raid
+
+<!-- ref:7655 -->
+`RaidDirector.StartRaid(era)` stores the Age in a replicated `SyncVar` (`RaidDirector.Era`), and
+`BuildCastle` publishes `RaidContext.Publish(new RaidContext(seed, Era))` on every peer before it
+generates anything. The garrison is handed the Age explicitly
+(`GuardSpawner.SpawnFor(castle, seed, era)` → `EnemyRoster.PickForZone(zone, era, rng)`).
+
+`RaidContext` (`Runtime/Inventory/RaidContext.cs`) is the accessor for code that sits *below* the
+raid and cannot be handed the Age: it lives in `RogueAi.Inventory`, beside `HistoricalEra`, because
+that assembly depends only on PurrNet, so `RogueAi.Castle` can reference it without a cycle (Raid
+already depends on Castle). That is how the era rooms (`docs/plans/era-castle-rooms.md`, "Not in this
+pass", step 1) will read the Age: add `RogueAi.Inventory` to `RogueAi.Castle.asmdef` and read
+`RaidContext.Current.Era` in `ProceduralCastleGenerator`. The room filtering itself is not built.
+`ReturnToLair` clears the context.
+
+`PickForZone` filters by Age first. When no enemy of that Age garrisons the zone it falls back to the
+zone's whole pool and logs `[Roster] No <Age> enemy garrisons <Zone>…` once per zone and Age per raid
+(`EnemyRoster.ReportedFallbacks`, reset by `GuardSpawner.SpawnFor`). A wrong-era guard is visible; an
+empty room would hide the gap.
+
+### Art-bible enemies
+
+<!-- ref:d1ef -->
+The sixteen ArtForge enemies (`Assets/Models/ArtBible/Enemies/<Age>/<Name>/`) reach a raid in three
+steps, all code-owned (`docs/plans/artbible-enemies-in-engine.md`, E0–E2).
+
+**Import (`ArtBibleModelImporter`, an `AssetPostprocessor` for `Assets/Models/ArtBible/**`).**
+- The fifteen humans import **Humanoid** with an avatar built from an **explicit** bone map
+  (`ArtBibleModelImporter.HumanBoneMap`, a copy of `UNITY_HUMANOID` in
+  `Tools/ArtForge/art_forge/figures.py`; `ArtBibleEnemyCatalogTests` fails if the two drift). A bone
+  renamed on one side makes the avatar invalid rather than being guessed.
+- The hound (`AlauntWarHound`) imports **Generic** with root node `Root`. Items import static, no rig.
+- Scale factor 1, no mesh Read/Write, materials via the material description.
+- Materials are rebuilt as **URP Lit** from the baked maps beside the model
+  (`Textures/<Name>_BaseMap.png`, `_MetallicGloss.png`, `_Emission.png`). URP reads metallic from
+  RGB and smoothness from alpha of `_MetallicGlossMap`, which is how EnemyForge packs it. The ORM map
+  is **not** bound as occlusion: URP samples occlusion from green, and ORM's green is roughness.
+- The six emissive models (`ArtBibleEnemyCatalog.EmissiveModels`, checked against the manifest's
+  `emit` fields) get their emission map at **×9 HDR** (`EmissionStrength`, equal to
+  `EMISSION_STRENGTH` in `Tools/EnemyForge/enemy_forge/materials.py`, also test-checked).
+- Textures: compressed, mipmapped, no Read/Write, capped at **1024** (`TextureSize`, the one flag to
+  change for a 2048 rebake). ORM, MetallicGloss, Metallic and Roughness import **linear**.
+
+`ArtAssetImportValidator.ValidateArtBible` checks every one of those settings on the imported
+assets, and `ArtAssetImportTests.ArtBibleModelsImportWithTheirOwnedSettings` runs it.
+
+**Prefabs (`Tools/Plunderspell/Forge Art Bible Enemies + Roster`, `ArtBibleEnemyForge`).** The
+numbers come from `docs/art/data/<age>.json` (role, zones, `height_m`) joined with
+`Assets/Models/ArtBible/artforge_manifest.json` (model name, FBX path, measured heights, emissive
+families) by `ArtBibleEnemyCatalog`, a pure parser the tests run headlessly. For each enemy it saves a
+**prefab variant** of the model at
+`Assets/_Project/Prefabs/Enemies/ArtBible/<Age>/<Name>.prefab` with:
+
+- no rescaling (ArtForge builds at true scale), grounded by `EnemyPrefabForge.GroundModel`;
+- a `CapsuleCollider` of the body height (props excluded), radius from the model's width, clamped;
+- a `NavMeshAgent` whose height is the body height **capped at the lowest archway** of its posted
+  zones (Crypt 2.16, OuterBailey 2.59, InnerWard 2.88, Keep 3.31, CurtainWall 3.74 m; see
+  `docs/systems/scale.md`);
+- `StatusEffectReceiver`, and `CastleGuard` tuned by role:
+
+  | Role | Patrol | Chase | Sight | Health | Attack |
+  |---|---|---|---|---|---|
+  | patrol | 2.0 | 4.2 | 14 m | 80 | melee |
+  | ranged | 1.9 | 3.6 | 20 m | 60 | projectile (`Bolt.prefab`, cooldown 2.2 s) |
+  | heavy | 1.5 | 3.2 | 13 m | 180 | melee |
+  | AlauntWarHound | 2.8 | 6.5 | 12 m | 55 | melee chaser |
+  | KeeperOfTheFlame | 1.6 | 3.4 | 16 m | 70 | thrown projectile |
+  | Pavisier | 1.6 | 3.4 | 14 m | 140 | melee shield-bearer |
+  | Petardier | 1.8 | 3.8 | 16 m | 70 | thrown projectile |
+
+- `EnemyBodyProfile`: enemy id, role, body height, height with props, lowest archway, and
+  `NeedsArchwayDuck` (props taller than that archway). Only the Palace Guard's partisan (2.62 m, Outer
+  Bailey 2.59 m) needs it today. The animation plan reads it;
+- an empty `Socket.<Bone>` child under each hand and prop bone (`Socket.Hand.R`, `Socket.Glaive`,
+  `Socket.LanternBody`, …; the per-model list is `ArtBibleEnemyCatalog`'s prop table);
+- on the six emissive enemies, a small warm shadowless point light (`PropLight`: range 3.5 m,
+  intensity 1.2) on the glowing prop: LanternBody, Censer3, MatchCord, Match, Lantern, Grenado.1.
+  The Palace Guard is in the list because the manifest records its horn lantern as emissive, though
+  the plan did not name it. There are no LODs, so "lights off at LOD distance" is not built.
+
+**Roster.** The same menu item writes the postings in "Enemy postings" above.
 
 ### Navigation
 
@@ -103,13 +286,13 @@ The raid no longer starts on scene load. The flow is
 - `LairScreen` shows the debt, the banked gold and the four eras, and reads `LairHubManager`
   directly. Set Out moves to `GameState.Playing`.
 - `RaidBootstrapper` listens for that transition and calls `RaidDirector.StartRaid()`, taking the
-  era from the lair. It ignores Paused/Inventory -> Playing, which are returns, not departures.
+  era from the lair. It ignores Paused -> Playing, which are returns, not departures.
 - When `RaidDirector.RaidResolved` fires, the bootstrapper puts the game back in `GameState.Lair`
   so the takings land against the debt.
 - `_autoStart` still exists on `RaidBootstrapper` but defaults to **false**. Turn it on to skip the
   menu while iterating on the raid itself.
 
-`RaidHudView` only draws in `Playing`, `Paused` or `Inventory`. It is IMGUI, which renders over the
+`RaidHudView` only draws in `Playing` or `Paused`. It is IMGUI, which renders over the
 uGUI canvas, so an always-on HUD sits on top of the menu and the lair.
 
 ## Authored, not generated
@@ -179,8 +362,25 @@ standard in `scale.md`.
   `Instantiate` discards the Blender axis correction the prefab root carries.
 - **Castle models are Read/Write enabled.** An unreadable mesh still bakes in the Editor and
   silently produces no surface in a player build.
+- **Every Age garrisons every zone outside the Crypt with its own enemies.** Asserted on the JSON by
+  `ArtBibleEnemyCatalogTests.Test_EveryAgeGarrisonsEveryZoneOutsideTheCrypt`; the Crypt is covered in
+  every Age by the `AnyEra` supernatural postings.
+- **An Age gap falls back loudly.** `EnemyRoster.PickForZone` never returns null while the zone has
+  any entry, and logs the gap once per zone and Age per raid.
+- **Nothing under `Assets/Models/ArtBible/` is configured in the Inspector.** `ArtBibleModelImporter`
+  owns those settings; a hand change is overwritten on the next import.
 
 ## Traps
+
+- **A Humanoid avatar needs the model's rest pose, which only exists after an import.** The first
+  import of an art-bible human that was Generic has an empty `HumanDescription.skeleton`, so
+  `ArtBibleModelImporter.OnPostprocessModel` records it from the imported hierarchy and schedules one
+  more import (`EditorApplication.delayCall` → `SaveAndReimport`). Expect each human to import twice
+  the first time, with an `[ArtBible] … reimporting once` log line. Whether Unity would build the
+  avatar from an empty skeleton on its own was not checked; this path does not rely on it.
+- **A model can import before its textures.** The material postprocessor looks the baked maps up by
+  path and registers a dependency on each (`context.DependsOnArtifact`), so the model re-imports when
+  a map arrives; until then it logs `[ArtBible] … missing baked map(s)`.
 
 - **Opening a scene unloads every asset nothing in it references yet.** `RaidSceneBuilder` used to
   load the three catalogue ScriptableObjects and *then* call
@@ -257,3 +457,17 @@ representative raid:
 - 116/116 tests pass (12 EditMode, 104 PlayMode)
 
 Screenshots in `Raid_Scene_Verification/`.
+
+### Art-bible enemies and era gating (2026-09-24): code only, UNTESTED in Unity
+
+Checked headlessly (`Tools/Headless/verify.sh`, which compiles against shims, not Unity): the new
+Runtime and Editor code compiles, and `EnemyRosterEraTests`, `GuardAttackSignalTests`,
+`ArtBibleEnemyCatalogTests` and the new `GuardAttackTests` cases pass. Nothing below has been run in
+the Editor yet:
+
+1. Reimport `Assets/Models/ArtBible` (right-click → Reimport) so `ArtBibleModelImporter` applies,
+   then run the EditMode test `ArtAssetImportTests.ArtBibleModelsImportWithTheirOwnedSettings`.
+2. `Tools/Plunderspell/Forge Art Bible Enemies + Roster`; read its `[ArtBible]` summary and warnings.
+3. EditMode `ScaleInvariantTests` (the three `ArtBible` cases are ignored until step 2 has run).
+4. The plan's remaining audits: in-engine review sheets, a five-seed sweep, CombatBench with each
+   enemy, and a two-player co-op raid.

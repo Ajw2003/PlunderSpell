@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8205eae1c47b36945b9d56e8f9f3bc13, type: 3}
+  m_Name: EraContentCatalogue
+  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.EraContentCatalogue
+  Entries:
+  - Era: 0
+    Rooms: {fileID: 11400000, guid: dc03b67fef201b24c8936efde52f6c6a, type: 2}
+    Loot: {fileID: 11400000, guid: 10c69eec4a8dbed40bdc722117ab8215, type: 2}
+    Enemies: {fileID: 11400000, guid: 640f96f6875eb214e97a550eb65bb522, type: 2}
+  - Era: 1
+    Rooms: {fileID: 0}
+    Loot: {fileID: 11400000, guid: af77446579700d942a8e1d98672f6a8a, type: 2}
+    Enemies: {fileID: 11400000, guid: aac992d3d6dc4f6499c43d39fbeabc0b, type: 2}
+  - Era: 2
+    Rooms: {fileID: 11400000, guid: 41af176f670feca43a17939ce3ef003c, type: 2}
+    Loot: {fileID: 11400000, guid: 4a491bbb47f379d44a4b1f1a876f7841, type: 2}
+    Enemies: {fileID: 11400000, guid: b2bf58c88a8ff0544967a1b9634877b9, type: 2}
+  - Era: 3
+    Rooms: {fileID: 0}
+    Loot: {fileID: 11400000, guid: de81d2493cc59124184abb33368d4d71, type: 2}
+    Enemies: {fileID: 11400000, guid: 2c3a7117ff7307848809ea505b74d6f6, type: 2}

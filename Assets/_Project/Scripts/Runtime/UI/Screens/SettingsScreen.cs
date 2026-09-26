@@ -15,7 +15,7 @@ namespace Plunderspell.UI.Screens
         protected override void OnBuild()
         {
             UIFactory.CreateFullStretchPanel(transform, "Overlay", new Color(0f, 0f, 0f, 0.7f));
-            var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 540f), Vector2.zero, UITheme.PanelBackground);
+            var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 600f), Vector2.zero, UITheme.PanelBackground);
 
             var title = UIFactory.CreateText(panel, "Title", "SETTINGS", UITheme.HeaderFontSize, UITheme.TextPrimary);
             title.rectTransform.anchorMin = new Vector2(0.5f, 1f);
@@ -29,7 +29,7 @@ namespace Plunderspell.UI.Screens
             var listRect = (RectTransform)listGo.transform;
             listRect.anchorMin = new Vector2(0.5f, 0.5f);
             listRect.anchorMax = new Vector2(0.5f, 0.5f);
-            listRect.sizeDelta = new Vector2(440f, 300f);
+            listRect.sizeDelta = new Vector2(440f, 360f);
             listRect.anchoredPosition = new Vector2(0f, 10f);
             UIFactory.AddVerticalLayout(listRect, 30f, new RectOffset(0, 0, 0, 0));
 
@@ -40,6 +40,10 @@ namespace Plunderspell.UI.Screens
             var micButton = UIFactory.CreateButton(listRect, "MicrophoneButton", string.Empty, CycleMicrophone, new Vector2(440f, 44f));
             _microphoneLabel = micButton.GetComponentInChildren<Text>();
             RefreshMicrophoneLabel();
+
+            var graphicsButton = UIFactory.CreateButton(listRect, "GraphicsButton", string.Empty, CycleGraphics, new Vector2(440f, 44f));
+            _graphicsLabel = graphicsButton.GetComponentInChildren<Text>();
+            RefreshGraphicsLabel();
 
             var backButton = UIFactory.CreateButton(panel, "BackButton", "Back", OnBackClicked, new Vector2(200f, 52f));
             var backRect = backButton.GetComponent<RectTransform>();
@@ -80,7 +84,35 @@ namespace Plunderspell.UI.Screens
 
         private Text _microphoneLabel;
 
-        protected override void OnShown() => RefreshMicrophoneLabel();
+        private Text _graphicsLabel;
+
+        protected override void OnShown()
+        {
+            RefreshMicrophoneLabel();
+            RefreshGraphicsLabel();
+        }
+
+        /// <summary>
+        /// Steps through the quality levels (Low, Medium, High), applying each at once and saving it.
+        /// Low is for a Steam Deck or a weak PC; the atmosphere picks it by itself on a Deck until the
+        /// player chooses.
+        /// </summary>
+        private void CycleGraphics()
+        {
+            string[] levels = QualitySettings.names;
+            int next = (QualitySettings.GetQualityLevel() + 1) % levels.Length;
+            QualitySettings.SetQualityLevel(next, true);
+            PlayerPrefs.SetString(GraphicsLevelSettings.QualityKey, levels[next]);
+            PlayerPrefs.Save();
+            RefreshGraphicsLabel();
+        }
+
+        private void RefreshGraphicsLabel()
+        {
+            if (_graphicsLabel == null)
+                return;
+            _graphicsLabel.text = $"Graphics: {QualitySettings.names[QualitySettings.GetQualityLevel()]}";
+        }
 
         /// <summary>
         /// Steps through Automatic and every microphone Windows reports. Automatic skips virtual

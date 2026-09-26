@@ -1,0 +1,209 @@
+{
+  "success": true,
+  "command": "command run_tests",
+  "data": {
+    "command": "run_tests",
+    "parameters": {
+      "mode": "EditMode"
+    },
+    "result": {
+      "Summary": {
+        "Total": 25,
+        "Passed": 25,
+        "Failed": 0,
+        "Skipped": 0,
+        "Inconclusive": 0
+      },
+      "Results": [
+        {
+          "FullName": "Plunderspell.Tests.EditMode.ExtractionControllerTests.CancelExtraction_StopsExtraction",
+          "Status": "Passed",
+          "Duration": 0.0006131,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.ExtractionControllerTests.StartExtraction_SetsIsExtractingTrue",
+          "Status": "Passed",
+          "Duration": 0.000212,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.ExtractionControllerTests.Tick_CompletesExtractionAfterDuration",
+          "Status": "Passed",
+          "Duration": 0.0002994,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.PlayerStatsTests.ApplyDamage_ClampsAtZero",
+          "Status": "Passed",
+          "Duration": 0.0005015,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.PlayerStatsTests.Heal_ClampsAtMaxHealth",
+          "Status": "Passed",
+          "Duration": 0.0001879,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.PlayerStatsTests.SpendMana_FailsWhenInsufficient",
+          "Status": "Passed",
+          "Duration": 0.000176,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "Plunderspell.Tests.EditMode.PlayerStatsTests.SpendMana_SucceedsAndDeducts",
+          "Status": "Passed",
+          "Duration": 0.0001003,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ArtAssetImportTests.GeneratedPropsImportCleanly",
+          "Status": "Passed",
+          "Duration": 0.1041939,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.AuthoredRaidSceneTests.Test_TheDirectorAndHudAreStillWiredToTheScene",
+          "Status": "Passed",
+          "Duration": 0.0340343,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.AuthoredRaidSceneTests.Test_ThePlayerCarriesWhatTheRaidExpectsOfIt",
+          "Status": "Passed",
+          "Duration": 0.0029305,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.AuthoredRaidSceneTests.Test_ThePlayerIsSpawnedFromTheAuthoredPrefab",
+          "Status": "Passed",
+          "Duration": 0.0032663,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.AuthoredRaidSceneTests.Test_ThePlayerMatchesTheCastleBenchSetup",
+          "Status": "Passed",
+          "Duration": 0.0036857,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.AuthoredRaidSceneTests.Test_ThePlayerUsesTheShippingControllerNotThePlaytestHarness",
+          "Status": "Passed",
+          "Duration": 0.0026309,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.EraContentTests.BronzeAgeAndHighMedievalShareNothing",
+          "Status": "Passed",
+          "Duration": 0.0017787,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.EraContentTests.EraRoomPrefabsStandUpright",
+          "Status": "Passed",
+          "Duration": 0.0009355,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.EraContentTests.EveryEraHasAnEntryWithItsOwnLootAndEnemies",
+          "Status": "Passed",
+          "Duration": 0.0006278,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.EraContentTests.EveryEraPostsLootAndEnemiesToEveryZone",
+          "Status": "Passed",
+          "Duration": 0.0007392,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.EraContentTests.EveryEraRoomSetBuildsAWholeCastle",
+          "Status": "Passed",
+          "Duration": 0.0006095,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.LootAmountTests.EachEraPlacesAboutDoubleTheOldHaulOneItemPerAnchor",
+          "Status": "Passed",
+          "Duration": 0.1736747,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.LootGripTests.EveryForgedItemHasAGripPointOnItsMesh",
+          "Status": "Passed",
+          "Duration": 0.0066144,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.LootGripTests.HeldItemIsUprightWithItsGripOnTheSocket",
+          "Status": "Passed",
+          "Duration": 0.0071353,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_EveryEnemyStandsOnItsOwnOrigin",
+          "Status": "Passed",
+          "Duration": 0.014077,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_EveryRoomModuleClearsAStandardHuman",
+          "Status": "Passed",
+          "Duration": 0.0033996,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_NoEnemyIsTallerThanTheRoomsItIsPostedTo",
+          "Status": "Passed",
+          "Duration": 0.0089956,
+          "Message": null,
+          "StackTrace": null
+        },
+        {
+          "FullName": "RogueAi.Tests.Editor.ScaleInvariantTests.Test_ThePlayerCapsuleIsTheStandardHuman",
+          "Status": "Passed",
+          "Duration": 0.0001824,
+          "Message": null,
+          "StackTrace": null
+        }
+      ],
+      "Duration": 3.38,
+      "StatusPath": null,
+      "Mode": "EditMode",
+      "FilterApplied": null,
+      "success": true,
+      "result": null
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\Ayden's mini\\Desktop\\GameDev\\PlunderSpell-trialmerge"
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

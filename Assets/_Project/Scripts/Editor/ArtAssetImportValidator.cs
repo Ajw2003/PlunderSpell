@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using RogueAi.EditorTools;
 using UnityEditor;
 using UnityEngine;
 
@@ -43,6 +44,9 @@ public static class ArtAssetImportValidator
     {
         AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         var report = Validate();
+        var artBible = ValidateArtBible();
+        report.Failures.AddRange(artBible.Failures);
+        report.Lines.AddRange(artBible.Lines);
 
         var text = string.Join("\n", report.Lines);
         Directory.CreateDirectory(Path.GetDirectoryName(ReportPath));
@@ -168,6 +172,127 @@ public static class ArtAssetImportValidator
             report.Lines.Add(
                 $"[ok]   {key,-18} {triangles,5} tris  {vertices,5} verts  {materials.Length} material(s)");
         }
+    }
+
+    /// <summary>
+    /// Checks that every model and texture under <see cref="ArtBibleModelImporter.Root"/> imported
+    /// with the settings <see cref="ArtBibleModelImporter"/> owns: rig type per model, a valid
+    /// Humanoid avatar for each human, the hound's root node, no Read/Write, scale 1, URP Lit
+    /// materials with the ×9 emission on the glowing ones, and compressed, mipmapped, size-capped
+    /// textures with the data maps linear. See docs/plans/artbible-enemies-in-engine.md (E0).
+    /// </summary>
+    public static Report ValidateArtBible()
+    {
+        var report = new Report();
+        string root = Path.Combine(ProjectRoot, ArtBibleModelImporter.Root);
+        if (!Directory.Exists(root))
+        {
+            Fail(report, $"no {ArtBibleModelImporter.Root} folder");
+            return report;
+        }
+
+        string[] models = Directory.GetFiles(root, "*.fbx", SearchOption.AllDirectories)
+            .Select(ToAssetPath).OrderBy(path => path).ToArray();
+        if (models.Length == 0)
+        {
+            Fail(report, $"no .fbx files under {ArtBibleModelImporter.Root}");
+            return report;
+        }
+
+        foreach (string path in models)
+        {
+            ValidateArtBibleModel(path, report);
+        }
+
+        string[] textures = Directory.GetFiles(root, "*.png", SearchOption.AllDirectories)
+            .Select(ToAssetPath).OrderBy(path => path).ToArray();
+        foreach (string path in textures)
+        {
+            ValidateArtBibleTexture(path, report);
+        }
+
+        report.Lines.Add(report.Passed
+            ? $"{SuccessMarker} — {models.Length} art-bible model(s), {textures.Length} texture(s) imported as specified."
+            : $"{FailureMarker} — {report.Failures.Count} art-bible import problem(s).");
+        return report;
+    }
+
+    private static void ValidateArtBibleModel(string assetPath, Report report)
+    {
+        string key = Path.GetFileNameWithoutExtension(assetPath);
+        ArtBibleModelImporter.Kind? kind = ArtBibleModelImporter.KindOf(assetPath);
+        if (!(AssetImporter.GetAtPath(assetPath) is ModelImporter importer) || !kind.HasValue)
+        {
+            Fail(report, $"{key}: not imported as a model ({assetPath})");
+            return;
+        }
+
+        int before = report.Failures.Count;
+        if (importer.isReadable)
+            Fail(report, $"{key}: mesh Read/Write is on");
+        if (Mathf.Abs(importer.globalScale - 1f) > 0.0001f)
+            Fail(report, $"{key}: scale factor {importer.globalScale}, not 1");
+
+        Avatar avatar = AssetDatabase.LoadAllAssetsAtPath(assetPath).OfType<Avatar>().FirstOrDefault();
+        switch (kind.Value)
+        {
+            case ArtBibleModelImporter.Kind.Item:
+                if (importer.animationType != ModelImporterAnimationType.None)
+                    Fail(report, $"{key}: item rigged as {importer.animationType}, not None");
+                break;
+
+            case ArtBibleModelImporter.Kind.GenericEnemy:
+                if (importer.animationType != ModelImporterAnimationType.Generic)
+                    Fail(report, $"{key}: rigged as {importer.animationType}, not Generic");
+                if (importer.motionNodeName != ArtBibleModelImporter.GenericRootBone)
+                    Fail(report, $"{key}: root node '{importer.motionNodeName}', not '{ArtBibleModelImporter.GenericRootBone}'");
+                break;
+
+            case ArtBibleModelImporter.Kind.HumanoidEnemy:
+                if (importer.animationType != ModelImporterAnimationType.Human)
+                    Fail(report, $"{key}: rigged as {importer.animationType}, not Humanoid");
+                if (avatar == null || !avatar.isHuman || !avatar.isValid)
+                    Fail(report, $"{key}: no valid Humanoid avatar (bone map in ArtBibleModelImporter.HumanBoneMap " +
+                                 "must match UNITY_HUMANOID in Tools/ArtForge/art_forge/figures.py)");
+                break;
+        }
+
+        bool emissive = ArtBibleEnemyCatalog.EmissiveModels.Contains(key);
+        foreach (Material material in AssetDatabase.LoadAllAssetsAtPath(assetPath).OfType<Material>())
+        {
+            if (material.shader == null || material.shader.name != ArtBibleModelImporter.LitShaderName)
+                Fail(report, $"{key}: material '{material.name}' uses " +
+                             $"'{(material.shader != null ? material.shader.name : "no shader")}', not URP Lit");
+            else if (emissive && material.GetColor("_EmissionColor").maxColorComponent <
+                     ArtBibleModelImporter.EmissionStrength - 0.01f)
+                Fail(report, $"{key}: emissive material '{material.name}' is not ×{ArtBibleModelImporter.EmissionStrength} HDR");
+        }
+
+        if (report.Failures.Count == before)
+            report.Lines.Add($"[ok]   {key,-24} {kind.Value}");
+    }
+
+    private static void ValidateArtBibleTexture(string assetPath, Report report)
+    {
+        string key = Path.GetFileName(assetPath);
+        if (!(AssetImporter.GetAtPath(assetPath) is TextureImporter importer))
+        {
+            Fail(report, $"{key}: not imported as a texture ({assetPath})");
+            return;
+        }
+
+        bool linear = ArtBibleModelImporter.IsLinearTexture(assetPath);
+        if (importer.sRGBTexture == linear)
+            Fail(report, $"{key}: imported as {(importer.sRGBTexture ? "sRGB" : "linear")}, should be " +
+                         $"{(linear ? "linear" : "sRGB")}");
+        if (!importer.mipmapEnabled)
+            Fail(report, $"{key}: no mipmaps");
+        if (importer.isReadable)
+            Fail(report, $"{key}: Read/Write is on");
+        if (importer.maxTextureSize > ArtBibleModelImporter.TextureSize)
+            Fail(report, $"{key}: max size {importer.maxTextureSize}, over {ArtBibleModelImporter.TextureSize}");
+        if (importer.textureCompression == TextureImporterCompression.Uncompressed)
+            Fail(report, $"{key}: uncompressed");
     }
 
     /// <summary>Triangle counts the Blender pipeline recorded for each prop. Parsed rather than

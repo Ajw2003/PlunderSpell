@@ -1,0 +1,31 @@
+| Row | Col | What | Asset |
+|---|---|---|---|
+| 1 | 1 | BronzeBastion - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeBastion.prefab` |
+| 1 | 2 | BronzeBathRoom - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeBathRoom.prefab` |
+| 1 | 3 | BronzeChariotShed - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeChariotShed.prefab` |
+| 1 | 4 | BronzeCistern - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeCistern.prefab` |
+| 1 | 5 | BronzeDoorPlugCrypt - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeDoorPlugCrypt.prefab` |
+| 1 | 6 | BronzeDoorPlugInnerWard - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeDoorPlugInnerWard.prefab` |
+| 2 | 1 | BronzeDoorPlugKeep - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeDoorPlugKeep.prefab` |
+| 2 | 2 | BronzeDoorPlugOuterBailey - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeDoorPlugOuterBailey.prefab` |
+| 2 | 3 | BronzeDromos - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeDromos.prefab` |
+| 2 | 4 | BronzeFoundry - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeFoundry.prefab` |
+| 2 | 5 | BronzeFrescoCourt - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeFrescoCourt.prefab` |
+| 2 | 6 | BronzeGateApproach - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeGateApproach.prefab` |
+| 3 | 1 | BronzeGraveCircle - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeGraveCircle.prefab` |
+| 3 | 2 | BronzeLarnaxVault - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeLarnaxVault.prefab` |
+| 3 | 3 | BronzeLevyBarracks - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeLevyBarracks.prefab` |
+| 3 | 4 | BronzeLionGate - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeLionGate.prefab` |
+| 3 | 5 | BronzeMegaron - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeMegaron.prefab` |
+| 3 | 6 | BronzeMegaronStair - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeMegaronStair.prefab` |
+| 4 | 1 | BronzeOilPress - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeOilPress.prefab` |
+| 4 | 2 | BronzePalaceKitchen - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzePalaceKitchen.prefab` |
+| 4 | 3 | BronzePithosMagazine - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzePithosMagazine.prefab` |
+| 4 | 4 | BronzeQueensHall - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeQueensHall.prefab` |
+| 4 | 5 | BronzeShaftStair - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeShaftStair.prefab` |
+| 4 | 6 | BronzeShrine - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeShrine.prefab` |
+| 5 | 1 | BronzeTabletArchive - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeTabletArchive.prefab` |
+| 5 | 2 | BronzeTholos - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeTholos.prefab` |
+| 5 | 3 | BronzeTreasury - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeTreasury.prefab` |
+| 5 | 4 | BronzeWallCorner - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeWallCorner.prefab` |
+| 5 | 5 | BronzeWallStraight - prefab (era branch) | `Assets/_Project/Prefabs/Castle/BronzeAge/BronzeWallStraight.prefab` |

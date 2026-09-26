@@ -1,0 +1,1315 @@
+{
+  "status": "completed",
+  "duration": 26.52,
+  "summary": {
+    "total": 186,
+    "passed": 186,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "Plunderspell.Tests.PlayMode.UIScreenshotPlayModeTests.CapturesAllUIScreens",
+      "Status": "Passed",
+      "Duration": 0.5701983,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CarryFeelTests.Test_AHeldItemIsHeldAtItsGripNotItsBase",
+      "Status": "Passed",
+      "Duration": 1.2054658,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CarryFeelTests.Test_AMouseSwingStillLagsMoreForAHeavyItem",
+      "Status": "Passed",
+      "Duration": 0.7158622,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CarryFeelTests.Test_WalkingDoesNotMakeAHeldItemLag",
+      "Status": "Passed",
+      "Duration": 1.5028302,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastingInputTests.Test_HoldingVOpensTheMic",
+      "Status": "Passed",
+      "Duration": 0.1085279,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastingInputTests.Test_HoldVAndPressFiveCastsTonitrusAndShowsIt",
+      "Status": "Passed",
+      "Duration": 0.0633839,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastingInputTests.Test_PressingFiveWithoutHoldingVDoesNothing",
+      "Status": "Passed",
+      "Duration": 0.0326453,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastingInputTests.Test_TheMicStaysShutWhileAMenuIsOpen",
+      "Status": "Passed",
+      "Duration": 0.0390492,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_AdjacentRoomsAreDoorConnected",
+      "Status": "Passed",
+      "Duration": 0.0167488,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_AllZonesPresent",
+      "Status": "Passed",
+      "Duration": 0.0018703,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_CurtainWallIsAClosedLoop",
+      "Status": "Passed",
+      "Duration": 0.0035209,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_CurtainWallIsNotAnEnclosedRoom",
+      "Status": "Passed",
+      "Duration": 0.000341,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_DeterministicGeneration",
+      "Status": "Passed",
+      "Duration": 0.0024919,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_ExtractionExitAssigned",
+      "Status": "Passed",
+      "Duration": 0.0004812,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_InteriorRoomCountIsPlayable",
+      "Status": "Passed",
+      "Duration": 0.0009623,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_LevenshteinFromM1_StillPasses",
+      "Status": "Passed",
+      "Duration": 0.0003328,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_PathValidatorFindsPath",
+      "Status": "Passed",
+      "Duration": 0.0056567,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_PathValidatorOnEmptyData",
+      "Status": "Passed",
+      "Duration": 0.0002408,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_SocketCompatibilityRules",
+      "Status": "Passed",
+      "Duration": 0.0002703,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CastleGeneratorTests.Test_SpawnIsJustInsideTheGatehouseForEverySeed",
+      "Status": "Passed",
+      "Duration": 0.0044607,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CombatBenchCastingTests.Test_CastingOnTheBenchProducesAVisual",
+      "Status": "Passed",
+      "Duration": 0.6243489,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CombatBenchCastingTests.Test_TheBenchsLexiconResolvesEveryPrimaryWord",
+      "Status": "Passed",
+      "Duration": 0.5249535,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CombatBenchTests.Test_ClearRemovesEverythingTheBenchSpawned",
+      "Status": "Passed",
+      "Duration": 0.0126429,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CombatBenchTests.Test_SpawnedEnemiesRingTheOriginRatherThanStackingOnIt",
+      "Status": "Passed",
+      "Duration": 0.0059245,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CombatBenchTests.Test_SpawnedGuardsStartInTheRequestedAlertState",
+      "Status": "Passed",
+      "Duration": 0.0051162,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CombatBenchTests.Test_SpawnPlacesTheRequestedCount",
+      "Status": "Passed",
+      "Duration": 0.0045457,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CombatBenchTests.Test_TheBenchOpensInPlayNotInTheMainMenu",
+      "Status": "Passed",
+      "Duration": 0.0051299,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CoopRulesTests.Test_AForwardedHitIsNotAlsoAppliedHere",
+      "Status": "Passed",
+      "Duration": 0.0017264,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CoopRulesTests.Test_AHitThatStaysHereStillApplies",
+      "Status": "Passed",
+      "Duration": 0.0022191,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.CoopRulesTests.Test_ShowingTheHostsCampaignDoesNotOverwriteThisMachinesSave",
+      "Status": "Passed",
+      "Duration": 0.0008877,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.ExtractionHaulTests.Test_BreakingThroughTheOldPickupStillRuinsTheValue",
+      "Status": "Passed",
+      "Duration": 0.0040071,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.ExtractionHaulTests.Test_ResolvingPaysOutWhatWasStandingInTheZone",
+      "Status": "Passed",
+      "Duration": 0.0010508,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.ExtractionHaulTests.Test_RuinedLootIsWorthNothing",
+      "Status": "Passed",
+      "Duration": 0.0004054,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.ExtractionHaulTests.Test_TheHaulIsAnnouncedAsLootArrives",
+      "Status": "Passed",
+      "Duration": 0.0003878,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.ExtractionHaulTests.Test_TheHudReadsOutTheHaulWhileTheRaidIsStillRunning",
+      "Status": "Passed",
+      "Duration": 0.000314,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.ExtractionHaulTests.Test_TheZoneTalliesTheWorthOfWhatIsStandingInIt",
+      "Status": "Passed",
+      "Duration": 0.0002702,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.FullRaidIntegrationTests.Test_AMisfiredAurumVocoScattersTheSameGold",
+      "Status": "Passed",
+      "Duration": 0.0033,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.FullRaidIntegrationTests.Test_ARousedCastleLocksItsDoors",
+      "Status": "Passed",
+      "Duration": 0.0028359,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.FullRaidIntegrationTests.Test_AurumVocoPutsCoinOnTheFloor",
+      "Status": "Passed",
+      "Duration": 0.0008502,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.FullRaidIntegrationTests.Test_AWholeRaidFromTheLairAndBack",
+      "Status": "Passed",
+      "Duration": 0.0170705,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.FullRaidIntegrationTests.Test_PortaStillOpensALockedDownCastle",
+      "Status": "Passed",
+      "Duration": 0.0009213,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.FullRaidIntegrationTests.Test_SayingTheWordBadlyHurtsYouInsteadOfTheGuard",
+      "Status": "Passed",
+      "Duration": 0.0028233,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.FullRaidIntegrationTests.Test_ShoutingASpellWakesTheCastleAndBringsAGuard",
+      "Status": "Passed",
+      "Duration": 0.0014235,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardAttackTests.Test_AGuardCannotAttackEveryFrame",
+      "Status": "Passed",
+      "Duration": 0.0097109,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardAttackTests.Test_AGuardInReachActuallyDamagesTheIntruder",
+      "Status": "Passed",
+      "Duration": 0.0054672,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardAttackTests.Test_AGuardOutOfReachDoesNotDamageTheIntruder",
+      "Status": "Passed",
+      "Duration": 0.0041265,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardAttackTests.Test_AnIncapacitatedGuardDoesNotAttack",
+      "Status": "Passed",
+      "Duration": 0.0054028,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_ABurningGuardEventuallyDies",
+      "Status": "Passed",
+      "Duration": 0.0020166,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_ACalmGuardSeesNobodyDuringTheArrivalGrace",
+      "Status": "Passed",
+      "Duration": 0.0005805,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AGuardDoesNotSeeAnIntruderBehindIt",
+      "Status": "Passed",
+      "Duration": 0.0004045,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AGuardDoesNotSeeAnIntruderTooFarAway",
+      "Status": "Passed",
+      "Duration": 0.0003425,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AGuardSeesAnIntruderInFrontOfIt",
+      "Status": "Passed",
+      "Duration": 0.0003146,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AGuardWithoutANavMeshStillWalksToTheNoise",
+      "Status": "Passed",
+      "Duration": 0.000489,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_ALoudNoisePullsAGuardOffPatrol",
+      "Status": "Passed",
+      "Duration": 0.000377,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AnAlertedCastleMakesGuardsJumpier",
+      "Status": "Passed",
+      "Duration": 0.0001354,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AnAlertedCastleSeesFurther",
+      "Status": "Passed",
+      "Duration": 0.0001499,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AnIncapacitatedGuardDoesNotDrift",
+      "Status": "Passed",
+      "Duration": 0.000338,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AQuietNoiseDoesNotWakeASleepingGuard",
+      "Status": "Passed",
+      "Duration": 0.0002915,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AQuietNoiseIsIgnoredWhileCalm",
+      "Status": "Passed",
+      "Duration": 0.0002866,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_ASleepingGuardSeesNothing",
+      "Status": "Passed",
+      "Duration": 0.0002975,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_AtHueAndCryTheHuntNeverEnds",
+      "Status": "Passed",
+      "Duration": 0.0005001,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_GuardsMoveFasterWhenChasingAndWhenTheCastleIsUp",
+      "Status": "Passed",
+      "Duration": 0.0001468,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_IntruderTagRegistersAndUnregisters",
+      "Status": "Passed",
+      "Duration": 0.0010428,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_LosingSightLeadsToASearchThenBackToPatrol",
+      "Status": "Passed",
+      "Duration": 0.0003759,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_LoudNoiseWakesASleepingGuard",
+      "Status": "Passed",
+      "Duration": 0.0003552,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.GuardTests.Test_SpottingAnIntruderRaisesTheAlarm",
+      "Status": "Passed",
+      "Duration": 0.0004837,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_ADoorInReachIsOpenedByTheInteractKey",
+      "Status": "Passed",
+      "Duration": 0.0032812,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_ALockedDoorDoesNotOpenByHandButPortaOpensIt",
+      "Status": "Passed",
+      "Duration": 0.0003901,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_BrokenLootCannotBePickedUp",
+      "Status": "Passed",
+      "Duration": 0.0006995,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_HeavyLootIsFlaggedAsNeedingTwoPeople",
+      "Status": "Passed",
+      "Duration": 0.000965,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_LookingAtLootFocusesIt",
+      "Status": "Passed",
+      "Duration": 0.0005323,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_LootOutOfReachIsNotFocused",
+      "Status": "Passed",
+      "Duration": 0.0003091,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_TakingAndDroppingLoot",
+      "Status": "Passed",
+      "Duration": 0.0023384,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_TheAlarmTextEscalatesWithTheAlarm",
+      "Status": "Passed",
+      "Duration": 0.0026855,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_TheClockIsMarkedCriticalInsideTheLastMinute",
+      "Status": "Passed",
+      "Duration": 0.0006031,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_TheHudNamesWhatYouAreCarrying",
+      "Status": "Passed",
+      "Duration": 0.0007442,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_TheHudPromptsForATwoPersonLift",
+      "Status": "Passed",
+      "Duration": 0.0012382,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_TheHudShowsTheClockAndTheAlarm",
+      "Status": "Passed",
+      "Duration": 0.0006306,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.HudAndInteractionTests.Test_TimerNeverReadsNegative",
+      "Status": "Passed",
+      "Duration": 0.0001402,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_AlarmEscalationToHueCry",
+      "Status": "Passed",
+      "Duration": 0.0007781,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_CastleSeedReplicates",
+      "Status": "Passed",
+      "Duration": 0.5070822,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_CrossEraEquip",
+      "Status": "Passed",
+      "Duration": 0.0004251,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_DebtSystem",
+      "Status": "Passed",
+      "Duration": 0.0004295,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_DownedPlayerBulk",
+      "Status": "Passed",
+      "Duration": 0.0011798,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_ExtractionTally",
+      "Status": "Passed",
+      "Duration": 0.0007667,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_FourClientsConnect",
+      "Status": "Passed",
+      "Duration": 1.005231,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_LootPickupFragility",
+      "Status": "Passed",
+      "Duration": 0.0007311,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_MisfireEngineViaIntegration",
+      "Status": "Passed",
+      "Duration": 0.000419,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_VoiceMockCastIgnis",
+      "Status": "Passed",
+      "Duration": 0.0001415,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootAcousticsTests.Test_AcousticOcclusionAttenuates",
+      "Status": "Passed",
+      "Duration": 0.0001439,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootAcousticsTests.Test_AlarmLevelIncreases",
+      "Status": "Passed",
+      "Duration": 0.0004147,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootAcousticsTests.Test_AlarmStateCalmToStirred",
+      "Status": "Passed",
+      "Duration": 0.0002403,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootAcousticsTests.Test_AlarmStateLocksAtRoused",
+      "Status": "Passed",
+      "Duration": 0.0002506,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootAcousticsTests.Test_DualCarryThreshold",
+      "Status": "Passed",
+      "Duration": 0.0003925,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootAcousticsTests.Test_LootItemFragilityBreaks",
+      "Status": "Passed",
+      "Duration": 0.0002817,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootAcousticsTests.Test_LootItemSurvivesLowVelocity",
+      "Status": "Passed",
+      "Duration": 0.0002254,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootAcousticsTests.Test_SingleCarryThreshold",
+      "Status": "Passed",
+      "Duration": 0.0002194,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootSettleAndInputGatingTests.Test_InputIsAcceptedOnlyWhilePlaying",
+      "Status": "Passed",
+      "Duration": 0.0007627,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootSettleAndInputGatingTests.Test_MovementIsIgnoredWhileAMenuIsOpenAndResumesInPlay",
+      "Status": "Passed",
+      "Duration": 0.0781481,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootSettleAndInputGatingTests.Test_NoSpawnedLootEndsUpBelowTheFloorOrFarAboveIt",
+      "Status": "Passed",
+      "Duration": 1.2009906,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootSettleAndInputGatingTests.Test_SettlingHandsFreeLootBackToPhysicsButLeavesCarriedLootAlone",
+      "Status": "Passed",
+      "Duration": 0.0027755,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootSettleAndInputGatingTests.Test_SpawnedLootIsFrozenUntilTheSceneHasSettled",
+      "Status": "Passed",
+      "Duration": 0.0033785,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootSettleAndInputGatingTests.Test_TheCursorFollowsTheGameStateAndIsFreedByLosingFocus",
+      "Status": "Passed",
+      "Duration": 0.0009716,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootSettleAndInputGatingTests.Test_TheCursorIsCapturedOnlyWhilePlaying",
+      "Status": "Passed",
+      "Duration": 0.0001696,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.LootSettleAndInputGatingTests.Test_TheRaidPlayerStopsMovingWhileAMenuIsOpen",
+      "Status": "Passed",
+      "Duration": 0.0086889,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_AHeavierThingLagsBehindTheHand",
+      "Status": "Passed",
+      "Duration": 5.2817878,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_AHeavyLoadSlowsTheCarrier",
+      "Status": "Passed",
+      "Duration": 0.0005771,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_AHitThatCostsNothingIsNotReported",
+      "Status": "Passed",
+      "Duration": 0.0014795,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_AKillingBlowAndSelfHarmAreRecognised",
+      "Status": "Passed",
+      "Duration": 0.000607,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_ApplyReportsTheHitWithWhoIsToBlame",
+      "Status": "Passed",
+      "Duration": 0.000886,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_IdleStandsStill",
+      "Status": "Passed",
+      "Duration": 0.0071724,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_NoGuardIsPostedNextToTheEntrance",
+      "Status": "Passed",
+      "Duration": 0.0106809,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_PauseFreezesTheWorldOnlyForTheHost",
+      "Status": "Passed",
+      "Duration": 0.0002604,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_SpellNumbersComeFromTheAuthoredAsset",
+      "Status": "Passed",
+      "Duration": 0.0003657,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_StandingOnThePadLeavesWithTheLootOnIt",
+      "Status": "Passed",
+      "Duration": 8.0063919,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_SteppingOffThePadCancelsLeaving",
+      "Status": "Passed",
+      "Duration": 1.0049093,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_TheCaptionTellsACastAMisfireAndAFizzleApart",
+      "Status": "Passed",
+      "Duration": 0.0010013,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.PlayableLoopTests.Test_TheViewMovesEveryFrameAndLookTurnsTheCamera",
+      "Status": "Passed",
+      "Duration": 0.0170222,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_AnEmptyExtractionStillEndsTheRaid",
+      "Status": "Passed",
+      "Duration": 0.0061666,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_ARaidStartsInTheLairAndEndsBackInIt",
+      "Status": "Passed",
+      "Duration": 0.0046378,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_ASecondRaidIsWinnableToo",
+      "Status": "Passed",
+      "Duration": 0.0085282,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_BrokenLootIsWorthNothing",
+      "Status": "Passed",
+      "Duration": 0.0051158,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_DeeperZonesAreLootedMoreOften",
+      "Status": "Passed",
+      "Duration": 0.0061703,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_DifferentSeedsYieldDifferentHauls",
+      "Status": "Passed",
+      "Duration": 0.0008811,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_ExtractedWorthPaysDownTheDebt",
+      "Status": "Passed",
+      "Duration": 0.0047387,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_GuardsAreDenserDeeperIn",
+      "Status": "Passed",
+      "Duration": 0.0003322,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_OnlyLootInsideTheZoneCounts",
+      "Status": "Passed",
+      "Duration": 0.0046247,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_PlayersStayVisibleToGuardsAcrossRaids",
+      "Status": "Passed",
+      "Duration": 0.0047611,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_RaidBuildsAWalkableCastle",
+      "Status": "Passed",
+      "Duration": 0.0041727,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_SameSeedYieldsTheSameHaul",
+      "Status": "Passed",
+      "Duration": 0.0008681,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_SettingOutRaisesTheDebt",
+      "Status": "Passed",
+      "Duration": 0.0038875,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_SpawnedLootMatchesThePlanAndIsClearedAfterTheRaid",
+      "Status": "Passed",
+      "Duration": 0.0044911,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_StartingARaidTwiceIsIgnored",
+      "Status": "Passed",
+      "Duration": 0.0043403,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_TheCryptAlwaysHoldsItsRelic",
+      "Status": "Passed",
+      "Duration": 0.0030135,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_TheExtractionRoomIsNeverLooted",
+      "Status": "Passed",
+      "Duration": 0.0052747,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidLoopTests.Test_TheGarrisonIsDeterministicAndAvoidsTheExit",
+      "Status": "Passed",
+      "Duration": 0.0043308,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidSceneCastingTests.Test_CastingInTheRaidSceneProducesAVisual",
+      "Status": "Passed",
+      "Duration": 0.8544481,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.RaidSceneCastingTests.Test_TheRaidScenesLexiconResolvesEveryPrimaryWord",
+      "Status": "Passed",
+      "Duration": 0.8730679,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_AMispronunciationNeverFizzles(\"David\")",
+      "Status": "Passed",
+      "Duration": 0.6074595,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_AMispronunciationNeverFizzles(\"Zira\")",
+      "Status": "Passed",
+      "Duration": 0.2752357,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_ASeparableMispronunciationMisfires(\"David\")",
+      "Status": "Passed",
+      "Duration": 0.1680633,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_ASeparableMispronunciationMisfires(\"Zira\")",
+      "Status": "Passed",
+      "Duration": 0.1700516,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"David\",\"IGNIS\")",
+      "Status": "Passed",
+      "Duration": 0.0321891,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"David\",\"FRANGO\")",
+      "Status": "Passed",
+      "Duration": 0.0319156,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"David\",\"LEVO\")",
+      "Status": "Passed",
+      "Duration": 0.0280494,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"David\",\"AURUMVOCO\")",
+      "Status": "Passed",
+      "Duration": 0.0345746,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"David\",\"TONITRUS\")",
+      "Status": "Passed",
+      "Duration": 0.0363145,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"David\",\"SOMNUS\")",
+      "Status": "Passed",
+      "Duration": 0.0319056,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"David\",\"CADAVERSURGE\")",
+      "Status": "Passed",
+      "Duration": 0.0431882,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"David\",\"PORTA\")",
+      "Status": "Passed",
+      "Duration": 0.0310811,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"Zira\",\"IGNIS\")",
+      "Status": "Passed",
+      "Duration": 0.0327015,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"Zira\",\"FRANGO\")",
+      "Status": "Passed",
+      "Duration": 0.0314234,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"Zira\",\"LEVO\")",
+      "Status": "Passed",
+      "Duration": 0.0316459,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"Zira\",\"AURUMVOCO\")",
+      "Status": "Passed",
+      "Duration": 0.0352289,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"Zira\",\"TONITRUS\")",
+      "Status": "Passed",
+      "Duration": 0.0363214,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"Zira\",\"SOMNUS\")",
+      "Status": "Passed",
+      "Duration": 0.0349418,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"Zira\",\"CADAVERSURGE\")",
+      "Status": "Passed",
+      "Duration": 0.0392383,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpeechRecognitionTests.Test_EverySpellSaidCorrectlyCastsThatSpell(\"Zira\",\"PORTA\")",
+      "Status": "Passed",
+      "Duration": 0.0276735,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_CastingIsHeardByTheAlarm",
+      "Status": "Passed",
+      "Duration": 0.0009255,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_EveryMisfireIdHasAnEffect",
+      "Status": "Passed",
+      "Duration": 0.0003265,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_EveryPrimarySpellHasAMisfire",
+      "Status": "Passed",
+      "Duration": 0.0003246,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_FrangoHurtsAndStaggersWhatYouAimAt",
+      "Status": "Passed",
+      "Duration": 0.002427,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_FrangoLeavesYourLootAlone",
+      "Status": "Passed",
+      "Duration": 0.0006609,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_IgnisBurnsTarget",
+      "Status": "Passed",
+      "Duration": 0.0002971,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_IgnisDoesNothingWhenNothingIsInRange",
+      "Status": "Passed",
+      "Duration": 0.0002193,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_MisfiredFrangoBreaksCarriedLootFirst",
+      "Status": "Passed",
+      "Duration": 0.0011393,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_MisfiredIgnisBurnsTheCasterNotTheTarget",
+      "Status": "Passed",
+      "Duration": 0.0003463,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_ShoutedTonitrusIsLoudEnoughToStirTheCastle",
+      "Status": "Passed",
+      "Duration": 0.0002506,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_ShoutingBurnsHarderThanWhispering",
+      "Status": "Passed",
+      "Duration": 0.0013738,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_SomnusSleepsGuardsButNotTheCaster",
+      "Status": "Passed",
+      "Duration": 0.0005542,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_TonitrusStunsEveryoneInRange",
+      "Status": "Passed",
+      "Duration": 0.0002977,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_UnknownSpellReportsNoEffectRatherThanSilentlyPassing",
+      "Status": "Passed",
+      "Duration": 0.0006099,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellEffectTests.Test_WhisperingIsQuieterThanShouting",
+      "Status": "Passed",
+      "Duration": 0.0003322,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellVfxTests.Test_ABurstAppearsAndThenCleansItselfUp",
+      "Status": "Passed",
+      "Duration": 0.1043602,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellVfxTests.Test_ACastPutsSomethingOnScreen",
+      "Status": "Passed",
+      "Duration": 0.0044906,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellVfxTests.Test_EveryMisfireLooksLikeAMisfire",
+      "Status": "Passed",
+      "Duration": 0.0002644,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellVfxTests.Test_EveryPrimarySpellHasItsOwnLook",
+      "Status": "Passed",
+      "Duration": 0.0010081,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.SpellVfxTests.Test_IgnisIsTheProjectileSpell",
+      "Status": "Passed",
+      "Duration": 0.0001416,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.VoiceCastingTests.Test_AmplitudeClassification",
+      "Status": "Passed",
+      "Duration": 0.0003938,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.VoiceCastingTests.Test_LevenshteinDistance",
+      "Status": "Passed",
+      "Duration": 0.0001413,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.VoiceCastingTests.Test_MisfireEngineExactMatch",
+      "Status": "Passed",
+      "Duration": 0.0005503,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.VoiceCastingTests.Test_MisfireEngineNearMatch",
+      "Status": "Passed",
+      "Duration": 0.0001446,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.VoiceCastingTests.Test_MisfireEngineNoMatch",
+      "Status": "Passed",
+      "Duration": 0.0001403,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.VoiceCastingTests.Test_MockServiceDoesNotFireWhenNotListening",
+      "Status": "Passed",
+      "Duration": 0.0003557,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.VoiceCastingTests.Test_MockServiceFiresOnKeyPress",
+      "Status": "Passed",
+      "Duration": 0.0012557,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "RogueAi.Tests.VoiceCastingTests.Test_NormalizeStripsPunctuationAndCase",
+      "Status": "Passed",
+      "Duration": 9.31E-05,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

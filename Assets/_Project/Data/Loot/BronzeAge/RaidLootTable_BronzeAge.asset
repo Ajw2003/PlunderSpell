@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b7e93a488918d94496681a46807bcea, type: 3}
+  m_Name: RaidLootTable_BronzeAge
+  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.RaidLootTable
+  Entries:
+  - Item: {fileID: 11400000, guid: 56e9eed58ea0d63478771e03cc84a458, type: 2}
+    Zone: 0
+    Weight: 14
+    Prefab: {fileID: 8065598540835275105, guid: 8b59e49d3c12dca42a1439eb6c31b731, type: 3}
+  - Item: {fileID: 11400000, guid: 56e9eed58ea0d63478771e03cc84a458, type: 2}
+    Zone: 1
+    Weight: 10
+    Prefab: {fileID: 8065598540835275105, guid: 8b59e49d3c12dca42a1439eb6c31b731, type: 3}
+  - Item: {fileID: 11400000, guid: 2b81c18b362a4f04bacdacea1575fc75, type: 2}
+    Zone: 1
+    Weight: 12
+    Prefab: {fileID: 9008604398329569266, guid: 1c8bd43ea2bd0064da39ae480a9f06cf, type: 3}
+  - Item: {fileID: 11400000, guid: 2b81c18b362a4f04bacdacea1575fc75, type: 2}
+    Zone: 2
+    Weight: 8
+    Prefab: {fileID: 9008604398329569266, guid: 1c8bd43ea2bd0064da39ae480a9f06cf, type: 3}
+  - Item: {fileID: 11400000, guid: 219feae8c0da78d41a9b2003fcc0103d, type: 2}
+    Zone: 2
+    Weight: 10
+    Prefab: {fileID: 4033661125121997560, guid: 77cddff781d15e14abba40390ed1f8e7, type: 3}
+  - Item: {fileID: 11400000, guid: 219feae8c0da78d41a9b2003fcc0103d, type: 2}
+    Zone: 3
+    Weight: 8
+    Prefab: {fileID: 4033661125121997560, guid: 77cddff781d15e14abba40390ed1f8e7, type: 3}
+  - Item: {fileID: 11400000, guid: 1e75a02e34bfeec48970282e84412875, type: 2}
+    Zone: 3
+    Weight: 8
+    Prefab: {fileID: 3364540795792774325, guid: cb44448686f090843859208e30a745d5, type: 3}
+  - Item: {fileID: 11400000, guid: 1e75a02e34bfeec48970282e84412875, type: 2}
+    Zone: 4
+    Weight: 6
+    Prefab: {fileID: 3364540795792774325, guid: cb44448686f090843859208e30a745d5, type: 3}
+  - Item: {fileID: 11400000, guid: d0e4025edde41ce44a30cb9104df1f9a, type: 2}
+    Zone: 4
+    Weight: 10
+    Prefab: {fileID: 990183969874016047, guid: 7b3f78dde34f9e540afde8b935eb325b, type: 3}
+  - Item: {fileID: 11400000, guid: 69dcc869fe227814eb7db3820cebf128, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 2973063209351107579, guid: 5c2a0e6dfb9303f498ed7d9b4fb2a725, type: 3}
+  - Item: {fileID: 11400000, guid: 69dcc869fe227814eb7db3820cebf128, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 2973063209351107579, guid: 5c2a0e6dfb9303f498ed7d9b4fb2a725, type: 3}
+  - Item: {fileID: 11400000, guid: 69dcc869fe227814eb7db3820cebf128, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 2973063209351107579, guid: 5c2a0e6dfb9303f498ed7d9b4fb2a725, type: 3}
+  - Item: {fileID: 11400000, guid: a332490699fd7f24ba4206337a1ae490, type: 2}
+    Zone: 1
+    Weight: 1
+    Prefab: {fileID: 205228437905608243, guid: 83b0e4e2755bcd844a623a9a5786f84b, type: 3}
+  - Item: {fileID: 11400000, guid: a332490699fd7f24ba4206337a1ae490, type: 2}
+    Zone: 2
+    Weight: 1
+    Prefab: {fileID: 205228437905608243, guid: 83b0e4e2755bcd844a623a9a5786f84b, type: 3}
+  - Item: {fileID: 11400000, guid: a332490699fd7f24ba4206337a1ae490, type: 2}
+    Zone: 3
+    Weight: 1
+    Prefab: {fileID: 205228437905608243, guid: 83b0e4e2755bcd844a623a9a5786f84b, type: 3}
+  CurtainWallDensity: 0.15
+  OuterBaileyDensity: 0.5
+  InnerWardDensity: 1
+  KeepDensity: 1
+  CryptDensity: 1
+  CurtainWallMaxPerRoom: 1
+  OuterBaileyMaxPerRoom: 1
+  InnerWardMaxPerRoom: 2
+  KeepMaxPerRoom: 3

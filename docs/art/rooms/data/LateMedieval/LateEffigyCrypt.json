@@ -1,0 +1,103 @@
+{
+  "key": "LateEffigyCrypt",
+  "name": "The Effigy Crypt",
+  "age": "LateMedieval",
+  "zone": "Crypt",
+  "role": "CryptChamberFinal",
+  "summary": "The founder's arcaded tomb chest with a gilded effigy under a four-post canopy, a candle hearse burning before it, and three lesser tombs with brass plates.",
+  "description": "The family that built the castle is buried under it, and the man who began it lies in the north-east corner in gilt. His tomb chest is arcaded sandstone with a moulded lid, and on it his effigy lies in beaten gold, head on a pillow, hands joined, under a canopy of oak posts hung in madder with a gilt fringe. Before him a candle hearse, an iron triangle of seven candles, burns on the anniversary of his death and on every other day the chaplain is paid for. His descendants were buried more cheaply: plain chests in the other three corners with engraved brass plates let into their lids. The effigy is the richest thing in the Late castle and the hardest to carry.",
+  "build": [
+    "Shell: the kit's Crypt shell, 12.0 × 12.0 × 0.30 m slab, 0.50 m dressed-sandstone walls 3.00 m clear, a 0.45 m dark trim course, an archway 2.60 × 2.16 m centred on every wall.",
+    "Founder's tomb (NE): sandstone chest 2.20 × 1.00 × 0.90 m at (3.60, 4.20), long axis east–west, arcaded sides (albedo), a moulded lid 2.28 × 1.08 × 0.08 m.",
+    "Gilded effigy: a gilt body 1.60 × 0.45 × 0.20 m on the lid, head r 0.11 m at the east end, hands at prayer.",
+    "Canopy: four oak posts 0.14 m square at the tomb's corners plus 0.20 m (x 2.30 / 4.90, y 3.50 / 4.90) to 2.60 m above the floor; a madder tester 2.80 × 1.60 × 0.15 m on them; a gilt fringe strip along its south edge; a madder hanging 2.60 m wide between the north posts from 1.50 m to the tester.",
+    "Candle hearse: iron, before the tomb at (3.60, 2.50): two legs 0.40 m, a base bar 1.20 m, two sloped bars meeting at 1.80 m above ground, seven candles up its edges with flames.",
+    "Lesser tombs: three sandstone chests 2.00 × 0.80 × 0.80 m at (−3.60, 4.60), (3.60, −4.60), (−3.60, −4.60), long axis east–west.",
+    "Brass plates: an engraved brass plate 0.50 × 0.35 m let into each lesser lid, west of centre.",
+    "The crossing: bare floor between all four archways."
+  ],
+  "sockets": [
+    "Archway ×4, centred on each wall: 2.60 × 2.16 m (Crypt), all open",
+    "Founder's lid: a loot anchor beside the effigy at 1.20 m",
+    "Lesser tomb lids: three loot anchors at 1.10 m"
+  ],
+  "loot_anchors": [
+    {
+      "at": "the founder's lid, beside the effigy",
+      "xyz": [
+        3.6,
+        4.56,
+        1.2
+      ]
+    },
+    {
+      "at": "the NW lesser tomb",
+      "xyz": [
+        -3.6,
+        4.6,
+        1.1
+      ]
+    },
+    {
+      "at": "the SE lesser tomb",
+      "xyz": [
+        3.6,
+        -4.6,
+        1.1
+      ]
+    },
+    {
+      "at": "the SW lesser tomb",
+      "xyz": [
+        -3.6,
+        -4.6,
+        1.1
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dressed sandstone",
+      "hex": "#A88B64",
+      "pigment": "vellum_dim",
+      "notes": "Walls, tomb chests."
+    },
+    {
+      "name": "Gilt",
+      "hex": "#C9A227",
+      "pigment": "orpiment",
+      "notes": "The effigy and the canopy fringe."
+    },
+    {
+      "name": "Oak",
+      "hex": "#6B4F33",
+      "pigment": "oak",
+      "notes": "Canopy posts."
+    },
+    {
+      "name": "Madder",
+      "hex": "#9E2A2F",
+      "pigment": "madder",
+      "notes": "Tester, hanging, flames."
+    },
+    {
+      "name": "Blackened iron",
+      "hex": "#2E2F31",
+      "pigment": "line",
+      "notes": "The hearse."
+    },
+    {
+      "name": "Brass",
+      "hex": "#B98A34",
+      "pigment": "bronze",
+      "notes": "The lesser tombs' plates."
+    }
+  ],
+  "gameplay": [
+    "The Late crypt's final room: the gilded effigy is the headline loot, lit by the hearse and visible from the north and east archways.",
+    "The canopy posts and hanging screen the founder's tomb from the north.",
+    "Four loot anchors, one per quadrant."
+  ],
+  "budget": "≤ 1.6k tris (kit)",
+  "concept": "concept/LateMedieval/LateEffigyCrypt.svg"
+}

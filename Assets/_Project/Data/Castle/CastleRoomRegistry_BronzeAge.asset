@@ -1,0 +1,535 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e24a259e7be6e43f24f32f6bb34ca28, type: 3}
+  m_Name: CastleRoomRegistry_BronzeAge
+  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.CastleRoomRegistry
+  Modules:
+  - RoomId: GatehouseModule
+    Zone: 0
+    Prefab: {fileID: 8808213288430781474, guid: dc13d758f5c3e8548811b232df54461c, type: 3}
+    Weight: 1
+    LootAnchors: []
+    FireAnchors:
+    - Position: {x: -3.6, y: 2.8, z: 1}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: 3.6, y: 2.8, z: 1}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+  - RoomId: WallStraight
+    Zone: 0
+    Prefab: {fileID: 4578720038825886154, guid: 2a962c5f71a379e4eb9238fee43907f1, type: 3}
+    Weight: 4
+    LootAnchors: []
+    FireAnchors:
+    - Position: {x: 0, y: 2.9, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+  - RoomId: WallCorner
+    Zone: 0
+    Prefab: {fileID: 3492388394623648510, guid: 34e112165c1c865419bf8b1993a94b77, type: 3}
+    Weight: 3
+    LootAnchors: []
+    FireAnchors:
+    - Position: {x: -3.7, y: 6.6, z: -3.7}
+      Yaw: 0
+      Kind: 3
+      LitFrom: 2
+      BringsHolder: 1
+  - RoomId: Bastion
+    Zone: 0
+    Prefab: {fileID: 4103726648674975285, guid: 724ca4630b29bc149ae990862fd4149f, type: 3}
+    Weight: 2
+    LootAnchors: []
+    FireAnchors:
+    - Position: {x: 0, y: 7.2, z: -1.2}
+      Yaw: 0
+      Kind: 3
+      LitFrom: 2
+      BringsHolder: 1
+    - Position: {x: 0, y: 2.9, z: 2.4}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+  - RoomId: Drawbridge
+    Zone: 0
+    Prefab: {fileID: 9217780092313914064, guid: eced8e33baf74374b8775e392f5a11df, type: 3}
+    Weight: 1
+    LootAnchors: []
+    FireAnchors: []
+  - RoomId: BronzeChariotShed
+    Zone: 1
+    Prefab: {fileID: 3792082193305461760, guid: 18e9e09277061f9419560643ec1e4143, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -4.4, y: 0.91, z: 3.8}
+    - {x: 4.6, y: 0.95, z: 5.2}
+    - {x: 3.7, y: 1.5, z: -4.6}
+    - {x: -4.4, y: 0.9, z: -4.9}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeFoundry
+    Zone: 1
+    Prefab: {fileID: 4644669145495497791, guid: e9847ff10e0bf5f428bfa8f6c48b1f49, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: 3.6, y: 1.1, z: 5.15}
+    - {x: 5.2, y: 1.23, z: 2.9}
+    - {x: 4, y: 0.66, z: -4.3}
+    - {x: -2.6, y: 0.8, z: -3}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeLevyBarracks
+    Zone: 1
+    Prefab: {fileID: 9022039815172955607, guid: 98e207fc33be4c64db7e2c0376f62fa8, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -5, y: 0.68, z: 3.5}
+    - {x: 5, y: 0.68, z: 3.5}
+    - {x: 3.2, y: 0.8, z: -3}
+    - {x: -3.2, y: 0.9, z: -3.2}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeCistern
+    Zone: 1
+    Prefab: {fileID: 8960380280988671722, guid: a25ed95d22e09964f92769642cc21afa, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: 3.6, y: 1.34, z: -2.9}
+    - {x: 2.2, y: 0.65, z: -4.8}
+    - {x: -3.8, y: 0.8, z: 4.9}
+    - {x: 3.8, y: 1.3, z: 4.2}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeOilPress
+    Zone: 1
+    Prefab: {fileID: 1283415277686095482, guid: 960441770b435ad4baaefdcaba78bc09, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -2.95, y: 0.7, z: 3.75}
+    - {x: 3.6, y: 1.08, z: 5.1}
+    - {x: 3.6, y: 1.08, z: -5.1}
+    - {x: -2.6, y: 1, z: -3.4}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzePithosMagazine
+    Zone: 2
+    Prefab: {fileID: 6681331281321039118, guid: 6b258ba090e0f864ba2ef6aef4d4f37b, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -5.2, y: 1.1, z: -3.5}
+    - {x: 5.1, y: 1, z: 2.3}
+    - {x: -5, y: 0.7, z: 2.3}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeFrescoCourt
+    Zone: 2
+    Prefab: {fileID: 3046209531261631178, guid: bf6371b92ff2a62439f81d00620a4986, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -3.6, y: 0.7, z: 5.25}
+    - {x: -3.6, y: 0.7, z: -5.25}
+    - {x: 3.6, y: 0.7, z: 5.25}
+    - {x: 3.6, y: 0.7, z: -5.25}
+    - {x: 3.6, y: 1.2, z: 3.6}
+    - {x: -3.2, y: 1, z: -3.4}
+    - {x: 3.2, y: 1, z: -3.4}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeShrine
+    Zone: 2
+    Prefab: {fileID: 7306628380060597290, guid: e5fac421006d03747b2132239e719017, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: 4.6, y: 0.75, z: 4.75}
+    - {x: 3.6, y: 1, z: 3.3}
+    - {x: -3.6, y: 0.7, z: -2.4}
+    - {x: 3.6, y: 0.7, z: -2.4}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzePalaceKitchen
+    Zone: 2
+    Prefab: {fileID: 2542535813182542472, guid: ae1c825110f57b24d8821b8d27e17154, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -3.8, y: 1.79, z: 3.8}
+    - {x: 2.4, y: 1.1, z: 4.9}
+    - {x: 3.6, y: 0.8, z: -5.1}
+    - {x: -5.1, y: 0.8, z: -3.6}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeTabletArchive
+    Zone: 2
+    Prefab: {fileID: 5268583713004378680, guid: 321975c69ead3f048b43b8a835155b6b, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -3.6, y: 0.9, z: 5.2}
+    - {x: 3.6, y: 0.9, z: 5.2}
+    - {x: 5.2, y: 1.78, z: 3.2}
+    - {x: 3.6, y: 1.05, z: -3.4}
+    - {x: -4.2, y: 0.75, z: -3.2}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeMegaron
+    Zone: 3
+    Prefab: {fileID: 4938310092584760533, guid: 3ab5250d31ec60748962309b7e9425f3, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: 5.05, y: 0.76, z: 3.7}
+    - {x: 4.15, y: 0.42, z: 3.7}
+    - {x: -3.1, y: 0.7, z: 5.25}
+    - {x: -3.6, y: 0.7, z: -5.25}
+    - {x: 3.1, y: 0.7, z: 5.25}
+    - {x: 3.6, y: 0.7, z: -5.25}
+    - {x: -3.5, y: 1.44, z: 2}
+    - {x: 3.3, y: 1.44, z: -2}
+    - {x: -4.6, y: 1, z: -3.6}
+    - {x: -2.4, y: 1, z: -4.3}
+    - {x: 4.6, y: 1, z: -3.6}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeTreasury
+    Zone: 3
+    Prefab: {fileID: 5203356307337315943, guid: 38f6c24bdb2b0b54cb45476e1723d873, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: 4.3, y: 1.2, z: 4.3}
+    - {x: 4, y: 0.66, z: -4.3}
+    - {x: -3.9, y: 0.6, z: -2.9}
+    - {x: -4.6, y: 0.9, z: -4.9}
+    - {x: -2.9, y: 0.9, z: -4.9}
+    - {x: -3.7, y: 1.78, z: 5.2}
+    - {x: -2.4, y: 1.44, z: 2.6}
+    - {x: 2.6, y: 1.44, z: 4.6}
+    - {x: 4.2, y: 0.75, z: -2.3}
+    - {x: 5, y: 0.75, z: -2.3}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeQueensHall
+    Zone: 3
+    Prefab: {fileID: 3397040045958329784, guid: 64bbcb23a2ca0a04a9cece7b637a5c19, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -4.6, y: 0.92, z: 3.9}
+    - {x: 3.7, y: 0.75, z: 4.2}
+    - {x: 5.25, y: 0.7, z: -2.6}
+    - {x: -4.5, y: 0.9, z: -4.9}
+    - {x: -2.6, y: 1.05, z: -4.8}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeBathRoom
+    Zone: 3
+    Prefab: {fileID: 853966464129380702, guid: a13f95fc12de0dd4d81fc6e0f55a78e4, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -4.2, y: 1.3, z: 4.2}
+    - {x: 3.8, y: 1.05, z: 4.8}
+    - {x: 3.6, y: 0.7, z: -5.25}
+    - {x: -3.7, y: 1.78, z: -5.2}
+    - {x: -4.8, y: 1, z: -2.6}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeMegaronStair
+    Zone: 3
+    Prefab: {fileID: 2233776779592389340, guid: 1797fa9b4e7393d45ba297b9f595860e, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -4.3, y: 3.5, z: 4.4}
+    - {x: 3.8, y: 1.44, z: 3.8}
+    - {x: 3.8, y: 1.44, z: -3.8}
+    - {x: 4.6, y: 1, z: -2.4}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeDromos
+    Zone: 4
+    Prefab: {fileID: 8929906132014144753, guid: abeca18de0a21f54db531e116755f31a, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: 3.2, y: 0.6, z: 4.65}
+    - {x: -3.2, y: 0.6, z: -4.65}
+    - {x: -3.2, y: 1, z: 3.6}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeGraveCircle
+    Zone: 4
+    Prefab: {fileID: 1912015089811086675, guid: 0a05d1e69d826a24bbcab62ffb611962, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -2.7, y: 0.5, z: -2.7}
+    - {x: -2.7, y: 0.5, z: 2.7}
+    - {x: 2.7, y: 0.5, z: -2.7}
+    - {x: 2.7, y: 0.5, z: 2.7}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: BronzeLarnaxVault
+    Zone: 4
+    Prefab: {fileID: 6879144161237843695, guid: fe774feaa08aed64f856bcb15915456a, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -3.3, y: 1.17, z: -4.9}
+    - {x: -3.3, y: 1.17, z: 4.9}
+    - {x: 3.3, y: 1.17, z: -4.9}
+    - {x: 3.3, y: 1.17, z: 4.9}
+    - {x: -4.95, y: 1.17, z: -2.9}
+    - {x: -4.95, y: 1.17, z: 2.9}
+    - {x: 4.95, y: 1.17, z: -2.9}
+    - {x: 4.95, y: 1.17, z: 2.9}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+  - RoomId: CryptChamberFinal
+    Zone: 4
+    Prefab: {fileID: 986630127237587952, guid: ec72b28f58021914ca5d92b3fe4d7ce5, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: 2.7, y: 0.86, z: 2.35}
+    - {x: 2, y: 1.44, z: 3.35}
+    - {x: -2.6, y: 1, z: 2.6}
+    - {x: -2.8, y: 0.9, z: -2.3}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+    - Position: {x: 2.7, y: 1.61, z: -2.7}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 0
+  - RoomId: BronzeShaftStair
+    Zone: 4
+    Prefab: {fileID: 9141318932295251869, guid: be8eeefe2a4dc494d99e087ec4b35328, type: 3}
+    Weight: 1
+    LootAnchors:
+    - {x: -4.4, y: 2.17, z: 4.55}
+    - {x: -3.4, y: 1, z: -3.4}
+    - {x: 3.7, y: 1.1, z: -3.4}
+    FireAnchors:
+    - Position: {x: 1.85, y: 2.6, z: 5.5}
+      Yaw: 180
+      Kind: 0
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -1.85, y: 2.6, z: -5.5}
+      Yaw: 0
+      Kind: 0
+      LitFrom: 1
+      BringsHolder: 1
+    - Position: {x: -2.4, y: 1.61, z: 2.8}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 0
+    - Position: {x: 4.4, y: 1.61, z: 2.6}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 0
+  DoorPlugs:
+  - RoomId: BronzeDoorPlugOuterBailey
+    Zone: 1
+    Prefab: {fileID: 905807449199922305, guid: 8a187b3cc80c76746992cc1200fc7124, type: 3}
+    Weight: 1
+    LootAnchors: []
+    FireAnchors: []
+  - RoomId: BronzeDoorPlugInnerWard
+    Zone: 2
+    Prefab: {fileID: 7666161891314441433, guid: c051dfd00474ede45985e42331d5cc24, type: 3}
+    Weight: 1
+    LootAnchors: []
+    FireAnchors: []
+  - RoomId: BronzeDoorPlugKeep
+    Zone: 3
+    Prefab: {fileID: 5378109219082412226, guid: b20e3eef5b80c6d4c9b53fe3a4e97ccf, type: 3}
+    Weight: 1
+    LootAnchors: []
+    FireAnchors: []
+  - RoomId: BronzeDoorPlugCrypt
+    Zone: 4
+    Prefab: {fileID: 6357163068502297216, guid: 40ffb72d5ab61ae4eb19f5f0fb8bd487, type: 3}
+    Weight: 1
+    LootAnchors: []
+    FireAnchors: []

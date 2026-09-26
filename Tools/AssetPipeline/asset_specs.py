@@ -123,17 +123,17 @@ BRONZE_CASTLE_SPECS = [
 
 LATE_CASTLE_SPECS = [
     # CurtainWall
-    dict(key="LateBarbican", builder="build_late_barbican", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    dict(key="LateBarbican", builder="build_late_barbican", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
     dict(key="LateWallStraight", builder="build_late_wall_straight", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
-    dict(key="LateWallCorner", builder="build_late_wall_corner", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
-    dict(key="LateBastion", builder="build_late_bastion", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
-    dict(key="LateDrawbridge", builder="build_late_drawbridge", tri_budget=1200, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    dict(key="LateWallCorner", builder="build_late_wall_corner", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    dict(key="LateBastion", builder="build_late_bastion", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
+    dict(key="LateDrawbridge", builder="build_late_drawbridge", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_curtain", era="LateMedieval", zone="CurtainWall", kind="wall"),
     # OuterBailey
-    dict(key="LateArtilleryYard", builder="build_late_artillery_yard", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
-    dict(key="LateGunFoundry", builder="build_late_gun_foundry", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
-    dict(key="LateHandgunnerBarracks", builder="build_late_handgunner_barracks", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
-    dict(key="LateBrewhouse", builder="build_late_brewhouse", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
-    dict(key="LateTreadwheelWell", builder="build_late_treadwheel_well", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateArtilleryYard", builder="build_late_artillery_yard", tri_budget=4000, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateGunFoundry", builder="build_late_gun_foundry", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateHandgunnerBarracks", builder="build_late_handgunner_barracks", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateBrewhouse", builder="build_late_brewhouse", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
+    dict(key="LateTreadwheelWell", builder="build_late_treadwheel_well", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_bailey", era="LateMedieval", zone="OuterBailey", kind="room"),
     # InnerWard
     dict(key="LateCountingHouse", builder="build_late_counting_house", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
     dict(key="LateArmouryHall", builder="build_late_armoury_hall", tri_budget=3200, subdir="Castle/LateMedieval", module="castle_builders_late_ward", era="LateMedieval", zone="InnerWard", kind="room"),
@@ -147,11 +147,11 @@ LATE_CASTLE_SPECS = [
     dict(key="LateTapestrySolar", builder="build_late_tapestry_solar", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
     dict(key="LateTurretStair", builder="build_late_turret_stair", tri_budget=2000, subdir="Castle/LateMedieval", module="castle_builders_late_keep", era="LateMedieval", zone="Keep", kind="room"),
     # Crypt
-    dict(key="LateUndercroft", builder="build_late_undercroft", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
-    dict(key="LateOubliette", builder="build_late_oubliette", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
-    dict(key="LateCharnelHouse", builder="build_late_charnel_house", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateUndercroft", builder="build_late_undercroft", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateOubliette", builder="build_late_oubliette", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateCharnelHouse", builder="build_late_charnel_house", tri_budget=5000, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
     dict(key="LateEffigyCrypt", builder="build_late_effigy_crypt", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
-    dict(key="LateUndercroftStair", builder="build_late_undercroft_stair", tri_budget=1600, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
+    dict(key="LateUndercroftStair", builder="build_late_undercroft_stair", tri_budget=2400, subdir="Castle/LateMedieval", module="castle_builders_late_crypt", era="LateMedieval", zone="Crypt", kind="room"),
     # Door plugs, one per enclosed zone: the High Medieval size, this Age's stone.
     dict(key="LateDoorPlugOuterBailey", builder="build_late_door_plug_outer_bailey", tri_budget=40, subdir="Castle/LateMedieval", module="castle_builders_late", era="LateMedieval", zone="OuterBailey", kind="plug"),
     dict(key="LateDoorPlugInnerWard", builder="build_late_door_plug_inner_ward", tri_budget=40, subdir="Castle/LateMedieval", module="castle_builders_late", era="LateMedieval", zone="InnerWard", kind="plug"),
@@ -200,7 +200,27 @@ POWDER_CASTLE_SPECS = [
 
 ERA_CASTLE_SPECS = BRONZE_CASTLE_SPECS + LATE_CASTLE_SPECS + POWDER_CASTLE_SPECS
 
-ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS
+# The outer bailey's dressing and the courtyard yards (docs/plans/night-atmosphere.md,
+# section 4), built in castle_builders_dressing.py. Not rooms: a curtain dressing
+# shares a cell with the wall module, a courtyard fills a carved interior cell, and
+# neither is walked through a room's archways, so they validate as "wall" pieces.
+DRESSING_SPECS = [
+    dict(key="DressingLeanTo", builder="build_dressing_lean_to", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingWoodpile", builder="build_dressing_woodpile", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingPens", builder="build_dressing_pens", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingTraining", builder="build_dressing_training", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingGateYard", builder="build_dressing_gate_yard", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingPlain", builder="build_dressing_plain", tri_budget=400, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="DressingGateSealed", builder="build_dressing_gate_sealed", tri_budget=400, subdir="Castle/Dressing", module="castle_builders_dressing", zone="CurtainWall", kind="wall"),
+    dict(key="CourtyardHerbGarden", builder="build_courtyard_herb_garden", tri_budget=800, subdir="Castle/Dressing", module="castle_builders_dressing", zone="OuterBailey", kind="wall"),
+    dict(key="CourtyardMidden", builder="build_courtyard_midden", tri_budget=1600, subdir="Castle/Dressing", module="castle_builders_dressing", zone="OuterBailey", kind="wall"),
+    dict(key="CourtyardWellYard", builder="build_courtyard_well_yard", tri_budget=1200, subdir="Castle/Dressing", module="castle_builders_dressing", zone="OuterBailey", kind="wall"),
+    dict(key="CourtyardTiltyard", builder="build_courtyard_tiltyard", tri_budget=800, subdir="Castle/Dressing", module="castle_builders_dressing", zone="InnerWard", kind="wall"),
+    dict(key="CourtyardCloisterGarth", builder="build_courtyard_cloister_garth", tri_budget=800, subdir="Castle/Dressing", module="castle_builders_dressing", zone="InnerWard", kind="wall"),
+    dict(key="CourtyardFormalGarden", builder="build_courtyard_formal_garden", tri_budget=1200, subdir="Castle/Dressing", module="castle_builders_dressing", zone="Keep", kind="wall"),
+]
+
+ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS + DRESSING_SPECS
 
 
 

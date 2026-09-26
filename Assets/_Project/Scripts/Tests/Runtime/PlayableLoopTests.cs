@@ -333,8 +333,6 @@ namespace RogueAi.Tests
             Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Paused, GameState.Playing, false),
                 "A client's pause menu cannot stop everyone else's game.");
             Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Settings, GameState.MainMenu, true));
-            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Inventory, GameState.Playing, true),
-                "The inventory is a live overlay, not a pause.");
         }
 
         // --- Phrase caption (#49) --------------------------------------------------------------

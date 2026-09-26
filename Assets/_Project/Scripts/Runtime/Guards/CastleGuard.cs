@@ -84,6 +84,10 @@ namespace RogueAi.Guards
 
         [field: SerializeField] private SyncVar<float> _health { get; set; } = new SyncVar<float>(100f);
 
+        // Every attack bumps this, so every peer learns a guard swung or fired, not only the server
+        // that resolved the hit. Packed count + kind; see GuardAttackSignal and docs/systems/net.md.
+        private readonly SyncVar<int> _attackSignal = new SyncVar<int>(GuardAttackSignal.None);
+
         private StatusEffectReceiver _status;
         private NavMeshAgent _agent;
 
@@ -108,6 +112,18 @@ namespace RogueAi.Guards
 
         /// <summary>Raised on this peer whenever the guard changes what it is doing.</summary>
         public event Action<GuardAlertState> StateChanged;
+
+        /// <summary>
+        /// Raised on every peer each time this guard attacks: on the server as the attack happens,
+        /// on a client when the replicated signal arrives. What an animator or a sound hooks.
+        /// </summary>
+        public event Action<GuardAttackKind> Attacked;
+
+        /// <summary>How many times this guard has attacked, as far as this peer has heard.</summary>
+        public int AttackCount => GuardAttackSignal.Count(_attackSignal.value);
+
+        /// <summary>The kind of the most recent attack. Meaningless while <see cref="AttackCount"/> is 0.</summary>
+        public GuardAttackKind LastAttackKind => GuardAttackSignal.Kind(_attackSignal.value);
 
         /// <summary>The intruders this guard is watching for. Registered by the player spawner.</summary>
         public static readonly List<Transform> Intruders = new List<Transform>();
@@ -144,10 +160,25 @@ namespace RogueAi.Guards
         protected override void OnSpawned()
         {
             base.OnSpawned();
+            _attackSignal.onChanged += OnAttackSignalReplicated;
             // A client's guard is moved by the server's replicated transform. Its own agent would
             // fight that, and has no NavMesh to stand on until the client has built the castle.
             if (!isServer && _agent != null)
                 _agent.enabled = false;
+        }
+
+        protected override void OnDespawned()
+        {
+            base.OnDespawned();
+            _attackSignal.onChanged -= OnAttackSignalReplicated;
+        }
+
+        /// <summary>A client's view of an attack the server resolved. The server raised its own already.</summary>
+        private void OnAttackSignalReplicated(int signal)
+        {
+            if (isServer || GuardAttackSignal.Count(signal) == 0)
+                return;
+            Attacked?.Invoke(GuardAttackSignal.Kind(signal));
         }
 
         private void Update()
@@ -547,12 +578,24 @@ namespace RogueAi.Guards
                 return;
 
             _lastAttackTime = Time.time;
+            SignalAttack(shoots ? GuardAttackKind.Projectile : GuardAttackKind.Melee);
 
             if (shoots)
                 FireAt(origin, toTarget.normalized);
             else if (target.TryGetComponent(out IHealth health))
                 Damage.Apply(health, _attackDamage, gameObject, gameObject,
                     Damage.PointOn(target, origin), DamageKind.EnemyAttack);
+        }
+
+        /// <summary>
+        /// Tells every peer this guard attacked. Server-side (the only side that runs TryAttack);
+        /// clients hear it through the SyncVar and raise <see cref="Attacked"/> in
+        /// <see cref="OnAttackSignalReplicated"/>.
+        /// </summary>
+        private void SignalAttack(GuardAttackKind kind)
+        {
+            _attackSignal.value = GuardAttackSignal.Next(_attackSignal.value, kind);
+            Attacked?.Invoke(kind);
         }
 
         /// <summary>

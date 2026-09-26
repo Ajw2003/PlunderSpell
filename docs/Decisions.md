@@ -3,6 +3,26 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-09-24 — The castle's look: warm fire in fog, calm until the alarm
+
+**Context.** The raid rendered with Unity's defaults: default sky, one sun, no fog, an untouched
+Volume profile and flat palette colours. The user asked to anchor the project's aesthetic before
+building more rooms or enemies. Four reference looks (Dishonored, Sea of Thieves, Thief/Hunt,
+Valheim) were rendered on the same bailey (`docs/generated/look-samples-2026-09-24/contact-sheet.png`).
+
+**Decision.** None of the four. The user chose the warm, fire-lit fog of two earlier test renders:
+night, a faint moon, fire as the only warmth. The castle holds two moods. It is calm and
+unsuspecting, then comes alive in steps with each alarm state: more fires lit, bigger braziers and
+redder flame. The full design is `docs/plans/night-atmosphere.md`.
+
+**Why.** It fits the heist. A sleeping castle rewards sneaking, and a burning one tells every
+player at a glance how much trouble they are in. It also keeps madder red meaning "alarm", as the
+art bible's pigment rules intend.
+
+**Considered and rejected.** The four references. Sea of Thieves read as blue daytime. Thief/Hunt
+was too dark to read a co-op fight. Dishonored and Valheim were closer, but cooler and flatter than
+the fire-in-fog renders the user pointed to.
+
 ## 2026-09-24 — The new per-Age bestiary is the household: people and animals, no monsters
 
 **Context.** `docs/plans/moodboard-gap-closure.md` §2.6 left the bestiary's register open: five of
@@ -779,3 +799,37 @@ placement, and the user's point is that a weapon is found like any other item. A
 the castle is about nine rooms across, so three rooms would empty most of it.
 
 **Status.** Standing. Verified with two game windows over UDP and in a solo raid (see the plan).
+
+## 2026-09-24 — Eras swap whole catalogues; they do not tag rooms
+
+**Context.** The Lair's era selection reached `RaidDirector` and stopped there. The earlier
+ProjectState note said era content would need a schema change: an `Era` field on
+`CastleRoomModuleData`, and era-keyed loot and guard tables. The user asked for the art that
+exists to spawn, so that two eras can be told apart.
+
+**Decision.** Each era gets its own room registry, loot table and enemy roster. An
+`EraContentCatalogue` maps each era to those three, and `RaidDirector` assigns them to the
+generator and spawners before it builds. An era's curtain-wall piece and crypt centre take the
+role id of the High Medieval piece they replace (`BronzeLionGate` registers as
+`GatehouseModule`), so the generator has no era logic. A missing field or zone falls back to the
+scene's defaults, so a half-built era still makes a whole castle.
+
+**Considered and rejected.** An `Era` field on every registry entry, filtered in the planners.
+That changes three planners and their tests, and every placement would need an era argument, for
+the same result. Making the generator ask for a per-era gatehouse id: the role-id alias gives the
+same result without code changes.
+
+**Status.** Standing. See `docs/systems/raid-scene-assembly.md`, "Eras".
+
+## 2026-09-25 — how the night atmosphere was built, where it departs from the spec
+
+- **Fire halos are computed, not sprites.** One full-screen fog pass integrates each nearby fire's
+  light along the view ray in closed form, so halos respect depth and fade behind walls. Replaces
+  the spec's additive halo sprites (section 5, layer 2).
+- **The surface shader is HLSL, not Shader Graph** — the spec's own fallback for banded light over
+  URP 17.3's Forward+ loop.
+- **Bailey dressing is laid over the wall modules**, not built as wall variants, so every Age's
+  walls take it. **Courtyards stay sealed** by the generator's archway plugs: seen and lit, not
+  walked. Opening them is a gameplay decision.
+- **No vertex soot bake yet.** Grime at wall feet plus SSAO stand in; baking would re-export every
+  castle FBX for little gain on 4-vertex faces. Open for a decision.

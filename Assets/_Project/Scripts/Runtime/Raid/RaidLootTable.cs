@@ -39,10 +39,18 @@ namespace RogueAi.Raid
         [Header("Density")]
         [Tooltip("Chance (0..1) that a given room in each zone contains loot at all.")]
         [Range(0f, 1f)] public float CurtainWallDensity = 0.15f;
-        [Range(0f, 1f)] public float OuterBaileyDensity = 0.35f;
-        [Range(0f, 1f)] public float InnerWardDensity = 0.5f;
-        [Range(0f, 1f)] public float KeepDensity = 0.7f;
+        [Range(0f, 1f)] public float OuterBaileyDensity = 0.5f;
+        [Range(0f, 1f)] public float InnerWardDensity = 1.0f;
+        [Range(0f, 1f)] public float KeepDensity = 1.0f;
         [Range(0f, 1f)] public float CryptDensity = 1.0f;
+
+        [Header("Items per looted room")]
+        [Tooltip("Most items a looted room in each zone holds; it holds 1 to this many, each on its " +
+                 "own loot anchor, never more than the room has. The crypt centre fills every anchor.")]
+        [Min(1)] public int CurtainWallMaxPerRoom = 1;
+        [Min(1)] public int OuterBaileyMaxPerRoom = 1;
+        [Min(1)] public int InnerWardMaxPerRoom = 2;
+        [Min(1)] public int KeepMaxPerRoom = 3;
 
         /// <summary>Chance that a room in <paramref name="zone"/> holds loot.</summary>
         public float DensityFor(CastleZone zone)
@@ -55,6 +63,19 @@ namespace RogueAi.Raid
                 case CastleZone.Keep: return KeepDensity;
                 case CastleZone.Crypt: return CryptDensity;
                 default: return 0f;
+            }
+        }
+
+        /// <summary>Most items a looted room in <paramref name="zone"/> holds.</summary>
+        public int MaxPerRoomFor(CastleZone zone)
+        {
+            switch (zone)
+            {
+                case CastleZone.CurtainWall: return Mathf.Max(1, CurtainWallMaxPerRoom);
+                case CastleZone.OuterBailey: return Mathf.Max(1, OuterBaileyMaxPerRoom);
+                case CastleZone.InnerWard: return Mathf.Max(1, InnerWardMaxPerRoom);
+                case CastleZone.Keep: return Mathf.Max(1, KeepMaxPerRoom);
+                default: return 1;
             }
         }
 

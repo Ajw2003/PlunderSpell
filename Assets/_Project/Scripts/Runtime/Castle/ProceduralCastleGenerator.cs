@@ -22,6 +22,10 @@ namespace RogueAi.Castle
     {
         [Header("Data")]
         [SerializeField] private CastleRoomRegistry registry;
+
+        [Tooltip("The bailey's furniture and the courtyards' yards. Optional: without it the curtain " +
+                 "strip and the carved cells stay bare.")]
+        [SerializeField] private CastleDressingSet m_dressing;
         [SerializeField] public int defaultSeed = 12345;
 
         [Header("Layout")]
@@ -74,6 +78,9 @@ namespace RogueAi.Castle
 
         public CastleRoomRegistry Registry { get => registry; set => registry = value; }
 
+        /// <summary>The dressing placed over the layout. Shared by every Age for now.</summary>
+        public CastleDressingSet Dressing { get => m_dressing; set => m_dressing = value; }
+
         /// <summary>Chebyshev ring the closed curtain wall occupies.</summary>
         public int CurtainWallRadius => m_curtainWallRadius;
 
@@ -101,6 +108,10 @@ namespace RogueAi.Castle
             // Every enclosed room is authored with an archway on all four sides, so any side with
             // no neighbour is currently a hole in the outer face. Fill those.
             SealOpenArchways(data, occupied);
+
+            // Placed with the rooms, before anyone bakes the NavMesh or probes for a standing point,
+            // so a cart or a woodpile is walked round and never stood in.
+            DressCastle(data, seed);
 
             LastGenerated = data;
             return data;
@@ -409,6 +420,31 @@ namespace RogueAi.Castle
             module.GridPosition = cell;
             module.IsCryptEntry = isCryptEntry;
             module.PopulateSockets();
+        }
+
+        /// <summary>
+        /// Plans the bailey's dressing on its own seed stream (<see cref="CastleDressingPlanner"/>)
+        /// and instantiates it into the castle, so it is cleared, baked and probed with the rooms.
+        /// </summary>
+        private void DressCastle(ProceduralCastleData data, int seed)
+        {
+            if (m_dressing == null)
+                return;
+
+            var straightIds = new HashSet<string> { k_WallStraightId, ResolveRoomId(k_WallStraightId) };
+            data.Dressings = CastleDressingPlanner.Plan(data, seed, m_dressing, straightIds, m_curtainWallRadius, cellSize);
+
+            foreach (PlacedDressing dressing in data.Dressings)
+            {
+                CastleDressingSet.Entry entry = m_dressing.GetById(dressing.Id);
+                if (entry?.Prefab == null)
+                    continue;
+                EnsureContainer();
+                GameObject go = Instantiate(entry.Prefab, dressing.Position,
+                    dressing.Rotation * entry.Prefab.transform.rotation, roomContainer);
+                go.name = $"{dressing.Id}_{dressing.Cell.x}_{dressing.Cell.y}";
+                _instantiated.Add(go);
+            }
         }
 
         /// <summary>

@@ -59,6 +59,32 @@ networked carry with two-person rules and fragility) and `Item` (the physics gra
 `PlayerStateMachine` drives through `ItemManager`). As of 2026-09-18 the `Item`/`ItemManager` path
 is the live one.
 
+### Arriving and leaving by portal (2026-09-25)
+
+Night atmosphere step 0 (`docs/plans/night-atmosphere.md`, section 6). The team no longer starts
+by the gatehouse, and nothing exists outside the curtain wall.
+
+- **Arrival.** `CastleArrivalPlanner.ChooseModule`
+  (`Assets/_Project/Scripts/Runtime/Castle/CastleArrivalPlanner.cs:34`) picks a module in the
+  curtain strip, outer bailey or inner ward from the raid seed, on its own RNG stream, never the
+  gatehouse. `CastleSpawnResolver.ResolveArrival` (`CastleSpawnResolver.cs:77`) finds a clear
+  standing point there and falls back to the old gate spawn, with a warning, if nothing qualifies.
+  Every peer derives the same point from the seed, so nothing new is networked.
+- **The portal is the `ExtractionZone`.** `RaidDirector.OpenPortal` (`RaidDirector.cs:441`) calls
+  `ExtractionZone.PlaceAsPortal` (`ExtractionZone.cs:90`), which moves the zone to the arrival and
+  shrinks its trigger to 4 × 4 × 4 m. `RaidDirector.PortalOpened` fires with the floor point.
+- **Players ring it.** Each stands `RaidDirector.PlayerRingRadius` (3.5 m, `RaidDirector.cs:107`)
+  from its centre by owner number, outside the trigger, facing it (`PlayerStateMachine.FaceYaw`).
+- **Left behind.** When the clock runs out, whoever is outside the portal is not saved and what
+  they carry is lost. `RaidDirector.cs:478` counts them and the Lair's last-raid line ends
+  "· N left behind".
+- **Sealed.** `CastleBoundary.Rebuild` (`CastleBoundary.cs:29`) puts four invisible 40 m walls on
+  the curtain wall's outer face, called from `RaidDirector.SealCastle` every raid. RaidScene's
+  ground covers only the ring plus a 4 m apron.
+
+Known gap: the loot planner still keeps only the gatehouse clear, so loot can lie in the arrival
+room, next to the exit, with no guard near it.
+
 ### Leaving: stand on the pad
 
 Added 2026-09-23 (#101). Before this a raid could only end when its clock ran out or on the
@@ -135,7 +161,7 @@ floor between two people in a large room.
 
 ## Invariants
 
-- **No guard is posted, or patrols, within two rooms of the entrance**
+- **No guard is posted, or patrols, within two rooms of the arrival portal**
   (`GuardPlacementPlanner.SafeEntranceRadius`, and `BuildRoute` leaves those rooms out of every
   route). One room was not enough: a guard next door walked its route through the gate.
 - **For the first 20 seconds of a raid a calm garrison sees nobody** (`CastleGuard.ArrivalGraceSeconds`,
@@ -143,7 +169,7 @@ floor between two people in a large room.
   player standing still at the spawn was first hit at about 10 seconds before this and the wider
   ring, and at 37 seconds after. Tests that tick guards call `CastleGuard.EndArrivalGrace()` first,
   because the grace is process-wide.
-  Players spawn just inside the extraction room; a guard next door saw them on the first frame and
+  Players arrive beside the portal (before 2026-09-25, inside the gatehouse); a guard next door saw them on the first frame and
   killed an idle player in ~18 s, which read as dying for no reason. The check runs after the
   density roll so the rest of the garrison stays seed-stable.
 - **A guard's attack is gated on a cooldown.** Contact damage per frame is not a difficulty
@@ -157,8 +183,15 @@ floor between two people in a large room.
 - **The extraction room holds no loot and no guards.** Free treasure at the exit would delete the
   carry, and a guard standing on it would turn every raid into the same fight.
 
-- **The crypt final chamber always holds the richest entry in its zone.** There must always be a
-  reason to go all the way in.
+- **The crypt final chamber always holds the richest entry in its zone, and fills every loot anchor
+  it has.** The richest goes on the room's first anchor, which the art puts at its centre. There
+  must always be a reason to go all the way in.
+
+- **A looted room holds several items, one per anchor** (2026-09-24). `LootPlacementPlanner` rolls
+  the zone's density for whether a room has anything, then 1 to `RaidLootTable.MaxPerRoomFor(zone)`
+  items (outer bailey 1, inner ward 2, keep 3), never more than the room's anchors and never two on
+  one anchor. Inner ward and keep are always looted, the outer bailey half the time: 44-53 items a
+  raid across the four eras, up from about 22 at one per room (`LootAmountTests`).
 
 - **The zone is re-armed on every `StartRaid`.** It carries the previous raid's result until then;
   a raid that starts against a completed zone cannot be left.

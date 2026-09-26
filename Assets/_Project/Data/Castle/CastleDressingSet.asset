@@ -1,0 +1,168 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e00a8f811596efa4d9e424a42b527fcf, type: 3}
+  m_Name: CastleDressingSet
+  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.CastleDressingSet
+  Entries:
+  - Id: CourtyardCloisterGarth
+    Kind: 2
+    Zone: 2
+    Prefab: {fileID: 6198518447278802849, guid: 295896172340f9b44a8a63733a6e4200, type: 3}
+    Weight: 1
+    FireAnchors:
+    - Position: {x: -4.6, y: 0.04, z: -4.6}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: 4.6, y: 0.04, z: 4.6}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+  - Id: CourtyardFormalGarden
+    Kind: 2
+    Zone: 3
+    Prefab: {fileID: 8301754624268353631, guid: 18b13046542d0ba43a9aaf7a63d113b4, type: 3}
+    Weight: 1
+    FireAnchors:
+    - Position: {x: -4.8, y: 0.04, z: 0}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: 4.8, y: 0.04, z: 0}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+  - Id: CourtyardHerbGarden
+    Kind: 2
+    Zone: 1
+    Prefab: {fileID: 1215850609971559203, guid: 8cf55872d19522a4abdc35c4bf999cfe, type: 3}
+    Weight: 1
+    FireAnchors:
+    - Position: {x: 0, y: 0.04, z: 0}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+  - Id: CourtyardMidden
+    Kind: 2
+    Zone: 1
+    Prefab: {fileID: 6443013256914113296, guid: c0f36798bfb7fda4eb9617a2e8edc947, type: 3}
+    Weight: 1
+    FireAnchors:
+    - Position: {x: 3.6, y: 0.04, z: 3.6}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 1
+      BringsHolder: 1
+  - Id: CourtyardTiltyard
+    Kind: 2
+    Zone: 2
+    Prefab: {fileID: 7608938715614137377, guid: 1937b9db44f6eab49b7df4cd36262c87, type: 3}
+    Weight: 1
+    FireAnchors:
+    - Position: {x: -4.6, y: 0.04, z: -4.2}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: 4.6, y: 0.04, z: 4.2}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 1
+      BringsHolder: 1
+  - Id: CourtyardWellYard
+    Kind: 2
+    Zone: 1
+    Prefab: {fileID: 3110042427679047282, guid: 44355c8155a25ae48b62527741ab40db, type: 3}
+    Weight: 1
+    FireAnchors:
+    - Position: {x: -3.6, y: 0.04, z: 3.6}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+  - Id: DressingGateSealed
+    Kind: 3
+    Zone: 0
+    Prefab: {fileID: 7855725852677550395, guid: befa1270793be264ead6fc9b54b5e7a4, type: 3}
+    Weight: 1
+    FireAnchors: []
+  - Id: DressingGateYard
+    Kind: 1
+    Zone: 0
+    Prefab: {fileID: 3250147436091186732, guid: 71c5d20796d9037429eaba44cff444d8, type: 3}
+    Weight: 1
+    FireAnchors:
+    - Position: {x: 0.9, y: 0, z: -1.6}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+    - Position: {x: -0.9, y: 0, z: -1.6}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+  - Id: DressingLeanTo
+    Kind: 0
+    Zone: 0
+    Prefab: {fileID: 4064721978129544431, guid: e00832d3c6d9c4743b5d1ae999f5d0f5, type: 3}
+    Weight: 2
+    FireAnchors:
+    - Position: {x: 2.6, y: 0, z: -1.9}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+  - Id: DressingPens
+    Kind: 0
+    Zone: 0
+    Prefab: {fileID: 358591892013371795, guid: 946ba6467ab17244682aaa0f36fbf0c4, type: 3}
+    Weight: 2
+    FireAnchors:
+    - Position: {x: 1.3, y: 0, z: -1.9}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+  - Id: DressingPlain
+    Kind: 0
+    Zone: 0
+    Prefab: {fileID: 6047422841369395030, guid: 6bdd51997523e2e44a320af425d2a5c5, type: 3}
+    Weight: 1
+    FireAnchors: []
+  - Id: DressingTraining
+    Kind: 0
+    Zone: 0
+    Prefab: {fileID: 4012253544839199731, guid: 6b169fb4edb303b4e87d767316e0564e, type: 3}
+    Weight: 2
+    FireAnchors:
+    - Position: {x: -0.9, y: 0, z: -1}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
+  - Id: DressingWoodpile
+    Kind: 0
+    Zone: 0
+    Prefab: {fileID: 3114402525079150186, guid: 23158a1aee4405a429a8369953f29d23, type: 3}
+    Weight: 2
+    FireAnchors:
+    - Position: {x: -1.6, y: 0, z: -1}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1

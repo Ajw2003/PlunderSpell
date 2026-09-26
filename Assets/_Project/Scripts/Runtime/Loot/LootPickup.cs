@@ -51,6 +51,12 @@ namespace RogueAi.Loot
         [Header("Carry")]
         [Tooltip("Local anchor offset used when parenting to a carrier's hand socket.")]
         [SerializeField] private Vector3 _handLocalOffset = Vector3.zero;
+        [Tooltip("Where the carrier's hand closes on this item. Empty: the centre of its meshes.")]
+        [SerializeField] private Transform _gripPoint;
+
+        // The rotation the item spawned with. It carries the Z-up import correction that stands an
+        // ArtForge model upright, so the item is held the same way up rather than tipped on its side.
+        private Quaternion _uprightRotation = Quaternion.identity;
 
         private Rigidbody _rb;
         private ConfigurableJoint _carryJoint;
@@ -74,6 +80,7 @@ namespace RogueAi.Loot
 
         private void Awake()
         {
+            CaptureUprightRotation();
             _rb = GetComponent<Rigidbody>();
             _rb.useGravity = true;
             if (_meshRenderer == null)
@@ -85,6 +92,49 @@ namespace RogueAi.Loot
         /// player into a carryable object, and by tests to drive fragility/bulk logic.
         /// </summary>
         public void SetData(LootItem data) => _data = data;
+
+        /// <summary>The point the hand holds, or null when the item is held by its mesh centre.</summary>
+        public Transform GripPoint => _gripPoint;
+
+        /// <summary>
+        /// Records the current rotation as the way up the item is carried. Runs in Awake, which the
+        /// spawner reaches with the prefab's own rotation; exposed for EditMode tests, where Awake
+        /// does not run.
+        /// </summary>
+        public void CaptureUprightRotation() => _uprightRotation = transform.rotation;
+
+        /// <summary>
+        /// Parents the item under <paramref name="socket"/>, upright, with its grip point (or mesh
+        /// centre) on the socket plus the hand offset.
+        /// </summary>
+        public void AttachToSocket(Transform socket)
+        {
+            transform.SetParent(socket, false);
+            transform.localRotation = _uprightRotation;
+            transform.localPosition = Vector3.zero;
+            Vector3 gripInSocket = socket.InverseTransformPoint(GripWorldPosition());
+            transform.localPosition = _handLocalOffset - gripInSocket;
+        }
+
+        private Vector3 GripWorldPosition()
+        {
+            if (_gripPoint != null)
+                return _gripPoint.position;
+
+            bool any = false;
+            var bounds = new Bounds(transform.position, Vector3.zero);
+            foreach (Renderer meshRenderer in GetComponentsInChildren<Renderer>())
+            {
+                if (meshRenderer is ParticleSystemRenderer)
+                    continue;
+                if (!any)
+                    bounds = meshRenderer.bounds;
+                else
+                    bounds.Encapsulate(meshRenderer.bounds);
+                any = true;
+            }
+            return bounds.center;
+        }
 
         // ---------------------------------------------------------------------------------------
         // Fragility
@@ -342,9 +392,7 @@ namespace RogueAi.Loot
             Transform socket = ResolveHandSocket(carrier);
             if (socket == null)
                 return;
-            transform.SetParent(socket, false);
-            transform.localPosition = _handLocalOffset;
-            transform.localRotation = Quaternion.identity;
+            AttachToSocket(socket);
         }
 
         // ---------------------------------------------------------------------------------------

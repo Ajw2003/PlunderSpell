@@ -24,6 +24,9 @@ namespace RogueAi.Castle
         /// <summary>Index of the crypt final chamber (path start), or -1.</summary>
         public int CryptStartIndex = -1;
 
+        /// <summary>The bailey's furniture and the courtyards' yards, from its own seed stream.</summary>
+        public List<PlacedDressing> Dressings = new List<PlacedDressing>();
+
         public ProceduralCastleData() { }
 
         public ProceduralCastleData(int seed)
