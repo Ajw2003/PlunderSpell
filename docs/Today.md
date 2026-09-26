@@ -1,5 +1,21 @@
 # Today
 
+**2026-09-25, late — issue backlog pass on `claude/issue-backlog`, cheapest high-payoff fixes first.**
+Triaged every open issue against code and history: closed 9 as already done (#132, #99, #36, #21,
+#115, #46, #119, #133, #93) and #10 as superseded by #141, and commented status on the partial ones
+(#134, #111, #17, #126). Then fixed, each verified in the live Editor: fewer, slower,
+softer-hitting guards (#114, #117, #118); the pause menu no longer pauses anything (#129,
+reverses #107); mana for every spell plus a 1.5 s chant for number-key casts (#116, and the user's
+ask to make mana useful rather than remove it); a themed raid HUD with no stale "pad" or inventory
+text (#137); raids start calm with a 20 s grace (#136); guards fighting you raise the hue and cry
+(#139); a toned-down hue and cry look (#138). Captures: `docs/generated/issue-backlog-2026-09-25/`.
+Tests run: EditMode 67 pass, 3 skip, and 1 fail (`ArtAssetImportTests`, which failed before this
+branch). PlayMode: casting, guard, raid-integration, HUD, acoustics and haul suites all pass. The
+full PlayMode suite was not run. Issues stay open until merged. Next: #144 (carry weight like
+R.E.P.O.), research first.
+
+---
+
 **2026-09-25, night — the night atmosphere is built (steps 0-4 of five) on `claude/night-atmosphere`.**
 Fog with fire halos, alarm-state blending, fires from pipeline anchors, the `Plunderspell/Surface`
 shader, the dressed outer bailey and courtyards, the sealed gate, Low/Medium/High with a Deck

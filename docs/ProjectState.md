@@ -40,6 +40,14 @@ per enemy as the art and scale reference; the prefabs raids spawn are
 `Assets/_Project/Prefabs/Enemies/<Era>/`. Merged together on `claude/staging-2026-09-24` for testing
 before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
 
+**2026-09-25 — backlog pass** (`claude/issue-backlog`, not merged). Spells cost mana
+(`SpellWord.ManaCost`, a 100-point pool, 2.5/s regen) and number-key casts chant for 1.5 s
+(`docs/systems/spells.md`, "Mana and the keyboard chant"). The pause menu no longer freezes the
+world. Guards are halved in number, 0.8× speed and 0.65× damage (`GuardSpawner`). Each raid starts
+calm with a 20 s grace, and guards report sightings, attacks and chases straight to the alarm
+(`docs/systems/alarm.md`). The raid HUD is themed and its hue and cry look toned down. Open issues
+re-triaged: see `docs/Today.md`.
+
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/systems/atmosphere.md`. Open: volumetric fog
 (High), vertex soot bake, Deck profiling, enemies/loot on the surface shader unseen in play,
