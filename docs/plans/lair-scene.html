@@ -68,6 +68,7 @@ svg text{ font-family:var(--ff-mono); }
 .orb{ width:56px; height:56px; border-radius:50%; }
 .orb.hearth{ background:radial-gradient(circle at 50% 60%, var(--flame) 0%, #6E5320 35%, #2A2012 70%, transparent 100%); }
 .orb.candle{ background:radial-gradient(circle, #F2D9A0 0%, #8C6A30 30%, transparent 70%); }
+.orb.market{ background:radial-gradient(circle, #A8E0C8 0%, var(--verdigris) 35%, #1D3029 70%, transparent 100%); }
 .orb.portal{ background:radial-gradient(circle, var(--lapis-hi) 0%, var(--lapis) 35%, #2A2340 70%, transparent 100%); }
 .light h3{ font-size:1.05rem; }
 .light p{ font-size:.92rem; color:var(--vellum-dim); }
@@ -88,6 +89,13 @@ svg text{ font-family:var(--ff-mono); }
 .st .limit{ font-size:.86rem; color:var(--madder); border-top:1px solid var(--line-soft); padding-top:10px; }
 .st .reuse{ font-size:.82rem; color:var(--vellum-faint); }
 
+.rev{ border:1px solid var(--verdigris-lo); background:var(--ash); padding:16px 20px; display:grid; gap:8px; max-width:78ch; }
+.rev .k{ font-family:var(--ff-mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--verdigris); }
+.rev ul{ margin:0; padding-left:18px; display:grid; gap:4px; font-size:.95rem; color:var(--vellum-dim); }
+.rev b{ color:var(--vellum); font-weight:600; }
+.warn{ border-left:3px solid var(--orpiment); padding:4px 0 4px 16px; font-size:.95rem; color:var(--vellum-dim); max-width:78ch; }
+.warn b{ color:var(--vellum); }
+
 /* tables */
 .tbl{ overflow-x:auto; border:1px solid var(--line); }
 table{ border-collapse:collapse; width:100%; min-width:620px; font-size:.9rem; }
@@ -100,7 +108,7 @@ td:first-child{ color:var(--vellum); }
 .tag.edit{ color:var(--vellum-dim); border:1px solid var(--line); }
 
 /* phases + decisions */
-.phases{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+.phases{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
 .ph{ background:var(--ash); border:1px solid var(--line-soft); padding:20px 22px; display:grid; gap:12px; grid-template-rows:auto auto 1fr auto; }
 .ph .lbl{ font-family:var(--ff-mono); font-size:11px; letter-spacing:.18em; color:var(--verdigris); text-transform:uppercase; }
 .ph ul{ margin:0; padding-left:18px; display:grid; gap:5px; align-content:start; font-size:.92rem; color:var(--vellum-dim); }
@@ -148,11 +156,21 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
 <div class="wrap">
 
 <header>
-  <span class="stamp">Proposal · awaiting your verdict</span>
+  <span class="stamp">Proposal · revision 2 · awaiting your verdict</span>
   <div class="eyebrow">Plunderspell · the between-raids hub</div>
   <h1>The Lair, as a place you stand in</h1>
-  <p class="thesis">A small vaulted cellar outside of time. The crew spawns at the fire, reads the debt, practises their words, takes a weapon off the rack, and sets out by all standing in one lit portal. Every function is an object you walk up to. None of it is a menu.</p>
-  <p class="meta">Written 2026-09-26 against <code>integration/staging-2026-09-15</code> @ <code>2c45fef</code> · full text in <code>docs/plans/lair-scene.md</code> · nothing built yet</p>
+  <p class="thesis">A small vaulted cellar outside of time. The crew sets out through a lit portal, and everything they carry out of the castle comes home through it: every goblet, chest and blade, still heavy and still breakable. Then they decide, item by item, what to sell at the Buyer's Hatch and what to keep in the Hoard. The coin buys things through the door, at the Mystical Market.</p>
+  <div class="rev">
+    <span class="k">What changed after your review</span>
+    <ul>
+      <li><b>The whole haul comes home</b> through the portal as objects, not just weapons.</li>
+      <li><b>Nothing is sold automatically.</b> Each item is sold at the Buyer's Hatch or stored in the Hoard or on the rack, or left where it lies.</li>
+      <li><b>A door to the Mystical Market</b>, with green lantern light spilling into the Lair.</li>
+      <li>The automatic trophy shelf is gone. The Hoard replaces it.</li>
+      <li>Two new decisions: where sale money goes (D5), and where the market sits (D6).</li>
+    </ul>
+  </div>
+  <p class="meta">Written 2026-09-26 against <code>integration/staging-2026-09-15</code> @ <code>2c45fef</code> · revised 2026-09-26 · full text in <code>docs/plans/lair-scene.md</code> · nothing built yet</p>
 </header>
 
 <section>
@@ -168,6 +186,8 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
         <li>Play starts a raid after 0.25 s. Nobody ever stands in the Lair.</li>
         <li>No scene ever changes. The only scene load reloads the raid on death.</li>
         <li>Picking an era changes nothing. The castle generator ignores it.</li>
+        <li><b style="color:var(--vellum)">Extraction turns the haul into a number and destroys the items.</b> They never reach the Lair.</li>
+        <li>The Mystical Market doesn't exist on any branch. It's designed in GitHub issues #26–#29.</li>
         <li>In co-op every player keeps their own separate debt.</li>
         <li>The raid scene is not in the build list.</li>
       </ul>
@@ -176,10 +196,11 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
       <span class="k new">Proposed</span>
       <ul>
         <li>A separate <code>LairScene</code> you walk around in first person.</li>
-        <li>Six stations, one per verb in the design bible.</li>
+        <li>The haul comes home as objects; the crew sells or keeps each one.</li>
+        <li>A door to the Mystical Market, and a purse to spend there.</li>
         <li>The host's scene change carries every player: Lair → Raid → Lair.</li>
         <li>One debt per crew, kept on the host and shown to everyone.</li>
-        <li>A save file that remembers raids, trophies and the weapon rack.</li>
+        <li>A save file that remembers every item in the Lair, where it lies.</li>
         <li>Both scenes added to the build.</li>
       </ul>
     </div>
@@ -188,12 +209,77 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
 
 <section>
   <div class="head">
-    <div class="eyebrow">Visuals · the view from the spawn point</div>
-    <h2>One fire, one candle, one open door</h2>
+    <div class="eyebrow">Functionality · the haul's journey</div>
+    <h2>Everything comes home. Nothing is sold until someone sells it.</h2>
+    <p class="dim">Extraction records which items crossed the threshold and what each was worth. Back in the Lair they spill out of the portal, and the crew carries each one to a station. The debt only moves when something is sold.</p>
   </div>
   <figure>
     <div class="scroll">
-      <svg viewBox="0 0 800 400" role="img" aria-label="Mood sketch looking north across the vaulted cellar: the hearth glowing in the foreground, the weapon rack on the left wall, the practice circle on the right, the ledger candle in the right foreground, and on the far wall four arches, one lit blue-violet with two hooded figures silhouetted against it and three bricked up.">
+      <svg viewBox="0 0 960 400" role="img" aria-label="Flow of the haul. The raid's extraction zone records unbroken items and their worth. They spill out of the portal onto the Lair floor. From there each item goes to one of three stations: the Buyer's Hatch to sell, the Hoard to keep, or the rack if it is a weapon, or it is left where it lies and still saved. Selling pays coin that is split between the debt in the strongbox and the crew purse. The purse is spent at the Mystical Market, and what is bought there is carried back to the Hoard. Things in the Hoard can be sold later, and anything kept can be carried into the next raid.">
+        <defs>
+          <marker id="j-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9A9078"/></marker>
+          <marker id="j-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C9A227"/></marker>
+          <marker id="j-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5FA288"/></marker>
+        </defs>
+        <!-- raid extraction -->
+        <rect x="20" y="150" width="160" height="100" fill="#1E1A14" stroke="#C4542E"/>
+        <text x="34" y="176" font-size="13" fill="#DCD2BA">Extraction zone</text>
+        <g font-size="10.5" fill="#9A9078"><text x="34" y="198">in the raid</text><text x="34" y="220">unbroken items only</text><text x="34" y="236">recorded: item + worth</text></g>
+        <!-- spill -->
+        <rect x="220" y="150" width="170" height="100" fill="#1E1A14" stroke="#7A6AA0"/>
+        <text x="234" y="176" font-size="13" fill="#DCD2BA">Arrival spill</text>
+        <g font-size="10.5" fill="#9A9078"><text x="234" y="198">out of the lit portal</text><text x="234" y="214">onto the Lair floor,</text><text x="234" y="230">set down gently</text></g>
+        <text x="222" y="140" font-size="10" fill="#635C4C">or left where it lies: still saved</text>
+        <path d="M180 200 H217" stroke="#9A9078" stroke-width="1.5" marker-end="url(#j-a)"/>
+        <!-- three stations -->
+        <rect x="440" y="30" width="190" height="80" fill="#1E1A14" stroke="#5FA288"/>
+        <text x="454" y="56" font-size="13" fill="#DCD2BA">Buyer's Hatch · sell</text>
+        <g font-size="10.5" fill="#9A9078"><text x="454" y="78">price chalked on the slate</text><text x="454" y="94">ring the bell to accept</text></g>
+        <rect x="440" y="160" width="190" height="80" fill="#1E1A14" stroke="#C9A227"/>
+        <text x="454" y="186" font-size="13" fill="#DCD2BA">The Hoard · keep</text>
+        <g font-size="10.5" fill="#9A9078"><text x="454" y="208">shelves, chests, floor</text><text x="454" y="224">snaps in, saved, listed</text></g>
+        <rect x="440" y="290" width="190" height="80" fill="#1E1A14" stroke="#4A4235"/>
+        <text x="454" y="316" font-size="13" fill="#DCD2BA">The Rack · weapons</text>
+        <g font-size="10.5" fill="#9A9078"><text x="454" y="338">hang it up to store it</text><text x="454" y="354">take it down to equip</text></g>
+        <path d="M390 180 C415 180 412 70 437 70" stroke="#9A9078" stroke-width="1.5" fill="none" marker-end="url(#j-a)"/>
+        <path d="M390 200 H437" stroke="#9A9078" stroke-width="1.5" marker-end="url(#j-a)"/>
+        <path d="M390 220 C415 220 412 330 437 330" stroke="#9A9078" stroke-width="1.5" fill="none" marker-end="url(#j-a)"/>
+        <!-- sell later -->
+        <path d="M535 158 V114" stroke="#9A9078" stroke-dasharray="3 3" marker-end="url(#j-a)"/>
+        <text x="542" y="140" font-size="10" fill="#9A9078">sell later</text>
+        <!-- coin split -->
+        <rect x="690" y="20" width="126" height="44" fill="#1E1A14" stroke="#C4542E"/>
+        <text x="702" y="40" font-size="12" fill="#DCD2BA">Debt</text><text x="702" y="55" font-size="10" fill="#9A9078">the strongbox</text>
+        <rect x="690" y="86" width="126" height="44" fill="#1E1A14" stroke="#C9A227"/>
+        <text x="702" y="106" font-size="12" fill="#DCD2BA">Crew purse</text><text x="702" y="121" font-size="10" fill="#9A9078">spendable coin</text>
+        <path d="M630 58 C660 58 660 42 687 42" stroke="#C9A227" stroke-width="1.5" fill="none" marker-end="url(#j-g)"/>
+        <path d="M630 82 C660 82 660 108 687 108" stroke="#C9A227" stroke-width="1.5" fill="none" marker-end="url(#j-g)"/>
+        <text x="636" y="148" font-size="10" fill="#C9A227">coin, split per D5</text>
+        <!-- market -->
+        <rect x="842" y="60" width="108" height="110" fill="#121A17" stroke="#5FA288"/>
+        <text x="852" y="84" font-size="12" fill="#DCD2BA">Mystical</text><text x="852" y="100" font-size="12" fill="#DCD2BA">Market</text>
+        <g font-size="10" fill="#9A9078"><text x="852" y="122">through the</text><text x="852" y="136">east door</text><text x="852" y="156" fill="#5FA288">#26–#29</text></g>
+        <path d="M816 108 H839" stroke="#5FA288" stroke-width="1.5" marker-end="url(#j-v)"/>
+        <path d="M896 170 C896 260 720 220 634 206" stroke="#5FA288" stroke-dasharray="4 4" fill="none" marker-end="url(#j-v)"/>
+        <text x="700" y="262" font-size="10" fill="#5FA288">what you buy is carried back to keep</text>
+        <!-- into the next raid -->
+        <path d="M437 345 C300 350 300 300 305 254" stroke="#7A6AA0" stroke-dasharray="4 4" fill="none" marker-end="url(#j-a)"/>
+        <text x="190" y="360" font-size="10" fill="#B6C8FF">anything kept can be carried</text>
+        <text x="190" y="374" font-size="10" fill="#B6C8FF">into the next raid</text>
+      </svg>
+    </div>
+    <figcaption>Solid lines are the normal route; dashed lines are optional trips. The market's stalls and prices are the market epic (issues #26–#29). This proposal builds the door, the purse and the Hatch they plug into.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">Visuals · the view from the spawn point</div>
+    <h2>One fire, one candle, one open door, and the market's green light</h2>
+  </div>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 800 400" role="img" aria-label="Mood sketch looking north across the vaulted cellar. In the far wall one arch is lit blue-violet, with two hooded figures silhouetted against it and the gold of the haul lying on the floor in front of them; the other three arches are bricked up. On the left, the Hoard's shelves and an iron-bound chest glint gold. On the right wall a door stands ajar with green lantern light spilling across the floor, and beside it the Buyer's Hatch with a small balance on its sill. The hearth glows in the foreground and the ledger's candle burns at the right edge.">
         <defs>
           <radialGradient id="v-hearth" cx="400" cy="410" r="330" gradientUnits="userSpaceOnUse">
             <stop offset="0" stop-color="#E8A24E" stop-opacity=".55"/>
@@ -211,7 +297,16 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
             <stop offset=".6" stop-color="#7A6AA0"/>
             <stop offset="1" stop-color="#2A2340"/>
           </linearGradient>
-          <radialGradient id="v-candle" cx="730" cy="292" r="70" gradientUnits="userSpaceOnUse">
+          <linearGradient id="v-market" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#1D3029"/>
+            <stop offset=".6" stop-color="#5FA288"/>
+            <stop offset="1" stop-color="#A8E0C8"/>
+          </linearGradient>
+          <radialGradient id="v-hoard" cx="90" cy="300" r="140" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#C9A227" stop-opacity=".22"/>
+            <stop offset="1" stop-color="#C9A227" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="v-candle" cx="770" cy="300" r="70" gradientUnits="userSpaceOnUse">
             <stop offset="0" stop-color="#F2D9A0" stop-opacity=".5"/>
             <stop offset="1" stop-color="#F2D9A0" stop-opacity="0"/>
           </radialGradient>
@@ -221,78 +316,85 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
           </pattern>
         </defs>
         <rect width="800" height="400" fill="#0B0A08"/>
-        <!-- floor -->
         <polygon points="0,400 800,400 550,290 250,290" fill="#17140F"/>
-        <!-- far wall with vaulted top -->
         <path d="M250 290 L250 220 Q400 20 550 220 L550 290 Z" fill="#1C1812"/>
-        <!-- receding vault ribs -->
         <path d="M20 400 L20 230 Q400 -190 780 230 L780 400" fill="none" stroke="#2E271E" stroke-width="10"/>
         <path d="M110 400 L110 225 Q400 -105 690 225 L690 400" fill="none" stroke="#2A241C" stroke-width="7"/>
         <path d="M190 400 L190 222 Q400 -32 610 222 L610 400" fill="none" stroke="#26201A" stroke-width="5"/>
-        <!-- side walls meeting floor -->
         <line x1="250" y1="290" x2="0" y2="400" stroke="#221D16" stroke-width="2"/>
         <line x1="550" y1="290" x2="800" y2="400" stroke="#221D16" stroke-width="2"/>
-        <!-- portal glow thrown upward -->
         <rect width="800" height="400" fill="url(#v-portal)"/>
-        <!-- the four arches: I bricked, II lit, III and IV bricked -->
+        <!-- arches -->
         <path d="M270 285 L270 242 A22 22 0 0 1 314 242 L314 285 Z" fill="url(#v-brick)" stroke="#3A3228"/>
         <path d="M340 285 L340 242 A22 22 0 0 1 384 242 L384 285 Z" fill="url(#v-door)" stroke="#5FA288" stroke-width="1.5"/>
         <path d="M416 285 L416 242 A22 22 0 0 1 460 242 L460 285 Z" fill="url(#v-brick)" stroke="#3A3228"/>
         <path d="M486 285 L486 242 A22 22 0 0 1 530 242 L530 285 Z" fill="url(#v-brick)" stroke="#3A3228"/>
         <rect x="358" y="214" width="8" height="8" fill="#5FA288"/>
-        <!-- ready ring on the floor -->
-        <ellipse cx="362" cy="300" rx="62" ry="9" fill="#7A6AA0" fill-opacity=".12" stroke="#7A6AA0" stroke-dasharray="4 4"/>
-        <!-- two crew silhouettes against the portal -->
+        <ellipse cx="362" cy="300" rx="72" ry="10" fill="#7A6AA0" fill-opacity=".12" stroke="#7A6AA0" stroke-dasharray="4 4"/>
+        <!-- the haul, just home -->
+        <line x1="268" y1="312" x2="292" y2="303" stroke="#8A8070" stroke-width="3"/>
+        <rect x="300" y="294" width="22" height="12" fill="#4A3A16" stroke="#C9A227"/>
+        <ellipse cx="412" cy="305" rx="8" ry="3" fill="#C9A227"/>
+        <ellipse cx="420" cy="301" rx="6" ry="2.5" fill="#C9A227"/>
+        <path d="M428 308 h10 l-3 -3 v-5 q4 -1 4 -7 h-12 q0 6 4 7 v5 z" fill="#C9A227"/>
         <path d="M338 302 L343 268 Q350 250 357 268 L362 302 Z" fill="#0B0A08"/>
         <path d="M372 304 L377 272 Q383 256 389 272 L394 304 Z" fill="#0B0A08"/>
-        <!-- weapon rack, left wall -->
-        <polygon points="66,250 128,262 128,338 66,344" fill="#2A2219"/>
-        <line x1="78" y1="262" x2="92" y2="330" stroke="#8A8070" stroke-width="3"/>
-        <circle cx="106" cy="296" r="15" fill="none" stroke="#8A8070" stroke-width="3"/>
-        <circle cx="78" cy="262" r="2.5" fill="#5FA288"/><circle cx="106" cy="274" r="2.5" fill="#5FA288"/><circle cx="120" cy="268" r="2.5" fill="#3A3228"/>
-        <!-- stair to nowhere, far left -->
-        <path d="M150 300 h14 v-8 h14 v-8 h14 v-8 h14 v-8" fill="none" stroke="#3A3228" stroke-width="2"/>
-        <!-- practice circle, right floor -->
-        <ellipse cx="628" cy="352" rx="92" ry="16" fill="none" stroke="#7A6AA0" stroke-dasharray="5 5"/>
-        <rect x="600" y="318" width="4" height="26" fill="#3A3228"/><rect x="612" y="318" width="4" height="26" fill="#3A3228"/>
-        <ellipse cx="608" cy="310" rx="12" ry="10" fill="#5A3A26"/>
-        <path d="M660 350 L660 312 M648 324 H672" stroke="#6B5A3A" stroke-width="4"/>
-        <circle cx="660" cy="306" r="7" fill="#6B5A3A"/>
-        <!-- ledger lectern and candle, right foreground -->
-        <rect x="712" y="310" width="36" height="90" fill="#221D16"/>
-        <polygon points="702,312 758,300 758,312 702,322" fill="#3A3024"/>
-        <rect x="738" y="286" width="5" height="14" fill="#DCD2BA"/>
-        <circle cx="740.5" cy="282" r="3" fill="#F2D9A0"/>
+        <!-- the Hoard, left -->
+        <rect width="800" height="400" fill="url(#v-hoard)"/>
+        <line x1="34" y1="250" x2="100" y2="262" stroke="#4A3A28" stroke-width="4"/>
+        <line x1="34" y1="290" x2="100" y2="300" stroke="#4A3A28" stroke-width="4"/>
+        <g fill="#C9A227"><rect x="44" y="240" width="8" height="10"/><circle cx="66" cy="251" r="5"/><rect x="80" y="248" width="10" height="8"/><path d="M48 288 h8 l-2 -2 v-4 q3 -1 3 -5 h-10 q0 4 3 5 v4 z"/><ellipse cx="76" cy="290" rx="9" ry="3"/></g>
+        <polygon points="128,336 196,340 196,372 128,368" fill="#4A3A16" stroke="#C9A227"/>
+        <polygon points="128,336 196,340 206,330 138,326" fill="#5A4A1E" stroke="#C9A227"/>
+        <ellipse cx="164" cy="322" rx="10" ry="3" fill="#C9A227"/>
+        <!-- market door, right wall, ajar -->
+        <polygon points="470,350 560,392 650,336 606,316" fill="#5FA288" fill-opacity=".16"/>
+        <polygon points="606,316 650,336 650,206 606,214" fill="url(#v-market)"/>
+        <polygon points="606,316 606,214 650,206 650,336" fill="none" stroke="#3A3228" stroke-width="3"/>
+        <polygon points="650,336 650,206 672,214 672,344" fill="#2A2219" stroke="#3A3228"/>
+        <circle cx="668" cy="276" r="2.5" fill="#5FA288"/>
+        <!-- Buyer's Hatch -->
+        <polygon points="700,306 728,312 728,338 700,332" fill="#1A1510" stroke="#6B5A3A" stroke-width="2"/>
+        <line x1="700" y1="334" x2="730" y2="341" stroke="#4A3A28" stroke-width="4"/>
+        <line x1="714" y1="336" x2="714" y2="322" stroke="#8A7A50" stroke-width="1.5"/>
+        <line x1="705" y1="322" x2="723" y2="325" stroke="#8A7A50" stroke-width="1.5"/>
+        <ellipse cx="705" cy="325" rx="4" ry="1.5" fill="#8A7A50"/><ellipse cx="723" cy="328" rx="4" ry="1.5" fill="#8A7A50"/>
+        <circle cx="732" cy="304" r="3" fill="#5FA288"/>
+        <!-- ledger and candle, right foreground -->
+        <rect x="750" y="320" width="36" height="80" fill="#221D16"/>
+        <polygon points="742,322 796,310 796,322 742,332" fill="#3A3024"/>
+        <rect x="768" y="296" width="5" height="14" fill="#DCD2BA"/>
+        <circle cx="770.5" cy="292" r="3" fill="#F2D9A0"/>
         <rect width="800" height="400" fill="url(#v-candle)"/>
-        <!-- hearth, foreground -->
+        <!-- hearth -->
         <rect width="800" height="400" fill="url(#v-hearth)"/>
         <ellipse cx="400" cy="394" rx="96" ry="18" fill="#2A2012"/>
         <path d="M372 392 Q378 356 392 340 Q392 366 402 372 Q406 350 418 334 Q426 366 430 392 Z" fill="#C4542E"/>
         <path d="M388 392 Q394 370 402 360 Q404 378 412 382 Q414 370 420 364 Q422 382 420 392 Z" fill="#E8A24E"/>
-        <!-- labels -->
         <g font-size="11" fill="#9A9078">
           <text x="340" y="206">II · High Medieval</text>
-          <text x="60" y="360">armoury rack</text>
-          <text x="560" y="378">practice circle</text>
-          <text x="700" y="296" text-anchor="end">ledger</text>
+          <text x="362" y="326" text-anchor="middle" fill="#C9A227">the haul, just home</text>
+          <text x="40" y="392">the Hoard</text>
+          <text x="628" y="196" text-anchor="middle" fill="#5FA288">market door</text>
+          <text x="700" y="378" text-anchor="middle">Buyer's Hatch</text>
+          <text x="770" y="282" text-anchor="middle">ledger</text>
           <text x="440" y="366">hearth</text>
-          <text x="148" y="316">stair to nowhere</text>
         </g>
       </svg>
     </div>
-    <figcaption>Mood sketch looking north from where you spawn. It shows the light plan and where things sit, not finished art. The lit arch is shown with decision D2's recommendation: High Medieval open, the other three bricked up.</figcaption>
+    <figcaption>Mood sketch looking north from where you spawn. It shows the light plan and where things sit, not finished art. The rack, the practice circle and the stair are out of frame. The lit arch follows decision D2's recommendation: High Medieval open, the other three bricked up.</figcaption>
   </figure>
 </section>
 
 <section>
   <div class="head">
     <div class="eyebrow">Visuals · floor plan</div>
-    <h2>16 m by 10 m, and the only way out is a portal</h2>
-    <p class="dim">A barrel-vaulted stone undercroft, 4.5 m to the crown. Damp brick, standing water in two corners. A stair climbs eleven steps and stops at a wall, because the Lair stands outside of time. That also means no sky, exterior or skybox to build. Hover a station card below to find it here, or tap a number here to jump to its card.</p>
+    <h2>16 m by 10 m, a portal wall, and one door to the market</h2>
+    <p class="dim">A barrel-vaulted stone undercroft, 4.5 m to the crown. Damp brick, standing water in two corners, and a stair that climbs eleven steps and stops at a wall. The only ways out are the portals and the east door, which opens onto the Mystical Market. The dashed lines are the carries: from the spill to the Hoard, the Hatch and the rack. Hover a station card below to find it here, or tap a number here to jump to its card.</p>
   </div>
   <figure>
     <div class="scroll">
-      <svg viewBox="0 0 820 560" role="img" aria-label="Top-down floor plan of the lair: portal arches along the north wall with a ready ring in front of the lit one, armoury rack and trophy shelves on the west wall, practice circle on the east side, hearth with four spawn points and a straw pallet in the south centre, ledger lectern and strongbox in the south-east, and a stair to nowhere along the south-west wall.">
+      <svg viewBox="0 0 960 560" role="img" aria-label="Top-down floor plan. North wall: four portal arches, the second lit, with the ready ring and arrival spill in front of it and gold items lying in it. North-west corner: the Hoard, with shelves and two chests. North-east corner: the practice circle. East wall: the Buyer's Hatch with a balance, and a door standing ajar onto the Mystical Market lane, which has four stall booths. South-east: ledger and strongbox. South centre: hearth with four spawn points and a straw pallet. South wall: the stair to nowhere. West wall, south end: the armoury rack. Dashed carry paths lead from the spill to the Hoard, the Hatch and the rack.">
         <defs>
           <pattern id="p-flag" width="45" height="45" patternUnits="userSpaceOnUse" x="40" y="40">
             <rect width="45" height="45" fill="#1A1712"/>
@@ -313,20 +415,41 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
             <stop offset="0" stop-color="#F2D9A0" stop-opacity=".35"/>
             <stop offset="1" stop-color="#F2D9A0" stop-opacity="0"/>
           </radialGradient>
+          <radialGradient id="p-market" cx="768" cy="255" r="190" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#5FA288" stop-opacity=".4"/>
+            <stop offset="1" stop-color="#5FA288" stop-opacity="0"/>
+          </radialGradient>
           <pattern id="p-brick" width="10" height="6" patternUnits="userSpaceOnUse">
             <rect width="10" height="6" fill="#2A241C"/>
             <path d="M0 5.5H10M5 0V3M0 3H10M0 3V6" stroke="#14120E" fill="none"/>
           </pattern>
+          <marker id="p-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9A9078"/></marker>
         </defs>
         <!-- floor and light pools -->
         <rect x="40" y="40" width="720" height="450" fill="url(#p-flag)"/>
-        <ellipse cx="100" cy="95" rx="46" ry="22" fill="#1E2A28" fill-opacity=".7"/>
         <ellipse cx="712" cy="468" rx="36" ry="14" fill="#1E2A28" fill-opacity=".7"/>
+        <ellipse cx="96" cy="470" rx="40" ry="12" fill="#1E2A28" fill-opacity=".7"/>
         <rect x="40" y="40" width="720" height="450" fill="url(#p-hearth)"/>
         <rect x="40" y="40" width="720" height="450" fill="url(#p-portal)"/>
         <rect x="40" y="40" width="720" height="450" fill="url(#p-candle)"/>
-        <!-- walls -->
+        <polygon points="760,225 760,285 590,350 600,170" fill="url(#p-market)"/>
+        <!-- walls, with the door gap in the east wall -->
         <rect x="40" y="40" width="720" height="450" fill="none" stroke="#4A4235" stroke-width="14"/>
+        <rect x="752" y="225" width="16" height="60" fill="#121A17"/>
+        <rect x="768" y="225" width="22" height="60" fill="#121A17"/>
+        <line x1="768" y1="285" x2="792" y2="262" stroke="#6B5A3A" stroke-width="5"/>
+
+        <!-- market lane beyond the door -->
+        <rect x="790" y="110" width="160" height="290" fill="#121A17" stroke="#2E4C41" stroke-dasharray="5 4"/>
+        <g font-size="9" fill="#9A9078" text-anchor="middle">
+          <rect x="802" y="126" width="64" height="54" fill="#18241F" stroke="#2E4C41"/><text x="834" y="157">Spellmonger</text>
+          <rect x="876" y="126" width="64" height="54" fill="#18241F" stroke="#2E4C41"/><text x="908" y="157">Smith</text>
+          <rect x="802" y="330" width="64" height="54" fill="#18241F" stroke="#2E4C41"/><text x="834" y="361">Alchemist</text>
+          <rect x="876" y="330" width="64" height="54" fill="#18241F" stroke="#2E4C41"/><text x="908" y="361">Curiosities</text>
+        </g>
+        <g fill="#5FA288"><circle cx="834" cy="196" r="3"/><circle cx="908" cy="196" r="3"/><circle cx="834" cy="316" r="3"/><circle cx="908" cy="316" r="3"/></g>
+        <text x="870" y="100" font-size="10" fill="#5FA288" text-anchor="middle" letter-spacing="1.5">THE MYSTICAL MARKET</text>
+        <text x="870" y="418" font-size="9" fill="#635C4C" text-anchor="middle">stalls: issues #26–#29</text>
 
         <!-- north wall: portal arches -->
         <g font-size="10" fill="#9A9078" text-anchor="middle">
@@ -340,34 +463,50 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
           <rect x="615" y="30" width="70" height="22" fill="url(#p-brick)" stroke="#3A3228"/>
           <text x="650" y="22">IV · Powder</text>
         </g>
-        <ellipse cx="330" cy="118" rx="62" ry="28" fill="#7A6AA0" fill-opacity=".1" stroke="#7A6AA0" stroke-width="1.5" stroke-dasharray="5 4"/>
-        <text x="330" y="122" font-size="10" fill="#B6C8FF" text-anchor="middle">ready ring</text>
+        <!-- ready ring = arrival spill, with the haul lying in it -->
+        <ellipse cx="330" cy="118" rx="66" ry="30" fill="#7A6AA0" fill-opacity=".1" stroke="#7A6AA0" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <g fill="#C9A227"><rect x="296" y="104" width="14" height="10"/><circle cx="326" cy="126" r="5"/><circle cx="350" cy="106" r="4"/><rect x="356" y="122" width="10" height="7"/><circle cx="312" cy="132" r="3"/></g>
+        <line x1="336" y1="96" x2="356" y2="92" stroke="#8A8070" stroke-width="2.5"/>
+        <text x="330" y="164" font-size="10" fill="#B6C8FF" text-anchor="middle">ready ring · arrival spill</text>
 
-        <!-- west wall: rack and trophy shelf -->
-        <rect x="48" y="180" width="14" height="120" fill="#3A3024"/>
-        <g stroke="#8A8070" stroke-width="2.5">
-          <line x1="66" y1="196" x2="96" y2="206"/>
-          <line x1="66" y1="226" x2="90" y2="226"/>
-        </g>
-        <circle cx="96" cy="206" r="0" />
-        <g fill="#5FA288"><circle cx="64" cy="196" r="2.5"/><circle cx="64" cy="226" r="2.5"/></g>
-        <g fill="#3A3228"><circle cx="64" cy="256" r="2.5"/><circle cx="64" cy="286" r="2.5"/></g>
-        <text x="72" y="276" font-size="10" fill="#635C4C">empty hooks</text>
-        <rect x="48" y="330" width="14" height="96" fill="#3A3024"/>
-        <g fill="#C9A227"><rect x="51" y="344" width="8" height="8"/><circle cx="55" cy="372" r="4"/><rect x="51" y="392" width="8" height="10"/></g>
+        <!-- north-west: the Hoard -->
+        <rect x="64" y="150" width="172" height="140" fill="#C9A227" fill-opacity=".04" stroke="#C9A227" stroke-opacity=".45" stroke-dasharray="5 4"/>
+        <rect x="48" y="150" width="14" height="140" fill="#3A3024"/>
+        <g fill="#C9A227"><rect x="51" y="160" width="8" height="8"/><circle cx="55" cy="184" r="4"/><rect x="51" y="200" width="8" height="10"/><circle cx="55" cy="226" r="3.5"/><rect x="51" y="244" width="8" height="8"/><circle cx="55" cy="270" r="4"/></g>
+        <rect x="96" y="236" width="42" height="26" fill="#4A3A16" stroke="#C9A227" stroke-width="1.5"/>
+        <rect x="160" y="248" width="42" height="26" fill="#4A3A16" stroke="#C9A227" stroke-width="1.5"/>
+        <g fill="#C9A227"><circle cx="110" cy="200" r="5"/><rect x="130" y="192" width="12" height="9"/><circle cx="182" cy="214" r="4"/></g>
+        <text x="150" y="172" font-size="11" fill="#C9A227" text-anchor="middle">the Hoard</text>
 
-        <!-- south-west: stair to nowhere -->
-        <rect x="70" y="452" width="132" height="30" fill="#221D16" stroke="#3A3228"/>
-        <g stroke="#3A3228"><line x1="82" y1="452" x2="82" y2="482"/><line x1="94" y1="452" x2="94" y2="482"/><line x1="106" y1="452" x2="106" y2="482"/><line x1="118" y1="452" x2="118" y2="482"/><line x1="130" y1="452" x2="130" y2="482"/><line x1="142" y1="452" x2="142" y2="482"/><line x1="154" y1="452" x2="154" y2="482"/><line x1="166" y1="452" x2="166" y2="482"/><line x1="178" y1="452" x2="178" y2="482"/><line x1="190" y1="452" x2="190" y2="482"/></g>
-        <text x="136" y="444" font-size="10" fill="#635C4C" text-anchor="middle">stair to nowhere ↗ wall</text>
+        <!-- north-east: practice circle -->
+        <circle cx="640" cy="150" r="48" fill="#7A6AA0" fill-opacity=".06" stroke="#7A6AA0" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <circle cx="616" cy="132" r="6" fill="#5A3A26"/>
+        <circle cx="664" cy="134" r="3" fill="#F2D9A0"/>
+        <rect x="620" y="160" width="12" height="12" fill="#4A3A22"/>
+        <path d="M660 158 v18 M653 165 h14" stroke="#6B5A3A" stroke-width="3"/>
+        <text x="640" y="212" font-size="10" fill="#9A9078" text-anchor="middle">practice circle</text>
 
-        <!-- east: practice circle -->
-        <circle cx="650" cy="245" r="60" fill="#7A6AA0" fill-opacity=".06" stroke="#7A6AA0" stroke-width="1.5" stroke-dasharray="5 4"/>
-        <circle cx="620" cy="222" r="7" fill="#5A3A26"/>
-        <circle cx="682" cy="226" r="3" fill="#F2D9A0"/>
-        <rect x="628" y="262" width="14" height="14" fill="#4A3A22"/>
-        <path d="M672 262 v20 M664 270 h16" stroke="#6B5A3A" stroke-width="3"/>
-        <g font-size="9" fill="#635C4C"><text x="604" y="210">pot</text><text x="688" y="222">candle</text><text x="614" y="292">crate</text><text x="664" y="296">dummy</text></g>
+        <!-- east wall: Buyer's Hatch -->
+        <rect x="744" y="300" width="10" height="52" fill="#3A3024" stroke="#6B5A3A"/>
+        <line x1="722" y1="338" x2="722" y2="316" stroke="#8A7A50" stroke-width="2"/>
+        <line x1="706" y1="316" x2="738" y2="316" stroke="#8A7A50" stroke-width="2"/>
+        <ellipse cx="706" cy="321" rx="7" ry="3" fill="#8A7A50"/><ellipse cx="738" cy="321" rx="7" ry="3" fill="#8A7A50"/>
+        <rect x="712" y="292" width="22" height="11" fill="#2B2C2A" stroke="#635C4C"/>
+        <circle cx="742" cy="296" r="3" fill="#5FA288"/>
+        <text x="722" y="370" font-size="10" fill="#9A9078" text-anchor="middle">Buyer's Hatch</text>
+        <text x="722" y="238" font-size="10" fill="#5FA288" text-anchor="end">market door</text>
+
+        <!-- west wall, south: rack -->
+        <rect x="48" y="320" width="14" height="110" fill="#3A3024"/>
+        <g stroke="#8A8070" stroke-width="2.5"><line x1="66" y1="334" x2="96" y2="344"/><line x1="66" y1="362" x2="90" y2="362"/></g>
+        <g fill="#5FA288"><circle cx="64" cy="334" r="2.5"/><circle cx="64" cy="362" r="2.5"/></g>
+        <g fill="#3A3228"><circle cx="64" cy="390" r="2.5"/><circle cx="64" cy="416" r="2.5"/></g>
+        <text x="72" y="406" font-size="10" fill="#635C4C">empty hooks</text>
+
+        <!-- south wall: stair to nowhere -->
+        <rect x="180" y="452" width="132" height="30" fill="#221D16" stroke="#3A3228"/>
+        <g stroke="#3A3228"><line x1="192" y1="452" x2="192" y2="482"/><line x1="204" y1="452" x2="204" y2="482"/><line x1="216" y1="452" x2="216" y2="482"/><line x1="228" y1="452" x2="228" y2="482"/><line x1="240" y1="452" x2="240" y2="482"/><line x1="252" y1="452" x2="252" y2="482"/><line x1="264" y1="452" x2="264" y2="482"/><line x1="276" y1="452" x2="276" y2="482"/><line x1="288" y1="452" x2="288" y2="482"/><line x1="300" y1="452" x2="300" y2="482"/></g>
+        <text x="246" y="444" font-size="10" fill="#635C4C" text-anchor="middle">stair to nowhere</text>
 
         <!-- south centre: hearth, spawns, pallet -->
         <circle cx="400" cy="420" r="24" fill="#2A2012" stroke="#6E5320" stroke-width="2"/>
@@ -386,18 +525,27 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
         <rect x="684" y="424" width="32" height="22" fill="#4A3A16" stroke="#C9A227" stroke-width="1.5"/>
         <text x="672" y="462" font-size="10" fill="#9A9078" text-anchor="middle">ledger · strongbox</text>
 
+        <!-- carry paths from the spill -->
+        <g fill="none" stroke="#9A9078" stroke-width="1.2" stroke-dasharray="3 4" marker-end="url(#p-arr)">
+          <path d="M270 122 Q235 140 222 176"/>
+          <path d="M392 128 Q610 190 700 306"/>
+          <path d="M300 146 Q150 250 100 330"/>
+        </g>
+
         <!-- station markers -->
         <g class="marker" data-st="1" tabindex="0" role="link" aria-label="Station 1, the hearth"><circle cx="352" cy="444" r="12"/><text x="352" y="448" text-anchor="middle">1</text></g>
-        <g class="marker" data-st="2" tabindex="0" role="link" aria-label="Station 2, the ledger"><circle cx="606" cy="420" r="12"/><text x="606" y="424" text-anchor="middle">2</text></g>
-        <g class="marker" data-st="3" tabindex="0" role="link" aria-label="Station 3, the portals"><circle cx="412" cy="118" r="12"/><text x="412" y="122" text-anchor="middle">3</text></g>
-        <g class="marker" data-st="4" tabindex="0" role="link" aria-label="Station 4, the armoury rack"><circle cx="112" cy="240" r="12"/><text x="112" y="244" text-anchor="middle">4</text></g>
-        <g class="marker" data-st="5" tabindex="0" role="link" aria-label="Station 5, the practice circle"><circle cx="728" cy="186" r="12"/><text x="728" y="190" text-anchor="middle">5</text></g>
-        <g class="marker" data-st="6" tabindex="0" role="link" aria-label="Station 6, the trophy shelf"><circle cx="90" cy="378" r="12"/><text x="90" y="382" text-anchor="middle">6</text></g>
+        <g class="marker" data-st="2" tabindex="0" role="link" aria-label="Station 2, the portals and arrival spill"><circle cx="418" cy="100" r="12"/><text x="418" y="104" text-anchor="middle">2</text></g>
+        <g class="marker" data-st="3" tabindex="0" role="link" aria-label="Station 3, the Buyer's Hatch"><circle cx="690" cy="340" r="12"/><text x="690" y="344" text-anchor="middle">3</text></g>
+        <g class="marker" data-st="4" tabindex="0" role="link" aria-label="Station 4, the Hoard"><circle cx="86" cy="134" r="12"/><text x="86" y="138" text-anchor="middle">4</text></g>
+        <g class="marker" data-st="5" tabindex="0" role="link" aria-label="Station 5, the armoury rack"><circle cx="112" cy="376" r="12"/><text x="112" y="380" text-anchor="middle">5</text></g>
+        <g class="marker" data-st="6" tabindex="0" role="link" aria-label="Station 6, the market door"><circle cx="736" cy="206" r="12"/><text x="736" y="210" text-anchor="middle">6</text></g>
+        <g class="marker" data-st="7" tabindex="0" role="link" aria-label="Station 7, the ledger"><circle cx="606" cy="420" r="12"/><text x="606" y="424" text-anchor="middle">7</text></g>
+        <g class="marker" data-st="8" tabindex="0" role="link" aria-label="Station 8, the practice circle"><circle cx="704" cy="112" r="12"/><text x="704" y="116" text-anchor="middle">8</text></g>
 
         <!-- compass and scale -->
         <g font-size="11" fill="#9A9078">
-          <text x="792" y="58" text-anchor="middle">N</text>
-          <path d="M792 64 v34 M786 72 l6 -8 l6 8" stroke="#9A9078" fill="none"/>
+          <text x="920" y="46" text-anchor="middle">N</text>
+          <path d="M920 52 v30 M914 60 l6 -8 l6 8" stroke="#9A9078" fill="none"/>
           <line x1="40" y1="522" x2="265" y2="522" stroke="#9A9078"/>
           <line x1="40" y1="516" x2="40" y2="528" stroke="#9A9078"/><line x1="265" y1="516" x2="265" y2="528" stroke="#9A9078"/>
           <text x="152" y="545" text-anchor="middle">5 m</text>
@@ -405,35 +553,36 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
         </g>
       </svg>
     </div>
-    <figcaption>Light pools are drawn to position: the hearth's warm pool fills the south half, the lit arch throws lapis across the north, and the candle covers only the ledger. Everything outside them falls to black.</figcaption>
+    <figcaption>Light pools are drawn to position: the hearth's warm pool fills the south half, the lit arch throws lapis across the north, the market's green lantern light comes in through the door, and the candle covers only the ledger. The Hoard sits right beside the spill, so the shortest carry from the portal is to keep something. The market lane is shown as a shell; its stalls are the market epic.</figcaption>
   </figure>
 </section>
 
 <section>
   <div class="head">
     <div class="eyebrow">Visuals · light and colour</div>
-    <h2>Three light sources, no fill light</h2>
+    <h2>Four light sources, no fill light</h2>
     <p class="dim">The design bible says nothing is lit by nothing. The Lair is its one safe frame: "one candle, one fire, falling away into black."</p>
   </div>
   <div class="lights">
     <div class="light"><div class="orb hearth"></div><div><h3>The hearth</h3><p>The key light, low in the south of the room. Matches the moodboard's Lair swatch, <code>#6E5320</code> falling to <code>#2A2012</code>.</p></div></div>
     <div class="light"><div class="orb candle"></div><div><h3>One candle</h3><p>On the ledger lectern. It lights the debt figure and nothing else.</p></div></div>
-    <div class="light"><div class="orb portal"></div><div><h3>The lit portal</h3><p>Ground Lapis thrown upward onto faces. The only cold light in the room, and only on the chosen arch.</p></div></div>
+    <div class="light"><div class="orb portal"></div><div><h3>The lit portal</h3><p>Ground Lapis thrown upward onto faces, and onto the haul lying in the spill. Only on the chosen arch.</p></div></div>
+    <div class="light"><div class="orb market"></div><div><h3>The market's lanterns</h3><p>Verdigris witch-light through the door, left ajar, in a wedge across the floor. Spell light, so still honest. From across the room it says there is somewhere to spend this.</p></div></div>
   </div>
   <div class="pigments">
-    <div class="pig"><i style="background:#C9A227"></i><span><b>Orpiment</b> only on gold: trophies and the strongbox.</span></div>
-    <div class="pig"><i style="background:#5FA288"></i><span><b>Verdigris</b> on anything usable: hooks, lectern, keystones.</span></div>
+    <div class="pig"><i style="background:#C9A227"></i><span><b>Orpiment</b> only on gold: the haul, the Hoard, the coin and the strongbox. A full Hoard is the brightest corner of the room.</span></div>
+    <div class="pig"><i style="background:#5FA288"></i><span><b>Verdigris</b> on anything usable: hooks, the Hatch's bell, keystones, and the market's light.</span></div>
     <div class="pig"><i style="background:#7A6AA0"></i><span><b>Lapis</b> for the voice: the practice ring and the portals.</span></div>
     <div class="pig"><i style="background:#C4542E"></i><span><b>Madder</b> for the debt in red ink, and the embers.</span></div>
     <div class="pig"><i style="background:#DCD2BA"></i><span><b>Vellum</b> for all written text. Never white.</span></div>
   </div>
-  <p class="dim" style="font-size:.95rem">No new pigments. The eleven kit pieces (cellar shell, stair, hearth, lectern, strongbox, rack, shelf, portal arch open and bricked, pallet, dummy, pot) are built by the existing Blender pipeline in <code>Tools/AssetPipeline/</code> from the existing palette atlas.</p>
+  <p class="dim" style="font-size:.95rem">No new pigments. The fourteen kit pieces (cellar shell, stair, hearth, lectern, strongbox, rack, Hoard shelving and chests, the Buyer's Hatch with its balance, slate and bell, the market door, portal arch open and bricked, pallet, dummy, pot) are built by the existing Blender pipeline in <code>Tools/AssetPipeline/</code> from the existing palette atlas.</p>
 </section>
 
 <section>
   <div class="head">
-    <div class="eyebrow">Functionality · six stations</div>
-    <h2>Each station is one verb from the design bible</h2>
+    <div class="eyebrow">Functionality · eight stations</div>
+    <h2>Each station is one verb, made into an object</h2>
   </div>
   <div class="stations">
     <article class="st" data-st="1" id="st-1" tabindex="-1">
@@ -445,49 +594,69 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
       </ul>
     </article>
     <article class="st" data-st="2" id="st-2" tabindex="-1">
-      <div class="top"><span class="n">2</span><div><h3>The Ledger</h3><div class="verb">see the debt</div></div></div>
+      <div class="top"><span class="n">2</span><div><h3>The Portals</h3><div class="verb">choose a century · set out · come home</div></div></div>
       <ul>
-        <li>An open book on a lectern: the debt in red ink, the gold banked, one line per past raid (era, seed, worth, players saved).</li>
-        <li>The +50 for setting out is written in the moment the crew commits, so you see the cost before you go.</li>
-        <li>A debt of zero shows the existing <code>DEBT_CLEARED</code> ending as a closed book.</li>
+        <li>Four arches, one per era. The chosen one glows lapis; locked ones are bricked up. Choose with <code>E</code>, or by saying <b>PORTA</b> at it.</li>
+        <li>Set out when <b>every connected player</b> stands in the chalk ring. A 3-second countdown runs; stepping out cancels it. <code>F6</code> still forces it for the host.</li>
+        <li>Anything a player holds goes through: a weapon, a potion, a candlestick.</li>
+        <li><b>The ring is also the arrival spill.</b> Every item carried out of the castle lands here, set down gently. Weapons too, and everything else.</li>
       </ul>
-      <p class="reuse">The maths stays exactly as <code>LairHubManager.ApplyExtractionResult</code> does it today, which is already tested.</p>
     </article>
     <article class="st" data-st="3" id="st-3" tabindex="-1">
-      <div class="top"><span class="n">3</span><div><h3>The Portals</h3><div class="verb">choose a century · set out</div></div></div>
+      <div class="top"><span class="n">3</span><div><h3>The Buyer's Hatch</h3><div class="verb">sell</div></div></div>
       <ul>
-        <li>Four arches, one per era. Open ones have a green keystone; the chosen one glows lapis; locked ones are bricked up.</li>
-        <li>Choose by walking up and pressing <code>E</code>, or by saying <b>PORTA</b> at it.</li>
-        <li>Set out when <b>every connected player</b> stands in the chalk ring. A 3-second countdown runs, and anyone stepping out cancels it.</li>
-        <li><code>F6</code> still forces departure for the host, so today's playtest key keeps working.</li>
+        <li>A shuttered hatch beside the market door, with a brass balance on the sill. It's where the market buys.</li>
+        <li>Put an item on the pan and its price is chalked on the slate. <b>Ring the bell</b> (<code>E</code>) to accept, and a gloved hand takes it and slides the coin back. Lift it off to decline.</li>
+        <li>A broken item fetches nothing. Two-person items need two people at the pan.</li>
+        <li>Where the coin goes is decision D5.</li>
       </ul>
+      <p class="reuse">The only place an item becomes money. Pays the worth recorded when it came home.</p>
     </article>
     <article class="st" data-st="4" id="st-4" tabindex="-1">
-      <div class="top"><span class="n">4</span><div><h3>The Armoury Rack</h3><div class="verb">choose a blade</div></div></div>
+      <div class="top"><span class="n">4</span><div><h3>The Hoard</h3><div class="verb">keep</div></div></div>
       <ul>
-        <li>One hook per weapon the crew owns. <code>E</code> takes it down and equips it; <code>E</code> again hangs it back.</li>
-        <li>Starts with a small starter kit (see D4). The save file records anything added later.</li>
+        <li>Shelves, two iron-bound chests and open floor, right beside the spill. Set an item in a slot and it snaps in and is listed in the ledger as kept.</li>
+        <li>Keep things to sell later, to take into a raid, or because the market's "stays bought" wares need a home.</li>
+        <li>Capacity is physical: when the shelves and chests are full, they're full.</li>
       </ul>
-      <p class="limit">Limitation: no raid code can bring a weapon home yet. Filling the rack from raids is separate raid-side work and isn't part of this proposal.</p>
+      <p class="reuse">A reason to hold stock for profit (sets, moving prices) would be market design, issues #28–#29. This proposal doesn't invent one.</p>
     </article>
     <article class="st" data-st="5" id="st-5" tabindex="-1">
-      <div class="top"><span class="n">5</span><div><h3>The Practice Circle</h3><div class="verb">set the words on your tongue</div></div></div>
+      <div class="top"><span class="n">5</span><div><h3>The Armoury Rack</h3><div class="verb">keep weapons · choose a blade</div></div></div>
       <ul>
-        <li>A chalk ring with targets: a pot for Frango, a candle for Ignis, a crate for Levo, a straw dummy for Somnus and Tonitrus. They reset after breaking.</li>
-        <li>Stand in it and a readout shows the word heard, the recogniser's confidence, how loud you were, and whether it would have misfired.</li>
-        <li>This is also the voice test bench the roadmap asks for in milestone M1.</li>
+        <li>Hang a weapon from the spill or the market on a free hook to store it. <code>E</code> takes it down and equips it; <code>E</code> again hangs it back.</li>
+        <li>Starts with a small starter kit (see D4). Weapons can be sold at the Hatch like anything else.</li>
       </ul>
-      <p class="reuse">Uses the real spell system. There's no alarm in the Lair, so noise costs nothing here.</p>
+      <p class="limit">Limitation: no raid spawns a weapon to pick up yet (issue #17). When one does, it comes home through the spill with no further Lair work.</p>
     </article>
     <article class="st" data-st="6" id="st-6" tabindex="-1">
-      <div class="top"><span class="n">6</span><div><h3>The Trophy Shelf</h3><div class="verb">remember what came back</div></div></div>
+      <div class="top"><span class="n">6</span><div><h3>The Market Door</h3><div class="verb">spend</div></div></div>
       <ul>
-        <li>After each raid the most valuable item that came home sits on the shelf, with a label giving the era, date and worth.</li>
-        <li>Twelve at most. The oldest drops off.</li>
-        <li>Costs one item id per raid in the save file. No physics, no effect on the economy.</li>
+        <li>A heavy door in the east wall, left ajar, green lantern light spilling through. Walk through into the Mystical Market.</li>
+        <li><b>This proposal builds</b> the door, the lane beyond with four empty stall booths (Spellmonger, Smith, Alchemist, Curiosity Dealer), the crew purse, and a place in the save for purchases.</li>
+        <li><b>It doesn't build</b> the wares, prices, mark-up or "stays bought" rules. Those are issues #26–#29 and plug into this.</li>
+      </ul>
+      <p class="reuse">Room in the Lair scene or its own scene: decision D6.</p>
+    </article>
+    <article class="st" data-st="7" id="st-7" tabindex="-1">
+      <div class="top"><span class="n">7</span><div><h3>The Ledger</h3><div class="verb">see the debt · count the house</div></div></div>
+      <ul>
+        <li>An open book: the debt in red ink, the crew's purse, and one line per past raid (era, seed, appraised worth of the haul, players saved).</li>
+        <li>A second page lists every item in the Lair, kept or unsorted, with its worth.</li>
+        <li>The +50 for setting out is written in the moment the crew commits. Beside it, the benefactor's strongbox, where debt payments go.</li>
       </ul>
     </article>
+    <article class="st" data-st="8" id="st-8" tabindex="-1">
+      <div class="top"><span class="n">8</span><div><h3>The Practice Circle</h3><div class="verb">set the words on your tongue</div></div></div>
+      <ul>
+        <li>A chalk ring with targets: a pot for Frango, a candle for Ignis, a crate for Levo, a straw dummy for Somnus and Tonitrus. They reset after breaking.</li>
+        <li>A readout shows the word heard, the recogniser's confidence, how loud you were, and whether it would have misfired.</li>
+        <li>Also the voice test bench the roadmap asks for in milestone M1.</li>
+      </ul>
+      <p class="reuse">Real spell system, no alarm. A badly aimed Frango still breaks whatever it hits, Hoard included.</p>
+    </article>
   </div>
+  <p class="warn"><b>Everything in the Lair is saved where it lies.</b> Quit with a chalice on the hearthstone and it's on the hearthstone next time. Nothing vanishes and nothing is sold unless someone rings the bell.</p>
 </section>
 
 <section>
@@ -505,17 +674,17 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
         </defs>
         <rect x="20" y="40" width="230" height="150" fill="#1E1A14" stroke="#7A6AA0"/>
         <text x="40" y="72" font-size="15" fill="#DCD2BA" font-weight="600">LairScene</text>
-        <g font-size="11" fill="#9A9078"><text x="40" y="98">hearth · ledger · portals</text><text x="40" y="118">rack · practice · trophies</text><text x="40" y="146" fill="#635C4C">phase: InLair</text><text x="40" y="166" fill="#635C4C">nobody can die here</text></g>
+        <g font-size="11" fill="#9A9078"><text x="40" y="98">hearth · portals · hatch</text><text x="40" y="118">hoard · rack · market door</text><text x="40" y="146" fill="#635C4C">phase: InLair</text><text x="40" y="166" fill="#635C4C">nobody can die here</text></g>
         <rect x="550" y="40" width="230" height="150" fill="#1E1A14" stroke="#C4542E"/>
         <text x="570" y="72" font-size="15" fill="#DCD2BA" font-weight="600">RaidScene</text>
         <g font-size="11" fill="#9A9078"><text x="570" y="98">castle from one seed</text><text x="570" y="118">loot · guards · alarm</text><text x="570" y="146" fill="#635C4C">phase: Generating →</text><text x="570" y="166" fill="#635C4C">Raiding → Extracting</text></g>
         <path d="M252 78 H546" stroke="#5FA288" stroke-width="2" marker-end="url(#ah)"/>
         <text x="400" y="68" font-size="11" fill="#5FA288" text-anchor="middle">all in the ring → 3 s</text><text x="400" y="98" font-size="11" fill="#5FA288" text-anchor="middle">debt +50 → StartRaid(era)</text>
         <path d="M548 152 H254" stroke="#C9A227" stroke-width="2" marker-end="url(#ah2)"/>
-        <text x="400" y="142" font-size="11" fill="#C9A227" text-anchor="middle">extraction resolves</text><text x="400" y="172" font-size="11" fill="#C9A227" text-anchor="middle">worth banked → back to Lair</text>
+        <text x="400" y="142" font-size="11" fill="#C9A227" text-anchor="middle">extraction records the haul</text><text x="400" y="172" font-size="11" fill="#C9A227" text-anchor="middle">it spills out in the Lair</text>
         <rect x="20" y="222" width="760" height="56" fill="#14120E" stroke="#5FA288" stroke-dasharray="6 4"/>
         <text x="40" y="244" font-size="10" fill="#5FA288" letter-spacing="2">PERSISTS ACROSS BOTH SCENES</text>
-        <text x="40" y="266" font-size="12" fill="#DCD2BA">NetworkManager  ·  LairHubManager (debt, gold, save file)  ·  SessionFlow (does the switching)</text>
+        <text x="40" y="266" font-size="12" fill="#DCD2BA">NetworkManager  ·  LairHubManager (debt, purse, the haul, save file)  ·  SessionFlow</text>
       </svg>
     </div>
     <figcaption>You can still press Play on RaidScene alone in the editor. It keeps its own Lair object for that; arriving from the Lair, the raid scene's copy is discarded by the existing singleton rule and the real one carries on.</figcaption>
@@ -551,52 +720,64 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
     <table>
       <thead><tr><th>File</th><th></th><th>What changes</th></tr></thead>
       <tbody>
-        <tr><td><code>Lair/LairHubManager.cs</code></td><td><span class="tag edit">edit</span></td><td>Becomes a persistent singleton, saves to JSON, raises <code>DepartureRequested</code></td></tr>
-        <tr><td><code>Lair/LairState.cs</code></td><td><span class="tag edit">edit</span></td><td>Adds unlocked eras, rack contents, trophies, raid log</td></tr>
-        <tr><td><code>Lair/LairSaveFile.cs</code></td><td><span class="tag new">new</span></td><td>JSON at <code>persistentDataPath/lair.json</code>; carries over the three existing PlayerPrefs values once so nobody's debt resets</td></tr>
+        <tr><td><code>Extraction/ExtractionZone.cs</code></td><td><span class="tag edit">edit</span></td><td>Adds <code>BuildManifest</code>: the unbroken items in the zone and each one's worth, instead of only a sum</td></tr>
+        <tr><td><code>Raid/RaidDirector.cs</code></td><td><span class="tag edit">edit</span></td><td>Hands the manifest to the Lair instead of banking worth; finds the lair singleton when a raid starts</td></tr>
+        <tr><td><code>Lair/LairHubManager.cs</code></td><td><span class="tag edit">edit</span></td><td>Persistent singleton, JSON save, <code>DepartureRequested</code>, <code>AddArrivals</code>, <code>Sell</code>, the purse</td></tr>
+        <tr><td><code>Lair/HaulEntry.cs</code></td><td><span class="tag new">new</span></td><td>One item that came home: catalogue id and worth</td></tr>
+        <tr><td><code>Loot/LootCatalogue.cs</code></td><td><span class="tag new">new</span></td><td>A stable id for every loot asset, so the save can name an item and the Lair can spawn it again</td></tr>
+        <tr><td><code>Lair/LairItemSpawner.cs</code></td><td><span class="tag new">new</span></td><td>Host spawns saved items where they lay, and new arrivals in the spill, as ordinary networked loot</td></tr>
+        <tr><td><code>Lair/LairState.cs</code></td><td><span class="tag edit">edit</span></td><td>Adds purse, unlocked eras, every Lair item, raid log</td></tr>
+        <tr><td><code>Lair/LairSaveFile.cs</code></td><td><span class="tag new">new</span></td><td>JSON at <code>persistentDataPath/lair.json</code>, including each item's position and slot and a section reserved for market purchases; carries over the existing PlayerPrefs values once</td></tr>
         <tr><td><code>Lair/LairNetworkState.cs</code></td><td><span class="tag new">new</span></td><td>Host's save is the truth; replicated to clients, who never write their own while connected</td></tr>
         <tr><td><code>Lair/DepartureReadyCheck.cs</code></td><td><span class="tag new">new</span></td><td>Plain logic: who is in the ring, the countdown, cancelling</td></tr>
-        <tr><td><code>Lair/Stations/*.cs</code></td><td><span class="tag new">new</span></td><td>Hearth, LedgerLectern, DeparturePortal, ArmouryRack, PracticeCircle, TrophyShelf</td></tr>
+        <tr><td><code>Lair/Stations/*.cs</code></td><td><span class="tag new">new</span></td><td>Hearth, DeparturePortal, BuyersHatch, Hoard, ArmouryRack, MarketDoor, LedgerLectern, PracticeCircle</td></tr>
         <tr><td><code>Session/SessionFlow.cs</code> + asmdef</td><td><span class="tag new">new</span></td><td>Loads RaidScene on departure, LairScene on return</td></tr>
-        <tr><td><code>Raid/RaidDirector.cs</code></td><td><span class="tag edit">edit</span></td><td>Finds the lair singleton when a raid starts</td></tr>
         <tr><td><code>Raid/RaidBootstrapper.cs</code></td><td><span class="tag edit">edit</span></td><td>Auto-starts only when there is no SessionFlow (standalone playtesting)</td></tr>
         <tr><td><code>Editor/LairSceneBuilder.cs</code></td><td><span class="tag new">new</span></td><td><i>Tools ▸ Plunderspell ▸ Build Lair Scene</i>, built from code like the raid scene</td></tr>
         <tr><td><code>EditorBuildSettings.asset</code></td><td><span class="tag edit">edit</span></td><td>LairScene first, then RaidScene</td></tr>
-        <tr><td><code>Tools/AssetPipeline/</code></td><td><span class="tag edit">edit</span></td><td>Eleven lair kit pieces, previews and contact sheet, all committed</td></tr>
+        <tr><td><code>Tools/AssetPipeline/</code></td><td><span class="tag edit">edit</span></td><td>Fourteen lair kit pieces, previews and contact sheet, all committed</td></tr>
         <tr><td><code>docs/systems/lair.md</code>, <code>raid.md</code>, <code>README.md</code></td><td><span class="tag edit">docs</span></td><td>How the Lair works; the loop now spans two scenes; Play starts in the Lair</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="dim" style="font-size:.95rem"><b style="color:var(--vellum)">Tests.</b> Save round-trip and one-time migration; the ready check (departs only with everyone in, cancels when someone leaves, a disconnect mid-countdown doesn't strand the rest); trophy choice and the twelve cap; era lock rules. The same debt-up, debt-down assertions the full-raid test makes today, now across two scenes.</p>
+  <p class="dim" style="font-size:.95rem"><b style="color:var(--vellum)">Tests.</b> The manifest holds exactly the unbroken items in the zone, and conjured gold keeps its rolled worth. Extraction leaves the debt and purse alone; only selling moves money, split per D5; a broken item sells for nothing. The save round-trips every item's id, worth, position and slot, and migrates PlayerPrefs once. The ready check departs only with everyone in and survives a disconnect. Lair → Raid → Lair keeps one Lair object, and selling the haul lowers the debt.</p>
+  <p class="warn"><b>This changes tested behaviour on purpose.</b> Two existing tests (<code>RaidLoopTests</code>, <code>FullRaidIntegrationTests</code>) assert that extraction pays down the debt. Under this proposal it doesn't, so those checks move from "after extraction" to "after selling at the Hatch". They're rewritten to the new rule, not deleted or skipped.</p>
 </section>
 
 <section>
   <div class="head">
     <div class="eyebrow">Your verdict · phases</div>
     <h2>Approve any prefix</h2>
-    <p class="dim">A alone gives you a real Lair to walk around in and leave from. B makes it the bible's Lair. C makes it look like one.</p>
+    <p class="dim">A gives you a Lair to walk around in, but on its own it still sells the haul automatically, as today. B is what your review asked for. C completes the stations. D makes it look right.</p>
   </div>
   <div class="phases">
     <div class="ph" data-phase="A">
       <div class="lbl">Phase A</div>
       <h3>The room and the loop</h3>
       <ul><li>Grey-box Lair scene from the builder</li><li>Hearth spawns, ledger, portals with ready ring</li><li>Scene switching both ways</li><li>JSON save and migration</li><li>One host-owned debt in co-op</li></ul>
-      <div style="display:grid;gap:10px"><span class="size">The bulk: about 10 files plus tests</span>
+      <div style="display:grid;gap:10px"><span class="size">About 10 files plus tests</span>
       <div class="seg" data-group="phase-A"><button type="button" class="yes" data-value="approve" aria-pressed="false">Approve</button><button type="button" class="no" data-value="reject" aria-pressed="false">Reject</button></div></div>
     </div>
     <div class="ph" data-phase="B">
       <div class="lbl">Phase B</div>
-      <h3>The stations</h3>
-      <ul><li>Armoury rack</li><li>Practice circle with the voice readout</li><li>Trophy shelf</li></ul>
-      <div style="display:grid;gap:10px"><span class="size">About 4 files plus tests</span>
+      <h3>The haul comes home</h3>
+      <ul><li>Extraction records the haul instead of selling it</li><li>Arrival spill in front of the portal</li><li>Buyer's Hatch and the crew purse</li><li>The Hoard; every item saved where it lies</li><li>Market door and empty market lane</li><li>Two existing debt tests rewritten</li></ul>
+      <div style="display:grid;gap:10px"><span class="size">About 8 files plus tests</span>
       <div class="seg" data-group="phase-B"><button type="button" class="yes" data-value="approve" aria-pressed="false">Approve</button><button type="button" class="no" data-value="reject" aria-pressed="false">Reject</button></div></div>
     </div>
     <div class="ph" data-phase="C">
       <div class="lbl">Phase C</div>
+      <h3>The other stations</h3>
+      <ul><li>Armoury rack</li><li>Practice circle with the voice readout</li></ul>
+      <div style="display:grid;gap:10px"><span class="size">About 3 files plus tests</span>
+      <div class="seg" data-group="phase-C"><button type="button" class="yes" data-value="approve" aria-pressed="false">Approve</button><button type="button" class="no" data-value="reject" aria-pressed="false">Reject</button></div></div>
+    </div>
+    <div class="ph" data-phase="D">
+      <div class="lbl">Phase D</div>
       <h3>The art pass</h3>
       <ul><li>Lair kit through the Blender pipeline</li><li>Lighting to the moodboard</li><li>Previews committed</li></ul>
       <div style="display:grid;gap:10px"><span class="size">Pipeline specs, then swap into the builder</span>
-      <div class="seg" data-group="phase-C"><button type="button" class="yes" data-value="approve" aria-pressed="false">Approve</button><button type="button" class="no" data-value="reject" aria-pressed="false">Reject</button></div></div>
+      <div class="seg" data-group="phase-D"><button type="button" class="yes" data-value="approve" aria-pressed="false">Approve</button><button type="button" class="no" data-value="reject" aria-pressed="false">Reject</button></div></div>
     </div>
   </div>
 </section>
@@ -635,12 +816,27 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
         <button type="button" class="pick" data-value="All eight existing weapons" aria-pressed="false">All eight existing weapons</button>
       </div>
     </div>
+    <div class="dec">
+      <div class="q"><span class="id">D5</span><h3>When an item is sold, where does the coin go?</h3><p class="why">The market's rule is that you spend "what's left after the debt". Taken literally, the market stays shut until the whole debt is gone, which is most of the game. The split keeps both the rule and a reason to visit the market.</p></div>
+      <div class="seg" data-group="D5">
+        <button type="button" class="pick" data-value="Half to the debt, half to the purse (tunable)" aria-pressed="true">Half to the debt, half to the purse<span class="rec">recommended · the half is tunable</span></button>
+        <button type="button" class="pick" data-value="All of it pays the debt until the debt is zero" aria-pressed="false">All of it pays the debt until it's zero</button>
+        <button type="button" class="pick" data-value="All to the purse; paying the debt is its own act at the strongbox" aria-pressed="false">All to the purse; pay the debt at the strongbox yourselves</button>
+      </div>
+    </div>
+    <div class="dec">
+      <div class="q"><span class="id">D6</span><h3>Where is the Mystical Market?</h3><p class="why">As a room behind the door, there's no loading screen and bought things can be carried straight to the Hoard. Issue #27 allows either.</p></div>
+      <div class="seg" data-group="D6">
+        <button type="button" class="pick" data-value="A second room of the Lair scene, through the east door" aria-pressed="true">A room of the Lair scene, through the door<span class="rec">recommended</span></button>
+        <button type="button" class="pick" data-value="Its own scene, loaded when you go through the door" aria-pressed="false">Its own scene, loaded at the door</button>
+      </div>
+    </div>
   </div>
 
   <div class="verdict">
     <h3>Send me your verdict</h3>
     <label for="notes" class="dim" style="font-size:.92rem">Anything to change? (optional)</label>
-    <textarea id="notes" placeholder="e.g. make the room bigger, drop the trophy shelf, portals on the east wall…"></textarea>
+    <textarea id="notes" placeholder="e.g. make the Hoard bigger, put the Hatch inside the market, portals on the east wall…"></textarea>
     <pre class="out" id="out" aria-live="polite"></pre>
     <div class="copyrow"><button type="button" class="copy" id="copy">Copy verdict</button><span class="status" id="status"></span></div>
     <p class="dim" style="font-size:.88rem">Paste it into the chat and I'll start on what you approved. Your choices stay in this browser only.</p>
@@ -659,24 +855,27 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
   <div class="rejected">
     <div><b>The Lair as a menu screen</b>Cheaper, but it breaks the "nothing is a menu" pillar and loses the one safe frame.</div>
     <div><b>A room inside RaidScene</b>No scene loading needed, but you asked for a separate scene, and the hub would share a scene with guards, alarm and loot.</div>
-    <div><b>Carrying loot to the strongbox to pay</b>On theme, but it moves the economy off the tested tally and into physics. Worth another look after Phase B.</div>
+    <div><b>Selling the haul at extraction</b>Today's behaviour, and revision 1. Rejected in review: the crew decides what's sold and what's kept.</div>
+    <div><b>Selling inside the market's stalls</b>It would take the haul out of the Lair before anyone decided. The Hatch belongs to the market but sits in the Lair wall.</div>
+    <div><b>An automatic trophy shelf</b>Revision 1 picked the best item for you. The Hoard lets the crew choose.</div>
   </div>
 </section>
 
-<footer>docs/plans/lair-scene.html · companion to docs/plans/lair-scene.md · Plunderspell · Unity 6000.3.15f1 · PurrNet</footer>
+<footer>docs/plans/lair-scene.html · revision 2 · companion to docs/plans/lair-scene.md · Plunderspell · Unity 6000.3.15f1 · PurrNet</footer>
 </div>
 
 <script>
 (function(){
-  var KEY = 'lair-proposal-verdict-v1';
-  var state = { 'phase-A':null, 'phase-B':null, 'phase-C':null,
+  var KEY = 'lair-proposal-verdict-v2';
+  var state = { 'phase-A':null, 'phase-B':null, 'phase-C':null, 'phase-D':null,
     D1:"The host's, shared by the crew", D2:'High Medieval only until the generator varies by era',
-    D3:'Wakes on the pallet, debt +25', D4:'Longsword and Round Shield only', notes:'' };
+    D3:'Wakes on the pallet, debt +25', D4:'Longsword and Round Shield only',
+    D5:'Half to the debt, half to the purse (tunable)', D6:'A second room of the Lair scene, through the east door', notes:'' };
   try { var saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved) for (var k in saved) if (k in state) state[k] = saved[k]; } catch(e) {}
 
   function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
 
-  var labels = { D1:'D1 Whose debt', D2:'D2 Open Ages', D3:'D3 Left behind', D4:'D4 Starting rack' };
+  var labels = { D1:'D1 Whose debt', D2:'D2 Open Ages', D3:'D3 Left behind', D4:'D4 Starting rack', D5:'D5 Sale money', D6:'D6 Market placement' };
   function word(v){ return v === 'approve' ? 'APPROVED' : v === 'reject' ? 'REJECTED' : 'no verdict yet'; }
 
   function render(){
@@ -686,15 +885,16 @@ footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); b
         b.setAttribute('aria-pressed', String(state[g] === b.getAttribute('data-value')));
       });
     });
-    ['A','B','C'].forEach(function(p){
+    ['A','B','C','D'].forEach(function(p){
       var el = document.querySelector('.ph[data-phase="'+p+'"]');
       if (state['phase-'+p]) el.setAttribute('data-v', state['phase-'+p]); else el.removeAttribute('data-v');
     });
-    var lines = ['Lair scene proposal: verdict', '',
+    var lines = ['Lair scene proposal (revision 2): verdict', '',
       'Phase A (room and loop): ' + word(state['phase-A']),
-      'Phase B (stations): ' + word(state['phase-B']),
-      'Phase C (art pass): ' + word(state['phase-C']), ''];
-    ['D1','D2','D3','D4'].forEach(function(d){ lines.push(labels[d] + ': ' + state[d]); });
+      'Phase B (haul comes home, hatch, hoard, market door): ' + word(state['phase-B']),
+      'Phase C (rack, practice circle): ' + word(state['phase-C']),
+      'Phase D (art pass): ' + word(state['phase-D']), ''];
+    ['D1','D2','D3','D4','D5','D6'].forEach(function(d){ lines.push(labels[d] + ': ' + state[d]); });
     if (state.notes.trim()) { lines.push('', 'Changes: ' + state.notes.trim()); }
     document.getElementById('out').textContent = lines.join('\n');
   }
