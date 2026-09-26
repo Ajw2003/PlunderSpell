@@ -55,7 +55,7 @@ made, or a raid that silently spawns nothing in a zone.
 
 ## Related
 - [Net](net.md)
-- [Scale](../../4-systems/scale.md) *(no plain copy yet)*
+- [Scale](scale.md)
 - [Raid](raid.md)
 
 ## Left out

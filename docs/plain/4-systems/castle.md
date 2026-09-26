@@ -42,7 +42,7 @@ the exit.
 ## Related
 - [Raid](raid.md)
 - [Alarm and Acoustics](alarm.md)
-- [Scale](../../4-systems/scale.md) *(no plain copy yet)*
+- [Scale](scale.md)
 
 ## Left out
 Exact sizes and counts, file and class names, the loot-anchor and stair rules, and the automated
