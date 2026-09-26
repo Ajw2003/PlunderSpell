@@ -78,6 +78,10 @@ public class Item : MonoBehaviour
              "is easier than lifting: a heavy thing still follows you, only slower.")]
     [SerializeField] private float _haulStrength = 250f;
 
+    [Tooltip("The most force (N) a rope can tow a piece too heavy to lift with. It gets no lift, so " +
+             "the floor's friction (about 0.6 x its weight) holds it back.")]
+    [SerializeField] private float _towStrength = 160f;
+
     [Tooltip("Angular damping while held and not being turned, so it hangs and settles, not spins.")]
     [SerializeField] private float _heldAngularDamping = 3f;
 
@@ -144,6 +148,103 @@ public class Item : MonoBehaviour
     /// <summary>True when the item is too heavy to lift and is dragged instead.</summary>
     public bool IsTooHeavyToLift => Load > 1f;
 
+    /// <summary>
+    /// How fast the holder may walk, as a fraction of their normal pace, while towing this: 1 for
+    /// anything they can lift, about 6 / mass for a piece too heavy to (0.5 at 12 kg, 0.4 at 15 kg),
+    /// never under 0.3. A rope does not stretch: while the piece lags past the rope's length the
+    /// holder is held back further, down to a fifth of that pace at a metre of strain.
+    /// </summary>
+    public float TowSpeedMultiplier
+    {
+        get
+        {
+            if (!IsTooHeavyToLift)
+                return 1f;
+            float pace = Mathf.Clamp(k_towPaceKg / Mass, 0.3f, 0.6f);
+            float heldBack = Mathf.Clamp(1f - (TowStrain - 0.2f) / 0.8f, 0.2f, 1f);
+            return pace * heldBack;
+        }
+    }
+
+    /// <summary>How far past the rope's length the towed piece is lagging, in metres (0 when slack).
+    /// Past <see cref="k_ropeBreaksAt"/> the piece is caught on something and the holder lets go.</summary>
+    public float TowStrain { get; private set; }
+
+    /// <summary>Strain (m) at which a towed piece is let go: it is stuck, and the holder is not.</summary>
+    public const float k_ropeBreaksAt = 2f;
+
+    private const float k_towPaceKg = 6f;
+
+    // The rope a piece too heavy to lift is towed on (#144 follow-up): who is towing, how fast
+    // they walk, and how long the rope is. Updated every frame by ItemManager.
+    private Vector3 _towFeet;
+    private Vector3 _towVelocity;
+    private float _towRope;
+    private float _towStampedAt = float.NegativeInfinity;
+    private float _grabHeight;
+
+    /// <summary>How much faster than the holder a towed piece may close a stretched rope, per metre of
+    /// stretch (1/s).</summary>
+    private const float k_ropeCatchUp = 1.5f;
+
+    /// <summary>Tows this piece behind a holder standing at <paramref name="holderFeet"/> and moving at
+    /// <paramref name="holderVelocity"/>, on a rope <paramref name="rope"/> metres long. Call every
+    /// frame while towing; it lapses after 0.1 s without a call.</summary>
+    public void SetTow(Vector3 holderFeet, Vector3 holderVelocity, float rope)
+    {
+        _towFeet = holderFeet;
+        _towVelocity = holderVelocity;
+        _towRope = rope;
+        _towStampedAt = Time.time;
+        // The beam is drawn through the target; a towed piece has none, so aim it at the piece.
+        _targetPosition = HeldPointWorld;
+    }
+
+    /// <summary>
+    /// The velocity a towed piece is driven toward: nothing while the rope is slack (friction stops
+    /// it), and once taut, the holder's pace along the rope plus a gentle catch-up for any stretch.
+    /// It is never yanked faster than that, so it plods behind instead of lurching. Horizontal only.
+    /// </summary>
+    public static Vector3 TowVelocity(Vector3 holderFeet, Vector3 piece, Vector3 holderVelocity, float rope)
+    {
+        Vector3 toHolder = holderFeet - piece;
+        toHolder.y = 0f;
+        float distance = toHolder.magnitude;
+        if (distance <= rope || distance < 1e-4f)
+            return Vector3.zero;
+        Vector3 along = toHolder / distance;
+        float holderPace = Mathf.Max(0f, Vector3.Dot(new Vector3(holderVelocity.x, 0f, holderVelocity.z), along));
+        return along * (holderPace + (distance - rope) * k_ropeCatchUp);
+    }
+
+    /// <summary>One physics step of towing. The grip still bears what weight it can (up to the lift
+    /// limit), holding its height, so a tall piece held by its top stays upright and slides rather
+    /// than toppling; without it an altarpiece fell on its face and stuck. The haul is a horizontal
+    /// force at the centre of mass, capped at the rope's strength, toward <see cref="TowVelocity"/>,
+    /// so the piece never outpaces the holder.</summary>
+    private void Tow()
+    {
+        Vector3 held = HeldPointWorld;
+        float damping = 2f * Mathf.Sqrt(_springRate) * _dampingRatio;
+        float upAccel = (_grabHeight - held.y) * _springRate - _rb.GetPointVelocity(held).y * damping;
+        float up = Mathf.Clamp((upAccel - Physics.gravity.y) * _rb.mass, 0f, _gripStrength);
+        _rb.AddForceAtPosition(Vector3.up * up, held, ForceMode.Force);
+
+        Vector3 centre = _rb.worldCenterOfMass;
+        Vector3 fromHolder = centre - _towFeet;
+        fromHolder.y = 0f;
+        TowStrain = Mathf.Max(0f, fromHolder.magnitude - _towRope);
+        Vector3 wanted = TowVelocity(_towFeet, centre, _towVelocity, _towRope);
+        Vector3 velocity = _rb.linearVelocity;
+        velocity.y = 0f;
+        Vector3 force = (wanted - velocity) * (_rb.mass / 0.05f);
+        force.y = 0f;
+        // Only ever pulled toward the holder: with the rope slack, friction does the stopping.
+        if (wanted == Vector3.zero)
+            return;
+        _rb.AddForce(Vector3.ClampMagnitude(force, _towStrength), ForceMode.Force);
+    }
+
     /// <summary>Where the beam is pulling the held point to, extrapolated to now.</summary>
     public Vector3 TargetPosition => _targetPosition;
 
@@ -160,30 +261,43 @@ public class Item : MonoBehaviour
         // separate limits: past about 10 kg the up part cannot hold the weight, and the item drags
         // on the floor while the sideways part still hauls it.
         float dt = Time.fixedDeltaTime;
+
+        if (IsTooHeavyToLift && !_isRotating && Time.time - _towStampedAt <= 0.1f)
+        {
+            Tow();
+            return;
+        }
+
         // A target nobody has updated for a while is standing still, whatever it was doing.
         float age = Time.time - _targetStampedAt;
         Vector3 targetVelocity = age > 0.1f ? Vector3.zero : _targetVelocity;
         Vector3 target = _targetPosition + targetVelocity * Mathf.Clamp(age, 0f, 0.05f);
         Vector3 held = HeldPointWorld;
-        Vector3 heldVelocity = _rb.GetPointVelocity(held);
+        bool towed = IsTooHeavyToLift && !_isRotating;
+
+        // While its orientation is held, the pull acts at the centre of mass, moved so the held
+        // point lands on the target: pulled at an off-centre point instead, a light item was
+        // twisted by the spring and twisted back by the orientation hold every step, and shook
+        // (17 degrees a step at 0.5 kg). A towed piece is pulled by the point it was grabbed
+        // at, so it tips and swings as it scrapes along.
+        Vector3 pulled = towed ? held : _rb.worldCenterOfMass;
+        Vector3 pulledTarget = target + (pulled - held);
+        Vector3 pulledVelocity = _rb.GetPointVelocity(pulled);
 
         float damping = 2f * Mathf.Sqrt(_springRate) * _dampingRatio;
-        Vector3 accel = (target - held) * _springRate + (targetVelocity - heldVelocity) * damping;
+        Vector3 accel = (pulledTarget - pulled) * _springRate + (targetVelocity - pulledVelocity) * damping;
         Vector3 force = (accel - Physics.gravity) * _rb.mass;
 
-        var sideways = Vector3.ClampMagnitude(new Vector3(force.x, 0f, force.z), _haulStrength);
-        float up = Mathf.Clamp(force.y, -_gripStrength, _gripStrength);
-        _rb.AddForceAtPosition(sideways + Vector3.up * up, held, ForceMode.Force);
+        // A towed piece gets no lift at all, so the floor's full friction holds it back, and a
+        // weaker pull, so it is slow to get going: it should feel like a weight on a rope.
+        var sideways = Vector3.ClampMagnitude(new Vector3(force.x, 0f, force.z), towed ? _towStrength : _haulStrength);
+        float up = towed ? 0f : Mathf.Clamp(force.y, -_gripStrength, _gripStrength);
+        _rb.AddForceAtPosition(sideways + Vector3.up * up, pulled, ForceMode.Force);
 
-        // Turned on purpose, or kept as it was picked up and turned with the holder. Something too
-        // heavy to lift is only dragged, and tips and slides as it will.
-        Quaternion wanted;
-        if (_isRotating)
-            wanted = _targetRotation;
-        else if (!IsTooHeavyToLift)
-            wanted = Quaternion.Euler(0f, _viewYaw, 0f) * _rotationInView;
-        else
+        // Turned on purpose, or kept as it was picked up and turned with the holder.
+        if (towed)
             return;
+        Quaternion wanted = _isRotating ? _targetRotation : Quaternion.Euler(0f, _viewYaw, 0f) * _rotationInView;
 
         Quaternion delta = wanted * Quaternion.Inverse(_rb.rotation);
         delta.ToAngleAxis(out float angle, out Vector3 axis);
@@ -270,6 +384,7 @@ public class Item : MonoBehaviour
         _angularDampingWhenFree = _rb.angularDamping;
         _rb.angularDamping = _heldAngularDamping;
         _gripOffset = Quaternion.Inverse(_rb.rotation) * (grabPoint - _rb.position);
+        _grabHeight = grabPoint.y;
         // Hold it where it is until the hand says otherwise.
         _hasTargetVelocity = false;
         UpdateTargetPosition(grabPoint);
@@ -282,6 +397,7 @@ public class Item : MonoBehaviour
 
     public void StopDragging()
     {
+        TowStrain = 0f;
         HoldInHand(false);
         _isDragging = false;
         _releasedAt = Time.time;

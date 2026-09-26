@@ -65,8 +65,12 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
 - **It keeps its orientation** (2026-09-26, replacing the free hang). A held item keeps the
   rotation it had when picked up, relative to where the holder faces, and turns with them
   (`Item.SetViewYaw`, fed by `ItemManager` every frame). Hanging freely from an off-centre grab was
-  floppy. A rotation spring does it, limited by mass, so heavy things turn slowly. Pieces too heavy
-  to lift are not held upright: they tip and slide as they are dragged.
+  floppy. A rotation spring does it, limited by mass, so heavy things turn slowly. While the
+  orientation is held, the beam's pull acts at the centre of mass (moved so the held point lands on
+  the target), not at the held point: pulled off-centre, a light item was twisted by the spring and
+  twisted back by the hold every step, and shook, 17 degrees a step at 0.5 kg. It now settles to
+  nothing (`CarryFeelTests.Test_AHeldItemSettlesInsteadOfShaking`, cubes and the real hippo, goblet,
+  nautilus cup and hat badge).
 - **Lift or drag.** Upward force is capped at `_gripStrength` (100 N) and sideways force at
   `_haulStrength` (250 N). Holding up an item takes `mass × 9.81` of the upward budget: under about
   10 kg it lifts, and heavier items (tapestry, cabinet, cauldron, parade armour, altarpiece, chest)
@@ -76,8 +80,8 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   and the spring follows it, so heavy things trail and swing when you turn. Measured
   (`CarryFeelTests`), turning round at full walking speed: a 2 kg item trails about 0.35 m and an
   8 kg one about 1 m, with no single-frame jump over 5 cm.
-- **Carrying never slows you.** `CarrySpeedMultiplier` is gone. The only cost of weight is lag,
-  swing and drag.
+- **Carrying what you can lift never slows you.** Its weight shows as lag and swing. Towing a
+  piece too heavy to lift does slow you: see below.
 - **Turning it on purpose.** Hold middle mouse: `Item.SetRotating(true)` locks its current
   rotation as a target, the mouse turns it, and letting go keeps the new orientation.
 - **Weapons sit in the hand, not on the beam** (2026-09-26). Anything with a `RangedWeapon` or
@@ -89,13 +93,26 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   the body is kinematic and its colliders are triggers on the Ignore Raycast layer. On the beam a
   crossbow hung on the crosshair line more than 0.8 m out, and its own bolt hit it. No beam is
   drawn for a weapon. Capture: `docs/generated/held-weapons-2026-09-26/crossbow-in-hand.png`.
-- **Two-person pieces are towed behind you** (2026-09-26, the owner's call). Anything too heavy to
-  lift (`LootItem.RequiresDualCarry` pieces are 12-15 kg) is not pulled toward the crosshair. It is
-  towed on a rope 1.5-3 m long, from wherever the holder's body is, so you walk forward and it
-  scrapes along behind (`ItemManager.TowTarget`). A slack rope pulls nothing and brakes the piece;
-  without that it coasted on past the holder. Measured with the real prefabs
-  (`CarryFeelTests.Test_OnePlayerCanDragEveryTwoPersonPieceBehindThem`): walking away at 1.5 m/s
-  for 3 s, each of the five moves 4.7-5.6 m and ends up trailing behind.
+- **Two-person pieces are towed behind you, slowly** (2026-09-26, the owner's call). Anything too
+  heavy to lift (`LootItem.RequiresDualCarry` pieces are 12-15 kg) is not pulled toward the
+  crosshair. It is towed on a rope as long as the reach it was grabbed at (1.5-3 m), from wherever
+  the holder's body is, so you walk forward and it scrapes along behind (`Item.SetTow`, fed by
+  `ItemManager`):
+  - **You walk slower.** `Item.TowSpeedMultiplier` is about 6 / mass of your walking pace (0.5 at
+    12 kg, 0.4 at 15 kg), and a rope does not stretch: while the piece lags past the rope's length
+    you are held back further, down to a fifth of that at a metre of strain. `PlayerWalkState`
+    applies it. Past 2 m of strain the piece is stuck on something and you let go.
+  - **It plods.** Once the rope is taut the piece is driven toward your own pace along the rope,
+    plus a gentle catch-up for any strain (`Item.TowVelocity`), with at most 160 N
+    (`_towStrength`), at its centre of mass. A slack rope pulls nothing and friction stops it. The
+    grip still bears what weight it can (up to the 100 N lift limit) at the height it was grabbed,
+    so a tall piece held by its top stays upright and slides instead of falling on its face.
+  - Earlier versions, both measured: a spring toward a point behind you let pieces lurch to
+    4-6 m/s behind a player walking 2-2.5 m/s, and towing with no lift toppled the altarpiece,
+    which then stuck. Measured now with the real prefabs
+    (`CarryFeelTests.Test_OnePlayerCanDragEveryTwoPersonPieceBehindThem`): each of the five trails
+    3.1-4.2 m behind on a 3 m rope, at a top ground speed of 2.1-2.7 m/s behind a holder slowed
+    to 2.0-2.5 m/s.
 - **The beam.** `GrabBeam` is a `LineRenderer` drawn as a quadratic curve. It starts at the hand
   (low right of the view, `ItemManager.BeamHand`) and ends at the held point, bent through the
   aim target. When the item keeps up the line is straight; when it lags or sags the line bends.

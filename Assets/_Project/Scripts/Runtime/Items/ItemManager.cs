@@ -187,15 +187,12 @@ public class ItemManager : SingletonBase<ItemManager>
         // go, while it scrapes along behind.
         if (_draggedItem.IsTooHeavyToLift)
         {
-            Vector3 feet = _mainCamera.transform.root.position;
-            Vector3 held = _draggedItem.GripWorldPosition;
-            Vector3 tow = TowTarget(feet, held, _towRope);
-            // A slack rope pulls nothing, and brakes the piece: without that it coasted on past the
-            // holder.
-            if (tow == held)
-                _draggedItem.UpdateTarget(held, Vector3.zero);
-            else
-                _draggedItem.UpdateTargetPosition(tow);
+            Transform body = _mainCamera.transform.root;
+            Vector3 velocity = body.TryGetComponent(out Rigidbody bodyRb) ? bodyRb.linearVelocity : Vector3.zero;
+            _draggedItem.SetTow(body.position, velocity, _towRope);
+            // Caught on a doorway or a corner and the rope strained past breaking: let it go.
+            if (_draggedItem.TowStrain > Item.k_ropeBreaksAt)
+                StopDragging();
             return;
         }
 
@@ -209,21 +206,6 @@ public class ItemManager : SingletonBase<ItemManager>
     // Length of the tow rope for a piece too heavy to lift, set at pickup from how far away it was.
     private float _towRope = 2f;
 
-    /// <summary>
-    /// Where a towed piece is pulled to: nowhere while it is within <paramref name="rope"/> of the
-    /// holder (measured across the floor), else to the rope's length from them, at its own height.
-    /// </summary>
-    public static Vector3 TowTarget(Vector3 holderFeet, Vector3 heldPoint, float rope)
-    {
-        Vector3 away = heldPoint - holderFeet;
-        away.y = 0f;
-        float distance = away.magnitude;
-        if (distance <= rope || distance < 1e-4f)
-            return heldPoint;
-        Vector3 target = holderFeet + away / distance * rope;
-        target.y = heldPoint.y;
-        return target;
-    }
 
     /// <summary>
     /// Straight out through the crosshair. The mouse pointer is locked there in play anyway; aiming

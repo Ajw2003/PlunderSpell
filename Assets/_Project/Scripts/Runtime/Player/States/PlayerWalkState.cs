@@ -20,9 +20,11 @@ public class PlayerWalkState : PlayerState
         // Preserve the vertical component so this doesn't interfere with jumping/falling.
         float verticalSpeed = _stateMachine._rb.linearVelocity.y;
 
-        // Carrying never slows the legs: weight shows as the held thing lagging, swinging and
-        // dragging on the beam instead (#144, docs/plans/carry-like-repo.md).
-        _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed) + (Vector3.up * verticalSpeed);
+        // Carrying what you can lift never slows the legs: its weight shows as lag on the beam
+        // (#144). Towing a piece too heavy to lift does (docs/systems/damage.md, "Weight").
+        Item carried = ItemManager.Instance != null ? ItemManager.Instance.CarriedItem : null;
+        float pace = carried != null ? carried.TowSpeedMultiplier : 1f;
+        _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed * pace) + (Vector3.up * verticalSpeed);
     }
 
     public override void Exit()

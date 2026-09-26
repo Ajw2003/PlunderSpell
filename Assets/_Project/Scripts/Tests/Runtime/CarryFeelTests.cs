@@ -161,6 +161,83 @@ namespace Plunderspell.Tests
         }
 
         [UnityTest]
+        public IEnumerator Test_AHeldItemSettlesInsteadOfShaking()
+        {
+            var report = new System.Text.StringBuilder();
+            float worstTurn = 0f, worstMove = 0f;
+            float x = -6f;
+            foreach (float mass in new[] { 0.5f, 1f, 2f, 5f, 9f })
+            {
+                Rigidbody holder = MakeHolder(new Vector3(x, 1f, 200f));
+                x += 3f;
+                Vector3 target = holder.position + new Vector3(0f, 0.3f, 1.5f);
+                Item item = MakeItem(target, mass);
+                item.StartDragging(holder.gameObject, target + new Vector3(0.45f, 0.2f, -0.3f)); // a corner
+                item.UpdateTarget(target + new Vector3(0.45f, 0.2f, -0.3f), Vector3.zero);
+                for (int i = 0; i < 75; i++)
+                    yield return new WaitForFixedUpdate();
+
+                float turn = 0f, move = 0f;
+                Quaternion lastRotation = item.transform.rotation;
+                Vector3 lastPosition = item.transform.position;
+                for (int i = 0; i < 50; i++)
+                {
+                    yield return new WaitForFixedUpdate();
+                    turn = Mathf.Max(turn, Quaternion.Angle(lastRotation, item.transform.rotation));
+                    move = Mathf.Max(move, Vector3.Distance(lastPosition, item.transform.position));
+                    lastRotation = item.transform.rotation;
+                    lastPosition = item.transform.position;
+                }
+                report.Append($"{mass} kg: worst step {turn:F2} deg, {move * 1000f:F1} mm\n");
+                worstTurn = Mathf.Max(worstTurn, turn);
+                worstMove = Mathf.Max(worstMove, move);
+            }
+#if UNITY_EDITOR
+            // The light loot that shook in play, as forged: grabbed by a corner of its collider.
+            foreach (string path in new[]
+            {
+                "Assets/_Project/Prefabs/Loot/BronzeAge/FaienceHippopotamus.prefab",
+                "Assets/_Project/Prefabs/Loot/GoldenGoblet.prefab",
+                "Assets/_Project/Prefabs/Loot/AgeOfPowder/NautilusCup.prefab",
+                "Assets/_Project/Prefabs/Loot/LateMedieval/JewelledHatBadge.prefab",
+            })
+            {
+                var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                Rigidbody holder = MakeHolder(new Vector3(x, 1f, 200f));
+                x += 3f;
+                Vector3 target = holder.position + new Vector3(0f, 0.3f, 1.5f);
+                GameObject piece = Object.Instantiate(prefab, target, prefab.transform.rotation);
+                _made.Add(piece);
+                var item = piece.GetComponent<Item>();
+                Bounds box = piece.GetComponent<Collider>().bounds;
+                Vector3 corner = box.center + Vector3.Scale(box.extents, new Vector3(0.9f, 0.9f, -0.9f));
+                item.StartDragging(holder.gameObject, corner);
+                item.UpdateTarget(corner, Vector3.zero);
+                for (int i = 0; i < 75; i++)
+                    yield return new WaitForFixedUpdate();
+
+                float turn = 0f, move = 0f;
+                Quaternion lastRotation = piece.transform.rotation;
+                Vector3 lastPosition = piece.transform.position;
+                for (int i = 0; i < 50; i++)
+                {
+                    yield return new WaitForFixedUpdate();
+                    turn = Mathf.Max(turn, Quaternion.Angle(lastRotation, piece.transform.rotation));
+                    move = Mathf.Max(move, Vector3.Distance(lastPosition, piece.transform.position));
+                    lastRotation = piece.transform.rotation;
+                    lastPosition = piece.transform.position;
+                }
+                report.Append($"{prefab.name} ({item.Mass} kg): worst step {turn:F2} deg, {move * 1000f:F1} mm\n");
+                worstTurn = Mathf.Max(worstTurn, turn);
+                worstMove = Mathf.Max(worstMove, move);
+            }
+#endif
+            Debug.Log("[CarryFeel] Settling:\n" + report);
+            Assert.That(worstTurn, Is.LessThan(0.2f), "A held item still shakes after settling.\n" + report);
+            Assert.That(worstMove, Is.LessThan(0.002f), "A held item still shakes after settling.\n" + report);
+        }
+
+        [UnityTest]
         public IEnumerator Test_AHeldItemTurnsWithTheHolder()
         {
             Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 90f));
@@ -247,12 +324,18 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_AHeavyPieceIsTowedBehindOnARope()
         {
-            Vector3 feet = new Vector3(0f, 0f, 0f);
-            Vector3 behind = new Vector3(0f, 0.4f, -4f);
-            Assert.That(Vector3.Distance(ItemManager.TowTarget(feet, behind, 2f), new Vector3(0f, 0.4f, -2f)), Is.LessThan(0.001f),
-                "Past the rope's length it is pulled to the rope's length from the holder, at its own height.");
-            Vector3 near = new Vector3(1f, 0.4f, -1f);
-            Assert.AreEqual(near, ItemManager.TowTarget(feet, near, 2f), "Within the rope it is not pulled at all.");
+            Vector3 feet = Vector3.zero;
+            Vector3 walking = new Vector3(0f, 0f, 2f); // walking away from the piece at 2 m/s
+
+            Vector3 taut = Item.TowVelocity(feet, new Vector3(0f, 0.4f, -2.001f), walking, 2f);
+            Assert.That(Vector3.Distance(taut, walking), Is.LessThan(0.01f),
+                "At the rope's length the piece is driven at the holder's own pace, no faster.");
+
+            Vector3 stretched = Item.TowVelocity(feet, new Vector3(0f, 0.4f, -3f), walking, 2f);
+            Assert.That(stretched.z, Is.GreaterThan(2f).And.LessThan(4f), "A stretched rope catches up gently.");
+
+            Assert.AreEqual(Vector3.zero, Item.TowVelocity(feet, new Vector3(1f, 0.4f, -1f), walking, 2f),
+                "A slack rope pulls nothing.");
         }
 
 #if UNITY_EDITOR
@@ -267,6 +350,7 @@ namespace Plunderspell.Tests
             _made.Add(floor);
 
             var report = new System.Text.StringBuilder();
+            var failures = new System.Text.StringBuilder();
             int checkedCount = 0;
             float x = -20f;
             foreach (string guid in UnityEditor.AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/_Project/Prefabs/Loot" }))
@@ -286,31 +370,35 @@ namespace Plunderspell.Tests
                 var item = piece.GetComponent<Item>();
                 Vector3 start = piece.transform.position;
                 item.StartDragging(holder.gameObject);
-                // The holder walks away, pulling it along behind them.
+                // The holder walks away at the pace towing allows them (PlayerWalkState: the
+                // RaidPlayer's 5 m/s walk times the piece's TowSpeedMultiplier), pulling it behind.
+                float pace = 5f * item.TowSpeedMultiplier;
+                Assert.That(pace, Is.LessThanOrEqualTo(3f), $"Towing {prefab.name} should slow the holder to at most 60 %.");
+                float topSpeed = 0f;
                 for (float t = 0f; t < 3f; t += Time.fixedDeltaTime)
                 {
-                    holder.MovePosition(holder.position + new Vector3(0f, 0f, -1.5f) * Time.fixedDeltaTime);
-                    Vector3 held = item.GripWorldPosition;
-                    Vector3 tow = ItemManager.TowTarget(holder.position + Vector3.down, held, 2f);
-                    if (tow == held)
-                        item.UpdateTarget(held, Vector3.zero);
-                    else
-                        item.UpdateTargetPosition(tow);
+                    // As PlayerWalkState does: a lagging piece holds the holder back.
+                    float now = 5f * item.TowSpeedMultiplier;
+                    holder.MovePosition(holder.position + new Vector3(0f, 0f, -now) * Time.fixedDeltaTime);
+                    if (t > 0.5f)
+                        topSpeed = Mathf.Max(topSpeed, Vector3.ProjectOnPlane(piece.GetComponent<Rigidbody>().linearVelocity, Vector3.up).magnitude);
+                    item.SetTow(holder.position + Vector3.down, new Vector3(0f, 0f, -now), 3f); // the rope is as long as the reach it was grabbed at
                     yield return new WaitForFixedUpdate();
                 }
                 item.StopDragging();
 
                 float moved = start.z - piece.transform.position.z;
                 float behind = piece.transform.position.z - holder.position.z;
-                if (behind < 0.5f || behind > 3.5f)
-                    Assert.Fail($"{prefab.name} ended {behind:F2} m behind the holder; towed on a 2 m rope it should trail about 2 m behind.\n{report}");
-                report.Append($"{prefab.name} ({piece.GetComponent<Rigidbody>().mass} kg): {moved:F2} m\n");
-                if (moved < 2f)
-                    Assert.Fail($"{prefab.name} moved only {moved:F2} m in 3 s of dragging; one player must be able to drag it.\n{report}");
+                report.Append($"{prefab.name} ({piece.GetComponent<Rigidbody>().mass} kg): holder {pace:F1} m/s, piece moved {moved:F2} m, {behind:F2} m behind, top speed {topSpeed:F1} m/s\n");
+                if (behind < 1.5f || behind > 4.2f)
+                    failures.Append($"{prefab.name} ended {behind:F2} m behind the holder; on a 3 m rope it should trail about 3 m behind.\n");
+                if (topSpeed > pace * 1.5f)
+                    failures.Append($"{prefab.name} surged to {topSpeed:F1} m/s behind a holder walking {pace:F1} m/s; a towed piece should plod.\n");
                 checkedCount++;
             }
-            Assert.Greater(checkedCount, 3, "Sanity: the two-person pieces were found.");
             Debug.Log("[CarryFeel] Dragged alone:\n" + report);
+            Assert.Greater(checkedCount, 3, "Sanity: the two-person pieces were found.");
+            Assert.IsEmpty(failures.ToString(), "\n" + report);
         }
 #endif
 

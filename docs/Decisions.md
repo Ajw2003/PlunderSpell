@@ -903,3 +903,15 @@ changed.
 issue-generator scripts and their dump, binary FBX metadata, and the lines recording that this is a
 fork of Rogue-Ai-Extraction-Game. They are records of what was true when written.
 
+## 2026-09-26 — Towing a piece too heavy to lift slows you down
+
+**Context.** After the rope tow, the owner found towed pieces too quick and too light, and said
+towing should slow the player.
+
+**Decision.** Towing a piece too heavy to lift slows your walk to about 6 / mass of your pace, and
+further while the piece lags. The piece is driven toward your pace, never yanked past it. How:
+`docs/systems/damage.md`, "Weight".
+
+**Replaces.** For towing only, "the walking slowdown is removed" from the #144 decision
+(2026-09-25). Carrying anything you can lift still never slows you.
+
