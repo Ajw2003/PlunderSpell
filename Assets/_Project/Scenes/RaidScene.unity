@@ -804,6 +804,78 @@ Transform:
   m_Children: []
   m_Father: {fileID: 865774667}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &724395778
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 724395780}
+  - component: {fileID: 724395779}
+  m_Layer: 0
+  m_Name: NightLookPreview
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &724395779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724395778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07e6239c1e0c0e149ada354ed8fb2cfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.NightLookPreview
+  _director: {fileID: 1029301707}
+  _moon: {fileID: 1280843096}
+  _fogColor: {r: 0.1, g: 0.06, b: 0.045, a: 1}
+  _fogDensity: 0.03
+  _ambientColor: {r: 0.035, g: 0.026, b: 0.02, a: 1}
+  _moonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
+  _moonIntensity: 0.12
+  _moonElevationDegrees: 26
+  _postExposure: 0.45
+  _contrast: 6
+  _saturation: -2
+  _colorFilter: {r: 1.08, g: 0.97, b: 0.88, a: 1}
+  _bloomThreshold: 0.75
+  _bloomIntensity: 1.5
+  _bloomScatter: 0.85
+  _vignetteIntensity: 0.35
+  _fireColor: {r: 1, g: 0.52, b: 0.2, a: 1}
+  _brazierRange: 9
+  _brazierIntensity: 12
+  _torchRange: 6
+  _torchIntensity: 6
+  _flickerAmount: 0.15
+  _flickerSpeed: 1.6
+  _ironColor: {r: 0.06, g: 0.06, b: 0.06, a: 1}
+  _woodColor: {r: 0.22, g: 0.15, b: 0.09, a: 1}
+  _hayColor: {r: 0.45, g: 0.36, b: 0.16, a: 1}
+  _emberColor: {r: 1, g: 0.52, b: 0.2, a: 1}
+  _emberEmissionStrength: 8
+--- !u!4 &724395780
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724395778}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &728934628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1676,3 +1748,4 @@ SceneRoots:
   - {fileID: 873404417}
   - {fileID: 194298984}
   - {fileID: 139000814}
+  - {fileID: 724395780}

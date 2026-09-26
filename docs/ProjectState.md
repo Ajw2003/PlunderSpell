@@ -40,6 +40,19 @@ per enemy as the art and scale reference; the prefabs raids spawn are
 `Assets/_Project/Prefabs/Enemies/<Era>/`. Merged together on `claude/staging-2026-09-24` for testing
 before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
 
+**2026-09-25 — a throwaway preview of the "calm" night look exists in RaidScene.** A
+`NightLookPreview` GameObject (`RogueAi.Atmosphere.NightLookPreview`,
+`Assets/_Project/Scripts/Runtime/Atmosphere/NightLookPreview.cs`) darkens `RaidScene`, retints the
+DirectionalLight as a faint moon, adds a runtime URP Volume (ACES tonemapping, bloom, colour grade,
+vignette), and drops primitive braziers, wall torches and stand-in props (cart+hay, crates, hay
+bale) along every generated castle's curtain wall, matching the chosen look at
+`docs/generated/look-samples-2026-09-24/calm.png`. It rebuilds itself whenever
+`RaidDirector.Castle` changes. Turn it off by disabling the `NightLookPreview` GameObject in
+`RaidScene`. **This is a stand-in only** — no alarm-state blending, no FireSource prefabs, no fire
+anchors, no quality levels, no shader — and is meant to be replaced once
+`docs/plans/night-atmosphere.md` steps 1-2 are actually built. Captures:
+`docs/generated/night-look-preview-2026-09-25/`.
+
 ## What used to be not what it looked like
 
 Until 2026-09-24, choosing an era in the Lair did nothing to the raid: every era built from one

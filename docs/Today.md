@@ -1,5 +1,23 @@
 # Today
 
+**2026-09-25 — a throwaway "calm" night-look preview in RaidScene.** Built the quick preview asked
+for after the look-anchoring session below: `RogueAi.Atmosphere.NightLookPreview`
+(`Assets/_Project/Scripts/Runtime/Atmosphere/NightLookPreview.cs`, new `RogueAi.Atmosphere` asmdef)
+darkens RaidScene, adds a runtime URP Volume (ACES, bloom, colour grade, vignette), and places
+primitive braziers, wall torches and stand-in props along the generated castle's curtain wall,
+values taken from `Tools/LookSamples/render_look_samples.py`'s `LOOKS["calm"]`. Wired into
+`RaidScene` and saved via the live Editor (`unity` CLI). Verified in Play mode: `RaidDirector.Castle`
+built and the scene rendered dark with warm fire pools and no compile/runtime errors from this
+code (one pre-existing, unrelated PurrNet loot-spawn error appears because this scene's solo Play
+mode never starts a NetworkManager or spawns a player — captures below use a temporary camera at
+`CastleSpawnResolver.ResolveSpawn`, not the player's own camera). Two tuning rounds against
+`docs/generated/look-samples-2026-09-24/calm.png` (fog/ambient/exposure warmed up). Captures:
+`docs/generated/night-look-preview-2026-09-25/spawn-view.png` and `bailey-view.png`. Stand-in only —
+see `docs/ProjectState.md` for what it doesn't do; superseded once
+`docs/plans/night-atmosphere.md` steps 1-2 are built.
+
+---
+
 **2026-09-24, night — the look is anchored.** The user asked to polish before building more, and to
 settle the aesthetic first. Decided, section by section: night, warm fire glowing in fog under a
 faint moon; a castle that is calm, then lights up and reddens with each alarm state; one stylised
