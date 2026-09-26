@@ -30,8 +30,9 @@ bash "$here/eval.sh" --file "$here/eval/quiet_castle.cs"
 # name x y z yaw pitch — views into the seed-777 castle (gate at (48, 0), arrival at (-24, -12)).
 views=(
     "strip 45 1.7 -16 10 -4"
+    "vignette 43 1.7 11 153 -9"
     "bailey 44 2.2 22 200 -2"
-    "gate 40 1.7 -6 70 -8"
+    "gate 44 1.7 -8 40 -8"
     "arrival -24 1.7 -8.5 180 -6"
     "overview 0 22 -40 20 28"
 )

@@ -13,9 +13,21 @@ namespace RogueAi.EditorTools
     /// </summary>
     public static class NightLooks
     {
+        // Night stone per Age: each kit's stone pigment pulled darker and warmer. High Medieval's is
+        // the cool grey "iron", so it is warmed more than darkened; the others build in pale
+        // limestone, sandstone and plaster, so they are darkened more.
+        public static readonly NightAtmosphereProfile.EraTint HighMedievalTint = new NightAtmosphereProfile.EraTint
+            { Stone = new Color(1.12f, 0.97f, 0.82f), Flame = Color.white };
+        public static readonly NightAtmosphereProfile.EraTint BronzeAgeTint = new NightAtmosphereProfile.EraTint
+            { Stone = new Color(0.72f, 0.62f, 0.52f), Flame = new Color(1f, 1.04f, 1.08f) };
+        public static readonly NightAtmosphereProfile.EraTint LateMedievalTint = new NightAtmosphereProfile.EraTint
+            { Stone = new Color(0.74f, 0.64f, 0.54f), Flame = Color.white };
+        public static readonly NightAtmosphereProfile.EraTint AgeOfPowderTint = new NightAtmosphereProfile.EraTint
+            { Stone = new Color(0.66f, 0.6f, 0.54f), Flame = new Color(1f, 0.97f, 0.92f) };
+
         public static AtmosphereLook Calm(VolumeProfile post) => new AtmosphereLook
         {
-            FogColor = new Color(0.050f, 0.032f, 0.022f),
+            FogColor = new Color(0.15f, 0.10f, 0.068f),
             FogDensity = 0.038f,
             FogBaseHeight = 0f,
             FogHeightFalloff = 0.075f,
@@ -24,11 +36,11 @@ namespace RogueAi.EditorTools
             MoonIntensity = 0.035f,
             MoonScatter = 0.02f,
             MoonAnisotropy = 0.55f,
-            AmbientSky = new Color(0.018f, 0.016f, 0.018f),
-            AmbientEquator = new Color(0.030f, 0.020f, 0.014f),
-            AmbientGround = new Color(0.014f, 0.009f, 0.006f),
-            SkyZenith = new Color(0.006f, 0.007f, 0.011f),
-            SkyHorizon = new Color(0.022f, 0.019f, 0.018f),
+            AmbientSky = new Color(0.075f, 0.072f, 0.08f),
+            AmbientEquator = new Color(0.12f, 0.085f, 0.06f),
+            AmbientGround = new Color(0.07f, 0.05f, 0.036f),
+            SkyZenith = new Color(0.012f, 0.012f, 0.016f),
+            SkyHorizon = new Color(0.05f, 0.04f, 0.035f),
             FlameColor = new Color(1.0f, 0.5f, 0.18f),
             FireIntensity = 1.4f,
             FireScatter = 3f,
@@ -39,39 +51,39 @@ namespace RogueAi.EditorTools
         public static AtmosphereLook Stirred(VolumeProfile post)
         {
             AtmosphereLook look = Calm(post);
-            look.FogColor = new Color(0.040f, 0.028f, 0.021f);
+            look.FogColor = new Color(0.17f, 0.11f, 0.07f);
             look.FlameColor = new Color(1.0f, 0.49f, 0.18f);
             look.FireIntensity = 1.5f;
             look.FireScatter = 3.4f;
-            look.SkyHorizon = new Color(0.028f, 0.021f, 0.017f);
+            look.SkyHorizon = new Color(0.06f, 0.045f, 0.035f);
             return look;
         }
 
         public static AtmosphereLook Roused(VolumeProfile post)
         {
             AtmosphereLook look = Calm(post);
-            look.FogColor = new Color(0.062f, 0.034f, 0.020f);
+            look.FogColor = new Color(0.22f, 0.12f, 0.06f);
             look.FogDensity = 0.034f;
             look.FlameColor = new Color(1.0f, 0.42f, 0.13f);
-            look.FireIntensity = 1.65f;
-            look.FireScatter = 3.8f;
-            look.SkyHorizon = new Color(0.045f, 0.024f, 0.014f);
-            look.AmbientEquator = new Color(0.034f, 0.022f, 0.016f);
+            look.FireIntensity = 1.5f;
+            look.FireScatter = 3.2f;
+            look.SkyHorizon = new Color(0.09f, 0.05f, 0.03f);
+            look.AmbientEquator = new Color(0.15f, 0.09f, 0.055f);
             return look;
         }
 
         public static AtmosphereLook HueAndCry(VolumeProfile post)
         {
             AtmosphereLook look = Calm(post);
-            look.FogColor = new Color(0.080f, 0.030f, 0.018f);
+            look.FogColor = new Color(0.25f, 0.1f, 0.05f);
             look.FogDensity = 0.030f;
             look.FlameColor = new Color(1.0f, 0.34f, 0.10f);
-            look.FireIntensity = 1.8f;
-            look.FireScatter = 4.2f;
-            look.SkyZenith = new Color(0.012f, 0.006f, 0.006f);
-            look.SkyHorizon = new Color(0.060f, 0.022f, 0.012f);
-            look.AmbientEquator = new Color(0.040f, 0.020f, 0.014f);
-            look.AmbientGround = new Color(0.018f, 0.008f, 0.006f);
+            look.FireIntensity = 1.55f;
+            look.FireScatter = 3.2f;
+            look.SkyZenith = new Color(0.03f, 0.012f, 0.01f);
+            look.SkyHorizon = new Color(0.12f, 0.045f, 0.025f);
+            look.AmbientEquator = new Color(0.17f, 0.08f, 0.05f);
+            look.AmbientGround = new Color(0.08f, 0.04f, 0.028f);
             return look;
         }
 
@@ -83,11 +95,11 @@ namespace RogueAi.EditorTools
             filter: new Color(1.05f, 0.99f, 0.91f), bloom: 1.05f, vignette: 0.36f,
             lift: new Vector4(1.0f, 0.99f, 1.0f, 0f), gain: new Vector4(1.06f, 0.99f, 0.9f, 0f));
 
-        public static void RousedGrade(VolumeProfile p) => Grade(p, exposure: 0.5f, contrast: 20f, saturation: 2f,
+        public static void RousedGrade(VolumeProfile p) => Grade(p, exposure: 0.35f, contrast: 20f, saturation: 2f,
             filter: new Color(1.07f, 0.97f, 0.88f), bloom: 1.3f, vignette: 0.4f,
             lift: new Vector4(1.0f, 0.98f, 0.98f, 0f), gain: new Vector4(1.08f, 0.98f, 0.88f, 0f));
 
-        public static void HueAndCryGrade(VolumeProfile p) => Grade(p, exposure: 0.45f, contrast: 30f, saturation: 6f,
+        public static void HueAndCryGrade(VolumeProfile p) => Grade(p, exposure: 0.2f, contrast: 30f, saturation: 6f,
             filter: new Color(1.1f, 0.94f, 0.85f), bloom: 1.6f, vignette: 0.46f,
             lift: new Vector4(1.02f, 0.96f, 0.95f, 0f), gain: new Vector4(1.1f, 0.96f, 0.85f, 0f));
 

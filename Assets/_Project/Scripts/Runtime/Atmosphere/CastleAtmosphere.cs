@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using RogueAi.Alarm;
+using RogueAi.Raid;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -26,6 +27,9 @@ namespace RogueAi.Atmosphere
         [Tooltip("Plunderspell/NightSky. The fog pass paints over most of it.")]
         [SerializeField] private Material _skyMaterial;
 
+        [Tooltip("Whose Age sets the stone and flame tints. Found in the scene when left empty.")]
+        [SerializeField] private RaidDirector _director;
+
         private static readonly int s_fogColor = Shader.PropertyToID("_NF_FogColor");
         private static readonly int s_fogParams = Shader.PropertyToID("_NF_Params");
         private static readonly int s_moonDir = Shader.PropertyToID("_NF_MoonDir");
@@ -37,6 +41,7 @@ namespace RogueAi.Atmosphere
         private static readonly int s_skyHorizon = Shader.PropertyToID("_Horizon");
         private static readonly int s_skyMoonDir = Shader.PropertyToID("_MoonDir");
         private static readonly int s_skyMoonColor = Shader.PropertyToID("_MoonColor");
+        private static readonly int s_stoneTint = Shader.PropertyToID("_PlunderStoneTint");
 
         private const int k_MaxScatterLights = 32;
         private const float k_ScatterReach = 70f;
@@ -93,6 +98,8 @@ namespace RogueAi.Atmosphere
             Instance = this;
             if (_alarm == null)
                 _alarm = FindFirstObjectByType<AlarmFSMManager>();
+            if (_director == null)
+                _director = FindFirstObjectByType<RaidDirector>();
             if (_alarm != null)
             {
                 _alarm.AlarmStateChanged += OnAlarmStateChanged;
@@ -122,6 +129,7 @@ namespace RogueAi.Atmosphere
                 _alarm.AlarmStateChanged -= OnAlarmStateChanged;
             NightFogFeature.IsActive = false;
             Shader.SetGlobalVector(s_scatter, Vector4.zero);
+            Shader.SetGlobalVector(s_stoneTint, Vector4.zero);
             RestoreRenderSettings();
             DestroyVolumes();
             if (_skyInstance != null)
@@ -185,10 +193,22 @@ namespace RogueAi.Atmosphere
                     _current.Accumulate(_profile.For((AlarmState)i), w);
             }
 
+            ApplyEraTint();
             ApplyLighting();
             ApplyFog();
             ApplyCamera();
             BurnFires();
+        }
+
+        /// <summary>Stone and flame shift with the Age being raided; the rest of the night is shared.</summary>
+        private void ApplyEraTint()
+        {
+            Inventory.HistoricalEra era = _director != null ? _director.Era : Inventory.HistoricalEra.HighMedieval;
+            NightAtmosphereProfile.EraTint tint = _profile.ForEra(era);
+            Color stone = tint.Stone.maxColorComponent > 0f ? tint.Stone : Color.white;
+            Shader.SetGlobalVector(s_stoneTint, new Vector4(stone.r, stone.g, stone.b, 1f));
+            if (tint.Flame.maxColorComponent > 0f)
+                _current.FlameColor *= tint.Flame;
         }
 
         private void ApplyLighting()

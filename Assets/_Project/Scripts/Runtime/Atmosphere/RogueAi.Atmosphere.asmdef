@@ -8,7 +8,8 @@
         "Unity.RenderPipelines.Core.Runtime",
         "Unity.RenderPipelines.Universal.Runtime",
         "RogueAi.Alarm",
-        "RogueAi.Extraction"
+        "RogueAi.Extraction",
+        "RogueAi.Inventory"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

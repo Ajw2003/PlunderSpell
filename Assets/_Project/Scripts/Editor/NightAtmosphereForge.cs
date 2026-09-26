@@ -244,6 +244,7 @@ namespace RogueAi.EditorTools
             public Material Sky;
             public Material Iron;
             public Material PortalEmber;
+            public Material Earth;
         }
 
         private static Materials BuildMaterials()
@@ -254,20 +255,36 @@ namespace RogueAi.EditorTools
                 Ember = MaterialAt("Ember", "Plunderspell/Ember"),
                 PortalSwirl = MaterialAt("PortalSwirl", "Plunderspell/PortalSwirl"),
                 Sky = MaterialAt("NightSky", "Plunderspell/NightSky"),
-                Iron = MaterialAt("FireIron", "Universal Render Pipeline/Lit"),
+                Iron = MaterialAt("FireIron", CastleSurfaceMaterials.SurfaceShaderName),
                 PortalEmber = MaterialAt("PortalEmber", "Plunderspell/Ember"),
+                Earth = MaterialAt("BaileyEarth", CastleSurfaceMaterials.SurfaceShaderName),
             };
-            m.Iron.SetColor("_BaseColor", new Color(0.075f, 0.07f, 0.068f));
-            m.Iron.SetFloat("_Metallic", 0.55f);
-            m.Iron.SetFloat("_Smoothness", 0.28f);
+            var detail = AssetDatabase.LoadAssetAtPath<Texture2D>(CastleSurfaceMaterials.DetailTexturePath);
+            SurfaceMaterial(m.Iron, new Color(0.2f, 0.19f, 0.18f), detail, new Vector4(0, 0, 1, 0), 0.5f, 0.5f, false);
+            // Packed earth under the whole castle: the stone channel at a quarter scale reads as
+            // trodden mud with the odd flag in it.
+            SurfaceMaterial(m.Earth, new Color(0.36f, 0.29f, 0.22f), detail, new Vector4(1, 0, 0, 0), 0.25f, 0.4f, false);
             m.PortalEmber.SetColor("_Color", new Color(1.2f, 1.0f, 3.2f));
             // Lapis, the art bible's colour of magic; kept below white so ACES does not bleach it.
-            m.PortalSwirl.SetColor("_ColorA", new Color(0.62f, 0.5f, 1.25f));
+            m.PortalSwirl.SetColor("_ColorA", new Color(0.42f, 0.46f, 1.4f));
             m.PortalSwirl.SetColor("_ColorB", new Color(0.3f, 0.9f, 0.7f));
-            m.PortalSwirl.SetFloat("_Brightness", 1.1f);
-            foreach (Material material in new[] { m.Flame, m.Ember, m.PortalSwirl, m.Sky, m.Iron, m.PortalEmber })
+            m.PortalSwirl.SetFloat("_Brightness", 0.55f);
+            foreach (Material material in new[] { m.Flame, m.Ember, m.PortalSwirl, m.Sky, m.Iron, m.PortalEmber, m.Earth })
                 EditorUtility.SetDirty(material);
             return m;
+        }
+
+        private static void SurfaceMaterial(Material material, Color color, Texture2D detail, Vector4 mask,
+            float scale, float strength, bool isStone)
+        {
+            material.SetTexture("_BaseMap", Texture2D.whiteTexture);
+            material.SetColor("_BaseColor", color);
+            material.SetTexture("_DetailMap", detail);
+            material.SetVector("_DetailMask", mask);
+            material.SetFloat("_DetailScale", scale);
+            material.SetFloat("_DetailStrength", strength);
+            material.SetFloat("_IsStone", isStone ? 1f : 0f);
+            material.SetFloat("_GroundGrime", 1f);
         }
 
         private static Material MaterialAt(string name, string shaderName)
@@ -306,6 +323,10 @@ namespace RogueAi.EditorTools
             profile.Stirred = NightLooks.Stirred(BuildGrade("Grade_Stirred", NightLooks.StirredGrade));
             profile.Roused = NightLooks.Roused(BuildGrade("Grade_Roused", NightLooks.RousedGrade));
             profile.HueAndCry = NightLooks.HueAndCry(BuildGrade("Grade_HueAndCry", NightLooks.HueAndCryGrade));
+            profile.BronzeAge = NightLooks.BronzeAgeTint;
+            profile.HighMedieval = NightLooks.HighMedievalTint;
+            profile.LateMedieval = NightLooks.LateMedievalTint;
+            profile.AgeOfPowder = NightLooks.AgeOfPowderTint;
             EditorUtility.SetDirty(profile);
             return profile;
         }
@@ -639,6 +660,7 @@ namespace RogueAi.EditorTools
                 AssetDatabase.LoadAssetAtPath<NightAtmosphereProfile>($"{SettingsDir}/NightAtmosphere.asset");
             atmosphereSo.FindProperty("_moon").objectReferenceValue = moon;
             atmosphereSo.FindProperty("_alarm").objectReferenceValue = Object.FindFirstObjectByType<AlarmFSMManager>();
+            atmosphereSo.FindProperty("_director").objectReferenceValue = Object.FindFirstObjectByType<RaidDirector>();
             atmosphereSo.FindProperty("_skyMaterial").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<Material>($"{MaterialDir}/NightSky.mat");
             atmosphereSo.ApplyModifiedPropertiesWithoutUndo();
@@ -664,6 +686,14 @@ namespace RogueAi.EditorTools
             portalSo.FindProperty("_director").objectReferenceValue = Object.FindFirstObjectByType<RaidDirector>();
             portalSo.FindProperty("_zone").objectReferenceValue = Object.FindFirstObjectByType<ExtractionZone>();
             portalSo.ApplyModifiedPropertiesWithoutUndo();
+
+            GameObject ground = GameObject.Find("Ground");
+            var earth = AssetDatabase.LoadAssetAtPath<Material>($"{MaterialDir}/BaileyEarth.mat");
+            if (ground != null && earth != null && ground.TryGetComponent(out MeshRenderer groundRenderer))
+            {
+                groundRenderer.sharedMaterial = earth;
+                report.AppendLine("  Ground on packed earth");
+            }
 
             EditorSceneManager.MarkSceneDirty(root.scene);
             report.AppendLine($"  NightAtmosphere (moon: {(moon != null ? moon.name : "none")}), fire spawner, portal");
