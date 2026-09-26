@@ -254,17 +254,17 @@ namespace RogueAi.Tests
         }
 
         [Test]
-        public void Test_AHeavyLoadSlowsTheCarrier()
+        public void Test_OnlyTheHeaviestLootIsTooHeavyToLift()
         {
             var go = Track(new GameObject("Chest"));
             go.AddComponent<Rigidbody>().mass = 15f;
             var chest = go.AddComponent<Item>();
-            var go2 = Track(new GameObject("Cup"));
-            go2.AddComponent<Rigidbody>().mass = 1f;
-            var cup = go2.AddComponent<Item>();
+            var go2 = Track(new GameObject("Coffer"));
+            go2.AddComponent<Rigidbody>().mass = 8f;
+            var coffer = go2.AddComponent<Item>();
 
-            Assert.AreEqual(1f, cup.CarrySpeedMultiplier);
-            Assert.AreEqual(0.5f, chest.CarrySpeedMultiplier, 0.01f);
+            Assert.IsTrue(chest.IsTooHeavyToLift, "A 15 kg chest drags on the floor (#144).");
+            Assert.IsFalse(coffer.IsTooHeavyToLift, "An 8 kg coffer can still be lifted, just.");
         }
 
         // --- Smooth view (#104) ---------------------------------------------------------------

@@ -20,11 +20,9 @@ public class PlayerWalkState : PlayerState
         // Preserve the vertical component so this doesn't interfere with jumping/falling.
         float verticalSpeed = _stateMachine._rb.linearVelocity.y;
 
-        // A heavy load slows you down: weight is felt in the legs, not only the arms.
-        Item carried = ItemManager.Instance != null ? ItemManager.Instance.CarriedItem : null;
-        float load = carried != null ? carried.CarrySpeedMultiplier : 1f;
-
-        _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed * load) + (Vector3.up * verticalSpeed);
+        // Carrying never slows the legs: weight shows as the held thing lagging, swinging and
+        // dragging on the beam instead (#144, docs/plans/carry-like-repo.md).
+        _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed) + (Vector3.up * verticalSpeed);
     }
 
     public override void Exit()

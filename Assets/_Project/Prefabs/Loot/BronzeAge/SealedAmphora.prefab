@@ -179,10 +179,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee81d29afbf11a9478fb8230b135d419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: RogueAi.Items::Item
-  _followSpeed: 12
+  _springRate: 120
+  _dampingRatio: 0.9
   _rotationSpeed: 10
-  _gripStrength: 180
-  _maxHoldSpeed: 14
+  _gripStrength: 100
+  _haulStrength: 250
+  _heldAngularDamping: 3
   _gripPoint: {fileID: 3664330430907745292}
   _maxThrowSpeed: 18
   _damageMultiplier: 2

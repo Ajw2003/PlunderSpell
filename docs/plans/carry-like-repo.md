@@ -1,6 +1,6 @@
 # Carrying like R.E.P.O. — research and plan (#144)
 
-Status: **research done, 2026-09-25; plan awaiting the user's choices (see "Decisions needed").**
+Status: **research done, 2026-09-25; the user chose phase 1 (see "Decisions"), being built on `claude/issue-backlog`.**
 Issue: #144, "Fix the way weight works to be more like repo". Added by the user in the same
 session: it needs a visual that links the held object to the cursor, the way R.E.P.O.'s grab beam
 does.
@@ -112,14 +112,17 @@ Phase 1 is the core feel. Phases 2 and 3 are separable.
 the item's fragility, instead of only shattering past a threshold. It changes the economy, so it is
 the user's call.
 
-## Decisions needed
+## Decisions
 
-1. **Walking slowdown.** Keep `CarrySpeedMultiplier` (heavy loot slows you), or drop it and let
-   the object's lag and drag be the only cost of weight, as in R.E.P.O.?
-2. **Walking with a held item.** Should it trail behind you on the beam spring, as in R.E.P.O.? Or
-   keep today's "rides with your body" feel (#119), and put the spring only on the mouse?
-3. **Scope.** Phase 1 only now, or phase 2 (co-op lifting, server-owned bodies) as well?
-4. **Phase 3.** Should loot lose value on every bump, or keep shatter-only?
+The user's answers, 2026-09-25:
+
+1. **Walking slowdown: dropped.** `CarrySpeedMultiplier` goes. Weight shows only as lag, swing
+   and dragging.
+2. **Walking: the item trails on the beam spring**, as in R.E.P.O. This replaces the #119
+   "rides with your body" behaviour. The spring damps toward the target's own velocity, so a
+   direction change does not jerk it.
+3. **Scope: phase 1 only.** No strength stat and no co-op lifting yet.
+4. **Loot damage: shatter-only stays.**
 
 ## Sources
 

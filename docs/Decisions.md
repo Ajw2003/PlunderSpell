@@ -847,3 +847,26 @@ host included; time and audio keep running. The menu's title reads "THE RAID GOE
 guards it.
 
 **Replaces.** "Pausing freezes the world, but only for the host (#107)", above.
+
+## 2026-09-25 — Carrying hangs from a beam spring, R.E.P.O.-style (#144)
+
+**Context.** #144 asked for weight to work "more like repo", with a visual link from the held
+object to the cursor. Research: `docs/plans/carry-like-repo.md`. Until now a held item was held by a
+fixed grip with a locked rotation. It rode rigidly with the holder's body: that was the 2026-09-24
+fix for #119's jerk on direction changes. Heavy loot also slowed your walk.
+
+**Decision (the user's choices).** Items hang from the point you grabbed, pulled by a
+strength-capped spring. The spring damps toward the target's velocity, so there is no jerk.
+Items over about 10 kg drag instead of lifting. A curved beam shows the link and the strain, and
+is synced to other players. The walking slowdown is removed. Phase 1 only: no strength stat or
+co-op lifting yet, and loot still only shatters (no per-bump value loss).
+
+**Replaces.** "Only the hand pays for weight; walking does not" (docs/systems/damage.md, 2026-09-24)
+and `Item.CarrySpeedMultiplier`. #119's complaint was the jerk. The velocity-damped spring answers
+it: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem` asserts no single-frame jump over 5 cm when
+turning round at walking speed.
+
+**Status.** Built and checked in the live Editor, captures in
+`docs/generated/issue-backlog-2026-09-25/beam-*.png`. A remote player's beam has not been seen
+between two machines.
+

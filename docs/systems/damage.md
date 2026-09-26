@@ -50,30 +50,49 @@ Screenshots of every case: `docs/generated/playtest-2026-09-23/05`–`12`.
 
 ## Weight
 
-Added 2026-09-23. A held `Item` is a **dynamic body pulled toward the hand by a force of limited
-strength** (`Item.FixedUpdate`), not a kinematic object teleported to the crosshair:
+Added 2026-09-23; rebuilt 2026-09-25 to carry like R.E.P.O. (#144, research and choices in
+[`docs/plans/carry-like-repo.md`](../plans/carry-like-repo.md)). A held `Item` is a **dynamic body
+hung from the point you grabbed, pulled by a spring of limited strength** (`Item.FixedUpdate`):
 
-- The hand wants a velocity proportional to how far the item is from the aim point
-  (`_followSpeed`, capped at `_maxHoldSpeed`), and pays for it plus gravity out of a fixed
-  `_gripStrength` (180 N). A 1 kg pot spends 10 N staying up and has the rest to move with; a
-  15 kg chest spends 147 N and has almost nothing left, so it lags, swings wide and sags to the
-  floor when you turn. Measured (a 90° turn): pot 0.34 s to catch up, goblet 0.32 s, 5 kg relic
-  0.43 s with 0.25 m of sag, 15 kg chest 1.78 s with 1.7 m.
-- **Only the hand pays for weight; walking does not** (2026-09-24). The holder's body carries the
-  item: each step its change of velocity is added to the item outright, and the aim point is kept
-  relative to the body, so the strength-capped pull above only answers the mouse (aim, reach,
-  turning). Before this, an 8 kg item strafed at 4 m/s trailed 0.447 m. `CarryFeelTests` holds it
-  within 5 cm, and still asserts that a heavy item lags a light one on a mouse swing.
-- **The hand holds the item's grip, not its base.** The point pulled to the aim point is the item's
-  `GripPoint` (placed per plunder item by `EraContentForge.GripFractions` from the art bible's grab
-  notes), or its mesh centre when it has none; `ItemManager` measures reach to the same point.
+- **You hold the point you aimed at.** `ItemManager` keeps the hover ray's hit point and passes it
+  to `Item.StartDragging(holder, grabPoint)`. The item stores it in its own frame. Picking up
+  without a point (tests, older callers) uses the authored `GripPoint`, or the mesh centre.
+- **A beam spring on that point.** The spring pulls the held point to a target on the crosshair
+  ray at the held depth (scroll changes the depth). Its stiffness is `_springRate` (120/s²),
+  damped at 0.9 of critical toward the target's own velocity. `Item` estimates that velocity from
+  successive `UpdateTargetPosition` calls, and `UpdateTarget` can supply it. The force is applied
+  with `AddForceAtPosition` at the held point, so an off-centre grab swings and hangs below it.
+  Held items get angular damping 3 so they settle rather than spin.
+- **Lift or drag.** Upward force is capped at `_gripStrength` (100 N) and sideways force at
+  `_haulStrength` (250 N). Holding up an item takes `mass × 9.81` of the upward budget: under about
+  10 kg it lifts, and heavier items (tapestry, cabinet, cauldron, parade armour, altarpiece, chest)
+  stay on the floor and are dragged. `Item.Load` is that fraction and `Item.IsTooHeavyToLift` is
+  load over 1.
+- **Walking.** There is no special case for the holder's body. The target moves with the camera
+  and the spring follows it, so heavy things trail and swing when you turn. Measured
+  (`CarryFeelTests`), turning round at full walking speed: a 2 kg item trails about 0.35 m and an
+  8 kg one about 1 m, with no single-frame jump over 5 cm.
+- **Carrying never slows you.** `CarrySpeedMultiplier` is gone. The only cost of weight is lag,
+  swing and drag.
+- **Turning it on purpose.** Hold middle mouse: `Item.SetRotating(true)` locks its current
+  rotation as a target, the mouse turns it, and letting go lets it hang again.
+- **The beam.** `GrabBeam` is a `LineRenderer` drawn as a quadratic curve. It starts at the hand
+  (low right of the view, `ItemManager.BeamHand`) and ends at the held point, bent through the
+  aim target. When the item keeps up the line is straight; when it lags or sags the line bends.
+  The colour follows the load: violet when easy, gold, orange near the limit, red and flickering
+  when dragging. It trembles more with strain. The material is `Resources/GrabBeam.mat` (URP
+  Particles/Unlit, additive). Other players see your beam through `RogueAi.Net.CarryBeamRelay` (a
+  RaidScene object, like `ShotRelay`). The holder sends the hand point, aim point, held point and
+  load about 15 times a second; others ease toward it and end the line on the replicated item.
+  Only networked loot gets a remote beam: weapons are a local copy on each machine.
+- **Prefabs carry their own strength.** `Item`'s serialized `_gripStrength` overrides the code
+  default. All 35 item prefabs were set to 100 N on 2026-09-25. A newly forged prefab
+  (`EraContentForge`) takes the code defaults.
 - Because it stays a physics body, walls stop it and it carries momentum: **swinging a held thing
   into someone is an impact hit** through `Item.OnCollisionEnter`, at `speed × 2 × heft` damage
   (`heft` = ×1 at 1 kg, ×1.5 at 4 kg, ×2 at 9 kg), blamed on the holder. A held item never collides
   with its holder (`Physics.IgnoreCollision`, restored 0.4 s after letting go).
 - Throws are impulses capped at 18 m/s, so the same arm throws a pot far and a chest barely at all.
-- Carrying slows you: `Item.CarrySpeedMultiplier` is 1 up to 2 kg, falling to 0.5 at 15 kg,
-  applied in `PlayerWalkState`.
 - Grabbing and holding aim through the screen centre (the crosshair), within `_maxDragDepth`
   (10 m) — the hover ray used to be 100 m.
 - Weapon prefabs carry real masses (sword 1–1.5 kg, round shield 3.5, pavise 8, matchlock 4…);

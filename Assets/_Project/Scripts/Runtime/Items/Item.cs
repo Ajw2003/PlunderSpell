@@ -23,13 +23,19 @@ public class Item : MonoBehaviour
     private Vector3 _targetPosition;
     private Quaternion _targetRotation = Quaternion.identity;
 
-    // The holder's body, when it has one. The item rides along with it rigidly; only the hand's own
-    // movement relative to the body (the mouse) goes through the weighted grip below.
-    private Rigidbody _holderBody;
-    private Vector3 _holderVelocityLastStep;
-    private Vector3 _targetOffsetFromHolder;
+    // Where the hand wants the held point, and how fast that point is moving. The velocity is what
+    // the spring damps toward, so a target moving at walking pace is followed without a jolt at
+    // every change of direction (#119, #144).
+    private Vector3 _targetVelocity;
+    private float _targetStampedAt;
+    private bool _hasTargetVelocity;
 
-    // The grip, relative to the item's position and in its rotation frame, measured at pickup.
+    // True while the player is turning the item on purpose. Otherwise it hangs from the held point.
+    private bool _isRotating;
+    private float _angularDampingWhenFree;
+
+    // The held point, relative to the item's position and in its rotation frame, measured at pickup:
+    // where the player grabbed it, or its authored grip.
     private Vector3 _gripOffset;
 
     // References for enemy handling. Resolved through Core interfaces, not MonsterStateMachine
@@ -40,17 +46,25 @@ public class Item : MonoBehaviour
     private NavMeshAgent _agent;
 
     [Header("Physics Settings")]
-    [Tooltip("How hard the hand pulls toward where it wants the item, per metre of error (1/s).")]
-    [SerializeField] private float _followSpeed = 12f;
+    [Tooltip("Stiffness of the beam's spring, per metre of error (1/s^2). Higher: the held point " +
+             "snaps to the target faster.")]
+    [SerializeField] private float _springRate = 120f;
+
+    [Tooltip("Damping of the spring as a fraction of critical. 1: no overshoot.")]
+    [Range(0.2f, 2f)] [SerializeField] private float _dampingRatio = 0.9f;
+
     [SerializeField] private float _rotationSpeed = 10f;
 
-    [Tooltip("The most force (N) one hand can apply. Lifting takes mass x 9.81 of it, so a heavy " +
-             "item has little left to move with: it lags, swings wide and sags. " +
-             "See docs/systems/damage.md, Weight.")]
-    [SerializeField] private float _gripStrength = 180f;
+    [Tooltip("The most upward force (N) the beam can apply. Lifting takes mass x 9.81 of it: " +
+             "under 10 kg lifts, heavier drags along the floor. See docs/systems/damage.md, Weight.")]
+    [SerializeField] private float _gripStrength = 100f;
 
-    [Tooltip("Fastest a held item is pulled toward the hand, m/s.")]
-    [SerializeField] private float _maxHoldSpeed = 14f;
+    [Tooltip("The most sideways force (N) the beam can apply. More than it can lift, as hauling " +
+             "is easier than lifting: a heavy thing still follows you, only slower.")]
+    [SerializeField] private float _haulStrength = 250f;
+
+    [Tooltip("Angular damping while held and not being turned, so it hangs and settles, not spins.")]
+    [SerializeField] private float _heldAngularDamping = 3f;
 
     [Tooltip("Where the hand holds this item. Empty: the centre of its meshes.")]
     [SerializeField] private Transform _gripPoint;
@@ -104,30 +118,45 @@ public class Item : MonoBehaviour
     /// <summary>Mass in kg, which is what makes it heavy to carry and hard to swing.</summary>
     public float Mass => _rb != null ? _rb.mass : 1f;
 
-    /// <summary>How much a held item slows its carrier: 1 up to 2 kg, falling to 0.5 at 15 kg.</summary>
-    public float CarrySpeedMultiplier => Mathf.Clamp(1f - (Mass - 2f) / 26f, 0.5f, 1f);
+    /// <summary>How much of the beam's strength holding this up takes: 0 weightless, 1 at the limit.
+    /// Over 1 it cannot be lifted and drags. The beam's colour reads this.</summary>
+    public float Load => Mass * -Physics.gravity.y / Mathf.Max(1f, _gripStrength);
+
+    /// <summary>True when the item is too heavy to lift and is dragged instead.</summary>
+    public bool IsTooHeavyToLift => Load > 1f;
+
+    /// <summary>Where the beam is pulling the held point to, extrapolated to now.</summary>
+    public Vector3 TargetPosition => _targetPosition;
 
     private void FixedUpdate()
     {
         if (!_isDragging)
             return;
 
-        // A real body pulled by a hand of limited strength, not a teleport: the solver keeps it out
-        // of walls, it carries momentum into whatever it hits, and weight shows as lag and sag.
-        // Walking is not the hand moving: the body's change of velocity reaches the item whole, and
-        // the target is kept relative to the body, so strength and weight only act on the hand's
-        // own movement (aim, reach). See docs/plans/staging-playtest-2-2026-09-24.md, part 1.
+        // A real body hung from the point the player grabbed, pulled by a spring of limited
+        // strength: the R.E.P.O. beam (#144, docs/plans/carry-like-repo.md). The force acts at that
+        // point, so an off-centre grab swings and turns by itself. The spring damps toward the
+        // target's own velocity, so following a walking player needs no jolt. Up and sideways have
+        // separate limits: past about 10 kg the up part cannot hold the weight, and the item drags
+        // on the floor while the sideways part still hauls it.
         float dt = Time.fixedDeltaTime;
-        Vector3 holderVelocity = _holderBody != null ? _holderBody.linearVelocity : Vector3.zero;
-        _rb.linearVelocity += holderVelocity - _holderVelocityLastStep;
-        _holderVelocityLastStep = holderVelocity;
+        // A target nobody has updated for a while is standing still, whatever it was doing.
+        float age = Time.time - _targetStampedAt;
+        Vector3 targetVelocity = age > 0.1f ? Vector3.zero : _targetVelocity;
+        Vector3 target = _targetPosition + targetVelocity * Mathf.Clamp(age, 0f, 0.05f);
+        Vector3 held = HeldPointWorld;
+        Vector3 heldVelocity = _rb.GetPointVelocity(held);
 
-        Vector3 target = _holderBody != null ? _holderBody.position + _targetOffsetFromHolder : _targetPosition;
-        Vector3 grip = _rb.position + _rb.rotation * _gripOffset;
-        Vector3 wantedVelocity = holderVelocity +
-            Vector3.ClampMagnitude((target - grip) * _followSpeed, _maxHoldSpeed);
-        Vector3 force = (wantedVelocity - _rb.linearVelocity) / dt * _rb.mass - Physics.gravity * _rb.mass;
-        _rb.AddForce(Vector3.ClampMagnitude(force, _gripStrength), ForceMode.Force);
+        float damping = 2f * Mathf.Sqrt(_springRate) * _dampingRatio;
+        Vector3 accel = (target - held) * _springRate + (targetVelocity - heldVelocity) * damping;
+        Vector3 force = (accel - Physics.gravity) * _rb.mass;
+
+        var sideways = Vector3.ClampMagnitude(new Vector3(force.x, 0f, force.z), _haulStrength);
+        float up = Mathf.Clamp(force.y, -_gripStrength, _gripStrength);
+        _rb.AddForceAtPosition(sideways + Vector3.up * up, held, ForceMode.Force);
+
+        if (!_isRotating)
+            return;
 
         Quaternion delta = _targetRotation * Quaternion.Inverse(_rb.rotation);
         delta.ToAngleAxis(out float angle, out Vector3 axis);
@@ -192,23 +221,28 @@ public class Item : MonoBehaviour
         }
     }
 
-    public void StartDragging(GameObject holder = null)
+    /// <summary>Picks the item up by its authored grip (or mesh centre).</summary>
+    public void StartDragging(GameObject holder = null) => StartDragging(holder, AuthoredGripWorld);
+
+    /// <summary>Picks the item up by <paramref name="grabPoint"/>, the point on it the player aimed
+    /// at. It hangs from there while held.</summary>
+    public void StartDragging(GameObject holder, Vector3 grabPoint)
     {
         _isDragging = true;
         Holder = holder;
-
         // Stays a dynamic body while held (see FixedUpdate). It must not collide with the person
         // holding it, or carrying it pushes them around and swinging it hits them.
         _rb.isKinematic = false;
         _rb.WakeUp();
         SetIgnoreHolder(true);
-
         _targetRotation = transform.rotation;
-        _holderBody = holder != null ? holder.GetComponent<Rigidbody>() : null;
-        _holderVelocityLastStep = Vector3.zero;
-        MeasureGrip();
+        _isRotating = false;
+        _angularDampingWhenFree = _rb.angularDamping;
+        _rb.angularDamping = _heldAngularDamping;
+        _gripOffset = Quaternion.Inverse(_rb.rotation) * (grabPoint - _rb.position);
         // Hold it where it is until the hand says otherwise.
-        UpdateTargetPosition(GripWorldPosition);
+        _hasTargetVelocity = false;
+        UpdateTargetPosition(grabPoint);
 
         if (_carryableCreature != null && (Object)_carryableCreature != null)
         {
@@ -221,6 +255,7 @@ public class Item : MonoBehaviour
         _isDragging = false;
         _releasedAt = Time.time;
         _rb.isKinematic = false;
+        _rb.angularDamping = _angularDampingWhenFree;
         SetIgnoreHolder(false);
 
         // Release call removed - Monster handles its own recovery via struggle routine.
@@ -231,6 +266,7 @@ public class Item : MonoBehaviour
         _isDragging = false;
         _releasedAt = Time.time;
         _rb.isKinematic = false;
+        _rb.angularDamping = _angularDampingWhenFree;
         SetIgnoreHolder(false);
 
         // An impulse, so the same arm throws a pot far and a chest barely at all.
@@ -284,12 +320,37 @@ public class Item : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Where the held point should be. Its velocity is estimated from successive calls, smoothed,
+    /// unless <see cref="UpdateTarget"/> supplies one.
+    /// </summary>
     public void UpdateTargetPosition(Vector3 position)
     {
+        if (!_hasTargetVelocity)
+        {
+            UpdateTarget(position, Vector3.zero);
+            return;
+        }
+
+        float elapsed = Time.time - _targetStampedAt;
+        if (elapsed <= 1e-4f)
+        {
+            // A second call in the same frame: no new time has passed to measure a velocity over.
+            _targetPosition = position;
+            return;
+        }
+
+        Vector3 measured = (position - _targetPosition) / elapsed;
+        UpdateTarget(position, Vector3.Lerp(_targetVelocity, measured, 0.5f));
+    }
+
+    /// <summary>Where the held point should be, and how fast that target is moving.</summary>
+    public void UpdateTarget(Vector3 position, Vector3 velocity)
+    {
         _targetPosition = position;
-        // Against the same (rendered) holder pose the camera placed this point from.
-        if (_holderBody != null)
-            _targetOffsetFromHolder = position - _holderBody.transform.position;
+        _targetVelocity = velocity;
+        _targetStampedAt = Time.time;
+        _hasTargetVelocity = true;
     }
 
     public void UpdateRotation(Quaternion rotation)
@@ -297,18 +358,34 @@ public class Item : MonoBehaviour
         _targetRotation = rotation;
     }
 
-    /// <summary>Sets where the hand holds this item; null holds it by its mesh centre.</summary>
-    public void SetGripPoint(Transform gripPoint)
+    /// <summary>Turning the item on purpose (the rotate button held). Starting keeps its current
+    /// orientation as the target; letting go lets it hang freely again.</summary>
+    public void SetRotating(bool rotating)
     {
-        _gripPoint = gripPoint;
-        MeasureGrip();
+        if (rotating && !_isRotating)
+            _targetRotation = _rb.rotation;
+        _isRotating = rotating;
     }
 
-    private void MeasureGrip() =>
-        _gripOffset = Quaternion.Inverse(transform.rotation) * (GripWorldPosition - transform.position);
+    /// <summary>Sets the authored grip, used when a pickup has no aimed point; null uses the mesh
+    /// centre.</summary>
+    public void SetGripPoint(Transform gripPoint) => _gripPoint = gripPoint;
 
-    /// <summary>Where the hand is holding the item right now, in world space.</summary>
-    public Vector3 GripWorldPosition => _gripPoint != null ? _gripPoint.position : MeshCentre();
+    /// <summary>The authored grip, or the mesh centre.</summary>
+    private Vector3 AuthoredGripWorld => _gripPoint != null ? _gripPoint.position : MeshCentre();
+
+    /// <summary>The held point, in world space, from the physics body's pose.</summary>
+    private Vector3 HeldPointWorld => _rb.position + _rb.rotation * _gripOffset;
+
+    /// <summary>The held point in the item's own frame, for sending over the network.</summary>
+    public Vector3 HeldPointLocal => _gripOffset;
+
+    /// <summary>A point given in the item's own frame (like <see cref="HeldPointLocal"/>), in world
+    /// space as the item is drawn.</summary>
+    public Vector3 LocalToWorldPoint(Vector3 local) => transform.position + transform.rotation * local;
+
+    /// <summary>Where the item is held while held, as drawn; its authored grip otherwise.</summary>
+    public Vector3 GripWorldPosition => _isDragging ? LocalToWorldPoint(_gripOffset) : AuthoredGripWorld;
 
     private Vector3 MeshCentre()
     {

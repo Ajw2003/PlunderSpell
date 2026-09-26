@@ -15,7 +15,11 @@ public class ItemManager : SingletonBase<ItemManager>
     [SerializeField] private float _throwForce = 15f;
 
     private Item _hoveredItem;
+    private Vector3 _hoveredPoint;
     private Item _draggedItem;
+
+    // The local player's grab beam (#144). Other players' beams are drawn by the carry relay.
+    private GrabBeam _beam;
     private Camera _mainCamera;
     private float _currentDragDepth;
 
@@ -41,7 +45,7 @@ public class ItemManager : SingletonBase<ItemManager>
         if (_mainCamera == null) return;
 
         if (_pendingDrag != null && _draggedItem == null && Item.CanDriveHere(_pendingDrag))
-            StartDragging(_pendingDrag);
+            StartDragging(_pendingDrag, _pendingDrag.LocalToWorldPoint(_pendingGrabLocal));
 
         HandleHover();
 
@@ -63,15 +67,15 @@ public class ItemManager : SingletonBase<ItemManager>
                 return;
             }
 
-            if (Mouse.current != null && Mouse.current.middleButton.isPressed)
-            {
+            // The target keeps following the crosshair while rotating too: a target left standing
+            // still would let the item drift off the beam.
+            bool rotating = Mouse.current != null && Mouse.current.middleButton.isPressed;
+            _draggedItem.SetRotating(rotating);
+            if (rotating)
                 HandleRotation();
-            }
             else
-            {
                 HandleScrollDepth();
-                UpdateDraggedItemPosition();
-            }
+            UpdateDraggedItemPosition();
         }
     }
 
@@ -134,6 +138,7 @@ public class ItemManager : SingletonBase<ItemManager>
             if (hit.collider.TryGetComponent(out Item item))
             {
                 _hoveredItem = item;
+                _hoveredPoint = hit.point;
             }
             else
             {
@@ -165,7 +170,7 @@ public class ItemManager : SingletonBase<ItemManager>
     {
         if (context.started && _hoveredItem != null)
         {
-            StartDragging(_hoveredItem);
+            StartDragging(_hoveredItem, _hoveredPoint);
         }
         else if (context.canceled)
         {
@@ -178,22 +183,26 @@ public class ItemManager : SingletonBase<ItemManager>
         StopDragging();
     }
 
-    private void StartDragging(Item item)
+    /// <summary>Picks up <paramref name="item"/> by <paramref name="grabPoint"/>, the point on it
+    /// the crosshair was on: it hangs from there, as in R.E.P.O. (#144).</summary>
+    private void StartDragging(Item item, Vector3 grabPoint)
     {
         // In a session another machine may be driving this body; ask for it and pick it up once
-        // granted (Update), rather than fighting the replicated position meanwhile.
+        // granted (Update), rather than fighting the replicated position meanwhile. The grab point
+        // is kept in the item's own frame, since it may move before the answer comes.
         if (!Item.CanDriveHere(item))
         {
             _pendingDrag = item;
+            _pendingGrabLocal = Quaternion.Inverse(item.transform.rotation) * (grabPoint - item.transform.position);
             Item.RequestDrive?.Invoke(item);
             return;
         }
 
         _pendingDrag = null;
         _draggedItem = item;
-        _draggedItem.StartDragging(_mainCamera.transform.root.gameObject);
+        _draggedItem.StartDragging(_mainCamera.transform.root.gameObject, grabPoint);
 
-        _currentDragDepth = Vector3.Distance(_mainCamera.transform.position, item.GripWorldPosition);
+        _currentDragDepth = Vector3.Distance(_mainCamera.transform.position, grabPoint);
         _currentDragDepth = Mathf.Clamp(_currentDragDepth, _minDragDepth, _maxDragDepth);
     }
 
@@ -208,6 +217,36 @@ public class ItemManager : SingletonBase<ItemManager>
     }
 
     private Item _pendingDrag;
+    private Vector3 _pendingGrabLocal;
+
+    /// <summary>Where the local player's beam leaves from: low and to the right of the view, where
+    /// a hand would be. The carry relay sends the same point to other players.</summary>
+    public Vector3 BeamHand { get; private set; }
+
+    /// <summary>Draws the local beam after the camera has moved for this frame.</summary>
+    private void LateUpdate()
+    {
+        if (_draggedItem == null || _mainCamera == null)
+        {
+            if (_beam != null)
+                _beam.Hide();
+            return;
+        }
+
+        if (_beam == null)
+            _beam = GrabBeam.Create("LocalGrabBeam");
+
+        Transform view = _mainCamera.transform;
+        BeamHand = view.position + view.right * 0.22f - view.up * 0.2f + view.forward * 0.35f;
+        _beam.Show(BeamHand, _draggedItem.TargetPosition, _draggedItem.GripWorldPosition, _draggedItem.Load);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (_beam != null)
+            Destroy(_beam.gameObject);
+    }
 
     public Item HoveredItem => _hoveredItem;
 

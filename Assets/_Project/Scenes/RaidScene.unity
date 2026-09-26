@@ -328,6 +328,10 @@ MonoBehaviour:
   _noiseWeight: 15
   _decayDelay: 3
   _decayRate: 5
+  _sightingPoints: 20
+  _attackPoints: 6
+  _rousedChasers: 2
+  _hueAndCryChasers: 3
 --- !u!65 &176129643
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -525,6 +529,7 @@ Transform:
   m_Children:
   - {fileID: 47651819}
   - {fileID: 728934629}
+  - {fileID: 547209065}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &203915345
@@ -806,6 +811,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 865774667}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &547209064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 547209065}
+  - component: {fileID: 547209066}
+  m_Layer: 0
+  m_Name: CarryBeamRelay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &547209065
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 547209064}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 194298984}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &547209066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 547209064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7af2b558db27614468e28f3c037171bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Net::RogueAi.Net.CarryBeamRelay
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
 --- !u!1 &728934628
 GameObject:
   m_ObjectHideFlags: 0
