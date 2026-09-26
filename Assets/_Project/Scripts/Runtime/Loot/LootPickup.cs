@@ -1,3 +1,4 @@
+using Interfaces;
 using PurrNet;
 using UnityEngine;
 
@@ -30,8 +31,13 @@ namespace RogueAi.Loot
     /// (<see cref="EvaluatePickup"/>, <see cref="WouldBreak"/>) are network-free so they can be unit
     /// tested in EditMode without a live transport.
     /// </summary>
+    /// <remarks>
+    /// Implements <see cref="IBreakable"/> and <see cref="ILevitatable"/> so spell effects can reach
+    /// loot without the Spells assembly referencing Loot (which would cycle back through Player).
+    /// Frango shatters loot; Levo lifts it.
+    /// </remarks>
     [RequireComponent(typeof(Rigidbody))]
-    public class LootPickup : NetworkBehaviour
+    public class LootPickup : NetworkBehaviour, IBreakable, ILevitatable
     {
         [Header("Data")]
         [SerializeField] private LootItem _data;
@@ -158,7 +164,14 @@ namespace RogueAi.Loot
         /// waits for a second carrier. Server-authoritative so ownership transfer cannot race.
         /// </summary>
         [ServerRpc(requireOwnership: false)]
-        public void RequestPickup(NetworkIdentity picker)
+        public void RequestPickup(NetworkIdentity picker) => PerformPickup(picker);
+
+        /// <summary>
+        /// The pickup itself, separate from the RPC that carries it. PurrNet rewrites an [ServerRpc]
+        /// into a send, and on an UNSPAWNED object it runs nothing at all — so offline callers use
+        /// this directly rather than silently failing to pick anything up.
+        /// </summary>
+        public void PerformPickup(NetworkIdentity picker)
         {
             if (IsBroken || picker == null)
                 return;
@@ -203,7 +216,12 @@ namespace RogueAi.Loot
         /// primary carrier's hand socket via a <see cref="ConfigurableJoint"/>.
         /// </summary>
         [ServerRpc(requireOwnership: false)]
-        public void RequestSecondaryPickup(NetworkIdentity secondaryPicker)
+        public void RequestSecondaryPickup(NetworkIdentity secondaryPicker) =>
+            PerformSecondaryPickup(secondaryPicker);
+
+        /// <summary>Takes the other end of a heavy item. See <see cref="PerformPickup"/> on why this
+        /// is separate from the RPC.</summary>
+        public void PerformSecondaryPickup(NetworkIdentity secondaryPicker)
         {
             if (IsBroken || secondaryPicker == null || PrimaryCarrierNetId == null)
                 return;
@@ -252,13 +270,18 @@ namespace RogueAi.Loot
 
         /// <summary>Release request — drops the item back into free physics and clears carry state.</summary>
         [ServerRpc(requireOwnership: false)]
-        public void RequestDrop()
+        public void RequestDrop() => PerformDrop();
+
+        /// <summary>Puts the item down. See <see cref="PerformPickup"/> on why this is separate from
+        /// the RPC.</summary>
+        public void PerformDrop()
         {
             _isBeingCarried.value = false;
             CurrentCarryMode = CarryMode.None;
 
-            // Return ownership to the server (no player owner).
-            GiveOwnership((PlayerID?)null);
+            // Return ownership to the server (no player owner). Only meaningful once spawned.
+            if (isSpawned)
+                GiveOwnership((PlayerID?)null);
 
             transform.SetParent(null, true);
 
@@ -287,6 +310,54 @@ namespace RogueAi.Loot
             transform.SetParent(socket, false);
             transform.localPosition = _handLocalOffset;
             transform.localRotation = Quaternion.identity;
+        }
+
+        // ---------------------------------------------------------------------------------------
+        // Spell targets
+        // ---------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// <see cref="IBreakable"/>: shatter this item. Idempotent, and identical to a fatal impact —
+        /// a Frango'd vase is exactly as worthless as a dropped one.
+        /// </summary>
+        public void Break()
+        {
+            if (IsBroken)
+                return;
+            BreakItem();
+        }
+
+        /// <summary>
+        /// <see cref="ILevitatable"/>: lift the item. A carried item is not liftable — it is already
+        /// kinematic and parented, and un-sticking it from a carrier's hand mid-carry would strand it.
+        /// </summary>
+        public void Levitate(Vector3 impulse, float duration)
+        {
+            if (IsBroken || IsBeingCarried || _rb == null || _rb.isKinematic)
+                return;
+
+            _rb.AddForce(impulse, ForceMode.VelocityChange);
+            _levitationRemaining = Mathf.Max(_levitationRemaining, duration);
+        }
+
+        /// <summary>Seconds of levitation left; while positive the item ignores gravity.</summary>
+        public float LevitationRemaining => _levitationRemaining;
+
+        private float _levitationRemaining;
+
+        private void FixedUpdate()
+        {
+            if (_levitationRemaining <= 0f)
+                return;
+
+            _levitationRemaining -= Time.fixedDeltaTime;
+
+            // Cancel gravity for the duration so the item hangs rather than arcing straight back down.
+            if (_rb != null && !_rb.isKinematic)
+                _rb.AddForce(-Physics.gravity * _rb.mass, ForceMode.Force);
+
+            if (_levitationRemaining <= 0f)
+                _levitationRemaining = 0f;
         }
 
         /// <summary>Finds a child transform named "HandSocket" on the carrier, falling back to its root.</summary>

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b7e93a488918d94496681a46807bcea, type: 3}
+  m_Name: GeneratedLootTable
+  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.RaidLootTable
+  Entries:
+  - Item: {fileID: 11400000, guid: 5376b2d429fd0eb41889321aa1195799, type: 2}
+    Zone: 0
+    Weight: 10
+    Prefab: {fileID: 6246938865165151804, guid: 3cd06647bd138044d82e569e492e0b47, type: 3}
+  - Item: {fileID: 11400000, guid: b6748f99332c92d4d8bfdf4d5ee7c5e1, type: 2}
+    Zone: 1
+    Weight: 10
+    Prefab: {fileID: 6246938865165151804, guid: 3cd06647bd138044d82e569e492e0b47, type: 3}
+  - Item: {fileID: 11400000, guid: fe59afb5045960445b8a72deca2c70df, type: 2}
+    Zone: 2
+    Weight: 10
+    Prefab: {fileID: 6246938865165151804, guid: 3cd06647bd138044d82e569e492e0b47, type: 3}
+  - Item: {fileID: 11400000, guid: 2ce3756ca83754649800ea9a16d1e978, type: 2}
+    Zone: 3
+    Weight: 10
+    Prefab: {fileID: 6246938865165151804, guid: 3cd06647bd138044d82e569e492e0b47, type: 3}
+  - Item: {fileID: 11400000, guid: 9f3ff84d135c4e44d86714212b43e18b, type: 2}
+    Zone: 4
+    Weight: 10
+    Prefab: {fileID: 6246938865165151804, guid: 3cd06647bd138044d82e569e492e0b47, type: 3}
+  - Item: {fileID: 11400000, guid: a7de776a2bef798e9411166208f6991f, type: 2}
+    Zone: 1
+    Weight: 10
+    Prefab: {fileID: 6484770831777660367, guid: 3d3a4d19ff5b64641b21765e31bee59c, type: 3}
+  - Item: {fileID: 11400000, guid: 2b5f2b30b465417552a86b09232744d1, type: 2}
+    Zone: 2
+    Weight: 10
+    Prefab: {fileID: 6816389412842675621, guid: ba45e493e9152b945baac5a7f48877d6, type: 3}
+  - Item: {fileID: 11400000, guid: d444275d53da01a2a48d06ee0b221415, type: 2}
+    Zone: 3
+    Weight: 10
+    Prefab: {fileID: 3106342062324146821, guid: cea5b906054d6b5429e3aaddc886fd08, type: 3}
+  - Item: {fileID: 11400000, guid: 24e3f11b16f03a49bb51cc3151e85449, type: 2}
+    Zone: 3
+    Weight: 10
+    Prefab: {fileID: 5313939541763710443, guid: 545c4c828845406488c404a25374a82e, type: 3}
+  - Item: {fileID: 11400000, guid: 7cfe70917ae3795b409df5962ba377e9, type: 2}
+    Zone: 4
+    Weight: 10
+    Prefab: {fileID: 5718070715567320153, guid: be95e564919da944e96adf1ba0e947d5, type: 3}
+  CurtainWallDensity: 0.15
+  OuterBaileyDensity: 0.35
+  InnerWardDensity: 0.5
+  KeepDensity: 0.7
+  CryptDensity: 1

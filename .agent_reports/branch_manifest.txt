@@ -1,0 +1,17 @@
+Integration staging branch: integration/staging-2026-09-15 (from plunderspell-dev)
+Excluded per user: origin/feature/Owen/PCG
+Branches to integrate (order = smallest diff first, recomputed below):
+origin/claude/plunderspell-enemy-assets-nsfuqn : 3 commits ahead of staging
+origin/claude/plunderspell-ui-system-ur2o22 : 3 commits ahead of staging
+origin/develop : 0 commits ahead of staging
+claude/steam-multiplayer-framework-xia7ch : 0 commits ahead of staging
+origin/feature/m0-gravity-removal : 0 commits ahead of staging
+claude/inspiring-davinci-83909p : 3 commits ahead of staging
+origin/claude/plunderspell-fable-prompt-iutej1 : 4 commits ahead of staging
+origin/feature/m1-voice-casting : 0 commits ahead of staging
+origin/feature/m2-castle-gen : 0 commits ahead of staging
+origin/feature/m2-loot-acoustics : 0 commits ahead of staging
+origin/feature/m3-extraction-lair : 0 commits ahead of staging
+claude/plunderspell-asset-pipeline-2cx4w4 : 2 commits ahead of staging
+claude/plunderspell-core-gameplay-o2av06 : 9 commits ahead of staging
+claude/level-generation-visual-pqdsr8 : 4 commits ahead of staging

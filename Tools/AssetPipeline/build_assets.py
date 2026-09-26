@@ -28,6 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import asset_specs  # noqa: E402
 import builders  # noqa: E402
+import castle_builders  # noqa: E402
 import manifest  # noqa: E402
 import mesh_kit as mk  # noqa: E402
 import validate_in_blender as val  # noqa: E402
@@ -47,7 +48,7 @@ def build_one(spec) -> tuple[object, list[str]]:
     uv = bm.loops.layers.uv.new("UVMap")
     mk.reset_material_order()
 
-    builder_fn = getattr(builders, spec["builder"])
+    builder_fn = getattr(builders, spec["builder"], None) or getattr(castle_builders, spec["builder"])
     builder_fn(bm, uv)
 
     obj = mk.finalize_to_object(bm, spec["key"], mk.used_pigments(), PALETTE_PNG)

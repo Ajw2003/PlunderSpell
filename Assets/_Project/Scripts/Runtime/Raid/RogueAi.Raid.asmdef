@@ -1,0 +1,28 @@
+{
+    "name": "RogueAi.Raid",
+    "rootNamespace": "RogueAi.Raid",
+    "references": [
+        "PurrNet.Runtime",
+        "RogueAi.Core",
+        "RogueAi.Castle",
+        "RogueAi.Loot",
+        "RogueAi.Extraction",
+        "RogueAi.Lair",
+        "RogueAi.Inventory",
+        "RogueAi.Alarm",
+        "RogueAi.Acoustics",
+        "RogueAi.Guards",
+        "RogueAi.Status",
+        "RogueAi.Spells",
+        "RogueAi.Voice"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

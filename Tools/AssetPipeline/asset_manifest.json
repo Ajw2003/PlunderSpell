@@ -7,11 +7,47 @@
       "preview": "1c7858a95cb98cb3:23a9d68e53fd",
       "tris": 212
     },
+    "ArmouredCourtyard": {
+      "budget": 450,
+      "content": "618f9273e1fe5927",
+      "preview": "618f9273e1fe5927:23a9d68e53fd",
+      "tris": 268
+    },
+    "BarracksBunk": {
+      "budget": 450,
+      "content": "52d01e5b6ac5e97e",
+      "preview": "52d01e5b6ac5e97e:23a9d68e53fd",
+      "tris": 276
+    },
+    "Bastion": {
+      "budget": 550,
+      "content": "0b34885c68677bc4",
+      "preview": "0b34885c68677bc4:23a9d68e53fd",
+      "tris": 352
+    },
+    "BlacksmithShop": {
+      "budget": 400,
+      "content": "fc3daed51c05ef61",
+      "preview": "fc3daed51c05ef61:23a9d68e53fd",
+      "tris": 248
+    },
     "BronzeSword": {
       "budget": 400,
       "content": "415b1b204fe7d963",
       "preview": "415b1b204fe7d963:23a9d68e53fd",
       "tris": 220
+    },
+    "BurialVault": {
+      "budget": 350,
+      "content": "1fe151ce69a80ac6",
+      "preview": "1fe151ce69a80ac6:23a9d68e53fd",
+      "tris": 204
+    },
+    "ChapelRoom": {
+      "budget": 400,
+      "content": "36c73c1b6a368107",
+      "preview": "36c73c1b6a368107:23a9d68e53fd",
+      "tris": 232
     },
     "CopperPot": {
       "budget": 400,
@@ -19,11 +55,41 @@
       "preview": "650ea3226a8dfbf8:23a9d68e53fd",
       "tris": 112
     },
+    "CryptAntechamber": {
+      "budget": 350,
+      "content": "017e67bcb3e4778f",
+      "preview": "017e67bcb3e4778f:23a9d68e53fd",
+      "tris": 196
+    },
+    "CryptChamberFinal": {
+      "budget": 800,
+      "content": "f8e0237cfd829fa6",
+      "preview": "f8e0237cfd829fa6:23a9d68e53fd",
+      "tris": 564
+    },
+    "CryptStairwell": {
+      "budget": 600,
+      "content": "9406ff2f2bfdfb1c",
+      "preview": "9406ff2f2bfdfb1c:23a9d68e53fd",
+      "tris": 372
+    },
+    "Drawbridge": {
+      "budget": 650,
+      "content": "9849e63d1c4e394d",
+      "preview": "9849e63d1c4e394d:23a9d68e53fd",
+      "tris": 412
+    },
     "FlintlockPistol": {
       "budget": 600,
       "content": "00e6571e2152278e",
       "preview": "00e6571e2152278e:23a9d68e53fd",
       "tris": 180
+    },
+    "GatehouseModule": {
+      "budget": 700,
+      "content": "8dd203b3a951df91",
+      "preview": "8dd203b3a951df91:23a9d68e53fd",
+      "tris": 444
     },
     "GoldenGoblet": {
       "budget": 350,
@@ -31,17 +97,47 @@
       "preview": "1de552354b689e47:23a9d68e53fd",
       "tris": 100
     },
+    "GreatHallMain": {
+      "budget": 600,
+      "content": "e6d547e987ae1b54",
+      "preview": "e6d547e987ae1b54:23a9d68e53fd",
+      "tris": 396
+    },
+    "GuardRoomInner": {
+      "budget": 400,
+      "content": "3fc20812489a8702",
+      "preview": "3fc20812489a8702:23a9d68e53fd",
+      "tris": 240
+    },
     "HeavyChest": {
       "budget": 700,
       "content": "3d912972113697bd",
       "preview": "3d912972113697bd:23a9d68e53fd",
       "tris": 48
     },
+    "KeepStairwell": {
+      "budget": 600,
+      "content": "0e2b34f846682118",
+      "preview": "0e2b34f846682118:23a9d68e53fd",
+      "tris": 396
+    },
+    "KitchenRoom": {
+      "budget": 500,
+      "content": "3005cd95684fe80c",
+      "preview": "3005cd95684fe80c:23a9d68e53fd",
+      "tris": 324
+    },
     "Longsword": {
       "budget": 450,
       "content": "2abf76a1be12ecb0",
       "preview": "2abf76a1be12ecb0:23a9d68e53fd",
       "tris": 220
+    },
+    "LordsSolar": {
+      "budget": 400,
+      "content": "9d7f8b37efc23520",
+      "preview": "9d7f8b37efc23520:23a9d68e53fd",
+      "tris": 240
     },
     "Matchlock": {
       "budget": 650,
@@ -73,11 +169,65 @@
       "preview": "52788788b318f1ac:23a9d68e53fd",
       "tris": 228
     },
+    "RoyalBedchamber": {
+      "budget": 400,
+      "content": "faa6d80436f05626",
+      "preview": "faa6d80436f05626:23a9d68e53fd",
+      "tris": 216
+    },
     "SilverPlate": {
       "budget": 420,
       "content": "fa0f3f32d84d83a6",
       "preview": "fa0f3f32d84d83a6:23a9d68e53fd",
       "tris": 252
+    },
+    "StableBlock": {
+      "budget": 400,
+      "content": "92be76aff688e7eb",
+      "preview": "92be76aff688e7eb:23a9d68e53fd",
+      "tris": 240
+    },
+    "StorehouseRoom": {
+      "budget": 500,
+      "content": "f62c9262b860c9d9",
+      "preview": "f62c9262b860c9d9:23a9d68e53fd",
+      "tris": 336
+    },
+    "ThroneRoomKeep": {
+      "budget": 450,
+      "content": "c63dd9a352f267ab",
+      "preview": "c63dd9a352f267ab:23a9d68e53fd",
+      "tris": 280
+    },
+    "TombCorridor": {
+      "budget": 450,
+      "content": "0739e1f4da9910d1",
+      "preview": "0739e1f4da9910d1:23a9d68e53fd",
+      "tris": 264
+    },
+    "TreasuryVault": {
+      "budget": 850,
+      "content": "b135ee6abac497de",
+      "preview": "b135ee6abac497de:23a9d68e53fd",
+      "tris": 588
+    },
+    "WallCorner": {
+      "budget": 400,
+      "content": "61927294b8458126",
+      "preview": "61927294b8458126:23a9d68e53fd",
+      "tris": 216
+    },
+    "WallStraight": {
+      "budget": 550,
+      "content": "e8808d6e6a8b62f9",
+      "preview": "e8808d6e6a8b62f9:23a9d68e53fd",
+      "tris": 348
+    },
+    "WellCourtyard": {
+      "budget": 500,
+      "content": "6b6d53f6a4c18ba9",
+      "preview": "6b6d53f6a4c18ba9:23a9d68e53fd",
+      "tris": 328
     }
   }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-15 19:24:54Z" end-time="2026-09-15 19:24:55Z" duration="0.2696112">
+  <test-suite type="TestSuite" id="1000" name="PurrnetTest" fullname="PurrnetTest" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-15 19:24:54Z" end-time="2026-09-15 19:24:55Z" duration="0.269611" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1003" name="RogueAi.Tests.Editor.dll" fullname="C:/Users/aj/Desktop/GameDev/Rogue-Ai-Extraction-Game/Library/ScriptAssemblies/RogueAi.Tests.Editor.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-15 19:24:54Z" end-time="2026-09-15 19:24:55Z" duration="0.236459" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="20372" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1004" name="RogueAi" fullname="RogueAi" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-15 19:24:54Z" end-time="2026-09-15 19:24:55Z" duration="0.228735" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1005" name="Tests" fullname="RogueAi.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-15 19:24:54Z" end-time="2026-09-15 19:24:55Z" duration="0.226894" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1006" name="Editor" fullname="RogueAi.Tests.Editor" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-15 19:24:54Z" end-time="2026-09-15 19:24:55Z" duration="0.223749" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="ArtAssetImportTests" fullname="RogueAi.Tests.Editor.ArtAssetImportTests" classname="RogueAi.Tests.Editor.ArtAssetImportTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-15 19:24:54Z" end-time="2026-09-15 19:24:55Z" duration="0.216860" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1002" name="GeneratedPropsImportCleanly" fullname="RogueAi.Tests.Editor.ArtAssetImportTests.GeneratedPropsImportCleanly" methodname="GeneratedPropsImportCleanly" classname="RogueAi.Tests.Editor.ArtAssetImportTests" runstate="Runnable" seed="2000552900" result="Passed" start-time="2026-09-15 19:24:54Z" end-time="2026-09-15 19:24:55Z" duration="0.175130" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/aj/AppData/LocalLow/DefaultCompany/PurrnetTest\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

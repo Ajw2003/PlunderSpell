@@ -3,6 +3,8 @@
     "rootNamespace": "RogueAi.Spells",
     "references": [
         "RogueAi.Voice",
+        "RogueAi.Core",
+        "RogueAi.Acoustics",
         "PurrNet.Runtime"
     ],
     "includePlatforms": [],

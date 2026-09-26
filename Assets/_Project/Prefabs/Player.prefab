@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5992561804980133146}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -128,8 +128,6 @@ GameObject:
   - component: {fileID: 1882235948596881410}
   - component: {fileID: 5845973335706416536}
   - component: {fileID: 7962204930486381791}
-  - component: {fileID: 9111867752775346081}
-  - component: {fileID: 9211867752775346082}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -250,34 +248,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c2c8881fd52f75439f527c4f4c0f10a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: RogueAi.Player::Player.PlayerInputController
---- !u!114 &9111867752775346081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8511867752775346080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
-  _syncPosition: 1
-  _syncRotation: 1
-  _syncScale: 0
-  _syncParent: 0
-  _ownerAuth: 1
---- !u!114 &9211867752775346082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8511867752775346080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd2b0608b472452abb69ae0b4a8473fe, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: RogueAi.Net::PlayerNetworkOwnership

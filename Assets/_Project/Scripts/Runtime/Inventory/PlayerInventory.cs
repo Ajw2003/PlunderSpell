@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using PurrNet;
 using UnityEngine;
 
@@ -24,8 +25,12 @@ namespace RogueAi.Inventory
         // reference survives serialization across peers (see master report "Known manual steps").
         private readonly SyncList<InventoryItem> _equippedItems = new SyncList<InventoryItem>();
 
-        /// <summary>Read-only view of the currently equipped items.</summary>
-        public IReadOnlyList<InventoryItem> EquippedItems => _equippedItems;
+        /// <summary>
+        /// Read-only view of the currently equipped items. SyncList implements IList&lt;T&gt; but not
+        /// IReadOnlyList&lt;T&gt;, so it is wrapped rather than cast (an unwrapped cast compiles but
+        /// throws InvalidCastException at runtime).
+        /// </summary>
+        public IReadOnlyList<InventoryItem> EquippedItems => new ReadOnlyCollection<InventoryItem>(_equippedItems);
 
         /// <summary>Number of equipped items.</summary>
         public int EquippedCount => _equippedItems.Count;

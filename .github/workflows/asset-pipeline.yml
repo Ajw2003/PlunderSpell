@@ -1,0 +1,53 @@
+name: Asset pipeline
+
+# Guards the invariant the pipeline is built around: rebuilding the props from
+# source must reproduce exactly what is committed. Needs no secrets — Blender
+# and the validators all run on a stock runner.
+
+on:
+  push:
+    branches: [plunderspell-dev, main]
+    paths:
+      - 'Tools/AssetPipeline/**'
+      - 'Assets/_Project/Art/**'
+      - '.github/workflows/asset-pipeline.yml'
+  pull_request:
+    paths:
+      - 'Tools/AssetPipeline/**'
+      - 'Assets/_Project/Art/**'
+      - '.github/workflows/asset-pipeline.yml'
+  workflow_dispatch:
+
+jobs:
+  rebuild-is-reproducible:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # Blender's apt package embeds the *system* python, so numpy (needed by
+      # its FBX exporter) and Pillow have to be the apt builds rather than pip
+      # installs into some other interpreter. trimesh has no apt package.
+      - name: Install Blender and Python dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender python3-numpy python3-pil
+          python3 -m pip install --break-system-packages --quiet trimesh
+
+      - name: Run the pipeline
+        run: Tools/AssetPipeline/run_pipeline.sh
+
+      - name: Committed artifacts must match a fresh build
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Rebuilding changed committed artifacts — commit the regenerated assets, or fix the nondeterminism."
+            git status --porcelain
+            git diff --stat
+            exit 1
+          fi
+          echo "Clean: committed assets match a fresh build."
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prop-previews
+          path: Tools/AssetPipeline/previews/

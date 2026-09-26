@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ddca6421151708fac6f6633b3e16d45, type: 3}
   m_Name: Spell_CADAVER_SURGE
   m_EditorClassIdentifier: 
-  SpellWord: CADAVER SURGE
+  Word: CADAVER SURGE
   spellId: 7
   AltPronunciations:
   - CADAVER SURJ

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ddca6421151708fac6f6633b3e16d45, type: 3}
   m_Name: Spell_IGNIS
   m_EditorClassIdentifier: 
-  SpellWord: IGNIS
+  Word: IGNIS
   spellId: 1
   AltPronunciations:
   - AGNIS

@@ -1,0 +1,812 @@
+<!doctype html>
+<title>Castle Generator</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #eceee5;
+    --surface: #f8f8f2;
+    --surface-2: #ffffff;
+    --ink: #23241f;
+    --ink-dim: #5d5f54;
+    --line: #c7c9b8;
+    --line-strong: #a7a996;
+    --accent: #35597a;
+    --accent-ink: #f4f6f9;
+    --warn: #a34a1f;
+    --good: #3f6e3a;
+
+    --z-crypt: #5b3a73;
+    --z-keep: #a97a2f;
+    --z-innerward: #4f6f8f;
+    --z-outerbailey: #4f7a49;
+    --z-curtainwall: #6e6a5e;
+
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14161b;
+      --surface: #1b1e25;
+      --surface-2: #20242c;
+      --ink: #e9e7dc;
+      --ink-dim: #9a9c8e;
+      --line: #333a3f;
+      --line-strong: #454e55;
+      --accent: #7fa9cf;
+      --accent-ink: #0f1a24;
+      --warn: #e08a52;
+      --good: #7fbb76;
+
+      --z-crypt: #9d78bd;
+      --z-keep: #d9ac5f;
+      --z-innerward: #85abcf;
+      --z-outerbailey: #7fb374;
+      --z-curtainwall: #9b988c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14161b;
+    --surface: #1b1e25;
+    --surface-2: #20242c;
+    --ink: #e9e7dc;
+    --ink-dim: #9a9c8e;
+    --line: #333a3f;
+    --line-strong: #454e55;
+    --accent: #7fa9cf;
+    --accent-ink: #0f1a24;
+    --warn: #e08a52;
+    --good: #7fbb76;
+
+    --z-crypt: #9d78bd;
+    --z-keep: #d9ac5f;
+    --z-innerward: #85abcf;
+    --z-outerbailey: #7fb374;
+    --z-curtainwall: #9b988c;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    padding-inline: 20px;
+    padding-block: 22px 40px;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  .wrap { max-width: 1180px; margin-inline: auto; }
+
+  /* ---- header ---- */
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line-strong);
+    margin-bottom: 20px;
+  }
+  .titleblock { display: flex; flex-direction: column; gap: 6px; max-width: 48ch; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-optical-sizing: auto;
+    font-weight: 620;
+    font-size: clamp(1.7rem, 1.2rem + 2vw, 2.35rem);
+    letter-spacing: -0.01em;
+  }
+  .dek { color: var(--ink-dim); font-size: 0.92rem; line-height: 1.5; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 14px 20px;
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  input[type="number"] {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.95rem;
+    width: 8.5ch;
+    padding: 7px 9px;
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+  input[type="number"]:focus-visible,
+  button:focus-visible,
+  .check input:focus-visible + span,
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .btnrow { display: flex; gap: 8px; }
+  button {
+    font: inherit;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.86rem;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 3px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface-2);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  button:hover { filter: brightness(1.06); }
+  button:active { filter: brightness(0.96); }
+
+  .checks { display: flex; gap: 16px; flex-wrap: wrap; padding-bottom: 2px; }
+  .check {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.84rem; color: var(--ink-dim);
+    cursor: pointer;
+  }
+  .check input { accent-color: var(--accent); width: 14px; height: 14px; }
+
+  /* ---- layout ---- */
+  main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.42fr) minmax(280px, 0.75fr);
+    gap: 26px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    main { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  .panel-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .panel-head h2 {
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim);
+    font-family: "IBM Plex Mono", monospace; font-weight: 600;
+  }
+  .panel-head .meta { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; color: var(--ink-dim); }
+
+  /* ---- map ---- */
+  .mapwrap { padding: 14px; }
+  svg#map { width: 100%; height: auto; display: block; }
+  .isoNote { margin: 0 16px 2px; font-size: 0.72rem; color: var(--ink-dim); font-style: italic; }
+
+  .room-face { stroke: none; }
+  .room-face-left { filter: brightness(0.86); }
+  .room-face-right { filter: brightness(0.64); }
+  .room-top { stroke: var(--surface); stroke-width: 1.1; cursor: pointer; }
+  .room-top.selected { stroke: var(--ink); stroke-width: 2; }
+  .room-group { cursor: pointer; }
+  .room-group:hover .room-top { filter: brightness(1.12); }
+  .door-notch { fill: var(--surface-2); opacity: 0.92; }
+
+  .conn-line { stroke: var(--line-strong); stroke-width: 1.6; opacity: 0.75; }
+  .path-line {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 0.6 5.5;
+    opacity: 0.95;
+  }
+  .marker-glyph { font-family: "IBM Plex Sans", sans-serif; pointer-events: none; }
+  .room-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    fill: var(--accent-ink);
+    pointer-events: none;
+  }
+
+  /* ---- legend ---- */
+  .legend { padding: 14px 16px; display: flex; flex-direction: column; gap: 9px; }
+  .legend-row { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
+  .legend-row.note { color: var(--ink-dim); font-size: 0.78rem; }
+  .swatch { width: 14px; height: 14px; border-radius: 3px; flex: none; border: 1px solid rgba(0,0,0,0.12); }
+  .legend-row .n { margin-left: auto; font-family: "IBM Plex Mono", monospace; color: var(--ink-dim); font-size: 0.8rem; }
+  .legend-glyph { width: 14px; text-align: center; flex: none; font-size: 14px; }
+  .legend-notch { width: 14px; height: 10px; flex: none; background: var(--surface-2); border: 1px solid var(--line-strong); border-radius: 1px; }
+
+  /* ---- status banner ---- */
+  .status {
+    margin: 14px 16px 0;
+    padding: 10px 12px;
+    border-radius: 3px;
+    border: 1px solid;
+    font-size: 0.85rem;
+    display: flex;
+    gap: 9px;
+    align-items: baseline;
+  }
+  .status.ok { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, transparent); background: color-mix(in srgb, var(--good) 10%, transparent); }
+  .status.bad { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); background: color-mix(in srgb, var(--warn) 10%, transparent); }
+  .status b { font-family: "IBM Plex Mono", monospace; }
+
+  /* ---- ring table ---- */
+  table.rings { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  table.rings th, table.rings td { text-align: left; padding: 7px 16px; border-bottom: 1px solid var(--line); }
+  table.rings th { font-family: "IBM Plex Mono", monospace; font-size: 0.66rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-dim); font-weight: 600; }
+  table.rings td:not(:first-child), table.rings th:not(:first-child) { text-align: right; font-family: "IBM Plex Mono", monospace; }
+  table.rings tr:last-child td { border-bottom: none; }
+  .zone-dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 7px; }
+  .warn-flag { color: var(--warn); font-weight: 700; }
+
+  /* ---- detail panel ---- */
+  .detail { padding: 14px 16px; min-height: 128px; }
+  .detail .empty { color: var(--ink-dim); font-size: 0.85rem; }
+  .detail dl { display: grid; grid-template-columns: auto 1fr; gap: 5px 14px; margin: 0; font-size: 0.86rem; }
+  .detail dt { color: var(--ink-dim); }
+  .detail dd { margin: 0; font-family: "IBM Plex Mono", monospace; }
+  .detail .roomid { font-family: "Fraunces", serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; }
+  .flagpill {
+    display: inline-block; font-size: 0.68rem; font-family: "IBM Plex Mono", monospace;
+    padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line-strong); margin-right: 5px;
+    color: var(--ink-dim);
+  }
+  .flagpill.on { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+
+  footer {
+    max-width: 1180px; margin: 28px auto 0; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--ink-dim); font-size: 0.78rem; line-height: 1.6;
+  }
+  footer code { font-family: "IBM Plex Mono", monospace; background: var(--surface); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--line); }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,620&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" />
+
+<div class="wrap">
+  <header>
+    <div class="titleblock">
+      <span class="eyebrow">Plunderspell &mdash; Milestone 2a</span>
+      <h1>Castle Generator</h1>
+      <p class="dek">Isometric blockout preview of <code class="mono">ProceduralCastleGenerator.cs</code> &mdash; five concentric rings grown outward from the crypt, each module's height set by zone and its doorway cut into whichever wall faces an already-built neighbour.</p>
+    </div>
+    <div class="controls">
+      <div class="field">
+        <label for="seedInput">Seed</label>
+        <input type="number" id="seedInput" value="12345" step="1" />
+      </div>
+      <div class="btnrow">
+        <button class="primary" id="generateBtn">Generate</button>
+        <button id="randomBtn">Random seed</button>
+      </div>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="toggleConn" checked /><span>Connections</span></label>
+        <label class="check"><input type="checkbox" id="togglePath" checked /><span>Extraction path</span></label>
+        <label class="check"><input type="checkbox" id="toggleLabels" checked /><span>Room labels</span></label>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Layout &mdash; isometric blockout</h2>
+        <span class="meta tnum" id="mapMeta">&nbsp;</span>
+      </div>
+      <div class="mapwrap">
+        <svg id="map" viewBox="0 0 100 100" role="img" aria-label="Generated castle isometric blockout"></svg>
+      </div>
+      <p class="isoNote">Block heights, shading and door cut-outs are a stylized blockout &mdash; every entry in <code class="mono">CastleRoomRegistry.asset</code> still has an empty <code class="mono">Prefab</code> field, so there is no mesh art yet to preview directly.</p>
+      <div class="status" id="pathStatus"></div>
+      <div style="height:14px"></div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap: 20px;">
+      <div class="panel legend">
+        <div class="legend-row"><span class="swatch" style="background:var(--z-crypt)"></span>Crypt <span class="n" id="cnt-Crypt"></span></div>
+        <div class="legend-row"><span class="swatch" style="background:var(--z-keep)"></span>Keep <span class="n" id="cnt-Keep"></span></div>
+        <div class="legend-row"><span class="swatch" style="background:var(--z-innerward)"></span>Inner Ward <span class="n" id="cnt-InnerWard"></span></div>
+        <div class="legend-row"><span class="swatch" style="background:var(--z-outerbailey)"></span>Outer Bailey <span class="n" id="cnt-OuterBailey"></span></div>
+        <div class="legend-row"><span class="swatch" style="background:var(--z-curtainwall)"></span>Curtain Wall <span class="n" id="cnt-CurtainWall"></span></div>
+        <div style="border-top:1px solid var(--line); margin: 3px 0;"></div>
+        <div class="legend-row"><span class="legend-glyph">&#9733;</span>Crypt entry (path start)</div>
+        <div class="legend-row"><span class="legend-glyph">&#9873;</span>Extraction exit (path end)</div>
+        <div class="legend-row"><span class="legend-notch"></span>Doorway to a connected room</div>
+        <div class="legend-row note">Taller block = a higher-weight zone (Keep is the tallest; Curtain Wall the lowest). Click any room for its full name.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Ring placement</h2></div>
+        <table class="rings" id="ringTable">
+          <thead><tr><th>Zone</th><th>Radius</th><th>Rolled</th><th>Placed</th><th>Inward links</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Selected room</h2></div>
+        <div class="detail" id="detailPanel"><p class="empty">Click any room on the plan to inspect it.</p></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Ported line-for-line from <code>Assets/_Project/Scripts/Runtime/Castle/{ProceduralCastleGenerator,CastlePathValidator}.cs</code> on branch <code>plunderspell-dev</code> (Milestone 2a, merged from <code>feature/m2-castle-gen</code>): the same ring radii, room-count ranges, axis-priority placement and A* validator, re-run in JS with a seeded generator standing in for .NET&rsquo;s <code>System.Random</code> &mdash; so a given seed number won&rsquo;t reproduce Unity&rsquo;s exact roll sequence, but every structural rule (ring order, weighted room pools, &ge;2 inward-link check, 4-connectivity) matches the source. Room heights/shading are this preview's own invention, standing in for the meshes the registry doesn't have yet.
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------------------------------------------------------------------
+  // Seeded RNG standing in for System.Random. Exposes Next(minIncl, maxExcl)
+  // with the same call contract the C# code uses.
+  // ---------------------------------------------------------------------
+  function makeRng(seed) {
+    let a = seed >>> 0 || 0xC0FFEE;
+    return {
+      next() {
+        a |= 0; a = (a + 0x6D2B79F5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      },
+      nextInt(minIncl, maxExcl) {
+        return minIncl + Math.floor(this.next() * (maxExcl - minIncl));
+      }
+    };
+  }
+
+  // ---------------------------------------------------------------------
+  // Zone + registry data (mirrors CastleRoomRegistry.asset)
+  // ---------------------------------------------------------------------
+  const ZONE_LABEL = { Crypt: "Crypt", Keep: "Keep", InnerWard: "Inner Ward", OuterBailey: "Outer Bailey", CurtainWall: "Curtain Wall" };
+  const ZONE_VAR = { Crypt: "--z-crypt", Keep: "--z-keep", InnerWard: "--z-innerward", OuterBailey: "--z-outerbailey", CurtainWall: "--z-curtainwall" };
+  // Not sourced from the C#: relative block heights standing in for absent meshes.
+  const ZONE_HEIGHT = { Crypt: 0.34, CurtainWall: 0.55, OuterBailey: 0.85, InnerWard: 1.05, Keep: 1.55 };
+
+  const POOL = {
+    CurtainWall: [["GatehouseModule",1],["WallStraight",4],["WallCorner",3],["Bastion",2],["Drawbridge",1]],
+    OuterBailey: [["StableBlock",2],["BlacksmithShop",2],["BarracksBunk",3],["WellCourtyard",2],["StorehouseRoom",3]],
+    InnerWard:   [["GreatHallMain",1],["ChapelRoom",2],["KitchenRoom",2],["GuardRoomInner",3],["ArmouredCourtyard",2]],
+    Keep:        [["ThroneRoomKeep",1],["TreasuryVault",1],["RoyalBedchamber",2],["LordsSolar",2],["KeepStairwell",3]],
+    Crypt:       [["CryptAntechamber",2],["TombCorridor",3],["BurialVault",2],["CryptChamberFinal",1],["CryptStairwell",2]]
+  };
+
+  // Build order, center outward (mirrors the `Rings` array in ProceduralCastleGenerator).
+  const RINGS = [
+    { zone: "Crypt",       radius: 1, min: 3,  max: 5  },
+    { zone: "Keep",        radius: 2, min: 4,  max: 7  },
+    { zone: "InnerWard",   radius: 3, min: 6,  max: 10 },
+    { zone: "OuterBailey", radius: 4, min: 8,  max: 14 },
+    { zone: "CurtainWall", radius: 5, min: 10, max: 16 },
+  ];
+
+  const FOUR_DIRS = [[1,0],[-1,0],[0,1],[0,-1]];
+  const key = (x, y) => x + "," + y;
+  const chebyshev = (x, y) => Math.max(Math.abs(x), Math.abs(y));
+
+  function ringCells(r) {
+    const cells = [];
+    for (let x = -r; x <= r; x++)
+      for (let y = -r; y <= r; y++)
+        if (chebyshev(x, y) === r) cells.push([x, y]);
+    return cells;
+  }
+
+  function shuffle(list, rng) {
+    for (let i = list.length - 1; i > 0; i--) {
+      const j = rng.nextInt(0, i + 1);
+      const t = list[i]; list[i] = list[j]; list[j] = t;
+    }
+  }
+
+  function pickWeighted(pool, rng) {
+    let total = 0;
+    for (const [, w] of pool) total += Math.max(1, w);
+    let roll = rng.nextInt(0, total);
+    for (const [id, w] of pool) {
+      roll -= Math.max(1, w);
+      if (roll < 0) return id;
+    }
+    return pool[pool.length - 1][0];
+  }
+
+  function tryFindPlacedNeighbour(occupied, x, y) {
+    const cellRing = chebyshev(x, y);
+    let found = null;
+    for (const [dx, dy] of FOUR_DIRS) {
+      const nx = x + dx, ny = y + dy;
+      const k = key(nx, ny);
+      if (!occupied.has(k)) continue;
+      if (chebyshev(nx, ny) < cellRing) return [nx, ny];
+      if (!found) found = [nx, ny];
+    }
+    return found;
+  }
+
+  // ---------------------------------------------------------------------
+  // Generation (mirrors ProceduralCastleGenerator.Generate / PlaceRing)
+  // ---------------------------------------------------------------------
+  function generate(seed) {
+    const rng = makeRng(seed);
+    const occupied = new Map();       // "x,y" -> module index
+    const modules = [];               // PlacedModule[]
+    const ringStats = [];
+
+    function place(roomId, zone, x, y, parentKey, isCryptEntry) {
+      const idx = modules.length;
+      modules.push({
+        roomId, zone, x, y,
+        isCryptEntry: !!isCryptEntry,
+        isExtractionExit: false,
+        parent: parentKey || null
+      });
+      occupied.set(key(x, y), idx);
+      return idx;
+    }
+
+    const cryptStartIndex = place("CryptChamberFinal", "Crypt", 0, 0, null, true);
+
+    for (const ring of RINGS) {
+      let count = rng.nextInt(ring.min, ring.max + 1);
+      if (ring.zone === "Crypt") count = Math.max(0, count - 1);
+
+      let placed = 0, inwardLinks = 0;
+      if (count > 0) {
+        const candidates = ringCells(ring.radius);
+        shuffle(candidates, rng);
+        candidates.sort((a, b) => {
+          const aAxis = (a[0] === 0 || a[1] === 0) ? 0 : 1;
+          const bAxis = (b[0] === 0 || b[1] === 0) ? 0 : 1;
+          return aAxis - bAxis;
+        });
+
+        const pool = POOL[ring.zone];
+        let progress = true;
+        while (placed < count && progress) {
+          progress = false;
+          for (let i = 0; i < candidates.length && placed < count; i++) {
+            const [cx, cy] = candidates[i];
+            if (occupied.has(key(cx, cy))) continue;
+            const nb = tryFindPlacedNeighbour(occupied, cx, cy);
+            if (!nb) continue;
+            const roomId = pickWeighted(pool, rng);
+            place(roomId, ring.zone, cx, cy, key(nb[0], nb[1]), false);
+            if (chebyshev(nb[0], nb[1]) < ring.radius) inwardLinks++;
+            placed++;
+            progress = true;
+          }
+        }
+      }
+      ringStats.push({ zone: ring.zone, radius: ring.radius, min: ring.min, max: ring.max, rolled: count, placed, inwardLinks });
+    }
+
+    // Last-placed OuterBailey module becomes the extraction exit.
+    let extractionExitIndex = -1;
+    for (let i = modules.length - 1; i >= 0; i--) {
+      if (modules[i].zone === "OuterBailey") { modules[i].isExtractionExit = true; extractionExitIndex = i; break; }
+    }
+
+    return { seed, modules, occupied, cryptStartIndex, extractionExitIndex, ringStats };
+  }
+
+  // ---------------------------------------------------------------------
+  // Path validation (mirrors CastlePathValidator: 2x2 footprint + A*),
+  // then collapsed back to a module-to-module hop sequence for display.
+  // ---------------------------------------------------------------------
+  function validatePath(data) {
+    const CELL = 2;
+    const { modules, cryptStartIndex, extractionExitIndex } = data;
+    if (!modules.length || cryptStartIndex < 0 || extractionExitIndex < 0) return { found: false, hops: [] };
+
+    let minX = modules[0].x, maxX = minX, minY = modules[0].y, maxY = minY;
+    for (const m of modules) { minX = Math.min(minX, m.x); maxX = Math.max(maxX, m.x); minY = Math.min(minY, m.y); maxY = Math.max(maxY, m.y); }
+    const w = (maxX - minX + 1) * CELL, h = (maxY - minY + 1) * CELL;
+    const grid = Array.from({ length: w }, () => new Array(h).fill(false));
+    for (const m of modules) {
+      const bx = (m.x - minX) * CELL, by = (m.y - minY) * CELL;
+      for (let dx = 0; dx < CELL; dx++) for (let dy = 0; dy < CELL; dy++) grid[bx + dx][by + dy] = true;
+    }
+
+    const start = [(modules[cryptStartIndex].x - minX) * CELL, (modules[cryptStartIndex].y - minY) * CELL];
+    const end = [(modules[extractionExitIndex].x - minX) * CELL, (modules[extractionExitIndex].y - minY) * CELL];
+
+    const path = astar(grid, w, h, start, end);
+    if (!path) return { found: false, hops: [] };
+
+    const hops = [];
+    for (const [cx, cy] of path) {
+      const gx = Math.floor(cx / CELL) + minX, gy = Math.floor(cy / CELL) + minY;
+      const idx = data.occupied.get(key(gx, gy));
+      if (idx !== undefined && hops[hops.length - 1] !== idx) hops.push(idx);
+    }
+    return { found: true, hops, gridSteps: path.length };
+  }
+
+  function astar(grid, w, h, start, end) {
+    const inBounds = (x, y) => x >= 0 && y >= 0 && x < w && y < h;
+    if (!inBounds(...start) || !inBounds(...end) || !grid[start[0]][start[1]] || !grid[end[0]][end[1]]) return null;
+    const man = (a, b) => Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
+    const open = [{ pos: start, g: 0, h: man(start, end), parent: null }];
+    const openLookup = new Map([[key(...start), open[0]]]);
+    const closed = new Set();
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+
+    while (open.length) {
+      let bi = 0;
+      for (let i = 1; i < open.length; i++) {
+        const f = open[i].g + open[i].h, bf = open[bi].g + open[bi].h;
+        if (f < bf || (f === bf && open[i].h < open[bi].h)) bi = i;
+      }
+      const cur = open.splice(bi, 1)[0];
+      openLookup.delete(key(...cur.pos));
+      if (cur.pos[0] === end[0] && cur.pos[1] === end[1]) {
+        const path = [];
+        let n = cur;
+        while (n) { path.push(n.pos); n = n.parent; }
+        return path.reverse();
+      }
+      closed.add(key(...cur.pos));
+      for (const [dx, dy] of dirs) {
+        const np = [cur.pos[0] + dx, cur.pos[1] + dy];
+        const nk = key(...np);
+        if (!inBounds(...np) || !grid[np[0]][np[1]] || closed.has(nk)) continue;
+        const tg = cur.g + 1;
+        const existing = openLookup.get(nk);
+        if (existing) { if (tg < existing.g) { existing.g = tg; existing.parent = cur; } }
+        else { const node = { pos: np, g: tg, h: man(np, end), parent: cur }; open.push(node); openLookup.set(nk, node); }
+      }
+    }
+    return null;
+  }
+
+  // ---------------------------------------------------------------------
+  // Rendering: an isometric (2:1) blockout. Each room is a diamond top
+  // face plus two shaded side faces (the two sides an iso camera can see),
+  // extruded by a per-zone height. A door notch is drawn on a side face
+  // whenever that side's grid neighbour is actually occupied, so every
+  // opening drawn corresponds to a real 4-connectivity edge.
+  // ---------------------------------------------------------------------
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs) => {
+    const n = document.createElementNS(SVG_NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  };
+
+  const TW = 10;          // top-face half-width
+  const TH = 5;            // top-face half-height (2:1 iso ratio)
+  const UNIT_H = 15;        // px-equivalent per world height unit
+  const FOOTPRINT = 0.92;    // block footprint within its cell (leaves a seam)
+
+  const isoCenter = (gx, gy) => ({ x: (gx - gy) * TW, y: (gx + gy) * TH });
+
+  // "GatehouseModule" -> "GM", "CryptChamberFinal" -> "CCF", "WallStraight" -> "WS"
+  function abbreviate(roomId) {
+    const words = roomId.match(/[A-Z][a-z0-9]*/g) || [roomId];
+    if (words.length === 1) return words[0].slice(0, 3).toUpperCase();
+    return words.map((w) => w[0]).join("").slice(0, 4).toUpperCase();
+  }
+
+  let current = null;
+  let selectedIdx = null;
+
+  function render() {
+    const svg = document.getElementById("map");
+    svg.innerHTML = "";
+    const data = current;
+    const modules = data.modules;
+
+    // Bounding box in screen space, including footprint half-extents and block height.
+    let minSX = Infinity, maxSX = -Infinity, minSY = Infinity, maxSY = -Infinity;
+    for (const m of modules) {
+      const c = isoCenter(m.x, m.y);
+      const hpx = ZONE_HEIGHT[m.zone] * UNIT_H;
+      minSX = Math.min(minSX, c.x - TW);
+      maxSX = Math.max(maxSX, c.x + TW);
+      minSY = Math.min(minSY, c.y - TH - hpx);
+      maxSY = Math.max(maxSY, c.y + TH);
+    }
+    const marginX = TW * 0.7, marginY = TH * 2.2;
+    const vbX = minSX - marginX, vbY = minSY - marginY;
+    const vbW = (maxSX - minSX) + marginX * 2, vbH = (maxSY - minSY) + marginY * 2;
+    svg.setAttribute("viewBox", `${vbX} ${vbY} ${vbW} ${vbH}`);
+
+    const topCenter = (gx, gy, hpx) => { const c = isoCenter(gx, gy); return { x: c.x, y: c.y - hpx }; };
+
+    // connection lines: every real 4-connectivity edge (what CastlePathValidator treats as walkable)
+    if (document.getElementById("toggleConn").checked) {
+      const connGroup = el("g", {});
+      const seen = new Set();
+      for (const m of modules) {
+        for (const [dx, dy] of FOUR_DIRS) {
+          const nIdx = data.occupied.get(key(m.x + dx, m.y + dy));
+          if (nIdx === undefined) continue;
+          const pairKey = nIdx < data.occupied.get(key(m.x, m.y)) ? `${nIdx}|${data.occupied.get(key(m.x, m.y))}` : `${data.occupied.get(key(m.x, m.y))}|${nIdx}`;
+          if (seen.has(pairKey)) continue;
+          seen.add(pairKey);
+          const n = modules[nIdx];
+          const a = topCenter(m.x, m.y, ZONE_HEIGHT[m.zone] * UNIT_H);
+          const b = topCenter(n.x, n.y, ZONE_HEIGHT[n.zone] * UNIT_H);
+          connGroup.appendChild(el("line", { class: "conn-line", x1: a.x, y1: a.y, x2: b.x, y2: b.y }));
+        }
+      }
+      svg.appendChild(connGroup);
+    }
+
+    // rooms, painter's algorithm: draw back-to-front so nearer blocks occlude farther ones
+    const showLabels = document.getElementById("toggleLabels").checked;
+    const order = modules.map((_, i) => i).sort((a, b) => (modules[a].x + modules[a].y) - (modules[b].x + modules[b].y));
+    const roomLayer = el("g", {});
+
+    for (const idx of order) {
+      const m = modules[idx];
+      const hpx = ZONE_HEIGHT[m.zone] * UNIT_H;
+      const c = isoCenter(m.x, m.y);
+      const topY = c.y - hpx;
+      const tw = TW * FOOTPRINT, th = TH * FOOTPRINT;
+
+      const N = [c.x, topY - th], E = [c.x + tw, topY], S = [c.x, topY + th], W = [c.x - tw, topY];
+      const colorVar = `var(${ZONE_VAR[m.zone]})`;
+
+      const g = el("g", { class: "room-group", "data-idx": idx });
+      g.addEventListener("click", () => { selectedIdx = idx; render(); showDetail(idx); });
+
+      g.appendChild(el("polygon", {
+        class: "room-face room-face-left",
+        points: `${S[0]},${S[1]} ${W[0]},${W[1]} ${W[0]},${W[1] + hpx} ${S[0]},${S[1] + hpx}`,
+        fill: colorVar
+      }));
+      g.appendChild(el("polygon", {
+        class: "room-face room-face-right",
+        points: `${S[0]},${S[1]} ${E[0]},${E[1]} ${E[0]},${E[1] + hpx} ${S[0]},${S[1] + hpx}`,
+        fill: colorVar
+      }));
+
+      // door notches only where the corresponding grid neighbour is actually occupied
+      if (data.occupied.has(key(m.x + 1, m.y))) {
+        const mx = (S[0] + E[0]) / 2, my = (S[1] + E[1]) / 2;
+        g.appendChild(el("rect", { class: "door-notch", x: mx - tw * 0.15, y: my + hpx * 0.22, width: tw * 0.3, height: Math.max(1, hpx * 0.5), rx: 0.6 }));
+      }
+      if (data.occupied.has(key(m.x, m.y + 1))) {
+        const mx = (S[0] + W[0]) / 2, my = (S[1] + W[1]) / 2;
+        g.appendChild(el("rect", { class: "door-notch", x: mx - tw * 0.15, y: my + hpx * 0.22, width: tw * 0.3, height: Math.max(1, hpx * 0.5), rx: 0.6 }));
+      }
+
+      g.appendChild(el("polygon", {
+        class: "room-top" + (idx === selectedIdx ? " selected" : ""),
+        points: `${N[0]},${N[1]} ${E[0]},${E[1]} ${S[0]},${S[1]} ${W[0]},${W[1]}`,
+        fill: colorVar
+      }));
+
+      const title = el("title", {});
+      title.textContent = `${m.roomId} — ${ZONE_LABEL[m.zone]} (${m.x}, ${m.y})`;
+      g.appendChild(title);
+
+      if (m.isCryptEntry || m.isExtractionExit) {
+        const glyph = el("text", {
+          class: "marker-glyph", x: c.x, y: topY, "text-anchor": "middle", "dominant-baseline": "central",
+          "font-size": th * 1.35, fill: "var(--accent-ink)"
+        });
+        glyph.textContent = m.isCryptEntry ? "★" : "⚑";
+        g.appendChild(glyph);
+      } else if (showLabels) {
+        const label = el("text", {
+          class: "room-label", x: c.x, y: topY, "text-anchor": "middle", "dominant-baseline": "central",
+          "font-size": th * 0.92
+        });
+        label.textContent = abbreviate(m.roomId);
+        g.appendChild(label);
+      }
+
+      roomLayer.appendChild(g);
+    }
+    svg.appendChild(roomLayer);
+
+    // extraction path overlay, floating just above the top faces it threads through
+    if (document.getElementById("togglePath").checked && data.pathResult && data.pathResult.found) {
+      const pts = data.pathResult.hops.map((idx) => {
+        const m = modules[idx];
+        const t = topCenter(m.x, m.y, ZONE_HEIGHT[m.zone] * UNIT_H);
+        return `${t.x},${t.y - 1.6}`;
+      }).join(" ");
+      svg.appendChild(el("polyline", { class: "path-line", points: pts }));
+    }
+
+    document.getElementById("mapMeta").textContent = `seed ${data.seed} · ${modules.length} rooms`;
+  }
+
+  function showDetail(idx) {
+    const m = current.modules[idx];
+    const panel = document.getElementById("detailPanel");
+    panel.innerHTML = `
+      <div class="roomid">${m.roomId}</div>
+      <dl>
+        <dt>Zone</dt><dd>${ZONE_LABEL[m.zone]}</dd>
+        <dt>Grid position</dt><dd>(${m.x}, ${m.y})</dd>
+        <dt>World position</dt><dd>(${(m.x * 12).toFixed(0)}, 0, ${(m.y * 12).toFixed(0)})</dd>
+      </dl>
+      <div style="margin-top:10px;">
+        <span class="flagpill ${m.isCryptEntry ? "on" : ""}">crypt entry</span>
+        <span class="flagpill ${m.isExtractionExit ? "on" : ""}">extraction exit</span>
+      </div>
+    `;
+  }
+
+  function renderRingTable(stats) {
+    const tbody = document.querySelector("#ringTable tbody");
+    tbody.innerHTML = "";
+    for (const s of stats) {
+      const tr = document.createElement("tr");
+      const warn = s.inwardLinks < 2;
+      tr.innerHTML = `
+        <td><span class="zone-dot" style="background:var(${ZONE_VAR[s.zone]})"></span>${ZONE_LABEL[s.zone]}</td>
+        <td class="tnum">${s.radius}</td>
+        <td class="tnum">${s.rolled} <span style="color:var(--ink-dim)">(${s.min}–${s.max})</span></td>
+        <td class="tnum">${s.placed}</td>
+        <td class="tnum ${warn ? "warn-flag" : ""}">${s.inwardLinks}${warn ? " ⚠" : ""}</td>
+      `;
+      tbody.appendChild(tr);
+      document.getElementById("cnt-" + s.zone).textContent = s.placed;
+    }
+  }
+
+  function renderPathStatus(result) {
+    const box = document.getElementById("pathStatus");
+    if (result.found) {
+      box.className = "status ok";
+      box.innerHTML = `<span>✓</span><span>Path validated &mdash; <b>${result.hops.length}</b> room hops from crypt to extraction exit (${result.gridSteps} grid steps on the A* footprint).</span>`;
+    } else {
+      box.className = "status bad";
+      box.innerHTML = `<span>✕</span><span>CastlePathValidator found no route from crypt to extraction exit for this seed.</span>`;
+    }
+  }
+
+  function run(seed) {
+    current = generate(seed);
+    current.pathResult = validatePath(current);
+    selectedIdx = current.cryptStartIndex;
+    render();
+    renderRingTable(current.ringStats);
+    renderPathStatus(current.pathResult);
+    showDetail(selectedIdx);
+  }
+
+  document.getElementById("generateBtn").addEventListener("click", () => {
+    const v = parseInt(document.getElementById("seedInput").value, 10);
+    run(Number.isFinite(v) ? v : 12345);
+  });
+  document.getElementById("randomBtn").addEventListener("click", () => {
+    const v = Math.floor(Math.random() * 1e6);
+    document.getElementById("seedInput").value = v;
+    run(v);
+  });
+  document.getElementById("seedInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("generateBtn").click();
+  });
+  ["toggleConn", "togglePath", "toggleLabels"].forEach((id) =>
+    document.getElementById(id).addEventListener("change", render)
+  );
+
+  run(12345);
+})();
+</script>

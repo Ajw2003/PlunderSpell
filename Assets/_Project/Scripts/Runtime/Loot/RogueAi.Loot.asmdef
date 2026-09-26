@@ -3,6 +3,7 @@
     "rootNamespace": "RogueAi.Loot",
     "references": [
         "PurrNet.Runtime",
+        "RogueAi.Core",
         "RogueAi.Player"
     ],
     "includePlatforms": [],

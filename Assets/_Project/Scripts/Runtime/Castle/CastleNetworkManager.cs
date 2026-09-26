@@ -67,6 +67,25 @@ namespace RogueAi.Castle
         }
 
         /// <summary>
+        /// Server-side: publish a specific seed. Writing the SyncVar fans it out to every observer,
+        /// each of which regenerates locally — the same path <see cref="RequestGeneration"/> takes,
+        /// but with the seed chosen by the caller. <see cref="RaidDirector"/> uses this so one seed
+        /// drives both the castle and its loot.
+        /// </summary>
+        public void SetSeed(int seed)
+        {
+            if (isSpawned && !isServer)
+            {
+                Debug.LogWarning("[CastleNet] SetSeed ignored on a client; the server owns the seed.");
+                return;
+            }
+            _castleSeed.value = seed;
+        }
+
+        /// <summary>The seed the castle is currently built from. Zero means nothing generated yet.</summary>
+        public int CurrentSeed => _castleSeed.value;
+
+        /// <summary>
         /// Fires on ALL peers (including the host) whenever the seed changes. Triggers local
         /// deterministic generation and, on the server, validates the result — retrying with a new
         /// seed up to <see cref="maxRetries"/> times if no crypt→extraction path exists.

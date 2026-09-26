@@ -125,6 +125,8 @@ namespace StateMachine
 
             // Standard world gravity: let the physics engine apply Physics.gravity (-Y). Rotation
             // stays owned by look input only, so freeze it here (previously done by GravityReceiver).
+            // freezeRotation is load-bearing: Player.prefab serialises m_Constraints: 0, so without
+            // this line the capsule tips over and rolls the first time it touches anything.
             _rb.useGravity = true;
             _rb.freezeRotation = true;
 

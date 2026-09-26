@@ -31,10 +31,15 @@ namespace RogueAi.Spells
             if (exact != null)
                 return exact.spellId;
 
-            // 2. Near match -> misfire.
+            // 2. Near match -> misfire. An entry that forgot to author a misfire falls back to the
+            // catalogue's default rather than casting the real spell: the mechanic must not fail open.
             var near = lexicon.FindByNearMatch(normalized);
             if (near != null)
-                return near.misfireId;
+            {
+                return near.misfireId != SpellId.None
+                    ? near.misfireId
+                    : SpellCatalogue.DefaultMisfireFor(near.spellId);
+            }
 
             // 3. No match -> silent fail.
             return SpellId.None;

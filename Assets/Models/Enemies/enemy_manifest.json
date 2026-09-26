@@ -1,0 +1,115 @@
+{
+  "generated_by": "Tools/EnemyForge/build_enemies.py",
+  "enemies": [
+    {
+      "name": "SigilWisp",
+      "role": "Scout flier \u2014 fast, fragile, swarms",
+      "passed": true,
+      "stats": {
+        "vertices": 1366,
+        "faces": 1698,
+        "triangles": 2668,
+        "islands": 19,
+        "bones": 5,
+        "lowest_z": 0.0588,
+        "height": 1.029,
+        "width": 0.735
+      },
+      "failures": [],
+      "warnings": [],
+      "files": {
+        "fbx": "Assets/Models/Enemies/SigilWisp/SigilWisp.fbx",
+        "gltf": "Assets/Models/Enemies/SigilWisp/glTF/SigilWisp.gltf",
+        "blend": "Assets/Models/Enemies/SigilWisp/SigilWisp.blend"
+      }
+    },
+    {
+      "name": "VaultWarden",
+      "role": "Melee grunt \u2014 slow, armoured, closes distance",
+      "passed": true,
+      "stats": {
+        "vertices": 2242,
+        "faces": 2326,
+        "triangles": 4320,
+        "islands": 43,
+        "bones": 18,
+        "lowest_z": 0.0,
+        "height": 2.253,
+        "width": 1.007
+      },
+      "failures": [],
+      "warnings": [],
+      "files": {
+        "fbx": "Assets/Models/Enemies/VaultWarden/VaultWarden.fbx",
+        "gltf": "Assets/Models/Enemies/VaultWarden/glTF/VaultWarden.gltf",
+        "blend": "Assets/Models/Enemies/VaultWarden/VaultWarden.blend"
+      }
+    },
+    {
+      "name": "HexTurret",
+      "role": "Static sentry \u2014 yaws to track, pitches to fire",
+      "passed": true,
+      "stats": {
+        "vertices": 2076,
+        "faces": 2056,
+        "triangles": 4056,
+        "islands": 28,
+        "bones": 4,
+        "lowest_z": 0.0,
+        "height": 1.457,
+        "width": 1.313
+      },
+      "failures": [],
+      "warnings": [],
+      "files": {
+        "fbx": "Assets/Models/Enemies/HexTurret/HexTurret.fbx",
+        "gltf": "Assets/Models/Enemies/HexTurret/glTF/HexTurret.gltf",
+        "blend": "Assets/Models/Enemies/HexTurret/HexTurret.blend"
+      }
+    },
+    {
+      "name": "ArcRevenant",
+      "role": "Elite caster \u2014 hovers, shields allies, casts at range",
+      "passed": true,
+      "stats": {
+        "vertices": 3058,
+        "faces": 3185,
+        "triangles": 5940,
+        "islands": 49,
+        "bones": 11,
+        "lowest_z": 0.1696,
+        "height": 2.48,
+        "width": 1.382
+      },
+      "failures": [],
+      "warnings": [],
+      "files": {
+        "fbx": "Assets/Models/Enemies/ArcRevenant/ArcRevenant.fbx",
+        "gltf": "Assets/Models/Enemies/ArcRevenant/glTF/ArcRevenant.gltf",
+        "blend": "Assets/Models/Enemies/ArcRevenant/ArcRevenant.blend"
+      }
+    },
+    {
+      "name": "GildedColossus",
+      "role": "Vault boss \u2014 asymmetric siege construct",
+      "passed": true,
+      "stats": {
+        "vertices": 3332,
+        "faces": 3508,
+        "triangles": 6428,
+        "islands": 62,
+        "bones": 18,
+        "lowest_z": 0.0,
+        "height": 3.408,
+        "width": 2.228
+      },
+      "failures": [],
+      "warnings": [],
+      "files": {
+        "fbx": "Assets/Models/Enemies/GildedColossus/GildedColossus.fbx",
+        "gltf": "Assets/Models/Enemies/GildedColossus/glTF/GildedColossus.gltf",
+        "blend": "Assets/Models/Enemies/GildedColossus/GildedColossus.blend"
+      }
+    }
+  ]
+}

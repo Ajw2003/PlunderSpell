@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="12" result="Passed" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.1135892">
+  <test-suite type="TestSuite" id="1000" name="PurrnetTest" fullname="PurrnetTest" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.113589" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1015" name="Plunderspell.Tests.EditMode.dll" fullname="C:/Users/aj/Desktop/GameDev/Rogue-Ai-Extraction-Game/Library/ScriptAssemblies/Plunderspell.Tests.EditMode.dll" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.057730" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1344" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1016" name="Plunderspell" fullname="Plunderspell" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.056962" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1017" name="Tests" fullname="Plunderspell.Tests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.056633" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1018" name="EditMode" fullname="Plunderspell.Tests.EditMode" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.055771" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="ExtractionControllerTests" fullname="Plunderspell.Tests.EditMode.ExtractionControllerTests" classname="Plunderspell.Tests.EditMode.ExtractionControllerTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.030332" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1004" name="CancelExtraction_StopsExtraction" fullname="Plunderspell.Tests.EditMode.ExtractionControllerTests.CancelExtraction_StopsExtraction" methodname="CancelExtraction_StopsExtraction" classname="Plunderspell.Tests.EditMode.ExtractionControllerTests" runstate="Runnable" seed="943856603" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.010526" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1002" name="StartExtraction_SetsIsExtractingTrue" fullname="Plunderspell.Tests.EditMode.ExtractionControllerTests.StartExtraction_SetsIsExtractingTrue" methodname="StartExtraction_SetsIsExtractingTrue" classname="Plunderspell.Tests.EditMode.ExtractionControllerTests" runstate="Runnable" seed="964529252" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.000778" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1003" name="Tick_CompletesExtractionAfterDuration" fullname="Plunderspell.Tests.EditMode.ExtractionControllerTests.Tick_CompletesExtractionAfterDuration" methodname="Tick_CompletesExtractionAfterDuration" classname="Plunderspell.Tests.EditMode.ExtractionControllerTests" runstate="Runnable" seed="399337608" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.000873" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1005" name="InventorySystemTests" fullname="Plunderspell.Tests.EditMode.InventorySystemTests" classname="Plunderspell.Tests.EditMode.InventorySystemTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.015055" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1007" name="AddItem_ReturnsFalse_WhenInventoryIsFull" fullname="Plunderspell.Tests.EditMode.InventorySystemTests.AddItem_ReturnsFalse_WhenInventoryIsFull" methodname="AddItem_ReturnsFalse_WhenInventoryIsFull" classname="Plunderspell.Tests.EditMode.InventorySystemTests" runstate="Runnable" seed="859743800" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.002527" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1006" name="AddItem_StacksUpToMaxStack" fullname="Plunderspell.Tests.EditMode.InventorySystemTests.AddItem_StacksUpToMaxStack" methodname="AddItem_StacksUpToMaxStack" classname="Plunderspell.Tests.EditMode.InventorySystemTests" runstate="Runnable" seed="2132658366" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.003846" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1008" name="RemoveItem_RemovesAcrossMultipleStacks" fullname="Plunderspell.Tests.EditMode.InventorySystemTests.RemoveItem_RemovesAcrossMultipleStacks" methodname="RemoveItem_RemovesAcrossMultipleStacks" classname="Plunderspell.Tests.EditMode.InventorySystemTests" runstate="Runnable" seed="2067720238" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.000971" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1009" name="RemoveItem_ReturnsFalse_AndLeavesInventoryUnchanged_WhenNotEnoughItems" fullname="Plunderspell.Tests.EditMode.InventorySystemTests.RemoveItem_ReturnsFalse_AndLeavesInventoryUnchanged_WhenNotEnoughItems" methodname="RemoveItem_ReturnsFalse_AndLeavesInventoryUnchanged_WhenNotEnoughItems" classname="Plunderspell.Tests.EditMode.InventorySystemTests" runstate="Runnable" seed="914822415" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.000488" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1010" name="PlayerStatsTests" fullname="Plunderspell.Tests.EditMode.PlayerStatsTests" classname="Plunderspell.Tests.EditMode.PlayerStatsTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.007815" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1011" name="ApplyDamage_ClampsAtZero" fullname="Plunderspell.Tests.EditMode.PlayerStatsTests.ApplyDamage_ClampsAtZero" methodname="ApplyDamage_ClampsAtZero" classname="Plunderspell.Tests.EditMode.PlayerStatsTests" runstate="Runnable" seed="1604663337" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.000496" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="Heal_ClampsAtMaxHealth" fullname="Plunderspell.Tests.EditMode.PlayerStatsTests.Heal_ClampsAtMaxHealth" methodname="Heal_ClampsAtMaxHealth" classname="Plunderspell.Tests.EditMode.PlayerStatsTests" runstate="Runnable" seed="406681908" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.000274" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="SpendMana_FailsWhenInsufficient" fullname="Plunderspell.Tests.EditMode.PlayerStatsTests.SpendMana_FailsWhenInsufficient" methodname="SpendMana_FailsWhenInsufficient" classname="Plunderspell.Tests.EditMode.PlayerStatsTests" runstate="Runnable" seed="149676597" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.000263" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1014" name="SpendMana_SucceedsAndDeducts" fullname="Plunderspell.Tests.EditMode.PlayerStatsTests.SpendMana_SucceedsAndDeducts" methodname="SpendMana_SucceedsAndDeducts" classname="Plunderspell.Tests.EditMode.PlayerStatsTests" runstate="Runnable" seed="2135106118" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.000201" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1021" name="RogueAi.Tests.Editor.dll" fullname="C:/Users/aj/Desktop/GameDev/Rogue-Ai-Extraction-Game/Library/ScriptAssemblies/RogueAi.Tests.Editor.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.045900" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1344" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1022" name="RogueAi" fullname="RogueAi" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.045533" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1023" name="Tests" fullname="RogueAi.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.045246" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1024" name="Editor" fullname="RogueAi.Tests.Editor" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.045019" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1019" name="ArtAssetImportTests" fullname="RogueAi.Tests.Editor.ArtAssetImportTests" classname="RogueAi.Tests.Editor.ArtAssetImportTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.044672" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1020" name="GeneratedPropsImportCleanly" fullname="RogueAi.Tests.Editor.ArtAssetImportTests.GeneratedPropsImportCleanly" methodname="GeneratedPropsImportCleanly" classname="RogueAi.Tests.Editor.ArtAssetImportTests" runstate="Runnable" seed="803594462" result="Passed" start-time="2026-09-16 04:20:25Z" end-time="2026-09-16 04:20:25Z" duration="0.043573" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/aj/AppData/LocalLow/DefaultCompany/PurrnetTest\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

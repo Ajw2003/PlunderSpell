@@ -28,13 +28,13 @@ namespace StateMachine
         {
         }
 
-        // Movement input resolved against the camera and flattened onto the plane the current
-        // planet defines, so "forward" means forward on this surface rather than forward in world
-        // space. Returns a unit vector, or zero when there is no input.
-        protected Vector3 CameraRelativeInputOnGravityPlane(Vector3 up)
+        // Movement input resolved against the camera and flattened onto the ground plane, so
+        // looking up or down never pushes the player into or out of the floor. Returns a unit
+        // vector, or zero when there is no input.
+        protected Vector3 CameraRelativeInput()
         {
-            Vector3 cameraForward = Vector3.ProjectOnPlane(_stateMachine.CameraTransform.forward, up).normalized;
-            Vector3 cameraRight = Vector3.ProjectOnPlane(_stateMachine.CameraTransform.right, up).normalized;
+            Vector3 cameraForward = Vector3.ProjectOnPlane(_stateMachine.CameraTransform.forward, Vector3.up).normalized;
+            Vector3 cameraRight = Vector3.ProjectOnPlane(_stateMachine.CameraTransform.right, Vector3.up).normalized;
 
             Vector3 moveDirection = (cameraForward * _stateMachine.MovementDirection.y)
                                     + (cameraRight * _stateMachine.MovementDirection.x);

@@ -1,0 +1,433 @@
+<!doctype html>
+<title>Plunderspell UI Verification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+/>
+<style>
+  :root {
+    --ink: #0a0c12;
+    --surface: #12151d;
+    --surface-line: #262c39;
+    --gold: #c69c4a;
+    --gold-dim: #8c6a2e;
+    --text: #edeef2;
+    --text-dim: #9aa0ac;
+    --danger: #c44646;
+    --success: #5ab66e;
+    --mana: #548cd6;
+    --game-bg: #12161e;
+    --game-panel: #1c222e;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--text);
+  }
+
+  body {
+    font-family: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+    padding-inline: max(20px, env(safe-area-inset-left, 0px));
+    padding-block: calc(48px + env(safe-area-inset-top, 0px)) calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+
+  a { color: var(--gold); }
+
+  code.inline {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.92em;
+    background: rgba(198, 156, 74, 0.12);
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+    color: var(--gold);
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead { display: flex; flex-direction: column; gap: 18px; }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  h1 {
+    font-family: "Cinzel", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(30px, 4.4vw, 46px);
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .lede {
+    max-width: 62ch;
+    color: var(--text-dim);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .notice {
+    display: flex;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--surface-line);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+  }
+
+  .notice__mark {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--gold);
+    flex: none;
+    padding-top: 1px;
+  }
+
+  .notice p {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+
+  .notice strong { color: var(--text); font-weight: 500; }
+
+  /* ---------- screen grid ---------- */
+
+  .screens {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+    gap: 40px 32px;
+  }
+
+  .screen {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .screen__meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .screen__tag {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .screen__file {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .screen__title {
+    font-family: "Cinzel", Georgia, serif;
+    font-size: 19px;
+    font-weight: 600;
+    margin: 2px 0 0;
+  }
+
+  .screen__caption {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  /* ---------- the faithful mockup stage ----------
+     .stage is the responsive card; .canvas is a fixed 1920x1080 box - the
+     game's real CanvasScaler reference resolution - laid out with the
+     exact same pixel numbers as each Screen script's RectTransform calls
+     (position, size, and font-size all in real px, copied straight from
+     the C#). A single transform: scale() shrinks that whole fixed canvas
+     down to fit the card, so every box and every glyph shrinks together
+     by construction - there's no separate unit system for text vs. layout
+     to drift apart. */
+
+  .stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 6px;
+    border: 1px solid var(--surface-line);
+    container-type: inline-size;
+    box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.7);
+  }
+
+  .canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    background: var(--game-bg);
+    transform: scale(calc(100cqw / 1920px));
+    transform-origin: top left;
+  }
+
+  .n {
+    position: absolute;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; /* matches Unity's LegacyRuntime.ttf */
+  }
+
+  .row { display: flex; align-items: center; }
+  .overlay { position: absolute; inset: 0; }
+
+  .panel-surface { background: var(--game-panel); border-radius: 2px; }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #14110a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 400;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .bar-track { background: var(--game-panel); border-radius: 1px; overflow: hidden; }
+  .bar-fill { position: absolute; inset: 0; }
+
+  .label-white { color: #fff; }
+  .label-dim { color: var(--text-dim); }
+  .label-gold { color: var(--gold); }
+
+  /* ---------- footer ---------- */
+
+  footer {
+    border-top: 1px solid var(--surface-line);
+    padding-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--text-dim);
+  }
+
+  footer span { white-space: nowrap; }
+
+  @media (max-width: 520px) {
+    .screens { gap: 32px 0; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">UI verification report</div>
+    <h1>Plunderspell — Six Screens, As Coded</h1>
+    <p class="lede">
+      Every panel below sits at the same pixel coordinates and font sizes as the real
+      <code class="inline">RectTransform</code> calls in each screen script, laid out on a fixed 1920&times;1080
+      canvas — the game's actual <code class="inline">CanvasScaler</code> reference resolution — then scaled down
+      as one image, so nothing drifts out of proportion.
+    </p>
+    <div class="notice">
+      <div class="notice__mark">&#9888;</div>
+      <p>
+        <strong>Not a live Unity capture.</strong> This container has no Unity Editor or dotnet SDK installed, so the
+        code has not been compiled or rendered by the actual engine yet. What follows is a to-spec reproduction built
+        from the source so you can review layout, color, and copy now — once you run the
+        <code class="inline">UIScreenshotPlayModeTests</code> in a real Editor, the true renders land in
+        <code class="inline">UI_Verification_Screenshots/</code> and I'll want to compare them against this.
+      </p>
+    </div>
+  </header>
+
+  <main class="screens">
+    <!-- 1. MAIN MENU -->
+    <section class="screen">
+      <div class="screen__meta">
+        <span class="screen__tag">State 01 &middot; GameState.MainMenu</span>
+        <span class="screen__file">MainMenuScreen.cs</span>
+      </div>
+      <h2 class="screen__title">Main Menu</h2>
+      <div class="stage">
+        <div class="canvas">
+          <div class="n label-gold" style="left:510px;top:210px;width:900px;height:120px;font-size:48px;text-align:center;display:flex;align-items:center;justify-content:center;letter-spacing:1px;">PLUNDERSPELL</div>
+          <div class="n label-dim" style="left:510px;top:326px;width:900px;height:40px;font-size:20px;text-align:center;display:flex;align-items:center;justify-content:center;">A Rogue Extraction of Plunder &amp; Spellcraft</div>
+
+          <div class="n" style="left:750px;top:450px;width:420px;height:260px;">
+            <div class="n btn-gold" style="left:0;top:0;width:420px;height:56px;font-size:20px;">Play</div>
+            <div class="n btn-gold" style="left:0;top:72px;width:420px;height:56px;font-size:20px;">Settings</div>
+            <div class="n btn-gold" style="left:0;top:144px;width:420px;height:56px;font-size:20px;">Quit</div>
+          </div>
+
+          <div class="n label-dim" style="left:1600px;top:1030px;width:300px;height:30px;font-size:16px;display:flex;align-items:flex-end;justify-content:flex-end;">v0.1.0 - Prototype</div>
+        </div>
+      </div>
+      <p class="screen__caption">Play &rarr; <code class="inline">GameState.Playing</code>. Settings remembers this as <code class="inline">PreviousState</code> so Back returns here.</p>
+    </section>
+
+    <!-- 2. HUD -->
+    <section class="screen">
+      <div class="screen__meta">
+        <span class="screen__tag">State 02 &middot; GameState.Playing</span>
+        <span class="screen__file">HUDScreen.cs</span>
+      </div>
+      <h2 class="screen__title">HUD</h2>
+      <div class="stage">
+        <div class="canvas">
+          <div class="n bar-track" style="left:20px;top:20px;width:280px;height:26px;">
+            <div class="bar-fill" style="width:72%;background:var(--danger);"></div>
+          </div>
+          <div class="n bar-track" style="left:20px;top:52px;width:280px;height:20px;">
+            <div class="bar-fill" style="width:55%;background:var(--mana);"></div>
+          </div>
+          <div class="n label-gold" style="left:1680px;top:20px;width:220px;height:36px;font-size:20px;display:flex;align-items:center;justify-content:flex-end;">Gold: 240</div>
+          <div class="n label-dim" style="left:20px;top:1030px;width:320px;height:30px;font-size:16px;display:flex;align-items:flex-end;">[TAB] Inventory &nbsp; [ESC] Pause</div>
+
+          <div class="n" style="left:750px;top:970px;width:420px;height:70px;">
+            <div class="n bar-track" style="left:0;top:24px;width:420px;height:22px;">
+              <div class="bar-fill" style="width:45%;background:var(--success);"></div>
+            </div>
+            <div class="n label-white" style="left:0;top:-34px;width:420px;height:30px;font-size:16px;text-align:center;display:flex;align-items:flex-end;justify-content:center;">Extracting...</div>
+          </div>
+        </div>
+      </div>
+      <p class="screen__caption">Health / mana fill from <code class="inline">PlayerStats.StatsChanged</code>; the extraction bar is hidden until <code class="inline">ExtractionController.StartExtraction()</code> — shown active here for illustration.</p>
+    </section>
+
+    <!-- 3. PAUSE -->
+    <section class="screen">
+      <div class="screen__meta">
+        <span class="screen__tag">State 03 &middot; GameState.Paused</span>
+        <span class="screen__file">PauseMenuScreen.cs</span>
+      </div>
+      <h2 class="screen__title">Pause Menu</h2>
+      <div class="stage">
+        <div class="canvas">
+          <div class="overlay" style="background:rgba(0,0,0,.6);"></div>
+          <div class="n panel-surface" style="left:720px;top:350px;width:480px;height:380px;">
+            <div class="n label-white" style="left:30px;top:24px;width:420px;height:60px;font-size:28px;text-align:center;display:flex;align-items:center;justify-content:center;letter-spacing:1px;">PAUSED</div>
+            <div class="n" style="left:60px;top:110px;width:360px;height:220px;">
+              <div class="n btn-gold" style="left:0;top:0;width:360px;height:52px;font-size:20px;">Resume</div>
+              <div class="n btn-gold" style="left:0;top:68px;width:360px;height:52px;font-size:20px;">Settings</div>
+              <div class="n btn-gold" style="left:0;top:136px;width:360px;height:52px;font-size:20px;">Quit to Main Menu</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="screen__caption">Triggered by <code class="inline">Esc</code> via <code class="inline">GameFlowInput</code>. HUD stays mounted underneath (not shown here for clarity).</p>
+    </section>
+
+    <!-- 4. INVENTORY -->
+    <section class="screen">
+      <div class="screen__meta">
+        <span class="screen__tag">State 04 &middot; GameState.Inventory</span>
+        <span class="screen__file">InventoryScreen.cs</span>
+      </div>
+      <h2 class="screen__title">Inventory / Extraction</h2>
+      <div class="stage">
+        <div class="canvas">
+          <div class="overlay" style="background:rgba(0,0,0,.7);"></div>
+          <div class="n panel-surface" style="left:510px;top:230px;width:900px;height:620px;">
+            <div class="n label-white" style="left:30px;top:24px;width:400px;height:50px;font-size:28px;display:flex;align-items:center;letter-spacing:.5px;">INVENTORY</div>
+            <div class="n label-dim" style="left:670px;top:24px;width:200px;height:50px;font-size:20px;display:flex;align-items:center;justify-content:flex-end;">6 / 20</div>
+
+            <div class="n" style="left:30px;top:90px;width:840px;height:440px;display:grid;grid-template-columns:repeat(auto-fill,120px);grid-auto-rows:120px;gap:12px;">
+              <div class="panel-surface label-white" style="display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;line-height:1.4;padding:8px;">Cursed Doubloon<br/>x5</div>
+              <div class="panel-surface label-white" style="display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;line-height:1.4;padding:8px;">Spellbound Ring<br/>x1</div>
+              <div class="panel-surface label-white" style="display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;line-height:1.4;padding:8px;">Kraken's Eye<br/>x3</div>
+              <div class="panel-surface label-white" style="display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;line-height:1.4;padding:8px;">Tattered Map<br/>x1</div>
+              <div class="panel-surface label-white" style="display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;line-height:1.4;padding:8px;">Ether Vial<br/>x2</div>
+              <div class="panel-surface" style="opacity:.35;"></div>
+            </div>
+
+            <div class="n row" style="left:200px;top:544px;width:500px;height:56px;justify-content:center;gap:16px;">
+              <div class="btn-gold" style="width:220px;height:56px;font-size:20px;">Begin Extraction</div>
+              <div class="btn-gold" style="width:160px;height:56px;font-size:20px;">Close</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="screen__caption">Grid rebuilds from <code class="inline">InventorySystem.InventoryChanged</code>. Begin Extraction calls <code class="inline">ExtractionController.StartExtraction()</code> then returns to Playing.</p>
+    </section>
+
+    <!-- 5. SETTINGS -->
+    <section class="screen">
+      <div class="screen__meta">
+        <span class="screen__tag">State 05 &middot; GameState.Settings</span>
+        <span class="screen__file">SettingsScreen.cs</span>
+      </div>
+      <h2 class="screen__title">Settings</h2>
+      <div class="stage">
+        <div class="canvas">
+          <div class="overlay" style="background:rgba(0,0,0,.7);"></div>
+          <div class="n panel-surface" style="left:680px;top:320px;width:560px;height:440px;">
+            <div class="n label-white" style="left:80px;top:24px;width:400px;height:60px;font-size:28px;text-align:center;display:flex;align-items:center;justify-content:center;letter-spacing:1px;">SETTINGS</div>
+
+            <div class="n" style="left:60px;top:100px;width:440px;height:240px;">
+              <div class="n" style="left:0;top:0;width:440px;height:24px;font-size:20px;color:#fff;">Master Volume</div>
+              <div class="n bar-track" style="left:0;top:36px;width:440px;height:16px;"><div class="bar-fill" style="width:80%;background:var(--gold);"></div></div>
+
+              <div class="n" style="left:0;top:90px;width:440px;height:24px;font-size:20px;color:#fff;">Music Volume</div>
+              <div class="n bar-track" style="left:0;top:126px;width:440px;height:16px;"><div class="bar-fill" style="width:65%;background:var(--gold);"></div></div>
+
+              <div class="n" style="left:0;top:180px;width:440px;height:24px;font-size:20px;color:#fff;">SFX Volume</div>
+              <div class="n bar-track" style="left:0;top:216px;width:440px;height:16px;"><div class="bar-fill" style="width:90%;background:var(--gold);"></div></div>
+            </div>
+
+            <div class="n btn-gold" style="left:180px;top:364px;width:200px;height:52px;font-size:20px;">Back</div>
+          </div>
+        </div>
+      </div>
+      <p class="screen__caption">Master Volume drives <code class="inline">AudioListener.volume</code> live; all three persist to <code class="inline">PlayerPrefs</code>. Back returns to <code class="inline">GameStateManager.PreviousState</code>.</p>
+    </section>
+
+    <!-- 6. GAME OVER / VICTORY -->
+    <section class="screen">
+      <div class="screen__meta">
+        <span class="screen__tag">State 06 &middot; GameState.Victory</span>
+        <span class="screen__file">GameOverScreen.cs</span>
+      </div>
+      <h2 class="screen__title">Game Over / Victory</h2>
+      <div class="stage">
+        <div class="canvas">
+          <div class="overlay" style="background:rgba(0,0,0,.85);"></div>
+          <div class="n" style="left:510px;top:382px;width:900px;height:100px;font-size:48px;text-align:center;display:flex;align-items:center;justify-content:center;color:var(--success);letter-spacing:1px;">EXTRACTION SUCCESSFUL</div>
+          <div class="n label-dim" style="left:610px;top:532px;width:700px;height:60px;font-size:20px;text-align:center;display:flex;align-items:center;justify-content:center;">Gold Plundered: 460</div>
+          <div class="n btn-gold" style="left:800px;top:706px;width:320px;height:56px;font-size:20px;">Return to Main Menu</div>
+        </div>
+      </div>
+      <p class="screen__caption">Same layout for both outcomes — <code class="inline">Configure(isVictory)</code> swaps the title text/color between this (green) and Game Over (red) and fills in gold collected.</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>UITheme.cs &middot; UIFactory.cs &middot; 6 screens &middot; Runtime/UI/Screens/</span>
+    <span>Reference resolution 1920&times;1080 &middot; CanvasScaler.ScaleWithScreenSize</span>
+  </footer>
+</div>

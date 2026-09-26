@@ -15,101 +15,101 @@ MonoBehaviour:
   Modules:
   - RoomId: GatehouseModule
     Zone: 0
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 7605481571458468450, guid: d508b1a1bbdeea84182e951ba9dd70b8, type: 3}
     Weight: 1
   - RoomId: WallStraight
     Zone: 0
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 2307179225275337236, guid: 57f096ebab042e646ad934326ece23b4, type: 3}
     Weight: 4
   - RoomId: WallCorner
     Zone: 0
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 2083134120665778401, guid: 6b023ecc193b726409ad0dfd003bfee1, type: 3}
     Weight: 3
   - RoomId: Bastion
     Zone: 0
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 1096296285567256863, guid: 452bac4e3475c7642a1dfdee31ccdd9d, type: 3}
     Weight: 2
   - RoomId: Drawbridge
     Zone: 0
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 5458353992571891080, guid: 85b35d5159b1a3546826f0164822f2d7, type: 3}
     Weight: 1
   - RoomId: StableBlock
     Zone: 1
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 6934693014549372239, guid: 05ef47a1c77d13945929b21383226b7d, type: 3}
     Weight: 2
   - RoomId: BlacksmithShop
     Zone: 1
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 1496446433871779257, guid: 4cced6ffe638d584385c40e6d5fffcbe, type: 3}
     Weight: 2
   - RoomId: BarracksBunk
     Zone: 1
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 5117095799832759090, guid: fd04b39cbd242b543ba3f887d1daed7b, type: 3}
     Weight: 3
   - RoomId: WellCourtyard
     Zone: 1
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 7119116422333824747, guid: 02a512b34d8a8f14daa03430b2346e1f, type: 3}
     Weight: 2
   - RoomId: StorehouseRoom
     Zone: 1
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 1321526607665636365, guid: 5d06da73a6b82654884ca1dc092ac100, type: 3}
     Weight: 3
   - RoomId: GreatHallMain
     Zone: 2
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 508259280168239178, guid: d2916e6e50b10114e84c70c9ac8e5102, type: 3}
     Weight: 1
   - RoomId: ChapelRoom
     Zone: 2
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 5984195066105149687, guid: 6da427765bb87684c81ad239f0ebd6d7, type: 3}
     Weight: 2
   - RoomId: KitchenRoom
     Zone: 2
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 8661425396228062180, guid: b9df7ccaabaa76041950c659fd3a5774, type: 3}
     Weight: 2
   - RoomId: GuardRoomInner
     Zone: 2
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 7559977051916474750, guid: 79c80bdbe0d01f34eb2b41f5acd760ed, type: 3}
     Weight: 3
   - RoomId: ArmouredCourtyard
     Zone: 2
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 4807366260876075078, guid: 25007046cddb1ec45a2d1137a9726385, type: 3}
     Weight: 2
   - RoomId: ThroneRoomKeep
     Zone: 3
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 5885932503757089826, guid: 18a2af4ecd6437240858111d562e6f44, type: 3}
     Weight: 1
   - RoomId: TreasuryVault
     Zone: 3
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 3378388832852410260, guid: 3b6c1bc1ad0c51c4abc95844aba4e76f, type: 3}
     Weight: 1
   - RoomId: RoyalBedchamber
     Zone: 3
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 2019529397989646425, guid: a9391d30dfee3e44197a9cbc18be0970, type: 3}
     Weight: 2
   - RoomId: LordsSolar
     Zone: 3
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 5542207942193915669, guid: 878ecc79a0241404299f1467f121feb2, type: 3}
     Weight: 2
   - RoomId: KeepStairwell
     Zone: 3
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 8993642434685173943, guid: eda3121b7cbda0044802035dfd1b16e2, type: 3}
     Weight: 3
   - RoomId: CryptAntechamber
     Zone: 4
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 4864861644171914230, guid: 7f4cc029f35da4042b0079e6a749308a, type: 3}
     Weight: 2
   - RoomId: TombCorridor
     Zone: 4
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 3266664819128555254, guid: 7e6a7bdeeb4917a498c9f854e66218ac, type: 3}
     Weight: 3
   - RoomId: BurialVault
     Zone: 4
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 4540910065094086325, guid: cc051a25f61ec5f4483932b9ef493d9b, type: 3}
     Weight: 2
   - RoomId: CryptChamberFinal
     Zone: 4
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 6854088760541039209, guid: 95d9fc7aea5d6e541a8d6f53b27a25a3, type: 3}
     Weight: 1
   - RoomId: CryptStairwell
     Zone: 4
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 5334702773492980883, guid: c90c27a28041ca8469e12b5ff2af5ec2, type: 3}
     Weight: 2

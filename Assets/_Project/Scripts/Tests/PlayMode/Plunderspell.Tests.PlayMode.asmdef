@@ -1,0 +1,23 @@
+{
+    "name": "Plunderspell.Tests.PlayMode",
+    "rootNamespace": "Plunderspell.Tests.PlayMode",
+    "references": [
+        "Plunderspell.Core",
+        "Plunderspell.UI",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

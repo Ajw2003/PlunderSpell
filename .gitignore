@@ -19,6 +19,9 @@
 # Tools/AssetPipeline is plain python run via `blender -b -P`, not a Unity asset.
 Tools/AssetPipeline/__pycache__/
 
+# CI test output (GameCI writes it into the workspace; uploaded as an artifact).
+/test-results/
+
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
@@ -109,3 +112,7 @@ InitTestScene*.unity*
 # Vosk native/managed binaries (drop Vosk.dll + libvosk.dll and define VOSK_PRESENT)
 /[Aa]ssets/Plugins/x86_64/*.dll
 /[Aa]ssets/Plugins/x86_64/libvosk*
+
+# Headless verification harness build output
+Tools/Headless/**/bin/
+Tools/Headless/**/obj/

@@ -41,8 +41,6 @@ namespace RogueAi.Acoustics
         /// <summary>Noise quieter than this (after attenuation) is inaudible and discarded.</summary>
         public const float MinAudibleStrength = 0.05f;
 
-        private static readonly Collider[] _overlapBuffer = new Collider[64];
-
         /// <summary>Emits this emitter's default noise profile.</summary>
         public void Emit() => EmitNoise(BaseNoiseRadius, BaseNoiseStrength);
 
@@ -55,47 +53,13 @@ namespace RogueAi.Acoustics
 
         /// <summary>
         /// Core propagation: find listeners in range, attenuate by wall occlusion and notify each.
+        /// Delegates to <see cref="NoiseBroadcaster"/> so authored emitters and code-driven noise
+        /// (spell effects, shattering loot) cannot drift apart. Returns the number of listeners
+        /// that heard it.
         /// </summary>
-        public void EmitNoise(float radius, float strength)
-        {
-            Vector3 origin = transform.position;
-            int count = Physics.OverlapSphereNonAlloc(origin, radius, _overlapBuffer,
-                                                       _noiseListenerLayer, QueryTriggerInteraction.Collide);
-
-            for (int i = 0; i < count; i++)
-            {
-                Collider hit = _overlapBuffer[i];
-                if (hit == null)
-                    continue;
-
-                var listener = hit.GetComponentInParent<INoiseListener>();
-                if (listener == null)
-                    continue;
-
-                Vector3 listenerPos = hit.transform.position;
-                int wallCount = CountWalls(origin, listenerPos);
-                float attenuated = ComputeAttenuatedStrength(strength, wallCount);
-
-                if (attenuated > MinAudibleStrength)
-                    listener.OnNoiseHeard(new NoiseEvent(origin, attenuated, NoiseType));
-            }
-        }
-
-        /// <summary>
-        /// Counts sound-blocking walls between two points, capped at <see cref="MaxWallSegments"/>.
-        /// Uses RaycastAll and tallies colliders on the geometry layer.
-        /// </summary>
-        private int CountWalls(Vector3 from, Vector3 to)
-        {
-            Vector3 dir = to - from;
-            float dist = dir.magnitude;
-            if (dist <= Mathf.Epsilon)
-                return 0;
-
-            RaycastHit[] hits = Physics.RaycastAll(from, dir.normalized, dist, _geometryLayer,
-                                                   QueryTriggerInteraction.Ignore);
-            return Mathf.Min(hits.Length, MaxWallSegments);
-        }
+        public int EmitNoise(float radius, float strength) =>
+            NoiseBroadcaster.Broadcast(transform.position, radius, strength, NoiseType,
+                _noiseListenerLayer, _geometryLayer);
 
         /// <summary>
         /// Pure occlusion maths: <c>strength × 0.5^wallCount</c>, clamped to at most

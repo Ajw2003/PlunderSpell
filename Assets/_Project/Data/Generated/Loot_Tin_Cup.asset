@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e6921339ee52db387f9085c3d7ee21d, type: 3}
+  m_Name: Loot_Tin_Cup
+  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootItem
+  Worth: 15
+  IsArtifact: 0
+  Bulk: 1
+  Fragility: 30
+  DisplayName: Tin Cup
+  Icon: {fileID: 0}

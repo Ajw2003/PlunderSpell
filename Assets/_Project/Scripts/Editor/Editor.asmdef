@@ -2,12 +2,24 @@
     "name": "RogueAi.Editor",
     "rootNamespace": "",
     "references": [
+        "PurrNet.Runtime",
         "RogueAi.Core",
         "RogueAi.Items",
         "RogueAi.Player",
         "RogueAi.Voice",
         "RogueAi.Spells",
-        "RogueAi.Castle"
+        "RogueAi.Castle",
+        "RogueAi.Acoustics",
+        "RogueAi.Alarm",
+        "RogueAi.Extraction",
+        "RogueAi.Guards",
+        "RogueAi.Inventory",
+        "RogueAi.Lair",
+        "RogueAi.Loot",
+        "RogueAi.Playtest",
+        "RogueAi.Raid",
+        "RogueAi.Status",
+        "RogueAi.UI"
     ],
     "includePlatforms": [
         "Editor"

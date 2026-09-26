@@ -29,7 +29,7 @@ namespace RogueAi.Tests
         private SpellWord MakeWord(string word, SpellId id, SpellId misfire, params string[] alts)
         {
             var sw = ScriptableObject.CreateInstance<SpellWord>();
-            sw.SpellWord = word;
+            sw.Word = word;
             sw.spellId = id;
             sw.misfireId = misfire;
             sw.AltPronunciations = alts;

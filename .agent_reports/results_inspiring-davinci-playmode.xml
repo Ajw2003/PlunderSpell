@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="34" result="Passed" total="34" passed="34" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-16 04:24:55Z" end-time="2026-09-16 04:24:57Z" duration="2.1500669">
+  <test-suite type="TestSuite" id="1051" name="PurrnetTest" fullname="PurrnetTest" runstate="Runnable" testcasecount="34" result="Passed" start-time="2026-09-16 04:24:55Z" end-time="2026-09-16 04:24:57Z" duration="2.150067" total="34" passed="34" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1003" name="Plunderspell.Tests.PlayMode.dll" fullname="C:/Users/aj/Desktop/GameDev/Rogue-Ai-Extraction-Game/Library/ScriptAssemblies/Plunderspell.Tests.PlayMode.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:24:55Z" end-time="2026-09-16 04:24:56Z" duration="0.595613" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="18644" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1004" name="Plunderspell" fullname="Plunderspell" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:24:55Z" end-time="2026-09-16 04:24:56Z" duration="0.595257" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1005" name="Tests" fullname="Plunderspell.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:24:55Z" end-time="2026-09-16 04:24:56Z" duration="0.595117" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1006" name="PlayMode" fullname="Plunderspell.Tests.PlayMode" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:24:55Z" end-time="2026-09-16 04:24:56Z" duration="0.594987" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="UIScreenshotPlayModeTests" fullname="Plunderspell.Tests.PlayMode.UIScreenshotPlayModeTests" classname="Plunderspell.Tests.PlayMode.UIScreenshotPlayModeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-16 04:24:55Z" end-time="2026-09-16 04:24:56Z" duration="0.594321" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1002" name="CapturesAllUIScreens" fullname="Plunderspell.Tests.PlayMode.UIScreenshotPlayModeTests.CapturesAllUIScreens" methodname="CapturesAllUIScreens" classname="Plunderspell.Tests.PlayMode.UIScreenshotPlayModeTests" runstate="Runnable" seed="1386800839" result="Passed" start-time="2026-09-16 04:24:55Z" end-time="2026-09-16 04:24:56Z" duration="0.586612" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1044" name="RogueAi.Tests.dll" fullname="C:/Users/aj/Desktop/GameDev/Rogue-Ai-Extraction-Game/Library/ScriptAssemblies/RogueAi.Tests.dll" runstate="Runnable" testcasecount="33" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:57Z" duration="1.549086" total="33" passed="33" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="18644" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1045" name="RogueAi" fullname="RogueAi" runstate="Runnable" testcasecount="33" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:57Z" duration="1.548609" total="33" passed="33" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1046" name="Tests" fullname="RogueAi.Tests" runstate="Runnable" testcasecount="33" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:57Z" duration="1.548405" total="33" passed="33" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1007" name="CastleGeneratorTests" fullname="RogueAi.Tests.CastleGeneratorTests" classname="RogueAi.Tests.CastleGeneratorTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.021333" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1009" name="Test_AllZonesPresent" fullname="RogueAi.Tests.CastleGeneratorTests.Test_AllZonesPresent" methodname="Test_AllZonesPresent" classname="RogueAi.Tests.CastleGeneratorTests" runstate="Runnable" seed="1947842050" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.008129" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1008" name="Test_DeterministicGeneration" fullname="RogueAi.Tests.CastleGeneratorTests.Test_DeterministicGeneration" methodname="Test_DeterministicGeneration" classname="RogueAi.Tests.CastleGeneratorTests" runstate="Runnable" seed="252907941" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.006321" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1013" name="Test_ExtractionExitAssigned" fullname="RogueAi.Tests.CastleGeneratorTests.Test_ExtractionExitAssigned" methodname="Test_ExtractionExitAssigned" classname="RogueAi.Tests.CastleGeneratorTests" runstate="Runnable" seed="440676024" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.000672" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1014" name="Test_LevenshteinFromM1_StillPasses" fullname="RogueAi.Tests.CastleGeneratorTests.Test_LevenshteinFromM1_StillPasses" methodname="Test_LevenshteinFromM1_StillPasses" classname="RogueAi.Tests.CastleGeneratorTests" runstate="Runnable" seed="585123823" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.000329" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1010" name="Test_PathValidatorFindsPath" fullname="RogueAi.Tests.CastleGeneratorTests.Test_PathValidatorFindsPath" methodname="Test_PathValidatorFindsPath" classname="RogueAi.Tests.CastleGeneratorTests" runstate="Runnable" seed="4245633" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.003922" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1011" name="Test_PathValidatorOnEmptyData" fullname="RogueAi.Tests.CastleGeneratorTests.Test_PathValidatorOnEmptyData" methodname="Test_PathValidatorOnEmptyData" classname="RogueAi.Tests.CastleGeneratorTests" runstate="Runnable" seed="1328685770" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.000236" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="Test_SocketCompatibilityRules" fullname="RogueAi.Tests.CastleGeneratorTests.Test_SocketCompatibilityRules" methodname="Test_SocketCompatibilityRules" classname="RogueAi.Tests.CastleGeneratorTests" runstate="Runnable" seed="1568733583" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.000169" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestSuite" id="1047" name="Integration" fullname="RogueAi.Tests.Integration" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:57Z" duration="1.515639" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1033" name="PlunderspellIntegrationTests" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:57Z" duration="1.514958" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1039" name="Test_AlarmEscalationToHueCry" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_AlarmEscalationToHueCry" methodname="Test_AlarmEscalationToHueCry" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="1831869626" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.002440" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1035" name="Test_CastleSeedReplicates" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_CastleSeedReplicates" methodname="Test_CastleSeedReplicates" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="1062872390" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.501393" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1041" name="Test_CrossEraEquip" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_CrossEraEquip" methodname="Test_CrossEraEquip" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="455808754" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.000475" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1042" name="Test_DebtSystem" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_DebtSystem" methodname="Test_DebtSystem" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="1511229111" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.001778" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1043" name="Test_DownedPlayerBulk" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_DownedPlayerBulk" methodname="Test_DownedPlayerBulk" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="585832422" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.002238" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1040" name="Test_ExtractionTally" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_ExtractionTally" methodname="Test_ExtractionTally" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="193201726" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:56Z" duration="0.001464" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1034" name="Test_FourClientsConnect" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_FourClientsConnect" methodname="Test_FourClientsConnect" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="445786985" result="Passed" start-time="2026-09-16 04:24:56Z" end-time="2026-09-16 04:24:57Z" duration="1.001812" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1038" name="Test_LootPickupFragility" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_LootPickupFragility" methodname="Test_LootPickupFragility" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="1459540921" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000654" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1037" name="Test_MisfireEngineViaIntegration" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_MisfireEngineViaIntegration" methodname="Test_MisfireEngineViaIntegration" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="694810133" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.001161" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1036" name="Test_VoiceMockCastIgnis" fullname="RogueAi.Tests.Integration.PlunderspellIntegrationTests.Test_VoiceMockCastIgnis" methodname="Test_VoiceMockCastIgnis" classname="RogueAi.Tests.Integration.PlunderspellIntegrationTests" runstate="Runnable" seed="121804687" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000152" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1015" name="LootAcousticsTests" fullname="RogueAi.Tests.LootAcousticsTests" classname="RogueAi.Tests.LootAcousticsTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.003588" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1023" name="Test_AcousticOcclusionAttenuates" fullname="RogueAi.Tests.LootAcousticsTests.Test_AcousticOcclusionAttenuates" methodname="Test_AcousticOcclusionAttenuates" classname="RogueAi.Tests.LootAcousticsTests" runstate="Runnable" seed="1790001769" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000340" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="Test_AlarmLevelIncreases" fullname="RogueAi.Tests.LootAcousticsTests.Test_AlarmLevelIncreases" methodname="Test_AlarmLevelIncreases" classname="RogueAi.Tests.LootAcousticsTests" runstate="Runnable" seed="2033308006" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000504" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="Test_AlarmStateCalmToStirred" fullname="RogueAi.Tests.LootAcousticsTests.Test_AlarmStateCalmToStirred" methodname="Test_AlarmStateCalmToStirred" classname="RogueAi.Tests.LootAcousticsTests" runstate="Runnable" seed="1224342146" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000241" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="Test_AlarmStateLocksAtRoused" fullname="RogueAi.Tests.LootAcousticsTests.Test_AlarmStateLocksAtRoused" methodname="Test_AlarmStateLocksAtRoused" classname="RogueAi.Tests.LootAcousticsTests" runstate="Runnable" seed="1270489367" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000230" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1018" name="Test_DualCarryThreshold" fullname="RogueAi.Tests.LootAcousticsTests.Test_DualCarryThreshold" methodname="Test_DualCarryThreshold" classname="RogueAi.Tests.LootAcousticsTests" runstate="Runnable" seed="446711966" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000346" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="Test_LootItemFragilityBreaks" fullname="RogueAi.Tests.LootAcousticsTests.Test_LootItemFragilityBreaks" methodname="Test_LootItemFragilityBreaks" classname="RogueAi.Tests.LootAcousticsTests" runstate="Runnable" seed="699437343" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000523" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="Test_LootItemSurvivesLowVelocity" fullname="RogueAi.Tests.LootAcousticsTests.Test_LootItemSurvivesLowVelocity" methodname="Test_LootItemSurvivesLowVelocity" classname="RogueAi.Tests.LootAcousticsTests" runstate="Runnable" seed="53533280" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000221" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1019" name="Test_SingleCarryThreshold" fullname="RogueAi.Tests.LootAcousticsTests.Test_SingleCarryThreshold" methodname="Test_SingleCarryThreshold" classname="RogueAi.Tests.LootAcousticsTests" runstate="Runnable" seed="626638717" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000199" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1024" name="VoiceCastingTests" fullname="RogueAi.Tests.VoiceCastingTests" classname="RogueAi.Tests.VoiceCastingTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.007463" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1030" name="Test_AmplitudeClassification" fullname="RogueAi.Tests.VoiceCastingTests.Test_AmplitudeClassification" methodname="Test_AmplitudeClassification" classname="RogueAi.Tests.VoiceCastingTests" runstate="Runnable" seed="1568142492" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000508" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1031" name="Test_LevenshteinDistance" fullname="RogueAi.Tests.VoiceCastingTests.Test_LevenshteinDistance" methodname="Test_LevenshteinDistance" classname="RogueAi.Tests.VoiceCastingTests" runstate="Runnable" seed="1063722661" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000145" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="Test_MisfireEngineExactMatch" fullname="RogueAi.Tests.VoiceCastingTests.Test_MisfireEngineExactMatch" methodname="Test_MisfireEngineExactMatch" classname="RogueAi.Tests.VoiceCastingTests" runstate="Runnable" seed="793473228" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000539" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="Test_MisfireEngineNearMatch" fullname="RogueAi.Tests.VoiceCastingTests.Test_MisfireEngineNearMatch" methodname="Test_MisfireEngineNearMatch" classname="RogueAi.Tests.VoiceCastingTests" runstate="Runnable" seed="225131717" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000133" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="Test_MisfireEngineNoMatch" fullname="RogueAi.Tests.VoiceCastingTests.Test_MisfireEngineNoMatch" methodname="Test_MisfireEngineNoMatch" classname="RogueAi.Tests.VoiceCastingTests" runstate="Runnable" seed="592204631" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000127" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="Test_MockServiceDoesNotFireWhenNotListening" fullname="RogueAi.Tests.VoiceCastingTests.Test_MockServiceDoesNotFireWhenNotListening" methodname="Test_MockServiceDoesNotFireWhenNotListening" classname="RogueAi.Tests.VoiceCastingTests" runstate="Runnable" seed="2117017067" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000497" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1025" name="Test_MockServiceFiresOnKeyPress" fullname="RogueAi.Tests.VoiceCastingTests.Test_MockServiceFiresOnKeyPress" methodname="Test_MockServiceFiresOnKeyPress" classname="RogueAi.Tests.VoiceCastingTests" runstate="Runnable" seed="116369411" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.004420" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[MockVoice] StartListening
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.20, vol=Normal)
+]]></output>
+            </test-case>
+            <test-case id="1032" name="Test_NormalizeStripsPunctuationAndCase" fullname="RogueAi.Tests.VoiceCastingTests.Test_NormalizeStripsPunctuationAndCase" methodname="Test_NormalizeStripsPunctuationAndCase" classname="RogueAi.Tests.VoiceCastingTests" runstate="Runnable" seed="458980087" result="Passed" start-time="2026-09-16 04:24:57Z" end-time="2026-09-16 04:24:57Z" duration="0.000110" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/aj/AppData/LocalLow/DefaultCompany/PurrnetTest\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

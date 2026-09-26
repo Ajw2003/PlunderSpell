@@ -46,22 +46,37 @@ namespace RogueAi.Extraction
         {
             base.OnSpawned();
             if (isServer)
-            {
-                _timeRemaining.value = RaidDurationSeconds;
-                _extractionComplete.value = false;
-            }
+                ResetClock();
+        }
+
+        /// <summary>
+        /// Offline (single-player, or a scene played without starting a host) there is no spawn
+        /// event, so the clock would sit at zero and the raid would end the instant it began. The
+        /// authority checks below all read "spawned AND not the server" for the same reason: an
+        /// unspawned object is its own authority.
+        /// </summary>
+        private void Awake()
+        {
+            if (!isSpawned)
+                ResetClock();
+        }
+
+        private void ResetClock()
+        {
+            _timeRemaining.value = RaidDurationSeconds;
+            _extractionComplete.value = false;
         }
 
         private void Update()
         {
-            if (!isServer || _extractionComplete.value)
+            if ((isSpawned && !isServer) || _extractionComplete.value)
                 return;
 
             _timeRemaining.value -= Time.deltaTime;
             if (_timeRemaining.value <= 0f)
             {
                 _timeRemaining.value = 0f;
-                TriggerExtraction();
+                ResolveExtraction();
             }
         }
 
@@ -70,16 +85,30 @@ namespace RogueAi.Extraction
         /// counts saved players, marks complete, broadcasts the result and raises the event.
         /// </summary>
         [ServerRpc(requireOwnership: false)]
-        public void TriggerExtraction()
+        public void TriggerExtraction() => ResolveExtraction();
+
+        /// <summary>
+        /// The actual resolution, separate from the RPC that carries it.
+        ///
+        /// PurrNet rewrites an [ServerRpc] method at build time into a send: its body runs on the
+        /// server after a round trip, and on an UNSPAWNED object it does not run at all. Offline —
+        /// single-player, or a scene played without starting a host — calling the RPC would
+        /// therefore silently do nothing, so the clock expiring and <c>RaidDirector</c> both call
+        /// this directly and let the RPC be the networked door onto it.
+        /// </summary>
+        public void ResolveExtraction()
         {
             if (_extractionComplete.value)
                 return;
 
             float totalWorth = ComputeWorth(_lootInZone);
             int playersSaved = _playersInZone.Count;
-
             _extractionComplete.value = true;
-            BroadcastExtractionResult(totalWorth, playersSaved);
+
+            if (isSpawned && isServer)
+                BroadcastExtractionResult(totalWorth, playersSaved);
+            else
+                ApplyExtractionResult(totalWorth, playersSaved);
         }
 
         /// <summary>
@@ -99,7 +128,10 @@ namespace RogueAi.Extraction
         }
 
         [ObserversRpc(bufferLast: true)]
-        private void BroadcastExtractionResult(float worth, int saved)
+        private void BroadcastExtractionResult(float worth, int saved) => ApplyExtractionResult(worth, saved);
+
+        /// <summary>Presentation half: mark complete locally and raise the event on this peer.</summary>
+        private void ApplyExtractionResult(float worth, int saved)
         {
             _extractionComplete.value = true;
             ExtractionResolved?.Invoke(worth, saved);
@@ -111,7 +143,7 @@ namespace RogueAi.Extraction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!isServer)
+            if (isSpawned && !isServer)
                 return;
 
             var pickup = other.GetComponentInParent<LootPickup>();
@@ -125,7 +157,7 @@ namespace RogueAi.Extraction
 
         private void OnTriggerExit(Collider other)
         {
-            if (!isServer)
+            if (isSpawned && !isServer)
                 return;
 
             var pickup = other.GetComponentInParent<LootPickup>();
@@ -141,6 +173,32 @@ namespace RogueAi.Extraction
         // Test / integration seams (network-free mutation of the tracked lists)
         // -----------------------------------------------------------------------------------------
 
+        /// <summary>
+        /// Sets the raid length. Used by scene tooling and by the director when a raid's duration
+        /// depends on the era. Takes effect on the next spawn, or immediately when already running.
+        /// </summary>
+        public void SetRaidDuration(float seconds)
+        {
+            RaidDurationSeconds = Mathf.Max(1f, seconds);
+            if (!_extractionComplete.value)
+                _timeRemaining.value = RaidDurationSeconds;
+        }
+
+        /// <summary>
+        /// Re-arms the zone for a new raid: clock back to full, extraction un-resolved, and both
+        /// tracked lists emptied.
+        ///
+        /// Without this a second raid is unwinnable — the zone stays flagged complete from the last
+        /// one, so <see cref="TriggerExtraction"/> returns immediately and the players can never
+        /// leave with anything.
+        /// </summary>
+        public void ResetForNewRaid()
+        {
+            _lootInZone.Clear();
+            _playersInZone.Clear();
+            ResetClock();
+        }
+
         /// <summary>Test seam: register a pickup as being inside the zone.</summary>
         public void TrackLoot(LootPickup pickup)
         {
@@ -155,13 +213,12 @@ namespace RogueAi.Extraction
                 _playersInZone.Add(identity);
         }
 
-        /// <summary>Test seam: resolve the extraction without an RPC round-trip.</summary>
+        /// <summary>Test seam: resolve the extraction and report what it paid out.</summary>
         public (float worth, int saved) ResolveLocally()
         {
             float worth = ComputeWorth(_lootInZone);
             int saved = _playersInZone.Count;
-            _extractionComplete.value = true;
-            ExtractionResolved?.Invoke(worth, saved);
+            ResolveExtraction();
             return (worth, saved);
         }
 

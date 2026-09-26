@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using PurrNet;
 using UnityEngine;
 
@@ -58,13 +59,42 @@ namespace RogueAi.Tests.Integration
         public void StartHost()
         {
             ManagerObject = new GameObject("TestNetworkManager");
+
+            // NetworkManager.Awake() throws if its NetworkRules field is unset, and AddComponent()
+            // runs Awake synchronously — so the GameObject must stay inactive until the field is
+            // assigned via reflection (NetworkRules has no public setter).
+            ManagerObject.SetActive(false);
             // A real NetworkManager component so lookups succeed; we do not open a socket.
             Manager = ManagerObject.AddComponent<NetworkManager>();
+            AssignNetworkRules(Manager);
+            ManagerObject.SetActive(true);
+
             HostStarted = true;
 
             var host = new SimulatedClient { Index = 0, Connected = true };
             host.PlayerObject = new GameObject("Host_Player");
             _clients.Add(host);
+        }
+
+        /// <summary>
+        /// Assigns the same NetworkRules asset the real TestScene's NetworkManager uses, so the
+        /// harness matches production configuration instead of inventing test-only rules.
+        /// </summary>
+        private static void AssignNetworkRules(NetworkManager manager)
+        {
+            if (manager.networkRules != null)
+                return;
+
+            NetworkRules rules = null;
+#if UNITY_EDITOR
+            rules = UnityEditor.AssetDatabase.LoadAssetAtPath<NetworkRules>("Assets/_Project/Net/NetworkRules.asset");
+#endif
+            if (rules == null)
+                return;
+
+            typeof(NetworkManager)
+                .GetField("_networkRules", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.SetValue(manager, rules);
         }
 
         /// <summary>Connect a simulated client at the given index (1..3). Returns the created peer.</summary>

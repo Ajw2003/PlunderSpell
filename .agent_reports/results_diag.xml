@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-16 03:48:27Z" end-time="2026-09-16 03:48:27Z" duration="0.0296784">
+  <test-suite type="TestSuite" id="1053" name="PurrnetTest" fullname="PurrnetTest" runstate="Runnable" testcasecount="35" result="Failed" site="Child" start-time="2026-09-16 03:48:27Z" end-time="2026-09-16 03:48:27Z" duration="0.029678" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1005" name="Plunderspell.Tests.PlayMode.dll" fullname="C:/Users/aj/Desktop/GameDev/Rogue-Ai-Extraction-Game/Library/ScriptAssemblies/Plunderspell.Tests.PlayMode.dll" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-16 03:48:27Z" end-time="2026-09-16 03:48:27Z" duration="0.024076" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24640" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1006" name="Plunderspell" fullname="Plunderspell" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-16 03:48:27Z" end-time="2026-09-16 03:48:27Z" duration="0.023650" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1007" name="Tests" fullname="Plunderspell.Tests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-16 03:48:27Z" end-time="2026-09-16 03:48:27Z" duration="0.023449" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1008" name="PlayMode" fullname="Plunderspell.Tests.PlayMode" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-16 03:48:27Z" end-time="2026-09-16 03:48:27Z" duration="0.023251" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1003" name="_DiagTempTest" fullname="Plunderspell.Tests.PlayMode._DiagTempTest" classname="Plunderspell.Tests.PlayMode._DiagTempTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-09-16 03:48:27Z" end-time="2026-09-16 03:48:27Z" duration="0.022484" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1004" name="ReproStepByStep" fullname="Plunderspell.Tests.PlayMode._DiagTempTest.ReproStepByStep" methodname="ReproStepByStep" classname="Plunderspell.Tests.PlayMode._DiagTempTest" runstate="Runnable" seed="2061393021" result="Failed" start-time="2026-09-16 03:48:27Z" end-time="2026-09-16 03:48:27Z" duration="0.014886" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[Unhandled log message: '[Exception] Exception: UnityTest yielded WaitForEndOfFrame, which is not evoked in batchmode.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                  <stack-trace><![CDATA[UnityEngine.TestTools.Utils.CoroutineRunner+<WrapEnumeratorForChecks>d__8.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@aebcb98460c6/UnityEngine.TestRunner/Utils/CoroutineRunner.cs:68)
+UnityEngine.SetupCoroutine.InvokeMoveNext (System.Collections.IEnumerator enumerator, System.IntPtr returnValueAddress) (at <6567e2a645a94ef68fffcf0e5cb82d14>:0)
+
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[DIAG 1: test body entered
+DIAG 2: FindFirstObjectByType<UIRoot> about to run
+DIAG 3: FindFirstObjectByType<UIRoot> returned, uiRoot null? False
+DIAG 4: about to ChangeState(MainMenu)
+DIAG 5: ChangeState(MainMenu) returned
+DIAG 6: yield return null after ChangeState completed
+Exception: UnityTest yielded WaitForEndOfFrame, which is not evoked in batchmode.
+UnityEngine.TestTools.Utils.CoroutineRunner+<WrapEnumeratorForChecks>d__8.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@aebcb98460c6/UnityEngine.TestRunner/Utils/CoroutineRunner.cs:68)
+UnityEngine.SetupCoroutine.InvokeMoveNext (System.Collections.IEnumerator enumerator, System.IntPtr returnValueAddress) (at <6567e2a645a94ef68fffcf0e5cb82d14>:0)
+
+DIAG 7: WaitForEndOfFrame after ChangeState completed
+DIAG 8: about to CaptureScreenshot
+DIAG 9: CaptureScreenshot call returned
+Saving results to: C:/Users/aj/AppData/LocalLow/DefaultCompany/PurrnetTest\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,25 @@
+{
+    "name": "RogueAi.UI",
+    "rootNamespace": "RogueAi.UI",
+    "references": [
+        "PurrNet.Runtime",
+        "RogueAi.Core",
+        "RogueAi.Alarm",
+        "RogueAi.Extraction",
+        "RogueAi.Lair",
+        "RogueAi.Loot",
+        "RogueAi.Raid",
+        "RogueAi.Spells",
+        "RogueAi.Voice",
+        "RogueAi.Status"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

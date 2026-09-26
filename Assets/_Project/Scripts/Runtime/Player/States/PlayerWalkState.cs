@@ -15,13 +15,12 @@ public class PlayerWalkState : PlayerState
             return;
         }
 
-        Vector3 up = Vector3.up;
-        Vector3 moveDirection = CameraRelativeInputOnGravityPlane(up);
+        Vector3 moveDirection = CameraRelativeInput();
 
-        // Preserve the velocity component along up so this doesn't interfere with jumping/falling.
-        float verticalSpeed = Vector3.Dot(_stateMachine._rb.linearVelocity, up);
+        // Preserve the vertical component so this doesn't interfere with jumping/falling.
+        float verticalSpeed = _stateMachine._rb.linearVelocity.y;
 
-        _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed) + (up * verticalSpeed);
+        _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed) + (Vector3.up * verticalSpeed);
     }
 
     public override void Exit()

@@ -45,7 +45,7 @@ namespace RogueAi.Tests.Integration
         private SpellLexicon BuildLexicon()
         {
             var ignis = ScriptableObject.CreateInstance<SpellWord>();
-            ignis.SpellWord = "IGNIS";
+            ignis.Word = "IGNIS";
             ignis.spellId = SpellId.Ignis;
             ignis.misfireId = SpellId.MisfireIgnis;
             ignis.AltPronunciations = new[] { "AGNIS", "IGNISH" };
@@ -194,8 +194,6 @@ namespace RogueAi.Tests.Integration
             var go = Track(new GameObject("Lair"));
             var lair = go.AddComponent<LairHubManager>();
             lair.Load();
-            // Force known starting debt.
-            typeof(LairHubManager); // documentation anchor
 
             float before = lair.TotalDebt; // 500 default
             lair.ApplyExtractionResult(200f);

@@ -11,8 +11,11 @@ public static class TestSceneBuilder
 {
     // Judgement calls - tune here rather than hunting through the generated scene.
     // Standard world gravity (Physics.gravity, -Y) is used, so the test surface is a large flat
-    // ground plane at the origin rather than a spherical planet.
-    private const float GroundSize = 200f;
+    // ground plane at the origin rather than a spherical planet. 120 units square is roughly 20
+    // seconds of walking edge to edge at PlayerWalkSpeed: enough room to build up speed and test
+    // a fall without the ground ending mid-test.
+    private const float GroundSize = 120f;
+    private const float GroundThickness = 1f;
     private const float PlayerCapsuleHeight = 2f;
     private const float PlayerCapsuleRadius = 0.5f;
     private const float PlayerWalkSpeed = 6f;
@@ -35,10 +38,10 @@ public static class TestSceneBuilder
         BuildSceneLight();
         BuildManagers();
 
-        GameObject ground = BuildGround();
+        BuildGround();
         GameObject playerPrefab = BuildPlayerPrefab();
         GameObject player = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab, scene);
-        BuildTestItem(ground.transform);
+        BuildTestItem();
 
         player.transform.position = new Vector3(0f, PlayerGroundedHeight + PlayerCapsuleHeight * 0.5f, 0f);
 
@@ -48,7 +51,7 @@ public static class TestSceneBuilder
         Debug.Log($"RogueAi: test scene built at {ScenePath} with player prefab at {PlayerPrefabPath}.");
     }
 
-    // NewSceneSetup.EmptyScene omits the default light, so without this the planet renders unlit
+    // NewSceneSetup.EmptyScene omits the default light, so without this the ground renders unlit
     // and the scene looks broken before any gameplay is even exercised.
     private static void BuildSceneLight()
     {
@@ -67,17 +70,16 @@ public static class TestSceneBuilder
         new GameObject("ItemManager").AddComponent<ItemManager>();
     }
 
-    // A large flat ground plane at the origin. Standard world gravity (-Y) pulls the player and
-    // items straight down onto it, so no GravitySource is needed.
-    private static GameObject BuildGround()
+    // A box rather than a plane: a plane's collider is one-sided and infinitely thin, so anything
+    // moving fast enough tunnels straight through it. Standard world gravity (-Y) pulls the
+    // player and items straight down onto it, so no GravitySource is needed. The top face sits
+    // at y = 0.
+    private static void BuildGround()
     {
         GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
         ground.name = "TestGround";
-        ground.transform.position = new Vector3(0f, -0.5f, 0f);
-        // Wide, thin slab whose top surface sits at y = 0.
-        ground.transform.localScale = new Vector3(GroundSize, 1f, GroundSize);
-
-        return ground;
+        ground.transform.position = new Vector3(0f, -GroundThickness * 0.5f, 0f);
+        ground.transform.localScale = new Vector3(GroundSize, GroundThickness, GroundSize);
     }
 
     private static GameObject BuildPlayerPrefab()
@@ -129,12 +131,14 @@ public static class TestSceneBuilder
         serialized.ApplyModifiedPropertiesWithoutUndo();
     }
 
-    private static void BuildTestItem(Transform groundTransform)
+    private static void BuildTestItem()
     {
         GameObject item = GameObject.CreatePrimitive(PrimitiveType.Cube);
         item.name = "TestItem";
         item.transform.localScale = Vector3.one * ItemSize;
-        item.transform.position = new Vector3(3f, ItemSize, 0f);
+        // Dropped from a height so the first thing the scene shows is the item falling and
+        // tumbling - the quickest read on whether gravity came back correctly.
+        item.transform.position = new Vector3(3f, 5f, 0f);
 
         // Item's [RequireComponent] pulls in a Rigidbody (useGravity = true at runtime);
         // CreatePrimitive already gave the cube a BoxCollider for the grab/throw physics.

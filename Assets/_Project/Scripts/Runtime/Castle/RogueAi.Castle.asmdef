@@ -2,7 +2,10 @@
     "name": "RogueAi.Castle",
     "rootNamespace": "RogueAi.Castle",
     "references": [
-        "PurrNet.Runtime"
+        "PurrNet.Runtime",
+        "RogueAi.Core",
+        "RogueAi.Acoustics",
+        "RogueAi.Alarm"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

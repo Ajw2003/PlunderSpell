@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ddca6421151708fac6f6633b3e16d45, type: 3}
   m_Name: Spell_TONITRUS
   m_EditorClassIdentifier: 
-  SpellWord: TONITRUS
+  Word: TONITRUS
   spellId: 5
   AltPronunciations:
   - TONITUS

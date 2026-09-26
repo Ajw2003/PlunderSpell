@@ -1,0 +1,20 @@
+{
+    "name": "RogueAi.Guards",
+    "rootNamespace": "RogueAi.Guards",
+    "references": [
+        "PurrNet.Runtime",
+        "RogueAi.Core",
+        "RogueAi.Acoustics",
+        "RogueAi.Alarm",
+        "RogueAi.Status"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
