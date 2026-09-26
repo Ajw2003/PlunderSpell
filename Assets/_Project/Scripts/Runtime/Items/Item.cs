@@ -78,8 +78,17 @@ public class Item : MonoBehaviour
              "is easier than lifting: a heavy thing still follows you, only slower.")]
     [SerializeField] private float _haulStrength = 250f;
 
-    [Tooltip("The most force (N) a rope can tow a piece too heavy to lift with. It gets no lift, so " +
-             "the floor's friction (about 0.6 x its weight) holds it back.")]
+    [Header("Towing (only for items too heavy to lift)")]
+    [Tooltip("Set this item's own walking pace while it is towed. Off: worked out from its weight " +
+             "(6 / mass, kept between 0.3 and 0.6).")]
+    [SerializeField] private bool _customTowPace;
+
+    [Tooltip("The holder's walking pace while towing this, as a fraction of their normal walk: " +
+             "1 = no slowdown, 0.5 = half speed. Used when Custom Tow Pace is on.")]
+    [Range(0.1f, 1f)] [SerializeField] private float _towPace = 0.5f;
+
+    [Tooltip("The most force (N) the rope can tow this with. Lower: slower to get moving and " +
+             "more likely to lag and hold the holder back.")]
     [SerializeField] private float _towStrength = 160f;
 
     [Tooltip("Angular damping while held and not being turned, so it hangs and settles, not spins.")]
@@ -150,8 +159,8 @@ public class Item : MonoBehaviour
 
     /// <summary>
     /// How fast the holder may walk, as a fraction of their normal pace, while towing this: 1 for
-    /// anything they can lift, about 6 / mass for a piece too heavy to (0.5 at 12 kg, 0.4 at 15 kg),
-    /// never under 0.3. A rope does not stretch: while the piece lags past the rope's length the
+    /// anything they can lift, else <see cref="TowPace"/> (set per item in the Inspector, or about
+    /// 6 / mass). A rope does not stretch: while the piece lags past the rope's length the
     /// holder is held back further, down to a fifth of that pace at a metre of strain.
     /// </summary>
     public float TowSpeedMultiplier
@@ -160,9 +169,20 @@ public class Item : MonoBehaviour
         {
             if (!IsTooHeavyToLift)
                 return 1f;
-            float pace = Mathf.Clamp(k_towPaceKg / Mass, 0.3f, 0.6f);
             float heldBack = Mathf.Clamp(1f - (TowStrain - 0.2f) / 0.8f, 0.2f, 1f);
-            return pace * heldBack;
+            return TowPace * heldBack;
+        }
+    }
+
+    /// <summary>The holder's walking pace while towing this, before any holding back: the item's
+    /// own Tow Pace when set in the Inspector, else about 6 / mass. 1 for anything liftable.</summary>
+    public float TowPace
+    {
+        get
+        {
+            if (!IsTooHeavyToLift)
+                return 1f;
+            return _customTowPace ? _towPace : Mathf.Clamp(k_towPaceKg / Mass, 0.3f, 0.6f);
         }
     }
 

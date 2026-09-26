@@ -179,6 +179,9 @@ MonoBehaviour:
   _rotationSpeed: 10
   _gripStrength: 100
   _haulStrength: 250
+  _customTowPace: 1
+  _towPace: 0.43
+  _towStrength: 160
   _heldAngularDamping: 3
   _gripPoint: {fileID: 2555858447851146997}
   _maxThrowSpeed: 18

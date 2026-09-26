@@ -98,8 +98,13 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   crosshair. It is towed on a rope as long as the reach it was grabbed at (1.5-3 m), from wherever
   the holder's body is, so you walk forward and it scrapes along behind (`Item.SetTow`, fed by
   `ItemManager`):
-  - **You walk slower.** `Item.TowSpeedMultiplier` is about 6 / mass of your walking pace (0.5 at
-    12 kg, 0.4 at 15 kg), and a rope does not stretch: while the piece lags past the rope's length
+  - **Tuning, per item.** On the item's prefab, `Item` > *Towing*: **Custom Tow Pace** on, then
+    **Tow Pace** (the holder's walk while towing it: 1 = no slowdown, 0.5 = half speed) and **Tow
+    Strength** (the most the rope pulls it with, N; lower is slower to get going). The five
+    two-person pieces have their own values (cabinet and cauldron 0.5, parade armour 0.46,
+    altarpiece 0.43, chest 0.4, all at 160 N); with Custom Tow Pace off, an item uses 6 / mass.
+  - **You walk slower.** `Item.TowSpeedMultiplier` is the item's `TowPace`, and a rope does not
+    stretch: while the piece lags past the rope's length
     you are held back further, down to a fifth of that at a metre of strain. `PlayerWalkState`
     applies it. Past 2 m of strain the piece is stuck on something and you let go.
   - **It plods.** Once the rope is taut the piece is driven toward your own pace along the rope,

@@ -372,6 +372,11 @@ namespace Plunderspell.Tests
                 item.StartDragging(holder.gameObject);
                 // The holder walks away at the pace towing allows them (PlayerWalkState: the
                 // RaidPlayer's 5 m/s walk times the piece's TowSpeedMultiplier), pulling it behind.
+                // The pace is each prefab's own, set in its Inspector (Item > Towing).
+                var authored = new UnityEditor.SerializedObject(prefab.GetComponent<Item>());
+                Assert.IsTrue(authored.FindProperty("_customTowPace").boolValue, $"{prefab.name} has no tow pace of its own.");
+                Assert.AreEqual(authored.FindProperty("_towPace").floatValue, item.TowPace, 1e-4f,
+                    $"{prefab.name} tows at a pace other than the one set on it.");
                 float pace = 5f * item.TowSpeedMultiplier;
                 Assert.That(pace, Is.LessThanOrEqualTo(3f), $"Towing {prefab.name} should slow the holder to at most 60 %.");
                 float topSpeed = 0f;
