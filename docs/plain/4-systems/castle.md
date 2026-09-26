@@ -40,7 +40,7 @@ the exit.
   off the new one.
 
 ## Related
-- [Raid](../../4-systems/raid.md) *(no plain copy yet)*
+- [Raid](raid.md)
 - [Alarm and Acoustics](alarm.md)
 - [Scale](../../4-systems/scale.md) *(no plain copy yet)*
 

@@ -29,7 +29,7 @@ even appear. The bench gives a fast, repeatable way to check that combat still w
 - **A screenshot tool missing the on-screen panel.** A known limit, not a bug.
 
 ## Related
-- [Raid](../../4-systems/raid.md) *(no plain copy yet)*
+- [Raid](raid.md)
 
 ## Left out
 File and script names, exact sizes and counts, the automated tests, and outstanding requests

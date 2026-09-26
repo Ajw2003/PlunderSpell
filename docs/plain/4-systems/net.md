@@ -43,7 +43,7 @@ do not work, or one player's actions not showing up for the others.
   through Steam; the friends list in the game's own menu covers that case instead.
 
 ## Related
-- [Raid](../../4-systems/raid.md) *(no plain copy yet)*
+- [Raid](raid.md)
 
 ## Left out
 File and class names, the exact replicated fields and RPC plumbing, Steam App ID and firewall

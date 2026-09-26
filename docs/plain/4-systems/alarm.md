@@ -31,7 +31,7 @@ alarm must stay raised, or players could hide it out and lose the tension of the
 
 ## Related
 - [Castle](../../4-systems/castle.md) *(no plain copy yet)*
-- [Raid](../../4-systems/raid.md) *(no plain copy yet)*
+- [Raid](raid.md)
 
 ## Left out
 Exact numbers, the wall-counting method, and how state syncs between players.

@@ -26,7 +26,7 @@ by the whole project.
 - **Rebuilt scenes leaving duplicates.** The dev tools always start from an empty scene first.
 
 ## Related
-- [Raid](../../4-systems/raid.md) *(no plain copy yet)*
+- [Raid](raid.md)
 
 ## Left out
 File and class names, spell-target interfaces, and exact tooling commands.

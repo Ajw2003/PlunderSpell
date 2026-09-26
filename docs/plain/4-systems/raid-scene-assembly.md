@@ -56,7 +56,7 @@ made, or a raid that silently spawns nothing in a zone.
 ## Related
 - [Net](net.md)
 - [Scale](../../4-systems/scale.md) *(no plain copy yet)*
-- [Raid](../../4-systems/raid.md) *(no plain copy yet)*
+- [Raid](raid.md)
 
 ## Left out
 File and class names, exact prefab paths, the full per-age enemy and loot tables, import settings
