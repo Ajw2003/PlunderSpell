@@ -58,7 +58,7 @@ damages you or it (`docs/systems/damage.md`). Loot is rebalanced: nothing breaks
 drop, heavy pieces pay more, and Late Medieval no longer fills its busy rooms with pieces too heavy to
 lift ([`docs/plans/loot-balance.md`](plans/loot-balance.md)). A player is never spawned over the
 drawbridge's moat (`docs/systems/scale.md`, "Spawning"). Held loot keeps its orientation, weapons are held rigidly
-in the hand, and pieces too heavy to lift are towed behind you (`docs/systems/damage.md`,
+in the hand, and pieces too heavy to lift are towed slowly behind you, slowing your walk (`docs/systems/damage.md`,
 "Weight"). The code's namespaces and assemblies are `Plunderspell.*`; the old `RogueAi` names are
 gone (Decisions, 2026-09-26).
 
