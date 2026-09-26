@@ -684,8 +684,8 @@ cannot stop three other people's game. The inventory is not a pause.
 while paused. One test did exactly that and hung the suite; it now uses the inventory to test the
 "menus block input" rule.
 
-**Status.** Standing. Verified in Play mode: the clock held at 295.00 s and a guard held still for
-2 s while paused, stayed frozen in Settings, and resumed on Esc.
+**Status.** Reversed 2026-09-25 by #129; see "The pause menu no longer pauses anything" below.
+`PausePolicy` is deleted.
 
 ## 2026-09-23 — Frango is a force blast, not a loot-breaker; Levo lifts guards (#106)
 
@@ -833,3 +833,17 @@ same result without code changes.
   walked. Opening them is a gameplay decision.
 - **No vertex soot bake yet.** Grime at wall feet plus SSAO stand in; baking would re-export every
   castle FBX for little gain on 4-vertex faces. Open for a decision.
+
+## 2026-09-25 — The pause menu no longer pauses anything (#129)
+
+**Context.** #107 let the host freeze the world from the pause menu. The user asked for host pausing
+to be disabled and deprecated: in a four-player raid one person should not be able to stop everyone
+else's game, and a raid is meant to be under pressure.
+
+**Decision.** `PausePolicy` is deleted and no longer added to the UI root (`UIBootstrapper`).
+Esc still opens the same menu (Resume, Settings, Quit to Main Menu) as an overlay for everyone,
+host included; time and audio keep running. The menu's title reads "THE RAID GOES ON" instead of
+"PAUSED" so nobody assumes they are safe. `PlayableLoopTests.Test_PauseMenuNeverFreezesTheWorld`
+guards it.
+
+**Replaces.** "Pausing freezes the world, but only for the host (#107)", above.

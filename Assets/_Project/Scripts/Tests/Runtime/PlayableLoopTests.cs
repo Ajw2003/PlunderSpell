@@ -322,17 +322,16 @@ namespace RogueAi.Tests
                 "Arriving in Idle while moving used to coast forever, off the edge of the map.");
         }
 
-        // --- Pause (#107) ----------------------------------------------------------------------
+        // --- Pause (#107, deprecated by #129) ----------------------------------------------------
 
         [Test]
-        public void Test_PauseFreezesTheWorldOnlyForTheHost()
+        public void Test_PauseMenuNeverFreezesTheWorld()
         {
-            Assert.IsTrue(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Paused, GameState.Playing, true));
-            Assert.IsTrue(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Settings, GameState.Paused, true),
-                "Settings opened from the pause menu is still paused.");
-            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Paused, GameState.Playing, false),
-                "A client's pause menu cannot stop everyone else's game.");
-            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Settings, GameState.MainMenu, true));
+            GameServices.GameState.ChangeState(GameState.Playing);
+            GameServices.GameState.ChangeState(GameState.Paused);
+            Assert.AreEqual(1f, Time.timeScale,
+                "The pause menu is an overlay for everyone, the host included (#129).");
+            Assert.IsFalse(AudioListener.pause);
         }
 
         // --- Phrase caption (#49) --------------------------------------------------------------
