@@ -57,8 +57,8 @@ namespace RogueAi.Raid
         }
 
         /// <summary>
-        /// Rooms within this many grid cells of the entrance get no guard. The players spawn just
-        /// inside the extraction room, so a guard next door sees them on frame one and kills a player
+        /// Rooms within this many grid cells of the arrival portal get no guard. The players step out
+        /// of it, so a guard next door sees them on frame one and kills a player
         /// who is still reading the HUD. Two cells, and patrols stay out of it too: at one cell a
         /// guard next door still walked its route through the gate and killed a player standing at
         /// the spawn within about twenty seconds (seen in co-op testing, 2026-09-23).
@@ -66,11 +66,14 @@ namespace RogueAi.Raid
         public const int SafeEntranceRadius = 2;
 
         /// <summary>
-        /// Plans the garrison. The extraction room and its neighbours are deliberately left
-        /// unguarded: a guard standing on the exit would turn every raid into the same fight, rather
-        /// than a choice about when to leave.
+        /// Plans the garrison. The gatehouse is never guarded, and no guard is posted or patrols
+        /// within <see cref="SafeEntranceRadius"/> cells of <paramref name="safeModuleIndex"/>: the
+        /// arrival portal, which is also the way out, so the team is not shot while stepping out of
+        /// it and every raid does not end in the same fight on the exit. Left at -1 the ring centres
+        /// on the gatehouse, as it did before players arrived by portal.
         /// </summary>
-        public static List<GuardPlacement> Plan(ProceduralCastleData castle, int seed, float densityScale = 1f)
+        public static List<GuardPlacement> Plan(ProceduralCastleData castle, int seed,
+            float densityScale = 1f, int safeModuleIndex = -1)
         {
             var placements = new List<GuardPlacement>();
             if (castle?.PlacedModules == null)
@@ -79,8 +82,9 @@ namespace RogueAi.Raid
             // A third independent stream, so changing the garrison cannot shift the castle or the loot.
             var rng = new System.Random(unchecked(seed * 31 + 6151));
 
-            bool hasEntrance = castle.ExtractionExitIndex >= 0 && castle.ExtractionExitIndex < castle.PlacedModules.Count;
-            Vector2Int entrance = hasEntrance ? castle.PlacedModules[castle.ExtractionExitIndex].GridPosition : default;
+            int centreIndex = safeModuleIndex >= 0 ? safeModuleIndex : castle.ExtractionExitIndex;
+            bool hasSafeCentre = centreIndex >= 0 && centreIndex < castle.PlacedModules.Count;
+            Vector2Int safeCentre = hasSafeCentre ? castle.PlacedModules[centreIndex].GridPosition : default;
 
             for (int i = 0; i < castle.PlacedModules.Count; i++)
             {
@@ -89,17 +93,17 @@ namespace RogueAi.Raid
                 if (module.IsExtractionExit || i == castle.ExtractionExitIndex)
                     continue;
 
-                // Rolled before the entrance check so the rest of the garrison stays where it was.
+                // Rolled before the safe-ring check so the rest of the garrison stays where it was.
                 if (rng.NextDouble() > DensityFor(module.Zone, densityScale))
                     continue;
 
-                if (hasEntrance && ChebyshevDistance(module.GridPosition, entrance) <= SafeEntranceRadius)
+                if (hasSafeCentre && ChebyshevDistance(module.GridPosition, safeCentre) <= SafeEntranceRadius)
                     continue;
 
                 placements.Add(new GuardPlacement(
                     i,
                     module.Position + Vector3.up * 0.1f,
-                    BuildRoute(castle, i, rng, hasEntrance, entrance),
+                    BuildRoute(castle, i, rng, hasSafeCentre, safeCentre),
                     module.Zone));
             }
 
@@ -115,7 +119,7 @@ namespace RogueAi.Raid
         /// always reachable from one another.
         /// </summary>
         private static List<Vector3> BuildRoute(ProceduralCastleData castle, int moduleIndex,
-            System.Random rng, bool hasEntrance, Vector2Int entrance)
+            System.Random rng, bool hasSafeCentre, Vector2Int safeCentre)
         {
             ProceduralCastleData.PlacedModule home = castle.PlacedModules[moduleIndex];
             var route = new List<Vector3> { home.Position };
@@ -129,8 +133,8 @@ namespace RogueAi.Raid
                 Vector2Int delta = castle.PlacedModules[i].GridPosition - home.GridPosition;
                 if (Math.Abs(delta.x) + Math.Abs(delta.y) != 1)
                     continue;
-                // A patrol never walks into the safe ring around the entrance.
-                if (hasEntrance && ChebyshevDistance(castle.PlacedModules[i].GridPosition, entrance) <= SafeEntranceRadius)
+                // A patrol never walks into the safe ring around the portal.
+                if (hasSafeCentre && ChebyshevDistance(castle.PlacedModules[i].GridPosition, safeCentre) <= SafeEntranceRadius)
                     continue;
                 neighbours.Add(castle.PlacedModules[i].Position);
             }

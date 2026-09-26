@@ -58,6 +58,12 @@ namespace RogueAi.Lair
         /// <summary>What the most recent raid brought home, for the Lair's "last raid" line. -1 before any raid.</summary>
         public float LastRaidWorth { get; private set; } = -1f;
 
+        /// <summary>Players left behind when the last raid's portal closed. Not saved: it describes one evening.</summary>
+        public int LastRaidLeftBehind { get; private set; }
+
+        /// <summary>Records how many were stuck outside the portal when it closed.</summary>
+        public void RecordLeftBehind(int count) => LastRaidLeftBehind = Mathf.Max(0, count);
+
         /// <summary>
         /// Apply the worth extracted from a completed raid. Gold is banked, then applied toward the
         /// debt. When the accumulated gold covers the full debt the game reaches the endgame stub

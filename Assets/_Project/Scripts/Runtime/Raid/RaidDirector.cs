@@ -1,4 +1,5 @@
 using System;
+using Interfaces;
 using PurrNet;
 using RogueAi.Alarm;
 using RogueAi.Castle;
@@ -89,6 +90,27 @@ namespace RogueAi.Raid
 
         /// <summary>Players saved by the most recent extraction.</summary>
         public int LastPlayersSaved { get; private set; }
+
+        /// <summary>Where the team stepped out of the portal: a capsule centre, as the spawn resolver returns.</summary>
+        public Vector3 ArrivalPoint { get; private set; }
+
+        /// <summary>The module the team arrived in, or <see cref="CastleArrivalPlanner.NoArrival"/>.</summary>
+        public int ArrivalModuleIndex { get; private set; } = CastleArrivalPlanner.NoArrival;
+
+        /// <summary>Living players who were outside the portal when the most recent raid ended.</summary>
+        public int LastPlayersLeftBehind { get; private set; }
+
+        /// <summary>
+        /// How far from the portal's centre each player stands on arrival. Outside the 4 m portal, so
+        /// arriving does not start the leaving countdown.
+        /// </summary>
+        public const float PlayerRingRadius = 3.5f;
+
+        /// <summary>
+        /// Raised on every peer once the portal stands for a raid, with the floor point under it.
+        /// The portal's light and glow listen for it.
+        /// </summary>
+        public event Action<Vector3> PortalOpened;
 
         /// <summary>Raised on every phase change. HUD and scene loading subscribe.</summary>
         public event Action<RaidPhase> PhaseChanged;
@@ -220,6 +242,17 @@ namespace RogueAi.Raid
                 _clientBuiltEra = Era;
             }
 
+            // The rooms were instantiated a moment ago; without this their colliders are still at
+            // their old transforms and every overlap probe reports clear.
+            Physics.SyncTransforms();
+
+            // Every peer derives the same arrival from the seed, so the portal and the team land in
+            // the same place on every screen without it being sent.
+            ArrivalPoint = CastleSpawnResolver.ResolveArrival(Castle, seed, out int arrivalModule);
+            ArrivalModuleIndex = arrivalModule;
+            OpenPortal();
+            SealCastle();
+
             // Before the NavMesh bake and the spawners, so a guard or a loot pile is never dropped
             // on top of a player who is about to be moved there.
             PlacePlayerAtSpawn();
@@ -237,7 +270,7 @@ namespace RogueAi.Raid
             if (!isSpawned || isServer)
             {
                 _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
-                _guardSpawner?.SpawnFor(Castle, seed, Era);
+                _guardSpawner?.SpawnFor(Castle, seed, Era, ArrivalModuleIndex);
             }
 
             return Castle;
@@ -324,11 +357,7 @@ namespace RogueAi.Raid
         // Plumbing
         // -----------------------------------------------------------------------------------------
 
-        /// <summary>
-        /// Stands the player just inside the gatehouse of the castle just built. Derived here, from
-        /// the seed this raid actually rolled, rather than baked into the scene — a baked spawn is
-        /// only in the right place for the one seed it was baked from.
-        /// </summary>
+        /// <summary>Points the generator, loot and garrison at the chosen era's content.</summary>
         private void ApplyEraContent(HistoricalEra era)
         {
             // The scene's own assignments are the fallback, captured once so that raiding a
@@ -362,6 +391,11 @@ namespace RogueAi.Raid
         private RaidLootTable _defaultLoot;
         private EnemyRoster _defaultEnemies;
 
+        /// <summary>
+        /// Stands the player beside the arrival portal of the castle just built. Derived here, from
+        /// the seed this raid actually rolled, rather than baked into the scene — a baked spawn is
+        /// only in the right place for the one seed it was baked from.
+        /// </summary>
         private void PlacePlayerAtSpawn()
         {
             // In a session the player is spawned per connection rather than placed in the scene, so
@@ -374,24 +408,23 @@ namespace RogueAi.Raid
                 return;
             }
 
-            // The rooms were instantiated a moment ago; without this their colliders are still at
-            // their old transforms and every overlap probe reports clear.
-            Physics.SyncTransforms();
-
-            Vector3 spawn = CastleSpawnResolver.ResolveSpawn(Castle);
-
-            // Each player stands at a different point around the gate, by owner number, so two
-            // bodies are never placed inside each other: a client places itself as soon as its
-            // castle is built, before the host's body has arrived there on its screen.
+            // Each player stands at their own point on a ring round the portal, by owner number, so
+            // two bodies are never placed inside each other (a client places itself as soon as its
+            // castle is built, before the host's body has arrived there on its screen) and nobody
+            // arrives standing in the exit.
             int index = player.TryGetComponent(out NetworkIdentity identity) && identity.owner.HasValue
                 ? Mathf.Max(0, (int)(ulong)identity.owner.Value.id - 1)
                 : 0;
-            if (index > 0)
-            {
-                float angle = index * Mathf.PI * 0.5f;
-                var anchor = new Vector3(spawn.x + Mathf.Cos(angle) * 1.5f, 0f, spawn.z + Mathf.Sin(angle) * 1.5f);
-                spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
-            }
+            float angle = index * Mathf.PI * 0.5f;
+            var anchor = new Vector3(ArrivalPoint.x + Mathf.Cos(angle) * PlayerRingRadius, 0f,
+                ArrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
+            Vector3 spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
+
+            // Face the portal, so the first thing a player sees is the way home.
+            Vector3 toPortal = ArrivalPoint - spawn;
+            toPortal.y = 0f;
+            if (toPortal.sqrMagnitude > 0.01f)
+                player.rotation = Quaternion.LookRotation(toPortal.normalized, Vector3.up);
 
             // Through the rigidbody as well as the transform: an interpolated body writes its old
             // position back over a transform-only move on the next physics step.
@@ -404,8 +437,47 @@ namespace RogueAi.Raid
             Debug.Log($"[Raid] Placed {player.name} at {player.position}.");
         }
 
+        /// <summary>Stands the extraction zone on the floor under the arrival point: the way in is the way out.</summary>
+        private void OpenPortal()
+        {
+            float feet = ArrivalPoint.y - CastleSpawnResolver.PlayerHeight * 0.5f - CastleSpawnResolver.FloorClearance;
+            var floorPoint = new Vector3(ArrivalPoint.x, feet, ArrivalPoint.z);
+            if (_extractionZone != null)
+                _extractionZone.PlaceAsPortal(floorPoint);
+            PortalOpened?.Invoke(floorPoint);
+        }
+
+        /// <summary>Puts the invisible boundary round the castle just built.</summary>
+        private void SealCastle()
+        {
+            if (_generator == null)
+                return;
+
+            CastleBoundary.EnsureOn(_generator.gameObject)
+                .Rebuild(_generator.CurtainWallRadius, k_CellSize);
+        }
+
+        /// <summary>The castle kit's cell size. The generator's own field is private; they must match.</summary>
+        private const float k_CellSize = 12f;
+
+        /// <summary>Living player bodies in the scene. Only called once, when a raid ends.</summary>
+        private static int CountLivingPlayers()
+        {
+            int living = 0;
+            foreach (MonoBehaviour behaviour in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+            {
+                if (behaviour is IPlayerBody body && body.IsAlive)
+                    living++;
+            }
+            return living;
+        }
+
         private void OnExtractionResolved(float worth, int saved)
         {
+            // Every peer counts for itself: the bodies are replicated, the count is not.
+            LastPlayersLeftBehind = ExtractionZone.CountLeftBehind(CountLivingPlayers(), saved);
+            _lair?.RecordLeftBehind(LastPlayersLeftBehind);
+
             if (isSpawned && !isServer)
             {
                 // A client only mirrors the summary; the server owns the economy.

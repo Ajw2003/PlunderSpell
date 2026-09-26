@@ -198,9 +198,11 @@ namespace Plunderspell.UI.Screens
             _debt.text = $"Debt owed: {state.TotalDebt:N0} coin";
             _gold.text = $"Banked: {state.AccumulatedGold:N0} coin";
             _era.text = $"Setting out in: {Label(state.SelectedEra)}";
+            string leftBehind = _lair.LastRaidLeftBehind == 0 ? string.Empty
+                : $" · {_lair.LastRaidLeftBehind} left behind";
             _lastRaid.text = _lair.LastRaidWorth < 0f ? string.Empty
-                : _lair.LastRaidWorth > 0f ? $"Last raid: brought home {_lair.LastRaidWorth:N0} coin"
-                : "Last raid: came home with nothing";
+                : _lair.LastRaidWorth > 0f ? $"Last raid: brought home {_lair.LastRaidWorth:N0} coin{leftBehind}"
+                : $"Last raid: came home with nothing{leftBehind}";
         }
 
         private void SelectEra(HistoricalEra era)

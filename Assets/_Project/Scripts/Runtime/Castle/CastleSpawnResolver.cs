@@ -66,6 +66,27 @@ namespace RogueAi.Castle
         }
 
         /// <summary>
+        /// Where the portal opens and the team stands: a clear point in the room
+        /// <see cref="CastleArrivalPlanner"/> picks for this seed. Falls back to
+        /// <see cref="ResolveSpawn"/>, with a warning, when no room qualifies, so a raid always
+        /// starts somewhere.
+        ///
+        /// Callers that have just instantiated the castle must have run
+        /// <see cref="Physics.SyncTransforms"/> first, or every overlap probe reads clear.
+        /// </summary>
+        public static Vector3 ResolveArrival(ProceduralCastleData layout, int seed, out int moduleIndex)
+        {
+            moduleIndex = CastleArrivalPlanner.ChooseModule(layout, seed);
+            if (moduleIndex == CastleArrivalPlanner.NoArrival)
+            {
+                Debug.LogWarning("[CastleSpawn] No arrival room in this layout; arriving at the gate instead.");
+                return ResolveSpawn(layout);
+            }
+
+            return FirstClearStandingPoint(CastleArrivalPlanner.AnchorFor(layout, moduleIndex));
+        }
+
+        /// <summary>
         /// The first offset from <paramref name="anchor"/> where a player-sized capsule standing on
         /// the floor touches nothing. Offsets fan outward from the anchor, because a cell's
         /// set-piece (a well, a stair core, a portcullis) is usually exactly there.
@@ -102,7 +123,7 @@ namespace RogueAi.Castle
         }
 
         /// <summary>The world direction from a perimeter cell back toward the castle's centre.</summary>
-        private static Vector3 InwardDirection(Vector2Int cell)
+        internal static Vector3 InwardDirection(Vector2Int cell)
         {
             if (cell == Vector2Int.zero)
                 return Vector3.zero;

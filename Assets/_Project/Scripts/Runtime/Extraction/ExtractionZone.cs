@@ -76,6 +76,35 @@ namespace RogueAi.Extraction
         /// <summary>How many pieces are currently standing in the zone.</summary>
         public int PiecesInZone => _lootInZone.Count;
 
+        /// <summary>Width and depth of the portal's trigger, in metres.</summary>
+        public const float PortalFootprint = 4f;
+
+        /// <summary>Height of the portal's trigger, in metres.</summary>
+        public const float PortalHeight = 4f;
+
+        /// <summary>
+        /// Moves the zone to where the team arrived, so the way in is the way out
+        /// (docs/plans/night-atmosphere.md, section 6). Called on every peer with the same point,
+        /// derived from the raid seed, so nothing about it needs replicating.
+        /// </summary>
+        public void PlaceAsPortal(Vector3 floorPoint)
+        {
+            transform.position = floorPoint;
+
+            if (TryGetComponent(out BoxCollider box))
+            {
+                box.size = new Vector3(PortalFootprint, PortalHeight, PortalFootprint);
+                box.center = new Vector3(0f, PortalHeight * 0.5f, 0f);
+            }
+
+            Transform marker = transform.Find("Marker");
+            if (marker != null)
+                marker.localScale = new Vector3(PortalFootprint, marker.localScale.y, PortalFootprint);
+        }
+
+        /// <summary>Living players who were not in the portal when it closed.</summary>
+        public static int CountLeftBehind(int livingPlayers, int saved) => Mathf.Max(0, livingPlayers - saved);
+
         protected override void OnSpawned()
         {
             base.OnSpawned();

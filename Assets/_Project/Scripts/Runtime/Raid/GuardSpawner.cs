@@ -45,14 +45,16 @@ namespace RogueAi.Raid
         /// <summary>
         /// Plans and spawns the garrison for a castle, drawing only enemies of
         /// <paramref name="era"/> where the roster has them. Returns the plan.
+        /// <paramref name="safeModuleIndex"/> is the arrival room guards keep clear of; -1 keeps the
+        /// old gatehouse ring.
         /// </summary>
         public IReadOnlyList<GuardPlacement> SpawnFor(ProceduralCastleData castle, int seed,
-            HistoricalEra era)
+            HistoricalEra era, int safeModuleIndex = -1)
         {
             Clear();
             LastEra = era;
 
-            List<GuardPlacement> plan = GuardPlacementPlanner.Plan(castle, seed, _densityScale);
+            List<GuardPlacement> plan = GuardPlacementPlanner.Plan(castle, seed, _densityScale, safeModuleIndex);
             _lastPlan.AddRange(plan);
 
             if (_roster == null && _guardPrefab == null)
