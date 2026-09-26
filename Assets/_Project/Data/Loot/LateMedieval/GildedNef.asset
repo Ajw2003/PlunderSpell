@@ -15,6 +15,6 @@ MonoBehaviour:
   Worth: 1100
   IsArtifact: 0
   Bulk: 4
-  Fragility: 3
+  Fragility: 6
   DisplayName: Gilded Nef
   Icon: {fileID: 0}

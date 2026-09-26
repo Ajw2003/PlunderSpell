@@ -1,6 +1,8 @@
 # Loot balance pass (#142, #148)
 
-Written 2026-09-26. A proposal, not yet applied. It needs the owner's yes before the numbers change.
+Written and applied 2026-09-26, after the owner chose "apply as proposed". `LootBalanceTests`
+(EditMode) holds the two rules that can be checked: the fragility floor, and nothing too heavy to
+lift in the three outer zones.
 
 ## What is wrong now
 

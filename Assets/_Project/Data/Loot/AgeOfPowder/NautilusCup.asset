@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6921339ee52db387f9085c3d7ee21d, type: 3}
   m_Name: NautilusCup
   m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootItem
-  Worth: 1600
+  Worth: 1800
   IsArtifact: 1
   Bulk: 1
-  Fragility: 2.5
+  Fragility: 4.5
   DisplayName: Nautilus Cup
   Icon: {fileID: 0}

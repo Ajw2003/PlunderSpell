@@ -15,6 +15,6 @@ MonoBehaviour:
   Worth: 350
   IsArtifact: 0
   Bulk: 1
-  Fragility: 5
+  Fragility: 6
   DisplayName: Illuminated Psalter
   Icon: {fileID: 0}

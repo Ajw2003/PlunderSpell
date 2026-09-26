@@ -29,26 +29,26 @@ MonoBehaviour:
     Zone: 2
     Weight: 8
     Prefab: {fileID: 1913605018267056981, guid: c35674c29db03a04084b5897d7678175, type: 3}
-  - Item: {fileID: 11400000, guid: 0d203688f6f2b6f42b268d12e1b4ab29, type: 2}
+  - Item: {fileID: 11400000, guid: 805b5bd060e9e96499c4a5770e621880, type: 2}
     Zone: 2
     Weight: 10
-    Prefab: {fileID: 3697833188390297358, guid: 513e1c34f4a4fdf4eaf01287fa9a3260, type: 3}
-  - Item: {fileID: 11400000, guid: 0d203688f6f2b6f42b268d12e1b4ab29, type: 2}
-    Zone: 3
-    Weight: 8
-    Prefab: {fileID: 3697833188390297358, guid: 513e1c34f4a4fdf4eaf01287fa9a3260, type: 3}
-  - Item: {fileID: 11400000, guid: 805b5bd060e9e96499c4a5770e621880, type: 2}
-    Zone: 3
-    Weight: 8
     Prefab: {fileID: 3928155017145501847, guid: 93b92275250cd9d4a8d6ba167ef195d1, type: 3}
   - Item: {fileID: 11400000, guid: 805b5bd060e9e96499c4a5770e621880, type: 2}
-    Zone: 4
-    Weight: 6
+    Zone: 3
+    Weight: 8
     Prefab: {fileID: 3928155017145501847, guid: 93b92275250cd9d4a8d6ba167ef195d1, type: 3}
   - Item: {fileID: 11400000, guid: fd737852dcbe6da4196202d57b87b576, type: 2}
+    Zone: 3
+    Weight: 8
+    Prefab: {fileID: 7566136990306978106, guid: ebb3c908a9b87094f8176ac0973d6b7a, type: 3}
+  - Item: {fileID: 11400000, guid: fd737852dcbe6da4196202d57b87b576, type: 2}
+    Zone: 4
+    Weight: 6
+    Prefab: {fileID: 7566136990306978106, guid: ebb3c908a9b87094f8176ac0973d6b7a, type: 3}
+  - Item: {fileID: 11400000, guid: 0d203688f6f2b6f42b268d12e1b4ab29, type: 2}
     Zone: 4
     Weight: 10
-    Prefab: {fileID: 7566136990306978106, guid: ebb3c908a9b87094f8176ac0973d6b7a, type: 3}
+    Prefab: {fileID: 3697833188390297358, guid: 513e1c34f4a4fdf4eaf01287fa9a3260, type: 3}
   - Item: {fileID: 11400000, guid: 7c2b7548643cbb8419bb827b5f8da666, type: 2}
     Zone: 1
     Weight: 1

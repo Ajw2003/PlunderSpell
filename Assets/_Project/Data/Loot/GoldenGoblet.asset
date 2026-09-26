@@ -15,6 +15,6 @@ MonoBehaviour:
   Worth: 150
   IsArtifact: 0
   Bulk: 2
-  Fragility: 3
+  Fragility: 4.5
   DisplayName: Golden Goblet
   Icon: {fileID: 0}

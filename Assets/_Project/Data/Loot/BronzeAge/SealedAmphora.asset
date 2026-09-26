@@ -15,6 +15,6 @@ MonoBehaviour:
   Worth: 120
   IsArtifact: 0
   Bulk: 3
-  Fragility: 4
+  Fragility: 6
   DisplayName: Sealed Amphora
   Icon: {fileID: 0}

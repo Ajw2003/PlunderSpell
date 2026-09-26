@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6921339ee52db387f9085c3d7ee21d, type: 3}
   m_Name: VenetianMirror
   m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootItem
-  Worth: 700
+  Worth: 900
   IsArtifact: 0
   Bulk: 6
-  Fragility: 2
+  Fragility: 4.5
   DisplayName: Venetian Mirror
   Icon: {fileID: 0}

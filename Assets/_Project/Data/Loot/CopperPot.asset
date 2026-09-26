@@ -15,6 +15,6 @@ MonoBehaviour:
   Worth: 100
   IsArtifact: 0
   Bulk: 0.8
-  Fragility: 3
+  Fragility: 4.5
   DisplayName: Copper Pot
   Icon: {fileID: 0}

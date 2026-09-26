@@ -97,8 +97,8 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   (10 m) — the hover ray used to be 100 m.
 - Weapon prefabs carry real masses (sword 1–1.5 kg, round shield 3.5, pavise 8, matchlock 4…);
   they were all 1 kg.
-- **Fragile loot breaks in your hands.** A valuable hit harder than its `Fragility` (m/s — goblet 3,
-  plate 2) shatters even while held, shows "SHATTERED −150" where it broke, and drops out of your
+- **Fragile loot breaks in your hands.** A valuable hit harder than its `Fragility` (m/s; 4.5 at the
+  least since #142, about a 1 m drop, see [`docs/plans/loot-balance.md`](../plans/loot-balance.md)) shatters even while held, shows "SHATTERED −150" where it broke, and drops out of your
   hands (`ItemManager` lets go of anything whose collisions switched off). Swinging the goblet at a
   guard hurts the guard and costs you the goblet — the REPO trade.
 - **Bodies bumping into loot never break it** (#142, `LootPickup.OnCollisionEnter`). Players set
