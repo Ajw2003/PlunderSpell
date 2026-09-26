@@ -34,7 +34,7 @@ Assemblies: `Plunderspell.Raid` (loop, spawning), `Plunderspell.Guards` (the gar
   director; this only decides when to ask.
 
 - **`CastleGuard`** hears (`INoiseListener`), sees (cone + line-of-sight raycast) and can be shut
-  down by Somnus, Tonitrus and Ignis through `StatusEffectReceiver`. Every decision it makes is
+  down by Somnus, Frango and Ignis through `StatusEffectReceiver`. Every decision it makes is
   delegated to **`GuardBrain`**, which is pure.
 
 - **`RaidHudPresenter`** gathers the raid into a plain `RaidHudModel`; `RaidHudView` draws it with
@@ -139,7 +139,7 @@ player forever and never land a blow. The attack code in the project lived on
 `CastleGuard.TryAttack` is called from the `Chasing` branch of `Act`, gated on range and a
 cooldown. The cooldown is load-bearing: without it a guard in contact damages the player every
 frame, which reads as dying instantly for no visible reason. An incapacitated guard cannot attack,
-which is what gives Somnus and Tonitrus their point.
+which is what gives Somnus and Frango their point.
 
 ### Melee by default, ranged when armed
 

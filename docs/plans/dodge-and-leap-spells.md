@@ -1,6 +1,9 @@
 # Plan: Velox (dodge) and Saltus (high jump and slam) replace Tonitrus and Cadaver Surge
 
-**Status: approved by the owner 2026-09-26, not built.** Roadmap: M2 (#106, more spells than Ignis
+**Status: built 2026-09-26** (see `docs/4-systems/spells.md`, "Velox and Saltus", for what shipped
+and where it differs from this plan: the dash holds its speed for 0.25 s rather than reusing the
+old impulse, which never moved; the launch is 14 m/s, not the 9 m/s first tried, because the
+player falls at 2.5 g; the slam's noise is as loud as the old thunderclap's). Roadmap: M2 (#106, more spells than Ignis
 worth casting) and #152 (the slam as a real spell, currently under M4).
 
 ## What the owner decided

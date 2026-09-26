@@ -970,3 +970,31 @@ headline drops from about 65% to about 40%: the same work, measured against a la
 of done.
 
 **Status.** Standing.
+
+## 2026-09-26 — Velox and Saltus replace Tonitrus and Cadaver Surge; no dodge key
+
+**Context.** The owner asked for a dodge spell and a high jump spell in place of Tonitrus (a
+thunderclap that stunned everything near the aim point) and Cadaver Surge (which only reported the
+corpse it would raise; there was no necromancy behind it). #152 had asked for the jump-and-slam to
+be a real spell instead of an accident of riding a held item.
+
+**Decision.** Velox ("swift") dashes about 3.5 m and is the only dodge: the Ctrl dodge key is gone.
+Saltus ("a leap") launches about 4 m straight up from the ground, and jump in the air then slams
+down, hurting and shoving everything within 3 m of the landing. They take keys 5 and 7, so the
+other six keys keep their places. Tonitrus and Cadaver Surge are deleted with their misfires,
+assets and tuning; their ids (5, 7, 103, 105) are retired, not reused, because ids are stored in
+assets and sent over the network. The words, the dodge key's removal, the slam and the deletion
+are the owner's choices; the misfires, mana costs, dash length, launch height and slam numbers are
+this change's defaults, all in `SpellTuning.asset`.
+
+**Why.** Moving the caster runs on the caster's own machine, not the server like every other
+effect, because that is where a player's body is simulated: moved on the server it would miss a
+remote player, and doing both would move a host twice (`ICasterMovementSpell`). The slam's damage
+still resolves on the server. The slam is on the jump key rather than attack because attack is
+`G`, awkward in mid-air, and jump in the air did nothing before. Making the dodge a spell gives it a
+cost, so getting out of the way is a choice; it also freed Ctrl, which is the whisper modifier.
+Building it found that the old dodge never moved at all (see `docs/4-systems/spells.md`, Traps).
+How it works: `docs/4-systems/spells.md`, "Velox and Saltus".
+
+**Status.** Standing.
+

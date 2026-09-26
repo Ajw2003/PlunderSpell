@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/spells.md @ 3099bd80904f538ddbb2c2201e85eb44ea67a4e8 -->
+<!-- plain copy of: docs/4-systems/spells.md @ ed6c3659d899ec95a17d5b6a55e02cc56ef8c86a -->
 
 # Spells
 
@@ -28,6 +28,14 @@ they get back.
    cover is refused outright, with nothing cast and nothing spent.
 7. Casting by keyboard chants for a short moment before firing, so it is a slight disadvantage
    compared to speaking, never the fastest way to cast.
+8. Two spells move the caster: one is a quick dash, the game's only dodge, and the other is a
+   high jump that, with a second press of jump in mid-air, turns into a slam that hurts and
+   knocks back everything around the landing. Moving the caster happens on their own machine;
+   the damage a slam does is still worked out centrally.
+8. Two spells move the caster: one is a quick dash, the game's only dodge, and the other is a
+   high jump that, with a second press of jump in mid-air, turns into a slam that hurts and
+   knocks back everything around the landing. Moving the caster happens on their own machine;
+   the damage a slam does is still worked out centrally.
 
 ## Risks and safeguards
 - **A spell hitting its own caster, or a misfire missing them.** An intended spell always
@@ -41,6 +49,8 @@ they get back.
   configured misfire falls back to a default misfire, never to the real spell.
 - **All the game's tuning numbers being buried in code.** Every spell's cost, damage, duration
   and volume behaviour lives in one editable data file, not scattered constants.
+- **A dodge that went nowhere.** The dash now keeps its speed for its whole length; it used to
+  stop on its very first moment, before it had moved at all.
 - **A visible spell effect swallowing the caster's own camera.** A burst effect is pushed forward
   from the caster so its near edge, not its centre, lands where the caster is looking.
 

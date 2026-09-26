@@ -28,6 +28,20 @@ broken links (see Decisions, 2026-09-26).
 
 Then the roadmap was rebuilt from the open issues and the project state, at the owner's request: eight weighted milestones instead of the pitch's four, with game systems before any expensive art or performance work, and every open issue placed except #24 and #159 (`docs/2-roadmap/Roadmap.md`; Decisions, "The roadmap runs to a game a stranger can play"). The headline is now ~40%, from ~65% against the old four. Open for the owner: GitHub milestones to match, and closing #24 and #159.
 
+Then, at the owner's request: GitHub milestones M0-M7 created and every open issue assigned
+(`Tools/github/sync_milestones.py`, run twice, the second time updating in place), #24 and #159
+closed, the Tripod Cauldron back to 12 kg. And Velox (dash) and Saltus (high jump and slam)
+replace Tonitrus and Cadaver Surge, with the dodge key removed
+(`docs/plans/dodge-and-leap-spells.md`). A delegated agent stopped after two files and left the
+project not compiling; the rest was finished here. Building it found that the dodge never moved
+(it ended on its first physics step); fixed. Tests: PlayMode 228 of 229 (the known guard test);
+EditMode 69 pass, 3 skip, 2 fail: the known `ArtAssetImportTests`, and `LootBalanceTests`, which
+fails on the owner's uncommitted Rolled Tapestry edit (12 kg in the Late Medieval outer bailey).
+In a solo raid in the Editor: Velox dashed 3.9 m, Saltus rose 4.0 m, the slam took a Lantern
+Warden 1.8 m away from 80 to 56.9 health, both misfires did their misfire and spent mana, and Ctrl
+no longer moves the player. Captures: `docs/generated/dodge-and-leap-2026-09-26/`. Not tried: the
+two words spoken by a real person; two machines.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

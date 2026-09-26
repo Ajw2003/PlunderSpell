@@ -51,7 +51,7 @@ orange regardless of what it was aimed at, so "that went wrong" is readable befo
 | Style | Spells | What it is |
 |---|---|---|
 | `Bolt` | Ignis | A tinted `Bolt.prefab` fired along the aim, plus a flash at the hands |
-| `Burst` | Frango, Levo, AurumVoco, Tonitrus, Somnus, CadaverSurge, Porta | An expanding, fading shell of light at the caster's hands |
+| `Burst` | Frango, Levo, AurumVoco, Velox, Somnus, Saltus, Porta | An expanding, fading shell of light at the caster's hands |
 
 `SpellBurst` builds itself from a primitive — no prefab, no authored particle asset, because none
 exist yet. It disables its collider *before* destroying it: `Destroy` is deferred to the end of the
@@ -127,7 +127,7 @@ easiest way to conclude the spells are broken when they are not.
 
 | Key (while holding V) | Spell | Hold also… |
 |---|---|---|
-| 1–8 | Ignis, Frango, Levo, Aurum Voco, Tonitrus, Somnus, Cadaver Surge, Porta | |
+| 1–8 | Ignis, Frango, Levo, Aurum Voco, Velox, Somnus, Saltus, Porta | |
 | 1–8 | the near-match misfire of each | `Shift` |
 | 1–8 | whisper (quiet, weak) | `Ctrl` |
 
@@ -160,10 +160,10 @@ than a visual — not attempted here.
 
 ### Spells go where you aim
 
-Added 2026-09-23 (#106). Single-target spells (Ignis, Levo, Porta, Cadaver Surge) take the target
+Added 2026-09-23 (#106). Single-target spells (Ignis, Levo, Porta) take the target
 closest to the crosshair within `AimConeDegrees` (22°) and `AimRange` (14 m × the volume power),
-preferring centred over near; anything within 1.5 m counts even off-centre. Area spells (Tonitrus,
-Somnus) burst at the crosshair's aim point, not on the caster's feet. Before, every spell took
+preferring centred over near; anything within 1.5 m counts even off-centre. Area spells (Somnus)
+burst at the crosshair's aim point, not on the caster's feet. Before, every spell took
 whatever was nearest a point 1 m in front of the caster's face, often something beside or behind
 them. The overlap buffer grows instead of capping at 128 colliders. Misfires still centre on the
 caster, on purpose.
@@ -183,8 +183,8 @@ code in `PrimarySpellEffects` / `MisfireSpellEffects`.
 Added 2026-09-25 (#116, and the user's request to make mana useful rather than remove it).
 
 - **Every word costs mana.** The cost is `SpellWord.ManaCost` on each spell's asset in
-  `Assets/_Project/Data/Spells/`: Porta 10, Levo 12, Ignis 15, Frango 20, Somnus 20, Cadaver Surge
-  20, Tonitrus 25, Aurum Voco 30. A misfire costs the same as the word it garbled
+  `Assets/_Project/Data/Spells/`: Porta 10, Velox 10, Levo 12, Ignis 15, Saltus 15, Frango 20,
+  Somnus 20, Aurum Voco 30. A misfire costs the same as the word it garbled
   (`SpellLexicon.ManaCostOf`). A fizzle costs nothing.
 - **The pool is the local player's `GameServices.PlayerStats`**, 100 points, refilled when the
   caster subscribes (a new body in a raid) and regained at `SpellTuning.ManaRegenPerSecond`
@@ -202,6 +202,37 @@ Added 2026-09-25 (#116, and the user's request to make mana useful rather than r
   refusal on an empty pool. The scene casting suites set `KeyboardCastSeconds` to 0 and refill
   between casts, because they test that words resolve, not the chant.
 
+### Velox and Saltus
+
+Added 2026-09-26, at the owner's call; they replace Tonitrus (a thunderclap stun) and Cadaver Surge
+(raise a corpse), which are deleted. Plan: `docs/plans/dodge-and-leap-spells.md`.
+
+- **Velox** (key 5, 10 mana) is the dodge: a dash at `VeloxDashSpeed` (14 m/s) for
+  `VeloxDashSeconds` (0.25 s), about 3.5 m, along where you are steering, or where you look when
+  you are not. There is no dodge key any more (it was Ctrl, which also whispers).
+- **Saltus** (key 7, 15 mana) is a high jump, only from the ground: `SaltusLaunchSpeed` (14 m/s,
+  times the volume power) straight up, about 4 m, since the player falls at 2.5 g. Cast in the air
+  it fizzles and costs nothing.
+- **The slam.** After a Saltus launch, jump in the air drives the body straight down at
+  `SaltusSlamSpeed` (22 m/s). On landing, every living thing within `SlamRadius` (3 m) except the
+  caster takes up to `SlamDamage` (30), half at the edge, scaled by landing speed, and is shoved
+  `SlamKnockback` (2.5 m); the landing makes an `Explosion` noise of `SlamNoiseStrength` 1 over
+  `SlamNoiseRadius` (14 m). Jump in the air without a Saltus launch does nothing, as before.
+- **Misfires.** A misfired Velox (VELOS, VELO) is a full dash in a random direction. A misfired
+  Saltus (SALTAS, SULTUS) is a hop at `MisfireSaltusHop` (a quarter) of a launch, and the legs lock
+  for `MisfireSaltusStaggerSeconds` (1 s); it never arms the slam, and is paid for even in mid-air.
+- **Where it runs.** These are `ICasterMovementSpell`s: `SpellCastingSystem.Cast` checks
+  `CanMove` before spending mana and calls `MoveCaster` on the caster's machine, where the body is
+  simulated, through `ISpellMovable` (the player's `PlayerStateMachine`). The server's `Execute`
+  only makes the cast noise. The slam's landing is reported by `PlayerStateMachine.SlamLanded`, and
+  `SpellCastingSystem` resolves its damage on the server (`ServerSlam` → `SaltusEffect.ResolveSlam`).
+- **Speech.** The small English model hears VELOX as "the locks" and SALTUS as "salt is"; the
+  `HeardAs` lists on `Spell_VELOX.asset` and `Spell_SALTUS.asset` start from what it heard on the
+  synthetic clips. Zira's mispronounced SULTUS is also heard as "salt is", so it casts Saltus;
+  David's is heard as "salt soldiers" and misfires. A real voice has not been tried.
+- Tests: `MovementSpellTests` (a real player body on a floor), `SpellEffectTests` (the slam's
+  damage, falloff, noise, and that a caster with no body fizzles).
+
 ## Invariants
 
 - **An intended spell never hits the caster; a misfire always aims at them.** Primary effects
@@ -213,13 +244,20 @@ Added 2026-09-25 (#116, and the user's request to make mana useful rather than r
 
 - **Consequence is server-side.** `SpellCastingSystem.ServerCast` runs the effect; the
   `[ObserversRpc]` that follows is presentation only. Running effects in the observers RPC would
-  have four clients each applying the same damage.
+  have four clients each applying the same damage. The one exception is moving the caster's own
+  body (Velox, Saltus), which happens on the caster's machine because that is where the body is
+  simulated; the damage a slam does still resolves on the server.
 
 - **Misfire resolution never fails open.** A lexicon entry with no authored `misfireId` falls back
   to `SpellCatalogue.DefaultMisfireFor`, rather than casting the real spell. A half-authored lexicon
   degrades into misfires, not into free correct casts.
 
 ## Traps
+
+- **The dodge used to go nowhere.** `PlayerDodgeState` gave one impulse and ended once the body
+  was slower than 1 m/s, which the very first physics step always was, before the impulse had been
+  applied. It now holds the dash speed for the dash's length. Found by `MovementSpellTests` when
+  Velox reused it; the old dodge key had the same fault.
 
 - **A field cannot share its type's name.** `SpellWord.SpellWord` is CS0542 and broke the whole
   assembly; the field is `Word`, with `[FormerlySerializedAs("SpellWord")]` for older assets.
