@@ -1,5 +1,7 @@
 # Proposal: the Lair as its own scene
 
+Rendered version with floor plan and diagrams: `docs/plans/lair-scene.html`.
+
 Status: **proposal, awaiting approval** — nothing here is built yet. Written 2026-09-26 against
 `integration/staging-2026-09-15` at `ee13c2d`.
 

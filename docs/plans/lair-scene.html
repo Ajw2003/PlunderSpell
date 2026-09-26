@@ -1,0 +1,746 @@
+<title>The Lair Scene</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Eczar:wght@500;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=Overpass+Mono:wght@400;600&display=swap">
+<style>
+/* Single dark theme by choice: this is the project's own candlelit pigment palette
+   (docs/plunderspell-moodboard.html). Every colour is set explicitly. */
+:root{
+  color-scheme: dark;
+  --bone-black:#14120E; --ash:#1E1A14; --ash-hi:#282318;
+  --vellum:#DCD2BA; --vellum-dim:#9A9078; --vellum-faint:#635C4C;
+  --verdigris:#5FA288; --verdigris-lo:#2E4C41;
+  --orpiment:#C9A227; --madder:#C4542E; --lapis:#7A6AA0; --lapis-hi:#B6C8FF;
+  --flame:#E8A24E;
+  --line:#332D22; --line-soft:#262119;
+  --ff-display:"Eczar", Georgia, "Times New Roman", serif;
+  --ff-body:"Spectral", Georgia, serif;
+  --ff-mono:"Overpass Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+html{ background:var(--bone-black); }
+body{
+  margin:0; background:var(--bone-black); color:var(--vellum);
+  font-family:var(--ff-body); font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{ max-width:1120px; margin:0 auto; padding-inline:20px; padding-block:40px 80px; display:grid; gap:72px; }
+h1,h2,h3{ font-family:var(--ff-display); margin:0; line-height:1.12; text-wrap:balance; font-weight:600; }
+h1{ font-size:clamp(2.4rem,6vw,3.8rem); letter-spacing:-.01em; }
+h2{ font-size:clamp(1.6rem,3.4vw,2.2rem); }
+h3{ font-size:1.2rem; }
+p{ margin:0; max-width:66ch; }
+.eyebrow{ font-family:var(--ff-mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--verdigris); }
+.dim{ color:var(--vellum-dim); }
+.mono{ font-family:var(--ff-mono); font-size:.82em; }
+code{ font-family:var(--ff-mono); font-size:.8em; color:var(--vellum); background:var(--ash-hi); padding:1px 5px; border-radius:3px; }
+section{ display:grid; gap:22px; }
+.head{ display:grid; gap:10px; }
+
+/* header */
+header{ display:grid; gap:18px; }
+.stamp{ display:inline-flex; gap:10px; align-items:center; font-family:var(--ff-mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--madder); border:1px solid var(--madder); padding:5px 10px; width:max-content; }
+.meta{ font-family:var(--ff-mono); font-size:12px; color:var(--vellum-faint); }
+.thesis{ font-size:1.2rem; color:var(--vellum); max-width:60ch; }
+
+/* today vs proposed */
+.gap{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); }
+.gap > div{ background:var(--ash); padding:20px 22px; display:grid; gap:10px; align-content:start; }
+.gap ul{ margin:0; padding-left:18px; display:grid; gap:8px; color:var(--vellum-dim); font-size:.95rem; }
+.gap .k{ font-family:var(--ff-mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; }
+.k.now{ color:var(--vellum-faint); } .k.new{ color:var(--verdigris); }
+
+/* figures */
+figure{ margin:0; display:grid; gap:10px; }
+.scroll{ overflow-x:auto; border:1px solid var(--line); background:#0E0D0A; }
+.scroll svg{ display:block; width:100%; min-width:660px; height:auto; }
+figcaption{ font-size:.88rem; color:var(--vellum-dim); max-width:80ch; }
+svg text{ font-family:var(--ff-mono); }
+.marker circle{ fill:var(--bone-black); stroke:var(--verdigris); stroke-width:1.5; transition:fill .15s; }
+.marker text{ fill:var(--vellum); font-size:12px; font-weight:600; }
+.marker.hot circle{ fill:var(--verdigris); }
+.marker.hot text{ fill:var(--bone-black); }
+.marker{ cursor:pointer; }
+
+/* light sources */
+.lights{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+.light{ display:grid; grid-template-columns:56px 1fr; gap:14px; align-items:start; }
+.orb{ width:56px; height:56px; border-radius:50%; }
+.orb.hearth{ background:radial-gradient(circle at 50% 60%, var(--flame) 0%, #6E5320 35%, #2A2012 70%, transparent 100%); }
+.orb.candle{ background:radial-gradient(circle, #F2D9A0 0%, #8C6A30 30%, transparent 70%); }
+.orb.portal{ background:radial-gradient(circle, var(--lapis-hi) 0%, var(--lapis) 35%, #2A2340 70%, transparent 100%); }
+.light h3{ font-size:1.05rem; }
+.light p{ font-size:.92rem; color:var(--vellum-dim); }
+
+.pigments{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; }
+.pig{ display:grid; grid-template-columns:14px 1fr; gap:10px; align-items:baseline; font-size:.9rem; color:var(--vellum-dim); }
+.pig i{ width:14px; height:14px; border-radius:2px; display:block; transform:translateY(2px); }
+.pig b{ color:var(--vellum); font-weight:600; }
+
+/* stations */
+.stations{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+.st{ background:var(--ash); border:1px solid var(--line-soft); padding:20px 22px; display:grid; gap:10px; align-content:start; transition:border-color .15s; }
+.st:hover,.st:focus-within,.st.hot{ border-color:var(--verdigris-lo); }
+.st .top{ display:flex; gap:12px; align-items:center; }
+.st .n{ flex:none; width:26px; height:26px; border-radius:50%; border:1.5px solid var(--verdigris); display:grid; place-items:center; font-family:var(--ff-mono); font-size:12px; font-weight:600; }
+.st .verb{ font-family:var(--ff-mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--vellum-faint); }
+.st ul{ margin:0; padding-left:18px; display:grid; gap:6px; font-size:.93rem; color:var(--vellum-dim); }
+.st .limit{ font-size:.86rem; color:var(--madder); border-top:1px solid var(--line-soft); padding-top:10px; }
+.st .reuse{ font-size:.82rem; color:var(--vellum-faint); }
+
+/* tables */
+.tbl{ overflow-x:auto; border:1px solid var(--line); }
+table{ border-collapse:collapse; width:100%; min-width:620px; font-size:.9rem; }
+th,td{ text-align:left; padding:10px 14px; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+th{ font-family:var(--ff-mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--vellum-faint); font-weight:400; background:var(--ash); }
+td{ color:var(--vellum-dim); }
+td:first-child{ color:var(--vellum); }
+.tag{ font-family:var(--ff-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; padding:2px 6px; border-radius:2px; white-space:nowrap; }
+.tag.new{ color:var(--verdigris); border:1px solid var(--verdigris-lo); }
+.tag.edit{ color:var(--vellum-dim); border:1px solid var(--line); }
+
+/* phases + decisions */
+.phases{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+.ph{ background:var(--ash); border:1px solid var(--line-soft); padding:20px 22px; display:grid; gap:12px; grid-template-rows:auto auto 1fr auto; }
+.ph .lbl{ font-family:var(--ff-mono); font-size:11px; letter-spacing:.18em; color:var(--verdigris); text-transform:uppercase; }
+.ph ul{ margin:0; padding-left:18px; display:grid; gap:5px; align-content:start; font-size:.92rem; color:var(--vellum-dim); }
+.ph .size{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); }
+.ph[data-v="approve"]{ border-color:var(--verdigris); }
+.ph[data-v="reject"]{ border-color:var(--madder); opacity:.75; }
+
+.seg{ display:flex; flex-wrap:wrap; gap:8px; }
+.seg button{
+  font-family:var(--ff-mono); font-size:12px; letter-spacing:.06em;
+  background:transparent; color:var(--vellum-dim); border:1px solid var(--line);
+  padding:8px 12px; cursor:pointer; border-radius:2px; text-align:left; line-height:1.35;
+}
+.seg button:hover{ color:var(--vellum); border-color:var(--vellum-faint); }
+.seg button:focus-visible, .copy:focus-visible, textarea:focus-visible{ outline:2px solid var(--lapis-hi); outline-offset:2px; }
+.seg button[aria-pressed="true"].yes{ background:var(--verdigris-lo); color:var(--vellum); border-color:var(--verdigris); }
+.seg button[aria-pressed="true"].no{ background:#3A1A10; color:var(--vellum); border-color:var(--madder); }
+.seg button[aria-pressed="true"].pick{ background:var(--ash-hi); color:var(--vellum); border-color:var(--lapis); }
+.seg .rec{ color:var(--verdigris); font-size:10px; letter-spacing:.14em; text-transform:uppercase; display:block; margin-top:2px; }
+
+.decisions{ display:grid; gap:1px; background:var(--line); border:1px solid var(--line); }
+.dec{ background:var(--ash); padding:18px 22px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); gap:20px; align-items:start; }
+.dec .q{ display:grid; gap:6px; }
+.dec .id{ font-family:var(--ff-mono); font-size:11px; color:var(--lapis-hi); letter-spacing:.14em; }
+.dec .why{ font-size:.88rem; color:var(--vellum-dim); }
+@media (max-width:720px){ .dec{ grid-template-columns:1fr; } }
+
+.verdict{ background:var(--ash); border:1px solid var(--lapis); padding:24px; display:grid; gap:16px; }
+textarea{ width:100%; min-height:80px; background:var(--bone-black); color:var(--vellum); border:1px solid var(--line); font-family:var(--ff-body); font-size:1rem; padding:10px 12px; resize:vertical; }
+pre.out{ margin:0; white-space:pre-wrap; background:var(--bone-black); border:1px solid var(--line-soft); padding:14px 16px; font-family:var(--ff-mono); font-size:12.5px; color:var(--vellum); user-select:all; }
+.copyrow{ display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
+.copy{ font-family:var(--ff-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; background:var(--lapis); color:var(--bone-black); border:0; padding:11px 18px; cursor:pointer; font-weight:600; border-radius:2px; }
+.copy:hover{ background:var(--lapis-hi); }
+.status{ font-family:var(--ff-mono); font-size:12px; color:var(--verdigris); }
+
+.risk{ border-left:3px solid var(--madder); padding:4px 0 4px 18px; display:grid; gap:8px; }
+.risk p{ font-size:.95rem; color:var(--vellum-dim); }
+.rejected{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+.rejected div{ display:grid; gap:6px; font-size:.9rem; color:var(--vellum-dim); }
+.rejected b{ color:var(--vellum); font-family:var(--ff-display); font-weight:500; font-size:1.02rem; }
+footer{ font-family:var(--ff-mono); font-size:11px; color:var(--vellum-faint); border-top:1px solid var(--line); padding-top:18px; }
+@media (prefers-reduced-motion:reduce){ *{ transition:none !important; } }
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="stamp">Proposal · awaiting your verdict</span>
+  <div class="eyebrow">Plunderspell · the between-raids hub</div>
+  <h1>The Lair, as a place you stand in</h1>
+  <p class="thesis">A small vaulted cellar outside of time. The crew spawns at the fire, reads the debt, practises their words, takes a weapon off the rack, and sets out by all standing in one lit portal. Every function is an object you walk up to. None of it is a menu.</p>
+  <p class="meta">Written 2026-09-26 against <code>integration/staging-2026-09-15</code> @ <code>2c45fef</code> · full text in <code>docs/plans/lair-scene.md</code> · nothing built yet</p>
+</header>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">The gap</div>
+    <h2>Today the Lair is a number with no room</h2>
+  </div>
+  <div class="gap">
+    <div>
+      <span class="k now">Today</span>
+      <ul>
+        <li><code>LairHubManager</code> holds debt, gold and era on an empty object inside the raid scene.</li>
+        <li>Play starts a raid after 0.25 s. Nobody ever stands in the Lair.</li>
+        <li>No scene ever changes. The only scene load reloads the raid on death.</li>
+        <li>Picking an era changes nothing. The castle generator ignores it.</li>
+        <li>In co-op every player keeps their own separate debt.</li>
+        <li>The raid scene is not in the build list.</li>
+      </ul>
+    </div>
+    <div>
+      <span class="k new">Proposed</span>
+      <ul>
+        <li>A separate <code>LairScene</code> you walk around in first person.</li>
+        <li>Six stations, one per verb in the design bible.</li>
+        <li>The host's scene change carries every player: Lair → Raid → Lair.</li>
+        <li>One debt per crew, kept on the host and shown to everyone.</li>
+        <li>A save file that remembers raids, trophies and the weapon rack.</li>
+        <li>Both scenes added to the build.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">Visuals · the view from the spawn point</div>
+    <h2>One fire, one candle, one open door</h2>
+  </div>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 800 400" role="img" aria-label="Mood sketch looking north across the vaulted cellar: the hearth glowing in the foreground, the weapon rack on the left wall, the practice circle on the right, the ledger candle in the right foreground, and on the far wall four arches, one lit blue-violet with two hooded figures silhouetted against it and three bricked up.">
+        <defs>
+          <radialGradient id="v-hearth" cx="400" cy="410" r="330" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#E8A24E" stop-opacity=".55"/>
+            <stop offset=".25" stop-color="#6E5320" stop-opacity=".45"/>
+            <stop offset=".6" stop-color="#2A2012" stop-opacity=".25"/>
+            <stop offset="1" stop-color="#100E0A" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="v-portal" cx="362" cy="250" r="150" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#B6C8FF" stop-opacity=".55"/>
+            <stop offset=".3" stop-color="#7A6AA0" stop-opacity=".4"/>
+            <stop offset="1" stop-color="#2A2340" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="v-door" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#B6C8FF"/>
+            <stop offset=".6" stop-color="#7A6AA0"/>
+            <stop offset="1" stop-color="#2A2340"/>
+          </linearGradient>
+          <radialGradient id="v-candle" cx="730" cy="292" r="70" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#F2D9A0" stop-opacity=".5"/>
+            <stop offset="1" stop-color="#F2D9A0" stop-opacity="0"/>
+          </radialGradient>
+          <pattern id="v-brick" width="12" height="7" patternUnits="userSpaceOnUse">
+            <rect width="12" height="7" fill="#221D16"/>
+            <path d="M0 6.5H12M6 0V3.5M0 3.5H12M0 3.5V7" stroke="#14120E" stroke-width="1" fill="none"/>
+          </pattern>
+        </defs>
+        <rect width="800" height="400" fill="#0B0A08"/>
+        <!-- floor -->
+        <polygon points="0,400 800,400 550,290 250,290" fill="#17140F"/>
+        <!-- far wall with vaulted top -->
+        <path d="M250 290 L250 220 Q400 20 550 220 L550 290 Z" fill="#1C1812"/>
+        <!-- receding vault ribs -->
+        <path d="M20 400 L20 230 Q400 -190 780 230 L780 400" fill="none" stroke="#2E271E" stroke-width="10"/>
+        <path d="M110 400 L110 225 Q400 -105 690 225 L690 400" fill="none" stroke="#2A241C" stroke-width="7"/>
+        <path d="M190 400 L190 222 Q400 -32 610 222 L610 400" fill="none" stroke="#26201A" stroke-width="5"/>
+        <!-- side walls meeting floor -->
+        <line x1="250" y1="290" x2="0" y2="400" stroke="#221D16" stroke-width="2"/>
+        <line x1="550" y1="290" x2="800" y2="400" stroke="#221D16" stroke-width="2"/>
+        <!-- portal glow thrown upward -->
+        <rect width="800" height="400" fill="url(#v-portal)"/>
+        <!-- the four arches: I bricked, II lit, III and IV bricked -->
+        <path d="M270 285 L270 242 A22 22 0 0 1 314 242 L314 285 Z" fill="url(#v-brick)" stroke="#3A3228"/>
+        <path d="M340 285 L340 242 A22 22 0 0 1 384 242 L384 285 Z" fill="url(#v-door)" stroke="#5FA288" stroke-width="1.5"/>
+        <path d="M416 285 L416 242 A22 22 0 0 1 460 242 L460 285 Z" fill="url(#v-brick)" stroke="#3A3228"/>
+        <path d="M486 285 L486 242 A22 22 0 0 1 530 242 L530 285 Z" fill="url(#v-brick)" stroke="#3A3228"/>
+        <rect x="358" y="214" width="8" height="8" fill="#5FA288"/>
+        <!-- ready ring on the floor -->
+        <ellipse cx="362" cy="300" rx="62" ry="9" fill="#7A6AA0" fill-opacity=".12" stroke="#7A6AA0" stroke-dasharray="4 4"/>
+        <!-- two crew silhouettes against the portal -->
+        <path d="M338 302 L343 268 Q350 250 357 268 L362 302 Z" fill="#0B0A08"/>
+        <path d="M372 304 L377 272 Q383 256 389 272 L394 304 Z" fill="#0B0A08"/>
+        <!-- weapon rack, left wall -->
+        <polygon points="66,250 128,262 128,338 66,344" fill="#2A2219"/>
+        <line x1="78" y1="262" x2="92" y2="330" stroke="#8A8070" stroke-width="3"/>
+        <circle cx="106" cy="296" r="15" fill="none" stroke="#8A8070" stroke-width="3"/>
+        <circle cx="78" cy="262" r="2.5" fill="#5FA288"/><circle cx="106" cy="274" r="2.5" fill="#5FA288"/><circle cx="120" cy="268" r="2.5" fill="#3A3228"/>
+        <!-- stair to nowhere, far left -->
+        <path d="M150 300 h14 v-8 h14 v-8 h14 v-8 h14 v-8" fill="none" stroke="#3A3228" stroke-width="2"/>
+        <!-- practice circle, right floor -->
+        <ellipse cx="628" cy="352" rx="92" ry="16" fill="none" stroke="#7A6AA0" stroke-dasharray="5 5"/>
+        <rect x="600" y="318" width="4" height="26" fill="#3A3228"/><rect x="612" y="318" width="4" height="26" fill="#3A3228"/>
+        <ellipse cx="608" cy="310" rx="12" ry="10" fill="#5A3A26"/>
+        <path d="M660 350 L660 312 M648 324 H672" stroke="#6B5A3A" stroke-width="4"/>
+        <circle cx="660" cy="306" r="7" fill="#6B5A3A"/>
+        <!-- ledger lectern and candle, right foreground -->
+        <rect x="712" y="310" width="36" height="90" fill="#221D16"/>
+        <polygon points="702,312 758,300 758,312 702,322" fill="#3A3024"/>
+        <rect x="738" y="286" width="5" height="14" fill="#DCD2BA"/>
+        <circle cx="740.5" cy="282" r="3" fill="#F2D9A0"/>
+        <rect width="800" height="400" fill="url(#v-candle)"/>
+        <!-- hearth, foreground -->
+        <rect width="800" height="400" fill="url(#v-hearth)"/>
+        <ellipse cx="400" cy="394" rx="96" ry="18" fill="#2A2012"/>
+        <path d="M372 392 Q378 356 392 340 Q392 366 402 372 Q406 350 418 334 Q426 366 430 392 Z" fill="#C4542E"/>
+        <path d="M388 392 Q394 370 402 360 Q404 378 412 382 Q414 370 420 364 Q422 382 420 392 Z" fill="#E8A24E"/>
+        <!-- labels -->
+        <g font-size="11" fill="#9A9078">
+          <text x="340" y="206">II · High Medieval</text>
+          <text x="60" y="360">armoury rack</text>
+          <text x="560" y="378">practice circle</text>
+          <text x="700" y="296" text-anchor="end">ledger</text>
+          <text x="440" y="366">hearth</text>
+          <text x="148" y="316">stair to nowhere</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Mood sketch looking north from where you spawn. It shows the light plan and where things sit, not finished art. The lit arch is shown with decision D2's recommendation: High Medieval open, the other three bricked up.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">Visuals · floor plan</div>
+    <h2>16 m by 10 m, and the only way out is a portal</h2>
+    <p class="dim">A barrel-vaulted stone undercroft, 4.5 m to the crown. Damp brick, standing water in two corners. A stair climbs eleven steps and stops at a wall, because the Lair stands outside of time. That also means no sky, exterior or skybox to build. Hover a station card below to find it here, or tap a number here to jump to its card.</p>
+  </div>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 820 560" role="img" aria-label="Top-down floor plan of the lair: portal arches along the north wall with a ready ring in front of the lit one, armoury rack and trophy shelves on the west wall, practice circle on the east side, hearth with four spawn points and a straw pallet in the south centre, ledger lectern and strongbox in the south-east, and a stair to nowhere along the south-west wall.">
+        <defs>
+          <pattern id="p-flag" width="45" height="45" patternUnits="userSpaceOnUse" x="40" y="40">
+            <rect width="45" height="45" fill="#1A1712"/>
+            <path d="M45 0V45H0" fill="none" stroke="#221E17" stroke-width="1"/>
+          </pattern>
+          <radialGradient id="p-hearth" cx="400" cy="420" r="270" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#E8A24E" stop-opacity=".45"/>
+            <stop offset=".3" stop-color="#6E5320" stop-opacity=".35"/>
+            <stop offset=".7" stop-color="#2A2012" stop-opacity=".12"/>
+            <stop offset="1" stop-color="#2A2012" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="p-portal" cx="330" cy="60" r="170" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#B6C8FF" stop-opacity=".45"/>
+            <stop offset=".3" stop-color="#7A6AA0" stop-opacity=".3"/>
+            <stop offset="1" stop-color="#7A6AA0" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="p-candle" cx="650" cy="420" r="85" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#F2D9A0" stop-opacity=".35"/>
+            <stop offset="1" stop-color="#F2D9A0" stop-opacity="0"/>
+          </radialGradient>
+          <pattern id="p-brick" width="10" height="6" patternUnits="userSpaceOnUse">
+            <rect width="10" height="6" fill="#2A241C"/>
+            <path d="M0 5.5H10M5 0V3M0 3H10M0 3V6" stroke="#14120E" fill="none"/>
+          </pattern>
+        </defs>
+        <!-- floor and light pools -->
+        <rect x="40" y="40" width="720" height="450" fill="url(#p-flag)"/>
+        <ellipse cx="100" cy="95" rx="46" ry="22" fill="#1E2A28" fill-opacity=".7"/>
+        <ellipse cx="712" cy="468" rx="36" ry="14" fill="#1E2A28" fill-opacity=".7"/>
+        <rect x="40" y="40" width="720" height="450" fill="url(#p-hearth)"/>
+        <rect x="40" y="40" width="720" height="450" fill="url(#p-portal)"/>
+        <rect x="40" y="40" width="720" height="450" fill="url(#p-candle)"/>
+        <!-- walls -->
+        <rect x="40" y="40" width="720" height="450" fill="none" stroke="#4A4235" stroke-width="14"/>
+
+        <!-- north wall: portal arches -->
+        <g font-size="10" fill="#9A9078" text-anchor="middle">
+          <rect x="135" y="30" width="70" height="22" fill="url(#p-brick)" stroke="#3A3228"/>
+          <text x="170" y="22">I · Bronze</text>
+          <rect x="295" y="30" width="70" height="22" fill="#7A6AA0" stroke="#B6C8FF"/>
+          <rect x="326" y="28" width="8" height="6" fill="#5FA288"/>
+          <text x="330" y="22" fill="#DCD2BA">II · High Medieval</text>
+          <rect x="455" y="30" width="70" height="22" fill="url(#p-brick)" stroke="#3A3228"/>
+          <text x="490" y="22">III · Late Medieval</text>
+          <rect x="615" y="30" width="70" height="22" fill="url(#p-brick)" stroke="#3A3228"/>
+          <text x="650" y="22">IV · Powder</text>
+        </g>
+        <ellipse cx="330" cy="118" rx="62" ry="28" fill="#7A6AA0" fill-opacity=".1" stroke="#7A6AA0" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="330" y="122" font-size="10" fill="#B6C8FF" text-anchor="middle">ready ring</text>
+
+        <!-- west wall: rack and trophy shelf -->
+        <rect x="48" y="180" width="14" height="120" fill="#3A3024"/>
+        <g stroke="#8A8070" stroke-width="2.5">
+          <line x1="66" y1="196" x2="96" y2="206"/>
+          <line x1="66" y1="226" x2="90" y2="226"/>
+        </g>
+        <circle cx="96" cy="206" r="0" />
+        <g fill="#5FA288"><circle cx="64" cy="196" r="2.5"/><circle cx="64" cy="226" r="2.5"/></g>
+        <g fill="#3A3228"><circle cx="64" cy="256" r="2.5"/><circle cx="64" cy="286" r="2.5"/></g>
+        <text x="72" y="276" font-size="10" fill="#635C4C">empty hooks</text>
+        <rect x="48" y="330" width="14" height="96" fill="#3A3024"/>
+        <g fill="#C9A227"><rect x="51" y="344" width="8" height="8"/><circle cx="55" cy="372" r="4"/><rect x="51" y="392" width="8" height="10"/></g>
+
+        <!-- south-west: stair to nowhere -->
+        <rect x="70" y="452" width="132" height="30" fill="#221D16" stroke="#3A3228"/>
+        <g stroke="#3A3228"><line x1="82" y1="452" x2="82" y2="482"/><line x1="94" y1="452" x2="94" y2="482"/><line x1="106" y1="452" x2="106" y2="482"/><line x1="118" y1="452" x2="118" y2="482"/><line x1="130" y1="452" x2="130" y2="482"/><line x1="142" y1="452" x2="142" y2="482"/><line x1="154" y1="452" x2="154" y2="482"/><line x1="166" y1="452" x2="166" y2="482"/><line x1="178" y1="452" x2="178" y2="482"/><line x1="190" y1="452" x2="190" y2="482"/></g>
+        <text x="136" y="444" font-size="10" fill="#635C4C" text-anchor="middle">stair to nowhere ↗ wall</text>
+
+        <!-- east: practice circle -->
+        <circle cx="650" cy="245" r="60" fill="#7A6AA0" fill-opacity=".06" stroke="#7A6AA0" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <circle cx="620" cy="222" r="7" fill="#5A3A26"/>
+        <circle cx="682" cy="226" r="3" fill="#F2D9A0"/>
+        <rect x="628" y="262" width="14" height="14" fill="#4A3A22"/>
+        <path d="M672 262 v20 M664 270 h16" stroke="#6B5A3A" stroke-width="3"/>
+        <g font-size="9" fill="#635C4C"><text x="604" y="210">pot</text><text x="688" y="222">candle</text><text x="614" y="292">crate</text><text x="664" y="296">dummy</text></g>
+
+        <!-- south centre: hearth, spawns, pallet -->
+        <circle cx="400" cy="420" r="24" fill="#2A2012" stroke="#6E5320" stroke-width="2"/>
+        <circle cx="400" cy="420" r="11" fill="#C4542E"/>
+        <circle cx="400" cy="420" r="5" fill="#E8A24E"/>
+        <g fill="none" stroke="#DCD2BA" stroke-width="1.5">
+          <path d="M340 382 l7 -14 l7 14 z"/><path d="M375 370 l7 -14 l7 14 z"/><path d="M411 370 l7 -14 l7 14 z"/><path d="M446 382 l7 -14 l7 14 z"/>
+        </g>
+        <text x="400" y="344" font-size="10" fill="#9A9078" text-anchor="middle">4 spawns, facing north</text>
+        <rect x="444" y="436" width="62" height="26" fill="#4A3A22" stroke="#6B5A3A"/>
+        <text x="475" y="476" font-size="10" fill="#9A9078" text-anchor="middle">straw pallet</text>
+
+        <!-- south-east: ledger and strongbox -->
+        <rect x="628" y="408" width="36" height="24" fill="#3A3024" stroke="#6B5A3A"/>
+        <circle cx="658" cy="412" r="3" fill="#F2D9A0"/>
+        <rect x="684" y="424" width="32" height="22" fill="#4A3A16" stroke="#C9A227" stroke-width="1.5"/>
+        <text x="672" y="462" font-size="10" fill="#9A9078" text-anchor="middle">ledger · strongbox</text>
+
+        <!-- station markers -->
+        <g class="marker" data-st="1" tabindex="0" role="link" aria-label="Station 1, the hearth"><circle cx="352" cy="444" r="12"/><text x="352" y="448" text-anchor="middle">1</text></g>
+        <g class="marker" data-st="2" tabindex="0" role="link" aria-label="Station 2, the ledger"><circle cx="606" cy="420" r="12"/><text x="606" y="424" text-anchor="middle">2</text></g>
+        <g class="marker" data-st="3" tabindex="0" role="link" aria-label="Station 3, the portals"><circle cx="412" cy="118" r="12"/><text x="412" y="122" text-anchor="middle">3</text></g>
+        <g class="marker" data-st="4" tabindex="0" role="link" aria-label="Station 4, the armoury rack"><circle cx="112" cy="240" r="12"/><text x="112" y="244" text-anchor="middle">4</text></g>
+        <g class="marker" data-st="5" tabindex="0" role="link" aria-label="Station 5, the practice circle"><circle cx="728" cy="186" r="12"/><text x="728" y="190" text-anchor="middle">5</text></g>
+        <g class="marker" data-st="6" tabindex="0" role="link" aria-label="Station 6, the trophy shelf"><circle cx="90" cy="378" r="12"/><text x="90" y="382" text-anchor="middle">6</text></g>
+
+        <!-- compass and scale -->
+        <g font-size="11" fill="#9A9078">
+          <text x="792" y="58" text-anchor="middle">N</text>
+          <path d="M792 64 v34 M786 72 l6 -8 l6 8" stroke="#9A9078" fill="none"/>
+          <line x1="40" y1="522" x2="265" y2="522" stroke="#9A9078"/>
+          <line x1="40" y1="516" x2="40" y2="528" stroke="#9A9078"/><line x1="265" y1="516" x2="265" y2="528" stroke="#9A9078"/>
+          <text x="152" y="545" text-anchor="middle">5 m</text>
+          <text x="760" y="545" text-anchor="end">1 flagstone = 1 m</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Light pools are drawn to position: the hearth's warm pool fills the south half, the lit arch throws lapis across the north, and the candle covers only the ledger. Everything outside them falls to black.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">Visuals · light and colour</div>
+    <h2>Three light sources, no fill light</h2>
+    <p class="dim">The design bible says nothing is lit by nothing. The Lair is its one safe frame: "one candle, one fire, falling away into black."</p>
+  </div>
+  <div class="lights">
+    <div class="light"><div class="orb hearth"></div><div><h3>The hearth</h3><p>The key light, low in the south of the room. Matches the moodboard's Lair swatch, <code>#6E5320</code> falling to <code>#2A2012</code>.</p></div></div>
+    <div class="light"><div class="orb candle"></div><div><h3>One candle</h3><p>On the ledger lectern. It lights the debt figure and nothing else.</p></div></div>
+    <div class="light"><div class="orb portal"></div><div><h3>The lit portal</h3><p>Ground Lapis thrown upward onto faces. The only cold light in the room, and only on the chosen arch.</p></div></div>
+  </div>
+  <div class="pigments">
+    <div class="pig"><i style="background:#C9A227"></i><span><b>Orpiment</b> only on gold: trophies and the strongbox.</span></div>
+    <div class="pig"><i style="background:#5FA288"></i><span><b>Verdigris</b> on anything usable: hooks, lectern, keystones.</span></div>
+    <div class="pig"><i style="background:#7A6AA0"></i><span><b>Lapis</b> for the voice: the practice ring and the portals.</span></div>
+    <div class="pig"><i style="background:#C4542E"></i><span><b>Madder</b> for the debt in red ink, and the embers.</span></div>
+    <div class="pig"><i style="background:#DCD2BA"></i><span><b>Vellum</b> for all written text. Never white.</span></div>
+  </div>
+  <p class="dim" style="font-size:.95rem">No new pigments. The eleven kit pieces (cellar shell, stair, hearth, lectern, strongbox, rack, shelf, portal arch open and bricked, pallet, dummy, pot) are built by the existing Blender pipeline in <code>Tools/AssetPipeline/</code> from the existing palette atlas.</p>
+</section>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">Functionality · six stations</div>
+    <h2>Each station is one verb from the design bible</h2>
+  </div>
+  <div class="stations">
+    <article class="st" data-st="1" id="st-1" tabindex="-1">
+      <div class="top"><span class="n">1</span><div><h3>The Hearth</h3><div class="verb">spawn · gather · revive</div></div></div>
+      <ul>
+        <li>Four spawn points around the fire. Everyone lands here on first load and after every raid.</li>
+        <li>You can't die in the Lair: health stops at 1. A misfired Ignis still sets your beard alight.</li>
+        <li>Players carried out of the raid wake at the hearth. Players left behind wake on the straw pallet (see D3).</li>
+      </ul>
+    </article>
+    <article class="st" data-st="2" id="st-2" tabindex="-1">
+      <div class="top"><span class="n">2</span><div><h3>The Ledger</h3><div class="verb">see the debt</div></div></div>
+      <ul>
+        <li>An open book on a lectern: the debt in red ink, the gold banked, one line per past raid (era, seed, worth, players saved).</li>
+        <li>The +50 for setting out is written in the moment the crew commits, so you see the cost before you go.</li>
+        <li>A debt of zero shows the existing <code>DEBT_CLEARED</code> ending as a closed book.</li>
+      </ul>
+      <p class="reuse">The maths stays exactly as <code>LairHubManager.ApplyExtractionResult</code> does it today, which is already tested.</p>
+    </article>
+    <article class="st" data-st="3" id="st-3" tabindex="-1">
+      <div class="top"><span class="n">3</span><div><h3>The Portals</h3><div class="verb">choose a century · set out</div></div></div>
+      <ul>
+        <li>Four arches, one per era. Open ones have a green keystone; the chosen one glows lapis; locked ones are bricked up.</li>
+        <li>Choose by walking up and pressing <code>E</code>, or by saying <b>PORTA</b> at it.</li>
+        <li>Set out when <b>every connected player</b> stands in the chalk ring. A 3-second countdown runs, and anyone stepping out cancels it.</li>
+        <li><code>F6</code> still forces departure for the host, so today's playtest key keeps working.</li>
+      </ul>
+    </article>
+    <article class="st" data-st="4" id="st-4" tabindex="-1">
+      <div class="top"><span class="n">4</span><div><h3>The Armoury Rack</h3><div class="verb">choose a blade</div></div></div>
+      <ul>
+        <li>One hook per weapon the crew owns. <code>E</code> takes it down and equips it; <code>E</code> again hangs it back.</li>
+        <li>Starts with a small starter kit (see D4). The save file records anything added later.</li>
+      </ul>
+      <p class="limit">Limitation: no raid code can bring a weapon home yet. Filling the rack from raids is separate raid-side work and isn't part of this proposal.</p>
+    </article>
+    <article class="st" data-st="5" id="st-5" tabindex="-1">
+      <div class="top"><span class="n">5</span><div><h3>The Practice Circle</h3><div class="verb">set the words on your tongue</div></div></div>
+      <ul>
+        <li>A chalk ring with targets: a pot for Frango, a candle for Ignis, a crate for Levo, a straw dummy for Somnus and Tonitrus. They reset after breaking.</li>
+        <li>Stand in it and a readout shows the word heard, the recogniser's confidence, how loud you were, and whether it would have misfired.</li>
+        <li>This is also the voice test bench the roadmap asks for in milestone M1.</li>
+      </ul>
+      <p class="reuse">Uses the real spell system. There's no alarm in the Lair, so noise costs nothing here.</p>
+    </article>
+    <article class="st" data-st="6" id="st-6" tabindex="-1">
+      <div class="top"><span class="n">6</span><div><h3>The Trophy Shelf</h3><div class="verb">remember what came back</div></div></div>
+      <ul>
+        <li>After each raid the most valuable item that came home sits on the shelf, with a label giving the era, date and worth.</li>
+        <li>Twelve at most. The oldest drops off.</li>
+        <li>Costs one item id per raid in the save file. No physics, no effect on the economy.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">Implementation · the loop across two scenes</div>
+    <h2>The host changes scene and everyone follows</h2>
+    <p class="dim">PurrNet's networked scene loading (<code>NetworkManager.sceneModule.LoadSceneAsync</code>) moves every client when the host moves. The Lair's state lives on an object that survives the switch.</p>
+  </div>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 800 300" role="img" aria-label="Diagram: Lair scene on the left, Raid scene on the right. Top arrow from Lair to Raid: everyone in the ready ring, 3 second countdown, host loads RaidScene, StartRaid with the chosen era. Bottom arrow from Raid to Lair: extraction resolves, summary dismissed, host loads LairScene. Beneath both, a bar of what persists across both scenes: NetworkManager, LairHubManager with the save file, and SessionFlow.">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5FA288"/></marker>
+          <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C9A227"/></marker>
+        </defs>
+        <rect x="20" y="40" width="230" height="150" fill="#1E1A14" stroke="#7A6AA0"/>
+        <text x="40" y="72" font-size="15" fill="#DCD2BA" font-weight="600">LairScene</text>
+        <g font-size="11" fill="#9A9078"><text x="40" y="98">hearth · ledger · portals</text><text x="40" y="118">rack · practice · trophies</text><text x="40" y="146" fill="#635C4C">phase: InLair</text><text x="40" y="166" fill="#635C4C">nobody can die here</text></g>
+        <rect x="550" y="40" width="230" height="150" fill="#1E1A14" stroke="#C4542E"/>
+        <text x="570" y="72" font-size="15" fill="#DCD2BA" font-weight="600">RaidScene</text>
+        <g font-size="11" fill="#9A9078"><text x="570" y="98">castle from one seed</text><text x="570" y="118">loot · guards · alarm</text><text x="570" y="146" fill="#635C4C">phase: Generating →</text><text x="570" y="166" fill="#635C4C">Raiding → Extracting</text></g>
+        <path d="M252 78 H546" stroke="#5FA288" stroke-width="2" marker-end="url(#ah)"/>
+        <text x="400" y="68" font-size="11" fill="#5FA288" text-anchor="middle">all in the ring → 3 s</text><text x="400" y="98" font-size="11" fill="#5FA288" text-anchor="middle">debt +50 → StartRaid(era)</text>
+        <path d="M548 152 H254" stroke="#C9A227" stroke-width="2" marker-end="url(#ah2)"/>
+        <text x="400" y="142" font-size="11" fill="#C9A227" text-anchor="middle">extraction resolves</text><text x="400" y="172" font-size="11" fill="#C9A227" text-anchor="middle">worth banked → back to Lair</text>
+        <rect x="20" y="222" width="760" height="56" fill="#14120E" stroke="#5FA288" stroke-dasharray="6 4"/>
+        <text x="40" y="244" font-size="10" fill="#5FA288" letter-spacing="2">PERSISTS ACROSS BOTH SCENES</text>
+        <text x="40" y="266" font-size="12" fill="#DCD2BA">NetworkManager  ·  LairHubManager (debt, gold, save file)  ·  SessionFlow (does the switching)</text>
+      </svg>
+    </div>
+    <figcaption>You can still press Play on RaidScene alone in the editor. It keeps its own Lair object for that; arriving from the Lair, the raid scene's copy is discarded by the existing singleton rule and the real one carries on.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 800 210" role="img" aria-label="Assembly diagram. RogueAi.Session references RogueAi.Raid and RogueAi.Lair. RogueAi.Raid already references RogueAi.Lair. Lair stations raise a DepartureRequested event that Session listens to, so Lair never references Raid and there is no cycle.">
+        <defs><marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9A9078"/></marker>
+        <marker id="ah4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B6C8FF"/></marker></defs>
+        <rect x="300" y="14" width="200" height="46" fill="#1E1A14" stroke="#5FA288"/>
+        <text x="400" y="36" text-anchor="middle" font-size="13" fill="#DCD2BA">RogueAi.Session</text>
+        <text x="400" y="52" text-anchor="middle" font-size="10" fill="#5FA288">new · SessionFlow</text>
+        <rect x="60" y="140" width="200" height="46" fill="#1E1A14" stroke="#332D22"/>
+        <text x="160" y="162" text-anchor="middle" font-size="13" fill="#DCD2BA">RogueAi.Raid</text>
+        <text x="160" y="178" text-anchor="middle" font-size="10" fill="#635C4C">RaidDirector</text>
+        <rect x="540" y="140" width="200" height="46" fill="#1E1A14" stroke="#332D22"/>
+        <text x="640" y="162" text-anchor="middle" font-size="13" fill="#DCD2BA">RogueAi.Lair</text>
+        <text x="640" y="178" text-anchor="middle" font-size="10" fill="#635C4C">LairHubManager · stations</text>
+        <path d="M340 60 L200 138" stroke="#9A9078" marker-end="url(#ah3)"/>
+        <path d="M460 60 L600 138" stroke="#9A9078" marker-end="url(#ah3)"/>
+        <path d="M262 163 H536" stroke="#9A9078" marker-end="url(#ah3)"/>
+        <text x="400" y="156" text-anchor="middle" font-size="10" fill="#635C4C">already references</text>
+        <path d="M680 138 Q690 60 504 40" stroke="#B6C8FF" stroke-dasharray="4 4" fill="none" marker-end="url(#ah4)"/>
+        <text x="796" y="84" font-size="10" fill="#B6C8FF" text-anchor="end">DepartureRequested</text>
+        <text x="796" y="98" font-size="10" fill="#B6C8FF" text-anchor="end">event, not a reference</text>
+      </svg>
+    </div>
+    <figcaption>Raid already depends on Lair, so the Lair can't call into Raid to start a raid. Stations raise an event instead, and a new small Session assembly listens and does the switching. Solid arrows are code references; the dashed one is an event.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th>File</th><th></th><th>What changes</th></tr></thead>
+      <tbody>
+        <tr><td><code>Lair/LairHubManager.cs</code></td><td><span class="tag edit">edit</span></td><td>Becomes a persistent singleton, saves to JSON, raises <code>DepartureRequested</code></td></tr>
+        <tr><td><code>Lair/LairState.cs</code></td><td><span class="tag edit">edit</span></td><td>Adds unlocked eras, rack contents, trophies, raid log</td></tr>
+        <tr><td><code>Lair/LairSaveFile.cs</code></td><td><span class="tag new">new</span></td><td>JSON at <code>persistentDataPath/lair.json</code>; carries over the three existing PlayerPrefs values once so nobody's debt resets</td></tr>
+        <tr><td><code>Lair/LairNetworkState.cs</code></td><td><span class="tag new">new</span></td><td>Host's save is the truth; replicated to clients, who never write their own while connected</td></tr>
+        <tr><td><code>Lair/DepartureReadyCheck.cs</code></td><td><span class="tag new">new</span></td><td>Plain logic: who is in the ring, the countdown, cancelling</td></tr>
+        <tr><td><code>Lair/Stations/*.cs</code></td><td><span class="tag new">new</span></td><td>Hearth, LedgerLectern, DeparturePortal, ArmouryRack, PracticeCircle, TrophyShelf</td></tr>
+        <tr><td><code>Session/SessionFlow.cs</code> + asmdef</td><td><span class="tag new">new</span></td><td>Loads RaidScene on departure, LairScene on return</td></tr>
+        <tr><td><code>Raid/RaidDirector.cs</code></td><td><span class="tag edit">edit</span></td><td>Finds the lair singleton when a raid starts</td></tr>
+        <tr><td><code>Raid/RaidBootstrapper.cs</code></td><td><span class="tag edit">edit</span></td><td>Auto-starts only when there is no SessionFlow (standalone playtesting)</td></tr>
+        <tr><td><code>Editor/LairSceneBuilder.cs</code></td><td><span class="tag new">new</span></td><td><i>Tools ▸ Plunderspell ▸ Build Lair Scene</i>, built from code like the raid scene</td></tr>
+        <tr><td><code>EditorBuildSettings.asset</code></td><td><span class="tag edit">edit</span></td><td>LairScene first, then RaidScene</td></tr>
+        <tr><td><code>Tools/AssetPipeline/</code></td><td><span class="tag edit">edit</span></td><td>Eleven lair kit pieces, previews and contact sheet, all committed</td></tr>
+        <tr><td><code>docs/systems/lair.md</code>, <code>raid.md</code>, <code>README.md</code></td><td><span class="tag edit">docs</span></td><td>How the Lair works; the loop now spans two scenes; Play starts in the Lair</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim" style="font-size:.95rem"><b style="color:var(--vellum)">Tests.</b> Save round-trip and one-time migration; the ready check (departs only with everyone in, cancels when someone leaves, a disconnect mid-countdown doesn't strand the rest); trophy choice and the twelve cap; era lock rules. The same debt-up, debt-down assertions the full-raid test makes today, now across two scenes.</p>
+</section>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">Your verdict · phases</div>
+    <h2>Approve any prefix</h2>
+    <p class="dim">A alone gives you a real Lair to walk around in and leave from. B makes it the bible's Lair. C makes it look like one.</p>
+  </div>
+  <div class="phases">
+    <div class="ph" data-phase="A">
+      <div class="lbl">Phase A</div>
+      <h3>The room and the loop</h3>
+      <ul><li>Grey-box Lair scene from the builder</li><li>Hearth spawns, ledger, portals with ready ring</li><li>Scene switching both ways</li><li>JSON save and migration</li><li>One host-owned debt in co-op</li></ul>
+      <div style="display:grid;gap:10px"><span class="size">The bulk: about 10 files plus tests</span>
+      <div class="seg" data-group="phase-A"><button type="button" class="yes" data-value="approve" aria-pressed="false">Approve</button><button type="button" class="no" data-value="reject" aria-pressed="false">Reject</button></div></div>
+    </div>
+    <div class="ph" data-phase="B">
+      <div class="lbl">Phase B</div>
+      <h3>The stations</h3>
+      <ul><li>Armoury rack</li><li>Practice circle with the voice readout</li><li>Trophy shelf</li></ul>
+      <div style="display:grid;gap:10px"><span class="size">About 4 files plus tests</span>
+      <div class="seg" data-group="phase-B"><button type="button" class="yes" data-value="approve" aria-pressed="false">Approve</button><button type="button" class="no" data-value="reject" aria-pressed="false">Reject</button></div></div>
+    </div>
+    <div class="ph" data-phase="C">
+      <div class="lbl">Phase C</div>
+      <h3>The art pass</h3>
+      <ul><li>Lair kit through the Blender pipeline</li><li>Lighting to the moodboard</li><li>Previews committed</li></ul>
+      <div style="display:grid;gap:10px"><span class="size">Pipeline specs, then swap into the builder</span>
+      <div class="seg" data-group="phase-C"><button type="button" class="yes" data-value="approve" aria-pressed="false">Approve</button><button type="button" class="no" data-value="reject" aria-pressed="false">Reject</button></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">Your verdict · four decisions</div>
+    <h2>My recommendations are pre-selected</h2>
+  </div>
+  <div class="decisions">
+    <div class="dec">
+      <div class="q"><span class="id">D1</span><h3>In co-op, whose debt is it?</h3><p class="why">Four players in one room reading four different ledgers makes no sense.</p></div>
+      <div class="seg" data-group="D1">
+        <button type="button" class="pick" data-value="The host's, shared by the crew" aria-pressed="true">The host's, shared by the crew<span class="rec">recommended</span></button>
+        <button type="button" class="pick" data-value="Each player keeps their own" aria-pressed="false">Each player keeps their own</button>
+      </div>
+    </div>
+    <div class="dec">
+      <div class="q"><span class="id">D2</span><h3>Which Ages are open?</h3><p class="why">Every era currently builds the same medieval castle. A Bronze Age door that opens onto a medieval castle is a lie players will notice.</p></div>
+      <div class="seg" data-group="D2">
+        <button type="button" class="pick" data-value="High Medieval only until the generator varies by era" aria-pressed="true">High Medieval only, others bricked up<span class="rec">recommended</span></button>
+        <button type="button" class="pick" data-value="All four open now" aria-pressed="false">All four open now</button>
+      </div>
+    </div>
+    <div class="dec">
+      <div class="q"><span class="id">D3</span><h3>What does a player left behind cost?</h3><p class="why">Keeps "carry your friend out" a real choice without permanent death.</p></div>
+      <div class="seg" data-group="D3">
+        <button type="button" class="pick" data-value="Wakes on the pallet, debt +25" aria-pressed="true">Wakes on the pallet, debt +25<span class="rec">recommended</span></button>
+        <button type="button" class="pick" data-value="Free revival, no cost" aria-pressed="false">Free revival, no cost</button>
+      </div>
+    </div>
+    <div class="dec">
+      <div class="q"><span class="id">D4</span><h3>What's on the rack at the start?</h3><p class="why">Starting with all eight weapons makes bringing weapons home from other eras pointless before it starts.</p></div>
+      <div class="seg" data-group="D4">
+        <button type="button" class="pick" data-value="Longsword and Round Shield only" aria-pressed="true">Longsword and Round Shield<span class="rec">recommended</span></button>
+        <button type="button" class="pick" data-value="All eight existing weapons" aria-pressed="false">All eight existing weapons</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <h3>Send me your verdict</h3>
+    <label for="notes" class="dim" style="font-size:.92rem">Anything to change? (optional)</label>
+    <textarea id="notes" placeholder="e.g. make the room bigger, drop the trophy shelf, portals on the east wall…"></textarea>
+    <pre class="out" id="out" aria-live="polite"></pre>
+    <div class="copyrow"><button type="button" class="copy" id="copy">Copy verdict</button><span class="status" id="status"></span></div>
+    <p class="dim" style="font-size:.88rem">Paste it into the chat and I'll start on what you approved. Your choices stay in this browser only.</p>
+  </div>
+</section>
+
+<section>
+  <div class="head">
+    <div class="eyebrow">Before you approve</div>
+    <h2>Risks and what I left out</h2>
+  </div>
+  <div class="risk">
+    <h3>Nothing can be compiled or rendered here</h3>
+    <p>This session has no Unity, no .NET SDK and no Blender. If you approve, I can write the code and tests but not compile, run or render them, so everything would be marked untested until it's checked in a session that has Unity, or on your machine. The test results in <code>.agent_reports/</code> show an earlier session had that setup.</p>
+  </div>
+  <div class="rejected">
+    <div><b>The Lair as a menu screen</b>Cheaper, but it breaks the "nothing is a menu" pillar and loses the one safe frame.</div>
+    <div><b>A room inside RaidScene</b>No scene loading needed, but you asked for a separate scene, and the hub would share a scene with guards, alarm and loot.</div>
+    <div><b>Carrying loot to the strongbox to pay</b>On theme, but it moves the economy off the tested tally and into physics. Worth another look after Phase B.</div>
+  </div>
+</section>
+
+<footer>docs/plans/lair-scene.html · companion to docs/plans/lair-scene.md · Plunderspell · Unity 6000.3.15f1 · PurrNet</footer>
+</div>
+
+<script>
+(function(){
+  var KEY = 'lair-proposal-verdict-v1';
+  var state = { 'phase-A':null, 'phase-B':null, 'phase-C':null,
+    D1:"The host's, shared by the crew", D2:'High Medieval only until the generator varies by era',
+    D3:'Wakes on the pallet, debt +25', D4:'Longsword and Round Shield only', notes:'' };
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved) for (var k in saved) if (k in state) state[k] = saved[k]; } catch(e) {}
+
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+
+  var labels = { D1:'D1 Whose debt', D2:'D2 Open Ages', D3:'D3 Left behind', D4:'D4 Starting rack' };
+  function word(v){ return v === 'approve' ? 'APPROVED' : v === 'reject' ? 'REJECTED' : 'no verdict yet'; }
+
+  function render(){
+    document.querySelectorAll('.seg').forEach(function(seg){
+      var g = seg.getAttribute('data-group');
+      seg.querySelectorAll('button').forEach(function(b){
+        b.setAttribute('aria-pressed', String(state[g] === b.getAttribute('data-value')));
+      });
+    });
+    ['A','B','C'].forEach(function(p){
+      var el = document.querySelector('.ph[data-phase="'+p+'"]');
+      if (state['phase-'+p]) el.setAttribute('data-v', state['phase-'+p]); else el.removeAttribute('data-v');
+    });
+    var lines = ['Lair scene proposal: verdict', '',
+      'Phase A (room and loop): ' + word(state['phase-A']),
+      'Phase B (stations): ' + word(state['phase-B']),
+      'Phase C (art pass): ' + word(state['phase-C']), ''];
+    ['D1','D2','D3','D4'].forEach(function(d){ lines.push(labels[d] + ': ' + state[d]); });
+    if (state.notes.trim()) { lines.push('', 'Changes: ' + state.notes.trim()); }
+    document.getElementById('out').textContent = lines.join('\n');
+  }
+
+  document.querySelectorAll('.seg').forEach(function(seg){
+    seg.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if (!b) return;
+      var g = seg.getAttribute('data-group'), v = b.getAttribute('data-value');
+      state[g] = (g.indexOf('phase-') === 0 && state[g] === v) ? null : v;
+      save(); render();
+    });
+  });
+  var notes = document.getElementById('notes');
+  notes.value = state.notes;
+  notes.addEventListener('input', function(){ state.notes = notes.value; save(); render(); });
+
+  document.getElementById('copy').addEventListener('click', function(){
+    var text = document.getElementById('out').textContent, status = document.getElementById('status');
+    function fallback(){
+      var r = document.createRange(); r.selectNodeContents(document.getElementById('out'));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      status.textContent = 'Selected. Press Ctrl+C / Cmd+C to copy.';
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function(){ status.textContent = 'Copied. Paste it into the chat.'; }, fallback);
+    } catch(e) { fallback(); }
+  });
+
+  // Link station cards and floor-plan markers.
+  function hot(n, on){
+    document.querySelectorAll('.marker[data-st="'+n+'"], .st[data-st="'+n+'"]').forEach(function(el){ el.classList.toggle('hot', on); });
+  }
+  document.querySelectorAll('.st').forEach(function(card){
+    var n = card.getAttribute('data-st');
+    card.addEventListener('mouseenter', function(){ hot(n, true); });
+    card.addEventListener('mouseleave', function(){ hot(n, false); });
+  });
+  document.querySelectorAll('.marker').forEach(function(m){
+    var n = m.getAttribute('data-st');
+    function go(){ var c = document.getElementById('st-'+n); c.scrollIntoView({behavior:'smooth', block:'center'}); c.focus({preventScroll:true}); hot(n, true); setTimeout(function(){ hot(n, false); }, 1600); }
+    m.addEventListener('click', go);
+    m.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    m.addEventListener('mouseenter', function(){ hot(n, true); });
+    m.addEventListener('mouseleave', function(){ hot(n, false); });
+  });
+
+  render();
+})();
+</script>
