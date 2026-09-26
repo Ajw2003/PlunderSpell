@@ -4,26 +4,17 @@
 set -euo pipefail
 
 filter="${1:?usage: run_tests.sh <test or class full name>}"
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cli=(--caller plugin --skill unity-cli --no-banner --format json)
+
+# The report of the run before ours: until test_status changes, it is not ours yet.
+before="$(unity command test_status "${cli[@]}" | python "$here/test_verdict.py" --raw)"
 
 unity command run_tests --mode PlayMode --filter "$filter" --async_tests true "${cli[@]}" > /dev/null
 
 for _ in $(seq 1 120); do
     status_json="$(unity command test_status "${cli[@]}")"
-    verdict="$(printf '%s' "$status_json" | python -c '
-import json, sys
-envelope = json.load(sys.stdin)
-report = json.loads(envelope["data"]["result"])
-if report.get("status") != "completed":
-    print("running")
-    sys.exit(0)
-s = report["summary"]
-print(f"total {s[\"total\"]}  passed {s[\"passed\"]}  failed {s[\"failed\"]}  skipped {s[\"skipped\"]}")
-for r in report.get("results", []):
-    if r.get("Status") not in ("Passed", "Skipped"):
-        print(f"FAILED {r[\"FullName\"]}: {r.get(\"Message\")}")
-print("FAIL" if s["failed"] or s["total"] == 0 else "PASS")
-')"
+    verdict="$(printf '%s' "$status_json" | python "$here/test_verdict.py" "$filter" "$before")"
     if [ "$verdict" != "running" ]; then
         printf '%s\n' "$verdict"
         [ "$(printf '%s' "$verdict" | tail -n 1)" = "PASS" ]
