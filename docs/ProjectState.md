@@ -46,7 +46,9 @@ before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
 world. Guards are halved in number, 0.8× speed and 0.65× damage (`GuardSpawner`). Each raid starts
 calm with a 20 s grace, and guards report sightings, attacks and chases straight to the alarm
 (`docs/systems/alarm.md`). The raid HUD is themed and its hue and cry look toned down. Open issues
-re-triaged: see `docs/Today.md`.
+re-triaged: see `docs/Today.md`. Carrying now works like R.E.P.O. (#144 phase 1): items hang
+from where you grabbed them on a visible beam, and loot over about 10 kg drags
+(`docs/systems/damage.md`, "Weight").
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/systems/atmosphere.md`. Open: volumetric fog

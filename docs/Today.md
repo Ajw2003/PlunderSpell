@@ -11,8 +11,13 @@ text (#137); raids start calm with a 20 s grace (#136); guards fighting you rais
 (#139); a toned-down hue and cry look (#138). Captures: `docs/generated/issue-backlog-2026-09-25/`.
 Tests run: EditMode 67 pass, 3 skip, and 1 fail (`ArtAssetImportTests`, which failed before this
 branch). PlayMode: casting, guard, raid-integration, HUD, acoustics and haul suites all pass. The
-full PlayMode suite was not run. Issues stay open until merged. Next: #144 (carry weight like
-R.E.P.O.), research first.
+full PlayMode suite was not run. Issues stay open until merged.
+
+Then #144 (carry like R.E.P.O.). Research is committed first: `docs/plans/carry-like-repo.md`.
+The user picked phase 1: hang from the grab point on a velocity-damped spring, drag anything over
+about 10 kg, no walking slowdown, and a curved grab beam synced to other players. Built and checked
+in the live Editor (`beam-*.png` captures); `CarryFeelTests` 6/6. A remote beam between two machines
+is untested.
 
 ---
 
