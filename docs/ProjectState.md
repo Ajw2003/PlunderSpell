@@ -40,6 +40,12 @@ per enemy as the art and scale reference; the prefabs raids spawn are
 `Assets/_Project/Prefabs/Enemies/<Era>/`. Merged together on `claude/staging-2026-09-24` for testing
 before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
 
+**2026-09-25 — raids arrive and leave by portal; the castle is sealed** (branch
+`claude/night-atmosphere`, night atmosphere step 0). The team arrives at a seeded spot in the outer
+rings, the `ExtractionZone` is stood up there as the portal, players outside it when the clock ends
+are left behind, `CastleBoundary` seals the gate and wall tops, and RaidScene has no ground beyond
+the wall. Verified in the live Editor; see `docs/systems/raid.md`, "Arriving and leaving by portal".
+
 **2026-09-25 — a throwaway preview of the "calm" night look exists in RaidScene.** A
 `NightLookPreview` GameObject (`RogueAi.Atmosphere.NightLookPreview`,
 `Assets/_Project/Scripts/Runtime/Atmosphere/NightLookPreview.cs`) darkens `RaidScene`, retints the

@@ -1,5 +1,18 @@
 # Today
 
+**2026-09-25, evening — night atmosphere build started on `claude/night-atmosphere`; step 0
+(portal, sealed castle) done.** Branched off `claude/staging-2026-09-24` to build all of
+[`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md). Step 0: raids arrive at a seeded
+spot inside the walls through a portal that is also the way out, anyone outside it when the clock
+runs out is left behind, the gatehouse and wall tops are sealed, and the outside is gone. Verified
+in the live Editor by playing solo raids through the menu calls: arrival, extraction (saved 1),
+left behind (Lair line "· 1 left behind"), and the navigation audit from the portal (44/44 rooms,
+100% floor, 5 seeds). Captures: `docs/generated/portal-arrival-2026-09-25/`. Also fixed
+`Tools/Unity/run_tests.sh` (a Python 3.13 syntax error), and added `recompile.sh` and
+`capture.sh` beside it.
+
+---
+
 **2026-09-25 — a throwaway "calm" night-look preview in RaidScene.** Built the quick preview asked
 for after the look-anchoring session below: `RogueAi.Atmosphere.NightLookPreview`
 (`Assets/_Project/Scripts/Runtime/Atmosphere/NightLookPreview.cs`, new `RogueAi.Atmosphere` asmdef)
