@@ -152,7 +152,8 @@ namespace RogueAi.Voice
                 normalizedText: VoiceUtility.Normalize(rawWord),
                 confidence: 1f,
                 rmsAmplitude: rms,
-                volume: VoiceUtility.ClassifyVolume(rms));
+                volume: VoiceUtility.ClassifyVolume(rms),
+                fromKeyboard: true);
 
             Debug.Log($"[MockVoice] Emit {result}");
             OnPhraseRecognized?.Invoke(result);

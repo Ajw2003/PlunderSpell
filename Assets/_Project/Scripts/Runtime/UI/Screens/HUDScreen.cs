@@ -9,7 +9,7 @@ namespace Plunderspell.UI.Screens
         private Image _healthFill;
         private Text _healthText;
         private Image _manaFill;
-        private Text _goldText;
+        private Text _manaText;
         private GameObject _extractionGroup;
         private Image _extractionFill;
         private Text _extractionLabel;
@@ -25,16 +25,20 @@ namespace Plunderspell.UI.Screens
             _healthText.rectTransform.offsetMin = Vector2.zero;
             _healthText.rectTransform.offsetMax = Vector2.zero;
 
+            // Every spell spends mana (SpellWord.ManaCost), so the pool sits under health.
             var manaBar = UIFactory.CreateProgressBar(transform, "ManaBar", UITheme.ManaColor, new Vector2(280f, 20f), out _manaFill);
             SetAnchor(manaBar.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(20f, 48f));
+            _manaText = UIFactory.CreateText(manaBar.rectTransform, "ManaText", "", UITheme.SmallFontSize, UITheme.TextPrimary);
+            _manaText.rectTransform.anchorMin = Vector2.zero;
+            _manaText.rectTransform.anchorMax = Vector2.one;
+            _manaText.rectTransform.offsetMin = Vector2.zero;
+            _manaText.rectTransform.offsetMax = Vector2.zero;
 
-            _goldText = UIFactory.CreateText(transform, "GoldText", "Gold: 0", UITheme.BodyFontSize, UITheme.Accent, TextAnchor.UpperRight);
-            SetAnchor(_goldText.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-20f, -20f));
-            _goldText.rectTransform.sizeDelta = new Vector2(220f, 36f);
-
-            var inventoryHint = UIFactory.CreateText(transform, "InventoryHint", "[TAB] Inventory   [ESC] Pause", UITheme.SmallFontSize, UITheme.TextSecondary, TextAnchor.LowerLeft);
-            SetAnchor(inventoryHint.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(20f, 12f));
-            inventoryHint.rectTransform.sizeDelta = new Vector2(320f, 30f);
+            // No gold counter: the raid HUD shows debt, banked and haul, and nothing adds to
+            // PlayerStats.Gold. No Tab hint: the inventory it opened is gone (#132, #137).
+            var menuHint = UIFactory.CreateText(transform, "MenuHint", "[ESC] Menu", UITheme.SmallFontSize, UITheme.TextSecondary, TextAnchor.LowerLeft);
+            SetAnchor(menuHint.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(20f, 12f));
+            menuHint.rectTransform.sizeDelta = new Vector2(320f, 30f);
 
             _extractionGroup = new GameObject("ExtractionGroup", typeof(RectTransform));
             _extractionGroup.transform.SetParent(transform, false);
@@ -90,7 +94,7 @@ namespace Plunderspell.UI.Screens
             _healthFill.fillAmount = stats.MaxHealth == 0 ? 0f : (float)stats.Health / stats.MaxHealth;
             _healthText.text = $"{stats.Health} / {stats.MaxHealth}";
             _manaFill.fillAmount = stats.MaxMana == 0 ? 0f : (float)stats.Mana / stats.MaxMana;
-            _goldText.text = $"Gold: {stats.Gold}";
+            _manaText.text = $"Mana {stats.Mana} / {stats.MaxMana}";
         }
 
         private void OnExtractionStarted()
@@ -109,7 +113,7 @@ namespace Plunderspell.UI.Screens
         {
             _extractionFill.fillAmount = progress;
             _extractionLabel.text =
-                $"Extracting — {Mathf.Max(0f, GameServices.Extraction.RemainingSeconds):0.0}s  (stay on the pad)";
+                $"Extracting — {Mathf.Max(0f, GameServices.Extraction.RemainingSeconds):0.0}s  (stay in the portal)";
         }
 
         private static void SetAnchor(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 anchoredPosition)

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Word: LEVO
   spellId: 3
+  ManaCost: 12
   AltPronunciations:
   - LAVO
   - LEVO O

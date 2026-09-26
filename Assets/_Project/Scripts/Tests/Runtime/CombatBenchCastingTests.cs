@@ -29,11 +29,23 @@ namespace RogueAi.Tests
 
             GameServices.Initialize();
             m_stateBeforeTest = GameServices.GameState.CurrentState;
+            CastKeysInstantly();
+        }
+
+
+        /// <summary>These tests are about words resolving and showing, not the keyboard chant or
+        /// mana (CastingInputTests covers both), so keyed casts fire at once here.</summary>
+        private static void CastKeysInstantly()
+        {
+            var tuning = ScriptableObject.CreateInstance<SpellTuningProfile>();
+            tuning.KeyboardCastSeconds = 0f;
+            SpellTuning.Use(tuning);
         }
 
         [UnityTearDown]
         public IEnumerator TearDownScene()
         {
+            SpellTuning.Use(null);
             if (GameServices.GameState != null)
             {
                 GameServices.GameState.ChangeState(m_stateBeforeTest);
@@ -119,6 +131,7 @@ namespace RogueAi.Tests
                 {
                     lastResolved = SpellId.None;
 
+                    GameServices.PlayerStats.RefillMana();
                     voice.StartListening();
                     mock.SimulateKeyPress(key);
                     voice.StopListening();

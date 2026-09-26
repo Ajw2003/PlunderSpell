@@ -21,6 +21,10 @@ namespace RogueAi.Spells
         [Tooltip("Spell that fires on an exact match.")]
         public SpellId spellId = SpellId.None;
 
+        [Tooltip("Mana spent when this word is cast, whether it lands or misfires. A fizzle (no " +
+                 "word recognised) costs nothing.")]
+        [Min(0)] public int ManaCost = 15;
+
         [Tooltip("Near-match mispronunciations that should trigger the misfire instead, e.g. \"AGNIS\".")]
         public string[] AltPronunciations;
 

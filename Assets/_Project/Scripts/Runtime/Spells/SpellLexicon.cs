@@ -55,6 +55,24 @@ namespace RogueAi.Spells
             }
         }
 
+        /// <summary>
+        /// Mana a resolved cast costs: the <see cref="SpellWord.ManaCost"/> of the word whose spell
+        /// or misfire it is. 0 for <see cref="SpellId.None"/> or a spell no word in this lexicon owns.
+        /// </summary>
+        public int ManaCostOf(SpellId resolved)
+        {
+            if (resolved == SpellId.None || Spells == null)
+                return 0;
+
+            for (int i = 0; i < Spells.Count; i++)
+            {
+                SpellWord sw = Spells[i];
+                if (sw != null && (sw.spellId == resolved || sw.misfireId == resolved))
+                    return sw.ManaCost;
+            }
+            return 0;
+        }
+
         /// <summary>Exact match on the normalised trigger word. Null if none.</summary>
         public SpellWord FindByWord(string normalized)
         {

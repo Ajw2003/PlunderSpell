@@ -35,14 +35,19 @@ namespace RogueAi.Voice
         /// <summary>Loudness classification derived from <see cref="RmsAmplitude"/>.</summary>
         public CastVolume Volume;
 
+        /// <summary>True when a number key produced the phrase rather than speech. A keyed cast is
+        /// chanted for a moment before it fires, so it is never faster than saying the word (#116).</summary>
+        public bool FromKeyboard;
+
         public VoiceRecognitionResult(string rawText, string normalizedText, float confidence,
-            float rmsAmplitude, CastVolume volume)
+            float rmsAmplitude, CastVolume volume, bool fromKeyboard = false)
         {
             RawText = rawText;
             NormalizedText = normalizedText;
             Confidence = confidence;
             RmsAmplitude = rmsAmplitude;
             Volume = volume;
+            FromKeyboard = fromKeyboard;
         }
 
         public override string ToString() =>

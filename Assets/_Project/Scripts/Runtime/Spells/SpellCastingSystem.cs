@@ -1,3 +1,4 @@
+using Plunderspell.Core;
 using PurrNet;
 using RogueAi.Voice;
 using UnityEngine;
@@ -12,6 +13,11 @@ namespace RogueAi.Spells
     /// resolve the cast. The server — and only the server — runs the effect through
     /// <see cref="SpellEffectRegistry"/>, so consequence is authoritative; the
     /// <c>[ObserversRpc]</c> that follows carries presentation to every peer.
+    ///
+    /// Every word costs mana (<see cref="SpellWord.ManaCost"/>), spent on the caster's machine from
+    /// <see cref="GameServices.PlayerStats"/> and regained over time. A number-key cast is chanted
+    /// for <see cref="SpellTuning.KeyboardCastSeconds"/> before it fires, so keys never out-pace
+    /// speech (#116). See docs/systems/spells.md, "Mana and the keyboard chant".
     /// </summary>
     public class SpellCastingSystem : NetworkBehaviour
     {
@@ -34,6 +40,38 @@ namespace RogueAi.Spells
 
         private IVoiceInputService _voice;
         private bool _subscribed;
+
+        // The keyboard chant in progress, if any. Owner-side only, like the rest of the input half.
+        private SpellId _chantSpell = SpellId.None;
+        private CastVolume _chantVolume;
+        private float _chantStartedAt;
+        private float _chantEndsAt;
+
+        // Fractional mana regained but not yet whole: PlayerStats counts in whole points.
+        private float _manaRegenCarry;
+
+        /// <summary>This machine's own caster: the one listening to this machine's microphone and
+        /// keys. Null until the local player exists. The HUD reads the chant and costs from it.</summary>
+        public static SpellCastingSystem Local { get; private set; }
+
+        /// <summary>True while a number-key cast is being chanted and has not fired yet.</summary>
+        public bool IsChanting => _chantSpell != SpellId.None;
+
+        /// <summary>The spell being chanted, or <see cref="SpellId.None"/>.</summary>
+        public SpellId ChantingSpell => _chantSpell;
+
+        /// <summary>The word being chanted, as keyed ("IGNIS"), or empty.</summary>
+        public string ChantingWord { get; private set; } = string.Empty;
+
+        /// <summary>How far through the chant, 0..1; 0 when not chanting.</summary>
+        public float ChantProgress =>
+            IsChanting ? Mathf.InverseLerp(_chantStartedAt, _chantEndsAt, Time.time) : 0f;
+
+        /// <summary>The spellbook in use, for displays that list words and costs.</summary>
+        public SpellLexicon Lexicon => _lexicon;
+
+        /// <summary>Mana a resolved cast costs from this caster's spellbook.</summary>
+        public int ManaCostOf(SpellId resolved) => _lexicon != null ? _lexicon.ManaCostOf(resolved) : 0;
 
         protected override void OnSpawned()
         {
@@ -77,6 +115,11 @@ namespace RogueAi.Spells
 
                 _voice.OnPhraseRecognized += HandlePhrase;
                 _subscribed = true;
+                Local = this;
+
+                // A new body arrives in the raid with a full pool.
+                GameServices.PlayerStats?.RefillMana();
+                _manaRegenCarry = 0f;
             }
             else
             {
@@ -103,38 +146,118 @@ namespace RogueAi.Spells
             if (_subscribed && _voice != null)
                 _voice.OnPhraseRecognized -= HandlePhrase;
             _subscribed = false;
+            _chantSpell = SpellId.None;
+            if (Local == this)
+                Local = null;
+        }
+
+        /// <summary>Owner-side: mana comes back over time, and a finished chant fires.</summary>
+        private void Update()
+        {
+            if (!_subscribed)
+                return;
+
+            RegenerateMana(Time.deltaTime);
+
+            if (IsChanting && Time.time >= _chantEndsAt)
+            {
+                SpellId spell = _chantSpell;
+                _chantSpell = SpellId.None;
+                Cast(spell, _chantVolume);
+            }
+        }
+
+        private void RegenerateMana(float deltaTime)
+        {
+            PlayerStats stats = GameServices.PlayerStats;
+            if (stats == null || stats.Mana >= stats.MaxMana)
+            {
+                _manaRegenCarry = 0f;
+                return;
+            }
+
+            _manaRegenCarry += SpellTuning.ManaRegenPerSecond * deltaTime;
+            int whole = (int)_manaRegenCarry;
+            if (whole <= 0)
+                return;
+
+            _manaRegenCarry -= whole;
+            stats.RestoreMana(whole);
+        }
+
+        /// <summary>True when the local pool covers <paramref name="cost"/>. With no stats service
+        /// (a bare test scene) mana is not enforced.</summary>
+        private static bool CanAfford(int cost)
+        {
+            PlayerStats stats = GameServices.PlayerStats;
+            return stats == null || stats.Mana >= cost;
         }
 
         /// <summary>Owner-side handler: resolve the phrase and request a networked cast.</summary>
         private void HandlePhrase(VoiceRecognitionResult result)
         {
             SpellId resolved = MisfireEngine.Resolve(result, _lexicon);
-            PhraseResolved?.Invoke(new PhraseReport(result.RawText, result.NormalizedText, resolved, result.Volume));
+            if (resolved != SpellId.None && result.FromKeyboard && IsChanting)
+            {
+                Debug.Log($"[SpellCast] Already chanting {_chantSpell}; \"{result.NormalizedText}\" ignored.");
+                return;
+            }
+
+            bool notEnoughMana = resolved != SpellId.None && !CanAfford(ManaCostOf(resolved));
+            bool chant = resolved != SpellId.None && !notEnoughMana && result.FromKeyboard &&
+                         SpellTuning.KeyboardCastSeconds > 0f;
+
+            PhraseResolved?.Invoke(new PhraseReport(result.RawText, result.NormalizedText, resolved,
+                result.Volume, notEnoughMana, chant));
             if (resolved == SpellId.None)
             {
                 Debug.Log($"[SpellCast] Phrase \"{result.NormalizedText}\" fizzled (no match).");
                 return;
             }
 
+            if (notEnoughMana)
+            {
+                Debug.Log($"[SpellCast] Not enough mana for {resolved} ({ManaCostOf(resolved)} needed).");
+                return;
+            }
+
+            if (chant)
+            {
+                _chantSpell = resolved;
+                _chantVolume = result.Volume;
+                ChantingWord = result.NormalizedText;
+                _chantStartedAt = Time.time;
+                _chantEndsAt = Time.time + SpellTuning.KeyboardCastSeconds;
+                return;
+            }
+
+            Cast(resolved, result.Volume);
+        }
+
+        /// <summary>Owner-side: pay for the cast, then resolve it (offline) or ask the server to.</summary>
+        private void Cast(SpellId resolved, CastVolume volume)
+        {
+            GameServices.PlayerStats?.SpendMana(ManaCostOf(resolved));
+
             bool isMisfire = IsMisfire(resolved);
             if (isMisfire)
-                Debug.Log($"[Misfire] Local cast misfired \"{result.NormalizedText}\" \u2192 {resolved} (Volume: {result.Volume})");
+                Debug.Log($"[Misfire] Local cast misfired \u2192 {resolved} (Volume: {volume})");
             else
-                Debug.Log($"[SpellCast] Local cast {resolved} (Volume: {result.Volume})");
+                Debug.Log($"[SpellCast] Local cast {resolved} (Volume: {volume})");
 
             // Offline there is no server to ask — and the [ServerRpc]/[ObserversRpc] wrappers would
             // send nothing and run nothing on an unspawned object — so resolve and present here.
             if (!isSpawned)
             {
-                int affected = ExecuteEffect(resolved, result.Volume, this);
-                PresentCast(resolved, result.Volume, this, default, affected,
+                int affected = ExecuteEffect(resolved, volume, this);
+                PresentCast(resolved, volume, this, default, affected,
                     CastOrigin(this), CastDirection(this));
                 return;
             }
 
             // Aim is read here, on the caster's machine: the server never sees a remote player's
             // camera pitch, so its own reading of their aim would point along the horizon.
-            ServerCast(resolved, (byte)result.Volume, this, CastOrigin(this), CastDirection(this));
+            ServerCast(resolved, (byte)volume, this, CastOrigin(this), CastDirection(this));
         }
 
         /// <summary>
@@ -265,12 +388,21 @@ namespace RogueAi.Spells
             public readonly SpellId Result;
             public readonly CastVolume Volume;
 
-            public PhraseReport(string heard, string word, SpellId result, CastVolume volume)
+            /// <summary>A real word, refused because the caster's mana did not cover it.</summary>
+            public readonly bool NotEnoughMana;
+
+            /// <summary>A keyed word that will fire once its chant finishes.</summary>
+            public readonly bool Chanting;
+
+            public PhraseReport(string heard, string word, SpellId result, CastVolume volume,
+                bool notEnoughMana = false, bool chanting = false)
             {
                 Heard = heard ?? string.Empty;
                 Word = word ?? string.Empty;
                 Result = result;
                 Volume = volume;
+                NotEnoughMana = notEnoughMana;
+                Chanting = chanting;
             }
 
             public bool Fizzled => Result == SpellId.None;

@@ -95,7 +95,8 @@ namespace RogueAi.Tests
         }
 
         /// <summary>
-        /// The whole thing, from keystroke to something on screen: hold V, tap 5, release.
+        /// The whole thing, from keystroke to something on screen: hold V, tap 5, release, and the
+        /// chant runs its course (#116). Nothing fires before it does, and the cast costs mana.
         /// </summary>
         [UnityTest]
         public IEnumerator Test_HoldVAndPressFiveCastsTonitrusAndShowsIt()
@@ -118,11 +119,57 @@ namespace RogueAi.Tests
                 Release(m_keyboard.vKey);
                 yield return null;
 
+                SpellCastingSystem caster = m_player.GetComponent<SpellCastingSystem>();
+                int manaBefore = GameServices.PlayerStats.Mana;
+                Assert.AreEqual(SpellId.None, resolved,
+                    "A keyed cast must be chanted first, never faster than saying the word (#116).");
+                Assert.IsTrue(caster.IsChanting, "Pressing 5 must start a chant.");
+
+                yield return new WaitForSeconds(SpellTuning.KeyboardCastSeconds + 0.2f);
+
                 Assert.AreEqual(SpellId.Tonitrus, resolved,
-                    "Holding V and pressing 5 must resolve to Tonitrus.");
+                    "Holding V and pressing 5 must resolve to Tonitrus once the chant ends.");
+                int cost = caster.ManaCostOf(SpellId.Tonitrus);
+                Assert.Greater(cost, 0, "Tonitrus must cost mana.");
+                Assert.LessOrEqual(GameServices.PlayerStats.Mana, manaBefore - cost + 1,
+                    "The cast must spend its mana (allowing a point of regeneration).");
 
                 int after = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
                 Assert.Greater(after, before, "…and it must put something on screen.");
+            }
+            finally
+            {
+                SpellCastingSystem.CastResolved -= Record;
+            }
+        }
+
+        /// <summary>
+        /// An empty pool refuses the word: no chant, no cast, no mana spent.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator Test_NotEnoughManaRefusesTheCast()
+        {
+            SpellId resolved = SpellId.None;
+            void Record(SpellCastingSystem.CastReport report) => resolved = report.Spell;
+            yield return null;
+
+            GameServices.PlayerStats.SpendMana(GameServices.PlayerStats.Mana);
+            SpellCastingSystem.CastResolved += Record;
+            try
+            {
+                Press(m_keyboard.vKey);
+                yield return null;
+                Press(m_keyboard.digit5Key);
+                yield return null;
+                Release(m_keyboard.digit5Key);
+                Release(m_keyboard.vKey);
+                yield return null;
+
+                Assert.IsFalse(m_player.GetComponent<SpellCastingSystem>().IsChanting,
+                    "A word the pool cannot pay for must not start a chant.");
+
+                yield return new WaitForSeconds(SpellTuning.KeyboardCastSeconds + 0.2f);
+                Assert.AreEqual(SpellId.None, resolved, "With no mana, nothing may be cast.");
             }
             finally
             {

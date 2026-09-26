@@ -178,6 +178,30 @@ missing it falls back to the values the game had when they were constants. `Spel
 in another profile for tests or balance experiments. Spell *behaviour* (what Ignis does) is still
 code in `PrimarySpellEffects` / `MisfireSpellEffects`.
 
+### Mana and the keyboard chant
+
+Added 2026-09-25 (#116, and the user's request to make mana useful rather than remove it).
+
+- **Every word costs mana.** The cost is `SpellWord.ManaCost` on each spell's asset in
+  `Assets/_Project/Data/Spells/`: Porta 10, Levo 12, Ignis 15, Frango 20, Somnus 20, Cadaver Surge
+  20, Tonitrus 25, Aurum Voco 30. A misfire costs the same as the word it garbled
+  (`SpellLexicon.ManaCostOf`). A fizzle costs nothing.
+- **The pool is the local player's `GameServices.PlayerStats`**, 100 points, refilled when the
+  caster subscribes (a new body in a raid) and regained at `SpellTuning.ManaRegenPerSecond`
+  (2.5/s, about 40 s from empty). The check and the spend happen on the caster's machine before
+  the cast is sent to the server, the same side the phrase is resolved on. A word the pool can't
+  cover is refused: nothing is cast and nothing is spent, and the caption says "not enough mana".
+- **A number-key cast is chanted before it fires.** `VoiceRecognitionResult.FromKeyboard` marks
+  a keyed phrase; `SpellCastingSystem` holds it for `SpellTuning.KeyboardCastSeconds` (1.5 s),
+  then spends the mana and casts, aimed wherever you look when it finishes. One chant at a time;
+  keys pressed during a chant are ignored. Speech casts the moment the phrase is recognised, so
+  the keys are a slight disadvantage, not the fastest way to cast.
+- **The HUD** shows mana under health (`HUDScreen`), each word's cost in the spellbook (dimmed when
+  you can't afford it), and a "Chanting IGNIS" bar under the crosshair (`RaidHudView.DrawChant`).
+- Tests: `CastingInputTests` presses the real keys and checks the chant delay, the spend, and the
+  refusal on an empty pool. The scene casting suites set `KeyboardCastSeconds` to 0 and refill
+  between casts, because they test that words resolve, not the chant.
+
 ## Invariants
 
 - **An intended spell never hits the caster; a misfire always aims at them.** Primary effects

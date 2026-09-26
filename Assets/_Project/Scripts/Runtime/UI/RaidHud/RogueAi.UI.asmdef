@@ -13,6 +13,7 @@
         "RogueAi.Voice",
         "RogueAi.Status",
         "Plunderspell.Core",
+        "Plunderspell.UI",
         "RogueAi.Items",
         "RogueAi.Player"
     ],

@@ -6,7 +6,8 @@
         "RogueAi.Core",
         "RogueAi.Acoustics",
         "PurrNet.Runtime",
-        "RogueAi.Items"
+        "RogueAi.Items",
+        "Plunderspell.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

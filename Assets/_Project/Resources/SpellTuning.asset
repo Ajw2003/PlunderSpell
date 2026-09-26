@@ -21,9 +21,16 @@ MonoBehaviour:
   WhisperNoiseStrength: 0.1
   NormalNoiseStrength: 0.45
   ShoutNoiseStrength: 1
+  ManaRegenPerSecond: 2.5
+  KeyboardCastSeconds: 1.5
   DefaultEffectRadius: 6
+  AimRange: 14
+  AimConeDegrees: 22
   IgnisDamagePerSecond: 12
   IgnisBurnSeconds: 4
+  FrangoDamage: 30
+  FrangoStaggerSeconds: 1.2
+  FrangoKnockback: 2.5
   TonitrusStunSeconds: 3
   TonitrusNoiseRadius: 18
   TonitrusNoiseStrength: 1

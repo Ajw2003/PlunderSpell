@@ -30,6 +30,16 @@ namespace RogueAi.Spells
         [Range(0f, 1f)] public float NormalNoiseStrength = 0.45f;
         [Range(0f, 1f)] public float ShoutNoiseStrength = 1.0f;
 
+        [Header("Mana")]
+        [Tooltip("Mana regained per second, all the time. Each spell's cost is on its SpellWord " +
+                 "asset (Assets/_Project/Data/Spells/).")]
+        [Min(0f)] public float ManaRegenPerSecond = 2.5f;
+
+        [Header("Keyboard casting")]
+        [Tooltip("Seconds a number-key cast is chanted before it fires. Longer than holding V and " +
+                 "saying the word, so keys are a slight disadvantage, not a speed advantage (#116).")]
+        [Min(0f)] public float KeyboardCastSeconds = 1.5f;
+
         [Header("All spells")]
         [Tooltip("Base effect radius in metres, before the volume multiplier.")]
         public float DefaultEffectRadius = 6f;

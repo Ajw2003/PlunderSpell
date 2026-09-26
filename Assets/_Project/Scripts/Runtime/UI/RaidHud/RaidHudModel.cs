@@ -92,7 +92,7 @@ namespace RogueAi.UI
         /// zero, because "0 gold" looks like a broken counter and "carry it here" does not.
         /// </summary>
         public string HaulText => HaulPieces == 0
-            ? "Haul: bring loot to the pad"
+            ? "Haul: bring loot to the portal"
             : $"Haul: {HaulWorth:N0} gold ({HaulPieces} piece{(HaulPieces == 1 ? string.Empty : "s")})";
 
         public static string FormatTime(float seconds)

@@ -42,6 +42,8 @@ namespace RogueAi.Spells
         public static float NoiseRadius(CastVolume volume) => Profile.NoiseRadius(volume);
         public static float NoiseStrength(CastVolume volume) => Profile.NoiseStrength(volume);
 
+        public static float ManaRegenPerSecond => Profile.ManaRegenPerSecond;
+        public static float KeyboardCastSeconds => Profile.KeyboardCastSeconds;
         public static float DefaultEffectRadius => Profile.DefaultEffectRadius;
         public static float AimRange => Profile.AimRange;
         public static float AimConeDegrees => Profile.AimConeDegrees;

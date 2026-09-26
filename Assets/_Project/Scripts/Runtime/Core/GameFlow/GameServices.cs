@@ -35,7 +35,7 @@ namespace Plunderspell.Core
             }
 
             GameState = new GameStateManager();
-            PlayerStats = new PlayerStats();
+            PlayerStats = new PlayerStats(maxMana: 100);
             Extraction = new ExtractionController(extractionDurationSeconds: 8f);
             IsInitialized = true;
         }

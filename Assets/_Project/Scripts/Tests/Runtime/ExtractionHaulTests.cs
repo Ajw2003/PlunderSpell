@@ -124,7 +124,7 @@ namespace RogueAi.Tests
         {
             var empty = new RaidHudModel(default, 0f, default, 0f, string.Empty, false,
                 string.Empty, false, 0f, 0f, string.Empty, 0f, 0);
-            Assert.AreEqual("Haul: bring loot to the pad", empty.HaulText,
+            Assert.AreEqual("Haul: bring loot to the portal", empty.HaulText,
                 "An empty pad should tell the player what to do, not show a zero.");
 
             var oneP = new RaidHudModel(default, 0f, default, 0f, string.Empty, false,

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Word: CADAVER SURGE
   spellId: 7
+  ManaCost: 20
   AltPronunciations:
   - CADAVER SURJ
   - CADVER SURGE
