@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// Everything the night looks like in one alarm state: fog, moon, ambient, sky, how the fires

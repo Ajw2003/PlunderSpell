@@ -151,7 +151,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee81d29afbf11a9478fb8230b135d419, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Items::Item
+  m_EditorClassIdentifier: Plunderspell.Items::Item
   _springRate: 120
   _dampingRatio: 0.9
   _rotationSpeed: 10
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b2863e9b62bfe054dde624400cad5af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootPickup
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootPickup
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cc187acd8d1fa74f838b8e9e0030bd0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootValue
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootValue
   m_item: {fileID: 0}
   m_worth: 50
   m_displayName: Loot

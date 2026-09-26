@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using RogueAi.Guards;
-using RogueAi.Raid;
+using Plunderspell.Guards;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Playtest
+namespace Plunderspell.Playtest
 {
     /// <summary>
     /// The bench's control panel: pick an enemy, a count and a starting alert state, then spawn.

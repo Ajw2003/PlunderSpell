@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Guards;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Raid;
-using RogueAi.Spells;
-using RogueAi.Status;
-using RogueAi.Voice;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
+using Plunderspell.Spells;
+using Plunderspell.Status;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// End-to-end tests of the core concept: speak a word, wake the castle, carry the treasure out,

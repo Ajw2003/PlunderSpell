@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Resolves a <see cref="SpellId"/> to the <see cref="ISpellEffect"/> that carries it out.

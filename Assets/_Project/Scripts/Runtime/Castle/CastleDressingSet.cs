@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>What a piece of dressing is for.</summary>
     public enum DressingKind
@@ -26,7 +26,7 @@ namespace RogueAi.Castle
     /// and placed by <see cref="CastleDressingPlanner"/>. Dressing is visual and cover: it never
     /// holds loot.
     /// </summary>
-    [CreateAssetMenu(fileName = "CastleDressingSet", menuName = "RogueAi/Castle/Dressing Set")]
+    [CreateAssetMenu(fileName = "CastleDressingSet", menuName = "Plunderspell/Castle/Dressing Set")]
     public class CastleDressingSet : ScriptableObject
     {
         [Serializable]

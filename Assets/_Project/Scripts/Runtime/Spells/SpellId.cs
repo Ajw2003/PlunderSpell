@@ -1,4 +1,4 @@
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Canonical identifier for every spell (and misfire outcome) in Plunderspell.

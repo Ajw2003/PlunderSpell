@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e00a8f811596efa4d9e424a42b527fcf, type: 3}
   m_Name: CastleDressingSet
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.CastleDressingSet
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.CastleDressingSet
   Entries:
   - Id: CourtyardCloisterGarth
     Kind: 2

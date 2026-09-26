@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Loot
+namespace Plunderspell.Loot
 {
     /// <summary>
     /// Brightens a lootable object while the player is looking at it, so "you can pick this up" is

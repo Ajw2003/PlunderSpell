@@ -1,8 +1,8 @@
-using RogueAi.Loot;
+using Plunderspell.Loot;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Gives every loot prefab a <see cref="LootValue"/>, carrying across the <c>LootItem</c> its

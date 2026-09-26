@@ -1,11 +1,11 @@
 {
-    "name": "RogueAi.Items",
+    "name": "Plunderspell.Items",
     "rootNamespace": "",
     "references": [
-        "RogueAi.Core",
-        "RogueAi.Acoustics",
+        "Plunderspell.Foundation",
+        "Plunderspell.Acoustics",
         "Unity.InputSystem",
-        "RogueAi.Inventory"
+        "Plunderspell.Inventory"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

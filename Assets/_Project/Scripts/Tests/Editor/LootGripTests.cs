@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Loot;
+using Plunderspell.Loot;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// Guards how a carried item sits in the hand: upright, held at its grip point (or its mesh

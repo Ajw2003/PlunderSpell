@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using Interfaces;
 using NUnit.Framework;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Loot;
-using RogueAi.Spells;
-using RogueAi.Status;
-using RogueAi.Voice;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Loot;
+using Plunderspell.Spells;
+using Plunderspell.Status;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the spell-effect layer: that a resolved cast actually changes the world, that a

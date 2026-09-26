@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.Inventory;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Inventory;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// Enemies spawn only in their own Age (docs/plans/artbible-enemies-in-engine.md, decision 2A,

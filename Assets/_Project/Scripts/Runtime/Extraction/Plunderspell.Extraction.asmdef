@@ -1,8 +1,11 @@
 {
-    "name": "RogueAi.Status",
-    "rootNamespace": "RogueAi.Status",
+    "name": "Plunderspell.Extraction",
+    "rootNamespace": "Plunderspell.Extraction",
     "references": [
-        "RogueAi.Core"
+        "PurrNet.Runtime",
+        "Plunderspell.Loot",
+        "Plunderspell.Foundation",
+        "Plunderspell.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

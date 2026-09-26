@@ -1,10 +1,9 @@
 {
-    "name": "RogueAi.Voice",
-    "rootNamespace": "RogueAi.Voice",
+    "name": "Plunderspell.Lair",
+    "rootNamespace": "Plunderspell.Lair",
     "references": [
-        "PurrNet.Runtime",
-        "Plunderspell.Core",
-        "Unity.InputSystem"
+        "Plunderspell.Extraction",
+        "Plunderspell.Inventory"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

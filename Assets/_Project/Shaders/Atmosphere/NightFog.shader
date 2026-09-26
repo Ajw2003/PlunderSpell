@@ -1,4 +1,4 @@
-// Full-screen fog for the castle at night. Drawn by RogueAi.Atmosphere.NightFogFeature after the
+// Full-screen fog for the castle at night. Drawn by Plunderspell.Atmosphere.NightFogFeature after the
 // opaques, blended over the camera colour as scene * transmittance + in-scattered light.
 Shader "Hidden/Plunderspell/NightFog"
 {

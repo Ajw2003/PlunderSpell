@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Spells.Vfx
+namespace Plunderspell.Spells.Vfx
 {
     /// <summary>How a spell shows itself.</summary>
     public enum SpellVisualStyle

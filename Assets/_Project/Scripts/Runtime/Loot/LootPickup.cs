@@ -2,7 +2,7 @@ using Interfaces;
 using PurrNet;
 using UnityEngine;
 
-namespace RogueAi.Loot
+namespace Plunderspell.Loot
 {
     /// <summary>Resolved carry requirement for a pickup attempt.</summary>
     public enum CarryMode

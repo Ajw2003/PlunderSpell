@@ -1,7 +1,7 @@
-using RogueAi.Voice;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Every number that decides how a cast feels, as an asset a designer edits in the Inspector

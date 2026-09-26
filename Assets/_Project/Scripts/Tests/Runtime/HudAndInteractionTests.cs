@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Alarm;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Raid;
-using RogueAi.UI;
+using Plunderspell.Alarm;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
+using Plunderspell.UI;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the two things standing between working systems and a playable game: being able to

@@ -3,7 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// How a held item follows the beam (#144, docs/plans/carry-like-repo.md): it trails a moving
@@ -272,7 +272,7 @@ namespace RogueAi.Tests
             foreach (string guid in UnityEditor.AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/_Project/Prefabs/Loot" }))
             {
                 var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(UnityEditor.AssetDatabase.GUIDToAssetPath(guid));
-                var pickup = prefab.GetComponent<RogueAi.Loot.LootPickup>();
+                var pickup = prefab.GetComponent<Plunderspell.Loot.LootPickup>();
                 if (pickup == null || pickup.Data == null || !pickup.Data.RequiresDualCarry)
                     continue;
 

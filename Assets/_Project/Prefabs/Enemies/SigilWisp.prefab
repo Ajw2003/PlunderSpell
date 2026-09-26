@@ -148,7 +148,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb201dad623c262478779bf36ad01883, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Status::RogueAi.Status.StatusEffectReceiver
+  m_EditorClassIdentifier: Plunderspell.Status::Plunderspell.Status.StatusEffectReceiver
   _healthSource: {fileID: 0}
   _body: {fileID: 0}
 --- !u!114 &6370046722780785423
@@ -162,7 +162,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7316eefc8d4f86c43b94afb39386487a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Guards::RogueAi.Guards.CastleGuard
+  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.CastleGuard
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0

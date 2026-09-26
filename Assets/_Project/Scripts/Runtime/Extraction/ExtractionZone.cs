@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Interfaces;
 using Plunderspell.Core;
 using PurrNet;
-using RogueAi.Loot;
+using Plunderspell.Loot;
 using UnityEngine;
 
-namespace RogueAi.Extraction
+namespace Plunderspell.Extraction
 {
     /// <summary>
     /// A trigger-collider "portal" that ends a raid. While the raid timer counts down on the server,

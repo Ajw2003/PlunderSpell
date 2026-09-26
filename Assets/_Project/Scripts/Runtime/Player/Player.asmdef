@@ -1,11 +1,11 @@
 {
-    "name": "RogueAi.Player",
+    "name": "Plunderspell.Player",
     "rootNamespace": "",
     "references": [
-        "RogueAi.Core",
-        "RogueAi.Items",
-        "RogueAi.Voice",
-        "RogueAi.Spells",
+        "Plunderspell.Foundation",
+        "Plunderspell.Items",
+        "Plunderspell.Voice",
+        "Plunderspell.Spells",
         "Unity.InputSystem",
         "Plunderspell.Core"
     ],

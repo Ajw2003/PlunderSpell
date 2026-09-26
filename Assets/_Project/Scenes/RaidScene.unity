@@ -162,7 +162,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 455b9c249798d3d43ae414de632ec438, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Net::RogueAi.Net.DamageRelay
+  m_EditorClassIdentifier: Plunderspell.Net::Plunderspell.Net.DamageRelay
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25d7e4b944bad4847aa929334772d84c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.UI::RogueAi.UI.RaidHudView
+  m_EditorClassIdentifier: Plunderspell.RaidHud::Plunderspell.UI.RaidHudView
   _visible: 1
   _showSpellbook: 1
 --- !u!114 &74181998
@@ -216,7 +216,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0405af90e9c1dd348b0e573fb9546995, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.UI::RogueAi.UI.RaidHudPresenter
+  m_EditorClassIdentifier: Plunderspell.RaidHud::Plunderspell.UI.RaidHudPresenter
   _director: {fileID: 1029301707}
   _extractionZone: {fileID: 1730551205}
   _alarm: {fileID: 176129642}
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eedd0ce2df553dc4d8910bee69b62438, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.UI::RogueAi.UI.CrosshairView
+  m_EditorClassIdentifier: Plunderspell.RaidHud::Plunderspell.UI.CrosshairView
   _visible: 1
 --- !u!1 &139000813
 GameObject:
@@ -315,7 +315,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3abdccb2859aa4af52595d16fe1b80c5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Alarm::RogueAi.Alarm.AlarmFSMManager
+  m_EditorClassIdentifier: Plunderspell.Alarm::Plunderspell.Alarm.AlarmFSMManager
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -402,7 +402,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 141ebbc7a1607ba41a35b6a2556d4683, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Net::RogueAi.Net.CoopSession
+  m_EditorClassIdentifier: Plunderspell.Net::Plunderspell.Net.CoopSession
   _manager: {fileID: 194298983}
   _localTransport: {fileID: 194298981}
   _udpTransport: {fileID: 194298980}
@@ -591,7 +591,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac8255aa151d96a45bc758d767bf17b8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.GuardSpawner
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.GuardSpawner
   _roster: {fileID: 11400000, guid: 13b9eb649aa2acf4bb2be962b0d7622e, type: 2}
   _guardPrefab: {fileID: 0}
   _densityScale: 0.5
@@ -754,7 +754,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6dc0b013fe4d80144b6ff5cd87a1dc91, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Items::ItemManager
+  m_EditorClassIdentifier: Plunderspell.Items::ItemManager
   _itemLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -854,7 +854,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7af2b558db27614468e28f3c037171bc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Net::RogueAi.Net.CarryBeamRelay
+  m_EditorClassIdentifier: Plunderspell.Net::Plunderspell.Net.CarryBeamRelay
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -907,7 +907,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a54c6a0effcbea49b353c1f1ca099f3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Net::RogueAi.Net.ShotRelay
+  m_EditorClassIdentifier: Plunderspell.Net::Plunderspell.Net.ShotRelay
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -945,7 +945,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3e515c15d6fcb8e59644ee2f11e0765, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.ProceduralCastleGenerator
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.ProceduralCastleGenerator
   registry: {fileID: 11400000, guid: d89396c4b851d67c8a7be3752b5d9f73, type: 2}
   m_dressing: {fileID: 11400000, guid: 4fb2f60de7f278441abbb91421f26c82, type: 2}
   defaultSeed: 12345
@@ -998,7 +998,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 167b13a50a45d5d43b5fe6773c102cb4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Spells::RogueAi.Spells.Vfx.SpellVfxDirector
+  m_EditorClassIdentifier: Plunderspell.Spells::Plunderspell.Spells.Vfx.SpellVfxDirector
   m_boltPrefab: {fileID: 8541296174138858501, guid: eef694f7f1ca617469908d761fde4588, type: 3}
   m_boltSpeed: 24
   m_burstDuration: 0.45
@@ -1045,7 +1045,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2da1c63157785c561479418788f743e4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Lair::RogueAi.Lair.LairHubManager
+  m_EditorClassIdentifier: Plunderspell.Lair::Plunderspell.Lair.LairHubManager
   SelectedEra: 0
   DebtIncreasePerSession: 50
 --- !u!4 &998072464
@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a016cbcb8ad8f9745a89fcd4e4d4377d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.CastleFireSpawner
+  m_EditorClassIdentifier: Plunderspell.Atmosphere::Plunderspell.Atmosphere.CastleFireSpawner
   _director: {fileID: 1029301707}
   _generator: {fileID: 865774666}
   _sconce: {fileID: 9005441603259401507, guid: 5fe390a1de3b02f45b4a8d969cd5a115, type: 3}
@@ -1110,7 +1110,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36616a88940f97947a121102a2214ab3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.CastleAtmosphere
+  m_EditorClassIdentifier: Plunderspell.Atmosphere::Plunderspell.Atmosphere.CastleAtmosphere
   _profile: {fileID: 11400000, guid: 0ee037222788b3845951cd22cad5f481, type: 2}
   _moon: {fileID: 1280843096}
   _alarm: {fileID: 176129642}
@@ -1162,7 +1162,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63c079f8d901be048ae27a23fa8ce5db, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.RaidDirector
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.RaidDirector
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -1194,7 +1194,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8028b696a4d9b84b9d45d7e6a23e575, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.RaidBootstrapper
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.RaidBootstrapper
   _autoStart: 0
   _era: 1
   _startDelay: 0.25
@@ -1275,7 +1275,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b48b288594878bb498682f10a12821e6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.CastleNavMeshBaker
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.CastleNavMeshBaker
 --- !u!114 &1179797331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1579,7 +1579,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78120cc1f6d0e9548a3fff5ec2a7cd87, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.CastleLockdown
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.CastleLockdown
   _alarm: {fileID: 176129642}
 --- !u!4 &1575185230
 Transform:
@@ -1625,7 +1625,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 144ccd4fb4876f343855a47fac1cb002, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.LootSpawner
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.LootSpawner
   _table: {fileID: 11400000, guid: 38cc89841a1a40346814c46029d7277e, type: 2}
   _container: {fileID: 0}
   m_settleDelay: 0.5
@@ -1640,7 +1640,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b076cf6fea9ce2449b1353e9710a2acc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.ConjuredGoldSpawner
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.ConjuredGoldSpawner
   _goldTemplate: {fileID: 11400000, guid: 4bbfbfd75edca4c4eaac74de34957f95, type: 2}
   _goldPrefab: {fileID: 3106342062324146821, guid: cea5b906054d6b5429e3aaddc886fd08, type: 3}
 --- !u!4 &1666543510
@@ -1687,7 +1687,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd8e684c4262f6d5917706017653d4ee, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Extraction::RogueAi.Extraction.ExtractionZone
+  m_EditorClassIdentifier: Plunderspell.Extraction::Plunderspell.Extraction.ExtractionZone
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0

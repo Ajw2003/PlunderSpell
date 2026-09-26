@@ -1,13 +1,13 @@
 # Voice
 
-The first pillar of the pitch: casting is speaking, not pressing a button. `RogueAi.Voice`
+The first pillar of the pitch: casting is speaking, not pressing a button. `Plunderspell.Voice`
 provides that input and nothing downstream of it — spell resolution belongs to `Spells`.
 
 ## What it owns
 
 Turning a held key + microphone audio into a `VoiceRecognitionResult` (normalised text,
 confidence, RMS amplitude, loudness bucket) and handing it to whatever subscribes
-(`SpellCastingSystem`, in `RogueAi.Spells`). Nothing else — Voice does not know what a spell word
+(`SpellCastingSystem`, in `Plunderspell.Spells`). Nothing else — Voice does not know what a spell word
 means or what happens when one misfires.
 
 ## How it works
@@ -62,7 +62,7 @@ fail. Tune a word by editing its `SpellWord` asset and re-running the test.
 
 - **`PushToCastController`** is the hold-to-talk driver: press opens the mic, release closes it —
   closing is what triggers recognition. It only drives listening and visual feedback
-  (`OnCastingStateChanged`); it deliberately does not depend on `RogueAi.Spells` (dependency runs
+  (`OnCastingStateChanged`); it deliberately does not depend on `Plunderspell.Spells` (dependency runs
   the other way), so a UI/animation change here can never touch spell logic.
 - **`VoiceUtility`** is shared by both providers so they classify identically: `ClassifyVolume`
   buckets RMS into `Whisper` (< 0.1) / `Normal` / `Shout` (> 0.4); `Normalize` upper-cases, strips

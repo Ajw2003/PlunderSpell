@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>The kinds of fire a castle burns (docs/plans/night-atmosphere.md, section 2).</summary>
     public enum FireKind

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using RogueAi.Alarm;
-using RogueAi.Castle;
+using Plunderspell.Alarm;
+using Plunderspell.Castle;
 using UnityEngine;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// One fire: a stylised flame, embers, a flickering point light and a <see cref="LightSource"/>

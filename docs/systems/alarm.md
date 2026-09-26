@@ -1,7 +1,7 @@
 # Alarm & Acoustics
 
-The third named pillar of the pitch: "the alarm latches and never decays." `RogueAi.Alarm` is the
-state that pillar lives in; `RogueAi.Acoustics` is how anything gets to it. Bundled here because
+The third named pillar of the pitch: "the alarm latches and never decays." `Plunderspell.Alarm` is the
+state that pillar lives in; `Plunderspell.Acoustics` is how anything gets to it. Bundled here because
 neither means anything without the other — a noise nobody hears is inert, and an alarm with
 nothing feeding it never moves.
 

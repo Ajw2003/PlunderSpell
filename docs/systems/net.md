@@ -1,7 +1,7 @@
 # Net
 
 How a session starts, how a friend joins it over Steam, and how each machine gets its own body.
-Code: `Assets/_Project/Scripts/Runtime/Net/` (`RogueAi.Net`), plus the networked paths in
+Code: `Assets/_Project/Scripts/Runtime/Net/` (`Plunderspell.Net`), plus the networked paths in
 `RaidDirector`, `PlayerStateMachine` and the menus. Plan and survey:
 [`docs/plans/steam-coop-raid.md`](../plans/steam-coop-raid.md).
 

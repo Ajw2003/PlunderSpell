@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using RogueAi.Castle;
-using RogueAi.Guards;
-using RogueAi.Inventory;
-using RogueAi.Loot;
-using RogueAi.Raid;
-using RogueAi.Status;
+using Plunderspell.Castle;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
+using Plunderspell.Status;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Turns the per-era art that exists so far into raid content: prefabs, loot items, loot tables,

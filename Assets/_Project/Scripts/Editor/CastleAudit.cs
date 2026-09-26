@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using RogueAi.Castle;
-using RogueAi.Loot;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Walks generated castles the way a player would and reports what is broken (castle revamp,

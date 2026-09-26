@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Interfaces;
-using RogueAi.Acoustics;
+using Plunderspell.Acoustics;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Base for the misfires. The rule that makes them punishing is here rather than repeated in

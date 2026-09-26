@@ -104,7 +104,7 @@ Found along the way:
   the ArtForge models' 270° X import correction. Reproduced in the Editor: the Arm Reliquary,
   0.52 m tall as placed, was 0.14 m tall and 0.52 m long in the hand. Fixed with the grip change.
 - **Removing `PlayerInventory` broke era replication.** It was the only network class in
-  `RogueAi.Inventory`, and PurrNet generates a type's serializer only in the assembly that declares
+  `Plunderspell.Inventory`, and PurrNet generates a type's serializer only in the assembly that declares
   it (`Assets/PurrNet/Codegen/GenerateSerializersProcessor.cs:95`) and only if that assembly sends
   it. Without it, `RaidSceneCastingTests` failed with "Failed to write value of type
   HistoricalEra". The attribute on `RaidDirector` did not help (wrong assembly). Verified both

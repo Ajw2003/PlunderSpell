@@ -2,7 +2,7 @@ using Interfaces;
 using PurrNet;
 using UnityEngine;
 
-namespace RogueAi.Net
+namespace Plunderspell.Net
 {
     /// <summary>
     /// Sends each hit to the machine whose copy of the target's health is the real one, by
@@ -73,7 +73,7 @@ namespace RogueAi.Net
         private static IHealth HealthOf(NetworkIdentity victim) =>
             victim != null ? victim.GetComponentInParent<IHealth>() ?? victim.GetComponentInChildren<IHealth>() : null;
 
-        // DamageKind travels as an int: it lives in RogueAi.Core, whose types PurrNet's code
+        // DamageKind travels as an int: it lives in Plunderspell.Foundation, whose types PurrNet's code
         // generation does not register (the same trap as CastVolume in the cast RPC).
         [ServerRpc(requireOwnership: false)]
         private void HitOnServer(NetworkIdentity victim, float amount, NetworkIdentity source, NetworkIdentity instigator,

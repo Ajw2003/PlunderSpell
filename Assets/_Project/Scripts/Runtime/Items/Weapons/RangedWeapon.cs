@@ -1,5 +1,5 @@
 using Interfaces;
-using RogueAi.Acoustics;
+using Plunderspell.Acoustics;
 using UnityEngine;
 
 /// <summary>One bolt, then a long reload. See docs/Decisions.md, "A ranged shot spawns ahead of the
@@ -62,7 +62,7 @@ public class RangedWeapon : MonoBehaviour
 
     /// <summary>
     /// Raised on the firing machine after a real shot: (weapon, where the shot left the muzzle, its
-    /// direction). RogueAi.Net shows the same shot on every other machine with
+    /// direction). Plunderspell.Net shows the same shot on every other machine with
     /// <see cref="SpawnCosmeticShot"/>.
     /// </summary>
     public static event System.Action<RangedWeapon, Vector3, Vector3> Fired;

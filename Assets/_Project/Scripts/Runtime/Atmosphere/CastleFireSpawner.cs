@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using RogueAi.Castle;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// Lights the castle: whenever the raid builds a castle, one <see cref="FireSource"/> per fire

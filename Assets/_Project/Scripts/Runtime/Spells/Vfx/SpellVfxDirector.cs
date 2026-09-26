@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Spells.Vfx
+namespace Plunderspell.Spells.Vfx
 {
     /// <summary>
     /// Turns a resolved cast into something you can see. Listens to

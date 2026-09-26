@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d2bc58b041d0984486880217349b189, type: 3}
   m_Name: NightAtmosphere
-  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.NightAtmosphereProfile
+  m_EditorClassIdentifier: Plunderspell.Atmosphere::Plunderspell.Atmosphere.NightAtmosphereProfile
   TransitionSeconds: 2
   Calm:
     FogColor: {r: 0.15, g: 0.1, b: 0.068, a: 1}

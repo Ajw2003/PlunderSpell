@@ -1,15 +1,15 @@
 using System;
 using Interfaces;
 using PurrNet;
-using RogueAi.Alarm;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Guards;
-using RogueAi.Inventory;
-using RogueAi.Lair;
+using Plunderspell.Alarm;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Runs the game loop: Lair → castle → raid → extraction → Lair, with the takings applied to the

@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// The team arrives by portal at a seeded spot inside the walls, leaves by the same portal, and

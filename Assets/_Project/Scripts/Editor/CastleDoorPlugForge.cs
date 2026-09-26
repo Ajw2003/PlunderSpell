@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
-using RogueAi.Castle;
+using Plunderspell.Castle;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Authors one door-plug prefab per enclosed zone from the FBX the asset pipeline exports, and

@@ -1,8 +1,8 @@
 {
-    "name": "RogueAi.Inventory",
-    "rootNamespace": "RogueAi.Inventory",
+    "name": "Plunderspell.Status",
+    "rootNamespace": "Plunderspell.Status",
     "references": [
-        "PurrNet.Runtime"
+        "Plunderspell.Foundation"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

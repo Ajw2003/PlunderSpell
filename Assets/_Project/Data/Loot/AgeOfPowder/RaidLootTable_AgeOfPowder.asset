@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b7e93a488918d94496681a46807bcea, type: 3}
   m_Name: RaidLootTable_AgeOfPowder
-  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.RaidLootTable
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.RaidLootTable
   Entries:
   - Item: {fileID: 11400000, guid: 4c932b55e9318ed4e8106b2c87ecc739, type: 2}
     Zone: 0

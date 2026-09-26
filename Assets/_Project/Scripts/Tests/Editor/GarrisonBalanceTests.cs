@@ -1,9 +1,9 @@
 using NUnit.Framework;
-using RogueAi.Guards;
-using RogueAi.Raid;
+using Plunderspell.Guards;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// The garrison's balance knobs on <see cref="GuardSpawner"/>: guards spawn slower and hit softer

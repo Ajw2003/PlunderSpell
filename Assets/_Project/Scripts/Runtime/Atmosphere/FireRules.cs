@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using RogueAi.Alarm;
-using RogueAi.Castle;
+using Plunderspell.Alarm;
+using Plunderspell.Castle;
 using UnityEngine;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// How the castle's fires answer the alarm (docs/plans/night-atmosphere.md, section 2), and

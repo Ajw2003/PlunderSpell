@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Runs PlayMode tests in the connected Unity Editor and waits for the result.
-# Usage: bash Tools/Unity/run_tests.sh RogueAi.Tests.CastleArrivalTests [PlayMode|EditMode]
+# Usage: bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleArrivalTests [PlayMode|EditMode]
 set -euo pipefail
 
 filter="${1:?usage: run_tests.sh <test or class full name> [PlayMode|EditMode]}"

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Interfaces;
 using UnityEngine;
 
-namespace RogueAi.UI
+namespace Plunderspell.UI
 {
     // doc-ref 7f7c docs/systems/damage.md
     /// <summary>
@@ -106,13 +106,13 @@ namespace RogueAi.UI
         private void OnEnable()
         {
             Damage.Dealt += OnDamage;
-            RogueAi.Loot.LootValue.Ruined += OnLootRuined;
+            Plunderspell.Loot.LootValue.Ruined += OnLootRuined;
         }
 
         private void OnDisable()
         {
             Damage.Dealt -= OnDamage;
-            RogueAi.Loot.LootValue.Ruined -= OnLootRuined;
+            Plunderspell.Loot.LootValue.Ruined -= OnLootRuined;
             foreach (Flash flash in _flashes.Values)
                 Restore(flash);
             _flashes.Clear();
@@ -182,7 +182,7 @@ namespace RogueAi.UI
         }
 
         /// <summary>A valuable broke: say so where it happened, with what it cost.</summary>
-        private void OnLootRuined(RogueAi.Loot.LootValue piece, float worthLost)
+        private void OnLootRuined(Plunderspell.Loot.LootValue piece, float worthLost)
         {
             if (piece == null)
                 return;

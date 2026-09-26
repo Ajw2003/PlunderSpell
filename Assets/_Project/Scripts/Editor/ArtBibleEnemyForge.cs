@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RogueAi.Castle;
-using RogueAi.Guards;
-using RogueAi.Raid;
-using RogueAi.Status;
+using Plunderspell.Castle;
+using Plunderspell.Guards;
+using Plunderspell.Raid;
+using Plunderspell.Status;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     // doc-ref d1ef docs/systems/raid-scene-assembly.md
     /// <summary>

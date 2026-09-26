@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Measures where a model's geometry actually is, rather than where Unity's bounding boxes say.

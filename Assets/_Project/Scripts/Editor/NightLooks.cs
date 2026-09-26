@@ -1,9 +1,9 @@
-using RogueAi.Atmosphere;
+using Plunderspell.Atmosphere;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// The tuned numbers for the night's four states, written into the profile by

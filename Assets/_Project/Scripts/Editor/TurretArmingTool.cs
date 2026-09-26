@@ -1,8 +1,8 @@
-using RogueAi.Guards;
+using Plunderspell.Guards;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Hands the HexTurret a projectile, which is what makes it a turret rather than a guard that

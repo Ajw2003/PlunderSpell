@@ -2,7 +2,7 @@ using System;
 using Interfaces;
 using UnityEngine;
 
-namespace RogueAi.Status
+namespace Plunderspell.Status
 {
     /// <summary>
     /// One component that makes anything a valid target for the status-inflicting spells: burning

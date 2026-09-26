@@ -1,10 +1,10 @@
 # Raid
 
 The game loop: Lair → castle → haul → extraction → Lair, with the takings applied to the debt.
-Everything else in the project is a system; `RogueAi.Raid` is what makes them a game.
+Everything else in the project is a system; `Plunderspell.Raid` is what makes them a game.
 
-Assemblies: `RogueAi.Raid` (loop, spawning), `RogueAi.Guards` (the garrison), `RogueAi.UI` (HUD),
-`RogueAi.Status` (spell-inflicted conditions), `RogueAi.Playtest` (a body to walk around in).
+Assemblies: `Plunderspell.Raid` (loop, spawning), `Plunderspell.Guards` (the garrison), `Plunderspell.RaidHud` (HUD),
+`Plunderspell.Status` (spell-inflicted conditions), `Plunderspell.Playtest` (a body to walk around in).
 
 ## How it works
 

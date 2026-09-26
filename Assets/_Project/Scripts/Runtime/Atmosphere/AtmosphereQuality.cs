@@ -1,7 +1,7 @@
 using Plunderspell.Core;
 using UnityEngine;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>The three graphics levels (docs/plans/night-atmosphere.md, section 5).</summary>
     public enum QualityTier

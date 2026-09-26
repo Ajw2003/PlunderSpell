@@ -28,10 +28,10 @@ The game currently only runs inside the game engine editor. There is no way to c
     (`Assets/_Project/Scripts/Editor/PlayerBuilder.cs`.)
 *   [x] A button or menu option exists to start the build process.
     (`Tools/Plunderspell/Build Standalone Player`, and `PlayerBuilder.Build()` is public so it can
-    also be invoked headlessly via `-executeMethod RogueAi.EditorTools.PlayerBuilder.Build`.)
+    also be invoked headlessly via `-executeMethod Plunderspell.EditorTools.PlayerBuilder.Build`.)
 *   [x] A standalone version of the game has been created successfully.
     (Ran for real: `Unity.exe -batchmode -nographics -quit -projectPath . -executeMethod
-    RogueAi.EditorTools.PlayerBuilder.Build`, against the real Editor install at
+    Plunderspell.EditorTools.PlayerBuilder.Build`, against the real Editor install at
     `C:\Program Files\Unity\Hub\Editor\6000.3.15f1`, matching this project's exact version.
     Produced `Build/Windows/Plunderspell.exe` + `Plunderspell_Data/` — 121MB, a real
     `BuildPipeline.BuildPlayer` output, not gitignored-and-faked. `Build/` is already covered by
@@ -40,7 +40,7 @@ The game currently only runs inside the game engine editor. There is no way to c
     (Partially verified. Launched `Plunderspell.exe -batchmode -nographics`: the engine
     initializes, PhysX loads, all managed assemblies load, and real game code runs —
     `[VoiceServiceLocator] Auto-registered MockVoiceInputService` is a log line from
-    `RogueAi.Voice`, not engine boilerplate, so `RaidScene.unity` did load and at least one
+    `Plunderspell.Voice`, not engine boilerplate, so `RaidScene.unity` did load and at least one
     `Awake()` ran. **Not verified**: that the main menu actually renders, because this session has
     no display/GPU (`-nographics` forces a `NullGfxDevice`) — there is no way to see or screenshot
     UI here. Needs a real machine with a display for the visual half of this check.)

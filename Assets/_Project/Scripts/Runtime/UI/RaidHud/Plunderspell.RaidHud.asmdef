@@ -1,0 +1,29 @@
+{
+    "name": "Plunderspell.RaidHud",
+    "rootNamespace": "Plunderspell.UI",
+    "references": [
+        "PurrNet.Runtime",
+        "Plunderspell.Foundation",
+        "Plunderspell.Alarm",
+        "Plunderspell.Extraction",
+        "Plunderspell.Lair",
+        "Plunderspell.Loot",
+        "Plunderspell.Raid",
+        "Plunderspell.Spells",
+        "Plunderspell.Voice",
+        "Plunderspell.Status",
+        "Plunderspell.Core",
+        "Plunderspell.UI",
+        "Plunderspell.Items",
+        "Plunderspell.Player"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

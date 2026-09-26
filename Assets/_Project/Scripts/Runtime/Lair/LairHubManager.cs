@@ -1,7 +1,7 @@
-using RogueAi.Inventory;
+using Plunderspell.Inventory;
 using UnityEngine;
 
-namespace RogueAi.Lair
+namespace Plunderspell.Lair
 {
     /// <summary>
     /// Owns the persistent between-raids "Lair" meta-progression: era selection, the debt owed to the

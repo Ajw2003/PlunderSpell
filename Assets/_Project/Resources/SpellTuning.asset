@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5dc7dd3c4e03004b82143ab10c15a50, type: 3}
   m_Name: SpellTuning
-  m_EditorClassIdentifier: RogueAi.Spells::RogueAi.Spells.SpellTuningProfile
+  m_EditorClassIdentifier: Plunderspell.Spells::Plunderspell.Spells.SpellTuningProfile
   WhisperPower: 0.5
   NormalPower: 1
   ShoutPower: 1.75

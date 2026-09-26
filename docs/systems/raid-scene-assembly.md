@@ -170,10 +170,10 @@ generates anything. The garrison is handed the Age explicitly
 (`GuardSpawner.SpawnFor(castle, seed, era)` → `EnemyRoster.PickForZone(zone, era, rng)`).
 
 `RaidContext` (`Runtime/Inventory/RaidContext.cs`) is the accessor for code that sits *below* the
-raid and cannot be handed the Age: it lives in `RogueAi.Inventory`, beside `HistoricalEra`, because
-that assembly depends only on PurrNet, so `RogueAi.Castle` can reference it without a cycle (Raid
+raid and cannot be handed the Age: it lives in `Plunderspell.Inventory`, beside `HistoricalEra`, because
+that assembly depends only on PurrNet, so `Plunderspell.Castle` can reference it without a cycle (Raid
 already depends on Castle). That is how the era rooms (`docs/plans/era-castle-rooms.md`, "Not in this
-pass", step 1) will read the Age: add `RogueAi.Inventory` to `RogueAi.Castle.asmdef` and read
+pass", step 1) will read the Age: add `Plunderspell.Inventory` to `Plunderspell.Castle.asmdef` and read
 `RaidContext.Current.Era` in `ProceduralCastleGenerator`. The room filtering itself is not built.
 `ReturnToLair` clears the context.
 

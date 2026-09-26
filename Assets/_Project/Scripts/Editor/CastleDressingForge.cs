@@ -1,11 +1,11 @@
 using System.IO;
 using System.Linq;
-using RogueAi.Castle;
+using Plunderspell.Castle;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Turns the pipeline's dressing models (Assets/_Project/Art/Models/Castle/Dressing) into prefabs

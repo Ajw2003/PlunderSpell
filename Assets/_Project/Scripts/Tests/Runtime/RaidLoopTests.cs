@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the core loop: Lair → castle → haul → extraction → debt, and the determinism that
@@ -29,7 +29,7 @@ namespace RogueAi.Tests
         [TearDown]
         public void TearDown()
         {
-            RogueAi.Guards.CastleGuard.ClearIntruders();
+            Plunderspell.Guards.CastleGuard.ClearIntruders();
             foreach (Object o in _spawned)
                 if (o != null)
                     Object.DestroyImmediate(o);
@@ -397,14 +397,14 @@ namespace RogueAi.Tests
             RaidDirector director = MakeDirector(out _, out ExtractionZone zone, out _);
 
             var playerGo = Track(new GameObject("Player"));
-            playerGo.AddComponent<RogueAi.Guards.IntruderTag>();
+            playerGo.AddComponent<Plunderspell.Guards.IntruderTag>();
 
             director.SetFixedSeed(55);
             director.StartRaid(HistoricalEra.BronzeAge);
             zone.ResolveLocally();
 
             Assert.Contains(playerGo.transform,
-                (System.Collections.ICollection)RogueAi.Guards.CastleGuard.Intruders,
+                (System.Collections.ICollection)Plunderspell.Guards.CastleGuard.Intruders,
                 "A surviving player must still be visible to guards in the next raid.");
         }
 

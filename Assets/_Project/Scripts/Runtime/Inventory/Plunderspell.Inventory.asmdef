@@ -1,11 +1,8 @@
 {
-    "name": "RogueAi.Extraction",
-    "rootNamespace": "RogueAi.Extraction",
+    "name": "Plunderspell.Inventory",
+    "rootNamespace": "Plunderspell.Inventory",
     "references": [
-        "PurrNet.Runtime",
-        "RogueAi.Loot",
-        "RogueAi.Core",
-        "Plunderspell.Core"
+        "PurrNet.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

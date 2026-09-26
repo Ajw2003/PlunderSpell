@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Acoustics
+namespace Plunderspell.Acoustics
 {
     /// <summary>Category of a noise event — drives alarm weighting and enemy reaction copy.</summary>
     public enum NoiseType

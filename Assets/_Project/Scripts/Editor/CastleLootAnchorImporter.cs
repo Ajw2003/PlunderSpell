@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
-using RogueAi.Castle;
+using Plunderspell.Castle;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Copies the loot anchors the asset pipeline writes (Assets/_Project/Data/Castle/CastleLootAnchors.json,

@@ -1,4 +1,4 @@
-namespace RogueAi.Guards
+namespace Plunderspell.Guards
 {
     /// <summary>What a guard just did to someone. Carried by <see cref="GuardAttackSignal"/>.</summary>
     public enum GuardAttackKind

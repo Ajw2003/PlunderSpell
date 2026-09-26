@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Interfaces;
 using NUnit.Framework;
-using RogueAi.Guards;
-using RogueAi.Status;
+using Plunderspell.Guards;
+using Plunderspell.Status;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// A guard that chases but never lands a blow is scenery. See docs/systems/raid.md,

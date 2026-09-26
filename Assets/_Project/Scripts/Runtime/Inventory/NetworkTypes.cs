@@ -1,6 +1,6 @@
 using PurrNet;
 
-namespace RogueAi.Inventory
+namespace Plunderspell.Inventory
 {
     /// <summary>
     /// Names this assembly's replicated types for PurrNet. PurrNet only generates a serializer inside

@@ -8,7 +8,7 @@ a raid and walking a castle until something turns up. Issue
 |---|---|
 | Scene | `Assets/_Project/Scenes/CombatBench.unity` |
 | Built by | `Assets/_Project/Scripts/Editor/CombatBenchSceneBuilder.cs` — *Tools ▸ Plunderspell ▸ Build Combat Bench Scene* |
-| Runtime | `CombatBench`, `CombatBenchHud` (assembly `RogueAi.Playtest`) |
+| Runtime | `CombatBench`, `CombatBenchHud` (assembly `Plunderspell.Playtest`) |
 | Screenshots | `Assets/_Project/Scripts/Editor/CombatBenchScreenshotForge.cs` → `docs/generated/combat-bench-screenshots/` |
 | Tests | `Assets/_Project/Scripts/Tests/Runtime/CombatBenchTests.cs` |
 
@@ -77,7 +77,7 @@ screenshot forge photographs the arena and the enemies in it but **can never sho
 ## Invariants
 
 - **The bench never ships enabled in a raid.** It is one scene and two components in
-  `RogueAi.Playtest`; nothing in `RogueAi.Raid` references it.
+  `Plunderspell.Playtest`; nothing in `Plunderspell.Raid` references it.
 - **`CombatBench.ClearSpawned` removes only what the bench spawned.** The arena, the player and the
   sword are not in `Spawned` and must not be destroyed by a Clear.
 - **The roster is shared, not copied.** The bench spawns from
@@ -101,9 +101,9 @@ Both run headlessly on Unity 6000.3.15f1. The capture must **not** pass `-nograp
 
 ```
 Unity.exe -batchmode -quit -projectPath <path> \
-  -executeMethod RogueAi.EditorTools.CombatBenchSceneBuilder.BuildCombatBenchScene
+  -executeMethod Plunderspell.EditorTools.CombatBenchSceneBuilder.BuildCombatBenchScene
 Unity.exe -batchmode -quit -projectPath <path> \
-  -executeMethod RogueAi.EditorTools.CombatBenchScreenshotForge.CaptureAll
+  -executeMethod Plunderspell.EditorTools.CombatBenchScreenshotForge.CaptureAll
 ```
 
 `CombatBenchTests` covers the play-state change, the spawn count, the ring spacing, the starting

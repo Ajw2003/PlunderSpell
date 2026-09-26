@@ -2,7 +2,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Renders the open scene from an arbitrary camera to a PNG. Shared by every screenshot forge so

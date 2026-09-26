@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>Produces a standalone Windows player build. See docs/plans/GitIssues/Issue_53_Plan.md.</summary>
     public static class PlayerBuilder

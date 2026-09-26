@@ -1,7 +1,7 @@
-using RogueAi.Acoustics;
+using Plunderspell.Acoustics;
 using UnityEngine;
 
-namespace RogueAi.Playtest
+namespace Plunderspell.Playtest
 {
     /// <summary>
     /// A minimal first-person controller for playtesting: WASD, mouse look, jump, and a crouch/sprint

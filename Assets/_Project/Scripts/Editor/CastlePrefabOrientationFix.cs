@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Stands the castle room prefabs the right way up.

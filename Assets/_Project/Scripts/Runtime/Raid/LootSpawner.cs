@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using RogueAi.Castle;
-using RogueAi.Loot;
+using Plunderspell.Castle;
+using Plunderspell.Loot;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Turns a <see cref="LootPlacementPlanner"/> plan into actual objects in the scene.

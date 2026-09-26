@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using PurrNet;
-using RogueAi.Acoustics;
+using Plunderspell.Acoustics;
 using UnityEngine;
 
-namespace RogueAi.Alarm
+namespace Plunderspell.Alarm
 {
     /// <summary>
     /// Server-authoritative four-state alarm state machine. It listens for noise (as an

@@ -1,8 +1,8 @@
 using PurrNet;
-using RogueAi.Voice;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Everything an effect needs to resolve itself: who cast, from where, facing where, how loud,

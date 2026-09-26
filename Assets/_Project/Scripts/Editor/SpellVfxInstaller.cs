@@ -1,10 +1,10 @@
-using RogueAi.Spells.Vfx;
+using Plunderspell.Spells.Vfx;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Puts a <see cref="SpellVfxDirector"/> into the authored scenes, with the bolt assigned.

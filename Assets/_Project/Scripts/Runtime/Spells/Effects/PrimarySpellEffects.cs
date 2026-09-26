@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Interfaces;
-using RogueAi.Acoustics;
+using Plunderspell.Acoustics;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Common plumbing for every built-in effect: the noise a cast makes, and the log line that

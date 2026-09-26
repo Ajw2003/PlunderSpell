@@ -1,14 +1,14 @@
 using System.Collections;
 using NUnit.Framework;
 using Plunderspell.Core;
-using RogueAi.Spells;
-using RogueAi.Spells.Vfx;
-using RogueAi.Voice;
+using Plunderspell.Spells;
+using Plunderspell.Spells.Vfx;
+using Plunderspell.Voice;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Presses the actual keys. Every other casting test drives the pipeline from the middle, which

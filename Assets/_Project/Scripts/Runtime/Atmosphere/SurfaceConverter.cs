@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// Moves an enemy's or a piece of plunder's opaque URP Lit materials onto Plunderspell/Surface in

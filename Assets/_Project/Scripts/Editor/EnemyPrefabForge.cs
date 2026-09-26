@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
-using RogueAi.Castle;
-using RogueAi.Guards;
-using RogueAi.Raid;
-using RogueAi.Status;
+using Plunderspell.Castle;
+using Plunderspell.Guards;
+using Plunderspell.Raid;
+using Plunderspell.Status;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Authors one prefab per enemy model, plus the <see cref="EnemyRoster"/> that posts them to

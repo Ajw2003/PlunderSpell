@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
-using RogueAi.Guards;
-using RogueAi.Playtest;
-using RogueAi.Raid;
+using Plunderspell.Guards;
+using Plunderspell.Playtest;
+using Plunderspell.Raid;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Photographs the combat bench with a spawn on the floor. See docs/systems/combat-bench.md,

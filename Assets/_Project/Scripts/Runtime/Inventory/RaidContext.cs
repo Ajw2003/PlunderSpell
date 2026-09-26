@@ -1,6 +1,6 @@
 using System;
 
-namespace RogueAi.Inventory
+namespace Plunderspell.Inventory
 {
     // doc-ref 7655 docs/systems/raid-scene-assembly.md
     /// <summary>

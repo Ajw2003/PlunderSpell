@@ -1,16 +1,16 @@
 using NUnit.Framework;
 using Player;
-using RogueAi.Guards;
-using RogueAi.Loot;
-using RogueAi.Raid;
-using RogueAi.UI;
+using Plunderspell.Guards;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
+using Plunderspell.UI;
 using StateMachine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// Guards the wiring of the hand-authored raid scene. See
@@ -70,7 +70,7 @@ namespace RogueAi.Tests.Editor
             var prefab = new SerializedObject(spawner).FindProperty("_playerPrefab").objectReferenceValue;
             Assert.AreEqual(k_PlayerPrefabPath, AssetDatabase.GetAssetPath(prefab));
 
-            var session = Find<RogueAi.Net.CoopSession>();
+            var session = Find<Plunderspell.Net.CoopSession>();
             Assert.IsNotNull(session, $"{k_ScenePath} has no CoopSession, so no session can start.");
             var wiring = new SerializedObject(session);
             foreach (string field in new[] { "_manager", "_localTransport", "_udpTransport", "_steamTransport" })
@@ -87,7 +87,7 @@ namespace RogueAi.Tests.Editor
             Assert.IsNotNull(PlayerPrefab().GetComponent<PlayerInputController>(),
                 "The raid player needs PlayerInputController; without it nothing drives the " +
                 "state machine and the player reads as unresponsive.");
-            Assert.IsNull(Find<RogueAi.Playtest.FreeLookPlaytestController>(),
+            Assert.IsNull(Find<Plunderspell.Playtest.FreeLookPlaytestController>(),
                 "FreeLookPlaytestController is the ItemGym harness. In the raid it silently " +
                 "replaces the real player and undoes the issue 9 input gate.");
         }
@@ -101,7 +101,7 @@ namespace RogueAi.Tests.Editor
         public void Test_ThePlayerMatchesTheCastleBenchSetup()
         {
             GameObject player = PlayerPrefab();
-            var pushToCast = new SerializedObject(player.GetComponent<RogueAi.Voice.PushToCastController>());
+            var pushToCast = new SerializedObject(player.GetComponent<Plunderspell.Voice.PushToCastController>());
             SerializedProperty key = pushToCast.FindProperty("_pushToCastKey");
             Assert.AreEqual("V", key.enumNames[key.enumValueIndex], "The HUD says Hold V to cast.");
             Assert.AreEqual(0.75f, player.transform.Find("Eye").localPosition.y, 0.001f,
@@ -115,7 +115,7 @@ namespace RogueAi.Tests.Editor
             Assert.IsNotNull(player.GetComponentInChildren<IntruderTag>(true), "Guards find intruders through IntruderTag.");
             // Picking things up is ItemManager's mouse drag, as on the CastleBench player this prefab
             // now copies; the E/Q LootInteractor was removed with the rest of the old setup.
-            Assert.IsNotNull(player.GetComponent<RogueAi.Voice.PushToCastController>(), "Nothing can be cast without push-to-cast.");
+            Assert.IsNotNull(player.GetComponent<Plunderspell.Voice.PushToCastController>(), "Nothing can be cast without push-to-cast.");
             Assert.IsNotNull(player.GetComponentInChildren<Camera>(true), "The player has no camera to see out of.");
             Assert.IsNotNull(player.GetComponent<PurrNet.NetworkTransform>(), "Nobody else would see this player move.");
             Assert.IsNotNull(player.GetComponent<PlayerNetworkOwnership>(),

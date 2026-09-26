@@ -1,4 +1,4 @@
-namespace RogueAi.Alarm
+namespace Plunderspell.Alarm
 {
     /// <summary>
     /// Castle-wide alert level. Ordered by severity so escalation/regression can be compared numerically.

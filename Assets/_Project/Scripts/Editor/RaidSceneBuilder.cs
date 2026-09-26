@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using System.IO;
 using Player;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Guards;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Playtest;
-using RogueAi.Raid;
-using RogueAi.Spells;
-using RogueAi.Status;
-using RogueAi.UI;
-using RogueAi.Voice;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Playtest;
+using Plunderspell.Raid;
+using Plunderspell.Spells;
+using Plunderspell.Status;
+using Plunderspell.UI;
+using Plunderspell.Voice;
 using StateMachine;
 using Unity.AI.Navigation;
 using UnityEditor;
@@ -23,7 +23,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Assembles a raid-scene **scaffold** from the project's authored assets: the 25 castle room

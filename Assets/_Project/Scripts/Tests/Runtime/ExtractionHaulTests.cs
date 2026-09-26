@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Extraction;
-using RogueAi.Loot;
-using RogueAi.UI;
+using Plunderspell.Extraction;
+using Plunderspell.Loot;
+using Plunderspell.UI;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Extraction tallies what is standing on the pad, and the HUD says so while the raid is still

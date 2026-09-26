@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using PurrNet;
 using UnityEngine;
 
-namespace RogueAi.Net
+namespace Plunderspell.Net
 {
     /// <summary>
     /// Shows every player's grab beam on every machine (#144). The holder's machine sends where its

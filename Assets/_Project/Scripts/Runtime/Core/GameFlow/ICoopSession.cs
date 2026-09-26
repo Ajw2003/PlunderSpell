@@ -2,7 +2,7 @@ namespace Plunderspell.Core
 {
     /// <summary>
     /// What the menus need from the network session, without the UI assembly referencing PurrNet
-    /// or Steamworks. <c>RogueAi.Net.CoopSession</c> implements it and registers itself in
+    /// or Steamworks. <c>Plunderspell.Net.CoopSession</c> implements it and registers itself in
     /// <see cref="GameServices.Coop"/>; scenes without one (the benches) leave it null and play
     /// offline.
     /// </summary>

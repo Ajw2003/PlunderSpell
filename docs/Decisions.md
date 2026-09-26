@@ -885,3 +885,21 @@ the crosshair. How: `docs/systems/damage.md`, "Weight".
 **Replaces.** The free hang from the grab point in "Carrying hangs from a beam spring" (2026-09-25
 entry above). The spring trail, lift limit and beam are unchanged.
 
+## 2026-09-26 — The code is Plunderspell, not RogueAi (#149)
+
+**Context.** The project began as a fork of Rogue-Ai-Extraction-Game, and its namespaces,
+assemblies, asset-menu paths and Unity's saved class labels still said `RogueAi`.
+
+**Decision.** Namespaces `RogueAi.X` are now `Plunderspell.X`, and assemblies likewise. Two
+assembly names were already taken, so they got their own: the shared contracts assembly
+(`Runtime/Core/Core.asmdef`, formerly `RogueAi.Core`) is **`Plunderspell.Foundation`**, because
+`Plunderspell.Core` is the game-flow assembly beneath it; the raid HUD (formerly `RogueAi.UI`) is
+**`Plunderspell.RaidHud`**, because `Plunderspell.UI` is the menu toolkit. The HUD's classes stay in
+the `Plunderspell.UI` namespace. Unity keeps each component's `m_EditorClassIdentifier` label
+through re-serialisation, so those 651 labels were rewritten in place; nothing else in those files
+changed.
+
+**Kept on purpose.** Captured test and audit output (`docs/generated/`), `docs/archive/`, the
+issue-generator scripts and their dump, binary FBX metadata, and the lines recording that this is a
+fork of Rogue-Ai-Extraction-Game. They are records of what was true when written.
+

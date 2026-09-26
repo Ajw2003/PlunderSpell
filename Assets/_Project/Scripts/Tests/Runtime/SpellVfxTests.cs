@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Spells;
-using RogueAi.Spells.Vfx;
+using Plunderspell.Spells;
+using Plunderspell.Spells.Vfx;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// A cast has to be visible. See docs/systems/spells.md, "Seeing a cast".
@@ -127,7 +127,7 @@ namespace RogueAi.Tests
             int before = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
 
             SpellCastingSystem.AnnounceForTesting(new SpellCastingSystem.CastReport(
-                SpellId.Tonitrus, RogueAi.Voice.CastVolume.Normal, 1, "Tester",
+                SpellId.Tonitrus, Plunderspell.Voice.CastVolume.Normal, 1, "Tester",
                 Vector3.zero, Vector3.forward));
 
             int after = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;

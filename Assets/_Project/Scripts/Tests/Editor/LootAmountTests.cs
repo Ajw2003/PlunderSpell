@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.Inventory;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Inventory;
+using Plunderspell.Raid;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// How much loot a real raid holds, with the real era rooms, tables and generator: about double

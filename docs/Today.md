@@ -16,7 +16,13 @@ where one could be written, and checked in the live Editor:
 - #147: on Late Medieval seed 43 a player slot was over the drawbridge's moat. An 80-seed sweep
   found 1 bad slot in 320 before the fix and 0 after (04dac3c).
 
-Tests: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
+Later: carrying stopped being floppy (15205a4). Held loot keeps its orientation, weapons sit
+rigidly in the hand (a crossbow's own bolt used to hit it on the beam), and two-person pieces are
+towed behind the holder, as the user asked. Then #149: RogueAi is renamed Plunderspell throughout
+the code (see Decisions, 2026-09-26). After it: EditMode 70 pass, 3 skip, 1 known failure;
+PlayMode 217 of 218, the same known guard test; and a solo raid played cleanly in the Editor.
+
+Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still
 use the generic curtain-wall rooms (WallStraight, Bastion, WallCorner, Drawbridge), not their Late
@@ -70,8 +76,8 @@ left behind (Lair line "· 1 left behind"), and the navigation audit from the po
 ---
 
 **2026-09-25 — a throwaway "calm" night-look preview in RaidScene.** Built the quick preview asked
-for after the look-anchoring session below: `RogueAi.Atmosphere.NightLookPreview`
-(`Assets/_Project/Scripts/Runtime/Atmosphere/NightLookPreview.cs`, new `RogueAi.Atmosphere` asmdef)
+for after the look-anchoring session below: `Plunderspell.Atmosphere.NightLookPreview`
+(`Assets/_Project/Scripts/Runtime/Atmosphere/NightLookPreview.cs`, new `Plunderspell.Atmosphere` asmdef)
 darkens RaidScene, adds a runtime URP Volume (ACES, bloom, colour grade, vignette), and places
 primitive braziers, wall torches and stand-in props along the generated castle's curtain wall,
 values taken from `Tools/LookSamples/render_look_samples.py`'s `LOOKS["calm"]`. Wired into

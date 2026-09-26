@@ -1,10 +1,10 @@
 using System;
 using Interfaces;
 using PurrNet;
-using RogueAi.Acoustics;
+using Plunderspell.Acoustics;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// A door in the castle. Three ways through it, and the choice between them is the stealth game:

@@ -1,0 +1,42 @@
+{
+    "name": "Plunderspell.Tests.Editor",
+    "rootNamespace": "Plunderspell.Tests.Editor",
+    "references": [
+        "Plunderspell.Status",
+        "Plunderspell.Voice",
+        "Plunderspell.Lair",
+        "Plunderspell.Extraction",
+        "Plunderspell.Alarm",
+        "Plunderspell.Acoustics",
+        "PurrNet.Runtime",
+        "Plunderspell.Foundation",
+        "Plunderspell.Playtest",
+        "Plunderspell.RaidHud",
+        "Plunderspell.Guards",
+        "Plunderspell.Raid",
+        "Plunderspell.Loot",
+        "Plunderspell.Player",
+        "Plunderspell.Castle",
+        "Plunderspell.Inventory",
+        "Plunderspell.Editor",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Plunderspell.Net",
+        "Plunderspell.Atmosphere"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

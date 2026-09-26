@@ -1,7 +1,7 @@
 using PurrNet;
 using UnityEngine;
 
-namespace RogueAi.Net
+namespace Plunderspell.Net
 {
     /// <summary>
     /// Shows a ranged weapon's shot on every machine. The shot is a local projectile on the machine

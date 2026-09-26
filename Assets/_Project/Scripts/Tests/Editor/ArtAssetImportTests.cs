@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// EditMode cover for the art pipeline's Unity half. The pipeline validates geometry in

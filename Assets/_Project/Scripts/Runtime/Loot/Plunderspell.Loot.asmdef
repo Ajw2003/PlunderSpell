@@ -1,13 +1,10 @@
 {
-    "name": "RogueAi.Playtest",
-    "rootNamespace": "RogueAi.Playtest",
+    "name": "Plunderspell.Loot",
+    "rootNamespace": "Plunderspell.Loot",
     "references": [
-        "RogueAi.Core",
-        "RogueAi.Acoustics",
-        "Plunderspell.Core",
-        "RogueAi.Guards",
-        "RogueAi.Raid",
-        "PurrNet.Runtime"
+        "PurrNet.Runtime",
+        "Plunderspell.Foundation",
+        "Plunderspell.Player"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

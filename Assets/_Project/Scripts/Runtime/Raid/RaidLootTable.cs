@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using RogueAi.Castle;
-using RogueAi.Loot;
+using Plunderspell.Castle;
+using Plunderspell.Loot;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// What can be found where. One entry per lootable object, tagged with the castle zone it belongs

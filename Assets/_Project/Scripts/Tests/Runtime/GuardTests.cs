@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Guards;
-using RogueAi.Status;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Guards;
+using Plunderspell.Status;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the guards — the reason noise matters. Most of these drive

@@ -4,8 +4,8 @@
     "references": [
         "Plunderspell.Core",
         "Unity.InputSystem",
-        "RogueAi.Lair",
-        "RogueAi.Inventory"
+        "Plunderspell.Lair",
+        "Plunderspell.Inventory"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

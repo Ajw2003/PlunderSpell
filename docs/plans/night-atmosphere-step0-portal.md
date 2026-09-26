@@ -35,7 +35,7 @@ wall tops. The ground is shrunk to the castle's footprint.
   cannot shift the castle, loot or garrison.
 - Commit after every task on the current `claude/` branch and push. Commit message format
   `<type>: <summary>`, ending with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
-- The gameplay tests (`Assets/_Project/Scripts/Tests/Runtime/`, assembly `RogueAi.Tests`) run in
+- The gameplay tests (`Assets/_Project/Scripts/Tests/Runtime/`, assembly `Plunderspell.Tests`) run in
   **PlayMode**. `EditMode` lists only the 26 legacy tests.
 
 ## Not in this plan (and where it goes)
@@ -75,7 +75,7 @@ wall tops. The ground is shrunk to the castle's footprint.
 
 **Interfaces:**
 - Produces: `bash Tools/Unity/run_tests.sh <filter>`, where `<filter>` is a full test or class
-  name such as `RogueAi.Tests.CastleArrivalTests`. Prints `total/passed/failed`, then each failed
+  name such as `Plunderspell.Tests.CastleArrivalTests`. Prints `total/passed/failed`, then each failed
   test's name and message. Exit 0 when everything passed, 1 on any failure or on a timeout.
 
 Why: `run_tests` in PlayMode returns at once with `"result": "running"`, and `test_status`
@@ -87,7 +87,7 @@ returns its report as a JSON **string** inside the JSON envelope, so a plain gre
 ```bash
 #!/usr/bin/env bash
 # Runs PlayMode tests in the connected Unity Editor and waits for the result.
-# Usage: bash Tools/Unity/run_tests.sh RogueAi.Tests.CastleArrivalTests
+# Usage: bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleArrivalTests
 set -euo pipefail
 
 filter="${1:?usage: run_tests.sh <test or class full name>}"
@@ -125,12 +125,12 @@ exit 1
 
 - [ ] **Step 2: Run it against a suite that already passes**
 
-Run: `bash Tools/Unity/run_tests.sh RogueAi.Tests.RaidLoopTests`
+Run: `bash Tools/Unity/run_tests.sh Plunderspell.Tests.RaidLoopTests`
 Expected: `total 18  passed 18  failed 0  skipped 0`, then `PASS`, exit code 0.
 
 - [ ] **Step 3: Run it twice more to prove the second run is not reading stale status**
 
-Run: `bash Tools/Unity/run_tests.sh RogueAi.Tests.RaidLoopTests; bash Tools/Unity/run_tests.sh RogueAi.Tests.CastleGeneratorTests`
+Run: `bash Tools/Unity/run_tests.sh Plunderspell.Tests.RaidLoopTests; bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleGeneratorTests`
 Expected: two summaries, the second with a different total from 18.
 If the second prints 18 again, `test_status` is returning the previous run: add a
 `sleep 3` before the loop and re-run.
@@ -155,7 +155,7 @@ git push
 
 **Interfaces:**
 - Produces:
-  - `public static class CastleArrivalPlanner` in namespace `RogueAi.Castle`
+  - `public static class CastleArrivalPlanner` in namespace `Plunderspell.Castle`
   - `public const int NoArrival = -1;`
   - `public static bool IsArrivalZone(CastleZone zone)`: true for `CurtainWall`, `OuterBailey`,
     `InnerWard`
@@ -169,10 +169,10 @@ git push
 ```csharp
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Castle;
+using Plunderspell.Castle;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// The team arrives by portal at a seeded spot inside the walls (docs/plans/night-atmosphere.md,
@@ -296,7 +296,7 @@ In `CastleSpawnResolver.cs`, change the declaration line only:
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Where the team steps out of the portal: a room chosen from the layout and the raid seed, so
@@ -367,7 +367,7 @@ namespace RogueAi.Castle
 
 Run: `unity command recompile --caller plugin --skill unity-cli`, poll `recompile_status` until
 `completed`, check `unity command console --level error --tail 20 --caller plugin --skill unity-cli`
-shows no `error CS`, then `bash Tools/Unity/run_tests.sh RogueAi.Tests.CastleArrivalTests`.
+shows no `error CS`, then `bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleArrivalTests`.
 Expected: `total 5  passed 5  failed 0`, `PASS`.
 If `Test_DifferentSeedsArriveInDifferentPlaces` fails with fewer than 10, print the count per seed
 before changing the threshold; the candidate pool is roughly 30 cells, so under 10 distinct cells
@@ -464,7 +464,7 @@ Expected: `error CS0117: 'CastleSpawnResolver' does not contain a definition for
 
 - [ ] **Step 4: Recompile and run the tests**
 
-Run: recompile as before, then `bash Tools/Unity/run_tests.sh RogueAi.Tests.CastleArrivalTests`.
+Run: recompile as before, then `bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleArrivalTests`.
 Expected: `total 7  passed 7  failed 0`, `PASS`.
 
 - [ ] **Step 5: Commit**
@@ -494,7 +494,7 @@ git push
   - `GuardSpawner.SpawnFor(ProceduralCastleData castle, int seed, int safeModuleIndex = -1)`.
 
 - [ ] **Step 1: Write the failing test** (append inside `CastleArrivalTests`; add
-  `using RogueAi.Raid;` to the file's usings)
+  `using Plunderspell.Raid;` to the file's usings)
 
 ```csharp
         [Test]
@@ -607,9 +607,9 @@ sentence to: `Rooms within this many grid cells of the arrival portal get no gua
 - [ ] **Step 5: Recompile and run the new and the old guard tests**
 
 Run: recompile as before, then
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.CastleArrivalTests`, then
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.PlayableLoopTests`, then
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.RaidLoopTests`.
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleArrivalTests`, then
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.PlayableLoopTests`, then
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.RaidLoopTests`.
 Expected: `CastleArrivalTests` `total 8  passed 8`; the other two print `PASS` with their previous
 totals (`RaidLoopTests` 18). `Test_NoGuardIsPostedNextToTheEntrance` still passes because the
 default argument keeps the gatehouse ring.
@@ -643,7 +643,7 @@ Why the footprint shrinks from the scene's 8 × 8 m pad: players stand in a ring
 just by arriving.
 
 - [ ] **Step 1: Write the failing tests** (append inside `CastleArrivalTests`; add
-  `using RogueAi.Extraction;`)
+  `using Plunderspell.Extraction;`)
 
 ```csharp
         [Test]
@@ -719,8 +719,8 @@ Expected: `error CS0117: 'ExtractionZone' does not contain a definition for 'Pla
 
 - [ ] **Step 4: Recompile and run the tests**
 
-Run: `bash Tools/Unity/run_tests.sh RogueAi.Tests.CastleArrivalTests`, then
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.ExtractionHaulTests`.
+Run: `bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleArrivalTests`, then
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.ExtractionHaulTests`.
 Expected: `CastleArrivalTests` `total 10  passed 10`; `ExtractionHaulTests` `PASS` with its previous total.
 
 - [ ] **Step 5: Commit**
@@ -741,7 +741,7 @@ git push
 
 **Interfaces:**
 - Produces:
-  - `public class CastleBoundary : MonoBehaviour` in namespace `RogueAi.Castle`
+  - `public class CastleBoundary : MonoBehaviour` in namespace `Plunderspell.Castle`
   - `public const float Height = 40f;`
   - `public static float OuterEdge(int curtainWallRadius, float cellSize)`:
     `(curtainWallRadius + 0.5f) * cellSize`
@@ -794,7 +794,7 @@ Expected: `error CS0246: The type or namespace name 'CastleBoundary' could not b
 ```csharp
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Four invisible walls on the curtain wall's outer face. The castle is the whole world for
@@ -853,7 +853,7 @@ namespace RogueAi.Castle
 
 - [ ] **Step 4: Recompile and run the tests**
 
-Run: `bash Tools/Unity/run_tests.sh RogueAi.Tests.CastleArrivalTests`.
+Run: `bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleArrivalTests`.
 Expected: `total 11  passed 11`. If the rebuild assertion reports 8 colliders, `DestroyImmediate`
 is not reached for the children: check the name comparison before anything else.
 
@@ -890,7 +890,7 @@ git push
     `public void RecordLeftBehind(int count)`.
 
 - [ ] **Step 1: Write the failing test** (append inside `CastleArrivalTests`; add
-  `using RogueAi.Lair;` and `using RogueAi.Inventory;`, the namespace of `HistoricalEra`)
+  `using Plunderspell.Lair;` and `using Plunderspell.Inventory;`, the namespace of `HistoricalEra`)
 
 ```csharp
         [Test]
@@ -1084,12 +1084,12 @@ Replace lines 201-203 with:
 - [ ] **Step 9: Recompile and run every suite this touches**
 
 Run, in order:
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.CastleArrivalTests`
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.RaidLoopTests`
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.PlayableLoopTests`
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.ExtractionHaulTests`
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.FullRaidIntegrationTests`
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.CoopRulesTests`
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleArrivalTests`
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.RaidLoopTests`
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.PlayableLoopTests`
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.ExtractionHaulTests`
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.FullRaidIntegrationTests`
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.CoopRulesTests`
 Expected: `CastleArrivalTests` `total 12  passed 12`; every other suite `PASS`.
 A pre-existing test that asserts the player stands by the gatehouse is now wrong by design. Update
 its assertion to the arrival point and name it in the commit body; do not delete it.
@@ -1144,8 +1144,8 @@ Expected: the eval prints `11.6 (0.00, 0.00, 0.00)`; `git diff --stat` shows `Ra
 
 - [ ] **Step 3: Run the scene tests**
 
-Run: `bash Tools/Unity/run_tests.sh RogueAi.Tests.RaidSceneTests` and
-`bash Tools/Unity/run_tests.sh RogueAi.Tests.RaidSceneCastingTests`.
+Run: `bash Tools/Unity/run_tests.sh Plunderspell.Tests.RaidSceneTests` and
+`bash Tools/Unity/run_tests.sh Plunderspell.Tests.RaidSceneCastingTests`.
 Expected: `PASS` for both.
 
 - [ ] **Step 4: Play a raid and capture it**
@@ -1169,7 +1169,7 @@ In the same Play session:
 1. Pick up one loot piece, carry it into the portal, stand in it until the leaving countdown ends.
    Expected: back in the Lair, the last-raid line shows the coin brought home and no "left behind".
 2. Set Out again, then set the raid clock to 2 seconds with
-   `unity command eval --caller plugin --skill unity-cli --code 'var z = UnityEngine.Object.FindFirstObjectByType<RogueAi.Extraction.ExtractionZone>(); z.SetRaidDuration(2f); z.ResetForNewRaid(); return z.TimeRemaining;'`
+   `unity command eval --caller plugin --skill unity-cli --code 'var z = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Extraction.ExtractionZone>(); z.SetRaidDuration(2f); z.ResetForNewRaid(); return z.TimeRemaining;'`
    while standing away from the portal. Expected: the raid resolves and the Lair line ends
    `· 1 left behind`.
    If `SetRaidDuration` / `ResetForNewRaid` do not reset the running clock, read

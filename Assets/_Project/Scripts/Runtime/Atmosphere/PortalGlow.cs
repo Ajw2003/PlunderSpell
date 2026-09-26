@@ -1,8 +1,8 @@
-using RogueAi.Extraction;
-using RogueAi.Raid;
+using Plunderspell.Extraction;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// The portal's look: a lapis swirl with its own light and fog glow, standing wherever the raid

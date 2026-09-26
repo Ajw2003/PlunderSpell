@@ -1,10 +1,10 @@
 using NUnit.Framework;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Loot;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Loot;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// EditMode tests for Milestone 2b — loot fragility, dual-carry thresholds, the four-state alarm

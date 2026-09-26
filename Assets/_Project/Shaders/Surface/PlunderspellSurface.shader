@@ -1,5 +1,5 @@
 // One shader for the whole castle (docs/plans/night-atmosphere.md, section 3). Castle models get
-// it on import (RogueAi.EditorTools.CastleSurfaceMaterials), with the detail channel and the
+// it on import (Plunderspell.EditorTools.CastleSurfaceMaterials), with the detail channel and the
 // stone flag chosen from each material's pigment. Fog is drawn afterwards by the night fog pass.
 Shader "Plunderspell/Surface"
 {

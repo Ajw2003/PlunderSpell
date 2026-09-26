@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Acoustics
+namespace Plunderspell.Acoustics
 {
     /// <summary>
     /// Emits noise into the world. Attach to footstep audio sources, breakable loot, spell effects or

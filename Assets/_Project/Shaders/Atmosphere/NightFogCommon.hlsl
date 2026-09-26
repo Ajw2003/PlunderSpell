@@ -7,7 +7,7 @@
 // Model: height fog (densest at the ground, thinning upward) lit three ways: a flat ambient colour,
 // the moon through a forward-scattering phase, and every nearby fire through a closed-form
 // point-light in-scattering integral. The last is what makes fire glow as a halo in the fog, the
-// look chosen in docs/plans/night-atmosphere.md. Globals are set by RogueAi.Atmosphere.CastleAtmosphere.
+// look chosen in docs/plans/night-atmosphere.md. Globals are set by Plunderspell.Atmosphere.CastleAtmosphere.
 
 #define NIGHT_FOG_MAX_LIGHTS 32
 

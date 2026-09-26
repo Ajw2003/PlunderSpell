@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Vosk;
 #endif
 
-namespace RogueAi.Voice
+namespace Plunderspell.Voice
 {
     [System.Serializable]
     public class VoiceRecognizerJson // JsonUtility target for Vosk's {"text":"..."} payload

@@ -1,4 +1,4 @@
-using RogueAi.Inventory;
+using Plunderspell.Inventory;
 using UnityEngine;
 
 /// <summary>

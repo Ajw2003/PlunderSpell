@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Spells.Vfx
+namespace Plunderspell.Spells.Vfx
 {
     /// <summary>
     /// A spell going off: an expanding, fading shell of light that destroys itself. Built from a

@@ -1,12 +1,12 @@
 using System;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.Inventory;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Inventory;
+using Plunderspell.Raid;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// Guards the per-era raid content forged by <c>EraContentForge</c>. See

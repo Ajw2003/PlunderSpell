@@ -1,4 +1,4 @@
-namespace RogueAi.Inventory
+namespace Plunderspell.Inventory
 {
     /// <summary>
     /// The historical eras a raid can be set in and that loot can be acquired from.

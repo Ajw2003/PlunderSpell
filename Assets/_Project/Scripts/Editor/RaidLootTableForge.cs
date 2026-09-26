@@ -1,11 +1,11 @@
 using System.IO;
-using RogueAi.Castle;
-using RogueAi.Loot;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Authors the <see cref="RaidLootTable"/> that pairs the hand-modelled loot prefabs with the

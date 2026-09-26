@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using RogueAi.Spells;
-using RogueAi.Voice;
+using Plunderspell.Spells;
+using Plunderspell.Voice;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Runs synthesized speech (Tools/VoiceFixtures/clips, two voices) through the real Vosk model

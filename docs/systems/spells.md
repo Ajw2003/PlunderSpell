@@ -1,7 +1,7 @@
 # Spells
 
 Say the word correctly and the spell happens. Say it nearly correctly and something worse happens.
-That is the game, and `RogueAi.Spells` is where it resolves.
+That is the game, and `Plunderspell.Spells` is where it resolves.
 
 ## How it works
 
@@ -24,7 +24,7 @@ That is the game, and `RogueAi.Spells` is where it resolves.
 
 - **Reaching the world without cycling**: Loot and Player sit downstream of Spells, so a spell never
   sees a `LootPickup` or a player. It sees `IBreakable`, `ILevitatable`, `ISleepable`, `IStunnable`,
-  `IIgnitable`, `IOpenable` — declared in `RogueAi.Core` and implemented by whatever can be affected.
+  `IIgnitable`, `IOpenable` — declared in `Plunderspell.Foundation` and implemented by whatever can be affected.
   `StatusEffectReceiver` implements four of them in one component, so anything can be made a valid
   target by adding it.
 

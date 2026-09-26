@@ -4884,7 +4884,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a663fdd822ad2446ab1f7712aa195e8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.LightSource
+  m_EditorClassIdentifier: Plunderspell.Atmosphere::Plunderspell.Atmosphere.LightSource
   _radius: 6
   _intensity: 1
 --- !u!114 &9005441603259401507
@@ -4898,7 +4898,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e626e5f47f56bc945a03004f81b0d610, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.FireSource
+  m_EditorClassIdentifier: Plunderspell.Atmosphere::Plunderspell.Atmosphere.FireSource
   _kind: 0
   _litFrom: 0
   _light: {fileID: 3077376192008563385}

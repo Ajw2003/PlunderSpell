@@ -3,7 +3,7 @@
 Shared infrastructure every other module sits on: the singleton base, the event bus, and the state
 machine contract. Ported from `RogueLikeSlop@ThirdPerson`.
 
-`RogueAi.Core` references nothing. Every other assembly references it, so anything added here is
+`Plunderspell.Foundation` references nothing. Every other assembly references it, so anything added here is
 paid for everywhere — keep it small.
 
 ## How it works
@@ -29,7 +29,7 @@ paid for everywhere — keep it small.
 
 `Core/Interfaces/ISpellTargets.cs` declares `IBreakable`, `ILevitatable`, `ISleepable`,
 `IStunnable`, `IIgnitable`, `IOpenable` and `IHandOpenable`. They live in Core for a structural
-reason: `RogueAi.Spells` must be able to affect loot, doors and players, all of which sit downstream
+reason: `Plunderspell.Spells` must be able to affect loot, doors and players, all of which sit downstream
 of it, so a direct reference would cycle. A spell only ever sees the interface, found by an overlap
 query. Anything that should be affectable implements one — or adds `StatusEffectReceiver`, which
 implements four of them.
@@ -46,7 +46,7 @@ implements four of them.
 - **`Tools/Headless/verify.sh`** compiles every gameplay and editor assembly and runs the whole test
   suite without Unity. See `Tools/Headless/README.md`.
 
-- **`Tools/RogueAi/Build Test Scene`** (`Assets/_Project/Scripts/Editor/TestSceneBuilder.cs`) builds a
+- **`Tools/Plunderspell/Build Test Scene`** (`Assets/_Project/Scripts/Editor/TestSceneBuilder.cs`) builds a
   throwaway player prefab, flat ground and grabbable item from code and saves them as
   `Assets/_Project/Scenes/TestScene.unity` / `Assets/_Project/Prefabs/Player.prefab`. It exists
   because nothing in the project has ever been run - there was no player prefab and no test scene -

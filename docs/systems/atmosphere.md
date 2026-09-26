@@ -2,8 +2,8 @@
 
 The castle's look: night, warm fire glowing in fog, a faint moon, and a castle that brightens and
 reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
-`claude/night-atmosphere` (2026-09-25). Assembly `RogueAi.Atmosphere`; editor tools in
-`RogueAi.Editor`.
+`claude/night-atmosphere` (2026-09-25). Assembly `Plunderspell.Atmosphere`; editor tools in
+`Plunderspell.Editor`.
 
 ## How it works
 

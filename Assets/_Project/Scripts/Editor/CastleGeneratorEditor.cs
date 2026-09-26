@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using RogueAi.Castle;
+using Plunderspell.Castle;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Custom inspector for <see cref="ProceduralCastleGenerator"/> giving designers one-click

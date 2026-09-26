@@ -1,9 +1,9 @@
 using Interfaces;
 using NUnit.Framework;
-using RogueAi.Lair;
+using Plunderspell.Lair;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// The two co-op rules that fail silently if broken: a hit sent to the machine that owns the

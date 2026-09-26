@@ -57,7 +57,10 @@ an item's own motion hurts or breaks things: walking into a cauldron or bumping 
 damages you or it (`docs/systems/damage.md`). Loot is rebalanced: nothing breaks from a waist-high
 drop, heavy pieces pay more, and Late Medieval no longer fills its busy rooms with pieces too heavy to
 lift ([`docs/plans/loot-balance.md`](plans/loot-balance.md)). A player is never spawned over the
-drawbridge's moat (`docs/systems/scale.md`, "Spawning").
+drawbridge's moat (`docs/systems/scale.md`, "Spawning"). Held loot keeps its orientation, weapons are held rigidly
+in the hand, and pieces too heavy to lift are towed behind you (`docs/systems/damage.md`,
+"Weight"). The code's namespaces and assemblies are `Plunderspell.*`; the old `RogueAi` names are
+gone (Decisions, 2026-09-26).
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/systems/atmosphere.md`. Open: volumetric fog
@@ -72,7 +75,7 @@ are left behind, `CastleBoundary` seals the gate and wall tops, and RaidScene ha
 the wall. Verified in the live Editor; see `docs/systems/raid.md`, "Arriving and leaving by portal".
 
 **2026-09-25 — a throwaway preview of the "calm" night look exists in RaidScene.** A
-`NightLookPreview` GameObject (`RogueAi.Atmosphere.NightLookPreview`,
+`NightLookPreview` GameObject (`Plunderspell.Atmosphere.NightLookPreview`,
 `Assets/_Project/Scripts/Runtime/Atmosphere/NightLookPreview.cs`) darkens `RaidScene`, retints the
 DirectionalLight as a faint moon, adds a runtime URP Volume (ACES tonemapping, bloom, colour grade,
 vignette), and drops primitive braziers, wall torches and stand-in props (cart+hay, crates, hay

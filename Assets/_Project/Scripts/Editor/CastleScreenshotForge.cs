@@ -1,19 +1,19 @@
 using System.Collections.Generic;
 using System.IO;
-using RogueAi.Castle;
+using Plunderspell.Castle;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Renders a generated castle to PNG so a layout change can be judged by eye rather than by
     /// reading coordinates out of a log. See docs/systems/castle.md, "Visual verification", for
     /// which view catches which class of fault and why the set is shaped this way.
     ///
-    /// Run headlessly with -executeMethod RogueAi.EditorTools.CastleScreenshotForge.CaptureAll.
+    /// Run headlessly with -executeMethod Plunderspell.EditorTools.CastleScreenshotForge.CaptureAll.
     /// A real graphics device is required, so the batchmode invocation must NOT pass -nographics.
     /// </summary>
     public static class CastleScreenshotForge

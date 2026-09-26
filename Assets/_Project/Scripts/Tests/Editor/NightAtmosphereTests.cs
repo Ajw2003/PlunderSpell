@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using RogueAi.Alarm;
-using RogueAi.Atmosphere;
-using RogueAi.Castle;
-using RogueAi.EditorTools;
+using Plunderspell.Alarm;
+using Plunderspell.Atmosphere;
+using Plunderspell.Castle;
+using Plunderspell.EditorTools;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// The pure rules behind the castle's night (docs/plans/night-atmosphere.md): which fires burn in

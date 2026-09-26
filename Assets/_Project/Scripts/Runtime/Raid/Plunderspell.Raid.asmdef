@@ -1,0 +1,30 @@
+{
+    "name": "Plunderspell.Raid",
+    "rootNamespace": "Plunderspell.Raid",
+    "references": [
+        "PurrNet.Runtime",
+        "Plunderspell.Foundation",
+        "Plunderspell.Castle",
+        "Plunderspell.Loot",
+        "Plunderspell.Extraction",
+        "Plunderspell.Lair",
+        "Plunderspell.Inventory",
+        "Plunderspell.Alarm",
+        "Plunderspell.Acoustics",
+        "Plunderspell.Guards",
+        "Plunderspell.Status",
+        "Plunderspell.Spells",
+        "Plunderspell.Voice",
+        "Plunderspell.Core",
+        "Plunderspell.Player"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

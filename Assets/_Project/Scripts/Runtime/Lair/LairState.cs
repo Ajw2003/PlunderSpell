@@ -1,7 +1,7 @@
 using System;
-using RogueAi.Inventory;
+using Plunderspell.Inventory;
 
-namespace RogueAi.Lair
+namespace Plunderspell.Lair
 {
     /// <summary>
     /// Serializable snapshot of the between-raids Lair meta-state: how much debt remains, how much

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace RogueAi.Voice
+namespace Plunderspell.Voice
 {
     /// <summary>
     /// A voice provider that can be told which phrases to listen for. The map runs from what the

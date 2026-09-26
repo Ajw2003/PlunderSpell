@@ -1,4 +1,4 @@
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// One spell's actual consequence in the world. Effects are stateless singletons registered in

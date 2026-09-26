@@ -1,9 +1,9 @@
 using System;
-using RogueAi.Alarm;
-using RogueAi.Inventory;
+using Plunderspell.Alarm;
+using Plunderspell.Inventory;
 using UnityEngine;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// The castle's night in its four alarm states (docs/plans/night-atmosphere.md, section 2):

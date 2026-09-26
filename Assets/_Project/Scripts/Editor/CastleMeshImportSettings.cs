@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Forces Read/Write and baked axis conversion on the castle room models.

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Inventory
+namespace Plunderspell.Inventory
 {
     /// <summary>Broad functional bucket for an inventory item.</summary>
     public enum ItemCategory
@@ -18,7 +18,7 @@ namespace RogueAi.Inventory
     /// allows cross-era equipping (an Age-of-Powder musket may be carried into a Bronze-Age raid),
     /// so <see cref="CanEquipInEra"/> always returns true.
     /// </summary>
-    [CreateAssetMenu(fileName = "InventoryItem", menuName = "RogueAi/Inventory Item")]
+    [CreateAssetMenu(fileName = "InventoryItem", menuName = "Plunderspell/Inventory Item")]
     public class InventoryItem : ScriptableObject
     {
         [Header("Identity")]

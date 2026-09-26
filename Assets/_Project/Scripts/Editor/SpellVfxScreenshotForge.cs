@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
-using RogueAi.Spells;
-using RogueAi.Spells.Vfx;
+using Plunderspell.Spells;
+using Plunderspell.Spells.Vfx;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Photographs every spell's visual, so "the spells are visible" is something you can look at

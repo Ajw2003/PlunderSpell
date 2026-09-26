@@ -1,5 +1,5 @@
 using Interfaces;
-using RogueAi.Acoustics;
+using Plunderspell.Acoustics;
 using UnityEngine;
 
 /// <summary>Turns a held <see cref="Item"/> into a melee weapon. See docs/Decisions.md, "Melee hit

@@ -1,8 +1,8 @@
-using RogueAi.Alarm;
-using RogueAi.Raid;
+using Plunderspell.Alarm;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.UI
+namespace Plunderspell.UI
 {
     /// <summary>
     /// Everything the HUD shows, as plain data. The presenter builds one of these each frame and the

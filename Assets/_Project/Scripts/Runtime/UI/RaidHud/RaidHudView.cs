@@ -1,9 +1,9 @@
-using RogueAi.Alarm;
-using RogueAi.Raid;
+using Plunderspell.Alarm;
+using Plunderspell.Raid;
 using UnityEngine;
 using Theme = Plunderspell.UI.UITheme;
 
-namespace RogueAi.UI
+namespace Plunderspell.UI
 {
     /// <summary>
     /// Draws the HUD with IMGUI.
@@ -32,16 +32,16 @@ namespace RogueAi.UI
             "TONITRUS", "SOMNUS", "CADAVER SURGE", "PORTA",
         };
 
-        private RogueAi.Voice.PushToCastController _pushToCast;
+        private Plunderspell.Voice.PushToCastController _pushToCast;
 
         /// <summary>This machine's player's push-to-cast, looked up once that player exists: it is
         /// spawned by the network after the HUD wakes.</summary>
-        private RogueAi.Voice.PushToCastController PushToCast
+        private Plunderspell.Voice.PushToCastController PushToCast
         {
             get
             {
                 if (_pushToCast == null && StateMachine.PlayerStateMachine.Local != null)
-                    _pushToCast = StateMachine.PlayerStateMachine.Local.GetComponentInChildren<RogueAi.Voice.PushToCastController>();
+                    _pushToCast = StateMachine.PlayerStateMachine.Local.GetComponentInChildren<Plunderspell.Voice.PushToCastController>();
                 return _pushToCast;
             }
         }
@@ -67,12 +67,12 @@ namespace RogueAi.UI
         private Color _captionColour = Color.white;
         private float _captionAt = float.NegativeInfinity;
 
-        private void OnEnable() => RogueAi.Spells.SpellCastingSystem.PhraseResolved += OnPhrase;
+        private void OnEnable() => Plunderspell.Spells.SpellCastingSystem.PhraseResolved += OnPhrase;
 
-        private void OnDisable() => RogueAi.Spells.SpellCastingSystem.PhraseResolved -= OnPhrase;
+        private void OnDisable() => Plunderspell.Spells.SpellCastingSystem.PhraseResolved -= OnPhrase;
 
         /// <summary>The caption text for a phrase, and how it is coloured. Pure, for tests.</summary>
-        public static string CaptionFor(RogueAi.Spells.SpellCastingSystem.PhraseReport phrase, out Color colour)
+        public static string CaptionFor(Plunderspell.Spells.SpellCastingSystem.PhraseReport phrase, out Color colour)
         {
             string heard = $"\"{phrase.Heard.ToLowerInvariant()}\"";
             if (phrase.NotEnoughMana)
@@ -94,15 +94,15 @@ namespace RogueAi.UI
             return $"{heard}  ->  {phrase.Word}  ({phrase.Volume})";
         }
 
-        private void OnPhrase(RogueAi.Spells.SpellCastingSystem.PhraseReport phrase)
+        private void OnPhrase(Plunderspell.Spells.SpellCastingSystem.PhraseReport phrase)
         {
             _caption = CaptionFor(phrase, out _captionColour);
             _captionAt = Time.time;
         }
 
         /// <summary>The live speech service, or null when casting is keyboard-only.</summary>
-        private static RogueAi.Voice.VoskVoiceInputService Speech =>
-            (RogueAi.Voice.VoiceServiceLocator.Current as RogueAi.Voice.CombinedVoiceInputService)?.Speech;
+        private static Plunderspell.Voice.VoskVoiceInputService Speech =>
+            (Plunderspell.Voice.VoiceServiceLocator.Current as Plunderspell.Voice.CombinedVoiceInputService)?.Speech;
 
         private void OnGUI()
         {
@@ -207,7 +207,7 @@ namespace RogueAi.UI
 
             if (casting)
             {
-                RogueAi.Voice.VoskVoiceInputService speech = Speech;
+                Plunderspell.Voice.VoskVoiceInputService speech = Speech;
                 string title = speech != null && speech.IsListening
                     ? $"Listening on {speech.CurrentDevice}"
                     : "Keyboard casting (no microphone) - press 1-8";
@@ -218,18 +218,18 @@ namespace RogueAi.UI
                     const float meterMax = 0.6f;
                     var meter = new Rect(Screen.width * 0.5f - 160f, y + 24f, 320f, 10f);
                     float level = Mathf.Clamp01(speech.CurrentRms / meterMax);
-                    Color colour = speech.CurrentRms > RogueAi.Voice.VoiceUtility.ShoutThreshold ? new Color(1f, 0.45f, 0.2f)
-                        : speech.CurrentRms < RogueAi.Voice.VoiceUtility.WhisperThreshold ? new Color(0.55f, 0.7f, 1f)
+                    Color colour = speech.CurrentRms > Plunderspell.Voice.VoiceUtility.ShoutThreshold ? new Color(1f, 0.45f, 0.2f)
+                        : speech.CurrentRms < Plunderspell.Voice.VoiceUtility.WhisperThreshold ? new Color(0.55f, 0.7f, 1f)
                         : new Color(0.45f, 0.95f, 0.55f);
                     DrawBar(meter, level, colour);
 
                     // Whisper and shout marks.
-                    foreach (float mark in new[] { RogueAi.Voice.VoiceUtility.WhisperThreshold, RogueAi.Voice.VoiceUtility.ShoutThreshold })
+                    foreach (float mark in new[] { Plunderspell.Voice.VoiceUtility.WhisperThreshold, Plunderspell.Voice.VoiceUtility.ShoutThreshold })
                         GUI.DrawTexture(new Rect(meter.x + meter.width * (mark / meterMax) - 1f, meter.y - 3f, 2f, meter.height + 6f), _barFill);
 
                     var small = new GUIStyle(_label) { fontSize = 11 };
                     GUI.Label(new Rect(meter.x, meter.y + 11f, 120f, 16f), "whisper", small);
-                    GUI.Label(new Rect(meter.x + meter.width * (RogueAi.Voice.VoiceUtility.ShoutThreshold / meterMax) - 20f, meter.y + 11f, 80f, 16f), "shout", small);
+                    GUI.Label(new Rect(meter.x + meter.width * (Plunderspell.Voice.VoiceUtility.ShoutThreshold / meterMax) - 20f, meter.y + 11f, 80f, 16f), "shout", small);
                 }
             }
             else if (Time.time - _captionAt < k_captionSeconds)
@@ -248,7 +248,7 @@ namespace RogueAi.UI
         /// </summary>
         private void DrawChant()
         {
-            RogueAi.Spells.SpellCastingSystem caster = RogueAi.Spells.SpellCastingSystem.Local;
+            Plunderspell.Spells.SpellCastingSystem caster = Plunderspell.Spells.SpellCastingSystem.Local;
             if (caster == null || !caster.IsChanting)
                 return;
 
@@ -288,12 +288,12 @@ namespace RogueAi.UI
                 "Shift = shout   Ctrl = whisper", style);
 
             // Each word with its mana cost, dimmed when the pool cannot cover it right now.
-            RogueAi.Spells.SpellLexicon lexicon = RogueAi.Spells.SpellCastingSystem.Local?.Lexicon;
+            Plunderspell.Spells.SpellLexicon lexicon = Plunderspell.Spells.SpellCastingSystem.Local?.Lexicon;
             int mana = Plunderspell.Core.GameServices.PlayerStats?.Mana ?? int.MaxValue;
             var costStyle = new GUIStyle(style) { alignment = TextAnchor.MiddleRight };
             for (int i = 0; i < Spellbook.Length; i++)
             {
-                int cost = lexicon != null && lexicon.FindByWord(Spellbook[i]) is RogueAi.Spells.SpellWord word
+                int cost = lexicon != null && lexicon.FindByWord(Spellbook[i]) is Plunderspell.Spells.SpellWord word
                     ? word.ManaCost
                     : 0;
                 style.normal.textColor = costStyle.normal.textColor =

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using RogueAi.Alarm;
-using RogueAi.Raid;
+using Plunderspell.Alarm;
+using Plunderspell.Raid;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// The castle's night: fog, moon, sky, ambient, grade and every fire, blended between the four

@@ -6,7 +6,7 @@ Everything that loses health, how it loses it, and how a player can tell. Added 
 ## What it owns
 
 `Interfaces.Damage` (`Assets/_Project/Scripts/Runtime/Core/Interfaces/Damage.cs`) — the only way
-anything in the game is hurt — and `RogueAi.UI.DamageFeedbackView`
+anything in the game is hurt — and `Plunderspell.UI.DamageFeedbackView`
 (`Assets/_Project/Scripts/Runtime/UI/RaidHud/DamageFeedbackView.cs`), which draws every hit. The
 three health owners (`PlayerStateMachine`, `CastleGuard`, `MonsterStateMachine`) still own their
 numbers through `IHealth`; this system only decides how damage reaches them and what it looks like.
@@ -101,7 +101,7 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   aim target. When the item keeps up the line is straight; when it lags or sags the line bends.
   The colour follows the load: violet when easy, gold, orange near the limit, red and flickering
   when dragging. It trembles more with strain. The material is `Resources/GrabBeam.mat` (URP
-  Particles/Unlit, additive). Other players see your beam through `RogueAi.Net.CarryBeamRelay` (a
+  Particles/Unlit, additive). Other players see your beam through `Plunderspell.Net.CarryBeamRelay` (a
   RaidScene object, like `ShotRelay`). The holder sends the hand point, aim point, held point and
   load about 15 times a second; others ease toward it and end the line on the replicated item.
   Only networked loot gets a remote beam: weapons are a local copy on each machine.

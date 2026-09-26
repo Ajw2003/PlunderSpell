@@ -1,11 +1,11 @@
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.Loot;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// The loot balance rules in docs/plans/loot-balance.md (#142, #148): nothing breaks from a

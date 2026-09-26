@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Extraction;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Spells;
-using RogueAi.Voice;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Extraction;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Spells;
+using Plunderspell.Voice;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests.Integration
+namespace Plunderspell.Tests.Integration
 {
     /// <summary>
     /// Milestone-3 end-to-end integration suite. Coroutine [UnityTest]s exercise the four-simulated-client

@@ -1,12 +1,12 @@
-using RogueAi.Alarm;
-using RogueAi.Extraction;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Raid;
-using RogueAi.Spells;
+using Plunderspell.Alarm;
+using Plunderspell.Extraction;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
+using Plunderspell.Spells;
 using UnityEngine;
 
-namespace RogueAi.UI
+namespace Plunderspell.UI
 {
     /// <summary>
     /// Gathers the raid's state into a <see cref="RaidHudModel"/> each frame. Deliberately separate

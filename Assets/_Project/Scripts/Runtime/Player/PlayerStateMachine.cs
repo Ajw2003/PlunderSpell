@@ -193,7 +193,7 @@ namespace StateMachine
 
         /// <summary>
         /// Asked when this machine's player dies: true when a teammate is still alive to watch.
-        /// Installed by RogueAi.Net; offline there is nobody to watch, so it is always false.
+        /// Installed by Plunderspell.Net; offline there is nobody to watch, so it is always false.
         /// </summary>
         public static System.Func<bool> SpectateOnDeath = () => false;
 

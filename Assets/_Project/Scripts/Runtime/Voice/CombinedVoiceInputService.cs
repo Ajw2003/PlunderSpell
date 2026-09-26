@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RogueAi.Voice
+namespace Plunderspell.Voice
 {
     /// <summary>
     /// Real speech and the keyboard at once. Holding push-to-cast opens both: speak a word, or tap

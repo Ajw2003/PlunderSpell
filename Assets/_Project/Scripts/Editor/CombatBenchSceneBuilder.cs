@@ -1,22 +1,22 @@
 using Code.Scripts.EventSystems;
 using Player;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Guards;
-using RogueAi.Playtest;
-using RogueAi.Raid;
-using RogueAi.Spells;
-using RogueAi.Spells.Vfx;
-using RogueAi.Status;
-using RogueAi.UI;
-using RogueAi.Voice;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Guards;
+using Plunderspell.Playtest;
+using Plunderspell.Raid;
+using Plunderspell.Spells;
+using Plunderspell.Spells.Vfx;
+using Plunderspell.Status;
+using Plunderspell.UI;
+using Plunderspell.Voice;
 using StateMachine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Builds the combat bench scene: a walled arena, the raid's own player rig, and a spawn panel.

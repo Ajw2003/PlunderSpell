@@ -12,7 +12,7 @@ using Steamworks;
 #endif
 using UnityEngine;
 
-namespace RogueAi.Net
+namespace Plunderspell.Net
 {
     // doc-ref 4e69 docs/systems/net.md
     /// <summary>

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using Interfaces;
 using NUnit.Framework;
 using Plunderspell.Core;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Loot;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Regression tests for the 2026-09-23 Phase 0 play session (docs/plans/phase0-playable-loop.md):
@@ -339,12 +339,12 @@ namespace RogueAi.Tests
         [Test]
         public void Test_TheCaptionTellsACastAMisfireAndAFizzleApart()
         {
-            string clean = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
-                "igneous", "IGNIS", RogueAi.Spells.SpellId.Ignis, RogueAi.Voice.CastVolume.Normal), out Color cleanColour);
-            string misfire = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
-                "a nice", "AGNIS", RogueAi.Spells.SpellId.MisfireIgnis, RogueAi.Voice.CastVolume.Normal), out Color misfireColour);
-            string fizzle = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
-                "potato", "POTATO", RogueAi.Spells.SpellId.None, RogueAi.Voice.CastVolume.Normal), out Color fizzleColour);
+            string clean = Plunderspell.UI.RaidHudView.CaptionFor(new Plunderspell.Spells.SpellCastingSystem.PhraseReport(
+                "igneous", "IGNIS", Plunderspell.Spells.SpellId.Ignis, Plunderspell.Voice.CastVolume.Normal), out Color cleanColour);
+            string misfire = Plunderspell.UI.RaidHudView.CaptionFor(new Plunderspell.Spells.SpellCastingSystem.PhraseReport(
+                "a nice", "AGNIS", Plunderspell.Spells.SpellId.MisfireIgnis, Plunderspell.Voice.CastVolume.Normal), out Color misfireColour);
+            string fizzle = Plunderspell.UI.RaidHudView.CaptionFor(new Plunderspell.Spells.SpellCastingSystem.PhraseReport(
+                "potato", "POTATO", Plunderspell.Spells.SpellId.None, Plunderspell.Voice.CastVolume.Normal), out Color fizzleColour);
 
             StringAssert.Contains("\"igneous\"", clean, "The caption shows what was actually heard.");
             StringAssert.Contains("IGNIS", clean);
@@ -360,22 +360,22 @@ namespace RogueAi.Tests
         [Test]
         public void Test_SpellNumbersComeFromTheAuthoredAsset()
         {
-            Assert.IsNotNull(Resources.Load<RogueAi.Spells.SpellTuningProfile>(RogueAi.Spells.SpellTuning.ResourcePath),
+            Assert.IsNotNull(Resources.Load<Plunderspell.Spells.SpellTuningProfile>(Plunderspell.Spells.SpellTuning.ResourcePath),
                 "The tuning asset must ship under Resources, or builds fall back to code defaults.");
 
-            var custom = ScriptableObject.CreateInstance<RogueAi.Spells.SpellTuningProfile>();
+            var custom = ScriptableObject.CreateInstance<Plunderspell.Spells.SpellTuningProfile>();
             custom.IgnisDamagePerSecond = 99f;
             custom.ShoutPower = 3f;
             try
             {
-                RogueAi.Spells.SpellTuning.Use(custom);
-                Assert.AreEqual(99f, RogueAi.Spells.SpellTuning.IgnisDamagePerSecond);
-                Assert.AreEqual(3f, RogueAi.Spells.SpellTuning.PowerMultiplier(RogueAi.Voice.CastVolume.Shout),
+                Plunderspell.Spells.SpellTuning.Use(custom);
+                Assert.AreEqual(99f, Plunderspell.Spells.SpellTuning.IgnisDamagePerSecond);
+                Assert.AreEqual(3f, Plunderspell.Spells.SpellTuning.PowerMultiplier(Plunderspell.Voice.CastVolume.Shout),
                     "Editing the asset must change the game, not a copy of the numbers in code.");
             }
             finally
             {
-                RogueAi.Spells.SpellTuning.Use(null);
+                Plunderspell.Spells.SpellTuning.Use(null);
                 Object.Destroy(custom);
             }
         }

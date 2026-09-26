@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.EditorTools;
+using Plunderspell.Castle;
+using Plunderspell.EditorTools;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// Measures the art that actually shipped against the standard in docs/systems/scale.md, so the

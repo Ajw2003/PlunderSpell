@@ -1,6 +1,6 @@
 using System;
 
-namespace RogueAi.Voice
+namespace Plunderspell.Voice
 {
     /// <summary>
     /// Loudness bucket a phrase was spoken at. Drives spell modifiers:

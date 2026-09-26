@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1271bb0bc296be02d9bc55a769045dd9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.CastleRoomModule
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.CastleRoomModule
   Zone: 0
   RoomId: WallStraight
   Sockets: []

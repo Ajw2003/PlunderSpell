@@ -1,9 +1,9 @@
 using Plunderspell.Core;
 using PurrNet;
-using RogueAi.Voice;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Bridges the voice pipeline to networked spell casting.

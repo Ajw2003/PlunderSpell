@@ -1,13 +1,9 @@
 {
-    "name": "RogueAi.Guards",
-    "rootNamespace": "RogueAi.Guards",
+    "name": "Plunderspell.Acoustics",
+    "rootNamespace": "Plunderspell.Acoustics",
     "references": [
         "PurrNet.Runtime",
-        "RogueAi.Core",
-        "RogueAi.Acoustics",
-        "RogueAi.Alarm",
-        "RogueAi.Status",
-        "RogueAi.Items"
+        "Plunderspell.Voice"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

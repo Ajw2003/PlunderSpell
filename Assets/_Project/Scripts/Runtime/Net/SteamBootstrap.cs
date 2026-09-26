@@ -7,7 +7,7 @@ using Steamworks;
 #endif
 using UnityEngine;
 
-namespace RogueAi.Net
+namespace Plunderspell.Net
 {
     /// <summary>
     /// Starts Steamworks once, before the first scene loads, pumps its callbacks every frame and

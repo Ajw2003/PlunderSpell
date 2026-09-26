@@ -1,15 +1,12 @@
 {
-    "name": "RogueAi.Atmosphere",
-    "rootNamespace": "RogueAi.Atmosphere",
+    "name": "Plunderspell.Spells",
+    "rootNamespace": "Plunderspell.Spells",
     "references": [
+        "Plunderspell.Voice",
+        "Plunderspell.Foundation",
+        "Plunderspell.Acoustics",
         "PurrNet.Runtime",
-        "RogueAi.Castle",
-        "RogueAi.Raid",
-        "Unity.RenderPipelines.Core.Runtime",
-        "Unity.RenderPipelines.Universal.Runtime",
-        "RogueAi.Alarm",
-        "RogueAi.Extraction",
-        "RogueAi.Inventory",
+        "Plunderspell.Items",
         "Plunderspell.Core"
     ],
     "includePlatforms": [],

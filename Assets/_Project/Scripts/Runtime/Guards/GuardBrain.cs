@@ -1,7 +1,7 @@
-using RogueAi.Alarm;
+using Plunderspell.Alarm;
 using UnityEngine;
 
-namespace RogueAi.Guards
+namespace Plunderspell.Guards
 {
     /// <summary>
     /// Everything a guard decides, as pure functions. No scene, no components, no time — just the

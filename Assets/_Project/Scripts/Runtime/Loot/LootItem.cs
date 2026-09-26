@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Loot
+namespace Plunderspell.Loot
 {
     /// <summary>
     /// Immutable design-time data describing a single lootable treasure. This is a pure data bag
@@ -13,7 +13,7 @@ namespace RogueAi.Loot
     /// <item><see cref="Fragility"/> — the collision relative-velocity (m/s) above which the item shatters.</item>
     /// </list>
     /// </summary>
-    [CreateAssetMenu(fileName = "LootItem", menuName = "RogueAi/Loot/Loot Item", order = 0)]
+    [CreateAssetMenu(fileName = "LootItem", menuName = "Plunderspell/Loot/Loot Item", order = 0)]
     public class LootItem : ScriptableObject
     {
         [Header("Economy")]

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using Interfaces;
 using PurrNet;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Status;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Status;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace RogueAi.Guards
+namespace Plunderspell.Guards
 {
     /// <summary>
     /// A castle guard: the thing that makes noise matter.

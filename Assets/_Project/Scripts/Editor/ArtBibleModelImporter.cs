@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     // doc-ref d1ef docs/systems/raid-scene-assembly.md
     /// <summary>

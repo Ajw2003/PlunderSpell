@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Spells;
-using RogueAi.Voice;
+using Plunderspell.Spells;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// EditMode tests for the Milestone 1 voice-casting pipeline: mock provider,

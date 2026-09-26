@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RogueAi.Castle;
-using RogueAi.Inventory;
+using Plunderspell.Castle;
+using Plunderspell.Inventory;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>The four jobs the art bible gives every Age (docs/art/data/*.json, "role").</summary>
     public enum ArtBibleRole

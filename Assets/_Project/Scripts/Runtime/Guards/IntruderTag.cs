@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Guards
+namespace Plunderspell.Guards
 {
     /// <summary>
     /// Marks a player as something guards look for, for as long as it is enabled.

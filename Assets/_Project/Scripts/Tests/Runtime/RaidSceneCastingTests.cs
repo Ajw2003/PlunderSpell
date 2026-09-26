@@ -2,15 +2,15 @@
 using System.Collections;
 using NUnit.Framework;
 using Plunderspell.Core;
-using RogueAi.Spells;
-using RogueAi.Spells.Vfx;
-using RogueAi.Voice;
+using Plunderspell.Spells;
+using Plunderspell.Spells.Vfx;
+using Plunderspell.Voice;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Drives the real raid scene the way a player does, rather than a fixture built in a test.

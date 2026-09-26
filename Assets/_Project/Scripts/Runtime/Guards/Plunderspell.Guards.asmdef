@@ -1,12 +1,13 @@
 {
-    "name": "RogueAi.Castle",
-    "rootNamespace": "RogueAi.Castle",
+    "name": "Plunderspell.Guards",
+    "rootNamespace": "Plunderspell.Guards",
     "references": [
         "PurrNet.Runtime",
-        "RogueAi.Core",
-        "RogueAi.Acoustics",
-        "RogueAi.Alarm",
-        "Unity.AI.Navigation"
+        "Plunderspell.Foundation",
+        "Plunderspell.Acoustics",
+        "Plunderspell.Alarm",
+        "Plunderspell.Status",
+        "Plunderspell.Items"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

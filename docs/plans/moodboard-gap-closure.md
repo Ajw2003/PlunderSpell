@@ -51,7 +51,7 @@ evidence anywhere in `docs/systems/` of a swing/reach/heft-driven melee attack �
 
 ### 2.1 Voice — mostly built, feedback is missing
 
-Built: `RogueAi.Voice` (Vosk + keyboard mock), `SpellLexicon`, `MisfireEngine`, volume-scaled
+Built: `Plunderspell.Voice` (Vosk + keyboard mock), `SpellLexicon`, `MisfireEngine`, volume-scaled
 casting. This is the most complete pillar in the game.
 
 Not built:
@@ -160,7 +160,7 @@ asset. Two things the mood board specifies that aren't covered by either filing:
 
 ### 2.8 Networking, market persistence, juice
 
-- The **acoustics simulation is real but silent** — `RogueAi.Acoustics` computes attenuated noise
+- The **acoustics simulation is real but silent** — `Plunderspell.Acoustics` computes attenuated noise
   events for guards and the alarm to react to, but produces no sound a player hears
   (`docs/systems/alarm.md`). Guards are correspondingly silent: no patrol murmur, alert bark, or
   chase shout — a second, narrower gap than the general "no SFX" already filed as issue #18,

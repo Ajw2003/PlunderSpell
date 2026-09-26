@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Loot
+namespace Plunderspell.Loot
 {
     /// <summary>
     /// What a carryable object is worth when it leaves the castle. Sits alongside <c>Item</c> on

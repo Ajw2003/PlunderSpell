@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using RogueAi.Castle;
-using RogueAi.Guards;
-using RogueAi.Inventory;
+using Plunderspell.Castle;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Puts the garrison planned by <see cref="GuardPlacementPlanner"/> into the world. Like

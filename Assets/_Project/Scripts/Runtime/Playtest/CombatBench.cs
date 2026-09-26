@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using Plunderspell.Core;
-using RogueAi.Guards;
-using RogueAi.Raid;
+using Plunderspell.Guards;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Playtest
+namespace Plunderspell.Playtest
 {
     /// <summary>
     /// Spawns enemies to fight on demand, so a weapon or a spell can be tried in about two seconds

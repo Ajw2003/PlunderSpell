@@ -2,7 +2,7 @@ using PurrNet;
 using StateMachine;
 using UnityEngine;
 
-namespace RogueAi.Loot
+namespace Plunderspell.Loot
 {
     /// <summary>
     /// Turns a downed player (HP ≤ 0) into a carryable "body" that teammates can haul to extraction

@@ -5,7 +5,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// An item hurts what it hits only by its own motion (#146): walking into a cauldron standing on
@@ -82,12 +82,12 @@ namespace RogueAi.Tests
         }
 
         /// <summary>Fragile loot, as the faience hippopotamus (Fragility 2 m/s), with a box collider.</summary>
-        private RogueAi.Loot.LootPickup MakeFragileLoot(Vector3 position)
+        private Plunderspell.Loot.LootPickup MakeFragileLoot(Vector3 position)
         {
             GameObject go = Make(PrimitiveType.Cube, position);
             go.transform.localScale = Vector3.one * 0.4f;
-            var pickup = go.AddComponent<RogueAi.Loot.LootPickup>();
-            var data = ScriptableObject.CreateInstance<RogueAi.Loot.LootItem>();
+            var pickup = go.AddComponent<Plunderspell.Loot.LootPickup>();
+            var data = ScriptableObject.CreateInstance<Plunderspell.Loot.LootItem>();
             data.Worth = 420f;
             data.Bulk = 0.5f;
             data.Fragility = 2f;
@@ -102,7 +102,7 @@ namespace RogueAi.Tests
             GameObject floor = Make(PrimitiveType.Cube, new Vector3(0f, -0.5f, 0f));
             floor.transform.localScale = new Vector3(20f, 1f, 20f);
             (Rigidbody walker, Body _) = MakeWalker(new Vector3(0f, 1f, 0f));
-            RogueAi.Loot.LootPickup loot = MakeFragileLoot(new Vector3(0f, 0.2f, 2f));
+            Plunderspell.Loot.LootPickup loot = MakeFragileLoot(new Vector3(0f, 0.2f, 2f));
 
             for (float t = 0f; t < 1f; t += Time.fixedDeltaTime)
             {
@@ -118,7 +118,7 @@ namespace RogueAi.Tests
         {
             GameObject floor = Make(PrimitiveType.Cube, new Vector3(0f, -0.5f, 0f));
             floor.transform.localScale = new Vector3(20f, 1f, 20f);
-            RogueAi.Loot.LootPickup loot = MakeFragileLoot(new Vector3(0f, 3f, 0f));
+            Plunderspell.Loot.LootPickup loot = MakeFragileLoot(new Vector3(0f, 3f, 0f));
 
             for (float t = 0f; t < 1.5f; t += Time.fixedDeltaTime)
                 yield return new WaitForFixedUpdate();

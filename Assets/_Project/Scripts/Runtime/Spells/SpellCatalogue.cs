@@ -1,4 +1,4 @@
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Pure facts about <see cref="SpellId"/> values: whether an id is a misfire outcome, and the

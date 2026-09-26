@@ -120,7 +120,7 @@ An enemy is a `SkinnedMeshRenderer`, and its `Renderer.bounds` is the box the FB
 it: padded, and not fitted to the vertices. On this roster it put `GildedColossus` 0.156 m below its
 own feet while the geometry sat exactly on the origin, and it made most of the cast read taller than
 they draw. Anything that decides where a foot is, or how tall a model stands, must measure the
-vertices instead — `RogueAi.EditorTools.PrefabGeometry.TryMeasureVerticalExtent`, used by the forge,
+vertices instead — `Plunderspell.EditorTools.PrefabGeometry.TryMeasureVerticalExtent`, used by the forge,
 the stance screenshot tool and `Test_EveryEnemyStandsOnItsOwnOrigin` so they cannot disagree.
 
 Getting the vertices wrong is quiet. `SkinnedMeshRenderer.BakeMesh` must be called with
