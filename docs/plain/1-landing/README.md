@@ -34,8 +34,8 @@ searching for documents that already exist. This page exists so nobody has to gu
   move, and an old document goes to an archive folder rather than being deleted.
 
 ## Related
-- [Roadmap](../../2-roadmap/Roadmap.md) *(no plain copy yet)*
-- [Project state](../../3-state/ProjectState.md) *(no plain copy yet)*
+- [Roadmap](../../2-roadmap/Roadmap.md)
+- [Project state](../3-state/ProjectState.md)
 - [Core](../4-systems/core.md)
 - [Net](../4-systems/net.md)
 - [Voice](../4-systems/voice.md)

@@ -58,7 +58,7 @@ code means a finished feature.
 - [Castle](../4-systems/castle.md)
 - [Net](../4-systems/net.md)
 - [Scale](../4-systems/scale.md)
-- [Roadmap](../../2-roadmap/Roadmap.md) *(no plain copy yet)*
+- [Roadmap](../../2-roadmap/Roadmap.md)
 
 ## Left out
 Dated change-by-change history, exact issue numbers, specific test and file names, and the
