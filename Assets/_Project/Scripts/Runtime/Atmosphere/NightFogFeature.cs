@@ -13,7 +13,7 @@ namespace Plunderspell.Atmosphere
     /// The fog's colour, density and the fires it scatters are shader globals owned by
     /// <see cref="CastleAtmosphere"/>. With no atmosphere in the scene the density global is zero and
     /// the pass is skipped, so menus and benches without one render untouched.
-    /// See docs/systems/atmosphere.md ("Fog").
+    /// See docs/4-systems/atmosphere.md ("Fog").
     /// </summary>
     public class NightFogFeature : ScriptableRendererFeature
     {

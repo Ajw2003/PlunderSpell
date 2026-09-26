@@ -15,7 +15,7 @@ namespace Plunderspell.EditorTools
     /// zones. Run once; the prefabs and the roster are committed assets from then on, editable by
     /// hand like any other.
     ///
-    /// See docs/systems/raid-scene-assembly.md ("Enemy prefabs") for why the prefabs are variants of
+    /// See docs/4-systems/raid-scene-assembly.md ("Enemy prefabs") for why the prefabs are variants of
     /// the model rather than copies of it, and for the per-enemy tuning table.
     /// </summary>
     public static class EnemyPrefabForge
@@ -63,7 +63,7 @@ namespace Plunderspell.EditorTools
         // supernatural five and CryptRisen belong to no century, so they garrison only the Crypt and
         // are posted to every Age (EnemyRoster.Entry.AnyEra).
         // The second column is standing height in metres, against the 1.8m human standard in
-        // docs/systems/scale.md; BuildPrefab scales each model to it.
+        // docs/4-systems/scale.md; BuildPrefab scales each model to it.
         private static readonly EnemySpec[] Specs =
         {
             new EnemySpec("Watchman",       1.80f, 2.0f, 4.0f, 14f,  70f),
@@ -82,7 +82,7 @@ namespace Plunderspell.EditorTools
             new EnemySpec("CryptRisen",     1.75f, 1.6f, 4.2f, 12f,  80f,
                 (CastleZone.Crypt, 12)),
             // Head and shoulders over everything else, but under the Crypt's clear height — the
-            // tightest room it can be posted to. See docs/systems/scale.md ("Enemies").
+            // tightest room it can be posted to. See docs/4-systems/scale.md ("Enemies").
             new EnemySpec("GildedColossus", 2.50f, 1.2f, 2.8f, 15f, 400f,
                 (CastleZone.Crypt, 2)),
         };

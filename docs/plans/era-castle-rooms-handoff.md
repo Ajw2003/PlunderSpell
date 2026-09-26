@@ -64,7 +64,7 @@ install -y blender` first.
 When an Age's zone is finished: `python3 Tools/ArtBible/build_room_sheets.py --only <Age> --check
 --models` (all sheets), then `python3 Tools/ArtBible/build_room_sheets.py --only <Age>`, which writes
 `docs/art/rooms/<Age>.md`. Then `python3 Tools/AssetPipeline/make_contact_sheet.py` writes the
-per-Age contact sheet. Update the M3 row in `docs/ProjectState.md`.
+per-Age contact sheet. Update the M3 row in `docs/3-state/ProjectState.md`.
 
 ## Rules the validator enforces (learned the hard way)
 
@@ -95,4 +95,4 @@ per-Age contact sheet. Update the M3 row in `docs/ProjectState.md`.
 - `Tools/AssetPipeline/run_pipeline.sh` runs clean, and the High Medieval set stays unchanged.
 - `python3 Tools/ArtBible/build_room_sheets.py --check --models` reports all OK.
 - Update the plan so its tables match what was built (for example, the Great Hall's hearth is on
-  the west wall north of centre). Update `docs/ProjectState.md` and `docs/Today.md`. Push.
+  the west wall north of centre). Update `docs/3-state/ProjectState.md` and `docs/5-today/Today.md`. Push.

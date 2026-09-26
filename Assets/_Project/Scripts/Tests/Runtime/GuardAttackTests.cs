@@ -10,7 +10,7 @@ using UnityEngine.TestTools;
 namespace Plunderspell.Tests
 {
     /// <summary>
-    /// A guard that chases but never lands a blow is scenery. See docs/systems/raid.md,
+    /// A guard that chases but never lands a blow is scenery. See docs/4-systems/raid.md,
     /// "Guards that can actually hurt you".
     /// </summary>
     public class GuardAttackTests

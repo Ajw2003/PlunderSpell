@@ -16,7 +16,7 @@ namespace Plunderspell.Tests
     /// Drives the real raid scene the way a player does, rather than a fixture built in a test.
     /// If casting works here it works in the game, which is the only claim worth making.
     ///
-    /// See docs/systems/spells.md, "Casting it in the Editor".
+    /// See docs/4-systems/spells.md, "Casting it in the Editor".
     /// </summary>
     public class RaidSceneCastingTests
     {

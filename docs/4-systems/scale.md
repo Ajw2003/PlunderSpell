@@ -106,7 +106,7 @@ meshes and are read from renderer bounds; enemies are rigged and are read from t
 
 `Tools ▸ Plunderspell ▸ Capture Enemy Stance Screenshots` photographs the roster on a ground slab and
 writes `stance-report.txt` beside the images. The committed before/after set for issue 94 is in
-[`docs/generated/enemy-stance-screenshots/`](../generated/enemy-stance-screenshots/).
+[`docs/generated/enemy-stance-screenshots/`](../generated/enemy-stance-screenshots).
 
 Archway clearance is **not** covered: the opening is a hole in a mesh rather than an object, so
 nothing here measures it. The archway figures above are still derived from

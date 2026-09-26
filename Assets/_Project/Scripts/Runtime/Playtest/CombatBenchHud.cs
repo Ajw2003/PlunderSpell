@@ -7,7 +7,7 @@ namespace Plunderspell.Playtest
 {
     /// <summary>
     /// The bench's control panel: pick an enemy, a count and a starting alert state, then spawn.
-    /// See docs/systems/combat-bench.md, "The panel is IMGUI".
+    /// See docs/4-systems/combat-bench.md, "The panel is IMGUI".
     /// </summary>
     [RequireComponent(typeof(CombatBench))]
     public class CombatBenchHud : MonoBehaviour

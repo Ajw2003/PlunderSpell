@@ -6,7 +6,7 @@ reverse-engineering them from the sheets.
 
 Source of truth for the look: the pitch bible [`docs/plunderspell.md`](../plunderspell.md) and its
 mood board [`docs/generated/plunderspell-moodboard.html`](../generated/plunderspell-moodboard.html).
-Source of truth for sizes: [`docs/systems/scale.md`](../systems/scale.md).
+Source of truth for sizes: [`docs/4-systems/scale.md`](../4-systems/scale.md).
 
 ## What each Age gets
 
@@ -33,7 +33,7 @@ roster; it does not delete or rework the five existing supernatural enemies.)
 Each Age's four enemies fill four roles: **patrol** (the common guard), **ranged**, **heavy**
 (the one you avoid), and **special** (the Age's signature threat).
 
-## Hard constraints (from `docs/systems/scale.md`)
+## Hard constraints (from `docs/4-systems/scale.md`)
 
 - Standard human: **1.80 m**, eyes 1.65 m, body radius 0.40 m.
 - Zone clear heights: Crypt 3.00 m · OuterBailey 3.60 m · InnerWard 4.00 m · Keep 4.60 m ·

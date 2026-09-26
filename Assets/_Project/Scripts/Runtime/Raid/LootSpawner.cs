@@ -64,7 +64,7 @@ namespace Plunderspell.Raid
 
         /// <summary>
         /// Holds every spawned piece frozen for <see cref="m_settleDelay"/>, then hands it back to
-        /// physics. See docs/systems/raid.md, "How loot settles".
+        /// physics. See docs/4-systems/raid.md, "How loot settles".
         /// </summary>
         private void BeginSettling()
         {

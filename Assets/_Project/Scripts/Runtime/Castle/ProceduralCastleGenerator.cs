@@ -480,7 +480,7 @@ namespace Plunderspell.Castle
         /// <summary>
         /// Fills every archway that faces an empty cell with its zone's door plug, so an opening
         /// either leads into the neighbouring room or is walled off — never out into nothing.
-        /// See docs/systems/scale.md ("Archways") for the sizes this relies on.
+        /// See docs/4-systems/scale.md ("Archways") for the sizes this relies on.
         /// </summary>
         private void SealOpenArchways(ProceduralCastleData data, Dictionary<Vector2Int, int> occupied)
         {
@@ -551,7 +551,7 @@ namespace Plunderspell.Castle
         /// <summary>
         /// Whether a module of <paramref name="zone"/> is authored with an archway facing
         /// <paramref name="direction"/>. Enclosed rooms open on all four sides — see
-        /// docs/systems/castle.md ("Doorways and door plugs").
+        /// docs/4-systems/castle.md ("Doorways and door plugs").
         /// </summary>
         public static bool HasArchwayFacing(CastleZone zone, Vector2Int direction)
         {

@@ -41,7 +41,7 @@ implements four of them.
   rooms with doorways, a placeholder haul, a garrison, the extraction zone, the HUD and a player who
   can walk, grab and cast. Everything it generates is placeholder — it is a harness for playing the
   game, not the art pass. Re-running always starts from an empty scene, so it never leaves a second
-  castle behind. See `docs/systems/raid.md`.
+  castle behind. See `docs/4-systems/raid.md`.
 
 - **`Tools/Headless/verify.sh`** compiles every gameplay and editor assembly and runs the whole test
   suite without Unity. See `Tools/Headless/README.md`.

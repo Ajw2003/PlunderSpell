@@ -14,7 +14,7 @@ namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// Guards the wiring of the hand-authored raid scene. See
-    /// docs/systems/raid-scene-assembly.md, "Authored, not generated", for why this exists.
+    /// docs/4-systems/raid-scene-assembly.md, "Authored, not generated", for why this exists.
     /// </summary>
     public class AuthoredRaidSceneTests
     {
@@ -56,7 +56,7 @@ namespace Plunderspell.Tests.Editor
 
         /// <summary>
         /// The player is not placed in the scene: the network spawns one per connection, solo
-        /// included, from the prefab the spawner names. See docs/systems/net.md.
+        /// included, from the prefab the spawner names. See docs/4-systems/net.md.
         /// </summary>
         [Test]
         public void Test_ThePlayerIsSpawnedFromTheAuthoredPrefab()

@@ -7,7 +7,7 @@ namespace Plunderspell.Spells.Vfx
     /// <see cref="SpellCastingSystem.CastResolved"/>, which fires on every peer, so a teammate's
     /// spell is visible to everyone rather than only to whoever spoke.
     ///
-    /// See docs/systems/spells.md, "Seeing a cast", including why a spell's bolt carries no damage.
+    /// See docs/4-systems/spells.md, "Seeing a cast", including why a spell's bolt carries no damage.
     /// </summary>
     public class SpellVfxDirector : MonoBehaviour
     {
@@ -43,7 +43,7 @@ namespace Plunderspell.Spells.Vfx
         /// <summary>
         /// Pushes the burst's centre out from the cast origin by its own radius, so the near edge
         /// lands at the origin rather than the caster's own camera ending up inside the sphere. See
-        /// docs/Decisions.md, "A spell burst is centred on where it lands, not where it starts".
+        /// docs/6-decisions/Decisions.md, "A spell burst is centred on where it lands, not where it starts".
         /// </summary>
         private static Vector3 BurstPosition(SpellCastingSystem.CastReport report, float radius) =>
             report.Origin + report.Direction.normalized * (radius + k_burstClearance);

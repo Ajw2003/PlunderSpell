@@ -15,7 +15,7 @@ namespace Plunderspell.Tests
     /// proves the spell system works and says nothing about whether the keyboard reaches it — and
     /// the keyboard is where casting was failing.
     ///
-    /// See docs/systems/spells.md, "Two ways to cast".
+    /// See docs/4-systems/spells.md, "Two ways to cast".
     /// </summary>
     public class CastingInputTests : InputTestFixture
     {

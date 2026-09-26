@@ -30,7 +30,7 @@ namespace StateMachine
 
         [Header("Casting")]
         [Tooltip("Optional. Leave empty and the raid's voice casting (hold V) is used instead. " +
-                 "See docs/systems/spells.md, \"Two ways to cast\".")]
+                 "See docs/4-systems/spells.md, \"Two ways to cast\".")]
         [SerializeField] private SpellBook _spellBook;
 
         /// <summary>

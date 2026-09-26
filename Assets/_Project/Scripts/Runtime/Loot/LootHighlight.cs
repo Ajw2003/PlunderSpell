@@ -7,7 +7,7 @@ namespace Plunderspell.Loot
     /// something the world says rather than something the player has to guess by walking into it.
     ///
     /// Why a property block rather than an outline shader, and why this is attached at runtime:
-    /// docs/Decisions.md, "Focus glow is a property block, added at runtime".
+    /// docs/6-decisions/Decisions.md, "Focus glow is a property block, added at runtime".
     /// </summary>
     public class LootHighlight : MonoBehaviour
     {

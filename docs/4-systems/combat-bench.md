@@ -72,7 +72,7 @@ bench: nothing there sets `CrosshairView.HasTarget`, since the bench has no `Loo
 For the same reason `RaidHudView` is: the bench is a code-built scene with no authored prefabs, and
 IMGUI needs none. The cost is the same too — `Camera.Render()` never invokes `OnGUI`, so the
 screenshot forge photographs the arena and the enemies in it but **can never show the panel**. See
-`docs/Decisions.md`, "The crosshair is IMGUI, and therefore invisible to the screenshot test".
+`docs/6-decisions/Decisions.md`, "The crosshair is IMGUI, and therefore invisible to the screenshot test".
 
 ## Invariants
 

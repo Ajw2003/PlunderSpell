@@ -22,6 +22,10 @@ towed behind the holder, as the user asked. Then #149: RogueAi is renamed Plunde
 the code (see Decisions, 2026-09-26). After it: EditMode 70 pass, 3 skip, 1 known failure;
 PlayMode 217 of 218, the same known guard test; and a solo raid played cleanly in the Editor.
 
+Then the docs moved into numbered tier folders (`docs/1-landing/` … `docs/6-decisions/`), as the
+house rules now expect; every pointer was rewritten and `Tools/docs/check_doc_links.py` reports 0
+broken links (see Decisions, 2026-09-26).
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still
@@ -58,13 +62,13 @@ shader, the dressed outer bailey and courtyards, the sealed gate, Low/Medium/Hig
 default and a Graphics setting. Looks checked by eye against the Blender renders:
 `docs/generated/night-atmosphere-2026-09-25/wip11/`. Navigation audit with dressing: 44/44 rooms,
 100% floor. Not done: volumetric fog (step 5), vertex soot bake, profiler timings, a play-through
-by a person. PlayMode suite not run. How it works: `docs/systems/atmosphere.md`.
+by a person. PlayMode suite not run. How it works: `docs/4-systems/atmosphere.md`.
 
 ---
 
 **2026-09-25, evening — night atmosphere build started on `claude/night-atmosphere`; step 0
 (portal, sealed castle) done.** Branched off `claude/staging-2026-09-24` to build all of
-[`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md). Step 0: raids arrive at a seeded
+[`docs/plans/night-atmosphere.md`](../plans/night-atmosphere.md). Step 0: raids arrive at a seeded
 spot inside the walls through a portal that is also the way out, anyone outside it when the clock
 runs out is left behind, the gatehouse and wall tops are sealed, and the outside is gone. Verified
 in the live Editor by playing solo raids through the menu calls: arrival, extraction (saved 1),
@@ -88,7 +92,7 @@ mode never starts a NetworkManager or spawns a player — captures below use a t
 `CastleSpawnResolver.ResolveSpawn`, not the player's own camera). Two tuning rounds against
 `docs/generated/look-samples-2026-09-24/calm.png` (fog/ambient/exposure warmed up). Captures:
 `docs/generated/night-look-preview-2026-09-25/spawn-view.png` and `bailey-view.png`. Stand-in only —
-see `docs/ProjectState.md` for what it doesn't do; superseded once
+see `docs/3-state/ProjectState.md` for what it doesn't do; superseded once
 `docs/plans/night-atmosphere.md` steps 1-2 are built.
 
 ---
@@ -97,7 +101,7 @@ see `docs/ProjectState.md` for what it doesn't do; superseded once
 settle the aesthetic first. Decided, section by section: night, warm fire glowing in fog under a
 faint moon; a castle that is calm, then lights up and reddens with each alarm state; one stylised
 surface shader; an outer bailey dressed inside the wall; fog, post-processing and Low/Medium/High
-quality levels that run on a Steam Deck. The spec is [`docs/plans/night-atmosphere.md`](plans/night-atmosphere.md);
+quality levels that run on a Steam Deck. The spec is [`docs/plans/night-atmosphere.md`](../plans/night-atmosphere.md);
 nothing is built yet. The look samples were rendered in Blender (`Tools/LookSamples/`) because the
 Unity Editor was stuck on a "Recovering Scene Backups" dialog, which still needs a person to click
 Yes.
@@ -112,7 +116,7 @@ second test on `claude/staging-2026-09-24` found three things, all fixed there.
 - **The Late Medieval centre.** The Effigy Crypt's tomb sat in a corner. It's re-laid with a gilt
   floor brass under a candle hearse. The walkway rule rules out a tomb in the middle.
 EditMode 25/25, PlayMode 186/186. Details:
-[`docs/plans/staging-playtest-2-2026-09-24.md`](plans/staging-playtest-2-2026-09-24.md).
+[`docs/plans/staging-playtest-2-2026-09-24.md`](../plans/staging-playtest-2-2026-09-24.md).
 
 ---
 
@@ -124,7 +128,7 @@ and held at a grip point placed from the art bible. The Tab grid inventory is re
 exposed a hidden dependency: PurrNet had only been generating `HistoricalEra`'s serializer because
 of the unused `PlayerInventory`, so the type is now registered explicitly. EditMode 24/24, PlayMode
 183/183. Next: the user retests staging; enemy animation is the next job. Details:
-[`docs/plans/staging-followups-2026-09-24.md`](plans/staging-followups-2026-09-24.md).
+[`docs/plans/staging-followups-2026-09-24.md`](../plans/staging-followups-2026-09-24.md).
 
 ---
 
@@ -132,7 +136,7 @@ of the unused `PlayerInventory`, so the type is now registered explicitly. EditM
 then castle-bench into `claude/staging-2026-09-24` rather than `main`, so the user can playtest
 before `main` changes. In the live Editor it compiles, and EditMode 26/26 and PlayMode 183/183
 pass. Next: the user tests staging. The follow-ups (roster era tags, the 6 new enemies, 19 Late
-rooms) are listed in the [plan](plans/merge-2026-09-24-art-branches.md) and not started.
+rooms) are listed in the [plan](../plans/merge-2026-09-24-art-branches.md) and not started.
 
 ---
 
@@ -142,7 +146,7 @@ against a trial merge of all three (`claude/trial-merge-2026-09-24`); it compile
 are modelled and none is animated. 10 are in raid rosters; 6 are in none. The 20 loot items and 29
 Bronze rooms are wired in. 19 of the 29 Late Medieval rooms are model-only. The one piece of
 duplicate work is era replication in `RaidDirector`, written on two branches. Plan, awaiting
-approval: [`docs/plans/merge-2026-09-24-art-branches.md`](plans/merge-2026-09-24-art-branches.md).
+approval: [`docs/plans/merge-2026-09-24-art-branches.md`](../plans/merge-2026-09-24-art-branches.md).
 Screenshots and scripts: `docs/generated/merge-audit-2026-09-24/`.
 
 **2026-09-24, later — art-bible enemies in the engine, E0–E4, as code (not yet run in Unity).**
@@ -156,7 +160,7 @@ every Age. `Tools/Headless/verify.sh` had stopped compiling since the co-op work
 extended and it now builds and runs (217 tests: 187 pass, 26 fail in known fidelity gaps, 4
 skipped); every new test passes. Nothing was run in the Editor: importer, forge, the avatar check,
 the scale tests on forged prefabs, CombatBench and co-op are all UNTESTED. Steps are in
-`docs/systems/raid-scene-assembly.md`, "Verification".
+`docs/4-systems/raid-scene-assembly.md`, "Verification".
 
 ---
 
@@ -179,11 +183,11 @@ catalogue. Driven in the live Editor through Main menu → Lair → Set Out, eac
 own art. Bronze Age: 20 kinds of Bronze room, Bronze loot, Levies, Slingers and Champions. High
 Medieval: the original castle, with knights, crossbowmen, wardens and hounds. Every guard was on
 the NavMesh. Screenshots: `docs/generated/era-integration-2026-09-24/`. Details and limits:
-`docs/systems/raid-scene-assembly.md`, "Eras".
+`docs/4-systems/raid-scene-assembly.md`, "Eras".
 
 ---
 
-**2026-09-24, end of session — enemies mid-run.** ArtForge builds rigged enemies; Lantern Warden and Alaunt War-hound are done, and 14 more were in progress when usage ran out. Resume from [`docs/art/HANDOFF.md`](art/HANDOFF.md).
+**2026-09-24, end of session — enemies mid-run.** ArtForge builds rigged enemies; Lantern Warden and Alaunt War-hound are done, and 14 more were in progress when usage ran out. Resume from [`docs/art/HANDOFF.md`](../art/HANDOFF.md).
 
 ---
 
@@ -227,7 +231,7 @@ The first pass below shipped labelled `UNTESTED:` because no Unity or .NET SDK w
 Installing `dotnet-sdk-8.0` via `apt` (the earlier `dot.net` install script is proxy-blocked here;
 `apt` is not) turned up a real, unrelated bug: `Tools/Headless/verify.sh` has never actually worked
 in this repo — its own `.csproj` files were gitignored from the first commit and never committed.
-Full account in `docs/Decisions.md`, "The headless harness's own project files were never
+Full account in `docs/6-decisions/Decisions.md`, "The headless harness's own project files were never
 committed". Fixed the gitignore rule, reconstructed the three project files, and filled the shim
 gaps that running it for the first time exposed (see `Tools/Headless/README.md`).
 
@@ -257,7 +261,7 @@ Worked from `Plans/Priority_Queue.md` Phase 1, on branch `claude/amazing-ritchie
   but neither health was visible. `RaidHudModel`/`RaidHudPresenter`/`RaidHudView` now carry and draw
   the player's health bar, and `CastleGuard` self-registers into a new static `Active` list (mirroring
   the existing `Intruders` pattern) so `RaidHudView` can project an in-world health bar over every
-  living guard. See `docs/Decisions.md`, "Enemy health bars are IMGUI, projected from world space",
+  living guard. See `docs/6-decisions/Decisions.md`, "Enemy health bars are IMGUI, projected from world space",
   for why that path was chosen over wiring up the existing but unused `HealthBar.cs` uGUI component.
 - Added `Test_TheHudShowsPlayerHealth`, `Test_TheHudReadsFullWithNoPlayerWired`,
   `Test_TheHudListsEveryLivingGuardAsAnInWorldHealthBar` and
@@ -295,10 +299,10 @@ checking each issue against the code rather than against its plan, on branch
   before doing any more artwork") is the live order; `docs/plans/playable-state-backlog.md` is
   marked superseded for ordering and kept as the issue map. Its 55 per-issue plan links all pointed
   at `docs/plans/issues/`, which does not exist — the plans are in `Plans/`. Relinked, and `Plans/`
-  is now in `docs/README.md`'s moving-parts table.
+  is now in `docs/1-landing/README.md`'s moving-parts table.
 - **Fixed issue 9 on the component the raid actually uses.** It had been implemented against
   `FreeLookPlaytestController`, which is not in `RaidScene.unity` — the raid carries
-  `PlayerStateMachine` + `PlayerInputController`, which had no gate at all. See `docs/Decisions.md`,
+  `PlayerStateMachine` + `PlayerInputController`, which had no gate at all. See `docs/6-decisions/Decisions.md`,
   "Issue 9's gate belongs on the raid's player, not only on the playtest harness".
 - **Closed 5 issues on evidence**, not on a code read: #5, #9, #19, #20, #25. 55 open → 50.
 - Regenerated the 13-image castle screenshot set as the visual evidence behind #5/#19/#25.
@@ -335,18 +339,18 @@ window. It is a batchmode artifact and should not be read as a red suite.
 **2026-09-16 — documentation audit day.** No gameplay code changed. `main` had gained the
 raid-scene-assembly work, the menu → lair → raid flow, the castle orientation fix and a 21-issue
 playtesting backlog since anyone last touched `docs/`, and `docs/` itself had tier 4
-(`docs/systems/`) and `docs/plans/` but no tier 1, 2, 3, 5 or 6, and no `archive/` or `generated/`.
+(`docs/4-systems/`) and `docs/plans/` but no tier 1, 2, 3, 5 or 6, and no `archive/` or `generated/`.
 
 ## Done
 
 - Found `origin/claude/repo-status-check-hjp6z7`: an unmerged branch that had already written
   tiers 1, 2, 3, 5 and three missing tier-4 docs (`voice.md`, `castle.md`, `alarm.md`), cut from a
   point 11 commits behind current `main`. Adopted its tier-4 work as-is (the systems it covers
-  hadn't changed) and rewrote the rest for what's shipped since. See `docs/Decisions.md`'s first
+  hadn't changed) and rewrote the rest for what's shipped since. See `docs/6-decisions/Decisions.md`'s first
   entry for the full reasoning.
-- Wrote tier 6 (`docs/Decisions.md`) from scratch — 8 real, dated decisions mined from commit
+- Wrote tier 6 (`docs/6-decisions/Decisions.md`) from scratch — 8 real, dated decisions mined from commit
   history and the existing plan/system docs, none invented.
-- Added `docs/systems/raid-scene-assembly.md` to the tier-4 index (`docs/systems/README.md`) — it
+- Added `docs/4-systems/raid-scene-assembly.md` to the tier-4 index (`docs/4-systems/README.md`) — it
   already existed on `main` but was never indexed.
 - Created `docs/generated/` and moved the three standalone HTML previews
   (`castle-generator-visualization.html`, `plunderspell-moodboard.html`, `ui-preview.html`) into
@@ -358,13 +362,13 @@ playtesting backlog since anyone last touched `docs/`, and `docs/` itself had ti
   branch was never merged so `main` still had the original `.agent_reports/` at the repo root)
   into `docs/archive/2026-09-15-integration/`, with the same "not actually committed" correction
   to `FINAL_MERGE_SUMMARY.md`'s self-reference that the abandoned branch had already worked out.
-- Updated `docs/ProjectState.md`: the raid now runs on real authored art rather than primitives,
+- Updated `docs/3-state/ProjectState.md`: the raid now runs on real authored art rather than primitives,
   the menu/lair/raid flow is live, and the 2026-09-16 issue backlog (21 open items, verified live
   via `gh issue list`) is now the concrete evidence behind M2's "acceptance unchecked" status.
 - Fixed the one real drift already known from the abandoned branch: `docs/plans/plunderspell.md`'s
   own "Status" section still said "Planning complete; no implementation yet" despite M0–M3 having
-  merged weeks ago. Pointed it at `docs/ProjectState.md` instead.
-- Added a pointer from the project's `CLAUDE.md` to `docs/README.md`.
+  merged weeks ago. Pointed it at `docs/3-state/ProjectState.md` instead.
+- Added a pointer from the project's `CLAUDE.md` to `docs/1-landing/README.md`.
 
 ## Deliberately not done
 
@@ -374,11 +378,11 @@ playtesting backlog since anyone last touched `docs/`, and `docs/` itself had ti
 - Did not attempt to verify M1/M2's acceptance criteria myself (real-microphone accent testing, a
   real four-player session), and did not triage the 21 open GitHub issues individually — both need
   a human (and, for the issues, actual engineering time), not a docs pass. Flagged as unchecked /
-  open in `docs/ProjectState.md` instead of guessing at status.
+  open in `docs/3-state/ProjectState.md` instead of guessing at status.
 
 ## Surfaced, not today's job
 
-- `docs/ProjectState.md` → "Choosing an era does nothing to the raid you get" — still true,
+- `docs/3-state/ProjectState.md` → "Choosing an era does nothing to the raid you get" — still true,
   re-verified by grep this pass. `CastleRoomRegistry` has no era field, so M3 needs a data-model
   change before it can produce era-specific content.
 - The 21-issue playtesting backlog (`docs/generated/github-issues.json`, GitHub issues #5–#25) is
@@ -391,7 +395,7 @@ playtesting backlog since anyone last touched `docs/`, and `docs/` itself had ti
 
 ## Next, in order
 
-1. Triage the 21 open GitHub issues against the milestones in `docs/Roadmap.md` — several (loot
+1. Triage the 21 open GitHub issues against the milestones in `docs/2-roadmap/Roadmap.md` — several (loot
    fling, room connectivity, player spawn placement) block a credible M2 playtest; others (VFX/SFX,
    menu art) don't block the loop but do block "something you'd hand a friend."
 2. Get an actual four-player raid played start to finish and record what happened, rather than
@@ -414,11 +418,11 @@ gap — "exhaustive," including content that has no art or systems work behind i
   `Assets/_Project/{Art,Data,Prefabs,Scripts}` and `Tools/` on disk (folder-listing depth, not a
   line-by-line code read — see the plan doc's "What this pass did not check").
 - Wrote up the full findings, pillar by pillar, as
-  [`docs/plans/moodboard-gap-closure.md`](plans/moodboard-gap-closure.md).
+  [`docs/plans/moodboard-gap-closure.md`](../plans/moodboard-gap-closure.md).
 - Filed 34 new GitHub issues via `Tools/mkissues_moodboard_gap.py`, following the same
   `gh issue create` mechanism as `Tools/mkissues.py`; manifest at
   `docs/generated/github-issues-moodboard-gap.json` once run.
-- Pointed `docs/README.md` and `docs/ProjectState.md` at the new plan doc and backlog.
+- Pointed `docs/1-landing/README.md` and `docs/3-state/ProjectState.md` at the new plan doc and backlog.
 
 ### Deliberately not done
 

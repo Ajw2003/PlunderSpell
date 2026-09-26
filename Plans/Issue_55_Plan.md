@@ -12,16 +12,16 @@ The goal is to conduct a complete play session of a raid with four real players 
 3.  **Play the Raid:**
     Have all four players join the game and attempt to complete the raid from the beginning to the end.
 4.  **Record the Outcome:**
-    Update the `docs/ProjectState.md` file with the results of the session, noting whether the group won or lost, and documenting the reasons why.
+    Update the `docs/3-state/ProjectState.md` file with the results of the session, noting whether the group won or lost, and documenting the reasons why.
 
 ## Verification Steps
 1.  Verify that all four players can successfully join the same game.
 2.  Confirm that the play session covers the entire raid from start to finish.
-3.  Check `docs/ProjectState.md` to ensure the session outcome is accurately written down.
+3.  Check `docs/3-state/ProjectState.md` to ensure the session outcome is accurately written down.
 
 ## Completion Checks
 *   [ ] Four real people play a raid together, start to finish, on the actual built game.
-*   [ ] The outcome (completed / failed, and why) is recorded against the M2 acceptance criterion in `docs/ProjectState.md`.
+*   [ ] The outcome (completed / failed, and why) is recorded against the M2 acceptance criterion in `docs/3-state/ProjectState.md`.
 
 
 ## Technical Constraints

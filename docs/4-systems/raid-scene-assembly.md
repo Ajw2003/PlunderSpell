@@ -219,7 +219,7 @@ families) by `ArtBibleEnemyCatalog`, a pure parser the tests run headlessly. For
 - a `CapsuleCollider` of the body height (props excluded), radius from the model's width, clamped;
 - a `NavMeshAgent` whose height is the body height **capped at the lowest archway** of its posted
   zones (Crypt 2.16, OuterBailey 2.59, InnerWard 2.88, Keep 3.31, CurtainWall 3.74 m; see
-  `docs/systems/scale.md`);
+  `docs/4-systems/scale.md`);
 - `StatusEffectReceiver`, and `CastleGuard` tuned by role:
 
   | Role | Patrol | Chase | Sight | Health | Attack |

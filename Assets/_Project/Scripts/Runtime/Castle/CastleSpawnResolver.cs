@@ -11,7 +11,7 @@ namespace Plunderspell.Castle
     /// editor scene builder (which bakes a spawn for the authored scene), so there is one probe and
     /// one set of player dimensions rather than a copy per caller.
     ///
-    /// See docs/systems/scale.md ("Spawning").
+    /// See docs/4-systems/scale.md ("Spawning").
     /// </summary>
     public static class CastleSpawnResolver
     {

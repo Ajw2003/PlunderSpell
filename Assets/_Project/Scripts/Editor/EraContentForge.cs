@@ -20,7 +20,7 @@ namespace Plunderspell.EditorTools
     /// <see cref="RaidDirector"/> reads when a raid sets out. Re-run after new art lands; every
     /// output lives at a fixed path and is overwritten, never duplicated.
     ///
-    /// See docs/systems/raid-scene-assembly.md ("Eras") for what each era is built from and what it
+    /// See docs/4-systems/raid-scene-assembly.md ("Eras") for what each era is built from and what it
     /// falls back to while its art is unfinished.
     /// </summary>
     public static class EraContentForge
@@ -270,7 +270,7 @@ namespace Plunderspell.EditorTools
             int weapons = 0;
             if (defaults != null)
             {
-                // Weapons are found as loot (docs/Decisions.md, 2026-09-23). Each era keeps the
+                // Weapons are found as loot (docs/6-decisions/Decisions.md, 2026-09-23). Each era keeps the
                 // default table's weapons that belong to it, by the era its inventory item names.
                 foreach (RaidLootTable.Entry weapon in defaults.Entries)
                 {

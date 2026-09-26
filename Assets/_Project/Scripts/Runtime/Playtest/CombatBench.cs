@@ -10,7 +10,7 @@ namespace Plunderspell.Playtest
     /// Spawns enemies to fight on demand, so a weapon or a spell can be tried in about two seconds
     /// instead of by starting a raid and walking a castle until something turns up.
     ///
-    /// See docs/systems/combat-bench.md.
+    /// See docs/4-systems/combat-bench.md.
     /// </summary>
     public class CombatBench : MonoBehaviour
     {
@@ -33,7 +33,7 @@ namespace Plunderspell.Playtest
         public EnemyRoster Roster => m_roster;
 
         /// <summary>
-        /// Load-bearing, not convenience. See docs/systems/combat-bench.md, "The bench puts itself
+        /// Load-bearing, not convenience. See docs/4-systems/combat-bench.md, "The bench puts itself
         /// into play".
         /// </summary>
         private void Start()
@@ -84,7 +84,7 @@ namespace Plunderspell.Playtest
             m_spawned.Clear();
         }
 
-        /// <summary>Starts the guard in the asked-for state. See docs/systems/combat-bench.md,
+        /// <summary>Starts the guard in the asked-for state. See docs/4-systems/combat-bench.md,
         /// "Traps", on why <c>SetAlertState</c> is a dev seam only.</summary>
         private static void ApplyAlertState(GameObject enemy, GuardAlertState alertState)
         {

@@ -68,13 +68,13 @@ scripts that were run and the screenshots they made are in
    `Tools/Plunderspell/Forge Era Content (rooms, loot, enemies)`. Fix the message text.
 
 Nothing else overlaps. Castle-bench shares no files with era or dreamy apart from
-`docs/ProjectState.md`, and merged with no conflicts.
+`docs/3-state/ProjectState.md`, and merged with no conflicts.
 
 ## Order
 
 1. **`era-content-integration` → `main`.** Fast-forward-able: 2 commits on the `main` tip.
 2. **`dreamy-curie-jnrkbu` → `main`.** Resolve `RaidDirector.cs` as in `c8441de`, keeping both
-   edits. Merge `docs/ProjectState.md` and `docs/Today.md` by hand: both sides added entries, keep
+   edits. Merge `docs/3-state/ProjectState.md` and `docs/5-today/Today.md` by hand: both sides added entries, keep
    all of them. `docs/art/HANDOFF.md` merges on its own.
 3. **`castle-bench-rooms-mwucab` → `main`.** No conflicts in the trial. Merge `main` into it first
    if you want CI to run on it against today's code.

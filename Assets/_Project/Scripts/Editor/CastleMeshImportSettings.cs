@@ -11,7 +11,7 @@ namespace Plunderspell.EditorTools
     /// in a build and walk fine in the Editor.
     ///
     /// A postprocessor rather than a one-off pass, so re-exporting a .blend cannot quietly undo it.
-    /// See docs/systems/raid-scene-assembly.md ("Navigation").
+    /// See docs/4-systems/raid-scene-assembly.md ("Navigation").
     /// </summary>
     public class CastleMeshImportSettings : AssetPostprocessor
     {
@@ -25,7 +25,7 @@ namespace Plunderspell.EditorTools
             var importer = (ModelImporter)assetImporter;
             importer.isReadable = true;
             // Without this a castle model imports at a 270-degree root instead of 90 and the
-            // prefab's upright root then flips it — see docs/systems/raid-scene-assembly.md
+            // prefab's upright root then flips it — see docs/4-systems/raid-scene-assembly.md
             // ("Orientation").
             importer.bakeAxisConversion = true;
         }

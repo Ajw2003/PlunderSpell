@@ -13,7 +13,7 @@ using UnityEngine.TestTools;
 namespace Plunderspell.Tests
 {
     /// <summary>The bench mirror of <see cref="RaidSceneCastingTests"/>. See
-    /// docs/systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
+    /// docs/4-systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
     public class CombatBenchCastingTests
     {
         private const string k_ScenePath = "Assets/_Project/Scenes/CombatBench.unity";
@@ -65,7 +65,7 @@ namespace Plunderspell.Tests
         }
 
         /// <summary>
-        /// The bench puts itself into Playing on Start (see docs/systems/combat-bench.md), so unlike
+        /// The bench puts itself into Playing on Start (see docs/4-systems/combat-bench.md), so unlike
         /// the raid scene this does not need an explicit state change first — proving that stays true
         /// is part of what this test covers.
         /// </summary>

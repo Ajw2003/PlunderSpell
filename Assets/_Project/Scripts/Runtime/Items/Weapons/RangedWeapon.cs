@@ -2,7 +2,7 @@ using Interfaces;
 using Plunderspell.Acoustics;
 using UnityEngine;
 
-/// <summary>One bolt, then a long reload. See docs/Decisions.md, "A ranged shot spawns ahead of the
+/// <summary>One bolt, then a long reload. See docs/6-decisions/Decisions.md, "A ranged shot spawns ahead of the
 /// wielder instead of tracking their colliders".</summary>
 [RequireComponent(typeof(Item))]
 [RequireComponent(typeof(AcousticEmitter))]
@@ -88,7 +88,7 @@ public class RangedWeapon : MonoBehaviour
             return;
 
         // Spawning at the muzzle rather than the eye clears the wielder's own capsule collider by
-        // construction, the same fix already used for spell bursts (docs/Decisions.md, "A spell
+        // construction, the same fix already used for spell bursts (docs/6-decisions/Decisions.md, "A spell
         // burst is centred on where it lands, not where it starts") — no per-frame collision-ignore
         // bookkeeping needed.
         Vector3 spawnPoint = origin + direction * k_muzzleOffset;

@@ -10,16 +10,16 @@ Currently, structural features like murder-holes and arrow-loops are only used t
 2.  **Add Gameplay Effects:**
     Ensure the new murder-hole hazard can interact with characters, such as dropping items or firing projectiles at anyone passing below it.
 3.  **Update Castle Documentation:**
-    Open the file `docs/systems/castle.md`. Add a new section explaining the gameplay effects of the murder-hole alongside its existing description as a connection point.
+    Open the file `docs/4-systems/castle.md`. Add a new section explaining the gameplay effects of the murder-hole alongside its existing description as a connection point.
 
 ## Verification Steps
 1.  Launch the game and enter a castle layout that contains a murder-hole socket.
 2.  Walk a character underneath or near the murder-hole and verify that the hazard triggers correctly.
-3.  Read the `docs/systems/castle.md` file to confirm the new gameplay rules are clearly explained.
+3.  Read the `docs/4-systems/castle.md` file to confirm the new gameplay rules are clearly explained.
 
 ## Completion Checks
 *   [ ] At least one socket type (such as the murder-hole) has a functional gameplay effect as a hazard.
-*   [ ] The new hazard effect is documented in `docs/systems/castle.md`.
+*   [ ] The new hazard effect is documented in `docs/4-systems/castle.md`.
 
 
 ## Technical Constraints

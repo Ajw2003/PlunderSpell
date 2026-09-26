@@ -75,7 +75,7 @@ public class Item : MonoBehaviour
     [SerializeField] private float _rotationSpeed = 10f;
 
     [Tooltip("The most upward force (N) the beam can apply. Lifting takes mass x 9.81 of it: " +
-             "under 10 kg lifts, heavier drags along the floor. See docs/systems/damage.md, Weight.")]
+             "under 10 kg lifts, heavier drags along the floor. See docs/4-systems/damage.md, Weight.")]
     [SerializeField] private float _gripStrength = 100f;
 
     [Tooltip("The most sideways force (N) the beam can apply. More than it can lift, as hauling " +

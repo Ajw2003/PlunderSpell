@@ -25,7 +25,7 @@ namespace Player
 
         /// <summary>
         /// Whether the world reacts to input in this state. Pure, so it can be asserted against
-        /// <c>CursorLockPolicy.ShouldCapture</c>, which has to agree with it. See docs/Decisions.md,
+        /// <c>CursorLockPolicy.ShouldCapture</c>, which has to agree with it. See docs/6-decisions/Decisions.md,
         /// "Issue 9's gate belongs on the raid's player, not only on the playtest harness".
         /// </summary>
         public static bool AcceptsInputIn(Plunderspell.Core.GameState state) =>
@@ -207,7 +207,7 @@ namespace Player
         /// <summary>
         /// Generated Input System actions are unmanaged and leak if they are only ever enabled.
         /// Unity asserts on the leak the second time a scene carrying a player is loaded, which is
-        /// how this surfaced. See docs/systems/spells.md, "Two ways to cast".
+        /// how this surfaced. See docs/4-systems/spells.md, "Two ways to cast".
         /// </summary>
         private void OnDestroy()
         {

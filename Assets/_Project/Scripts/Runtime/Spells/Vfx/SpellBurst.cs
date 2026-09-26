@@ -6,7 +6,7 @@ namespace Plunderspell.Spells.Vfx
     /// A spell going off: an expanding, fading shell of light that destroys itself. Built from a
     /// primitive rather than a particle asset because the project has no authored VFX yet.
     ///
-    /// See docs/systems/spells.md, "Seeing a cast".
+    /// See docs/4-systems/spells.md, "Seeing a cast".
     /// </summary>
     public class SpellBurst : MonoBehaviour
     {
@@ -62,7 +62,7 @@ namespace Plunderspell.Spells.Vfx
             EnsureDoubleSided();
         }
 
-        /// <summary>See docs/systems/spells.md, "A burst is invisible from inside itself".</summary>
+        /// <summary>See docs/4-systems/spells.md, "A burst is invisible from inside itself".</summary>
         private void EnsureDoubleSided()
         {
             if (m_renderer == null || m_materialInstance != null)

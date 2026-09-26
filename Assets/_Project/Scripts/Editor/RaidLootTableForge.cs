@@ -11,7 +11,7 @@ namespace Plunderspell.EditorTools
     /// Authors the <see cref="RaidLootTable"/> that pairs the hand-modelled loot prefabs with the
     /// zones they are found in. Run once; the table is a committed asset from then on.
     ///
-    /// See docs/systems/raid-scene-assembly.md ("Loot table") for the zone/weight rationale.
+    /// See docs/4-systems/raid-scene-assembly.md ("Loot table") for the zone/weight rationale.
     /// </summary>
     public static class RaidLootTableForge
     {

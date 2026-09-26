@@ -1,6 +1,6 @@
 # Project State
 
-**Headline: ~65% against the roadmap in `docs/Roadmap.md`.** Every milestone's code has been
+**Headline: ~65% against the roadmap in `docs/2-roadmap/Roadmap.md`.** Every milestone's code has been
 written, merged, and passes an automated test suite; the raid now runs on real authored art
 instead of primitives. Two of the four milestones' acceptance criteria have never actually been
 checked the way they're defined, and a 21-item playtesting backlog (filed 2026-09-16, all still
@@ -24,8 +24,8 @@ surfaced it as not actually functional yet.
 |---|---|---|---|
 | M0 — Fork clean, cut gravity | Done | ✅ merged (`feature/m0-gravity-removal`) | ✅ — compiles, gravity restored, verified in the `.agent_reports`-era logs, now `docs/archive/2026-09-15-integration/` |
 | M1 — Prove the voice | Code complete, acceptance unchecked | ✅ merged (`feature/m1-voice-casting`) | ❌ — no real-microphone, multi-accent, latency measurement exists anywhere in the repo |
-| M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
-| M3 — Open the other Ages | Era content wired in; Bronze Age and High Medieval raids differ | 🟡 The Lair's era now picks the raid's rooms, loot and garrison through `EraContentCatalogue` ([`raid-scene-assembly.md`, "Eras"](systems/raid-scene-assembly.md)). Bronze Age has its own full room set, 5 items, 3 enemies. High Medieval: the original rooms, 5 items, 4 enemies. Late Medieval: its own InnerWard and Keep, 5 items, 1 enemy. Age of Powder: High Medieval rooms, 5 items, 2 enemies. Castle art: the Bronze Age and Late Medieval sets are fully modelled, 25 rooms and wall pieces plus 4 door plugs each ([`BronzeAge.md`](art/rooms/BronzeAge.md), [`LateMedieval.md`](art/rooms/LateMedieval.md)); Enemies: all 16 modelled and rostered. Unfinished art: all 26 Powder rooms ([`docs/plans/era-castle-rooms.md`](plans/era-castle-rooms.md)) | 🟡 — verified 2026-09-24 in the live Editor through Lair → Set Out, one seed per era; not yet playtested by a person |
+| M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/4-systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
+| M3 — Open the other Ages | Era content wired in; Bronze Age and High Medieval raids differ | 🟡 The Lair's era now picks the raid's rooms, loot and garrison through `EraContentCatalogue` ([`raid-scene-assembly.md`, "Eras"](../4-systems/raid-scene-assembly.md)). Bronze Age has its own full room set, 5 items, 3 enemies. High Medieval: the original rooms, 5 items, 4 enemies. Late Medieval: its own InnerWard and Keep, 5 items, 1 enemy. Age of Powder: High Medieval rooms, 5 items, 2 enemies. Castle art: the Bronze Age and Late Medieval sets are fully modelled, 25 rooms and wall pieces plus 4 door plugs each ([`BronzeAge.md`](../art/rooms/BronzeAge.md), [`LateMedieval.md`](../art/rooms/LateMedieval.md)); Enemies: all 16 modelled and rostered. Unfinished art: all 26 Powder rooms ([`docs/plans/era-castle-rooms.md`](../plans/era-castle-rooms.md)) | 🟡 — verified 2026-09-24 in the live Editor through Lair → Set Out, one seed per era; not yet playtested by a person |
 
 **2026-09-24 — art bible plunder and enemies modelled, and per-era raid content wired in.**
 All 20 plunder items and all 16 enemies from the art bible (`docs/art/`) exist as validated,
@@ -42,28 +42,28 @@ before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
 
 **2026-09-25 — backlog pass** (`claude/issue-backlog`, not merged). Spells cost mana
 (`SpellWord.ManaCost`, a 100-point pool, 2.5/s regen) and number-key casts chant for 1.5 s
-(`docs/systems/spells.md`, "Mana and the keyboard chant"). The pause menu no longer freezes the
+(`docs/4-systems/spells.md`, "Mana and the keyboard chant"). The pause menu no longer freezes the
 world. Guards are halved in number, 0.8× speed and 0.65× damage (`GuardSpawner`). Each raid starts
 calm with a 20 s grace, and guards report sightings, attacks and chases straight to the alarm
-(`docs/systems/alarm.md`). The raid HUD is themed and its hue and cry look toned down. Open issues
-re-triaged: see `docs/Today.md`. Carrying now works like R.E.P.O. (#144 phase 1): items hang
+(`docs/4-systems/alarm.md`). The raid HUD is themed and its hue and cry look toned down. Open issues
+re-triaged: see `docs/5-today/Today.md`. Carrying now works like R.E.P.O. (#144 phase 1): items hang
 from where you grabbed them on a visible beam, and loot over about 10 kg drags
-(`docs/systems/damage.md`, "Weight").
+(`docs/4-systems/damage.md`, "Weight").
 
 **2026-09-26 — backlog pass continued** (same branch, not merged). Casting no longer freezes the
-game when the cast key is released: the microphone stays open for the raid (`docs/systems/voice.md`).
-The closing portal falters gently instead of strobing (`docs/systems/atmosphere.md`, "Portal"). Only
+game when the cast key is released: the microphone stays open for the raid (`docs/4-systems/voice.md`).
+The closing portal falters gently instead of strobing (`docs/4-systems/atmosphere.md`, "Portal"). Only
 an item's own motion hurts or breaks things: walking into a cauldron or bumping loot no longer
-damages you or it (`docs/systems/damage.md`). Loot is rebalanced: nothing breaks from a waist-high
+damages you or it (`docs/4-systems/damage.md`). Loot is rebalanced: nothing breaks from a waist-high
 drop, heavy pieces pay more, and Late Medieval no longer fills its busy rooms with pieces too heavy to
-lift ([`docs/plans/loot-balance.md`](plans/loot-balance.md)). A player is never spawned over the
-drawbridge's moat (`docs/systems/scale.md`, "Spawning"). Held loot keeps its orientation, weapons are held rigidly
-in the hand, and pieces too heavy to lift are towed slowly behind you, slowing your walk; each loot item has one weight, its LootItem's Weight in kg, and all of it scales from that (`docs/systems/damage.md`,
+lift ([`docs/plans/loot-balance.md`](../plans/loot-balance.md)). A player is never spawned over the
+drawbridge's moat (`docs/4-systems/scale.md`, "Spawning"). Held loot keeps its orientation, weapons are held rigidly
+in the hand, and pieces too heavy to lift are towed slowly behind you, slowing your walk; each loot item has one weight, its LootItem's Weight in kg, and all of it scales from that (`docs/4-systems/damage.md`,
 "Weight"). The code's namespaces and assemblies are `Plunderspell.*`; the old `RogueAi` names are
 gone (Decisions, 2026-09-26).
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
-of `docs/plans/night-atmosphere.md` built: see `docs/systems/atmosphere.md`. Open: volumetric fog
+of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog
 (High), vertex soot bake, Deck profiling, enemies/loot on the surface shader unseen in play,
 PlayMode suite not re-run, `ArtAssetImportTests` fails (art-bible animations, enemy emissive HDR;
 predates this branch).
@@ -72,7 +72,7 @@ predates this branch).
 `claude/night-atmosphere`, night atmosphere step 0). The team arrives at a seeded spot in the outer
 rings, the `ExtractionZone` is stood up there as the portal, players outside it when the clock ends
 are left behind, `CastleBoundary` seals the gate and wall tops, and RaidScene has no ground beyond
-the wall. Verified in the live Editor; see `docs/systems/raid.md`, "Arriving and leaving by portal".
+the wall. Verified in the live Editor; see `docs/4-systems/raid.md`, "Arriving and leaving by portal".
 
 **2026-09-25 — a throwaway preview of the "calm" night look exists in RaidScene.** A
 `NightLookPreview` GameObject (`Plunderspell.Atmosphere.NightLookPreview`,
@@ -91,7 +91,7 @@ anchors, no quality levels, no shader — and is meant to be replaced once
 
 Until 2026-09-24, choosing an era in the Lair did nothing to the raid: every era built from one
 room set, loot table and guard roster. That is fixed. `RaidDirector` now swaps in the era's
-catalogue entry before it builds the castle (see `docs/systems/raid-scene-assembly.md`, "Eras").
+catalogue entry before it builds the castle (see `docs/4-systems/raid-scene-assembly.md`, "Eras").
 No schema change was needed. Each era has its own registry, table and roster, so the planners
 still branch only on `CastleZone`. What M3 still lacks is art, plus a person playing the eras side
 by side.
@@ -102,7 +102,7 @@ replicated) to `EnemyRoster.PickForZone(zone, era, rng)`, and `RaidContext` is p
 castle generator to read later. Rooms and loot still ignore the era, and until
 `Tools/Plunderspell/Forge Art Bible Enemies + Roster` is run in the Editor the roster holds no
 Bronze, Late or Powder enemies, so those raids fall back (with a warning) to the old High Medieval
-guards outside the Crypt. See `docs/systems/raid-scene-assembly.md`, "Era reaches the raid".
+guards outside the Crypt. See `docs/4-systems/raid-scene-assembly.md`, "Era reaches the raid".
 
 ## The 2026-09-16 playtesting backlog
 
@@ -128,11 +128,11 @@ art — so these are gaps the art exposed, not pre-art complaints. All 21 are op
 before touching the raid loop:
 
 - **#20 — loot is flung across the map by physics at spawn.** Already documented as an open,
-  unfixed defect in `docs/systems/raid-scene-assembly.md` ("Traps") — roughly 2–7 of ~19 pieces
+  unfixed defect in `docs/4-systems/raid-scene-assembly.md` ("Traps") — roughly 2–7 of ~19 pieces
   per raid. An attempted floor-raycast fix made it worse (15/22) and was reverted; a real fix needs
   the spawner to find a clear resting spot while keeping the placement planner pure.
 - **#5 / #19 — rooms don't connect / modules float and snap inconsistently.** Filed against the
-  same generator `docs/systems/castle.md` describes; `CastlePathValidator` guarantees the *layout*
+  same generator `docs/4-systems/castle.md` describes; `CastlePathValidator` guarantees the *layout*
   is reachable, not that the *meshes* read as continuous interior space.
 - **#21 — no portal asset**, **#16 — no main menu art**, **#23 — castles look bland**, **#22 — no
   VFX/SFX anywhere** — the game loop runs end to end but almost nothing in it has a finished visual
@@ -149,7 +149,7 @@ for one further failure mode of the same kind.
 A second, separate audit pass (2026-09-16, same day as the docs-structure pass above) checked the
 built game against `docs/plunderspell.md` and the mood board pillar by pillar, rather than against
 the raid loop the playtesting backlog above was filed against. Full findings and reasoning:
-[`docs/plans/moodboard-gap-closure.md`](plans/moodboard-gap-closure.md). Headline: the voice and
+[`docs/plans/moodboard-gap-closure.md`](../plans/moodboard-gap-closure.md). Headline: the voice and
 physics-loot pillars are real and mostly match the pitch; **the Mystical Market pillar (the fourth
 named pillar in the pitch) does not exist anywhere in the codebase**, the Lair is a menu screen
 rather than the physical place the pitch describes, and half the built bestiary (SigilWisp,
@@ -162,8 +162,8 @@ the 21-item backlog above.
 ## Cross-cutting issues that belong to no milestone
 
 - **The `isSpawned`/`isServer` trap has already caused three separate silent failures** (voice
-  casting, the extraction clock, trigger tracking — see `docs/systems/raid.md`,
-  `docs/systems/voice.md` and `docs/systems/alarm.md`) because `if (!isServer) return;` is true on
+  casting, the extraction clock, trigger tracking — see `docs/4-systems/raid.md`,
+  `docs/4-systems/voice.md` and `docs/4-systems/alarm.md`) because `if (!isServer) return;` is true on
   an unspawned object as well as a real client. All three known instances are fixed
   (`if (isSpawned && !isServer) return;`), but the underlying trap is a property of PurrNet's
   authority model, not something the codebase can permanently rule out — any new
@@ -180,7 +180,7 @@ committed, English heard-as grammar, the right microphone picked, a live level m
 holding V, and a microphone choice in Settings); one damage pathway with readable feedback for
 hitting, being hit and hurting yourself; death → "YOU DIED" → Lair; held objects with weight
 and swing damage; standing on the pad to extract, then Lair → Set Out again. #100's diagnosis was
-wrong: RaidScene uses `RaidPlayer.prefab`, which is fully wired (see `docs/Decisions.md`). **Not yet
+wrong: RaidScene uses `RaidPlayer.prefab`, which is fully wired (see `docs/6-decisions/Decisions.md`). **Not yet
 done:** walking the loop in `RaidScene.unity` from the main menu; a fresh standalone build; a real
 person speaking into the mic (the Whisper/Shout thresholds are uncalibrated); commenting on and
 closing GitHub issues #14, #100, #101, #102.
@@ -208,7 +208,7 @@ the raid ends when everyone is down, and a friend's Lair shows the host's campai
 two game windows over UDP; still untested between two Steam accounts. Then: weapons now spawn in
 the castle as networked loot (found, carried, swung, sold), a crossbow shot shows on every machine,
 downed bodies lie down, and guards give players at the gate a clear ring and a 20 second grace. See
-`docs/systems/net.md`.
+`docs/4-systems/net.md`.
 
 **2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh
 (`CastleAudit.cs`). Every room and all floor are reachable on five seeds, and loot now spawns on

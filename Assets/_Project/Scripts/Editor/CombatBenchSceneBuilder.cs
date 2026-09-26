@@ -22,7 +22,7 @@ namespace Plunderspell.EditorTools
     /// Builds the combat bench scene: a walled arena, the raid's own player rig, and a spawn panel.
     /// Rebuilt from scratch every run and saved over the same path, so it cannot accumulate cruft.
     ///
-    /// See docs/systems/combat-bench.md.
+    /// See docs/4-systems/combat-bench.md.
     /// </summary>
     public static class CombatBenchSceneBuilder
     {
@@ -69,7 +69,7 @@ namespace Plunderspell.EditorTools
             go.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
         }
 
-        /// <summary>Scene-owned singletons the swing path needs. See docs/systems/combat-bench.md,
+        /// <summary>Scene-owned singletons the swing path needs. See docs/4-systems/combat-bench.md,
         /// "Why the raid's rig, not the playtest harness".</summary>
         private static void BuildManagers()
         {
@@ -118,7 +118,7 @@ namespace Plunderspell.EditorTools
             go.AddComponent<AlarmFSMManager>();
         }
 
-        /// <summary>See docs/systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
+        /// <summary>See docs/4-systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
         private static void BuildSpellVfx()
         {
             var bolt = AssetDatabase.LoadAssetAtPath<GameObject>(k_BoltPath);
@@ -136,7 +136,7 @@ namespace Plunderspell.EditorTools
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        /// <summary>The raid's rig, not the playtest harness. See docs/systems/combat-bench.md,
+        /// <summary>The raid's rig, not the playtest harness. See docs/4-systems/combat-bench.md,
         /// "Why the raid's rig, not the playtest harness".</summary>
         private static GameObject BuildPlayer()
         {
@@ -182,7 +182,7 @@ namespace Plunderspell.EditorTools
             return root;
         }
 
-        /// <summary>See docs/systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
+        /// <summary>See docs/4-systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
         private static void WireCasting(GameObject player)
         {
             player.AddComponent<PushToCastController>();

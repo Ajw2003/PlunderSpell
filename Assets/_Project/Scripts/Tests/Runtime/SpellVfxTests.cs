@@ -9,7 +9,7 @@ using UnityEngine.TestTools;
 namespace Plunderspell.Tests
 {
     /// <summary>
-    /// A cast has to be visible. See docs/systems/spells.md, "Seeing a cast".
+    /// A cast has to be visible. See docs/4-systems/spells.md, "Seeing a cast".
     /// </summary>
     public class SpellVfxTests
     {

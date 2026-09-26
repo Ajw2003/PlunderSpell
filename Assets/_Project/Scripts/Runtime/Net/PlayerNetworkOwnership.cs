@@ -149,7 +149,7 @@ public class PlayerNetworkOwnership : NetworkBehaviour
     }
 
     // -----------------------------------------------------------------------------------------
-    // Going down, spectating, and the party wipe. See docs/systems/net.md, "Spectating".
+    // Going down, spectating, and the party wipe. See docs/4-systems/net.md, "Spectating".
     // -----------------------------------------------------------------------------------------
 
     private void Update()

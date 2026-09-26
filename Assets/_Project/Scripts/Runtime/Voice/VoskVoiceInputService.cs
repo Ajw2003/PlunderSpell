@@ -16,7 +16,7 @@ namespace Plunderspell.Voice
         public string partial;
     }
 
-    // doc-ref 5ea6 docs/systems/voice.md
+    // doc-ref 5ea6 docs/4-systems/voice.md
     /// <summary>
     /// Windows x64 speech provider backed by the offline Vosk recogniser. Reads the microphone on
     /// the main thread, and maps English spellings the model can hear back to the Latin lexicon

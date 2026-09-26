@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Plunderspell.Tests.Editor
 {
     /// <summary>
-    /// Measures the art that actually shipped against the standard in docs/systems/scale.md, so the
+    /// Measures the art that actually shipped against the standard in docs/4-systems/scale.md, so the
     /// doc's invariants are checkable rather than a matter of opinion. Issue
     /// <see href="https://github.com/Ajw2003/PlunderSpell/issues/6"/>.
     ///
@@ -23,7 +23,7 @@ namespace Plunderspell.Tests.Editor
         private const string k_RegistryPath = "Assets/_Project/Data/Castle/CastleRoomRegistry.asset";
         private const string k_EnemyPrefabDirectory = "Assets/_Project/Prefabs/Enemies";
 
-        /// <summary>The standard human, from docs/systems/scale.md, "The standard".</summary>
+        /// <summary>The standard human, from docs/4-systems/scale.md, "The standard".</summary>
         private const float k_StandardHumanHeight = 1.80f;
 
         /// <summary>Floor slab thickness; a module's bounds include it, the clear height does not.</summary>

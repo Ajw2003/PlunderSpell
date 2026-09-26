@@ -53,7 +53,7 @@ doorways/ceilings do not fit a human-scale character.
   Colossus does not fit in a crypt room at all.
 
 ## Acceptance criteria
-- Decide the canonical metre scale for a character and record it in `docs/systems/`.
+- Decide the canonical metre scale for a character and record it in `docs/4-systems/`.
 - Player, enemies and room interiors agree on that scale; the Colossus fits where it can spawn.
 - Doorway heights clear the player with headroom.""")
 
@@ -101,7 +101,7 @@ menu has focus.
 
 ## Context
 The menu flow now exists (main menu -> lair -> Set Out -> raid, see
-`docs/systems/raid-scene-assembly.md`), but nothing gates player input on `GameState`. The player
+`docs/4-systems/raid-scene-assembly.md`), but nothing gates player input on `GameState`. The player
 object and its `FreeLookPlaytestController` / `PushToCastController` are always enabled.
 
 ## Acceptance criteria
@@ -284,7 +284,7 @@ logic, not a playable encounter. A `TestScene` and `TestSceneBuilder` already ex
 ## Acceptance criteria
 - A combat test scene or menu entry that spawns chosen enemies in a flat arena with the player.
 - Enemy type, count and alarm level selectable without editing code.
-- Reachable from a single menu item or scene, documented in `docs/systems/`.""")
+- Reachable from a single menu item or scene, documented in `docs/4-systems/`.""")
 
 add("Modules float and snap inconsistently - grid spacing must be exact",
     "pcg,bug",
@@ -372,7 +372,7 @@ the return to the lair is a UI state change rather than something in the fiction
 - `ExtractionZone` is built in `RaidSceneBuilder` as a `BoxCollider` trigger with a flat green quad
   as a marker, one cell outside the curtain wall.
 - Returning to the lair happens through `GameState.Lair` when `RaidDirector.RaidResolved` fires -
-  see `docs/systems/raid-scene-assembly.md`.
+  see `docs/4-systems/raid-scene-assembly.md`.
 
 ## Acceptance criteria
 - A portal model exists and is placed at the extraction point.

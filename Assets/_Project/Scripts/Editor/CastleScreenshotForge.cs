@@ -10,7 +10,7 @@ namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Renders a generated castle to PNG so a layout change can be judged by eye rather than by
-    /// reading coordinates out of a log. See docs/systems/castle.md, "Visual verification", for
+    /// reading coordinates out of a log. See docs/4-systems/castle.md, "Visual verification", for
     /// which view catches which class of fault and why the set is shaped this way.
     ///
     /// Run headlessly with -executeMethod Plunderspell.EditorTools.CastleScreenshotForge.CaptureAll.

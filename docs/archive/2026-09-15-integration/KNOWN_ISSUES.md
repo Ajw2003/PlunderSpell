@@ -29,13 +29,13 @@ check and fails the test, depending on scheduling timing. This is a fundamental 
 not a flag to tune.
 
 **Second, independent issue found in the same test:** the UI's root `Canvas` is created in
-`RenderMode.ScreenSpaceOverlay` (see [UIFactory.CreateRootCanvas](../Assets/_Project/Scripts/Runtime/UI/UIFactory.cs)).
+`RenderMode.ScreenSpaceOverlay` (see [UIFactory.CreateRootCanvas](../../../Assets/_Project/Scripts/Runtime/UI/UIFactory.cs)).
 Overlay-mode canvases composite directly to the display and are not captured by rendering any
 particular `Camera` to a `RenderTexture` — so even a from-scratch headless-safe capture using
 `Camera.Render()` would produce a blank image for this UI unless the canvas is temporarily
 switched to `ScreenSpaceCamera` mode against the capture camera.
 
-**Fix applied** (in [UIScreenshotPlayModeTests.cs](../Assets/_Project/Scripts/Tests/PlayMode/UIScreenshotPlayModeTests.cs)):
+**Fix applied** (in [UIScreenshotPlayModeTests.cs](../../../Assets/_Project/Scripts/Tests/PlayMode/UIScreenshotPlayModeTests.cs)):
 replaced `WaitForEndOfFrame` + `ScreenCapture.CaptureScreenshot` with a dedicated capture
 `Camera` rendering synchronously to a `RenderTexture` (`Camera.Render()` + `ReadPixels` +
 `EncodeToPNG`), with the target `Canvas` temporarily switched to `ScreenSpaceCamera` mode

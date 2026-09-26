@@ -30,7 +30,7 @@ wall tops. The ground is shrunk to the castle's footprint.
   braces, `_camelCase` private fields, `PascalCase` public members, `k_` prefix for private
   constants (this codebase's own convention), `///` summaries that say why.
 - `if (isSpawned && !isServer) return;` is the authority check. Never `if (!isServer) return;`
-  (see `docs/ProjectState.md`, "The `isSpawned`/`isServer` trap").
+  (see `docs/3-state/ProjectState.md`, "The `isSpawned`/`isServer` trap").
 - Determinism: anything derived from the raid seed uses its own `System.Random` stream, so adding it
   cannot shift the castle, loot or garrison.
 - Commit after every task on the current `claude/` branch and push. Commit message format
@@ -64,7 +64,7 @@ wall tops. The ground is shrunk to the castle's footprint.
 | `Assets/_Project/Scripts/Editor/RaidSceneBuilder.cs` | modify | Scaffold ground sized to the castle; zone no longer placed outside. |
 | `Assets/_Project/Scenes/RaidScene.unity` | modify via CLI | Ground scaled to the castle footprint. |
 | `Assets/_Project/Scripts/Tests/Runtime/CastleArrivalTests.cs` | create | Planner, resolver, boundary, guard ring, portal tests. |
-| `docs/systems/raid.md`, `docs/systems/castle.md`, `docs/ProjectState.md`, `docs/Today.md` | modify | Record the new arrival and exit. |
+| `docs/4-systems/raid.md`, `docs/4-systems/castle.md`, `docs/3-state/ProjectState.md`, `docs/5-today/Today.md` | modify | Record the new arrival and exit. |
 
 ---
 
@@ -1199,24 +1199,24 @@ git push
 ### Task 9: Documentation
 
 **Files:**
-- Modify: `docs/systems/raid.md`, `docs/systems/castle.md`, `docs/ProjectState.md`, `docs/Today.md`
+- Modify: `docs/4-systems/raid.md`, `docs/4-systems/castle.md`, `docs/3-state/ProjectState.md`, `docs/5-today/Today.md`
 
-- [ ] **Step 1: Tier 4.** In `docs/systems/raid.md`, replace the description of the spawn and the
+- [ ] **Step 1: Tier 4.** In `docs/4-systems/raid.md`, replace the description of the spawn and the
   extraction pad by the gate with: the arrival (`CastleArrivalPlanner`, seeded, outer rings only),
   the portal (`ExtractionZone.PlaceAsPortal`, 4 m), the ring of players at
   `RaidDirector.PlayerRingRadius`, and the rule that anyone outside the portal when the clock runs
-  out is left behind, citing `file:line` for each. In `docs/systems/castle.md`, add `CastleBoundary`
+  out is left behind, citing `file:line` for each. In `docs/4-systems/castle.md`, add `CastleBoundary`
   and state that the gatehouse is sealed and no longer the spawn; keep the note that the generator
   still flags it `IsExtractionExit` and the loot planner still avoids it.
-- [ ] **Step 2: Tier 3.** In `docs/ProjectState.md`, add a dated line under the M2 row: arrival by
+- [ ] **Step 2: Tier 3.** In `docs/3-state/ProjectState.md`, add a dated line under the M2 row: arrival by
   portal, extraction through it, castle sealed, outside removed; verified in the live Editor with the
   captures in `docs/generated/portal-arrival-2026-09-24/`.
-- [ ] **Step 3: Tier 5.** Add a dated entry at the top of `docs/Today.md` saying what changed and
+- [ ] **Step 3: Tier 5.** Add a dated entry at the top of `docs/5-today/Today.md` saying what changed and
   linking the captures.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add docs/systems/raid.md docs/systems/castle.md docs/ProjectState.md docs/Today.md
+git add docs/4-systems/raid.md docs/4-systems/castle.md docs/3-state/ProjectState.md docs/5-today/Today.md
 git commit -m "docs: raids arrive and leave by portal"
 git push
 ```

@@ -4,7 +4,7 @@
 > `PushToCastController`. `FreeLookPlaytestController` is not in `RaidScene.unity` — it is the
 > ItemGym bench harness. The raid's player is `PlayerStateMachine` plus `PlayerInputController`,
 > and that is where the gate has to go. Gating the two scripts named below, as originally written,
-> leaves the shipping player ungated. See docs/Decisions.md, "Issue 9's gate belongs on the raid's
+> leaves the shipping player ungated. See docs/6-decisions/Decisions.md, "Issue 9's gate belongs on the raid's
 > player, not only on the playtest harness".
 
 ## Exhaustive Outline

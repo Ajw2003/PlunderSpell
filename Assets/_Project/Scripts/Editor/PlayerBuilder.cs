@@ -31,7 +31,7 @@ namespace Plunderspell.EditorTools
             {
                 // The whole game lives in one scene, driven by Plunderspell.Core.GameState
                 // (MainMenu/Lair/Playing/...) rather than a scene per screen — see
-                // docs/Decisions.md, "The standalone build is one scene, not one per screen".
+                // docs/6-decisions/Decisions.md, "The standalone build is one scene, not one per screen".
                 scenes = new[] { "Assets/_Project/Scenes/RaidScene.unity" },
                 locationPathName = outputPath,
                 target = BuildTarget.StandaloneWindows64,

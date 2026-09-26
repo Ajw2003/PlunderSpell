@@ -49,7 +49,7 @@ nothing wrong with it — the keyboard→mic→spell-word pipeline checks out on
 headless harness. A separate, unopened branch (`claude/verified-issue-fixes`, built on top of PR
 #96) had already gotten further and left real Unity-rendered proof: `raid-cast-eye-Ignis.png` shows
 an orange sphere filling almost the entire frame, and `raid-cast-eye-Tonitrus.png` is blank sky.
-Both are the camera sitting inside the burst sphere — confirmed by `docs/systems/spells.md`'s own
+Both are the camera sitting inside the burst sphere — confirmed by `docs/4-systems/spells.md`'s own
 "burst is invisible from inside itself" entry, which already diagnosed the back-face-culling half of
 this but mitigated it with `SpellBurst.EnsureDoubleSided` rather than moving the burst.
 `CastOrigin` (`SpellCastingSystem`) places a burst only 1m in front of the caster; `SpellLookbook`'s
@@ -129,7 +129,7 @@ alone rather than wired up.
 **Why.** Standing up `HealthBar.cs` would mean authoring a uGUI canvas + slider prefab per enemy
 and placing it in every enemy prefab, which is real art/prefab work this pass isn't scoped for, and
 it would leave two parallel health-bar systems (one IMGUI, one uGUI) rather than one. Projecting
-from the existing IMGUI view costs one method and no new assets, matches `docs/Decisions.md`'s
+from the existing IMGUI view costs one method and no new assets, matches `docs/6-decisions/Decisions.md`'s
 existing "swap for a canvas when the art pass arrives" plan for the rest of the HUD, and gives every
 enemy a bar today rather than only the ones someone remembers to wire a prefab for. When the uGUI
 art pass happens, `HealthBar.cs` is the natural component to revive — or delete, if the projected
@@ -295,7 +295,7 @@ did not fit in the Crypt it spawns in.
 **Decision.** A standard human is 1.80 m (eyes 1.65 m). Per-zone room heights are raised against
 it, and `EnemyPrefabForge` carries a standing height per enemy and scales each model uniformly
 from its authored height to that figure. The models themselves are untouched. Written up in
-`docs/systems/scale.md`.
+`docs/4-systems/scale.md`.
 
 **Why.** Re-authoring ten rigged, skinned models in Blender to agree on a metre is a large change
 with real risk to the rigs, and it puts the game's scale standard somewhere nothing can check it.
@@ -307,7 +307,7 @@ enemy's tuning, and is applied by the same tool that already authors the prefabs
 ## 2026-09-16 — Complete the docs structure by salvaging an abandoned scaffold branch, not rewriting it
 
 **Context.** Running a `docs/` structure/audit pass, `origin/claude/repo-status-check-hjp6z7` was
-found: a fully-written five-tier scaffold (tiers 1, 2, 3, 5, plus `docs/systems/README.md` and
+found: a fully-written five-tier scaffold (tiers 1, 2, 3, 5, plus `docs/4-systems/README.md` and
 three previously-missing system docs — `voice.md`, `castle.md`, `alarm.md` — and the
 `docs/archive/2026-09-15-integration/` move) committed once (`d721d7b`) and never merged. It was
 cut from a point 11 commits behind current `main`, so its tier 1/2/3/5 drafts were stale relative
@@ -336,7 +336,7 @@ capsule guard whenever the room/loot/enemy catalogues were empty. Meanwhile the 
 contained 25 modelled castle rooms, 5 modelled loot prefabs and 10 rigged enemy models, wired into
 complete `ScriptableObject` catalogues — none of it referenced by anything. The placeholder
 fallback was silent, so this went unnoticed for the length of an entire asset-pipeline effort. See
-`docs/systems/raid-scene-assembly.md` ("The placeholder era").
+`docs/4-systems/raid-scene-assembly.md` ("The placeholder era").
 
 **Decision.** `RaidSceneBuilder` now aborts the build and names every missing catalogue by name,
 instead of silently substituting primitives.
@@ -349,7 +349,7 @@ failure at build time makes a missing catalogue impossible to miss again.
 ## 2026-09-16 — Compose spawn rotations with the prefab's own rotation; never replace it
 
 **Context.** Castle room, loot and enemy prefabs each carry a different Blender-to-Unity axis
-correction baked into their root rotation (see `docs/systems/raid-scene-assembly.md`,
+correction baked into their root rotation (see `docs/4-systems/raid-scene-assembly.md`,
 "Orientation"). `RaidSceneBuilder` and `ProceduralCastleGenerator.PlaceModule` called
 `Instantiate(prefab, pos, rot, parent)`, which overwrites a prefab's root rotation outright —
 laying every castle room on its edge.
@@ -372,7 +372,7 @@ land inside a wall or prop, and PhysX ejects the overlapping rigidbody hard: mea
 it measurably worse (15/22 flung), because loot ended up landing on room roofs instead.
 
 **Decision.** Revert the raycast attempt. Leave the fling defect open and documented
-(`docs/systems/raid-scene-assembly.md`, "Traps"; tracked as GitHub issue #20) rather than
+(`docs/4-systems/raid-scene-assembly.md`, "Traps"; tracked as GitHub issue #20) rather than
 compromise the planner's purity for a fix that didn't work.
 
 **Why.** The planner being pure — knowing the layout and the seed but nothing about mesh geometry
@@ -395,8 +395,8 @@ clock (never counted down), and trigger tracking.
 an unspawned object is treated as its own authority.
 
 **Why.** This is the one check that's correct in both single-player (unspawned) and real
-multiplayer (spawned client), without a separate offline code path. See `docs/systems/raid.md`,
-`docs/systems/voice.md` and `docs/systems/alarm.md` for where this bit.
+multiplayer (spawned client), without a separate offline code path. See `docs/4-systems/raid.md`,
+`docs/4-systems/voice.md` and `docs/4-systems/alarm.md` for where this bit.
 
 **Status.** Standing — the underlying trap is a property of PurrNet's authority model, not
 something the codebase can rule out for a future `NetworkBehaviour` that skips the `isSpawned`
@@ -414,7 +414,7 @@ castle architecture only. `feature/Owen/PCG` is never opened, diffed, merged, ch
 rebased into this lineage again. The one file already read is recorded rather than treated as
 unread: it implements a recursive branching room-web (random rotation, retry-on-overlap), which is
 a different algorithm from the deterministic outward-in ward nesting this project's generator
-uses (`docs/systems/castle.md`).
+uses (`docs/4-systems/castle.md`).
 
 **Why.** Avoids any dependency — even a convergent, coincidental one — on code from a departed
 contributor whose branch was never a sanctioned reference for this codebase.
@@ -465,7 +465,7 @@ self-creating one; `DontDestroyOnLoad` is only called when `PersistBetweenScenes
 
 **Why.** An absent instance is information a caller needs (no scene owner has been set up yet),
 not a problem to paper over by spawning a `GameObject` nobody asked for. See
-`docs/systems/core.md`'s invariant: "`SingletonBase.Instance` never creates anything."
+`docs/4-systems/core.md`'s invariant: "`SingletonBase.Instance` never creates anything."
 
 **Status.** Standing.
 
@@ -574,7 +574,7 @@ byte-identical. Evidence: `docs/generated/enemy-stance-screenshots/`.
 
 **Not decided.** The same padding makes the forge under-scale most enemies (`WarHound` draws 0.685 m
 against a 0.85 m table entry). Correcting it resizes the whole cast against the rooms and archways, so
-it was recorded in `docs/systems/scale.md` "Traps" and left for a design call.
+it was recorded in `docs/4-systems/scale.md` "Traps" and left for a design call.
 
 **Status.** Standing.
 
@@ -605,7 +605,7 @@ matching over free-form text (can't separate IGNIS from AGNIS when both come bac
 the multi-accent measurement issue #50 asks for, may need different ones — tune them in the
 `SpellWord` assets and re-run `SpeechRecognitionTests`.
 
-**Status.** Standing. Mechanism: `docs/systems/voice.md`, "Latin through an English model".
+**Status.** Standing. Mechanism: `docs/4-systems/voice.md`, "Latin through an English model".
 
 ## 2026-09-23 — Dying ends the raid on a "You died" screen; the scene reload is gone
 
@@ -626,7 +626,7 @@ session's flow for no gain.
 **Not decided.** Co-op downing (`DownedPlayerCarryAdapter` exists) should replace instant death
 once there is more than one player; with one player, down is out.
 
-**Status.** Standing. Mechanism: `docs/systems/damage.md`, "How it works".
+**Status.** Standing. Mechanism: `docs/4-systems/damage.md`, "How it works".
 
 ## 2026-09-23 — #100's root cause was the voice pipeline, not a missing component
 
@@ -729,7 +729,7 @@ casts and pickups would land on the host's body.
 `PlayerSpawner`, `CoopSession`). Every session starts through `CoopSession`: Play Solo hosts on
 `LocalTransport`, Host Co-op hosts on Steam (UDP without Steam), and a friend joins as a client. The
 player is spawned per connection from `RaidPlayer.prefab`, and ownership decides which body each
-machine drives. Mechanism: `docs/systems/net.md`.
+machine drives. Mechanism: `docs/4-systems/net.md`.
 
 **Considered and rejected.** Keeping solo offline and adding network "avatars" for remote players.
 Two code paths for the raid, and the scene player's collision with itself across machines would
@@ -819,7 +819,7 @@ That changes three planners and their tests, and every placement would need an e
 the same result. Making the generator ask for a per-era gatehouse id: the role-id alias gives the
 same result without code changes.
 
-**Status.** Standing. See `docs/systems/raid-scene-assembly.md`, "Eras".
+**Status.** Standing. See `docs/4-systems/raid-scene-assembly.md`, "Eras".
 
 ## 2026-09-25 — how the night atmosphere was built, where it departs from the spec
 
@@ -861,7 +861,7 @@ Items over about 10 kg drag instead of lifting. A curved beam shows the link and
 is synced to other players. The walking slowdown is removed. Phase 1 only: no strength stat or
 co-op lifting yet, and loot still only shatters (no per-bump value loss).
 
-**Replaces.** "Only the hand pays for weight; walking does not" (docs/systems/damage.md, 2026-09-24)
+**Replaces.** "Only the hand pays for weight; walking does not" (docs/4-systems/damage.md, 2026-09-24)
 and `Item.CarrySpeedMultiplier`. #119's complaint was the jerk. The velocity-damped spring answers
 it: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem` asserts no single-frame jump over 5 cm when
 turning round at walking speed.
@@ -880,7 +880,7 @@ be movable by one player, dragged behind them.
 **Decision.** A held item keeps its pickup orientation relative to the holder's facing. Weapons
 (`RangedWeapon`, `MeleeWeapon`) are held rigidly in the hand, pointing where the player looks,
 with no beam. Pieces too heavy to lift are towed on a rope behind the holder, not pulled toward
-the crosshair. How: `docs/systems/damage.md`, "Weight".
+the crosshair. How: `docs/4-systems/damage.md`, "Weight".
 
 **Replaces.** The free hang from the grab point in "Carrying hangs from a beam spring" (2026-09-25
 entry above). The spring trail, lift limit and beam are unchanged.
@@ -910,7 +910,7 @@ towing should slow the player.
 
 **Decision.** Towing a piece too heavy to lift slows your walk to about 6 / mass of your pace, and
 further while the piece lags. The piece is driven toward your pace, never yanked past it. How:
-`docs/systems/damage.md`, "Weight".
+`docs/4-systems/damage.md`, "Weight".
 
 **Replaces.** For towing only, "the walking slowdown is removed" from the #144 decision
 (2026-09-25). Carrying anything you can lift still never slows you.
@@ -925,5 +925,20 @@ and the prefab's Rigidbody mass (what the physics used), and they disagreed for 
 Tow Pace and Tow Strength fields added earlier the same day are gone: pace is 6 / mass and the
 rope's pull rises with mass. A towed piece's friction is off and its speed is driven directly,
 since friction made forces untunable across shapes and weights. How:
-`docs/systems/damage.md`, "Weight".
+`docs/4-systems/damage.md`, "Weight".
+
+## 2026-09-26 — The six doc tiers live in numbered folders
+
+**Context.** The house-rules plugin (v2.36) now expects each tier in its own numbered folder, so
+the folders sort in tier order, and flagged this repo's flat layout every session.
+
+**Decision.** `docs/README.md` moved to `docs/1-landing/`, `Roadmap.md` to `docs/2-roadmap/`,
+`ProjectState.md` to `docs/3-state/`, `docs/systems/` to `docs/4-systems/`, `Today.md` to
+`docs/5-today/` and `Decisions.md` to `docs/6-decisions/`. Every pointer was rewritten: paths in
+code comments and `doc-ref` lines, tools, docs and `CLAUDE.md`, and relative links re-aimed from
+each file's old place to its new one. `python Tools/docs/check_doc_links.py` checks every relative
+link in the docs resolves; it found 2 broken before the move (in the archive, now fixed) and 0
+after. Captured output in `docs/generated/` keeps the paths it was written with.
+
+**Status.** Standing.
 

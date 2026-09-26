@@ -254,7 +254,7 @@ namespace Plunderspell.Loot
 
             // Transition bridge: extraction tallies LootValue now, so breaking through the old
             // system has to reach the new one or a smashed piece still pays out. Goes away with
-            // LootPickup. See docs/systems/raid.md, "Carrying and extracting".
+            // LootPickup. See docs/4-systems/raid.md, "Carrying and extracting".
             if (TryGetComponent(out LootValue value))
                 value.Ruin();
             if (_meshRenderer != null) _meshRenderer.enabled = false;

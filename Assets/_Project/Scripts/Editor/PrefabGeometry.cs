@@ -7,7 +7,7 @@ namespace Plunderspell.EditorTools
     /// <see cref="Renderer.bounds"/> is padded on a rigged mesh and must not decide where a foot is.
     /// Issue <see href="https://github.com/Ajw2003/PlunderSpell/issues/94"/>.
     /// </summary>
-    // doc-ref 892b docs/systems/scale.md
+    // doc-ref 892b docs/4-systems/scale.md
     public static class PrefabGeometry
     {
         /// <summary>

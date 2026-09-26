@@ -12,7 +12,7 @@ namespace Plunderspell.Net
     /// <summary>
     /// Starts Steamworks once, before the first scene loads, pumps its callbacks every frame and
     /// shuts it down on quit. Nothing else in the game initialises Steam: PurrLobby's provider only
-    /// does so behind a flag, and no shipping scene contains it. See docs/systems/net.md.
+    /// does so behind a flag, and no shipping scene contains it. See docs/4-systems/net.md.
     ///
     /// Steam must be running and signed in. Outside Steam, the App ID comes from
     /// <c>steam_appid.txt</c> next to the executable (the build tool copies it there) or at the

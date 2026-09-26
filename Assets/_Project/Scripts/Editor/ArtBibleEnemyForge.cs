@@ -11,7 +11,7 @@ using UnityEngine.AI;
 
 namespace Plunderspell.EditorTools
 {
-    // doc-ref d1ef docs/systems/raid-scene-assembly.md
+    // doc-ref d1ef docs/4-systems/raid-scene-assembly.md
     /// <summary>
     /// Authors one prefab variant per art-bible enemy from <see cref="ArtBibleEnemyCatalog"/> and
     /// posts them to the <see cref="EnemyRoster"/>. The sibling of <see cref="EnemyPrefabForge"/>.

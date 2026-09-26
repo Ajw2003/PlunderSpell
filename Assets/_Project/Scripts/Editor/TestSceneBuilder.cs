@@ -6,7 +6,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Development convenience only, not shipped gameplay. See docs/systems/core.md - Dev tooling.
+// Development convenience only, not shipped gameplay. See docs/4-systems/core.md - Dev tooling.
 public static class TestSceneBuilder
 {
     // Judgement calls - tune here rather than hunting through the generated scene.

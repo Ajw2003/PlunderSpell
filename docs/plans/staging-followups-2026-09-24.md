@@ -77,7 +77,7 @@ In the live Editor: no compile errors; `audit_era_filter.cs` shows 0 fallback wa
 era served by its own entries; `audit_inventory.cs` shows all 16 enemies rostered and 0 Late models
 without a prefab; `audit_render.cs` re-rendered (the sheets update). EditMode and PlayMode suites
 pass (baseline: 26/26 and 183/183; inventory tests removed will lower the counts, so say by how
-much). Record results here and in `docs/Today.md`, then commit and push.
+much). Record results here and in `docs/5-today/Today.md`, then commit and push.
 
 ## Results (2026-09-24)
 

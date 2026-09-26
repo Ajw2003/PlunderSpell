@@ -10,7 +10,7 @@ namespace Plunderspell.EditorTools
     /// Lifts the raid's player out of the authored scene into an authored prefab, and leaves the
     /// scene holding an instance of it. Run once; after that the prefab is the thing to edit.
     ///
-    /// See docs/systems/raid-scene-assembly.md, "Authored, not generated".
+    /// See docs/4-systems/raid-scene-assembly.md, "Authored, not generated".
     /// </summary>
     public static class RaidPlayerPrefabExtractor
     {

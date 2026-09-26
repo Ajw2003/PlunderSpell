@@ -233,7 +233,7 @@ namespace Plunderspell.EditorTools
             };
 
         /// <summary>
-        /// Archway height per zone, from docs/systems/scale.md ("Archways"; the CurtainWall gate from
+        /// Archway height per zone, from docs/4-systems/scale.md ("Archways"; the CurtainWall gate from
         /// the art bible's Lion Gate, 3.74 m). The geometry is the source; this mirrors it.
         /// </summary>
         public static float ArchwayHeight(CastleZone zone)

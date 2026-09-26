@@ -17,7 +17,7 @@ namespace Plunderspell.Spells
     /// Every word costs mana (<see cref="SpellWord.ManaCost"/>), spent on the caster's machine from
     /// <see cref="GameServices.PlayerStats"/> and regained over time. A number-key cast is chanted
     /// for <see cref="SpellTuning.KeyboardCastSeconds"/> before it fires, so keys never out-pace
-    /// speech (#116). See docs/systems/spells.md, "Mana and the keyboard chant".
+    /// speech (#116). See docs/4-systems/spells.md, "Mana and the keyboard chant".
     /// </summary>
     public class SpellCastingSystem : NetworkBehaviour
     {
@@ -26,7 +26,7 @@ namespace Plunderspell.Spells
 
         [Header("Cast origin")]
         [Tooltip("The caster's look camera; a spell fires from here, along its forward. Self-wires " +
-                 "to the first child Camera if left empty. See docs/systems/spells.md, \"A cast " +
+                 "to the first child Camera if left empty. See docs/4-systems/spells.md, \"A cast " +
                  "follows the camera, not the body\".")]
         [SerializeField] private Transform _aimSource;
         [Tooltip("How far in front of the aim source a spell originates, in metres.")]

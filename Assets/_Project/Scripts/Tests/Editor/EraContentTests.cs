@@ -10,7 +10,7 @@ namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// Guards the per-era raid content forged by <c>EraContentForge</c>. See
-    /// docs/systems/raid-scene-assembly.md, "Eras".
+    /// docs/4-systems/raid-scene-assembly.md, "Eras".
     /// </summary>
     public class EraContentTests
     {

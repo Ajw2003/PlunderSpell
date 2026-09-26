@@ -63,7 +63,7 @@ namespace Plunderspell.Spells
     }
 
     /// <summary>Frango — a force blast at what you aim at: hurts, staggers and shoves a creature, or
-    /// smashes a door open. See docs/Decisions.md, 2026-09-23, on why it no longer breaks loot.</summary>
+    /// smashes a door open. See docs/6-decisions/Decisions.md, 2026-09-23, on why it no longer breaks loot.</summary>
     public sealed class FrangoEffect : SpellEffectBase
     {
         public override SpellId Id => SpellId.Frango;

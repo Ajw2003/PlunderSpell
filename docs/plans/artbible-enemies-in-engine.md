@@ -21,8 +21,8 @@ The decisions below were made by the user (see "Decisions recorded"). Per phase:
 | E3 era | `EnemyRoster.Entry.Era`/`AnyEra`, `PickForZone(zone, era, rng)`, `GuardSpawner.SpawnFor(castle, seed, era)`, `RaidDirector.Era` replicated, `Runtime/Inventory/RaidContext.cs` | `EnemyRosterEraTests` (Bronze seed plan only Bronze, fallback reported, weights) | a raid per Age in the Editor |
 | E4 attack signal | `CastleGuard._attackSignal`, `Attacked`, `Runtime/Guards/GuardAttackSignal.cs` | `GuardAttackSignalTests`, `GuardAttackTests` (count per attack, none on cooldown or out of reach) | CombatBench with each enemy; two-player co-op raid (the client's `Attacked`) |
 
-Where it is documented: `docs/systems/raid-scene-assembly.md` ("Enemy postings", "Era reaches the
-raid", "Art-bible enemies"), `docs/systems/net.md` ("Guard attacks reach every peer").
+Where it is documented: `docs/4-systems/raid-scene-assembly.md` ("Enemy postings", "Era reaches the
+raid", "Art-bible enemies"), `docs/4-systems/net.md` ("Guard attacks reach every peer").
 
 The original status line read: "plan only. Nothing here is built. The decisions marked
 **[DECIDE]** need the user before work starts." 
@@ -35,7 +35,7 @@ The original status line read: "plan only. Nothing here is built. The decisions 
 | They import as **Generic** rigs with no avatar | `LanternWarden.fbx.meta`: `animationType: 2`, `avatarSetup: 0` |
 | No prefab, roster entry or spawn uses them | `EnemyPrefabForge.Specs` lists only the 10 EnemyForge enemies (`Assets/_Project/Scripts/Editor/EnemyPrefabForge.cs:62`) |
 | A guard is one `CastleGuard` (PurrNet `NetworkBehaviour`) with a synced alert state and health, plus a `NavMeshAgent`, a `CapsuleCollider` and a `StatusEffectReceiver` | `EnemyPrefabForge.BuildPrefab`, `CastleGuard.cs:25`, `:82`, `:85` |
-| The roster picks by **zone only**. The Age chosen in the Lair does not reach the guard planner | `EnemyRoster.PickForZone(zone, rng)`; `docs/ProjectState.md`, "Choosing an era in the Lair does nothing" |
+| The roster picks by **zone only**. The Age chosen in the Lair does not reach the guard planner | `EnemyRoster.PickForZone(zone, rng)`; `docs/3-state/ProjectState.md`, "Choosing an era in the Lair does nothing" |
 | Era-specific castle rooms are being built by another agent, also not yet wired to era | `docs/plans/era-castle-rooms.md` |
 | Attacks run on the server only. Clients see a projectile or a health change, but get no event saying "this guard swung" | `CastleGuard.TryAttack` (`:536`), with no RPC in the file |
 | Nothing animates any enemy today | No `Animator` anywhere under `Runtime/Guards` or `Runtime/Raid` |
@@ -94,7 +94,7 @@ Humanoid avatar is valid (`Avatar.isHuman && isValid`).
 
 ### E1: prefabs from the art bible's own numbers
 `Editor/ArtBibleEnemyForge.cs`, a sibling of `EnemyPrefabForge`, following the same rules
-(`docs/systems/raid-scene-assembly.md`, "Enemy prefabs"). It reads `docs/art/data/*.json` and
+(`docs/4-systems/raid-scene-assembly.md`, "Enemy prefabs"). It reads `docs/art/data/*.json` and
 `artforge_manifest.json`, so the height, zones and role come from the one source rather than
 another hand-typed table.
 - One **prefab variant** per model: `Assets/_Project/Prefabs/Enemies/ArtBible/<Age>/<Name>.prefab`.
@@ -112,7 +112,7 @@ another hand-typed table.
   their behaviour from the nearest existing mode: hound = melee chaser, keeper and petardier =
   thrown projectile, pavisier = melee shield-bearer.
 - **Collider and agent** from the measured height (the JSON `height_m`, props excluded). The agent
-  height is capped so every enemy fits the archways of its posted zones (`docs/systems/scale.md`).
+  height is capped so every enemy fits the archways of its posted zones (`docs/4-systems/scale.md`).
   An enemy taller than an archway gets the "archway duck" flag the animation plan uses.
 - **Props and lights.** Prop bones become sockets (`Prop.Lantern`, `Hand.R`, …). The Lantern Warden,
   Keeper of the Flame, handgunner and musketeer match, and the petardier's grenado get a small warm

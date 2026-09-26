@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Plunderspell.EditorTools
 {
     /// <summary>
-    /// Photographs the combat bench with a spawn on the floor. See docs/systems/combat-bench.md,
+    /// Photographs the combat bench with a spawn on the floor. See docs/4-systems/combat-bench.md,
     /// "Verification", for the headless invocation and why the panel can never appear in these.
     /// </summary>
     public static class CombatBenchScreenshotForge

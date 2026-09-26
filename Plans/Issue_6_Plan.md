@@ -6,7 +6,7 @@ Currently, the player character is too tall compared to the castle rooms. The ro
 ## Step by Step Execution Instructions
 
 1.  **Define a Standard Scale:**
-    Create or update a documentation file in `docs/systems/` that states the official height for a standard character. For example, determine that a standard human character should be a specific height like 1.8 meters.
+    Create or update a documentation file in `docs/4-systems/` that states the official height for a standard character. For example, determine that a standard human character should be a specific height like 1.8 meters.
 
 2.  **Adjust Player Height:**
     Open the script `RaidSceneBuilder.cs`. Update the `PlayerHeight`, `PlayerRadius`, and `EyeHeight` values to match the new standard scale.
@@ -24,7 +24,7 @@ Currently, the player character is too tall compared to the castle rooms. The ro
 4.  Observe the character and enemies relative to the ceilings and doorways.
 
 ## Completion Checks
-*   [ ] A standard character height is documented in the `docs/systems/` folder.
+*   [ ] A standard character height is documented in the `docs/4-systems/` folder.
 *   [ ] The player character has comfortable headroom inside all rooms and when passing through all doorways.
 *   [ ] The largest enemy can spawn and move freely inside the smallest room it is allowed to enter.
 *   [ ] All character and environment models visually agree on a consistent scale.

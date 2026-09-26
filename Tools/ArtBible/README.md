@@ -74,5 +74,5 @@ unless the whole set validates.
 }
 ```
 
-Zones are the five in `docs/systems/scale.md`: `Crypt`, `OuterBailey`, `InnerWard`, `Keep`,
+Zones are the five in `docs/4-systems/scale.md`: `Crypt`, `OuterBailey`, `InnerWard`, `Keep`,
 `CurtainWall`. Paths in `concept` are relative to `docs/art/`.

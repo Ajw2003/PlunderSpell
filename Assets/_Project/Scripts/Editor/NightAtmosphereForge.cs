@@ -21,7 +21,7 @@ namespace Plunderspell.EditorTools
     /// into a scene: the Low/Medium/High quality levels and their URP assets, the fog pass on each
     /// renderer, the four alarm-state grades, the atmosphere profile, the fire and portal prefabs.
     /// Idempotent: re-running rebuilds the same assets in place, keeping their GUIDs.
-    /// See docs/systems/atmosphere.md.
+    /// See docs/4-systems/atmosphere.md.
     /// </summary>
     public static class NightAtmosphereForge
     {

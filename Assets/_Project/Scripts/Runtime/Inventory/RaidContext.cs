@@ -2,7 +2,7 @@ using System;
 
 namespace Plunderspell.Inventory
 {
-    // doc-ref 7655 docs/systems/raid-scene-assembly.md
+    // doc-ref 7655 docs/4-systems/raid-scene-assembly.md
     /// <summary>
     /// The seed and Age of the raid being built on this peer, published by
     /// <c>RaidDirector.BuildCastle</c>. For code below the raid in the dependency graph (the castle

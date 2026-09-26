@@ -10,7 +10,7 @@ namespace Plunderspell.Net
     /// the server spawned keep their health on the server; a player's health lives on that player's
     /// own machine, because their body, HUD and death screen are there. The hitter gets the result
     /// back through <see cref="Damage.ReportRemote"/>, so damage numbers still appear for them.
-    /// See docs/systems/net.md, "Damage".
+    /// See docs/4-systems/net.md, "Damage".
     /// </summary>
     public sealed class DamageRelay : NetworkBehaviour
     {

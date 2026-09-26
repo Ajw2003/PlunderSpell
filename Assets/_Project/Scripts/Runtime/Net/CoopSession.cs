@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace Plunderspell.Net
 {
-    // doc-ref 4e69 docs/systems/net.md
+    // doc-ref 4e69 docs/4-systems/net.md
     /// <summary>
     /// The one place a network session starts and ends: solo on LocalTransport, co-op on Steam (UDP
     /// on a LAN without Steam), and joining a friend's Steam lobby. Command line for local testing:

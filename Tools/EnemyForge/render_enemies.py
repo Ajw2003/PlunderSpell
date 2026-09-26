@@ -185,7 +185,7 @@ def _enable_wireframe() -> bpy.types.Material:
 
     Deliberately not Freestyle, and rendered without a ground plane because the
     override hits every object — see "Freestyle is not usable headlessly here" in
-    docs/systems/enemy-asset-pipeline.md.
+    docs/4-systems/enemy-asset-pipeline.md.
     """
     clay = bpy.data.materials.new("ReviewClay")
     clay.use_nodes = True

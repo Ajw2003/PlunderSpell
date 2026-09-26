@@ -30,7 +30,7 @@ public class SpellBook : MonoBehaviour
         _playerColliders = gameObject.GetComponentsInChildren<Collider>();
 
         // Self-wire what the raid's player rig does not author, so dropping this component on a
-        // player is enough on its own. See docs/systems/spells.md, "Two ways to cast".
+        // player is enough on its own. See docs/4-systems/spells.md, "Two ways to cast".
         if (playerCamera == null)
             playerCamera = GetComponentInChildren<Camera>() ?? Camera.main;
         if (shootPoint == null)

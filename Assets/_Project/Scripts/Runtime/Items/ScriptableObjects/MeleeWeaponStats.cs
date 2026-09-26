@@ -3,7 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// Combat-specific stats for a melee weapon. Heft is read from <see cref="InventoryItem.Weight"/>
-/// rather than duplicated here — see docs/Decisions.md, "Melee weight is read from InventoryItem".
+/// rather than duplicated here — see docs/6-decisions/Decisions.md, "Melee weight is read from InventoryItem".
 /// </summary>
 [CreateAssetMenu(fileName = "MeleeWeaponStats", menuName = "Scriptable Objects/Melee Weapon Stats")]
 public class MeleeWeaponStats : ScriptableObject

@@ -40,7 +40,7 @@ Sources are listed at the end. Each point is marked with where it comes from:
 9. **The beam's shape.** It leaves the player's hand and ends on the grab point. It curves when
    the object lags behind where you are aiming, so you can see the strain. [play]
 
-## What we have (`Item` + `ItemManager`, see `docs/systems/damage.md`, "Weight")
+## What we have (`Item` + `ItemManager`, see `docs/4-systems/damage.md`, "Weight")
 
 | | Plunderspell today | R.E.P.O. |
 |---|---|---|

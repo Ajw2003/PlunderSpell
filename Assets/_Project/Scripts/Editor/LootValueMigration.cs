@@ -8,7 +8,7 @@ namespace Plunderspell.EditorTools
     /// Gives every loot prefab a <see cref="LootValue"/>, carrying across the <c>LootItem</c> its
     /// <c>LootPickup</c> already referenced. Idempotent; safe to re-run.
     ///
-    /// See docs/systems/raid.md, "Carrying and extracting".
+    /// See docs/4-systems/raid.md, "Carrying and extracting".
     /// </summary>
     public static class LootValueMigration
     {

@@ -42,7 +42,7 @@ vertices on the band edges if you want them crisp.
 Invariants are EnemyForge's: every part is its own closed, manifold island with
 outward normals; material index and bone id are stamped inline while the op's
 references are live (see "bmesh references and index order both go stale" in
-docs/systems/enemy-asset-pipeline.md).
+docs/4-systems/enemy-asset-pipeline.md).
 """
 
 from __future__ import annotations

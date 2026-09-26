@@ -2,7 +2,7 @@ using Interfaces;
 using Plunderspell.Acoustics;
 using UnityEngine;
 
-/// <summary>Turns a held <see cref="Item"/> into a melee weapon. See docs/Decisions.md, "Melee hit
+/// <summary>Turns a held <see cref="Item"/> into a melee weapon. See docs/6-decisions/Decisions.md, "Melee hit
 /// detection has no enemy layer to filter on".</summary>
 [RequireComponent(typeof(Item))]
 [RequireComponent(typeof(AcousticEmitter))]

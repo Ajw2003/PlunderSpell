@@ -1,6 +1,6 @@
 // Minimal shim of the uGUI surface UIFactory/the screens under Assets/_Project/Scripts/Runtime/UI
 // use, added when the headless harness's own project files (Plunderspell.Headless.csproj etc.) were
-// reconstructed after a gitignore rule had swallowed them -- see docs/Decisions.md, "The headless
+// reconstructed after a gitignore rule had swallowed them -- see docs/6-decisions/Decisions.md, "The headless
 // harness's own project files were never committed". Nothing here does real layout; it exists so
 // this code compiles and constructs headlessly. No test exercises these UI screens at runtime (the
 // one that tries, UIScreenshotPlayModeTests, self-skips without a real graphics device), so

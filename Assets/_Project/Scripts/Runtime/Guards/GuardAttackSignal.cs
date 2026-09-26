@@ -10,7 +10,7 @@ namespace Plunderspell.Guards
         Projectile = 1,
     }
 
-    // doc-ref 51f2 docs/systems/net.md
+    // doc-ref 51f2 docs/4-systems/net.md
     /// <summary>
     /// One replicated integer: the attack count in the high bits, the kind of the latest attack in
     /// the low <see cref="KindBits"/> bits. Pure, so the packing is tested without a network.

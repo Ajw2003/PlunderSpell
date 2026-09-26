@@ -11,7 +11,7 @@ using Steamworks;
 #endif
 using UnityEngine;
 
-// See docs/systems/net.md for why this exists as a separate component. Closes PurrLobby's
+// See docs/4-systems/net.md for why this exists as a separate component. Closes PurrLobby's
 // cold-launch and rich-presence invite gaps (plan Phase 5).
 [RequireComponent(typeof(SteamLobbyProvider))]
 public class SteamInviteGateway : MonoBehaviour
@@ -57,7 +57,7 @@ public class SteamInviteGateway : MonoBehaviour
     {
         if (!TryGetCommandLineLobbyId(out ulong lobbyId)) yield break;
 
-        // See docs/systems/net.md#how-it-works for why this polls instead of awaiting an event.
+        // See docs/4-systems/net.md#how-it-works for why this polls instead of awaiting an event.
         int attempts = 0;
         while (!_provider.IsSteamClientAvailable && attempts < MaxSteamReadyPollFrames)
         {

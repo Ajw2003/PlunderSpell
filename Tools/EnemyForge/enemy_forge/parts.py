@@ -174,7 +174,7 @@ def build_bmesh(parts: list[Part]) -> tuple[bmesh.types.BMesh, list[str]]:
     Faces carry their surface family as `material_index`; verts carry an index into
     the returned bone-name table in the `bone_id` int layer. Both are stamped inline,
     while the primitive op's references are still live — see "bmesh references and
-    index order both go stale" in docs/systems/enemy-asset-pipeline.md.
+    index order both go stale" in docs/4-systems/enemy-asset-pipeline.md.
     """
     bm = bmesh.new()
     bone_layer = bm.verts.layers.int.new(BONE_LAYER)

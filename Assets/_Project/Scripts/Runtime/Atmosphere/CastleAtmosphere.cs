@@ -11,7 +11,7 @@ namespace Plunderspell.Atmosphere
     /// The castle's night: fog, moon, sky, ambient, grade and every fire, blended between the four
     /// alarm states over about two seconds whenever <see cref="AlarmFSMManager.AlarmStateChanged"/>
     /// fires. That event already fires on every peer, so each machine blends its own visuals and
-    /// nothing here is networked. See docs/systems/atmosphere.md.
+    /// nothing here is networked. See docs/4-systems/atmosphere.md.
     /// </summary>
     public class CastleAtmosphere : MonoBehaviour
     {

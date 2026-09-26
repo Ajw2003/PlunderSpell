@@ -8,7 +8,7 @@ namespace Plunderspell.EditorTools
     /// Builds the one projectile prefab the whole game fires — guard turrets and spells alike.
     /// Code-built for the same reason the rest of the scene tooling is: no authored art exists yet.
     ///
-    /// See docs/systems/raid.md, "Guards that can actually hurt you".
+    /// See docs/4-systems/raid.md, "Guards that can actually hurt you".
     /// </summary>
     public static class ProjectileForge
     {

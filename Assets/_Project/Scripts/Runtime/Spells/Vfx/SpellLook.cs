@@ -32,7 +32,7 @@ namespace Plunderspell.Spells.Vfx
     /// What each spell looks like. A misfire is always the same angry orange whatever it was meant
     /// to be, so "that went wrong" is readable before the caption is.
     ///
-    /// See docs/systems/spells.md, "Seeing a cast".
+    /// See docs/4-systems/spells.md, "Seeing a cast".
     /// </summary>
     public static class SpellLookbook
     {

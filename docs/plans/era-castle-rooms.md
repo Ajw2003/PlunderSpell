@@ -11,7 +11,7 @@ The user's brief:
 `CastleBench.unity` builds its castle with `ProceduralCastleGenerator` from
 `Assets/_Project/Data/Castle/CastleRoomRegistry.asset`. That registry holds one room set, and it
 is High Medieval in all but name. `HistoricalEra` (`Assets/_Project/Scripts/Runtime/Inventory/HistoricalEra.cs`)
-has four Ages, but no room is tagged with one (`docs/ProjectState.md`, "The one thing that is not
+has four Ages, but no room is tagged with one (`docs/3-state/ProjectState.md`, "The one thing that is not
 what it looks like"). The current set, one mesh each, built by `Tools/AssetPipeline/castle_builders.py`:
 
 | Zone | Pieces |
@@ -34,7 +34,7 @@ These come from the code, not from memory. Each was checked against the file nam
 - **Grid.** Every module fills one 12 m × 12 m cell exactly (`room_kit.FOOTPRINT`), is bottom-flush at
   Z = 0 and centred on X/Y. `validate_in_blender` fails anything that reaches past ±6.05 m.
 - **Heights are the same in every Age.** `ZONE_HEIGHT` (CurtainWall 5.2, OuterBailey 3.6, InnerWard
-  4.0, Keep 4.6, Crypt 3.0) is measured against the 1.80 m human (`docs/systems/scale.md`), and the
+  4.0, Keep 4.6, Crypt 3.0) is measured against the 1.80 m human (`docs/4-systems/scale.md`), and the
   archway size is derived from it. The art bible uses the same figures. Keeping them identical
   means every Age's archways, door plugs and prefab socket positions match, and
   `ScaleInvariantTests` holds without change.
@@ -327,7 +327,7 @@ Editor:
 
 1. `CastleRoomModuleData.Era` (a `HistoricalEra` field) and `ProceduralCastleGenerator` filtering
    by it, so a raid in a given Age draws from that Age's set. This is the schema change
-   `docs/ProjectState.md` calls out for M3.
+   `docs/3-state/ProjectState.md` calls out for M3.
 2. Prefabs for each new FBX (a `MeshCollider` per piece plus `CastleRoomModule` with sockets),
    the same way `CastleDoorPlugForge` builds the plug prefabs, and registry entries for them.
 3. `Import Castle Loot Anchors`, then the navigation audit (`CastleAudit.cs`) in each Age.

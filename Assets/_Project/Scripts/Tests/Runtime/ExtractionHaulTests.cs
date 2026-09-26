@@ -9,7 +9,7 @@ namespace Plunderspell.Tests
 {
     /// <summary>
     /// Extraction tallies what is standing on the pad, and the HUD says so while the raid is still
-    /// running. See docs/systems/raid.md, "Carrying and extracting".
+    /// running. See docs/4-systems/raid.md, "Carrying and extracting".
     /// </summary>
     public class ExtractionHaulTests
     {

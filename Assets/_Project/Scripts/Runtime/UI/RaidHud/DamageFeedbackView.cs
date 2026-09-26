@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Plunderspell.UI
 {
-    // doc-ref 7f7c docs/systems/damage.md
+    // doc-ref 7f7c docs/4-systems/damage.md
     /// <summary>
     /// Draws every <see cref="Damage.Dealt"/> hit: numbers, flashes, enemy health bars, a hit marker,
     /// and a red screen edge plus a "what hurt you" line for the local player. Creates itself.

@@ -1,7 +1,7 @@
 # Roadmap
 
 Milestones as defined in the pitch (`docs/plunderspell.md` §11) and the engineering plan
-(`docs/plans/plunderspell.md`). Percentages and current status live in `docs/ProjectState.md`;
+(`docs/plans/plunderspell.md`). Percentages and current status live in `docs/3-state/ProjectState.md`;
 this document only defines what "done" means for each one.
 
 ## M0 — Fork clean, cut gravity
@@ -29,7 +29,7 @@ misfire table.
 **Acceptance:** >90% top-1 recognition across four accents on the 40-word lexicon, under 150 ms
 from word-end to effect, and misfires that land as jokes rather than frustration. This requires
 a real microphone and real speakers of different accents — a unit test against the mock provider
-does not check this criterion; see `docs/ProjectState.md`.
+does not check this criterion; see `docs/3-state/ProjectState.md`.
 
 ## M2 — The vertical slice
 

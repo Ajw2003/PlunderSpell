@@ -3,7 +3,7 @@ using UnityEngine.Rendering;
 
 /// <summary>
 /// The line from a player's hand to what they are holding, bent through where they aim, coloured
-/// by <see cref="Item.Load"/> (#144). How it is drawn and synced: docs/systems/damage.md, "Weight".
+/// by <see cref="Item.Load"/> (#144). How it is drawn and synced: docs/4-systems/damage.md, "Weight".
 /// </summary>
 [RequireComponent(typeof(LineRenderer))]
 public class GrabBeam : MonoBehaviour

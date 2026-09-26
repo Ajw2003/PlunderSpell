@@ -32,7 +32,7 @@ def build_object(bp: Blueprint, authoring: list[bpy.types.Material],
     """The joined mesh with its authoring material slots (and vertex groups if rigged).
 
     Material slots are attached before face indices are written — see "Material
-    indices are clamped to the number of slots" in docs/systems/enemy-asset-pipeline.md.
+    indices are clamped to the number of slots" in docs/4-systems/enemy-asset-pipeline.md.
     """
     bm, bone_names = kit.build_bmesh(bp.parts, family_index)
     # EnemyForge's own torus comes out inside-out; this fixes it, per island.
@@ -99,7 +99,7 @@ def _bevel(obj: bpy.types.Object, width: float) -> None:
 
     Settings match enemy_forge.assemble.finish_geometry: one segment, arc mitres,
     clamped overlap, then dissolve the slivers the clamp leaves ("A clamped bevel
-    still leaves slivers" in docs/systems/enemy-asset-pipeline.md). The only
+    still leaves slivers" in docs/4-systems/enemy-asset-pipeline.md). The only
     difference is which edges qualify: sharper than BEVEL_ANGLE AND not on a part
     that set extras["bevel"] = False.
     """

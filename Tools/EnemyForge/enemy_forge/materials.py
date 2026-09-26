@@ -63,7 +63,7 @@ PALETTE = {
 
 # Families no living member of the household may use, and why. Checked per archetype
 # in discipline_violations(); see "Colour on an enemy means state" in
-# docs/systems/enemy-asset-pipeline.md.
+# docs/4-systems/enemy-asset-pipeline.md.
 ARCANE_ONLY = {"lapis"}
 
 # The baked emission map is 8-bit and clamps at 1.0, so the glow is scaled back up

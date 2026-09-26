@@ -32,7 +32,7 @@ Right now, weapons in the game can only be thrown at enemies. Even though weapon
     `MeleeWeapon.DealDamage`.)
 *   [x] Swing speed and damage are affected by the weapon's weight stat. (`MeleeWeaponStats.Weight`
     reads `InventoryItem.Weight`; `SwingDuration` and `Damage` are both derived from it. See
-    docs/Decisions.md, "Melee weight is read from InventoryItem".)
+    docs/6-decisions/Decisions.md, "Melee weight is read from InventoryItem".)
 *   [x] Swinging a weapon creates a noise alert for the enemy hearing system. (`MeleeWeapon.AlertNearbyListeners`
     via the existing `AcousticEmitter`/`NoiseBroadcaster` pipeline, new `NoiseType.MeleeSwing`.)
 *   [x] The Arming Sword is completely set up and working as a test example.

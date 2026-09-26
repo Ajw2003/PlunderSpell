@@ -4,7 +4,7 @@ READ FIRST (all of them):
 - /home/user/PlunderSpell/docs/art/BRIEF.md — the rules (scale, palette, budgets, household register, sheet conventions). Obey every one.
 - /home/user/PlunderSpell/Tools/ArtBible/README.md — the exact JSON shape.
 - /home/user/PlunderSpell/Tools/ArtBible/sheet_template.svg — the sheet frame. Every SVG you make starts from it (same background, glow, grid, ground line, border, title block, palette strip). Keep the frame; adapt the ladder/human/labels per sheet type as described below.
-- /home/user/PlunderSpell/docs/systems/scale.md — heights, zones, archways, the 12 m cell.
+- /home/user/PlunderSpell/docs/4-systems/scale.md — heights, zones, archways, the 12 m cell.
 - Skim /home/user/PlunderSpell/docs/plunderspell.md for voice and the Age's description.
 
 WHAT YOU PRODUCE

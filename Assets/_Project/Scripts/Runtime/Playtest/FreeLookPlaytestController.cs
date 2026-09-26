@@ -9,7 +9,7 @@ namespace Plunderspell.Playtest
     ///
     /// A harness, not the shipping controller: this is used by ItemGym.unity only. RaidScene carries
     /// <c>PlayerStateMachine</c> plus <c>PlayerInputController</c>, so a behaviour change made here
-    /// does not reach the raid — see docs/Decisions.md, "Issue 9's gate belongs on the raid's player,
+    /// does not reach the raid — see docs/6-decisions/Decisions.md, "Issue 9's gate belongs on the raid's player,
     /// not only on the playtest harness".
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]

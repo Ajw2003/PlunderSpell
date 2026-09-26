@@ -12,7 +12,7 @@ namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the combat bench: that it opens in a state the player can act in, and that spawning
-    /// puts the asked-for enemies where they can be reached. See docs/systems/combat-bench.md.
+    /// puts the asked-for enemies where they can be reached. See docs/4-systems/combat-bench.md.
     /// </summary>
     public class CombatBenchTests
     {

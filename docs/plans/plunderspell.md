@@ -202,6 +202,6 @@ balance it away.
 
 ## Status
 
-M0 through M3 are all merged into `main`. See [`docs/ProjectState.md`](../ProjectState.md) for
+M0 through M3 are all merged into `main`. See [`docs/3-state/ProjectState.md`](../3-state/ProjectState.md) for
 where things actually stand against each milestone's acceptance criterion — most of them are code
 complete but unchecked, not done in the sense this plan means it.

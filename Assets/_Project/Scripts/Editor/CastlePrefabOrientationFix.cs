@@ -9,7 +9,7 @@ namespace Plunderspell.EditorTools
     /// Their roots were saved at (270, 0, 0) on top of the mesh child's own (270, 0, 0), which
     /// composes to a 180-degree flip about X: the room hangs below the floor. The upright root
     /// rotation is (90, 0, 0), measured rather than reasoned — see
-    /// docs/systems/raid-scene-assembly.md ("Orientation").
+    /// docs/4-systems/raid-scene-assembly.md ("Orientation").
     ///
     /// The loot and enemy prefabs are *not* touched: their roots are already correct, and applying
     /// this to them would tip them over instead.

@@ -85,7 +85,7 @@ namespace Plunderspell.Guards
         [field: SerializeField] private SyncVar<float> _health { get; set; } = new SyncVar<float>(100f);
 
         // Every attack bumps this, so every peer learns a guard swung or fired, not only the server
-        // that resolved the hit. Packed count + kind; see GuardAttackSignal and docs/systems/net.md.
+        // that resolved the hit. Packed count + kind; see GuardAttackSignal and docs/4-systems/net.md.
         private readonly SyncVar<int> _attackSignal = new SyncVar<int>(GuardAttackSignal.None);
 
         private StatusEffectReceiver _status;
@@ -567,7 +567,7 @@ namespace Plunderspell.Guards
         /// Strikes or fires at <paramref name="target"/> when in range and off cooldown. A guard that
         /// could chase but never hurt anyone is what made the castle harmless.
         ///
-        /// See docs/systems/raid.md, "Guards that can actually hurt you".
+        /// See docs/4-systems/raid.md, "Guards that can actually hurt you".
         /// </summary>
         private void TryAttack(Transform target)
         {

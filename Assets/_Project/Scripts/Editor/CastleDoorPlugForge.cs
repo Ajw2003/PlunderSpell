@@ -10,7 +10,7 @@ namespace Plunderspell.EditorTools
     /// Authors one door-plug prefab per enclosed zone from the FBX the asset pipeline exports, and
     /// registers them on the <see cref="CastleRoomRegistry"/> so the generator can find them.
     ///
-    /// See docs/systems/scale.md ("Archways") for why there is one plug per zone rather than one
+    /// See docs/4-systems/scale.md ("Archways") for why there is one plug per zone rather than one
     /// for the whole castle.
     /// </summary>
     public static class CastleDoorPlugForge

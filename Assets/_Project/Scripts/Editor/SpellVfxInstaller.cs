@@ -10,7 +10,7 @@ namespace Plunderspell.EditorTools
     /// Puts a <see cref="SpellVfxDirector"/> into the authored scenes, with the bolt assigned.
     /// Idempotent, and a targeted edit rather than a scene rebuild — the raid scene is hand-authored.
     ///
-    /// See docs/systems/spells.md, "Seeing a cast".
+    /// See docs/4-systems/spells.md, "Seeing a cast".
     /// </summary>
     public static class SpellVfxInstaller
     {

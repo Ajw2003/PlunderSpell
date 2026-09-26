@@ -9,7 +9,7 @@ namespace Plunderspell.EditorTools
     /// cannot walk. Deliberately separate from <c>EnemyPrefabForge</c>: the forge rebuilds all ten
     /// enemy prefabs and would discard the hand-tuning they already carry.
     ///
-    /// See docs/systems/raid.md, "Guards that can actually hurt you".
+    /// See docs/4-systems/raid.md, "Guards that can actually hurt you".
     /// </summary>
     public static class TurretArmingTool
     {
