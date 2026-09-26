@@ -50,6 +50,15 @@ re-triaged: see `docs/Today.md`. Carrying now works like R.E.P.O. (#144 phase 1)
 from where you grabbed them on a visible beam, and loot over about 10 kg drags
 (`docs/systems/damage.md`, "Weight").
 
+**2026-09-26 — backlog pass continued** (same branch, not merged). Casting no longer freezes the
+game when the cast key is released: the microphone stays open for the raid (`docs/systems/voice.md`).
+The closing portal falters gently instead of strobing (`docs/systems/atmosphere.md`, "Portal"). Only
+an item's own motion hurts or breaks things: walking into a cauldron or bumping loot no longer
+damages you or it (`docs/systems/damage.md`). Loot is rebalanced: nothing breaks from a waist-high
+drop, heavy pieces pay more, and Late Medieval no longer fills its busy rooms with pieces too heavy to
+lift ([`docs/plans/loot-balance.md`](plans/loot-balance.md)). A player is never spawned over the
+drawbridge's moat (`docs/systems/scale.md`, "Spawning").
+
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/systems/atmosphere.md`. Open: volumetric fog
 (High), vertex soot bake, Deck profiling, enemies/loot on the surface shader unseen in play,

@@ -1,5 +1,30 @@
 # Today
 
+**2026-09-26 — backlog pass continued on `claude/issue-backlog`.** Closed the ten issues the pass
+had fixed (at the user's request, before merging). Then fixed, each with a test that failed first
+where one could be written, and checked in the live Editor:
+- releasing the cast key froze the game for about 126 ms (closing the microphone); the microphone
+  now stays open for the raid (8ac8807);
+- #145: the closing portal strobed at up to 4.6 flashes a second; now under 1 (d578ba0);
+- #146: walking into a cauldron dealt 24 damage, because impacts counted the walker's own speed
+  (38b8a35);
+- a guard's once-per-chase shout never reset after a direct chase-to-patrol change, from the #139
+  edit (7418cd1);
+- #142/#148: bumping loot broke it (3b050db); then the balance in `docs/plans/loot-balance.md`,
+  chosen by the user (0ccc74d). Late Medieval had 51 pieces on seed 777, 29 of them too heavy to
+  lift, in its busiest rooms;
+- #147: on Late Medieval seed 43 a player slot was over the drawbridge's moat. An 80-seed sweep
+  found 1 bad slot in 320 before the fix and 0 after (04dac3c).
+
+Tests: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
+fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
+the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still
+use the generic curtain-wall rooms (WallStraight, Bastion, WallCorner, Drawbridge), not their Late
+variants (#135/#150). A recompile during the user's Play session hung the Editor once; check Play
+mode first.
+
+---
+
 **2026-09-25, late — issue backlog pass on `claude/issue-backlog`, cheapest high-payoff fixes first.**
 Triaged every open issue against code and history: closed 9 as already done (#132, #99, #36, #21,
 #115, #46, #119, #133, #93) and #10 as superseded by #141, and commented status on the partial ones
