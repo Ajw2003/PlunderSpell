@@ -29,6 +29,10 @@ namespace RogueAi.Castle
                  "Tools/Plunderspell/Import Castle Loot Anchors from the asset pipeline's " +
                  "CastleLootAnchors.json; do not edit by hand.")]
         public Vector3[] LootAnchors = new Vector3[0];
+
+        [Tooltip("Where this room burns its fires. Written by Tools/Plunderspell/Import Castle Fire " +
+                 "Anchors from the asset pipeline's CastleFireAnchors.json; do not edit by hand.")]
+        public CastleFireAnchor[] FireAnchors = new CastleFireAnchor[0];
     }
 
     /// <summary>

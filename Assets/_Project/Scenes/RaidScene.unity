@@ -804,78 +804,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 865774667}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &724395778
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 724395780}
-  - component: {fileID: 724395779}
-  m_Layer: 0
-  m_Name: NightLookPreview
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &724395779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 724395778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07e6239c1e0c0e149ada354ed8fb2cfe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.NightLookPreview
-  _director: {fileID: 1029301707}
-  _moon: {fileID: 1280843096}
-  _fogColor: {r: 0.1, g: 0.06, b: 0.045, a: 1}
-  _fogDensity: 0.03
-  _ambientColor: {r: 0.035, g: 0.026, b: 0.02, a: 1}
-  _moonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
-  _moonIntensity: 0.12
-  _moonElevationDegrees: 26
-  _postExposure: 0.45
-  _contrast: 6
-  _saturation: -2
-  _colorFilter: {r: 1.08, g: 0.97, b: 0.88, a: 1}
-  _bloomThreshold: 0.75
-  _bloomIntensity: 1.5
-  _bloomScatter: 0.85
-  _vignetteIntensity: 0.35
-  _fireColor: {r: 1, g: 0.52, b: 0.2, a: 1}
-  _brazierRange: 9
-  _brazierIntensity: 12
-  _torchRange: 6
-  _torchIntensity: 6
-  _flickerAmount: 0.15
-  _flickerSpeed: 1.6
-  _ironColor: {r: 0.06, g: 0.06, b: 0.06, a: 1}
-  _woodColor: {r: 0.22, g: 0.15, b: 0.09, a: 1}
-  _hayColor: {r: 0.45, g: 0.36, b: 0.16, a: 1}
-  _emberColor: {r: 1, g: 0.52, b: 0.2, a: 1}
-  _emberEmissionStrength: 8
---- !u!4 &724395780
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 724395778}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &728934628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,6 +1000,74 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1000908549
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1000908552}
+  - component: {fileID: 1000908551}
+  - component: {fileID: 1000908550}
+  m_Layer: 0
+  m_Name: NightAtmosphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1000908550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000908549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a016cbcb8ad8f9745a89fcd4e4d4377d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.CastleFireSpawner
+  _director: {fileID: 1029301707}
+  _generator: {fileID: 865774666}
+  _sconce: {fileID: 9005441603259401507, guid: 5fe390a1de3b02f45b4a8d969cd5a115, type: 3}
+  _brazier: {fileID: 4333249412799636111, guid: 9d635cbccfc5fbe42a96fd5983b44186, type: 3}
+  _hearth: {fileID: 3893173286356388970, guid: ac90809e8e617ef4c9bdf9073c4073ce, type: 3}
+  _beacon: {fileID: 304490856341061202, guid: f22c02bf860ae804c915e92f27eab706, type: 3}
+--- !u!114 &1000908551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000908549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36616a88940f97947a121102a2214ab3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RogueAi.Atmosphere::RogueAi.Atmosphere.CastleAtmosphere
+  _profile: {fileID: 11400000, guid: 0ee037222788b3845951cd22cad5f481, type: 2}
+  _moon: {fileID: 1280843096}
+  _alarm: {fileID: 176129642}
+  _skyMaterial: {fileID: 2100000, guid: 8498545e9dddf5047ae138fde9e8ffe5, type: 2}
+--- !u!4 &1000908552
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000908549}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1493487608}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1029301706
@@ -1299,10 +1295,10 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.85
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -1355,7 +1351,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280843095}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821794, y: -0.23456973, z: 0.10938166, w: 0.8754261}
+  m_LocalRotation: {x: 0.05822162, y: -0.9411692, z: 0.21728602, w: 0.25218555}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1422,6 +1418,76 @@ Transform:
   m_Children: []
   m_Father: {fileID: 139000814}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1493487607
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1000908552}
+    m_Modifications:
+    - target: {fileID: 1128584713164182252, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: _zone
+      value: 
+      objectReference: {fileID: 1730551205}
+    - target: {fileID: 1128584713164182252, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: _director
+      value: 
+      objectReference: {fileID: 1029301707}
+    - target: {fileID: 5495320766297095453, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_Name
+      value: Portal
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+--- !u!4 &1493487608 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6118778668879973441, guid: 02b8551a3d46c4d45b393f1f6e89bdb6, type: 3}
+  m_PrefabInstance: {fileID: 1493487607}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1575185228
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,4 +1814,4 @@ SceneRoots:
   - {fileID: 873404417}
   - {fileID: 194298984}
   - {fileID: 139000814}
-  - {fileID: 724395780}
+  - {fileID: 1000908552}

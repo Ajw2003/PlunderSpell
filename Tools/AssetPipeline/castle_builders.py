@@ -86,6 +86,14 @@ def _shell(bm, uv, zone, stone=STONE, trim=None, floor=None):
     h = ZONE_HEIGHT[zone]
     floor_z = rk.room_shell(bm, uv, h, stone, trim=trim or ZONE_ACCENT[zone],
                             floor_pigment=floor or ZONE_FLOOR[zone], door_sides=rk.SIDES)
+    # A torch beside two of the four archways, on opposite walls, so every
+    # room has some fire and its doors read in the dark. One burns from the
+    # start, the other is lit once the castle stirs.
+    ow, _ = rk.opening_size(h)
+    x = ow / 2 + 0.55
+    z = floor_z + min(2.3, h - 0.6)
+    _fire("Sconce", x, rk.HALF - rk.WALL_T, z, facing=(0.0, -1.0), lit=0)
+    _fire("Sconce", -x, -rk.HALF + rk.WALL_T, z, facing=(0.0, 1.0), lit=1)
     return h, floor_z
 
 
@@ -135,6 +143,7 @@ def build_wall_straight(bm, uv):
     rk.crenellations(bm, uv, h, STONE, size=rk.FOOTPRINT, sides=("south",))
     for x in (-3.0, 3.0):
         _box(bm, uv, DEEP, (x, -rk.HALF + rk.WALL_T + 0.05, h * 0.55), (0.5, 0.12, 1.2))
+    _fire("Sconce", 0.0, -rk.HALF + rk.WALL_T, 2.9, facing=(0.0, 1.0), lit=0)
 
 
 def build_wall_corner(bm, uv):
@@ -149,6 +158,7 @@ def build_wall_corner(bm, uv):
     corner = (-rk.HALF + 2.3, -rk.HALF + 2.3)
     top = rk.tower_drum(bm, uv, 2.1, h + 1.4, STONE, loc=(*corner, 0), trim=ZONE_ACCENT["CurtainWall"], segments=10)
     rk.crenellations(bm, uv, top, STONE, size=4.2, center=corner)
+    _fire("Beacon", corner[0], corner[1], top, lit=2)
 
 
 def build_bastion(bm, uv):
@@ -156,6 +166,8 @@ def build_bastion(bm, uv):
     rk.wall_run(bm, uv, "south", 0, h * 0.82, STONE, trim_pigment=ZONE_ACCENT["CurtainWall"])
     top = rk.tower_drum(bm, uv, 3.6, h + 2.0, STONE, loc=(0, -1.2, 0), trim=ZONE_ACCENT["CurtainWall"], segments=12)
     rk.crenellations(bm, uv, top, STONE, size=6.6, center=(0, -1.2))
+    _fire("Beacon", 0.0, -1.2, top, lit=2)
+    _fire("Sconce", 0.0, -1.2 + 3.6, 2.9, facing=(0.0, 1.0), lit=0)
     # Arrow loops set into the drum's face (touching it, not floating off it).
     for ang in range(0, 360, 45):
         rad = math.radians(ang)
@@ -184,6 +196,7 @@ def build_gatehouse_module(bm, uv):
     for x in (-3.6, 3.6):
         top = rk.tower_drum(bm, uv, 2.0, h + 2.4, STONE, loc=(x, -1.0, 0), trim=ZONE_ACCENT["CurtainWall"], segments=10)
         rk.crenellations(bm, uv, top, STONE, size=3.8, center=(x, -1.0))
+        _fire("Sconce", x, -1.0 + 2.0, 2.8, facing=(0.0, 1.0), lit=0)
     # The portcullis, raised: bars hang from the gate lintel, bottoms clear of a walking head.
     for x in (-2.3, -0.8, 0.8, 2.3):
         _box(bm, uv, METAL, (x, -rk.HALF + 0.35, 4.2 - 1.0), (0.18, 0.18, 2.0))
@@ -211,6 +224,30 @@ LOOT_ANCHORS = []
 
 def _anchor(x, y, z):
     LOOT_ANCHORS.append((round(x, 3), round(y, 3), round(z, 3)))
+
+
+# Where the module burns a fire (docs/plans/night-atmosphere.md, section 2).
+# build_assets writes these per module into
+# Assets/_Project/Data/Castle/CastleFireAnchors.json (Blender coordinates,
+# Z up); CastleFireAnchorImporter copies them into the room registry and
+# CastleFireSpawner lights one FireSource per anchor at runtime.
+#   kind:    "Sconce" | "Brazier" | "Hearth" | "Beacon"
+#   facing:  (x, y) direction the fire faces; a sconce faces off its wall
+#   lit:     alarm state that first lights it, 0 Calm .. 3 HueAndCry
+#   holder:  True when the fire brings its own iron (bracket, bowl, basket);
+#            False when the room already models it and only the flame is
+#            wanted, in which case the point is the flame's base.
+FIRE_ANCHORS = []
+
+
+def _fire(kind, x, y, z, facing=(0.0, 1.0), lit=0, holder=True):
+    FIRE_ANCHORS.append({
+        "kind": kind,
+        "p": [round(x, 3), round(y, 3), round(z, 3)],
+        "facing": [round(facing[0], 3), round(facing[1], 3)],
+        "lit": lit,
+        "holder": holder,
+    })
 Q0 = 1.8                           # a quadrant starts this far from each centre line
 
 
@@ -280,6 +317,7 @@ def _brazier(bm, uv, x, y, fz, pigment="madder", metal=METAL):
     mk.paint(bm, mk.add_cylinder(bm, 0.08, 1.0, loc=(x, y, fz + 0.5), segments=6), metal, uv)
     mk.paint(bm, mk.add_cylinder(bm, 0.35, 0.25, loc=(x, y, fz + 1.12), segments=8, radius2=0.2), metal, uv)
     mk.paint(bm, mk.add_cylinder(bm, 0.25, 0.08, loc=(x, y, fz + 1.27), segments=8), pigment, uv)
+    _fire("Brazier", x, y, fz + 1.31, holder=False)
 
 
 def _chest(bm, uv, x, y, fz, w=1.0, d=0.6, h=0.55, trim=None, body=TIMBER):
@@ -353,6 +391,7 @@ def build_blacksmith_shop(bm, uv):
     # Forge in the north-west corner with its hood against both walls.
     _box(bm, uv, STONE, (-4.3, 4.3, fz + 0.5), (2.2, 2.2, 1.0))
     _box(bm, uv, "madder", (-4.3, 4.3, fz + 1.02), (1.4, 1.4, 0.06))
+    _fire("Hearth", -4.3, 4.3, fz + 1.05, holder=False)
     _box(bm, uv, STONE, (-4.7, 4.7, fz + 2.2), (1.4, 1.4, 2.4))
     # Anvil on its stump in the north-east, quench tub beside it.
     _barrel(bm, uv, 3.2, 3.4, fz, r=0.4, h=0.6)
@@ -460,6 +499,7 @@ def build_kitchen_room(bm, uv):
     # The hearth in the north-west corner, a cauldron sitting in it.
     _box(bm, uv, STONE, (-4.3, 4.6, fz + 0.6), (2.4, 1.2, 1.2))
     _box(bm, uv, "madder", (-4.3, 4.4, fz + 1.22), (1.6, 0.6, 0.04))
+    _fire("Hearth", -4.3, 4.0, fz + 1.24, holder=False)
     mk.paint(bm, mk.add_cylinder(bm, 0.4, 0.45, loc=(-4.3, 4.4, fz + 1.45), segments=10), DEEP, uv)
     _box(bm, uv, STONE, (-4.3, 5.0, fz + 2.3), (2.0, 0.8, 2.2))
     # Prep tables, north-east and south-east; flour sacks and barrels south-west.
@@ -565,6 +605,7 @@ def build_lords_solar(bm, uv):
     # A hearth on the west wall, two chairs before it; a rug.
     _box(bm, uv, STONE, (-IN + 0.5, 3.8, fz + 0.7), (1.0, 2.4, 1.4))
     _box(bm, uv, "madder", (-IN + 0.9, 3.8, fz + 0.3), (0.3, 1.2, 0.5))
+    _fire("Hearth", -IN + 1.2, 3.8, fz + 0.05, facing=(1.0, 0.0), holder=False)
     for y in (2.6, 5.0):
         _box(bm, uv, HIDE, (-3.3, y, fz + 0.3), (0.8, 0.8, 0.6))
     _box(bm, uv, ZONE_ACCENT["Keep"], (-3.6, -3.6, fz + 0.02), (2.6, 2.0, 0.04))

@@ -40,7 +40,9 @@ MODELS_ROOT = os.path.join(REPO_ROOT, "Assets", "_Project", "Art", "Models")
 PALETTE_PNG = os.path.join(REPO_ROOT, "Assets", "_Project", "Art", "Textures", "PlunderspellPalette.png")
 SCRATCH_GLB_DIR = os.environ.get("PLUNDERSPELL_SCRATCH_GLB", "/tmp/plunderspell_glb")
 ANCHORS_JSON = os.path.join(REPO_ROOT, "Assets", "_Project", "Data", "Castle", "CastleLootAnchors.json")
+FIRE_JSON = os.path.join(REPO_ROOT, "Assets", "_Project", "Data", "Castle", "CastleFireAnchors.json")
 LOOT_ANCHORS_BY_KEY = {}
+FIRE_ANCHORS_BY_KEY = {}
 
 
 def write_loot_anchors(partial=False):
@@ -59,6 +61,22 @@ def write_loot_anchors(partial=False):
         f.write("\n")
 
 
+def write_fire_anchors(partial=False):
+    """Same shape and rules as write_loot_anchors: Blender coordinates relative
+    to the module origin, rounded, and a partial build keeps what it did not
+    rebuild."""
+    import json
+    rooms = {}
+    if partial and os.path.isfile(FIRE_JSON):
+        with open(FIRE_JSON, encoding="utf8") as f:
+            rooms = {k: v for k, v in json.load(f)["rooms"].items() if k not in FIRE_ANCHORS_BY_KEY}
+    rooms.update({k: v for k, v in FIRE_ANCHORS_BY_KEY.items() if v})
+    rooms = dict(sorted(rooms.items()))
+    with open(FIRE_JSON, "w", encoding="utf8") as f:
+        json.dump({"space": "blender_z_up_module_local", "rooms": rooms}, f, indent=1, sort_keys=True)
+        f.write("\n")
+
+
 def clear_scene():
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
@@ -73,10 +91,12 @@ def build_one(spec) -> tuple[object, list[str]]:
     else:
         builder_fn = getattr(builders, spec["builder"], None) or getattr(castle_builders, spec["builder"])
     castle_builders.LOOT_ANCHORS.clear()
+    castle_builders.FIRE_ANCHORS.clear()
     builder_fn(bm, uv)
     is_castle = spec["subdir"].startswith("Castle")
     if is_castle:
         LOOT_ANCHORS_BY_KEY[spec["key"]] = list(castle_builders.LOOT_ANCHORS)
+        FIRE_ANCHORS_BY_KEY[spec["key"]] = [dict(a) for a in castle_builders.FIRE_ANCHORS]
 
     obj = mk.finalize_to_object(bm, spec["key"], mk.used_pigments(), PALETTE_PNG)
     # Only castle modules are placed on the generator's grid; a weapon or a
@@ -233,6 +253,7 @@ def main():
 
     manifest.save(recorded)
     write_loot_anchors(partial=only is not None)
+    write_fire_anchors(partial=only is not None)
 
     print("\n" + "=" * 70)
     print("PLUNDERSPELL ASSET PIPELINE — build report")
