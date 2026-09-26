@@ -112,6 +112,18 @@ namespace StateMachine
             CameraTransform.localRotation = Quaternion.Euler(_xRotation, _yaw, 0f);
         }
 
+        /// <summary>
+        /// Turns the view to a world yaw, level. Used when the player is placed rather than walked
+        /// somewhere (arriving by portal), since the body's own rotation is never read.
+        /// </summary>
+        public void FaceYaw(float yawDegrees)
+        {
+            _yaw = yawDegrees;
+            _xRotation = 0f;
+            if (CameraTransform != null)
+                CameraTransform.localRotation = Quaternion.Euler(_xRotation, _yaw, 0f);
+        }
+
         public void Awake()
         {
             RunState = new PlayerRunState(this);

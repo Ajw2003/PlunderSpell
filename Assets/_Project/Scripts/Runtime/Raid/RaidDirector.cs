@@ -423,8 +423,8 @@ namespace RogueAi.Raid
             // Face the portal, so the first thing a player sees is the way home.
             Vector3 toPortal = ArrivalPoint - spawn;
             toPortal.y = 0f;
-            if (toPortal.sqrMagnitude > 0.01f)
-                player.rotation = Quaternion.LookRotation(toPortal.normalized, Vector3.up);
+            if (toPortal.sqrMagnitude > 0.01f && player.TryGetComponent(out StateMachine.PlayerStateMachine look))
+                look.FaceYaw(Quaternion.LookRotation(toPortal.normalized, Vector3.up).eulerAngles.y);
 
             // Through the rigidbody as well as the transform: an interpolated body writes its old
             // position back over a transform-only move on the next physics step.
