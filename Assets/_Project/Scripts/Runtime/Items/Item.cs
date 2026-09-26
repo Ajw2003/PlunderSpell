@@ -30,8 +30,23 @@ public class Item : MonoBehaviour
     private float _targetStampedAt;
     private bool _hasTargetVelocity;
 
-    // True while the player is turning the item on purpose. Otherwise it hangs from the held point.
+    // True while the player is turning the item on purpose.
     private bool _isRotating;
+
+    // Otherwise a held item keeps the orientation it had when picked up, relative to where the
+    // holder faces, and turns with them. A free hang from the grab point was floppy.
+    private Quaternion _rotationInView = Quaternion.identity;
+    private float _viewYaw;
+
+    // A weapon is not hung on the beam: it sits rigidly in the hand, pointing where the player looks.
+    // On the beam a crossbow hung on the crosshair line, and its own bolt hit it.
+    private bool _isInHand;
+    private RigidbodyInterpolation _interpolationWhenFree;
+    private int[] _layerWhenFree;
+    private bool[] _triggerWhenFree;
+    private bool _hasAimFrame;
+    private Quaternion _aimFrameLocal;
+    private Vector3 _handGripOffset;
     private float _angularDampingWhenFree;
 
     // The held point, relative to the item's position and in its rotation frame, measured at pickup:
@@ -135,7 +150,7 @@ public class Item : MonoBehaviour
     private void FixedUpdate()
     {
         _velocityIntoStep = _rb.linearVelocity;
-        if (!_isDragging)
+        if (!_isDragging || _isInHand)
             return;
 
         // A real body hung from the point the player grabbed, pulled by a spring of limited
@@ -160,10 +175,17 @@ public class Item : MonoBehaviour
         float up = Mathf.Clamp(force.y, -_gripStrength, _gripStrength);
         _rb.AddForceAtPosition(sideways + Vector3.up * up, held, ForceMode.Force);
 
-        if (!_isRotating)
+        // Turned on purpose, or kept as it was picked up and turned with the holder. Something too
+        // heavy to lift is only dragged, and tips and slides as it will.
+        Quaternion wanted;
+        if (_isRotating)
+            wanted = _targetRotation;
+        else if (!IsTooHeavyToLift)
+            wanted = Quaternion.Euler(0f, _viewYaw, 0f) * _rotationInView;
+        else
             return;
 
-        Quaternion delta = _targetRotation * Quaternion.Inverse(_rb.rotation);
+        Quaternion delta = wanted * Quaternion.Inverse(_rb.rotation);
         delta.ToAngleAxis(out float angle, out Vector3 axis);
         if (angle > 180f)
             angle -= 360f;
@@ -244,6 +266,7 @@ public class Item : MonoBehaviour
         SetIgnoreHolder(true);
         _targetRotation = transform.rotation;
         _isRotating = false;
+        _rotationInView = Quaternion.Euler(0f, -_viewYaw, 0f) * _rb.rotation;
         _angularDampingWhenFree = _rb.angularDamping;
         _rb.angularDamping = _heldAngularDamping;
         _gripOffset = Quaternion.Inverse(_rb.rotation) * (grabPoint - _rb.position);
@@ -259,6 +282,7 @@ public class Item : MonoBehaviour
 
     public void StopDragging()
     {
+        HoldInHand(false);
         _isDragging = false;
         _releasedAt = Time.time;
         _rb.isKinematic = false;
@@ -270,6 +294,7 @@ public class Item : MonoBehaviour
 
     public void Throw(Vector3 direction, float force)
     {
+        HoldInHand(false);
         _isDragging = false;
         _releasedAt = Time.time;
         _rb.isKinematic = false;
@@ -371,7 +396,142 @@ public class Item : MonoBehaviour
     {
         if (rotating && !_isRotating)
             _targetRotation = _rb.rotation;
+        // Let go of the rotate button: keep the orientation it was turned to.
+        if (!rotating && _isRotating)
+            _rotationInView = Quaternion.Euler(0f, -_viewYaw, 0f) * _targetRotation;
         _isRotating = rotating;
+    }
+
+    /// <summary>The holder's facing, in degrees about world up. A held item keeps its orientation
+    /// relative to this, so it turns with the holder instead of flopping. Call every frame while
+    /// held; before a pickup it sets the frame the pickup orientation is measured in.</summary>
+    public void SetViewYaw(float yawDegrees) => _viewYaw = yawDegrees;
+
+    /// <summary>True while held rigidly in the hand (weapons), rather than hung on the beam.</summary>
+    public bool IsInHand => _isInHand;
+
+    private const int k_ignoreRaycastLayer = 2;
+
+    /// <summary>
+    /// Holds the item rigidly in the hand (true) or puts it back on the beam (false). In the hand
+    /// the body is kinematic and its colliders are triggers on the Ignore Raycast layer, so it
+    /// neither shoves loot about nor stops its own shots. <see cref="SetHandPose"/> places it.
+    /// </summary>
+    public void HoldInHand(bool inHand)
+    {
+        if (inHand == _isInHand)
+            return;
+        _isInHand = inHand;
+        if (_ownColliders == null)
+            _ownColliders = GetComponentsInChildren<Collider>();
+
+        if (inHand)
+        {
+            _interpolationWhenFree = _rb.interpolation;
+            _triggerWhenFree = new bool[_ownColliders.Length];
+            _layerWhenFree = new int[_ownColliders.Length];
+            _rb.linearVelocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+            _rb.isKinematic = true;
+            _rb.interpolation = RigidbodyInterpolation.None;
+            // Held by its authored grip, or by its origin (a crossbow's butt, a sword's pommel),
+            // never by whatever point the crosshair happened to be on.
+            _handGripOffset = _gripPoint != null
+                ? Quaternion.Inverse(_rb.rotation) * (_gripPoint.position - _rb.position)
+                : Vector3.zero;
+            for (int i = 0; i < _ownColliders.Length; i++)
+            {
+                _triggerWhenFree[i] = _ownColliders[i].isTrigger;
+                _layerWhenFree[i] = _ownColliders[i].gameObject.layer;
+                _ownColliders[i].isTrigger = true;
+                _ownColliders[i].gameObject.layer = k_ignoreRaycastLayer;
+            }
+            return;
+        }
+
+        _rb.isKinematic = false;
+        _rb.interpolation = _interpolationWhenFree;
+        for (int i = 0; i < _ownColliders.Length; i++)
+        {
+            if (_ownColliders[i] == null)
+                continue;
+            _ownColliders[i].isTrigger = _triggerWhenFree[i];
+            _ownColliders[i].gameObject.layer = _layerWhenFree[i];
+        }
+    }
+
+    /// <summary>Places an in-hand item with its held point at <paramref name="handPosition"/>,
+    /// pointing along <paramref name="view"/>'s forward. Called just before the camera renders, so
+    /// it never lags the view.</summary>
+    public void SetHandPose(Vector3 handPosition, Quaternion view)
+    {
+        if (!_isInHand)
+            return;
+        Quaternion rotation = view * Quaternion.Inverse(AimFrameLocal());
+        Vector3 position = handPosition - rotation * _handGripOffset;
+        transform.SetPositionAndRotation(position, rotation);
+        _rb.position = position;
+        _rb.rotation = rotation;
+    }
+
+    /// <summary>
+    /// The item's own pointing frame: forward along its longest reach from its origin (a crossbow's
+    /// stock to its prod, a sword's hilt to its tip), up along the next longest. Measured from the
+    /// meshes, since the forged weapons point along different local axes.
+    /// </summary>
+    public Quaternion AimFrameLocal()
+    {
+        if (_hasAimFrame)
+            return _aimFrameLocal;
+        _hasAimFrame = true;
+        var bounds = new Bounds();
+        bool any = false;
+        Matrix4x4 toLocal = transform.worldToLocalMatrix;
+        foreach (MeshFilter filter in GetComponentsInChildren<MeshFilter>())
+        {
+            if (filter.sharedMesh == null)
+                continue;
+            Bounds mesh = filter.sharedMesh.bounds;
+            Matrix4x4 meshToLocal = toLocal * filter.transform.localToWorldMatrix;
+            foreach (Vector3 corner in new[] { mesh.min, mesh.max })
+            {
+                Vector3 point = meshToLocal.MultiplyPoint3x4(corner);
+                if (!any)
+                    bounds = new Bounds(point, Vector3.zero);
+                else
+                    bounds.Encapsulate(point);
+                any = true;
+            }
+        }
+        Vector3 reach = any ? bounds.center : Vector3.forward;
+        Vector3 forward = DominantAxis(reach, Vector3.zero);
+        if (forward == Vector3.zero)
+            forward = Vector3.forward;
+        Vector3 up = DominantAxis(reach, forward);
+        if (up == Vector3.zero)
+            up = Mathf.Abs(forward.y) > 0.5f ? Vector3.forward : Vector3.up;
+        _aimFrameLocal = Quaternion.LookRotation(forward, up);
+        return _aimFrameLocal;
+    }
+
+    /// <summary>The signed unit axis along which <paramref name="v"/> reaches furthest, skipping
+    /// <paramref name="exclude"/>'s axis.</summary>
+    private static Vector3 DominantAxis(Vector3 v, Vector3 exclude)
+    {
+        Vector3 best = Vector3.zero;
+        float bestSize = 1e-4f;
+        foreach (Vector3 axis in new[] { Vector3.right, Vector3.up, Vector3.forward })
+        {
+            if (Mathf.Abs(Vector3.Dot(axis, exclude)) > 0.5f)
+                continue;
+            float size = Mathf.Abs(Vector3.Dot(v, axis));
+            if (size > bestSize)
+            {
+                bestSize = size;
+                best = axis * Mathf.Sign(Vector3.Dot(v, axis));
+            }
+        }
+        return best;
     }
 
     /// <summary>Sets the authored grip, used when a pickup has no aimed point; null uses the mesh

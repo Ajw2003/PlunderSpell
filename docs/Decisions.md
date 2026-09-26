@@ -870,3 +870,18 @@ turning round at walking speed.
 `docs/generated/issue-backlog-2026-09-25/beam-*.png`. A remote player's beam has not been seen
 between two machines.
 
+## 2026-09-26 — Held items keep their orientation; weapons sit in the hand; heavy pieces are towed
+
+**Context.** After #144 the owner found the carry "floppy": held items swung freely from an
+off-centre grab, and it broke ranged weapons. A crossbow on the beam hung on the crosshair line,
+and a shot fired from the camera hit its own weapon. The owner also asked that two-person pieces
+be movable by one player, dragged behind them.
+
+**Decision.** A held item keeps its pickup orientation relative to the holder's facing. Weapons
+(`RangedWeapon`, `MeleeWeapon`) are held rigidly in the hand, pointing where the player looks,
+with no beam. Pieces too heavy to lift are towed on a rope behind the holder, not pulled toward
+the crosshair. How: `docs/systems/damage.md`, "Weight".
+
+**Replaces.** The free hang from the grab point in "Carrying hangs from a beam spring" (2026-09-25
+entry above). The spring trail, lift limit and beam are unchanged.
+

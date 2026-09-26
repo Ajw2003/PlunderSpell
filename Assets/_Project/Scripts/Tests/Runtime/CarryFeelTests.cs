@@ -144,7 +144,7 @@ namespace RogueAi.Tests
         }
 
         [UnityTest]
-        public IEnumerator Test_AnOffCentreGrabLetsTheItemHangAndTurn()
+        public IEnumerator Test_AnOffCentreGrabKeepsTheItemsOrientation()
         {
             Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 80f));
             Vector3 target = holder.position + new Vector3(0f, 0.3f, 1.5f);
@@ -156,8 +156,81 @@ namespace RogueAi.Tests
                 yield return new WaitForFixedUpdate();
 
             float turned = Quaternion.Angle(before, item.transform.rotation);
-            Assert.That(turned, Is.GreaterThan(30f),
-                $"Held by one side, the item turned {turned:F1} degrees; it should swing down to hang below the grab.");
+            Assert.That(turned, Is.LessThan(10f),
+                $"Held by one side, the item flopped round {turned:F1} degrees; it should keep the orientation it was picked up in.");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_AHeldItemTurnsWithTheHolder()
+        {
+            Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 90f));
+            Vector3 target = holder.position + new Vector3(0f, 0.3f, 1.5f);
+            Item item = MakeItem(target, mass: 2f);
+            item.SetViewYaw(0f);
+            item.StartDragging(holder.gameObject);
+            item.UpdateTarget(target, Vector3.zero);
+            item.SetViewYaw(90f);
+            for (int i = 0; i < 150; i++)
+                yield return new WaitForFixedUpdate();
+
+            float yaw = item.transform.eulerAngles.y;
+            Assert.That(Mathf.Abs(Mathf.DeltaAngle(yaw, 90f)), Is.LessThan(10f),
+                $"The holder turned 90 degrees and the item is at {yaw:F1}; it should turn with them.");
+        }
+
+        /// <summary>A crossbow-shaped item: its mesh reaches 0.97 m along local +Y from its origin,
+        /// as the forged Crossbow and Matchlock do.</summary>
+        private Item MakeCrossbow(Vector3 position)
+        {
+            var go = new GameObject("Crossbow");
+            go.transform.position = position;
+            go.AddComponent<Rigidbody>().mass = 3f;
+            var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            body.transform.SetParent(go.transform, false);
+            body.transform.localPosition = new Vector3(0f, 0.49f, 0.12f);
+            body.transform.localScale = new Vector3(0.06f, 0.97f, 0.23f);
+            var item = go.AddComponent<Item>();
+            _made.Add(go);
+            return item;
+        }
+
+        [UnityTest]
+        public IEnumerator Test_AWeaponInTheHandPointsWhereYouLookAndDoesNotStopItsOwnShot()
+        {
+            Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 150f));
+            Item crossbow = MakeCrossbow(holder.position + Vector3.forward * 2f);
+            crossbow.StartDragging(holder.gameObject);
+            crossbow.HoldInHand(true);
+
+            Quaternion view = Quaternion.LookRotation(new Vector3(1f, 0f, 1f).normalized);
+            Vector3 hand = holder.position + new Vector3(0f, 0.6f, 0f);
+            crossbow.SetHandPose(hand, view);
+            Physics.SyncTransforms();
+
+            Vector3 barrel = crossbow.transform.TransformDirection(Vector3.up);
+            Assert.That(Vector3.Angle(barrel, view * Vector3.forward), Is.LessThan(1f),
+                "The crossbow's barrel should point along the view.");
+            Assert.That(Vector3.Distance(crossbow.transform.position, hand), Is.LessThan(0.01f),
+                "It is held by its origin (the butt of the stock), at the hand.");
+
+            // A shot fired down the barrel from behind the hand passes straight through the weapon.
+            var shot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            shot.transform.localScale = Vector3.one * 0.05f;
+            shot.transform.position = hand + barrel * 0.2f + crossbow.transform.TransformDirection(new Vector3(0f, 0f, 0.12f));
+            var shotBody = shot.AddComponent<Rigidbody>();
+            shotBody.useGravity = false;
+            shotBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            shotBody.linearVelocity = barrel * 30f;
+            _made.Add(shot);
+            for (int i = 0; i < 10; i++)
+                yield return new WaitForFixedUpdate();
+
+            Assert.That(Vector3.Dot(shot.transform.position - hand, barrel), Is.GreaterThan(2f),
+                "The weapon in the hand stopped a shot fired along it.");
+
+            crossbow.StopDragging();
+            Assert.IsFalse(crossbow.GetComponent<Rigidbody>().isKinematic, "Let go, it is a physics body again.");
+            Assert.IsFalse(crossbow.GetComponentInChildren<Collider>().isTrigger, "Let go, it collides again.");
         }
 
         [Test]
@@ -170,6 +243,76 @@ namespace RogueAi.Tests
             Assert.Greater(easy.b, straining.b, "A light load reads cool (violet), a heavy one warm.");
             Assert.Greater(dragging.r, dragging.g * 3f, "Past the lift limit the beam is red.");
         }
+
+        [Test]
+        public void Test_AHeavyPieceIsTowedBehindOnARope()
+        {
+            Vector3 feet = new Vector3(0f, 0f, 0f);
+            Vector3 behind = new Vector3(0f, 0.4f, -4f);
+            Assert.That(Vector3.Distance(ItemManager.TowTarget(feet, behind, 2f), new Vector3(0f, 0.4f, -2f)), Is.LessThan(0.001f),
+                "Past the rope's length it is pulled to the rope's length from the holder, at its own height.");
+            Vector3 near = new Vector3(1f, 0.4f, -1f);
+            Assert.AreEqual(near, ItemManager.TowTarget(feet, near, 2f), "Within the rope it is not pulled at all.");
+        }
+
+#if UNITY_EDITOR
+        [UnityTest]
+        public IEnumerator Test_OnePlayerCanDragEveryTwoPersonPieceBehindThem()
+        {
+            // Two-person pieces (LootItem.RequiresDualCarry) are heavy, not immovable: one player
+            // drags them, slowly (the owner's call, 2026-09-26).
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            floor.transform.position = new Vector3(0f, -0.5f, 300f);
+            floor.transform.localScale = new Vector3(60f, 1f, 60f);
+            _made.Add(floor);
+
+            var report = new System.Text.StringBuilder();
+            int checkedCount = 0;
+            float x = -20f;
+            foreach (string guid in UnityEditor.AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/_Project/Prefabs/Loot" }))
+            {
+                var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(UnityEditor.AssetDatabase.GUIDToAssetPath(guid));
+                var pickup = prefab.GetComponent<RogueAi.Loot.LootPickup>();
+                if (pickup == null || pickup.Data == null || !pickup.Data.RequiresDualCarry)
+                    continue;
+
+                GameObject piece = Object.Instantiate(prefab, new Vector3(x, 0.05f, 300f), prefab.transform.rotation);
+                _made.Add(piece);
+                x += 8f;
+                for (int i = 0; i < 30; i++)
+                    yield return new WaitForFixedUpdate();
+
+                Rigidbody holder = MakeHolder(piece.transform.position + new Vector3(0f, 1f, -3f));
+                var item = piece.GetComponent<Item>();
+                Vector3 start = piece.transform.position;
+                item.StartDragging(holder.gameObject);
+                // The holder walks away, pulling it along behind them.
+                for (float t = 0f; t < 3f; t += Time.fixedDeltaTime)
+                {
+                    holder.MovePosition(holder.position + new Vector3(0f, 0f, -1.5f) * Time.fixedDeltaTime);
+                    Vector3 held = item.GripWorldPosition;
+                    Vector3 tow = ItemManager.TowTarget(holder.position + Vector3.down, held, 2f);
+                    if (tow == held)
+                        item.UpdateTarget(held, Vector3.zero);
+                    else
+                        item.UpdateTargetPosition(tow);
+                    yield return new WaitForFixedUpdate();
+                }
+                item.StopDragging();
+
+                float moved = start.z - piece.transform.position.z;
+                float behind = piece.transform.position.z - holder.position.z;
+                if (behind < 0.5f || behind > 3.5f)
+                    Assert.Fail($"{prefab.name} ended {behind:F2} m behind the holder; towed on a 2 m rope it should trail about 2 m behind.\n{report}");
+                report.Append($"{prefab.name} ({piece.GetComponent<Rigidbody>().mass} kg): {moved:F2} m\n");
+                if (moved < 2f)
+                    Assert.Fail($"{prefab.name} moved only {moved:F2} m in 3 s of dragging; one player must be able to drag it.\n{report}");
+                checkedCount++;
+            }
+            Assert.Greater(checkedCount, 3, "Sanity: the two-person pieces were found.");
+            Debug.Log("[CarryFeel] Dragged alone:\n" + report);
+        }
+#endif
 
         [UnityTest]
         public IEnumerator Test_AnItemTooHeavyToLiftIsDraggedAlongTheFloor()
