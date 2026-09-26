@@ -1,10 +1,11 @@
 # Roadmap draft: from "is it fun" to "can a stranger play it"
 
-**Status: draft for the owner's review (2026-09-26). Nothing here is adopted yet.** If it is
-approved, the milestones below replace the body of [`docs/2-roadmap/Roadmap.md`](../2-roadmap/Roadmap.md),
-a dated entry goes in [`docs/6-decisions/Decisions.md`](../6-decisions/Decisions.md), the headline in
-[`docs/3-state/ProjectState.md`](../3-state/ProjectState.md) is re-measured against it, and this file
-moves to `docs/archive/`.
+**Status: adopted 2026-09-26, with changes; inert.** The live roadmap is
+[`docs/2-roadmap/Roadmap.md`](../2-roadmap/Roadmap.md). On adoption the owner made crouch a keyboard
+control rather than a spell, and asked for a milestone on enemies being responsive and alive, which
+became M5 and renumbered the castle and final-pass milestones to M6 and M7. Reasons:
+[`docs/6-decisions/Decisions.md`](../6-decisions/Decisions.md), "The roadmap runs to a game a
+stranger can play".
 
 ## Why the current roadmap needs replacing
 

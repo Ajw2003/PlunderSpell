@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/3-state/ProjectState.md @ 2849935e2bc9bb888372b2e7a96cf2650f204f3f -->
+<!-- plain copy of: docs/3-state/ProjectState.md @ 1576f7d02797c5ac569039c986bc3cad977c3298 -->
 
 # Project state
 
@@ -14,9 +14,10 @@ record exists to track that gap honestly, milestone by milestone, instead of ass
 code means a finished feature.
 
 ## How it works
-1. The project sits at roughly two thirds of the way through its roadmap. Every planned
-   milestone's code has been written and merged, but two of the four milestones have never
-   actually been checked the way their own finish line defines "done".
+1. The project sits at roughly two fifths of the way through its roadmap. It read two thirds
+   until the roadmap grew from four milestones to eight, adding a market, livelier enemies, a
+   dangerous castle and a final art pass. Only the first milestone has actually been checked the
+   way its own finish line defines "done".
 2. A real play session found the raid itself broken in ways the automated tests had missed:
    casting not working, no way to tell if someone was taking damage, and escaping not working.
    That became the top-priority work before anything else.

@@ -19,3 +19,11 @@ where things stand now.
   `WaitForEndOfFrame` doesn't work under Unity's `-batchmode` and what to do instead. Worth
   reading on its own if you ever need a PlayMode test to capture a screenshot headlessly.
 - `branch_manifest.txt`, `results_*.xml` — raw inputs the two narrative docs above summarize.
+
+## `roadmap-draft-2026-09-26.md`
+
+The draft that became the eight-milestone roadmap on 2026-09-26. Kept because it records the
+first ordering the owner reviewed and the per-milestone estimate behind the headline's drop from
+about 65% to about 40%. It is inert: the owner changed it on adoption (crouch stays a keyboard
+control, a new enemies milestone), so read [`docs/2-roadmap/Roadmap.md`](../2-roadmap/Roadmap.md)
+for the milestones as they stand.

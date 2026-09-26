@@ -942,3 +942,31 @@ after. Captured output in `docs/generated/` keeps the paths it was written with.
 
 **Status.** Standing.
 
+
+## 2026-09-26 — The roadmap runs to a game a stranger can play
+
+**Context.** The roadmap was the pitch's four milestones, which the pitch titles "Four milestones
+to knowing whether it is any fun". They stop at the vertical slice and the other Ages. Of 57 open
+issues none was tied to a milestone, the priority queue covered only issues up to #59, the
+Mystical Market pillar had no milestone at all, and M3's acceptance was already met while two eras
+borrowed another era's rooms. The owner asked for a fuller roadmap built from the open issues and
+the project state; the draft is `docs/archive/roadmap-draft-2026-09-26.md`.
+
+**Decision.** Eight weighted milestones (weights add to 100): M0-M3 kept; M3's acceptance now also
+needs every era on its own room set and a person playing all four side by side; new M4 The Lair
+and the Market, M5 The household is awake, M6 The castle fights back, M7 Final art and
+performance pass. Game systems come before expensive presentation: animation, recorded audio,
+final art and performance wait for M7, except cheap feel (screen shake, hit-stop, simple impact
+effects), which sits in M2. Every open issue is placed except #24 and #159.
+
+**Why.** The owner set the order: the Market and the castle's hazards before feel, "nothing
+expensive until a final art and perf pass". Doing art once, after the systems it dresses stop
+changing, avoids paying for it twice. The draft first put M4 as a feel milestone ahead of the
+Market; rejected for that reason. The draft also made crouch one of the unlockable spells, as #103
+suggested; the owner rejected that on adoption: crouch is a keyboard control that slows you and
+makes your footsteps quieter. The owner also asked for a milestone on enemies being responsive and
+alive, which became M5; it takes #160 out of M2, where it had been one line among many. The
+headline drops from about 65% to about 40%: the same work, measured against a larger definition
+of done.
+
+**Status.** Standing.

@@ -1,11 +1,26 @@
 # Project State
 
-**Headline: ~65% against the roadmap in `docs/2-roadmap/Roadmap.md`.** Every milestone's code has been
-written, merged, and passes an automated test suite; the raid now runs on real authored art
-instead of primitives. Two of the four milestones' acceptance criteria have never actually been
-checked the way they're defined, and a 21-item playtesting backlog (filed 2026-09-16, all still
-open — see below) is the clearest evidence of the gap between "compiles and passes tests" and
-"plays like the pitch."
+**Headline: ~40% against the roadmap in `docs/2-roadmap/Roadmap.md`** (re-measured 2026-09-26).
+The roadmap grew that day from the pitch's four milestones to eight, running to a game a stranger
+can play (Decisions, "The roadmap runs to a game a stranger can play"). Against the old four this
+headline read ~65%; nothing was lost, the definition of done got bigger. Each share below is a
+judgement until that milestone's acceptance is checked, and only M0's has been.
+
+| Milestone | Weight | Share done | Why |
+|---|---:|---:|---|
+| M0 Fork clean | 5 | 100% | Acceptance checked |
+| M1 Prove the voice | 10 | ~70% | Works for one person on one machine; #50 never measured |
+| M2 Vertical slice | 20 | ~70% | Loop plays solo and over UDP; #55 never run; its listed issues open |
+| M3 Other Ages | 15 | ~60% | Bronze and Late have their own rooms; High Medieval and Powder borrow |
+| M4 Lair and Market | 15 | ~5% | Debt is a number on the Lair screen; no market, no 3D Lair |
+| M5 Household awake | 10 | ~30% | Guards patrol, investigate noise, chase and search; the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
+| M6 Castle fights back | 10 | ~5% | Doors and hazards are layout tags; revamp phases 3-5 not started |
+| M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, a partial settings menu; no animation |
+| **Total** | 100 | **≈ 41%** | |
+
+Before 2026-09-26: every one of the four old milestones' code had been written, merged and
+tested, the raid ran on real authored art, and two of the four acceptance criteria had never been
+checked the way they are defined.
 
 **2026-09-22 update — "code-complete" and "actually playable" turned out to be different claims.**
 Phase 1 of `docs/plans/GitIssues/Priority_Queue.md` was closed out this session purely against code
@@ -25,7 +40,11 @@ surfaced it as not actually functional yet.
 | M0 — Fork clean, cut gravity | Done | ✅ merged (`feature/m0-gravity-removal`) | ✅ — compiles, gravity restored, verified in the `.agent_reports`-era logs, now `docs/archive/2026-09-15-integration/` |
 | M1 — Prove the voice | Code complete, acceptance unchecked | ✅ merged (`feature/m1-voice-casting`) | ❌ — no real-microphone, multi-accent, latency measurement exists anywhere in the repo |
 | M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/4-systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
-| M3 — Open the other Ages | Era content wired in; Bronze Age and High Medieval raids differ | 🟡 The Lair's era now picks the raid's rooms, loot and garrison through `EraContentCatalogue` ([`raid-scene-assembly.md`, "Eras"](../4-systems/raid-scene-assembly.md)). Bronze Age has its own full room set, 5 items, 3 enemies. High Medieval: the original rooms, 5 items, 4 enemies. Late Medieval: its own InnerWard and Keep, 5 items, 1 enemy. Age of Powder: High Medieval rooms, 5 items, 2 enemies. Castle art: the Bronze Age and Late Medieval sets are fully modelled, 25 rooms and wall pieces plus 4 door plugs each ([`BronzeAge.md`](../art/rooms/BronzeAge.md), [`LateMedieval.md`](../art/rooms/LateMedieval.md)); Enemies: all 16 modelled and rostered. Unfinished art: all 26 Powder rooms ([`docs/plans/era-castle-rooms.md`](../plans/era-castle-rooms.md)) | 🟡 — verified 2026-09-24 in the live Editor through Lair → Set Out, one seed per era; not yet playtested by a person |
+| M3 — Open the other Ages | Era content wired in; Bronze Age and High Medieval raids differ | 🟡 The Lair's era now picks the raid's rooms, loot and garrison through `EraContentCatalogue` ([`raid-scene-assembly.md`, "Eras"](../4-systems/raid-scene-assembly.md)). Bronze Age has its own full room set, 5 items, 3 enemies. High Medieval: the original rooms, 5 items, 4 enemies. Late Medieval: its own InnerWard and Keep, 5 items, 1 enemy. Age of Powder: High Medieval rooms, 5 items, 2 enemies. Castle art: the Bronze Age and Late Medieval sets are fully modelled, 25 rooms and wall pieces plus 4 door plugs each ([`BronzeAge.md`](../art/rooms/BronzeAge.md), [`LateMedieval.md`](../art/rooms/LateMedieval.md)); Enemies: all 16 modelled and rostered. Unfinished art: all 26 Powder rooms ([`docs/plans/era-castle-rooms.md`](../plans/era-castle-rooms.md)) | 🟡 — verified 2026-09-24 in the live Editor through Lair → Set Out, one seed per era; not yet playtested by a person. Acceptance tightened 2026-09-26: every era on its own room set, so this is not met while High Medieval and Powder borrow rooms |
+| M4 — The Lair and the Market | Not started | ❌ No market code (`grep -i market` finds nothing in `Assets/_Project/Scripts`); debt exists only as numbers (`LairState`, `LairScreen`) | ❌ |
+| M5 — The household is awake | Partly built | 🟡 Guards patrol, investigate noise, chase and search (`GuardAlertState`); no hit reaction or crouch in the raid | ❌ |
+| M6 — The castle fights back | Not started | ❌ Doors don't open and stairs can lead nowhere (#111); murder-holes and arrow-loops are layout tags (#44); castle revamp phases 3-5 not started | ❌ |
+| M7 — Final art and performance pass | Partly built | 🟡 Build tool (#53), Low/Medium/High quality levels, a settings menu; no animation, no profiling | ❌ |
 
 **2026-09-24 — art bible plunder and enemies modelled, and per-era raid content wired in.**
 All 20 plunder items and all 16 enemies from the art bible (`docs/art/`) exist as validated,
