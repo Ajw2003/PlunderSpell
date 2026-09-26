@@ -37,9 +37,10 @@ this document, not a reason to go grep the repo.
 | 6 | [`docs/6-decisions/Decisions.md`](../6-decisions/Decisions.md) | Why a decision was made, and what it replaced |
 
 Plus `docs/plans/` (a plan for a specific piece of work, live until executed), `docs/archive/`
-(documents that were correct once and are now inert — moved, never deleted), and
-`docs/generated/` (tool-produced deliverables — not hand-edited, regenerated if they need to
-change).
+(documents that were correct once and are now inert — moved, never deleted), `docs/generated/`
+(tool-produced deliverables — not hand-edited, regenerated if they need to change), and
+`docs/plain/` (plain-English copies of the system docs, landing, state and roadmap, for readers
+who don't want code detail).
 
 ## Systems (tier 4)
 
