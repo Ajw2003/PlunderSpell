@@ -541,15 +541,20 @@ namespace RogueAi.Guards
             GuardAlertState previous = _state.value;
             _state.value = next;
 
-            // Spotting an intruder is worth shouting about — once per chase, not once per frame.
+            // Spotting an intruder is worth shouting about — once per chase, not once per frame. The
+            // shout wakes guards in earshot; the alarm is told directly, walls or not (#139).
             if (next == GuardAlertState.Chasing && previous != GuardAlertState.Chasing)
             {
                 if (!_hasShoutedThisChase)
                 {
                     RaiseTheCry();
+                    _alarm?.ReportSighting();
                     _hasShoutedThisChase = true;
                 }
             }
+
+            if (next == GuardAlertState.Chasing || previous == GuardAlertState.Chasing)
+                _alarm?.ReportChase(GetInstanceID(), next == GuardAlertState.Chasing);
             else if (next == GuardAlertState.Patrolling)
             {
                 _hasShoutedThisChase = false;
@@ -579,6 +584,7 @@ namespace RogueAi.Guards
 
             _lastAttackTime = Time.time;
             SignalAttack(shoots ? GuardAttackKind.Projectile : GuardAttackKind.Melee);
+            _alarm?.ReportAttack();
 
             if (shoots)
                 FireAt(origin, toTarget.normalized);

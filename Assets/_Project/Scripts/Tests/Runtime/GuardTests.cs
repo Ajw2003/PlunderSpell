@@ -272,6 +272,56 @@ namespace RogueAi.Tests
                 "A guard that spots you shouts, and the shout reaches the alarm.");
         }
 
+        [Test]
+        public void Test_ThreeGuardsChasingIsHueAndCry()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+
+            alarm.ReportChase(1, true);
+            Assert.Less(alarm.State, AlarmState.Roused, "One guard on the chase is not the castle up in arms.");
+            alarm.ReportChase(2, true);
+            Assert.AreEqual(AlarmState.Roused, alarm.State, "Two guards chasing at once rouse the castle.");
+            alarm.ReportChase(3, true);
+            Assert.AreEqual(AlarmState.HueAndCry, alarm.State,
+                "Several guards chasing and attacking must reach Hue and Cry (#139).");
+        }
+
+        [Test]
+        public void Test_GuardsSpottingAndAttackingRaiseTheAlarmThroughWalls()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+
+            alarm.ReportSighting();
+            float afterSighting = alarm.AlarmLevel;
+            alarm.ReportAttack();
+
+            Assert.GreaterOrEqual(afterSighting, 20f, "A sighting is not muffled by the walls between guard and alarm.");
+            Assert.Greater(alarm.AlarmLevel, afterSighting, "An attack adds to it.");
+        }
+
+        [Test]
+        public void Test_ANewRaidStartsCalmAndStaysCalmThroughTheGrace()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            alarm.SetAlarmLevel(100f);
+            Assert.AreEqual(AlarmState.HueAndCry, alarm.State);
+
+            alarm.ResetForNewRaid(20f);
+            Assert.AreEqual(AlarmState.Calm, alarm.State, "The last raid's Hue and Cry must not carry over (#136).");
+            Assert.IsFalse(alarm.IsLocked);
+
+            alarm.ApplyNoise(1f);
+            alarm.ReportSighting();
+            alarm.ReportChase(1, true);
+            alarm.ReportChase(2, true);
+            alarm.ReportChase(3, true);
+            Assert.AreEqual(0f, alarm.AlarmLevel, "Nothing raises the alarm during the arrival grace.");
+
+            alarm.ResetForNewRaid(0f);
+            alarm.ReportSighting();
+            Assert.Greater(alarm.AlarmLevel, 0f, "After the grace the alarm works again.");
+        }
+
         // --- Moving -------------------------------------------------------------------------
 
         [Test]

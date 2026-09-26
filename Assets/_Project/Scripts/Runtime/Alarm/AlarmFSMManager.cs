@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using PurrNet;
 using RogueAi.Acoustics;
 using UnityEngine;
@@ -14,6 +15,12 @@ namespace RogueAi.Alarm
     /// off at 5/sec once no noise has arrived for 3 seconds. Reaching <see cref="AlarmState.Roused"/> or
     /// <see cref="AlarmState.HueAndCry"/> latches <see cref="IsLocked"/> — from then on the alarm never
     /// decays and the state can only escalate, for the rest of the raid.
+    /// <see cref="ResetForNewRaid"/> clears the latch and opens a grace in which nothing raises it.
+    ///
+    /// Guards do not only make noise: seeing an intruder (<see cref="ReportSighting"/>), landing a
+    /// blow (<see cref="ReportAttack"/>) and how many of them are chasing at once
+    /// (<see cref="ReportChase"/>) go straight to the alarm, un-muffled by walls. Several guards
+    /// fighting you is the castle up in arms whether or not the shout carried (#139).
     ///
     /// PurrNet 1.15 note: there is no Mirror-style <c>[SyncVar(hook=...)]</c> — replicated state uses
     /// field-based <see cref="SyncVar{T}"/> modules. The state change fans out to clients via the
@@ -34,12 +41,27 @@ namespace RogueAi.Alarm
         [Tooltip("Alarm points shed per second while decaying.")]
         [SerializeField] private float _decayRate = 5.0f;
 
+        [Header("Guards")]
+        [Tooltip("Alarm points each time a guard spots an intruder and gives chase.")]
+        [SerializeField] private float _sightingPoints = 20f;
+
+        [Tooltip("Alarm points each time a guard's attack is launched at a player.")]
+        [SerializeField] private float _attackPoints = 6f;
+
+        [Tooltip("Guards chasing at once that force the castle to at least Roused.")]
+        [SerializeField] private int _rousedChasers = 2;
+
+        [Tooltip("Guards chasing at once that force Hue and Cry.")]
+        [SerializeField] private int _hueAndCryChasers = 3;
+
         // Replicated state (PurrNet field-based SyncVars; inline-initialised so never null).
         private readonly SyncVar<float> _alarmLevel = new SyncVar<float>(0f);
         private readonly SyncVar<AlarmState> _alarmState = new SyncVar<AlarmState>(AlarmState.Calm);
 
         private float _lastNoiseTime;   // server-only timestamp of the most recent noise
         private bool _locked;           // true once Roused/HueAndCry reached — stops all decay
+        private float _graceEndsAt;     // server-only: nothing raises the alarm before this time
+        private readonly HashSet<int> _chasers = new HashSet<int>(); // guards chasing right now
 
         // Thresholds.
         private const float StirredThreshold = 20f;
@@ -52,6 +74,12 @@ namespace RogueAi.Alarm
         public float AlarmLevel => _alarmLevel.value;
         public AlarmState State => _alarmState.value;
         public bool IsLocked => _locked;
+
+        /// <summary>True during the calm grace after a raid starts, when nothing raises the alarm.</summary>
+        public bool InGrace => Time.time < _graceEndsAt;
+
+        /// <summary>How many guards are chasing an intruder right now.</summary>
+        public int ChasingGuards => _chasers.Count;
 
         protected override void OnSpawned()
         {
@@ -92,9 +120,52 @@ namespace RogueAi.Alarm
         }
 
         /// <summary>Pure noise application: bump the level, stamp the time and re-evaluate state.</summary>
-        public void ApplyNoise(float strength)
+        public void ApplyNoise(float strength) => Raise(strength * _noiseWeight);
+
+        /// <summary>A guard has spotted an intruder and given chase. Server-side.</summary>
+        public void ReportSighting() => Raise(_sightingPoints);
+
+        /// <summary>A guard has attacked a player. Server-side.</summary>
+        public void ReportAttack() => Raise(_attackPoints);
+
+        /// <summary>
+        /// A guard started (<paramref name="chasing"/> true) or stopped chasing. Enough guards on the
+        /// chase at once force the castle to Roused, then Hue and Cry. Stopping never lowers it.
+        /// </summary>
+        public void ReportChase(int guardId, bool chasing)
         {
-            _alarmLevel.value = Mathf.Clamp(_alarmLevel.value + strength * _noiseWeight, 0f, 100f);
+            bool changed = chasing ? _chasers.Add(guardId) : _chasers.Remove(guardId);
+            if (!changed || !chasing || InGrace)
+                return;
+
+            float floor = _chasers.Count >= _hueAndCryChasers ? HueAndCryThreshold
+                : _chasers.Count >= _rousedChasers ? RousedThreshold
+                : 0f;
+            if (floor > _alarmLevel.value)
+                Raise(floor - _alarmLevel.value);
+        }
+
+        /// <summary>
+        /// A new raid: Calm, level 0, the latch released, no chasers, and nothing raises the alarm
+        /// for <paramref name="graceSeconds"/>. Without the latch release a raid that ended in Hue
+        /// and Cry started the next one in it (#136).
+        /// </summary>
+        public void ResetForNewRaid(float graceSeconds)
+        {
+            _locked = false;
+            _chasers.Clear();
+            _alarmLevel.value = 0f;
+            _lastNoiseTime = Time.time;
+            _graceEndsAt = Time.time + Mathf.Max(0f, graceSeconds);
+            UpdateState();
+        }
+
+        private void Raise(float points)
+        {
+            if (points <= 0f || InGrace)
+                return;
+
+            _alarmLevel.value = Mathf.Clamp(_alarmLevel.value + points, 0f, 100f);
             _lastNoiseTime = Time.time;
             UpdateState();
         }

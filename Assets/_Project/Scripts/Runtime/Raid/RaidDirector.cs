@@ -203,7 +203,7 @@ namespace RogueAi.Raid
             _seed.value = _fixedSeed != 0 ? _fixedSeed : NewSeed();
             BuildCastle(_seed.value);
 
-            _alarm?.SetAlarmLevel(0f);
+            _alarm?.ResetForNewRaid(CastleGuard.ArrivalGraceSeconds);
             CastleGuard.BeginArrivalGrace();
 
             SetPhase(RaidPhase.Raiding);

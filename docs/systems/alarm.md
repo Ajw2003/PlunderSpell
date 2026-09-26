@@ -27,9 +27,20 @@ past — those belong to `Guards`/`Castle` respectively.
   at a fixed rate once `_decayDelay` seconds have passed with no noise. `UpdateState` maps the
   level to a state at fixed thresholds (20 / 50 / 80).
 - **The latch is the whole point.** Once the computed state reaches `Roused`, `_locked` is set and
-  never cleared for the rest of the raid: `TickDecay` still runs, but `UpdateState` refuses to let
+  never cleared for the rest of the raid (only `ResetForNewRaid` clears it): `TickDecay` still runs, but `UpdateState` refuses to let
   the *state* fall below its high-water mark even if the numeric level drifts down, and the level
   itself stops decaying at all while locked. Escalation past that point is the only direction left.
+- **Guards report straight to the alarm** (2026-09-25, #139). A guard's shout still goes through
+  `NoiseBroadcaster`, but the alarm hears it from the castle-wide trigger's centre, so the walls in
+  between halved a far guard's shout to one or two points: several guards chasing and hitting you
+  never got past Stirred. Now `CastleGuard` also calls `ReportSighting` (+20) when it starts a chase,
+  `ReportAttack` (+6) each time it attacks, and `ReportChase(id, chasing)` as it starts and stops
+  chasing. Two guards chasing at once lift the level to at least Roused (50), three to Hue and Cry
+  (80). The numbers are serialized on `AlarmFSMManager`.
+- **Each raid starts calm, with a grace** (2026-09-25, #136). `RaidDirector.StartRaid` calls
+  `ResetForNewRaid(CastleGuard.ArrivalGraceSeconds)`: level 0, state Calm, the latch released, no
+  chasers, and for 20 s nothing raises the alarm. Before this it only set the level to 0, and the
+  latch kept the last raid's Hue and Cry, so the next raid began in it.
 - **Replication is a state broadcast, not per-value sync.** `AlarmFSMManager` runs the FSM only on
   the server (`if (isSpawned && !isServer) return;` in `Update`); a client-side `OnNoiseHeard` call
   forwards to the server via `ReportNoiseServer` instead of applying locally. State *changes* fan
