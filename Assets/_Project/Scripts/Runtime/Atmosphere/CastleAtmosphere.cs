@@ -30,6 +30,9 @@ namespace RogueAi.Atmosphere
         [Tooltip("Whose Age sets the stone and flame tints. Found in the scene when left empty.")]
         [SerializeField] private RaidDirector _director;
 
+        [Tooltip("Plunderspell/Surface. Enemies and plunder are moved onto it as they spawn.")]
+        [SerializeField] private Shader _surfaceShader;
+
         private static readonly int s_fogColor = Shader.PropertyToID("_NF_FogColor");
         private static readonly int s_fogParams = Shader.PropertyToID("_NF_Params");
         private static readonly int s_moonDir = Shader.PropertyToID("_NF_MoonDir");
@@ -47,6 +50,7 @@ namespace RogueAi.Atmosphere
         private const float k_ScatterReach = 70f;
         private const float k_BudgetInterval = 0.2f;
         private const float k_VisibilityInterval = 0.1f;
+        private const float k_ConvertInterval = 0.5f;
         private const float k_VisibilityFade = 6f;
         private const float k_OccludedGlow = 0.2f;
         // Closest a view ray counts as passing to a flame, metres. Keeps the glow's centre soft
@@ -71,6 +75,10 @@ namespace RogueAi.Atmosphere
         private Material _skyInstance;
         private float _nextBudget;
         private float _nextVisibility;
+        private float _nextConvert;
+        private GuardSpawner _guards;
+        private LootSpawner _loot;
+        private readonly HashSet<int> _converted = new HashSet<int>();
         private QualityTier _tier;
         private Camera _camera;
         private Vector3 _eye;
@@ -165,6 +173,10 @@ namespace RogueAi.Atmosphere
 
         private void Update()
         {
+            // The Settings screen can change the level mid-raid.
+            if (AtmosphereQuality.Current != _tier)
+                ApplyQuality();
+
             float seconds = _profile != null ? Mathf.Max(0.01f, _profile.TransitionSeconds) : 2f;
             Apply(Time.deltaTime / seconds);
         }
@@ -198,6 +210,37 @@ namespace RogueAi.Atmosphere
             ApplyFog();
             ApplyCamera();
             BurnFires();
+            ConvertSpawnedBodies();
+        }
+
+        /// <summary>
+        /// Puts the garrison and the haul on the castle's surface shader as they arrive, so they take
+        /// the same banded light as the walls. Guards and loot are spawned per raid (and on clients by
+        /// the network), so this looks for new ones twice a second rather than hooking each spawner.
+        /// </summary>
+        private void ConvertSpawnedBodies()
+        {
+            if (_surfaceShader == null || Time.unscaledTime < _nextConvert)
+                return;
+            _nextConvert = Time.unscaledTime + k_ConvertInterval;
+            if (_guards == null)
+                _guards = FindFirstObjectByType<GuardSpawner>();
+            if (_loot == null)
+                _loot = FindFirstObjectByType<LootSpawner>();
+            ConvertAll(_guards != null ? _guards.Spawned : null);
+            ConvertAll(_loot != null ? _loot.Spawned : null);
+        }
+
+        private void ConvertAll(IReadOnlyList<GameObject> bodies)
+        {
+            if (bodies == null)
+                return;
+            for (int i = 0; i < bodies.Count; i++)
+            {
+                GameObject body = bodies[i];
+                if (body != null && _converted.Add(body.GetInstanceID()))
+                    SurfaceConverter.Convert(body, _surfaceShader);
+            }
         }
 
         /// <summary>Stone and flame shift with the Age being raided; the rest of the night is shared.</summary>

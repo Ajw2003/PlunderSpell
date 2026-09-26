@@ -139,9 +139,8 @@ half4 SurfaceFragment(Varyings input) : SV_Target
     #endif
 
     half3 color = albedo * lighting;
-    #if defined(_EMISSION)
-        color += SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, input.uv).rgb * _EmissionColor.rgb;
-    #endif
+    // Always on: LootHighlight lights plunder by setting _EmissionColor on a property block.
+    color += SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, input.uv).rgb * _EmissionColor.rgb;
     return half4(color, 1.0h);
 }
 

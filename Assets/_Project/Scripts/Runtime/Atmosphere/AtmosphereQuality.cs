@@ -1,3 +1,4 @@
+using Plunderspell.Core;
 using UnityEngine;
 
 namespace RogueAi.Atmosphere
@@ -95,6 +96,21 @@ namespace RogueAi.Atmosphere
                           || gpu.IndexOf("AMD Custom GPU 0405", System.StringComparison.OrdinalIgnoreCase) >= 0
                           || gpu.IndexOf("AMD Custom GPU 0932", System.StringComparison.OrdinalIgnoreCase) >= 0;
             return isDeck ? QualityTier.Low : QualityTier.Medium;
+        }
+
+        /// <summary>
+        /// At startup: the level the player chose, or, until they choose, the machine's default (Low on a
+        /// Steam Deck, Medium elsewhere). Runs before the first scene, so nothing renders on the wrong level.
+        /// </summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void ApplySavedOrDefault()
+        {
+            string saved = PlayerPrefs.GetString(GraphicsLevelSettings.QualityKey, string.Empty);
+            QualityTier tier = string.IsNullOrEmpty(saved)
+                ? DefaultTierFor(SystemInfo.deviceModel, SystemInfo.graphicsDeviceName)
+                : TierForLevelName(saved);
+            Apply(tier);
+            Debug.Log($"[Atmosphere] Graphics {LevelNames[(int)tier]} ({(string.IsNullOrEmpty(saved) ? "default for this machine" : "chosen in Settings")}).");
         }
 
         /// <summary>Switches Unity to the quality level for <paramref name="tier"/>, if it exists.</summary>

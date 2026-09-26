@@ -1056,6 +1056,7 @@ MonoBehaviour:
   _alarm: {fileID: 176129642}
   _skyMaterial: {fileID: 2100000, guid: 8498545e9dddf5047ae138fde9e8ffe5, type: 2}
   _director: {fileID: 1029301707}
+  _surfaceShader: {fileID: 4800000, guid: 10e9134dd6f9cf540bf4efba279acbf0, type: 3}
 --- !u!4 &1000908552
 Transform:
   m_ObjectHideFlags: 0

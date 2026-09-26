@@ -661,6 +661,7 @@ namespace RogueAi.EditorTools
             atmosphereSo.FindProperty("_moon").objectReferenceValue = moon;
             atmosphereSo.FindProperty("_alarm").objectReferenceValue = Object.FindFirstObjectByType<AlarmFSMManager>();
             atmosphereSo.FindProperty("_director").objectReferenceValue = Object.FindFirstObjectByType<RaidDirector>();
+            atmosphereSo.FindProperty("_surfaceShader").objectReferenceValue = Shader.Find(CastleSurfaceMaterials.SurfaceShaderName);
             atmosphereSo.FindProperty("_skyMaterial").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<Material>($"{MaterialDir}/NightSky.mat");
             atmosphereSo.ApplyModifiedPropertiesWithoutUndo();

@@ -41,7 +41,6 @@ Shader "Plunderspell/Surface"
             #pragma vertex SurfaceVertex
             #pragma fragment SurfaceFragment
 
-            #pragma shader_feature_local_fragment _EMISSION
             #pragma multi_compile_fragment _ _PLUNDER_TRIPLANAR
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN

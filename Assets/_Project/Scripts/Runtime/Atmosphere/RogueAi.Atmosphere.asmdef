@@ -9,7 +9,8 @@
         "Unity.RenderPipelines.Universal.Runtime",
         "RogueAi.Alarm",
         "RogueAi.Extraction",
-        "RogueAi.Inventory"
+        "RogueAi.Inventory",
+        "Plunderspell.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
