@@ -65,6 +65,6 @@ does and does not prove.
 | `Assets/_Project/Scripts/Tests/` | the test suite (runs in Unity and headlessly) |
 | `Assets/_Project/Scripts/Editor/` | scene builders and dev tooling |
 | `Tools/Headless/` | the headless build + test harness |
-| `docs/systems/` | how each system works, its invariants, and its traps |
+| `docs/4-systems/` | how each system works, its invariants, and its traps |
 
-Start with `docs/systems/core.md`, then `raid.md` and `spells.md`.
+Start with `docs/4-systems/core.md`, then `raid.md` and `spells.md`.

@@ -3,7 +3,7 @@ Vosk small English model
 
 This folder holds the extracted contents of vosk-model-small-en-us-0.15
 (from https://alphacephei.com/vosk/models/). It is committed to git (decided
-2026-09-22, see docs/Decisions.md), so a fresh clone and every build can
+2026-09-22, see docs/6-decisions/Decisions.md), so a fresh clone and every build can
 recognise speech with no extra step.
 
 To replace or re-fetch it: Plunderspell > Voice > Download Vosk Small Model.
