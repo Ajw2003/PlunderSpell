@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/alarm.md @ ca9339f258c4dfec4e450c2162312fc5bc972a87 -->
+<!-- plain copy of: docs/4-systems/alarm.md @ 196aefc41080e0ce6ca4bea2b95c3d7e6f34724a -->
 
 # Alarm and Acoustics
 
@@ -22,6 +22,8 @@ alarm must stay raised, or players could hide it out and lose the tension of the
    resets it.
 6. Guards chasing or attacking a player report straight to the alarm, so several guards fighting
    at once can raise it unaided.
+7. A guard who spots you shouts, and every guard near it heads to where you were seen. When the
+   alarm reaches its highest state, every guard within 40 metres of a player heads for them.
 
 ## Risks and safeguards
 - **Alarm creeping up from the last raid.** Every new raid resets it, with a grace period first.

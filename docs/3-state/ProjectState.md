@@ -98,7 +98,9 @@ team arriving there faces it (#140; `docs/4-systems/castle.md`, "Entrances from 
 A new raid no longer inherits fire, sleep or stun from the last (#143). Loot put down in the
 portal stays put and cannot break (#158; `docs/4-systems/raid.md`, "Loot in the portal"). Guards grow
 in number and health with the lobby (#154; defaults, not yet playtested with four people).
-Stars and the moon show overhead through the fog, which still hangs over the horizon
+Guards now actually report to the alarm (every spawned guard had been disconnected from it), a
+guard's shout sends nearby guards to you, and the hue and cry sends guards within 40 m (#163;
+`docs/4-systems/alarm.md`). Stars and the moon show overhead through the fog, which still hangs over the horizon
 (`docs/4-systems/atmosphere.md`, "The sky shows through overhead").
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4

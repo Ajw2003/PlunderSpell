@@ -37,6 +37,22 @@ past — those belong to `Guards`/`Castle` respectively.
   `ReportAttack` (+6) each time it attacks, and `ReportChase(id, chasing)` as it starts and stops
   chasing. Two guards chasing at once lift the level to at least Roused (50), three to Hue and Cry
   (80). The numbers are serialized on `AlarmFSMManager`.
+  **Until 2026-09-26 none of this reached the alarm in a real raid** (#163): `GuardSpawner` calls
+  `CastleGuard.Configure(null, route)` after the guard's `Awake` has found the alarm, and `Configure`
+  overwrote it with null. A live raid had 10 guards and 0 connected to the alarm; a guard breaking
+  into a chase left it at Calm 0. `Configure` now keeps the found alarm when passed null
+  (`GuardTests.Test_ASpawnedGuardKeepsTheAlarmItFound`). Live after: 9 of 9 connected, and a sighting
+  took the alarm from 0 to 22 (Stirred).
+- **The shout and the hue and cry send guards to you** (2026-09-26, #163). The shout used to be only
+  a noise at the shouting guard, muffled by walls, so guards who heard it walked to the shouter. Now,
+  when a guard starts a chase, every guard within its shout radius (20 m) is sent to the intruder's
+  last known position (`CastleGuard.AlertGuardsNear`); the noise still goes out as well. When the
+  alarm reaches Hue and Cry, every guard within `CastleGuard.HueAndCryRadius` (40 m) of a player heads
+  for the nearest one. A sent guard investigates the spot; one already chasing, asleep or stunned is
+  left alone. `AlertsReceived` counts it. Tests: `GuardTests` (shout, hue and cry). Live: a shout sent
+  4 of the 4 guards within 20 m to the player; the hue and cry sent 1 of the 1 free guard within 40 m.
+  Trap: the alarm announces a state change through an observers RPC, which reaches the host a frame
+  later, so a probe that raises the level and reads the guards in the same frame sees nothing.
 - **Each raid starts calm, with a grace** (2026-09-25, #136). `RaidDirector.StartRaid` calls
   `ResetForNewRaid(CastleGuard.ArrivalGraceSeconds)`: level 0, state Calm, the latch released, no
   chasers, and for 20 s nothing raises the alarm. Before this it only set the level to 0, and the

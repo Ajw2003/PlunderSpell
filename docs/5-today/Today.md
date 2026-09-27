@@ -163,6 +163,14 @@ Next, agreed with the owner: roofs, then rooms of 2 to 4 cells, then upper floor
 design first. Roofs were designed with the owner (separate roof tiles per age and zone, visual only,
 solid but off the NavMesh) and saved unbuilt for a later session: `docs/plans/roofs-floors-multicell-handoff.md`.
 
+Then #163 (hue and cry and shout should send guards to you; verify it is called). It was not:
+the spawner's `Configure(null, …)` wiped the alarm every guard had found, so in a real raid no
+sighting, chase or attack ever reached it (10 guards, 0 connected; a chase left the alarm at 0).
+Fixed, and a guard's shout now sends every guard within 20 m to the intruder, and the hue and cry
+every guard within 40 m of a player. `GuardTests` 45/46 with 4 new (the known attack-signal case
+fails), alarm tests 11/11. Live: 9 of 9 guards connected; a sighting took the alarm 0 to 22; a shout
+sent 4 of 4 guards in range; the hue and cry sent 1 of 1.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

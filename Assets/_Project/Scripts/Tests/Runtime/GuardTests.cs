@@ -237,6 +237,74 @@ namespace Plunderspell.Tests
                 "Once the castle is fully up, letting it max out is not a decision you can take back.");
         }
 
+        // --- Raising the castle (#163) -------------------------------------------------------
+
+        [Test]
+        public void Test_ASpawnedGuardKeepsTheAlarmItFound()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            var go = Track(new GameObject("Guard"));
+            go.AddComponent<BoxCollider>();
+            var guard = go.AddComponent<CastleGuard>();
+            guard.Configure(null);   // what GuardSpawner does
+
+            Assert.AreSame(alarm, guard.Alarm,
+                "Configure(null) wiped the alarm every spawned guard had found, so none could report a sighting.");
+        }
+
+        [Test]
+        public void Test_ASightingReachesTheAlarm()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            CastleGuard guard = MakeGuard(Vector3.zero, alarm);
+            MakeIntruder(new Vector3(0f, 0f, 6f));
+            float before = alarm.AlarmLevel;
+
+            guard.Tick(0.1f);
+
+            Assert.AreEqual(GuardAlertState.Chasing, guard.State, "Test premise: it sees the intruder.");
+            Assert.Greater(alarm.AlarmLevel, before, "Spotting an intruder must raise the alarm.");
+        }
+
+        [Test]
+        public void Test_TheShoutSendsNearbyGuardsToTheIntruder()
+        {
+            CastleGuard spotter = MakeGuard(Vector3.zero);
+            CastleGuard near = MakeGuard(new Vector3(-10f, 0f, -5f));
+            CastleGuard far = MakeGuard(new Vector3(-40f, 0f, 0f));
+            near.transform.rotation = Quaternion.Euler(0f, 180f, 0f);  // facing away: hears, cannot see
+            far.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            Vector3 intruder = new Vector3(0f, 0f, 6f);
+            MakeIntruder(intruder);
+
+            spotter.Tick(0.1f);
+
+            Assert.AreEqual(GuardAlertState.Chasing, spotter.State, "Test premise: the spotter sees the intruder.");
+            Assert.AreEqual(GuardAlertState.Investigating, near.State, "A guard in earshot must answer the shout.");
+            Assert.AreEqual(intruder, near.InvestigationTarget, "It goes to the intruder, not to the shouter.");
+            Assert.AreEqual(1, near.AlertsReceived);
+            Assert.AreEqual(0, far.AlertsReceived, "A guard 40 m away is out of the shout's 20 m.");
+        }
+
+        [Test]
+        public void Test_TheHueAndCrySendsGuardsNearAPlayerToThem()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            CastleGuard near = MakeGuard(new Vector3(0f, 0f, -30f), alarm);
+            CastleGuard far = MakeGuard(new Vector3(0f, 0f, -80f), alarm);
+            near.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            far.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            Vector3 player = Vector3.zero;
+            MakeIntruder(player);
+
+            alarm.SetAlarmLevel(100f);
+
+            Assert.AreEqual(AlarmState.HueAndCry, alarm.State, "Test premise.");
+            Assert.AreEqual(GuardAlertState.Investigating, near.State, "The hue and cry must send guards within 40 m.");
+            Assert.AreEqual(player, near.InvestigationTarget);
+            Assert.AreEqual(0, far.AlertsReceived, "A guard 80 m away is outside the hue and cry's reach.");
+        }
+
         // --- Speed --------------------------------------------------------------------------
 
         [Test]
