@@ -82,7 +82,8 @@ in the hand, and pieces too heavy to lift are towed slowly behind you, slowing y
 gone (Decisions, 2026-09-26). Velox (a dash, the only dodge) and Saltus (a high jump that the jump
 key turns into a slam) replace Tonitrus and Cadaver Surge on keys 5 and 7, checked in a raid in the
 Editor; neither word has been tried with a real voice (`docs/4-systems/spells.md`, "Velox and
-Saltus").
+Saltus"). Settings has a microphone gain slider (#125; `docs/4-systems/voice.md`, "Microphone
+gain").
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog

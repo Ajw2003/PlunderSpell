@@ -42,6 +42,14 @@ Warden 1.8 m away from 80 to 56.9 health, both misfires did their misfire and sp
 no longer moves the player. Captures: `docs/generated/dodge-and-leap-2026-09-26/`. Not tried: the
 two words spoken by a real person; two machines.
 
+Later: the owner's spell retune committed (a 10 m dash, a 13 m leap, stronger Levo). #155 closed
+as a duplicate of #156. #125: a microphone gain slider in Settings, 0.25x to 4x, applied to the
+audio before recognition and loudness. The Editor had closed, so this was compiled and tested with
+Unity in batch mode: PlayMode 230 of 233 (the known guard test; the cursor-lock test, which needs a
+window; and `RaidSceneCastingTests`' lexicon test, which then passed twice on its own), EditMode
+69 pass, 3 skip, 2 fail (the known art import test; the owner's Rolled Tapestry edit). The new
+Settings row, as the UI verification test captured it: `UI_Verification_Screenshots/05_Settings.png`.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

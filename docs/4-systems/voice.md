@@ -78,6 +78,16 @@ what the recogniser output, so a mis-recognition reads differently from a real m
 While V is held the same spot shows the open microphone and a live level meter with the
 whisper/shout marks.
 
+### Microphone gain
+
+Added 2026-09-26 (#125). Settings has a **Microphone Gain** slider, 0.25x to 4x, saved as
+`AudioInputSettings.MicGain` (PlayerPrefs `Settings.MicGain`, 1 when unset). `VoskVoiceInputService`
+reads it when the cast key goes down and multiplies every sample by it, clipping at full scale
+(`VoiceUtility.ApplyGain`), before anything else sees the audio: the recogniser, the loudness
+classification and the level meter all hear the same, amplified voice. So a quiet headset can
+reach a normal or shouted cast, and a hot one can be turned down so a normal voice is not a shout.
+Raising it also raises background noise into the recogniser. Tests: `MicGainTests`.
+
 ## Invariants
 
 - **Both providers must classify and normalise identically.** `VoiceUtility` is the single place
@@ -108,7 +118,7 @@ whisper/shout marks.
 - **A machine with no microphone, or no model installed, silently downgrades to keyboard-only
   casting**, even in a real Windows build. The console says so, the player's screen does not.
 - **The loudness thresholds (`Whisper` < 0.1, `Shout` > 0.4 RMS) were set without a real
-  microphone.** Headset gain varies a lot; until issue #47's meter exists, check `[Vosk] Heard ...`
-  lines in the log for the RMS a normal voice actually produces.
+  microphone.** Headset gain varies a lot, which is what the Settings gain slider is for: hold V
+  and watch the level meter against the whisper/shout marks while adjusting it.
 - **Unity's `Microphone` device list includes virtual devices** (e.g. "Virtual Desktop Audio").
   The service uses the system default (`null`), not `devices[0]`, for exactly this reason.

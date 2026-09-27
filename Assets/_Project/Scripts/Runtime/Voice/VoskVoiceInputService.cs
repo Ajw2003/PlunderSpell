@@ -64,6 +64,10 @@ namespace Plunderspell.Voice
         // the next press. It is opened once (WarmUp) and closed when the service goes away.
         private int _lastSamplePosition;
         private float[] _floatBuffer = new float[SampleRate];
+
+        // The Settings microphone gain, read when the cast key goes down so a change applies to the
+        // next cast without a lookup every frame.
+        private float _gain = 1f;
         private short[] _shortBuffer = new short[SampleRate];
         private MainThreadPump _pump;
 
@@ -152,6 +156,7 @@ namespace Plunderspell.Voice
             _lastSamplePosition = Microphone.GetPosition(_micDevice);
             LastPeakRms = 0f;
             CurrentRms = 0f;
+            _gain = Plunderspell.Core.AudioInputSettings.MicGain;
             CurrentDevice = _micDevice;
             IsListening = true;
             Debug.Log($"[Vosk] Listening on '{_micDevice}'.");
@@ -322,6 +327,8 @@ namespace Plunderspell.Voice
             _micClip.GetData(_floatBuffer, _lastSamplePosition);
             _lastSamplePosition = position;
 
+            // Gain first, so recognition, loudness and the level meter all hear the same voice.
+            VoiceUtility.ApplyGain(_floatBuffer, available, _gain);
             CurrentRms = VoiceUtility.ComputeRms(_floatBuffer, available);
             LastPeakRms = Mathf.Max(LastPeakRms, CurrentRms);
             for (int i = 0; i < available; i++)

@@ -116,6 +116,18 @@ namespace Plunderspell.Voice
             return sb.ToString().Trim();
         }
 
+        /// <summary>
+        /// Amplifies the first <paramref name="count"/> samples in place by <paramref name="gain"/>
+        /// (the Settings microphone gain, #125), clipping at full scale as a real preamp would.
+        /// </summary>
+        public static void ApplyGain(float[] samples, int count, float gain)
+        {
+            if (samples == null || UnityEngine.Mathf.Approximately(gain, 1f))
+                return;
+            for (int i = 0; i < count; i++)
+                samples[i] = UnityEngine.Mathf.Clamp(samples[i] * gain, -1f, 1f);
+        }
+
         /// <summary>Compute RMS amplitude of a float PCM buffer in the range 0..1.</summary>
         public static float ComputeRms(float[] samples, int count)
         {

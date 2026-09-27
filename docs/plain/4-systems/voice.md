@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/voice.md @ 77e4b76b3fbf778876ae536b5f1ec01ec02405da -->
+<!-- plain copy of: docs/4-systems/voice.md @ 20a54550bc8ab48360c82624fb00d58528ce9057 -->
 
 # Voice
 
@@ -20,7 +20,8 @@ without the player ever knowing why.
 3. Speech recognition only knows English, but the spell words are Latin, so each word is taught a
    set of English spellings that count as saying it correctly or nearly correctly.
 4. How loudly a word was said is measured and classified as a whisper, normal, or a shout,
-   using the same method regardless of which recognition path is active.
+   using the same method regardless of which recognition path is active. A gain setting turns a
+   quiet microphone up, or a loud one down, before any of this happens.
 5. What the player said, and what it resolved to, is shown on screen for a few seconds:
    a clean cast, a garbled misfire, or a silent fizzle that was not a spell at all.
 

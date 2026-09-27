@@ -15,7 +15,7 @@ namespace Plunderspell.UI.Screens
         protected override void OnBuild()
         {
             UIFactory.CreateFullStretchPanel(transform, "Overlay", new Color(0f, 0f, 0f, 0.7f));
-            var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 600f), Vector2.zero, UITheme.PanelBackground);
+            var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 700f), Vector2.zero, UITheme.PanelBackground);
 
             var title = UIFactory.CreateText(panel, "Title", "SETTINGS", UITheme.HeaderFontSize, UITheme.TextPrimary);
             title.rectTransform.anchorMin = new Vector2(0.5f, 1f);
@@ -29,7 +29,7 @@ namespace Plunderspell.UI.Screens
             var listRect = (RectTransform)listGo.transform;
             listRect.anchorMin = new Vector2(0.5f, 0.5f);
             listRect.anchorMax = new Vector2(0.5f, 0.5f);
-            listRect.sizeDelta = new Vector2(440f, 360f);
+            listRect.sizeDelta = new Vector2(440f, 450f);
             listRect.anchoredPosition = new Vector2(0f, 10f);
             UIFactory.AddVerticalLayout(listRect, 30f, new RectOffset(0, 0, 0, 0));
 
@@ -40,6 +40,8 @@ namespace Plunderspell.UI.Screens
             var micButton = UIFactory.CreateButton(listRect, "MicrophoneButton", string.Empty, CycleMicrophone, new Vector2(440f, 44f));
             _microphoneLabel = micButton.GetComponentInChildren<Text>();
             RefreshMicrophoneLabel();
+
+            AddMicGainRow(listRect);
 
             var graphicsButton = UIFactory.CreateButton(listRect, "GraphicsButton", string.Empty, CycleGraphics, new Vector2(440f, 44f));
             _graphicsLabel = graphicsButton.GetComponentInChildren<Text>();
@@ -71,6 +73,44 @@ namespace Plunderspell.UI.Screens
             var slider = UIFactory.CreateSlider(rowRect, "Slider", 0f, 1f, startValue, onChanged, new Vector2(440f, 24f));
             slider.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, -18f);
         }
+
+        /// <summary>
+        /// The microphone gain (#125): how much a quiet microphone is turned up before the game hears
+        /// it. The level meter while holding V shows the result.
+        /// </summary>
+        private void AddMicGainRow(Transform parent)
+        {
+            var rowGo = new GameObject("MicGainRow", typeof(RectTransform));
+            rowGo.transform.SetParent(parent, false);
+            var rowRect = (RectTransform)rowGo.transform;
+            rowRect.sizeDelta = new Vector2(440f, 60f);
+
+            _micGainLabel = UIFactory.CreateText(rowRect, "Label", string.Empty, UITheme.BodyFontSize, UITheme.TextPrimary, TextAnchor.UpperLeft);
+            _micGainLabel.rectTransform.anchorMin = new Vector2(0f, 1f);
+            _micGainLabel.rectTransform.anchorMax = new Vector2(1f, 1f);
+            _micGainLabel.rectTransform.pivot = new Vector2(0.5f, 1f);
+            _micGainLabel.rectTransform.sizeDelta = new Vector2(0f, 24f);
+            _micGainLabel.rectTransform.anchoredPosition = Vector2.zero;
+
+            var slider = UIFactory.CreateSlider(rowRect, "Slider", AudioInputSettings.MinMicGain,
+                AudioInputSettings.MaxMicGain, AudioInputSettings.MicGain, OnMicGainChanged, new Vector2(440f, 24f));
+            slider.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, -18f);
+            RefreshMicGainLabel();
+        }
+
+        private void OnMicGainChanged(float value)
+        {
+            AudioInputSettings.MicGain = value;
+            RefreshMicGainLabel();
+        }
+
+        private void RefreshMicGainLabel()
+        {
+            if (_micGainLabel != null)
+                _micGainLabel.text = $"Microphone Gain: {AudioInputSettings.MicGain:0.00}x";
+        }
+
+        private Text _micGainLabel;
 
         private void OnMasterVolumeChanged(float value)
         {
