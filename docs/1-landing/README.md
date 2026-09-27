@@ -88,6 +88,10 @@ together and what was deliberately left undocumented, and why.
   warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
   the surface shader, post-processing and the Low/Medium/High quality levels. Look samples in
   `docs/generated/look-samples-2026-09-24/`.
+- [`docs/plans/audio.md`](../plans/audio.md) — **awaiting approval.** Every sound effect and
+  music track the game needs, named (~480 names, ~1,000 files), what triggers each, and how
+  each is generated or sourced (library / AI / in-repo synth / recording / composer), plus four
+  decisions needed first. The game currently has no audio at all.
 - [`docs/plans/moodboard-gap-closure.md`](../plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
