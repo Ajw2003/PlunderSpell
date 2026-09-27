@@ -7,8 +7,8 @@ namespace Plunderspell.Net
     /// <summary>
     /// Installs the session rules for moving physical items (<see cref="Item.CanDriveHere"/>,
     /// <see cref="Item.RequestDrive"/>): a machine may only drag a networked item whose transform it
-    /// controls, and asks the server for ownership of loot otherwise. Items with no
-    /// NetworkTransform (weapons, which each machine has its own copy of) are always free to move.
+    /// controls, and asks the server for ownership of loot otherwise. Weapons are networked loot and
+    /// follow the same rule; an item with no spawned NetworkTransform (offline) is always free to move.
     /// </summary>
     public static class NetworkCarry
     {
