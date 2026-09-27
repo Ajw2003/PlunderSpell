@@ -160,7 +160,8 @@ procedural stars. Both shaders compile without messages; before/after captures o
 `docs/generated/night-sky-2026-09-26/` (the overhead view went from mean RGB 83/46/28 of orange fog
 to 48/24/17 of starry sky). Softer rooftop silhouettes against the darker sky are the trade-off.
 Next, agreed with the owner: roofs, then rooms of 2 to 4 cells, then upper floors, each with its own
-design first.
+design first. Roofs were designed with the owner (separate roof tiles per age and zone, visual only,
+solid but off the NavMesh) and saved unbuilt for a later session: `docs/plans/roofs-floors-multicell-handoff.md`.
 
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
