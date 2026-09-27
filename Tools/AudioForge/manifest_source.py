@@ -474,13 +474,21 @@ for age in AGES:
     for kind in ("stirred", "roused", "huecry"):
         add(f"sting_alarm_{kind}_{age}", 1, "Stingers", "Music", "2d", 0, "C", "none", f"music:sting kind=alarm_{kind} age={age}",
             f"alarm → {kind}, {age} instruments")
-for name, kind, brief in (("sting_gold_found", "gold_found", "an orpiment shimmer: bells and a harp gliss"),
-                          ("sting_player_down", "player_down", "a muted drum and a low bell"),
-                          ("sting_extract_success", "extract_success", "a fanfare"),
-                          ("sting_raid_lost", "raid_lost", "a sackbut sighs downwards"),
-                          ("sting_portal_opened", "portal_opened", "the lapis choir swells")):
+STINGS = (
+    ("sting_gold_found", "gold_found", "an orpiment shimmer: bells and a harp gliss",
+     "a short magical treasure discovery sting: warm golden bells and a rising harp glissando, 3 seconds"),
+    ("sting_player_down", "player_down", "a muted drum and a low bell",
+     "a short sombre medieval sting: one muted frame drum hit and a single low church bell, 4 seconds"),
+    ("sting_extract_success", "extract_success", "a fanfare",
+     "a short triumphant but shabby medieval fanfare on natural trumpets and tabor, slightly out of tune, 3 seconds"),
+    ("sting_raid_lost", "raid_lost", "a sackbut sighs downwards",
+     "a short comic failure sting: a renaissance sackbut sliding sadly downwards, 3 seconds"),
+    ("sting_portal_opened", "portal_opened", "the lapis choir swells",
+     "an otherworldly choir of reversed voices and glass harmonica swelling up, cold and magical, 4 seconds"),
+)
+for name, kind, brief, prompt in STINGS:
     add(name, 2 if kind == "gold_found" else 1, "Stingers", "Music", "2d", 0, "M" if kind != "portal_opened" else "A", "none",
-        f"music:sting kind={kind}", brief)
+        f"music:sting kind={kind}", brief, prompt)
 
 # --- 5. Ambience beds -----------------------------------------------------------------------------
 AMB = (

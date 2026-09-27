@@ -459,11 +459,11 @@ sting_alarm_huecry_late,1,Stingers,Music,2d,0,C,none,music:sting kind=alarm_huec
 sting_alarm_stirred_powder,1,Stingers,Music,2d,0,C,none,music:sting kind=alarm_stirred age=powder,"alarm → stirred, powder instruments",
 sting_alarm_roused_powder,1,Stingers,Music,2d,0,C,none,music:sting kind=alarm_roused age=powder,"alarm → roused, powder instruments",
 sting_alarm_huecry_powder,1,Stingers,Music,2d,0,C,none,music:sting kind=alarm_huecry age=powder,"alarm → huecry, powder instruments",
-sting_gold_found,2,Stingers,Music,2d,0,M,none,music:sting kind=gold_found,an orpiment shimmer: bells and a harp gliss,
-sting_player_down,1,Stingers,Music,2d,0,M,none,music:sting kind=player_down,a muted drum and a low bell,
-sting_extract_success,1,Stingers,Music,2d,0,M,none,music:sting kind=extract_success,a fanfare,
-sting_raid_lost,1,Stingers,Music,2d,0,M,none,music:sting kind=raid_lost,a sackbut sighs downwards,
-sting_portal_opened,1,Stingers,Music,2d,0,A,none,music:sting kind=portal_opened,the lapis choir swells,
+sting_gold_found,2,Stingers,Music,2d,0,M,none,music:sting kind=gold_found,an orpiment shimmer: bells and a harp gliss,"a short magical treasure discovery sting: warm golden bells and a rising harp glissando, 3 seconds"
+sting_player_down,1,Stingers,Music,2d,0,M,none,music:sting kind=player_down,a muted drum and a low bell,"a short sombre medieval sting: one muted frame drum hit and a single low church bell, 4 seconds"
+sting_extract_success,1,Stingers,Music,2d,0,M,none,music:sting kind=extract_success,a fanfare,"a short triumphant but shabby medieval fanfare on natural trumpets and tabor, slightly out of tune, 3 seconds"
+sting_raid_lost,1,Stingers,Music,2d,0,M,none,music:sting kind=raid_lost,a sackbut sighs downwards,"a short comic failure sting: a renaissance sackbut sliding sadly downwards, 3 seconds"
+sting_portal_opened,1,Stingers,Music,2d,0,A,none,music:sting kind=portal_opened,the lapis choir swells,"an otherworldly choir of reversed voices and glass harmonica swelling up, cold and magical, 4 seconds"
 amb_bronze_exterior_loop,1,Ambience,SFX/Ambience,2d,1,L,none,synth:wind dur=30 low=200 high=1200 gain=-6 + synth:crickets dur=30 voices=8 + synth:wind dur=30 low=60 high=200 gust=0.05 gain=-8,"warm night wind, crickets, a distant sea",
 amb_high_exterior_loop,1,Ambience,SFX/Ambience,2d,1,L,none,synth:wind dur=30 low=250 high=1800 gust=0.2 + synth:crickets dur=30 voices=2 gain=-10,"cold wind on stone, an owl, a far dog",
 amb_late_exterior_loop,1,Ambience,SFX/Ambience,2d,1,L,none,synth:wind dur=30 low=300 high=1500 + synth:drips dur=30 rate=3,"wet stone, gutters dripping, flags snapping",

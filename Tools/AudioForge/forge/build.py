@@ -157,6 +157,8 @@ def build_one(row, variant):
     final = find_final(name, variant)
     if final is not None:
         x = read_audio(final)
+        if row["loop"] != "1":
+            x = trim_silence(x)  # recordings arrive with a breath of room noise either side
         sources = [f"final/{final.name}"]
         status = {"A": "ai", "M": "ai-music", "R": "recorded", "C": "composed"}.get(row["final"], "final")
     else:

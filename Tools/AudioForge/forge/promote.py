@@ -82,16 +82,23 @@ def scan(licence, origin):
     rows = manifest_rows()
     entries = load_licences()
     known = {e["file"] for e in entries}
-    added = 0
+    added, refused = 0, []
     for path in sorted(FINAL.glob("*.*")):
         if path.name in ("LICENCES.csv", "README.md") or path.name in known:
             continue
-        name, variant = validate_target(path.stem, rows)
+        try:
+            name, variant = validate_target(path.stem, rows)
+        except SystemExit as why:
+            refused.append(f"{path.name}: {why}")
+            continue
         entries = record(entries, path.name, name, variant, licence, origin or "dropped into final/")
         added += 1
         print(f"recorded final/{path.name}")
     save_licences(entries)
     print(f"{added} file(s) recorded")
+    for line in refused:
+        print(f"REFUSED {line}")
+    return 1 if refused else 0
 
 
 def main(argv):
@@ -103,7 +110,7 @@ def main(argv):
     parser.add_argument("--scan", action="store_true", help="record every unlicensed file already in final/")
     args = parser.parse_args(argv)
     if args.scan:
-        scan(args.licence, args.origin)
+        return scan(args.licence, args.origin)
     elif args.source and args.target:
         from pathlib import Path
         promote(Path(args.source), args.target, args.licence, args.origin)
