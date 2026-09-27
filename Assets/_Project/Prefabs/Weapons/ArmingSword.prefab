@@ -113,12 +113,6 @@ PrefabInstance:
       addedObject: {fileID: 45594708289676235}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 13024124775164703}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 21609349879468227}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1247129701243966387}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
       insertIndex: -1
@@ -207,42 +201,6 @@ MonoBehaviour:
   _maxThrowSpeed: 18
   _damageMultiplier: 2
   _damageCooldown: 0.5
---- !u!114 &13024124775164703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905311075115648840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cda8b63ac315c7b1f93361f635efb5d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Acoustics::Plunderspell.Acoustics.AcousticEmitter
-  BaseNoiseRadius: 3
-  BaseNoiseStrength: 0.6
-  NoiseType: 6
-  _noiseListenerLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  _geometryLayer:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!114 &21609349879468227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905311075115648840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ca8219aed8a38835fd7691adabfd1a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Items::MeleeWeapon
-  m_stats: {fileID: 11400000, guid: e6d0583f1463c4c14dd6060dff4d950d, type: 2}
-  m_hitRadius: 1
-  m_swingNoiseStrength: 0.6
 --- !u!114 &1247129701243966387
 MonoBehaviour:
   m_ObjectHideFlags: 0

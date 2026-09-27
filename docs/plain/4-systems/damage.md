@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/damage.md @ 9b51fd9781aa8b3ee0c2ee29d9ff758f8147ca5a -->
+<!-- plain copy of: docs/4-systems/damage.md @ 26f503b6880198efc154c984cdef497f9fdd27bd -->
 
 # Damage
 

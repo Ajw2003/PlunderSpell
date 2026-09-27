@@ -119,7 +119,8 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
 - **Turning it on purpose.** Hold middle mouse: `Item.SetRotating(true)` locks its current
   rotation as a target, the mouse turns it, and letting go keeps the new orientation.
 - **Weapons sit in the hand, not on the beam** (2026-09-26). Anything with a `RangedWeapon` or
-  `MeleeWeapon` is held rigidly low right of the view, pointing where you look
+  `MeleeWeapon` is held rigidly (since the owner's ruling the same day, that is the ranged weapons
+  only: every sword, the Arming Sword included, is an ordinary object on the beam) low right of the view, pointing where you look
   (`Item.HoldInHand`, `Item.SetHandPose`, posed in `RenderPipelineManager.beginCameraRendering`
   so it never lags the camera). It is held by its authored grip, or else by its origin (a
   crossbow's butt, a sword's pommel). Since 2026-09-26 (#134) every weapon and the five original

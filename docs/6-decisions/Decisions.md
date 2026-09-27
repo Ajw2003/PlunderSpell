@@ -1047,6 +1047,8 @@ on the carry beam, or held; the attack key is not the melee the game means. The 
 `MeleeDamageTests` are gone; the #134 grip points stay). What #110's "damage scaling for the melee
 damage system" does mean is open.
 
-**Status.** Standing. The Arming Sword's own `MeleeWeapon` (from #37, before this branch) is
-untouched pending the owner's word on it.
+**Status.** Standing. Extended the same evening at the owner's word: the Arming Sword (a
+`MeleeWeapon` since #37) is an ordinary object too, its `MeleeWeapon` and `AcousticEmitter`
+removed. No prefab uses `MeleeWeapon` now; the class and `ArmingSword_MeleeStats.asset` remain,
+unused.
 

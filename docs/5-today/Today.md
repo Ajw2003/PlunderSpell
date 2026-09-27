@@ -150,6 +150,9 @@ playtest's. `LobbyScalingTests` 3/3 (written with the change), guard suites 41/4
 Then the owner reversed #110: swords are swung like normal objects or held, and the attack-key
 melee was never the meaning. Reverted (the Bronze Sword's and Longsword's `MeleeWeapon`s and stats,
 the base damage, `MeleeDamageTests`); the #134 grips stay. Decisions, "Swords are swung as objects".
+Then the Arming Sword too: its `MeleeWeapon` and `AcousticEmitter` removed, so every sword is an
+ordinary object. Edited while the owner was in Play mode, so no recompile and no tests were run
+for this step.
 
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except

@@ -37,7 +37,9 @@ The bench is built with `PlayerStateMachine` + `PlayerInputController`, the pair
 carries — not `FreeLookPlaytestController`.
 
 Melee runs through `PlayerStateMachine.Attack` → `ItemManager.TryMeleeSwing` →
-`MeleeWeapon.TrySwing`. `FreeLookPlaytestController` has no attack path at all, so a bench built on
+`MeleeWeapon.TrySwing`. **Since 2026-09-26 no prefab has a `MeleeWeapon`:** the owner ruled that
+swords are swung as objects on the carry beam, so the bench's Arming Sword is an ordinary object
+and the attack key does nothing with it (Decisions, "Swords are swung as objects"). `FreeLookPlaytestController` has no attack path at all, so a bench built on
 it could exercise spells and nothing else, and would prove nothing about the melee it exists to
 test. `ItemManager` and `EventManager` are scene-owned singletons, so the builder places both;
 without `ItemManager` in the scene, `ItemManager.Instance` is null and a swing silently does

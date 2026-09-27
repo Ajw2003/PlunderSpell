@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/combat-bench.md @ cbb360134696257d6737777a5bb06b6e0af10474 -->
+<!-- plain copy of: docs/4-systems/combat-bench.md @ 307867619cf72ff3037a5706df3f218d4ac0ae51 -->
 
 # Combat bench
 
