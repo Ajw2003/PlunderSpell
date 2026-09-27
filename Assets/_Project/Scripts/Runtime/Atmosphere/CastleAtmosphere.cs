@@ -38,6 +38,11 @@ namespace Plunderspell.Atmosphere
         private static readonly int s_moonDir = Shader.PropertyToID("_NF_MoonDir");
         private static readonly int s_moonColor = Shader.PropertyToID("_NF_MoonColor");
         private static readonly int s_scatter = Shader.PropertyToID("_NF_Scatter");
+        private static readonly int s_sky = Shader.PropertyToID("_NF_Sky");
+
+        /// <summary>How quickly the sky clears with elevation: an exponent on the up component, so
+        /// the horizon keeps the fires' glow and overhead opens up.</summary>
+        private const float k_SkyClarityCurve = 0.6f;
         private static readonly int s_lightPos = Shader.PropertyToID("_NF_LightPos");
         private static readonly int s_lightColor = Shader.PropertyToID("_NF_LightColor");
         private static readonly int s_skyZenith = Shader.PropertyToID("_Zenith");
@@ -283,6 +288,7 @@ namespace Plunderspell.Atmosphere
             Vector3 moonDir = MoonDirection();
             Shader.SetGlobalVector(s_moonDir, new Vector4(moonDir.x, moonDir.y, moonDir.z, _current.MoonAnisotropy));
             Shader.SetGlobalColor(s_moonColor, _current.MoonColor * _current.MoonScatter);
+            Shader.SetGlobalVector(s_sky, new Vector4(Mathf.Clamp01(_current.SkyClarity), k_SkyClarityCurve, 0f, 0f));
 
             int count = GatherScatterLights();
             Shader.SetGlobalVectorArray(s_lightPos, _lightPos);

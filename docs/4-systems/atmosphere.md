@@ -18,6 +18,16 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
   (`Assets/_Project/Shaders/Atmosphere/NightFogCommon.hlsl`) for the nearest burning fires, each
   dimmed while a linecast from the camera is blocked. Transparent flames/portal fog themselves
   with the same functions.
+- **The sky shows through overhead** (2026-09-26). Sky pixels are fogged as if at `SkyDistance`,
+  which used to cover the whole sky. Now, on sky pixels only, the fog's opacity fades by
+  `SkyClarity × up^0.6` (`AtmosphereLook.SkyClarity`, sent as `_NF_Sky`): the horizon keeps the
+  fires' glow and overhead opens onto `Plunderspell/NightSky`, which now draws procedural stars
+  (one candidate per cell of a grid over the sky sphere, with a slow twinkle, fading near the
+  horizon and the moon) as well as the moon. Calm 0.75, Stirred 0.65, Roused 0.45, Hue and Cry
+  0.2, so the alarm smokes the sky over. Walls and rooms fog exactly as before. The trade-off:
+  rooftops that stood dark against glowing fog now stand, a little fogged, against a dark sky, so
+  their silhouettes are softer. Before/after captures from the same spots:
+  `docs/generated/night-sky-2026-09-26/`.
 - **Fire.** The Blender builders register fire anchors (`castle_builders._fire`), `build_assets.py`
   writes `Assets/_Project/Data/Castle/CastleFireAnchors.json`, `CastleFireAnchorImporter` copies them
   into the three room registries and `CastleDressingSet`. `CastleFireSpawner` lights one

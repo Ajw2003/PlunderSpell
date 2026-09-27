@@ -16,6 +16,7 @@ float4 _NF_Params;          // x: density at the base height (1/m), y: base heig
 float4 _NF_MoonDir;         // xyz: direction towards the moon, w: moon phase anisotropy
 float4 _NF_MoonColor;       // rgb: moon in-scatter colour and strength
 float4 _NF_Scatter;         // x: fire scatter strength, y: fire phase anisotropy, z: minimum halo radius (m), w: light count
+float4 _NF_Sky;             // x: sky clarity overhead (0..1), y: exponent on elevation for how fast it clears
 float4 _NF_LightPos[NIGHT_FOG_MAX_LIGHTS];    // xyz: position, w: range
 float4 _NF_LightColor[NIGHT_FOG_MAX_LIGHTS];  // rgb: colour x intensity x visibility
 

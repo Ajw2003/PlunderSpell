@@ -55,7 +55,16 @@ Shader "Hidden/Plunderspell/NightFog"
                 if (isSky)
                     dist = _NF_Params.w;
 
-                return half4(NightFogAlongRay(_WorldSpaceCameraPos, dir, dist));
+                float4 fog = NightFogAlongRay(_WorldSpaceCameraPos, dir, dist);
+                // Overhead, the sky shows through: stars and the moon above the fog. Only sky pixels,
+                // and less the nearer the horizon, where the fires' glow stays.
+                if (isSky)
+                {
+                    float clear = _NF_Sky.x * pow(saturate(dir.y), _NF_Sky.y);
+                    fog.a = lerp(fog.a, 1.0, clear);
+                    fog.rgb *= 1.0 - clear;
+                }
+                return half4(fog);
             }
             ENDHLSL
         }

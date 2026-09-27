@@ -154,6 +154,14 @@ Then the Arming Sword too: its `MeleeWeapon` and `AcousticEmitter` removed, so e
 ordinary object. Edited while the owner was in Play mode, so no recompile and no tests were run
 for this step.
 
+Then, at the owner's request, a night sky without losing the fog. Sky pixels now lose fog as you
+look up (`SkyClarity`, 0.75 calm down to 0.2 in the hue and cry), and the sky shader draws
+procedural stars. Both shaders compile without messages; before/after captures of four views in
+`docs/generated/night-sky-2026-09-26/` (the overhead view went from mean RGB 83/46/28 of orange fog
+to 48/24/17 of starry sky). Softer rooftop silhouettes against the darker sky are the trade-off.
+Next, agreed with the owner: roofs, then rooms of 2 to 4 cells, then upper floors, each with its own
+design first.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

@@ -19,6 +19,7 @@ MonoBehaviour:
     FogBaseHeight: 0
     FogHeightFalloff: 0.075
     SkyDistance: 140
+    SkyClarity: 0.75
     MoonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
     MoonIntensity: 0.035
     MoonScatter: 0.02
@@ -39,6 +40,7 @@ MonoBehaviour:
     FogBaseHeight: 0
     FogHeightFalloff: 0.075
     SkyDistance: 140
+    SkyClarity: 0.65
     MoonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
     MoonIntensity: 0.035
     MoonScatter: 0.02
@@ -59,6 +61,7 @@ MonoBehaviour:
     FogBaseHeight: 0
     FogHeightFalloff: 0.075
     SkyDistance: 140
+    SkyClarity: 0.45
     MoonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
     MoonIntensity: 0.035
     MoonScatter: 0.02
@@ -79,6 +82,7 @@ MonoBehaviour:
     FogBaseHeight: 0
     FogHeightFalloff: 0.075
     SkyDistance: 140
+    SkyClarity: 0.2
     MoonColor: {r: 0.45, g: 0.58, b: 0.9, a: 1}
     MoonIntensity: 0.035
     MoonScatter: 0.02
