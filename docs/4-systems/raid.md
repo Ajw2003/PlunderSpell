@@ -88,6 +88,19 @@ by the gatehouse, and nothing exists outside the curtain wall.
   the curtain wall's outer face, called from `RaidDirector.SealCastle` every raid. RaidScene's
   ground covers only the ring plus a 4 m apron.
 
+### Lobby size (2026-09-26, #154)
+
+The garrison grows with the lobby, so a four-player raid is not tuned for one. The server passes
+`RaidDirector.LobbySize` (everyone connected in a session, else 1) to `GuardSpawner.SpawnFor`, which
+scales guard density by `1 + 0.35 × (players − 1)` and each guard's health by
+`1 + 0.25 × (players − 1)` (`CastleGuard.ScaleHealth`, applied once at spawn). Damage per hit does
+not scale: each player is hit as hard as a solo one. Both rates are Inspector fields on
+`GuardSpawner` (`_extraGuardsPerPlayer`, `_extraHealthPerPlayer`); the numbers are this change's
+defaults, not playtested. A zone's chance of a guard is capped at 1, so the crypt saturates first.
+`LobbyScalingTests` (PlayMode) covers the scale, the count over 20 castles and the health. Live on
+seed 100454263: 1 player met 8 guards at 80 health, 2 players 8 at 100, 4 players 15 at 140. Not
+tried: an actual four-machine lobby.
+
 ### Loot in the portal (2026-09-26, #158)
 
 Loot put down inside the portal stops moving and cannot break, for the players' sanity and so a

@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/raid.md @ 7e521e9bb3b940433445ad9122cdf70db583b598 -->
+<!-- plain copy of: docs/4-systems/raid.md @ 4d8eaa01dfc6fb77ae3c82aa93ad5a6e0f6a4436 -->
 
 # Raid
 
@@ -27,7 +27,8 @@ a raid, cannot tell what they are carrying is worth, or cannot get out with it.
    put down inside the portal stays exactly where it is and cannot break until someone picks it up.
 6. Standing on the escape point starts a short countdown; finishing it, or the raid's clock
    running out, banks whatever loot is there.
-7. A guard's attack is limited to firing every so often, not every frame in contact, and guards
+7. More players means more guards, and tougher ones, though each guard hits no harder.
+8. A guard's attack is limited to firing every so often, not every frame in contact, and guards
    give newly arrived players a short grace period before they can be spotted.
 
 ## Risks and safeguards

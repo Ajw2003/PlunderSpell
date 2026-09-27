@@ -33,10 +33,26 @@ namespace Plunderspell.Raid
         [Range(0.1f, 2f)]
         [SerializeField] private float _damageScale = 0.65f;
 
+        [Tooltip("Extra guards for each player past the first, as a share of the solo garrison: 0.35 " +
+                 "gives a four-player raid about twice the guards (#154).")]
+        [Range(0f, 1f)]
+        [SerializeField] private float _extraGuardsPerPlayer = 0.35f;
+
+        [Tooltip("Extra guard health for each player past the first: 0.25 gives a four-player raid " +
+                 "1.75x health (#154). Damage per hit does not scale; each player is hit as hard as solo.")]
+        [Range(0f, 1f)]
+        [SerializeField] private float _extraHealthPerPlayer = 0.25f;
+
         [Tooltip("Parent for spawned guards. Auto-created if left null.")]
         [SerializeField] private Transform _container;
 
         private readonly List<GameObject> _spawned = new List<GameObject>();
+        private float _healthScale = 1f;
+
+        /// <summary>1 for a solo raid, plus <paramref name="extraPerPlayer"/> for each player past the
+        /// first (#154).</summary>
+        public static float LobbyScale(int playerCount, float extraPerPlayer) =>
+            1f + extraPerPlayer * Mathf.Max(0, playerCount - 1);
         private readonly List<GuardPlacement> _lastPlan = new List<GuardPlacement>();
 
         /// <summary>The garrison plan behind the guards currently in the world.</summary>
@@ -61,12 +77,14 @@ namespace Plunderspell.Raid
         /// old gatehouse ring.
         /// </summary>
         public IReadOnlyList<GuardPlacement> SpawnFor(ProceduralCastleData castle, int seed,
-            HistoricalEra era, int safeModuleIndex = -1)
+            HistoricalEra era, int safeModuleIndex = -1, int playerCount = 1)
         {
             Clear();
             LastEra = era;
+            _healthScale = LobbyScale(playerCount, _extraHealthPerPlayer);
 
-            List<GuardPlacement> plan = GuardPlacementPlanner.Plan(castle, seed, _densityScale, safeModuleIndex);
+            float density = _densityScale * LobbyScale(playerCount, _extraGuardsPerPlayer);
+            List<GuardPlacement> plan = GuardPlacementPlanner.Plan(castle, seed, density, safeModuleIndex);
             _lastPlan.AddRange(plan);
 
             if (_roster == null && _guardPrefab == null)
@@ -127,6 +145,7 @@ namespace Plunderspell.Raid
 
             guard.Configure(null, route);
             guard.ScaleTuning(_speedScale, _damageScale);
+            guard.ScaleHealth(_healthScale);
         }
 
         /// <summary>Removes the garrison. Called when a raid ends.</summary>

@@ -140,6 +140,13 @@ or it leaving frees it. `PortalRestTests` 4/4 (written with the change), and ext
 carry 15/15, loot 38/38. Live: a Gold Death Mask in the portal did not move 1 mm or break under a
 shove, a spell break and a 50 m/s strike, and was free again once picked up and outside.
 
+Then #154 (enemies scale with lobby size). The server passes the lobby size to the guard spawner:
++35% guard density and +25% guard health for each player past the first, damage per hit unchanged.
+Both are Inspector fields on `GuardSpawner`, and the numbers are my defaults, not the owner's or a
+playtest's. `LobbyScalingTests` 3/3 (written with the change), guard suites 41/42 (the known
+`GuardAttackTests` case), `GarrisonBalanceTests` 2/2. Live, respawning one raid's garrison: 1 player
+8 guards at 80 health, 4 players 15 at 140. No real multi-machine lobby was tried.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

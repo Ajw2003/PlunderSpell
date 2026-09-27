@@ -715,6 +715,16 @@ namespace Plunderspell.Guards
             _attackDamage *= damageScale;
         }
 
+        /// <summary>Multiplies the guard's health, full and current, for a bigger lobby (#154).
+        /// Applied once at spawn, on the server.</summary>
+        public void ScaleHealth(float healthScale)
+        {
+            if (healthScale <= 0f)
+                return;
+            _maxHealth *= healthScale;
+            _health.value = _maxHealth;
+        }
+
         public float PatrolSpeed => _patrolSpeed;
         public float ChaseSpeed => _chaseSpeed;
         public float AttackDamage => _attackDamage;

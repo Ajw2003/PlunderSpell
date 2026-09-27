@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/3-state/ProjectState.md @ 132af4783d0eaef4aa44f3aae7cde972de750f3a -->
+<!-- plain copy of: docs/3-state/ProjectState.md @ 0dfc41ea5f0e21fad56387c0a2c5fb7fcf2e236f -->
 
 # Project state
 

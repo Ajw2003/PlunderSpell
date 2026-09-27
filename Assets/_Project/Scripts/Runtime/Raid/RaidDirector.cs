@@ -270,7 +270,7 @@ namespace Plunderspell.Raid
             if (!isSpawned || isServer)
             {
                 _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
-                _guardSpawner?.SpawnFor(Castle, seed, Era, ArrivalModuleIndex);
+                _guardSpawner?.SpawnFor(Castle, seed, Era, ArrivalModuleIndex, LobbySize);
             }
 
             return Castle;
@@ -400,6 +400,9 @@ namespace Plunderspell.Raid
             if (player != null && player.TryGetComponent(out Plunderspell.Status.StatusEffectReceiver status))
                 status.ClearAll();
         }
+
+        /// <summary>Players in this raid: everyone connected in a session, else one (#154).</summary>
+        private int LobbySize => isSpawned && networkManager != null ? Mathf.Max(1, networkManager.playerCount) : 1;
 
         /// <summary>What an arriving player turns to: the portal, or on the curtain strip the room
         /// inward of it, whose archway is the way in (#140).</summary>
