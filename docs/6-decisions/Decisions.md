@@ -1052,3 +1052,30 @@ damage system" does mean is open.
 removed. No prefab uses `MeleeWeapon` now; the class and `ArmingSword_MeleeStats.asset` remain,
 unused.
 
+
+## 2026-09-27 — Carried pieces: the host holds them, holders send intent, and the mouse steers (#169)
+
+**Context.** Carrying over the network gives the piece to whoever asked last:
+`LootPickup.RequestCarry` (`Assets/_Project/Scripts/Runtime/Loot/LootPickup.cs:253`) hands ownership
+to any asker, so a second player grabbing a held piece takes it, and nothing lets two players share
+one. An older primary/secondary carry in `LootPickup` and `LootInteractor` is not on the live player.
+The owner asked whether to replace the carry system wholesale, and wants long pieces such as the
+Rolled Tapestry to turn more like real objects.
+
+**Decision.** Replace the networking of a carry, not the carry. While anyone holds a piece the host
+controls it and keeps a list of its holders; each holder's machine sends its pull (grab point,
+target) and turn, and the host applies them all. This covers one holder, two, and pieces that need
+more, and makes grab-stealing impossible. `Item` and `ItemManager` keep the carry's feel (spring,
+tow, weight, weapons in hand, beam) and change from moving the body to describing the pull. The
+unused two-person code in `LootPickup` and `LootInteractor` is removed. Rotation is mouse steering:
+turning your view turns the held piece through physics, so a heavy or long piece lags and sweeps
+into place; middle-click stays for fine rotation. Plan:
+`docs/plans/GitIssues/Issue_169_Plan.md`.
+
+**Considered and rejected.** A wholesale rewrite of the carry system: the feel code is tuned by the
+owner's 2026-09-25 and 2026-09-26 calls and checked by `CarryFeelTests`, and the fault is only in
+who controls the piece. For rotation, a free swing from the grab point (close to the hang reverted
+in "Held items keep their orientation", above, for feeling floppy) and angle set only by two
+holders' positions.
+
+**Status.** Standing. Not built yet.
