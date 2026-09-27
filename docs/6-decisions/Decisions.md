@@ -998,3 +998,22 @@ How it works: `docs/4-systems/spells.md`, "Velox and Saltus".
 
 **Status.** Standing.
 
+## 2026-09-26 — Every sword is a melee weapon, and a hit is about a quarter of a guard (#110)
+
+**Context.** #110 asked to fix melee damage scaling, with no detail. Only the Arming Sword was a
+melee weapon. It did `weight × 6` = 12 a hit, so a guard (60 to 100 health) took 5 to 9 swings,
+while a thrown 2 kg item did about 24 and Frango 30. The Bronze Sword and Longsword were loot only:
+the attack key did nothing with them.
+
+**Decision.** The owner chose, from three options: every sword is a melee weapon, and one hit is
+`8 + 6 × weight` (stone). The Arming Sword (2 st) does 20, the Longsword (3 st) 26, the Bronze
+Sword (3.5 st) 29, so an 80-health guard takes 3 or 4 hits. Heavier still swings slower
+(`0.35 + 0.08 × weight` s). The rejected options were retuning the Arming Sword alone, and
+damage from how fast the blade moves, like a thrown item.
+
+**Why.** A sword should beat throwing junk, and a heavy blade should trade speed for damage. The
+base term keeps a light sword useful; with weight alone, a 2 st sword could not reach 3 or 4 hits
+without making a 3.5 st one kill in two. How it works: `docs/4-systems/damage.md`, "Melee".
+
+**Status.** Standing.
+

@@ -48,6 +48,25 @@ numbers through `IHealth`; this system only decides how damage reaches them and 
 
 Screenshots of every case: `docs/generated/playtest-2026-09-23/05`–`12`.
 
+## Melee
+
+Changed 2026-09-26 for #110 (Decisions, "Every sword is a melee weapon"). A `MeleeWeapon` swing
+(`Assets/_Project/Scripts/Runtime/Items/Weapons/MeleeWeapon.cs`) overlaps a 1 m sphere at the tip of
+its reach and hits every body there once, for `MeleeWeaponStats.Damage` = base 8 + 6 a stone of the
+weapon's `InventoryItem.Weight`. Swing time is 0.35 s + 0.08 s a stone.
+
+| Sword | Era table | Weight | Damage | Swing | Reach |
+|---|---|---:|---:|---:|---:|
+| Arming Sword | High Medieval | 2 st | 20 | 0.51 s | 1.56 m |
+| Longsword | High Medieval | 3 st | 26 | 0.59 s | 1.8 m |
+| Bronze Sword | Bronze Age | 3.5 st | 29 | 0.63 s | 1.4 m |
+
+Until then only the Arming Sword was a melee weapon (12 a hit); the other two were loot with no
+swing. Their `*_MeleeStats.asset` files and the components on their prefabs were made by
+`docs/generated/melee-swords-2026-09-26.cs`. `MeleeDamageTests` (EditMode) checks every sword is
+swingable and kills an 80-health guard in 3 or 4 hits. In a live raid, swinging each at a Palace
+Levy took 29, 26 and 20, and a second swing at once was refused.
+
 ## Camera shake
 
 Added 2026-09-26 for #51. `CameraShakeDirector`

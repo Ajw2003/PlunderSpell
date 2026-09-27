@@ -15,6 +15,7 @@
         "Plunderspell.Guards",
         "Plunderspell.Raid",
         "Plunderspell.Loot",
+        "Plunderspell.Items",
         "Plunderspell.Player",
         "Plunderspell.Castle",
         "Plunderspell.Inventory",

@@ -70,6 +70,16 @@ back on the floor in one frame with no fall damage; they now fall and take about
 that failed first. Porta cannot help yet: the raid had 0 doors (#111). `SpellEffectTests` 18/18,
 `GuardTests` 24/24.
 
+Then #110 (melee damage scaling, no description). Only the Arming Sword could be swung, for 12 a
+hit; the Bronze Sword and Longsword were loot with no swing. The user chose: every sword is a melee
+weapon, 3 or 4 hits a guard. Damage is now 8 + 6 a stone: Arming 20, Longsword 26, Bronze 29
+(Decisions, 2026-09-26). `MeleeDamageTests` failed first (7 hits; two swords not swingable) and
+passes 7/7; swung live at a Palace Levy, the three took 29, 26 and 20. EditMode 84 pass, 3 skip,
+the same 2 known failures; `CombatBench` PlayMode 7/7. `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
+fails in the live Editor, three runs out of three (a 0.059 to 0.070 m jump against a 0.05 m limit).
+It drives an Item alone, with nothing changed today in its path, and passed in batch mode earlier;
+a frame-rate-sensitive limit is the likely cause, not yet confirmed.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

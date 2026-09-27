@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/damage.md @ b485fae8b0181cce717b95490d71ec78a9425348 -->
+<!-- plain copy of: docs/4-systems/damage.md @ 5f4dd59271858e482ca906e811b61c530b94cc55 -->
 
 # Damage
 
@@ -29,7 +29,9 @@ has to feel physical, or heavy items would not seem worth the risk of hauling th
    the holder turns.
 7. Items too heavy to lift are towed behind the holder on an invisible rope instead, slowing the
    holder's walk and trailing behind them realistically.
-8. The view shakes a little when you are hit, when you land a hit, when someone casts a spell
+8. Every sword can be swung. A hit does a set amount plus more for a heavier blade, so three or
+   four hits bring down a guard; heavier swords hit harder but swing slower.
+9. The view shakes a little when you are hit, when you land a hit, when someone casts a spell
    near you (a shout more than a whisper), and when your leap spell slams into the ground. Only
    your own view moves; time never pauses, because every player shares the same raid.
 
