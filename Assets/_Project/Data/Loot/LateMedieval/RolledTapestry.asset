@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 800
   IsArtifact: 0
-  Bulk: 8
+  WeightKg: 12
   Fragility: 999
   DisplayName: Rolled Tapestry
   Icon: {fileID: 0}

@@ -594,9 +594,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.GuardSpawner
   _roster: {fileID: 11400000, guid: 13b9eb649aa2acf4bb2be962b0d7622e, type: 2}
   _guardPrefab: {fileID: 0}
-  _densityScale: 0.5
+  _densityScale: 0.75
   _speedScale: 0.8
   _damageScale: 0.65
+  _extraGuardsPerPlayer: 0.35
+  _extraHealthPerPlayer: 0.25
   _container: {fileID: 0}
 --- !u!4 &298889176
 Transform:
