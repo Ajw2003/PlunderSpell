@@ -62,7 +62,14 @@ feels. `Item` and `ItemManager` stay and are adapted; the unused two-person code
     references them. Keep what the live game still uses from `LootPickup` (breaking, value,
     levitation).
 
-7.  **Update the documentation.**
+7.  **Final acceptance over Steam on two real PCs (needs #170).**
+    Once `coop_carry_check.sh` passes, run the shared-carry scenario through #170's two-PC
+    automation: PC A hosts over Steam, PC B joins by invite, both players carry the same piece,
+    one lets go, and one leaves mid-carry. Both sides must agree on where the piece is, allowing for
+    real network delay. Save both sides' screenshots and output under `docs/generated/`. If #170 is
+    not built yet, #169 stays open at this step.
+
+8.  **Update the documentation.**
     `docs/4-systems/net.md` (carrying and grab beams), `docs/4-systems/damage.md` ("Weight"), and
     their copies under `docs/plain/4-systems/`.
 
@@ -79,6 +86,7 @@ and output. Nothing below needs a second person or a second PC.
 5.  Carry the Rolled Tapestry and turn quickly. It sweeps round and settles; a goblet turns almost
     at once. Middle-click still rotates it precisely.
 6.  Let go, disconnect or die while holding. The piece carries on for the other holder, or falls.
+7.  Over Steam on two PCs (#170): the shared-carry scenario passes on both sides.
 
 ## Completion Checks
 *   [ ] `Tools/Unity/coop_carry_check.sh` exists and runs both players on one PC without a person.
@@ -87,6 +95,7 @@ and output. Nothing below needs a second person or a second PC.
 *   [ ] Holders pulling the same way add their strength; opposite pulls drop the piece.
 *   [ ] Held pieces turn with the holder's view through physics, heavier and longer pieces more slowly.
 *   [ ] The unused two-person code in `LootPickup` and `LootInteractor` is gone.
+*   [ ] The shared-carry scenario passes over Steam on two real PCs (#170).
 *   [ ] `CarryFeelTests` passes, and new tests cover two holders and steering.
 *   [ ] The net and damage system docs and their plain copies describe the new behaviour.
 

@@ -224,4 +224,4 @@ Screenshots of each checked step: `docs/generated/coop-2026-09-23/`.
 Use them for what one PC on localhost cannot show: Steam's relay, lobby, invite and overlay flow,
 and real network delay. The owner works alone, so a two-machine check must be driven by the agent
 (a Claude Code session on each PC, or one reaching both), not by the owner at two keyboards.
-Nothing automates it yet.
+Nothing automates it yet; #170 tracks building that.
