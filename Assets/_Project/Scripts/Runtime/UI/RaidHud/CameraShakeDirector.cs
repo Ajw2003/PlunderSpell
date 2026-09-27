@@ -57,17 +57,31 @@ namespace Plunderspell.UI
                 Instance = null;
         }
 
+        /// <summary>
+        /// While the local player burns, trauma is held at least this high rather than added per
+        /// tick: fire deals damage about ten times a second, so per-tick trauma either vanished or
+        /// pinned the shake at full. 0.7 is half the angle of a full-strength shake.
+        /// </summary>
+        public const float OnFireTrauma = 0.7f;
+
         /// <summary>Trauma for a hit on the local player: sized by the share of health it took,
-        /// so a sword blow jolts and a fire tick barely registers.</summary>
+        /// so a sword blow jolts. Burning is <see cref="OnFireTrauma"/> instead.</summary>
         public static float ForHitTaken(float amount, float maxHealth, DamageKind kind)
         {
-            if (kind == DamageKind.Burn || kind == DamageKind.Choke)
+            if (kind == DamageKind.Choke)
                 return 0.1f;
             return 0.4f + 1.5f * amount / Mathf.Max(1f, maxHealth);
         }
 
-        /// <summary>Trauma for a hit the local player dealt: a small knock, more for a kill.</summary>
-        public static float ForHitDealt(bool killed) => killed ? 0.55f : 0.35f;
+        /// <summary>Trauma for a hit the local player dealt: a small knock, more for a kill. Damage
+        /// over time (an enemy you set alight, one you are choking) shakes nothing: only your own
+        /// burning shakes your view.</summary>
+        public static float ForHitDealt(DamageKind kind, bool killed)
+        {
+            if (kind == DamageKind.Burn || kind == DamageKind.Choke)
+                return 0f;
+            return killed ? 0.55f : 0.35f;
+        }
 
         /// <summary>Trauma for a cast <paramref name="metres"/> away: louder is stronger, and it
         /// fades to nothing at <see cref="CastReachMetres"/>.</summary>
@@ -118,9 +132,16 @@ namespace Plunderspell.UI
 
             Transform you = local.transform.root;
             if (report.Target.transform.root == you)
-                _trauma.Add(ForHitTaken(report.Amount, report.MaxHealth, report.Kind));
+            {
+                if (report.Kind == DamageKind.Burn)
+                    _trauma.AtLeast(OnFireTrauma);
+                else
+                    _trauma.Add(ForHitTaken(report.Amount, report.MaxHealth, report.Kind));
+            }
             else if (report.Instigator != null && report.Instigator.transform.root == you)
-                _trauma.Add(ForHitDealt(report.Killed));
+            {
+                _trauma.Add(ForHitDealt(report.Kind, report.Killed));
+            }
         }
 
         private void OnCast(SpellCastingSystem.CastReport report)

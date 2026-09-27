@@ -33,6 +33,10 @@ namespace Plunderspell.UI
                 Trauma = Mathf.Min(1f, Trauma + amount);
         }
 
+        /// <summary>Raises trauma to at least <paramref name="level"/>, for a sustained shake (being on
+        /// fire) that should hold steady rather than stack with every tick.</summary>
+        public void AtLeast(float level) => Trauma = Mathf.Clamp(Mathf.Max(Trauma, level), 0f, 1f);
+
         /// <summary>Drains trauma and returns this frame's view offset.</summary>
         public Quaternion Step(float deltaTime)
         {

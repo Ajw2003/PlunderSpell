@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/damage.md @ 40920f8551b49750777ac620ed712886e05501bb -->
+<!-- plain copy of: docs/4-systems/damage.md @ 517c72463b1ab755197f41ef46f1b9f07f018c20 -->
 
 # Damage
 
@@ -33,7 +33,8 @@ has to feel physical, or heavy items would not seem worth the risk of hauling th
    four hits bring down a guard; heavier swords hit harder but swing slower.
 9. The view shakes a little when you are hit, when you land a hit, when someone casts a spell
    near you (a shout more than a whisper), and when your leap spell slams into the ground. Only
-   your own view moves; time never pauses, because every player shares the same raid.
+   your own view moves; time never pauses, because every player shares the same raid. Being on fire gives a
+   steady, gentler shake; an enemy you set on fire does not shake your view at all.
 
 ## Risks and safeguards
 - **A hit bypassing the shared path.** Nothing else in the game is allowed to apply damage

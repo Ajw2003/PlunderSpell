@@ -119,6 +119,12 @@ path to the crypt; the strip arrivals (43, 64, 88) have no plug in front and ope
 archway. Full PlayMode then: 240 of 241, the known `GuardAttackTests` case (the carry jolt test
 passed this time, so it is intermittent).
 
+Then, at the user's request, the camera shake for fire. An enemy you set alight shook your view at
+full strength (each burn tick, about ten a second, counted as a hit you dealt); now it shakes
+nothing. Your own burning holds a steady shake at half a full one's angle instead of stacking per
+tick. `CameraShakeTests` 10/10 (2 new); live, a guard burning in your name gave 0.00°, you burning
+1.06° mean and 3.41° peak over the 3 s burn.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

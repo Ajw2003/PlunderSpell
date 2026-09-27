@@ -66,14 +66,37 @@ namespace Plunderspell.Tests.Editor
         {
             Assert.Greater(CameraShakeDirector.ForHitTaken(40f, 100f, DamageKind.Melee),
                 CameraShakeDirector.ForHitTaken(5f, 100f, DamageKind.Melee));
-            Assert.Less(CameraShakeDirector.ForHitTaken(3f, 100f, DamageKind.Burn),
-                CameraShakeDirector.ForHitTaken(3f, 100f, DamageKind.Melee), "A fire tick barely registers.");
         }
 
         [Test]
         public void Test_AKillShakesMoreThanAHit()
         {
-            Assert.Greater(CameraShakeDirector.ForHitDealt(true), CameraShakeDirector.ForHitDealt(false));
+            Assert.Greater(CameraShakeDirector.ForHitDealt(DamageKind.Melee, true),
+                CameraShakeDirector.ForHitDealt(DamageKind.Melee, false));
+        }
+
+        /// <summary>The user, 2026-09-26: an enemy you set alight must not shake your view.</summary>
+        [Test]
+        public void Test_AnEnemyYouSetAlightDoesNotShakeYou()
+        {
+            Assert.AreEqual(0f, CameraShakeDirector.ForHitDealt(DamageKind.Burn, false));
+            Assert.AreEqual(0f, CameraShakeDirector.ForHitDealt(DamageKind.Burn, true));
+        }
+
+        /// <summary>Being on fire holds a steady shake at half the angle of a full one, however
+        /// many ticks land.</summary>
+        [Test]
+        public void Test_BeingOnFireHoldsAHalfStrengthShake()
+        {
+            var trauma = new ShakeTrauma();
+            for (int tick = 0; tick < 30; tick++)
+            {
+                trauma.AtLeast(CameraShakeDirector.OnFireTrauma);
+                trauma.Step(0.1f);
+            }
+            trauma.AtLeast(CameraShakeDirector.OnFireTrauma);
+            Assert.AreEqual(CameraShakeDirector.OnFireTrauma, trauma.Trauma, 1e-4f, "Ticks must not stack.");
+            Assert.AreEqual(0.5f, trauma.Trauma * trauma.Trauma, 0.02f, "Half the angle of a full-strength shake.");
         }
 
         [Test]

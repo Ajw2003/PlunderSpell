@@ -78,8 +78,9 @@ means small events are small and big ones stack into a jolt.
 
 | Event | Trauma added | Measured peak (live raid, 2026-09-26) |
 |---|---|---|
-| A hit on you | 0.4 + 1.5 × share of max health (fire or choking: 0.1) | 30 damage: 2.1° |
-| A hit you dealt | 0.35, or 0.55 on a kill | |
+| A hit on you | 0.4 + 1.5 × share of max health (choking: 0.1) | 30 damage: 2.1° |
+| You on fire | held at 0.7 while you burn, not added per tick: half the angle of a full shake | 1.1° mean, 3.4° peak |
+| A hit you dealt | 0.35, or 0.55 on a kill; nothing for burning or choking | an enemy you set alight: 0° |
 | A cast within 20 m, anyone's | whisper 0.25, normal 0.45, shout 0.7, fading to 0 at 20 m | a friend's shout 3 m away: 0.8° |
 | Your Saltus slam landing | 0.45 + 0.55 × (landing speed / 25 m/s, capped at 1) | 22.5 m/s: 3.1° |
 
@@ -87,6 +88,11 @@ means small events are small and big ones stack into a jolt.
   camera's rotation in `Look`; the stored pitch and yaw never change, so the view settles exactly
   where the player aimed. The director runs at execution order −50, before the input controller
   calls `Look`.
+- **Damage over time is not a hit** (changed 2026-09-26, at the user's request). Fire deals its
+  damage a point at a time, about ten times a second, and every tick on an enemy you had set alight
+  counted as a hit you dealt, which pinned your view at full shake while it burned. Burning and
+  choking you deal now shake nothing; your own burning holds a steady half-strength shake
+  (`ShakeTrauma.AtLeast`, `CameraShakeDirector.OnFireTrauma`).
 - **No hit-stop.** #51 asks for shake *or* hit-stop. Hit-stop means pausing time, and the raid's
   time and physics are shared by every player, so a freeze on one machine would either freeze
   everyone or put that machine out of step. Shake is local and costs nothing.
