@@ -147,6 +147,10 @@ playtest's. `LobbyScalingTests` 3/3 (written with the change), guard suites 41/4
 `GuardAttackTests` case), `GarrisonBalanceTests` 2/2. Live, respawning one raid's garrison: 1 player
 8 guards at 80 health, 4 players 15 at 140. No real multi-machine lobby was tried.
 
+Then the owner reversed #110: swords are swung like normal objects or held, and the attack-key
+melee was never the meaning. Reverted (the Bronze Sword's and Longsword's `MeleeWeapon`s and stats,
+the base damage, `MeleeDamageTests`); the #134 grips stay. Decisions, "Swords are swung as objects".
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

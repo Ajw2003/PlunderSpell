@@ -120,12 +120,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 30659954981373737}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1880578482243710}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8774757728557935566}
   m_SourcePrefab: {fileID: 100100000, guid: be9a35d2e66093a49bd4cdef706b6e7e, type: 3}
 --- !u!4 &5780983720355903020 stripped
 Transform:
@@ -280,39 +274,3 @@ MonoBehaviour:
   _characterControllerPatch: 0
   _ownerAuth: 1
   _interpolationTiming: 0
---- !u!114 &1880578482243710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6589327813404355734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cda8b63ac315c7b1f93361f635efb5d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Acoustics::Plunderspell.Acoustics.AcousticEmitter
-  BaseNoiseRadius: 3
-  BaseNoiseStrength: 0.6
-  NoiseType: 6
-  _noiseListenerLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  _geometryLayer:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!114 &8774757728557935566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6589327813404355734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ca8219aed8a38835fd7691adabfd1a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Items::MeleeWeapon
-  m_stats: {fileID: 11400000, guid: 12d8a7de9e7d50940aa9b764f374cf2f, type: 2}
-  m_hitRadius: 1
-  m_swingNoiseStrength: 0.6

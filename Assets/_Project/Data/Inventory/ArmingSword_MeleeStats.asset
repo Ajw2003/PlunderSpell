@@ -11,11 +11,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3d4fe9c810650a31fea4103cc71e6d38, type: 3}
   m_Name: ArmingSword_MeleeStats
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   m_item: {fileID: 11400000, guid: 798d194eff1ea94c380db2816447aa71, type: 2}
   m_reach: 1.56
   m_noiseRadius: 3
   m_baseSwingDuration: 0.35
   m_swingDurationPerWeight: 0.08
-  m_baseDamage: 8
   m_damagePerWeight: 6

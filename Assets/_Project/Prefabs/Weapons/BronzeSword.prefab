@@ -120,12 +120,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9fd629019627a844ab41631dc68ebc42, type: 3}
       insertIndex: -1
       addedObject: {fileID: 197339210504724996}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9fd629019627a844ab41631dc68ebc42, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7697416223317026466}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9fd629019627a844ab41631dc68ebc42, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8810690425305585223}
   m_SourcePrefab: {fileID: 100100000, guid: 9fd629019627a844ab41631dc68ebc42, type: 3}
 --- !u!4 &2452669112776100161 stripped
 Transform:
@@ -280,39 +274,3 @@ MonoBehaviour:
   _characterControllerPatch: 0
   _ownerAuth: 1
   _interpolationTiming: 0
---- !u!114 &7697416223317026466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2973063209351107579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cda8b63ac315c7b1f93361f635efb5d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Acoustics::Plunderspell.Acoustics.AcousticEmitter
-  BaseNoiseRadius: 3
-  BaseNoiseStrength: 0.6
-  NoiseType: 6
-  _noiseListenerLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  _geometryLayer:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!114 &8810690425305585223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2973063209351107579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ca8219aed8a38835fd7691adabfd1a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Items::MeleeWeapon
-  m_stats: {fileID: 11400000, guid: 27e18ab5fd8e76f458ffbcc544ed381e, type: 2}
-  m_hitRadius: 1
-  m_swingNoiseStrength: 0.6

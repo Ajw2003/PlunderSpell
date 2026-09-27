@@ -88,9 +88,7 @@ than a whisper) or land a slam; there is no hit-stop, since the raid's time is s
 `docs/4-systems/damage.md`, "Camera shake"). A spell audit in a live raid (#106;
 `docs/generated/spell-audit-2026-09-26/`): Somnus now finds a guard slightly off the crosshair, and
 a guard dropped by Levo falls and takes about 16 damage instead of landing unhurt. Porta still has
-nothing to open, because the castle places no doors (#111). Every sword swings: the Bronze Sword
-and Longsword are melee weapons now, and a hit does 20 to 29, three or four to a guard (#110;
-`docs/4-systems/damage.md`, "Melee"). Spell bursts render in a standalone build (they were magenta
+nothing to open, because the castle places no doors (#111). Spell bursts render in a standalone build (they were magenta
 error spheres), and now fade as intended (#127; `docs/4-systems/spells.md`, "What the visuals
 actually look like"). The main menu and Lair no longer show "No cameras rendering" in the Editor
 (#131; `docs/4-systems/raid-scene-assembly.md`, "Getting into a raid"). Every weapon and the five

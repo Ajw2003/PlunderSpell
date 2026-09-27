@@ -22,17 +22,12 @@ public class MeleeWeaponStats : ScriptableObject
     [Tooltip("Extra swing-duration seconds added per stone of the weapon's weight.")]
     [SerializeField] private float m_swingDurationPerWeight = 0.08f;
 
-    [Tooltip("Damage every hit deals before the weapon's weight is counted.")]
-    [SerializeField] private float m_baseDamage = 8f;
-
-    [Tooltip("Extra damage dealt per stone of the weapon's weight.")]
+    [Tooltip("Damage dealt per stone of the weapon's weight.")]
     [SerializeField] private float m_damagePerWeight = 6f;
 
     public float Reach => m_reach;
     public float NoiseRadius => m_noiseRadius;
     public float Weight => m_item != null ? m_item.Weight : 0f;
     public float SwingDuration => m_baseSwingDuration + Weight * m_swingDurationPerWeight;
-    /// <summary>One hit. A base plus weight, so a light sword still kills a guard in about four
-    /// hits and a heavy one in three (#110; docs/4-systems/damage.md, "Melee").</summary>
-    public float Damage => m_baseDamage + Weight * m_damagePerWeight;
+    public float Damage => Weight * m_damagePerWeight;
 }

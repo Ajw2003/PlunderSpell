@@ -1013,9 +1013,10 @@ damage from how fast the blade moves, like a thrown item.
 
 **Why.** A sword should beat throwing junk, and a heavy blade should trade speed for damage. The
 base term keeps a light sword useful; with weight alone, a 2 st sword could not reach 3 or 4 hits
-without making a 3.5 st one kill in two. How it works: `docs/4-systems/damage.md`, "Melee".
+without making a 3.5 st one kill in two.
 
-**Status.** Standing.
+**Status.** Reversed 2026-09-26, the same day: see "Swords are swung as objects, not with the attack
+key" below.
 
 ## 2026-09-26 — Entrances from the curtain strip, and strip arrivals face them (#140)
 
@@ -1034,4 +1035,18 @@ ways in, and it is a rule on the layout alone, so nothing new crosses the networ
 `docs/4-systems/castle.md`, "Entrances from the strip".
 
 **Status.** Standing.
+
+## 2026-09-26 — Swords are swung as objects, not with the attack key (reverses the #110 entry above)
+
+**Context.** The #110 change made the Bronze Sword and Longsword `MeleeWeapon`s swung with the
+attack key (G), at `8 + 6 × weight` a hit.
+
+**Decision.** The owner: that was never the meaning of #110. Swords are swung like any other object,
+on the carry beam, or held; the attack key is not the melee the game means. The change is reverted
+(the two swords' `MeleeWeapon` components and stats assets, the base-damage term and
+`MeleeDamageTests` are gone; the #134 grip points stay). What #110's "damage scaling for the melee
+damage system" does mean is open.
+
+**Status.** Standing. The Arming Sword's own `MeleeWeapon` (from #37, before this branch) is
+untouched pending the owner's word on it.
 
