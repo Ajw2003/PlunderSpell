@@ -297,10 +297,15 @@ namespace Plunderspell.Spells
         {
             EmitCastNoise(ctx);
 
+            // Centre on the sleeper under the crosshair when there is one, with the same forgiving
+            // aim as every other spell. The ray alone misses a guard a hand's width off it and runs
+            // on to the wall behind, and the burst went off there instead (#106).
+            Vector3 centre = ctx.Aimed<ISleepable>() is Component aimed ? aimed.transform.position : ctx.AimPoint;
+
             int slept = 0;
             Transform caster = ctx.CasterTransform;
             foreach (ISleepable target in SpellTargeting.FindAll<ISleepable>(
-                         ctx.AimPoint, ctx.Radius(), ctx.TargetLayerMask))
+                         centre, ctx.Radius(), ctx.TargetLayerMask))
             {
                 if (caster != null && target is Component c && c.transform.IsChildOf(caster))
                     continue;

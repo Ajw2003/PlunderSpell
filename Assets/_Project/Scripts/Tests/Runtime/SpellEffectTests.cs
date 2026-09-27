@@ -198,6 +198,27 @@ namespace Plunderspell.Tests
             Assert.IsFalse(caster.IsAsleep, "An intended spell must never hit the caster.");
         }
 
+        /// <summary>
+        /// #106: Somnus burst where the crosshair's ray ended, so a guard a hand's width off the
+        /// crosshair (the ray passing it and ending on a wall far behind) slept through it, while
+        /// Ignis, Frango and Levo all forgive that much. It now centres on the aimed sleeper.
+        /// </summary>
+        [Test]
+        public void Test_SomnusSleepsAGuardSlightlyOffTheCrosshair()
+        {
+            StatusEffectReceiver caster = MakeActor("Caster", Vector3.zero);
+            caster.gameObject.AddComponent<PurrNet.NetworkIdentity>();
+            // 17 degrees off the aim line: inside the aim cone, but the ray down the line misses its
+            // collider and runs on to the end of its range, 9 m beyond it.
+            StatusEffectReceiver guard = MakeActor("Guard", new Vector3(1.5f, 0f, 5f));
+
+            int slept = SpellEffectRegistry.Execute(
+                Context(SpellId.Somnus, CastVolume.Normal, Vector3.zero, caster.transform));
+
+            Assert.AreEqual(1, slept, "The guard under the crosshair must fall asleep.");
+            Assert.IsTrue(guard.IsAsleep);
+        }
+
         [Test]
         public void Test_TheSlamHurtsWhatIsAroundTheLandingButNotTheCaster()
         {
