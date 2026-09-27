@@ -15,8 +15,20 @@ import sys
 
 
 def main() -> None:
-    envelope = json.load(sys.stdin)
-    raw = envelope["data"]["result"]
+    raw_mode = sys.argv[1] == "--raw"
+    try:
+        envelope = json.load(sys.stdin)
+        raw = envelope["data"]["result"]
+    except (ValueError, KeyError, TypeError):
+        if raw_mode:
+            print("")
+            return
+        # The Editor answers without a report while it enters Play mode for the run: not done yet.
+        print("running")
+        return
+    if raw is None:
+        print("running")
+        return
     if sys.argv[1] == "--raw":
         print(" ".join(raw.split()))
         return
