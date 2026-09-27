@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/spells.md @ ed6c3659d899ec95a17d5b6a55e02cc56ef8c86a -->
+<!-- plain copy of: docs/4-systems/spells.md @ e3ab8462c4df92445a4daae3bcb20fa2039a087a -->
 
 # Spells
 

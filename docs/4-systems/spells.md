@@ -207,11 +207,13 @@ Added 2026-09-25 (#116, and the user's request to make mana useful rather than r
 Added 2026-09-26, at the owner's call; they replace Tonitrus (a thunderclap stun) and Cadaver Surge
 (raise a corpse), which are deleted. Plan: `docs/plans/dodge-and-leap-spells.md`.
 
-- **Velox** (key 5, 10 mana) is the dodge: a dash at `VeloxDashSpeed` (14 m/s) for
-  `VeloxDashSeconds` (0.25 s), about 3.5 m, along where you are steering, or where you look when
+- **Velox** (key 5, 10 mana) is the dodge: a dash at `VeloxDashSpeed` (20 m/s) for
+  `VeloxDashSeconds` (0.5 s), about 10 m, along where you are steering, or where you look when
   you are not. There is no dodge key any more (it was Ctrl, which also whispers).
-- **Saltus** (key 7, 15 mana) is a high jump, only from the ground: `SaltusLaunchSpeed` (14 m/s,
-  times the volume power) straight up, about 4 m, since the player falls at 2.5 g. Cast in the air
+- **Saltus** (key 7, 15 mana) is a high jump, only from the ground: `SaltusLaunchSpeed` (25 m/s,
+  times the volume power) straight up, about 13 m, since the player falls at 2.5 g. The owner set
+  these (and Levo's lift, 6 to 15) in the Inspector on 2026-09-26; the first defaults were 14 m/s
+  and 0.25 s for the dash and 14 m/s for the launch. Cast in the air
   it fizzles and costs nothing.
 - **The slam.** After a Saltus launch, jump in the air drives the body straight down at
   `SaltusSlamSpeed` (22 m/s). On landing, every living thing within `SlamRadius` (3 m) except the
