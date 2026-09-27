@@ -100,6 +100,14 @@ before, `capture_game_view` at the menu failed with "No camera found to capture"
 reads as dim brown, since the night fog pass runs on every camera. `BackdropCameraTests` 2/2 and
 `UIScreenshotPlayModeTests` 1/1; these tests were written with the fix, not before it.
 
+Then #134 (grab points for all objects). The 20 era plunder items had grips; the 10 weapons and
+the 5 original loot pieces did not, so a weapon was held by its origin (a sword by its pommel).
+Each now has a `GripPoint` placed as a fraction of its mesh bounds, like the era forge does, on both
+its `Item` and `LootPickup` (`docs/generated/grip-place-2026-09-26.cs`). The new
+`LootGripTests` case failed first and `LootGripTests` passes 3/3. Held in a live raid, the grip sits
+0.000 m from the hand, where the Arming Sword's old held point was 0.095 m off it and the
+crossbow's 0.269 m (`docs/generated/issue-134-grips/`).
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

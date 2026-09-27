@@ -64,6 +64,43 @@ namespace Plunderspell.Tests.Editor
             Assert.AreEqual(20, checkedCount, "Expected the 20 art-bible plunder items.");
         }
 
+        /// <summary>#134: the weapons and the five original loot pieces get authored grips too, on
+        /// their mesh, shared by the Item (the raid's carry) and the LootPickup.</summary>
+        [Test]
+        public void EveryWeaponAndOriginalLootPieceHasAGripPointOnItsMesh()
+        {
+            var paths = new List<string>(PrefabPaths("Assets/_Project/Prefabs/Weapons"));
+            foreach (string file in System.IO.Directory.GetFiles("Assets/_Project/Prefabs/Loot", "*.prefab"))
+                paths.Add(file.Replace('\\', '/'));
+            Assert.AreEqual(15, paths.Count, "Expected 10 weapons and 5 original loot pieces.");
+
+            foreach (string path in paths)
+            {
+                var instance = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path));
+                try
+                {
+                    var item = instance.GetComponent<Item>();
+                    Assert.IsNotNull(item, $"{path} has no Item.");
+                    var serialized = new SerializedObject(item);
+                    var grip = (Transform)serialized.FindProperty("_gripPoint").objectReferenceValue;
+                    Assert.IsNotNull(grip, $"{path} has no grip point on its Item.");
+
+                    var pickup = instance.GetComponent<LootPickup>();
+                    if (pickup != null)
+                        Assert.AreSame(grip, pickup.GripPoint, $"{path}: the Item and the LootPickup must share one grip.");
+
+                    Bounds bounds = MeshBounds(instance);
+                    bounds.Expand(0.01f);
+                    Assert.IsTrue(bounds.Contains(grip.position),
+                        $"{path}: grip {grip.position} is outside the mesh bounds {bounds}.");
+                }
+                finally
+                {
+                    Object.DestroyImmediate(instance);
+                }
+            }
+        }
+
         [Test]
         public void HeldItemIsUprightWithItsGripOnTheSocket()
         {

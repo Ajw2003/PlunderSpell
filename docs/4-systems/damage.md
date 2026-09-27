@@ -135,7 +135,14 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   `MeleeWeapon` is held rigidly low right of the view, pointing where you look
   (`Item.HoldInHand`, `Item.SetHandPose`, posed in `RenderPipelineManager.beginCameraRendering`
   so it never lags the camera). It is held by its authored grip, or else by its origin (a
-  crossbow's butt, a sword's pommel). Its pointing axis is measured from its meshes
+  crossbow's butt, a sword's pommel). Since 2026-09-26 (#134) every weapon and the five original
+  loot pieces have an authored `GripPoint`, as the 20 era plunder items already did: the sword
+  hilts about 0.1 m above the pommel, the crossbow and matchlock stocks 0.24 m from the butt, the
+  shields' centres, the helm's rim, the pot's and plate's rims, the chest's end handle, the
+  goblet's stem. Placed by `docs/generated/grip-place-2026-09-26.cs` as fractions of each mesh's
+  bounds (`grip-survey-2026-09-26.cs` prints them), on both `Item` and `LootPickup`, and checked by
+  `LootGripTests.EveryWeaponAndOriginalLootPieceHasAGripPointOnItsMesh`. Held in a live raid, the
+  grip sits exactly on the hand (`docs/generated/issue-134-grips/`). Its pointing axis is measured from its meshes
   (`Item.AimFrameLocal`), since the forged weapons point along different local axes. In the hand
   the body is kinematic and its colliders are triggers on the Ignore Raycast layer. On the beam a
   crossbow hung on the crosshair line more than 0.8 m out, and its own bolt hit it. No beam is

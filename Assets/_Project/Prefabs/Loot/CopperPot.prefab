@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5454359171934068982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5937600080903415442}
+  m_Layer: 0
+  m_Name: GripPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5937600080903415442
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5454359171934068982}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.153, y: 0, z: 0.14875002}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6184425951746115359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5933993746897412340
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -66,7 +97,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 893e65063672fd64ea526eec4a5f25c0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5937600080903415442}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 893e65063672fd64ea526eec4a5f25c0, type: 3}
       insertIndex: -1
@@ -90,6 +124,11 @@ PrefabInstance:
 --- !u!23 &5014848887632378992 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 893e65063672fd64ea526eec4a5f25c0, type: 3}
+  m_PrefabInstance: {fileID: 5933993746897412340}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6184425951746115359 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 893e65063672fd64ea526eec4a5f25c0, type: 3}
   m_PrefabInstance: {fileID: 5933993746897412340}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &6816389412842675621 stripped
@@ -170,7 +209,7 @@ MonoBehaviour:
   _meshRenderer: {fileID: 5014848887632378992}
   _brokenVfx: {fileID: 0}
   _handLocalOffset: {x: 0, y: 0, z: 0}
-  _gripPoint: {fileID: 0}
+  _gripPoint: {fileID: 5937600080903415442}
 --- !u!114 &-1047688489085833015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,7 +228,7 @@ MonoBehaviour:
   _gripStrength: 100
   _haulStrength: 250
   _heldAngularDamping: 3
-  _gripPoint: {fileID: 0}
+  _gripPoint: {fileID: 5937600080903415442}
   _maxThrowSpeed: 18
   _damageMultiplier: 2
   _damageCooldown: 0.5
