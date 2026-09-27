@@ -53,8 +53,8 @@ orange regardless of what it was aimed at, so "that went wrong" is readable befo
 | `Bolt` | Ignis | A tinted `Bolt.prefab` fired along the aim, plus a flash at the hands |
 | `Burst` | Frango, Levo, AurumVoco, Velox, Somnus, Saltus, Porta | An expanding, fading shell of light at the caster's hands |
 
-`SpellBurst` builds itself from a primitive — no prefab, no authored particle asset, because none
-exist yet. It disables its collider *before* destroying it: `Destroy` is deferred to the end of the
+`SpellBurst` builds itself from a sphere primitive — no prefab, no authored particle asset, because
+none exist yet — and gives it `Resources/SpellBurst.mat` (URP Unlit, transparent, double-sided). It disables its collider *before* destroying it: `Destroy` is deferred to the end of the
 frame, and a live collider expanding to 2.5 m punts every piece of loot in the room across it first.
 
 ### A cast follows the camera, not the body
@@ -142,10 +142,15 @@ the voice path only.
 `Tools ▸ Plunderspell ▸ Capture Spell VFX Screenshots` photographs every look into
 `docs/generated/spell-vfx-screenshots/`. The committed set is the evidence that these render at all.
 
-**Known limitation, visible in that capture:** a burst is an *opaque* sphere. `SpellBurst` fades by
-writing alpha into `_BaseColor`, and the URP/Lit material it builds is opaque, so the alpha does
-nothing — the fade is currently dead code and a burst reads as a solid coloured ball rather than
-light. Fixing it means a transparent or additive material on the burst.
+**Fixed 2026-09-26 (#127): a burst drew magenta in a standalone build, and never faded.** It used
+the sphere primitive's default material. In the Editor that is URP Lit, opaque, so the alpha fade
+written into `_BaseColor` did nothing and a burst read as a solid ball. In a build the default had no
+shader the build kept: the material was `Hidden/InternalErrorShader`, a magenta sphere. `SpellBurst`
+now assigns `Resources/SpellBurst.mat` before anything clones the material; being under Resources,
+the material and its transparent shader variant ship. Checked in a Development build of RaidScene:
+before, the material was the error shader; after, `Universal Render Pipeline/Unlit`, supported,
+queue 3000, and the bursts show tinted and see-through (`docs/generated/issue-127-spell-shader/`).
+The Ignis bolt was fine all along (`Bolt.prefab` has an authored URP Lit material).
 
 ### A spell's bolt carries no damage
 
@@ -259,6 +264,11 @@ Added 2026-09-26, at the owner's call; they replace Tonitrus (a thunderclap stun
   degrades into misfires, not into free correct casts.
 
 ## Traps
+
+- **A primitive's default material does not survive a build.** `GameObject.CreatePrimitive` gives
+  a material that works in the Editor and draws with the error shader in a standalone build (#127).
+  Anything built from a primitive at runtime needs a material from Resources or a serialized field,
+  as `SpellBurst` and `GrabBeam` do. Seeing it right in the Editor proves nothing here.
 
 - **Porta has nothing to open in a raid** (found 2026-09-26, #106). `CastleDoor` exists, but the
   castle generator places none: a live raid had 0 doors, and Porta cast at nothing. It becomes

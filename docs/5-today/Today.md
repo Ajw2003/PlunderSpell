@@ -80,6 +80,18 @@ fails in the live Editor, three runs out of three (a 0.059 to 0.070 m jump again
 It drives an Item alone, with nothing changed today in its path, and passed in batch mode earlier;
 a frame-rate-sensitive limit is the likely cause, not yet confirmed.
 
+Then #127 (spell shader wrong in the standalone build). Reproduced in a Development build of
+RaidScene driven through the Pipeline runtime (`unity command --runtime Plunderspell eval`): every
+spell burst's material was `Hidden/InternalErrorShader`, a magenta sphere, because the sphere
+primitive's default material has no shader in a build. The Ignis bolt was fine. `SpellBurst` now
+uses `Resources/SpellBurst.mat` (URP Unlit, transparent, double-sided), made by
+`docs/generated/issue-127-spell-shader/make-burst-material.cs`; the transparency also makes the
+long-dead fade work. `SpellVfxTests.Test_ABurstUsesItsOwnTransparentMaterial` failed first;
+`SpellVfxTests` 6/6. Rebuilt and checked: Unlit, supported, queue 3000, tinted and see-through
+(`build-fixed-*.png` against `build-*.png`). The build's settings side effects (the
+`preloadedAssets` line, and five settings files rewritten with no content change) were restored,
+and the Pipeline runtime is off again.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

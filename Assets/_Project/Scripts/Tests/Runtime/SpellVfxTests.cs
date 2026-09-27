@@ -117,6 +117,28 @@ namespace Plunderspell.Tests
                 "A burst must destroy itself, or every cast leaks a GameObject.");
         }
 
+        /// <summary>
+        /// #127: in a standalone build the sphere primitive's default material has no shader the
+        /// build kept, so every burst drew as a magenta error ball. A burst must use the shipped
+        /// Resources material, and that must be transparent so the burst can fade.
+        /// </summary>
+        [Test]
+        public void Test_ABurstUsesItsOwnTransparentMaterial()
+        {
+            var shipped = Resources.Load<Material>(SpellBurst.MaterialResourcePath);
+            Assert.IsNotNull(shipped, $"Resources/{SpellBurst.MaterialResourcePath} must exist, or builds get no shader.");
+
+            SpellBurst burst = SpellBurst.Spawn(Vector3.zero, Color.red, 2f, 0.1f);
+            Track(burst.gameObject);
+            Material used = burst.GetComponent<Renderer>().sharedMaterial;
+
+            Assert.AreEqual(shipped.shader, used.shader, "The burst must draw with the shipped material's shader.");
+            Assert.GreaterOrEqual(used.renderQueue, (int)UnityEngine.Rendering.RenderQueue.Transparent,
+                "A burst is light: transparent, so its fade shows.");
+            Assert.IsTrue(used.IsKeywordEnabled("_SURFACE_TYPE_TRANSPARENT"),
+                "URP only blends a material with its transparent keyword on.");
+        }
+
         [UnityTest]
         public IEnumerator Test_ACastPutsSomethingOnScreen()
         {

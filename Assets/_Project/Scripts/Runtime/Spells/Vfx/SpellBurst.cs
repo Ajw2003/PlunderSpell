@@ -20,6 +20,24 @@ namespace Plunderspell.Spells.Vfx
         private Material m_materialInstance;
         private Light m_light;
 
+        /// <summary>The burst's material, under a Resources folder so builds keep it and its shader
+        /// variant: URP Unlit, transparent, double-sided.</summary>
+        public const string MaterialResourcePath = "SpellBurst";
+
+        private static Material s_shippedMaterial;
+
+        private static Material ShippedMaterial()
+        {
+            if (s_shippedMaterial != null)
+                return s_shippedMaterial;
+
+            s_shippedMaterial = Resources.Load<Material>(MaterialResourcePath);
+            if (s_shippedMaterial == null)
+                Debug.LogWarning($"[SpellBurst] No material at Resources/{MaterialResourcePath}; " +
+                                 "bursts use the sphere's default, which a build draws magenta.");
+            return s_shippedMaterial;
+        }
+
         private Color m_colour = Color.white;
         private float m_startRadius = 0.2f;
         private float m_endRadius = 2.5f;
@@ -42,6 +60,12 @@ namespace Plunderspell.Spells.Vfx
             var collider = go.GetComponent<Collider>();
             collider.enabled = false;
             SafeDestroy(collider);
+
+            // Before AddComponent: Awake clones whatever material the renderer holds. The primitive's
+            // own default has no shader in a standalone build and drew magenta (#127).
+            Material shipped = ShippedMaterial();
+            if (shipped != null)
+                go.GetComponent<Renderer>().sharedMaterial = shipped;
 
             var burst = go.AddComponent<SpellBurst>();
             burst.m_colour = colour;

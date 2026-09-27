@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/spells.md @ a62a67ae78a14024e696bdfd962051ed3f8cdc2c -->
+<!-- plain copy of: docs/4-systems/spells.md @ fd412b4ad9d1936d2fba8bf35af938918cc51fb9 -->
 
 # Spells
 
@@ -53,6 +53,9 @@ they get back.
   every other spell.
 - **A lifted guard landing unhurt.** Guards dropped by the lifting spell now fall to the floor and
   take damage for the height, rather than reappearing on the floor at once.
+- **Spell effects drawing as bright pink balls in the finished game.** A spell's burst of light
+  used a default look that exists only in the editor; it now carries its own, which ships with the
+  game and lets the burst fade out as it should.
 - **The door-opening spell having nothing to open.** The castle does not place doors yet, so this
   spell does nothing in a raid until doors are added.
 - **A visible spell effect swallowing the caster's own camera.** A burst effect is pushed forward
