@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/damage.md @ 5c7edca30d604442319a3af71051a28b5355ab80 -->
+<!-- plain copy of: docs/4-systems/damage.md @ b485fae8b0181cce717b95490d71ec78a9425348 -->
 
 # Damage
 
@@ -29,6 +29,9 @@ has to feel physical, or heavy items would not seem worth the risk of hauling th
    the holder turns.
 7. Items too heavy to lift are towed behind the holder on an invisible rope instead, slowing the
    holder's walk and trailing behind them realistically.
+8. The view shakes a little when you are hit, when you land a hit, when someone casts a spell
+   near you (a shout more than a whisper), and when your leap spell slams into the ground. Only
+   your own view moves; time never pauses, because every player shares the same raid.
 
 ## Risks and safeguards
 - **A hit bypassing the shared path.** Nothing else in the game is allowed to apply damage

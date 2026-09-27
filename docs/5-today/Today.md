@@ -50,6 +50,17 @@ window; and `RaidSceneCastingTests`' lexicon test, which then passed twice on it
 69 pass, 3 skip, 2 fail (the known art import test; the owner's Rolled Tapestry edit). The new
 Settings row, as the UI verification test captured it: `UI_Verification_Screenshots/05_Settings.png`.
 
+Later still, a new pass through the open issues in roadmap order (M2 first). #51: camera shake
+for a hit on you, a hit you dealt, a cast within 20 m (louder shakes more) and a Saltus slam
+landing. Measured in a live Editor raid, by recording the view's shake angle every rendered frame:
+a 30-damage hit peaks at 2.1°, a friend's shout 3 m away at 0.8°, a 22.5 m/s slam at 3.1°. The
+first tuning peaked at 0.75° for the same hit and was too faint, so the limits and amounts went up.
+No hit-stop: pausing time in a shared raid would stall or desync the other players.
+`CameraShakeTests` 8/8; EditMode 77 pass, 3 skip, and the same 2 known failures; PlayMode
+`PlayableLoopTests` 13/13, `MovementSpellTests` 7/7. Seen along the way: a guard (PalaceLevy,
+KeeperOfTheFlame) walked up and killed the idle player about 20 s into a raid, twice, which is
+the calm grace ending as designed.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

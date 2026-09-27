@@ -48,6 +48,34 @@ numbers through `IHealth`; this system only decides how damage reaches them and 
 
 Screenshots of every case: `docs/generated/playtest-2026-09-23/05`–`12`.
 
+## Camera shake
+
+Added 2026-09-26 for #51. `CameraShakeDirector`
+(`Assets/_Project/Scripts/Runtime/UI/RaidHud/CameraShakeDirector.cs`) creates itself like the
+feedback view and shakes only this machine's view. The shake itself is `ShakeTrauma`
+(`ShakeTrauma.cs`, plain C#): events add "trauma" (0 to 1), it drains at 1.5 a second, and the view
+turns by trauma squared times Perlin noise, up to 5° of pitch and yaw and 6° of roll. Squaring it
+means small events are small and big ones stack into a jolt.
+
+| Event | Trauma added | Measured peak (live raid, 2026-09-26) |
+|---|---|---|
+| A hit on you | 0.4 + 1.5 × share of max health (fire or choking: 0.1) | 30 damage: 2.1° |
+| A hit you dealt | 0.35, or 0.55 on a kill | |
+| A cast within 20 m, anyone's | whisper 0.25, normal 0.45, shout 0.7, fading to 0 at 20 m | a friend's shout 3 m away: 0.8° |
+| Your Saltus slam landing | 0.45 + 0.55 × (landing speed / 25 m/s, capped at 1) | 22.5 m/s: 3.1° |
+
+- **The offset rides on top of the look.** `PlayerStateMachine.ViewShake` is multiplied onto the
+  camera's rotation in `Look`; the stored pitch and yaw never change, so the view settles exactly
+  where the player aimed. The director runs at execution order −50, before the input controller
+  calls `Look`.
+- **No hit-stop.** #51 asks for shake *or* hit-stop. Hit-stop means pausing time, and the raid's
+  time and physics are shared by every player, so a freeze on one machine would either freeze
+  everyone or put that machine out of step. Shake is local and costs nothing.
+- **Tests:** `CameraShakeTests` (EditMode) covers the rules: no trauma means no turn, trauma
+  drains to exactly nothing, shouts beat whispers, far casts do nothing, bigger hits and faster
+  slams shake more. The peaks in the table were measured in the Editor by recording the
+  largest `ViewShake` angle each rendered frame.
+
 ## Weight
 
 Added 2026-09-23; rebuilt 2026-09-25 to carry like R.E.P.O. (#144, research and choices in

@@ -83,7 +83,9 @@ gone (Decisions, 2026-09-26). Velox (a dash, the only dodge) and Saltus (a high 
 key turns into a slam) replace Tonitrus and Cadaver Surge on keys 5 and 7, checked in a raid in the
 Editor; neither word has been tried with a real voice (`docs/4-systems/spells.md`, "Velox and
 Saltus"). Settings has a microphone gain slider (#125; `docs/4-systems/voice.md`, "Microphone
-gain").
+gain"). The view shakes when you are hit, land a hit, hear a cast nearby (a shout more
+than a whisper) or land a slam; there is no hit-stop, since the raid's time is shared (#51;
+`docs/4-systems/damage.md`, "Camera shake").
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog

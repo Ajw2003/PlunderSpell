@@ -133,8 +133,15 @@ namespace StateMachine
             // moves every rendered frame, not only on 50 Hz physics steps — issue #104), and
             // interpolation overwrites any rotation set on its transform between steps. Movement,
             // aiming, spells and melee all read the camera, so the capsule never needs to face anywhere.
-            CameraTransform.localRotation = Quaternion.Euler(_xRotation, _yaw, 0f);
+            CameraTransform.localRotation = Quaternion.Euler(_xRotation, _yaw, 0f) * ViewShake;
         }
+
+        /// <summary>
+        /// A small extra turn on top of the look, set every frame by the camera shake
+        /// (Plunderspell.UI.CameraShakeDirector). Identity when nothing is shaking. It never touches
+        /// the stored look angles, so the view settles back exactly where the player was aiming.
+        /// </summary>
+        public Quaternion ViewShake { get; set; } = Quaternion.identity;
 
         /// <summary>
         /// Turns the view to a world yaw, level. Used when the player is placed rather than walked
