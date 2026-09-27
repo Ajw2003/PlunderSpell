@@ -28,3 +28,73 @@ PASS client_grabs
 FAIL aims 1.94 m apart, host's held point 1.94 m off, client's 0.03 m off: one pull is ignored both_grab_same_piece
 FAIL held point 2.71 m from host's aim client_lets_go
 FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 112"}] client_quits_holding
+
+# run 16:05:06
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:07:11
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.88 m apart, host's held point 1.57 m off, client's 0.32 m off: one pull is ignored both_grab_same_piece
+FAIL held point 1.57 m from host's aim client_lets_go
+FAIL 1.57 m from the host aim after the client left client_quits_holding
+
+# run 16:14:58
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.82 m apart, host's held point 1.48 m off, client's 0.34 m off: one pull is ignored both_grab_same_piece
+FAIL held point 1.48 m from host's aim client_lets_go
+FAIL 1.48 m from the host aim after the client left client_quits_holding
+
+# run 16:16:46
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:19:05
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.82 m apart, host's held point 1.51 m off, client's 0.31 m off: one pull is ignored both_grab_same_piece
+FAIL held point 1.51 m from host's aim client_lets_go
+FAIL 1.51 m from the host aim after the client left client_quits_holding
+
+# run 16:20:53
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:22:41
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.92 m apart, host's held point 1.55 m off, client's 0.38 m off: one pull is ignored both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:25:17
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:27:05
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:28:54
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding

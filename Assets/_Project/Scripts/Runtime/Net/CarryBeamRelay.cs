@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PurrNet;
+using Plunderspell.Loot;
 using UnityEngine;
 
 namespace Plunderspell.Net
@@ -10,6 +11,12 @@ namespace Plunderspell.Net
     /// everyone else draws a <see cref="GrabBeam"/> from that, smoothed, ending on the item as it
     /// is replicated here. Only networked items have a beam elsewhere; weapons are networked loot,
     /// so they get one too.
+    /// <para>
+    /// The same message doubles as how a beam piece's holder sends its pull: the server, which
+    /// controls a held piece's body while it has any holder, writes the sender's pull into the
+    /// item's remote holds (<see cref="Item.SetRemotePull"/>) so <see cref="Item.FixedUpdate"/> can
+    /// apply it, unless the item is held in hand (a weapon, posed and owned locally, not shared).
+    /// </para>
     /// </summary>
     public sealed class CarryBeamRelay : NetworkBehaviour
     {
@@ -56,13 +63,42 @@ namespace Plunderspell.Net
 
             _sending = id;
             _nextSendAt = Time.time + k_sendInterval;
-            BeamMoved(id, items.BeamHand, held.TargetPosition, held.HeldPointLocal, held.Load);
+            // In-hand items (weapons) are owned and posed locally, not shared, so there is no pull
+            // to send for them; a beam piece's pull rides along with the beam it already sends.
+            CarryPull pull = held.IsInHand ? default : held.LocalPull;
+            BeamMoved(id, items.BeamHand, held.TargetPosition, held.HeldPointLocal, held.Load,
+                pull.TargetVelocity, pull.WantedRotation, pull.IsTowing, pull.TowFeet, pull.TowVelocity,
+                pull.TowRope, pull.UprightLocalUp);
         }
 
+        // PurrNet RPC parameters must be primitive/auto-packed types, so CarryPull's fields travel
+        // as separate parameters rather than as the struct itself.
         [ServerRpc(requireOwnership: false)]
         private void BeamMoved(NetworkIdentity item, Vector3 hand, Vector3 aim, Vector3 grabLocal, float load,
-            RPCInfo info = default) =>
+            Vector3 targetVelocity, Quaternion wantedRotation, bool isTowing, Vector3 towFeet, Vector3 towVelocity,
+            float towRope, Vector3 uprightLocalUp, RPCInfo info = default)
+        {
+            // The server controls a held piece's body while it has any holder (LootPickup.RequestHostControl);
+            // this writes the sender's pull into it, unless it is the host's own hold (applied
+            // locally already) or the item is held in hand (a weapon, not shared).
+            if (item != null && info.sender != localPlayerForced && item.TryGetComponent(out Item component) &&
+                !component.IsInHand)
+            {
+                component.SetRemotePull(LootPickup.HolderKey(info.sender), new CarryPull
+                {
+                    GripLocal = grabLocal,
+                    Target = aim,
+                    TargetVelocity = targetVelocity,
+                    WantedRotation = wantedRotation,
+                    IsTowing = isTowing,
+                    TowFeet = towFeet,
+                    TowVelocity = towVelocity,
+                    TowRope = towRope,
+                    UprightLocalUp = uprightLocalUp,
+                });
+            }
             ShowBeam(item, hand, aim, grabLocal, load, info.sender);
+        }
 
         [ObserversRpc]
         private void ShowBeam(NetworkIdentity item, Vector3 hand, Vector3 aim, Vector3 grabLocal, float load,
@@ -88,7 +124,12 @@ namespace Plunderspell.Net
         }
 
         [ServerRpc(requireOwnership: false)]
-        private void BeamStopped(NetworkIdentity item, RPCInfo info = default) => HideBeam(item, info.sender);
+        private void BeamStopped(NetworkIdentity item, RPCInfo info = default)
+        {
+            if (item != null && item.TryGetComponent(out Item component))
+                component.RemoveRemotePull(LootPickup.HolderKey(info.sender));
+            HideBeam(item, info.sender);
+        }
 
         [ObserversRpc]
         private void HideBeam(NetworkIdentity item, PlayerID holder)

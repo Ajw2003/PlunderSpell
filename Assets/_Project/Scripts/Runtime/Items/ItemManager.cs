@@ -234,16 +234,21 @@ public class ItemManager : SingletonBase<ItemManager>
     /// the crosshair was on: it hangs from there, as in R.E.P.O. (#144).</summary>
     private void StartDragging(Item item, Vector3 grabPoint)
     {
-        // In a session another machine may be driving this body; ask for it and pick it up once
-        // granted (Update), rather than fighting the replicated position meanwhile. The grab point
-        // is kept in the item's own frame, since it may move before the answer comes.
-        if (!Item.CanDriveHere(item))
+        // A weapon is still handed to one player at a time (posed to their view every frame, so it
+        // cannot be shared): wait for ownership before picking it up, same as before. A beam piece
+        // has no such hand-off — any number of players can hold it — so it asks the server to take
+        // control (only meaningful the first time; a second holder just joins the hold) and starts
+        // dragging at once, rather than waiting for an answer that never singles this machine out.
+        if (!Item.CanDriveHere(item) && IsHeldInHand(item))
         {
             _pendingDrag = item;
             _pendingGrabLocal = Quaternion.Inverse(item.transform.rotation) * (grabPoint - item.transform.position);
             Item.RequestDrive?.Invoke(item);
             return;
         }
+
+        if (!Item.CanDriveHere(item))
+            Item.RequestDrive?.Invoke(item);
 
         _pendingDrag = null;
         _draggedItem = item;

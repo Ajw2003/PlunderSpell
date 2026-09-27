@@ -245,9 +245,10 @@ namespace Plunderspell.Loot
         private void RequestBreak() => BreakItem();
 
         /// <summary>
-        /// A player wants to pick this up: hand them the body, so their machine simulates it while it
-        /// is carried and their movement of it replicates. Ownership then stays with them until
-        /// someone else picks it up.
+        /// A player wants to hold this in hand (a weapon): hand them the body, so their machine
+        /// simulates it while it is held and their movement of it replicates. Ownership then stays
+        /// with them until someone else picks it up. A piece on the beam does not use this — see
+        /// <see cref="RequestHostControl"/> — since any number of players may hold one at once.
         /// </summary>
         [ServerRpc(requireOwnership: false)]
         public void RequestCarry(RPCInfo info = default)
@@ -255,6 +256,33 @@ namespace Plunderspell.Loot
             if (!IsBroken)
                 GiveOwnership(info.sender);
         }
+
+        /// <summary>
+        /// A player wants to hold this on the beam: while held it has no owner, so the server
+        /// controls it and applies every holder's pull (<see cref="Item.CanDriveHere"/>). Nobody owns
+        /// it, so nobody can take it by grabbing it, and it does not leave with a player who quits.
+        /// </summary>
+        [ServerRpc(requireOwnership: false)]
+        public void RequestHostControl()
+        {
+            if (!IsBroken && hasOwner)
+                RemoveOwnership();
+        }
+
+        /// <summary>
+        /// A holder let go of this while their machine did not control its body: the server, which
+        /// does, throws it on their behalf and drops their pull.
+        /// </summary>
+        [ServerRpc(requireOwnership: false)]
+        public void RequestThrow(Vector3 direction, float force, RPCInfo info = default)
+        {
+            if (TryGetComponent(out Item item))
+                item.ApplyRemoteThrow(HolderKey(info.sender), direction, force);
+        }
+
+        /// <summary>A stable per-player integer key for a held piece's remote pulls (<see
+        /// cref="Item.SetRemotePull"/>), shared by <see cref="Plunderspell.Net.CarryBeamRelay"/>.</summary>
+        public static int HolderKey(PlayerID player) => (int)player.id.value;
 
         private void ApplyBrokenState()
         {

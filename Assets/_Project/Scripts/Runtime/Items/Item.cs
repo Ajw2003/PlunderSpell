@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,13 +11,22 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// <summary>
     /// Whether this machine may move the item's body. Always true offline; in a session
     /// Plunderspell.Net installs a check that this machine controls the item's NetworkTransform, since a
-    /// body driven here while another machine drives it would snap back every frame.
+    /// body driven here while another machine drives it would snap back every frame. A piece on the
+    /// beam has no owner while held, so the server controls it and every holder's pull is applied
+    /// there; an in-hand weapon still hands ownership to whoever holds it.
     /// </summary>
     public static System.Func<Item, bool> CanDriveHere = _ => true;
 
-    /// <summary>Asks for the right to move the item; installed by Plunderspell.Net. The drag starts once
-    /// <see cref="CanDriveHere"/> turns true.</summary>
+    /// <summary>
+    /// Asks the server to take control of a held piece so it can apply every holder's pull (or, for
+    /// an in-hand weapon, asks for ownership); installed by Plunderspell.Net. The drag starts once
+    /// <see cref="CanDriveHere"/> turns true.
+    /// </summary>
     public static System.Action<Item> RequestDrive;
+
+    /// <summary>Asks the server to apply a throw thrown by a machine that does not control the body;
+    /// installed by Plunderspell.Net.</summary>
+    public static System.Action<Item, Vector3, float> RequestThrow;
 
     private Rigidbody _rb;
     private bool _isDragging = false;
@@ -52,6 +62,13 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     // The held point, relative to the item's position and in its rotation frame, measured at pickup:
     // where the player grabbed it, or its authored grip.
     private Vector3 _gripOffset;
+
+    // Other holders' pulls, sent over the network and applied here when this machine controls the
+    // body (CanDriveHere). Keyed by a stable per-player integer (LootPickup.HolderKey). A pull not
+    // heard from for k_remotePullTimeout is dropped, which also covers a holder's disconnect.
+    private readonly Dictionary<int, (CarryPull pull, float heardAt)> _remotePulls = new Dictionary<int, (CarryPull, float)>();
+    private readonly List<int> _expiredHolderKeys = new List<int>();
+    private const float k_remotePullTimeout = 0.5f;
 
     // References for enemy handling. Resolved through Core interfaces, not MonsterStateMachine
     // directly, so Items does not depend on Enemies (Enemies already depends on Items via Item
@@ -242,8 +259,11 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
 
     /// <summary>One physics step of towing: the grip bears what weight it can, the piece is kept
     /// upright, and it is hauled toward <see cref="TowVelocity"/>, with at most
-    /// <see cref="TowStrength"/>, so it never outpaces the holder.</summary>
-    private void Tow()
+    /// <see cref="TowStrength"/>, so it never outpaces the holder. Parametrized so a remote holder's
+    /// tow (heard over the network) can be applied the same way as the local holder's; only the
+    /// local holder's tow updates <see cref="TowStrain"/>, since that drives that holder's own
+    /// walk pace.</summary>
+    private void Tow(Vector3 towFeet, Vector3 towVelocity, float towRope, Vector3 uprightLocalUp, bool setStrain)
     {
         // The grip bears what it can of the weight, straight up through the centre of mass: borne
         // at the grip on a cauldron's rim, it tipped a 25 kg cauldron over onto its rim, where it stuck.
@@ -252,16 +272,18 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
 
         // Kept upright as it was picked up, free to turn about the vertical so it swings round to
         // trail: a towed altarpiece otherwise fell on its face, and a cauldron onto its rim.
-        Vector3 up = _rb.rotation * _uprightLocalUp;
+        Vector3 up = _rb.rotation * uprightLocalUp;
         Vector3 tiltAxis = Vector3.Cross(up, Vector3.up);
         float tilt = Vector3.Angle(up, Vector3.up) * Mathf.Deg2Rad;
         Vector3 spinAboutUp = Vector3.Project(_rb.angularVelocity, Vector3.up);
         _rb.angularVelocity = spinAboutUp + (tiltAxis.sqrMagnitude > 1e-8f ? tiltAxis.normalized * tilt * k_uprightRate : Vector3.zero);
 
-        Vector3 fromHolder = centre - _towFeet;
+        Vector3 fromHolder = centre - towFeet;
         fromHolder.y = 0f;
-        TowStrain = Mathf.Max(0f, fromHolder.magnitude - _towRope);
-        Vector3 wanted = TowVelocity(_towFeet, centre, _towVelocity, _towRope);
+        float strain = Mathf.Max(0f, fromHolder.magnitude - towRope);
+        if (setStrain)
+            TowStrain = strain;
+        Vector3 wanted = TowVelocity(towFeet, centre, towVelocity, towRope);
         // Its ground speed is eased toward that, at most TowStrength / mass per second, so heavier
         // pieces are slower to get going; with the rope slack it slows at k_towBrake. Its own
         // friction is off while towed (SetTowFriction) and this does the braking instead: the
@@ -321,6 +343,43 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// <summary>Where the beam is pulling the held point to, extrapolated to now.</summary>
     public Vector3 TargetPosition => _targetPosition;
 
+    /// <summary>This machine's own hold, valid while <see cref="_isDragging"/>: what it works out
+    /// from its grab point, aim and view, sent to whichever machine controls the body
+    /// (<see cref="CanDriveHere"/>) so every holder's pull can be applied there.</summary>
+    public CarryPull LocalPull => new CarryPull
+    {
+        GripLocal = _gripOffset,
+        Target = _targetPosition,
+        TargetVelocity = Time.time - _targetStampedAt > 0.1f ? Vector3.zero : _targetVelocity,
+        WantedRotation = _isRotating ? _targetRotation : Quaternion.Euler(0f, _viewYaw, 0f) * _rotationInView,
+        IsTowing = IsTooHeavyToLift && !_isRotating && Time.time - _towStampedAt <= 0.1f,
+        TowFeet = _towFeet,
+        TowVelocity = _towVelocity,
+        TowRope = _towRope,
+        UprightLocalUp = _uprightLocalUp,
+    };
+
+    /// <summary>Records another holder's pull, heard over the network; applied here once this
+    /// machine controls the body. Wakes the body and lifts a portal freeze, since a held piece is
+    /// not resting.</summary>
+    public void SetRemotePull(int holder, CarryPull pull)
+    {
+        _remotePulls[holder] = (pull, Time.time);
+        _rb.WakeUp();
+        if (_frozenByPortal)
+        {
+            _frozenByPortal = false;
+            _rb.isKinematic = false;
+        }
+    }
+
+    /// <summary>Drops a holder's pull: they let go, disconnected or died.</summary>
+    public void RemoveRemotePull(int holder) => _remotePulls.Remove(holder);
+
+    /// <summary>How many holders are pulling this right now: this machine's own hold, if any, plus
+    /// every live remote pull.</summary>
+    public int HolderCount => (_isDragging && !_isInHand ? 1 : 0) + _remotePulls.Count;
+
     // Loot in the portal (#158): frozen once it settles, until picked up or out of the portal.
     private bool _inPortal;
     private bool _frozenByPortal;
@@ -350,7 +409,9 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// so a dropped piece still lands first.</summary>
     private void UpdatePortalFreeze()
     {
-        if (!_inPortal || _frozenByPortal || _isDragging || _rb.isKinematic || !CanDriveHere(this))
+        // A remote hold means someone else is holding this piece, same as _isDragging locally: not
+        // resting, so it must not freeze mid-hold.
+        if (!_inPortal || _frozenByPortal || _isDragging || _rb.isKinematic || !CanDriveHere(this) || _remotePulls.Count > 0)
             return;
         if (_rb.linearVelocity.magnitude > k_portalSettleSpeed || _rb.angularVelocity.magnitude > 0.5f)
             return;
@@ -364,7 +425,16 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     {
         _velocityIntoStep = _rb.linearVelocity;
         UpdatePortalFreeze();
-        if (!_isDragging || _isInHand)
+        // A machine that does not control the body never pushes it: elsewhere the body is moved by
+        // the replicated transform, and pushing it here as well would fight that every step.
+        if (!CanDriveHere(this))
+            return;
+
+        ExpireRemotePulls();
+
+        bool localHold = _isDragging && !_isInHand;
+        int holders = (localHold ? 1 : 0) + _remotePulls.Count;
+        if (holders == 0)
             return;
 
         // A real body hung from the point the player grabbed, pulled by a spring of limited
@@ -373,44 +443,92 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
         // target's own velocity, so following a walking player needs no jolt. Up and sideways have
         // separate limits: past about 10 kg the up part cannot hold the weight, and the item drags
         // on the floor while the sideways part still hauls it.
-        float dt = Time.fixedDeltaTime;
+        if (localHold)
+            ApplyPull(LocalPull, true, Time.time - _targetStampedAt, holders);
 
-        if (IsTooHeavyToLift && !_isRotating && Time.time - _towStampedAt <= 0.1f)
+        foreach (KeyValuePair<int, (CarryPull pull, float heardAt)> remote in _remotePulls)
+            ApplyPull(remote.Value.pull, false, Time.time - remote.Value.heardAt, holders);
+    }
+
+    /// <summary>Drops a remote pull nobody has renewed for <see cref="k_remotePullTimeout"/>: the
+    /// holder let go, disconnected, or their machine stopped sending. No allocation: reuses
+    /// <see cref="_expiredHolderKeys"/> instead of building a new list every step.</summary>
+    private void ExpireRemotePulls()
+    {
+        _expiredHolderKeys.Clear();
+        foreach (KeyValuePair<int, (CarryPull pull, float heardAt)> remote in _remotePulls)
         {
-            Tow();
+            if (Time.time - remote.Value.heardAt > k_remotePullTimeout)
+                _expiredHolderKeys.Add(remote.Key);
+        }
+        foreach (int key in _expiredHolderKeys)
+            _remotePulls.Remove(key);
+    }
+
+    /// <summary>
+    /// Applies one holder's pull. With exactly one LOCAL holder this is numerically identical to the
+    /// original single-holder carry, so <c>CarryFeelTests</c> sees the same numbers. With more than
+    /// one holder, gravity is shared between them, each pulls at its own held point instead of the
+    /// centre of mass, and the orientation hold is skipped (multi-holder turning is a later step).
+    /// </summary>
+    /// <param name="pull">The holder's pull.</param>
+    /// <param name="isLocal">Whether this is this machine's own hold, rather than one heard from
+    /// the network.</param>
+    /// <param name="age">Seconds since the pull's target was last updated (local) or last heard
+    /// (remote); a stale target is treated as standing still.</param>
+    /// <param name="holders">How many holders are pulling this piece right now.</param>
+    private void ApplyPull(CarryPull pull, bool isLocal, float age, int holders)
+    {
+        if (pull.IsTowing)
+        {
+            // Only the local holder's tow updates TowStrain, which drives that holder's own walk
+            // pace; a remote holder's tow still pulls the body but says nothing about our pace.
+            Tow(pull.TowFeet, pull.TowVelocity, pull.TowRope, pull.UprightLocalUp, isLocal);
             return;
         }
 
-        // A target nobody has updated for a while is standing still, whatever it was doing.
-        float age = Time.time - _targetStampedAt;
-        Vector3 targetVelocity = age > 0.1f ? Vector3.zero : _targetVelocity;
-        Vector3 target = _targetPosition + targetVelocity * Mathf.Clamp(age, 0f, 0.05f);
-        Vector3 held = HeldPointWorld;
-        bool towed = IsTooHeavyToLift && !_isRotating;
+        // A target nobody has updated for a while is standing still, whatever it was doing. Network
+        // updates arrive about 15 times a second, so a remote pull tolerates a longer gap before it
+        // is treated as stale.
+        Vector3 targetVelocity = isLocal
+            ? (age > 0.1f ? Vector3.zero : pull.TargetVelocity)
+            : (age > 0.25f ? Vector3.zero : pull.TargetVelocity);
+        float extrapolateClamp = isLocal ? 0.05f : 0.1f;
+        Vector3 target = pull.Target + targetVelocity * Mathf.Clamp(age, 0f, extrapolateClamp);
+        Vector3 held = _rb.position + _rb.rotation * pull.GripLocal;
 
-        // While its orientation is held, the pull acts at the centre of mass, moved so the held
-        // point lands on the target: pulled at an off-centre point instead, a light item was
+        // A too-heavy piece whose tow input has gone stale (nobody towing it this step) still drags
+        // along the floor rather than springing free, same as before this was split out.
+        bool towed = isLocal && IsTooHeavyToLift && !_isRotating;
+
+        // While its orientation is held, one holder's pull acts at the centre of mass, moved so the
+        // held point lands on the target: pulled at an off-centre point instead, a light item was
         // twisted by the spring and twisted back by the orientation hold every step, and shook
-        // (17 degrees a step at 0.5 kg). A towed piece is pulled by the point it was grabbed
-        // at, so it tips and swings as it scrapes along.
-        Vector3 pulled = towed ? held : _rb.worldCenterOfMass;
+        // (17 degrees a step at 0.5 kg). A towed piece is pulled by the point it was grabbed at, so
+        // it tips and swings as it scrapes along. With more than one holder each pulls at its own
+        // held point, so two holders at different points turn the piece naturally.
+        Vector3 pulled = holders == 1 ? (towed ? held : _rb.worldCenterOfMass) : held;
         Vector3 pulledTarget = target + (pulled - held);
         Vector3 pulledVelocity = _rb.GetPointVelocity(pulled);
 
         float damping = 2f * Mathf.Sqrt(_springRate) * _dampingRatio;
         Vector3 accel = (pulledTarget - pulled) * _springRate + (targetVelocity - pulledVelocity) * damping;
-        Vector3 force = (accel - Physics.gravity) * _rb.mass;
+        // Gravity is shared equally between every holder; with one holder this is exactly
+        // (accel - Physics.gravity) * mass, as before.
+        Vector3 force = accel * _rb.mass - Physics.gravity * _rb.mass / holders;
 
         // A towed piece gets no lift at all, so the floor's full friction holds it back, and a
-        // weaker pull, so it is slow to get going: it should feel like a weight on a rope.
+        // weaker pull, so it is slow to get going: it should feel like a weight on a rope. Each
+        // holder's upward part is capped by their own grip.
         var sideways = Vector3.ClampMagnitude(new Vector3(force.x, 0f, force.z), towed ? TowStrength : _haulStrength);
         float up = towed ? 0f : Mathf.Clamp(force.y, -_gripStrength, _gripStrength);
         _rb.AddForceAtPosition(sideways + Vector3.up * up, pulled, ForceMode.Force);
 
-        // Turned on purpose, or kept as it was picked up and turned with the holder.
-        if (towed)
+        // Turned on purpose, or kept as it was picked up and turned with the holder. Skipped for a
+        // towed piece, and with more than one holder (step 5 replaces this with torque).
+        if (towed || holders > 1)
             return;
-        Quaternion wanted = _isRotating ? _targetRotation : Quaternion.Euler(0f, _viewYaw, 0f) * _rotationInView;
+        Quaternion wanted = pull.WantedRotation;
 
         Quaternion delta = wanted * Quaternion.Inverse(_rb.rotation);
         delta.ToAngleAxis(out float angle, out Vector3 axis);
@@ -420,7 +538,7 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
             ? Vector3.zero
             : axis * (angle * Mathf.Deg2Rad * _rotationSpeed);
         // Heavy things turn slowly too.
-        float turnRate = Mathf.Clamp01(8f / Mathf.Max(1f, _rb.mass) * dt * 10f);
+        float turnRate = Mathf.Clamp01(8f / Mathf.Max(1f, _rb.mass) * Time.fixedDeltaTime * 10f);
         _rb.angularVelocity = Vector3.Lerp(_rb.angularVelocity, wantedSpin, turnRate);
     }
 
@@ -534,11 +652,29 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
         _rb.angularDamping = _angularDampingWhenFree;
         SetIgnoreHolder(false);
 
+        // This machine's own hold is cleared either way; only the throw itself needs the machine
+        // that controls the body, which asks the server to apply it when this one does not.
+        if (!CanDriveHere(this))
+        {
+            RequestThrow?.Invoke(this, direction, force);
+            return;
+        }
+
         // An impulse, so the same arm throws a pot far and a chest barely at all.
         _rb.AddForce(direction * force, ForceMode.Impulse);
         _rb.linearVelocity = Vector3.ClampMagnitude(_rb.linearVelocity, _maxThrowSpeed);
 
         // Release call removed - Monster handles its own recovery via struggle routine.
+    }
+
+    /// <summary>Applies a throw asked for by a holder whose machine does not control this body, so
+    /// the server can throw a piece any holder lets go of with force.</summary>
+    public void ApplyRemoteThrow(int holder, Vector3 direction, float force)
+    {
+        RemoveRemotePull(holder);
+        _rb.AddForce(direction * force, ForceMode.Impulse);
+        _rb.linearVelocity = Vector3.ClampMagnitude(_rb.linearVelocity, _maxThrowSpeed);
+        _releasedAt = Time.time;
     }
 
     /// <summary>
