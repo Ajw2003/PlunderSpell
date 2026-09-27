@@ -34,7 +34,8 @@ def main() -> None:
         return
 
     results = report.get("results", [])
-    if not any(r.get("FullName", "").startswith(test_filter) for r in results):
+    # Substring, as Unity's own --filter matches: a bare class name like `CarryFeelTests` must count.
+    if not any(test_filter in r.get("FullName", "") for r in results):
         # test_status still holds the run before ours.
         print("running")
         return
