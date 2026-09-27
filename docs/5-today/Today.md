@@ -125,6 +125,15 @@ nothing. Your own burning holds a steady shake at half a full one's angle instea
 tick. `CameraShakeTests` 10/10 (2 new); live, a guard burning in your name gave 0.00°, you burning
 1.06° mean and 3.41° peak over the 3 s burn.
 
+Then #143 (UI or state holding over from the previous raid; no description). A probe
+(`docs/generated/issue-143-carryover/snapshot.cs`) compared the start of a raid with the start of
+the next, after hurting the player, setting them alight, raising the hue and cry, spending mana,
+holding an item and dying. One thing carried over: the fire. The next raid began at 68 health with
+"-32 RaidPlayer (fire)" on screen. Placing a player for a raid now clears their status effects.
+`RaidLoopTests` 19/19 (the new test was written with the fix); re-probed live, both after dying and
+after surviving on fire, the next raid starts clean. Open for the user: a survivor keeps their
+wounds into the next raid, which may be intended.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

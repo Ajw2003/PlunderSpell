@@ -391,6 +391,16 @@ namespace Plunderspell.Raid
         private RaidLootTable _defaultLoot;
         private EnemyRoster _defaultEnemies;
 
+        /// <summary>
+        /// A new raid starts with no fire, sleep, stun or lift left over from the last one: a player
+        /// who died burning set out again still alight (#143).
+        /// </summary>
+        public static void ClearCarriedOverState(GameObject player)
+        {
+            if (player != null && player.TryGetComponent(out Plunderspell.Status.StatusEffectReceiver status))
+                status.ClearAll();
+        }
+
         /// <summary>What an arriving player turns to: the portal, or on the curtain strip the room
         /// inward of it, whose archway is the way in (#140).</summary>
         private Vector3 FacingTarget()
@@ -423,6 +433,8 @@ namespace Plunderspell.Raid
                 Debug.LogWarning($"[Raid] Not placing a player: player {(player == null ? "missing" : "found")}, castle {(Castle == null ? "missing" : "built")}.");
                 return;
             }
+
+            ClearCarriedOverState(player.gameObject);
 
             // Each player stands at their own point on a ring round the portal, by owner number, so
             // two bodies are never placed inside each other (a client places itself as soon as its

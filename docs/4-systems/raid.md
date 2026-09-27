@@ -77,6 +77,10 @@ by the gatehouse, and nothing exists outside the curtain wall.
 - **Players ring it.** Each stands `RaidDirector.PlayerRingRadius` (3.5 m, `RaidDirector.cs:107`)
   from its centre by owner number, outside the trigger, facing it (`PlayerStateMachine.FaceYaw`),
   except on the curtain strip, where they face the entrance (`RaidDirector.FacingTarget`).
+- **Nothing lingers from the last raid** (#143, 2026-09-26). Placing a player also clears their
+  status effects (`RaidDirector.ClearCarriedOverState`): a player who died burning used to set out
+  on the next raid still alight, losing 32 health before they could move. Health itself is only
+  reset for a player who died; a survivor keeps their wounds.
 - **Left behind.** When the clock runs out, whoever is outside the portal is not saved and what
   they carry is lost. `RaidDirector.cs:478` counts them and the Lair's last-raid line ends
   "· N left behind".

@@ -455,5 +455,23 @@ namespace Plunderspell.Tests
             zone.ResolveLocally();
             Assert.AreEqual(0, spawner.Spawned.Count, "Loot must not survive into the next raid.");
         }
+
+        /// <summary>#143: a player who died burning set out on the next raid still alight.</summary>
+        [Test]
+        public void Test_ANewRaidStartsWithNoStatusEffectsLeftOver()
+        {
+            var player = Track(new GameObject("Player"));
+            var status = player.AddComponent<Plunderspell.Status.StatusEffectReceiver>();
+            status.Ignite(5f, 30f);
+            status.Stun(10f);
+            status.Sleep(10f);
+            Assert.IsTrue(status.IsBurning && status.IsStunned && status.IsAsleep, "Test premise.");
+
+            RaidDirector.ClearCarriedOverState(player);
+
+            Assert.IsFalse(status.IsBurning, "Fire from the last raid must not follow you into the next.");
+            Assert.IsFalse(status.IsStunned);
+            Assert.IsFalse(status.IsAsleep);
+        }
     }
 }
