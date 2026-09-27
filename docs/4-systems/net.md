@@ -94,6 +94,17 @@ Outer Bailey, Inner Ward and Keep), carrying `LootPickup`, `LootValue` and a `Ne
 they are found, carried, swung and sold like any other piece. Whether a find is a weapon is only
 learnt by trying its right-click use.
 
+**Other players' grab beams.** `CarryBeamRelay` (on the `Network` object in `RaidScene`, beside
+`ShotRelay` and `DamageRelay`) shows each carrier's grab beam on every other machine. The carrier's
+machine sends the beam's hand point (`ItemManager.BeamHand`), aim point, the held point in the
+item's own space and the load, about 15 times a second (`BeamMoved`, a server RPC relayed to all
+by `ShowBeam`), and `BeamStopped` when it lets go. Every other machine eases toward the latest
+update so the line does not step, and ends it on the item as it replicates there. The carrier
+ignores its own relayed beam and draws the local one, which has no network delay. A beam not
+heard from for half a second is removed, so a dropped connection does not leave one hanging. Only
+networked items can have a remote beam; weapons and loot both qualify. How the beam itself looks:
+[`damage.md`](damage.md), "The beam".
+
 A ranged weapon's shot is a local projectile on the machine that fired it, where its hit is judged.
 `ShotRelay` shows the same shot on every other machine as a copy with no damage
 (`RangedWeapon.Fired`, `RangedWeapon.SpawnCosmeticShot`).

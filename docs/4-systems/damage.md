@@ -173,7 +173,8 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   Particles/Unlit, additive). Other players see your beam through `Plunderspell.Net.CarryBeamRelay` (a
   RaidScene object, like `ShotRelay`). The holder sends the hand point, aim point, held point and
   load about 15 times a second; others ease toward it and end the line on the replicated item.
-  Only networked loot gets a remote beam: weapons are a local copy on each machine.
+  Only networked items get a remote beam; weapons are networked loot (`docs/4-systems/net.md`), so
+  they get one too.
 - **Prefabs carry their own strength.** `Item`'s serialized `_gripStrength` overrides the code
   default. All 35 item prefabs were set to 100 N on 2026-09-25. A newly forged prefab
   (`EraContentForge`) takes the code defaults.

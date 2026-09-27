@@ -8,8 +8,8 @@ namespace Plunderspell.Net
     /// Shows every player's grab beam on every machine (#144). The holder's machine sends where its
     /// beam starts, where it aims and which point of the item it holds, about 15 times a second;
     /// everyone else draws a <see cref="GrabBeam"/> from that, smoothed, ending on the item as it
-    /// is replicated here. Only networked items (loot) have a beam elsewhere: weapons are a local
-    /// copy on each machine.
+    /// is replicated here. Only networked items have a beam elsewhere; weapons are networked loot,
+    /// so they get one too.
     /// </summary>
     public sealed class CarryBeamRelay : NetworkBehaviour
     {
