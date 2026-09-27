@@ -61,6 +61,25 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   and leave by a portal inside the walls (`raid.md`, "Arriving and leaving by portal").
   `CastleBoundary` (`Assets/_Project/Scripts/Runtime/Castle/CastleBoundary.cs:29`) closes the gate
   arch and the wall tops with four invisible walls on the curtain's outer face.
+- **Entrances from the strip (2026-09-26, #140).**
+<!-- ref:f151 -->
+  The strip between the curtain wall and the block of rooms had every archway onto it plugged, so
+  a team whose portal opened there could not get in, and the drawbridge (a curtain-wall module
+  outside the sealed gate) was an allowed arrival too. `CastleEntrancePlanner.Plan`
+  (`Assets/_Project/Scripts/Runtime/Castle/CastleEntrancePlanner.cs`) now picks the strip cells
+  that open into the room inward of them: a plain run of wall (not a corner, bastion or the gate),
+  at an even position along its side so entrances are two cells apart, with an enclosed room, not
+  a courtyard, on its inner side. A side with none of those gets its qualifying cell nearest the
+  middle, so every side has a way in. The generator stores them in
+  `ProceduralCastleData.EntranceCells` and `IsArchwayConnected` leaves those archways unplugged;
+  `CastleArrivalPlanner` only opens the portal on the strip at an entrance, and
+  `RaidDirector.FacingTarget` turns a strip arrival toward the entrance instead of the portal.
+  Typically 6 to 8 entrances a castle. Pure, so every peer derives the same ones. Courtyards stay
+  sealed off from their rooms, as before. `CastleArrivalTests` covers a strip arrival being in
+  front of a way in, nobody arriving outside the wall, and every side having an entrance. Checked
+  on the real castle for 12 seeds: every arrival has a complete NavMesh path to the crypt, and the
+  three strip arrivals (seeds 43, 64, 88) have no plug in front and open looking at the archway
+  (`docs/generated/issue-140-entrances/`).
 - **`CastleLockdown`** subscribes to `AlarmState` and locks (`Roused`) then bars (`HueAndCry`)
   every door — deliberately one-way, matching the alarm's own latch, so the castle can't hand back
   a mistake the players already paid for.

@@ -108,6 +108,17 @@ its `Item` and `LootPickup` (`docs/generated/grip-place-2026-09-26.cs`). The new
 0.000 m from the hand, where the Arming Sword's old held point was 0.095 m off it and the
 crossbow's 0.269 m (`docs/generated/issue-134-grips/`).
 
+Then #140 (not enough entrances; arriving outside with none in sight). Every archway onto the
+curtain strip was plugged, yet the portal could open on the strip, or on the drawbridge outside the
+sealed gate. The user chose: entrances round the strip, portal on the strip only in front of one.
+`CastleEntrancePlanner` picks them (typically 6 to 8), the generator leaves those archways open, the
+arrival planner only uses them, and a strip arrival now faces the entrance. `CastleArrivalTests`
+16/16 (3 new; the per-side test failed on seed 4 until a side with no even slot got a fallback),
+`CastleGeneratorTests` 12/12. On the real castle, 12 seeds: every arrival has a complete NavMesh
+path to the crypt; the strip arrivals (43, 64, 88) have no plug in front and open looking at the
+archway. Full PlayMode then: 240 of 241, the known `GuardAttackTests` case (the carry jolt test
+passed this time, so it is intermittent).
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

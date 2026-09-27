@@ -27,6 +27,10 @@ namespace Plunderspell.Castle
         /// <summary>The bailey's furniture and the courtyards' yards, from its own seed stream.</summary>
         public List<PlacedDressing> Dressings = new List<PlacedDressing>();
 
+        /// <summary>Curtain-wall cells whose room archway onto the strip is open: the ways in from
+        /// the strip (#140). Set by <see cref="CastleEntrancePlanner"/> during generation.</summary>
+        public List<UnityEngine.Vector2Int> EntranceCells = new List<UnityEngine.Vector2Int>();
+
         public ProceduralCastleData() { }
 
         public ProceduralCastleData(int seed)

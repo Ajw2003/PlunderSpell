@@ -68,6 +68,63 @@ namespace Plunderspell.Tests
             }
         }
 
+        /// <summary>#140: a portal on the curtain strip opens in front of an entrance: the room
+        /// inward of it is enclosed, and its archway onto the strip is left open.</summary>
+        [Test]
+        public void Test_AStripArrivalIsInFrontOfAWayIn()
+        {
+            ProceduralCastleGenerator generator = MakeGenerator();
+            int stripArrivals = 0;
+            for (int seed = 1; seed <= 120; seed++)
+            {
+                ProceduralCastleData castle = generator.Generate(seed);
+                ProceduralCastleData.PlacedModule module = castle.PlacedModules[CastleArrivalPlanner.ChooseModule(castle, seed)];
+                if (module.Zone != CastleZone.CurtainWall)
+                    continue;
+                stripArrivals++;
+                Assert.Contains(module.GridPosition, castle.EntranceCells,
+                    $"Seed {seed}: arrived on the strip at {module.GridPosition}, where every archway is plugged.");
+                Vector2Int inward = CastleEntrancePlanner.InwardCell(module.GridPosition);
+                Assert.IsTrue(castle.PlacedModules.Exists(m => m.GridPosition == inward && ProceduralCastleGenerator.IsEnclosedRoom(m.Zone)),
+                    $"Seed {seed}: the cell inward of the arrival, {inward}, is not a room to walk into.");
+            }
+            Assert.Greater(stripArrivals, 0, "Test premise: some seeds should still arrive on the strip.");
+        }
+
+        /// <summary>#140 and #147: the drawbridge is a curtain-wall module outside the sealed gate.</summary>
+        [Test]
+        public void Test_TheTeamNeverArrivesOutsideTheWall()
+        {
+            ProceduralCastleGenerator generator = MakeGenerator();
+            for (int seed = 1; seed <= 120; seed++)
+            {
+                ProceduralCastleData castle = generator.Generate(seed);
+                Vector2Int cell = castle.PlacedModules[CastleArrivalPlanner.ChooseModule(castle, seed)].GridPosition;
+                Assert.LessOrEqual(Chebyshev(cell, Vector2Int.zero), generator.CurtainWallRadius,
+                    $"Seed {seed}: arrived at {cell}, outside the curtain wall.");
+            }
+        }
+
+        /// <summary>#140: the strip is not a dead end anywhere round the castle.</summary>
+        [Test]
+        public void Test_EverySideOfTheStripHasAWayIn()
+        {
+            ProceduralCastleGenerator generator = MakeGenerator();
+            int radius = generator.CurtainWallRadius;
+            for (int seed = 1; seed <= 60; seed++)
+            {
+                ProceduralCastleData castle = generator.Generate(seed);
+                var sides = new HashSet<Vector2Int>();
+                foreach (Vector2Int cell in castle.EntranceCells)
+                {
+                    Assert.IsTrue(CastleEntrancePlanner.IsSideCell(cell, radius), $"Seed {seed}: {cell} is not a side of the strip.");
+                    sides.Add(CastleEntrancePlanner.SideOf(cell, radius));
+                }
+                Assert.AreEqual(4, sides.Count,
+                    $"Seed {seed}: only {sides.Count} sides of the strip have an entrance ({castle.EntranceCells.Count} in all).");
+            }
+        }
+
         [Test]
         public void Test_DifferentSeedsArriveInDifferentPlaces()
         {

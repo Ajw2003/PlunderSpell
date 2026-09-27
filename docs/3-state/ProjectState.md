@@ -94,7 +94,9 @@ and Longsword are melee weapons now, and a hit does 20 to 29, three or four to a
 error spheres), and now fade as intended (#127; `docs/4-systems/spells.md`, "What the visuals
 actually look like"). The main menu and Lair no longer show "No cameras rendering" in the Editor
 (#131; `docs/4-systems/raid-scene-assembly.md`, "Getting into a raid"). Every weapon and the five
-original loot pieces have authored grip points, so a sword is held by its hilt (#134).
+original loot pieces have authored grip points, so a sword is held by its hilt (#134). The
+curtain strip has entrances into the castle, the portal opens on it only in front of one, and a
+team arriving there faces it (#140; `docs/4-systems/castle.md`, "Entrances from the strip").
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog

@@ -1017,3 +1017,21 @@ without making a 3.5 st one kill in two. How it works: `docs/4-systems/damage.md
 
 **Status.** Standing.
 
+## 2026-09-26 — Entrances from the curtain strip, and strip arrivals face them (#140)
+
+**Context.** #140: not enough entrances, and players arriving outside the castle with no entrance in
+sight. `SealOpenArchways` plugged every archway onto the curtain strip, yet the portal could open
+there (about 4 in 9 of the arrival candidates), and on the drawbridge outside the sealed gate.
+
+**Decision.** The owner chose, from three options: open entrances from the strip into the outer
+rooms at intervals round the ring, only open the portal on the strip in front of one, and leave
+courtyards as they are. Strip arrivals also face the entrance rather than the portal, since the
+portal otherwise puts it off to one side. The rejected options were arriving only inside rooms, and
+also opening the rooms onto courtyards.
+
+**Why.** It keeps arriving "outside, looking at the castle" while making the strip a place with
+ways in, and it is a rule on the layout alone, so nothing new crosses the network. How it works:
+`docs/4-systems/castle.md`, "Entrances from the strip".
+
+**Status.** Standing.
+

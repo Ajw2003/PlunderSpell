@@ -391,6 +391,22 @@ namespace Plunderspell.Raid
         private RaidLootTable _defaultLoot;
         private EnemyRoster _defaultEnemies;
 
+        /// <summary>What an arriving player turns to: the portal, or on the curtain strip the room
+        /// inward of it, whose archway is the way in (#140).</summary>
+        private Vector3 FacingTarget()
+        {
+            if (Castle == null || ArrivalModuleIndex < 0 || ArrivalModuleIndex >= Castle.PlacedModules.Count)
+                return ArrivalPoint;
+            ProceduralCastleData.PlacedModule arrival = Castle.PlacedModules[ArrivalModuleIndex];
+            if (arrival.Zone != CastleZone.CurtainWall)
+                return ArrivalPoint;
+            Vector2Int inward = CastleEntrancePlanner.InwardCell(arrival.GridPosition);
+            foreach (ProceduralCastleData.PlacedModule module in Castle.PlacedModules)
+                if (module.GridPosition == inward)
+                    return module.Position;
+            return ArrivalPoint;
+        }
+
         /// <summary>
         /// Stands the player beside the arrival portal of the castle just built. Derived here, from
         /// the seed this raid actually rolled, rather than baked into the scene — a baked spawn is
@@ -420,11 +436,12 @@ namespace Plunderspell.Raid
                 ArrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
             Vector3 spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
 
-            // Face the portal, so the first thing a player sees is the way home.
-            Vector3 toPortal = ArrivalPoint - spawn;
-            toPortal.y = 0f;
-            if (toPortal.sqrMagnitude > 0.01f && player.TryGetComponent(out StateMachine.PlayerStateMachine look))
-                look.FaceYaw(Quaternion.LookRotation(toPortal.normalized, Vector3.up).eulerAngles.y);
+            // Face the portal, so the first thing a player sees is the way home; on the curtain strip,
+            // face the way in instead, which the portal otherwise puts off to one side (#140).
+            Vector3 toFacing = FacingTarget() - spawn;
+            toFacing.y = 0f;
+            if (toFacing.sqrMagnitude > 0.01f && player.TryGetComponent(out StateMachine.PlayerStateMachine look))
+                look.FaceYaw(Quaternion.LookRotation(toFacing.normalized, Vector3.up).eulerAngles.y);
 
             // Through the rigidbody as well as the transform: an interpolated body writes its old
             // position back over a transform-only move on the next physics step.

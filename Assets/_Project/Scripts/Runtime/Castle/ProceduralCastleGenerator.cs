@@ -104,6 +104,8 @@ namespace Plunderspell.Castle
             BuildInterior(data, occupied, rng);
             int gatehouseIndex = BuildCurtainWall(data, occupied);
             AssignExtractionExit(data, gatehouseIndex);
+            data.EntranceCells = CastleEntrancePlanner.Plan(data, m_curtainWallRadius,
+                new HashSet<string> { k_WallStraightId, ResolveRoomId(k_WallStraightId) });
 
             // Every enclosed room is authored with an archway on all four sides, so any side with
             // no neighbour is currently a hole in the outer face. Fill those.
@@ -509,12 +511,15 @@ namespace Plunderspell.Castle
         /// <summary>
         /// Whether an archway onto <paramref name="neighbour"/> leads somewhere, and so must be
         /// left open. A curtain-wall cell is a wall, not a room, so an archway onto one is as open
-        /// as an archway onto nothing — except at the gatehouse, which is the way out.
+        /// as an archway onto nothing — except at the gatehouse, and at an entrance from the
+        /// strip (<see cref="CastleEntrancePlanner"/>).
         /// </summary>
         private bool IsArchwayConnected(ProceduralCastleData data,
             Dictionary<Vector2Int, int> occupied, Vector2Int neighbour)
         {
             if (neighbour == k_GateOutward * m_curtainWallRadius)
+                return true;
+            if (data.EntranceCells.Contains(neighbour))
                 return true;
             if (!occupied.TryGetValue(neighbour, out int index))
                 return false;

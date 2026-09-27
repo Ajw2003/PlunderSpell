@@ -67,14 +67,16 @@ by the gatehouse, and nothing exists outside the curtain wall.
 - **Arrival.** `CastleArrivalPlanner.ChooseModule`
   (`Assets/_Project/Scripts/Runtime/Castle/CastleArrivalPlanner.cs:34`) picks a module in the
   curtain strip, outer bailey or inner ward from the raid seed, on its own RNG stream, never the
-  gatehouse. `CastleSpawnResolver.ResolveArrival` (`CastleSpawnResolver.cs:77`) finds a clear
+  gatehouse. On the strip, only in front of an entrance into the castle (#140; `castle.md`,
+  "Entrances from the strip"). `CastleSpawnResolver.ResolveArrival` (`CastleSpawnResolver.cs:77`) finds a clear
   standing point there and falls back to the old gate spawn, with a warning, if nothing qualifies.
   Every peer derives the same point from the seed, so nothing new is networked.
 - **The portal is the `ExtractionZone`.** `RaidDirector.OpenPortal` (`RaidDirector.cs:441`) calls
   `ExtractionZone.PlaceAsPortal` (`ExtractionZone.cs:90`), which moves the zone to the arrival and
   shrinks its trigger to 4 × 4 × 4 m. `RaidDirector.PortalOpened` fires with the floor point.
 - **Players ring it.** Each stands `RaidDirector.PlayerRingRadius` (3.5 m, `RaidDirector.cs:107`)
-  from its centre by owner number, outside the trigger, facing it (`PlayerStateMachine.FaceYaw`).
+  from its centre by owner number, outside the trigger, facing it (`PlayerStateMachine.FaceYaw`),
+  except on the curtain strip, where they face the entrance (`RaidDirector.FacingTarget`).
 - **Left behind.** When the clock runs out, whoever is outside the portal is not saved and what
   they carry is lost. `RaidDirector.cs:478` counts them and the Lair's last-raid line ends
   "· N left behind".

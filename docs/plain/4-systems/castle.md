@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/castle.md @ ef2f71186b6582a9a366b4080e87b57821d0edb8 -->
+<!-- plain copy of: docs/4-systems/castle.md @ ed02e7fb81ee12b3496e4c2119ab1d4be61f70f8 -->
 
 # Castle
 
@@ -26,6 +26,8 @@ the exit.
 6. Only that seed travels across the network. Every player's game builds its own copy locally
    from it, so nothing about the castle's shape itself needs to be sent.
 7. As the alarm escalates, doors lock and then bar shut, and never unlock again during that raid.
+8. The open strip just inside the outer wall has doorways into the castle every so often, on every
+   side, and a team that arrives on that strip always arrives in front of one, facing it.
 
 ## Risks and safeguards
 - **Players unable to reach the exit.** A layout is only accepted once a pathfinding check
