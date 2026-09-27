@@ -251,6 +251,14 @@ the castle as networked loot (found, carried, swung, sold), a crossbow shot show
 downed bodies lie down, and guards give players at the gate a clear ring and a 20 second grace. See
 `docs/4-systems/net.md`.
 
+**2026-09-27, #169 step 1: two-player carry check built.** `Tools/Unity/coop_carry_check.sh` runs
+host (Editor) and client (Development build) on one PC with nobody at the keyboard. Run twice
+before any carry change, same results both times: one holder works on either side; a second
+player's grab takes the piece (the first holder's pull is ignored); the piece falls when the
+second holder lets go; and it despawns when a holding client quits. Results and screenshots:
+`docs/generated/coop-carry-2026-09-27/`. Also found: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
+already failed before any #169 change (0.054 m jolt against a 0.05 m limit).
+
 **2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh
 (`CastleAudit.cs`). Every room and all floor are reachable on five seeds, and loot now spawns on
 furniture (tables, chests, shelves, altars) inside rooms, all of it reachable. Phases 3–5 (themed

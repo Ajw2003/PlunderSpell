@@ -1,0 +1,30 @@
+
+# run 15:20:58
+PASS host_grabs
+FAIL 0.39 m from client's aim client_grabs
+FAIL held host=True client=False, wanted both; needs both aim points both_grab_same_piece
+FAIL 1.13 m from host's aim client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 148"}] client_quits_holding
+
+# run 15:23:26
+FAIL 0.49 m from host's aim host_grabs
+FAIL sides disagree by 0.455 m client_grabs
+FAIL aims 1.82 m apart, piece 1.91 m from host's and 0.51 m from client's: one pull is ignored both_grab_same_piece
+FAIL 2.67 m from host's aim client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 58"}] client_quits_holding
+
+# run 15:26:48
+
+# run 15:36:24
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.83 m apart, host's held point 1.83 m off, client's 0.03 m off: one pull is ignored both_grab_same_piece
+FAIL held point 2.67 m from host's aim client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 22"}] client_quits_holding
+
+# run 15:38:34
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.94 m apart, host's held point 1.94 m off, client's 0.03 m off: one pull is ignored both_grab_same_piece
+FAIL held point 2.71 m from host's aim client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 112"}] client_quits_holding

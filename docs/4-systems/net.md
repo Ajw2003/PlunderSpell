@@ -220,6 +220,19 @@ actions asset in `ProjectSettings.asset`'s `preloadedAssets`; revert that line b
 
 Screenshots of each checked step: `docs/generated/coop-2026-09-23/`.
 
+**Carry check (#169).** `bash Tools/Unity/coop_carry_check.sh` does all of the above for carrying,
+with nobody at the keyboard: it builds `Build/DevTest` (Pipeline runtime on for that build only),
+hosts from the Editor, joins with the build, sets out, and runs five scenarios (host grabs, client
+grabs, both grab one piece, the client lets go, the client quits while holding). It prints one
+PASS/FAIL line each, and saves both sides' screenshots, `results.txt` and the client's log under
+`docs/generated/coop-carry-<date>/`. `--no-build` reuses the last build. Both sides are driven by
+`Tools/Unity/coop_eval.sh host|client <action>`, which runs `Tools/Unity/eval/coop_carry.cs`
+through reflection so the same code works in the build. It needs the Editor open and not playing,
+and leaves Play stopped, the runtime setting off and the settings files as they were. Before #169's
+carry changes (2026-09-27): single holders pass; the shared carry fails (the first holder's pull
+is ignored), the piece falls when the second holder lets go, and it despawns when a holding client
+quits.
+
 **Two real machines.** The owner has two PCs, each with its own Steam account (noted 2026-09-27).
 Use them for what one PC on localhost cannot show: Steam's relay, lobby, invite and overlay flow,
 and real network delay. The owner works alone, so a two-machine check must be driven by the agent
