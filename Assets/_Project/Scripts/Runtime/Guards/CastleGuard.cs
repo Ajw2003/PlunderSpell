@@ -204,6 +204,7 @@ namespace Plunderspell.Guards
         private float _floatBaseY;
         private float _fallFromY;
         private float _fallStartedAt;
+        private float _fallSpeed;
 
         /// <summary>True while Levo holds this guard up or it is still falling back down.</summary>
         public bool IsAirborne => _floating || _falling;
@@ -214,7 +215,7 @@ namespace Plunderspell.Guards
         /// suspended and the transform raised directly, then the body falls under real gravity and
         /// takes damage for the height. Returns true while the AI must not run.
         /// </summary>
-        private bool UpdateLevitation(float deltaTime)
+        public bool UpdateLevitation(float deltaTime)
         {
             bool levitating = _status != null && _status.IsLevitating;
             TryGetComponent(out Rigidbody body);
@@ -248,6 +249,7 @@ namespace Plunderspell.Guards
                 _falling = true;
                 _fallFromY = transform.position.y;
                 _fallStartedAt = Time.time;
+                _fallSpeed = 0f;
                 if (body != null)
                 {
                     body.isKinematic = false;
@@ -255,17 +257,27 @@ namespace Plunderspell.Guards
                     body.freezeRotation = true;
                     body.linearVelocity = Vector3.zero;
                 }
-                else
-                {
-                    Land(body);
-                    return false;
-                }
                 return true;
+            }
+
+            if (_falling && body == null)
+            {
+                // Raid guards have no Rigidbody, so fall by hand, straight back down to where the lift
+                // started: the guard was raised vertically with its agent off, so that is the floor.
+                // Landing at once here cost the drop nothing (#106).
+                _fallSpeed -= Physics.gravity.y * deltaTime;
+                Vector3 p = transform.position;
+                p.y = Mathf.Max(_floatBaseY, p.y - _fallSpeed * deltaTime);
+                transform.position = p;
+                if (p.y > _floatBaseY)
+                    return true;
+                Land(null);
+                return false;
             }
 
             if (_falling)
             {
-                bool settled = body == null || (Time.time - _fallStartedAt > 0.25f && Mathf.Abs(body.linearVelocity.y) < 0.05f);
+                bool settled = Time.time - _fallStartedAt > 0.25f && Mathf.Abs(body.linearVelocity.y) < 0.05f;
                 bool timedOut = Time.time - _fallStartedAt > 3f;
                 if (!settled && !timedOut)
                     return true;

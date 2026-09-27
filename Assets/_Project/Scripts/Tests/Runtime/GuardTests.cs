@@ -392,6 +392,39 @@ namespace Plunderspell.Tests
 
         // --- Damage -------------------------------------------------------------------------
 
+        /// <summary>
+        /// #106: raid guards have no Rigidbody, and without one a guard Levo let go of was put
+        /// straight back on the floor, a 1.8 m drop in one frame that cost it nothing. It must fall
+        /// and take the fall damage.
+        /// </summary>
+        [Test]
+        public void Test_ALevitatedGuardWithNoBodyFallsAndIsHurt()
+        {
+            CastleGuard guard = MakeGuard(Vector3.zero);
+            Assert.IsNull(guard.GetComponent<Rigidbody>(), "Raid guards have no Rigidbody.");
+            StatusEffectReceiver status = guard.GetComponent<StatusEffectReceiver>();
+            float before = guard.CurrentHealth;
+
+            status.Levitate(Vector3.up, 1f);
+            for (int i = 0; i < 60 && status.IsLevitating; i++)
+            {
+                guard.UpdateLevitation(0.02f);
+                status.Tick(0.02f);
+            }
+            Assert.Greater(guard.transform.position.y, 1.5f, "Levo must lift the guard.");
+
+            Assert.IsTrue(guard.UpdateLevitation(0.02f), "Let go, the guard must fall, not land at once.");
+            Assert.IsTrue(guard.IsAirborne);
+            Assert.Greater(guard.transform.position.y, 1.5f, "The fall starts where the lift ended.");
+
+            for (int i = 0; i < 200 && guard.IsAirborne; i++)
+                guard.UpdateLevitation(0.02f);
+
+            Assert.IsFalse(guard.IsAirborne, "The guard must land.");
+            Assert.AreEqual(0f, guard.transform.position.y, 0.05f, "It lands where it was lifted from.");
+            Assert.Less(guard.CurrentHealth, before - 10f, "A 1.8 m drop must hurt.");
+        }
+
         [Test]
         public void Test_ABurningGuardEventuallyDies()
         {
