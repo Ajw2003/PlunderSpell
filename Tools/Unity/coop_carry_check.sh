@@ -130,6 +130,7 @@ stage() { # stage <light|heavy>:<n>: fresh piece in front of the host, client be
     "${E[@]}" host release >/dev/null
     "${E[@]}" client release >/dev/null
     sleep 1
+    [ -n "$piece" ] && "${E[@]}" host park "$piece" >/dev/null
     local staged
     staged="$("${E[@]}" host stage "$1")"
     piece="${staged%% *}"
@@ -164,7 +165,7 @@ check() {
     host_read="$(cat "$out/.host_read")"
     client_read="$(cat "$out/.client_read")"
     rm -f "$out/.host_read" "$out/.client_read"
-    "${E[@]}" client shot "$(cygpath -w "$repo/$out/$name-client.png")" >/dev/null 2>&1
+    "${E[@]}" client shot "$(cygpath -m "$repo/$out/$name-client.png")" >/dev/null 2>&1
     timeout 60 bash Tools/Unity/capture.sh "$out/$name-host.png" >/dev/null 2>&1
     verdict="$(python - "$host_read" "$client_read" "$@" <<'PY'
 import math, re, sys

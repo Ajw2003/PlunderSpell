@@ -14,7 +14,8 @@
 //   level             look level, so a held piece is lifted to eye height
 //   read <id>         the piece's position, whether this side holds it, where it aims it, and
 //                     where its held point is
-//   shot <path>       save a screenshot (absolute path)
+//   park <id>         host: move a finished scenario's piece out of the way
+//   shot <path>       save a screenshot (absolute path, forward slashes)
 //   quit              close this game (the client build)
 string action = "__ACTION__";
 string arg = "__ARG__";
@@ -123,7 +124,29 @@ switch (action)
         int skip = int.Parse(arg.Substring(arg.IndexOf(':') + 1));
         var player = LocalPlayer();
         var view = (UnityEngine.Transform)Get(player, "CameraTransform");
-        var forward = UnityEngine.Vector3.ProjectOnPlane(view.forward, UnityEngine.Vector3.up).normalized;
+        // Face the most open way: each scenario turns a view 25 degrees and pulls a piece ~2 m out,
+        // and a wall or furniture in that path pins the piece and reads as a carry fault. A way
+        // counts as open as far as it and 30 degrees either side are clear at chest height.
+        var chest = view.position - UnityEngine.Vector3.up * 0.3f;
+        float bestYaw = 0f, bestClear = -1f;
+        for (int step = 0; step < 16; step++)
+        {
+            float yawTry = step * 22.5f;
+            float clear = float.MaxValue;
+            foreach (float spread in new[] { -30f, 0f, 30f })
+            {
+                var way = UnityEngine.Quaternion.Euler(0f, yawTry + spread, 0f) * UnityEngine.Vector3.forward;
+                float reach = UnityEngine.Physics.Raycast(chest, way, out var wall, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)
+                    ? wall.distance : 6f;
+                clear = UnityEngine.Mathf.Min(clear, reach);
+            }
+            if (clear > bestClear) { bestClear = clear; bestYaw = yawTry; }
+        }
+        Set(player, "_yaw", bestYaw);
+        Set(player, "_xRotation", 0f);
+        view.localRotation = UnityEngine.Quaternion.Euler(0f, bestYaw, 0f);
+        var forward = UnityEngine.Quaternion.Euler(0f, bestYaw, 0f) * UnityEngine.Vector3.forward;
+        var right = UnityEngine.Quaternion.Euler(0f, bestYaw, 0f) * UnityEngine.Vector3.right;
         foreach (var found in FindAll("Plunderspell.Loot.LootPickup"))
         {
             var pickup = (UnityEngine.Component)found;
@@ -141,7 +164,7 @@ switch (action)
             body.linearVelocity = UnityEngine.Vector3.zero;
             body.angularVelocity = UnityEngine.Vector3.zero;
             return Get(pickup, "objectId") + " " + pickup.name + " " + body.mass.ToString("F1") + "kg at " + V(at)
-                + " host " + V(player.transform.position) + " right " + V(view.right);
+                + " clear " + bestClear.ToString("F1") + "m host " + V(player.transform.position) + " right " + V(right);
         }
         return "no spawned " + arg + " piece";
     }
@@ -205,7 +228,22 @@ switch (action)
         var held = Items() != null ? Get(Items(), "CarriedItem") as UnityEngine.Component : null;
         var aim = held == item ? V((UnityEngine.Vector3)Get(item, "TargetPosition")) : "none";
         var grip = held == item ? V((UnityEngine.Vector3)Get(item, "GripWorldPosition")) : "none";
-        return "pos " + V(item.transform.position) + " held " + (held == item) + " aim " + aim + " grip " + grip;
+        var body = item.GetComponent<UnityEngine.Rigidbody>();
+        var identity = item.GetComponentInParent(T("PurrNet.NetworkIdentity"));
+        return "pos " + V(item.transform.position) + " held " + (held == item) + " aim " + aim + " grip " + grip
+            + " | kinematic " + body.isKinematic + " portalFrozen " + Get(item, "IsFrozenByPortal")
+            + " inPortal " + Get(item, "_inPortal") + " controls " + ((System.Delegate)Get(T("Item"), "CanDriveHere")).DynamicInvoke(item)
+            + " holders " + Get(item, "HolderCount") + " owner " + Get(identity, "owner");
+    }
+    case "park":
+    {
+        // A finished scenario's piece, out of the way: left where it dropped, the next scenario's
+        // piece caught on it and read as a carry fault.
+        var body = Piece(arg).GetComponent<UnityEngine.Rigidbody>();
+        body.isKinematic = true;
+        body.position += UnityEngine.Vector3.down * 50f;
+        body.transform.position = body.position;
+        return "parked " + arg;
     }
     case "shot":
         UnityEngine.ScreenCapture.CaptureScreenshot(arg);
