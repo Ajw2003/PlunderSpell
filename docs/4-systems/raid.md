@@ -88,6 +88,18 @@ by the gatehouse, and nothing exists outside the curtain wall.
   the curtain wall's outer face, called from `RaidDirector.SealCastle` every raid. RaidScene's
   ground covers only the ring plus a 4 m apron.
 
+### Loot in the portal (2026-09-26, #158)
+
+Loot put down inside the portal stops moving and cannot break, for the players' sanity and so a
+growing pile costs no physics. `ExtractionZone.UpdateRestingLoot` tells each piece as it enters or
+leaves (`Interfaces.IPortalResting`). `Item.SetInPortal` freezes the body (kinematic) once it has
+settled, below 0.15 m/s, so a dropped piece still lands first; picking it up (`StartDragging`) or it
+leaving the portal frees it. `LootPickup.SetInPortal` makes `WouldBreak` false and `Break()` a no-op,
+so neither a fall, a knock nor a spell breaks it there. `PortalRestTests` (PlayMode) covers settling,
+not freezing in mid-air, being picked up, and not breaking. Live: a Gold Death Mask dropped in the
+portal froze; a 500 N·s shove, a spell break and a 50 m/s strike moved it 0.000 m and left it whole;
+picked up it was free, and outside the portal it was an ordinary body again.
+
 Known gap: the loot planner still keeps only the gatehouse clear, so loot can lie in the arrival
 room, next to the exit, with no guard near it.
 

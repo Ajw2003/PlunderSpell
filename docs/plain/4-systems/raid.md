@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/raid.md @ 65716fbb0992cbf83f5cb1918d9b1dece3853d12 -->
+<!-- plain copy of: docs/4-systems/raid.md @ 7e521e9bb3b940433445ad9122cdf70db583b598 -->
 
 # Raid
 
@@ -23,7 +23,8 @@ a raid, cannot tell what they are carrying is worth, or cannot get out with it.
 4. Newly spawned loot is held still for a moment before physics takes over, so a piece that
    spawned slightly inside a wall settles gently instead of being flung across the room.
 5. Players arrive and leave through a portal inside the castle rather than a gate; anyone still
-   outside it when the clock runs out is left behind, along with whatever they were carrying.
+   outside it when the clock runs out is left behind, along with whatever they were carrying. Loot
+   put down inside the portal stays exactly where it is and cannot break until someone picks it up.
 6. Standing on the escape point starts a short countdown; finishing it, or the raid's clock
    running out, banks whatever loot is there.
 7. A guard's attack is limited to firing every so often, not every frame in contact, and guards

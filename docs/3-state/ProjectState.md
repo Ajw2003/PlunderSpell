@@ -97,7 +97,8 @@ actually look like"). The main menu and Lair no longer show "No cameras renderin
 original loot pieces have authored grip points, so a sword is held by its hilt (#134). The
 curtain strip has entrances into the castle, the portal opens on it only in front of one, and a
 team arriving there faces it (#140; `docs/4-systems/castle.md`, "Entrances from the strip").
-A new raid no longer inherits fire, sleep or stun from the last (#143).
+A new raid no longer inherits fire, sleep or stun from the last (#143). Loot put down in the
+portal stays put and cannot break (#158; `docs/4-systems/raid.md`, "Loot in the portal").
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog

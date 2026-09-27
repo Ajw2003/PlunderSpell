@@ -134,6 +134,12 @@ holding an item and dying. One thing carried over: the fire. The next raid began
 after surviving on fire, the next raid starts clean. Open for the user: a survivor keeps their
 wounds into the next raid, which may be intended.
 
+Then #158 (loot near the portal should neither move nor take damage). The portal now tells each
+piece as it enters or leaves; a settled piece inside is frozen and cannot break, and picking it up
+or it leaving frees it. `PortalRestTests` 4/4 (written with the change), and extraction 10/10,
+carry 15/15, loot 38/38. Live: a Gold Death Mask in the portal did not move 1 mm or break under a
+shove, a spell break and a 50 m/s strike, and was free again once picked up and outside.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

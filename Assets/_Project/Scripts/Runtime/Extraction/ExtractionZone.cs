@@ -308,6 +308,7 @@ namespace Plunderspell.Extraction
             }
 
             bool haulChanged = Sync(_lootInZone, _seenLoot, _pinnedLoot);
+            UpdateRestingLoot();
             Sync(_playersInZone, _seenPlayers, _pinnedPlayers);
             if (haulChanged)
                 OnHaulChanged();
@@ -356,6 +357,39 @@ namespace Plunderspell.Extraction
 
         private void OnHaulChanged() => HaulInZoneChanged?.Invoke(WorthInZone, _lootInZone.Count);
 
+        // Loot inside the portal is held still and cannot break (#158).
+        private readonly HashSet<LootValue> _restingLoot = new HashSet<LootValue>();
+        private readonly List<LootValue> _restingScratch = new List<LootValue>();
+
+        /// <summary>Tells each piece as it enters or leaves the portal (<see cref="IPortalResting"/>).</summary>
+        private void UpdateRestingLoot()
+        {
+            _restingScratch.Clear();
+            foreach (LootValue piece in _restingLoot)
+                if (piece == null || !_lootInZone.Contains(piece))
+                    _restingScratch.Add(piece);
+            foreach (LootValue piece in _restingScratch)
+            {
+                _restingLoot.Remove(piece);
+                SetInPortal(piece, false);
+            }
+
+            foreach (LootValue piece in _lootInZone)
+                if (piece != null && _restingLoot.Add(piece))
+                    SetInPortal(piece, true);
+        }
+
+        private static readonly List<IPortalResting> s_resting = new List<IPortalResting>();
+
+        private static void SetInPortal(LootValue piece, bool inPortal)
+        {
+            if (piece == null)
+                return;
+            piece.GetComponents(s_resting);
+            foreach (IPortalResting resting in s_resting)
+                resting.SetInPortal(inPortal);
+        }
+
         // -----------------------------------------------------------------------------------------
         // Test / integration seams (network-free mutation of the tracked lists)
         // -----------------------------------------------------------------------------------------
@@ -385,6 +419,9 @@ namespace Plunderspell.Extraction
             _playersInZone.Clear();
             _pinnedLoot.Clear();
             _pinnedPlayers.Clear();
+            foreach (LootValue piece in _restingLoot)
+                SetInPortal(piece, false);
+            _restingLoot.Clear();
             ResetClock();
             OnHaulChanged();
         }

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 // Physical grab/carry/throw. Uses standard world gravity: the Rigidbody has useGravity = true,
 // so a released or thrown item falls along world -Y (Physics.gravity).
 [RequireComponent(typeof(Rigidbody))]
-public class Item : MonoBehaviour
+public class Item : MonoBehaviour, Interfaces.IPortalResting
 {
     /// <summary>
     /// Whether this machine may move the item's body. Always true offline; in a session
@@ -321,9 +321,49 @@ public class Item : MonoBehaviour
     /// <summary>Where the beam is pulling the held point to, extrapolated to now.</summary>
     public Vector3 TargetPosition => _targetPosition;
 
+    // Loot in the portal (#158): frozen once it settles, until picked up or out of the portal.
+    private bool _inPortal;
+    private bool _frozenByPortal;
+    private const float k_portalSettleSpeed = 0.15f;
+
+    /// <summary>True while the portal is holding this piece still.</summary>
+    public bool IsFrozenByPortal => _frozenByPortal;
+
+    /// <summary><see cref="Interfaces.IPortalResting"/>: the extraction portal took this piece in, or let it go.</summary>
+    public void SetInPortal(bool inPortal)
+    {
+        _inPortal = inPortal;
+        if (!inPortal)
+            ReleasePortalFreeze();
+    }
+
+    private void ReleasePortalFreeze()
+    {
+        if (!_frozenByPortal)
+            return;
+        _frozenByPortal = false;
+        if (!_isInHand)
+            _rb.isKinematic = false;
+    }
+
+    /// <summary>Freezes a piece resting in the portal: not held, and slow enough to have settled,
+    /// so a dropped piece still lands first.</summary>
+    private void UpdatePortalFreeze()
+    {
+        if (!_inPortal || _frozenByPortal || _isDragging || _rb.isKinematic || !CanDriveHere(this))
+            return;
+        if (_rb.linearVelocity.magnitude > k_portalSettleSpeed || _rb.angularVelocity.magnitude > 0.5f)
+            return;
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+        _rb.isKinematic = true;
+        _frozenByPortal = true;
+    }
+
     private void FixedUpdate()
     {
         _velocityIntoStep = _rb.linearVelocity;
+        UpdatePortalFreeze();
         if (!_isDragging || _isInHand)
             return;
 
@@ -444,6 +484,7 @@ public class Item : MonoBehaviour
     /// at. It hangs from there while held.</summary>
     public void StartDragging(GameObject holder, Vector3 grabPoint)
     {
+        _frozenByPortal = false;
         _isDragging = true;
         Holder = holder;
         // Stays a dynamic body while held (see FixedUpdate). It must not collide with the person

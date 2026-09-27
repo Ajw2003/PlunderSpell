@@ -37,7 +37,7 @@ namespace Plunderspell.Loot
     /// Frango shatters loot; Levo lifts it.
     /// </remarks>
     [RequireComponent(typeof(Rigidbody))]
-    public class LootPickup : NetworkBehaviour, IBreakable, ILevitatable
+    public class LootPickup : NetworkBehaviour, IBreakable, ILevitatable, IPortalResting
     {
         [Header("Data")]
         [SerializeField] private LootItem _data;
@@ -188,10 +188,19 @@ namespace Plunderspell.Loot
             return Mathf.Abs(Vector3.Dot(col.relativeVelocity, col.GetContact(0).normal));
         }
 
+        private bool _inPortal;
+
+        /// <summary>True while the extraction portal holds this piece safe (#158).</summary>
+        public bool IsInPortal => _inPortal;
+
+        /// <summary><see cref="IPortalResting"/>: nothing breaks a piece inside the portal.</summary>
+        public void SetInPortal(bool inPortal) => _inPortal = inPortal;
+
         /// <summary>Pure fragility test — does an impact of this magnitude break the item?</summary>
         public bool WouldBreak(float relativeVelocityMagnitude)
         {
             return _data != null &&
+                   !_inPortal &&
                    !IsBeingCarried &&
                    !IsBroken &&
                    relativeVelocityMagnitude > _data.Fragility;
@@ -439,7 +448,8 @@ namespace Plunderspell.Loot
         /// </summary>
         public void Break()
         {
-            if (IsBroken)
+            // Safe in the portal, from spells as from falls (#158).
+            if (IsBroken || _inPortal)
                 return;
             BreakItem();
         }
