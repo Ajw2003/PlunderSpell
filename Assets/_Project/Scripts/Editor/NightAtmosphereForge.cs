@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using RogueAi.Alarm;
-using RogueAi.Atmosphere;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Raid;
+using Plunderspell.Alarm;
+using Plunderspell.Atmosphere;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Raid;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -14,14 +14,14 @@ using UnityEngine.AI;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Builds everything the castle's night is made of (docs/plans/night-atmosphere.md) and wires it
     /// into a scene: the Low/Medium/High quality levels and their URP assets, the fog pass on each
     /// renderer, the four alarm-state grades, the atmosphere profile, the fire and portal prefabs.
     /// Idempotent: re-running rebuilds the same assets in place, keeping their GUIDs.
-    /// See docs/systems/atmosphere.md.
+    /// See docs/4-systems/atmosphere.md.
     /// </summary>
     public static class NightAtmosphereForge
     {

@@ -1,4 +1,4 @@
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Where a session is in the loop. Ordered as it is lived: the Lair, then a raid, then back to

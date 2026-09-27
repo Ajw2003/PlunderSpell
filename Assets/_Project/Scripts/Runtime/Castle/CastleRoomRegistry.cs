@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Serializable description of a single room prefab available to the generator.
@@ -39,7 +39,7 @@ namespace RogueAi.Castle
     /// ScriptableObject catalogue of every room module, grouped conceptually by zone. Feeds the
     /// <see cref="ProceduralCastleGenerator"/> weighted selection.
     /// </summary>
-    [CreateAssetMenu(fileName = "CastleRoomRegistry", menuName = "RogueAi/Castle/Room Registry")]
+    [CreateAssetMenu(fileName = "CastleRoomRegistry", menuName = "Plunderspell/Castle/Room Registry")]
     public class CastleRoomRegistry : ScriptableObject
     {
         [Tooltip("All room modules known to the generator.")]

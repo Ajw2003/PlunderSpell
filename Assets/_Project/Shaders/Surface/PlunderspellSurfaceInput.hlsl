@@ -29,7 +29,7 @@ TEXTURE2D(_DetailMap);
 SAMPLER(sampler_DetailMap);
 // _EmissionMap is declared by URP's SurfaceInput.hlsl.
 
-// Set per era by RogueAi.Atmosphere.CastleAtmosphere: rgb darkens and warms stone at night,
+// Set per era by Plunderspell.Atmosphere.CastleAtmosphere: rgb darkens and warms stone at night,
 // a is how much of it applies (0 when no atmosphere is running, so nothing turns black).
 half4 _PlunderStoneTint;
 

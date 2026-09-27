@@ -2,19 +2,19 @@ using System;
 using System.Collections.Generic;
 using Interfaces;
 using PurrNet;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Status;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Status;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace RogueAi.Guards
+namespace Plunderspell.Guards
 {
     /// <summary>
     /// A castle guard: the thing that makes noise matter.
     ///
     /// It hears (<see cref="INoiseListener"/>), it sees (a cone check with a line-of-sight raycast),
-    /// and it can be shut down by the spells that target the living — Somnus, Tonitrus and Ignis all
+    /// and it can be shut down by the spells that target the living — Somnus, Frango and Ignis all
     /// reach it through <see cref="StatusEffectReceiver"/>. Every decision it makes is delegated to
     /// <see cref="GuardBrain"/>, so its behaviour is asserted in tests rather than observed in play.
     ///
@@ -85,7 +85,7 @@ namespace RogueAi.Guards
         [field: SerializeField] private SyncVar<float> _health { get; set; } = new SyncVar<float>(100f);
 
         // Every attack bumps this, so every peer learns a guard swung or fired, not only the server
-        // that resolved the hit. Packed count + kind; see GuardAttackSignal and docs/systems/net.md.
+        // that resolved the hit. Packed count + kind; see GuardAttackSignal and docs/4-systems/net.md.
         private readonly SyncVar<int> _attackSignal = new SyncVar<int>(GuardAttackSignal.None);
 
         private StatusEffectReceiver _status;
@@ -154,7 +154,103 @@ namespace RogueAi.Guards
             _health.value = _maxHealth;
 
             if (_alarm == null)
-                _alarm = FindObjectOfType<AlarmFSMManager>();
+                WatchAlarm(FindObjectOfType<AlarmFSMManager>());
+        }
+
+        private void OnEnable() => s_active.Add(this);
+
+        private void OnDisable()
+        {
+            s_active.Remove(this);
+        }
+
+        protected override void OnDestroy()
+        {
+            WatchAlarm(null);
+            base.OnDestroy();
+        }
+
+        // -----------------------------------------------------------------------------------------
+        // Raising the castle (#163)
+        // -----------------------------------------------------------------------------------------
+
+        private static readonly List<CastleGuard> s_active = new List<CastleGuard>();
+
+        /// <summary>At the hue and cry, every guard this close to a player goes for that player.</summary>
+        public const float HueAndCryRadius = 40f;
+
+        /// <summary>Guards alive and enabled, for the shout and the hue and cry.</summary>
+        public static IReadOnlyList<CastleGuard> Active => s_active;
+
+        /// <summary>The alarm this guard reports to and listens to. Null outside a raid.</summary>
+        public AlarmFSMManager Alarm => _alarm;
+
+        private void WatchAlarm(AlarmFSMManager alarm)
+        {
+            if (_alarm != null)
+                _alarm.AlarmStateChanged -= OnAlarmStateChanged;
+            _alarm = alarm;
+            if (_alarm != null)
+                _alarm.AlarmStateChanged += OnAlarmStateChanged;
+        }
+
+        /// <summary>The hue and cry: every guard within <see cref="HueAndCryRadius"/> of a player
+        /// heads for the nearest one (#163).</summary>
+        private void OnAlarmStateChanged(AlarmState state)
+        {
+            if (state != AlarmState.HueAndCry || (isSpawned && !isServer))
+                return;
+            Transform nearest = null;
+            float best = HueAndCryRadius;
+            foreach (Transform intruder in Intruders)
+            {
+                if (intruder == null)
+                    continue;
+                float d = Vector3.Distance(transform.position, intruder.position);
+                if (d <= best)
+                {
+                    best = d;
+                    nearest = intruder;
+                }
+            }
+            if (nearest != null)
+                AlertTo(nearest.position);
+        }
+
+        /// <summary>
+        /// Sends this guard to <paramref name="position"/>, where an intruder was: it investigates
+        /// there unless it is already chasing someone, and it does not wake from sleep or stun for
+        /// it. Returns whether the guard took it up.
+        /// </summary>
+        public bool AlertTo(Vector3 position)
+        {
+            if (IsDead || IsIncapacitated || _state.value == GuardAlertState.Chasing)
+                return false;
+            _investigationTarget = position;
+            if (_state.value != GuardAlertState.Investigating)
+                EnterState(GuardAlertState.Investigating, _alarm != null ? _alarm.State : AlarmState.Calm);
+            AlertsReceived++;
+            return true;
+        }
+
+        /// <summary>How many times this guard has been sent after an intruder by a shout or the hue
+        /// and cry, for tests and the live check.</summary>
+        public int AlertsReceived { get; private set; }
+
+        /// <summary>Sends every active guard within <paramref name="radius"/> of <paramref name="centre"/>,
+        /// except <paramref name="except"/>, to <paramref name="target"/>. Returns how many went.</summary>
+        public static int AlertGuardsNear(Vector3 centre, float radius, Vector3 target, CastleGuard except = null)
+        {
+            int alerted = 0;
+            for (int i = s_active.Count - 1; i >= 0; i--)
+            {
+                CastleGuard guard = s_active[i];
+                if (guard == null || guard == except)
+                    continue;
+                if (Vector3.Distance(guard.transform.position, centre) <= radius && guard.AlertTo(target))
+                    alerted++;
+            }
+            return alerted;
         }
 
         protected override void OnSpawned()
@@ -204,6 +300,7 @@ namespace RogueAi.Guards
         private float _floatBaseY;
         private float _fallFromY;
         private float _fallStartedAt;
+        private float _fallSpeed;
 
         /// <summary>True while Levo holds this guard up or it is still falling back down.</summary>
         public bool IsAirborne => _floating || _falling;
@@ -214,7 +311,7 @@ namespace RogueAi.Guards
         /// suspended and the transform raised directly, then the body falls under real gravity and
         /// takes damage for the height. Returns true while the AI must not run.
         /// </summary>
-        private bool UpdateLevitation(float deltaTime)
+        public bool UpdateLevitation(float deltaTime)
         {
             bool levitating = _status != null && _status.IsLevitating;
             TryGetComponent(out Rigidbody body);
@@ -248,6 +345,7 @@ namespace RogueAi.Guards
                 _falling = true;
                 _fallFromY = transform.position.y;
                 _fallStartedAt = Time.time;
+                _fallSpeed = 0f;
                 if (body != null)
                 {
                     body.isKinematic = false;
@@ -255,17 +353,27 @@ namespace RogueAi.Guards
                     body.freezeRotation = true;
                     body.linearVelocity = Vector3.zero;
                 }
-                else
-                {
-                    Land(body);
-                    return false;
-                }
                 return true;
+            }
+
+            if (_falling && body == null)
+            {
+                // Raid guards have no Rigidbody, so fall by hand, straight back down to where the lift
+                // started: the guard was raised vertically with its agent off, so that is the floor.
+                // Landing at once here cost the drop nothing (#106).
+                _fallSpeed -= Physics.gravity.y * deltaTime;
+                Vector3 p = transform.position;
+                p.y = Mathf.Max(_floatBaseY, p.y - _fallSpeed * deltaTime);
+                transform.position = p;
+                if (p.y > _floatBaseY)
+                    return true;
+                Land(null);
+                return false;
             }
 
             if (_falling)
             {
-                bool settled = body == null || (Time.time - _fallStartedAt > 0.25f && Mathf.Abs(body.linearVelocity.y) < 0.05f);
+                bool settled = Time.time - _fallStartedAt > 0.25f && Mathf.Abs(body.linearVelocity.y) < 0.05f;
                 bool timedOut = Time.time - _fallStartedAt > 3f;
                 if (!settled && !timedOut)
                     return true;
@@ -541,12 +649,16 @@ namespace RogueAi.Guards
             GuardAlertState previous = _state.value;
             _state.value = next;
 
-            // Spotting an intruder is worth shouting about — once per chase, not once per frame.
+            // Spotting an intruder is worth shouting about — once per chase, not once per frame. The
+            // shout wakes guards in earshot; the alarm is told directly, walls or not (#139).
             if (next == GuardAlertState.Chasing && previous != GuardAlertState.Chasing)
             {
                 if (!_hasShoutedThisChase)
                 {
                     RaiseTheCry();
+                    // Everyone in earshot is sent to where the intruder was seen, not to the shouter.
+                    AlertGuardsNear(transform.position, _shoutRadius, _lastKnownIntruderPosition, this);
+                    _alarm?.ReportSighting();
                     _hasShoutedThisChase = true;
                 }
             }
@@ -555,6 +667,9 @@ namespace RogueAi.Guards
                 _hasShoutedThisChase = false;
             }
 
+            if (next == GuardAlertState.Chasing || previous == GuardAlertState.Chasing)
+                _alarm?.ReportChase(GetInstanceID(), next == GuardAlertState.Chasing);
+
             StateChanged?.Invoke(next);
         }
 
@@ -562,7 +677,7 @@ namespace RogueAi.Guards
         /// Strikes or fires at <paramref name="target"/> when in range and off cooldown. A guard that
         /// could chase but never hurt anyone is what made the castle harmless.
         ///
-        /// See docs/systems/raid.md, "Guards that can actually hurt you".
+        /// See docs/4-systems/raid.md, "Guards that can actually hurt you".
         /// </summary>
         private void TryAttack(Transform target)
         {
@@ -579,6 +694,7 @@ namespace RogueAi.Guards
 
             _lastAttackTime = Time.time;
             SignalAttack(shoots ? GuardAttackKind.Projectile : GuardAttackKind.Melee);
+            _alarm?.ReportAttack();
 
             if (shoots)
                 FireAt(origin, toTarget.normalized);
@@ -681,10 +797,38 @@ namespace RogueAi.Guards
         /// <summary>Wires the guard from code, for tests and tooling-built scenes.</summary>
         public void Configure(AlarmFSMManager alarm, List<Transform> patrolRoute = null)
         {
-            _alarm = alarm;
+            // Null keeps the alarm Awake found: the spawner passes null, and overwriting it left
+            // every spawned guard deaf to the alarm and unable to report a sighting (#163).
+            if (alarm != null)
+                WatchAlarm(alarm);
             if (patrolRoute != null)
                 _patrolRoute = patrolRoute;
         }
+
+        /// <summary>
+        /// Scales this guard's movement speeds and damage per hit. Call once, on a freshly spawned
+        /// guard: it multiplies the prefab's values, so a second call compounds.
+        /// </summary>
+        public void ScaleTuning(float speedScale, float damageScale)
+        {
+            _patrolSpeed *= speedScale;
+            _chaseSpeed *= speedScale;
+            _attackDamage *= damageScale;
+        }
+
+        /// <summary>Multiplies the guard's health, full and current, for a bigger lobby (#154).
+        /// Applied once at spawn, on the server.</summary>
+        public void ScaleHealth(float healthScale)
+        {
+            if (healthScale <= 0f)
+                return;
+            _maxHealth *= healthScale;
+            _health.value = _maxHealth;
+        }
+
+        public float PatrolSpeed => _patrolSpeed;
+        public float ChaseSpeed => _chaseSpeed;
+        public float AttackDamage => _attackDamage;
 
         /// <summary>Where the guard is currently heading to investigate, if anywhere.</summary>
         public Vector3? InvestigationTarget => _investigationTarget;

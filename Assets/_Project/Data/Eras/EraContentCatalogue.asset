@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8205eae1c47b36945b9d56e8f9f3bc13, type: 3}
   m_Name: EraContentCatalogue
-  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.EraContentCatalogue
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.EraContentCatalogue
   Entries:
   - Era: 0
     Rooms: {fileID: 11400000, guid: dc03b67fef201b24c8936efde52f6c6a, type: 2}

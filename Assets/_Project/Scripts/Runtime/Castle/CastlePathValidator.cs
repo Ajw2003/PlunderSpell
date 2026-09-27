@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Validates that a generated castle is traversable from the crypt final chamber to the

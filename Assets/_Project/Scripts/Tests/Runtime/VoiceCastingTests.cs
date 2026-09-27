@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Spells;
-using RogueAi.Voice;
+using Plunderspell.Spells;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// EditMode tests for the Milestone 1 voice-casting pipeline: mock provider,
@@ -46,7 +46,7 @@ namespace RogueAi.Tests
                 MakeWord("IGNIS", SpellId.Ignis, SpellId.MisfireIgnis, "AGNIS", "IGNISH"),
                 MakeWord("FRANGO", SpellId.Frango, SpellId.MisFireFrango, "FRANCO", "FRANGGO"),
                 MakeWord("LEVO", SpellId.Levo, SpellId.MisfireLevo, "LAVO"),
-                MakeWord("TONITRUS", SpellId.Tonitrus, SpellId.MisfireTonitrus, "TONITUS", "TONITRIS"),
+                MakeWord("VELOX", SpellId.Velox, SpellId.MisfireVelox, "VELOS", "VELO"),
                 MakeWord("PORTA", SpellId.Porta, SpellId.MisfirePorta, "PROTA", "PORTA A"),
             };
             _spawned.Add(lex);

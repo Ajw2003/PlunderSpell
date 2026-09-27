@@ -1,0 +1,17 @@
+{
+    "name": "Plunderspell.Lair",
+    "rootNamespace": "Plunderspell.Lair",
+    "references": [
+        "Plunderspell.Extraction",
+        "Plunderspell.Inventory"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

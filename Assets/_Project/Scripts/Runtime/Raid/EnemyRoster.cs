@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using RogueAi.Castle;
-using RogueAi.Inventory;
+using Plunderspell.Castle;
+using Plunderspell.Inventory;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Which enemy stands where. One entry per enemy prefab, tagged with the castle zone it garrisons
@@ -33,7 +33,7 @@ namespace RogueAi.Raid
             public HistoricalEra Era = HistoricalEra.HighMedieval;
 
             [Tooltip("Spawns in every Age. Only for the supernatural Crypt enemies, which belong to " +
-                     "no century; see docs/systems/raid-scene-assembly.md (\"Era reaches the raid\").")]
+                     "no century; see docs/4-systems/raid-scene-assembly.md (\"Era reaches the raid\").")]
             public bool AnyEra;
 
             [Tooltip("Relative frequency within its zone. Higher is more common.")]

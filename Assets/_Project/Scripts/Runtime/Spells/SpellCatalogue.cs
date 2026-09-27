@@ -1,4 +1,4 @@
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Pure facts about <see cref="SpellId"/> values: whether an id is a misfire outcome, and the
@@ -28,10 +28,10 @@ namespace RogueAi.Spells
                 case SpellId.Frango: return SpellId.MisFireFrango;
                 case SpellId.Levo: return SpellId.MisfireLevo;
                 case SpellId.AurumVoco: return SpellId.MisfireAurumVoco;
-                case SpellId.Tonitrus: return SpellId.MisfireTonitrus;
                 case SpellId.Somnus: return SpellId.MisFireSomnus;
-                case SpellId.CadaverSurge: return SpellId.MisFireCadaverSurge;
                 case SpellId.Porta: return SpellId.MisfirePorta;
+                case SpellId.Velox: return SpellId.MisfireVelox;
+                case SpellId.Saltus: return SpellId.MisfireSaltus;
                 default: return SpellId.None;
             }
         }
@@ -45,10 +45,10 @@ namespace RogueAi.Spells
                 case SpellId.MisFireFrango: return SpellId.Frango;
                 case SpellId.MisfireLevo: return SpellId.Levo;
                 case SpellId.MisfireAurumVoco: return SpellId.AurumVoco;
-                case SpellId.MisfireTonitrus: return SpellId.Tonitrus;
                 case SpellId.MisFireSomnus: return SpellId.Somnus;
-                case SpellId.MisFireCadaverSurge: return SpellId.CadaverSurge;
                 case SpellId.MisfirePorta: return SpellId.Porta;
+                case SpellId.MisfireVelox: return SpellId.Velox;
+                case SpellId.MisfireSaltus: return SpellId.Saltus;
                 default: return SpellId.None;
             }
         }

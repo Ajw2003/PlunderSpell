@@ -1,0 +1,16 @@
+{
+    "name": "Plunderspell.Status",
+    "rootNamespace": "Plunderspell.Status",
+    "references": [
+        "Plunderspell.Foundation"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

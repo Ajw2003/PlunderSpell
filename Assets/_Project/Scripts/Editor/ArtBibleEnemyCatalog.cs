@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RogueAi.Castle;
-using RogueAi.Inventory;
+using Plunderspell.Castle;
+using Plunderspell.Inventory;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>The four jobs the art bible gives every Age (docs/art/data/*.json, "role").</summary>
     public enum ArtBibleRole
@@ -233,7 +233,7 @@ namespace RogueAi.EditorTools
             };
 
         /// <summary>
-        /// Archway height per zone, from docs/systems/scale.md ("Archways"; the CurtainWall gate from
+        /// Archway height per zone, from docs/4-systems/scale.md ("Archways"; the CurtainWall gate from
         /// the art bible's Lion Gate, 3.74 m). The geometry is the source; this mirrors it.
         /// </summary>
         public static float ArchwayHeight(CastleZone zone)

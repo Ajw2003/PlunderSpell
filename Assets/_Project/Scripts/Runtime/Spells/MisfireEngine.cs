@@ -1,6 +1,6 @@
-using RogueAi.Voice;
+using Plunderspell.Voice;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Pure resolution logic that turns a recognised phrase into the spell that actually

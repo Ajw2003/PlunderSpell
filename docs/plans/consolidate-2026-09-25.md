@@ -19,7 +19,7 @@ of that plan has already happened on `claude/staging-2026-09-24`.
 staging + dreamy + era, merged in that order:
 - **dreamy into staging:** no conflicts. `RaidDirector` ends with one Age field, era's content swap
   and dreamy's `RaidContext` side by side.
-- **era:** conflicts only in `docs/README.md` and `docs/Today.md`, where both sides added entries.
+- **era:** conflicts only in `docs/1-landing/README.md` and `docs/5-today/Today.md`, where both sides added entries.
   Resolved by keeping both.
 - **Headless build:** clean, after the harness fixes now committed on dreamy (`a43d041`).
 - **Tests:** 185 passed, 35 failed. Every one of the 35 also fails on staging alone or on dreamy

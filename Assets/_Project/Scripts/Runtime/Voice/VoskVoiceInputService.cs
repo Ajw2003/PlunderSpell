@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Vosk;
 #endif
 
-namespace RogueAi.Voice
+namespace Plunderspell.Voice
 {
     [System.Serializable]
     public class VoiceRecognizerJson // JsonUtility target for Vosk's {"text":"..."} payload
@@ -16,7 +16,7 @@ namespace RogueAi.Voice
         public string partial;
     }
 
-    // doc-ref 5ea6 docs/systems/voice.md
+    // doc-ref 5ea6 docs/4-systems/voice.md
     /// <summary>
     /// Windows x64 speech provider backed by the offline Vosk recogniser. Reads the microphone on
     /// the main thread, and maps English spellings the model can hear back to the Latin lexicon
@@ -58,8 +58,16 @@ namespace RogueAi.Voice
         private bool _recognizerStale = true;
         private AudioClip _micClip;
         private string _micDevice;
+
+        // The microphone stays open between casts: closing a device (Microphone.End) blocked the main
+        // thread for ~90 ms on every release of the cast key, and opening it again cost as much on
+        // the next press. It is opened once (WarmUp) and closed when the service goes away.
         private int _lastSamplePosition;
         private float[] _floatBuffer = new float[SampleRate];
+
+        // The Settings microphone gain, read when the cast key goes down so a change applies to the
+        // next cast without a lookup every frame.
+        private float _gain = 1f;
         private short[] _shortBuffer = new short[SampleRate];
         private MainThreadPump _pump;
 
@@ -102,6 +110,21 @@ namespace RogueAi.Voice
             }
 #if !HEADLESS
             _recognizerStale = true;
+            WarmUp();
+#endif
+        }
+
+        /// <summary>
+        /// Builds the recogniser and opens the microphone now, so the first press of the cast key
+        /// does not pay for either (about a second between them). Called when the caster hands
+        /// over its vocabulary, which happens as the player spawns.
+        /// </summary>
+        public void WarmUp()
+        {
+#if !HEADLESS
+            if (Microphone.devices == null || Microphone.devices.Length == 0 || !EnsureRecognizer())
+                return;
+            OpenMicrophone(MicrophonePicker.Resolve());
 #endif
         }
 
@@ -125,21 +148,18 @@ namespace RogueAi.Voice
 
             // Not null: Unity's null is just the first device listed, which here was a silent virtual
             // input. MicrophonePicker prefers the Settings choice, then Windows' own default.
-            _micDevice = MicrophonePicker.Resolve();
-            _micClip = Microphone.Start(_micDevice, true, MicLoopSeconds, SampleRate);
-            if (_micClip == null)
-            {
-                Debug.LogWarning("[Vosk] Microphone.Start returned null; voice casting will stay silent.");
+            if (!OpenMicrophone(MicrophonePicker.Resolve()))
                 return;
-            }
 
             EnsurePump();
-            _lastSamplePosition = 0;
+            // Only what is said from now on: the open microphone has been recording all along.
+            _lastSamplePosition = Microphone.GetPosition(_micDevice);
             LastPeakRms = 0f;
             CurrentRms = 0f;
+            _gain = Plunderspell.Core.AudioInputSettings.MicGain;
             CurrentDevice = _micDevice;
             IsListening = true;
-            Debug.Log($"[Vosk] Listening on '{_micDevice}' @ {SampleRate}Hz.");
+            Debug.Log($"[Vosk] Listening on '{_micDevice}'.");
 #endif
         }
 
@@ -166,13 +186,45 @@ namespace RogueAi.Voice
                 _recognizerStale = true;
             }
 
-            Microphone.End(_micDevice);
-            _micClip = null;
+            // The microphone is left open for the next cast; see WarmUp.
             CurrentRms = 0f;
             CurrentDevice = null;
             Debug.Log("[Vosk] Stopped listening.");
 #endif
         }
+
+#if !HEADLESS
+        /// <summary>Closes the microphone device if it is open. Blocks for a moment; never call it
+        /// on the cast key's release.</summary>
+        public void CloseMicrophone()
+        {
+            if (_micClip == null)
+                return;
+            Microphone.End(_micDevice);
+            _micClip = null;
+            Debug.Log($"[Vosk] Closed '{_micDevice}'.");
+        }
+
+        /// <summary>Opens <paramref name="device"/> unless it is already open and recording.
+        /// A different device (a new choice in Settings) closes the old one first.</summary>
+        private bool OpenMicrophone(string device)
+        {
+            if (_micClip != null && device == _micDevice && Microphone.IsRecording(device))
+                return true;
+
+            CloseMicrophone();
+            _micDevice = device;
+            _micClip = Microphone.Start(_micDevice, true, MicLoopSeconds, SampleRate);
+            if (_micClip == null)
+            {
+                Debug.LogWarning("[Vosk] Microphone.Start returned null; voice casting will stay silent.");
+                return false;
+            }
+            EnsurePump();
+            Debug.Log($"[Vosk] Opened '{_micDevice}' @ {SampleRate}Hz.");
+            return true;
+        }
+#endif
 
 #if !HEADLESS
         /// <summary>
@@ -275,6 +327,8 @@ namespace RogueAi.Voice
             _micClip.GetData(_floatBuffer, _lastSamplePosition);
             _lastSamplePosition = position;
 
+            // Gain first, so recognition, loudness and the level meter all hear the same voice.
+            VoiceUtility.ApplyGain(_floatBuffer, available, _gain);
             CurrentRms = VoiceUtility.ComputeRms(_floatBuffer, available);
             LastPeakRms = Mathf.Max(LastPeakRms, CurrentRms);
             for (int i = 0; i < available; i++)
@@ -347,7 +401,12 @@ namespace RogueAi.Voice
         {
             private VoskVoiceInputService _owner;
             public void Init(VoskVoiceInputService owner) => _owner = owner;
-            private void Update() => _owner?.ReadMicrophone();
+            private void Update()
+            {
+                _owner?.ReadMicrophone();
+            }
+
+            private void OnDestroy() => _owner?.CloseMicrophone();
         }
 #endif
     }

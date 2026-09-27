@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Works out where a raid starts from a generated layout: standing on the floor just inside the
@@ -11,7 +11,7 @@ namespace RogueAi.Castle
     /// editor scene builder (which bakes a spawn for the authored scene), so there is one probe and
     /// one set of player dimensions rather than a copy per caller.
     ///
-    /// See docs/systems/scale.md ("Spawning").
+    /// See docs/4-systems/scale.md ("Spawning").
     /// </summary>
     public static class CastleSpawnResolver
     {
@@ -93,6 +93,10 @@ namespace RogueAi.Castle
         /// </summary>
         public static Vector3 FirstClearStandingPoint(Vector3 anchor)
         {
+            // A clear capsule is not enough: over the drawbridge's moat it is clear all the way down,
+            // and a player stood there fell through the world (#147). Prefer a point with a floor
+            // under it; a clear point with none is only a fallback for layouts without floors.
+            Vector3? clearButUnfloored = null;
             foreach (Vector2 offset in StandingOffsets())
             {
                 Vector3 feet = anchor + new Vector3(offset.x, FloorHeight + FloorClearance, offset.y);
@@ -100,13 +104,29 @@ namespace RogueAi.Castle
                 Vector3 top = feet + Vector3.up * (PlayerHeight - PlayerRadius);
                 // Triggers are ignored deliberately: the alarm's listening volume spans the whole
                 // castle, so counting it as an obstruction would reject every candidate.
-                if (!Physics.CheckCapsule(bottom, top, PlayerRadius, ~0, QueryTriggerInteraction.Ignore))
+                if (Physics.CheckCapsule(bottom, top, PlayerRadius, ~0, QueryTriggerInteraction.Ignore))
+                    continue;
+                if (HasFloorUnder(feet))
                     return feet + Vector3.up * (PlayerHeight * 0.5f);
+                clearButUnfloored ??= feet;
+            }
+
+            if (clearButUnfloored.HasValue)
+            {
+                Debug.LogWarning("[CastleSpawn] No clear standing point with a floor under it; standing on the first clear one.");
+                return clearButUnfloored.Value + Vector3.up * (PlayerHeight * 0.5f);
             }
 
             Debug.LogWarning("[CastleSpawn] No clear standing point near the gate; using its centre.");
             return anchor + Vector3.up * (FloorHeight + FloorClearance + PlayerHeight * 0.5f);
         }
+
+        /// <summary>How far below the feet a floor may be and still count: a step down to bare
+        /// ground (0.35 m below a room's floor) is fine, a moat is not.</summary>
+        private const float k_MaxStepDown = 1f;
+
+        private static bool HasFloorUnder(Vector3 feet) =>
+            Physics.Raycast(feet + Vector3.up * 0.1f, Vector3.down, k_MaxStepDown + 0.1f, ~0, QueryTriggerInteraction.Ignore);
 
         /// <summary>Anchor, then two rings of eight, out to just inside the cell walls.</summary>
         private static IEnumerable<Vector2> StandingOffsets()

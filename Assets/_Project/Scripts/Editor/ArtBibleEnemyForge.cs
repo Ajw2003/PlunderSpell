@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RogueAi.Castle;
-using RogueAi.Guards;
-using RogueAi.Raid;
-using RogueAi.Status;
+using Plunderspell.Castle;
+using Plunderspell.Guards;
+using Plunderspell.Raid;
+using Plunderspell.Status;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
-    // doc-ref d1ef docs/systems/raid-scene-assembly.md
+    // doc-ref d1ef docs/4-systems/raid-scene-assembly.md
     /// <summary>
     /// Authors one prefab variant per art-bible enemy from <see cref="ArtBibleEnemyCatalog"/> and
     /// posts them to the <see cref="EnemyRoster"/>. The sibling of <see cref="EnemyPrefabForge"/>.

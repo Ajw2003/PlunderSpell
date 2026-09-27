@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Deterministic, seed-driven procedural castle builder.
@@ -104,6 +104,8 @@ namespace RogueAi.Castle
             BuildInterior(data, occupied, rng);
             int gatehouseIndex = BuildCurtainWall(data, occupied);
             AssignExtractionExit(data, gatehouseIndex);
+            data.EntranceCells = CastleEntrancePlanner.Plan(data, m_curtainWallRadius,
+                new HashSet<string> { k_WallStraightId, ResolveRoomId(k_WallStraightId) });
 
             // Every enclosed room is authored with an archway on all four sides, so any side with
             // no neighbour is currently a hole in the outer face. Fill those.
@@ -480,7 +482,7 @@ namespace RogueAi.Castle
         /// <summary>
         /// Fills every archway that faces an empty cell with its zone's door plug, so an opening
         /// either leads into the neighbouring room or is walled off — never out into nothing.
-        /// See docs/systems/scale.md ("Archways") for the sizes this relies on.
+        /// See docs/4-systems/scale.md ("Archways") for the sizes this relies on.
         /// </summary>
         private void SealOpenArchways(ProceduralCastleData data, Dictionary<Vector2Int, int> occupied)
         {
@@ -509,12 +511,15 @@ namespace RogueAi.Castle
         /// <summary>
         /// Whether an archway onto <paramref name="neighbour"/> leads somewhere, and so must be
         /// left open. A curtain-wall cell is a wall, not a room, so an archway onto one is as open
-        /// as an archway onto nothing — except at the gatehouse, which is the way out.
+        /// as an archway onto nothing — except at the gatehouse, and at an entrance from the
+        /// strip (<see cref="CastleEntrancePlanner"/>).
         /// </summary>
         private bool IsArchwayConnected(ProceduralCastleData data,
             Dictionary<Vector2Int, int> occupied, Vector2Int neighbour)
         {
             if (neighbour == k_GateOutward * m_curtainWallRadius)
+                return true;
+            if (data.EntranceCells.Contains(neighbour))
                 return true;
             if (!occupied.TryGetValue(neighbour, out int index))
                 return false;
@@ -551,7 +556,7 @@ namespace RogueAi.Castle
         /// <summary>
         /// Whether a module of <paramref name="zone"/> is authored with an archway facing
         /// <paramref name="direction"/>. Enclosed rooms open on all four sides — see
-        /// docs/systems/castle.md ("Doorways and door plugs").
+        /// docs/4-systems/castle.md ("Doorways and door plugs").
         /// </summary>
         public static bool HasArchwayFacing(CastleZone zone, Vector2Int direction)
         {

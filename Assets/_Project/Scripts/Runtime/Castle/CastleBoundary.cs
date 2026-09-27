@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Four invisible walls on the curtain wall's outer face. The castle is the whole world for

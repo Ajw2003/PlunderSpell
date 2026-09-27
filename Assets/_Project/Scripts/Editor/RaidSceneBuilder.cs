@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using System.IO;
 using Player;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Guards;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Playtest;
-using RogueAi.Raid;
-using RogueAi.Spells;
-using RogueAi.Status;
-using RogueAi.UI;
-using RogueAi.Voice;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Playtest;
+using Plunderspell.Raid;
+using Plunderspell.Spells;
+using Plunderspell.Status;
+using Plunderspell.UI;
+using Plunderspell.Voice;
 using StateMachine;
 using Unity.AI.Navigation;
 using UnityEditor;
@@ -23,14 +23,14 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Assembles a raid-scene **scaffold** from the project's authored assets: the 25 castle room
     /// prefabs, the 5 loot prefabs, the 10 enemy prefabs, extraction, HUD and the authored player.
     ///
     /// It writes `RaidScene.Scaffold.unity`, never `RaidScene.unity` — the raid scene is hand-authored
-    /// now. See docs/systems/raid-scene-assembly.md, "Authored, not generated", for what that means
+    /// now. See docs/4-systems/raid-scene-assembly.md, "Authored, not generated", for what that means
     /// for this tool, and for what this builds and the order it builds it in.
     /// </summary>
     public static class RaidSceneBuilder
@@ -45,7 +45,7 @@ namespace RogueAi.EditorTools
 
         /// <summary>
         /// The scaffold this writes — deliberately NOT the authored scene. See
-        /// docs/systems/raid-scene-assembly.md, "Authored, not generated".
+        /// docs/4-systems/raid-scene-assembly.md, "Authored, not generated".
         /// </summary>
         private const string ScenePath = SceneDirectory + "/RaidScene.Scaffold.unity";
 
@@ -79,7 +79,7 @@ namespace RogueAi.EditorTools
             EnsureFolder(DataDirectory);
 
             // The catalogues are loaded AFTER the new scene, never before — see
-            // docs/systems/raid-scene-assembly.md ("Traps").
+            // docs/4-systems/raid-scene-assembly.md ("Traps").
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             if (!TryLoadAuthoredAssets(out CastleRoomRegistry registry, out RaidLootTable lootTable,
@@ -283,7 +283,7 @@ namespace RogueAi.EditorTools
         /// castle the default seed produces. The director re-derives this at raid start from the
         /// seed actually rolled, so this only has to be right for the scene as saved.
         ///
-        /// See docs/systems/scale.md ("Spawning").
+        /// See docs/4-systems/scale.md ("Spawning").
         /// </summary>
         private static Vector3 ResolveSpawn(ProceduralCastleGenerator generator)
         {
@@ -299,7 +299,7 @@ namespace RogueAi.EditorTools
         }
 
         /// <summary>
-        /// Instances the authored raid player. See docs/systems/raid-scene-assembly.md, "Authored,
+        /// Instances the authored raid player. See docs/4-systems/raid-scene-assembly.md, "Authored,
         /// not generated", for why this is an instance rather than a rig assembled here.
         /// </summary>
         private static GameObject BuildPlayer(Vector3 spawn)
@@ -321,7 +321,7 @@ namespace RogueAi.EditorTools
         /// A body good enough to keep the scaffold openable when the authored prefab is missing. It
         /// carries the shipping controller, not <c>FreeLookPlaytestController</c>: building the
         /// harness here is what let the scaffold and the authored scene disagree about what a player
-        /// even is. See docs/Decisions.md, 2026-09-18.
+        /// even is. See docs/6-decisions/Decisions.md, 2026-09-18.
         /// </summary>
         private static GameObject BuildFallbackPlayer(Vector3 spawn)
         {
@@ -421,7 +421,7 @@ namespace RogueAi.EditorTools
             var gold = ScriptableObject.CreateInstance<LootItem>();
             gold.DisplayName = "Conjured Coin";
             gold.Worth = 40f;
-            gold.Bulk = 1f;
+            gold.WeightKg = 1f;
             gold.Fragility = 999f;   // coin does not shatter
             return SaveAsset(gold, ConjuredCoinItemPath);
         }

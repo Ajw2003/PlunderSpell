@@ -1,8 +1,8 @@
 using Plunderspell.Core;
-using RogueAi.Inventory;
+using Plunderspell.Inventory;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Starts the loop when the scene runs, and gives a solo playtester the two controls the loop

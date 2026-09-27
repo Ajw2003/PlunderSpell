@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the core loop: Lair → castle → haul → extraction → debt, and the determinism that
@@ -29,7 +29,7 @@ namespace RogueAi.Tests
         [TearDown]
         public void TearDown()
         {
-            RogueAi.Guards.CastleGuard.ClearIntruders();
+            Plunderspell.Guards.CastleGuard.ClearIntruders();
             foreach (Object o in _spawned)
                 if (o != null)
                     Object.DestroyImmediate(o);
@@ -80,7 +80,7 @@ namespace RogueAi.Tests
             var item = Track(ScriptableObject.CreateInstance<LootItem>());
             item.DisplayName = name;
             item.Worth = worth;
-            item.Bulk = 2f;
+            item.WeightKg = 2f;
             item.Fragility = 8f;
             return item;
         }
@@ -397,14 +397,14 @@ namespace RogueAi.Tests
             RaidDirector director = MakeDirector(out _, out ExtractionZone zone, out _);
 
             var playerGo = Track(new GameObject("Player"));
-            playerGo.AddComponent<RogueAi.Guards.IntruderTag>();
+            playerGo.AddComponent<Plunderspell.Guards.IntruderTag>();
 
             director.SetFixedSeed(55);
             director.StartRaid(HistoricalEra.BronzeAge);
             zone.ResolveLocally();
 
             Assert.Contains(playerGo.transform,
-                (System.Collections.ICollection)RogueAi.Guards.CastleGuard.Intruders,
+                (System.Collections.ICollection)Plunderspell.Guards.CastleGuard.Intruders,
                 "A surviving player must still be visible to guards in the next raid.");
         }
 
@@ -454,6 +454,24 @@ namespace RogueAi.Tests
 
             zone.ResolveLocally();
             Assert.AreEqual(0, spawner.Spawned.Count, "Loot must not survive into the next raid.");
+        }
+
+        /// <summary>#143: a player who died burning set out on the next raid still alight.</summary>
+        [Test]
+        public void Test_ANewRaidStartsWithNoStatusEffectsLeftOver()
+        {
+            var player = Track(new GameObject("Player"));
+            var status = player.AddComponent<Plunderspell.Status.StatusEffectReceiver>();
+            status.Ignite(5f, 30f);
+            status.Stun(10f);
+            status.Sleep(10f);
+            Assert.IsTrue(status.IsBurning && status.IsStunned && status.IsAsleep, "Test premise.");
+
+            RaidDirector.ClearCarriedOverState(player);
+
+            Assert.IsFalse(status.IsBurning, "Fire from the last raid must not follow you into the next.");
+            Assert.IsFalse(status.IsStunned);
+            Assert.IsFalse(status.IsAsleep);
         }
     }
 }

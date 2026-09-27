@@ -251,7 +251,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26178ec69eeb9e5488d01d05f0f41878, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Items::NetworkedProjectile
+  m_EditorClassIdentifier: Plunderspell.Items::NetworkedProjectile
   lifeTime: 3
   Damage: 0
 --- !u!114 &3293439849672311214
@@ -265,5 +265,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd8b7fb5e55afef45b97aa6ccc8d7fcb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Items::ProjectileTint
+  m_EditorClassIdentifier: Plunderspell.Items::ProjectileTint
   m_emissionBoost: 2.5

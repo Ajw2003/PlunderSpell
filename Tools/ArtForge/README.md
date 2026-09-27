@@ -8,7 +8,7 @@ the render beside the concept art.
 It is built **on top of** `Tools/EnemyForge`, not beside it. The part primitives, the
 authoring-to-texture bake, the packed maps, the shipping material, the shade/unwrap
 and the geometry validator are EnemyForge's own code, imported through `sys.path`.
-EnemyForge's files are untouched. Read `docs/systems/enemy-asset-pipeline.md`,
+EnemyForge's files are untouched. Read `docs/4-systems/enemy-asset-pipeline.md`,
 especially **Traps**: every trap there applies here too.
 
 **Status:** all 20 **items** are built. The rigged **enemy** path works end to end

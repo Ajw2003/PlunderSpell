@@ -1,6 +1,7 @@
 using Code.Scripts.Singleton;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class ItemManager : SingletonBase<ItemManager>
 {
@@ -15,7 +16,11 @@ public class ItemManager : SingletonBase<ItemManager>
     [SerializeField] private float _throwForce = 15f;
 
     private Item _hoveredItem;
+    private Vector3 _hoveredPoint;
     private Item _draggedItem;
+
+    // The local player's grab beam (#144). Other players' beams are drawn by the carry relay.
+    private GrabBeam _beam;
     private Camera _mainCamera;
     private float _currentDragDepth;
 
@@ -31,7 +36,31 @@ public class ItemManager : SingletonBase<ItemManager>
         }
     }
 
-    public bool IsRotatingObject => _draggedItem != null && Mouse.current != null && Mouse.current.middleButton.isPressed;
+    public bool IsRotatingObject => _draggedItem != null && !_draggedItem.IsInHand
+        && Mouse.current != null && Mouse.current.middleButton.isPressed;
+
+    /// <summary>Weapons are held rigidly in the hand, not hung on the beam: a crossbow on the beam
+    /// hung on the crosshair line and its own bolt hit it.</summary>
+    private static bool IsHeldInHand(Item item) =>
+        item.TryGetComponent(out RangedWeapon _) || item.TryGetComponent(out MeleeWeapon _);
+
+    private void OnEnable() => RenderPipelineManager.beginCameraRendering += PoseHeldWeapon;
+
+    private void OnDisable() => RenderPipelineManager.beginCameraRendering -= PoseHeldWeapon;
+
+    /// <summary>Stands an in-hand weapon in the hand just before the view renders, after the
+    /// camera has moved this frame, so it never lags or jitters against the view.</summary>
+    private void PoseHeldWeapon(ScriptableRenderContext context, Camera camera)
+    {
+        if (camera != _mainCamera || _draggedItem == null || !_draggedItem.IsInHand)
+            return;
+        Transform view = camera.transform;
+        _draggedItem.SetHandPose(WeaponHand(view), view.rotation);
+    }
+
+    /// <summary>Where a held weapon's grip sits: low and to the right of the view.</summary>
+    private static Vector3 WeaponHand(Transform view) =>
+        view.position + view.right * 0.2f - view.up * 0.22f + view.forward * 0.3f;
 
     private void Update()
     {
@@ -41,7 +70,7 @@ public class ItemManager : SingletonBase<ItemManager>
         if (_mainCamera == null) return;
 
         if (_pendingDrag != null && _draggedItem == null && Item.CanDriveHere(_pendingDrag))
-            StartDragging(_pendingDrag);
+            StartDragging(_pendingDrag, _pendingDrag.LocalToWorldPoint(_pendingGrabLocal));
 
         HandleHover();
 
@@ -63,15 +92,19 @@ public class ItemManager : SingletonBase<ItemManager>
                 return;
             }
 
-            if (Mouse.current != null && Mouse.current.middleButton.isPressed)
-            {
+            _draggedItem.SetViewYaw(_mainCamera.transform.eulerAngles.y);
+            if (_draggedItem.IsInHand)
+                return;
+
+            // The target keeps following the crosshair while rotating too: a target left standing
+            // still would let the item drift off the beam.
+            bool rotating = Mouse.current != null && Mouse.current.middleButton.isPressed;
+            _draggedItem.SetRotating(rotating);
+            if (rotating)
                 HandleRotation();
-            }
             else
-            {
                 HandleScrollDepth();
-                UpdateDraggedItemPosition();
-            }
+            UpdateDraggedItemPosition();
         }
     }
 
@@ -134,6 +167,7 @@ public class ItemManager : SingletonBase<ItemManager>
             if (hit.collider.TryGetComponent(out Item item))
             {
                 _hoveredItem = item;
+                _hoveredPoint = hit.point;
             }
             else
             {
@@ -148,12 +182,30 @@ public class ItemManager : SingletonBase<ItemManager>
 
     private void UpdateDraggedItemPosition()
     {
+        // Too heavy to lift (a two-person piece held by one): towed behind the holder on a rope
+        // instead of pulled toward the crosshair, so they can walk forward, looking where they
+        // go, while it scrapes along behind.
+        if (_draggedItem.IsTooHeavyToLift)
+        {
+            Transform body = _mainCamera.transform.root;
+            Vector3 velocity = body.TryGetComponent(out Rigidbody bodyRb) ? bodyRb.linearVelocity : Vector3.zero;
+            _draggedItem.SetTow(body.position, velocity, _towRope);
+            // Caught on a doorway or a corner and the rope strained past breaking: let it go.
+            if (_draggedItem.TowStrain > Item.k_ropeBreaksAt)
+                StopDragging();
+            return;
+        }
+
         if (Mouse.current == null) return;
         Ray ray = CrosshairRay();
 
         Vector3 targetPoint = ray.GetPoint(_currentDragDepth);
         _draggedItem.UpdateTargetPosition(targetPoint);
     }
+
+    // Length of the tow rope for a piece too heavy to lift, set at pickup from how far away it was.
+    private float _towRope = 2f;
+
 
     /// <summary>
     /// Straight out through the crosshair. The mouse pointer is locked there in play anyway; aiming
@@ -165,7 +217,7 @@ public class ItemManager : SingletonBase<ItemManager>
     {
         if (context.started && _hoveredItem != null)
         {
-            StartDragging(_hoveredItem);
+            StartDragging(_hoveredItem, _hoveredPoint);
         }
         else if (context.canceled)
         {
@@ -178,23 +230,36 @@ public class ItemManager : SingletonBase<ItemManager>
         StopDragging();
     }
 
-    private void StartDragging(Item item)
+    /// <summary>Picks up <paramref name="item"/> by <paramref name="grabPoint"/>, the point on it
+    /// the crosshair was on: it hangs from there, as in R.E.P.O. (#144).</summary>
+    private void StartDragging(Item item, Vector3 grabPoint)
     {
         // In a session another machine may be driving this body; ask for it and pick it up once
-        // granted (Update), rather than fighting the replicated position meanwhile.
+        // granted (Update), rather than fighting the replicated position meanwhile. The grab point
+        // is kept in the item's own frame, since it may move before the answer comes.
         if (!Item.CanDriveHere(item))
         {
             _pendingDrag = item;
+            _pendingGrabLocal = Quaternion.Inverse(item.transform.rotation) * (grabPoint - item.transform.position);
             Item.RequestDrive?.Invoke(item);
             return;
         }
 
         _pendingDrag = null;
         _draggedItem = item;
-        _draggedItem.StartDragging(_mainCamera.transform.root.gameObject);
+        _draggedItem.SetViewYaw(_mainCamera.transform.eulerAngles.y);
+        _draggedItem.StartDragging(_mainCamera.transform.root.gameObject, grabPoint);
+        if (IsHeldInHand(item))
+        {
+            _draggedItem.HoldInHand(true);
+            _draggedItem.SetHandPose(WeaponHand(_mainCamera.transform), _mainCamera.transform.rotation);
+        }
 
-        _currentDragDepth = Vector3.Distance(_mainCamera.transform.position, item.GripWorldPosition);
+        _currentDragDepth = Vector3.Distance(_mainCamera.transform.position, grabPoint);
         _currentDragDepth = Mathf.Clamp(_currentDragDepth, _minDragDepth, _maxDragDepth);
+        Vector3 across = grabPoint - _mainCamera.transform.root.position;
+        across.y = 0f;
+        _towRope = Mathf.Clamp(across.magnitude, 1.5f, 3f);
     }
 
     private void StopDragging()
@@ -208,6 +273,36 @@ public class ItemManager : SingletonBase<ItemManager>
     }
 
     private Item _pendingDrag;
+    private Vector3 _pendingGrabLocal;
+
+    /// <summary>Where the local player's beam leaves from: low and to the right of the view, where
+    /// a hand would be. The carry relay sends the same point to other players.</summary>
+    public Vector3 BeamHand { get; private set; }
+
+    /// <summary>Draws the local beam after the camera has moved for this frame.</summary>
+    private void LateUpdate()
+    {
+        if (_draggedItem == null || _mainCamera == null || _draggedItem.IsInHand)
+        {
+            if (_beam != null)
+                _beam.Hide();
+            return;
+        }
+
+        if (_beam == null)
+            _beam = GrabBeam.Create("LocalGrabBeam");
+
+        Transform view = _mainCamera.transform;
+        BeamHand = view.position + view.right * 0.22f - view.up * 0.2f + view.forward * 0.35f;
+        _beam.Show(BeamHand, _draggedItem.TargetPosition, _draggedItem.GripWorldPosition, _draggedItem.Load);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (_beam != null)
+            Destroy(_beam.gameObject);
+    }
 
     public Item HoveredItem => _hoveredItem;
 

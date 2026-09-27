@@ -6,7 +6,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Development convenience only, not shipped gameplay. See docs/systems/core.md - Dev tooling.
+// Development convenience only, not shipped gameplay. See docs/4-systems/core.md - Dev tooling.
 public static class TestSceneBuilder
 {
     // Judgement calls - tune here rather than hunting through the generated scene.
@@ -28,7 +28,7 @@ public static class TestSceneBuilder
     private const string ScenePath = "Assets/_Project/Scenes/TestScene.unity";
     private const string PlayerPrefabPath = "Assets/_Project/Prefabs/Player.prefab";
 
-    [MenuItem("Tools/RogueAi/Build Test Scene")]
+    [MenuItem("Tools/Plunderspell/Build Test Scene")]
     public static void BuildTestScene()
     {
         // A fresh scene built from scratch every run, saved over the same path, is what keeps
@@ -48,7 +48,7 @@ public static class TestSceneBuilder
         EnsureSceneFolderExists();
         EditorSceneManager.SaveScene(scene, ScenePath);
 
-        Debug.Log($"RogueAi: test scene built at {ScenePath} with player prefab at {PlayerPrefabPath}.");
+        Debug.Log($"Plunderspell: test scene built at {ScenePath} with player prefab at {PlayerPrefabPath}.");
     }
 
     // NewSceneSetup.EmptyScene omits the default light, so without this the ground renders unlit

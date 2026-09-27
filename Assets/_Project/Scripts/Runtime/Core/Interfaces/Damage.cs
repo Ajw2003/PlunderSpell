@@ -74,7 +74,7 @@ namespace Interfaces
             Vector3 point, DamageKind kind, float impactVelocity);
 
         /// <summary>
-        /// Installed by RogueAi.Net during a session. Returns true when the target's health lives on
+        /// Installed by Plunderspell.Net during a session. Returns true when the target's health lives on
         /// another machine (a guard, on the server; a friend's body, on their machine) and the hit
         /// has been sent there, in which case <see cref="Apply"/> does nothing here. Null offline.
         /// </summary>

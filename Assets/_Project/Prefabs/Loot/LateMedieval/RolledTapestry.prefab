@@ -153,7 +153,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1913605018267056981}
   serializedVersion: 5
-  m_Mass: 11
+  m_Mass: 8
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -183,11 +183,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee81d29afbf11a9478fb8230b135d419, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Items::Item
-  _followSpeed: 12
+  m_EditorClassIdentifier: Plunderspell.Items::Item
+  _springRate: 120
+  _dampingRatio: 0.9
   _rotationSpeed: 10
-  _gripStrength: 180
-  _maxHoldSpeed: 14
+  _gripStrength: 100
+  _haulStrength: 250
+  _heldAngularDamping: 3
   _gripPoint: {fileID: 369984814216469726}
   _maxThrowSpeed: 18
   _damageMultiplier: 2
@@ -203,7 +205,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b2863e9b62bfe054dde624400cad5af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootPickup
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootPickup
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -229,7 +231,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cc187acd8d1fa74f838b8e9e0030bd0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootValue
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootValue
   m_item: {fileID: 11400000, guid: e52bfdbaeeb4e1f4e840516f3ac3e983, type: 2}
   m_worth: 50
   m_displayName: Loot

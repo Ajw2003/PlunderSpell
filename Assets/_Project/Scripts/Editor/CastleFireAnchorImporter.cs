@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using RogueAi.Castle;
+using Plunderspell.Castle;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Copies the fire anchors the asset pipeline writes (Assets/_Project/Data/Castle/CastleFireAnchors.json,

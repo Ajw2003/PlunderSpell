@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Shared target acquisition for spell effects: an overlap query that returns the distinct

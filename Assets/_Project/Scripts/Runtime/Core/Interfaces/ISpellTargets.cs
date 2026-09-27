@@ -31,7 +31,7 @@ namespace Interfaces
         void WakeUp();
     }
 
-    /// <summary>Something Tonitrus can stun, and Caecus can blind. Implemented by guards and players.</summary>
+    /// <summary>Something Frango can stagger, and Caecus can blind. Implemented by guards and players.</summary>
     public interface IStunnable
     {
         bool IsStunned { get; }
@@ -43,6 +43,32 @@ namespace Interfaces
     {
         bool IsBurning { get; }
         void Ignite(float damagePerSecond, float duration, UnityEngine.GameObject instigator = null);
+    }
+
+    /// <summary>
+    /// A body the movement spells move: the caster's own, for Velox (a dash) and Saltus (a high
+    /// jump that the jump key turns into a slam). Implemented by the player. Called on the body's
+    /// own machine, where it is simulated; see docs/4-systems/spells.md, "Velox and Saltus".
+    /// </summary>
+    public interface ISpellMovable
+    {
+        bool IsGrounded { get; }
+
+        /// <summary>Dash along a flat direction at <paramref name="speed"/> m/s for
+        /// <paramref name="seconds"/>. Zero direction means the way the body is being steered, or,
+        /// with no steering, the way it is looking.</summary>
+        void SpellDash(Vector3 direction, float speed, float seconds);
+
+        /// <summary>Launch straight up at <paramref name="upwardSpeed"/> m/s. A positive
+        /// <paramref name="slamSpeed"/> arms the slam: jump in the air then drives the body down at
+        /// that speed. Does nothing off the ground.</summary>
+        void SpellLaunch(float upwardSpeed, float slamSpeed);
+
+        /// <summary>Stops the legs for <paramref name="seconds"/>.</summary>
+        void Stagger(float seconds);
+
+        /// <summary>Raised on the body's own machine when a slam reaches the ground: (where, speed).</summary>
+        event System.Action<Vector3, float> SlamLanded;
     }
 
     /// <summary>A door or portcullis Porta can open (and a misfired Porta can open by mistake).</summary>

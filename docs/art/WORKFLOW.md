@@ -34,7 +34,7 @@ rules.
 ## 1. Plan
 
 - Write or extend the brief (`docs/art/BRIEF.md`): counts, roles, scale limits from
-  `docs/systems/scale.md`, pigment rules, triangle and texture budgets.
+  `docs/4-systems/scale.md`, pigment rules, triangle and texture budgets.
 - Fix the roster before anyone draws: names, slugs, roles, zones, the item list. Give each
   worker one Age and a list of slugs, so no two workers touch the same file.
 - Save the worker instructions in the repo (`Tools/ArtBible/worker_brief.md`,
@@ -118,5 +118,5 @@ python3 Tools/ArtForge/build.py <kind>     # twice; expect "N built, 0 crashed" 
 git add -- Tools/ArtForge Assets/Models/ArtBible docs && git commit && git push
 ```
 
-Update the docs tier that changed (`docs/Today.md`, `docs/ProjectState.md`, the tool README's
+Update the docs tier that changed (`docs/5-today/Today.md`, `docs/3-state/ProjectState.md`, the tool README's
 "Not done yet") in the same commit.

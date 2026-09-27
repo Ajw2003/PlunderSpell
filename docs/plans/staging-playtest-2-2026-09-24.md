@@ -51,7 +51,7 @@ gets reported, not worked around silently.
 ## Verify
 
 Compile clean; EditMode and PlayMode suites pass; `audit_loot_counts.cs` shows about double;
-`centre-rooms.png` re-rendered; the carry tests above. Record results here and in `docs/Today.md`.
+`centre-rooms.png` re-rendered; the carry tests above. Record results here and in `docs/5-today/Today.md`.
 
 ## Results (2026-09-24)
 

@@ -1,7 +1,7 @@
-using RogueAi.Alarm;
+using Plunderspell.Alarm;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Closes the castle as the alarm rises. This is the consequence that gives the alarm teeth:

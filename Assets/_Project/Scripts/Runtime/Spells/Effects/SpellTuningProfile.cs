@@ -1,7 +1,7 @@
-using RogueAi.Voice;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Every number that decides how a cast feels, as an asset a designer edits in the Inspector
@@ -30,6 +30,16 @@ namespace RogueAi.Spells
         [Range(0f, 1f)] public float NormalNoiseStrength = 0.45f;
         [Range(0f, 1f)] public float ShoutNoiseStrength = 1.0f;
 
+        [Header("Mana")]
+        [Tooltip("Mana regained per second, all the time. Each spell's cost is on its SpellWord " +
+                 "asset (Assets/_Project/Data/Spells/).")]
+        [Min(0f)] public float ManaRegenPerSecond = 2.5f;
+
+        [Header("Keyboard casting")]
+        [Tooltip("Seconds a number-key cast is chanted before it fires. Longer than holding V and " +
+                 "saying the word, so keys are a slight disadvantage, not a speed advantage (#116).")]
+        [Min(0f)] public float KeyboardCastSeconds = 1.5f;
+
         [Header("All spells")]
         [Tooltip("Base effect radius in metres, before the volume multiplier.")]
         public float DefaultEffectRadius = 6f;
@@ -53,11 +63,27 @@ namespace RogueAi.Spells
         [Tooltip("How far it shoves them back, in metres, before the volume multiplier.")]
         public float FrangoKnockback = 2.5f;
 
-        [Header("Tonitrus — thunderclap")]
-        public float TonitrusStunSeconds = 3f;
-        [Tooltip("The thunderclap's own noise, on top of the cast's.")]
-        public float TonitrusNoiseRadius = 18f;
-        [Range(0f, 1f)] public float TonitrusNoiseStrength = 1f;
+        [Header("Velox — dash")]
+        [Tooltip("Speed of the dash, m/s.")]
+        public float VeloxDashSpeed = 14f;
+        [Tooltip("How long the dash lasts, s. Speed x time is its length (3.5 m by default).")]
+        public float VeloxDashSeconds = 0.25f;
+
+        [Header("Saltus — high jump and slam")]
+        [Tooltip("Upward speed of the launch, m/s, before the volume multiplier. The player falls at " +
+                 "2.5 g, so 14 m/s is about 4 m up.")]
+        public float SaltusLaunchSpeed = 14f;
+        [Tooltip("Downward speed of the slam, m/s (press jump in the air after a launch).")]
+        public float SaltusSlamSpeed = 22f;
+        [Tooltip("How far from the landing the slam reaches, m.")]
+        public float SlamRadius = 3f;
+        [Tooltip("Damage at the landing spot from a full-speed slam; half at the edge.")]
+        public float SlamDamage = 30f;
+        [Tooltip("How far the slam shoves what it hits, m.")]
+        public float SlamKnockback = 2.5f;
+        [Tooltip("The landing's own noise, on top of the cast's.")]
+        public float SlamNoiseRadius = 14f;
+        [Range(0f, 1f)] public float SlamNoiseStrength = 1f;
 
         [Header("Somnus — sleep")]
         [Tooltip("How long a guard sleeps. Whisper it, or the noise wakes them anyway.")]
@@ -77,8 +103,10 @@ namespace RogueAi.Spells
         [Header("Misfires — punishing on purpose")]
         public float MisfireSelfBurnSeconds = 6f;
         public float MisfireSelfDamagePerSecond = 8f;
-        public float MisfireSelfStunSeconds = 4f;
         public float MisfireSelfSleepSeconds = 5f;
+        [Tooltip("A misfired Saltus: the hop, as a share of a real launch, and how long the legs lock.")]
+        [Range(0f, 1f)] public float MisfireSaltusHop = 0.25f;
+        public float MisfireSaltusStaggerSeconds = 1f;
         [Tooltip("How far a misfire looks for its (wrong) victim; tighter than an intended cast.")]
         public float MisfireRadius = 4f;
 

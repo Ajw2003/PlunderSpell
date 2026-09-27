@@ -77,7 +77,7 @@ In the live Editor: no compile errors; `audit_era_filter.cs` shows 0 fallback wa
 era served by its own entries; `audit_inventory.cs` shows all 16 enemies rostered and 0 Late models
 without a prefab; `audit_render.cs` re-rendered (the sheets update). EditMode and PlayMode suites
 pass (baseline: 26/26 and 183/183; inventory tests removed will lower the counts, so say by how
-much). Record results here and in `docs/Today.md`, then commit and push.
+much). Record results here and in `docs/5-today/Today.md`, then commit and push.
 
 ## Results (2026-09-24)
 
@@ -104,7 +104,7 @@ Found along the way:
   the ArtForge models' 270° X import correction. Reproduced in the Editor: the Arm Reliquary,
   0.52 m tall as placed, was 0.14 m tall and 0.52 m long in the hand. Fixed with the grip change.
 - **Removing `PlayerInventory` broke era replication.** It was the only network class in
-  `RogueAi.Inventory`, and PurrNet generates a type's serializer only in the assembly that declares
+  `Plunderspell.Inventory`, and PurrNet generates a type's serializer only in the assembly that declares
   it (`Assets/PurrNet/Codegen/GenerateSerializersProcessor.cs:95`) and only if that assembly sends
   it. Without it, `RaidSceneCastingTests` failed with "Failed to write value of type
   HistoricalEra". The attribute on `RaidDirector` did not help (wrong assembly). Verified both

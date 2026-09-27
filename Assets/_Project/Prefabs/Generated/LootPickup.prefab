@@ -153,7 +153,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b2863e9b62bfe054dde624400cad5af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootPickup
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootPickup
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -178,7 +178,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cda8b63ac315c7b1f93361f635efb5d0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Acoustics::RogueAi.Acoustics.AcousticEmitter
+  m_EditorClassIdentifier: Plunderspell.Acoustics::Plunderspell.Acoustics.AcousticEmitter
   BaseNoiseRadius: 5
   BaseNoiseStrength: 0.5
   NoiseType: 0

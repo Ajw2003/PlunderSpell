@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Interfaces;
-using RogueAi.Acoustics;
+using Plunderspell.Acoustics;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Common plumbing for every built-in effect: the noise a cast makes, and the log line that
@@ -63,7 +63,7 @@ namespace RogueAi.Spells
     }
 
     /// <summary>Frango — a force blast at what you aim at: hurts, staggers and shoves a creature, or
-    /// smashes a door open. See docs/Decisions.md, 2026-09-23, on why it no longer breaks loot.</summary>
+    /// smashes a door open. See docs/6-decisions/Decisions.md, 2026-09-23, on why it no longer breaks loot.</summary>
     public sealed class FrangoEffect : SpellEffectBase
     {
         public override SpellId Id => SpellId.Frango;
@@ -111,9 +111,10 @@ namespace RogueAi.Spells
 
         /// <summary>
         /// Pushes a body back along the blast. A guard is moved through its NavMeshAgent so it cannot
-        /// be shoved through a wall; anything else physical gets an impulse.
+        /// be shoved through a wall; anything else physical gets an impulse. The Saltus slam uses it
+        /// too.
         /// </summary>
-        private static void Shove(Transform body, Vector3 direction, float metres)
+        internal static void Shove(Transform body, Vector3 direction, float metres)
         {
             Vector3 flat = new Vector3(direction.x, 0f, direction.z).normalized * metres;
             var agent = body.GetComponent<UnityEngine.AI.NavMeshAgent>();
@@ -178,35 +179,106 @@ namespace RogueAi.Spells
     }
 
     /// <summary>
-    /// Tonitrus — a thunderclap that stuns everything nearby. Powerful and catastrophically loud:
-    /// cast it once and the castle knows where you are.
+    /// Velox — a dash along where you are steering, or where you look. The only dodge in the game:
+    /// it costs mana, so getting out of the way is a choice.
     /// </summary>
-    public sealed class TonitrusEffect : SpellEffectBase
+    public sealed class VeloxEffect : SpellEffectBase, ICasterMovementSpell
     {
-        public override SpellId Id => SpellId.Tonitrus;
+        public override SpellId Id => SpellId.Velox;
 
-        public override string Describe(in SpellEffectContext ctx) =>
-            $"Tonitrus: stun {SpellTuning.TonitrusStunSeconds * ctx.Power:0.0}s within {ctx.Radius():0.0}m";
+        public override string Describe(in SpellEffectContext ctx) => "Velox: dash";
 
         public override int Execute(in SpellEffectContext ctx)
         {
             EmitCastNoise(ctx);
+            return 1;
+        }
 
-            int stunned = 0;
-            Transform caster = ctx.CasterTransform;
-            // Bursts where you aim, not on your own feet.
-            foreach (IStunnable target in SpellTargeting.FindAll<IStunnable>(
-                         ctx.AimPoint, ctx.Radius(), ctx.TargetLayerMask))
+        public bool CanMove(in SpellEffectContext ctx) => MovableCaster.Of(ctx) != null;
+
+        public void MoveCaster(in SpellEffectContext ctx)
+        {
+            ISpellMovable body = MovableCaster.Of(ctx);
+            if (body != null)
+                body.SpellDash(Vector3.zero, SpellTuning.VeloxDashSpeed, SpellTuning.VeloxDashSeconds);
+        }
+    }
+
+    /// <summary>
+    /// Saltus — a high jump; press jump in the air to turn it into a slam that hurts and shoves
+    /// everything around the landing. Only from the ground.
+    /// </summary>
+    public sealed class SaltusEffect : SpellEffectBase, ICasterMovementSpell
+    {
+        public override SpellId Id => SpellId.Saltus;
+
+        public override string Describe(in SpellEffectContext ctx) =>
+            $"Saltus: leap at {SpellTuning.SaltusLaunchSpeed * ctx.Power:0.0} m/s; jump again to slam";
+
+        public override int Execute(in SpellEffectContext ctx)
+        {
+            EmitCastNoise(ctx);
+            return 1;
+        }
+
+        public bool CanMove(in SpellEffectContext ctx)
+        {
+            ISpellMovable body = MovableCaster.Of(ctx);
+            return body != null && body.IsGrounded;
+        }
+
+        public void MoveCaster(in SpellEffectContext ctx)
+        {
+            ISpellMovable body = MovableCaster.Of(ctx);
+            if (body != null)
+                body.SpellLaunch(SpellTuning.SaltusLaunchSpeed * ctx.Power, SpellTuning.SaltusSlamSpeed);
+        }
+
+        /// <summary>
+        /// The slam's landing, run where damage is authoritative (the server, or offline). Hurts and
+        /// shoves every living thing within <see cref="SpellTuning.SlamRadius"/> of
+        /// <paramref name="where"/> except the caster, harder nearer the centre and the faster the
+        /// landing, and makes the noise of it. Returns how many it hit.
+        /// </summary>
+        public static int ResolveSlam(Vector3 where, float speed, Transform caster, int targetLayerMask,
+            int geometryLayerMask)
+        {
+            float radius = SpellTuning.SlamRadius;
+            float force = Mathf.Clamp01(speed / Mathf.Max(SpellTuning.SaltusSlamSpeed, 0.01f));
+            GameObject instigator = caster != null ? caster.gameObject : null;
+
+            int hit = 0;
+            foreach (IHealth victim in SpellTargeting.FindAll<IHealth>(where, radius, targetLayerMask))
             {
-                if (caster != null && target is Component c && c.transform.IsChildOf(caster))
+                if (!(victim is Component c) || victim.CurrentHealth <= 0f)
                     continue;
-                target.Stun(SpellTuning.TonitrusStunSeconds * ctx.Power);
-                stunned++;
+                if (caster != null && c.transform.IsChildOf(caster))
+                    continue;
+
+                Vector3 away = c.transform.position - where;
+                float nearness = 1f - 0.5f * Mathf.Clamp01(new Vector3(away.x, 0f, away.z).magnitude / radius);
+                Damage.Apply(victim, SpellTuning.SlamDamage * force * nearness, instigator, instigator,
+                    Damage.PointOn(c, where), DamageKind.Spell);
+                FrangoEffect.Shove(c.transform.root, away, SpellTuning.SlamKnockback * force);
+                hit++;
             }
 
-            EmitEffectNoise(ctx, SpellTuning.TonitrusNoiseRadius, SpellTuning.TonitrusNoiseStrength,
-                NoiseType.Explosion);
-            return stunned;
+            NoiseBroadcaster.Broadcast(where, SpellTuning.SlamNoiseRadius, SpellTuning.SlamNoiseStrength,
+                NoiseType.Explosion, ~0, geometryLayerMask);
+            return hit;
+        }
+    }
+
+    /// <summary>Finds the body a movement spell moves: the caster's own.</summary>
+    internal static class MovableCaster
+    {
+        public static ISpellMovable Of(in SpellEffectContext ctx)
+        {
+            Transform caster = ctx.CasterTransform;
+            if (caster == null)
+                return null;
+            ISpellMovable own = caster.GetComponentInParent<ISpellMovable>();
+            return own != null ? own : caster.GetComponentInChildren<ISpellMovable>();
         }
     }
 
@@ -225,10 +297,15 @@ namespace RogueAi.Spells
         {
             EmitCastNoise(ctx);
 
+            // Centre on the sleeper under the crosshair when there is one, with the same forgiving
+            // aim as every other spell. The ray alone misses a guard a hand's width off it and runs
+            // on to the wall behind, and the burst went off there instead (#106).
+            Vector3 centre = ctx.Aimed<ISleepable>() is Component aimed ? aimed.transform.position : ctx.AimPoint;
+
             int slept = 0;
             Transform caster = ctx.CasterTransform;
             foreach (ISleepable target in SpellTargeting.FindAll<ISleepable>(
-                         ctx.AimPoint, ctx.Radius(), ctx.TargetLayerMask))
+                         centre, ctx.Radius(), ctx.TargetLayerMask))
             {
                 if (caster != null && target is Component c && c.transform.IsChildOf(caster))
                     continue;
@@ -238,33 +315,6 @@ namespace RogueAi.Spells
                 slept++;
             }
             return slept;
-        }
-    }
-
-    /// <summary>
-    /// Cadaver Surge — raises the nearest corpse. Until the necromancy milestone lands this reports
-    /// the corpse it would raise and makes the noise of doing it, rather than pretending to succeed.
-    /// </summary>
-    public sealed class CadaverSurgeEffect : SpellEffectBase
-    {
-        public override SpellId Id => SpellId.CadaverSurge;
-
-        /// <summary>Raised with the position of the corpse a cast targeted. The enemy layer listens.</summary>
-        public static event System.Action<Vector3> CorpseRaised;
-
-        public override string Describe(in SpellEffectContext ctx) =>
-            $"Cadaver Surge: raise a corpse within {ctx.Radius():0.0}m";
-
-        public override int Execute(in SpellEffectContext ctx)
-        {
-            EmitCastNoise(ctx);
-
-            var corpse = ctx.Aimed<IHealth>();
-            if (corpse == null || corpse.CurrentHealth > 0f)
-                return 0;
-
-            CorpseRaised?.Invoke(corpse is Component c ? c.transform.position : ctx.Origin);
-            return 1;
         }
     }
 

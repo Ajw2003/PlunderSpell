@@ -1,4 +1,4 @@
-namespace RogueAi.Guards
+namespace Plunderspell.Guards
 {
     /// <summary>
     /// What one guard is doing. Ordered by how much trouble the players are in, so escalation can be

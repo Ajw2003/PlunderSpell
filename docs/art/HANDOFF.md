@@ -95,7 +95,7 @@ python3 Tools/ArtForge/render.py enemies   # all sheets; about 1 min each on 4 c
 
 Then:
 1. Stop the auto-save (Ctrl-C, or stop its task).
-2. Update `docs/Today.md` and `docs/ProjectState.md`. ProjectState still says the enemies are not
+2. Update `docs/5-today/Today.md` and `docs/3-state/ProjectState.md`. ProjectState still says the enemies are not
    modelled.
 3. Update the "Not done yet" list in `Tools/ArtForge/README.md`.
 4. Commit, push, and open a PR to `main`.
@@ -127,5 +127,5 @@ Then:
     multiplies emission by 9.
   - The warden uses one extra colour (`woad_mud`).
 - **In Unity:** imported and wired into raids on 2026-09-24 by *Forge Era Content*; see
-  `docs/systems/raid-scene-assembly.md`, "Eras". Re-run it after new models land. (Was: nothing imported, and the items
+  `docs/4-systems/raid-scene-assembly.md`, "Eras". Re-run it after new models land. (Was: nothing imported, and the items
   weren't in any loot table.)

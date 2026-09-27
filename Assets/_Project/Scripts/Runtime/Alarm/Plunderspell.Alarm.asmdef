@@ -1,0 +1,17 @@
+{
+    "name": "Plunderspell.Alarm",
+    "rootNamespace": "Plunderspell.Alarm",
+    "references": [
+        "PurrNet.Runtime",
+        "Plunderspell.Acoustics"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

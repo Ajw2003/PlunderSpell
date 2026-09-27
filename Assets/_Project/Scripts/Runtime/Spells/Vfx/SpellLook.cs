@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Spells.Vfx
+namespace Plunderspell.Spells.Vfx
 {
     /// <summary>How a spell shows itself.</summary>
     public enum SpellVisualStyle
@@ -32,7 +32,7 @@ namespace RogueAi.Spells.Vfx
     /// What each spell looks like. A misfire is always the same angry orange whatever it was meant
     /// to be, so "that went wrong" is readable before the caption is.
     ///
-    /// See docs/systems/spells.md, "Seeing a cast".
+    /// See docs/4-systems/spells.md, "Seeing a cast".
     /// </summary>
     public static class SpellLookbook
     {
@@ -58,12 +58,12 @@ namespace RogueAi.Spells.Vfx
                     return new SpellLook(new Color(0.6f, 0.45f, 1f), SpellVisualStyle.Burst, 2f);
                 case SpellId.AurumVoco:
                     return new SpellLook(new Color(1f, 0.85f, 0.25f), SpellVisualStyle.Burst, 2.4f);
-                case SpellId.Tonitrus:
-                    return new SpellLook(new Color(0.75f, 0.85f, 1f), SpellVisualStyle.Burst, 4f);
+                case SpellId.Velox:
+                    return new SpellLook(new Color(0.85f, 0.95f, 1f), SpellVisualStyle.Burst, 1.6f);
                 case SpellId.Somnus:
                     return new SpellLook(new Color(0.35f, 0.55f, 0.85f), SpellVisualStyle.Burst, 2.6f);
-                case SpellId.CadaverSurge:
-                    return new SpellLook(new Color(0.45f, 0.75f, 0.4f), SpellVisualStyle.Burst, 2.4f);
+                case SpellId.Saltus:
+                    return new SpellLook(new Color(0.95f, 0.75f, 0.45f), SpellVisualStyle.Burst, 2f);
                 case SpellId.Porta:
                     return new SpellLook(new Color(0.55f, 0.8f, 1f), SpellVisualStyle.Burst, 1.8f);
                 default:

@@ -22,7 +22,7 @@ notes under [Using this prompt](#using-this-prompt) are for the human, not for F
 > 2. `docs/plans/plunderspell.md` — the engineering plan. Steps 3–6 are your specification for the
 >    castle generator, voice layer, Ages and loot. Its "Verification" section is your acceptance
 >    criteria.
-> 3. `docs/systems/core.md` and `docs/systems/net.md` — the invariants and traps of the code you are
+> 3. `docs/4-systems/core.md` and `docs/4-systems/net.md` — the invariants and traps of the code you are
 >    building on. The `SingletonBase`/`OnDestroy` trap and Unity's fake-null note in `core.md` will
 >    bite you if you skim them.
 > 4. The code you are extending: `Assets/_Project/Scripts/Runtime/` — `Core/`, `Player/`, `Items/`,
@@ -157,7 +157,7 @@ notes under [Using this prompt](#using-this-prompt) are for the human, not for F
 >
 > Land M1 and M2 as separate reviewable commits (or a commit per step within them) on the branch you
 > were given — not one enormous drop. Update `docs/plans/plunderspell.md`'s Status section and add a
-> `docs/systems/` note for each new assembly, matching the existing ones in shape: how it works,
+> `docs/4-systems/` note for each new assembly, matching the existing ones in shape: how it works,
 > invariants, traps. When the documentation and the code disagree, the documentation is the intent
 > and the code is the bug — unless the documentation is describing work already done differently, in
 > which case fix the documentation and say that you did.

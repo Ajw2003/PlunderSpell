@@ -8,7 +8,7 @@ python3 Tools/EnemyForge/build_enemies.py
 ```
 
 How the pipeline works, and the invariants it guarantees, are in
-`docs/systems/enemy-asset-pipeline.md`.
+`docs/4-systems/enemy-asset-pipeline.md`.
 
 ## What each enemy folder contains
 

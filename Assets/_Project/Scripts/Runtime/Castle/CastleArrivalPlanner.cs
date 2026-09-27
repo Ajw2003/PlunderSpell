@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Where the team steps out of the portal: a room chosen from the layout and the raid seed, so
@@ -43,6 +43,10 @@ namespace RogueAi.Castle
                 if (module.IsExtractionExit || i == layout.ExtractionExitIndex)
                     continue;
                 if (!IsArrivalZone(module.Zone))
+                    continue;
+                // On the curtain strip, only in front of a way in: elsewhere every archway onto the
+                // strip is plugged, and the drawbridge is outside the sealed gate (#140).
+                if (module.Zone == CastleZone.CurtainWall && !layout.EntranceCells.Contains(module.GridPosition))
                     continue;
                 candidates.Add(i);
             }

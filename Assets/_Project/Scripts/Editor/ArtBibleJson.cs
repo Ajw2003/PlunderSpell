@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// A small strict JSON reader for docs/art/data/*.json and the ArtForge manifest, which

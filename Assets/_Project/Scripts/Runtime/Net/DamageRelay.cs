@@ -2,7 +2,7 @@ using Interfaces;
 using PurrNet;
 using UnityEngine;
 
-namespace RogueAi.Net
+namespace Plunderspell.Net
 {
     /// <summary>
     /// Sends each hit to the machine whose copy of the target's health is the real one, by
@@ -10,7 +10,7 @@ namespace RogueAi.Net
     /// the server spawned keep their health on the server; a player's health lives on that player's
     /// own machine, because their body, HUD and death screen are there. The hitter gets the result
     /// back through <see cref="Damage.ReportRemote"/>, so damage numbers still appear for them.
-    /// See docs/systems/net.md, "Damage".
+    /// See docs/4-systems/net.md, "Damage".
     /// </summary>
     public sealed class DamageRelay : NetworkBehaviour
     {
@@ -73,7 +73,7 @@ namespace RogueAi.Net
         private static IHealth HealthOf(NetworkIdentity victim) =>
             victim != null ? victim.GetComponentInParent<IHealth>() ?? victim.GetComponentInChildren<IHealth>() : null;
 
-        // DamageKind travels as an int: it lives in RogueAi.Core, whose types PurrNet's code
+        // DamageKind travels as an int: it lives in Plunderspell.Foundation, whose types PurrNet's code
         // generation does not register (the same trap as CastVolume in the cast RPC).
         [ServerRpc(requireOwnership: false)]
         private void HitOnServer(NetworkIdentity victim, float amount, NetworkIdentity source, NetworkIdentity instigator,

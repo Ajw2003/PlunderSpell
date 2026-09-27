@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using Interfaces;
 using NUnit.Framework;
 using Plunderspell.Core;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Loot;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Regression tests for the 2026-09-23 Phase 0 play session (docs/plans/phase0-playable-loop.md):
@@ -254,17 +254,17 @@ namespace RogueAi.Tests
         }
 
         [Test]
-        public void Test_AHeavyLoadSlowsTheCarrier()
+        public void Test_OnlyTheHeaviestLootIsTooHeavyToLift()
         {
             var go = Track(new GameObject("Chest"));
             go.AddComponent<Rigidbody>().mass = 15f;
             var chest = go.AddComponent<Item>();
-            var go2 = Track(new GameObject("Cup"));
-            go2.AddComponent<Rigidbody>().mass = 1f;
-            var cup = go2.AddComponent<Item>();
+            var go2 = Track(new GameObject("Coffer"));
+            go2.AddComponent<Rigidbody>().mass = 8f;
+            var coffer = go2.AddComponent<Item>();
 
-            Assert.AreEqual(1f, cup.CarrySpeedMultiplier);
-            Assert.AreEqual(0.5f, chest.CarrySpeedMultiplier, 0.01f);
+            Assert.IsTrue(chest.IsTooHeavyToLift, "A 15 kg chest drags on the floor (#144).");
+            Assert.IsFalse(coffer.IsTooHeavyToLift, "An 8 kg coffer can still be lifted, just.");
         }
 
         // --- Smooth view (#104) ---------------------------------------------------------------
@@ -322,17 +322,16 @@ namespace RogueAi.Tests
                 "Arriving in Idle while moving used to coast forever, off the edge of the map.");
         }
 
-        // --- Pause (#107) ----------------------------------------------------------------------
+        // --- Pause (#107, deprecated by #129) ----------------------------------------------------
 
         [Test]
-        public void Test_PauseFreezesTheWorldOnlyForTheHost()
+        public void Test_PauseMenuNeverFreezesTheWorld()
         {
-            Assert.IsTrue(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Paused, GameState.Playing, true));
-            Assert.IsTrue(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Settings, GameState.Paused, true),
-                "Settings opened from the pause menu is still paused.");
-            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Paused, GameState.Playing, false),
-                "A client's pause menu cannot stop everyone else's game.");
-            Assert.IsFalse(Plunderspell.UI.PausePolicy.ShouldFreeze(GameState.Settings, GameState.MainMenu, true));
+            GameServices.GameState.ChangeState(GameState.Playing);
+            GameServices.GameState.ChangeState(GameState.Paused);
+            Assert.AreEqual(1f, Time.timeScale,
+                "The pause menu is an overlay for everyone, the host included (#129).");
+            Assert.IsFalse(AudioListener.pause);
         }
 
         // --- Phrase caption (#49) --------------------------------------------------------------
@@ -340,12 +339,12 @@ namespace RogueAi.Tests
         [Test]
         public void Test_TheCaptionTellsACastAMisfireAndAFizzleApart()
         {
-            string clean = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
-                "igneous", "IGNIS", RogueAi.Spells.SpellId.Ignis, RogueAi.Voice.CastVolume.Normal), out Color cleanColour);
-            string misfire = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
-                "a nice", "AGNIS", RogueAi.Spells.SpellId.MisfireIgnis, RogueAi.Voice.CastVolume.Normal), out Color misfireColour);
-            string fizzle = RogueAi.UI.RaidHudView.CaptionFor(new RogueAi.Spells.SpellCastingSystem.PhraseReport(
-                "potato", "POTATO", RogueAi.Spells.SpellId.None, RogueAi.Voice.CastVolume.Normal), out Color fizzleColour);
+            string clean = Plunderspell.UI.RaidHudView.CaptionFor(new Plunderspell.Spells.SpellCastingSystem.PhraseReport(
+                "igneous", "IGNIS", Plunderspell.Spells.SpellId.Ignis, Plunderspell.Voice.CastVolume.Normal), out Color cleanColour);
+            string misfire = Plunderspell.UI.RaidHudView.CaptionFor(new Plunderspell.Spells.SpellCastingSystem.PhraseReport(
+                "a nice", "AGNIS", Plunderspell.Spells.SpellId.MisfireIgnis, Plunderspell.Voice.CastVolume.Normal), out Color misfireColour);
+            string fizzle = Plunderspell.UI.RaidHudView.CaptionFor(new Plunderspell.Spells.SpellCastingSystem.PhraseReport(
+                "potato", "POTATO", Plunderspell.Spells.SpellId.None, Plunderspell.Voice.CastVolume.Normal), out Color fizzleColour);
 
             StringAssert.Contains("\"igneous\"", clean, "The caption shows what was actually heard.");
             StringAssert.Contains("IGNIS", clean);
@@ -361,22 +360,22 @@ namespace RogueAi.Tests
         [Test]
         public void Test_SpellNumbersComeFromTheAuthoredAsset()
         {
-            Assert.IsNotNull(Resources.Load<RogueAi.Spells.SpellTuningProfile>(RogueAi.Spells.SpellTuning.ResourcePath),
+            Assert.IsNotNull(Resources.Load<Plunderspell.Spells.SpellTuningProfile>(Plunderspell.Spells.SpellTuning.ResourcePath),
                 "The tuning asset must ship under Resources, or builds fall back to code defaults.");
 
-            var custom = ScriptableObject.CreateInstance<RogueAi.Spells.SpellTuningProfile>();
+            var custom = ScriptableObject.CreateInstance<Plunderspell.Spells.SpellTuningProfile>();
             custom.IgnisDamagePerSecond = 99f;
             custom.ShoutPower = 3f;
             try
             {
-                RogueAi.Spells.SpellTuning.Use(custom);
-                Assert.AreEqual(99f, RogueAi.Spells.SpellTuning.IgnisDamagePerSecond);
-                Assert.AreEqual(3f, RogueAi.Spells.SpellTuning.PowerMultiplier(RogueAi.Voice.CastVolume.Shout),
+                Plunderspell.Spells.SpellTuning.Use(custom);
+                Assert.AreEqual(99f, Plunderspell.Spells.SpellTuning.IgnisDamagePerSecond);
+                Assert.AreEqual(3f, Plunderspell.Spells.SpellTuning.PowerMultiplier(Plunderspell.Voice.CastVolume.Shout),
                     "Editing the asset must change the game, not a copy of the numbers in code.");
             }
             finally
             {
-                RogueAi.Spells.SpellTuning.Use(null);
+                Plunderspell.Spells.SpellTuning.Use(null);
                 Object.Destroy(custom);
             }
         }

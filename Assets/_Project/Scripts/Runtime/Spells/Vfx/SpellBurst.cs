@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace RogueAi.Spells.Vfx
+namespace Plunderspell.Spells.Vfx
 {
     /// <summary>
     /// A spell going off: an expanding, fading shell of light that destroys itself. Built from a
     /// primitive rather than a particle asset because the project has no authored VFX yet.
     ///
-    /// See docs/systems/spells.md, "Seeing a cast".
+    /// See docs/4-systems/spells.md, "Seeing a cast".
     /// </summary>
     public class SpellBurst : MonoBehaviour
     {
@@ -19,6 +19,24 @@ namespace RogueAi.Spells.Vfx
         private Renderer m_renderer;
         private Material m_materialInstance;
         private Light m_light;
+
+        /// <summary>The burst's material, under a Resources folder so builds keep it and its shader
+        /// variant: URP Unlit, transparent, double-sided.</summary>
+        public const string MaterialResourcePath = "SpellBurst";
+
+        private static Material s_shippedMaterial;
+
+        private static Material ShippedMaterial()
+        {
+            if (s_shippedMaterial != null)
+                return s_shippedMaterial;
+
+            s_shippedMaterial = Resources.Load<Material>(MaterialResourcePath);
+            if (s_shippedMaterial == null)
+                Debug.LogWarning($"[SpellBurst] No material at Resources/{MaterialResourcePath}; " +
+                                 "bursts use the sphere's default, which a build draws magenta.");
+            return s_shippedMaterial;
+        }
 
         private Color m_colour = Color.white;
         private float m_startRadius = 0.2f;
@@ -43,6 +61,12 @@ namespace RogueAi.Spells.Vfx
             collider.enabled = false;
             SafeDestroy(collider);
 
+            // Before AddComponent: Awake clones whatever material the renderer holds. The primitive's
+            // own default has no shader in a standalone build and drew magenta (#127).
+            Material shipped = ShippedMaterial();
+            if (shipped != null)
+                go.GetComponent<Renderer>().sharedMaterial = shipped;
+
             var burst = go.AddComponent<SpellBurst>();
             burst.m_colour = colour;
             burst.m_endRadius = Mathf.Max(0.3f, radius);
@@ -62,7 +86,7 @@ namespace RogueAi.Spells.Vfx
             EnsureDoubleSided();
         }
 
-        /// <summary>See docs/systems/spells.md, "A burst is invisible from inside itself".</summary>
+        /// <summary>See docs/4-systems/spells.md, "A burst is invisible from inside itself".</summary>
         private void EnsureDoubleSided()
         {
             if (m_renderer == null || m_materialInstance != null)

@@ -212,7 +212,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61f50616b7ae63244b170a2a9c4323cf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Player::StateMachine.PlayerStateMachine
+  m_EditorClassIdentifier: Plunderspell.Player::StateMachine.PlayerStateMachine
   _rb: {fileID: 0}
   walkSpeed: 6
   JumpForce: 7
@@ -249,4 +249,4 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c2c8881fd52f75439f527c4f4c0f10a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Player::Player.PlayerInputController
+  m_EditorClassIdentifier: Plunderspell.Player::Player.PlayerInputController

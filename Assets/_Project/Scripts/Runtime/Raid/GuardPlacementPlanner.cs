@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using RogueAi.Castle;
+using Plunderspell.Castle;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>Where one guard starts, and the route it walks.</summary>
     public readonly struct GuardPlacement

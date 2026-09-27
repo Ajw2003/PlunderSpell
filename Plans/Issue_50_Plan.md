@@ -14,10 +14,10 @@ The first milestone requires the game to understand spoken words accurately and 
 4.  **Measure Accuracy and Speed:**
     Record how often the game correctly identifies the spoken word. Also record the time it takes for the game to react after the word is spoken.
 5.  **Update the Project Documentation:**
-    Open the docs/ProjectState.md file. Add a new section detailing the results of the microphone test, including the recognition rate and the latency measurements. Note whether the results meet the milestone requirements.
+    Open the docs/3-state/ProjectState.md file. Add a new section detailing the results of the microphone test, including the recognition rate and the latency measurements. Note whether the results meet the milestone requirements.
 
 ## Verification Steps
-1.  Read the docs/ProjectState.md file to confirm that the test results are clearly documented.
+1.  Read the docs/3-state/ProjectState.md file to confirm that the test results are clearly documented.
 2.  Verify that the documented results include both the recognition accuracy percentage and the reaction time in milliseconds.
 3.  Ensure the document lists the four accents that were tested.
 
@@ -25,7 +25,7 @@ The first milestone requires the game to understand spoken words accurately and 
 *   [ ] A real-microphone test was run across at least four distinct accents against the 40-word dictionary.
 *   [ ] The top-1 recognition rate was measured and recorded.
 *   [ ] The word-end-to-effect latency was measured and recorded.
-*   [ ] The results are written up against the M1 acceptance criterion in docs/ProjectState.md.
+*   [ ] The results are written up against the M1 acceptance criterion in docs/3-state/ProjectState.md.
 
 
 ## Technical Constraints

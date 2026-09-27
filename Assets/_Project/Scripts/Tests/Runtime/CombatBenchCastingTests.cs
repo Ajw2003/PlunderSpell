@@ -2,18 +2,18 @@
 using System.Collections;
 using NUnit.Framework;
 using Plunderspell.Core;
-using RogueAi.Spells;
-using RogueAi.Spells.Vfx;
-using RogueAi.Voice;
+using Plunderspell.Spells;
+using Plunderspell.Spells.Vfx;
+using Plunderspell.Voice;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>The bench mirror of <see cref="RaidSceneCastingTests"/>. See
-    /// docs/systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
+    /// docs/4-systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
     public class CombatBenchCastingTests
     {
         private const string k_ScenePath = "Assets/_Project/Scenes/CombatBench.unity";
@@ -29,11 +29,23 @@ namespace RogueAi.Tests
 
             GameServices.Initialize();
             m_stateBeforeTest = GameServices.GameState.CurrentState;
+            CastKeysInstantly();
+        }
+
+
+        /// <summary>These tests are about words resolving and showing, not the keyboard chant or
+        /// mana (CastingInputTests covers both), so keyed casts fire at once here.</summary>
+        private static void CastKeysInstantly()
+        {
+            var tuning = ScriptableObject.CreateInstance<SpellTuningProfile>();
+            tuning.KeyboardCastSeconds = 0f;
+            SpellTuning.Use(tuning);
         }
 
         [UnityTearDown]
         public IEnumerator TearDownScene()
         {
+            SpellTuning.Use(null);
             if (GameServices.GameState != null)
             {
                 GameServices.GameState.ChangeState(m_stateBeforeTest);
@@ -53,7 +65,7 @@ namespace RogueAi.Tests
         }
 
         /// <summary>
-        /// The bench puts itself into Playing on Start (see docs/systems/combat-bench.md), so unlike
+        /// The bench puts itself into Playing on Start (see docs/4-systems/combat-bench.md), so unlike
         /// the raid scene this does not need an explicit state change first — proving that stays true
         /// is part of what this test covers.
         /// </summary>
@@ -87,7 +99,7 @@ namespace RogueAi.Tests
 
             int after = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
             Assert.Greater(after, before,
-                "Casting Tonitrus on the bench produced no visible effect.");
+                "Casting Velox on the bench produced no visible effect.");
         }
 
         /// <summary>
@@ -119,6 +131,7 @@ namespace RogueAi.Tests
                 {
                     lastResolved = SpellId.None;
 
+                    GameServices.PlayerStats.RefillMana();
                     voice.StartListening();
                     mock.SimulateKeyPress(key);
                     voice.StopListening();

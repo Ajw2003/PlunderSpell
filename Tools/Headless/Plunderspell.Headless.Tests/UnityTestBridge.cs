@@ -8,7 +8,7 @@ using NUnit.Framework.Interfaces;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests.Headless
+namespace Plunderspell.Tests.Headless
 {
     /// <summary>
     /// Runs the project's <c>[UnityTest]</c> coroutine tests under the plain NUnit runner.

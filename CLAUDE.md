@@ -2,7 +2,7 @@
 
 ## Documentation
 
-Start at [`docs/README.md`](docs/README.md) — it indexes the roadmap, current project state,
+Start at [`docs/1-landing/README.md`](docs/1-landing/README.md) — it indexes the roadmap, current project state,
 per-system docs, and everything else worth reaching. Don't duplicate its content here.
 
 ## Commit everything — paper trail and asset backup take priority

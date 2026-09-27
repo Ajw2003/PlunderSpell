@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using RogueAi.Castle;
+using Plunderspell.Castle;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>Where one piece of loot goes, and what it is.</summary>
     public readonly struct LootPlacement

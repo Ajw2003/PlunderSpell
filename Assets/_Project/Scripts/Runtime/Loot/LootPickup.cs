@@ -2,7 +2,7 @@ using Interfaces;
 using PurrNet;
 using UnityEngine;
 
-namespace RogueAi.Loot
+namespace Plunderspell.Loot
 {
     /// <summary>Resolved carry requirement for a pickup attempt.</summary>
     public enum CarryMode
@@ -18,9 +18,9 @@ namespace RogueAi.Loot
     /// behaviour:
     /// <list type="bullet">
     /// <item>Fragility: a hard collision above <see cref="LootItem.Fragility"/> shatters the item.</item>
-    /// <item>Single carry: <see cref="LootItem.Bulk"/> ≤ 10 stone → one carrier owns and kinematically
+    /// <item>Single carry: <see cref="LootItem.WeightKg"/> ≤ 10 kg → one carrier owns and kinematically
     /// parents the object to their hand socket.</item>
-    /// <item>Dual carry: Bulk &gt; 10 stone → a primary carrier plus a secondary carrier chained via a
+    /// <item>Dual carry: WeightKg &gt; 10 kg → a primary carrier plus a secondary carrier chained via a
     /// <see cref="ConfigurableJoint"/> (linear axes locked, angular free so it swings naturally).</item>
     /// </list>
     ///
@@ -37,7 +37,7 @@ namespace RogueAi.Loot
     /// Frango shatters loot; Levo lifts it.
     /// </remarks>
     [RequireComponent(typeof(Rigidbody))]
-    public class LootPickup : NetworkBehaviour, IBreakable, ILevitatable
+    public class LootPickup : NetworkBehaviour, IBreakable, ILevitatable, IPortalResting
     {
         [Header("Data")]
         [SerializeField] private LootItem _data;
@@ -83,6 +83,7 @@ namespace RogueAi.Loot
             CaptureUprightRotation();
             _rb = GetComponent<Rigidbody>();
             _rb.useGravity = true;
+            ApplyWeight();
             if (_meshRenderer == null)
                 _meshRenderer = GetComponentInChildren<MeshRenderer>();
         }
@@ -91,7 +92,23 @@ namespace RogueAi.Loot
         /// Injects a data source at runtime. Used by <c>DownedPlayerCarryAdapter</c> to turn a downed
         /// player into a carryable object, and by tests to drive fragility/bulk logic.
         /// </summary>
-        public void SetData(LootItem data) => _data = data;
+        public void SetData(LootItem data)
+        {
+            _data = data;
+            ApplyWeight();
+        }
+
+        /// <summary>
+        /// Gives the body its <see cref="LootItem.WeightKg"/>, the one weight to tune: everything a
+        /// held or towed item does scales from the body's mass. Not for a downed player, whose body
+        /// is carried as loot but must keep a player's mass.
+        /// </summary>
+        private void ApplyWeight()
+        {
+            if (_data == null || _rb == null || _data.WeightKg <= 0f || TryGetComponent(out IPlayerBody _))
+                return;
+            _rb.mass = _data.WeightKg;
+        }
 
         /// <summary>The point the hand holds, or null when the item is held by its mesh centre.</summary>
         public Transform GripPoint => _gripPoint;
@@ -151,13 +168,39 @@ namespace RogueAi.Loot
             if (isSpawned && TryGetComponent(out NetworkTransform synced) && !synced.IsController(synced.ownerAuth))
                 return;
 
-            ApplyImpact(col.relativeVelocity.magnitude);
+            // A creature bumping into it never breaks it. Players set their velocity every step, so
+            // walking into loot shoves it and then strikes it again while it moves, which shattered
+            // a 2 m/s item on the second bump (#142). It still breaks if the shove sends it into a wall.
+            if (col.gameObject.GetComponentInParent<IHealth>() != null)
+                return;
+
+            ApplyImpact(ImpactSpeed(col));
         }
+
+        /// <summary>
+        /// How hard a contact struck this item: the closing speed along the contact normal, so
+        /// sliding or tumbling along the floor after a knock is not a fresh blow.
+        /// </summary>
+        private static float ImpactSpeed(Collision col)
+        {
+            if (col.contactCount == 0)
+                return col.relativeVelocity.magnitude;
+            return Mathf.Abs(Vector3.Dot(col.relativeVelocity, col.GetContact(0).normal));
+        }
+
+        private bool _inPortal;
+
+        /// <summary>True while the extraction portal holds this piece safe (#158).</summary>
+        public bool IsInPortal => _inPortal;
+
+        /// <summary><see cref="IPortalResting"/>: nothing breaks a piece inside the portal.</summary>
+        public void SetInPortal(bool inPortal) => _inPortal = inPortal;
 
         /// <summary>Pure fragility test — does an impact of this magnitude break the item?</summary>
         public bool WouldBreak(float relativeVelocityMagnitude)
         {
             return _data != null &&
+                   !_inPortal &&
                    !IsBeingCarried &&
                    !IsBroken &&
                    relativeVelocityMagnitude > _data.Fragility;
@@ -220,7 +263,7 @@ namespace RogueAi.Loot
 
             // Transition bridge: extraction tallies LootValue now, so breaking through the old
             // system has to reach the new one or a smashed piece still pays out. Goes away with
-            // LootPickup. See docs/systems/raid.md, "Carrying and extracting".
+            // LootPickup. See docs/4-systems/raid.md, "Carrying and extracting".
             if (TryGetComponent(out LootValue value))
                 value.Ruin();
             if (_meshRenderer != null) _meshRenderer.enabled = false;
@@ -245,7 +288,7 @@ namespace RogueAi.Loot
         }
 
         /// <summary>
-        /// Primary pickup request. Bulk ≤ 10 → single carry; Bulk &gt; 10 → begins a dual carry that
+        /// Primary pickup request. WeightKg ≤ 10 kg → single carry; WeightKg &gt; 10 kg → begins a dual carry that
         /// waits for a second carrier. Server-authoritative so ownership transfer cannot race.
         /// </summary>
         [ServerRpc(requireOwnership: false)]
@@ -405,7 +448,8 @@ namespace RogueAi.Loot
         /// </summary>
         public void Break()
         {
-            if (IsBroken)
+            // Safe in the portal, from spells as from falls (#158).
+            if (IsBroken || _inPortal)
                 return;
             BreakItem();
         }

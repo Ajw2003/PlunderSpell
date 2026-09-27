@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using RogueAi.Castle;
-using RogueAi.Guards;
-using RogueAi.Inventory;
-using RogueAi.Loot;
-using RogueAi.Raid;
-using RogueAi.Status;
+using Plunderspell.Castle;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
+using Plunderspell.Status;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Turns the per-era art that exists so far into raid content: prefabs, loot items, loot tables,
@@ -20,7 +20,7 @@ namespace RogueAi.EditorTools
     /// <see cref="RaidDirector"/> reads when a raid sets out. Re-run after new art lands; every
     /// output lives at a fixed path and is overwritten, never duplicated.
     ///
-    /// See docs/systems/raid-scene-assembly.md ("Eras") for what each era is built from and what it
+    /// See docs/4-systems/raid-scene-assembly.md ("Eras") for what each era is built from and what it
     /// falls back to while its art is unfinished.
     /// </summary>
     public static class EraContentForge
@@ -242,7 +242,7 @@ namespace RogueAi.EditorTools
                 LootItem data = LoadOrCreate<LootItem>($"Assets/_Project/Data/Loot/{era}/{asset.name}.asset");
                 data.DisplayName = asset.title;
                 data.Worth = item.worth;
-                data.Bulk = item.bulk;
+                data.WeightKg = item.bulk;
                 data.Fragility = item.fragility;
                 data.IsArtifact = item.artifact;
                 EditorUtility.SetDirty(data);
@@ -270,7 +270,7 @@ namespace RogueAi.EditorTools
             int weapons = 0;
             if (defaults != null)
             {
-                // Weapons are found as loot (docs/Decisions.md, 2026-09-23). Each era keeps the
+                // Weapons are found as loot (docs/6-decisions/Decisions.md, 2026-09-23). Each era keeps the
                 // default table's weapons that belong to it, by the era its inventory item names.
                 foreach (RaidLootTable.Entry weapon in defaults.Entries)
                 {
@@ -322,7 +322,7 @@ namespace RogueAi.EditorTools
                 box.size = local.size;
 
                 var body = instance.AddComponent<Rigidbody>();
-                body.mass = Mathf.Max(0.5f, data.Bulk);
+                body.mass = Mathf.Max(0.5f, data.WeightKg);
 
                 var carried = instance.AddComponent<Item>();
                 var pickup = instance.AddComponent<LootPickup>();

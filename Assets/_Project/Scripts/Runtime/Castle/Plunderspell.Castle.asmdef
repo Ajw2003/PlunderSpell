@@ -1,0 +1,20 @@
+{
+    "name": "Plunderspell.Castle",
+    "rootNamespace": "Plunderspell.Castle",
+    "references": [
+        "PurrNet.Runtime",
+        "Plunderspell.Foundation",
+        "Plunderspell.Acoustics",
+        "Plunderspell.Alarm",
+        "Unity.AI.Navigation"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

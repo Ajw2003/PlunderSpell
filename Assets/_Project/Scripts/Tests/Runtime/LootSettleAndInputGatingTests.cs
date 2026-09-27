@@ -4,15 +4,15 @@ using NUnit.Framework;
 using Player;
 using Plunderspell.Core;
 using Plunderspell.UI;
-using RogueAi.Castle;
-using RogueAi.Loot;
-using RogueAi.Playtest;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Loot;
+using Plunderspell.Playtest;
+using Plunderspell.Raid;
 using StateMachine;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the three things that make the raid playable rather than merely running: loot that
@@ -60,7 +60,7 @@ namespace RogueAi.Tests
             {
                 var item = Track(ScriptableObject.CreateInstance<LootItem>());
                 item.DisplayName = $"{zone} Trinket";
-                item.Bulk = 3f;
+                item.WeightKg = 3f;
                 item.Worth = 50f;
 
                 table.Entries.Add(new RaidLootTable.Entry

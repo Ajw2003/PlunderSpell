@@ -7,8 +7,8 @@ paint the project into a corner?**
 
 Live until the backlog below is closed out or re-triaged; supersedes ad hoc issue-by-issue work.
 Companion to [`docs/plans/moodboard-gap-closure.md`](moodboard-gap-closure.md) (the audit that
-produced 34 of these 55 issues) and [`docs/ProjectState.md`](../ProjectState.md) (the milestone
-scorecard this backlog moves). Each issue below has its own exhaustive plan in [`Plans/`](../../Plans/) at the repo root
+produced 34 of these 55 issues) and [`docs/3-state/ProjectState.md`](../3-state/ProjectState.md) (the milestone
+scorecard this backlog moves). Each issue below has its own exhaustive plan in [`Plans/`](../../Plans) at the repo root
 (`Plans/Issue_<n>_Plan.md`), alongside [`Plans/Priority_Queue.md`](../../Plans/Priority_Queue.md);
 this document is the map, not the territory.
 

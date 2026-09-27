@@ -1,0 +1,21 @@
+{
+    "name": "Plunderspell.Spells",
+    "rootNamespace": "Plunderspell.Spells",
+    "references": [
+        "Plunderspell.Voice",
+        "Plunderspell.Foundation",
+        "Plunderspell.Acoustics",
+        "PurrNet.Runtime",
+        "Plunderspell.Items",
+        "Plunderspell.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

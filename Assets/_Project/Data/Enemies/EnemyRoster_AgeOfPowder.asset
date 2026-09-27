@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e18ecce912b050d44a86923eecb1637e, type: 3}
   m_Name: EnemyRoster_AgeOfPowder
-  m_EditorClassIdentifier: RogueAi.Raid::RogueAi.Raid.EnemyRoster
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.EnemyRoster
   Entries:
   - EnemyId: Cuirassier
     Zone: 3

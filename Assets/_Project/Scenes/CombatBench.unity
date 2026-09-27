@@ -668,7 +668,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fda99c12fcae56943ab00c2eb0a88e3f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Core::Code.Scripts.EventSystems.EventManager
+  m_EditorClassIdentifier: Plunderspell.Foundation::Code.Scripts.EventSystems.EventManager
 --- !u!4 &547266609
 Transform:
   m_ObjectHideFlags: 0
@@ -713,7 +713,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3abdccb2859aa4af52595d16fe1b80c5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Alarm::RogueAi.Alarm.AlarmFSMManager
+  m_EditorClassIdentifier: Plunderspell.Alarm::Plunderspell.Alarm.AlarmFSMManager
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -790,7 +790,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 167b13a50a45d5d43b5fe6773c102cb4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Spells::RogueAi.Spells.Vfx.SpellVfxDirector
+  m_EditorClassIdentifier: Plunderspell.Spells::Plunderspell.Spells.Vfx.SpellVfxDirector
   m_boltPrefab: {fileID: 8541296174138858501, guid: eef694f7f1ca617469908d761fde4588, type: 3}
   m_boltSpeed: 24
   m_burstDuration: 0.45
@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eedd0ce2df553dc4d8910bee69b62438, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.UI::RogueAi.UI.CrosshairView
+  m_EditorClassIdentifier: Plunderspell.RaidHud::Plunderspell.UI.CrosshairView
   _visible: 1
 --- !u!114 &1058235552
 MonoBehaviour:
@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a3ed469cad4e5140b67c48be0315a42, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Playtest::RogueAi.Playtest.CombatBenchHud
+  m_EditorClassIdentifier: Plunderspell.Playtest::Plunderspell.Playtest.CombatBenchHud
   m_isPanelVisible: 1
   m_toggleKey: 282
 --- !u!114 &1058235553
@@ -1106,7 +1106,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc9d4dfffb05c20468a1c2e3b7968509, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Playtest::RogueAi.Playtest.CombatBench
+  m_EditorClassIdentifier: Plunderspell.Playtest::Plunderspell.Playtest.CombatBench
   m_roster: {fileID: 11400000, guid: 13b9eb649aa2acf4bb2be962b0d7622e, type: 2}
   m_spawnOrigin: {fileID: 1943028603}
   m_spawnRadius: 7
@@ -1370,7 +1370,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6dc0b013fe4d80144b6ff5cd87a1dc91, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Items::ItemManager
+  m_EditorClassIdentifier: Plunderspell.Items::ItemManager
   _itemLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -2119,7 +2119,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d2e8c1f0858f1008e21f576157fb986, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Spells::RogueAi.Spells.SpellCastingSystem
+  m_EditorClassIdentifier: Plunderspell.Spells::Plunderspell.Spells.SpellCastingSystem
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -2149,7 +2149,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0c27837db9d68146fe8d94e1eff5984, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Voice::RogueAi.Voice.PushToCastController
+  m_EditorClassIdentifier: Plunderspell.Voice::Plunderspell.Voice.PushToCastController
   _pushToCastKey: 36
   _handAnimator: {fileID: 0}
   _isCastingBool: IsCasting
@@ -2168,7 +2168,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2bad5926e645494cb2c8aa74376ed03, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Guards::RogueAi.Guards.IntruderTag
+  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.IntruderTag
 --- !u!114 &1943028607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2180,7 +2180,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8e76e8aa3d2f1f36480843c678932e2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Acoustics::RogueAi.Acoustics.FootstepNoiseEmitter
+  m_EditorClassIdentifier: Plunderspell.Acoustics::Plunderspell.Acoustics.FootstepNoiseEmitter
   _crouchRadius: 1.5
   _walkRadius: 4
   _runRadius: 8
@@ -2201,7 +2201,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cda8b63ac315c7b1f93361f635efb5d0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Acoustics::RogueAi.Acoustics.AcousticEmitter
+  m_EditorClassIdentifier: Plunderspell.Acoustics::Plunderspell.Acoustics.AcousticEmitter
   BaseNoiseRadius: 5
   BaseNoiseStrength: 0.5
   NoiseType: 0
@@ -2222,7 +2222,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb201dad623c262478779bf36ad01883, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Status::RogueAi.Status.StatusEffectReceiver
+  m_EditorClassIdentifier: Plunderspell.Status::Plunderspell.Status.StatusEffectReceiver
   _healthSource: {fileID: 0}
   _body: {fileID: 0}
 --- !u!114 &1943028610
@@ -2236,7 +2236,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c2c8881fd52f75439f527c4f4c0f10a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Player::Player.PlayerInputController
+  m_EditorClassIdentifier: Plunderspell.Player::Player.PlayerInputController
 --- !u!114 &1943028611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2248,7 +2248,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61f50616b7ae63244b170a2a9c4323cf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Player::StateMachine.PlayerStateMachine
+  m_EditorClassIdentifier: Plunderspell.Player::StateMachine.PlayerStateMachine
   _spellBook: {fileID: 0}
   _rb: {fileID: 0}
   walkSpeed: 5

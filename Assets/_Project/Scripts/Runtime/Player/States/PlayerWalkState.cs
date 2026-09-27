@@ -20,11 +20,13 @@ public class PlayerWalkState : PlayerState
         // Preserve the vertical component so this doesn't interfere with jumping/falling.
         float verticalSpeed = _stateMachine._rb.linearVelocity.y;
 
-        // A heavy load slows you down: weight is felt in the legs, not only the arms.
+        // Carrying what you can lift never slows the legs: its weight shows as lag on the beam
+        // (#144). Towing a piece too heavy to lift does (docs/4-systems/damage.md, "Weight").
         Item carried = ItemManager.Instance != null ? ItemManager.Instance.CarriedItem : null;
-        float load = carried != null ? carried.CarrySpeedMultiplier : 1f;
-
-        _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed * load) + (Vector3.up * verticalSpeed);
+        float pace = carried != null ? carried.TowSpeedMultiplier : 1f;
+        if (_stateMachine.IsStaggered)
+            pace = 0f;
+        _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed * pace) + (Vector3.up * verticalSpeed);
     }
 
     public override void Exit()

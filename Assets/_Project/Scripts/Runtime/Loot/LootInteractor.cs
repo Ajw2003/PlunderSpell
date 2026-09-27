@@ -2,7 +2,7 @@ using Interfaces;
 using PurrNet;
 using UnityEngine;
 
-namespace RogueAi.Loot
+namespace Plunderspell.Loot
 {
     /// <summary>
     /// The player's hands. Looks at what is in front of the camera and, on the interact key, picks it

@@ -46,7 +46,7 @@ def build_mesh_object(arch: Archetype,
 
     The authoring materials must be attached before face indices are written, or
     Blender clamps every family onto slot 0 — see "Material indices are clamped to
-    the number of slots" in docs/systems/enemy-asset-pipeline.md.
+    the number of slots" in docs/4-systems/enemy-asset-pipeline.md.
     """
     bm, bone_names = build_bmesh(arch.parts)
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)

@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 using System.IO;
-using RogueAi.Spells;
-using RogueAi.Spells.Vfx;
+using Plunderspell.Spells;
+using Plunderspell.Spells.Vfx;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Photographs every spell's visual, so "the spells are visible" is something you can look at
     /// rather than something a test asserts about a GameObject's existence.
     ///
-    /// See docs/systems/spells.md, "Seeing a cast".
+    /// See docs/4-systems/spells.md, "Seeing a cast".
     /// </summary>
     public static class SpellVfxScreenshotForge
     {
@@ -28,7 +28,7 @@ namespace RogueAi.EditorTools
         private static readonly SpellId[] k_Showcase =
         {
             SpellId.Ignis, SpellId.Frango, SpellId.Levo, SpellId.AurumVoco,
-            SpellId.Tonitrus, SpellId.Somnus, SpellId.CadaverSurge, SpellId.Porta,
+            SpellId.Velox, SpellId.Somnus, SpellId.Saltus, SpellId.Porta,
             SpellId.MisfireIgnis,
         };
 
@@ -136,7 +136,7 @@ namespace RogueAi.EditorTools
             Transform aim = Camera.main != null ? Camera.main.transform : player;
             Vector3 hands = aim.position + aim.forward * 1.0f;
 
-            SpellLook look = SpellLookbook.For(SpellId.Tonitrus);
+            SpellLook look = SpellLookbook.For(SpellId.Saltus);
             SpellBurst burst = SpellBurst.Spawn(hands, look.Colour, look.Radius, 0.45f);
             burst.SetProgress(k_CaptureProgress);
 
@@ -156,7 +156,7 @@ namespace RogueAi.EditorTools
         /// Every look, one image each, from the scene's own player camera at its own position — not
         /// an approximation of it. Answers "does the caster see their own spell", which the bench
         /// lineup and the single-spell raid capture do not: both put the camera further from the
-        /// burst than the real rig does. See docs/systems/spells.md, "A burst is invisible from
+        /// burst than the real rig does. See docs/4-systems/spells.md, "A burst is invisible from
         /// inside itself".
         /// </summary>
         [MenuItem("Tools/Plunderspell/Capture Every Cast From The Raid Scene Eye")]

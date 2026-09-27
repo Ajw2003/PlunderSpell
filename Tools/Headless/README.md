@@ -33,7 +33,7 @@ here is a compile error in the editor.
 
 **The three `.csproj` files above are hand-written and must stay committed.** They were lost once
 already to a `.gitignore` rule that swallowed every `*.csproj` in the repo, including these —
-see `docs/Decisions.md`, "The headless harness's own project files were never committed". The
+see `docs/6-decisions/Decisions.md`, "The headless harness's own project files were never committed". The
 gitignore rule is now anchored to the repo root (`/*.csproj`, where Unity/Rider actually dump their
 auto-generated ones); `Tools/Headless/**/*.csproj` is intentionally outside that anchor.
 
@@ -76,7 +76,7 @@ harness broke is not known: there was no green run to compare against.
   object's on-screen or world footprint from `Renderer.bounds` (e.g. `EnemyPrefabForge`'s scale
   checks) will not get a meaningful answer from this shim.
 - `Camera.WorldToScreenPoint` always returns the screen centre rather than a real projection. See
-  `docs/Decisions.md`, "Enemy health bars are IMGUI, projected from world space" — nothing in the
+  `docs/6-decisions/Decisions.md`, "Enemy health bars are IMGUI, projected from world space" — nothing in the
   test suite currently asserts on its actual value, only on whether callers handle "behind the
   camera" and "off-screen" correctly, which the stub cannot exercise either. Fixing it properly
   needs at least an FOV/aspect/viewport model, not a one-line change.

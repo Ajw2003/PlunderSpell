@@ -46,7 +46,7 @@ for state in "${states[@]}"; do
     case "$state" in
         Calm) level=0 ;; Stirred) level=30 ;; Roused) level=60 ;; HueAndCry) level=95 ;;
     esac
-    bash "$here/eval.sh" "var a = UnityEngine.Object.FindFirstObjectByType<RogueAi.Alarm.AlarmFSMManager>(); a.SetAlarmLevel(${level}f); return a.State.ToString();"
+    bash "$here/eval.sh" "var a = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Alarm.AlarmFSMManager>(); a.SetAlarmLevel(${level}f); return a.State.ToString();"
     sleep 3
     for view in "${views[@]}"; do
         read -r name x y z yaw pitch <<< "$view"

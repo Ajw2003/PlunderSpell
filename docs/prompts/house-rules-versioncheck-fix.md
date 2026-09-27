@@ -71,7 +71,7 @@ it works.
 - `docs/architecture.md` — the `versioncheck` row (~line 38) and the section "`versioncheck` checks
   three copies of the version, not two" (~line 583): the fallback route and the new
   model-visible "couldn't verify" notice.
-- `docs/Decisions.md` — a dated entry: previously an unverifiable check told the model nothing;
+- `docs/6-decisions/Decisions.md` — a dated entry: previously an unverifiable check told the model nothing;
   now it tells the model, because an out-of-date install went unnoticed on 2026-09-24.
 - `claude-house-rules/README.md` if it describes versioncheck's output.
 - Bump the version in `.claude-plugin/plugin.json` (and the marketplace manifest if it carries one),

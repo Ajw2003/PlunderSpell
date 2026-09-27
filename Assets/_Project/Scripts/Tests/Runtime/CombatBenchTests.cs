@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Core;
-using RogueAi.Guards;
-using RogueAi.Playtest;
-using RogueAi.Status;
+using Plunderspell.Guards;
+using Plunderspell.Playtest;
+using Plunderspell.Status;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the combat bench: that it opens in a state the player can act in, and that spawning
-    /// puts the asked-for enemies where they can be reached. See docs/systems/combat-bench.md.
+    /// puts the asked-for enemies where they can be reached. See docs/4-systems/combat-bench.md.
     /// </summary>
     public class CombatBenchTests
     {

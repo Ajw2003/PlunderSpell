@@ -1,15 +1,15 @@
 using System;
 using Interfaces;
 using PurrNet;
-using RogueAi.Alarm;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Guards;
-using RogueAi.Inventory;
-using RogueAi.Lair;
+using Plunderspell.Alarm;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Runs the game loop: Lair → castle → raid → extraction → Lair, with the takings applied to the
@@ -203,7 +203,7 @@ namespace RogueAi.Raid
             _seed.value = _fixedSeed != 0 ? _fixedSeed : NewSeed();
             BuildCastle(_seed.value);
 
-            _alarm?.SetAlarmLevel(0f);
+            _alarm?.ResetForNewRaid(CastleGuard.ArrivalGraceSeconds);
             CastleGuard.BeginArrivalGrace();
 
             SetPhase(RaidPhase.Raiding);
@@ -270,7 +270,7 @@ namespace RogueAi.Raid
             if (!isSpawned || isServer)
             {
                 _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
-                _guardSpawner?.SpawnFor(Castle, seed, Era, ArrivalModuleIndex);
+                _guardSpawner?.SpawnFor(Castle, seed, Era, ArrivalModuleIndex, LobbySize);
             }
 
             return Castle;
@@ -392,6 +392,35 @@ namespace RogueAi.Raid
         private EnemyRoster _defaultEnemies;
 
         /// <summary>
+        /// A new raid starts with no fire, sleep, stun or lift left over from the last one: a player
+        /// who died burning set out again still alight (#143).
+        /// </summary>
+        public static void ClearCarriedOverState(GameObject player)
+        {
+            if (player != null && player.TryGetComponent(out Plunderspell.Status.StatusEffectReceiver status))
+                status.ClearAll();
+        }
+
+        /// <summary>Players in this raid: everyone connected in a session, else one (#154).</summary>
+        private int LobbySize => isSpawned && networkManager != null ? Mathf.Max(1, networkManager.playerCount) : 1;
+
+        /// <summary>What an arriving player turns to: the portal, or on the curtain strip the room
+        /// inward of it, whose archway is the way in (#140).</summary>
+        private Vector3 FacingTarget()
+        {
+            if (Castle == null || ArrivalModuleIndex < 0 || ArrivalModuleIndex >= Castle.PlacedModules.Count)
+                return ArrivalPoint;
+            ProceduralCastleData.PlacedModule arrival = Castle.PlacedModules[ArrivalModuleIndex];
+            if (arrival.Zone != CastleZone.CurtainWall)
+                return ArrivalPoint;
+            Vector2Int inward = CastleEntrancePlanner.InwardCell(arrival.GridPosition);
+            foreach (ProceduralCastleData.PlacedModule module in Castle.PlacedModules)
+                if (module.GridPosition == inward)
+                    return module.Position;
+            return ArrivalPoint;
+        }
+
+        /// <summary>
         /// Stands the player beside the arrival portal of the castle just built. Derived here, from
         /// the seed this raid actually rolled, rather than baked into the scene — a baked spawn is
         /// only in the right place for the one seed it was baked from.
@@ -408,6 +437,8 @@ namespace RogueAi.Raid
                 return;
             }
 
+            ClearCarriedOverState(player.gameObject);
+
             // Each player stands at their own point on a ring round the portal, by owner number, so
             // two bodies are never placed inside each other (a client places itself as soon as its
             // castle is built, before the host's body has arrived there on its screen) and nobody
@@ -420,11 +451,12 @@ namespace RogueAi.Raid
                 ArrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
             Vector3 spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
 
-            // Face the portal, so the first thing a player sees is the way home.
-            Vector3 toPortal = ArrivalPoint - spawn;
-            toPortal.y = 0f;
-            if (toPortal.sqrMagnitude > 0.01f && player.TryGetComponent(out StateMachine.PlayerStateMachine look))
-                look.FaceYaw(Quaternion.LookRotation(toPortal.normalized, Vector3.up).eulerAngles.y);
+            // Face the portal, so the first thing a player sees is the way home; on the curtain strip,
+            // face the way in instead, which the portal otherwise puts off to one side (#140).
+            Vector3 toFacing = FacingTarget() - spawn;
+            toFacing.y = 0f;
+            if (toFacing.sqrMagnitude > 0.01f && player.TryGetComponent(out StateMachine.PlayerStateMachine look))
+                look.FaceYaw(Quaternion.LookRotation(toFacing.normalized, Vector3.up).eulerAngles.y);
 
             // Through the rigidbody as well as the transform: an interpolated body writes its old
             // position back over a transform-only move on the next physics step.

@@ -5,9 +5,9 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
-    // doc-ref d1ef docs/systems/raid-scene-assembly.md
+    // doc-ref d1ef docs/4-systems/raid-scene-assembly.md
     /// <summary>
     /// Owns the import settings of everything under <c>Assets/Models/ArtBible/</c>: rig per model,
     /// URP Lit materials from the baked maps, texture settings. Checked by

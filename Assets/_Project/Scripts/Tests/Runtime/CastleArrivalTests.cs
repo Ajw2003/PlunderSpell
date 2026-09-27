@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// The team arrives by portal at a seeded spot inside the walls, leaves by the same portal, and
@@ -65,6 +65,63 @@ namespace RogueAi.Tests
                     $"Seed {seed}: arrived in {module.Zone}, which is too deep to start in.");
                 Assert.IsFalse(module.IsExtractionExit || index == castle.ExtractionExitIndex,
                     $"Seed {seed}: the gatehouse is sealed and is never the arrival.");
+            }
+        }
+
+        /// <summary>#140: a portal on the curtain strip opens in front of an entrance: the room
+        /// inward of it is enclosed, and its archway onto the strip is left open.</summary>
+        [Test]
+        public void Test_AStripArrivalIsInFrontOfAWayIn()
+        {
+            ProceduralCastleGenerator generator = MakeGenerator();
+            int stripArrivals = 0;
+            for (int seed = 1; seed <= 120; seed++)
+            {
+                ProceduralCastleData castle = generator.Generate(seed);
+                ProceduralCastleData.PlacedModule module = castle.PlacedModules[CastleArrivalPlanner.ChooseModule(castle, seed)];
+                if (module.Zone != CastleZone.CurtainWall)
+                    continue;
+                stripArrivals++;
+                Assert.Contains(module.GridPosition, castle.EntranceCells,
+                    $"Seed {seed}: arrived on the strip at {module.GridPosition}, where every archway is plugged.");
+                Vector2Int inward = CastleEntrancePlanner.InwardCell(module.GridPosition);
+                Assert.IsTrue(castle.PlacedModules.Exists(m => m.GridPosition == inward && ProceduralCastleGenerator.IsEnclosedRoom(m.Zone)),
+                    $"Seed {seed}: the cell inward of the arrival, {inward}, is not a room to walk into.");
+            }
+            Assert.Greater(stripArrivals, 0, "Test premise: some seeds should still arrive on the strip.");
+        }
+
+        /// <summary>#140 and #147: the drawbridge is a curtain-wall module outside the sealed gate.</summary>
+        [Test]
+        public void Test_TheTeamNeverArrivesOutsideTheWall()
+        {
+            ProceduralCastleGenerator generator = MakeGenerator();
+            for (int seed = 1; seed <= 120; seed++)
+            {
+                ProceduralCastleData castle = generator.Generate(seed);
+                Vector2Int cell = castle.PlacedModules[CastleArrivalPlanner.ChooseModule(castle, seed)].GridPosition;
+                Assert.LessOrEqual(Chebyshev(cell, Vector2Int.zero), generator.CurtainWallRadius,
+                    $"Seed {seed}: arrived at {cell}, outside the curtain wall.");
+            }
+        }
+
+        /// <summary>#140: the strip is not a dead end anywhere round the castle.</summary>
+        [Test]
+        public void Test_EverySideOfTheStripHasAWayIn()
+        {
+            ProceduralCastleGenerator generator = MakeGenerator();
+            int radius = generator.CurtainWallRadius;
+            for (int seed = 1; seed <= 60; seed++)
+            {
+                ProceduralCastleData castle = generator.Generate(seed);
+                var sides = new HashSet<Vector2Int>();
+                foreach (Vector2Int cell in castle.EntranceCells)
+                {
+                    Assert.IsTrue(CastleEntrancePlanner.IsSideCell(cell, radius), $"Seed {seed}: {cell} is not a side of the strip.");
+                    sides.Add(CastleEntrancePlanner.SideOf(cell, radius));
+                }
+                Assert.AreEqual(4, sides.Count,
+                    $"Seed {seed}: only {sides.Count} sides of the strip have an entrance ({castle.EntranceCells.Count} in all).");
             }
         }
 
@@ -126,6 +183,33 @@ namespace RogueAi.Tests
             Assert.AreEqual(CastleSpawnResolver.FloorHeight + CastleSpawnResolver.FloorClearance
                             + CastleSpawnResolver.PlayerHeight * 0.5f, point.y, 0.001f,
                 "Same height convention as ResolveSpawn: the capsule's centre.");
+        }
+
+        [Test]
+        public void Test_NoOneIsStoodOverAHole()
+        {
+            // A floor slab (top at FloorHeight) with a 4 m square hole round the anchor, like the
+            // moat under the drawbridge that dropped a player on seed 43 (#147).
+            var anchor = new Vector3(100f, 0f, 100f);
+            float top = CastleSpawnResolver.FloorHeight;
+            void Slab(Vector3 centre, Vector3 size)
+            {
+                GameObject slab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                _spawned.Add(slab);
+                slab.transform.position = centre + new Vector3(0f, top - 0.5f, 0f);
+                slab.transform.localScale = new Vector3(size.x, 1f, size.z);
+            }
+            Slab(anchor + new Vector3(-7f, 0f, 0f), new Vector3(10f, 1f, 20f));
+            Slab(anchor + new Vector3(7f, 0f, 0f), new Vector3(10f, 1f, 20f));
+            Slab(anchor + new Vector3(0f, 0f, -7f), new Vector3(4f, 1f, 10f));
+            Slab(anchor + new Vector3(0f, 0f, 7f), new Vector3(4f, 1f, 10f));
+            Physics.SyncTransforms();
+
+            Vector3 point = CastleSpawnResolver.FirstClearStandingPoint(anchor);
+
+            float feet = point.y - CastleSpawnResolver.PlayerHeight * 0.5f;
+            Assert.IsTrue(Physics.Raycast(new Vector3(point.x, feet + 0.1f, point.z), Vector3.down, 1f),
+                $"Stood at {point}, over the hole: the player falls through the floor.");
         }
 
         [Test]

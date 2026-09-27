@@ -1,8 +1,8 @@
-using RogueAi.Loot;
-using RogueAi.Spells;
+using Plunderspell.Loot;
+using Plunderspell.Spells;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Turns Aurum Voco into actual coin on the floor.

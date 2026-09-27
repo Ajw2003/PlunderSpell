@@ -1,15 +1,15 @@
-using RogueAi.Atmosphere;
+using Plunderspell.Atmosphere;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// The tuned numbers for the night's four states, written into the profile by
     /// <see cref="NightAtmosphereForge"/>. Started from the chosen Blender renders
     /// (Tools/LookSamples/render_look_samples.py, LOOKS["calm"] and ["alert"]) and tuned against
-    /// in-engine captures; see docs/systems/atmosphere.md ("Tuning").
+    /// in-engine captures; see docs/4-systems/atmosphere.md ("Tuning").
     /// </summary>
     public static class NightLooks
     {

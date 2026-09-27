@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace RogueAi.Loot
+namespace Plunderspell.Loot
 {
     /// <summary>
     /// What a carryable object is worth when it leaves the castle. Sits alongside <c>Item</c> on
     /// loot prefabs; anything without one extracts for nothing.
     ///
-    /// See docs/systems/raid.md, "Carrying and extracting".
+    /// See docs/4-systems/raid.md, "Carrying and extracting".
     /// </summary>
     public class LootValue : MonoBehaviour
     {

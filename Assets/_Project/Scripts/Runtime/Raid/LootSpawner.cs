@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using RogueAi.Castle;
-using RogueAi.Loot;
+using Plunderspell.Castle;
+using Plunderspell.Loot;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Turns a <see cref="LootPlacementPlanner"/> plan into actual objects in the scene.
@@ -64,7 +64,7 @@ namespace RogueAi.Raid
 
         /// <summary>
         /// Holds every spawned piece frozen for <see cref="m_settleDelay"/>, then hands it back to
-        /// physics. See docs/systems/raid.md, "How loot settles".
+        /// physics. See docs/4-systems/raid.md, "How loot settles".
         /// </summary>
         private void BeginSettling()
         {

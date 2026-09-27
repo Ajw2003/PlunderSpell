@@ -8,7 +8,7 @@ namespace Plunderspell.UI
     /// <see cref="GameStateManager.StateChanged"/>: locked and hidden while playing, free and visible
     /// in every screen the player is expected to click.
     ///
-    /// Why this is the sole owner: docs/Decisions.md, "One owner for the cursor; input gates on the
+    /// Why this is the sole owner: docs/6-decisions/Decisions.md, "One owner for the cursor; input gates on the
     /// state variable".
     /// </summary>
     public class CursorLockPolicy : MonoBehaviour

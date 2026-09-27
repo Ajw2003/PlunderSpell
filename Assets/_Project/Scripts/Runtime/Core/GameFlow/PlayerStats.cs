@@ -65,6 +65,9 @@ namespace Plunderspell.Core
             StatsChanged?.Invoke();
         }
 
+        /// <summary>Fills mana to the maximum, as a fresh body arriving in a raid does.</summary>
+        public void RefillMana() => RestoreMana(MaxMana);
+
         public void AddGold(int amount)
         {
             Gold += amount;

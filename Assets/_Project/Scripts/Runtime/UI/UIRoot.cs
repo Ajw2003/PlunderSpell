@@ -27,6 +27,10 @@ namespace Plunderspell.UI
             _settings = BuildScreen<SettingsScreen>(root, "SettingsScreen");
             _gameOver = BuildScreen<GameOverScreen>(root, "GameOverScreen");
 
+            var backdrop = new GameObject("BackdropCamera");
+            backdrop.transform.SetParent(transform, false);
+            backdrop.AddComponent<BackdropCamera>();
+
             GameServices.GameState.StateChanged += OnStateChanged;
         }
 

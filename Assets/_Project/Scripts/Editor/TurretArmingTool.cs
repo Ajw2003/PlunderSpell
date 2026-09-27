@@ -1,15 +1,15 @@
-using RogueAi.Guards;
+using Plunderspell.Guards;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Hands the HexTurret a projectile, which is what makes it a turret rather than a guard that
     /// cannot walk. Deliberately separate from <c>EnemyPrefabForge</c>: the forge rebuilds all ten
     /// enemy prefabs and would discard the hand-tuning they already carry.
     ///
-    /// See docs/systems/raid.md, "Guards that can actually hurt you".
+    /// See docs/4-systems/raid.md, "Guards that can actually hurt you".
     /// </summary>
     public static class TurretArmingTool
     {

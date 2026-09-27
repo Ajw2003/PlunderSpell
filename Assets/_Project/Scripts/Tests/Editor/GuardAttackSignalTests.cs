@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using RogueAi.Guards;
+using Plunderspell.Guards;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// The replicated attack signal (docs/plans/artbible-enemies-in-engine.md, E4): one integer

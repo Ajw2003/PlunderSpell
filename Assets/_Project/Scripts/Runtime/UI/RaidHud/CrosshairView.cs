@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace RogueAi.UI
+namespace Plunderspell.UI
 {
-    /// <summary>Centre-screen crosshair, drawn with IMGUI. See docs/systems/combat-bench.md, "The
+    /// <summary>Centre-screen crosshair, drawn with IMGUI. See docs/4-systems/combat-bench.md, "The
     /// bench has its own crosshair".</summary>
     public class CrosshairView : MonoBehaviour
     {

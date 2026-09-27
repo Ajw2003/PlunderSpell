@@ -6,7 +6,7 @@ using System.Net;
 using UnityEditor;
 using UnityEngine;
 
-namespace RogueAi.Voice.EditorTools
+namespace Plunderspell.Voice.EditorTools
 {
     /// <summary>
     /// Editor utility that fetches the small English Vosk model and unpacks it into

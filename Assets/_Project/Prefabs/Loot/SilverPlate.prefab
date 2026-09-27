@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5769285190757031285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 56444062339688455}
+  m_Layer: 0
+  m_Name: GripPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &56444062339688455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5769285190757031285}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.1404, y: 0, z: 0.019000001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4904837437970478819}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4871701641175830792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -66,7 +97,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1b749bec8027a0c49889afd1b989d871, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 56444062339688455}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b749bec8027a0c49889afd1b989d871, type: 3}
       insertIndex: -1
@@ -87,6 +121,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7687934111844728203}
   m_SourcePrefab: {fileID: 100100000, guid: 1b749bec8027a0c49889afd1b989d871, type: 3}
+--- !u!4 &4904837437970478819 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1b749bec8027a0c49889afd1b989d871, type: 3}
+  m_PrefabInstance: {fileID: 4871701641175830792}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5718070715567320153 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b749bec8027a0c49889afd1b989d871, type: 3}
@@ -151,7 +190,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b2863e9b62bfe054dde624400cad5af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootPickup
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootPickup
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -165,6 +204,7 @@ MonoBehaviour:
   _meshRenderer: {fileID: 6078266807638789516}
   _brokenVfx: {fileID: 0}
   _handLocalOffset: {x: 0, y: 0, z: 0}
+  _gripPoint: {fileID: 56444062339688455}
 --- !u!114 &-4483413053605711612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,11 +216,14 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee81d29afbf11a9478fb8230b135d419, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Items::Item
-  _followSpeed: 20
+  m_EditorClassIdentifier: Plunderspell.Items::Item
+  _springRate: 120
+  _dampingRatio: 0.9
   _rotationSpeed: 10
-  _gripStrength: 180
-  _maxHoldSpeed: 14
+  _gripStrength: 100
+  _haulStrength: 250
+  _heldAngularDamping: 3
+  _gripPoint: {fileID: 56444062339688455}
   _maxThrowSpeed: 18
   _damageMultiplier: 2
   _damageCooldown: 0.5
@@ -195,7 +238,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cc187acd8d1fa74f838b8e9e0030bd0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootValue
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootValue
   m_item: {fileID: 11400000, guid: 7cfe70917ae3795b409df5962ba377e9, type: 2}
   m_worth: 50
   m_displayName: Loot

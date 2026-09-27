@@ -117,7 +117,7 @@ UVs and painted textures through the same shader in a texture mode.
 
 ## 4. The outer bailey
 
-The curtain wall is a ring of 12 m cells (`docs/systems/castle.md:17`). Each cell raises its wall on
+The curtain wall is a ring of 12 m cells (`docs/4-systems/castle.md:17`). Each cell raises its wall on
 the outer edge, which leaves a strip about 10 m wide between the wall and the rooms. That strip is
 the bailey. The courtyards carved out of the interior become outdoor places with a purpose.
 
@@ -150,7 +150,7 @@ garden near the keep. Each has fire anchors.
   must still report every room reachable and 100% of floor reachable on its five seeds.
 - **Cover, not walls.** Sheds and carts break sight lines but never block the path.
 - **Loot is unchanged.** Loot still never spawns on a curtain-wall cell
-  (`docs/systems/castle.md:83`). Loot in the sheds would be a gameplay change and needs its own
+  (`docs/4-systems/castle.md:83`). Loot in the sheds would be a gameplay change and needs its own
   decision.
 - **Eras.** High Medieval first. The other eras get their own dressing kits in the same variant
   slots later.

@@ -1,7 +1,7 @@
 using PurrNet;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Replicates the castle layout across the network using nothing but the generation seed.

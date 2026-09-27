@@ -3,7 +3,7 @@ using System.Reflection;
 using PurrNet;
 using UnityEngine;
 
-namespace RogueAi.Tests.Integration
+namespace Plunderspell.Tests.Integration
 {
     /// <summary>
     /// Lightweight harness for the Milestone-3 integration suite.

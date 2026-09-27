@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace RogueAi.Voice
+namespace Plunderspell.Voice
 {
     /// <summary>
     /// Keyboard-driven stand-in for the real speech recogniser. Used in the editor and
@@ -29,9 +29,9 @@ namespace RogueAi.Voice
             { KeyCode.Alpha2, "FRANGO" },
             { KeyCode.Alpha3, "LEVO" },
             { KeyCode.Alpha4, "AURUM VOCO" },
-            { KeyCode.Alpha5, "TONITRUS" },
+            { KeyCode.Alpha5, "VELOX" },
             { KeyCode.Alpha6, "SOMNUS" },
-            { KeyCode.Alpha7, "CADAVER SURGE" },
+            { KeyCode.Alpha7, "SALTUS" },
             { KeyCode.Alpha8, "PORTA" },
         };
 
@@ -42,9 +42,9 @@ namespace RogueAi.Voice
             { KeyCode.Alpha2, "FRANCO" },
             { KeyCode.Alpha3, "LAVO" },
             { KeyCode.Alpha4, "AURUM BOCO" },
-            { KeyCode.Alpha5, "TONITUS" },
+            { KeyCode.Alpha5, "VELOS" },
             { KeyCode.Alpha6, "SONUS" },
-            { KeyCode.Alpha7, "CADAVER SURJ" },
+            { KeyCode.Alpha7, "SALTAS" },
             { KeyCode.Alpha8, "PROTA" },
         };
 
@@ -152,7 +152,8 @@ namespace RogueAi.Voice
                 normalizedText: VoiceUtility.Normalize(rawWord),
                 confidence: 1f,
                 rmsAmplitude: rms,
-                volume: VoiceUtility.ClassifyVolume(rms));
+                volume: VoiceUtility.ClassifyVolume(rms),
+                fromKeyboard: true);
 
             Debug.Log($"[MockVoice] Emit {result}");
             OnPhraseRecognized?.Invoke(result);

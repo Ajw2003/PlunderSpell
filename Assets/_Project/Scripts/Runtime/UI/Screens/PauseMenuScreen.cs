@@ -10,7 +10,7 @@ namespace Plunderspell.UI.Screens
             UIFactory.CreateFullStretchPanel(transform, "Overlay", new Color(0f, 0f, 0f, 0.6f));
             var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(480f, 380f), Vector2.zero, UITheme.PanelBackground);
 
-            var title = UIFactory.CreateText(panel, "Title", "PAUSED", UITheme.HeaderFontSize, UITheme.TextPrimary);
+            var title = UIFactory.CreateText(panel, "Title", "THE RAID GOES ON", UITheme.HeaderFontSize, UITheme.TextPrimary);
             title.rectTransform.anchorMin = new Vector2(0.5f, 1f);
             title.rectTransform.anchorMax = new Vector2(0.5f, 1f);
             title.rectTransform.pivot = new Vector2(0.5f, 1f);

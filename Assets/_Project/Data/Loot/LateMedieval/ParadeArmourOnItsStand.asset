@@ -11,10 +11,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e6921339ee52db387f9085c3d7ee21d, type: 3}
   m_Name: ParadeArmourOnItsStand
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootItem
-  Worth: 900
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
+  Worth: 1500
   IsArtifact: 0
-  Bulk: 13
-  Fragility: 6
+  WeightKg: 12
+  Fragility: 8
   DisplayName: Parade Armour on its Stand
   Icon: {fileID: 0}

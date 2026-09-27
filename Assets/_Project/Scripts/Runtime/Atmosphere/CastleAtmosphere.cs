@@ -1,17 +1,17 @@
 using System.Collections.Generic;
-using RogueAi.Alarm;
-using RogueAi.Raid;
+using Plunderspell.Alarm;
+using Plunderspell.Raid;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// The castle's night: fog, moon, sky, ambient, grade and every fire, blended between the four
     /// alarm states over about two seconds whenever <see cref="AlarmFSMManager.AlarmStateChanged"/>
     /// fires. That event already fires on every peer, so each machine blends its own visuals and
-    /// nothing here is networked. See docs/systems/atmosphere.md.
+    /// nothing here is networked. See docs/4-systems/atmosphere.md.
     /// </summary>
     public class CastleAtmosphere : MonoBehaviour
     {
@@ -38,6 +38,11 @@ namespace RogueAi.Atmosphere
         private static readonly int s_moonDir = Shader.PropertyToID("_NF_MoonDir");
         private static readonly int s_moonColor = Shader.PropertyToID("_NF_MoonColor");
         private static readonly int s_scatter = Shader.PropertyToID("_NF_Scatter");
+        private static readonly int s_sky = Shader.PropertyToID("_NF_Sky");
+
+        /// <summary>How quickly the sky clears with elevation: an exponent on the up component, so
+        /// the horizon keeps the fires' glow and overhead opens up.</summary>
+        private const float k_SkyClarityCurve = 0.6f;
         private static readonly int s_lightPos = Shader.PropertyToID("_NF_LightPos");
         private static readonly int s_lightColor = Shader.PropertyToID("_NF_LightColor");
         private static readonly int s_skyZenith = Shader.PropertyToID("_Zenith");
@@ -283,6 +288,7 @@ namespace RogueAi.Atmosphere
             Vector3 moonDir = MoonDirection();
             Shader.SetGlobalVector(s_moonDir, new Vector4(moonDir.x, moonDir.y, moonDir.z, _current.MoonAnisotropy));
             Shader.SetGlobalColor(s_moonColor, _current.MoonColor * _current.MoonScatter);
+            Shader.SetGlobalVector(s_sky, new Vector4(Mathf.Clamp01(_current.SkyClarity), k_SkyClarityCurve, 0f, 0f));
 
             int count = GatherScatterLights();
             Shader.SetGlobalVectorArray(s_lightPos, _lightPos);

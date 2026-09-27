@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4264266212277003547
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2037019468589343963}
+  m_Layer: 0
+  m_Name: GripPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2037019468589343963
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4264266212277003547}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.006400004, z: 0.06128694}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9199981820967622616}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8657712635601416243
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -66,7 +97,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: fc83b0a814a17f0419166d4bad11eca0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2037019468589343963}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fc83b0a814a17f0419166d4bad11eca0, type: 3}
       insertIndex: -1
@@ -151,11 +185,14 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee81d29afbf11a9478fb8230b135d419, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Items::Item
-  _followSpeed: 20
+  m_EditorClassIdentifier: Plunderspell.Items::Item
+  _springRate: 120
+  _dampingRatio: 0.9
   _rotationSpeed: 10
-  _gripStrength: 180
-  _maxHoldSpeed: 14
+  _gripStrength: 100
+  _haulStrength: 250
+  _heldAngularDamping: 3
+  _gripPoint: {fileID: 2037019468589343963}
   _maxThrowSpeed: 18
   _damageMultiplier: 2
   _damageCooldown: 0.5
@@ -170,7 +207,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b2863e9b62bfe054dde624400cad5af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootPickup
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootPickup
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -184,6 +221,7 @@ MonoBehaviour:
   _meshRenderer: {fileID: 0}
   _brokenVfx: {fileID: 0}
   _handLocalOffset: {x: 0, y: 0, z: 0}
+  _gripPoint: {fileID: 2037019468589343963}
 --- !u!114 &2883085050451344730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +233,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cc187acd8d1fa74f838b8e9e0030bd0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootValue
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootValue
   m_item: {fileID: 0}
   m_worth: 50
   m_displayName: Loot
@@ -231,3 +269,8 @@ MonoBehaviour:
   _characterControllerPatch: 0
   _ownerAuth: 1
   _interpolationTiming: 0
+--- !u!4 &9199981820967622616 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fc83b0a814a17f0419166d4bad11eca0, type: 3}
+  m_PrefabInstance: {fileID: 8657712635601416243}
+  m_PrefabAsset: {fileID: 0}

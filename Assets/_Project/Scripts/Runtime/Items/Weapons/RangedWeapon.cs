@@ -1,8 +1,8 @@
 using Interfaces;
-using RogueAi.Acoustics;
+using Plunderspell.Acoustics;
 using UnityEngine;
 
-/// <summary>One bolt, then a long reload. See docs/Decisions.md, "A ranged shot spawns ahead of the
+/// <summary>One bolt, then a long reload. See docs/6-decisions/Decisions.md, "A ranged shot spawns ahead of the
 /// wielder instead of tracking their colliders".</summary>
 [RequireComponent(typeof(Item))]
 [RequireComponent(typeof(AcousticEmitter))]
@@ -62,7 +62,7 @@ public class RangedWeapon : MonoBehaviour
 
     /// <summary>
     /// Raised on the firing machine after a real shot: (weapon, where the shot left the muzzle, its
-    /// direction). RogueAi.Net shows the same shot on every other machine with
+    /// direction). Plunderspell.Net shows the same shot on every other machine with
     /// <see cref="SpawnCosmeticShot"/>.
     /// </summary>
     public static event System.Action<RangedWeapon, Vector3, Vector3> Fired;
@@ -88,7 +88,7 @@ public class RangedWeapon : MonoBehaviour
             return;
 
         // Spawning at the muzzle rather than the eye clears the wielder's own capsule collider by
-        // construction, the same fix already used for spell bursts (docs/Decisions.md, "A spell
+        // construction, the same fix already used for spell bursts (docs/6-decisions/Decisions.md, "A spell
         // burst is centred on where it lands, not where it starts") — no per-frame collision-ignore
         // bookkeeping needed.
         Vector3 spawnPoint = origin + direction * k_muzzleOffset;

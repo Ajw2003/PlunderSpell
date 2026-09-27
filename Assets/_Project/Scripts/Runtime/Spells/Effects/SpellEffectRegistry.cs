@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RogueAi.Spells
+namespace Plunderspell.Spells
 {
     /// <summary>
     /// Resolves a <see cref="SpellId"/> to the <see cref="ISpellEffect"/> that carries it out.
@@ -80,17 +80,17 @@ namespace RogueAi.Spells
                 new FrangoEffect(),
                 new LevoEffect(),
                 new AurumVocoEffect(),
-                new TonitrusEffect(),
+                new VeloxEffect(),
                 new SomnusEffect(),
-                new CadaverSurgeEffect(),
+                new SaltusEffect(),
                 new PortaEffect(),
 
                 new MisfireIgnisEffect(),
                 new MisfireFrangoEffect(),
                 new MisfireLevoEffect(),
-                new MisfireTonitrusEffect(),
+                new MisfireVeloxEffect(),
                 new MisfireSomnusEffect(),
-                new MisfireCadaverSurgeEffect(),
+                new MisfireSaltusEffect(),
                 new MisfireAurumVocoEffect(),
                 new MisfirePortaEffect(),
             };

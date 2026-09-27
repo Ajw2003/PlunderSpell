@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Extraction;
-using RogueAi.Loot;
-using RogueAi.UI;
+using Plunderspell.Extraction;
+using Plunderspell.Loot;
+using Plunderspell.UI;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Extraction tallies what is standing on the pad, and the HUD says so while the raid is still
-    /// running. See docs/systems/raid.md, "Carrying and extracting".
+    /// running. See docs/4-systems/raid.md, "Carrying and extracting".
     /// </summary>
     public class ExtractionHaulTests
     {
@@ -124,7 +124,7 @@ namespace RogueAi.Tests
         {
             var empty = new RaidHudModel(default, 0f, default, 0f, string.Empty, false,
                 string.Empty, false, 0f, 0f, string.Empty, 0f, 0);
-            Assert.AreEqual("Haul: bring loot to the pad", empty.HaulText,
+            Assert.AreEqual("Haul: bring loot to the portal", empty.HaulText,
                 "An empty pad should tell the player what to do, not show a zero.");
 
             var oneP = new RaidHudModel(default, 0f, default, 0f, string.Empty, false,

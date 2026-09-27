@@ -26,7 +26,7 @@ import room_kit as rk
 # not sourced from the C#; this preview's own reading of the moodboard's
 # era-accent idea (palette.ERA_ACCENT) applied to the five castle zones.
 # Wall height above the floor slab's top face, per zone. Sized against the
-# 1.8m standard human documented in docs/systems/scale.md: the tightest
+# 1.8m standard human documented in docs/4-systems/scale.md: the tightest
 # zone (Crypt) still leaves a full body's worth of headroom, and each ring
 # outward is grander than the one inside it.
 ZONE_HEIGHT = {

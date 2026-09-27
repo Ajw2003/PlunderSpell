@@ -10,7 +10,7 @@ namespace Code.Scripts.Singleton
         protected virtual bool PersistBetweenScenes => true;
 
         // Never auto-creates a GameObject, and collapses a destroyed instance to a real null so
-        // that `Instance?.Publish(...)` at call sites behaves. See docs/systems/core.md - Traps.
+        // that `Instance?.Publish(...)` at call sites behaves. See docs/4-systems/core.md - Traps.
         public static T Instance => _instance != null ? _instance : null;
 
         protected virtual void Awake()

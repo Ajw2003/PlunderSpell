@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using Plunderspell.Core;
 using UnityEngine;
 
-namespace RogueAi.Voice
+namespace Plunderspell.Voice
 {
     /// <summary>
     /// Chooses which microphone to listen on. Unity's "default" (a null device name) is simply the

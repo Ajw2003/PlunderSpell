@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Voice
+namespace Plunderspell.Voice
 {
     /// <summary>
     /// Static access point for the active <see cref="IVoiceInputService"/>.

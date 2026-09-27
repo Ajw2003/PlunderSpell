@@ -188,7 +188,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 644620259e38985d96708a3f28b07bf7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.SocketPoint
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.SocketPoint
   Type: 0
   Facing: 3
   IsOccupied: 0
@@ -236,7 +236,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 644620259e38985d96708a3f28b07bf7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.SocketPoint
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.SocketPoint
   Type: 0
   Facing: 1
   IsOccupied: 0
@@ -1022,7 +1022,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 644620259e38985d96708a3f28b07bf7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.SocketPoint
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.SocketPoint
   Type: 0
   Facing: 0
   IsOccupied: 0
@@ -1303,7 +1303,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1271bb0bc296be02d9bc55a769045dd9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.CastleRoomModule
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.CastleRoomModule
   Zone: 1
   RoomId: GenericRoom
   Sockets:
@@ -1357,7 +1357,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 644620259e38985d96708a3f28b07bf7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.SocketPoint
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.SocketPoint
   Type: 0
   Facing: 2
   IsOccupied: 0

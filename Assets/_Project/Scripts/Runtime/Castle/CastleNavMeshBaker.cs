@@ -1,13 +1,13 @@
 using Unity.AI.Navigation;
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>
     /// Rebuilds the scene's walkable surface once the castle exists.
     ///
     /// The castle is instantiated from the seed at runtime, so a NavMesh baked in the Editor would
-    /// only ever cover the empty ground plane. See docs/systems/raid-scene-assembly.md ("Navigation")
+    /// only ever cover the empty ground plane. See docs/4-systems/raid-scene-assembly.md ("Navigation")
     /// for why the bake is driven from the raid sequence rather than from Start().
     /// </summary>
     [RequireComponent(typeof(NavMeshSurface))]

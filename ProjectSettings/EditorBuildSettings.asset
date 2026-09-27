@@ -14,9 +14,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/PurrLobby/LobbyScenes/NetworkedScene.unity
     guid: e6ba6bbd3072e63449ec09bda4a1b5e6
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Project/Scenes/CastleBench.unity
     guid: aef1b78bf3397ba45b8a0e61df75b790
+  - enabled: 1
+    path: Assets/_Project/Scenes/RaidScene.unity
+    guid: e44e619c01fc7ad4c9c2088497d362c8
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: e05f63c218fb0e54f8c41ecaf9e2ef10, type: 3}
   m_UseUCBPForAssetBundles: 0

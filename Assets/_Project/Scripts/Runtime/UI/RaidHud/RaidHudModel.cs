@@ -1,8 +1,8 @@
-using RogueAi.Alarm;
-using RogueAi.Raid;
+using Plunderspell.Alarm;
+using Plunderspell.Raid;
 using UnityEngine;
 
-namespace RogueAi.UI
+namespace Plunderspell.UI
 {
     /// <summary>
     /// Everything the HUD shows, as plain data. The presenter builds one of these each frame and the
@@ -92,7 +92,7 @@ namespace RogueAi.UI
         /// zero, because "0 gold" looks like a broken counter and "carry it here" does not.
         /// </summary>
         public string HaulText => HaulPieces == 0
-            ? "Haul: bring loot to the pad"
+            ? "Haul: bring loot to the portal"
             : $"Haul: {HaulWorth:N0} gold ({HaulPieces} piece{(HaulPieces == 1 ? string.Empty : "s")})";
 
         public static string FormatTime(float seconds)

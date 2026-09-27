@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5dc7dd3c4e03004b82143ab10c15a50, type: 3}
   m_Name: SpellTuning
-  m_EditorClassIdentifier: RogueAi.Spells::RogueAi.Spells.SpellTuningProfile
+  m_EditorClassIdentifier: Plunderspell.Spells::Plunderspell.Spells.SpellTuningProfile
   WhisperPower: 0.5
   NormalPower: 1
   ShoutPower: 1.75
@@ -21,20 +21,34 @@ MonoBehaviour:
   WhisperNoiseStrength: 0.1
   NormalNoiseStrength: 0.45
   ShoutNoiseStrength: 1
+  ManaRegenPerSecond: 2.5
+  KeyboardCastSeconds: 1.5
   DefaultEffectRadius: 6
+  AimRange: 14
+  AimConeDegrees: 22
   IgnisDamagePerSecond: 12
   IgnisBurnSeconds: 4
-  TonitrusStunSeconds: 3
-  TonitrusNoiseRadius: 18
-  TonitrusNoiseStrength: 1
+  FrangoDamage: 30
+  FrangoStaggerSeconds: 1.2
+  FrangoKnockback: 2.5
+  VeloxDashSpeed: 20
+  VeloxDashSeconds: 0.5
+  SaltusLaunchSpeed: 25
+  SaltusSlamSpeed: 22
+  SlamRadius: 3
+  SlamDamage: 30
+  SlamKnockback: 2.5
+  SlamNoiseRadius: 14
+  SlamNoiseStrength: 1
   SomnusSleepSeconds: 8
-  LevoImpulse: 6
+  LevoImpulse: 15
   LevoSeconds: 3
   AurumVocoWorth: 40
   AurumVocoNoiseRadius: 8
   AurumVocoNoiseStrength: 0.5
   MisfireSelfBurnSeconds: 6
   MisfireSelfDamagePerSecond: 8
-  MisfireSelfStunSeconds: 4
   MisfireSelfSleepSeconds: 5
+  MisfireSaltusHop: 0.25
+  MisfireSaltusStaggerSeconds: 1
   MisfireRadius: 4

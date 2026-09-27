@@ -1,9 +1,9 @@
 {
-    "name": "RogueAi.Enemies",
+    "name": "Plunderspell.Enemies",
     "rootNamespace": "",
     "references": [
-        "RogueAi.Core",
-        "RogueAi.Items"
+        "Plunderspell.Foundation",
+        "Plunderspell.Items"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

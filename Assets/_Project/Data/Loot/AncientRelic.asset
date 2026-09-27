@@ -15,6 +15,6 @@ MonoBehaviour:
   Worth: 500
   IsArtifact: 1
   Bulk: 5
-  Fragility: 3
+  Fragility: 6
   DisplayName: Ancient Relic
   Icon: {fileID: 0}

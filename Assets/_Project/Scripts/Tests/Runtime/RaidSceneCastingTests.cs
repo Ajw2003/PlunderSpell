@@ -2,21 +2,21 @@
 using System.Collections;
 using NUnit.Framework;
 using Plunderspell.Core;
-using RogueAi.Spells;
-using RogueAi.Spells.Vfx;
-using RogueAi.Voice;
+using Plunderspell.Spells;
+using Plunderspell.Spells.Vfx;
+using Plunderspell.Voice;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Drives the real raid scene the way a player does, rather than a fixture built in a test.
     /// If casting works here it works in the game, which is the only claim worth making.
     ///
-    /// See docs/systems/spells.md, "Casting it in the Editor".
+    /// See docs/4-systems/spells.md, "Casting it in the Editor".
     /// </summary>
     public class RaidSceneCastingTests
     {
@@ -36,6 +36,7 @@ namespace RogueAi.Tests
 
             GameServices.Initialize();
             m_stateBeforeTest = GameServices.GameState.CurrentState;
+            CastKeysInstantly();
 
             // The player is spawned by the network, solo included, exactly as Play Solo does it.
             Assert.IsNotNull(GameServices.Coop, $"{k_ScenePath} has no co-op session to start.");
@@ -52,9 +53,20 @@ namespace RogueAi.Tests
         /// and every later test that asserts "nothing is in range" finds a castle full of guards and
         /// loot instead -- which is how this suite silently broke six spell-effect tests.
         /// </summary>
+
+        /// <summary>These tests are about words resolving and showing, not the keyboard chant or
+        /// mana (CastingInputTests covers both), so keyed casts fire at once here.</summary>
+        private static void CastKeysInstantly()
+        {
+            var tuning = ScriptableObject.CreateInstance<SpellTuningProfile>();
+            tuning.KeyboardCastSeconds = 0f;
+            SpellTuning.Use(tuning);
+        }
+
         [UnityTearDown]
         public IEnumerator TearDownScene()
         {
+            SpellTuning.Use(null);
             if (GameServices.GameState != null)
             {
                 GameServices.GameState.ChangeState(m_stateBeforeTest);
@@ -111,7 +123,7 @@ namespace RogueAi.Tests
 
             int after = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
             Assert.Greater(after, before,
-                "Casting Tonitrus in the raid scene produced no visible effect.");
+                "Casting Velox in the raid scene produced no visible effect.");
         }
 
         /// <summary>
@@ -144,6 +156,7 @@ namespace RogueAi.Tests
                 {
                     lastResolved = SpellId.None;
 
+                    GameServices.PlayerStats.RefillMana();
                     voice.StartListening();
                     mock.SimulateKeyPress(key);
                     voice.StopListening();

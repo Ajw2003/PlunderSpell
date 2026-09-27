@@ -1,14 +1,14 @@
 using Interfaces;
 using NUnit.Framework;
-using RogueAi.Lair;
+using Plunderspell.Lair;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// The two co-op rules that fail silently if broken: a hit sent to the machine that owns the
     /// target must not also land here, and showing a friend the host's campaign must never overwrite
-    /// the friend's own save. See docs/systems/net.md.
+    /// the friend's own save. See docs/4-systems/net.md.
     /// </summary>
     public class CoopRulesTests
     {

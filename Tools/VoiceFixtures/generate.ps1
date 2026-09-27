@@ -19,9 +19,9 @@ $clips = [ordered]@{
     "OK_FRANGO" = "Frango";               "MF_FRANGO" = "Franco"
     "OK_LEVO" = "Levo";                   "MF_LEVO" = "Lavo"
     "OK_AURUMVOCO" = "Aurum voco";        "MF_AURUMVOCO" = "Aurum boco"
-    "OK_TONITRUS" = "Tonitrus";           "MF_TONITRUS" = "Tonitus"
+    "OK_VELOX" = "Velox";                 "MF_VELOX" = "Velo"
     "OK_SOMNUS" = "Somnus";               "MF_SOMNUS" = "Sonus"
-    "OK_CADAVERSURGE" = "Cadaver surge";  "MF_CADAVERSURGE" = "Cadver surge"
+    "OK_SALTUS" = "Saltus";               "MF_SALTUS" = "Sultus"
     "OK_PORTA" = "Porta";                 "MF_PORTA" = "Prota"
 }
 

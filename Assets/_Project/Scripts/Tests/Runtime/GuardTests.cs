@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Guards;
-using RogueAi.Status;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Guards;
+using Plunderspell.Status;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the guards — the reason noise matters. Most of these drive
@@ -237,6 +237,74 @@ namespace RogueAi.Tests
                 "Once the castle is fully up, letting it max out is not a decision you can take back.");
         }
 
+        // --- Raising the castle (#163) -------------------------------------------------------
+
+        [Test]
+        public void Test_ASpawnedGuardKeepsTheAlarmItFound()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            var go = Track(new GameObject("Guard"));
+            go.AddComponent<BoxCollider>();
+            var guard = go.AddComponent<CastleGuard>();
+            guard.Configure(null);   // what GuardSpawner does
+
+            Assert.AreSame(alarm, guard.Alarm,
+                "Configure(null) wiped the alarm every spawned guard had found, so none could report a sighting.");
+        }
+
+        [Test]
+        public void Test_ASightingReachesTheAlarm()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            CastleGuard guard = MakeGuard(Vector3.zero, alarm);
+            MakeIntruder(new Vector3(0f, 0f, 6f));
+            float before = alarm.AlarmLevel;
+
+            guard.Tick(0.1f);
+
+            Assert.AreEqual(GuardAlertState.Chasing, guard.State, "Test premise: it sees the intruder.");
+            Assert.Greater(alarm.AlarmLevel, before, "Spotting an intruder must raise the alarm.");
+        }
+
+        [Test]
+        public void Test_TheShoutSendsNearbyGuardsToTheIntruder()
+        {
+            CastleGuard spotter = MakeGuard(Vector3.zero);
+            CastleGuard near = MakeGuard(new Vector3(-10f, 0f, -5f));
+            CastleGuard far = MakeGuard(new Vector3(-40f, 0f, 0f));
+            near.transform.rotation = Quaternion.Euler(0f, 180f, 0f);  // facing away: hears, cannot see
+            far.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            Vector3 intruder = new Vector3(0f, 0f, 6f);
+            MakeIntruder(intruder);
+
+            spotter.Tick(0.1f);
+
+            Assert.AreEqual(GuardAlertState.Chasing, spotter.State, "Test premise: the spotter sees the intruder.");
+            Assert.AreEqual(GuardAlertState.Investigating, near.State, "A guard in earshot must answer the shout.");
+            Assert.AreEqual(intruder, near.InvestigationTarget, "It goes to the intruder, not to the shouter.");
+            Assert.AreEqual(1, near.AlertsReceived);
+            Assert.AreEqual(0, far.AlertsReceived, "A guard 40 m away is out of the shout's 20 m.");
+        }
+
+        [Test]
+        public void Test_TheHueAndCrySendsGuardsNearAPlayerToThem()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            CastleGuard near = MakeGuard(new Vector3(0f, 0f, -30f), alarm);
+            CastleGuard far = MakeGuard(new Vector3(0f, 0f, -80f), alarm);
+            near.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            far.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            Vector3 player = Vector3.zero;
+            MakeIntruder(player);
+
+            alarm.SetAlarmLevel(100f);
+
+            Assert.AreEqual(AlarmState.HueAndCry, alarm.State, "Test premise.");
+            Assert.AreEqual(GuardAlertState.Investigating, near.State, "The hue and cry must send guards within 40 m.");
+            Assert.AreEqual(player, near.InvestigationTarget);
+            Assert.AreEqual(0, far.AlertsReceived, "A guard 80 m away is outside the hue and cry's reach.");
+        }
+
         // --- Speed --------------------------------------------------------------------------
 
         [Test]
@@ -270,6 +338,77 @@ namespace RogueAi.Tests
             Assert.AreEqual(GuardAlertState.Chasing, guard.State);
             Assert.Greater(alarm.AlarmLevel, 0f,
                 "A guard that spots you shouts, and the shout reaches the alarm.");
+        }
+
+        [Test]
+        public void Test_AGuardShoutsAgainOnItsNextChase()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            CastleGuard guard = MakeGuard(Vector3.zero, alarm);
+            Transform intruder = MakeIntruder(new Vector3(0f, 0f, 5f));
+
+            guard.Tick(0.1f);
+            CastleGuard.UnregisterIntruder(intruder);
+            guard.Tick(0.1f);
+            guard.Tick(GuardBrain.SearchPatience + 1f);
+            Assert.AreEqual(GuardAlertState.Patrolling, guard.State, "Sanity: the first chase is over.");
+
+            alarm.SetAlarmLevel(0f);
+            CastleGuard.RegisterIntruder(intruder);
+            guard.Tick(0.1f);
+
+            Assert.AreEqual(GuardAlertState.Chasing, guard.State);
+            Assert.Greater(alarm.AlarmLevel, 0f, "A guard back on patrol must shout again when it spots someone.");
+        }
+
+        [Test]
+        public void Test_ThreeGuardsChasingIsHueAndCry()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+
+            alarm.ReportChase(1, true);
+            Assert.Less(alarm.State, AlarmState.Roused, "One guard on the chase is not the castle up in arms.");
+            alarm.ReportChase(2, true);
+            Assert.AreEqual(AlarmState.Roused, alarm.State, "Two guards chasing at once rouse the castle.");
+            alarm.ReportChase(3, true);
+            Assert.AreEqual(AlarmState.HueAndCry, alarm.State,
+                "Several guards chasing and attacking must reach Hue and Cry (#139).");
+        }
+
+        [Test]
+        public void Test_GuardsSpottingAndAttackingRaiseTheAlarmThroughWalls()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+
+            alarm.ReportSighting();
+            float afterSighting = alarm.AlarmLevel;
+            alarm.ReportAttack();
+
+            Assert.GreaterOrEqual(afterSighting, 20f, "A sighting is not muffled by the walls between guard and alarm.");
+            Assert.Greater(alarm.AlarmLevel, afterSighting, "An attack adds to it.");
+        }
+
+        [Test]
+        public void Test_ANewRaidStartsCalmAndStaysCalmThroughTheGrace()
+        {
+            AlarmFSMManager alarm = MakeAlarm();
+            alarm.SetAlarmLevel(100f);
+            Assert.AreEqual(AlarmState.HueAndCry, alarm.State);
+
+            alarm.ResetForNewRaid(20f);
+            Assert.AreEqual(AlarmState.Calm, alarm.State, "The last raid's Hue and Cry must not carry over (#136).");
+            Assert.IsFalse(alarm.IsLocked);
+
+            alarm.ApplyNoise(1f);
+            alarm.ReportSighting();
+            alarm.ReportChase(1, true);
+            alarm.ReportChase(2, true);
+            alarm.ReportChase(3, true);
+            Assert.AreEqual(0f, alarm.AlarmLevel, "Nothing raises the alarm during the arrival grace.");
+
+            alarm.ResetForNewRaid(0f);
+            alarm.ReportSighting();
+            Assert.Greater(alarm.AlarmLevel, 0f, "After the grace the alarm works again.");
         }
 
         // --- Moving -------------------------------------------------------------------------
@@ -320,6 +459,39 @@ namespace RogueAi.Tests
         }
 
         // --- Damage -------------------------------------------------------------------------
+
+        /// <summary>
+        /// #106: raid guards have no Rigidbody, and without one a guard Levo let go of was put
+        /// straight back on the floor, a 1.8 m drop in one frame that cost it nothing. It must fall
+        /// and take the fall damage.
+        /// </summary>
+        [Test]
+        public void Test_ALevitatedGuardWithNoBodyFallsAndIsHurt()
+        {
+            CastleGuard guard = MakeGuard(Vector3.zero);
+            Assert.IsNull(guard.GetComponent<Rigidbody>(), "Raid guards have no Rigidbody.");
+            StatusEffectReceiver status = guard.GetComponent<StatusEffectReceiver>();
+            float before = guard.CurrentHealth;
+
+            status.Levitate(Vector3.up, 1f);
+            for (int i = 0; i < 60 && status.IsLevitating; i++)
+            {
+                guard.UpdateLevitation(0.02f);
+                status.Tick(0.02f);
+            }
+            Assert.Greater(guard.transform.position.y, 1.5f, "Levo must lift the guard.");
+
+            Assert.IsTrue(guard.UpdateLevitation(0.02f), "Let go, the guard must fall, not land at once.");
+            Assert.IsTrue(guard.IsAirborne);
+            Assert.Greater(guard.transform.position.y, 1.5f, "The fall starts where the lift ended.");
+
+            for (int i = 0; i < 200 && guard.IsAirborne; i++)
+                guard.UpdateLevitation(0.02f);
+
+            Assert.IsFalse(guard.IsAirborne, "The guard must land.");
+            Assert.AreEqual(0f, guard.transform.position.y, 0.05f, "It lands where it was lifted from.");
+            Assert.Less(guard.CurrentHealth, before - 10f, "A 1.8 m drop must hurt.");
+        }
 
         [Test]
         public void Test_ABurningGuardEventuallyDies()

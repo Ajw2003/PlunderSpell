@@ -1,8 +1,8 @@
 using PurrNet;
-using RogueAi.Loot;
+using Plunderspell.Loot;
 using UnityEngine;
 
-namespace RogueAi.Net
+namespace Plunderspell.Net
 {
     /// <summary>
     /// Installs the session rules for moving physical items (<see cref="Item.CanDriveHere"/>,

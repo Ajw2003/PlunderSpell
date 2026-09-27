@@ -1,7 +1,7 @@
-using RogueAi.Voice;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Acoustics
+namespace Plunderspell.Acoustics
 {
     /// <summary>Movement stance, drives footstep loudness.</summary>
     public enum MoveStance

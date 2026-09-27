@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.Spells;
+using Plunderspell.Castle;
+using Plunderspell.Spells;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// EditMode tests for the Milestone 2a procedural castle generator, socket compatibility and

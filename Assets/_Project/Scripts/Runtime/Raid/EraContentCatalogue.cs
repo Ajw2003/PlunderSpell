@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using RogueAi.Castle;
-using RogueAi.Inventory;
+using Plunderspell.Castle;
+using Plunderspell.Inventory;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Which rooms, loot and garrison each historical era is raided with. An empty field falls
     /// back to the scene's own assignment.
     /// </summary>
-    // doc-ref da27 docs/systems/raid-scene-assembly.md
+    // doc-ref da27 docs/4-systems/raid-scene-assembly.md
     [CreateAssetMenu(fileName = "EraContentCatalogue", menuName = "Plunderspell/Era Content Catalogue")]
     public class EraContentCatalogue : ScriptableObject
     {

@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
-using RogueAi.Castle;
-using RogueAi.EditorTools;
-using RogueAi.Inventory;
+using Plunderspell.Castle;
+using Plunderspell.EditorTools;
+using Plunderspell.Inventory;
 
-namespace RogueAi.Tests.Editor
+namespace Plunderspell.Tests.Editor
 {
     /// <summary>
     /// The art-bible enemies' numbers, read from docs/art/data/*.json and the ArtForge manifest

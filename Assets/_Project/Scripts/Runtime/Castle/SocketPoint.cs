@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Castle
+namespace Plunderspell.Castle
 {
     /// <summary>The kind of opening a socket represents. Only compatible types may connect.</summary>
     public enum SocketType

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e6921339ee52db387f9085c3d7ee21d, type: 3}
   m_Name: Loot_Gilded_Chest
-  m_EditorClassIdentifier: RogueAi.Loot::RogueAi.Loot.LootItem
+  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 260
   IsArtifact: 0
   Bulk: 14

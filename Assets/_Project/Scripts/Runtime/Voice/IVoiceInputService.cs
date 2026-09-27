@@ -1,6 +1,6 @@
 using System;
 
-namespace RogueAi.Voice
+namespace Plunderspell.Voice
 {
     /// <summary>
     /// Loudness bucket a phrase was spoken at. Drives spell modifiers:
@@ -35,14 +35,19 @@ namespace RogueAi.Voice
         /// <summary>Loudness classification derived from <see cref="RmsAmplitude"/>.</summary>
         public CastVolume Volume;
 
+        /// <summary>True when a number key produced the phrase rather than speech. A keyed cast is
+        /// chanted for a moment before it fires, so it is never faster than saying the word (#116).</summary>
+        public bool FromKeyboard;
+
         public VoiceRecognitionResult(string rawText, string normalizedText, float confidence,
-            float rmsAmplitude, CastVolume volume)
+            float rmsAmplitude, CastVolume volume, bool fromKeyboard = false)
         {
             RawText = rawText;
             NormalizedText = normalizedText;
             Confidence = confidence;
             RmsAmplitude = rmsAmplitude;
             Volume = volume;
+            FromKeyboard = fromKeyboard;
         }
 
         public override string ToString() =>
@@ -109,6 +114,18 @@ namespace RogueAi.Voice
                 // punctuation is dropped
             }
             return sb.ToString().Trim();
+        }
+
+        /// <summary>
+        /// Amplifies the first <paramref name="count"/> samples in place by <paramref name="gain"/>
+        /// (the Settings microphone gain, #125), clipping at full scale as a real preamp would.
+        /// </summary>
+        public static void ApplyGain(float[] samples, int count, float gain)
+        {
+            if (samples == null || UnityEngine.Mathf.Approximately(gain, 1f))
+                return;
+            for (int i = 0; i < count; i++)
+                samples[i] = UnityEngine.Mathf.Clamp(samples[i] * gain, -1f, 1f);
         }
 
         /// <summary>Compute RMS amplitude of a float PCM buffer in the range 0..1.</summary>

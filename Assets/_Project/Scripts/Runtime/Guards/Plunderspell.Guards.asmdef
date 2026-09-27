@@ -1,0 +1,21 @@
+{
+    "name": "Plunderspell.Guards",
+    "rootNamespace": "Plunderspell.Guards",
+    "references": [
+        "PurrNet.Runtime",
+        "Plunderspell.Foundation",
+        "Plunderspell.Acoustics",
+        "Plunderspell.Alarm",
+        "Plunderspell.Status",
+        "Plunderspell.Items"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

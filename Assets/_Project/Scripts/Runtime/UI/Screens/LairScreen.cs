@@ -1,6 +1,6 @@
 using Plunderspell.Core;
-using RogueAi.Inventory;
-using RogueAi.Lair;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
 using UnityEngine;
 using UnityEngine.UI;
 

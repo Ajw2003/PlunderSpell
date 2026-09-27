@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Extraction;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Spells;
-using RogueAi.Voice;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Extraction;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Spells;
+using Plunderspell.Voice;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests.Integration
+namespace Plunderspell.Tests.Integration
 {
     /// <summary>
     /// Milestone-3 end-to-end integration suite. Coroutine [UnityTest]s exercise the four-simulated-client
@@ -65,7 +65,7 @@ namespace RogueAi.Tests.Integration
             var data = Track(ScriptableObject.CreateInstance<LootItem>());
             data.Worth = worth;
             data.Fragility = fragility;
-            data.Bulk = 3f;
+            data.WeightKg = 3f;
             pickup.SetData(data);
             return pickup;
         }
@@ -132,7 +132,7 @@ namespace RogueAi.Tests.Integration
             var go = Track(new GameObject("Fragile"));
             var pickup = go.AddComponent<LootPickup>();
             var data = Track(ScriptableObject.CreateInstance<LootItem>());
-            data.Bulk = 3f;
+            data.WeightKg = 3f;
             data.Fragility = 5f;
             pickup.SetData(data);
 
@@ -212,8 +212,8 @@ namespace RogueAi.Tests.Integration
 
             var pickup = go.GetComponent<LootPickup>();
             Assert.IsNotNull(pickup.Data, "Downed adapter should assign body loot data.");
-            Assert.AreEqual(12f, pickup.Data.Bulk, 0.001f,
-                "A downed player body should be Bulk 12 (forces dual carry).");
+            Assert.AreEqual(12f, pickup.Data.WeightKg, 0.001f,
+                "A downed player body should be WeightKg 12 (forces dual carry).");
         }
     }
 }

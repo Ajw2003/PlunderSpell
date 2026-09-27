@@ -1,7 +1,7 @@
-# Steam Co-op Framework for Rogue-Ai-Extraction-Game
+# Steam Co-op Framework
 
 > **Historical record — completed.** Kept as-is for the reasoning behind the current architecture.
-> One part of it no longer holds: the planetary gravity described below (`RogueAi.Gravity`,
+> One part of it no longer holds: the planetary gravity described below (`Plunderspell.Gravity`,
 > `GravitySource`, `GravityReceiver`, and the gravity-relative movement frame) was removed by the
 > Plunderspell pivot to flat world gravity. Everything else — the PurrNet and Steam work, the FSM
 > and item systems, the assembly layout — is still live. See [`plunderspell.md`](plunderspell.md).

@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Castle;
-using RogueAi.Extraction;
-using RogueAi.Guards;
-using RogueAi.Inventory;
-using RogueAi.Lair;
-using RogueAi.Loot;
-using RogueAi.Raid;
-using RogueAi.Spells;
-using RogueAi.Status;
-using RogueAi.Voice;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Castle;
+using Plunderspell.Extraction;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
+using Plunderspell.Lair;
+using Plunderspell.Loot;
+using Plunderspell.Raid;
+using Plunderspell.Spells;
+using Plunderspell.Status;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// End-to-end tests of the core concept: speak a word, wake the castle, carry the treasure out,
@@ -99,10 +99,11 @@ namespace RogueAi.Tests
             guard.Configure(alarm);
 
             SpellEffectRegistry.Execute(new SpellEffectContext(
-                SpellId.Tonitrus, CastVolume.Shout, Vector3.zero, Vector3.forward));
+                SpellId.Saltus, CastVolume.Shout, Vector3.zero, Vector3.forward));
+            SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, null, ~0, 0);
 
             Assert.GreaterOrEqual((int)alarm.State, (int)AlarmState.Stirred,
-                "A shouted thunderclap must wake the castle.");
+                "A shouted leap and its slam must wake the castle.");
             Assert.AreEqual(GuardAlertState.Investigating, guard.State,
                 "…and bring a guard to look.");
         }
@@ -291,7 +292,7 @@ namespace RogueAi.Tests
                 var item = Track(ScriptableObject.CreateInstance<LootItem>());
                 item.DisplayName = $"{zone} Treasure";
                 item.Worth = 50f + (int)zone * 25f;
-                item.Bulk = 3f;
+                item.WeightKg = 3f;
                 item.Fragility = 8f;
 
                 table.Entries.Add(new RaidLootTable.Entry { Item = item, Zone = zone, Weight = 10 });

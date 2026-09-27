@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using RogueAi.Castle;
-using RogueAi.Raid;
+using Plunderspell.Castle;
+using Plunderspell.Raid;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// Throwaway preview of the "calm" night look chosen in docs/plans/night-atmosphere.md and

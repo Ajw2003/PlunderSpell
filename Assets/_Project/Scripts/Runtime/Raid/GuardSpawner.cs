@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using RogueAi.Castle;
-using RogueAi.Guards;
-using RogueAi.Inventory;
+using Plunderspell.Castle;
+using Plunderspell.Guards;
+using Plunderspell.Inventory;
 using UnityEngine;
 
-namespace RogueAi.Raid
+namespace Plunderspell.Raid
 {
     /// <summary>
     /// Puts the garrison planned by <see cref="GuardPlacementPlanner"/> into the world. Like
@@ -23,10 +23,36 @@ namespace RogueAi.Raid
         [Range(0f, 2f)]
         [SerializeField] private float _densityScale = 1f;
 
+        [Tooltip("Scales every spawned guard's patrol and chase speed. Applied once at spawn, on top " +
+                 "of the prefab's own tuning, so one number balances the whole roster (#117).")]
+        [Range(0.25f, 2f)]
+        [SerializeField] private float _speedScale = 0.8f;
+
+        [Tooltip("Scales every spawned guard's damage per hit. Applied once at spawn, on top of the " +
+                 "prefab's own tuning (#118).")]
+        [Range(0.1f, 2f)]
+        [SerializeField] private float _damageScale = 0.65f;
+
+        [Tooltip("Extra guards for each player past the first, as a share of the solo garrison: 0.35 " +
+                 "gives a four-player raid about twice the guards (#154).")]
+        [Range(0f, 1f)]
+        [SerializeField] private float _extraGuardsPerPlayer = 0.35f;
+
+        [Tooltip("Extra guard health for each player past the first: 0.25 gives a four-player raid " +
+                 "1.75x health (#154). Damage per hit does not scale; each player is hit as hard as solo.")]
+        [Range(0f, 1f)]
+        [SerializeField] private float _extraHealthPerPlayer = 0.25f;
+
         [Tooltip("Parent for spawned guards. Auto-created if left null.")]
         [SerializeField] private Transform _container;
 
         private readonly List<GameObject> _spawned = new List<GameObject>();
+        private float _healthScale = 1f;
+
+        /// <summary>1 for a solo raid, plus <paramref name="extraPerPlayer"/> for each player past the
+        /// first (#154).</summary>
+        public static float LobbyScale(int playerCount, float extraPerPlayer) =>
+            1f + extraPerPlayer * Mathf.Max(0, playerCount - 1);
         private readonly List<GuardPlacement> _lastPlan = new List<GuardPlacement>();
 
         /// <summary>The garrison plan behind the guards currently in the world.</summary>
@@ -36,6 +62,8 @@ namespace RogueAi.Raid
         public IReadOnlyList<GameObject> Spawned => _spawned;
 
         public float DensityScale { get => _densityScale; set => _densityScale = value; }
+        public float SpeedScale { get => _speedScale; set => _speedScale = value; }
+        public float DamageScale { get => _damageScale; set => _damageScale = value; }
         public GameObject GuardPrefab { get => _guardPrefab; set => _guardPrefab = value; }
         public EnemyRoster Roster { get => _roster; set => _roster = value; }
 
@@ -49,12 +77,14 @@ namespace RogueAi.Raid
         /// old gatehouse ring.
         /// </summary>
         public IReadOnlyList<GuardPlacement> SpawnFor(ProceduralCastleData castle, int seed,
-            HistoricalEra era, int safeModuleIndex = -1)
+            HistoricalEra era, int safeModuleIndex = -1, int playerCount = 1)
         {
             Clear();
             LastEra = era;
+            _healthScale = LobbyScale(playerCount, _extraHealthPerPlayer);
 
-            List<GuardPlacement> plan = GuardPlacementPlanner.Plan(castle, seed, _densityScale, safeModuleIndex);
+            float density = _densityScale * LobbyScale(playerCount, _extraGuardsPerPlayer);
+            List<GuardPlacement> plan = GuardPlacementPlanner.Plan(castle, seed, density, safeModuleIndex);
             _lastPlan.AddRange(plan);
 
             if (_roster == null && _guardPrefab == null)
@@ -114,6 +144,8 @@ namespace RogueAi.Raid
             }
 
             guard.Configure(null, route);
+            guard.ScaleTuning(_speedScale, _damageScale);
+            guard.ScaleHealth(_healthScale);
         }
 
         /// <summary>Removes the garrison. Called when a raid ends.</summary>

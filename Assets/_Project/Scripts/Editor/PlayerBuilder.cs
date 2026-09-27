@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace RogueAi.EditorTools
+namespace Plunderspell.EditorTools
 {
     /// <summary>Produces a standalone Windows player build. See docs/plans/GitIssues/Issue_53_Plan.md.</summary>
     public static class PlayerBuilder
@@ -31,7 +31,7 @@ namespace RogueAi.EditorTools
             {
                 // The whole game lives in one scene, driven by Plunderspell.Core.GameState
                 // (MainMenu/Lair/Playing/...) rather than a scene per screen — see
-                // docs/Decisions.md, "The standalone build is one scene, not one per screen".
+                // docs/6-decisions/Decisions.md, "The standalone build is one scene, not one per screen".
                 scenes = new[] { "Assets/_Project/Scenes/RaidScene.unity" },
                 locationPathName = outputPath,
                 target = BuildTarget.StandaloneWindows64,

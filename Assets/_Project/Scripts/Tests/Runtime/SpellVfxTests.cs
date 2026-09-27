@@ -1,15 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using RogueAi.Spells;
-using RogueAi.Spells.Vfx;
+using Plunderspell.Spells;
+using Plunderspell.Spells.Vfx;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
-    /// A cast has to be visible. See docs/systems/spells.md, "Seeing a cast".
+    /// A cast has to be visible. See docs/4-systems/spells.md, "Seeing a cast".
     /// </summary>
     public class SpellVfxTests
     {
@@ -41,7 +41,7 @@ namespace RogueAi.Tests
             SpellId[] primaries =
             {
                 SpellId.Ignis, SpellId.Frango, SpellId.Levo, SpellId.AurumVoco,
-                SpellId.Tonitrus, SpellId.Somnus, SpellId.CadaverSurge, SpellId.Porta,
+                SpellId.Velox, SpellId.Somnus, SpellId.Saltus, SpellId.Porta,
             };
 
             var seen = new List<Color>();
@@ -73,7 +73,7 @@ namespace RogueAi.Tests
             SpellId[] misfires =
             {
                 SpellId.MisfireIgnis, SpellId.MisFireFrango, SpellId.MisfireLevo,
-                SpellId.MisfireTonitrus, SpellId.MisFireSomnus, SpellId.MisFireCadaverSurge,
+                SpellId.MisfireVelox, SpellId.MisFireSomnus, SpellId.MisfireSaltus,
                 SpellId.MisfireAurumVoco, SpellId.MisfirePorta,
             };
 
@@ -89,8 +89,8 @@ namespace RogueAi.Tests
         {
             Assert.AreEqual(SpellVisualStyle.Bolt, SpellLookbook.For(SpellId.Ignis).Style,
                 "Ignis is the fire bolt; it should fly rather than bloom at the hands.");
-            Assert.AreEqual(SpellVisualStyle.Burst, SpellLookbook.For(SpellId.Tonitrus).Style,
-                "A thunderclap happens where you are standing.");
+            Assert.AreEqual(SpellVisualStyle.Burst, SpellLookbook.For(SpellId.Saltus).Style,
+                "A leap happens where you are standing.");
         }
 
         [UnityTest]
@@ -117,6 +117,28 @@ namespace RogueAi.Tests
                 "A burst must destroy itself, or every cast leaks a GameObject.");
         }
 
+        /// <summary>
+        /// #127: in a standalone build the sphere primitive's default material has no shader the
+        /// build kept, so every burst drew as a magenta error ball. A burst must use the shipped
+        /// Resources material, and that must be transparent so the burst can fade.
+        /// </summary>
+        [Test]
+        public void Test_ABurstUsesItsOwnTransparentMaterial()
+        {
+            var shipped = Resources.Load<Material>(SpellBurst.MaterialResourcePath);
+            Assert.IsNotNull(shipped, $"Resources/{SpellBurst.MaterialResourcePath} must exist, or builds get no shader.");
+
+            SpellBurst burst = SpellBurst.Spawn(Vector3.zero, Color.red, 2f, 0.1f);
+            Track(burst.gameObject);
+            Material used = burst.GetComponent<Renderer>().sharedMaterial;
+
+            Assert.AreEqual(shipped.shader, used.shader, "The burst must draw with the shipped material's shader.");
+            Assert.GreaterOrEqual(used.renderQueue, (int)UnityEngine.Rendering.RenderQueue.Transparent,
+                "A burst is light: transparent, so its fade shows.");
+            Assert.IsTrue(used.IsKeywordEnabled("_SURFACE_TYPE_TRANSPARENT"),
+                "URP only blends a material with its transparent keyword on.");
+        }
+
         [UnityTest]
         public IEnumerator Test_ACastPutsSomethingOnScreen()
         {
@@ -127,7 +149,7 @@ namespace RogueAi.Tests
             int before = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;
 
             SpellCastingSystem.AnnounceForTesting(new SpellCastingSystem.CastReport(
-                SpellId.Tonitrus, RogueAi.Voice.CastVolume.Normal, 1, "Tester",
+                SpellId.Somnus, Plunderspell.Voice.CastVolume.Normal, 1, "Tester",
                 Vector3.zero, Vector3.forward));
 
             int after = Object.FindObjectsByType<SpellBurst>(FindObjectsSortMode.None).Length;

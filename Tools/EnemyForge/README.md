@@ -4,7 +4,7 @@ Procedural generation of the Plunderspell enemy roster: meshes, rigs, baked text
 FBX/glTF exports and multi-angle review renders, all from Python.
 
 Design rationale, invariants and the traps hit while building this are in
-`docs/systems/enemy-asset-pipeline.md`. This file is just how to run it.
+`docs/4-systems/enemy-asset-pipeline.md`. This file is just how to run it.
 
 ## Requirements
 

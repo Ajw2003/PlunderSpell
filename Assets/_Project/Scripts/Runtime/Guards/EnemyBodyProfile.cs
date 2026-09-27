@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Guards
+namespace Plunderspell.Guards
 {
     /// <summary>
     /// The art bible's numbers for one enemy, written onto its prefab by <c>ArtBibleEnemyForge</c>

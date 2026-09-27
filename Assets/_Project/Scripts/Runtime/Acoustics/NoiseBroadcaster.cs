@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RogueAi.Acoustics
+namespace Plunderspell.Acoustics
 {
     /// <summary>
     /// Component-free noise propagation. <see cref="AcousticEmitter"/> is the authored, per-object

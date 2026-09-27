@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ddca6421151708fac6f6633b3e16d45, type: 3}
+  m_Name: Spell_SALTUS
+  m_EditorClassIdentifier: Plunderspell.Spells::Plunderspell.Spells.SpellWord
+  Word: SALTUS
+  spellId: 47
+  ManaCost: 15
+  AltPronunciations:
+  - SALTAS
+  - SULTUS
+  misfireId: 109
+  HeardAs:
+  - salt is
+  - salt us
+  - sal toss
+  MisfireHeardAs:
+  - soldiers
+  - salt soldiers
+  - sultus
+  Description: High jump from the ground; press jump in the air to slam down, hurting
+    and shoving what is around the landing. Misfire (SALTAS/SULTUS) is a feeble hop
+    that locks your legs.

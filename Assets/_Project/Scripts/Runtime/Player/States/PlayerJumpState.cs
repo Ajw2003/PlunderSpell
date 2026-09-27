@@ -11,7 +11,9 @@ public class PlayerJumpState : PlayerState
 
     public override void Enter()
     {
-        _stateMachine._rb.AddForce(Vector3.up * _stateMachine.JumpForce, ForceMode.Impulse);
+        // A Saltus launch has already set the upward speed.
+        if (!_stateMachine.TakeSpellLaunch())
+            _stateMachine._rb.AddForce(Vector3.up * _stateMachine.JumpForce, ForceMode.Impulse);
         _jumpTime = Time.time;
     }
 

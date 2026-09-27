@@ -15,7 +15,7 @@ Currently, to test if combat works, you have to start a full raid, explore a mas
     Write a script for this test scene that reads the values from the UI panel. When a "Spawn" button is pressed, the script should create the chosen enemies in the arena and set their alarm levels.
 
 4.  **Add Menu Access:**
-    Add a button to the Main Menu or a special developer menu that loads this combat test scene directly. Document how to use this new test scene in the `docs/systems/` folder.
+    Add a button to the Main Menu or a special developer menu that loads this combat test scene directly. Document how to use this new test scene in the `docs/4-systems/` folder.
 
 ## Verification Steps
 1.  Launch the game and look for the new "Combat Test" button on the menu. Click it.
@@ -30,7 +30,7 @@ Currently, to test if combat works, you have to start a full raid, explore a mas
 *   [ ] A developer or tester can select the enemy type, count, and alarm level from a menu in the scene.
 *   [ ] The player can instantly fight the spawned enemies.
 *   [ ] The test scene is easily accessible from a main menu button.
-*   [ ] The feature is documented in `docs/systems/`.
+*   [ ] The feature is documented in `docs/4-systems/`.
 
 
 ## Technical Constraints

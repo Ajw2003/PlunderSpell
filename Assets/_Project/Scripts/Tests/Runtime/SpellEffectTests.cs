@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using Interfaces;
 using NUnit.Framework;
-using RogueAi.Acoustics;
-using RogueAi.Alarm;
-using RogueAi.Loot;
-using RogueAi.Spells;
-using RogueAi.Status;
-using RogueAi.Voice;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Loot;
+using Plunderspell.Spells;
+using Plunderspell.Status;
+using Plunderspell.Voice;
 using UnityEngine;
 
-namespace RogueAi.Tests
+namespace Plunderspell.Tests
 {
     /// <summary>
     /// Tests for the spell-effect layer: that a resolved cast actually changes the world, that a
@@ -57,7 +57,7 @@ namespace RogueAi.Tests
             var data = Track(ScriptableObject.CreateInstance<LootItem>());
             data.Worth = worth;
             data.Fragility = fragility;
-            data.Bulk = 2f;
+            data.WeightKg = 2f;
             pickup.SetData(data);
             return pickup;
         }
@@ -145,6 +145,15 @@ namespace RogueAi.Tests
             public void TakeDamage(float damage, float impactVelocity) => TakeDamage(damage);
         }
 
+        /// <summary>Something with health at a position, with a collider so a spell can find it.</summary>
+        private Target MakeTarget(Vector3 position)
+        {
+            var go = Track(new GameObject("Target"));
+            go.transform.position = position;
+            go.AddComponent<BoxCollider>();
+            return go.AddComponent<Target>();
+        }
+
         [Test]
         public void Test_FrangoLeavesYourLootAlone()
         {
@@ -189,17 +198,69 @@ namespace RogueAi.Tests
             Assert.IsFalse(caster.IsAsleep, "An intended spell must never hit the caster.");
         }
 
+        /// <summary>
+        /// #106: Somnus burst where the crosshair's ray ended, so a guard a hand's width off the
+        /// crosshair (the ray passing it and ending on a wall far behind) slept through it, while
+        /// Ignis, Frango and Levo all forgive that much. It now centres on the aimed sleeper.
+        /// </summary>
         [Test]
-        public void Test_TonitrusStunsEveryoneInRange()
+        public void Test_SomnusSleepsAGuardSlightlyOffTheCrosshair()
         {
-            StatusEffectReceiver a = MakeActor("GuardA", new Vector3(0f, 0f, 2f));
-            StatusEffectReceiver b = MakeActor("GuardB", new Vector3(2f, 0f, 0f));
+            StatusEffectReceiver caster = MakeActor("Caster", Vector3.zero);
+            caster.gameObject.AddComponent<PurrNet.NetworkIdentity>();
+            // 17 degrees off the aim line: inside the aim cone, but the ray down the line misses its
+            // collider and runs on to the end of its range, 9 m beyond it.
+            StatusEffectReceiver guard = MakeActor("Guard", new Vector3(1.5f, 0f, 5f));
 
-            int stunned = SpellEffectRegistry.Execute(
-                Context(SpellId.Tonitrus, CastVolume.Normal, Vector3.zero));
+            int slept = SpellEffectRegistry.Execute(
+                Context(SpellId.Somnus, CastVolume.Normal, Vector3.zero, caster.transform));
 
-            Assert.AreEqual(2, stunned, "Tonitrus is an area stun: both guards.");
-            Assert.IsTrue(a.IsStunned && b.IsStunned);
+            Assert.AreEqual(1, slept, "The guard under the crosshair must fall asleep.");
+            Assert.IsTrue(guard.IsAsleep);
+        }
+
+        [Test]
+        public void Test_TheSlamHurtsWhatIsAroundTheLandingButNotTheCaster()
+        {
+            Target caster = MakeTarget(Vector3.zero);
+            Target near = MakeTarget(new Vector3(0f, 0f, 1f));
+            Target edge = MakeTarget(new Vector3(0f, 0f, SpellTuning.SlamRadius - 0.3f));
+            Target far = MakeTarget(new Vector3(0f, 0f, SpellTuning.SlamRadius + 3f));
+
+            int hit = SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, caster.transform, ~0, 0);
+
+            Assert.AreEqual(2, hit, "The slam reaches everything in its radius except the caster.");
+            Assert.Less(near.CurrentHealth, edge.CurrentHealth, "Nearer the landing hurts more.");
+            Assert.Less(edge.CurrentHealth, edge.MaxHealth, "The edge of the radius is still hit.");
+            Assert.AreEqual(far.MaxHealth, far.CurrentHealth, "Outside the radius is untouched.");
+            Assert.AreEqual(caster.MaxHealth, caster.CurrentHealth, "The caster is never hurt by their own slam.");
+        }
+
+        [Test]
+        public void Test_ASlowLandingHurtsLessThanAFullSlam()
+        {
+            Target soft = MakeTarget(new Vector3(0f, 0f, 1f));
+            SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed * 0.25f, null, ~0, 0);
+            float softDamage = soft.MaxHealth - soft.CurrentHealth;
+            Object.DestroyImmediate(soft.gameObject);
+
+            Target hard = MakeTarget(new Vector3(0f, 0f, 1f));
+            SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, null, ~0, 0);
+            float hardDamage = hard.MaxHealth - hard.CurrentHealth;
+
+            Assert.Greater(hardDamage, softDamage, "The slam scales with how fast it lands.");
+        }
+
+        [Test]
+        public void Test_AMovementSpellWithNoBodyToMoveCannotBeCast()
+        {
+            foreach (SpellId id in new[] { SpellId.Velox, SpellId.Saltus, SpellId.MisfireVelox, SpellId.MisfireSaltus })
+            {
+                var mover = SpellEffectRegistry.Find(id) as ICasterMovementSpell;
+                Assert.IsNotNull(mover, $"{id} must move its caster, on the caster's machine.");
+                Assert.IsFalse(mover.CanMove(Context(id, CastVolume.Normal, Vector3.zero)),
+                    $"{id} with no caster body must fizzle rather than spend mana on nothing.");
+            }
         }
 
         // --- Misfires -----------------------------------------------------------------------
@@ -257,7 +318,7 @@ namespace RogueAi.Tests
             SpellId[] primaries =
             {
                 SpellId.Ignis, SpellId.Frango, SpellId.Levo, SpellId.AurumVoco,
-                SpellId.Tonitrus, SpellId.Somnus, SpellId.CadaverSurge, SpellId.Porta
+                SpellId.Velox, SpellId.Somnus, SpellId.Saltus, SpellId.Porta
             };
 
             foreach (SpellId primary in primaries)
@@ -298,14 +359,17 @@ namespace RogueAi.Tests
         }
 
         [Test]
-        public void Test_ShoutedTonitrusIsLoudEnoughToStirTheCastle()
+        public void Test_ALeapAndItsSlamStirTheCastle()
         {
             AlarmFSMManager alarm = MakeAlarmListener(new Vector3(0f, 0f, 3f));
 
-            SpellEffectRegistry.Execute(Context(SpellId.Tonitrus, CastVolume.Shout, Vector3.zero));
+            SpellEffectRegistry.Execute(Context(SpellId.Saltus, CastVolume.Normal, Vector3.zero));
+            float afterWord = alarm.AlarmLevel;
+            SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, null, ~0, 0);
 
+            Assert.Greater(alarm.AlarmLevel, afterWord, "The slam's landing makes a noise of its own.");
             Assert.GreaterOrEqual((int)alarm.State, (int)AlarmState.Stirred,
-                "A shouted thunderclap must at least stir the castle.");
+                "Saying the word and landing the slam must at least stir the castle.");
         }
 
         // --- Unregistered ids -----------------------------------------------------------------

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace RogueAi.Atmosphere
+namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// Everything the night looks like in one alarm state: fog, moon, ambient, sky, how the fires
@@ -22,6 +22,9 @@ namespace RogueAi.Atmosphere
         public float FogHeightFalloff;
         [Tooltip("How far away the sky counts as, in metres of fog.")]
         public float SkyDistance;
+        [Tooltip("How much the fog thins over the sky as you look up: 0 keeps the sky fogged over, 1 " +
+                 "shows it clear overhead. Only sky pixels; walls and rooms fog as before.")]
+        [Range(0f, 1f)] public float SkyClarity;
 
         [Header("Moon")]
         public Color MoonColor;
@@ -59,6 +62,7 @@ namespace RogueAi.Atmosphere
             FogBaseHeight += look.FogBaseHeight * weight;
             FogHeightFalloff += look.FogHeightFalloff * weight;
             SkyDistance += look.SkyDistance * weight;
+            SkyClarity += look.SkyClarity * weight;
             MoonColor += look.MoonColor * weight;
             MoonIntensity += look.MoonIntensity * weight;
             MoonScatter += look.MoonScatter * weight;

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e24a259e7be6e43f24f32f6bb34ca28, type: 3}
   m_Name: GeneratedRoomRegistry
-  m_EditorClassIdentifier: RogueAi.Castle::RogueAi.Castle.CastleRoomRegistry
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.CastleRoomRegistry
   Modules:
   - RoomId: CryptChamberFinal
     Zone: 4
