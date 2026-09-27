@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/spells.md @ e3ab8462c4df92445a4daae3bcb20fa2039a087a -->
+<!-- plain copy of: docs/4-systems/spells.md @ a62a67ae78a14024e696bdfd962051ed3f8cdc2c -->
 
 # Spells
 
@@ -23,15 +23,12 @@ they get back.
 4. A spell aims from where the caster is actually looking, not just from their body's facing
    direction.
 5. Single-target spells pick whatever is closest to the crosshair within a cone and a range;
-   area spells burst wherever the crosshair is pointed, not at the caster's feet.
+   area spells burst on whoever that cone finds under the crosshair, or else wherever the
+   crosshair is pointed, never at the caster's feet.
 6. Every spell costs mana from a shared pool that refills over time; a word the pool cannot
    cover is refused outright, with nothing cast and nothing spent.
 7. Casting by keyboard chants for a short moment before firing, so it is a slight disadvantage
    compared to speaking, never the fastest way to cast.
-8. Two spells move the caster: one is a quick dash, the game's only dodge, and the other is a
-   high jump that, with a second press of jump in mid-air, turns into a slam that hurts and
-   knocks back everything around the landing. Moving the caster happens on their own machine;
-   the damage a slam does is still worked out centrally.
 8. Two spells move the caster: one is a quick dash, the game's only dodge, and the other is a
    high jump that, with a second press of jump in mid-air, turns into a slam that hurts and
    knocks back everything around the landing. Moving the caster happens on their own machine;
@@ -51,6 +48,13 @@ they get back.
   and volume behaviour lives in one editable data file, not scattered constants.
 - **A dodge that went nowhere.** The dash now keeps its speed for its whole length; it used to
   stop on its very first moment, before it had moved at all.
+- **The sleep spell missing a guard just off the crosshair.** It used to go off wherever a single
+  line from the crosshair ended, often a wall far behind the guard; it now aims as forgivingly as
+  every other spell.
+- **A lifted guard landing unhurt.** Guards dropped by the lifting spell now fall to the floor and
+  take damage for the height, rather than reappearing on the floor at once.
+- **The door-opening spell having nothing to open.** The castle does not place doors yet, so this
+  spell does nothing in a raid until doors are added.
 - **A visible spell effect swallowing the caster's own camera.** A burst effect is pushed forward
   from the caster so its near edge, not its centre, lands where the caster is looking.
 

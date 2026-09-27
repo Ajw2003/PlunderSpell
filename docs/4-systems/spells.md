@@ -163,7 +163,11 @@ than a visual — not attempted here.
 Added 2026-09-23 (#106). Single-target spells (Ignis, Levo, Porta) take the target
 closest to the crosshair within `AimConeDegrees` (22°) and `AimRange` (14 m × the volume power),
 preferring centred over near; anything within 1.5 m counts even off-centre. Area spells (Somnus)
-burst at the crosshair's aim point, not on the caster's feet. Before, every spell took
+burst on the sleeper under the crosshair when the cone finds one, else at the crosshair's aim point,
+not on the caster's feet. (Changed 2026-09-26, #106: Somnus used only the aim point, a single ray,
+and a guard a little off it let the ray run on to the wall behind, so the sleep went off 9 m past
+the guard. In a live raid it slept 0 guards where Ignis, Frango and Levo, aimed the same way, all
+hit.) Before, every spell took
 whatever was nearest a point 1 m in front of the caster's face, often something beside or behind
 them. The overlap buffer grows instead of capping at 128 colliders. Misfires still centre on the
 caster, on purpose.
@@ -255,6 +259,16 @@ Added 2026-09-26, at the owner's call; they replace Tonitrus (a thunderclap stun
   degrades into misfires, not into free correct casts.
 
 ## Traps
+
+- **Porta has nothing to open in a raid** (found 2026-09-26, #106). `CastleDoor` exists, but the
+  castle generator places none: a live raid had 0 doors, and Porta cast at nothing. It becomes
+  useful with #111 (doors that open), phase 5 of `docs/plans/castle-revamp.md`. Frango's
+  "forces doors" is idle for the same reason.
+
+- **Raid guards have no Rigidbody, so Levo's drop is simulated by hand** (#106).
+  `CastleGuard.UpdateLevitation` used to land a bodiless guard the frame the spell ended, a 1.8 m
+  drop that cost nothing. It now falls under gravity back to the height it was lifted from and takes
+  9 damage a metre (about 16). `GuardTests.Test_ALevitatedGuardWithNoBodyFallsAndIsHurt`.
 
 - **The dodge used to go nowhere.** `PlayerDodgeState` gave one impulse and ended once the body
   was slower than 1 m/s, which the very first physics step always was, before the impulse had been

@@ -61,6 +61,15 @@ No hit-stop: pausing time in a shared raid would stall or desync the other playe
 KeeperOfTheFlame) walked up and killed the idle player about 20 s into a raid, twice, which is
 the calm grace ending as designed.
 
+Then #106 (make spells other than Ignis useful). Each spell was cast at a real guard in a raid, with
+probe scripts kept in `docs/generated/spell-audit-2026-09-26/`. Ignis, Frango, Aurum Voco, Velox and
+Saltus do their job. Two were broken: Somnus slept nobody unless the crosshair's single ray hit the
+guard, since it burst where that ray ended (9 m behind the guard in the test); it now centres on the
+sleeper the aim cone finds, like the other spells. Levo dropped raid guards (which have no Rigidbody)
+back on the floor in one frame with no fall damage; they now fall and take about 16. Both have a test
+that failed first. Porta cannot help yet: the raid had 0 doors (#111). `SpellEffectTests` 18/18,
+`GuardTests` 24/24.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still
