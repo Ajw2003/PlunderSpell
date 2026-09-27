@@ -14,10 +14,24 @@ feels. `Item` and `ItemManager` stay and are adapted; the unused two-person code
 
 ## Step by Step Execution Instructions
 
-1.  **Confirm today's grab-steal behaviour first.**
-    Run two machines (`docs/4-systems/net.md`, "Testing it"). Player A tows a heavy piece; player B
-    grabs it. Record what A's screen shows, with a screenshot under `docs/generated/`. This is the
-    before-state the new code must fix.
+1.  **Build an automated two-player carry check, then confirm today's grab-steal behaviour.**
+    The owner works alone, so no step may need a person at a second machine. Both players run on
+    one PC and the agent drives both (`docs/4-systems/net.md`, "Testing it"): the Editor hosts, and
+    a Development build with the Pipeline runtime on joins with `-coop-join 127.0.0.1`. Write
+    `Tools/Unity/coop_carry_check.sh`, which in one command:
+    - builds the Development client to `Build/DevTest` with the Pipeline runtime on, then sets it
+      back off and reverts the `preloadedAssets` line (both traps are in net.md);
+    - starts the host in the Editor and launches the client in a window;
+    - drives both sides with `Tools/Unity/eval/` scripts (`unity command eval` for the host,
+      `unity command --runtime Plunderspell eval` for the client) through a list of scenarios: host
+      grabs a piece, client grabs a piece, both grab the same piece, one lets go, the client quits
+      while holding;
+    - after each scenario reads the piece's position on both sides and fails if they differ by
+      more than a small tolerance, and saves a screenshot from each side under
+      `docs/generated/coop-carry-<date>/`;
+    - closes the client and stops Play mode, and prints one PASS or FAIL line per scenario.
+    Run it before any carry code changes. The "both grab the same piece" scenario should fail today:
+    that is the recorded before-state the new code must fix.
 
 2.  **Give held pieces to the host.**
     Replace the ownership hand-off in `NetworkCarry` and `LootPickup.RequestCarry`. While a piece
@@ -53,17 +67,21 @@ feels. `Item` and `ItemManager` stay and are adapted; the unused two-person code
     their copies under `docs/plain/4-systems/`.
 
 ## Verification Steps
+Run `Tools/Unity/coop_carry_check.sh` after steps 2, 3, 4, 5 and 6, and commit its screenshots
+and output. Nothing below needs a second person or a second PC.
+
 1.  Run `CarryFeelTests`; every existing test still passes, with the same numbers.
 2.  Solo: carry, tow and throw a light piece, a heavy piece and a weapon. Each feels as it did before.
-3.  Two machines: A grabs a piece, then B grabs the same piece. Neither loses it, and both screens
+3.  Two players (`coop_carry_check.sh`): A grabs a piece, then B grabs the same piece. Neither loses it, and both screens
     show it in the same place.
-4.  Two machines: A and B lift a 12 kg piece together and walk the same way. It moves faster than
+4.  Two players (`coop_carry_check.sh`): A and B lift a 12 kg piece together and walk the same way. It moves faster than
     one player towing it. Pull opposite ways: it drops.
 5.  Carry the Rolled Tapestry and turn quickly. It sweeps round and settles; a goblet turns almost
     at once. Middle-click still rotates it precisely.
 6.  Let go, disconnect or die while holding. The piece carries on for the other holder, or falls.
 
 ## Completion Checks
+*   [ ] `Tools/Unity/coop_carry_check.sh` exists and runs both players on one PC without a person.
 *   [ ] Any number of players can hold one piece, and every machine agrees where it is.
 *   [ ] A second player grabbing a held piece joins the carry instead of taking it.
 *   [ ] Holders pulling the same way add their strength; opposite pulls drop the piece.
