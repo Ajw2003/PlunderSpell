@@ -12,6 +12,43 @@ Decided 2026-09-27 (`docs/6-decisions/Decisions.md`): replace how a carry is net
 feels. `Item` and `ItemManager` stay and are adapted; the unused two-person code in `LootPickup` and
 `LootInteractor` goes.
 
+## Design (fixed 2026-09-27, before building)
+Checked against the code on 2026-09-27. Loot prefabs use `NetworkTransform` with owner authority
+(`_ownerAuth: 1`); with no owner, PurrNet makes the server the controller
+(`NetworkIdentity.IsController`), so "the host controls a held piece" means the piece has no owner.
+
+- **A hold.** `Item` keeps a list of holds instead of one. A hold is: holder key (the local player
+  or a network `PlayerID`), grip point in the item's frame, target point and its velocity, when the
+  target was last stamped, the holder's view yaw, whether they are turning it on purpose and to what
+  rotation, the tow feet/velocity/rope, and the holder's grip, haul and turn strengths. Solo play
+  has exactly one hold, written by `ItemManager` as today.
+- **Who applies it.** `Item.FixedUpdate` applies every hold only where `CanDriveHere` is true. On
+  a client that is not the controller, `ItemManager` still keeps its own hold (the beam, the HUD
+  and holder-collision ignoring read it) but no force is applied there.
+- **Sending intent.** `CarryBeamRelay` already sends hand, aim, grip point and load 15 times a
+  second. It also sends the target velocity, view yaw, rotating flag and target rotation, and tow
+  data; the server writes them into that player's hold on the item. A hold not heard from for
+  0.5 s is dropped, which also covers a disconnect. `PlayerID` leaving, and the holder's death,
+  drop it at once.
+- **Grabbing.** Grabbing a networked piece on the beam asks the server to add a hold; the server
+  removes any owner (`RemoveOwnership`), so the server controls it. A second player's grab adds a
+  second hold; nothing is taken from the first. Weapons held in the hand keep today's ownership
+  hand-off: they are posed to one player's view every frame and cannot be shared.
+- **Adding strengths.** Each holder's spring is worked out alone; gravity compensation is shared
+  equally across holders, and each holder's upward part is capped by their own grip. A piece is too
+  heavy to lift when its weight exceeds the holders' grips added together (one player: 100 N, so
+  10 kg as before). With one hold the numbers are identical to today's, so `CarryFeelTests` holds.
+- **Opposite pulls.** When a holder's held point is more than `k_beamSnapDistance` (1.5 m) from
+  their target for 0.3 s, that holder's beam snaps and their hold is dropped. Two players pulling
+  apart both snap, and the piece falls.
+- **Mouse steering.** The wanted rotation (view yaw times the pickup orientation, or the middle-click
+  target) is reached by torque: a critically damped angular spring per hold, capped by the holder's
+  turn strength (N·m). Angular acceleration is torque over the body's inertia, so a long or heavy
+  piece reaches its cap and sweeps round; a goblet follows almost at once.
+- **Naming.** New code follows the file it is in (`_camelCase` in `Item`, `ItemManager`,
+  `CarryBeamRelay`), per "existing file style wins"; `docs/UnityConvention.md`'s `m_` applies to
+  new files.
+
 ## Step by Step Execution Instructions
 
 1.  **Build an automated two-player carry check, then confirm today's grab-steal behaviour.**
