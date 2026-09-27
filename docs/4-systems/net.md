@@ -219,3 +219,9 @@ reflection. Never ship a build with the runtime on. Building through the Pipelin
 actions asset in `ProjectSettings.asset`'s `preloadedAssets`; revert that line before committing.
 
 Screenshots of each checked step: `docs/generated/coop-2026-09-23/`.
+
+**Two real machines.** The owner has two PCs, each with its own Steam account (noted 2026-09-27).
+Use them for what one PC on localhost cannot show: Steam's relay, lobby, invite and overlay flow,
+and real network delay. The owner works alone, so a two-machine check must be driven by the agent
+(a Claude Code session on each PC, or one reaching both), not by the owner at two keyboards.
+Nothing automates it yet.
