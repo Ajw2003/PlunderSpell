@@ -1070,3 +1070,21 @@ nothing exists (spells, the portal); friends' voices suit a co-op comedy. `ai/lo
 
 **Status.** Standing.
 
+## 2026-09-27 — Audio levels are baked per category, and Unity's Normalize is off
+
+**Context.** The owner found many of the built sounds harsh or misplaced. Every file had been mastered
+to the same −1 dBFS peak, so a UI hover played as loud as a musket shot, and the committed `.meta`
+files had Unity's Normalize on, which enforces exactly that.
+
+**Decision.** The build sets each file's level by its part of the mix (`Tools/AudioForge/forge/categories.py`:
+UI, cue, foley, physics, weapons, spells, creatures, world), nudged by its gameplay noise class.
+Normalize is turned off in all 1,013 `.meta` files. Streaming, the owner's choice, is unchanged. This
+replaces plan §2's "SFX peaks at −1 dBTP" for every non-music, non-ambience sound.
+
+**Why.** Relative level is most of what makes a mix sound right, and there is no mixer in the game yet
+to set it at runtime. The audit (`docs/generated/audio-audit/`) measured 452 files outside their
+category's level window before, 3 after.
+
+**Status.** Standing. When the runtime mixer exists (plan §7.3), its bus faders trim around these
+levels rather than replacing them.
+

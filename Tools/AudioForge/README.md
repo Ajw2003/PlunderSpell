@@ -21,6 +21,7 @@ in this form when it was written (2026-09-27).
 | `python3 Tools/AudioForge/audioforge.py manifest` | rewrites `manifest.csv` from `manifest_source.py` |
 | `python3 Tools/AudioForge/audioforge.py build` | builds all 1,013 files (about 30 s on 4 cores); add a glob to build some, e.g. `build "sfx_spell_*"` |
 | `python3 Tools/AudioForge/audioforge.py check` | fails on a missing, extra, silent, clipped or clicking file, or one with no licence; ends `OK: 0 problem(s)` |
+| `python3 Tools/AudioForge/audioforge.py audit` | measures every file for harshness, clipping, level and length against real recordings; writes `docs/generated/audio-audit/` ([README](../../docs/generated/audio-audit/README.md)); `--refs` also shows the reference profiles and calibration |
 | `python3 Tools/AudioForge/audioforge.py preview` | writes `docs/generated/audio-preview/index.html`, a page with a player for every sound |
 | `python3 Tools/AudioForge/audioforge.py promote <file> <name>_NN --licence "..."` | files a finished take in `final/` so the build ships it |
 | `python3 Tools/AudioForge/audioforge.py ai --dry-run` | lists the 38 AI-sourced sounds and their prompts; without `--dry-run` it generates takes (needs `ELEVENLABS_API_KEY`) |
@@ -35,8 +36,8 @@ it should end up as.
 
 | Status now | Count | Meaning |
 |---|---:|---|
-| `library-cc0` | 262 | real recordings from Kenney's CC0 packs (`library/kenney/`); shippable |
-| `generated` | 45 | synthesised here, and synthesis is their intended final source (UI ticks, hums that track game values) |
+| `library-cc0` | 258 | real recordings from Kenney's CC0 packs (`library/kenney/`); shippable |
+| `generated` | 49 | synthesised here, and synthesis is their intended final source (UI ticks, hums that track game values) |
 | `placeholder` | 706 | synthesised stand-ins so the game makes the right *kind* of noise now; 435 are guard voices |
 
 Replacing placeholders:
@@ -60,12 +61,14 @@ Edit `manifest_source.py` (the rows, recipes and prompts), then run `manifest`, 
 `preview`. A recipe is one or more layers joined by ` + `:
 
 - `kenney:<pack>/<glob> [gain=dB] [shift=ratio]`, a CC0 file (variant N takes the Nth match)
+- any layer also takes `at=seconds` (start later: knock, knock) and `lp=Hz` (low-pass a fizzy recording)
 - `synth:<recipe> key=value ...`, a function in `forge/recipes.py`
 - `music:raid age=… layer=…`, `music:theme variant=…`, `music:sting kind=… [age=…]`, from `forge/music.py`
 
 ## Unity import settings
 
 Unity writes a `.meta` next to each `.ogg` the first time it imports it; those are committed
-(`268b1ef`). They currently set **Streaming** load type and **Normalize on** for every clip. Normalize
-rescales each clip to full level on import, overriding the levels this build sets (ambience beds at
-−26 dB RMS, music layers balanced against each other). See `docs/plans/audio.md` §2.
+(`268b1ef`). They set **Streaming** load type for every clip. **Normalize is off** (turned off
+2026-09-27): each file's level is set by the build, per category (`forge/categories.py`), so a hover
+tick lands about 14 dB under a weapon hit. Normalize would raise every clip to full level again. A
+new `.ogg` gets Unity's default `.meta` (Normalize on), so switch it off when adding sounds.

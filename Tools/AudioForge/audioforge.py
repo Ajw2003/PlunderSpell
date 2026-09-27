@@ -23,6 +23,7 @@ COMMANDS = {
     "promote": "forge.promote",
     "ai": "forge.ai_elevenlabs",
     "preview": "forge.preview",
+    "audit": "forge.audit",
 }
 
 

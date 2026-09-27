@@ -27,6 +27,7 @@ import soundfile as sf
 from scipy import signal
 
 from . import dsp, music
+from .categories import CATEGORY, category, target_rms_db
 from .recipes import RECIPES
 
 FORGE = Path(__file__).resolve().parent.parent
@@ -79,6 +80,8 @@ def render_layer(layer, rng, variant):
     tokens = shlex.split(rest)
     target, params = tokens[0], parse_args(tokens[1:])
     gain_db = float(params.pop("gain", 0))
+    at = float(params.pop("at", 0))  # start this layer later, in seconds (knock... knock)
+    lp = float(params.pop("lp", 0))  # low-pass this layer at lp Hz (tame a fizzy recording)
     shift = float(params.pop("shift", 1.0))
     sources = []
     if kind == "kenney":
@@ -107,6 +110,10 @@ def render_layer(layer, rng, variant):
     else:
         raise KeyError(f"unknown recipe kind {kind!r} in {layer!r}")
     x = dsp.pitch_shift(np.nan_to_num(x.astype(np.float32)), shift)
+    if lp > 0:
+        x = dsp.lowpass(x, lp, 4)
+    if at > 0:
+        x = np.concatenate([np.zeros(dsp.seconds(at), dtype=np.float32), x])
     return x * 10 ** (gain_db / 20), sources
 
 
@@ -119,14 +126,21 @@ def find_final(name, variant):
 
 
 def loudness(x, row):
-    if row["bus"] == "Music":
-        target = {"calm": -24, "stirred": -26, "roused": -24, "huecry": -21}
-        layer = next((v for k, v in target.items() if row["name"].endswith("_" + k)), -18)
-        return dsp.normalise_rms(x, layer if row["name"].startswith("mus_raid_") else -18) \
-            if row["name"].startswith("mus_") else dsp.normalise_peak(x, PEAK)
+    if row["name"].startswith("mus_raid_"):
+        layer = {"calm": -24, "stirred": -26, "roused": -24, "huecry": -21}
+        return dsp.normalise_rms(x, next((v for k, v in layer.items() if row["name"].endswith("_" + k)), -22))
     if row["loop"] == "1" and row["bus"] == "SFX/Ambience":
         return dsp.normalise_rms(x, -26 if row["spatial"] == "2d" else -22)
-    return dsp.normalise_peak(x, PEAK)
+    # Everything else sits at its category's level (categories.py), never above -1 dBFS peak.
+    return dsp.normalise_rms(x, target_rms_db(row))
+
+
+def cap_length(x, row):
+    """A one-shot longer than its category allows (a UI page-turn running 0.8 s) is faded out."""
+    limit = CATEGORY[category(row)]["max_s"]
+    if row["loop"] == "1" or not limit or len(x) <= dsp.seconds(limit):
+        return x
+    return dsp.fade(x[:dsp.seconds(limit)], 0.0, min(0.15, limit / 4))
 
 
 def write_if_changed(path, x):
@@ -185,6 +199,7 @@ def build_one(row, variant):
         if len(audible):
             x = x[:audible[-1] + dsp.seconds(0.02)]
         x = dsp.fade(x, 0.001, 0.02)
+        x = cap_length(x, row)
     x = loudness(x, row)
     folder = OUT / row["folder"]
     folder.mkdir(parents=True, exist_ok=True)

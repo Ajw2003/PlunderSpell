@@ -41,7 +41,7 @@ def breath(rng, dur=0.5, inhale=1, low=500.0, high=4000.0):
 
 @recipe
 def hiss(rng, dur=1.0, low=2000.0, high=9000.0, decay=0.0, flutter=0.0):
-    x = dsp.bandpass(dsp.white(rng, dur), low, high)
+    x = dsp.bandpass(dsp.pink(rng, dur), low, high)
     if flutter:
         t = dsp.time_axis(dur)
         x *= 0.7 + 0.3 * np.sin(2 * np.pi * flutter * t + rng.uniform(0, 6))
@@ -58,6 +58,13 @@ def wind(rng, dur=20.0, low=150.0, high=900.0, gust=0.15):
     return x * lfo
 
 
+@recipe
+def brush(rng, dur=0.05, low=900.0, high=3500.0):
+    """A fingertip across vellum: a whisper of band-limited noise with a soft start."""
+    x = dsp.bandpass(dsp.pink(rng, dur), low, high)
+    return x * dsp.env_ad(dur, 0.35, 1.5)
+
+
 # --- impacts -------------------------------------------------------------------------------------
 
 @recipe
@@ -71,26 +78,27 @@ def thump(rng, dur=0.25, freq=90.0, drop=0.5, click=0.3, noise_cut=1500.0, decay
 @recipe
 def tick(rng, dur=0.05, freq=2200.0, decay=120.0, noise=0.3):
     freq = _j(rng, freq, 0.05)
-    tone = dsp.sine(freq, dur) * dsp.env_exp(dur, decay, 0.0005)
-    n = dsp.highpass(dsp.white(rng, dur), 1500) * dsp.env_exp(dur, decay * 2, 0.0002)
-    return tone + n * noise
+    # Mostly a band of noise around freq (wood), only a little pure tone (which reads as a beep).
+    tone = dsp.sine(freq, dur) * dsp.env_exp(dur, decay, 0.001) * 0.35
+    n = dsp.bandpass(dsp.pink(rng, dur), freq * 0.5, freq * 1.6) * dsp.env_exp(dur, decay * 1.5, 0.0008)
+    return tone + n * (0.6 + noise)
 
 
 @recipe
 def metal_ring(rng, dur=1.2, freq=620.0, decay=3.0, clank=0.5):
     freq = _j(rng, freq)
     ring = dsp.bell(freq, dur, partials=(1.0, 1.47, 2.09, 2.56, 3.9, 5.2), decay=decay)
-    hit = dsp.highpass(dsp.white(rng, dur), 2000) * dsp.env_exp(dur, 60)
+    hit = dsp.bandpass(dsp.pink(rng, dur), 1200, 6000) * dsp.env_exp(dur, 60, 0.0008)
     return ring * 0.6 + hit * clank
 
 
 @recipe
 def shatter(rng, dur=1.0, brightness=1.0, pieces=40, low=1500.0):
-    out = dsp.highpass(dsp.white(rng, dur), low) * dsp.env_exp(dur, 12) * 0.8
+    out = dsp.highpass(dsp.pink(rng, dur), low) * dsp.env_exp(dur, 12, 0.001) * 0.8
     for _ in range(int(pieces)):
-        f = rng.uniform(2500, 9000) * brightness
-        d = rng.uniform(0.02, 0.15)
-        ping = dsp.sine(f, d) * dsp.env_exp(d, rng.uniform(40, 120))
+        f = rng.uniform(1800, 7000) * brightness
+        d = rng.uniform(0.02, 0.08)
+        ping = dsp.sine(f, d) * dsp.env_exp(d, rng.uniform(70, 160), 0.0005)
         dsp.place(out, ping, rng.exponential(dur / 5), rng.uniform(0.1, 0.4))
     return dsp.fade(out, 0.0005, 0.05)
 
@@ -111,14 +119,14 @@ def explosion(rng, dur=3.0, size=1.0):
     boom = dsp.sine(dsp.glide(90 * size ** -0.3, 30, dur, 0.2), dur) * dsp.env_exp(dur, 3 / size)
     blast = dsp.lowpass(dsp.white(rng, dur), 1800) * dsp.env_exp(dur, 6 / size, 0.001)
     tail = dsp.lowpass(dsp.brown(rng, dur), 150) * dsp.env_ad(dur, 0.05, 2.0)
-    return dsp.saturate(boom * 1.2 + blast + tail * 1.5, 2.5)
+    return dsp.saturate(boom * 1.2 + blast + tail * 1.5, 1.3)
 
 
 @recipe
 def gunshot(rng, dur=1.5, size=1.0):
-    crack = dsp.highpass(dsp.white(rng, dur), 800) * dsp.env_exp(dur, 45, 0.0003)
+    crack = dsp.bandpass(dsp.pink(rng, dur), 600, 7000) * dsp.env_exp(dur, 45, 0.0008)
     body = explosion(rng, dur, 0.4 * size) * 0.8
-    return dsp.saturate(crack * 1.5 + body, 3.0)
+    return dsp.saturate(crack * 1.5 + body, 1.4)
 
 
 # --- creaks, chains, rattles, coins --------------------------------------------------------------
@@ -146,10 +154,11 @@ def rattle(rng, dur=0.6, density=40.0, freq=3000.0, spread=0.5):
 def coins(rng, dur=0.8, count=8, spread=0.6):
     out = np.zeros(dsp.seconds(dur), dtype=np.float32)
     for _ in range(int(count)):
-        f = rng.uniform(2600, 4800)
-        d = rng.uniform(0.15, 0.4)
-        c = dsp.bell(f, d, partials=(1.0, 2.32, 4.25, 6.63), decay=12)
-        dsp.place(out, c, rng.uniform(0, dur * spread), rng.uniform(0.3, 1.0))
+        f = rng.uniform(1900, 3600)
+        d = rng.uniform(0.06, 0.16)
+        ring = dsp.bell(f, d, partials=(1.0, 2.32, 3.1), decay=35) * 0.5
+        clink = dsp.bandpass(dsp.pink(rng, d), 2000, 7000) * dsp.env_exp(d, 90, 0.0005)
+        dsp.place(out, ring + clink, rng.uniform(0, dur * spread), rng.uniform(0.3, 1.0))
     return out
 
 
@@ -159,7 +168,7 @@ def coin_count(rng, steps=5, step=0.07, base=1400.0, rise=1.06):
     out = np.zeros(dsp.seconds(dur), dtype=np.float32)
     for i in range(int(steps)):
         f = base * rise ** i
-        dsp.place(out, dsp.bell(f, 0.3, partials=(1.0, 2.32, 4.25), decay=14), i * step, 0.8)
+        dsp.place(out, dsp.bell(f, 0.2, partials=(1.0, 2.32), decay=22), i * step, 0.8)
     return out
 
 
@@ -224,7 +233,7 @@ def horn(rng, freq=110.0, dur=2.5, vibrato=5.0, brass=0.6, bend=0.94):
     for k in range(1, 12):
         x += np.sin(2 * np.pi * np.cumsum(f * k) / SAMPLE_RATE) / (k ** (1.6 - brass))
     x = dsp.lowpass(x.astype(np.float32), 1800 + 2000 * brass)
-    return dsp.saturate(x * dsp.env_ad(dur, 0.25, 0.8), 1.5)
+    return dsp.saturate(x * dsp.env_ad(dur, 0.25, 0.8), 1.1)
 
 
 @recipe
@@ -233,7 +242,7 @@ def reed(rng, freq=220.0, dur=0.6, drop=0.75, buzz=1.0):
     f = dsp.glide(_j(rng, freq, 0.03), freq * drop, dur, 2.0)
     phase = np.cumsum(f) / SAMPLE_RATE
     square = np.sign(np.sin(2 * np.pi * phase)).astype(np.float32)
-    x = dsp.bandpass(square, 300, 2500) * buzz
+    x = dsp.lowpass(dsp.bandpass(square, 250, 2500), 1400) * buzz
     return x * dsp.env_ad(dur, 0.05, 0.6) * 0.8
 
 
@@ -310,11 +319,11 @@ def crickets(rng, dur=20.0, voices=5):
     out = np.zeros(dsp.seconds(dur), dtype=np.float32)
     t = dsp.time_axis(dur)
     for _ in range(int(voices)):
-        f = rng.uniform(3800, 5200)
+        f = rng.uniform(3200, 4400)
         rate = rng.uniform(12, 20)
         gate = (np.sin(2 * np.pi * rate * t + rng.uniform(0, 6)) > 0.6).astype(np.float32)
         phrase = (np.sin(2 * np.pi * rng.uniform(0.2, 0.5) * t + rng.uniform(0, 6)) > 0).astype(np.float32)
-        out += dsp.sine(f, dur) * dsp.lowpass(gate * phrase, 300) * rng.uniform(0.1, 0.3)
+        out += dsp.sine(f, dur) * dsp.lowpass(gate * phrase, 300) * rng.uniform(0.03, 0.1)
     return out
 
 
@@ -322,7 +331,7 @@ def crickets(rng, dur=20.0, voices=5):
 def clock(rng, dur=20.0, bpm=60.0):
     out = np.zeros(dsp.seconds(dur), dtype=np.float32)
     for i in range(int(dur * bpm / 60)):
-        f = 3000 if i % 2 else 2500
+        f = 1700 if i % 2 else 1450
         dsp.place(out, tick(rng, 0.04, f, 200, 1.0), i * 60 / bpm, 0.5)
     return out
 
@@ -353,7 +362,7 @@ def babble(rng, dur=1.0, pitch=120.0, mood="calm"):
     t = dsp.time_axis(dur)
     f0 = pitch * (1 + contour * np.sin(np.pi * t / dur) + 0.02 * np.sin(2 * np.pi * 5 * t))
     phase = np.cumsum(f0) / SAMPLE_RATE
-    buzz = (2 * (phase % 1.0) - 1).astype(np.float32)
+    buzz = dsp.lowpass((2 * (phase % 1.0) - 1).astype(np.float32), 1800)
     out = np.zeros_like(buzz)
     n_syll = max(1, int(dur * syll_rate))
     edges = np.linspace(0, len(buzz), n_syll + 1).astype(int)
@@ -363,8 +372,8 @@ def babble(rng, dur=1.0, pitch=120.0, mood="calm"):
         seg = dsp.formant(buzz[a:b], v)
         env = np.sin(np.linspace(0, np.pi, b - a)) ** 0.7
         out[a:b] = seg * env
-    breathiness = dsp.bandpass(dsp.white(rng, dur), 1500, 5000) * 0.05
-    return dsp.saturate((out + breathiness) * loud, 1.5 if mood == "shout" else 1.0)
+    breathiness = dsp.bandpass(dsp.pink(rng, dur), 1500, 5000) * 0.05
+    return dsp.lowpass(dsp.saturate((out + breathiness) * loud, 1.15 if mood == "shout" else 1.0), 4000)
 
 
 @recipe
@@ -380,7 +389,7 @@ def hound(rng, dur=0.4, kind="bark"):
     if kind == "howl":
         return whine(rng, dur, 380, 520, 5, 0.03) + babble(rng, dur, 400, "sleep") * 0.3
     if kind == "yelp":
-        return babble(rng, dur, 600, "pain")
+        return babble(rng, dur, 450, "pain")
     return babble(rng, dur, 260, "shout") + thump(rng, dur, 150, 0.2, 0.2) * 0.3
 
 

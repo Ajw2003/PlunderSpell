@@ -8,11 +8,11 @@ code than to type out. Edit the lists here, then run:
 
 Recipe syntax (read by forge/build.py):
     synth:<recipe> key=value ...          a function in forge/recipes.py
-    kenney:<pack>/<glob> [gain=dB] [shift=ratio]   a CC0 file in library/kenney/<pack>/Audio/
+    kenney:<pack>/<glob> [gain=dB] [shift=ratio] [at=seconds]   a CC0 file in library/kenney/<pack>/Audio/
     music:raid age=<age> layer=<layer>    forge/music.py
     music:theme variant=<name>
     music:sting kind=<kind> [age=<age>]
-    Several layers are summed with " + ".
+    Several layers are summed with " + "; any layer takes gain=dB and at=seconds (a delayed start).
 
 `final` is where the shipped version comes from (docs/plans/audio.md §7.1):
     G generated here · L library · A AI text-to-sound · R recorded · C composed · M AI music
@@ -49,8 +49,8 @@ def amb(name, recipe, brief, final="L", spatial="2d", folder="Ambience", ai=""):
 K = "kenney:"
 
 # --- 3.1 UI ---------------------------------------------------------------------------------------
-ui("ui_button_hover", 3, K + "ui-audio/rollover*", "a dry fingertip on vellum")
-ui("ui_button_click", 3, K + "interface-sounds/click_*", "a quill tap on a wooden desk")
+ui("ui_button_hover", 3, "synth:brush dur=0.05", "a dry fingertip on vellum", "G")
+ui("ui_button_click", 3, K + "impact-sounds/impactWood_light_* shift=1.5", "a quill tap on a wooden desk")
 ui("ui_button_back", 1, K + "rpg-audio/bookFlip* shift=0.9", "a page flipped backwards")
 ui("ui_button_denied", 1, "synth:thump dur=0.15 freq=140 click=0.6 decay=35", "a dull wooden knock", "G")
 ui("ui_screen_open", 2, K + "rpg-audio/bookFlip*", "a page turning")
@@ -60,12 +60,12 @@ ui("ui_toggle_on", 1, K + "rpg-audio/metalLatch*", "a latch opening")
 ui("ui_toggle_off", 1, K + "rpg-audio/metalClick*", "a latch closing")
 ui("ui_keybind_listen", 1, K + "rpg-audio/bookPlace* gain=-6", "a quill dipped in ink")
 ui("ui_keybind_set", 1, "synth:thump dur=0.2 freq=110 click=0.4 decay=20", "a wax seal pressed", "L")
-ui("ui_error", 1, K + "interface-sounds/error_00*", "torn parchment")
+ui("ui_error", 1, K + "rpg-audio/bookFlip* shift=1.3 + synth:thump dur=0.15 freq=110 click=0.5 decay=30 gain=-4", "torn parchment and a dull knock")
 ui("ui_pause_open", 1, K + "rpg-audio/cloth* shift=0.8", "a heavy curtain drawn")
 ui("ui_pause_close", 1, K + "rpg-audio/cloth* shift=0.7", "a heavy curtain drawn back")
 ui("ui_lobby_join", 1, "synth:chime notes=880/1320 dur=0.6 gap=0.09", "a small handbell, rising", "G")
 ui("ui_lobby_leave", 1, "synth:chime notes=1320/880 dur=0.6 gap=0.09", "a small handbell, falling", "G")
-ui("ui_invite_received", 1, "synth:thump dur=0.2 freq=120 click=0.8 decay=25 + synth:thump dur=0.2 freq=118 click=0.8 decay=25",
+ui("ui_invite_received", 1, "synth:thump dur=0.2 freq=120 click=0.8 decay=25 + synth:thump dur=0.2 freq=118 click=0.8 decay=25 at=0.22",
    "a knock on a wooden door, twice")
 ui("ui_ready", 1, K + "rpg-audio/metalPot* gain=-4", "a tankard set down")
 ui("ui_hit_confirm", 3, "synth:tick dur=0.06 freq=700 decay=70 noise=0.5", "a very short thock under the world sound", "G")
@@ -136,7 +136,7 @@ spell("sfx_spell_velox_dash", 2, "synth:whoosh dur=0.35 f0=300 f1=4000 attack=0.
       "a fast whoosh past the ear, 0.4 seconds", "L")
 spell("sfx_spell_velox_misfire", 1, "synth:whoosh dur=0.35 f0=300 f1=4000 + synth:thump dur=0.3 freq=80 click=0.8",
       "a whoosh then a thud", "mid", "a fast whoosh ending in a body thudding into a wall, comic, 0.8 seconds")
-spell("sfx_spell_saltus_cast", 1, "synth:boing dur=0.3 freq=120", "a coiled spring", "low", "a coiled spring releasing, magical, 0.3 seconds")
+spell("sfx_spell_saltus_cast", 1, "synth:whoosh dur=0.25 f0=200 f1=1200 + synth:thump dur=0.15 freq=90 click=0.3 gain=-6", "a crouch and spring", "low", "a crouch and a springing push-off, magical, 0.3 seconds")
 spell("sfx_spell_saltus_launch", 1, "synth:whoosh dur=0.5 f0=200 f1=2500 attack=0.2", "a rising whoosh", "low", "", "L")
 spell("sfx_spell_saltus_land_slam", 2, "synth:thump dur=0.6 freq=55 click=1.0 decay=7 + synth:crumble dur=0.8 density=30 size=0.5 gain=-8",
       "a flagstone boom and dust", "high", "a heavy body slamming onto flagstones, boom and dust, 1 second", "L")
@@ -169,7 +169,7 @@ sfx("sfx_status_burning_loop", 1, "SFX/Status", "synth:crackle dur=4 density=50 
 sfx("sfx_status_burning_out", 1, "SFX/Status", "synth:hiss dur=0.8 low=1500 high=6000 decay=4", "a hiss and smoulder", "L", "none")
 sfx("sfx_status_asleep_player_loop", 2, "SFX/Status", "synth:snore dur=3.5 pitch=40", "soft breathing, never the player's voice",
     "R", "low", "SFX/Foley", "3d", 1)
-sfx("sfx_status_stagger", 2, "SFX/Status", "synth:whine dur=1.2 f0=3200 f1=3000 depth=0.005", "a ringing-ear whine (local)",
+sfx("sfx_status_stagger", 2, "SFX/Status", "synth:whine dur=1.0 f0=1400 f1=1300 depth=0.005", "a ringing-ear whine (local)",
     "G", "none", "SFX/Foley", "2d")
 sfx("sfx_status_levitating_loop", 1, "SFX/Status", "synth:whine dur=3 f0=600 f1=600 wobble=5 depth=0.06",
     "the Levo misfire loop", "G", "none", "SFX/Spells", "3d", 1)
@@ -180,7 +180,7 @@ for surface, recipe in (
         ("stone", K + "impact-sounds/footstep_concrete_*"),
         ("wood", K + "impact-sounds/footstep_wood_*"),
         ("earth", K + "impact-sounds/footstep_grass_* shift=0.85"),
-        ("rushes", K + "impact-sounds/footstep_snow_* shift=1.15"),
+        ("rushes", K + "impact-sounds/footstep_grass_* shift=1.1"),
         ("tile", K + "impact-sounds/footstep_concrete_* shift=1.2"),
         ("metal", K + "impact-sounds/impactMetal_light_* gain=-8"),
         ("water", "synth:drips dur=0.25 rate=12 + synth:whoosh dur=0.2 f0=400 f1=1500 gain=-6")):
@@ -206,7 +206,7 @@ sfx("sfx_grab_beam_start", 1, "SFX/Grab", "synth:whine dur=0.2 f0=500 f1=1500 de
 sfx("sfx_grab_beam_loop", 1, "SFX/Grab", "synth:hum dur=3 freq=220 tremolo=6 harm=0.4", "a quiet hum; strains with bulk", "G", "none",
     "SFX/Spells", loop=1)
 sfx("sfx_grab_beam_release", 1, "SFX/Grab", "synth:whine dur=0.15 f0=1200 f1=400 depth=0", "a soft snap", "G", "none", "SFX/Spells")
-sfx("sfx_grab_pickup_light", 3, "SFX/Grab", K + "rpg-audio/handleSmallLeather* + " + K + "rpg-audio/beltHandle* gain=-6", "a quick lift", "L", "none")
+sfx("sfx_grab_pickup_light", 3, "SFX/Grab", K + "rpg-audio/handleSmallLeather* lp=8000 + " + K + "rpg-audio/beltHandle* gain=-6 lp=7000", "a quick lift", "L", "none")
 sfx("sfx_grab_pickup_heavy", 3, "SFX/Grab", K + "impact-sounds/impactPlank_medium_* gain=-6 pitch=0.8", "scrape and heave", "L", "low")
 sfx("sfx_carry_strain_loop", 1, "SFX/Grab", "synth:creak dur=3 rate=12 pitch=250 rise=0.8", "wood-and-gilt creaks and groans", "L", "low", loop=1)
 sfx("sfx_throw_whoosh_light", 3, "SFX/Grab", "synth:whoosh dur=0.25 f0=600 f1=3500", "a short whoosh", "L", "none")
@@ -225,10 +225,10 @@ for mat, light, heavy, noise_l, noise_h, nl, nh in (
     sfx(f"phys_impact_{mat}_heavy", nh, P, heavy, f"{mat} struck hard", "L", noise_h)
 sfx("phys_impact_ceramic_light", 4, P, K + "impact-sounds/impactPlate_light_*", "faience or terracotta knocked", "L")
 sfx("phys_impact_glass_light", 3, P, K + "impact-sounds/impactGlass_light_*", "glass knocked", "L")
-sfx("phys_impact_cloth", 3, P, K + "impact-sounds/impactSoft_medium_* gain=-4", "cloth landing", "L", "none")
+sfx("phys_impact_cloth", 3, P, K + "rpg-audio/dropLeather* + " + K + "rpg-audio/cloth* gain=-6", "cloth landing", "L", "none")
 sfx("phys_impact_book", 3, P, K + "rpg-audio/bookPlace*", "a book landing", "L")
 sfx("phys_impact_body", 4, P, K + "impact-sounds/impactPunch_heavy_* + " + K + "impact-sounds/impactSoft_heavy_*", "a thrown body", "L", "mid")
-sfx("phys_impact_coins", 3, P, K + "casino-audio/chips-collide-* + synth:coins dur=0.5 count=6 gain=-4", "coins landing", "L", "mid")
+sfx("phys_impact_coins", 3, P, K + "rpg-audio/handleCoins* + synth:coins dur=0.4 count=5 gain=-8", "coins landing", "L", "mid")
 sfx("phys_scrape_stone_loop", 1, P, "synth:hiss dur=3 low=300 high=3000 flutter=13 + synth:rattle dur=3 density=30 freq=900", "dragging over stone", "L", "low", loop=1)
 sfx("phys_scrape_wood_loop", 1, P, "synth:creak dur=3 rate=30 pitch=500 rise=1.0", "dragging over wood", "L", "low", loop=1)
 sfx("phys_scrape_metal_loop", 1, P, "synth:hiss dur=3 low=2000 high=8000 flutter=17 + synth:rattle dur=3 density=40 freq=2500", "dragging metal", "L", "mid", loop=1)
@@ -240,8 +240,8 @@ sfx("phys_break_glass_large", 2, P, "synth:shatter dur=2.5 pieces=160 + " + K + 
 sfx("phys_break_wood", 3, P, K + "impact-sounds/impactWood_heavy_* + synth:crumble dur=0.9 density=40 size=0.3 gain=-8", "wood splintering", "L", "high")
 sfx("phys_break_book", 1, P, K + "rpg-audio/bookFlip* + synth:hiss dur=0.4 low=1000 high=6000 decay=6", "a psalter torn apart", "L", "low")
 sfx("phys_break_liquid", 2, P, "synth:whoosh dur=0.6 f0=300 f1=1200 q=0.8 + synth:drips dur=0.6 rate=20", "contents spilling", "L", "low")
-sfx("phys_coin_spill", 3, P, "synth:coins dur=1.2 count=30 + " + K + "casino-audio/chips-stack-*", "coins scattering", "L", "high")
-sfx("sfx_loot_value_lost", 2, "SFX/Loot", "synth:coin_drain steps=6", "a coin-drain tink-tink-tink dropping away", "G", "none", "UI", "2d")
+sfx("phys_coin_spill", 3, P, "synth:coins dur=1.2 count=30 + " + K + "rpg-audio/handleCoins* at=0.1", "coins scattering", "L", "high")
+sfx("sfx_loot_value_lost", 2, "SFX/Loot", "synth:coin_drain steps=6 base=1500", "a coin-drain tink-tink-tink dropping away", "G", "none", "UI", "2d")
 sfx("sfx_loot_highlight", 1, "SFX/Loot", "synth:chime notes=2637 dur=0.5 gold=1 decay=8", "a very faint gold glint", "G", "none", "UI", "2d")
 sfx("sfx_loot_pickup_gold", 2, "SFX/Loot", "synth:coins dur=0.5 count=4", "a brief coin chime on top of the pickup", "G", "none")
 
@@ -304,16 +304,16 @@ wpn("sfx_wpn_explosion_small", 2, "synth:explosion dur=2.5 size=0.8", "a grenado
 wpn("sfx_wpn_explosion_large", 2, "synth:explosion dur=4 size=1.6", "a petard blows a door", "max", "A",
     ai="a large black powder petard blasting a heavy door apart, huge boom and debris, 4 seconds")
 wpn("sfx_wpn_debris", 2, "synth:crumble dur=2 density=40 size=0.6", "debris raining down", "mid")
-wpn("sfx_wpn_caltrops_scatter", 2, K + "casino-audio/chips-collide-* shift=0.8 + synth:rattle dur=0.5 density=40 freq=1500", "caltrops flung", "low")
+wpn("sfx_wpn_caltrops_scatter", 2, K + "impact-sounds/impactMetal_light_* shift=1.4 gain=-4 + synth:rattle dur=0.5 density=40 freq=1500", "caltrops flung", "low")
 wpn("sfx_wpn_caltrops_step_on", 2, "synth:tick dur=0.05 freq=1400 noise=0.8 + " + K + "impact-sounds/impactPunch_medium_* gain=-8", "a caltrop stepped on", "low")
-wpn("sfx_wpn_equip", 2, K + "rpg-audio/beltHandle*", "a weapon taken up", "low")
+wpn("sfx_wpn_equip", 2, K + "rpg-audio/beltHandle* lp=7000", "a weapon taken up", "low")
 wpn("sfx_wpn_break", 2, "synth:metal_ring dur=0.6 freq=1100 clank=1.2 + " + K + "impact-sounds/impactWood_medium_*", "a weapon breaks", "low")
 
 # --- 3.9 Enemies ----------------------------------------------------------------------------------
 C = "SFX/Creatures"
 for gear, rec in (("linen", K + "rpg-audio/cloth*"),
                   ("leather", K + "rpg-audio/clothBelt* + " + K + "rpg-audio/handleSmallLeather* gain=-6"),
-                  ("mail", "synth:rattle dur=0.4 density=60 freq=3500 + " + K + "rpg-audio/cloth* gain=-6"),
+                  ("mail", "synth:rattle dur=0.4 density=60 freq=2200 + " + K + "rpg-audio/cloth* gain=-6"),
                   ("plate", K + "impact-sounds/impactPlate_light_* gain=-6 + synth:rattle dur=0.3 density=25 freq=1800"),
                   ("bronze_plate", K + "impact-sounds/impactBell_heavy_* shift=1.6 gain=-12 + synth:rattle dur=0.3 density=15 freq=900")):
     sfx(f"foley_gear_{gear}_move", 4, "Foley", rec, f"{gear.replace('_', ' ')} moving with the body", "L", "low", F)
@@ -384,7 +384,7 @@ sfx("sfx_door_heavy_open", 2, Cs, "synth:creak dur=2.0 rate=18 pitch=250 rise=0.
 sfx("sfx_door_heavy_close", 2, Cs, K + "rpg-audio/doorClose_* shift=0.6 + synth:thump dur=0.8 freq=50 decay=6", "a boom", "L", "mid")
 sfx("sfx_door_grate_open", 2, Cs, "synth:rattle dur=1.0 density=40 freq=1200 + synth:creak dur=1.0 rate=30 pitch=1500", "a rattle and squeal", "L", "mid")
 sfx("sfx_door_grate_close", 2, Cs, K + "impact-sounds/impactMetal_heavy_* + synth:rattle dur=0.5 density=40 freq=1000", "an iron clang", "L", "mid")
-sfx("sfx_door_locked_rattle", 3, Cs, K + "rpg-audio/metalLatch* + " + K + "rpg-audio/metalClick* + " + K + "rpg-audio/metalLatch* shift=0.9",
+sfx("sfx_door_locked_rattle", 3, Cs, K + "rpg-audio/metalLatch* + " + K + "rpg-audio/metalClick* at=0.18 + " + K + "rpg-audio/metalLatch* shift=0.9 at=0.34",
     "the handle jiggles, the bolt holds", "L")
 sfx("sfx_door_unlock", 2, Cs, K + "rpg-audio/metalClick* shift=0.8 + " + K + "rpg-audio/metalLatch*", "a key turning in the ward", "L")
 sfx("sfx_door_slam", 2, Cs, K + "impact-sounds/impactWood_heavy_* shift=0.7", "a crack", "L", "high")
@@ -438,7 +438,7 @@ sfx("sfx_portal_collapse", 1, Po, "synth:whoosh dur=1.8 f0=3000 f1=60 q=0.8 atta
 sfx("sfx_extract_item_cross", 3, Po, "synth:coin_count steps=4", "a coin-count chime; the game raises pitch with value", "G", "none", "UI", "2d")
 sfx("sfx_extract_player_cross", 1, Po, "synth:whoosh dur=1.0 f0=150 f1=3000 q=0.8 + synth:shimmer dur=1 root=330 gain=-10", "the portal whoosh, softened",
     "A", "none", S)
-ui("sfx_result_tally_tick", 1, K + "casino-audio/chip-lay-*", "a coin drop", "L")
+ui("sfx_result_tally_tick", 1, "synth:tick dur=0.06 freq=900 decay=80 noise=0.6", "an abacus bead clacking", "G")
 ui("sfx_result_tally_total", 1, K + "rpg-audio/handleCoins* + synth:thump dur=0.3 freq=90 click=0.5", "a heavy coin purse set down", "L")
 
 # --- 3.13 Lair ------------------------------------------------------------------------------------
@@ -446,7 +446,7 @@ amb("amb_lair_bed_loop", "synth:drips dur=30 rate=0.5 + synth:wind dur=30 low=80
 amb("amb_lair_hearth_loop", "synth:crackle dur=12 density=22 body=1.0", "a warm crackle, the only safe fire", spatial="3d")
 sfx("sfx_lair_debt_pay", 2, "SFX/Lair", "synth:coins dur=1.2 count=25 + " + K + "rpg-audio/handleCoins* + synth:hiss dur=0.6 low=3000 high=8000 flutter=25 gain=-12",
     "coins into a coffer, then a quill scratch", "L", "none", "UI", "2d")
-sfx("sfx_lair_debt_due", 1, "SFX/Lair", "synth:thump dur=0.4 freq=80 click=0.9 decay=15 + synth:thump dur=0.4 freq=78 click=0.9 decay=15",
+sfx("sfx_lair_debt_due", 1, "SFX/Lair", "synth:thump dur=0.4 freq=80 click=0.9 decay=15 + synth:thump dur=0.4 freq=78 click=0.9 decay=15 at=0.7 + synth:thump dur=0.4 freq=76 click=0.9 decay=15 at=1.4",
     "three slow knocks on the door", "R", "none", "UI", "2d")
 for age in AGES:
     sfx(f"sfx_lair_era_select_{age}", 1, "SFX/Lair", f"music:sting kind=alarm_stirred age={age} + synth:hiss dur=1.2 low=3000 high=9000 decay=2 gain=-14",
@@ -492,7 +492,7 @@ for name, kind, brief, prompt in STINGS:
 
 # --- 5. Ambience beds -----------------------------------------------------------------------------
 AMB = (
-    ("amb_bronze_exterior_loop", "synth:wind dur=30 low=200 high=1200 gain=-6 + synth:crickets dur=30 voices=8 + synth:wind dur=30 low=60 high=200 gust=0.05 gain=-8",
+    ("amb_bronze_exterior_loop", "synth:wind dur=30 low=200 high=1200 gain=-6 + synth:crickets dur=30 voices=8 gain=-6 + synth:wind dur=30 low=60 high=200 gust=0.05 gain=-8",
      "warm night wind, crickets, a distant sea"),
     ("amb_high_exterior_loop", "synth:wind dur=30 low=250 high=1800 gust=0.2 + synth:crickets dur=30 voices=2 gain=-10", "cold wind on stone, an owl, a far dog"),
     ("amb_late_exterior_loop", "synth:wind dur=30 low=300 high=1500 + synth:drips dur=30 rate=3", "wet stone, gutters dripping, flags snapping"),
@@ -514,7 +514,7 @@ AMB = (
 for name, recipe, brief in AMB:
     amb(name, recipe, brief)
 for spot, recipe, brief in (("dripping", "synth:drips dur=12 rate=1.5", "a drip"),
-                            ("rats", "synth:rattle dur=12 density=4 freq=5000 spread=0.3 + synth:babble dur=0.3 pitch=1400 mood=alert gain=-12", "rats in the stone"),
+                            ("rats", "synth:rattle dur=12 density=6 freq=1300 spread=0.3 + synth:babble dur=0.3 pitch=900 mood=alert gain=-18", "rats in the stone"),
                             ("wind_gap", "synth:wind dur=12 low=600 high=2500 gust=0.3", "wind through a gap")):
     amb(f"amb_spot_{spot}", recipe, brief, spatial="3d")
 

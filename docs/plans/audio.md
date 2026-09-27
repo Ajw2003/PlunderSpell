@@ -83,8 +83,9 @@ ADPCM. Loops over 10 s and all music: *Streaming*, Vorbis quality 0.6. Loudness 
 LUFS integrated, ambience beds −26 LUFS, SFX peaks at −1 dBTP. The final mix is set by ear in the M7
 pass.
 
-*2026-09-27: the committed `.meta` files instead set every clip to Streaming with Unity's Normalize
-on. Normalize overrides the levels above; see `Tools/AudioForge/README.md`, "Unity import settings".*
+*2026-09-27: the committed `.meta` files set every clip to Streaming (the owner's choice), with
+Normalize off. The build now bakes a level per category into each file rather than a flat −1 dBFS
+peak (Decisions, "Audio levels are baked per category"); `Tools/AudioForge/forge/categories.py`.*
 
 **Mixer (the `AudioMixer` from #22):**
 

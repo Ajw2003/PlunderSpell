@@ -182,6 +182,9 @@ before touching the raid loop:
   planned sounds into `Assets/_Project/Audio/` (262 CC0 library, 45 generated, 706 placeholders
   including 435 guard voices awaiting recording). No game code plays any of them yet: the mixer
   and `AudioDirector`/`MusicDirector` (`docs/plans/audio.md` §7.3) are not built.
+  The same day, after the owner reported harsh and misplaced sounds, a measured pass
+  (`docs/generated/audio-audit/`) re-levelled every file by category, softened the synth recipes and
+  swapped off-theme sources; flagged files went from 465 to 3. Nobody has listened to the result yet.
 - **#6 / #25 — player scale and spawn placement** — the player can be too tall for the rooms, and
   can spawn inside or flush against castle geometry.
 
