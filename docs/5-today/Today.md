@@ -92,6 +92,14 @@ long-dead fade work. `SpellVfxTests.Test_ABurstUsesItsOwnTransparentMaterial` fa
 `preloadedAssets` line, and five settings files rewritten with no content change) were restored,
 and the Pipeline runtime is off again.
 
+Then #131 (the Editor says "No cameras rendering" at the main menu, though the menu works). The
+message was true: before the raid spawns the player there is no camera, and the overlay canvas
+draws without one. `UIRoot` now owns a `BackdropCamera` that renders only while no other camera is
+enabled. Live: main menu and Lair render through it, the raid through the player's `Eye` alone;
+before, `capture_game_view` at the menu failed with "No camera found to capture". The backdrop
+reads as dim brown, since the night fog pass runs on every camera. `BackdropCameraTests` 2/2 and
+`UIScreenshotPlayModeTests` 1/1; these tests were written with the fix, not before it.
+
 Tests before those two: PlayMode 213 of 214 pass. `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`
 fails; it was not touched by this work and is flagged as its own task. EditMode: all pass except
 the known `ArtAssetImportTests` failure (3 skipped). Seen along the way: Late Medieval castles still

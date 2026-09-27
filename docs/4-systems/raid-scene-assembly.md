@@ -295,6 +295,15 @@ The raid no longer starts on scene load. The flow is
 `RaidHudView` only draws in `Playing` or `Paused`. It is IMGUI, which renders over the
 uGUI canvas, so an always-on HUD sits on top of the menu and the lair.
 
+**The menu and the Lair have a camera of their own** (#131, 2026-09-26). Until the raid spawns the
+player there is no camera in the scene at all, so the Editor's Game view printed "No cameras
+rendering" under a menu that worked: the canvas is Screen Space Overlay and draws without one.
+`UIRoot` now owns a `BackdropCamera` (`Assets/_Project/Scripts/Runtime/UI/BackdropCamera.cs`) that
+renders nothing but its clear colour, and only while no other camera is enabled; it turns itself
+off the frame the player's `Eye` exists. The night fog renderer feature runs on it too, so the
+backdrop reads as the fog's dim brown. Checked live: main menu and Lair render through
+`BackdropCamera`, the raid through `Eye` alone. `BackdropCameraTests` (PlayMode) covers both.
+
 ## Authored, not generated
 
 `RaidScene.unity` is edited by hand and saved. Nothing regenerates it.

@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/raid-scene-assembly.md @ 8bb0321c5497e739258535201316add5cb0900d5 -->
+<!-- plain copy of: docs/4-systems/raid-scene-assembly.md @ 0cdf857e18cc7c97b640327d07c39c59f55e3b61 -->
 
 # Raid scene assembly
 
@@ -32,6 +32,8 @@ made, or a raid that silently spawns nothing in a zone.
    it is placed.
 8. Players now go from a main menu into a hub, choose an age, set out, then return to the hub
    afterwards, rather than starting straight into a raid.
+9. The main menu and the hub have a plain camera of their own, which switches off once the raid
+   starts, so the editor no longer warns that nothing is being drawn.
 
 ## Risks and safeguards
 - **The raid quietly falling back to placeholder art.** The dev tool that assembles a raid aborts

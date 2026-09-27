@@ -92,7 +92,8 @@ nothing to open, because the castle places no doors (#111). Every sword swings: 
 and Longsword are melee weapons now, and a hit does 20 to 29, three or four to a guard (#110;
 `docs/4-systems/damage.md`, "Melee"). Spell bursts render in a standalone build (they were magenta
 error spheres), and now fade as intended (#127; `docs/4-systems/spells.md`, "What the visuals
-actually look like").
+actually look like"). The main menu and Lair no longer show "No cameras rendering" in the Editor
+(#131; `docs/4-systems/raid-scene-assembly.md`, "Getting into a raid").
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog
