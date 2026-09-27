@@ -1,6 +1,9 @@
 # Plan — Sound and music
 
-Status: **draft, awaiting approval** (2026-09-27). Nothing in this plan is built yet.
+Status: **approved and in progress** (2026-09-27; decisions in §8). Phase A's asset side is built:
+`Tools/AudioForge/` makes every sound below (1,013 files, placeholders where the real source isn't
+in yet) into `Assets/_Project/Audio/`. Its [README](../../Tools/AudioForge/README.md) is the live
+status. Nothing plays in the game yet: the in-game audio layer (§7.3) is not built.
 
 Every sound effect and music track Plunderspell needs, each with a name, what makes it play, and
 where the file will come from. The second half covers how to generate or source them, in what
@@ -79,6 +82,9 @@ nothing is thrown away.
 ADPCM. Loops over 10 s and all music: *Streaming*, Vorbis quality 0.6. Loudness targets: music −18
 LUFS integrated, ambience beds −26 LUFS, SFX peaks at −1 dBTP. The final mix is set by ear in the M7
 pass.
+
+*2026-09-27: the committed `.meta` files instead set every clip to Streaming with Unity's Normalize
+on. Normalize overrides the levels above; see `Tools/AudioForge/README.md`, "Unity import settings".*
 
 **Mixer (the `AudioMixer` from #22):**
 
@@ -596,7 +602,8 @@ sources, and regenerating them gives the same result.
 
 1. **`manifest.csv`** holds this plan's tables as data, one row per name, with columns
    `name, variants, bus, spatial, loop, src, noise, brief, status, source_ref, licence`. It's the
-   single source of truth; this doc points to it once it exists.
+   single source of truth, generated from `manifest_source.py`. Where this doc's tables and the
+   manifest disagree, the manifest wins (e.g. `sfx_lair_era_select` became one sound per Age).
 2. **`synth/`** holds the **G** sounds as Python (numpy + scipy; the container needs
    `pip install numpy scipy soundfile` first). Each sound is a function, seeded, so output is the
    same every run.
@@ -654,7 +661,11 @@ them don't have to wait.
 | **E. Music** | composer brief from §4 → Lair and title first, then one Age's four stems (High, the "learning" Age), then the other three | adaptive music |
 | **F. Mix** | loudness pass, reverb zones per room type, a playtest listening session | M7 acceptance |
 
-## 8. Decisions needed before starting
+## 8. Decisions
+
+**Answered by the owner, 2026-09-27:** AI sound is fine (1); AI music for the non-adaptive tracks (2,
+partly); record friends for guard voices (3). Still open: who makes the 16 adaptive raid stems and
+the alarm stingers (the rest of 2), and the bestiary fork (4). The questions as first asked:
 
 1. **Using AI.** Is AI-generated sound (and possibly music) acceptable, given the Steam disclosure it
    requires? If not, every **A** row moves to library layering or recording, which is more hand work.

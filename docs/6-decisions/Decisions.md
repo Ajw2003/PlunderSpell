@@ -1052,3 +1052,21 @@ damage system" does mean is open.
 removed. No prefab uses `MeleeWeapon` now; the class and `ArmingSword_MeleeStats.asset` remain,
 unused.
 
+## 2026-09-27 — Audio: AI sound effects, friends' voices, AI music only where it doesn't adapt
+
+**Context.** The game had no audio at all. `docs/plans/audio.md` named every sound (483 names,
+about 1,000 files) and asked four questions about where they come from.
+
+**Decision.** The owner: AI-generated sound effects are acceptable (with Steam's AI disclosure);
+guard voices are recorded by friends; AI music (Suno) for the six non-adaptive tracks. The adaptive
+raid stems stay marked "composed", because AI music can't produce layers that share a bar grid;
+who composes them is still open. Every sound is built from one manifest by `Tools/AudioForge/`,
+with a placeholder until its real source arrives, so the game's audio can be wired up before any
+of it is final.
+
+**Why.** Libraries already cover the ordinary sounds (footsteps, doors, impacts); AI is used where
+nothing exists (spells, the portal); friends' voices suit a co-op comedy. `ai/log.csv` and
+`final/LICENCES.csv` keep the record Steam asks for.
+
+**Status.** Standing.
+

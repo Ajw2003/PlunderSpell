@@ -21,6 +21,7 @@ this document, not a reason to go grep the repo.
 | `Tools/AssetPipeline/` | Blender-driven generation of weapon/loot/castle-module props |
 | `Tools/EnemyForge/` | Blender-driven generation of the enemy roster (mesh, rig, textures) |
 | `Tools/ArtForge/` | Blender-driven generation of the art bible's plunder, structures and enemies, built on EnemyForge; review sheets in `docs/art/models/` ([README](../../Tools/ArtForge/README.md)) |
+| `Tools/AudioForge/` | builds every sound and music track from `manifest.csv` into `Assets/_Project/Audio/` ([README](../../Tools/AudioForge/README.md)); listening page `docs/generated/audio-preview/` |
 | `Tools/mkissues.py` | files the playtesting backlog to GitHub issues; see `docs/generated/github-issues.json` |
 | `Plans/` | one exhaustive plan per GitHub issue, plus `Priority_Queue.md`, the live execution order |
 | `docs/` | this tree |
@@ -88,7 +89,7 @@ together and what was deliberately left undocumented, and why.
   warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
   the surface shader, post-processing and the Low/Medium/High quality levels. Look samples in
   `docs/generated/look-samples-2026-09-24/`.
-- [`docs/plans/audio.md`](../plans/audio.md) — **awaiting approval.** Every sound effect and
+- [`docs/plans/audio.md`](../plans/audio.md) — **approved, in progress** (assets built, not yet played in game). Every sound effect and
   music track the game needs, named (~480 names, ~1,000 files), what triggers each, and how
   each is generated or sourced (library / AI / in-repo synth / recording / composer), plus four
   decisions needed first. The game currently has no audio at all.
