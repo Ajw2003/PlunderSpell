@@ -1,5 +1,35 @@
 # Today
 
+**2026-09-28 — issue triage and docs brought in line with every branch.** At the owner's request.
+Every open issue was checked against the code and docs on `main`. Twelve were already done or
+superseded and are closed, each with a comment saying why and where: #127, #131, #134, #140,
+#152, #154, #158, #163 (fixed 2026-09-26, with the evidence in the entry below), #121
+(post-processing built with the night atmosphere), #41 (decided 2026-09-24), #126 (done but for
+#151 and #141) and #17 (a duplicate of #151). The nine filed since the roadmap was rebuilt are
+placed on milestones: #164, #167, #168, #170, #171, #172 on M2 and #165, #166 on M7 (#169, closed
+by the owner today, on M2 for the record). 44 remain open. The roadmap marks closed issues in
+place and lists the new ones; `Tools/github/sync_milestones.py` matches it (not run: `gh` is not
+installed in this session, so the milestones were set through the GitHub API instead).
+`docs/3-state/ProjectState.md` has a new section, "Work not on `main` yet": the carry-check
+follow-up on `claude/carry-cleanup-169` and the audio work on `claude/eloquent-dirac-i10hep`.
+Left open on purpose: #103 still asks for crouch as a spell, which the owner rejected on
+2026-09-26 (Decisions, "The roadmap runs to a game a stranger can play"), but its sprint half is
+not built. Worth the owner's look: the open PRs #2, #4 and #97 are stale.
+
+**2026-09-27 — #169, carrying together, and two client-side raid bugs.** On `main` (merged from
+`claude/networked-systems-game-logic-fgat3n`). `Tools/Unity/coop_carry_check.sh` runs a host (the
+Editor) and a client (a Development build) on one PC with nobody at the keyboard. Then: the host
+moves every held piece and applies each holder's pull, a second grab joins the carry, holders'
+strength adds up, opposite pulls snap the carry, and a held piece turns toward where its holder
+faces through a capped torque. A client no longer builds the castle twice as a raid starts, and
+no longer logs a SyncVar permission error when a raid ends. Last recorded check: `CarryFeelTests`
+19/19 and the carry check 10/10. Details and every run: `docs/3-state/ProjectState.md`,
+2026-09-27 entries, and `docs/4-systems/net.md`. On a branch the same day:
+`claude/eloquent-dirac-i10hep`, the audio plan and every sound file built (not played by the
+game; see ProjectState, "Work not on `main` yet").
+
+---
+
 **2026-09-26 — backlog pass continued on `claude/issue-backlog`.** Closed the ten issues the pass
 had fixed (at the user's request, before merging). Then fixed, each with a test that failed first
 where one could be written, and checked in the live Editor:

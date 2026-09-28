@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/net.md @ 27bbdd88364af8e422ff70990b351190c989b500 -->
+<!-- plain copy of: docs/4-systems/net.md @ 5e98534981f6faa507388e502ab9a4887fc9ac22 -->
 
 # Net
 
@@ -22,15 +22,21 @@ do not work, or one player's actions not showing up for the others.
    input, camera and microphone; every other machine just watches it move.
 4. Only the castle's starting seed crosses the network. Every machine builds the same castle
    from it locally, rather than sending the whole building over the connection.
-5. The host runs guards and enemies; other machines just see them move. Picking up loot briefly
-   asks the host for permission to control it, so only one machine drives a piece at a time.
-   Weapons are loot too, and work the same way.
+5. The host runs guards and enemies; other machines just see them move. While anyone holds a
+   piece of loot, the host moves it: each holder's machine sends how it is pulling, and the host
+   combines every pull. A second player grabbing a held piece joins the carry instead of taking
+   it, and a holder who lets go or drops out is simply removed. Weapons are loot too, but sit in
+   one player's hand at a time.
 6. While you carry something, the beam linking your hand to it shows on everyone else's screen,
    updated several times a second and smoothed so it does not jump.
 7. Every hit is judged by whoever owns the thing being hit: the host for guards and loot, the
    player themselves for their own body, so results are trustworthy either way.
 8. If every player is downed at once, the raid ends for everyone together; a downed player can
    otherwise spectate a teammate until the next raid begins.
+
+9. Two-player carrying is checked automatically on one PC: the Editor hosts, a test build joins,
+   and a script drives both with nobody at the keyboard, comparing where each machine sees the
+   piece.
 
 ## Risks and safeguards
 - **Two players ending up standing inside each other, or in the wrong place.** Each machine

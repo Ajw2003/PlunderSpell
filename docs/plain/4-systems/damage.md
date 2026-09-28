@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/4-systems/damage.md @ 26f503b6880198efc154c984cdef497f9fdd27bd -->
+<!-- plain copy of: docs/4-systems/damage.md @ b2fd04d87868a75a02ea100693a331aacd1e6596 -->
 
 # Damage
 
@@ -28,8 +28,13 @@ has to feel physical, or heavy items would not seem worth the risk of hauling th
 6. A held item hangs from where it was grabbed on a springy pull, keeping its own orientation as
    the holder turns.
 7. Items too heavy to lift are towed behind the holder on an invisible rope instead, slowing the
-   holder's walk and trailing behind them realistically.
-8. The view shakes a little when you are hit, when you land a hit, when someone casts a spell
+   holder's walk and trailing behind them realistically. Several players can hold the same
+   piece, and their strength adds up, so two can lift what one could only tow.
+8. A held piece turns toward where its holder faces with limited strength: a cup follows at
+   once, a long or heavy piece sweeps round slowly, and two holders turn it faster than one.
+9. If holders pull the same piece in opposite directions, far enough apart for long enough, the
+   beams snap and everyone lets go.
+10. The view shakes a little when you are hit, when you land a hit, when someone casts a spell
    near you (a shout more than a whisper), and when your leap spell slams into the ground. Only
    your own view moves; time never pauses, because every player shares the same raid. Being on fire gives a
    steady, gentler shake; an enemy you set on fire does not shake your view at all.

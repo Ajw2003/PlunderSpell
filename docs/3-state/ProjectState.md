@@ -1,6 +1,7 @@
 # Project State
 
-**Headline: ~40% against the roadmap in `docs/2-roadmap/Roadmap.md`** (re-measured 2026-09-26).
+**Headline: ~42% against the roadmap in `docs/2-roadmap/Roadmap.md`** (re-measured 2026-09-28;
+~41% on 2026-09-26).
 The roadmap grew that day from the pitch's four milestones to eight, running to a game a stranger
 can play (Decisions, "The roadmap runs to a game a stranger can play"). Against the old four this
 headline read ~65%; nothing was lost, the definition of done got bigger. Each share below is a
@@ -10,13 +11,50 @@ judgement until that milestone's acceptance is checked, and only M0's has been.
 |---|---:|---:|---|
 | M0 Fork clean | 5 | 100% | Acceptance checked |
 | M1 Prove the voice | 10 | ~70% | Works for one person on one machine; #50 never measured |
-| M2 Vertical slice | 20 | ~70% | Loop plays solo and over UDP; #55 never run; its listed issues open |
+| M2 Vertical slice | 20 | ~75% | Loop plays solo and over UDP; carrying together works (#169); #55 never run; Steam outside the Editor broken (#167, #168); #164, #170-#172 open |
 | M3 Other Ages | 15 | ~60% | Bronze and Late have their own rooms; High Medieval and Powder borrow |
 | M4 Lair and Market | 15 | ~5% | Debt is a number on the Lair screen; no market, no 3D Lair |
-| M5 Household awake | 10 | ~30% | Guards patrol, investigate noise, chase and search; the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
+| M5 Household awake | 10 | ~35% | Guards patrol, investigate noise, chase and search, and a shout or the hue and cry calls guards in (#163); the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
 | M6 Castle fights back | 10 | ~5% | Doors and hazards are layout tags; revamp phases 3-5 not started |
-| M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, a partial settings menu; no animation |
-| **Total** | 100 | **≈ 41%** | |
+| M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, post-processing, a partial settings menu; no animation; every sound file built but on a branch and not played by the game (below) |
+| **Total** | 100 | **≈ 42%** | |
+
+**Open issues, 2026-09-28:** 44, every one on a milestone (`docs/2-roadmap/Roadmap.md`). The same
+day twelve that were already done or superseded were closed with a note on each: #127, #131,
+#134, #140, #152, #154, #158, #163 (fixed on `main` 2026-09-26), #121 (post-processing built with
+the night atmosphere), #41 (decided 2026-09-24), #126 (done but for #151 and #141) and #17 (a
+duplicate of #151). The owner closed #169 on 2026-09-28 with two of its plan's steps not done:
+the unused two-person code is still in `LootPickup` (`InitiateDualCarry`) and
+`LootInteractor.cs`, and the plain copies of `net.md` and `damage.md` predate the new carry.
+
+## Work not on `main` yet
+
+Checked 2026-09-28 against every branch on `origin`. Two branches hold recent work that `main`
+lacks; the rest are older and either merged in another form or abandoned.
+
+- **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
+  two-player carry check now moves to the most open floor within 25 m before staging, which fixed
+  `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
+  the combined grip. Found and not fixed, a real game bug: two holders sometimes cannot lift the
+  Rolled Tapestry (`heavy_lifted_together` failed on 2 of 4 runs, always that piece; the Parade
+  Armour lifts fine in the same spot). Cause not confirmed.
+- **`claude/eloquent-dirac-i10hep`** (7 commits, 2026-09-27, branched before the #169 work). The
+  audio plan (`docs/plans/audio.md`: about 480 named sounds, about 1,000 files) and
+  `Tools/AudioForge/`, which builds all 1,013 files into `Assets/_Project/Audio/`: 262 from a CC0
+  library, 45 generated, 706 placeholders (435 of them guard voices awaiting friends' recordings).
+  A measured pass re-levelled every file by category after the owner found sounds harsh; files
+  outside their level window went from 452 to 3. Nobody has listened to the result, and no game
+  code plays any of it: the mixer and `AudioDirector`/`MusicDirector` are not built. Two
+  decisions are recorded on the branch (AI sound effects, friends' voices, AI music only where it
+  does not adapt; levels baked per category with Unity's Normalize off).
+- **`claude/busy-bose-a7647f`** (1 commit, 2026-09-26): a test-only fix to
+  `GuardAttackTests` so the guard's own `Update` does not swing during the test's yield frame.
+  The test it touches is the "known failure" named throughout the 2026-09-26 test runs.
+- Older, not worth merging as they stand: open PRs #2 (`integration/staging-2026-09-15`), #4
+  (`claude/repo-status-check-hjp6z7`, the five-tier docs scaffold, since replaced by the six
+  tiers) and #97 (`claude/amazing-ritchie-ga4w1t`, HUD health for #14, which is closed), plus
+  `claude/damp-cave-svg-treasure-r0l6rz` (a portal illustration and bestiary concept sheets, as SVG), `claude/trial-merge-2026-09-24`
+  (verification only) and `idk`.
 
 Before 2026-09-26: every one of the four old milestones' code had been written, merged and
 tested, the raid ran on real authored art, and two of the four acceptance criteria had never been
@@ -195,7 +233,8 @@ physics-loot pillars are real and mostly match the pitch; **the Mystical Market 
 named pillar in the pitch) does not exist anywhere in the codebase**, the Lair is a menu screen
 rather than the physical place the pitch describes, and half the built bestiary (SigilWisp,
 VaultWarden, HexTurret, ArcRevenant, GildedColossus) reads as fantasy monsters with no basis in the
-pitch's human "household" antagonists — flagged as an open creative-direction question, not a bug.
+pitch's human "household" antagonists — flagged as an open creative-direction question, not a bug
+(decided 2026-09-24: each Age's enemies are its household; #41 closed 2026-09-28).
 34 new issues are filed via `Tools/mkissues_moodboard_gap.py`
 (manifest: `docs/generated/github-issues-moodboard-gap.json`), additive to and non-duplicative of
 the 21-item backlog above.

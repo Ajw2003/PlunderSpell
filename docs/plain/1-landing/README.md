@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/1-landing/README.md @ b88354fd3825ab994724fbf13789ebfe9fba9bcb -->
+<!-- plain copy of: docs/1-landing/README.md @ fdb58dd5c59d381e75ac24c8740f8d809b090c0b -->
 
 # Plunderspell: docs
 

@@ -1,4 +1,4 @@
-<!-- plain copy of: docs/3-state/ProjectState.md @ 1bbcefcc42a268f048bcaa1759515c610dfe0472 -->
+<!-- plain copy of: docs/3-state/ProjectState.md @ 0f98d10abf36dd81faef47396b6f6f554aa166fa -->
 
 # Project state
 
@@ -14,7 +14,7 @@ record exists to track that gap honestly, milestone by milestone, instead of ass
 code means a finished feature.
 
 ## How it works
-1. The project sits at roughly two fifths of the way through its roadmap. It read two thirds
+1. The project sits a little over two fifths of the way through its roadmap. It read two thirds
    until the roadmap grew from four milestones to eight, adding a market, livelier enemies, a
    dangerous castle and a final art pass. Only the first milestone has actually been checked the
    way its own finish line defines "done".
@@ -33,20 +33,26 @@ code means a finished feature.
    systems, and remains a risk for any new networked feature.
 7. Voice casting, co-op over Steam, and carrying weighted loot have each been confirmed working
    for a real person, though several of their edge cases, like recognising different voices or
-   two separate Steam accounts joining each other, are still unverified.
+   two separate Steam accounts joining each other, are still unverified. Steam features also
+   fail when the game is started from its own program file rather than from the Editor.
+8. Several players can now carry one piece together, checked automatically with two copies of
+   the game on one PC. One heavy piece sometimes will not lift with two holders; the cause is
+   not yet known.
+9. Some finished work lives on side branches, not the main line yet. The largest is every sound
+   effect and music track the game needs, built as files but not yet played by the game.
 
 ## Risks and safeguards
 - **Code passing tests while the actual game is broken.** A milestone's automated tests passing
   is tracked separately from whether a real person has actually played it and confirmed it works.
 - **A known bug pattern reappearing in new code.** Every place that checks who is in charge of a
   networked object is documented so a new feature does not repeat the same offline mistake.
-- **Loot ejected out of the world at spawn.** Documented as a known, unfixed defect rather than
-  silently accepted; an attempted fix that made it worse was reverted.
-- **A core pitch idea being quietly dropped rather than decided on.** The missing market feature
-  and the mismatch between some enemies and the pitch's antagonists are flagged as open questions
-  needing a decision, not bugs to just fix.
-- **No standalone build ever having been produced or checked.** Called out explicitly so it is
-  tracked rather than assumed to work.
+- **Loot ejected out of the world at spawn.** Once a known defect; loot now spawns resting on
+  furniture inside rooms, checked across several castle layouts.
+- **A core pitch idea being quietly dropped rather than decided on.** The missing market is
+  its own milestone. The mismatch between some enemies and the pitch's antagonists was decided:
+  each age's enemies are its household.
+- **Work sitting on a side branch and being forgotten.** The state record lists every branch
+  holding work the main line lacks.
 
 ## Related
 - [Raid scene assembly](../4-systems/raid-scene-assembly.md)

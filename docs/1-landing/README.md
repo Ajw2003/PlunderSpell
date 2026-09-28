@@ -21,6 +21,8 @@ this document, not a reason to go grep the repo.
 | `Tools/AssetPipeline/` | Blender-driven generation of weapon/loot/castle-module props |
 | `Tools/EnemyForge/` | Blender-driven generation of the enemy roster (mesh, rig, textures) |
 | `Tools/ArtForge/` | Blender-driven generation of the art bible's plunder, structures and enemies, built on EnemyForge; review sheets in `docs/art/models/` ([README](../../Tools/ArtForge/README.md)) |
+| `Tools/Unity/coop_carry_check.sh` | runs a host and a client on one PC with nobody at the keyboard and checks two-player carrying; see [`net`](../4-systems/net.md) |
+| `Tools/github/sync_milestones.py` | sets the GitHub milestones M0-M7 and their issues from the roadmap |
 | `Tools/mkissues.py` | files the playtesting backlog to GitHub issues; see `docs/generated/github-issues.json` |
 | `Plans/` | one exhaustive plan per GitHub issue, plus `Priority_Queue.md`, the live execution order |
 | `docs/` | this tree |
@@ -81,8 +83,9 @@ together and what was deliberately left undocumented, and why.
   sheet → audit → fix → commit) is [`docs/art/WORKFLOW.md`](../art/WORKFLOW.md); long runs are protected
   by `Tools/autosave.sh`.
 - [`docs/plans/artbible-enemies-in-engine.md`](../plans/artbible-enemies-in-engine.md) and
-  [`docs/plans/artbible-enemy-animations.md`](../plans/artbible-enemy-animations.md): **awaiting
-  approval.** How the 16 ArtForge enemies get into a raid, and how they get animated. Review page:
+  [`docs/plans/artbible-enemy-animations.md`](../plans/artbible-enemy-animations.md). How the 16
+  ArtForge enemies get into a raid (built: all 16 are in their era's roster) and how they get
+  animated (**awaiting approval**; no enemy is animated yet, #141). Review page:
   [`docs/generated/enemy-animation-plan/`](../generated/enemy-animation-plan/index.html).
 - [`docs/plans/night-atmosphere.md`](../plans/night-atmosphere.md) — the anchored aesthetic: night,
   warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
@@ -92,8 +95,12 @@ together and what was deliberately left undocumented, and why.
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
   [`docs/generated/github-issues-moodboard-gap.json`](../generated/github-issues-moodboard-gap.json)
-  once filed). Flags one open creative-direction question (the bestiary's thematic split) that
-  needs a decision, not just more art.
+  once filed). Its one open creative-direction question, the bestiary's thematic split, was
+  decided on 2026-09-24: each Age's enemies are its household.
+- **Work on other branches.** `docs/3-state/ProjectState.md`, "Work not on `main` yet", lists
+  every branch holding work `main` lacks. The largest is the audio plan (`docs/plans/audio.md`)
+  and `Tools/AudioForge/`, which builds every sound into `Assets/_Project/Audio/`, both on
+  `claude/eloquent-dirac-i10hep`.
 - [`docs/prompts/plunderspell-fable.md`](../prompts/plunderspell-fable.md) — the build-and-test
   prompt used to drive an agent session on this project.
 - [`docs/prompts/house-rules-versioncheck-fix.md`](../prompts/house-rules-versioncheck-fix.md) — a

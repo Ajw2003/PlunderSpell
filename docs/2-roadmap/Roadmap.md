@@ -35,8 +35,11 @@ stranger can play". The draft it was adopted from is
 | M7 | Final art and performance pass | 15 | all, plus release |
 
 The issue numbers are GitHub issues on `Ajw2003/PlunderSpell`, and each milestone exists there
-as a GitHub milestone with the same title and issues. Every issue open on 2026-09-26 is placed;
-#24 (the loop epic, superseded by M2) and #159 (no description) were closed instead. To change
+as a GitHub milestone with the same title and issues. Every issue open on 2026-09-28 is placed;
+#24 (the loop epic, superseded by M2) and #159 (no description) were closed on 2026-09-26. An
+issue marked *(closed)* below is done; it stays listed so the milestone keeps its history. The
+2026-09-28 pass closed twelve that were already done or superseded (#17, #41, #121, #126, #127,
+#131, #134, #140, #152, #154, #158, #163) and placed the nine filed since (#164-#172). To change
 which issue belongs where, edit this file, then the list in `Tools/github/sync_milestones.py`,
 and run `python Tools/github/sync_milestones.py`; it updates milestones rather than duplicating
 them.
@@ -61,7 +64,7 @@ whether shouting at your own computer feels like power or embarrassment, answere
 possible.
 
 **Contains:** `IVoiceInputService`, the Vosk provider, the keyboard mock, `SpellLexicon`, the
-misfire table, and a way to adjust microphone gain (#125), without which the Whisper/Shout
+misfire table, and a way to adjust microphone gain (#125, closed), without which the Whisper/Shout
 thresholds cannot be calibrated across players.
 
 **Acceptance:** over 90% top-1 recognition across four accents on the 40-word lexicon, under
@@ -78,21 +81,32 @@ thing you put in front of people."
 an extraction portal that counts only what physically crosses it; a Lair that remembers what came
 back. And, because each one breaks or undermines a real raid:
 
-- A raid leaves no state behind for the next one (#143).
-- Players never spawn somewhere with no entrance in sight (#140).
-- Combat reads: melee damage scales sensibly (#110), and more spells than Ignis are worth casting
-  (#106). Velox (a dodge) and Saltus (a high jump that turns into a slam) replace Tonitrus and
-  Cadaver Surge, and the slam replaces the accidental ride on a held item (#152); plan:
-  [`docs/plans/dodge-and-leap-spells.md`](../plans/dodge-and-leap-spells.md).
-- Every item is held at a sensible grip point (#134), and carrying is not floppy (#155).
-- Loot near the portal neither moves nor takes damage (#158).
-- Enemy numbers and strength scale with the lobby size (#154), so a four-player raid is not tuned
-  for one.
-- The spell shader renders in the standalone build (#127). The menu flow works in the Editor
-  (#131).
-- Cheap feel: camera shake, hit-stop and simple impact effects (#51). Anything needing new art,
-  animation or recorded audio waits for M7.
-- Two different Steam accounts can join each other.
+- A raid leaves no state behind for the next one (#143, closed).
+- Players never spawn somewhere with no entrance in sight (#140, closed).
+- Combat reads: more spells than Ignis are worth casting (#106, closed). Velox (a dodge) and
+  Saltus (a high jump that turns into a slam) replace Tonitrus and Cadaver Surge, and the slam
+  replaces the accidental ride on a held item (#152, closed); plan:
+  [`docs/plans/dodge-and-leap-spells.md`](../plans/dodge-and-leap-spells.md). Melee scaling
+  (#110, closed) was reversed: swords are swung as objects (Decisions, 2026-09-26).
+- Every item is held at a sensible grip point (#134, closed), and carrying is not floppy (#155,
+  closed).
+- **Carrying together.** Any number of players can hold one piece, the host moves it, and
+  strength adds up (#169, closed; plan
+  [`docs/plans/GitIssues/Issue_169_Plan.md`](../plans/GitIssues/Issue_169_Plan.md)). Still open:
+  strafing with WASD swings a held piece too much (#171), and dragging a heavy piece should work
+  while a hard impact still damages it (#172).
+- Loot near the portal neither moves nor takes damage (#158, closed); the portal area is larger,
+  taller, and its safe edge glows (#164).
+- Enemy numbers and strength scale with the lobby size (#154, closed; defaults, tuned by #55).
+- The spell shader renders in the standalone build (#127, closed). The menu flow works in the
+  Editor (#131, closed).
+- Cheap feel: camera shake and simple impact effects (#51, closed; no hit-stop, since the raid's
+  time is shared). Anything needing new art, animation or recorded audio waits for M7.
+- **Steam co-op works outside the Editor.** Steam features work when the game is launched from
+  its `.exe`, not only from Build and Run (#167). Hosting your own game after joining a friend's
+  works (#168). Two different Steam accounts can join each other, checked by an automated two-PC
+  test the agent drives (#170; plan
+  [`docs/plans/GitIssues/Issue_170_Plan.md`](../plans/GitIssues/Issue_170_Plan.md)).
 
 **Acceptance:** four real players complete a raid together, start to finish, through the actual
 built game (not a scripted test), and loot they carry out changes what the Lair shows next time
@@ -107,12 +121,14 @@ than engineering.
 deliberately carry across eras (a wheellock pistol in the Bronze Age is not corrected). And:
 
 - High Medieval and Age of Powder get rooms of their own, in the same design language as the
-  Bronze Age (#151, #17).
-- No era spawns another era's pieces, and each era's lighting is laid out for its own geometry
-  (#135, #150).
-- Every model is an authored, adjustable, networked item, structure or enemy (#126).
+  Bronze Age (#151; #17 closed as its duplicate).
+- No era spawns another era's pieces (#135, closed), and each era's lighting is laid out for its
+  own geometry (#150).
+- Every model is an authored, adjustable, networked item, structure or enemy (#126, closed; the
+  rooms left are #151, the animation #141).
 - The weapon roster matches the pitch's twelve named weapons, three per era (#38).
-- The bestiary question is settled: the household guards against the fantasy enemies (#41).
+- The bestiary question is settled (#41, closed): each Age's enemies are its household, people
+  and animals; the older supernatural enemies stay, Crypt only (Decisions, 2026-09-24).
 
 **Acceptance (changed 2026-09-26).** It used to say: selecting a different era in the Lair
 produces a measurably different raid (a different room set, loot table, guard roster and
@@ -156,7 +172,8 @@ here; animation clips (#141) and barks (#42) are M7.
   turns on whoever did it.
 - The house hears the raid: a thrown object, a dropped piece of loot or a fallen guard draws
   nearby guards to look, and a guard who finds a body raises the alarm.
-- Chases are hunts: guards call others in, lose a player who breaks line of sight, search the
+- Chases are hunts: guards call others in (a shout sends guards within 20 m, the hue and cry
+  within 40 m: #163, closed), lose a player who breaks line of sight, search the
   last place they saw them, then give up and go back to patrol.
 - No guard stands frozen: patrols vary, and a guard at rest looks around.
 - Stealth from the player's side, as keyboard controls: crouch slows you and makes your
@@ -201,14 +218,17 @@ build goes to someone who was not there.
 - Animation: the player and doors (#11), every enemy in every state it has (#141), wind-up and
   follow-through on throws and swings (#52), and the crouch posture (#153).
 - Audio that carries meaning: guards murmur on patrol, bark on alert and shout on a chase (#42),
-  and teammates hear a word half a heartbeat before it resolves (#48).
+  and teammates hear a word half a heartbeat before it resolves (#48). Every sound and track is
+  named, with its source, in `docs/plans/audio.md` (on branch
+  `claude/eloquent-dirac-i10hep`, not yet on `main`).
 - Art: main menu art (#16), an icon set (#34, #40), Steam lobby and invite branding (#58), the
-  pitch's lighting frames (#59), post-processing (#121), castles that no longer look bland (#23),
-  and the Lair's lighting (#32).
+  pitch's lighting frames (#59), post-processing (#121, closed: built with the night atmosphere),
+  castles that no longer look bland (#23), and the Lair's lighting (#32).
 - Performance: a budget and a profiling pass for full-art raids (#54), with a Steam Deck as the
-  low end (the night atmosphere's quality levels already target it).
-- Settings: complete audio mix, keybinds and microphone device (#56), and every word bindable to
-  a key (#57).
+  low end (the night atmosphere's quality levels already target it). Lights and shadows no longer
+  pop in (#165, #166).
+- Settings: complete audio mix, keybinds and microphone device (#56, closed), and every word
+  bindable to a key (#57).
 
 **Acceptance:** both of these.
 
