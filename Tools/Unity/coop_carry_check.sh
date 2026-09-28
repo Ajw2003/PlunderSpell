@@ -12,6 +12,8 @@
 #   --build      always build;  --no-build  never build
 #   --shots      screenshot every scenario, not just failed ones (each costs a few seconds)
 #   --no-video   do not record the screen (it needs ffmpeg on PATH)
+#   --raid-end   instead of the carry scenarios: end the raid from the host and check the client
+#                took it cleanly (no SyncVar permission errors), about a minute
 #
 # Needs the Editor open on this project, not in Play mode. Leaves it stopped, with the Pipeline
 # runtime setting off and ProjectSettings.asset's preloadedAssets line as it was
@@ -84,13 +86,14 @@ fi
 # ---------------------------------------------------------------------------------------------
 # The client build.
 # ---------------------------------------------------------------------------------------------
-build=auto; shots=failed; video=on
+build=auto; shots=failed; video=on; mode=carry
 for arg in "$@"; do
     case "$arg" in
         --build) build=yes ;;
         --no-build) build=no ;;
         --shots) shots=all ;;
         --no-video) video=off ;;
+        --raid-end) mode=raid_end ;;
         *) log "FAIL unknown option $arg"; trap - EXIT; exit 1 ;;
     esac
 done
@@ -173,6 +176,38 @@ fi
 mkdir -p "$out/trace" "$out/video" "$out/frames"
 # This run's evidence only: an earlier run's failure video would read as this run's (git keeps it).
 rm -f "${out:?}"/video/*.mkv "${out:?}"/frames/*.png
+
+printf '\n# run %s (%s)\n' "$(date +%T)" "$mode" >> "$out/results.txt"
+
+# Every run: the client builds the castle once, in the host's era. The seed and era used to arrive
+# separately, so the client built the last raid's era first and then built again.
+builds="$(grep -c 'Building the castle from seed' "$out/client.log")"
+if [ "$builds" = 1 ]; then
+    verdict=PASS
+else
+    verdict="FAIL client built the castle $builds times: $(grep 'Building the castle' "$out/client.log" | tr '\n' ';')"
+fi
+printf '%s %s\n' "$verdict" castle_built_once | tee -a "$out/results.txt"
+case "$verdict" in PASS*) ;; *) failures=$((failures + 1)) ;; esac
+
+if [ "$mode" = raid_end ]; then
+    # The host ends the raid as the clock running out would; the client must follow it to the Lair
+    # without writing the server's SyncVars ("Invalid permissions when setting ...").
+    timeout 60 bash Tools/Unity/eval.sh 'UnityEngine.Object.FindFirstObjectByType<Plunderspell.Extraction.ExtractionZone>().ResolveExtraction(); return "resolved";' >/dev/null
+    for _ in $(seq 1 20); do grep -q "Host moved the raid to Resolved" "$out/client.log" && break; sleep 1; done
+    sleep 2
+    if ! grep -q "Host moved the raid to Resolved" "$out/client.log"; then
+        verdict="FAIL the client never heard the raid end"
+    elif grep -q "Invalid permissions" "$out/client.log"; then
+        verdict="FAIL $(grep -m1 'Invalid permissions' "$out/client.log")"
+    else
+        verdict=PASS
+    fi
+    printf '%s %s\n' "$verdict" raid_ends_cleanly | tee -a "$out/results.txt"
+    case "$verdict" in PASS*) ;; *) failures=$((failures + 1)) ;; esac
+    log "$failures scenario(s) failed; results in $out/results.txt"
+    exit $((failures > 0))
+fi
 
 # ---------------------------------------------------------------------------------------------
 # Scenarios.
@@ -349,7 +384,6 @@ shoot() { # shoot <name> <verdict> <both|host>: screenshots, for a failure or wh
     timeout 60 bash Tools/Unity/capture.sh "$out/$1-host.png" >/dev/null 2>&1
 }
 
-printf '\n# run %s\n' "$(date +%T)" >> "$out/results.txt"
 
 stage light:0
 "${E[@]}" host grab "$piece" >/dev/null; "${E[@]}" host level >/dev/null; sleep 2

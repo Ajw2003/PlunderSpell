@@ -373,3 +373,20 @@ PASS opposite_pulls_snap
 PASS both_grab_same_piece
 PASS client_lets_go
 PASS client_quits_holding
+
+# run 23:00:56 (raid_end)
+PASS castle_built_once
+PASS raid_ends_cleanly
+
+# run 23:01:41 (carry)
+PASS castle_built_once
+PASS host_grabs
+FAIL held point 0.38 m from client's aim client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
