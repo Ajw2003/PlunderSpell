@@ -448,6 +448,161 @@ namespace Plunderspell.Tests
 #endif
 
         [UnityTest]
+        public IEnumerator Test_ASecondHolderLiftsWhatOneWouldDrag()
+        {
+            // 14 kg exceeds one 100 N holder's grip (Load > 1) but not two (200 N combined).
+            Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 600f));
+            Vector3 target = holder.position + new Vector3(0f, 0.3f, 1.5f);
+            Item item = MakeItem(target, mass: 14f);
+            item.StartDragging(holder.gameObject);
+            item.UpdateTarget(target, Vector3.zero);
+            Assert.IsTrue(item.IsTooHeavyToLift, "One 100 N holder should not lift a 14 kg piece.");
+
+            Rigidbody second = MakeHolder(new Vector3(2f, 1f, 600f));
+            CarryPull secondPull = new CarryPull
+            {
+                GripLocal = item.HeldPointLocal,
+                Target = target,
+                TargetVelocity = Vector3.zero,
+                WantedRotation = item.transform.rotation,
+                GripStrength = 100f,
+                HaulStrength = 250f,
+            };
+            item.SetRemotePull(501, secondPull, second.gameObject);
+            Assert.IsFalse(item.IsTooHeavyToLift, "Two 100 N holders combine grip past a 14 kg piece's weight.");
+
+            float distance = float.MaxValue;
+            for (float t = 0f; t < 3f; t += Time.fixedDeltaTime)
+            {
+                item.UpdateTarget(target, Vector3.zero);
+                item.SetRemotePull(501, secondPull, second.gameObject);
+                yield return new WaitForFixedUpdate();
+                distance = Vector3.Distance(item.GripWorldPosition, target);
+            }
+            Assert.That(distance, Is.LessThan(0.3f),
+                $"Lifted by two holders, the held point should reach within 0.3 m of the target in 3 s; it is {distance:F2} m away.");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_OppositePullsSnapBothHolds()
+        {
+            Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 620f));
+            Vector3 target = holder.position + new Vector3(0f, 0.3f, 1.5f);
+            Item item = MakeItem(target, mass: 2f);
+            item.StartDragging(holder.gameObject);
+            item.UpdateTarget(target, Vector3.zero);
+
+            Rigidbody second = MakeHolder(new Vector3(4f, 1f, 620f));
+            Vector3 farTarget = target + new Vector3(4f, 0f, 0f); // 4 m from the local target
+            CarryPull pullingAway = new CarryPull
+            {
+                GripLocal = item.HeldPointLocal,
+                Target = farTarget,
+                TargetVelocity = Vector3.zero,
+                WantedRotation = item.transform.rotation,
+                GripStrength = 100f,
+                HaulStrength = 250f,
+            };
+            item.SetRemotePull(502, pullingAway, second.gameObject);
+
+            // As in a session: a snapped remote holder is told to let go and stops sending (the
+            // relay's TargetRpc), and ItemManager drops a snapped local hold.
+            bool remoteSnapped = false;
+            System.Action<Item, int> onSnap = (snapped, key) => remoteSnapped |= snapped == item && key == 502;
+            Item.RemoteBeamSnapped += onSnap;
+            bool localSnapped = false;
+            try
+            {
+                for (float t = 0f; t < 1f; t += Time.fixedDeltaTime)
+                {
+                    if (item.LocalBeamSnapped && item.IsDragging)
+                    {
+                        localSnapped = true;
+                        item.StopDragging();
+                    }
+                    if (item.IsDragging)
+                        item.UpdateTarget(target, Vector3.zero);
+                    if (!remoteSnapped)
+                        item.SetRemotePull(502, pullingAway, second.gameObject);
+                    yield return new WaitForFixedUpdate();
+                }
+            }
+            finally
+            {
+                Item.RemoteBeamSnapped -= onSnap;
+            }
+
+            Assert.AreEqual(0, item.HolderCount,
+                "Pulled apart past the snap distance for 0.3 s, both holds should drop.");
+            Assert.IsTrue(remoteSnapped, "The other holder's beam should have snapped.");
+            Assert.IsTrue(localSnapped, "The local holder's beam should have snapped too.");
+        }
+
+        /// <summary>One holder turning quickly moves their aim ~2 m sideways at once while the other
+        /// holder still anchors the piece. That is not pulling apart: the piece must settle between
+        /// them and both keep it (seen as a flaky drop in coop_carry_check's shared carry).</summary>
+        [UnityTest]
+        public IEnumerator Test_AQuickTurnByOneOfTwoHoldersDoesNotSnap()
+        {
+            Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 640f));
+            Vector3 target = holder.position + new Vector3(0f, 0.3f, 2.2f);
+            Item item = MakeItem(target, mass: 1f);
+            item.StartDragging(holder.gameObject);
+            Rigidbody second = MakeHolder(new Vector3(1.2f, 1f, 640f));
+            var pull = new CarryPull
+            {
+                GripLocal = item.HeldPointLocal,
+                Target = target,
+                WantedRotation = item.transform.rotation,
+                GripStrength = 100f,
+                HaulStrength = 250f,
+            };
+
+            bool snapped = false;
+            System.Action<Item, int> onSnap = (snappedItem, key) => snapped |= snappedItem == item;
+            Item.RemoteBeamSnapped += onSnap;
+            try
+            {
+                for (float t = 0f; t < 3f; t += Time.fixedDeltaTime)
+                {
+                    // Both on one point for a second, then the local holder flicks 1.9 m aside.
+                    Vector3 local = t < 1f ? target : target + new Vector3(1.9f, 0f, 0f);
+                    item.UpdateTarget(local, Vector3.zero);
+                    if (!snapped)
+                        item.SetRemotePull(503, pull, second.gameObject);
+                    snapped |= item.LocalBeamSnapped;
+                    yield return new WaitForFixedUpdate();
+                }
+            }
+            finally
+            {
+                Item.RemoteBeamSnapped -= onSnap;
+            }
+
+            Assert.IsFalse(snapped, "A quick turn by one of two holders should not snap the shared carry.");
+            Assert.AreEqual(2, item.HolderCount);
+        }
+
+        [UnityTest]
+        public IEnumerator Test_ASoloHolderNeverSnaps()
+        {
+            Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 640f));
+            Vector3 target = holder.position + new Vector3(0f, 0.3f, 1.5f);
+            Item item = MakeItem(target, mass: 2f);
+            item.StartDragging(holder.gameObject);
+
+            Vector3 farTarget = target + new Vector3(4f, 0f, 0f);
+            for (float t = 0f; t < 1f; t += Time.fixedDeltaTime)
+            {
+                item.UpdateTarget(farTarget, Vector3.zero);
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.AreEqual(1, item.HolderCount, "A solo holder must never snap, however far the target is.");
+            Assert.IsFalse(item.LocalBeamSnapped, "A solo holder's beam must never snap.");
+        }
+
+        [UnityTest]
         public IEnumerator Test_AnItemTooHeavyToLiftIsDraggedAlongTheFloor()
         {
             var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);

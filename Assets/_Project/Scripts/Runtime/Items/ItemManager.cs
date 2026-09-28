@@ -78,6 +78,10 @@ public class ItemManager : SingletonBase<ItemManager>
         if (_draggedItem != null && _draggedItem.TryGetComponent(out Rigidbody heldBody) && !heldBody.detectCollisions)
             StopDragging();
 
+        // Opposite pulls snapped the beam (#169), same as the tow rope breaking: let go.
+        if (_draggedItem != null && _draggedItem.LocalBeamSnapped)
+            StopDragging();
+
         if (_draggedItem != null)
         {
             // A held ranged weapon aims on right-click-and-hold instead of throwing on right-click:

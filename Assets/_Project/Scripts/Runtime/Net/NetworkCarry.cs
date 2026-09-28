@@ -21,6 +21,7 @@ namespace Plunderspell.Net
             Item.CanDriveHere = CanDriveHere;
             Item.RequestDrive = RequestDrive;
             Item.RequestThrow = RequestThrow;
+            Item.NetworkedTotalGrip = NetworkedTotalGrip;
         }
 
         private static bool CanDriveHere(Item item)
@@ -47,6 +48,16 @@ namespace Plunderspell.Net
         {
             if (item != null && item.TryGetComponent(out LootPickup pickup) && pickup.isSpawned)
                 pickup.RequestThrow(direction, force);
+        }
+
+        /// <summary>A client holder's view of the combined grip a controller (the host) already
+        /// knows: the server-written SyncVar on the spawned LootPickup, or 0 (Item.TotalGrip's
+        /// "nothing heard yet" fallback) offline or unspawned.</summary>
+        private static float NetworkedTotalGrip(Item item)
+        {
+            if (item == null || !item.TryGetComponent(out LootPickup pickup) || !pickup.isSpawned)
+                return 0f;
+            return pickup.TotalGrip;
         }
     }
 }

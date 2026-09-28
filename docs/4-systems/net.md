@@ -188,6 +188,10 @@ the session. A friend's own save is never touched by joining.
 - **Ownership callbacks fire twice on a host,** once as the server and once as its own client.
   Ownership is only applied from the client-side call; the server-side one would switch the host's
   own body off.
+- **PurrNet's `removeAuth` rule defaults to nobody,** so without it set, every side receiving the
+  server's ownership removal refuses it ("Failed to remove ownership ... because of missing
+  authority") and keeps a stale owner. `Assets/_Project/Net/NetworkRules.asset` sets it to
+  Server | Owner, like `transferAuth`.
 - **A client sees ownership after the spawn,** so its body first looks remote and is switched back
   on by `OnOwnerChanged`.
 - **An interpolated rigidbody overwrites a transform-only move** on the next physics step. Moving a
@@ -231,12 +235,15 @@ actions asset in `ProjectSettings.asset`'s `preloadedAssets`; revert that line b
 Screenshots of each checked step: `docs/generated/coop-2026-09-23/`.
 
 **Carry check (#169).** `bash Tools/Unity/coop_carry_check.sh` does all of the above for carrying,
-with nobody at the keyboard: it builds `Build/DevTest` (Pipeline runtime on for that build only),
-hosts from the Editor, joins with the build, sets out, and runs seven scenarios (host grabs, client
-grabs, the client throws, the client holds a piece low and close, both grab one piece, the client
-lets go, the client quits while holding). It prints one
-PASS/FAIL line each, and saves both sides' screenshots, `results.txt` and the client's log under
-`docs/generated/coop-carry-<date>/`. `--no-build` reuses the last build. Both sides are driven by
+with nobody at the keyboard: it builds `Build/DevTest` (Pipeline runtime on for that build only)
+when anything under `Assets/` or `ProjectSettings/` is newer than it, hosts from the Editor, joins
+with the build, sets out, and runs ten scenarios (host grabs, client grabs, the client throws, the
+client holds a piece low and close, one holder only tows a heavy piece, two lift it, opposite pulls
+snap both holds, both grab one piece, the client lets go, the client quits while holding). It
+prints one PASS/FAIL line each and saves `results.txt`, the client's log and, for failed scenarios
+only, both sides' screenshots under `docs/generated/coop-carry-<date>/`. `--build` and `--no-build`
+override the build decision; `--shots` screenshots every scenario. A run takes about 3 minutes, or
+about 2.5 without a build. Both sides are driven by
 `Tools/Unity/coop_eval.sh host|client <action>`, which runs `Tools/Unity/eval/coop_carry.cs`
 through reflection so the same code works in the build. It needs the Editor open and not playing,
 and leaves Play stopped, the runtime setting off and the settings files as they were. Before #169's

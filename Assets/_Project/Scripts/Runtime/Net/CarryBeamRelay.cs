@@ -37,6 +37,11 @@ namespace Plunderspell.Net
         private NetworkIdentity _sending;
         private float _nextSendAt;
 
+        // A holder key (LootPickup.HolderKey) back to the PlayerID that sent it, filled in
+        // BeamMoved: an opposite-pulls snap (Item.RemoteBeamSnapped) only knows the item and the
+        // key, and has to tell that specific player's machine to let go.
+        private readonly Dictionary<int, PlayerID> _holderPlayers = new Dictionary<int, PlayerID>();
+
         // A sender's player body (Item.SetRemotePull's holderBody, so a held piece ignores that
         // player's own colliders), looked up by PlayerNetworkOwnership.owner and cached: a
         // FindObjectsByType scan every message would be wasteful at 15 messages/second/holder.
@@ -59,12 +64,40 @@ namespace Plunderspell.Net
             return null;
         }
 
+        protected override void OnSpawned()
+        {
+            base.OnSpawned();
+            Item.RemoteBeamSnapped += HandleRemoteBeamSnapped;
+        }
+
         private void Update()
         {
             if (!isSpawned)
                 return;
             SendLocalBeam();
             DrawRemoteBeams();
+        }
+
+        /// <summary>A remote holder's beam snapped (opposite pulls, #169): their pull is already
+        /// removed by the time this fires (<see cref="Item.RemoteBeamSnapped"/>), so this only has
+        /// to tell that holder's own machine to let go, or it would keep sending a pull the item no
+        /// longer has and re-add it next message.</summary>
+        private void HandleRemoteBeamSnapped(Item item, int holderKey)
+        {
+            if (!isServer || item == null)
+                return;
+            NetworkIdentity id = item.GetComponentInParent<NetworkIdentity>();
+            if (id != null && _holderPlayers.TryGetValue(holderKey, out PlayerID player))
+                TellHolderToRelease(player, id);
+        }
+
+        [TargetRpc]
+        private void TellHolderToRelease(PlayerID holder, NetworkIdentity item)
+        {
+            ItemManager items = ItemManager.Instance;
+            if (items != null && item != null && items.CarriedItem != null
+                && items.CarriedItem.GetComponentInParent<NetworkIdentity>() == item)
+                items.ForceRelease();
         }
 
         private void SendLocalBeam()
@@ -90,7 +123,7 @@ namespace Plunderspell.Net
             CarryPull pull = held.IsInHand ? default : held.LocalPull;
             BeamMoved(id, items.BeamHand, held.TargetPosition, held.HeldPointLocal, held.Load,
                 pull.TargetVelocity, pull.WantedRotation, pull.IsTowing, pull.TowFeet, pull.TowVelocity,
-                pull.TowRope, pull.UprightLocalUp);
+                pull.TowRope, pull.UprightLocalUp, pull.GripStrength, pull.HaulStrength);
         }
 
         // PurrNet RPC parameters must be primitive/auto-packed types, so CarryPull's fields travel
@@ -98,7 +131,7 @@ namespace Plunderspell.Net
         [ServerRpc(requireOwnership: false)]
         private void BeamMoved(NetworkIdentity item, Vector3 hand, Vector3 aim, Vector3 grabLocal, float load,
             Vector3 targetVelocity, Quaternion wantedRotation, bool isTowing, Vector3 towFeet, Vector3 towVelocity,
-            float towRope, Vector3 uprightLocalUp, RPCInfo info = default)
+            float towRope, Vector3 uprightLocalUp, float gripStrength, float haulStrength, RPCInfo info = default)
         {
             // The server controls a held piece's body while it has any holder (LootPickup.RequestHostControl);
             // this writes the sender's pull into it, unless it is the host's own hold (applied
@@ -106,7 +139,9 @@ namespace Plunderspell.Net
             if (item != null && info.sender != localPlayerForced && item.TryGetComponent(out Item component) &&
                 !component.IsInHand)
             {
-                component.SetRemotePull(LootPickup.HolderKey(info.sender), new CarryPull
+                int holderKey = LootPickup.HolderKey(info.sender);
+                _holderPlayers[holderKey] = info.sender;
+                component.SetRemotePull(holderKey, new CarryPull
                 {
                     GripLocal = grabLocal,
                     Target = aim,
@@ -117,6 +152,8 @@ namespace Plunderspell.Net
                     TowVelocity = towVelocity,
                     TowRope = towRope,
                     UprightLocalUp = uprightLocalUp,
+                    GripStrength = gripStrength,
+                    HaulStrength = haulStrength,
                 }, ResolvePlayerBody(info.sender));
             }
             ShowBeam(item, hand, aim, grabLocal, load, info.sender);
@@ -197,6 +234,7 @@ namespace Plunderspell.Net
         protected override void OnDespawned()
         {
             base.OnDespawned();
+            Item.RemoteBeamSnapped -= HandleRemoteBeamSnapped;
             foreach (RemoteBeam beam in _remote.Values)
             {
                 if (beam.Beam != null)

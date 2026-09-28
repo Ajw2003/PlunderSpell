@@ -259,6 +259,16 @@ second holder lets go; and it despawns when a holding client quits. Results and 
 `docs/generated/coop-carry-2026-09-27/`. Also found: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
 already failed before any #169 change (0.054 m jolt against a 0.05 m limit).
 
+**2026-09-27, #169 step 4: holders' strength adds up, and opposite pulls snap.** Each holder's
+grip and haul strength travel with their pull; the host adds them, so a piece too heavy for one
+holder (they tow it) is lifted by two, and every holder sees the shared total. If two holders pull
+a piece more than 1.5 m apart for 0.3 s, everyone lets go. A quick turn by one holder does not
+snap it. Also fixed: PurrNet's `removeAuth` rule was unset, so every client refused the host's
+ownership removal and logged "missing authority" errors. Checked: `CarryFeelTests` 16/16 and
+`coop_carry_check.sh` 10/10, with no authority errors on either side. The check now screenshots only
+failed scenarios and rebuilds only when needed; a run takes about 3 minutes. Still to do: mouse
+steering (step 5), removing the old two-person code (6), docs (8), the two-PC Steam test (#170).
+
 **2026-09-27, #169 steps 2-3: the host controls held pieces.** A piece on the beam has no owner
 while held, so the host moves it and applies every holder's pull; clients send theirs with the beam
 relay. A second grab joins the carry instead of taking it; a holder who lets go, quits or stops

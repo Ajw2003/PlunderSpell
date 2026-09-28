@@ -59,11 +59,27 @@ namespace Plunderspell.Loot
         private Quaternion _uprightRotation = Quaternion.identity;
 
         private Rigidbody _rb;
+        private Item _item;
         private ConfigurableJoint _carryJoint;
 
         // Replicated state (PurrNet field-based SyncVars; inline-initialised so they are never null).
         private readonly SyncVar<bool> _isBroken = new SyncVar<bool>(false);
         private readonly SyncVar<bool> _isBeingCarried = new SyncVar<bool>(false);
+
+        // A held piece's combined grip (#169, "Add strengths together"): only the machine
+        // controlling the body (the server, while it has any holder) knows every holder's pull, so
+        // a client holder's own ItemManager (Load, IsTooHeavyToLift, TowSpeedMultiplier, the beam's
+        // colour) reads this instead. 0 means nobody is holding it, which Item.TotalGrip reads as
+        // "use your own grip" rather than a real zero.
+        private readonly SyncVar<float> _totalGrip = new SyncVar<float>(0f);
+
+        /// <summary>The combined grip <see cref="Item.TotalGrip"/> replicates for a client holder;
+        /// see <see cref="_totalGrip"/>.</summary>
+        public float TotalGrip => _totalGrip.value;
+
+        /// <summary>Below this the SyncVar is not rewritten: a held piece's total grip does not
+        /// change every physics step, so this avoids spamming the network for noise.</summary>
+        private const float k_totalGripTolerance = 1f;
 
         /// <summary>Network identity of the primary carrier (null when not carried).</summary>
         public NetworkIdentity PrimaryCarrierNetId { get; private set; }
@@ -82,6 +98,7 @@ namespace Plunderspell.Loot
         {
             CaptureUprightRotation();
             _rb = GetComponent<Rigidbody>();
+            _item = GetComponent<Item>();
             _rb.useGravity = true;
             ApplyWeight();
             if (_meshRenderer == null)
@@ -502,6 +519,8 @@ namespace Plunderspell.Loot
 
         private void FixedUpdate()
         {
+            UpdateTotalGripSync();
+
             if (_levitationRemaining <= 0f)
                 return;
 
@@ -513,6 +532,18 @@ namespace Plunderspell.Loot
 
             if (_levitationRemaining <= 0f)
                 _levitationRemaining = 0f;
+        }
+
+        /// <summary>Keeps <see cref="_totalGrip"/> replicated for a client holder (<see
+        /// cref="Item.NetworkedTotalGrip"/>). Only the server writes it, and only while spawned:
+        /// offline or on a client, whoever is asking reads the item's own grip directly.</summary>
+        private void UpdateTotalGripSync()
+        {
+            if (!isSpawned || !isServer || _item == null)
+                return;
+            float current = _item.TotalGripOfHolders;
+            if (Mathf.Abs(current - _totalGrip.value) > k_totalGripTolerance)
+                _totalGrip.value = current;
         }
 
         /// <summary>Finds a child transform named "HandSocket" on the carrier, falling back to its root.</summary>
