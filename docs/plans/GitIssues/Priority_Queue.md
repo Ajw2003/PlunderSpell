@@ -4,6 +4,12 @@ This document orders the open backlog issues based on the core directive: **"Get
 
 The backlog is broken down into phases. Work should be completed sequentially from Phase 0 through Phase 5.
 
+## Urgent: carrying in co-op
+*Added 2026-09-27 at the owner's word ("it's urgent"). Ahead of every phase below.*
+
+*   **#169** Two-person carrying and mouse-steered rotation: host-controlled carries over the network (plan: `Issue_169_Plan.md`)
+*   **#170** Automate a real two-PC co-op test over Steam, driven by the agent (#169's final acceptance step needs it)
+
 ## Phase 0: Make the shipped build actually playable
 *Added 2026-09-22, after the user played the real standalone build produced for #53 and found the raid
 itself broken in ways no automated check (headless or otherwise) had caught. This supersedes Phase 1

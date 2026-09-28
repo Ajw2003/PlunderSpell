@@ -15,8 +15,20 @@ import sys
 
 
 def main() -> None:
-    envelope = json.load(sys.stdin)
-    raw = envelope["data"]["result"]
+    raw_mode = sys.argv[1] == "--raw"
+    try:
+        envelope = json.load(sys.stdin)
+        raw = envelope["data"]["result"]
+    except (ValueError, KeyError, TypeError):
+        if raw_mode:
+            print("")
+            return
+        # The Editor answers without a report while it enters Play mode for the run: not done yet.
+        print("running")
+        return
+    if raw is None:
+        print("running")
+        return
     if sys.argv[1] == "--raw":
         print(" ".join(raw.split()))
         return
@@ -34,7 +46,8 @@ def main() -> None:
         return
 
     results = report.get("results", [])
-    if not any(r.get("FullName", "").startswith(test_filter) for r in results):
+    # Substring, as Unity's own --filter matches: a bare class name like `CarryFeelTests` must count.
+    if not any(test_filter in r.get("FullName", "") for r in results):
         # test_status still holds the run before ours.
         print("running")
         return

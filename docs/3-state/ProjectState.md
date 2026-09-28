@@ -251,6 +251,73 @@ the castle as networked loot (found, carried, swung, sold), a crossbow shot show
 downed bodies lie down, and guards give players at the gate a clear ring and a 20 second grace. See
 `docs/4-systems/net.md`.
 
+**2026-09-27, #169 step 1: two-player carry check built.** `Tools/Unity/coop_carry_check.sh` runs
+host (Editor) and client (Development build) on one PC with nobody at the keyboard. Run twice
+before any carry change, same results both times: one holder works on either side; a second
+player's grab takes the piece (the first holder's pull is ignored); the piece falls when the
+second holder lets go; and it despawns when a holding client quits. Results and screenshots:
+`docs/generated/coop-carry-2026-09-27/`. Also found: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
+already failed before any #169 change (0.054 m jolt against a 0.05 m limit).
+
+**2026-09-27, two client-side raid bugs fixed.** A client built the castle twice as a raid
+started (first in the last raid's era, then again): the seed and era were separate SyncVars and
+arrived apart. They now travel as one packed value (`RaidDirector._layout`). And a client logged
+"Invalid permissions when setting `_extractionComplete`" whenever a raid ended: the extraction
+result RPC runs on every peer and wrote the server's SyncVar; now only the server (or an offline
+game) writes it. Checked: `RaidLoopTests` 19/19, `PlayableLoopTests` 13/13, and a two-player run of
+`coop_carry_check.sh --raid-end` (`raid-end-run1.log`): the client built once, in LateMedieval, and
+followed the raid to Resolved with no SyncVar error. Every carry-check run now also checks the castle
+was built once (`castle_built_once`, passed twice). Open: the carry check's `client_grabs` still
+fails now and then by a few centimetres (0.38 m against 0.35) because its aim point sits behind a
+wall in the fixed castle (seen in `frames/client_grabs.png`); a check problem, not a game one.
+
+**2026-09-27, #169 step 5: held pieces turn by torque.** A held piece turns toward where its
+holder faces through a torque capped at the holder's turn strength, so a goblet follows at once and
+a long piece sweeps round; two holders turn it faster than one. Also fixed: two holders lifting a
+heavy piece from knee height snapped their beams mid-lift (the target was more than the snap
+distance away while the piece rose toward it); a hold now counts as strained only while not
+closing on its target. Checked: `CarryFeelTests` 19/19 (four new), and `coop_carry_check.sh` 10/10
+(`step5-run6.log`) with every scenario's frame sheet looked at, including two gold beams holding
+the Rolled Tapestry up in `frames/heavy_lifted_together.png`. The earlier throw and
+both-grab failures were the check's own: the old castle was cramped, and a pavise shield, taller
+than a player, jammed against the wall (seen in the recording). The check now skips light pieces
+over 1 m, uses a more open castle (seed 3508293) and clears the guards, which otherwise end the
+raid within minutes. Still to do: removing the old two-person code (6), docs (8), the two-PC
+Steam test (#170).
+
+**2026-09-27, carry check records evidence.** `coop_carry_check.sh` now writes a per-physics-step
+trace of the piece on both sides for every scenario, and for a failed one a screen recording and a
+frame sheet. It uses one fixed castle and skips the build when nothing changed. The traces found
+three faults in the check itself (staging into the portal, a random seed that spawned on the
+extraction pad, and grabbing with a stale aim), all fixed. Latest run (`trace-run5.log`): 10/10 except
+`client_throws`. The 3 kg PaviseShield hung still 0.45 m under its aim for 3 s, then the throw
+moved it 0.06 m/s. It looks snagged out of the client's view, but that is not confirmed. Open, along
+with three game bugs the logs showed, none part of #169: the client built the castle twice (BronzeAge,
+then LateMedieval) as the seed arrived; a client logs "Invalid permissions when setting
+`_extractionComplete`"; and the snap rule counts a heavy piece lagging behind its target as strain,
+so lifting a heavy piece from the floor with two holders can snap (seen once, trace
+`heavy_lifted_together` in `trace-run2.log`).
+
+**2026-09-27, #169 step 4: holders' strength adds up, and opposite pulls snap.** Each holder's
+grip and haul strength travel with their pull; the host adds them, so a piece too heavy for one
+holder (they tow it) is lifted by two, and every holder sees the shared total. If two holders pull
+a piece more than 1.5 m apart for 0.3 s, everyone lets go. A quick turn by one holder does not
+snap it. Also fixed: PurrNet's `removeAuth` rule was unset, so every client refused the host's
+ownership removal and logged "missing authority" errors. Checked: `CarryFeelTests` 16/16 and
+`coop_carry_check.sh` 10/10, with no authority errors on either side. The check now screenshots only
+failed scenarios and rebuilds only when needed; a run takes about 3 minutes. Still to do: mouse
+steering (step 5), removing the old two-person code (6), docs (8), the two-PC Steam test (#170).
+
+**2026-09-27, #169 steps 2-3: the host controls held pieces.** A piece on the beam has no owner
+while held, so the host moves it and applies every holder's pull; clients send theirs with the beam
+relay. A second grab joins the carry instead of taking it; a holder who lets go, quits or stops
+sending is dropped within 0.5 s and the piece stays; a client's throw is applied by the host
+(including in the extraction portal, which used to freeze a just-thrown piece), and a client's own
+body does not collide with the piece they hold. Weapons in the hand still go to one player at a
+time. Checked: `CarryFeelTests` 12/12 (the jolt test now passes too) and `coop_carry_check.sh` 7/7
+on four runs in a row. Still to do: per-player strength and beam snapping (step 4), mouse steering
+(5), removing the old two-person code (6), docs' plain copies (8), and the two-PC Steam test (#170).
+
 **2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh
 (`CastleAudit.cs`). Every room and all floor are reachable on five seeds, and loot now spawns on
 furniture (tables, chests, shelves, altars) inside rooms, all of it reachable. Phases 3–5 (themed

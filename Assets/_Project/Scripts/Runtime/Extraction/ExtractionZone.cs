@@ -264,7 +264,10 @@ namespace Plunderspell.Extraction
         /// <summary>Presentation half: mark complete locally and raise the event on this peer.</summary>
         private void ApplyExtractionResult(float worth, int saved)
         {
-            _extractionComplete.value = true;
+            // This runs on every peer (BroadcastExtractionResult), but only the server may write a
+            // SyncVar; a client gets the value the server already set in ResolveExtraction.
+            if (!isSpawned || isServer)
+                _extractionComplete.value = true;
             ExtractionResolved?.Invoke(worth, saved);
         }
 

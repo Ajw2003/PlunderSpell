@@ -59,11 +59,27 @@ namespace Plunderspell.Loot
         private Quaternion _uprightRotation = Quaternion.identity;
 
         private Rigidbody _rb;
+        private Item _item;
         private ConfigurableJoint _carryJoint;
 
         // Replicated state (PurrNet field-based SyncVars; inline-initialised so they are never null).
         private readonly SyncVar<bool> _isBroken = new SyncVar<bool>(false);
         private readonly SyncVar<bool> _isBeingCarried = new SyncVar<bool>(false);
+
+        // A held piece's combined grip (#169, "Add strengths together"): only the machine
+        // controlling the body (the server, while it has any holder) knows every holder's pull, so
+        // a client holder's own ItemManager (Load, IsTooHeavyToLift, TowSpeedMultiplier, the beam's
+        // colour) reads this instead. 0 means nobody is holding it, which Item.TotalGrip reads as
+        // "use your own grip" rather than a real zero.
+        private readonly SyncVar<float> _totalGrip = new SyncVar<float>(0f);
+
+        /// <summary>The combined grip <see cref="Item.TotalGrip"/> replicates for a client holder;
+        /// see <see cref="_totalGrip"/>.</summary>
+        public float TotalGrip => _totalGrip.value;
+
+        /// <summary>Below this the SyncVar is not rewritten: a held piece's total grip does not
+        /// change every physics step, so this avoids spamming the network for noise.</summary>
+        private const float k_totalGripTolerance = 1f;
 
         /// <summary>Network identity of the primary carrier (null when not carried).</summary>
         public NetworkIdentity PrimaryCarrierNetId { get; private set; }
@@ -82,6 +98,7 @@ namespace Plunderspell.Loot
         {
             CaptureUprightRotation();
             _rb = GetComponent<Rigidbody>();
+            _item = GetComponent<Item>();
             _rb.useGravity = true;
             ApplyWeight();
             if (_meshRenderer == null)
@@ -245,9 +262,10 @@ namespace Plunderspell.Loot
         private void RequestBreak() => BreakItem();
 
         /// <summary>
-        /// A player wants to pick this up: hand them the body, so their machine simulates it while it
-        /// is carried and their movement of it replicates. Ownership then stays with them until
-        /// someone else picks it up.
+        /// A player wants to hold this in hand (a weapon): hand them the body, so their machine
+        /// simulates it while it is held and their movement of it replicates. Ownership then stays
+        /// with them until someone else picks it up. A piece on the beam does not use this — see
+        /// <see cref="RequestHostControl"/> — since any number of players may hold one at once.
         /// </summary>
         [ServerRpc(requireOwnership: false)]
         public void RequestCarry(RPCInfo info = default)
@@ -255,6 +273,33 @@ namespace Plunderspell.Loot
             if (!IsBroken)
                 GiveOwnership(info.sender);
         }
+
+        /// <summary>
+        /// A player wants to hold this on the beam: while held it has no owner, so the server
+        /// controls it and applies every holder's pull (<see cref="Item.CanDriveHere"/>). Nobody owns
+        /// it, so nobody can take it by grabbing it, and it does not leave with a player who quits.
+        /// </summary>
+        [ServerRpc(requireOwnership: false)]
+        public void RequestHostControl()
+        {
+            if (!IsBroken && hasOwner)
+                RemoveOwnership();
+        }
+
+        /// <summary>
+        /// A holder let go of this while their machine did not control its body: the server, which
+        /// does, throws it on their behalf and drops their pull.
+        /// </summary>
+        [ServerRpc(requireOwnership: false)]
+        public void RequestThrow(Vector3 direction, float force, RPCInfo info = default)
+        {
+            if (TryGetComponent(out Item item))
+                item.ApplyRemoteThrow(HolderKey(info.sender), direction, force);
+        }
+
+        /// <summary>A stable per-player integer key for a held piece's remote pulls (<see
+        /// cref="Item.SetRemotePull"/>), shared by <see cref="Plunderspell.Net.CarryBeamRelay"/>.</summary>
+        public static int HolderKey(PlayerID player) => (int)player.id.value;
 
         private void ApplyBrokenState()
         {
@@ -474,6 +519,8 @@ namespace Plunderspell.Loot
 
         private void FixedUpdate()
         {
+            UpdateTotalGripSync();
+
             if (_levitationRemaining <= 0f)
                 return;
 
@@ -485,6 +532,18 @@ namespace Plunderspell.Loot
 
             if (_levitationRemaining <= 0f)
                 _levitationRemaining = 0f;
+        }
+
+        /// <summary>Keeps <see cref="_totalGrip"/> replicated for a client holder (<see
+        /// cref="Item.NetworkedTotalGrip"/>). Only the server writes it, and only while spawned:
+        /// offline or on a client, whoever is asking reads the item's own grip directly.</summary>
+        private void UpdateTotalGripSync()
+        {
+            if (!isSpawned || !isServer || _item == null)
+                return;
+            float current = _item.TotalGripOfHolders;
+            if (Mathf.Abs(current - _totalGrip.value) > k_totalGripTolerance)
+                _totalGrip.value = current;
         }
 
         /// <summary>Finds a child transform named "HandSocket" on the carrier, falling back to its root.</summary>

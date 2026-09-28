@@ -1,0 +1,392 @@
+
+# run 15:20:58
+PASS host_grabs
+FAIL 0.39 m from client's aim client_grabs
+FAIL held host=True client=False, wanted both; needs both aim points both_grab_same_piece
+FAIL 1.13 m from host's aim client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 148"}] client_quits_holding
+
+# run 15:23:26
+FAIL 0.49 m from host's aim host_grabs
+FAIL sides disagree by 0.455 m client_grabs
+FAIL aims 1.82 m apart, piece 1.91 m from host's and 0.51 m from client's: one pull is ignored both_grab_same_piece
+FAIL 2.67 m from host's aim client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 58"}] client_quits_holding
+
+# run 15:26:48
+
+# run 15:36:24
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.83 m apart, host's held point 1.83 m off, client's 0.03 m off: one pull is ignored both_grab_same_piece
+FAIL held point 2.67 m from host's aim client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 22"}] client_quits_holding
+
+# run 15:38:34
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.94 m apart, host's held point 1.94 m off, client's 0.03 m off: one pull is ignored both_grab_same_piece
+FAIL held point 2.71 m from host's aim client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 112"}] client_quits_holding
+
+# run 16:05:06
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:07:11
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.88 m apart, host's held point 1.57 m off, client's 0.32 m off: one pull is ignored both_grab_same_piece
+FAIL held point 1.57 m from host's aim client_lets_go
+FAIL 1.57 m from the host aim after the client left client_quits_holding
+
+# run 16:14:58
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.82 m apart, host's held point 1.48 m off, client's 0.34 m off: one pull is ignored both_grab_same_piece
+FAIL held point 1.48 m from host's aim client_lets_go
+FAIL 1.48 m from the host aim after the client left client_quits_holding
+
+# run 16:16:46
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:19:05
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.82 m apart, host's held point 1.51 m off, client's 0.31 m off: one pull is ignored both_grab_same_piece
+FAIL held point 1.51 m from host's aim client_lets_go
+FAIL 1.51 m from the host aim after the client left client_quits_holding
+
+# run 16:20:53
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:22:41
+PASS host_grabs
+PASS client_grabs
+FAIL aims 1.92 m apart, host's held point 1.55 m off, client's 0.38 m off: one pull is ignored both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:25:17
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:27:05
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 16:28:54
+PASS host_grabs
+PASS client_grabs
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 18:21:46
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.00 m horizontally client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 18:29:06
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id ERROR"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Multiple Unity Player instances found matching 'Plunderspell':\n\n  1. Plunderspell.exe (localhost:7900) - C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell\\' host_grabs
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id no"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Multiple Unity Player instances found matching 'Plunderspell':\n\n  1. Plunderspell.exe (localhost:7901) - C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell\\' client_grabs
+FAIL unreadable: before 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id no"}]' after_host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id no"}]' after_client 'ERROR [{"code": "COMMAND_FAILED", "message": "Multiple Unity Player instances found matching \'Plunderspell\':\\n\\n  1. Plunderspell.exe (localhost:7901) - C:\\\\Users\\\\aj\\\\Desktop\\\\GameDev\\\\PlunderSpell\\\\' client_throws
+
+# run 18:37:42
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.00 m horizontally client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 18:55:00
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 18:57:55
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 19:00:51
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 19:06:33
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 19:55:49
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 19:59:31
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+FAIL held host=False client=False, wanted both; needs both aim points both_grab_same_piece
+FAIL held host=False client=False, wanted host; host has no aim point client_lets_go
+FAIL host lost the piece: pos -11.407,0.310,22.077 held False aim none grip none load 0.20 heavy False | kinematic True portalFrozen True inPortal True controls True holders 0 owner  client_quits_holding
+
+# run 20:03:10
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 20:08:17
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 20:11:51
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+
+# run 20:56:05
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 73"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "No running Unity Player found matching 'Plunderspell' with Pipeline server.\n\nMake sure:\n\u00e2\u20ac\u00a2 The Unity Player build is running\n\u00e2\u2' opposite_pulls_snap
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id ERROR"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "No running Unity Player found matching 'Plunderspell' with Pipeline server.\n\nMake sure:\n\u00e2\u20ac\u00a2 The Unity Player build is running\n\u00e2\u2' both_grab_same_piece
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id ERROR"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "No running Unity Player found matching 'Plunderspell' with Pipeline server.\n\nMake sure:\n\u00e2\u20ac\u00a2 The Unity Player build is running\n\u00e2\u2' client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id ERROR"}] client_quits_holding
+
+# run 21:05:36
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 21:22:55
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+FAIL piece rose 0.21 m (wanted at least 0.6 m) heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 21:27:30
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+FAIL held host=False client=False, wanted both; heavy host=True client=True, wanted light=both; piece rose 0.00 m (wanted at least 0.6 m, or to within 0.3 m of the aim height) heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 21:32:37
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 76"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 76"}]' host_grabs
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client_grabs
+FAIL unreadable: before 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id "}]' after_host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id "}]' after_client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id "}]' client_throws
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client_holds_close
+FAIL no spawned heavy:0 piece heavy_alone_tows
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' opposite_pulls_snap
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' both_grab_same_piece
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}] client_quits_holding
+
+# run 21:36:56
+PASS host_grabs
+FAIL held point 0.37 m from client's aim client_grabs
+FAIL only moved 0.01 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+FAIL held host=False client=False, wanted both; needs both aim points both_grab_same_piece
+FAIL held host=False client=False, wanted host; host has no aim point client_lets_go
+FAIL host lost the piece: pos 5.478,0.540,-34.817 held False aim none grip none load 0.15 heavy False | kinematic False portalFrozen False inPortal False controls True holders 0 owner  broken False snapped True client_quits_holding
+
+# run 21:41:49
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.02 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 22:14:54
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 22"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 22"}]' opposite_pulls_snap
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' both_grab_same_piece
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}] client_quits_holding
+
+# run 22:20:05
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.41 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 22:24:51
+PASS host_grabs
+FAIL held point 0.54 m from client's aim client_grabs
+FAIL only moved 0.29 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+FAIL held host=False client=False, wanted both; heavy host=True client=True, wanted light=both; piece rose -0.12 m (wanted at least 0.6 m, or to within 0.3 m of the aim height) heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 22:32:56
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.88 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+FAIL aims 1.43 m apart, host's held point 1.40 m off, client's 0.22 m off: one pull is ignored both_grab_same_piece
+FAIL held point 1.15 m from host's aim client_lets_go
+FAIL 1.15 m from the host aim after the client left client_quits_holding
+
+# run 22:37:14
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.13 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 22:42:13
+PASS host_grabs
+PASS client_grabs
+
+# run 22:43:47
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 23:00:56 (raid_end)
+PASS castle_built_once
+PASS raid_ends_cleanly
+
+# run 23:01:41 (carry)
+PASS castle_built_once
+PASS host_grabs
+FAIL held point 0.38 m from client's aim client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding

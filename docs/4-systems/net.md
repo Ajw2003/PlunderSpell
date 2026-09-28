@@ -83,16 +83,37 @@ Every enemy and loot prefab carries a `NetworkTransform`, so a client sees guard
 move as the host simulates them. A client's guards switch their own `NavMeshAgent` off
 (`CastleGuard.OnSpawned`); the server's copy runs the AI.
 
-To carry loot a machine must control its transform. `Item.CanDriveHere` and `Item.RequestDrive` are
-installed by `NetworkCarry`: grabbing a piece this machine does not control asks the server
-(`LootPickup.RequestCarry`), which hands over ownership, and `ItemManager` starts the drag once it
-is granted. The carrier then simulates the piece and its movement replicates, so the host's
-extraction pad sees it land. Only the machine simulating a piece judges its impacts; a client
-carrier asks the server to break it (`LootPickup.RequestBreak`). Weapons are the same:
-they are ordinary loot entries in `RaidLootTable` (one `Weapon_*` `LootItem` each, weight 1, in the
+Only the machine that controls a piece's transform pushes its body (`Item.CanDriveHere`, installed
+by `NetworkCarry`; `Item.FixedUpdate` returns early elsewhere). **A piece on the beam is controlled
+by the host while anyone holds it (#169, 2026-09-27).** Grabbing one this machine does not control
+asks the server to drop its owner (`LootPickup.RequestHostControl`), so the server controls it, and
+the drag starts at once. Every holder's machine keeps its own hold, for its beam and HUD, and sends
+its pull (`CarryPull`: grip point, aim and its velocity, wanted rotation, tow data) with the beam
+update below; the server writes it into the piece (`Item.SetRemotePull`) and applies every holder's
+pull each physics step, sharing the lift between them. A second grab joins the carry rather than
+taking it. A pull not heard from for 0.5 s is dropped, which covers letting go, quitting and a lost
+connection, and nobody owns the piece, so it stays when a holder leaves. A client's throw is applied
+by the server (`LootPickup.RequestThrow`), and the server ignores collisions between a piece and
+its holders' own bodies, as the local holder does. Loot spawns owned by the host's player; the
+first client grab clears that. Only the machine simulating a piece judges its impacts; a client
+asks the server to break it (`LootPickup.RequestBreak`). Weapons differ in how they are held: a
+weapon sits in one player's hand, posed to their view every frame, so grabbing one still hands
+that player ownership (`LootPickup.RequestCarry`) and the drag waits for it. Otherwise weapons are
+the same: they are ordinary loot entries in `RaidLootTable` (one `Weapon_*` `LootItem` each, weight 1, in the
 Outer Bailey, Inner Ward and Keep), carrying `LootPickup`, `LootValue` and a `NetworkTransform`, so
 they are found, carried, swung and sold like any other piece. Whether a find is a weapon is only
 learnt by trying its right-click use.
+
+**Other players' grab beams.** `CarryBeamRelay` (on the `Network` object in `RaidScene`, beside
+`ShotRelay` and `DamageRelay`) shows each carrier's grab beam on every other machine. The carrier's
+machine sends the beam's hand point (`ItemManager.BeamHand`), aim point, the held point in the
+item's own space and the load, about 15 times a second (`BeamMoved`, a server RPC relayed to all
+by `ShowBeam`), and `BeamStopped` when it lets go. Every other machine eases toward the latest
+update so the line does not step, and ends it on the item as it replicates there. The carrier
+ignores its own relayed beam and draws the local one, which has no network delay. A beam not
+heard from for half a second is removed, so a dropped connection does not leave one hanging. Only
+networked items can have a remote beam; weapons and loot both qualify. How the beam itself looks:
+[`damage.md`](damage.md), "The beam".
 
 A ranged weapon's shot is a local projectile on the machine that fired it, where its hit is judged.
 `ShotRelay` shows the same shot on every other machine as a copy with no damage
@@ -167,6 +188,10 @@ the session. A friend's own save is never touched by joining.
 - **Ownership callbacks fire twice on a host,** once as the server and once as its own client.
   Ownership is only applied from the client-side call; the server-side one would switch the host's
   own body off.
+- **PurrNet's `removeAuth` rule defaults to nobody,** so without it set, every side receiving the
+  server's ownership removal refuses it ("Failed to remove ownership ... because of missing
+  authority") and keeps a stale owner. `Assets/_Project/Net/NetworkRules.asset` sets it to
+  Server | Owner, like `transferAuth`.
 - **A client sees ownership after the spawn,** so its body first looks remote and is switched back
   on by `OnOwnerChanged`.
 - **An interpolated rigidbody overwrites a transform-only move** on the next physics step. Moving a
@@ -208,3 +233,41 @@ reflection. Never ship a build with the runtime on. Building through the Pipelin
 actions asset in `ProjectSettings.asset`'s `preloadedAssets`; revert that line before committing.
 
 Screenshots of each checked step: `docs/generated/coop-2026-09-23/`.
+
+**Carry check (#169).** `bash Tools/Unity/coop_carry_check.sh` does all of the above for carrying,
+with nobody at the keyboard: it builds `Build/DevTest` (Pipeline runtime on for that build only)
+when anything under `Assets/` or `ProjectSettings/` is newer than it, hosts from the Editor, joins
+with the build, sets out, and runs ten scenarios (host grabs, client grabs, the client throws, the
+client holds a piece low and close, one holder only tows a heavy piece, two lift it, opposite pulls
+snap both holds, both grab one piece, the client lets go, the client quits while holding). It
+prints one PASS/FAIL line each and saves, under `docs/generated/coop-carry-<date>/`: `results.txt`;
+the client's log; `trace/<scenario>-<host|client>.csv`, the piece's position, velocity, spin,
+rotation, holder count, who controls it and the local aim point on every physics step (read these
+first when a scenario fails); and, for failed scenarios only, both sides' screenshots, a recording
+of the primary monitor (`video/<scenario>.mkv`, via ffmpeg). Every scenario, passed or not, gets
+`frames/<scenario>.png`, 8 frames of the two game windows: look at them, since a number can pass
+or fail for a reason only a picture shows (a pavise shield jammed against a wall read as a failed
+throw). During the run the client window sits left of the Editor and both stay
+above other windows, so the recording shows the games. Every run uses the same castle (seed
+3508293, LateMedieval, a spawn with room to work) and clears the guards, which otherwise reach the
+players and end the raid a few minutes in: with a random seed the spawn sometimes lands on the extraction pad, which
+ends the raid within seconds, and the pieces available to stage change. Staging avoids the
+portal, which holds pieces up and freezes them, and skips light pieces over 1 m across. The build is redone only when something under
+`Assets/` or `ProjectSettings/` is newer than `Build/DevTest/.built`; `--build` and `--no-build`
+override that. `--shots` screenshots every scenario, `--no-video` skips recording. Every run first checks the client built the castle exactly once
+(`castle_built_once`). `--raid-end` runs no carry scenarios: it ends the raid from the host and
+checks the client followed it with no SyncVar permission errors (`raid_ends_cleanly`), in about a
+minute. A run takes about
+3.5 minutes. Both sides are driven by
+`Tools/Unity/coop_eval.sh host|client <action>`, which runs `Tools/Unity/eval/coop_carry.cs`
+through reflection so the same code works in the build. It needs the Editor open and not playing,
+and leaves Play stopped, the runtime setting off and the settings files as they were. Before #169's
+carry changes (2026-09-27): single holders pass; the shared carry fails (the first holder's pull
+is ignored), the piece falls when the second holder lets go, and it despawns when a holding client
+quits. After (steps 2-3, same day): all seven pass on four runs in a row.
+
+**Two real machines.** The owner has two PCs, each with its own Steam account (noted 2026-09-27).
+Use them for what one PC on localhost cannot show: Steam's relay, lobby, invite and overlay flow,
+and real network delay. The owner works alone, so a two-machine check must be driven by the agent
+(a Claude Code session on each PC, or one reaching both), not by the owner at two keyboards.
+Nothing automates it yet; #170 tracks building that.

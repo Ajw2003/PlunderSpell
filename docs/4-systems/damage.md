@@ -99,7 +99,14 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
 - **It keeps its orientation** (2026-09-26, replacing the free hang). A held item keeps the
   rotation it had when picked up, relative to where the holder faces, and turns with them
   (`Item.SetViewYaw`, fed by `ItemManager` every frame). Hanging freely from an off-centre grab was
-  floppy. A rotation spring does it, limited by mass, so heavy things turn slowly. While the
+  floppy. Since 2026-09-27 (#169 step 5) the turn is torque: each hold is a critically damped
+  angular spring (`_turnStiffness`, 10 rad/s) toward the wanted rotation, turned into torque
+  through the body's inertia tensor and capped at the holder's `_turnStrength` (40 N·m,
+  `Item.ApplyTurnTorque`). A goblet needs well under 1 N·m and follows at once; a long piece hits
+  the cap and sweeps round (`Test_ALongHeavyPieceTurnsSlowerThanASmallOne`, at least twice as long
+  for a 9 kg, 2.5 m box as for a 0.5 kg cube). Every holder adds their own capped torque, so two
+  turn a piece faster than one (`Test_TwoHoldersTurnALongPieceFasterThanOne`). A towed piece is not
+  turned. The strength travels with each holder's pull (`CarryPull.TurnStrength`). While the
   orientation is held, the beam's pull acts at the centre of mass (moved so the held point lands on
   the target), not at the held point: pulled off-centre, a light item was twisted by the spring and
   twisted back by the hold every step, and shook, 17 degrees a step at 0.5 kg. It now settles to
@@ -116,6 +123,11 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   8 kg one about 1 m, with no single-frame jump over 5 cm.
 - **Carrying what you can lift never slows you.** Its weight shows as lag and swing. Towing a
   piece too heavy to lift does slow you: see below.
+- **Pulled apart, the beams snap** (#169 step 4). With two or more holders, a hold whose held
+  point stays more than 1.5 m from its target for 0.3 s, while not closing on it faster than
+  0.3 m/s, snaps, and every holder lets go. The closing-speed exception (2026-09-27) is for a heavy
+  piece two holders lift from knee height: it starts more than 1.5 m below eye height and rises
+  toward it, which is lag, not a tug of war (`Test_TwoHoldersLiftingAHeavyPieceFromLowDoNotSnap`).
 - **Turning it on purpose.** Hold middle mouse: `Item.SetRotating(true)` locks its current
   rotation as a target, the mouse turns it, and letting go keeps the new orientation.
 - **Weapons sit in the hand, not on the beam** (2026-09-26). Anything with a `RangedWeapon` or
@@ -173,7 +185,8 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   Particles/Unlit, additive). Other players see your beam through `Plunderspell.Net.CarryBeamRelay` (a
   RaidScene object, like `ShotRelay`). The holder sends the hand point, aim point, held point and
   load about 15 times a second; others ease toward it and end the line on the replicated item.
-  Only networked loot gets a remote beam: weapons are a local copy on each machine.
+  Only networked items get a remote beam; weapons are networked loot (`docs/4-systems/net.md`), so
+  they get one too.
 - **Prefabs carry their own strength.** `Item`'s serialized `_gripStrength` overrides the code
   default. All 35 item prefabs were set to 100 N on 2026-09-25. A newly forged prefab
   (`EraContentForge`) takes the code defaults.
