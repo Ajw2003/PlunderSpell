@@ -484,6 +484,60 @@ namespace Plunderspell.Tests
         }
 
         [UnityTest]
+        public IEnumerator Test_TwoHoldersLiftingAHeavyPieceFromLowDoNotSnap()
+        {
+            // Seen in the two-player check: a heavy piece towed at knee height becomes liftable when a
+            // second holder grabs it, and both targets jump to eye height, more than the 1.5 m snap
+            // distance away. It takes longer than 0.3 s to rise that far, and it must not snap on
+            // the way: it is lagging behind its target, not being pulled apart.
+            Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 640f));
+            Vector3 target = holder.position + new Vector3(0f, 0.3f, 1.5f);
+            Item item = MakeItem(target + Vector3.down * 1.8f, mass: 14f);
+            item.StartDragging(holder.gameObject);
+            item.UpdateTarget(target, Vector3.zero);
+
+            Rigidbody second = MakeHolder(new Vector3(2f, 1f, 640f));
+            CarryPull secondPull = new CarryPull
+            {
+                GripLocal = item.HeldPointLocal,
+                Target = target,
+                TargetVelocity = Vector3.zero,
+                WantedRotation = item.transform.rotation,
+                GripStrength = 100f,
+                HaulStrength = 250f,
+                TurnStrength = 40f,
+            };
+            item.SetRemotePull(503, secondPull, second.gameObject);
+
+            bool remoteSnapped = false;
+            System.Action<Item, int> onSnap = (snapped, key) => remoteSnapped |= snapped == item && key == 503;
+            Item.RemoteBeamSnapped += onSnap;
+            bool localSnapped = false;
+            float distance = float.MaxValue;
+            try
+            {
+                for (float t = 0f; t < 3f; t += Time.fixedDeltaTime)
+                {
+                    localSnapped |= item.LocalBeamSnapped;
+                    item.UpdateTarget(target, Vector3.zero);
+                    if (!remoteSnapped)
+                        item.SetRemotePull(503, secondPull, second.gameObject);
+                    yield return new WaitForFixedUpdate();
+                    distance = Vector3.Distance(item.GripWorldPosition, target);
+                }
+            }
+            finally
+            {
+                Item.RemoteBeamSnapped -= onSnap;
+            }
+
+            Assert.IsFalse(localSnapped, "The local hold snapped while lifting, not being pulled apart.");
+            Assert.IsFalse(remoteSnapped, "The second hold snapped while lifting, not being pulled apart.");
+            Assert.That(distance, Is.LessThan(0.3f),
+                $"Two holders should lift the piece to within 0.3 m of the target in 3 s; it is {distance:F2} m away.");
+        }
+
+        [UnityTest]
         public IEnumerator Test_OppositePullsSnapBothHolds()
         {
             Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 620f));
@@ -630,6 +684,120 @@ namespace Plunderspell.Tests
                 $"The 15 kg chest rose {end.y - start.y:F2} m; past the beam's strength it should stay on the floor.");
             Assert.That(start.z - end.z, Is.GreaterThan(0.3f),
                 $"The chest slid {start.z - end.z:F2} m toward the holder; it should still be dragged.");
+        }
+
+        /// <summary>A long thin box, like the Rolled Tapestry: 2.5 m along local Z, so its inertia
+        /// about the vertical (turning) axis is large even at a modest mass. Callers keep the mass
+        /// under one holder's ~10.2 kg lift limit (100 N grip) so it is held, not towed (towed
+        /// pieces skip the turn torque entirely).</summary>
+        private Item MakeLongItem(Vector3 position, float mass)
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.transform.position = position;
+            go.transform.localScale = new Vector3(0.2f, 0.2f, 2.5f);
+            // The BoxCollider does not pick up the new scale until PhysX syncs; without this the
+            // Rigidbody's auto-computed inertia tensor uses the old (unit) size, understating the
+            // long axis's inertia and defeating the whole test.
+            Physics.SyncTransforms();
+            var body = go.AddComponent<Rigidbody>();
+            body.mass = mass;
+            var item = go.AddComponent<Item>();
+            _made.Add(go);
+            return item;
+        }
+
+        /// <summary>Turns a held item 90 degrees and counts fixed steps until it settles within 10
+        /// degrees of the wanted yaw (or times out).</summary>
+        private static IEnumerator TurnAndCountSteps(Item item, Rigidbody holder, Vector3 target, int[] steps)
+        {
+            item.SetViewYaw(0f);
+            item.StartDragging(holder.gameObject);
+            item.UpdateTarget(target, Vector3.zero);
+            item.SetViewYaw(90f);
+
+            const int timeout = 600; // 10 s at a 60 Hz fixed step; well past a few seconds
+            int count = 0;
+            for (; count < timeout; count++)
+            {
+                yield return new WaitForFixedUpdate();
+                item.UpdateTarget(target, Vector3.zero);
+                float yaw = item.transform.eulerAngles.y;
+                if (Mathf.Abs(Mathf.DeltaAngle(yaw, 90f)) < 10f)
+                    break;
+            }
+            steps[0] = count;
+        }
+
+        [UnityTest]
+        public IEnumerator Test_ALongHeavyPieceTurnsSlowerThanASmallOne()
+        {
+            Rigidbody smallHolder = MakeHolder(new Vector3(0f, 1f, 700f));
+            Vector3 smallTarget = smallHolder.position + new Vector3(0f, 0.3f, 1.5f);
+            Item small = MakeItem(smallTarget, mass: 0.5f);
+            var smallSteps = new int[1];
+            yield return TurnAndCountSteps(small, smallHolder, smallTarget, smallSteps);
+
+            Rigidbody longHolder = MakeHolder(new Vector3(20f, 1f, 700f));
+            Vector3 longTarget = longHolder.position + new Vector3(0f, 0.3f, 1.5f);
+            Item longPiece = MakeLongItem(longTarget, mass: 9f);
+            var longSteps = new int[1];
+            yield return TurnAndCountSteps(longPiece, longHolder, longTarget, longSteps);
+
+            const int timeout = 600;
+            Assert.That(smallSteps[0], Is.LessThan(timeout),
+                $"The 0.5 kg goblet-like item never settled within 90 degrees in {timeout} steps.");
+            Assert.That(longSteps[0], Is.LessThan(timeout),
+                $"The 9 kg tapestry roll never settled within 90 degrees in {timeout} steps.");
+            Assert.That(longSteps[0], Is.GreaterThanOrEqualTo(smallSteps[0] * 2),
+                $"The long heavy piece took {longSteps[0]} steps and the small one {smallSteps[0]}; " +
+                "it should turn clearly slower (at least 2x).");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_TwoHoldersTurnALongPieceFasterThanOne()
+        {
+            Rigidbody soloHolder = MakeHolder(new Vector3(0f, 1f, 720f));
+            Vector3 soloTarget = soloHolder.position + new Vector3(0f, 0.3f, 1.5f);
+            Item solo = MakeLongItem(soloTarget, mass: 9f);
+            var soloSteps = new int[1];
+            yield return TurnAndCountSteps(solo, soloHolder, soloTarget, soloSteps);
+
+            Rigidbody firstHolder = MakeHolder(new Vector3(20f, 1f, 720f));
+            Vector3 pairTarget = firstHolder.position + new Vector3(0f, 0.3f, 1.5f);
+            Item pair = MakeLongItem(pairTarget, mass: 9f);
+            Rigidbody secondHolder = MakeHolder(new Vector3(24f, 1f, 720f));
+
+            pair.SetViewYaw(0f);
+            pair.StartDragging(firstHolder.gameObject);
+            pair.UpdateTarget(pairTarget, Vector3.zero);
+            pair.SetViewYaw(90f);
+
+            const int timeout = 600;
+            int pairSteps = 0;
+            for (; pairSteps < timeout; pairSteps++)
+            {
+                CarryPull secondPull = new CarryPull
+                {
+                    GripLocal = pair.HeldPointLocal,
+                    Target = pairTarget,
+                    TargetVelocity = Vector3.zero,
+                    WantedRotation = pair.LocalPull.WantedRotation,
+                    GripStrength = 100f,
+                    HaulStrength = 250f,
+                    TurnStrength = 40f,
+                };
+                pair.SetRemotePull(701, secondPull, secondHolder.gameObject);
+                yield return new WaitForFixedUpdate();
+                pair.UpdateTarget(pairTarget, Vector3.zero);
+                float yaw = pair.transform.eulerAngles.y;
+                if (Mathf.Abs(Mathf.DeltaAngle(yaw, 90f)) < 10f)
+                    break;
+            }
+
+            Assert.That(pairSteps, Is.LessThan(timeout),
+                $"Two holders turning the 12 kg piece never settled within 90 degrees in {timeout} steps.");
+            Assert.That(pairSteps, Is.LessThan(soloSteps[0]),
+                $"Two holders took {pairSteps} steps and one holder took {soloSteps[0]}; two should turn it faster.");
         }
     }
 }

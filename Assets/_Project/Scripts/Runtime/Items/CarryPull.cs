@@ -19,4 +19,9 @@ public struct CarryPull
     // force by their own numbers rather than the item's (#169, "Add strengths together").
     public float GripStrength;
     public float HaulStrength;
+
+    /// <summary>The holder's own turning strength (N·m), capping the torque their hold contributes
+    /// toward WantedRotation (#169, "Mouse steering"). Travels with the pull for the same reason as
+    /// GripStrength/HaulStrength: a later per-player upgrade only has to set this.</summary>
+    public float TurnStrength;
 }

@@ -80,6 +80,8 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     private const int k_localHolderKey = -1;
     private const float k_beamSnapDistance = 1.5f;
     private const float k_beamSnapSeconds = 0.3f;
+    // m/s toward its target above which a strained held point counts as catching up, not pulled apart.
+    private const float k_beamSnapClosingSpeed = 0.3f;
     private bool _localBeamSnapped;
 
     /// <summary>True once this machine's own hold has snapped from an opposite pull; ItemManager
@@ -121,7 +123,9 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     [Tooltip("Damping of the spring as a fraction of critical. 1: no overshoot.")]
     [Range(0.2f, 2f)] [SerializeField] private float _dampingRatio = 0.9f;
 
-    [SerializeField] private float _rotationSpeed = 10f;
+    [Tooltip("Angular frequency (rad/s) of the critically damped spring that turns a held piece " +
+             "toward WantedRotation. 10 matches the old lerp's feel for a light item.")]
+    [SerializeField] private float _turnStiffness = 10f;
 
     [Tooltip("The most upward force (N) the beam can apply. Lifting takes mass x 9.81 of it: " +
              "under 10 kg lifts, heavier drags along the floor. See docs/4-systems/damage.md, Weight.")]
@@ -130,6 +134,13 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     [Tooltip("The most sideways force (N) the beam can apply. More than it can lift, as hauling " +
              "is easier than lifting: a heavy thing still follows you, only slower.")]
     [SerializeField] private float _haulStrength = 250f;
+
+    [Tooltip("The most torque (N*m) one holder can apply to turn a held piece. 40 N*m is essentially " +
+             "uncapped for a 0.5-3 kg item (a goblet needs well under 1 N*m to snap round at 10 rad/s) " +
+             "but clearly caps a long piece (a 9 kg, 2.5 m box has about 4 kg*m^2 about its turning " +
+             "axis and would ask for hundreds of N*m), so it sweeps into place instead of snapping. " +
+             "A piece too heavy for its holders is towed and not turned at all.")]
+    [SerializeField] private float _turnStrength = 40f;
 
 
     [Tooltip("Angular damping while held and not being turned, so it hangs and settles, not spins.")]
@@ -437,6 +448,7 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
         UprightLocalUp = _uprightLocalUp,
         GripStrength = _gripStrength,
         HaulStrength = _haulStrength,
+        TurnStrength = _turnStrength,
     };
 
     /// <summary>Records another holder's pull, heard over the network; applied here once this
@@ -711,22 +723,43 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
         float up = towed ? 0f : Mathf.Clamp(force.y, -pull.GripStrength, pull.GripStrength);
         _rb.AddForceAtPosition(sideways + Vector3.up * up, pulled, ForceMode.Force);
 
-        // Turned on purpose, or kept as it was picked up and turned with the holder. Skipped for a
-        // towed piece, and with more than one holder (step 5 replaces this with torque).
-        if (towed || holders > 1)
+        // Turned on purpose, or kept as it was picked up and turned with the holder. Skipped only
+        // for a towed piece; with more than one holder, each hold adds its own capped torque so two
+        // holders turning the same piece turn it faster than one.
+        if (towed)
             return;
-        Quaternion wanted = pull.WantedRotation;
+        ApplyTurnTorque(pull.WantedRotation, pull.TurnStrength);
+    }
 
+    /// <summary>One hold's contribution to turning the body toward <paramref name="wanted"/>: a
+    /// critically damped angular spring (stiffness <see cref="_turnStiffness"/>) turned into torque
+    /// through the body's own inertia, then capped by this holder's <paramref name="turnStrength"/>
+    /// (N*m) so a long or heavy piece sweeps into place instead of snapping. Called once per holder,
+    /// so with two holders each adds its own capped torque rather than fighting over one shared cap.
+    /// </summary>
+    private void ApplyTurnTorque(Quaternion wanted, float turnStrength)
+    {
         Quaternion delta = wanted * Quaternion.Inverse(_rb.rotation);
         delta.ToAngleAxis(out float angle, out Vector3 axis);
         if (angle > 180f)
             angle -= 360f;
-        Vector3 wantedSpin = Mathf.Abs(angle) < 0.01f || float.IsInfinity(axis.x) || float.IsNaN(axis.x)
-            ? Vector3.zero
-            : axis * (angle * Mathf.Deg2Rad * _rotationSpeed);
-        // Heavy things turn slowly too.
-        float turnRate = Mathf.Clamp01(8f / Mathf.Max(1f, _rb.mass) * Time.fixedDeltaTime * 10f);
-        _rb.angularVelocity = Vector3.Lerp(_rb.angularVelocity, wantedSpin, turnRate);
+        if (Mathf.Abs(angle) < 0.01f || float.IsInfinity(axis.x) || float.IsNaN(axis.x))
+            axis = Vector3.zero;
+        Vector3 theta = axis * (angle * Mathf.Deg2Rad);
+
+        // Critically damped spring: wanted angular acceleration alpha = wn^2 * theta - 2*wn*omega.
+        Vector3 omega = _rb.angularVelocity;
+        Vector3 alpha = _turnStiffness * _turnStiffness * theta - 2f * _turnStiffness * omega;
+
+        // Torque from angular acceleration through the body's inertia tensor, worked out in the
+        // tensor's own (principal-axis) frame since Rigidbody.inertiaTensor is diagonal only there.
+        Quaternion inertiaFrame = _rb.rotation * _rb.inertiaTensorRotation;
+        Vector3 alphaLocal = Quaternion.Inverse(inertiaFrame) * alpha;
+        Vector3 torqueLocal = Vector3.Scale(_rb.inertiaTensor, alphaLocal);
+        Vector3 torque = inertiaFrame * torqueLocal;
+
+        torque = Vector3.ClampMagnitude(torque, turnStrength);
+        _rb.AddTorque(torque, ForceMode.Force);
     }
 
     /// <summary>
@@ -740,7 +773,11 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// </summary>
     private void UpdateBeamSnap(int holderKey, bool isLocal, Vector3 held, Vector3 target)
     {
-        if (Vector3.Distance(held, target) <= k_beamSnapDistance)
+        // A held point still closing on its target is lagging, not being pulled apart: a heavy piece
+        // two holders lift from knee height starts more than the snap distance below eye height.
+        Vector3 toTarget = target - held;
+        float closing = Vector3.Dot(_rb.GetPointVelocity(held), toTarget.normalized);
+        if (toTarget.magnitude <= k_beamSnapDistance || closing > k_beamSnapClosingSpeed)
         {
             _beamStrainSince.Remove(holderKey);
             return;

@@ -123,7 +123,7 @@ namespace Plunderspell.Net
             CarryPull pull = held.IsInHand ? default : held.LocalPull;
             BeamMoved(id, items.BeamHand, held.TargetPosition, held.HeldPointLocal, held.Load,
                 pull.TargetVelocity, pull.WantedRotation, pull.IsTowing, pull.TowFeet, pull.TowVelocity,
-                pull.TowRope, pull.UprightLocalUp, pull.GripStrength, pull.HaulStrength);
+                pull.TowRope, pull.UprightLocalUp, pull.GripStrength, pull.HaulStrength, pull.TurnStrength);
         }
 
         // PurrNet RPC parameters must be primitive/auto-packed types, so CarryPull's fields travel
@@ -131,7 +131,8 @@ namespace Plunderspell.Net
         [ServerRpc(requireOwnership: false)]
         private void BeamMoved(NetworkIdentity item, Vector3 hand, Vector3 aim, Vector3 grabLocal, float load,
             Vector3 targetVelocity, Quaternion wantedRotation, bool isTowing, Vector3 towFeet, Vector3 towVelocity,
-            float towRope, Vector3 uprightLocalUp, float gripStrength, float haulStrength, RPCInfo info = default)
+            float towRope, Vector3 uprightLocalUp, float gripStrength, float haulStrength, float turnStrength,
+            RPCInfo info = default)
         {
             // The server controls a held piece's body while it has any holder (LootPickup.RequestHostControl);
             // this writes the sender's pull into it, unless it is the host's own hold (applied
@@ -154,6 +155,7 @@ namespace Plunderspell.Net
                     UprightLocalUp = uprightLocalUp,
                     GripStrength = gripStrength,
                     HaulStrength = haulStrength,
+                    TurnStrength = turnStrength,
                 }, ResolvePlayerBody(info.sender));
             }
             ShowBeam(item, hand, aim, grabLocal, load, info.sender);

@@ -259,6 +259,20 @@ second holder lets go; and it despawns when a holding client quits. Results and 
 `docs/generated/coop-carry-2026-09-27/`. Also found: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
 already failed before any #169 change (0.054 m jolt against a 0.05 m limit).
 
+**2026-09-27, #169 step 5: held pieces turn by torque.** A held piece turns toward where its
+holder faces through a torque capped at the holder's turn strength, so a goblet follows at once and
+a long piece sweeps round; two holders turn it faster than one. Also fixed: two holders lifting a
+heavy piece from knee height snapped their beams mid-lift (the target was more than the snap
+distance away while the piece rose toward it); a hold now counts as strained only while not
+closing on its target. Checked: `CarryFeelTests` 19/19 (four new), and `coop_carry_check.sh` 10/10
+(`step5-run6.log`) with every scenario's frame sheet looked at, including two gold beams holding
+the Rolled Tapestry up in `frames/heavy_lifted_together.png`. The earlier throw and
+both-grab failures were the check's own: the old castle was cramped, and a pavise shield, taller
+than a player, jammed against the wall (seen in the recording). The check now skips light pieces
+over 1 m, uses a more open castle (seed 3508293) and clears the guards, which otherwise end the
+raid within minutes. Still to do: removing the old two-person code (6), docs (8), the two-PC
+Steam test (#170).
+
 **2026-09-27, carry check records evidence.** `coop_carry_check.sh` now writes a per-physics-step
 trace of the piece on both sides for every scenario, and for a failed one a screen recording and a
 frame sheet. It uses one fixed castle and skips the build when nothing changed. The traces found
