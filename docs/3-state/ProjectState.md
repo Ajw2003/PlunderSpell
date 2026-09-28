@@ -259,6 +259,19 @@ second holder lets go; and it despawns when a holding client quits. Results and 
 `docs/generated/coop-carry-2026-09-27/`. Also found: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
 already failed before any #169 change (0.054 m jolt against a 0.05 m limit).
 
+**2026-09-28, carry check stages where there is room.** `client_grabs` failed now and then
+because the fixed castle's spawn room was too tight: the second player's aim point landed behind
+a wall. The host now moves, once per session, to the most open walkable spot within 25 m (2.5 m
+of room became 6.0 m). The open-way scan now looks from both players' spots and at head height,
+and treats a step or drop in the floor as blocked. It found a dais edge that had pinned a staged
+piece under its lip. `client_grabs` passed on the next three runs. The trace now also records the
+combined grip and whether the piece counts as too heavy on each side. Open, and a real game bug:
+two holders sometimes cannot lift the Rolled Tapestry (`heavy_lifted_together` failed on 2 of the
+last 4 runs, always with it). Grip reads 200 with two holders, the host aims at eye height, and
+the roll does not move at all, while the client's target stays near the floor after it learns the
+piece is liftable (`coop-carry-2026-09-28/trace/heavy_lifted_together-*.csv`). The cause is not
+confirmed yet. The Parade Armour lifts fine in the same spot.
+
 **2026-09-27, two client-side raid bugs fixed.** A client built the castle twice as a raid
 started (first in the last raid's era, then again): the seed and era were separate SyncVars and
 arrived apart. They now travel as one packed value (`RaidDirector._layout`). And a client logged
@@ -279,8 +292,9 @@ distance away while the piece rose toward it); a hold now counts as strained onl
 closing on its target. Checked: `CarryFeelTests` 19/19 (four new), and `coop_carry_check.sh` 10/10
 (`step5-run6.log`) with every scenario's frame sheet looked at, including two gold beams holding
 the Rolled Tapestry up in `frames/heavy_lifted_together.png`. The earlier throw and
-both-grab failures were the check's own: the old castle was cramped, and a pavise shield, taller
-than a player, jammed against the wall (seen in the recording). The check now skips light pieces
+both-grab failures were the check's own: the old castle was cramped, and a 0.9 m pavise shield
+jammed against the wall (seen in the recording; first written up as taller than a player, which it
+is not). The check now skips light pieces
 over 1 m, uses a more open castle (seed 3508293) and clears the guards, which otherwise end the
 raid within minutes. Still to do: removing the old two-person code (6), docs (8), the two-PC
 Steam test (#170).

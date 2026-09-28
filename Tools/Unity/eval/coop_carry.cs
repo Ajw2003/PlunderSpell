@@ -14,6 +14,7 @@
 //   depth <metres>    set how far along the aim ray the held point sits (pulls it in or out)
 //   turn <degrees>    turn the local view about world up
 //   face_open         turn the local view to the most open way
+//   relocate          host: move to the most open walkable spot within 25 m (once per session)
 //   pitch <degrees>   look at this pitch (degrees, positive down), like level but to an angle
 //   level             look level, so a held piece is lifted to eye height
 //   read <id>         the piece's position, whether this side holds it, where it aims it, where
@@ -122,14 +123,18 @@ System.Text.StringBuilder StopTrace()
 }
 
 // The most open horizontal way from this view, in degrees of yaw, and how far it is clear.
-float OpenYaw(UnityEngine.Transform view, out float bestClear)
+float OpenYaw(UnityEngine.Vector3 eye, out float bestClear)
 {
     // Face the most open way: each scenario turns a view 25 degrees and pulls a piece ~2 m out,
     // and a wall or furniture in that path pins the piece and reads as a carry fault. A way
     // counts as open as far as it and 30 degrees either side are clear at chest height and at the
     // height held pieces ride (eye height and a little above), where wall lamps and shelves are.
-    var chest = view.position - UnityEngine.Vector3.up * 0.3f;
+    var chest = eye - UnityEngine.Vector3.up * 0.3f;
     var heights = new[] { -0.3f, 0f, 0.4f };
+    // The floor this spot stands on: a way whose floor steps up or drops (a dais edge, a stair) is
+    // blocked there, since a staged piece falls off the edge and is pinned under its lip.
+    float floorY = UnityEngine.Physics.Raycast(eye, UnityEngine.Vector3.down, out var under, 4f, ~0,
+        UnityEngine.QueryTriggerInteraction.Ignore) ? under.point.y : eye.y - 1.7f;
     // Not towards the extraction portal either: it is open space, but it holds up and freezes
     // pieces in it, which reads as a carry fault too.
     var portals = new System.Collections.Generic.List<UnityEngine.Bounds>();
@@ -149,11 +154,31 @@ float OpenYaw(UnityEngine.Transform view, out float bestClear)
         {
             var way = UnityEngine.Quaternion.Euler(0f, yawTry + spread, 0f) * UnityEngine.Vector3.forward;
             float reach = 6f;
-            foreach (float height in heights)
-                if (UnityEngine.Physics.SphereCast(view.position + UnityEngine.Vector3.up * height, 0.2f, way, out var wall, 6f,
-                        ~0, UnityEngine.QueryTriggerInteraction.Ignore)
-                    && wall.collider.GetComponentInParent(T("Item")) == null)
-                    reach = UnityEngine.Mathf.Min(reach, wall.distance);
+            // From this player and from where the second player stands (1.2 m to the right, see
+            // coop_carry_check.sh's stage): they aim across at the piece, and a wall only this spot
+            // missed put their aim point behind it.
+            var sideStep = UnityEngine.Quaternion.Euler(0f, yawTry, 0f) * UnityEngine.Vector3.right * 1.2f;
+            if (!UnityEngine.Physics.Raycast(eye + sideStep, UnityEngine.Vector3.down, out var sideFloor, 4f, ~0,
+                    UnityEngine.QueryTriggerInteraction.Ignore)
+                || UnityEngine.Mathf.Abs(sideFloor.point.y - floorY) > 0.2f)
+                reach = 0f;
+            foreach (var origin in new[] { eye, eye + sideStep })
+                foreach (float height in heights)
+                    if (UnityEngine.Physics.SphereCast(origin + UnityEngine.Vector3.up * height, 0.2f, way, out var wall, 6f,
+                            ~0, UnityEngine.QueryTriggerInteraction.Ignore)
+                        && wall.collider.GetComponentInParent(T("Item")) == null)
+                        reach = UnityEngine.Mathf.Min(reach, wall.distance);
+            for (float along = 0.5f; along < reach; along += 0.5f)
+            {
+                var above = eye + way * along;
+                if (!UnityEngine.Physics.Raycast(above, UnityEngine.Vector3.down, out var floor, 4f, ~0,
+                        UnityEngine.QueryTriggerInteraction.Ignore)
+                    || UnityEngine.Mathf.Abs(floor.point.y - floorY) > 0.2f)
+                {
+                    reach = along;
+                    break;
+                }
+            }
             clear = UnityEngine.Mathf.Min(clear, reach);
             for (float along = 0f; along <= reach; along += 0.5f)
                 foreach (var portal in portals)
@@ -190,7 +215,7 @@ switch (action)
         int skip = int.Parse(arg.Substring(arg.IndexOf(':') + 1));
         var player = LocalPlayer();
         var view = (UnityEngine.Transform)Get(player, "CameraTransform");
-        float bestYaw = OpenYaw(view, out float bestClear);
+        float bestYaw = OpenYaw(view.position, out float bestClear);
         Set(player, "_yaw", bestYaw);
         Set(player, "_xRotation", 0f);
         view.localRotation = UnityEngine.Quaternion.Euler(0f, bestYaw, 0f);
@@ -202,13 +227,16 @@ switch (action)
             var body = pickup.GetComponent<UnityEngine.Rigidbody>();
             if (body == null || !(bool)Get(pickup, "isSpawned") || (bool)Get(pickup, "IsBroken")) continue;
             if (heavy ? body.mass <= 10f || body.mass > 16f : body.mass > 3f) continue;
-            // A light piece bigger than a metre (a pavise shield stands taller than a player) jams
+            // A light piece bigger than a metre (a banner pole, a long rod) jams
             // against the room's walls when held out at eye height, and reads as a carry fault.
             if (!heavy)
             {
-                var size = UnityEngine.Vector3.zero;
-                foreach (var part in pickup.GetComponentsInChildren<UnityEngine.Collider>())
-                    size = UnityEngine.Vector3.Max(size, part.bounds.size);
+                // All its colliders together: a piece can be built from several parts each under a metre.
+                var colliders = pickup.GetComponentsInChildren<UnityEngine.Collider>();
+                var whole = colliders.Length > 0 ? colliders[0].bounds : new UnityEngine.Bounds(pickup.transform.position, UnityEngine.Vector3.zero);
+                foreach (var part in colliders)
+                    whole.Encapsulate(part.bounds);
+                var size = whole.size;
                 if (UnityEngine.Mathf.Max(size.x, UnityEngine.Mathf.Max(size.y, size.z)) > 1f) continue;
             }
             // Weapons are held in the hand, one player at a time; the carry check is about pieces.
@@ -226,13 +254,56 @@ switch (action)
         }
         return "no spawned " + arg + " piece";
     }
+    case "relocate":
+    {
+        // Host, once per session: move to the most open walkable spot within 25 m, so every
+        // scenario has room to lift, turn and throw. The spawn room of a castle can be too tight
+        // for that, and a piece held against its wall reads as a carry fault.
+        var player = LocalPlayer();
+        var view = (UnityEngine.Transform)Get(player, "CameraTransform");
+        var body = player.GetComponent<UnityEngine.Rigidbody>();
+        var eyeOffset = view.position - player.transform.position;
+        float standHeight = UnityEngine.Physics.Raycast(player.transform.position, UnityEngine.Vector3.down, out var ground, 5f,
+            ~0, UnityEngine.QueryTriggerInteraction.Ignore) ? ground.distance : 1.25f;
+        var start = player.transform.position;
+        var best = start;
+        OpenYaw(view.position, out float bestClear);
+        float startClear = bestClear;
+        // Anywhere walkable nearby, at any height: the scan itself refuses a way that steps
+        // up or drops, so a spot on another floor is as good as one on the spawn's.
+        // Triangle centres, not vertices: the vertices sit in the corners, against the walls.
+        var mesh = UnityEngine.AI.NavMesh.CalculateTriangulation();
+        int triangles = mesh.indices.Length / 3;
+        // Within 25 m of the spawn, and at most 150 tried: a spot 35 m away left the client not
+        // seeing the staged pieces, and every spot tried costs a full scan (an eval must finish in 5 s).
+        var near = new System.Collections.Generic.List<UnityEngine.Vector3>();
+        for (int t = 0; t < triangles; t++)
+        {
+            var centre = (mesh.vertices[mesh.indices[3 * t]] + mesh.vertices[mesh.indices[3 * t + 1]]
+                + mesh.vertices[mesh.indices[3 * t + 2]]) / 3f;
+            if ((centre - start).sqrMagnitude < 25f * 25f) near.Add(centre);
+        }
+        int stride = UnityEngine.Mathf.Max(1, near.Count / 150);
+        for (int t = 0; t < near.Count; t += stride)
+        {
+            var centre = near[t];
+            var stand = centre + UnityEngine.Vector3.up * standHeight;
+            OpenYaw(stand + eyeOffset, out float clear);
+            if (clear > bestClear + 0.25f) { bestClear = clear; best = stand; }
+        }
+        body.position = best;
+        player.transform.position = best;
+        body.linearVelocity = UnityEngine.Vector3.zero;
+        return "relocated from " + V(start) + " (clear " + startClear.ToString("F1") + "m) to " + V(best) + " (clear "
+            + bestClear.ToString("F1") + "m)";
+    }
     case "face_open":
     {
         // Turn the view (and so a held piece) to the most open way, e.g. before a throw that must
         // not hit a wall at once.
         var player = LocalPlayer();
         var view = (UnityEngine.Transform)Get(player, "CameraTransform");
-        float yaw = OpenYaw(view, out float clear);
+        float yaw = OpenYaw(view.position, out float clear);
         Set(player, "_yaw", yaw);
         view.localRotation = UnityEngine.Quaternion.Euler((float)Get(player, "_xRotation"), yaw, 0f);
         return "facing yaw " + yaw.ToString("F1") + " clear " + clear.ToString("F1") + "m";
@@ -352,9 +423,11 @@ switch (action)
         var carried = items.GetType().GetProperty("CarriedItem", All);
         var holderCount = item.GetType().GetProperty("HolderCount", All);
         var target = item.GetType().GetProperty("TargetPosition", All);
+        var totalGrip = item.GetType().GetProperty("TotalGrip", All);
+        var tooHeavy = item.GetType().GetProperty("IsTooHeavyToLift", All);
         var canDrive = (System.Delegate)Get(T("Item"), "CanDriveHere");
         var rows = new System.Text.StringBuilder(
-            "t,x,y,z,vx,vy,vz,speed,spin,rx,ry,rz,held,holders,controls,kinematic,aimx,aimy,aimz\n");
+            "t,x,y,z,vx,vy,vz,speed,spin,rx,ry,rz,held,holders,controls,kinematic,grip,heavy,aimx,aimy,aimz\n");
         float startedAt = UnityEngine.Time.fixedTime;
         int count = 0;
         UnityEngine.LowLevel.PlayerLoopSystem.UpdateFunction step = () =>
@@ -369,6 +442,7 @@ switch (action)
                 .Append(body.angularVelocity.magnitude.ToString("F3")).Append(',').Append(V(e)).Append(',')
                 .Append(held ? 1 : 0).Append(',').Append(holderCount.GetValue(item)).Append(',')
                 .Append((bool)canDrive.DynamicInvoke(item) ? 1 : 0).Append(',').Append(body.isKinematic ? 1 : 0).Append(',')
+                .Append(((float)totalGrip.GetValue(item)).ToString("F0")).Append(',').Append((bool)tooHeavy.GetValue(item) ? 1 : 0).Append(',')
                 .Append(aim).Append('\n');
         };
         var loop = UnityEngine.LowLevel.PlayerLoop.GetCurrentPlayerLoop();

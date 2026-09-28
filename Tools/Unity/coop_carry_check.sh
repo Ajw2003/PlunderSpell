@@ -164,6 +164,7 @@ sleep 3
 # raid, which reads as every later scenario failing.
 guards="$(timeout 60 bash Tools/Unity/eval.sh 'var d = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.RaidDirector>(); var f = typeof(Plunderspell.Raid.RaidDirector).GetField("_guardSpawner", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic); var spawner = f.GetValue(d); spawner.GetType().GetMethod("Clear").Invoke(spawner, null); return "guards cleared";')"
 log "$guards"
+log "host $("${E[@]}" host relocate)"
 if [ "$video" = on ]; then
     if ! command -v ffmpeg >/dev/null; then
         log "no ffmpeg on PATH: recording off"; video=off
@@ -261,11 +262,11 @@ rec_stop() { # rec_stop <name> <verdict>: stop recording; frames for every scena
     rec_pid=""
     local video="$out/video/.current.mkv"
     [ "$1" = discard ] && { rm -f "$video"; return 0; }
-    # 8 frames across the scenario, cropped to the two game windows along the top of the monitor.
+    # 8 frames across the scenario, of the whole monitor: both game windows are on it.
     # Numbers alone miss things a picture shows at once, such as a piece jammed against a wall.
     local seconds
     seconds="$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$video")"
-    ffmpeg -loglevel error -y -i "$video" -vf "fps=8/$seconds,crop=iw:min(ih\,640):0:0,scale=960:-2,tile=2x4" -frames:v 1 "$out/frames/$1.png" || log "$1: could not take frames"
+    ffmpeg -loglevel error -y -i "$video" -vf "fps=8/$seconds,scale=960:-2,tile=2x4" -frames:v 1 "$out/frames/$1.png" || log "$1: could not take frames"
     case "$2" in
         PASS*) rm -f "$video" ;;
         *) mv -f "$video" "$out/video/$1.mkv"; log "$1: recording in $out/video/$1.mkv" ;;

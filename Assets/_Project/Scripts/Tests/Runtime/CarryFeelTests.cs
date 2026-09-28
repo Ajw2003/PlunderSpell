@@ -484,6 +484,71 @@ namespace Plunderspell.Tests
         }
 
         [UnityTest]
+        public IEnumerator Test_ASecondHoldersStaleTowPullStillLifts()
+        {
+            // Seen in the two-player check: a client that grabs a heavy piece keeps sending a tow pull
+            // until the combined grip reaches it over the network, sometimes for over a second. The
+            // host, which knows two holders can lift it, must lift with that pull rather than drag it
+            // along the floor, or the piece never rises and the beams snap.
+            Rigidbody holder = MakeHolder(new Vector3(0f, 1f, 660f));
+            Vector3 target = holder.position + new Vector3(0f, 0.3f, 1.5f);
+            Vector3 low = target + Vector3.down * 1.8f;
+            // On a floor, as in the game: in the air a tow's own lift hid the fault.
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            floor.transform.position = low + Vector3.down * 0.5f;
+            floor.transform.localScale = new Vector3(3f, 1f, 3f);
+            _made.Add(floor);
+            Item item = MakeItem(low, mass: 14f);
+            item.StartDragging(holder.gameObject);
+            item.UpdateTarget(target, Vector3.zero);
+
+            Rigidbody second = MakeHolder(new Vector3(2f, 1f, 660f));
+            CarryPull staleTow = new CarryPull
+            {
+                GripLocal = item.HeldPointLocal,
+                Target = low + Vector3.up * 0.4f,
+                TargetVelocity = Vector3.zero,
+                WantedRotation = item.transform.rotation,
+                IsTowing = true,
+                TowFeet = second.position + Vector3.down,
+                TowVelocity = Vector3.zero,
+                TowRope = 2f,
+                UprightLocalUp = Vector3.up,
+                GripStrength = 100f,
+                HaulStrength = 250f,
+                TurnStrength = 40f,
+            };
+            item.SetRemotePull(504, staleTow, second.gameObject);
+            Assert.IsFalse(item.IsTooHeavyToLift, "Two 100 N holders combine grip past a 14 kg piece's weight.");
+
+            bool remoteSnapped = false;
+            System.Action<Item, int> onSnap = (snapped, key) => remoteSnapped |= snapped == item && key == 504;
+            Item.RemoteBeamSnapped += onSnap;
+            bool localSnapped = false;
+            float startY = item.GripWorldPosition.y;
+            try
+            {
+                for (float t = 0f; t < 1.5f; t += Time.fixedDeltaTime)
+                {
+                    localSnapped |= item.LocalBeamSnapped;
+                    item.UpdateTarget(target, Vector3.zero);
+                    if (!remoteSnapped)
+                        item.SetRemotePull(504, staleTow, second.gameObject);
+                    yield return new WaitForFixedUpdate();
+                }
+            }
+            finally
+            {
+                Item.RemoteBeamSnapped -= onSnap;
+            }
+
+            float rose = item.GripWorldPosition.y - startY;
+            Assert.IsFalse(localSnapped || remoteSnapped, "A hold snapped while two holders lifted the piece.");
+            Assert.That(rose, Is.GreaterThan(0.5f),
+                $"With enough grip between them the piece should rise, even on a stale tow pull; it rose {rose:F2} m.");
+        }
+
+        [UnityTest]
         public IEnumerator Test_TwoHoldersLiftingAHeavyPieceFromLowDoNotSnap()
         {
             // Seen in the two-player check: a heavy piece towed at knee height becomes liftable when a
