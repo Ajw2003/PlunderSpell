@@ -259,6 +259,16 @@ second holder lets go; and it despawns when a holding client quits. Results and 
 `docs/generated/coop-carry-2026-09-27/`. Also found: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
 already failed before any #169 change (0.054 m jolt against a 0.05 m limit).
 
+**2026-09-27, #169 steps 2-3: the host controls held pieces.** A piece on the beam has no owner
+while held, so the host moves it and applies every holder's pull; clients send theirs with the beam
+relay. A second grab joins the carry instead of taking it; a holder who lets go, quits or stops
+sending is dropped within 0.5 s and the piece stays; a client's throw is applied by the host
+(including in the extraction portal, which used to freeze a just-thrown piece), and a client's own
+body does not collide with the piece they hold. Weapons in the hand still go to one player at a
+time. Checked: `CarryFeelTests` 12/12 (the jolt test now passes too) and `coop_carry_check.sh` 7/7
+on four runs in a row. Still to do: per-player strength and beam snapping (step 4), mouse steering
+(5), removing the old two-person code (6), docs' plain copies (8), and the two-PC Steam test (#170).
+
 **2026-09-23, castle revamp phases 1–2 done.** The castle is audited on its real NavMesh
 (`CastleAudit.cs`). Every room and all floor are reachable on five seeds, and loot now spawns on
 furniture (tables, chests, shelves, altars) inside rooms, all of it reachable. Phases 3–5 (themed

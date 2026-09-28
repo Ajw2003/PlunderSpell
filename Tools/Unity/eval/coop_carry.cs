@@ -10,7 +10,10 @@
 //   aim <id>          turn the local view onto the piece
 //   grab <id>         grab the piece at the point the crosshair is on, as a left-click does
 //   release           let go
+//   throw             throw the dragged item, as a right-click does
+//   depth <metres>    set how far along the aim ray the held point sits (pulls it in or out)
 //   turn <degrees>    turn the local view about world up
+//   pitch <degrees>   look at this pitch (degrees, positive down), like level but to an angle
 //   level             look level, so a held piece is lifted to eye height
 //   read <id>         the piece's position, whether this side holds it, where it aims it, and
 //                     where its held point is
@@ -205,6 +208,12 @@ switch (action)
     case "release":
         Call(Items(), "ForceRelease");
         return "released";
+    case "throw":
+        Call(Items(), "ThrowDraggedItem");
+        return "thrown";
+    case "depth":
+        Set(Items(), "_currentDragDepth", float.Parse(arg));
+        return "depth " + arg;
     case "turn":
     {
         var player = LocalPlayer();
@@ -221,6 +230,15 @@ switch (action)
         var view = (UnityEngine.Transform)Get(player, "CameraTransform");
         view.localRotation = UnityEngine.Quaternion.Euler(0f, (float)Get(player, "_yaw"), 0f);
         return "level";
+    }
+    case "pitch":
+    {
+        var player = LocalPlayer();
+        float pitch = float.Parse(arg);
+        Set(player, "_xRotation", pitch);
+        var view = (UnityEngine.Transform)Get(player, "CameraTransform");
+        view.localRotation = UnityEngine.Quaternion.Euler(pitch, (float)Get(player, "_yaw"), 0f);
+        return "pitched to " + pitch.ToString("F1");
     }
     case "read":
     {

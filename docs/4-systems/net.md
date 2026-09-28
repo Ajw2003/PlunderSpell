@@ -83,13 +83,23 @@ Every enemy and loot prefab carries a `NetworkTransform`, so a client sees guard
 move as the host simulates them. A client's guards switch their own `NavMeshAgent` off
 (`CastleGuard.OnSpawned`); the server's copy runs the AI.
 
-To carry loot a machine must control its transform. `Item.CanDriveHere` and `Item.RequestDrive` are
-installed by `NetworkCarry`: grabbing a piece this machine does not control asks the server
-(`LootPickup.RequestCarry`), which hands over ownership, and `ItemManager` starts the drag once it
-is granted. The carrier then simulates the piece and its movement replicates, so the host's
-extraction pad sees it land. Only the machine simulating a piece judges its impacts; a client
-carrier asks the server to break it (`LootPickup.RequestBreak`). Weapons are the same:
-they are ordinary loot entries in `RaidLootTable` (one `Weapon_*` `LootItem` each, weight 1, in the
+Only the machine that controls a piece's transform pushes its body (`Item.CanDriveHere`, installed
+by `NetworkCarry`; `Item.FixedUpdate` returns early elsewhere). **A piece on the beam is controlled
+by the host while anyone holds it (#169, 2026-09-27).** Grabbing one this machine does not control
+asks the server to drop its owner (`LootPickup.RequestHostControl`), so the server controls it, and
+the drag starts at once. Every holder's machine keeps its own hold, for its beam and HUD, and sends
+its pull (`CarryPull`: grip point, aim and its velocity, wanted rotation, tow data) with the beam
+update below; the server writes it into the piece (`Item.SetRemotePull`) and applies every holder's
+pull each physics step, sharing the lift between them. A second grab joins the carry rather than
+taking it. A pull not heard from for 0.5 s is dropped, which covers letting go, quitting and a lost
+connection, and nobody owns the piece, so it stays when a holder leaves. A client's throw is applied
+by the server (`LootPickup.RequestThrow`), and the server ignores collisions between a piece and
+its holders' own bodies, as the local holder does. Loot spawns owned by the host's player; the
+first client grab clears that. Only the machine simulating a piece judges its impacts; a client
+asks the server to break it (`LootPickup.RequestBreak`). Weapons differ in how they are held: a
+weapon sits in one player's hand, posed to their view every frame, so grabbing one still hands
+that player ownership (`LootPickup.RequestCarry`) and the drag waits for it. Otherwise weapons are
+the same: they are ordinary loot entries in `RaidLootTable` (one `Weapon_*` `LootItem` each, weight 1, in the
 Outer Bailey, Inner Ward and Keep), carrying `LootPickup`, `LootValue` and a `NetworkTransform`, so
 they are found, carried, swung and sold like any other piece. Whether a find is a weapon is only
 learnt by trying its right-click use.
@@ -222,8 +232,9 @@ Screenshots of each checked step: `docs/generated/coop-2026-09-23/`.
 
 **Carry check (#169).** `bash Tools/Unity/coop_carry_check.sh` does all of the above for carrying,
 with nobody at the keyboard: it builds `Build/DevTest` (Pipeline runtime on for that build only),
-hosts from the Editor, joins with the build, sets out, and runs five scenarios (host grabs, client
-grabs, both grab one piece, the client lets go, the client quits while holding). It prints one
+hosts from the Editor, joins with the build, sets out, and runs seven scenarios (host grabs, client
+grabs, the client throws, the client holds a piece low and close, both grab one piece, the client
+lets go, the client quits while holding). It prints one
 PASS/FAIL line each, and saves both sides' screenshots, `results.txt` and the client's log under
 `docs/generated/coop-carry-<date>/`. `--no-build` reuses the last build. Both sides are driven by
 `Tools/Unity/coop_eval.sh host|client <action>`, which runs `Tools/Unity/eval/coop_carry.cs`
@@ -231,7 +242,7 @@ through reflection so the same code works in the build. It needs the Editor open
 and leaves Play stopped, the runtime setting off and the settings files as they were. Before #169's
 carry changes (2026-09-27): single holders pass; the shared carry fails (the first holder's pull
 is ignored), the piece falls when the second holder lets go, and it despawns when a holding client
-quits.
+quits. After (steps 2-3, same day): all seven pass on four runs in a row.
 
 **Two real machines.** The owner has two PCs, each with its own Steam account (noted 2026-09-27).
 Use them for what one PC on localhost cannot show: Steam's relay, lobby, invite and overlay flow,

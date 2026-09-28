@@ -37,6 +37,28 @@ namespace Plunderspell.Net
         private NetworkIdentity _sending;
         private float _nextSendAt;
 
+        // A sender's player body (Item.SetRemotePull's holderBody, so a held piece ignores that
+        // player's own colliders), looked up by PlayerNetworkOwnership.owner and cached: a
+        // FindObjectsByType scan every message would be wasteful at 15 messages/second/holder.
+        // Refreshed on a cache miss or if the cached object was destroyed (a player who disconnected
+        // and rejoined).
+        private readonly Dictionary<PlayerID, GameObject> _playerBodies = new Dictionary<PlayerID, GameObject>();
+
+        private GameObject ResolvePlayerBody(PlayerID player)
+        {
+            if (_playerBodies.TryGetValue(player, out GameObject cached) && cached != null)
+                return cached;
+            foreach (PlayerNetworkOwnership body in FindObjectsByType<PlayerNetworkOwnership>(FindObjectsSortMode.None))
+            {
+                if (body.owner == player)
+                {
+                    _playerBodies[player] = body.gameObject;
+                    return body.gameObject;
+                }
+            }
+            return null;
+        }
+
         private void Update()
         {
             if (!isSpawned)
@@ -95,7 +117,7 @@ namespace Plunderspell.Net
                     TowVelocity = towVelocity,
                     TowRope = towRope,
                     UprightLocalUp = uprightLocalUp,
-                });
+                }, ResolvePlayerBody(info.sender));
             }
             ShowBeam(item, hand, aim, grabLocal, load, info.sender);
         }

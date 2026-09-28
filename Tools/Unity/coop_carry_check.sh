@@ -225,6 +225,47 @@ stage light:1
 "${E[@]}" client grab "$piece" >/dev/null; "${E[@]}" client level >/dev/null; sleep 2
 check client_grabs holder=client near=client
 
+stage light:5
+"${E[@]}" client grab "$piece" >/dev/null; "${E[@]}" client level >/dev/null; sleep 2
+before="$("${E[@]}" host read "$piece" 2>&1)"
+"${E[@]}" client throw >/dev/null
+sleep 0.3
+after_host="$("${E[@]}" host read "$piece" 2>&1)"
+after_client="$("${E[@]}" client read "$piece" 2>&1)"
+timeout 60 bash Tools/Unity/capture.sh "$out/client_throws-host.png" >/dev/null 2>&1
+"${E[@]}" client shot "$(cygpath -m "$repo/$out/client_throws-client.png")" >/dev/null 2>&1
+verdict="$(python -c "
+import math, re, sys
+def parse(line):
+    m = re.match(r'pos ([^ ]+) held (\w+)', line)
+    if not m: return None
+    return {'pos': [float(v) for v in m.group(1).split(',')], 'held': m.group(2) == 'True'}
+b, ah, ac = parse(sys.argv[1]), parse(sys.argv[2]), parse(sys.argv[3])
+if b is None or ah is None or ac is None:
+    print(f'FAIL unreadable: before {sys.argv[1][:200]!r} after_host {sys.argv[2][:200]!r} after_client {sys.argv[3][:200]!r}'); sys.exit()
+dist = math.hypot(ah['pos'][0] - b['pos'][0], ah['pos'][2] - b['pos'][2])
+if ac['held']:
+    print('FAIL client still holds it after throw')
+elif dist < 1.0:
+    print(f'FAIL only moved {dist:.2f} m horizontally')
+else:
+    print('PASS')
+" "$before" "$after_host" "$after_client")"
+log "client_throws: before [$before] after_host [$after_host] after_client [$after_client]"
+printf '%s %s\n' "$verdict" client_throws | tee -a "$out/results.txt"
+case "$verdict" in PASS*) ;; *) failures=$((failures + 1)) ;; esac
+
+# Regression coverage for a client holding a piece low and close to their own body (#169 Fix 1):
+# it did not fail before the collision fix (a target this close, at pitch 45 / depth 0.7, did not
+# turn out to meet the client's capsule in this scene), but it stays as a guard against that
+# regressing.
+stage light:6
+"${E[@]}" client grab "$piece" >/dev/null; "${E[@]}" client level >/dev/null
+"${E[@]}" client pitch 45 >/dev/null
+"${E[@]}" client depth 0.7 >/dev/null
+sleep 2
+check client_holds_close holder=client near=client
+
 stage light:2
 "${E[@]}" host grab "$piece" >/dev/null; "${E[@]}" host level >/dev/null; sleep 1
 "${E[@]}" client grab "$piece" >/dev/null; "${E[@]}" client level >/dev/null; sleep 1

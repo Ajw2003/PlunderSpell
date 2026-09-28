@@ -70,6 +70,15 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     private readonly List<int> _expiredHolderKeys = new List<int>();
     private const float k_remotePullTimeout = 0.5f;
 
+    // A remote holder's own body must not collide with the piece they hold, same reason as
+    // SetIgnoreHolder for the local holder: holding it close would otherwise bump or block them.
+    // Colliders fetched once, when a holder's pull first appears (not on every renewal), and
+    // restored k_remoteReleaseDelay after their pull ends, unless they take hold again first.
+    private readonly Dictionary<int, Collider[]> _remoteHolderColliders = new Dictionary<int, Collider[]>();
+    private readonly List<(int holder, Collider[] colliders, float restoreAt)> _pendingRemoteRestores =
+        new List<(int, Collider[], float)>();
+    private const float k_remoteReleaseDelay = 0.4f;
+
     // References for enemy handling. Resolved through Core interfaces, not MonsterStateMachine
     // directly, so Items does not depend on Enemies (Enemies already depends on Items via Item
     // references in the Monster FSM, and a direct reference back would create a cycle).
@@ -361,9 +370,12 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
 
     /// <summary>Records another holder's pull, heard over the network; applied here once this
     /// machine controls the body. Wakes the body and lifts a portal freeze, since a held piece is
-    /// not resting.</summary>
-    public void SetRemotePull(int holder, CarryPull pull)
+    /// not resting. The first time this holder appears (not on every renewal), <paramref
+    /// name="holderBody"/>'s colliders are fetched and told to ignore this piece's own, so holding
+    /// it close does not bump or block the holder; null skips that (no body to ignore).</summary>
+    public void SetRemotePull(int holder, CarryPull pull, GameObject holderBody)
     {
+        bool isNewHolder = !_remotePulls.ContainsKey(holder);
         _remotePulls[holder] = (pull, Time.time);
         _rb.WakeUp();
         if (_frozenByPortal)
@@ -371,10 +383,68 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
             _frozenByPortal = false;
             _rb.isKinematic = false;
         }
+
+        if (!isNewHolder)
+            return;
+
+        // Retaking hold before the pending restore from the last release fired: cancel it, or the
+        // restore would turn collisions back on while this new hold still needs them off.
+        CancelPendingRemoteRestore(holder);
+
+        if (holderBody == null)
+            return;
+        if (_ownColliders == null)
+            _ownColliders = GetComponentsInChildren<Collider>();
+        Collider[] theirs = holderBody.GetComponentsInChildren<Collider>();
+        _remoteHolderColliders[holder] = theirs;
+        ApplyIgnore(theirs, true);
     }
 
-    /// <summary>Drops a holder's pull: they let go, disconnected or died.</summary>
-    public void RemoveRemotePull(int holder) => _remotePulls.Remove(holder);
+    /// <summary>Drops a holder's pull: they let go, disconnected or died. Counts as a release for
+    /// <see cref="UpdatePortalFreeze"/>'s grace period, same as the local holder's own release, so a
+    /// piece a client lets go of in the portal still lands first instead of being frozen mid-air.
+    /// Schedules that holder's body to stop ignoring this piece again, same delay as the local
+    /// holder's own release, so a piece let go close to them does not explode out of their capsule.
+    /// </summary>
+    public void RemoveRemotePull(int holder)
+    {
+        _remotePulls.Remove(holder);
+        _releasedAt = Time.time;
+        ScheduleRemoteRestore(holder);
+    }
+
+    private void ScheduleRemoteRestore(int holder)
+    {
+        if (!_remoteHolderColliders.TryGetValue(holder, out Collider[] theirs))
+            return;
+        _remoteHolderColliders.Remove(holder);
+        CancelPendingRemoteRestore(holder);
+        _pendingRemoteRestores.Add((holder, theirs, Time.time + k_remoteReleaseDelay));
+    }
+
+    private void CancelPendingRemoteRestore(int holder)
+    {
+        for (int i = _pendingRemoteRestores.Count - 1; i >= 0; i--)
+        {
+            if (_pendingRemoteRestores[i].holder == holder)
+                _pendingRemoteRestores.RemoveAt(i);
+        }
+    }
+
+    /// <summary>Turns collisions back on for every remote holder whose delayed restore has come due,
+    /// unless they took hold again first (then <see cref="CancelPendingRemoteRestore"/> already
+    /// dropped their entry). Walks backward so removing an entry does not skip the next one; no
+    /// allocation per frame, since entries are only ever added on a release.</summary>
+    private void ProcessPendingRemoteRestores()
+    {
+        for (int i = _pendingRemoteRestores.Count - 1; i >= 0; i--)
+        {
+            if (Time.time < _pendingRemoteRestores[i].restoreAt)
+                continue;
+            ApplyIgnore(_pendingRemoteRestores[i].colliders, false);
+            _pendingRemoteRestores.RemoveAt(i);
+        }
+    }
 
     /// <summary>How many holders are pulling this right now: this machine's own hold, if any, plus
     /// every live remote pull.</summary>
@@ -384,6 +454,12 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     private bool _inPortal;
     private bool _frozenByPortal;
     private const float k_portalSettleSpeed = 0.15f;
+
+    /// <summary>How long after a release/throw <see cref="UpdatePortalFreeze"/> holds off: a queued
+    /// impulse (a throw, or gravity itself) only shows up in <see cref="Rigidbody.linearVelocity"/>
+    /// after the next physics step (FixedUpdate scripts run before the step), so a piece read right
+    /// after it was let go looks settled and would be frozen with that impulse still pending.</summary>
+    private const float k_portalFreezeGrace = 0.5f;
 
     /// <summary>True while the portal is holding this piece still.</summary>
     public bool IsFrozenByPortal => _frozenByPortal;
@@ -411,7 +487,8 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     {
         // A remote hold means someone else is holding this piece, same as _isDragging locally: not
         // resting, so it must not freeze mid-hold.
-        if (!_inPortal || _frozenByPortal || _isDragging || _rb.isKinematic || !CanDriveHere(this) || _remotePulls.Count > 0)
+        if (!_inPortal || _frozenByPortal || _isDragging || _rb.isKinematic || !CanDriveHere(this) || _remotePulls.Count > 0
+            || Time.time - _releasedAt < k_portalFreezeGrace)
             return;
         if (_rb.linearVelocity.magnitude > k_portalSettleSpeed || _rb.angularVelocity.magnitude > 0.5f)
             return;
@@ -425,6 +502,7 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     {
         _velocityIntoStep = _rb.linearVelocity;
         UpdatePortalFreeze();
+        ProcessPendingRemoteRestores();
         // A machine that does not control the body never pushes it: elsewhere the body is moved by
         // the replicated transform, and pushing it here as well would fight that every step.
         if (!CanDriveHere(this))
@@ -462,7 +540,14 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
                 _expiredHolderKeys.Add(remote.Key);
         }
         foreach (int key in _expiredHolderKeys)
+        {
             _remotePulls.Remove(key);
+            // Expiry ends a holder's pull the same as RemoveRemotePull: their body's ignore needs
+            // the same delayed restore, and it counts toward UpdatePortalFreeze's grace period too.
+            ScheduleRemoteRestore(key);
+        }
+        if (_expiredHolderKeys.Count > 0)
+            _releasedAt = Time.time;
     }
 
     /// <summary>
@@ -672,6 +757,16 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     public void ApplyRemoteThrow(int holder, Vector3 direction, float force)
     {
         RemoveRemotePull(holder);
+        // The pull ending (RemoveRemotePull above) can leave the piece resting in the portal for a
+        // moment before this throw's impulse lands, and UpdatePortalFreeze freezes anything that
+        // slow: an impulse added to a kinematic body does nothing, so the throw must lift the
+        // freeze first, the same as SetRemotePull already does for a renewed pull.
+        _rb.WakeUp();
+        if (_frozenByPortal)
+        {
+            _frozenByPortal = false;
+            _rb.isKinematic = false;
+        }
         _rb.AddForce(direction * force, ForceMode.Impulse);
         _rb.linearVelocity = Vector3.ClampMagnitude(_rb.linearVelocity, _maxThrowSpeed);
         _releasedAt = Time.time;
@@ -693,7 +788,7 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
         if (ignore)
         {
             CancelInvoke(nameof(RestoreHolderCollisions));
-            ApplyIgnore(true);
+            ApplyIgnore(_holderColliders, true);
             return;
         }
 
@@ -704,19 +799,22 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     private void RestoreHolderCollisions()
     {
         if (!_isDragging)
-            ApplyIgnore(false);
+            ApplyIgnore(_holderColliders, false);
     }
 
-    private void ApplyIgnore(bool ignore)
+    /// <summary>Turns collisions between this piece's own colliders and <paramref name="theirs"/> on
+    /// or off. Shared by the local holder (<see cref="SetIgnoreHolder"/>) and every remote holder
+    /// (<see cref="SetRemotePull"/>/<see cref="ScheduleRemoteRestore"/>).</summary>
+    private void ApplyIgnore(Collider[] theirs, bool ignore)
     {
-        if (_ownColliders == null || _holderColliders == null)
+        if (_ownColliders == null || theirs == null)
             return;
         foreach (Collider own in _ownColliders)
         {
-            foreach (Collider theirs in _holderColliders)
+            foreach (Collider theirCollider in theirs)
             {
-                if (own != null && theirs != null)
-                    Physics.IgnoreCollision(own, theirs, ignore);
+                if (own != null && theirCollider != null)
+                    Physics.IgnoreCollision(own, theirCollider, ignore);
             }
         }
     }

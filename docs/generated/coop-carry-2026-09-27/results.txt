@@ -98,3 +98,62 @@ PASS client_grabs
 PASS both_grab_same_piece
 PASS client_lets_go
 PASS client_quits_holding
+
+# run 18:21:46
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.00 m horizontally client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 18:29:06
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id ERROR"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Multiple Unity Player instances found matching 'Plunderspell':\n\n  1. Plunderspell.exe (localhost:7900) - C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell\\' host_grabs
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id no"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Multiple Unity Player instances found matching 'Plunderspell':\n\n  1. Plunderspell.exe (localhost:7901) - C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell\\' client_grabs
+FAIL unreadable: before 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id no"}]' after_host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id no"}]' after_client 'ERROR [{"code": "COMMAND_FAILED", "message": "Multiple Unity Player instances found matching \'Plunderspell\':\\n\\n  1. Plunderspell.exe (localhost:7901) - C:\\\\Users\\\\aj\\\\Desktop\\\\GameDev\\\\PlunderSpell\\\\' client_throws
+
+# run 18:37:42
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.00 m horizontally client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 18:55:00
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 18:57:55
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 19:00:51
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 19:06:33
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
