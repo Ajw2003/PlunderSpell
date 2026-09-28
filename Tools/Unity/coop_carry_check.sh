@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 # Two-player carry check for #169, on one PC with nobody at the keyboard: the Editor hosts in Play
 # mode, a Development build in Build/DevTest joins it on 127.0.0.1, and both are driven through
-# Tools/Unity/coop_eval.sh. Prints one PASS or FAIL line per scenario, and saves the client's log
-# and, for each failed scenario, both sides' screenshots under docs/generated/coop-carry-<date>/.
+# Tools/Unity/coop_eval.sh. Prints one PASS or FAIL line per scenario, and saves under
+# docs/generated/coop-carry-<date>/: the client's log; trace/<scenario>-<side>.csv, the piece's
+# state on every physics step on each side; and, for each failed scenario, both sides'
+# screenshots, a recording of the primary monitor (video/<scenario>.mkv) and 8 frames of it in
+# one image (<scenario>-frames.png).
 #
-# Usage: bash Tools/Unity/coop_carry_check.sh [--build | --no-build] [--shots]
+# Usage: bash Tools/Unity/coop_carry_check.sh [--build | --no-build] [--shots] [--no-video]
 #   (default)    build Build/DevTest only if a file under Assets/ is newer than it (about a minute)
 #   --build      always build;  --no-build  never build
 #   --shots      screenshot every scenario, not just failed ones (each costs a few seconds)
+#   --no-video   do not record the screen (it needs ffmpeg on PATH)
 #
 # Needs the Editor open on this project, not in Play mode. Leaves it stopped, with the Pipeline
 # runtime setting off and ProjectSettings.asset's preloadedAssets line as it was
@@ -23,6 +27,8 @@ E=(timeout 90 bash Tools/Unity/coop_eval.sh)
 cli=(--no-banner --format json)
 client_pid=""
 failures=0
+rec_pid=""
+rec_area=""
 
 log() { printf '%s %s\n' "$(date +%T)" "$*"; }
 
@@ -32,6 +38,8 @@ field() { # field <json envelope on stdin> <key>: one key of a Pipeline command'
 
 cleanup() {
     log "cleaning up"
+    rec_stop discard PASS
+    [ -n "$rec_area" ] && powershell -NoProfile -ExecutionPolicy Bypass -File Tools/Unity/place_windows.ps1 release >/dev/null
     if [ -n "$client_pid" ] && kill -0 "$client_pid" 2>/dev/null; then
         "${E[@]}" client quit >/dev/null 2>&1 || true
         sleep 2
@@ -76,21 +84,23 @@ fi
 # ---------------------------------------------------------------------------------------------
 # The client build.
 # ---------------------------------------------------------------------------------------------
-build=auto; shots=failed
+build=auto; shots=failed; video=on
 for arg in "$@"; do
     case "$arg" in
         --build) build=yes ;;
         --no-build) build=no ;;
         --shots) shots=all ;;
+        --no-video) video=off ;;
         *) log "FAIL unknown option $arg"; trap - EXIT; exit 1 ;;
     esac
 done
 if [ "$build" = auto ]; then
     build=no
-    [ -f Build/DevTest/Plunderspell.exe ] || build=yes
-    # Anything the client build is made from, changed since it was built. Tests are not in it.
-    if [ "$build" = no ] && [ -n "$(find Assets ProjectSettings -newer Build/DevTest/Plunderspell.exe -type f \
-            ! -path '*/Tests/*' ! -name '*.meta' ! -name 'ProjectSettings.asset' -print -quit)" ]; then
+    [ -f Build/DevTest/.built ] || build=yes
+    # Anything the client build is made from, changed since it was built. Tests are not in it. Not
+    # compared with Plunderspell.exe: the build copies that file with its old date.
+    if [ "$build" = no ] && [ -n "$(find Assets ProjectSettings -newer Build/DevTest/.built -type f \
+            ! -path '*/Tests/*' ! -path 'ProjectSettings/Packages/*' ! -name '*.meta' ! -name 'ProjectSettings.asset' -print -quit)" ]; then
         build=yes
     fi
     log "build: $build (auto)"
@@ -109,6 +119,7 @@ if [ "$build" = yes ]; then
     result="$(unity command build_status "${cli[@]}" | field result)"
     unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":false}' --confirm true "${cli[@]}" >/dev/null
     [ "$result" = "Succeeded" ] || { log "FAIL build: status $status, result $result"; exit 1; }
+    touch Build/DevTest/.built
     log "build $result"
 fi
 [ -f Build/DevTest/Plunderspell.exe ] || { log "FAIL no Build/DevTest/Plunderspell.exe; run without --no-build"; exit 1; }
@@ -137,10 +148,25 @@ client_pid=$!
 log "client started (pid $client_pid)"
 wait_for client "players 2" 60
 
+# One castle every run: a random seed moves the spawn (onto the extraction pad, for some seeds,
+# which ends the raid within seconds) and changes which pieces there are to stage.
+seed=3782782
+pinned="$(timeout 60 bash Tools/Unity/eval.sh "var d = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.RaidDirector>(); d.SetFixedSeed($seed); var lair = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Lair.LairHubManager>(); if (lair != null) lair.SelectEra(Plunderspell.Inventory.HistoricalEra.LateMedieval); return \"seed $seed, LateMedieval\";")"
+log "castle: $pinned"
 timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/set_out.cs >/dev/null
 wait_for host "state Playing" 30
 wait_for client "state Playing" 30
 sleep 3
+if [ "$video" = on ]; then
+    if ! command -v ffmpeg >/dev/null; then
+        log "no ffmpeg on PATH: recording off"; video=off
+    else
+        # Client beside the Editor, so the recording shows both games.
+        rec_area="$(powershell -NoProfile -ExecutionPolicy Bypass -File Tools/Unity/place_windows.ps1 | tr -d '')"
+        [ "$rec_area" = none ] && { log "client or Editor window not found: recording off"; video=off; }
+    fi
+fi
+mkdir -p "$out/trace" "$out/video"
 
 # ---------------------------------------------------------------------------------------------
 # Scenarios.
@@ -169,6 +195,61 @@ stage() { # stage <light|heavy>:<n>: fresh piece in front of the host, client be
     "${E[@]}" host aim "$piece" >/dev/null
     "${E[@]}" client aim "$piece" >/dev/null
     log "staged: $staged"
+    begin
+}
+
+# ---------------------------------------------------------------------------------------------
+# Evidence for each scenario: from begin to finish, both sides trace the piece every physics step
+# and ffmpeg records the primary monitor. finish keeps the traces always, and the recording only
+# for a failure; then it begins again, for scenarios that carry on with the same piece.
+# ---------------------------------------------------------------------------------------------
+rec_start() {
+    rec_stop discard PASS
+    [ "$video" = on ] || return 0
+    local x y w h
+    read -r x y w h <<< "$rec_area"
+    # ffmpeg stops cleanly on a "q" down its stdin (fd 7); a killed ffmpeg leaves an unreadable file.
+    exec 7> >(exec ffmpeg -loglevel error -y -f gdigrab -framerate 10 -offset_x "$x" -offset_y "$y"         -video_size "${w}x${h}" -i desktop -c:v libx264 -preset ultrafast -crf 30 "$out/video/.current.mkv"         2>> "$out/video/ffmpeg.log")
+    rec_pid=$!
+}
+
+rec_stop() { # rec_stop <name> <verdict>: stop recording; keep it, and its frames, for a failure
+    [ -n "$rec_pid" ] || return 0
+    printf q >&7 2>/dev/null; exec 7>&-
+    wait "$rec_pid" 2>/dev/null
+    rec_pid=""
+    case "$2" in
+        PASS*) rm -f "$out/video/.current.mkv" ;;
+        *)
+            mv -f "$out/video/.current.mkv" "$out/video/$1.mkv"
+            local seconds
+            seconds="$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$out/video/$1.mkv")"
+            ffmpeg -loglevel error -y -i "$out/video/$1.mkv" -vf "fps=8/$seconds,scale=640:-2,tile=4x2"                 -frames:v 1 "$out/$1-frames.png"                 && log "$1: recording in $out/video/$1.mkv, frames in $out/$1-frames.png"                 || log "$1: could not take frames from $out/video/$1.mkv"
+            ;;
+    esac
+}
+
+begin() {
+    [ -n "$piece" ] || return 0
+    "${E[@]}" host trace_start "$piece" >/dev/null 2>&1 &
+    local host_tracer=$!
+    "${E[@]}" client trace_start "$piece" >/dev/null 2>&1 &
+    wait "$host_tracer" $!
+    rec_start
+}
+
+finish() { # finish <name> <verdict> <both|host>: save the traces, the recording on a failure, screenshots
+    "${E[@]}" host trace_stop "$(cygpath -m "$repo/$out/trace/$1-host.csv")" >/dev/null 2>&1 &
+    local host_saver=$!
+    if [ "$3" = both ]; then
+        "${E[@]}" client trace_stop "$(cygpath -m "$repo/$out/trace/$1-client.csv")" >/dev/null 2>&1 &
+        wait "$host_saver" $!
+    else
+        wait "$host_saver"
+    fi
+    rec_stop "$1" "$2"
+    shoot "$1" "$2" "$3"
+    begin
 }
 
 # check <name> <rule>: reads the piece on both sides and applies one rule. Every rule also needs
@@ -240,15 +321,18 @@ for rule in rules:
     elif key == "rose":
         before_y, min_rise = value.split(":")
         rise = h["pos"][1] - float(before_y)
-        if rise < float(min_rise):
-            problems.append(f"piece rose {rise:.2f} m (wanted at least {min_rise} m)")
+        # A piece that started high (resting on furniture, or held up in the portal) cannot rise the
+        # full amount: reaching the host's aim height counts as lifted too.
+        reached = h["aim"] is not None and abs(h["pos"][1] - h["aim"][1]) < 0.3
+        if rise < float(min_rise) and not reached:
+            problems.append(f"piece rose {rise:.2f} m (wanted at least {min_rise} m, or to within 0.3 m of the aim height)")
 print("PASS" if not problems else "FAIL " + "; ".join(problems))
 PY
 )"
     log "$name: host [$host_read] client [$client_read]"
     printf '%s %s\n' "$verdict" "$name" | tee -a "$out/results.txt"
     case "$verdict" in PASS*) ;; *) failures=$((failures + 1)) ;; esac
-    shoot "$name" "$verdict" both
+    finish "$name" "$verdict" both
 }
 
 shoot() { # shoot <name> <verdict> <both|host>: screenshots, for a failure or when --shots asked
@@ -293,7 +377,7 @@ else:
 " "$before" "$after_host" "$after_client")"
 log "client_throws: before [$before] after_host [$after_host] after_client [$after_client]"
 printf '%s %s\n' "$verdict" client_throws | tee -a "$out/results.txt"
-shoot client_throws "$verdict" both
+finish client_throws "$verdict" both
 case "$verdict" in PASS*) ;; *) failures=$((failures + 1)) ;; esac
 
 # Regression coverage for a client holding a piece low and close to their own body (#169 Fix 1):
@@ -325,7 +409,7 @@ print('PASS' if m.group(6) == 'True' else 'FAIL heavy is False for a 10-16 kg pi
 " "$host_read")"
     log "heavy_alone_tows: host [$host_read]"
     printf '%s %s\n' "$verdict" heavy_alone_tows | tee -a "$out/results.txt"
-    shoot heavy_alone_tows "$verdict" both
+    finish heavy_alone_tows "$verdict" both
     case "$verdict" in PASS*) ;; *) failures=$((failures + 1)) ;; esac
 
     before_y="$(python -c "
@@ -372,7 +456,7 @@ print('PASS' if d <= 0.35 else f'FAIL {d:.2f} m from the host aim after the clie
 " "$host_read")"
 log "client_quits_holding: host [$host_read]"
 printf '%s %s\n' "$verdict" client_quits_holding | tee -a "$out/results.txt"
-shoot client_quits_holding "$verdict" host
+finish client_quits_holding "$verdict" host
 case "$verdict" in PASS*) ;; *) failures=$((failures + 1)) ;; esac
 
 log "$failures scenario(s) failed; results in $out/results.txt"

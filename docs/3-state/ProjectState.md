@@ -259,6 +259,19 @@ second holder lets go; and it despawns when a holding client quits. Results and 
 `docs/generated/coop-carry-2026-09-27/`. Also found: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
 already failed before any #169 change (0.054 m jolt against a 0.05 m limit).
 
+**2026-09-27, carry check records evidence.** `coop_carry_check.sh` now writes a per-physics-step
+trace of the piece on both sides for every scenario, and for a failed one a screen recording and a
+frame sheet. It uses one fixed castle and skips the build when nothing changed. The traces found
+three faults in the check itself (staging into the portal, a random seed that spawned on the
+extraction pad, and grabbing with a stale aim), all fixed. Latest run (`trace-run5.log`): 10/10 except
+`client_throws`. The 3 kg PaviseShield hung still 0.45 m under its aim for 3 s, then the throw
+moved it 0.06 m/s. It looks snagged out of the client's view, but that is not confirmed. Open, along
+with three game bugs the logs showed, none part of #169: the client built the castle twice (BronzeAge,
+then LateMedieval) as the seed arrived; a client logs "Invalid permissions when setting
+`_extractionComplete`"; and the snap rule counts a heavy piece lagging behind its target as strain,
+so lifting a heavy piece from the floor with two holders can snap (seen once, trace
+`heavy_lifted_together` in `trace-run2.log`).
+
 **2026-09-27, #169 step 4: holders' strength adds up, and opposite pulls snap.** Each holder's
 grip and haul strength travel with their pull; the host adds them, so a piece too heavy for one
 holder (they tow it) is lifted by two, and every holder sees the shared total. If two holders pull

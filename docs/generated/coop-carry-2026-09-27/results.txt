@@ -238,3 +238,62 @@ PASS opposite_pulls_snap
 PASS both_grab_same_piece
 PASS client_lets_go
 PASS client_quits_holding
+
+# run 21:22:55
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+FAIL piece rose 0.21 m (wanted at least 0.6 m) heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 21:27:30
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+FAIL held host=False client=False, wanted both; heavy host=True client=True, wanted light=both; piece rose 0.00 m (wanted at least 0.6 m, or to within 0.3 m of the aim height) heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 21:32:37
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 76"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 76"}]' host_grabs
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client_grabs
+FAIL unreadable: before 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id "}]' after_host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id "}]' after_client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id "}]' client_throws
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client_holds_close
+FAIL no spawned heavy:0 piece heavy_alone_tows
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' opposite_pulls_snap
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' both_grab_same_piece
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}] client_quits_holding
+
+# run 21:36:56
+PASS host_grabs
+FAIL held point 0.37 m from client's aim client_grabs
+FAIL only moved 0.01 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+FAIL held host=False client=False, wanted both; needs both aim points both_grab_same_piece
+FAIL held host=False client=False, wanted host; host has no aim point client_lets_go
+FAIL host lost the piece: pos 5.478,0.540,-34.817 held False aim none grip none load 0.15 heavy False | kinematic False portalFrozen False inPortal False controls True holders 0 owner  broken False snapped True client_quits_holding
+
+# run 21:41:49
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.02 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding

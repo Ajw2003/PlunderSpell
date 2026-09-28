@@ -18,6 +18,8 @@
 //   read <id>         the piece's position, whether this side holds it, where it aims it, where
 //                     its held point is, its load and whether it is too heavy to lift
 //   park <id>         host: move a finished scenario's piece out of the way
+//   trace_start <id>  record the piece every physics step (replaces any running trace)
+//   trace_stop <path> stop recording and write the CSV there (absolute path, forward slashes)
 //   shot <path>       save a screenshot (absolute path, forward slashes)
 //   quit              close this game (the client build)
 string action = "__ACTION__";
@@ -101,6 +103,23 @@ UnityEngine.Vector3 ParseV(string s)
     return new UnityEngine.Vector3(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
 }
 
+// Takes the running trace's step out of the player loop and returns its rows (null if none runs).
+System.Text.StringBuilder StopTrace()
+{
+    if (!(System.AppDomain.CurrentDomain.GetData("coopTrace") is object[] running)) return null;
+    System.AppDomain.CurrentDomain.SetData("coopTrace", null);
+    var step = (System.Delegate)running[0];
+    var loop = UnityEngine.LowLevel.PlayerLoop.GetCurrentPlayerLoop();
+    for (int i = 0; i < loop.subSystemList.Length; i++)
+    {
+        var steps = loop.subSystemList[i].subSystemList;
+        if (steps == null) continue;
+        loop.subSystemList[i].subSystemList = System.Array.FindAll(steps, s => !ReferenceEquals(s.updateDelegate, step));
+    }
+    UnityEngine.LowLevel.PlayerLoop.SetPlayerLoop(loop);
+    return (System.Text.StringBuilder)running[1];
+}
+
 var gameStates = T("Plunderspell.Core.GameServices");
 switch (action)
 {
@@ -131,6 +150,15 @@ switch (action)
         // and a wall or furniture in that path pins the piece and reads as a carry fault. A way
         // counts as open as far as it and 30 degrees either side are clear at chest height.
         var chest = view.position - UnityEngine.Vector3.up * 0.3f;
+        // Not towards the extraction portal either: it is open space, but it holds up and freezes
+        // pieces in it, which reads as a carry fault too.
+        var portals = new System.Collections.Generic.List<UnityEngine.Bounds>();
+        foreach (var zone in FindAll("Plunderspell.Extraction.ExtractionZone"))
+        {
+            var bounds = ((UnityEngine.Component)zone).GetComponent<UnityEngine.Collider>().bounds;
+            bounds.Expand(2f);
+            portals.Add(bounds);
+        }
         float bestYaw = 0f, bestClear = -1f;
         for (int step = 0; step < 16; step++)
         {
@@ -142,6 +170,9 @@ switch (action)
                 float reach = UnityEngine.Physics.Raycast(chest, way, out var wall, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)
                     ? wall.distance : 6f;
                 clear = UnityEngine.Mathf.Min(clear, reach);
+                for (float along = 0f; along <= reach; along += 0.5f)
+                    foreach (var portal in portals)
+                        if (portal.Contains(chest + way * along)) clear = 0f;
             }
             if (clear > bestClear) { bestClear = clear; bestYaw = yawTry; }
         }
@@ -199,6 +230,14 @@ switch (action)
         var player = LocalPlayer();
         var view = (UnityEngine.Transform)Get(player, "CameraTransform");
         var grabPoint = item.GetComponent<UnityEngine.Rigidbody>().worldCenterOfMass;
+        // Onto the piece where it is now, as a player's crosshair must be to grab it: aimed where it
+        // was staged, after another holder lifted it, the new hold's target starts metres away.
+        var to = grabPoint - view.position;
+        float grabYaw = UnityEngine.Mathf.Atan2(to.x, to.z) * UnityEngine.Mathf.Rad2Deg;
+        float grabPitch = -UnityEngine.Mathf.Atan2(to.y, new UnityEngine.Vector2(to.x, to.z).magnitude) * UnityEngine.Mathf.Rad2Deg;
+        Set(player, "_yaw", grabYaw);
+        Set(player, "_xRotation", grabPitch);
+        view.localRotation = UnityEngine.Quaternion.Euler(grabPitch, grabYaw, 0f);
         if (UnityEngine.Physics.Raycast(view.position, view.forward, out var hit, 10f)
             && hit.collider.GetComponentInParent(T("Item")) == item)
             grabPoint = hit.point;
@@ -265,6 +304,57 @@ switch (action)
         body.position += UnityEngine.Vector3.down * 50f;
         body.transform.position = body.position;
         return "parked " + arg;
+    }
+    case "trace_start":
+    {
+        // Every physics step from now until trace_stop, one CSV row: the piece's motion and who
+        // holds it on this side. A step hook in the player loop, not a component, because this
+        // code is compiled fresh on each call and the build cannot add a component from it.
+        StopTrace();
+        var item = Piece(arg);
+        var body = item.GetComponent<UnityEngine.Rigidbody>();
+        var items = Items();
+        var carried = items.GetType().GetProperty("CarriedItem", All);
+        var holderCount = item.GetType().GetProperty("HolderCount", All);
+        var target = item.GetType().GetProperty("TargetPosition", All);
+        var canDrive = (System.Delegate)Get(T("Item"), "CanDriveHere");
+        var rows = new System.Text.StringBuilder(
+            "t,x,y,z,vx,vy,vz,speed,spin,rx,ry,rz,held,holders,controls,kinematic,aimx,aimy,aimz\n");
+        float startedAt = UnityEngine.Time.fixedTime;
+        int count = 0;
+        UnityEngine.LowLevel.PlayerLoopSystem.UpdateFunction step = () =>
+        {
+            if (item == null || body == null || count >= 6000) return;
+            count++;
+            var p = body.position; var v = body.linearVelocity; var e = body.rotation.eulerAngles;
+            bool held = (UnityEngine.Object)carried.GetValue(items) == item;
+            var aim = held ? V((UnityEngine.Vector3)target.GetValue(item)) : ",,";
+            rows.Append((UnityEngine.Time.fixedTime - startedAt).ToString("F3")).Append(',').Append(V(p)).Append(',')
+                .Append(V(v)).Append(',').Append(v.magnitude.ToString("F3")).Append(',')
+                .Append(body.angularVelocity.magnitude.ToString("F3")).Append(',').Append(V(e)).Append(',')
+                .Append(held ? 1 : 0).Append(',').Append(holderCount.GetValue(item)).Append(',')
+                .Append((bool)canDrive.DynamicInvoke(item) ? 1 : 0).Append(',').Append(body.isKinematic ? 1 : 0).Append(',')
+                .Append(aim).Append('\n');
+        };
+        var loop = UnityEngine.LowLevel.PlayerLoop.GetCurrentPlayerLoop();
+        for (int i = 0; i < loop.subSystemList.Length; i++)
+        {
+            if (loop.subSystemList[i].type != typeof(UnityEngine.PlayerLoop.FixedUpdate)) continue;
+            var steps = new System.Collections.Generic.List<UnityEngine.LowLevel.PlayerLoopSystem>(loop.subSystemList[i].subSystemList);
+            // Last in the fixed step, so each row is the state physics just produced.
+            steps.Add(new UnityEngine.LowLevel.PlayerLoopSystem { type = typeof(System.Text.StringBuilder), updateDelegate = step });
+            loop.subSystemList[i].subSystemList = steps.ToArray();
+        }
+        UnityEngine.LowLevel.PlayerLoop.SetPlayerLoop(loop);
+        System.AppDomain.CurrentDomain.SetData("coopTrace", new object[] { step, rows });
+        return "tracing " + arg;
+    }
+    case "trace_stop":
+    {
+        var rows = StopTrace();
+        if (rows == null) return "no trace running";
+        System.IO.File.WriteAllText(arg, rows.ToString());
+        return "trace to " + arg;
     }
     case "shot":
         UnityEngine.ScreenCapture.CaptureScreenshot(arg);
