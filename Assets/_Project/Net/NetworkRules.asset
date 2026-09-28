@@ -11,4 +11,31 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28e93bf2b6064364aa5fd430134916ac, type: 3}
   m_Name: NetworkRules
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
+  _defaultSpawnRules:
+    spawnAuth: 0
+    despawnAuth: 3
+    defaultOwner: 1
+    propagateOwnershipByDefault: 1
+    despawnIfOwnerDisconnects: 1
+    cleanupSpawnedObjects: 1
+  _defaultRpcRules:
+    ignoreRequireServerAttribute: 0
+    ignoreRequireOwnerAttribute: 0
+  _defaultVisibilityRules:
+    visibilityMode: 0
+  _defaultOwnershipRules:
+    assignAuth: 0
+    transferAuth: 3
+    removeAuth: 3
+    overrideWhenPropagating: 1
+  _defaultSceneRules:
+    removePlayerFromSceneOnDisconnect: 0
+    cleanupScenesOnDisconnect: 1
+    alwaysIncludeDontDestroyOnLoadScene: 0
+  _defaultIdentityRules:
+    receiveRpcsWhenDisabled: 1
+  _defaultTransformRules:
+    changeParentAuth: 3
+  _defaultMiscRules:
+    syncedTickUpdateInterval: 1
