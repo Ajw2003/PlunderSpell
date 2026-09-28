@@ -13,6 +13,7 @@
 //   throw             throw the dragged item, as a right-click does
 //   depth <metres>    set how far along the aim ray the held point sits (pulls it in or out)
 //   turn <degrees>    turn the local view about world up
+//   face_open         turn the local view to the most open way
 //   pitch <degrees>   look at this pitch (degrees, positive down), like level but to an angle
 //   level             look level, so a held piece is lifted to eye height
 //   read <id>         the piece's position, whether this side holds it, where it aims it, where
@@ -120,6 +121,49 @@ System.Text.StringBuilder StopTrace()
     return (System.Text.StringBuilder)running[1];
 }
 
+// The most open horizontal way from this view, in degrees of yaw, and how far it is clear.
+float OpenYaw(UnityEngine.Transform view, out float bestClear)
+{
+    // Face the most open way: each scenario turns a view 25 degrees and pulls a piece ~2 m out,
+    // and a wall or furniture in that path pins the piece and reads as a carry fault. A way
+    // counts as open as far as it and 30 degrees either side are clear at chest height and at the
+    // height held pieces ride (eye height and a little above), where wall lamps and shelves are.
+    var chest = view.position - UnityEngine.Vector3.up * 0.3f;
+    var heights = new[] { -0.3f, 0f, 0.4f };
+    // Not towards the extraction portal either: it is open space, but it holds up and freezes
+    // pieces in it, which reads as a carry fault too.
+    var portals = new System.Collections.Generic.List<UnityEngine.Bounds>();
+    foreach (var zone in FindAll("Plunderspell.Extraction.ExtractionZone"))
+    {
+        var bounds = ((UnityEngine.Component)zone).GetComponent<UnityEngine.Collider>().bounds;
+        bounds.Expand(2f);
+        portals.Add(bounds);
+    }
+    float bestYaw = 0f;
+    bestClear = -1f;
+    for (int step = 0; step < 16; step++)
+    {
+        float yawTry = step * 22.5f;
+        float clear = float.MaxValue;
+        foreach (float spread in new[] { -30f, 0f, 30f })
+        {
+            var way = UnityEngine.Quaternion.Euler(0f, yawTry + spread, 0f) * UnityEngine.Vector3.forward;
+            float reach = 6f;
+            foreach (float height in heights)
+                if (UnityEngine.Physics.SphereCast(view.position + UnityEngine.Vector3.up * height, 0.2f, way, out var wall, 6f,
+                        ~0, UnityEngine.QueryTriggerInteraction.Ignore)
+                    && wall.collider.GetComponentInParent(T("Item")) == null)
+                    reach = UnityEngine.Mathf.Min(reach, wall.distance);
+            clear = UnityEngine.Mathf.Min(clear, reach);
+            for (float along = 0f; along <= reach; along += 0.5f)
+                foreach (var portal in portals)
+                    if (portal.Contains(chest + way * along)) clear = 0f;
+        }
+        if (clear > bestClear) { bestClear = clear; bestYaw = yawTry; }
+    }
+    return bestYaw;
+}
+
 var gameStates = T("Plunderspell.Core.GameServices");
 switch (action)
 {
@@ -146,36 +190,7 @@ switch (action)
         int skip = int.Parse(arg.Substring(arg.IndexOf(':') + 1));
         var player = LocalPlayer();
         var view = (UnityEngine.Transform)Get(player, "CameraTransform");
-        // Face the most open way: each scenario turns a view 25 degrees and pulls a piece ~2 m out,
-        // and a wall or furniture in that path pins the piece and reads as a carry fault. A way
-        // counts as open as far as it and 30 degrees either side are clear at chest height.
-        var chest = view.position - UnityEngine.Vector3.up * 0.3f;
-        // Not towards the extraction portal either: it is open space, but it holds up and freezes
-        // pieces in it, which reads as a carry fault too.
-        var portals = new System.Collections.Generic.List<UnityEngine.Bounds>();
-        foreach (var zone in FindAll("Plunderspell.Extraction.ExtractionZone"))
-        {
-            var bounds = ((UnityEngine.Component)zone).GetComponent<UnityEngine.Collider>().bounds;
-            bounds.Expand(2f);
-            portals.Add(bounds);
-        }
-        float bestYaw = 0f, bestClear = -1f;
-        for (int step = 0; step < 16; step++)
-        {
-            float yawTry = step * 22.5f;
-            float clear = float.MaxValue;
-            foreach (float spread in new[] { -30f, 0f, 30f })
-            {
-                var way = UnityEngine.Quaternion.Euler(0f, yawTry + spread, 0f) * UnityEngine.Vector3.forward;
-                float reach = UnityEngine.Physics.Raycast(chest, way, out var wall, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)
-                    ? wall.distance : 6f;
-                clear = UnityEngine.Mathf.Min(clear, reach);
-                for (float along = 0f; along <= reach; along += 0.5f)
-                    foreach (var portal in portals)
-                        if (portal.Contains(chest + way * along)) clear = 0f;
-            }
-            if (clear > bestClear) { bestClear = clear; bestYaw = yawTry; }
-        }
+        float bestYaw = OpenYaw(view, out float bestClear);
         Set(player, "_yaw", bestYaw);
         Set(player, "_xRotation", 0f);
         view.localRotation = UnityEngine.Quaternion.Euler(0f, bestYaw, 0f);
@@ -187,6 +202,15 @@ switch (action)
             var body = pickup.GetComponent<UnityEngine.Rigidbody>();
             if (body == null || !(bool)Get(pickup, "isSpawned") || (bool)Get(pickup, "IsBroken")) continue;
             if (heavy ? body.mass <= 10f || body.mass > 16f : body.mass > 3f) continue;
+            // A light piece bigger than a metre (a pavise shield stands taller than a player) jams
+            // against the room's walls when held out at eye height, and reads as a carry fault.
+            if (!heavy)
+            {
+                var size = UnityEngine.Vector3.zero;
+                foreach (var part in pickup.GetComponentsInChildren<UnityEngine.Collider>())
+                    size = UnityEngine.Vector3.Max(size, part.bounds.size);
+                if (UnityEngine.Mathf.Max(size.x, UnityEngine.Mathf.Max(size.y, size.z)) > 1f) continue;
+            }
             // Weapons are held in the hand, one player at a time; the carry check is about pieces.
             if (pickup.GetComponent(T("Item")) == null || pickup.GetComponent(T("RangedWeapon")) != null
                 || pickup.GetComponent(T("MeleeWeapon")) != null) continue;
@@ -201,6 +225,17 @@ switch (action)
                 + " clear " + bestClear.ToString("F1") + "m host " + V(player.transform.position) + " right " + V(right);
         }
         return "no spawned " + arg + " piece";
+    }
+    case "face_open":
+    {
+        // Turn the view (and so a held piece) to the most open way, e.g. before a throw that must
+        // not hit a wall at once.
+        var player = LocalPlayer();
+        var view = (UnityEngine.Transform)Get(player, "CameraTransform");
+        float yaw = OpenYaw(view, out float clear);
+        Set(player, "_yaw", yaw);
+        view.localRotation = UnityEngine.Quaternion.Euler((float)Get(player, "_xRotation"), yaw, 0f);
+        return "facing yaw " + yaw.ToString("F1") + " clear " + clear.ToString("F1") + "m";
     }
     case "beside":
     {

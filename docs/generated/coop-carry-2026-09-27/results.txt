@@ -297,3 +297,79 @@ PASS opposite_pulls_snap
 PASS both_grab_same_piece
 PASS client_lets_go
 PASS client_quits_holding
+
+# run 22:14:54
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 22"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 22"}]' opposite_pulls_snap
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' both_grab_same_piece
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}]' client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id "}] client_quits_holding
+
+# run 22:20:05
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.41 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 22:24:51
+PASS host_grabs
+FAIL held point 0.54 m from client's aim client_grabs
+FAIL only moved 0.29 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+FAIL held host=False client=False, wanted both; heavy host=True client=True, wanted light=both; piece rose -0.12 m (wanted at least 0.6 m, or to within 0.3 m of the aim height) heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 22:32:56
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.88 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+FAIL aims 1.43 m apart, host's held point 1.40 m off, client's 0.22 m off: one pull is ignored both_grab_same_piece
+FAIL held point 1.15 m from host's aim client_lets_go
+FAIL 1.15 m from the host aim after the client left client_quits_holding
+
+# run 22:37:14
+PASS host_grabs
+PASS client_grabs
+FAIL only moved 0.13 m horizontally client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 22:42:13
+PASS host_grabs
+PASS client_grabs
+
+# run 22:43:47
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding

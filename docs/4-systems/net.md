@@ -244,12 +244,15 @@ prints one PASS/FAIL line each and saves, under `docs/generated/coop-carry-<date
 the client's log; `trace/<scenario>-<host|client>.csv`, the piece's position, velocity, spin,
 rotation, holder count, who controls it and the local aim point on every physics step (read these
 first when a scenario fails); and, for failed scenarios only, both sides' screenshots, a recording
-of the primary monitor (`video/<scenario>.mkv`, via ffmpeg) and 8 frames of it in one image
-(`<scenario>-frames.png`). During the run the client window sits left of the Editor and both stay
+of the primary monitor (`video/<scenario>.mkv`, via ffmpeg). Every scenario, passed or not, gets
+`frames/<scenario>.png`, 8 frames of the two game windows: look at them, since a number can pass
+or fail for a reason only a picture shows (a pavise shield jammed against a wall read as a failed
+throw). During the run the client window sits left of the Editor and both stay
 above other windows, so the recording shows the games. Every run uses the same castle (seed
-3782782, LateMedieval): with a random seed the spawn sometimes lands on the extraction pad, which
+3508293, LateMedieval, a spawn with room to work) and clears the guards, which otherwise reach the
+players and end the raid a few minutes in: with a random seed the spawn sometimes lands on the extraction pad, which
 ends the raid within seconds, and the pieces available to stage change. Staging avoids the
-portal, which holds pieces up and freezes them. The build is redone only when something under
+portal, which holds pieces up and freezes them, and skips light pieces over 1 m across. The build is redone only when something under
 `Assets/` or `ProjectSettings/` is newer than `Build/DevTest/.built`; `--build` and `--no-build`
 override that. `--shots` screenshots every scenario, `--no-video` skips recording. A run takes about
 3.5 minutes. Both sides are driven by

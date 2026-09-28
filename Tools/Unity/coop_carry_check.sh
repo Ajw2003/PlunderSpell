@@ -150,13 +150,17 @@ wait_for client "players 2" 60
 
 # One castle every run: a random seed moves the spawn (onto the extraction pad, for some seeds,
 # which ends the raid within seconds) and changes which pieces there are to stage.
-seed=3782782
+seed=3508293
 pinned="$(timeout 60 bash Tools/Unity/eval.sh "var d = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.RaidDirector>(); d.SetFixedSeed($seed); var lair = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Lair.LairHubManager>(); if (lair != null) lair.SelectEra(Plunderspell.Inventory.HistoricalEra.LateMedieval); return \"seed $seed, LateMedieval\";")"
 log "castle: $pinned"
 timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/set_out.cs >/dev/null
 wait_for host "state Playing" 30
 wait_for client "state Playing" 30
 sleep 3
+# No guards: with the fixed castle they spawn near the players, and a few minutes in they end the
+# raid, which reads as every later scenario failing.
+guards="$(timeout 60 bash Tools/Unity/eval.sh 'var d = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.RaidDirector>(); var f = typeof(Plunderspell.Raid.RaidDirector).GetField("_guardSpawner", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic); var spawner = f.GetValue(d); spawner.GetType().GetMethod("Clear").Invoke(spawner, null); return "guards cleared";')"
+log "$guards"
 if [ "$video" = on ]; then
     if ! command -v ffmpeg >/dev/null; then
         log "no ffmpeg on PATH: recording off"; video=off
@@ -166,7 +170,9 @@ if [ "$video" = on ]; then
         [ "$rec_area" = none ] && { log "client or Editor window not found: recording off"; video=off; }
     fi
 fi
-mkdir -p "$out/trace" "$out/video"
+mkdir -p "$out/trace" "$out/video" "$out/frames"
+# This run's evidence only: an earlier run's failure video would read as this run's (git keeps it).
+rm -f "${out:?}"/video/*.mkv "${out:?}"/frames/*.png
 
 # ---------------------------------------------------------------------------------------------
 # Scenarios.
@@ -213,19 +219,21 @@ rec_start() {
     rec_pid=$!
 }
 
-rec_stop() { # rec_stop <name> <verdict>: stop recording; keep it, and its frames, for a failure
+rec_stop() { # rec_stop <name> <verdict>: stop recording; frames for every scenario, the video for a failure
     [ -n "$rec_pid" ] || return 0
     printf q >&7 2>/dev/null; exec 7>&-
     wait "$rec_pid" 2>/dev/null
     rec_pid=""
+    local video="$out/video/.current.mkv"
+    [ "$1" = discard ] && { rm -f "$video"; return 0; }
+    # 8 frames across the scenario, cropped to the two game windows along the top of the monitor.
+    # Numbers alone miss things a picture shows at once, such as a piece jammed against a wall.
+    local seconds
+    seconds="$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$video")"
+    ffmpeg -loglevel error -y -i "$video" -vf "fps=8/$seconds,crop=iw:min(ih\,640):0:0,scale=960:-2,tile=2x4" -frames:v 1 "$out/frames/$1.png" || log "$1: could not take frames"
     case "$2" in
-        PASS*) rm -f "$out/video/.current.mkv" ;;
-        *)
-            mv -f "$out/video/.current.mkv" "$out/video/$1.mkv"
-            local seconds
-            seconds="$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$out/video/$1.mkv")"
-            ffmpeg -loglevel error -y -i "$out/video/$1.mkv" -vf "fps=8/$seconds,scale=640:-2,tile=4x2"                 -frames:v 1 "$out/$1-frames.png"                 && log "$1: recording in $out/video/$1.mkv, frames in $out/$1-frames.png"                 || log "$1: could not take frames from $out/video/$1.mkv"
-            ;;
+        PASS*) rm -f "$video" ;;
+        *) mv -f "$video" "$out/video/$1.mkv"; log "$1: recording in $out/video/$1.mkv" ;;
     esac
 }
 
@@ -353,6 +361,8 @@ check client_grabs holder=client near=client
 
 stage light:5
 "${E[@]}" client grab "$piece" >/dev/null; "${E[@]}" client level >/dev/null; sleep 2
+# Towards open space, so the throw is not stopped by a wall the piece was held against.
+"${E[@]}" client face_open >/dev/null; sleep 1.5
 before="$("${E[@]}" host read "$piece" 2>&1)"
 "${E[@]}" client throw >/dev/null
 sleep 0.3
