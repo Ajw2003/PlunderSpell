@@ -1,0 +1,542 @@
+<title>Plunderspell UI Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Eczar:wght@500;600;700;800&family=Overpass+Mono:wght@400;500;600&family=Spectral:ital,wght@0,300;0,400;1,300;1,400&display=swap">
+<style>
+/* Layout: a design sheet in the pitch bible's own hairline grid; each game screen is a
+   1920x1080 frame scaled to the column width, so every measurement matches the Unity canvas. */
+:root{
+  --bone-black:#14120E; --ash:#1E1A14; --ash-hi:#282318;
+  --vellum:#DCD2BA; --vellum-dim:#9A9078; --vellum-faint:#635C4C;
+  --verdigris:#5FA288; --verdigris-lo:#2E4C41;
+  --orpiment:#C9A227;
+  --madder:#C4542E; --madder-lo:#5E2A18;
+  --lapis:#7A6AA0; --lapis-lo:#3A3350;
+  --flint:#7A7568; --umber:#5B4430;
+  --line:#332D22; --line-soft:#262119;
+  --ff-display:"Eczar", Georgia, "Times New Roman", serif;
+  --ff-body:"Spectral", Georgia, serif;
+  --ff-mono:"Overpass Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--bone-black)}
+body{background:var(--bone-black);color:var(--vellum);font-family:var(--ff-body);font-size:17px;line-height:1.62;padding-inline:20px;padding-block:0 80px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3{font-family:var(--ff-display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+.eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--vellum-faint);display:flex;align-items:center;gap:12px}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+header.top{padding-block:64px 40px;display:grid;gap:18px;max-width:72ch}
+header.top h1{font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;letter-spacing:-.02em}
+header.top h1 em{font-style:normal;color:var(--verdigris)}
+.lede{font-size:1.18rem;font-weight:300;line-height:1.6}
+.dim{color:var(--vellum-dim)}
+.mono{font-family:var(--ff-mono);font-variant-numeric:tabular-nums}
+section{padding-block:48px;border-top:1px solid var(--line-soft);display:grid;gap:22px}
+section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:700}
+.note{max-width:70ch;color:var(--vellum-dim)}
+.note b{color:var(--vellum);font-weight:500}
+
+/* role swatches */
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
+.role{background:var(--ash);padding:16px;display:grid;gap:8px;min-width:0}
+.chip{height:40px;border:1px solid var(--line)}
+.role .k{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--vellum-faint)}
+.role .n{font-family:var(--ff-display);font-weight:600;font-size:1.05rem}
+.role .u{font-size:.88rem;color:var(--vellum-dim);line-height:1.45}
+.types{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
+.types>div{background:var(--ash);padding:20px;display:grid;gap:10px;min-width:0}
+
+/* frames */
+.frame{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;overflow:hidden;border:1px solid var(--line);background:var(--bone-black)}
+.screen{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;font-family:var(--ff-body);color:var(--vellum)}
+.cap{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline}
+.cap h3{font-size:1.2rem;font-weight:600}
+.cap span{font-family:var(--ff-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--vellum-faint)}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:22px}
+.pair>figure{margin:0;display:grid;gap:10px;min-width:0}
+figcaption{font-size:.95rem;color:var(--vellum-dim)}
+
+/* ── in-game components (px are 1080p canvas units) ───────────────── */
+.s-ground{position:absolute;inset:0;background:
+  radial-gradient(46% 40% at 18% 8%, rgba(201,162,39,.12), transparent 70%),
+  radial-gradient(34% 30% at 88% 22%, rgba(95,162,136,.06), transparent 70%),
+  radial-gradient(70% 60% at 50% 120%, rgba(196,84,46,.07), transparent 70%),
+  var(--bone-black)}
+.s-eye{font-family:var(--ff-mono);font-size:15px;letter-spacing:.26em;text-transform:uppercase;color:var(--vellum-faint);display:flex;align-items:center;gap:16px}
+.s-eye::after{content:"";flex:1;height:1px;background:var(--line)}
+.s-eye.noline::after{display:none}
+.s-panel{background:rgba(30,26,20,.94);border:1px solid var(--line)}
+.s-btn{position:relative;display:flex;align-items:center;height:64px;padding:0 28px;font-family:var(--ff-display);font-weight:600;font-size:27px;letter-spacing:.01em;border:1px solid var(--line);background:var(--ash);color:var(--vellum)}
+.s-btn .key{margin-left:auto;font-family:var(--ff-mono);font-size:14px;letter-spacing:.14em;color:var(--vellum-faint);font-weight:500}
+.s-btn.primary{background:var(--verdigris);border-color:var(--verdigris);color:var(--bone-black)}
+.s-btn.primary .key{color:var(--verdigris-lo)}
+.s-btn.hover{background:var(--ash-hi);border-color:var(--verdigris)}
+.s-btn.hover::before,.s-btn.primary.hover::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:6px;background:var(--verdigris)}
+.s-btn.primary.hover{background:#6DB297}
+.s-btn.primary.hover::before{background:var(--vellum)}
+.s-btn.quiet{background:transparent;border-color:transparent;color:var(--vellum-dim);font-size:24px;padding:0 4px}
+.s-btn.small{height:52px;font-size:23px}
+.s-bar{position:relative;height:14px;border:1px solid var(--line);background:rgba(20,18,14,.75)}
+.s-bar i{position:absolute;left:0;top:0;bottom:0;display:block}
+.s-bar b{position:absolute;top:0;bottom:0;width:1px;background:rgba(51,45,34,.9)}
+.num{font-family:var(--ff-mono);font-variant-numeric:tabular-nums}
+.gold{color:var(--orpiment)} .blood{color:var(--madder)} .voice{color:var(--lapis)} .touch{color:var(--verdigris)}
+
+/* sigil */
+.sigil{width:112px;height:112px}
+
+/* main menu */
+.mm-col{position:absolute;left:180px;top:130px;width:700px;display:grid;gap:0}
+.mm-word{font-family:var(--ff-display);font-weight:800;font-size:156px;line-height:.84;letter-spacing:-.035em;margin-top:26px}
+.mm-word em{font-style:normal;color:var(--verdigris);display:block}
+.mm-hook{font-family:var(--ff-body);font-weight:300;font-size:29px;line-height:1.42;color:var(--vellum-dim);margin-top:24px;max-width:640px}
+.mm-list{display:grid;gap:10px;margin-top:40px;width:520px}
+.mm-foot{position:absolute;left:180px;right:180px;bottom:60px;display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:18px;font-family:var(--ff-mono);font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--vellum-faint)}
+.mm-foot .ok{color:var(--verdigris)}
+.mm-right{position:absolute;right:180px;top:130px;width:560px;display:grid;gap:14px;text-align:right;justify-items:end}
+.mm-right .s-eye{justify-content:flex-end}
+.mm-right .s-eye::after{display:none}
+.mm-right .s-eye::before{content:"";flex:1;height:1px;background:var(--line)}
+.mm-lex{font-family:var(--ff-display);font-weight:600;font-size:36px;line-height:1.35;color:var(--vellum-faint)}
+.mm-lex span{color:var(--vellum-dim)}
+
+/* lair */
+.lr-head{position:absolute;left:120px;right:120px;top:72px;display:flex;align-items:flex-end;justify-content:space-between}
+.lr-title{font-family:var(--ff-display);font-weight:800;font-size:92px;line-height:.9;letter-spacing:-.02em}
+.lr-ledger{position:absolute;left:120px;right:120px;top:196px;display:grid;grid-template-columns:1fr 1fr 2fr;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
+.lr-ledger>div{background:var(--ash);padding:26px 30px;display:grid;gap:10px}
+.lr-fig{font-family:var(--ff-display);font-weight:700;font-size:64px;line-height:1}
+.lr-fig small{font-family:var(--ff-mono);font-size:18px;letter-spacing:.14em;color:var(--vellum-faint);font-weight:500;margin-left:10px}
+.lr-last{font-family:var(--ff-body);font-size:25px;line-height:1.45;color:var(--vellum-dim)}
+.lr-last b{font-weight:400;color:var(--orpiment)}
+.lr-eras{position:absolute;left:120px;right:600px;top:430px;display:grid;gap:18px}
+.lr-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
+.lr-card{position:relative;background:var(--ash);padding:24px 28px 26px;display:grid;gap:6px;min-height:176px}
+.lr-card .st{font-family:var(--ff-mono);font-size:14px;letter-spacing:.22em;color:var(--vellum-faint);text-transform:uppercase;display:flex;justify-content:space-between}
+.lr-card h4{font-family:var(--ff-display);font-weight:700;font-size:38px;margin:0;line-height:1.1}
+.lr-card p{font-size:21px;line-height:1.4;color:var(--vellum-dim)}
+.lr-card.sel{background:var(--ash-hi);outline:2px solid var(--verdigris);outline-offset:-2px;z-index:1}
+.lr-card.sel .st span:last-child{color:var(--verdigris)}
+.lr-company{position:absolute;right:120px;top:430px;width:440px;display:grid;gap:18px}
+.lr-company .s-panel{padding:22px 24px;display:grid;gap:14px}
+.lr-friend{display:flex;justify-content:space-between;align-items:center;font-family:var(--ff-body);font-size:22px;padding:5px 0;border-top:1px solid var(--line-soft)}
+.lr-friend .num{font-size:13px;letter-spacing:.14em;color:var(--verdigris)}
+.lr-friend .off{color:var(--vellum-faint)}
+.lr-foot{position:absolute;left:120px;right:120px;bottom:56px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:22px}
+.lr-foot .s-btn.primary{width:420px;height:76px;font-size:32px}
+
+/* raid hud */
+.rd-bg{position:absolute;inset:0;background:url("raid-backdrop.jpg") center/cover, #2a1c10}
+.rd-bg.hue{filter:saturate(1.25) hue-rotate(-8deg) brightness(.92)}
+.rd-tl{position:absolute;left:36px;top:32px;width:420px;display:grid;gap:8px}
+.rd-clock{font-family:var(--ff-display);font-weight:700;font-size:76px;line-height:.9;letter-spacing:.01em;text-shadow:0 1px 0 rgba(20,18,14,.6)}
+.rd-alarm{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:10px}
+.rd-seg{height:10px;border:1px solid var(--line);background:rgba(20,18,14,.7);position:relative}
+.rd-seg i{position:absolute;inset:0;display:block}
+.rd-alarmlbl{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--vellum-faint)}
+.rd-alarmlbl .on{color:var(--vellum)}
+.rd-tr{position:absolute;right:36px;top:32px;width:470px;display:grid;gap:10px;text-align:right}
+.rd-ledger{font-family:var(--ff-mono);font-size:17px;letter-spacing:.14em;text-transform:uppercase;color:var(--vellum-dim)}
+.rd-ledger b{font-weight:600;color:var(--orpiment)}
+.rd-haul{font-family:var(--ff-display);font-weight:600;font-size:30px;color:var(--orpiment)}
+.rd-haul small{font-family:var(--ff-mono);font-size:14px;letter-spacing:.14em;color:var(--vellum-dim);font-weight:500;margin-left:10px}
+.rd-haul.empty{color:var(--vellum-dim);font-family:var(--ff-body);font-weight:300;font-style:italic;font-size:24px}
+.rd-bl{position:absolute;left:36px;bottom:34px;width:420px;display:grid;gap:10px}
+.rd-vital{display:grid;grid-template-columns:100px 1fr 70px;align-items:center;gap:14px;font-family:var(--ff-mono);font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--vellum-faint)}
+.rd-vital .num{font-size:18px;letter-spacing:.04em;color:var(--vellum);text-align:right;text-transform:none}
+.rd-hint{font-family:var(--ff-mono);font-size:13px;letter-spacing:.16em;color:var(--vellum-dim);margin-top:6px}
+.kbd{display:inline-block;border:1px solid var(--vellum-faint);padding:1px 7px;margin-right:6px;color:var(--vellum);font-family:var(--ff-mono)}
+.rd-book{position:absolute;right:36px;bottom:34px;width:340px;padding:18px 22px 16px;display:grid;gap:4px}
+.rd-book .hd{font-family:var(--ff-mono);font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--vellum-dim);display:flex;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.rd-book .hd.listen{color:var(--lapis)}
+.rd-sp{display:grid;grid-template-columns:30px 1fr auto;align-items:baseline;gap:10px;line-height:1.45}
+.rd-sp .k{font-family:var(--ff-mono);font-size:14px;color:var(--vellum-faint)}
+.rd-sp .w{font-family:var(--ff-display);font-weight:600;font-size:23px;letter-spacing:.04em}
+.rd-sp .c{font-family:var(--ff-mono);font-size:15px;color:var(--lapis)}
+.rd-sp.poor .w,.rd-sp.poor .c{color:var(--vellum-faint)}
+.rd-sp.poor .w{text-decoration:line-through;text-decoration-color:var(--line)}
+.rd-book .ft{font-family:var(--ff-mono);font-size:12px;letter-spacing:.14em;color:var(--vellum-faint);border-top:1px solid var(--line);padding-top:8px;margin-top:6px;text-transform:uppercase}
+.rd-cross{position:absolute;left:960px;top:540px;width:0;height:0}
+.rd-cross i{position:absolute;background:rgba(220,210,186,.8)}
+.rd-cross.act i{background:var(--verdigris)}
+.rd-cross .h{left:-11px;top:-1px;width:8px;height:2px}.rd-cross .h2{left:3px;top:-1px;width:8px;height:2px}
+.rd-cross .v{left:-1px;top:-11px;width:2px;height:8px}.rd-cross .v2{left:-1px;top:3px;width:2px;height:8px}
+.rd-cross.act .ring{position:absolute;left:-17px;top:-17px;width:34px;height:34px;border:1px solid var(--verdigris);border-radius:50%;background:none}
+.rd-prompt{position:absolute;left:560px;width:800px;top:578px;text-align:center;font-family:var(--ff-mono);font-size:17px;letter-spacing:.14em;text-transform:uppercase;color:var(--vellum)}
+.rd-prompt .gold{font-family:var(--ff-display);font-size:24px;letter-spacing:.01em;text-transform:none;font-weight:600}
+.rd-prompt .w{display:block;margin-top:6px;font-size:13px;color:var(--vellum-dim)}
+.rd-bc{position:absolute;left:560px;width:800px;bottom:40px;display:grid;gap:10px;justify-items:center;text-align:center}
+.rd-caption{font-family:var(--ff-body);font-style:italic;font-size:28px;color:var(--vellum)}
+.rd-caption .arrow{font-style:normal;color:var(--vellum-faint);margin:0 12px;font-family:var(--ff-mono);font-size:20px}
+.rd-caption .spell{font-family:var(--ff-display);font-style:normal;font-weight:600;color:var(--lapis);letter-spacing:.04em}
+.rd-caption .tag{font-family:var(--ff-mono);font-style:normal;font-size:14px;letter-spacing:.16em;color:var(--vellum-faint);margin-left:12px;text-transform:uppercase}
+.rd-meter{width:440px;display:grid;gap:6px}
+.rd-meter .s-bar{height:12px}
+.rd-meter .marks{position:relative;height:16px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.16em;color:var(--vellum-faint);text-transform:uppercase}
+.rd-meter .marks span{position:absolute;transform:translateX(-50%)}
+.rd-listen{font-family:var(--ff-mono);font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--lapis)}
+.rd-carry{font-family:var(--ff-mono);font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--vellum-dim)}
+.rd-carry .gold{font-family:var(--ff-display);font-size:22px;letter-spacing:.01em;text-transform:none;font-weight:600}
+.rd-dmg{position:absolute;font-family:var(--ff-display);font-weight:700;font-size:40px;text-shadow:0 2px 0 rgba(20,18,14,.7)}
+.rd-wound{position:absolute;inset:0;box-shadow:inset 0 0 180px 40px rgba(196,84,46,.42);pointer-events:none}
+.rd-hurt{position:absolute;left:36px;bottom:150px;text-shadow:0 1px 0 rgba(20,18,14,.8);font-family:var(--ff-mono);font-size:17px;letter-spacing:.08em;color:var(--madder)}
+.rd-gbar{position:absolute;width:120px;height:8px;border:1px solid var(--line);background:rgba(20,18,14,.8)}
+.rd-gbar i{position:absolute;left:0;top:0;bottom:0;background:var(--madder)}
+.pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}}
+
+/* overlays */
+.ov-dim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,18,14,.35) 0%,rgba(20,18,14,.8) 60%,rgba(20,18,14,.94) 100%)}
+.pa-panel{position:absolute;right:0;top:0;bottom:0;width:640px;background:rgba(30,26,20,.96);border-left:1px solid var(--line);padding:120px 80px;display:grid;align-content:start;gap:16px}
+.pa-title{font-family:var(--ff-display);font-weight:700;font-size:64px;line-height:1;margin:18px 0 10px}
+.pa-sub{font-size:23px;line-height:1.45;color:var(--vellum-dim);margin-bottom:34px}
+.st-panel{position:absolute;left:260px;right:260px;top:110px;bottom:110px;padding:56px 64px;display:grid;grid-template-rows:auto 1fr auto;gap:30px}
+.st-title{font-family:var(--ff-display);font-weight:700;font-size:64px;line-height:1}
+.st-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);align-self:start}
+.st-col{background:var(--ash);padding:28px 30px 34px;display:grid;gap:26px;align-content:start}
+.st-row{display:grid;gap:12px}
+.st-row .top{display:flex;justify-content:space-between;align-items:baseline;font-size:23px}
+.st-row .top .num{font-size:17px;color:var(--vellum-dim)}
+.st-slider{position:relative;height:28px}
+.st-slider .tr{position:absolute;left:0;right:0;top:13px;height:2px;background:var(--line)}
+.st-slider .fl{position:absolute;left:0;top:13px;height:2px;background:var(--verdigris)}
+.st-slider .hd{position:absolute;top:4px;width:10px;height:20px;background:var(--vellum);margin-left:-5px}
+.st-step{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;border:1px solid var(--line);height:54px}
+.st-step span{text-align:center;font-family:var(--ff-mono);font-size:22px;color:var(--verdigris)}
+.st-step b{font-weight:400;text-align:center;font-size:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line)}
+.st-seg span{height:52px;display:grid;place-items:center;font-family:var(--ff-mono);font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--vellum-dim);border-left:1px solid var(--line)}
+.st-seg span:first-child{border-left:0}
+.st-seg .on{background:var(--verdigris-lo);color:var(--vellum);box-shadow:inset 0 -3px 0 var(--verdigris)}
+.st-note{font-size:19px;line-height:1.45;color:var(--vellum-dim);font-style:italic}
+.go{position:absolute;left:180px;top:300px;width:1100px;display:grid;gap:18px}
+.go-title{font-family:var(--ff-display);font-weight:800;font-size:150px;line-height:.9;letter-spacing:-.03em}
+.go-line{font-size:34px;font-weight:300;line-height:1.4;color:var(--vellum-dim);max-width:900px}
+.go-fig{font-family:var(--ff-display);font-weight:800;font-size:150px;line-height:.9;color:var(--orpiment);letter-spacing:-.02em}
+.go-fig small{font-family:var(--ff-mono);font-weight:500;font-size:26px;letter-spacing:.16em;color:var(--vellum-dim);margin-left:18px}
+.go-list{display:grid;gap:0;margin-top:12px;width:760px;border-top:1px solid var(--line)}
+.go-list div{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line-soft);font-size:24px}
+.go-list .num{color:var(--orpiment);font-size:20px}
+.go .s-btn{width:440px;margin-top:40px}
+
+/* component sheet */
+.sheet{position:absolute;inset:0;padding:0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line-soft)}
+.sheet>div{background:var(--bone-black);padding:40px;display:grid;gap:22px;align-content:start}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Plunderspell · UI redesign · mockup, 2026-09-28</div>
+    <h1>The UI, brought into <em>the lair at 2 am</em></h1>
+    <p class="lede">Every screen and the raid HUD, redrawn in the pitch bible's own identity: pigment colours with one meaning each, Eczar, Spectral and Overpass Mono, hairline rules and square corners. Each frame below is drawn at the game's 1920×1080 canvas size and scaled to fit, so its measurements carry straight into Unity.</p>
+    <p class="dim">Plan: <span class="mono">docs/plans/ui-redesign.md</span>. Source of the identity: <span class="mono">docs/generated/design-system/</span>.</p>
+  </header>
+
+  <section>
+    <div class="eyebrow">What each colour means</div>
+    <h2>Four colours carry meaning; the rest is the world</h2>
+    <div class="roles">
+      <div class="role"><div class="chip" style="background:var(--verdigris)"></div><div class="k">Interactive</div><div class="n">Verdigris</div><div class="u">Buttons, selection, focus, the crosshair over something usable.</div></div>
+      <div class="role"><div class="chip" style="background:var(--orpiment)"></div><div class="k">Value</div><div class="n">Orpiment</div><div class="u">Gold only: debt, banked coin, the haul, loot names.</div></div>
+      <div class="role"><div class="chip" style="background:var(--madder)"></div><div class="k">Danger</div><div class="n">Madder</div><div class="u">Health, the alarm, the last minute, death.</div></div>
+      <div class="role"><div class="chip" style="background:var(--lapis)"></div><div class="k">Voice</div><div class="n">Lapis</div><div class="u">Mana, the microphone, what the game heard you say.</div></div>
+      <div class="role"><div class="chip" style="background:var(--vellum)"></div><div class="k">Text</div><div class="n">Vellum</div><div class="u">Never pure white. Dim and faint steps for secondary text and labels.</div></div>
+      <div class="role"><div class="chip" style="background:var(--ash);"></div><div class="k">Surface</div><div class="n">Bone-black, ash</div><div class="u">Ground and panels, separated by 1 px hairlines, never shadows.</div></div>
+    </div>
+    <div class="types">
+      <div><div class="eyebrow">Display · Eczar</div><p style="font-family:var(--ff-display);font-weight:700;font-size:2.2rem;line-height:1">04:38 · AURUM VOCO</p><p class="dim">Titles, the raid clock, spell words, big figures.</p></div>
+      <div><div class="eyebrow">Body · Spectral</div><p style="font-size:1.25rem;font-weight:300;font-style:italic">"aurum voco" became Aurum Voco, shouted.</p><p class="dim">Sentences: descriptions, the last-raid line, captions.</p></div>
+      <div><div class="eyebrow">Labels · Overpass Mono</div><p class="mono" style="font-size:.95rem;letter-spacing:.2em">OWED 1,050 · [E] LIFT · 15</p><p class="dim">Eyebrows, keys, costs and any number in a row.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="cap"><h3>Main menu</h3><span>GameState.MainMenu</span></div>
+    <div class="frame"><div class="screen">
+      <div class="s-ground"></div>
+      <div class="mm-col">
+        <div class="s-eye">A heist in four centuries · up to four wizards</div>
+        <div class="mm-word">PLUNDER<em>SPELL</em></div>
+        <p class="mm-hook">Say the word. Carry what you can. Get out before the house wakes.</p>
+        <div class="mm-list">
+          <div class="s-btn primary hover">Play Solo<span class="key">ENTER</span></div>
+          <div class="s-btn">Host Co-op<span class="key">STEAM</span></div>
+          <div class="s-btn">Settings</div>
+          <div class="s-btn quiet">Quit</div>
+        </div>
+      </div>
+      <div class="mm-right">
+        <svg class="sigil" style="width:150px;height:150px;margin-bottom:26px" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+          <circle cx="50" cy="50" r="46" stroke="#332D22" stroke-width="1.5"/>
+          <circle cx="50" cy="50" r="38" stroke="#5FA288" stroke-width="1.2" stroke-dasharray="3 4"/>
+          <path d="M50 22 L50 70 M38 34 L50 22 L62 34 M36 76 L64 76" stroke="#C9A227" stroke-width="2.5" stroke-linecap="square"/>
+          <circle cx="50" cy="50" r="5" stroke="#C9A227" stroke-width="2.5"/>
+        </svg>
+        <div class="s-eye">The lexicon</div>
+        <div class="mm-lex"><span>Ignis</span> · Frango · <span>Levo</span><br>Aurum Voco · <span>Velox</span><br>Somnus · <span>Saltus</span> · Porta</div>
+      </div>
+      <div class="mm-foot"><span><span class="ok">●</span>&nbsp; Steam connected as Ajw2003</span><span>v0.1.0 · prototype</span></div>
+    </div></div>
+    <p class="note">Left-aligned instead of a centred column, so the wordmark and the actions read as one block. <b>Play Solo is the one primary button</b>; the hover state shows the left marker every button uses for mouse, keyboard and controller focus. The lexicon on the right is the eight real words, set dim, as the thing you are about to shout.</p>
+  </section>
+
+  <section>
+    <div class="cap"><h3>The Lair</h3><span>GameState.Lair</span></div>
+    <div class="frame"><div class="screen">
+      <div class="s-ground"></div>
+      <div class="lr-head">
+        <div style="display:grid;gap:14px"><div class="s-eye noline">Between raids</div><div class="lr-title">The Lair</div></div>
+        <div class="s-eye noline" style="color:var(--vellum-dim)">Debt grows by 50 each raid it stands</div>
+      </div>
+      <div class="lr-ledger">
+        <div><div class="s-eye">Owed</div><div class="lr-fig gold">1,050<small>COIN</small></div></div>
+        <div><div class="s-eye">Banked</div><div class="lr-fig gold">640<small>COIN</small></div></div>
+        <div><div class="s-eye">Last raid</div><p class="lr-last">Brought home <b>640 coin</b> in three pieces. One of you was left behind in the castle.</p></div>
+      </div>
+      <div class="lr-eras">
+        <div class="s-eye">Set out for</div>
+        <div class="lr-cards">
+          <div class="lr-card"><div class="st"><span>Stratum I</span><span>c. 1200 BC</span></div><h4>Bronze Age</h4><p>Painted plaster, grain stores, and kings who are also gods. Fire runs faster here.</p></div>
+          <div class="lr-card sel"><div class="st"><span>Stratum II</span><span>Setting out</span></div><h4>High Medieval</h4><p>Curtain walls, spiral stairs, and a chapel worth more than everything around it.</p></div>
+          <div class="lr-card"><div class="st"><span>Stratum III</span><span>c. 1450</span></div><h4>Late Medieval</h4><p>Fortresses within fortresses, built by men who had you in mind. They hunt in pairs.</p></div>
+          <div class="lr-card"><div class="st"><span>Stratum IV</span><span>c. 1620</span></div><h4>Age of Powder</h4><p>Glass by the acre and magazines of black powder. One stray Ignis ends the evening.</p></div>
+        </div>
+      </div>
+      <div class="lr-company">
+        <div class="s-eye">Company</div>
+        <div class="s-panel">
+          <div class="st-row"><div class="top"><span>Hosting over Steam</span><span class="num touch">2 / 4</span></div></div>
+          <div class="lr-friend"><span>Ajw2003 <span class="dim" style="font-size:18px">(you)</span></span><span class="num">HOST</span></div>
+          <div class="lr-friend"><span>Owen</span><span class="num">IN THE LAIR</span></div>
+          <div class="s-eye noline" style="font-size:13px;margin-top:8px">Online friends</div>
+          <div class="lr-friend"><span>Maddie</span><span class="num">INVITE</span></div>
+          <div class="lr-friend"><span>Tobias</span><span class="num">INVITE</span></div>
+          <div class="s-btn small" style="margin-top:6px">Invite Friend<span class="key">STEAM</span></div>
+        </div>
+      </div>
+      <div class="lr-foot">
+        <div class="s-btn quiet">‹ Back to Menu</div>
+        <div style="display:flex;gap:26px;align-items:center"><span class="s-eye noline">High Medieval · 2 of 4 in the Lair</span><div class="s-btn primary">Set Out<span class="key">ENTER</span></div></div>
+      </div>
+    </div></div>
+    <p class="note">The ledger puts the three numbers the Lair exists for in one row, <b>in orpiment because they are money</b>. The four Ages become cards carrying the pitch's own stratum numbers, dates and one-line character, with the chosen one outlined in verdigris. The company panel replaces the pop-out friend list; a client sees "Waiting for the host to set out" where the Set Out button is.</p>
+  </section>
+
+  <section>
+    <div class="cap"><h3>Raid HUD, calm</h3><span>GameState.Playing · aiming at loot</span></div>
+    <div class="frame"><div class="screen">
+      <div class="rd-bg"></div>
+      <div class="rd-tl">
+        <div class="s-eye noline" style="color:var(--vellum-dim)">Raiding · <span style="color:var(--vellum-faint)">Calm</span></div>
+        <div class="rd-clock num" style="font-family:var(--ff-display)">04:38</div>
+        <div class="rd-alarm"><div class="rd-seg"><i style="right:64%;background:var(--vellum-faint)"></i></div><div class="rd-seg"></div><div class="rd-seg"></div><div class="rd-seg"></div></div>
+        <div class="rd-alarmlbl"><span class="on">Calm</span><span>Stirred</span><span>Roused</span><span>Hue&nbsp;&amp;&nbsp;cry</span></div>
+      </div>
+      <div class="rd-tr">
+        <div class="rd-ledger">Owed <b>1,050</b> &nbsp;·&nbsp; Banked <b>640</b></div>
+        <div class="rd-haul">430 in the portal<small>2 PIECES</small></div>
+      </div>
+      <div class="rd-cross act"><span class="ring"></span><i class="h"></i><i class="h2"></i><i class="v"></i><i class="v2"></i></div>
+      <div class="rd-prompt"><span class="kbd">E</span>Lift <span class="gold">Gilt Reliquary</span><span class="w">4.2 kg · fragile</span></div>
+      <div class="rd-bl">
+        <div class="rd-vital"><span>Health</span><div class="s-bar"><i style="width:100%;background:var(--madder)"></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b></div><span class="num">100</span></div>
+        <div class="rd-vital"><span>Mana</span><div class="s-bar" style="height:10px"><i style="width:82%;background:var(--lapis)"></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b></div><span class="num">82</span></div>
+        <div class="rd-hint"><span class="kbd">ESC</span>MENU</div>
+      </div>
+      <div class="s-panel rd-book">
+        <div class="hd"><span>Hold <span class="kbd" style="margin:0 2px">V</span> to cast</span><span>Mana</span></div>
+        <div class="rd-sp"><span class="k">1</span><span class="w">IGNIS</span><span class="c">15</span></div>
+        <div class="rd-sp"><span class="k">2</span><span class="w">FRANGO</span><span class="c">20</span></div>
+        <div class="rd-sp"><span class="k">3</span><span class="w">LEVO</span><span class="c">12</span></div>
+        <div class="rd-sp"><span class="k">4</span><span class="w">AURUM VOCO</span><span class="c">30</span></div>
+        <div class="rd-sp"><span class="k">5</span><span class="w">VELOX</span><span class="c">10</span></div>
+        <div class="rd-sp"><span class="k">6</span><span class="w">SOMNUS</span><span class="c">20</span></div>
+        <div class="rd-sp"><span class="k">7</span><span class="w">SALTUS</span><span class="c">15</span></div>
+        <div class="rd-sp"><span class="k">8</span><span class="w">PORTA</span><span class="c">10</span></div>
+        <div class="ft">Shift shout · Ctrl whisper</div>
+      </div>
+      <div class="rd-bc">
+        <div class="rd-caption">"ignis"<span class="arrow">→</span><span class="spell">IGNIS</span><span class="tag">spoken</span></div>
+      </div>
+      <div class="rd-dmg" style="left:1180px;top:430px;color:var(--vellum)">24</div>
+    </div></div>
+    <p class="note">The crosshair gains a verdigris ring over anything you can use, and the prompt under it names the key in a box and the piece in orpiment, with its weight. The alarm bar is split into its four named states, so you can see how far you are from the next one. The haul reads as money once something stands in the portal. The number you dealt is vellum, not yellow: yellow means gold.</p>
+  </section>
+
+  <section>
+    <div class="cap"><h3>Raid HUD, going wrong</h3><span>Casting · hue and cry · last minute · hurt</span></div>
+    <div class="frame"><div class="screen">
+      <div class="rd-bg hue"></div>
+      <div class="rd-wound"></div>
+      <div class="rd-tl">
+        <div class="s-eye noline" style="color:var(--madder)">Raiding · <span class="pulse">Hue and cry, get out</span></div>
+        <div class="rd-clock num blood" style="font-family:var(--ff-display)">00:47</div>
+        <div class="rd-alarm"><div class="rd-seg"><i style="background:var(--madder-lo)"></i></div><div class="rd-seg"><i style="background:var(--madder-lo)"></i></div><div class="rd-seg"><i style="background:var(--madder)"></i></div><div class="rd-seg"><i class="pulse" style="right:30%;background:var(--madder)"></i></div></div>
+        <div class="rd-alarmlbl"><span>Calm</span><span>Stirred</span><span>Roused</span><span class="on" style="color:var(--madder)">Hue&nbsp;&amp;&nbsp;cry</span></div>
+      </div>
+      <div class="rd-tr">
+        <div class="rd-ledger">Owed <b>1,050</b> &nbsp;·&nbsp; Banked <b>640</b></div>
+        <div class="rd-haul empty">Nothing in the portal yet</div>
+      </div>
+      <div class="rd-cross"><i class="h"></i><i class="h2"></i><i class="v"></i><i class="v2"></i></div>
+      <div class="rd-dmg" style="left:1010px;top:380px;color:var(--madder);font-size:48px">−18</div>
+      <div class="rd-hurt">−18 Palace Levy &nbsp;·&nbsp; −32 fire</div>
+      <div class="rd-bl">
+        <div class="rd-vital"><span>Health</span><div class="s-bar"><i class="pulse" style="width:22%;background:var(--madder)"></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b></div><span class="num blood">22</span></div>
+        <div class="rd-vital"><span>Mana</span><div class="s-bar" style="height:10px"><i style="width:14%;background:var(--lapis)"></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b></div><span class="num">14</span></div>
+        <div class="rd-hint"><span class="kbd">ESC</span>MENU</div>
+      </div>
+      <div class="s-panel rd-book" style="border-color:var(--lapis-lo)">
+        <div class="hd listen"><span>Listening · speak</span><span>or 1–8</span></div>
+        <div class="rd-sp"><span class="k">1</span><span class="w">IGNIS</span><span class="c">15</span></div>
+        <div class="rd-sp poor"><span class="k">2</span><span class="w">FRANGO</span><span class="c">20</span></div>
+        <div class="rd-sp"><span class="k">3</span><span class="w">LEVO</span><span class="c">12</span></div>
+        <div class="rd-sp poor"><span class="k">4</span><span class="w">AURUM VOCO</span><span class="c">30</span></div>
+        <div class="rd-sp"><span class="k">5</span><span class="w">VELOX</span><span class="c">10</span></div>
+        <div class="rd-sp poor"><span class="k">6</span><span class="w">SOMNUS</span><span class="c">20</span></div>
+        <div class="rd-sp poor"><span class="k">7</span><span class="w">SALTUS</span><span class="c">15</span></div>
+        <div class="rd-sp"><span class="k">8</span><span class="w">PORTA</span><span class="c">10</span></div>
+        <div class="ft">Shift shout · Ctrl whisper</div>
+      </div>
+      <div class="rd-bc">
+        <div class="rd-listen">● Listening on Headset Microphone (Arctis 7)</div>
+        <div class="rd-meter">
+          <div class="s-bar"><i style="width:58%;background:var(--lapis)"></i><b style="left:12%;background:var(--vellum-dim)"></b><b style="left:70%;background:var(--vellum-dim)"></b></div>
+          <div class="marks"><span style="left:12%">whisper</span><span style="left:70%">shout</span></div>
+        </div>
+        <div class="rd-carry">Towing <span class="gold">Rolled Tapestry</span> · too heavy to lift</div>
+      </div>
+    </div></div>
+    <p class="note">Everything that means trouble is madder and only madder: the clock in its last minute, the hue and cry segment (pulsing slowly), the wound vignette, low health. While the cast key is held the spellbook's border and header turn lapis, the microphone meter appears with its whisper and shout marks, and <b>words you cannot afford are struck through</b> rather than only dimmed.</p>
+  </section>
+
+  <section>
+    <div class="pair">
+      <figure>
+        <div class="cap"><h3>Pause</h3><span>GameState.Paused</span></div>
+        <div class="frame"><div class="screen">
+          <div class="rd-bg"></div><div class="ov-dim"></div>
+          <div class="pa-panel">
+            <div class="s-eye">Paused for you only</div>
+            <div class="pa-title">The raid goes on</div>
+            <p class="pa-sub">The castle does not wait. Your friends and the guards keep moving while this is open.</p>
+            <div class="s-btn primary hover">Resume<span class="key">ESC</span></div>
+            <div class="s-btn">Settings</div>
+            <div class="s-btn quiet">Quit to Main Menu</div>
+          </div>
+        </div></div>
+        <figcaption>A side panel, so the world stays visible behind it, since the raid really does keep going.</figcaption>
+      </figure>
+      <figure>
+        <div class="cap"><h3>Settings</h3><span>GameState.Settings</span></div>
+        <div class="frame"><div class="screen">
+          <div class="s-ground"></div>
+          <div class="s-panel st-panel">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end"><div class="st-title">Settings</div><div class="s-eye noline">Saved as you change them</div></div>
+            <div class="st-cols">
+              <div class="st-col"><div class="s-eye">Sound</div>
+                <div class="st-row"><div class="top"><span>Master</span><span class="num">80%</span></div><div class="st-slider"><div class="tr"></div><div class="fl" style="width:80%"></div><div class="hd" style="left:80%"></div></div></div>
+                <div class="st-row"><div class="top"><span>Music</span><span class="num">60%</span></div><div class="st-slider"><div class="tr"></div><div class="fl" style="width:60%"></div><div class="hd" style="left:60%"></div></div></div>
+                <div class="st-row"><div class="top"><span>Effects</span><span class="num">100%</span></div><div class="st-slider"><div class="tr"></div><div class="fl" style="width:100%"></div><div class="hd" style="left:100%"></div></div></div>
+              </div>
+              <div class="st-col"><div class="s-eye" style="color:var(--lapis)">Voice</div>
+                <div class="st-row"><div class="top"><span>Microphone</span></div><div class="st-step"><span>‹</span><b>Headset (Arctis 7)</b><span>›</span></div></div>
+                <div class="st-row"><div class="top"><span>Gain</span><span class="num">1.50×</span></div><div class="st-slider"><div class="tr"></div><div class="fl" style="width:33%"></div><div class="hd" style="left:33%"></div></div></div>
+                <p class="st-note">Hold V in a raid to see the level meter.</p>
+              </div>
+              <div class="st-col"><div class="s-eye">Graphics</div>
+                <div class="st-row"><div class="top"><span>Quality</span></div><div class="st-seg"><span>Low</span><span class="on">Medium</span><span>High</span></div></div>
+                <p class="st-note">Low suits a Steam Deck.</p>
+              </div>
+            </div>
+            <div class="s-btn quiet" style="justify-self:start">‹ Back</div>
+          </div>
+        </div></div>
+        <figcaption>Three groups under labels. Choices you step through get ‹ › arrows; quality becomes three segments you can see all at once.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="pair">
+      <figure>
+        <div class="cap"><h3>Extracted</h3><span>GameState.Victory</span></div>
+        <div class="frame"><div class="screen">
+          <div class="s-ground"></div>
+          <div class="go">
+            <div class="s-eye" style="color:var(--verdigris)">Extracted · through the portal</div>
+            <div class="go-line" style="font-size:40px;color:var(--vellum)">Home with</div>
+            <div class="go-fig">640<small>COIN</small></div>
+            <div class="go-list">
+              <div><span>Gilt Reliquary</span><span class="num">310</span></div>
+              <div><span>Altar Plate</span><span class="num">210</span></div>
+              <div><span>Illuminated Psalter</span><span class="num">120</span></div>
+            </div>
+            <div class="s-btn primary">Back to the Lair</div>
+          </div>
+        </div></div>
+        <figcaption>The figure is the point, in orpiment and the largest thing on screen. The piece list needs a small addition to the extraction result.</figcaption>
+      </figure>
+      <figure>
+        <div class="cap"><h3>Died</h3><span>GameState.GameOver</span></div>
+        <div class="frame"><div class="screen">
+          <div class="s-ground" style="background:radial-gradient(60% 50% at 30% 40%, rgba(196,84,46,.14), transparent 70%),var(--bone-black)"></div>
+          <div class="go">
+            <div class="s-eye" style="color:var(--madder)">Fallen · High Medieval · 02:13 left</div>
+            <div class="go-title blood">You died</div>
+            <p class="go-line">The castle keeps everything you didn't carry out.</p>
+            <div class="s-btn primary">Back to the Lair</div>
+          </div>
+        </div></div>
+        <figcaption>Madder title, the existing line in Spectral, and one way on.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="cap"><h3>Components</h3><span>UIFactory</span></div>
+    <div class="frame"><div class="screen">
+      <div class="sheet">
+        <div>
+          <div class="s-eye">Buttons</div>
+          <div class="s-btn primary">Primary<span class="key">ENTER</span></div>
+          <div class="s-btn primary hover">Primary, focused</div>
+          <div class="s-btn">Secondary</div>
+          <div class="s-btn hover">Secondary, focused</div>
+          <div class="s-btn quiet">Quiet</div>
+          <div class="s-btn" style="opacity:.4">Disabled</div>
+        </div>
+        <div>
+          <div class="s-eye">Bars</div>
+          <div class="rd-vital"><span>Health</span><div class="s-bar"><i style="width:64%;background:var(--madder)"></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b></div><span class="num">64</span></div>
+          <div class="rd-vital"><span>Mana</span><div class="s-bar"><i style="width:40%;background:var(--lapis)"></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b></div><span class="num">40</span></div>
+          <div class="rd-vital"><span>Leave</span><div class="s-bar"><i style="width:70%;background:var(--verdigris)"></i></div><span class="num">3.1s</span></div>
+          <div class="s-eye" style="margin-top:20px">Alarm ramp</div>
+          <div class="rd-alarm"><div class="rd-seg"><i style="background:var(--vellum-faint)"></i></div><div class="rd-seg"><i style="background:var(--madder-lo)"></i></div><div class="rd-seg"><i style="background:var(--madder)"></i></div><div class="rd-seg"><i class="pulse" style="background:var(--madder)"></i></div></div>
+          <div class="rd-alarmlbl"><span>Calm</span><span>Stirred</span><span>Roused</span><span>Hue&nbsp;&amp;&nbsp;cry</span></div>
+        </div>
+        <div>
+          <div class="s-eye">Labels and figures</div>
+          <div class="s-eye">Eyebrow, with its hairline</div>
+          <div><div class="s-eye noline">Owed</div><div class="lr-fig gold">1,050<small>COIN</small></div></div>
+          <div class="s-panel" style="padding:22px 24px"><div class="st-row"><div class="top"><span>Panel</span><span class="num" style="color:var(--vellum-dim)">ash + 1px line</span></div></div></div>
+          <div class="rd-prompt" style="position:static;width:auto;text-align:left"><span class="kbd">E</span>Pick up <span class="gold">Gold Death Mask</span></div>
+        </div>
+      </div>
+    </div></div>
+    <p class="note">Each of these is one builder in <span class="mono">UIFactory</span> (or its IMGUI twin for the raid HUD), so a new screen gets the look by calling it, not by picking colours.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  var frames=document.querySelectorAll('.frame');
+  function fit(){frames.forEach(function(f){var s=f.querySelector('.screen');if(s)s.style.transform='scale('+(f.clientWidth/1920)+')';});}
+  fit();
+  if('ResizeObserver' in window){var ro=new ResizeObserver(fit);frames.forEach(function(f){ro.observe(f);});}
+  else window.addEventListener('resize',fit);
+})();
+</script>
