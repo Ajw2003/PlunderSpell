@@ -63,10 +63,13 @@ namespace Plunderspell.Raid
 
         // Replicated so a late-joining client knows what is going on without asking.
         private readonly SyncVar<RaidPhase> _phase = new SyncVar<RaidPhase>(RaidPhase.InLair);
-        private readonly SyncVar<int> _seed = new SyncVar<int>(0);
 
-        // Replicated because every peer builds its own castle geometry, and the era picks the rooms.
-        private readonly SyncVar<HistoricalEra> _era = new SyncVar<HistoricalEra>(HistoricalEra.BronzeAge);
+        // The seed and the era together, because every peer builds its own castle geometry from both
+        // (the era picks the rooms). As two SyncVars a client could get the new seed before the new
+        // era, build the castle in the last raid's era, then build it again when the era arrived.
+        private readonly SyncVar<long> _layout = new SyncVar<long>(PackLayout(0, HistoricalEra.BronzeAge));
+
+        private static long PackLayout(int seed, HistoricalEra era) => ((long)seed << 8) | (byte)era;
 
         // The host's campaign, so a friend's Lair shows the debt they are paying off together.
         private readonly SyncVar<float> _hostDebt = new SyncVar<float>(0f);
@@ -77,10 +80,10 @@ namespace Plunderspell.Raid
         public RaidPhase Phase => _phase.value;
 
         /// <summary>The seed the current (or most recent) raid was built from.</summary>
-        public int Seed => _seed.value;
+        public int Seed => (int)(_layout.value >> 8);
 
         /// <summary>The era the current raid is set in. Replicated, so a client reads the host's.</summary>
-        public HistoricalEra Era => _era.value;
+        public HistoricalEra Era => (HistoricalEra)(_layout.value & 0xFF);
 
         /// <summary>The layout the current raid is being played in, or null in the Lair.</summary>
         public ProceduralCastleData Castle { get; private set; }
@@ -124,8 +127,7 @@ namespace Plunderspell.Raid
         {
             base.OnSpawned();
             _phase.onChanged += OnPhaseReplicated;
-            _seed.onChanged += OnSeedReplicated;
-            _era.onChanged += OnEraReplicated;
+            _layout.onChanged += OnLayoutReplicated;
             _hostDebt.onChanged += OnHostCampaignReplicated;
             _hostGold.onChanged += OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged += OnHostCampaignReplicated;
@@ -134,15 +136,14 @@ namespace Plunderspell.Raid
             else
                 OnHostCampaignReplicated(0f);
             SubscribeToZone();
-            Debug.Log($"[Raid] Director spawned as {(isServer ? "server" : "client")}: phase {_phase.value}, seed {_seed.value}.");
+            Debug.Log($"[Raid] Director spawned as {(isServer ? "server" : "client")}: phase {_phase.value}, seed {Seed}.");
         }
 
         protected override void OnDespawned()
         {
             base.OnDespawned();
             _phase.onChanged -= OnPhaseReplicated;
-            _seed.onChanged -= OnSeedReplicated;
-            _era.onChanged -= OnEraReplicated;
+            _layout.onChanged -= OnLayoutReplicated;
             _hostDebt.onChanged -= OnHostCampaignReplicated;
             _hostGold.onChanged -= OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged -= OnHostCampaignReplicated;
@@ -161,8 +162,8 @@ namespace Plunderspell.Raid
         /// </summary>
         private void Update()
         {
-            if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(_seed.value))
-                BuildCastle(_seed.value);
+            if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(Seed))
+                BuildCastle(Seed);
         }
 
         private void OnDestroy() => UnsubscribeFromZone();
@@ -188,7 +189,7 @@ namespace Plunderspell.Raid
                 return;
             }
 
-            _era.value = era;
+            _layout.value = PackLayout(Seed, era);
             _lair?.SelectEra(era);
 
             // Debt grows every time you set out, which is what puts a clock on the whole campaign.
@@ -200,8 +201,8 @@ namespace Plunderspell.Raid
             // The zone carries the last raid's result until it is re-armed.
             _extractionZone?.ResetForNewRaid();
 
-            _seed.value = _fixedSeed != 0 ? _fixedSeed : NewSeed();
-            BuildCastle(_seed.value);
+            _layout.value = PackLayout(_fixedSeed != 0 ? _fixedSeed : NewSeed(), era);
+            BuildCastle(Seed);
 
             _alarm?.ResetForNewRaid(CastleGuard.ArrivalGraceSeconds);
             CastleGuard.BeginArrivalGrace();
@@ -235,7 +236,7 @@ namespace Plunderspell.Raid
             if (RaidContext.Current.Seed != seed)
                 RaidContext.Publish(new RaidContext(seed, Era));
             if (!isSpawned || isServer)
-                _seed.value = seed;
+                _layout.value = PackLayout(seed, Era);
             else
             {
                 _clientBuiltSeed = seed;
@@ -547,8 +548,8 @@ namespace Plunderspell.Raid
         }
 
         /// <summary>
-        /// The seed and the phase are separate SyncVars and a client can receive "raiding" before
-        /// the seed, so whichever of the two arrives second builds the castle.
+        /// The layout (seed and era) and the phase are separate SyncVars and a client can receive
+        /// "raiding" before the layout, so whichever of the two arrives second builds the castle.
         /// </summary>
         /// <summary>
         /// Whether a client's castle is missing or from an older raid. Keyed on the seed, not on the
@@ -561,17 +562,11 @@ namespace Plunderspell.Raid
         private int _clientBuiltSeed;
         private HistoricalEra _clientBuiltEra;
 
-        private void OnEraReplicated(HistoricalEra era)
+        private void OnLayoutReplicated(long layout)
         {
-            if (!isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(_seed.value))
-                BuildCastle(_seed.value);
-        }
-
-        private void OnSeedReplicated(int seed)
-        {
-            Debug.Log($"[Raid] Host's seed arrived: {seed} (phase {_phase.value}).");
-            if (!isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(seed))
-                BuildCastle(seed);
+            Debug.Log($"[Raid] Host's castle arrived: seed {Seed}, {Era} (phase {_phase.value}).");
+            if (!isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(Seed))
+                BuildCastle(Seed);
         }
 
         private void PublishCampaign()
@@ -594,13 +589,13 @@ namespace Plunderspell.Raid
         {
             if (isServer)
                 return; // the server already raised it in SetPhase
-            Debug.Log($"[Raid] Host moved the raid to {phase} (seed {_seed.value}).");
+            Debug.Log($"[Raid] Host moved the raid to {phase} (seed {Seed}).");
 
             // A client builds the same castle from the replicated seed: the geometry is local on
             // every machine, only the seed crosses the network. Loot and guards arrive as network
             // objects from the server instead.
-            if (phase == RaidPhase.Raiding && NeedsClientBuild(_seed.value))
-                BuildCastle(_seed.value);
+            if (phase == RaidPhase.Raiding && NeedsClientBuild(Seed))
+                BuildCastle(Seed);
             else if (phase == RaidPhase.InLair && Castle != null)
             {
                 _generator?.ClearGenerated();

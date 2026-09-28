@@ -259,6 +259,18 @@ second holder lets go; and it despawns when a holding client quits. Results and 
 `docs/generated/coop-carry-2026-09-27/`. Also found: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
 already failed before any #169 change (0.054 m jolt against a 0.05 m limit).
 
+**2026-09-27, two client-side raid bugs fixed.** A client built the castle twice as a raid
+started (first in the last raid's era, then again): the seed and era were separate SyncVars and
+arrived apart. They now travel as one packed value (`RaidDirector._layout`). And a client logged
+"Invalid permissions when setting `_extractionComplete`" whenever a raid ended: the extraction
+result RPC runs on every peer and wrote the server's SyncVar; now only the server (or an offline
+game) writes it. Checked: `RaidLoopTests` 19/19, `PlayableLoopTests` 13/13, and a two-player run of
+`coop_carry_check.sh --raid-end` (`raid-end-run1.log`): the client built once, in LateMedieval, and
+followed the raid to Resolved with no SyncVar error. Every carry-check run now also checks the castle
+was built once (`castle_built_once`, passed twice). Open: the carry check's `client_grabs` still
+fails now and then by a few centimetres (0.38 m against 0.35) because its aim point sits behind a
+wall in the fixed castle (seen in `frames/client_grabs.png`); a check problem, not a game one.
+
 **2026-09-27, #169 step 5: held pieces turn by torque.** A held piece turns toward where its
 holder faces through a torque capped at the holder's turn strength, so a goblet follows at once and
 a long piece sweeps round; two holders turn it faster than one. Also fixed: two holders lifting a

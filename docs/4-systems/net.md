@@ -254,7 +254,10 @@ players and end the raid a few minutes in: with a random seed the spawn sometime
 ends the raid within seconds, and the pieces available to stage change. Staging avoids the
 portal, which holds pieces up and freezes them, and skips light pieces over 1 m across. The build is redone only when something under
 `Assets/` or `ProjectSettings/` is newer than `Build/DevTest/.built`; `--build` and `--no-build`
-override that. `--shots` screenshots every scenario, `--no-video` skips recording. A run takes about
+override that. `--shots` screenshots every scenario, `--no-video` skips recording. Every run first checks the client built the castle exactly once
+(`castle_built_once`). `--raid-end` runs no carry scenarios: it ends the raid from the host and
+checks the client followed it with no SyncVar permission errors (`raid_ends_cleanly`), in about a
+minute. A run takes about
 3.5 minutes. Both sides are driven by
 `Tools/Unity/coop_eval.sh host|client <action>`, which runs `Tools/Unity/eval/coop_carry.cs`
 through reflection so the same code works in the build. It needs the Editor open and not playing,
