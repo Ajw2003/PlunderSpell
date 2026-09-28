@@ -157,3 +157,84 @@ PASS client_holds_close
 PASS both_grab_same_piece
 PASS client_lets_go
 PASS client_quits_holding
+
+# run 19:55:49
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 19:59:31
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+FAIL held host=False client=False, wanted both; needs both aim points both_grab_same_piece
+FAIL held host=False client=False, wanted host; host has no aim point client_lets_go
+FAIL host lost the piece: pos -11.407,0.310,22.077 held False aim none grip none load 0.20 heavy False | kinematic True portalFrozen True inPortal True controls True holders 0 owner  client_quits_holding
+
+# run 20:03:10
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 20:08:17
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 20:11:51
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+
+# run 20:56:05
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 73"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "No running Unity Player found matching 'Plunderspell' with Pipeline server.\n\nMake sure:\n\u00e2\u20ac\u00a2 The Unity Player build is running\n\u00e2\u2' opposite_pulls_snap
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id ERROR"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "No running Unity Player found matching 'Plunderspell' with Pipeline server.\n\nMake sure:\n\u00e2\u20ac\u00a2 The Unity Player build is running\n\u00e2\u2' both_grab_same_piece
+FAIL unreadable: host 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id ERROR"}]' client 'ERROR [{"code": "COMMAND_FAILED", "message": "No running Unity Player found matching 'Plunderspell' with Pipeline server.\n\nMake sure:\n\u00e2\u20ac\u00a2 The Unity Player build is running\n\u00e2\u2' client_lets_go
+FAIL host lost the piece: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id ERROR"}] client_quits_holding
+
+# run 21:05:36
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding

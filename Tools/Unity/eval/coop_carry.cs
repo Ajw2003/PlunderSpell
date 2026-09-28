@@ -15,8 +15,8 @@
 //   turn <degrees>    turn the local view about world up
 //   pitch <degrees>   look at this pitch (degrees, positive down), like level but to an angle
 //   level             look level, so a held piece is lifted to eye height
-//   read <id>         the piece's position, whether this side holds it, where it aims it, and
-//                     where its held point is
+//   read <id>         the piece's position, whether this side holds it, where it aims it, where
+//                     its held point is, its load and whether it is too heavy to lift
 //   park <id>         host: move a finished scenario's piece out of the way
 //   shot <path>       save a screenshot (absolute path, forward slashes)
 //   quit              close this game (the client build)
@@ -249,9 +249,12 @@ switch (action)
         var body = item.GetComponent<UnityEngine.Rigidbody>();
         var identity = item.GetComponentInParent(T("PurrNet.NetworkIdentity"));
         return "pos " + V(item.transform.position) + " held " + (held == item) + " aim " + aim + " grip " + grip
+            + " load " + ((float)Get(item, "Load")).ToString("F2") + " heavy " + Get(item, "IsTooHeavyToLift")
             + " | kinematic " + body.isKinematic + " portalFrozen " + Get(item, "IsFrozenByPortal")
             + " inPortal " + Get(item, "_inPortal") + " controls " + ((System.Delegate)Get(T("Item"), "CanDriveHere")).DynamicInvoke(item)
-            + " holders " + Get(item, "HolderCount") + " owner " + Get(identity, "owner");
+            + " holders " + Get(item, "HolderCount") + " owner " + Get(identity, "owner")
+            + " broken " + Get(item.GetComponent(T("Plunderspell.Loot.LootPickup")), "IsBroken")
+            + " snapped " + Get(item, "LocalBeamSnapped");
     }
     case "park":
     {
