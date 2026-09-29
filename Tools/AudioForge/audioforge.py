@@ -44,4 +44,10 @@ def main():
 
 
 if __name__ == "__main__":
+    # The CSVs and briefs are UTF-8 (they hold characters like the arrow in "alarm -> stirred"). Python on
+    # Windows opens files as cp1252 unless told otherwise, which crashed the manifest writer partway and
+    # left a truncated manifest.csv. Restart once in UTF-8 mode rather than patch every open() call.
+    if not sys.flags.utf8_mode:
+        import subprocess
+        sys.exit(subprocess.call([sys.executable, "-X", "utf8", str(Path(__file__).resolve())] + sys.argv[1:]))
     sys.exit(main())

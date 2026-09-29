@@ -462,7 +462,9 @@ for name, variant, brief in (("mus_title_loop", "title", "The Herald's Overture"
                              ("mus_results_success_loop", "results_success", "a jaunty tavern reel"),
                              ("mus_results_failure_loop", "results_failure", "a slow tipsy reel"),
                              ("mus_credits", "credits", "a full theme arrangement")):
-    add(name, 1, M, "Music", "2d", 1, "M", "none", f"music:theme variant={variant}", brief)
+    # The owner keeps the synthesised title theme (2026-09-29): "G" means synthesis is final, so it is
+    # not on the list of tracks to replace with AI music.
+    add(name, 1, M, "Music", "2d", 1, "G" if variant == "title" else "M", "none", f"music:theme variant={variant}", brief)
 for age in AGES:
     for layer in ("calm", "stirred", "roused", "huecry"):
         add(f"mus_raid_{age}_{layer}", 1, M, "Music", "2d", 1, "C", "none", f"music:raid age={age} layer={layer}",

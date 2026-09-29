@@ -424,7 +424,7 @@ sfx_lair_era_select_late,1,SFX/Lair,UI,2d,0,G,none,music:sting kind=alarm_stirre
 sfx_lair_era_select_powder,1,SFX/Lair,UI,2d,0,G,none,music:sting kind=alarm_stirred age=powder + synth:hiss dur=1.2 low=3000 high=9000 decay=2 gain=-14,"an hourglass turned, plus the powder Age's instrument",
 sfx_lair_weapon_rack_take,2,SFX/Lair,SFX/World,3d,0,L,none,kenney:rpg-audio/drawKnife* + kenney:impact-sounds/impactWood_light_* gain=-6,a scrape off a peg,
 sfx_lair_revive,1,SFX/Lair,UI,2d,0,C,none,synth:shimmer dur=2.5 root=262 voices=5 attack=0.6 rise=1.5,a warm rising chord,
-mus_title_loop,1,Music,Music,2d,1,M,none,music:theme variant=title,The Herald's Overture,
+mus_title_loop,1,Music,Music,2d,1,G,none,music:theme variant=title,The Herald's Overture,
 mus_lair_loop,1,Music,Music,2d,1,M,none,music:theme variant=lair,"one candle, one fire",
 mus_lair_after_loss_loop,1,Music,Music,2d,1,M,none,music:theme variant=lair_after_loss,"solo hurdy-gurdy, sadder",
 mus_results_success_loop,1,Music,Music,2d,1,M,none,music:theme variant=results_success,a jaunty tavern reel,
