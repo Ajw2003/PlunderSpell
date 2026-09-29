@@ -7,7 +7,7 @@ namespace Plunderspell.UI
     // doc-ref 7f7c docs/4-systems/damage.md
     /// <summary>
     /// Draws every <see cref="Damage.Dealt"/> hit: numbers, flashes, enemy health bars, a hit marker,
-    /// and a red screen edge plus a "what hurt you" line for the local player. Creates itself.
+    /// and a madder screen edge plus a "what hurt you" line for the local player. Creates itself.
     /// </summary>
     public class DamageFeedbackView : MonoBehaviour
     {
@@ -18,13 +18,15 @@ namespace Plunderspell.UI
         private const float k_hitMarkerSeconds = 0.25f;
         private const int k_maxHurtLines = 4;
 
-        private static readonly Color k_youHurtColour = new Color(1f, 0.25f, 0.2f);
-        private static readonly Color k_youDealtColour = new Color(1f, 0.9f, 0.35f);
-        private static readonly Color k_friendlyFireColour = new Color(1f, 0.55f, 0.1f);
-        private static readonly Color k_otherColour = new Color(0.85f, 0.85f, 0.85f);
-        private static readonly Color k_shatterColour = new Color(0.75f, 0.85f, 1f);
-        private static readonly Color k_enemyBarColour = new Color(0.85f, 0.15f, 0.12f);
-        private static readonly Color k_friendBarColour = new Color(0.25f, 0.8f, 0.3f);
+        // Yellow is gold's colour and means loot, so a hit you land is vellum, not yellow.
+        private static readonly Color k_youHurtColour = UITheme.Danger;
+        private static readonly Color k_youDealtColour = UITheme.Text;
+        private static readonly Color k_friendlyFireColour = Color.Lerp(UITheme.Umber, UITheme.Danger, 0.5f);
+        private static readonly Color k_otherColour = UITheme.TextDim;
+        private static readonly Color k_shatterColour = UITheme.Flint;
+        private static readonly Color k_enemyBarColour = UITheme.Danger;
+        private static readonly Color k_friendBarColour = UITheme.TextDim;
+        private static readonly float[] k_hitMarkerAngles = { 45f, 135f, 225f, 315f };
         private static readonly int k_baseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int k_colorId = Shader.PropertyToID("_Color");
 
@@ -72,6 +74,7 @@ namespace Plunderspell.UI
         private GUIStyle _numberStyle;
         private GUIStyle _bigNumberStyle;
         private GUIStyle _lineStyle;
+        private readonly GUIContent _measure = new GUIContent();
 
         /// <summary>The hits drawn right now, for tests: how many floating numbers are alive.</summary>
         public int LiveNumberCount => _numbers.Count;
@@ -348,7 +351,8 @@ namespace Plunderspell.UI
                 return;
 
             Color previous = GUI.color;
-            GUI.color = new Color(1f, 0f, 0f, Mathf.Clamp01(alpha));
+            // Madder, not pure red: the wound belongs to the same palette as the rest of the HUD.
+            GUI.color = new Color(UITheme.Danger.r, UITheme.Danger.g, UITheme.Danger.b, Mathf.Clamp01(alpha));
             GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), _vignetteTexture, ScaleMode.StretchToFill);
             GUI.color = previous;
         }
@@ -396,7 +400,8 @@ namespace Plunderspell.UI
 
                 GUIStyle style = number.Big ? _bigNumberStyle : _numberStyle;
                 float alpha = age < 0.7f ? 1f : 1f - (age - 0.7f) / 0.3f;
-                Vector2 size = style.CalcSize(new GUIContent(number.Text)) + new Vector2(8f, 4f);
+                _measure.text = number.Text;
+                Vector2 size = style.CalcSize(_measure) + new Vector2(8f, 4f);
                 float rise = age * 60f;
                 var rect = new Rect(screen.x - size.x * 0.5f, Screen.height - screen.y - size.y * 0.5f - rise, size.x, size.y);
                 Shadowed(rect, number.Text, style, new Color(number.Colour.r, number.Colour.g, number.Colour.b, alpha));
@@ -414,7 +419,7 @@ namespace Plunderspell.UI
             Color previous = GUI.color;
             GUI.color = _hitMarkerKill ? k_youHurtColour : Color.white;
             Matrix4x4 matrix = GUI.matrix;
-            foreach (float angle in new[] { 45f, 135f, 225f, 315f })
+            foreach (float angle in k_hitMarkerAngles)
             {
                 GUIUtility.RotateAroundPivot(angle, new Vector2(cx, cy));
                 GUI.DrawTexture(new Rect(cx + 5f, cy - 1f, size, 2.5f), _white);
@@ -460,14 +465,15 @@ namespace Plunderspell.UI
             if (_numberStyle != null)
                 return;
 
+            // Numbers are Eczar and the lines naming what hurt you are mono, as everywhere else in the HUD.
             _numberStyle = new GUIStyle(GUI.skin.label)
             {
+                font = UIFonts.Display,
                 alignment = TextAnchor.MiddleCenter,
-                fontSize = 20,
-                fontStyle = FontStyle.Bold,
+                fontSize = 22,
             };
-            _bigNumberStyle = new GUIStyle(_numberStyle) { fontSize = 28 };
-            _lineStyle = new GUIStyle(_numberStyle) { fontSize = 18 };
+            _bigNumberStyle = new GUIStyle(_numberStyle) { font = UIFonts.DisplayHeavy, fontSize = 30 };
+            _lineStyle = new GUIStyle(_numberStyle) { font = UIFonts.Mono, fontSize = 17 };
 
             _white = Texture2D.whiteTexture;
             _vignetteTexture = BuildVignette(128);
@@ -476,7 +482,11 @@ namespace Plunderspell.UI
         /// <summary>A white texture that is clear in the middle and opaque at the edges.</summary>
         private static Texture2D BuildVignette(int size)
         {
-            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.DontSave,
+            };
             var pixels = new Color[size * size];
             for (int y = 0; y < size; y++)
             {

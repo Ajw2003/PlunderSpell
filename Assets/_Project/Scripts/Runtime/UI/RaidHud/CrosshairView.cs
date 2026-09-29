@@ -9,13 +9,22 @@ namespace Plunderspell.UI
         [Tooltip("Hide the crosshair (e.g. for screenshots).")]
         [SerializeField] private bool _visible = true;
 
-        private const float k_size = 9f;
+        // The mockup's .rd-cross, in 1080p units: four ticks 8 long and 2 thick, pulled 3 off centre,
+        // and over something usable a 34px ring in one hairline.
+        private const float k_referenceHeight = 1080f;
+        private const float k_tickInner = 3f;
+        private const float k_tickLength = 8f;
         private const float k_thickness = 2f;
+        private const float k_ringSize = 34f;
 
-        private static readonly Color k_idleColour = new Color(1f, 1f, 1f, 0.75f);
-        private static readonly Color k_activeColour = new Color(1f, 0.85f, 0.35f, 1f);
+        // The ring is drawn from a texture twice its size so a 1px line stays crisp when it is scaled down.
+        private const int k_ringTexture = 68;
+        private const float k_ringTextureThickness = 2f;
+
+        private static readonly Color k_idleColour = new Color(UITheme.Text.r, UITheme.Text.g, UITheme.Text.b, 0.8f);
 
         private Texture2D _fill;
+        private Texture2D _ring;
 
         /// <summary>True while the crosshair should show its "over something" look. A scene with
         /// nothing to interact with (the bench) just never sets this and stays idle.</summary>
@@ -28,32 +37,33 @@ namespace Plunderspell.UI
             if (Plunderspell.Core.GameServices.GameState.CurrentState != Plunderspell.Core.GameState.Playing)
                 return;
 
-            EnsureTexture();
-            Draw(HasTarget);
+            float scale = Screen.height / k_referenceHeight;
+            if (scale <= 0f)
+                return;
+
+            EnsureTextures();
+
+            Matrix4x4 previousMatrix = GUI.matrix;
+            GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(scale, scale, 1f));
+            Draw(HasTarget, Screen.width * 0.5f / scale, k_referenceHeight * 0.5f);
+            GUI.matrix = previousMatrix;
         }
 
-        private void Draw(bool hasTarget)
+        private void Draw(bool hasTarget, float centreX, float centreY)
         {
-            float centreX = Screen.width * 0.5f;
-            float centreY = Screen.height * 0.5f;
-
             Color previous = GUI.color;
-            GUI.color = hasTarget ? k_activeColour : k_idleColour;
+            GUI.color = hasTarget ? UITheme.Interactive : k_idleColour;
+
+            float half = k_thickness * 0.5f;
+            DrawLine(centreX - k_tickInner - k_tickLength, centreY - half, k_tickLength, k_thickness);
+            DrawLine(centreX + k_tickInner, centreY - half, k_tickLength, k_thickness);
+            DrawLine(centreX - half, centreY - k_tickInner - k_tickLength, k_thickness, k_tickLength);
+            DrawLine(centreX - half, centreY + k_tickInner, k_thickness, k_tickLength);
 
             if (hasTarget)
             {
-                // Four ticks pulled back off centre: an open bracket around what you are looking at.
-                float inner = k_size * 0.6f;
-                float outer = k_size * 1.5f;
-                DrawLine(centreX - outer, centreY - k_thickness * 0.5f, outer - inner, k_thickness);
-                DrawLine(centreX + inner, centreY - k_thickness * 0.5f, outer - inner, k_thickness);
-                DrawLine(centreX - k_thickness * 0.5f, centreY - outer, k_thickness, outer - inner);
-                DrawLine(centreX - k_thickness * 0.5f, centreY + inner, k_thickness, outer - inner);
-            }
-            else
-            {
-                DrawLine(centreX - k_size, centreY - k_thickness * 0.5f, k_size * 2f, k_thickness);
-                DrawLine(centreX - k_thickness * 0.5f, centreY - k_size, k_thickness, k_size * 2f);
+                float ring = k_ringSize * 0.5f;
+                GUI.DrawTexture(new Rect(centreX - ring, centreY - ring, k_ringSize, k_ringSize), _ring);
             }
 
             GUI.color = previous;
@@ -62,14 +72,12 @@ namespace Plunderspell.UI
         private void DrawLine(float x, float y, float width, float height) =>
             GUI.DrawTexture(new Rect(x, y, width, height), _fill);
 
-        private void EnsureTexture()
+        private void EnsureTextures()
         {
-            if (_fill != null)
-                return;
-
-            _fill = new Texture2D(1, 1);
-            _fill.SetPixel(0, 0, Color.white);
-            _fill.Apply();
+            if (_fill == null)
+                _fill = UITextures.White;
+            if (_ring == null)
+                _ring = UITextures.Ring(k_ringTexture, k_ringTextureThickness);
         }
     }
 }

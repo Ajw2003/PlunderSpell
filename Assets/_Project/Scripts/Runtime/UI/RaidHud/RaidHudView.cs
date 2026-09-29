@@ -1,3 +1,4 @@
+using System;
 using Plunderspell.Alarm;
 using Plunderspell.Raid;
 using UnityEngine;
@@ -23,7 +24,11 @@ namespace Plunderspell.UI
         [Tooltip("Show the push-to-cast key and the spell list.")]
         [SerializeField] private bool _showSpellbook = true;
 
-        private const float k_crosshairSize = 9f;
+        // Everything is laid out in 1080p units (the mockup's CSS pixels) and scaled to the screen.
+        private const float k_referenceHeight = 1080f;
+        private const float k_edge = 36f;
+        private const float k_meterMax = 0.6f;
+        private const float k_pulseSeconds = 2.4f;
 
         // Mirrors MockVoiceInputService.keybindMap; the HUD only needs the words, not the service.
         private static readonly string[] Spellbook =
@@ -31,6 +36,45 @@ namespace Plunderspell.UI
             "IGNIS", "FRANGO", "LEVO", "AURUM VOCO",
             "VELOX", "SOMNUS", "SALTUS", "PORTA",
         };
+
+        private static readonly string[] SpellKeys = { "1", "2", "3", "4", "5", "6", "7", "8" };
+
+        private static readonly AlarmState[] AlarmStates =
+        {
+            AlarmState.Calm, AlarmState.Stirred, AlarmState.Roused, AlarmState.HueAndCry,
+        };
+
+        // Letter-spaced labels are built once: tracking a string allocates, and the HUD draws every frame.
+        private static readonly string[] AlarmNames =
+        {
+            Theme.Tracked("Calm"), Theme.Tracked("Stirred"), Theme.Tracked("Roused"), Theme.Tracked("Hue and cry"),
+        };
+
+        private static readonly string[] AlarmSegmentLabels =
+        {
+            Theme.Tracked("Calm"), Theme.Tracked("Stirred"), Theme.Tracked("Roused"), Theme.Tracked("Hue & cry"),
+        };
+
+        private static readonly string Separator = Theme.Tracked(" · ");
+        private static readonly string OwedLabel = Theme.Tracked("Owed");
+        private static readonly string BankedLabel = Theme.Tracked("Banked");
+        private static readonly string HoldToCast = Theme.Tracked("Hold [V] to cast");
+        private static readonly string ManaHeader = Theme.Tracked("Mana");
+        private static readonly string ListeningHeader = Theme.Tracked("Listening · speak");
+        private static readonly string OrNumbers = Theme.Tracked("or 1–8");
+        private static readonly string CastingHeader = Theme.Tracked("Casting");
+        private static readonly string PressNumber = Theme.Tracked("Press 1–8");
+        private static readonly string SpellFooter = Theme.Tracked("Shift shout · Ctrl whisper");
+        private static readonly string KeyboardCasting = "● " + Theme.Tracked("Keyboard casting · press 1–8");
+        private static readonly string ListeningOn = "● " + Theme.Tracked("Listening on") + " ";
+        private static readonly string WhisperLabel = Theme.Tracked("Whisper");
+        private static readonly string ShoutLabel = Theme.Tracked("Shout");
+        private static readonly string CarryingLabel = Theme.Tracked("Carrying");
+        private static readonly string TowingLabel = Theme.Tracked("Towing");
+        private static readonly string TooHeavy = Theme.Tracked(" · too heavy to lift");
+        private static readonly string PieceLabel = Theme.Tracked("piece");
+        private static readonly string PiecesLabel = Theme.Tracked("pieces");
+        private const string NothingInPortal = "Nothing in the portal yet";
 
         private Plunderspell.Voice.PushToCastController _pushToCast;
 
@@ -47,12 +91,46 @@ namespace Plunderspell.UI
         }
         private RaidHudPresenter _presenter;
         private CrosshairView _crosshair;
-        private GUIStyle _label;
-        private GUIStyle _big;
-        private GUIStyle _heading;
-        private Texture2D _panel;
-        private Texture2D _barBackground;
-        private Texture2D _barFill;
+
+        // Styles are white so a colour can be chosen per draw (GUI.contentColor) without touching them.
+        private GUIStyle _mono12;
+        private GUIStyle _mono14;
+        private GUIStyle _mono15;
+        private GUIStyle _mono17;
+        private GUIStyle _monoBold17;
+        private GUIStyle _display22;
+        private GUIStyle _display23;
+        private GUIStyle _display26;
+        private GUIStyle _display30;
+        private GUIStyle _display76;
+        private GUIStyle _italic24;
+        private GUIStyle _italic28;
+        private Texture2D _white;
+        private readonly GUIContent _measure = new GUIContent();
+
+        // Text that only changes when its number does, so a steady HUD makes no garbage.
+        private int _clockSecond = -1;
+        private string _clockText = string.Empty;
+        private float _owedValue = float.NaN;
+        private string _owedText = string.Empty;
+        private float _bankedValue = float.NaN;
+        private string _bankedText = string.Empty;
+        private float _haulWorth = float.NaN;
+        private string _haulText = string.Empty;
+        private int _haulPieces = -1;
+        private string _pieceText = string.Empty;
+        private string _promptSource;
+        private bool _promptHasKey;
+        private string _promptKey = string.Empty;
+        private string _promptRest = string.Empty;
+        private string _carriedName;
+        private bool _carriedTwo;
+        private string _carriedLine = string.Empty;
+        private string _chantWord;
+        private string _chantLine = string.Empty;
+        private string _listenDevice;
+        private string _listenLine = string.Empty;
+        private readonly string[] _costTexts = new string[100];
 
         private void Awake()
         {
@@ -77,21 +155,45 @@ namespace Plunderspell.UI
             string heard = $"\"{phrase.Heard.ToLowerInvariant()}\"";
             if (phrase.NotEnoughMana)
             {
-                colour = Theme.ManaColor;
+                // Mana is the voice's colour, brightened so it reads as a caption and not as a dark bar.
+                colour = Color.Lerp(Theme.VoiceLo, Theme.TextDim, 0.5f);
                 return $"{heard}  ->  {phrase.Word}  -  not enough mana";
             }
             if (phrase.Fizzled)
             {
-                colour = new Color(0.65f, 0.65f, 0.65f);
+                colour = Theme.TextDim;
                 return $"{heard}  -  fizzled, not a spell";
             }
             if (phrase.IsMisfire)
             {
-                colour = new Color(1f, 0.45f, 0.2f);
+                colour = Theme.Danger;
                 return $"{heard}  ->  {phrase.Word}  -  MISFIRE";
             }
-            colour = new Color(0.55f, 1f, 0.6f);
+            colour = Theme.Voice;
             return $"{heard}  ->  {phrase.Word}  ({phrase.Volume})";
+        }
+
+        /// <summary>
+        /// Splits "Press [E] to pick up Gold Death Mask" into the key ("E") and what it does ("pick up
+        /// Gold Death Mask"), so the key can be drawn in a box. False, with <paramref name="rest"/> the
+        /// whole prompt, when the text is not of that form. Pure, for tests.
+        /// </summary>
+        public static bool SplitPrompt(string prompt, out string key, out string rest)
+        {
+            const string opening = "Press [";
+            key = string.Empty;
+            rest = prompt;
+            if (string.IsNullOrEmpty(prompt) || !prompt.StartsWith(opening, StringComparison.Ordinal))
+                return false;
+
+            int close = prompt.IndexOf(']', opening.Length);
+            if (close <= opening.Length)
+                return false;
+
+            key = prompt.Substring(opening.Length, close - opening.Length);
+            string after = prompt.Substring(close + 1).TrimStart();
+            rest = after.StartsWith("to ", StringComparison.Ordinal) ? after.Substring(3) : after;
+            return true;
         }
 
         private void OnPhrase(Plunderspell.Spells.SpellCastingSystem.PhraseReport phrase)
@@ -119,80 +221,174 @@ namespace Plunderspell.UI
                 state != Plunderspell.Core.GameState.Paused)
                 return;
 
+            float scale = Screen.height / k_referenceHeight;
+            if (scale <= 0f)
+                return;
+
             EnsureStyles();
             RaidHudModel model = _presenter.Build();
 
-            const float pad = 12f;
-            float width = Mathf.Min(360f, Screen.width - pad * 2f);
+            Matrix4x4 previousMatrix = GUI.matrix;
+            GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(scale, scale, 1f));
+            float width = Screen.width / scale;
+            float centre = width * 0.5f;
 
-            // Top-left: phase, clock, alarm.
-            GUI.DrawTexture(new Rect(pad * 0.5f, pad * 0.5f, width + pad, 104f), _panel);
-            GUILayout.BeginArea(new Rect(pad, pad, width, 200f));
-            GUILayout.Label(PhaseLine(model.Phase).ToUpperInvariant(), _heading);
-
-            _big.normal.textColor = model.TimerIsCritical ? Theme.Danger : Theme.TextPrimary;
-            GUILayout.Label(model.TimerText, _big);
-
-            GUILayout.Label(model.AlarmText, _label);
-            DrawBar(GUILayoutUtility.GetRect(width - pad, 10f), model.AlarmFill, AlarmColour(model.Alarm));
-            GUILayout.EndArea();
-
-            // Top-right: the money, and the haul standing in the portal. The haul sits with the debt
-            // rather than near the crosshair because it is the number the debt is measured against.
-            GUI.DrawTexture(new Rect(Screen.width - width - pad * 1.5f, pad * 0.5f, width + pad, 52f), _panel);
-            GUILayout.BeginArea(new Rect(Screen.width - width - pad, pad, width, 80f));
-            GUILayout.Label($"Debt {model.Debt:0}   Banked {model.BankedGold:0}", _heading);
-
-            GUIStyle haulStyle = _label;
-            if (model.HaulPieces > 0)
-            {
-                haulStyle = new GUIStyle(_label);
-                haulStyle.normal.textColor = Theme.Accent;
-            }
-            GUILayout.Label(model.HaulText, haulStyle);
-            GUILayout.EndArea();
+            DrawTopLeft(model);
+            DrawTopRight(model, width - k_edge);
 
             if (_crosshair != null)
                 _crosshair.HasTarget = model.HasInteractTarget;
 
-            // Centre: the interact prompt, just under the crosshair so the eye never has to leave it.
+            DrawPrompt(model, centre);
+            DrawCarrying(model, centre);
+            DrawSpellbook(width - k_edge);
+            DrawChant(centre);
+            DrawListening(model, centre);
+
+            GUI.matrix = previousMatrix;
+        }
+
+        // --- Top-left: phase, clock, alarm ---------------------------------------------------------
+
+        private void DrawTopLeft(RaidHudModel model)
+        {
+            const float width = 420f;
+            const float segmentTop = 150f;
+
+            // "RAIDING · CALM": the alarm's name turns madder as it climbs.
+            int alarmIndex = Mathf.Clamp((int)model.Alarm, 0, AlarmNames.Length - 1);
+            bool alarmed = model.Alarm == AlarmState.Roused || model.Alarm == AlarmState.HueAndCry;
+            float x = k_edge;
+            x += DrawText(x, 44f, TrackedPhase(model.Phase), _mono15, Theme.TextDim);
+            x += DrawText(x, 44f, Separator, _mono15, Theme.TextDim);
+            DrawText(x, 44f, AlarmNames[alarmIndex], _mono15, alarmed ? Theme.Danger : Theme.TextFaint);
+
+            int second = Mathf.FloorToInt(Mathf.Max(0f, model.TimeRemaining));
+            if (second != _clockSecond)
+            {
+                _clockSecond = second;
+                _clockText = model.TimerText;
+            }
+            DrawText(k_edge, 98f, _clockText, _display76, model.TimerIsCritical ? Theme.Danger : Theme.Text);
+
+            // Four segments, one per alarm state; the fill of each is its quarter of the alarm level.
+            float segmentWidth = (width - 12f) * 0.25f;
+            for (int k = 0; k < AlarmStates.Length; k++)
+            {
+                float left = k_edge + k * (segmentWidth + 4f);
+                DrawBar(new Rect(left, segmentTop, segmentWidth, 10f), Mathf.Clamp01(model.AlarmFill * 4f - k),
+                    Theme.AlarmColour(AlarmStates[k]), k == 3 ? Pulse() : 1f, 0.7f);
+                DrawText(left, 175f, AlarmSegmentLabels[k], _mono12, k == alarmIndex ? Theme.Text : Theme.TextFaint);
+            }
+        }
+
+        /// <summary>Alpha for the hue and cry segment: 1 down to 0.55 and back over 2.4 seconds.</summary>
+        private static float Pulse() => 0.775f + 0.225f * Mathf.Cos(Time.time * (Mathf.PI * 2f / k_pulseSeconds));
+
+        // --- Top-right: the money, and the haul standing in the portal -----------------------------
+
+        private void DrawTopRight(RaidHudModel model, float right)
+        {
+            // The haul sits with the debt rather than near the crosshair because it is the number the
+            // debt is measured against.
+            if (!Mathf.Approximately(_owedValue, model.Debt) || float.IsNaN(_owedValue))
+            {
+                _owedValue = model.Debt;
+                _owedText = model.Debt.ToString("N0");
+            }
+            if (!Mathf.Approximately(_bankedValue, model.BankedGold) || float.IsNaN(_bankedValue))
+            {
+                _bankedValue = model.BankedGold;
+                _bankedText = model.BankedGold.ToString("N0");
+            }
+
+            const float gap = 10f;
+            float labelOwed = Measure(OwedLabel, _mono17).x;
+            float figureOwed = Measure(_owedText, _monoBold17).x;
+            float separator = Measure(Separator, _mono17).x;
+            float labelBanked = Measure(BankedLabel, _mono17).x;
+            float figureBanked = Measure(_bankedText, _monoBold17).x;
+            float x = right - (labelOwed + figureOwed + separator + labelBanked + figureBanked + gap * 2f);
+
+            x += DrawText(x, 46f, OwedLabel, _mono17, Theme.TextDim) + gap;
+            x += DrawText(x, 46f, _owedText, _monoBold17, Theme.Value);
+            x += DrawText(x, 46f, Separator, _mono17, Theme.TextDim);
+            x += DrawText(x, 46f, BankedLabel, _mono17, Theme.TextDim) + gap;
+            DrawText(x, 46f, _bankedText, _monoBold17, Theme.Value);
+
+            if (model.HaulPieces > 0)
+            {
+                if (float.IsNaN(_haulWorth) || !Mathf.Approximately(_haulWorth, model.HaulWorth))
+                {
+                    _haulWorth = model.HaulWorth;
+                    _haulText = $"{model.HaulWorth:N0} in the portal";
+                }
+                if (_haulPieces != model.HaulPieces)
+                {
+                    _haulPieces = model.HaulPieces;
+                    _pieceText = $"{model.HaulPieces} " + (model.HaulPieces == 1 ? PieceLabel : PiecesLabel);
+                }
+
+                float countWidth = DrawTextRight(right, 90f, _pieceText, _mono14, Theme.TextDim);
+                DrawTextRight(right - countWidth - 10f, 88f, _haulText, _display30, Theme.Value);
+            }
+            else
+            {
+                DrawTextRight(right, 88f, NothingInPortal, _italic24, Theme.TextDim);
+            }
+        }
+
+        // --- Centre: the prompt under the crosshair -------------------------------------------------
+
+        private void DrawPrompt(RaidHudModel model, float centre)
+        {
+            const float promptMid = 592f;
+
             if (!string.IsNullOrEmpty(model.InteractPrompt))
             {
-                var promptRect = new Rect(Screen.width * 0.5f - 250f,
-                    Screen.height * 0.5f + k_crosshairSize, 500f, 24f);
-                GUI.Label(promptRect, model.InteractPrompt, Centered(_label));
+                if (!string.Equals(_promptSource, model.InteractPrompt, StringComparison.Ordinal))
+                {
+                    _promptSource = model.InteractPrompt;
+                    _promptHasKey = SplitPrompt(_promptSource, out _promptKey, out _promptRest);
+                }
+
+                if (_promptHasKey)
+                {
+                    // The key sits in a box, then what it does, so the eye finds the key first.
+                    float keyWidth = Measure(_promptKey, _mono17).x + 14f;
+                    float restWidth = Measure(_promptRest, _mono17).x;
+                    float left = centre - (keyWidth + 8f + restWidth) * 0.5f;
+                    Frame(new Rect(left, promptMid - 13f, keyWidth, 26f), Theme.TextFaint);
+                    DrawText(left + 7f, promptMid, _promptKey, _mono17, Theme.Text);
+                    DrawText(left + keyWidth + 8f, promptMid, _promptRest, _mono17, Theme.Text);
+                }
+                else
+                {
+                    DrawTextCentre(centre, promptMid, _promptSource, _mono17, Theme.Text);
+                }
             }
 
             if (!string.IsNullOrEmpty(model.RangedWeaponStatus))
-            {
-                var ammoRect = new Rect(Screen.width * 0.5f - 250f,
-                    Screen.height * 0.5f + k_crosshairSize + 22f, 500f, 24f);
-                GUI.Label(ammoRect, model.RangedWeaponStatus, Centered(_label));
-            }
+                DrawTextCentre(centre, promptMid + 30f, model.RangedWeaponStatus, _mono15, Theme.TextDim);
+        }
 
-            if (!string.IsNullOrEmpty(model.CarriedLootName))
-            {
-                string carrying = model.CarriedNeedsTwo
-                    ? $"Carrying {model.CarriedLootName} (two-person)"
-                    : $"Carrying {model.CarriedLootName}";
-                GUI.Label(new Rect(Screen.width * 0.5f - 150f, Screen.height - 60f, 300f, 24f),
-                    carrying, Centered(_label));
-            }
+        /// <summary>"CARRYING name", or "TOWING name · TOO HEAVY TO LIFT" for a piece that needs two.</summary>
+        private void DrawCarrying(RaidHudModel model, float centre)
+        {
+            if (string.IsNullOrEmpty(model.CarriedLootName))
+                return;
 
-            DrawSpellbook();
-            DrawChant();
-            DrawListening();
+            const float mid = 1022f;
+            string label = model.CarriedNeedsTwo ? TowingLabel : CarryingLabel;
+            float labelWidth = Measure(label, _mono14).x;
+            float nameWidth = Measure(model.CarriedLootName, _display22).x;
+            float tailWidth = model.CarriedNeedsTwo ? Measure(TooHeavy, _mono14).x : 0f;
+            float x = centre - (labelWidth + 10f + nameWidth + tailWidth) * 0.5f;
 
-            // Bottom-centre: the last cast, so a misfire is unmissable.
-            if (!string.IsNullOrEmpty(model.LastCastLine))
-            {
-                GUIStyle style = Centered(_label);
-                style.normal.textColor = model.LastCastLine.StartsWith("MISFIRE")
-                    ? new Color(1f, 0.4f, 0.2f)
-                    : Color.white;
-                GUI.Label(new Rect(Screen.width * 0.5f - 200f, Screen.height - 32f, 400f, 24f),
-                    model.LastCastLine, style);
-            }
+            x += DrawText(x, mid, label, _mono14, Theme.TextDim) + 10f;
+            x += DrawText(x, mid, model.CarriedLootName, _display22, Theme.Value);
+            if (model.CarriedNeedsTwo)
+                DrawText(x, mid, TooHeavy, _mono14, Theme.TextDim);
         }
 
         /// <summary>
@@ -200,45 +396,52 @@ namespace Plunderspell.UI
         /// the whisper and shout marks. Without it a dead or wrong microphone looks exactly like a
         /// word the game did not understand.
         /// </summary>
-        private void DrawListening()
+        private void DrawListening(RaidHudModel model, float centre)
         {
             bool casting = PushToCast != null && PushToCast.IsCasting;
-            float y = Screen.height - 110f;
+            bool carrying = !string.IsNullOrEmpty(model.CarriedLootName);
 
             if (casting)
             {
                 Plunderspell.Voice.VoskVoiceInputService speech = Speech;
-                string title = speech != null && speech.IsListening
-                    ? $"Listening on {speech.CurrentDevice}"
-                    : "Keyboard casting (no microphone) - press 1-8";
-                GUI.Label(new Rect(Screen.width * 0.5f - 250f, y, 500f, 22f), title, Centered(_label));
-
-                if (speech != null && speech.IsListening)
+                bool listening = speech != null && speech.IsListening;
+                string title = KeyboardCasting;
+                if (listening)
                 {
-                    const float meterMax = 0.6f;
-                    var meter = new Rect(Screen.width * 0.5f - 160f, y + 24f, 320f, 10f);
-                    float level = Mathf.Clamp01(speech.CurrentRms / meterMax);
-                    Color colour = speech.CurrentRms > Plunderspell.Voice.VoiceUtility.ShoutThreshold ? new Color(1f, 0.45f, 0.2f)
-                        : speech.CurrentRms < Plunderspell.Voice.VoiceUtility.WhisperThreshold ? new Color(0.55f, 0.7f, 1f)
-                        : new Color(0.45f, 0.95f, 0.55f);
-                    DrawBar(meter, level, colour);
+                    if (!string.Equals(_listenDevice, speech.CurrentDevice, StringComparison.Ordinal))
+                    {
+                        _listenDevice = speech.CurrentDevice;
+                        _listenLine = ListeningOn + _listenDevice;
+                    }
+                    title = _listenLine;
+                }
+                DrawTextCentre(centre, 938f, title, _mono14, Theme.Voice);
+
+                if (listening)
+                {
+                    var meter = new Rect(centre - 220f, 960f, 440f, 12f);
+                    DrawBar(meter, Mathf.Clamp01(speech.CurrentRms / k_meterMax), Theme.Voice, 1f, 0.75f);
 
                     // Whisper and shout marks.
-                    foreach (float mark in new[] { Plunderspell.Voice.VoiceUtility.WhisperThreshold, Plunderspell.Voice.VoiceUtility.ShoutThreshold })
-                        GUI.DrawTexture(new Rect(meter.x + meter.width * (mark / meterMax) - 1f, meter.y - 3f, 2f, meter.height + 6f), _barFill);
-
-                    var small = new GUIStyle(_label) { fontSize = 11 };
-                    GUI.Label(new Rect(meter.x, meter.y + 11f, 120f, 16f), "whisper", small);
-                    GUI.Label(new Rect(meter.x + meter.width * (Plunderspell.Voice.VoiceUtility.ShoutThreshold / meterMax) - 20f, meter.y + 11f, 80f, 16f), "shout", small);
+                    float whisper = meter.x + meter.width * (Plunderspell.Voice.VoiceUtility.WhisperThreshold / k_meterMax);
+                    float shout = meter.x + meter.width * (Plunderspell.Voice.VoiceUtility.ShoutThreshold / k_meterMax);
+                    Fill(new Rect(whisper - 0.5f, meter.y - 3f, 1f, meter.height + 6f), Theme.TextDim);
+                    Fill(new Rect(shout - 0.5f, meter.y - 3f, 1f, meter.height + 6f), Theme.TextDim);
+                    DrawTextCentre(whisper, 986f, WhisperLabel, _mono12, Theme.TextFaint);
+                    DrawTextCentre(shout, 986f, ShoutLabel, _mono12, Theme.TextFaint);
                 }
             }
             else if (Time.time - _captionAt < k_captionSeconds)
             {
                 // What you said, and what it became: a clean cast, a misfire, or a fizzle (#49).
-                GUIStyle caption = Centered(_label);
-                caption.fontSize = 16;
-                caption.normal.textColor = _captionColour;
-                GUI.Label(new Rect(Screen.width * 0.5f - 300f, Screen.height - 58f, 600f, 24f), _caption, caption);
+                DrawTextCentre(centre, carrying ? 977f : 1017f, _caption, _italic28, _captionColour);
+            }
+
+            // The last cast, so a misfire is unmissable.
+            if (!string.IsNullOrEmpty(model.LastCastLine))
+            {
+                DrawTextCentre(centre, 902f, model.LastCastLine, _mono15,
+                    model.LastCastLine.StartsWith("MISFIRE", StringComparison.Ordinal) ? Theme.Danger : Theme.Text);
             }
         }
 
@@ -246,136 +449,208 @@ namespace Plunderspell.UI
         /// A keyed cast is chanted before it fires (#116): show which word and how far along, just
         /// under the crosshair, so the wait reads as the spell gathering rather than lag.
         /// </summary>
-        private void DrawChant()
+        private void DrawChant(float centre)
         {
             Plunderspell.Spells.SpellCastingSystem caster = Plunderspell.Spells.SpellCastingSystem.Local;
             if (caster == null || !caster.IsChanting)
                 return;
 
-            var bar = new Rect(Screen.width * 0.5f - 110f, Screen.height * 0.5f + 60f, 220f, 8f);
-            GUI.Label(new Rect(bar.x - 40f, bar.y - 22f, bar.width + 80f, 20f),
-                $"Chanting {caster.ChantingWord}", Centered(_heading));
-            DrawBar(bar, caster.ChantProgress, Theme.ManaColor);
+            string word = caster.ChantingWord;
+            if (!string.Equals(_chantWord, word, StringComparison.Ordinal))
+            {
+                _chantWord = word;
+                _chantLine = $"Chanting {word}";
+            }
+
+            DrawTextCentre(centre, 640f, _chantLine, _display26, Theme.Voice);
+            DrawBar(new Rect(centre - 110f, 660f, 220f, 8f), caster.ChantProgress, Theme.Voice, 1f, 0.75f);
         }
 
         /// <summary>
         /// The casting controls. Push-to-cast is not guessable: you hold a key to open the mic and
         /// then say (here, press) the word, so without this the spells are invisible.
         /// </summary>
-        private void DrawSpellbook()
+        private void DrawSpellbook(float right)
         {
             if (!_showSpellbook)
                 return;
 
-            const float width = 210f;
-            const float lineHeight = 18f;
-            float height = lineHeight * (Spellbook.Length + 2) + 12f;
-            float x = Screen.width - width - 12f;
-            float y = Screen.height - height - 12f;
+            const float width = 340f;
+            const float height = 378f;
+            const float padX = 22f;
+            const float rowPitch = 34f;
+            float x = right - width;
+            float y = k_referenceHeight - 34f - height;
 
-            GUI.DrawTexture(new Rect(x, y, width, height), _panel);
-
-            var style = new GUIStyle(_label) { alignment = TextAnchor.MiddleLeft };
             bool casting = PushToCast != null && PushToCast.IsCasting;
 
-            style.normal.textColor = casting ? Theme.Success : Theme.Accent;
-            string castingPrompt = Speech != null ? "LISTENING - speak, or 1-8" : "CASTING - press a number";
-            GUI.Label(new Rect(x + 8f, y + 6f, width - 16f, lineHeight),
-                casting ? castingPrompt : "Hold V to cast", style);
+            // The panel is a hairline: a Line border (lapis while a cast is being heard) round the surface.
+            Fill(new Rect(x, y, width, height), casting ? Theme.VoiceLo : Theme.Line);
+            Color surface = Theme.Surface;
+            surface.a = 0.94f;
+            Fill(new Rect(x + 1f, y + 1f, width - 2f, height - 2f), surface);
 
-            style.normal.textColor = Theme.TextSecondary;
-            GUI.Label(new Rect(x + 8f, y + 6f + lineHeight, width - 16f, lineHeight),
-                "Shift = shout   Ctrl = whisper", style);
+            string left = HoldToCast;
+            string rightHeader = ManaHeader;
+            if (casting)
+            {
+                bool speech = Speech != null;
+                left = speech ? ListeningHeader : CastingHeader;
+                rightHeader = speech ? OrNumbers : PressNumber;
+            }
+            Color header = casting ? Theme.Voice : Theme.TextDim;
+            DrawText(x + padX, y + 30f, left, _mono14, header);
+            DrawTextRight(x + width - padX, y + 30f, rightHeader, _mono14, header);
+            Fill(new Rect(x + padX, y + 49f, width - padX * 2f, 1f), Theme.Line);
 
-            // Each word with its mana cost, dimmed when the pool cannot cover it right now.
+            // Each word with its mana cost, struck through when the pool cannot cover it right now.
             Plunderspell.Spells.SpellLexicon lexicon = Plunderspell.Spells.SpellCastingSystem.Local?.Lexicon;
             int mana = Plunderspell.Core.GameServices.PlayerStats?.Mana ?? int.MaxValue;
-            var costStyle = new GUIStyle(style) { alignment = TextAnchor.MiddleRight };
             for (int i = 0; i < Spellbook.Length; i++)
             {
                 int cost = lexicon != null && lexicon.FindByWord(Spellbook[i]) is Plunderspell.Spells.SpellWord word
                     ? word.ManaCost
                     : 0;
-                style.normal.textColor = costStyle.normal.textColor =
-                    cost > mana ? Theme.TextSecondary * new Color(1f, 1f, 1f, 0.5f) : Theme.TextPrimary;
+                bool poor = cost > mana;
+                float mid = y + 56f + rowPitch * i + rowPitch * 0.5f;
+                float wordX = x + padX + 40f;
 
-                var line = new Rect(x + 8f, y + 6f + lineHeight * (i + 2), width - 16f, lineHeight);
-                GUI.Label(line, $"{i + 1}   {Spellbook[i]}", style);
+                DrawText(x + padX, mid, SpellKeys[i], _mono14, Theme.TextFaint);
+                Vector2 wordSize = Measure(Spellbook[i], _display23);
+                DrawText(wordX, mid, Spellbook[i], _display23, poor ? Theme.TextFaint : Theme.Text);
+                if (poor)
+                    Fill(new Rect(wordX, mid, wordSize.x, 1f), Theme.TextFaint);
                 if (cost > 0)
-                {
-                    costStyle.normal.textColor = cost > mana ? costStyle.normal.textColor : Theme.ManaColor;
-                    GUI.Label(line, cost.ToString(), costStyle);
-                }
+                    DrawTextRight(x + width - padX, mid, CostText(cost), _mono15, poor ? Theme.TextFaint : Theme.Voice);
             }
+
+            float footerTop = y + 56f + rowPitch * Spellbook.Length + 6f;
+            Fill(new Rect(x + padX, footerTop, width - padX * 2f, 1f), Theme.Line);
+            DrawText(x + padX, footerTop + 18f, SpellFooter, _mono12, Theme.TextFaint);
         }
 
-        private static string PhaseLine(RaidPhase phase)
+        private string CostText(int cost)
+        {
+            if (cost >= _costTexts.Length)
+                return cost.ToString();
+            return _costTexts[cost] ?? (_costTexts[cost] = cost.ToString());
+        }
+
+        private static string TrackedPhase(RaidPhase phase)
         {
             switch (phase)
             {
-                case RaidPhase.InLair: return "The Lair";
-                case RaidPhase.Generating: return "Building the castle…";
-                case RaidPhase.Raiding: return "Raiding";
-                case RaidPhase.Extracting: return "Extracting";
-                case RaidPhase.Resolved: return "Raid over";
+                case RaidPhase.InLair: return PhaseLair;
+                case RaidPhase.Generating: return PhaseGenerating;
+                case RaidPhase.Raiding: return PhaseRaiding;
+                case RaidPhase.Extracting: return PhaseExtracting;
+                case RaidPhase.Resolved: return PhaseResolved;
                 default: return phase.ToString();
             }
         }
 
-        private static Color AlarmColour(AlarmState state)
+        private static readonly string PhaseLair = Theme.Tracked("The Lair");
+        private static readonly string PhaseGenerating = Theme.Tracked("Building the castle…");
+        private static readonly string PhaseRaiding = Theme.Tracked("Raiding");
+        private static readonly string PhaseExtracting = Theme.Tracked("Extracting");
+        private static readonly string PhaseResolved = Theme.Tracked("Raid over");
+
+        // --- Drawing helpers -------------------------------------------------------------------------
+
+        private void Fill(Rect rect, Color colour)
         {
-            switch (state)
+            GUI.color = colour;
+            GUI.DrawTexture(rect, _white);
+            GUI.color = Color.white;
+        }
+
+        /// <summary>A 1px outline.</summary>
+        private void Frame(Rect rect, Color colour)
+        {
+            Fill(new Rect(rect.x, rect.y, rect.width, 1f), colour);
+            Fill(new Rect(rect.x, rect.yMax - 1f, rect.width, 1f), colour);
+            Fill(new Rect(rect.x, rect.y, 1f, rect.height), colour);
+            Fill(new Rect(rect.xMax - 1f, rect.y, 1f, rect.height), colour);
+        }
+
+        /// <summary>A bar: a 1px Line frame, a dark inside, and a flat fill.</summary>
+        private void DrawBar(Rect rect, float fill, Color colour, float alpha, float insideAlpha)
+        {
+            Fill(rect, Theme.Line);
+            var inside = new Rect(rect.x + 1f, rect.y + 1f, rect.width - 2f, rect.height - 2f);
+            Color ground = Theme.Ground;
+            ground.a = insideAlpha;
+            Fill(inside, ground);
+            if (fill > 0f)
             {
-                case AlarmState.Stirred: return new Color(0.95f, 0.85f, 0.2f);
-                case AlarmState.Roused: return new Color(0.95f, 0.55f, 0.1f);
-                case AlarmState.HueAndCry: return new Color(0.9f, 0.2f, 0.15f);
-                default: return new Color(0.4f, 0.7f, 0.45f);
+                colour.a *= alpha;
+                Fill(new Rect(inside.x, inside.y, inside.width * Mathf.Clamp01(fill), inside.height), colour);
             }
         }
 
-        private void DrawBar(Rect rect, float fill, Color colour)
+        private Vector2 Measure(string text, GUIStyle style)
         {
-            GUI.DrawTexture(rect, _barBackground);
-
-            Color previous = GUI.color;
-            GUI.color = colour;
-            GUI.DrawTexture(new Rect(rect.x, rect.y, rect.width * Mathf.Clamp01(fill), rect.height), _barFill);
-            GUI.color = previous;
+            _measure.text = text;
+            return style.CalcSize(_measure);
         }
 
-        private GUIStyle Centered(GUIStyle from) => new GUIStyle(from) { alignment = TextAnchor.MiddleCenter };
+        /// <summary>Draws text with its left edge at x and its vertical centre at yMid; returns its width.</summary>
+        private float DrawText(float x, float yMid, string text, GUIStyle style, Color colour)
+        {
+            Vector2 size = Measure(text, style);
+            GUI.contentColor = colour;
+            GUI.Label(new Rect(x, yMid - size.y * 0.5f, size.x + 2f, size.y), text, style);
+            GUI.contentColor = Color.white;
+            return size.x;
+        }
+
+        private float DrawTextRight(float right, float yMid, string text, GUIStyle style, Color colour)
+        {
+            float width = Measure(text, style).x;
+            DrawText(right - width, yMid, text, style, colour);
+            return width;
+        }
+
+        private void DrawTextCentre(float centre, float yMid, string text, GUIStyle style, Color colour)
+        {
+            float width = Measure(text, style).x;
+            DrawText(centre - width * 0.5f, yMid, text, style, colour);
+        }
 
         private void EnsureStyles()
         {
-            if (_label != null)
+            if (_mono12 != null)
                 return;
 
-            // Same typeface and palette as the uGUI screens (UIFactory, UITheme), so the raid HUD
+            // The same typefaces and palette as the uGUI screens (UIFactory, UITheme), so the raid HUD
             // reads as part of the game's menus rather than Unity's debug skin (#137).
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-
-            _label = new GUIStyle(GUI.skin.label) { font = font, fontSize = 14 };
-            _label.normal.textColor = Theme.TextSecondary;
-
-            _heading = new GUIStyle(_label) { fontStyle = FontStyle.Bold };
-            _heading.normal.textColor = Theme.Accent;
-
-            _big = new GUIStyle(GUI.skin.label) { font = font, fontSize = 34, fontStyle = FontStyle.Bold };
-            _big.normal.textColor = Theme.TextPrimary;
-
-            Color panel = Theme.PanelBackground;
-            panel.a = 0.55f;
-            _panel = SolidTexture(panel);
-            _barBackground = SolidTexture(new Color(0f, 0f, 0f, 0.5f));
-            _barFill = SolidTexture(Color.white);
+            _mono12 = MakeStyle(UIFonts.Mono, 12);
+            _mono14 = MakeStyle(UIFonts.Mono, 14);
+            _mono15 = MakeStyle(UIFonts.Mono, 15);
+            _mono17 = MakeStyle(UIFonts.Mono, 17);
+            _monoBold17 = MakeStyle(UIFonts.MonoBold, 17);
+            _display22 = MakeStyle(UIFonts.Display, 22);
+            _display23 = MakeStyle(UIFonts.Display, 23);
+            _display26 = MakeStyle(UIFonts.Display, 26);
+            _display30 = MakeStyle(UIFonts.Display, 30);
+            _display76 = MakeStyle(UIFonts.Display, 76);
+            _italic24 = MakeStyle(UIFonts.BodyItalic, 24);
+            _italic28 = MakeStyle(UIFonts.BodyItalic, 28);
+            _white = UITextures.White;
         }
 
-        private static Texture2D SolidTexture(Color colour)
+        private static GUIStyle MakeStyle(Font font, int size)
         {
-            var texture = new Texture2D(1, 1);
-            texture.SetPixel(0, 0, colour);
-            texture.Apply();
-            return texture;
+            // Not copied from GUI.skin.label, which carries margins and padding this layout does its own way.
+            var style = new GUIStyle
+            {
+                font = font,
+                fontSize = size,
+                alignment = TextAnchor.MiddleLeft,
+                wordWrap = false,
+            };
+            style.normal.textColor = Color.white;
+            return style;
         }
     }
 }
