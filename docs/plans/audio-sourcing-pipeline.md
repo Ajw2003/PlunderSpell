@@ -13,6 +13,21 @@ impacts) and wrong files at low scores (0.2–0.3) when it does not (stone door,
 flesh, fire, magic). So the score can report a gap. Spike script: not kept; the design below is the
 result.
 
+## What else was checked (2026-09-29)
+
+- **Free CC0 magic and spell recordings exist** (this corrects the first version of the Decision):
+  OpenGameArt "80 CC0 RPG SFX" (9 spell sounds), OpenGameArt "RPG Sound Pack", Kenney "Sci-fi
+  Sounds" and "Digital Audio". Downloaded and registered as library roots (`bda0c262`).
+- **The free Sonniss GDC 2026 bundle holds little magic.** Its track list (a Google Sheet, 1,008 rows)
+  was read through a summariser, so the count is a lower bound: about 6 magic files, 1 shimmer loop
+  and about 6 fire files, from the libraries "Emotion and Magic", "Fantasy Game 2", "Elemental
+  Mutation Whooshes and Impacts", "Campfire - Bonfire FX" and a few others. Seventeen vendors in all,
+  including Epic Stock Media and Cinematic Sound Design. Sonniss sells full magic libraries
+  separately; those are not free.
+- **Mixkit** (66 magic sounds): commercial use, including video games, no attribution; it does not
+  allow redistributing the files. Read from a third-party summary; the licence text itself was not
+  reachable. Pixabay bars standalone distribution (its own summary page).
+
 ## Pipeline
 
 ```
