@@ -1,3 +1,4 @@
+using Plunderspell.Audio;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -37,6 +38,7 @@ namespace Plunderspell.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            AudioDirector.PlayUi(SoundNames.UiHover);
             _hovered = true;
             Apply();
         }

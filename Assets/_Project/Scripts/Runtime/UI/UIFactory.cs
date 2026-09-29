@@ -1,3 +1,4 @@
+using Plunderspell.Audio;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -322,6 +323,13 @@ namespace Plunderspell.UI
 
         // --- Buttons ---------------------------------------------------------------------------------------
 
+        /// <summary>A button that leaves a screen plays the page-turned-backwards sound instead of the click.</summary>
+        private static bool IsBackLabel(string label) =>
+            label != null && (label.StartsWith("Back", System.StringComparison.OrdinalIgnoreCase)
+                || label.StartsWith("Close", System.StringComparison.OrdinalIgnoreCase)
+                || label.StartsWith("Cancel", System.StringComparison.OrdinalIgnoreCase)
+                || label.StartsWith("Resume", System.StringComparison.OrdinalIgnoreCase));
+
         /// <summary>
         /// A button: a border, a fill inside it, the label (always the first Text child, so callers can
         /// relabel with GetComponentInChildren), an optional key hint, and a marker shown on hover and
@@ -361,6 +369,8 @@ namespace Plunderspell.UI
             colors.disabledColor = new Color(fillNormal.r, fillNormal.g, fillNormal.b, fillNormal.a * 0.4f);
             button.colors = colors;
 
+            string clickSound = IsBackLabel(label) ? SoundNames.UiBack : SoundNames.UiClick;
+            button.onClick.AddListener(() => AudioDirector.PlayUi(clickSound));
             if (onClick != null)
                 button.onClick.AddListener(onClick);
 

@@ -1,4 +1,5 @@
 using System;
+using Plunderspell.Audio;
 using Plunderspell.Core;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,9 +9,9 @@ namespace Plunderspell.UI.Screens
 {
     public class SettingsScreen : UIScreen
     {
-        private const string MasterVolumeKey = "Settings.MasterVolume";
-        private const string MusicVolumeKey = "Settings.MusicVolume";
-        private const string SfxVolumeKey = "Settings.SfxVolume";
+        private const string MasterVolumeKey = AudioLevels.MasterKey;
+        private const string MusicVolumeKey = AudioLevels.MusicKey;
+        private const string SfxVolumeKey = AudioLevels.SfxKey;
 
         // The mockup's .st-panel and .st-cols, in 1920x1080 canvas units.
         private const float PanelSide = 260f;
@@ -166,15 +167,11 @@ namespace Plunderspell.UI.Screens
                 _micGainValue.text = $"{AudioInputSettings.MicGain:0.00}×";
         }
 
-        private void OnMasterVolumeChanged(float value)
-        {
-            AudioListener.volume = value;
-            PlayerPrefs.SetFloat(MasterVolumeKey, value);
-        }
+        private void OnMasterVolumeChanged(float value) => AudioLevels.SetMaster(value);
 
-        private void OnMusicVolumeChanged(float value) => PlayerPrefs.SetFloat(MusicVolumeKey, value);
+        private void OnMusicVolumeChanged(float value) => AudioLevels.SetMusic(value);
 
-        private void OnSfxVolumeChanged(float value) => PlayerPrefs.SetFloat(SfxVolumeKey, value);
+        private void OnSfxVolumeChanged(float value) => AudioLevels.SetEffects(value);
 
         protected override void OnShown()
         {

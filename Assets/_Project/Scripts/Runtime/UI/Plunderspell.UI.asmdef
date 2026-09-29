@@ -6,7 +6,8 @@
         "Unity.InputSystem",
         "Plunderspell.Lair",
         "Plunderspell.Inventory",
-        "Plunderspell.Alarm"
+        "Plunderspell.Alarm",
+        "Plunderspell.Audio"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
