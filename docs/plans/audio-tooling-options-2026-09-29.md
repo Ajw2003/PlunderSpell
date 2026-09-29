@@ -20,21 +20,25 @@ what fits.
 
 | Option | What it gives | Fit | Cost and terms |
 |---|---|---|---|
-| **ElevenLabs skills** (`elevenlabs/skills`: `sound-effects`, `music`, `voice-isolator`, `setup-api-key`; MIT; install `npx skills add elevenlabs/skills`) | Claude knows the API's parameters and prompt style. Sound effects 0.5–22 s, a `loop` flag for a seamless loop, `prompt_influence` | **Best.** It is the source AudioForge already targets for the 38 AI-sourced sounds, and 93 sounds in the manifest are loops | Needs an API key and a paid plan for commercial use. Sound effects and music are cleared for games per ElevenLabs' docs; read the plan terms |
+| **ElevenLabs skills** (`elevenlabs/skills`: `sound-effects`, `music`, `voice-isolator`, `setup-api-key`; MIT; install `npx skills add elevenlabs/skills`) | Claude knows the API's parameters and prompt style. Sound effects 0.5–22 s, a `loop` flag for a seamless loop, `prompt_influence` | **Best.** It is the source AudioForge already targets for the 38 AI-sourced sounds, and 93 sounds in the manifest are loops | Needs an API key. Commercial licence for sound effects and music starts at the Starter plan, US$6 a month (pricing page). The music docs say "cleared for ... gaming"; the plan terms page read did not restate that, so the Eleven Music model-specific terms were not seen |
 | **ElevenLabs MCP server** (`uvx elevenlabs-mcp`, MIT, needs `ELEVENLABS_API_KEY`) | Generates and saves files from a chat: speech, voice design, audio isolation. The tool list for sound effects and music was not confirmed from the page | Good for quick tries by ear | Same key |
-| **Mirelo MCP** (hosted, `mirelo.ai/mcp`) | Sound effects from text or from video, **extend a clip, and replace one region of a clip** | Good for tailoring: fix the last 300 ms of a take instead of rerolling it. Music is not exposed | Studio credits; licence and length limits not stated on the page read |
+| **Mirelo MCP** (hosted, `mirelo.ai/mcp`) | Sound effects from text or from video, **extend a clip, and replace one region of a clip** | Good for tailoring: fix the last 300 ms of a take instead of rerolling it. Music is not exposed | Install: `claude mcp add --transport http mirelo https://mcp.mirelo.ai/mcp`, then `/mcp` and log in. Plans from free (5,000 credits) to Creator €20 and Studio €99 a month. Commercial-use terms and clip length are not on its MCP or pricing pages; ask them before shipping anything from it |
 | **Ludo MCP** (`claude mcp add ludo https://mcp.ludo.ai/mcp`) | Music, sound effects and voices, MP3 only | Lower: a generalist, MP3 only, licence not stated | Pro plan $50 a month plus credits; 60-second timeout |
 | **Stable Audio Open** (local, Hugging Face) | Up to 47 s of sound effects and field recordings on the RTX 5070, no per-file cost | Good for bulk foley variants | Free under US$1M annual revenue; a commercial licence is needed above that. Weaker at music |
 
 Not useful: the `game-audio` skill in `opusgamelabs/game-creator` (Web Audio for browser games,
 not Unity); `claude-music` (Apple Music remote control); `Music Catalog Diligence` (finance);
 `transcribe-so`, `QkConvert`. The `mcpmarket.com` skills "Sound Effects Expert" and "Game Audio
-Design" were seen in search results and not opened; they are third-party and unvetted.
+Design" were opened: the first (by `willsigmon`, 7 stars) is a wrapper over the same ElevenLabs API
+plus Meta AudioCraft with no Unity content, so `elevenlabs/skills` covers it; the second (by
+`claudiodearaujo`) is advice on layering and adaptive music with no generating or reviewing tool
+and no Unity, FMOD or Wwise integration. Both are third-party and unaudited.
 
 ## Two things in our own files to know
 
 1. **`mus_title_loop` is marked `final = M` (AI music) in `Tools/AudioForge/manifest.csv`**, so the
-   plan would replace the menu music the owner likes. It is currently synthesised
+   plan would replace the menu music the owner likes (`MusicDirector` plays `mus_title_loop` on the
+main menu, `MusicDirector.cs:69`, so this is the track heard there). It is currently synthesised
    (`music:theme variant=title`, "The Herald's Overture"). Keep it: change its `final` to the
    synthesis being final (as the `G` rows are) in `manifest_source.py` and regenerate the manifest.
 2. **`ai_elevenlabs.py` does not use the newer sound-effects model or the `loop` flag**, so it
