@@ -1116,3 +1116,28 @@ category's level window before, 3 after.
 **Status.** Standing. When the runtime mixer exists (plan §7.3), its bus faders trim around these
 levels rather than replacing them.
 
+
+## 2026-09-29 — Sounds come from free libraries and our own search, not a paid generator
+
+**Context.** The 2026-09-27 audio decision said AI sound effects were fine and named ElevenLabs. On
+2026-09-29 the owner chose ElevenLabs, then found they have no account and do not want a paid one:
+the way forward is the best free route, or a pipeline built here from the same steps.
+
+**Decision.** ElevenLabs is off the plan. Sounds come from (1) recorded libraries that are free to
+ship in a game, found by a text search built on the Apache-2.0 CLAP model (a prompt or a brief in,
+ranked recordings out), tailored with the DSP AudioForge already has, and chosen through a review
+page; (2) synthesis where nothing recorded fits (spells, the portal); (3) later, if wanted, Stable
+Audio Open run locally (free under US$1M revenue, needs a free Hugging Face account and Stability's
+commercial registration). Not used: AudioLDM 2, MMAudio, TangoFlux and Woosh, whose weights are
+non-commercial. The synthesised main-menu theme stays as it is. The 2026-09-27 rules on levels and
+on friends' voices for guards stand. `Tools/AudioForge/forge/ai_elevenlabs.py` stays in the tree,
+unused, in case a paid route is wanted later.
+
+**Why.** Recorded sound beats generated sound for foley, impacts, fire and doors, has no per-file
+cost and needs no Steam AI disclosure. A first test on the 389 free Kenney files found the right
+recording when the library has it and showed by low scores when it does not, which is the measure
+of how much a bigger library is worth. The Sonniss GameAudioGDC library (free, commercial, no
+attribution) forbids handing its raw files to others, and this repository is public, so it is not
+committed until the owner decides on the repository's visibility.
+
+**Status.** Standing. Plan: `docs/plans/audio-sourcing-pipeline.md`.
