@@ -248,8 +248,10 @@ through Windows' own per-app output (the Volume mixer setting EarTrumpet also us
 Checked 2026-09-29 in Play, with `Tools/Audio/audio_sessions.ps1` (lists devices and which apps play
 to each): picking BlackShark moved the Unity session from HISENSE to BlackShark with music still
 playing; Windows default moved it back; a saved choice was re-applied at startup. Screens:
-`docs/generated/audio/settings-output-row*.png`. Not checked: the voice microphone across a reset
-(`VoskVoiceInputService.OpenMicrophone` reopens a device that stopped recording), and a built player.
+`docs/generated/audio/settings-output-row*.png`. The reset also stops the voice microphone (checked in a raid:
+recording before, not after). The next cast key press reopens it through
+`VoskVoiceInputService.OpenMicrophone` (checked: recording again, 5760 samples in 0.4 s), so the only
+cost is that first press paying the open again. Not checked: a built player (needs a Development build).
 
 ## Traps
 
