@@ -7,6 +7,7 @@
         "Plunderspell.Lair",
         "Plunderspell.Extraction",
         "Plunderspell.Alarm",
+        "Plunderspell.Audio",
         "Plunderspell.Acoustics",
         "PurrNet.Runtime",
         "Plunderspell.Foundation",

@@ -11,6 +11,7 @@
         "Plunderspell.Castle",
         "Plunderspell.Acoustics",
         "Plunderspell.Alarm",
+        "Plunderspell.Audio",
         "Plunderspell.Extraction",
         "Plunderspell.Guards",
         "Plunderspell.Inventory",
