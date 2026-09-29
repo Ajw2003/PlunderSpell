@@ -213,7 +213,7 @@ namespace Plunderspell.UI
             row.childForceExpandWidth = false;
             row.childForceExpandHeight = false;
 
-            Text label = CreateText(rect, "Label", UITheme.Tracked(text), UITheme.Label, colour ?? UITheme.TextFaint, TextAnchor.MiddleLeft, UIFonts.Mono);
+            Text label = CreateText(rect, "Label", UITheme.Tracked(text, UITheme.Label), UITheme.Label, colour ?? UITheme.TextFaint, TextAnchor.MiddleLeft, UIFonts.Mono);
             label.horizontalOverflow = HorizontalWrapMode.Overflow;
 
             if (withRule)
@@ -258,18 +258,37 @@ namespace Plunderspell.UI
         }
 
         /// <summary>
-        /// A big figure with its small mono unit beside it ("1,050 COIN"), aligned along the bottom.
-        /// The figure Text comes back through <paramref name="figure"/>.
+        /// A big figure with its small mono unit beside it ("1,050 COIN"), sharing one baseline that sits
+        /// on the bottom edge of the returned rect. The figure Text comes back through
+        /// <paramref name="figure"/>.
         /// </summary>
+        /// <remarks>
+        /// A Text draws its line box, not its glyphs, and Eczar's line box is 1.77 em with 0.63 em of it
+        /// below the baseline. So the row inside is pushed down by the figure's descent, and the unit is
+        /// top-aligned in a box tall enough to put its baseline on the same line.
+        /// </remarks>
         public static RectTransform CreateFigureRow(Transform parent, string name, Font figureFont, int figureSize, Color figureColour,
             string unit, int unitSize, float gap, float height, out Text figure)
         {
-            var go = new GameObject(name, typeof(RectTransform), typeof(HorizontalLayoutGroup));
+            var go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
             var rect = (RectTransform)go.transform;
             rect.sizeDelta = new Vector2(0f, height);
 
-            var row = go.GetComponent<HorizontalLayoutGroup>();
+            LineMetrics(figureFont, figureSize, out float figureAscent, out float figureLine);
+            LineMetrics(UIFonts.Mono, unitSize, out float unitAscent, out _);
+            float figureDescent = figureLine - figureAscent;
+
+            var rowGo = new GameObject("Row", typeof(RectTransform), typeof(HorizontalLayoutGroup));
+            rowGo.transform.SetParent(rect, false);
+            var rowRect = (RectTransform)rowGo.transform;
+            rowRect.anchorMin = new Vector2(0f, 0f);
+            rowRect.anchorMax = new Vector2(1f, 0f);
+            rowRect.pivot = new Vector2(0f, 0f);
+            rowRect.sizeDelta = new Vector2(0f, figureLine);
+            rowRect.anchoredPosition = new Vector2(0f, -figureDescent);
+
+            var row = rowGo.GetComponent<HorizontalLayoutGroup>();
             row.spacing = gap;
             row.childAlignment = TextAnchor.LowerLeft;
             row.childControlWidth = true;
@@ -277,14 +296,28 @@ namespace Plunderspell.UI
             row.childForceExpandWidth = false;
             row.childForceExpandHeight = false;
 
-            figure = CreateText(rect, "Figure", string.Empty, figureSize, figureColour, TextAnchor.LowerLeft, figureFont);
+            figure = CreateText(rowRect, "Figure", string.Empty, figureSize, figureColour, TextAnchor.LowerLeft, figureFont);
             figure.horizontalOverflow = HorizontalWrapMode.Overflow;
-            figure.rectTransform.sizeDelta = new Vector2(0f, height);
+            figure.rectTransform.sizeDelta = new Vector2(0f, figureLine);
 
-            Text unitText = CreateText(rect, "Unit", UITheme.Tracked(unit), unitSize, UITheme.TextFaint, TextAnchor.LowerLeft, UIFonts.Mono);
+            Text unitText = CreateText(rowRect, "Unit", UITheme.Tracked(unit, unitSize), unitSize, UITheme.TextFaint, TextAnchor.UpperLeft, UIFonts.Mono);
             unitText.horizontalOverflow = HorizontalWrapMode.Overflow;
-            unitText.rectTransform.sizeDelta = new Vector2(0f, unitSize + 12f);
+            unitText.rectTransform.sizeDelta = new Vector2(0f, figureDescent + unitAscent);
             return rect;
+        }
+
+        /// <summary>The ascent and the line-box height of a font at a size, in canvas units.</summary>
+        public static void LineMetrics(Font font, int size, out float ascent, out float line)
+        {
+            font.RequestCharactersInTexture("0Hg", size);
+            float scale = font.fontSize > 0 ? size / (float)font.fontSize : 1f;
+            ascent = font.ascent * scale;
+            line = font.lineHeight * scale;
+            if (ascent <= 0f || line <= 0f)
+            {
+                ascent = size * 0.9f;
+                line = size * 1.25f;
+            }
         }
 
         // --- Buttons ---------------------------------------------------------------------------------------
@@ -341,7 +374,7 @@ namespace Plunderspell.UI
 
             if (!string.IsNullOrEmpty(keyHint))
             {
-                Text key = CreateText(rect, "Key", UITheme.Tracked(keyHint), 14, primary ? UITheme.InteractiveLo : UITheme.TextFaint,
+                Text key = CreateText(rect, "Key", UITheme.Tracked(keyHint, 14), 14, primary ? UITheme.InteractiveLo : UITheme.TextFaint,
                     TextAnchor.MiddleRight, UIFonts.Mono);
                 Stretch(key.rectTransform, inset, 0f, ButtonKeyInset, 0f);
             }
@@ -611,7 +644,7 @@ namespace Plunderspell.UI
                     divider.rectTransform.anchoredPosition = Vector2.zero;
                 }
 
-                labels[i] = CreateText(cell.transform, "Label", UITheme.Tracked(options[i]), UITheme.Label, UITheme.TextDim, TextAnchor.MiddleCenter, UIFonts.Mono);
+                labels[i] = CreateText(cell.transform, "Label", UITheme.Tracked(options[i], UITheme.Label), UITheme.Label, UITheme.TextDim, TextAnchor.MiddleCenter, UIFonts.Mono);
                 Stretch(labels[i].rectTransform, 0f, 0f, 0f, 0f);
                 labels[i].resizeTextForBestFit = true;
                 labels[i].resizeTextMinSize = 10;

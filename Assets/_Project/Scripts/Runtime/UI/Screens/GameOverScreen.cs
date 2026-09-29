@@ -12,6 +12,8 @@ namespace Plunderspell.UI.Screens
         private const float Width = 1100f;
         private const float Gap = 18f;
         private const float Line = Top + 24f + Gap;
+        // The 150 px figure's digits stand 102 px above the baseline; the rest is air.
+        private const float FigureHeight = 112f;
 
         private RawImage _victoryBackdrop;
         private RawImage _defeatBackdrop;
@@ -41,8 +43,8 @@ namespace Plunderspell.UI.Screens
             _leadText = UIFactory.CreateText(transform, "Lead", "Home with", 40, UITheme.Text, TextAnchor.MiddleLeft, UIFonts.BodyLight);
             UIFactory.PlaceTopLeft(_leadText.rectTransform, Left, Line, Width, 56f);
 
-            _figureRow = UIFactory.CreateFigureRow(transform, "Figure", UIFonts.DisplayHeavy, 150, UITheme.Value, "COIN", 26, 18f, 135f, out _figureText);
-            UIFactory.PlaceTopLeft(_figureRow, Left, Line + 56f + Gap, Width, 135f);
+            _figureRow = UIFactory.CreateFigureRow(transform, "Figure", UIFonts.DisplayHeavy, 150, UITheme.Value, "COIN", 26, 18f, FigureHeight, out _figureText);
+            UIFactory.PlaceTopLeft(_figureRow, Left, Line + 56f + Gap, Width, FigureHeight);
 
             _summaryText = UIFactory.CreateText(transform, "Summary", string.Empty, 34, UITheme.TextDim, TextAnchor.UpperLeft, UIFonts.BodyLight);
             UIFactory.PlaceTopLeft(_summaryText.rectTransform, Left, Line + 135f + Gap, 900f, 100f);
@@ -63,14 +65,14 @@ namespace Plunderspell.UI.Screens
             _leadText.gameObject.SetActive(isVictory);
             _figureRow.gameObject.SetActive(isVictory);
 
-            _eyebrow.text = UITheme.Tracked(isVictory ? "Extracted · through the portal" : "Fallen");
+            _eyebrow.text = UITheme.Tracked(isVictory ? "Extracted · through the portal" : "Fallen", UITheme.Label);
             _eyebrow.color = isVictory ? UITheme.Interactive : UITheme.Danger;
 
             float buttonTop;
             if (isVictory)
             {
                 _figureText.text = GameServices.PlayerStats.Gold.ToString("N0");
-                buttonTop = Line + 56f + Gap + 135f + Gap + 40f;
+                buttonTop = Line + 56f + Gap + FigureHeight + Gap + 40f;
             }
             else
             {

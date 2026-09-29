@@ -1,5 +1,22 @@
 # Today
 
+**2026-09-29 — UI redesign seen in Unity, and five type defects fixed.** Console was clean (0 errors).
+Every screen was captured in Play mode through the Unity CLI (`capture_game_view --source screen`;
+the HUD through Play Solo, Lair, Set Out) and compared to the mockup frames. Layouts match; the
+defects were in type. Fixed: letter-spacing was about 2.5x too wide because Overpass Mono gives every
+space a full 0.62 em cell (`UITheme.Tracked` now takes the font size and shrinks the spacer with a
+rich-text size tag; the HUD's IMGUI styles turn rich text on), which had overprinted the spell
+panel's header and clipped its footer; the big figures (Lair ledger, Victory) now share a baseline
+with their unit (`UIFactory.CreateFigureRow` offsets by Eczar's descent); the pause title's line
+spacing is tightened; HUD text gets a shadow; the spell panel is hidden while paused (it sat on the
+Quit button); the Lair's empty Last raid says "No raid yet." Plan and evidence:
+`docs/plans/ui-visual-fixes-2026-09-29.md`; before and after frames in
+`docs/generated/ui-fix-2026-09-29/`. `UIThemeTests`, `UIFontsTests` and `RaidHudPromptTests` pass
+(14 of 14). Not re-checked: the HUD shadow over a bright wall (the raid that spawned for the after
+shots was dark), the raid HUD under damage or the alarm, and `UIScreenshotPlayModeTests`. Still open: the Victory piece list is not built.
+
+---
+
 **2026-09-29 — UI redesign written, not yet seen in Unity; paused for a session on the owner's
 PC.** Plan `docs/plans/ui-redesign.md`, mockup `docs/generated/ui-redesign/index.html` (frames in
 `docs/generated/ui-redesign/frames/`). The code is on `claude/ui-redesign-impl` (also

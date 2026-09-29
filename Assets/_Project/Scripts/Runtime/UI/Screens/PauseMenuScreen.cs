@@ -11,6 +11,7 @@ namespace Plunderspell.UI.Screens
         private const float PadTop = 120f;
         private const float PadSide = 80f;
         private const float ContentWidth = PanelWidth - PadSide * 2f;
+        private const float TitleHeight = 140f;
 
         protected override void OnBuild()
         {
@@ -34,13 +35,16 @@ namespace Plunderspell.UI.Screens
             RectTransform eyebrow = UIFactory.CreateEyebrow(panel, "Eyebrow", "Paused for you only");
             UIFactory.PlaceTopLeft(eyebrow, PadSide, PadTop, ContentWidth, 24f);
 
+            // Two lines at 1.1 em: Eczar's own line box is 1.77 em, which spaces them like two paragraphs.
             var title = UIFactory.CreateText(panel, "Title", "The raid goes on", UITheme.Heading, UITheme.Text, TextAnchor.MiddleLeft, UIFonts.Display);
-            UIFactory.PlaceTopLeft(title.rectTransform, PadSide, PadTop + 24f + 16f + 18f, ContentWidth, 64f);
+            title.lineSpacing = 0.62f;
+            float titleTop = PadTop + 24f + 16f + 18f;
+            UIFactory.PlaceTopLeft(title.rectTransform, PadSide, titleTop, ContentWidth, TitleHeight);
 
             var sentence = UIFactory.CreateText(panel, "Sentence",
                 "The castle does not wait. Your friends and the guards keep moving while this is open.",
                 UITheme.Body, UITheme.TextDim, TextAnchor.UpperLeft, UIFonts.Body);
-            float sentenceTop = PadTop + 24f + 16f + 18f + 64f + 10f + 16f;
+            float sentenceTop = titleTop + TitleHeight + 16f;
             UIFactory.PlaceTopLeft(sentence.rectTransform, PadSide, sentenceTop, ContentWidth, 100f);
 
             var buttonListGo = new GameObject("ButtonList", typeof(RectTransform));

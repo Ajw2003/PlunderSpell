@@ -38,7 +38,7 @@ namespace Plunderspell.UI.Screens
             var title = UIFactory.CreateText(panel, "Title", "Settings", UITheme.Heading, UITheme.Text, TextAnchor.MiddleLeft, UIFonts.Display);
             UIFactory.PlaceTopLeft(title.rectTransform, PadSide, PadTop, 700f, TitleHeight);
 
-            var saved = UIFactory.CreateText(panel, "SavedNote", UITheme.Tracked("Saved as you change them"), UITheme.Label, UITheme.TextFaint,
+            var saved = UIFactory.CreateText(panel, "SavedNote", UITheme.Tracked("Saved as you change them", UITheme.Label), UITheme.Label, UITheme.TextFaint,
                 TextAnchor.MiddleRight, UIFonts.Mono);
             UIFactory.PlaceTopRight(saved.rectTransform, PadSide, PadTop + TitleHeight - 24f, 600f, 24f);
 

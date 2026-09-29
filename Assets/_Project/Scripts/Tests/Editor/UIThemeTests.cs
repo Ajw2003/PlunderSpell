@@ -72,12 +72,20 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
-        public void Test_TrackedUpperCasesAndSpacesWithAThinSpace()
+        public void Test_TrackedUpperCasesAndSpacesWithAShrunkenSpace()
         {
-            Assert.AreEqual("A B", UITheme.Tracked("ab"));
-            Assert.AreEqual("A", UITheme.Tracked("a"));
-            Assert.AreEqual(string.Empty, UITheme.Tracked(string.Empty));
-            Assert.AreEqual(string.Empty, UITheme.Tracked(null));
+            // 15 px at 0.18 em over Overpass Mono's 0.62 em space is a 4 px spacer.
+            Assert.AreEqual("A<size=4> </size>B", UITheme.Tracked("ab", 15));
+            Assert.AreEqual("A", UITheme.Tracked("a", 15));
+            Assert.AreEqual(string.Empty, UITheme.Tracked(string.Empty, 15));
+            Assert.AreEqual(string.Empty, UITheme.Tracked(null, 15));
+        }
+
+        [Test]
+        public void Test_TrackedSpacerGrowsWithTheFontSize()
+        {
+            Assert.AreEqual("A<size=8> </size>B", UITheme.Tracked("ab", 26));
+            Assert.AreEqual("A<size=1> </size>B", UITheme.Tracked("ab", 1));
         }
     }
 }

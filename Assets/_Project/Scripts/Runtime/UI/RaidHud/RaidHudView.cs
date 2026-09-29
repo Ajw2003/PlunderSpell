@@ -47,33 +47,34 @@ namespace Plunderspell.UI
         // Letter-spaced labels are built once: tracking a string allocates, and the HUD draws every frame.
         private static readonly string[] AlarmNames =
         {
-            Theme.Tracked("Calm"), Theme.Tracked("Stirred"), Theme.Tracked("Roused"), Theme.Tracked("Hue and cry"),
+            Theme.Tracked("Calm", 15), Theme.Tracked("Stirred", 15), Theme.Tracked("Roused", 15), Theme.Tracked("Hue and cry", 15),
         };
 
         private static readonly string[] AlarmSegmentLabels =
         {
-            Theme.Tracked("Calm"), Theme.Tracked("Stirred"), Theme.Tracked("Roused"), Theme.Tracked("Hue & cry"),
+            Theme.Tracked("Calm", 12), Theme.Tracked("Stirred", 12), Theme.Tracked("Roused", 12), Theme.Tracked("Hue & cry", 12),
         };
 
-        private static readonly string Separator = Theme.Tracked(" · ");
-        private static readonly string OwedLabel = Theme.Tracked("Owed");
-        private static readonly string BankedLabel = Theme.Tracked("Banked");
-        private static readonly string HoldToCast = Theme.Tracked("Hold [V] to cast");
-        private static readonly string ManaHeader = Theme.Tracked("Mana");
-        private static readonly string ListeningHeader = Theme.Tracked("Listening · speak");
-        private static readonly string OrNumbers = Theme.Tracked("or 1–8");
-        private static readonly string CastingHeader = Theme.Tracked("Casting");
-        private static readonly string PressNumber = Theme.Tracked("Press 1–8");
-        private static readonly string SpellFooter = Theme.Tracked("Shift shout · Ctrl whisper");
-        private static readonly string KeyboardCasting = "● " + Theme.Tracked("Keyboard casting · press 1–8");
-        private static readonly string ListeningOn = "● " + Theme.Tracked("Listening on") + " ";
-        private static readonly string WhisperLabel = Theme.Tracked("Whisper");
-        private static readonly string ShoutLabel = Theme.Tracked("Shout");
-        private static readonly string CarryingLabel = Theme.Tracked("Carrying");
-        private static readonly string TowingLabel = Theme.Tracked("Towing");
-        private static readonly string TooHeavy = Theme.Tracked(" · too heavy to lift");
-        private static readonly string PieceLabel = Theme.Tracked("piece");
-        private static readonly string PiecesLabel = Theme.Tracked("pieces");
+        private static readonly Color ShadowColour = new Color(0.04f, 0.03f, 0.02f, 0.85f);
+        private static readonly string Separator = Theme.Tracked(" · ", 16);
+        private static readonly string OwedLabel = Theme.Tracked("Owed", 17);
+        private static readonly string BankedLabel = Theme.Tracked("Banked", 17);
+        private static readonly string HoldToCast = Theme.Tracked("Hold [V] to cast", 14);
+        private static readonly string ManaHeader = Theme.Tracked("Mana", 14);
+        private static readonly string ListeningHeader = Theme.Tracked("Listening · speak", 14);
+        private static readonly string OrNumbers = Theme.Tracked("or 1–8", 14);
+        private static readonly string CastingHeader = Theme.Tracked("Casting", 14);
+        private static readonly string PressNumber = Theme.Tracked("Press 1–8", 14);
+        private static readonly string SpellFooter = Theme.Tracked("Shift shout · Ctrl whisper", 12);
+        private static readonly string KeyboardCasting = "● " + Theme.Tracked("Keyboard casting · press 1–8", 14);
+        private static readonly string ListeningOn = "● " + Theme.Tracked("Listening on", 14) + " ";
+        private static readonly string WhisperLabel = Theme.Tracked("Whisper", 12);
+        private static readonly string ShoutLabel = Theme.Tracked("Shout", 12);
+        private static readonly string CarryingLabel = Theme.Tracked("Carrying", 14);
+        private static readonly string TowingLabel = Theme.Tracked("Towing", 14);
+        private static readonly string TooHeavy = Theme.Tracked(" · too heavy to lift", 14);
+        private static readonly string PieceLabel = Theme.Tracked("piece", 14);
+        private static readonly string PiecesLabel = Theme.Tracked("pieces", 14);
         private const string NothingInPortal = "Nothing in the portal yet";
 
         private Plunderspell.Voice.PushToCastController _pushToCast;
@@ -472,7 +473,8 @@ namespace Plunderspell.UI
         /// </summary>
         private void DrawSpellbook(float right)
         {
-            if (!_showSpellbook)
+            // The pause panel takes the right edge and the panel would sit on its buttons.
+            if (!_showSpellbook || Plunderspell.Core.GameServices.GameState.CurrentState == Plunderspell.Core.GameState.Paused)
                 return;
 
             const float width = 340f;
@@ -549,11 +551,11 @@ namespace Plunderspell.UI
             }
         }
 
-        private static readonly string PhaseLair = Theme.Tracked("The Lair");
-        private static readonly string PhaseGenerating = Theme.Tracked("Building the castle…");
-        private static readonly string PhaseRaiding = Theme.Tracked("Raiding");
-        private static readonly string PhaseExtracting = Theme.Tracked("Extracting");
-        private static readonly string PhaseResolved = Theme.Tracked("Raid over");
+        private static readonly string PhaseLair = Theme.Tracked("The Lair", 15);
+        private static readonly string PhaseGenerating = Theme.Tracked("Building the castle…", 15);
+        private static readonly string PhaseRaiding = Theme.Tracked("Raiding", 15);
+        private static readonly string PhaseExtracting = Theme.Tracked("Extracting", 15);
+        private static readonly string PhaseResolved = Theme.Tracked("Raid over", 15);
 
         // --- Drawing helpers -------------------------------------------------------------------------
 
@@ -598,8 +600,12 @@ namespace Plunderspell.UI
         private float DrawText(float x, float yMid, string text, GUIStyle style, Color colour)
         {
             Vector2 size = Measure(text, style);
+            var rect = new Rect(x, yMid - size.y * 0.5f, size.x + 2f, size.y);
+            // A shadow, because this text sits over the lit world and vellum alone washes out on a bright wall.
+            GUI.contentColor = ShadowColour;
+            GUI.Label(new Rect(rect.x + 1f, rect.y + 1.5f, rect.width, rect.height), text, style);
             GUI.contentColor = colour;
-            GUI.Label(new Rect(x, yMid - size.y * 0.5f, size.x + 2f, size.y), text, style);
+            GUI.Label(rect, text, style);
             GUI.contentColor = Color.white;
             return size.x;
         }
@@ -648,6 +654,7 @@ namespace Plunderspell.UI
                 fontSize = size,
                 alignment = TextAnchor.MiddleLeft,
                 wordWrap = false,
+                richText = true,
             };
             style.normal.textColor = Color.white;
             return style;

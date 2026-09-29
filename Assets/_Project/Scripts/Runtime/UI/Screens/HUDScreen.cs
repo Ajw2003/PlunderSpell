@@ -62,7 +62,7 @@ namespace Plunderspell.UI.Screens
             var row = (RectTransform)rowGo.transform;
             UIFactory.PlaceBottomLeft(row, Left, bottom, BlockWidth, RowHeight);
 
-            var labelText = UIFactory.CreateText(row, name + "Label", UITheme.Tracked(label), 14, UITheme.TextFaint, TextAnchor.MiddleLeft, UIFonts.Mono);
+            var labelText = UIFactory.CreateText(row, name + "Label", UITheme.Tracked(label, 14), 14, UITheme.TextFaint, TextAnchor.MiddleLeft, UIFonts.Mono);
             UIFactory.PlaceTopLeft(labelText.rectTransform, 0f, 0f, LabelWidth, RowHeight);
 
             float barWidth = BlockWidth - LabelWidth - ValueWidth - ColumnGap * 2f;
@@ -84,7 +84,7 @@ namespace Plunderspell.UI.Screens
             RectTransform key = UIFactory.CreateKeyBox(hint, "Key", "ESC", 13, UITheme.TextFaint, UITheme.Text);
             UIFactory.PlaceTopLeft(key, 0f, 0f, key.sizeDelta.x, HintHeight);
 
-            var label = UIFactory.CreateText(hint, "Label", UITheme.Tracked("Menu"), 13, UITheme.TextDim, TextAnchor.MiddleLeft, UIFonts.Mono);
+            var label = UIFactory.CreateText(hint, "Label", UITheme.Tracked("Menu", 13), 13, UITheme.TextDim, TextAnchor.MiddleLeft, UIFonts.Mono);
             UIFactory.PlaceTopLeft(label.rectTransform, key.sizeDelta.x + 6f, 0f, 200f, HintHeight);
         }
 

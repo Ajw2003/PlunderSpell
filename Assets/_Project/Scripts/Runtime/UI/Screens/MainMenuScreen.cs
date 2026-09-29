@@ -93,7 +93,7 @@ namespace Plunderspell.UI.Screens
             _status = UIFactory.CreateText(transform, "CoopStatus", "", UITheme.Label, UITheme.TextFaint, TextAnchor.MiddleLeft, UIFonts.Mono);
             UIFactory.PlaceBottomLeft(_status.rectTransform, side, FooterBottom, 1000f, textHeight);
 
-            var version = UIFactory.CreateText(transform, "VersionLabel", UITheme.Tracked("v0.1.0 \u00B7 prototype"), UITheme.Label, UITheme.TextFaint,
+            var version = UIFactory.CreateText(transform, "VersionLabel", UITheme.Tracked("v0.1.0 \u00B7 prototype", UITheme.Label), UITheme.Label, UITheme.TextFaint,
                 TextAnchor.MiddleRight, UIFonts.Mono);
             UIFactory.PlaceBottomRight(version.rectTransform, side, FooterBottom, 500f, textHeight);
         }
@@ -113,7 +113,7 @@ namespace Plunderspell.UI.Screens
         private void RefreshStatus()
         {
             if (_status != null)
-                _status.text = GameServices.Coop != null ? UITheme.Tracked(GameServices.Coop.Status) : string.Empty;
+                _status.text = GameServices.Coop != null ? UITheme.Tracked(GameServices.Coop.Status, UITheme.Label) : string.Empty;
         }
 
         private void OnPlayClicked()

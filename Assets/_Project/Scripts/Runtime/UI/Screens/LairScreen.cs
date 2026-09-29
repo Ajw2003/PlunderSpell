@@ -170,10 +170,10 @@ namespace Plunderspell.UI.Screens
             const float padX = 28f;
             float inner = CardWidth - padX * 2f;
 
-            var stratum = UIFactory.CreateText(rect, "Stratum", UITheme.Tracked(Strata[index]), 14, UITheme.TextFaint, TextAnchor.MiddleLeft, UIFonts.Mono);
+            var stratum = UIFactory.CreateText(rect, "Stratum", UITheme.Tracked(Strata[index], 14), 14, UITheme.TextFaint, TextAnchor.MiddleLeft, UIFonts.Mono);
             UIFactory.PlaceTopLeft(stratum.rectTransform, padX, 24f, inner, 23f);
 
-            var date = UIFactory.CreateText(rect, "Date", UITheme.Tracked(Dates[index]), 14, UITheme.TextFaint, TextAnchor.MiddleRight, UIFonts.Mono);
+            var date = UIFactory.CreateText(rect, "Date", UITheme.Tracked(Dates[index], 14), 14, UITheme.TextFaint, TextAnchor.MiddleRight, UIFonts.Mono);
             UIFactory.PlaceTopLeft(date.rectTransform, padX, 24f, inner, 23f);
             _cardDates[index] = date;
 
@@ -365,15 +365,15 @@ namespace Plunderspell.UI.Screens
             LairState state = _lair.GetLairState();
             _debt.text = state.TotalDebt.ToString("N0");
             _gold.text = state.AccumulatedGold.ToString("N0");
-            _debtNote.text = UITheme.Tracked($"Debt grows by {_lair.DebtIncreasePerSession:N0} each raid it stands");
+            _debtNote.text = UITheme.Tracked($"Debt grows by {_lair.DebtIncreasePerSession:N0} each raid it stands", UITheme.Label);
 
             // The coop session does not say how many are in the Lair, so the summary names the Age only.
-            _summary.text = UITheme.Tracked(Label(state.SelectedEra));
+            _summary.text = UITheme.Tracked(Label(state.SelectedEra), UITheme.Label);
 
             string value = ColorUtility.ToHtmlStringRGB(UITheme.Value);
             string leftBehind = _lair.LastRaidLeftBehind == 0 ? string.Empty
                 : $" \u00B7 {_lair.LastRaidLeftBehind} left behind";
-            _lastRaid.text = _lair.LastRaidWorth < 0f ? string.Empty
+            _lastRaid.text = _lair.LastRaidWorth < 0f ? "No raid yet."
                 : _lair.LastRaidWorth > 0f ? $"Brought home <color=#{value}>{_lair.LastRaidWorth:N0} coin</color>{leftBehind}"
                 : $"Came home with nothing{leftBehind}";
 
@@ -388,7 +388,7 @@ namespace Plunderspell.UI.Screens
                 bool chosen = Eras[i] == selected;
                 _cardBorders[i].color = chosen ? UITheme.Interactive : UITheme.Surface;
                 _cardFills[i].color = chosen ? UITheme.SurfaceHi : UITheme.Surface;
-                _cardDates[i].text = UITheme.Tracked(chosen ? "Setting out" : Dates[i]);
+                _cardDates[i].text = UITheme.Tracked(chosen ? "Setting out" : Dates[i], 14);
                 _cardDates[i].color = chosen ? UITheme.Interactive : UITheme.TextFaint;
             }
         }

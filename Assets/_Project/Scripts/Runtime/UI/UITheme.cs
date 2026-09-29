@@ -57,8 +57,12 @@ namespace Plunderspell.UI
         public const int Label = 15;
         public const int Small = 13;
 
-        /// <summary>Thin space: legacy Text has no letter-spacing, and every UI font has this glyph.</summary>
-        private const char ThinSpace = ' ';
+        /// <summary>The mockup's eyebrow letter-spacing, in em.</summary>
+        private const float TrackingEm = 0.18f;
+
+        /// <summary>The advance of a space in Overpass Mono, in em. Every space character in it has this
+        /// width (measured), so a thin-space spacer is a full cell and tracking has to shrink the spacer.</summary>
+        private const float MonoSpaceEm = 0.62f;
 
         /// <summary>
         /// The alarm as one ramp from quiet to madder: Calm is faint vellum, Stirred the dark madder,
@@ -75,18 +79,26 @@ namespace Plunderspell.UI
             }
         }
 
-        /// <summary>Upper-cases the text and puts a thin space between every character, the eyebrow look.</summary>
-        public static string Tracked(string text)
+        /// <summary>
+        /// Upper-cases the text and puts a small gap between every character, the eyebrow look. Legacy
+        /// Text and IMGUI have no letter-spacing, so the gap is a space shrunk with a rich-text size tag
+        /// (the text must be drawn with rich text on, which is the default for Text). The gap scales with
+        /// <paramref name="fontSize"/>, so pass the size the string is drawn at.
+        /// </summary>
+        public static string Tracked(string text, int fontSize)
         {
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
+            int spacerSize = Mathf.Max(1, Mathf.RoundToInt(fontSize * TrackingEm / MonoSpaceEm));
+            string spacer = "<size=" + spacerSize + "> </size>";
+
             string upper = text.ToUpperInvariant();
-            var builder = new StringBuilder(upper.Length * 2);
+            var builder = new StringBuilder(upper.Length * (spacer.Length + 1));
             for (int i = 0; i < upper.Length; i++)
             {
                 if (i > 0)
-                    builder.Append(ThinSpace);
+                    builder.Append(spacer);
                 builder.Append(upper[i]);
             }
             return builder.ToString();
