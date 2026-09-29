@@ -325,10 +325,10 @@ namespace Plunderspell.UI
 
         /// <summary>A button that leaves a screen plays the page-turned-backwards sound instead of the click.</summary>
         private static bool IsBackLabel(string label) =>
-            label != null && (label.StartsWith("Back", System.StringComparison.OrdinalIgnoreCase)
-                || label.StartsWith("Close", System.StringComparison.OrdinalIgnoreCase)
-                || label.StartsWith("Cancel", System.StringComparison.OrdinalIgnoreCase)
-                || label.StartsWith("Resume", System.StringComparison.OrdinalIgnoreCase));
+            label != null && (label.IndexOf("Back", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || label.IndexOf("Close", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || label.IndexOf("Cancel", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || label.IndexOf("Resume", System.StringComparison.OrdinalIgnoreCase) >= 0);
 
         /// <summary>
         /// A button: a border, a fill inside it, the label (always the first Text child, so callers can
