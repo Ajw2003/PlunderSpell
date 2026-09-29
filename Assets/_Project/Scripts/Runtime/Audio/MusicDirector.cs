@@ -207,7 +207,10 @@ namespace Plunderspell.Audio
                     continue;
 
                 source.volume = Mathf.MoveTowards(source.volume, _target[i], _speed[i] * dt);
-                if (source.volume <= 0f && _target[i] <= 0f)
+
+                // A silent stem keeps playing while the stems are on, so it is still in step when its alarm state arrives.
+                bool keepRunning = i < StemCount && _stemsOn;
+                if (source.volume <= 0f && _target[i] <= 0f && !keepRunning)
                     source.Stop();
             }
         }

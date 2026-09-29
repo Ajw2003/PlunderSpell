@@ -16,7 +16,7 @@ namespace Plunderspell.EditorTools
     public static class AudioMixerBuilder
     {
         public const string MixerPath = "Assets/_Project/Audio/Plunderspell.mixer";
-        public const float CastingDipDb = -9f;
+        public const float CastingDipDb = AudioLevels.CastingDipDb;
 
         private const BindingFlags Any = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 

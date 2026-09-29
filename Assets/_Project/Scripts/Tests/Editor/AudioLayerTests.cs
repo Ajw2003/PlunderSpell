@@ -70,6 +70,30 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
+        public void CastingDipAddsToTheSliderAndNeverGoesBelowSilence()
+        {
+            Assert.AreEqual(-9f, AudioLevels.Combine(1f, AudioLevels.CastingDipDb), 0.0001f);
+            Assert.AreEqual(-15f, AudioLevels.Combine(0.5f, AudioLevels.CastingDipDb), 0.1f);
+            Assert.AreEqual(-80f, AudioLevels.Combine(0f, AudioLevels.CastingDipDb));
+
+            AudioLevels.Bind(null);
+            try
+            {
+                AudioLevels.TickCasting(true, 1f);
+                Assert.AreEqual(-9f, AudioLevels.CastingDb, 0.0001f, "Held for a second, the dip is fully in.");
+                AudioLevels.TickCasting(false, 0.15f);
+                Assert.Less(AudioLevels.CastingDb, 0f, "Released, it is still coming back after 0.15 s.");
+                Assert.Greater(AudioLevels.CastingDb, -9f);
+                AudioLevels.TickCasting(false, 1f);
+                Assert.AreEqual(0f, AudioLevels.CastingDb, 0.0001f);
+            }
+            finally
+            {
+                AudioLevels.Bind(null);
+            }
+        }
+
+        [Test]
         public void MixerExposesTheVolumeParametersAndTheCastingSnapshot()
         {
             SoundBank bank = LoadBank();

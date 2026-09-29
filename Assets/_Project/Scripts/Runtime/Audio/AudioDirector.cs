@@ -11,7 +11,6 @@ using Plunderspell.Spells;
 using Plunderspell.Voice;
 using StateMachine;
 using UnityEngine;
-using UnityEngine.Audio;
 
 namespace Plunderspell.Audio
 {
@@ -27,8 +26,6 @@ namespace Plunderspell.Audio
         private const float PollSeconds = 1f;
         private const float DoorScanSeconds = 5f;
         private const float MinRepeatSeconds = 0.04f;
-        private const float CastingFadeIn = 0.12f;
-        private const float CastingFadeOut = 0.3f;
 
         private static readonly float[] NoiseMaxDistance = { 15f, 20f, 30f, 45f, 70f };
 
@@ -44,9 +41,6 @@ namespace Plunderspell.Audio
         private SoundBank _bank;
         private AudioSourcePool _pool;
         private MusicDirector _music;
-        private AudioMixerSnapshot _defaultSnapshot;
-        private AudioMixerSnapshot _castingSnapshot;
-        private bool _snapshotCasting;
         private PushToCastController _pushToCast;
         private Transform _listener;
 
@@ -65,14 +59,7 @@ namespace Plunderspell.Audio
             _bank = bank;
             _pool = new AudioSourcePool(transform, PoolSize);
 
-            AudioMixer mixer = bank.Mixer;
-            if (mixer != null)
-            {
-                _defaultSnapshot = mixer.FindSnapshot("Default");
-                _castingSnapshot = mixer.FindSnapshot("Casting");
-            }
-
-            AudioLevels.Bind(mixer);
+            AudioLevels.Bind(bank.Mixer);
 
             if (withMusic)
             {
@@ -115,7 +102,7 @@ namespace Plunderspell.Audio
 
         private void Update()
         {
-            UpdateCastingSnapshot();
+            AudioLevels.TickCasting(_pushToCast != null && _pushToCast.IsCasting, Time.unscaledDeltaTime);
 
             if (Time.unscaledTime < _pollAt)
                 return;
@@ -319,23 +306,6 @@ namespace Plunderspell.Audio
                         door.OpenStateChanged += open => OnDoorChanged(door, open);
                 }
             }
-        }
-
-        // --- The Casting snapshot ----------------------------------------------------------------------
-
-        private void UpdateCastingSnapshot()
-        {
-            if (_castingSnapshot == null || _defaultSnapshot == null || _pushToCast == null)
-                return;
-
-            bool casting = _pushToCast.IsCasting;
-            if (casting == _snapshotCasting)
-                return;
-            _snapshotCasting = casting;
-            if (casting)
-                _castingSnapshot.TransitionTo(CastingFadeIn);
-            else
-                _defaultSnapshot.TransitionTo(CastingFadeOut);
         }
     }
 }
