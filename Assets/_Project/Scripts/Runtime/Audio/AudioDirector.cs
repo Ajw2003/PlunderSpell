@@ -156,6 +156,10 @@ namespace Plunderspell.Audio
                 return null;
             }
 
+            // Checked after the lookup so a misspelt name is still reported while its group is muted.
+            if (!SoundFocus.Allows(soundName))
+                return null;
+
             // Only the general pool drops a repeat within 40 ms: two guards taking a step in the same frame are two sounds.
             if (pool == SoundPoolKind.General)
             {

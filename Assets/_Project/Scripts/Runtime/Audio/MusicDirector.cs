@@ -176,6 +176,8 @@ namespace Plunderspell.Audio
 
         private bool StartLayer(int layer, string soundName, float fadeSeconds, bool stem, double scheduled = 0d)
         {
+            if (!SoundFocus.Allows(soundName))
+                return false;
             if (!_director.Bank.TryGet(soundName, out SoundEntry entry) || entry.Clips.Length == 0 || entry.Clips[0] == null)
             {
                 Debug.LogWarning("[Audio] No music named '" + soundName + "' in the SoundBank.");

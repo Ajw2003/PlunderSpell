@@ -69,7 +69,7 @@ namespace Plunderspell.Audio
         /// <summary>Asks for the loop <paramref name="entry"/> to be heard for <paramref name="key"/> at <paramref name="level"/> (0 to 1) at <paramref name="position"/>.</summary>
         public void Drive(int key, SoundEntry entry, float level, Vector3 position)
         {
-            if (entry == null || entry.Clips.Length == 0 || entry.Clips[0] == null)
+            if (entry == null || entry.Clips.Length == 0 || entry.Clips[0] == null || !SoundFocus.Allows(entry.Name))
                 return;
 
             int slot = -1;

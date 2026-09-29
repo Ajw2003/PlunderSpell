@@ -48,6 +48,9 @@ lacks; the rest are older and either merged in another form or abandoned.
   code played any of it when the branch was written; the layer that does is described below.
   Two decisions are recorded on the branch (AI sound effects, friends' voices, AI music only where it
   does not adapt; levels baked per category with Unity's Normalize off).
+- **`ccr-6bf1f02d-o8jhoy`** also holds, since 2026-09-29: the raid always has one audio listener,
+  an output-device picker in Settings, three save slots on the main menu, and a reduced playtest
+  sound set (spells, music, ambience muted; `docs/4-systems/audio.md`, `docs/4-systems/core.md`).
 - **`claude/busy-bose-a7647f`** (1 commit, 2026-09-26): a test-only fix to
   `GuardAttackTests` so the guard's own `Update` does not swing during the test's yield frame.
   The test it touches is the "known failure" named throughout the 2026-09-26 test runs.

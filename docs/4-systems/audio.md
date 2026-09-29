@@ -199,6 +199,18 @@ raid phase is `Raiding` they are searched every 5 s with `FindObjectsByType`, wh
 array each time (never per frame). A door built after a search is heard within 5 s, which is well
 inside the time it takes to reach it.
 
+## Reduced sound set (playtest)
+
+Since 2026-09-29 `SoundFocus.Enabled` is true: only footsteps and movement foley (`foley_`), physics
+(`phys_`), guard and hound voices (`vo_`), guard sounds and weapons (`sfx_enemy`, `sfx_wpn`) and UI
+clicks (`ui_`) play. Spells, music, ambience, stingers, doors, portal, loot and player sounds stay in
+the SoundBank and their hooks stay wired; they are just not played, because the full mix was too busy
+to tell sounds apart. The check sits in `AudioDirector.Play` (after the bank lookup, so a misspelt
+name is still reported), `LoopBus.Drive` and `MusicDirector.StartLayer`. Set
+`SoundFocus.Enabled = false` (`Assets/_Project/Scripts/Runtime/Audio/SoundFocus.cs`) to hear
+everything again. Checked in Play: menu and raid played only foley, guard voices and physics;
+`sfx_spell_ignis_cast` returned no source, and did play with the flag off. Tests: `SoundFocusTests`.
+
 ## The listener
 
 In the raid scene the player's listener lives on `PlayerCamera`, which only exists once PurrNet has
