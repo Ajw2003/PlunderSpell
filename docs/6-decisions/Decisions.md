@@ -1141,3 +1141,9 @@ attribution) forbids handing its raw files to others, and this repository is pub
 committed until the owner decides on the repository's visibility.
 
 **Status.** Standing. Plan: `docs/plans/audio-sourcing-pipeline.md`.
+
+**Correction, same day.** The Decision above names spells and the portal as the place for synthesis
+because "nothing recorded fits". That was said without checking, and it is wrong as a blanket claim:
+CC0 spell and magic recordings exist (OpenGameArt "80 CC0 RPG SFX", 9 spell sounds; Kenney's Sci-fi
+Sounds and Digital Audio packs). Whether they are enough is measured, not assumed: add them as library
+roots and read the coverage report. Synthesis stays the fallback for what the report shows uncovered.
