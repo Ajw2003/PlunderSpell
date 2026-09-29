@@ -22,7 +22,10 @@ namespace Plunderspell.Audio
             public GuardAlertState State;
             public int AttackCount;
             public float Health;
-            public bool WasDead;
+            public CastleGuard Guard;
+            public Vector3 LastHead;
+            public int SeenFrame;
+            public bool Gone;
             public float LastLineAt = -100f;
             public float NextMurmurAt;
             public float NextAsleepAt;
@@ -69,7 +72,7 @@ namespace Plunderspell.Audio
                         State = guard.State,
                         AttackCount = guard.AttackCount,
                         Health = guard.CurrentHealth,
-                        WasDead = guard.IsDead,
+                        Guard = guard,
                         NextMurmurAt = now + Random.Range(MurmurMin, MurmurMax),
                         NextAsleepAt = now + AsleepEvery
                     };
@@ -80,6 +83,8 @@ namespace Plunderspell.Audio
                     continue;
 
                 Vector3 head = guard.transform.position + Vector3.up * 1.6f;
+                record.LastHead = head;
+                record.SeenFrame = Time.frameCount;
                 bool audible = (head - listener).sqrMagnitude < HearingDistance * HearingDistance;
                 Listen(guard, record, head, audible, now);
 
@@ -87,7 +92,32 @@ namespace Plunderspell.Audio
                     Pant(id, record, guard, head, listener);
             }
 
+            SpeakDeaths(now, listener);
             _director.Loops.Tick(Time.unscaledDeltaTime);
+        }
+
+        // A guard that dies is destroyed the moment its health reaches zero (CastleGuard.TakeDamage), on
+        // every peer, so death cannot be read from its health. A guard that vanishes while the raid is
+        // running has died, and says so from where it stood.
+        private void SpeakDeaths(float now, Vector3 listener)
+        {
+            bool raiding = _director.Raid != null && _director.Raid.Phase == Plunderspell.Raid.RaidPhase.Raiding;
+            foreach (KeyValuePair<int, Record> pair in _records)
+            {
+                Record record = pair.Value;
+                if (record.Gone || record.SeenFrame == Time.frameCount || record.Guard != null)
+                    continue;
+
+                record.Gone = true;
+                if (!raiding || !record.Profile.Valid)
+                    continue;
+                if ((record.LastHead - listener).sqrMagnitude > HearingDistance * HearingDistance)
+                    continue;
+
+                string name = GuardVoices.LineName(record.Profile, GuardLine.Death);
+                if (name != null)
+                    _director.Play(name, record.LastHead, 1f, -1, SoundPoolKind.Voice);
+            }
         }
 
         private void Listen(CastleGuard guard, Record record, Vector3 head, bool audible, float now)
@@ -98,9 +128,7 @@ namespace Plunderspell.Audio
             bool dead = guard.IsDead;
 
             GuardLine? line = null;
-            if (dead && !record.WasDead)
-                line = GuardLine.Death;
-            else if (!dead && health < record.Health - 0.01f)
+            if (!dead && health < record.Health - 0.01f)
                 line = GuardLine.Hurt;
             else if (attacks != record.AttackCount)
                 line = GuardLine.Attack;
@@ -115,7 +143,6 @@ namespace Plunderspell.Audio
             record.State = state;
             record.AttackCount = attacks;
             record.Health = health;
-            record.WasDead = dead;
 
             if (state == GuardAlertState.Incapacitated)
                 record.NextMurmurAt = now + Random.Range(MurmurMin, MurmurMax);
@@ -126,7 +153,7 @@ namespace Plunderspell.Audio
 
             if (line == null || !audible)
                 return;
-            if (line != GuardLine.Death && now - record.LastLineAt < LineGapSeconds)
+            if (now - record.LastLineAt < LineGapSeconds)
                 return;
 
             string name = GuardVoices.LineName(record.Profile, line.Value);

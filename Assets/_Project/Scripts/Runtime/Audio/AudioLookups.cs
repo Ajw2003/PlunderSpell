@@ -114,7 +114,7 @@ namespace Plunderspell.Audio
     public static class StepMath
     {
         public const float MinLandFallSpeed = 2.5f;
-        public const float HeavyLandFallSpeed = 7f;
+        public const float HeavyLandFallSpeed = 10f;
 
         /// <summary>Metres between steps: short when slow, longer when fast, so a sprint steps faster but not frantically.</summary>
         public static float Stride(float speed) => Mathf.Clamp(0.7f + 0.22f * speed, 0.9f, 2f);

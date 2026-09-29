@@ -70,7 +70,8 @@ namespace Plunderspell.Tests.Editor
             Assert.Less(StepMath.Loudness(3f), StepMath.Loudness(6f));
             Assert.IsNull(StepMath.Land(1f));
             Assert.AreEqual("foley_player_land", StepMath.Land(4f));
-            Assert.AreEqual("foley_player_land_heavy", StepMath.Land(9f));
+            Assert.AreEqual("foley_player_land", StepMath.Land(8f), "An ordinary jump (about 8 m/s down) is a light landing.");
+            Assert.AreEqual("foley_player_land_heavy", StepMath.Land(12f));
         }
 
         [Test]
