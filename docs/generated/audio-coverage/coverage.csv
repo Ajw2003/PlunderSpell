@@ -1,0 +1,150 @@
+sound,category,loop,query,from_ai_prompt,best_score,best_file,window,covered
+sfx_wpn_rapier_swing,weapons,0,the sound of a thin whip,False,0.602,kenney/ui-audio/Audio/switch3.ogg,0-0.367,True
+sfx_spell_ignis_misfire,spells,0,"the sound of a beard suddenly catching fire right next to the ear, whoomph and sizzle, comic",True,0.596,kenney/casino-audio/Audio/card-shove-3.ogg,0-0.693,True
+sfx_spell_velox_misfire,spells,0,"the sound of a fast whoosh ending in a body thudding into a wall, comic",True,0.594,kenney/casino-audio/Audio/card-place-1.ogg,0-0.689,True
+sfx_spell_ignis_cast,spells,0,"the sound of a short hard spit of fire, an ember flicked from a fingertip, magical",True,0.584,kenney/casino-audio/Audio/card-slide-4.ogg,0-0.459,True
+sfx_spell_saltus_misfire,spells,0,"the sound of a feeble sad little boing spring sound and a stumble, comic",True,0.578,kenney/interface-sounds/Audio/error_003.ogg,0-0.533,True
+sfx_spell_velox_dash,spells,0,the sound of a fast whoosh past the ear,True,0.567,kenney/casino-audio/Audio/card-place-1.ogg,0-0.689,True
+sfx_spell_aurumvoco_misfire,spells,0,"the sound of a burst of gold coins exploding outwards with a shrill metallic screaming, comic",True,0.564,kenney/interface-sounds/Audio/maximize_003.ogg,0-0.212,True
+ui_keybind_set,ui,0,the sound of a wax seal pressed,False,0.562,kenney/interface-sounds/Audio/switch_006.ogg,0-0.611,True
+sfx_drawbridge_slam,world,0,the sound of (if #44 builds it) the bridge slams,False,0.561,kenney/impact-sounds/Audio/impactPlate_heavy_004.ogg,0-0.559,True
+sfx_wpn_rapier_snap,weapons,0,the sound of it snaps clean,False,0.551,kenney/ui-audio/Audio/switch3.ogg,0-0.367,True
+sfx_spell_fizzle,spells,0,"the sound of a damp match failing to light, weak fizzle and a small puff of dust, comic",True,0.547,kenney/casino-audio/Audio/card-shove-3.ogg,0-0.693,True
+sfx_spell_frango_shatter_metal,spells,0,"the sound of an iron lock snapping apart, metallic crack with a ringing tail",True,0.547,kenney/interface-sounds/Audio/glass_004.ogg,0-0.692,True
+sfx_spell_saltus_land_slam,spells,0,"the sound of a heavy body slamming onto flagstones, boom and dust",True,0.527,kenney/rpg-audio/Audio/cloth1.ogg,0-0.661,True
+sfx_castle_lockdown_portcullis_drop,world,0,"the sound of a chain let go, iron teeth hitting stone",False,0.518,kenney/rpg-audio/Audio/doorClose_2.ogg,0-0.612,True
+sfx_spell_frango_cast,spells,0,the sound of a plosive magical crack like a fist punching through stone,True,0.506,kenney/impact-sounds/Audio/impactBell_heavy_000.ogg,0-1.48,True
+sfx_fire_ignite,world,0,the sound of a whumph,False,0.506,kenney/ui-audio/Audio/rollover5.ogg,0-0.112,True
+sfx_spell_frango_misfire,spells,0,the sound of a crack of magic in your hands and a precious object shattering,True,0.494,kenney/rpg-audio/Audio/doorClose_2.ogg,0-0.612,True
+sfx_wpn_blade_swing,weapons,0,the sound of blade swing,False,0.493,kenney/rpg-audio/Audio/knifeSlice.ogg,0-0.6,True
+sfx_spell_velox_cast,spells,0,the sound of a sharp snap of air,True,0.492,kenney/ui-audio/Audio/rollover3.ogg,0-0.069,True
+sfx_enemy_dendra_boar_tusk_rattle,creatures,0,the sound of a helmet of boar tusks clacking,False,0.487,kenney/interface-sounds/Audio/switch_001.ogg,0-0.618,True
+sfx_spell_somnus_misfire,spells,0,"the sound of a sleepy sigh then a body flopping onto the floor, comic",True,0.479,kenney/rpg-audio/Audio/footstep04.ogg,0-0.323,True
+sfx_throw_whoosh_light,physics,0,the sound of a short whoosh,False,0.471,kenney/impact-sounds/Audio/impactWood_light_004.ogg,0-0.266,True
+sfx_wpn_ball_ricochet,weapons,0,the sound of a ricochet,False,0.462,kenney/impact-sounds/Audio/impactPlate_light_001.ogg,0-0.655,True
+foley_step_hound,foley,0,the sound of claws on stone,False,0.461,kenney/rpg-audio/Audio/drawKnife1.ogg,0-0.4,True
+sfx_portal_enter,spells,0,"the sound of stepping through a portal in time, whoosh and muffled distant world",True,0.457,kenney/interface-sounds/Audio/switch_006.ogg,0-0.611,True
+sfx_spell_levo_cast,spells,0,"the sound of an open rising airy magical tone, levitation spell",True,0.455,kenney/ui-audio/Audio/switch10.ogg,0-0.367,True
+sting_raid_lost,music,0,the sound of a short comic failure sting: a renaissance sackbut sliding sadly downwards,True,0.454,kenney/interface-sounds/Audio/error_003.ogg,0-0.533,True
+sfx_spell_somnus_cast_soft,spells,0,"the sound of a soft breathy lullaby exhale with a gentle magical shimmer, sleep spell",True,0.446,kenney/ui-audio/Audio/switch10.ogg,0-0.367,False
+sting_spell_misfire,music,0,"the sound of a single comic crumhorn blat, a medieval buzzy reed instrument sagging downward in pitch",True,0.445,kenney/rpg-audio/Audio/creak3.ogg,0-0.338,False
+sfx_hazard_murderhole_drop,world,0,the sound of Late: stones from above,False,0.445,kenney/casino-audio/Audio/dice-shake-2.ogg,0-1.38,False
+sfx_wpn_blade_clash,weapons,0,the sound of blades meeting,False,0.443,kenney/rpg-audio/Audio/knifeSlice.ogg,0-0.6,False
+sfx_wpn_bronze_clash,weapons,0,the sound of blades meeting,False,0.443,kenney/rpg-audio/Audio/knifeSlice.ogg,0-0.6,False
+sfx_wpn_xbow_loose,weapons,0,the sound of the string loosed,False,0.436,kenney/ui-audio/Audio/switch10.ogg,0-0.367,False
+sfx_enemy_keeper_firepot_throw,creatures,0,the sound of a pot of fire thrown,False,0.432,kenney/impact-sounds/Audio/impactBell_heavy_000.ogg,0-1.48,False
+sfx_extract_player_cross,spells,0,"the sound of the portal whoosh, softened",False,0.43,kenney/interface-sounds/Audio/switch_006.ogg,0-0.611,False
+sting_player_down,music,0,the sound of a short sombre medieval sting: one muted frame drum hit and a single low church bell,True,0.43,kenney/impact-sounds/Audio/impactBell_heavy_001.ogg,0-1.741,False
+ui_invite_received,ui,0,"the sound of a knock on a wooden door, twice",False,0.427,kenney/rpg-audio/Audio/doorClose_2.ogg,0-0.612,False
+sfx_wpn_explosion_small,weapons,0,the sound of a small black powder grenade exploding in a stone room,True,0.422,kenney/impact-sounds/Audio/impactBell_heavy_000.ogg,0-1.48,False
+sfx_enemy_keeper_firepot_shatter,creatures,0,the sound of a clay pot full of burning oil shattering and bursting into flame,True,0.422,kenney/casino-audio/Audio/card-shove-2.ogg,0-0.767,False
+sfx_wpn_fuse_light,weapons,0,the sound of a fuse catches,False,0.419,kenney/interface-sounds/Audio/click_004.ogg,0-0.01,False
+sfx_fire_extinguish,world,0,the sound of a hiss,False,0.415,kenney/interface-sounds/Audio/minimize_007.ogg,0-0.186,False
+sfx_wpn_xbow_bolt_fly,weapons,0,the sound of a bolt in flight,False,0.411,kenney/interface-sounds/Audio/click_004.ogg,0-0.01,False
+sfx_wpn_pistol_fire,weapons,0,"the sound of a 17th century flintlock pistol shot, sharp crack and smoke",True,0.406,kenney/rpg-audio/Audio/drawKnife3.ogg,0-0.477,False
+sting_alarm_huecry_high,music,0,"the sound of alarm → huecry, high instruments",False,0.4,kenney/interface-sounds/Audio/open_003.ogg,0-0.314,False
+sfx_spell_saltus_cast,spells,0,"the sound of a crouch and a springing push-off, magical",True,0.397,kenney/interface-sounds/Audio/scratch_005.ogg,0-0.325,False
+sfx_spell_saltus_launch,spells,0,the sound of a rising whoosh,False,0.397,kenney/interface-sounds/Audio/maximize_003.ogg,0-0.212,False
+sfx_spell_ignis_impact,spells,0,"the sound of a fireball hitting stone, flame pop and crackle burst",True,0.392,kenney/casino-audio/Audio/card-shove-3.ogg,0-0.693,False
+sfx_masonry_crumble,world,0,the sound of a stone collapse,False,0.386,kenney/interface-sounds/Audio/switch_006.ogg,0-0.611,False
+sfx_wpn_wheellock_spin,weapons,0,the sound of the wheel spins,False,0.384,kenney/ui-audio/Audio/switch10.ogg,0-0.367,False
+sfx_wpn_match_tail_small,weapons,0,"the sound of echo tail, small room",False,0.38,kenney/interface-sounds/Audio/close_004.ogg,0-0.323,False
+sfx_lair_debt_due,cue,0,the sound of three slow knocks on the door,False,0.38,kenney/impact-sounds/Audio/impactPunch_heavy_002.ogg,0-0.457,False
+sfx_spell_frango_shatter_stone,spells,0,the sound of masonry wall splitting apart and collapsing into rubble,True,0.378,kenney/impact-sounds/Audio/impactBell_heavy_000.ogg,0-1.48,False
+sfx_wpn_explosion_large,weapons,0,"the sound of a large black powder petard blasting a heavy door apart, huge boom and debris",True,0.376,kenney/rpg-audio/Audio/doorClose_2.ogg,0-0.612,False
+amb_alarm_powder_roused,ambience,0,"the sound of a drum beat to quarters, then a drum roll and a signal gun",False,0.376,kenney/impact-sounds/Audio/impactPunch_heavy_002.ogg,0-0.457,False
+sfx_spell_porta_cast,spells,0,"the sound of a deep final magical word-tone, cold and heavy",True,0.372,kenney/interface-sounds/Audio/switch_001.ogg,0-0.618,False
+sfx_fire_tapestry_catch,world,0,"the sound of a hanging tapestry catching fire, fast rising crackling roar",True,0.369,kenney/casino-audio/Audio/card-shove-2.ogg,0-0.767,False
+sfx_throw_whoosh_heavy,physics,0,the sound of a slow deep whoosh,False,0.368,kenney/impact-sounds/Audio/impactSoft_heavy_000.ogg,0-0.505,False
+sting_alarm_roused_high,music,0,"the sound of alarm → roused, high instruments",False,0.366,kenney/interface-sounds/Audio/open_003.ogg,0-0.314,False
+sting_alarm_huecry_powder,music,0,"the sound of alarm → huecry, powder instruments",False,0.362,kenney/interface-sounds/Audio/open_003.ogg,0-0.314,False
+sfx_wpn_blunt_swing,weapons,0,the sound of a heavy swing,False,0.36,kenney/interface-sounds/Audio/click_004.ogg,0-0.01,False
+sfx_spell_somnus_cast_loud,spells,0,the sound of a sleep spell ruined by shouting: a harsh brassy blare over a breathy exhale,True,0.358,kenney/interface-sounds/Audio/open_004.ogg,0-0.323,False
+phys_impact_gold_heavy,physics,0,the sound of gold struck hard,False,0.356,kenney/interface-sounds/Audio/switch_001.ogg,0-0.618,False
+foley_step_water,foley,0,the sound of a step on water,False,0.355,kenney/interface-sounds/Audio/scratch_005.ogg,0-0.325,False
+sfx_wpn_match_fire,weapons,0,"the sound of a medieval hand cannon firing, black powder boom with a deep rolling tail",True,0.355,kenney/impact-sounds/Audio/impactPlank_medium_000.ogg,0-0.779,False
+sting_alarm_huecry_late,music,0,"the sound of alarm → huecry, late instruments",False,0.354,kenney/interface-sounds/Audio/open_003.ogg,0-0.314,False
+sfx_portal_collapse,spells,0,"the sound of a magical portal collapsing inward, implosion with a deep thud",True,0.353,kenney/impact-sounds/Audio/impactBell_heavy_000.ogg,0-1.48,False
+sfx_wpn_sling_release,weapons,0,the sound of the stone let fly,False,0.352,kenney/ui-audio/Audio/switch10.ogg,0-0.367,False
+sfx_spell_porta_misfire,spells,0,"the sound of a heavy door slamming far away down a stone corridor, echoing",True,0.349,kenney/interface-sounds/Audio/click_004.ogg,0-0.01,False
+phys_break_liquid,physics,0,the sound of contents spilling,False,0.349,kenney/interface-sounds/Audio/scratch_005.ogg,0-0.325,False
+phys_impact_gold_light,physics,0,the sound of gold struck lightly,False,0.348,kenney/interface-sounds/Audio/switch_001.ogg,0-0.618,False
+sfx_wpn_bronze_swing,weapons,0,the sound of bronze swing,False,0.346,kenney/ui-audio/Audio/switch3.ogg,0-0.367,False
+sfx_spell_aurumvoco_cast,spells,0,"the sound of two beats of distant golden bells ringing, rich and warm, magical treasure reveal",True,0.339,kenney/ui-audio/Audio/switch10.ogg,0-0.367,False
+sfx_status_burning_out,foley,0,the sound of a hiss and smoulder,False,0.337,kenney/interface-sounds/Audio/minimize_007.ogg,0-0.186,False
+sting_alarm_stirred_powder,music,0,"the sound of alarm → stirred, powder instruments",False,0.333,kenney/rpg-audio/Audio/clothBelt2.ogg,0-0.753,False
+sfx_hazard_magazine_explosion,world,0,"the sound of a gunpowder magazine exploding inside a stone palace, enormous boom, collapse and debris",True,0.331,kenney/rpg-audio/Audio/doorClose_2.ogg,0-0.612,False
+sfx_hazard_arrowloop_loose,world,0,the sound of Late: arrows through the loops,False,0.33,kenney/interface-sounds/Audio/switch_001.ogg,0-0.618,False
+sting_alarm_roused_late,music,0,"the sound of alarm → roused, late instruments",False,0.33,kenney/interface-sounds/Audio/open_003.ogg,0-0.314,False
+sting_extract_success,music,0,"the sound of a short triumphant but shabby medieval fanfare on natural trumpets and tabor, slightly out of tune",True,0.329,kenney/rpg-audio/Audio/creak2.ogg,0-0.83,False
+sfx_wpn_match_tail_large,weapons,0,"the sound of echo tail, big hall",False,0.328,kenney/interface-sounds/Audio/switch_004.ogg,0-0.5,False
+amb_alarm_bronze_roused,ambience,0,"the sound of a bull-horn call, then war-conch and bronze gong",False,0.327,kenney/impact-sounds/Audio/impactBell_heavy_000.ogg,0-1.48,False
+sfx_wpn_match_flash_in_pan,weapons,0,the sound of it didn't fire,False,0.323,kenney/impact-sounds/Audio/impactBell_heavy_000.ogg,0-1.48,False
+sting_alarm_stirred_high,music,0,"the sound of alarm → stirred, high instruments",False,0.319,kenney/interface-sounds/Audio/maximize_005.ogg,0-0.526,False
+amb_late_exterior_loop,ambience,1,"the sound of wet stone, gutters dripping, flags snapping",False,0.318,kenney/casino-audio/Preview.ogg,20-30,False
+amb_alarm_high_roused,ambience,0,"the sound of a single chapel bell, then fast tolling",False,0.309,kenney/impact-sounds/Audio/impactBell_heavy_001.ogg,0-1.741,False
+sfx_voice_teammate_tell,spells,0,"the sound of a rising whispered magical hum, breathy voices swelling into a glassy shimmer, dry, no reverb",True,0.306,kenney/ui-audio/Audio/switch10.ogg,0-0.367,False
+sting_alarm_huecry_bronze,music,0,"the sound of alarm → huecry, bronze instruments",False,0.306,kenney/rpg-audio/Audio/doorClose_2.ogg,0-0.612,False
+sting_alarm_stirred_bronze,music,0,"the sound of alarm → stirred, bronze instruments",False,0.303,kenney/rpg-audio/Audio/handleCoins2.ogg,0-0.338,False
+sting_alarm_roused_powder,music,0,"the sound of alarm → roused, powder instruments",False,0.295,kenney/impact-sounds/Audio/impactMining_000.ogg,0-0.937,False
+sfx_portal_open,spells,0,"the sound of a magical portal tearing open, cold inrushing air and glassy choir",True,0.294,kenney/interface-sounds/Audio/maximize_003.ogg,0-0.212,False
+sfx_spell_porta_open,spells,0,"the sound of the fabric of time tearing open into a portal, cold roar and glassy shimmer",True,0.288,kenney/interface-sounds/Audio/maximize_003.ogg,0-0.212,False
+sting_alarm_roused_bronze,music,0,"the sound of alarm → roused, bronze instruments",False,0.286,kenney/interface-sounds/Audio/switch_001.ogg,0-0.618,False
+sfx_debris_settle,world,0,the sound of dust and pebbles,False,0.283,kenney/interface-sounds/Audio/close_004.ogg,0-0.323,False
+sfx_door_grate_open,world,0,the sound of a rattle and squeal,False,0.281,kenney/rpg-audio/Audio/handleCoins2.ogg,0-0.338,False
+amb_alarm_late_roused,ambience,0,"the sound of a watch horn, then a tocsin bell and drum",False,0.278,kenney/impact-sounds/Audio/impactMetal_heavy_003.ogg,0-0.207,False
+sting_alarm_stirred_late,music,0,"the sound of alarm → stirred, late instruments",False,0.27,kenney/interface-sounds/Audio/open_003.ogg,0-0.314,False
+sfx_hazard_explosion_tail_distant,world,0,the sound of a distant muffled explosion heard through thick castle walls,True,0.268,kenney/interface-sounds/Audio/click_004.ogg,0-0.01,False
+sfx_lair_revive,cue,0,the sound of a warm rising chord,False,0.267,kenney/rpg-audio/Audio/drawKnife1.ogg,0-0.4,False
+amb_alarm_powder_huecry_loop,ambience,1,"the sound of a drum beat to quarters, then a drum roll and a signal gun",False,0.265,kenney/ui-audio/Preview.ogg,0-10,False
+sfx_hazard_fire_spread_fast,world,0,"the sound of Bronze: fire runs, hungrier crackle",False,0.264,kenney/casino-audio/Audio/chips-stack-1.ogg,0-0.287,False
+sting_gold_found,music,0,the sound of a short magical treasure discovery sting: warm golden bells and a rising harp glissando,True,0.263,kenney/interface-sounds/Audio/scratch_005.ogg,0-0.325,False
+sfx_wpn_debris,weapons,0,the sound of debris raining down,False,0.258,kenney/interface-sounds/Audio/error_008.ogg,0-0.139,False
+sfx_spell_somnus_apply,spells,0,"the sound of a soft falling sigh, someone drifting asleep",True,0.253,kenney/ui-audio/Audio/switch4.ogg,0-0.42,False
+sfx_carry_strain_loop,physics,1,the sound of wood-and-gilt creaks and groans,False,0.241,kenney/rpg-audio/Preview.ogg,5-15,False
+sting_portal_opened,music,0,"the sound of an otherworldly choir of reversed voices and glass harmonica swelling up, cold and magical",True,0.239,kenney/interface-sounds/Audio/switch_001.ogg,0-0.618,False
+amb_enemy_lantern_creak_loop,ambience,1,the sound of a creaking lantern bail,False,0.233,kenney/rpg-audio/Preview.ogg,20-26.127,False
+amb_lair_hearth_loop,ambience,1,"the sound of a warm crackle, the only safe fire",False,0.231,kenney/ui-audio/Preview.ogg,0-10,False
+sfx_portal_arrive,spells,0,"the sound of arriving through a portal into a cold night castle courtyard, whoosh fading to wind",True,0.215,kenney/interface-sounds/Audio/switch_006.ogg,0-0.611,False
+sfx_hazard_oil_sizzle,world,0,the sound of oil sizzling,False,0.214,kenney/ui-audio/Audio/switch4.ogg,0-0.42,False
+amb_room_magazine_loop,ambience,1,"the sound of dry, muffled, creaking kegs",False,0.213,kenney/casino-audio/Preview.ogg,25-35,False
+sfx_portcullis_raise_loop,world,1,the sound of chain and ratchet,False,0.206,kenney/casino-audio/Preview.ogg,20-30,False
+sfx_hazard_oil_pour,world,0,"the sound of boiling oil poured from above onto stone, thick splashing",True,0.199,kenney/interface-sounds/Audio/close_003.ogg,0-0.314,False
+sfx_spell_ignis_travel_loop,spells,1,"the sound of a small fireball flying, fluttering hiss and crackle",True,0.189,kenney/casino-audio/Preview.ogg,5-15,False
+amb_room_kunstkammer_loop,ambience,1,"the sound of a clock ticking, a clockwork curiosity",False,0.182,kenney/ui-audio/Preview.ogg,0-10,False
+sfx_status_burning_loop,foley,1,the sound of crackle close to cloth,False,0.181,kenney/casino-audio/Preview.ogg,0-10,False
+sfx_drawbridge_raise_loop,world,1,the sound of (if #44 builds it) winching,False,0.162,kenney/rpg-audio/Preview.ogg,5-15,False
+amb_fire_candle_loop,ambience,1,the sound of candle fire,False,0.158,kenney/casino-audio/Preview.ogg,5-15,False
+phys_roll_loop,physics,1,the sound of round things rolling,False,0.143,kenney/rpg-audio/Preview.ogg,10-20,False
+phys_scrape_wood_loop,physics,1,the sound of dragging over wood,False,0.134,kenney/rpg-audio/Preview.ogg,5-15,False
+amb_room_gallery_loop,ambience,1,the sound of wind rattling big glass panes,False,0.127,kenney/rpg-audio/Preview.ogg,15-25,False
+amb_fire_torch_loop,ambience,1,the sound of torch fire,False,0.121,kenney/casino-audio/Preview.ogg,5-15,False
+phys_scrape_metal_loop,physics,1,the sound of dragging metal,False,0.114,kenney/rpg-audio/Preview.ogg,15-25,False
+amb_fire_brazier_loop,ambience,1,the sound of brazier fire,False,0.113,kenney/ui-audio/Preview.ogg,0-10,False
+amb_fire_hearth_loop,ambience,1,the sound of hearth fire,False,0.106,kenney/ui-audio/Preview.ogg,0-10,False
+amb_fire_blaze_loop,ambience,1,the sound of blaze fire,False,0.095,kenney/ui-audio/Preview.ogg,0-10,False
+sfx_wpn_match_hiss_loop,weapons,1,the sound of a burning match-cord,False,0.072,kenney/casino-audio/Preview.ogg,0-10,False
+phys_scrape_stone_loop,physics,1,the sound of dragging over stone,False,0.071,kenney/rpg-audio/Preview.ogg,10-20,False
+sfx_wpn_fuse_loop,weapons,1,the sound of a fizzing fuse,False,0.063,kenney/casino-audio/Preview.ogg,5-15,False
+amb_spot_rats,ambience,1,the sound of rats in the stone,False,0.057,kenney/rpg-audio/Preview.ogg,10-20,False
+amb_spot_dripping,ambience,1,the sound of a drip,False,0.033,kenney/ui-audio/Preview.ogg,0-10,False
+amb_room_crypt_loop,ambience,1,the sound of drips and deep sub-rumble,False,0.021,kenney/ui-audio/Preview.ogg,0-10,False
+amb_room_bronze_interior_loop,ambience,1,"the sound of smoke, dust, a low fire",False,0.017,kenney/casino-audio/Preview.ogg,5-15,False
+sfx_wpn_xbow_span_loop,weapons,1,the sound of the long terrible pause,False,0.015,kenney/ui-audio/Preview.ogg,0-10,False
+amb_room_stair_loop,ambience,1,the sound of a draught whistling round the newel,False,-0.005,kenney/rpg-audio/Preview.ogg,0-10,False
+amb_alarm_late_huecry_loop,ambience,1,"the sound of a watch horn, then a tocsin bell and drum",False,-0.016,kenney/ui-audio/Preview.ogg,0-10,False
+sfx_wpn_sling_whirl_loop,weapons,1,the sound of a cord whirled overhead,False,-0.025,kenney/ui-audio/Preview.ogg,0-10,False
+amb_household_stir_loop,ambience,1,"the sound of distant doors, muffled voices, dogs",False,-0.036,kenney/rpg-audio/Preview.ogg,15-25,False
+amb_alarm_bronze_huecry_loop,ambience,1,"the sound of a bull-horn call, then war-conch and bronze gong",False,-0.039,kenney/rpg-audio/Preview.ogg,0-10,False
+amb_room_hall_loop,ambience,1,"the sound of a large, faintly humming space",False,-0.041,kenney/rpg-audio/Preview.ogg,15-25,False
+amb_lair_bed_loop,ambience,1,"the sound of drips, damp stone, a far creak",False,-0.046,kenney/casino-audio/Preview.ogg,20-30,False
+amb_alarm_high_huecry_loop,ambience,1,"the sound of a single chapel bell, then fast tolling",False,-0.054,kenney/casino-audio/Preview.ogg,0-10,False
+amb_bronze_exterior_loop,ambience,1,"the sound of warm night wind, crickets, a distant sea",False,-0.07,kenney/ui-audio/Preview.ogg,0-10,False
+sfx_status_asleep_player_loop,foley,1,"the sound of soft breathing, never the player's voice",False,-0.073,kenney/rpg-audio/Preview.ogg,10-20,False
+amb_room_counting_loop,ambience,1,"the sound of quiet, an occasional abacus click",False,-0.076,kenney/casino-audio/Preview.ogg,0-10,False
+amb_room_chapel_loop,ambience,1,"the sound of a huge reverberant hush, a faint organ drone",False,-0.089,kenney/ui-audio/Preview.ogg,0-10,False
+amb_spot_wind_gap,ambience,1,the sound of wind through a gap,False,-0.092,kenney/rpg-audio/Preview.ogg,20-26.127,False
+amb_powder_exterior_loop,ambience,1,"the sound of light breeze, distant town bells, a fountain",False,-0.096,kenney/ui-audio/Preview.ogg,5-14.136,False
+amb_high_exterior_loop,ambience,1,"the sound of cold wind on stone, an owl, a far dog",False,-0.111,kenney/ui-audio/Preview.ogg,0-10,False
+amb_room_corridor_loop,ambience,1,"the sound of dead air, a faint draught",False,-0.12,kenney/ui-audio/Preview.ogg,0-10,False
+amb_room_small_loop,ambience,1,the sound of room tone,False,-0.121,kenney/rpg-audio/Preview.ogg,20-26.127,False

@@ -36,8 +36,14 @@ def clean_query(text):
     return text.strip(" ,")
 
 
+def phrase(text):
+    """CLAP was trained on captions, and "the sound of ..." ranks the library's own files better than a bare
+    brief: 14 of 102 own files in the top five against 8 (see docs/plans/audio-sourcing-pipeline.md)."""
+    return text if text.lower().startswith("the sound of") else "the sound of " + text
+
+
 def query_for(row):
-    return clean_query(row["ai_prompt"] or row["brief"])
+    return phrase(clean_query(row["ai_prompt"] or row["brief"]))
 
 
 def length_limits(row):
@@ -112,6 +118,7 @@ def main(argv=None):
     parser.add_argument("--min-s", type=float)
     parser.add_argument("--max-s", type=float)
     parser.add_argument("--root", action="append", help="limit to this root (repeatable)")
+    parser.add_argument("--plain", action="store_true", help="search for the text exactly as typed (no 'the sound of')")
     args = parser.parse_args(argv)
 
     row = None
@@ -121,7 +128,7 @@ def main(argv=None):
             print(f"no sound named {args.sound!r} in manifest.csv")
             return 2
         row = matches[0]
-    query = args.query or (query_for(row) if row else None)
+    query = (args.query if args.plain else phrase(args.query)) if args.query else (query_for(row) if row else None)
     if not query:
         parser.error("give a query or --for <sound>")
     ctx = dict(row or DEFAULT_ROW)
