@@ -1,5 +1,23 @@
 # Today
 
+**2026-09-29 — UI redesign written, not yet seen in Unity; paused for a session on the owner's
+PC.** Plan `docs/plans/ui-redesign.md`, mockup `docs/generated/ui-redesign/index.html` (frames in
+`docs/generated/ui-redesign/frames/`). The code is on `claude/ui-redesign-impl` (also
+fast-forwarded onto `ccr-6bf1f02d-o8jhoy`): `UIFonts`, `UITheme` pigments and roles, `UITextures`,
+`UIFactory` components, every screen re-laid out, the IMGUI raid HUD, crosshair and damage
+feedback restyled, and EditMode tests `UIFontsTests`, `UIThemeTests`, `RaidHudPromptTests`.
+Nothing was compiled by Unity: this container has no Editor. The headless harness shows the same
+28 pre-existing errors before and after (none in UI files; they hide method-body errors, so this
+proves little). **Next, in the Editor:** open the project and read the Console for `error CS`;
+run EditMode and PlayMode tests (the known `GuardAttackTests` and `ArtAssetImportTests` failures
+predate this); run `UIScreenshotPlayModeTests` and compare `UI_Verification_Screenshots/` against
+the mockup frames; play menu → Lair → raid → pause → settings → death → Lair → extract. Judgement
+calls to check: bars now size by anchor instead of `fillAmount`; buttons are white Images tinted
+by their `ColorBlock`; the Lair footer shows the Age only (no player count exposed); the victory
+piece list is not built. Also filed #173 (finish #169).
+
+---
+
 **2026-09-28 — issue triage and docs brought in line with every branch.** At the owner's request.
 Every open issue was checked against the code and docs on `main`. Twelve were already done or
 superseded and are closed, each with a comment saying why and where: #127, #131, #134, #140,
