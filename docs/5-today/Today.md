@@ -1,5 +1,32 @@
 # Today
 
+**2026-09-29 (later) — the in-game audio layer is built and plays; nobody has listened.** Plan
+`docs/plans/audio-in-game-layer.md`, how it works `docs/4-systems/audio.md` (event table and gap list).
+Built: assembly `Plunderspell.Audio`, `Plunderspell.mixer` (Master, Music, SFX with six children, UI;
+exposed `MasterVolume`, `MusicVolume`, `SfxVolume`, `UiVolume`; snapshots `Default` and `Casting`),
+`SoundBank.asset` (483 entries, 0 missing clips, registered as a preloaded asset), `AudioDirector`
+(32 pooled sources), `MusicDirector`, and the Settings sliders on the mixer. The mixer had to be
+authored through reflection on `UnityEditor.Audio.AudioMixerController`; that worked. Checked:
+`AudioLayerTests` pass 9 of 9; the full EditMode run was 103 passed, 2 failed, 3 skipped, and the two
+failures (`ArtAssetImportTests.ArtBibleModelsImportWithTheirOwnedSettings`,
+`LootBalanceTests.Test_TheOuterZonesHoldNothingTooHeavyToLift`) are in art import and loot weights,
+not audio, and were not investigated. Play mode, through Play Solo, Lair, Set Out: title loop on the
+Music group in the menu, cross-fade to the Lair loop, then in the raid all four `mus_raid_high_*` stems
+on Music (Calm: stem 0 at 1.0 and the other three at 0.0; Hue and Cry: all four playing, stem 2 read at 1.0; the intermediate Roused state was only read before a fix that kept silent stems running, not after);
+button hover and click on the UI group, `ui_button_back_01` for the Back button; alarm stinger and
+portal stinger on Music. Raised from a script, not played through: cast, misfire, fizzle, no mana,
+hit, player hurt, guard swing and throw, loot ruined all reached the right group. Not seen: door
+sounds (no `CastleDoor` existed in the castles built), the player-death sound, item crossing,
+extraction success and the portal warning. Two findings: a snapshot transition overwrites exposed
+mixer parameters (measured: `MusicVolume` and `SfxVolume` read minus 9 after transitioning to `Casting`),
+so the casting dip is a code offset that leaves the sliders alone (forced on and off, the parameters
+went to minus 9 and back to 0); and the saved Master slider value was never applied at start-up
+before, and now is. Nobody can listen from a script: the levels, the mix and whether any of it sounds
+right are for the owner to judge. Gaps (own swing and throw, footsteps, ambience, guard voices,
+door kinds, more) are listed in `docs/4-systems/audio.md`.
+
+---
+
 **2026-09-29 — UI redesign seen in Unity, and five type defects fixed.** Console was clean (0 errors).
 Every screen was captured in Play mode through the Unity CLI (`capture_game_view --source screen`;
 the HUD through Play Solo, Lair, Set Out) and compared to the mockup frames. Layouts match; the

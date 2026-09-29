@@ -63,6 +63,7 @@ together and what was deliberately left undocumented, and why.
 | [`enemy-asset-pipeline`](../4-systems/enemy-asset-pipeline.md) | Generating the enemy roster from Python/Blender |
 | [`damage`](../4-systems/damage.md) | One damage pathway, blame, and hit feedback you can read |
 | [`combat-bench`](../4-systems/combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
+| [`audio`](../4-systems/audio.md) | Mixer, SoundBank, sounds played from game events, music by state and alarm, volume sliders, and what is still silent |
 | [`scale`](../4-systems/scale.md) | The 1.8m standard human, and the room, archway and enemy heights measured against it |
 
 ## Everything else worth reaching
@@ -92,10 +93,10 @@ together and what was deliberately left undocumented, and why.
   warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
   the surface shader, post-processing and the Low/Medium/High quality levels. Look samples in
   `docs/generated/look-samples-2026-09-24/`.
-- [`docs/plans/audio.md`](../plans/audio.md) — **approved, in progress** (assets built, not yet played in game). Every sound effect and
+- [`docs/plans/audio.md`](../plans/audio.md) — **approved, in progress** (assets built; Phase A layer built 2026-09-29, see [`audio`](../4-systems/audio.md)). Every sound effect and
   music track the game needs, named (~480 names, ~1,000 files), what triggers each, and how
   each is generated or sourced (library / AI / in-repo synth / recording / composer), plus four
-  decisions needed first. The game currently has no audio at all.
+  decisions needed first. The in-game layer plays the M7 set, the UI sounds and the music by state; the rest is listed as a gap in `docs/4-systems/audio.md`.
 - [`docs/plans/moodboard-gap-closure.md`](../plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
@@ -103,9 +104,8 @@ together and what was deliberately left undocumented, and why.
   once filed). Its one open creative-direction question, the bestiary's thematic split, was
   decided on 2026-09-24: each Age's enemies are its household.
 - **Work on other branches.** `docs/3-state/ProjectState.md`, "Work not on `main` yet", lists
-  every branch holding work `main` lacks. The largest is the audio plan (`docs/plans/audio.md`)
-  and `Tools/AudioForge/`, which builds every sound into `Assets/_Project/Audio/`, both on
-  `claude/eloquent-dirac-i10hep`.
+  every branch holding work `main` lacks. The audio plan (`docs/plans/audio.md`) and
+  `Tools/AudioForge/` are now merged into `ccr-6bf1f02d-o8jhoy` together with the in-game audio layer.
 - [`docs/prompts/plunderspell-fable.md`](../prompts/plunderspell-fable.md) — the build-and-test
   prompt used to drive an agent session on this project.
 - [`docs/prompts/house-rules-versioncheck-fix.md`](../prompts/house-rules-versioncheck-fix.md) — a

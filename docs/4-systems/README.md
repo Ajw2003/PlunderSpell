@@ -18,6 +18,7 @@ everything else feeds.
 | [`Tools/ArtForge/README.md`](../../Tools/ArtForge/README.md) | Turning the art bible (`docs/art/`) into game models on top of EnemyForge: blueprint API, part kinds, validation, review sheets, traps. Tool-level doc, kept beside the code; all 20 plunder items built, no structures or enemies |
 | [`damage.md`](damage.md) | The one damage pathway, who gets blamed, and the feedback that makes every hit readable |
 | [`combat-bench.md`](combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
+| [`audio.md`](audio.md) | The audio layer: mixer, SoundBank, the director that plays sounds from game events, the music, the volume sliders, and the gap list of what is still silent |
 | [`scale.md`](scale.md) | The metre: the 1.8m standard human, per-zone room and archway heights, enemy sizes, and where the player spawns |
 
 ## Considered and folded into another doc

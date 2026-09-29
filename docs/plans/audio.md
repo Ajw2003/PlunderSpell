@@ -3,7 +3,10 @@
 Status: **approved and in progress** (2026-09-27; decisions in §8). Phase A's asset side is built:
 `Tools/AudioForge/` makes every sound below (1,013 files, placeholders where the real source isn't
 in yet) into `Assets/_Project/Audio/`. Its [README](../../Tools/AudioForge/README.md) is the live
-status. Nothing plays in the game yet: the in-game audio layer (§7.3) is not built.
+status. *2026-09-29:* the in-game layer (§7.3) is now partly built, as decided in
+[`audio-in-game-layer.md`](audio-in-game-layer.md): mixer, SoundBank, `AudioDirector`,
+`MusicDirector`, the Casting dip and the Settings sliders. What plays, and everything that does not
+yet, is in [`docs/4-systems/audio.md`](../4-systems/audio.md). Nobody has listened to it.
 
 Every sound effect and music track Plunderspell needs, each with a name, what makes it play, and
 where the file will come from. The second half covers how to generate or source them, in what

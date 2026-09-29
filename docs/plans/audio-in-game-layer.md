@@ -1,6 +1,6 @@
 # Plan — the in-game audio layer (Phase A of `audio.md`)
 
-Status: **decided 2026-09-29, being built.** This is §7.3 and Phase A of [`audio.md`](audio.md) made
+Status: **built 2026-09-29 (Phase A); what plays and what does not is in [`docs/4-systems/audio.md`](../4-systems/audio.md).** Two things differ from this plan: the Casting dip is a code offset because a snapshot transition overwrites exposed parameters, and there is a fourth exposed parameter, `UiVolume`. Originally: decided 2026-09-29. This is §7.3 and Phase A of [`audio.md`](audio.md) made
 concrete. The assets exist (`Assets/_Project/Audio/`, 1,013 files, from `Tools/AudioForge/`, merged
 into this branch as `84732e04`); no game code plays them. The Settings screen's Music and Effects
 sliders store a number and do nothing (`SettingsScreen.cs:175,177`); Master sets

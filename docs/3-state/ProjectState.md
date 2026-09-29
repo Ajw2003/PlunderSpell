@@ -38,14 +38,15 @@ lacks; the rest are older and either merged in another form or abandoned.
   the combined grip. Found and not fixed, a real game bug: two holders sometimes cannot lift the
   Rolled Tapestry (`heavy_lifted_together` failed on 2 of 4 runs, always that piece; the Parade
   Armour lifts fine in the same spot). Cause not confirmed.
-- **`claude/eloquent-dirac-i10hep`** (7 commits, 2026-09-27, branched before the #169 work). The
-  audio plan (`docs/plans/audio.md`: about 480 named sounds, about 1,000 files) and
+- **`claude/eloquent-dirac-i10hep`** (7 commits, 2026-09-27, branched before the #169 work),
+  **now merged into `ccr-6bf1f02d-o8jhoy`** (`84732e04`), where the in-game layer was then built
+  (2026-09-29; `docs/4-systems/audio.md`). Still not on `main`. The audio plan (`docs/plans/audio.md`: about 480 named sounds, about 1,000 files) and
   `Tools/AudioForge/`, which builds all 1,013 files into `Assets/_Project/Audio/`: 262 from a CC0
   library, 45 generated, 706 placeholders (435 of them guard voices awaiting friends' recordings).
   A measured pass re-levelled every file by category after the owner found sounds harsh; files
   outside their level window went from 452 to 3. Nobody has listened to the result, and no game
-  code plays any of it: the mixer and `AudioDirector`/`MusicDirector` are not built. Two
-  decisions are recorded on the branch (AI sound effects, friends' voices, AI music only where it
+  code played any of it when the branch was written; the layer that does is described below.
+  Two decisions are recorded on the branch (AI sound effects, friends' voices, AI music only where it
   does not adapt; levels baked per category with Unity's Normalize off).
 - **`claude/busy-bose-a7647f`** (1 commit, 2026-09-26): a test-only fix to
   `GuardAttackTests` so the guard's own `Update` does not swing during the test's yield frame.
@@ -230,7 +231,12 @@ before touching the raid loop:
   *2026-09-27:* the audio half of #22 now has its files. `Tools/AudioForge/` builds all 1,013
   planned sounds into `Assets/_Project/Audio/` (262 CC0 library, 45 generated, 706 placeholders
   including 435 guard voices awaiting recording). No game code plays any of them yet: the mixer
-  and `AudioDirector`/`MusicDirector` (`docs/plans/audio.md` §7.3) are not built.
+  and `AudioDirector`/`MusicDirector` (`docs/plans/audio.md` §7.3) were not built.
+  *2026-09-29:* they are, in part. `Plunderspell.mixer`, `SoundBank.asset` (483 entries),
+  `AudioDirector`, `MusicDirector`, the Settings sliders on the mixer and the casting dip exist and
+  play from game events; see `docs/4-systems/audio.md` for the event table and the gap list (the
+  wizard's own swing and throw, footsteps, physics impacts, ambience, guard voices and more are
+  still silent). Play-mode reads show the right clips on the right groups; nobody has listened.
   The same day, after the owner reported harsh and misplaced sounds, a measured pass
   (`docs/generated/audio-audit/`) re-levelled every file by category, softened the synth recipes and
   swapped off-theme sources; flagged files went from 465 to 3. Nobody has listened to the result yet.
