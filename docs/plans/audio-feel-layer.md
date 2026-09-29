@@ -1,6 +1,6 @@
 # Plan — footsteps, physics impacts and guard voices (Phase A2 of `audio.md`)
 
-Status: **decided 2026-09-29, being built.** The owner's word: these three are integral to the
+Status: **built 2026-09-29; what plays and what does not is in [`docs/4-systems/audio.md`](../4-systems/audio.md).** Originally: decided 2026-09-29. The owner's word: these three are integral to the
 game's feel, so they move ahead of Phases B–F. They were listed as out of scope in
 [`audio-in-game-layer.md`](audio-in-game-layer.md); the layer that plays sounds is built
 ([`4-systems/audio.md`](../4-systems/audio.md)). The files are already in `Assets/_Project/Audio/`:

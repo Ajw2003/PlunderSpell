@@ -1,5 +1,32 @@
 # Today
 
+**2026-09-29 (evening) - footsteps, physics impacts and guard voices are built; nobody has listened.**
+Plan `docs/plans/audio-feel-layer.md`; how it works and the gap list are in `docs/4-systems/audio.md`.
+`AudioLayerTests` and the new `AudioFeelTests` pass, 19 of 19 (10 new). The full EditMode run is
+113 passed, 2 failed, 3 skipped of 118; the two failures are the same two as before
+(`ArtAssetImportTests.ArtBibleModelsImportWithTheirOwnedSettings`,
+`LootBalanceTests.Test_TheOuterZonesHoldNothingTooHeavyToLift`). They were not run on `84732e04`: that
+needs a second full import of the project, which cannot share this Editor. Between `84732e04` and now
+no art model, loot table, enemy prefab or `Item` prefab changed (the diff outside audio and docs is the
+UI sounds, four assembly definitions and two lines of `ProjectSettings.asset`), and neither test reads
+anything else, so neither can be caused by the audio changes; that is an argument from the diff, not a
+run. Play mode, through Play Solo, Lair, Set Out, with the W key and the Space key queued through the
+Input System so the real controller moved the player: the player's steps played flat on the Foley
+group (`foley_step_wood`), guards' steps and armour layers in 3D, a jump played `foley_player_jump`
+and the landing `foley_player_land_heavy` (since re-tuned so an ordinary jump lands light; that
+change was not re-run in Play mode). Steppers found stone, earth, tile, water, metal and rushes
+surfaces. Dropping a loot piece (the fall was set by script) played `phys_impact_bronze_heavy` on the
+World group, pushing it played `phys_roll_loop`, and ruining three pieces played `phys_break_ceramic`
+(the pieces were ingots and faience, so the other breaks were not heard). Guard voices, on the Creatures
+group: alert, chase, murmur and attack lines arose from the guards' own behaviour (I had moved the player next to them by script); hurt, asleep and death I
+caused by damaging a guard and by putting one to sleep with `StatusEffectReceiver.Sleep` (a script
+call, not a Somnus cast). Not seen: the hound (no High Age raid), a second player, the voice cap
+of six under a crowd, and a piece scraping. Two
+findings: a guard is destroyed the instant its health reaches zero, so a death line has to be read from
+the guard vanishing; and `CastleGuard.StateChanged` is host-only, so voices read replicated state.
+
+---
+
 **2026-09-29 (later) — the in-game audio layer is built and plays; nobody has listened.** Plan
 `docs/plans/audio-in-game-layer.md`, how it works `docs/4-systems/audio.md` (event table and gap list).
 Built: assembly `Plunderspell.Audio`, `Plunderspell.mixer` (Master, Music, SFX with six children, UI;

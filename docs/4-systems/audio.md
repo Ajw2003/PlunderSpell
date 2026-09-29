@@ -113,6 +113,82 @@ Two things differ from the plan, and both came from measuring.
   sets `UiVolume` to the same value as `SfxVolume`. The dip does not touch it, as the plan says only
   Music and SFX drop.
 
+## Footsteps and movement foley (Phase A2)
+
+`StepAudio` is added at run time by `AudioDirector.Discover` to every player (found every 5 s) and every
+guard (from `CastleGuard.Active`), so no prefab was edited. A step is one stride of ground covered:
+the stride is 0.9 to 2 m depending on speed (`StepMath.Stride`), so a sprint steps faster and standing
+still makes no sound. Loudness is 0.4, 0.7 or 1.0 by pace (under 2.2, under 4.5, faster m/s), the same
+three-way split as the crouch, walk and run reach of `FootstepNoiseEmitter`. The plan asked to reuse
+`EmitStep` where a character already reports a step; nothing does. `FootstepNoiseEmitter.OnFootstep`
+is called only by the free-look playtest controller, and the real player emits no step noise at all, so
+the sounds and the noise the guards hear are not yet the same event. That is a gap.
+
+Surface comes from a ray down from the character. A castle room is one floor collider named after its
+room (`BronzeLevyBarracks(Clone)`) with one material per pigment, so the room name decides and the
+ground outside is recognised by its material (`BaileyEarth`). `SurfaceLookup` keeps a keyword list
+(barracks and archive are wood, kitchen and chapel tile, foundry metal, courtyard and yard earth, shed
+rushes, cistern water) and defaults to stone. The list is a judgement about what each room's floor is
+made of, not read from any data, and it is the first thing to change if a room sounds wrong. Read in a
+Bronze Age raid, the steppers found stone, earth, tile, water, metal and rushes under them.
+
+The local player's steps play flat (2D) at 35 percent; everyone else's play in 3D. Guards add
+`foley_gear_<linen|leather|mail|plate|bronze_plate>_move` at 40 percent of the step, and the hound
+uses `foley_step_hound`. Jump plays when a grounded player rises faster than 2 m/s. A landing plays
+`foley_player_land` from 2.5 m/s of fall and `foley_player_land_heavy` from 10; an ordinary jump
+lands at about 8 m/s, which the first version called heavy, so the threshold moved. The Velox cast
+plays `foley_player_dodge` (the dodge key is gone; Velox is the only dash). Steps use their own pool of
+12 sources so a crowd of guards cannot use up the 32 general ones.
+
+## Physics impacts (Phase A2)
+
+`ImpactAudio` listens to `Item.Impacted`, the one hook added to gameplay code: a static event
+declared on `Item` and raised on the first line of its `OnCollisionEnter`, before that method's own
+early returns. It picks `phys_impact_<material>_<light|heavy>` from the piece's material and speed
+(heavy at 3 kg or 6 m/s), plays `phys_impact_body` when the thing it hit has health, and scales
+volume by speed up to 8 m/s. Impacts under 1.2 m/s are ignored, and a piece repeats no faster than
+every 0.12 s.
+
+Material is read from the piece's name by `LootMaterials` (a keyword list, first match wins, stone
+by default), since loot has no material field and the data assets were not edited. A test requires that
+every `LootItem` asset in the project matches a keyword, so a new piece added without one fails the
+suite. Breaks come from `LootValue.Ruined`, which every break passes through on every peer, so
+`LootPickup.BreakItem` did not need touching: glass, wood, book and coin-spill by material, the large
+glass break for a mirror, the liquid break for an amphora, and the ceramic crack for metal and stone.
+
+A piece that has just hit something is tracked for 6 s (up to 8 pieces). While it is on the floor and
+moving it drives a `LoopBus` slot: `phys_roll_loop` when it spins, otherwise the scrape for its
+material. The bus has six pooled sources, one loop per piece, fading in over 0.1 s and out over 0.25 s.
+
+**The `stashing` branch.** The one gameplay edit is two additive hunks in `Item.cs`: the event
+declaration after `Mass`, and one raise line at the top of `OnCollisionEnter`. The plan expected a
+second hook in `LootPickup.cs`; it was not needed, so that file is untouched. When branch `stashing`
+(the owner's loot work, which also changes `Item.cs`) merges, check that the raise line is still at
+the top of `OnCollisionEnter` and that the method still takes a `Collision`.
+
+## Guard voices (Phase A2, issue #42)
+
+`GuardVoices.Resolve` maps a guard's prefab name to its Age, voice and armour (16 enemies across the
+four Ages; the older prototype prefabs get no voice, as section 3.9 of `audio.md` decided). Lines are
+`vo_<age>_<voice>_<line>`; the hound has growl, bark, bite and yelp, plus a panting loop within 12 m
+while calm, and one howl from the nearest hound when the alarm reaches Roused.
+
+`GuardVoiceDirector` reads triggers from state every guard already replicates: its alert state, its
+attack count and its health. That is deliberate. `CastleGuard.StateChanged` is raised only on the
+host (in `EnterState`), so a client would have heard nothing from it. Reading synced state means a
+client hears what the host hears, nothing crosses the network, and no guard speaks twice on one
+machine. The lines: alert (to Investigating), chase, search, lost (back to patrol from an alerted
+state), attack (attack count rose), hurt (health fell), asleep (on falling asleep and every 6 s while
+asleep) and murmur. Limits: one line per guard per 2 s; a murmur only from a calm guard, 8 to 20 s
+apart and never within 8 s of another line; six voices at once, nearest first (a new line takes a free
+voice, else replaces the farthest playing one if that is farther than the new one); nothing beyond 45 m.
+Voices play in 3D at the guard's head on the Creatures group.
+
+Death cannot be read from health: `CastleGuard.TakeDamage` destroys the guard the moment health reaches
+zero, on every peer. A guard that vanishes while the raid phase is `Raiding` is treated as dead and
+speaks its death line from where it last stood. A guard destroyed for any other reason during a raid
+would do the same; none is known.
+
 ## Finding things that raise events
 
 Static events (`CastResolved`, `PhraseResolved`, `Damage.Dealt`, `LootValue.Ruined`) are subscribed in
@@ -142,13 +218,7 @@ Everything the plan put out of scope, and every sound in the M7 set that has no 
 **M7 set, missing a hook**
 
 - **The player's own melee swing and throw.** No event exists for either; the hook would go in
-  `Items/Item.cs` or `ItemManager.cs`, and `Item.cs` had someone else's uncommitted changes when this
-  was built. Guards swing and throw audibly; the wizard does not.
-- **Guard death and guard hurt.** `Damage.Dealt` plays the hit sound, but the death cries are
-  `vo_<age>_<role>_death` and guard voices are Phase C.
-- **Loot break by material.** `LootValue.Ruined` plays `phys_break_ceramic` for everything. The
-  `LootPickup.BreakItem` hook named in `audio.md` section 0 is in a file with someone else's changes,
-  and `LootValue` carries no material.
+  `Items/Item.cs` or `ItemManager.cs`. Guards swing and throw audibly; the wizard does not.
 - **Door kind.** Every door plays the wooden open and close; heavy, grate, locked-rattle and unlock
   sounds need the door to say what it is, and `CastleDoor` does not.
 - **Your own casts play in 3D at the cast origin**, not in 2D, so they follow the camera closely but are
@@ -156,7 +226,8 @@ Everything the plan put out of scope, and every sound in the M7 set that has no 
 
 **Events found and deliberately not used**
 
-- `CastleGuard.StateChanged` exists at `Guards/CastleGuard.cs:114` but only guard voices would use it.
+- `CastleGuard.StateChanged` exists at `Guards/CastleGuard.cs:114` but is raised only on the host;
+  guard voices read the replicated state instead.
 - `PlayerStateMachine.LocalPlayerDied`, `RangedWeapon.Fired`, `PlayerStateMachine.SlamLanded`,
   `GoldConjured` and `GoldScattered` exist and are unused. `sting_player_down` is built into the names
   class but nothing plays it.
@@ -165,8 +236,7 @@ Everything the plan put out of scope, and every sound in the M7 set that has no 
 
 - Phases B to F of `audio.md`: better library files, AI spell sounds, guard voices, real music, the
   mix pass.
-- Footsteps, the grab beam and grab sounds, physics impacts and scrapes, spell travel, impact and
-  hold loops, status loops (burning, asleep, levitating), the diegetic alarm loops
+- The grab beam and grab sounds, spell travel, impact and hold loops, status loops (burning, asleep, levitating), the diegetic alarm loops
   (`amb_alarm_<age>_*`), ambience beds and spot loops, fire loops, the portal drone, reverb zones.
 - The `Lair`, `Downed` and `Paused` snapshots, and the heartbeat.
 - `sfx_voice_listen_open` and `_close` (needs a hook in `PushToCastController`, and the open cue must
@@ -177,10 +247,37 @@ Everything the plan put out of scope, and every sound in the M7 set that has no 
 - Bar-line quantised music (Phase E), the Lair-after-loss loop, the credits track, the portal
   narrowing stem, and the `sting_gold_found`, `sting_player_down` and `sting_raid_lost` stingers.
 - The combat-bench toggle that cycles every sound in a category.
+**Phase A2 gaps**
+
+- The wizard's steps are not the noise the guards hear (see Footsteps); the real player never calls
+  `FootstepNoiseEmitter`.
+- Guard `grabbed` and `thrown` lines and the hound's `whimper_grabbed`: nothing in the code can grab or
+  throw a guard, so there is no event.
+- The gear layer on body movement (`foley_robe_move` and gear sounds while not stepping).
+- Scrape and roll only start after a piece's first impact, so a piece dragged from rest before it has
+  hit anything is silent until it bumps something. Pieces dragged by the grab beam are not detected as
+  dragged at all.
+- Cloth, book and coin impacts, and the ceramic and glass impacts, have one weight only, so heavy and
+  light are the same for them.
+- The surface list is a guess from room names; ledges, stairs and thresholds inside a room take the
+  room's surface.
+- A remote player's steps and jumps use the same code as a guard's; no run had a second player, so that
+  path was not seen.
+- The hound has not been heard in a run (the Bronze Age raid has none); its lines are tested by name only.
+
+**Still open from Phase A**
+
 - Making the wizard's own casts 2D, and scaling loudness by gameplay noise more finely than the
   five reach distances.
 
 ## Tests and how it was checked
+
+`Assets/_Project/Scripts/Tests/Editor/AudioFeelTests.cs` (EditMode, 10 tests): the surface lookup and
+that every step, jump, land and dodge name is in the bank; stride, loudness and landing rules; every
+`LootItem` asset has a known material and every impact, break, scrape and roll name is in the bank; the
+16 roster enemies each resolve to a voice and every line and gear name is in the bank; `(Clone)` and
+prototype names; the line chosen for each change of alert state; and the loop bus giving one slot per
+key and never more than its size.
 
 `Assets/_Project/Scripts/Tests/Editor/AudioLayerTests.cs` (EditMode, 9 tests): every manifest name has
 an entry with the manifest's number of clips and a mixer group; every group belongs to the mixer; the

@@ -237,6 +237,11 @@ before touching the raid loop:
   play from game events; see `docs/4-systems/audio.md` for the event table and the gap list (the
   wizard's own swing and throw, footsteps, physics impacts, ambience, guard voices and more are
   still silent). Play-mode reads show the right clips on the right groups; nobody has listened.
+  *2026-09-29 (later):* footsteps by surface, jump and landing, physics impacts by material and
+  speed with scrape and roll loops, and guard voices from replicated state (alert, chase, search,
+  lost, attack, hurt, asleep, murmur, death; the hound's growl, bark, bite, yelp and howl) were added
+  (`docs/plans/audio-feel-layer.md`). One additive event on `Item.cs` (`Item.Impacted`); it needs a look
+  when branch `stashing` merges.
   The same day, after the owner reported harsh and misplaced sounds, a measured pass
   (`docs/generated/audio-audit/`) re-levelled every file by category, softened the synth recipes and
   swapped off-theme sources; flagged files went from 465 to 3. Nobody has listened to the result yet.

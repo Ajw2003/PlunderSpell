@@ -6,7 +6,7 @@ in yet) into `Assets/_Project/Audio/`. Its [README](../../Tools/AudioForge/READM
 status. *2026-09-29:* the in-game layer (§7.3) is now partly built, as decided in
 [`audio-in-game-layer.md`](audio-in-game-layer.md): mixer, SoundBank, `AudioDirector`,
 `MusicDirector`, the Casting dip and the Settings sliders. What plays, and everything that does not
-yet, is in [`docs/4-systems/audio.md`](../4-systems/audio.md). Nobody has listened to it.
+yet, is in [`docs/4-systems/audio.md`](../4-systems/audio.md). Footsteps, physics impacts and guard voices followed the same day ([`audio-feel-layer.md`](audio-feel-layer.md)). Nobody has listened to any of it.
 
 Every sound effect and music track Plunderspell needs, each with a name, what makes it play, and
 where the file will come from. The second half covers how to generate or source them, in what
