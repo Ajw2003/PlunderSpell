@@ -1,6 +1,6 @@
 # UI redesign: bring the game's screens into the pitch's visual world
 
-**Status: planned 2026-09-28, mockup built, implementation in progress.** Asked for by the owner:
+**Status: planned 2026-09-28, mockup built, implemented 2026-09-29 on `claude/ui-redesign-impl` and not yet seen in Unity.** Asked for by the owner:
 "the visual language is taking shape everywhere else but the UI." Visual mockup of every screen:
 [`docs/generated/ui-redesign/index.html`](../generated/ui-redesign/index.html).
 

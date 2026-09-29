@@ -141,6 +141,17 @@ guard's shout sends nearby guards to you, and the hue and cry sends guards withi
 `docs/4-systems/alarm.md`). Stars and the moon show overhead through the fog, which still hangs over the horizon
 (`docs/4-systems/atmosphere.md`, "The sky shows through overhead").
 
+**2026-09-29 — the UI redesign is written, not yet seen** (`claude/ui-redesign-impl`, not merged).
+`docs/plans/ui-redesign.md` is built in code: `UITheme` is the pigment list and roles, `UIFonts`
+loads Eczar, Spectral and Overpass Mono, `UITextures` generates the backdrop, sigil and ring,
+`UIFactory` has the new buttons, bars, slider, stepper and segmented control, every menu screen and
+the vitals HUD are re-laid out, and the IMGUI raid HUD, crosshair and damage numbers use the same
+roles. Nothing has been opened in Unity: the headless harness compiles the code, and three new
+EditMode test files (`UIFontsTests`, `UIThemeTests`, `RaidHudPromptTests`) have not run in the
+Editor. Not built: the extracted-piece list on the victory screen (no data), the Lair's "n of 4 in
+the Lair" count (the co-op session does not expose one), and screenshot comparison against the
+mockup.
+
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog
 (High), vertex soot bake, Deck profiling, enemies/loot on the surface shader unseen in play,
