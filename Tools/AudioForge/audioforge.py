@@ -6,6 +6,11 @@
     python3 Tools/AudioForge/audioforge.py promote <file> <name>_<NN> --licence "..."
     python3 Tools/AudioForge/audioforge.py ai [glob] [--dry-run] [--auto-promote]
     python3 Tools/AudioForge/audioforge.py preview      # docs/generated/audio-preview/index.html
+    python3 Tools/AudioForge/audioforge.py index        # CLAP index of the library roots (finder/roots.json)
+    python3 Tools/AudioForge/audioforge.py find "text" [--top N] [--for <sound>]
+    python3 Tools/AudioForge/audioforge.py coverage     # which placeholders a library covers
+    python3 Tools/AudioForge/audioforge.py review [glob]  # docs/generated/audio-review/index.html
+    python3 Tools/AudioForge/audioforge.py apply review-decisions.json
 
 (On Windows, `python` instead of `python3`.) See Tools/AudioForge/README.md.
 """
@@ -24,6 +29,11 @@ COMMANDS = {
     "ai": "forge.ai_elevenlabs",
     "preview": "forge.preview",
     "audit": "forge.audit",
+    "index": "finder.index",
+    "find": "finder.search",
+    "coverage": "finder.coverage",
+    "review": "finder.review",
+    "apply": "finder.apply",
 }
 
 
