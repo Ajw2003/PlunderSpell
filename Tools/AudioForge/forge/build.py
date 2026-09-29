@@ -26,7 +26,7 @@ import numpy as np
 import soundfile as sf
 from scipy import signal
 
-from . import dsp, music
+from . import dsp, music, tailor
 from .categories import CATEGORY, category, target_rms_db
 from .recipes import RECIPES
 
@@ -37,6 +37,7 @@ KENNEY = FORGE / "library" / "kenney"
 FINAL = FORGE / "final"
 MANIFEST = FORGE / "manifest.csv"
 REPORT = FORGE / "build_report.csv"
+PICKS = FORGE / "picks.csv"  # name,variant,recipe: written by `audioforge.py apply`, overrides the row's recipe
 
 PEAK = 10 ** (-1 / 20)  # -1 dBFS
 FINAL_EXTENSIONS = (".wav", ".flac", ".ogg", ".mp3")
@@ -82,9 +83,13 @@ def render_layer(layer, rng, variant):
     gain_db = float(params.pop("gain", 0))
     at = float(params.pop("at", 0))  # start this layer later, in seconds (knock... knock)
     lp = float(params.pop("lp", 0))  # low-pass this layer at lp Hz (tame a fizzy recording)
+    hp = float(params.pop("hp", 0))  # high-pass this layer at hp Hz (thin out rumble)
     shift = float(params.pop("shift", 1.0))
     sources = []
-    if kind == "kenney":
+    if kind == "lib":  # a file from a library root (finder/roots.json): tailor.py
+        x, label = tailor.render(target, params, trim_silence)
+        sources.append(label)
+    elif kind == "kenney":
         pack, _, pattern = target.partition("/")
         files = sorted((KENNEY / pack / "Audio").glob(pattern + ("" if pattern.endswith(".ogg") else ".ogg")))
         if not files:
@@ -112,6 +117,8 @@ def render_layer(layer, rng, variant):
     x = dsp.pitch_shift(np.nan_to_num(x.astype(np.float32)), shift)
     if lp > 0:
         x = dsp.lowpass(x, lp, 4)
+    if hp > 0:
+        x = dsp.highpass(x, hp)
     if at > 0:
         x = np.concatenate([np.zeros(dsp.seconds(at), dtype=np.float32), x])
     return x * 10 ** (gain_db / 20), sources
@@ -183,15 +190,21 @@ def build_one(row, variant):
             sources += src
         x = dsp.mix(*parts)
         uses_kenney = any(s.startswith("kenney/") for s in sources)
+        lib_licences = [tailor.licence(s[4:].split("/")[0]) for s in sources if s.startswith("lib:")]
         if row["final"] == "G":
             status = "generated"
+        elif row["final"] == "L" and lib_licences:
+            status = "library-cc0" if all(l.startswith("CC0") for l in lib_licences) else "library"
         elif row["final"] == "L" and uses_kenney:
             status = "library-cc0"
         else:
             status = "placeholder"
     x = np.nan_to_num(x)
     if row["loop"] == "1":
-        x = dsp.make_loop(x, min(0.5, len(x) / dsp.SAMPLE_RATE / 4))
+        if final is None and " xfade=" in row["recipe"]:
+            pass  # a lib: layer already folded its own tail over its head (equal power); do not fold twice
+        else:
+            x = dsp.make_loop(x, min(0.5, len(x) / dsp.SAMPLE_RATE / 4))
     else:
         # Mixed layers are padded to the longest one; drop the dead tail so a one-shot ends
         # when it stops sounding. Loops keep their exact length.
@@ -206,9 +219,11 @@ def build_one(row, variant):
     path = folder / f"{name}_{variant + 1:02d}.ogg"
     write_if_changed(path, x)
     licence = "CC0 (Kenney)" if any(s.startswith("kenney/") for s in sources) else "original (AudioForge)"
+    if final is None and any(s.startswith("lib:") for s in sources):
+        licence = "; ".join(sorted({tailor.licence(s[4:].split("/")[0]) for s in sources if s.startswith("lib:")}))
     if final is not None:
         licence = "see final/LICENCES.csv"
-    return dict(file=str(path.relative_to(REPO)), name=name, variant=variant + 1, status=status,
+    return dict(file=path.relative_to(REPO).as_posix(), name=name, variant=variant + 1, status=status,
                 final_source=row["final"], seconds=round(len(x) / dsp.SAMPLE_RATE, 3),
                 peak_db=round(20 * np.log10(np.max(np.abs(x)) + 1e-12), 1),
                 rms_db=round(20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-12), 1),
@@ -223,11 +238,26 @@ def _job(args):
         return dict(name=row["name"], variant=variant + 1, error=f"{type(exc).__name__}: {exc}")
 
 
+def load_picks():
+    """{(name, variant index from 0): recipe} from picks.csv, or {} when there is none."""
+    if not PICKS.exists():
+        return {}
+    with PICKS.open(newline="", encoding="utf-8") as f:
+        return {(r["name"], int(r["variant"]) - 1): r["recipe"] for r in csv.DictReader(f) if r.get("recipe")}
+
+
+def with_pick(row, variant, picks):
+    """The row as variant `variant` builds it: a pick replaces the recipe and makes the sound a library sound."""
+    recipe = picks.get((row["name"], variant))
+    return row if recipe is None else dict(row, recipe=recipe, final="L")
+
+
 def main(argv):
     patterns = argv or ["*"]
     rows = list(csv.DictReader(MANIFEST.open()))
     selected = [r for r in rows if any(fnmatch.fnmatch(r["name"], p) for p in patterns)]
-    jobs = [(r, v) for r in selected for v in range(int(r["variants"]))]
+    picks = load_picks()
+    jobs = [(with_pick(r, v, picks), v) for r in selected for v in range(int(r["variants"]))]
     print(f"building {len(jobs)} files from {len(selected)} sounds...", flush=True)
     results = []
     with ProcessPoolExecutor() as pool:

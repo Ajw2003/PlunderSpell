@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
-from .build import FINAL, MANIFEST, OUT, REPO, REPORT
+from .build import FINAL, MANIFEST, OUT, REPO, REPORT, load_picks
 
 SILENT_DB = -60.0
 CLIP_DB = -0.5
@@ -33,7 +33,7 @@ def main():
             expected[OUT / row["folder"] / f"{row['name']}_{v:02d}.ogg"] = row
 
     for path, row in expected.items():
-        rel = str(path.relative_to(REPO))
+        rel = path.relative_to(REPO).as_posix()
         if not path.exists():
             problems.append(f"missing: {rel}")
             continue
@@ -72,9 +72,11 @@ def main():
     for r in report.values():
         statuses[r["status"]] = statuses.get(r["status"], 0) + 1
     by_final = {}
+    picks = load_picks()  # a pick makes its variant a library sound
     for row in rows:
-        by_final.setdefault(row["final"], 0)
-        by_final[row["final"]] += int(row["variants"])
+        for v in range(int(row["variants"])):
+            final = "L" if (row["name"], v) in picks else row["final"]
+            by_final[final] = by_final.get(final, 0) + 1
     print(f"{len(expected)} files expected, {len(rows)} sounds")
     print("status:          " + ", ".join(f"{k} {v}" for k, v in sorted(statuses.items())))
     print("shipping source: " + ", ".join(f"{k} {v}" for k, v in sorted(by_final.items())) +

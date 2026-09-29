@@ -15,7 +15,7 @@ from .build import MANIFEST, OUT, REPO, REPORT
 PAGE = REPO / "docs" / "generated" / "audio-preview" / "index.html"
 SOURCE_NAMES = {"G": "generated", "L": "library", "A": "AI sound", "R": "recorded", "C": "composed",
                 "M": "AI music"}
-STATUS_NOTE = {"placeholder": "placeholder", "generated": "generated", "library-cc0": "CC0 library",
+STATUS_NOTE = {"placeholder": "placeholder", "generated": "generated", "library-cc0": "CC0 library", "library": "library",
                "ai": "AI take", "ai-music": "AI music", "recorded": "recorded", "composed": "composed"}
 
 STYLE = """
@@ -29,7 +29,7 @@ h2{margin:28px 0 8px;font-size:19px;border-bottom:1px solid var(--line);padding-
 .row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1.6fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dotted var(--line)}
 .name{font-family:ui-monospace,Menlo,monospace;font-size:13px;word-break:break-all}.brief{color:var(--dim);font-size:14px}
 .tags{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}.tag{font-size:11px;padding:1px 6px;border-radius:9px;border:1px solid var(--line);white-space:nowrap}
-.placeholder{color:var(--madder);border-color:var(--madder)}.library-cc0,.generated{color:var(--verd);border-color:var(--verd)}
+.placeholder{color:var(--madder);border-color:var(--madder)}.library-cc0,.library,.generated{color:var(--verd);border-color:var(--verd)}
 .ai,.ai-music,.recorded,.composed{color:var(--gold);border-color:var(--gold)}
 .players{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}audio{height:30px;max-width:100%}
 .summary{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0 0;color:var(--dim)}.summary b{color:var(--ink)}
