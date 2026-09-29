@@ -24,7 +24,7 @@ in this form when it was written (2026-09-27).
 | `python3 Tools/AudioForge/audioforge.py audit` | measures every file for harshness, clipping, level and length against real recordings; writes `docs/generated/audio-audit/` ([README](../../docs/generated/audio-audit/README.md)); `--refs` also shows the reference profiles and calibration |
 | `python3 Tools/AudioForge/audioforge.py preview` | writes `docs/generated/audio-preview/index.html`, a page with a player for every sound |
 | `python3 Tools/AudioForge/audioforge.py promote <file> <name>_NN --licence "..."` | files a finished take in `final/` so the build ships it |
-| `python3 Tools/AudioForge/audioforge.py ai --dry-run` | lists the 38 AI-sourced sounds and their prompts; without `--dry-run` it generates takes (needs `ELEVENLABS_API_KEY`) |
+| `python3 Tools/AudioForge/audioforge.py ai --dry-run` | lists the 38 AI-sourced sounds and their prompts; without `--dry-run` it generates takes (needs `ELEVENLABS_API_KEY`). Uses ElevenLabs' `eleven_text_to_sound_v2`, asks for a seamless loop on `loop=1` rows, and allows 0.5-30 s. Add `--placeholders` to also cover every sound still synthesised as a stand-in (149 sounds, 693 takes at 3 each; not guard voices or music), using its brief when it has no prompt. Add sound names or globs to limit it, e.g. `ai --placeholders sfx_portal_open` |
 
 Requirements: Python 3.10+, `pip install numpy scipy soundfile`. Rebuilding is deterministic: the
 same manifest gives the same audio, and files whose audio didn't change are left untouched in git.
