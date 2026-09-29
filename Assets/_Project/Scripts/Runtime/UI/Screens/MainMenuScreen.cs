@@ -1,4 +1,5 @@
 using Plunderspell.Core;
+using Plunderspell.Lair;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,14 +42,89 @@ namespace Plunderspell.UI.Screens
             var buttonListGo = new GameObject("ButtonList", typeof(RectTransform));
             buttonListGo.transform.SetParent(transform, false);
             var buttonListRect = (RectTransform)buttonListGo.transform;
-            UIFactory.PlaceTopLeft(buttonListRect, ColumnLeft, hookTop + 82f + 40f, 520f, 64f * 4f + 10f * 3f);
+            UIFactory.PlaceTopLeft(buttonListRect, ColumnLeft, hookTop + 82f + 40f, 520f, 64f * 5f + 10f * 4f);
             UIFactory.AddVerticalLayout(buttonListRect, spacing: 10f, padding: new RectOffset(0, 0, 0, 0), childAlignment: TextAnchor.UpperLeft);
 
             var buttonSize = new Vector2(520f, 64f);
+            BuildSaveRow(buttonListRect);
             UIFactory.CreateButton(buttonListRect, "PlayButton", "Play Solo", OnPlayClicked, buttonSize, ButtonKind.Primary, "ENTER");
             UIFactory.CreateButton(buttonListRect, "HostButton", "Host Co-op", OnHostClicked, buttonSize, ButtonKind.Secondary, "STEAM");
             UIFactory.CreateButton(buttonListRect, "SettingsButton", "Settings", OnSettingsClicked, buttonSize);
             UIFactory.CreateButton(buttonListRect, "QuitButton", "Quit", OnQuitClicked, buttonSize, ButtonKind.Quiet);
+        }
+
+        /// <summary>The save slot picker: a stepper through the slots and a Reset that asks twice.</summary>
+        private void BuildSaveRow(RectTransform list)
+        {
+            const float resetWidth = 130f;
+            const float gap = 10f;
+            var rowGo = new GameObject("SaveRow", typeof(RectTransform));
+            rowGo.transform.SetParent(list, false);
+            var row = (RectTransform)rowGo.transform;
+            row.sizeDelta = new Vector2(520f, 64f);
+
+            RectTransform stepper = UIFactory.CreateStepper(row, "SaveSlot", () => StepSlot(-1), () => StepSlot(1),
+                new Vector2(520f - resetWidth - gap, 64f), out _saveValue);
+            UIFactory.PlaceTopLeft(stepper, 0f, 0f, 520f - resetWidth - gap, 64f);
+
+            Button reset = UIFactory.CreateButton(row, "ResetSaveButton", "Reset", OnResetClicked, new Vector2(resetWidth, 64f), ButtonKind.Quiet);
+            UIFactory.PlaceTopRight(reset.GetComponent<RectTransform>(), 0f, 0f, resetWidth, 64f);
+            _resetLabel = reset.GetComponentInChildren<Text>();
+            RefreshSaveLabel();
+        }
+
+        private Text _saveValue;
+        private Text _resetLabel;
+        private bool _resetArmed;
+
+        private void StepSlot(int step)
+        {
+            int slot = ((SaveSlots.Active - 1 + step) % SaveSlots.Count + SaveSlots.Count) % SaveSlots.Count + 1;
+            LairHubManager lair = FindFirstObjectByType<LairHubManager>();
+            if (lair != null)
+                lair.LoadSlot(slot);
+            else
+                SaveSlots.Active = slot;
+            _resetArmed = false;
+            RefreshSaveLabel();
+        }
+
+        // The first press arms it and the second wipes the slot, so a stray click cannot lose a save.
+        private void OnResetClicked()
+        {
+            if (!_resetArmed)
+            {
+                _resetArmed = true;
+                RefreshSaveLabel();
+                return;
+            }
+
+            _resetArmed = false;
+            int slot = SaveSlots.Active;
+            LairHubManager.ResetSlot(slot);
+            LairHubManager lair = FindFirstObjectByType<LairHubManager>();
+            if (lair != null)
+                lair.LoadSlot(slot);
+            Debug.Log($"[Save] Slot {slot} reset to a new campaign.");
+            RefreshSaveLabel();
+        }
+
+        private void RefreshSaveLabel()
+        {
+            if (_saveValue == null)
+                return;
+            int slot = SaveSlots.Active;
+            if (LairHubManager.HasSave(slot))
+            {
+                LairState state = LairHubManager.Peek(slot);
+                _saveValue.text = $"Save {slot} · debt {state.TotalDebt:0} · gold {state.AccumulatedGold:0}";
+            }
+            else
+            {
+                _saveValue.text = $"Save {slot} · new";
+            }
+            if (_resetLabel != null)
+                _resetLabel.text = _resetArmed ? "Sure?" : "Reset";
         }
 
         private void AddWordmarkLine(string name, string word, Color colour, float top)
@@ -108,6 +184,8 @@ namespace Plunderspell.UI.Screens
                 GameServices.Coop.Changed += RefreshStatus;
             }
             RefreshStatus();
+            _resetArmed = false;
+            RefreshSaveLabel();
         }
 
         private void RefreshStatus()
