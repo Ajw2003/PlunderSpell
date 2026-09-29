@@ -46,8 +46,14 @@ def duration_for(row):
     if m:
         seconds = float(m.group(1))
     else:
-        durs = [float(d) for d in re.findall(r"\bdur=([\d.]+)", row["recipe"])]
-        seconds = max(durs) if durs else 2.0
+        # A layer ends at its start offset (at=) plus its length (dur=); the sound ends when the last does.
+        ends = []
+        for layer in row["recipe"].split(" + "):
+            dur = re.search(r"\bdur=([\d.]+)", layer)
+            if dur:
+                start = re.search(r"\bat=([\d.]+)", layer)
+                ends.append(float(dur.group(1)) + (float(start.group(1)) if start else 0.0))
+        seconds = max(ends) if ends else 2.0
     return max(MIN_SECONDS, min(MAX_SECONDS, seconds))
 
 
