@@ -1,5 +1,20 @@
 # Today
 
+**2026-09-29 — ElevenLabs chosen for sound effects; AudioForge ready for a pilot.** The owner picked
+ElevenLabs after `docs/plans/audio-tooling-options-2026-09-29.md` compared it with Mirelo, Ludo and
+local models. `Tools/AudioForge/forge/ai_elevenlabs.py` now uses `eleven_text_to_sound_v2`, asks for
+seamless loops on `loop=1` rows, allows up to 30 s, counts layer start offsets when it works out a
+duration, and takes `--placeholders` to cover every stand-in sound (149 sounds, 693 takes, about
+107,000 credits at 40 a second; guard voices and music are left out). The menu theme
+`mus_title_loop` is now `final = G`, so it is not on the list to replace with AI music. Fixed a
+Windows bug where regenerating the manifest crashed on a non-ASCII brief and truncated
+`manifest.csv` (the entry point now restarts Python in UTF-8 mode). Run: the dry run of the
+five-sound pilot (21 takes, about 49 s). Not run: any real ElevenLabs request, because there is no
+`ELEVENLABS_API_KEY` on this machine and the owner has to make the key. Next: the owner runs the
+pilot, listens to `Tools/AudioForge/ai/takes/`, and says which to keep.
+
+---
+
 **2026-09-29 (evening) - footsteps, physics impacts and guard voices are built; nobody has listened.**
 Plan `docs/plans/audio-feel-layer.md`; how it works and the gap list are in `docs/4-systems/audio.md`.
 `AudioLayerTests` and the new `AudioFeelTests` pass, 19 of 19 (10 new). The full EditMode run is
