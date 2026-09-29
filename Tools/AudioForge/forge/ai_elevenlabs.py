@@ -36,11 +36,13 @@ TAKES = FORGE / "ai" / "takes"
 LOG = FORGE / "ai" / "log.csv"
 STYLE = ("Medieval castle heist game, stylised and slightly comic, recorded dry and close, "
          "no music, no reverb unless asked: ")
-MIN_SECONDS, MAX_SECONDS = 0.5, 22.0
+MODEL = "eleven_text_to_sound_v2"   # the only model the API accepts; the one that supports loop
+MIN_SECONDS, MAX_SECONDS = 0.5, 30.0
+REPORT = FORGE / "build_report.csv"
 
 
 def duration_for(row):
-    m = re.search(r"(\d+(?:\.\d+)?) seconds?", row["ai_prompt"])
+    m = re.search(r"(\d+(?:\.\d+)?) seconds?", prompt_for(row))
     if m:
         seconds = float(m.group(1))
     else:
@@ -49,8 +51,22 @@ def duration_for(row):
     return max(MIN_SECONDS, min(MAX_SECONDS, seconds))
 
 
-def request_take(api_key, prompt, seconds, influence):
-    body = json.dumps({"text": prompt, "duration_seconds": seconds, "prompt_influence": influence}).encode()
+def prompt_for(row):
+    """The AI prompt, or the manifest's one-line brief for a row that was never given a prompt."""
+    return row["ai_prompt"] or row["brief"]
+
+
+def placeholder_names():
+    """Sounds whose files are still synthesised stand-ins, minus guard voices (friends record those)
+    and music (its own plan)."""
+    with REPORT.open(newline="") as f:
+        names = {r["name"] for r in csv.DictReader(f) if r["status"] == "placeholder"}
+    return {n for n in names if not n.startswith(("vo_", "mus_"))}
+
+
+def request_take(api_key, prompt, seconds, influence, loop=False):
+    body = json.dumps({"text": prompt, "duration_seconds": seconds, "prompt_influence": influence,
+                       "loop": loop, "model_id": MODEL}).encode()
     req = urllib.request.Request(ENDPOINT, data=body, method="POST",
                                  headers={"xi-api-key": api_key, "Content-Type": "application/json",
                                           "Accept": "audio/mpeg"})
@@ -75,18 +91,23 @@ def main(argv):
     parser.add_argument("--influence", type=float, default=0.4, help="prompt influence 0-1 (default 0.4)")
     parser.add_argument("--auto-promote", action="store_true", help="promote take 1 of every variant")
     parser.add_argument("--licence", default="ElevenLabs paid plan, commercial use (AI-generated)")
+    parser.add_argument("--placeholders", action="store_true",
+                        help="also do every sound still synthesised as a stand-in (not guard voices or music), "
+                             "using its brief when it has no AI prompt")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
 
+    stand_ins = placeholder_names() if args.placeholders else set()
     rows = [r for r in csv.DictReader(MANIFEST.open())
-            if r["final"] in ("A", "M") and r["ai_prompt"]
+            if ((r["final"] in ("A", "M") and r["ai_prompt"]) or r["name"] in stand_ins)
             and any(fnmatch.fnmatch(r["name"], p) for p in args.patterns)]
     jobs = [(r, v, k) for r in rows for v in range(1, int(r["variants"]) + 1) for k in range(1, args.takes + 1)]
     print(f"{len(rows)} sounds, {len(jobs)} takes requested "
           f"(~{sum(duration_for(r) for r, _, _ in jobs):.0f} s of audio)")
     if args.dry_run:
         for r in rows:
-            print(f"  {r['name']} x{r['variants']} ({duration_for(r):.1f}s): {r['ai_prompt']}")
+            loop = " loop" if r["loop"] == "1" else ""
+            print(f"  {r['name']} x{r['variants']} ({duration_for(r):.1f}s{loop}): {prompt_for(r)}")
         return 0
     api_key = os.environ.get("ELEVENLABS_API_KEY")
     if not api_key:
@@ -99,9 +120,10 @@ def main(argv):
         if out.exists():
             continue
         out.parent.mkdir(parents=True, exist_ok=True)
-        prompt, seconds = STYLE + row["ai_prompt"], duration_for(row)
+        prompt, seconds = STYLE + prompt_for(row), duration_for(row)
+        loop = row["loop"] == "1"
         try:
-            audio = request_take(api_key, prompt, seconds, args.influence)
+            audio = request_take(api_key, prompt, seconds, args.influence, loop)
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode(errors="replace")[:300]
             print(f"FAILED {out.name}: HTTP {exc.code} {detail}")
@@ -113,7 +135,7 @@ def main(argv):
             continue
         out.write_bytes(audio)
         log(dict(file=str(out.relative_to(FORGE)), name=row["name"], variant=variant, take=take,
-                 service="elevenlabs sound-generation", prompt=prompt, seconds=seconds,
+                 service="elevenlabs sound-generation " + MODEL, prompt=prompt, seconds=seconds, loop=loop,
                  influence=args.influence, date=datetime.datetime.now().isoformat(timespec="seconds")))
         print(f"saved {out.relative_to(FORGE)}")
         if args.auto_promote and take == 1:
