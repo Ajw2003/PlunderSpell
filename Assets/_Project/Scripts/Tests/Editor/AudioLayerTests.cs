@@ -132,7 +132,7 @@ namespace Plunderspell.Tests.Editor
             try
             {
                 var director = root.AddComponent<AudioDirector>();
-                director.Initialize(LoadBank(), withMusic: false);
+                director.Initialize(LoadBank(), withSceneLayers: false);
 
                 LogAssert.Expect(LogType.Warning, new Regex("No sound named 'no_such_sound'"));
                 Assert.IsNull(director.Play("no_such_sound", Vector3.zero));

@@ -108,6 +108,8 @@ namespace Plunderspell.Audio
         public const string PlayerHurt = "sfx_player_hurt";
         public const string PlayerHurtHeavy = "sfx_player_hurt_heavy";
         public const string PlayerDeath = "sfx_player_death";
+        public const string Dodge = "foley_player_dodge";
+        public const string Jump = "foley_player_jump";
         public const string UiHover = "ui_button_hover";
         public const string UiClick = "ui_button_click";
         public const string UiBack = "ui_button_back";

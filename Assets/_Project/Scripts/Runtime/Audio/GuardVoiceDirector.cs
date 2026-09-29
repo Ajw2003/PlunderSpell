@@ -1,0 +1,174 @@
+using System.Collections.Generic;
+using Plunderspell.Alarm;
+using Plunderspell.Guards;
+using UnityEngine;
+
+namespace Plunderspell.Audio
+{
+    /// <summary>Speaks each guard's lines from replicated state. Limits and reasoning: docs/4-systems/audio.md.</summary>
+    public sealed class GuardVoiceDirector : MonoBehaviour
+    {
+        private const float LineGapSeconds = 2f;
+        private const float MurmurQuietSeconds = 8f;
+        private const float MurmurMin = 8f;
+        private const float MurmurMax = 20f;
+        private const float AsleepEvery = 6f;
+        private const float HearingDistance = 45f;
+        private const float PantDistance = 12f;
+
+        private sealed class Record
+        {
+            public GuardVoiceProfile Profile;
+            public GuardAlertState State;
+            public int AttackCount;
+            public float Health;
+            public bool WasDead;
+            public float LastLineAt = -100f;
+            public float NextMurmurAt;
+            public float NextAsleepAt;
+        }
+
+        private AudioDirector _director;
+        private readonly Dictionary<int, Record> _records = new Dictionary<int, Record>();
+        private AlarmFSMManager _alarm;
+
+        public void Initialize(AudioDirector director) => _director = director;
+
+        private void OnDisable()
+        {
+            if (_alarm != null)
+                _alarm.AlarmStateChanged -= OnAlarmStateChanged;
+        }
+
+        private void Update()
+        {
+            if (_director == null)
+                return;
+
+            if (_alarm == null && _director.Alarm != null)
+            {
+                _alarm = _director.Alarm;
+                _alarm.AlarmStateChanged += OnAlarmStateChanged;
+            }
+
+            float now = Time.time;
+            Vector3 listener = _director.Listener;
+            IReadOnlyList<CastleGuard> guards = CastleGuard.Active;
+            for (int i = 0; i < guards.Count; i++)
+            {
+                CastleGuard guard = guards[i];
+                if (guard == null)
+                    continue;
+
+                int id = guard.GetInstanceID();
+                if (!_records.TryGetValue(id, out Record record))
+                {
+                    record = new Record
+                    {
+                        Profile = GuardVoices.Resolve(guard.name),
+                        State = guard.State,
+                        AttackCount = guard.AttackCount,
+                        Health = guard.CurrentHealth,
+                        WasDead = guard.IsDead,
+                        NextMurmurAt = now + Random.Range(MurmurMin, MurmurMax),
+                        NextAsleepAt = now + AsleepEvery
+                    };
+                    _records[id] = record;
+                }
+
+                if (!record.Profile.Valid)
+                    continue;
+
+                Vector3 head = guard.transform.position + Vector3.up * 1.6f;
+                bool audible = (head - listener).sqrMagnitude < HearingDistance * HearingDistance;
+                Listen(guard, record, head, audible, now);
+
+                if (record.Profile.Hound)
+                    Pant(id, record, guard, head, listener);
+            }
+
+            _director.Loops.Tick(Time.unscaledDeltaTime);
+        }
+
+        private void Listen(CastleGuard guard, Record record, Vector3 head, bool audible, float now)
+        {
+            GuardAlertState state = guard.State;
+            int attacks = guard.AttackCount;
+            float health = guard.CurrentHealth;
+            bool dead = guard.IsDead;
+
+            GuardLine? line = null;
+            if (dead && !record.WasDead)
+                line = GuardLine.Death;
+            else if (!dead && health < record.Health - 0.01f)
+                line = GuardLine.Hurt;
+            else if (attacks != record.AttackCount)
+                line = GuardLine.Attack;
+            else if (state != record.State)
+                line = GuardVoices.LineForStateChange(record.State, state);
+            else if (!dead && state == GuardAlertState.Incapacitated && now >= record.NextAsleepAt)
+                line = GuardLine.Asleep;
+            else if (!dead && state == GuardAlertState.Patrolling && now >= record.NextMurmurAt
+                     && now - record.LastLineAt >= MurmurQuietSeconds)
+                line = GuardLine.Murmur;
+
+            record.State = state;
+            record.AttackCount = attacks;
+            record.Health = health;
+            record.WasDead = dead;
+
+            if (state == GuardAlertState.Incapacitated)
+                record.NextMurmurAt = now + Random.Range(MurmurMin, MurmurMax);
+            if (line == GuardLine.Murmur)
+                record.NextMurmurAt = now + Random.Range(MurmurMin, MurmurMax);
+            if (line == GuardLine.Asleep)
+                record.NextAsleepAt = now + AsleepEvery;
+
+            if (line == null || !audible)
+                return;
+            if (line != GuardLine.Death && now - record.LastLineAt < LineGapSeconds)
+                return;
+
+            string name = GuardVoices.LineName(record.Profile, line.Value);
+            if (name != null && _director.Play(name, head, 1f, -1, SoundPoolKind.Voice) != null)
+                record.LastLineAt = now;
+        }
+
+        // A hound pants while it is calm and near enough to hear, as a loop that fades in and out.
+        private void Pant(int id, Record record, CastleGuard guard, Vector3 head, Vector3 listener)
+        {
+            bool calm = guard.State == GuardAlertState.Patrolling && !guard.IsDead;
+            if (!calm || (head - listener).sqrMagnitude > PantDistance * PantDistance)
+                return;
+            if (_director.Bank.TryGet("vo_hound_pant_loop", out SoundEntry entry))
+                _director.Loops.Drive(id, entry, 0.6f, head);
+        }
+
+        // The howl doubles as a Roused call (audio.md 3.9): the nearest hound answers once.
+        private void OnAlarmStateChanged(AlarmState state)
+        {
+            if (state < AlarmState.Roused)
+                return;
+
+            IReadOnlyList<CastleGuard> guards = CastleGuard.Active;
+            CastleGuard nearest = null;
+            float best = float.MaxValue;
+            Vector3 listener = _director.Listener;
+            for (int i = 0; i < guards.Count; i++)
+            {
+                CastleGuard guard = guards[i];
+                if (guard == null || guard.IsDead || !GuardVoices.Resolve(guard.name).Hound)
+                    continue;
+                float distance = (guard.transform.position - listener).sqrMagnitude;
+                if (distance < best)
+                {
+                    best = distance;
+                    nearest = guard;
+                }
+            }
+
+            if (nearest != null)
+                _director.Play("vo_hound_howl", nearest.transform.position + Vector3.up, 1f, -1, SoundPoolKind.Voice);
+        }
+    }
+}

@@ -5,7 +5,6 @@ using Plunderspell.Castle;
 using Plunderspell.Extraction;
 using Plunderspell.Guards;
 using Plunderspell.Inventory;
-using Plunderspell.Loot;
 using Plunderspell.Raid;
 using Plunderspell.Spells;
 using Plunderspell.Voice;
@@ -14,6 +13,14 @@ using UnityEngine;
 
 namespace Plunderspell.Audio
 {
+    /// <summary>Which set of sources a sound plays from, so a crowd of steps or voices cannot use up the general pool.</summary>
+    public enum SoundPoolKind
+    {
+        General,
+        Step,
+        Voice
+    }
+
     /// <summary>
     /// Plays sounds from the SoundBank out of a fixed pool of AudioSources, driven by events the game
     /// already raises. Nothing here reaches into gameplay code and nothing goes over the network: each
@@ -23,6 +30,10 @@ namespace Plunderspell.Audio
     public sealed class AudioDirector : MonoBehaviour
     {
         private const int PoolSize = 32;
+        private const int StepPoolSize = 12;
+        private const int VoicePoolSize = 6;
+        private const int LoopSlots = 6;
+        private const float PlayerScanSeconds = 5f;
         private const float PollSeconds = 1f;
         private const float DoorScanSeconds = 5f;
         private const float MinRepeatSeconds = 0.04f;
@@ -35,11 +46,15 @@ namespace Plunderspell.Audio
         public AlarmFSMManager Alarm { get; private set; }
         public ExtractionZone Zone { get; private set; }
         public AudioSourcePool Pool => _pool;
+        public LoopBus Loops => _loops;
         public SoundBank Bank => _bank;
         public MusicDirector Music => _music;
 
         private SoundBank _bank;
         private AudioSourcePool _pool;
+        private AudioSourcePool _stepPool;
+        private AudioSourcePool _voicePool;
+        private LoopBus _loops;
         private MusicDirector _music;
         private PushToCastController _pushToCast;
         private Transform _listener;
@@ -48,23 +63,30 @@ namespace Plunderspell.Audio
         private readonly Dictionary<string, float> _lastPlayed = new Dictionary<string, float>();
         private readonly HashSet<int> _subscribedDoors = new HashSet<int>();
         private readonly HashSet<int> _subscribedGuards = new HashSet<int>();
+        private readonly HashSet<int> _steppers = new HashSet<int>();
+        private float _playerScanAt;
         private float _pollAt;
         private float _doorScanAt;
         private int _lastHaulCount;
 
         /// <summary>Wires the director to a bank. Runs once, from <see cref="AudioBootstrapper"/> or a test.</summary>
-        public void Initialize(SoundBank bank, bool withMusic = true)
+        public void Initialize(SoundBank bank, bool withSceneLayers = true)
         {
             Instance = this;
             _bank = bank;
             _pool = new AudioSourcePool(transform, PoolSize);
+            _stepPool = new AudioSourcePool(transform, StepPoolSize);
+            _voicePool = new AudioSourcePool(transform, VoicePoolSize);
+            _loops = new LoopBus(transform, LoopSlots);
 
             AudioLevels.Bind(bank.Mixer);
 
-            if (withMusic)
+            if (withSceneLayers)
             {
                 _music = gameObject.AddComponent<MusicDirector>();
                 _music.Initialize(this);
+                gameObject.AddComponent<ImpactAudio>().Initialize(this);
+                gameObject.AddComponent<GuardVoiceDirector>().Initialize(this);
             }
         }
 
@@ -73,7 +95,6 @@ namespace Plunderspell.Audio
             SpellCastingSystem.PhraseResolved += OnPhraseResolved;
             SpellCastingSystem.CastResolved += OnCastResolved;
             Damage.Dealt += OnDamageDealt;
-            LootValue.Ruined += OnLootRuined;
         }
 
         private void OnDisable()
@@ -81,7 +102,6 @@ namespace Plunderspell.Audio
             SpellCastingSystem.PhraseResolved -= OnPhraseResolved;
             SpellCastingSystem.CastResolved -= OnCastResolved;
             Damage.Dealt -= OnDamageDealt;
-            LootValue.Ruined -= OnLootRuined;
 
             if (Alarm != null)
                 Alarm.AlarmStateChanged -= OnAlarmStateChanged;
@@ -123,7 +143,8 @@ namespace Plunderspell.Audio
         /// Plays one variant of <paramref name="soundName"/> at <paramref name="position"/> and returns the
         /// source, or null when the name is not in the bank (logged once, never thrown).
         /// </summary>
-        public AudioSource Play(string soundName, Vector3 position, float volumeScale = 1f, int variant = -1)
+        public AudioSource Play(string soundName, Vector3 position, float volumeScale = 1f, int variant = -1,
+            SoundPoolKind pool = SoundPoolKind.General, bool flat = false)
         {
             if (_bank == null || soundName == null)
                 return null;
@@ -135,24 +156,31 @@ namespace Plunderspell.Audio
                 return null;
             }
 
-            float now = Time.unscaledTime;
-            if (_lastPlayed.TryGetValue(soundName, out float last) && now - last < MinRepeatSeconds)
-                return null;
-            _lastPlayed[soundName] = now;
+            // Only the general pool drops a repeat within 40 ms: two guards taking a step in the same frame are two sounds.
+            if (pool == SoundPoolKind.General)
+            {
+                float now = Time.unscaledTime;
+                if (_lastPlayed.TryGetValue(soundName, out float last) && now - last < MinRepeatSeconds)
+                    return null;
+                _lastPlayed[soundName] = now;
+            }
 
             int index = variant >= 0 ? variant % entry.Clips.Length : Random.Range(0, entry.Clips.Length);
             AudioClip clip = entry.Clips[index];
             if (clip == null)
                 return null;
 
-            AudioSource source = _pool.Acquire();
+            AudioSource source = AcquireFor(pool, position);
+            if (source == null)
+                return null;
+
             source.Stop();
             source.clip = clip;
             source.outputAudioMixerGroup = entry.Group;
             source.loop = false;
             source.volume = entry.Volume * volumeScale;
             source.pitch = 1f + Random.Range(-entry.PitchRange, entry.PitchRange);
-            source.spatialBlend = entry.ThreeD ? 1f : 0f;
+            source.spatialBlend = entry.ThreeD && !flat ? 1f : 0f;
             source.minDistance = 2f;
             source.maxDistance = NoiseMaxDistance[(int)entry.Noise];
             source.rolloffMode = AudioRolloffMode.Logarithmic;
@@ -160,6 +188,58 @@ namespace Plunderspell.Audio
             source.Play();
             return source;
         }
+
+        /// <summary>Voices are capped at six at once and the nearest win: a new line takes a free source, else the farthest one playing if it is farther than the new line.</summary>
+        private AudioSource AcquireFor(SoundPoolKind kind, Vector3 position)
+        {
+            switch (kind)
+            {
+                case SoundPoolKind.Step:
+                    return _stepPool.Acquire();
+                case SoundPoolKind.Voice:
+                    return AcquireVoice(position);
+                default:
+                    return _pool.Acquire();
+            }
+        }
+
+        private AudioSource AcquireVoice(Vector3 position)
+        {
+            Vector3 listener = ListenerPosition;
+            float newDistance = (position - listener).sqrMagnitude;
+            AudioSource farthest = null;
+            float farthestDistance = -1f;
+            for (int i = 0; i < _voicePool.Size; i++)
+            {
+                AudioSource source = _voicePool[i];
+                if (!source.isPlaying)
+                    return source;
+                float distance = (source.transform.position - listener).sqrMagnitude;
+                if (distance > farthestDistance)
+                {
+                    farthestDistance = distance;
+                    farthest = source;
+                }
+            }
+            return farthestDistance > newDistance ? farthest : null;
+        }
+
+        public int VoicesPlaying
+        {
+            get
+            {
+                int count = 0;
+                for (int i = 0; i < _voicePool.Size; i++)
+                {
+                    if (_voicePool[i].isPlaying)
+                        count++;
+                }
+                return count;
+            }
+        }
+
+        /// <summary>Where the listener is, for the systems that decide by distance.</summary>
+        public Vector3 Listener => ListenerPosition;
 
         private Vector3 ListenerPosition => _listener != null ? _listener.position : Vector3.zero;
 
@@ -181,6 +261,8 @@ namespace Plunderspell.Audio
                 ? SoundNames.SpellMisfire(report.Spell)
                 : SoundNames.SpellCast(report.Spell, report.Volume);
             Play(name, report.Origin);
+            if (report.Spell == SpellId.Velox)
+                Play(SoundNames.Dodge, report.Origin);
             if (report.IsMisfire)
                 Play(SoundNames.MisfireSting, ListenerPosition);
         }
@@ -200,12 +282,6 @@ namespace Plunderspell.Audio
 
             if (report.Killed && body != null)
                 Play(SoundNames.PlayerDeath, report.Point);
-        }
-
-        private void OnLootRuined(LootValue piece, float worthLost)
-        {
-            if (piece != null)
-                Play(SoundNames.LootBreak, piece.transform.position);
         }
 
         private void OnAlarmStateChanged(AlarmState state)
@@ -292,6 +368,24 @@ namespace Plunderspell.Audio
                 CastleGuard guard = guards[i];
                 if (guard != null && _subscribedGuards.Add(guard.GetInstanceID()))
                     guard.Attacked += kind => OnGuardAttacked(guard, kind);
+            }
+
+            for (int i = 0; i < guards.Count; i++)
+            {
+                CastleGuard guard = guards[i];
+                if (guard != null && _steppers.Add(guard.GetInstanceID()))
+                    guard.gameObject.AddComponent<StepAudio>().Initialize(this, GuardVoices.Resolve(guard.name), null);
+            }
+
+            if (Time.unscaledTime >= _playerScanAt)
+            {
+                _playerScanAt = Time.unscaledTime + PlayerScanSeconds;
+                PlayerStateMachine[] players = FindObjectsByType<PlayerStateMachine>(FindObjectsSortMode.None);
+                for (int i = 0; i < players.Length; i++)
+                {
+                    if (_steppers.Add(players[i].GetInstanceID()))
+                        players[i].gameObject.AddComponent<StepAudio>().Initialize(this, default, players[i]);
+                }
             }
 
             bool raiding = Raid != null && Raid.Phase == RaidPhase.Raiding;

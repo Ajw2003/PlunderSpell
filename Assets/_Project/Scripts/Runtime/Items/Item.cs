@@ -203,6 +203,9 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// towing, the tow pace and pull, throws and impact damage all scale from it.</summary>
     public float Mass => _rb != null ? _rb.mass : 1f;
 
+    /// <summary>Raised at the start of every collision this item is in. Audio listens; see docs/4-systems/audio.md.</summary>
+    public static event System.Action<Item, Collision> Impacted;
+
     /// <summary>How much of the beam's strength holding this up takes: 0 weightless, 1 at the limit.
     /// Over 1 it cannot be lifted and drags. The beam's colour reads this.</summary>
     public float Load => Mass * -Physics.gravity.y / Mathf.Max(1f, TotalGrip);
@@ -799,6 +802,7 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
 
     private void OnCollisionEnter(Collision collision)
     {
+        Impacted?.Invoke(this, collision);
         if (Time.time < _lastDamageTime + _damageCooldown) return;
 
         // Only the item's own motion hurts: walking into a cauldron on the floor is not being hit

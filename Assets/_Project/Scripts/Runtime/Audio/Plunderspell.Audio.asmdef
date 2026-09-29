@@ -10,6 +10,7 @@
         "Plunderspell.Extraction",
         "Plunderspell.Guards",
         "Plunderspell.Inventory",
+        "Plunderspell.Items",
         "Plunderspell.Loot",
         "Plunderspell.Player",
         "Plunderspell.Raid",
