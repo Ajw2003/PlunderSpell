@@ -12,6 +12,7 @@
         "Plunderspell.Foundation",
         "Plunderspell.Playtest",
         "Plunderspell.RaidHud",
+        "Plunderspell.UI",
         "Plunderspell.Guards",
         "Plunderspell.Raid",
         "Plunderspell.Loot",
