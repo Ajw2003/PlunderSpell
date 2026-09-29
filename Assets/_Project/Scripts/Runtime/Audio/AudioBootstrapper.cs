@@ -28,6 +28,7 @@ namespace Plunderspell.Audio
             Object.DontDestroyOnLoad(go);
             s_root = go.AddComponent<AudioDirector>();
             s_root.Initialize(banks[0]);
+            AudioOutputDevices.ApplySaved();
         }
     }
 }

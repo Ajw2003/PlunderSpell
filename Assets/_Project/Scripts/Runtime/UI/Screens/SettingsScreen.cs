@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Plunderspell.Audio;
 using Plunderspell.Core;
 using UnityEngine;
@@ -20,13 +21,14 @@ namespace Plunderspell.UI.Screens
         private const float PadTop = 56f;
         private const float TitleHeight = 64f;
         private const float ColumnsTop = PadTop + TitleHeight + 30f;
-        private const float ColumnHeight = 395f;
+        private const float ColumnHeight = 525f;
         private const float ColumnWidth = 422f;
         private const float RowLabelHeight = 37f;
         private const float RowGap = 12f;
 
         private Text _micGainValue;
         private Text _microphoneValue;
+        private Text _outputValue;
         private UISegmentedControl _graphics;
 
         protected override void OnBuild()
@@ -55,6 +57,7 @@ namespace Plunderspell.UI.Screens
             AddVolumeRow(sound, "Master", MasterVolumeKey, OnMasterVolumeChanged);
             AddVolumeRow(sound, "Music", MusicVolumeKey, OnMusicVolumeChanged);
             AddVolumeRow(sound, "Effects", SfxVolumeKey, OnSfxVolumeChanged);
+            AddOutputRow(sound);
 
             // Voice is the lapis colour's own territory: the microphone and what it hears.
             UIFactory.CreateEyebrow(voice, "Eyebrow", "Voice", colour: UITheme.Voice);
@@ -131,6 +134,23 @@ namespace Plunderspell.UI.Screens
             RefreshMicrophoneLabel();
         }
 
+        private void AddOutputRow(Transform parent)
+        {
+            RectTransform row = AddRow(parent, "OutputRow", "Output", 54f, out Text value);
+            value.gameObject.SetActive(false);
+
+            RectTransform stepper = UIFactory.CreateStepper(row, "OutputButton", () => CycleOutput(-1), () => CycleOutput(1),
+                new Vector2(0f, 54f), out _outputValue);
+            PlaceControl(stepper, 54f);
+            // Windows device names run long ("Headphones (BlackShark V2 Pro PS 2.4)"): shrink to fit the box.
+            _outputValue.horizontalOverflow = HorizontalWrapMode.Wrap;
+            _outputValue.verticalOverflow = VerticalWrapMode.Truncate;
+            _outputValue.resizeTextForBestFit = true;
+            _outputValue.resizeTextMinSize = 12;
+            _outputValue.resizeTextMaxSize = _outputValue.fontSize;
+            RefreshOutputLabel();
+        }
+
         /// <summary>
         /// The microphone gain (#125): how much a quiet microphone is turned up before the game hears
         /// it. The level meter while holding V shows the result.
@@ -176,6 +196,7 @@ namespace Plunderspell.UI.Screens
         protected override void OnShown()
         {
             RefreshMicrophoneLabel();
+            RefreshOutputLabel();
             if (_graphics != null)
                 _graphics.SetSelected(QualitySettings.GetQualityLevel());
         }
@@ -222,6 +243,38 @@ namespace Plunderspell.UI.Screens
             _microphoneValue.text = devices.Length == 0 ? "None found (keys still cast)"
                 : Array.IndexOf(devices, current) < 0 ? "Automatic"
                 : current;
+        }
+
+        /// <summary>
+        /// Steps through the Windows default and every playback device, forwards or back, and switches
+        /// the game's output at once. See <see cref="AudioOutputDevices"/>.
+        /// </summary>
+        private void CycleOutput(int step)
+        {
+            List<OutputDevice> devices = AudioOutputDevices.List();
+            int index = devices.FindIndex(d => d.Id == AudioOutputDevices.ChosenId); // -1 = Windows default
+
+            // Position 0 is the Windows default, 1.. are the devices, wrapping in both directions.
+            int count = devices.Count + 1;
+            int position = ((index + 1 + step) % count + count) % count;
+            index = position - 1;
+
+            AudioOutputDevices.Apply(index < 0 ? string.Empty : devices[index].Id);
+            RefreshOutputLabel();
+        }
+
+        private void RefreshOutputLabel()
+        {
+            if (_outputValue == null)
+                return;
+            if (!AudioOutputDevices.IsSupported)
+            {
+                _outputValue.text = "System default";
+                return;
+            }
+            List<OutputDevice> devices = AudioOutputDevices.List();
+            OutputDevice chosen = devices.Find(d => d.Id == AudioOutputDevices.ChosenId);
+            _outputValue.text = chosen.Id == null ? "Windows default" : chosen.Name;
         }
 
         private void OnBackClicked() => GameServices.GameState.ChangeState(GameServices.GameState.PreviousState);

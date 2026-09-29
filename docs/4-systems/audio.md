@@ -221,8 +221,35 @@ Checked 2026-09-29: Play from `RaidScene`, host, set out. Zero "no audio listene
 across menu, Lair and raid; every sample showed one enabled listener (`RaidFallbackListener` before
 spawn, `Eye` after); `AudioDirector` held `Eye`. PlayMode test: `RaidListenerFallbackTests`.
 
-Output device choice is not built: Unity 6000.3 has no API to list or pick an output device (checked
-`UnityEngine.AudioModule.xml`), so audio follows the Windows default device.
+## Output device
+
+Unity 6000.3 has no API to list or pick an output device (checked `UnityEngine.AudioModule.xml`); it
+plays to the Windows default. On 2026-09-29 that default was a TV's HDMI output while the owner wore
+headphones, so the game sounded silent while Unity was playing normally.
+
+`AudioOutputDevices` (`Assets/_Project/Scripts/Runtime/Audio/AudioOutputDevices.cs`) routes the game
+through Windows' own per-app output (the Volume mixer setting EarTrumpet also uses):
+
+- Devices come from Core Audio (`IMMDeviceEnumerator`, active render endpoints).
+- The route is set with the undocumented `Windows.Media.Internal.AudioPolicyConfig` factory,
+  `SetPersistedDefaultAudioEndpoint` for this process id, console and multimedia roles. The factory's
+  interface id changed in Windows 10 21H2; both ids are tried. The methods are called by vtable slot
+  (25 set, 26 get), so a Windows update that reorders the interface breaks this, and the warning
+  "Windows refused the output route" or "not available here" says so. Empty id clears the route.
+- Windows persists the route per executable path. In the Editor that is `Unity.exe`, so a route chosen
+  in Play stays on the Editor after Play stops until "Windows default" is picked again.
+- After routing, `AudioSettings.Reset` reopens Unity's output on the new device. Reset stops every
+  source, so looping sources that were playing (music layers, fires, loops) are restarted at their
+  sample position; one-shots in flight are cut.
+- The choice is saved in PlayerPrefs `Settings.OutputDevice`; `AudioBootstrapper` re-applies it at
+  startup when Windows' route disagrees and the device is plugged in.
+- Settings > Sound > Output steps through Windows default and each device.
+
+Checked 2026-09-29 in Play, with `Tools/Audio/audio_sessions.ps1` (lists devices and which apps play
+to each): picking BlackShark moved the Unity session from HISENSE to BlackShark with music still
+playing; Windows default moved it back; a saved choice was re-applied at startup. Screens:
+`docs/generated/audio/settings-output-row*.png`. Not checked: the voice microphone across a reset
+(`VoskVoiceInputService.OpenMicrophone` reopens a device that stopped recording), and a built player.
 
 ## Traps
 
