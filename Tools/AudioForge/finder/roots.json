@@ -4,5 +4,11 @@
     "path": "library/kenney",
     "licence": "CC0 (Kenney)",
     "commit": true
+  },
+  {
+    "name": "opengameart",
+    "path": "library/opengameart",
+    "licence": "CC0 (OpenGameArt: rubberduck, artisticdude)",
+    "commit": true
   }
 ]
