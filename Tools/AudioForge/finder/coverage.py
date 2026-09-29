@@ -20,7 +20,7 @@ from forge.build import FORGE, KENNEY, REPO
 from forge.categories import category
 
 from . import clap
-from .search import Library, length_limits, manifest_rows, query_for
+from .search import Library, length_limits, manifest_rows, phrase, query_for
 
 OUT = REPO / "docs" / "generated" / "audio-coverage"
 TOP_HIT = 5
@@ -96,6 +96,43 @@ def sweep(cal, hits_total):
     return lines
 
 
+MAGIC_PREFIXES = ("sfx_spell_", "sfx_portal_", "sting_spell_", "sting_portal_")
+BASELINE = OUT / "spell-baseline.csv"
+
+
+def magic_section(results, brief, library=None):
+    """Spell and portal sounds, before and after the OpenGameArt and extra Kenney packs were added.
+    The 'before' rows are spell-baseline.csv, taken from this report as it stood on the 389 original Kenney files."""
+    magic = [r for r in results if r["sound"].startswith(MAGIC_PREFIXES)]
+    covered = [r for r in magic if r["covered"]]
+    lines = ["## Spells and portals", ""]
+    if BASELINE.exists():
+        with BASELINE.open(newline="", encoding="utf-8") as f:
+            before = list(csv.DictReader(f))
+        n_before = sum(1 for r in before if r["covered"] == "True")
+        lines += [f"**Spell and portal sounds (`sfx_spell_`, `sfx_portal_`, `sting_spell_`, `sting_portal_`) with a candidate "
+                  f"at or above the threshold: {n_before} of {len(before)} before the four extra packs "
+                  f"(389 Kenney files), {len(covered)} of {len(magic)} after.** "
+                  f"Before is `spell-baseline.csv`, copied from this report on the 389 files.", ""]
+    else:
+        lines += [f"Spell and portal sounds with a candidate at or above the threshold: {len(covered)} of {len(magic)}.", ""]
+    lines += ["| sound | best score | best file | covered | brief |", "|---|---:|---|---|---|",
+              *[f"| `{r['sound']}` | {r['best_score']} | `{r['best_file']}` | {'yes' if r['covered'] else 'no'} | "
+                f"{brief[r['sound']]} |" for r in sorted(magic, key=lambda r: r["sound"])], "",
+              f"Still uncovered: {', '.join('`' + r['sound'] + '`' for r in magic if not r['covered']) or 'none'}."]
+    if library is not None:
+        # Cross-check by file name: a library file called "spell" should surface for a spell query.
+        query = phrase("a magic spell being cast")
+        hits = library.search(query, 10 ** 6, (0.0, None))
+        named = [(i, h) for i, h in enumerate(hits, 1) if "spell" in h["file"].lower().rsplit("/", 1)[-1]]
+        lines += ["", f"Cross-check: {len(named)} indexed files have \"spell\" in their name. For the query "
+                  f"\"{query}\" they rank " + ", ".join(f"{i} ({h['score']:.2f})" for i, h in named[:12])
+                  + f" of {len(hits)}. Files named for the thing searched for that do not rank near the top mean the "
+                  "search misses real matches as well as inventing false ones, so coverage here is a guide to what to "
+                  "listen to, not a verdict."]
+    return lines
+
+
 def main(argv=None):
     argv = argv or []
     rows = manifest_rows()
@@ -167,7 +204,8 @@ def main(argv=None):
         + (f" (`{prompted[0]['sound']}` reaches {prompted[0]['best_score']} with `{prompted[0]['best_file'].split('/')[-1]}`)"
            if prompted else "")
         + ". The review page is where a candidate is really judged.", "",
-        "## Covered and not, by category", "", "| category | covered | not covered |", "|---|---:|---:|",
+        *magic_section(results, brief, library), "",
+        "## Covered and not, by category", "","| category | covered | not covered |", "|---|---:|---:|",
         *[f"| {cat} | {by_cat[(cat, True)]} | {by_cat[(cat, False)]} |"
           for cat in sorted({r['category'] for r in results})], "",
         f"## The {len(results) - len(covered)} sounds no indexed library covers", "",
@@ -177,6 +215,8 @@ def main(argv=None):
     (OUT / "README.md").write_text(SEP.join(md), encoding="utf-8")
     print(f"{len(covered)} of {len(results)} placeholder sounds covered at score >= {threshold}; "
           f"library check: own file in top {TOP_HIT} for {len(hits)} of {len(cal)}")
+    magic = [r for r in results if r["sound"].startswith(MAGIC_PREFIXES)]
+    print(f"spell and portal sounds covered: {sum(1 for r in magic if r['covered'])} of {len(magic)}")
     print(f"wrote {OUT.relative_to(REPO)}/coverage.csv, README.md, calibration.csv")
     return 0
 
