@@ -329,10 +329,10 @@ namespace Plunderspell.EditorTools
                 pickup.SetData(data);
                 var pickupSo = new SerializedObject(pickup);
                 pickupSo.FindProperty("_meshRenderer").objectReferenceValue = instance.GetComponentInChildren<MeshRenderer>();
-                Transform grip = AddGripPoint(instance, slug);
-                pickupSo.FindProperty("_gripPoint").objectReferenceValue = grip;
                 pickupSo.ApplyModifiedPropertiesWithoutUndo();
-                // The raid carries items through Item (ItemManager's drag), so it needs the grip too.
+                Transform grip = AddGripPoint(instance, slug);
+                // The raid carries items through Item (ItemManager's drag) — LootPickup no longer
+                // holds a grip of its own since #169 removed its old carry.
                 var carriedSo = new SerializedObject(carried);
                 carriedSo.FindProperty("_gripPoint").objectReferenceValue = grip;
                 carriedSo.ApplyModifiedPropertiesWithoutUndo();

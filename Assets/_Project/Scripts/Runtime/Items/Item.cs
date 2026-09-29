@@ -1177,6 +1177,10 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// centre.</summary>
     public void SetGripPoint(Transform gripPoint) => _gripPoint = gripPoint;
 
+    /// <summary>The authored grip transform, or null when held by the mesh centre. Exposed for
+    /// authoring checks (Editor tests verifying every prefab has one).</summary>
+    public Transform GripPoint => _gripPoint;
+
     /// <summary>The authored grip, or the mesh centre.</summary>
     private Vector3 AuthoredGripWorld => _gripPoint != null ? _gripPoint.position : MeshCentre();
 

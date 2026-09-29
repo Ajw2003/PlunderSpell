@@ -7,8 +7,9 @@ using UnityEngine;
 namespace Plunderspell.Tests.Editor
 {
     /// <summary>
-    /// Guards how a carried item sits in the hand: upright, held at its grip point (or its mesh
-    /// centre), never by its base. See docs/plans/staging-followups-2026-09-24.md, part B.
+    /// Guards that every loot piece and weapon has an authored grip point on its mesh — the point
+    /// <see cref="Item"/> (the raid's carry) hangs it from. See
+    /// docs/plans/staging-followups-2026-09-24.md, part B.
     /// </summary>
     public class LootGripTests
     {
@@ -48,7 +49,7 @@ namespace Plunderspell.Tests.Editor
                 var instance = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path));
                 try
                 {
-                    Transform grip = instance.GetComponent<LootPickup>().GripPoint;
+                    Transform grip = instance.GetComponent<Item>().GripPoint;
                     Assert.IsNotNull(grip, $"{path} has no grip point; re-run Forge Era Content.");
                     Bounds bounds = MeshBounds(instance);
                     bounds.Expand(0.01f);
@@ -65,7 +66,7 @@ namespace Plunderspell.Tests.Editor
         }
 
         /// <summary>#134: the weapons and the five original loot pieces get authored grips too, on
-        /// their mesh, shared by the Item (the raid's carry) and the LootPickup.</summary>
+        /// their mesh (the point <see cref="Item"/> hangs them from while held).</summary>
         [Test]
         public void EveryWeaponAndOriginalLootPieceHasAGripPointOnItsMesh()
         {
@@ -81,13 +82,8 @@ namespace Plunderspell.Tests.Editor
                 {
                     var item = instance.GetComponent<Item>();
                     Assert.IsNotNull(item, $"{path} has no Item.");
-                    var serialized = new SerializedObject(item);
-                    var grip = (Transform)serialized.FindProperty("_gripPoint").objectReferenceValue;
+                    Transform grip = item.GripPoint;
                     Assert.IsNotNull(grip, $"{path} has no grip point on its Item.");
-
-                    var pickup = instance.GetComponent<LootPickup>();
-                    if (pickup != null)
-                        Assert.AreSame(grip, pickup.GripPoint, $"{path}: the Item and the LootPickup must share one grip.");
 
                     Bounds bounds = MeshBounds(instance);
                     bounds.Expand(0.01f);
@@ -98,46 +94,6 @@ namespace Plunderspell.Tests.Editor
                 {
                     Object.DestroyImmediate(instance);
                 }
-            }
-        }
-
-        [Test]
-        public void HeldItemIsUprightWithItsGripOnTheSocket()
-        {
-            var socket = new GameObject("TestHandSocket").transform;
-            socket.SetPositionAndRotation(new Vector3(1f, 1.4f, -2f), Quaternion.Euler(10f, 70f, -5f));
-            try
-            {
-                foreach (string path in PrefabPaths("Assets/_Project/Prefabs/Loot"))
-                {
-                    var instance = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path));
-                    try
-                    {
-                        var pickup = instance.GetComponent<LootPickup>();
-                        if (pickup == null)
-                            continue;
-                        Quaternion upright = instance.transform.rotation;
-                        pickup.CaptureUprightRotation();
-                        Transform grip = pickup.GripPoint;
-                        Vector3 centreBefore = instance.transform.InverseTransformPoint(MeshBounds(instance).center);
-
-                        pickup.AttachToSocket(socket);
-
-                        Assert.That(Quaternion.Angle(instance.transform.rotation, socket.rotation * upright), Is.LessThan(0.1f),
-                            $"{path} is not held the way up it spawned.");
-                        Vector3 held = grip != null ? grip.position : instance.transform.TransformPoint(centreBefore);
-                        Assert.That(Vector3.Distance(held, socket.position), Is.LessThan(0.002f),
-                            $"{path}: the {(grip != null ? "grip point" : "mesh centre")} is {Vector3.Distance(held, socket.position):F3} m from the hand.");
-                    }
-                    finally
-                    {
-                        Object.DestroyImmediate(instance);
-                    }
-                }
-            }
-            finally
-            {
-                Object.DestroyImmediate(socket.gameObject);
             }
         }
     }

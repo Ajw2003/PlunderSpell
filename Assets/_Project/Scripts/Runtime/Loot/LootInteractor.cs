@@ -5,8 +5,10 @@ using UnityEngine;
 namespace Plunderspell.Loot
 {
     /// <summary>
-    /// The player's hands. Looks at what is in front of the camera and, on the interact key, picks it
-    /// up, drops it, or helps a teammate lift something too heavy for one person.
+    /// The player's eyes for loot: looks at what is in front of the camera so the HUD can show a
+    /// focus prompt and doors can be opened by the interact key. Grabbing and carrying itself goes
+    /// through <see cref="ItemManager"/> (left-click), not this component — see docs/plans/GitIssues/
+    /// Issue_169_Plan.md, "Remove the old two-person carry".
     ///
     /// The dual-carry rule is what makes this co-op rather than four solo raids: anything over
     /// <see cref="LootItem.DualCarryBulkThreshold"/> stone simply will not move until a second player
@@ -23,8 +25,8 @@ namespace Plunderspell.Loot
         [SerializeField] private LayerMask _interactableLayers = ~0;
 
         [Header("Input")]
+        [Tooltip("Door-only now — grabbing loot is left-click, through ItemManager.")]
         [SerializeField] private KeyCode _interactKey = KeyCode.E;
-        [SerializeField] private KeyCode _dropKey = KeyCode.Q;
 
         [Header("Wiring")]
         [Tooltip("Camera the reach ray is cast from. Falls back to this transform.")]
@@ -32,9 +34,6 @@ namespace Plunderspell.Loot
 
         /// <summary>What the player is currently looking at within reach, or null.</summary>
         public LootPickup Focus { get; private set; }
-
-        /// <summary>What the player is currently carrying, or null.</summary>
-        public LootPickup Carried { get; private set; }
 
         /// <summary>A door in reach, or null. Doors are interacted with by the same key.</summary>
         public CastleDoorHandle FocusDoor { get; private set; }
@@ -58,16 +57,11 @@ namespace Plunderspell.Loot
             if (isSpawned && !isOwner)
                 return;
 
-
-
             if (Input.GetKeyDown(_interactKey))
             {
                 UpdateFocus();
                 Interact();
             }
-
-            else if (Input.GetKeyDown(_dropKey))
-                Drop();
         }
 
         /// <summary>
@@ -101,56 +95,12 @@ namespace Plunderspell.Loot
             }
         }
 
-        /// <summary>
-        /// The interact key. In priority order: open a door in reach, take the other end of a heavy
-        /// item someone is already holding, or pick up what you are looking at.
-        /// </summary>
+        /// <summary>The interact key: opens a door in reach. Grabbing and dropping loot is
+        /// left-click, through <see cref="ItemManager"/>.</summary>
         public void Interact()
         {
             if (FocusDoor != null)
-            {
                 FocusDoor.Interact();
-                return;
-            }
-
-            if (Focus == null || Focus.IsBroken)
-                return;
-
-            // Someone already has the primary end of this: take the other one.
-            if (Focus.IsBeingCarried && Focus.CurrentCarryMode == CarryMode.Dual &&
-                Focus.SecondaryCarrierNetId == null && Focus.PrimaryCarrierNetId != this)
-            {
-                if (isSpawned)
-                    Focus.RequestSecondaryPickup(this);
-                else
-                    Focus.PerformSecondaryPickup(this);
-                return;
-            }
-
-            if (Focus.IsBeingCarried)
-                return;
-
-            // Spawned, the server decides; offline the RPC wrapper would run nothing at all.
-            if (isSpawned)
-                Focus.RequestPickup(this);
-            else
-                Focus.PerformPickup(this);
-
-            Carried = Focus;
-        }
-
-        /// <summary>Puts down whatever is being carried.</summary>
-        public void Drop()
-        {
-            if (Carried == null)
-                return;
-
-            if (isSpawned)
-                Carried.RequestDrop();
-            else
-                Carried.PerformDrop();
-
-            Carried = null;
         }
 
         /// <summary>Test/tooling seam: point the reach ray at a specific transform.</summary>

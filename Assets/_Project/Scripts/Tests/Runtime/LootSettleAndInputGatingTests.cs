@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework;
 using Player;
 using Plunderspell.Core;
@@ -168,14 +169,21 @@ namespace Plunderspell.Tests
             LootSpawner spawner = MakeSpawner(out ProceduralCastleData castle);
             spawner.SpawnFor(castle, 4242);
 
+            // Carrying now goes through Item, not LootPickup — drive the piece's own Item the way
+            // ItemManager's beam does. The test spawner (unlike a real loot prefab) has no Item on
+            // its piece yet, and LootPickup already cached its (then-null) GetComponent<Item>() in
+            // Awake, so the new Item is wired in directly rather than through SetData/Awake.
             var carrierGo = Track(new GameObject("Carrier"));
             LootPickup carried = spawner.Spawned[0].GetComponent<LootPickup>();
-            carried.PerformPickup(carrierGo.AddComponent<LootInteractor>());
+            Item item = carried.gameObject.AddComponent<Item>();
+            typeof(LootPickup).GetField("_item", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(carried, item);
+            item.StartDragging(carrierGo);
 
             spawner.ReleaseSpawned();
 
-            Assert.IsTrue(carried.GetComponent<Rigidbody>().isKinematic,
-                "Releasing a carried item drops it out of the carrier's hand.");
+            Assert.IsTrue(carried.IsBeingCarried,
+                "Settling must not stop a piece someone is actively dragging.");
 
             for (int i = 1; i < spawner.Spawned.Count; i++)
             {

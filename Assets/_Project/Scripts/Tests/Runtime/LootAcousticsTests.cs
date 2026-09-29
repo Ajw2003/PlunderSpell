@@ -10,8 +10,9 @@ namespace Plunderspell.Tests
     /// EditMode tests for Milestone 2b — loot fragility, dual-carry thresholds, the four-state alarm
     /// FSM and acoustic occlusion attenuation.
     ///
-    /// These exercise the network-free logic seams (ApplyImpact / EvaluatePickup / ApplyNoise /
-    /// SetAlarmLevel / ComputeAttenuatedStrength) so they run without a live PurrNet transport. The RPC
+    /// These exercise the network-free logic seams (ApplyImpact / LootItem.RequiresDualCarry /
+    /// ApplyNoise / SetAlarmLevel / ComputeAttenuatedStrength) so they run without a live PurrNet
+    /// transport. The RPC
     /// wrappers and SyncVar replication are integration concerns validated in PlayMode on the target.
     /// </summary>
     public class LootAcousticsTests
@@ -66,16 +67,16 @@ namespace Plunderspell.Tests
 
         // ---------------------------------------------------------------- Carry thresholds
 
+        // Carrying itself now goes through Item/ItemManager, not LootPickup — these two just check
+        // the threshold LootItem still exposes for the HUD's "needs two" prompt and CarryFeelTests.
+
         [Test]
         public void Test_DualCarryThreshold()
         {
             var item = MakeItem(200f, bulk: 11f, fragility: 999f);
-            var pickup = CreatePickup(item);
 
-            Assert.AreEqual(CarryMode.Dual, pickup.EvaluatePickup(),
-                "11 kg (> 10 kg) must require a dual carry.");
+            Assert.IsTrue(item.RequiresDualCarry, "11 kg (> 10 kg) must require a dual carry.");
 
-            Object.DestroyImmediate(pickup.gameObject);
             Object.DestroyImmediate(item);
         }
 
@@ -83,12 +84,9 @@ namespace Plunderspell.Tests
         public void Test_SingleCarryThreshold()
         {
             var item = MakeItem(60f, bulk: 9f, fragility: 6f);
-            var pickup = CreatePickup(item);
 
-            Assert.AreEqual(CarryMode.Single, pickup.EvaluatePickup(),
-                "9 kg (≤ 10 kg) should be a single carry.");
+            Assert.IsFalse(item.RequiresDualCarry, "9 kg (≤ 10 kg) should be a single carry.");
 
-            Object.DestroyImmediate(pickup.gameObject);
             Object.DestroyImmediate(item);
         }
 

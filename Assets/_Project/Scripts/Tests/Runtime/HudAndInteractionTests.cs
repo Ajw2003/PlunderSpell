@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework;
 using Plunderspell.Alarm;
 using Plunderspell.Castle;
@@ -44,11 +45,16 @@ namespace Plunderspell.Tests
             return o;
         }
 
-        private LootPickup MakeLoot(string name, float bulk, Vector3 position)
+        /// <param name="withItem">Adds an <see cref="Item"/> before the <see cref="LootPickup"/> so
+        /// <c>LootPickup.IsBeingCarried</c> (which reads the piece's own Item) has one to read —
+        /// LootPickup's Awake caches <c>GetComponent&lt;Item&gt;()</c>, so the Item must exist first.</param>
+        private LootPickup MakeLoot(string name, float bulk, Vector3 position, bool withItem = false)
         {
             var go = Track(new GameObject($"Loot_{name}"));
             go.transform.position = position;
             go.AddComponent<BoxCollider>();
+            if (withItem)
+                go.AddComponent<Item>();
 
             var pickup = go.AddComponent<LootPickup>();
             var data = Track(ScriptableObject.CreateInstance<LootItem>());
@@ -66,6 +72,23 @@ namespace Plunderspell.Tests
             var go = Track(new GameObject("Player"));
             go.transform.position = Vector3.zero;
             return go.AddComponent<LootInteractor>();
+        }
+
+        /// <summary>An <see cref="ItemManager"/> singleton reporting <paramref name="carried"/> as
+        /// what it is dragging — driven through the private field it exposes as
+        /// <see cref="ItemManager.CarriedItem"/>, since driving the real hover/click input needs a
+        /// live camera and raycast the HUD tests do not set up.</summary>
+        private ItemManager MakeItemManager(Item carried = null)
+        {
+            var go = Track(new GameObject("ItemManager"));
+            var manager = go.AddComponent<ItemManager>();
+            if (carried != null)
+            {
+                typeof(ItemManager)
+                    .GetField("_draggedItem", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .SetValue(manager, carried);
+            }
+            return manager;
         }
 
         // --- Interaction ---------------------------------------------------------------------
@@ -95,20 +118,19 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_TakingAndDroppingLoot()
         {
-            LootInteractor player = MakePlayer();
-            LootPickup vase = MakeLoot("Vase", 2f, new Vector3(0f, 0f, 2f));
+            // Grabbing is left-click through ItemManager now, not the interact key: drive the piece's
+            // own Item, the way ItemManager's beam does (see CarryFeelTests).
+            LootPickup vase = MakeLoot("Vase", 2f, new Vector3(0f, 0f, 2f), withItem: true);
+            var item = vase.GetComponent<Item>();
+            var holder = Track(new GameObject("Holder"));
 
-            player.UpdateFocus();
-            player.Interact();
+            item.StartDragging(holder);
 
-            Assert.AreSame(vase, player.Carried, "Interacting must pick the loot up.");
-            Assert.IsTrue(vase.IsBeingCarried);
-            Assert.AreEqual(CarryMode.Single, vase.CurrentCarryMode);
+            Assert.IsTrue(vase.IsBeingCarried, "Dragging the item must read back as carried.");
 
-            player.Drop();
+            item.StopDragging();
 
-            Assert.IsNull(player.Carried);
-            Assert.IsFalse(vase.IsBeingCarried);
+            Assert.IsFalse(vase.IsBeingCarried, "Letting go must clear the carried state.");
         }
 
         [Test]
@@ -122,20 +144,7 @@ namespace Plunderspell.Tests
 
             Assert.IsTrue(player.FocusRequiresHelp,
                 "A player must be able to tell a two-person lift before they try it.");
-            Assert.AreEqual(CarryMode.Dual, chest.EvaluatePickup());
-        }
-
-        [Test]
-        public void Test_BrokenLootCannotBePickedUp()
-        {
-            LootInteractor player = MakePlayer();
-            LootPickup vase = MakeLoot("Vase", 2f, new Vector3(0f, 0f, 2f));
-            vase.Break();
-
-            player.UpdateFocus();
-            player.Interact();
-
-            Assert.IsNull(player.Carried, "Shattered loot is worthless and not worth carrying.");
+            Assert.IsTrue(chest.Data.RequiresDualCarry);
         }
 
         [Test]
@@ -239,18 +248,18 @@ namespace Plunderspell.Tests
             interactor.UpdateFocus();
             RaidHudModel model = hud.Build();
 
-            StringAssert.Contains("needs two", model.InteractPrompt,
+            StringAssert.Contains("grab with a friend", model.InteractPrompt,
                 "A player who does not know an item is a two-person lift will just stand there.");
         }
 
         [Test]
         public void Test_TheHudNamesWhatYouAreCarrying()
         {
-            RaidHudPresenter hud = MakeHud(out _, out _, out LootInteractor interactor);
-            MakeLoot("Silver Plate", 2f, new Vector3(0f, 0f, 2f));
-
-            interactor.UpdateFocus();
-            interactor.Interact();
+            RaidHudPresenter hud = MakeHud(out _, out _, out _);
+            LootPickup plate = MakeLoot("Silver Plate", 2f, new Vector3(0f, 0f, 2f), withItem: true);
+            var item = plate.GetComponent<Item>();
+            Track(plate.gameObject.AddComponent<LootValue>()).SetItem(plate.Data);
+            MakeItemManager(item);
 
             RaidHudModel model = hud.Build();
             Assert.AreEqual("Silver Plate", model.CarriedLootName);

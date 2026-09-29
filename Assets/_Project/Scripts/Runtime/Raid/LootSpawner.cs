@@ -111,8 +111,8 @@ namespace Plunderspell.Raid
                 if (go == null)
                     continue;
 
-                // A carried item is kinematic on purpose — releasing it would drop it out of the
-                // carrier's hand socket.
+                // A carried piece is already driven by its holder's beam — forcing it back to
+                // dynamic here would just fight that.
                 var pickup = go.GetComponent<LootPickup>();
                 if (pickup != null && (pickup.IsBeingCarried || pickup.IsBroken))
                     continue;

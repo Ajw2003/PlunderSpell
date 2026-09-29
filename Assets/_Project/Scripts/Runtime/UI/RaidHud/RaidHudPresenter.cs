@@ -57,7 +57,7 @@ namespace Plunderspell.UI
         /// <summary>Collects the current state. Public so tests call it directly.</summary>
         public RaidHudModel Build()
         {
-            LootPickup carried = Interactor != null ? Interactor.Carried : null;
+            LootPickup carried = CarriedPickup();
             bool stale = Time.time - _lastCastAt > _castLineDuration;
 
             return new RaidHudModel(
@@ -89,26 +89,29 @@ namespace Plunderspell.UI
                 : $"Reloading… {Mathf.RoundToInt(weapon.ReloadProgress01 * 100f)}%";
         }
 
-        /// <summary>
-        /// What the player is holding. Reads <c>ItemManager</c> first — that is the live pickup
-        /// system — and falls back to the old interactor while both still exist.
-        /// </summary>
-        private static string CarriedName(LootPickup legacyCarried)
+        /// <summary>The <see cref="LootPickup"/> on whatever <see cref="ItemManager"/> is currently
+        /// dragging, or null when holding nothing or holding something that is not loot (a
+        /// weapon).</summary>
+        private static LootPickup CarriedPickup()
+        {
+            Item held = ItemManager.Instance != null ? ItemManager.Instance.CarriedItem : null;
+            return held != null && held.TryGetComponent(out LootPickup pickup) ? pickup : null;
+        }
+
+        /// <summary>What the player is holding, read from <c>ItemManager</c> — the live pickup
+        /// system.</summary>
+        private static string CarriedName(LootPickup carried)
         {
             Item held = ItemManager.Instance != null ? ItemManager.Instance.CarriedItem : null;
             if (held != null)
-            {
                 return held.TryGetComponent(out LootValue value) ? value.DisplayName : held.name;
-            }
 
-            return legacyCarried != null && legacyCarried.Data != null
-                ? legacyCarried.Data.DisplayName
-                : string.Empty;
+            return carried != null && carried.Data != null ? carried.Data.DisplayName : string.Empty;
         }
 
         /// <summary>
         /// The prompt under the crosshair. The "needs two" case is the one that has to be obvious:
-        /// a player who does not know an item is a two-person lift will stand there pressing E.
+        /// a player who does not know an item is a two-person lift will stand there clicking.
         /// </summary>
         private string BuildInteractPrompt(LootPickup carried)
         {
@@ -120,7 +123,7 @@ namespace Plunderspell.UI
 
             LootPickup focus = Interactor.Focus;
             if (focus == null)
-                return carried != null ? "Press [Q] to drop" : string.Empty;
+                return string.Empty;
 
             string name = NameOf(focus);
 
@@ -130,11 +133,11 @@ namespace Plunderspell.UI
             if (focus.Data != null && focus.Data.RequiresDualCarry)
             {
                 return focus.IsBeingCarried
-                    ? $"Press [E] to take the other end of {name} — needs two"
-                    : $"Press [E] to lift {name} — needs two";
+                    ? string.Empty
+                    : $"Too heavy alone: grab with a friend to lift {name}";
             }
 
-            return focus.IsBeingCarried ? string.Empty : $"Press [E] to pick up {name}";
+            return focus.IsBeingCarried ? string.Empty : $"Click to grab {name}";
         }
 
         /// <summary>True while the crosshair is over something the interact key would act on.</summary>
