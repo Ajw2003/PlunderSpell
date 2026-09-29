@@ -12,8 +12,12 @@ spacing is tightened; HUD text gets a shadow; the spell panel is hidden while pa
 Quit button); the Lair's empty Last raid says "No raid yet." Plan and evidence:
 `docs/plans/ui-visual-fixes-2026-09-29.md`; before and after frames in
 `docs/generated/ui-fix-2026-09-29/`. `UIThemeTests`, `UIFontsTests` and `RaidHudPromptTests` pass
-(14 of 14). Not re-checked: the HUD shadow over a bright wall (the raid that spawned for the after
-shots was dark), the raid HUD under damage or the alarm, and `UIScreenshotPlayModeTests`. Still open: the Victory piece list is not built.
+(14 of 14), and `UIScreenshotPlayModeTests` passes 1/1 (it rewrote the six reference frames in
+`UI_Verification_Screenshots/`, committed). The HUD was also captured in Hue and cry with health at
+38 (`after/Raid_HueAndCry_Damaged.png`): the alarm name and segments turn madder and the shadow keeps
+the labels readable over a torch flame. Not reproduced: the bright wall behind the top-right money
+line, because every raid that spawned in these runs had a dark wall there. Still open: the Victory
+piece list is not built.
 
 ---
 
