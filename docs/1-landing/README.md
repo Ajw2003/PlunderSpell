@@ -23,6 +23,7 @@ this document, not a reason to go grep the repo.
 | `Tools/ArtForge/` | Blender-driven generation of the art bible's plunder, structures and enemies, built on EnemyForge; review sheets in `docs/art/models/` ([README](../../Tools/ArtForge/README.md)) |
 | `Tools/Unity/coop_carry_check.sh` | runs a host and a client on one PC with nobody at the keyboard and checks two-player carrying; see [`net`](../4-systems/net.md) |
 | `Tools/github/sync_milestones.py` | sets the GitHub milestones M0-M7 and their issues from the roadmap |
+| `Tools/AudioForge/` | builds every sound and music track from `manifest.csv` into `Assets/_Project/Audio/` ([README](../../Tools/AudioForge/README.md)); listening page `docs/generated/audio-preview/` |
 | `Tools/mkissues.py` | files the playtesting backlog to GitHub issues; see `docs/generated/github-issues.json` |
 | `Plans/` | one exhaustive plan per GitHub issue, plus `Priority_Queue.md`, the live execution order |
 | `docs/` | this tree |
@@ -91,6 +92,10 @@ together and what was deliberately left undocumented, and why.
   warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
   the surface shader, post-processing and the Low/Medium/High quality levels. Look samples in
   `docs/generated/look-samples-2026-09-24/`.
+- [`docs/plans/audio.md`](../plans/audio.md) — **approved, in progress** (assets built, not yet played in game). Every sound effect and
+  music track the game needs, named (~480 names, ~1,000 files), what triggers each, and how
+  each is generated or sourced (library / AI / in-repo synth / recording / composer), plus four
+  decisions needed first. The game currently has no audio at all.
 - [`docs/plans/moodboard-gap-closure.md`](../plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
