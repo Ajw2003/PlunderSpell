@@ -154,7 +154,13 @@ namespace Plunderspell.Raid
             UnsubscribeFromZone();
         }
 
-        private void Awake() => SubscribeToZone();
+        private GameObject _fallbackListener;
+
+        private void Awake()
+        {
+            SubscribeToZone();
+            _fallbackListener = new GameObject("RaidFallbackListener", typeof(RaidListenerFallback));
+        }
 
         /// <summary>
         /// A client's fallback for building the castle: the phase and seed change events can arrive
@@ -166,7 +172,12 @@ namespace Plunderspell.Raid
                 BuildCastle(Seed);
         }
 
-        private void OnDestroy() => UnsubscribeFromZone();
+        private void OnDestroy()
+        {
+            UnsubscribeFromZone();
+            if (_fallbackListener != null)
+                Destroy(_fallbackListener);
+        }
 
         // -----------------------------------------------------------------------------------------
         // Starting a raid

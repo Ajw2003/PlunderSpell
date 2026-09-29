@@ -199,6 +199,31 @@ raid phase is `Raiding` they are searched every 5 s with `FindObjectsByType`, wh
 array each time (never per frame). A door built after a search is heard within 5 s, which is well
 inside the time it takes to reach it.
 
+## The listener
+
+In the raid scene the player's listener lives on `PlayerCamera`, which only exists once PurrNet has
+spawned this machine's body and handed it ownership (`PlayerNetworkOwnership.ApplyOwnership`). Until
+then the scene had no listener: Unity logged "There are no audio listeners in the scene" every frame
+(193,766 lines in one Editor log) and nothing was heard until the player spawned.
+
+`RaidDirector.Awake` now creates `RaidFallbackListener` (`Assets/_Project/Scripts/Runtime/Raid/RaidListenerFallback.cs`).
+Every `LateUpdate` it switches its own listener on exactly while no enabled camera carries an enabled
+listener, so the raid always has one listener and never two. It counts only listeners on cameras,
+using `Camera.GetAllCameras` into a fixed buffer (no allocation per frame); every other raid listener
+(player camera, spectator camera) sits on a camera. A listener added anywhere else would not be seen
+and would give two.
+
+`AudioDirector.Discover` drops its cached listener once that listener is switched off and picks the
+first enabled one, so distance checks follow the player's camera after spawn instead of staying on the
+fallback.
+
+Checked 2026-09-29: Play from `RaidScene`, host, set out. Zero "no audio listeners" lines in the log
+across menu, Lair and raid; every sample showed one enabled listener (`RaidFallbackListener` before
+spawn, `Eye` after); `AudioDirector` held `Eye`. PlayMode test: `RaidListenerFallbackTests`.
+
+Output device choice is not built: Unity 6000.3 has no API to list or pick an output device (checked
+`UnityEngine.AudioModule.xml`), so audio follows the Windows default device.
+
 ## Traps
 
 - A snapshot transition overwrites exposed parameters. See above.

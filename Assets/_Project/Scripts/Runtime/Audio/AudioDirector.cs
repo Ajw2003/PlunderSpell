@@ -57,7 +57,7 @@ namespace Plunderspell.Audio
         private LoopBus _loops;
         private MusicDirector _music;
         private PushToCastController _pushToCast;
-        private Transform _listener;
+        private AudioListener _listener;
 
         private readonly HashSet<string> _reported = new HashSet<string>();
         private readonly Dictionary<string, float> _lastPlayed = new Dictionary<string, float>();
@@ -241,7 +241,7 @@ namespace Plunderspell.Audio
         /// <summary>Where the listener is, for the systems that decide by distance.</summary>
         public Vector3 Listener => ListenerPosition;
 
-        private Vector3 ListenerPosition => _listener != null ? _listener.position : Vector3.zero;
+        private Vector3 ListenerPosition => _listener != null ? _listener.transform.position : Vector3.zero;
 
         private HistoricalEra CurrentEra => Raid != null ? Raid.Era : HistoricalEra.BronzeAge;
 
@@ -327,12 +327,10 @@ namespace Plunderspell.Audio
         /// </summary>
         private void Discover()
         {
-            if (_listener == null)
-            {
-                AudioListener listener = FindFirstObjectByType<AudioListener>();
-                if (listener != null)
-                    _listener = listener.transform;
-            }
+            // The raid hears through a fallback listener until this machine's player spawns, then
+            // through the player's camera, so a listener that has been switched off is dropped.
+            if (_listener == null || !_listener.isActiveAndEnabled)
+                _listener = FindEnabledListener();
 
             if (Raid == null)
             {
@@ -400,6 +398,14 @@ namespace Plunderspell.Audio
                         door.OpenStateChanged += open => OnDoorChanged(door, open);
                 }
             }
+        }
+
+        private static AudioListener FindEnabledListener()
+        {
+            foreach (AudioListener listener in FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
+                if (listener.isActiveAndEnabled)
+                    return listener;
+            return null;
         }
     }
 }
