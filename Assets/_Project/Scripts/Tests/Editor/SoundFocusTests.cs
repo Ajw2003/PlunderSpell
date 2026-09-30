@@ -3,7 +3,7 @@ using Plunderspell.Audio;
 
 namespace Plunderspell.Tests.Editor
 {
-    /// <summary>The reduced playtest sound set: footsteps, physics, guards and UI only.</summary>
+    /// <summary>The reduced playtest sound set: footsteps, guards and UI only.</summary>
     public class SoundFocusTests
     {
         private bool _wasEnabled;
@@ -15,8 +15,6 @@ namespace Plunderspell.Tests.Editor
         public void TearDown() => SoundFocus.Enabled = _wasEnabled;
 
         [TestCase("foley_step_stone_walk")]
-        [TestCase("phys_break_pottery")]
-        [TestCase("phys_impact_wood")]
         [TestCase("vo_bronze_alert")]
         [TestCase("vo_hound_howl")]
         [TestCase("sfx_wpn_blade_swing")]
@@ -33,6 +31,9 @@ namespace Plunderspell.Tests.Editor
         [TestCase("sting_alarm_roused_late")]
         [TestCase("sfx_door_open")]
         [TestCase("sfx_player_hurt")]
+        [TestCase("phys_break_pottery")]
+        [TestCase("phys_impact_wood")]
+        [TestCase("phys_scrape_stone_loop")]
         public void Test_EverythingElseIsMuted(string name)
         {
             SoundFocus.Enabled = true;

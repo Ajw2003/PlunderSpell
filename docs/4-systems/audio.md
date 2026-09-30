@@ -201,15 +201,31 @@ inside the time it takes to reach it.
 
 ## Reduced sound set (playtest)
 
-Since 2026-09-29 `SoundFocus.Enabled` is true: only footsteps and movement foley (`foley_`), physics
-(`phys_`), guard and hound voices (`vo_`), guard sounds and weapons (`sfx_enemy`, `sfx_wpn`) and UI
-clicks (`ui_`) play. Spells, music, ambience, stingers, doors, portal, loot and player sounds stay in
+Since 2026-09-29 `SoundFocus.Enabled` is true: only footsteps and movement foley (`foley_`), guard
+and hound voices (`vo_`), guard sounds and weapons (`sfx_enemy`, `sfx_wpn`) and UI clicks (`ui_`)
+play. Physics (`phys_`) was muted on 2026-09-30: the triggers are right but the tone reads wrong
+(leather on stone sounded like metal), so it waits for replacement files. Spells, music, ambience, stingers, doors, portal, loot and player sounds stay in
 the SoundBank and their hooks stay wired; they are just not played, because the full mix was too busy
 to tell sounds apart. The check sits in `AudioDirector.Play` (after the bank lookup, so a misspelt
 name is still reported), `LoopBus.Drive` and `MusicDirector.StartLayer`. Set
 `SoundFocus.Enabled = false` (`Assets/_Project/Scripts/Runtime/Audio/SoundFocus.cs`) to hear
 everything again. Checked in Play: menu and raid played only foley, guard voices and physics;
 `sfx_spell_ignis_cast` returned no source, and did play with the flag off. Tests: `SoundFocusTests`.
+
+## Latency (measured 2026-09-30)
+
+The owner heard a delay on physics sounds. `AudioLatencyProbe` (a diagnostic, attached from an eval)
+measured, in Play from `RaidScene`, solo host:
+
+- play call to sound in the listener output: 0-22 ms for UI, footsteps, hound howl, weapon swing,
+  all imported as Streaming;
+- a BronzeSword dropped 1.5 m: visible mesh down at 553 ms, collision at 559 ms, sound in the output
+  at 578 ms, so the sound lands 25 ms after the picture;
+- the phys_ files start at once (impacts peak within 30 ms), except the scrape and roll loops, which
+  swell for 0.5-2.3 s before their loudest part.
+
+So no delay was found in Unity for a solo drop. Not yet measured: a co-op client, where loot bodies
+are kinematic and follow the host.
 
 ## The listener
 
