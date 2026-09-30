@@ -14,6 +14,34 @@ the stranger the sentences.
 **Where it stands** (checked 2026-09-30): speech between casts is heard and transcribed (step 1's
 listening half). Nothing below that is built.
 
+## Prototype (built 2026-09-30, branch `claude/guard-mimic-prototype`)
+
+The owner asked for the quickest free route to something testable: speak, and a guard speaks back
+with your words at random pitches, chosen by a small local language model with no account. Built:
+
+- **Words and audio:** the chatter recogniser now asks Vosk for word timings (`SetWords(true)`) and
+  keeps the last 10 s of the voice it was fed; each `ChatterReport` carries the words, their times and
+  the audio behind them (`VoskVoiceInputService.CutChatterAudio`).
+- **Word bank:** `Audio/Mimic/MimicWordBank.cs` cuts each word heard with confidence 0.5+ (30 ms
+  padding, 10 ms fades, 0.12-1.2 s), newest four clips per word, 300 words, for the play session.
+- **Local model:** `Audio/Mimic/LocalLanguageModel.cs` starts llama.cpp's `llama-server.exe` (MIT, CPU
+  build b11295) with Qwen2.5 0.5B Instruct Q4_K_M (Apache-2.0) from `StreamingAssets/LLM/` on
+  127.0.0.1:8791, and stops it when the game object goes. A GBNF grammar allows only banked words, 2 to
+  8 of them. The model file (491 MB) is not in git: `Tools/LLM/fetch_llm.ps1` downloads it.
+- **Reply:** `Audio/Mimic/GuardMimic.cs` answers each line from the nearest awake guard within 25 m
+  (needs 2+ banked words), stitching clips with `MimicStitcher` (each word at a random pitch
+  0.75-1.3, 30 ms crossfades, 40-120 ms gaps), played from the guard. **Only the speaker hears it.**
+  The model starts as soon as a raid has guards and "Guards hear my voice" is on. A "Guard mimicry
+  (prototype)" tick box in `SoundFocusSettings` mutes it.
+
+Checked: `GuardMimicTests` (4) pass; the model alone answers in 0.1-0.45 s with only allowed words;
+`Tools/Unity/coop_mimic_check.sh` (co-op, the joining player fed four words as a recording) gave
+"the gold is where the the is where" from a guard beside them, 1.0 s then 0.7 s to think once warm
+(4.7 s when the model had to start first). Not checked by me: real speech through the microphone,
+where the word times must line up with the kept audio (Vosk counts time from the recogniser's
+start; if they do not line up the log says "fall outside the kept audio"). Known: with a tiny bank
+the model repeats words ("the the the").
+
 ## Privacy, decided up front
 
 PR #177 sends only written words. Mimic mode sends short clips of a player's voice to the other

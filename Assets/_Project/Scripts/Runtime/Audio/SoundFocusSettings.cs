@@ -74,6 +74,7 @@ namespace Plunderspell.Audio
             new Group("Portal, loot, extraction, results, lair", true,
                 "sfx_portal", "sfx_extract", "sfx_loot", "sfx_result", "sfx_lair"),
             new Group("Hazards, fire, status, debris", true, "sfx_hazard", "sfx_fire", "sfx_status", "sfx_debris"),
+            new Group("Guard mimicry (prototype)", true, "mimic_"),
         };
 
         [Tooltip("Exact sound names that ignore their group.")]

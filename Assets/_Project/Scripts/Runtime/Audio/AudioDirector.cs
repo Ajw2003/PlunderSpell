@@ -87,6 +87,7 @@ namespace Plunderspell.Audio
                 _music.Initialize(this);
                 gameObject.AddComponent<ImpactAudio>().Initialize(this);
                 gameObject.AddComponent<GuardVoiceDirector>().Initialize(this);
+                gameObject.AddComponent<Mimic.GuardMimic>();
             }
         }
 

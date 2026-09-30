@@ -2,18 +2,51 @@ using System;
 
 namespace Plunderspell.Voice
 {
+    /// <summary>One recognised word and where it sits in <see cref="ChatterReport.Samples"/>, in seconds.</summary>
+    public readonly struct WordTiming
+    {
+        public readonly string Word;
+        public readonly float Start;
+        public readonly float End;
+        public readonly float Confidence;
+
+        public WordTiming(string word, float start, float end, float confidence)
+        {
+            Word = word;
+            Start = start;
+            End = end;
+            Confidence = confidence;
+        }
+    }
+
     /// <summary>One utterance overheard between casts.</summary>
     public readonly struct ChatterReport
     {
+        /// <summary>Sample rate of <see cref="Samples"/>.</summary>
+        public const int SampleRate = 16000;
+
         public readonly string Transcript;
         public readonly float PeakRms;
         public readonly CastVolume Volume;
 
+        /// <summary>Each word with its time in <see cref="Samples"/>; empty when the recogniser gave no timings.</summary>
+        public readonly WordTiming[] Words;
+
+        /// <summary>The recorded voice behind <see cref="Words"/>, mono, gain applied; empty when not kept.</summary>
+        public readonly float[] Samples;
+
         public ChatterReport(string transcript, float peakRms, CastVolume volume)
+            : this(transcript, peakRms, volume, Array.Empty<WordTiming>(), Array.Empty<float>())
+        {
+        }
+
+        public ChatterReport(string transcript, float peakRms, CastVolume volume, WordTiming[] words, float[] samples)
         {
             Transcript = transcript;
             PeakRms = peakRms;
             Volume = volume;
+            Words = words ?? Array.Empty<WordTiming>();
+            Samples = samples ?? Array.Empty<float>();
         }
     }
 

@@ -14,6 +14,16 @@ namespace Plunderspell.Voice
     {
         public string text;
         public string partial;
+        public VoiceWordJson[] result; // per-word timings, when SetWords(true)
+    }
+
+    [Serializable]
+    public class VoiceWordJson
+    {
+        public float conf;
+        public float start;
+        public float end;
+        public string word;
     }
 
     // doc-ref 5ea6 docs/4-systems/voice.md
@@ -76,6 +86,14 @@ namespace Plunderspell.Voice
         private VoskRecognizer _chatterRecognizer;
         private float _chatterPeakRms;
         private float _chatterGain = 1f;
+
+        // The voice fed to the chatter recogniser, kept so each word can be cut out of it (guard mimic
+        // prototype). _chatterFed counts samples fed since the recogniser was made or reset, the clock
+        // Vosk's word times use; _chatterAudioStart is that clock at _chatterAudio[0].
+        private const int ChatterAudioMaxSamples = SampleRate * 10;
+        private readonly System.Collections.Generic.List<float> _chatterAudio = new System.Collections.Generic.List<float>();
+        private long _chatterFed;
+        private long _chatterAudioStart;
         private short[] _shortBuffer = new short[SampleRate];
         private MainThreadPump _pump;
 
@@ -406,7 +424,12 @@ namespace Plunderspell.Voice
                     if (_recognizer.AcceptWaveform(_shortBuffer, available))
                         EmitFromJson(_recognizer.Result());
                 }
-                else if (_chatterRecognizer.AcceptWaveform(_shortBuffer, available))
+                else
+                {
+                    KeepChatterAudio(available);
+                }
+
+                if (!casting && _chatterRecognizer.AcceptWaveform(_shortBuffer, available))
                 {
                     EmitChatter(_chatterRecognizer.Result());
                 }
@@ -427,6 +450,8 @@ namespace Plunderspell.Voice
             try
             {
                 _chatterRecognizer = new VoskRecognizer(_modelLoad.Result, SampleRate);
+                _chatterRecognizer.SetWords(true);
+                ResetChatterAudio();
                 return true;
             }
             catch (Exception e)
@@ -445,6 +470,7 @@ namespace Plunderspell.Voice
             {
                 EmitChatter(_chatterRecognizer.FinalResult());
                 _chatterRecognizer.Reset();
+                ResetChatterAudio();
             }
             catch (Exception e)
             {
@@ -475,8 +501,69 @@ namespace Plunderspell.Voice
             if (!ChatterFilter.IsWorthReporting(heard, peak))
                 return;
 
-            Debug.Log($"[Chatter] Heard \"{heard}\" (rms={peak:0.00})");
-            ChatterHeard?.Invoke(new ChatterReport(heard, peak, VoiceUtility.ClassifyVolume(peak)));
+            VoiceWordJson[] words = null;
+            try
+            {
+                words = JsonUtility.FromJson<VoiceRecognizerJson>(json)?.result;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Chatter] No word timings in '{json}': {e.Message}");
+            }
+            CutChatterAudio(words, out WordTiming[] timings, out float[] samples);
+
+            Debug.Log($"[Chatter] Heard \"{heard}\" (rms={peak:0.00}, {timings.Length} timed words, {samples.Length / (float)SampleRate:0.00} s kept)");
+            ChatterHeard?.Invoke(new ChatterReport(heard, peak, VoiceUtility.ClassifyVolume(peak), timings, samples));
+        }
+
+        private void ResetChatterAudio()
+        {
+            _chatterAudio.Clear();
+            _chatterFed = 0;
+            _chatterAudioStart = 0;
+        }
+
+        private void KeepChatterAudio(int count)
+        {
+            for (int i = 0; i < count; i++)
+                _chatterAudio.Add(_floatBuffer[i]);
+            _chatterFed += count;
+            int over = _chatterAudio.Count - ChatterAudioMaxSamples;
+            if (over > 0)
+            {
+                _chatterAudio.RemoveRange(0, over);
+                _chatterAudioStart += over;
+            }
+        }
+
+        /// <summary>
+        /// The kept audio that covers <paramref name="words"/>, and the words' times re-based to it.
+        /// Vosk's times count from the recogniser's creation or last reset, the same clock as _chatterFed.
+        /// </summary>
+        private void CutChatterAudio(VoiceWordJson[] words, out WordTiming[] timings, out float[] samples)
+        {
+            timings = Array.Empty<WordTiming>();
+            samples = Array.Empty<float>();
+            if (words == null || words.Length == 0 || _chatterAudio.Count == 0)
+                return;
+
+            const float Pad = 0.05f;
+            long first = (long)((words[0].start - Pad) * SampleRate);
+            long last = (long)((words[words.Length - 1].end + Pad) * SampleRate);
+            first = Math.Max(first, _chatterAudioStart);
+            last = Math.Min(last, _chatterAudioStart + _chatterAudio.Count);
+            if (last <= first)
+            {
+                Debug.LogWarning($"[Chatter] Word times {words[0].start:0.00}-{words[words.Length - 1].end:0.00} s fall outside the kept audio " +
+                                 $"({_chatterAudioStart / (float)SampleRate:0.00}-{(_chatterAudioStart + _chatterAudio.Count) / (float)SampleRate:0.00} s).");
+                return;
+            }
+
+            samples = _chatterAudio.GetRange((int)(first - _chatterAudioStart), (int)(last - first)).ToArray();
+            float offset = first / (float)SampleRate;
+            timings = new WordTiming[words.Length];
+            for (int i = 0; i < words.Length; i++)
+                timings[i] = new WordTiming(words[i].word, words[i].start - offset, words[i].end - offset, words[i].conf);
         }
 
         /// <summary>Recognises a finished recording as chatter would, without a microphone. Test seam for fixtures.</summary>

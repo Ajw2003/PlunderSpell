@@ -111,3 +111,7 @@ InitTestScene*.unity*
 Tools/Headless/**/bin/
 Tools/Headless/**/obj/
 .claude/worktrees/
+
+# The guard-mimic prototype's language model (491 MB, over GitHub's file limit); Tools/LLM/fetch_llm.ps1 downloads it.
+/Assets/StreamingAssets/LLM/*.gguf
+/Assets/StreamingAssets/LLM/*.gguf.meta
