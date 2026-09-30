@@ -124,6 +124,7 @@ namespace Plunderspell.Audio
         {
             AudioLevels.TickStartup();
             AudioLevels.TickCasting(_pushToCast != null && _pushToCast.IsCasting, Time.unscaledDeltaTime);
+            AudioLevels.Settle(Time.unscaledDeltaTime);
 
             if (Time.unscaledTime < _pollAt)
                 return;
