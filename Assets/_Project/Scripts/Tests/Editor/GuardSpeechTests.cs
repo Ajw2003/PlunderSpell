@@ -213,6 +213,34 @@ namespace Plunderspell.Tests.Editor
             Assert.IsTrue(oldest == null, "The evicted clip is destroyed.");
         }
 
+        [Test]
+        public void Test_TryGetRendersInTheBackgroundAndPumpDeliversTheClip()
+        {
+            var renderer = new GuardSpeechRenderer();
+            AudioClip source = Clip("vo_high_base_chase_01", 1f);
+            DisguiseProfile profile = GuardVoiceProfiles.For(7, "knight");
+
+            Assert.IsFalse(renderer.TryGet(source, profile, "high/knight/7", out AudioClip early), "The first ask must not block for a render.");
+            Assert.IsNull(early);
+            Assert.IsFalse(renderer.TryGet(source, profile, "high/knight/7", out _), "Asking again while it renders must not start a second render.");
+            Assert.AreEqual(1, renderer.RenderingCount);
+
+            AudioClip ready = null;
+            var timer = System.Diagnostics.Stopwatch.StartNew();
+            while (timer.Elapsed.TotalSeconds < 5 && ready == null)
+            {
+                System.Threading.Thread.Sleep(10);
+                renderer.Pump();
+                renderer.TryGet(source, profile, "high/knight/7", out ready);
+            }
+
+            Assert.IsNotNull(ready, "The background render never finished.");
+            _made.Add(ready);
+            Assert.AreEqual(0, renderer.RenderingCount);
+            Assert.AreEqual(source.length / profile.Speed, ready.length, source.length / profile.Speed * 0.05f);
+            Assert.AreSame(ready, renderer.Get(source, profile, "high/knight/7"), "The blocking Get must see the same cached clip.");
+        }
+
         // --- Sound filter -------------------------------------------------------------------------------
 
         [Test]
