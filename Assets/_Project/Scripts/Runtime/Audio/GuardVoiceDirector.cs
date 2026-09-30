@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Plunderspell.Alarm;
+using Plunderspell.Audio.VoiceBank;
 using Plunderspell.Guards;
 using UnityEngine;
 
@@ -15,6 +16,10 @@ namespace Plunderspell.Audio
         private const float AsleepEvery = 6f;
         private const float HearingDistance = 45f;
         private const float PantDistance = 12f;
+        private const float QuietGain = 0.5f;
+        private const float NormalGain = 0.75f;
+        private const float LoudGain = 1f;
+        private const string SpeechGroupPrefix = "guardspeech_";
 
         private sealed class Record
         {
@@ -29,11 +34,20 @@ namespace Plunderspell.Audio
             public float LastLineAt = -100f;
             public float NextMurmurAt;
             public float NextAsleepAt;
+            public float SpeakingUntil;
+            public string Name;
+            public int Seed;
+            public Vector3 FirstPosition;
+            public bool HasNetworkSeed;
+            public bool HasDisguise;
+            public DisguiseProfile Disguise;
         }
 
         private AudioDirector _director;
         private readonly Dictionary<int, Record> _records = new Dictionary<int, Record>();
         private AlarmFSMManager _alarm;
+        private readonly System.Random _rng = new System.Random();
+        private readonly GuardSpeechRenderer _renderer = new GuardSpeechRenderer();
 
         public void Initialize(AudioDirector director) => _director = director;
 
@@ -73,6 +87,8 @@ namespace Plunderspell.Audio
                         AttackCount = guard.AttackCount,
                         Health = guard.CurrentHealth,
                         Guard = guard,
+                        Name = guard.name,
+                        FirstPosition = guard.transform.position,
                         NextMurmurAt = now + Random.Range(MurmurMin, MurmurMax),
                         NextAsleepAt = now + AsleepEvery
                     };
@@ -81,6 +97,13 @@ namespace Plunderspell.Audio
 
                 if (!record.Profile.Valid)
                     continue;
+
+                // The network id only exists once the guard has spawned; from then on it is the seed.
+                if (!record.HasNetworkSeed && guard.objectId != 0)
+                {
+                    record.HasNetworkSeed = true;
+                    record.HasDisguise = false;
+                }
 
                 Vector3 head = guard.transform.position + Vector3.up * 1.6f;
                 record.LastHead = head;
@@ -114,9 +137,16 @@ namespace Plunderspell.Audio
                 if ((record.LastHead - listener).sqrMagnitude > HearingDistance * HearingDistance)
                     continue;
 
-                string name = GuardVoices.LineName(record.Profile, GuardLine.Death);
-                if (name != null)
-                    _director.Play(name, record.LastHead, 1f, -1, SoundPoolKind.Voice);
+                if (record.Profile.Hound)
+                {
+                    string name = GuardVoices.LineName(record.Profile, GuardLine.Death);
+                    if (name != null)
+                        _director.Play(name, record.LastHead, 1f, -1, SoundPoolKind.Voice);
+                }
+                else
+                {
+                    Speak(record, GuardLine.Death, record.LastHead, now);
+                }
             }
         }
 
@@ -153,12 +183,72 @@ namespace Plunderspell.Audio
 
             if (line == null || !audible)
                 return;
-            if (now - record.LastLineAt < LineGapSeconds)
+            if (now - record.LastLineAt < LineGapSeconds || now < record.SpeakingUntil)
                 return;
 
-            string name = GuardVoices.LineName(record.Profile, line.Value);
-            if (name != null && _director.Play(name, head, 1f, -1, SoundPoolKind.Voice) != null)
+            if (record.Profile.Hound)
+            {
+                string name = GuardVoices.LineName(record.Profile, line.Value);
+                if (name != null && _director.Play(name, head, 1f, -1, SoundPoolKind.Voice) != null)
+                    record.LastLineAt = now;
+            }
+            else if (Speak(record, line.Value, head, now))
+            {
                 record.LastLineAt = now;
+            }
+        }
+
+        // Picks a recorded line for the guard's Age, re-voices it with the guard's own disguise and plays it
+        // from its head. The guard is silent for the clip's length so its own lines do not overlap.
+        private bool Speak(Record record, GuardLine line, Vector3 head, float now)
+        {
+            string situation = GuardSpeechBank.Situation(line);
+            if (!SoundFocus.Allows(SpeechGroupPrefix + situation))
+                return false;
+            if (!GuardSpeechBank.Shared.TryPick(record.Profile.Age, line, _rng, out AudioClip source))
+                return false;
+
+            DisguiseProfile disguise = DisguiseOf(record);
+            string key = record.Profile.Age + "/" + record.Profile.Voice + "/" + record.Seed;
+            AudioClip clip = _renderer.Get(source, disguise, key);
+            if (clip == null)
+                return false;
+
+            AudioSource playing = _director.PlayClip(clip, head, SituationGain(line), SoundPoolKind.Voice);
+            if (playing == null)
+                return false;
+
+            record.SpeakingUntil = now + clip.length;
+            string who = record.Guard != null ? record.Guard.name : "(gone)";
+            Debug.Log("[GuardSpeech] " + who + " (" + record.Profile.Age + "/" + record.Profile.Voice + ") " + situation + " "
+                      + source.name + " pitch x" + disguise.PitchRatio.ToString("F2")
+                      + " speed x" + disguise.Speed.ToString("F2"));
+            return true;
+        }
+
+        private DisguiseProfile DisguiseOf(Record record)
+        {
+            if (!record.HasDisguise)
+            {
+                ulong id = record.Guard != null ? record.Guard.objectId : 0;
+                record.Seed = GuardVoiceProfiles.SeedFor(id, record.Name.Replace("(Clone)", string.Empty), record.FirstPosition);
+                record.Disguise = GuardVoiceProfiles.For(record.Seed, record.Profile.Voice);
+                record.HasDisguise = true;
+            }
+            return record.Disguise;
+        }
+
+        private static float SituationGain(GuardLine line)
+        {
+            switch (line)
+            {
+                case GuardLine.Murmur:
+                case GuardLine.Lost:
+                case GuardLine.Asleep: return QuietGain;
+                case GuardLine.Chase:
+                case GuardLine.Attack: return LoudGain;
+                default: return NormalGain;
+            }
         }
 
         // A hound pants while it is calm and near enough to hear, as a loop that fades in and out.
