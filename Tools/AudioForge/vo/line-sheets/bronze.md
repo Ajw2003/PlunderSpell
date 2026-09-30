@@ -26,7 +26,7 @@ Each voice reads every line below. Replace `<voice>` in the file name with the v
 | `vo_bronze_<voice>_murmur_01.wav` | *(muttering)* Sitos, sitos... panta sitos. *(grain, grain, always grain)* |
 | `vo_bronze_<voice>_murmur_02.wav` | *(hum a little tune, 4–5 seconds)* |
 | `vo_bronze_<voice>_murmur_03.wav` | *(yawn)* Aaah... nyx makra. *(long night)* |
-| `vo_bronze_<voice>_murmur_04.wav` | Ho wanax... pantote ho wanax. *(the king... always the king)* |
+| `vo_bronze_<voice>_murmur_04.wav` | Wanax... pantote wanax. *(the king... always the king)* |
 
 ### alert — heard something, not sure
 
@@ -56,7 +56,7 @@ Each voice reads every line below. Replace `<voice>` in the file name with the v
 | File | Say |
 |---|---|
 | `vo_bronze_<voice>_lost_01.wav` | Ouden. ...Mys. *(nothing. a mouse)* |
-| `vo_bronze_<voice>_lost_02.wav` | Oimoi. Ho wanax ou mathēsetai. *(alas. the king won't hear of it)* |
+| `vo_bronze_<voice>_lost_02.wav` | Oimoi. Wanax ou mathēsetai. *(alas. the king won't hear of it)* |
 
 ### attack — swinging a weapon: short effort sounds
 
@@ -78,7 +78,7 @@ Each voice reads every line below. Replace `<voice>` in the file name with the v
 
 | File | Say |
 |---|---|
-| `vo_bronze_<voice>_death_01.wav` | *(theatrical)* Ōh... ho wanax... |
+| `vo_bronze_<voice>_death_01.wav` | *(theatrical)* Ōh... wanax... |
 | `vo_bronze_<voice>_death_02.wav` | *(a yell, cut off)* Aaa— |
 
 ### asleep — put to sleep by a spell

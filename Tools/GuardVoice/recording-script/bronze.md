@@ -25,7 +25,7 @@ Tone: Half to yourself, bored and unhurried, low energy. Loudness: quiet.
 - `vo_bronze_base_murmur_03.wav` (quiet, at least 1.5 s): Aaah... nyx makra.
   - Direction: yawn
   - Means: long night. Do not say this part.
-- `vo_bronze_base_murmur_04.wav` (quiet, at least 1.5 s): Ho wanax... pantote ho wanax.
+- `vo_bronze_base_murmur_04.wav` (quiet, at least 1.5 s): Wanax... pantote wanax.
   - Means: the king... always the king. Do not say this part.
 ## alert (heard something, not sure)
 
@@ -62,7 +62,7 @@ Tone: Deflated and a bit embarrassed. Pitch drops at the end. Loudness: quiet.
 
 - `vo_bronze_base_lost_01.wav` (quiet, at least 1 s): Ouden. ...Mys.
   - Means: nothing. a mouse. Do not say this part.
-- `vo_bronze_base_lost_02.wav` (quiet, at least 1 s): Oimoi. Ho wanax ou mathēsetai.
+- `vo_bronze_base_lost_02.wav` (quiet, at least 1 s): Oimoi. Wanax ou mathēsetai.
   - Means: alas. the king won't hear of it. Do not say this part.
 ## attack (swinging a weapon: short effort sounds)
 
@@ -87,7 +87,7 @@ Tone: Sharp and short, surprised pain, not gory. Normal to loud. Loudness: norma
 
 Tone: Theatrical and a little comic, fading out. Never gory. Loudness: normal.
 
-- `vo_bronze_base_death_01.wav` (normal, at least 0.8 s): Ōh... ho wanax...
+- `vo_bronze_base_death_01.wav` (normal, at least 0.8 s): Ōh... wanax...
   - Direction: theatrical
 - `vo_bronze_base_death_02.wav` (normal, at least 0.8 s): Aaa—
   - Direction: a yell, cut off

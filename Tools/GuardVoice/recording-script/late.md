@@ -29,7 +29,7 @@ Tone: Half to yourself, bored and unhurried, low energy. Loudness: quiet.
 Tone: Suspicious and sharp. Let a question rise at the end. Loudness: normal.
 
 - `vo_late_base_alert_01.wav` (normal, at least 0.6 s): Halte! Who's there?
-- `vo_late_base_alert_02.wav` (normal, at least 0.6 s): Qui vive?
+- `vo_late_base_alert_02.wav` (normal, at least 0.6 s): Qui est là?
 - `vo_late_base_alert_03.wav` (quiet, at least 0.6 s): Somthyng stirreth...
   - Direction: quietly
 ## chase (seen you, shouting for help. LOUD)
