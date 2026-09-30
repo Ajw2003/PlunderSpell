@@ -32,6 +32,12 @@ the unused two-person code is still in `LootPickup` (`InitiateDualCarry`) and
 Checked 2026-09-28 against every branch on `origin`. Two branches hold recent work that `main`
 lacks; the rest are older and either merged in another form or abandoned.
 
+- **`claude/guard-mimic-prototype`** (2026-09-30, off `claude/check-pr-177` = PR #178): the guard mimic
+  prototype. Talk between casts is cut into a word bank; a local model (llama.cpp + Qwen2.5 0.5B, no
+  account, fetched by `Tools/LLM/fetch_llm.ps1`) picks a reply from banked words and the nearest guard
+  says it in the player's own clips at random pitches, heard by the speaker only. Checked in co-op
+  with a fed recording (`Tools/Unity/coop_mimic_check.sh`); real microphone speech is for the owner to
+  try. Details: `docs/plans/guards-speak-overheard-words.md`, "Prototype".
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
