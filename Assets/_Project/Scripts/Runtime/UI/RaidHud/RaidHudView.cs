@@ -146,9 +146,37 @@ namespace Plunderspell.UI
         private Color _captionColour = Color.white;
         private float _captionAt = float.NegativeInfinity;
 
-        private void OnEnable() => Plunderspell.Spells.SpellCastingSystem.PhraseResolved += OnPhrase;
+        private void OnEnable()
+        {
+            Plunderspell.Spells.SpellCastingSystem.PhraseResolved += OnPhrase;
+            Plunderspell.Acoustics.PlayerChatterRelay.ChatterResolved += OnChatter;
+        }
 
-        private void OnDisable() => Plunderspell.Spells.SpellCastingSystem.PhraseResolved -= OnPhrase;
+        private void OnDisable()
+        {
+            Plunderspell.Spells.SpellCastingSystem.PhraseResolved -= OnPhrase;
+            Plunderspell.Acoustics.PlayerChatterRelay.ChatterResolved -= OnChatter;
+        }
+
+        /// <summary>The caption for a line the player just said between casts, and its colour. Pure, for tests.</summary>
+        public static string ChatterCaptionFor(Plunderspell.Acoustics.ChatterOutcome outcome, out Color colour)
+        {
+            string said = $"\"{outcome.Transcript.ToLowerInvariant()}\"";
+            int n = outcome.GuardsWhoUnderstood;
+            if (n <= 0)
+            {
+                colour = new Color(0.6f, 0.68f, 0.78f);
+                return $"{said}  -  nobody heard";
+            }
+            colour = new Color(1f, 0.75f, 0.25f);
+            return n == 1 ? $"{said}  -  overheard by a guard" : $"{said}  -  overheard by {n} guards";
+        }
+
+        private void OnChatter(Plunderspell.Acoustics.ChatterOutcome outcome)
+        {
+            _caption = ChatterCaptionFor(outcome, out _captionColour);
+            _captionAt = Time.time;
+        }
 
         /// <summary>The caption text for a phrase, and how it is coloured. Pure, for tests.</summary>
         public static string CaptionFor(Plunderspell.Spells.SpellCastingSystem.PhraseReport phrase, out Color colour)

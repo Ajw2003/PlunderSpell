@@ -86,3 +86,10 @@ past — those belong to `Guards`/`Castle` respectively.
   work by accident of that specific unspawned-is-its-own-authority convention, but any new code in
   this system that checks `isServer` alone, without the `isSpawned` guard, will silently do nothing
   offline.
+
+## Speech noise
+
+`NoiseType.Speech` (appended last) carries `NoiseEvent.Transcript`. `NoiseBroadcaster.BroadcastSpeech`
+delivers it to every `INoiseListener` like any noise, then asks each `IEavesdropper.Overhear` whether the
+words were taken in and returns that count (the alarm hears the noise but is not an eavesdropper).
+`CastleGuard` is one: an asleep or stunned guard answers false; otherwise it stores `LastOverheard`.

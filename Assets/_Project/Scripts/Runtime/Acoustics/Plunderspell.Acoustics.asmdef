@@ -3,7 +3,8 @@
     "rootNamespace": "Plunderspell.Acoustics",
     "references": [
         "PurrNet.Runtime",
-        "Plunderspell.Voice"
+        "Plunderspell.Voice",
+        "Plunderspell.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

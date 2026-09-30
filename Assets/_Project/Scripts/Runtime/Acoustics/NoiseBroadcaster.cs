@@ -24,6 +24,26 @@ namespace Plunderspell.Acoustics
         public static int Broadcast(Vector3 origin, float radius, float strength, NoiseType type,
             int listenerLayerMask = ~0, int geometryLayerMask = 0)
         {
+            return BroadcastCore(origin, radius, strength, type, null, listenerLayerMask, geometryLayerMask, out _);
+        }
+
+        /// <summary>
+        /// Broadcasts spoken words as a <see cref="NoiseType.Speech"/> noise. Returns how many
+        /// <see cref="IEavesdropper"/>s took in the words (not how many listeners heard the noise: the
+        /// alarm hears speech too but is not a guard).
+        /// </summary>
+        public static int BroadcastSpeech(Vector3 origin, float radius, float strength, string transcript,
+            int listenerLayerMask = ~0, int geometryLayerMask = 0)
+        {
+            BroadcastCore(origin, radius, strength, NoiseType.Speech, transcript, listenerLayerMask,
+                geometryLayerMask, out int understood);
+            return understood;
+        }
+
+        private static int BroadcastCore(Vector3 origin, float radius, float strength, NoiseType type,
+            string transcript, int listenerLayerMask, int geometryLayerMask, out int understood)
+        {
+            understood = 0;
             if (radius <= 0f || strength <= 0f)
                 return 0;
 
@@ -46,8 +66,12 @@ namespace Plunderspell.Acoustics
                 if (attenuated <= AcousticEmitter.MinAudibleStrength)
                     continue;
 
-                listener.OnNoiseHeard(new NoiseEvent(origin, attenuated, type));
+                var evt = new NoiseEvent(origin, attenuated, type, transcript);
+                listener.OnNoiseHeard(evt);
                 heard++;
+
+                if (type == NoiseType.Speech && listener is IEavesdropper eavesdropper && eavesdropper.Overhear(evt))
+                    understood++;
             }
 
             return heard;

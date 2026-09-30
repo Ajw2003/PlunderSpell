@@ -363,6 +363,7 @@ namespace Plunderspell.EditorTools
             root.AddComponent<StatusEffectReceiver>();
             root.AddComponent<AcousticEmitter>();
             root.AddComponent<FootstepNoiseEmitter>();
+            root.AddComponent<PlayerChatterRelay>();
             root.AddComponent<PushToCastController>();
             SpellCastingSystem casting = root.AddComponent<SpellCastingSystem>();
             casting.SetLexicon(LoadLexicon());

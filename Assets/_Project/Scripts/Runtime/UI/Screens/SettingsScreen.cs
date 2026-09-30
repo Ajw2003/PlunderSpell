@@ -63,6 +63,7 @@ namespace Plunderspell.UI.Screens
             UIFactory.CreateEyebrow(voice, "Eyebrow", "Voice", colour: UITheme.Voice);
             AddMicrophoneRow(voice);
             AddMicGainRow(voice);
+            AddChatterRow(voice);
             AddNote(voice, "Hold V in a raid to see the level meter.");
 
             UIFactory.CreateEyebrow(graphics, "Eyebrow", "Graphics");
@@ -165,6 +166,21 @@ namespace Plunderspell.UI.Screens
             RefreshMicGainLabel();
         }
 
+        /// <summary>Opt-in: between casts the game also writes down what you say, and guards can overhear it.
+        /// Runs on this machine; only the words go to the host in co-op. Use a headset so game sound is not "heard".</summary>
+        private void AddChatterRow(Transform parent)
+        {
+            RectTransform row = AddRow(parent, "ChatterRow", "Guards hear my voice", 52f, out Text value);
+            value.gameObject.SetActive(false);
+
+            _chatter = UIFactory.CreateSegmented(row, "ChatterButton", new[] { "Off", "On" },
+                AudioInputSettings.GuardsHearChatter ? 1 : 0, index => AudioInputSettings.GuardsHearChatter = index == 1,
+                new Vector2(0f, 52f));
+            PlaceControl((RectTransform)_chatter.transform, 52f);
+        }
+
+        private UISegmentedControl _chatter;
+
         private void AddQualityRow(Transform parent)
         {
             RectTransform row = AddRow(parent, "QualityRow", "Quality", 52f, out Text value);
@@ -197,6 +213,8 @@ namespace Plunderspell.UI.Screens
         {
             RefreshMicrophoneLabel();
             RefreshOutputLabel();
+            if (_chatter != null)
+                _chatter.SetSelected(AudioInputSettings.GuardsHearChatter ? 1 : 0);
             if (_graphics != null)
                 _graphics.SetSelected(QualitySettings.GetQualityLevel());
         }
