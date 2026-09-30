@@ -84,6 +84,9 @@ together and what was deliberately left undocumented, and why.
   [`docs/plans/artbible-enemy-animations.md`](../plans/artbible-enemy-animations.md): **awaiting
   approval.** How the 16 ArtForge enemies get into a raid, and how they get animated. Review page:
   [`docs/generated/enemy-animation-plan/`](../generated/enemy-animation-plan/index.html).
+- [`docs/plans/guards-hear-chatter.md`](../plans/guards-hear-chatter.md): **awaiting approval.**
+  Guards hear what players say between casts (opt-in, local speech-to-text, words sent only to the
+  host), react to it as noise, and remember the words for a later local-language-model stage.
 - [`docs/plans/night-atmosphere.md`](../plans/night-atmosphere.md) — the anchored aesthetic: night,
   warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
   the surface shader, post-processing and the Low/Medium/High quality levels. Look samples in
