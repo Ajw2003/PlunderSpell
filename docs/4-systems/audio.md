@@ -224,8 +224,26 @@ measured, in Play from `RaidScene`, solo host:
 - the phys_ files start at once (impacts peak within 30 ms), except the scrape and roll loops, which
   swell for 0.5-2.3 s before their loudest part.
 
-So no delay was found in Unity for a solo drop. Not yet measured: a co-op client, where loot bodies
-are kinematic and follow the host.
+So no delay was found in Unity for a solo drop.
+
+Co-op, the normal case (`Tools/Unity/coop_drop_latency.sh`: Editor hosts, the Development build
+joins, the host lifts the piece nearest its camera 2 m and drops it, both sides log), two runs:
+
+| Side | Piece | Visible mesh down | Collision on this machine | Sound starts |
+|---|---|---|---|---|
+| host | FaienceHippopotamus | 638 ms | 634 ms | 644 ms |
+| client | FaienceHippopotamus | 584 ms after its fall began there | never | 404 ms (`phys_break_ceramic_01`) |
+| host | OxhideIngot | 642 ms | 640 ms | 642 ms |
+| client | OxhideIngot | 584 ms | never | never |
+
+- On the host, sound and picture are within 10 ms.
+- On a client, a piece it does not simulate raises no collision, so **impact sounds never play on a
+  client** for pieces the host simulates (every carried piece is host-simulated, #169).
+- A break does play on the client, from the replicated ruin (`LootValue.Ruined`), but it arrives
+  about 180 ms **before** the client's interpolated picture shows the hit.
+- Unity's own output path is 0-22 ms. Anything later than that happens after Unity: the Windows
+  device (Bluetooth headphones typically add 150-300 ms; a TV's HDMI audio adds its own). Not
+  measured: that needs a microphone recording the speaker.
 
 ## The listener
 
