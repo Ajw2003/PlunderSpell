@@ -214,9 +214,12 @@ but what plays is a recorded line re-voiced per guard:
    id (`NetworkIdentity.objectId`), which is the same on the host and every client, so a guard has one
    voice everywhere and two guards of one archetype differ. Before the guard has spawned the id is 0;
    the seed then comes from prefab name and first position instead (`GuardVoiceProfiles.SeedFor`).
-3. `GuardSpeechRenderer` runs `VoiceDisguise.Render` on the main thread at first use, peak-normalises
-   to 0.8, and keeps the last 48 clips (an evicted clip is destroyed). A render over 40 ms logs a
-   warning naming the clip; in the Editor most first renders take 40 to 300 ms.
+3. `GuardSpeechRenderer.TryGet` renders on a worker thread (`Task.Run`), peak-normalises to 0.8, and
+   `Pump()` (called from `GuardVoiceDirector.Update`) turns finished renders into clips on the main
+   thread; the cache keeps the last 48 (an evicted clip is destroyed). `TryGet` returns false while a
+   clip renders and the director keeps the line pending for up to 1 s (`PendingSeconds`), asking for the
+   same clip each frame, so the first line a guard says is late by a few frames and not dropped. The
+   blocking `Get` is for tests and tools. A blocking render over 40 ms logs a warning.
 4. `AudioDirector.PlayClip` plays it through the voice pool (six voices, nearest win) on the mixer
    group and reach of the bank's first `vo_` entry (Creatures), so the volume sliders reach it. The
    director's situation gain is 0.5 for murmur, lost and asleep, 0.75 for alert, search, hurt and
@@ -524,3 +527,19 @@ Play-mode reads (which `AudioSource`s were playing, on which group) are in
 `docs/5-today/Today.md` for the day they were taken. They show the sources, the clips and the groups.
 They cannot show how anything sounds, or whether a level is right, and the listening pass is still to
 do.
+
+### Trap: frame drops from guard speech (fixed 2026-09-30, #184)
+
+The first version rendered each guard's line on the main thread the first time a guard said it. The
+pitch match in `VoiceDisguise.BestMatch` compared 441 candidate positions over a 550-sample window 80
+times per second of audio, about 14 ms per second of audio on a fast .NET runtime (measured: 20 ms for a
+1.5 s clip, 138 ms for the 10 s snore), and the Editor log showed 163 to 309 ms renders, each a frozen
+frame. Two changes: the search is now coarse then fine (every fourth candidate on every fourth sample,
+then the nine nearest at full resolution: 2.3 ms for 1.5 s, 15 ms for 10 s on the same runtime; in the
+Unity Editor 26 ms for the 5.1 s shout clip and 52 ms for the snore), and rendering happens off the
+main thread, where `TryGet` costs 0.08 ms. Measured with `Tools/Unity/frame_cost_check.sh` in a solo
+Editor raid with "Guards hear my voice" on: about 5 to 6 ms per frame, and with 15 guards all made to
+speak at once the worst frames were 34 to 51 ms, one frame per pass, with no slow-render warnings. How
+much of that one frame is the speech and how much is the script teleporting 15 guards was not
+separated. The always-listening recogniser showed no measurable cost in silence (same frame times with
+it on and off); its cost while someone talks was not measured.

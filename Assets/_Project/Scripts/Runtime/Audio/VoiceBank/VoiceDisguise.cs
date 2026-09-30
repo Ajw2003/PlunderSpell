@@ -16,6 +16,7 @@ namespace Plunderspell.Audio.VoiceBank
         private const float HopSeconds = 0.0125f;
         private const float SearchSeconds = 0.010f;
         private const float FadeSeconds = 0.005f;
+        private const int CoarseStep = 4;
 
         public static float[] Render(float[] input, int sampleRate, DisguiseProfile profile)
         {
@@ -114,6 +115,9 @@ namespace Plunderspell.Audio.VoiceBank
             return output;
         }
 
+        // The match is found in two passes: a coarse one over every few candidates using every few samples of
+        // the window, then a fine one around the winner. Scanning every candidate at full resolution cost
+        // about 14 ms per second of audio, enough to drop frames when a guard spoke a long line.
         private static int BestMatch(float[] input, int referenceStart, int nominal, int search, int window, int lastStart)
         {
             int reference = Math.Min(referenceStart, input.Length - window);
@@ -123,17 +127,22 @@ namespace Plunderspell.Audio.VoiceBank
 
             int best = low;
             double bestScore = double.NegativeInfinity;
-            for (int candidate = low; candidate <= high; candidate++)
+            for (int candidate = low; candidate <= high; candidate += CoarseStep)
             {
-                double dot = 0;
-                double energy = 0;
-                for (int i = 0; i < window; i++)
+                double score = MatchScore(input, candidate, reference, window, CoarseStep);
+                if (score > bestScore)
                 {
-                    float value = input[candidate + i];
-                    dot += value * input[reference + i];
-                    energy += value * value;
+                    bestScore = score;
+                    best = candidate;
                 }
-                double score = dot / Math.Sqrt(energy + 1e-9);
+            }
+
+            int fineLow = Math.Max(low, best - CoarseStep);
+            int fineHigh = Math.Min(high, best + CoarseStep);
+            bestScore = double.NegativeInfinity;
+            for (int candidate = fineLow; candidate <= fineHigh; candidate++)
+            {
+                double score = MatchScore(input, candidate, reference, window, 1);
                 if (score > bestScore)
                 {
                     bestScore = score;
@@ -141,6 +150,19 @@ namespace Plunderspell.Audio.VoiceBank
                 }
             }
             return best;
+        }
+
+        private static double MatchScore(float[] input, int candidate, int reference, int window, int stride)
+        {
+            double dot = 0;
+            double energy = 0;
+            for (int i = 0; i < window; i += stride)
+            {
+                float value = input[candidate + i];
+                dot += value * input[reference + i];
+                energy += value * value;
+            }
+            return dot / Math.Sqrt(energy + 1e-9);
         }
 
         private static void LowPass(float[] samples, float cutoffHz, int sampleRate)

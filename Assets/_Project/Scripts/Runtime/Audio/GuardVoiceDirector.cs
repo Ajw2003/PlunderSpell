@@ -10,6 +10,8 @@ namespace Plunderspell.Audio
     public sealed class GuardVoiceDirector : MonoBehaviour
     {
         private const float LineGapSeconds = 2f;
+        // How long a line waits for its clip to finish rendering before it is dropped.
+        private const float PendingSeconds = 1f;
         private const float MurmurQuietSeconds = 8f;
         private const float MurmurMin = 8f;
         private const float MurmurMax = 20f;
@@ -35,6 +37,9 @@ namespace Plunderspell.Audio
             public float NextMurmurAt;
             public float NextAsleepAt;
             public float SpeakingUntil;
+            public GuardLine? PendingLine;
+            public AudioClip PendingSource;
+            public float PendingAt;
             public string Name;
             public int Seed;
             public Vector3 FirstPosition;
@@ -61,6 +66,8 @@ namespace Plunderspell.Audio
         {
             if (_director == null)
                 return;
+
+            _renderer.Pump();
 
             if (_alarm == null && _director.Alarm != null)
             {
@@ -128,6 +135,11 @@ namespace Plunderspell.Audio
             foreach (KeyValuePair<int, Record> pair in _records)
             {
                 Record record = pair.Value;
+                if (record.Gone && record.PendingLine == GuardLine.Death)
+                {
+                    RetryPending(record, record.LastHead, now);
+                    continue;
+                }
                 if (record.Gone || record.SeenFrame == Time.frameCount || record.Guard != null)
                     continue;
 
@@ -174,6 +186,15 @@ namespace Plunderspell.Audio
             record.AttackCount = attacks;
             record.Health = health;
 
+            // A line whose clip was still being rendered last frame is tried again, unless something newer came up.
+            if (line == null && record.PendingLine.HasValue && record.PendingLine != GuardLine.Death)
+            {
+                if (now - record.PendingAt > PendingSeconds)
+                    ClearPending(record);
+                else
+                    line = record.PendingLine;
+            }
+
             if (state == GuardAlertState.Incapacitated)
                 record.NextMurmurAt = now + Random.Range(MurmurMin, MurmurMax);
             if (line == GuardLine.Murmur)
@@ -205,14 +226,25 @@ namespace Plunderspell.Audio
             string situation = GuardSpeechBank.Situation(line);
             if (!SoundFocus.Allows(SpeechGroupPrefix + situation))
                 return false;
-            if (!GuardSpeechBank.Shared.TryPick(record.Profile.Age, line, _rng, out AudioClip source))
+
+            // The same clip is asked for again while it renders, so the wait ends once it is ready.
+            AudioClip source = record.PendingLine == line ? record.PendingSource : null;
+            if (source == null && !GuardSpeechBank.Shared.TryPick(record.Profile.Age, line, _rng, out source))
                 return false;
 
             DisguiseProfile disguise = DisguiseOf(record);
             string key = record.Profile.Age + "/" + record.Profile.Voice + "/" + record.Seed;
-            AudioClip clip = _renderer.Get(source, disguise, key);
-            if (clip == null)
+            if (!_renderer.TryGet(source, disguise, key, out AudioClip clip))
+            {
+                if (record.PendingLine != line)
+                {
+                    record.PendingLine = line;
+                    record.PendingAt = now;
+                }
+                record.PendingSource = source;
                 return false;
+            }
+            ClearPending(record);
 
             AudioSource playing = _director.PlayClip(clip, head, SituationGain(line), SoundPoolKind.Voice);
             if (playing == null)
@@ -224,6 +256,20 @@ namespace Plunderspell.Audio
                       + source.name + " pitch x" + disguise.PitchRatio.ToString("F2")
                       + " speed x" + disguise.Speed.ToString("F2"));
             return true;
+        }
+
+        private void RetryPending(Record record, Vector3 head, float now)
+        {
+            if (now - record.PendingAt > PendingSeconds)
+                ClearPending(record);
+            else
+                Speak(record, record.PendingLine.Value, head, now);
+        }
+
+        private static void ClearPending(Record record)
+        {
+            record.PendingLine = null;
+            record.PendingSource = null;
         }
 
         private DisguiseProfile DisguiseOf(Record record)
