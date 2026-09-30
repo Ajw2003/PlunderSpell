@@ -22,7 +22,7 @@ namespace Plunderspell.Guards
     /// replicated transform and the replicated alert state.
     /// </summary>
     [RequireComponent(typeof(StatusEffectReceiver))]
-    public class CastleGuard : NetworkBehaviour, INoiseListener, IHealth
+    public class CastleGuard : NetworkBehaviour, INoiseListener, IEavesdropper, IHealth
     {
         [Header("Senses")]
         [Tooltip("How far this guard can see while the castle is calm, in metres.")]
@@ -462,6 +462,30 @@ namespace Plunderspell.Guards
 
             if (_state.value == GuardAlertState.Patrolling)
                 EnterState(GuardAlertState.Investigating, alarm);
+        }
+
+        /// <summary>The last words this guard took in, or null. Ends with the raid: a fresh garrison spawns each time.</summary>
+        public string LastOverheard { get; private set; }
+
+        /// <summary>How many spoken lines this guard has taken in.</summary>
+        public int OverheardCount { get; private set; }
+
+        /// <summary>Raised with the words whenever this guard takes in speech. The hook for later dialogue.</summary>
+        public event Action<string> Overheard;
+
+        /// <summary>
+        /// <see cref="IEavesdropper"/>: runs after <see cref="OnNoiseHeard"/>, so a shout that woke this
+        /// guard counts. An asleep or stunned guard hears the noise but not the words.
+        /// </summary>
+        public bool Overhear(NoiseEvent speech)
+        {
+            if (IsIncapacitated || string.IsNullOrWhiteSpace(speech.Transcript))
+                return false;
+
+            LastOverheard = speech.Transcript;
+            OverheardCount++;
+            Overheard?.Invoke(speech.Transcript);
+            return true;
         }
 
         /// <summary>Noise at or above this strength wakes a sleeping guard.</summary>

@@ -15,7 +15,7 @@ namespace Plunderspell.UI.Screens
         protected override void OnBuild()
         {
             UIFactory.CreateFullStretchPanel(transform, "Overlay", new Color(0f, 0f, 0f, 0.7f));
-            var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 700f), Vector2.zero, UITheme.PanelBackground);
+            var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 780f), Vector2.zero, UITheme.PanelBackground);
 
             var title = UIFactory.CreateText(panel, "Title", "SETTINGS", UITheme.HeaderFontSize, UITheme.TextPrimary);
             title.rectTransform.anchorMin = new Vector2(0.5f, 1f);
@@ -29,7 +29,7 @@ namespace Plunderspell.UI.Screens
             var listRect = (RectTransform)listGo.transform;
             listRect.anchorMin = new Vector2(0.5f, 0.5f);
             listRect.anchorMax = new Vector2(0.5f, 0.5f);
-            listRect.sizeDelta = new Vector2(440f, 450f);
+            listRect.sizeDelta = new Vector2(440f, 530f);
             listRect.anchoredPosition = new Vector2(0f, 10f);
             UIFactory.AddVerticalLayout(listRect, 30f, new RectOffset(0, 0, 0, 0));
 
@@ -42,6 +42,10 @@ namespace Plunderspell.UI.Screens
             RefreshMicrophoneLabel();
 
             AddMicGainRow(listRect);
+
+            var chatterButton = UIFactory.CreateButton(listRect, "ChatterButton", string.Empty, ToggleChatter, new Vector2(440f, 44f));
+            _chatterLabel = chatterButton.GetComponentInChildren<Text>();
+            RefreshChatterLabel();
 
             var graphicsButton = UIFactory.CreateButton(listRect, "GraphicsButton", string.Empty, CycleGraphics, new Vector2(440f, 44f));
             _graphicsLabel = graphicsButton.GetComponentInChildren<Text>();
@@ -112,6 +116,22 @@ namespace Plunderspell.UI.Screens
 
         private Text _micGainLabel;
 
+        private Text _chatterLabel;
+
+        /// <summary>Opt-in: between casts the game also writes down what you say, and guards can overhear it.
+        /// Runs on this machine; only the words go to the host in co-op. Use a headset so game sound is not "heard".</summary>
+        private void ToggleChatter()
+        {
+            AudioInputSettings.GuardsHearChatter = !AudioInputSettings.GuardsHearChatter;
+            RefreshChatterLabel();
+        }
+
+        private void RefreshChatterLabel()
+        {
+            if (_chatterLabel != null)
+                _chatterLabel.text = $"Guards hear my voice: {(AudioInputSettings.GuardsHearChatter ? "On" : "Off")}";
+        }
+
         private void OnMasterVolumeChanged(float value)
         {
             AudioListener.volume = value;
@@ -129,6 +149,7 @@ namespace Plunderspell.UI.Screens
         protected override void OnShown()
         {
             RefreshMicrophoneLabel();
+            RefreshChatterLabel();
             RefreshGraphicsLabel();
         }
 

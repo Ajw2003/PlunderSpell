@@ -1,6 +1,6 @@
 # Plan: guards hear what players say
 
-**Status: awaiting the owner's review (written 2026-09-30).** Nothing in this plan is built yet.
+**Status: code written 2026-09-30 on `claude/guards-player-chatter-plan-ac93ff`; not compiled, not run.** Approved by the owner with all recommended options. Step 8 is untested. Differences from the plan: see `docs/5-today/Today.md`.
 Roadmap: M5 "Household awake" (`docs/2-roadmap/Roadmap.md`). It is the second of three stages
 discussed on 2026-09-30:
 

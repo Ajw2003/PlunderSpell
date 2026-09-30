@@ -22,10 +22,13 @@ namespace Plunderspell.Voice
     /// the main thread, and maps English spellings the model can hear back to the Latin lexicon
     /// words via <see cref="SetVocabulary"/>.
     /// </summary>
-    public class VoskVoiceInputService : IVoiceInputService, IPhraseVocabularyTarget
+    public class VoskVoiceInputService : IVoiceInputService, IPhraseVocabularyTarget, IChatterSource
     {
         public bool IsListening { get; private set; }
         public event Action<VoiceRecognitionResult> OnPhraseRecognized;
+        public event Action<ChatterReport> ChatterHeard;
+
+        private bool _chatterEnabled;
 
         // Model lives under StreamingAssets so it ships read-only with the player.
         public const string ModelRelativePath = "VoskModels/small-en-us";
@@ -68,6 +71,11 @@ namespace Plunderspell.Voice
         // The Settings microphone gain, read when the cast key goes down so a change applies to the
         // next cast without a lookup every frame.
         private float _gain = 1f;
+
+        // Free-form recogniser on the same Model, fed only while the cast key is up and chatter is on.
+        private VoskRecognizer _chatterRecognizer;
+        private float _chatterPeakRms;
+        private float _chatterGain = 1f;
         private short[] _shortBuffer = new short[SampleRate];
         private MainThreadPump _pump;
 
@@ -92,6 +100,45 @@ namespace Plunderspell.Voice
             });
         }
 #endif
+
+        /// <summary>
+        /// Listens between casts and reports what was said. Turning it on opens the microphone and
+        /// starts a free-form recogniser; off disposes it. Nothing from before the switch is read.
+        /// </summary>
+        public bool ChatterEnabled
+        {
+            get => _chatterEnabled;
+            set
+            {
+                if (_chatterEnabled == value)
+                    return;
+                _chatterEnabled = value;
+#if !HEADLESS
+                if (value)
+                {
+                    if (Microphone.devices == null || Microphone.devices.Length == 0
+                        || !OpenMicrophone(MicrophonePicker.Resolve()))
+                    {
+                        Debug.LogWarning("[Chatter] No usable microphone; guards will not hear speech.");
+                        _chatterEnabled = false;
+                        return;
+                    }
+                    EnsurePump();
+                    _lastSamplePosition = Microphone.GetPosition(_micDevice);
+                    _chatterGain = Plunderspell.Core.AudioInputSettings.MicGain;
+                    _chatterPeakRms = 0f;
+                    EnsureChatterRecognizer();
+                    Debug.Log("[Chatter] Listening between casts.");
+                }
+                else
+                {
+                    _chatterRecognizer?.Dispose();
+                    _chatterRecognizer = null;
+                    Debug.Log("[Chatter] Stopped listening between casts.");
+                }
+#endif
+            }
+        }
 
         /// <summary>
         /// Constrains recognition to these heard phrases and maps each back to its lexicon word.
@@ -152,6 +199,12 @@ namespace Plunderspell.Voice
                 return;
 
             EnsurePump();
+            // Words said just before the key went down are chatter, not part of the spell.
+            if (_chatterEnabled)
+            {
+                ReadMicrophone();
+                FlushChatter();
+            }
             // Only what is said from now on: the open microphone has been recording all along.
             _lastSamplePosition = Microphone.GetPosition(_micDevice);
             LastPeakRms = 0f;
@@ -305,11 +358,19 @@ namespace Plunderspell.Voice
             return json.ToString();
         }
 
-        /// <summary>Feeds every sample recorded since the last call to the recogniser. Main thread only.</summary>
+        /// <summary>Feeds every sample recorded since the last call to whichever recogniser owns the
+        /// microphone now: the cast one while the key is held, else the chatter one. Main thread only.</summary>
         private void ReadMicrophone()
         {
-            if (!IsListening || _micClip == null || _recognizer == null)
+            bool casting = IsListening;
+            if (!(casting || _chatterEnabled) || _micClip == null)
                 return;
+            if (casting ? _recognizer == null : (_chatterRecognizer == null && !EnsureChatterRecognizer()))
+            {
+                // Chatter with the model still loading: skip ahead rather than replay old audio later.
+                _lastSamplePosition = Microphone.GetPosition(_micDevice);
+                return;
+            }
 
             int position = Microphone.GetPosition(_micDevice);
             int available = position - _lastSamplePosition;
@@ -328,22 +389,107 @@ namespace Plunderspell.Voice
             _lastSamplePosition = position;
 
             // Gain first, so recognition, loudness and the level meter all hear the same voice.
-            VoiceUtility.ApplyGain(_floatBuffer, available, _gain);
+            VoiceUtility.ApplyGain(_floatBuffer, available, casting ? _gain : _chatterGain);
             CurrentRms = VoiceUtility.ComputeRms(_floatBuffer, available);
-            LastPeakRms = Mathf.Max(LastPeakRms, CurrentRms);
+            if (casting)
+                LastPeakRms = Mathf.Max(LastPeakRms, CurrentRms);
+            else
+                _chatterPeakRms = Mathf.Max(_chatterPeakRms, CurrentRms);
             for (int i = 0; i < available; i++)
                 _shortBuffer[i] = (short)Mathf.Clamp(_floatBuffer[i] * short.MaxValue, short.MinValue, short.MaxValue);
 
             try
             {
-                // True means the recogniser found the end of an utterance mid-hold: emit it now.
-                if (_recognizer.AcceptWaveform(_shortBuffer, available))
-                    EmitFromJson(_recognizer.Result());
+                // True means the recogniser found the end of an utterance: emit it now.
+                if (casting)
+                {
+                    if (_recognizer.AcceptWaveform(_shortBuffer, available))
+                        EmitFromJson(_recognizer.Result());
+                }
+                else if (_chatterRecognizer.AcceptWaveform(_shortBuffer, available))
+                {
+                    EmitChatter(_chatterRecognizer.Result());
+                }
             }
             catch (Exception e)
             {
                 Debug.LogWarning($"[Vosk] AcceptWaveform failed: {e.Message}");
             }
+        }
+
+        /// <summary>A free-form recogniser sharing the cast recogniser's model. False while the model loads.</summary>
+        private bool EnsureChatterRecognizer()
+        {
+            if (_chatterRecognizer != null)
+                return true;
+            if (_modelLoad == null || !_modelLoad.IsCompleted || _modelLoad.IsFaulted)
+                return false;
+            try
+            {
+                _chatterRecognizer = new VoskRecognizer(_modelLoad.Result, SampleRate);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Chatter] Failed to create recognizer: {e.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>Ends the chatter utterance in progress (the cast key just went down).</summary>
+        private void FlushChatter()
+        {
+            if (_chatterRecognizer == null)
+                return;
+            try
+            {
+                EmitChatter(_chatterRecognizer.FinalResult());
+                _chatterRecognizer.Reset();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Chatter] Flush failed: {e.Message}");
+            }
+        }
+
+        private void EmitChatter(string json)
+        {
+            float peak = _chatterPeakRms;
+            _chatterPeakRms = 0f;
+            _chatterGain = Plunderspell.Core.AudioInputSettings.MicGain;
+            if (string.IsNullOrEmpty(json))
+                return;
+
+            string heard;
+            try
+            {
+                heard = JsonUtility.FromJson<VoiceRecognizerJson>(json)?.text;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Chatter] Unreadable result '{json}': {e.Message}");
+                return;
+            }
+
+            heard = heard?.Replace(UnknownToken, string.Empty).Trim();
+            if (!ChatterFilter.IsWorthReporting(heard, peak))
+                return;
+
+            Debug.Log($"[Chatter] Heard \"{heard}\" (rms={peak:0.00})");
+            ChatterHeard?.Invoke(new ChatterReport(heard, peak, VoiceUtility.ClassifyVolume(peak)));
+        }
+
+        /// <summary>Recognises a finished recording as chatter would, without a microphone. Test seam for fixtures.</summary>
+        public string RecognizeChatterSamples(short[] samples)
+        {
+            if (_modelLoad != null && !_modelLoad.IsCompleted)
+                _modelLoad.Wait();
+            if (!EnsureChatterRecognizer())
+                return null;
+            _chatterRecognizer.AcceptWaveform(samples, samples.Length);
+            string json = _chatterRecognizer.FinalResult();
+            _chatterRecognizer.Reset();
+            return JsonUtility.FromJson<VoiceRecognizerJson>(json)?.text;
         }
 
         /// <summary>Parse a Vosk JSON payload and, if it holds recognisable text, raise the event.</summary>

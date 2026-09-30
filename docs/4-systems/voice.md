@@ -88,6 +88,16 @@ classification and the level meter all hear the same, amplified voice. So a quie
 reach a normal or shouted cast, and a hot one can be turned down so a normal voice is not a shout.
 Raising it also raises background noise into the recogniser. Tests: `MicGainTests`.
 
+### Chatter (guards hear what you say)
+
+Opt-in (Settings, "Guards hear my voice", off by default, remembered). While on and the cast key is up,
+`VoskVoiceInputService` feeds the microphone to a second, free-form `VoskRecognizer` built from the same
+`Model` and reports each finished utterance as a `ChatterReport` (`IChatterSource`). Cast speech never
+becomes chatter: pressing the cast key first flushes the chatter recogniser, then the cast recogniser owns
+the samples. Utterances with peak RMS under `ChatterFilter.MinChatterRms` (0.02) are dropped. Audio never
+leaves the machine; in co-op only the words go to the host (`PlayerChatterRelay`, see net.md). Plan and
+tunables: `docs/plans/guards-hear-chatter.md`.
+
 ## Invariants
 
 - **Both providers must classify and normalise identically.** `VoiceUtility` is the single place

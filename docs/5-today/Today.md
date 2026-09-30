@@ -1,5 +1,13 @@
 # Today
 
+**2026-09-30 - guards hear chatter: code written, not yet compiled.** Built plan steps 1-7 and 9 of
+`docs/plans/guards-hear-chatter.md` (setting, second recogniser, `NoiseType.Speech` + `IEavesdropper`,
+`PlayerChatterRelay` on the RaidPlayer prefab, Settings row, HUD caption, `ChatterTests`). Not compiled or
+run: the only open Editor is in Play mode on the main checkout, not this worktree. Step 8 checks are
+untested. Deviations: `TellSpeaker` also carries the volume byte; the relay's geometry layer mask is empty
+in the prefab (like `AcousticEmitter` and `SpellCastingSystem` today), so walls do not yet muffle chatter
+in the raid. The two problems found while planning are still unfiled.
+
 **2026-09-30 — plan: guards hear chatter.** Discussed local speech/LLM guard reactions and a
 mimic mode; the owner chose to go straight to guards hearing players' free speech. Written up for
 review as `docs/plans/guards-hear-chatter.md`; nothing built. Found while planning: a co-op

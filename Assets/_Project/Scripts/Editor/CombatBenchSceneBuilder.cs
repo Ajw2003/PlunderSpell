@@ -177,6 +177,7 @@ namespace Plunderspell.EditorTools
             root.AddComponent<StatusEffectReceiver>();
             root.AddComponent<AcousticEmitter>();
             root.AddComponent<FootstepNoiseEmitter>();
+            root.AddComponent<PlayerChatterRelay>();
             root.AddComponent<IntruderTag>();
             WireCasting(root);
             return root;

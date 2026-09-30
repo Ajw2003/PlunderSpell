@@ -11,7 +11,9 @@ namespace Plunderspell.Acoustics
         VoiceCast,
         ItemDrop,
         Explosion,
-        MeleeSwing
+        MeleeSwing,
+        /// <summary>Ordinary talk between casts; carries <see cref="NoiseEvent.Transcript"/>. Appended last so stored values do not shift.</summary>
+        Speech
     }
 
     /// <summary>
@@ -29,11 +31,20 @@ namespace Plunderspell.Acoustics
         /// <summary>What produced the noise.</summary>
         public NoiseType Type;
 
+        /// <summary>The words spoken; only set for <see cref="NoiseType.Speech"/>, otherwise null.</summary>
+        public string Transcript;
+
         public NoiseEvent(Vector3 origin, float strength, NoiseType type)
+            : this(origin, strength, type, null)
+        {
+        }
+
+        public NoiseEvent(Vector3 origin, float strength, NoiseType type, string transcript)
         {
             Origin = origin;
             Strength = strength;
             Type = type;
+            Transcript = transcript;
         }
     }
 
@@ -45,5 +56,15 @@ namespace Plunderspell.Acoustics
     public interface INoiseListener
     {
         void OnNoiseHeard(NoiseEvent noise);
+    }
+
+    /// <summary>
+    /// Implemented by listeners that can take in spoken words, not just the noise. Called after
+    /// <see cref="INoiseListener.OnNoiseHeard"/> for a speech noise; true means the words were understood
+    /// (an asleep or stunned guard hears the noise but not the words).
+    /// </summary>
+    public interface IEavesdropper
+    {
+        bool Overhear(NoiseEvent speech);
     }
 }

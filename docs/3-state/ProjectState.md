@@ -13,7 +13,7 @@ judgement until that milestone's acceptance is checked, and only M0's has been.
 | M2 Vertical slice | 20 | ~70% | Loop plays solo and over UDP; #55 never run; its listed issues open |
 | M3 Other Ages | 15 | ~60% | Bronze and Late have their own rooms; High Medieval and Powder borrow |
 | M4 Lair and Market | 15 | ~5% | Debt is a number on the Lair screen; no market, no 3D Lair |
-| M5 Household awake | 10 | ~30% | Guards patrol, investigate noise, chase and search; the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
+| M5 Household awake | 10 | ~30% | Guards patrol, investigate noise, chase and search; the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller; opt-in guards-hear-chatter written but unverified |
 | M6 Castle fights back | 10 | ~5% | Doors and hazards are layout tags; revamp phases 3-5 not started |
 | M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, a partial settings menu; no animation |
 | **Total** | 100 | **≈ 41%** | |
