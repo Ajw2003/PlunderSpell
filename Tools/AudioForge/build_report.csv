@@ -344,15 +344,15 @@ Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_stone_02.ogg,sfx_spell
 Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_stone_03.ogg,sfx_spell_frango_shatter_stone,3,library,L,1.769,-5.8,-17.0,lib:p0ss/magicfail2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_wood_01.ogg,sfx_spell_frango_shatter_wood,1,library,L,1.01,-5.7,-17.0,lib:p0ss/magicfail.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_wood_02.ogg,sfx_spell_frango_shatter_wood,2,library,L,0.971,-5.8,-17.0,lib:p0ss/magicfail.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
-Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_cast_01.ogg,sfx_spell_ignis_cast,1,placeholder,A,0.3,-7.9,-20.5,synth:whumph + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_cast_02.ogg,sfx_spell_ignis_cast,2,placeholder,A,0.3,-7.5,-20.5,synth:whumph + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_cast_03.ogg,sfx_spell_ignis_cast,3,placeholder,A,0.3,-7.5,-20.5,synth:whumph + synth:shimmer,original (AudioForge)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_cast_01.ogg,sfx_spell_ignis_cast,1,library,L,1.257,-3.5,-20.5,lib:ayden-own/IngnisBall.wav,Owner's own work (Ayden)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_cast_02.ogg,sfx_spell_ignis_cast,2,library,L,1.209,-3.5,-20.5,lib:ayden-own/IngnisBall.wav,Owner's own work (Ayden)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_cast_03.ogg,sfx_spell_ignis_cast,3,library,L,1.31,-3.5,-20.5,lib:ayden-own/IngnisBall.wav,Owner's own work (Ayden)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_impact_01.ogg,sfx_spell_ignis_impact,1,placeholder,A,0.6,-4.6,-19.0,synth:whumph + synth:crackle,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_impact_02.ogg,sfx_spell_ignis_impact,2,placeholder,A,0.6,-4.5,-19.0,synth:whumph + synth:crackle,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_impact_03.ogg,sfx_spell_ignis_impact,3,placeholder,A,0.6,-3.4,-19.0,synth:whumph + synth:crackle,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_misfire_01.ogg,sfx_spell_ignis_misfire,1,library,L,0.415,-1.0,-19.5,lib:p0ss/sand.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_misfire_02.ogg,sfx_spell_ignis_misfire,2,library,L,0.399,-1.1,-19.0,lib:p0ss/sand.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
-Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_travel_loop_01.ogg,sfx_spell_ignis_travel_loop,1,placeholder,A,2.5,-1.0,-22.1,synth:crackle + synth:hiss,original (AudioForge)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_travel_loop_01.ogg,sfx_spell_ignis_travel_loop,1,library,L,0.857,-5.6,-20.5,lib:ayden-own/IngnisBall.wav,Owner's own work (Ayden)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_cast_01.ogg,sfx_spell_levo_cast,1,library,L,1.387,-3.5,-20.5,lib:p0ss/zap2d.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_cast_02.ogg,sfx_spell_levo_cast,2,library,L,1.334,-3.4,-20.5,lib:p0ss/zap2d.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_hold_loop_01.ogg,sfx_spell_levo_hold_loop,1,library,L,2.463,-17.0,-22.0,lib:p0ss/moving.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"

@@ -1,6 +1,12 @@
 """Writes docs/generated/audio-review/index.html: one self-contained page to audition the search's candidates.
 
     python Tools/AudioForge/audioforge.py review [glob ...] [--top 5] [--all] [--root NAME ...]
+        [--candidates FILE.json] [--exclude-rejected DECISIONS.json]
+
+--candidates lists recipes by hand for some sounds ({"sound": ["lib:p0ss/explode3.ogg shift=0.8", ...]});
+those sounds show only these, each rendered to docs/generated/audio-review/previews/ so a pitch shift or
+filter is heard as the build would make it. --exclude-rejected drops files an earlier export rejected
+for the same sound from the search results.
 
 Default: every sound still synthesised as a stand-in (the coverage list); a glob narrows it, --all takes every
 sound in the manifest. For each sound the page shows its brief, the file the build made now, and the top
@@ -120,12 +126,39 @@ def recipe_for(hit, row, library):
     return " ".join(parts)
 
 
+def hand_candidate(row, recipe, index):
+    """A candidate named by recipe: rendered as the build would (shift, filters, trim), with its player on the render."""
+    from forge.build import render_layer
+    import numpy as np
+    import soundfile as sf
+    from forge import dsp
+
+    x, _ = render_layer(recipe, np.random.default_rng(0), 0)
+    peak = float(np.max(np.abs(x))) if len(x) else 0.0
+    if peak > 0:
+        x = x * (0.7 / peak)  # a preview at a steady level; the build sets the real one per category
+    preview = PAGE.parent / "previews" / f"{row['name']}_{index + 1:02d}.ogg"
+    preview.parent.mkdir(parents=True, exist_ok=True)
+    sf.write(str(preview), x, dsp.SAMPLE_RATE, format="OGG", subtype="VORBIS")
+    info = dict(sound=row["name"], recipe=recipe, root=recipe[4:].split("/")[0], file=recipe.split("/", 1)[1].split(" ")[0],
+                start=0, dur=round(len(x) / dsp.SAMPLE_RATE, 3), score=None)
+    cid = f"{row['name']}|{recipe}"
+    return (f"<div class=cand data-id='{html.escape(cid)}' data-info='{html.escape(json.dumps(info))}'>"
+            f"<button class=play data-src='{html.escape(audio_url(preview))}'>play</button>"
+            f"<div><span class=score>picked by hand</span> <span class=meta>{html.escape(recipe)} &middot; "
+            f"{len(x) / dsp.SAMPLE_RATE:.2f} s</span></div>"
+            "<div><button class=keep>Keep</button> <button class=reject>Reject</button></div>"
+            "<input class=note placeholder='note'></div>")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="audioforge.py review")
     parser.add_argument("globs", nargs="*", help="sound-name globs (default: every placeholder sound)")
     parser.add_argument("--top", type=int, default=5)
     parser.add_argument("--all", action="store_true", help="every sound in the manifest, not only placeholders")
     parser.add_argument("--root", action="append", help="candidates only from this library root (repeatable)")
+    parser.add_argument("--candidates", help="JSON: sound name -> list of lib: recipes to show instead of a search")
+    parser.add_argument("--exclude-rejected", help="an earlier review-decisions.json; its rejected files are not shown again")
     args = parser.parse_args(argv)
 
     rows = manifest_rows()
@@ -137,11 +170,18 @@ def main(argv=None):
         return 2
     library = Library(args.root)
     picks = load_picks()
+    by_hand = json.loads(Path(args.candidates).read_text(encoding="utf-8")) if args.candidates else {}
+    rejected = set()
+    if args.exclude_rejected:
+        for d in json.loads(Path(args.exclude_rejected).read_text(encoding="utf-8"))["decisions"]:
+            if d.get("decision") == "reject":
+                rejected.add((d["sound"], d.get("root"), d.get("file")))
     body = []
     n_cands = 0
     for row in chosen:
         query = query_for(row)
-        hits = library.search(query, args.top, length_limits(row))
+        hits = [] if row["name"] in by_hand else library.search(query, args.top + len(rejected), length_limits(row))
+        hits = [h for h in hits if (row["name"], h["root"], h["file"]) not in rejected][:args.top]
         cur = OUT / row["folder"] / f"{row['name']}_01.ogg"
         picked = " (a pick is set)" if (row["name"], 0) in picks else ""
         block = [f"<div class=sound data-k='{html.escape((row['name'] + ' ' + row['brief'] + ' ' + category(row)).lower())}'>",
@@ -154,7 +194,10 @@ def main(argv=None):
         if cur.exists():
             block.append(f"<div class=cur><button class=play data-src='{html.escape(audio_url(cur))}'>play</button>"
                          f"<div class=meta>now: {html.escape(row['name'])}_01.ogg{picked}</div><span></span></div>")
-        if not hits:
+        for i, recipe in enumerate(by_hand.get(row["name"], [])):
+            n_cands += 1
+            block.append(hand_candidate(row, recipe, i))
+        if not hits and row["name"] not in by_hand:
             block.append("<div class=meta>no candidate passes this sound's length rule in the indexed libraries</div>")
         for hit in hits:
             n_cands += 1

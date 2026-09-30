@@ -1,0 +1,23 @@
+{
+  "sfx_spell_ignis_impact": [
+    "lib:p0ss/explode.ogg",
+    "lib:p0ss/explode1.ogg",
+    "lib:p0ss/explode2.ogg",
+    "lib:p0ss/explode3.ogg",
+    "lib:p0ss/explode4.ogg",
+    "lib:p0ss/explode5.ogg",
+    "lib:p0ss/explode3.ogg shift=0.8",
+    "lib:p0ss/explode4.ogg shift=0.8",
+    "lib:p0ss/explode1.ogg shift=0.75"
+  ],
+  "sfx_spell_levo_release": [
+    "lib:p0ss/curse3.ogg shift=0.7",
+    "lib:p0ss/zap15.ogg shift=0.7",
+    "lib:p0ss/explode5.ogg shift=0.8",
+    "lib:p0ss/zap.ogg shift=0.7",
+    "lib:p0ss/zap9a.ogg shift=0.7",
+    "lib:p0ss/forcepulse.ogg shift=0.7",
+    "lib:p0ss/forcepush.ogg shift=0.75",
+    "lib:p0ss/forcepulse.ogg shift=0.55"
+  ]
+}

@@ -88,10 +88,6 @@ MonoBehaviour:
     - sfx_status
     - sfx_debris
   Overrides:
-  - Sound: sfx_spell_ignis_cast
-    Play: 0
-  - Sound: sfx_spell_ignis_travel_loop
-    Play: 0
   - Sound: sfx_spell_ignis_impact
     Play: 0
   - Sound: sfx_spell_levo_release

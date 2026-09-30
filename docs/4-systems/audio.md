@@ -282,10 +282,15 @@ Keep clicks; `review-decisions-2026-09-30-applied.json` is the file `apply` read
 `enchant.ogg`). 27 sounds, 41 files, now built from the pack (`Tools/AudioForge/picks.csv`).
 
 - Porta cast, open and loop keep their current sounds (owner's choice).
-- Still waiting, and muted by `SoundFocus` until replaced: `sfx_spell_ignis_cast` and
-  `sfx_spell_ignis_travel_loop` (the owner wants `IngnisBall.wav`, source not recorded yet),
-  `sfx_spell_ignis_impact` (wants a bigger explosion), `sfx_spell_levo_release` (every candidate too
-  high; wants more bass), `sfx_spell_levo_misfire` (all rejected).
+- Ignis cast and the fireball's flight use the owner's own `IngnisBall.wav` (library root
+  `ayden-own`; `docs/generated/audio-review/ingnisball-2026-09-30.json`). The spell category's length
+  cap trims the cast to about 1.3 s; the flight loop is 0.86 s.
+- Round two (`docs/generated/audio-review/index.html`, built with `review --candidates
+  round2-candidates.json --exclude-rejected review-decisions-2026-09-30.json`): `sfx_spell_ignis_impact`
+  (all six pack explosions, three also pitched down), `sfx_spell_levo_release` (the earlier candidates
+  pitched down 20-45 % for bass), `sfx_spell_levo_misfire` (six not yet rejected). Those three stay
+  muted by overrides in `SoundFocusSettings.asset` until picked. Hand-picked candidates are rendered
+  to `docs/generated/audio-review/previews/` so a pitch shift is heard as the build makes it.
 - `audioforge.py build "sfx_spell_*"` also re-rendered 10 files nobody picked (the build changed since
   they were made); those were restored from git, so unpicked sounds are exactly as before.
 
