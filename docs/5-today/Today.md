@@ -1,5 +1,11 @@
 # Today
 
+**2026-09-30 — plan: guards hear chatter.** Discussed local speech/LLM guard reactions and a
+mimic mode; the owner chose to go straight to guards hearing players' free speech. Written up for
+review as `docs/plans/guards-hear-chatter.md`; nothing built. Found while planning: a co-op
+client's spell-voice noise never reaches the host's guards, only the alarm; and
+`Tools/Headless/verify.sh` fails to build (31 errors, none in voice code) at `0119891`.
+
 **2026-09-26 — backlog pass continued on `claude/issue-backlog`.** Closed the ten issues the pass
 had fixed (at the user's request, before merging). Then fixed, each with a test that failed first
 where one could be written, and checked in the live Editor:
