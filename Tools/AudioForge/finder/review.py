@@ -1,6 +1,6 @@
 """Writes docs/generated/audio-review/index.html: one self-contained page to audition the search's candidates.
 
-    python Tools/AudioForge/audioforge.py review [glob ...] [--top 5] [--all]
+    python Tools/AudioForge/audioforge.py review [glob ...] [--top 5] [--all] [--root NAME ...]
 
 Default: every sound still synthesised as a stand-in (the coverage list); a glob narrows it, --all takes every
 sound in the manifest. For each sound the page shows its brief, the file the build made now, and the top
@@ -125,6 +125,7 @@ def main(argv=None):
     parser.add_argument("globs", nargs="*", help="sound-name globs (default: every placeholder sound)")
     parser.add_argument("--top", type=int, default=5)
     parser.add_argument("--all", action="store_true", help="every sound in the manifest, not only placeholders")
+    parser.add_argument("--root", action="append", help="candidates only from this library root (repeatable)")
     args = parser.parse_args(argv)
 
     rows = manifest_rows()
@@ -134,7 +135,7 @@ def main(argv=None):
     if not chosen:
         print("no sounds match")
         return 2
-    library = Library()
+    library = Library(args.root)
     picks = load_picks()
     body = []
     n_cands = 0

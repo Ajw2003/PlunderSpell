@@ -97,8 +97,11 @@ class Library:
                 for i in order]
 
     def flags(self, hit, row=None):
-        """Audit flags of the hit's window, minus the level rule (the build sets the level)."""
-        x = read_window(self.path(hit), hit["start"], hit["dur"])
+        """Audit flags of the hit's window as the build would ship it (silence either side trimmed),
+        minus the level rule (the build sets the level)."""
+        from forge.build import trim_silence
+
+        x = trim_silence(read_window(self.path(hit), hit["start"], hit["dur"]))
         _, found = rules(row or DEFAULT_ROW, measure(x))
         return [f for f in found if not f.startswith("level:")]
 

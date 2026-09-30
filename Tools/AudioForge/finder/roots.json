@@ -10,5 +10,11 @@
     "path": "library/opengameart",
     "licence": "CC0 (OpenGameArt: rubberduck, artisticdude)",
     "commit": true
+  },
+  {
+    "name": "p0ss",
+    "path": "library/p0ss-spells",
+    "licence": "CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)",
+    "commit": true
   }
 ]

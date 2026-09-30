@@ -12,4 +12,4 @@ The original zips are kept next to the extracted folders. Files here are used on
 Direct downloads: `https://opengameart.org/sites/default/files/80-CC0-RPG-SFX_0.zip` and
 `https://opengameart.org/sites/default/files/rpg_sound_pack.zip`.
 
-Not used: OpenGameArt's "Spell Sounds Starter Pack" (CC-BY-SA 3.0 and GPL: share-alike terms).
+Not used here: OpenGameArt's "Spell Sounds Starter Pack" (CC-BY-SA 3.0 and GPL). Since 2026-09-30 it is used, with credit, from `../p0ss-spells/` (see docs/6-decisions/Decisions.md).

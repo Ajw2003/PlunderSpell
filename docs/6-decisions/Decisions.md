@@ -1147,3 +1147,19 @@ because "nothing recorded fits". That was said without checking, and it is wrong
 CC0 spell and magic recordings exist (OpenGameArt "80 CC0 RPG SFX", 9 spell sounds; Kenney's Sci-fi
 Sounds and Digital Audio packs). Whether they are enough is measured, not assumed: add them as library
 roots and read the coverage report. Synthesis stays the fallback for what the report shows uncovered.
+
+## 2026-09-30 — The p0ss Spell Sounds Starter Pack is used, with credit
+
+**Context.** `Tools/AudioForge/library/opengameart/SOURCES.md` (2026-09-29) set OpenGameArt's "Spell
+Sounds Starter Pack" (p0ss, CC-BY-SA 3.0 / GPL) aside for its share-alike terms. On 2026-09-30 the
+owner downloaded it for the spells and said an attributed, commercial-use licence is fine.
+
+**Decision.** The pack is a library root (`p0ss`, `Tools/AudioForge/library/p0ss-spells/`) under
+CC-BY-SA 3.0. p0ss is credited in the game's credits with the source page. Files built from it stay
+CC-BY-SA 3.0 and public (this repository is public); the game's code and other assets are not
+affected by share-alike.
+
+**Why.** The spells had no recording that fit; the pack is the owner's pick and allows commercial use
+with credit.
+
+**Status.** Standing. Reverses the "Not used" line in `Tools/AudioForge/library/opengameart/SOURCES.md`.
