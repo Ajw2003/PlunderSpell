@@ -44,7 +44,28 @@ recordings:
 > I agree that recordings of my voice made for Plunderspell may be used, edited and sold as
 > part of the game and its marketing, without further payment. — *name, date*
 
+## Stand-in clips (computer voices)
+
+Until real takes exist, every line has a computer-voice stand-in in `takes-tts/<age>/`, named exactly like a
+real take, so a recording simply replaces it. Windows' David and Zira read the lines with a tone per
+situation; snores are synthesised because no voice can snore. To rebuild and check them, from any folder:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File Tools\GuardVoice\make_tts_base.ps1
+python Tools/GuardVoice/check_takes.py Tools/GuardVoice/takes-tts
+python Tools/GuardVoice/make_listen_page.py
+```
+
+You should see `Wrote 108 text-to-speech clips`, `Wrote 8 snore clips`, then `Checked 116 takes.` and
+`0 problem(s).` Open `takes-tts/listen.html` to hear them. `check_takes.py` also checks your real takes
+(`python Tools/GuardVoice/check_takes.py Tools/GuardVoice/takes/powder powder`).
+`check_intelligibility.ps1` plays them into Windows' speech recogniser as a rough check that words are
+recognisable; it scores archaic words and grunts low by design.
+
 ## Files
+
+- `make_tts_base.ps1`, `make_snores.py`: build the stand-in clips and `takes-tts/tts-manifest.csv`
+- `check_takes.py`, `check_intelligibility.ps1`, `make_listen_page.py`: check them and build the listening page
 
 - `make_recording_script.py`: generator (Python 3, stdlib only, deterministic)
 - `record.template.html`: the page source; `record.html` is generated from it with the lines embedded

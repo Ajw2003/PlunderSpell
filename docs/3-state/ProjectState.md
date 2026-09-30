@@ -38,6 +38,14 @@ lacks; the rest are older and either merged in another form or abandoned.
   says it in the player's own clips at random pitches, heard by the speaker only. Checked in co-op
   with a fed recording (`Tools/Unity/coop_mimic_check.sh`); real microphone speech is for the owner to
   try. Details: `docs/plans/guards-speak-overheard-words.md`, "Prototype".
+- **`claude/voice-mimicry-improvements-7a0b29`** (2026-09-30, on top of the prototype above; issues
+  #179 to #187): replaces word recognition with recorded clips. Built and tested: saved volumes checked
+  against the mixer after start-up (the stale-volume fault itself was not reproduced; see
+  `docs/4-systems/audio.md`), a pause segmenter, a saved clip bank and a guard voice disguise (24 EditMode
+  tests), a recording script and browser recorder page, and 116 stand-in guard lines made with Windows'
+  voices plus synthesised snores (`Tools/GuardVoice/takes-tts/`, checked for length, level and clipping;
+  nobody has listened to them yet, `listen.html` there is for that). Not yet wired into the game: the
+  mic-to-bank capture, the guard speech swap, the always-on mic setting.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
