@@ -1,51 +1,73 @@
 using NUnit.Framework;
 using Plunderspell.Audio;
+using UnityEngine;
 
 namespace Plunderspell.Tests.Editor
 {
-    /// <summary>The reduced playtest sound set: footsteps, guards, UI and the replaced spells.</summary>
+    /// <summary>
+    /// The playtest sound filter: its rules on a settings object built here, and the shipped asset
+    /// loading. What the shipped asset lets through is the owner's to change, so it is not asserted.
+    /// </summary>
     public class SoundFocusTests
     {
-        private bool _wasEnabled;
+        private SoundFocusSettings _settings;
 
         [SetUp]
-        public void SetUp() => _wasEnabled = SoundFocus.Enabled;
-
-        [TearDown]
-        public void TearDown() => SoundFocus.Enabled = _wasEnabled;
-
-        [TestCase("foley_step_stone_walk")]
-        [TestCase("vo_bronze_alert")]
-        [TestCase("vo_hound_howl")]
-        [TestCase("sfx_wpn_blade_swing")]
-        [TestCase("ui_button_click")]
-        [TestCase("sfx_spell_frango_cast")]
-        [TestCase("sfx_spell_porta_open")]
-        public void Test_KeptSoundsPlay(string name)
+        public void SetUp()
         {
-            SoundFocus.Enabled = true;
-            Assert.IsTrue(SoundFocus.Allows(name));
+            _settings = ScriptableObject.CreateInstance<SoundFocusSettings>();
+            _settings.Groups.Clear();
+            _settings.Overrides.Clear();
         }
 
-        [TestCase("sfx_spell_ignis_cast")]
-        [TestCase("sfx_spell_levo_release")]
-        [TestCase("mus_title_loop")]
-        [TestCase("amb_fire_crackle")]
-        [TestCase("sting_alarm_roused_late")]
-        [TestCase("sfx_door_open")]
-        [TestCase("sfx_player_hurt")]
-        [TestCase("phys_break_pottery")]
-        [TestCase("phys_impact_wood")]
-        [TestCase("phys_scrape_stone_loop")]
-        public void Test_EverythingElseIsMuted(string name)
+        [TearDown]
+        public void TearDown()
         {
-            SoundFocus.Enabled = true;
-            Assert.IsFalse(SoundFocus.Allows(name));
+            Object.DestroyImmediate(_settings);
+            SoundFocus.ClearOverride();
         }
 
         [Test]
-        public void Test_TurningItOffPlaysEverything()
+        public void Test_TheGroupDecides()
         {
+            _settings.Groups.Add(new SoundFocusSettings.Group("Spells", true, "sfx_spell_"));
+            _settings.Groups.Add(new SoundFocusSettings.Group("Physics", false, "phys_"));
+            Assert.IsTrue(_settings.Allows("sfx_spell_frango_cast"));
+            Assert.IsFalse(_settings.Allows("phys_impact_wood"));
+        }
+
+        [Test]
+        public void Test_TheLongestPrefixWins()
+        {
+            _settings.Groups.Add(new SoundFocusSettings.Group("All effects", false, "sfx_"));
+            _settings.Groups.Add(new SoundFocusSettings.Group("Spells", true, "sfx_spell_"));
+            Assert.IsTrue(_settings.Allows("sfx_spell_frango_cast"));
+            Assert.IsFalse(_settings.Allows("sfx_door_open"));
+        }
+
+        [Test]
+        public void Test_AnOverrideBeatsItsGroup()
+        {
+            _settings.Groups.Add(new SoundFocusSettings.Group("Spells", true, "sfx_spell_"));
+            _settings.Overrides.Add(new SoundFocusSettings.Override("sfx_spell_ignis_impact", false));
+            Assert.IsFalse(_settings.Allows("sfx_spell_ignis_impact"));
+            Assert.IsTrue(_settings.Allows("sfx_spell_ignis_misfire"));
+        }
+
+        [Test]
+        public void Test_EverythingElseFollowsItsSwitch()
+        {
+            _settings.PlayEverythingElse = false;
+            Assert.IsFalse(_settings.Allows("mus_title_loop"));
+            _settings.PlayEverythingElse = true;
+            Assert.IsTrue(_settings.Allows("mus_title_loop"));
+            Assert.IsFalse(_settings.Allows(null));
+        }
+
+        [Test]
+        public void Test_TheShippedAssetLoadsAndCanBeSwitchedOff()
+        {
+            Assert.IsNotNull(SoundFocus.Settings, "Assets/_Project/Resources/SoundFocusSettings.asset is missing.");
             SoundFocus.Enabled = false;
             Assert.IsTrue(SoundFocus.Allows("sfx_spell_ignis_cast"));
             Assert.IsTrue(SoundFocus.Allows("mus_title_loop"));

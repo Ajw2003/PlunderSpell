@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62edbe5c42fcae94a9411aa87dc23042, type: 3}
+  m_Name: SoundFocusSettings
+  m_EditorClassIdentifier: Plunderspell.Audio::Plunderspell.Audio.SoundFocusSettings
+  FilterOn: 1
+  PlayEverythingElse: 0
+  Groups:
+  - Label: Footsteps and movement
+    Play: 1
+    Prefixes:
+    - foley_
+  - Label: Guard and hound voices
+    Play: 1
+    Prefixes:
+    - vo_
+  - Label: Guard sounds
+    Play: 1
+    Prefixes:
+    - sfx_enemy
+  - Label: 'Weapons: swings, bolts, hits'
+    Play: 1
+    Prefixes:
+    - sfx_wpn
+  - Label: Menu and UI
+    Play: 1
+    Prefixes:
+    - ui_
+  - Label: Spells
+    Play: 1
+    Prefixes:
+    - sfx_spell_
+  - Label: 'Physics: impacts, breaks, scrapes'
+    Play: 0
+    Prefixes:
+    - phys_
+  - Label: Music
+    Play: 0
+    Prefixes:
+    - mus_
+  - Label: Ambience
+    Play: 0
+    Prefixes:
+    - amb_
+  - Label: Stingers
+    Play: 0
+    Prefixes:
+    - sting_
+  - Label: 'Castle: doors, gates, torches'
+    Play: 0
+    Prefixes:
+    - sfx_door
+    - sfx_portcullis
+    - sfx_drawbridge
+    - sfx_castle
+    - sfx_masonry
+    - sfx_torch
+  - Label: 'Player: hurt, grab, throw, carry, voice'
+    Play: 0
+    Prefixes:
+    - sfx_player
+    - sfx_grab
+    - sfx_throw
+    - sfx_carry
+    - sfx_voice
+  - Label: Portal, loot, extraction, results, lair
+    Play: 0
+    Prefixes:
+    - sfx_portal
+    - sfx_extract
+    - sfx_loot
+    - sfx_result
+    - sfx_lair
+  - Label: Hazards, fire, status, debris
+    Play: 0
+    Prefixes:
+    - sfx_hazard
+    - sfx_fire
+    - sfx_status
+    - sfx_debris
+  Overrides:
+  - Sound: sfx_spell_ignis_cast
+    Play: 0
+  - Sound: sfx_spell_ignis_travel_loop
+    Play: 0
+  - Sound: sfx_spell_ignis_impact
+    Play: 0
+  - Sound: sfx_spell_levo_release
+    Play: 0
+  - Sound: sfx_spell_levo_misfire
+    Play: 0

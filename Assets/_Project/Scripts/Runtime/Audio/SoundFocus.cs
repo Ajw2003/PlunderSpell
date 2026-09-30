@@ -1,57 +1,57 @@
-using System;
+using UnityEngine;
 
 namespace Plunderspell.Audio
 {
     /// <summary>
-    /// A reduced sound set for playtesting: with it on, only footsteps and movement foley, guards
-    /// (voices, hounds, weapons and hits), UI clicks and the replaced spells play. Physics (impacts, breaking,
-    /// scraping: the tone read wrong, e.g. leather on stone sounded like metal), music, ambience,
-    /// stingers, doors and the rest stay in the SoundBank, unused, so the game is quiet enough to
-    /// tell those apart. Set <see cref="Enabled"/> false to hear everything.
+    /// The playtest sound filter. What plays is set in
+    /// <c>Assets/_Project/Resources/SoundFocusSettings.asset</c> (see <see cref="SoundFocusSettings"/>);
+    /// select it and tick or untick groups in the Inspector. If the asset is missing, everything plays.
     /// </summary>
     public static class SoundFocus
     {
-        /// <summary>True while only the reduced set plays.</summary>
-        public static bool Enabled = true;
+        public const string SettingsResource = "SoundFocusSettings";
 
-        private static readonly string[] s_kept =
-        {
-            "foley_",     // footsteps, jump and land, gear rattle on each step
-            "vo_",        // guard and hound voices
-            "sfx_enemy",  // guard sounds
-            "sfx_wpn",    // guard swings, bolts, hits
-            "ui_",        // menu clicks
-            "sfx_spell_", // spells, replaced from the owner's picks 2026-09-30
-        };
+        private static SoundFocusSettings s_settings;
+        private static bool s_reportedMissing;
+        private static bool? s_enabledOverride;
 
-        // Spell sounds still waiting on a replacement; they keep the old sound, so they stay muted.
-        private static readonly string[] s_pending =
+        /// <summary>The settings asset, loaded once from Resources; null if it is missing.</summary>
+        public static SoundFocusSettings Settings
         {
-            "sfx_spell_ignis_cast",
-            "sfx_spell_ignis_travel_loop",
-            "sfx_spell_ignis_impact",
-            "sfx_spell_levo_release",
-            "sfx_spell_levo_misfire",
-        };
+            get
+            {
+                if (s_settings == null)
+                {
+                    s_settings = Resources.Load<SoundFocusSettings>(SettingsResource);
+                    if (s_settings == null && !s_reportedMissing)
+                    {
+                        s_reportedMissing = true;
+                        Debug.LogWarning($"[Audio] No Resources/{SettingsResource}.asset; every sound plays.");
+                    }
+                }
+                return s_settings;
+            }
+        }
+
+        /// <summary>
+        /// True while the filter applies: the asset's "Filter On", unless code set this (tests and the
+        /// latency probe switch it off for a run without touching the asset).
+        /// </summary>
+        public static bool Enabled
+        {
+            get => s_enabledOverride ?? (Settings != null && Settings.FilterOn);
+            set => s_enabledOverride = value;
+        }
+
+        /// <summary>Drops a value set through <see cref="Enabled"/>, so the asset decides again.</summary>
+        public static void ClearOverride() => s_enabledOverride = null;
 
         /// <summary>Whether <paramref name="soundName"/> may play right now.</summary>
         public static bool Allows(string soundName)
         {
-            if (!Enabled)
+            if (!Enabled || Settings == null)
                 return true;
-            if (string.IsNullOrEmpty(soundName))
-                return false;
-            foreach (string pending in s_pending)
-            {
-                if (soundName == pending)
-                    return false;
-            }
-            foreach (string prefix in s_kept)
-            {
-                if (soundName.StartsWith(prefix, StringComparison.Ordinal))
-                    return true;
-            }
-            return false;
+            return Settings.Allows(soundName);
         }
     }
 }

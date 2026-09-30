@@ -201,16 +201,28 @@ inside the time it takes to reach it.
 
 ## Reduced sound set (playtest)
 
-Since 2026-09-29 `SoundFocus.Enabled` is true: only footsteps and movement foley (`foley_`), guard
-and hound voices (`vo_`), guard sounds and weapons (`sfx_enemy`, `sfx_wpn`) and UI clicks (`ui_`)
-play, and since 2026-09-30 the replaced spells (`sfx_spell_`, less the five still pending). Physics (`phys_`) was muted on 2026-09-30: the triggers are right but the tone reads wrong
-(leather on stone sounded like metal), so it waits for replacement files. Spells, music, ambience, stingers, doors, portal, loot and player sounds stay in
-the SoundBank and their hooks stay wired; they are just not played, because the full mix was too busy
-to tell sounds apart. The check sits in `AudioDirector.Play` (after the bank lookup, so a misspelt
-name is still reported), `LoopBus.Drive` and `MusicDirector.StartLayer`. Set
-`SoundFocus.Enabled = false` (`Assets/_Project/Scripts/Runtime/Audio/SoundFocus.cs`) to hear
-everything again. Checked in Play: menu and raid played only foley, guard voices and physics;
-`sfx_spell_ignis_cast` returned no source, and did play with the flag off. Tests: `SoundFocusTests`.
+What plays is set by hand in **`Assets/_Project/Resources/SoundFocusSettings.asset`**: select it in
+the Project window and edit it in the Inspector. Changes apply at once, in Play mode too (checked
+2026-09-30: ticking Music flipped `mus_title_loop` from muted to playing on the next call, no reload).
+
+- **Filter On**: untick to hear every sound; the lists are then ignored.
+- **Groups**: each has a label, a **Play** tick box and name prefixes (`sfx_spell_`, `phys_`, ...). The
+  group with the longest matching prefix decides, so a narrower group can carve a piece out of a
+  wider one.
+- **Overrides**: exact sound names that ignore their group (the five spell sounds still waiting on a
+  replacement are here, muted).
+- **Play Everything Else**: for a sound no group or override names.
+
+As shipped on 2026-09-30: footsteps and movement, guard and hound voices, guard sounds, weapons, UI and
+spells play; physics, music, ambience, stingers, castle, player, portal and loot, and hazards are
+muted. Physics was muted because its tone read wrong (leather on stone sounded like metal); the
+triggers are unchanged and wait for replacement files. `SoundFocus` (`Assets/_Project/Scripts/Runtime/Audio/SoundFocus.cs`)
+reads the asset from Resources; with the asset missing, everything plays and one warning is logged.
+The check sits in `AudioDirector.Play` (after the bank lookup, so a misspelt name is still reported),
+`LoopBus.Drive` and `MusicDirector.StartLayer`. Code can switch the filter off for a run without
+touching the asset (`SoundFocus.Enabled = false`, undone by `SoundFocus.ClearOverride()`); the tests
+and `AudioLatencyProbe` do. Tests: `SoundFocusTests` (the rules on a settings object of their own,
+and the shipped asset loading).
 
 ## Latency (measured 2026-09-30)
 
