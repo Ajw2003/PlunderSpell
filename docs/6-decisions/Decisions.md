@@ -1163,3 +1163,25 @@ affected by share-alike.
 with credit.
 
 **Status.** Standing. Reverses the "Not used" line in `Tools/AudioForge/library/opengameart/SOURCES.md`.
+
+## 2026-09-30 — The music's direction is the in-house synth sound the owner heard
+
+**Context.** The raid stems, title, Lair and results music are synthesised by
+`Tools/AudioForge/forge/music.py`: plucked strings (lute, mandolin-like) over chiptune-style square and
+saw leads, a drone, and a per-Age palette (`AGES`: Bronze Age reed and frame drum in Phrygian, High
+Medieval choir and tabor in Dorian, Late Medieval shawm and side drum in Aeolian, Gunpowder trumpet
+and timpani in harmonic minor). In a raid four stems play together and fade in by alarm state
+(calm, stirred, roused, hue and cry). `docs/plans/audio.md` §8 planned to replace them with a
+commissioned composer (stems) and paid AI music (title, Lair, results).
+
+**Decision.** On 2026-09-30 the owner heard it in play and liked it: "chiptune, mandolin / guitar synth
+combo ... very of the medieval era but with some old video game dungeon crawler flair, keep that
+vibe up". That sound is the music's direction. Any change to the music, from any source, keeps it:
+period plucked strings and drones, chiptune leads, one palette per Age, stems that layer by alarm
+state.
+
+**Why.** It is the owner's stated taste after hearing it in the game.
+
+**Status.** Standing. Open: `docs/plans/audio.md` §8 and the manifest's `final` column (C composed, M
+AI music) still describe the replacement plan; whether the synth tracks are now final is the owner's
+call.
