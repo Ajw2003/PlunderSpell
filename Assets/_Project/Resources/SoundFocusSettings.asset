@@ -44,7 +44,7 @@ MonoBehaviour:
     Prefixes:
     - phys_
   - Label: Music
-    Play: 0
+    Play: 1
     Prefixes:
     - mus_
   - Label: Ambience
@@ -65,7 +65,7 @@ MonoBehaviour:
     - sfx_masonry
     - sfx_torch
   - Label: 'Player: hurt, grab, throw, carry, voice'
-    Play: 0
+    Play: 1
     Prefixes:
     - sfx_player
     - sfx_grab
@@ -73,7 +73,7 @@ MonoBehaviour:
     - sfx_carry
     - sfx_voice
   - Label: Portal, loot, extraction, results, lair
-    Play: 0
+    Play: 1
     Prefixes:
     - sfx_portal
     - sfx_extract
@@ -81,7 +81,7 @@ MonoBehaviour:
     - sfx_result
     - sfx_lair
   - Label: Hazards, fire, status, debris
-    Play: 0
+    Play: 1
     Prefixes:
     - sfx_hazard
     - sfx_fire

@@ -64,16 +64,16 @@ namespace Plunderspell.Audio
             new Group("Menu and UI", true, "ui_"),
             new Group("Spells", true, "sfx_spell_"),
             new Group("Physics: impacts, breaks, scrapes", false, "phys_"),
-            new Group("Music", false, "mus_"),
+            new Group("Music", true, "mus_"),
             new Group("Ambience", false, "amb_"),
             new Group("Stingers", false, "sting_"),
             new Group("Castle: doors, gates, torches", false,
                 "sfx_door", "sfx_portcullis", "sfx_drawbridge", "sfx_castle", "sfx_masonry", "sfx_torch"),
-            new Group("Player: hurt, grab, throw, carry, voice", false,
+            new Group("Player: hurt, grab, throw, carry, voice", true,
                 "sfx_player", "sfx_grab", "sfx_throw", "sfx_carry", "sfx_voice"),
-            new Group("Portal, loot, extraction, results, lair", false,
+            new Group("Portal, loot, extraction, results, lair", true,
                 "sfx_portal", "sfx_extract", "sfx_loot", "sfx_result", "sfx_lair"),
-            new Group("Hazards, fire, status, debris", false, "sfx_hazard", "sfx_fire", "sfx_status", "sfx_debris"),
+            new Group("Hazards, fire, status, debris", true, "sfx_hazard", "sfx_fire", "sfx_status", "sfx_debris"),
         };
 
         [Tooltip("Exact sound names that ignore their group.")]

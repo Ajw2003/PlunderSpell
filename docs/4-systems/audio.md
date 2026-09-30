@@ -213,9 +213,10 @@ the Project window and edit it in the Inspector. Changes apply at once, in Play 
   replacement are here, muted).
 - **Play Everything Else**: for a sound no group or override names.
 
-As shipped on 2026-09-30: footsteps and movement, guard and hound voices, guard sounds, weapons, UI and
-spells play; physics, music, ambience, stingers, castle, player, portal and loot, and hazards are
-muted. Physics was muted because its tone read wrong (leather on stone sounded like metal); the
+As shipped (the owner's ticks, 2026-09-30): footsteps and movement, guard and hound voices, guard
+sounds, weapons, UI, spells, music, player, portal and loot, and hazards play; physics, ambience,
+stingers and castle are muted, and three spell sounds waiting on round two are muted by override.
+The code's defaults (`SoundFocusSettings.cs`, used only for a fresh asset) match. Physics was muted because its tone read wrong (leather on stone sounded like metal); the
 triggers are unchanged and wait for replacement files. `SoundFocus` (`Assets/_Project/Scripts/Runtime/Audio/SoundFocus.cs`)
 reads the asset from Resources; with the asset missing, everything plays and one warning is logged.
 The check sits in `AudioDirector.Play` (after the bank lookup, so a misspelt name is still reported),
