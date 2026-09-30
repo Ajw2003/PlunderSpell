@@ -96,6 +96,17 @@ minus 80, 1 is 0, 0.5 is about minus 6), applies the saved values when the direc
 the exposed parameters. Before this layer the saved Master value was not applied at start-up at all;
 it is now. With no mixer loaded, Master falls back to `AudioListener.volume`.
 
+**Start-up is checked, not trusted (#181).** The owner reported sliders showing the saved value while
+the sound sat elsewhere until a slider was moved. Checked 2026-09-30: with music playing in a live
+Editor session the mixer matched the saved values exactly (master -1.32 dB, music -13.87 dB), and in a
+test run the values held over ten frames, after a looping sound started, and after
+`AudioSettings.Reset`. So the fault was **not reproduced**; a mixer that drops values set before its
+first real use would only show in a fresh process, which was not measured. `AudioLevels` now reads the
+mixer back every frame for 2 s after `Bind` and after any `AudioSettings.OnAudioConfigurationChanged`,
+puts any value that differs back, and logs `[Audio] The mixer dropped the saved volumes` (up to five
+times), so a recurrence names itself in the log. Sliders also call `PlayerPrefs.Save()` now.
+Tests: `SavedAudioSettingsTests`. If the log line ever appears, that was the cause.
+
 Two things differ from the plan, and both came from measuring.
 
 - **The Casting dip is not a snapshot transition.** In Unity 6000.3 a snapshot transition overwrites an

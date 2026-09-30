@@ -20,6 +20,7 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Plunderspell.Core",
+        "Plunderspell.Audio",
         "Plunderspell.UI",
         "Plunderspell.Playtest",
         "Plunderspell.Player",
