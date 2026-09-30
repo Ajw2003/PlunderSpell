@@ -203,7 +203,7 @@ inside the time it takes to reach it.
 
 Since 2026-09-29 `SoundFocus.Enabled` is true: only footsteps and movement foley (`foley_`), guard
 and hound voices (`vo_`), guard sounds and weapons (`sfx_enemy`, `sfx_wpn`) and UI clicks (`ui_`)
-play. Physics (`phys_`) was muted on 2026-09-30: the triggers are right but the tone reads wrong
+play, and since 2026-09-30 the replaced spells (`sfx_spell_`, less the five still pending). Physics (`phys_`) was muted on 2026-09-30: the triggers are right but the tone reads wrong
 (leather on stone sounded like metal), so it waits for replacement files. Spells, music, ambience, stingers, doors, portal, loot and player sounds stay in
 the SoundBank and their hooks stay wired; they are just not played, because the full mix was too busy
 to tell sounds apart. The check sits in `AudioDirector.Play` (after the bank lookup, so a misspelt
@@ -260,6 +260,22 @@ velocity of its own to read.
 - Unity's own output path is 0-22 ms. Anything later than that happens after Unity: the Windows
   device (Bluetooth headphones typically add 150-300 ms; a TV's HDMI audio adds its own). Not
   measured: that needs a microphone recording the speaker.
+
+## Spell sounds from the owner's picks (2026-09-30)
+
+The owner auditioned six p0ss candidates per spell sound on the review page and exported
+`docs/generated/audio-review/review-decisions-2026-09-30.json`. Some picks were written as notes, not
+Keep clicks; `review-decisions-2026-09-30-applied.json` is the file `apply` read, with those four added
+(no_mana reuses fizzle's `sand.ogg`; saltus cast and launch use `spell.ogg`; porta misfire uses
+`enchant.ogg`). 27 sounds, 41 files, now built from the pack (`Tools/AudioForge/picks.csv`).
+
+- Porta cast, open and loop keep their current sounds (owner's choice).
+- Still waiting, and muted by `SoundFocus` until replaced: `sfx_spell_ignis_cast` and
+  `sfx_spell_ignis_travel_loop` (the owner wants `IngnisBall.wav`, source not recorded yet),
+  `sfx_spell_ignis_impact` (wants a bigger explosion), `sfx_spell_levo_release` (every candidate too
+  high; wants more bass), `sfx_spell_levo_misfire` (all rejected).
+- `audioforge.py build "sfx_spell_*"` also re-rendered 10 files nobody picked (the build changed since
+  they were made); those were restored from git, so unpicked sounds are exactly as before.
 
 ## The listener
 

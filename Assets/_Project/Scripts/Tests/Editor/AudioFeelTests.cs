@@ -186,6 +186,9 @@ namespace Plunderspell.Tests.Editor
             SoundBank bank = LoadBank();
             Assert.IsTrue(bank.TryGet(LootMaterials.Roll, out SoundEntry entry));
             var root = new GameObject("LoopTest");
+            // The slot rules, not the playtest mute: the roll loop is muted while SoundFocus is on.
+            bool focus = SoundFocus.Enabled;
+            SoundFocus.Enabled = false;
             try
             {
                 var bus = new LoopBus(root.transform, 3);
@@ -201,6 +204,7 @@ namespace Plunderspell.Tests.Editor
             }
             finally
             {
+                SoundFocus.Enabled = focus;
                 UnityEngine.Object.DestroyImmediate(root);
             }
         }

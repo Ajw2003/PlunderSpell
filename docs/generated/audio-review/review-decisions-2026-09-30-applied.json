@@ -1,0 +1,291 @@
+{
+  "version": 1,
+  "derived_from": "docs/generated/audio-review/review-decisions-2026-09-30.json",
+  "decisions": [
+    {
+      "sound": "sfx_spell_fizzle",
+      "recipe": "lib:p0ss/sand.ogg",
+      "root": "p0ss",
+      "file": "sand.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.549,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_mana_restored",
+      "recipe": "lib:p0ss/zap6a.ogg",
+      "root": "p0ss",
+      "file": "zap6a.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.519,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_ignis_misfire",
+      "recipe": "lib:p0ss/sand.ogg",
+      "root": "p0ss",
+      "file": "sand.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.487,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_frango_cast",
+      "recipe": "lib:p0ss/magicfail2.ogg",
+      "root": "p0ss",
+      "file": "magicfail2.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.402,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_frango_shatter_stone",
+      "recipe": "lib:p0ss/magicfail2.ogg",
+      "root": "p0ss",
+      "file": "magicfail2.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.281,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_frango_shatter_wood",
+      "recipe": "lib:p0ss/magicfail.ogg",
+      "root": "p0ss",
+      "file": "magicfail.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.25,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_frango_shatter_metal",
+      "recipe": "lib:p0ss/magicfail2.ogg",
+      "root": "p0ss",
+      "file": "magicfail2.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.33,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_frango_misfire",
+      "recipe": "lib:p0ss/enchant.ogg",
+      "root": "p0ss",
+      "file": "enchant.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.451,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_levo_cast",
+      "recipe": "lib:p0ss/zap2d.ogg",
+      "root": "p0ss",
+      "file": "zap2d.ogg",
+      "start": 0,
+      "dur": 2.327,
+      "score": 0.43,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_levo_hold_loop",
+      "recipe": "lib:p0ss/moving.ogg xfade=0.5",
+      "root": "p0ss",
+      "file": "moving.ogg",
+      "start": 0,
+      "dur": 5.143,
+      "score": 0.263,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_aurumvoco_cast",
+      "recipe": "lib:p0ss/blessing2.ogg",
+      "root": "p0ss",
+      "file": "blessing2.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.254,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_aurumvoco_reveal_loop",
+      "recipe": "lib:p0ss/heal.ogg xfade=0.5",
+      "root": "p0ss",
+      "file": "heal.ogg",
+      "start": 0,
+      "dur": 5.143,
+      "score": 0.304,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_aurumvoco_end",
+      "recipe": "lib:p0ss/zap6a.ogg",
+      "root": "p0ss",
+      "file": "zap6a.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.22,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_aurumvoco_misfire",
+      "recipe": "lib:p0ss/enchant.ogg",
+      "root": "p0ss",
+      "file": "enchant.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.561,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_velox_cast",
+      "recipe": "lib:p0ss/warp2.ogg",
+      "root": "p0ss",
+      "file": "warp2.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.321,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_velox_dash",
+      "recipe": "lib:p0ss/warp.ogg",
+      "root": "p0ss",
+      "file": "warp.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.405,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_velox_misfire",
+      "recipe": "lib:p0ss/water.ogg",
+      "root": "p0ss",
+      "file": "water.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.285,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_saltus_land_slam",
+      "recipe": "lib:p0ss/magicfail.ogg",
+      "root": "p0ss",
+      "file": "magicfail.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.372,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_saltus_misfire",
+      "recipe": "lib:p0ss/enchant.ogg",
+      "root": "p0ss",
+      "file": "enchant.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.366,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_somnus_cast_soft",
+      "recipe": "lib:p0ss/blessing2.ogg",
+      "root": "p0ss",
+      "file": "blessing2.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.522,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_somnus_cast_loud",
+      "recipe": "lib:p0ss/curse4.ogg",
+      "root": "p0ss",
+      "file": "curse4.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.359,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_somnus_apply",
+      "recipe": "lib:p0ss/zap6a.ogg",
+      "root": "p0ss",
+      "file": "zap6a.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.213,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_somnus_misfire",
+      "recipe": "lib:p0ss/freeze2.ogg",
+      "root": "p0ss",
+      "file": "freeze2.ogg",
+      "start": 0,
+      "dur": 3.431,
+      "score": 0.389,
+      "decision": "keep",
+      "note": ""
+    },
+    {
+      "sound": "sfx_spell_no_mana",
+      "recipe": "lib:p0ss/sand.ogg",
+      "root": "p0ss",
+      "file": "sand.ogg",
+      "decision": "keep",
+      "note": "note: just re use the fizzle sound"
+    },
+    {
+      "sound": "sfx_spell_saltus_cast",
+      "recipe": "lib:p0ss/spell.ogg",
+      "root": "p0ss",
+      "file": "spell.ogg",
+      "decision": "keep",
+      "note": "note: p0ss/spell.ogg"
+    },
+    {
+      "sound": "sfx_spell_saltus_launch",
+      "recipe": "lib:p0ss/spell.ogg",
+      "root": "p0ss",
+      "file": "spell.ogg",
+      "decision": "keep",
+      "note": "note: p0ss/spell.ogg"
+    },
+    {
+      "sound": "sfx_spell_porta_misfire",
+      "recipe": "lib:p0ss/enchant.ogg",
+      "root": "p0ss",
+      "file": "enchant.ogg",
+      "decision": "keep",
+      "note": "note: p0ss/enchant.ogg"
+    }
+  ]
+}

@@ -326,59 +326,59 @@ Assets/_Project/Audio/SFX/Portal/sfx_portal_collapse_01.ogg,sfx_portal_collapse,
 Assets/_Project/Audio/SFX/Portal/sfx_portal_enter_01.ogg,sfx_portal_enter,1,placeholder,A,1.504,-7.1,-22.0,synth:whoosh + synth:shimmer,original (AudioForge)
 Assets/_Project/Audio/SFX/Portal/sfx_portal_narrowing_loop_01.ogg,sfx_portal_narrowing_loop,1,generated,G,7.5,-10.2,-22.0,synth:drone + synth:hum,original (AudioForge)
 Assets/_Project/Audio/SFX/Portal/sfx_portal_open_01.ogg,sfx_portal_open,1,placeholder,A,2.5,-1.4,-17.0,synth:whoosh + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_cast_01.ogg,sfx_spell_aurumvoco_cast,1,placeholder,A,1.96,-2.9,-19.0,synth:chime + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_end_01.ogg,sfx_spell_aurumvoco_end,1,generated,G,1.42,-4.3,-22.0,synth:chime,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_misfire_01.ogg,sfx_spell_aurumvoco_misfire,1,placeholder,A,1.22,-1.0,-15.4,synth:coins + synth:whine,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_misfire_02.ogg,sfx_spell_aurumvoco_misfire,2,placeholder,A,1.22,-1.4,-15.0,synth:coins + synth:whine,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_reveal_loop_01.ogg,sfx_spell_aurumvoco_reveal_loop,1,generated,G,3.5,-2.5,-22.0,synth:coins + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_fizzle_01.ogg,sfx_spell_fizzle,1,placeholder,A,0.4,-6.0,-20.5,synth:hiss + synth:whoosh,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_fizzle_02.ogg,sfx_spell_fizzle,2,placeholder,A,0.4,-6.3,-20.5,synth:hiss + synth:whoosh,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_fizzle_03.ogg,sfx_spell_fizzle,3,placeholder,A,0.4,-4.4,-20.5,synth:hiss + synth:whoosh,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_cast_01.ogg,sfx_spell_frango_cast,1,placeholder,A,0.3,-4.2,-19.0,synth:thump + synth:shatter + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_cast_02.ogg,sfx_spell_frango_cast,2,placeholder,A,0.3,-5.7,-19.0,synth:thump + synth:shatter + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_misfire_01.ogg,sfx_spell_frango_misfire,1,placeholder,A,0.8,-1.0,-19.8,synth:thump + synth:shatter,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_metal_01.ogg,sfx_spell_frango_shatter_metal,1,placeholder,L,1.5,-1.0,-21.6,synth:metal_ring + synth:thump,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_metal_02.ogg,sfx_spell_frango_shatter_metal,2,placeholder,L,1.5,-1.0,-22.1,synth:metal_ring + synth:thump,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_stone_01.ogg,sfx_spell_frango_shatter_stone,1,placeholder,L,1.784,-2.3,-17.0,synth:crumble,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_stone_02.ogg,sfx_spell_frango_shatter_stone,2,placeholder,L,1.79,-3.8,-17.0,synth:crumble,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_stone_03.ogg,sfx_spell_frango_shatter_stone,3,placeholder,L,1.795,-1.0,-17.1,synth:crumble,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_wood_01.ogg,sfx_spell_frango_shatter_wood,1,library-cc0,L,1.0,-1.0,-22.5,kenney/impact-sounds/impactWood_heavy_000.ogg + synth:crumble,CC0 (Kenney)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_wood_02.ogg,sfx_spell_frango_shatter_wood,2,library-cc0,L,0.996,-1.0,-19.9,kenney/impact-sounds/impactWood_heavy_001.ogg + synth:crumble,CC0 (Kenney)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_cast_01.ogg,sfx_spell_aurumvoco_cast,1,library,L,1.714,-7.1,-19.0,lib:p0ss/blessing2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_end_01.ogg,sfx_spell_aurumvoco_end,1,library,L,1.61,-14.0,-22.0,lib:p0ss/zap6a.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_misfire_01.ogg,sfx_spell_aurumvoco_misfire,1,library,L,0.787,-1.0,-21.6,lib:p0ss/enchant.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_misfire_02.ogg,sfx_spell_aurumvoco_misfire,2,library,L,0.757,-1.0,-21.8,lib:p0ss/enchant.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_aurumvoco_reveal_loop_01.ogg,sfx_spell_aurumvoco_reveal_loop,1,library,L,1.646,-2.5,-22.0,lib:p0ss/heal.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_fizzle_01.ogg,sfx_spell_fizzle,1,library,L,0.415,-2.0,-20.5,lib:p0ss/sand.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_fizzle_02.ogg,sfx_spell_fizzle,2,library,L,0.399,-2.6,-20.5,lib:p0ss/sand.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_fizzle_03.ogg,sfx_spell_fizzle,3,library,L,0.433,-2.1,-20.5,lib:p0ss/sand.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_cast_01.ogg,sfx_spell_frango_cast,1,library,L,1.698,-7.8,-19.0,lib:p0ss/magicfail2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_cast_02.ogg,sfx_spell_frango_cast,2,library,L,1.633,-7.8,-19.0,lib:p0ss/magicfail2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_misfire_01.ogg,sfx_spell_frango_misfire,1,library,L,0.787,-1.0,-21.6,lib:p0ss/enchant.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_metal_01.ogg,sfx_spell_frango_shatter_metal,1,library,L,1.698,-5.8,-17.0,lib:p0ss/magicfail2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_metal_02.ogg,sfx_spell_frango_shatter_metal,2,library,L,1.633,-5.8,-17.0,lib:p0ss/magicfail2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_stone_01.ogg,sfx_spell_frango_shatter_stone,1,library,L,1.698,-5.8,-17.0,lib:p0ss/magicfail2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_stone_02.ogg,sfx_spell_frango_shatter_stone,2,library,L,1.633,-5.8,-17.0,lib:p0ss/magicfail2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_stone_03.ogg,sfx_spell_frango_shatter_stone,3,library,L,1.769,-5.8,-17.0,lib:p0ss/magicfail2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_wood_01.ogg,sfx_spell_frango_shatter_wood,1,library,L,1.01,-5.7,-17.0,lib:p0ss/magicfail.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_frango_shatter_wood_02.ogg,sfx_spell_frango_shatter_wood,2,library,L,0.971,-5.8,-17.0,lib:p0ss/magicfail.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_cast_01.ogg,sfx_spell_ignis_cast,1,placeholder,A,0.3,-7.9,-20.5,synth:whumph + synth:shimmer,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_cast_02.ogg,sfx_spell_ignis_cast,2,placeholder,A,0.3,-7.5,-20.5,synth:whumph + synth:shimmer,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_cast_03.ogg,sfx_spell_ignis_cast,3,placeholder,A,0.3,-7.5,-20.5,synth:whumph + synth:shimmer,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_impact_01.ogg,sfx_spell_ignis_impact,1,placeholder,A,0.6,-4.6,-19.0,synth:whumph + synth:crackle,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_impact_02.ogg,sfx_spell_ignis_impact,2,placeholder,A,0.6,-4.5,-19.0,synth:whumph + synth:crackle,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_impact_03.ogg,sfx_spell_ignis_impact,3,placeholder,A,0.6,-3.4,-19.0,synth:whumph + synth:crackle,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_misfire_01.ogg,sfx_spell_ignis_misfire,1,placeholder,A,0.9,-5.9,-19.0,synth:whumph + synth:hiss,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_misfire_02.ogg,sfx_spell_ignis_misfire,2,placeholder,A,0.9,-7.1,-19.0,synth:whumph + synth:hiss,original (AudioForge)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_misfire_01.ogg,sfx_spell_ignis_misfire,1,library,L,0.415,-1.0,-19.5,lib:p0ss/sand.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_misfire_02.ogg,sfx_spell_ignis_misfire,2,library,L,0.399,-1.1,-19.0,lib:p0ss/sand.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_ignis_travel_loop_01.ogg,sfx_spell_ignis_travel_loop,1,placeholder,A,2.5,-1.0,-22.1,synth:crackle + synth:hiss,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_cast_01.ogg,sfx_spell_levo_cast,1,placeholder,A,0.5,-7.7,-20.5,synth:shimmer + synth:breath,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_cast_02.ogg,sfx_spell_levo_cast,2,placeholder,A,0.5,-7.3,-20.5,synth:shimmer + synth:breath,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_hold_loop_01.ogg,sfx_spell_levo_hold_loop,1,generated,G,3.5,-15.9,-22.0,synth:hum,original (AudioForge)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_cast_01.ogg,sfx_spell_levo_cast,1,library,L,1.387,-3.5,-20.5,lib:p0ss/zap2d.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_cast_02.ogg,sfx_spell_levo_cast,2,library,L,1.334,-3.4,-20.5,lib:p0ss/zap2d.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_hold_loop_01.ogg,sfx_spell_levo_hold_loop,1,library,L,2.463,-17.0,-22.0,lib:p0ss/moving.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_misfire_01.ogg,sfx_spell_levo_misfire,1,generated,G,1.5,-12.5,-20.5,synth:whine,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_levo_release_01.ogg,sfx_spell_levo_release,1,generated,G,0.4,-14.0,-22.0,synth:whine,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_mana_restored_01.ogg,sfx_spell_mana_restored,1,generated,G,0.92,-5.2,-22.0,synth:chime,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_no_mana_01.ogg,sfx_spell_no_mana,1,generated,G,0.25,-5.1,-22.0,synth:hiss + synth:tick,original (AudioForge)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_mana_restored_01.ogg,sfx_spell_mana_restored,1,library,L,1.61,-14.0,-22.0,lib:p0ss/zap6a.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_no_mana_01.ogg,sfx_spell_no_mana,1,library,L,0.415,-3.5,-22.0,lib:p0ss/sand.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_porta_cast_01.ogg,sfx_spell_porta_cast,1,placeholder,A,1.0,-2.5,-17.0,synth:shimmer + synth:thump,original (AudioForge)
 Assets/_Project/Audio/SFX/Spells/sfx_spell_porta_loop_01.ogg,sfx_spell_porta_loop,1,generated,G,7.5,-10.2,-22.0,synth:drone,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_porta_misfire_01.ogg,sfx_spell_porta_misfire,1,placeholder,L,0.6,-6.5,-19.0,synth:thump + synth:reed,original (AudioForge)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_porta_misfire_01.ogg,sfx_spell_porta_misfire,1,library,L,0.787,-1.0,-21.6,lib:p0ss/enchant.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Spells/sfx_spell_porta_open_01.ogg,sfx_spell_porta_open,1,placeholder,A,2.005,-2.3,-17.0,synth:whoosh + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_cast_01.ogg,sfx_spell_saltus_cast,1,placeholder,A,0.243,-8.4,-20.5,synth:whoosh + synth:thump,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_land_slam_01.ogg,sfx_spell_saltus_land_slam,1,placeholder,L,0.792,-2.3,-17.0,synth:thump + synth:crumble,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_land_slam_02.ogg,sfx_spell_saltus_land_slam,2,placeholder,L,0.796,-1.8,-17.0,synth:thump + synth:crumble,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_launch_01.ogg,sfx_spell_saltus_launch,1,placeholder,L,0.505,-6.4,-20.5,synth:whoosh,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_misfire_01.ogg,sfx_spell_saltus_misfire,1,placeholder,A,0.5,-5.7,-20.5,synth:boing + synth:thump,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_apply_01.ogg,sfx_spell_somnus_apply,1,placeholder,A,0.7,-13.6,-22.0,synth:whine + synth:breath,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_apply_02.ogg,sfx_spell_somnus_apply,2,placeholder,A,0.7,-13.4,-22.0,synth:whine + synth:breath,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_cast_loud_01.ogg,sfx_spell_somnus_cast_loud,1,placeholder,A,0.885,-8.9,-17.0,synth:horn + synth:breath,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_cast_soft_01.ogg,sfx_spell_somnus_cast_soft,1,placeholder,A,0.9,-7.9,-22.0,synth:breath + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_cast_soft_02.ogg,sfx_spell_somnus_cast_soft,2,placeholder,A,0.9,-8.8,-22.0,synth:breath + synth:shimmer,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_misfire_01.ogg,sfx_spell_somnus_misfire,1,placeholder,A,0.8,-3.0,-20.5,synth:breath + synth:thump,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_velox_cast_01.ogg,sfx_spell_velox_cast,1,placeholder,A,0.158,-5.3,-20.5,synth:whoosh,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_velox_dash_01.ogg,sfx_spell_velox_dash,1,placeholder,L,0.336,-5.5,-20.5,synth:whoosh,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_velox_dash_02.ogg,sfx_spell_velox_dash,2,placeholder,L,0.326,-5.7,-20.5,synth:whoosh,original (AudioForge)
-Assets/_Project/Audio/SFX/Spells/sfx_spell_velox_misfire_01.ogg,sfx_spell_velox_misfire,1,placeholder,A,0.325,-4.8,-19.0,synth:whoosh + synth:thump,original (AudioForge)
+Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_cast_01.ogg,sfx_spell_saltus_cast,1,library,L,0.919,-4.2,-20.5,lib:p0ss/spell.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_land_slam_01.ogg,sfx_spell_saltus_land_slam,1,library,L,1.01,-5.7,-17.0,lib:p0ss/magicfail.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_land_slam_02.ogg,sfx_spell_saltus_land_slam,2,library,L,0.971,-5.8,-17.0,lib:p0ss/magicfail.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_launch_01.ogg,sfx_spell_saltus_launch,1,library,L,0.919,-4.2,-20.5,lib:p0ss/spell.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_saltus_misfire_01.ogg,sfx_spell_saltus_misfire,1,library,L,0.787,-1.0,-21.6,lib:p0ss/enchant.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_apply_01.ogg,sfx_spell_somnus_apply,1,library,L,1.61,-14.0,-22.0,lib:p0ss/zap6a.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_apply_02.ogg,sfx_spell_somnus_apply,2,library,L,1.548,-14.0,-22.0,lib:p0ss/zap6a.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_cast_loud_01.ogg,sfx_spell_somnus_cast_loud,1,library,L,0.937,-12.2,-17.0,lib:p0ss/curse4.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_cast_soft_01.ogg,sfx_spell_somnus_cast_soft,1,library,L,1.714,-10.1,-22.0,lib:p0ss/blessing2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_cast_soft_02.ogg,sfx_spell_somnus_cast_soft,2,library,L,1.648,-10.1,-22.0,lib:p0ss/blessing2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_somnus_misfire_01.ogg,sfx_spell_somnus_misfire,1,library,L,1.206,-5.4,-20.5,lib:p0ss/freeze2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_velox_cast_01.ogg,sfx_spell_velox_cast,1,library,L,1.348,-1.0,-20.7,lib:p0ss/warp2.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_velox_dash_01.ogg,sfx_spell_velox_dash,1,library,L,1.201,-1.8,-20.5,lib:p0ss/warp.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_velox_dash_02.ogg,sfx_spell_velox_dash,2,library,L,1.155,-1.7,-20.5,lib:p0ss/warp.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
+Assets/_Project/Audio/SFX/Spells/sfx_spell_velox_misfire_01.ogg,sfx_spell_velox_misfire,1,library,L,1.501,-1.0,-25.7,lib:p0ss/water.ogg,"CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)"
 Assets/_Project/Audio/SFX/Status/sfx_status_asleep_player_loop_01.ogg,sfx_status_asleep_player_loop,1,placeholder,R,3.0,-7.0,-26.5,synth:snore,original (AudioForge)
 Assets/_Project/Audio/SFX/Status/sfx_status_asleep_player_loop_02.ogg,sfx_status_asleep_player_loop,2,placeholder,R,3.0,-8.2,-26.5,synth:snore,original (AudioForge)
 Assets/_Project/Audio/SFX/Status/sfx_status_burning_loop_01.ogg,sfx_status_burning_loop,1,placeholder,L,3.5,-8.7,-26.5,synth:crackle,original (AudioForge)

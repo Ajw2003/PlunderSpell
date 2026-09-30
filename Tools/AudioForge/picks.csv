@@ -1,1 +1,42 @@
 name,variant,recipe
+sfx_spell_aurumvoco_cast,1,lib:p0ss/blessing2.ogg
+sfx_spell_aurumvoco_end,1,lib:p0ss/zap6a.ogg
+sfx_spell_aurumvoco_misfire,1,lib:p0ss/enchant.ogg
+sfx_spell_aurumvoco_misfire,2,lib:p0ss/enchant.ogg shift=1.04
+sfx_spell_aurumvoco_reveal_loop,1,lib:p0ss/heal.ogg xfade=0.5
+sfx_spell_fizzle,1,lib:p0ss/sand.ogg
+sfx_spell_fizzle,2,lib:p0ss/sand.ogg shift=1.04
+sfx_spell_fizzle,3,lib:p0ss/sand.ogg shift=0.96
+sfx_spell_frango_cast,1,lib:p0ss/magicfail2.ogg
+sfx_spell_frango_cast,2,lib:p0ss/magicfail2.ogg shift=1.04
+sfx_spell_frango_misfire,1,lib:p0ss/enchant.ogg
+sfx_spell_frango_shatter_metal,1,lib:p0ss/magicfail2.ogg
+sfx_spell_frango_shatter_metal,2,lib:p0ss/magicfail2.ogg shift=1.04
+sfx_spell_frango_shatter_stone,1,lib:p0ss/magicfail2.ogg
+sfx_spell_frango_shatter_stone,2,lib:p0ss/magicfail2.ogg shift=1.04
+sfx_spell_frango_shatter_stone,3,lib:p0ss/magicfail2.ogg shift=0.96
+sfx_spell_frango_shatter_wood,1,lib:p0ss/magicfail.ogg
+sfx_spell_frango_shatter_wood,2,lib:p0ss/magicfail.ogg shift=1.04
+sfx_spell_ignis_misfire,1,lib:p0ss/sand.ogg
+sfx_spell_ignis_misfire,2,lib:p0ss/sand.ogg shift=1.04
+sfx_spell_levo_cast,1,lib:p0ss/zap2d.ogg
+sfx_spell_levo_cast,2,lib:p0ss/zap2d.ogg shift=1.04
+sfx_spell_levo_hold_loop,1,lib:p0ss/moving.ogg xfade=0.5
+sfx_spell_mana_restored,1,lib:p0ss/zap6a.ogg
+sfx_spell_no_mana,1,lib:p0ss/sand.ogg
+sfx_spell_porta_misfire,1,lib:p0ss/enchant.ogg
+sfx_spell_saltus_cast,1,lib:p0ss/spell.ogg
+sfx_spell_saltus_land_slam,1,lib:p0ss/magicfail.ogg
+sfx_spell_saltus_land_slam,2,lib:p0ss/magicfail.ogg shift=1.04
+sfx_spell_saltus_launch,1,lib:p0ss/spell.ogg
+sfx_spell_saltus_misfire,1,lib:p0ss/enchant.ogg
+sfx_spell_somnus_apply,1,lib:p0ss/zap6a.ogg
+sfx_spell_somnus_apply,2,lib:p0ss/zap6a.ogg shift=1.04
+sfx_spell_somnus_cast_loud,1,lib:p0ss/curse4.ogg
+sfx_spell_somnus_cast_soft,1,lib:p0ss/blessing2.ogg
+sfx_spell_somnus_cast_soft,2,lib:p0ss/blessing2.ogg shift=1.04
+sfx_spell_somnus_misfire,1,lib:p0ss/freeze2.ogg
+sfx_spell_velox_cast,1,lib:p0ss/warp2.ogg
+sfx_spell_velox_dash,1,lib:p0ss/warp.ogg
+sfx_spell_velox_dash,2,lib:p0ss/warp.ogg shift=1.04
+sfx_spell_velox_misfire,1,lib:p0ss/water.ogg

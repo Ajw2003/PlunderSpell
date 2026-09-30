@@ -3,7 +3,7 @@ using Plunderspell.Audio;
 
 namespace Plunderspell.Tests.Editor
 {
-    /// <summary>The reduced playtest sound set: footsteps, guards and UI only.</summary>
+    /// <summary>The reduced playtest sound set: footsteps, guards, UI and the replaced spells.</summary>
     public class SoundFocusTests
     {
         private bool _wasEnabled;
@@ -19,6 +19,8 @@ namespace Plunderspell.Tests.Editor
         [TestCase("vo_hound_howl")]
         [TestCase("sfx_wpn_blade_swing")]
         [TestCase("ui_button_click")]
+        [TestCase("sfx_spell_frango_cast")]
+        [TestCase("sfx_spell_porta_open")]
         public void Test_KeptSoundsPlay(string name)
         {
             SoundFocus.Enabled = true;
@@ -26,6 +28,7 @@ namespace Plunderspell.Tests.Editor
         }
 
         [TestCase("sfx_spell_ignis_cast")]
+        [TestCase("sfx_spell_levo_release")]
         [TestCase("mus_title_loop")]
         [TestCase("amb_fire_crackle")]
         [TestCase("sting_alarm_roused_late")]
