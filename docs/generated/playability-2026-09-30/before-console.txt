@@ -1,0 +1,32 @@
+17:54:13 host: state MainMenu players 0 local none holding nothing
+17:54:15 host: state Lair players 1 local 44.500,1.189,0.000 holding nothing
+17:54:15 client started (pid 1474)
+17:54:23 client: state Lair players 2 local 44.500,1.187,1.600 holding nothing
+17:54:24 castle: seed 3508293, LateMedieval
+17:54:27 host: state Playing players 2 local -20.500,1.499,-36.000 holding nothing
+17:54:28 client: state Playing players 2 local -24.000,1.498,-32.500 holding nothing
+17:54:34 provoked 20 guards toward (-20.50, 1.50, -36.00)
+TOTAL guards 20 observed_s 1821.4 stuck_s 467.7 parked_s 0.0 nodest_s 0.0 moving_s 1353.7 standing_s 467.7 now Patrolling=19 Investigating=1
+guard -221210 stuck 2.3 parked 0.0 nodest 0.0 moving 88.8
+guard -221340 stuck 4.6 parked 0.0 nodest 0.0 moving 86.5
+guard -221470 stuck 2.3 parked 0.0 nodest 0.0 moving 88.8
+guard -221600 stuck 2.3 parked 0.0 nodest 0.0 moving 88.8
+guard -221730 stuck 4.6 parked 0.0 nodest 0.0 moving 86.5
+guard -221860 stuck 2.3 parked 0.0 nodest 0.0 moving 88.8
+guard -221998 stuck 0.0 parked 0.0 nodest 0.0 moving 91.1
+guard -222128 stuck 0.0 parked 0.0 nodest 0.0 moving 91.1
+guard -222266 stuck 2.3 parked 0.0 nodest 0.0 moving 88.8
+guard -222404 stuck 0.0 parked 0.0 nodest 0.0 moving 91.1
+guard -222542 stuck 2.3 parked 0.0 nodest 0.0 moving 88.8
+guard -222676 stuck 66.9 parked 0.0 nodest 0.0 moving 24.2
+guard -222810 stuck 64.6 parked 0.0 nodest 0.0 moving 26.5
+guard -222944 stuck 0.0 parked 0.0 nodest 0.0 moving 91.1
+guard -223078 stuck 78.3 parked 0.0 nodest 0.0 moving 12.7
+guard -223212 stuck 71.5 parked 0.0 nodest 0.0 moving 19.6
+guard -223346 stuck 2.3 parked 0.0 nodest 0.0 moving 88.7
+guard -223484 stuck 0.0 parked 0.0 nodest 0.0 moving 91.1
+guard -223618 stuck 76.0 parked 0.0 nodest 0.0 moving 15.0
+guard -223752 stuck 85.2 parked 0.0 nodest 0.0 moving 5.9
+17:56:10 state after: state Playing players 2 local -20.500,1.497,-36.000 holding nothing
+client log error lines: 3
+17:56:10 cleaning up
