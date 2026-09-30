@@ -22,21 +22,51 @@ namespace Plunderspell.Audio
         // Static entry points for Tools/Unity/coop_drop_latency.sh: a Development build's eval reaches
         // game code only through reflection, so each call is one method with plain arguments.
 
-        /// <summary>Host: lifts the free piece nearest the main camera and drops it; returns where it was.</summary>
-        public static string DropNearestToCamera(float height)
+        /// <summary>
+        /// Host: puts a piece for <paramref name="scenario"/> on the floor 1.5 m in front of the main
+        /// camera and returns "x,y,z name" of where it rests. "impact" takes a piece that never breaks,
+        /// "break" one a 2 m drop breaks.
+        /// </summary>
+        public static string StageScenario(string scenario)
         {
-            Item piece = Nearest(Camera.main.transform.position, freeOnly: true);
+            const float DropHeight = 2f;
+            float landingSpeed = Mathf.Sqrt(2f * -Physics.gravity.y * DropHeight);
+            Transform cam = Camera.main.transform;
+            Item piece = scenario == "break"
+                ? Nearest(cam.position, freeOnly: true, breaksAt: landingSpeed * 0.8f)
+                : Nearest(cam.position, freeOnly: true, sturdyOnly: true);
             if (piece == null)
-                return "no piece";
-            Vector3 at = piece.transform.position;
-            Instance().Drop(piece, height);
-            return FormattableString.Invariant($"{at.x:F2},{at.y:F2},{at.z:F2} {piece.name}");
+                return "no piece for " + scenario;
+
+            Vector3 forward = Vector3.ProjectOnPlane(cam.forward, Vector3.up).normalized;
+            Vector3 ahead = cam.position + forward * 1.5f;
+            if (!Physics.Raycast(ahead, Vector3.down, out RaycastHit floor, 5f, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+                return "no floor in front of the camera";
+
+            var body = piece.GetComponent<Rigidbody>();
+            var collider = piece.GetComponentInChildren<Collider>();
+            Vector3 rest = floor.point + Vector3.up * ((collider != null ? collider.bounds.extents.y : 0.3f) + 0.02f);
+            body.linearVelocity = Vector3.zero;
+            body.angularVelocity = Vector3.zero;
+            body.position = rest;
+            piece.transform.position = rest;
+            return FormattableString.Invariant($"{rest.x:F2},{rest.y:F2},{rest.z:F2} {piece.name}");
         }
 
-        /// <summary>Client: watches the piece nearest (x, y, z) for <paramref name="seconds"/>.</summary>
-        public static string WatchNearest(float x, float y, float z, float seconds)
+        /// <summary>Host: lifts the piece called <paramref name="name"/> nearest (x, y, z) and drops it.</summary>
+        public static string DropAt(float x, float y, float z, string name, float height)
         {
-            Item piece = Nearest(new Vector3(x, y, z), freeOnly: false);
+            Item piece = Nearest(new Vector3(x, y, z), freeOnly: true, name);
+            if (piece == null)
+                return "no piece";
+            Instance().Drop(piece, height);
+            return "dropping " + piece.name;
+        }
+
+        /// <summary>Client: watches the piece called <paramref name="name"/> nearest (x, y, z) for <paramref name="seconds"/>.</summary>
+        public static string WatchNearest(float x, float y, float z, float seconds, string name)
+        {
+            Item piece = Nearest(new Vector3(x, y, z), freeOnly: false, name);
             if (piece == null)
                 return "no piece";
             Instance().Watch(piece, y, seconds);
@@ -56,7 +86,7 @@ namespace Plunderspell.Audio
             return root.GetComponent<AudioLatencyProbe>() ?? root.AddComponent<AudioLatencyProbe>();
         }
 
-        private static Item Nearest(Vector3 point, bool freeOnly)
+        private static Item Nearest(Vector3 point, bool freeOnly, string name = null, float breaksAt = -1f, bool sturdyOnly = false)
         {
             Item best = null;
             float bestDistance = float.MaxValue;
@@ -65,6 +95,17 @@ namespace Plunderspell.Audio
                 var body = item.GetComponent<Rigidbody>();
                 if (freeOnly && (body == null || body.isKinematic))
                     continue;
+                if (name != null && item.name != name)
+                    continue;
+                if (breaksAt > 0f || sturdyOnly)
+                {
+                    if (!item.TryGetComponent(out Plunderspell.Loot.LootPickup loot))
+                        continue;
+                    if (breaksAt > 0f && !loot.WouldBreak(breaksAt))
+                        continue;
+                    if (sturdyOnly && loot.WouldBreak(50f))
+                        continue;
+                }
                 float distance = (item.transform.position - point).sqrMagnitude;
                 if (distance < bestDistance)
                 {
@@ -102,12 +143,21 @@ namespace Plunderspell.Audio
                     impactAt = Time.realtimeSinceStartup;
             }
             Item.Impacted += OnImpact;
+            float relayedAt = -1f;
+            void OnRelayed(Item item, float speed, Vector3 point, bool struckCreature)
+            {
+                if (item == piece && relayedAt < 0f)
+                    relayedAt = Time.realtimeSinceStartup;
+            }
+            Item.ImpactedRemotely += OnRelayed;
 
             AudioSource[] sources = AudioDirector.Instance.GetComponentsInChildren<AudioSource>();
             float end = Time.realtimeSinceStartup + seconds;
             float top = restY, fallStart = -1f, landed = -1f, soundAt = -1f;
             string soundName = null;
-            while (Time.realtimeSinceStartup < end && (landed < 0f || soundAt < 0f))
+            var heard = new System.Text.StringBuilder();
+            var started = new System.Collections.Generic.HashSet<AudioSource>();
+            while (Time.realtimeSinceStartup < end)
             {
                 float now = Time.realtimeSinceStartup;
                 float y = mesh.position.y;
@@ -120,26 +170,33 @@ namespace Plunderspell.Audio
                 {
                     landed = now;
                 }
-                if (fallStart > 0f && soundAt < 0f)
+                if (fallStart > 0f)
                 {
                     foreach (AudioSource source in sources)
                     {
-                        if (source.isPlaying && source.clip != null && source.clip.name.StartsWith("phys_") && source.time < 0.1f)
+                        if (source.isPlaying && source.clip != null && source.clip.name.StartsWith("phys_") && source.time < 0.1f
+                            && started.Add(source))
                         {
-                            soundAt = now;
-                            soundName = source.clip.name;
-                            break;
+                            if (soundAt < 0f)
+                            {
+                                soundAt = now;
+                                soundName = source.clip.name;
+                            }
+                            heard.Append(' ').Append(source.clip.name).Append('@').Append(((now - fallStart) * 1000f).ToString("F0")).Append("ms");
                         }
                     }
                 }
+                if (landed > 0f && now - landed > 1.5f)
+                    break;
                 yield return null;
             }
             Item.Impacted -= OnImpact;
+            Item.ImpactedRemotely -= OnRelayed;
 
             string Ms(float t) => t < 0f || fallStart < 0f ? "never" : $"{(t - fallStart) * 1000f:F0} ms";
             var body = piece.GetComponent<Rigidbody>();
-            Debug.Log($"[AudioLatency] watch {piece.name}: from fall start, mesh down {Ms(landed)}, collision here {Ms(impactAt)}, " +
-                      $"phys sound starts {Ms(soundAt)} ({soundName ?? "none"}), kinematic {(body != null && body.isKinematic)}");
+            Debug.Log($"[AudioLatency] watch {piece.name}: from fall start, mesh down {Ms(landed)}, collision here {Ms(impactAt)}, relayed impact {Ms(relayedAt)}, " +
+                      $"phys sound starts {Ms(soundAt)} ({soundName ?? "none"}), all:{heard}, kinematic {(body != null && body.isKinematic)}");
         }
 
         private IEnumerator MeasureDrop(Item piece, float height)

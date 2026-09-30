@@ -56,12 +56,14 @@ namespace Plunderspell.Audio
         private void OnEnable()
         {
             Item.Impacted += OnImpact;
+            Item.ImpactedRemotely += PlayImpact;
             LootValue.Ruined += OnRuined;
         }
 
         private void OnDisable()
         {
             Item.Impacted -= OnImpact;
+            Item.ImpactedRemotely -= PlayImpact;
             LootValue.Ruined -= OnRuined;
         }
 
@@ -86,8 +88,15 @@ namespace Plunderspell.Audio
 
         private void OnImpact(Item item, Collision collision)
         {
-            float speed = collision.relativeVelocity.magnitude;
-            if (speed < MinImpactSpeed)
+            Vector3 point = collision.contactCount > 0 ? collision.GetContact(0).point : item.transform.position;
+            bool body = collision.gameObject.GetComponentInParent<IHealth>() != null;
+            PlayImpact(item, collision.relativeVelocity.magnitude, point, body);
+        }
+
+        /// <summary>An impact heard here: from this machine's own collision, or relayed from the one simulating the piece.</summary>
+        private void PlayImpact(Item item, float speed, Vector3 point, bool body)
+        {
+            if (item == null || speed < MinImpactSpeed)
                 return;
 
             int id = item.GetInstanceID();
@@ -97,9 +106,6 @@ namespace Plunderspell.Audio
             _lastImpact[id] = now;
 
             LootMaterial material = MaterialOf(item);
-            Vector3 point = collision.contactCount > 0 ? collision.GetContact(0).point : item.transform.position;
-
-            bool body = collision.gameObject.GetComponentInParent<IHealth>() != null;
             string sound = body
                 ? LootMaterials.Body
                 : LootMaterials.Impact(material, item.Mass >= HeavyMass || speed >= HeavySpeed);

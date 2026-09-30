@@ -206,6 +206,17 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// <summary>Raised at the start of every collision this item is in. Audio listens; see docs/4-systems/audio.md.</summary>
     public static event System.Action<Item, Collision> Impacted;
 
+    /// <summary>
+    /// Raised for an impact another machine simulated (a co-op client never simulates the host's
+    /// pieces, so it raises no collision of its own): the piece, the contact's relative speed, the
+    /// contact point, and whether it struck a creature. Relayed by <c>LootPickup</c>.
+    /// </summary>
+    public static event System.Action<Item, float, Vector3, bool> ImpactedRemotely;
+
+    /// <summary>Raises <see cref="ImpactedRemotely"/>; called by the network relay.</summary>
+    public static void RaiseRemoteImpact(Item item, float speed, Vector3 point, bool struckCreature) =>
+        ImpactedRemotely?.Invoke(item, speed, point, struckCreature);
+
     /// <summary>How much of the beam's strength holding this up takes: 0 weightless, 1 at the limit.
     /// Over 1 it cannot be lifted and drags. The beam's colour reads this.</summary>
     public float Load => Mass * -Physics.gravity.y / Mathf.Max(1f, TotalGrip);

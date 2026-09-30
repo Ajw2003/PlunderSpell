@@ -176,6 +176,8 @@ namespace Plunderspell.Loot
 
         private void OnCollisionEnter(Collision col)
         {
+            ShareImpact(col);
+
             // A carried item is protected — only free-falling / thrown loot can shatter.
             if (IsBeingCarried || IsBroken || _data == null)
                 return;
@@ -192,6 +194,69 @@ namespace Plunderspell.Loot
                 return;
 
             ApplyImpact(ImpactSpeed(col));
+        }
+
+        // ---------------------------------------------------------------------------------------
+        // Impact sounds for the machines that do not simulate this piece
+        // ---------------------------------------------------------------------------------------
+
+        // Match ImpactAudio's own floor and repeat guard, so nothing is sent that would not be heard.
+        private const float ShareMinSpeed = 1.2f;
+        private const float ShareRepeatSeconds = 0.12f;
+        private float _lastSharedImpact = -1f;
+
+        /// <summary>
+        /// Only the machine simulating a piece raises its collisions, so a co-op client heard no
+        /// impact from a piece the host simulates (every carried piece). The simulating machine sends
+        /// each audible impact through the server to everyone else, who raise
+        /// <see cref="Item.ImpactedRemotely"/>. See docs/4-systems/audio.md, "Latency".
+        /// </summary>
+        private void ShareImpact(Collision col)
+        {
+            if (!isSpawned || _item == null)
+                return;
+            if (TryGetComponent(out NetworkTransform synced) && !synced.IsController(synced.ownerAuth))
+                return;
+
+            float speed = col.relativeVelocity.magnitude;
+            float now = Time.unscaledTime;
+            if (speed < ShareMinSpeed || now - _lastSharedImpact < ShareRepeatSeconds)
+                return;
+            _lastSharedImpact = now;
+
+            Vector3 point = col.contactCount > 0 ? col.GetContact(0).point : transform.position;
+            bool struckCreature = col.gameObject.GetComponentInParent<IHealth>() != null;
+            if (isServer)
+                ImpactObservers(speed, point, struckCreature, localPlayerForced);
+            else
+                ImpactToServer(speed, point, struckCreature);
+        }
+
+        [ServerRpc(requireOwnership: false)]
+        private void ImpactToServer(float speed, Vector3 point, bool struckCreature, RPCInfo info = default) =>
+            ImpactObservers(speed, point, struckCreature, info.sender);
+
+        [ObserversRpc]
+        private void ImpactObservers(float speed, Vector3 point, bool struckCreature, PlayerID simulatedBy)
+        {
+            // The simulating machine already played it from its own collision.
+            if (localPlayerForced == simulatedBy || _item == null)
+                return;
+
+            // This machine's picture of the hit comes after the message; hold the sound as long, so it
+            // lands with the picture.
+            float behind = ReplicationDelay();
+            if (behind > 0.01f)
+                StartCoroutine(RaiseImpactLater(behind, speed, point, struckCreature));
+            else
+                Item.RaiseRemoteImpact(_item, speed, point, struckCreature);
+        }
+
+        private System.Collections.IEnumerator RaiseImpactLater(float seconds, float speed, Vector3 point, bool struckCreature)
+        {
+            yield return new WaitForSecondsRealtime(seconds);
+            if (_item != null)
+                Item.RaiseRemoteImpact(_item, speed, point, struckCreature);
         }
 
         /// <summary>
@@ -256,7 +321,33 @@ namespace Plunderspell.Loot
         }
 
         [ObserversRpc(bufferLast: true)]
-        private void BreakItemObservers() => ApplyBrokenState();
+        private void BreakItemObservers()
+        {
+            // A client draws the piece from its buffer of replicated states, so it would vanish (and
+            // its break sound play) before it visibly lands. Apply the break when the picture gets there.
+            float behind = isServer ? 0f : ReplicationDelay();
+            if (behind > 0.01f)
+                StartCoroutine(ApplyBrokenStateLater(behind));
+            else
+                ApplyBrokenState();
+        }
+
+        private System.Collections.IEnumerator ApplyBrokenStateLater(float seconds)
+        {
+            yield return new WaitForSecondsRealtime(seconds);
+            ApplyBrokenState();
+        }
+
+        /// <summary>
+        /// How far behind the simulating machine this machine's picture of the piece runs: the ticks
+        /// its NetworkTransform holds for interpolation (about 150 ms measured on a local client).
+        /// </summary>
+        private float ReplicationDelay()
+        {
+            if (!TryGetComponent(out NetworkTransform synced) || networkManager == null)
+                return 0f;
+            return synced.ticksBehind / (float)networkManager.tickModule.tickRate;
+        }
 
         [ServerRpc(requireOwnership: true)]
         private void RequestBreak() => BreakItem();

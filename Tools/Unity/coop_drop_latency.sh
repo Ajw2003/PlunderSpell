@@ -5,6 +5,8 @@
 # (AudioLatencyProbe). Physics sounds are muted by SoundFocus in play, so both sides switch it off
 # for the run. Prints the two [AudioLatency] lines.
 # Usage: bash Tools/Unity/coop_drop_latency.sh [--build]
+# Scenarios, in one session: impact (a piece that never breaks) and break (one a 2 m drop breaks),
+# each staged on the floor in front of the host camera.
 set -euo pipefail
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
@@ -82,13 +84,19 @@ probe() { # probe <method> <args as C# object[] items>: calls a static AudioLate
 log "host: $(bash Tools/Unity/eval.sh "$(probe SetSoundFocus false)" 2>&1 || true)"
 log "client: $(client_eval "$(probe SetSoundFocus false)")"
 
-# The host names the piece it will drop by position; the client watches the one nearest there.
+# One session, one staged piece per scenario: a sturdy piece times the impact, a fragile one the break.
 host_log_start=$(wc -l < "$LOCALAPPDATA/Unity/Editor/Editor.log")
-where="$(bash Tools/Unity/eval.sh "$(probe DropNearestToCamera 2f)" 2>&1 || true)"
-log "host: dropping $where"
-xyz="${where%% *}"
-log "client: $(client_eval "$(probe WatchNearest "${xyz//,/f,}f, 8f")")"
-sleep 11
+for scenario in impact break; do
+    staged="$(bash Tools/Unity/eval.sh "$(probe StageScenario "\"$scenario\"")" 2>&1 || true)"
+    log "$scenario: host staged $staged"
+    case "$staged" in no*|ERROR*) continue ;; esac
+    sleep 2
+    xyz="${staged%% *}"
+    piece="${staged#* }"
+    log "$scenario: client $(client_eval "$(probe WatchNearest "${xyz//,/f,}f, 8f, \"$piece\"")")"
+    log "$scenario: host $(bash Tools/Unity/eval.sh "$(probe DropAt "${xyz//,/f,}f, \"$piece\", 2f")" 2>&1 || true)"
+    sleep 8
+done
 
 tail -n +"$host_log_start" "$LOCALAPPDATA/Unity/Editor/Editor.log" | grep "\[AudioLatency\] drop" | sed 's/^/host   /' || log "host: no result line"
 grep "\[AudioLatency\] watch" "$out/client.log" | sed 's/^/client /' || log "client: no result line"

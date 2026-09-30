@@ -237,10 +237,26 @@ joins, the host lifts the piece nearest its camera 2 m and drops it, both sides 
 | client | OxhideIngot | 584 ms | never | never |
 
 - On the host, sound and picture are within 10 ms.
-- On a client, a piece it does not simulate raises no collision, so **impact sounds never play on a
-  client** for pieces the host simulates (every carried piece is host-simulated, #169).
-- A break does play on the client, from the replicated ruin (`LootValue.Ruined`), but it arrives
-  about 180 ms **before** the client's interpolated picture shows the hit.
+- Before the fix, a client raised no collision for a piece it does not simulate, so impact sounds
+  never played there, and a break arrived about 180 ms before the client's interpolated picture.
+
+**Fix (2026-09-30).** The machine simulating a piece sends each audible impact (speed 1.2 m/s and
+up, 0.12 s apart, the same floor and guard as `ImpactAudio`) through the server to everyone else
+(`LootPickup.ShareImpact` → `ImpactObservers`), who raise `Item.ImpactedRemotely`; `ImpactAudio`
+plays it like its own. A client draws the piece `NetworkTransform.ticksBehind` ticks behind, so it
+holds a relayed impact, and applies a break (hiding the piece, its sound), that long
+(`LootPickup.ReplicationDelay`). The script now stages one piece per scenario in front of the host
+camera (a never-breaking piece for impact, one a 2 m drop breaks), one session. After the fix:
+
+| Side | Scenario | Visible mesh down | Sound starts |
+|---|---|---|---|
+| host | impact, OxhideIngot | 639 ms | 646 ms |
+| client | impact, OxhideIngot | 560 ms | 528 ms |
+| host | break, FaienceHippopotamus | 648 ms | 674 ms |
+| client | break, FaienceHippopotamus | 557 ms | 554 ms (impact and break together) |
+
+Scrape and roll loops still play only on the simulating machine: a client's copy of the piece has no
+velocity of its own to read.
 - Unity's own output path is 0-22 ms. Anything later than that happens after Unity: the Windows
   device (Bluetooth headphones typically add 150-300 ms; a TV's HDMI audio adds its own). Not
   measured: that needs a microphone recording the speaker.
