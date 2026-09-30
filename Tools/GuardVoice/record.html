@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guard voice recorder</title>
+<!-- record.html is GENERATED from this template by make_recording_script.py. Edit the template. -->
+<style>
+  :root { --bg:#14161a; --panel:#1f2329; --text:#f2f2f2; --dim:#b4bac4; --accent:#ffd166;
+          --good:#7ee787; --bad:#ff7b72; --line:#3a414b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:18px/1.45 system-ui, "Segoe UI", sans-serif; }
+  .wrap { display:grid; grid-template-columns: 1fr 300px; gap:16px; max-width:1200px; margin:0 auto; padding:16px; }
+  @media (max-width: 800px) { .wrap { grid-template-columns: 1fr; } }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  h1 { font-size:20px; margin:0 0 8px; }
+  label, select, button { font-size:18px; }
+  select { background:var(--bg); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:6px; }
+  button { background:#2c333c; color:var(--text); border:2px solid var(--line); border-radius:8px; padding:10px 16px; cursor:pointer; }
+  button:hover:not(:disabled) { border-color:var(--accent); }
+  button:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  button.primary { background:var(--accent); color:#111; border-color:var(--accent); font-weight:700; }
+  button.rec { background:#b3261e; border-color:#ff9b94; font-weight:700; }
+  .how { color:var(--dim); font-size:16px; margin:6px 0; }
+  .say { font-size:38px; line-height:1.2; font-weight:700; margin:12px 0; min-height:1.2em; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:99px; font-weight:700; border:2px solid; margin-right:8px; }
+  .badge.quiet { color:#8ecbff; border-color:#8ecbff; }
+  .badge.normal { color:var(--text); border-color:var(--text); }
+  .badge.loud { color:var(--bad); border-color:var(--bad); }
+  .dir { color:var(--accent); font-style:italic; margin:6px 0; }
+  .bar { height:10px; background:var(--bg); border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+  .bar > div { height:100%; background:var(--accent); width:0; }
+  .meter { height:22px; }
+  .meter > div { background:var(--good); }
+  .row { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0; align-items:center; }
+  .msg { min-height:1.5em; font-weight:600; }
+  .warn { color:var(--bad); }
+  .ok { color:var(--good); }
+  ol { list-style:none; margin:0; padding:0; max-height:70vh; overflow:auto; }
+  li button { width:100%; text-align:left; padding:6px 8px; font-size:15px; border-width:1px; margin-bottom:3px; }
+  li.cur button { border-color:var(--accent); border-width:2px; }
+  .tick { display:inline-block; width:1.4em; font-weight:700; }
+  .tick.done { color:var(--good); }
+  .small { font-size:15px; color:var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<main class="panel">
+  <h1>Guard voice recorder</h1>
+  <div class="row">
+    <label for="age">Age:</label><select id="age"></select>
+    <button id="folder" type="button">Choose output folder</button>
+  </div>
+  <p class="small" id="saveinfo"></p>
+  <p class="how" id="how"></p>
+  <p class="small"><b>One voice for every line.</b> Read all lines as yourself in one voice; the game disguises it into many guards later.</p>
+  <hr style="border-color:var(--line)">
+  <div class="small" id="pos"></div>
+  <div class="bar" aria-hidden="true"><div id="progress"></div></div>
+  <p class="small" id="situation"></p>
+  <div class="say" id="say"></div>
+  <div><span class="badge" id="loud"></span><span id="tone"></span></div>
+  <div class="dir" id="dir"></div>
+  <div class="small" id="note"></div>
+  <p class="small" id="gainHint"></p>
+  <div class="small">Input level</div>
+  <div class="bar meter" aria-hidden="true"><div id="meter"></div></div>
+  <div class="row">
+    <button id="rec" type="button" class="primary">Record (Space)</button>
+    <button id="play" type="button" disabled>Play back</button>
+    <button id="redo" type="button" disabled>Redo</button>
+    <button id="keep" type="button" disabled>Keep and next (Enter)</button>
+  </div>
+  <div class="row">
+    <button id="prev" type="button">Previous</button>
+    <button id="skip" type="button">Skip</button>
+  </div>
+  <div class="msg" id="take" aria-live="polite"></div>
+  <div class="msg" id="warning" aria-live="assertive"></div>
+  <p class="small">Leave about a second of silence before and after each take. Record in a dead room, 20 cm from the mic.
+     Perform bigger than feels natural.</p>
+</main>
+<aside class="panel">
+  <h1>Lines</h1>
+  <p class="small" id="count"></p>
+  <ol id="list"></ol>
+</aside>
+</div>
+
+<script id="data" type="application/json">{"ages": [{"id": "bronze", "title": "The Bronze Age (c. 1200 BC)", "howToSound": "A conscripted farmer with a spear. Bored, put-upon, would rather be home with the goats.", "language": "Greek-sounding. Built from real Ancient Greek words, but nobody will check: say it like you mean it.", "lines": [{"age": "bronze", "situation": "murmur", "number": 1, "file": "vo_bronze_base_murmur_01.wav", "text": "Sitos, sitos... panta sitos.", "direction": "muttering", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: muttering.", "loudness": "quiet", "minSeconds": 1.5, "note": "Means: grain, grain, always grain. Do not say this part."}, {"age": "bronze", "situation": "murmur", "number": 2, "file": "vo_bronze_base_murmur_02.wav", "text": "", "direction": "hum a little tune, 4–5 seconds", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: hum a little tune, 4–5 seconds.", "loudness": "quiet", "minSeconds": 4.0, "note": "No words: just make the sound described."}, {"age": "bronze", "situation": "murmur", "number": 3, "file": "vo_bronze_base_murmur_03.wav", "text": "Aaah... nyx makra.", "direction": "yawn", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: yawn.", "loudness": "quiet", "minSeconds": 1.5, "note": "Means: long night. Do not say this part."}, {"age": "bronze", "situation": "murmur", "number": 4, "file": "vo_bronze_base_murmur_04.wav", "text": "Ho wanax... pantote ho wanax.", "direction": "", "tone": "Half to yourself, bored and unhurried, low energy.", "loudness": "quiet", "minSeconds": 1.5, "note": "Means: the king... always the king. Do not say this part."}, {"age": "bronze", "situation": "alert", "number": 1, "file": "vo_bronze_base_alert_01.wav", "text": "Tis? Tis ekei?", "direction": "", "tone": "Suspicious and sharp. Let a question rise at the end.", "loudness": "normal", "minSeconds": 0.6, "note": "Means: who? who's there. Do not say this part."}, {"age": "bronze", "situation": "alert", "number": 2, "file": "vo_bronze_base_alert_02.wav", "text": "Ti touto?", "direction": "", "tone": "Suspicious and sharp. Let a question rise at the end.", "loudness": "normal", "minSeconds": 0.6, "note": "Means: what's this. Do not say this part."}, {"age": "bronze", "situation": "alert", "number": 3, "file": "vo_bronze_base_alert_03.wav", "text": "Akouō ti...", "direction": "quietly", "tone": "Hushed and suspicious. Suspicious and sharp. Let a question rise at the end. Direction for this line: quietly.", "loudness": "quiet", "minSeconds": 0.6, "note": "Means: I hear something. Do not say this part."}, {"age": "bronze", "situation": "chase", "number": 1, "file": "vo_bronze_base_chase_01.wav", "text": "KLEPTAI! KLEPTAI!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": "Means: thieves. Do not say this part."}, {"age": "bronze", "situation": "chase", "number": 2, "file": "vo_bronze_base_chase_02.wav", "text": "DEURO! DEURO, PHYLAKES!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": "Means: here, guards. Do not say this part."}, {"age": "bronze", "situation": "chase", "number": 3, "file": "vo_bronze_base_chase_03.wav", "text": "LABETE AUTOUS!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": "Means: seize them. Do not say this part."}, {"age": "bronze", "situation": "search", "number": 1, "file": "vo_bronze_base_search_01.wav", "text": "Pou ei...?", "direction": "", "tone": "Slow and low, playful menace. Stretch the vowels.", "loudness": "normal", "minSeconds": 1.2, "note": "Means: where are you. Do not say this part."}, {"age": "bronze", "situation": "search", "number": 2, "file": "vo_bronze_base_search_02.wav", "text": "Exelthe, mikre klepta...", "direction": "", "tone": "Slow and low, playful menace. Stretch the vowels.", "loudness": "normal", "minSeconds": 1.2, "note": "Means: come out, little thief. Do not say this part."}, {"age": "bronze", "situation": "lost", "number": 1, "file": "vo_bronze_base_lost_01.wav", "text": "Ouden. ...Mys.", "direction": "", "tone": "Deflated and a bit embarrassed. Pitch drops at the end.", "loudness": "quiet", "minSeconds": 1.0, "note": "Means: nothing. a mouse. Do not say this part."}, {"age": "bronze", "situation": "lost", "number": 2, "file": "vo_bronze_base_lost_02.wav", "text": "Oimoi. Ho wanax ou mathēsetai.", "direction": "", "tone": "Deflated and a bit embarrassed. Pitch drops at the end.", "loudness": "quiet", "minSeconds": 1.0, "note": "Means: alas. the king won't hear of it. Do not say this part."}, {"age": "bronze", "situation": "attack", "number": 1, "file": "vo_bronze_base_attack_01.wav", "text": "Ha!", "direction": "effort", "tone": "Short explosive effort sound, from the chest. Direction for this line: effort.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "bronze", "situation": "attack", "number": 2, "file": "vo_bronze_base_attack_02.wav", "text": "Hyah!", "direction": "effort", "tone": "Short explosive effort sound, from the chest. Direction for this line: effort.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "bronze", "situation": "attack", "number": 3, "file": "vo_bronze_base_attack_03.wav", "text": "Hup!", "direction": "effort", "tone": "Short explosive effort sound, from the chest. Direction for this line: effort.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "bronze", "situation": "hurt", "number": 1, "file": "vo_bronze_base_hurt_01.wav", "text": "Aiai!", "direction": "", "tone": "Sharp and short, surprised pain, not gory. Normal to loud.", "loudness": "normal", "minSeconds": 0.3, "note": ""}, {"age": "bronze", "situation": "hurt", "number": 2, "file": "vo_bronze_base_hurt_02.wav", "text": "Ow— oimoi!", "direction": "", "tone": "Sharp and short, surprised pain, not gory. Normal to loud.", "loudness": "normal", "minSeconds": 0.3, "note": ""}, {"age": "bronze", "situation": "hurt", "number": 3, "file": "vo_bronze_base_hurt_03.wav", "text": "", "direction": "pained grunt", "tone": "Sharp and short, surprised pain, not gory. Normal to loud. Direction for this line: pained grunt.", "loudness": "normal", "minSeconds": 0.3, "note": "No words: just make the sound described."}, {"age": "bronze", "situation": "death", "number": 1, "file": "vo_bronze_base_death_01.wav", "text": "Ōh... ho wanax...", "direction": "theatrical", "tone": "Theatrical and a little comic, fading out. Never gory. Direction for this line: theatrical.", "loudness": "normal", "minSeconds": 0.8, "note": ""}, {"age": "bronze", "situation": "death", "number": 2, "file": "vo_bronze_base_death_02.wav", "text": "Aaa—", "direction": "a yell, cut off", "tone": "Theatrical and a little comic, fading out. Never gory. Direction for this line: a yell, cut off.", "loudness": "normal", "minSeconds": 0.8, "note": ""}, {"age": "bronze", "situation": "asleep", "number": 1, "file": "vo_bronze_base_asleep_01.wav", "text": "", "direction": "slow deep snore, 3 breaths", "tone": "Slow deep snoring, three full breaths, at least 6 seconds. Direction for this line: slow deep snore, 3 breaths.", "loudness": "quiet", "minSeconds": 6.0, "note": "No words: just make the sound described."}, {"age": "bronze", "situation": "asleep", "number": 2, "file": "vo_bronze_base_asleep_02.wav", "text": "", "direction": "snore with a little mumble", "tone": "Slow deep snoring, three full breaths, at least 6 seconds. Direction for this line: snore with a little mumble.", "loudness": "quiet", "minSeconds": 6.0, "note": "No words: just make the sound described."}, {"age": "bronze", "situation": "grabbed", "number": 1, "file": "vo_bronze_base_grabbed_01.wav", "text": "Ti?! Aphes me!", "direction": "", "tone": "Indignant outrage, squeaky at the top.", "loudness": "loud", "minSeconds": 0.6, "note": "Means: what?! put me down. Do not say this part."}, {"age": "bronze", "situation": "grabbed", "number": 2, "file": "vo_bronze_base_grabbed_02.wav", "text": "Ou! Ou! OU!", "direction": "", "tone": "Indignant outrage, squeaky at the top.", "loudness": "loud", "minSeconds": 0.6, "note": "Means: no! no! NO. Do not say this part."}, {"age": "bronze", "situation": "grabbed", "number": 3, "file": "vo_bronze_base_grabbed_03.wav", "text": "", "direction": "indignant, muffled protest", "tone": "Indignant outrage, squeaky at the top. Direction for this line: indignant, muffled protest.", "loudness": "loud", "minSeconds": 0.6, "note": "No words: just make the sound described."}, {"age": "bronze", "situation": "thrown", "number": 1, "file": "vo_bronze_base_thrown_01.wav", "text": "AAAAAAH—", "direction": "", "tone": "A long falling scream that starts loud and trails off.", "loudness": "loud", "minSeconds": 1.5, "note": ""}, {"age": "bronze", "situation": "thrown", "number": 2, "file": "vo_bronze_base_thrown_02.wav", "text": "Ō theoi—!", "direction": "", "tone": "A long falling scream that starts loud and trails off.", "loudness": "loud", "minSeconds": 1.5, "note": "Means: oh gods—. Do not say this part."}]}, {"id": "high", "title": "The High Medieval (c. 1250)", "howToSound": "Old night-watchman with a lantern. Grumbles to himself, creaky, kind of sweet.", "language": "Middle English, with Norman French from the knight. Haro! was the real medieval cry that raised the hue and cry.", "lines": [{"age": "high", "situation": "murmur", "number": 1, "file": "vo_high_base_murmur_01.wav", "text": "Colde. Evere colde, this wal.", "direction": "muttering", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: muttering.", "loudness": "quiet", "minSeconds": 1.5, "note": ""}, {"age": "high", "situation": "murmur", "number": 2, "file": "vo_high_base_murmur_02.wav", "text": "", "direction": "hum a slow chant, 4–5 seconds", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: hum a slow chant, 4–5 seconds.", "loudness": "quiet", "minSeconds": 4.0, "note": "No words: just make the sound described."}, {"age": "high", "situation": "murmur", "number": 3, "file": "vo_high_base_murmur_03.wav", "text": "...Longe nyght.", "direction": "yawn", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: yawn.", "loudness": "quiet", "minSeconds": 1.5, "note": ""}, {"age": "high", "situation": "murmur", "number": 4, "file": "vo_high_base_murmur_04.wav", "text": "Mi lord slepeth, and I walke. As evere.", "direction": "", "tone": "Half to yourself, bored and unhurried, low energy.", "loudness": "quiet", "minSeconds": 1.5, "note": ""}, {"age": "high", "situation": "alert", "number": 1, "file": "vo_high_base_alert_01.wav", "text": "Who goth ther?", "direction": "", "tone": "Suspicious and sharp. Let a question rise at the end.", "loudness": "normal", "minSeconds": 0.6, "note": ""}, {"age": "high", "situation": "alert", "number": 2, "file": "vo_high_base_alert_02.wav", "text": "Qui va là?", "direction": "", "tone": "Suspicious and sharp. Let a question rise at the end.", "loudness": "normal", "minSeconds": 0.6, "note": ""}, {"age": "high", "situation": "alert", "number": 3, "file": "vo_high_base_alert_03.wav", "text": "Herke... what was that?", "direction": "quietly", "tone": "Hushed and suspicious. Suspicious and sharp. Let a question rise at the end. Direction for this line: quietly.", "loudness": "quiet", "minSeconds": 0.6, "note": ""}, {"age": "high", "situation": "chase", "number": 1, "file": "vo_high_base_chase_01.wav", "text": "HARO! HARO! THEVES!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": ""}, {"age": "high", "situation": "chase", "number": 2, "file": "vo_high_base_chase_02.wav", "text": "OUT! HARROW! TO ME, TO ME!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": ""}, {"age": "high", "situation": "chase", "number": 3, "file": "vo_high_base_chase_03.wav", "text": "AUX LARRONS!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": "Means: at the thieves. Do not say this part."}, {"age": "high", "situation": "search", "number": 1, "file": "vo_high_base_search_01.wav", "text": "Com forth, thef...", "direction": "", "tone": "Slow and low, playful menace. Stretch the vowels.", "loudness": "normal", "minSeconds": 1.2, "note": ""}, {"age": "high", "situation": "search", "number": 2, "file": "vo_high_base_search_02.wav", "text": "I se thee nat... yet.", "direction": "", "tone": "Slow and low, playful menace. Stretch the vowels.", "loudness": "normal", "minSeconds": 1.2, "note": ""}, {"age": "high", "situation": "lost", "number": 1, "file": "vo_high_base_lost_01.wav", "text": "Nought. A rat, par ma foi.", "direction": "", "tone": "Deflated and a bit embarrassed. Pitch drops at the end.", "loudness": "quiet", "minSeconds": 1.0, "note": ""}, {"age": "high", "situation": "lost", "number": 2, "file": "vo_high_base_lost_02.wav", "text": "Wel. Nobody seith a word to mi lord.", "direction": "", "tone": "Deflated and a bit embarrassed. Pitch drops at the end.", "loudness": "quiet", "minSeconds": 1.0, "note": ""}, {"age": "high", "situation": "attack", "number": 1, "file": "vo_high_base_attack_01.wav", "text": "Hah!", "direction": "effort", "tone": "Short explosive effort sound, from the chest. Direction for this line: effort.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "high", "situation": "attack", "number": 2, "file": "vo_high_base_attack_02.wav", "text": "Have at thee!", "direction": "", "tone": "Short explosive effort sound, from the chest.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "high", "situation": "attack", "number": 3, "file": "vo_high_base_attack_03.wav", "text": "Hyah!", "direction": "effort", "tone": "Short explosive effort sound, from the chest. Direction for this line: effort.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "high", "situation": "hurt", "number": 1, "file": "vo_high_base_hurt_01.wav", "text": "Ow! By Seint Thomas!", "direction": "", "tone": "Sharp and short, surprised pain, not gory. Normal to loud.", "loudness": "normal", "minSeconds": 0.3, "note": ""}, {"age": "high", "situation": "hurt", "number": 2, "file": "vo_high_base_hurt_02.wav", "text": "Aah!", "direction": "", "tone": "Sharp and short, surprised pain, not gory. Normal to loud.", "loudness": "normal", "minSeconds": 0.3, "note": ""}, {"age": "high", "situation": "hurt", "number": 3, "file": "vo_high_base_hurt_03.wav", "text": "", "direction": "pained grunt", "tone": "Sharp and short, surprised pain, not gory. Normal to loud. Direction for this line: pained grunt.", "loudness": "normal", "minSeconds": 0.3, "note": "No words: just make the sound described."}, {"age": "high", "situation": "death", "number": 1, "file": "vo_high_base_death_01.wav", "text": "Mercy... Jhesu...", "direction": "grandly", "tone": "Theatrical and a little comic, fading out. Never gory. Direction for this line: grandly.", "loudness": "normal", "minSeconds": 0.8, "note": ""}, {"age": "high", "situation": "death", "number": 2, "file": "vo_high_base_death_02.wav", "text": "Oof—", "direction": "winded", "tone": "Theatrical and a little comic, fading out. Never gory. Direction for this line: winded.", "loudness": "normal", "minSeconds": 0.8, "note": ""}, {"age": "high", "situation": "asleep", "number": 1, "file": "vo_high_base_asleep_01.wav", "text": "", "direction": "slow deep snore, 3 breaths", "tone": "Slow deep snoring, three full breaths, at least 6 seconds. Direction for this line: slow deep snore, 3 breaths.", "loudness": "quiet", "minSeconds": 6.0, "note": "No words: just make the sound described."}, {"age": "high", "situation": "asleep", "number": 2, "file": "vo_high_base_asleep_02.wav", "text": "", "direction": "snore with a little mumble", "tone": "Slow deep snoring, three full breaths, at least 6 seconds. Direction for this line: snore with a little mumble.", "loudness": "quiet", "minSeconds": 6.0, "note": "No words: just make the sound described."}, {"age": "high", "situation": "grabbed", "number": 1, "file": "vo_high_base_grabbed_01.wav", "text": "Unhand me, knave!", "direction": "", "tone": "Indignant outrage, squeaky at the top.", "loudness": "loud", "minSeconds": 0.6, "note": ""}, {"age": "high", "situation": "grabbed", "number": 2, "file": "vo_high_base_grabbed_02.wav", "text": "What sorcerie is this?!", "direction": "", "tone": "Indignant outrage, squeaky at the top.", "loudness": "loud", "minSeconds": 0.6, "note": ""}, {"age": "high", "situation": "grabbed", "number": 3, "file": "vo_high_base_grabbed_03.wav", "text": "", "direction": "indignant, muffled protest", "tone": "Indignant outrage, squeaky at the top. Direction for this line: indignant, muffled protest.", "loudness": "loud", "minSeconds": 0.6, "note": "No words: just make the sound described."}, {"age": "high", "situation": "thrown", "number": 1, "file": "vo_high_base_thrown_01.wav", "text": "AAAAAAH—", "direction": "", "tone": "A long falling scream that starts loud and trails off.", "loudness": "loud", "minSeconds": 1.5, "note": ""}, {"age": "high", "situation": "thrown", "number": 2, "file": "vo_high_base_thrown_02.wav", "text": "Mon Dieu—!", "direction": "", "tone": "A long falling scream that starts loud and trails off.", "loudness": "loud", "minSeconds": 1.5, "note": ""}]}, {"id": "late", "title": "The Late Medieval (c. 1450)", "howToSound": "Drilled, counts his steps, a stickler for the rota.", "language": "Late Middle English and Burgundian French. These guards walk to a schedule and hunt in pairs, so they sound drilled.", "lines": [{"age": "late", "situation": "murmur", "number": 1, "file": "vo_late_base_murmur_01.wav", "text": "...two and twenti, thre and twenti, turne.", "direction": "counting under breath", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: counting under breath.", "loudness": "quiet", "minSeconds": 1.5, "note": ""}, {"age": "late", "situation": "murmur", "number": 2, "file": "vo_late_base_murmur_02.wav", "text": "Hmm. The bellman's late agayn.", "direction": "", "tone": "Half to yourself, bored and unhurried, low energy.", "loudness": "quiet", "minSeconds": 1.5, "note": ""}, {"age": "late", "situation": "murmur", "number": 3, "file": "vo_late_base_murmur_03.wav", "text": "", "direction": "hum a marching tune, 4–5 seconds", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: hum a marching tune, 4–5 seconds.", "loudness": "quiet", "minSeconds": 4.0, "note": "No words: just make the sound described."}, {"age": "late", "situation": "murmur", "number": 4, "file": "vo_late_base_murmur_04.wav", "text": "Seconde wacche. Alwey the seconde wacche.", "direction": "yawn", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: yawn.", "loudness": "quiet", "minSeconds": 1.5, "note": ""}, {"age": "late", "situation": "alert", "number": 1, "file": "vo_late_base_alert_01.wav", "text": "Halte! Who's there?", "direction": "", "tone": "Suspicious and sharp. Let a question rise at the end.", "loudness": "normal", "minSeconds": 0.6, "note": ""}, {"age": "late", "situation": "alert", "number": 2, "file": "vo_late_base_alert_02.wav", "text": "Qui vive?", "direction": "", "tone": "Suspicious and sharp. Let a question rise at the end.", "loudness": "normal", "minSeconds": 0.6, "note": ""}, {"age": "late", "situation": "alert", "number": 3, "file": "vo_late_base_alert_03.wav", "text": "Somthyng stirreth...", "direction": "quietly", "tone": "Hushed and suspicious. Suspicious and sharp. Let a question rise at the end. Direction for this line: quietly.", "loudness": "quiet", "minSeconds": 0.6, "note": ""}, {"age": "late", "situation": "chase", "number": 1, "file": "vo_late_base_chase_01.wav", "text": "À L'ARME! À L'ARME!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": ""}, {"age": "late", "situation": "chase", "number": 2, "file": "vo_late_base_chase_02.wav", "text": "SAINCT GEORGE! THEVES!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": ""}, {"age": "late", "situation": "chase", "number": 3, "file": "vo_late_base_chase_03.wav", "text": "Two by two, lads — TAKE THEM!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": ""}, {"age": "late", "situation": "search", "number": 1, "file": "vo_late_base_search_01.wav", "text": "Come out, come out...", "direction": "", "tone": "Slow and low, playful menace. Stretch the vowels.", "loudness": "normal", "minSeconds": 1.2, "note": ""}, {"age": "late", "situation": "search", "number": 2, "file": "vo_late_base_search_02.wav", "text": "We hold the gates, thef. Every one.", "direction": "", "tone": "Slow and low, playful menace. Stretch the vowels.", "loudness": "normal", "minSeconds": 1.2, "note": ""}, {"age": "late", "situation": "lost", "number": 1, "file": "vo_late_base_lost_01.wav", "text": "Nothing. Write it in the book.", "direction": "", "tone": "Deflated and a bit embarrassed. Pitch drops at the end.", "loudness": "quiet", "minSeconds": 1.0, "note": ""}, {"age": "late", "situation": "lost", "number": 2, "file": "vo_late_base_lost_02.wav", "text": "...Tell no-one.", "direction": "", "tone": "Deflated and a bit embarrassed. Pitch drops at the end.", "loudness": "quiet", "minSeconds": 1.0, "note": ""}, {"age": "late", "situation": "attack", "number": 1, "file": "vo_late_base_attack_01.wav", "text": "Hah!", "direction": "effort", "tone": "Short explosive effort sound, from the chest. Direction for this line: effort.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "late", "situation": "attack", "number": 2, "file": "vo_late_base_attack_02.wav", "text": "Montjoie!", "direction": "", "tone": "Short explosive effort sound, from the chest.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "late", "situation": "attack", "number": 3, "file": "vo_late_base_attack_03.wav", "text": "Hyah!", "direction": "effort", "tone": "Short explosive effort sound, from the chest. Direction for this line: effort.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "late", "situation": "hurt", "number": 1, "file": "vo_late_base_hurt_01.wav", "text": "Aah! Saint Denis!", "direction": "", "tone": "Sharp and short, surprised pain, not gory. Normal to loud.", "loudness": "normal", "minSeconds": 0.3, "note": ""}, {"age": "late", "situation": "hurt", "number": 2, "file": "vo_late_base_hurt_02.wav", "text": "Ow!", "direction": "", "tone": "Sharp and short, surprised pain, not gory. Normal to loud.", "loudness": "normal", "minSeconds": 0.3, "note": ""}, {"age": "late", "situation": "hurt", "number": 3, "file": "vo_late_base_hurt_03.wav", "text": "", "direction": "pained grunt", "tone": "Sharp and short, surprised pain, not gory. Normal to loud. Direction for this line: pained grunt.", "loudness": "normal", "minSeconds": 0.3, "note": "No words: just make the sound described."}, {"age": "late", "situation": "death", "number": 1, "file": "vo_late_base_death_01.wav", "text": "I... am... slayn...", "direction": "grandly", "tone": "Theatrical and a little comic, fading out. Never gory. Direction for this line: grandly.", "loudness": "normal", "minSeconds": 0.8, "note": ""}, {"age": "late", "situation": "death", "number": 2, "file": "vo_late_base_death_02.wav", "text": "Oof—", "direction": "winded", "tone": "Theatrical and a little comic, fading out. Never gory. Direction for this line: winded.", "loudness": "normal", "minSeconds": 0.8, "note": ""}, {"age": "late", "situation": "asleep", "number": 1, "file": "vo_late_base_asleep_01.wav", "text": "", "direction": "slow deep snore, 3 breaths", "tone": "Slow deep snoring, three full breaths, at least 6 seconds. Direction for this line: slow deep snore, 3 breaths.", "loudness": "quiet", "minSeconds": 6.0, "note": "No words: just make the sound described."}, {"age": "late", "situation": "asleep", "number": 2, "file": "vo_late_base_asleep_02.wav", "text": "", "direction": "snore with a little mumble", "tone": "Slow deep snoring, three full breaths, at least 6 seconds. Direction for this line: snore with a little mumble.", "loudness": "quiet", "minSeconds": 6.0, "note": "No words: just make the sound described."}, {"age": "late", "situation": "grabbed", "number": 1, "file": "vo_late_base_grabbed_01.wav", "text": "Put me DOWN!", "direction": "", "tone": "Indignant outrage, squeaky at the top.", "loudness": "loud", "minSeconds": 0.6, "note": ""}, {"age": "late", "situation": "grabbed", "number": 2, "file": "vo_late_base_grabbed_02.wav", "text": "Wicchecraft! WICCHECRAFT!", "direction": "", "tone": "Indignant outrage, squeaky at the top.", "loudness": "loud", "minSeconds": 0.6, "note": ""}, {"age": "late", "situation": "grabbed", "number": 3, "file": "vo_late_base_grabbed_03.wav", "text": "", "direction": "indignant, muffled protest", "tone": "Indignant outrage, squeaky at the top. Direction for this line: indignant, muffled protest.", "loudness": "loud", "minSeconds": 0.6, "note": "No words: just make the sound described."}, {"age": "late", "situation": "thrown", "number": 1, "file": "vo_late_base_thrown_01.wav", "text": "AAAAAAH—", "direction": "", "tone": "A long falling scream that starts loud and trails off.", "loudness": "loud", "minSeconds": 1.5, "note": ""}, {"age": "late", "situation": "thrown", "number": 2, "file": "vo_late_base_thrown_02.wav", "text": "Not agayn—!", "direction": "", "tone": "A long falling scream that starts loud and trails off.", "loudness": "loud", "minSeconds": 1.5, "note": ""}]}, {"id": "powder", "title": "The Age of Powder (c. 1620)", "howToSound": "A palace guard. Pompous, bored, proud of his uniform.", "language": "Early Modern English: Shakespeare's era, thee and thou. A palace full of glass, so they are twitchy about breakages.", "lines": [{"age": "powder", "situation": "murmur", "number": 1, "file": "vo_powder_base_murmur_01.wav", "text": "Twelve o' the clock, and all's well... God willing.", "direction": "", "tone": "Half to yourself, bored and unhurried, low energy.", "loudness": "quiet", "minSeconds": 1.5, "note": ""}, {"age": "powder", "situation": "murmur", "number": 2, "file": "vo_powder_base_murmur_02.wav", "text": "Zounds, these boots.", "direction": "muttering", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: muttering.", "loudness": "quiet", "minSeconds": 1.5, "note": ""}, {"age": "powder", "situation": "murmur", "number": 3, "file": "vo_powder_base_murmur_03.wav", "text": "", "direction": "hum a courtly dance tune, 4–5 seconds", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: hum a courtly dance tune, 4–5 seconds.", "loudness": "quiet", "minSeconds": 4.0, "note": "No words: just make the sound described."}, {"age": "powder", "situation": "murmur", "number": 4, "file": "vo_powder_base_murmur_04.wav", "text": "A pox on the night watch.", "direction": "yawn", "tone": "Half to yourself, bored and unhurried, low energy. Direction for this line: yawn.", "loudness": "quiet", "minSeconds": 1.5, "note": ""}, {"age": "powder", "situation": "alert", "number": 1, "file": "vo_powder_base_alert_01.wav", "text": "Who goes there?", "direction": "", "tone": "Suspicious and sharp. Let a question rise at the end.", "loudness": "normal", "minSeconds": 0.6, "note": ""}, {"age": "powder", "situation": "alert", "number": 2, "file": "vo_powder_base_alert_02.wav", "text": "Stand! Show thyself!", "direction": "", "tone": "Suspicious and sharp. Let a question rise at the end.", "loudness": "normal", "minSeconds": 0.6, "note": ""}, {"age": "powder", "situation": "alert", "number": 3, "file": "vo_powder_base_alert_03.wav", "text": "Hark — what was that?", "direction": "quietly", "tone": "Hushed and suspicious. Suspicious and sharp. Let a question rise at the end. Direction for this line: quietly.", "loudness": "quiet", "minSeconds": 0.6, "note": ""}, {"age": "powder", "situation": "chase", "number": 1, "file": "vo_powder_base_chase_01.wav", "text": "THIEVES! THIEVES IN THE GALLERY!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": ""}, {"age": "powder", "situation": "chase", "number": 2, "file": "vo_powder_base_chase_02.wav", "text": "TO ARMS! BEAT THE DRUM!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": ""}, {"age": "powder", "situation": "chase", "number": 3, "file": "vo_powder_base_chase_03.wav", "text": "IN THE KING'S NAME, STAND!", "direction": "", "tone": "SHOUTED, urgent, from the gut, full volume.", "loudness": "loud", "minSeconds": 0.8, "note": ""}, {"age": "powder", "situation": "search", "number": 1, "file": "vo_powder_base_search_01.wav", "text": "I know thou'rt here...", "direction": "", "tone": "Slow and low, playful menace. Stretch the vowels.", "loudness": "normal", "minSeconds": 1.2, "note": ""}, {"age": "powder", "situation": "search", "number": 2, "file": "vo_powder_base_search_02.wav", "text": "Mind the glass, lads. Mind the glass.", "direction": "", "tone": "Slow and low, playful menace. Stretch the vowels.", "loudness": "normal", "minSeconds": 1.2, "note": ""}, {"age": "powder", "situation": "lost", "number": 1, "file": "vo_powder_base_lost_01.wav", "text": "'Twas naught. A cat.", "direction": "", "tone": "Deflated and a bit embarrassed. Pitch drops at the end.", "loudness": "quiet", "minSeconds": 1.0, "note": ""}, {"age": "powder", "situation": "lost", "number": 2, "file": "vo_powder_base_lost_02.wav", "text": "Methinks I'll say nothing of it.", "direction": "", "tone": "Deflated and a bit embarrassed. Pitch drops at the end.", "loudness": "quiet", "minSeconds": 1.0, "note": ""}, {"age": "powder", "situation": "attack", "number": 1, "file": "vo_powder_base_attack_01.wav", "text": "Have at you!", "direction": "", "tone": "Short explosive effort sound, from the chest.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "powder", "situation": "attack", "number": 2, "file": "vo_powder_base_attack_02.wav", "text": "Hah!", "direction": "effort", "tone": "Short explosive effort sound, from the chest. Direction for this line: effort.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "powder", "situation": "attack", "number": 3, "file": "vo_powder_base_attack_03.wav", "text": "Hyah!", "direction": "effort", "tone": "Short explosive effort sound, from the chest. Direction for this line: effort.", "loudness": "loud", "minSeconds": 0.3, "note": ""}, {"age": "powder", "situation": "hurt", "number": 1, "file": "vo_powder_base_hurt_01.wav", "text": "God's wounds!", "direction": "", "tone": "Sharp and short, surprised pain, not gory. Normal to loud.", "loudness": "normal", "minSeconds": 0.3, "note": ""}, {"age": "powder", "situation": "hurt", "number": 2, "file": "vo_powder_base_hurt_02.wav", "text": "Ah!", "direction": "", "tone": "Sharp and short, surprised pain, not gory. Normal to loud.", "loudness": "normal", "minSeconds": 0.3, "note": ""}, {"age": "powder", "situation": "hurt", "number": 3, "file": "vo_powder_base_hurt_03.wav", "text": "", "direction": "pained grunt", "tone": "Sharp and short, surprised pain, not gory. Normal to loud. Direction for this line: pained grunt.", "loudness": "normal", "minSeconds": 0.3, "note": "No words: just make the sound described."}, {"age": "powder", "situation": "death", "number": 1, "file": "vo_powder_base_death_01.wav", "text": "I am... undone...", "direction": "grandly", "tone": "Theatrical and a little comic, fading out. Never gory. Direction for this line: grandly.", "loudness": "normal", "minSeconds": 0.8, "note": ""}, {"age": "powder", "situation": "death", "number": 2, "file": "vo_powder_base_death_02.wav", "text": "Oof—", "direction": "winded", "tone": "Theatrical and a little comic, fading out. Never gory. Direction for this line: winded.", "loudness": "normal", "minSeconds": 0.8, "note": ""}, {"age": "powder", "situation": "asleep", "number": 1, "file": "vo_powder_base_asleep_01.wav", "text": "", "direction": "slow deep snore, 3 breaths", "tone": "Slow deep snoring, three full breaths, at least 6 seconds. Direction for this line: slow deep snore, 3 breaths.", "loudness": "quiet", "minSeconds": 6.0, "note": "No words: just make the sound described."}, {"age": "powder", "situation": "asleep", "number": 2, "file": "vo_powder_base_asleep_02.wav", "text": "", "direction": "snore with a little mumble", "tone": "Slow deep snoring, three full breaths, at least 6 seconds. Direction for this line: snore with a little mumble.", "loudness": "quiet", "minSeconds": 6.0, "note": "No words: just make the sound described."}, {"age": "powder", "situation": "grabbed", "number": 1, "file": "vo_powder_base_grabbed_01.wav", "text": "Unhand me, sir!", "direction": "", "tone": "Indignant outrage, squeaky at the top.", "loudness": "loud", "minSeconds": 0.6, "note": ""}, {"age": "powder", "situation": "grabbed", "number": 2, "file": "vo_powder_base_grabbed_02.wav", "text": "Witchcraft! WITCHCRAFT!", "direction": "", "tone": "Indignant outrage, squeaky at the top.", "loudness": "loud", "minSeconds": 0.6, "note": ""}, {"age": "powder", "situation": "grabbed", "number": 3, "file": "vo_powder_base_grabbed_03.wav", "text": "", "direction": "indignant, muffled protest", "tone": "Indignant outrage, squeaky at the top. Direction for this line: indignant, muffled protest.", "loudness": "loud", "minSeconds": 0.6, "note": "No words: just make the sound described."}, {"age": "powder", "situation": "thrown", "number": 1, "file": "vo_powder_base_thrown_01.wav", "text": "AAAAAAH—", "direction": "", "tone": "A long falling scream that starts loud and trails off.", "loudness": "loud", "minSeconds": 1.5, "note": ""}, {"age": "powder", "situation": "thrown", "number": 2, "file": "vo_powder_base_thrown_02.wav", "text": "Not the mirror—!", "direction": "", "tone": "A long falling scream that starts loud and trails off.", "loudness": "loud", "minSeconds": 1.5, "note": ""}]}]}</script>
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById("data").textContent);
+const $ = (id) => document.getElementById(id);
+
+// ---- state ----
+let ageIdx = 0, lineIdx = 0;
+let dirHandle = null;
+let take = null;          // {samples: Float32Array, rate, peak, seconds} for the current, unkept take
+let done = {};            // file name -> true, for the current age
+let recording = null;     // live capture object
+let playing = null;
+const STORE = "guardvoice.progress.";
+
+// localStorage can throw or be absent (private window, file:// quirks); the page must work without it.
+function loadProgress(age) {
+  try { return JSON.parse(localStorage.getItem(STORE + age) || "{}"); } catch (e) { return {}; }
+}
+function saveProgress(age) {
+  try { localStorage.setItem(STORE + age, JSON.stringify({ done: done, line: lineIdx })); } catch (e) { /* no storage: fine */ }
+}
+
+const curAge = () => DATA.ages[ageIdx];
+const curLine = () => curAge().lines[lineIdx];
+
+function setAge(i) {
+  ageIdx = i;
+  const saved = loadProgress(curAge().id);
+  done = saved.done || {};
+  lineIdx = Math.min(saved.line || 0, curAge().lines.length - 1);
+  discardTake();
+  buildList();
+  render();
+}
+
+function buildList() {
+  const ol = $("list"); ol.textContent = "";
+  curAge().lines.forEach((ln, i) => {
+    const li = document.createElement("li"); li.id = "li" + i;
+    const b = document.createElement("button"); b.type = "button";
+    b.addEventListener("click", () => jump(i));
+    li.appendChild(b); ol.appendChild(li);
+  });
+}
+
+function refreshList() {
+  curAge().lines.forEach((ln, i) => {
+    const li = $("li" + i);
+    li.className = i === lineIdx ? "cur" : "";
+    const ok = !!done[ln.file];
+    const b = li.firstChild;
+    b.textContent = "";
+    const t = document.createElement("span");
+    // A tick character AND a text label, so colour is never the only signal.
+    t.className = "tick" + (ok ? " done" : ""); t.textContent = ok ? "✓" : "○";
+    b.appendChild(t);
+    b.appendChild(document.createTextNode(ln.situation + " " + ln.number + (ln.text ? ": " + ln.text : "")));
+    b.setAttribute("aria-label", (ok ? "recorded: " : "not recorded: ") + ln.file);
+  });
+  const n = Object.keys(done).length;
+  $("count").textContent = n + " of " + curAge().lines.length + " recorded";
+}
+
+function render() {
+  const a = curAge(), ln = curLine();
+  $("how").textContent = "How to sound: " + a.howToSound + " (" + a.language + ")";
+  $("pos").textContent = "Line " + (lineIdx + 1) + " of " + a.lines.length + "  |  " + ln.file + (done[ln.file] ? "  |  recorded" : "");
+  $("progress").style.width = (100 * Object.keys(done).length / a.lines.length) + "%";
+  $("situation").textContent = "Situation: " + ln.situation;
+  $("say").textContent = ln.text || "(no words: make the sound)";
+  const lb = $("loud"); lb.className = "badge " + ln.loudness;
+  lb.textContent = ln.loudness === "loud" ? "LOUD" : ln.loudness === "quiet" ? "quiet" : "normal volume";
+  $("tone").textContent = ln.tone;
+  $("dir").textContent = ln.direction ? "Direction: " + ln.direction : "";
+  $("note").textContent = (ln.note ? ln.note + " " : "") + "Take must be at least " + ln.minSeconds + " s.";
+  $("gainHint").textContent = ln.loudness === "loud" ? "Turn the mic gain DOWN for this line so it does not clip." : "";
+  $("gainHint").className = "small" + (ln.loudness === "loud" ? " warn" : "");
+  $("saveinfo").textContent = dirHandle
+    ? "Saving each kept take straight into the chosen folder."
+    : window.showDirectoryPicker
+      ? "Suggested folder: Tools/GuardVoice/takes/" + a.id + "/ . Until you choose one, kept takes download instead."
+      : "This browser cannot pick a folder, so each kept take is offered as a download. Use Chrome or Edge to save into a folder.";
+  updateButtons();
+  refreshList();
+  const cur = $("li" + lineIdx); if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: "nearest" });
+}
+
+function updateButtons() {
+  const isRec = !!recording;
+  $("rec").textContent = isRec ? "Stop (Space)" : "Record (Space)";
+  $("rec").className = isRec ? "rec" : "primary";
+  $("play").disabled = !take || isRec;
+  $("redo").disabled = !take || isRec;
+  $("keep").disabled = !take || isRec || take.seconds < curLine().minSeconds;
+}
+
+function jump(i) { if (recording) return; discardTake(); lineIdx = i; saveProgress(curAge().id); render(); }
+function discardTake() { stopPlay(); take = null; $("take").textContent = ""; $("warning").textContent = ""; $("warning").className = "msg"; }
+
+// ---- capture ----
+// AudioWorklet code is built as a Blob so the page stays one file and works from file://.
+const WORKLET_SRC = "class Cap extends AudioWorkletProcessor{process(i){const c=i[0][0];if(c)this.port.postMessage(c.slice());return true;}}registerProcessor('cap',Cap);";
+
+async function startRecording() {
+  $("warning").textContent = ""; $("warning").className = "msg";
+  let stream;
+  try {
+    // Processing off: echo cancel / noise suppression / auto gain would colour the voice the game disguises later.
+    stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
+  } catch (e) {
+    $("warning").textContent = "Could not open the microphone: " + e.message + ". Allow microphone access and try again.";
+    $("warning").className = "msg warn"; return;
+  }
+  discardTake();
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  await ctx.resume();
+  const src = ctx.createMediaStreamSource(stream);
+  const chunks = []; let length = 0, peak = 0;
+  const onChunk = (data) => {
+    chunks.push(data); length += data.length;
+    let p = 0; for (let i = 0; i < data.length; i++) { const v = Math.abs(data[i]); if (v > p) p = v; }
+    if (p > peak) peak = p;
+    $("meter").style.width = Math.min(100, p * 100) + "%";
+    $("meter").style.background = p >= 0.99 ? "var(--bad)" : "var(--good)";
+  };
+  const rec = { stream, ctx, src, chunks, get length() { return length; }, get peak() { return peak; } };
+  let usedWorklet = false;
+  if (ctx.audioWorklet && window.AudioWorkletNode) {
+    try {
+      const url = URL.createObjectURL(new Blob([WORKLET_SRC], { type: "application/javascript" }));
+      await ctx.audioWorklet.addModule(url); URL.revokeObjectURL(url);
+      const node = new AudioWorkletNode(ctx, "cap", { numberOfOutputs: 0 });
+      node.port.onmessage = (ev) => onChunk(ev.data);
+      src.connect(node); rec.node = node; usedWorklet = true;
+    } catch (e) { usedWorklet = false; }
+  }
+  if (!usedWorklet) {
+    // Fallback for browsers without worklets. Deprecated but widely available.
+    const node = ctx.createScriptProcessor(4096, 1, 1);
+    node.onaudioprocess = (ev) => onChunk(new Float32Array(ev.inputBuffer.getChannelData(0)));
+    const mute = ctx.createGain(); mute.gain.value = 0;
+    src.connect(node); node.connect(mute); mute.connect(ctx.destination); rec.node = node;
+  }
+  recording = rec; updateButtons();
+  rec.timer = setInterval(() => { $("take").textContent = "Recording... " + (rec.length / ctx.sampleRate).toFixed(1) + " s"; }, 100);
+}
+
+async function stopRecording() {
+  const rec = recording; recording = null;
+  clearInterval(rec.timer);
+  rec.src.disconnect(); if (rec.node) rec.node.disconnect();
+  rec.stream.getTracks().forEach((t) => t.stop());
+  const rate = rec.ctx.sampleRate;
+  await rec.ctx.close();
+  const samples = new Float32Array(rec.length); let off = 0;
+  for (const c of rec.chunks) { samples.set(c, off); off += c.length; }
+  take = { samples, rate, peak: rec.peak, seconds: samples.length / rate };
+  window.__lastTake = take; // exposed for testing only
+  $("meter").style.width = "0";
+  showTakeInfo(); updateButtons();
+}
+
+function showTakeInfo() {
+  const ln = curLine();
+  $("take").textContent = "Take: " + take.seconds.toFixed(1) + " s, peak " + take.peak.toFixed(2) + ", " + take.rate + " Hz.";
+  const warns = [];
+  if (take.seconds < ln.minSeconds) warns.push("Too short: this line needs at least " + ln.minSeconds + " s. Press Redo.");
+  if (take.peak >= 0.99) warns.push("CLIPPING: the sound hit the maximum and is distorted. Turn the mic gain down and Redo.");
+  if (take.peak < 0.05) warns.push("Nearly silent: the mic may be muted, too far away, or the gain is too low. Check and Redo.");
+  $("warning").textContent = warns.length ? warns.join(" ") : "Take looks good.";
+  $("warning").className = "msg" + (warns.length ? " warn" : " ok");
+}
+
+// ---- WAV encoding: 16-bit PCM, mono ----
+function encodeWav(samples, rate) {
+  const buf = new ArrayBuffer(44 + samples.length * 2), v = new DataView(buf);
+  const str = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  str(0, "RIFF"); v.setUint32(4, 36 + samples.length * 2, true); str(8, "WAVE");
+  str(12, "fmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  str(36, "data"); v.setUint32(40, samples.length * 2, true);
+  for (let i = 0; i < samples.length; i++) {
+    const s = Math.max(-1, Math.min(1, samples[i]));
+    v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+  }
+  return new Blob([buf], { type: "audio/wav" });
+}
+
+// ---- playback ----
+function stopPlay() { if (playing) { try { playing.stop(); } catch (e) { /* already ended */ } playing = null; } }
+function playTake() {
+  stopPlay();
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const b = ctx.createBuffer(1, take.samples.length, take.rate); b.copyToChannel(take.samples, 0);
+  const s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination);
+  s.onended = () => { ctx.close(); if (playing === s) playing = null; };
+  s.start(); playing = s;
+}
+
+// ---- saving ----
+async function chooseFolder() {
+  if (!window.showDirectoryPicker) { $("warning").textContent = "This browser cannot pick a folder. Kept takes will download instead."; return; }
+  try { dirHandle = await window.showDirectoryPicker({ mode: "readwrite" }); } catch (e) { return; /* cancelled */ }
+  render();
+}
+
+async function saveTake(name, blob) {
+  if (dirHandle) {
+    const fh = await dirHandle.getFileHandle(name, { create: true });
+    const w = await fh.createWritable(); await w.write(blob); await w.close();
+  } else {
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }
+}
+
+async function keep() {
+  if ($("keep").disabled) return;
+  const ln = curLine();
+  const blob = encodeWav(take.samples, take.rate);
+  window.__lastKept = { name: ln.file, blob: blob, rate: take.rate, peak: take.peak, seconds: take.seconds }; // for testing
+  try { await saveTake(ln.file, blob); }
+  catch (e) { $("warning").textContent = "Could not save " + ln.file + ": " + e.message; $("warning").className = "msg warn"; return; }
+  done[ln.file] = true;
+  discardTake();
+  if (lineIdx < curAge().lines.length - 1) lineIdx++;
+  saveProgress(curAge().id);
+  render();
+  $("warning").textContent = "Saved " + ln.file; $("warning").className = "msg ok";
+}
+
+// ---- wiring ----
+function toggleRecord() { if (recording) stopRecording(); else startRecording(); }
+$("rec").addEventListener("click", toggleRecord);
+$("play").addEventListener("click", () => { if (take) playTake(); });
+$("redo").addEventListener("click", () => { discardTake(); updateButtons(); });
+$("keep").addEventListener("click", keep);
+$("prev").addEventListener("click", () => { if (lineIdx > 0) jump(lineIdx - 1); });
+$("skip").addEventListener("click", () => { if (lineIdx < curAge().lines.length - 1) jump(lineIdx + 1); });
+$("folder").addEventListener("click", chooseFolder);
+$("age").addEventListener("change", (e) => setAge(+e.target.value));
+document.addEventListener("keydown", (e) => {
+  if (e.target && e.target.tagName === "SELECT") return;
+  // preventDefault stops a focused button also firing its own click on Space/Enter.
+  if (e.code === "Space") { e.preventDefault(); if (!e.repeat) toggleRecord(); }
+  else if (e.code === "Enter") { e.preventDefault(); if (!e.repeat) keep(); }
+});
+
+DATA.ages.forEach((a, i) => { const o = document.createElement("option"); o.value = i; o.textContent = a.title; $("age").appendChild(o); });
+setAge(0);
+</script>
+</body>
+</html>
