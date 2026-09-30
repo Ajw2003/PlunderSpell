@@ -51,6 +51,14 @@ lacks; the rest are older and either merged in another form or abandoned.
 - **`ccr-6bf1f02d-o8jhoy`** also holds, since 2026-09-29: the raid always has one audio listener,
   an output-device picker in Settings, three save slots on the main menu, and a reduced playtest
   sound set (spells, music, ambience muted; `docs/4-systems/audio.md`, `docs/4-systems/core.md`).
+- **PR #177, `claude/guards-player-chatter-plan-ac93ff`** (guards overhear player chatter, opt-in),
+  checked 2026-09-30 by merging it into `ccr-6bf1f02d-o8jhoy` on a local scratch branch
+  (`claude/check-pr-177`, not pushed): it compiles, its 11 `ChatterTests` pass, and in co-op
+  (`Tools/Unity/coop_chatter_check.sh`) a line fed into the joining player's relay reached the host,
+  a guard 3 m away took in the words and the caption came back "overheard by a guard". It conflicts
+  with this branch's Settings screen (written against `main`'s older one); the scratch branch places
+  the toggle as an Off/On row in the Voice column. Not checked: real speech through the second Vosk
+  recogniser (needs someone talking into the microphone).
 - **`claude/busy-bose-a7647f`** (1 commit, 2026-09-26): a test-only fix to
   `GuardAttackTests` so the guard's own `Update` does not swing during the test's yield frame.
   The test it touches is the "known failure" named throughout the 2026-09-26 test runs.
