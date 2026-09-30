@@ -37,6 +37,7 @@ namespace Plunderspell.Audio
         private const float PollSeconds = 1f;
         private const float DoorScanSeconds = 5f;
         private const float MinRepeatSeconds = 0.04f;
+        private const string GuardFoleyGroupName = "guard_foley";
 
         private static readonly float[] NoiseMaxDistance = { 15f, 20f, 30f, 45f, 70f };
 
@@ -58,6 +59,7 @@ namespace Plunderspell.Audio
         private MusicDirector _music;
         private PushToCastController _pushToCast;
         private AudioListener _listener;
+        private SoundEntry _voiceEntry;
 
         private readonly HashSet<string> _reported = new HashSet<string>();
         private readonly Dictionary<string, float> _lastPlayed = new Dictionary<string, float>();
@@ -193,6 +195,53 @@ namespace Plunderspell.Audio
             source.transform.position = position;
             source.Play();
             return source;
+        }
+
+        /// <summary>
+        /// Plays a clip made at run time (a re-voiced guard line) through the voice pool and the mixer group the
+        /// guard voices use, so the volume sliders reach it. Returns null when no voice source is free.
+        /// </summary>
+        public AudioSource PlayClip(AudioClip clip, Vector3 position, float volumeScale, SoundPoolKind pool)
+        {
+            if (_bank == null || clip == null || !TryFindVoiceEntry(out SoundEntry reference))
+                return null;
+
+            AudioSource source = AcquireFor(pool, position);
+            if (source == null)
+                return null;
+
+            source.Stop();
+            source.clip = clip;
+            source.outputAudioMixerGroup = reference.Group;
+            source.loop = false;
+            source.volume = volumeScale;
+            source.pitch = 1f;
+            source.spatialBlend = 1f;
+            source.minDistance = 2f;
+            source.maxDistance = NoiseMaxDistance[(int)reference.Noise];
+            source.rolloffMode = AudioRolloffMode.Logarithmic;
+            source.transform.position = position;
+            source.Play();
+            return source;
+        }
+
+        // The recorded guard lines are not in the SoundBank, so they borrow the group and reach of the
+        // old guard voices, the bank's first "vo_" entry.
+        private bool TryFindVoiceEntry(out SoundEntry entry)
+        {
+            if (_voiceEntry == null)
+            {
+                foreach (SoundEntry candidate in _bank.Entries)
+                {
+                    if (candidate.Name.StartsWith("vo_", System.StringComparison.Ordinal) && candidate.Group != null)
+                    {
+                        _voiceEntry = candidate;
+                        break;
+                    }
+                }
+            }
+            entry = _voiceEntry;
+            return entry != null;
         }
 
         /// <summary>Voices are capped at six at once and the nearest win: a new line takes a free source, else the farthest one playing if it is farther than the new line.</summary>
@@ -374,7 +423,8 @@ namespace Plunderspell.Audio
                     guard.AttackSignal.Attacked += kind => OnGuardAttacked(guard, kind);
             }
 
-            for (int i = 0; i < guards.Count; i++)
+            bool guardsStep = SoundFocus.Allows(GuardFoleyGroupName);
+            for (int i = 0; i < guards.Count && guardsStep; i++)
             {
                 Guard guard = guards[i] as Guard;
                 if (guard != null && _steppers.Add(guard.GetInstanceID()))

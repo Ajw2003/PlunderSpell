@@ -92,11 +92,11 @@ MonoBehaviour:
     Prefixes:
     - foley_player_dodge
   - Label: Guard and hound voices
-    Play: 1
+    Play: 0
     Prefixes:
     - vo_
   - Label: Guard sounds
-    Play: 1
+    Play: 0
     Prefixes:
     - sfx_enemy
   - Label: 'Weapons: swings, bolts, hits'
@@ -159,6 +159,18 @@ MonoBehaviour:
     - sfx_fire
     - sfx_status
     - sfx_debris
+  - Label: Guard mimicry (prototype)
+    Play: 0
+    Prefixes:
+    - mimic_
+  - Label: Guard speech (recorded clips)
+    Play: 1
+    Prefixes:
+    - guardspeech_
+  - Label: Guard footsteps and armor
+    Play: 0
+    Prefixes:
+    - guard_foley
   Overrides:
   - Sound: sfx_spell_ignis_impact
     Play: 0
