@@ -200,6 +200,54 @@ zero, on every peer. A guard that vanishes while the raid phase is `Raiding` is 
 speaks its death line from where it last stood. A guard destroyed for any other reason during a raid
 would do the same; none is known.
 
+## Guard speech from recorded clips (issue #184, part of #179)
+
+Human guards no longer play the named `vo_<age>_<voice>_<line>` sounds. `GuardVoiceDirector.Speak`
+(`GuardVoiceDirector.cs:203`) still decides when a guard talks, with the same triggers and limits above,
+but what plays is a recorded line re-voiced per guard:
+
+1. `GuardSpeechBank` loads every clip in `Resources/GuardVoice/<age>/` once and picks a random clip of
+   the guard's Age and line (file names `vo_<age>_base_<situation>_<NN>`). An Age with no clip for a
+   line borrows it from powder, then high, late, bronze, so a guard is never silent.
+2. `GuardVoiceProfiles` gives the guard's archetype pitch (130 Hz levy, 95 Hz champion, and so on;
+   unknown 120 Hz) and a `DisguiseProfile` from a seed. The seed is the guard's PurrNet network object
+   id (`NetworkIdentity.objectId`), which is the same on the host and every client, so a guard has one
+   voice everywhere and two guards of one archetype differ. Before the guard has spawned the id is 0;
+   the seed then comes from prefab name and first position instead (`GuardVoiceProfiles.SeedFor`).
+3. `GuardSpeechRenderer` runs `VoiceDisguise.Render` on the main thread at first use, peak-normalises
+   to 0.8, and keeps the last 48 clips (an evicted clip is destroyed). A render over 40 ms logs a
+   warning naming the clip; in the Editor most first renders take 40 to 300 ms.
+4. `AudioDirector.PlayClip` plays it through the voice pool (six voices, nearest win) on the mixer
+   group and reach of the bank's first `vo_` entry (Creatures), so the volume sliders reach it. The
+   director's situation gain is 0.5 for murmur, lost and asleep, 0.75 for alert, search, hurt and
+   death, 1.0 for chase and attack. The `SoundFocus` gate is `guardspeech_<situation>`, checked before
+   rendering.
+5. A guard stays silent until its own clip ends (`Record.SpeakingUntil`), so a 10 s snore does not
+   overlap the 6 s asleep timer. The side effect is that a state change during a long clip gets no line.
+
+Each spoken line logs `[GuardSpeech] <guard> (<age>/<voice>) <situation> <clip> pitch x.. speed x..`.
+Hounds are unchanged (still the named `vo_hound_*` sounds).
+
+**Switched off for the guard-speech test** (in `SoundFocusSettings.asset` and the code defaults):
+"Guard and hound voices" (`vo_`, so hounds are silent too), "Guard sounds" (`sfx_enemy`), "Guard mimicry
+(prototype)" (`mimic_`) and the new "Guard footsteps and armor" (`guard_foley`). `AudioDirector.Discover`
+adds `StepAudio` to guards only while `guard_foley` is allowed; the player's steps are unchanged.
+`Mimic.GuardMimic` is no longer added in `AudioDirector.Initialize`; its files and tests remain. To turn
+any of it back on, tick the group in `SoundFocusSettings.asset` (guard footsteps apply to guards seen
+after the change). The new "Guard speech (recorded clips)" group (`guardspeech_`) is on.
+
+**Real recordings replace the stand-ins**: drop them into `Tools/GuardVoice/takes/<age>/` with the same
+file names, then run `python Tools/GuardVoice/sync_base_to_game.py`. For each line it copies the real
+take if there is one, else the stand-in from `takes-tts/`, into `Resources/GuardVoice/`, removes files
+not in `record-lines.json`, and prints how many are real. `GuardVoiceImportSettings` (Editor) imports
+those clips decompressed, PCM, mono, which the re-voicing needs to read samples.
+
+Checked 2026-09-30, solo Editor raid only: guards moved beside the player and driven through
+Investigating, Chasing, Searching, Patrolling and damaged logged `[GuardSpeech]` lines, and a playing
+AudioSource held a rendered clip on Creatures. Two knights got different pitch (x0.82 and x0.84). Not
+checked: a second machine, so that the network id matching on host and client is read from PurrNet's
+code, not measured; and how any of it sounds.
+
 ## Finding things that raise events
 
 Static events (`CastResolved`, `PhraseResolved`, `Damage.Dealt`, `LootValue.Ruined`) are subscribed in
@@ -230,8 +278,9 @@ the Project window and edit it in the Inspector. Changes apply at once, in Play 
   sound. Players and guards share the `Step:` sounds, so one switch mutes both. Checked: with
   "Step: stone" off, stone was blocked and wood, landings and plate rustle still played.
 
-As shipped (the owner's ticks, 2026-09-30): footsteps and movement, guard and hound voices, guard
-sounds, weapons, UI, spells, music, player, portal and loot, and hazards play; physics, ambience,
+As shipped (the owner's ticks, 2026-09-30; guard and hound voices, guard sounds, guard mimicry and guard
+footsteps then switched off for the guard-speech test, see above): footsteps and movement, guard
+speech clips, weapons, UI, spells, music, player, portal and loot, and hazards play; physics, ambience,
 stingers and castle are muted, and three spell sounds waiting on round two are muted by override.
 The code's defaults (`SoundFocusSettings.cs`, used only for a fresh asset) match. Physics was muted because its tone read wrong (leather on stone sounded like metal); the
 triggers are unchanged and wait for replacement files. `SoundFocus` (`Assets/_Project/Scripts/Runtime/Audio/SoundFocus.cs`)
