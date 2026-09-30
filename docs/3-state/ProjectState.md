@@ -44,8 +44,11 @@ lacks; the rest are older and either merged in another form or abandoned.
   `docs/4-systems/audio.md`), a pause segmenter, a saved clip bank and a guard voice disguise (24 EditMode
   tests), a recording script and browser recorder page, and 116 stand-in guard lines made with Windows'
   voices plus synthesised snores (`Tools/GuardVoice/takes-tts/`, checked for length, level and clipping;
-  nobody has listened to them yet, `listen.html` there is for that). Not yet wired into the game: the
-  mic-to-bank capture, the guard speech swap, the always-on mic setting.
+  nobody has listened to them yet, `listen.html` there is for that). Guard speech swap built (#184):
+  human guards now play those clips, re-voiced per guard, through the mixer; the old guard voices, guard
+  sounds, guard steps and the mimic are switched off in `SoundFocusSettings.asset`. Checked solo in the
+  Editor only (lines logged, rendered clip playing); not checked in co-op or by ear. Not yet wired: the
+  mic-to-bank capture, the always-on mic setting.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
