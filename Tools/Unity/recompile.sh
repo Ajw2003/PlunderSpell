@@ -3,6 +3,7 @@
 # Exit 0 when the compile finished clean, 1 on compile errors or a timeout.
 # Usage: bash Tools/Unity/recompile.sh
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 
 cli=(--caller plugin --skill unity-cli --no-banner --format json)
 

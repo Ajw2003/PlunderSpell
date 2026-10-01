@@ -8,6 +8,7 @@
 #   --solo   host only, no client (used when the co-op session cannot be made to work)
 # Needs the Editor open on this project, not in Play mode. Leaves it stopped.
 set -uo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
 label="${1:?usage: coop_guard_check.sh <label> [options]}"; shift

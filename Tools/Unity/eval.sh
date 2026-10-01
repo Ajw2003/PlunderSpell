@@ -3,6 +3,7 @@
 # Usage: bash Tools/Unity/eval.sh '<C# statements ending in return ...;>'
 #        bash Tools/Unity/eval.sh --file Tools/Unity/eval/<name>.cs
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 
 if [ "${1:-}" = "--file" ]; then
     out="$(unity command eval_file --file "$2" --timeout 600 --caller plugin --skill unity-cli --no-banner --format json 2>&1 || true)"

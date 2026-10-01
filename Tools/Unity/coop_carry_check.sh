@@ -19,6 +19,7 @@
 # runtime setting off and ProjectSettings.asset's preloadedAssets line as it was
 # (docs/4-systems/net.md, "Testing it").
 set -uo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
