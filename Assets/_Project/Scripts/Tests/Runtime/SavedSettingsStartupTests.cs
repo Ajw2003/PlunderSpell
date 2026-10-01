@@ -1,6 +1,8 @@
 using System.Collections;
 using NUnit.Framework;
+using Plunderspell.Atmosphere;
 using Plunderspell.Audio;
+using Plunderspell.Core;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -66,6 +68,47 @@ namespace Plunderspell.Tests
             finally
             {
                 Object.Destroy(go);
+            }
+        }
+
+        [Test]
+        public void FreshLaunchAppliesSavedGraphicsLevel()
+        {
+            string before = PlayerPrefs.GetString(GraphicsLevelSettings.QualityKey, string.Empty);
+            int level = QualitySettings.GetQualityLevel();
+            try
+            {
+                string[] names = QualitySettings.names;
+                string other = names[0] == QualitySettings.names[QualitySettings.GetQualityLevel()] ? names[names.Length - 1] : names[0];
+                PlayerPrefs.SetString(GraphicsLevelSettings.QualityKey, other);
+                AtmosphereQuality.ApplySavedOrDefault();
+                Assert.AreEqual(other, names[QualitySettings.GetQualityLevel()], "the saved level is live after start-up");
+            }
+            finally
+            {
+                PlayerPrefs.SetString(GraphicsLevelSettings.QualityKey, before);
+                QualitySettings.SetQualityLevel(level, true);
+            }
+        }
+
+        [Test]
+        public void FreshLaunchReadsSavedVoiceSettings()
+        {
+            float gain = PlayerPrefs.GetFloat(AudioInputSettings.MicGainKey, 1f);
+            int chatter = PlayerPrefs.GetInt(AudioInputSettings.GuardsHearChatterKey, 0);
+            try
+            {
+                PlayerPrefs.SetFloat(AudioInputSettings.MicGainKey, 2.5f);
+                PlayerPrefs.SetInt(AudioInputSettings.GuardsHearChatterKey, 1);
+                // Both are read straight from PlayerPrefs each time the voice service starts listening or
+                // emits chatter, so there is no cached copy to go stale.
+                Assert.AreEqual(2.5f, AudioInputSettings.MicGain, 0.001f);
+                Assert.IsTrue(AudioInputSettings.GuardsHearChatter);
+            }
+            finally
+            {
+                PlayerPrefs.SetFloat(AudioInputSettings.MicGainKey, gain);
+                PlayerPrefs.SetInt(AudioInputSettings.GuardsHearChatterKey, chatter);
             }
         }
 

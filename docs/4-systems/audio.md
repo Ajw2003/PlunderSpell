@@ -349,6 +349,23 @@ recording before, not after). The next cast key press reopens it through
 `VoskVoiceInputService.OpenMicrophone` (checked: recording again, 5760 samples in 0.4 s), so the only
 cost is that first press paying the open again. Not checked: a built player (needs a Development build).
 
+## Saved settings (#181)
+
+Every setting the Settings screen saves, where it is applied at start-up, and whether a change is live.
+
+| Setting | Saved at | Applied at start-up | Live on change |
+|---|---|---|---|
+| Master / Music / Effects volume | `AudioLevels.cs:94,102,110` (`Settings.*Volume`) | `AudioLevels.Bind` (`:58`) reads prefs and pushes; `TickStartup` (`:76`) re-pushes every frame for 1.5 s from `AudioDirector.cs:125` | Yes, `SetMaster/Music/Effects` push at once |
+| Output device | `AudioOutputDevices.cs:88` | `AudioBootstrapper.cs:31` -> `ApplySaved` (`:100`); a restart calls `KeepPushing` (`:163`) | Yes, `Apply` (`:82`) |
+| Microphone | `SettingsScreen.cs:250` | `MicrophonePicker.Resolve` (`MicrophonePicker.cs:28`) at `WarmUp` / `StartListening` | At the next cast key press (`OpenMicrophone` reopens on a new device). Gap: chatter listening keeps the old microphone until it is switched off and on |
+| Mic gain | `AudioInputSettings.cs:34` | Read from prefs on each listen (`VoskVoiceInputService.cs:212,459`), no cached copy | Yes, next listen / chatter report |
+| Guards hear my voice | `AudioInputSettings.cs:50` | `PlayerChatterRelay.cs:102` sets it when it finds the voice service | Yes, `GuardsHearChatterChanged` (`PlayerChatterRelay.cs:110`) |
+| Graphics quality | `SettingsScreen.cs:230` | `AtmosphereQuality.ApplySavedOrDefault` (`:106`, BeforeSceneLoad) | Yes, `SetGraphics` (`SettingsScreen.cs:226`) |
+
+Cause of the volume symptom: not reproduced independently. The saved value was pushed once in the start-up frame, and the output-device restart (`AudioSettings.Reset`) can drop the mixer's live values, so a single push can be lost. The fix keeps pushing for 1.5 s after binding and after a restart. `SavedSettingsStartupTests` simulates a fresh launch (wipes the mixer and the cached values, sets prefs, runs the start-up path) for volumes, graphics, and the mic gain and chatter reads.
+
+Not asserted in a test: output device (needs a real second Windows playback device and changes the machine's per-app route), microphone (needs hardware; `Microphone.devices` is empty on the test machine), chatter wiring at start-up (needs a loaded speech model).
+
 ## Traps
 
 - A snapshot transition overwrites exposed parameters. See above.
