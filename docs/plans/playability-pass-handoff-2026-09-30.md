@@ -19,9 +19,14 @@ Parent issue #192.
 | 1. Guards never stand still | #193 (refs #188) | Done; the owner has not played it yet |
 | 2. Guards follow sound | #194 (refs #189) | Done; the owner has not played it yet |
 | 3. Hue and cry keeps hunting (rough position, owner's choice) | #195 (refs #190) | Done; the owner has not played it yet |
-| 4. Saved settings apply at start-up | #181 | Executor running at time of writing |
-| 5. Lights and shadows fade instead of popping | #196 (refs #165, #166) | Executor running at time of writing |
+| 4. Saved settings apply at start-up | #181 | Partial, WIP commit 01e40615: re-pushes volumes for 1.5 s after start-up and audio restart, plus a test. Not compiled or run; other settings not covered |
+| 5. Lights and shadows fade instead of popping | #196 (refs #165, #166) | Not started |
 | 6. Stairs lead somewhere, doors open | #197 (refs #111) | Not started |
+
+Follow-ups filed 2026-10-01: #198 (the guard attack test that fails, possibly from before these changes) and
+#199 (the co-op scripts leave a changed line in `ProjectSettings.asset`).
+
+**Update 2026-10-01:** the step 4/5 executor hit the usage limit partway through #181 and never reached #196.
 
 Issues stay open until the owner has tested; closing one always asks.
 
@@ -56,8 +61,8 @@ Issues stay open until the owner has tested; closing one always asks.
 
 ## Next
 
-1. Read the step 4/5 executor's report and check its claims against git and a test run before relaying
-   them.
+1. Finish #181 from 01e40615: compile, run `SavedSettingsStartupTests`, confirm the real cause, cover the
+   other saved settings. Then #196.
 2. Step 6 (#197): walk real castles for several seeds, list stairs that lead nowhere and doors that will
    not open, then fix what the list shows.
 3. Open a PR from `claude/playability-fixes` into `main`. Its body says `Refs #192`, never a closing
