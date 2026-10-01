@@ -1,5 +1,14 @@
 # Today
 
+**2026-09-30 (evening) - playability pass: guards keep moving; settings and pop-in in progress.**
+Mimic prototype paused; work is on `claude/playability-fixes` (from PR #178), parent issue #192. In a
+co-op run, guard stuck time fell from 25.1% to 4.0% of guard-seconds. Guard tests: 54 of 55 pass; the
+one failure, `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`, is reported to fail on the
+old code too. Steps 4 and 5 (#181, #196) were with the executor when this was written; #197 is not
+started. Handoff, including the two-Editor trap: `docs/plans/playability-pass-handoff-2026-09-30.md`.
+
+---
+
 **2026-09-29 — ElevenLabs chosen for sound effects; AudioForge ready for a pilot.** The owner picked
 ElevenLabs after `docs/plans/audio-tooling-options-2026-09-29.md` compared it with Mirelo, Ludo and
 local models. `Tools/AudioForge/forge/ai_elevenlabs.py` now uses `eleven_text_to_sound_v2`, asks for
