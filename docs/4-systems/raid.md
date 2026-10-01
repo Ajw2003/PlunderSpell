@@ -214,6 +214,17 @@ whose path was blocked. All the pure decisions are in `GuardBrain`; the rest is 
   `:823`; the sight range for projectile guards) short of the target, and inside that distance the
   guard stands and faces the target. `NavMeshAgent.stoppingDistance` was tried first and does not hold
   the agent (it braked into the target anyway, measured). `GuardShoveTests` reproduces it.
+  **Host-side cause fixed** (#200): the guard was an immovable, infinite-mass body driven into a dynamic
+  player pinned against a 0.5 m wall. `CastleGuard.Awake` (`CastleGuard.cs:160`) now gives every agent guard
+  a finite-mass (80) dynamic Rigidbody, added if the prefab lacks one; on the server `FixedUpdate`
+  (`:312`) sets `agent.updatePosition = false` and drives the body by the agent's `desiredVelocity`
+  (horizontal, gravity kept), then syncs `agent.nextPosition` to the body, so the transform is never written
+  (no #104 jitter). A client keeps it kinematic under the replicated transform. Levo hands the body back to
+  the kinematic path (`UpdateLevitation`, `Land`). Frango's shove now goes through `IShovable.Shove`
+  (`CastleGuard.cs:343`, `PrimarySpellEffects.cs:117`) as a short velocity burst. Test:
+  `GuardShoveTests.Test_AGuardDrivenIntoAPlayerAgainstAThinWallCannotCrushThemThrough` (player centre
+  reached x 16.48 through the wall before; stays on the near side now). **Open:** the co-op run after this
+  change shows stuck_s 378.9 of 1778.9 (was 65.0 of 1773.9), see `after-200b-report.txt`; not yet diagnosed.
 - **Searching sweeps** (`Search`, `:689`; `GuardBrain.SweepOffset`, `GuardBrain.cs:104`). The last
   known spot first, then ring points 4/6/8 m around it (100 degrees apart), skipping any that are
   off the mesh or cut off, until the search ends.

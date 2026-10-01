@@ -164,7 +164,7 @@ namespace Plunderspell.Guards
 
             // The guard is a real physics participant (#200): a finite-mass dynamic body the agent only
             // plans for. It starts kinematic; the server flips it dynamic in FixedUpdate (see
-            // DriveBody), a client leaves it kinematic under the replicated transform.
+            // FixedUpdate), a client leaves it kinematic under the replicated transform.
             if (_agent != null)
             {
                 if (!TryGetComponent(out _body))
