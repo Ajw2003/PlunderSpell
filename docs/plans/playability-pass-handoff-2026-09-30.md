@@ -19,7 +19,7 @@ Parent issue #192.
 | 1. Guards never stand still | #193 (refs #188) | Done; the owner has not played it yet |
 | 2. Guards follow sound | #194 (refs #189) | Done; the owner has not played it yet |
 | 3. Hue and cry keeps hunting (rough position, owner's choice) | #195 (refs #190) | Done; the owner has not played it yet |
-| 4. Saved settings apply at start-up | #181 | Partial, WIP commit 01e40615: re-pushes volumes for 1.5 s after start-up and audio restart, plus a test. Not compiled or run; other settings not covered |
+| 4. Saved settings apply at start-up | #181 | Partial, WIP commit 01e40615: re-pushes volumes for 1.5 s after start-up and audio restart, plus a test. Compiles; the test passes, and fails with the fix disabled (2026-10-01). Not yet checked in a real fresh build launch; other settings not covered |
 | 5. Lights and shadows fade instead of popping | #196 (refs #165, #166) | Not started |
 | 6. Stairs lead somewhere, doors open | #197 (refs #111) | Not started |
 
@@ -61,7 +61,7 @@ Issues stay open until the owner has tested; closing one always asks.
 
 ## Next
 
-1. Finish #181 from 01e40615: compile, run `SavedSettingsStartupTests`, confirm the real cause, cover the
+1. Finish #181 from 01e40615: confirm the real cause with a fresh launch of a build, then cover the
    other saved settings. Then #196.
 2. Step 6 (#197): walk real castles for several seeds, list stairs that lead nowhere and doors that will
    not open, then fix what the list shows.
