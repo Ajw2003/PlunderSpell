@@ -159,6 +159,8 @@ namespace Plunderspell.Tests
             guard.transform.LookAt(victim.transform);
             var heard = new List<GuardAttackKind>();
             guard.Attacked += heard.Add;
+            // Update would otherwise tick the guard during the yield and land the blow before we look.
+            guard.enabled = false;
 
             yield return null;
 
