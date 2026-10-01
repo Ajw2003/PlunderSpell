@@ -1,0 +1,14 @@
+07:19:06 building Build/DevTest
+07:19:34 build Succeeded
+07:19:42 host: state MainMenu players 0 local none holding nothing
+07:19:44 host: state Lair players 1 local 44.500,1.189,0.000 holding nothing
+07:19:44 client started (pid 11997)
+07:20:00 client: state Lair players 2 local 44.500,1.187,1.600 holding nothing
+07:20:00 castle: seed 3508293, LateMedieval
+07:20:02 host: state Playing players 2 local -20.500,1.499,-36.000 holding nothing
+07:20:03 client: state Playing players 2 local -24.000,1.499,-32.500 holding nothing
+07:20:09 provoked 20 guards toward (-20.50, 1.50, -36.00)
+07:21:40 state after: state Playing players 2 local -20.500,1.498,-36.000 holding nothing
+client log error lines: 2
+07:21:40 cleaning up
+07:21:45 left ProjectSettings/ProjectSettings.asset: its content changed
