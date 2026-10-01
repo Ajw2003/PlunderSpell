@@ -355,6 +355,8 @@ namespace Plunderspell.Tests
 
             alarm.SetAlarmLevel(0f);
             CastleGuard.RegisterIntruder(intruder);
+            // The 13 s tick above let the guard wander off (it has no route); put it back facing the intruder.
+            guard.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             guard.Tick(0.1f);
 
             Assert.AreEqual(GuardAlertState.Chasing, guard.State);

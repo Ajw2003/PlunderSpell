@@ -192,6 +192,7 @@ namespace Plunderspell.Tests
             guard.OnNoiseHeard(new NoiseEvent(new Vector3(0f, 0f, 3f), 0.7f, NoiseType.GlassBreak));
 
             // Walk until it reaches the noise: the destination is dropped while it looks around.
+            guard.Tick(0.1f);   // Destination is only set once it has ticked
             int guardLimit = 0;
             while (guard.Destination.HasValue && guardLimit++ < 200)
                 guard.Tick(0.1f);
