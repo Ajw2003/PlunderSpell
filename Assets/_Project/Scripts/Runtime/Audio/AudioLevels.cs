@@ -30,6 +30,14 @@ namespace Plunderspell.Audio
         private static float s_music = 1f;
         private static float s_sfx = 1f;
         private static float s_castingDb;
+        private static float s_keepPushingUntil;
+
+        /// <summary>
+        /// How long, after the mixer is bound or the audio engine restarts, the saved values are pushed
+        /// again every frame. Measured 2026-09-30 (#181): a SetFloat made in the start-up frame is
+        /// lost, the mixer sits at 0 dB until the next SetFloat; later pushes stick.
+        /// </summary>
+        public const float StartupPushSeconds = 1.5f;
 
         /// <summary>The casting dip in force right now, 0 when not casting.</summary>
         public static float CastingDb => s_castingDb;
@@ -54,6 +62,30 @@ namespace Plunderspell.Audio
             s_music = PlayerPrefs.GetFloat(MusicKey, 1f);
             s_sfx = PlayerPrefs.GetFloat(SfxKey, 1f);
             Push();
+            KeepPushing();
+        }
+
+        /// <summary>Pushes the current values now and again each frame for <see cref="StartupPushSeconds"/>; call after anything that may reset the mixer.</summary>
+        public static void KeepPushing()
+        {
+            s_keepPushingUntil = Time.unscaledTime + StartupPushSeconds;
+            Push();
+        }
+
+        /// <summary>Called every frame by the director: re-pushes while the start-up window is open.</summary>
+        public static void TickStartup()
+        {
+            if (Time.unscaledTime < s_keepPushingUntil)
+                Push();
+        }
+
+        /// <summary>Test seam: forgets the bound mixer and cached values, as a fresh process would.</summary>
+        public static void ResetForFreshLaunch()
+        {
+            s_mixer = null;
+            s_master = s_music = s_sfx = 1f;
+            s_castingDb = 0f;
+            s_keepPushingUntil = 0f;
         }
 
         public static void SetMaster(float linear, bool save = true)

@@ -160,6 +160,7 @@ namespace Plunderspell.Audio
             }
 
             AudioSettings.Reset(AudioSettings.GetConfiguration());
+            AudioLevels.KeepPushing(); // the restart can drop the mixer's live values
 
             foreach ((AudioSource source, int samples) in resume)
             {
