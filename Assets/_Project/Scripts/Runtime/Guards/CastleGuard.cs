@@ -98,6 +98,17 @@ namespace Plunderspell.Guards
         private bool _hasShoutedThisChase;
         private float _lastAttackTime = float.NegativeInfinity;
 
+        // Never standing still (#193). The reasoning is in docs/4-systems/raid.md, "Guards that keep moving".
+        private float _tickDelta;
+        private bool _seenThisTick;
+        private float _lookTimeLeft;
+        private float _huntClock;
+        private Vector3 _sweepCentre;
+        private int _sweepIndex;
+        private Vector3? _sweepGoal;
+        private Vector3? _wanderGoal;
+        private Vector3? _home;
+
         /// <summary>What this guard is currently doing.</summary>
         public GuardAlertState State => _state.value;
 
@@ -213,6 +224,7 @@ namespace Plunderspell.Guards
                     nearest = intruder;
                 }
             }
+            _huntClock = 0f;
             if (nearest != null)
                 AlertTo(nearest.position);
         }
@@ -227,6 +239,7 @@ namespace Plunderspell.Guards
             if (IsDead || IsIncapacitated || _state.value == GuardAlertState.Chasing)
                 return false;
             _investigationTarget = position;
+            _lookTimeLeft = 0f;
             if (_state.value != GuardAlertState.Investigating)
                 EnterState(GuardAlertState.Investigating, _alarm != null ? _alarm.State : AlarmState.Calm);
             AlertsReceived++;
@@ -413,8 +426,11 @@ namespace Plunderspell.Guards
         public void Tick(float deltaTime)
         {
             AlarmState alarm = _alarm != null ? _alarm.State : AlarmState.Calm;
+            _tickDelta = deltaTime;
+            _home ??= transform.position;
 
             Transform seen = FindVisibleIntruder(alarm);
+            _seenThisTick = seen != null;
             if (seen != null)
             {
                 _lastKnownIntruderPosition = seen.position;
@@ -436,7 +452,79 @@ namespace Plunderspell.Guards
             if (next != _state.value)
                 EnterState(next, alarm);
 
+            KeepHunting(next, alarm, deltaTime);
             Act(next, seen, alarm, deltaTime);
+        }
+
+        /// <summary>
+        /// While the alarm is at the hue and cry, sends a searching or investigating guard toward a
+        /// point near the nearest player every few seconds (#195). The alarm event sends each guard
+        /// once; without this they reach that point, find nobody and stop.
+        /// </summary>
+        private void KeepHunting(GuardAlertState state, AlarmState alarm, float deltaTime)
+        {
+            if (!GuardBrain.ShouldHunt(state, alarm))
+            {
+                _huntClock = 0f;
+                return;
+            }
+
+            _huntClock += deltaTime;
+            if (!GuardBrain.HuntDue(_huntClock, GetInstanceID()))
+                return;
+            _huntClock = 0f;
+
+            Transform nearest = NearestIntruder();
+            if (nearest == null)
+                return;
+
+            Vector3 rough = nearest.position
+                + GuardBrain.HuntOffset(UnityEngine.Random.value, UnityEngine.Random.value);
+            rough = SnapToMesh(rough);
+
+            if (state == GuardAlertState.Investigating)
+            {
+                _investigationTarget = rough;
+                _lookTimeLeft = 0f;
+            }
+            else
+            {
+                FollowToward(rough);
+            }
+        }
+
+        private Transform NearestIntruder()
+        {
+            Transform nearest = null;
+            float best = float.MaxValue;
+            foreach (Transform intruder in Intruders)
+            {
+                if (intruder == null)
+                    continue;
+                float d = (intruder.position - transform.position).sqrMagnitude;
+                if (d < best)
+                {
+                    best = d;
+                    nearest = intruder;
+                }
+            }
+            return nearest;
+        }
+
+        /// <summary>Makes <paramref name="position"/> the last-known spot and restarts the sweep around
+        /// it. A fresh lead also restarts the search patience.</summary>
+        private void FollowToward(Vector3 position)
+        {
+            _lastKnownIntruderPosition = position;
+            _timeSinceLastContact = 0f;
+            ResetSweep();
+        }
+
+        private void ResetSweep()
+        {
+            _sweepCentre = _lastKnownIntruderPosition;
+            _sweepIndex = 0;
+            _sweepGoal = null;
         }
 
         // -----------------------------------------------------------------------------------------
@@ -457,8 +545,16 @@ namespace Plunderspell.Guards
             if (!GuardBrain.ShouldInvestigate(noise.Strength, alarm))
                 return;
 
+            // A hunting guard follows the newer noise (#194); one that can see its target ignores it.
+            if (GuardBrain.ShouldFollowNoise(_state.value, _seenThisTick, noise.Strength, alarm))
+            {
+                FollowToward(noise.Origin);
+                return;
+            }
+
             // A louder noise overrides a quieter one already being walked toward.
             _investigationTarget = noise.Origin;
+            _lookTimeLeft = 0f;
 
             if (_state.value == GuardAlertState.Patrolling)
                 EnterState(GuardAlertState.Investigating, alarm);
@@ -556,6 +652,7 @@ namespace Plunderspell.Guards
         private void Act(GuardAlertState state, Transform seen, AlarmState alarm, float deltaTime)
         {
             float speed = GuardBrain.MoveSpeed(_patrolSpeed, _chaseSpeed, state, alarm);
+            _moveSpeed = speed;
             if (_agent != null && _agent.isOnNavMesh)
                 _agent.speed = speed;
 
@@ -572,16 +669,11 @@ namespace Plunderspell.Guards
                     break;
 
                 case GuardAlertState.Searching:
-                    MoveTo(_lastKnownIntruderPosition);
+                    Search();
                     break;
 
                 case GuardAlertState.Investigating:
-                    if (_investigationTarget.HasValue)
-                    {
-                        MoveTo(_investigationTarget.Value);
-                        if (HasArrivedAt(_investigationTarget.Value))
-                            _investigationTarget = null;  // nothing here; back to the route
-                    }
+                    Investigate(deltaTime);
                     break;
 
                 default:
@@ -592,11 +684,70 @@ namespace Plunderspell.Guards
             Steer(deltaTime, speed);
         }
 
-        private void Patrol()
+        /// <summary>Goes to the last-known position, then sweeps reachable points around it instead of
+        /// parking on it (#193).</summary>
+        private void Search()
         {
-            if (_patrolRoute.Count == 0)
+            if (!_sweepGoal.HasValue)
+                _sweepGoal = NextSweepGoal();
+
+            MoveTo(_sweepGoal.Value);
+            if (HasArrivedAt(_sweepGoal.Value) || TakeGaveUp())
+                _sweepGoal = null;
+        }
+
+        private Vector3 NextSweepGoal()
+        {
+            if (_sweepIndex == 0)
+            {
+                _sweepIndex = 1;
+                return _sweepCentre;
+            }
+
+            // A few tries: a ring point inside a wall or cut off from here is skipped, not walked at.
+            for (int attempt = 0; attempt < 4; attempt++)
+            {
+                Vector3? point = Reachable(_sweepCentre + GuardBrain.SweepOffset(_sweepIndex++));
+                if (point.HasValue)
+                    return point.Value;
+            }
+            return _sweepCentre;
+        }
+
+        /// <summary>Walks to the noise, looks around for a moment, then the state falls back to the
+        /// route. Turning on the spot rather than standing there is the point (#193).</summary>
+        private void Investigate(float deltaTime)
+        {
+            if (!_investigationTarget.HasValue)
+                return;
+
+            if (_lookTimeLeft > 0f)
             {
                 MoveTo(null);
+                transform.Rotate(Vector3.up, _turnSpeed * 0.5f * deltaTime, Space.World);
+                _lookTimeLeft -= deltaTime;
+                if (_lookTimeLeft <= 0f)
+                    _investigationTarget = null;  // nothing here; back to the route
+                return;
+            }
+
+            Vector3 target = _investigationTarget.Value;
+            MoveTo(target);
+            if (HasArrivedAt(target))
+                _lookTimeLeft = GuardBrain.LookAroundSeconds;
+            else if (TakeGaveUp())
+                _investigationTarget = null;
+        }
+
+        private void Patrol()
+        {
+            int usable = 0;
+            foreach (Transform waypoint in _patrolRoute)
+                if (waypoint != null)
+                    usable++;
+            if (usable < 2)
+            {
+                Wander();
                 return;
             }
 
@@ -608,29 +759,189 @@ namespace Plunderspell.Guards
             }
 
             MoveTo(point.position);
-            if (HasArrivedAt(point.position))
+            // An unreachable point is skipped rather than walked at forever.
+            if (HasArrivedAt(point.position) || TakeGaveUp())
                 _patrolIndex = (_patrolIndex + 1) % _patrolRoute.Count;
+        }
+
+        /// <summary>A guard with no route to walk drifts between reachable points near where it was
+        /// posted, instead of standing its post.</summary>
+        private void Wander()
+        {
+            if (!_wanderGoal.HasValue)
+            {
+                Vector2 around = UnityEngine.Random.insideUnitCircle.normalized * UnityEngine.Random.Range(3f, 8f);
+                Vector3 centre = _home ?? transform.position;
+                _wanderGoal = Reachable(centre + new Vector3(around.x, 0f, around.y)) ?? centre;
+            }
+
+            MoveTo(_wanderGoal.Value);
+            if (HasArrivedAt(_wanderGoal.Value) || TakeGaveUp())
+                _wanderGoal = null;
+        }
+
+        // -----------------------------------------------------------------------------------------
+        // Moving, snapping and the stuck watchdog (#193)
+        // -----------------------------------------------------------------------------------------
+
+        /// <summary>How far to look for the nearest NavMesh point when snapping a destination.</summary>
+        private const float k_snapRadius = 6f;
+
+        /// <summary>A destination that moves less than this is not sent to the agent again:
+        /// SetDestination restarts path computation.</summary>
+        private const float k_resendDistance = 0.75f;
+
+        private float _moveSpeed;
+        private NavMeshPath _scratchPath;
+        private Vector3 _sentDestination;
+        private bool _hasSentDestination;
+        private Vector3 _watchGoal;
+        private Vector3 _watchAnchor;
+        private float _stuckTime;
+        private int _stuckStage;
+        private Vector3? _detour;
+        private bool _gaveUp;
+
+        private bool OnMesh => _agent != null && _agent.isOnNavMesh;
+
+        /// <summary>The nearest NavMesh point to <paramref name="point"/>, or the point itself where
+        /// there is no mesh to snap to (a player on a table, a noise inside a wall).</summary>
+        private Vector3 SnapToMesh(Vector3 point)
+        {
+            if (OnMesh && NavMesh.SamplePosition(point, out NavMeshHit hit, k_snapRadius, NavMesh.AllAreas))
+                return hit.position;
+            return point;
+        }
+
+        /// <summary>
+        /// A point this guard can actually walk to: snapped to the mesh and path-checked when there is
+        /// one, the point unchanged when there is not, null when it is cut off.
+        /// </summary>
+        private Vector3? Reachable(Vector3 point)
+        {
+            if (!OnMesh)
+                return point;
+            if (!NavMesh.SamplePosition(point, out NavMeshHit hit, 2.5f, NavMesh.AllAreas))
+                return null;
+            _scratchPath ??= new NavMeshPath();
+            if (!NavMesh.CalculatePath(transform.position, hit.position, NavMesh.AllAreas, _scratchPath)
+                || _scratchPath.status != NavMeshPathStatus.PathComplete)
+                return null;
+            return hit.position;
+        }
+
+        /// <summary>True once, when the watchdog gave up on the destination it was watching.</summary>
+        private bool TakeGaveUp()
+        {
+            bool gaveUp = _gaveUp;
+            _gaveUp = false;
+            return gaveUp;
         }
 
         private void MoveTo(Vector3? destination)
         {
             Destination = destination;
 
-            if (_agent != null && _agent.isOnNavMesh)
+            if (!destination.HasValue)
             {
-                if (destination.HasValue)
-                {
-                    _agent.isStopped = false;
-                    _agent.SetDestination(destination.Value);
-                }
-                else
-                {
+                _hasSentDestination = false;
+                _stuckTime = 0f;
+                _detour = null;
+                if (OnMesh)
                     _agent.isStopped = true;
+                _steerTarget = null;
+                return;
+            }
+
+            Vector3 goal = destination.Value;
+            WatchProgress(goal);
+            Vector3 heading = SnapToMesh(_detour ?? goal);
+
+            if (OnMesh)
+            {
+                _agent.isStopped = false;
+                if (!_hasSentDestination || (heading - _sentDestination).sqrMagnitude > k_resendDistance * k_resendDistance
+                    || (!_agent.hasPath && !_agent.pathPending))
+                {
+                    _agent.SetDestination(heading);
+                    _sentDestination = heading;
+                    _hasSentDestination = true;
                 }
                 return;
             }
 
-            _steerTarget = destination;
+            _steerTarget = heading;
+        }
+
+        /// <summary>
+        /// Notices a guard that has a destination and is going nowhere: under
+        /// <see cref="GuardBrain.StuckProgress"/> metres in <see cref="GuardBrain.StuckSeconds"/>.
+        /// The first time it forces a fresh path; the second time it heads for a reachable point near
+        /// the goal; and if there is none it gives the goal up, so the caller moves on to the next one.
+        /// </summary>
+        private void WatchProgress(Vector3 goal)
+        {
+            if (_moveSpeed <= 0.01f || _tickDelta <= 0f)
+                return;   // a turret is meant not to move
+
+            if (_seenThisTick)
+            {
+                // Closing on a target it can see, and standing to strike it, is not being stuck.
+                _stuckTime = 0f;
+                _stuckStage = 0;
+                _detour = null;
+                return;
+            }
+
+            if ((goal - _watchGoal).sqrMagnitude > 1.5f * 1.5f)
+            {
+                _watchGoal = goal;
+                _watchAnchor = transform.position;
+                _stuckTime = 0f;
+                _stuckStage = 0;
+                _detour = null;
+            }
+
+            Vector3 here = transform.position;
+            if (HasArrivedAt(_detour ?? goal))
+            {
+                _watchAnchor = here;
+                _stuckTime = 0f;
+                if (_detour.HasValue)
+                {
+                    _detour = null;
+                    _hasSentDestination = false;
+                }
+                return;
+            }
+
+            Vector3 moved = here - _watchAnchor;
+            moved.y = 0f;
+            if (!GuardBrain.IsStuck(moved.magnitude))
+            {
+                _watchAnchor = here;
+                _stuckTime = 0f;
+                _stuckStage = 0;
+                return;
+            }
+
+            _stuckTime += _tickDelta;
+            if (_stuckTime < GuardBrain.StuckSeconds)
+                return;
+
+            _stuckTime = 0f;
+            _watchAnchor = here;
+            _hasSentDestination = false;   // resend: a fresh path
+            if (++_stuckStage == 1)
+                return;
+
+            _stuckStage = 0;
+            Vector2 around = UnityEngine.Random.insideUnitCircle.normalized * UnityEngine.Random.Range(2f, 5f);
+            Vector3? detour = OnMesh ? Reachable(goal + new Vector3(around.x, 0f, around.y)) : null;
+            if (detour.HasValue)
+                _detour = detour;
+            else
+                _gaveUp = true;
         }
 
         /// <summary>
@@ -666,12 +977,15 @@ namespace Plunderspell.Guards
         }
 
         private bool HasArrivedAt(Vector3 position) =>
-            Vector3.Distance(transform.position, position) <= _arrivalDistance;
+            Vector3.Distance(transform.position, SnapToMesh(position)) <= _arrivalDistance;
 
         private void EnterState(GuardAlertState next, AlarmState alarm)
         {
             GuardAlertState previous = _state.value;
             _state.value = next;
+            _lookTimeLeft = 0f;
+            if (next == GuardAlertState.Searching)
+                ResetSweep();
 
             // Spotting an intruder is worth shouting about — once per chase, not once per frame. The
             // shout wakes guards in earshot; the alarm is told directly, walls or not (#139).
@@ -856,5 +1170,8 @@ namespace Plunderspell.Guards
 
         /// <summary>Where the guard is currently heading to investigate, if anywhere.</summary>
         public Vector3? InvestigationTarget => _investigationTarget;
+
+        /// <summary>Where the guard last saw or heard an intruder: the centre its search sweeps around.</summary>
+        public Vector3 LastKnownIntruderPosition => _lastKnownIntruderPosition;
     }
 }
