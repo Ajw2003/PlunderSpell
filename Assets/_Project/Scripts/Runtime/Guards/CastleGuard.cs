@@ -22,7 +22,7 @@ namespace Plunderspell.Guards
     /// replicated transform and the replicated alert state.
     /// </summary>
     [RequireComponent(typeof(StatusEffectReceiver))]
-    public class CastleGuard : NetworkBehaviour, INoiseListener, IEavesdropper, IHealth
+    public class CastleGuard : NetworkBehaviour, INoiseListener, IEavesdropper, IHealth, IShovable
     {
         [Header("Senses")]
         [Tooltip("How far this guard can see while the castle is calm, in metres.")]
@@ -90,6 +90,12 @@ namespace Plunderspell.Guards
 
         private StatusEffectReceiver _status;
         private NavMeshAgent _agent;
+        private Rigidbody _body;
+        private bool _bodyDriven;
+        private Vector3 _shoveVelocity;
+        private float _shoveUntil;
+        private const float k_bodyMass = 80f;
+        private const float k_shoveSeconds = 0.25f;
 
         private Vector3? _investigationTarget;
         private Vector3 _lastKnownIntruderPosition;
@@ -156,12 +162,19 @@ namespace Plunderspell.Guards
             _status = GetComponent<StatusEffectReceiver>();
             _agent = GetComponent<NavMeshAgent>();
 
-            // The agent moves this transform every frame; a dynamic rigidbody on the same object had
-            // the physics step writing its own position back, so guards froze on about a third of
-            // rendered frames and looked like they lagged and smeared (#104). Kinematic still
-            // collides and still takes hits from thrown things.
-            if (_agent != null && TryGetComponent(out Rigidbody body))
-                body.isKinematic = true;
+            // The guard is a real physics participant (#200): a finite-mass dynamic body the agent only
+            // plans for. It starts kinematic; the server flips it dynamic in FixedUpdate (see
+            // DriveBody), a client leaves it kinematic under the replicated transform.
+            if (_agent != null)
+            {
+                if (!TryGetComponent(out _body))
+                    _body = gameObject.AddComponent<Rigidbody>();
+                _body.mass = k_bodyMass;
+                _body.freezeRotation = true;
+                _body.useGravity = true;
+                _body.interpolation = RigidbodyInterpolation.Interpolate;
+                _body.isKinematic = true;
+            }
             _health.value = _maxHealth;
 
             if (_alarm == null)
@@ -290,6 +303,49 @@ namespace Plunderspell.Guards
             Attacked?.Invoke(GuardAttackSignal.Kind(signal));
         }
 
+        /// <summary>
+        /// Server only. Hands the guard to the physics: the agent plans (updatePosition off, so it never
+        /// writes the transform, which is what made agent and physics fight in #104), and the body
+        /// follows the agent's desired velocity. Because the body is dynamic with finite mass, a
+        /// contact with a player or a wall stops it instead of crushing a player into the wall (#200).
+        /// </summary>
+        private void FixedUpdate()
+        {
+            if (_body == null || _agent == null || (isSpawned && !isServer))
+                return;
+
+            bool free = !_floating && !_falling && _agent.enabled && _agent.isOnNavMesh && _health.value > 0f;
+            if (!free)
+            {
+                _bodyDriven = false;
+                return;
+            }
+
+            if (!_bodyDriven)
+            {
+                _bodyDriven = true;
+                _agent.updatePosition = false;
+                _body.isKinematic = false;
+                _body.linearVelocity = Vector3.zero;
+                _agent.nextPosition = _body.position;
+            }
+
+            Vector3 want = _agent.isStopped ? Vector3.zero : _agent.desiredVelocity;
+            want.y = 0f;
+            if (Time.time < _shoveUntil)
+                want += _shoveVelocity;
+            Vector3 v = _body.linearVelocity;
+            _body.linearVelocity = new Vector3(want.x, v.y, want.z);
+            _agent.nextPosition = _body.position;
+        }
+
+        /// <summary>Knocks the guard back by <paramref name="metres"/> over a moment; walls and bodies stop it.</summary>
+        public void Shove(Vector3 metres)
+        {
+            _shoveVelocity = new Vector3(metres.x, 0f, metres.z) / k_shoveSeconds;
+            _shoveUntil = Time.time + k_shoveSeconds;
+        }
+
         private void Update()
         {
             // Clients render what the server decided; only the server runs the AI.
@@ -337,7 +393,11 @@ namespace Plunderspell.Guards
                     _falling = false;
                     _floatBaseY = transform.position.y;
                     if (_agent != null)
+                    {
                         _agent.enabled = false;
+                        _agent.updatePosition = true;
+                    }
+                    _bodyDriven = false;
                     if (body != null)
                     {
                         body.isKinematic = true;
@@ -411,8 +471,10 @@ namespace Plunderspell.Guards
                     transform.position + Vector3.up * 0.2f, DamageKind.Impact);
             }
 
+            _bodyDriven = false;
             if (_agent != null && _health.value > 0f)
             {
+                _agent.updatePosition = true;
                 _agent.enabled = true;
                 if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
                     _agent.Warp(hit.position);

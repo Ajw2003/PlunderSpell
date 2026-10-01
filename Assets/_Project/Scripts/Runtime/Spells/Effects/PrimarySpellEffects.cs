@@ -110,13 +110,20 @@ namespace Plunderspell.Spells
         }
 
         /// <summary>
-        /// Pushes a body back along the blast. A guard is moved through its NavMeshAgent so it cannot
-        /// be shoved through a wall; anything else physical gets an impulse. The Saltus slam uses it
+        /// Pushes a body back along the blast. A guard is a dynamic body driven by velocity, so it is
+        /// shoved by a velocity burst and a wall stops it; anything else physical gets an impulse. The Saltus slam uses it
         /// too.
         /// </summary>
         internal static void Shove(Transform body, Vector3 direction, float metres)
         {
             Vector3 flat = new Vector3(direction.x, 0f, direction.z).normalized * metres;
+            var guard = body.GetComponent<Interfaces.IShovable>();
+            if (guard != null)
+            {
+                guard.Shove(flat);
+                return;
+            }
+
             var agent = body.GetComponent<UnityEngine.AI.NavMeshAgent>();
             if (agent != null && agent.enabled && agent.isOnNavMesh)
             {
