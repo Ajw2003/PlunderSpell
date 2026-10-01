@@ -62,3 +62,40 @@ guard now stops 0.8 of its strike range short of the target.
   safety net for mechanism 3 and any other cause, such as spells or loot.
 
 The recommendation is A plus C: A removes the cause and C guarantees nobody is stuck forever.
+
+## Host side: why physics lets it happen (added 2026-10-01, owner asked for the cause, not a workaround)
+
+The owner rejected A/B/C: the physics should stop this, so find why it does not. The host-side
+chain, read from code and settings (a repro test is next):
+
+1. **The guard is not a physics participant.** The NavMeshAgent writes the guard's transform every
+   `Update`. Its body is kinematic (ManAtArms) or absent (PalaceGuard: a bare collider moved by
+   hand). PhysX gives both infinite mass and never lets a contact stop them. The agent's own
+   avoidance knows nothing about the player, who is neither an agent nor a NavMeshObstacle, so its
+   path runs straight through the player's capsule.
+2. **A dynamic body between two immovable ones cannot be resolved.** With the player against a
+   wall, the guard (immovable) pushes from one side and the wall (static) blocks the other. The
+   solver cannot satisfy both contacts and the kinematic one always wins, so each physics step
+   the guard's movement (up to 4.5 x 1.4 = 6.3 m/s at the hue and cry, about 0.13 m per 0.02 s
+   step) presses the player further into the wall. Depenetration out of the wall is capped at 10 m/s
+   (`DynamicsManager.asset`) and is undone by the next push.
+3. **The wall is thinner than the player.** Walls are 0.5 m (`Tools/AssetPipeline/room_kit.py:34`
+   `WALL_T`) and the player's capsule radius is 0.5 m (1 m wide). Once the capsule's centre passes
+   the middle of the wall, only 0.75 m from first touching, the shortest way out of the overlap is
+   the far side, and depenetration throws the player through.
+4. **Then nothing brings them back.** The wall MeshColliders are non-convex, which makes them
+   hollow surfaces, and the player's discrete collision detection does not sweep back across the
+   face it crossed.
+
+So the physics is doing what it is told. The faulty input is an immovable guard driven into a
+dynamic player. The physics-correct fix is to make the guard a real participant: a dynamic
+Rigidbody with finite mass, moved by velocity toward the agent's planned position
+(`agent.updatePosition = false`, `agent.nextPosition` kept in step with the body). Contacts then
+stop the guard at the player, the wall wins over the guard, and the solver never has to choose.
+The kinematic body came in for #104 (agent and physics fighting gave jitter); driving the body by
+velocity and syncing the agent to it is the standard way to have both.
+
+Confirm with a play-mode test: real 0.5 m wall, player capsule r 0.5 dynamic against it, guard
+moved by its agent at chase speed into the player, step physics. Expected before the fix: the
+player ends up past the wall's far face. After: the player stays on the near side and the guard
+stops on contact.
