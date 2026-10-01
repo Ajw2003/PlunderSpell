@@ -190,6 +190,48 @@ damage and lifetime, and `ProjectileTint` so one prefab can read as fire, frost 
 a prefab per spell. Gravity is off — a bolt flies where it was aimed, rather than landing on the
 floor between two people in a large room.
 
+## Guards that keep moving (#193, #194, #195)
+
+Owner's rule: no waiting state, just patrol, chat, chase, kill. Before this pass a searching guard
+stood on `_lastKnownIntruderPosition` for the search patience (forever at the hue and cry), a noise
+only moved a patrolling guard, the hue and cry sent each guard once, and nothing noticed a guard
+whose path was blocked. All the pure decisions are in `GuardBrain`; the rest is `CastleGuard`.
+
+- **Stuck watchdog** (`CastleGuard.WatchProgress`, `CastleGuard.cs:882`). A guard with a destination
+  that covers under 0.3 m in 1.5 s (`GuardBrain.IsStuck`, `StuckProgress`, `StuckSeconds`,
+  `GuardBrain.cs:87`) first gets a fresh path, then (next window) a reachable detour point 2-5 m
+  from its goal, and if none exists it gives the goal up: the patrol point is skipped, an
+  investigation ends, a sweep point is replaced. It is off for a guard that can see its target
+  (standing to strike is not stuck) and for speed 0 (the turret).
+- **Snapping** (`SnapToMesh`, `Reachable`, `CastleGuard.cs:809,820`; `MoveTo`, `:841`). Every
+  destination is snapped to the nearest NavMesh point (6 m) before it is sent, and arrival is judged
+  against the snapped point, so a player on a table or a noise in a wall is still reachable.
+  `SetDestination` is only re-sent when the target moved over 0.75 m or the agent has no path.
+- **Searching sweeps** (`Search`, `:689`; `GuardBrain.SweepOffset`, `GuardBrain.cs:104`). The last
+  known spot first, then ring points 4/6/8 m around it (100 degrees apart), skipping any that are
+  off the mesh or cut off, until the search ends.
+- **Investigating looks around** (`Investigate`, `:719`): on arrival it turns on the spot for
+  `GuardBrain.LookAroundSeconds` (1.6 s), then returns to the route.
+- **No route, no standing** (`Patrol` `:742`, `Wander` `:769`): fewer than two usable waypoints
+  wanders between reachable points 3-8 m from where the guard was posted. `GuardSpawner` also gives
+  a one-point route a second point (`NearbyPoint`, `GuardSpawner.cs:166`).
+- **Noise steers the hunt** (`OnNoiseHeard`, `CastleGuard.cs:538`; `GuardBrain.ShouldFollowNoise`):
+  a noise that passes `ShouldInvestigate` moves a searching guard's last-known spot (and restarts
+  the sweep and the patience) to the noise origin; a chaser that has lost sight does the same. A
+  guard that can see its target ignores it. Patrolling guards still investigate as before.
+- **The hue and cry keeps hunting** (`KeepHunting`, `:464`; `GuardBrain.ShouldHunt`, `HuntOffset`,
+  `HuntDelay`): while the alarm is `HueAndCry`, every searching or investigating guard is re-sent
+  every 3.0-3.9 s (staggered by instance id) to a point 3-5 m, random direction, from the nearest
+  registered intruder, snapped to the mesh. Roughly-known, not exact, so players can still break away.
+  Server only, like all guard AI.
+
+Measured with `Tools/Unity/coop_guard_check.sh` (Editor host + Development client, seed 3508293, 20
+guards, all provoked into a chase at the start, 90 s): seconds spent with a destination farther than
+1 m away and under 0.2 m/s of movement went from **451.0 of 1798.9 guard-seconds (25.1%)** to **71.1
+of 1768.5 (4.0%)**; seven guards were stuck 63-84 s each before, none more than 22 s after. Files in
+`docs/generated/playability-2026-09-30/`. Tests: `GuardMovementTests` (20) and `GuardTests` (28).
+Not checked: a player standing on furniture, and the in-game feel of the sweep (no one watched it).
+
 ## Invariants
 
 - **No guard is posted, or patrols, within two rooms of the arrival portal**

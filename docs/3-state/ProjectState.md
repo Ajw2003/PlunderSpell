@@ -101,6 +101,14 @@ per enemy as the art and scale reference; the prefabs raids spawn are
 `Assets/_Project/Prefabs/Enemies/<Era>/`. Merged together on `claude/staging-2026-09-24` for testing
 before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
 
+**2026-09-30 — playability pass, guards** (`claude/playability-fixes`, #193-#195, not merged).
+Guards no longer stand still: a stuck watchdog re-paths and skips unreachable points, destinations
+snap to the NavMesh, searchers sweep around the last-known spot, noise steers a hunt, and the hue
+and cry re-sends searching guards near the nearest player every ~3.5 s. Stuck time in a 20-guard
+co-op raid fell from 25.1% to 4.0% of guard-seconds (`docs/4-systems/raid.md`, "Guards that keep
+moving"). `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal` fails before and after this
+change (the guard's own `Update` swings in the yield frame).
+
 **2026-09-25 — backlog pass** (`claude/issue-backlog`, not merged). Spells cost mana
 (`SpellWord.ManaCost`, a 100-point pool, 2.5/s regen) and number-key casts chant for 1.5 s
 (`docs/4-systems/spells.md`, "Mana and the keyboard chant"). The pause menu no longer freezes the
