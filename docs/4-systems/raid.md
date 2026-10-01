@@ -207,6 +207,13 @@ whose path was blocked. All the pure decisions are in `GuardBrain`; the rest is 
   destination is snapped to the nearest NavMesh point (6 m) before it is sent, and arrival is judged
   against the snapped point, so a player on a table or a noise in a wall is still reachable.
   `SetDestination` is only re-sent when the target moved over 0.75 m or the agent has no path.
+- **A chaser stops short of the player** (#200; `ChaseToward`, `CastleGuard.cs:693`, called from `Act`,
+  `:666`). It used to send the player's own position to the agent, so the guard walked its body into
+  the player and the physics depenetration pushed the dynamic player body out sideways, against walls
+  and (thin ones) through them. The destination is now a point 0.8 of the strike range (`k_strikeStopFraction`,
+  `:823`; the sight range for projectile guards) short of the target, and inside that distance the
+  guard stands and faces the target. `NavMeshAgent.stoppingDistance` was tried first and does not hold
+  the agent (it braked into the target anyway, measured). `GuardShoveTests` reproduces it.
 - **Searching sweeps** (`Search`, `:689`; `GuardBrain.SweepOffset`, `GuardBrain.cs:104`). The last
   known spot first, then ring points 4/6/8 m around it (100 degrees apart), skipping any that are
   off the mesh or cut off, until the search ends.

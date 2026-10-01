@@ -663,7 +663,7 @@ namespace Plunderspell.Guards
                     return;
 
                 case GuardAlertState.Chasing:
-                    MoveTo(seen != null ? seen.position : _lastKnownIntruderPosition);
+                    ChaseToward(seen != null ? seen.position : _lastKnownIntruderPosition, deltaTime);
                     if (seen != null)
                         TryAttack(seen);
                     break;
@@ -682,6 +682,35 @@ namespace Plunderspell.Guards
             }
 
             Steer(deltaTime, speed);
+        }
+
+        /// <summary>
+        /// Closes on <paramref name="target"/> and halts <see cref="k_strikeStopFraction"/> of the strike
+        /// range short of it, so the guard can strike but never walks its body into the player: the
+        /// depenetration was shoving players through walls (#200). The agent's own stoppingDistance did
+        /// not hold it (it braked into the target regardless), so the destination is the stopping point.
+        /// </summary>
+        private void ChaseToward(Vector3 target, float deltaTime)
+        {
+            float reach = _projectilePrefab != null ? GuardBrain.SightRange(_sightRange, CurrentAlarm) : _attackRange;
+            float stopShort = reach * k_strikeStopFraction;
+
+            Vector3 away = transform.position - target;
+            away.y = 0f;
+            if (away.magnitude <= stopShort)
+            {
+                // In position: stand and face the target instead of pressing on.
+                MoveTo(null);
+                Vector3 toward = -away;
+                if (toward.sqrMagnitude > 0.0001f && deltaTime > 0f)
+                {
+                    Quaternion facing = Quaternion.LookRotation(toward, Vector3.up);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, facing, _turnSpeed * deltaTime);
+                }
+                return;
+            }
+
+            MoveTo(target + away.normalized * stopShort);
         }
 
         /// <summary>Goes to the last-known position, then sweeps reachable points around it instead of
@@ -790,6 +819,8 @@ namespace Plunderspell.Guards
         /// <summary>A destination that moves less than this is not sent to the agent again:
         /// SetDestination restarts path computation.</summary>
         private const float k_resendDistance = 0.75f;
+
+        private const float k_strikeStopFraction = 0.8f;
 
         private float _moveSpeed;
         private NavMeshPath _scratchPath;
