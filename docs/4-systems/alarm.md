@@ -182,8 +182,7 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
 - **Wiring.** `RaidDirector` gives the service the castle after generating it
   (`Runtime/Raid/RaidDirector.cs:249`, `SetMap(new CastleGuardNavigationMap(Castle.NavGraph))`, server only).
   `CastleLockdown.NavGraph` is set in the same place (`RaidDirector.cs:262`, see "Doors" above).
-- **Patrol** (#207, `States/PatrolState.cs:16`, replaces `PlaceholderPatrolState`, which is now unused and should be
-  deleted). Plans a round of `PatrolPointCount` (3) points 3-8 m from `Guard.Home` (`States/GuardPatrolPlanner.cs:27`,
+- **Patrol** (#207, `States/PatrolState.cs:16`, replaces `PlaceholderPatrolState`, deleted in c30fe4a6). Plans a round of `PatrolPointCount` (3) points 3-8 m from `Guard.Home` (`States/GuardPatrolPlanner.cs:27`,
   `:39`). A point counts only if the map has floor under it (`FindCell`) and `TryFindPath` from the post succeeds,
   so a barred door rules a point out. Picks use the guard's own `System.Random` (`Guard.cs:50`, seeded from the
   post, `Reseed` at `:190`), so the server is deterministic. Walks them in turn with a 1 s pause
