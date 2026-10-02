@@ -141,8 +141,10 @@ the fresh guard core (#206, below) sends requests. No co-op run was possible for
   skips an infinite one. `CastleNavGraph.SetDoorCost` (`CastleNavGraph.cs:115`) sets it with no rebuild and
   bumps `DoorVersion`; `IsReachable` (`:86`) searches when any door is closed, because area ids are computed
   once. `CastleLockdown.NavGraph` (`CastleLockdown.cs:39`) is the opt-in: set, a locked door costs
-  `LockedDoorCost` (40 m) and a barred door is closed (`CastleLockdownNavigation.MarkDoor`). It is **not set
-  anywhere yet**, and closing every door at Hue and Cry would stop guards entirely, so decide that with #206.
+  `LockedDoorCost` (40 m) and a barred door is closed (`CastleLockdownNavigation.MarkDoor`). `RaidDirector` sets
+  it at generation (`RaidDirector.cs:262`, `WireLockdownToNavigation` at `:230`), per the 2026-10-02 decision
+  (`docs/6-decisions/Decisions.md`): a locked door costs, a barred door blocks, and a guard with no route gets
+  `Blocked(DoorClosed)`.
   A door is matched to the archway within 2 m of it on the floor plan; that was not checked against a built
   raid scene.
 - **Allocation.** Zero per tick: 0 B over 500 ticks of 20 guards sweeping (`GuardNavigationServiceTests`).
@@ -179,8 +181,20 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
   `director.Navigation` on attach. Nothing else writes the transform except the shove.
 - **Wiring.** `RaidDirector` gives the service the castle after generating it
   (`Runtime/Raid/RaidDirector.cs:249`, `SetMap(new CastleGuardNavigationMap(Castle.NavGraph))`, server only).
-  `CastleLockdown.NavGraph` is **not** set: a lockdown at the hue and cry bars every door, which would stop all
-  guards, so what a closed door should cost needs a decision first (see "Doors" above).
+  `CastleLockdown.NavGraph` is set in the same place (`RaidDirector.cs:262`, see "Doors" above).
+- **Patrol** (#207, `States/PatrolState.cs:16`, replaces `PlaceholderPatrolState`, which is now unused and should be
+  deleted). Plans a round of `PatrolPointCount` (3) points 3-8 m from `Guard.Home` (`States/GuardPatrolPlanner.cs:27`,
+  `:39`). A point counts only if the map has floor under it (`FindCell`) and `TryFindPath` from the post succeeds,
+  so a barred door rules a point out. Picks use the guard's own `System.Random` (`Guard.cs:50`, seeded from the
+  post, `Reseed` at `:190`), so the server is deterministic. Walks them in turn with a 1 s pause
+  (`PatrolState.cs:70`, `:114`); a finished round is replanned. `Blocked(DoorClosed)` drops the point; any other
+  block swaps it for a fresh one (`PatrolState.cs:91`). The route is `States/GuardPatrolRoute.cs`.
+  `GuardNavigationService.Map` (`GuardNavigationService.cs:50`) exposes the map to states. Numbers are in
+  `GuardTuning` ("Patrol").
+- **Hand-off to Investigate (#208).** Patrol calls `Guard.RequestInvestigation(where)` (`Guard.cs:193`), which raises
+  `Guard.InvestigateRequested` (`Guard.cs:44`), on `GuardHearing.NoiseNoticed` and once per new sighting
+  (`PatrolState.cs:62`; `OnNoiseNoticed` at `:112`). **Nothing subscribes yet**, so today a guard that sees or hears something keeps
+  patrolling. #208 either subscribes and changes state, or replaces Patrol's two checks.
 - **Replacing a placeholder.** Edit `States/GuardStateSet.cs`; each placeholder names its issue.
 - **Tests.** `GuardCoreSensesTests` (throttle, stagger, cone, own-collider line of sight, grace, wake, threshold)
   and `GuardCoreBodyTests` (a move request reaching Arrived through the service, health, lobby scaling, the
