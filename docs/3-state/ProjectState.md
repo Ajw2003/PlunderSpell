@@ -50,7 +50,17 @@ lacks; the rest are older and either merged in another form or abandoned.
   room module carries a baked `CastleNavTile`, a 24×24 grid of 0.5 m cells with up to 2 floor
   layers and archway portals. The menu item Tools/Plunderspell/Bake Castle Nav Tiles bakes it.
   `CastleNavTileTests` pass 2/2, and the overlays are in `docs/generated/nav-tiles-2026-10-02/`.
-  Open: the Gatehouse and the curtain wall pieces bake empty, which #221 must handle. Next is #221.
+  The Gatehouse and curtain wall pieces now bake with a virtual yard floor.
+
+  #221 is in: `CastleNavGraph` (`Runtime/Castle/Navigation/`, 14 small classes) is stitched at
+  generation (`ProceduralCastleGenerator.cs:115`).
+  - Queries: path finding takes about 150 µs, the nearest-cell and reachable queries a few µs, all
+    with 0 B allocated (Editor timings).
+  - Reachability agrees with an Editor NavMesh on all 5 seeds wherever both call a spot floor. The
+    graph calls more spots floor than the NavMesh does (Great Hall, Chapel), which is unexplained.
+  - Locked doors aren't in the graph yet; that is #222.
+
+  Next is #222.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
