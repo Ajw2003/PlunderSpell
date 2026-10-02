@@ -210,16 +210,52 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
   offers the last seen spot as a sighting-strength lead and returns Investigate (`:88`); the guard runs to the
   last seen spot, never the player's real one. Publishes `IntruderSpotted` on enter and `IntruderLost` on exit
   (`:46`, `:54`), no shout. A `Blocked` answer is ignored: the next re-plan tries again, and the navigation
-  sweep keeps a guard off a player pinned to a wall (#200). **Combat hand-off left for #210:** the
+  sweep keeps a guard off a player pinned to a wall (#200). **Combat hand-off (#210):** the
   `ChaseState.InReach` event (`:38`, once per approach, within `MeleeReach` 2 m or `RangedEngageRange` 8 m for a
-  ranged guard) and `ReactToInReach` (`:126`), which returns null today; #210 returns Combat there.
+  ranged guard) and `ReactToInReach` (`:130`), which now returns `States.Combat`. Coming back from Combat uses
+  `Follow(player, alreadySpotted: true)` (`:45`) so the sighting is not scored twice.
   **Ranged:** `Core/GuardRangedAttack.cs` (`Guard.RangedAttack`, `Guard.cs:54`, built `:102`) is a guard
   with `Tuning.ProjectilePrefab`. `TryFire` (`:31`) takes the cooldown (1.4 s), signals
   `GuardAttackSignaller.Signal(Projectile)`, publishes `GuardEngaged` and launches the shared
   `NetworkedProjectile` (`:50`), as legacy `CastleGuard.TryAttack`/`FireAt` did (`CastleGuard.cs.txt:1157-1215`).
-  Chase calls it every tick while the player is seen, so shots come on the move, out to sight range. **Not done,
-  left to #210:** the teammate-safe sphere cast before a shot (the issue asks for it in Chase too), and the
-  legacy melee strike. Tests: `Tests/Runtime/GuardChaseTests.cs`.
+  Chase calls it every tick while the player is seen, so shots come on the move, out to sight range. Before every
+  shot it asks the friendly-fire check (below), so Chase never fires through a teammate either. Tests:
+  `Tests/Runtime/GuardChaseTests.cs`.
+- **Combat and attack turns (#210).** `States/CombatState.cs:20`, entered from Chase. The guard asks the director
+  for a turn by event: `AttackTurnRequested` is published (`GuardAttackTurn.Request`, `Core/GuardAttackTurn.cs:52`),
+  `AttackTurnMediator.Handle` (`Alarm/AttackTurnMediator.cs:53`) answers `AttackTurnGranted` or `AttackTurnDenied`
+  (`EnemyDirector.cs:197-230`; `director.AttackTurns` is the mediator, `:213`). **Limit: 1 melee and 1 ranged turn
+  per player** (`AttackTurnTuning.cs:14`). That is the number in issue #210; the legacy guard had no tokens, no
+  windup and no turns, every guard in reach struck on its own 1.4 s cooldown (`CastleGuard.cs.txt:1157-1180`).
+  A turn ends when the guard releases it (`CombatState.cs:156`, after a 0.5 s `AttackRecoverySeconds` that spreads
+  strikes out; the legacy swing had no windup), on leaving Combat (`GuardAttackTurn.End`, called from
+  `CombatState.Exit` :63, which covers death and stun because both change state), on `GuardDied` and
+  `UnregisterGuard` (`EnemyDirector.cs`), or after `TurnTimeoutSeconds` 3 s (`AttackTurnMediator.cs:89`), so a
+  guard that cannot reach the player does not block the others. The alarm itself is the director's and was already
+  folded in (#205); turns sit beside it there.
+  - **With a turn** a melee guard walks in and strikes (`CloseInAndStrike` :187, `Core/GuardMeleeAttack.cs:31`:
+    reach `MeleeReach` 2 m, 12 damage through `Damage.Apply`, attack signal `Melee`, `GuardEngaged`). A ranged
+    guard fires (`ShootOrSidestep` :197).
+  - **Without a turn** it holds a place on a ring around the player (`States/CombatRing.cs`, melee just outside
+    reach, ranged just inside range) through `MoveRequest`, and asks again every 0.2 s only when its own cooldown
+    is over (`AskForTurnWhenDue` :169). It turns to face the player (`FaceTarget` :91, yaw only); nothing else
+    turns guards yet, so Chase and Patrol still do not face where they walk.
+  - **No flicker.** Combat holds while the player is inside reach plus `CombatMargin` 2.5 m (`ReasonToLeave` :119).
+    Past that: Chase if still seen, Investigate if not seen for `ChaseLoseSightSeconds`.
+  - **Pinned players.** Combat never writes position, only the navigation sweep does, so the #200 guarantee
+    holds; a guard may walk round the player to its ring place but never into them.
+  - **Friendly fire.** `Core/GuardLineOfFire.cs:26` (`IsBlockedByTeammate`): a `SphereCastNonAlloc` of
+    `ShotClearanceRadius` 0.3 m from eye to aim point into a 16-hit buffer made once; the nearest hit that is not
+    the shooter or the target decides, so a wall in front of a teammate is not friendly fire. A `Guard` or the
+    legacy `CastleGuard` counts as a teammate. `GuardRangedAttack.TryFire` (`:44`, check at `:58`) calls it, and
+    both Chase and Combat shoot only through `TryFire`. A blocked shot is not fired and does not spend the
+    cooldown; `LastShotBlocked` makes Combat sidestep to the next place on the ring (`ShootOrSidestep`).
+  - **Owner bugs (leaves a player in front of it, cannot get close).** Not reproduced against the legacy guard
+    (not run). On the fresh guard the sight check already skips the target's own colliders (`GuardSight.cs:84`)
+    and the stop-short is the navigation sweep, so the guard closes to the player's capsule (inside the 2 m reach);
+    `GuardCombatTests.AMeleeGuardWithATurnStrikesAndHurtsThePlayer` shows it landing hits. A co-op run is not
+    possible yet: no prefab uses the fresh guard (#214).
+  - Tests: `GuardCombatTests`, `GuardAttackTurnTests`, `GuardFriendlyFireTests` (`Tests/Runtime`).
 - **Replacing a placeholder.** Edit `States/GuardStateSet.cs`; each placeholder names its issue.
 - **Tests.** `GuardCoreSensesTests` (throttle, stagger, cone, own-collider line of sight, grace, wake, threshold)
   and `GuardCoreBodyTests` (a move request reaching Arrived through the service, health, lobby scaling, the

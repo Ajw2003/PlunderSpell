@@ -82,8 +82,10 @@ lacks; the rest are older and either merged in another form or abandoned.
   decision: locked doors cost, barred doors block). Tests pass: 7/7 PlayMode and 1/1 EditMode.
   #208 is in: `InvestigateState` consumes leads (noise, sighting, hue and cry) from `GuardLeads`.
   #209 is in: `ChaseState` follows a seen player at chase speed (throttled re-plans), ranged guards shoot
-  on the move, sight lost goes to Investigate at the last seen spot. The Combat hand-off is
-  `ChaseState.InReach` (#210); teammate-safe shooting is not done yet.
+  on the move, sight lost goes to Investigate at the last seen spot.
+  #210 is in: `CombatState` (Chase hands over at reach); the director's `AttackTurnMediator` gives 1 melee and
+  1 ranged turn per player, others hold a ring place; one `GuardLineOfFire` check stops Chase and Combat shots
+  through a teammate. Not in a prefab or a co-op run yet (the legacy guard stays until #214).
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
