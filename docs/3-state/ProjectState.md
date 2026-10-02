@@ -74,9 +74,15 @@ lacks; the rest are older and either merged in another form or abandoned.
   - 17 new PlayMode tests pass (sight throttle, own-collider line of sight, hearing wake, a move reaching
   Arrived, health, state SyncVar, shove). The prefabs are **not** swapped: the states are placeholders until
   #207-#213, so a swap would make guards harmless. No co-op run for that reason.
-  - `CastleLockdown.NavGraph` is still unset (barring every door at the hue and cry would stop all guards).
+  - `CastleLockdown.NavGraph` was left unset by #206, pending the owner's door decision; #207 has since
+    wired it.
 
-  Next is #207 (Patrol).
+  #207 is in: `PatrolState` picks 3+ reachable points around the post, re-plans on Blocked and drops
+  points behind barred doors. Lockdown doors are wired (`RaidDirector.cs:262`, per the 2026-10-02
+  decision: locked doors cost, barred doors block). Tests pass: 7/7 PlayMode and 1/1 EditMode.
+  Sightings and noises raise `Guard.InvestigateRequested`, which nothing consumes until #208.
+
+  Next is #208 (Investigate).
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
