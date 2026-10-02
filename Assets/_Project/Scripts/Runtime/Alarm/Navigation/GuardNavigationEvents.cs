@@ -12,7 +12,10 @@ namespace Plunderspell.Alarm
         Patrol,
         Investigate,
         Chase,
-        Return
+        Return,
+
+        /// <summary>Walking to a place on the ring round a player. The Combat state does the facing for these moves.</summary>
+        Combat
     }
 
     /// <summary>Why a move stopped short of its destination.</summary>

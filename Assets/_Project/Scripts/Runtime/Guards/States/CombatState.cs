@@ -225,7 +225,7 @@ namespace Plunderspell.Guards
                 return;
 
             _secondsToRetarget = Context.Tuning.ChaseRetargetSeconds;
-            Context.Navigator.MoveTo(spot, Context.Tuning.ChaseSpeed, MoveReason.Chase);
+            Context.Navigator.MoveTo(spot, Context.Tuning.ChaseSpeed, MoveReason.Combat);
         }
     }
 }

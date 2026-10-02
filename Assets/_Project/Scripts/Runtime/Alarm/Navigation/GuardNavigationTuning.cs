@@ -37,6 +37,9 @@ namespace Plunderspell.Alarm
         [Tooltip("How fast a guard climbs or drops to the floor height, in metres per second.")]
         public float VerticalSpeed = 8f;
 
+        [Tooltip("How fast a walking guard turns to face where it is going, in degrees per second.")]
+        public float TurnDegreesPerSecond = 270f;
+
         [Tooltip("How far the guard's pivot sits above the floor. Zero when the pivot is at the feet.")]
         public float PivotAboveFloor = 0f;
     }
