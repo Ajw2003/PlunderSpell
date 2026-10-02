@@ -1,5 +1,16 @@
 # Today
 
+**2026-10-02 - Lesson: a stray .cs file in Assets can silently drop prefabs from PurrNet's network list.**
+Four draft guard part files, left by a stopped builder, broke compilation. While it was broken,
+PurrNet's auto-generated `Assets/_Project/Net/NetworkPrefabs.asset` lost the `CastleGuard` prefab,
+so guards would not have spawned in co-op. Fixed: the drafts moved to
+`docs/reference/guard-parts-draft/` and the entry restored. After any compile failure, check `git
+diff Assets/_Project/Net/NetworkPrefabs.asset` before committing. Dead code is now marked deprecated
+(#230, `docs/reference/deprecated-code.md`); the guard is being rebuilt from scratch with bespoke
+navigation (#203, `docs/plans/bespoke-navigation.md`).
+
+---
+
 **2026-09-30 (evening) - playability pass: guards keep moving; settings and pop-in in progress.**
 Mimic prototype paused; work is on `claude/playability-fixes` (from PR #178), parent issue #192. In a
 co-op run, guard stuck time fell from 25.1% to 4.0% of guard-seconds. Guard tests: 54 of 55 pass; the
