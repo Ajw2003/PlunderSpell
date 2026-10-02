@@ -659,7 +659,7 @@ namespace Plunderspell.EditorTools
             atmosphereSo.FindProperty("_profile").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<NightAtmosphereProfile>($"{SettingsDir}/NightAtmosphere.asset");
             atmosphereSo.FindProperty("_moon").objectReferenceValue = moon;
-            atmosphereSo.FindProperty("_alarm").objectReferenceValue = Object.FindFirstObjectByType<AlarmFSMManager>();
+            atmosphereSo.FindProperty("_alarm").objectReferenceValue = Object.FindFirstObjectByType<EnemyDirector>();
             atmosphereSo.FindProperty("_director").objectReferenceValue = Object.FindFirstObjectByType<RaidDirector>();
             atmosphereSo.FindProperty("_surfaceShader").objectReferenceValue = Shader.Find(CastleSurfaceMaterials.SurfaceShaderName);
             atmosphereSo.FindProperty("_skyMaterial").objectReferenceValue =

@@ -20,12 +20,16 @@ namespace Plunderspell.Tests
         // The arrival grace is process-wide: a test elsewhere that started a raid would otherwise
         // leave these guards unable to see anyone.
         [SetUp]
-        public void SetUp() => CastleGuard.EndArrivalGrace();
+        public void SetUp()
+        {
+            CastleGuard.EndArrivalGrace();
+            TestDirector.Ensure();
+        }
 
         [TearDown]
         public void TearDown()
         {
-            CastleGuard.ClearIntruders();
+            TestDirector.Reset();
             foreach (Object o in _spawned)
                 if (o != null)
                     Object.DestroyImmediate(o);
@@ -38,7 +42,7 @@ namespace Plunderspell.Tests
             return o;
         }
 
-        private CastleGuard MakeGuard(Vector3 position, AlarmFSMManager alarm = null)
+        private CastleGuard MakeGuard(Vector3 position, EnemyDirector alarm = null)
         {
             var go = Track(new GameObject("Guard"));
             go.transform.position = position;
@@ -48,17 +52,16 @@ namespace Plunderspell.Tests
             return guard;
         }
 
-        private AlarmFSMManager MakeAlarm()
+        private EnemyDirector MakeAlarm()
         {
-            var go = Track(new GameObject("Alarm"));
-            return go.AddComponent<AlarmFSMManager>();
+            return TestDirector.Ensure();
         }
 
         private Transform MakeIntruder(Vector3 position)
         {
             var go = Track(new GameObject("Intruder"));
             go.transform.position = position;
-            CastleGuard.RegisterIntruder(go.transform);
+            TestDirector.Ensure().RegisterIntruder(go.transform);
             return go.transform;
         }
 
@@ -209,7 +212,7 @@ namespace Plunderspell.Tests
             guard.Tick(0.1f);
             Assert.AreEqual(GuardAlertState.Chasing, guard.State);
 
-            CastleGuard.UnregisterIntruder(intruder);   // vanished round a corner
+            TestDirector.Ensure().UnregisterIntruder(intruder);   // vanished round a corner
             guard.Tick(0.1f);
             Assert.AreEqual(GuardAlertState.Searching, guard.State);
 
@@ -221,7 +224,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_AtHueAndCryTheHuntNeverEnds()
         {
-            AlarmFSMManager alarm = MakeAlarm();
+            EnemyDirector alarm = MakeAlarm();
             alarm.SetAlarmLevel(95f);
             Assert.AreEqual(AlarmState.HueAndCry, alarm.State);
 
@@ -229,7 +232,7 @@ namespace Plunderspell.Tests
             Transform intruder = MakeIntruder(new Vector3(0f, 0f, 5f));
 
             guard.Tick(0.1f);
-            CastleGuard.UnregisterIntruder(intruder);
+            TestDirector.Ensure().UnregisterIntruder(intruder);
             guard.Tick(0.1f);
             guard.Tick(GuardBrain.SearchPatience * 5f);
 
@@ -242,7 +245,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_ASpawnedGuardKeepsTheAlarmItFound()
         {
-            AlarmFSMManager alarm = MakeAlarm();
+            EnemyDirector alarm = MakeAlarm();
             var go = Track(new GameObject("Guard"));
             go.AddComponent<BoxCollider>();
             var guard = go.AddComponent<CastleGuard>();
@@ -255,7 +258,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_ASightingReachesTheAlarm()
         {
-            AlarmFSMManager alarm = MakeAlarm();
+            EnemyDirector alarm = MakeAlarm();
             CastleGuard guard = MakeGuard(Vector3.zero, alarm);
             MakeIntruder(new Vector3(0f, 0f, 6f));
             float before = alarm.AlarmLevel;
@@ -289,7 +292,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_TheHueAndCrySendsGuardsNearAPlayerToThem()
         {
-            AlarmFSMManager alarm = MakeAlarm();
+            EnemyDirector alarm = MakeAlarm();
             CastleGuard near = MakeGuard(new Vector3(0f, 0f, -30f), alarm);
             CastleGuard far = MakeGuard(new Vector3(0f, 0f, -80f), alarm);
             near.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
@@ -328,7 +331,7 @@ namespace Plunderspell.Tests
             var alarmGo = Track(new GameObject("Alarm"));
             alarmGo.transform.position = new Vector3(1f, 0f, 0f);
             alarmGo.AddComponent<BoxCollider>();
-            AlarmFSMManager alarm = alarmGo.AddComponent<AlarmFSMManager>();
+            EnemyDirector alarm = alarmGo.AddComponent<EnemyDirector>();
 
             CastleGuard guard = MakeGuard(Vector3.zero, alarm);
             MakeIntruder(new Vector3(0f, 0f, 5f));
@@ -343,18 +346,18 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_AGuardShoutsAgainOnItsNextChase()
         {
-            AlarmFSMManager alarm = MakeAlarm();
+            EnemyDirector alarm = MakeAlarm();
             CastleGuard guard = MakeGuard(Vector3.zero, alarm);
             Transform intruder = MakeIntruder(new Vector3(0f, 0f, 5f));
 
             guard.Tick(0.1f);
-            CastleGuard.UnregisterIntruder(intruder);
+            TestDirector.Ensure().UnregisterIntruder(intruder);
             guard.Tick(0.1f);
             guard.Tick(GuardBrain.SearchPatience + 1f);
             Assert.AreEqual(GuardAlertState.Patrolling, guard.State, "Sanity: the first chase is over.");
 
             alarm.SetAlarmLevel(0f);
-            CastleGuard.RegisterIntruder(intruder);
+            TestDirector.Ensure().RegisterIntruder(intruder);
             // The 13 s tick above let the guard wander off (it has no route); put it back facing the intruder.
             guard.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             guard.Tick(0.1f);
@@ -366,7 +369,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_ThreeGuardsChasingIsHueAndCry()
         {
-            AlarmFSMManager alarm = MakeAlarm();
+            EnemyDirector alarm = MakeAlarm();
 
             alarm.ReportChase(1, true);
             Assert.Less(alarm.State, AlarmState.Roused, "One guard on the chase is not the castle up in arms.");
@@ -380,7 +383,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_GuardsSpottingAndAttackingRaiseTheAlarmThroughWalls()
         {
-            AlarmFSMManager alarm = MakeAlarm();
+            EnemyDirector alarm = MakeAlarm();
 
             alarm.ReportSighting();
             float afterSighting = alarm.AlarmLevel;
@@ -393,7 +396,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_ANewRaidStartsCalmAndStaysCalmThroughTheGrace()
         {
-            AlarmFSMManager alarm = MakeAlarm();
+            EnemyDirector alarm = MakeAlarm();
             alarm.SetAlarmLevel(100f);
             Assert.AreEqual(AlarmState.HueAndCry, alarm.State);
 
@@ -452,11 +455,11 @@ namespace Plunderspell.Tests
             go.AddComponent<IntruderTag>();
             Transform playerTransform = go.transform;
 
-            Assert.Contains(playerTransform, (System.Collections.ICollection)CastleGuard.Intruders,
+            Assert.IsTrue(TestDirector.Ensure().IsIntruder(playerTransform),
                 "A tagged player must be visible to guards at runtime.");
 
             Object.DestroyImmediate(go);
-            Assert.IsFalse(CastleGuard.Intruders.Contains(playerTransform),
+            Assert.IsFalse(TestDirector.Ensure().IsIntruder(playerTransform),
                 "…and must stop being watched for once it is gone.");
         }
 

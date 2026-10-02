@@ -62,12 +62,12 @@ namespace Plunderspell.Tests
             return pickup;
         }
 
-        private AlarmFSMManager MakeAlarmListener(Vector3 position)
+        private EnemyDirector MakeAlarmListener(Vector3 position)
         {
             var go = Track(new GameObject("Alarm"));
             go.transform.position = position;
             go.AddComponent<BoxCollider>();
-            return go.AddComponent<AlarmFSMManager>();
+            return go.AddComponent<EnemyDirector>();
         }
 
         private static SpellEffectContext Context(SpellId spell, CastVolume volume, Vector3 origin,
@@ -335,7 +335,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_CastingIsHeardByTheAlarm()
         {
-            AlarmFSMManager alarm = MakeAlarmListener(new Vector3(0f, 0f, 2f));
+            EnemyDirector alarm = MakeAlarmListener(new Vector3(0f, 0f, 2f));
 
             SpellEffectRegistry.Execute(Context(SpellId.Ignis, CastVolume.Normal, Vector3.zero));
 
@@ -346,11 +346,11 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_WhisperingIsQuieterThanShouting()
         {
-            AlarmFSMManager whisperAlarm = MakeAlarmListener(new Vector3(0f, 0f, 0.4f));
+            EnemyDirector whisperAlarm = MakeAlarmListener(new Vector3(0f, 0f, 0.4f));
             SpellEffectRegistry.Execute(Context(SpellId.Ignis, CastVolume.Whisper, Vector3.zero));
             float whisperLevel = whisperAlarm.AlarmLevel;
 
-            AlarmFSMManager shoutAlarm = MakeAlarmListener(new Vector3(0f, 0f, 0.4f));
+            EnemyDirector shoutAlarm = MakeAlarmListener(new Vector3(0f, 0f, 0.4f));
             SpellEffectRegistry.Execute(Context(SpellId.Ignis, CastVolume.Shout, Vector3.zero));
             float shoutLevel = shoutAlarm.AlarmLevel;
 
@@ -361,7 +361,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_ALeapAndItsSlamStirTheCastle()
         {
-            AlarmFSMManager alarm = MakeAlarmListener(new Vector3(0f, 0f, 3f));
+            EnemyDirector alarm = MakeAlarmListener(new Vector3(0f, 0f, 3f));
 
             SpellEffectRegistry.Execute(Context(SpellId.Saltus, CastVolume.Normal, Vector3.zero));
             float afterWord = alarm.AlarmLevel;

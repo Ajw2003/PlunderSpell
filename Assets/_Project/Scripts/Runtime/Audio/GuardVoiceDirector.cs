@@ -33,7 +33,7 @@ namespace Plunderspell.Audio
 
         private AudioDirector _director;
         private readonly Dictionary<int, Record> _records = new Dictionary<int, Record>();
-        private AlarmFSMManager _alarm;
+        private EnemyDirector _alarm;
 
         public void Initialize(AudioDirector director) => _director = director;
 
@@ -56,10 +56,10 @@ namespace Plunderspell.Audio
 
             float now = Time.time;
             Vector3 listener = _director.Listener;
-            IReadOnlyList<CastleGuard> guards = CastleGuard.Active;
+            IReadOnlyList<Component> guards = EnemyDirector.GuardsOf(_director.Alarm);
             for (int i = 0; i < guards.Count; i++)
             {
-                CastleGuard guard = guards[i];
+                CastleGuard guard = guards[i] as CastleGuard;
                 if (guard == null)
                     continue;
 
@@ -177,13 +177,13 @@ namespace Plunderspell.Audio
             if (state < AlarmState.Roused)
                 return;
 
-            IReadOnlyList<CastleGuard> guards = CastleGuard.Active;
+            IReadOnlyList<Component> guards = EnemyDirector.GuardsOf(_director.Alarm);
             CastleGuard nearest = null;
             float best = float.MaxValue;
             Vector3 listener = _director.Listener;
             for (int i = 0; i < guards.Count; i++)
             {
-                CastleGuard guard = guards[i];
+                CastleGuard guard = guards[i] as CastleGuard;
                 if (guard == null || guard.IsDead || !GuardVoices.Resolve(guard.name).Hound)
                     continue;
                 float distance = (guard.transform.position - listener).sqrMagnitude;

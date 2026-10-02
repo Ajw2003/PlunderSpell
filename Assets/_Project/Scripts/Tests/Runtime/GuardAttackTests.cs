@@ -20,14 +20,15 @@ namespace Plunderspell.Tests
         [SetUp]
         public void SetUp()
         {
-            CastleGuard.ClearIntruders();
+            TestDirector.Reset();
+            TestDirector.Ensure();
             CastleGuard.EndArrivalGrace();
         }
 
         [TearDown]
         public void TearDown()
         {
-            CastleGuard.ClearIntruders();
+            TestDirector.Reset();
             foreach (Object o in m_tracked)
             {
                 if (o != null)
@@ -69,7 +70,7 @@ namespace Plunderspell.Tests
             go.transform.position = position;
             go.AddComponent<BoxCollider>();
             var victim = go.AddComponent<Victim>();
-            CastleGuard.RegisterIntruder(go.transform);
+            TestDirector.Ensure().RegisterIntruder(go.transform);
             return victim;
         }
 

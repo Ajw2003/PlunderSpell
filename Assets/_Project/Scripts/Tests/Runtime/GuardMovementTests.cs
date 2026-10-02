@@ -22,12 +22,16 @@ namespace Plunderspell.Tests
         private readonly List<NavMeshDataInstance> _meshes = new List<NavMeshDataInstance>();
 
         [SetUp]
-        public void SetUp() => CastleGuard.EndArrivalGrace();
+        public void SetUp()
+        {
+            CastleGuard.EndArrivalGrace();
+            TestDirector.Ensure();
+        }
 
         [TearDown]
         public void TearDown()
         {
-            CastleGuard.ClearIntruders();
+            TestDirector.Reset();
             foreach (NavMeshDataInstance mesh in _meshes)
                 mesh.Remove();
             _meshes.Clear();
@@ -43,7 +47,7 @@ namespace Plunderspell.Tests
             return o;
         }
 
-        private CastleGuard MakeGuard(Vector3 position, AlarmFSMManager alarm = null)
+        private CastleGuard MakeGuard(Vector3 position, EnemyDirector alarm = null)
         {
             var go = Track(new GameObject("Guard"));
             go.transform.position = position;
@@ -53,9 +57,9 @@ namespace Plunderspell.Tests
             return guard;
         }
 
-        private AlarmFSMManager MakeAlarm(float level = 0f)
+        private EnemyDirector MakeAlarm(float level = 0f)
         {
-            var alarm = Track(new GameObject("Alarm")).AddComponent<AlarmFSMManager>();
+            EnemyDirector alarm = TestDirector.Ensure();
             if (level > 0f)
                 alarm.SetAlarmLevel(level);
             return alarm;
@@ -65,7 +69,7 @@ namespace Plunderspell.Tests
         {
             var go = Track(new GameObject("Intruder"));
             go.transform.position = position;
-            CastleGuard.RegisterIntruder(go.transform);
+            TestDirector.Ensure().RegisterIntruder(go.transform);
             return go.transform;
         }
 
@@ -159,12 +163,12 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_ASearchingGuardSweepsInsteadOfParking()
         {
-            AlarmFSMManager alarm = MakeAlarm(95f);   // the hunt never ends, so it must keep moving
+            EnemyDirector alarm = MakeAlarm(95f);   // the hunt never ends, so it must keep moving
             CastleGuard guard = MakeGuard(Vector3.zero, alarm);
             Transform intruder = MakeIntruder(new Vector3(0f, 0f, 5f));
             guard.Tick(0.1f);
             Assert.AreEqual(GuardAlertState.Chasing, guard.State, "Test premise.");
-            CastleGuard.UnregisterIntruder(intruder);
+            TestDirector.Ensure().UnregisterIntruder(intruder);
             guard.Tick(0.1f);
             Assert.AreEqual(GuardAlertState.Searching, guard.State, "Test premise.");
             Vector3 centre = guard.LastKnownIntruderPosition;
@@ -268,11 +272,11 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_ANoiseMovesASearchingGuardsTarget()
         {
-            AlarmFSMManager alarm = MakeAlarm(95f);
+            EnemyDirector alarm = MakeAlarm(95f);
             CastleGuard guard = MakeGuard(Vector3.zero, alarm);
             Transform intruder = MakeIntruder(new Vector3(0f, 0f, 5f));
             guard.Tick(0.1f);
-            CastleGuard.UnregisterIntruder(intruder);
+            TestDirector.Ensure().UnregisterIntruder(intruder);
             guard.Tick(0.1f);
             Assert.AreEqual(GuardAlertState.Searching, guard.State, "Test premise.");
             Vector3 was = guard.LastKnownIntruderPosition;
@@ -326,7 +330,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_AtTheHueAndCryASearchingGuardIsResentWhenThePlayerMoves()
         {
-            AlarmFSMManager alarm = MakeAlarm(95f);
+            EnemyDirector alarm = MakeAlarm(95f);
             CastleGuard guard = MakeGuard(Vector3.zero, alarm);
             guard.SetAlertState(GuardAlertState.Searching);
             Vector3 first = new Vector3(0f, 0f, 70f);          // beyond even the hue and cry's sight
@@ -347,7 +351,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_AtTheHueAndCryAnInvestigatingGuardIsResentToo()
         {
-            AlarmFSMManager alarm = MakeAlarm(95f);
+            EnemyDirector alarm = MakeAlarm(95f);
             CastleGuard guard = MakeGuard(Vector3.zero, alarm);
             guard.AlertTo(new Vector3(0f, 0f, -70f));
             var player = new Vector3(70f, 0f, 0f);

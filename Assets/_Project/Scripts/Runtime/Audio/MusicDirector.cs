@@ -123,7 +123,7 @@ namespace Plunderspell.Audio
 
             if (_stemsOn)
             {
-                AlarmFSMManager alarm = _director.Alarm;
+                EnemyDirector alarm = _director.Alarm;
                 int alarmIndex = alarm != null ? StemIndex(alarm.State) : 0;
                 for (int i = 0; i < StemCount; i++)
                     _target[i] = i <= alarmIndex ? _gain[i] : 0f;

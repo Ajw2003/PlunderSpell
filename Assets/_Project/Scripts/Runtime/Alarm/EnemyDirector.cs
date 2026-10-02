@@ -7,7 +7,17 @@ using UnityEngine;
 namespace Plunderspell.Alarm
 {
     /// <summary>
-    /// Server-authoritative four-state alarm state machine. It listens for noise (as an
+    /// The server-side enemy mediator (#205). It owns the guard and intruder registries, a small typed
+    /// event bus that guards and listeners share, and the alarm (formerly AlarmFSMManager, folded in by
+    /// the owner's decision). Guards raise events; the director scores the alarm and answers with events
+    /// such as <see cref="InvestigateRequest"/>. Nothing here moves a guard: a request is only relayed,
+    /// and each guard's own state machine decides what to do with it.
+    ///
+    /// It lives in the Alarm assembly because Guards, Audio, Castle, Raid and UI already reference it, so
+    /// none gains a dependency. Guards are held as <see cref="Component"/> and events carry plain data,
+    /// so it needs no reference to Guards.
+    ///
+    /// The alarm is a server-authoritative four-state machine. It listens for noise (as an
     /// <see cref="INoiseListener"/>), accumulates an alarm level 0–100 weighted by noise strength, and
     /// drives the shared <see cref="AlarmState"/> that UI and enemy AI subscribe to.
     ///
@@ -29,7 +39,7 @@ namespace Plunderspell.Alarm
     /// (<see cref="ApplyNoise"/>, <see cref="UpdateState"/>, <see cref="TickDecay"/>) is network-free
     /// for EditMode testing.
     /// </summary>
-    public class AlarmFSMManager : NetworkBehaviour, INoiseListener
+    public class EnemyDirector : NetworkBehaviour, INoiseListener
     {
         [Header("Tuning")]
         [Tooltip("Alarm points added per unit of noise strength.")]
@@ -87,6 +97,149 @@ namespace Plunderspell.Alarm
             _lastNoiseTime = Time.time;
         }
 
+        // ---------------------------------------------------------------------------------------
+        // Registries
+        // ---------------------------------------------------------------------------------------
+
+        private readonly List<Component> _guards = new List<Component>();
+        private readonly List<Transform> _intruders = new List<Transform>();
+
+        /// <summary>The director in play, set while one is enabled. Guards and intruder tags register
+        /// with it; the most recently enabled wins.</summary>
+        public static EnemyDirector Current { get; private set; }
+
+        private static readonly List<Component> s_noGuards = new List<Component>();
+        private static readonly List<Transform> s_noIntruders = new List<Transform>();
+
+        /// <summary>Guards alive and enabled. Listed as <see cref="Component"/>: the director sits below
+        /// the Guards assembly, so callers cast to their guard type.</summary>
+        public IReadOnlyList<Component> Guards => _guards;
+
+        /// <summary>The players guards look for. Registered by <c>IntruderTag</c>.</summary>
+        public IReadOnlyList<Transform> Intruders => _intruders;
+
+        /// <summary>Guards of <paramref name="director"/>, or an empty list when there is none.</summary>
+        public static IReadOnlyList<Component> GuardsOf(EnemyDirector director)
+            => director != null ? director._guards : s_noGuards;
+
+        /// <summary>Intruders of <paramref name="director"/>, or an empty list when there is none.</summary>
+        public static IReadOnlyList<Transform> IntrudersOf(EnemyDirector director)
+            => director != null ? director._intruders : s_noIntruders;
+
+        /// <summary>Adds a guard to the registry.</summary>
+        public void RegisterGuard(Component guard)
+        {
+            if (guard != null && !_guards.Contains(guard))
+                _guards.Add(guard);
+        }
+
+        /// <summary>Removes a guard from the registry.</summary>
+        public void UnregisterGuard(Component guard) => _guards.Remove(guard);
+
+        /// <summary>Registers a player as something guards will look for.</summary>
+        public void RegisterIntruder(Transform intruder)
+        {
+            if (intruder != null && !_intruders.Contains(intruder))
+                _intruders.Add(intruder);
+        }
+
+        /// <summary>Stops guards looking for <paramref name="intruder"/>.</summary>
+        public void UnregisterIntruder(Transform intruder) => _intruders.Remove(intruder);
+
+        /// <summary>Forgets every intruder.</summary>
+        public void ClearIntruders() => _intruders.Clear();
+
+        /// <summary>True when <paramref name="intruder"/> is registered.</summary>
+        public bool IsIntruder(Transform intruder) => _intruders.Contains(intruder);
+
+        private void Awake() => Current = this;
+
+        private void OnEnable() => Current = this;
+
+        private void OnDisable()
+        {
+            if (Current == this)
+                Current = null;
+        }
+
+        // ---------------------------------------------------------------------------------------
+        // Event bus. Plain C# events carrying readonly structs: raising allocates nothing.
+        // ---------------------------------------------------------------------------------------
+
+        /// <summary>A noise reached the director.</summary>
+        public event Action<NoiseReported> OnNoiseReported;
+        /// <summary>A guard spotted an intruder.</summary>
+        public event Action<IntruderSpotted> OnIntruderSpotted;
+        /// <summary>A guard gave up a chase.</summary>
+        public event Action<IntruderLost> OnIntruderLost;
+        /// <summary>A guard attacked.</summary>
+        public event Action<GuardEngaged> OnGuardEngaged;
+        /// <summary>The alarm state changed (on every peer).</summary>
+        public event Action<AlarmChanged> OnAlarmChanged;
+        /// <summary>A guard died.</summary>
+        public event Action<GuardDied> OnGuardDied;
+        /// <summary>Guards are asked to investigate a position. Relayed only; each guard decides.</summary>
+        public event Action<InvestigateRequest> OnInvestigateRequest;
+
+        private bool IsAuthority => !isSpawned || isServer;
+
+        /// <summary>A guard saw an intruder: scores the sighting and counts the chaser.</summary>
+        public void Publish(IntruderSpotted e)
+        {
+            OnIntruderSpotted?.Invoke(e);
+            if (!IsAuthority)
+                return;
+            if (e.FirstSighting)
+                ReportSighting();
+            ReportChase(e.Guard != null ? e.Guard.GetInstanceID() : 0, true);
+        }
+
+        /// <summary>A guard stopped chasing: stops counting it. Stopping never lowers the alarm.</summary>
+        public void Publish(IntruderLost e)
+        {
+            OnIntruderLost?.Invoke(e);
+            if (IsAuthority)
+                ReportChase(e.Guard != null ? e.Guard.GetInstanceID() : 0, false);
+        }
+
+        /// <summary>A guard attacked: scores the attack.</summary>
+        public void Publish(GuardEngaged e)
+        {
+            OnGuardEngaged?.Invoke(e);
+            if (IsAuthority)
+                ReportAttack();
+        }
+
+        /// <summary>A guard died: stops counting it as a chaser.</summary>
+        public void Publish(GuardDied e)
+        {
+            OnGuardDied?.Invoke(e);
+            if (IsAuthority)
+                ReportChase(e.Guard != null ? e.Guard.GetInstanceID() : 0, false);
+        }
+
+        /// <summary>Raises a noise event and scores it.</summary>
+        public void Publish(NoiseReported e)
+        {
+            OnNoiseReported?.Invoke(e);
+            if (IsAuthority)
+                ApplyNoise(e.Strength);
+        }
+
+        /// <summary>Asks guards to investigate. The director never moves a guard itself.</summary>
+        public void Publish(InvestigateRequest e) => OnInvestigateRequest?.Invoke(e);
+
+        /// <summary>The hue and cry: one investigate request at each player, so each guard in range can
+        /// take the nearest. Replaces the guards' own alarm subscription (#205).</summary>
+        private void RaiseHueAndCry()
+        {
+            for (int i = 0; i < _intruders.Count; i++)
+            {
+                if (_intruders[i] != null)
+                    Publish(new InvestigateRequest(_intruders[i].position, InvestigateReason.HueAndCry));
+            }
+        }
+
         private void Update()
         {
             // Only the server integrates decay; clients receive state via replication.
@@ -110,13 +263,13 @@ namespace Plunderspell.Alarm
                 ReportNoiseServer(noise.Origin, noise.Strength, (int)noise.Type);
                 return;
             }
-            ApplyNoise(noise.Strength);
+            Publish(new NoiseReported(noise.Origin, noise.Strength));
         }
 
         [ServerRpc(requireOwnership: false)]
         private void ReportNoiseServer(Vector3 origin, float strength, int type)
         {
-            ApplyNoise(strength);
+            Publish(new NoiseReported(origin, strength));
         }
 
         /// <summary>Pure noise application: bump the level, stamp the time and re-evaluate state.</summary>
@@ -223,6 +376,10 @@ namespace Plunderspell.Alarm
 
             _alarmState.value = newState;
 
+            // The hue and cry is a request, not an order: guards decide what to do with it.
+            if (newState == AlarmState.HueAndCry && IsAuthority)
+                RaiseHueAndCry();
+
             if (isSpawned && isServer)
                 BroadcastAlarmState(newState);
             else
@@ -233,6 +390,10 @@ namespace Plunderspell.Alarm
         [ObserversRpc(bufferLast: true)]
         private void BroadcastAlarmState(AlarmState newState) => RaiseStateChanged(newState);
 
-        private void RaiseStateChanged(AlarmState newState) => AlarmStateChanged?.Invoke(newState);
+        private void RaiseStateChanged(AlarmState newState)
+        {
+            AlarmStateChanged?.Invoke(newState);
+            OnAlarmChanged?.Invoke(new AlarmChanged(newState));
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Plunderspell.Atmosphere
 {
     /// <summary>
     /// The castle's night: fog, moon, sky, ambient, grade and every fire, blended between the four
-    /// alarm states over about two seconds whenever <see cref="AlarmFSMManager.AlarmStateChanged"/>
+    /// alarm states over about two seconds whenever <see cref="EnemyDirector.AlarmStateChanged"/>
     /// fires. That event already fires on every peer, so each machine blends its own visuals and
     /// nothing here is networked. See docs/4-systems/atmosphere.md.
     /// </summary>
@@ -22,7 +22,7 @@ namespace Plunderspell.Atmosphere
         [SerializeField] private Light _moon;
 
         [Tooltip("The castle's alarm. Found in the scene when left empty.")]
-        [SerializeField] private AlarmFSMManager _alarm;
+        [SerializeField] private EnemyDirector _alarm;
 
         [Tooltip("Plunderspell/NightSky. The fog pass paints over most of it.")]
         [SerializeField] private Material _skyMaterial;
@@ -110,7 +110,7 @@ namespace Plunderspell.Atmosphere
         {
             Instance = this;
             if (_alarm == null)
-                _alarm = FindFirstObjectByType<AlarmFSMManager>();
+                _alarm = FindFirstObjectByType<EnemyDirector>();
             if (_director == null)
                 _director = FindFirstObjectByType<RaidDirector>();
             if (_alarm != null)

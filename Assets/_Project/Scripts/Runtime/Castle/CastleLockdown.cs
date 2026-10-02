@@ -21,7 +21,7 @@ namespace Plunderspell.Castle
     public class CastleLockdown : MonoBehaviour
     {
         [Tooltip("The alarm to follow. Found in the scene when left empty.")]
-        [SerializeField] private AlarmFSMManager _alarm;
+        [SerializeField] private EnemyDirector _alarm;
 
         /// <summary>True once the doors have been locked.</summary>
         public bool IsLockedDown { get; private set; }
@@ -35,7 +35,7 @@ namespace Plunderspell.Castle
         private void Awake()
         {
             if (_alarm == null)
-                _alarm = FindObjectOfType<AlarmFSMManager>();
+                _alarm = FindObjectOfType<EnemyDirector>();
         }
 
         private void OnEnable()
@@ -103,7 +103,7 @@ namespace Plunderspell.Castle
         }
 
         /// <summary>Wires the lockdown from code, for tests and tooling-built scenes.</summary>
-        public void Configure(AlarmFSMManager alarm)
+        public void Configure(EnemyDirector alarm)
         {
             if (_alarm != null)
                 _alarm.AlarmStateChanged -= OnAlarmStateChanged;

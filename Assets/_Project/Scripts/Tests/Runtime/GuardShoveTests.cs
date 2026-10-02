@@ -18,12 +18,16 @@ namespace Plunderspell.Tests
         private readonly List<NavMeshDataInstance> _meshes = new List<NavMeshDataInstance>();
 
         [SetUp]
-        public void SetUp() => CastleGuard.EndArrivalGrace();
+        public void SetUp()
+        {
+            CastleGuard.EndArrivalGrace();
+            TestDirector.Ensure();
+        }
 
         [TearDown]
         public void TearDown()
         {
-            CastleGuard.ClearIntruders();
+            TestDirector.Reset();
             foreach (NavMeshDataInstance mesh in _meshes)
                 mesh.Remove();
             _meshes.Clear();
@@ -78,7 +82,7 @@ namespace Plunderspell.Tests
             body.mass = 1f;                 // as the player prefab
             body.freezeRotation = true;
             body.interpolation = RigidbodyInterpolation.Interpolate;
-            CastleGuard.RegisterIntruder(player.transform);
+            TestDirector.Ensure().RegisterIntruder(player.transform);
 
             var guardGo = Track(new GameObject("Guard"));
             guardGo.transform.position = new Vector3(2f, 0f, 0f);
@@ -158,7 +162,7 @@ namespace Plunderspell.Tests
             body.mass = 1f;
             body.freezeRotation = true;
             body.interpolation = RigidbodyInterpolation.Interpolate;
-            CastleGuard.RegisterIntruder(player.transform);
+            TestDirector.Ensure().RegisterIntruder(player.transform);
 
             var guardGo = Track(new GameObject("Guard"));
             guardGo.transform.position = new Vector3(3f, 0f, 0f);

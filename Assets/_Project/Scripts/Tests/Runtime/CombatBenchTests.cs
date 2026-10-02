@@ -30,7 +30,7 @@ namespace Plunderspell.Tests
         public void TearDown()
         {
             GameServices.GameState.ChangeState(m_stateBeforeTest);
-            CastleGuard.ClearIntruders();
+            TestDirector.ClearIntruders();
 
             foreach (Object o in m_tracked)
             {

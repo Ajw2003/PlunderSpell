@@ -43,7 +43,7 @@ namespace Plunderspell.Audio
         public static AudioDirector Instance { get; private set; }
 
         public RaidDirector Raid { get; private set; }
-        public AlarmFSMManager Alarm { get; private set; }
+        public EnemyDirector Alarm { get; private set; }
         public ExtractionZone Zone { get; private set; }
         public AudioSourcePool Pool => _pool;
         public LoopBus Loops => _loops;
@@ -346,7 +346,7 @@ namespace Plunderspell.Audio
 
             if (Alarm == null)
             {
-                Alarm = FindFirstObjectByType<AlarmFSMManager>();
+                Alarm = FindFirstObjectByType<EnemyDirector>();
                 if (Alarm != null)
                     Alarm.AlarmStateChanged += OnAlarmStateChanged;
             }
@@ -365,17 +365,17 @@ namespace Plunderspell.Audio
             if (_pushToCast == null)
                 _pushToCast = FindFirstObjectByType<PushToCastController>();
 
-            IReadOnlyList<CastleGuard> guards = CastleGuard.Active;
+            IReadOnlyList<Component> guards = EnemyDirector.GuardsOf(Alarm);
             for (int i = 0; i < guards.Count; i++)
             {
-                CastleGuard guard = guards[i];
+                CastleGuard guard = guards[i] as CastleGuard;
                 if (guard != null && _subscribedGuards.Add(guard.GetInstanceID()))
                     guard.Attacked += kind => OnGuardAttacked(guard, kind);
             }
 
             for (int i = 0; i < guards.Count; i++)
             {
-                CastleGuard guard = guards[i];
+                CastleGuard guard = guards[i] as CastleGuard;
                 if (guard != null && _steppers.Add(guard.GetInstanceID()))
                     guard.gameObject.AddComponent<StepAudio>().Initialize(this, GuardVoices.Resolve(guard.name), null);
             }

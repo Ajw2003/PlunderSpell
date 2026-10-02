@@ -89,7 +89,7 @@ namespace Plunderspell.EditorTools
             BuildLight();
             BuildGround();
 
-            AlarmFSMManager alarm = BuildAlarm();
+            EnemyDirector alarm = BuildAlarm();
             BuildLockdown(alarm);
             LairHubManager lair = BuildLair();
             ExtractionZone extraction = BuildExtractionZone();
@@ -164,7 +164,7 @@ namespace Plunderspell.EditorTools
 
         // --- Systems ------------------------------------------------------------------------
 
-        private static AlarmFSMManager BuildAlarm()
+        private static EnemyDirector BuildAlarm()
         {
             var go = new GameObject("CastleAlarm");
             // The alarm listens for noise like anything else, so it needs a collider to be found by
@@ -172,7 +172,7 @@ namespace Plunderspell.EditorTools
             var collider = go.AddComponent<BoxCollider>();
             collider.isTrigger = true;
             collider.size = Vector3.one * (CellSize * 12f);
-            return go.AddComponent<AlarmFSMManager>();
+            return go.AddComponent<EnemyDirector>();
         }
 
         private static LairHubManager BuildLair()
@@ -229,7 +229,7 @@ namespace Plunderspell.EditorTools
             return spawner;
         }
 
-        private static void BuildLockdown(AlarmFSMManager alarm)
+        private static void BuildLockdown(EnemyDirector alarm)
         {
             var go = new GameObject("CastleLockdown");
             go.AddComponent<CastleLockdown>().Configure(alarm);
@@ -260,7 +260,7 @@ namespace Plunderspell.EditorTools
 
         private static RaidDirector BuildDirector(ProceduralCastleGenerator generator,
             LootSpawner lootSpawner, GuardSpawner guardSpawner, ExtractionZone extraction,
-            LairHubManager lair, AlarmFSMManager alarm, CastleNavMeshBaker navigation,
+            LairHubManager lair, EnemyDirector alarm, CastleNavMeshBaker navigation,
             Transform playerRoot)
         {
             var go = new GameObject("RaidDirector");
@@ -378,7 +378,7 @@ namespace Plunderspell.EditorTools
         }
 
         private static void BuildHud(RaidDirector director, ExtractionZone extraction,
-            AlarmFSMManager alarm, LairHubManager lair, LootInteractor interactor)
+            EnemyDirector alarm, LairHubManager lair, LootInteractor interactor)
         {
             var go = new GameObject("RaidHud");
             var presenter = go.AddComponent<RaidHudPresenter>();

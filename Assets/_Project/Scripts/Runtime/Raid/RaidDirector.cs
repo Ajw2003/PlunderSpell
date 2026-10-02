@@ -45,7 +45,7 @@ namespace Plunderspell.Raid
         [SerializeField] private LairHubManager _lair;
 
         [Tooltip("The castle's alert level. Reset at the start of every raid.")]
-        [SerializeField] private AlarmFSMManager _alarm;
+        [SerializeField] private EnemyDirector _alarm;
 
         [Tooltip("Bakes the walkable surface over the generated castle. Without it guards cannot move.")]
         [SerializeField] private CastleNavMeshBaker _navigation;
@@ -656,7 +656,7 @@ namespace Plunderspell.Raid
 
         /// <summary>Wires the director up from code, for tests and for scenes built by tooling.</summary>
         public void Configure(ProceduralCastleGenerator generator, LootSpawner spawner,
-            ExtractionZone zone, LairHubManager lair, AlarmFSMManager alarm = null,
+            ExtractionZone zone, LairHubManager lair, EnemyDirector alarm = null,
             CastleNetworkManager castleNetwork = null, GuardSpawner guardSpawner = null,
             CastleNavMeshBaker navigation = null, Transform playerRoot = null,
             EraContentCatalogue eraContent = null)

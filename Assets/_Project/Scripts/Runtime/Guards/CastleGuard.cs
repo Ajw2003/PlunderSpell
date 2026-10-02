@@ -73,7 +73,7 @@ namespace Plunderspell.Guards
 
         [Header("Alarm")]
         [Tooltip("The castle alarm. Found in the scene when left empty.")]
-        [SerializeField] private AlarmFSMManager _alarm;
+        [SerializeField] private EnemyDirector _alarm;
 
         [Tooltip("Noise this guard makes when it spots an intruder and raises the cry.")]
         [Range(0f, 1f)] [SerializeField] private float _shoutStrength = 0.8f;
@@ -142,20 +142,8 @@ namespace Plunderspell.Guards
         /// <summary>The kind of the most recent attack. Meaningless while <see cref="AttackCount"/> is 0.</summary>
         public GuardAttackKind LastAttackKind => GuardAttackSignal.Kind(_attackSignal.value);
 
-        /// <summary>The intruders this guard is watching for. Registered by the player spawner.</summary>
-        public static readonly List<Transform> Intruders = new List<Transform>();
-
-        /// <summary>Registers a player as something guards will look for.</summary>
-        public static void RegisterIntruder(Transform intruder)
-        {
-            if (intruder != null && !Intruders.Contains(intruder))
-                Intruders.Add(intruder);
-        }
-
-        public static void UnregisterIntruder(Transform intruder) => Intruders.Remove(intruder);
-
-        /// <summary>Forgets every intruder. Called between raids, and by test teardown.</summary>
-        public static void ClearIntruders() => Intruders.Clear();
+        /// <summary>The intruders this guard is watching for, from its director (#205). Empty without one.</summary>
+        private IReadOnlyList<Transform> Intruders => EnemyDirector.IntrudersOf(_alarm);
 
         private void Awake()
         {
@@ -181,12 +169,12 @@ namespace Plunderspell.Guards
             _health.value = _maxHealth;
 
             if (_alarm == null)
-                WatchAlarm(FindObjectOfType<AlarmFSMManager>());
+                WatchAlarm(EnemyDirector.Current != null ? EnemyDirector.Current : FindObjectOfType<EnemyDirector>());
         }
 
         private void OnEnable()
         {
-            s_active.Add(this);
+            _alarm?.RegisterGuard(this);
             IgnoreOtherGuards();
         }
 
@@ -197,9 +185,10 @@ namespace Plunderspell.Guards
         private void IgnoreOtherGuards()
         {
             Collider[] mine = GetComponentsInChildren<Collider>();
-            foreach (CastleGuard other in s_active)
+            IReadOnlyList<Component> guards = EnemyDirector.GuardsOf(_alarm);
+            for (int g = 0; g < guards.Count; g++)
             {
-                if (other == this)
+                if (!(guards[g] is CastleGuard other) || other == this)
                     continue;
                 foreach (Collider theirs in other.GetComponentsInChildren<Collider>())
                     foreach (Collider c in mine)
@@ -231,7 +220,7 @@ namespace Plunderspell.Guards
 
         private void OnDisable()
         {
-            s_active.Remove(this);
+            _alarm?.UnregisterGuard(this);
         }
 
         protected override void OnDestroy()
@@ -244,48 +233,52 @@ namespace Plunderspell.Guards
         // Raising the castle (#163)
         // -----------------------------------------------------------------------------------------
 
-        private static readonly List<CastleGuard> s_active = new List<CastleGuard>();
-
         /// <summary>At the hue and cry, every guard this close to a player goes for that player.</summary>
         public const float HueAndCryRadius = 40f;
 
-        /// <summary>Guards alive and enabled, for the shout and the hue and cry.</summary>
-        public static IReadOnlyList<CastleGuard> Active => s_active;
+        /// <summary>The director this guard reports to and listens to. Null outside a raid.</summary>
+        public EnemyDirector Alarm => _alarm;
 
-        /// <summary>The alarm this guard reports to and listens to. Null outside a raid.</summary>
-        public AlarmFSMManager Alarm => _alarm;
-
-        private void WatchAlarm(AlarmFSMManager alarm)
+        private void WatchAlarm(EnemyDirector director)
         {
             if (_alarm != null)
-                _alarm.AlarmStateChanged -= OnAlarmStateChanged;
-            _alarm = alarm;
-            if (_alarm != null)
-                _alarm.AlarmStateChanged += OnAlarmStateChanged;
-        }
-
-        /// <summary>The hue and cry: every guard within <see cref="HueAndCryRadius"/> of a player
-        /// heads for the nearest one (#163).</summary>
-        private void OnAlarmStateChanged(AlarmState state)
-        {
-            if (state != AlarmState.HueAndCry || (isSpawned && !isServer))
-                return;
-            Transform nearest = null;
-            float best = HueAndCryRadius;
-            foreach (Transform intruder in Intruders)
             {
-                if (intruder == null)
-                    continue;
-                float d = Vector3.Distance(transform.position, intruder.position);
-                if (d <= best)
+                _alarm.OnInvestigateRequest -= OnInvestigateRequest;
+                _alarm.UnregisterGuard(this);
+            }
+            _alarm = director;
+            if (_alarm != null)
+            {
+                _alarm.OnInvestigateRequest += OnInvestigateRequest;
+                if (isActiveAndEnabled)
                 {
-                    best = d;
-                    nearest = intruder;
+                    _alarm.RegisterGuard(this);
+                    IgnoreOtherGuards();
                 }
             }
+        }
+
+        private int _requestFrame = -1;
+        private float _requestDistance;
+
+        /// <summary>
+        /// The director asks guards to investigate a spot (the hue and cry, #163/#205). This guard
+        /// decides: it heads there only when the spot is within <see cref="HueAndCryRadius"/>, and when
+        /// several players are asked about in one go it keeps the nearest.
+        /// </summary>
+        private void OnInvestigateRequest(InvestigateRequest request)
+        {
+            if (isSpawned && !isServer)
+                return;
+            float d = Vector3.Distance(transform.position, request.Position);
+            if (d > HueAndCryRadius)
+                return;
+            if (_requestFrame == Time.frameCount && d >= _requestDistance)
+                return;
+            _requestFrame = Time.frameCount;
+            _requestDistance = d;
             _huntClock = 0f;
-            if (nearest != null)
-                AlertTo(nearest.position);
+            AlertTo(request.Position);
         }
 
         /// <summary>
@@ -311,12 +304,13 @@ namespace Plunderspell.Guards
 
         /// <summary>Sends every active guard within <paramref name="radius"/> of <paramref name="centre"/>,
         /// except <paramref name="except"/>, to <paramref name="target"/>. Returns how many went.</summary>
-        public static int AlertGuardsNear(Vector3 centre, float radius, Vector3 target, CastleGuard except = null)
+        private int AlertGuardsNear(Vector3 centre, float radius, Vector3 target, CastleGuard except = null)
         {
             int alerted = 0;
-            for (int i = s_active.Count - 1; i >= 0; i--)
+            IReadOnlyList<Component> guards = EnemyDirector.GuardsOf(_alarm);
+            for (int i = guards.Count - 1; i >= 0; i--)
             {
-                CastleGuard guard = s_active[i];
+                CastleGuard guard = guards[i] as CastleGuard;
                 if (guard == null || guard == except)
                     continue;
                 if (Vector3.Distance(guard.transform.position, centre) <= radius && guard.AlertTo(target))
@@ -605,8 +599,10 @@ namespace Plunderspell.Guards
         {
             Transform nearest = null;
             float best = float.MaxValue;
-            foreach (Transform intruder in Intruders)
+            IReadOnlyList<Transform> intruders = Intruders;
+            for (int i = 0; i < intruders.Count; i++)
             {
+                Transform intruder = intruders[i];
                 if (intruder == null)
                     continue;
                 float d = (intruder.position - transform.position).sqrMagnitude;
@@ -1127,7 +1123,8 @@ namespace Plunderspell.Guards
                 ResetSweep();
 
             // Spotting an intruder is worth shouting about — once per chase, not once per frame. The
-            // shout wakes guards in earshot; the alarm is told directly, walls or not (#139).
+            // shout wakes guards in earshot; the director is told directly, walls or not (#139).
+            bool firstSighting = false;
             if (next == GuardAlertState.Chasing && previous != GuardAlertState.Chasing)
             {
                 if (!_hasShoutedThisChase)
@@ -1135,8 +1132,8 @@ namespace Plunderspell.Guards
                     RaiseTheCry();
                     // Everyone in earshot is sent to where the intruder was seen, not to the shouter.
                     AlertGuardsNear(transform.position, _shoutRadius, _lastKnownIntruderPosition, this);
-                    _alarm?.ReportSighting();
                     _hasShoutedThisChase = true;
+                    firstSighting = true;
                 }
             }
             else if (next == GuardAlertState.Patrolling)
@@ -1144,9 +1141,10 @@ namespace Plunderspell.Guards
                 _hasShoutedThisChase = false;
             }
 
-            if (next == GuardAlertState.Chasing || previous == GuardAlertState.Chasing)
-                _alarm?.ReportChase(GetInstanceID(), next == GuardAlertState.Chasing);
-
+            if (next == GuardAlertState.Chasing && previous != GuardAlertState.Chasing)
+                _alarm?.Publish(new IntruderSpotted(this, NearestIntruder(), _lastKnownIntruderPosition, firstSighting));
+            else if (previous == GuardAlertState.Chasing && next != GuardAlertState.Chasing)
+                _alarm?.Publish(new IntruderLost(this, _lastKnownIntruderPosition));
             StateChanged?.Invoke(next);
         }
 
@@ -1171,7 +1169,7 @@ namespace Plunderspell.Guards
 
             _lastAttackTime = Time.time;
             SignalAttack(shoots ? GuardAttackKind.Projectile : GuardAttackKind.Melee);
-            _alarm?.ReportAttack();
+            _alarm?.Publish(new GuardEngaged(this, target));
 
             if (shoots)
                 FireAt(origin, toTarget.normalized);
@@ -1260,6 +1258,7 @@ namespace Plunderspell.Guards
 
             if (IsDead)
             {
+                _alarm?.Publish(new GuardDied(this, transform.position));
                 Destroy(this.gameObject);
             }
         }
@@ -1272,7 +1271,7 @@ namespace Plunderspell.Guards
         // -----------------------------------------------------------------------------------------
 
         /// <summary>Wires the guard from code, for tests and tooling-built scenes.</summary>
-        public void Configure(AlarmFSMManager alarm, List<Transform> patrolRoute = null)
+        public void Configure(EnemyDirector alarm, List<Transform> patrolRoute = null)
         {
             // Null keeps the alarm Awake found: the spawner passes null, and overwriting it left
             // every spawned guard deaf to the alarm and unable to report a sighting (#163).

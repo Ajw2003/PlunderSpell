@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using Plunderspell.Alarm;
 using Plunderspell.Castle;
 using Plunderspell.Extraction;
 using Plunderspell.Inventory;
@@ -29,7 +30,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
-            Plunderspell.Guards.CastleGuard.ClearIntruders();
+            TestDirector.Reset();
             foreach (Object o in _spawned)
                 if (o != null)
                     Object.DestroyImmediate(o);
@@ -396,6 +397,7 @@ namespace Plunderspell.Tests
         {
             RaidDirector director = MakeDirector(out _, out ExtractionZone zone, out _);
 
+            EnemyDirector enemies = TestDirector.Ensure();
             var playerGo = Track(new GameObject("Player"));
             playerGo.AddComponent<Plunderspell.Guards.IntruderTag>();
 
@@ -403,8 +405,7 @@ namespace Plunderspell.Tests
             director.StartRaid(HistoricalEra.BronzeAge);
             zone.ResolveLocally();
 
-            Assert.Contains(playerGo.transform,
-                (System.Collections.ICollection)Plunderspell.Guards.CastleGuard.Intruders,
+            Assert.IsTrue(enemies.IsIntruder(playerGo.transform),
                 "A surviving player must still be visible to guards in the next raid.");
         }
 

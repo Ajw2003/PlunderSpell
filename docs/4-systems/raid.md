@@ -233,15 +233,20 @@ whose path was blocked. All the pure decisions are in `GuardBrain`; the rest is 
 - **No route, no standing** (`Patrol` `:742`, `Wander` `:769`): fewer than two usable waypoints
   wanders between reachable points 3-8 m from where the guard was posted. `GuardSpawner` also gives
   a one-point route a second point (`NearbyPoint`, `GuardSpawner.cs:166`).
-- **Noise steers the hunt** (`OnNoiseHeard`, `CastleGuard.cs:538`; `GuardBrain.ShouldFollowNoise`):
+- **Noise steers the hunt** (`OnNoiseHeard`, `CastleGuard.cs:642`; `GuardBrain.ShouldFollowNoise`):
   a noise that passes `ShouldInvestigate` moves a searching guard's last-known spot (and restarts
   the sweep and the patience) to the noise origin; a chaser that has lost sight does the same. A
   guard that can see its target ignores it. Patrolling guards still investigate as before.
-- **The hue and cry keeps hunting** (`KeepHunting`, `:464`; `GuardBrain.ShouldHunt`, `HuntOffset`,
+- **The hue and cry keeps hunting** (`KeepHunting`, `CastleGuard.cs:566`; `GuardBrain.ShouldHunt`, `HuntOffset`,
   `HuntDelay`): while the alarm is `HueAndCry`, every searching or investigating guard is re-sent
   every 3.0-3.9 s (staggered by instance id) to a point 3-5 m, random direction, from the nearest
   registered intruder, snapped to the mesh. Roughly-known, not exact, so players can still break away.
   Server only, like all guard AI.
+- **Registries and the alarm sit on the `EnemyDirector`** (#205). Guards and players register with it
+  (`CastleGuard.cs:143` reads its intruders, `IntruderTag.cs:1` registers a player in `OnEnable` and
+  retries in `Start`, as the director may spawn later). `RaidDirector` still calls
+  `ResetForNewRaid` on the same component; it never clears intruders, `IntruderTag` owns them. See
+  `alarm.md` for the event bus and the hue and cry request.
 
 Measured with `Tools/Unity/coop_guard_check.sh` (Editor host + Development client, seed 3508293, 20
 guards, all provoked into a chase at the start, 90 s): seconds spent with a destination farther than

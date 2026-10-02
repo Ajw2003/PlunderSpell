@@ -36,7 +36,7 @@ namespace Plunderspell.Tests
         {
             AudioInputSettings.GuardsHearChatter = _settingBefore;
             VoiceServiceLocator.Clear();
-            CastleGuard.ClearIntruders();
+            TestDirector.Reset();
             foreach (UnityEngine.Object o in _spawned)
                 if (o != null)
                     UnityEngine.Object.DestroyImmediate(o);
@@ -49,7 +49,7 @@ namespace Plunderspell.Tests
             return o;
         }
 
-        private CastleGuard MakeGuard(Vector3 position, AlarmFSMManager alarm = null)
+        private CastleGuard MakeGuard(Vector3 position, EnemyDirector alarm = null)
         {
             var go = Track(new GameObject("Guard"));
             go.transform.position = position;
@@ -214,7 +214,7 @@ namespace Plunderspell.Tests
             var alarmGo = Track(new GameObject("Alarm"));
             alarmGo.transform.position = new Vector3(0f, 0f, 2f);
             alarmGo.AddComponent<BoxCollider>();
-            var alarm = alarmGo.AddComponent<AlarmFSMManager>();
+            var alarm = alarmGo.AddComponent<EnemyDirector>();
             PlayerChatterRelay relay = MakeRelay();
             Physics.SyncTransforms();
             float before = alarm.AlarmLevel;
