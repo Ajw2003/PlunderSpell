@@ -33,6 +33,10 @@ namespace Plunderspell.Castle
         [Tooltip("Where this room burns its fires. Written by Tools/Plunderspell/Import Castle Fire " +
                  "Anchors from the asset pipeline's CastleFireAnchors.json; do not edit by hand.")]
         public CastleFireAnchor[] FireAnchors = new CastleFireAnchor[0];
+
+        [Tooltip("Walkable grid, floor heights and archway openings. Written by Tools/Plunderspell/Bake " +
+                 "Castle Nav Tiles; do not edit by hand.")]
+        public CastleNavTile NavTile = new CastleNavTile();
     }
 
     /// <summary>

@@ -1,0 +1,27 @@
+Castle nav tiles, 24x24 cells of 0.5 m, 2 layers. Guard capsule r=0.4 h=1.85.
+module | walkable% (columns with any walkable surface, of 576; total surfaces) | levels | portals N/E/S/W | dropped unreachable | bytes
+GatehouseModule | 0.0 (0 surfaces) | 0 | 0/0/0/0 | 142 | 3456
+WallStraight | 0.0 (0 surfaces) | 0 | 0/0/0/0 | 49 | 3456
+WallCorner | 0.0 (0 surfaces) | 0 | 0/0/0/0 | 128 | 3456
+Bastion | 0.0 (0 surfaces) | 0 | 0/0/0/0 | 281 | 3456
+Drawbridge | 11.5 (66 surfaces) | 1 | 0/0/4/0 | 18 | 3464
+StableBlock | 63.7 (367 surfaces) | 1 | 4/4/4/4 | 212 | 3488
+BlacksmithShop | 65.8 (379 surfaces) | 1 | 4/4/4/4 | 223 | 3488
+BarracksBunk | 62.5 (360 surfaces) | 1 | 4/4/4/4 | 240 | 3488
+WellCourtyard | 62.0 (357 surfaces) | 1 | 4/4/4/4 | 220 | 3488
+StorehouseRoom | 62.2 (358 surfaces) | 1 | 4/4/4/4 | 204 | 3488
+GreatHallMain | 65.3 (464 surfaces) | 2 | 4/4/4/4 | 184 | 3488
+ChapelRoom | 71.5 (457 surfaces) | 2 | 4/4/4/4 | 197 | 3488
+KitchenRoom | 62.2 (358 surfaces) | 1 | 4/4/4/4 | 219 | 3488
+GuardRoomInner | 68.9 (397 surfaces) | 1 | 4/4/4/4 | 201 | 3488
+ArmouredCourtyard | 68.9 (397 surfaces) | 1 | 4/4/4/4 | 189 | 3488
+ThroneRoomKeep | 69.3 (430 surfaces) | 2 | 4/4/4/4 | 190 | 3488
+TreasuryVault | 59.7 (360 surfaces) | 2 | 4/4/4/4 | 280 | 3488
+RoyalBedchamber | 67.0 (411 surfaces) | 2 | 4/4/4/4 | 226 | 3488
+LordsSolar | 64.4 (391 surfaces) | 2 | 4/4/4/4 | 205 | 3488
+KeepStairwell | 70.1 (438 surfaces) | 2 | 4/4/4/4 | 194 | 3488
+CryptAntechamber | 67.7 (434 surfaces) | 2 | 4/4/4/4 | 222 | 3488
+TombCorridor | 66.7 (428 surfaces) | 2 | 4/4/4/4 | 200 | 3488
+BurialVault | 66.7 (384 surfaces) | 1 | 4/4/4/4 | 204 | 3488
+CryptChamberFinal | 61.6 (391 surfaces) | 2 | 4/4/4/4 | 251 | 3488
+CryptStairwell | 69.6 (404 surfaces) | 2 | 4/4/4/4 | 202 | 3488

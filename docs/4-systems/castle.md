@@ -154,3 +154,20 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   prefab whose collider doesn't match the grid footprint the generator assumed can pass placement
   but fail path validation (or the reverse), because the two use different representations of the
   same layout.
+
+## Nav tiles
+
+`CastleNavTile` (`Assets/_Project/Scripts/Runtime/Castle/CastleNavTile.cs`) is each room module's walkable
+grid, stored in `CastleRoomModuleData.NavTile`: 24 x 24 cells of 0.5 m in module-local space (module
+centred on its origin), two stacked layers per cell column (a gallery over a floor), per layer a walkable
+byte and a floor height in centimetres (`short`), plus the archway portal cell indices for each side and a
+level count. About 3.5 KB per module, plain arrays, no allocation on read. Two cells connect when their
+heights differ by at most `StepHeight` (0.45 m); stairs are walkable cells whose heights step up.
+
+`Tools/Plunderspell/Bake Castle Nav Tiles` (`CastleNavTileBaker.cs`) writes it: each prefab goes into a
+preview scene with its import rotation, a downward ray per cell finds the stacked floors, and a guard
+capsule (radius 0.4, 1.85 m, lifted one step so the floor and stair risers do not count) clears each
+surface. Wall tops and lintels are dropped unless they connect to an archway floor. A portal is an archway
+cell where a guard fits, so 4 cells per side, not the full 2.6 m. Re-run it after the castle meshes change.
+Results and per-module top-down overlays are in `docs/generated/nav-tiles-2026-10-02/`. The gatehouse,
+straight wall, corner and bastion pieces have no interior floor and bake near-empty.
