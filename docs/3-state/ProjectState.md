@@ -45,6 +45,11 @@ lacks; the rest are older and either merged in another form or abandoned.
   where they go, and `EnemyDirector` is split into registry, bus, alarm and hue-and-cry classes
   (472 to 248 lines). Details and file:line in `docs/4-systems/alarm.md`.
 
+  #212 is in (2026-10-02): the fresh guard has an OnFire state. A burning guard panic-runs to random
+  reachable points, ignores leads and attacks, and on fire's end goes to Combat, Chase, Patrol or
+  Investigate, or Dead if the fire killed it; stun and sleep outrank the fire. Burn damage stays in
+  `StatusEffectReceiver.Tick`. Not in a prefab yet (#214). Details in `docs/4-systems/alarm.md`.
+
   The guard state-machine rebuild has started: #204 is in. A plain C# `StateMachine<TContext>`
   lives in Core/StateMachine, and the shared `BaseStateMachine` now runs `Exit`, which needed the
   player's Dodge, Jump and Attack exits fixed. `StateMachineTests` pass 6/6. The rest is #203's

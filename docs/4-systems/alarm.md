@@ -283,6 +283,26 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
     today Levo lifts nothing; this is ready for whatever moves it.
   - **Stun beats sleep** (`GuardStateSet.cs:42`): a stun or levitation holds longer than a noise can wake.
   - Tests: `GuardIncapacitatedTests` (timer, exit at Calm and Roused, early wake by 0.6 and not 0.3, Levo, turn release).
+- **On fire (#212).** `States/OnFireState.cs:18`, driven by `StatusEffectReceiver.IsBurning`. The receiver owns the
+  burn: `StatusEffectReceiver.Tick` applies Ignis damage to the guard's health in whole points
+  (`Status/StatusEffectReceiver.cs:103-115`), and a lethal tick makes `Guard.OnDied` enter Dead (`Guard.cs:228`). The
+  state applies no damage, so nothing is counted twice.
+  - **Panic** (`RunToRandomPoint`, `OnFireState.cs:60`). Picks a reachable point around where the guard stands now,
+    through the patrol planner's `TryPickPoint` (`States/GuardPatrolPlanner.cs:39`), and runs there at
+    `Tuning.PanicSpeed` (5.5, faster than a chase). Arrival or a Blocked answer clears the navigator's destination,
+    so the next tick picks again; a failed pick or a Blocked answer waits `Tuning.PanicRetrySeconds` first. Leads are
+    never read, and entry stops the walk and gives back any attack turn (`:35`).
+  - **Priority.** Stun, levitation and sleep outrank burning. `GuardStateSet.TryInterrupt`
+    (`States/GuardStateSet.cs:58`) sends a status change to Stunned or Slept whenever the guard is incapacitated, and to
+    OnFire only when it is not already held. A burning guard that is stunned stays stunned, and `IncapacitatedState.Recover`
+    (`:34`) enters OnFire when the hold ends with the fire still going. Why: a guard that cannot move cannot run about.
+    `Guard.OnStatusChanged` (`Guard.cs:222`) calls it.
+  - **When the fire ends** (`AfterTheFire`, `OnFireState.cs:72`). Health 0 goes to Dead (`:48`; the placeholder until #213).
+    A player in sight and in reach (melee reach, or the ranged engage range) goes to Combat, in sight only to Chase.
+    Otherwise `GuardRecovery.PatrolOrInvestigate` (`States/GuardRecovery.cs:15`), the same rule a stun or sleep uses:
+    a lead or a Roused castle goes to Investigate, else Patrol.
+  - Tests: `GuardOnFireTests` (panic between distinct points, no attack and turn released, exits to Combat, Chase,
+    Patrol and Dead, stun and sleep outranking the fire).
 - **Facing (#211).** `Alarm/Navigation/GuardMoverFacing.cs:25` turns each moving guard toward its path step by
   `GuardNavigationTuning.TurnDegreesPerSecond` (270, `RotateTowards`), called from `TickMover`
   (`GuardNavigationService.cs:146`). Yaw only, so sight cones follow where the guard walks. `MoveReason.Combat`
