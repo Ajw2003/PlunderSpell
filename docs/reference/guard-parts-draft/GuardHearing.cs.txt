@@ -1,0 +1,81 @@
+using System;
+using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
+using Plunderspell.Status;
+using UnityEngine;
+
+namespace Plunderspell.Guards
+{
+    /// <summary>
+    /// What a guard hears: whether a noise wakes it, whether it is worth investigating, and the words
+    /// it overhears. A plain class owned by <see cref="CastleGuard"/>. It decides and raises events;
+    /// the guard listens and moves.
+    /// </summary>
+    public class GuardHearing
+    {
+        /// <summary>Noise at or above this strength wakes a sleeping guard.</summary>
+        public const float NoiseWakeThreshold = 0.5f;
+
+        private readonly CastleGuard _owner;
+
+        /// <summary>Raised with the noise origin when a hunting guard should follow a newer noise (#194).</summary>
+        public event Action<Vector3> NoiseFollowed;
+
+        /// <summary>Raised with the noise origin when the guard should go and investigate it.</summary>
+        public event Action<Vector3> NoiseInvestigated;
+
+        /// <summary>Raised with the words whenever this guard takes in speech. The hook for later dialogue.</summary>
+        public event Action<string> Overheard;
+
+        /// <summary>The last words this guard took in, or null. Ends with the raid.</summary>
+        public string LastOverheard { get; private set; }
+
+        /// <summary>How many spoken lines this guard has taken in.</summary>
+        public int OverheardCount { get; private set; }
+
+        /// <summary>Builds the hearing for <paramref name="owner"/>.</summary>
+        public GuardHearing(CastleGuard owner)
+        {
+            _owner = owner;
+        }
+
+        /// <summary>
+        /// A noise reached the guard. Loud enough noise wakes a sleeper (Somnus buys time, it does not
+        /// remove a patrol); then the noise is followed, investigated or ignored by the alarm level.
+        /// </summary>
+        public void Hear(NoiseEvent noise, AlarmState alarm, GuardAlertState state, bool seesTarget)
+        {
+            WakeIfLoud(noise);
+            if (!GuardBrain.ShouldInvestigate(noise.Strength, alarm))
+                return;
+
+            // A hunting guard follows the newer noise; one that can see its target ignores it.
+            if (GuardBrain.ShouldFollowNoise(state, seesTarget, noise.Strength, alarm))
+                NoiseFollowed?.Invoke(noise.Origin);
+            else
+                NoiseInvestigated?.Invoke(noise.Origin);
+        }
+
+        private void WakeIfLoud(NoiseEvent noise)
+        {
+            StatusEffectReceiver status = _owner.Status;
+            if (status != null && status.IsAsleep && noise.Strength >= NoiseWakeThreshold)
+                status.WakeUp();
+        }
+
+        /// <summary>
+        /// Takes in speech. An asleep or stunned guard hears the noise but not the words. Returns
+        /// whether the words were taken in.
+        /// </summary>
+        public bool Overhear(NoiseEvent speech)
+        {
+            if (_owner.IsIncapacitated || string.IsNullOrWhiteSpace(speech.Transcript))
+                return false;
+
+            LastOverheard = speech.Transcript;
+            OverheardCount++;
+            Overheard?.Invoke(speech.Transcript);
+            return true;
+        }
+    }
+}

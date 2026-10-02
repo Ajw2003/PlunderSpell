@@ -1,0 +1,92 @@
+using System;
+using Interfaces;
+using Plunderspell.Alarm;
+using UnityEngine;
+
+namespace Plunderspell.Guards
+{
+    /// <summary>
+    /// How a guard hurts someone: a melee strike or a projectile, gated by range and a cooldown. A
+    /// plain class owned by <see cref="CastleGuard"/>. The replicated attack signal is networking, so
+    /// the guard keeps it and listens to <see cref="AttackStarted"/>.
+    ///
+    /// See docs/4-systems/raid.md, "Guards that can actually hurt you".
+    /// </summary>
+    public class GuardCombat
+    {
+        private readonly CastleGuard _owner;
+        private float _lastAttackTime = float.NegativeInfinity;
+
+        /// <summary>
+        /// Raised as an attack begins, before its damage or projectile lands. The guard turns it into
+        /// the replicated signal, the <see cref="CastleGuard.Attacked"/> event and the director's engagement.
+        /// </summary>
+        public event Action<GuardAttackKind, Transform> AttackStarted;
+
+        /// <summary>Builds the combat for <paramref name="owner"/>.</summary>
+        public GuardCombat(CastleGuard owner)
+        {
+            _owner = owner;
+        }
+
+        /// <summary>True when this guard fires instead of striking.</summary>
+        public bool Shoots => _owner.ProjectilePrefab != null;
+
+        /// <summary>How far this guard attacks from: its sight range when it fires, its strike range otherwise.</summary>
+        public float Reach(AlarmState alarm) =>
+            Shoots ? GuardBrain.SightRange(_owner.SightRange, alarm) : _owner.AttackRange;
+
+        /// <summary>
+        /// Strikes or fires at <paramref name="target"/> when in range and off cooldown. A guard that
+        /// could chase but never hurt anyone is what made the castle harmless.
+        /// </summary>
+        public void TryAttack(Transform target, AlarmState alarm)
+        {
+            if (_owner.IsIncapacitated || Time.time < _lastAttackTime + _owner.AttackCooldown)
+                return;
+
+            Vector3 origin = _owner.transform.position + Vector3.up * _owner.EyeHeight;
+            Vector3 toTarget = target.position + Vector3.up * 0.9f - origin;
+            if (toTarget.magnitude > Reach(alarm))
+                return;
+
+            _lastAttackTime = Time.time;
+            AttackStarted?.Invoke(Shoots ? GuardAttackKind.Projectile : GuardAttackKind.Melee, target);
+
+            if (Shoots)
+                FireAt(origin, toTarget.normalized);
+            else
+                Strike(target, origin);
+        }
+
+        private void Strike(Transform target, Vector3 origin)
+        {
+            if (target.TryGetComponent(out IHealth health))
+                Damage.Apply(health, _owner.AttackDamage, _owner.gameObject, _owner.gameObject,
+                    Damage.PointOn(target, origin), DamageKind.EnemyAttack);
+        }
+
+        /// <summary>
+        /// Spawns a projectile carrying this guard's damage, reusing the <c>NetworkedProjectile</c> the
+        /// player's spells fire so there is one projectile in the game rather than two.
+        /// </summary>
+        private void FireAt(Vector3 origin, Vector3 direction)
+        {
+            GameObject shot = UnityEngine.Object.Instantiate(_owner.ProjectilePrefab, origin, Quaternion.LookRotation(direction));
+            if (shot.TryGetComponent(out NetworkedProjectile projectile))
+            {
+                projectile.Damage = Mathf.RoundToInt(_owner.AttackDamage);
+                projectile.Instigator = _owner.gameObject;
+            }
+
+            foreach (Collider own in _owner.GetComponentsInChildren<Collider>())
+            {
+                if (shot.TryGetComponent(out Collider shotCollider))
+                    Physics.IgnoreCollision(shotCollider, own);
+            }
+
+            if (shot.TryGetComponent(out Rigidbody body))
+                body.linearVelocity = direction * _owner.ProjectileSpeed;
+        }
+    }
+}
