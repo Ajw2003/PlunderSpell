@@ -114,7 +114,7 @@ The director owns a server-side navigation service (#222, plan `docs/plans/bespo
 `EnemyDirector.Navigation` (`Assets/_Project/Scripts/Runtime/Alarm/EnemyDirector.cs:272`), a
 `GuardNavigationService` (`Runtime/Alarm/Navigation/GuardNavigationService.cs:17`), ticked from the director's
 server-only `Update`. **Nothing drives guards with it yet**: `CastleGuard` still uses its NavMeshAgent, and
-the fresh guard core (#206) is what will send requests. No co-op run was possible for #222 for that reason.
+the fresh guard core (#206, below) sends requests. No co-op run was possible for #222 for that reason.
 
 - **Events** on the existing bus (`GuardNavigationEvents.cs`, readonly structs): `Publish(MoveRequest(guard,
   destination, speed, reason))` in; `OnPathReady`, `OnArrived`, `OnBlocked(reason)` out. Blocked reasons: no
@@ -149,3 +149,39 @@ the fresh guard core (#206) is what will send requests. No co-op run was possibl
   Planning a new route allocates its array once.
 - **Tests.** `GuardNavigationServiceTests` (flat floor: player against a wall, arrival, 20 guards, 0 B) and
   `GuardNavigationCastleTests` (real graph: across rooms, KeepStairwell, closed doors).
+
+## The fresh guard core (#206)
+
+`Guard` (`Assets/_Project/Scripts/Runtime/Guards/Core/Guard.cs:24`) is the new guard, a thin NetworkBehaviour. **Not live yet:** no prefab uses it,
+because it only has placeholder states (it patrols, sleeps and dies, but does not investigate, chase or
+attack until #207-#213), so the legacy `CastleGuard` stays on the prefabs and spawner until #214. Inventory of
+every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/guard-core-inventory.md`.
+
+- **Host.** Owns the replicated SyncVars (state, health, attack signal: `Guard.cs:28-30`, they must be fields of
+  the NetworkBehaviour), a `StateMachine<Guard>` (`Guard.cs:32`) and the parts. It decides nothing: a state
+  returns its own next state. The only interruptions are status effects (`Guard.cs:191`, a sleep or stun enters
+  Incapacitated) and death (`Guard.cs:197`, publishes `GuardDied`, enters Dead). Only the server runs `Tick`.
+- **One class per job**, none over 215 lines: `Core/GuardHealth` (hit points, `Died`, lobby scale),
+  `Core/GuardAttackSignaller` (packed count and kind, client replay), `Core/GuardShove` (Frango knock-back by
+  transform with a capsule cast, as there is no Rigidbody), `Core/GuardDirectorLink` (registry, hue and cry
+  requests within 40 m), `Core/GuardTuning` (every number), `Senses/GuardSight`, `Senses/GuardSightThrottle`,
+  `Senses/GuardArrivalGrace`, `Senses/GuardHearing`, `Movement/GuardNavigator`, `States/*`.
+- **Sight** (`Senses/GuardSight.cs:42`). Looks 12 times a second (`GuardSightThrottle.cs:14`), each guard offset
+  by a phase from its instance id so they never all look in one frame (#201). Range and cone are tested before
+  the raycast; the line of sight skips hits that belong to the target's own colliders (`GuardSight.cs:84`).
+  Nobody is seen during the 20 s grace while the alarm is Calm (`GuardArrivalGrace.cs`; `RaidDirector` begins it
+  next to the legacy guard's). Range does not grow with the alarm (re-add: #229).
+- **Hearing** (`Senses/GuardHearing.cs:33`). A noise of 0.5 or more wakes a sleeper; a noise above the alarm's
+  threshold (`GuardBrain.ShouldInvestigate`) raises `NoiseNoticed`. The guard does not move itself: the
+  current state decides (Investigate, #208).
+- **Movement** (`Movement/GuardNavigator.cs:67`). The only way the guard moves: `MoveTo` publishes a `MoveRequest`,
+  and `RouteReady`, `Reached` and `RouteBlocked` come back filtered to this guard. It registers a mover with
+  `director.Navigation` on attach. Nothing else writes the transform except the shove.
+- **Wiring.** `RaidDirector` gives the service the castle after generating it
+  (`Runtime/Raid/RaidDirector.cs:249`, `SetMap(new CastleGuardNavigationMap(Castle.NavGraph))`, server only).
+  `CastleLockdown.NavGraph` is **not** set: a lockdown at the hue and cry bars every door, which would stop all
+  guards, so what a closed door should cost needs a decision first (see "Doors" above).
+- **Replacing a placeholder.** Edit `States/GuardStateSet.cs`; each placeholder names its issue.
+- **Tests.** `GuardCoreSensesTests` (throttle, stagger, cone, own-collider line of sight, grace, wake, threshold)
+  and `GuardCoreBodyTests` (a move request reaching Arrived through the service, health, lobby scaling, the
+  replicated state, death, shove, attack signal), both PlayMode in `Tests/Runtime`.

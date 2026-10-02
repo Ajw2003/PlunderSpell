@@ -69,7 +69,14 @@ lacks; the rest are older and either merged in another form or abandoned.
     nobody, and the legacy guard still uses the NavMesh. The fresh guard core (#206) wires it, and
     the co-op run moves there too.
 
-  Next is #206.
+  #206 is in: the fresh guard core (`Runtime/Guards/Core`, `Senses`, `Movement`, `States`; 16 files, none over
+  215 lines). It moves only through the director's navigation, which `RaidDirector` now gives the castle graph.
+  - 17 new PlayMode tests pass (sight throttle, own-collider line of sight, hearing wake, a move reaching
+  Arrived, health, state SyncVar, shove). The prefabs are **not** swapped: the states are placeholders until
+  #207-#213, so a swap would make guards harmless. No co-op run for that reason.
+  - `CastleLockdown.NavGraph` is still unset (barring every door at the hue and cry would stop all guards).
+
+  Next is #207 (Patrol).
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
