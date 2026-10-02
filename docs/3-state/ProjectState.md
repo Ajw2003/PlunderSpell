@@ -32,6 +32,19 @@ the unused two-person code is still in `LootPickup` (`InitiateDualCarry`) and
 Checked 2026-09-28 against every branch on `origin`. Two branches hold recent work that `main`
 lacks; the rest are older and either merged in another form or abandoned.
 
+- **`claude/playability-fixes`** (2026-09-30 to 2026-10-01, from the audio pass PR #178;
+  parent #192). Contents:
+  - guards keep moving (#193–#195);
+  - saved settings apply at start-up (#181);
+  - guards are slippery dynamic physics bodies that cannot crush a player through a wall (#200;
+    co-op stuck time 1.7 of 1811 s);
+  - the co-op scripts restore ProjectSettings byte-for-byte (#199).
+
+  The guard state-machine rebuild has started: #204 is in. A plain C# `StateMachine<TContext>`
+  lives in Core/StateMachine, and the shared `BaseStateMachine` now runs `Exit`, which needed the
+  player's Dodge, Jump and Attack exits fixed. `StateMachineTests` pass 6/6. The rest is #203's
+  children #205–#214 (plan: `docs/plans/guard-fsm-restructure.md`). The handoff is
+  `docs/plans/playability-pass-handoff-2026-09-30.md`.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
