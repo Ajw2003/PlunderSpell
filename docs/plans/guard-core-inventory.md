@@ -54,4 +54,14 @@ Dynamic physics body, Steer, the Search sweep, Levo's float-and-fall. Each is re
 
 ## Verified at the end
 
-See the "Verification" section appended below once the core is built.
+Checked against this table on 2026-10-02, after building the core (tests in `Tests/Runtime/GuardCore*Tests.cs`, 17 pass):
+
+- **Kept and tested:** state, health and attack-signal SyncVars; server-only AI; IHealth; lobby scaling; the Frango shove;
+  sight cone, own-collider line of sight, 12 Hz throttle with stagger, the 20 s grace; hearing threshold by alarm and the
+  loud-noise wake; a move reaching Arrived through the service.
+- **Kept, not tested:** the hue and cry radius and nearest-player rule (`GuardDirectorLink`), the client replay of the
+  attack signal and state (needs a networked run), `GuardArrivalGrace` being begun by `RaidDirector`.
+- **Deferred to the state issues, as marked above:** attacking (#210), `IntruderSpotted`/`IntruderLost`/`GuardEngaged`
+  publishing (#209, #210), the real Patrol, Stunned and Dead (#207, #211, #213).
+- **Dropped as listed**, none ported. Re-add issues: #225 spawner routes, #226 detour/skip, #227 shout as noise, #228 chatter,
+  #229 alarm-scaled vision.
