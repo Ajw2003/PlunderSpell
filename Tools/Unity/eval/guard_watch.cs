@@ -126,11 +126,15 @@ foreach (var g in active)
     {
         var d = dest.Value;
         double far = System.Math.Sqrt((p.x - d.x) * (p.x - d.x) + (p.z - d.z) * (p.z - d.z));
-        if (far > 1.0)
+        var ag = guard.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        var rb = guard.GetComponent<UnityEngine.Rigidbody>();
+        // Stuck only when the body is really stopped (under 0.2 m/s) while the agent wants to move.
+        bool bodyStopped = rb == null || new UnityEngine.Vector2(rb.linearVelocity.x, rb.linearVelocity.z).magnitude < 0.2f;
+        bool wants = ag != null && ag.enabled && new UnityEngine.Vector2(ag.desiredVelocity.x, ag.desiredVelocity.z).magnitude > 0.01f;
+        if (far > 1.0 && !(bodyStopped && wants)) row[6] += dt;
+        else if (far > 1.0)
         {
             row[3] += dt;
-            var ag = guard.GetComponent<UnityEngine.AI.NavMeshAgent>();
-            var rb = guard.GetComponent<UnityEngine.Rigidbody>();
             var cap = guard.GetComponent<UnityEngine.CapsuleCollider>();
             string ground = "none";
             if (UnityEngine.Physics.Raycast(p + UnityEngine.Vector3.up * 0.5f, UnityEngine.Vector3.down, out var gh, 2f))

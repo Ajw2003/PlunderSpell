@@ -174,6 +174,9 @@ namespace Plunderspell.Guards
                 _body.useGravity = true;
                 _body.interpolation = RigidbodyInterpolation.Interpolate;
                 _body.isKinematic = true;
+                foreach (Collider c in GetComponentsInChildren<Collider>())
+                    if (!c.isTrigger)
+                        c.sharedMaterial = Slippery;
             }
             _health.value = _maxHealth;
 
@@ -181,7 +184,50 @@ namespace Plunderspell.Guards
                 WatchAlarm(FindObjectOfType<AlarmFSMManager>());
         }
 
-        private void OnEnable() => s_active.Add(this);
+        private void OnEnable()
+        {
+            s_active.Add(this);
+            IgnoreOtherGuards();
+        }
+
+        /// <summary>
+        /// Guards pass through each other (as their kinematic bodies always did) so two dynamic bodies
+        /// cannot jam, while still colliding with players and walls (#200).
+        /// </summary>
+        private void IgnoreOtherGuards()
+        {
+            Collider[] mine = GetComponentsInChildren<Collider>();
+            foreach (CastleGuard other in s_active)
+            {
+                if (other == this)
+                    continue;
+                foreach (Collider theirs in other.GetComponentsInChildren<Collider>())
+                    foreach (Collider c in mine)
+                        Physics.IgnoreCollision(c, theirs, true);
+            }
+        }
+
+        private static PhysicsMaterial s_slippery;
+
+        /// <summary>No friction against walls and floor: the body is steered by velocity, so friction only
+        /// ever holds it against a wall it brushes (#200).</summary>
+        private static PhysicsMaterial Slippery
+        {
+            get
+            {
+                if (s_slippery == null)
+                    s_slippery = new PhysicsMaterial("GuardSlippery")
+                    {
+                        dynamicFriction = 0f,
+                        staticFriction = 0f,
+                        bounciness = 0f,
+                        frictionCombine = PhysicsMaterialCombine.Minimum,
+                        bounceCombine = PhysicsMaterialCombine.Minimum,
+                        hideFlags = HideFlags.HideAndDontSave
+                    };
+                return s_slippery;
+            }
+        }
 
         private void OnDisable()
         {

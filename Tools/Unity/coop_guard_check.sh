@@ -104,6 +104,7 @@ evf report | tee "$out/$label-report.txt"
 evf dump > "$out/$label-stuck.txt"   # one row per stuck sample: where, why, what it touches
 log "stuck rows: $(wc -l < "$out/$label-stuck.txt")"
 # Host-side spell checks, after the totals so they do not disturb them.
+log "floor probe: $(ev "var sb = new System.Text.StringBuilder(); foreach (var pt in new[]{new UnityEngine.Vector3(42.38f,3f,-24.6f), new UnityEngine.Vector3(-31.75f,3f,4.6f)}) { sb.Append(pt.x + \",\" + pt.z + \": \"); foreach (var h in UnityEngine.Physics.RaycastAll(pt, UnityEngine.Vector3.down, 6f)) sb.Append(h.collider.name + \"@y\" + h.point.y.ToString(\"F2\") + \" \"); sb.Append(\" | \"); } return sb.ToString();")"
 log "$(evf levo)"; sleep 9; log "$(evf levocheck)"; sleep 4; log "$(evf levocheck)"
 log "$(evf frango)"; sleep 1; log "$(evf frangocheck)"; sleep 4; log "$(evf frangocheck)"
 log "state after: $("${E[@]}" host state 2>&1)"
