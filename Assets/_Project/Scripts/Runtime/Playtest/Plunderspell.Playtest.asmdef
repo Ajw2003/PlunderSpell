@@ -4,6 +4,7 @@
     "references": [
         "Plunderspell.Foundation",
         "Plunderspell.Acoustics",
+        "Plunderspell.Alarm",
         "Plunderspell.Core",
         "Plunderspell.Guards",
         "Plunderspell.Raid",

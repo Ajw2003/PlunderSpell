@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Plunderspell.Alarm;
 using Plunderspell.Core;
 using Plunderspell.Guards;
 using Plunderspell.Raid;
@@ -85,13 +86,37 @@ namespace Plunderspell.Playtest
         }
 
         /// <summary>Starts the guard in the asked-for state. See docs/4-systems/combat-bench.md,
-        /// "Traps", on why <c>SetAlertState</c> is a dev seam only.</summary>
+        /// "Traps", on why forcing a state is a dev seam only.</summary>
         private static void ApplyAlertState(GameObject enemy, GuardAlertState alertState)
         {
-            if (enemy.TryGetComponent(out CastleGuard guard))
+            if (!enemy.TryGetComponent(out Guard guard))
             {
-                guard.SetAlertState(alertState);
+                return;
             }
+
+            if (alertState == GuardAlertState.Chasing)
+            {
+                StartChasing(guard);
+            }
+            else if (alertState != GuardAlertState.Patrolling)
+            {
+                // Only a chase can be forced: the other states need a target or a lead the bench does not have.
+                Debug.LogWarning($"CombatBench: a guard cannot start in {alertState}; it starts on patrol.");
+            }
+        }
+
+        // The chase state needs a named player, so the bench gives it the first intruder the director knows.
+        private static void StartChasing(Guard guard)
+        {
+            IReadOnlyList<Transform> intruders = EnemyDirector.IntrudersOf(guard.Link.Director);
+            if (intruders.Count == 0)
+            {
+                Debug.LogWarning("CombatBench: no player is registered to chase, so the guard starts on patrol.");
+                return;
+            }
+
+            guard.States.Chase.Follow(intruders[0]);
+            guard.ChangeState(guard.States.Chase);
         }
     }
 }

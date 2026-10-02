@@ -17,7 +17,8 @@ namespace Plunderspell.Guards
     /// only through the director's navigation (see <see cref="GuardNavigator"/>).
     ///
     /// Server-authoritative: only the server runs the AI. Clients see the replicated transform and the
-    /// replicated state. The legacy <c>CastleGuard</c> stays live until #214; inventory in
+    /// replicated state. The legacy <c>CastleGuard</c> is no longer on any prefab (#214) and stays
+    /// compiling, unused, until the owner approves removing it; inventory in
     /// docs/plans/guard-core-inventory.md.
     /// </summary>
     [RequireComponent(typeof(StatusEffectReceiver), typeof(GuardDeathPlayback))]
@@ -164,9 +165,13 @@ namespace Plunderspell.Guards
             Navigator.Attach(director);
         }
 
-        /// <summary>Wires the guard to a director from code, for tests and tooling-built scenes.</summary>
+        /// <summary>Wires the guard to a director from code, for tests and tooling-built scenes. Null keeps the
+        /// director the guard found when it woke: a spawned guard must not lose the alarm it reports to.</summary>
         public void Configure(EnemyDirector director)
         {
+            if (director == null)
+                return;
+
             _configuredDirector = director;
             if (isActiveAndEnabled)
                 AttachTo(director);

@@ -56,10 +56,9 @@ namespace Plunderspell.Guards
             return hit.IsChildOf(_shooter.transform) || (target != null && hit.IsChildOf(target));
         }
 
-        // The legacy CastleGuard is still on the prefabs until #214, so it counts as a teammate too.
         private static bool IsTeammate(Collider hit)
         {
-            return hit.GetComponentInParent<Guard>() != null || hit.GetComponentInParent<CastleGuard>() != null;
+            return hit.GetComponentInParent<Guard>() != null;
         }
     }
 }

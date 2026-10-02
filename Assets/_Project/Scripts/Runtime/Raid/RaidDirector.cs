@@ -215,8 +215,7 @@ namespace Plunderspell.Raid
             _layout.value = PackLayout(_fixedSeed != 0 ? _fixedSeed : NewSeed(), era);
             BuildCastle(Seed);
 
-            _alarm?.ResetForNewRaid(CastleGuard.ArrivalGraceSeconds);
-            CastleGuard.BeginArrivalGrace();
+            _alarm?.ResetForNewRaid(GuardArrivalGrace.Seconds);
             GuardArrivalGrace.Begin();
 
             SetPhase(RaidPhase.Raiding);
@@ -350,7 +349,7 @@ namespace Plunderspell.Raid
             _lootSpawner?.Clear();
             _guardSpawner?.Clear();
 
-            // Deliberately NOT clearing CastleGuard.Intruders: IntruderTag owns that list by
+            // Deliberately NOT clearing the director's Intruders: IntruderTag owns that list by
             // component lifetime, and wiping it here would leave every surviving player invisible
             // to guards for the rest of the session.
 

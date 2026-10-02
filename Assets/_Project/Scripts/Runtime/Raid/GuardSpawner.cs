@@ -127,61 +127,14 @@ namespace Plunderspell.Raid
                 _container);
             _spawned.Add(go);
 
-            var guard = go.GetComponent<CastleGuard>();
+            var guard = go.GetComponent<Guard>();
             if (guard == null)
                 return;
 
-            // Patrol waypoints are plain child transforms so the guard's inspector-facing route
-            // field works identically whether a scene author or this spawner filled it in.
-            var route = new List<Transform>(placement.PatrolRoute.Count);
-            for (int i = 0; i < placement.PatrolRoute.Count; i++)
-            {
-                var point = new GameObject($"Waypoint_{i}");
-                point.transform.SetParent(_container, false);
-                point.transform.position = placement.PatrolRoute[i];
-                route.Add(point.transform);
-                _spawned.Add(point);
-            }
-
-            // A route of one point is a guard that stands its post; every guard walks between two (#193).
-            if (route.Count < 2)
-            {
-                var extra = new GameObject($"Waypoint_{route.Count}");
-                extra.transform.SetParent(_container, false);
-                extra.transform.position = NearbyPoint(placement.Position, rng);
-                route.Add(extra.transform);
-                _spawned.Add(extra);
-            }
-
-            guard.Configure(null, route);
+            // The fresh guard finds its director when it wakes and picks its own patrol points around where
+            // it stands (planned routes are dropped, re-add: #225), so the spawner only scales it.
             guard.ScaleTuning(_speedScale, _damageScale);
             guard.ScaleHealth(_healthScale);
-        }
-
-        /// <summary>
-        /// A second patrol point 3 to 5 m from <paramref name="home"/>: on the NavMesh and walkable
-        /// from home when a mesh exists, otherwise just the offset. Used when the planned route has
-        /// only one point.
-        /// </summary>
-        public static Vector3 NearbyPoint(Vector3 home, System.Random rng)
-        {
-            Vector3 fallback = home + new Vector3(4f, 0f, 0f);
-            var path = new UnityEngine.AI.NavMeshPath();
-            for (int attempt = 0; attempt < 8; attempt++)
-            {
-                double angle = rng.NextDouble() * System.Math.PI * 2.0;
-                float radius = 3f + (float)rng.NextDouble() * 2f;
-                Vector3 candidate = home + new Vector3((float)System.Math.Sin(angle), 0f, (float)System.Math.Cos(angle)) * radius;
-                if (!UnityEngine.AI.NavMesh.SamplePosition(candidate, out UnityEngine.AI.NavMeshHit hit, 2f, UnityEngine.AI.NavMesh.AllAreas))
-                {
-                    fallback = candidate;   // no mesh here (or none at all): keep the raw offset as the last resort
-                    continue;
-                }
-                if (UnityEngine.AI.NavMesh.CalculatePath(home, hit.position, UnityEngine.AI.NavMesh.AllAreas, path)
-                    && path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete)
-                    return hit.position;
-            }
-            return fallback;
         }
 
         /// <summary>Removes the garrison. Called when a raid ends.</summary>

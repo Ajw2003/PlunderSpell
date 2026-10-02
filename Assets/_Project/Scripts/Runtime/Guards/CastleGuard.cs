@@ -21,6 +21,7 @@ namespace Plunderspell.Guards
     /// Server-authoritative: only the server ticks the AI and moves the agent. Clients see the
     /// replicated transform and the replicated alert state.
     /// </summary>
+    [System.Obsolete("Replaced by Guard (#214). No prefab carries this any more; kept compiling until the owner approves its removal.")]
     [RequireComponent(typeof(StatusEffectReceiver))]
     public class CastleGuard : NetworkBehaviour, INoiseListener, IEavesdropper, IHealth, IShovable
     {

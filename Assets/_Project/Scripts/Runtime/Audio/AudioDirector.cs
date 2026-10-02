@@ -317,7 +317,7 @@ namespace Plunderspell.Audio
                 Play(open ? SoundNames.DoorOpen : SoundNames.DoorClose, door.transform.position);
         }
 
-        private void OnGuardAttacked(CastleGuard guard, GuardAttackKind kind)
+        private void OnGuardAttacked(Guard guard, GuardAttackKind kind)
         {
             if (guard != null)
                 Play(SoundNames.GuardAttack(kind, CurrentEra), guard.transform.position);
@@ -368,14 +368,14 @@ namespace Plunderspell.Audio
             IReadOnlyList<Component> guards = EnemyDirector.GuardsOf(Alarm);
             for (int i = 0; i < guards.Count; i++)
             {
-                CastleGuard guard = guards[i] as CastleGuard;
+                Guard guard = guards[i] as Guard;
                 if (guard != null && _subscribedGuards.Add(guard.GetInstanceID()))
-                    guard.Attacked += kind => OnGuardAttacked(guard, kind);
+                    guard.AttackSignal.Attacked += kind => OnGuardAttacked(guard, kind);
             }
 
             for (int i = 0; i < guards.Count; i++)
             {
-                CastleGuard guard = guards[i] as CastleGuard;
+                Guard guard = guards[i] as Guard;
                 if (guard != null && _steppers.Add(guard.GetInstanceID()))
                     guard.gameObject.AddComponent<StepAudio>().Initialize(this, GuardVoices.Resolve(guard.name), null);
             }
