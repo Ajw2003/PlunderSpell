@@ -1,74 +1,134 @@
-# Guard AI as a proper state machine (plan, 2026-10-01)
+# Guard AI as a proper state machine, with an enemy mediator (plan, 2026-10-01)
 
-Owner's request: enemies use a real FSM like the player, talk through events rather than direct
-references, no long if/switch chains, and fix guards leaving a player who stands in front of them
-and not getting close enough to hit since the #200 collision changes.
+This replaces the first draft of this file from earlier the same day, which the owner superseded
+with the behaviour spec below before approving it.
 
-Inventory read from code on `claude/playability-fixes` (scout report plus a spot check).
-`CastleGuard.cs` is 1316 lines.
+## The owner's spec (2026-10-01)
 
-## What exists
+- **Patrol.** Pick 3 or more random points in a radius that are reachable, and walk them. Seeing a
+  player or hearing something sends the guard to Investigate.
+- **Investigate.** A noise, movement, or something out of the ordinary: the guard comes looking. If
+  it sees you and you run, it comes after you and starts fighting.
+- **Chase.** Starts right after Investigate if you run. The guard follows fast; ranged attackers shoot.
+- **Combat.** Guards take turns attacking the player. Ranged guards let loose, but they are aware of
+  their surroundings and teammates, so they don't shoot them.
+- **The mediator.** Taking turns needs a central enemy mediator that talks to the guards through
+  events. The alarm FSM could become part of it, or the other way round.
+- **Stunned / Slept.** Stays still for a set time, then transitions out.
+- **On fire.** Freaks out and runs around randomly, then goes back to idle (Patrol), Combat, or Dead.
+- **Dead.** Ragdolls, then fades to dust.
+- This changes how attacking works.
 
-- **The player's FSM.** `StateMachine.BaseStateMachine`
-  (`Assets/_Project/Scripts/Runtime/Core/StateMachine/BaseStateMachine.cs`) is a MonoBehaviour with
-  `ChangeState`, `Update` and `FixedUpdate`; `IState` has Enter, Update, Exit and FixedUpdate.
-  - **Bug:** `ChangeState` never calls `Exit()` on the old state. It affects the player and the
-    monsters.
-  - It can't be a guard's base, because `CastleGuard` must be a PurrNet `NetworkBehaviour`.
-- **The monster FSM.** `MonsterStateMachine` (Enemies/), with Idle, Patrol, Pursue, Attack, Dead and
-  PickedUp states, is live for the throwable creatures. It is separate from the guards.
-- **The guards today.** One enum (`GuardAlertState`), one transition function (`GuardBrain.NextState`,
-  a switch) and one action switch (`CastleGuard.Act`). Levitation is a 75-line nested if/else
-  (`UpdateLevitation`). The stuck watchdog is a 63-line chain (`WatchProgress`). The guard calls the
-  alarm directly (`_alarm?.ReportSighting/ReportChase/ReportAttack`).
+## What exists today (read from code)
 
-## Keep, change, drop
+- **`CastleGuard.cs`** is 1316 lines:
+  - one transition switch (`GuardBrain.NextState`) and one action switch (`Act`);
+  - Levo is a 75-line nested if/else (`UpdateLevitation`);
+  - the stuck watchdog is a 63-line chain (`WatchProgress`);
+  - it calls the alarm directly (`_alarm?.ReportSighting/ReportChase/ReportAttack`).
+- **States today:** Patrolling, Investigating, Chasing, Searching, Incapacitated.
+- **The shared `StateMachine.BaseStateMachine`** (used by the player and the monsters) is a
+  MonoBehaviour, so a PurrNet `NetworkBehaviour` guard can't inherit it. Its `ChangeState` never
+  calls `Exit()` on the old state.
+- **`AlarmFSMManager`** (238 lines, a NetworkBehaviour) has the Calm → Stirred → Roused → HueAndCry
+  latch, an `AlarmStateChanged` event, and `ReportSighting`, `ReportAttack` and `ReportChase`.
+- **Burning** already exists as a status: `StatusEffectReceiver.IsBurning`.
+- **Guard prefabs have no ragdoll rig:** no joints or bones in ManAtArms or PalaceGuard, and the
+  animations are #141.
+- **Movement that works and stays** (from #193 and #200):
+  - a dynamic body driven by the NavMeshAgent;
+  - zero friction, and guards ignore each other's colliders;
+  - the stuck watchdog, NavMesh snapping, and the 0.75 m resend.
 
-| Behaviour today | Plan |
-|---|---|
-| Patrol route, wander when there is no route | **Keep**, as the Patrol state |
-| Investigate a noise, look around on arrival | **Keep**, as the Investigate state |
-| Chase with stop-short, attack in reach | **Change**: Chase hands over to a new **Attack** state. It stays engaged while the target is inside reach plus a margin, keeps facing it, and doesn't drop to Search on one missed sight frame |
-| Search sweep around the last-known spot; never give up at the hue and cry | **Keep**, as the Search state |
-| Hue and cry re-sends near the nearest player (rough, 3–5 m) | **Keep**, as an alarm event the Search and Investigate states react to |
-| Asleep, stunned, dead | **Keep**, as the Incapacitated state |
-| Levo lift and fall damage | **Keep**, as an Airborne state, which replaces the nested if/else |
-| Frango shove (`IShovable`) | **Keep**, in the motor |
-| Sight: cone, range by alarm, linecast, arrival grace | **Keep**, as a `GuardSight` part. **Fix (once a test confirms it):** the line-of-sight check ignores the target's own colliders |
-| Hearing, wake threshold, overhear and eavesdrop | **Keep**, as a `GuardHearing` part that raises events |
-| Dynamic body driven by the agent, zero friction, guards ignore each other, stuck watchdog, NavMesh snap, 0.75 m resend | **Keep**, as a `GuardMotor` part. Re-path, detour and skip become small steps instead of one long chain |
-| Projectile guards (turrets) | **Keep**, inside the Attack state |
-| Health, `IHealth`, `ScaleHealth`/`ScaleTuning` | **Keep** |
-| SyncVars: state, health, attack signal; server-only AI | **Keep**. The replicated enum is set from the current state class, so clients and audio see the same values as today |
-| Alarm reports | **Change**: the guard raises `Spotted`, `ChaseChanged` and `Attacked` events, and the alarm subscribes. No more `_alarm?.Report…` calls |
-| Static `Intruders` / `Active` lists | **Change**: move to a small registry. Users (audio, spawner, raid) keep the same calls through it |
-| `Steer`, the straight-line walk with no NavMesh | **Ask**: raids always bake a NavMesh. Keep as a fallback, or drop it (and its one test)? |
-| Test seams: `Tick`, `SetAlertState`, `Configure` | **Keep**, so the 58 guard tests still drive guards the same way |
+  Co-op stuck time was 1.7 s of 1811 s.
 
 ## Design
 
-- **A generic, plain-C# state machine** (`StateMachine<TContext>`) in Core/StateMachine, not a
-  MonoBehaviour, so a NetworkBehaviour can own one.
-  - `ChangeState` calls `Exit` then `Enter`.
-  - Each state owns its own transitions: a state's `Tick` returns the next state or itself. That
-    replaces both the transition switch and the action switch.
-- **Fix the shared base:** `BaseStateMachine.ChangeState` calls `Exit()`. Each player and monster
-  state's `Exit` gets checked first, because some may never have run and could now change behaviour.
-- **CastleGuard** becomes a thin NetworkBehaviour that owns the parts (sight, hearing, motor, combat,
-  health) and the FSM, and does the networking. Parts talk to states through events; states call
-  the parts' methods.
+- **A generic, plain-C# state machine**, `StateMachine<TContext>` in Core/StateMachine.
+  - `ChangeState` runs `Exit` then `Enter`.
+  - Each state returns its own next state, so there are no transition switches.
+  - The shared `BaseStateMachine` gets the same `Exit` fix, after each player and monster `Exit`
+    has been checked for side effects that never used to run.
+- **The enemy mediator (`EnemyDirector`, server-side).** It owns:
+  - the guard and intruder registries, replacing the static `Intruders` and `Active` lists;
+  - the alarm level;
+  - the shared events: `NoiseReported`, `IntruderSpotted`, `IntruderLost`, `GuardEngaged`,
+    `AlarmChanged`, `GuardDied`;
+  - the combat turn system.
 
-## Steps (issues)
+  Guards never call each other or the alarm directly. They raise events, and the director answers
+  with events. **Proposed:** the director absorbs `AlarmFSMManager`'s logic and the alarm becomes
+  one part of the director, because the director already sees every sighting and engagement the
+  alarm scores. Audio, HUD and raid code subscribe to the director's events instead of holding
+  guard or alarm references.
+- **Taking turns.** The director hands out attack tokens per target: by default one melee token
+  and one ranged token per player.
+  - A guard in Combat without a token holds position at a ring around the target, facing it, and
+    gives way to the attacker.
+  - A token is released after the attack, or after a timeout if the attack never happens.
+- **Friendly fire.** Before a ranged guard fires, a sphere cast along the shot checks the path. If a
+  teammate is in the line, the guard sidesteps along the ring instead of shooting.
+- **The guard's parts.** `CastleGuard` becomes a thin NetworkBehaviour that owns the FSM and these
+  parts:
+  - `GuardSight`: the cone, the range by alarm, and a line-of-sight check that ignores the target's
+    own colliders;
+  - `GuardHearing`: the noise threshold and the overheard line;
+  - `GuardMotor`: body, agent, stuck watchdog, sweep points, shove;
+  - `GuardCombat`: melee and ranged, the cooldown, the replicated attack signal;
+  - health.
 
-1. A generic state machine, plus the `Exit` fix on the shared base.
-2. Split CastleGuard into sight, hearing, motor and combat parts, with no behaviour change. All 58
-   guard tests stay green.
-3. Guard states as classes, replacing `NextState`, `Act` and `UpdateLevitation`.
-4. Alarm, audio and raid talk to guards through events and the registry, not direct references.
-5. Reproduce, then fix, "a guard leaves a player in front of it" and "can't get close enough to
-   hit": test first (the line-of-sight self-block, and the stop-short versus the reach), then the
-   Attack state.
-6. Parity check:
-   - every guard test passes;
-   - one co-op run, where stuck time stays low (1.7 s today) and guards actually land hits;
-   - every keep/change/drop line above checked against the new code.
+  The parts raise events; the states call the parts.
+- **Replication.** The state still replicates as an enum SyncVar, extended with Combat, OnFire and
+  Dead, so clients, audio and the HUD see it as today.
+- **Death.** Death no longer destroys the guard on the spot. Dead hands the body to physics (a
+  topple, until #141 adds a rig for a real ragdoll), then fades it to dust and despawns over the
+  network.
+
+## The states and their exits
+
+| State | Exits to |
+|---|---|
+| **Patrol**: 3+ random reachable points around the guard's post | Investigate (a noise, or seeing a player); Stunned; OnFire; Dead |
+| **Investigate**: go to the noise or sighting, look around | Chase (sees a player who runs); Combat (a player within reach); Patrol (nothing found) |
+| **Chase**: fast follow; ranged guards shoot on the move | Combat (target within engagement range); Investigate (lost sight, search the last-known spot) |
+| **Combat**: turns through director tokens; ranged guards avoid friendly fire | Chase (target leaves the engagement range plus a margin, so there is no flicker); Investigate (lost them) |
+| **Stunned / Slept**: stands still for a set time | Patrol or Investigate, depending on the alarm level |
+| **OnFire**: panic-runs to random reachable points while burning | Patrol, Combat (a player close), or Dead |
+| **Dead**: topple, fade to dust, despawn | (none) |
+
+Every state can go to Stunned, OnFire or Dead when that status lands, except Dead.
+
+## Open questions for the owner
+
+1. **Search and the hue and cry.** Today a guard that loses you sweeps the area, and at the hue and
+   cry every guard keeps being sent near the nearest player. The spec has no Search state. Should
+   Investigate absorb Search, and should the hue and cry become a director event that puts nearby
+   guards into Investigate?
+2. **Levo.** A levitated guard floats, then takes fall damage. Is that a state of its own
+   ("Airborne"), or part of Stunned?
+3. **Sleep woken by noise.** Today Somnus sleep breaks on a loud noise. Keep that, or sleep is a
+   fixed time, as the spec reads?
+4. **The no-NavMesh `Steer` fallback.** Drop it (recommended), or keep it?
+5. **The alarm.** Merge it into the director (proposed), or keep it separate and have the director
+   wrap it?
+
+## Steps (parent #203, one issue each)
+
+1. (#204) A generic state machine, plus the `Exit` fix on the shared base.
+2. (#205) The enemy director: registries, events, the alarm inside it; the old direct calls and statics go.
+3. (#206) Split the guard into its parts (sight, hearing, motor, combat, health). No behaviour change, and
+   the guard tests stay green.
+4. (#207) Patrol state: 3+ random reachable points.
+5. (#208) Investigate state.
+6. (#209) Chase state, with ranged guards firing on the move.
+7. (#210) Combat state: attack tokens, holding a ring, ranged friendly-fire avoidance, the new attack flow.
+   It also fixes "guards leave you while you're in front of them" and "can't get close enough to
+   hit", test first.
+8. (#211) Stunned / Slept state.
+9. (#212) OnFire state.
+10. (#213) Dead state: topple, dust, despawn. The full ragdoll waits on #141.
+11. (#214) Parity and cleanup:
+    - remove `GuardBrain.NextState`, `Act` and `UpdateLevitation`;
+    - all guard tests pass, updated where the spec changes behaviour;
+    - one co-op run: stuck time stays low, guards take turns and land hits, no friendly fire;
+    - docs updated.
