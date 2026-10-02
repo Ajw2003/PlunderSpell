@@ -60,7 +60,16 @@ lacks; the rest are older and either merged in another form or abandoned.
     graph calls more spots floor than the NavMesh does (Great Hall, Chapel), which is unexplained.
   - Locked doors aren't in the graph yet; that is #222.
 
-  Next is #222.
+  #222 is in: the director's guard navigation service (`Runtime/Alarm/Navigation/`, every file under
+  180 lines). It takes move requests, smooths paths, sweeps a capsule before each step and keeps
+  guards about 1 m apart. Door costs come from `CastleLockdown`.
+  - Its tests pass 7/7. One of them is a guard stopping at a player pinned to a wall without
+    moving them. Allocations are 0 B over 500 ticks with 20 guards.
+  - It isn't wired into anything yet. `CastleLockdown.NavGraph` and the service's map are set by
+    nobody, and the legacy guard still uses the NavMesh. The fresh guard core (#206) wires it, and
+    the co-op run moves there too.
+
+  Next is #206.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
