@@ -36,13 +36,6 @@ namespace Plunderspell.Guards
         /// <summary>Raised on this peer when the guard's replicated state changes.</summary>
         public event Action<GuardAlertState> StateChanged;
 
-        /// <summary>
-        /// HAND-OFF TO INVESTIGATE (#208). A state that notices something (Patrol today) raises this with
-        /// where to go. Nothing subscribes yet: #208 builds the Investigate state and either subscribes
-        /// here to change state, or makes its own sight and hearing checks in Patrol's place.
-        /// </summary>
-        public event Action<Vector3> InvestigateRequested;
-
         public GuardTuning Tuning => _tuning;
 
         /// <summary>The guard's own random numbers, seeded from where it was posted so the server picks the
@@ -56,6 +49,9 @@ namespace Plunderspell.Guards
         public GuardNavigator Navigator { get; private set; }
         public GuardDirectorLink Link { get; private set; }
         public GuardAttackSignaller AttackSignal { get; private set; }
+
+        /// <summary>What is worth a look (noise, sighting, hue and cry). Patrol and Investigate read it (#208).</summary>
+        public GuardLeads Leads { get; private set; }
         public GuardStateSet States { get; private set; }
         private GuardShove _shove;
 
@@ -100,6 +96,7 @@ namespace Plunderspell.Guards
             Navigator = new GuardNavigator(this, _tuning);
             Link = new GuardDirectorLink(this);
             AttackSignal = new GuardAttackSignaller(_attackSignal);
+            Leads = new GuardLeads(Link, Hearing, () => Random);
             _shove = new GuardShove(transform, _tuning);
             States = new GuardStateSet(this);
 
@@ -188,9 +185,6 @@ namespace Plunderspell.Guards
 
         /// <summary>Starts the guard's random numbers over from <paramref name="seed"/>.</summary>
         public void Reseed(int seed) => Random = new System.Random(seed);
-
-        /// <summary>Tells whoever handles investigations that something is worth a look at <paramref name="where"/>.</summary>
-        public void RequestInvestigation(Vector3 where) => InvestigateRequested?.Invoke(where);
 
         // Centimetre-rounded so the same post gives the same seed on every run and every peer.
         private static int SeedFrom(Vector3 post)

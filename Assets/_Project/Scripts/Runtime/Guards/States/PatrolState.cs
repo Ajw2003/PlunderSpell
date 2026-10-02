@@ -10,8 +10,8 @@ namespace Plunderspell.Guards
     ///
     /// A blocked walk is handled by cause: a closed door means the point is not worth trying (a barred
     /// door will not open mid-raid), anything else gets the point swapped for another. Seeing or hearing
-    /// something is passed to <see cref="Guard.RequestInvestigation"/>; Investigate (#208) takes it from
-    /// there. Until it exists the guard simply carries on patrolling.
+    /// something becomes a lead in <see cref="GuardLeads"/>; a waiting lead (a noise, the hue and cry, or a
+    /// new sighting) sends the guard to <see cref="InvestigateState"/> (#208).
     /// </summary>
     public sealed class PatrolState : GuardState
     {
@@ -37,7 +37,6 @@ namespace Plunderspell.Guards
             _lastSighting = null;
             Context.Navigator.Reached += OnReached;
             Context.Navigator.RouteBlocked += OnBlocked;
-            Context.Hearing.NoiseNoticed += OnNoiseNoticed;
         }
 
         public override void Exit()
@@ -45,13 +44,14 @@ namespace Plunderspell.Guards
             Context.Navigator.Stop();
             Context.Navigator.Reached -= OnReached;
             Context.Navigator.RouteBlocked -= OnBlocked;
-            Context.Hearing.NoiseNoticed -= OnNoiseNoticed;
         }
 
         public override State<Guard> Tick(float deltaTime)
         {
             _pauseLeft -= deltaTime;
             NoticeSighting();
+            if (Context.Leads.HasLead)
+                return Context.States.Investigate;
             if (_pauseLeft <= 0f && !Context.Navigator.IsMoving)
                 WalkToNextPoint();
             return this;
@@ -63,7 +63,7 @@ namespace Plunderspell.Guards
         {
             Transform seen = Context.Sight.Visible;
             if (seen != null && seen != _lastSighting)
-                Context.RequestInvestigation(seen.position);
+                Context.Leads.Offer(seen.position, GuardLeads.SightingStrength);
             _lastSighting = seen;
         }
 
@@ -108,8 +108,6 @@ namespace Plunderspell.Guards
             else
                 _route.DropCurrent();
         }
-
-        private void OnNoiseNoticed(Vector3 origin, float strength) => Context.RequestInvestigation(origin);
 
         private void PauseBeforeNextPoint() => _pauseLeft = Context.Tuning.PatrolPauseSeconds;
     }

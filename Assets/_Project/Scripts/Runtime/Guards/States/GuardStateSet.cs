@@ -9,12 +9,16 @@ namespace Plunderspell.Guards
         public GuardStateSet(Guard guard)
         {
             Patrol = new PatrolState(guard);
+            Investigate = new InvestigateState(guard);
             Incapacitated = new PlaceholderIncapacitatedState(guard);
             Dead = new PlaceholderDeadState(guard);
         }
 
         /// <summary>Walking about (#207).</summary>
         public GuardState Patrol { get; }
+
+        /// <summary>Going to look at a noise, a sighting or the hue and cry (#208).</summary>
+        public GuardState Investigate { get; }
 
         /// <summary>Asleep, stunned or levitated (#211).</summary>
         public GuardState Incapacitated { get; }

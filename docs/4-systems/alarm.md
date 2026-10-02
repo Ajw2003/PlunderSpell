@@ -34,8 +34,8 @@ past — those belong to `Guards`/`Castle` respectively.
 - **The hue and cry is a request, not an order.** On reaching HueAndCry the director publishes one
   `InvestigateRequest` per player (`EnemyDirector.cs:234`, called from `SetState` :381); each guard
   within 40 m takes the nearest (`CastleGuard.cs:269`) and goes to Investigating through `AlertTo`.
-  Nothing outside a guard moves it. Until the Investigate state (#208) exists this maps to the old
-  `Investigating` behaviour.
+  Nothing outside a guard moves it. The fresh guard takes it up as a lead for its Investigate state
+  (see "Leads and Investigate (#208)" below).
 - **`EnemyDirector`** is a server-authoritative FSM: `ApplyNoise(strength)` adds
   `strength * _noiseWeight` to a 0–100 level and stamps the time; `TickDecay` bleeds the level off
   at a fixed rate once `_decayDelay` seconds have passed with no noise. `UpdateState` maps the
@@ -175,7 +175,7 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
   next to the legacy guard's). Range does not grow with the alarm (re-add: #229).
 - **Hearing** (`Senses/GuardHearing.cs:33`). A noise of 0.5 or more wakes a sleeper; a noise above the alarm's
   threshold (`GuardBrain.ShouldInvestigate`) raises `NoiseNoticed`. The guard does not move itself: the
-  current state decides (Investigate, #208).
+  current state decides (Investigate, #208; the noise becomes a lead in `GuardLeads`).
 - **Movement** (`Movement/GuardNavigator.cs:67`). The only way the guard moves: `MoveTo` publishes a `MoveRequest`,
   and `RouteReady`, `Reached` and `RouteBlocked` come back filtered to this guard. It registers a mover with
   `director.Navigation` on attach. Nothing else writes the transform except the shove.
@@ -191,10 +191,20 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
   block swaps it for a fresh one (`PatrolState.cs:91`). The route is `States/GuardPatrolRoute.cs`.
   `GuardNavigationService.Map` (`GuardNavigationService.cs:50`) exposes the map to states. Numbers are in
   `GuardTuning` ("Patrol").
-- **Hand-off to Investigate (#208).** Patrol calls `Guard.RequestInvestigation(where)` (`Guard.cs:193`), which raises
-  `Guard.InvestigateRequested` (`Guard.cs:44`), on `GuardHearing.NoiseNoticed` and once per new sighting
-  (`PatrolState.cs:62`; `OnNoiseNoticed` at `:112`). **Nothing subscribes yet**, so today a guard that sees or hears something keeps
-  patrolling. #208 either subscribes and changes state, or replaces Patrol's two checks.
+- **Leads and Investigate (#208).** `Core/GuardLeads.cs` (`Guard.Leads`, `Guard.cs:54`, built `:99`) holds the one
+  strongest waiting lead: a noise (`GuardHearing.NoiseNoticed`, strength 0-1, `GuardLeads.cs:33`), the director's hue
+  and cry (`GuardDirectorLink.InvestigateRequested`, strength 2, `GuardLeads.cs:32`) or a new sighting (strength 3,
+  offered by Patrol, `PatrolState.cs:66`). `Offer` (`GuardLeads.cs:52`) keeps the stronger, the newer on a tie.
+  Patrol returns `States.Investigate` whenever a lead waits (`PatrolState.cs:53`), so there is no if/else ladder.
+  The 40 m hue-and-cry rule stays in `GuardDirectorLink.HueAndCryRadius` and applies before a lead is made;
+  the position is then moved 3-5 m at random (`GuardLeads.cs:38`, `GuardBrain.HuntOffsetMin/Max`) so the guard
+  goes to "roughly" where the player is. `States/InvestigateState.cs` walks to the spot at
+  `Tuning.InvestigateSpeed`, stands `InvestigateLookSeconds` (3 s), then returns to Patrol. A newer lead at least
+  as strong re-targets, a weaker one is dropped (`InvestigateState.cs:94`); any `Blocked` (`DoorClosed`,
+  `Unreachable`, ...) gives up to Patrol (`:117`). It stands rather than turning to look: only the navigation
+  service writes the transform. **Chase hand-off left for #209:** `InvestigateState.PlayerSeen` event (once per
+  sighting, `:37`) and `ReactToPlayerSeen` (`:86`), which returns null today; #209 returns the Chase state there.
+  Tests: `Tests/Runtime/GuardInvestigateTests.cs`.
 - **Replacing a placeholder.** Edit `States/GuardStateSet.cs`; each placeholder names its issue.
 - **Tests.** `GuardCoreSensesTests` (throttle, stagger, cone, own-collider line of sight, grace, wake, threshold)
   and `GuardCoreBodyTests` (a move request reaching Arrived through the service, health, lobby scaling, the

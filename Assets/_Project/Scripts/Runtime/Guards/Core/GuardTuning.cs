@@ -46,6 +46,13 @@ namespace Plunderspell.Guards
         [Tooltip("Random tries to find one reachable point before giving up until the next pause ends.")]
         public int PatrolPickAttempts = 16;
 
+        [Header("Investigate")]
+        [Tooltip("Walking speed to a noise or sighting, between a patrol walk and a chase.")]
+        public float InvestigateSpeed = 3.2f;
+
+        [Tooltip("How long the guard stands and looks around at the spot, in seconds.")]
+        public float InvestigateLookSeconds = 3f;
+
         [Header("Movement body")]
         [Tooltip("Body shape the navigation service sweeps with.")]
         public float BodyRadius = 0.4f;

@@ -111,19 +111,16 @@ namespace Plunderspell.Tests
         }
 
         [Test]
-        public void SeeingAPlayerHandsOffToInvestigate()
+        public void SeeingAPlayerSendsTheGuardToInvestigate()
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
-            var requested = new List<Vector3>();
-            guard.InvestigateRequested += requested.Add;
             Transform intruder = _rig.MakeIntruder(guard.transform.position + guard.transform.forward * 5f);
             guard.Sight.LookNext();
 
             guard.Tick(Step);
-            guard.Tick(Step);
 
-            Assert.That(requested.Count, Is.EqualTo(1), "one sighting is one request, not one per look");
-            Assert.That(Vector3.Distance(requested[0], intruder.position), Is.LessThan(0.01f));
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Investigate));
+            Assert.That(Vector3.Distance(((InvestigateState)guard.CurrentState).Spot, intruder.position), Is.LessThan(0.01f));
         }
 
         // One tick is enough to plan the round and start the first leg.
