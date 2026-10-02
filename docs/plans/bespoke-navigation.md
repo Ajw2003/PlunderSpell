@@ -78,26 +78,31 @@ navigation answers with events (path ready, arrived, blocked).
 5. **Doors.** Locked or barred doors (`CastleLockdown`) mark their portal closed or costed in the
    graph, which they don't do today.
 
-## Open scope questions for the owner
+## Owner's answers (2026-10-01)
 
-1. **"Wholesale".** Monsters and items also use the NavMesh. Should the new system replace it for
-   them too, in the same project, or guards first with monsters and items moved over afterwards?
-   (The NavMesh package stays until the last user goes.)
-2. **Networking.** Phase 1 (keep NetworkTransform) first, then path replication, or straight to
-   path replication?
-3. **Grid resolution.** 0.5 m cells, so a guard (r 0.32–0.39) takes one cell plus clearance. Fine,
-   or coarser for speed?
+1. **Scope.** Only guards walk on the NavMesh in practice. Monsters (`MonsterStateMachine`) exist as
+   code, but no prefab, scene or asset uses them, and items only read a monster's agent as an "is
+   it walking?" flag (`Item.cs:853`). So the new navigation replaces the NavMesh for guards, and
+   runtime NavMesh use is removed at the end. The monster code is **kept, not deleted, and marked
+   deprecated**, along with any other dead code, so future agents don't mistake it for live code.
+   The NavMesh package stays as long as the deprecated monster code references it.
+2. **Networking.** Phase 1 keeps NetworkTransform; path replication comes later.
+3. **Grid.** 0.5 m cells.
 
-## Steps (issues to be created once approved)
+## Steps (issues)
 
-1. The nav tile authoring tool and data: probe each room module, store grid, heights and portals.
-2. Stitch the castle nav graph at generation, plus graph queries (nearest cell, reachable) and tests
-   against today's `CastleAudit` reachability.
-3. The navigation service in the director: move requests, portal A* plus local paths, the capsule
-   sweep, separation, events.
-4. The fresh guard core on top of it (replaces #206). Then the states #207–#213 use move requests.
-5. Move the other NavMesh users (spawner validation, Frango, Levo landing, CastleAudit, tests).
-   Monsters and items are included or not per question 1.
-6. Remove the NavMesh: the baker, the surfaces in scenes, the agents in prefabs and forges, the
-   package if nothing is left.
-7. Phase 2 networking (path replication), per question 2.
+Issue numbers are listed on #203.
+
+1. #220: the nav tile authoring tool and data. Probe each room module; store the grid, heights and portals.
+2. #221: stitch the castle nav graph at generation, plus graph queries (nearest cell, reachable)
+   and tests against `CastleAudit` reachability.
+3. #222: the navigation service in the director. Move requests, portal A* plus local paths, the
+   capsule sweep, spacing, events. Phase 1 networking (NetworkTransform).
+4. #206: the fresh guard core on top of it. Then the states #207–#213 issue move requests; #214 checks
+   parity against `docs/reference/guard-legacy/`.
+5. #223: move the other NavMesh users (spawner check, Frango, Levo landing, CastleAudit, tests), then
+   remove runtime NavMesh use. The package stays while the deprecated monster code references it.
+6. #224 (later): phase 2 networking, which replicates paths.
+
+Dropped behaviour, each with a re-add issue: spawner patrol routes #225, stuck detour/skip #226, the
+shout as a noise #227, overheard chatter #228, alarm-scaled vision #229.
