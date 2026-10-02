@@ -201,9 +201,25 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
   `Tuning.InvestigateSpeed`, stands `InvestigateLookSeconds` (3 s), then returns to Patrol. A newer lead at least
   as strong re-targets, a weaker one is dropped (`InvestigateState.cs:94`); any `Blocked` (`DoorClosed`,
   `Unreachable`, ...) gives up to Patrol (`:117`). It stands rather than turning to look: only the navigation
-  service writes the transform. **Chase hand-off left for #209:** `InvestigateState.PlayerSeen` event (once per
-  sighting, `:37`) and `ReactToPlayerSeen` (`:86`), which returns null today; #209 returns the Chase state there.
-  Tests: `Tests/Runtime/GuardInvestigateTests.cs`.
+  service writes the transform. A sighting raises `InvestigateState.PlayerSeen` (`:36`) and `ReactToPlayerSeen`
+  (`:84`) hands over to Chase. Tests: `Tests/Runtime/GuardInvestigateTests.cs`.
+- **Chase (#209).** `States/ChaseState.cs:19`, entered from Investigate with `States.Chase.Follow(player)`.
+  Runs at `Tuning.ChaseSpeed` via `MoveRequest(Chase)`. It re-plans toward the player at most every
+  `ChaseRetargetSeconds` (0.25 s) and only if the player is `ChaseRetargetDistance` (0.75 m) from the planned
+  spot (`:95`). Sight lost for `ChaseLoseSightSeconds` (0.75 s, so an edge-of-view flicker does not end it)
+  offers the last seen spot as a sighting-strength lead and returns Investigate (`:88`); the guard runs to the
+  last seen spot, never the player's real one. Publishes `IntruderSpotted` on enter and `IntruderLost` on exit
+  (`:46`, `:54`), no shout. A `Blocked` answer is ignored: the next re-plan tries again, and the navigation
+  sweep keeps a guard off a player pinned to a wall (#200). **Combat hand-off left for #210:** the
+  `ChaseState.InReach` event (`:38`, once per approach, within `MeleeReach` 2 m or `RangedEngageRange` 8 m for a
+  ranged guard) and `ReactToInReach` (`:126`), which returns null today; #210 returns Combat there.
+  **Ranged:** `Core/GuardRangedAttack.cs` (`Guard.RangedAttack`, `Guard.cs:54`, built `:102`) is a guard
+  with `Tuning.ProjectilePrefab`. `TryFire` (`:31`) takes the cooldown (1.4 s), signals
+  `GuardAttackSignaller.Signal(Projectile)`, publishes `GuardEngaged` and launches the shared
+  `NetworkedProjectile` (`:50`), as legacy `CastleGuard.TryAttack`/`FireAt` did (`CastleGuard.cs.txt:1157-1215`).
+  Chase calls it every tick while the player is seen, so shots come on the move, out to sight range. **Not done,
+  left to #210:** the teammate-safe sphere cast before a shot (the issue asks for it in Chase too), and the
+  legacy melee strike. Tests: `Tests/Runtime/GuardChaseTests.cs`.
 - **Replacing a placeholder.** Edit `States/GuardStateSet.cs`; each placeholder names its issue.
 - **Tests.** `GuardCoreSensesTests` (throttle, stagger, cone, own-collider line of sight, grace, wake, threshold)
   and `GuardCoreBodyTests` (a move request reaching Arrived through the service, health, lobby scaling, the

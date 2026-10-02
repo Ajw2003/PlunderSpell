@@ -10,6 +10,7 @@ namespace Plunderspell.Guards
         {
             Patrol = new PatrolState(guard);
             Investigate = new InvestigateState(guard);
+            Chase = new ChaseState(guard);
             Incapacitated = new PlaceholderIncapacitatedState(guard);
             Dead = new PlaceholderDeadState(guard);
         }
@@ -19,6 +20,9 @@ namespace Plunderspell.Guards
 
         /// <summary>Going to look at a noise, a sighting or the hue and cry (#208).</summary>
         public GuardState Investigate { get; }
+
+        /// <summary>Following a player who was seen (#209).</summary>
+        public ChaseState Chase { get; }
 
         /// <summary>Asleep, stunned or levitated (#211).</summary>
         public GuardState Incapacitated { get; }

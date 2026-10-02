@@ -81,7 +81,9 @@ lacks; the rest are older and either merged in another form or abandoned.
   points behind barred doors. Lockdown doors are wired (`RaidDirector.cs:262`, per the 2026-10-02
   decision: locked doors cost, barred doors block). Tests pass: 7/7 PlayMode and 1/1 EditMode.
   #208 is in: `InvestigateState` consumes leads (noise, sighting, hue and cry) from `GuardLeads`.
-  Next is #209 (Chase); the hand-off is `InvestigateState.PlayerSeen`.
+  #209 is in: `ChaseState` follows a seen player at chase speed (throttled re-plans), ranged guards shoot
+  on the move, sight lost goes to Investigate at the last seen spot. The Combat hand-off is
+  `ChaseState.InReach` (#210); teammate-safe shooting is not done yet.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record

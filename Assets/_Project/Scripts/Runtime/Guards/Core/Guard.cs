@@ -50,6 +50,9 @@ namespace Plunderspell.Guards
         public GuardDirectorLink Link { get; private set; }
         public GuardAttackSignaller AttackSignal { get; private set; }
 
+        /// <summary>The ranged shot (#209). Chase and Combat both fire through it.</summary>
+        public GuardRangedAttack RangedAttack { get; private set; }
+
         /// <summary>What is worth a look (noise, sighting, hue and cry). Patrol and Investigate read it (#208).</summary>
         public GuardLeads Leads { get; private set; }
         public GuardStateSet States { get; private set; }
@@ -96,6 +99,7 @@ namespace Plunderspell.Guards
             Navigator = new GuardNavigator(this, _tuning);
             Link = new GuardDirectorLink(this);
             AttackSignal = new GuardAttackSignaller(_attackSignal);
+            RangedAttack = new GuardRangedAttack(this);
             Leads = new GuardLeads(Link, Hearing, () => Random);
             _shove = new GuardShove(transform, _tuning);
             States = new GuardStateSet(this);

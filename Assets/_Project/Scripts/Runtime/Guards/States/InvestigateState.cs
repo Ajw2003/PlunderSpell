@@ -30,9 +30,8 @@ namespace Plunderspell.Guards
         public override GuardAlertState AlertState => GuardAlertState.Investigating;
 
         /// <summary>
-        /// HAND-OFF TO CHASE (#209). Raised with the player's transform once per sighting while the guard
-        /// investigates. #209 replaces this with a return of its Chase state from
-        /// <see cref="ReactToPlayerSeen"/>; until then the guard keeps investigating.
+        /// Raised with the player's transform once per sighting while the guard investigates, just before
+        /// it hands over to <see cref="ChaseState"/> (#209).
         /// </summary>
         public event Action<Transform> PlayerSeen;
 
@@ -82,11 +81,11 @@ namespace Plunderspell.Guards
             return next;
         }
 
-        // The one place #209 changes: return the Chase state here once it exists.
         private State<Guard> ReactToPlayerSeen(Transform player)
         {
             PlayerSeen?.Invoke(player);
-            return null;
+            Context.States.Chase.Follow(player);
+            return Context.States.Chase;
         }
 
         // A weaker lead than the one being followed is thrown away so it does not send the guard

@@ -53,6 +53,32 @@ namespace Plunderspell.Guards
         [Tooltip("How long the guard stands and looks around at the spot, in seconds.")]
         public float InvestigateLookSeconds = 3f;
 
+        [Header("Chase")]
+        [Tooltip("How often a chasing guard may re-plan toward a moving player, in seconds. Keeps the route service from re-planning every frame.")]
+        public float ChaseRetargetSeconds = 0.25f;
+
+        [Tooltip("The player must have moved this far from the planned destination before the guard re-plans, in metres.")]
+        public float ChaseRetargetDistance = 0.75f;
+
+        [Tooltip("How long the guard keeps running to the last seen spot before it gives up and investigates, in seconds. Stops a player flickering at the edge of the view from dropping the chase.")]
+        public float ChaseLoseSightSeconds = 0.75f;
+
+        [Tooltip("A melee guard hands over to combat within this distance of the player, in metres (legacy attack range).")]
+        public float MeleeReach = 2f;
+
+        [Tooltip("A ranged guard hands over to combat within this distance of the player, in metres. It shoots from further out while it runs.")]
+        public float RangedEngageRange = 8f;
+
+        [Header("Ranged attack")]
+        [Tooltip("Set on archers and mages. Empty means a melee guard.")]
+        public GameObject ProjectilePrefab;
+
+        [Tooltip("Metres per second the shot leaves at (legacy 18).")]
+        public float ProjectileSpeed = 18f;
+
+        [Tooltip("Seconds between shots (legacy 1.4).")]
+        public float AttackCooldownSeconds = 1.4f;
+
         [Header("Movement body")]
         [Tooltip("Body shape the navigation service sweeps with.")]
         public float BodyRadius = 0.4f;
