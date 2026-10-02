@@ -4,6 +4,9 @@
 //             and searches: the situation #188/#189/#190 are about
 //   sample    add the time since the last sample to each guard's counters
 //   report    one line of totals, then one line per guard
+//   dump      one line per stuck sample (position, state, destination, velocities, ground normal, what it
+//             touches), for the cause analysis in #200
+//   levo / levocheck / frango / frangocheck   host-side checks of Levo and the Frango shove
 // Each sample, per live guard that is not incapacitated, takes the ground it covered since the last
 // sample and classes the interval:
 //   stuck    has a destination farther than 1 m away, moved under 0.2 m per second
@@ -24,6 +27,14 @@ if (data == null)
     System.AppDomain.CurrentDomain.SetData("guardWatch", data);
 }
 // per guard: 0 lastX 1 lastZ 2 lastTime 3 stuck 4 parked 5 nodest 6 moving 7 observed
+var rows = System.AppDomain.CurrentDomain.GetData("guardWatchRows") as System.Collections.Generic.List<string>;
+if (rows == null)
+{
+    rows = new System.Collections.Generic.List<string>();
+    System.AppDomain.CurrentDomain.SetData("guardWatchRows", rows);
+}
+var playerTypeW = System.AppDomain.CurrentDomain.GetAssemblies()
+    .Select(a => a.GetType("StateMachine.PlayerStateMachine")).First(t => t != null);
 var states = new System.Collections.Generic.Dictionary<string, int>();
 
 if (action == "provoke")
@@ -42,6 +53,46 @@ if (action == "provoke")
         n++;
     }
     return "provoked " + n + " guards toward " + spot;
+}
+
+if (action == "dump")
+    return string.Join(System.Environment.NewLine, rows);
+
+if (action == "levo" || action == "levocheck" || action == "frango" || action == "frangocheck")
+{
+    var key = action.StartsWith("levo") ? "levoGuard" : "frangoGuard";
+    UnityEngine.Component target = System.AppDomain.CurrentDomain.GetData(key) as UnityEngine.Component;
+    if (action == "levo" || action == "frango")
+    {
+        foreach (var g in active)
+        {
+            var c = (UnityEngine.Component)g;
+            if (guardType.GetProperty("State").GetValue(c).ToString() == "Incapacitated") continue;
+            target = c;
+            if (action == "levo" && c.GetInstanceID() != 0) break;
+            if (action == "frango") break;
+        }
+        System.AppDomain.CurrentDomain.SetData(key, target);
+        System.AppDomain.CurrentDomain.SetData(key + "Pos", target.transform.position);
+        if (action == "levo")
+        {
+            var recv = target.GetComponent("StatusEffectReceiver");
+            recv.GetType().GetMethod("Levitate").Invoke(recv, new object[] { UnityEngine.Vector3.up * 4f, 2.5f, null });
+        }
+        else
+            ((Interfaces.IShovable)target).Shove(target.transform.forward * 2f);
+        return action + " started on guard " + target.GetInstanceID() + " at " + target.transform.position;
+    }
+    var from = (UnityEngine.Vector3)System.AppDomain.CurrentDomain.GetData(key + "Pos");
+    var ag = target.GetComponent<UnityEngine.AI.NavMeshAgent>();
+    var rbd = target.GetComponent<UnityEngine.Rigidbody>();
+    var air = (bool)guardType.GetProperty("IsAirborne").GetValue(target);
+    var dd = target.transform.position - from;
+    System.AppDomain.CurrentDomain.SetData(key + "Pos", target.transform.position);
+    return action + " airborne " + air + " onMesh " + ag.isOnNavMesh + " kinematic " + rbd.isKinematic
+        + " y " + target.transform.position.y.ToString("F2") + " movedSinceLast " + dd.magnitude.ToString("F2")
+        + " (xz " + new UnityEngine.Vector2(dd.x, dd.z).magnitude.ToString("F2") + ") state "
+        + guardType.GetProperty("State").GetValue(target);
 }
 
 double now = UnityEngine.Time.realtimeSinceStartupAsDouble;
@@ -75,7 +126,37 @@ foreach (var g in active)
     {
         var d = dest.Value;
         double far = System.Math.Sqrt((p.x - d.x) * (p.x - d.x) + (p.z - d.z) * (p.z - d.z));
-        if (far > 1.0) row[3] += dt; else row[4] += dt;
+        if (far > 1.0)
+        {
+            row[3] += dt;
+            var ag = guard.GetComponent<UnityEngine.AI.NavMeshAgent>();
+            var rb = guard.GetComponent<UnityEngine.Rigidbody>();
+            var cap = guard.GetComponent<UnityEngine.CapsuleCollider>();
+            string ground = "none";
+            if (UnityEngine.Physics.Raycast(p + UnityEngine.Vector3.up * 0.5f, UnityEngine.Vector3.down, out var gh, 2f))
+                ground = gh.collider.name + " n=" + gh.normal.ToString("F2") + " slope=" + UnityEngine.Vector3.Angle(gh.normal, UnityEngine.Vector3.up).ToString("F0");
+            var touching = new System.Collections.Generic.List<string>();
+            float rad = (cap != null ? cap.radius : 0.4f) + 0.1f;
+            var lo = p + UnityEngine.Vector3.up * (rad + 0.05f);
+            var hi = p + UnityEngine.Vector3.up * ((cap != null ? cap.height : 1.8f) - rad);
+            foreach (var col in UnityEngine.Physics.OverlapCapsule(lo, hi, rad, ~0, UnityEngine.QueryTriggerInteraction.Ignore))
+            {
+                if (col.transform.root == guard.transform.root) continue;
+                string kind;
+                if (col.GetComponentInParent(guardType) != null) kind = "GUARD";
+                else if (col.GetComponentInParent(playerTypeW) != null) kind = "PLAYER";
+                else if (col.attachedRigidbody != null) kind = "PROP";
+                else kind = "STATIC";
+                touching.Add(kind + ":" + col.name + "/L" + UnityEngine.LayerMask.LayerToName(col.gameObject.layer));
+            }
+            rows.Add("guard " + guard.GetInstanceID() + " t " + now.ToString("F0") + " dt " + dt.ToString("F1") + " pos " + p.ToString("F2")
+                + " state " + st + " dest " + d.ToString("F2") + " distDest " + far.ToString("F1")
+                + " vel " + (rb != null ? rb.linearVelocity.ToString("F2") : "nobody") + (rb != null && rb.isKinematic ? "(kin)" : "")
+                + " desired " + (ag != null && ag.enabled ? ag.desiredVelocity.ToString("F2") : "noagent")
+                + " onMesh " + (ag != null && ag.enabled && ag.isOnNavMesh) + " agentGap " + (ag != null && ag.enabled ? UnityEngine.Vector3.Distance(ag.nextPosition, rb != null ? rb.position : p).ToString("F2") : "n/a")
+                + " ground " + ground + " touching [" + string.Join(", ", touching) + "]");
+        }
+        else row[4] += dt;
     }
     row[7] += dt;
 }

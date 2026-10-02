@@ -1,0 +1,79 @@
+12:04:50 FAIL Editor did not answer
+12:04:50 cleaning up
+12:05:09 building Build/DevTest
+12:05:26 build Succeeded
+12:05:34 host: state MainMenu players 0 local none holding nothing
+12:05:35 host: state Lair players 1 local 44.500,1.189,0.000 holding nothing
+12:05:35 client started (pid 2356)
+12:05:51 client: state Lair players 2 local 44.500,1.187,1.600 holding nothing
+12:05:52 castle: seed 3508293, LateMedieval
+12:05:53 host: state Playing players 2 local -20.500,1.497,-36.000 holding nothing
+12:05:54 client: state Playing players 2 local -24.000,1.501,-32.500 holding nothing
+12:06:00 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Compilation Failed\n  Newline in constant (line 59, col 23)\n  Syntax error, ',' expected (line 59, col 24)\n  Newline in constant (line 60, col 0)\n  ) expected (line 60, col 9)\n  ; expected (line 60, col 9)\n  Unreachable code detected (line 180, col 12)"
+ }
+]
+12:07:33 stuck rows: 6
+12:07:33 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Compilation Failed\n  Newline in constant (line 59, col 23)\n  Syntax error, ',' expected (line 59, col 24)\n  Newline in constant (line 60, col 0)\n  ) expected (line 60, col 9)\n  ; expected (line 60, col 9)\n  Unreachable code detected (line 180, col 12)"
+ }
+]
+12:07:43 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Compilation Failed\n  Newline in constant (line 59, col 23)\n  Syntax error, ',' expected (line 59, col 24)\n  Newline in constant (line 60, col 0)\n  ) expected (line 60, col 9)\n  ; expected (line 60, col 9)\n  Unreachable code detected (line 180, col 12)"
+ }
+]
+12:07:47 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Compilation Failed\n  Newline in constant (line 59, col 23)\n  Syntax error, ',' expected (line 59, col 24)\n  Newline in constant (line 60, col 0)\n  ) expected (line 60, col 9)\n  ; expected (line 60, col 9)\n  Unreachable code detected (line 180, col 12)"
+ }
+]
+12:07:48 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Compilation Failed\n  Newline in constant (line 59, col 23)\n  Syntax error, ',' expected (line 59, col 24)\n  Newline in constant (line 60, col 0)\n  ) expected (line 60, col 9)\n  ; expected (line 60, col 9)\n  Unreachable code detected (line 180, col 12)"
+ }
+]
+12:07:50 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Compilation Failed\n  Newline in constant (line 59, col 23)\n  Syntax error, ',' expected (line 59, col 24)\n  Newline in constant (line 60, col 0)\n  ) expected (line 60, col 9)\n  ; expected (line 60, col 9)\n  Unreachable code detected (line 180, col 12)"
+ }
+]
+12:07:54 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Compilation Failed\n  Newline in constant (line 59, col 23)\n  Syntax error, ',' expected (line 59, col 24)\n  Newline in constant (line 60, col 0)\n  ) expected (line 60, col 9)\n  ; expected (line 60, col 9)\n  Unreachable code detected (line 180, col 12)"
+ }
+]
+12:07:55 state after: state Playing players 2 local -20.500,1.497,-36.000 holding nothing
+client log error lines: 2
+12:07:55 cleaning up
+12:07:59 left ProjectSettings/ProjectSettings.asset: its content changed
+13:45:32 building Build/DevTest
+13:45:44 build Succeeded
+13:45:51 host: state MainMenu players 0 local none holding nothing
+13:45:52 host: state Lair players 1 local 44.500,1.189,0.000 holding nothing
+13:45:52 client started (pid 284)
+13:46:00 client: state Lair players 2 local 44.500,1.187,1.600 holding nothing
+13:46:01 castle: seed 3508293, LateMedieval
+13:46:02 host: state Playing players 2 local -20.500,1.499,-36.000 holding nothing
+13:46:03 client: state Playing players 2 local -24.000,1.498,-32.500 holding nothing
+13:46:09 provoked 20 guards toward (-20.50, 1.50, -36.00)
+13:47:41 stuck rows: 222
+13:47:42 levo started on guard -122494 at (6.64, 0.31, 0.03)
+13:47:51 levocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 2.09 (xz 2.09) state Patrolling
+13:47:56 levocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 1.09 (xz 1.09) state Patrolling
+13:47:56 frango started on guard -122494 at (8.11, 0.31, -0.89)
+13:47:58 frangocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 0.55 (xz 0.55) state Patrolling
+13:48:03 frangocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 0.17 (xz 0.17) state Patrolling
+13:48:03 state after: state Playing players 2 local -20.500,1.500,-36.000 holding nothing
+client log error lines: 2
+13:48:04 cleaning up
+13:48:08 left ProjectSettings/ProjectSettings.asset: its content changed
