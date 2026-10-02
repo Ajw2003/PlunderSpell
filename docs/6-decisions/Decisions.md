@@ -3,6 +3,28 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-01 — Guards become a state machine driven by an enemy director
+
+**Context.** `CastleGuard` had grown to 1316 lines of switches and direct calls. Guards got stuck,
+left players who stood in front of them, and couldn't land hits after the #200 collision changes.
+The owner asked for a proper FSM, like the player's, communicating through events.
+
+**Decision.** Guards have seven states: Patrol (3 or more random reachable points), Investigate,
+Chase, Combat (taking turns through director attack tokens, ranged guards avoiding friendly fire),
+Stunned/Slept (Levo counts as Stunned until the guard lands; a loud noise wakes a sleeper),
+OnFire, and Dead (topple and dust).
+- A server-side enemy director absorbs the alarm. It relays behavioural requests and their data
+  (for example a player's location) to guards as events on an event bus.
+- Each guard's state decides how it responds; nothing outside the FSM moves a guard.
+- Investigate replaces the Search sweep, and the hue and cry becomes a director event that sends
+  guards to Investigate.
+- The no-NavMesh `Steer` fallback is dropped.
+
+**Supersedes.** The Search state, and the hue-and-cry re-send from #195
+(`docs/4-systems/raid.md`, "Guards that keep moving"). Their replacement is tracked in #203.
+
+**Plan.** `docs/plans/guard-fsm-restructure.md`; issues #203 to #214.
+
 ## 2026-09-24 — The castle's look: warm fire in fog, calm until the alarm
 
 **Context.** The raid rendered with Unity's defaults: default sky, one sun, no fog, an untouched

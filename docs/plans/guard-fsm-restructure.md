@@ -98,19 +98,17 @@ with the behaviour spec below before approving it.
 
 Every state can go to Stunned, OnFire or Dead when that status lands, except Dead.
 
-## Open questions for the owner
+## Owner's answers (2026-10-01)
 
-1. **Search and the hue and cry.** Today a guard that loses you sweeps the area, and at the hue and
-   cry every guard keeps being sent near the nearest player. The spec has no Search state. Should
-   Investigate absorb Search, and should the hue and cry become a director event that puts nearby
-   guards into Investigate?
-2. **Levo.** A levitated guard floats, then takes fall damage. Is that a state of its own
-   ("Airborne"), or part of Stunned?
-3. **Sleep woken by noise.** Today Somnus sleep breaks on a loud noise. Keep that, or sleep is a
-   fixed time, as the spec reads?
-4. **The no-NavMesh `Steer` fallback.** Drop it (recommended), or keep it?
-5. **The alarm.** Merge it into the director (proposed), or keep it separate and have the director
-   wrap it?
+1. **Search and the hue and cry.** Investigate replaces the sweep. The hue and cry becomes a
+   director event that sends guards to Investigate. More generally, director events are the
+   channel for behavioural requests to guards. Each event carries its data, such as a player's
+   location, on an efficient event bus.
+2. **Levo.** A levitated guard is Stunned, and recovers when it hits the ground.
+3. **Sleep.** A loud noise still wakes a sleeper early.
+4. **Steer.** Dropped completely. The state machine controls everything; director events only
+   relay requests, and each guard's current state decides what to do with them.
+5. **The alarm.** It folds into the director.
 
 ## Steps (parent #203, one issue each)
 
