@@ -79,6 +79,9 @@ namespace Plunderspell.Guards
         [Tooltip("Seconds between shots (legacy 1.4).")]
         public float AttackCooldownSeconds = 1.4f;
 
+        [Tooltip("Radius of the sphere swept along a shot to look for a teammate in the way, in metres (#210).")]
+        public float ShotClearanceRadius = 0.3f;
+
         [Header("Movement body")]
         [Tooltip("Body shape the navigation service sweeps with.")]
         public float BodyRadius = 0.4f;
@@ -87,6 +90,21 @@ namespace Plunderspell.Guards
         [Header("Combat")]
         [Tooltip("Damage per hit. Scaled by the lobby size at spawn.")]
         public float AttackDamage = 12f;
+
+        [Tooltip("Combat holds while the player is within the reach plus this, in metres, so a player stepping back does not flicker the guard between Chase and Combat (#210).")]
+        public float CombatMargin = 2.5f;
+
+        [Tooltip("A guard waiting its turn stands this far outside melee reach, or inside ranged range, in metres.")]
+        public float CombatRingPadding = 1f;
+
+        [Tooltip("After a strike or a shot the guard keeps its turn this long, in seconds, so guards' attacks do not land in the same frame. The legacy swing had no windup, so this is new.")]
+        public float AttackRecoverySeconds = 0.5f;
+
+        [Tooltip("How fast a fighting guard turns to face the player, in degrees per second.")]
+        public float TurnDegreesPerSecond = 360f;
+
+        [Tooltip("How often a guard without a turn asks again, in seconds.")]
+        public float TurnRequestSeconds = 0.2f;
 
         [Header("Health")]
         public float MaxHealth = 100f;

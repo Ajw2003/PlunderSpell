@@ -8,8 +8,9 @@ namespace Plunderspell.Guards
     /// <summary>
     /// Chase (#209): follow the player we saw at chase speed. The move is re-planned as the player moves,
     /// but only on a timer and only when the player has gone somewhere new, so the route service is not
-    /// asked every frame. Ranged guards shoot while they run. Losing sight sends the guard to
-    /// Investigate at the last place it saw the player. Coming within reach is the Combat hand-off (#210).
+    /// asked every frame. Ranged guards shoot while they run, never through a teammate (the check is in
+    /// <see cref="GuardRangedAttack"/>, #210). Losing sight sends the guard to Investigate at the last place
+    /// it saw the player. Coming within reach hands over to <see cref="CombatState"/> (#210).
     ///
     /// Movement stays with the navigation service: its capsule sweep stops the guard short of a player,
     /// so a player pinned against a wall is never pushed (#200). A Blocked answer is not an exit here:
@@ -22,6 +23,7 @@ namespace Plunderspell.Guards
         private float _secondsSinceSeen;
         private float _secondsToRetarget;
         private bool _inReach;
+        private bool _alreadySpotted;
 
         public ChaseState(Guard guard) : base(guard)
         {
@@ -30,18 +32,21 @@ namespace Plunderspell.Guards
         public override GuardAlertState AlertState => GuardAlertState.Chasing;
 
         /// <summary>
-        /// HAND-OFF TO COMBAT (#210). Raised with the player's transform once each time the guard comes
-        /// within reach (melee reach, or the ranged engage range for a ranged guard). #210 replaces this
-        /// with a return of its Combat state from <see cref="ReactToInReach"/>; until then the guard
-        /// keeps chasing, standing at the player.
+        /// Raised with the player's transform once each time the guard comes within reach (melee reach,
+        /// or the ranged engage range for a ranged guard), just before the hand-off to Combat (#210).
         /// </summary>
         public event Action<Transform> InReach;
 
         /// <summary>The player being chased, for tests and the debug overlay.</summary>
         public Transform Target => _target;
 
-        /// <summary>Names the player to chase. Call before the guard enters this state.</summary>
-        public void Follow(Transform player) => _target = player;
+        /// <summary>Names the player to chase. Call before the guard enters this state. Pass
+        /// <paramref name="alreadySpotted"/> when coming back from Combat, so the sighting is not scored twice.</summary>
+        public void Follow(Transform player, bool alreadySpotted = false)
+        {
+            _target = player;
+            _alreadySpotted = alreadySpotted;
+        }
 
         public override void Enter()
         {
@@ -49,7 +54,7 @@ namespace Plunderspell.Guards
             _secondsSinceSeen = 0f;
             _inReach = false;
             MoveToward(_lastSeenSpot);
-            Context.Link.Director?.Publish(new IntruderSpotted(Context, _target, _lastSeenSpot));
+            Context.Link.Director?.Publish(new IntruderSpotted(Context, _target, _lastSeenSpot, !_alreadySpotted));
         }
 
         public override void Exit()
@@ -122,11 +127,11 @@ namespace Plunderspell.Guards
             return next;
         }
 
-        // The one place #210 changes: return the Combat state here once it exists.
         private State<Guard> ReactToInReach(Transform player)
         {
             InReach?.Invoke(player);
-            return null;
+            Context.States.Combat.Engage(player);
+            return Context.States.Combat;
         }
     }
 }

@@ -76,7 +76,7 @@ namespace Plunderspell.Tests
                 StepGuard(guard, 1);
             }
 
-            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Chase));
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Chase).Or.SameAs(guard.States.Combat), "chasing, or in Combat once it has caught up (#210)");
             Assert.That(guard.transform.position.z, Is.GreaterThan(12f), "it ran after the player");
             Assert.That(Vector3.Distance(guard.transform.position, player.position), Is.LessThan(3f), "and caught up, being faster");
         }
@@ -106,7 +106,7 @@ namespace Plunderspell.Tests
 
             StepGuard(guard, 120);
 
-            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Chase), "Combat is #210; until then the guard keeps chasing");
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Combat), "Combat takes over from Chase (#210)");
             Assert.That(reached, Is.EqualTo(1), "once per approach, not once per look");
         }
 
@@ -136,10 +136,12 @@ namespace Plunderspell.Tests
         public void AMeleeGuardDoesNotShoot()
         {
             Guard guard = GuardChasingAPlayerAt(new Vector3(0f, 0f, 10f), out Transform player);
+            int shots = 0;
+            guard.AttackSignal.Attacked += kind => shots += kind == GuardAttackKind.Projectile ? 1 : 0;
 
             StepGuard(guard, 50);
 
-            Assert.That(guard.AttackSignal.Count, Is.EqualTo(0));
+            Assert.That(shots, Is.EqualTo(0), "it may strike in Combat (#210) but never fires a projectile");
         }
 
         [Test]
@@ -157,13 +159,21 @@ namespace Plunderspell.Tests
             Guard guard = _rig.MakeGuard(Vector3.zero);
             guard.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
 
-            StepGuard(guard, 200);
+            // Once in reach the guard is in Combat (#210) and may walk round the player to a place on the
+            // ring, so the check is that its body never overlaps the player's, not that it stays on one side.
+            float closest = float.MaxValue;
+            for (int i = 0; i < 200; i++)
+            {
+                StepGuard(guard, 1);
+                Vector3 apart = guard.transform.position - playerBefore;
+                apart.y = 0f;
+                closest = Mathf.Min(closest, apart.magnitude);
+            }
 
-            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Chase));
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Chase).Or.SameAs(guard.States.Combat), "chasing, or in Combat once in reach (#210)");
             Assert.That(player.position, Is.EqualTo(playerBefore), "the player must not be displaced");
-            Assert.That(guard.transform.position.x + guard.Tuning.BodyRadius, Is.LessThanOrEqualTo(playerBefore.x - PlayerCapsuleRadius + 0.001f),
-                "the guard's body must stop before the player");
-            Assert.That(guard.transform.position.x, Is.GreaterThan(playerBefore.x - PlayerCapsuleRadius - 1.5f), "it walked right up to the player");
+            Assert.That(closest, Is.GreaterThanOrEqualTo(guard.Tuning.BodyRadius + PlayerCapsuleRadius - 0.001f), "the guard's body never overlapped the player's");
+            Assert.That(closest, Is.LessThan(2f), "it walked right up to the player");
         }
     }
 }

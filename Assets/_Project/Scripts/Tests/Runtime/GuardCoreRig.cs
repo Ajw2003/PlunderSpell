@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Interfaces;
 using Plunderspell.Alarm;
 using Plunderspell.Guards;
 using UnityEngine;
@@ -70,6 +71,43 @@ namespace Plunderspell.Tests
                 guard.Tick(deltaTime);
                 Director.Navigation.Tick(deltaTime);
             }
+        }
+
+        /// <summary>
+        /// Steps several guards together the way the game does: every guard looks (skipping the 12 Hz wait),
+        /// ticks, then the director's navigation and attack turns advance once. Physics is told about moved
+        /// transforms first, as the navigation sweep would otherwise hit stale positions.
+        /// </summary>
+        public void StepTogether(int steps, float deltaTime, params Guard[] guards)
+        {
+            for (int i = 0; i < steps; i++)
+            {
+                Physics.SyncTransforms();
+                foreach (Guard guard in guards)
+                {
+                    guard.Sight.LookNext();
+                    guard.Tick(deltaTime);
+                }
+                Director.Navigation.Tick(deltaTime);
+                Director.AttackTurns.Tick(deltaTime);
+            }
+        }
+
+        /// <summary>A player stand-in that can be hurt, so a test can count the damage guards deal.</summary>
+        public Victim MakeVictim(Vector3 position)
+        {
+            Victim victim = MakeIntruder(position).gameObject.AddComponent<Victim>();
+            return victim;
+        }
+
+        /// <summary>Health that only counts what it is dealt.</summary>
+        public sealed class Victim : MonoBehaviour, IHealth
+        {
+            public float DamageTaken { get; private set; }
+            public float CurrentHealth => 100000f - DamageTaken;
+            public float MaxHealth => 100000f;
+            public void TakeDamage(float damage) => DamageTaken += damage;
+            public void TakeDamage(float damage, float impactVelocity) => DamageTaken += damage;
         }
 
         /// <summary>An empty floor at height zero where every point is walkable and a path is a straight line.</summary>

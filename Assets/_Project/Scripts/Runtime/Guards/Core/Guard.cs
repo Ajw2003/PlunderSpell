@@ -53,6 +53,12 @@ namespace Plunderspell.Guards
         /// <summary>The ranged shot (#209). Chase and Combat both fire through it.</summary>
         public GuardRangedAttack RangedAttack { get; private set; }
 
+        /// <summary>The melee strike (#210). Combat strikes through it when the guard has a turn.</summary>
+        public GuardMeleeAttack MeleeAttack { get; private set; }
+
+        /// <summary>This guard's asking for, and holding of, an attack turn (#210).</summary>
+        public GuardAttackTurn AttackTurn { get; private set; }
+
         /// <summary>What is worth a look (noise, sighting, hue and cry). Patrol and Investigate read it (#208).</summary>
         public GuardLeads Leads { get; private set; }
         public GuardStateSet States { get; private set; }
@@ -100,6 +106,8 @@ namespace Plunderspell.Guards
             Link = new GuardDirectorLink(this);
             AttackSignal = new GuardAttackSignaller(_attackSignal);
             RangedAttack = new GuardRangedAttack(this);
+            MeleeAttack = new GuardMeleeAttack(this);
+            AttackTurn = new GuardAttackTurn(this);
             Leads = new GuardLeads(Link, Hearing, () => Random);
             _shove = new GuardShove(transform, _tuning);
             States = new GuardStateSet(this);
