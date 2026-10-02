@@ -20,7 +20,7 @@ namespace Plunderspell.Guards
     /// replicated state. The legacy <c>CastleGuard</c> stays live until #214; inventory in
     /// docs/plans/guard-core-inventory.md.
     /// </summary>
-    [RequireComponent(typeof(StatusEffectReceiver))]
+    [RequireComponent(typeof(StatusEffectReceiver), typeof(GuardDeathPlayback))]
     public class Guard : NetworkBehaviour, INoiseListener, IHealth, IShovable
     {
         [SerializeField] private GuardTuning _tuning = new GuardTuning();

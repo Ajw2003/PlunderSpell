@@ -17,6 +17,7 @@ namespace Plunderspell.Guards
         public const float WakeThreshold = 0.5f;
 
         private readonly StatusEffectReceiver _status;
+        private bool _closed;
 
         /// <summary>Raised with where the noise came from and how strong it was, when it is worth a look.</summary>
         public event Action<Vector3, float> NoiseNoticed;
@@ -29,9 +30,15 @@ namespace Plunderspell.Guards
         /// <summary>How many noises this guard has found worth a look.</summary>
         public int NoticedCount { get; private set; }
 
+        /// <summary>Stops listening for good (death, #213): a dead guard is not woken or alerted by noise.</summary>
+        public void Close() => _closed = true;
+
         /// <summary>A noise reached the guard: wake it if loud enough, then announce it if the alarm level says it matters.</summary>
         public void Hear(NoiseEvent noise, AlarmState alarm)
         {
+            if (_closed)
+                return;
+
             if (_status != null && _status.IsAsleep && noise.Strength >= WakeThreshold)
                 _status.WakeUp();
 

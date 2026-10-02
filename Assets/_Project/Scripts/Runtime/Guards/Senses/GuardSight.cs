@@ -18,6 +18,7 @@ namespace Plunderspell.Guards
         private readonly GuardTuning _tuning;
         private readonly GuardSightThrottle _throttle;
         private readonly RaycastHit[] _hits = new RaycastHit[HitBufferSize];
+        private bool _closed;
 
         public GuardSight(Transform body, GuardTuning tuning, int guardId)
         {
@@ -32,6 +33,13 @@ namespace Plunderspell.Guards
         /// <summary>How many looks this guard has taken. For tests and the perf check.</summary>
         public int LookCount { get; private set; }
 
+        /// <summary>Shuts the eyes for good (death, #213): nothing is seen from now on.</summary>
+        public void Close()
+        {
+            _closed = true;
+            Visible = null;
+        }
+
         /// <summary>Test seam: the next <see cref="Update"/> looks at once.</summary>
         public void LookNext() => _throttle.LookNext();
 
@@ -41,7 +49,7 @@ namespace Plunderspell.Guards
         /// </summary>
         public void Update(IReadOnlyList<Transform> intruders, AlarmState alarm, bool blind, float deltaTime)
         {
-            if (blind || (alarm == AlarmState.Calm && GuardArrivalGrace.IsActive))
+            if (_closed || blind || (alarm == AlarmState.Calm && GuardArrivalGrace.IsActive))
             {
                 Visible = null;
                 return;

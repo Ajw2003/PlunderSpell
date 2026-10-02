@@ -121,6 +121,19 @@ namespace Plunderspell.Guards
         [Tooltip("When no panic point can be reached (or a run is blocked), the guard waits this long before trying again, in seconds.")]
         public float PanicRetrySeconds = 0.25f;
 
+        [Header("Dead")]
+        [Tooltip("How long the body takes to fall over, in seconds.")]
+        public float ToppleSeconds = 0.7f;
+
+        [Tooltip("How long the body lies still before it fades, in seconds.")]
+        public float LingerSeconds = 2f;
+
+        [Tooltip("How long the body shrinks to dust before it is removed, in seconds.")]
+        public float FadeSeconds = 1.5f;
+
+        [Tooltip("Dust particles puffed out as the body fades.")]
+        public int DustParticleCount = 24;
+
         [Header("Health")]
         public float MaxHealth = 100f;
     }

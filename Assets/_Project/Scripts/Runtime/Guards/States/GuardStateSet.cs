@@ -18,7 +18,7 @@ namespace Plunderspell.Guards
             Stunned = new StunnedState(guard);
             Slept = new SleptState(guard);
             OnFire = new OnFireState(guard);
-            Dead = new PlaceholderDeadState(guard);
+            Dead = new DeadState(guard);
         }
 
         /// <summary>Walking about (#207).</summary>
