@@ -111,6 +111,9 @@ namespace Plunderspell.Castle
             // no neighbour is currently a hole in the outer face. Fill those.
             SealOpenArchways(data, occupied);
 
+            // Stitched here because the archways just left open are exactly the nav graph's joins.
+            data.NavGraph = CastleNavGraph.Build(data, registry);
+
             // Placed with the rooms, before anyone bakes the NavMesh or probes for a standing point,
             // so a cart or a woodpile is walked round and never stood in.
             DressCastle(data, seed);

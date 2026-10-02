@@ -169,5 +169,51 @@ preview scene with its import rotation, a downward ray per cell finds the stacke
 capsule (radius 0.4, 1.85 m, lifted one step so the floor and stair risers do not count) clears each
 surface. Wall tops and lintels are dropped unless they connect to an archway floor. A portal is an archway
 cell where a guard fits, so 4 cells per side, not the full 2.6 m. Re-run it after the castle meshes change.
-Results and per-module top-down overlays are in `docs/generated/nav-tiles-2026-10-02/`. The gatehouse,
-straight wall, corner and bastion pieces have no interior floor and bake near-empty.
+Results and per-module top-down overlays are in `docs/generated/nav-tiles-2026-10-02/`. The curtain-wall
+pieces (gatehouse, straight wall, corner, bastion) have no floor mesh of their own, only walls and towers:
+the yard they stand on is the scene's ground plane. For those the baker adds a virtual ground at y = 0
+wherever the guard capsule clears (`CastleNavTileBaker.cs:134`) and opens portals along the whole edge
+(`CastleNavTileBaker.cs:160`), because the strip runs on into the next piece. The drawbridge is excluded
+(it spans a moat) and keeps only its deck.
+
+## Nav graph
+
+`CastleNavGraph` (`Assets/_Project/Scripts/Runtime/Castle/Navigation/CastleNavGraph.cs:42`) is the castle's
+walkable map, built at the end of generation (`ProceduralCastleGenerator.cs:115`, after `SealOpenArchways`
+so it sees which archways stayed open) and kept on `ProceduralCastleData.NavGraph` (not serialized). It is
+a pure function of the layout and the registry, so each peer builds it from the seed and nothing is sent.
+Guards are server-side, so only the server needs to query it. Issue #221, plan
+`docs/plans/bespoke-navigation.md` Design 2.
+
+- **Fine layer**, `CastleNavGrid`: every placed module's baked tile, rotated by the module's quarter turns
+  to its placement (`CastleNavStitcher.cs:40`), as flat arrays of walkable, height and area id. Cell id is
+  `module * 1152 + layer * 576 + row * 24 + column`.
+- **Open archways**, `CastleNavArchwayRule.cs:17`: room to room is always open; a room to the curtain wall
+  is open only at the gatehouse and at a strip entrance (`EntranceCells`); the strip itself is open along
+  its length; the cell outside the gatehouse (the drawbridge) is closed, because the gate is sealed
+  (`CastleBoundary`). `CastleNavStitcher.FindLinks` (`:85`) turns each open join into a `NavLink`, one per
+  archway, and joins the area ids of the cells it connects.
+- **Coarse layer**, `CastleNavPortalGraph`: nodes are the links, edges are the walking cost across a room
+  between two of its archways, flooded once at build (`ComputeRoomCrossings`, `:62`).
+- **Queries**: `NearestWalkableCell` (3D distance within 3 m by default, so a gallery and the floor under it
+  are told apart), `IsReachable` (a single comparison of area ids), `FindPath` (`CastleNavGraph.cs:98`):
+  portal A* (`CastleNavPortalSearch.cs:54`) picks the archways, grid A* (`CastleNavGridSearch.cs:34`) walks
+  each room, and `CastleNavPathFinder.Find` (`:28`) stitches the hops. All buffers are preallocated; the heap
+  and the path list only grow during warm-up. The path follows 4-connected cells, so whatever moves along it
+  smooths it.
+- **The entrance.** The gatehouse is not a way in (sealed since 2026-09-25; raids arrive by portal, on a strip
+  entrance or inside the walls). Players come in on the strip, so the strip pieces had to be walkable: they
+  now are (see Nav tiles), every strip entrance joins the crypt in the test, and the gatehouse passage is part
+  of the graph and joins the strip. Its outward side to the drawbridge is deliberately closed.
+- **Not in the graph yet**: furniture the tiles did not capture beyond what the capsule hit at bake time,
+  dressing placed per seed (`CastleDressingPlanner`), and doors that lock (`CastleLockdown`). Areas are
+  computed once, so a closed door would need the area ids recomputed (issue for #222).
+
+Tests: `CastleNavGraphTests` (`Assets/_Project/Scripts/Tests/Editor/CastleNavGraphTests.cs`): same seed twice
+gives the same checksum; strip entrances and the gatehouse join the crypt and the drawbridge stays cut off;
+reachability against a NavMesh baked in the Editor over each generated castle, with the audit's 25 floor
+probes per room (5 seeds, `docs/generated/nav-graph-2026-10-02/reachability.md`); and query timing with zero
+allocation (`timings.txt`). On a probe both sides call floor, reachability never differs. The two differ only
+on whether a probe has floor at all (about 6% of probes, mostly rooms with long furniture): the graph is
+the more permissive on narrow gaps. The cause is not isolated; an agent radius of 0.4 m on the NavMesh
+instead of 0.5 m removed only about a fifth of the differences.

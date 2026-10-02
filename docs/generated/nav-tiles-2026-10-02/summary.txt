@@ -1,9 +1,9 @@
 Castle nav tiles, 24x24 cells of 0.5 m, 2 layers. Guard capsule r=0.4 h=1.85.
 module | walkable% (columns with any walkable surface, of 576; total surfaces) | levels | portals N/E/S/W | dropped unreachable | bytes
-GatehouseModule | 0.0 (0 surfaces) | 0 | 0/0/0/0 | 142 | 3456
-WallStraight | 0.0 (0 surfaces) | 0 | 0/0/0/0 | 49 | 3456
-WallCorner | 0.0 (0 surfaces) | 0 | 0/0/0/0 | 128 | 3456
-Bastion | 0.0 (0 surfaces) | 0 | 0/0/0/0 | 281 | 3456
+GatehouseModule | 70.8 (408 surfaces) | 1 | 24/18/8/18 | 202 | 3592
+WallStraight | 91.7 (528 surfaces) | 1 | 24/22/0/22 | 49 | 3592
+WallCorner | 75.7 (436 surfaces) | 1 | 22/22/0/0 | 159 | 3544
+Bastion | 58.3 (336 surfaces) | 1 | 24/22/0/22 | 407 | 3592
 Drawbridge | 11.5 (66 surfaces) | 1 | 0/0/4/0 | 18 | 3464
 StableBlock | 63.7 (367 surfaces) | 1 | 4/4/4/4 | 212 | 3488
 BlacksmithShop | 65.8 (379 surfaces) | 1 | 4/4/4/4 | 223 | 3488

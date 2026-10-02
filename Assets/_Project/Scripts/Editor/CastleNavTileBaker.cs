@@ -28,7 +28,10 @@ namespace Plunderspell.EditorTools
         private const float MaxDoorwayFloor = 1.0f;
         private const int N = CastleNavTile.Size;
         // Scratch surfaces per column while scanning: wall tops and lintels count until the flood fill drops them.
-        private const int Scratch = 4;
+        private const int Scratch = 6;
+        // Curtain-wall pieces carry no floor of their own: the strip they stand on is the scene's ground plane.
+        private const float StripGroundHeight = 0f;
+        private const string DrawbridgeId = "Drawbridge";
 
         /// <summary>Menu entry: bakes and logs the summary.</summary>
         [MenuItem("Tools/Plunderspell/Bake Castle Nav Tiles")]
@@ -57,7 +60,9 @@ namespace Plunderspell.EditorTools
                     SceneManager.MoveGameObjectToScene(go, scene);
                     go.transform.SetPositionAndRotation(Vector3.zero, entry.Prefab.transform.rotation); // the FBX import rotation, as the generator keeps it
                     Physics.SyncTransforms();
-                    CastleNavTile tile = BakeModule(scene.GetPhysicsScene(), out int dropped);
+                    // The drawbridge spans a moat, so a virtual ground under it would be a lie.
+                    bool strip = entry.Zone == CastleZone.CurtainWall && entry.RoomId != DrawbridgeId;
+                    CastleNavTile tile = BakeModule(scene.GetPhysicsScene(), strip, out int dropped);
                     Object.DestroyImmediate(go);
 
                     entry.NavTile = tile;
@@ -88,7 +93,7 @@ namespace Plunderspell.EditorTools
             return report.ToString();
         }
 
-        private static CastleNavTile BakeModule(PhysicsScene physics, out int dropped)
+        private static CastleNavTile BakeModule(PhysicsScene physics, bool strip, out int dropped)
         {
             int cells = N * N;
             var walk = new bool[Scratch * cells];
@@ -123,6 +128,21 @@ namespace Plunderspell.EditorTools
                         height[idx] = h;
                         layer++;
                     }
+
+                    // Curtain pieces have no floor mesh, only walls and towers; the ground between
+                    // them is walkable where the capsule clears. Added last, so it stays the lowest.
+                    if (strip && layer < Scratch && !HasDoorwayFloor(walk, height, x, z))
+                    {
+                        Vector3 gBottom = new Vector3(wx, StripGroundHeight + lift + GuardRadius, wz);
+                        Vector3 gTop = new Vector3(wx, StripGroundHeight + GuardHeight - GuardRadius, wz);
+                        if (physics.OverlapCapsule(gBottom, gTop, GuardRadius, capsuleHits, ~0,
+                                QueryTriggerInteraction.Ignore) == 0)
+                        {
+                            int gi = (layer * N + z) * N + x;
+                            walk[gi] = true;
+                            height[gi] = StripGroundHeight;
+                        }
+                    }
                 }
             }
 
@@ -135,7 +155,9 @@ namespace Plunderspell.EditorTools
             for (int i = 0; i < N; i++)
             {
                 float c = (i + 0.5f) * CastleNavTile.CellSize - N * CastleNavTile.CellSize * 0.5f;
-                if (Mathf.Abs(c) > ArchHalfWidth)
+                // A strip piece opens along its whole edge: the yard runs on into the next piece, and
+                // an entrance is wherever the room's archway meets it.
+                if (!strip && Mathf.Abs(c) > ArchHalfWidth)
                     continue;
                 if (LowestSurface(walk, height, i, N - 1) >= 0) north.Add((ushort)((N - 1) * N + i));
                 if (LowestSurface(walk, height, N - 1, i) >= 0) east.Add((ushort)(i * N + N - 1));
@@ -225,6 +247,11 @@ namespace Plunderspell.EditorTools
                     tile.LevelCount++;
             }
             return tile;
+        }
+
+        private static bool HasDoorwayFloor(bool[] walk, float[] height, int x, int z)
+        {
+            return LowestSurface(walk, height, x, z) >= 0;
         }
 
         /// <summary>Scratch index of the lowest walkable surface in a column when it is at doorway floor
