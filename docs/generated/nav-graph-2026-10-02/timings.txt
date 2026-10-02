@@ -1,1 +1,1 @@
-2000 queries over 88 points, seed 12345: FindPath 155.6 us avg (2000 found, 117 points avg), NearestWalkableCell 3.29 us (2000 hit), IsReachable 6.73 us (2000 true); allocated 0 bytes.
+2000 queries over 88 points, seed 12345: FindPath 142.3 us avg (2000 found, 117 points avg), NearestWalkableCell 3.04 us (2000 hit), IsReachable 6.10 us (2000 true); allocated 0 bytes.
