@@ -26,6 +26,7 @@ namespace Plunderspell.Alarm
         private readonly GuardPathFollower _follower;
         private readonly GuardSeparation _separation;
         private readonly GuardMoverStepper _stepper;
+        private readonly GuardMoverFacing _facing;
         private IGuardNavigationMap _map;
         private int _planVersion;
 
@@ -36,6 +37,7 @@ namespace Plunderspell.Alarm
             _follower = new GuardPathFollower(tuning);
             _separation = new GuardSeparation(tuning);
             _stepper = new GuardMoverStepper(tuning, new GuardSweep(tuning));
+            _facing = new GuardMoverFacing(tuning);
             director.OnMoveRequest += HandleMoveRequest;
         }
 
@@ -73,6 +75,14 @@ namespace Plunderspell.Alarm
 
         /// <summary>Stops a guard where it stands. No event is raised: the caller asked for it.</summary>
         public void Cancel(Component guard) => FindMover(guard)?.Stop();
+
+        /// <summary>Stops (or restarts) the service moving one guard's transform, for as long as something else owns its position.</summary>
+        public void SetPaused(Component guard, bool paused)
+        {
+            GuardMover mover = FindMover(guard);
+            if (mover != null)
+                mover.Paused = paused;
+        }
 
         public bool IsMoving(Component guard) => FindMover(guard)?.IsMoving ?? false;
 
@@ -129,7 +139,11 @@ namespace Plunderspell.Alarm
 
         private void TickMover(GuardMover mover, float deltaTime)
         {
+            if (mover.Paused)
+                return;
+
             Vector3 pathStep = mover.IsMoving ? _follower.NextStep(mover, deltaTime) : Vector3.zero;
+            _facing.Turn(mover, pathStep, deltaTime);
             Vector3 push = _separation.PushFor(mover, _movers, deltaTime);
             float share = _stepper.Move(mover, pathStep + push, _map, deltaTime);
 

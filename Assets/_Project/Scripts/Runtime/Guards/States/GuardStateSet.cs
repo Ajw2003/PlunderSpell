@@ -1,3 +1,5 @@
+using Plunderspell.Status;
+
 namespace Plunderspell.Guards
 {
     /// <summary>
@@ -12,7 +14,8 @@ namespace Plunderspell.Guards
             Investigate = new InvestigateState(guard);
             Chase = new ChaseState(guard);
             Combat = new CombatState(guard);
-            Incapacitated = new PlaceholderIncapacitatedState(guard);
+            Stunned = new StunnedState(guard);
+            Slept = new SleptState(guard);
             Dead = new PlaceholderDeadState(guard);
         }
 
@@ -28,8 +31,18 @@ namespace Plunderspell.Guards
         /// <summary>Fighting a player in reach, taking turns (#210).</summary>
         public CombatState Combat { get; }
 
-        /// <summary>Asleep, stunned or levitated (#211).</summary>
-        public GuardState Incapacitated { get; }
+        /// <summary>Stunned, or levitated until it lands (#211).</summary>
+        public GuardState Stunned { get; }
+
+        /// <summary>Asleep until the sleep ends or a loud noise wakes it (#211).</summary>
+        public GuardState Slept { get; }
+
+        /// <summary>The state for a guard a status effect has just incapacitated. A stun or levitation
+        /// outranks sleep, because it holds the guard for longer than a noise can wake it.</summary>
+        public GuardState IncapacitatedBy(StatusEffectReceiver status)
+        {
+            return status.IsStunned || status.IsLevitating ? Stunned : Slept;
+        }
 
         /// <summary>Down for good (#213).</summary>
         public GuardState Dead { get; }

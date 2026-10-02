@@ -21,6 +21,9 @@ namespace Plunderspell.Alarm
         public Vector3[] Path;
         public int NextWaypoint;
 
+        /// <summary>While true the service leaves this guard's transform alone: something else (Levo) is carrying it.</summary>
+        public bool Paused;
+
         /// <summary>Seconds the sweep has held this guard to less than <see cref="GuardNavigationTuning.ProgressShare"/> of its step.</summary>
         public float HeldUpSeconds;
 

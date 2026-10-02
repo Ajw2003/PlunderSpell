@@ -80,6 +80,12 @@ namespace Plunderspell.Guards
             _director?.Navigation.Cancel(_guard);
         }
 
+        /// <summary>Hands the guard's position to something else (Levo's lift) by stopping the navigation service from moving it.</summary>
+        public void Pause() => _director?.Navigation.SetPaused(_guard, true);
+
+        /// <summary>Takes the position back once whatever else was moving the guard is done.</summary>
+        public void Resume() => _director?.Navigation.SetPaused(_guard, false);
+
         private void HandlePathReady(PathReady answer)
         {
             if (answer.Guard == _guard)

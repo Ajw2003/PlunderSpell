@@ -1,4 +1,5 @@
 using System;
+using Plunderspell.Alarm;
 using UnityEngine;
 
 namespace Plunderspell.Guards
@@ -105,6 +106,13 @@ namespace Plunderspell.Guards
 
         [Tooltip("How often a guard without a turn asks again, in seconds.")]
         public float TurnRequestSeconds = 0.2f;
+
+        [Header("Stunned and slept")]
+        [Tooltip("When a stun or sleep ends with nothing heard, a guard goes to look around where it stands if the castle is at least this alert. Below it, it goes back to its round.")]
+        public AlarmState InvestigateAfterRecoveryFrom = AlarmState.Roused;
+
+        [Tooltip("A levitated guard counts as landed once its pivot is this close to the floor, in metres.")]
+        public float LandingTolerance = 0.15f;
 
         [Header("Health")]
         public float MaxHealth = 100f;

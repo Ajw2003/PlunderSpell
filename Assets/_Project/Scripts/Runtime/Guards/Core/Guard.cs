@@ -222,7 +222,7 @@ namespace Plunderspell.Guards
         private void OnStatusChanged(StatusEffectReceiver status)
         {
             if (IsAuthority && !IsDead && status.IsIncapacitated)
-                _machine.ChangeState(States.Incapacitated);
+                _machine.ChangeState(States.IncapacitatedBy(status));
         }
 
         private void OnDied()
