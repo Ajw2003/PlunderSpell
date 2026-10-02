@@ -297,12 +297,30 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
     OnFire only when it is not already held. A burning guard that is stunned stays stunned, and `IncapacitatedState.Recover`
     (`:34`) enters OnFire when the hold ends with the fire still going. Why: a guard that cannot move cannot run about.
     `Guard.OnStatusChanged` (`Guard.cs:222`) calls it.
-  - **When the fire ends** (`AfterTheFire`, `OnFireState.cs:72`). Health 0 goes to Dead (`:48`; the placeholder until #213).
+  - **When the fire ends** (`AfterTheFire`, `OnFireState.cs:72`). Health 0 goes to Dead (`:48`, see the Dead entry below).
     A player in sight and in reach (melee reach, or the ranged engage range) goes to Combat, in sight only to Chase.
     Otherwise `GuardRecovery.PatrolOrInvestigate` (`States/GuardRecovery.cs:15`), the same rule a stun or sleep uses:
     a lead or a Roused castle goes to Investigate, else Patrol.
   - Tests: `GuardOnFireTests` (panic between distinct points, no attack and turn released, exits to Combat, Chase,
     Patrol and Dead, stun and sleep outranking the fire).
+- **Dead (#213).** `Guard.OnDied` (`Guard.cs:228`) clears status, publishes `GuardDied` and enters `States/DeadState.cs:21`.
+  - **On entry** it stops and unregisters the mover (`Navigator.Detach`, `GuardNavigator.cs:53`), leaves the director
+    registry (`Link.Detach`, which also releases a held attack turn), and closes the eyes and ears
+    (`GuardSight.Close`, `GuardHearing.Close`). `Tick` returns itself, so nothing leaves Dead; a second hit is
+    ignored by `GuardHealth.TakeDamage` (`GuardHealth.cs:34`).
+  - **Visual: a scripted tween, not a ragdoll.** Neither guard prefab has bones or joints (full ragdoll waits on #141)
+    and the fresh guard has no Rigidbody. `Core/GuardDeathVisual.cs:49` tips the body 90 degrees sideways over
+    `ToppleSeconds` (0.7), lets it lie `LingerSeconds` (2), then scales it to nothing over `FadeSeconds` (1.5) as
+    `Core/GuardDust.cs:23` puffs a runtime-built particle burst (no dust effect or dissolve shader exists; the
+    sprite shader is the one `GrabBeam` uses). Values are in `GuardTuning` ("Dead" header).
+  - **Clients.** `Core/GuardDeathPlayback.cs:24` runs on every peer (added by `[RequireComponent]` on `Guard`, so
+    `Guard.cs` did not grow) and starts when the replicated state reads Dead, so a client plays the same fall
+    from the existing state SyncVar. It also runs on the server.
+  - **Despawn.** After the fade the server alone calls `Destroy(gameObject)` (`GuardDeathPlayback.cs:40`), the path
+    the legacy guard used (`CastleGuard.cs:1262`), which PurrNet turns into a network despawn. Legacy guards carried
+    and dropped nothing on death, so there is nothing to port.
+  - Tests: `GuardDeadStateTests` (leaves navigation, registry and turn; stays Dead; leaves upright; removed only after
+    the fade; second death harmless). Not yet seen in a live co-op run.
 - **Facing (#211).** `Alarm/Navigation/GuardMoverFacing.cs:25` turns each moving guard toward its path step by
   `GuardNavigationTuning.TurnDegreesPerSecond` (270, `RotateTowards`), called from `TickMover`
   (`GuardNavigationService.cs:146`). Yaw only, so sight cones follow where the guard walks. `MoveReason.Combat`

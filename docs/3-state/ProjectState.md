@@ -50,6 +50,10 @@ lacks; the rest are older and either merged in another form or abandoned.
   Investigate, or Dead if the fire killed it; stun and sleep outrank the fire. Burn damage stays in
   `StatusEffectReceiver.Tick`. Not in a prefab yet (#214). Details in `docs/4-systems/alarm.md`.
 
+  #213 is in (2026-10-02): a dead fresh guard leaves navigation and the registries, topples (scripted
+  tween, no rig yet), shrinks away in a dust puff on every peer, then the server despawns it. Not in a
+  prefab yet (#214); not yet seen in live co-op. Details in `docs/4-systems/alarm.md`.
+
   The guard state-machine rebuild has started: #204 is in. A plain C# `StateMachine<TContext>`
   lives in Core/StateMachine, and the shared `BaseStateMachine` now runs `Exit`, which needed the
   player's Dodge, Jump and Attack exits fixed. `StateMachineTests` pass 6/6. The rest is #203's
