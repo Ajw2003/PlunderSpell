@@ -19,7 +19,11 @@ var All = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFla
     | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
 var guardType = System.AppDomain.CurrentDomain.GetAssemblies()
     .Select(a => a.GetType("Plunderspell.Guards.CastleGuard")).First(t => t != null);
-var active = (System.Collections.IEnumerable)guardType.GetProperty("Active").GetValue(null);
+var directorType = System.AppDomain.CurrentDomain.GetAssemblies()
+    .Select(a => a.GetType("Plunderspell.Alarm.EnemyDirector")).First(t => t != null);
+var director = directorType.GetProperty("Current").GetValue(null);
+var active = director == null ? new System.Collections.Generic.List<object>()
+    : (System.Collections.IEnumerable)directorType.GetProperty("Guards").GetValue(director);
 var data = System.AppDomain.CurrentDomain.GetData("guardWatch") as System.Collections.Generic.Dictionary<int, double[]>;
 if (data == null)
 {
