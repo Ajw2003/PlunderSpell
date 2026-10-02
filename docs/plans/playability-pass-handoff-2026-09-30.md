@@ -28,6 +28,13 @@ Follow-ups filed 2026-10-01: #198 (the guard attack test that fails, possibly fr
 
 **Update 2026-10-01:** the step 4/5 executor hit the usage limit partway through #181 and never reached #196.
 
+**Update 2026-10-01 (later):**
+- #181: done, gap split to #202.
+- #198: fixed in the test.
+- #199: co-op scripts restore settings byte-for-byte.
+- #200: guards are slippery dynamic bodies that ignore each other. Co-op stuck time is 1.7 s of 1811.3; the crush is fixed host-side; the client-side lag case is unchecked.
+- New issues: #201 (profiling), #202 (microphone change doesn't reach chatter).
+
 Issues stay open until the owner has tested; closing one always asks.
 
 ## What steps 1–3 proved
