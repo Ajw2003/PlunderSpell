@@ -114,6 +114,13 @@ namespace Plunderspell.Guards
         [Tooltip("A levitated guard counts as landed once its pivot is this close to the floor, in metres.")]
         public float LandingTolerance = 0.15f;
 
+        [Header("On fire")]
+        [Tooltip("How fast a burning guard runs about in a panic, in metres per second. Faster than a chase: it is not aiming anywhere.")]
+        public float PanicSpeed = 5.5f;
+
+        [Tooltip("When no panic point can be reached (or a run is blocked), the guard waits this long before trying again, in seconds.")]
+        public float PanicRetrySeconds = 0.25f;
+
         [Header("Health")]
         public float MaxHealth = 100f;
     }

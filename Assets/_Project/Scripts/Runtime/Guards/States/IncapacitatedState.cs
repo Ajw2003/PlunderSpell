@@ -28,15 +28,15 @@ namespace Plunderspell.Guards
         /// <summary>
         /// Where to go once nothing holds the guard. A noise that woke it (or was heard while it lay there)
         /// is a lead, so it goes to look. With no lead it still goes to look around where it stands once
-        /// the castle is Roused or worse, and otherwise it goes back to its round.
+        /// the castle is Roused or worse, and otherwise it goes back to its round (<see cref="GuardRecovery"/>).
+        /// A guard still on fire when the hold ends goes on to panic (#212): stun and sleep outrank burning.
         /// </summary>
         protected State<Guard> Recover()
         {
-            bool onAlert = Context.Link.Alarm >= Context.Tuning.InvestigateAfterRecoveryFrom;
-            if (!Context.Leads.HasLead && onAlert)
-                Context.Leads.Offer(Context.transform.position, 0f);
+            if (Context.Status.IsBurning)
+                return Context.States.OnFire;
 
-            return Context.Leads.HasLead ? Context.States.Investigate : Context.States.Patrol;
+            return GuardRecovery.PatrolOrInvestigate(Context);
         }
     }
 }

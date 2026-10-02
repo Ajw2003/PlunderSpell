@@ -218,11 +218,11 @@ namespace Plunderspell.Guards
         /// <summary>Multiplies health for a bigger lobby (#154). Call once, on the server, at spawn.</summary>
         public void ScaleHealth(float healthScale) => Health.Scale(healthScale);
 
-        // A status effect that incapacitates is not a state's choice: it interrupts whichever state is running.
+        // A status effect that incapacitates or ignites is not a state's choice: it interrupts whichever state is running.
         private void OnStatusChanged(StatusEffectReceiver status)
         {
-            if (IsAuthority && !IsDead && status.IsIncapacitated)
-                _machine.ChangeState(States.IncapacitatedBy(status));
+            if (IsAuthority && !IsDead && States.TryInterrupt(status, CurrentState, out GuardState held))
+                _machine.ChangeState(held);
         }
 
         private void OnDied()
