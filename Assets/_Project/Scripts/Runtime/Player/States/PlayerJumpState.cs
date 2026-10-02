@@ -24,7 +24,7 @@ public class PlayerJumpState : PlayerState
         // Small grace period before checking grounded, so we've actually left the ground.
         if (Time.time > _jumpTime + 0.2f && _stateMachine.IsGrounded)
         {
-            Exit();
+            Finish();
         }
     }
 
@@ -52,7 +52,9 @@ public class PlayerJumpState : PlayerState
         }
     }
 
-    public override void Exit()
+    // Hands control back to walk or idle. This used to be Exit, but ChangeState now runs Exit on the
+    // state being left, so a transition inside Exit would recurse forever.
+    private void Finish()
     {
         if (_stateMachine.MovementDirection.sqrMagnitude > 0.1f)
         {

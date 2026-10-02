@@ -12,6 +12,8 @@ namespace StateMachine
             if (newState == CurrentState)
                 return;
 
+            // Leave the old state first so it can undo what Enter or Update set up.
+            CurrentState?.Exit();
             CurrentState = newState;
             CurrentState?.Enter();
             CurrentStateName = CurrentState?.ToString();
