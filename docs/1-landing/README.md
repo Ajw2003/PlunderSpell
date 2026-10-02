@@ -114,6 +114,7 @@ together and what was deliberately left undocumented, and why.
 - [`docs/prompts/house-rules-versioncheck-fix.md`](../prompts/house-rules-versioncheck-fix.md) — a
   handoff for an agent in `Ajw2003/AjsClaudeCodeTools`: the house-rules version check went silent
   when it couldn't reach GitHub (found 2026-09-24). Not PlunderSpell work.
+- [`docs/reference/deprecated-code.md`](../reference/deprecated-code.md) — dead code kept as reference, with the evidence that it is unused.
 - [`docs/generated/`](../generated/README.md) — the castle-generator and UI HTML previews, and the
   live GitHub issues backlog (`gh issue list` is the source of truth for current status; the JSON
   is a point-in-time manifest of what's been filed).
