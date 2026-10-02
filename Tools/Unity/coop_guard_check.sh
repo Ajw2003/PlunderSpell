@@ -9,6 +9,7 @@
 # Needs the Editor open on this project, not in Play mode. Leaves it stopped.
 set -uo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/settings_restore.sh"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
 label="${1:?usage: coop_guard_check.sh <label> [options]}"; shift
@@ -44,6 +45,7 @@ trap cleanup EXIT
 
 playing="$(bash Tools/Unity/eval.sh 'return UnityEditor.EditorApplication.isPlaying + " " + UnityEditor.EditorApplication.isCompiling;')" || { log "FAIL Editor did not answer"; exit 1; }
 if [ "$playing" != "False False" ]; then log "FAIL Editor is playing or compiling ($playing)"; trap - EXIT; exit 1; fi
+settings_save || { log "FAIL cannot save ProjectSettings before building"; trap - EXIT; exit 1; }
 
 if [ "$solo" = no ]; then
     if [ "$build" = auto ]; then
