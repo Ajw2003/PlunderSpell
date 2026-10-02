@@ -45,6 +45,12 @@ lacks; the rest are older and either merged in another form or abandoned.
   player's Dodge, Jump and Attack exits fixed. `StateMachineTests` pass 6/6. The rest is #203's
   children #205–#214 (plan: `docs/plans/guard-fsm-restructure.md`). The handoff is
   `docs/plans/playability-pass-handoff-2026-09-30.md`.
+
+  Bespoke navigation (plan: `docs/plans/bespoke-navigation.md`) has started. #220 is in: every
+  room module carries a baked `CastleNavTile`, a 24×24 grid of 0.5 m cells with up to 2 floor
+  layers and archway portals. The menu item Tools/Plunderspell/Bake Castle Nav Tiles bakes it.
+  `CastleNavTileTests` pass 2/2, and the overlays are in `docs/generated/nav-tiles-2026-10-02/`.
+  Open: the Gatehouse and the curtain wall pieces bake empty, which #221 must handle. Next is #221.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
