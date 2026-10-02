@@ -217,6 +217,7 @@ namespace Plunderspell.Raid
 
             _alarm?.ResetForNewRaid(CastleGuard.ArrivalGraceSeconds);
             CastleGuard.BeginArrivalGrace();
+            GuardArrivalGrace.Begin();
 
             SetPhase(RaidPhase.Raiding);
         }
@@ -244,6 +245,8 @@ namespace Plunderspell.Raid
             // castle generator's era rooms, when they land) reads the same Age the garrison is drawn for.
             RaidContext.Publish(new RaidContext(seed, Era));
             Castle = GenerateWalkable(ref seed);
+            if ((!isSpawned || isServer) && _alarm != null && Castle != null && Castle.NavGraph != null)
+                _alarm.Navigation.SetMap(new CastleGuardNavigationMap(Castle.NavGraph)); // what the fresh guard walks on (#206)
             if (RaidContext.Current.Seed != seed)
                 RaidContext.Publish(new RaidContext(seed, Era));
             if (!isSpawned || isServer)

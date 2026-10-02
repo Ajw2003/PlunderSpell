@@ -19,6 +19,12 @@ namespace Plunderspell.Guards
         Searching = 3,
 
         /// <summary>Asleep, stunned or otherwise out of the fight.</summary>
-        Incapacitated = 4
+        Incapacitated = 4,
+        /// <summary>Fighting a player in reach: takes its turn to attack (the Combat state, #210).</summary>
+        Combat = 5,
+        /// <summary>Burning and running about at random (the OnFire state, #212).</summary>
+        OnFire = 6,
+        /// <summary>Down for good, toppling and fading (the Dead state, #213).</summary>
+        Dead = 7
     }
 }
