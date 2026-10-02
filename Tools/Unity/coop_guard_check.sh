@@ -38,19 +38,7 @@ cleanup() {
     fi
     unity command editor_stop "${cli[@]}" >/dev/null 2>&1 || true
     unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":false}' --confirm true "${cli[@]}" >/dev/null 2>&1 || true
-    if grep -q 'fileID: -944628639613478452, guid: e05f63c218fb0e54f8c41ecaf9e2ef10' ProjectSettings/ProjectSettings.asset; then
-        python -c "
-import re, sys
-p = sys.argv[1]
-text = open(p, newline='').read()
-text = re.sub(r'  preloadedAssets:(\r?\n)  - \{fileID: -944628639613478452, guid: e05f63c218fb0e54f8c41ecaf9e2ef10, type: 3\}', r'  preloadedAssets: []', text)
-open(p, 'w', newline='').write(text)
-" ProjectSettings/ProjectSettings.asset
-    fi
-    for s in ProjectSettings/ProjectSettings.asset ProjectSettings/Packages/com.unity.pipeline/RuntimePipelineConfig.json; do
-        if ! git diff --quiet -- "$s" 2>/dev/null; then log "left $s: its content changed"
-        elif [ -n "$(git status --porcelain -- "$s")" ]; then git checkout -- "$s"; fi
-    done
+    settings_restore
 }
 trap cleanup EXIT
 
