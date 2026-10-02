@@ -133,8 +133,12 @@ namespace Plunderspell.Alarm
                 _guards.Add(guard);
         }
 
-        /// <summary>Removes a guard from the registry.</summary>
-        public void UnregisterGuard(Component guard) => _guards.Remove(guard);
+        /// <summary>Removes a guard from the registry and takes back any attack turn it held.</summary>
+        public void UnregisterGuard(Component guard)
+        {
+            _guards.Remove(guard);
+            _attackTurns?.Release(guard);
+        }
 
         /// <summary>Registers a player as something guards will look for.</summary>
         public void RegisterIntruder(Transform intruder)
@@ -189,7 +193,42 @@ namespace Plunderspell.Alarm
         /// <summary>A guard could not get to the spot it was sent to.</summary>
         public event Action<Blocked> OnBlocked;
 
+        /// <summary>A guard in combat asks for a turn to attack a player (#210).</summary>
+        public event Action<AttackTurnRequested> OnAttackTurnRequested;
+        /// <summary>The mediator let a guard attack.</summary>
+        public event Action<AttackTurnGranted> OnAttackTurnGranted;
+        /// <summary>The mediator told a guard to wait its turn.</summary>
+        public event Action<AttackTurnDenied> OnAttackTurnDenied;
+        /// <summary>A guard gave its turn back.</summary>
+        public event Action<AttackTurnReleased> OnAttackTurnReleased;
+
         private bool IsAuthority => !isSpawned || isServer;
+
+        [Header("Attack turns")]
+        [SerializeField] private AttackTurnTuning _attackTurnTuning = new AttackTurnTuning();
+
+        private AttackTurnMediator _attackTurns;
+
+        /// <summary>Who may attack which player right now (#210). Made on first use so EditMode tests need no Awake.</summary>
+        public AttackTurnMediator AttackTurns => _attackTurns ??= new AttackTurnMediator(this, _attackTurnTuning);
+
+        /// <summary>A guard asks for a turn; the answer comes back as a granted or denied event.</summary>
+        public void Publish(AttackTurnRequested e)
+        {
+            OnAttackTurnRequested?.Invoke(e);
+            AttackTurns.Handle(e);
+        }
+
+        public void Publish(AttackTurnGranted e) => OnAttackTurnGranted?.Invoke(e);
+
+        public void Publish(AttackTurnDenied e) => OnAttackTurnDenied?.Invoke(e);
+
+        /// <summary>A guard gives its turn back so the next one can strike.</summary>
+        public void Publish(AttackTurnReleased e)
+        {
+            OnAttackTurnReleased?.Invoke(e);
+            AttackTurns.Release(e.Guard);
+        }
 
         /// <summary>A guard saw an intruder: scores the sighting and counts the chaser.</summary>
         public void Publish(IntruderSpotted e)
@@ -222,6 +261,7 @@ namespace Plunderspell.Alarm
         public void Publish(GuardDied e)
         {
             OnGuardDied?.Invoke(e);
+            _attackTurns?.Release(e.Guard);
             if (IsAuthority)
                 ReportChase(e.Guard != null ? e.Guard.GetInstanceID() : 0, false);
         }
@@ -278,6 +318,7 @@ namespace Plunderspell.Alarm
                 return;
             TickDecay(Time.deltaTime);
             _navigation?.Tick(Time.deltaTime);
+            _attackTurns?.Tick(Time.deltaTime);
         }
 
         // ---------------------------------------------------------------------------------------
