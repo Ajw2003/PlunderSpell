@@ -40,6 +40,11 @@ lacks; the rest are older and either merged in another form or abandoned.
     co-op stuck time 1.7 of 1811 s);
   - the co-op scripts restore ProjectSettings byte-for-byte (#199).
 
+  #211 is in (2026-10-02): the fresh guard has Stunned and Slept states (Levo holds a guard Stunned
+  until it lands and pauses its mover; a loud noise wakes a sleeper early), walking guards now face
+  where they go, and `EnemyDirector` is split into registry, bus, alarm and hue-and-cry classes
+  (472 to 248 lines). Details and file:line in `docs/4-systems/alarm.md`.
+
   The guard state-machine rebuild has started: #204 is in. A plain C# `StateMachine<TContext>`
   lives in Core/StateMachine, and the shared `BaseStateMachine` now runs `Exit`, which needed the
   player's Dodge, Jump and Attack exits fixed. `StateMachineTests` pass 6/6. The rest is #203's

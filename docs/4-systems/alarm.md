@@ -23,16 +23,23 @@ past — those belong to `Guards`/`Castle` respectively.
   halves the perceived strength; anything left under `MinAudibleStrength` is dropped before an
   `INoiseListener` ever sees it.
 - **The alarm lives inside `EnemyDirector`** (2026-10-01, #205; formerly `AlarmFSMManager`, same file GUID,
-  so scenes keep their component). The director (`Assets/_Project/Scripts/Runtime/Alarm/EnemyDirector.cs:1`)
-  also owns the guard and intruder registries (`RegisterGuard` :130, `RegisterIntruder` :140, replacing
-  the static `CastleGuard.Active`/`Intruders`) and a typed event bus (`Publish` :187-230; payload structs in
-  `EnemyDirectorEvents.cs:1`): `NoiseReported`, `IntruderSpotted`, `IntruderLost`, `GuardEngaged`,
+  so scenes keep their component). The director (`Assets/_Project/Scripts/Runtime/Alarm/EnemyDirector.cs:18`)
+  is a thin NetworkBehaviour (248 lines; it was 472 before #211) that owns and ticks one class per job, all in
+  `Runtime/Alarm/`: `EnemyRegistry.cs:11` (guard and intruder lists, replacing the static
+  `CastleGuard.Active`/`Intruders`; `RegisterGuard` :104 forwards to it), `EnemyDirectorBus.cs:11` (the typed events
+  and every `Publish` with the scoring each one owes, :36-101), `DirectorAlarm.cs:20` (level, state, latch,
+  decay, grace, chasers), `HueAndCry.cs:9`, and the tuning copy `AlarmTuning.cs:7`. The director forwards its
+  events and `Publish` calls to the bus (`EnemyDirector.cs:123-153`), so callers did not change. The
+  `SyncVar`s stay fields of the director (PurrNet needs that) and are handed to the alarm (`:78`); the
+  Inspector tuning fields stay on the director so scenes keep their values, and are copied into `AlarmTuning`
+  when the alarm is first used (so live edits of them in Play mode no longer reach the alarm). Payload structs
+  are in `EnemyDirectorEvents.cs:1`: `NoiseReported`, `IntruderSpotted`, `IntruderLost`, `GuardEngaged`,
   `AlarmChanged`, `GuardDied`, `InvestigateRequest`. Guards raise them (`CastleGuard.cs:1145-1172,1261`);
   the director turns sightings, chases, attacks and noise into alarm points. It sits in the Alarm
   assembly (already referenced by Guards, Audio, Castle, Raid, UI) and holds guards as `Component`, so
   no assembly cycle. `EnemyDirector.Current` is the in-play instance.
 - **The hue and cry is a request, not an order.** On reaching HueAndCry the director publishes one
-  `InvestigateRequest` per player (`EnemyDirector.cs:234`, called from `SetState` :381); each guard
+  `InvestigateRequest` per player (`HueAndCry.cs:25`, called from `EnemyDirector.OnAlarmStateChanged` :227); each guard
   within 40 m takes the nearest (`CastleGuard.cs:269`) and goes to Investigating through `AlertTo`.
   Nothing outside a guard moves it. The fresh guard takes it up as a lead for its Investigate state
   (see "Leads and Investigate (#208)" below).
@@ -111,7 +118,7 @@ words were taken in and returns that count (the alarm hears the noise but is not
 ## Guard navigation
 
 The director owns a server-side navigation service (#222, plan `docs/plans/bespoke-navigation.md` Design 3):
-`EnemyDirector.Navigation` (`Assets/_Project/Scripts/Runtime/Alarm/EnemyDirector.cs:272`), a
+`EnemyDirector.Navigation` (`Assets/_Project/Scripts/Runtime/Alarm/EnemyDirector.cs:88`), a
 `GuardNavigationService` (`Runtime/Alarm/Navigation/GuardNavigationService.cs:17`), ticked from the director's
 server-only `Update`. **Nothing drives guards with it yet**: `CastleGuard` still uses its NavMeshAgent, and
 the fresh guard core (#206, below) sends requests. No co-op run was possible for #222 for that reason.
@@ -161,8 +168,8 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
 
 - **Host.** Owns the replicated SyncVars (state, health, attack signal: `Guard.cs:28-30`, they must be fields of
   the NetworkBehaviour), a `StateMachine<Guard>` (`Guard.cs:32`) and the parts. It decides nothing: a state
-  returns its own next state. The only interruptions are status effects (`Guard.cs:191`, a sleep or stun enters
-  Incapacitated) and death (`Guard.cs:197`, publishes `GuardDied`, enters Dead). Only the server runs `Tick`.
+  returns its own next state. The only interruptions are status effects (`Guard.cs:222`, a sleep, stun or levitation
+  enters Slept or Stunned through `GuardStateSet.IncapacitatedBy`, `GuardStateSet.cs:42`) and death (`Guard.cs:197`, publishes `GuardDied`, enters Dead). Only the server runs `Tick`.
 - **One class per job**, none over 215 lines: `Core/GuardHealth` (hit points, `Died`, lobby scale),
   `Core/GuardAttackSignaller` (packed count and kind, client replay), `Core/GuardShove` (Frango knock-back by
   transform with a capsule cast, as there is no Rigidbody), `Core/GuardDirectorLink` (registry, hue and cry
@@ -224,13 +231,13 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
 - **Combat and attack turns (#210).** `States/CombatState.cs:20`, entered from Chase. The guard asks the director
   for a turn by event: `AttackTurnRequested` is published (`GuardAttackTurn.Request`, `Core/GuardAttackTurn.cs:52`),
   `AttackTurnMediator.Handle` (`Alarm/AttackTurnMediator.cs:53`) answers `AttackTurnGranted` or `AttackTurnDenied`
-  (`EnemyDirector.cs:197-230`; `director.AttackTurns` is the mediator, `:213`). **Limit: 1 melee and 1 ranged turn
+  (`EnemyDirectorBus.cs:36-52`; `director.AttackTurns` is the mediator, `EnemyDirector.cs:85`). **Limit: 1 melee and 1 ranged turn
   per player** (`AttackTurnTuning.cs:14`). That is the number in issue #210; the legacy guard had no tokens, no
   windup and no turns, every guard in reach struck on its own 1.4 s cooldown (`CastleGuard.cs.txt:1157-1180`).
   A turn ends when the guard releases it (`CombatState.cs:156`, after a 0.5 s `AttackRecoverySeconds` that spreads
   strikes out; the legacy swing had no windup), on leaving Combat (`GuardAttackTurn.End`, called from
   `CombatState.Exit` :63, which covers death and stun because both change state), on `GuardDied` and
-  `UnregisterGuard` (`EnemyDirector.cs`), or after `TurnTimeoutSeconds` 3 s (`AttackTurnMediator.cs:89`), so a
+  `UnregisterGuard` (`EnemyDirector.cs:107`), or after `TurnTimeoutSeconds` 3 s (`AttackTurnMediator.cs:89`), so a
   guard that cannot reach the player does not block the others. The alarm itself is the director's and was already
   folded in (#205); turns sit beside it there.
   - **With a turn** a melee guard walks in and strikes (`CloseInAndStrike` :187, `Core/GuardMeleeAttack.cs:31`:
@@ -238,8 +245,9 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
     guard fires (`ShootOrSidestep` :197).
   - **Without a turn** it holds a place on a ring around the player (`States/CombatRing.cs`, melee just outside
     reach, ranged just inside range) through `MoveRequest`, and asks again every 0.2 s only when its own cooldown
-    is over (`AskForTurnWhenDue` :169). It turns to face the player (`FaceTarget` :91, yaw only); nothing else
-    turns guards yet, so Chase and Patrol still do not face where they walk.
+    is over (`AskForTurnWhenDue` :169). It turns to face the player (`FaceTarget` :91, yaw only). Its ring
+    walks use `MoveReason.Combat` (`CombatState.cs:228`), which the navigation facing skips, so `FaceTarget` wins
+    (see "Facing" and "Stunned and slept" below).
   - **No flicker.** Combat holds while the player is inside reach plus `CombatMargin` 2.5 m (`ReasonToLeave` :119).
     Past that: Chase if still seen, Investigate if not seen for `ChaseLoseSightSeconds`.
   - **Pinned players.** Combat never writes position, only the navigation sweep does, so the #200 guarantee
@@ -256,6 +264,29 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
     `GuardCombatTests.AMeleeGuardWithATurnStrikesAndHurtsThePlayer` shows it landing hits. A co-op run is not
     possible yet: no prefab uses the fresh guard (#214).
   - Tests: `GuardCombatTests`, `GuardAttackTurnTests`, `GuardFriendlyFireTests` (`Tests/Runtime`).
+- **Stunned and slept (#211).** Two states over a shared base, `States/IncapacitatedState.cs:13`, because they end
+  differently. The status receiver owns the timers (`StatusEffectReceiver.Stun/Sleep/Levitate`), so "stands still
+  for a set time" is the status running out and the state waits for it. On entry the guard stops its walk and
+  gives back any attack turn (`:25`; Combat's own exit already does too). Exit (`Recover` :33): a lead waiting
+  (a noise heard while down, including the noise that woke it) goes to Investigate at it; no lead and the castle
+  at `Tuning.InvestigateAfterRecoveryFrom` (Roused) or worse goes to Investigate where it stands; otherwise Patrol.
+  - **`SleptState`** (`States/SleptState.cs:11`). A noise of 0.5 or more wakes it early: `GuardHearing.Hear`
+    (`Senses/GuardHearing.cs:33`) wakes it and leaves the noise as a lead. A stun or Levo landing on a sleeper
+    hands over to Stunned (`:19`).
+  - **`StunnedState`** (`States/StunnedState.cs:14`). Frango, and Levo until it lands (owner's answer 2). While
+    levitated the guard's position is the spell's, so `NoteLevitation` (`:47`) calls `GuardNavigator.Pause`
+    (`Movement/GuardNavigator.cs:84`) which sets `GuardMover.Paused` through `GuardNavigationService.SetPaused`
+    (`GuardNavigationService.cs:80`); `TickMover` returns early for a paused mover (`:142`), so the service does not
+    step, separate or settle it. `TouchDown` (`:56`) resumes it on landing or on leaving the state. Landing is
+    `Core/GuardLanding.cs:22`: the spell is over and the pivot is within `LandingTolerance` 0.15 m of the map's
+    floor. No fall damage (dropped, `docs/plans/guard-core-inventory.md`). The fresh guard has no Rigidbody, so
+    today Levo lifts nothing; this is ready for whatever moves it.
+  - **Stun beats sleep** (`GuardStateSet.cs:42`): a stun or levitation holds longer than a noise can wake.
+  - Tests: `GuardIncapacitatedTests` (timer, exit at Calm and Roused, early wake by 0.6 and not 0.3, Levo, turn release).
+- **Facing (#211).** `Alarm/Navigation/GuardMoverFacing.cs:25` turns each moving guard toward its path step by
+  `GuardNavigationTuning.TurnDegreesPerSecond` (270, `RotateTowards`), called from `TickMover`
+  (`GuardNavigationService.cs:146`). Yaw only, so sight cones follow where the guard walks. `MoveReason.Combat`
+  moves are skipped. Test: `GuardFacingTests`.
 - **Replacing a placeholder.** Edit `States/GuardStateSet.cs`; each placeholder names its issue.
 - **Tests.** `GuardCoreSensesTests` (throttle, stagger, cone, own-collider line of sight, grace, wake, threshold)
   and `GuardCoreBodyTests` (a move request reaching Arrived through the service, health, lobby scaling, the
