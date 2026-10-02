@@ -8,7 +8,7 @@ namespace Plunderspell.Guards
     {
         public GuardStateSet(Guard guard)
         {
-            Patrol = new PlaceholderPatrolState(guard);
+            Patrol = new PatrolState(guard);
             Incapacitated = new PlaceholderIncapacitatedState(guard);
             Dead = new PlaceholderDeadState(guard);
         }

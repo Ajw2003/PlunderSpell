@@ -36,7 +36,19 @@ namespace Plunderspell.Guards
         /// <summary>Raised on this peer when the guard's replicated state changes.</summary>
         public event Action<GuardAlertState> StateChanged;
 
+        /// <summary>
+        /// HAND-OFF TO INVESTIGATE (#208). A state that notices something (Patrol today) raises this with
+        /// where to go. Nothing subscribes yet: #208 builds the Investigate state and either subscribes
+        /// here to change state, or makes its own sight and hearing checks in Patrol's place.
+        /// </summary>
+        public event Action<Vector3> InvestigateRequested;
+
         public GuardTuning Tuning => _tuning;
+
+        /// <summary>The guard's own random numbers, seeded from where it was posted so the server picks the
+        /// same patrol every time. Tests replace the seed with <see cref="Reseed"/>.</summary>
+        public System.Random Random { get; private set; }
+
         public StatusEffectReceiver Status { get; private set; }
         public GuardHealth Health { get; private set; }
         public GuardSight Sight { get; private set; }
@@ -81,6 +93,7 @@ namespace Plunderspell.Guards
 
             Status = GetComponent<StatusEffectReceiver>();
             Home = transform.position;
+            Random = new System.Random(SeedFrom(Home));
             Health = new GuardHealth(_health, _tuning.MaxHealth);
             Sight = new GuardSight(transform, _tuning, GetInstanceID());
             Hearing = new GuardHearing(Status);
@@ -171,6 +184,18 @@ namespace Plunderspell.Guards
         {
             if (IsAuthority)
                 Hearing.Hear(noise, Link.Alarm);
+        }
+
+        /// <summary>Starts the guard's random numbers over from <paramref name="seed"/>.</summary>
+        public void Reseed(int seed) => Random = new System.Random(seed);
+
+        /// <summary>Tells whoever handles investigations that something is worth a look at <paramref name="where"/>.</summary>
+        public void RequestInvestigation(Vector3 where) => InvestigateRequested?.Invoke(where);
+
+        // Centimetre-rounded so the same post gives the same seed on every run and every peer.
+        private static int SeedFrom(Vector3 post)
+        {
+            return Mathf.RoundToInt(post.x * 100f) * 73856093 ^ Mathf.RoundToInt(post.z * 100f) * 19349663;
         }
 
         /// <summary>Switches state from outside. A seam for tests, and for later states that hand over to each other.</summary>

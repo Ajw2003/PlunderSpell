@@ -30,6 +30,23 @@ namespace Plunderspell.Guards
         public float PatrolSpeed = 2.0f;
         public float ChaseSpeed = 4.5f;
 
+        [Header("Patrol")]
+        [Tooltip("Points a patrol round walks. At least 3 so the guard never just paces between two.")]
+        public int PatrolPointCount = 3;
+
+        public float PatrolMinimumRadius = 3f;
+        public float PatrolMaximumRadius = 8f;
+
+        [Tooltip("Points closer together than this count as the same point.")]
+        public float PatrolPointSpacing = 1.5f;
+
+        [Tooltip("Standing time at each point, in seconds.")]
+        public float PatrolPauseSeconds = 1f;
+
+        [Tooltip("Random tries to find one reachable point before giving up until the next pause ends.")]
+        public int PatrolPickAttempts = 16;
+
+        [Header("Movement body")]
         [Tooltip("Body shape the navigation service sweeps with.")]
         public float BodyRadius = 0.4f;
         public float BodyHeight = 1.8f;

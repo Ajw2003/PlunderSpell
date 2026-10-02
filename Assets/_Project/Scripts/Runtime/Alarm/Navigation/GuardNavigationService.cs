@@ -45,6 +45,10 @@ namespace Plunderspell.Alarm
 
         public GuardNavigationTuning Tuning => _tuning;
 
+        /// <summary>The castle the service plans on, or null before <see cref="SetMap"/>. States read it to
+        /// ask "can I get there" without sending a move request.</summary>
+        public IGuardNavigationMap Map => _map;
+
         /// <summary>Gives the service the castle to plan on. Without one every request is answered Blocked.</summary>
         public void SetMap(IGuardNavigationMap map)
         {

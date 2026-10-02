@@ -225,6 +225,17 @@ namespace Plunderspell.Raid
         /// <summary>Starts a raid in whichever era the Lair currently has selected.</summary>
         public void StartRaid() => StartRaid(_lair != null ? _lair.GetLairState().SelectedEra : Era);
 
+        // Decision 2026-10-02: a locked door costs the guards a detour and a barred door stops them, so the
+        // lockdown has to tell the graph about every door it changes (#207).
+        private static void WireLockdownToNavigation(CastleNavGraph graph)
+        {
+            CastleLockdown lockdown = FindFirstObjectByType<CastleLockdown>();
+            if (lockdown == null)
+                Debug.LogWarning("[Raid] No CastleLockdown in the scene; guards will walk through barred doors.");
+            else
+                lockdown.NavGraph = graph;
+        }
+
         /// <summary>
         /// Builds the castle and its haul from a seed. Separate from <see cref="StartRaid"/> so a
         /// client can rebuild from a replicated seed, and so tests can build without a full loop.
@@ -246,7 +257,10 @@ namespace Plunderspell.Raid
             RaidContext.Publish(new RaidContext(seed, Era));
             Castle = GenerateWalkable(ref seed);
             if ((!isSpawned || isServer) && _alarm != null && Castle != null && Castle.NavGraph != null)
+            {
                 _alarm.Navigation.SetMap(new CastleGuardNavigationMap(Castle.NavGraph)); // what the fresh guard walks on (#206)
+                WireLockdownToNavigation(Castle.NavGraph);
+            }
             if (RaidContext.Current.Seed != seed)
                 RaidContext.Publish(new RaidContext(seed, Era));
             if (!isSpawned || isServer)
