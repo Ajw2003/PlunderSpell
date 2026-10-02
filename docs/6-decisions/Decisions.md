@@ -3,6 +3,23 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-02 — Lockdown doors slow or stop guards too, not just players
+
+**Context.** The guard navigation service (#222) can give each archway link a runtime cost, and
+`CastleLockdown.NavGraph` would feed lockdown doors into it. Barring every door at the hue and
+cry could strand guards, so the wiring waited on the owner.
+
+**Decision (owner, 2026-10-02).**
+- A locked door adds a detour cost to the guard's route (40 m, `CastleLockdownNavigation`).
+- A barred door closes the route completely, for guards as well as players.
+- Guards on the wrong side of a barred door have to find another way.
+
+Rejected: guards passing freely (keys), and guards opening doors with a delay.
+
+**Consequence.** `CastleLockdown.NavGraph` is wired at generation. A guard that finds no route
+raises `Blocked(DoorClosed)`, and its state (#208–#210) must handle that, for example by giving
+up or holding position.
+
 ## 2026-10-01 — Guards become a state machine driven by an enemy director
 
 **Context.** `CastleGuard` had grown to 1316 lines of switches and direct calls. Guards got stuck,
