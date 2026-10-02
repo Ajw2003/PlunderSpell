@@ -100,6 +100,10 @@ namespace Plunderspell.Castle
 
         private void Relax(int node, float cost, int cameFrom, int throughModule, Vector3 goalPosition)
         {
+            // Entering an archway pays its door cost; a closed door (infinite) is not a way through.
+            cost += _portals.ExtraCost(node);
+            if (float.IsInfinity(cost))
+                return;
             if (_reachedBy[node] == _search && cost >= _cost[node])
                 return;
             _reachedBy[node] = _search;

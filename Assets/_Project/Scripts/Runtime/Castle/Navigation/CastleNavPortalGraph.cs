@@ -18,6 +18,10 @@ namespace Plunderspell.Castle
         // Per link, the costs across the rooms it touches: _edgeStart[link] up to _edgeStart[link + 1].
         private readonly int[] _edgeStart;
         private NavEdge[] _edges;
+        // Per link, what crossing it costs on top of the walk (#222). Zero is an ordinary archway, a
+        // locked door adds a detour's worth, infinity is closed. Set at runtime, so changing it needs
+        // no rebuild; _doorVersion tells callers their cached routes are stale.
+        private readonly float[] _extraCost;
 
         public CastleNavPortalGraph(List<NavLink> links, int moduleCount)
         {
@@ -27,6 +31,52 @@ namespace Plunderspell.Castle
             CollectEnds(moduleCount);
             _edgeStart = new int[_links.Length + 1];
             _edges = new NavEdge[0];
+            _extraCost = new float[_links.Length];
+        }
+
+        /// <summary>Bumps every time a link's extra cost actually changes.</summary>
+        public int DoorVersion { get; private set; }
+
+        /// <summary>Links currently closed.</summary>
+        public int ClosedLinkCount { get; private set; }
+
+        /// <summary>What crossing a node costs beyond the walk; zero for the goal pseudo-node, infinity if closed.</summary>
+        public float ExtraCost(int node) => node < _extraCost.Length ? _extraCost[node] : 0f;
+
+        public void SetExtraCost(int link, float cost)
+        {
+            if (_extraCost[link] == cost)
+                return;
+            if (float.IsPositiveInfinity(_extraCost[link]))
+                ClosedLinkCount--;
+            if (float.IsPositiveInfinity(cost))
+                ClosedLinkCount++;
+            _extraCost[link] = cost;
+            DoorVersion++;
+        }
+
+        /// <summary>Opens every link and drops every extra cost.</summary>
+        public void ClearExtraCosts()
+        {
+            for (int link = 0; link < _extraCost.Length; link++)
+                SetExtraCost(link, 0f);
+        }
+
+        /// <summary>The link whose archway is nearest a point on the floor plan, within the distance, or -1.</summary>
+        public int FindLinkNear(Vector3 position, float maxDistance)
+        {
+            int best = -1;
+            float bestSqr = maxDistance * maxDistance;
+            for (int link = 0; link < _links.Length; link++)
+            {
+                float dx = _links[link].Position.x - position.x, dz = _links[link].Position.z - position.z;
+                if (dx * dx + dz * dz < bestSqr)
+                {
+                    bestSqr = dx * dx + dz * dz;
+                    best = link;
+                }
+            }
+            return best;
         }
 
         public int LinkCount => _links.Length;

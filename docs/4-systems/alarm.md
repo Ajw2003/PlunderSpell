@@ -107,3 +107,45 @@ past — those belong to `Guards`/`Castle` respectively.
 delivers it to every `INoiseListener` like any noise, then asks each `IEavesdropper.Overhear` whether the
 words were taken in and returns that count (the alarm hears the noise but is not an eavesdropper).
 `CastleGuard` is one: an asleep or stunned guard answers false; otherwise it stores `LastOverheard`.
+
+## Guard navigation
+
+The director owns a server-side navigation service (#222, plan `docs/plans/bespoke-navigation.md` Design 3):
+`EnemyDirector.Navigation` (`Assets/_Project/Scripts/Runtime/Alarm/EnemyDirector.cs:272`), a
+`GuardNavigationService` (`Runtime/Alarm/Navigation/GuardNavigationService.cs:17`), ticked from the director's
+server-only `Update`. **Nothing drives guards with it yet**: `CastleGuard` still uses its NavMeshAgent, and
+the fresh guard core (#206) is what will send requests. No co-op run was possible for #222 for that reason.
+
+- **Events** on the existing bus (`GuardNavigationEvents.cs`, readonly structs): `Publish(MoveRequest(guard,
+  destination, speed, reason))` in; `OnPathReady`, `OnArrived`, `OnBlocked(reason)` out. Blocked reasons: no
+  map, no walkable cell, unreachable, door closed, obstacle (the sweep held the guard up for 0.5 s).
+- **Why an interface.** Castle references Alarm, so Alarm cannot name `CastleNavGraph`. The service plans
+  through `IGuardNavigationMap` (`IGuardNavigationMap.cs`); `CastleGuardNavigationMap`
+  (`Runtime/Castle/Navigation/CastleGuardNavigationMap.cs`) adapts the graph. Call
+  `director.Navigation.SetMap(new CastleGuardNavigationMap(data.NavGraph))`.
+- **Paths.** `GuardPathPlanner.TryPlan` (`GuardPathPlanner.cs:30`) asks the graph for the 4-connected cell
+  chain, `GuardPathSmoother.Smooth` (`:19`) keeps only the corners (look ahead to the farthest cell with a
+  clear straight line), and the result is cached under (start cell, goal cell). The cache key is the cell
+  pair, not the room pair the plan suggested: a route is only right from the cell it began in, and guards
+  in one room stand in different cells. The cache is dropped whenever a door changes.
+- **Moving.** Each tick, per guard: `GuardPathFollower.NextStep` toward the next waypoint, plus
+  `GuardSeparation.PushFor` (`:21`, pushes any pair closer than 1 m apart, standing guards included), cut
+  down by `GuardSweep.AllowedDistance` (`GuardSweep.cs:27`), then `GuardMoverStepper.Move` (`:28`) sets the
+  transform and settles height onto the graph's floor height (stairs). No Rigidbody, no agent.
+- **The #200 rule.** The capsule (bottom raised by `StepHeight` so stair risers pass) is swept with
+  `CapsuleCastNonAlloc` into a 16-hit buffer before every step and the step stops `SkinWidth` short of the
+  first wall or player. A guard cannot be moved into a player, so it cannot push one through a wall.
+  `SweepMask` is the thing to set when guards get colliders: keep their own layer out of it.
+- **Doors** (Design 5). `CastleNavPortalGraph` holds an extra cost per link (`CastleNavPortalGraph.cs`,
+  `SetExtraCost`); the portal search adds it when entering an archway (`CastleNavPortalSearch.cs:104`) and
+  skips an infinite one. `CastleNavGraph.SetDoorCost` (`CastleNavGraph.cs:115`) sets it with no rebuild and
+  bumps `DoorVersion`; `IsReachable` (`:86`) searches when any door is closed, because area ids are computed
+  once. `CastleLockdown.NavGraph` (`CastleLockdown.cs:39`) is the opt-in: set, a locked door costs
+  `LockedDoorCost` (40 m) and a barred door is closed (`CastleLockdownNavigation.MarkDoor`). It is **not set
+  anywhere yet**, and closing every door at Hue and Cry would stop guards entirely, so decide that with #206.
+  A door is matched to the archway within 2 m of it on the floor plan; that was not checked against a built
+  raid scene.
+- **Allocation.** Zero per tick: 0 B over 500 ticks of 20 guards sweeping (`GuardNavigationServiceTests`).
+  Planning a new route allocates its array once.
+- **Tests.** `GuardNavigationServiceTests` (flat floor: player against a wall, arrival, 20 guards, 0 B) and
+  `GuardNavigationCastleTests` (real graph: across rooms, KeepStairwell, closed doors).

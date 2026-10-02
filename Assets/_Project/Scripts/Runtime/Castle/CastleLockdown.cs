@@ -32,6 +32,20 @@ namespace Plunderspell.Castle
         /// <summary>Doors affected by the most recent lockdown. Surfaced for tests and tooling.</summary>
         public int DoorsAffected { get; private set; }
 
+        /// <summary>
+        /// The nav graph to tell about locked and barred doors (#222). Left null, the lockdown leaves
+        /// guard navigation alone; whoever drives guards through the graph sets it.
+        /// </summary>
+        public CastleNavGraph NavGraph { get; set; }
+
+        private void MarkNavigation(CastleDoor[] doors)
+        {
+            if (NavGraph == null)
+                return;
+            foreach (CastleDoor door in doors)
+                CastleLockdownNavigation.MarkDoor(NavGraph, door);
+        }
+
         private void Awake()
         {
             if (_alarm == null)
@@ -74,6 +88,7 @@ namespace Plunderspell.Castle
 
             foreach (CastleDoor door in doors)
                 door.Lock();
+            MarkNavigation(doors);
 
             Debug.Log($"[Lockdown] The castle locks its doors ({doors.Length}).");
         }
@@ -90,6 +105,7 @@ namespace Plunderspell.Castle
                 door.Lock();
                 door.Bar();
             }
+            MarkNavigation(doors);
 
             Debug.Log($"[Lockdown] The castle bars its doors ({doors.Length}).");
         }
@@ -100,6 +116,7 @@ namespace Plunderspell.Castle
             IsLockedDown = false;
             IsBarred = false;
             DoorsAffected = 0;
+            NavGraph?.ClearDoorCosts();
         }
 
         /// <summary>Wires the lockdown from code, for tests and tooling-built scenes.</summary>

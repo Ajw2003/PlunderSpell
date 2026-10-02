@@ -22,6 +22,7 @@ namespace Plunderspell.Castle
         private CastleNavGrid _grid;
         private CastleNavPortalGraph _portals;
         private CastleNavPathFinder _pathFinder;
+        private readonly List<Vector3> _scratchPath = new List<Vector3>();
 
         private CastleNavGraph() { }
 
@@ -77,11 +78,48 @@ namespace Plunderspell.Castle
             return _grid == null ? CastleNavGrid.NoCell : _grid.NearestWalkableCell(position, maxDistance);
         }
 
-        /// <summary>True when a guard could walk from one cell to the other through open archways.</summary>
+        /// <summary>
+        /// True when a guard could walk from one cell to the other through archways that are not
+        /// closed. With no door closed this is a single area-id comparison; with one closed it also
+        /// searches, because area ids are computed once and know nothing of doors.
+        /// </summary>
         public bool IsReachable(int cellA, int cellB)
+        {
+            if (!IsReachableWithDoorsOpen(cellA, cellB))
+                return false;
+            return _portals.ClosedLinkCount == 0 || _pathFinder.Find(cellA, cellB, _scratchPath);
+        }
+
+        /// <summary>Reachability as the castle was built, ignoring every door's state.</summary>
+        public bool IsReachableWithDoorsOpen(int cellA, int cellB)
         {
             return cellA >= 0 && cellB >= 0 && _grid.AreaId(cellA) >= 0 && _grid.AreaId(cellA) == _grid.AreaId(cellB);
         }
+
+        /// <summary>Extra cost that marks a door as shut (<see cref="SetDoorCost"/>).</summary>
+        public const float ClosedDoor = float.PositiveInfinity;
+
+        /// <summary>Changes whenever a door's cost changes; routes planned before are stale.</summary>
+        public int DoorVersion => _portals != null ? _portals.DoorVersion : 0;
+
+        /// <summary>The open archway nearest a point (floor plan distance only), or -1. How a door finds its link.</summary>
+        public int FindLinkNear(Vector3 position, float maxDistance)
+        {
+            return _portals == null ? -1 : _portals.FindLinkNear(position, maxDistance);
+        }
+
+        /// <summary>
+        /// Prices crossing a link on top of walking it (#222). Zero is ordinary, a positive cost makes
+        /// paths detour round it, <see cref="ClosedDoor"/> removes it. Nothing is rebuilt.
+        /// </summary>
+        public void SetDoorCost(int link, float extraCost)
+        {
+            if (_portals != null && link >= 0 && link < _portals.LinkCount)
+                _portals.SetExtraCost(link, extraCost);
+        }
+
+        /// <summary>Opens every door and removes every door cost.</summary>
+        public void ClearDoorCosts() => _portals?.ClearExtraCosts();
 
         /// <summary>True when the walkable cells nearest the two points are connected.</summary>
         public bool IsReachable(Vector3 a, Vector3 b)
@@ -100,7 +138,7 @@ namespace Plunderspell.Castle
             path.Clear();
             int startNode = NearestWalkableCell(from);
             int goalNode = NearestWalkableCell(to);
-            return IsReachable(startNode, goalNode) && _pathFinder.Find(startNode, goalNode, path);
+            return IsReachableWithDoorsOpen(startNode, goalNode) && _pathFinder.Find(startNode, goalNode, path);
         }
 
         /// <summary>Order-sensitive hash of everything the build produced, to compare two builds.</summary>

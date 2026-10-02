@@ -180,6 +180,14 @@ namespace Plunderspell.Alarm
         public event Action<GuardDied> OnGuardDied;
         /// <summary>Guards are asked to investigate a position. Relayed only; each guard decides.</summary>
         public event Action<InvestigateRequest> OnInvestigateRequest;
+        /// <summary>A guard is asked to walk somewhere. The navigation service answers it (#222).</summary>
+        public event Action<MoveRequest> OnMoveRequest;
+        /// <summary>The navigation service planned a route and the guard is walking it.</summary>
+        public event Action<PathReady> OnPathReady;
+        /// <summary>A guard reached the spot it was sent to.</summary>
+        public event Action<Arrived> OnArrived;
+        /// <summary>A guard could not get to the spot it was sent to.</summary>
+        public event Action<Blocked> OnBlocked;
 
         private bool IsAuthority => !isSpawned || isServer;
 
@@ -229,6 +237,20 @@ namespace Plunderspell.Alarm
         /// <summary>Asks guards to investigate. The director never moves a guard itself.</summary>
         public void Publish(InvestigateRequest e) => OnInvestigateRequest?.Invoke(e);
 
+        /// <summary>Asks the navigation service to walk a guard. Touching <see cref="Navigation"/> first
+        /// makes sure the service exists to hear it.</summary>
+        public void Publish(MoveRequest e)
+        {
+            _ = Navigation;
+            OnMoveRequest?.Invoke(e);
+        }
+
+        public void Publish(PathReady e) => OnPathReady?.Invoke(e);
+
+        public void Publish(Arrived e) => OnArrived?.Invoke(e);
+
+        public void Publish(Blocked e) => OnBlocked?.Invoke(e);
+
         /// <summary>The hue and cry: one investigate request at each player, so each guard in range can
         /// take the nearest. Replaces the guards' own alarm subscription (#205).</summary>
         private void RaiseHueAndCry()
@@ -240,12 +262,22 @@ namespace Plunderspell.Alarm
             }
         }
 
+        [Header("Guard navigation")]
+        [SerializeField] private GuardNavigationTuning _navigationTuning = new GuardNavigationTuning();
+
+        private GuardNavigationService _navigation;
+
+        /// <summary>Moves guards on request (#222). Made on first use so EditMode tests need no Awake.
+        /// Give it a map with <see cref="GuardNavigationService.SetMap"/> before sending requests.</summary>
+        public GuardNavigationService Navigation => _navigation ??= new GuardNavigationService(this, _navigationTuning);
+
         private void Update()
         {
             // Only the server integrates decay; clients receive state via replication.
             if (isSpawned && !isServer)
                 return;
             TickDecay(Time.deltaTime);
+            _navigation?.Tick(Time.deltaTime);
         }
 
         // ---------------------------------------------------------------------------------------
