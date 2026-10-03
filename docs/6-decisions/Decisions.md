@@ -1252,3 +1252,21 @@ state.
 **Status.** Standing. Open: `docs/plans/audio.md` §8 and the manifest's `final` column (C composed, M
 AI music) still describe the replacement plan; whether the synth tracks are now final is the owner's
 call.
+
+## 2026-10-03 — Short sounds load into memory; only music and long loops stream
+
+**Context.** Every one of the 1,013 clips was imported as Streaming, the owner's choice (2026-09-27,
+"Audio levels are baked per category"). The first Profiler captures of a co-op raid (#242,
+`docs/generated/perf-2026-10-03/`) showed `SoundManager.Update > SoundHandle.Instance.Destructor`
+costing 485-557 ms per 10 s of hue and cry on host and client: each footstep or hit opened and closed
+an FMOD stream.
+
+**Decision.** Owner approved on 2026-10-03: short sounds go into memory, as `docs/plans/audio.md` §2
+first planned. 517 SFX, foley, physics and UI clips are Decompress On Load (ADPCM, preloaded); 452
+voice lines are Compressed In Memory (Vorbis, preloaded); 44 music tracks and loops over 10 s stay
+Streaming. Set by `Tools/Unity/eval/audio_load_types.cs`.
+
+**Why.** Measured stalls, not taste: the after-capture shows no destructor time.
+
+**Status.** Standing (#244). Reverses the "Streaming, the owner's choice, is unchanged" line of the
+2026-09-27 entry; `docs/4-systems/audio.md` updated.

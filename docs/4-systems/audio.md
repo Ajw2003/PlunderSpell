@@ -231,7 +231,7 @@ The owner heard a delay on physics sounds. `AudioLatencyProbe` (a diagnostic, at
 measured, in Play from `RaidScene`, solo host:
 
 - play call to sound in the listener output: 0-22 ms for UI, footsteps, hound howl, weapon swing,
-  all imported as Streaming;
+  all imported as Streaming at the time (since 2026-10-03 short sounds load into memory);
 - a BronzeSword dropped 1.5 m: visible mesh down at 553 ms, collision at 559 ms, sound in the output
   at 578 ms, so the sound lands 25 ms after the picture;
 - the phys_ files start at once (impacts peak within 30 ms), except the scrape and roll loops, which
@@ -375,8 +375,10 @@ Not asserted in a test: output device (needs a real second Windows playback devi
   the concrete one is `AudioGroupParameterPath(group, guid)`.
 - `PlayerSettings.SetPreloadedAssets` is what puts the bank in `ProjectSettings.asset`; the diff is two
   lines. Deleting the bank asset without rebuilding leaves a dangling entry.
-- All clips are imported as Streaming (the owner's choice, `audio.md` section 2), so the first play of
-  a clip reads from disk. Nobody has measured whether that is audible on a busy frame.
+- Short sounds load into memory (Decompress On Load, ADPCM; voice lines Compressed In Memory,
+  Vorbis), all preloaded; music and loops over 10 s stream. Streaming every clip cost ~0.5 s of
+  stalls per 10 s of fighting (Decisions, 2026-10-03; #244). `Tools/Unity/eval/audio_load_types.cs`
+  re-applies the rule after new clips are imported.
 
 ## Not built (the gap list)
 
