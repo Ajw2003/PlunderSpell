@@ -89,19 +89,16 @@ PrefabInstance:
       addedObject: {fileID: 3177909402763064231}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6838651928492965365}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4694252293608377310}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2179051637313994380}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9070506736328958086}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7750046190311658685}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5656634184037842554}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5344196913607338570}
   m_SourcePrefab: {fileID: 100100000, guid: be7c2c71d921e1242b57f262c2db1d96, type: 3}
 --- !u!1 &3553585510442637796 stripped
 GameObject:
@@ -131,28 +128,6 @@ CapsuleCollider:
   m_Height: 2.310565
   m_Direction: 1
   m_Center: {x: 0, y: 1.1552825, z: 0}
---- !u!195 &6838651928492965365
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3553585510442637796}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.62800014
-  m_Speed: 1.8
-  m_Acceleration: 12
-  avoidancePriority: 50
-  m_AngularSpeed: 240
-  m_StoppingDistance: 0.8
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2.1
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 1
 --- !u!114 &4694252293608377310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,78 +142,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Status::Plunderspell.Status.StatusEffectReceiver
   _healthSource: {fileID: 0}
   _body: {fileID: 0}
---- !u!114 &2179051637313994380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3553585510442637796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7316eefc8d4f86c43b94afb39386487a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.CastleGuard
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
-  _isSetup: 0
-  _prefabId: -2147483648
-  _componentIndex: -2147483648
-  _shouldBePooled: 0
-  _parent: {fileID: 0}
-  _invertedPathToNearestParent: 
-  _directChildren: []
-  _sightRange: 18
-  _fieldOfView: 110
-  _eyeHeight: 1.8899999
-  _geometryLayers:
-    serializedVersion: 2
-    m_Bits: 1
-  _patrolSpeed: 1.8
-  _chaseSpeed: 3.8
-  _arrivalDistance: 1
-  _turnSpeed: 240
-  _patrolRoute: []
-  _attackRange: 2
-  _attackDamage: 12
-  _attackCooldown: 1.4
-  _projectilePrefab: {fileID: 0}
-  _projectileSpeed: 18
-  _maxHealth: 150
-  _alarm: {fileID: 0}
-  _shoutStrength: 0.8
-  _shoutRadius: 20
-  <_health>k__BackingField:
-    _value: 100
-    _ownerAuth: 0
-    _sendIntervalInSeconds: 0
---- !u!54 &9070506736328958086
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3553585510442637796}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &7750046190311658685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,3 +173,80 @@ MonoBehaviour:
   _characterControllerPatch: 0
   _ownerAuth: 1
   _interpolationTiming: 0
+--- !u!114 &5656634184037842554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3553585510442637796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2378832c299a4e48a255e6c03d5e201, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.GuardDeathPlayback
+--- !u!114 &5344196913607338570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3553585510442637796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b511e175954e647bb476c30e55a5bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.Guard
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _tuning:
+    SightRange: 18
+    FieldOfView: 110
+    EyeHeight: 1.8899999
+    TargetAimHeight: 1
+    GeometryLayers:
+      serializedVersion: 2
+      m_Bits: 1
+    PatrolSpeed: 1.8
+    ChaseSpeed: 3.8
+    PatrolPointCount: 3
+    PatrolMinimumRadius: 3
+    PatrolMaximumRadius: 8
+    PatrolPointSpacing: 1.5
+    PatrolPauseSeconds: 1
+    PatrolPickAttempts: 16
+    InvestigateSpeed: 3.2
+    InvestigateLookSeconds: 3
+    ChaseRetargetSeconds: 0.25
+    ChaseRetargetDistance: 0.75
+    ChaseLoseSightSeconds: 0.75
+    MeleeReach: 2
+    RangedEngageRange: 8
+    ProjectilePrefab: {fileID: 0}
+    ProjectileSpeed: 18
+    AttackCooldownSeconds: 1.4
+    ShotClearanceRadius: 0.3
+    BodyRadius: 0.62800014
+    BodyHeight: 2.1
+    AttackDamage: 12
+    CombatMargin: 2.5
+    CombatRingPadding: 1
+    AttackRecoverySeconds: 0.5
+    TurnDegreesPerSecond: 360
+    TurnRequestSeconds: 0.2
+    InvestigateAfterRecoveryFrom: 2
+    LandingTolerance: 0.15
+    PanicSpeed: 5.5
+    PanicRetrySeconds: 0.25
+    ToppleSeconds: 0.7
+    LingerSeconds: 2
+    FadeSeconds: 1.5
+    DustParticleCount: 24
+    MaxHealth: 150
