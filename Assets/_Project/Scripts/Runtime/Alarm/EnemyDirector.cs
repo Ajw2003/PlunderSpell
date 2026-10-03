@@ -40,6 +40,10 @@ namespace Plunderspell.Alarm
         [Tooltip("Guards chasing at once that force Hue and Cry.")]
         [SerializeField] private int _hueAndCryChasers = 3;
 
+        [Header("Hue and cry")]
+        [Tooltip("Seconds between repeats of the hue and cry, at the players' current positions, while the alarm stays at Hue and Cry.")]
+        [SerializeField] private float _hueAndCryRepeatSeconds = 3f;
+
         [Header("Attack turns")]
         [SerializeField] private AttackTurnTuning _attackTurnTuning = new AttackTurnTuning();
 
@@ -200,9 +204,19 @@ namespace Plunderspell.Alarm
             if (isSpawned && !isServer)
                 return;
             Alarm.TickDecay(Time.deltaTime);
+            TickHueAndCry(Time.deltaTime);
             _navigation?.Tick(Time.deltaTime);
             _attackTurns?.Tick(Time.deltaTime);
         }
+
+        /// <summary>Repeats the hue and cry on its interval while the alarm is at Hue and Cry; does nothing otherwise or on a client.</summary>
+        public void TickHueAndCry(float deltaTime)
+        {
+            if (IsAuthority && State == AlarmState.HueAndCry)
+                HueAndCryRaiser.Repeat(deltaTime);
+        }
+
+        private HueAndCry HueAndCryRaiser => _hueAndCry ??= new HueAndCry(_registry, Publish, _hueAndCryRepeatSeconds);
 
         internal void ReleaseAttackTurnOf(Component guard) => _attackTurns?.Release(guard);
 
@@ -227,7 +241,7 @@ namespace Plunderspell.Alarm
         private void OnAlarmStateChanged(AlarmState newState)
         {
             if (newState == AlarmState.HueAndCry && IsAuthority)
-                (_hueAndCry ??= new HueAndCry(_registry, Publish)).Raise();
+                HueAndCryRaiser.Raise();
 
             if (isSpawned && isServer)
                 BroadcastAlarmState(newState);

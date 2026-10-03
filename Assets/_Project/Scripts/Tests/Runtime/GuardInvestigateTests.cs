@@ -1,8 +1,10 @@
+using System.Collections;
 using Plunderspell.Acoustics;
 using NUnit.Framework;
 using Plunderspell.Alarm;
 using Plunderspell.Guards;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Plunderspell.Tests
 {
@@ -64,10 +66,57 @@ namespace Plunderspell.Tests
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
 
-            _rig.Director.Publish(new InvestigateRequest(new Vector3(0f, 0f, GuardDirectorLink.HueAndCryRadius + 10f), InvestigateReason.HueAndCry));
+            _rig.Director.Publish(new InvestigateRequest(new Vector3(0f, 0f, GuardDirectorLink.HueAndCryRadius + 10f), InvestigateReason.Noise));
             guard.Tick(Step);
 
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.Patrol));
+        }
+
+        [Test]
+        public void TheHueAndCryReachesAGuardEightyMetresAway()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+
+            _rig.Director.Publish(new InvestigateRequest(new Vector3(0f, 0f, 80f), InvestigateReason.HueAndCry));
+            guard.Tick(Step);
+
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Investigate));
+        }
+
+        // A frame passes between the two raises, as in the game: a guard keeps only the nearest request of one frame.
+        [UnityTest]
+        public IEnumerator ARepeatOfTheHueAndCrySendsAnInvestigatingGuardToTheNewSpot()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            Transform player = _rig.MakeIntruder(new Vector3(0f, 0f, 60f));
+            _rig.Director.SetAlarmLevel(100f);
+            guard.Tick(Step);
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Investigate));
+
+            yield return null;
+            player.position = new Vector3(70f, 0f, 0f);
+            _rig.Director.TickHueAndCry(4f);
+            guard.Tick(Step);
+
+            float offset = Vector3.Distance(((InvestigateState)guard.CurrentState).Spot, player.position);
+            Assert.That(offset, Is.InRange(GuardBrain.HuntOffsetMin - 0.01f, GuardBrain.HuntOffsetMax + 0.01f), "now heading for where the player is");
+        }
+
+        [Test]
+        public void TheRepeatStopsWhenTheAlarmDropsBelowHueAndCry()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            Transform player = _rig.MakeIntruder(new Vector3(0f, 0f, 60f));
+            _rig.Director.SetAlarmLevel(100f);
+            guard.Tick(Step);
+            _rig.Director.SetAlarmLevel(0f);
+            Vector3 spotBefore = ((InvestigateState)guard.CurrentState).Spot;
+
+            player.position = new Vector3(70f, 0f, 0f);
+            _rig.Director.TickHueAndCry(10f);
+            guard.Tick(Step);
+
+            Assert.That(((InvestigateState)guard.CurrentState).Spot, Is.EqualTo(spotBefore), "no repeat below Hue and Cry");
         }
 
         [Test]

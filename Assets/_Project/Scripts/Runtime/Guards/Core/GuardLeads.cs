@@ -28,7 +28,7 @@ namespace Plunderspell.Guards
         public GuardLeads(GuardDirectorLink link, GuardHearing hearing, Func<System.Random> random)
         {
             _random = random;
-            // The link applies the 40 m rule before it raises this, so every request here is already in range.
+            // The link applies its radius rule before it raises this; the hue and cry has none.
             link.InvestigateRequested += position => Offer(Roughly(position), HueAndCryStrength);
             hearing.NoiseNoticed += (origin, strength) => Offer(origin, Mathf.Clamp01(strength) * LoudestNoiseStrength);
         }

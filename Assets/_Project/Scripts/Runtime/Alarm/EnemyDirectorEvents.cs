@@ -6,7 +6,10 @@ namespace Plunderspell.Alarm
     public enum InvestigateReason
     {
         /// <summary>The alarm reached Hue and Cry: head for a player.</summary>
-        HueAndCry
+        HueAndCry,
+
+        /// <summary>A spot worth a look that is not the hue and cry: only nearby guards take it up.</summary>
+        Noise
     }
 
     // The director's event payloads. Plain readonly structs so raising one never allocates, and so the

@@ -12,7 +12,7 @@ namespace Plunderspell.Guards
     /// </summary>
     public sealed class GuardDirectorLink
     {
-        /// <summary>At the hue and cry, only guards this close to a player take the request up.</summary>
+        /// <summary>A request that is not the hue and cry is taken up only by guards this close to its spot.</summary>
         public const float HueAndCryRadius = 40f;
 
         private readonly Component _guard;
@@ -61,7 +61,8 @@ namespace Plunderspell.Guards
         private void HandleInvestigateRequest(InvestigateRequest request)
         {
             float distance = Vector3.Distance(_guard.transform.position, request.Position);
-            if (distance > HueAndCryRadius)
+            // Every guard in the castle answers the hue and cry, wherever it is (#239).
+            if (request.Reason != InvestigateReason.HueAndCry && distance > HueAndCryRadius)
                 return;
             if (_requestFrame == Time.frameCount && distance >= _requestDistance)
                 return;
