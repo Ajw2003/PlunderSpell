@@ -42,7 +42,7 @@ names all of them, rather than falling back to primitives.
 **`Tools/Plunderspell/Forge Enemy Prefabs + Roster`** authors one prefab per model in
 `Assets/Models/Enemies/` and the roster that posts them. Each prefab is a **variant of the model**,
 not a copy, so re-exporting the `.blend` flows through to the prefab. Onto that variant it adds a
-`CapsuleCollider` and `NavMeshAgent` sized from the model's measured bounds, a
+`CapsuleCollider` sized from the model's measured bounds (no `NavMeshAgent` since #223), a
 `StatusEffectReceiver`, and a `CastleGuard` tuned per role. The tuning table lives in
 `EnemyPrefabForge.Specs`; the roles it is derived from are recorded in
 `Assets/Models/Enemies/enemy_manifest.json`.
@@ -217,8 +217,8 @@ families) by `ArtBibleEnemyCatalog`, a pure parser the tests run headlessly. For
 
 - no rescaling (ArtForge builds at true scale), grounded by `EnemyPrefabForge.GroundModel`;
 - a `CapsuleCollider` of the body height (props excluded), radius from the model's width, clamped;
-- a `NavMeshAgent` whose height is the body height **capped at the lowest archway** of its posted
-  zones (Crypt 2.16, OuterBailey 2.59, InnerWard 2.88, Keep 3.31, CurtainWall 3.74 m; see
+- a body height (the guard's `Tuning.BodyHeight`; it was a `NavMeshAgent` height until #223) **capped at
+  the lowest archway** of its posted zones (Crypt 2.16, OuterBailey 2.59, InnerWard 2.88, Keep 3.31, CurtainWall 3.74 m; see
   `docs/4-systems/scale.md`);
 - `StatusEffectReceiver`, and `CastleGuard` tuned by role:
 
@@ -246,16 +246,15 @@ families) by `ArtBibleEnemyCatalog`, a pure parser the tests run headlessly. For
 
 ### Navigation
 
-The castle is instantiated from the seed at runtime, so its NavMesh is built at runtime too. A bake
-done in the Editor would only ever cover the empty ground plane.
+There is no runtime NavMesh any more (#223, 2026-10-02). The scenes carry no `NavMeshSurface` and
+`RaidDirector` has no `_navigation` field. Guards walk the castle's nav graph, which the generator
+stitches from tiles baked in the Editor, in the same step as the rooms (`docs/4-systems/castle.md`,
+"Nav tiles" and "Nav graph"). `CastleNavMeshBaker` is kept but marked obsolete until the owner approves
+removing it.
 
-`RaidDirector.BuildCastle` calls `CastleNavMeshBaker.Rebuild()` in the one window where it works:
-**after** the rooms are instantiated and **before** the garrison spawns. A guard spawned before the
-bake lands off-mesh and stands still for the entire raid.
-
-`CastleMeshImportSettings` forces Read/Write on everything under `Art/Models/Castle/`, because
-`NavMeshSurface` has to read those meshes to bake them. It is an `AssetPostprocessor` rather than a
-one-off pass so that re-exporting a `.blend` cannot quietly undo it.
+`CastleMeshImportSettings` still forces Read/Write on everything under `Art/Models/Castle/`. That was
+for the runtime bake; it stays until someone confirms nothing else reads those meshes. It is an
+`AssetPostprocessor` rather than a one-off pass so that re-exporting a `.blend` cannot quietly undo it.
 
 ### Orientation
 
@@ -365,12 +364,11 @@ standard in `scale.md`.
   `.blend` and the art stops flowing through.
 - **Every zone has at least one enemy posting and one loot posting.** A zone with an empty pool
   spawns nothing there, silently.
-- **The NavMesh is baked between castle generation and guard spawning.** Not in `Start()`, not
-  in the Editor.
+- **The nav graph is built with the castle, before guards spawn.** There is no NavMesh bake (#223).
 - **Spawn sites compose with the prefab's rotation, never replace it.** Passing a bare rotation to
   `Instantiate` discards the Blender axis correction the prefab root carries.
-- **Castle models are Read/Write enabled.** An unreadable mesh still bakes in the Editor and
-  silently produces no surface in a player build.
+- **Castle models are Read/Write enabled.** Needed by the old runtime NavMesh bake (removed, #223); kept
+  until nothing else is confirmed to need it.
 - **Every Age garrisons every zone outside the Crypt with its own enemies.** Asserted on the JSON by
   `ArtBibleEnemyCatalogTests.Test_EveryAgeGarrisonsEveryZoneOutsideTheCrypt`; the Crypt is covered in
   every Age by the `AnyEra` supernatural postings.

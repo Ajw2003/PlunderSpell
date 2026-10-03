@@ -197,6 +197,9 @@ stood on `_lastKnownIntruderPosition` for the search patience (forever at the hu
 only moved a patrolling guard, the hue and cry sent each guard once, and nothing noticed a guard
 whose path was blocked. All the pure decisions are in `GuardBrain`; the rest is `CastleGuard`.
 
+*Historical (#223, 2026-10-02): the next bullets describe the legacy `CastleGuard` on a NavMeshAgent. Guards
+now move on the nav graph and the runtime NavMesh is gone; see `docs/4-systems/alarm.md` "Guard navigation".*
+
 - **Stuck watchdog** (`CastleGuard.WatchProgress`, `CastleGuard.cs:882`). A guard with a destination
   that covers under 0.3 m in 1.5 s (`GuardBrain.IsStuck`, `StuckProgress`, `StuckSeconds`,
   `GuardBrain.cs:87`) first gets a fresh path, then (next window) a reachable detour point 2-5 m

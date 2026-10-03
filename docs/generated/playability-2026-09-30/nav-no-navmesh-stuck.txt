@@ -1,0 +1,8 @@
+guard -357266 t 39 dt 1.7 pos (-16.84, 0.31, -34.82) state Combat dest (-14.71, 1.50, -32.07) distDest 3.5 movedPerSecond 0.05 ground LateBrewhouse(Clone) n=(0.00, 1.00, 0.00) slope=0 touching []
+guard -357266 t 44 dt 1.7 pos (-16.96, 0.31, -34.67) state Combat dest (-14.81, 1.50, -32.07) distDest 3.4 movedPerSecond 0.14 ground LateBrewhouse(Clone) n=(0.00, 1.00, 0.00) slope=0 touching [GUARD:GothicManAtArms(Clone)/LDefault, GUARD:Handgunner(Clone)/LDefault]
+guard -356424 t 45 dt 1.7 pos (-21.46, 0.31, -36.33) state Combat dest (-22.82, 1.50, -38.02) distDest 2.2 movedPerSecond 0.00 ground LateGunFoundry(Clone) n=(0.00, 1.00, 0.00) slope=0 touching [PLAYER:RaidPlayer(Clone)/LDefault]
+guard -357392 t 45 dt 1.7 pos (-16.75, 0.31, -34.48) state Combat dest (-19.62, 1.50, -29.07) distDest 6.1 movedPerSecond 0.20 ground LateBrewhouse(Clone) n=(0.00, 1.00, 0.00) slope=0 touching [PROP:Bolt(Clone)/LDefault]
+guard -356424 t 47 dt 1.7 pos (-21.70, 0.31, -36.46) state Combat dest (-22.82, 1.50, -38.02) distDest 1.9 movedPerSecond 0.16 ground LateGunFoundry(Clone) n=(0.00, 1.00, 0.00) slope=0 touching []
+guard -356896 t 49 dt 1.7 pos (-16.62, 0.31, -37.45) state Combat dest (-14.79, 1.50, -39.90) distDest 3.1 movedPerSecond 0.14 ground LateBrewhouse(Clone) n=(0.00, 1.00, 0.00) slope=0 touching []
+guard -357140 t 49 dt 1.7 pos (-16.85, 0.31, -34.41) state Combat dest (-15.10, 1.50, -31.68) distDest 3.3 movedPerSecond 0.13 ground LateBrewhouse(Clone) n=(0.00, 1.00, 0.00) slope=0 touching [GUARD:SalletHalberdier(Clone)/LDefault]
+guard -357266 t 49 dt 1.7 pos (-15.07, 0.31, -33.60) state Combat dest (-14.81, 1.50, -32.07) distDest 1.5 movedPerSecond 0.13 ground LateBrewhouse(Clone) n=(0.00, 1.00, 0.00) slope=0 touching [GUARD:Handgunner(Clone)/LDefault]

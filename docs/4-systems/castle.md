@@ -77,7 +77,7 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   Typically 6 to 8 entrances a castle. Pure, so every peer derives the same ones. Courtyards stay
   sealed off from their rooms, as before. `CastleArrivalTests` covers a strip arrival being in
   front of a way in, nobody arriving outside the wall, and every side having an entrance. Checked
-  on the real castle for 12 seeds: every arrival has a complete NavMesh path to the crypt, and the
+  on the real castle for 12 seeds: every arrival had a complete NavMesh path to the crypt (when that was the walk map), and the
   three strip arrivals (seeds 43, 64, 88) have no plug in front and open looking at the archway
   (`docs/generated/issue-140-entrances/`).
 - **`CastleLockdown`** subscribes to `AlarmState` and locks (`Roused`) then bars (`HueAndCry`)
@@ -92,8 +92,8 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   `ZONE_ACCENT` in `castle_builders.py`). Stairwells climb to a gallery or dais, never into the sky.
 - **Navigation is audited, not assumed.** `CastlePathValidator` walks a rasterised grid and cannot
   see furniture. `Tools/Plunderspell/Audit Castle Navigation` (`CastleAudit.cs`) checks 25 floor
-  points per room and every loot piece on the real baked NavMesh, for five seeds. Results and
-  before/after overlays: `docs/generated/castle-survey-2026-09-23/`.
+  points per room and every loot piece on the castle's nav graph (since #223; it was a baked NavMesh), for five
+  seeds. Results and before/after overlays (NavMesh era): `docs/generated/castle-survey-2026-09-23/`.
 - **Loot sits on furniture, not on the floor.** Each room builder registers loot anchors (table
   tops, chest lids, the top board of a bookcase, altars, the throne dais, crypt niches) through
   `_anchor` in `castle_builders.py`. `build_assets.py` writes them to
@@ -145,9 +145,10 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
 
 - **The previous castle must leave physics before the next one is baked.** `ClearGenerated`
   deactivates each old piece before `Destroy`, because `Destroy` lands at the end of the frame and
-  the next castle is generated and baked within that same frame. Without it the NavMesh bake saw
+  the next castle is generated within that same frame. Without it the NavMesh bake (removed, #223) saw
   both castles overlaid and the old walls sealed the new doorways: from the second raid on, 50–99%
-  of the castle was unreachable for players' guards and the audit alike.
+  of the castle was unreachable for players' guards and the audit alike. The guards' capsule sweep
+  queries physics, so the same rule still protects it.
 
 - **The layout depends on whether a registry is assigned.** `PickWeighted` consumes a random draw
   when there is a room pool and returns early without one when there is not, so the same seed
@@ -228,6 +229,11 @@ Guards are server-side, so only the server needs to query it. Issue #221, plan
 - **Not in the graph**: fires and braziers (`CastleFireSpawner`, placed after generation) and loot. A guard
   meeting one slides round it in the sweep (alarm.md, Guard navigation). Locked and barred doors are costs
   on the coarse layer (alarm.md).
+
+There is no runtime NavMesh (#223): the scenes carry no `NavMeshSurface`, `RaidDirector` does not bake, and
+`CastleNavMeshBaker` is obsolete. `CastleAudit` now checks the floor and loot on this graph
+(`NearestWalkableCell` at the same 3 m / 0.5 m / 1.6 m radii, `IsReachable`); the radii are unchanged in
+number but now measure to a cell centre, so the audit's counts can differ slightly from the NavMesh era.
 
 Tests: `CastleNavGraphTests` (`Assets/_Project/Scripts/Tests/Editor/CastleNavGraphTests.cs`): same seed twice
 gives the same checksum; strip entrances and the gatehouse join the crypt and the drawbridge stays cut off;

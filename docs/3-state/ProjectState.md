@@ -107,8 +107,13 @@ lacks; the rest are older and either merged in another form or abandoned.
   (only the default registry was baked), the bailey dressing was not in the map, guards stopped dead on a
   clipped corner, and guards' bodies blocked each other. Co-op check, Late Medieval, 20 guards: stuck 4.8 s
   of 466 guard-seconds (1.0%), against 0 s moving before. Details: `docs/4-systems/alarm.md` (Guard
-  navigation) and `docs/4-systems/castle.md` (Nav tiles, Nav graph). The #214 parity table and the rest of
-  #223 (removing the runtime NavMesh) are not done.
+  navigation) and `docs/4-systems/castle.md` (Nav tiles, Nav graph). The #214 parity table is not done.
+  Then #223 finished: the runtime NavMesh is gone (no bake in `RaidDirector`, no `NavMeshSurface` in the three
+  scenes, no obstacle on the fire props, `CastleNavMeshBaker` obsolete, `CastleAudit` on the nav graph); the AI
+  Navigation package stays for the deprecated monster. Co-op check after: stuck 13.8 s of 461.0 guard-seconds
+  (the run before was 4.8 of 465.9; the seed is rolled per run, so not a like-for-like comparison). Four guard
+  PlayMode tests fail (`GuardTests` x2, `ChatterTests`, `GuardFriendlyFireTests`): they expect one tick of sight
+  to start a chase, but `PatrolState` now turns a sighting into an Investigate lead first. Not touched by #223.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
