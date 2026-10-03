@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Profiling;
 using UnityEngine;
 
 namespace Plunderspell.Alarm
@@ -14,6 +15,10 @@ namespace Plunderspell.Alarm
     /// </summary>
     public sealed class GuardPathPlanner
     {
+        // Named in Profiler captures (#243), so a slow frame shows which half of planning it paid for.
+        private static readonly ProfilerMarker SearchMarker = new ProfilerMarker("GuardPathPlanner.Search");
+        private static readonly ProfilerMarker SmoothMarker = new ProfilerMarker("GuardPathPlanner.Smooth");
+
         private readonly Dictionary<long, Vector3[]> _cache = new Dictionary<long, Vector3[]>();
         private readonly List<Vector3> _cellChain = new List<Vector3>();
         private readonly GuardPathSmoother _smoother = new GuardPathSmoother();
@@ -43,10 +48,14 @@ namespace Plunderspell.Alarm
                 return true;
             }
 
-            if (!map.TryFindPath(from, to, _cellChain, out failure))
-                return false;
+            using (SearchMarker.Auto())
+            {
+                if (!map.TryFindPath(from, to, _cellChain, out failure))
+                    return false;
+            }
             CacheMisses++;
-            _smoother.Smooth(_cellChain, map, halfWidth);
+            using (SmoothMarker.Auto())
+                _smoother.Smooth(_cellChain, map, halfWidth);
             route = _smoother.Kept.ToArray();
             _cache[key] = route;
             return true;
