@@ -1,5 +1,6 @@
 Castle nav tiles, 24x24 cells of 0.5 m, 2 layers. Guard capsule r=0.4 h=1.85.
 module | walkable% (columns with any walkable surface, of 576; total surfaces) | levels | portals N/E/S/W | dropped unreachable | bytes
+## CastleRoomRegistry
 GatehouseModule | 70.8 (408 surfaces) | 1 | 24/18/8/18 | 202 | 3592
 WallStraight | 91.7 (528 surfaces) | 1 | 24/22/0/22 | 49 | 3592
 WallCorner | 75.7 (436 surfaces) | 1 | 22/22/0/0 | 159 | 3544
@@ -25,3 +26,69 @@ TombCorridor | 66.7 (428 surfaces) | 2 | 4/4/4/4 | 200 | 3488
 BurialVault | 66.7 (384 surfaces) | 1 | 4/4/4/4 | 204 | 3488
 CryptChamberFinal | 61.6 (391 surfaces) | 2 | 4/4/4/4 | 251 | 3488
 CryptStairwell | 69.6 (404 surfaces) | 2 | 4/4/4/4 | 202 | 3488
+## CastleRoomRegistry_BronzeAge
+GatehouseModule | 72.0 (415 surfaces) | 1 | 24/15/4/17 | 208 | 3576
+WallStraight | 75.2 (433 surfaces) | 1 | 24/18/0/18 | 152 | 3576
+WallCorner | 54.2 (312 surfaces) | 1 | 18/18/0/0 | 298 | 3528
+Bastion | 64.4 (371 surfaces) | 1 | 24/18/0/19 | 288 | 3578
+Drawbridge | 12.2 (70 surfaces) | 1 | 0/0/6/0 | 136 | 3468
+BronzeChariotShed | 64.1 (369 surfaces) | 1 | 4/4/4/4 | 216 | 3488
+BronzeFoundry | 70.8 (428 surfaces) | 2 | 4/4/4/4 | 204 | 3488
+BronzeLevyBarracks | 72.0 (439 surfaces) | 2 | 4/4/4/4 | 214 | 3488
+BronzeCistern | 66.1 (382 surfaces) | 2 | 4/4/4/4 | 209 | 3488
+BronzeOilPress | 65.8 (383 surfaces) | 2 | 4/4/4/4 | 199 | 3488
+BronzePithosMagazine | 45.5 (263 surfaces) | 2 | 4/4/4/4 | 203 | 3488
+BronzeFrescoCourt | 67.5 (389 surfaces) | 1 | 4/4/4/4 | 214 | 3488
+BronzeShrine | 71.9 (450 surfaces) | 2 | 4/4/4/4 | 193 | 3488
+BronzePalaceKitchen | 68.6 (397 surfaces) | 2 | 4/4/4/4 | 201 | 3488
+BronzeTabletArchive | 70.0 (406 surfaces) | 2 | 4/4/4/4 | 184 | 3488
+BronzeMegaron | 67.4 (441 surfaces) | 2 | 4/4/4/4 | 251 | 3488
+BronzeTreasury | 69.6 (418 surfaces) | 2 | 4/4/4/4 | 223 | 3488
+BronzeQueensHall | 70.5 (427 surfaces) | 2 | 4/4/4/4 | 212 | 3488
+BronzeBathRoom | 69.4 (400 surfaces) | 1 | 4/4/4/4 | 195 | 3488
+BronzeMegaronStair | 69.8 (436 surfaces) | 2 | 4/4/4/4 | 192 | 3488
+BronzeDromos | 60.8 (394 surfaces) | 2 | 4/4/4/4 | 242 | 3488
+BronzeGraveCircle | 54.2 (324 surfaces) | 2 | 4/4/4/4 | 256 | 3488
+BronzeLarnaxVault | 63.9 (368 surfaces) | 1 | 4/4/4/4 | 264 | 3488
+CryptChamberFinal | 47.6 (274 surfaces) | 1 | 4/4/4/4 | 338 | 3488
+BronzeShaftStair | 64.8 (379 surfaces) | 2 | 4/4/4/4 | 198 | 3488
+## CastleRoomRegistry_LateMedieval
+GatehouseModule | 66.1 (381 surfaces) | 1 | 24/19/4/19 | 96 | 3588
+WallStraight | 79.2 (456 surfaces) | 1 | 24/19/0/19 | 164 | 3580
+WallCorner | 60.4 (348 surfaces) | 1 | 19/19/3/3 | 310 | 3544
+Bastion | 58.0 (334 surfaces) | 1 | 24/19/2/19 | 351 | 3584
+Drawbridge | 8.7 (54 surfaces) | 2 | 0/0/4/0 | 142 | 3464
+LateArtilleryYard | 67.2 (392 surfaces) | 2 | 4/4/4/4 | 203 | 3488
+LateGunFoundry | 62.5 (360 surfaces) | 1 | 4/4/4/4 | 215 | 3488
+LateHandgunnerBarracks | 72.6 (466 surfaces) | 2 | 4/4/4/4 | 260 | 3488
+LateBrewhouse | 65.6 (378 surfaces) | 1 | 4/4/4/4 | 228 | 3488
+LateTreadwheelWell | 66.3 (382 surfaces) | 1 | 4/4/4/4 | 196 | 3488
+LateCountingHouse | 65.3 (385 surfaces) | 2 | 4/4/4/4 | 244 | 3488
+LateArmouryHall | 68.8 (396 surfaces) | 1 | 4/4/4/4 | 205 | 3488
+LateSpitKitchen | 66.1 (381 surfaces) | 1 | 4/4/4/4 | 206 | 3488
+LateChantryChapel | 62.3 (359 surfaces) | 1 | 4/4/4/4 | 223 | 3488
+LateLibrary | 63.0 (363 surfaces) | 1 | 4/4/4/4 | 224 | 3488
+LateGreatHall | 68.4 (409 surfaces) | 2 | 4/4/4/4 | 206 | 3488
+LateJewelHouse | 68.6 (395 surfaces) | 1 | 4/4/4/4 | 199 | 3488
+LateStateBedchamber | 67.0 (386 surfaces) | 1 | 4/4/4/4 | 229 | 3488
+LateTapestrySolar | 68.6 (395 surfaces) | 1 | 4/4/4/4 | 193 | 3488
+LateTurretStair | 70.8 (442 surfaces) | 2 | 4/4/4/4 | 193 | 3488
+LateUndercroft | 63.9 (368 surfaces) | 1 | 4/4/4/4 | 231 | 3488
+LateOubliette | 57.3 (334 surfaces) | 2 | 4/4/4/4 | 296 | 3488
+LateCharnelHouse | 68.2 (393 surfaces) | 1 | 4/4/4/4 | 192 | 3488
+CryptChamberFinal | 60.6 (365 surfaces) | 2 | 4/4/4/4 | 301 | 3488
+LateUndercroftStair | 68.1 (395 surfaces) | 2 | 4/4/4/4 | 204 | 3488
+## GeneratedRoomRegistry 1
+CryptChamberFinal | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+CurtainWall_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+OuterBailey_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+InnerWard_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+Keep_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+Crypt_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+## GeneratedRoomRegistry
+CryptChamberFinal | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+CurtainWall_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+OuterBailey_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+InnerWard_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+Keep_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
+Crypt_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504

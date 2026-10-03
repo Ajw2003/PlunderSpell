@@ -16,8 +16,8 @@ namespace Plunderspell.EditorTools
     /// </summary>
     public static class CastleNavTileBaker
     {
-        private const string RegistryPath = "Assets/_Project/Data/Castle/CastleRoomRegistry.asset";
         private const string OutputDir = "docs/generated/nav-tiles-2026-10-02";
+        private const string DefaultRegistryName = "CastleRoomRegistry";
 
         private const float GuardRadius = 0.4f;
         private const float GuardHeight = 1.85f;
@@ -37,12 +37,17 @@ namespace Plunderspell.EditorTools
         [MenuItem("Tools/Plunderspell/Bake Castle Nav Tiles")]
         public static void BakeMenu() => Debug.Log(Bake());
 
-        /// <summary>Bakes every module, writes overlays and a summary, and returns the summary.</summary>
+        /// <summary>
+        /// Bakes every module of every room registry, writes overlays and a summary, and returns the
+        /// summary. Every Age has its own registry with its own entries (a shared piece such as WallCorner
+        /// is a separate entry in each), so all of them are baked: an unbaked registry gives that Age's
+        /// castle an empty walk map, and its guards cannot move at all.
+        /// </summary>
         public static string Bake()
         {
-            var registry = AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>(RegistryPath);
-            if (registry == null)
-                return $"[NavTiles] No registry at {RegistryPath}.";
+            string[] registryGuids = AssetDatabase.FindAssets("t:" + nameof(CastleRoomRegistry));
+            if (registryGuids.Length == 0)
+                return "[NavTiles] No CastleRoomRegistry assets found.";
             Directory.CreateDirectory(OutputDir);
 
             var report = new StringBuilder();
@@ -52,34 +57,12 @@ namespace Plunderspell.EditorTools
             Scene scene = EditorSceneManager.NewPreviewScene();
             try
             {
-                foreach (CastleRoomModuleData entry in registry.Modules)
+                foreach (string guid in registryGuids)
                 {
-                    if (entry == null || entry.Prefab == null)
-                        continue;
-                    GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(entry.Prefab);
-                    SceneManager.MoveGameObjectToScene(go, scene);
-                    go.transform.SetPositionAndRotation(Vector3.zero, entry.Prefab.transform.rotation); // the FBX import rotation, as the generator keeps it
-                    Physics.SyncTransforms();
-                    // The drawbridge spans a moat, so a virtual ground under it would be a lie.
-                    bool strip = entry.Zone == CastleZone.CurtainWall && entry.RoomId != DrawbridgeId;
-                    CastleNavTile tile = BakeModule(scene.GetPhysicsScene(), strip, out int dropped);
-                    Object.DestroyImmediate(go);
-
-                    entry.NavTile = tile;
-                    WriteOverlay(entry.RoomId, tile);
-                    int walk = 0, columns = 0;
-                    for (int i = 0; i < N * N; i++)
-                    {
-                        walk += tile.Walkable[i] + tile.Walkable[N * N + i];
-                        if (tile.Walkable[i] + tile.Walkable[N * N + i] > 0)
-                            columns++;
-                    }
-                    int bytes = tile.Walkable.Length + tile.HeightCm.Length * 2 +
-                                (tile.PortalNorth.Length + tile.PortalEast.Length +
-                                 tile.PortalSouth.Length + tile.PortalWest.Length) * 2;
-                    report.AppendLine($"{entry.RoomId} | {100f * columns / (N * N):F1} ({walk} surfaces) | {tile.LevelCount} | " +
-                                      $"{tile.PortalNorth.Length}/{tile.PortalEast.Length}/{tile.PortalSouth.Length}/{tile.PortalWest.Length}" +
-                                      $" | {dropped} | {bytes}");
+                    var registry = AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>(AssetDatabase.GUIDToAssetPath(guid));
+                    report.AppendLine($"## {registry.name}");
+                    BakeRegistry(registry, OverlayFolderFor(registry), scene, report);
+                    EditorUtility.SetDirty(registry);
                 }
             }
             finally
@@ -87,10 +70,56 @@ namespace Plunderspell.EditorTools
                 EditorSceneManager.ClosePreviewScene(scene);
             }
 
-            EditorUtility.SetDirty(registry);
             AssetDatabase.SaveAssets();
             File.WriteAllText(Path.Combine(OutputDir, "summary.txt"), report.ToString());
             return report.ToString();
+        }
+
+        // The default registry keeps the folder root (the overlays #220 was checked against); every other
+        // Age gets a folder of its own, because a shared piece such as WallCorner is a different model there.
+        private static string OverlayFolderFor(CastleRoomRegistry registry)
+        {
+            string folder = registry.name == DefaultRegistryName ? OutputDir : Path.Combine(OutputDir, registry.name);
+            Directory.CreateDirectory(folder);
+            return folder;
+        }
+
+        private static void BakeRegistry(CastleRoomRegistry registry, string overlayFolder, Scene scene, StringBuilder report)
+        {
+            foreach (CastleRoomModuleData entry in registry.Modules)
+            {
+                if (entry == null || entry.Prefab == null)
+                    continue;
+                GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(entry.Prefab);
+                SceneManager.MoveGameObjectToScene(go, scene);
+                go.transform.SetPositionAndRotation(Vector3.zero, entry.Prefab.transform.rotation); // the FBX import rotation, as the generator keeps it
+                Physics.SyncTransforms();
+                // The drawbridge spans a moat, so a virtual ground under it would be a lie.
+                bool strip = entry.Zone == CastleZone.CurtainWall && entry.RoomId != DrawbridgeId;
+                CastleNavTile tile = BakeModule(scene.GetPhysicsScene(), strip, out int dropped);
+                Object.DestroyImmediate(go);
+
+                entry.NavTile = tile;
+                WriteOverlay(overlayFolder, entry.RoomId, tile);
+                report.AppendLine(SummaryLine(entry.RoomId, tile, dropped));
+            }
+        }
+
+        private static string SummaryLine(string roomId, CastleNavTile tile, int dropped)
+        {
+            int walk = 0, columns = 0;
+            for (int i = 0; i < N * N; i++)
+            {
+                walk += tile.Walkable[i] + tile.Walkable[N * N + i];
+                if (tile.Walkable[i] + tile.Walkable[N * N + i] > 0)
+                    columns++;
+            }
+            int bytes = tile.Walkable.Length + tile.HeightCm.Length * 2 +
+                        (tile.PortalNorth.Length + tile.PortalEast.Length +
+                         tile.PortalSouth.Length + tile.PortalWest.Length) * 2;
+            return $"{roomId} | {100f * columns / (N * N):F1} ({walk} surfaces) | {tile.LevelCount} | " +
+                   $"{tile.PortalNorth.Length}/{tile.PortalEast.Length}/{tile.PortalSouth.Length}/{tile.PortalWest.Length}" +
+                   $" | {dropped} | {bytes}";
         }
 
         private static CastleNavTile BakeModule(PhysicsScene physics, bool strip, out int dropped)
@@ -271,7 +300,7 @@ namespace Plunderspell.EditorTools
 
         /// <summary>Top-down overlay, north up: one panel per layer. Green walkable (brighter =
         /// higher), red blocked or empty, blue portal.</summary>
-        private static void WriteOverlay(string roomId, CastleNavTile tile)
+        private static void WriteOverlay(string folder, string roomId, CastleNavTile tile)
         {
             const int px = 16;
             int w = CastleNavTile.Layers * N * px + (CastleNavTile.Layers - 1) * 8;
@@ -322,7 +351,7 @@ namespace Plunderspell.EditorTools
                 }
             }
             tex.SetPixels32(pixels);
-            File.WriteAllBytes(Path.Combine(OutputDir, roomId + ".png"), tex.EncodeToPNG());
+            File.WriteAllBytes(Path.Combine(folder, roomId + ".png"), tex.EncodeToPNG());
             Object.DestroyImmediate(tex);
         }
 

@@ -23,6 +23,26 @@ namespace Plunderspell.Tests.Editor
             return entry.NavTile;
         }
 
+        // Regression: only the default registry was baked, so Bronze Age and Late Medieval castles had an
+        // empty walk map and not one guard moved (2026-10-02).
+        [Test]
+        public void EveryRoomOfEveryAgeHasABakedTile()
+        {
+            var missing = new System.Text.StringBuilder();
+            string[] guids = AssetDatabase.FindAssets("t:" + nameof(CastleRoomRegistry));
+            Assert.That(guids.Length, Is.GreaterThan(1), "expected one registry per Age");
+            foreach (string guid in guids)
+            {
+                var registry = AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>(AssetDatabase.GUIDToAssetPath(guid));
+                foreach (CastleRoomModuleData entry in registry.Modules)
+                {
+                    if (entry != null && entry.Prefab != null && (entry.NavTile == null || !entry.NavTile.IsBaked))
+                        missing.Append(registry.name).Append('/').Append(entry.RoomId).Append(' ');
+                }
+            }
+            Assert.That(missing.ToString(), Is.Empty, "rooms with no baked nav tile");
+        }
+
         [Test]
         public void KitchenHasPortalsOnAllSidesAndSaneWalkableShare()
         {

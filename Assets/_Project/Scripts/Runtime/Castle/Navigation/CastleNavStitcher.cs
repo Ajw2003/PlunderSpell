@@ -13,12 +13,18 @@ namespace Plunderspell.Castle
         /// <summary>Copies every placed module's baked tile into the grid, rotated to its placement.</summary>
         public static void LoadTiles(CastleNavGrid grid, ProceduralCastleData data, CastleRoomRegistry registry)
         {
+            int unbaked = 0;
+            string firstUnbaked = null;
             for (int module = 0; module < grid.ModuleCount; module++)
             {
                 ProceduralCastleData.PlacedModule placed = data.PlacedModules[module];
                 CastleRoomModuleData entry = registry.GetById(placed.RoomId);
                 if (entry == null || entry.NavTile == null || !entry.NavTile.IsBaked)
+                {
+                    unbaked++;
+                    firstUnbaked ??= placed.RoomId;
                     continue;
+                }
                 grid.MarkTile(module);
                 int turns = QuarterTurns(placed.Rotation);
                 CopyCells(grid, module, entry.NavTile, turns);
@@ -27,6 +33,13 @@ namespace Plunderspell.Castle
                 CopyArchways(grid, module, entry.NavTile.PortalSouth, 2, turns);
                 CopyArchways(grid, module, entry.NavTile.PortalWest, 3, turns);
             }
+
+            // A room with no tile is a hole guards cannot stand in or cross; with a whole registry unbaked the
+            // map is empty and no guard moves at all, so this must never pass quietly.
+            if (unbaked > 0)
+                Debug.LogWarning($"[CastleNav] {unbaked} of {grid.ModuleCount} placed rooms have no baked nav tile " +
+                                 $"in {registry.name} (first: {firstUnbaked}). Guards cannot walk there. " +
+                                 "Run Tools/Plunderspell/Bake Castle Nav Tiles.");
         }
 
         // Modules are only ever turned in quarters about the vertical axis.
