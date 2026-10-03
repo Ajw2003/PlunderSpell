@@ -46,6 +46,12 @@ namespace StateMachine
 
         public Vector2 MovementDirection { get; set; }
 
+        /// <summary>Held creep key (#238): walk pace scaled by <see cref="CreepPace"/>, so the footstep is the quiet one.</summary>
+        public bool Creeping { get; set; }
+
+        /// <summary>Share of walk speed while creeping. 5 m/s * 0.4 = 2 m/s, under the 2.2 m/s crouch band of FootstepNoiseEmitter.</summary>
+        public const float CreepPace = 0.4f;
+
         public Rigidbody _rb;
 
         public float walkSpeed;

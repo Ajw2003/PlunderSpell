@@ -24,6 +24,8 @@ public class PlayerWalkState : PlayerState
         // (#144). Towing a piece too heavy to lift does (docs/4-systems/damage.md, "Weight").
         Item carried = ItemManager.Instance != null ? ItemManager.Instance.CarriedItem : null;
         float pace = carried != null ? carried.TowSpeedMultiplier : 1f;
+        if (_stateMachine.Creeping)
+            pace *= PlayerStateMachine.CreepPace;
         if (_stateMachine.IsStaggered)
             pace = 0f;
         _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed * pace) + (Vector3.up * verticalSpeed);
