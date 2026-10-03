@@ -115,10 +115,15 @@ namespace Plunderspell.Tests
                 "A guard back on patrol must raise the alarm again when it spots someone.");
         }
 
+        // Two looks: a patrolling guard that sees someone goes to Investigate first, and Investigate hands a
+        // sighting on to Chase (docs/plans/guard-fsm-restructure.md, the state table).
         private static void LookAndTick(Guard guard)
         {
-            guard.Sight.LookNext();
-            guard.Tick(0.1f);
+            for (int look = 0; look < 2; look++)
+            {
+                guard.Sight.LookNext();
+                guard.Tick(0.1f);
+            }
         }
 
         // --- The director's own rules ----------------------------------------------------------

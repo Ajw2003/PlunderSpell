@@ -117,6 +117,9 @@ namespace Plunderspell.Tests
         public void ARangedGuardChasingDoesNotFireThroughATeammate()
         {
             Guard archer = MakeArcherAt(Vector3.zero);
+            // Held where it stands, so the teammate stays in its line and it stays out of engage range. Guards
+            // walk through each other's bodies now (the sweep ignores guards), so it would otherwise close in.
+            archer.Tuning.ChaseSpeed = 0f;
             _rig.MakeIntruder(new Vector3(0f, 0f, 12f));
             MakeTeammateAt(new Vector3(0f, 0f, 1.5f));
 
