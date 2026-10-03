@@ -109,6 +109,8 @@ lacks; the rest are older and either merged in another form or abandoned.
   clipped corner, and guards' bodies blocked each other. Co-op check, Late Medieval, 20 guards: stuck 4.8 s
   of 466 guard-seconds (1.0%), against 0 s moving before. Details: `docs/4-systems/alarm.md` (Guard
   navigation) and `docs/4-systems/castle.md` (Nav tiles, Nav graph). The #214 parity table is not done.
+  #238: raid footsteps and landings now reach guards, sight looks up to 70 degrees, loot impacts and drags make noise by weight; heavy
+  loot in game and a walk in the open are unverified, and the raid has no sneak (`docs/4-systems/alarm.md`).
   Then #223 finished: the runtime NavMesh is gone (no bake in `RaidDirector`, no `NavMeshSurface` in the three
   scenes, no obstacle on the fire props, `CastleNavMeshBaker` obsolete, since deleted, `CastleAudit` on the nav graph); the AI
   Navigation package stays for the deprecated monster. Co-op check after: stuck 13.8 s of 461.0 guard-seconds

@@ -190,6 +190,24 @@ prefab carries the fresh guard since #214.
   in the way, 20 guards, 0 B) and
   `GuardNavigationCastleTests` (real graph: across rooms, KeepStairwell, closed doors).
 
+## Sight and hearing rules (#238)
+
+Measured numbers: `docs/generated/guard-awareness-2026-10-02/findings.md`.
+
+- **Sight.** `GuardBrain.CanSee` tests the side-to-side angle against half the field of view (55 degrees) and the up/down angle
+  separately against `MaxLookPitchDegrees` (70). A player on a table, a ledge or in mid-jump in front stays seen and a chase is not lost
+  for being airborne; nearly overhead is not seen.
+- **Footsteps.** `StepAudio` feeds `FootstepNoiseEmitter` for any player that has one, wherever the player is. Pace picks the stance
+  (under 2.2 m/s crouch 1.5 m, under 4.5 walk 4 m, else run 8 m; strength 0.4). The raid controller has one pace, 5 m/s, so a raid player
+  always makes the 8 m run noise. **There is no sneak or crouch on the raid controller**, so a backstab approach has no quiet way in.
+  Smallest option, not built: a hold-to-creep key lowering `walkSpeed` under 2.2 m/s, which the same breaks make a 1.5 m footstep.
+- **Landing.** `OnLanding`: falls over 2.5 m/s 6 m at 0.5, over 10 m/s 12 m at 0.8.
+- **Loot.** `LootNoise`: impact reach 2 x sqrt(kg) scaled by speed, capped 14 m, strength 0.2 + 0.03 x kg; a piece too heavy to lift being
+  dragged scrapes every 0.8 s, 2 x sqrt(kg) m at 0.3 (`LootDragNoise`). Server only. In-game hook not yet verified (see findings).
+- **Walls.** The raid player's emitter now counts Default-layer walls. `NoiseBroadcaster.CountWalls` ignores the listener's own body,
+  other listeners and anything carrying a Rigidbody, and aims at the middle of the listener. Two walls hide a footstep from a calm guard.
+- **Tests.** `GuardAwarenessTests`, `NoiseSourceTests`.
+
 ## The fresh guard core (#206)
 
 `Guard` (`Assets/_Project/Scripts/Runtime/Guards/Core/Guard.cs:24`) is the new guard, a thin NetworkBehaviour. **Not live yet:** no prefab uses it,

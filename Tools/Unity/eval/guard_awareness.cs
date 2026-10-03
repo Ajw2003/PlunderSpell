@@ -150,14 +150,39 @@ if (action == "loot")
     float bestD = float.MaxValue;
     foreach (var l in UnityEngine.Object.FindObjectsByType<Plunderspell.Loot.LootPickup>(UnityEngine.FindObjectsSortMode.None))
     {
-        float dd = (l.transform.position - guard.transform.position).sqrMagnitude;
+        var lbody = l.GetComponent<UnityEngine.Rigidbody>();
+        // HEAVY picks the heaviest piece in the castle, anything else the nearest to the guard.
+        float dd = arg == "HEAVY" ? -(lbody != null ? lbody.mass : 0f) : (l.transform.position - guard.transform.position).sqrMagnitude;
         if (dd < bestD) { bestD = dd; best = l; }
     }
     if (best == null) return "no loose loot";
     var body = best.GetComponent<UnityEngine.Rigidbody>();
-    best.transform.position = guard.transform.position + guard.transform.right * 1.5f + UnityEngine.Vector3.up * 0.6f;
+    float lootDistance = arg2.Length > 0 && arg2[0] != '_' ? float.Parse(arg2, inv) : 1.5f;
+    best.transform.position = guard.transform.position + guard.transform.right * lootDistance + UnityEngine.Vector3.up * 0.6f;
     if (body != null) { body.linearVelocity = UnityEngine.Vector3.zero; body.WakeUp(); }
     return "dropped " + best.name + " mass " + (body != null ? body.mass : 0f) + " beside the guard";
+}
+
+if (action == "diag")
+{
+    // What StepAudio on the local player thinks it is doing: its private counters, by reflection.
+    var stepAudio = player.GetComponent<Plunderspell.Audio.StepAudio>();
+    var all = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+    string text = "";
+    foreach (var name in new[] { "_noise", "_wasGrounded", "_idleSeconds", "_travelled", "_windowSeconds", "_fallSpeed" })
+        text += name + "=" + typeof(Plunderspell.Audio.StepAudio).GetField(name, all).GetValue(stepAudio) + " ";
+    // What stands between the player and the guard's body, as the noise search would see it.
+    var gcol = guard.GetComponentInChildren<UnityEngine.Collider>();
+    string between = "";
+    if (gcol != null)
+    {
+        var target = gcol.bounds.center;
+        var rayDir = target - player.transform.position;
+        foreach (var h in UnityEngine.Physics.RaycastAll(player.transform.position, rayDir.normalized, rayDir.magnitude, 1, UnityEngine.QueryTriggerInteraction.Ignore))
+            between += h.collider.name + "(rb " + (h.collider.attachedRigidbody != null) + ") ";
+        between = "toGuardCenter " + target + " walls " + Plunderspell.Acoustics.NoiseBroadcaster.CountWalls(player.transform.position, target, 1, guard) + " hits " + between;
+    }
+    return text + "isGrounded " + player.IsGrounded + " dead " + player.dead + " " + between;
 }
 
 if (action == "look")

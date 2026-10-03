@@ -92,14 +92,20 @@ done
 for d in 3 6 10; do
     log "--- player walking, guard $d m behind"
     log "$(aw place WALK "$d")"
-    log "$(aw walk 1.5)"; sleep 2.5
+    log "$(aw walk 1.5)"; sleep 0.6; log "diag mid-walk: $(aw diag)"; sleep 2.2
     log "read: $(aw read)"
 done
 # b. A jump landing and dropped loot, guard 3 m behind.
 log "--- jump landing, guard 3 m behind"
 log "$(aw place BEHIND 3)"; log "$(aw jump)"; sleep 2.5; log "read: $(aw read)"
-log "--- loot dropped beside a guard 3 m behind"
-log "$(aw place BEHIND 3)"; log "$(aw loot)"; sleep 2; log "read: $(aw read)"
+for d in 2 5; do
+    log "--- nearest (light) loot dropped $d m from a guard"
+    log "$(aw place BEHIND 6)"; log "$(aw loot NEAR "$d")"; sleep 2.5; log "read: $(aw read)"
+done
+for d in 2 5 7 12; do
+    log "--- heaviest loot dropped $d m from a guard"
+    log "$(aw place BEHIND 6)"; log "$(aw loot HEAVY "$d")"; sleep 2.5; log "read: $(aw read)"
+done
 # c. Sight: the guard faces the player, who is UP m higher than the guard, 3.5 m away.
 for dist in 3.5 1.5; do
     for up in 0 1 2.5 4 8; do
