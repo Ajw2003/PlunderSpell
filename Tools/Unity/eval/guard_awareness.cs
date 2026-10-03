@@ -64,6 +64,8 @@ if (action == "place")
     // The player goes back to the spot it was at when the guard was picked (UP m higher, held there
     // if UP > 0), and the guard is put on the floor under the anchor, d m in front of it or behind it.
     var rb = player.GetComponent<UnityEngine.Rigidbody>();
+    var leftover = UnityEngine.GameObject.Find("awLedge");   // the slab of a previous ledge case
+    if (leftover != null) UnityEngine.Object.DestroyImmediate(leftover);
     rb.isKinematic = false;
     rb.linearVelocity = UnityEngine.Vector3.zero;
     player.transform.position = anchor + UnityEngine.Vector3.up * up;
@@ -83,6 +85,108 @@ if (action == "place")
     guard.ChangeState(guard.States.Patrol);
     System.AppDomain.CurrentDomain.SetData("awNoticed0", guard.Hearing.NoticedCount);
     return "placed " + mode + " " + d + " m up " + up + " guard at " + guard.transform.position + " player at " + player.transform.position;
+}
+
+if (action == "ledge")
+{
+    // ledge KIND:TOP D (#238 part 2): the player stands on top of a slab, TOP m above the floor the guard
+    // stands on; the guard is D m away on the floor, facing the player. WALL is a 2 m deep wall walk,
+    // RAIL a 0.12 m thick railing. The slab is on a layer the guards' line of sight collides with.
+    string kind = arg.Split(':')[0];
+    float top = float.Parse(arg.Split(':')[1], inv);
+    float d = float.Parse(arg2, inv);
+    float floorY = anchor.y - 1.19f;
+    var old = UnityEngine.GameObject.Find("awLedge");
+    if (old != null) UnityEngine.Object.DestroyImmediate(old);
+    var slab = UnityEngine.GameObject.CreatePrimitive(UnityEngine.PrimitiveType.Cube);
+    slab.name = "awLedge";
+    for (int bit = 0; bit < 32; bit++)
+    {
+        if ((guard.Tuning.GeometryLayers.value & (1 << bit)) != 0) { slab.layer = bit; break; }
+    }
+    slab.transform.localScale = new UnityEngine.Vector3(3f, top, kind == "RAIL" ? 0.12f : 2f);
+    slab.transform.position = new UnityEngine.Vector3(anchor.x, floorY + top * 0.5f, anchor.z);
+    var rb = player.GetComponent<UnityEngine.Rigidbody>();
+    rb.isKinematic = true;
+    player.transform.position = new UnityEngine.Vector3(anchor.x, floorY + top + 1.19f, anchor.z);
+    rb.position = player.transform.position;
+    guard.transform.position = new UnityEngine.Vector3(anchor.x, floorY, anchor.z) + UnityEngine.Vector3.forward * d;
+    guard.transform.rotation = UnityEngine.Quaternion.LookRotation(UnityEngine.Vector3.back, UnityEngine.Vector3.up);
+    UnityEngine.Physics.SyncTransforms();
+    guard.Leads.Clear();
+    guard.ChangeState(guard.States.Patrol);
+    System.AppDomain.CurrentDomain.SetData("awNoticed0", guard.Hearing.NoticedCount);
+    return "ledge " + arg + " guard " + d + " m away, player at " + player.transform.position + " guard at " + guard.transform.position;
+}
+
+if (action == "probe")
+{
+    // Which aim points on the player have a clear ray from the guard's eye, the up angle to each, and what
+    // blocks the others (the nearest hit that is not the player's own collider).
+    var eyePoint = guard.transform.position + UnityEngine.Vector3.up * guard.Tuning.EyeHeight;
+    string[] pointNames = { "head", "chest", "feet" };
+    float[] pointHeights = { 1.0f, 0.05f, -0.9f };   // from the player pivot, which is 1.19 m above the floor
+    string text = "Visible " + (guard.Sight.Visible != null) + " |";
+    for (int p = 0; p < 3; p++)
+    {
+        var aimPoint = player.transform.position + UnityEngine.Vector3.up * pointHeights[p];
+        var toPoint = aimPoint - eyePoint;
+        float pointDistance = toPoint.magnitude;
+        float pitch = UnityEngine.Mathf.Atan2(toPoint.y, UnityEngine.Mathf.Sqrt(toPoint.x * toPoint.x + toPoint.z * toPoint.z)) * UnityEngine.Mathf.Rad2Deg;
+        string blocker = "clear";
+        float nearest = float.MaxValue;
+        foreach (var h in UnityEngine.Physics.RaycastAll(eyePoint, toPoint / pointDistance, pointDistance, guard.Tuning.GeometryLayers, UnityEngine.QueryTriggerInteraction.Ignore))
+        {
+            if (h.collider.transform.IsChildOf(player.transform) || h.distance >= nearest) continue;
+            nearest = h.distance;
+            blocker = "blocked by " + h.collider.name + " at " + h.distance.ToString("F2");
+        }
+        text += " " + pointNames[p] + " up " + pitch.ToString("F0") + " deg dist " + pointDistance.ToString("F1") + " " + blocker + ";";
+    }
+    return text;
+}
+
+if (action == "sidewalk")
+{
+    // sidewalk SECONDS WALK|CREEP: the guard stands 3 m to the player's right and the real walk state moves
+    // the player forward (the controller is switched off so the held key cannot overwrite Creeping).
+    var rb = player.GetComponent<UnityEngine.Rigidbody>();
+    var controller = player.GetComponent<Player.PlayerInputController>();
+    var camForward = UnityEngine.Vector3.ProjectOnPlane(player.CameraTransform.forward, UnityEngine.Vector3.up).normalized;
+    var rightward = UnityEngine.Vector3.Cross(UnityEngine.Vector3.up, camForward);
+    rb.isKinematic = false;
+    rb.linearVelocity = UnityEngine.Vector3.zero;
+    player.transform.position = anchor;
+    rb.position = anchor;
+    guard.transform.position = new UnityEngine.Vector3(anchor.x, anchor.y - 1.19f, anchor.z) + rightward * 3f;
+    guard.transform.rotation = UnityEngine.Quaternion.LookRotation(-rightward, UnityEngine.Vector3.up);
+    UnityEngine.Physics.SyncTransforms();
+    guard.Leads.Clear();
+    guard.ChangeState(guard.States.Patrol);
+    System.AppDomain.CurrentDomain.SetData("awNoticed0", guard.Hearing.NoticedCount);
+    var speeds = new float[2];   // fastest horizontal speed, samples
+    System.AppDomain.CurrentDomain.SetData("awSpeed", speeds);
+    controller.enabled = false;
+    player.Creeping = arg2 == "CREEP";
+    player.Move(new UnityEngine.Vector2(0f, 1f));
+    player.ChangeState(player.WalkState);
+    double sideEnd = UnityEngine.Time.realtimeSinceStartupAsDouble + double.Parse(arg, inv);
+    UnityEditor.EditorApplication.CallbackFunction sideTick = null;
+    sideTick = () =>
+    {
+        if (player == null) { UnityEditor.EditorApplication.update -= sideTick; return; }
+        var flatVelocity = rb.linearVelocity; flatVelocity.y = 0f;
+        if (flatVelocity.magnitude > speeds[0]) speeds[0] = flatVelocity.magnitude;
+        if (UnityEngine.Time.realtimeSinceStartupAsDouble > sideEnd)
+        {
+            player.Move(UnityEngine.Vector2.zero);
+            player.Creeping = false;
+            controller.enabled = true;
+            UnityEditor.EditorApplication.update -= sideTick;
+        }
+    };
+    UnityEditor.EditorApplication.update += sideTick;
+    return "sidewalk " + arg2 + " " + arg + " s, guard 3 m to the right at " + guard.transform.position;
 }
 
 if (action == "footstep")
@@ -199,9 +303,10 @@ if (action == "read")
     var aim = player.transform.position + UnityEngine.Vector3.up * guard.Tuning.TargetAimHeight;
     bool cone = Plunderspell.Guards.GuardBrain.CanSee(eye, guard.transform.forward, aim, guard.Tuning.SightRange,
         guard.Tuning.FieldOfView, true);
+    var speedData = System.AppDomain.CurrentDomain.GetData("awSpeed") as float[];
     var jump = System.AppDomain.CurrentDomain.GetData("awJump") as float[];
-    string jumpText = jump == null ? "" : " jumpPeak " + jump[0].ToString("F2") + " airFrames " + jump[1] + " seenFrames " + jump[2];
-    return "player " + player.transform.position + jumpText + " state " + guard.State + " noticedSincePlace " + (guard.Hearing.NoticedCount - n0)
+    string speedText = speedData == null ? "" : " fastestWalk " + speedData[0].ToString("F2") + " m/s";    string jumpText = jump == null ? "" : " jumpPeak " + jump[0].ToString("F2") + " airFrames " + jump[1] + " seenFrames " + jump[2];
+    return "player " + player.transform.position + jumpText + speedText + " state " + guard.State + " noticedSincePlace " + (guard.Hearing.NoticedCount - n0)
         + " coneOnly " + cone + " sees " + (guard.Sight.Visible != null ? guard.Sight.Visible.name : "nobody") + " distance " + dist.ToString("F1")
         + " playerY " + player.transform.position.y.ToString("F2") + " guardY " + guard.transform.position.y.ToString("F2");
 }

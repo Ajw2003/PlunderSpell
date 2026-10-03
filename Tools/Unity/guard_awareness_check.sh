@@ -84,6 +84,8 @@ sleep 10   # past the calm arrival grace
 log "pick: $(aw pick)"
 log "info: $(aw info)"
 
+# Sections a and b (hearing, jumps, loot) were measured in part 1; AW_FULL=1 repeats them.
+if [ "${AW_FULL:-0}" = 1 ]; then
 # a. Footsteps: the positive control (the emitter called by hand) and the real thing (the player moving).
 for d in 4 8 12; do
     log "--- footstep control, guard $d m behind"
@@ -115,5 +117,32 @@ for dist in 3.5 1.5; do
 done
 log "--- mid-jump, guard facing the player 1.5 m away"
 log "$(aw place FRONT 1.5)"; log "$(aw jump)"; sleep 3; log "read: $(aw read)"
+fi
+
+# d. Sight from below (#238 part 2): the player on a wall walk (4.5 m), a stair railing (3 m) and a low
+# railing (1.1 m), a calm guard on the floor 1.5, 3 and 6 m away facing it; then open ground at 15 and 20 m.
+for ledge in WALL:4.5 RAIL:3 RAIL:1.1; do
+    for dist in 1.5 3 6; do
+        log "--- sight, player on $ledge, guard $dist m away"
+        log "$(aw ledge "$ledge" "$dist")"; aw look >/dev/null; sleep 0.5
+        log "probe: $(aw probe)"; log "read: $(aw read)"
+    done
+done
+for dist in 15 20; do
+    log "--- sight, open ground, guard $dist m away facing the player"
+    log "$(aw place FRONT "$dist")"; aw look >/dev/null; sleep 0.5
+    log "probe: $(aw probe)"; log "read: $(aw read)"
+done
+# e. Creep (part 2, only when the build has it): the real walk state, the guard 3 m to the side.
+if [ "$label" != before ]; then
+    for gait in WALK CREEP; do
+        log "--- real $gait for 1.5 s, guard 3 m to the side"
+        log "$(aw sidewalk 1.5 "$gait")"; sleep 2.5; log "read: $(aw read)"
+    done
+    for stance in Run Crouch; do
+        log "--- footstep control $stance, guard 3 m behind"
+        log "$(aw place BEHIND 3)"; log "$(aw footstep "$stance")"; sleep 0.4; log "read: $(aw read)"
+    done
+fi
 aw place BEHIND 30 >/dev/null   # puts the player back on its feet, not held up
 log "done"
