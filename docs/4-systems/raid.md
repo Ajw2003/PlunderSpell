@@ -198,7 +198,10 @@ only moved a patrolling guard, the hue and cry sent each guard once, and nothing
 whose path was blocked. All the pure decisions are in `GuardBrain`; the rest is `CastleGuard`.
 
 *Historical (#223, 2026-10-02): the next bullets describe the legacy `CastleGuard` on a NavMeshAgent. Guards
-now move on the nav graph and the runtime NavMesh is gone; see `docs/4-systems/alarm.md` "Guard navigation".*
+now move on the nav graph and the runtime NavMesh is gone; see `docs/4-systems/alarm.md` "Guard navigation".
+`CastleGuard.cs`, `GuardMovementTests` and the `GuardBrain` rules named below were deleted on 2026-10-02 (owner's
+approval); the `CastleGuard.cs:N` line numbers refer to the frozen copy `docs/reference/guard-legacy/CastleGuard.cs.txt`.
+The hue and cry's re-sending is now the director's repeat (#239, alarm.md).*
 
 - **Stuck watchdog** (`CastleGuard.WatchProgress`, `CastleGuard.cs:882`). A guard with a destination
   that covers under 0.3 m in 1.5 s (`GuardBrain.IsStuck`, `StuckProgress`, `StuckSeconds`,

@@ -393,8 +393,8 @@ Everything the plan put out of scope, and every sound in the M7 set that has no 
 
 **Events found and deliberately not used**
 
-- `CastleGuard.StateChanged` exists at `Guards/CastleGuard.cs:114` but is raised only on the host;
-  guard voices read the replicated state instead.
+- `Guard.StateChanged` (`Guards/Core/Guard.cs`) is raised on each peer when the replicated state changes;
+  guard voices read the replicated state. (The legacy `CastleGuard.StateChanged` was host-only; that file is deleted.)
 - `PlayerStateMachine.LocalPlayerDied`, `RangedWeapon.Fired`, `PlayerStateMachine.SlamLanded`,
   `GoldConjured` and `GoldScattered` exist and are unused. `sting_player_down` is built into the names
   class but nothing plays it.

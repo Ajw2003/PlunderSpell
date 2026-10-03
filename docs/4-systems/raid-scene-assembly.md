@@ -20,8 +20,8 @@ Owns: `Assets/_Project/Scripts/Editor/RaidSceneBuilder.cs`,
 `Assets/_Project/Scripts/Editor/ArtBibleJson.cs`,
 `Assets/_Project/Scripts/Runtime/Raid/EnemyRoster.cs`,
 `Assets/_Project/Scripts/Runtime/Inventory/RaidContext.cs`,
-`Assets/_Project/Scripts/Runtime/Guards/EnemyBodyProfile.cs`,
-`Assets/_Project/Scripts/Runtime/Castle/CastleNavMeshBaker.cs`.
+`Assets/_Project/Scripts/Runtime/Guards/EnemyBodyProfile.cs`
+(`CastleNavMeshBaker.cs` was here until it was deleted on 2026-10-02).
 
 ## How it works
 
@@ -249,8 +249,7 @@ families) by `ArtBibleEnemyCatalog`, a pure parser the tests run headlessly. For
 There is no runtime NavMesh any more (#223, 2026-10-02). The scenes carry no `NavMeshSurface` and
 `RaidDirector` has no `_navigation` field. Guards walk the castle's nav graph, which the generator
 stitches from tiles baked in the Editor, in the same step as the rooms (`docs/4-systems/castle.md`,
-"Nav tiles" and "Nav graph"). `CastleNavMeshBaker` is kept but marked obsolete until the owner approves
-removing it.
+"Nav tiles" and "Nav graph"). `CastleNavMeshBaker` was deleted on 2026-10-02 with the owner's approval.
 
 `CastleMeshImportSettings` still forces Read/Write on everything under `Art/Models/Castle/`. That was
 for the runtime bake; it stays until someone confirms nothing else reads those meshes. It is an

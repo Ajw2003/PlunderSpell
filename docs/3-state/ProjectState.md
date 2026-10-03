@@ -101,15 +101,16 @@ lacks; the rest are older and either merged in another form or abandoned.
   1 ranged turn per player, others hold a ring place; one `GuardLineOfFire` check stops Chase and Combat shots
   through a teammate. Not in a prefab or a co-op run yet (the legacy guard stays until #214).
 
-  2026-10-02 (evening): all 27 guard prefabs carry the fresh guard (#214 swap; `CastleGuard.cs` stays,
-  unused and marked obsolete, until the owner approves removing it). Guard navigation fixed after the owner
+  2026-10-02 (evening): all 27 guard prefabs carry the fresh guard (#214 swap; `CastleGuard.cs`, `CastleNavMeshBaker.cs`,
+  `GuardPrefabSwapTool.cs`, `GuardMovementTests` and the dead `GuardBrain` rules were deleted later that evening
+  with the owner's approval). Guard navigation fixed after the owner
   saw guards stuck and standing still in co-op: Bronze Age and Late Medieval castles had an empty walk map
   (only the default registry was baked), the bailey dressing was not in the map, guards stopped dead on a
   clipped corner, and guards' bodies blocked each other. Co-op check, Late Medieval, 20 guards: stuck 4.8 s
   of 466 guard-seconds (1.0%), against 0 s moving before. Details: `docs/4-systems/alarm.md` (Guard
   navigation) and `docs/4-systems/castle.md` (Nav tiles, Nav graph). The #214 parity table is not done.
   Then #223 finished: the runtime NavMesh is gone (no bake in `RaidDirector`, no `NavMeshSurface` in the three
-  scenes, no obstacle on the fire props, `CastleNavMeshBaker` obsolete, `CastleAudit` on the nav graph); the AI
+  scenes, no obstacle on the fire props, `CastleNavMeshBaker` obsolete, since deleted, `CastleAudit` on the nav graph); the AI
   Navigation package stays for the deprecated monster. Co-op check after: stuck 13.8 s of 461.0 guard-seconds
   against 4.8 of 465.9 before, same seed (3508293); all 8 stuck samples are guards in Combat shuffling in the
   crowd at one archway, none against scenery. The four guard PlayMode tests that then failed are fixed: two

@@ -231,7 +231,7 @@ Guards are server-side, so only the server needs to query it. Issue #221, plan
   on the coarse layer (alarm.md).
 
 There is no runtime NavMesh (#223): the scenes carry no `NavMeshSurface`, `RaidDirector` does not bake, and
-`CastleNavMeshBaker` is obsolete. `CastleAudit` now checks the floor and loot on this graph
+`CastleNavMeshBaker` was deleted (owner's approval, 2026-10-02). `CastleAudit` now checks the floor and loot on this graph
 (`NearestWalkableCell` at the same 3 m / 0.5 m / 1.6 m radii, `IsReachable`); the radii are unchanged in
 number but now measure to a cell centre, so the audit's counts can differ slightly from the NavMesh era.
 

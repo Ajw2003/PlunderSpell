@@ -8,16 +8,14 @@ namespace Plunderspell.Guards
     /// inputs a guard has and the conclusion it reaches.
     ///
     /// Keeping the decisions here rather than inside the MonoBehaviour is what makes guard behaviour
-    /// testable: "does a shouted spell three rooms away actually pull a guard off patrol" is an
-    /// assertion about <see cref="NextState"/>, not something to watch for in play.
+    /// testable. The legacy guard's state rules (NextState, the stuck watchdog, the search sweep, the
+    /// hunt re-send) went with it (#214); <see cref="MoveSpeed"/> and <see cref="SightRange"/> wait on #234
+    /// and #229.
     /// </summary>
     public static class GuardBrain
     {
         /// <summary>Noise quieter than this is background; a guard never reacts to it.</summary>
         public const float NoiseNoticeThreshold = 0.12f;
-
-        /// <summary>Seconds a guard keeps searching after losing sight before giving up.</summary>
-        public const float SearchPatience = 12f;
 
         /// <summary>
         /// How far a guard can see, in metres, given the castle-wide alert level. An alerted castle
@@ -78,89 +76,10 @@ namespace Plunderspell.Guards
             return noiseStrength >= threshold;
         }
 
-        // -----------------------------------------------------------------------------------------
-        // Never standing still (#193). See docs/4-systems/raid.md, "Guards that keep moving".
-        // -----------------------------------------------------------------------------------------
-
-        /// <summary>A guard with a destination that covers less than <see cref="StuckProgress"/> in
-        /// this many seconds is stuck.</summary>
-        public const float StuckSeconds = 1.5f;
-
-        /// <summary>Metres a guard must cover within <see cref="StuckSeconds"/> to count as moving.</summary>
-        public const float StuckProgress = 0.3f;
-
-        /// <summary>Seconds an investigating guard turns on the spot after reaching the noise.</summary>
-        public const float LookAroundSeconds = 1.6f;
-
-        /// <summary>Whether a guard that moved <paramref name="moved"/> metres over a full stuck window
-        /// has made no real progress.</summary>
-        public static bool IsStuck(float moved) => moved < StuckProgress;
-
-        /// <summary>
-        /// Where the <paramref name="index"/>-th search point lies around the last-known position, as
-        /// an offset: the angle steps 100 degrees each time (so neighbours are not side by side) and
-        /// the distance cycles through 4, 6 and 8 metres. Pure, so a guard's sweep is a known pattern.
-        /// </summary>
-        public static Vector3 SweepOffset(int index)
-        {
-            float angle = index * 100f * Mathf.Deg2Rad;
-            float radius = 4f + (Mathf.Abs(index) % 3) * 2f;
-            return new Vector3(Mathf.Sin(angle), 0f, Mathf.Cos(angle)) * radius;
-        }
-
-        // -----------------------------------------------------------------------------------------
-        // Following sound and the hue and cry (#194, #195)
-        // -----------------------------------------------------------------------------------------
-
-        /// <summary>
-        /// Whether a noise should steer a guard that is already hunting: it must be loud enough to
-        /// notice, and the guard must be searching, or chasing without eyes on anyone. A guard that
-        /// can see its target has no use for a noise.
-        /// </summary>
-        public static bool ShouldFollowNoise(GuardAlertState state, bool seesIntruder,
-            float noiseStrength, AlarmState alarm)
-        {
-            if (!ShouldInvestigate(noiseStrength, alarm))
-                return false;
-            return state == GuardAlertState.Searching
-                || (state == GuardAlertState.Chasing && !seesIntruder);
-        }
-
-        /// <summary>Whether the hue and cry should keep sending a guard in this state toward the
-        /// players: it is at the top alert and the guard is not already fighting or down.</summary>
-        public static bool ShouldHunt(GuardAlertState state, AlarmState alarm) =>
-            alarm >= AlarmState.HueAndCry
-            && (state == GuardAlertState.Searching || state == GuardAlertState.Investigating);
-
-        /// <summary>Metres from a player the hue and cry sends a guard: they know roughly where, so
-        /// players who break away and hide can still slip the hunt.</summary>
+        /// <summary>Metres from a player the hue and cry sends a guard (<c>GuardLeads</c>): they know roughly
+        /// where, so players who break away and hide can still slip the hunt.</summary>
         public const float HuntOffsetMin = 3f;
         public const float HuntOffsetMax = 5f;
-
-        /// <summary>Seconds between re-sends at the hue and cry, before the per-guard stagger.</summary>
-        public const float HuntInterval = 3f;
-
-        /// <summary>
-        /// Seconds until a guard is next re-sent at the hue and cry: <see cref="HuntInterval"/> plus
-        /// up to a second that depends on the guard, so twenty guards do not all re-path on one frame.
-        /// </summary>
-        public static float HuntDelay(int guardId) => HuntInterval + (Mathf.Abs(guardId) % 10) * 0.1f;
-
-        /// <summary>Whether a re-send is due once <paramref name="timeSinceSent"/> seconds have passed.</summary>
-        public static bool HuntDue(float timeSinceSent, int guardId) => timeSinceSent >= HuntDelay(guardId);
-
-        /// <summary>
-        /// The rough offset from a player's position: a direction (<paramref name="angle01"/>, a turn
-        /// from 0 to 1) and a distance between <see cref="HuntOffsetMin"/> and
-        /// <see cref="HuntOffsetMax"/> (<paramref name="distance01"/>). Random numbers come in so
-        /// this stays pure.
-        /// </summary>
-        public static Vector3 HuntOffset(float angle01, float distance01)
-        {
-            float angle = angle01 * Mathf.PI * 2f;
-            float radius = Mathf.Lerp(HuntOffsetMin, HuntOffsetMax, Mathf.Clamp01(distance01));
-            return new Vector3(Mathf.Sin(angle), 0f, Mathf.Cos(angle)) * radius;
-        }
 
         /// <summary>
         /// Whether a guard can see a point: inside the cone, inside range, and not through a wall.
@@ -179,48 +98,5 @@ namespace Plunderspell.Guards
             return Vector3.Angle(forward, toTarget) <= fovDegrees * 0.5f;
         }
 
-        /// <summary>
-        /// The state a guard should be in next.
-        ///
-        /// The rule that gives the alarm teeth is the last one: at
-        /// <see cref="AlarmState.HueAndCry"/> a guard that has lost its target does not go back to
-        /// patrolling. Once the castle is up, it stays up — so letting the alarm max out is a
-        /// decision the players do not get to take back.
-        /// </summary>
-        public static GuardAlertState NextState(GuardAlertState current, bool incapacitated,
-            bool seesIntruder, bool hasInvestigationTarget, float timeSinceLastContact,
-            AlarmState alarm)
-        {
-            if (incapacitated)
-                return GuardAlertState.Incapacitated;
-
-            if (seesIntruder)
-                return GuardAlertState.Chasing;
-
-            switch (current)
-            {
-                case GuardAlertState.Incapacitated:
-                    // Just woke up. An alerted castle means straight back to searching, not patrolling.
-                    return alarm >= AlarmState.Roused ? GuardAlertState.Searching : GuardAlertState.Patrolling;
-
-                case GuardAlertState.Chasing:
-                    return GuardAlertState.Searching;
-
-                case GuardAlertState.Searching:
-                    if (timeSinceLastContact < SearchPatience)
-                        return GuardAlertState.Searching;
-                    return alarm >= AlarmState.HueAndCry
-                        ? GuardAlertState.Searching   // the hunt never ends once the castle is up
-                        : GuardAlertState.Patrolling;
-
-                case GuardAlertState.Investigating:
-                    if (hasInvestigationTarget)
-                        return GuardAlertState.Investigating;
-                    return GuardAlertState.Patrolling;
-
-                default:
-                    return hasInvestigationTarget ? GuardAlertState.Investigating : GuardAlertState.Patrolling;
-            }
-        }
     }
 }
