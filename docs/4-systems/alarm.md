@@ -39,8 +39,13 @@ past — those belong to `Guards`/`Castle` respectively.
   assembly (already referenced by Guards, Audio, Castle, Raid, UI) and holds guards as `Component`, so
   no assembly cycle. `EnemyDirector.Current` is the in-play instance.
 - **The hue and cry is a request, not an order.** On reaching HueAndCry the director publishes one
-  `InvestigateRequest` per player (`HueAndCry.cs:25`, called from `EnemyDirector.OnAlarmStateChanged` :227); each guard
-  within 40 m takes the nearest (`CastleGuard.cs:269`) and goes to Investigating through `AlertTo`.
+  `InvestigateRequest` per player (`HueAndCry.Raise`, called from `EnemyDirector.OnAlarmStateChanged`), and
+  repeats it every `_hueAndCryRepeatSeconds` (3 s, Inspector) at the players' current positions for as long as the
+  alarm stays at HueAndCry (`EnemyDirector.TickHueAndCry`, `HueAndCry.Repeat`; server only; #239). Every guard in
+  the castle takes the nearest request of a frame, wherever it is (`GuardDirectorLink`: only other reasons, e.g.
+  `InvestigateReason.Noise`, keep the 40 m radius). A guard already investigating retargets, since the lead has
+  equal strength (a guard that arrived and is looking around too); Chase, Combat and the like do not read leads.
+  Older legacy text: each guard within 40 m took the nearest (`CastleGuard.cs:269`) and went to Investigating through `AlertTo`.
   Nothing outside a guard moves it. The fresh guard takes it up as a lead for its Investigate state
   (see "Leads and Investigate (#208)" below).
 - **`EnemyDirector`** is a server-authoritative FSM: `ApplyNoise(strength)` adds
@@ -228,7 +233,7 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
   and cry (`GuardDirectorLink.InvestigateRequested`, strength 2, `GuardLeads.cs:32`) or a new sighting (strength 3,
   offered by Patrol, `PatrolState.cs:66`). `Offer` (`GuardLeads.cs:52`) keeps the stronger, the newer on a tie.
   Patrol returns `States.Investigate` whenever a lead waits (`PatrolState.cs:53`), so there is no if/else ladder.
-  The 40 m hue-and-cry rule stays in `GuardDirectorLink.HueAndCryRadius` and applies before a lead is made;
+  The 40 m rule (`GuardDirectorLink.HueAndCryRadius`) no longer applies to the hue and cry (#239), only to other request reasons, and applies before a lead is made;
   the position is then moved 3-5 m at random (`GuardLeads.cs:38`, `GuardBrain.HuntOffsetMin/Max`) so the guard
   goes to "roughly" where the player is. `States/InvestigateState.cs` walks to the spot at
   `Tuning.InvestigateSpeed`, stands `InvestigateLookSeconds` (3 s), then returns to Patrol. A newer lead at least

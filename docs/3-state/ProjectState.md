@@ -116,6 +116,10 @@ lacks; the rest are older and either merged in another form or abandoned.
   expected one look to start a chase (the fresh guard investigates first), one relied on a teammate's body
   blocking an archer, and one found a real bug (a sleeper heard noises too quiet to wake it; fixed in
   `GuardHearing`). Full PlayMode run after: 341 of 342, the one failure the known flaky #233.
+  #239: the hue and cry repeats every 3 s (`EnemyDirector._hueAndCryRepeatSeconds`) at the players' current spots
+  while the alarm stays at Hue and Cry, and every guard answers it at any distance (other requests keep 40 m);
+  full PlayMode 345 of 345. Co-op: 19 of 20 guards investigating at once after the alarm was raised, but the
+  players died within about 20 s, so the repeat itself was not seen in play (tests cover it).
   Guards now climb stairs: the sweep's step-over is 0.7 m (two risers); at 0.35 m no staircase in any Age
   was climbable (alarm.md, Guard navigation, "Stairs"). Seen in co-op on the Late turret stair, up and down.
   The #214 parity table is checked (`docs/plans/guard-core-inventory.md`): 36 of 39 rows match. Open, the

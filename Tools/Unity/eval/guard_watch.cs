@@ -64,6 +64,35 @@ if (action == "provoke")
     return "provoked " + n + " guards toward " + spot;
 }
 
+if (action == "huecry")
+{
+    // Raises the castle to Hue and Cry (#239): the director publishes the request and repeats it on its interval.
+    directorType.GetMethod("SetAlarmLevel").Invoke(director, new object[] { 100f });
+    return "alarm " + directorType.GetProperty("State").GetValue(director) + " level " + directorType.GetProperty("AlarmLevel").GetValue(director);
+}
+
+if (action == "swarm")
+{
+    // Live guards near the host's local player: within 10 m, within 20 m, the total, and their states.
+    var swarmPlayer = (UnityEngine.Component)playerTypeW.GetProperty("Local").GetValue(null);
+    if (swarmPlayer == null) return "swarm no local player";
+    var playerPos = swarmPlayer.transform.position;
+    int within10 = 0, within20 = 0, liveGuards = 0;
+    foreach (var g in active)
+    {
+        var guard = (UnityEngine.Component)g;
+        var guardState = guardType.GetProperty("State").GetValue(guard).ToString();
+        if (guardState == "Dead" || (bool)guardType.GetProperty("IsDead").GetValue(guard)) continue;
+        liveGuards++;
+        states[guardState] = states.ContainsKey(guardState) ? states[guardState] + 1 : 1;
+        float away = UnityEngine.Vector3.Distance(guard.transform.position, playerPos);
+        if (away <= 10f) within10++;
+        if (away <= 20f) within20++;
+    }
+    return "swarm within10m " + within10 + " within20m " + within20 + " liveGuards " + liveGuards
+        + " states " + string.Join(" ", states.Select(kv => kv.Key + "=" + kv.Value));
+}
+
 if (action == "dump")
     return string.Join(System.Environment.NewLine, rows);
 
