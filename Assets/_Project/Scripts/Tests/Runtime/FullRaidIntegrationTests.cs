@@ -95,12 +95,13 @@ namespace Plunderspell.Tests
             guardGo.transform.position = new Vector3(0f, 0f, 6f);
             guardGo.AddComponent<BoxCollider>();
             guardGo.AddComponent<StatusEffectReceiver>();
-            CastleGuard guard = guardGo.AddComponent<CastleGuard>();
+            Guard guard = guardGo.AddComponent<Guard>();
             guard.Configure(alarm);
 
             SpellEffectRegistry.Execute(new SpellEffectContext(
                 SpellId.Saltus, CastVolume.Shout, Vector3.zero, Vector3.forward));
             SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, null, ~0, 0);
+            guard.Tick(0.1f);   // the fresh guard decides what a noise means on its next tick
 
             Assert.GreaterOrEqual((int)alarm.State, (int)AlarmState.Stirred,
                 "A shouted leap and its slam must wake the castle.");

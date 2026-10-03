@@ -27,7 +27,7 @@ namespace Plunderspell.Tests
         [SetUp]
         public void SetUp()
         {
-            CastleGuard.EndArrivalGrace();
+            GuardArrivalGrace.End();
             _settingBefore = AudioInputSettings.GuardsHearChatter;
         }
 
@@ -49,12 +49,12 @@ namespace Plunderspell.Tests
             return o;
         }
 
-        private CastleGuard MakeGuard(Vector3 position, EnemyDirector alarm = null)
+        private Guard MakeGuard(Vector3 position, EnemyDirector alarm = null)
         {
             var go = Track(new GameObject("Guard"));
             go.transform.position = position;
             go.AddComponent<BoxCollider>();
-            var guard = go.AddComponent<CastleGuard>();
+            var guard = go.AddComponent<Guard>();
             guard.Configure(alarm);
             return guard;
         }
@@ -94,7 +94,7 @@ namespace Plunderspell.Tests
             AudioInputSettings.GuardsHearChatter = false;
             var fake = new FakeChatterService();
             VoiceServiceLocator.Register(fake);
-            CastleGuard guard = MakeGuard(new Vector3(0f, 0f, 3f));
+            Guard guard = MakeGuard(new Vector3(0f, 0f, 3f));
             PlayerChatterRelay relay = MakeRelay();
             StartRelay(relay);
             Physics.SyncTransforms();
@@ -113,7 +113,7 @@ namespace Plunderspell.Tests
             }
 
             Assert.AreEqual(0, resolved, "Nothing may be resolved while the setting is off.");
-            Assert.IsNull(guard.LastOverheard);
+            Assert.AreEqual(0, guard.Hearing.NoticedCount);
         }
 
         [Test]
@@ -143,28 +143,29 @@ namespace Plunderspell.Tests
             }
 
             Assert.IsTrue(outcome.HasValue, "Offline, a heard line resolves at once.");
-            Assert.AreEqual(1, outcome.Value.GuardsWhoUnderstood);
+            Assert.AreEqual(0, outcome.Value.GuardsWhoUnderstood,
+                "The fresh guard does not take in words (overheard chatter is dropped, re-add: #228).");
             Assert.AreEqual("go left", outcome.Value.Transcript);
         }
 
         [Test]
         public void Test_NormalSpeechDrawsANearbyGuard()
         {
-            CastleGuard guard = MakeGuard(new Vector3(0f, 0f, 4f));
+            Guard guard = MakeGuard(new Vector3(0f, 0f, 4f));
             PlayerChatterRelay relay = MakeRelay();
             Physics.SyncTransforms();
 
             int understood = relay.Resolve("go left", CastVolume.Normal, Vector3.zero);
+            guard.Tick(0.1f);
 
-            Assert.AreEqual(1, understood);
+            Assert.AreEqual(0, understood, "Words are not taken in (re-add: #228); the noise still draws the guard.");
             Assert.AreEqual(GuardAlertState.Investigating, guard.State);
-            Assert.AreEqual("go left", guard.LastOverheard);
         }
 
         [Test]
         public void Test_AWhisperIsNotHeardAcrossTheRoom()
         {
-            CastleGuard guard = MakeGuard(new Vector3(0f, 0f, 5f));
+            Guard guard = MakeGuard(new Vector3(0f, 0f, 5f));
             PlayerChatterRelay relay = MakeRelay();
             Physics.SyncTransforms();
 
@@ -177,7 +178,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_AShoutCarriesThroughAWall()
         {
-            CastleGuard guard = MakeGuard(new Vector3(0f, 0f, 10f));
+            Guard guard = MakeGuard(new Vector3(0f, 0f, 10f));
             var wall = Track(GameObject.CreatePrimitive(PrimitiveType.Cube));
             wall.layer = WallLayer;
             wall.transform.position = new Vector3(0f, 0f, 5f);
@@ -188,14 +189,14 @@ namespace Plunderspell.Tests
                 PlayerChatterRelay.RadiusFor(CastVolume.Shout), PlayerChatterRelay.StrengthFor(CastVolume.Shout),
                 "run", 1 << 0, 1 << WallLayer);
 
-            Assert.AreEqual(1, understood, "One wall halves a shout; it is still audible.");
-            Assert.AreEqual("run", guard.LastOverheard);
+            Assert.AreEqual(0, understood, "Words are not taken in (re-add: #228).");
+            Assert.AreEqual(1, guard.Hearing.NoticedCount, "One wall halves a shout; it is still audible.");
         }
 
         [Test]
         public void Test_ASleepingGuardDoesNotTakeInWords()
         {
-            CastleGuard guard = MakeGuard(new Vector3(0f, 0f, 1f));
+            Guard guard = MakeGuard(new Vector3(0f, 0f, 1f));
             guard.GetComponent<StatusEffectReceiver>().Sleep(30f);
             PlayerChatterRelay relay = MakeRelay();
             Physics.SyncTransforms();
@@ -203,9 +204,9 @@ namespace Plunderspell.Tests
             // A whisper is too quiet to wake the guard (wake threshold 0.5), so it stays asleep.
             int understood = relay.Resolve("psst", CastVolume.Whisper, Vector3.zero);
 
-            Assert.IsTrue(guard.IsIncapacitated);
+            Assert.IsTrue(guard.Status.IsIncapacitated);
             Assert.AreEqual(0, understood);
-            Assert.IsNull(guard.LastOverheard);
+            Assert.AreEqual(0, guard.Hearing.NoticedCount, "A whisper neither wakes the guard nor draws it.");
         }
 
         [Test]
@@ -250,14 +251,14 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_BroadcastIsUnchangedForOrdinaryNoise()
         {
-            CastleGuard near = MakeGuard(new Vector3(0f, 0f, 2f));
+            Guard near = MakeGuard(new Vector3(0f, 0f, 2f));
             MakeGuard(new Vector3(0f, 0f, 30f));
             Physics.SyncTransforms();
 
             int heard = NoiseBroadcaster.Broadcast(Vector3.zero, 5f, 0.6f, NoiseType.GlassBreak);
 
             Assert.AreEqual(1, heard);
-            Assert.IsNull(near.LastOverheard, "Ordinary noise carries no words.");
+            Assert.AreEqual(1, near.Hearing.NoticedCount, "The near guard noticed the noise.");
         }
     }
 }

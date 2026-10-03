@@ -24,14 +24,15 @@ namespace Plunderspell.Tests.Editor
         public void ScaleTuning_MultipliesSpeedsAndDamage()
         {
             _go = new GameObject("Guard");
-            var guard = _go.AddComponent<CastleGuard>();
-            float patrol = guard.PatrolSpeed, chase = guard.ChaseSpeed, damage = guard.AttackDamage;
+            var guard = _go.AddComponent<Guard>();
+            GuardTuning tuning = guard.Tuning;
+            float patrol = tuning.PatrolSpeed, chase = tuning.ChaseSpeed, damage = tuning.AttackDamage;
 
             guard.ScaleTuning(0.5f, 0.25f);
 
-            Assert.AreEqual(patrol * 0.5f, guard.PatrolSpeed, 1e-4f, "patrol speed");
-            Assert.AreEqual(chase * 0.5f, guard.ChaseSpeed, 1e-4f, "chase speed");
-            Assert.AreEqual(damage * 0.25f, guard.AttackDamage, 1e-4f, "damage per hit");
+            Assert.AreEqual(patrol * 0.5f, tuning.PatrolSpeed, 1e-4f, "patrol speed");
+            Assert.AreEqual(chase * 0.5f, tuning.ChaseSpeed, 1e-4f, "chase speed");
+            Assert.AreEqual(damage * 0.25f, tuning.AttackDamage, 1e-4f, "damage per hit");
         }
 
         [Test]

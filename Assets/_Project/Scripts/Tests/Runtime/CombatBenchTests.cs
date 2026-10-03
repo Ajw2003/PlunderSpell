@@ -60,7 +60,7 @@ namespace Plunderspell.Tests
         {
             var go = Track(new GameObject("TestGuard"));
             go.AddComponent<StatusEffectReceiver>();
-            go.AddComponent<CastleGuard>();
+            go.AddComponent<Guard>();
             return go;
         }
 
@@ -124,10 +124,14 @@ namespace Plunderspell.Tests
             GameObject prefab = MakeGuardPrefab();
             yield return null;
 
+            // The fresh guard's chase needs a player to follow, so one must be registered first.
+            var player = Track(new GameObject("Player"));
+            TestDirector.Ensure().RegisterIntruder(player.transform);
+
             bench.Spawn(prefab, 1, GuardAlertState.Chasing);
             GameObject spawned = Track(bench.Spawned[0]);
 
-            Assert.AreEqual(GuardAlertState.Chasing, spawned.GetComponent<CastleGuard>().State,
+            Assert.AreEqual(GuardAlertState.Chasing, spawned.GetComponent<Guard>().State,
                 "Starting a guard already chasing is the point: a target that fights back.");
         }
 
