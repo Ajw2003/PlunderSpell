@@ -36,7 +36,7 @@ namespace Plunderspell.Guards
 
         /// <summary>
         /// True when something this enemy carries is taller than an archway it must pass: the
-        /// animation plan's "archway duck" clip plays for it. The NavMesh agent's height is already
+        /// animation plan's "archway duck" clip plays for it. The guard's body height is already
         /// capped at <see cref="ArchwayClearance"/>, so the duck is visual, not pathing.
         /// </summary>
         public bool NeedsArchwayDuck => _heightWithProps > _archwayClearance;

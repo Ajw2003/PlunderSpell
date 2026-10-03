@@ -589,9 +589,10 @@ namespace Plunderspell.Castle
                 if (Application.isPlaying)
                 {
                     // Destroy only lands at the end of the frame, and the next castle is generated
-                    // and its NavMesh baked in this same frame: without this the bake saw both
-                    // castles at once and the old walls sealed the new doorways, so every raid after
-                    // the first was largely unwalkable. Inactive objects leave physics and the bake now.
+                    // and its nav graph built in this same frame: without this the old walls still
+                    // answered physics queries and sealed the new doorways (this was found when the
+                    // NavMesh was baked here, and the guards' capsule sweep has the same exposure).
+                    // Inactive objects leave physics now.
                     go.SetActive(false);
                     Destroy(go);
                 }

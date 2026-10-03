@@ -47,9 +47,6 @@ namespace Plunderspell.Raid
         [Tooltip("The castle's alert level. Reset at the start of every raid.")]
         [SerializeField] private EnemyDirector _alarm;
 
-        [Tooltip("Bakes the walkable surface over the generated castle. Without it guards cannot move.")]
-        [SerializeField] private CastleNavMeshBaker _navigation;
-
         [Tooltip("The player to stand just inside the gatehouse when the castle is built. The seed " +
                  "is rolled per raid, so a spawn baked into the scene is only right for one of them.")]
         [SerializeField] private Transform _playerRoot;
@@ -281,17 +278,12 @@ namespace Plunderspell.Raid
             OpenPortal();
             SealCastle();
 
-            // Before the NavMesh bake and the spawners, so a guard or a loot pile is never dropped
+            // Before the spawners, so a guard or a loot pile is never dropped
             // on top of a player who is about to be moved there.
             PlacePlayerAtSpawn();
 
             if (_castleNetwork != null && (!isSpawned || isServer))
                 _castleNetwork.SetSeed(seed);
-
-            // The rooms only exist now, so the walkable surface has to be built between generating
-            // them and posting the garrison — a guard spawned before the bake lands off-mesh and
-            // stands still for the whole raid.
-            _navigation?.Rebuild();
 
             // Only the server populates the world; clients receive the loot objects as spawned network
             // objects rather than instantiating their own copies.
@@ -674,7 +666,7 @@ namespace Plunderspell.Raid
         public void Configure(ProceduralCastleGenerator generator, LootSpawner spawner,
             ExtractionZone zone, LairHubManager lair, EnemyDirector alarm = null,
             CastleNetworkManager castleNetwork = null, GuardSpawner guardSpawner = null,
-            CastleNavMeshBaker navigation = null, Transform playerRoot = null,
+            Transform playerRoot = null,
             EraContentCatalogue eraContent = null)
         {
             UnsubscribeFromZone();
@@ -686,7 +678,6 @@ namespace Plunderspell.Raid
             _alarm = alarm;
             _castleNetwork = castleNetwork;
             _guardSpawner = guardSpawner;
-            _navigation = navigation;
             _playerRoot = playerRoot;
             _eraContent = eraContent;
             _capturedDefaults = false;

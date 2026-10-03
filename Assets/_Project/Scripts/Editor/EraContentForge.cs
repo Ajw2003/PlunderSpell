@@ -10,7 +10,6 @@ using Plunderspell.Raid;
 using Plunderspell.Status;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Plunderspell.EditorTools
 {

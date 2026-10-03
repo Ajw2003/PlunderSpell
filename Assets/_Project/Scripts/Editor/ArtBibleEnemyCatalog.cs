@@ -106,7 +106,7 @@ namespace Plunderspell.EditorTools
             Zones.Length == 0 ? ArtBibleEnemyCatalog.ArchwayHeight(CastleZone.Crypt)
                 : Zones.Min(ArtBibleEnemyCatalog.ArchwayHeight);
 
-        /// <summary>The NavMesh agent's height: the body, but never more than the lowest archway.</summary>
+        /// <summary>The guard body's height (its tuning's BodyHeight): the body, but never more than the lowest archway.</summary>
         public float AgentHeight => Mathf.Min(BodyHeight, ArchwayClearance);
 
         /// <summary>True when a prop rises above an archway this enemy must walk through.</summary>

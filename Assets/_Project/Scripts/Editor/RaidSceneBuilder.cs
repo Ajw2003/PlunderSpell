@@ -16,11 +16,9 @@ using Plunderspell.Status;
 using Plunderspell.UI;
 using Plunderspell.Voice;
 using StateMachine;
-using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 namespace Plunderspell.EditorTools
@@ -96,12 +94,11 @@ namespace Plunderspell.EditorTools
             ProceduralCastleGenerator generator = BuildGenerator(registry);
             LootSpawner lootSpawner = BuildLootSpawner(lootTable);
             GuardSpawner guardSpawner = BuildGuardSpawner(roster);
-            CastleNavMeshBaker navigation = BuildNavigation();
 
             GameObject player = BuildPlayer(ResolveSpawn(generator));
 
             RaidDirector director = BuildDirector(generator, lootSpawner, guardSpawner, extraction,
-                lair, alarm, navigation, player.transform);
+                lair, alarm, player.transform);
             BuildHud(director, extraction, alarm, lair, player.GetComponentInChildren<LootInteractor>());
 
             EditorSceneManager.MarkSceneDirty(scene);
@@ -243,30 +240,14 @@ namespace Plunderspell.EditorTools
             return spawner;
         }
 
-        /// <summary>
-        /// The surface the garrison walks. Guards move through a <see cref="NavMeshAgent"/>, so
-        /// without a baked NavMesh every enemy stands still wherever it spawned — which looks like
-        /// broken AI rather than missing navigation data.
-        /// </summary>
-        private static CastleNavMeshBaker BuildNavigation()
-        {
-            var go = new GameObject("Navigation");
-            var surface = go.AddComponent<NavMeshSurface>();
-            surface.collectObjects = CollectObjects.All;
-            // The castle rooms carry MeshColliders, not readable meshes, so collect from physics.
-            surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
-            return go.AddComponent<CastleNavMeshBaker>();
-        }
-
         private static RaidDirector BuildDirector(ProceduralCastleGenerator generator,
             LootSpawner lootSpawner, GuardSpawner guardSpawner, ExtractionZone extraction,
-            LairHubManager lair, EnemyDirector alarm, CastleNavMeshBaker navigation,
-            Transform playerRoot)
+            LairHubManager lair, EnemyDirector alarm, Transform playerRoot)
         {
             var go = new GameObject("RaidDirector");
             var director = go.AddComponent<RaidDirector>();
             director.Configure(generator, lootSpawner, extraction, lair, alarm, null, guardSpawner,
-                navigation, playerRoot);
+                playerRoot);
 
             var bootstrapper = go.AddComponent<RaidBootstrapper>();
             // The raid starts when the player sets out from the lair, not on scene load.

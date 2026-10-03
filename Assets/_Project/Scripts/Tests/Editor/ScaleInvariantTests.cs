@@ -255,10 +255,11 @@ namespace Plunderspell.Tests.Editor
                     }
                 }
 
-                if (prefab.TryGetComponent(out UnityEngine.AI.NavMeshAgent agent) &&
-                    agent.height > spec.ArchwayClearance + 0.001f)
+                // The navigation sweep uses the guard's tuned body capsule, so that is what must fit.
+                if (prefab.TryGetComponent(out Plunderspell.Guards.Guard guard) &&
+                    guard.Tuning.BodyHeight > spec.ArchwayClearance + 0.001f)
                 {
-                    failures.AppendLine($"  {spec.Name}: agent {agent.height:F2} m, over its lowest archway " +
+                    failures.AppendLine($"  {spec.Name}: body {guard.Tuning.BodyHeight:F2} m, over its lowest archway " +
                                         $"{spec.ArchwayClearance:F2} m.");
                 }
             }

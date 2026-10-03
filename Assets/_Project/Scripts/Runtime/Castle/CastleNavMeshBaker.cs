@@ -10,6 +10,7 @@ namespace Plunderspell.Castle
     /// only ever cover the empty ground plane. See docs/4-systems/raid-scene-assembly.md ("Navigation")
     /// for why the bake is driven from the raid sequence rather than from Start().
     /// </summary>
+    [System.Obsolete("Guards walk the bespoke nav graph (#223); kept until the owner approves removal.")]
     [RequireComponent(typeof(NavMeshSurface))]
     public class CastleNavMeshBaker : MonoBehaviour
     {

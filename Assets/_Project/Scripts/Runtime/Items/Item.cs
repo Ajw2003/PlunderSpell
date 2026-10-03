@@ -109,7 +109,7 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     // references in the Monster FSM, and a direct reference back would create a cycle).
     private IHealth _monsterHealth;
     private ICarryableCreature _carryableCreature;
-    private NavMeshAgent _agent;
+    private NavMeshAgent _agent; // deprecated monster only (#223); guards have none
 
     // The one weight knob: for loot, its LootItem's Weight (kg), which the pickup gives the body at
     // spawn; for anything else (weapons), the Rigidbody's Mass. Lifting or towing, the tow pace and
@@ -850,7 +850,7 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
         if (_monsterHealth != null && (Object)_monsterHealth != null)
         {
             // Only take impact damage if we are NOT grounded/active.
-            if (!_agent.enabled || myVelocity > 1f)
+            if (!IsDeprecatedMonsterWalking() || myVelocity > 1f)
             {
                 if (Damage.Apply(_monsterHealth, damage, collision.gameObject, instigator, point,
                         DamageKind.Impact, impactVelocity) > 0f)
@@ -864,6 +864,13 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
             Debug.Log($"Impact Damage Dealt: {damage} (Impact: {impactVelocity:F1})");
         }
     }
+
+    /// <summary>
+    /// True while a deprecated monster (MonsterStateMachine, the only thing left with a NavMeshAgent) is
+    /// walking on its agent. Guards have no agent, so they count as not walking and take impact damage.
+    /// </summary>
+    [System.Obsolete("Monster-only: the NavMeshAgent belongs to the deprecated MonsterStateMachine (#223).")]
+    private bool IsDeprecatedMonsterWalking() => _agent != null && _agent.enabled;
 
     /// <summary>Picks the item up by its authored grip (or mesh centre).</summary>
     public void StartDragging(GameObject holder = null) => StartDragging(holder, AuthoredGripWorld);

@@ -137,7 +137,7 @@ namespace Plunderspell.Tests.Editor
             foreach (string field in new[]
                      {
                          "_generator", "_lootSpawner", "_guardSpawner", "_extractionZone",
-                         "_lair", "_alarm", "_navigation",
+                         "_lair", "_alarm",
                      })
             {
                 SerializedProperty property = serialized.FindProperty(field);
