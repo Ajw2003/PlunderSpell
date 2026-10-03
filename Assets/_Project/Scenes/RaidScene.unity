@@ -340,7 +340,7 @@ MonoBehaviour:
     SweepMask:
       serializedVersion: 2
       m_Bits: 4294967291
-    StepHeight: 0.35
+    StepHeight: 0.7
     SkinWidth: 0.03
     SeparationSpacing: 1
     SeparationSpeedShare: 0.8

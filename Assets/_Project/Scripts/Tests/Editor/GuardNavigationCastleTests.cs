@@ -79,18 +79,26 @@ namespace Plunderspell.Tests.Editor
             Assert.That(_director.Navigation.Planner.CacheHits, Is.EqualTo(1), "the same start and goal cells should reuse the route");
         }
 
-        [Test]
-        public void GuardClimbsTheKeepStairwellToItsGallery()
+        // The sweep is on here (SetUp turns it off for the other tests): the stairs' real colliders are what
+        // stopped guards at the foot of the Late turret stair in a raid on 2026-10-02, when the step-over
+        // height was 0.35 m and a guard's front edge met a 0.65 m riser while its centre was still on the floor.
+        [TestCase("Assets/_Project/Data/Castle/CastleRoomRegistry.asset", "KeepStairwell")]
+        [TestCase("Assets/_Project/Data/Castle/CastleRoomRegistry_LateMedieval.asset", "LateTurretStair")]
+        [TestCase("Assets/_Project/Data/Castle/CastleRoomRegistry_BronzeAge.asset", "BronzeMegaronStair")]
+        public void GuardClimbsTheStairToItsGallery(string registryPath, string stairRoom)
         {
+            _generator.Registry = AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>(registryPath);
+            _director.Navigation.Tuning.SweepMask = Physics.DefaultRaycastLayers;
             CastleNavGraph graph = null;
             ProceduralCastleData data = null;
             int module = -1;
             for (int seed = 1; seed < 60 && module < 0; seed++)
             {
                 graph = UseCastle(seed, out data);
-                module = IndexOfRoom(data, "KeepStairwell");
+                module = IndexOfRoom(data, stairRoom);
             }
-            Assert.That(module, Is.GreaterThanOrEqualTo(0), "no seed in 1..59 placed a KeepStairwell");
+            Assert.That(module, Is.GreaterThanOrEqualTo(0), $"no seed in 1..59 placed a {stairRoom}");
+            Physics.SyncTransforms();
 
             LowestAndHighestCell(graph, module, out Vector3 low, out Vector3 high);
             Assert.That(high.y - low.y, Is.GreaterThan(1f), "the gallery should sit well above the floor");

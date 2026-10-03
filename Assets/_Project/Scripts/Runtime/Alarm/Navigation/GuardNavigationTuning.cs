@@ -10,8 +10,8 @@ namespace Plunderspell.Alarm
         [Tooltip("Layers the sweep stops for: walls and players. Keep guards' own layer out of it; they keep apart by spacing.")]
         public LayerMask SweepMask = Physics.DefaultRaycastLayers;
 
-        [Tooltip("Ledges up to this high are stepped over by the sweep, so stair risers do not stop a guard.")]
-        public float StepHeight = 0.35f;
+        [Tooltip("Ledges up to this high are stepped over by the sweep, so stair risers do not stop a guard. Two risers: the body's front edge meets the next riser while its centre is still a step lower.")]
+        public float StepHeight = 0.7f;
 
         [Tooltip("Gap the guard keeps from whatever the sweep hit, in metres.")]
         public float SkinWidth = 0.03f;

@@ -144,6 +144,13 @@ prefab carries the fresh guard since #214.
   slides past it. A guard walking square into a wall keeps none of its step and is still reported held up,
   then Blocked. Sliding moves only the guard, so the #200 rule holds. Before this, a guard that clipped a
   corner stood on it until its state gave up.
+- **Stairs** (2026-10-02). `GuardNavigationTuning.StepHeight` is 0.7 m, two risers, not one: the body is 0.4 m
+  wide, so its front edge meets the next riser while its centre is still a step lower, and at 0.35 m every
+  staircase tested (KeepStairwell, LateTurretStair, BronzeMegaronStair) stopped guards at the foot.
+  `GuardNavigationCastleTests.GuardClimbsTheStairToItsGallery` covers all three with the sweep on; until then that
+  test ran with `SweepMask = 0` and so never touched the stair colliders. The scenes save their own copy of the
+  tuning (RaidScene, RaidScene.Scaffold, CastleBench x2), so a change to the default must be made there too. Seen in
+  co-op: a guard sent to look at the Late turret-stair gallery climbed from y 0.31 to 2.59 and came back down.
 - **Guards do not block each other's sweep** (2026-10-02). Guards are on the Default layer with the castle,
   so `SweepMask` cannot leave them out; `GuardSweep` ignores any hit on a registered guard's body instead (the
   service keeps the set). `GuardSeparation` alone keeps them apart. Before this, a crowd round a player locked
