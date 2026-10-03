@@ -50,17 +50,18 @@ namespace Plunderspell.Guards
         public GuardState OnFire { get; }
 
         /// <summary>
-        /// The state a status change forces on the guard, or false when it forces none. Priority (#212):
-        /// stun, levitation and sleep outrank burning, because a guard that cannot move cannot run about; it
-        /// panics once the hold ends (<see cref="IncapacitatedState"/> recovers into OnFire). Fire never
-        /// pulls a guard out of a hold, so a status change during one is ignored if the guard is burning only.
+        /// The state a status change forces on the guard, or false when it forces none. Priority (#212, #236):
+        /// stun and levitation outrank burning, because a guard held in place cannot run about; it panics once
+        /// the hold ends (<see cref="IncapacitatedState"/> recovers into OnFire). Fire overrules sleep: the
+        /// receiver wakes a sleeper that catches fire, so a burning guard that is not held goes to OnFire,
+        /// including straight out of <see cref="SleptState"/>.
         /// </summary>
-        public bool TryInterrupt(StatusEffectReceiver status, State<Guard> current, out GuardState next)
+        public bool TryInterrupt(StatusEffectReceiver status, out GuardState next)
         {
             next = null;
             if (status.IsIncapacitated)
                 next = IncapacitatedBy(status);
-            else if (status.IsBurning && !(current is IncapacitatedState))
+            else if (status.IsBurning)
                 next = OnFire;
             return next != null;
         }

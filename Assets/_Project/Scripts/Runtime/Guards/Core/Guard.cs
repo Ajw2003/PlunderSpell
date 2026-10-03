@@ -231,7 +231,7 @@ namespace Plunderspell.Guards
         // A status effect that incapacitates or ignites is not a state's choice: it interrupts whichever state is running.
         private void OnStatusChanged(StatusEffectReceiver status)
         {
-            if (IsAuthority && !IsDead && States.TryInterrupt(status, CurrentState, out GuardState held))
+            if (IsAuthority && !IsDead && States.TryInterrupt(status, out GuardState held))
                 _machine.ChangeState(held);
         }
 

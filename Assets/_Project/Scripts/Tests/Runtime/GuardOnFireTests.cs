@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Plunderspell.Tests
 {
-    /// <summary>OnFire (#212) on the flat rig: panic runs between distinct points, no attacks and no held turn, every way the fire can end (Combat, Chase, Patrol, Dead), and stun or sleep outranking the fire.</summary>
+    /// <summary>OnFire (#212) on the flat rig: panic runs between distinct points, no attacks and no held turn, every way the fire can end (Combat, Chase, Patrol, Dead), stun outranking the fire, and fire overruling sleep (#236).</summary>
     public class GuardOnFireTests
     {
         private const float Step = 0.05f;
@@ -164,17 +164,32 @@ namespace Plunderspell.Tests
         }
 
         [Test]
-        public void ASleepOutranksTheFireToo()
+        public void FireOverrulesSleepSoASleepingGuardSetAlightWakesIntoOnFire()
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
-            guard.Status.Sleep(1f);
-            Advance(guard, 0.2f);
-
-            guard.Status.Ignite(1f, 30f);
+            guard.Status.Sleep(30f);
             Advance(guard, 0.2f);
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.Slept));
 
-            Advance(guard, 1f);
+            guard.Status.Ignite(1f, 30f);
+            Advance(guard, 0.1f);
+
+            Assert.That(guard.Status.IsAsleep, Is.False, "the fire woke it");
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.OnFire), "straight to panic, not Patrol or Investigate");
+        }
+
+        [Test]
+        public void SomnusOnABurningGuardLeavesItAwakeAndBurning()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            guard.Status.Ignite(1f, 30f);
+            Advance(guard, 0.2f);
+
+            guard.Status.Sleep(30f);
+            Advance(guard, 0.2f);
+
+            Assert.That(guard.Status.IsAsleep, Is.False);
+            Assert.That(guard.Status.IsBurning, Is.True);
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.OnFire));
         }
     }

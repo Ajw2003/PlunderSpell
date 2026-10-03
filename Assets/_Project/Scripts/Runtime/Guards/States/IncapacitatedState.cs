@@ -29,7 +29,8 @@ namespace Plunderspell.Guards
         /// Where to go once nothing holds the guard. A noise that woke it (or was heard while it lay there)
         /// is a lead, so it goes to look. With no lead it still goes to look around where it stands once
         /// the castle is Roused or worse, and otherwise it goes back to its round (<see cref="GuardRecovery"/>).
-        /// A guard still on fire when the hold ends goes on to panic (#212): stun and sleep outrank burning.
+        /// A guard still on fire when the hold ends goes on to panic (#212): stun outranks burning, and fire
+        /// overrules sleep (#236), so a sleeper that catches fire never reaches here still asleep.
         /// </summary>
         protected State<Guard> Recover()
         {

@@ -152,6 +152,15 @@ namespace Plunderspell.Status
             // Hotter fire wins on rate; longer fire wins on duration. Neither stacks additively.
             _burnDps = Mathf.Max(_burnDps, damagePerSecond);
             _burnRemaining = Mathf.Max(_burnRemaining, duration);
+
+            // Fire overrules Somnus (#236): being burnt wakes a sleeper. Burn is set first so listeners
+            // woken by WakeUp's StatusChanged already see IsBurning and pick the panic state.
+            if (IsAsleep)
+            {
+                WakeUp();
+                return;
+            }
+
             StatusChanged?.Invoke(this);
         }
 
@@ -180,7 +189,8 @@ namespace Plunderspell.Status
 
         public void Sleep(float duration)
         {
-            if (duration <= 0f)
+            // Fire overrules Somnus (#236): a burning target cannot be put to sleep.
+            if (duration <= 0f || IsBurning)
                 return;
             _sleepRemaining = Mathf.Max(_sleepRemaining, duration);
             StatusChanged?.Invoke(this);
