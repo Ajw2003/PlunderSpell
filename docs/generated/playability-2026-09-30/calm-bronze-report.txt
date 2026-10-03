@@ -1,0 +1,21 @@
+TOTAL guards 20 observed_s 1177.4 stuck_s 11.8 parked_s 2.1 nodest_s 2.1 moving_s 1161.4 standing_s 16.0 now Patrolling=20
+guard -522090 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -522248 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -522406 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -522564 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -522710 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -522868 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -523006 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -523164 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -523302 stuck 1.1 parked 0.0 nodest 0.0 moving 57.8
+guard -523440 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -523578 stuck 2.2 parked 0.0 nodest 0.0 moving 56.7
+guard -523696 stuck 0.0 parked 2.1 nodest 0.0 moving 56.8
+guard -523814 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -523952 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -524090 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -524228 stuck 0.0 parked 0.0 nodest 2.1 moving 56.7
+guard -524366 stuck 0.0 parked 0.0 nodest 0.0 moving 58.9
+guard -524484 stuck 2.1 parked 0.0 nodest 0.0 moving 56.7
+guard -524622 stuck 4.3 parked 0.0 nodest 0.0 moving 54.6
+guard -524760 stuck 2.1 parked 0.0 nodest 0.0 moving 56.7

@@ -23,7 +23,7 @@ namespace Plunderspell.Guards
         {
             get
             {
-                if (_guard.Status.IsLevitating)
+                if (_guard.Status.IsLevitating || _guard.Lift.IsAirborne)
                     return false;
 
                 EnemyDirector director = _guard.Link.Director;

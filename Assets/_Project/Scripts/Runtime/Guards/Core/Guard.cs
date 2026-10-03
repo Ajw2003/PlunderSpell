@@ -63,6 +63,9 @@ namespace Plunderspell.Guards
         /// <summary>What is worth a look (noise, sighting, hue and cry). Patrol and Investigate read it (#208).</summary>
         public GuardLeads Leads { get; private set; }
         public GuardStateSet States { get; private set; }
+
+        /// <summary>Levo's lift and the fall after it (the guard has no physics body for the spell to push).</summary>
+        public GuardLift Lift { get; private set; }
         private GuardShove _shove;
 
         /// <summary>Where the guard was posted. Patrol wanders around it.</summary>
@@ -111,6 +114,7 @@ namespace Plunderspell.Guards
             AttackTurn = new GuardAttackTurn(this);
             Leads = new GuardLeads(Link, Hearing, () => Random);
             _shove = new GuardShove(transform, _tuning);
+            Lift = new GuardLift(transform, Status);
             States = new GuardStateSet(this);
 
             Health.Died += OnDied;
@@ -191,6 +195,7 @@ namespace Plunderspell.Guards
             Sight.Update(EnemyDirector.IntrudersOf(Link.Director), Link.Alarm, Status.IsIncapacitated, deltaTime);
             _machine.Tick(deltaTime);
             _shove.Step(deltaTime);
+            Lift.Step(deltaTime);
         }
 
         /// <summary>A noise reached the guard. The server decides; a client's copy ignores it.</summary>

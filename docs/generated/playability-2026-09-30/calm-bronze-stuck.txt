@@ -1,0 +1,6 @@
+guard -523302 t 26 dt 1.1 pos (16.73, 0.31, -19.58) state Patrolling dest (5.65, 0.10, -23.27) distDest 11.7 movedPerSecond 0.14 ground BronzeFrescoCourt(Clone) n=(0.00, 1.00, 0.00) slope=0 touching [STATIC:BronzeFrescoCourt(Clone)/LDefault]
+guard -524622 t 28 dt 2.1 pos (-45.67, 0.00, 24.72) state Patrolling dest (-50.17, 0.10, 21.04) distDest 5.8 movedPerSecond 0.11 ground Ground n=(0.00, 1.00, 0.00) slope=0 touching []
+guard -524622 t 35 dt 2.1 pos (-49.62, 0.00, 22.11) state Patrolling dest (-42.90, 0.10, 27.94) distDest 8.9 movedPerSecond 0.09 ground DressingLeanTo_-4_2 n=(0.00, 1.00, 0.00) slope=0 touching []
+guard -524484 t 63 dt 2.1 pos (-41.72, 0.00, 47.76) state Patrolling dest (-43.49, 0.10, 48.72) distDest 2.0 movedPerSecond 0.01 ground DressingTraining_-3_4 n=(0.00, 1.00, 0.00) slope=0 touching []
+guard -523578 t 75 dt 2.2 pos (10.39, 0.31, 32.25) state Patrolling dest (14.13, 0.10, 28.49) distDest 5.3 movedPerSecond 0.07 ground BronzeLevyBarracks(Clone) n=(0.00, 1.00, 0.00) slope=0 touching []
+guard -524760 t 80 dt 2.1 pos (-50.02, 0.00, 16.50) state Patrolling dest (-51.55, 0.10, 12.39) distDest 4.4 movedPerSecond 0.07 ground Ground n=(0.00, 1.00, 0.00) slope=0 touching []

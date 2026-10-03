@@ -144,6 +144,12 @@ prefab carries the fresh guard since #214.
   slides past it. A guard walking square into a wall keeps none of its step and is still reported held up,
   then Blocked. Sliding moves only the guard, so the #200 rule holds. Before this, a guard that clipped a
   corner stood on it until its state gave up.
+- **Levo's lift** (2026-10-02). The fresh guard has no physics body, so the spell's impulse (`StatusEffectReceiver.cs:215`
+  pushes only a non-kinematic Rigidbody) moved nothing and a levitated guard never left the floor; its test only
+  checked the Stunned state. `GuardLift` (`Runtime/Guards/Core/GuardLift.cs`), stepped from `Guard.Tick`, now raises
+  the guard 1.8 m at 3 m/s while it levitates, turning 45 degrees a second, then drops it under gravity to where the
+  lift began: the legacy `CastleGuard.UpdateLevitation` motion, without its fall damage (dropped in the inventory).
+  `GuardLanding.HasLanded` waits for the fall. Tested (`GuardIncapacitatedTests`); not yet seen in co-op.
 - **Stairs** (2026-10-02). `GuardNavigationTuning.StepHeight` is 0.7 m, two risers, not one: the body is 0.4 m
   wide, so its front edge meets the next riser while its centre is still a step lower, and at 0.35 m every
   staircase tested (KeepStairwell, LateTurretStair, BronzeMegaronStair) stopped guards at the foot.

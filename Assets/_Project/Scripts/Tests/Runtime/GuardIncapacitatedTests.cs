@@ -100,19 +100,20 @@ namespace Plunderspell.Tests
         public void ALevitatedGuardIsStunnedUntilItLandsAndItsMoverIsPausedMeanwhile()
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
-            guard.Status.Levitate(Vector3.zero, 1f);
-            guard.transform.position = new Vector3(0f, 3f, 0f); // the spell's lift, which the navigation service must not undo
+            guard.Status.Levitate(Vector3.up * 4f, 1f);
 
+            // Regression (2026-10-02 co-op): the spell's impulse had no physics body to push, so the guard never left the floor.
             Advance(guard, 0.5f);
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.Stunned));
-            Assert.That(guard.transform.position.y, Is.EqualTo(3f), "the paused mover did not settle it onto the floor");
+            Assert.That(guard.transform.position.y, Is.GreaterThan(1f), "Levo lifts the guard, and the paused mover does not pull it back down");
 
-            Advance(guard, 1f);
+            Advance(guard, 0.6f);
             Assert.That(guard.Status.IsLevitating, Is.False, "the spell is over");
-            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Stunned), "but it has not landed yet");
+            Assert.That(guard.transform.position.y, Is.GreaterThan(0.1f), "it is still falling");
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Stunned), "and stays stunned until it lands");
 
-            guard.transform.position = Vector3.zero; // lands
-            Advance(guard, 0.2f);
+            Advance(guard, 1.5f);
+            Assert.That(guard.transform.position.y, Is.EqualTo(0f).Within(0.01f), "it falls back to the floor it left");
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.Patrol), "recovers on landing");
 
             Vector3 resumedAt = guard.transform.position;
