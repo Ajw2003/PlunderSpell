@@ -98,7 +98,10 @@ namespace Plunderspell.Tests
                 _rig.RunNavigation(guard, 1, 0.025f);
             }
 
-            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Chase), "2.25 s in the air, longer than the 0.75 s grace");
+            // Hanging 4.5 m up is out of reach on the flat floor, so after the confirm time (#237) a melee guard
+            // holds below and throws; what matters here is that it did not lose the player.
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Chase).Or.SameAs(guard.States.HoldBelow),
+                "2.25 s in the air, longer than the 0.75 s grace");
         }
 
         // ---------------------------------------------------------------- Hearing

@@ -101,6 +101,9 @@ lacks; the rest are older and either merged in another form or abandoned.
   1 ranged turn per player, others hold a ring place; one `GuardLineOfFire` check stops Chase and Combat shots
   through a teammate. Not in a prefab or a co-op run yet (the legacy guard stays until #214).
 
+  2026-10-03 (#237): a melee guard that sees a player it cannot reach (nav map: no floor near, or feet over 0.9 m above it, for 1 s) holds below and throws
+  stones (new `HoldBelowState`, `Resources/GuardStone.prefab`) and calls ranged guards to shoot, melee ones to look; PlayMode `GuardUnreachableTests` 4/4;
+  the one co-op run did not work (the guard stayed on patrol and never saw the player; log in `docs/generated/guard-unreachable-2026-10-03/run.log`).
   2026-10-02 (evening, #238 part 2): hold C to creep (2 m/s, 1.5 m footstep); guards see head, body or feet, look up 80 degrees, see 1.5x
   farther and farther again as the alarm rises (#229); noise radii unchanged (`docs/4-systems/alarm.md`).
   2026-10-02 (evening): all 27 guard prefabs carry the fresh guard (#214 swap; `CastleGuard.cs`, `CastleNavMeshBaker.cs`,

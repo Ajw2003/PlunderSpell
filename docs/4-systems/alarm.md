@@ -215,6 +215,27 @@ Measured numbers: `docs/generated/guard-awareness-2026-10-02/findings.md`.
   other listeners and anything carrying a Rigidbody, and aims at the middle of the listener. Two walls hide a footstep from a calm guard.
 - **Tests.** `GuardAwarenessTests`, `NoiseSourceTests`, `GuardSightReachTests`, `PlayerCreepTests`.
 
+## A player the guard cannot reach (#237)
+
+The nav map has no cells on tables, rails or ledges, so a melee guard used to run to the spot under the player and stand there or give up.
+
+- **Unreachable** (`Core/GuardReachability`): from the director's map, not guessed. A player is unreachable when `TryGetFloorHeight` finds no floor
+  within 1.5 m, or their feet (`pivot + TargetLowAimHeight`) are more than `UnreachableHeight` (0.9 m) above that floor, and it has held for
+  `UnreachableConfirmSeconds` (1 s, so a jump does not count). A player within `MeleeReach` of the guard is always reachable (it can hit them).
+  With no director or map nothing is unreachable. Ranged guards never ask: they shoot anyway.
+- **Hold below** (`States/HoldBelowState`, replicated as Combat): `ChaseState` and `CombatState` hand a melee guard here. It stops, faces the player,
+  stays within `ThrowStandOff` (4 m) of the spot under them (moving to a ring place only to get close, or to sidestep a teammate in the line) and
+  throws on `GuardRangedAttack.TryThrow`: the same shot path as a bolt (cooldown, `GuardLineOfFire`, attack signal, `NetworkedProjectile`) with
+  `ThrowSpeed` 10, `ThrowCooldownSeconds` 2.5 and `ThrowDamageShare` 0.4 of `AttackDamage`. Stone: `Resources/GuardStone.prefab`, built by
+  `Editor/StoneForge`, not a PurrNet network prefab (like the bolt). It gives up to Investigate after `UnreachableLoseSightSeconds` (3 s) unseen,
+  and returns to Chase (then Combat) as soon as the player is reachable.
+- **Throws use the ranged attack turn**, so the director's limit on shooters per player covers stones; the turn is released straight after each throw.
+- **Call for help**: entering the state publishes `UnreachableIntruderReported` on the director's bus. `GuardDirectorLink.HelpCalled` reaches free
+  guards (Patrol or Investigate) within 40 m; `Core/GuardHelpResponse`: ranged guards go to Chase at once, melee guards are given the player's spot as a
+  sighting lead and walk at investigate pace, so they come second and hold below themselves.
+- **Tests**: `GuardUnreachableTests` (throws and stays; not through a teammate; melee returns; help call). The one real co-op run did not work (the guard stayed on patrol and never saw
+  the player), so the real map's answer for a slab is unverified; log in `docs/generated/guard-unreachable-2026-10-03/run.log`.
+
 ## The fresh guard core (#206)
 
 `Guard` (`Assets/_Project/Scripts/Runtime/Guards/Core/Guard.cs:24`) is the new guard, a thin NetworkBehaviour. **Not live yet:** no prefab uses it,

@@ -16,6 +16,75 @@ string arg2 = "__ARG2__";
 var inv = System.Globalization.CultureInfo.InvariantCulture;
 var player = StateMachine.PlayerStateMachine.Local;
 if (player == null) return "no local player";
+
+// #237: a melee guard against a player on an unreachable slab. Other guards stay free, so the call for help shows.
+//   unreachsetup SLABTOP D  pick the live melee guard nearest the player, put the player on a slab SLABTOP m high
+//                           and the guard on the floor D m away facing it; remember every guard's position
+//   unreachwatch            one line: the melee guard (state, distances, position, throws, player health) and the
+//                           other guards that have moved 3 m or more since setup, with their states
+if (action == "unreachsetup")
+{
+    float uTop = float.Parse(arg, inv);
+    float uDist = float.Parse(arg2, inv);
+    float uFloor = player.transform.position.y - 1.19f;
+    Plunderspell.Guards.Guard uPick = null;
+    var uPositions = new System.Collections.Generic.Dictionary<int, UnityEngine.Vector3>();
+    foreach (var g in UnityEngine.Object.FindObjectsByType<Plunderspell.Guards.Guard>(UnityEngine.FindObjectsSortMode.None))
+    {
+        if (g == null || g.IsDead) continue;
+        uPositions[g.GetInstanceID()] = g.transform.position;
+        bool melee = g.Tuning.ProjectilePrefab == null;
+        if (melee && (uPick == null || (g.transform.position - player.transform.position).sqrMagnitude < (uPick.transform.position - player.transform.position).sqrMagnitude))
+            uPick = g;
+    }
+    if (uPick == null) return "no live melee guard";
+    var uOld = UnityEngine.GameObject.Find("awLedge");
+    if (uOld != null) UnityEngine.Object.DestroyImmediate(uOld);
+    var uSlab = UnityEngine.GameObject.CreatePrimitive(UnityEngine.PrimitiveType.Cube);
+    uSlab.name = "awLedge";
+    for (int bit = 0; bit < 32; bit++)
+    {
+        if ((uPick.Tuning.GeometryLayers.value & (1 << bit)) != 0) { uSlab.layer = bit; break; }
+    }
+    var uAt = player.transform.position;
+    uSlab.transform.localScale = new UnityEngine.Vector3(3f, uTop, 2f);
+    uSlab.transform.position = new UnityEngine.Vector3(uAt.x, uFloor + uTop * 0.5f, uAt.z);
+    var uBody = player.GetComponent<UnityEngine.Rigidbody>();
+    uBody.isKinematic = true;
+    player.transform.position = new UnityEngine.Vector3(uAt.x, uFloor + uTop + 1.19f, uAt.z);
+    uBody.position = player.transform.position;
+    uPick.transform.position = new UnityEngine.Vector3(uAt.x, uFloor, uAt.z) + UnityEngine.Vector3.forward * uDist;
+    uPick.transform.rotation = UnityEngine.Quaternion.LookRotation(UnityEngine.Vector3.back, UnityEngine.Vector3.up);
+    UnityEngine.Physics.SyncTransforms();
+    uPick.Leads.Clear();
+    System.AppDomain.CurrentDomain.SetData("uGuard", uPick);
+    System.AppDomain.CurrentDomain.SetData("uStart", uPositions);
+    System.AppDomain.CurrentDomain.SetData("uThrows0", uPick.AttackSignal.Count);
+    return "setup: " + uPick.name + " (melee) " + uDist + " m from a " + uTop + " m slab, player at " + player.transform.position + ", " + uPositions.Count + " guards live";
+}
+
+if (action == "unreachwatch")
+{
+    var uMain = System.AppDomain.CurrentDomain.GetData("uGuard") as Plunderspell.Guards.Guard;
+    var uStart = System.AppDomain.CurrentDomain.GetData("uStart") as System.Collections.Generic.Dictionary<int, UnityEngine.Vector3>;
+    if (uMain == null || uStart == null) return "no setup";
+    var uHealth = player.GetComponent<Interfaces.IHealth>();
+    var uSpot = player.transform.position;
+    var uFlat = uMain.transform.position - uSpot; uFlat.y = 0f;
+    string uLine = "main " + uMain.CurrentState.GetType().Name + " flat " + uFlat.magnitude.ToString("F1", inv)
+        + " m, at " + uMain.transform.position + ", signals " + (uMain.AttackSignal.Count - (int)System.AppDomain.CurrentDomain.GetData("uThrows0"))
+        + " " + uMain.AttackSignal.LastKind + ", player health " + (uHealth != null ? uHealth.CurrentHealth.ToString("F0", inv) : "?");
+    string uOthers = "";
+    foreach (var g in UnityEngine.Object.FindObjectsByType<Plunderspell.Guards.Guard>(UnityEngine.FindObjectsSortMode.None))
+    {
+        if (g == null || g == uMain || !uStart.TryGetValue(g.GetInstanceID(), out var uFrom)) continue;
+        if ((g.transform.position - uFrom).magnitude < 3f) continue;
+        uOthers += " [" + g.name + (g.Tuning.ProjectilePrefab != null ? " ranged " : " melee ") + g.CurrentState.GetType().Name
+            + " " + (g.transform.position - uSpot).magnitude.ToString("F1", inv) + " m]";
+    }
+    return uLine + " | moved:" + (uOthers == "" ? " none" : uOthers);
+}
+
 var guard = System.AppDomain.CurrentDomain.GetData("awGuard") as Plunderspell.Guards.Guard;
 
 if (action == "pick" || guard == null)
