@@ -38,9 +38,13 @@ namespace Plunderspell.Castle
         /// <summary>
         /// Builds the graph for a generated layout. A module with no baked tile in the registry
         /// contributes no cells, and archways stay joined only where the generator left them open.
-        /// Without a registry or a layout the graph is empty and every query answers "nowhere".
+        /// <paramref name="obstacles"/> are things placed on top of the rooms (the bailey dressing); the
+        /// cells they stand on are taken out (<see cref="CastleNavObstacles"/>). They must be in place in
+        /// the physics scene already. Without a registry or a layout the graph is empty and every query
+        /// answers "nowhere".
         /// </summary>
-        public static CastleNavGraph Build(ProceduralCastleData data, CastleRoomRegistry registry)
+        public static CastleNavGraph Build(ProceduralCastleData data, CastleRoomRegistry registry,
+            IReadOnlyList<GameObject> obstacles = null)
         {
             var graph = new CastleNavGraph();
             if (data?.PlacedModules == null || data.PlacedModules.Count == 0 || registry == null)
@@ -50,6 +54,7 @@ namespace Plunderspell.Castle
             if (!grid.IsUsable)
                 return graph;
             CastleNavStitcher.LoadTiles(grid, data, registry);
+            CastleNavObstacles.Stamp(grid, obstacles); // before areas, so a cart that seals a gap splits them
             CastleNavAreas areas = CastleNavAreas.Label(grid);
             List<NavLink> links = CastleNavStitcher.FindLinks(grid, data, areas);
             areas.Flatten(grid);

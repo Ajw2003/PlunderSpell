@@ -111,12 +111,12 @@ namespace Plunderspell.Castle
             // no neighbour is currently a hole in the outer face. Fill those.
             SealOpenArchways(data, occupied);
 
-            // Stitched here because the archways just left open are exactly the nav graph's joins.
-            data.NavGraph = CastleNavGraph.Build(data, registry);
-
-            // Placed with the rooms, before anyone bakes the NavMesh or probes for a standing point,
+            // Placed with the rooms, before the nav graph is built or anyone probes for a standing point,
             // so a cart or a woodpile is walked round and never stood in.
-            DressCastle(data, seed);
+            List<GameObject> dressing = DressCastle(data, seed);
+
+            // Stitched here because the archways just left open are exactly the nav graph's joins.
+            data.NavGraph = CastleNavGraph.Build(data, registry, dressing);
 
             LastGenerated = data;
             return data;
@@ -430,11 +430,13 @@ namespace Plunderspell.Castle
         /// <summary>
         /// Plans the bailey's dressing on its own seed stream (<see cref="CastleDressingPlanner"/>)
         /// and instantiates it into the castle, so it is cleared, baked and probed with the rooms.
+        /// Returns the pieces placed, for the nav graph to walk round.
         /// </summary>
-        private void DressCastle(ProceduralCastleData data, int seed)
+        private List<GameObject> DressCastle(ProceduralCastleData data, int seed)
         {
+            var placed = new List<GameObject>();
             if (m_dressing == null)
-                return;
+                return placed;
 
             var straightIds = new HashSet<string> { k_WallStraightId, ResolveRoomId(k_WallStraightId) };
             data.Dressings = CastleDressingPlanner.Plan(data, seed, m_dressing, straightIds, m_curtainWallRadius, cellSize);
@@ -449,7 +451,9 @@ namespace Plunderspell.Castle
                     dressing.Rotation * entry.Prefab.transform.rotation, roomContainer);
                 go.name = $"{dressing.Id}_{dressing.Cell.x}_{dressing.Cell.y}";
                 _instantiated.Add(go);
+                placed.Add(go);
             }
+            return placed;
         }
 
         /// <summary>

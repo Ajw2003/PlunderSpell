@@ -116,6 +116,15 @@ namespace Plunderspell.Castle
             WalkableCellCount++;
         }
 
+        /// <summary>Takes a cell out of the map: something placed after the tiles were baked stands on it.</summary>
+        public void ClearWalkable(int cell)
+        {
+            if (_walkable[cell] == 0)
+                return;
+            _walkable[cell] = 0;
+            WalkableCellCount--;
+        }
+
         /// <summary>Marks the cell at <paramref name="along"/> on a module's world-side edge as an archway cell.</summary>
         public void SetArchway(int module, int side, int along)
         {
@@ -225,6 +234,23 @@ namespace Plunderspell.Castle
                     ConsiderColumn(position, centreColumn + dc, centreRow + dr, ref best, ref bestSqr);
             }
             return best;
+        }
+
+        /// <summary>Castle-wide cell column under a world X.</summary>
+        public int CastleColumn(float worldX) => Mathf.FloorToInt((worldX + HalfSpan) / CastleNavTile.CellSize);
+
+        /// <summary>Castle-wide cell row under a world Z.</summary>
+        public int CastleRow(float worldZ) => Mathf.FloorToInt((worldZ + HalfSpan) / CastleNavTile.CellSize);
+
+        /// <summary>The cell at castle-wide column and row on a layer, or <see cref="NoCell"/> where no module with a tile is.</summary>
+        public int CellAt(int castleColumn, int castleRow, int layer)
+        {
+            int gridX = FloorDiv(castleColumn, TileSize), gridY = FloorDiv(castleRow, TileSize);
+            int module = ModuleAtGridCell(gridX, gridY);
+            if (module < 0 || !_moduleHasTile[module])
+                return NoCell;
+            int column = castleColumn - gridX * TileSize, row = castleRow - gridY * TileSize;
+            return module * CellsPerModule + CastleNavTile.Index(layer, column, row);
         }
 
         // A column is addressed by its castle-wide cell coordinates, which may fall in a neighbour module.
