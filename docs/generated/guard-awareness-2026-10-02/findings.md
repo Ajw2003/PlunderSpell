@@ -38,7 +38,48 @@ The raid controller has one pace (walk speed 5, no crouch or run), so a raid pla
 footstep (8 m). There is no quiet way to approach for a backstab. Smallest option, not built: a hold-to-creep
 key that drops the speed under 2.2 m/s, which the existing speed bands already turn into a 1.5 m footstep.
 
+## After (part 2, 2026-10-02): creep key and sight from below
+
+Owner: "I can still lose them easily jumping on a wall or something or the railing of the stairs." Two co-op runs (one before, one after) with
+`guard_awareness_check.sh` (`ledge`, `probe`, `sidewalk` actions in `Tools/Unity/eval/guard_awareness.cs`). The player is on a synthetic slab on a
+guard-blocking layer (WALL = 2 m deep wall walk, RAIL = 0.12 m rail) in the Late Medieval castle, a calm guard on the floor facing it. Player
+pivot is the capsule centre (1.19 m above the feet), so the old single aim (pivot + 1.0) was already at the head, not the chest.
+
+| Case (guard distance) | Before: head / chest / feet ray, Visible | After |
+|---|---|---|
+| Wall walk 4.5 m (1.5 m) | blocked / blocked / blocked (the wall face), head 73 deg; not seen | same: the wall really hides the player; head 74 deg |
+| Wall walk 4.5 m (3 m) | clear / blocked / blocked, head 59 deg; seen | **not valid**: the run was inside the 20 s arrival grace |
+| Wall walk 4.5 m (6 m) | clear / clear / blocked; seen | seen |
+| Rail 3 m (1.5 / 3 / 6 m) | clear x3 (head 67 / 50 / 31 deg); seen x3 | seen x3 (6 m: head blocked by a building, chest and feet clear: only the new rule sees this) |
+| Rail 1.1 m (1.5 / 3 / 6 m) | clear x3; seen x3 | seen x3 (3 m: head ray hit a bolt in flight, body clear) |
+| Open ground, 15 m | seen at the look (guard then walked; the probe was taken later) | seen |
+| Open ground, 20 m | not seen: a building wall 1.4 m from the eye, and out of the 14 m range | not seen: the same building wall (range is now 21+ m) |
+
+Causes. The head ray alone rarely fails for a player above the guard: standing on a ledge only hides the player when the ledge is between eye
+and head, which is a real wall. What failed was (1) the 70 degree up limit when the guard stands close under a wall or rail (73 degrees to the head
+at 1.5 m under a 4.5 m wall walk; 67 for a 3 m rail) and (2) one thin ray: anything crossing the head ray (a lintel, a bolt, a building corner)
+dropped the sighting even with the body in view. And the range was 14 m (20 m for Handgunners).
+
+Changes: three aim points (head, middle, feet), one clear ray is a sighting; up limit 80 degrees (73 measured, a margin for a player a little higher
+or closer; overhead still unseen); sight range times 1.5, and `GuardBrain.SightRange` now applied (x1.15 / 1.4 / 1.75 for Stirred / Roused / Hue and
+Cry, #229). No allocation: `GuardSight` reuses its hit buffer and the new code only loops over three heights. Noise radii and strengths untouched.
+
+Not valid in the after run: the first two WALL cases (inside the arrival grace, because the old hearing sections that used to burn that time were
+skipped). The runner was not edited and re-run, per the one-run rule; `GuardSightReachTests.APlayerOnAWallWalk...` reproduces the geometry
+(3 m seen, 1.5 m not) in a PlayMode test instead.
+
+Creep (hold C, `PlayerStateMachine.CreepPace` 0.4), real walk state, guard 3 m to the side, 1.5 s:
+
+| Gait | Fastest speed | Noticed by the guard |
+|---|---|---|
+| Walk | 5.00 m/s | 4 |
+| Creep | 2.00 m/s | 0 |
+| Footstep control Run / Crouch, guard 3 m behind | | 1 / 0 |
+
+Not run: a client player creeping (the input is local and the speed is the movement, so the host measures it like any player; not exercised with a
+second human). Heavy-loot hearing: not worked on, per the owner.
+
 ## Co-op runs
 
-8 in all (4 before, 4 after), against the one-per-change rule. Several repeated runs fixed the measuring
+Part 2: 2 (before, after). Part 1: 8 in all (4 before, 4 after), against the one-per-change rule. Several repeated runs fixed the measuring
 script itself. Stopped at the owner's request.

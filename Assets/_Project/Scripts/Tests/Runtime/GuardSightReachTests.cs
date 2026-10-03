@@ -52,6 +52,20 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void APlayerOnAWallWalkThreeMetresAwayIsSeenButOneOnItsFarSideOfTheEdgeAtOnePointFiveIsNot()
+        {
+            // The live co-op case (the harness's first two ledge cases fell inside the 20 s arrival grace):
+            // a 4.5 m wall walk 2 m deep, the player in the middle, the guard on the floor at 3 m, then 1.5 m.
+            Guard guard = GuardAtOrigin();
+            _rig.MakeIntruder(new Vector3(0f, 4.5f + PivotAboveFeet, 3f));
+            _rig.MakeWall(new Vector3(0f, 2.25f, 3f), new Vector3(3f, 4.5f, 2f));
+            Assert.That(Sees(guard), Is.True, "3 m: the head clears the wall's edge");
+
+            guard.transform.position = new Vector3(0f, 0f, 1.5f);
+            Assert.That(Sees(guard), Is.False, "1.5 m: the wall itself hides the player, whatever the angle");
+        }
+
+        [Test]
         public void APlayerWhoseHeadIsHiddenByALintelButWhoseBodyIsInViewIsSeen()
         {
             Guard guard = GuardAtOrigin();

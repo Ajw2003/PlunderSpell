@@ -101,6 +101,8 @@ lacks; the rest are older and either merged in another form or abandoned.
   1 ranged turn per player, others hold a ring place; one `GuardLineOfFire` check stops Chase and Combat shots
   through a teammate. Not in a prefab or a co-op run yet (the legacy guard stays until #214).
 
+  2026-10-02 (evening, #238 part 2): hold C to creep (2 m/s, 1.5 m footstep); guards see head, body or feet, look up 80 degrees, see 1.5x
+  farther and farther again as the alarm rises (#229); noise radii unchanged (`docs/4-systems/alarm.md`).
   2026-10-02 (evening): all 27 guard prefabs carry the fresh guard (#214 swap; `CastleGuard.cs`, `CastleNavMeshBaker.cs`,
   `GuardPrefabSwapTool.cs`, `GuardMovementTests` and the dead `GuardBrain` rules were deleted later that evening
   with the owner's approval). Guard navigation fixed after the owner

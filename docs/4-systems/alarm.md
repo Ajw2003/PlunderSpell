@@ -195,18 +195,25 @@ prefab carries the fresh guard since #214.
 Measured numbers: `docs/generated/guard-awareness-2026-10-02/findings.md`.
 
 - **Sight.** `GuardBrain.CanSee` tests the side-to-side angle against half the field of view (55 degrees) and the up/down angle
-  separately against `MaxLookPitchDegrees` (70). A player on a table, a ledge or in mid-jump in front stays seen and a chase is not lost
-  for being airborne; nearly overhead is not seen.
+  separately against `MaxLookPitchDegrees` (80, raised from 70 in part 2: a guard 1.5 m under a 4.5 m wall walk looks 73 degrees up to the
+  head). A player on a table, a ledge or in mid-jump in front stays seen and a chase is not lost for being airborne; nearly overhead is not seen.
+  `GuardSight` aims at three points, head (`TargetAimHeight` 1.0 above the pivot, which is the capsule centre), middle and feet
+  (`TargetLowAimHeight` -0.9), and a sighting needs **one** clear ray, so a lintel over the head or a ledge edge over the body no longer hides a
+  player whose other half is in view. Rays still stop at geometry layers: a player fully behind a wall, or 1.5 m from the foot of a wall
+  they stand 1 m back on, is not seen. **Range:** the serialized `SightRange` (14 on most prefabs) times `GuardBrain.BaseSightScale` (1.5),
+  then `GuardBrain.SightRange(alarm)`: x1.15 Stirred, x1.4 Roused, x1.75 Hue and Cry (#229). Noise radii and strengths are unchanged.
 - **Footsteps.** `StepAudio` feeds `FootstepNoiseEmitter` for any player that has one, wherever the player is. Pace picks the stance
-  (under 2.2 m/s crouch 1.5 m, under 4.5 walk 4 m, else run 8 m; strength 0.4). The raid controller has one pace, 5 m/s, so a raid player
-  always makes the 8 m run noise. **There is no sneak or crouch on the raid controller**, so a backstab approach has no quiet way in.
-  Smallest option, not built: a hold-to-creep key lowering `walkSpeed` under 2.2 m/s, which the same breaks make a 1.5 m footstep.
+  (under 2.2 m/s crouch 1.5 m, under 4.5 walk 4 m, else run 8 m; strength 0.4). The raid controller walks at 5 m/s, which is the 8 m run noise.
+  **Hold C to creep** (`PlayerInputController`, `PlayerStateMachine.Creeping`, `CreepPace` 0.4): 2 m/s, the 1.5 m crouch footstep. C because
+  Ctrl is the whisper modifier and Shift the shout modifier. The input is local; the slower pace is the movement itself, so the host
+  measures the same quiet step for a client (`StepAudio` reads each player's travel). Measured in co-op, guard 3 m to the side: walking 5 m/s
+  was heard 4 times, creeping 2 m/s 0 times.
 - **Landing.** `OnLanding`: falls over 2.5 m/s 6 m at 0.5, over 10 m/s 12 m at 0.8.
 - **Loot.** `LootNoise`: impact reach 2 x sqrt(kg) scaled by speed, capped 14 m, strength 0.2 + 0.03 x kg; a piece too heavy to lift being
   dragged scrapes every 0.8 s, 2 x sqrt(kg) m at 0.3 (`LootDragNoise`). Server only. In-game hook not yet verified (see findings).
 - **Walls.** The raid player's emitter now counts Default-layer walls. `NoiseBroadcaster.CountWalls` ignores the listener's own body,
   other listeners and anything carrying a Rigidbody, and aims at the middle of the listener. Two walls hide a footstep from a calm guard.
-- **Tests.** `GuardAwarenessTests`, `NoiseSourceTests`.
+- **Tests.** `GuardAwarenessTests`, `NoiseSourceTests`, `GuardSightReachTests`, `PlayerCreepTests`.
 
 ## The fresh guard core (#206)
 
