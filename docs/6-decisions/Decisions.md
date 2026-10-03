@@ -3,6 +3,20 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-02 — Levo lifts the fresh guard; every guard answers the hue and cry
+
+**Context.** The #214 inventory listed "Levo's float-and-fall" as replaced by the Stunned state, but the
+fresh guard has no physics body, so the spell's push lifted nothing. Separately, the hue and cry was raised
+once and reached only guards within 40 m, and the owner was not swarmed reliably.
+
+**Decision (owner, 2026-10-02).** Keep the restored lift (`GuardLift`, no fall damage): the owner played it
+and said "levo works". Every guard in the castle answers the hue and cry, and it repeats while the alarm stays
+there (#239). The owner's new issues #236 (fire wakes a sleeper), #237 (reaching a player on a table or ledge)
+and #238 (hearing footsteps and moved objects, looking up) say awareness that was dropped must come back, so
+the "re-add if needed" issues for hearing (#227, #228) are now wanted rather than optional.
+
+**Consequence.** `docs/plans/guard-core-inventory.md`'s drop of the float-and-fall is reversed by this entry.
+
 ## 2026-10-02 — Lockdown doors slow or stop guards too, not just players
 
 **Context.** The guard navigation service (#222) can give each archway link a runtime cost, and
