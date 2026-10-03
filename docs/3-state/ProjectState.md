@@ -111,9 +111,15 @@ lacks; the rest are older and either merged in another form or abandoned.
   Then #223 finished: the runtime NavMesh is gone (no bake in `RaidDirector`, no `NavMeshSurface` in the three
   scenes, no obstacle on the fire props, `CastleNavMeshBaker` obsolete, `CastleAudit` on the nav graph); the AI
   Navigation package stays for the deprecated monster. Co-op check after: stuck 13.8 s of 461.0 guard-seconds
-  (the run before was 4.8 of 465.9; the seed is rolled per run, so not a like-for-like comparison). Four guard
-  PlayMode tests fail (`GuardTests` x2, `ChatterTests`, `GuardFriendlyFireTests`): they expect one tick of sight
-  to start a chase, but `PatrolState` now turns a sighting into an Investigate lead first. Not touched by #223.
+  against 4.8 of 465.9 before, same seed (3508293); all 8 stuck samples are guards in Combat shuffling in the
+  crowd at one archway, none against scenery. The four guard PlayMode tests that then failed are fixed: two
+  expected one look to start a chase (the fresh guard investigates first), one relied on a teammate's body
+  blocking an archer, and one found a real bug (a sleeper heard noises too quiet to wake it; fixed in
+  `GuardHearing`). Full PlayMode run after: 341 of 342, the one failure the known flaky #233.
+  Guards now climb stairs: the sweep's step-over is 0.7 m (two risers); at 0.35 m no staircase in any Age
+  was climbable (alarm.md, Guard navigation, "Stairs"). Seen in co-op on the Late turret stair, up and down.
+  The #214 parity table is checked (`docs/plans/guard-core-inventory.md`): 36 of 39 rows match. Open, the
+  owner's call: the alarm no longer speeds guards up (`GuardBrain.MoveSpeed` is called by no state).
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record

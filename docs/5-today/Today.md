@@ -12,6 +12,11 @@ committed now, nothing was lost. Not seen: a calm patrol over minutes (the check
 host), the Bronze Age and default castles in co-op, and Levo and Frango on the fresh guard in co-op (the
 guards killed the idle host before those checks ran).
 
+Later: guards could not climb any staircase. The sweep stepped over 0.35 m, but a guard's front edge meets a
+0.65 m riser while its centre is still on the floor, and the stair test had the sweep switched off. Now 0.7 m,
+with tests for three staircases with the sweep on (they fail at 0.35 m), and a real guard went up and down the
+Late turret stair in co-op. The runtime NavMesh is removed (#223), and the #214 parity table is checked.
+
 ---
 
 **2026-10-02 - Lesson: a stray .cs file in Assets can silently drop prefabs from PurrNet's network list.**
