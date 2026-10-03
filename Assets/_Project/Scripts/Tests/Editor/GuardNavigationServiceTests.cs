@@ -74,6 +74,41 @@ namespace Plunderspell.Tests.Editor
             Assert.That(_blocked.Count, Is.EqualTo(0));
         }
 
+        // Regression (2026-10-02 co-op run): a route that clipped an archway's edge stopped the guard dead
+        // on the corner for good. It now slides past.
+        [Test]
+        public void AGuardThatClipsAWallCornerSlidesPastItAndArrives()
+        {
+            // The wall's near face is at z = 0.25, so a guard of radius 0.4 walking along z = 0 clips it by 0.15 m.
+            MakeBox("Jamb", new Vector3(4f, 1f, 1.25f), new Vector3(1f, 3f, 2f));
+            Physics.SyncTransforms();
+            GameObject guard = MakeGuard(Vector3.zero);
+
+            _director.Publish(new MoveRequest(guard.transform, new Vector3(8f, 0f, 0f), 3f, MoveReason.Patrol));
+            RunTicks(400);
+
+            Assert.That(_blocked.Count, Is.EqualTo(0), "clipping a corner must not block the walk");
+            Assert.That(_arrived.Count, Is.EqualTo(1));
+        }
+
+        // Regression (2026-10-02 co-op run): guards share the Default layer with walls, so one guard's body
+        // stopped another's sweep and a crowd round a player locked solid.
+        [Test]
+        public void AGuardWalksPastAnotherGuardStandingInItsWay()
+        {
+            GameObject standing = MakeGuard(new Vector3(4f, 0f, 0f));
+            AddBody(standing);
+            GameObject walker = MakeGuard(Vector3.zero);
+            AddBody(walker);
+            Physics.SyncTransforms();
+
+            _director.Publish(new MoveRequest(walker.transform, new Vector3(8f, 0f, 0f), 3f, MoveReason.Chase));
+            RunTicks(400);
+
+            Assert.That(_blocked.Count, Is.EqualTo(0), "another guard's body must not block the sweep");
+            Assert.That(_arrived.Count, Is.EqualTo(1));
+        }
+
         [Test]
         public void TwentyGuardsSentToOneSpotKeepTheirDistance()
         {
@@ -149,11 +184,16 @@ namespace Plunderspell.Tests.Editor
         {
             GameObject player = Make("Player");
             player.transform.position = feet;
-            CapsuleCollider capsule = player.AddComponent<CapsuleCollider>();
+            AddBody(player);
+            return player;
+        }
+
+        private static void AddBody(GameObject owner)
+        {
+            CapsuleCollider capsule = owner.AddComponent<CapsuleCollider>();
             capsule.radius = 0.4f;
             capsule.height = 1.8f;
             capsule.center = new Vector3(0f, 0.9f, 0f);
-            return player;
         }
     }
 }

@@ -22,6 +22,7 @@ namespace Plunderspell.Alarm
         private readonly EnemyDirector _director;
         private readonly GuardNavigationTuning _tuning;
         private readonly List<GuardMover> _movers = new List<GuardMover>();
+        private readonly HashSet<Transform> _guardBodies = new HashSet<Transform>();
         private readonly GuardPathPlanner _planner = new GuardPathPlanner();
         private readonly GuardPathFollower _follower;
         private readonly GuardSeparation _separation;
@@ -36,7 +37,7 @@ namespace Plunderspell.Alarm
             _tuning = tuning;
             _follower = new GuardPathFollower(tuning);
             _separation = new GuardSeparation(tuning);
-            _stepper = new GuardMoverStepper(tuning, new GuardSweep(tuning));
+            _stepper = new GuardMoverStepper(tuning, new GuardSweep(tuning, _guardBodies));
             _facing = new GuardMoverFacing(tuning);
             director.OnMoveRequest += HandleMoveRequest;
         }
@@ -63,14 +64,20 @@ namespace Plunderspell.Alarm
         public void Register(Component guard, float radius = DefaultRadius, float height = DefaultHeight)
         {
             if (guard != null && FindMover(guard) == null)
+            {
                 _movers.Add(new GuardMover(guard, radius, height));
+                _guardBodies.Add(guard.transform);
+            }
         }
 
         public void Unregister(Component guard)
         {
             GuardMover mover = FindMover(guard);
             if (mover != null)
+            {
                 _movers.Remove(mover);
+                _guardBodies.Remove(mover.Body);
+            }
         }
 
         /// <summary>Stops a guard where it stands. No event is raised: the caller asked for it.</summary>
