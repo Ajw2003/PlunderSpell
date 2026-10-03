@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Plunderspell.Alarm;
 using Plunderspell.Raid;
+using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -69,7 +70,7 @@ namespace Plunderspell.Atmosphere
         private readonly Vector4[] _lightPos = new Vector4[k_MaxScatterLights];
         private readonly Vector4[] _lightColor = new Vector4[k_MaxScatterLights];
         private readonly Dictionary<FireSource, float> _visibility = new Dictionary<FireSource, float>();
-        private readonly List<FireSource> _scatterOrder = new List<FireSource>();
+        private readonly List<(float sqr, FireSource fire)> _scatterOrder = new List<(float, FireSource)>();
         private readonly List<float> _sqrDistances = new List<float>();
         private readonly List<bool> _isLit = new List<bool>();
         private readonly List<FireRules.LightGrant> _grants = new List<FireRules.LightGrant>();
@@ -86,8 +87,9 @@ namespace Plunderspell.Atmosphere
         private readonly HashSet<int> _converted = new HashSet<int>();
         private QualityTier _tier;
         private Camera _camera;
-        private Vector3 _eye;
-        private System.Comparison<FireSource> _byDistanceFromEye;
+        // Sorts on the distance worked out once per fire; recomputing it from the transforms in every
+        // comparison was most of this script's per-frame cost (#217).
+        private static readonly System.Comparison<(float sqr, FireSource fire)> s_byDistance = (a, b) => a.sqr.CompareTo(b.sqr);
 
         // Restored on disable, so a scene without the atmosphere renders as it did before.
         private AmbientMode _prevAmbientMode;
@@ -186,6 +188,11 @@ namespace Plunderspell.Atmosphere
             Apply(Time.deltaTime / seconds);
         }
 
+        // Named in Profiler captures (#217), so the per-frame cost splits into its parts.
+        private static readonly ProfilerMarker BurnMarker = new ProfilerMarker("CastleAtmosphere.BurnFires");
+        private static readonly ProfilerMarker GatherMarker = new ProfilerMarker("CastleAtmosphere.GatherScatterLights");
+        private static readonly ProfilerMarker ProbeMarker = new ProfilerMarker("CastleAtmosphere.VisibilityProbe");
+
         private void Apply(float step)
         {
             if (_profile == null)
@@ -214,7 +221,8 @@ namespace Plunderspell.Atmosphere
             ApplyLighting();
             ApplyFog();
             ApplyCamera();
-            BurnFires();
+            using (BurnMarker.Auto())
+                BurnFires();
             ConvertSpawnedBodies();
         }
 
@@ -290,7 +298,9 @@ namespace Plunderspell.Atmosphere
             Shader.SetGlobalColor(s_moonColor, _current.MoonColor * _current.MoonScatter);
             Shader.SetGlobalVector(s_sky, new Vector4(Mathf.Clamp01(_current.SkyClarity), k_SkyClarityCurve, 0f, 0f));
 
-            int count = GatherScatterLights();
+            int count;
+            using (GatherMarker.Auto())
+                count = GatherScatterLights();
             Shader.SetGlobalVectorArray(s_lightPos, _lightPos);
             Shader.SetGlobalVectorArray(s_lightColor, _lightColor);
             Shader.SetGlobalVector(s_scatter, new Vector4(_current.FireScatter, _current.FireAnisotropy, k_HaloCore, count));
@@ -306,7 +316,6 @@ namespace Plunderspell.Atmosphere
             if (camera == null)
                 return 0;
             Vector3 eye = camera.transform.position;
-            _eye = eye;
             int limit = Mathf.Min(k_MaxScatterLights, AtmosphereQuality.BudgetFor(_tier).ScatteredFires);
 
             // Fires come and go with each castle; drop the ones that went.
@@ -314,14 +323,17 @@ namespace Plunderspell.Atmosphere
                 _visibility.Clear();
 
             _scatterOrder.Clear();
-            foreach (FireSource fire in FireSource.All)
+            IReadOnlyList<FireSource> all = FireSource.All;
+            for (int i = 0; i < all.Count; i++)
             {
-                if (fire.IsBurning && (fire.GlowPosition - eye).sqrMagnitude < k_ScatterReach * k_ScatterReach)
-                    _scatterOrder.Add(fire);
+                FireSource fire = all[i];
+                if (!fire.IsBurning)
+                    continue;
+                float sqr = (fire.GlowPosition - eye).sqrMagnitude;
+                if (sqr < k_ScatterReach * k_ScatterReach)
+                    _scatterOrder.Add((sqr, fire));
             }
-            _byDistanceFromEye ??= (a, b) =>
-                (a.GlowPosition - _eye).sqrMagnitude.CompareTo((b.GlowPosition - _eye).sqrMagnitude);
-            _scatterOrder.Sort(_byDistanceFromEye);
+            _scatterOrder.Sort(s_byDistance);
 
             bool probe = Time.unscaledTime >= _nextVisibility;
             if (probe)
@@ -330,12 +342,13 @@ namespace Plunderspell.Atmosphere
             int count = Mathf.Min(limit, _scatterOrder.Count);
             for (int i = 0; i < count; i++)
             {
-                FireSource fire = _scatterOrder[i];
+                FireSource fire = _scatterOrder[i].fire;
                 Vector3 glow = fire.GlowPosition;
                 if (!_visibility.TryGetValue(fire, out float seen))
                     seen = 1f;
                 if (probe)
                 {
+                    using var probing = ProbeMarker.Auto();
                     bool blocked = Physics.Linecast(eye, glow, ~0, QueryTriggerInteraction.Ignore)
                                    && Physics.Linecast(eye, glow + Vector3.up * 1.5f, ~0, QueryTriggerInteraction.Ignore);
                     float target = blocked ? k_OccludedGlow : 1f;
