@@ -65,3 +65,73 @@ Checked against this table on 2026-10-02, after building the core (tests in `Tes
   publishing (#209, #210), the real Patrol, Stunned and Dead (#207, #211, #213).
 - **Dropped as listed**, none ported. Re-add issues: #225 spawner routes, #226 detour/skip, #227 shout as noise, #228 chatter,
   #229 alarm-scaled vision.
+
+## Parity check (#214, 2026-10-02)
+
+Read-only check by reading the code; nothing was run (the Editor was busy with a test run). Paths are under
+`Assets/_Project/Scripts/Runtime/`. One line per row of the table above, in table order.
+
+Keep and change rows:
+
+- State, health and attack-signal SyncVars: **matches**. `Guards/Core/Guard.cs:29-31` are fields of the NetworkBehaviour.
+- Server-only AI: **matches**. `Guard.cs:180-185` `Update` ticks only when `IsAuthority`; clients run nothing.
+- `GuardAlertState` enum: **matches**. `Guards/GuardAlertState.cs:21-28` adds Combat, OnFire, Dead; Searching (line 19) is set by no state (only mapped for audio, `Audio/AudioLookups.cs:423`).
+- IHealth, `TakeDamage`, `IsDead`: **matches**. `Guards/Core/GuardHealth.cs:31-42`, exposed at `Guard.cs:77-86`.
+- Death (clear status, publish `GuardDied`, despawn): **matches**, updated by #213. `Guard.cs:233-238` clears status, publishes, enters Dead; `States/DeadState.cs:21-28` leaves the registries and closes eyes and ears; `Core/GuardDeathPlayback.cs:37-40` destroys after the fade (the "despawn at once" stub in the row is gone).
+- Lobby scaling: **matches**. `Guard.cs:216-224`, same two signatures as legacy `CastleGuard.cs:1289,1298`.
+- Frango shove: **matches**. `Core/GuardShove.cs:31-50` carries the transform with a capsule check (`:52-67`); wired at `Guard.cs:89,193`.
+- Status effects (receiver; Levo changed): **matches**. `Guard.cs:227-231` and `States/GuardStateSet.cs:58-66` read `IsIncapacitated`/`IsBurning`; Levo is a Stunned state that recovers on landing (`States/StunnedState.cs:33-43`, `Core/GuardLanding.cs:22-37`), no float-and-fall ported.
+- Sight cone, range, `CanSee`: **matches**. `Senses/GuardSight.cs:87-90` calls `GuardBrain.CanSee`.
+- Line of sight ignoring the target's colliders: **matches**. `GuardSight.cs:99-106` skips hits under the target.
+- Sight throttle 12 Hz, staggered: **matches**. `Senses/GuardSightThrottle.cs:14,23`, used at `GuardSight.cs:58`.
+- 20 s arrival grace: **differs (location only)**. Behaviour matches (`Senses/GuardArrivalGrace.cs:14,20`, honoured at `GuardSight.cs:52`, begun at `Raid/RaidDirector.cs:216`), but the row names `GuardSight.cs` `BeginArrivalGrace`/`EndArrivalGrace`; they are `GuardArrivalGrace.Begin`/`End` in their own file. Row text is stale.
+- Hearing threshold by alarm: **matches**. `Senses/GuardHearing.cs:49` via `GuardBrain.ShouldInvestigate` (`Guards/GuardBrain.cs:68-79`).
+- Loud noise wakes sleepers (0.5): **matches**. `GuardHearing.cs:17,42-43`. A sleeping guard no longer hears noises too quiet to wake it: `GuardHearing.cs:45-47` returns before the noise can become a lead (today's fix).
+- Hearing raises an event, guard does not move itself: **matches**. `GuardHearing.cs:23,53` raises `NoiseNoticed`; `Core/GuardLeads.cs:33` turns it into a lead; the state decides (`States/PatrolState.cs:53-54`). Row calls it `NoiseHeard`; the event is `NoiseNoticed`.
+- Hue and cry investigate requests, 40 m, nearest player: **matches**. `Core/GuardDirectorLink.cs:16,61-73`; forwarded to `GuardLeads.cs:32`; Investigate is `States/InvestigateState.cs`. Row names `GuardHearing.IsWithinHueAndCryRadius`; the rule is in `GuardDirectorLink`.
+- Register with the director, listen for events: **matches**. `GuardDirectorLink.cs:39-48`.
+- Publish `IntruderSpotted` / `IntruderLost` / `GuardEngaged` / `GuardDied`: **matches**. Spotted and Lost at `States/ChaseState.cs:57,63` and `States/CombatState.cs:60,67`; Engaged at `Core/GuardMeleeAttack.cs:42` and `Core/GuardRangedAttack.cs:64`; Died at `Guard.cs:236`.
+- Attack signal and client replay: **matches**. `Core/GuardAttackSignaller.cs:31-46`, started on clients at `Guard.cs:146`.
+- Melee strike / ranged `FireAt`, cooldown: **matches**, now done by #209/#210 rather than "not ported". `Core/GuardMeleeAttack.cs:31-49` (1.4 s cooldown, reach), `Core/GuardRangedAttack.cs`, turn-taking in `States/CombatState.cs:138-152`.
+- Movement requests, arrival, path result: **matches**. `Movement/GuardNavigator.cs:67-74` sends `MoveRequest`; `:89-111` turns `PathReady`/`Arrived`/`Blocked` into events.
+- Wander near the post becomes Patrol: **matches**. `States/PatrolState.cs:70-83`; the placeholder state is gone (`States/GuardStateSet.cs:14`).
+- `IntruderSpotted` first-sighting scoring: **matches**. `ChaseState.cs:57` passes `!_alreadySpotted`; Combat passes false (`CombatState.cs:60`) so it is not scored twice; no shout.
+- Alarm-scaled move speed: **differs**. Gap: `GuardBrain.MoveSpeed` (`Guards/GuardBrain.cs:38`) still exists, but no state calls it (only `Tests/Runtime/GuardTests.cs` does); the states use the flat `PatrolSpeed`/`ChaseSpeed`/`InvestigateSpeed` (`PatrolState.cs:82`, `ChaseState.cs:116`, `InvestigateState.cs:110`), so guards no longer speed up as the alarm rises. The row said the states would pass the speed they want; none applies the alarm bonus.
+- `SetAlertState` seam, public `Tick`, `Configure`: **differs (name only)**. `Guard.Tick` (`Guard.cs:189`) and `Configure(director)` (`:170`, route argument gone) match; the state seam is `Guard.ChangeState` (`:213`), not `ForceState` as the row says. Row text is stale.
+
+Known items from the plan:
+
+- A sighting on patrol goes to Investigate first, then Chase: **matches**. `PatrolState.cs:62-67` offers a sighting lead, `:53-54` goes to Investigate, `States/InvestigateState.cs:74-89` then hands over to Chase (plan state table, `docs/plans/guard-fsm-restructure.md:92`).
+- Guards ignore each other's bodies in the sweep and slide along walls: **matches**. `Alarm/Navigation/GuardSweep.cs:56-61` ignores guard bodies; `Alarm/Navigation/GuardMoverStepper.cs:38-42,58-66` slides along what cut the step.
+- Landing does no fall damage: **matches** (dropped). `Core/GuardLanding.cs:10` says so and the class only answers "has landed"; nothing in `Guards/Core` or `Guards/States` applies fall damage.
+
+Drop rows (checked that the fresh code does not do it; re-add issue named where the row has one):
+
+- Dynamic Rigidbody and NavMeshAgent: **matches** (not done). No `Rigidbody` or `NavMeshAgent` use under `Guards/`; `Core/GuardShove.cs:6` and `Alarm/Navigation/GuardMoverStepper.cs:7` say so. No re-add issue (#223).
+- Guards ignoring each other's colliders: **matches**. Spacing is `Alarm/Navigation/GuardSeparation.cs:21`; no collider-ignore code.
+- Slippery physics material: **matches**. No `PhysicsMaterial` in `Guards/`.
+- Snap to mesh, `Reachable`, resend 0.75 m, `HasArrivedAt`: **matches**. The service plans (`GuardNavigationService.cs:130`) and raises Arrived (`:165-169`); none of those names exist in `Guards/`.
+- Steer: **matches**. No `Steer` in `Guards/`. No re-add issue (owner's answer 4).
+- Stuck watchdog, refresh path: **matches**. Replaced by Blocked: `GuardNavigationService.cs:172-178`.
+- Stuck watchdog, detour and skip: **matches** (not done). Closest is Patrol swapping a blocked point (`PatrolState.cs:91-110`). Re-add issue **#226**.
+- Search sweep: **matches**. No state sets Searching; Investigate replaces it (`InvestigateState.cs:9-12`). `GuardBrain.SweepOffset` (`GuardBrain.cs:104`) is left over and unused. No separate issue.
+- `KeepHunting` re-send: **matches**. Nothing re-sends; the hue and cry is a one-off lead (`GuardLeads.cs:32`). `GuardBrain.HuntDue`/`ShouldHunt` (`GuardBrain.cs:131,150`) are left over and unused.
+- Patrol route from spawner transforms: **matches**. `Configure` takes no route (`Guard.cs:170`); Patrol plans random points (`PatrolState.cs:74`). Re-add issue **#225**.
+- Overheard chatter: **matches**. `Guard` implements only `INoiseListener` (`Guard.cs:25`), not `IEavesdropper` (`Acoustics/INoiseListener.cs:68`). Re-add issue **#228**.
+- Alarm-scaled vision: **matches**. `GuardSight.cs:89` uses the base `SightRange`; `GuardBrain.SightRange` (`GuardBrain.cs:26`) has no caller. Re-add issue **#229**.
+- Shout as noise: **matches**. No `RaiseTheCry` or `AlertGuardsNear` anywhere outside the legacy guard. Re-add issue **#227**.
+- Fall damage on landing: **matches**. See the known item above; no separate issue.
+
+### Summary
+
+Table rows checked: 39 (25 keep or change, 14 drop). **Matches 36, differs 3, missing 0.** The three known items from the plan
+are checked on top of that, all matching (the landing item is the same as the fall-damage drop row).
+
+Gaps:
+
+1. **Alarm-scaled move speed is not applied** (differs): `Guards/GuardBrain.cs:38` is unused by any state; speeds are flat (`PatrolState.cs:82`, `ChaseState.cs:116`, `InvestigateState.cs:110`). Needs a decision: wire it in or drop the row.
+2. **Arrival grace row names the wrong file and methods** (text only): real code is `Senses/GuardArrivalGrace.cs:20,23`.
+3. **State seam row names `ForceState`** (text only): real name is `Guard.ChangeState`, `Guard.cs:213`.
+4. **Legacy decision code still compiled** (not a parity gap, but #214 asks for it to go): `GuardBrain.NextState` (`GuardBrain.cs:190`), `SweepOffset` (`:104`), `ShouldFollowNoise`/`ShouldHunt`/`HuntDue` (`:120,131,150`), `SightRange` (`:26`) and `MoveSpeed` (`:38`) have no caller in the fresh guard.
+
+Not verified: any behaviour at run time (this was a read of the code, no tests or co-op run); the "Kept, not tested" items above stay untested.
