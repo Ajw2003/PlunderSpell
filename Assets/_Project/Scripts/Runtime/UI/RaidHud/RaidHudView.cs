@@ -135,6 +135,9 @@ namespace Plunderspell.UI
 
         private void Awake()
         {
+            // The HUD only draws labels and fills: no GUILayout, nothing clickable. Skipping the Layout
+            // pass, and every event but Repaint, halves IMGUI's text work and its garbage (#245).
+            useGUILayout = false;
             _presenter = GetComponent<RaidHudPresenter>();
             _crosshair = GetComponent<CrosshairView>();
         }
@@ -237,7 +240,7 @@ namespace Plunderspell.UI
 
         private void OnGUI()
         {
-            if (!_visible || _presenter == null)
+            if (!_visible || _presenter == null || Event.current.type != EventType.Repaint)
                 return;
 
             // IMGUI draws over the uGUI canvas, so an always-on HUD hides the main menu and the

@@ -101,5 +101,7 @@ for phase in calm huecry; do
     log "host $(stop_log host)"; log "client $(stop_log client)"
 done
 log "guards: $(evf swarm)"
+# The host's screen with the HUD on it, so a HUD change can be looked at, not just timed.
+log "screenshot: $(timeout 90 bash Tools/Unity/capture.sh "$out/$label-host.png" screen 2>&1 | tail -1)"
 echo "client log error lines: $(grep -ci 'error\|exception' "$out/$label-client.log")" | tee -a "$out/$label-run.log"
 ls -la "$out"/"$label"-*.raw | tee -a "$out/$label-run.log"
