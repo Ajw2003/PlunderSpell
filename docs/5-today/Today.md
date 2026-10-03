@@ -1,5 +1,19 @@
 # Today
 
+**2026-10-02 (evening) - guards move again: the walk map was empty for two of the three Ages.** The owner
+saw guards stuck and standing still in co-op. Measured with `Tools/Unity/coop_guard_check.sh` (Late
+Medieval, seed 3508293): every guard stood still for the whole 90 s. Cause: `CastleNavTileBaker` baked only
+`CastleRoomRegistry.asset`, so Bronze Age and Late Medieval castles built a nav graph with 0 cells. Fixed by
+baking every registry, plus a warning and a test. Then three causes of stuck guards, each seen in the run's
+stuck dump: dressing missing from the map, a dead stop on a clipped corner (now a slide), and guards' bodies
+blocking each other's sweep. Stuck went from 117 s of 666 to 4.8 s of 466 (1.0%). Also found: the previous
+session's #214 builder stopped at the usage limit with its prefab swap and test moves uncommitted; they are
+committed now, nothing was lost. Not seen: a calm patrol over minutes (the check sends every guard after the
+host), the Bronze Age and default castles in co-op, and Levo and Frango on the fresh guard in co-op (the
+guards killed the idle host before those checks ran).
+
+---
+
 **2026-10-02 - Lesson: a stray .cs file in Assets can silently drop prefabs from PurrNet's network list.**
 Four draft guard part files, left by a stopped builder, broke compilation. While it was broken,
 PurrNet's auto-generated `Assets/_Project/Net/NetworkPrefabs.asset` lost the `CastleGuard` prefab,

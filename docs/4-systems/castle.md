@@ -136,6 +136,13 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
 
 ## Traps
 
+- **An unbaked registry gives that Age an empty walk map, and no guard moves.** Until 2026-10-02 the baker
+  read only `CastleRoomRegistry.asset`, so every Bronze Age and Late Medieval castle built a nav graph of
+  77 modules and 0 cells: every guard was registered, and every move request was answered Blocked. The
+  stitcher now logs `[CastleNav] N of M placed rooms have no baked nav tile` (`CastleNavStitcher.cs`), and
+  `CastleNavTileTests.EveryRoomOfEveryAgeHasABakedTile` fails for any unbaked room. A new registry needs a
+  re-bake.
+
 - **The previous castle must leave physics before the next one is baked.** `ClearGenerated`
   deactivates each old piece before `Destroy`, because `Destroy` lands at the end of the frame and
   the next castle is generated and baked within that same frame. Without it the NavMesh bake saw
@@ -169,7 +176,11 @@ preview scene with its import rotation, a downward ray per cell finds the stacke
 capsule (radius 0.4, 1.85 m, lifted one step so the floor and stair risers do not count) clears each
 surface. Wall tops and lintels are dropped unless they connect to an archway floor. A portal is an archway
 cell where a guard fits, so 4 cells per side, not the full 2.6 m. Re-run it after the castle meshes change.
-Results and per-module top-down overlays are in `docs/generated/nav-tiles-2026-10-02/`. The curtain-wall
+It bakes **every** `CastleRoomRegistry` asset, one per Age (`CastleRoomRegistry`, `_BronzeAge`,
+`_LateMedieval`, and the two `GeneratedRoomRegistry` placeholders): each Age's registry holds its own
+entries, and a shared piece such as `WallCorner` is a different model in each. Results are in
+`docs/generated/nav-tiles-2026-10-02/summary.txt`; per-module top-down overlays are in that folder for the
+default registry and in a subfolder named after each other registry. The curtain-wall
 pieces (gatehouse, straight wall, corner, bastion) have no floor mesh of their own, only walls and towers:
 the yard they stand on is the scene's ground plane. For those the baker adds a virtual ground at y = 0
 wherever the guard capsule clears (`CastleNavTileBaker.cs:134`) and opens portals along the whole edge
@@ -179,8 +190,9 @@ wherever the guard capsule clears (`CastleNavTileBaker.cs:134`) and opens portal
 ## Nav graph
 
 `CastleNavGraph` (`Assets/_Project/Scripts/Runtime/Castle/Navigation/CastleNavGraph.cs:42`) is the castle's
-walkable map, built at the end of generation (`ProceduralCastleGenerator.cs:115`, after `SealOpenArchways`
-so it sees which archways stayed open) and kept on `ProceduralCastleData.NavGraph` (not serialized). It is
+walkable map, built at the end of generation (`ProceduralCastleGenerator.cs`, after `SealOpenArchways`
+so it sees which archways stayed open, and after `DressCastle` so it can walk round the dressing) and kept
+on `ProceduralCastleData.NavGraph` (not serialized). It is
 a pure function of the layout and the registry, so each peer builds it from the seed and nothing is sent.
 Guards are server-side, so only the server needs to query it. Issue #221, plan
 `docs/plans/bespoke-navigation.md` Design 2.
@@ -205,9 +217,17 @@ Guards are server-side, so only the server needs to query it. Issue #221, plan
   entrance or inside the walls). Players come in on the strip, so the strip pieces had to be walkable: they
   now are (see Nav tiles), every strip entrance joins the crypt in the test, and the gatehouse passage is part
   of the graph and joins the strip. Its outward side to the drawbridge is deliberately closed.
-- **Not in the graph yet**: furniture the tiles did not capture beyond what the capsule hit at bake time,
-  dressing placed per seed (`CastleDressingPlanner`), and doors that lock (`CastleLockdown`). Areas are
-  computed once, so a closed door would need the area ids recomputed (issue for #222).
+- **Dressing** (2026-10-02). The tiles are baked from bare room prefabs, and the bailey's carts, woodpiles
+  and crates are placed per seed on top. `CastleNavObstacles.Stamp` (`CastleNavObstacles.cs`) runs inside
+  `Build` before areas are labelled: for each dressing piece it takes the cells under its collider bounds
+  (grown by the guard radius) and clears any where the baker's standing capsule now hits something. The bare
+  room passed that check at every walkable cell, so a hit is the dressing. Before this, routes ran through
+  carts and the guard's sweep stopped it there. The NavMesh had been baked after the dressing, so this was
+  a regression of the new navigation. Seed 3508293 (Late Medieval) logs `[CastleNav] 25 dressing pieces
+  took 371 cells out of the walk map.`
+- **Not in the graph**: fires and braziers (`CastleFireSpawner`, placed after generation) and loot. A guard
+  meeting one slides round it in the sweep (alarm.md, Guard navigation). Locked and barred doors are costs
+  on the coarse layer (alarm.md).
 
 Tests: `CastleNavGraphTests` (`Assets/_Project/Scripts/Tests/Editor/CastleNavGraphTests.cs`): same seed twice
 gives the same checksum; strip entrances and the gatehouse join the crypt and the drawbridge stays cut off;

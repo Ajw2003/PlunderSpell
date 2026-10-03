@@ -120,8 +120,8 @@ words were taken in and returns that count (the alarm hears the noise but is not
 The director owns a server-side navigation service (#222, plan `docs/plans/bespoke-navigation.md` Design 3):
 `EnemyDirector.Navigation` (`Assets/_Project/Scripts/Runtime/Alarm/EnemyDirector.cs:88`), a
 `GuardNavigationService` (`Runtime/Alarm/Navigation/GuardNavigationService.cs:17`), ticked from the director's
-server-only `Update`. **Nothing drives guards with it yet**: `CastleGuard` still uses its NavMeshAgent, and
-the fresh guard core (#206, below) sends requests. No co-op run was possible for #222 for that reason.
+server-only `Update`. The fresh guard (#206, below) is the only thing that moves through it; every guard
+prefab carries the fresh guard since #214.
 
 - **Events** on the existing bus (`GuardNavigationEvents.cs`, readonly structs): `Publish(MoveRequest(guard,
   destination, speed, reason))` in; `OnPathReady`, `OnArrived`, `OnBlocked(reason)` out. Blocked reasons: no
@@ -137,12 +137,20 @@ the fresh guard core (#206, below) sends requests. No co-op run was possible for
   in one room stand in different cells. The cache is dropped whenever a door changes.
 - **Moving.** Each tick, per guard: `GuardPathFollower.NextStep` toward the next waypoint, plus
   `GuardSeparation.PushFor` (`:21`, pushes any pair closer than 1 m apart, standing guards included), cut
-  down by `GuardSweep.AllowedDistance` (`GuardSweep.cs:27`), then `GuardMoverStepper.Move` (`:28`) sets the
-  transform and settles height onto the graph's floor height (stairs). No Rigidbody, no agent.
+  down by `GuardSweep.AllowedDistance`, then `GuardMoverStepper.Move` sets the transform and settles height
+  onto the graph's floor height (stairs). No Rigidbody, no agent.
+- **Sliding** (2026-10-02). When the sweep cuts a step short, `GuardMoverStepper.Slide` keeps the part of the
+  step along the surface it hit and sweeps that too, so a route that clips an archway jamb or a cart's corner
+  slides past it. A guard walking square into a wall keeps none of its step and is still reported held up,
+  then Blocked. Sliding moves only the guard, so the #200 rule holds. Before this, a guard that clipped a
+  corner stood on it until its state gave up.
+- **Guards do not block each other's sweep** (2026-10-02). Guards are on the Default layer with the castle,
+  so `SweepMask` cannot leave them out; `GuardSweep` ignores any hit on a registered guard's body instead (the
+  service keeps the set). `GuardSeparation` alone keeps them apart. Before this, a crowd round a player locked
+  solid, because each guard's body stopped its neighbours'.
 - **The #200 rule.** The capsule (bottom raised by `StepHeight` so stair risers pass) is swept with
   `CapsuleCastNonAlloc` into a 16-hit buffer before every step and the step stops `SkinWidth` short of the
   first wall or player. A guard cannot be moved into a player, so it cannot push one through a wall.
-  `SweepMask` is the thing to set when guards get colliders: keep their own layer out of it.
 - **Doors** (Design 5). `CastleNavPortalGraph` holds an extra cost per link (`CastleNavPortalGraph.cs`,
   `SetExtraCost`); the portal search adds it when entering an archway (`CastleNavPortalSearch.cs:104`) and
   skips an infinite one. `CastleNavGraph.SetDoorCost` (`CastleNavGraph.cs:115`) sets it with no rebuild and
@@ -156,7 +164,12 @@ the fresh guard core (#206, below) sends requests. No co-op run was possible for
   raid scene.
 - **Allocation.** Zero per tick: 0 B over 500 ticks of 20 guards sweeping (`GuardNavigationServiceTests`).
   Planning a new route allocates its array once.
-- **Tests.** `GuardNavigationServiceTests` (flat floor: player against a wall, arrival, 20 guards, 0 B) and
+- **Measured** (co-op, `Tools/Unity/coop_guard_check.sh`, seed 3508293, Late Medieval, 20 guards sent
+  chasing the host): before the fixes, 0 s moving of 1778 guard-seconds (empty map); after baking every Age,
+  117 s stuck of 666; after the dressing, sliding and guard-body fixes, 4.8 s stuck of 466 (1.0%), 447 s moving.
+  Logs in `docs/generated/playability-2026-09-30/nav-before-*`, `nav-tiles-fixed-*`, `nav-sweep-fixed-*`.
+- **Tests.** `GuardNavigationServiceTests` (flat floor: player against a wall, arrival, a clipped corner, a guard
+  in the way, 20 guards, 0 B) and
   `GuardNavigationCastleTests` (real graph: across rooms, KeepStairwell, closed doors).
 
 ## The fresh guard core (#206)

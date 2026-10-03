@@ -1,0 +1,56 @@
+0s sampled 20 Investigating=20
+2s sampled 20 Investigating=20
+3s sampled 20 Investigating=20
+5s sampled 20 Investigating=20
+6s sampled 20 Investigating=20
+8s sampled 20 Investigating=20
+10s sampled 20 Investigating=20
+11s sampled 20 Combat=3 Investigating=15 Chasing=2
+13s sampled 20 Combat=4 Chasing=3 Investigating=13
+15s sampled 20 Combat=4 Chasing=3 Investigating=13
+16s sampled 20 Chasing=3 Combat=7 Investigating=10
+18s sampled 20 Combat=9 Chasing=3 Investigating=8
+19s sampled 20 Combat=10 Chasing=4 Investigating=6
+21s sampled 20 Combat=10 Chasing=3 Investigating=7
+23s sampled 20 Combat=13 Investigating=5 Chasing=2
+24s sampled 0 
+26s sampled 0 
+28s sampled 0 
+29s sampled 0 
+31s sampled 0 
+32s sampled 0 
+34s sampled 0 
+36s sampled 0 
+37s sampled 0 
+39s sampled 0 
+41s sampled 0 
+42s sampled 0 
+44s sampled 0 
+45s sampled 0 
+47s sampled 0 
+49s sampled 0 
+50s sampled 0 
+52s sampled 0 
+54s sampled 0 
+55s sampled 0 
+57s sampled 0 
+58s sampled 0 
+60s sampled 0 
+62s sampled 0 
+63s sampled 0 
+65s sampled 0 
+66s sampled 0 
+68s sampled 0 
+70s sampled 0 
+71s sampled 0 
+73s sampled 0 
+75s sampled 0 
+76s sampled 0 
+78s sampled 0 
+79s sampled 0 
+81s sampled 0 
+83s sampled 0 
+84s sampled 0 
+86s sampled 0 
+88s sampled 0 
+89s sampled 0 

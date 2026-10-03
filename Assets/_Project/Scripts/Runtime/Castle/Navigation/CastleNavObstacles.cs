@@ -4,14 +4,9 @@ using UnityEngine;
 namespace Plunderspell.Castle
 {
     /// <summary>
-    /// Takes the bailey's dressing (carts, woodpiles, crates) out of the walk map. Room tiles are baked
-    /// from the bare module prefabs, and the dressing is placed per raid on top of them, so without this
-    /// a route runs straight through a cart and the guard's sweep stops it there for good. The old NavMesh
-    /// was baked after the dressing, so this restores what it gave.
-    ///
-    /// Only cells under a dressing piece's bounds (grown by the guard's radius) are tested, each with the
-    /// same standing-capsule check the tile baker uses. The bare room already passed that check at every
-    /// walkable cell, so anything the capsule hits now is the dressing.
+    /// Takes the bailey's dressing (carts, woodpiles, crates) out of the walk map: tiles are baked from bare
+    /// rooms, so each walkable cell under a piece is re-tested with the baker's standing capsule. Why and
+    /// what it fixed: docs/4-systems/castle.md, Nav graph, "Dressing".
     /// </summary>
     public static class CastleNavObstacles
     {

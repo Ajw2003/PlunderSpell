@@ -100,6 +100,15 @@ lacks; the rest are older and either merged in another form or abandoned.
   #210 is in: `CombatState` (Chase hands over at reach); the director's `AttackTurnMediator` gives 1 melee and
   1 ranged turn per player, others hold a ring place; one `GuardLineOfFire` check stops Chase and Combat shots
   through a teammate. Not in a prefab or a co-op run yet (the legacy guard stays until #214).
+
+  2026-10-02 (evening): all 27 guard prefabs carry the fresh guard (#214 swap; `CastleGuard.cs` stays,
+  unused and marked obsolete, until the owner approves removing it). Guard navigation fixed after the owner
+  saw guards stuck and standing still in co-op: Bronze Age and Late Medieval castles had an empty walk map
+  (only the default registry was baked), the bailey dressing was not in the map, guards stopped dead on a
+  clipped corner, and guards' bodies blocked each other. Co-op check, Late Medieval, 20 guards: stuck 4.8 s
+  of 466 guard-seconds (1.0%), against 0 s moving before. Details: `docs/4-systems/alarm.md` (Guard
+  navigation) and `docs/4-systems/castle.md` (Nav tiles, Nav graph). The #214 parity table and the rest of
+  #223 (removing the runtime NavMesh) are not done.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record

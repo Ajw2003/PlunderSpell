@@ -4,13 +4,10 @@ using UnityEngine;
 namespace Plunderspell.Alarm
 {
     /// <summary>
-    /// The capsule sweep that keeps the #200 wall-crush fix once guards have no physics body
-    /// (docs/plans/issue-200-collision-netcode.md). Before a step the guard's capsule is swept along it;
-    /// the step is cut short of the first wall or player hit, with a small skin left, so a guard can
-    /// never be moved into a player, or move a player into a wall. The hit buffer is allocated once.
-    ///
-    /// Other guards never stop the sweep: they share the Default layer with the castle, and letting them
-    /// block meant a crowd round a player locked solid. <see cref="GuardSeparation"/> keeps guards apart.
+    /// The capsule sweep that keeps the #200 wall-crush fix once guards have no physics body: a step is cut
+    /// short of the first wall or player hit, so a guard can never be moved into a player. Other guards'
+    /// bodies are ignored (<see cref="GuardSeparation"/> keeps guards apart); why: docs/4-systems/alarm.md,
+    /// Guard navigation. The hit buffer is allocated once.
     /// </summary>
     public sealed class GuardSweep
     {
