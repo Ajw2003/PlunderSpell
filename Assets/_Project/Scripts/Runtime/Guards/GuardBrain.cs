@@ -95,7 +95,29 @@ namespace Plunderspell.Guards
             if (toTarget.sqrMagnitude > range * range)
                 return false;
 
-            return Vector3.Angle(forward, toTarget) <= fovDegrees * 0.5f;
+            return IsWithinYaw(forward, toTarget, fovDegrees) && Mathf.Abs(PitchOf(toTarget)) <= MaxLookPitchDegrees;
+        }
+
+        /// <summary>How far up or down a guard can look, in degrees, whatever way its head is turned (#238).
+        /// A player on a table, a ledge or in mid-jump in front of a guard stays seen; one nearly overhead does not.</summary>
+        public const float MaxLookPitchDegrees = 70f;
+
+        // The field of view is the side-to-side angle: height alone never takes a player out of the cone.
+        // Straight above or below the guard there is no side-to-side angle, so that counts as in front.
+        private static bool IsWithinYaw(Vector3 forward, Vector3 toTarget, float fovDegrees)
+        {
+            Vector3 flatForward = new Vector3(forward.x, 0f, forward.z);
+            Vector3 flatTarget = new Vector3(toTarget.x, 0f, toTarget.z);
+            if (flatForward.sqrMagnitude < 0.0001f || flatTarget.sqrMagnitude < 0.0001f)
+                return true;
+
+            return Vector3.Angle(flatForward, flatTarget) <= fovDegrees * 0.5f;
+        }
+
+        private static float PitchOf(Vector3 toTarget)
+        {
+            float flat = Mathf.Sqrt(toTarget.x * toTarget.x + toTarget.z * toTarget.z);
+            return Mathf.Atan2(toTarget.y, flat) * Mathf.Rad2Deg;
         }
 
     }

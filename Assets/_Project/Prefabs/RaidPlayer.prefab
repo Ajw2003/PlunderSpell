@@ -390,7 +390,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   _geometryLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
 --- !u!114 &569994354187788677
 MonoBehaviour:
   m_ObjectHideFlags: 0

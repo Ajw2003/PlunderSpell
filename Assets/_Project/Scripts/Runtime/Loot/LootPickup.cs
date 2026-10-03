@@ -227,14 +227,20 @@ namespace Plunderspell.Loot
             Vector3 point = col.contactCount > 0 ? col.GetContact(0).point : transform.position;
             bool struckCreature = col.gameObject.GetComponentInParent<IHealth>() != null;
             if (isServer)
+            {
+                LootNoise.BroadcastImpact(point, _item.Mass, speed);
                 ImpactObservers(speed, point, struckCreature, localPlayerForced);
+            }
             else
                 ImpactToServer(speed, point, struckCreature);
         }
 
         [ServerRpc(requireOwnership: false)]
-        private void ImpactToServer(float speed, Vector3 point, bool struckCreature, RPCInfo info = default) =>
+        private void ImpactToServer(float speed, Vector3 point, bool struckCreature, RPCInfo info = default)
+        {
+            LootNoise.BroadcastImpact(point, _item != null ? _item.Mass : 1f, speed);
             ImpactObservers(speed, point, struckCreature, info.sender);
+        }
 
         [ObserversRpc]
         private void ImpactObservers(float speed, Vector3 point, bool struckCreature, PlayerID simulatedBy)
@@ -608,9 +614,15 @@ namespace Plunderspell.Loot
 
         private float _levitationRemaining;
 
+        private readonly LootDragNoise _dragNoise = new LootDragNoise();
+
         private void FixedUpdate()
         {
             UpdateTotalGripSync();
+
+            // Guards are decided on the server (or offline): only it makes the noise they hear.
+            if (!isSpawned || isServer)
+                _dragNoise.Tick(Time.fixedDeltaTime, _item, _rb);
 
             if (_levitationRemaining <= 0f)
                 return;

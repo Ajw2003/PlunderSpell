@@ -5,6 +5,7 @@
         "PurrNet.Runtime",
         "Plunderspell.Foundation",
         "Plunderspell.Core",
+        "Plunderspell.Acoustics",
         "Plunderspell.Alarm",
         "Plunderspell.Castle",
         "Plunderspell.Extraction",

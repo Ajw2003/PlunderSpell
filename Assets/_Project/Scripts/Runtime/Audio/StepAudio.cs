@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Plunderspell.Acoustics;
 using StateMachine;
 using UnityEngine;
 
@@ -25,6 +26,7 @@ namespace Plunderspell.Audio
         private AudioDirector _director;
         private GuardVoiceProfile _profile;
         private PlayerStateMachine _player;
+        private FootstepNoiseEmitter _noise;
         private Vector3 _last;
         private float _travelled;
         private float _windowSeconds;
@@ -40,6 +42,7 @@ namespace Plunderspell.Audio
             _director = director;
             _profile = profile;
             _player = player;
+            _noise = player != null ? GetComponent<FootstepNoiseEmitter>() : null;
             _last = transform.position;
         }
 
@@ -63,7 +66,8 @@ namespace Plunderspell.Audio
 
             bool near = (position - _director.Listener).sqrMagnitude < HearingDistance * HearingDistance
                         || (_player != null && _player.IsLocal);
-            bool grounded = near ? Probe(position) : _wasGrounded;
+            // A player who makes noise is tracked wherever they are: a guard far from the camera still hears them (#238).
+            bool grounded = near || _noise != null ? Probe(position) : _wasGrounded;
 
             if (_player != null)
                 TrackAir(grounded, vertical, position);
@@ -91,6 +95,8 @@ namespace Plunderspell.Audio
             {
                 _travelled = 0f;
                 _windowSeconds = 0f;
+                if (_noise != null)
+                    _noise.OnFootstep(FootstepNoiseEmitter.StanceForSpeed(speed));
                 if (near)
                     Step(position, speed);
             }
@@ -122,6 +128,8 @@ namespace Plunderspell.Audio
 
             if (!_wasGrounded)
             {
+                if (_noise != null)
+                    _noise.OnLanding(_fallSpeed);
                 string land = StepMath.Land(_fallSpeed);
                 if (land != null)
                     _director.Play(land, position, local ? LocalLevel + 0.3f : 1f, -1, SoundPoolKind.Step, local);

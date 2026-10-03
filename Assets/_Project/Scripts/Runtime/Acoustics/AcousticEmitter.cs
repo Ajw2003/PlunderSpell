@@ -30,7 +30,7 @@ namespace Plunderspell.Acoustics
         [SerializeField] private LayerMask _noiseListenerLayer = ~0;
 
         [Tooltip("Layers treated as sound-blocking walls for occlusion.")]
-        [SerializeField] private LayerMask _geometryLayer;
+        [SerializeField] private LayerMask _geometryLayer = 1; // Default: the castle's walls live there (#238)
 
         /// <summary>Per-wall attenuation factor.</summary>
         public const float WallAttenuation = 0.5f;

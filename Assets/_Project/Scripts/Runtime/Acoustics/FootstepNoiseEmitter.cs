@@ -39,6 +39,22 @@ namespace Plunderspell.Acoustics
         [Range(0f, 1f)]
         [SerializeField] private float _footstepStrength = 0.4f;
 
+        [Header("Landing (metres, strength)")]
+        [SerializeField] private float _landingRadius = 6.0f;
+        [SerializeField] private float _heavyLandingRadius = 12.0f;
+        [Range(0f, 1f)]
+        [SerializeField] private float _landingStrength = 0.5f;
+        [Range(0f, 1f)]
+        [SerializeField] private float _heavyLandingStrength = 0.8f;
+
+        /// <summary>Paces under this are a crouch, from <see cref="RunFromSpeed"/> a run, between a walk (m/s).</summary>
+        public const float CrouchBelowSpeed = 2.2f;
+        public const float RunFromSpeed = 4.5f;
+
+        /// <summary>Falls slower than this (m/s) make no noise; from <see cref="HeavyLandingFallSpeed"/> it is a crash.</summary>
+        public const float LandingMinFallSpeed = 2.5f;
+        public const float HeavyLandingFallSpeed = 10f;
+
         [Header("Voice radii (metres)")]
         [SerializeField] private float _whisperRadius = 0.5f;
         [SerializeField] private float _normalRadius = 5.0f;
@@ -91,6 +107,28 @@ namespace Plunderspell.Acoustics
         {
             _emitter.NoiseType = NoiseType.Footstep;
             _emitter.EmitNoise(RadiusForStance(stance), _footstepStrength);
+        }
+
+        /// <summary>The stance a pace in m/s amounts to: slow is a crouch, fast is a run. The same breaks as the footstep sounds (StepMath).</summary>
+        public static MoveStance StanceForSpeed(float metresPerSecond)
+        {
+            if (metresPerSecond < CrouchBelowSpeed)
+                return MoveStance.Crouch;
+            return metresPerSecond < RunFromSpeed ? MoveStance.Walk : MoveStance.Run;
+        }
+
+        /// <summary>
+        /// Emit the noise of landing from a fall at <paramref name="fallSpeed"/> m/s: nothing for a small
+        /// step down, a thud for a jump, a crash for a long drop (#238).
+        /// </summary>
+        public void OnLanding(float fallSpeed)
+        {
+            if (fallSpeed < LandingMinFallSpeed)
+                return;
+
+            bool heavy = fallSpeed >= HeavyLandingFallSpeed;
+            _emitter.NoiseType = NoiseType.Footstep;
+            _emitter.EmitNoise(heavy ? _heavyLandingRadius : _landingRadius, heavy ? _heavyLandingStrength : _landingStrength);
         }
 
         private float RadiusForStance(MoveStance stance)
