@@ -11,6 +11,12 @@ namespace Plunderspell.Alarm
     /// </summary>
     public sealed class GuardPathSmoother
     {
+        // Each straight-line check samples its whole length, so an unbounded look-ahead costs the square of
+        // the route's length: 20 guards planning long hue-and-cry routes in one frame took up to 200 ms
+        // (#243). Capping it at 8 m keeps the cost in line with the route's length; a long straight
+        // just keeps a corner every 8 m, which the guard walks through without turning.
+        private const int MaxLookaheadCells = 16;
+
         private readonly List<Vector3> _kept = new List<Vector3>();
 
         /// <summary>The corner points of the last <see cref="Smooth"/>, valid until the next call.</summary>
@@ -37,7 +43,8 @@ namespace Plunderspell.Alarm
         private static int FarthestVisibleFrom(int anchor, List<Vector3> cellChain, IGuardNavigationMap map, float halfWidth)
         {
             int farthest = anchor + 1;
-            for (int candidate = anchor + 2; candidate < cellChain.Count; candidate++)
+            int last = Mathf.Min(cellChain.Count - 1, anchor + MaxLookaheadCells);
+            for (int candidate = anchor + 2; candidate <= last; candidate++)
             {
                 if (!map.IsWalkClear(cellChain[anchor], cellChain[candidate], halfWidth))
                     break;

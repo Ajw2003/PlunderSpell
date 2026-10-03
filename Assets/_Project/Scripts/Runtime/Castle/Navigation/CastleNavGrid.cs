@@ -223,7 +223,10 @@ namespace Plunderspell.Castle
         {
             if (ModuleCount == 0)
                 return NoCell;
-            int reach = Mathf.CeilToInt(maxDistance / CastleNavTile.CellSize);
+            // A column dc away has its centre at least (|dc| - 0.5) cells off, so columns past this reach
+            // can never be within maxDistance. (CeilToInt scanned a ring too many: 25 columns, not 9, for
+            // the 0.6 m floor checks that route smoothing makes thousands of, #243.)
+            int reach = Mathf.FloorToInt(maxDistance / CastleNavTile.CellSize + 0.5f);
             int centreColumn = Mathf.FloorToInt((position.x + HalfSpan) / CastleNavTile.CellSize);
             int centreRow = Mathf.FloorToInt((position.z + HalfSpan) / CastleNavTile.CellSize);
             int best = NoCell;
