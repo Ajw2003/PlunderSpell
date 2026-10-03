@@ -1,24 +1,26 @@
 // Play mode, host side only (the server drives the guards). Measures how long guards stand still
 // with nowhere to go, for Tools/Unity/coop_guard_check.sh, which replaces the placeholder below.
-//   provoke   point every guard at the local player's spot and make it chase, so each loses sight
-//             and searches: the situation #188/#189/#190 are about
+// Reads the fresh Guard (#214): its destination is Guard.Navigator.Destination, and it has no
+// NavMeshAgent or Rigidbody, so there is no body velocity to read; position change is the measure.
+//   provoke   make every live guard chase the local player, so each loses sight and investigates:
+//             the situation #188/#189/#190 are about
 //   sample    add the time since the last sample to each guard's counters
 //   report    one line of totals, then one line per guard
-//   dump      one line per stuck sample (position, state, destination, velocities, ground normal, what it
-//             touches), for the cause analysis in #200
+//   dump      one line per stuck sample (position, state, destination, what it touches), for the
+//             cause analysis in #200
 //   levo / levocheck / frango / frangocheck   host-side checks of Levo and the Frango shove
-// Each sample, per live guard that is not incapacitated, takes the ground it covered since the last
-// sample and classes the interval:
+// Each sample, per live guard that is not incapacitated or dead, takes the ground it covered since the
+// last sample and classes the interval:
 //   stuck    has a destination farther than 1 m away, moved under 0.2 m per second
 //   parked   has a destination it is already at, moved under 0.2 m per second (waiting there)
-//   nodest   has no destination and did not move
+//   nodest   has no destination and did not move (a guard in Combat stands and fights: counted here)
 //   moving   anything else
 // "standing" is stuck + parked + nodest. State counts are taken at each sample.
 string action = "__ACTION__";
 var All = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static
     | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
 var guardType = System.AppDomain.CurrentDomain.GetAssemblies()
-    .Select(a => a.GetType("Plunderspell.Guards.CastleGuard")).First(t => t != null);
+    .Select(a => a.GetType("Plunderspell.Guards.Guard")).First(t => t != null);
 var directorType = System.AppDomain.CurrentDomain.GetAssemblies()
     .Select(a => a.GetType("Plunderspell.Alarm.EnemyDirector")).First(t => t != null);
 var director = directorType.GetProperty("Current").GetValue(null);
@@ -48,12 +50,15 @@ if (action == "provoke")
     var local = (UnityEngine.Component)playerType.GetProperty("Local").GetValue(null);
     var spot = local.transform.position;
     int n = 0;
-    var stateType = guardType.Assembly.GetType("Plunderspell.Guards.GuardAlertState");
     foreach (var g in active)
     {
         var guard = (UnityEngine.Component)g;
-        guardType.GetField("_lastKnownIntruderPosition", All).SetValue(guard, spot);
-        guardType.GetMethod("SetAlertState").Invoke(guard, new object[] { System.Enum.Parse(stateType, "Chasing") });
+        if ((bool)guardType.GetProperty("IsDead").GetValue(guard)) continue;
+        // Chase needs a named player: name the local one, then switch the guard into the Chase state.
+        var set = guardType.GetProperty("States").GetValue(guard);
+        var chase = set.GetType().GetProperty("Chase").GetValue(set);
+        chase.GetType().GetMethod("Follow").Invoke(chase, new object[] { local.transform, false });
+        guardType.GetMethod("ChangeState").Invoke(guard, new object[] { chase });
         n++;
     }
     return "provoked " + n + " guards toward " + spot;
@@ -71,7 +76,8 @@ if (action == "levo" || action == "levocheck" || action == "frango" || action ==
         foreach (var g in active)
         {
             var c = (UnityEngine.Component)g;
-            if (guardType.GetProperty("State").GetValue(c).ToString() == "Incapacitated") continue;
+            var liveState = guardType.GetProperty("State").GetValue(c).ToString();
+            if (liveState == "Incapacitated" || liveState == "Dead") continue;
             target = c;
             if (action == "levo" && c.GetInstanceID() != 0) break;
             if (action == "frango") break;
@@ -88,12 +94,11 @@ if (action == "levo" || action == "levocheck" || action == "frango" || action ==
         return action + " started on guard " + target.GetInstanceID() + " at " + target.transform.position;
     }
     var from = (UnityEngine.Vector3)System.AppDomain.CurrentDomain.GetData(key + "Pos");
-    var ag = target.GetComponent<UnityEngine.AI.NavMeshAgent>();
-    var rbd = target.GetComponent<UnityEngine.Rigidbody>();
-    var air = (bool)guardType.GetProperty("IsAirborne").GetValue(target);
+    var recvNow = target.GetComponent("StatusEffectReceiver");
+    var levitating = (bool)recvNow.GetType().GetProperty("IsLevitating").GetValue(recvNow);
     var dd = target.transform.position - from;
     System.AppDomain.CurrentDomain.SetData(key + "Pos", target.transform.position);
-    return action + " airborne " + air + " onMesh " + ag.isOnNavMesh + " kinematic " + rbd.isKinematic
+    return action + " levitating " + levitating
         + " y " + target.transform.position.y.ToString("F2") + " movedSinceLast " + dd.magnitude.ToString("F2")
         + " (xz " + new UnityEngine.Vector2(dd.x, dd.z).magnitude.ToString("F2") + ") state "
         + guardType.GetProperty("State").GetValue(target);
@@ -120,9 +125,10 @@ foreach (var g in active)
     var p = guard.transform.position;
     double moved = System.Math.Sqrt((p.x - row[0]) * (p.x - row[0]) + (p.z - row[1]) * (p.z - row[1]));
     row[0] = p.x; row[1] = p.z; row[2] = now;
-    if (st == "Incapacitated") continue;
+    if (st == "Incapacitated" || st == "Dead") continue;
     live++;
-    var dest = (UnityEngine.Vector3?)guardType.GetProperty("Destination").GetValue(guard);
+    var navigator = guardType.GetProperty("Navigator").GetValue(guard);
+    var dest = (UnityEngine.Vector3?)navigator.GetType().GetProperty("Destination").GetValue(navigator);
     bool slow = moved < 0.2 * dt;
     if (!slow) { row[6] += dt; }
     else if (!dest.HasValue) { row[5] += dt; }
@@ -130,13 +136,8 @@ foreach (var g in active)
     {
         var d = dest.Value;
         double far = System.Math.Sqrt((p.x - d.x) * (p.x - d.x) + (p.z - d.z) * (p.z - d.z));
-        var ag = guard.GetComponent<UnityEngine.AI.NavMeshAgent>();
-        var rb = guard.GetComponent<UnityEngine.Rigidbody>();
-        // Stuck only when the body is really stopped (under 0.2 m/s) while the agent wants to move.
-        bool bodyStopped = rb == null || new UnityEngine.Vector2(rb.linearVelocity.x, rb.linearVelocity.z).magnitude < 0.2f;
-        bool wants = ag != null && ag.enabled && new UnityEngine.Vector2(ag.desiredVelocity.x, ag.desiredVelocity.z).magnitude > 0.01f;
-        if (far > 1.0 && !(bodyStopped && wants)) row[6] += dt;
-        else if (far > 1.0)
+        // The guard has no body of its own: it was slow over the interval and still has somewhere to be.
+        if (far > 1.0)
         {
             row[3] += dt;
             var cap = guard.GetComponent<UnityEngine.CapsuleCollider>();
@@ -159,9 +160,7 @@ foreach (var g in active)
             }
             rows.Add("guard " + guard.GetInstanceID() + " t " + now.ToString("F0") + " dt " + dt.ToString("F1") + " pos " + p.ToString("F2")
                 + " state " + st + " dest " + d.ToString("F2") + " distDest " + far.ToString("F1")
-                + " vel " + (rb != null ? rb.linearVelocity.ToString("F2") : "nobody") + (rb != null && rb.isKinematic ? "(kin)" : "")
-                + " desired " + (ag != null && ag.enabled ? ag.desiredVelocity.ToString("F2") : "noagent")
-                + " onMesh " + (ag != null && ag.enabled && ag.isOnNavMesh) + " agentGap " + (ag != null && ag.enabled ? UnityEngine.Vector3.Distance(ag.nextPosition, rb != null ? rb.position : p).ToString("F2") : "n/a")
+                + " movedPerSecond " + (moved / dt).ToString("F2")
                 + " ground " + ground + " touching [" + string.Join(", ", touching) + "]");
         }
         else row[4] += dt;
