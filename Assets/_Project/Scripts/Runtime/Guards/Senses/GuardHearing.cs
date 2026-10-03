@@ -42,6 +42,10 @@ namespace Plunderspell.Guards
             if (_status != null && _status.IsAsleep && noise.Strength >= WakeThreshold)
                 _status.WakeUp();
 
+            // A noise too quiet to wake the guard goes unheard; it must not wait as a lead for when it wakes.
+            if (_status != null && _status.IsAsleep)
+                return;
+
             if (!GuardBrain.ShouldInvestigate(noise.Strength, alarm))
                 return;
 
