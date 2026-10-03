@@ -56,10 +56,10 @@ namespace Plunderspell.Guards
             }
 
             if (_throttle.IsLookDue(deltaTime))
-                Look(intruders);
+                Look(intruders, GuardBrain.SightRange(_tuning.SightRange * GuardBrain.BaseSightScale, alarm));
         }
 
-        private void Look(IReadOnlyList<Transform> intruders)
+        private void Look(IReadOnlyList<Transform> intruders, float range)
         {
             LookCount++;
             Vector3 eye = _body.position + Vector3.up * _tuning.EyeHeight;
@@ -72,9 +72,8 @@ namespace Plunderspell.Guards
                 if (intruder == null)
                     continue;
 
-                Vector3 aim = intruder.position + Vector3.up * _tuning.TargetAimHeight;
-                float distance = Vector3.Distance(eye, aim);
-                if (distance >= bestDistance || !IsInsideCone(eye, aim) || !HasLineOfSight(eye, aim, intruder))
+                float distance = Vector3.Distance(eye, intruder.position + Vector3.up * _tuning.TargetAimHeight);
+                if (distance >= bestDistance || !SeesAnyAimPoint(eye, intruder, range))
                     continue;
 
                 bestDistance = distance;
@@ -83,10 +82,24 @@ namespace Plunderspell.Guards
             Visible = best;
         }
 
-        // The cheap tests (range and angle) run before the raycast, so most intruders cost no cast.
-        private bool IsInsideCone(Vector3 eye, Vector3 aim)
+        // A sighting needs one clear aim point, head first (the usual hit): a ledge edge or a lintel that hides
+        // the head can leave the body in view, and the other way round (#238).
+        private bool SeesAnyAimPoint(Vector3 eye, Transform intruder, float range)
         {
-            return GuardBrain.CanSee(eye, _body.forward, aim, _tuning.SightRange, _tuning.FieldOfView, true);
+            float head = _tuning.TargetAimHeight;
+            float feet = _tuning.TargetLowAimHeight;
+            float middle = (head + feet) * 0.5f;
+            return CanSeePoint(eye, intruder, head, range)
+                || CanSeePoint(eye, intruder, middle, range)
+                || CanSeePoint(eye, intruder, feet, range);
+        }
+
+        // The cheap tests (range and angle) run before the raycast, so most points cost no cast.
+        private bool CanSeePoint(Vector3 eye, Transform intruder, float heightAbovePivot, float range)
+        {
+            Vector3 aim = intruder.position + Vector3.up * heightAbovePivot;
+            return GuardBrain.CanSee(eye, _body.forward, aim, range, _tuning.FieldOfView, true)
+                && HasLineOfSight(eye, aim, intruder);
         }
 
         private bool HasLineOfSight(Vector3 eye, Vector3 aim, Transform target)

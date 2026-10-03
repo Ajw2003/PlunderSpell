@@ -9,8 +9,7 @@ namespace Plunderspell.Guards
     ///
     /// Keeping the decisions here rather than inside the MonoBehaviour is what makes guard behaviour
     /// testable. The legacy guard's state rules (NextState, the stuck watchdog, the search sweep, the
-    /// hunt re-send) went with it (#214); <see cref="MoveSpeed"/> and <see cref="SightRange"/> wait on #234
-    /// and #229.
+    /// hunt re-send) went with it (#214); <see cref="MoveSpeed"/> waits on #234.
     /// </summary>
     public static class GuardBrain
     {
@@ -99,8 +98,15 @@ namespace Plunderspell.Guards
         }
 
         /// <summary>How far up or down a guard can look, in degrees, whatever way its head is turned (#238).
-        /// A player on a table, a ledge or in mid-jump in front of a guard stays seen; one nearly overhead does not.</summary>
-        public const float MaxLookPitchDegrees = 70f;
+        /// 80 lets a guard at the foot of a stair railing or a wall walk keep a player on it in view (measured
+        /// 73 degrees to the head at 1.5 m under a 4.5 m wall walk); one nearly overhead is still not seen.</summary>
+        public const float MaxLookPitchDegrees = 80f;
+
+        /// <summary>
+        /// Multiplies every guard's serialized sight range (14 m on the prefabs), so guards see farther than they
+        /// did (owner, 2026-10-02) without editing each prefab and keeping the differences between guard kinds.
+        /// </summary>
+        public const float BaseSightScale = 1.5f;
 
         // The field of view is the side-to-side angle: height alone never takes a player out of the cone.
         // Straight above or below the guard there is no side-to-side angle, so that counts as in front.

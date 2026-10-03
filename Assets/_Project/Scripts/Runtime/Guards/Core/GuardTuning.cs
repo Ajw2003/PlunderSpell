@@ -12,7 +12,7 @@ namespace Plunderspell.Guards
     public sealed class GuardTuning
     {
         [Header("Senses")]
-        [Tooltip("How far this guard can see, in metres. It does not grow with the alarm (re-add: #229).")]
+        [Tooltip("How far this guard sees while the castle is Calm, in metres, before GuardBrain.BaseSightScale. The alarm stretches it (#229).")]
         public float SightRange = 14f;
 
         [Tooltip("Field of view in degrees.")]
@@ -23,6 +23,9 @@ namespace Plunderspell.Guards
 
         [Tooltip("Height above a player pivot the guard looks at, in metres.")]
         public float TargetAimHeight = 1.0f;
+
+        [Tooltip("Height above a player pivot of the lowest point a guard looks at (the feet), in metres. A middle point is aimed at between it and the head. Any clear one is a sighting (#238).")]
+        public float TargetLowAimHeight = -0.9f;
 
         [Tooltip("Layers that block line of sight. Leave players out.")]
         public LayerMask GeometryLayers;
