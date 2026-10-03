@@ -30,7 +30,17 @@ namespace Plunderspell.Tests
                     Object.DestroyImmediate(created);
             }
             _created.Clear();
+            DestroyLeftoverProjectiles();
             GuardArrivalGrace.End();
+        }
+
+        // A shot or thrown stone only destroys itself on impact or after a delay of game time, which a test
+        // does not run, so it would survive into the next test and block that guard's sweep at the spawn point
+        // (a GuardStone left at the origin made 9 Chase and Combat tests fail, 2026-10-03).
+        private static void DestroyLeftoverProjectiles()
+        {
+            foreach (NetworkedProjectile projectile in Object.FindObjectsByType<NetworkedProjectile>(FindObjectsSortMode.None))
+                Object.DestroyImmediate(projectile.gameObject);
         }
 
         public Guard MakeGuard(Vector3 position)
