@@ -1,0 +1,54 @@
+1s sampled 20 Searching=20
+2s sampled 20 Searching=20
+4s sampled 20 Searching=20
+6s sampled 20 Searching=20
+7s sampled 20 Searching=20
+9s sampled 20 Searching=20
+11s sampled 20 Searching=20
+12s sampled 20 Patrolling=8 Investigating=12
+14s sampled 20 Patrolling=8 Investigating=12
+16s sampled 20 Patrolling=9 Investigating=11
+17s sampled 20 Patrolling=9 Investigating=11
+19s sampled 20 Patrolling=11 Investigating=9
+21s sampled 20 Patrolling=13 Investigating=7
+22s sampled 20 Patrolling=15 Investigating=5
+24s sampled 20 Patrolling=15 Investigating=5
+26s sampled 20 Patrolling=17 Investigating=3
+27s sampled 20 Patrolling=17 Investigating=3
+29s sampled 20 Patrolling=17 Investigating=3
+31s sampled 20 Patrolling=17 Investigating=3
+32s sampled 20 Patrolling=17 Investigating=3
+34s sampled 20 Patrolling=17 Investigating=3
+36s sampled 20 Patrolling=17 Investigating=3
+37s sampled 20 Patrolling=17 Investigating=3
+39s sampled 20 Patrolling=18 Investigating=2
+41s sampled 20 Patrolling=19 Investigating=1
+42s sampled 20 Patrolling=19 Investigating=1
+44s sampled 20 Patrolling=19 Investigating=1
+46s sampled 20 Patrolling=19 Investigating=1
+47s sampled 20 Patrolling=19 Investigating=1
+49s sampled 20 Patrolling=19 Investigating=1
+51s sampled 20 Patrolling=19 Investigating=1
+52s sampled 20 Patrolling=19 Investigating=1
+54s sampled 20 Patrolling=19 Investigating=1
+56s sampled 20 Patrolling=19 Investigating=1
+57s sampled 20 Patrolling=19 Investigating=1
+59s sampled 20 Patrolling=19 Investigating=1
+61s sampled 20 Patrolling=19 Investigating=1
+63s sampled 20 Patrolling=20
+64s sampled 20 Patrolling=20
+66s sampled 20 Patrolling=20
+67s sampled 20 Patrolling=20
+69s sampled 20 Patrolling=20
+71s sampled 20 Patrolling=20
+72s sampled 20 Patrolling=20
+74s sampled 20 Patrolling=20
+76s sampled 20 Patrolling=20
+77s sampled 20 Patrolling=20
+79s sampled 20 Patrolling=20
+81s sampled 20 Patrolling=20
+82s sampled 20 Patrolling=20
+84s sampled 20 Patrolling=20
+86s sampled 20 Patrolling=20
+87s sampled 20 Patrolling=20
+89s sampled 20 Patrolling=20

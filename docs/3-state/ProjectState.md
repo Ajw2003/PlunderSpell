@@ -1,6 +1,7 @@
 # Project State
 
-**Headline: ~40% against the roadmap in `docs/2-roadmap/Roadmap.md`** (re-measured 2026-09-26).
+**Headline: ~42% against the roadmap in `docs/2-roadmap/Roadmap.md`** (re-measured 2026-09-28;
+~41% on 2026-09-26).
 The roadmap grew that day from the pitch's four milestones to eight, running to a game a stranger
 can play (Decisions, "The roadmap runs to a game a stranger can play"). Against the old four this
 headline read ~65%; nothing was lost, the definition of done got bigger. Each share below is a
@@ -10,13 +11,155 @@ judgement until that milestone's acceptance is checked, and only M0's has been.
 |---|---:|---:|---|
 | M0 Fork clean | 5 | 100% | Acceptance checked |
 | M1 Prove the voice | 10 | ~70% | Works for one person on one machine; #50 never measured |
-| M2 Vertical slice | 20 | ~70% | Loop plays solo and over UDP; #55 never run; its listed issues open |
+| M2 Vertical slice | 20 | ~75% | Loop plays solo and over UDP; carrying together works (#169); #55 never run; Steam outside the Editor broken (#167, #168); #164, #170-#172 open |
 | M3 Other Ages | 15 | ~60% | Bronze and Late have their own rooms; High Medieval and Powder borrow |
 | M4 Lair and Market | 15 | ~5% | Debt is a number on the Lair screen; no market, no 3D Lair |
-| M5 Household awake | 10 | ~30% | Guards patrol, investigate noise, chase and search; the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
+| M5 Household awake | 10 | ~35% | Guards patrol, investigate noise, chase and search, and a shout or the hue and cry calls guards in (#163); the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
 | M6 Castle fights back | 10 | ~5% | Doors and hazards are layout tags; revamp phases 3-5 not started |
-| M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, a partial settings menu; no animation |
-| **Total** | 100 | **≈ 41%** | |
+| M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, post-processing, a partial settings menu; no animation; every sound file built but on a branch and not played by the game (below) |
+| **Total** | 100 | **≈ 42%** | |
+
+**Open issues, 2026-09-28:** 44, every one on a milestone (`docs/2-roadmap/Roadmap.md`). The same
+day twelve that were already done or superseded were closed with a note on each: #127, #131,
+#134, #140, #152, #154, #158, #163 (fixed on `main` 2026-09-26), #121 (post-processing built with
+the night atmosphere), #41 (decided 2026-09-24), #126 (done but for #151 and #141) and #17 (a
+duplicate of #151). The owner closed #169 on 2026-09-28 with two of its plan's steps not done:
+the unused two-person code is still in `LootPickup` (`InitiateDualCarry`) and
+`LootInteractor.cs`, and the plain copies of `net.md` and `damage.md` predate the new carry.
+
+## Work not on `main` yet
+
+Checked 2026-09-28 against every branch on `origin`. Two branches hold recent work that `main`
+lacks; the rest are older and either merged in another form or abandoned.
+
+- **`claude/playability-fixes`** (2026-09-30 to 2026-10-01, from the audio pass PR #178;
+  parent #192). Contents:
+  - guards keep moving (#193–#195);
+  - saved settings apply at start-up (#181);
+  - guards are slippery dynamic physics bodies that cannot crush a player through a wall (#200;
+    co-op stuck time 1.7 of 1811 s);
+  - the co-op scripts restore ProjectSettings byte-for-byte (#199).
+
+  #211 is in (2026-10-02): the fresh guard has Stunned and Slept states (Levo holds a guard Stunned
+  until it lands and pauses its mover; a loud noise wakes a sleeper early), walking guards now face
+  where they go, and `EnemyDirector` is split into registry, bus, alarm and hue-and-cry classes
+  (472 to 248 lines). Details and file:line in `docs/4-systems/alarm.md`.
+
+  #212 is in (2026-10-02): the fresh guard has an OnFire state. A burning guard panic-runs to random
+  reachable points, ignores leads and attacks, and on fire's end goes to Combat, Chase, Patrol or
+  Investigate, or Dead if the fire killed it; stun and sleep outrank the fire. Burn damage stays in
+  `StatusEffectReceiver.Tick`. Not in a prefab yet (#214). Details in `docs/4-systems/alarm.md`.
+
+  #213 is in (2026-10-02): a dead fresh guard leaves navigation and the registries, topples (scripted
+  tween, no rig yet), shrinks away in a dust puff on every peer, then the server despawns it. Not in a
+  prefab yet (#214); not yet seen in live co-op. Details in `docs/4-systems/alarm.md`.
+
+  The guard state-machine rebuild has started: #204 is in. A plain C# `StateMachine<TContext>`
+  lives in Core/StateMachine, and the shared `BaseStateMachine` now runs `Exit`, which needed the
+  player's Dodge, Jump and Attack exits fixed. `StateMachineTests` pass 6/6. The rest is #203's
+  children #205–#214 (plan: `docs/plans/guard-fsm-restructure.md`). The handoff is
+  `docs/plans/playability-pass-handoff-2026-09-30.md`.
+
+  Bespoke navigation (plan: `docs/plans/bespoke-navigation.md`) has started. #220 is in: every
+  room module carries a baked `CastleNavTile`, a 24×24 grid of 0.5 m cells with up to 2 floor
+  layers and archway portals. The menu item Tools/Plunderspell/Bake Castle Nav Tiles bakes it.
+  `CastleNavTileTests` pass 2/2, and the overlays are in `docs/generated/nav-tiles-2026-10-02/`.
+  The Gatehouse and curtain wall pieces now bake with a virtual yard floor.
+
+  #221 is in: `CastleNavGraph` (`Runtime/Castle/Navigation/`, 14 small classes) is stitched at
+  generation (`ProceduralCastleGenerator.cs:115`).
+  - Queries: path finding takes about 150 µs, the nearest-cell and reachable queries a few µs, all
+    with 0 B allocated (Editor timings).
+  - Reachability agrees with an Editor NavMesh on all 5 seeds wherever both call a spot floor. The
+    graph calls more spots floor than the NavMesh does (Great Hall, Chapel), which is unexplained.
+  - Locked doors aren't in the graph yet; that is #222.
+
+  #222 is in: the director's guard navigation service (`Runtime/Alarm/Navigation/`, every file under
+  180 lines). It takes move requests, smooths paths, sweeps a capsule before each step and keeps
+  guards about 1 m apart. Door costs come from `CastleLockdown`.
+  - Its tests pass 7/7. One of them is a guard stopping at a player pinned to a wall without
+    moving them. Allocations are 0 B over 500 ticks with 20 guards.
+  - It isn't wired into anything yet. `CastleLockdown.NavGraph` and the service's map are set by
+    nobody, and the legacy guard still uses the NavMesh. The fresh guard core (#206) wires it, and
+    the co-op run moves there too.
+
+  #206 is in: the fresh guard core (`Runtime/Guards/Core`, `Senses`, `Movement`, `States`; 16 files, none over
+  215 lines). It moves only through the director's navigation, which `RaidDirector` now gives the castle graph.
+  - 17 new PlayMode tests pass (sight throttle, own-collider line of sight, hearing wake, a move reaching
+  Arrived, health, state SyncVar, shove). The prefabs are **not** swapped: the states are placeholders until
+  #207-#213, so a swap would make guards harmless. No co-op run for that reason.
+  - `CastleLockdown.NavGraph` was left unset by #206, pending the owner's door decision; #207 has since
+    wired it.
+
+  #207 is in: `PatrolState` picks 3+ reachable points around the post, re-plans on Blocked and drops
+  points behind barred doors. Lockdown doors are wired (`RaidDirector.cs:262`, per the 2026-10-02
+  decision: locked doors cost, barred doors block). Tests pass: 7/7 PlayMode and 1/1 EditMode.
+  #208 is in: `InvestigateState` consumes leads (noise, sighting, hue and cry) from `GuardLeads`.
+  #209 is in: `ChaseState` follows a seen player at chase speed (throttled re-plans), ranged guards shoot
+  on the move, sight lost goes to Investigate at the last seen spot.
+  #210 is in: `CombatState` (Chase hands over at reach); the director's `AttackTurnMediator` gives 1 melee and
+  1 ranged turn per player, others hold a ring place; one `GuardLineOfFire` check stops Chase and Combat shots
+  through a teammate. Not in a prefab or a co-op run yet (the legacy guard stays until #214).
+
+  2026-10-03 (#237): a melee guard that sees a player it cannot reach (nav map: no floor near, or feet over 0.9 m above it, for 1 s) holds below and throws
+  stones (new `HoldBelowState`, `Resources/GuardStone.prefab`) and calls ranged guards to shoot, melee ones to look; PlayMode `GuardUnreachableTests` 4/4;
+  the one co-op run did not work (the guard stayed on patrol and never saw the player; log in `docs/generated/guard-unreachable-2026-10-03/run.log`).
+  2026-10-02 (evening, #238 part 2): hold C to creep (2 m/s, 1.5 m footstep); guards see head, body or feet, look up 80 degrees, see 1.5x
+  farther and farther again as the alarm rises (#229); noise radii unchanged (`docs/4-systems/alarm.md`).
+  2026-10-02 (evening): all 27 guard prefabs carry the fresh guard (#214 swap; `CastleGuard.cs`, `CastleNavMeshBaker.cs`,
+  `GuardPrefabSwapTool.cs`, `GuardMovementTests` and the dead `GuardBrain` rules were deleted later that evening
+  with the owner's approval). Guard navigation fixed after the owner
+  saw guards stuck and standing still in co-op: Bronze Age and Late Medieval castles had an empty walk map
+  (only the default registry was baked), the bailey dressing was not in the map, guards stopped dead on a
+  clipped corner, and guards' bodies blocked each other. Co-op check, Late Medieval, 20 guards: stuck 4.8 s
+  of 466 guard-seconds (1.0%), against 0 s moving before. Details: `docs/4-systems/alarm.md` (Guard
+  navigation) and `docs/4-systems/castle.md` (Nav tiles, Nav graph). The #214 parity table is not done.
+  #238: raid footsteps and landings now reach guards, sight looks up to 70 degrees, loot impacts and drags make noise by weight; heavy
+  loot in game and a walk in the open are unverified, and the raid has no sneak (`docs/4-systems/alarm.md`).
+  Then #223 finished: the runtime NavMesh is gone (no bake in `RaidDirector`, no `NavMeshSurface` in the three
+  scenes, no obstacle on the fire props, `CastleNavMeshBaker` obsolete, since deleted, `CastleAudit` on the nav graph); the AI
+  Navigation package stays for the deprecated monster. Co-op check after: stuck 13.8 s of 461.0 guard-seconds
+  against 4.8 of 465.9 before, same seed (3508293); all 8 stuck samples are guards in Combat shuffling in the
+  crowd at one archway, none against scenery. The four guard PlayMode tests that then failed are fixed: two
+  expected one look to start a chase (the fresh guard investigates first), one relied on a teammate's body
+  blocking an archer, and one found a real bug (a sleeper heard noises too quiet to wake it; fixed in
+  `GuardHearing`). Full PlayMode run after: 341 of 342, the one failure the known flaky #233.
+  #239: the hue and cry repeats every 3 s (`EnemyDirector._hueAndCryRepeatSeconds`) at the players' current spots
+  while the alarm stays at Hue and Cry, and every guard answers it at any distance (other requests keep 40 m);
+  full PlayMode 345 of 345. Co-op: 19 of 20 guards investigating at once after the alarm was raised, but the
+  players died within about 20 s, so the repeat itself was not seen in play (tests cover it).
+  #236: fire overrules Somnus (`StatusEffectReceiver.Ignite` wakes a sleeper, `Sleep` on a burning target does nothing, a woken guard goes to OnFire); reverses the #212 sleep-over-fire rule, stun still outranks fire. Co-op: slept guard ignited went OnFire at once.
+  Guards now climb stairs: the sweep's step-over is 0.7 m (two risers); at 0.35 m no staircase in any Age
+  was climbable (alarm.md, Guard navigation, "Stairs"). Seen in co-op on the Late turret stair, up and down.
+  The #214 parity table is checked (`docs/plans/guard-core-inventory.md`): 36 of 39 rows match. Open, the
+  owner's call: the alarm no longer speeds guards up (`GuardBrain.MoveSpeed` is called by no state).
+- **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
+  two-player carry check now moves to the most open floor within 25 m before staging, which fixed
+  `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
+  the combined grip. Found and not fixed, a real game bug: two holders sometimes cannot lift the
+  Rolled Tapestry (`heavy_lifted_together` failed on 2 of 4 runs, always that piece; the Parade
+  Armour lifts fine in the same spot). Cause not confirmed.
+- **`claude/eloquent-dirac-i10hep`** (7 commits, 2026-09-27, branched before the #169 work),
+  **now merged into `ccr-6bf1f02d-o8jhoy`** (`84732e04`), where the in-game layer was then built
+  (2026-09-29; `docs/4-systems/audio.md`). Still not on `main`. The audio plan (`docs/plans/audio.md`: about 480 named sounds, about 1,000 files) and
+  `Tools/AudioForge/`, which builds all 1,013 files into `Assets/_Project/Audio/`: 262 from a CC0
+  library, 45 generated, 706 placeholders (435 of them guard voices awaiting friends' recordings).
+  A measured pass re-levelled every file by category after the owner found sounds harsh; files
+  outside their level window went from 452 to 3. Nobody has listened to the result, and no game
+  code played any of it when the branch was written; the layer that does is described below.
+  Two decisions are recorded on the branch (AI sound effects, friends' voices, AI music only where it
+  does not adapt; levels baked per category with Unity's Normalize off).
+- **`ccr-6bf1f02d-o8jhoy`** also holds, since 2026-09-29: the raid always has one audio listener,
+  an output-device picker in Settings, three save slots on the main menu, and a reduced playtest
+  sound set (spells, music, ambience muted; `docs/4-systems/audio.md`, `docs/4-systems/core.md`).
+- **`claude/busy-bose-a7647f`** (1 commit, 2026-09-26): a test-only fix to
+  `GuardAttackTests` so the guard's own `Update` does not swing during the test's yield frame.
+  The test it touches is the "known failure" named throughout the 2026-09-26 test runs.
+- Older, not worth merging as they stand: open PRs #2 (`integration/staging-2026-09-15`), #4
+  (`claude/repo-status-check-hjp6z7`, the five-tier docs scaffold, since replaced by the six
+  tiers) and #97 (`claude/amazing-ritchie-ga4w1t`, HUD health for #14, which is closed), plus
+  `claude/damp-cave-svg-treasure-r0l6rz` (a portal illustration and bestiary concept sheets, as SVG), `claude/trial-merge-2026-09-24`
+  (verification only) and `idk`.
 
 Before 2026-09-26: every one of the four old milestones' code had been written, merged and
 tested, the raid ran on real authored art, and two of the four acceptance criteria had never been
@@ -44,7 +187,7 @@ surfaced it as not actually functional yet.
 | M4 — The Lair and the Market | Not started | ❌ No market code (`grep -i market` finds nothing in `Assets/_Project/Scripts`); debt exists only as numbers (`LairState`, `LairScreen`) | ❌ |
 | M5 — The household is awake | Partly built | 🟡 Guards patrol, investigate noise, chase and search (`GuardAlertState`); no hit reaction or crouch in the raid | ❌ |
 | M6 — The castle fights back | Not started | ❌ Doors don't open and stairs can lead nowhere (#111); murder-holes and arrow-loops are layout tags (#44); castle revamp phases 3-5 not started | ❌ |
-| M7 — Final art and performance pass | Partly built | 🟡 Build tool (#53), Low/Medium/High quality levels, a settings menu; no animation, no profiling | ❌ |
+| M7 — Final art and performance pass | Partly built | 🟡 Build tool (#53), Low/Medium/High quality levels, a settings menu; no animation; first profiling pass 2026-10-03 (#242, `docs/generated/perf-2026-10-03/README.md`): sound streaming, guard route smoothing, HUD and fire-glow costs cut | ❌ |
 
 **2026-09-24 — art bible plunder and enemies modelled, and per-era raid content wired in.**
 All 20 plunder items and all 16 enemies from the art bible (`docs/art/`) exist as validated,
@@ -58,6 +201,14 @@ Animator, no clips, no spring bones. `Assets/Models/ArtBible/AllEnemies/` holds 
 per enemy as the art and scale reference; the prefabs raids spawn are
 `Assets/_Project/Prefabs/Enemies/<Era>/`. Merged together on `claude/staging-2026-09-24` for testing
 before `main`; see `docs/plans/merge-2026-09-24-art-branches.md`.
+
+**2026-09-30 — playability pass, guards** (`claude/playability-fixes`, #193-#195, not merged).
+Guards no longer stand still: a stuck watchdog re-paths and skips unreachable points, destinations
+snap to the NavMesh, searchers sweep around the last-known spot, noise steers a hunt, and the hue
+and cry re-sends searching guards near the nearest player every ~3.5 s. Stuck time in a 20-guard
+co-op raid fell from 25.1% to 4.0% of guard-seconds (`docs/4-systems/raid.md`, "Guards that keep
+moving"). `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal` fails before and after this
+change (the guard's own `Update` swings in the yield frame).
 
 **2026-09-25 — backlog pass** (`claude/issue-backlog`, not merged). Spells cost mana
 (`SpellWord.ManaCost`, a 100-point pool, 2.5/s regen) and number-key casts chant for 1.5 s
@@ -102,6 +253,17 @@ Guards now actually report to the alarm (every spawned guard had been disconnect
 guard's shout sends nearby guards to you, and the hue and cry sends guards within 40 m (#163;
 `docs/4-systems/alarm.md`). Stars and the moon show overhead through the fog, which still hangs over the horizon
 (`docs/4-systems/atmosphere.md`, "The sky shows through overhead").
+
+**2026-09-29 — the UI redesign is written, not yet seen** (`claude/ui-redesign-impl`, not merged).
+`docs/plans/ui-redesign.md` is built in code: `UITheme` is the pigment list and roles, `UIFonts`
+loads Eczar, Spectral and Overpass Mono, `UITextures` generates the backdrop, sigil and ring,
+`UIFactory` has the new buttons, bars, slider, stepper and segmented control, every menu screen and
+the vitals HUD are re-laid out, and the IMGUI raid HUD, crosshair and damage numbers use the same
+roles. Nothing has been opened in Unity: the headless harness compiles the code, and three new
+EditMode test files (`UIFontsTests`, `UIThemeTests`, `RaidHudPromptTests`) have not run in the
+Editor. Not built: the extracted-piece list on the victory screen (no data), the Lair's "n of 4 in
+the Lair" count (the co-op session does not expose one), and screenshot comparison against the
+mockup.
 
 **2026-09-25 — the castle has its night look** (`claude/night-atmosphere`, not merged). Steps 1-4
 of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog
@@ -178,6 +340,23 @@ before touching the raid loop:
 - **#21 — no portal asset**, **#16 — no main menu art**, **#23 — castles look bland**, **#22 — no
   VFX/SFX anywhere** — the game loop runs end to end but almost nothing in it has a finished visual
   or audio pass yet.
+  *2026-09-27:* the audio half of #22 now has its files. `Tools/AudioForge/` builds all 1,013
+  planned sounds into `Assets/_Project/Audio/` (262 CC0 library, 45 generated, 706 placeholders
+  including 435 guard voices awaiting recording). No game code plays any of them yet: the mixer
+  and `AudioDirector`/`MusicDirector` (`docs/plans/audio.md` §7.3) were not built.
+  *2026-09-29:* they are, in part. `Plunderspell.mixer`, `SoundBank.asset` (483 entries),
+  `AudioDirector`, `MusicDirector`, the Settings sliders on the mixer and the casting dip exist and
+  play from game events; see `docs/4-systems/audio.md` for the event table and the gap list (the
+  wizard's own swing and throw, footsteps, physics impacts, ambience, guard voices and more are
+  still silent). Play-mode reads show the right clips on the right groups; nobody has listened.
+  *2026-09-29 (later):* footsteps by surface, jump and landing, physics impacts by material and
+  speed with scrape and roll loops, and guard voices from replicated state (alert, chase, search,
+  lost, attack, hurt, asleep, murmur, death; the hound's growl, bark, bite, yelp and howl) were added
+  (`docs/plans/audio-feel-layer.md`). One additive event on `Item.cs` (`Item.Impacted`); it needs a look
+  when branch `stashing` merges.
+  The same day, after the owner reported harsh and misplaced sounds, a measured pass
+  (`docs/generated/audio-audit/`) re-levelled every file by category, softened the synth recipes and
+  swapped off-theme sources; flagged files went from 465 to 3. Nobody has listened to the result yet.
 - **#6 / #25 — player scale and spawn placement** — the player can be too tall for the rooms, and
   can spawn inside or flush against castle geometry.
 
@@ -195,7 +374,8 @@ physics-loot pillars are real and mostly match the pitch; **the Mystical Market 
 named pillar in the pitch) does not exist anywhere in the codebase**, the Lair is a menu screen
 rather than the physical place the pitch describes, and half the built bestiary (SigilWisp,
 VaultWarden, HexTurret, ArcRevenant, GildedColossus) reads as fantasy monsters with no basis in the
-pitch's human "household" antagonists — flagged as an open creative-direction question, not a bug.
+pitch's human "household" antagonists — flagged as an open creative-direction question, not a bug
+(decided 2026-09-24: each Age's enemies are its household; #41 closed 2026-09-28).
 34 new issues are filed via `Tools/mkissues_moodboard_gap.py`
 (manifest: `docs/generated/github-issues-moodboard-gap.json`), additive to and non-duplicative of
 the 21-item backlog above.

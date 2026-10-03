@@ -31,6 +31,11 @@ namespace Plunderspell.Castle
         /// the strip (#140). Set by <see cref="CastleEntrancePlanner"/> during generation.</summary>
         public List<UnityEngine.Vector2Int> EntranceCells = new List<UnityEngine.Vector2Int>();
 
+        /// <summary>The walkable graph stitched from the placed modules' nav tiles (#221). Built by the
+        /// generator on every peer from the seed; never serialized or sent. Empty when the layout was
+        /// generated without a registry.</summary>
+        [NonSerialized] public CastleNavGraph NavGraph;
+
         public ProceduralCastleData() { }
 
         public ProceduralCastleData(int seed)

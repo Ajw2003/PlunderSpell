@@ -20,7 +20,7 @@ namespace Plunderspell.UI
         [Header("Sources (all optional)")]
         [SerializeField] private RaidDirector _director;
         [SerializeField] private ExtractionZone _extractionZone;
-        [SerializeField] private AlarmFSMManager _alarm;
+        [SerializeField] private EnemyDirector _alarm;
         [SerializeField] private LairHubManager _lair;
         [SerializeField] private LootInteractor _interactor;
 
@@ -163,14 +163,14 @@ namespace Plunderspell.UI
         {
             if (_director == null) _director = FindObjectOfType<RaidDirector>();
             if (_extractionZone == null) _extractionZone = FindObjectOfType<ExtractionZone>();
-            if (_alarm == null) _alarm = FindObjectOfType<AlarmFSMManager>();
+            if (_alarm == null) _alarm = FindObjectOfType<EnemyDirector>();
             if (_lair == null) _lair = FindObjectOfType<LairHubManager>();
             // No scene search for the interactor: in a session every player's body has one, and only
             // this machine's player (resolved lazily in Interactor) is the one the HUD describes.
         }
 
         /// <summary>Wires the presenter from code, for tests and tooling-built scenes.</summary>
-        public void Configure(RaidDirector director, ExtractionZone zone, AlarmFSMManager alarm,
+        public void Configure(RaidDirector director, ExtractionZone zone, EnemyDirector alarm,
             LairHubManager lair, LootInteractor interactor)
         {
             _director = director;

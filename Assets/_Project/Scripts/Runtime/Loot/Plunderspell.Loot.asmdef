@@ -4,6 +4,7 @@
     "references": [
         "PurrNet.Runtime",
         "Plunderspell.Foundation",
+        "Plunderspell.Acoustics",
         "Plunderspell.Player",
         "Plunderspell.Items"
     ],

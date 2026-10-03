@@ -1,0 +1,35 @@
+18:58:06 building Build/DevTest
+18:58:39 build Succeeded
+18:58:48 host: state MainMenu players 0 local none holding nothing
+18:58:49 host: state Lair players 1 local 44.500,1.188,0.000 holding nothing
+18:58:49 client started (pid 933)
+18:58:57 client: state Lair players 2 local 44.500,1.188,1.600 holding nothing
+18:58:58 castle: seed 3508293, LateMedieval
+18:58:59 host: state Playing players 2 local -20.500,1.498,-36.000 holding nothing
+18:59:00 client: state Playing players 2 local -24.000,1.500,-32.500 holding nothing
+18:59:06 provoked 20 guards toward (-20.50, 1.50, -36.00)
+TOTAL guards 20 observed_s 1798.9 stuck_s 451.0 parked_s 0.0 nodest_s 0.0 moving_s 1347.9 standing_s 451.0 now Patrolling=19 Investigating=1
+guard -14240 stuck 0.0 parked 0.0 nodest 0.0 moving 89.9
+guard -14370 stuck 1.6 parked 0.0 nodest 0.0 moving 88.3
+guard -14500 stuck 1.8 parked 0.0 nodest 0.0 moving 88.2
+guard -14630 stuck 0.0 parked 0.0 nodest 0.0 moving 89.9
+guard -14760 stuck 1.7 parked 0.0 nodest 0.0 moving 88.3
+guard -14890 stuck 0.0 parked 0.0 nodest 0.0 moving 89.9
+guard -15028 stuck 0.0 parked 0.0 nodest 0.0 moving 89.9
+guard -15158 stuck 0.0 parked 0.0 nodest 0.0 moving 89.9
+guard -15296 stuck 3.3 parked 0.0 nodest 0.0 moving 86.6
+guard -15434 stuck 0.0 parked 0.0 nodest 0.0 moving 89.9
+guard -15572 stuck 0.0 parked 0.0 nodest 0.0 moving 89.9
+guard -15706 stuck 63.2 parked 0.0 nodest 0.0 moving 26.8
+guard -15840 stuck 72.9 parked 0.0 nodest 0.0 moving 17.0
+guard -15974 stuck 3.3 parked 0.0 nodest 0.0 moving 86.7
+guard -16108 stuck 72.9 parked 0.0 nodest 0.0 moving 17.0
+guard -16242 stuck 66.4 parked 0.0 nodest 0.0 moving 23.5
+guard -16376 stuck 0.0 parked 0.0 nodest 0.0 moving 89.9
+guard -16514 stuck 0.0 parked 0.0 nodest 0.0 moving 89.9
+guard -16648 stuck 79.6 parked 0.0 nodest 0.0 moving 10.4
+guard -16782 stuck 84.3 parked 0.0 nodest 0.0 moving 5.6
+19:00:38 state after: state Playing players 2 local -20.500,1.500,-36.000 holding nothing
+client log error lines: 2
+19:00:39 cleaning up
+19:00:43 left ProjectSettings/ProjectSettings.asset: its content changed

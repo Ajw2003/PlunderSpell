@@ -282,6 +282,7 @@ namespace UnityEngine
     public static class Mathf
     {
         public const float PI = 3.14159265358979f;
+        public static float Atan2(float y, float x) => (float)System.Math.Atan2(y, x);
         public const float Epsilon = 1.1920929E-07f;
         public const float Infinity = float.PositiveInfinity;
         public const float NegativeInfinity = float.NegativeInfinity;
@@ -525,6 +526,19 @@ namespace UnityEngine
                     for (int j = 0; j < 4; j++) result[i, j] = (float)a[i, j + 4];
                 return result;
             }
+        }
+    }
+}
+
+namespace UnityEngine
+{
+    public static class ColorUtility
+    {
+        /// <summary>"RRGGBB" for a colour, as Unity's does (no leading #, alpha dropped).</summary>
+        public static string ToHtmlStringRGB(Color color)
+        {
+            int R(float v) => Mathf.Clamp(Mathf.RoundToInt(v * 255f), 0, 255);
+            return R(color.r).ToString("X2") + R(color.g).ToString("X2") + R(color.b).ToString("X2");
         }
     }
 }

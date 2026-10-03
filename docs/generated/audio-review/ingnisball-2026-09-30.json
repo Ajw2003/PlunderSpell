@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "note": "The owner's call on 2026-09-30: use their own IngnisBall.wav for the Ignis cast and the fireball's flight.",
+  "decisions": [
+    {"sound": "sfx_spell_ignis_cast", "recipe": "lib:ayden-own/IngnisBall.wav", "decision": "keep"},
+    {"sound": "sfx_spell_ignis_travel_loop", "recipe": "lib:ayden-own/IngnisBall.wav xfade=0.4", "decision": "keep"}
+  ]
+}

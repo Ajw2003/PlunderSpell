@@ -146,7 +146,7 @@ namespace Plunderspell.Tests.Integration
         public void Test_AlarmEscalationToHueCry()
         {
             var go = Track(new GameObject("Alarm"));
-            var alarm = go.AddComponent<AlarmFSMManager>();
+            var alarm = go.AddComponent<EnemyDirector>();
 
             // 6 noise events at strength 1.0 (weight 15) → 90 ≥ 80 → HueAndCry, latched.
             for (int i = 0; i < 6; i++)

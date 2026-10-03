@@ -38,6 +38,12 @@ namespace Interfaces
         void Stun(float duration);
     }
 
+    /// <summary>A velocity-driven body (a guard) that cannot take an impulse; it is knocked back by a burst of speed instead.</summary>
+    public interface IShovable
+    {
+        void Shove(UnityEngine.Vector3 metres);
+    }
+
     /// <summary>Something Ignis can set alight — damage over time rather than a single hit.</summary>
     public interface IIgnitable
     {

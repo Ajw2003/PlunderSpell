@@ -19,6 +19,8 @@
 # runtime setting off and ProjectSettings.asset's preloadedAssets line as it was
 # (docs/4-systems/net.md, "Testing it").
 set -uo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/settings_restore.sh"
 
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
@@ -49,26 +51,8 @@ cleanup() {
     fi
     unity command editor_stop "${cli[@]}" >/dev/null 2>&1 || true
     unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":false}' --confirm true "${cli[@]}" >/dev/null 2>&1 || true
-    # The Pipeline build adds the Input System actions to preloadedAssets; put the line back.
-    # Only touched when that line is there: rewriting the file otherwise changes its line endings.
-    if grep -q 'fileID: -944628639613478452, guid: e05f63c218fb0e54f8c41ecaf9e2ef10' ProjectSettings/ProjectSettings.asset; then
-        python -c "
-import re, sys
-p = sys.argv[1]
-text = open(p, newline='').read()
-text = re.sub(r'  preloadedAssets:(\r?\n)  - \{fileID: -944628639613478452, guid: e05f63c218fb0e54f8c41ecaf9e2ef10, type: 3\}', r'  preloadedAssets: []', text)
-open(p, 'w', newline='').write(text)
-" ProjectSettings/ProjectSettings.asset
-    fi
-    # Toggling the setting makes Unity rewrite these files with other line endings and nothing else;
-    # put back only a file whose content git sees as unchanged, so a real edit is never lost.
-    for settings in ProjectSettings/ProjectSettings.asset ProjectSettings/Packages/com.unity.pipeline/RuntimePipelineConfig.json; do
-        if ! git diff --quiet -- "$settings" 2>/dev/null; then
-            log "left $settings: its content changed"
-        elif [ -n "$(git status --porcelain -- "$settings")" ]; then
-            git checkout -- "$settings"
-        fi
-    done
+    # The Pipeline build rewrites ProjectSettings; put back the byte-exact copy saved at the start.
+    settings_restore
 }
 trap cleanup EXIT
 
@@ -82,6 +66,8 @@ if [ "$playing" != "False False" ]; then
     trap - EXIT
     exit 1
 fi
+
+settings_save || { log "FAIL cannot save ProjectSettings before building"; trap - EXIT; exit 1; }
 
 # ---------------------------------------------------------------------------------------------
 # The client build.

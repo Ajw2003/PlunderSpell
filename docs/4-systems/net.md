@@ -271,3 +271,9 @@ Use them for what one PC on localhost cannot show: Steam's relay, lobby, invite 
 and real network delay. The owner works alone, so a two-machine check must be driven by the agent
 (a Claude Code session on each PC, or one reaching both), not by the owner at two keyboards.
 Nothing automates it yet; #170 tracks building that.
+
+## Chatter RPCs
+
+`PlayerChatterRelay.ReportChatter` (`[ServerRpc]`, owner only) sends transcript (capped at 200 chars),
+volume as a `byte`, and mouth position to the host, which resolves it and answers the speaker with the
+`[TargetRpc]` `TellSpeaker` for the caption. Same owner -> server route as `SpellCastingSystem.ServerCast`.

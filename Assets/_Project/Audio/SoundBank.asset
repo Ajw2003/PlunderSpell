@@ -1,0 +1,4893 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 391734f2d7c78eb4ebde265e60d8257c, type: 3}
+  m_Name: SoundBank
+  m_EditorClassIdentifier: Plunderspell.Audio::Plunderspell.Audio.SoundBank
+  _mixer: {fileID: 24100000, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+  _entries:
+  - Name: ui_button_hover
+    Clips:
+    - {fileID: 8300000, guid: 3bdf3bd1866311e4293f5ab1be480a55, type: 3}
+    - {fileID: 8300000, guid: bca82bdd743aad84a849c9c3366d2bff, type: 3}
+    - {fileID: 8300000, guid: c83f8af030eed19419c17671280a9d99, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_button_click
+    Clips:
+    - {fileID: 8300000, guid: 3b1edbe0b4bffa94dbf4ca2f1d54aac5, type: 3}
+    - {fileID: 8300000, guid: 6259c3e50ff19b742870c9df0fd701e7, type: 3}
+    - {fileID: 8300000, guid: b108ec36021154e43af4883900bd0c9d, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_button_back
+    Clips:
+    - {fileID: 8300000, guid: dab285dd858d68648b4966e2b7991570, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_button_denied
+    Clips:
+    - {fileID: 8300000, guid: 507b0355e40d44e4c87e02ae9cce859c, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_screen_open
+    Clips:
+    - {fileID: 8300000, guid: c6e426b052c1f564c9c82e14c26f37a6, type: 3}
+    - {fileID: 8300000, guid: b167671fe820e5c40b964ef9fed88f8b, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_screen_close
+    Clips:
+    - {fileID: 8300000, guid: 2caad1a5ee8fa0d4288af0f181abdc64, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_slider_tick
+    Clips:
+    - {fileID: 8300000, guid: 8cb5a6a16040e814f95e286769f145fe, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_toggle_on
+    Clips:
+    - {fileID: 8300000, guid: 02934e6eb8644c441a4a1a88a5f115c3, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_toggle_off
+    Clips:
+    - {fileID: 8300000, guid: c21671a16ca94fe45a035330d4af0d37, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_keybind_listen
+    Clips:
+    - {fileID: 8300000, guid: 754f9f8bb98c0cc46881801612137409, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_keybind_set
+    Clips:
+    - {fileID: 8300000, guid: e7f2d2eceabf81d43959843f94235688, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_error
+    Clips:
+    - {fileID: 8300000, guid: 41715ed57715ac34da00de9b9003fb8d, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_pause_open
+    Clips:
+    - {fileID: 8300000, guid: e469545efbbe36743a3bdcafb86d9ae0, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_pause_close
+    Clips:
+    - {fileID: 8300000, guid: 207b35a88d76c7644a0ba124a42ca4d0, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_lobby_join
+    Clips:
+    - {fileID: 8300000, guid: 857bc4ee5c3d2cc48abc67b60b5d8cd7, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_lobby_leave
+    Clips:
+    - {fileID: 8300000, guid: 2e31c3e6413164849821dd6fa7023855, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_invite_received
+    Clips:
+    - {fileID: 8300000, guid: 867e605c8dea73e4691b87027aed9393, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_ready
+    Clips:
+    - {fileID: 8300000, guid: d41c54118722fd64c990271f47186f6e, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_hit_confirm
+    Clips:
+    - {fileID: 8300000, guid: caf37e84c23f9444d88b9601403db61e, type: 3}
+    - {fileID: 8300000, guid: eae82c3b108cdb0478d615f6f1ee8078, type: 3}
+    - {fileID: 8300000, guid: 208c1be2de6f3db488969e17b7e5af2c, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_hit_friendly
+    Clips:
+    - {fileID: 8300000, guid: 566c7b19a6d64294587234281c856409, type: 3}
+    - {fileID: 8300000, guid: 2a57298cb43fa4347b0c98f76695c06f, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: ui_kill_confirm
+    Clips:
+    - {fileID: 8300000, guid: d42cea4e52890ab438717cba4685a12b, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_voice_listen_open
+    Clips:
+    - {fileID: 8300000, guid: 67a3d35e2c0d3f74a8188c1bbd26d64d, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_voice_listen_close
+    Clips:
+    - {fileID: 8300000, guid: 58ce98d3ffb819542ba6cb709babd6ab, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_voice_teammate_tell
+    Clips:
+    - {fileID: 8300000, guid: c900c88b4c800d14d9991152c9fcdc3e, type: 3}
+    - {fileID: 8300000, guid: 13168ac492d06744890539969917b04d, type: 3}
+    - {fileID: 8300000, guid: ede9135a9c2abf64697c5fa4bb40f5dc, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_fizzle
+    Clips:
+    - {fileID: 8300000, guid: 6517cfa52876e5a4bacaef30e54a35c7, type: 3}
+    - {fileID: 8300000, guid: 0df113f48f038b84fa35509cb4a12d58, type: 3}
+    - {fileID: 8300000, guid: 2ba49f4df8ecc984eb935d3fccdfee53, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_no_mana
+    Clips:
+    - {fileID: 8300000, guid: 20c7d545c2be2e848b4c2074cfec9b3e, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_mana_restored
+    Clips:
+    - {fileID: 8300000, guid: a22e400267b72d54eafe87477daa8cf3, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_ignis_cast
+    Clips:
+    - {fileID: 8300000, guid: 747f89788b284d44e92963069bda5c09, type: 3}
+    - {fileID: 8300000, guid: 022bf7bac151878419fd755b7ab66b0b, type: 3}
+    - {fileID: 8300000, guid: 8c5738b806bfed24f953dacec3b9188e, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_ignis_travel_loop
+    Clips:
+    - {fileID: 8300000, guid: 0a6e248f61a4aea4b8c98d9f471b5ffe, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_ignis_impact
+    Clips:
+    - {fileID: 8300000, guid: c117f5c90329c614f9b3381773af45b9, type: 3}
+    - {fileID: 8300000, guid: 10c30f5f6b86c4c4f8ac4f844076502e, type: 3}
+    - {fileID: 8300000, guid: 50e29a6e6423f9f4cba7e182943cb532, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_ignis_misfire
+    Clips:
+    - {fileID: 8300000, guid: 3f457bace39f2c24aae5cfa5aad20503, type: 3}
+    - {fileID: 8300000, guid: 760609c4736bbbf4ea99701e84972592, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_frango_cast
+    Clips:
+    - {fileID: 8300000, guid: b9fc0d2596d81b747b85a28dfb6b2273, type: 3}
+    - {fileID: 8300000, guid: ca327454101ad2748959bf36e21a330e, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_frango_shatter_stone
+    Clips:
+    - {fileID: 8300000, guid: 58cdd838d69afa04195b303ff2817f4e, type: 3}
+    - {fileID: 8300000, guid: 3e6b6c2e578d7ab4ea6c179f8291985d, type: 3}
+    - {fileID: 8300000, guid: e34452a35b2fd9b428d55ea7f18cf7fb, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_frango_shatter_wood
+    Clips:
+    - {fileID: 8300000, guid: d93a533747a510d439056aff0ba49106, type: 3}
+    - {fileID: 8300000, guid: e7657ff19b122f245be1f458f41f8e4f, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_frango_shatter_metal
+    Clips:
+    - {fileID: 8300000, guid: 4bad9d0b41591aa40ab46b29b9492741, type: 3}
+    - {fileID: 8300000, guid: 558bd427cf6df724e83054e63729dd41, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_frango_misfire
+    Clips:
+    - {fileID: 8300000, guid: c43ddb3e92422b34b821d142fb913e11, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_levo_cast
+    Clips:
+    - {fileID: 8300000, guid: 73c3cb59d4760a24fa9543130fd15231, type: 3}
+    - {fileID: 8300000, guid: f45dc31edebaafb4e998a409b5204304, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_levo_hold_loop
+    Clips:
+    - {fileID: 8300000, guid: db030ccac54b3d240bf38fe61608a933, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_levo_release
+    Clips:
+    - {fileID: 8300000, guid: 945f4a87c7153e8448622a293c260970, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_levo_misfire
+    Clips:
+    - {fileID: 8300000, guid: 2732aded0562c9947a033187f91b8b53, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_aurumvoco_cast
+    Clips:
+    - {fileID: 8300000, guid: 2b7576b38a0de0b4f83dfa5f98440d31, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_aurumvoco_reveal_loop
+    Clips:
+    - {fileID: 8300000, guid: 2659ce12c01699b42a167b694e0ddd0c, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_aurumvoco_end
+    Clips:
+    - {fileID: 8300000, guid: 63f7f1051a8bff84cb1c4ad991d246c9, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_aurumvoco_misfire
+    Clips:
+    - {fileID: 8300000, guid: 88ae3626046ddba459e93d06916853fc, type: 3}
+    - {fileID: 8300000, guid: f60e93eaa74a554448a0a2357ba62e6e, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 4
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_velox_cast
+    Clips:
+    - {fileID: 8300000, guid: 314977169cf93e64fba78f0c91ba22cc, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_velox_dash
+    Clips:
+    - {fileID: 8300000, guid: e607e1017887dfe4d87d3885210839d4, type: 3}
+    - {fileID: 8300000, guid: 66baef46f9a8a62449023714d1e26875, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_velox_misfire
+    Clips:
+    - {fileID: 8300000, guid: b3ecc43df9f718a43831e9deb38eec35, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_saltus_cast
+    Clips:
+    - {fileID: 8300000, guid: 11b6f13f6d2c3284fbd1fbd344c21194, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_saltus_launch
+    Clips:
+    - {fileID: 8300000, guid: 2d5ee0d47e1dd98448b662478fdb5fab, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_saltus_land_slam
+    Clips:
+    - {fileID: 8300000, guid: 4b7923e1cb4ddf24ca4b5de530fe2150, type: 3}
+    - {fileID: 8300000, guid: 39dfe0d4a0c682244b4888abad514439, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_saltus_misfire
+    Clips:
+    - {fileID: 8300000, guid: 7b42641238fff184489fc81919117761, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_somnus_cast_soft
+    Clips:
+    - {fileID: 8300000, guid: dd1fe9c9365f15745baf306dd186960e, type: 3}
+    - {fileID: 8300000, guid: 0f77eeba4b6e22c4eb7e4280840cd92f, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_somnus_cast_loud
+    Clips:
+    - {fileID: 8300000, guid: 1afbb9874c4552e4c8097319b73a022d, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_somnus_apply
+    Clips:
+    - {fileID: 8300000, guid: 91a0d6b46e13b87428f837d37f024ab9, type: 3}
+    - {fileID: 8300000, guid: 335daad686528e940b42541c27500350, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_somnus_misfire
+    Clips:
+    - {fileID: 8300000, guid: 03d45c577eb8d8c4f92440ff4e4c370e, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_porta_cast
+    Clips:
+    - {fileID: 8300000, guid: 441baf91099c7a34286b2779a4243b41, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_porta_open
+    Clips:
+    - {fileID: 8300000, guid: a216dceee84d5334fb770af7af0e13ec, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_porta_loop
+    Clips:
+    - {fileID: 8300000, guid: c167954291a7de34195d6099c134ea44, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_spell_porta_misfire
+    Clips:
+    - {fileID: 8300000, guid: 443fb5f39aa8a404880d28e253a50f65, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_spell_misfire
+    Clips:
+    - {fileID: 8300000, guid: 656e41a5ecf7dff418a1bd037d4f802f, type: 3}
+    - {fileID: 8300000, guid: c2f306361fd36b64c8021314784dabbc, type: 3}
+    - {fileID: 8300000, guid: af7e96ac6a088da4d84fdab7d1f8cf0b, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_status_burning_loop
+    Clips:
+    - {fileID: 8300000, guid: 4b0ebcc7c44a0e74eb6f6dd2b801b482, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_status_burning_out
+    Clips:
+    - {fileID: 8300000, guid: 71f054b2200711148bfede532f7a9a53, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_status_asleep_player_loop
+    Clips:
+    - {fileID: 8300000, guid: 1178b17141ddd0445903a93964a8668f, type: 3}
+    - {fileID: 8300000, guid: 4579c09360a89a642afbf215c4d3d6db, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_status_stagger
+    Clips:
+    - {fileID: 8300000, guid: 49b9f8f4519aaeb499848f9506c05d49, type: 3}
+    - {fileID: 8300000, guid: 21e958afc60c4d049b27eb99478c75f4, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_status_levitating_loop
+    Clips:
+    - {fileID: 8300000, guid: 96066590be3c1d34cb78f468e62ae752, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_step_stone
+    Clips:
+    - {fileID: 8300000, guid: 252879b329cc48844876f670c8f58f8d, type: 3}
+    - {fileID: 8300000, guid: ff19f0b9cd9f7b94ba6053e663436eb8, type: 3}
+    - {fileID: 8300000, guid: 582f5337021fe9c48b5af3d42036713a, type: 3}
+    - {fileID: 8300000, guid: aa302f60fdb6946428dac32a21b57f8d, type: 3}
+    - {fileID: 8300000, guid: ca2d2652fa9ba874a860d0ba7a9df52d, type: 3}
+    - {fileID: 8300000, guid: fcc728b6bc177744cacb04f89a26c2ab, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_step_wood
+    Clips:
+    - {fileID: 8300000, guid: 6a474b6f71778ed4287e435ce282f7c1, type: 3}
+    - {fileID: 8300000, guid: f9cbcf93c932ae24da4a8569fea47733, type: 3}
+    - {fileID: 8300000, guid: 2c447f2566f50c047a9ec01fb830b851, type: 3}
+    - {fileID: 8300000, guid: bb998ff572519714180a42fd182e5a2c, type: 3}
+    - {fileID: 8300000, guid: 9b60ae317a0d24c439f98c69f30b4050, type: 3}
+    - {fileID: 8300000, guid: 00c4f0fa83b18b843b48b3195d23e007, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_step_earth
+    Clips:
+    - {fileID: 8300000, guid: 4f76a9ee683974d4997e631c6540ac02, type: 3}
+    - {fileID: 8300000, guid: 46753126eead427478037876853aad5e, type: 3}
+    - {fileID: 8300000, guid: 78017d1aa63a2c64e8cfd34149090656, type: 3}
+    - {fileID: 8300000, guid: acbc10332ab7f1e46b5af07c9de3968d, type: 3}
+    - {fileID: 8300000, guid: 2ce6728bbf20ee54885e22d6f682b142, type: 3}
+    - {fileID: 8300000, guid: 84f70e19fae46e940820a1643289a27c, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_step_rushes
+    Clips:
+    - {fileID: 8300000, guid: 19736c202e31f4e4e8d0ca3f430bd80c, type: 3}
+    - {fileID: 8300000, guid: 56879d7e57b61cd41be5478839d47577, type: 3}
+    - {fileID: 8300000, guid: 499ad90a95f551749be3358e8adf95c9, type: 3}
+    - {fileID: 8300000, guid: 8e8c4a2eefbd7814593388ba377c8d23, type: 3}
+    - {fileID: 8300000, guid: e574f342af1e97747a17288268aac3aa, type: 3}
+    - {fileID: 8300000, guid: 967eaffa0a8508f4faa346773110ac91, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_step_tile
+    Clips:
+    - {fileID: 8300000, guid: cbd3f1c7f7343c44ca26381c69708330, type: 3}
+    - {fileID: 8300000, guid: 3db592923f19e914b882a49d0af9a76d, type: 3}
+    - {fileID: 8300000, guid: 3a3e814bc1b3eea4b9381b1f42d93bc1, type: 3}
+    - {fileID: 8300000, guid: d50596db7f411a744a65e0e56a475ff5, type: 3}
+    - {fileID: 8300000, guid: 12a2ed89de357ce4e99182b697aedd6b, type: 3}
+    - {fileID: 8300000, guid: 2668e21914d6d9248a5909724153358d, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_step_metal
+    Clips:
+    - {fileID: 8300000, guid: 59abb6f0051a5ef4a99c17e7142230bf, type: 3}
+    - {fileID: 8300000, guid: 571b28c380a55e34aab9294c8e38071b, type: 3}
+    - {fileID: 8300000, guid: 48143fa0ae85e814482f4b98a738a267, type: 3}
+    - {fileID: 8300000, guid: bb3f5c8d40655e146af67905796724f4, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_step_water
+    Clips:
+    - {fileID: 8300000, guid: 58ede9fe442c7404bab1d06a5047f09f, type: 3}
+    - {fileID: 8300000, guid: 3b3776dd51824a74ba3514c786625491, type: 3}
+    - {fileID: 8300000, guid: 4a83358a9b5d88b40b1445dc8960579a, type: 3}
+    - {fileID: 8300000, guid: a6120086782bb4946adaf38f95058d69, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_robe_move
+    Clips:
+    - {fileID: 8300000, guid: 6b44f9a8247b0fe4fbd1bcae4a210f07, type: 3}
+    - {fileID: 8300000, guid: c10cccfa8d3b1454a807aefa7a280d2f, type: 3}
+    - {fileID: 8300000, guid: 5722d72e98704c04ab18e7eee907dcb2, type: 3}
+    - {fileID: 8300000, guid: a00d570456a74bf40b71bd764b48d015, type: 3}
+    - {fileID: 8300000, guid: 9c148d9e634e536448cc3b2958debc84, type: 3}
+    - {fileID: 8300000, guid: 7faf007ff4f3e4e4096c0968d4641f82, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_player_jump
+    Clips:
+    - {fileID: 8300000, guid: 55539f35b1e959745bd48cb78719b454, type: 3}
+    - {fileID: 8300000, guid: 1f71973b524fbe240ba2614016fb6e6f, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_player_land
+    Clips:
+    - {fileID: 8300000, guid: d581078951f037744834099b941125f4, type: 3}
+    - {fileID: 8300000, guid: c094694eaa076414181590cdf9a7ba32, type: 3}
+    - {fileID: 8300000, guid: 6679cb6d877617046a5ddd2c1b525c65, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_player_land_heavy
+    Clips:
+    - {fileID: 8300000, guid: c5c14cd3750cc9247b126b7ca70ea4b3, type: 3}
+    - {fileID: 8300000, guid: 07b7723812f7026448596c4303d6825f, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_player_dodge
+    Clips:
+    - {fileID: 8300000, guid: 08444558492f826498ac970be45dc587, type: 3}
+    - {fileID: 8300000, guid: 3e204d9349ba09747a7dc6174bbdee68, type: 3}
+    - {fileID: 8300000, guid: 4fecec9e3b3edbd4eba5b01137a73582, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_player_hurt
+    Clips:
+    - {fileID: 8300000, guid: e0ef01b50e70a3e4abc151c7fa4cf3ef, type: 3}
+    - {fileID: 8300000, guid: c3f0532ca11a31e4b9afd11b26c0c1cf, type: 3}
+    - {fileID: 8300000, guid: e770c1f41e8eace43bad1afafc6e03b2, type: 3}
+    - {fileID: 8300000, guid: 81e312fee471ee94d9e01e0ab3d8e046, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_player_hurt_heavy
+    Clips:
+    - {fileID: 8300000, guid: e1d200c8f2398124e8b91564a1486e77, type: 3}
+    - {fileID: 8300000, guid: 1308ef5e5b5084f499ec2ab915267585, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_player_heartbeat_loop
+    Clips:
+    - {fileID: 8300000, guid: 4fcdbdc524697f5478ca42971729f265, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_player_downed
+    Clips:
+    - {fileID: 8300000, guid: 98ede45a107f58247a843ceaa0639f92, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_player_death
+    Clips:
+    - {fileID: 8300000, guid: 839bc3dafe5861e4595362938d7ed8c2, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_player_carried_loop
+    Clips:
+    - {fileID: 8300000, guid: d393309ff12b4bf45b45644f268ab9d7, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_grab_beam_start
+    Clips:
+    - {fileID: 8300000, guid: 9de77b41392469142bc974c4a08aaa1d, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_grab_beam_loop
+    Clips:
+    - {fileID: 8300000, guid: 894702697c58de7459c6243f1c8cf57d, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_grab_beam_release
+    Clips:
+    - {fileID: 8300000, guid: 10e1f6f75057af64ba5023d3f7b3fd48, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_grab_pickup_light
+    Clips:
+    - {fileID: 8300000, guid: cc17579d643effb4799c7e4076fc4463, type: 3}
+    - {fileID: 8300000, guid: 2508146ea639bba438534f642d629ca5, type: 3}
+    - {fileID: 8300000, guid: 7eed785c10ec74f419f0e345f7cef4ce, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_grab_pickup_heavy
+    Clips:
+    - {fileID: 8300000, guid: ee9c1454cd694354b9b381f4d68dcb92, type: 3}
+    - {fileID: 8300000, guid: 63c70a67c7bbea04ab5e0965e20de1a7, type: 3}
+    - {fileID: 8300000, guid: 24e41329289c1fe44b62c9731e83b4a8, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_carry_strain_loop
+    Clips:
+    - {fileID: 8300000, guid: f1213fcac9bc1aa48945cbab75880bd8, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_throw_whoosh_light
+    Clips:
+    - {fileID: 8300000, guid: a75afa48508de334c87e29a54e169f1f, type: 3}
+    - {fileID: 8300000, guid: f0cb1f68e4f53cc44b495072aea9770c, type: 3}
+    - {fileID: 8300000, guid: f090e0c5d2255da439a97d820299dadf, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_throw_whoosh_heavy
+    Clips:
+    - {fileID: 8300000, guid: 9ef4efdef99cf984a80744d03748918f, type: 3}
+    - {fileID: 8300000, guid: 1ce541be2fce2f840a0306bbe1401438, type: 3}
+    - {fileID: 8300000, guid: 77b7dc2804f35f24d98d7a0f314c02b1, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_stone_light
+    Clips:
+    - {fileID: 8300000, guid: 26e7f24ba805db247b78c0fb76e6730d, type: 3}
+    - {fileID: 8300000, guid: b7c5f07264e6ac04f81015a0ff408139, type: 3}
+    - {fileID: 8300000, guid: 4b61f5e2764e83746a225f5b2ff655dd, type: 3}
+    - {fileID: 8300000, guid: ddff33f25631fd64394718ceca4a44f5, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_stone_heavy
+    Clips:
+    - {fileID: 8300000, guid: fd30a5e5f648bd24f9f5118ad91e1661, type: 3}
+    - {fileID: 8300000, guid: a5316c4b6a149f6449cb592dab96e741, type: 3}
+    - {fileID: 8300000, guid: 82053e9ee59c48d4aaa0f36f5e619fcd, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_wood_light
+    Clips:
+    - {fileID: 8300000, guid: 1afeeee08b81a0f48bedb1343887967b, type: 3}
+    - {fileID: 8300000, guid: 1f6c98a1d84ee244ab25e8a66f7ad1bb, type: 3}
+    - {fileID: 8300000, guid: 4dd7bb6ac43c85341a1db9f46f10e319, type: 3}
+    - {fileID: 8300000, guid: fbb49af5eafbe994abe8096a5a5633c5, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_wood_heavy
+    Clips:
+    - {fileID: 8300000, guid: 916a3368dbfa2f74c835f9a70350f284, type: 3}
+    - {fileID: 8300000, guid: 47cc09f048d33ff41a54dfa3ddd7e4c3, type: 3}
+    - {fileID: 8300000, guid: 5c7b97f29cbaff745a19a0637d9a1b1f, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_metal_light
+    Clips:
+    - {fileID: 8300000, guid: b53333b9e00e29b4990d2187def10efd, type: 3}
+    - {fileID: 8300000, guid: ad2ecbb35db550347b7ee0f6d47c2445, type: 3}
+    - {fileID: 8300000, guid: 62bedacf6de4f3141910f364d0878f62, type: 3}
+    - {fileID: 8300000, guid: cced7b2899ad2e0469de216081d1f151, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_metal_heavy
+    Clips:
+    - {fileID: 8300000, guid: e0feaf7cb1609a743938c9ec1d3d54ea, type: 3}
+    - {fileID: 8300000, guid: 96e04920b3514f84499f040e8d8cd5f1, type: 3}
+    - {fileID: 8300000, guid: 3bd96cf9ee45da4428b1075d2edb8fc6, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_bronze_light
+    Clips:
+    - {fileID: 8300000, guid: 5522a8a224ae9b142982426c6bbb4c0a, type: 3}
+    - {fileID: 8300000, guid: 87c12ba6839ccfa48a3f042f2d6175b0, type: 3}
+    - {fileID: 8300000, guid: 3a32512f3b7c09948a92e31bfc1936f2, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_bronze_heavy
+    Clips:
+    - {fileID: 8300000, guid: 02d9242e34dbc764294c614727efb81d, type: 3}
+    - {fileID: 8300000, guid: 48906d5486109fd4a9837dd97ce98244, type: 3}
+    - {fileID: 8300000, guid: 1c818865ebed5d14eb6db6e1a37f404e, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_gold_light
+    Clips:
+    - {fileID: 8300000, guid: 4dbe115e9359305439a27651b43821e7, type: 3}
+    - {fileID: 8300000, guid: 2609872e4c7556446be0ed34a32af683, type: 3}
+    - {fileID: 8300000, guid: 2716d0053ba3f784fa84953ab104a366, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_gold_heavy
+    Clips:
+    - {fileID: 8300000, guid: 9673dc4c0f302c94596947d0ecad46e4, type: 3}
+    - {fileID: 8300000, guid: ef6cc565b9ea2aa44a7c5ef9bd9c2ef1, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_ceramic_light
+    Clips:
+    - {fileID: 8300000, guid: 22bb670fecf539c449eabdb90e450bff, type: 3}
+    - {fileID: 8300000, guid: 2a252a9d7f8b2dd49aec592d1ee2cfcf, type: 3}
+    - {fileID: 8300000, guid: de03654beaa2fe54a8c36652b649cb27, type: 3}
+    - {fileID: 8300000, guid: d275028a6c222d043a59476339efafaa, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_glass_light
+    Clips:
+    - {fileID: 8300000, guid: daa61065a7ce6b141a83408ff34a5d9e, type: 3}
+    - {fileID: 8300000, guid: 5824a451ebe27fc43b77552f094902a4, type: 3}
+    - {fileID: 8300000, guid: c472b05ad27be2d41a4a2c21e4a3f0c6, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_cloth
+    Clips:
+    - {fileID: 8300000, guid: bf946236f1c605b4ea3478e4ee4f05d7, type: 3}
+    - {fileID: 8300000, guid: 6b7bbc5c8bf0e154abfb2fd01f197493, type: 3}
+    - {fileID: 8300000, guid: 67bb17afa47aa524f868a581830c74ed, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_book
+    Clips:
+    - {fileID: 8300000, guid: 7a7f905db415fec4f8b346754ff4f7e4, type: 3}
+    - {fileID: 8300000, guid: 906f0fc4209ec0448a1dc5df9c7cc022, type: 3}
+    - {fileID: 8300000, guid: 7623813820948714f974f774580dacc3, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_body
+    Clips:
+    - {fileID: 8300000, guid: 1e34c877d6eec8b4bb5dc6673cc19f34, type: 3}
+    - {fileID: 8300000, guid: 7c9ae774cc8367942ab96d2aad9ac1b7, type: 3}
+    - {fileID: 8300000, guid: d9544b513e3e2f54bb292cb93366b19c, type: 3}
+    - {fileID: 8300000, guid: e682a1af3df1f9d438b8aa384c2f2fa5, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_impact_coins
+    Clips:
+    - {fileID: 8300000, guid: 126a95218b41a88469b7cf3afd5b6f12, type: 3}
+    - {fileID: 8300000, guid: a4ee1e4b814308b40bde39422b13d568, type: 3}
+    - {fileID: 8300000, guid: 8453eeac6bc7d2147a3a6da335b0fdf3, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_scrape_stone_loop
+    Clips:
+    - {fileID: 8300000, guid: 20aaa540fb15d8b44a850edb94ff6d80, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_scrape_wood_loop
+    Clips:
+    - {fileID: 8300000, guid: b8e1bac2bd17e4840a846c4c99b699ea, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_scrape_metal_loop
+    Clips:
+    - {fileID: 8300000, guid: 5643336ec0412074cbc3cfdd2507ae5a, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_roll_loop
+    Clips:
+    - {fileID: 8300000, guid: 559602db2581bfe4fa225f6629240a24, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_break_ceramic
+    Clips:
+    - {fileID: 8300000, guid: 248d6904efaf1ca47a3d501d7e0a18d0, type: 3}
+    - {fileID: 8300000, guid: 66a614c7cef2f8d428e6608a49dd26c4, type: 3}
+    - {fileID: 8300000, guid: 70db8c945d055024d862589024c7f172, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_break_glass
+    Clips:
+    - {fileID: 8300000, guid: c2f51a04c02e02b4dab0e265bba200e0, type: 3}
+    - {fileID: 8300000, guid: 2eadc045637e68741b0f03c3744a9852, type: 3}
+    - {fileID: 8300000, guid: de9165c302ee2204ab2e209d34c94601, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_break_glass_large
+    Clips:
+    - {fileID: 8300000, guid: 881c11cddd3687247bb8eeaf52b7e9d7, type: 3}
+    - {fileID: 8300000, guid: 97fd07462ac149a4ebeb9b1daaeeecf0, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 4
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_break_wood
+    Clips:
+    - {fileID: 8300000, guid: 9b3c113e131a19640b29caca7e611a8d, type: 3}
+    - {fileID: 8300000, guid: 7fad68ea8f24d0247a638d59f257010e, type: 3}
+    - {fileID: 8300000, guid: e41f0873f3e44054b873c61d3d7b6afa, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_break_book
+    Clips:
+    - {fileID: 8300000, guid: b21dc3bb15b2a1946bd174c340d718f2, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_break_liquid
+    Clips:
+    - {fileID: 8300000, guid: 9ab1bc0b2f4d9ab4ab8bc16e4b2fd837, type: 3}
+    - {fileID: 8300000, guid: a233bd2455f3b4146b14877d6ea52a5b, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: phys_coin_spill
+    Clips:
+    - {fileID: 8300000, guid: 401a1e1e34227c145aade89f7d4e119b, type: 3}
+    - {fileID: 8300000, guid: afba4a0d3cf71a14ab07617c97c04e7d, type: 3}
+    - {fileID: 8300000, guid: 5e7e30295146fa64088e591989988bc2, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_loot_value_lost
+    Clips:
+    - {fileID: 8300000, guid: 29a60b7914ab0034196e74c1541d77aa, type: 3}
+    - {fileID: 8300000, guid: 96db940003bb1da49b5671f1da9b3874, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_loot_highlight
+    Clips:
+    - {fileID: 8300000, guid: 56f32b978bed3714982afb87de17db49, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_loot_pickup_gold
+    Clips:
+    - {fileID: 8300000, guid: 1a8c4e633837bca4293422c6589069fd, type: 3}
+    - {fileID: 8300000, guid: e29a22887129f434bb66c3d6128916f6, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blade_swing
+    Clips:
+    - {fileID: 8300000, guid: d20d7c45e874cae48bc281d44781db18, type: 3}
+    - {fileID: 8300000, guid: 69fb5c950cf841b4b80929ea96c37748, type: 3}
+    - {fileID: 8300000, guid: fb831abcb2bccc342a7ace56a907833b, type: 3}
+    - {fileID: 8300000, guid: 233901c6edddbdb4c957be491dc1f2e9, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blade_hit_flesh
+    Clips:
+    - {fileID: 8300000, guid: a9285600ac5fc654b842fa7d69e65102, type: 3}
+    - {fileID: 8300000, guid: 59baaabbe44a746458de1ac00a54c605, type: 3}
+    - {fileID: 8300000, guid: 71727fe14f6da384cbc75c3cbca05583, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blade_hit_armour
+    Clips:
+    - {fileID: 8300000, guid: ba41325b8254e234f90797276cfe6348, type: 3}
+    - {fileID: 8300000, guid: 2005d764b0591224588119a22e9c023d, type: 3}
+    - {fileID: 8300000, guid: 4269a922ca5e2e6428fe79834c18e942, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blade_hit_wood
+    Clips:
+    - {fileID: 8300000, guid: 95577f96339654a4b81a20a543c5e31c, type: 3}
+    - {fileID: 8300000, guid: 2102891099e63144bb16f24183501569, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blade_hit_stone
+    Clips:
+    - {fileID: 8300000, guid: 2024597e8c24fc842a7c517aa1d49f2b, type: 3}
+    - {fileID: 8300000, guid: 216105b6dcc4e954bb706014caf5ed17, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blade_clash
+    Clips:
+    - {fileID: 8300000, guid: 4c8cf13223ee6394b9dd8e112547d8c5, type: 3}
+    - {fileID: 8300000, guid: 0cf63cf8b95774f4bb60ea5e2a01affe, type: 3}
+    - {fileID: 8300000, guid: 58fb2795ed8a03e4abc4c0166561db46, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blade_draw
+    Clips:
+    - {fileID: 8300000, guid: c3fd9a080874a9642b60702ae8765539, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_bronze_swing
+    Clips:
+    - {fileID: 8300000, guid: c7262c1dab3f710438231d047028e8df, type: 3}
+    - {fileID: 8300000, guid: f17e59948ca54994aab5e7c8f4089dfc, type: 3}
+    - {fileID: 8300000, guid: 7b0046b9065a008458afd7f605ab373c, type: 3}
+    - {fileID: 8300000, guid: 007adb4b0e90d6d41b69c6f9ac33a167, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_bronze_hit_flesh
+    Clips:
+    - {fileID: 8300000, guid: 0f8da173f8cdcbe439a5191c118fdcb0, type: 3}
+    - {fileID: 8300000, guid: 1a039224494894c448d760ac6016e011, type: 3}
+    - {fileID: 8300000, guid: 5b4c9aad6be04f14a903749579a6667a, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_bronze_hit_armour
+    Clips:
+    - {fileID: 8300000, guid: 4c89f4f5aada687419e7ebeed4ad42cd, type: 3}
+    - {fileID: 8300000, guid: d4306f0f34ce6af4f951bba1e31960d1, type: 3}
+    - {fileID: 8300000, guid: 522fa81178b54c746996a838d634cecf, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_bronze_hit_wood
+    Clips:
+    - {fileID: 8300000, guid: a4d1577a8ac99024386b71d5a7619ed9, type: 3}
+    - {fileID: 8300000, guid: 562df8f18c649ec4eab93d6cb5e66c95, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_bronze_hit_stone
+    Clips:
+    - {fileID: 8300000, guid: 5fda66341637aaf48b52a2a73f42d892, type: 3}
+    - {fileID: 8300000, guid: 28ef28493ac064b42ba17dddd4c0a1fe, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_bronze_clash
+    Clips:
+    - {fileID: 8300000, guid: eaca0ba7f1831ec429653f2e091f34bc, type: 3}
+    - {fileID: 8300000, guid: 981225330686ead479c48154cfed0b00, type: 3}
+    - {fileID: 8300000, guid: 6b5498e3c5032f04db4dc7380f237ac0, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_bronze_draw
+    Clips:
+    - {fileID: 8300000, guid: 0d63fe4cb47fad94a87943ce223d3919, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_bronze_bend
+    Clips:
+    - {fileID: 8300000, guid: d7ea9e115751ab440bf98b82070ac2b9, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_rapier_swing
+    Clips:
+    - {fileID: 8300000, guid: dd664d44a4d8bae41a94934af708c78d, type: 3}
+    - {fileID: 8300000, guid: 54e233d03dddec24cb61f9ab41e02cf7, type: 3}
+    - {fileID: 8300000, guid: 06fc30f02d589b44a9cff85864daaa65, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_rapier_hit
+    Clips:
+    - {fileID: 8300000, guid: 9fe6ccfee2c89ac408812cc4d220e7cb, type: 3}
+    - {fileID: 8300000, guid: 63a1cf5c3c0db4d44918116bb21f30a7, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_rapier_snap
+    Clips:
+    - {fileID: 8300000, guid: d5c6908a39db60c45b8f7f9818a645fd, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blunt_swing
+    Clips:
+    - {fileID: 8300000, guid: 35ea8a05b2dc9ef41957266bd66f6318, type: 3}
+    - {fileID: 8300000, guid: 63453a2db8eaf184bb4755d8e30145b8, type: 3}
+    - {fileID: 8300000, guid: ffd995f35921a3b4eab94f1bd6068219, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blunt_hit_armour
+    Clips:
+    - {fileID: 8300000, guid: 679b972033583b045aea7ad5df5b2d84, type: 3}
+    - {fileID: 8300000, guid: 561dae50f4445d5469769d948c19f2f2, type: 3}
+    - {fileID: 8300000, guid: 1ff65b7a7139c9448858328a48bc9742, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blunt_hit_flesh
+    Clips:
+    - {fileID: 8300000, guid: 0d242f0d60e59bc4599de21696453a9e, type: 3}
+    - {fileID: 8300000, guid: 5defa879d8bb7a141a2aec4302cdee7d, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_blunt_hit_door
+    Clips:
+    - {fileID: 8300000, guid: 881b8eba94d809d49b8b91805c77e42c, type: 3}
+    - {fileID: 8300000, guid: ba1dea61e3e90e249b384ab25f7b0dcb, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_shield_bash
+    Clips:
+    - {fileID: 8300000, guid: 6bb269eac6e338e4fa433c764cc55f82, type: 3}
+    - {fileID: 8300000, guid: 94874988d2ec7d4438e201e1fed3be84, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_shield_block
+    Clips:
+    - {fileID: 8300000, guid: 0053e782c38e2c94c8daf2d5761a6d74, type: 3}
+    - {fileID: 8300000, guid: ab3960267aa6fa14d95e6c36808c42f3, type: 3}
+    - {fileID: 8300000, guid: a7405e2adfd94f246af228aa1148bc5b, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_shield_arrow_thunk
+    Clips:
+    - {fileID: 8300000, guid: ec1eb2f8bf4de7f4ba434c75e64ecea0, type: 3}
+    - {fileID: 8300000, guid: 4deb5657a3e2f104cad02349c0872701, type: 3}
+    - {fileID: 8300000, guid: c3b137d67b331cb499e72efd4e02ced1, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_shield_pavise_plant
+    Clips:
+    - {fileID: 8300000, guid: 5cb8cef5690f8a64a9eb70bd1b14fb10, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_xbow_span_loop
+    Clips:
+    - {fileID: 8300000, guid: 117e5897f6c6e4e47b35015a766d4d5e, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_xbow_loose
+    Clips:
+    - {fileID: 8300000, guid: 5c74c87cf952a224fb55c95df3159690, type: 3}
+    - {fileID: 8300000, guid: 19bd7c6c4b2edfb49919b3078af7b658, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_xbow_bolt_fly
+    Clips:
+    - {fileID: 8300000, guid: 9957525a6e8e20c4fbb493eed780d153, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_xbow_bolt_hit_wood
+    Clips:
+    - {fileID: 8300000, guid: b1eff6d687388e24ba7b6d9ed1dd575a, type: 3}
+    - {fileID: 8300000, guid: 7f4d72e6e53e71145b847fa15f63d3d6, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_xbow_bolt_hit_stone
+    Clips:
+    - {fileID: 8300000, guid: d17c0d1e82cc4514a937109a2680d143, type: 3}
+    - {fileID: 8300000, guid: c59f8a81761939a4991936dcd350c973, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_xbow_bolt_hit_flesh
+    Clips:
+    - {fileID: 8300000, guid: 96a8c1a599b519d4c81bebcb8fe5e6af, type: 3}
+    - {fileID: 8300000, guid: 698b85d178db1ca4882f5d86177f3e91, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_sling_whirl_loop
+    Clips:
+    - {fileID: 8300000, guid: 6f8d97de6513ea744891385a7157f9f2, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_sling_release
+    Clips:
+    - {fileID: 8300000, guid: a2e1781f78d4c6a46830a266b64a0b06, type: 3}
+    - {fileID: 8300000, guid: 21220ef957a74de4da478547ab68ece8, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_sling_stone_hit
+    Clips:
+    - {fileID: 8300000, guid: 02991cb048ab4934e90fce4cf76594d5, type: 3}
+    - {fileID: 8300000, guid: f0266eeb4fa14a64daab62fb313358bf, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_match_hiss_loop
+    Clips:
+    - {fileID: 8300000, guid: cdf409a1344df6142b0db0a6c5be8a32, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_match_fire
+    Clips:
+    - {fileID: 8300000, guid: 54cba266d203cf54c9ef4e04eab2fca8, type: 3}
+    - {fileID: 8300000, guid: 566671d2b1a7e85459e846ffa74f2ba6, type: 3}
+    - {fileID: 8300000, guid: 3b06695259e3f254e8093b911057062a, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 4
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_match_tail_small
+    Clips:
+    - {fileID: 8300000, guid: 97000384b019ea546a70d1d5eee14cb5, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_match_tail_large
+    Clips:
+    - {fileID: 8300000, guid: 01a7b2a531e64bc4c8c5dd55de189f51, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_match_reload
+    Clips:
+    - {fileID: 8300000, guid: cb5910617635cc14a9e34c7c1b62fba7, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_match_flash_in_pan
+    Clips:
+    - {fileID: 8300000, guid: 458cac5a7f1893c4c95795e765643734, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_wheellock_spin
+    Clips:
+    - {fileID: 8300000, guid: d9bd05e56c788c645874c6eab97094ab, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_flint_click
+    Clips:
+    - {fileID: 8300000, guid: 66a0a948c347f0947b35e575e17ae9b5, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_pistol_fire
+    Clips:
+    - {fileID: 8300000, guid: 71ebd430936289a49a60a67252fbf3ae, type: 3}
+    - {fileID: 8300000, guid: f1af2337aa0911a4ba0e0c51340aa501, type: 3}
+    - {fileID: 8300000, guid: a50a4a300cc3a1046a18d5a273a89f1b, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_pistol_reload
+    Clips:
+    - {fileID: 8300000, guid: 97d5baabed6873f458274ac2974a2de5, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_ball_ricochet
+    Clips:
+    - {fileID: 8300000, guid: 7cc9e017412cf5c40982a1df3599a92a, type: 3}
+    - {fileID: 8300000, guid: de1c6bf8a2edc7846bea4339b8ce9a80, type: 3}
+    - {fileID: 8300000, guid: c7e7e25f58cbfba41b1783550d926ad6, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_ball_hit_flesh
+    Clips:
+    - {fileID: 8300000, guid: f9d625a3cf4d7394bad275db1aff37fe, type: 3}
+    - {fileID: 8300000, guid: 33bdd871697a4904e92b325ce8948d69, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_ball_hit_stone
+    Clips:
+    - {fileID: 8300000, guid: f51e68c49ffe9994f88efe9bfe55a94d, type: 3}
+    - {fileID: 8300000, guid: 7859f8575a37d234a961b2dae4f02c86, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_fuse_light
+    Clips:
+    - {fileID: 8300000, guid: a590f28bf2c128c4893cd611932a2896, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_fuse_loop
+    Clips:
+    - {fileID: 8300000, guid: d89901366f878df43b4fa6d5fc04a484, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_explosion_small
+    Clips:
+    - {fileID: 8300000, guid: 4f27b344e16ffce4b9726ac889b11abb, type: 3}
+    - {fileID: 8300000, guid: 4fff85f9fa48219489bc6f52a8bc579f, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 4
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_explosion_large
+    Clips:
+    - {fileID: 8300000, guid: 3d71d7fe6128052459825b8c3959352c, type: 3}
+    - {fileID: 8300000, guid: a6f081ea12bacf9439aa3790533379c3, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 4
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_debris
+    Clips:
+    - {fileID: 8300000, guid: 116aa293a683fb44cb3ccb3ba73cf583, type: 3}
+    - {fileID: 8300000, guid: dabdaed045c61db4eaf461d4a380a340, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_caltrops_scatter
+    Clips:
+    - {fileID: 8300000, guid: 50eceaee14c2ea249b865c4e338c445a, type: 3}
+    - {fileID: 8300000, guid: 70c10cb4b31f3b44cbcb1255f07a2417, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_caltrops_step_on
+    Clips:
+    - {fileID: 8300000, guid: 1bbf6314d195495468b54c57dd184ea9, type: 3}
+    - {fileID: 8300000, guid: 91414907f92f9bf4db689450456339a5, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_equip
+    Clips:
+    - {fileID: 8300000, guid: 0e4a5ad6deb714f4b8785792be481654, type: 3}
+    - {fileID: 8300000, guid: b524063c6e80d874982539ddbcf072d5, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_wpn_break
+    Clips:
+    - {fileID: 8300000, guid: f9de3d153a2d29841958bbde92b2e7b1, type: 3}
+    - {fileID: 8300000, guid: e758d4d099d009b4698057eff1df50e5, type: 3}
+    Group: {fileID: 1868145430077989497, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_gear_linen_move
+    Clips:
+    - {fileID: 8300000, guid: 777a7a65532f4874883ac19a4770865a, type: 3}
+    - {fileID: 8300000, guid: b18c8cac02346d942b117192fc45a417, type: 3}
+    - {fileID: 8300000, guid: 9124c61f2b2b5d045914e36ac2cf6975, type: 3}
+    - {fileID: 8300000, guid: 8d55899ade4d1744689d8860d84ae029, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_gear_leather_move
+    Clips:
+    - {fileID: 8300000, guid: 82af70ee9a6d38a40a34460328ea9b62, type: 3}
+    - {fileID: 8300000, guid: 318f1797620ee7343b8f9cf1c5fa5a80, type: 3}
+    - {fileID: 8300000, guid: 93014ca54183b2c42bcc24144337bcaa, type: 3}
+    - {fileID: 8300000, guid: 39e020301945dce44972ed505c43fd33, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_gear_mail_move
+    Clips:
+    - {fileID: 8300000, guid: 77472c4cc8ef25c44a451477a9cd0e4a, type: 3}
+    - {fileID: 8300000, guid: 19fa036f1dc784e4691737a55092194d, type: 3}
+    - {fileID: 8300000, guid: 13d743a69919acf4a9cbed5de74de823, type: 3}
+    - {fileID: 8300000, guid: 2cb05015295be9442894fe27ff22de6d, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_gear_plate_move
+    Clips:
+    - {fileID: 8300000, guid: a5f6cd7544908f547b362f3f90af38be, type: 3}
+    - {fileID: 8300000, guid: 129627465f38d95458ba68d0ab89bfe6, type: 3}
+    - {fileID: 8300000, guid: 1008dbff0bfd3334a8985fa70b9f4ac2, type: 3}
+    - {fileID: 8300000, guid: 899e83488f594f640b42ad94567448d2, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_gear_bronze_plate_move
+    Clips:
+    - {fileID: 8300000, guid: 7db948b2720a82846986f45efef00942, type: 3}
+    - {fileID: 8300000, guid: d89ce42fddb8cb542871fb66b20ca6f3, type: 3}
+    - {fileID: 8300000, guid: 22769aafe49623040b715225007956a2, type: 3}
+    - {fileID: 8300000, guid: 0b16cebf2b4c0db409d01ba08c3bd844, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: foley_step_hound
+    Clips:
+    - {fileID: 8300000, guid: ca5dc92ca90f35644b2a6eb94d4f4658, type: 3}
+    - {fileID: 8300000, guid: f968d987508ec8a4c81e4a17af73e72b, type: 3}
+    - {fileID: 8300000, guid: 693a9e96d2ac58941bda9a350a52d8ea, type: 3}
+    - {fileID: 8300000, guid: e727754991983c5459c8cc631ca8cc91, type: 3}
+    - {fileID: 8300000, guid: 5353e7ed12c11e04993f9897ec546e23, type: 3}
+    - {fileID: 8300000, guid: f23eb0c6ba9c7c940aee333291fe2ace, type: 3}
+    Group: {fileID: 7853900434034703740, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_enemy_dendra_boar_tusk_rattle
+    Clips:
+    - {fileID: 8300000, guid: 00fd79c56e33f0e44b615cfd1902d7b7, type: 3}
+    - {fileID: 8300000, guid: a3cd0cb8a0fe5a5458c186075d2fe3db, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_enemy_keeper_firepot_throw
+    Clips:
+    - {fileID: 8300000, guid: 8937e4b2e4dff2c4487b82006c2e6655, type: 3}
+    - {fileID: 8300000, guid: 49ec479213e0e8742868a9cfb4284b2c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_enemy_keeper_firepot_shatter
+    Clips:
+    - {fileID: 8300000, guid: 5831368c760354046be9a18b018f9157, type: 3}
+    - {fileID: 8300000, guid: ddf624ee6b5f3654e9909aa3586078ee, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_enemy_lantern_creak_loop
+    Clips:
+    - {fileID: 8300000, guid: 2b2418461e2cf244eb747db257e5220b, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_enemy_musket_rest_plant
+    Clips:
+    - {fileID: 8300000, guid: 18255b9dd56a57046a2963297973e7bb, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_enemy_petard_plant
+    Clips:
+    - {fileID: 8300000, guid: fc4f3e0584e15164292ecb7711e90412, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_hound_pant_loop
+    Clips:
+    - {fileID: 8300000, guid: b0ce20e4cb9b39846829d0ea3bda138c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_hound_growl
+    Clips:
+    - {fileID: 8300000, guid: 13d031532abc3604e9dc2b3936586308, type: 3}
+    - {fileID: 8300000, guid: d19b0ee9bbc929644a5f40abb473838c, type: 3}
+    - {fileID: 8300000, guid: 6b85f6161d8f3cc418f4b1caf99e4655, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_hound_bark
+    Clips:
+    - {fileID: 8300000, guid: a38aaa7fbedc41740ada9c4dd8eb26f4, type: 3}
+    - {fileID: 8300000, guid: 93c62dab5d9bd224390a27b9bf378cdf, type: 3}
+    - {fileID: 8300000, guid: aa36dec2dfd64ae4d8331acf802327ae, type: 3}
+    - {fileID: 8300000, guid: d3d85497c3517e74b9f28acf87521dbd, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_hound_bite
+    Clips:
+    - {fileID: 8300000, guid: b9a0db860b947614ca91db434e1b038c, type: 3}
+    - {fileID: 8300000, guid: ffddd8044f0f2384f96963b441f75015, type: 3}
+    - {fileID: 8300000, guid: 5d8006ad4244f79408da4253ee30d790, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_hound_yelp
+    Clips:
+    - {fileID: 8300000, guid: ac9fb75faaa759847ad671f9e987a4c6, type: 3}
+    - {fileID: 8300000, guid: c29d040ffc6eb584e8c8b6c812fa0baf, type: 3}
+    - {fileID: 8300000, guid: 84ffe4813434acb47b3803dbbc206bbd, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_hound_howl
+    Clips:
+    - {fileID: 8300000, guid: a7844678aa61ea545855f7ea3b5a3e34, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_hound_whimper_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 0fb8f3d8cb3d00b45a216073c85eec15, type: 3}
+    - {fileID: 8300000, guid: d442860cf1e452e459bd4160617ff656, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_murmur
+    Clips:
+    - {fileID: 8300000, guid: 330eb24561479e84bab2f745786d19df, type: 3}
+    - {fileID: 8300000, guid: 3dced5400924a5f47ba79d725e1bcab5, type: 3}
+    - {fileID: 8300000, guid: f7b9b0f6a4143414c87621c65001e9ba, type: 3}
+    - {fileID: 8300000, guid: e921c9b112ae23544a3e129a2d1e0015, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_alert
+    Clips:
+    - {fileID: 8300000, guid: 2f25560260dd899479a42fc3906b9ee2, type: 3}
+    - {fileID: 8300000, guid: 07076b844260f58459f1366200db5169, type: 3}
+    - {fileID: 8300000, guid: 2b9b908409b2acf459e13b68fe1991fa, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_chase
+    Clips:
+    - {fileID: 8300000, guid: 2d6087577e61a7047acb7ec7a92c65bc, type: 3}
+    - {fileID: 8300000, guid: 9027832ab48aef54282a6f36123e7118, type: 3}
+    - {fileID: 8300000, guid: 2b1df8c22c8471f4e98d051fa3746353, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_search
+    Clips:
+    - {fileID: 8300000, guid: 00767af4dfe6f3043ab5300ca48097cd, type: 3}
+    - {fileID: 8300000, guid: e5cb719c10ea4ec47a8bd117d3b9b2b2, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_lost
+    Clips:
+    - {fileID: 8300000, guid: f5b6a7534a22b774cb8199f556f31e77, type: 3}
+    - {fileID: 8300000, guid: 5ddc2d37f9a2bd042b3c1aa04e56d813, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_attack
+    Clips:
+    - {fileID: 8300000, guid: b779055cbabb6c24ca492922fd1e617a, type: 3}
+    - {fileID: 8300000, guid: 70cc0441b5823904e91566d102971986, type: 3}
+    - {fileID: 8300000, guid: b5cdd570ca798ef4e8b5088eb0ec64a8, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_hurt
+    Clips:
+    - {fileID: 8300000, guid: d22563e6e0535db45a7d5a27e5a98f5a, type: 3}
+    - {fileID: 8300000, guid: 04f86dacc00c87d42b0e1e7aee3b2779, type: 3}
+    - {fileID: 8300000, guid: 8aa597e4ed4d9fc4bac03b3a100c58f9, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_death
+    Clips:
+    - {fileID: 8300000, guid: 8aef114fef2ea3c45bfeaeeaf63409cc, type: 3}
+    - {fileID: 8300000, guid: 0fe8ef4b3639b1a45be573346593570c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_asleep
+    Clips:
+    - {fileID: 8300000, guid: 08d9bb96ad35dc040a6f64abd193bc25, type: 3}
+    - {fileID: 8300000, guid: e369f69a9e22dad4388c511b4468b724, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_grabbed
+    Clips:
+    - {fileID: 8300000, guid: c71ed3fc80a6f524aa6ab03190a3ffdf, type: 3}
+    - {fileID: 8300000, guid: d58f8ea030fdfea4c85689965dfffc89, type: 3}
+    - {fileID: 8300000, guid: 7bd65bfc46e248046a2c3e58b137e1e1, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_levy_thrown
+    Clips:
+    - {fileID: 8300000, guid: beea7318a90d27d4ba6b3d8cb5c851b7, type: 3}
+    - {fileID: 8300000, guid: e8f08e2bfc751fc4ca5f540d5a781592, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_murmur
+    Clips:
+    - {fileID: 8300000, guid: acd25417b3782064f8f1c1234b36e6e0, type: 3}
+    - {fileID: 8300000, guid: c62790ff3a7847249aa42154548c175b, type: 3}
+    - {fileID: 8300000, guid: 231b550f714bf8c41b653a6c00964286, type: 3}
+    - {fileID: 8300000, guid: 57b314219e11f4d4d95c9ea1147a41e2, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_alert
+    Clips:
+    - {fileID: 8300000, guid: 3de85f6c4936eac4cb9125de7b2ed5ca, type: 3}
+    - {fileID: 8300000, guid: c0f0ca5566411944badcb58bcd547538, type: 3}
+    - {fileID: 8300000, guid: 3e68e5b1110bda741ba93da5a03f4f3d, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_chase
+    Clips:
+    - {fileID: 8300000, guid: b0ff492fc33dcf74c8b9b623f8f73f35, type: 3}
+    - {fileID: 8300000, guid: 857b161eea29a0c4d802949b4db675ba, type: 3}
+    - {fileID: 8300000, guid: 4936036f4090587459c4f34eb9675713, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_search
+    Clips:
+    - {fileID: 8300000, guid: 41f69a483e981f844b91cfaf69bee9d4, type: 3}
+    - {fileID: 8300000, guid: ea36ba69eef0cdd42ac29b618a829e54, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_lost
+    Clips:
+    - {fileID: 8300000, guid: 12e697164d13f6d4f900e57d6cd67680, type: 3}
+    - {fileID: 8300000, guid: afc21753d14ef614d83b29e99e1ceba0, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_attack
+    Clips:
+    - {fileID: 8300000, guid: 419a694ca862e1c49ac1d2800ad8893f, type: 3}
+    - {fileID: 8300000, guid: f38e98598c38f5942868e5342d5c1ac4, type: 3}
+    - {fileID: 8300000, guid: 646f4f451b5ee7549b732883e81c815f, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_hurt
+    Clips:
+    - {fileID: 8300000, guid: cce87de1a133d5642ad095af4908e0c6, type: 3}
+    - {fileID: 8300000, guid: 86dc30c5e70f08849a5abd32bc05efa1, type: 3}
+    - {fileID: 8300000, guid: 4e2fdd6c26cb1894f9dc8598c8ac7b2a, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_death
+    Clips:
+    - {fileID: 8300000, guid: 398dc5530ea0b0b44bbfee7f8e995ff8, type: 3}
+    - {fileID: 8300000, guid: 54db1107fac79914d9c6ebe46eea86e6, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_asleep
+    Clips:
+    - {fileID: 8300000, guid: 4042f6a30ffd9b94bba34fe2b65aa026, type: 3}
+    - {fileID: 8300000, guid: fc546817085c53042ab3ddde04e22e7d, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_grabbed
+    Clips:
+    - {fileID: 8300000, guid: e7e65a986dcf5c6419a4fe7c6b88bf69, type: 3}
+    - {fileID: 8300000, guid: 250b81f92136ad940a34a9ace7f49258, type: 3}
+    - {fileID: 8300000, guid: 44e0c1b23b1d43c499377c37e190bb1a, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_slinger_thrown
+    Clips:
+    - {fileID: 8300000, guid: 3d199b9d846ee5f4c81c1e7e575022cd, type: 3}
+    - {fileID: 8300000, guid: b34914598a64e624b9f82850cb5c6b15, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_murmur
+    Clips:
+    - {fileID: 8300000, guid: deb4c5dd9f350f24d92ec2f626b4b09e, type: 3}
+    - {fileID: 8300000, guid: a1c498f9dc4047d418ad8f4aa85a1f70, type: 3}
+    - {fileID: 8300000, guid: a02762880e598a74c9f8bec106422e8f, type: 3}
+    - {fileID: 8300000, guid: 7008bc5caa6abdc43991d7ccc4323cc9, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_alert
+    Clips:
+    - {fileID: 8300000, guid: 4fff848b0ca5ec14e90e838b581f8a26, type: 3}
+    - {fileID: 8300000, guid: cf7ddbd9ed3cbc649b09178813ab0dd9, type: 3}
+    - {fileID: 8300000, guid: ea8a055be67bebc4ba44c43b626a831f, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_chase
+    Clips:
+    - {fileID: 8300000, guid: fa98a0e12a3d1c14eaa70c11de3f30c6, type: 3}
+    - {fileID: 8300000, guid: ce95109bef65c524a9084e7b6ccdeaa7, type: 3}
+    - {fileID: 8300000, guid: 8e2f4b1b7f1d01b4b9b30d823332e7de, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_search
+    Clips:
+    - {fileID: 8300000, guid: 0fbc97836631c5b4ca8a4af1f76bfaa7, type: 3}
+    - {fileID: 8300000, guid: 9e808a935ce5987479ffb2b396227f4c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_lost
+    Clips:
+    - {fileID: 8300000, guid: 385594a0a6077b04489e9cf758834bb2, type: 3}
+    - {fileID: 8300000, guid: 9414a799fe49f2b429b40a704a682c48, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_attack
+    Clips:
+    - {fileID: 8300000, guid: ac951fc52aa9f9d41ae9dbe732d54349, type: 3}
+    - {fileID: 8300000, guid: 9458b66a93a5076429eb52a824c8ed2a, type: 3}
+    - {fileID: 8300000, guid: e3fd751711ad4a341a8f0f55599749c6, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_hurt
+    Clips:
+    - {fileID: 8300000, guid: fcc7da3672207fc42addab2b08e200bf, type: 3}
+    - {fileID: 8300000, guid: ba35cd07f9886b54f906ec8f5b3a0fc7, type: 3}
+    - {fileID: 8300000, guid: 3c25c0eb80fb74d49a36cdf1ee45e3f2, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_death
+    Clips:
+    - {fileID: 8300000, guid: 9f56d1d9b9311c04b9df6a3475882275, type: 3}
+    - {fileID: 8300000, guid: 5c9f6889eaa03a94194fdf375b1c6b3c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_asleep
+    Clips:
+    - {fileID: 8300000, guid: aa59bc18a3b37c449b3837cacd003f6f, type: 3}
+    - {fileID: 8300000, guid: a6a70a37c4e96fe458efb17f2dec695c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 8d170dad07985b742b161c1fe34c696b, type: 3}
+    - {fileID: 8300000, guid: ca99c33bcf71a7844b59cd31e8ae4113, type: 3}
+    - {fileID: 8300000, guid: 6d28f690e4cf73147972c2d3ae9fb66c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_champion_thrown
+    Clips:
+    - {fileID: 8300000, guid: e8574f3fecfe25041ad6d0002a629e93, type: 3}
+    - {fileID: 8300000, guid: 822e4027dc9a6eb499b98450c7e1fa69, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_murmur
+    Clips:
+    - {fileID: 8300000, guid: f185e8eda47a9854b8e7f3bcf386aaa0, type: 3}
+    - {fileID: 8300000, guid: 58fb54f805a0de6469cf0dfde79efa11, type: 3}
+    - {fileID: 8300000, guid: 29d79066f62944949bdafc6c12a7788e, type: 3}
+    - {fileID: 8300000, guid: b79b0f7a08344ed40af173db0d381897, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_alert
+    Clips:
+    - {fileID: 8300000, guid: 680967c12fa11234da685813e8622528, type: 3}
+    - {fileID: 8300000, guid: 50259d5742883a2419d64c4606e0e2a4, type: 3}
+    - {fileID: 8300000, guid: 99d25b942711d2a479f3e14de11e6d07, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_chase
+    Clips:
+    - {fileID: 8300000, guid: 50381ebb5f9d6694aafb5e64311f3449, type: 3}
+    - {fileID: 8300000, guid: 990f6696f8e95e8418fc40397f235daf, type: 3}
+    - {fileID: 8300000, guid: d06bfa3725f24744a929738aedebf342, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_search
+    Clips:
+    - {fileID: 8300000, guid: a9d5d2129eed5c84596e91cb8c6afd2d, type: 3}
+    - {fileID: 8300000, guid: 0eb0653f8a55ebd47a58b31f3c617238, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_lost
+    Clips:
+    - {fileID: 8300000, guid: d579bb5f123a004498bedd819dd502dc, type: 3}
+    - {fileID: 8300000, guid: 3d902949126075447aeb3b4952397745, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_attack
+    Clips:
+    - {fileID: 8300000, guid: 3369017875314cd44b6f2f6eaaa1a5e9, type: 3}
+    - {fileID: 8300000, guid: 179a4716755fc1942b6b2a1d1c9bd65e, type: 3}
+    - {fileID: 8300000, guid: 14131318a2ec01f4481bfb373475efe2, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_hurt
+    Clips:
+    - {fileID: 8300000, guid: e47e4fefc9cdbe84e8007d72a4b68c05, type: 3}
+    - {fileID: 8300000, guid: bf90156cfbdbfe343951974516caad40, type: 3}
+    - {fileID: 8300000, guid: b36fb62eb216fdb4291384900909e5ba, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_death
+    Clips:
+    - {fileID: 8300000, guid: 7ce843dc3bcef814ab89b0fbcc03643e, type: 3}
+    - {fileID: 8300000, guid: 16b3f84b87a8f8043aeeaef0a85fface, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_asleep
+    Clips:
+    - {fileID: 8300000, guid: 8af4fa80949a6a94b836b18381f401d9, type: 3}
+    - {fileID: 8300000, guid: e6b8d9fa5da9d4c45a910202a0f971c9, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 8834d9d173baa5c4b85c355b41d19647, type: 3}
+    - {fileID: 8300000, guid: 5703fa831027cdc45817e490d94c61bb, type: 3}
+    - {fileID: 8300000, guid: 6c39a055f8db28246b663c4d57651b31, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_bronze_keeper_thrown
+    Clips:
+    - {fileID: 8300000, guid: ae3dc61df2bcb6f4ebbfb64ce3b0769f, type: 3}
+    - {fileID: 8300000, guid: 373b67290a49c85488a17a5484af9c2b, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_murmur
+    Clips:
+    - {fileID: 8300000, guid: ef82de9e56784514e8672a25fa4f5f15, type: 3}
+    - {fileID: 8300000, guid: 5248ce8d50ba6a34d8d998d5a16aa266, type: 3}
+    - {fileID: 8300000, guid: 863dc593527e46f4d8f24d6118cafe27, type: 3}
+    - {fileID: 8300000, guid: 329613ebc48d7ec41b4d273b36441cf7, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_alert
+    Clips:
+    - {fileID: 8300000, guid: fd5126793c737c94b9b049fa36582051, type: 3}
+    - {fileID: 8300000, guid: a13e0af94ee363e4885f66d36de760f5, type: 3}
+    - {fileID: 8300000, guid: 7d75091c214050848b661c81070c78c7, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_chase
+    Clips:
+    - {fileID: 8300000, guid: ddb473d345c1313419f95da58f2eb791, type: 3}
+    - {fileID: 8300000, guid: b8b2c525a7b91f043b43c160ea068d2d, type: 3}
+    - {fileID: 8300000, guid: 057b8cca3cf5f0c49ba13e664c136358, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_search
+    Clips:
+    - {fileID: 8300000, guid: 9936ae6833273b94585e88d1ca75ed12, type: 3}
+    - {fileID: 8300000, guid: 98e9828ec088249478ee58eaa4ad2c84, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_lost
+    Clips:
+    - {fileID: 8300000, guid: 415ad1818cba69a408248c9fb33e9225, type: 3}
+    - {fileID: 8300000, guid: 9526c5023d9543f4b8a949125a920fc4, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_attack
+    Clips:
+    - {fileID: 8300000, guid: 28c6aa8a68e9bb14e9791847721e179c, type: 3}
+    - {fileID: 8300000, guid: 12a9a1c67c32eaf4488e120653748f76, type: 3}
+    - {fileID: 8300000, guid: f02530c104a00e9448ef54ee2d88e3c0, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_hurt
+    Clips:
+    - {fileID: 8300000, guid: 06a0d356f934a2a48be2c9f97af574df, type: 3}
+    - {fileID: 8300000, guid: 3c872c25898b942459ee7be629117f10, type: 3}
+    - {fileID: 8300000, guid: e4cb9a83c8ebce54d8a09da8f7ae6776, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_death
+    Clips:
+    - {fileID: 8300000, guid: 22baf843e74d2d446ba84af7d5b5ab63, type: 3}
+    - {fileID: 8300000, guid: 782c38af8ceaca743b39e1bece064b80, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_asleep
+    Clips:
+    - {fileID: 8300000, guid: bc3554eb4e5ef7443baf0c859927425c, type: 3}
+    - {fileID: 8300000, guid: 916d7663ffb2c2e4ba126a976df94d27, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 1707323bb7400c541b69d860ec4a0550, type: 3}
+    - {fileID: 8300000, guid: e6451e3cee113dd40842e86740f01150, type: 3}
+    - {fileID: 8300000, guid: 6ed064a00f4ece147bd56089b7a54628, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_warden_thrown
+    Clips:
+    - {fileID: 8300000, guid: 39e454bc60ad1f044b0d47aa121c49ec, type: 3}
+    - {fileID: 8300000, guid: 7e273f1f6cd39d54fbc9532fdb6d1dc1, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_murmur
+    Clips:
+    - {fileID: 8300000, guid: 6741e4c4e48f5e74793fbe39965e86e2, type: 3}
+    - {fileID: 8300000, guid: 7b30f1c9c2e31c04db3d33e79c0c0a4b, type: 3}
+    - {fileID: 8300000, guid: b630d4c1986a5024688277ad4a805a08, type: 3}
+    - {fileID: 8300000, guid: 28c91b12e7651da46819d12366816436, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_alert
+    Clips:
+    - {fileID: 8300000, guid: 4f258470602aab14493a9ea98b08d293, type: 3}
+    - {fileID: 8300000, guid: 823abbc7589049942a0a75f140a9c582, type: 3}
+    - {fileID: 8300000, guid: e72ed4e8538a6204894f7dd6c48dc869, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_chase
+    Clips:
+    - {fileID: 8300000, guid: f29b9f4ba351b5e449cc3cc1714f0258, type: 3}
+    - {fileID: 8300000, guid: 1d59e65e5f1c60a4cb86e8cbceb67e05, type: 3}
+    - {fileID: 8300000, guid: cc3c1ebc53f8f3a448413271ff4cf32d, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_search
+    Clips:
+    - {fileID: 8300000, guid: 309f5f45a73ff534f80cdbc9857eea33, type: 3}
+    - {fileID: 8300000, guid: f8757b765bad5a3408ea5cd67af7b185, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_lost
+    Clips:
+    - {fileID: 8300000, guid: 872a4075ec941cf43bf67b1620cd622b, type: 3}
+    - {fileID: 8300000, guid: 2cbb56499f1b155488b0b8a499c104af, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_attack
+    Clips:
+    - {fileID: 8300000, guid: 1fce7dd57396f9b49888befcd273daf0, type: 3}
+    - {fileID: 8300000, guid: c8e3a96bdef0954418bcfca6b3ff9ab3, type: 3}
+    - {fileID: 8300000, guid: 88987515dac378749b21abb089863f17, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_hurt
+    Clips:
+    - {fileID: 8300000, guid: 761e7e7dc4612cc439b8746215c1715b, type: 3}
+    - {fileID: 8300000, guid: dfe3cbd38038fb5478bcf1801e1c5812, type: 3}
+    - {fileID: 8300000, guid: e73dfe900043eb04e904709b601b717c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_death
+    Clips:
+    - {fileID: 8300000, guid: cef6eff0170bd844c917e3c6fbcf4391, type: 3}
+    - {fileID: 8300000, guid: 2cd1f81e6ca3c764abbf4242d8c39161, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_asleep
+    Clips:
+    - {fileID: 8300000, guid: fbac6ff22aa74a34b8a043b3a75f27e8, type: 3}
+    - {fileID: 8300000, guid: c2558b5bea1cb02439e3d7e4c2ef2153, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 1e101049e10040b469ef6a156780b97b, type: 3}
+    - {fileID: 8300000, guid: 0c06270a859c3bd4ba645d9da3b42451, type: 3}
+    - {fileID: 8300000, guid: 61f378491b4fcc84d81b531396287d22, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_crossbowman_thrown
+    Clips:
+    - {fileID: 8300000, guid: 6850042c183fd8046934407c611d56ce, type: 3}
+    - {fileID: 8300000, guid: 6cee71ef3144ed1479b656a7d946f054, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_murmur
+    Clips:
+    - {fileID: 8300000, guid: abc52c0326e45404eb7a194fcd9e9e02, type: 3}
+    - {fileID: 8300000, guid: f3476faf8bf88964391d0ad7a3b6292a, type: 3}
+    - {fileID: 8300000, guid: e849a62557256894f9902832b5aaf322, type: 3}
+    - {fileID: 8300000, guid: cbc595fe227200640a2ea66c0a98ab98, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_alert
+    Clips:
+    - {fileID: 8300000, guid: 39605aaf7fbd6d64fa65c3d824ff2db4, type: 3}
+    - {fileID: 8300000, guid: 3393f103705c63045962cb965da83671, type: 3}
+    - {fileID: 8300000, guid: 74b3b3c682654c94dbfb74dc96a267ee, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_chase
+    Clips:
+    - {fileID: 8300000, guid: 0ac87cfaa41d6da4784b242c79785032, type: 3}
+    - {fileID: 8300000, guid: 4880c73eef83e1943ac2536185bbccb6, type: 3}
+    - {fileID: 8300000, guid: 92af86430b471ae44a6ef960656644c5, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_search
+    Clips:
+    - {fileID: 8300000, guid: 3f460e358201c9c4c83ce69fa71b3cf5, type: 3}
+    - {fileID: 8300000, guid: fd75ee3ff0ea379469d768aab89ac843, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_lost
+    Clips:
+    - {fileID: 8300000, guid: 18a23f2988cc160468a8f37a2e70736b, type: 3}
+    - {fileID: 8300000, guid: a795c94c0b438e343a3547b435dd5f88, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_attack
+    Clips:
+    - {fileID: 8300000, guid: 0a809a73069a4b64ea0efd1511e2f385, type: 3}
+    - {fileID: 8300000, guid: 669cb34c6732b8942876c46c6f11f56d, type: 3}
+    - {fileID: 8300000, guid: 34f19d71b2871da469342b1ed491f856, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_hurt
+    Clips:
+    - {fileID: 8300000, guid: 1fb2134c3cbc79843a72dc4e3d63d9e7, type: 3}
+    - {fileID: 8300000, guid: 6442f1b19800ad34e8cff3256b499f01, type: 3}
+    - {fileID: 8300000, guid: f77c3142bb8e9944184a232be16e89d3, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_death
+    Clips:
+    - {fileID: 8300000, guid: 37f4f336b2a3c3e41b45d04afaab2312, type: 3}
+    - {fileID: 8300000, guid: d7e0423ed5bcd004e869744ba4f55e33, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_asleep
+    Clips:
+    - {fileID: 8300000, guid: 62ba8fb71b454834c80c592e9a561fe8, type: 3}
+    - {fileID: 8300000, guid: 600f0f061a4b0e646a4c3ae7eba6bdac, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 3cb6d017aec3a654ca67f0ed430735d7, type: 3}
+    - {fileID: 8300000, guid: 098b85886e2a2394a97b4ff8fe19ae6a, type: 3}
+    - {fileID: 8300000, guid: d70cdabaf483c54418488de8345b2efa, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_high_knight_thrown
+    Clips:
+    - {fileID: 8300000, guid: 1db48fff77def914d957cfaaaa71afc1, type: 3}
+    - {fileID: 8300000, guid: e7b8c9aceb0f0914b9c8244d8b00da86, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_murmur
+    Clips:
+    - {fileID: 8300000, guid: f30448dc792e79f4aae9950460b96b25, type: 3}
+    - {fileID: 8300000, guid: 5a0f032e9d5d7a8449b2fa8c2a2a8625, type: 3}
+    - {fileID: 8300000, guid: 868f74ba30e8d7c4ca45f7d1479f60d0, type: 3}
+    - {fileID: 8300000, guid: 0d0081ddbe353164f964e266701a4460, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_alert
+    Clips:
+    - {fileID: 8300000, guid: 3f0f3181f1679d847b0fd7a64401e460, type: 3}
+    - {fileID: 8300000, guid: bd34926a7a7241a46a8e7f3f8587b04b, type: 3}
+    - {fileID: 8300000, guid: 1e5bd73c32e3c0c4d83dd6ca94ef83be, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_chase
+    Clips:
+    - {fileID: 8300000, guid: de6b46138dce8cd43b348ce76d016515, type: 3}
+    - {fileID: 8300000, guid: e211efb889453bd45822dd680f8a5ef9, type: 3}
+    - {fileID: 8300000, guid: da1738b5ffcab904ba9f3851091b0883, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_search
+    Clips:
+    - {fileID: 8300000, guid: 032da4a91b3253540b3a75540e6db8a7, type: 3}
+    - {fileID: 8300000, guid: b8bad25146372584dba527367a80e935, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_lost
+    Clips:
+    - {fileID: 8300000, guid: f92589a79f2fe9d4f92dcb2c8ac7a40b, type: 3}
+    - {fileID: 8300000, guid: 4c6db9377a0bb144a8bf8db850b96818, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_attack
+    Clips:
+    - {fileID: 8300000, guid: 5d1416434cf9f8e44baf6b849262d364, type: 3}
+    - {fileID: 8300000, guid: 3f4b9bbde92861546a7235e3b25d18ef, type: 3}
+    - {fileID: 8300000, guid: 46a69f70762a68d4d85bf7f981dc441c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_hurt
+    Clips:
+    - {fileID: 8300000, guid: 310ba9dcc0e9557438c8fe2a6bad4c78, type: 3}
+    - {fileID: 8300000, guid: 96c37acf285e9af4aa9d7c5244160e80, type: 3}
+    - {fileID: 8300000, guid: a270eb9f9b9fdbe4e9477f073e1aaeac, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_death
+    Clips:
+    - {fileID: 8300000, guid: 00a817fdd4122de4c81783ec6dfdf22f, type: 3}
+    - {fileID: 8300000, guid: a25ce81aa3a7fe64fb7259fbb384115a, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_asleep
+    Clips:
+    - {fileID: 8300000, guid: 9f913da86dac8b348a01c2439fe69d0f, type: 3}
+    - {fileID: 8300000, guid: 8b7c8899922c8b74aafe144b30298630, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_grabbed
+    Clips:
+    - {fileID: 8300000, guid: b7f7c439adcce4b4c8b991e95dceeb35, type: 3}
+    - {fileID: 8300000, guid: 965b6ac4c344a7c4b8021f4c774a5cbc, type: 3}
+    - {fileID: 8300000, guid: f4b58d78616bf734084b1eb5bf0ce22b, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_halberdier_thrown
+    Clips:
+    - {fileID: 8300000, guid: 0c1062729dbbee04aa37ed1ed132145a, type: 3}
+    - {fileID: 8300000, guid: 8f10cf8d1ca543a46bbed85366dbeea1, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_murmur
+    Clips:
+    - {fileID: 8300000, guid: ebbff30c972329147ab19aeadd305ec0, type: 3}
+    - {fileID: 8300000, guid: 00ed10dc8447b21408abe1fb2f762625, type: 3}
+    - {fileID: 8300000, guid: 4da810b3121b7d6438a2a33f9e89b98d, type: 3}
+    - {fileID: 8300000, guid: fd8b77d15989f0745ae76a412c8864e5, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_alert
+    Clips:
+    - {fileID: 8300000, guid: 01c5bf61abcb8df49a4593b9830a139a, type: 3}
+    - {fileID: 8300000, guid: 27ac2d91cbbeb4a47b439cddbe9a1691, type: 3}
+    - {fileID: 8300000, guid: feef2dde872cd684bb5df828b8f92ccf, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_chase
+    Clips:
+    - {fileID: 8300000, guid: 7525b128d44115a4280c8906f9eb94df, type: 3}
+    - {fileID: 8300000, guid: 138104caeefb9174ebf8db238a3f6aec, type: 3}
+    - {fileID: 8300000, guid: ce58559a0cdc5424d8b67d22d972d6ee, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_search
+    Clips:
+    - {fileID: 8300000, guid: 09355c205d62dfc4ea74805b0340a425, type: 3}
+    - {fileID: 8300000, guid: 91e0d90f99869d74e8086a5bf9d3af94, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_lost
+    Clips:
+    - {fileID: 8300000, guid: 8aa6d330eb5d2e44eb6ec681e951a475, type: 3}
+    - {fileID: 8300000, guid: 28b7dd5bec594104cb6a1ee38a0e61f1, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_attack
+    Clips:
+    - {fileID: 8300000, guid: 866c5473371d4554187aedd8ea31ac80, type: 3}
+    - {fileID: 8300000, guid: f59bd4c1ac9414f4581b790eee1e1901, type: 3}
+    - {fileID: 8300000, guid: b3b5808d97e79a74c875a130de3f63ec, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_hurt
+    Clips:
+    - {fileID: 8300000, guid: 47dde0ff919974b4798140b8f6332c25, type: 3}
+    - {fileID: 8300000, guid: 84f48500a27713e4f877a5573531141a, type: 3}
+    - {fileID: 8300000, guid: 6dfbb2a609916cd47a7ec9646071d28f, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_death
+    Clips:
+    - {fileID: 8300000, guid: 916be127a78f8f64fac7ea03dd340843, type: 3}
+    - {fileID: 8300000, guid: 5be66053a0960c44a94bcb612b572c74, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_asleep
+    Clips:
+    - {fileID: 8300000, guid: b4e9e20ca221e4c49af49ec4054954c7, type: 3}
+    - {fileID: 8300000, guid: 3effd2fcf7a35874c8e247623c32fbd1, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_grabbed
+    Clips:
+    - {fileID: 8300000, guid: dc9a9378d66f512478fa402e7c48b9a5, type: 3}
+    - {fileID: 8300000, guid: b1cf4cc787b8f284884cdf5b25ffd319, type: 3}
+    - {fileID: 8300000, guid: f033341aa10ad0143b7272d504fa9fea, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_handgunner_thrown
+    Clips:
+    - {fileID: 8300000, guid: 338cd4dfccf647d41ba4af6fac93df30, type: 3}
+    - {fileID: 8300000, guid: 4d1e7948fca87db4fa7e36385753606d, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_murmur
+    Clips:
+    - {fileID: 8300000, guid: 78bb43fcec157fe4f8ffeacc7f1253b4, type: 3}
+    - {fileID: 8300000, guid: 2005dc8c91bc03c40a9f89866074d617, type: 3}
+    - {fileID: 8300000, guid: cf077acf6aaa91746ad05e7f7629ce51, type: 3}
+    - {fileID: 8300000, guid: d596456b2572f6e4ebaf23dd892d1c45, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_alert
+    Clips:
+    - {fileID: 8300000, guid: 26743707dbf337e4fb915f499c197043, type: 3}
+    - {fileID: 8300000, guid: 900ae777733a7e74da459431dc5fe9c7, type: 3}
+    - {fileID: 8300000, guid: 7dc7d5680cab4c94fae3269ceb66f791, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_chase
+    Clips:
+    - {fileID: 8300000, guid: 45c21a36509983240b989f52d375da05, type: 3}
+    - {fileID: 8300000, guid: af3138f2d6f5af843b6e6c6aa7f061df, type: 3}
+    - {fileID: 8300000, guid: a26575915a712a54d893fcfe76caad6f, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_search
+    Clips:
+    - {fileID: 8300000, guid: fa78312ea922a434fbd98c6b117b4d59, type: 3}
+    - {fileID: 8300000, guid: 160ebcb30a69ce34f8c29ca2f462d717, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_lost
+    Clips:
+    - {fileID: 8300000, guid: fe49f42ea7a9a8c46a79a082bd74bf11, type: 3}
+    - {fileID: 8300000, guid: a0857cef8f4ea8e40b96e1d38c221629, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_attack
+    Clips:
+    - {fileID: 8300000, guid: aee2a78eec7bd9c44b11690952cd8ade, type: 3}
+    - {fileID: 8300000, guid: ac447ccb01cf83d429d6cb5bef2577a0, type: 3}
+    - {fileID: 8300000, guid: 44458f3bbd39e734aa21d4b1858ff7a7, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_hurt
+    Clips:
+    - {fileID: 8300000, guid: 0eb14001f0411544b9e8cf5467f98679, type: 3}
+    - {fileID: 8300000, guid: e80b2fb5439b4e944b005b8f6809390b, type: 3}
+    - {fileID: 8300000, guid: 643a2e3f99b791e459788849bfbfbf0c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_death
+    Clips:
+    - {fileID: 8300000, guid: 56bde09d3a6a0204ab8b210f56bebec6, type: 3}
+    - {fileID: 8300000, guid: 744631d4cc477314b91118c9f1cc96e3, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_asleep
+    Clips:
+    - {fileID: 8300000, guid: 826aa391ab3b80d4a93e0ae1f51598ab, type: 3}
+    - {fileID: 8300000, guid: 998382ba07bce2d48a7eda6bff519f69, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 125fa7c234ebd444ca145ca7a2d2999a, type: 3}
+    - {fileID: 8300000, guid: 693b096d709fbc44898142cb5ffd827d, type: 3}
+    - {fileID: 8300000, guid: 1e5656967be6f264a9f55b66c7e61cb7, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_manatarms_thrown
+    Clips:
+    - {fileID: 8300000, guid: 1ecfd6ec0fc8e534a8d52f17f302e9f3, type: 3}
+    - {fileID: 8300000, guid: ec3bcfcfbad1b5546b7646ae0f970b2c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_murmur
+    Clips:
+    - {fileID: 8300000, guid: 2dd0fee16c308b54fbb8608e875a2515, type: 3}
+    - {fileID: 8300000, guid: 531e94427b1927841bb25ef7edd8debb, type: 3}
+    - {fileID: 8300000, guid: d81cc028e94202940b649d6408ad96c6, type: 3}
+    - {fileID: 8300000, guid: 814a294ead0eeb44dbd9a549011c40b9, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_alert
+    Clips:
+    - {fileID: 8300000, guid: 6e47268a18287dd4a80cc9a3764e5c20, type: 3}
+    - {fileID: 8300000, guid: 00ec83570761299478a7da29004b8381, type: 3}
+    - {fileID: 8300000, guid: f879f1b5364c631429909d32248025af, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_chase
+    Clips:
+    - {fileID: 8300000, guid: cd51df5a65a1e894aaa638323fb03535, type: 3}
+    - {fileID: 8300000, guid: f75b28bb3cb1627489c2d7b0286e02eb, type: 3}
+    - {fileID: 8300000, guid: 228bd0ba41e330b418a74654f16acdb6, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_search
+    Clips:
+    - {fileID: 8300000, guid: 4366b99e0dd70524bba8e58427876024, type: 3}
+    - {fileID: 8300000, guid: dbad5a4e86e648546849141d68d51ee5, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_lost
+    Clips:
+    - {fileID: 8300000, guid: 4c383d8ce9d967b46a6bd597b9ab623c, type: 3}
+    - {fileID: 8300000, guid: 69642c378d5758e47801e0b715527479, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_attack
+    Clips:
+    - {fileID: 8300000, guid: 8c31f28a2963ba940872c51fb6f03f90, type: 3}
+    - {fileID: 8300000, guid: ea47153a5e668ec43a8353fdee840bad, type: 3}
+    - {fileID: 8300000, guid: cb531cb5c9b9c1d4ca892088e884cb8c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_hurt
+    Clips:
+    - {fileID: 8300000, guid: d3a0c26f5bbd35445ab8f09f19cccd46, type: 3}
+    - {fileID: 8300000, guid: 2468e6638186aef4a8f80f0f3f5fff18, type: 3}
+    - {fileID: 8300000, guid: a0f5cc894d79c5f4385f3b562b8253a8, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_death
+    Clips:
+    - {fileID: 8300000, guid: 9e9ca6c671ffc0746846def057032d47, type: 3}
+    - {fileID: 8300000, guid: 526f8382796e9114585bdeab75cb9561, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_asleep
+    Clips:
+    - {fileID: 8300000, guid: 9b6d955373621384581b40b5e9fd12a1, type: 3}
+    - {fileID: 8300000, guid: 307e2c4a28a5120459dfb6f4810cdee5, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_grabbed
+    Clips:
+    - {fileID: 8300000, guid: bc408e2ee26a83d44b8d4f77508f2af2, type: 3}
+    - {fileID: 8300000, guid: fad46a6c81f10e34f8cf981a53a7cc79, type: 3}
+    - {fileID: 8300000, guid: d5f1d641ac716dc4aa2882c8896ac0bb, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_late_pavisier_thrown
+    Clips:
+    - {fileID: 8300000, guid: fe81cc2b191e7f540accd6811e08117e, type: 3}
+    - {fileID: 8300000, guid: eaec76aa80e111c4a9f759fc1203cffd, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_murmur
+    Clips:
+    - {fileID: 8300000, guid: 276498a04c550b141a3296ce742629e9, type: 3}
+    - {fileID: 8300000, guid: 6732e3b73435e42499cdc0a505fe87e0, type: 3}
+    - {fileID: 8300000, guid: 07a7c8c9a4fb9ec40b86999f7b98f0bb, type: 3}
+    - {fileID: 8300000, guid: be8a393af0879a3418ec1fd177d4f9c7, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_alert
+    Clips:
+    - {fileID: 8300000, guid: 8882b503f187d8f408e72e7ed63fa3f0, type: 3}
+    - {fileID: 8300000, guid: 51745793257c59a4cad44f57a101ee39, type: 3}
+    - {fileID: 8300000, guid: bc3ca69517a85614caf0167223d13d53, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_chase
+    Clips:
+    - {fileID: 8300000, guid: 5d569297abd933a4a8e1d115afaf1420, type: 3}
+    - {fileID: 8300000, guid: b8cead3787a89fa4b8d5d861d6d0c633, type: 3}
+    - {fileID: 8300000, guid: 12fdf3a0a45af9e418ee26cb2179935c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_search
+    Clips:
+    - {fileID: 8300000, guid: c2988000492948b43a52f5dcb30b13c0, type: 3}
+    - {fileID: 8300000, guid: 21ee5d1b6ce1fe84b9a1465652b466a0, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_lost
+    Clips:
+    - {fileID: 8300000, guid: ca20104086eece54a8e47d4e37a95e71, type: 3}
+    - {fileID: 8300000, guid: ab7071fcbe0cb2745abc3d793085833e, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_attack
+    Clips:
+    - {fileID: 8300000, guid: 86432251c3d317046914ef55fe90146c, type: 3}
+    - {fileID: 8300000, guid: 55d3bcad3c0107f4194db8a568bccd99, type: 3}
+    - {fileID: 8300000, guid: a25013efcdec6cd4d92c7d8e1a549e61, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_hurt
+    Clips:
+    - {fileID: 8300000, guid: 65647c46c3dbfeb4698a1fcd4a7f4233, type: 3}
+    - {fileID: 8300000, guid: 61e0f9911be52a5409aef6a6d8df0e07, type: 3}
+    - {fileID: 8300000, guid: 11b464b114e05ce468df5acd95917d16, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_death
+    Clips:
+    - {fileID: 8300000, guid: fb2cc6abf0255e64e83a27b5689638fb, type: 3}
+    - {fileID: 8300000, guid: 570a5491d77a1c747a6f315d1a22ded9, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_asleep
+    Clips:
+    - {fileID: 8300000, guid: a4c191c1e1f11e54cac2093bf9539e18, type: 3}
+    - {fileID: 8300000, guid: e9203c03e5b45d5468827383d66faf9a, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 9502526235394c849bf9b8bf15f4c7a8, type: 3}
+    - {fileID: 8300000, guid: 4889f06caf7463d4b9281f6a73a93486, type: 3}
+    - {fileID: 8300000, guid: 2c83047c4e73a3f49a64a17eef9a0e5e, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_guard_thrown
+    Clips:
+    - {fileID: 8300000, guid: bc8f09d191a64e64a8951494a8110080, type: 3}
+    - {fileID: 8300000, guid: 76c452cbfffb1154b87c4dd1fa62f21a, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_murmur
+    Clips:
+    - {fileID: 8300000, guid: d6dd9dc4bc176844193893d7e90c0d9b, type: 3}
+    - {fileID: 8300000, guid: 15549cbd32270224794a138351fa5e97, type: 3}
+    - {fileID: 8300000, guid: c5f1898cb05f7974fb695ea96dd64990, type: 3}
+    - {fileID: 8300000, guid: ac420d3245a32f64c94cb35c2b680ecf, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_alert
+    Clips:
+    - {fileID: 8300000, guid: 7ac9064486e8e264fa8953c10ee54394, type: 3}
+    - {fileID: 8300000, guid: 7db6831a1753075438c54acbb9f70d07, type: 3}
+    - {fileID: 8300000, guid: 1561816c407beff4790d4f21a2f28c8b, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_chase
+    Clips:
+    - {fileID: 8300000, guid: 183e7561f9965ba4187a65d10532bbe6, type: 3}
+    - {fileID: 8300000, guid: 606d3ba5f29a7b74b83f2f98ca718751, type: 3}
+    - {fileID: 8300000, guid: f78efc6ac6de2b64c80bacee23f05f37, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_search
+    Clips:
+    - {fileID: 8300000, guid: 066d17b7307c6d247bae315e03e6d039, type: 3}
+    - {fileID: 8300000, guid: 698dfa20f4c4876498ffb708e53de373, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_lost
+    Clips:
+    - {fileID: 8300000, guid: 6a8f424e1d83f3349b5172d21dc6a980, type: 3}
+    - {fileID: 8300000, guid: c9d408378e935584c8003df829378928, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_attack
+    Clips:
+    - {fileID: 8300000, guid: 33c6957e11047c84b844415ad09eb9d7, type: 3}
+    - {fileID: 8300000, guid: 44968b7bcc8c531449ca98cf0bc8d499, type: 3}
+    - {fileID: 8300000, guid: 3ed8ec2586be26d4b9159109cd6638ad, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_hurt
+    Clips:
+    - {fileID: 8300000, guid: dde9e1ea3fd3fec46a1df6cbf1323d0b, type: 3}
+    - {fileID: 8300000, guid: 5c0257f5fcd60d34aa9143a78d3b3e00, type: 3}
+    - {fileID: 8300000, guid: 25547529830d2ae44ba1c6b7d61550d0, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_death
+    Clips:
+    - {fileID: 8300000, guid: cfba5b7d0e0276b4ca7552652baae606, type: 3}
+    - {fileID: 8300000, guid: b3e71614d3db7784fb8aa84fcebe8381, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_asleep
+    Clips:
+    - {fileID: 8300000, guid: b5012908d7348ba429457828ba7c7ca7, type: 3}
+    - {fileID: 8300000, guid: ce0eeafa5f184e046843d2142840d7af, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 13f5ca09c1242264585206d71d87e687, type: 3}
+    - {fileID: 8300000, guid: 0bf2ec3ff331f3c49a887eaad1da21c9, type: 3}
+    - {fileID: 8300000, guid: ad093b9cb903b3540a8711d240425144, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_musketeer_thrown
+    Clips:
+    - {fileID: 8300000, guid: 5ab9272a2478f4e408e608fd32c7f8aa, type: 3}
+    - {fileID: 8300000, guid: 1013dcdf66a63014eb49e567839c3f9c, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_murmur
+    Clips:
+    - {fileID: 8300000, guid: e9742b3f0564439408eaba54132f526b, type: 3}
+    - {fileID: 8300000, guid: fe5b7b7a18e548442966e41ef546d4d1, type: 3}
+    - {fileID: 8300000, guid: b3e1a0782eb5c844a9a20fea77fdb047, type: 3}
+    - {fileID: 8300000, guid: 33c577b3b4503de40bdbea87c9639276, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_alert
+    Clips:
+    - {fileID: 8300000, guid: 5cf7c65642ef4f0429c04ee95c6dc282, type: 3}
+    - {fileID: 8300000, guid: 0e834b95eedb77b4a87abbbcabdc56a1, type: 3}
+    - {fileID: 8300000, guid: 6f7dcd9ad451083459b1ebf69b0955f4, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_chase
+    Clips:
+    - {fileID: 8300000, guid: 89444be505eb18142a5a880b311c7254, type: 3}
+    - {fileID: 8300000, guid: 07240831e36487d43a6489a70c982fba, type: 3}
+    - {fileID: 8300000, guid: f1db15b9b1cf21e44a5a039b4cfa7968, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_search
+    Clips:
+    - {fileID: 8300000, guid: f528006fe7ec9374ab8dce0b9c52de03, type: 3}
+    - {fileID: 8300000, guid: a45ea28c32c75f3439e6d00e465bec48, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_lost
+    Clips:
+    - {fileID: 8300000, guid: 874605430fc60a642bd59b83f622cbb2, type: 3}
+    - {fileID: 8300000, guid: 13dfd733144895a4690c4a2c28c8db97, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_attack
+    Clips:
+    - {fileID: 8300000, guid: 9decd38fe51245a4ba71dfcd011aec04, type: 3}
+    - {fileID: 8300000, guid: 89579c1931de7844f82b136bfdef13d9, type: 3}
+    - {fileID: 8300000, guid: 752443466b433a44f85c3fc2c902bb60, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_hurt
+    Clips:
+    - {fileID: 8300000, guid: 052e3174107a3ae45bb98f0b2a271c64, type: 3}
+    - {fileID: 8300000, guid: de73b04dcc2d40f41a8d2dcbddfb48c5, type: 3}
+    - {fileID: 8300000, guid: 56eb83012164ada44878b3233fc40399, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_death
+    Clips:
+    - {fileID: 8300000, guid: 6ed9ec2c9cde95643aaf41e5e31921f1, type: 3}
+    - {fileID: 8300000, guid: 2df1bb68b7af9eb418b618b6980719ba, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_asleep
+    Clips:
+    - {fileID: 8300000, guid: ad491b732bcc0c749ae6840b0bd553a9, type: 3}
+    - {fileID: 8300000, guid: 22b69f25c86590d4a9f52d894407af72, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_grabbed
+    Clips:
+    - {fileID: 8300000, guid: b78540961593580448fd7043b7990525, type: 3}
+    - {fileID: 8300000, guid: e20736693c98a6c4296bb796ae4de3ab, type: 3}
+    - {fileID: 8300000, guid: aab66fe19ca640b4aa13c0a44fbda6f4, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_cuirassier_thrown
+    Clips:
+    - {fileID: 8300000, guid: ddd67861ffcad164e8b4cce5e2997f05, type: 3}
+    - {fileID: 8300000, guid: 4c679f978b2065f4fa9aa7a636271694, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_murmur
+    Clips:
+    - {fileID: 8300000, guid: 59109b4acdf2f0c46bba555f9e888b07, type: 3}
+    - {fileID: 8300000, guid: 33724fe5d4b94b2499e8d1eb94aeaa87, type: 3}
+    - {fileID: 8300000, guid: 58d1ec6181f0b9d49b198190efd1f4cc, type: 3}
+    - {fileID: 8300000, guid: 3ee970e8755024744acc4ab8ac4503f4, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_alert
+    Clips:
+    - {fileID: 8300000, guid: 9ef825edea28d1d40ab2ef3f46bc9867, type: 3}
+    - {fileID: 8300000, guid: a2826bd31abb17946be3726c0d9d6e03, type: 3}
+    - {fileID: 8300000, guid: 9d491794950d4bb4ca62b179fd5a15f8, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_chase
+    Clips:
+    - {fileID: 8300000, guid: 1aed991d867b96946b6d46d262fd9b64, type: 3}
+    - {fileID: 8300000, guid: 95d4afe8572b2a34bb657c0f2c4c7637, type: 3}
+    - {fileID: 8300000, guid: 21d73f206ad8b2d4cbfd7a5bff8b3454, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_search
+    Clips:
+    - {fileID: 8300000, guid: 3d9b0b4085d032643863a6683b9b443a, type: 3}
+    - {fileID: 8300000, guid: 7f3426ac19eacf246b45cee7ab6b795a, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_lost
+    Clips:
+    - {fileID: 8300000, guid: c1902cf0aee12b24dbfa5d83d08c8376, type: 3}
+    - {fileID: 8300000, guid: 0ed91d72deac0054f8b74edd42b0d05d, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_attack
+    Clips:
+    - {fileID: 8300000, guid: 08a71d69c3c149a4f83163701ac199a8, type: 3}
+    - {fileID: 8300000, guid: 117c52fd68c876a49be161c170430fdb, type: 3}
+    - {fileID: 8300000, guid: 336800ad8fcc9c843baa9cd6bf39cb03, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_hurt
+    Clips:
+    - {fileID: 8300000, guid: 0e0acdd439e1b7c4c8dfefe04384b17d, type: 3}
+    - {fileID: 8300000, guid: be01d7796845be94ebbcc4596f102a5b, type: 3}
+    - {fileID: 8300000, guid: 20928a3ad30a3a044b218b63833f89a5, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_death
+    Clips:
+    - {fileID: 8300000, guid: 3d71a1b78d014fe41853685b1e801139, type: 3}
+    - {fileID: 8300000, guid: 600d06717db009b4c94ffe05f27197e8, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_asleep
+    Clips:
+    - {fileID: 8300000, guid: d5c34e64402f2cb458f25a841406ca61, type: 3}
+    - {fileID: 8300000, guid: 506ae2df234193a4f9b6731f52057f81, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_grabbed
+    Clips:
+    - {fileID: 8300000, guid: 6a9bbafe727cc42439750d89738e1704, type: 3}
+    - {fileID: 8300000, guid: ab71c6571a5ad5f4b81db4ab7f288998, type: 3}
+    - {fileID: 8300000, guid: 689ac9f521163f94aa1df28d03a52eab, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: vo_powder_petardier_thrown
+    Clips:
+    - {fileID: 8300000, guid: 4209b324fabb7c242a7422eb7b685eb0, type: 3}
+    - {fileID: 8300000, guid: 3d6b679ffda26d3468db175bf8b39ad1, type: 3}
+    Group: {fileID: -259419153321129032, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_alarm_bronze_roused
+    Clips:
+    - {fileID: 8300000, guid: f92b96d7e863ab34c8e35099332a94e5, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_alarm_bronze_huecry_loop
+    Clips:
+    - {fileID: 8300000, guid: 350d25044a507c840854190ad35ad8d4, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_alarm_high_roused
+    Clips:
+    - {fileID: 8300000, guid: 1215ec8bf28781a4abf5e9303ff245b2, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_alarm_high_huecry_loop
+    Clips:
+    - {fileID: 8300000, guid: f6871aac95e849c4d9ce5db676532915, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_alarm_late_roused
+    Clips:
+    - {fileID: 8300000, guid: 647fcb193497ca24eb8067eef25b4c40, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_alarm_late_huecry_loop
+    Clips:
+    - {fileID: 8300000, guid: d8c80c6d885ab5c4d828abecf4bdec14, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_alarm_powder_roused
+    Clips:
+    - {fileID: 8300000, guid: c8e05676e7e1e7e40b6679d221a6c08d, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_alarm_powder_huecry_loop
+    Clips:
+    - {fileID: 8300000, guid: 78b15a02842f12448b9927a31b1cd178, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_household_stir_loop
+    Clips:
+    - {fileID: 8300000, guid: 15e500ae323e131459823019a4fa0344, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_castle_lockdown_portcullis_drop
+    Clips:
+    - {fileID: 8300000, guid: 4d7bd9b3cb29bd747aa32ba2e19c4208, type: 3}
+    - {fileID: 8300000, guid: 1afab104d550b884ab0eda395ebc4cb9, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_castle_lockdown_bolt
+    Clips:
+    - {fileID: 8300000, guid: e58fecee7fa82fb4480e7719a8882cec, type: 3}
+    - {fileID: 8300000, guid: 494c30dfb2c68234e92be848afd98fab, type: 3}
+    - {fileID: 8300000, guid: 3598b2d962c27f042adb98d6c86d5132, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_door_wood_open
+    Clips:
+    - {fileID: 8300000, guid: 9cd16ca0d44df914e93e6349061e8981, type: 3}
+    - {fileID: 8300000, guid: 3b1807f737f7d594ba5752005b2989dd, type: 3}
+    - {fileID: 8300000, guid: 8491ba93930b7654990bc043bb716471, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_door_wood_close
+    Clips:
+    - {fileID: 8300000, guid: 43ecb9a8535e4dd48a4889a14cb1408b, type: 3}
+    - {fileID: 8300000, guid: dafe53087a026424aaa0415ea6a7ffb4, type: 3}
+    - {fileID: 8300000, guid: d99d19086180bd5449935f635b03bfd0, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_door_heavy_open
+    Clips:
+    - {fileID: 8300000, guid: d61393e3dd279b64ea1d736029f6210b, type: 3}
+    - {fileID: 8300000, guid: e99d948e97b154448a290b7dcaa71c22, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_door_heavy_close
+    Clips:
+    - {fileID: 8300000, guid: 7e4e0f069fb23d6429ec5d1ea22bc9af, type: 3}
+    - {fileID: 8300000, guid: dafab1e6197848d4a9a1dffc72347966, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_door_grate_open
+    Clips:
+    - {fileID: 8300000, guid: 4a0bae6ff0326d146a05e2599c15665f, type: 3}
+    - {fileID: 8300000, guid: 0c3db9bb99243094e833b3d994fe5339, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_door_grate_close
+    Clips:
+    - {fileID: 8300000, guid: 97998e37f8ae783498ebc0bc0c39880a, type: 3}
+    - {fileID: 8300000, guid: adaab7681ba78794aac39f9b46662c56, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_door_locked_rattle
+    Clips:
+    - {fileID: 8300000, guid: 3901c05a60145c5408892d2856926279, type: 3}
+    - {fileID: 8300000, guid: 5702dad1553040c4ead6cd8005bd6ed6, type: 3}
+    - {fileID: 8300000, guid: a3087e2b74527cf48ad48952fd2d128d, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_door_unlock
+    Clips:
+    - {fileID: 8300000, guid: 0c6ff1f128023bc4dbffd2b68f25955e, type: 3}
+    - {fileID: 8300000, guid: cc06760839d347640a27d7a04c0c98b7, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_door_slam
+    Clips:
+    - {fileID: 8300000, guid: ad1f94827fc4cca4799e32b10b558a56, type: 3}
+    - {fileID: 8300000, guid: 0bf24ab1e2d841449af6f4c338ab023c, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_portcullis_raise_loop
+    Clips:
+    - {fileID: 8300000, guid: 4decdd6fd7216a940bdfda66275520cd, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_portcullis_stop
+    Clips:
+    - {fileID: 8300000, guid: a3b9e2261697bfd47895bec63d64ff2b, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_masonry_crumble
+    Clips:
+    - {fileID: 8300000, guid: f14f41fb10914c44a9c18d8688ae7d3f, type: 3}
+    - {fileID: 8300000, guid: f773537e555a7734ea8c6bdffb515ca3, type: 3}
+    - {fileID: 8300000, guid: 8278230f6b7c96a4d9b6125d17f69f86, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 4
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_debris_settle
+    Clips:
+    - {fileID: 8300000, guid: a4e990d7e5de11947a1d28d6eddb1d8c, type: 3}
+    - {fileID: 8300000, guid: 6b0272d8a77c355428835addb02e5333, type: 3}
+    - {fileID: 8300000, guid: c2d6c757b8e9fbe448a18c230ac3e1ea, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_fire_ignite
+    Clips:
+    - {fileID: 8300000, guid: 804aaac873a62964aa4c55c6153f6111, type: 3}
+    - {fileID: 8300000, guid: 169579e72ad18cd48bd43e30f3ef837f, type: 3}
+    - {fileID: 8300000, guid: 7113a584e587e4b4db53ad2a88dc9f97, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_fire_tapestry_catch
+    Clips:
+    - {fileID: 8300000, guid: 13c707d108c572048a3ecbb184cd1d0f, type: 3}
+    - {fileID: 8300000, guid: 33156bd6d40b9584f9b8a91def93d615, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_fire_candle_loop
+    Clips:
+    - {fileID: 8300000, guid: 4de05ef7b498b6646ab7fb2a0bde3504, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_fire_torch_loop
+    Clips:
+    - {fileID: 8300000, guid: ae3b3d9740d86c942993f80c06b6910d, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_fire_brazier_loop
+    Clips:
+    - {fileID: 8300000, guid: 28738c9796790854bb1de64fd836986f, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_fire_hearth_loop
+    Clips:
+    - {fileID: 8300000, guid: 92301dfc4b5011442a96417b979955e5, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_fire_blaze_loop
+    Clips:
+    - {fileID: 8300000, guid: e6a3eb770ba52a44f93d8e875c35aef8, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_fire_extinguish
+    Clips:
+    - {fileID: 8300000, guid: d7e425f2232af23478b8332e380b0c2d, type: 3}
+    - {fileID: 8300000, guid: df1868963a535794b98a975e13810b79, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_torch_drop
+    Clips:
+    - {fileID: 8300000, guid: e3497c9b27d49134f9765ab5dcd35265, type: 3}
+    - {fileID: 8300000, guid: e28802534e5bcf94780d20ce5d293d80, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_hazard_fire_spread_fast
+    Clips:
+    - {fileID: 8300000, guid: 5c8633121e646284892e8fb936429d6e, type: 3}
+    - {fileID: 8300000, guid: cfcd6e9eb3a2a4a46b497d8728fc9601, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_hazard_oil_pour
+    Clips:
+    - {fileID: 8300000, guid: d001be752e9aa6442879888140af37f6, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_hazard_oil_sizzle
+    Clips:
+    - {fileID: 8300000, guid: 81bff4171819c6a4c9d194522a0acab3, type: 3}
+    - {fileID: 8300000, guid: 0e2dcb03b3f4b0343b909f6e051064d7, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_hazard_murderhole_drop
+    Clips:
+    - {fileID: 8300000, guid: f361d67e3ce14b2458ea4fe99f38d048, type: 3}
+    - {fileID: 8300000, guid: 5ec8af502b21230478a795bab67ea47f, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 2
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_hazard_arrowloop_loose
+    Clips:
+    - {fileID: 8300000, guid: e38580ad5effd42488c6ddc65a16fb49, type: 3}
+    - {fileID: 8300000, guid: d566990535aec164b9738a8858703bf6, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 1
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_hazard_magazine_explosion
+    Clips:
+    - {fileID: 8300000, guid: fabd9b624dec313438d27580fce2d8ca, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 4
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_hazard_explosion_tail_distant
+    Clips:
+    - {fileID: 8300000, guid: b2c126faaa91f20408d3ba69ccd29453, type: 3}
+    - {fileID: 8300000, guid: 27522d8d1a11b7c46a80531733621058, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_drawbridge_raise_loop
+    Clips:
+    - {fileID: 8300000, guid: 51d369d8795e73b45aa4ba0015c1236c, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_drawbridge_slam
+    Clips:
+    - {fileID: 8300000, guid: 1544db2c3b95a7f4b8ce93c88cf62970, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_portal_loop
+    Clips:
+    - {fileID: 8300000, guid: 0feaa304539d2f4429c13b9160cb1e74, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_portal_open
+    Clips:
+    - {fileID: 8300000, guid: b21ed8cedb2d71a45998ef3744e90fef, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_portal_enter
+    Clips:
+    - {fileID: 8300000, guid: 423fce413f7db5e4e8677025ff47a267, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_portal_arrive
+    Clips:
+    - {fileID: 8300000, guid: c48b63013dc80c343b44d37d20c709ad, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_portal_narrowing_loop
+    Clips:
+    - {fileID: 8300000, guid: 1a1cc9baecdf470488e695fdd2701ee5, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_portal_warning
+    Clips:
+    - {fileID: 8300000, guid: e863d7d78aa357045b650aeecb24860d, type: 3}
+    - {fileID: 8300000, guid: 6c4edd4228fa32544afb7b7e83523e0e, type: 3}
+    - {fileID: 8300000, guid: 33f06a9dabfcbe94c8fcf1cb707030f8, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_portal_collapse
+    Clips:
+    - {fileID: 8300000, guid: d06ed41167167a747beeb593d8a18d0b, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 3
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_extract_item_cross
+    Clips:
+    - {fileID: 8300000, guid: 6bce9c59c31aa714c8af1fd5b029533b, type: 3}
+    - {fileID: 8300000, guid: 7c0fe1231578079438ef504214bf578f, type: 3}
+    - {fileID: 8300000, guid: 7397e4e462da3914583a4ebd81975048, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_extract_player_cross
+    Clips:
+    - {fileID: 8300000, guid: 3f37fe359dde32448ae6e28fbabfe0e2, type: 3}
+    Group: {fileID: -6548249127991572709, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_result_tally_tick
+    Clips:
+    - {fileID: 8300000, guid: 5625a074ea8413d4683d655b27e8fe7b, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_result_tally_total
+    Clips:
+    - {fileID: 8300000, guid: 7decc267d96fd3c468bcac347252cc09, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_lair_bed_loop
+    Clips:
+    - {fileID: 8300000, guid: e8ce63899773c7840b9aa8a9c58991c3, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_lair_hearth_loop
+    Clips:
+    - {fileID: 8300000, guid: 61f0a51a3d757dc4b959a25954aa894d, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_lair_debt_pay
+    Clips:
+    - {fileID: 8300000, guid: bca2c8e10d06e3b49a22ad9170478ce2, type: 3}
+    - {fileID: 8300000, guid: c0dbb726074b78c458deca0f9a44d00e, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_lair_debt_due
+    Clips:
+    - {fileID: 8300000, guid: 16af6a50557c6c7468e2c9dd27dd38d9, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_lair_era_select_bronze
+    Clips:
+    - {fileID: 8300000, guid: 24f07069aa3d9d94d99a37d3aba7ce30, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_lair_era_select_high
+    Clips:
+    - {fileID: 8300000, guid: d65d0c740a241c943a0613ef02c5111d, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_lair_era_select_late
+    Clips:
+    - {fileID: 8300000, guid: e3e2742dcf1aea44c991870a75a17f37, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_lair_era_select_powder
+    Clips:
+    - {fileID: 8300000, guid: 66392c3adaa1c6f4e9ead4de097e2c68, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_lair_weapon_rack_take
+    Clips:
+    - {fileID: 8300000, guid: c2adf64bb9168e14483dca0d5b4e050b, type: 3}
+    - {fileID: 8300000, guid: fdcd8d9ecdca32948bee0501cd8c2377, type: 3}
+    Group: {fileID: 5682989802745087802, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sfx_lair_revive
+    Clips:
+    - {fileID: 8300000, guid: 0d2a112deb7ff284a906781fff399f21, type: 3}
+    Group: {fileID: -5770185294276085106, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_title_loop
+    Clips:
+    - {fileID: 8300000, guid: df160af412a3dd64dbc0dbfb1ef99776, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_lair_loop
+    Clips:
+    - {fileID: 8300000, guid: ac765c4e770865c4682a521662e356c0, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_lair_after_loss_loop
+    Clips:
+    - {fileID: 8300000, guid: 9b92abf60c5aa1546a52bce67b1e5bf3, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_results_success_loop
+    Clips:
+    - {fileID: 8300000, guid: 1fef417115d2cc442ad98667c1904e61, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_results_failure_loop
+    Clips:
+    - {fileID: 8300000, guid: bdf906f36a6d31e40a09c49728ea9467, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_credits
+    Clips:
+    - {fileID: 8300000, guid: 2e15377b3202d7e47ac527979594a7ae, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_bronze_calm
+    Clips:
+    - {fileID: 8300000, guid: 28901e9f04d0a3444abf810fd4cb5a2f, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_bronze_stirred
+    Clips:
+    - {fileID: 8300000, guid: bd99b0f9597e5d644a42c083c8123a54, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_bronze_roused
+    Clips:
+    - {fileID: 8300000, guid: a7fc4e3282257004591abbcafe619d57, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_bronze_huecry
+    Clips:
+    - {fileID: 8300000, guid: 3c0490b59e5f34040a4a9fafc74356ef, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_high_calm
+    Clips:
+    - {fileID: 8300000, guid: 4fe53624667fd0240a8b78517ec2aba2, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_high_stirred
+    Clips:
+    - {fileID: 8300000, guid: 3e053a749cc90404d8ce9d1351d64a15, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_high_roused
+    Clips:
+    - {fileID: 8300000, guid: 54ac97a495a37644891804b96e319eda, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_high_huecry
+    Clips:
+    - {fileID: 8300000, guid: 2ee1ade2126155149abd5ceb21957588, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_late_calm
+    Clips:
+    - {fileID: 8300000, guid: c5afe07b77e3c764d8d96a7cf7a4c4c9, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_late_stirred
+    Clips:
+    - {fileID: 8300000, guid: 78c9306ff59ddb14ebc756f66bcb464e, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_late_roused
+    Clips:
+    - {fileID: 8300000, guid: a9da39bfdb498ff479a10808b14ba29a, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_late_huecry
+    Clips:
+    - {fileID: 8300000, guid: c1e8ab1261397c34c9743ed0d61a6983, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_powder_calm
+    Clips:
+    - {fileID: 8300000, guid: 4c1a5719eec4b184882351fc4741a6e1, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_powder_stirred
+    Clips:
+    - {fileID: 8300000, guid: 151a6f70896cdfc418718a9ec8e3e0b4, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_powder_roused
+    Clips:
+    - {fileID: 8300000, guid: 33e0a0343cb5f6345afb2cd1c408020d, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_powder_huecry
+    Clips:
+    - {fileID: 8300000, guid: eb95addcc9c27524594ac12863632e50, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: mus_raid_portal_narrowing
+    Clips:
+    - {fileID: 8300000, guid: 0884656c1cdbc384abad80f4e5bf70ed, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_stirred_bronze
+    Clips:
+    - {fileID: 8300000, guid: e731d2a0a1063bc4b90d7eb888b3faa4, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_roused_bronze
+    Clips:
+    - {fileID: 8300000, guid: 2cb9e97f04761044cb054b9043504426, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_huecry_bronze
+    Clips:
+    - {fileID: 8300000, guid: fa2c19c65e349eb43803c4f1abce7e16, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_stirred_high
+    Clips:
+    - {fileID: 8300000, guid: 821aaf250b508d74f89ab94220600233, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_roused_high
+    Clips:
+    - {fileID: 8300000, guid: 929d70f6ceee3b049996b081dbaefd4b, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_huecry_high
+    Clips:
+    - {fileID: 8300000, guid: e843ca45015831d40be5358d79deb845, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_stirred_late
+    Clips:
+    - {fileID: 8300000, guid: 712e4b4f4a6143f488b0c9fad4474296, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_roused_late
+    Clips:
+    - {fileID: 8300000, guid: 9f2ce9c8c7f51df42bdc466c8edf5225, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_huecry_late
+    Clips:
+    - {fileID: 8300000, guid: 94cb452a64d45f14b86b1d64722d94b6, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_stirred_powder
+    Clips:
+    - {fileID: 8300000, guid: 4a34d4b813ae0e24697436068c297a05, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_roused_powder
+    Clips:
+    - {fileID: 8300000, guid: 5759e69c1dc458749a042c18e6c4b75a, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_alarm_huecry_powder
+    Clips:
+    - {fileID: 8300000, guid: 6bfd89a0ccfd9954797f2e135c24b793, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_gold_found
+    Clips:
+    - {fileID: 8300000, guid: 5875ef40f396b9e4b9afcfd4b7b81742, type: 3}
+    - {fileID: 8300000, guid: fb985ea50d4ad2441a2fdad214ffa6d2, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_player_down
+    Clips:
+    - {fileID: 8300000, guid: b088c74aae90f6e4e9ada2b95af53c36, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_extract_success
+    Clips:
+    - {fileID: 8300000, guid: 18860f3e600d30d4eb41b632067e8abc, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_raid_lost
+    Clips:
+    - {fileID: 8300000, guid: 2861684cb1356674285a65a74fae986b, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: sting_portal_opened
+    Clips:
+    - {fileID: 8300000, guid: 440fc37b77a54ac40b19072a6b4f2d37, type: 3}
+    Group: {fileID: 6970600747070554013, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 0
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_bronze_exterior_loop
+    Clips:
+    - {fileID: 8300000, guid: f8ace3a067fc1bf40b25f2f961a07185, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_high_exterior_loop
+    Clips:
+    - {fileID: 8300000, guid: c298b570a78790c499d4291a2608ff37, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_late_exterior_loop
+    Clips:
+    - {fileID: 8300000, guid: 58ca96fe2dc25fe4a8fd54ed75b4a616, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_powder_exterior_loop
+    Clips:
+    - {fileID: 8300000, guid: 6d7c67e334996da479803170021f937f, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_corridor_loop
+    Clips:
+    - {fileID: 8300000, guid: ebd3a2dc828567d489a5eb1c3fce2e2c, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_small_loop
+    Clips:
+    - {fileID: 8300000, guid: dd84aa837d5c3804780e794caf4882d3, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_hall_loop
+    Clips:
+    - {fileID: 8300000, guid: 6382e1708d6b56548acdeb508cca235b, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_stair_loop
+    Clips:
+    - {fileID: 8300000, guid: fb6dfd8168119084da15649cf545e3ab, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_crypt_loop
+    Clips:
+    - {fileID: 8300000, guid: 3d8bc3d01bba63d4eab857869daef8a9, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_chapel_loop
+    Clips:
+    - {fileID: 8300000, guid: 40709ee16db682a4e94694f7acf22d2b, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_magazine_loop
+    Clips:
+    - {fileID: 8300000, guid: 5f5a6edaaa96b6b4d8f99ffd2e0cdbc6, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_counting_loop
+    Clips:
+    - {fileID: 8300000, guid: daa3487ce8a058e49b21def3146c8878, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_kunstkammer_loop
+    Clips:
+    - {fileID: 8300000, guid: 33050af961189ae4798eb847eede6918, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_gallery_loop
+    Clips:
+    - {fileID: 8300000, guid: 72f2398e12fd8cf4ca2566302412c651, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_room_bronze_interior_loop
+    Clips:
+    - {fileID: 8300000, guid: c68c450fdb2a1ee4d99bf100252d8d49, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 0
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_spot_dripping
+    Clips:
+    - {fileID: 8300000, guid: a0e177a07c875cf41adbca24d213e7b8, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_spot_rats
+    Clips:
+    - {fileID: 8300000, guid: 947bbb70fc9440c4187d137b3ba69468, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05
+  - Name: amb_spot_wind_gap
+    Clips:
+    - {fileID: 8300000, guid: b186aaa7ab5428241a8b706fb0750172, type: 3}
+    Group: {fileID: -2134094723536833316, guid: 544d54763b700f1448822bd2f707f582, type: 2}
+    ThreeD: 1
+    Loop: 1
+    Noise: 0
+    Volume: 1
+    PitchRange: 0.05

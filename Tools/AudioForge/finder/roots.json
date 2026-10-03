@@ -1,0 +1,32 @@
+[
+  {
+    "name": "kenney",
+    "path": "library/kenney",
+    "licence": "CC0 (Kenney)",
+    "commit": true
+  },
+  {
+    "name": "opengameart",
+    "path": "library/opengameart",
+    "licence": "CC0 (OpenGameArt: rubberduck, artisticdude)",
+    "commit": true
+  },
+  {
+    "name": "p0ss",
+    "path": "library/p0ss-spells",
+    "licence": "CC-BY-SA 3.0 (p0ss, OpenGameArt Spell Sounds Starter Pack; credit required, derived files stay CC-BY-SA)",
+    "commit": true
+  },
+  {
+    "name": "ayden-own",
+    "path": "library/ayden-own",
+    "licence": "Owner's own work (Ayden)",
+    "commit": true
+  },
+  {
+    "name": "ayden-downloads",
+    "path": "library/ayden-downloads",
+    "licence": "Owner-stated: free library, same or similar terms as the other roots; page not recorded (see SOURCES.md)",
+    "commit": true
+  }
+]

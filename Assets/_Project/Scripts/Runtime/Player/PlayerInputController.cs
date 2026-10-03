@@ -11,8 +11,13 @@ namespace Player
         private PlayerInputs _input;
         private Vector2 _lookDelta;
 
+        // Hold C to creep (#238). Ctrl is the whisper modifier and Shift the shout modifier, so C is free.
+        // Local input only: the slower pace is the movement itself, so other machines hear it as a quiet step.
+        private InputAction _creep;
+
         private void Awake()
         {
+            _creep = new InputAction("Creep", InputActionType.Button, "<Keyboard>/c");
             _input ??= new PlayerInputs();
             _stateMachine = GetComponent<PlayerStateMachine>();
             EventManager.Instance?.Subscribe(this, (PlayerIdleEvent e) => EnableAllInputs());
@@ -43,8 +48,11 @@ namespace Player
             {
                 _stateMachine.Look(Vector2.zero);
                 _stateMachine.Move(Vector2.zero);
+                _stateMachine.Creeping = false;
                 return;
             }
+
+            _stateMachine.Creeping = _creep.IsPressed();
 
             // Lock player rotation while rotating a held item.
             if (ItemManager.Instance != null && ItemManager.Instance.IsRotatingObject)
@@ -195,6 +203,7 @@ namespace Player
                 return;
 
             DisableAllInputs();
+            _creep.Dispose();
             _input.Disable();
             _input.Dispose();
             _input = null;
@@ -214,6 +223,7 @@ namespace Player
         {
             if (_input == null) _input = new PlayerInputs();
             _input.Enable();
+            _creep.Enable();
 
             OpenInventoryInput(true);
             WalkInputs(true);

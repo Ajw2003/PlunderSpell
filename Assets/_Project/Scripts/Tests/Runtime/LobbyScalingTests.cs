@@ -55,8 +55,7 @@ namespace Plunderspell.Tests
             var go = new GameObject("Guard");
             _spawned.Add(go);
             go.AddComponent<BoxCollider>();
-            var guard = go.AddComponent<CastleGuard>();
-            guard.Configure(null);
+            var guard = go.AddComponent<Guard>();
             float solo = guard.MaxHealth;
 
             guard.ScaleHealth(GuardSpawner.LobbyScale(4, 0.25f));

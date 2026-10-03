@@ -29,7 +29,7 @@ namespace StateMachine.States
         {
             if (Time.time >= _endsAt)
             {
-                Exit();
+                Finish();
                 return;
             }
             Hold();
@@ -41,7 +41,9 @@ namespace StateMachine.States
             _stateMachine._rb.linearVelocity = _direction * _speed + Vector3.up * vertical;
         }
 
-        public override void Exit()
+        // Hands control back to walk or idle. This used to be Exit, but ChangeState now runs Exit on the
+        // state being left, so a transition inside Exit would recurse forever.
+        private void Finish()
         {
             if (_stateMachine.MovementDirection.sqrMagnitude > 0.1f)
             {

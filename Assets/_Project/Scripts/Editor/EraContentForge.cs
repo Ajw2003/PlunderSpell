@@ -10,7 +10,6 @@ using Plunderspell.Raid;
 using Plunderspell.Status;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Plunderspell.EditorTools
 {
@@ -518,27 +517,18 @@ namespace Plunderspell.EditorTools
 
                 (float patrol, float chase, float sight, float health, _) = Tuning(spec.role, spec.height_m);
 
-                var agent = instance.AddComponent<NavMeshAgent>();
-                agent.radius = radius;
-                agent.height = height;
-                agent.speed = patrol;
-                agent.angularSpeed = 240f;
-                agent.acceleration = 12f;
-                agent.stoppingDistance = 0.8f;
-                agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
-
                 instance.AddComponent<StatusEffectReceiver>();
-                CastleGuard guard = instance.AddComponent<CastleGuard>();
-                var so = new SerializedObject(guard);
-                so.FindProperty("_sightRange").floatValue = sight;
-                so.FindProperty("_patrolSpeed").floatValue = patrol;
-                so.FindProperty("_chaseSpeed").floatValue = chase;
-                so.FindProperty("_maxHealth").floatValue = health;
-                so.FindProperty("_eyeHeight").floatValue = height * 0.9f;
-                so.FindProperty("_geometryLayers").intValue = 1;
-                if (spec.role == "ranged" && bolt != null)
-                    so.FindProperty("_projectilePrefab").objectReferenceValue = bolt;
-                so.ApplyModifiedPropertiesWithoutUndo();
+                GuardPrefabParts.Add(instance, new GuardPrefabSetup
+                {
+                    SightRange = sight,
+                    PatrolSpeed = patrol,
+                    ChaseSpeed = chase,
+                    MaxHealth = health,
+                    EyeHeight = height * 0.9f,
+                    BodyRadius = radius,
+                    BodyHeight = height,
+                    ProjectilePrefab = spec.role == "ranged" ? bolt : null
+                });
 
                 instance.AddComponent<PurrNet.NetworkTransform>();
 

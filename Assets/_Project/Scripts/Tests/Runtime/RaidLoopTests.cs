@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using Plunderspell.Alarm;
 using Plunderspell.Castle;
 using Plunderspell.Extraction;
 using Plunderspell.Inventory;
@@ -29,7 +30,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
-            Plunderspell.Guards.CastleGuard.ClearIntruders();
+            TestDirector.Reset();
             foreach (Object o in _spawned)
                 if (o != null)
                     Object.DestroyImmediate(o);
@@ -396,6 +397,7 @@ namespace Plunderspell.Tests
         {
             RaidDirector director = MakeDirector(out _, out ExtractionZone zone, out _);
 
+            EnemyDirector enemies = TestDirector.Ensure();
             var playerGo = Track(new GameObject("Player"));
             playerGo.AddComponent<Plunderspell.Guards.IntruderTag>();
 
@@ -403,8 +405,7 @@ namespace Plunderspell.Tests
             director.StartRaid(HistoricalEra.BronzeAge);
             zone.ResolveLocally();
 
-            Assert.Contains(playerGo.transform,
-                (System.Collections.ICollection)Plunderspell.Guards.CastleGuard.Intruders,
+            Assert.IsTrue(enemies.IsIntruder(playerGo.transform),
                 "A surviving player must still be visible to guards in the next raid.");
         }
 
@@ -464,14 +465,19 @@ namespace Plunderspell.Tests
             var status = player.AddComponent<Plunderspell.Status.StatusEffectReceiver>();
             status.Ignite(5f, 30f);
             status.Stun(10f);
-            status.Sleep(10f);
-            Assert.IsTrue(status.IsBurning && status.IsStunned && status.IsAsleep, "Test premise.");
+            Assert.IsTrue(status.IsBurning && status.IsStunned, "Test premise.");
+            // Fire overrules sleep (#236), so a sleeper is a different player from a burning one.
+            var sleeper = Track(new GameObject("Sleeper"));
+            var sleepStatus = sleeper.AddComponent<Plunderspell.Status.StatusEffectReceiver>();
+            sleepStatus.Sleep(10f);
+            Assert.IsTrue(sleepStatus.IsAsleep, "Test premise.");
 
             RaidDirector.ClearCarriedOverState(player);
+            RaidDirector.ClearCarriedOverState(sleeper);
 
             Assert.IsFalse(status.IsBurning, "Fire from the last raid must not follow you into the next.");
             Assert.IsFalse(status.IsStunned);
-            Assert.IsFalse(status.IsAsleep);
+            Assert.IsFalse(sleepStatus.IsAsleep);
         }
     }
 }

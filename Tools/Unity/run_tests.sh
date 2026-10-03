@@ -2,6 +2,7 @@
 # Runs PlayMode tests in the connected Unity Editor and waits for the result.
 # Usage: bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleArrivalTests [PlayMode|EditMode]
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 
 filter="${1:?usage: run_tests.sh <test or class full name> [PlayMode|EditMode]}"
 mode="${2:-PlayMode}"

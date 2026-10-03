@@ -6,6 +6,17 @@ namespace Plunderspell.UI.Screens
 {
     public class HUDScreen : UIScreen
     {
+        // The mockup's .rd-bl and .rd-vital: a 420-wide block in the bottom-left corner, labels in a
+        // 100 column, the value in a 70 column, 14 between.
+        private const float Left = 36f;
+        private const float BlockWidth = 420f;
+        private const float RowHeight = 29f;
+        private const float LabelWidth = 100f;
+        private const float ValueWidth = 70f;
+        private const float ColumnGap = 14f;
+        private const float HintHeight = 21f;
+        private const float LowHealth = 0.25f;
+
         private Image _healthFill;
         private Text _healthText;
         private Image _manaFill;
@@ -16,50 +27,65 @@ namespace Plunderspell.UI.Screens
 
         protected override void OnBuild()
         {
-            var healthBar = UIFactory.CreateProgressBar(transform, "HealthBar", UITheme.Danger, new Vector2(280f, 26f), out _healthFill);
-            // Bottom-left: the raid HUD owns the top-left corner (clock, alarm).
-            SetAnchor(healthBar.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(20f, 74f));
-            _healthText = UIFactory.CreateText(healthBar.rectTransform, "HealthText", "", UITheme.SmallFontSize, UITheme.TextPrimary);
-            _healthText.rectTransform.anchorMin = Vector2.zero;
-            _healthText.rectTransform.anchorMax = Vector2.one;
-            _healthText.rectTransform.offsetMin = Vector2.zero;
-            _healthText.rectTransform.offsetMax = Vector2.zero;
-
-            // Every spell spends mana (SpellWord.ManaCost), so the pool sits under health.
-            var manaBar = UIFactory.CreateProgressBar(transform, "ManaBar", UITheme.ManaColor, new Vector2(280f, 20f), out _manaFill);
-            SetAnchor(manaBar.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(20f, 48f));
-            _manaText = UIFactory.CreateText(manaBar.rectTransform, "ManaText", "", UITheme.SmallFontSize, UITheme.TextPrimary);
-            _manaText.rectTransform.anchorMin = Vector2.zero;
-            _manaText.rectTransform.anchorMax = Vector2.one;
-            _manaText.rectTransform.offsetMin = Vector2.zero;
-            _manaText.rectTransform.offsetMax = Vector2.zero;
+            // Bottom-left: the raid HUD owns the top-left corner (clock, alarm). Every spell spends
+            // mana (SpellWord.ManaCost), so the pool sits under health.
+            float manaBottom = 34f + HintHeight + 6f + 10f;
+            float healthBottom = manaBottom + RowHeight + 10f;
+            _healthText = BuildVital("Health", "HEALTH", 14f, UITheme.Danger, healthBottom, out _healthFill);
+            _manaText = BuildVital("Mana", "MANA", 10f, UITheme.Voice, manaBottom, out _manaFill);
 
             // No gold counter: the raid HUD shows debt, banked and haul, and nothing adds to
             // PlayerStats.Gold. No Tab hint: the inventory it opened is gone (#132, #137).
-            var menuHint = UIFactory.CreateText(transform, "MenuHint", "[ESC] Menu", UITheme.SmallFontSize, UITheme.TextSecondary, TextAnchor.LowerLeft);
-            SetAnchor(menuHint.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(20f, 12f));
-            menuHint.rectTransform.sizeDelta = new Vector2(320f, 30f);
+            BuildMenuHint();
 
             _extractionGroup = new GameObject("ExtractionGroup", typeof(RectTransform));
             _extractionGroup.transform.SetParent(transform, false);
             var groupRect = (RectTransform)_extractionGroup.transform;
-            groupRect.anchorMin = new Vector2(0.5f, 0f);
-            groupRect.anchorMax = new Vector2(0.5f, 0f);
-            groupRect.pivot = new Vector2(0.5f, 0f);
-            groupRect.sizeDelta = new Vector2(420f, 70f);
-            groupRect.anchoredPosition = new Vector2(0f, 40f);
+            // Above the caption and microphone meter the raid HUD draws in the bottom-centre.
+            UIFactory.PlaceBottomCentre(groupRect, 120f, 420f, 44f);
 
-            var extractionBar = UIFactory.CreateProgressBar(groupRect, "ExtractionBar", UITheme.Success, new Vector2(420f, 22f), out _extractionFill);
-            extractionBar.rectTransform.anchoredPosition = Vector2.zero;
+            var extractionBar = UIFactory.CreateProgressBar(groupRect, "ExtractionBar", UITheme.Interactive, new Vector2(420f, 14f), out _extractionFill);
+            UIFactory.PlaceBottomLeft(extractionBar.rectTransform, 0f, 0f, 420f, 14f);
 
-            _extractionLabel = UIFactory.CreateText(groupRect, "ExtractionLabel", "Extracting...", UITheme.SmallFontSize, UITheme.TextPrimary);
-            _extractionLabel.rectTransform.anchorMin = new Vector2(0.5f, 1f);
-            _extractionLabel.rectTransform.anchorMax = new Vector2(0.5f, 1f);
-            _extractionLabel.rectTransform.pivot = new Vector2(0.5f, 0f);
-            _extractionLabel.rectTransform.sizeDelta = new Vector2(420f, 30f);
-            _extractionLabel.rectTransform.anchoredPosition = new Vector2(0f, 4f);
+            _extractionLabel = UIFactory.CreateText(groupRect, "ExtractionLabel", string.Empty, UITheme.Label - 1, UITheme.TextDim,
+                TextAnchor.LowerCenter, UIFonts.Mono);
+            UIFactory.PlaceTopLeft(_extractionLabel.rectTransform, 0f, 0f, 420f, 24f);
 
             _extractionGroup.SetActive(false);
+        }
+
+        /// <summary>One vital: a mono label, a bar with quarter ticks, and a right-aligned figure.</summary>
+        private Text BuildVital(string name, string label, float barHeight, Color fill, float bottom, out Image fillImage)
+        {
+            var rowGo = new GameObject(name + "Row", typeof(RectTransform));
+            rowGo.transform.SetParent(transform, false);
+            var row = (RectTransform)rowGo.transform;
+            UIFactory.PlaceBottomLeft(row, Left, bottom, BlockWidth, RowHeight);
+
+            var labelText = UIFactory.CreateText(row, name + "Label", UITheme.Tracked(label, 14), 14, UITheme.TextFaint, TextAnchor.MiddleLeft, UIFonts.Mono);
+            UIFactory.PlaceTopLeft(labelText.rectTransform, 0f, 0f, LabelWidth, RowHeight);
+
+            float barWidth = BlockWidth - LabelWidth - ValueWidth - ColumnGap * 2f;
+            var bar = UIFactory.CreateProgressBar(row, name + "Bar", fill, new Vector2(barWidth, barHeight), out fillImage, quarterTicks: true);
+            UIFactory.PlaceTopLeft(bar.rectTransform, LabelWidth + ColumnGap, (RowHeight - barHeight) * 0.5f, barWidth, barHeight);
+
+            var value = UIFactory.CreateText(row, name + "Text", string.Empty, 18, UITheme.Text, TextAnchor.MiddleRight, UIFonts.Mono);
+            UIFactory.PlaceTopLeft(value.rectTransform, BlockWidth - ValueWidth, 0f, ValueWidth, RowHeight);
+            return value;
+        }
+
+        private void BuildMenuHint()
+        {
+            var hintGo = new GameObject("MenuHint", typeof(RectTransform));
+            hintGo.transform.SetParent(transform, false);
+            var hint = (RectTransform)hintGo.transform;
+            UIFactory.PlaceBottomLeft(hint, Left, 34f, BlockWidth, HintHeight);
+
+            RectTransform key = UIFactory.CreateKeyBox(hint, "Key", "ESC", 13, UITheme.TextFaint, UITheme.Text);
+            UIFactory.PlaceTopLeft(key, 0f, 0f, key.sizeDelta.x, HintHeight);
+
+            var label = UIFactory.CreateText(hint, "Label", UITheme.Tracked("Menu", 13), 13, UITheme.TextDim, TextAnchor.MiddleLeft, UIFonts.Mono);
+            UIFactory.PlaceTopLeft(label.rectTransform, key.sizeDelta.x + 6f, 0f, 200f, HintHeight);
         }
 
         protected override void OnShown()
@@ -91,37 +117,33 @@ namespace Plunderspell.UI.Screens
         private void RefreshStats()
         {
             var stats = GameServices.PlayerStats;
-            _healthFill.fillAmount = stats.MaxHealth == 0 ? 0f : (float)stats.Health / stats.MaxHealth;
-            _healthText.text = $"{stats.Health} / {stats.MaxHealth}";
-            _manaFill.fillAmount = stats.MaxMana == 0 ? 0f : (float)stats.Mana / stats.MaxMana;
-            _manaText.text = $"Mana {stats.Mana} / {stats.MaxMana}";
+            float health = stats.MaxHealth == 0 ? 0f : (float)stats.Health / stats.MaxHealth;
+            UIFactory.SetBarFill(_healthFill, health);
+            _healthText.text = stats.Health.ToString();
+            // The figure joins the bar in warning once health is low.
+            _healthText.color = health < LowHealth ? UITheme.Danger : UITheme.Text;
+
+            UIFactory.SetBarFill(_manaFill, stats.MaxMana == 0 ? 0f : (float)stats.Mana / stats.MaxMana);
+            _manaText.text = stats.Mana.ToString();
         }
 
         private void OnExtractionStarted()
         {
             _extractionGroup.SetActive(true);
-            _extractionFill.fillAmount = 0f;
+            UIFactory.SetBarFill(_extractionFill, 0f);
         }
 
         private void OnExtractionEnded()
         {
             _extractionGroup.SetActive(false);
-            _extractionFill.fillAmount = 0f;
+            UIFactory.SetBarFill(_extractionFill, 0f);
         }
 
         private void OnExtractionProgress(float progress)
         {
-            _extractionFill.fillAmount = progress;
+            UIFactory.SetBarFill(_extractionFill, progress);
             _extractionLabel.text =
-                $"Extracting — {Mathf.Max(0f, GameServices.Extraction.RemainingSeconds):0.0}s  (stay in the portal)";
-        }
-
-        private static void SetAnchor(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 anchoredPosition)
-        {
-            rect.anchorMin = anchorMin;
-            rect.anchorMax = anchorMax;
-            rect.pivot = pivot;
-            rect.anchoredPosition = anchoredPosition;
+                $"LEAVING IN {Mathf.Max(0f, GameServices.Extraction.RemainingSeconds):0.0}S · STAY IN THE PORTAL";
         }
     }
 }

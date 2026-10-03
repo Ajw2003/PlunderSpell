@@ -9,8 +9,8 @@ namespace Plunderspell.EditorTools
 {
     /// <summary>
     /// Turns the pipeline's dressing models (Assets/_Project/Art/Models/Castle/Dressing) into prefabs
-    /// set up the way the room prefabs are (upright root, a mesh collider so the NavMesh walks round
-    /// them), fills <see cref="CastleDressingSet"/>, imports their fire anchors, and hands the set to
+    /// set up the way the room prefabs are (upright root, a mesh collider so the guards' sweep and the
+    /// nav tile bake see them), fills <see cref="CastleDressingSet"/>, imports their fire anchors, and hands the set to
     /// every castle generator in the open scene. Idempotent. See docs/plans/night-atmosphere.md,
     /// section 4.
     /// </summary>

@@ -278,8 +278,8 @@ MonoBehaviour:
   _extractionZone: {fileID: 617190722}
   _lair: {fileID: 355717651}
   _alarm: {fileID: 872823616}
-  _navigation: {fileID: 442793437}
   _playerRoot: {fileID: 2130629897}
+  _eraContent: {fileID: 0}
   _fixedSeed: 0
 --- !u!114 &305845363
 MonoBehaviour:
@@ -389,83 +389,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 502960577}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &442793436
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 442793439}
-  - component: {fileID: 442793438}
-  - component: {fileID: 442793437}
-  m_Layer: 0
-  m_Name: Navigation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &442793437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 442793436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b48b288594878bb498682f10a12821e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.CastleNavMeshBaker
---- !u!114 &442793438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 442793436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
-  m_SerializedVersion: 0
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 1
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
-  m_BuildHeightMesh: 0
---- !u!4 &442793439
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 442793436}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &449687904
 GameObject:
@@ -624,6 +547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.ProceduralCastleGenerator
   registry: {fileID: 11400000, guid: d89396c4b851d67c8a7be3752b5d9f73, type: 2}
+  m_dressing: {fileID: 0}
   defaultSeed: 12345
   cellSize: 12
   roomContainer: {fileID: 402601300}
@@ -686,6 +610,7 @@ MonoBehaviour:
   _invertedPathToNearestParent: 
   _directChildren: []
   RaidDurationSeconds: 300
+  _minimumRaidSecondsBeforeLeaving: 10
 --- !u!65 &617190723
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -734,6 +659,7 @@ GameObject:
   - component: {fileID: 700486308}
   - component: {fileID: 700486307}
   - component: {fileID: 700486306}
+  - component: {fileID: 700486309}
   m_Layer: 0
   m_Name: RaidHud
   m_TagString: Untagged
@@ -771,7 +697,7 @@ MonoBehaviour:
   _extractionZone: {fileID: 617190722}
   _alarm: {fileID: 872823616}
   _lair: {fileID: 355717651}
-  _interactor: {fileID: 2130629896}
+  _interactor: {fileID: 0}
   _castLineDuration: 4
 --- !u!4 &700486308
 Transform:
@@ -788,6 +714,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &700486309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700486305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eedd0ce2df553dc4d8910bee69b62438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.RaidHud::Plunderspell.UI.CrosshairView
+  _visible: 1
 --- !u!1 &872823615
 GameObject:
   m_ObjectHideFlags: 0
@@ -830,6 +769,29 @@ MonoBehaviour:
   _noiseWeight: 15
   _decayDelay: 3
   _decayRate: 5
+  _sightingPoints: 20
+  _attackPoints: 6
+  _rousedChasers: 2
+  _hueAndCryChasers: 3
+  _attackTurnTuning:
+    MeleeTurnsPerTarget: 1
+    RangedTurnsPerTarget: 1
+    TurnTimeoutSeconds: 3
+  _navigationTuning:
+    SweepMask:
+      serializedVersion: 2
+      m_Bits: 4294967291
+    StepHeight: 0.7
+    SkinWidth: 0.03
+    SeparationSpacing: 1
+    SeparationSpeedShare: 0.8
+    WaypointRadius: 0.2
+    ArriveRadius: 0.3
+    BlockedSeconds: 0.5
+    ProgressShare: 0.25
+    VerticalSpeed: 8
+    TurnDegreesPerSecond: 270
+    PivotAboveFloor: 0
 --- !u!65 &872823617
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -898,6 +860,10 @@ MonoBehaviour:
   _roster: {fileID: 11400000, guid: 13b9eb649aa2acf4bb2be962b0d7622e, type: 2}
   _guardPrefab: {fileID: 0}
   _densityScale: 1
+  _speedScale: 0.8
+  _damageScale: 0.65
+  _extraGuardsPerPlayer: 0.35
+  _extraHealthPerPlayer: 0.25
   _container: {fileID: 0}
 --- !u!4 &924623277
 Transform:
@@ -1234,17 +1200,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ef0dafca8cbff642a29d350ff693332, type: 3}
---- !u!114 &2130629896 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8230535799788002116, guid: 3ef0dafca8cbff642a29d350ff693332, type: 3}
-  m_PrefabInstance: {fileID: 2130629895}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 833a6c31bf7591341bc74e63be743361, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootInteractor
 --- !u!4 &2130629897 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2728099172172530629, guid: 3ef0dafca8cbff642a29d350ff693332, type: 3}
@@ -1263,7 +1218,6 @@ SceneRoots:
   - {fileID: 502960577}
   - {fileID: 1495748537}
   - {fileID: 924623277}
-  - {fileID: 442793439}
   - {fileID: 2130629895}
   - {fileID: 305845364}
   - {fileID: 700486308}

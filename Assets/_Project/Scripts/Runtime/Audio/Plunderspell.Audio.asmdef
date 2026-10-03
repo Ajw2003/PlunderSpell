@@ -1,0 +1,30 @@
+{
+    "name": "Plunderspell.Audio",
+    "rootNamespace": "Plunderspell.Audio",
+    "references": [
+        "PurrNet.Runtime",
+        "Plunderspell.Foundation",
+        "Plunderspell.Core",
+        "Plunderspell.Acoustics",
+        "Plunderspell.Alarm",
+        "Plunderspell.Castle",
+        "Plunderspell.Extraction",
+        "Plunderspell.Guards",
+        "Plunderspell.Inventory",
+        "Plunderspell.Items",
+        "Plunderspell.Loot",
+        "Plunderspell.Player",
+        "Plunderspell.Raid",
+        "Plunderspell.Spells",
+        "Plunderspell.Voice"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

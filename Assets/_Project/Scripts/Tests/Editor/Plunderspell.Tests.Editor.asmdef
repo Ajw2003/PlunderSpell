@@ -7,11 +7,15 @@
         "Plunderspell.Lair",
         "Plunderspell.Extraction",
         "Plunderspell.Alarm",
+        "Plunderspell.Audio",
+        "Plunderspell.Core",
+        "Plunderspell.Spells",
         "Plunderspell.Acoustics",
         "PurrNet.Runtime",
         "Plunderspell.Foundation",
         "Plunderspell.Playtest",
         "Plunderspell.RaidHud",
+        "Plunderspell.UI",
         "Plunderspell.Guards",
         "Plunderspell.Raid",
         "Plunderspell.Loot",
@@ -23,7 +27,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Plunderspell.Net",
-        "Plunderspell.Atmosphere"
+        "Plunderspell.Atmosphere",
+        "Unity.AI.Navigation"
     ],
     "includePlatforms": [
         "Editor"

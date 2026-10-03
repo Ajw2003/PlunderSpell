@@ -172,7 +172,7 @@ namespace Plunderspell.Tests
 
         // --- HUD ------------------------------------------------------------------------------
 
-        private RaidHudPresenter MakeHud(out ExtractionZone zone, out AlarmFSMManager alarm,
+        private RaidHudPresenter MakeHud(out ExtractionZone zone, out EnemyDirector alarm,
             out LootInteractor interactor)
         {
             var zoneGo = Track(new GameObject("Zone"));
@@ -182,7 +182,7 @@ namespace Plunderspell.Tests
             zone = zoneGo.AddComponent<ExtractionZone>();
 
             var alarmGo = Track(new GameObject("Alarm"));
-            alarm = alarmGo.AddComponent<AlarmFSMManager>();
+            alarm = alarmGo.AddComponent<EnemyDirector>();
 
             var lairGo = Track(new GameObject("Lair"));
             LairHubManager lair = lairGo.AddComponent<LairHubManager>();
@@ -198,7 +198,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_TheHudShowsTheClockAndTheAlarm()
         {
-            RaidHudPresenter hud = MakeHud(out ExtractionZone zone, out AlarmFSMManager alarm, out _);
+            RaidHudPresenter hud = MakeHud(out ExtractionZone zone, out EnemyDirector alarm, out _);
             zone.SetRaidDuration(125f);
             alarm.SetAlarmLevel(60f);
 
@@ -260,7 +260,7 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_TheAlarmTextEscalatesWithTheAlarm()
         {
-            RaidHudPresenter hud = MakeHud(out _, out AlarmFSMManager alarm, out _);
+            RaidHudPresenter hud = MakeHud(out _, out EnemyDirector alarm, out _);
 
             alarm.SetAlarmLevel(0f);
             StringAssert.Contains("Calm", hud.Build().AlarmText);

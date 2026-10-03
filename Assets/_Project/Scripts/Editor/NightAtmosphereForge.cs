@@ -10,7 +10,6 @@ using Plunderspell.Raid;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -453,12 +452,6 @@ namespace Plunderspell.EditorTools
                     capsule.center = new Vector3(0f, spec.FlameBase.y * 0.5f, 0f);
                     capsule.height = spec.FlameBase.y;
                     capsule.radius = spec.Kind == FireKind.Beacon ? 0.7f : 0.3f;
-                    var obstacle = prop.AddComponent<NavMeshObstacle>();
-                    obstacle.shape = NavMeshObstacleShape.Capsule;
-                    obstacle.center = capsule.center;
-                    obstacle.height = capsule.height;
-                    obstacle.radius = capsule.radius + 0.1f;
-                    obstacle.carving = true;
                 }
             }
 
@@ -659,7 +652,7 @@ namespace Plunderspell.EditorTools
             atmosphereSo.FindProperty("_profile").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<NightAtmosphereProfile>($"{SettingsDir}/NightAtmosphere.asset");
             atmosphereSo.FindProperty("_moon").objectReferenceValue = moon;
-            atmosphereSo.FindProperty("_alarm").objectReferenceValue = Object.FindFirstObjectByType<AlarmFSMManager>();
+            atmosphereSo.FindProperty("_alarm").objectReferenceValue = Object.FindFirstObjectByType<EnemyDirector>();
             atmosphereSo.FindProperty("_director").objectReferenceValue = Object.FindFirstObjectByType<RaidDirector>();
             atmosphereSo.FindProperty("_surfaceShader").objectReferenceValue = Shader.Find(CastleSurfaceMaterials.SurfaceShaderName);
             atmosphereSo.FindProperty("_skyMaterial").objectReferenceValue =

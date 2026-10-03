@@ -5,10 +5,9 @@ namespace Plunderspell.EditorTools
     /// <summary>
     /// Forces Read/Write and baked axis conversion on the castle room models.
     ///
-    /// The castle is instantiated from a seed at runtime, so its NavMesh is built at runtime too, and
-    /// <c>NavMeshSurface</c> has to read the room meshes to do it. An unreadable mesh still bakes in
-    /// the Editor but silently produces no surface in a player build — the garrison would stand still
-    /// in a build and walk fine in the Editor.
+    /// The castle is instantiated from a seed at runtime. The runtime NavMesh bake that needed readable
+    /// room meshes is gone (#223: guards walk the nav graph, baked from the prefabs in the Editor), but
+    /// the settings stay as they were until someone confirms nothing else reads these meshes at runtime.
     ///
     /// A postprocessor rather than a one-off pass, so re-exporting a .blend cannot quietly undo it.
     /// See docs/4-systems/raid-scene-assembly.md ("Navigation").

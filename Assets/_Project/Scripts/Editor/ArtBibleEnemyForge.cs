@@ -7,7 +7,6 @@ using Plunderspell.Raid;
 using Plunderspell.Status;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Plunderspell.EditorTools
 {
@@ -134,20 +133,10 @@ namespace Plunderspell.EditorTools
             capsule.height = Mathf.Max(spec.BodyHeight, radius * 2f);
             capsule.center = new Vector3(0f, capsule.height * 0.5f, 0f);
 
-            // Capped so the agent fits every archway of the zones it is posted to (scale.md). The
-            // plan's "archway duck" is the visual half, flagged on the profile.
-            var agent = instance.AddComponent<NavMeshAgent>();
-            agent.radius = radius;
-            agent.height = spec.AgentHeight;
-            agent.speed = Mathf.Max(spec.Tuning.PatrolSpeed, 0.01f);
-            agent.angularSpeed = 240f;
-            agent.acceleration = 12f;
-            agent.stoppingDistance = 0.8f;
-            agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
-
+            // The body height is capped so the guard fits every archway of the zones it is posted to
+            // (scale.md). The plan's "archway duck" is the visual half, flagged on the profile.
             instance.AddComponent<StatusEffectReceiver>();
-            CastleGuard guard = instance.AddComponent<CastleGuard>();
-            ApplyGuardTuning(guard, spec, bolt);
+            GuardPrefabParts.Add(instance, GuardSetupFor(spec, radius, bolt));
 
             var profile = instance.AddComponent<EnemyBodyProfile>();
             profile.Configure(spec.Name, spec.Role.ToString().ToLowerInvariant(), spec.BodyHeight,
@@ -164,23 +153,25 @@ namespace Plunderspell.EditorTools
             return prefab;
         }
 
-        private static void ApplyGuardTuning(CastleGuard guard, ArtBibleEnemySpec spec, GameObject bolt)
+        private static GuardPrefabSetup GuardSetupFor(ArtBibleEnemySpec spec, float radius, GameObject bolt)
         {
             ArtBibleTuning tuning = spec.Tuning;
-            var so = new SerializedObject(guard);
-            so.FindProperty("_sightRange").floatValue = tuning.SightRange;
-            so.FindProperty("_patrolSpeed").floatValue = tuning.PatrolSpeed;
-            so.FindProperty("_chaseSpeed").floatValue = tuning.ChaseSpeed;
-            so.FindProperty("_maxHealth").floatValue = tuning.MaxHealth;
-            so.FindProperty("_eyeHeight").floatValue = spec.BodyHeight * 0.92f;
-            // Castle geometry is on Default; without this guards see through walls (EnemyPrefabForge).
-            so.FindProperty("_geometryLayers").intValue = 1;
+            var setup = new GuardPrefabSetup
+            {
+                SightRange = tuning.SightRange,
+                PatrolSpeed = tuning.PatrolSpeed,
+                ChaseSpeed = tuning.ChaseSpeed,
+                MaxHealth = tuning.MaxHealth,
+                EyeHeight = spec.BodyHeight * 0.92f,
+                BodyRadius = radius,
+                BodyHeight = spec.AgentHeight
+            };
             if (tuning.Attack == ArtBibleAttack.Projectile && bolt != null)
             {
-                so.FindProperty("_projectilePrefab").objectReferenceValue = bolt;
-                so.FindProperty("_attackCooldown").floatValue = 2.2f;
+                setup.ProjectilePrefab = bolt;
+                setup.AttackCooldownSeconds = 2.2f;
             }
-            so.ApplyModifiedPropertiesWithoutUndo();
+            return setup;
         }
 
         /// <summary>An empty <c>Socket.&lt;Bone&gt;</c> child under each socket bone, at the bone.</summary>

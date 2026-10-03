@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Plunderspell.Core
@@ -14,6 +15,9 @@ namespace Plunderspell.Core
         /// <summary>PlayerPrefs key holding the microphone gain (#125).</summary>
         public const string MicGainKey = "Settings.MicGain";
 
+        /// <summary>PlayerPrefs key for "guards hear what I say between casts". Off unless switched on.</summary>
+        public const string GuardsHearChatterKey = "Settings.GuardsHearChatter";
+
         public const float MinMicGain = 0.25f;
         public const float MaxMicGain = 4f;
 
@@ -29,6 +33,23 @@ namespace Plunderspell.Core
             {
                 PlayerPrefs.SetFloat(MicGainKey, Mathf.Clamp(value, MinMicGain, MaxMicGain));
                 PlayerPrefs.Save();
+            }
+        }
+
+        /// <summary>Raised when <see cref="GuardsHearChatter"/> actually changes value.</summary>
+        public static event Action<bool> GuardsHearChatterChanged;
+
+        /// <summary>Opt-in: keep listening between casts and let guards overhear ordinary talk. Default off.</summary>
+        public static bool GuardsHearChatter
+        {
+            get => PlayerPrefs.GetInt(GuardsHearChatterKey, 0) == 1;
+            set
+            {
+                if (value == GuardsHearChatter)
+                    return;
+                PlayerPrefs.SetInt(GuardsHearChatterKey, value ? 1 : 0);
+                PlayerPrefs.Save();
+                GuardsHearChatterChanged?.Invoke(value);
             }
         }
     }

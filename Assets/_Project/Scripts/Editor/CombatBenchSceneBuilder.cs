@@ -115,7 +115,7 @@ namespace Plunderspell.EditorTools
             var collider = go.AddComponent<BoxCollider>();
             collider.isTrigger = true;
             collider.size = Vector3.one * (k_ArenaSize * 2f);
-            go.AddComponent<AlarmFSMManager>();
+            go.AddComponent<EnemyDirector>();
         }
 
         /// <summary>See docs/4-systems/combat-bench.md, "The bench carries its own spell VFX".</summary>
@@ -177,6 +177,7 @@ namespace Plunderspell.EditorTools
             root.AddComponent<StatusEffectReceiver>();
             root.AddComponent<AcousticEmitter>();
             root.AddComponent<FootstepNoiseEmitter>();
+            root.AddComponent<PlayerChatterRelay>();
             root.AddComponent<IntruderTag>();
             WireCasting(root);
             return root;

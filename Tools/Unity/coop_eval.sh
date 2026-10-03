@@ -4,6 +4,7 @@
 # Build/DevTest, reached by its process name.
 # Usage: bash Tools/Unity/coop_eval.sh host|client <action> [arg]
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 
 side="${1:?usage: coop_eval.sh host|client <action> [arg]}"
 action="${2:?usage: coop_eval.sh host|client <action> [arg]}"

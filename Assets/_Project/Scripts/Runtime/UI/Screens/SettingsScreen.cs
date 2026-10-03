@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Plunderspell.Audio;
 using Plunderspell.Core;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,70 +10,146 @@ namespace Plunderspell.UI.Screens
 {
     public class SettingsScreen : UIScreen
     {
-        private const string MasterVolumeKey = "Settings.MasterVolume";
-        private const string MusicVolumeKey = "Settings.MusicVolume";
-        private const string SfxVolumeKey = "Settings.SfxVolume";
+        private const string MasterVolumeKey = AudioLevels.MasterKey;
+        private const string MusicVolumeKey = AudioLevels.MusicKey;
+        private const string SfxVolumeKey = AudioLevels.SfxKey;
+
+        // The mockup's .st-panel and .st-cols, in 1920x1080 canvas units.
+        private const float PanelSide = 260f;
+        private const float PanelVertical = 110f;
+        private const float PadSide = 64f;
+        private const float PadTop = 56f;
+        private const float TitleHeight = 64f;
+        private const float ColumnsTop = PadTop + TitleHeight + 30f;
+        private const float ColumnHeight = 525f;
+        private const float ColumnWidth = 422f;
+        private const float RowLabelHeight = 37f;
+        private const float RowGap = 12f;
+
+        private Text _micGainValue;
+        private Text _microphoneValue;
+        private Text _outputValue;
+        private UISegmentedControl _graphics;
 
         protected override void OnBuild()
         {
-            UIFactory.CreateFullStretchPanel(transform, "Overlay", new Color(0f, 0f, 0f, 0.7f));
-            var panel = UIFactory.CreatePanel(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 700f), Vector2.zero, UITheme.PanelBackground);
+            UIFactory.CreateBackdrop(transform);
 
-            var title = UIFactory.CreateText(panel, "Title", "SETTINGS", UITheme.HeaderFontSize, UITheme.TextPrimary);
-            title.rectTransform.anchorMin = new Vector2(0.5f, 1f);
-            title.rectTransform.anchorMax = new Vector2(0.5f, 1f);
-            title.rectTransform.pivot = new Vector2(0.5f, 1f);
-            title.rectTransform.sizeDelta = new Vector2(400f, 60f);
-            title.rectTransform.anchoredPosition = new Vector2(0f, -24f);
+            RectTransform panel = UIFactory.CreateHairlinePanel(transform, "Panel", Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            UIFactory.Stretch((RectTransform)panel.parent, PanelSide, PanelVertical, PanelSide, PanelVertical);
 
-            var listGo = new GameObject("SliderList", typeof(RectTransform));
-            listGo.transform.SetParent(panel, false);
-            var listRect = (RectTransform)listGo.transform;
-            listRect.anchorMin = new Vector2(0.5f, 0.5f);
-            listRect.anchorMax = new Vector2(0.5f, 0.5f);
-            listRect.sizeDelta = new Vector2(440f, 450f);
-            listRect.anchoredPosition = new Vector2(0f, 10f);
-            UIFactory.AddVerticalLayout(listRect, 30f, new RectOffset(0, 0, 0, 0));
+            var title = UIFactory.CreateText(panel, "Title", "Settings", UITheme.Heading, UITheme.Text, TextAnchor.MiddleLeft, UIFonts.Display);
+            UIFactory.PlaceTopLeft(title.rectTransform, PadSide, PadTop, 700f, TitleHeight);
 
-            AddVolumeRow(listRect, "Master Volume", MasterVolumeKey, OnMasterVolumeChanged);
-            AddVolumeRow(listRect, "Music Volume", MusicVolumeKey, OnMusicVolumeChanged);
-            AddVolumeRow(listRect, "SFX Volume", SfxVolumeKey, OnSfxVolumeChanged);
+            var saved = UIFactory.CreateText(panel, "SavedNote", UITheme.Tracked("Saved as you change them", UITheme.Label), UITheme.Label, UITheme.TextFaint,
+                TextAnchor.MiddleRight, UIFonts.Mono);
+            UIFactory.PlaceTopRight(saved.rectTransform, PadSide, PadTop + TitleHeight - 24f, 600f, 24f);
 
-            var micButton = UIFactory.CreateButton(listRect, "MicrophoneButton", string.Empty, CycleMicrophone, new Vector2(440f, 44f));
-            _microphoneLabel = micButton.GetComponentInChildren<Text>();
-            RefreshMicrophoneLabel();
+            // The three columns share a LineSoft frame, so the 1px gaps between them read as hairlines.
+            var frame = UIFactory.CreateImage(panel, "Columns", UITheme.LineSoft);
+            UIFactory.PlaceTopStretch(frame.rectTransform, PadSide, PadSide, ColumnsTop, ColumnHeight + 2f);
 
-            AddMicGainRow(listRect);
+            RectTransform sound = BuildColumn(frame.rectTransform, "SoundColumn", 0);
+            RectTransform voice = BuildColumn(frame.rectTransform, "VoiceColumn", 1);
+            RectTransform graphics = BuildColumn(frame.rectTransform, "GraphicsColumn", 2);
 
-            var graphicsButton = UIFactory.CreateButton(listRect, "GraphicsButton", string.Empty, CycleGraphics, new Vector2(440f, 44f));
-            _graphicsLabel = graphicsButton.GetComponentInChildren<Text>();
-            RefreshGraphicsLabel();
+            UIFactory.CreateEyebrow(sound, "Eyebrow", "Sound");
+            AddVolumeRow(sound, "Master", MasterVolumeKey, OnMasterVolumeChanged);
+            AddVolumeRow(sound, "Music", MusicVolumeKey, OnMusicVolumeChanged);
+            AddVolumeRow(sound, "Effects", SfxVolumeKey, OnSfxVolumeChanged);
+            AddOutputRow(sound);
 
-            var backButton = UIFactory.CreateButton(panel, "BackButton", "Back", OnBackClicked, new Vector2(200f, 52f));
-            var backRect = backButton.GetComponent<RectTransform>();
-            backRect.anchorMin = new Vector2(0.5f, 0f);
-            backRect.anchorMax = new Vector2(0.5f, 0f);
-            backRect.pivot = new Vector2(0.5f, 0f);
-            backRect.anchoredPosition = new Vector2(0f, 24f);
+            // Voice is the lapis colour's own territory: the microphone and what it hears.
+            UIFactory.CreateEyebrow(voice, "Eyebrow", "Voice", colour: UITheme.Voice);
+            AddMicrophoneRow(voice);
+            AddMicGainRow(voice);
+            AddChatterRow(voice);
+            AddNote(voice, "Hold V in a raid to see the level meter.");
+
+            UIFactory.CreateEyebrow(graphics, "Eyebrow", "Graphics");
+            AddQualityRow(graphics);
+            AddNote(graphics, "Low suits a Steam Deck.");
+
+            var backButton = UIFactory.CreateButton(panel, "BackButton", "‹ Back", OnBackClicked, new Vector2(200f, 64f), ButtonKind.Quiet);
+            UIFactory.PlaceBottomLeft(backButton.GetComponent<RectTransform>(), PadSide, PadTop, 200f, 64f);
+        }
+
+        private static RectTransform BuildColumn(RectTransform frame, string name, int index)
+        {
+            var cell = UIFactory.CreateImage(frame, name, UITheme.Surface);
+            // Inside the frame's 1px border, with a 1px gap between columns.
+            UIFactory.PlaceTopLeft(cell.rectTransform, 1f + index * (ColumnWidth + 1f), 1f, ColumnWidth, ColumnHeight);
+            UIFactory.AddVerticalLayout(cell.rectTransform, 26f, new RectOffset(30, 30, 28, 34), TextAnchor.UpperLeft);
+            return cell.rectTransform;
+        }
+
+        /// <summary>A label on the left, its value on the right, and room below for the control.</summary>
+        private static RectTransform AddRow(Transform parent, string name, string label, float controlHeight, out Text value)
+        {
+            var rowGo = new GameObject(name, typeof(RectTransform));
+            rowGo.transform.SetParent(parent, false);
+            var row = (RectTransform)rowGo.transform;
+            row.sizeDelta = new Vector2(0f, RowLabelHeight + RowGap + controlHeight);
+
+            var labelText = UIFactory.CreateText(row, "Label", label, UITheme.Body, UITheme.Text, TextAnchor.MiddleLeft, UIFonts.Body);
+            UIFactory.PlaceTopStretch(labelText.rectTransform, 0f, 0f, 0f, RowLabelHeight);
+
+            value = UIFactory.CreateText(row, "Value", string.Empty, 17, UITheme.TextDim, TextAnchor.MiddleRight, UIFonts.Mono);
+            UIFactory.PlaceTopStretch(value.rectTransform, 0f, 0f, 0f, RowLabelHeight);
+            return row;
+        }
+
+        private static void PlaceControl(RectTransform control, float height) =>
+            UIFactory.PlaceTopStretch(control, 0f, 0f, RowLabelHeight + RowGap, height);
+
+        private static void AddNote(Transform parent, string text)
+        {
+            var note = UIFactory.CreateText(parent, "Note", text, 19, UITheme.TextDim, TextAnchor.UpperLeft, UIFonts.BodyItalic);
+            note.rectTransform.sizeDelta = new Vector2(0f, 60f);
         }
 
         private void AddVolumeRow(Transform parent, string label, string prefsKey, UnityAction<float> onChanged)
         {
-            var rowGo = new GameObject(label.Replace(" ", string.Empty) + "Row", typeof(RectTransform));
-            rowGo.transform.SetParent(parent, false);
-            var rowRect = (RectTransform)rowGo.transform;
-            rowRect.sizeDelta = new Vector2(440f, 60f);
-
-            var labelText = UIFactory.CreateText(rowRect, "Label", label, UITheme.BodyFontSize, UITheme.TextPrimary, TextAnchor.UpperLeft);
-            labelText.rectTransform.anchorMin = new Vector2(0f, 1f);
-            labelText.rectTransform.anchorMax = new Vector2(1f, 1f);
-            labelText.rectTransform.pivot = new Vector2(0.5f, 1f);
-            labelText.rectTransform.sizeDelta = new Vector2(0f, 24f);
-            labelText.rectTransform.anchoredPosition = Vector2.zero;
+            RectTransform row = AddRow(parent, label + "Row", label, 28f, out Text value);
 
             float startValue = PlayerPrefs.GetFloat(prefsKey, 1f);
-            var slider = UIFactory.CreateSlider(rowRect, "Slider", 0f, 1f, startValue, onChanged, new Vector2(440f, 24f));
-            slider.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, -18f);
+            value.text = Percent(startValue);
+            var slider = UIFactory.CreateSlider(row, "Slider", 0f, 1f, startValue, v =>
+            {
+                value.text = Percent(v);
+                onChanged(v);
+            }, new Vector2(0f, 28f));
+            PlaceControl(slider.GetComponent<RectTransform>(), 28f);
+        }
+
+        private static string Percent(float value) => $"{Mathf.RoundToInt(value * 100f)}%";
+
+        private void AddMicrophoneRow(Transform parent)
+        {
+            RectTransform row = AddRow(parent, "MicrophoneRow", "Microphone", 54f, out Text value);
+            value.gameObject.SetActive(false);
+
+            RectTransform stepper = UIFactory.CreateStepper(row, "MicrophoneButton", () => CycleMicrophone(-1), () => CycleMicrophone(1),
+                new Vector2(0f, 54f), out _microphoneValue);
+            PlaceControl(stepper, 54f);
+            RefreshMicrophoneLabel();
+        }
+
+        private void AddOutputRow(Transform parent)
+        {
+            RectTransform row = AddRow(parent, "OutputRow", "Output", 54f, out Text value);
+            value.gameObject.SetActive(false);
+
+            RectTransform stepper = UIFactory.CreateStepper(row, "OutputButton", () => CycleOutput(-1), () => CycleOutput(1),
+                new Vector2(0f, 54f), out _outputValue);
+            PlaceControl(stepper, 54f);
+            // Windows device names run long ("Headphones (BlackShark V2 Pro PS 2.4)"): shrink to fit the box.
+            _outputValue.horizontalOverflow = HorizontalWrapMode.Wrap;
+            _outputValue.verticalOverflow = VerticalWrapMode.Truncate;
+            _outputValue.resizeTextForBestFit = true;
+            _outputValue.resizeTextMinSize = 12;
+            _outputValue.resizeTextMaxSize = _outputValue.fontSize;
+            RefreshOutputLabel();
         }
 
         /// <summary>
@@ -80,22 +158,37 @@ namespace Plunderspell.UI.Screens
         /// </summary>
         private void AddMicGainRow(Transform parent)
         {
-            var rowGo = new GameObject("MicGainRow", typeof(RectTransform));
-            rowGo.transform.SetParent(parent, false);
-            var rowRect = (RectTransform)rowGo.transform;
-            rowRect.sizeDelta = new Vector2(440f, 60f);
+            RectTransform row = AddRow(parent, "MicGainRow", "Gain", 28f, out _micGainValue);
 
-            _micGainLabel = UIFactory.CreateText(rowRect, "Label", string.Empty, UITheme.BodyFontSize, UITheme.TextPrimary, TextAnchor.UpperLeft);
-            _micGainLabel.rectTransform.anchorMin = new Vector2(0f, 1f);
-            _micGainLabel.rectTransform.anchorMax = new Vector2(1f, 1f);
-            _micGainLabel.rectTransform.pivot = new Vector2(0.5f, 1f);
-            _micGainLabel.rectTransform.sizeDelta = new Vector2(0f, 24f);
-            _micGainLabel.rectTransform.anchoredPosition = Vector2.zero;
-
-            var slider = UIFactory.CreateSlider(rowRect, "Slider", AudioInputSettings.MinMicGain,
-                AudioInputSettings.MaxMicGain, AudioInputSettings.MicGain, OnMicGainChanged, new Vector2(440f, 24f));
-            slider.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, -18f);
+            var slider = UIFactory.CreateSlider(row, "Slider", AudioInputSettings.MinMicGain,
+                AudioInputSettings.MaxMicGain, AudioInputSettings.MicGain, OnMicGainChanged, new Vector2(0f, 28f));
+            PlaceControl(slider.GetComponent<RectTransform>(), 28f);
             RefreshMicGainLabel();
+        }
+
+        /// <summary>Opt-in: between casts the game also writes down what you say, and guards can overhear it.
+        /// Runs on this machine; only the words go to the host in co-op. Use a headset so game sound is not "heard".</summary>
+        private void AddChatterRow(Transform parent)
+        {
+            RectTransform row = AddRow(parent, "ChatterRow", "Guards hear my voice", 52f, out Text value);
+            value.gameObject.SetActive(false);
+
+            _chatter = UIFactory.CreateSegmented(row, "ChatterButton", new[] { "Off", "On" },
+                AudioInputSettings.GuardsHearChatter ? 1 : 0, index => AudioInputSettings.GuardsHearChatter = index == 1,
+                new Vector2(0f, 52f));
+            PlaceControl((RectTransform)_chatter.transform, 52f);
+        }
+
+        private UISegmentedControl _chatter;
+
+        private void AddQualityRow(Transform parent)
+        {
+            RectTransform row = AddRow(parent, "QualityRow", "Quality", 52f, out Text value);
+            value.gameObject.SetActive(false);
+
+            _graphics = UIFactory.CreateSegmented(row, "GraphicsButton", QualitySettings.names, QualitySettings.GetQualityLevel(),
+                SetGraphics, new Vector2(0f, 52f));
+            PlaceControl((RectTransform)_graphics.transform, 52f);
         }
 
         private void OnMicGainChanged(float value)
@@ -106,64 +199,54 @@ namespace Plunderspell.UI.Screens
 
         private void RefreshMicGainLabel()
         {
-            if (_micGainLabel != null)
-                _micGainLabel.text = $"Microphone Gain: {AudioInputSettings.MicGain:0.00}x";
+            if (_micGainValue != null)
+                _micGainValue.text = $"{AudioInputSettings.MicGain:0.00}×";
         }
 
-        private Text _micGainLabel;
+        private void OnMasterVolumeChanged(float value) => AudioLevels.SetMaster(value);
 
-        private void OnMasterVolumeChanged(float value)
-        {
-            AudioListener.volume = value;
-            PlayerPrefs.SetFloat(MasterVolumeKey, value);
-        }
+        private void OnMusicVolumeChanged(float value) => AudioLevels.SetMusic(value);
 
-        private void OnMusicVolumeChanged(float value) => PlayerPrefs.SetFloat(MusicVolumeKey, value);
-
-        private void OnSfxVolumeChanged(float value) => PlayerPrefs.SetFloat(SfxVolumeKey, value);
-
-        private Text _microphoneLabel;
-
-        private Text _graphicsLabel;
+        private void OnSfxVolumeChanged(float value) => AudioLevels.SetEffects(value);
 
         protected override void OnShown()
         {
             RefreshMicrophoneLabel();
-            RefreshGraphicsLabel();
+            RefreshOutputLabel();
+            if (_chatter != null)
+                _chatter.SetSelected(AudioInputSettings.GuardsHearChatter ? 1 : 0);
+            if (_graphics != null)
+                _graphics.SetSelected(QualitySettings.GetQualityLevel());
         }
 
         /// <summary>
-        /// Steps through the quality levels (Low, Medium, High), applying each at once and saving it.
-        /// Low is for a Steam Deck or a weak PC; the atmosphere picks it by itself on a Deck until the
-        /// player chooses.
+        /// Applies a quality level (Low, Medium, High) at once and saves it. Low is for a Steam Deck or
+        /// a weak PC; the atmosphere picks it by itself on a Deck until the player chooses.
         /// </summary>
-        private void CycleGraphics()
+        private static void SetGraphics(int level)
         {
             string[] levels = QualitySettings.names;
-            int next = (QualitySettings.GetQualityLevel() + 1) % levels.Length;
-            QualitySettings.SetQualityLevel(next, true);
-            PlayerPrefs.SetString(GraphicsLevelSettings.QualityKey, levels[next]);
+            QualitySettings.SetQualityLevel(level, true);
+            PlayerPrefs.SetString(GraphicsLevelSettings.QualityKey, levels[level]);
             PlayerPrefs.Save();
-            RefreshGraphicsLabel();
-        }
-
-        private void RefreshGraphicsLabel()
-        {
-            if (_graphicsLabel == null)
-                return;
-            _graphicsLabel.text = $"Graphics: {QualitySettings.names[QualitySettings.GetQualityLevel()]}";
         }
 
         /// <summary>
-        /// Steps through Automatic and every microphone Windows reports. Automatic skips virtual
-        /// inputs (a VR streaming app's silent mic was the Windows default on the dev machine).
+        /// Steps through Automatic and every microphone Windows reports, forwards or back. Automatic
+        /// skips virtual inputs (a VR streaming app's silent mic was the Windows default on the dev
+        /// machine).
         /// </summary>
-        private void CycleMicrophone()
+        private void CycleMicrophone(int step)
         {
             string[] devices = Microphone.devices ?? Array.Empty<string>();
             string current = PlayerPrefs.GetString(AudioInputSettings.MicrophoneKey, string.Empty);
             int index = Array.IndexOf(devices, current); // -1 = Automatic
-            index = index + 1 >= devices.Length ? -1 : index + 1;
+
+            // Position 0 is Automatic, 1.. are the devices, wrapping in both directions.
+            int count = devices.Length + 1;
+            int position = ((index + 1 + step) % count + count) % count;
+            index = position - 1;
+
             PlayerPrefs.SetString(AudioInputSettings.MicrophoneKey, index < 0 ? string.Empty : devices[index]);
             PlayerPrefs.Save();
             RefreshMicrophoneLabel();
@@ -171,13 +254,45 @@ namespace Plunderspell.UI.Screens
 
         private void RefreshMicrophoneLabel()
         {
-            if (_microphoneLabel == null)
+            if (_microphoneValue == null)
                 return;
             string[] devices = Microphone.devices ?? Array.Empty<string>();
             string current = PlayerPrefs.GetString(AudioInputSettings.MicrophoneKey, string.Empty);
-            _microphoneLabel.text = devices.Length == 0 ? "Microphone: none found (keys still cast)"
-                : Array.IndexOf(devices, current) < 0 ? "Microphone: Automatic"
-                : $"Microphone: {current}";
+            _microphoneValue.text = devices.Length == 0 ? "None found (keys still cast)"
+                : Array.IndexOf(devices, current) < 0 ? "Automatic"
+                : current;
+        }
+
+        /// <summary>
+        /// Steps through the Windows default and every playback device, forwards or back, and switches
+        /// the game's output at once. See <see cref="AudioOutputDevices"/>.
+        /// </summary>
+        private void CycleOutput(int step)
+        {
+            List<OutputDevice> devices = AudioOutputDevices.List();
+            int index = devices.FindIndex(d => d.Id == AudioOutputDevices.ChosenId); // -1 = Windows default
+
+            // Position 0 is the Windows default, 1.. are the devices, wrapping in both directions.
+            int count = devices.Count + 1;
+            int position = ((index + 1 + step) % count + count) % count;
+            index = position - 1;
+
+            AudioOutputDevices.Apply(index < 0 ? string.Empty : devices[index].Id);
+            RefreshOutputLabel();
+        }
+
+        private void RefreshOutputLabel()
+        {
+            if (_outputValue == null)
+                return;
+            if (!AudioOutputDevices.IsSupported)
+            {
+                _outputValue.text = "System default";
+                return;
+            }
+            List<OutputDevice> devices = AudioOutputDevices.List();
+            OutputDevice chosen = devices.Find(d => d.Id == AudioOutputDevices.ChosenId);
+            _outputValue.text = chosen.Id == null ? "Windows default" : chosen.Name;
         }
 
         private void OnBackClicked() => GameServices.GameState.ChangeState(GameServices.GameState.PreviousState);

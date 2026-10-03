@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 2732042473465149011}
   - component: {fileID: 6941188428493179686}
   - component: {fileID: 1947196609185030178}
-  - component: {fileID: 3092255571636568073}
+  - component: {fileID: 3121082560524699375}
+  - component: {fileID: 6125728724426136377}
   m_Layer: 0
   m_Name: CastleGuard
   m_TagString: Untagged
@@ -130,7 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Status::Plunderspell.Status.StatusEffectReceiver
   _healthSource: {fileID: 0}
   _body: {fileID: 0}
---- !u!114 &3092255571636568073
+--- !u!114 &3121082560524699375
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,9 +140,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 5792966157314537543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7316eefc8d4f86c43b94afb39386487a, type: 3}
+  m_Script: {fileID: 11500000, guid: c2378832c299a4e48a255e6c03d5e201, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.CastleGuard
+  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.GuardDeathPlayback
+--- !u!114 &6125728724426136377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5792966157314537543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b511e175954e647bb476c30e55a5bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.Guard
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   _isSetup: 0
@@ -151,18 +164,47 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _sightRange: 14
-  _fieldOfView: 110
-  _eyeHeight: 1.6
-  _geometryLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  _patrolSpeed: 2
-  _chaseSpeed: 4.5
-  _arrivalDistance: 1
-  _turnSpeed: 240
-  _patrolRoute: []
-  _maxHealth: 100
-  _alarm: {fileID: 0}
-  _shoutStrength: 0.8
-  _shoutRadius: 20
+  _tuning:
+    SightRange: 14
+    FieldOfView: 110
+    EyeHeight: 1.6
+    TargetAimHeight: 1
+    GeometryLayers:
+      serializedVersion: 2
+      m_Bits: 1
+    PatrolSpeed: 2
+    ChaseSpeed: 4.5
+    PatrolPointCount: 3
+    PatrolMinimumRadius: 3
+    PatrolMaximumRadius: 8
+    PatrolPointSpacing: 1.5
+    PatrolPauseSeconds: 1
+    PatrolPickAttempts: 16
+    InvestigateSpeed: 3.2
+    InvestigateLookSeconds: 3
+    ChaseRetargetSeconds: 0.25
+    ChaseRetargetDistance: 0.75
+    ChaseLoseSightSeconds: 0.75
+    MeleeReach: 2
+    RangedEngageRange: 8
+    ProjectilePrefab: {fileID: 0}
+    ProjectileSpeed: 18
+    AttackCooldownSeconds: 1.4
+    ShotClearanceRadius: 0.3
+    BodyRadius: 0.4
+    BodyHeight: 1.8
+    AttackDamage: 12
+    CombatMargin: 2.5
+    CombatRingPadding: 1
+    AttackRecoverySeconds: 0.5
+    TurnDegreesPerSecond: 360
+    TurnRequestSeconds: 0.2
+    InvestigateAfterRecoveryFrom: 2
+    LandingTolerance: 0.15
+    PanicSpeed: 5.5
+    PanicRetrySeconds: 0.25
+    ToppleSeconds: 0.7
+    LingerSeconds: 2
+    FadeSeconds: 1.5
+    DustParticleCount: 24
+    MaxHealth: 100

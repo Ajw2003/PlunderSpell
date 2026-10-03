@@ -21,6 +21,9 @@ this document, not a reason to go grep the repo.
 | `Tools/AssetPipeline/` | Blender-driven generation of weapon/loot/castle-module props |
 | `Tools/EnemyForge/` | Blender-driven generation of the enemy roster (mesh, rig, textures) |
 | `Tools/ArtForge/` | Blender-driven generation of the art bible's plunder, structures and enemies, built on EnemyForge; review sheets in `docs/art/models/` ([README](../../Tools/ArtForge/README.md)) |
+| `Tools/Unity/` | scripts that drive the live Editor and the co-op checks (host plus built client, nobody at the keyboard), and how to wait on Unity without a wait that can never finish ([README](../../Tools/Unity/README.md)) |
+| `Tools/github/sync_milestones.py` | sets the GitHub milestones M0-M7 and their issues from the roadmap |
+| `Tools/AudioForge/` | builds every sound and music track from `manifest.csv` into `Assets/_Project/Audio/` ([README](../../Tools/AudioForge/README.md)); listening page `docs/generated/audio-preview/` |
 | `Tools/mkissues.py` | files the playtesting backlog to GitHub issues; see `docs/generated/github-issues.json` |
 | `Plans/` | one exhaustive plan per GitHub issue, plus `Priority_Queue.md`, the live execution order |
 | `docs/` | this tree |
@@ -60,6 +63,7 @@ together and what was deliberately left undocumented, and why.
 | [`enemy-asset-pipeline`](../4-systems/enemy-asset-pipeline.md) | Generating the enemy roster from Python/Blender |
 | [`damage`](../4-systems/damage.md) | One damage pathway, blame, and hit feedback you can read |
 | [`combat-bench`](../4-systems/combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
+| [`audio`](../4-systems/audio.md) | Mixer, SoundBank, sounds played from game events, music by state and alarm, volume sliders, and what is still silent |
 | [`scale`](../4-systems/scale.md) | The 1.8m standard human, and the room, archway and enemy heights measured against it |
 
 ## Everything else worth reaching
@@ -81,24 +85,36 @@ together and what was deliberately left undocumented, and why.
   sheet → audit → fix → commit) is [`docs/art/WORKFLOW.md`](../art/WORKFLOW.md); long runs are protected
   by `Tools/autosave.sh`.
 - [`docs/plans/artbible-enemies-in-engine.md`](../plans/artbible-enemies-in-engine.md) and
-  [`docs/plans/artbible-enemy-animations.md`](../plans/artbible-enemy-animations.md): **awaiting
-  approval.** How the 16 ArtForge enemies get into a raid, and how they get animated. Review page:
+  [`docs/plans/artbible-enemy-animations.md`](../plans/artbible-enemy-animations.md). How the 16
+  ArtForge enemies get into a raid (built: all 16 are in their era's roster) and how they get
+  animated (**awaiting approval**; no enemy is animated yet, #141). Review page:
   [`docs/generated/enemy-animation-plan/`](../generated/enemy-animation-plan/index.html).
+- [`docs/plans/guards-hear-chatter.md`](../plans/guards-hear-chatter.md): **awaiting approval.**
+  Guards hear what players say between casts (opt-in, local speech-to-text, words sent only to the
+  host), react to it as noise, and remember the words for a later local-language-model stage.
 - [`docs/plans/night-atmosphere.md`](../plans/night-atmosphere.md) — the anchored aesthetic: night,
   warm fire in fog, a castle that brightens and reddens with each alarm state; plus the outer bailey,
   the surface shader, post-processing and the Low/Medium/High quality levels. Look samples in
   `docs/generated/look-samples-2026-09-24/`.
+- [`docs/plans/audio.md`](../plans/audio.md) — **approved, in progress** (assets built; Phase A layer built 2026-09-29, see [`audio`](../4-systems/audio.md)). Every sound effect and
+  music track the game needs, named (~480 names, ~1,000 files), what triggers each, and how
+  each is generated or sourced (library / AI / in-repo synth / recording / composer), plus four
+  decisions needed first. The in-game layer plays the M7 set, the UI sounds and the music by state; the rest is listed as a gap in `docs/4-systems/audio.md`.
 - [`docs/plans/moodboard-gap-closure.md`](../plans/moodboard-gap-closure.md) — a full audit of the
   built game against the pitch bible and mood board, pillar by pillar, plus the 34-item backlog it
   produced (`Tools/mkissues_moodboard_gap.py`,
   [`docs/generated/github-issues-moodboard-gap.json`](../generated/github-issues-moodboard-gap.json)
-  once filed). Flags one open creative-direction question (the bestiary's thematic split) that
-  needs a decision, not just more art.
+  once filed). Its one open creative-direction question, the bestiary's thematic split, was
+  decided on 2026-09-24: each Age's enemies are its household.
+- **Work on other branches.** `docs/3-state/ProjectState.md`, "Work not on `main` yet", lists
+  every branch holding work `main` lacks. The audio plan (`docs/plans/audio.md`) and
+  `Tools/AudioForge/` are now merged into `ccr-6bf1f02d-o8jhoy` together with the in-game audio layer.
 - [`docs/prompts/plunderspell-fable.md`](../prompts/plunderspell-fable.md) — the build-and-test
   prompt used to drive an agent session on this project.
 - [`docs/prompts/house-rules-versioncheck-fix.md`](../prompts/house-rules-versioncheck-fix.md) — a
   handoff for an agent in `Ajw2003/AjsClaudeCodeTools`: the house-rules version check went silent
   when it couldn't reach GitHub (found 2026-09-24). Not PlunderSpell work.
+- [`docs/reference/deprecated-code.md`](../reference/deprecated-code.md) — dead code kept as reference, with the evidence that it is unused.
 - [`docs/generated/`](../generated/README.md) — the castle-generator and UI HTML previews, and the
   live GitHub issues backlog (`gh issue list` is the source of truth for current status; the JSON
   is a point-in-time manifest of what's been filed).

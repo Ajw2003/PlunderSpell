@@ -29,16 +29,16 @@ namespace Plunderspell.EditorTools
             GameObject root = PrefabUtility.LoadPrefabContents(k_TurretPath);
             try
             {
-                if (!root.TryGetComponent(out CastleGuard guard))
+                if (!root.TryGetComponent(out Guard guard))
                 {
-                    Debug.LogError($"[Turret] {k_TurretPath} has no CastleGuard.");
+                    Debug.LogError($"[Turret] {k_TurretPath} has no Guard.");
                     return;
                 }
 
                 var serialized = new SerializedObject(guard);
-                serialized.FindProperty("_projectilePrefab").objectReferenceValue = bolt;
-                serialized.FindProperty("_attackCooldown").floatValue = 2.2f;
-                serialized.FindProperty("_attackDamage").floatValue = 14f;
+                serialized.FindProperty("_tuning.ProjectilePrefab").objectReferenceValue = bolt;
+                serialized.FindProperty("_tuning.AttackCooldownSeconds").floatValue = 2.2f;
+                serialized.FindProperty("_tuning.AttackDamage").floatValue = 14f;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
 
                 PrefabUtility.SaveAsPrefabAsset(root, k_TurretPath);

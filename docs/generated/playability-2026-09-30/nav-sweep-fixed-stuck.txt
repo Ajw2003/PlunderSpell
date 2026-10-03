@@ -1,0 +1,3 @@
+guard -168930 t 46 dt 1.6 pos (-19.84, 0.31, -37.13) state Combat dest (-20.47, 1.50, -35.86) distDest 1.4 movedPerSecond 0.12 ground LateGunFoundry(Clone) n=(0.00, 1.00, 0.00) slope=0 touching [GUARD:GothicManAtArms(Clone)/LDefault]
+guard -169646 t 50 dt 1.6 pos (-16.17, 0.31, -33.63) state Investigating dest (-20.47, 1.50, -35.86) distDest 4.8 movedPerSecond 0.04 ground LateBrewhouse(Clone) n=(0.00, 1.00, 0.00) slope=0 touching []
+guard -169284 t 51 dt 1.6 pos (-19.15, 0.31, -37.60) state Combat dest (-21.73, 1.50, -35.40) distDest 3.4 movedPerSecond 0.07 ground LateGunFoundry(Clone) n=(0.00, 1.00, 0.00) slope=0 touching []

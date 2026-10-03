@@ -3,6 +3,7 @@
     "rootNamespace": "Plunderspell.Tests.EditMode",
     "references": [
         "Plunderspell.Core",
+        "Plunderspell.Foundation",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

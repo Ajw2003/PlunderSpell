@@ -1,105 +1,51 @@
-using System.Collections;
 using System.Collections.Generic;
-using Interfaces;
 using NUnit.Framework;
 using Plunderspell.Guards;
-using Plunderspell.Status;
 using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Plunderspell.Tests
 {
     /// <summary>
     /// A guard that chases but never lands a blow is scenery. See docs/4-systems/raid.md,
-    /// "Guards that can actually hurt you".
+    /// "Guards that can actually hurt you". Ported to the fresh guard (#214): the legacy tests ticked a
+    /// guard standing beside its victim; the fresh guard first sees, closes, then waits for an attack turn,
+    /// so these step it for a second the way the game does (GuardCoreRig.StepTogether).
     /// </summary>
     public class GuardAttackTests
     {
-        private readonly List<Object> m_tracked = new List<Object>();
+        private const float StepSeconds = 0.05f;
+        private const int OneSecondOfSteps = 20;
+
+        private readonly GuardCoreRig _rig = new GuardCoreRig();
 
         [SetUp]
-        public void SetUp()
-        {
-            CastleGuard.ClearIntruders();
-            CastleGuard.EndArrivalGrace();
-        }
+        public void SetUp() => _rig.SetUp();
 
         [TearDown]
-        public void TearDown()
-        {
-            CastleGuard.ClearIntruders();
-            foreach (Object o in m_tracked)
-            {
-                if (o != null)
-                {
-                    Object.DestroyImmediate(o);
-                }
-            }
+        public void TearDown() => _rig.TearDown();
 
-            m_tracked.Clear();
+        [Test]
+        public void Test_AGuardInReachActuallyDamagesTheIntruder()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            GuardCoreRig.Victim victim = _rig.MakeVictim(new Vector3(0f, 0f, 1.2f));
+
+            _rig.StepTogether(3 * OneSecondOfSteps, StepSeconds, guard);
+
+            Assert.Greater(victim.DamageTaken, 0f,
+                "A guard standing beside an intruder must be able to hurt them.");
         }
 
-        private T Track<T>(T o) where T : Object
+        [Test]
+        public void Test_AGuardOutOfReachDoesNotDamageTheIntruder()
         {
-            m_tracked.Add(o);
-            return o;
-        }
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            GuardCoreRig.Victim victim = _rig.MakeVictim(new Vector3(0f, 0f, 8f));
 
-        /// <summary>A body guards can see, that records what it has been hit for.</summary>
-        private sealed class Victim : MonoBehaviour, IHealth
-        {
-            public float Taken;
-            public float CurrentHealth => 100f - Taken;
-            public float MaxHealth => 100f;
-            public void TakeDamage(float damage) => Taken += damage;
-            public void TakeDamage(float damage, float impactVelocity) => TakeDamage(damage);
-        }
+            // A fifth of a second is not enough to cross eight metres at chase speed.
+            _rig.StepTogether(4, StepSeconds, guard);
 
-        private CastleGuard MakeGuard(Vector3 position)
-        {
-            var go = Track(new GameObject("Guard"));
-            go.transform.position = position;
-            go.AddComponent<StatusEffectReceiver>();
-            return go.AddComponent<CastleGuard>();
-        }
-
-        private Victim MakeVictim(Vector3 position)
-        {
-            var go = Track(new GameObject("Victim"));
-            go.transform.position = position;
-            go.AddComponent<BoxCollider>();
-            var victim = go.AddComponent<Victim>();
-            CastleGuard.RegisterIntruder(go.transform);
-            return victim;
-        }
-
-        [UnityTest]
-        public IEnumerator Test_AGuardInReachActuallyDamagesTheIntruder()
-        {
-            CastleGuard guard = MakeGuard(Vector3.zero);
-            Victim victim = MakeVictim(new Vector3(0f, 0f, 1.2f));
-            guard.transform.LookAt(victim.transform);
-
-            yield return null;
-
-            guard.Tick(0.1f);
-
-            Assert.Greater(victim.Taken, 0f,
-                "A guard standing on top of an intruder must be able to hurt them.");
-        }
-
-        [UnityTest]
-        public IEnumerator Test_AGuardOutOfReachDoesNotDamageTheIntruder()
-        {
-            CastleGuard guard = MakeGuard(Vector3.zero);
-            Victim victim = MakeVictim(new Vector3(0f, 0f, 8f));
-            guard.transform.LookAt(victim.transform);
-
-            yield return null;
-
-            guard.Tick(0.1f);
-
-            Assert.AreEqual(0f, victim.Taken,
+            Assert.AreEqual(0f, victim.DamageTaken,
                 "A melee guard must close the distance before it can hurt anyone.");
         }
 
@@ -107,101 +53,62 @@ namespace Plunderspell.Tests
         /// The cooldown is what keeps a chase survivable: without it a guard in contact damages the
         /// player every single frame, which reads as dying instantly for no visible reason.
         /// </summary>
-        [UnityTest]
-        public IEnumerator Test_AGuardCannotAttackEveryFrame()
+        [Test]
+        public void Test_AGuardCannotAttackEveryFrame()
         {
-            CastleGuard guard = MakeGuard(Vector3.zero);
-            Victim victim = MakeVictim(new Vector3(0f, 0f, 1.2f));
-            guard.transform.LookAt(victim.transform);
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            GuardCoreRig.Victim victim = _rig.MakeVictim(new Vector3(0f, 0f, 1.2f));
+            float oneHit = guard.Tuning.AttackDamage;
 
-            yield return null;
+            _rig.StepTogether(OneSecondOfSteps, StepSeconds, guard);
 
-            for (int i = 0; i < 10; i++)
-            {
-                guard.Tick(0.01f);
-            }
-
-            float afterBurst = victim.Taken;
-            Assert.Greater(afterBurst, 0f, "Sanity: it should have landed the first blow.");
-
-            for (int i = 0; i < 10; i++)
-            {
-                guard.Tick(0.01f);
-            }
-
-            Assert.AreEqual(afterBurst, victim.Taken,
-                "Twenty ticks inside one cooldown must still be a single hit.");
+            Assert.Greater(victim.DamageTaken, 0f, "Sanity: it should have landed the first blow.");
+            Assert.LessOrEqual(victim.DamageTaken, oneHit + 0.001f,
+                "A second of contact inside one cooldown must still be a single hit.");
         }
 
-        [UnityTest]
-        public IEnumerator Test_AnIncapacitatedGuardDoesNotAttack()
+        [Test]
+        public void Test_AnIncapacitatedGuardDoesNotAttack()
         {
-            CastleGuard guard = MakeGuard(Vector3.zero);
-            Victim victim = MakeVictim(new Vector3(0f, 0f, 1.2f));
-            guard.transform.LookAt(victim.transform);
-            guard.GetComponent<StatusEffectReceiver>().Sleep(5f);
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            GuardCoreRig.Victim victim = _rig.MakeVictim(new Vector3(0f, 0f, 1.2f));
+            guard.Status.Sleep(5f);
 
-            yield return null;
+            _rig.StepTogether(OneSecondOfSteps, StepSeconds, guard);
 
-            guard.Tick(0.1f);
-
-            Assert.AreEqual(0f, victim.Taken,
+            Assert.AreEqual(0f, victim.DamageTaken,
                 "Somnus has to actually stop a guard, or the spell is decorative.");
         }
 
         // --- The replicated attack signal (docs/plans/artbible-enemies-in-engine.md, E4) ----------
 
-        [UnityTest]
-        public IEnumerator Test_EveryAttackBumpsTheReplicatedSignal()
+        [Test]
+        public void Test_EveryAttackBumpsTheReplicatedSignal()
         {
-            CastleGuard guard = MakeGuard(Vector3.zero);
-            Victim victim = MakeVictim(new Vector3(0f, 0f, 1.2f));
-            guard.transform.LookAt(victim.transform);
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            GuardCoreRig.Victim victim = _rig.MakeVictim(new Vector3(0f, 0f, 1.2f));
             var heard = new List<GuardAttackKind>();
-            guard.Attacked += heard.Add;
+            guard.AttackSignal.Attacked += heard.Add;
+            Assert.AreEqual(0, guard.AttackSignal.Count, "No attack yet.");
 
-            yield return null;
+            _rig.StepTogether(OneSecondOfSteps, StepSeconds, guard);
 
-            Assert.AreEqual(0, guard.AttackCount, "No attack yet.");
-            guard.Tick(0.1f);
-
-            Assert.Greater(victim.Taken, 0f, "Sanity: the blow landed.");
-            Assert.AreEqual(1, guard.AttackCount, "One blow, one count: this is what every client sees.");
-            Assert.AreEqual(GuardAttackKind.Melee, guard.LastAttackKind);
+            Assert.Greater(victim.DamageTaken, 0f, "Sanity: the blow landed.");
+            Assert.AreEqual(1, guard.AttackSignal.Count, "One blow, one count: this is what every client sees.");
+            Assert.AreEqual(GuardAttackKind.Melee, guard.AttackSignal.LastKind);
             CollectionAssert.AreEqual(new[] { GuardAttackKind.Melee }, heard,
                 "The server raises Attacked as the blow lands.");
         }
 
-        [UnityTest]
-        public IEnumerator Test_AnAttackOnCooldownSignalsNothing()
+        [Test]
+        public void Test_AGuardOutOfReachSignalsNoAttack()
         {
-            CastleGuard guard = MakeGuard(Vector3.zero);
-            Victim victim = MakeVictim(new Vector3(0f, 0f, 1.2f));
-            guard.transform.LookAt(victim.transform);
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            _rig.MakeVictim(new Vector3(0f, 0f, 8f));
 
-            yield return null;
+            _rig.StepTogether(4, StepSeconds, guard);
 
-            for (int i = 0; i < 10; i++)
-            {
-                guard.Tick(0.01f);
-            }
-
-            Assert.AreEqual(1, guard.AttackCount,
-                "Ten ticks inside one cooldown are one attack; a swing per tick would be an animation per frame.");
-        }
-
-        [UnityTest]
-        public IEnumerator Test_AGuardOutOfReachSignalsNoAttack()
-        {
-            CastleGuard guard = MakeGuard(Vector3.zero);
-            Victim victim = MakeVictim(new Vector3(0f, 0f, 8f));
-            guard.transform.LookAt(victim.transform);
-
-            yield return null;
-
-            guard.Tick(0.1f);
-
-            Assert.AreEqual(0, guard.AttackCount, "No swing at thin air.");
+            Assert.AreEqual(0, guard.AttackSignal.Count, "No swing at thin air.");
         }
     }
 }

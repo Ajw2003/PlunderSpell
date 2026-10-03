@@ -3,6 +3,73 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-02 — Fire overrules Somnus
+
+**Context.** #212 ruled that stun and sleep outrank burning, so a sleeping guard that was set alight kept
+sleeping until the sleep ended, then panicked. The owner saw a guard burn alive without waking (#236).
+
+**Decision (owner, 2026-10-02).** Fire overrules Somnus. Igniting a sleeper wakes it
+(`StatusEffectReceiver.Ignite`), `Sleep` on a burning target does nothing, and a guard that wakes this way goes
+to OnFire, not Patrol or Investigate. Stun and levitation still outrank fire. The receiver is shared, so a
+sleeping player set alight wakes too.
+
+**Consequence.** Reverses the sleep half of the #212 rule (stun and sleep outrank fire). `GuardStateSet.TryInterrupt`
+no longer ignores fire while the guard is in a held state that has ended; `docs/4-systems/alarm.md` (OnFire,
+Priority) is updated.
+
+## 2026-10-02 — Levo lifts the fresh guard; every guard answers the hue and cry
+
+**Context.** The #214 inventory listed "Levo's float-and-fall" as replaced by the Stunned state, but the
+fresh guard has no physics body, so the spell's push lifted nothing. Separately, the hue and cry was raised
+once and reached only guards within 40 m, and the owner was not swarmed reliably.
+
+**Decision (owner, 2026-10-02).** Keep the restored lift (`GuardLift`, no fall damage): the owner played it
+and said "levo works". Every guard in the castle answers the hue and cry, and it repeats while the alarm stays
+there (#239). The owner's new issues #236 (fire wakes a sleeper), #237 (reaching a player on a table or ledge)
+and #238 (hearing footsteps and moved objects, looking up) say awareness that was dropped must come back, so
+the "re-add if needed" issues for hearing (#227, #228) are now wanted rather than optional.
+
+**Consequence.** `docs/plans/guard-core-inventory.md`'s drop of the float-and-fall is reversed by this entry.
+
+## 2026-10-02 — Lockdown doors slow or stop guards too, not just players
+
+**Context.** The guard navigation service (#222) can give each archway link a runtime cost, and
+`CastleLockdown.NavGraph` would feed lockdown doors into it. Barring every door at the hue and
+cry could strand guards, so the wiring waited on the owner.
+
+**Decision (owner, 2026-10-02).**
+- A locked door adds a detour cost to the guard's route (40 m, `CastleLockdownNavigation`).
+- A barred door closes the route completely, for guards as well as players.
+- Guards on the wrong side of a barred door have to find another way.
+
+Rejected: guards passing freely (keys), and guards opening doors with a delay.
+
+**Consequence.** `CastleLockdown.NavGraph` is wired at generation. A guard that finds no route
+raises `Blocked(DoorClosed)`, and its state (#208–#210) must handle that, for example by giving
+up or holding position.
+
+## 2026-10-01 — Guards become a state machine driven by an enemy director
+
+**Context.** `CastleGuard` had grown to 1316 lines of switches and direct calls. Guards got stuck,
+left players who stood in front of them, and couldn't land hits after the #200 collision changes.
+The owner asked for a proper FSM, like the player's, communicating through events.
+
+**Decision.** Guards have seven states: Patrol (3 or more random reachable points), Investigate,
+Chase, Combat (taking turns through director attack tokens, ranged guards avoiding friendly fire),
+Stunned/Slept (Levo counts as Stunned until the guard lands; a loud noise wakes a sleeper),
+OnFire, and Dead (topple and dust).
+- A server-side enemy director absorbs the alarm. It relays behavioural requests and their data
+  (for example a player's location) to guards as events on an event bus.
+- Each guard's state decides how it responds; nothing outside the FSM moves a guard.
+- Investigate replaces the Search sweep, and the hue and cry becomes a director event that sends
+  guards to Investigate.
+- The no-NavMesh `Steer` fallback is dropped.
+
+**Supersedes.** The Search state, and the hue-and-cry re-send from #195
+(`docs/4-systems/raid.md`, "Guards that keep moving"). Their replacement is tracked in #203.
+
+**Plan.** `docs/plans/guard-fsm-restructure.md`; issues #203 to #214.
+
 ## 2026-09-24 — The castle's look: warm fire in fog, calm until the alarm
 
 **Context.** The raid rendered with Unity's defaults: default sky, one sun, no fog, an untouched
@@ -1079,3 +1146,127 @@ in "Held items keep their orientation", above, for feeling floppy) and angle set
 holders' positions.
 
 **Status.** Standing. Not built yet.
+
+## 2026-09-27 — Audio: AI sound effects, friends' voices, AI music only where it doesn't adapt
+
+**Context.** The game had no audio at all. `docs/plans/audio.md` named every sound (483 names,
+about 1,000 files) and asked four questions about where they come from.
+
+**Decision.** The owner: AI-generated sound effects are acceptable (with Steam's AI disclosure);
+guard voices are recorded by friends; AI music (Suno) for the six non-adaptive tracks. The adaptive
+raid stems stay marked "composed", because AI music can't produce layers that share a bar grid;
+who composes them is still open. Every sound is built from one manifest by `Tools/AudioForge/`,
+with a placeholder until its real source arrives, so the game's audio can be wired up before any
+of it is final.
+
+**Why.** Libraries already cover the ordinary sounds (footsteps, doors, impacts); AI is used where
+nothing exists (spells, the portal); friends' voices suit a co-op comedy. `ai/log.csv` and
+`final/LICENCES.csv` keep the record Steam asks for.
+
+**Status.** Standing.
+
+## 2026-09-27 — Audio levels are baked per category, and Unity's Normalize is off
+
+**Context.** The owner found many of the built sounds harsh or misplaced. Every file had been mastered
+to the same −1 dBFS peak, so a UI hover played as loud as a musket shot, and the committed `.meta`
+files had Unity's Normalize on, which enforces exactly that.
+
+**Decision.** The build sets each file's level by its part of the mix (`Tools/AudioForge/forge/categories.py`:
+UI, cue, foley, physics, weapons, spells, creatures, world), nudged by its gameplay noise class.
+Normalize is turned off in all 1,013 `.meta` files. Streaming, the owner's choice, is unchanged. This
+replaces plan §2's "SFX peaks at −1 dBTP" for every non-music, non-ambience sound.
+
+**Why.** Relative level is most of what makes a mix sound right, and there is no mixer in the game yet
+to set it at runtime. The audit (`docs/generated/audio-audit/`) measured 452 files outside their
+category's level window before, 3 after.
+
+**Status.** Standing. When the runtime mixer exists (plan §7.3), its bus faders trim around these
+levels rather than replacing them.
+
+
+## 2026-09-29 — Sounds come from free libraries and our own search, not a paid generator
+
+**Context.** The 2026-09-27 audio decision said AI sound effects were fine and named ElevenLabs. On
+2026-09-29 the owner chose ElevenLabs, then found they have no account and do not want a paid one:
+the way forward is the best free route, or a pipeline built here from the same steps.
+
+**Decision.** ElevenLabs is off the plan. Sounds come from (1) recorded libraries that are free to
+ship in a game, found by a text search built on the Apache-2.0 CLAP model (a prompt or a brief in,
+ranked recordings out), tailored with the DSP AudioForge already has, and chosen through a review
+page; (2) synthesis where nothing recorded fits (spells, the portal); (3) later, if wanted, Stable
+Audio Open run locally (free under US$1M revenue, needs a free Hugging Face account and Stability's
+commercial registration). Not used: AudioLDM 2, MMAudio, TangoFlux and Woosh, whose weights are
+non-commercial. The synthesised main-menu theme stays as it is. The 2026-09-27 rules on levels and
+on friends' voices for guards stand. `Tools/AudioForge/forge/ai_elevenlabs.py` stays in the tree,
+unused, in case a paid route is wanted later.
+
+**Why.** Recorded sound beats generated sound for foley, impacts, fire and doors, has no per-file
+cost and needs no Steam AI disclosure. A first test on the 389 free Kenney files found the right
+recording when the library has it and showed by low scores when it does not, which is the measure
+of how much a bigger library is worth. The Sonniss GameAudioGDC library (free, commercial, no
+attribution) forbids handing its raw files to others, and this repository is public, so it is not
+committed until the owner decides on the repository's visibility.
+
+**Status.** Standing. Plan: `docs/plans/audio-sourcing-pipeline.md`.
+
+**Correction, same day.** The Decision above names spells and the portal as the place for synthesis
+because "nothing recorded fits". That was said without checking, and it is wrong as a blanket claim:
+CC0 spell and magic recordings exist (OpenGameArt "80 CC0 RPG SFX", 9 spell sounds; Kenney's Sci-fi
+Sounds and Digital Audio packs). Whether they are enough is measured, not assumed: add them as library
+roots and read the coverage report. Synthesis stays the fallback for what the report shows uncovered.
+
+## 2026-09-30 — The p0ss Spell Sounds Starter Pack is used, with credit
+
+**Context.** `Tools/AudioForge/library/opengameart/SOURCES.md` (2026-09-29) set OpenGameArt's "Spell
+Sounds Starter Pack" (p0ss, CC-BY-SA 3.0 / GPL) aside for its share-alike terms. On 2026-09-30 the
+owner downloaded it for the spells and said an attributed, commercial-use licence is fine.
+
+**Decision.** The pack is a library root (`p0ss`, `Tools/AudioForge/library/p0ss-spells/`) under
+CC-BY-SA 3.0. p0ss is credited in the game's credits with the source page. Files built from it stay
+CC-BY-SA 3.0 and public (this repository is public); the game's code and other assets are not
+affected by share-alike.
+
+**Why.** The spells had no recording that fit; the pack is the owner's pick and allows commercial use
+with credit.
+
+**Status.** Standing. Reverses the "Not used" line in `Tools/AudioForge/library/opengameart/SOURCES.md`.
+
+## 2026-09-30 — The music's direction is the in-house synth sound the owner heard
+
+**Context.** The raid stems, title, Lair and results music are synthesised by
+`Tools/AudioForge/forge/music.py`: plucked strings (lute, mandolin-like) over chiptune-style square and
+saw leads, a drone, and a per-Age palette (`AGES`: Bronze Age reed and frame drum in Phrygian, High
+Medieval choir and tabor in Dorian, Late Medieval shawm and side drum in Aeolian, Gunpowder trumpet
+and timpani in harmonic minor). In a raid four stems play together and fade in by alarm state
+(calm, stirred, roused, hue and cry). `docs/plans/audio.md` §8 planned to replace them with a
+commissioned composer (stems) and paid AI music (title, Lair, results).
+
+**Decision.** On 2026-09-30 the owner heard it in play and liked it: "chiptune, mandolin / guitar synth
+combo ... very of the medieval era but with some old video game dungeon crawler flair, keep that
+vibe up". That sound is the music's direction. Any change to the music, from any source, keeps it:
+period plucked strings and drones, chiptune leads, one palette per Age, stems that layer by alarm
+state.
+
+**Why.** It is the owner's stated taste after hearing it in the game.
+
+**Status.** Standing. Open: `docs/plans/audio.md` §8 and the manifest's `final` column (C composed, M
+AI music) still describe the replacement plan; whether the synth tracks are now final is the owner's
+call.
+
+## 2026-10-03 — Short sounds load into memory; only music and long loops stream
+
+**Context.** Every one of the 1,013 clips was imported as Streaming, the owner's choice (2026-09-27,
+"Audio levels are baked per category"). The first Profiler captures of a co-op raid (#242,
+`docs/generated/perf-2026-10-03/`) showed `SoundManager.Update > SoundHandle.Instance.Destructor`
+costing 485-557 ms per 10 s of hue and cry on host and client: each footstep or hit opened and closed
+an FMOD stream.
+
+**Decision.** Owner approved on 2026-10-03: short sounds go into memory, as `docs/plans/audio.md` §2
+first planned. 517 SFX, foley, physics and UI clips are Decompress On Load (ADPCM, preloaded); 452
+voice lines are Compressed In Memory (Vorbis, preloaded); 44 music tracks and loops over 10 s stay
+Streaming. Set by `Tools/Unity/eval/audio_load_types.cs`.
+
+**Why.** Measured stalls, not taste: the after-capture shows no destructor time.
+
+**Status.** Standing (#244). Reverses the "Streaming, the owner's choice, is unchanged" line of the
+2026-09-27 entry; `docs/4-systems/audio.md` updated.

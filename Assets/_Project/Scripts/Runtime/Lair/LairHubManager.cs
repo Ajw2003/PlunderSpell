@@ -31,19 +31,49 @@ namespace Plunderspell.Lair
 
         private void Awake() => Load();
 
-        /// <summary>Load persisted state from PlayerPrefs (falling back to defaults).</summary>
+        /// <summary>Load the active save slot's state from PlayerPrefs (falling back to defaults).</summary>
         public void Load()
         {
-            SelectedEra = (HistoricalEra)PlayerPrefs.GetInt(KeySelectedEra, (int)HistoricalEra.BronzeAge);
-            TotalDebt = PlayerPrefs.GetFloat(KeyTotalDebt, DefaultDebt);
-            AccumulatedGold = PlayerPrefs.GetFloat(KeyAccumulatedGold, DefaultGold);
+            LairState state = Peek(SaveSlots.Active);
+            SelectedEra = state.SelectedEra;
+            TotalDebt = state.TotalDebt;
+            AccumulatedGold = state.AccumulatedGold;
+        }
+
+        /// <summary>Makes <paramref name="slot"/> the save in use and loads it; the last-raid lines belonged to the old one.</summary>
+        public void LoadSlot(int slot)
+        {
+            SaveSlots.Active = slot;
+            LastRaidWorth = -1f;
+            LastRaidLeftBehind = 0;
+            Load();
         }
 
         private void Save()
         {
-            PlayerPrefs.SetInt(KeySelectedEra, (int)SelectedEra);
-            PlayerPrefs.SetFloat(KeyTotalDebt, TotalDebt);
-            PlayerPrefs.SetFloat(KeyAccumulatedGold, AccumulatedGold);
+            int slot = SaveSlots.Active;
+            PlayerPrefs.SetInt(SaveSlots.Key(KeySelectedEra, slot), (int)SelectedEra);
+            PlayerPrefs.SetFloat(SaveSlots.Key(KeyTotalDebt, slot), TotalDebt);
+            PlayerPrefs.SetFloat(SaveSlots.Key(KeyAccumulatedGold, slot), AccumulatedGold);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>A slot's saved state without loading it, defaults where nothing is saved.</summary>
+        public static LairState Peek(int slot) => new LairState(
+            PlayerPrefs.GetFloat(SaveSlots.Key(KeyTotalDebt, slot), DefaultDebt),
+            PlayerPrefs.GetFloat(SaveSlots.Key(KeyAccumulatedGold, slot), DefaultGold),
+            (HistoricalEra)PlayerPrefs.GetInt(SaveSlots.Key(KeySelectedEra, slot), (int)HistoricalEra.BronzeAge));
+
+        /// <summary>True once a raid has been banked or an era picked in <paramref name="slot"/>.</summary>
+        public static bool HasSave(int slot) =>
+            PlayerPrefs.HasKey(SaveSlots.Key(KeyTotalDebt, slot)) || PlayerPrefs.HasKey(SaveSlots.Key(KeySelectedEra, slot));
+
+        /// <summary>Wipes <paramref name="slot"/> back to a new campaign.</summary>
+        public static void ResetSlot(int slot)
+        {
+            PlayerPrefs.DeleteKey(SaveSlots.Key(KeySelectedEra, slot));
+            PlayerPrefs.DeleteKey(SaveSlots.Key(KeyTotalDebt, slot));
+            PlayerPrefs.DeleteKey(SaveSlots.Key(KeyAccumulatedGold, slot));
             PlayerPrefs.Save();
         }
 
@@ -51,7 +81,7 @@ namespace Plunderspell.Lair
         public void SelectEra(HistoricalEra era)
         {
             SelectedEra = era;
-            PlayerPrefs.SetInt(KeySelectedEra, (int)era);
+            PlayerPrefs.SetInt(SaveSlots.Key(KeySelectedEra, SaveSlots.Active), (int)era);
             PlayerPrefs.Save();
         }
 

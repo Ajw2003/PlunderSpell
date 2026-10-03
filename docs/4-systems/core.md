@@ -59,6 +59,15 @@ implements four of them.
   component is deleted from the project - fix the builder and re-run it rather than hand-editing
   the prefab or scene YAML.
 
+- **Save slots** (`Assets/_Project/Scripts/Runtime/Lair/SaveSlots.cs`, main menu Save row). Three
+  campaigns, each with its own debt, gold and era, so a cheap or rich campaign can be kept for
+  testing debt and loot rates. Slot 1 uses the PlayerPrefs keys saves had before slots existed
+  (`TotalDebt`, `AccumulatedGold`, `SelectedEra`), so an existing campaign is slot 1; slots 2 and 3
+  prefix them (`Slot2.TotalDebt`). The active slot is `Save.ActiveSlot`. The stepper calls
+  `LairHubManager.LoadSlot`; Reset asks twice ("Sure?") and then `LairHubManager.ResetSlot` deletes
+  the slot's keys. A client in someone else's session still shows the host's campaign and never
+  writes its own slot. Tests: `SaveSlotTests`.
+
 ## Traps
 
 - **Unity's fake null and `?.`** — a destroyed `UnityEngine.Object` is not a real C# null. It

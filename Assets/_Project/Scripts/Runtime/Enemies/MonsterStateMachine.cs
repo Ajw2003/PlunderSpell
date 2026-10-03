@@ -5,6 +5,8 @@ using StateMachine.States;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>Deprecated: kept as reference, not live.</summary>
+[System.Obsolete("Deprecated 2026-10-01: unused by any prefab, scene or code. See docs/reference/deprecated-code.md")]
 public class MonsterStateMachine : BaseStateMachine, IHealth, ICarryableCreature
 {
     public float CurrentHealth => _health;

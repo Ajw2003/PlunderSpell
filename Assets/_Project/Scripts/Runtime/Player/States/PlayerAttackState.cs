@@ -8,8 +8,7 @@ namespace StateMachine.States
 
         public override void Exit()
         {
-            // Don't force state transfer, just allow it to happen.
-            _stateMachine.ChangeState(_stateMachine.IdleState);
+            // Nothing to undo. It used to switch to Idle here, which would now recurse since ChangeState runs Exit.
         }
     }
 }

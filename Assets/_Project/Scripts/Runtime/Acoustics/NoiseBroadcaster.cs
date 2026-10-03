@@ -15,6 +15,7 @@ namespace Plunderspell.Acoustics
     public static class NoiseBroadcaster
     {
         private static readonly Collider[] _overlapBuffer = new Collider[64];
+        private static readonly RaycastHit[] _wallBuffer = new RaycastHit[16];
 
         /// <summary>
         /// Delivers a noise to every <see cref="INoiseListener"/> within <paramref name="radius"/>,
@@ -24,6 +25,26 @@ namespace Plunderspell.Acoustics
         public static int Broadcast(Vector3 origin, float radius, float strength, NoiseType type,
             int listenerLayerMask = ~0, int geometryLayerMask = 0)
         {
+            return BroadcastCore(origin, radius, strength, type, null, listenerLayerMask, geometryLayerMask, out _);
+        }
+
+        /// <summary>
+        /// Broadcasts spoken words as a <see cref="NoiseType.Speech"/> noise. Returns how many
+        /// <see cref="IEavesdropper"/>s took in the words (not how many listeners heard the noise: the
+        /// alarm hears speech too but is not a guard).
+        /// </summary>
+        public static int BroadcastSpeech(Vector3 origin, float radius, float strength, string transcript,
+            int listenerLayerMask = ~0, int geometryLayerMask = 0)
+        {
+            BroadcastCore(origin, radius, strength, NoiseType.Speech, transcript, listenerLayerMask,
+                geometryLayerMask, out int understood);
+            return understood;
+        }
+
+        private static int BroadcastCore(Vector3 origin, float radius, float strength, NoiseType type,
+            string transcript, int listenerLayerMask, int geometryLayerMask, out int understood)
+        {
+            understood = 0;
             if (radius <= 0f || strength <= 0f)
                 return 0;
 
@@ -41,20 +62,33 @@ namespace Plunderspell.Acoustics
                 if (listener == null)
                     continue;
 
-                int walls = CountWalls(origin, hit.transform.position, geometryLayerMask);
+                // Aimed at the middle of the listener's body, not its feet: the floor is not a wall.
+                int walls = CountWalls(origin, hit.bounds.center, geometryLayerMask, listener);
                 float attenuated = AcousticEmitter.ComputeAttenuatedStrength(strength, walls);
                 if (attenuated <= AcousticEmitter.MinAudibleStrength)
                     continue;
 
-                listener.OnNoiseHeard(new NoiseEvent(origin, attenuated, type));
+                var evt = new NoiseEvent(origin, attenuated, type, transcript);
+                listener.OnNoiseHeard(evt);
                 heard++;
+
+                if (type == NoiseType.Speech && listener is IEavesdropper eavesdropper && eavesdropper.Overhear(evt))
+                    understood++;
             }
 
             return heard;
         }
 
         /// <summary>Counts sound-blocking walls on the segment, capped at the model's maximum.</summary>
-        public static int CountWalls(Vector3 from, Vector3 to, int geometryLayerMask)
+        public static int CountWalls(Vector3 from, Vector3 to, int geometryLayerMask) =>
+            CountWalls(from, to, geometryLayerMask, null);
+
+        /// <summary>
+        /// As above, but a wall is fixed scenery: the listener's own body (a guard standing in the open
+        /// is not behind a wall of itself), other listeners and anything a physics body carries (loot, a
+        /// player) are not counted (#238).
+        /// </summary>
+        public static int CountWalls(Vector3 from, Vector3 to, int geometryLayerMask, INoiseListener listener)
         {
             if (geometryLayerMask == 0)
                 return 0;
@@ -64,9 +98,19 @@ namespace Plunderspell.Acoustics
             if (dist <= Mathf.Epsilon)
                 return 0;
 
-            RaycastHit[] hits = Physics.RaycastAll(from, dir.normalized, dist, geometryLayerMask,
+            int count = Physics.RaycastNonAlloc(from, dir / dist, _wallBuffer, dist, geometryLayerMask,
                 QueryTriggerInteraction.Ignore);
-            return Mathf.Min(hits.Length, AcousticEmitter.MaxWallSegments);
+            int walls = 0;
+            for (int i = 0; i < count; i++)
+            {
+                Collider collider = _wallBuffer[i].collider;
+                if (listener == null || IsScenery(collider))
+                    walls++;
+            }
+            return Mathf.Min(walls, AcousticEmitter.MaxWallSegments);
         }
+
+        private static bool IsScenery(Collider collider) =>
+            collider.attachedRigidbody == null && collider.GetComponentInParent<INoiseListener>() == null;
     }
 }

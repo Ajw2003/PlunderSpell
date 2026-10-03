@@ -6,7 +6,6 @@ using Plunderspell.Raid;
 using Plunderspell.Status;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Plunderspell.EditorTools
 {
@@ -172,23 +171,10 @@ namespace Plunderspell.EditorTools
             capsule.height = localHeight;
             capsule.center = new Vector3(0f, localHeight * 0.5f, 0f);
 
-            // A NavMeshAgent's are world units and ignore the transform scale, so they take the
-            // scaled figures instead.
-            var agent = instance.AddComponent<NavMeshAgent>();
-            agent.radius = radius;
-            agent.height = height;
-            agent.speed = Mathf.Max(spec.PatrolSpeed, 0.01f);
-            agent.angularSpeed = 240f;
-            agent.acceleration = 12f;
-            agent.stoppingDistance = 0.8f;
-            // A turret is placed, not steered: letting it avoid others would drift it off its post.
-            agent.obstacleAvoidanceType = spec.PatrolSpeed <= 0f
-                ? ObstacleAvoidanceType.NoObstacleAvoidance
-                : ObstacleAvoidanceType.LowQualityObstacleAvoidance;
-
+            // The guard is moved by the director's navigation service, not an agent. Its body shape is in
+            // world units (the sweep ignores the transform scale), so it takes the scaled figures.
             instance.AddComponent<StatusEffectReceiver>();
-            CastleGuard guard = instance.AddComponent<CastleGuard>();
-            ApplyGuardTuning(guard, spec, height);
+            GuardPrefabParts.Add(instance, GuardSetupFor(spec, radius, height));
 
             string path = $"{PrefabDirectory}/{spec.Name}.prefab";
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(instance, path);
@@ -267,22 +253,21 @@ namespace Plunderspell.EditorTools
         }
 
         /// <summary>
-        /// Writes the guard's inspector fields. They are private and serialized, so this goes through
-        /// SerializedObject rather than widening the runtime API just for an authoring tool.
+        /// The guard's numbers for a spec. Eyes sit near the top of the model, so the line-of-sight ray
+        /// clears its own collider.
         /// </summary>
-        private static void ApplyGuardTuning(CastleGuard guard, EnemySpec spec, float height)
+        private static GuardPrefabSetup GuardSetupFor(EnemySpec spec, float radius, float height)
         {
-            var so = new SerializedObject(guard);
-            so.FindProperty("_sightRange").floatValue = spec.SightRange;
-            so.FindProperty("_patrolSpeed").floatValue = spec.PatrolSpeed;
-            so.FindProperty("_chaseSpeed").floatValue = spec.ChaseSpeed;
-            so.FindProperty("_maxHealth").floatValue = spec.MaxHealth;
-            // Eyes sit near the top of the model, so the line-of-sight ray clears its own collider.
-            so.FindProperty("_eyeHeight").floatValue = height * 0.9f;
-            // Castle geometry is on Default; without this the sight check never hits a wall and
-            // guards see through the castle.
-            so.FindProperty("_geometryLayers").intValue = 1;
-            so.ApplyModifiedPropertiesWithoutUndo();
+            return new GuardPrefabSetup
+            {
+                SightRange = spec.SightRange,
+                PatrolSpeed = spec.PatrolSpeed,
+                ChaseSpeed = spec.ChaseSpeed,
+                MaxHealth = spec.MaxHealth,
+                EyeHeight = height * 0.9f,
+                BodyRadius = radius,
+                BodyHeight = height
+            };
         }
 
         private static Bounds MeasureBounds(GameObject instance)

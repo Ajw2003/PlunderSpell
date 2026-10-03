@@ -103,7 +103,7 @@ namespace Plunderspell.Atmosphere
         /// Steam Deck, Medium elsewhere). Runs before the first scene, so nothing renders on the wrong level.
         /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void ApplySavedOrDefault()
+        public static void ApplySavedOrDefault()
         {
             string saved = PlayerPrefs.GetString(GraphicsLevelSettings.QualityKey, string.Empty);
             QualityTier tier = string.IsNullOrEmpty(saved)

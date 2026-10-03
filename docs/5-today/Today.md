@@ -1,5 +1,182 @@
 # Today
 
+**2026-10-02 (evening) - guards move again: the walk map was empty for two of the three Ages.** The owner
+saw guards stuck and standing still in co-op. Measured with `Tools/Unity/coop_guard_check.sh` (Late
+Medieval, seed 3508293): every guard stood still for the whole 90 s. Cause: `CastleNavTileBaker` baked only
+`CastleRoomRegistry.asset`, so Bronze Age and Late Medieval castles built a nav graph with 0 cells. Fixed by
+baking every registry, plus a warning and a test. Then three causes of stuck guards, each seen in the run's
+stuck dump: dressing missing from the map, a dead stop on a clipped corner (now a slide), and guards' bodies
+blocking each other's sweep. Stuck went from 117 s of 666 to 4.8 s of 466 (1.0%). Also found: the previous
+session's #214 builder stopped at the usage limit with its prefab swap and test moves uncommitted; they are
+committed now, nothing was lost. Not seen: a calm patrol over minutes (the check sends every guard after the
+host), the Bronze Age and default castles in co-op, and Levo and Frango on the fresh guard in co-op (the
+guards killed the idle host before those checks ran).
+
+Later: guards could not climb any staircase. The sweep stepped over 0.35 m, but a guard's front edge meets a
+0.65 m riser while its centre is still on the floor, and the stair test had the sweep switched off. Now 0.7 m,
+with tests for three staircases with the sweep on (they fail at 0.35 m), and a real guard went up and down the
+Late turret stair in co-op. The runtime NavMesh is removed (#223), and the #214 parity table is checked.
+
+---
+
+**2026-10-02 - Lesson: a stray .cs file in Assets can silently drop prefabs from PurrNet's network list.**
+Four draft guard part files, left by a stopped builder, broke compilation. While it was broken,
+PurrNet's auto-generated `Assets/_Project/Net/NetworkPrefabs.asset` lost the `CastleGuard` prefab,
+so guards would not have spawned in co-op. Fixed: the drafts moved to
+`docs/reference/guard-parts-draft/` and the entry restored. After any compile failure, check `git
+diff Assets/_Project/Net/NetworkPrefabs.asset` before committing. Dead code is now marked deprecated
+(#230, `docs/reference/deprecated-code.md`); the guard is being rebuilt from scratch with bespoke
+navigation (#203, `docs/plans/bespoke-navigation.md`).
+
+---
+
+**2026-09-30 (evening) - playability pass: guards keep moving; settings and pop-in in progress.**
+Mimic prototype paused; work is on `claude/playability-fixes` (from PR #178), parent issue #192. In a
+co-op run, guard stuck time fell from 25.1% to 4.0% of guard-seconds. Guard tests: 54 of 55 pass; the
+one failure, `GuardAttackTests.Test_EveryAttackBumpsTheReplicatedSignal`, is reported to fail on the
+old code too. Steps 4 and 5 (#181, #196) were with the executor when this was written; #197 is not
+started. Handoff, including the two-Editor trap: `docs/plans/playability-pass-handoff-2026-09-30.md`.
+
+---
+
+**2026-09-29 — ElevenLabs chosen for sound effects; AudioForge ready for a pilot.** The owner picked
+ElevenLabs after `docs/plans/audio-tooling-options-2026-09-29.md` compared it with Mirelo, Ludo and
+local models. `Tools/AudioForge/forge/ai_elevenlabs.py` now uses `eleven_text_to_sound_v2`, asks for
+seamless loops on `loop=1` rows, allows up to 30 s, counts layer start offsets when it works out a
+duration, and takes `--placeholders` to cover every stand-in sound (149 sounds, 693 takes, about
+107,000 credits at 40 a second; guard voices and music are left out). The menu theme
+`mus_title_loop` is now `final = G`, so it is not on the list to replace with AI music. Fixed a
+Windows bug where regenerating the manifest crashed on a non-ASCII brief and truncated
+`manifest.csv` (the entry point now restarts Python in UTF-8 mode). Run: the dry run of the
+five-sound pilot (21 takes, about 49 s). Not run: any real ElevenLabs request, because there is no
+`ELEVENLABS_API_KEY` on this machine and the owner has to make the key. Next: the owner runs the
+pilot, listens to `Tools/AudioForge/ai/takes/`, and says which to keep.
+
+---
+
+**2026-09-29 (evening) - footsteps, physics impacts and guard voices are built; nobody has listened.**
+Plan `docs/plans/audio-feel-layer.md`; how it works and the gap list are in `docs/4-systems/audio.md`.
+`AudioLayerTests` and the new `AudioFeelTests` pass, 19 of 19 (10 new). The full EditMode run is
+113 passed, 2 failed, 3 skipped of 118; the two failures are the same two as before
+(`ArtAssetImportTests.ArtBibleModelsImportWithTheirOwnedSettings`,
+`LootBalanceTests.Test_TheOuterZonesHoldNothingTooHeavyToLift`). They were not run on `84732e04`: that
+needs a second full import of the project, which cannot share this Editor. Between `84732e04` and now
+no art model, loot table, enemy prefab or `Item` prefab changed (the diff outside audio and docs is the
+UI sounds, four assembly definitions and two lines of `ProjectSettings.asset`), and neither test reads
+anything else, so neither can be caused by the audio changes; that is an argument from the diff, not a
+run. Play mode, through Play Solo, Lair, Set Out, with the W key and the Space key queued through the
+Input System so the real controller moved the player: the player's steps played flat on the Foley
+group (`foley_step_wood`), guards' steps and armour layers in 3D, a jump played `foley_player_jump`
+and the landing `foley_player_land_heavy` (since re-tuned so an ordinary jump lands light; that
+change was not re-run in Play mode). Steppers found stone, earth, tile, water, metal and rushes
+surfaces. Dropping a loot piece (the fall was set by script) played `phys_impact_bronze_heavy` on the
+World group, pushing it played `phys_roll_loop`, and ruining three pieces played `phys_break_ceramic`
+(the pieces were ingots and faience, so the other breaks were not heard). Guard voices, on the Creatures
+group: alert, chase, murmur and attack lines arose from the guards' own behaviour (I had moved the player next to them by script); hurt, asleep and death I
+caused by damaging a guard and by putting one to sleep with `StatusEffectReceiver.Sleep` (a script
+call, not a Somnus cast). Not seen: the hound (no High Age raid), a second player, the voice cap
+of six under a crowd, and a piece scraping. Two
+findings: a guard is destroyed the instant its health reaches zero, so a death line has to be read from
+the guard vanishing; and `CastleGuard.StateChanged` is host-only, so voices read replicated state.
+
+---
+
+**2026-09-29 (later) — the in-game audio layer is built and plays; nobody has listened.** Plan
+`docs/plans/audio-in-game-layer.md`, how it works `docs/4-systems/audio.md` (event table and gap list).
+Built: assembly `Plunderspell.Audio`, `Plunderspell.mixer` (Master, Music, SFX with six children, UI;
+exposed `MasterVolume`, `MusicVolume`, `SfxVolume`, `UiVolume`; snapshots `Default` and `Casting`),
+`SoundBank.asset` (483 entries, 0 missing clips, registered as a preloaded asset), `AudioDirector`
+(32 pooled sources), `MusicDirector`, and the Settings sliders on the mixer. The mixer had to be
+authored through reflection on `UnityEditor.Audio.AudioMixerController`; that worked. Checked:
+`AudioLayerTests` pass 9 of 9; the full EditMode run was 103 passed, 2 failed, 3 skipped, and the two
+failures (`ArtAssetImportTests.ArtBibleModelsImportWithTheirOwnedSettings`,
+`LootBalanceTests.Test_TheOuterZonesHoldNothingTooHeavyToLift`) are in art import and loot weights,
+not audio, and were not investigated. Play mode, through Play Solo, Lair, Set Out: title loop on the
+Music group in the menu, cross-fade to the Lair loop, then in the raid all four `mus_raid_high_*` stems
+on Music (Calm: stem 0 at 1.0 and the other three at 0.0; Hue and Cry: all four playing, stem 2 read at 1.0; the intermediate Roused state was only read before a fix that kept silent stems running, not after);
+button hover and click on the UI group, `ui_button_back_01` for the Back button; alarm stinger and
+portal stinger on Music. Raised from a script, not played through: cast, misfire, fizzle, no mana,
+hit, player hurt, guard swing and throw, loot ruined all reached the right group. Not seen: door
+sounds (no `CastleDoor` existed in the castles built), the player-death sound, item crossing,
+extraction success and the portal warning. Two findings: a snapshot transition overwrites exposed
+mixer parameters (measured: `MusicVolume` and `SfxVolume` read minus 9 after transitioning to `Casting`),
+so the casting dip is a code offset that leaves the sliders alone (forced on and off, the parameters
+went to minus 9 and back to 0); and the saved Master slider value was never applied at start-up
+before, and now is. Nobody can listen from a script: the levels, the mix and whether any of it sounds
+right are for the owner to judge. Gaps (own swing and throw, footsteps, ambience, guard voices,
+door kinds, more) are listed in `docs/4-systems/audio.md`.
+
+---
+
+**2026-09-29 — UI redesign seen in Unity, and five type defects fixed.** Console was clean (0 errors).
+Every screen was captured in Play mode through the Unity CLI (`capture_game_view --source screen`;
+the HUD through Play Solo, Lair, Set Out) and compared to the mockup frames. Layouts match; the
+defects were in type. Fixed: letter-spacing was about 2.5x too wide because Overpass Mono gives every
+space a full 0.62 em cell (`UITheme.Tracked` now takes the font size and shrinks the spacer with a
+rich-text size tag; the HUD's IMGUI styles turn rich text on), which had overprinted the spell
+panel's header and clipped its footer; the big figures (Lair ledger, Victory) now share a baseline
+with their unit (`UIFactory.CreateFigureRow` offsets by Eczar's descent); the pause title's line
+spacing is tightened; HUD text gets a shadow; the spell panel is hidden while paused (it sat on the
+Quit button); the Lair's empty Last raid says "No raid yet." Plan and evidence:
+`docs/plans/ui-visual-fixes-2026-09-29.md`; before and after frames in
+`docs/generated/ui-fix-2026-09-29/`. `UIThemeTests`, `UIFontsTests` and `RaidHudPromptTests` pass
+(14 of 14), and `UIScreenshotPlayModeTests` passes 1/1 (it rewrote the six reference frames in
+`UI_Verification_Screenshots/`, committed). The HUD was also captured in Hue and cry with health at
+38 (`after/Raid_HueAndCry_Damaged.png`): the alarm name and segments turn madder and the shadow keeps
+the labels readable over a torch flame. Not reproduced: the bright wall behind the top-right money
+line, because every raid that spawned in these runs had a dark wall there. Still open: the Victory
+piece list is not built.
+
+---
+
+**2026-09-29 — UI redesign written, not yet seen in Unity; paused for a session on the owner's
+PC.** Plan `docs/plans/ui-redesign.md`, mockup `docs/generated/ui-redesign/index.html` (frames in
+`docs/generated/ui-redesign/frames/`). The code is on `claude/ui-redesign-impl` (also
+fast-forwarded onto `ccr-6bf1f02d-o8jhoy`): `UIFonts`, `UITheme` pigments and roles, `UITextures`,
+`UIFactory` components, every screen re-laid out, the IMGUI raid HUD, crosshair and damage
+feedback restyled, and EditMode tests `UIFontsTests`, `UIThemeTests`, `RaidHudPromptTests`.
+Nothing was compiled by Unity: this container has no Editor. The headless harness shows the same
+28 pre-existing errors before and after (none in UI files; they hide method-body errors, so this
+proves little). **Next, in the Editor:** open the project and read the Console for `error CS`;
+run EditMode and PlayMode tests (the known `GuardAttackTests` and `ArtAssetImportTests` failures
+predate this); run `UIScreenshotPlayModeTests` and compare `UI_Verification_Screenshots/` against
+the mockup frames; play menu → Lair → raid → pause → settings → death → Lair → extract. Judgement
+calls to check: bars now size by anchor instead of `fillAmount`; buttons are white Images tinted
+by their `ColorBlock`; the Lair footer shows the Age only (no player count exposed); the victory
+piece list is not built. Also filed #173 (finish #169).
+
+---
+
+**2026-09-28 — issue triage and docs brought in line with every branch.** At the owner's request.
+Every open issue was checked against the code and docs on `main`. Twelve were already done or
+superseded and are closed, each with a comment saying why and where: #127, #131, #134, #140,
+#152, #154, #158, #163 (fixed 2026-09-26, with the evidence in the entry below), #121
+(post-processing built with the night atmosphere), #41 (decided 2026-09-24), #126 (done but for
+#151 and #141) and #17 (a duplicate of #151). The nine filed since the roadmap was rebuilt are
+placed on milestones: #164, #167, #168, #170, #171, #172 on M2 and #165, #166 on M7 (#169, closed
+by the owner today, on M2 for the record). 44 remain open. The roadmap marks closed issues in
+place and lists the new ones; `Tools/github/sync_milestones.py` matches it (not run: `gh` is not
+installed in this session, so the milestones were set through the GitHub API instead).
+`docs/3-state/ProjectState.md` has a new section, "Work not on `main` yet": the carry-check
+follow-up on `claude/carry-cleanup-169` and the audio work on `claude/eloquent-dirac-i10hep`.
+Left open on purpose: #103 still asks for crouch as a spell, which the owner rejected on
+2026-09-26 (Decisions, "The roadmap runs to a game a stranger can play"), but its sprint half is
+not built. Worth the owner's look: the open PRs #2, #4 and #97 are stale.
+
+**2026-09-27 — #169, carrying together, and two client-side raid bugs.** On `main` (merged from
+`claude/networked-systems-game-logic-fgat3n`). `Tools/Unity/coop_carry_check.sh` runs a host (the
+Editor) and a client (a Development build) on one PC with nobody at the keyboard. Then: the host
+moves every held piece and applies each holder's pull, a second grab joins the carry, holders'
+strength adds up, opposite pulls snap the carry, and a held piece turns toward where its holder
+faces through a capped torque. A client no longer builds the castle twice as a raid starts, and
+no longer logs a SyncVar permission error when a raid ends. Last recorded check: `CarryFeelTests`
+19/19 and the carry check 10/10. Details and every run: `docs/3-state/ProjectState.md`,
+2026-09-27 entries, and `docs/4-systems/net.md`. On a branch the same day:
+`claude/eloquent-dirac-i10hep`, the audio plan and every sound file built (not played by the
+game; see ProjectState, "Work not on `main` yet").
+
+---
+
 **2026-09-26 — backlog pass continued on `claude/issue-backlog`.** Closed the ten issues the pass
 had fixed (at the user's request, before merging). Then fixed, each with a test that failed first
 where one could be written, and checked in the live Editor:

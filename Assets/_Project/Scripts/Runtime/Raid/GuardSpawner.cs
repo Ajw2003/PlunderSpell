@@ -127,23 +127,12 @@ namespace Plunderspell.Raid
                 _container);
             _spawned.Add(go);
 
-            var guard = go.GetComponent<CastleGuard>();
+            var guard = go.GetComponent<Guard>();
             if (guard == null)
                 return;
 
-            // Patrol waypoints are plain child transforms so the guard's inspector-facing route
-            // field works identically whether a scene author or this spawner filled it in.
-            var route = new List<Transform>(placement.PatrolRoute.Count);
-            for (int i = 0; i < placement.PatrolRoute.Count; i++)
-            {
-                var point = new GameObject($"Waypoint_{i}");
-                point.transform.SetParent(_container, false);
-                point.transform.position = placement.PatrolRoute[i];
-                route.Add(point.transform);
-                _spawned.Add(point);
-            }
-
-            guard.Configure(null, route);
+            // The fresh guard finds its director when it wakes and picks its own patrol points around where
+            // it stands (planned routes are dropped, re-add: #225), so the spawner only scales it.
             guard.ScaleTuning(_speedScale, _damageScale);
             guard.ScaleHealth(_healthScale);
         }

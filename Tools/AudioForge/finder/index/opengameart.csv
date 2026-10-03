@@ -1,0 +1,177 @@
+file,start,dur,file_dur,size,mtime
+80-cc0-rpg-sfx/blade_01.ogg,0.0,0.291,0.291,15142,1790696341
+80-cc0-rpg-sfx/blade_02.ogg,0.0,0.313,0.313,17776,1790696341
+80-cc0-rpg-sfx/blade_03.ogg,0.0,0.396,0.396,15184,1790696341
+80-cc0-rpg-sfx/book_01.ogg,0.0,0.723,0.723,34237,1790696341
+80-cc0-rpg-sfx/book_02.ogg,0.0,0.885,0.885,36858,1790696341
+80-cc0-rpg-sfx/book_03.ogg,0.0,1.215,1.215,60390,1790696341
+80-cc0-rpg-sfx/book_04.ogg,0.0,1.152,1.152,44092,1790696341
+80-cc0-rpg-sfx/chain_01.ogg,0.0,0.506,0.506,23007,1790696341
+80-cc0-rpg-sfx/chain_02.ogg,0.0,0.492,0.492,18783,1790696341
+80-cc0-rpg-sfx/chain_03.ogg,0.0,0.927,0.927,36494,1790696341
+80-cc0-rpg-sfx/creature_die_01.ogg,0.0,1.06,1.06,15883,1790696341
+80-cc0-rpg-sfx/creature_hurt_01.ogg,0.0,0.621,0.621,17185,1790696341
+80-cc0-rpg-sfx/creature_hurt_02.ogg,0.0,0.678,0.678,20959,1790696341
+80-cc0-rpg-sfx/creature_misc_01.ogg,0.0,0.255,0.255,16406,1790696341
+80-cc0-rpg-sfx/creature_misc_02.ogg,0.0,0.189,0.189,7729,1790696341
+80-cc0-rpg-sfx/creature_misc_03.ogg,0.0,0.637,0.637,29846,1790696341
+80-cc0-rpg-sfx/creature_misc_04.ogg,0.0,0.549,0.549,24456,1790696341
+80-cc0-rpg-sfx/creature_misc_05.ogg,0.0,0.601,0.601,15804,1790696341
+80-cc0-rpg-sfx/creature_misc_06.ogg,0.0,0.418,0.418,23008,1790696341
+80-cc0-rpg-sfx/creature_misc_07.ogg,0.0,0.349,0.349,15789,1790696341
+80-cc0-rpg-sfx/creature_misc_08.ogg,0.0,0.461,0.461,16889,1790696341
+80-cc0-rpg-sfx/creature_monster_01.ogg,0.0,0.258,0.258,12446,1790696341
+80-cc0-rpg-sfx/creature_monster_02.ogg,0.0,0.236,0.236,16920,1790696341
+80-cc0-rpg-sfx/creature_monster_03.ogg,0.0,0.991,0.991,21818,1790696341
+80-cc0-rpg-sfx/creature_monster_04.ogg,0.0,0.721,0.721,19153,1790696341
+80-cc0-rpg-sfx/creature_roar_01.ogg,0.0,0.64,0.64,15061,1790696341
+80-cc0-rpg-sfx/creature_roar_02.ogg,0.0,1.043,1.043,22480,1790696341
+80-cc0-rpg-sfx/creature_roar_03.ogg,0.0,1.163,1.163,23375,1790696341
+80-cc0-rpg-sfx/creature_slime_01.ogg,0.0,0.672,0.672,35353,1790696341
+80-cc0-rpg-sfx/creature_slime_02.ogg,0.0,0.741,0.741,35232,1790696341
+80-cc0-rpg-sfx/creature_slime_03.ogg,0.0,0.482,0.482,27560,1790696341
+80-cc0-rpg-sfx/creature_slime_04.ogg,0.0,0.625,0.625,35702,1790696341
+80-cc0-rpg-sfx/item_coins_01.ogg,0.0,0.406,0.406,18985,1790696341
+80-cc0-rpg-sfx/item_coins_02.ogg,0.0,0.616,0.616,31942,1790696341
+80-cc0-rpg-sfx/item_coins_03.ogg,0.0,0.482,0.482,24878,1790696341
+80-cc0-rpg-sfx/item_coins_04.ogg,0.0,1.61,1.61,70846,1790696341
+80-cc0-rpg-sfx/item_gem_01.ogg,0.0,0.247,0.247,14690,1790696341
+80-cc0-rpg-sfx/item_gem_02.ogg,0.0,0.2,0.2,9058,1790696341
+80-cc0-rpg-sfx/item_gem_03.ogg,0.0,0.288,0.288,11885,1790696341
+80-cc0-rpg-sfx/item_gem_04.ogg,0.0,0.592,0.592,28423,1790696341
+80-cc0-rpg-sfx/item_misc_01.ogg,0.0,0.408,0.408,22242,1790696341
+80-cc0-rpg-sfx/item_misc_02.ogg,0.0,0.438,0.438,22460,1790696341
+80-cc0-rpg-sfx/item_misc_03.ogg,0.0,0.341,0.341,19638,1790696341
+80-cc0-rpg-sfx/item_misc_04.ogg,0.0,0.383,0.383,13457,1790696341
+80-cc0-rpg-sfx/item_misc_05.ogg,0.0,0.393,0.393,15531,1790696341
+80-cc0-rpg-sfx/item_misc_06.ogg,0.0,0.716,0.716,29391,1790696341
+80-cc0-rpg-sfx/item_stone_01.ogg,0.0,0.735,0.735,34170,1790696341
+80-cc0-rpg-sfx/item_stone_02.ogg,0.0,0.298,0.298,15303,1790696341
+80-cc0-rpg-sfx/item_stone_03.ogg,0.0,0.393,0.393,24923,1790696341
+80-cc0-rpg-sfx/item_stone_04.ogg,0.0,0.298,0.298,17029,1790696341
+80-cc0-rpg-sfx/item_wood_01.ogg,0.0,0.542,0.542,22789,1790696341
+80-cc0-rpg-sfx/item_wood_02.ogg,0.0,0.263,0.263,13988,1790696341
+80-cc0-rpg-sfx/item_wood_03.ogg,0.0,0.326,0.326,18291,1790696341
+80-cc0-rpg-sfx/lock_01.ogg,0.0,0.411,0.411,17452,1790696341
+80-cc0-rpg-sfx/lock_02.ogg,0.0,0.397,0.397,15553,1790696341
+80-cc0-rpg-sfx/lock_03.ogg,0.0,0.34,0.34,18168,1790696341
+80-cc0-rpg-sfx/metal_01.ogg,0.0,0.576,0.576,25403,1790696341
+80-cc0-rpg-sfx/metal_02.ogg,0.0,0.564,0.564,26586,1790696341
+80-cc0-rpg-sfx/metal_03.ogg,0.0,0.426,0.426,18753,1790696341
+80-cc0-rpg-sfx/misc_01.ogg,0.0,0.342,0.342,12521,1790696341
+80-cc0-rpg-sfx/misc_02.ogg,0.0,0.543,0.543,19851,1790696341
+80-cc0-rpg-sfx/misc_03.ogg,0.0,0.237,0.237,12875,1790696341
+80-cc0-rpg-sfx/spell_01.ogg,0.0,0.633,0.633,29121,1790696341
+80-cc0-rpg-sfx/spell_02.ogg,0.0,0.546,0.546,25118,1790696341
+80-cc0-rpg-sfx/spell_fire_01.ogg,0.0,1.057,1.057,39482,1790696341
+80-cc0-rpg-sfx/spell_fire_02.ogg,0.0,1.072,1.072,33115,1790696341
+80-cc0-rpg-sfx/spell_fire_03.ogg,0.0,1.927,1.927,71801,1790696341
+80-cc0-rpg-sfx/spell_fire_04.ogg,0.0,1.595,1.595,59036,1790696341
+80-cc0-rpg-sfx/spell_fire_05.ogg,0.0,1.245,1.245,54658,1790696341
+80-cc0-rpg-sfx/spell_fire_06.ogg,0.0,1.005,1.005,53074,1790696341
+80-cc0-rpg-sfx/spell_fire_07.ogg,0.0,0.651,0.651,24862,1790696341
+80-cc0-rpg-sfx/stones_01.ogg,0.0,0.681,0.681,27110,1790696341
+80-cc0-rpg-sfx/stones_02.ogg,0.0,0.777,0.777,35982,1790696341
+80-cc0-rpg-sfx/stones_03.ogg,0.0,1.2,1.2,41046,1790696341
+80-cc0-rpg-sfx/stones_04.ogg,0.0,0.383,0.383,20176,1790696341
+80-cc0-rpg-sfx/wood_01.ogg,0.0,0.239,0.239,13512,1790696341
+80-cc0-rpg-sfx/wood_02.ogg,0.0,0.188,0.188,10311,1790696341
+80-cc0-rpg-sfx/wood_03.ogg,0.0,0.298,0.298,14089,1790696341
+80-cc0-rpg-sfx/wood_04.ogg,0.0,0.649,0.649,20667,1790696341
+80-cc0-rpg-sfx/wood_05.ogg,0.0,0.388,0.388,14208,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/magic1.wav,0.0,0.875,0.875,232576,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/spell.wav,0.0,3.25,3.25,861816,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/swing.wav,0.0,0.229,0.229,61462,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/swing2.wav,0.0,0.146,0.146,39384,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/swing3.wav,0.0,0.138,0.138,37316,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/sword-unsheathe.wav,0.0,0.542,0.542,156950,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/sword-unsheathe2.wav,0.0,0.369,0.369,107086,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/sword-unsheathe3.wav,0.0,0.514,0.514,148990,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/sword-unsheathe4.wav,0.0,0.479,0.479,138926,1790696341
+rpg-sound-pack/RPG Sound Pack/battle/sword-unsheathe5.wav,0.0,0.424,0.424,123006,1790696341
+rpg-sound-pack/RPG Sound Pack/interface/interface1.wav,0.0,0.186,0.186,50150,1790696341
+rpg-sound-pack/RPG Sound Pack/interface/interface2.wav,0.0,0.446,0.446,119004,1790696341
+rpg-sound-pack/RPG Sound Pack/interface/interface3.wav,0.0,0.446,0.446,119010,1790696341
+rpg-sound-pack/RPG Sound Pack/interface/interface4.wav,0.0,0.409,0.409,72414,1790696341
+rpg-sound-pack/RPG Sound Pack/interface/interface5.wav,0.0,0.409,0.409,72326,1790696341
+rpg-sound-pack/RPG Sound Pack/interface/interface6.wav,0.0,0.5,0.5,88434,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/armor-light.wav,0.0,0.5,0.5,88434,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/beads.wav,0.0,0.5,0.5,88434,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/bottle.wav,0.0,0.479,0.479,127698,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/bubble.wav,0.0,0.456,0.456,121630,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/bubble2.wav,0.0,0.438,0.438,116662,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/bubble3.wav,0.0,0.729,0.729,193934,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/chainmail1.wav,0.0,0.583,0.583,155298,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/chainmail2.wav,0.0,0.75,0.75,199456,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/cloth-heavy.wav,0.0,0.408,0.408,108792,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/cloth.wav,0.0,0.458,0.458,132918,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/coin.wav,0.0,0.604,0.604,174974,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/coin2.wav,0.0,1.0,1.0,289122,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/coin3.wav,0.0,0.309,0.309,89812,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/metal-ringing.wav,0.0,0.517,0.517,149740,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/metal-small1.wav,0.0,0.528,0.528,140536,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/metal-small2.wav,0.0,0.332,0.332,96422,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/metal-small3.wav,0.0,0.458,0.458,132918,1790696341
+rpg-sound-pack/RPG Sound Pack/inventory/wood-small.wav,0.0,0.313,0.313,83546,1790696341
+rpg-sound-pack/RPG Sound Pack/misc/burp.wav,0.0,1.208,1.208,349200,1790696341
+rpg-sound-pack/RPG Sound Pack/misc/random1.wav,0.0,0.987,0.987,174594,1790696341
+rpg-sound-pack/RPG Sound Pack/misc/random2.wav,0.0,0.417,0.417,120904,1790696341
+rpg-sound-pack/RPG Sound Pack/misc/random3.wav,0.0,0.396,0.396,114896,1790696341
+rpg-sound-pack/RPG Sound Pack/misc/random4.wav,0.0,0.688,0.688,199004,1790696341
+rpg-sound-pack/RPG Sound Pack/misc/random5.wav,0.0,0.386,0.386,103000,1790696341
+rpg-sound-pack/RPG Sound Pack/misc/random6.wav,0.0,0.5,0.5,133220,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/beetle/bite-small.wav,0.0,0.383,0.383,73804,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/beetle/bite-small2.wav,0.0,0.348,0.348,101078,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/beetle/bite-small3.wav,0.0,0.515,0.515,149290,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/giant/giant1.wav,0.0,0.646,0.646,186990,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/giant/giant2.wav,0.0,0.926,0.926,267794,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/giant/giant3.wav,0.0,0.625,0.625,180982,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/giant/giant4.wav,0.0,0.542,0.542,156950,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/giant/giant5.wav,0.0,0.709,0.709,205314,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr1.wav,0.0,0.438,0.438,126912,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr10.wav,0.0,0.544,0.544,157702,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr11.wav,0.0,0.75,0.75,217028,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr12.wav,0.0,0.438,0.438,126912,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr13.wav,0.0,0.541,0.541,156800,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr14.wav,0.0,1.055,1.055,305042,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr15.wav,0.0,0.375,0.375,108888,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr2.wav,0.0,0.5,0.5,144934,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr3.wav,0.0,0.542,0.542,156950,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr4.wav,0.0,0.703,0.703,203510,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr5.wav,0.0,0.921,0.921,266292,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr6.wav,0.0,0.708,0.708,205012,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr7.wav,0.0,0.649,0.649,188040,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr8.wav,0.0,0.583,0.583,168966,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/gutteral beast/mnstr9.wav,0.0,0.753,0.753,217780,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/misc/wolfman.wav,0.0,0.414,0.414,120152,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/ogre/ogre1.wav,0.0,0.404,0.404,117148,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/ogre/ogre2.wav,0.0,0.589,0.589,170468,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/ogre/ogre3.wav,0.0,0.579,0.579,167614,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/ogre/ogre4.wav,0.0,0.578,0.578,167464,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/ogre/ogre5.wav,0.0,0.342,0.342,99426,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade1.wav,0.0,0.53,0.53,153646,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade10.wav,0.0,1.011,1.011,292426,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade11.wav,0.0,1.125,1.125,325168,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade12.wav,0.0,1.312,1.312,379240,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade13.wav,0.0,1.146,1.146,331176,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade14.wav,0.0,0.562,0.562,162958,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade15.wav,0.0,0.646,0.646,186990,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade2.wav,0.0,0.551,0.551,159654,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade3.wav,0.0,0.594,0.594,172120,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade4.wav,0.0,0.668,0.668,193448,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade5.wav,0.0,0.667,0.667,192996,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade6.wav,0.0,1.096,1.096,316908,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade7.wav,0.0,1.239,1.239,358062,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade8.wav,0.0,1.636,1.636,472510,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/shade/shade9.wav,0.0,1.562,1.562,451332,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime1.wav,0.0,0.28,0.28,49566,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime10.wav,0.0,0.35,0.35,61942,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime2.wav,0.0,0.316,0.316,55846,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime3.wav,0.0,0.252,0.252,44524,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime4.wav,0.0,0.28,0.28,49566,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime5.wav,0.0,0.28,0.28,49566,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime6.wav,0.0,0.42,0.42,74318,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime7.wav,0.0,0.35,0.35,61942,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime8.wav,0.0,0.56,0.56,99070,1790696341
+rpg-sound-pack/RPG Sound Pack/NPC/slime/slime9.wav,0.0,0.49,0.49,86694,1790696341
+rpg-sound-pack/RPG Sound Pack/world/door.wav,0.0,1.0,1.0,265692,1790696341

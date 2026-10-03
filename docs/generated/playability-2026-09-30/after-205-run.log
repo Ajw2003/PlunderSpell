@@ -1,0 +1,77 @@
+22:41:09 building Build/DevTest
+22:41:47 build Succeeded
+22:41:57 host: state MainMenu players 0 local none holding nothing
+22:41:58 host: state Lair players 1 local 44.500,1.191,0.000 holding nothing
+22:41:58 client started (pid 5118)
+22:42:14 client: state Lair players 2 local 44.500,1.188,1.600 holding nothing
+22:42:15 castle: seed 3508293, LateMedieval
+22:42:16 host: state Playing players 2 local -20.500,1.500,-36.000 holding nothing
+22:42:17 client: state Playing players 2 local -24.000,1.499,-32.500 holding nothing
+22:42:23 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Runtime Error\n  Object reference not set to an instance of an object"
+ }
+]
+22:43:56 stuck rows: 6
+22:43:57 floor probe: 42.38,-24.6: Ground@y0.00  | -31.75,4.6: LateArtilleryYard(Clone)@y1.34 Ground@y0.00  | 
+22:43:58 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Runtime Error\n  Object reference not set to an instance of an object"
+ }
+]
+22:44:07 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Runtime Error\n  Object reference not set to an instance of an object"
+ }
+]
+22:44:12 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Runtime Error\n  Object reference not set to an instance of an object"
+ }
+]
+22:44:13 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Runtime Error\n  Object reference not set to an instance of an object"
+ }
+]
+22:44:14 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Runtime Error\n  Object reference not set to an instance of an object"
+ }
+]
+22:44:19 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Runtime Error\n  Object reference not set to an instance of an object"
+ }
+]
+22:44:20 state after: state Playing players 2 local -20.500,1.498,-36.000 holding nothing
+client log error lines: 3
+22:44:20 cleaning up
+22:44:48 building Build/DevTest
+22:45:00 build Succeeded
+22:45:07 host: state MainMenu players 0 local none holding nothing
+22:45:09 host: state Lair players 1 local 44.500,1.190,0.000 holding nothing
+22:45:09 client started (pid 6597)
+22:45:18 client: state Lair players 2 local 44.500,1.188,1.600 holding nothing
+22:45:19 castle: seed 3508293, LateMedieval
+22:45:20 host: state Playing players 2 local -20.500,1.500,-36.000 holding nothing
+22:45:21 client: state Playing players 2 local -24.000,1.499,-32.500 holding nothing
+22:45:27 provoked 20 guards toward (-20.50, 1.50, -36.00)
+22:46:59 stuck rows: 2
+22:46:59 floor probe: 42.38,-24.6: Ground@y0.00  | -31.75,4.6: LateArtilleryYard(Clone)@y1.34 Ground@y0.00  | 
+22:47:00 levo started on guard -168490 at (4.13, 0.31, 0.00)
+22:47:10 levocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 6.01 (xz 6.01) state Patrolling
+22:47:14 levocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 5.64 (xz 5.64) state Patrolling
+22:47:15 frango started on guard -168490 at (3.73, 0.31, 0.00)
+22:47:17 frangocheck airborne False onMesh True kinematic False y 0.36 movedSinceLast 3.90 (xz 3.90) state Patrolling
+22:47:21 frangocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 5.57 (xz 5.57) state Patrolling
+22:47:22 state after: state Playing players 2 local -20.500,1.499,-36.000 holding nothing
+client log error lines: 2
+22:47:22 cleaning up

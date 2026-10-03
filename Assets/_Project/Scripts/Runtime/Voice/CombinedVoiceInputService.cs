@@ -8,13 +8,20 @@ namespace Plunderspell.Voice
     /// a number key, and either one casts. Without this a machine with a microphone lost the
     /// keyboard fallback entirely, since the locator only ever picked one provider.
     /// </summary>
-    public class CombinedVoiceInputService : IVoiceInputService, IPhraseVocabularyTarget
+    public class CombinedVoiceInputService : IVoiceInputService, IPhraseVocabularyTarget, IChatterSource
     {
         public VoskVoiceInputService Speech { get; }
         public MockVoiceInputService Keyboard { get; }
 
         public bool IsListening => Speech.IsListening || Keyboard.IsListening;
         public event Action<VoiceRecognitionResult> OnPhraseRecognized;
+        public event Action<ChatterReport> ChatterHeard;
+
+        public bool ChatterEnabled
+        {
+            get => Speech.ChatterEnabled;
+            set => Speech.ChatterEnabled = value;
+        }
 
         public CombinedVoiceInputService(VoskVoiceInputService speech, MockVoiceInputService keyboard)
         {
@@ -22,6 +29,7 @@ namespace Plunderspell.Voice
             Keyboard = keyboard;
             Speech.OnPhraseRecognized += Forward;
             Keyboard.OnPhraseRecognized += Forward;
+            Speech.ChatterHeard += report => ChatterHeard?.Invoke(report);
         }
 
         public void StartListening()

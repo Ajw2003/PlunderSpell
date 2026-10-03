@@ -1,0 +1,103 @@
+sound,query,expected,rank_of_own,own_score,top1_score,top1_file,hit
+ui_button_click,the sound of a quill tap on a wooden desk,5,39,0.361,0.535,casino-audio/Audio/die-throw-2.ogg,False
+ui_button_back,the sound of a page flipped backwards,3,1,0.456,0.456,rpg-audio/Audio/bookFlip1.ogg,True
+ui_screen_open,the sound of a page turning,3,1,0.368,0.368,rpg-audio/Audio/bookFlip1.ogg,True
+ui_screen_close,the sound of a book closing softly,1,181,0.24,0.381,interface-sounds/Audio/switch_005.ogg,False
+ui_toggle_on,the sound of a latch opening,1,328,0.24,0.432,interface-sounds/Audio/switch_001.ogg,False
+ui_toggle_off,the sound of a latch closing,1,391,0.191,0.419,interface-sounds/Audio/switch_005.ogg,False
+ui_keybind_listen,the sound of a quill dipped in ink,3,411,0.048,0.436,sci-fi-sounds/Audio/slime_000.ogg,False
+ui_error,the sound of torn parchment and a dull knock,3,46,0.237,0.359,sci-fi-sounds/Audio/explosionCrunch_000.ogg,False
+ui_pause_open,the sound of a heavy curtain drawn,6,29,0.352,0.416,interface-sounds/Audio/minimize_005.ogg,False
+ui_pause_close,the sound of a heavy curtain drawn back,6,108,0.284,0.401,interface-sounds/Audio/minimize_005.ogg,False
+ui_ready,the sound of a tankard set down,3,,,0.51,impact-sounds/Audio/impactBell_heavy_003.ogg,False
+sfx_spell_frango_shatter_wood,the sound of timber splintering,5,130,0.182,0.408,interface-sounds/Audio/click_004.ogg,False
+foley_step_stone,the sound of a step on stone,5,325,0.178,0.383,interface-sounds/Audio/back_001.ogg,False
+foley_step_wood,the sound of a step on wood,5,66,0.248,0.36,interface-sounds/Audio/error_008.ogg,False
+foley_step_earth,the sound of a step on earth,5,147,0.174,0.415,rpg-audio/Audio/footstep04.ogg,False
+foley_step_rushes,the sound of a step on rushes,5,351,0.045,0.325,sci-fi-sounds/Audio/slime_000.ogg,False
+foley_step_tile,the sound of a step on tile,5,303,0.156,0.411,casino-audio/Audio/card-shove-1.ogg,False
+foley_step_metal,the sound of a step on metal,5,168,0.302,0.459,interface-sounds/Audio/click_004.ogg,False
+foley_robe_move,the sound of wool robe swish,6,5,0.348,0.433,casino-audio/Audio/card-place-1.ogg,True
+foley_player_jump,the sound of cloth whip and push-off,6,22,0.399,0.631,casino-audio/Audio/card-slide-1.ogg,False
+foley_player_land,the sound of a light thump,5,10,0.386,0.444,interface-sounds/Audio/switch_005.ogg,False
+foley_player_land_heavy,the sound of a thud and a rattle of gear,5,14,0.294,0.377,interface-sounds/Audio/switch_003.ogg,False
+foley_player_dodge,the sound of a quick cloth whoosh and scuff,6,3,0.467,0.514,casino-audio/Audio/card-place-1.ogg,True
+sfx_player_hurt,the sound of a body thump plus a cloth hit,5,23,0.38,0.458,impact-sounds/Audio/footstep_carpet_003.ogg,False
+sfx_player_hurt_heavy,the sound of a heavier impact,5,282,0.188,0.576,sci-fi-sounds/Audio/explosionCrunch_000.ogg,False
+sfx_player_downed,the sound of the body collapses,6,25,0.29,0.46,sci-fi-sounds/Audio/explosionCrunch_002.ogg,False
+sfx_player_death,"the sound of a collapse, then a single low bell",5,108,0.233,0.445,impact-sounds/Audio/impactBell_heavy_000.ogg,False
+sfx_player_carried_loop,the sound of limp-body cloth drag and creak,6,,,0.27,casino-audio/Preview.ogg,False
+sfx_grab_pickup_light,the sound of a quick lift,4,415,0.162,0.474,interface-sounds/Audio/minimize_005.ogg,False
+sfx_grab_pickup_heavy,the sound of scrape and heave,5,292,-0.031,0.42,rpg-audio/Audio/handleSmallLeather.ogg,False
+phys_impact_stone_light,the sound of stone struck lightly,5,52,0.244,0.337,interface-sounds/Audio/switch_006.ogg,False
+phys_impact_stone_heavy,the sound of stone struck hard,5,187,0.25,0.456,sci-fi-sounds/Audio/explosionCrunch_000.ogg,False
+phys_impact_wood_light,the sound of wood struck lightly,5,154,0.187,0.317,interface-sounds/Audio/switch_006.ogg,False
+phys_impact_wood_heavy,the sound of wood struck hard,5,34,0.378,0.518,sci-fi-sounds/Audio/explosionCrunch_000.ogg,False
+phys_impact_metal_light,the sound of metal struck lightly,5,92,0.27,0.376,interface-sounds/Audio/glass_004.ogg,False
+phys_impact_metal_heavy,the sound of metal struck hard,5,110,0.264,0.454,impact-sounds/Audio/impactBell_heavy_000.ogg,False
+phys_impact_bronze_light,the sound of bronze struck lightly,5,9,0.286,0.35,interface-sounds/Audio/glass_004.ogg,False
+phys_impact_bronze_heavy,the sound of bronze struck hard,5,1,0.403,0.403,impact-sounds/Audio/impactBell_heavy_001.ogg,True
+phys_impact_ceramic_light,the sound of faience or terracotta knocked,5,268,0.117,0.381,rpg-audio/Audio/doorClose_2.ogg,False
+phys_impact_glass_light,the sound of glass knocked,5,49,0.287,0.362,digital-audio/Audio/powerUp4.ogg,False
+phys_impact_cloth,the sound of cloth landing,7,19,0.383,0.472,casino-audio/Audio/card-place-1.ogg,False
+phys_impact_book,the sound of a book landing,3,6,0.44,0.475,ui-audio/Audio/click3.ogg,False
+phys_impact_body,the sound of a thrown body,10,218,0.19,0.403,sci-fi-sounds/Audio/explosionCrunch_002.ogg,False
+phys_impact_coins,the sound of coins landing,2,232,0.24,0.471,interface-sounds/Audio/glass_004.ogg,False
+phys_break_ceramic,the sound of pottery shattering,5,174,0.194,0.497,rpg-audio/Audio/doorClose_2.ogg,False
+phys_break_glass,the sound of small glass shattering,5,62,0.289,0.443,digital-audio/Audio/laser7.ogg,False
+phys_break_glass_large,"the sound of a large antique mirror shattering on a stone floor, long cascade of glass",5,90,0.104,0.41,rpg-audio/Audio/doorClose_2.ogg,False
+phys_break_wood,the sound of wood splintering,5,129,0.199,0.402,interface-sounds/Audio/click_004.ogg,False
+phys_break_book,the sound of a psalter torn apart,3,7,0.34,0.485,casino-audio/Audio/cards-pack-open-2.ogg,False
+phys_coin_spill,the sound of coins scattering,2,82,0.239,0.392,interface-sounds/Audio/glass_004.ogg,False
+sfx_wpn_blade_hit_flesh,the sound of blade into body,7,2,0.54,0.541,casino-audio/Audio/card-place-1.ogg,True
+sfx_wpn_blade_hit_armour,the sound of blade on armour,5,277,0.229,0.501,rpg-audio/Audio/drawKnife1.ogg,False
+sfx_wpn_blade_hit_wood,the sound of blade into wood,1,60,0.334,0.547,rpg-audio/Audio/knifeSlice.ogg,False
+sfx_wpn_blade_hit_stone,the sound of blade on stone,5,45,0.29,0.436,rpg-audio/Audio/knifeSlice.ogg,False
+sfx_wpn_blade_draw,the sound of drawn from the scabbard,3,3,0.479,0.614,rpg-audio/Audio/knifeSlice.ogg,True
+sfx_wpn_bronze_hit_flesh,the sound of blade into body,7,2,0.54,0.541,casino-audio/Audio/card-place-1.ogg,True
+sfx_wpn_bronze_hit_armour,the sound of blade on armour,5,277,0.229,0.501,rpg-audio/Audio/drawKnife1.ogg,False
+sfx_wpn_bronze_hit_wood,the sound of blade into wood,1,60,0.334,0.547,rpg-audio/Audio/knifeSlice.ogg,False
+sfx_wpn_bronze_hit_stone,the sound of blade on stone,5,45,0.29,0.436,rpg-audio/Audio/knifeSlice.ogg,False
+sfx_wpn_bronze_draw,the sound of drawn from the scabbard,3,3,0.479,0.614,rpg-audio/Audio/knifeSlice.ogg,True
+sfx_wpn_rapier_hit,the sound of a light hit,2,360,0.171,0.402,sci-fi-sounds/Audio/laserRetro_003.ogg,False
+sfx_wpn_blunt_hit_armour,the sound of a huge clang,5,47,0.241,0.449,impact-sounds/Audio/impactBell_heavy_000.ogg,False
+sfx_wpn_blunt_hit_flesh,the sound of a thud,5,172,0.26,0.492,sci-fi-sounds/Audio/explosionCrunch_000.ogg,False
+sfx_wpn_blunt_hit_door,the sound of a door battered,5,40,0.305,0.497,rpg-audio/Audio/doorClose_2.ogg,False
+sfx_wpn_shield_bash,the sound of a shield bash,5,14,0.459,0.541,rpg-audio/Audio/cloth1.ogg,False
+sfx_wpn_shield_block,the sound of a blow blocked,5,5,0.469,0.49,impact-sounds/Audio/impactBell_heavy_004.ogg,True
+sfx_wpn_shield_arrow_thunk,the sound of an arrow thunks into the shield,5,106,0.32,0.497,interface-sounds/Audio/switch_006.ogg,False
+sfx_wpn_shield_pavise_plant,the sound of a pavise slammed into the floor,5,47,0.376,0.525,rpg-audio/Audio/footstep08.ogg,False
+sfx_wpn_xbow_bolt_hit_wood,the sound of a bolt hits wood,5,53,0.343,0.479,rpg-audio/Audio/doorClose_2.ogg,False
+sfx_wpn_xbow_bolt_hit_stone,the sound of a bolt hits stone,5,204,0.26,0.45,interface-sounds/Audio/switch_001.ogg,False
+sfx_wpn_xbow_bolt_hit_flesh,the sound of a bolt hits flesh,5,231,0.251,0.49,casino-audio/Audio/card-slide-1.ogg,False
+sfx_wpn_sling_stone_hit,the sound of a stone hits,5,222,0.266,0.469,interface-sounds/Audio/switch_006.ogg,False
+sfx_wpn_match_reload,the sound of ramrod and powder,2,277,0.139,0.368,sci-fi-sounds/Audio/thrusterFire_002.ogg,False
+sfx_wpn_flint_click,the sound of flint strikes,1,362,0.06,0.316,digital-audio/Audio/laser8.ogg,False
+sfx_wpn_pistol_reload,the sound of reloading a pistol,2,22,0.477,0.586,ui-audio/Audio/switch6.ogg,False
+sfx_wpn_ball_hit_flesh,the sound of a ball hits a body,5,107,0.285,0.406,ui-audio/Audio/click2.ogg,False
+sfx_wpn_ball_hit_stone,the sound of a ball hits stone,5,346,0.214,0.474,interface-sounds/Audio/switch_006.ogg,False
+sfx_wpn_caltrops_scatter,the sound of caltrops flung,5,292,0.102,0.388,digital-audio/Audio/laser8.ogg,False
+sfx_wpn_caltrops_step_on,the sound of a caltrop stepped on,5,202,0.191,0.388,rpg-audio/Audio/footstep04.ogg,False
+sfx_wpn_equip,the sound of a weapon taken up,2,353,0.226,0.492,digital-audio/Audio/laser5.ogg,False
+sfx_wpn_break,the sound of a weapon breaks,5,72,0.288,0.439,rpg-audio/Audio/doorClose_2.ogg,False
+foley_gear_linen_move,the sound of linen moving with the body,6,1,0.287,0.287,rpg-audio/Audio/cloth3.ogg,True
+foley_gear_leather_move,the sound of leather moving with the body,4,11,0.266,0.398,casino-audio/Audio/chips-handle-5.ogg,False
+foley_gear_mail_move,the sound of mail moving with the body,6,6,0.31,0.354,digital-audio/Audio/powerUp7.ogg,False
+foley_gear_plate_move,the sound of plate moving with the body,5,198,0.165,0.393,rpg-audio/Audio/metalPot2.ogg,False
+foley_gear_bronze_plate_move,the sound of bronze plate moving with the body,5,2,0.363,0.366,rpg-audio/Audio/metalPot2.ogg,True
+sfx_enemy_musket_rest_plant,the sound of a musket fork planted,5,61,0.373,0.52,interface-sounds/Audio/switch_006.ogg,False
+sfx_enemy_petard_plant,the sound of a bell of powder hammered onto a door,5,22,0.347,0.463,interface-sounds/Audio/glass_004.ogg,False
+sfx_castle_lockdown_bolt,the sound of a heavy iron bolt thrown,6,109,0.285,0.625,rpg-audio/Audio/doorClose_2.ogg,False
+sfx_door_wood_open,the sound of an iron hinge creak,5,1,0.459,0.459,rpg-audio/Audio/creak1.ogg,True
+sfx_door_wood_close,the sound of a thud,4,266,0.214,0.492,sci-fi-sounds/Audio/explosionCrunch_000.ogg,False
+sfx_door_heavy_open,the sound of a long groan,2,276,0.064,0.244,interface-sounds/Audio/click_004.ogg,False
+sfx_door_heavy_close,the sound of a boom,4,305,0.141,0.493,sci-fi-sounds/Audio/explosionCrunch_000.ogg,False
+sfx_door_grate_close,the sound of an iron clang,5,18,0.357,0.47,impact-sounds/Audio/impactBell_heavy_000.ogg,False
+sfx_door_locked_rattle,"the sound of the handle jiggles, the bolt holds",2,53,0.232,0.472,rpg-audio/Audio/doorClose_4.ogg,False
+sfx_door_unlock,the sound of a key turning in the ward,2,401,0.086,0.385,digital-audio/Audio/powerUp9.ogg,False
+sfx_door_slam,the sound of a crack,5,183,0.231,0.472,interface-sounds/Audio/click_004.ogg,False
+sfx_portcullis_stop,the sound of the winch stops,5,89,0.301,0.447,digital-audio/Audio/highUp.ogg,False
+sfx_torch_drop,the sound of a clatter and sputter,5,94,0.188,0.362,sci-fi-sounds/Audio/explosionCrunch_002.ogg,False
+sfx_result_tally_total,the sound of a heavy coin purse set down,2,13,0.447,0.516,rpg-audio/Audio/doorClose_2.ogg,False
+sfx_lair_debt_pay,"the sound of coins into a coffer, then a quill scratch",2,43,0.346,0.466,digital-audio/Audio/powerUp7.ogg,False
+sfx_lair_weapon_rack_take,the sound of a scrape off a peg,8,17,0.319,0.389,rpg-audio/Audio/knifeSlice.ogg,False

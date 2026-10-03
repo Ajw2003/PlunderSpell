@@ -45,10 +45,7 @@ namespace Plunderspell.Raid
         [SerializeField] private LairHubManager _lair;
 
         [Tooltip("The castle's alert level. Reset at the start of every raid.")]
-        [SerializeField] private AlarmFSMManager _alarm;
-
-        [Tooltip("Bakes the walkable surface over the generated castle. Without it guards cannot move.")]
-        [SerializeField] private CastleNavMeshBaker _navigation;
+        [SerializeField] private EnemyDirector _alarm;
 
         [Tooltip("The player to stand just inside the gatehouse when the castle is built. The seed " +
                  "is rolled per raid, so a spawn baked into the scene is only right for one of them.")]
@@ -154,7 +151,13 @@ namespace Plunderspell.Raid
             UnsubscribeFromZone();
         }
 
-        private void Awake() => SubscribeToZone();
+        private GameObject _fallbackListener;
+
+        private void Awake()
+        {
+            SubscribeToZone();
+            _fallbackListener = new GameObject("RaidFallbackListener", typeof(RaidListenerFallback));
+        }
 
         /// <summary>
         /// A client's fallback for building the castle: the phase and seed change events can arrive
@@ -166,7 +169,12 @@ namespace Plunderspell.Raid
                 BuildCastle(Seed);
         }
 
-        private void OnDestroy() => UnsubscribeFromZone();
+        private void OnDestroy()
+        {
+            UnsubscribeFromZone();
+            if (_fallbackListener != null)
+                Destroy(_fallbackListener);
+        }
 
         // -----------------------------------------------------------------------------------------
         // Starting a raid
@@ -204,14 +212,25 @@ namespace Plunderspell.Raid
             _layout.value = PackLayout(_fixedSeed != 0 ? _fixedSeed : NewSeed(), era);
             BuildCastle(Seed);
 
-            _alarm?.ResetForNewRaid(CastleGuard.ArrivalGraceSeconds);
-            CastleGuard.BeginArrivalGrace();
+            _alarm?.ResetForNewRaid(GuardArrivalGrace.Seconds);
+            GuardArrivalGrace.Begin();
 
             SetPhase(RaidPhase.Raiding);
         }
 
         /// <summary>Starts a raid in whichever era the Lair currently has selected.</summary>
         public void StartRaid() => StartRaid(_lair != null ? _lair.GetLairState().SelectedEra : Era);
+
+        // Decision 2026-10-02: a locked door costs the guards a detour and a barred door stops them, so the
+        // lockdown has to tell the graph about every door it changes (#207).
+        private static void WireLockdownToNavigation(CastleNavGraph graph)
+        {
+            CastleLockdown lockdown = FindFirstObjectByType<CastleLockdown>();
+            if (lockdown == null)
+                Debug.LogWarning("[Raid] No CastleLockdown in the scene; guards will walk through barred doors.");
+            else
+                lockdown.NavGraph = graph;
+        }
 
         /// <summary>
         /// Builds the castle and its haul from a seed. Separate from <see cref="StartRaid"/> so a
@@ -233,6 +252,11 @@ namespace Plunderspell.Raid
             // castle generator's era rooms, when they land) reads the same Age the garrison is drawn for.
             RaidContext.Publish(new RaidContext(seed, Era));
             Castle = GenerateWalkable(ref seed);
+            if ((!isSpawned || isServer) && _alarm != null && Castle != null && Castle.NavGraph != null)
+            {
+                _alarm.Navigation.SetMap(new CastleGuardNavigationMap(Castle.NavGraph)); // what the fresh guard walks on (#206)
+                WireLockdownToNavigation(Castle.NavGraph);
+            }
             if (RaidContext.Current.Seed != seed)
                 RaidContext.Publish(new RaidContext(seed, Era));
             if (!isSpawned || isServer)
@@ -254,17 +278,12 @@ namespace Plunderspell.Raid
             OpenPortal();
             SealCastle();
 
-            // Before the NavMesh bake and the spawners, so a guard or a loot pile is never dropped
+            // Before the spawners, so a guard or a loot pile is never dropped
             // on top of a player who is about to be moved there.
             PlacePlayerAtSpawn();
 
             if (_castleNetwork != null && (!isSpawned || isServer))
                 _castleNetwork.SetSeed(seed);
-
-            // The rooms only exist now, so the walkable surface has to be built between generating
-            // them and posting the garrison — a guard spawned before the bake lands off-mesh and
-            // stands still for the whole raid.
-            _navigation?.Rebuild();
 
             // Only the server populates the world; clients receive the loot objects as spawned network
             // objects rather than instantiating their own copies.
@@ -322,7 +341,7 @@ namespace Plunderspell.Raid
             _lootSpawner?.Clear();
             _guardSpawner?.Clear();
 
-            // Deliberately NOT clearing CastleGuard.Intruders: IntruderTag owns that list by
+            // Deliberately NOT clearing the director's Intruders: IntruderTag owns that list by
             // component lifetime, and wiping it here would leave every surviving player invisible
             // to guards for the rest of the session.
 
@@ -645,9 +664,9 @@ namespace Plunderspell.Raid
 
         /// <summary>Wires the director up from code, for tests and for scenes built by tooling.</summary>
         public void Configure(ProceduralCastleGenerator generator, LootSpawner spawner,
-            ExtractionZone zone, LairHubManager lair, AlarmFSMManager alarm = null,
+            ExtractionZone zone, LairHubManager lair, EnemyDirector alarm = null,
             CastleNetworkManager castleNetwork = null, GuardSpawner guardSpawner = null,
-            CastleNavMeshBaker navigation = null, Transform playerRoot = null,
+            Transform playerRoot = null,
             EraContentCatalogue eraContent = null)
         {
             UnsubscribeFromZone();
@@ -659,7 +678,6 @@ namespace Plunderspell.Raid
             _alarm = alarm;
             _castleNetwork = castleNetwork;
             _guardSpawner = guardSpawner;
-            _navigation = navigation;
             _playerRoot = playerRoot;
             _eraContent = eraContent;
             _capturedDefaults = false;

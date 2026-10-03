@@ -1,0 +1,21 @@
+19:14:55 building Build/DevTest
+19:15:17 build Succeeded
+19:15:25 host: state MainMenu players 0 local none holding nothing
+19:15:26 host: state Lair players 1 local 44.500,1.188,0.000 holding nothing
+19:15:26 client started (pid 1985)
+19:15:35 client: state Lair players 2 local 44.500,1.188,1.600 holding nothing
+19:15:36 castle: seed 3508293, LateMedieval
+19:15:37 host: state Playing players 2 local -20.500,1.499,-36.000 holding nothing
+19:15:38 client: state Playing players 2 local -24.000,1.499,-32.500 holding nothing
+19:15:44 provoked 20 guards toward (-20.50, 1.50, -36.00)
+19:17:17 stuck rows: 1
+19:17:18 floor probe: 42.38,-24.6: Ground@y0.00  | -31.75,4.6: LateArtilleryYard(Clone)@y1.34 Ground@y0.00  | 
+19:17:19 levo started on guard -153292 at (7.69, 0.31, 0.00)
+19:17:28 levocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 1.14 (xz 1.14) state Patrolling
+19:17:33 levocheck airborne False onMesh True kinematic False y 0.32 movedSinceLast 5.62 (xz 5.62) state Patrolling
+19:17:34 frango started on guard -153292 at (0.18, 0.36, 0.00)
+19:17:35 frangocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 3.89 (xz 3.89) state Patrolling
+19:17:40 frangocheck airborne False onMesh True kinematic False y 0.31 movedSinceLast 5.57 (xz 5.57) state Patrolling
+19:17:41 state after: state Playing players 2 local -20.500,1.498,-36.000 holding nothing
+client log error lines: 2
+19:17:41 cleaning up

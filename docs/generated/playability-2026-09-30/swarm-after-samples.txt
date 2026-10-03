@@ -1,0 +1,13 @@
+0s swarm within10m 0 within20m 0 liveGuards 20 states Investigating=19 Patrolling=1
+6s swarm within10m 0 within20m 3 liveGuards 20 states Investigating=18 Chasing=1 Patrolling=1
+12s swarm within10m 3 within20m 8 liveGuards 20 states Chasing=2 Investigating=15 Combat=2 Patrolling=1
+18s swarm within10m 13 within20m 15 liveGuards 20 states Combat=8 Chasing=3 Investigating=8 Patrolling=1
+24s swarm within10m 0 within20m 0 liveGuards 0 states 
+30s swarm within10m 0 within20m 0 liveGuards 0 states 
+36s swarm within10m 0 within20m 0 liveGuards 0 states 
+42s swarm within10m 0 within20m 0 liveGuards 0 states 
+48s swarm within10m 0 within20m 0 liveGuards 0 states 
+54s swarm within10m 0 within20m 0 liveGuards 0 states 
+60s swarm within10m 0 within20m 0 liveGuards 0 states 
+66s swarm within10m 0 within20m 0 liveGuards 0 states 
+72s swarm within10m 0 within20m 0 liveGuards 0 states 

@@ -326,17 +326,20 @@ namespace UnityEngine
     public enum TextureFormat { RGBA32, RGB24, Alpha8 }
 
     public enum TextureWrapMode { Repeat, Clamp, Mirror, MirrorOnce }
+    public enum FilterMode { Point, Bilinear, Trilinear }
 
     public class Texture2D : Texture
     {
         public int width { get; }
         public int height { get; }
         public TextureWrapMode wrapMode { get; set; }
+        public FilterMode filterMode { get; set; } = FilterMode.Bilinear;
 
         /// <summary>Unity's built-in 4×4 white texture.</summary>
         public static Texture2D whiteTexture { get; } = new Texture2D(4, 4);
         /// <summary>No pixel storage headlessly; nothing reads pixels back.</summary>
         public void SetPixels(Color[] colours) { }
+        public void SetPixels32(Color32[] colours) { }
 
         public Texture2D(int w, int h) { width = w; height = h; }
         public Texture2D(int w, int h, TextureFormat format, bool mipChain) { width = w; height = h; }
@@ -891,18 +894,17 @@ namespace UnityEngine.Events
     public class UnityEvent : UnityEventBase
     {
         private readonly List<Action> _calls = new List<Action>();
-        public void AddListener(Action call) => _calls.Add(call);
+        // Unity's UnityEvent takes only UnityAction; a second Action overload made every lambda ambiguous.
         public void AddListener(UnityAction call) => _calls.Add(new Action(call.Invoke));
-        public void RemoveListener(Action call) => _calls.Remove(call);
+        public void RemoveListener(UnityAction call) => _calls.RemoveAll(c => c.Target == (object)call.Target && c.Method == call.Method);
         public void RemoveAllListeners() => _calls.Clear();
         public void Invoke() { foreach (Action c in _calls.ToArray()) c(); }
     }
     public class UnityEvent<T> : UnityEventBase
     {
         private readonly List<Action<T>> _calls = new List<Action<T>>();
-        public void AddListener(Action<T> call) => _calls.Add(call);
         public void AddListener(UnityAction<T> call) => _calls.Add(new Action<T>(call.Invoke));
-        public void RemoveListener(Action<T> call) => _calls.Remove(call);
+        public void RemoveListener(UnityAction<T> call) => _calls.RemoveAll(c => c.Target == (object)call.Target && c.Method == call.Method);
         public void RemoveAllListeners() => _calls.Clear();
         public void Invoke(T arg) { foreach (Action<T> c in _calls.ToArray()) c(arg); }
     }
@@ -914,7 +916,25 @@ namespace UnityEngine.UI
     public class Graphic : Behaviour
     {
         public Color color;
+        public bool raycastTarget = true;
         public RectTransform rectTransform => (RectTransform)transform;
+    }
+
+    /// <summary>uGUI's texture-drawing Graphic. Nothing is drawn headlessly.</summary>
+    public class RawImage : Graphic
+    {
+        public Texture texture;
+    }
+
+    /// <summary>Only the layout hints the UI factory sets; nothing lays out headlessly.</summary>
+    public class LayoutElement : Behaviour
+    {
+        public float minWidth;
+        public float minHeight;
+        public float preferredWidth;
+        public float preferredHeight;
+        public float flexibleWidth;
+        public float flexibleHeight;
     }
 
     public class Image : Graphic
@@ -942,9 +962,26 @@ namespace UnityEngine.UI
         public Font font;
         public HorizontalWrapMode horizontalOverflow;
         public VerticalWrapMode verticalOverflow;
+        public bool resizeTextForBestFit;
+        public int resizeTextMinSize;
+        public int resizeTextMaxSize;
+
+        /// <summary>No font metrics headlessly: a rough monospace estimate, only ever used for layout.</summary>
+        public float preferredWidth => (text?.Length ?? 0) * (fontSize > 0 ? fontSize : 14) * 0.6f;
+        public float preferredHeight => (fontSize > 0 ? fontSize : 14) * 1.2f;
     }
 
-    public class Slider : Behaviour
+    public class Selectable : Behaviour
+    {
+        public Graphic targetGraphic;
+        public ColorBlock colors = new ColorBlock
+        {
+            normalColor = Color.white, highlightedColor = Color.white, pressedColor = Color.white,
+            selectedColor = Color.white, disabledColor = Color.white, colorMultiplier = 1f, fadeDuration = 0.1f,
+        };
+    }
+
+    public class Slider : Selectable
     {
         public enum Direction { LeftToRight, RightToLeft, BottomToTop, TopToBottom }
 
@@ -953,7 +990,6 @@ namespace UnityEngine.UI
         public float maxValue = 1f;
         public RectTransform fillRect;
         public RectTransform handleRect;
-        public Graphic targetGraphic;
         public Direction direction;
         public Events.UnityEvent<float> onValueChanged = new Events.UnityEvent<float>();
     }
@@ -963,13 +999,15 @@ namespace UnityEngine.UI
         public Color normalColor;
         public Color highlightedColor;
         public Color pressedColor;
+        public Color selectedColor;
         public Color disabledColor;
+        public float colorMultiplier;
+        public float fadeDuration;
     }
 
-    public class Button : Behaviour
+    public class Button : Selectable
     {
         public Events.UnityEvent onClick = new Events.UnityEvent();
-        public ColorBlock colors;
     }
 }
 
@@ -1088,6 +1126,7 @@ namespace UnityEngine
     public class GUIContent
     {
         public string text;
+        public GUIContent() { text = string.Empty; }
         public GUIContent(string text) => this.text = text;
     }
 
@@ -1108,14 +1147,18 @@ namespace UnityEngine
             return new Vector2((content?.text?.Length ?? 0) * size * 0.6f, size * 1.2f);
         }
 
+        public Font font;
         public int fontSize;
         public FontStyle fontStyle;
         public TextAnchor alignment;
         public bool richText;
+        public bool wordWrap;
         public GUIStyleState normal = new GUIStyleState();
         public GUIStyle() { }
         public GUIStyle(GUIStyle other)
         {
+            font = other.font;
+            wordWrap = other.wordWrap;
             fontSize = other.fontSize;
             fontStyle = other.fontStyle;
             alignment = other.alignment;
@@ -1130,6 +1173,7 @@ namespace UnityEngine
     {
         public static GUISkin skin { get; } = new GUISkin();
         public static Color color { get; set; } = Color.white;
+        public static Color contentColor { get; set; } = Color.white;
         public static void Label(Rect rect, string text) { }
         public static void Label(Rect rect, string text, GUIStyle style) { }
         public static void Box(Rect rect, string text) { }
@@ -1192,6 +1236,16 @@ namespace UnityEngine
     {
         public static float volume { get; set; } = 1f;
         public static bool pause { get; set; }
+    }
+
+    /// <summary>The quality levels of a fresh project (Low, Medium, High); switching just records the index.</summary>
+    public static class QualitySettings
+    {
+        private static int _level = 1;
+        public static string[] names { get; } = { "Low", "Medium", "High" };
+        public static int GetQualityLevel() => _level;
+        public static void SetQualityLevel(int index, bool applyExpensiveChanges) => _level = index;
+        public static void SetQualityLevel(int index) => SetQualityLevel(index, true);
     }
 
     public enum CursorLockMode { None, Locked, Confined }

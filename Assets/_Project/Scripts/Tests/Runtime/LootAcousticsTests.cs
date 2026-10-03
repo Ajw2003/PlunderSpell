@@ -94,10 +94,10 @@ namespace Plunderspell.Tests
 
         // ---------------------------------------------------------------- Alarm FSM
 
-        private static AlarmFSMManager CreateAlarm()
+        private static EnemyDirector CreateAlarm()
         {
             var go = new GameObject("AlarmFSM_Test");
-            return go.AddComponent<AlarmFSMManager>();
+            return go.AddComponent<EnemyDirector>();
         }
 
         [Test]

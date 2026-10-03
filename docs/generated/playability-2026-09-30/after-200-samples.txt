@@ -1,0 +1,54 @@
+0s sampled 20 Searching=20
+2s sampled 20 Searching=20
+4s sampled 20 Searching=20
+5s sampled 20 Searching=20
+7s sampled 20 Searching=20
+8s sampled 20 Searching=20
+10s sampled 20 Searching=20
+12s sampled 20 Patrolling=8 Investigating=12
+13s sampled 20 Patrolling=8 Investigating=12
+15s sampled 20 Patrolling=8 Investigating=12
+17s sampled 20 Patrolling=11 Investigating=9
+18s sampled 20 Patrolling=13 Investigating=7
+20s sampled 20 Patrolling=15 Investigating=5
+22s sampled 20 Patrolling=16 Investigating=4
+23s sampled 20 Patrolling=16 Investigating=4
+25s sampled 20 Patrolling=18 Investigating=2
+27s sampled 20 Patrolling=18 Investigating=2
+28s sampled 20 Patrolling=19 Investigating=1
+30s sampled 20 Patrolling=20
+31s sampled 20 Patrolling=20
+33s sampled 20 Patrolling=20
+35s sampled 20 Patrolling=20
+36s sampled 20 Patrolling=20
+38s sampled 20 Patrolling=20
+40s sampled 20 Patrolling=20
+41s sampled 20 Patrolling=20
+43s sampled 20 Patrolling=20
+44s sampled 20 Patrolling=20
+46s sampled 20 Patrolling=20
+48s sampled 20 Patrolling=20
+49s sampled 20 Patrolling=20
+51s sampled 20 Patrolling=20
+52s sampled 20 Patrolling=20
+54s sampled 20 Patrolling=20
+56s sampled 20 Patrolling=20
+58s sampled 20 Patrolling=20
+60s sampled 20 Patrolling=20
+61s sampled 20 Patrolling=20
+63s sampled 20 Patrolling=20
+65s sampled 20 Patrolling=20
+66s sampled 20 Patrolling=20
+68s sampled 20 Patrolling=20
+70s sampled 20 Patrolling=20
+71s sampled 20 Patrolling=20
+73s sampled 20 Patrolling=20
+75s sampled 20 Patrolling=20
+76s sampled 20 Patrolling=20
+78s sampled 20 Patrolling=20
+80s sampled 20 Patrolling=20
+82s sampled 20 Patrolling=20
+83s sampled 20 Patrolling=20
+85s sampled 20 Patrolling=20
+87s sampled 20 Patrolling=20
+88s sampled 20 Patrolling=20

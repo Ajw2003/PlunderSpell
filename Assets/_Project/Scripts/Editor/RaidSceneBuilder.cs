@@ -16,11 +16,9 @@ using Plunderspell.Status;
 using Plunderspell.UI;
 using Plunderspell.Voice;
 using StateMachine;
-using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 namespace Plunderspell.EditorTools
@@ -89,19 +87,18 @@ namespace Plunderspell.EditorTools
             BuildLight();
             BuildGround();
 
-            AlarmFSMManager alarm = BuildAlarm();
+            EnemyDirector alarm = BuildAlarm();
             BuildLockdown(alarm);
             LairHubManager lair = BuildLair();
             ExtractionZone extraction = BuildExtractionZone();
             ProceduralCastleGenerator generator = BuildGenerator(registry);
             LootSpawner lootSpawner = BuildLootSpawner(lootTable);
             GuardSpawner guardSpawner = BuildGuardSpawner(roster);
-            CastleNavMeshBaker navigation = BuildNavigation();
 
             GameObject player = BuildPlayer(ResolveSpawn(generator));
 
             RaidDirector director = BuildDirector(generator, lootSpawner, guardSpawner, extraction,
-                lair, alarm, navigation, player.transform);
+                lair, alarm, player.transform);
             BuildHud(director, extraction, alarm, lair, player.GetComponentInChildren<LootInteractor>());
 
             EditorSceneManager.MarkSceneDirty(scene);
@@ -164,7 +161,7 @@ namespace Plunderspell.EditorTools
 
         // --- Systems ------------------------------------------------------------------------
 
-        private static AlarmFSMManager BuildAlarm()
+        private static EnemyDirector BuildAlarm()
         {
             var go = new GameObject("CastleAlarm");
             // The alarm listens for noise like anything else, so it needs a collider to be found by
@@ -172,7 +169,7 @@ namespace Plunderspell.EditorTools
             var collider = go.AddComponent<BoxCollider>();
             collider.isTrigger = true;
             collider.size = Vector3.one * (CellSize * 12f);
-            return go.AddComponent<AlarmFSMManager>();
+            return go.AddComponent<EnemyDirector>();
         }
 
         private static LairHubManager BuildLair()
@@ -229,7 +226,7 @@ namespace Plunderspell.EditorTools
             return spawner;
         }
 
-        private static void BuildLockdown(AlarmFSMManager alarm)
+        private static void BuildLockdown(EnemyDirector alarm)
         {
             var go = new GameObject("CastleLockdown");
             go.AddComponent<CastleLockdown>().Configure(alarm);
@@ -243,30 +240,14 @@ namespace Plunderspell.EditorTools
             return spawner;
         }
 
-        /// <summary>
-        /// The surface the garrison walks. Guards move through a <see cref="NavMeshAgent"/>, so
-        /// without a baked NavMesh every enemy stands still wherever it spawned — which looks like
-        /// broken AI rather than missing navigation data.
-        /// </summary>
-        private static CastleNavMeshBaker BuildNavigation()
-        {
-            var go = new GameObject("Navigation");
-            var surface = go.AddComponent<NavMeshSurface>();
-            surface.collectObjects = CollectObjects.All;
-            // The castle rooms carry MeshColliders, not readable meshes, so collect from physics.
-            surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
-            return go.AddComponent<CastleNavMeshBaker>();
-        }
-
         private static RaidDirector BuildDirector(ProceduralCastleGenerator generator,
             LootSpawner lootSpawner, GuardSpawner guardSpawner, ExtractionZone extraction,
-            LairHubManager lair, AlarmFSMManager alarm, CastleNavMeshBaker navigation,
-            Transform playerRoot)
+            LairHubManager lair, EnemyDirector alarm, Transform playerRoot)
         {
             var go = new GameObject("RaidDirector");
             var director = go.AddComponent<RaidDirector>();
             director.Configure(generator, lootSpawner, extraction, lair, alarm, null, guardSpawner,
-                navigation, playerRoot);
+                playerRoot);
 
             var bootstrapper = go.AddComponent<RaidBootstrapper>();
             // The raid starts when the player sets out from the lair, not on scene load.
@@ -363,6 +344,7 @@ namespace Plunderspell.EditorTools
             root.AddComponent<StatusEffectReceiver>();
             root.AddComponent<AcousticEmitter>();
             root.AddComponent<FootstepNoiseEmitter>();
+            root.AddComponent<PlayerChatterRelay>();
             root.AddComponent<PushToCastController>();
             SpellCastingSystem casting = root.AddComponent<SpellCastingSystem>();
             casting.SetLexicon(LoadLexicon());
@@ -377,7 +359,7 @@ namespace Plunderspell.EditorTools
         }
 
         private static void BuildHud(RaidDirector director, ExtractionZone extraction,
-            AlarmFSMManager alarm, LairHubManager lair, LootInteractor interactor)
+            EnemyDirector alarm, LairHubManager lair, LootInteractor interactor)
         {
             var go = new GameObject("RaidHud");
             var presenter = go.AddComponent<RaidHudPresenter>();

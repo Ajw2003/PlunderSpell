@@ -190,6 +190,77 @@ damage and lifetime, and `ProjectileTint` so one prefab can read as fire, frost 
 a prefab per spell. Gravity is off — a bolt flies where it was aimed, rather than landing on the
 floor between two people in a large room.
 
+## Guards that keep moving (#193, #194, #195)
+
+Owner's rule: no waiting state, just patrol, chat, chase, kill. Before this pass a searching guard
+stood on `_lastKnownIntruderPosition` for the search patience (forever at the hue and cry), a noise
+only moved a patrolling guard, the hue and cry sent each guard once, and nothing noticed a guard
+whose path was blocked. All the pure decisions are in `GuardBrain`; the rest is `CastleGuard`.
+
+*Historical (#223, 2026-10-02): the next bullets describe the legacy `CastleGuard` on a NavMeshAgent. Guards
+now move on the nav graph and the runtime NavMesh is gone; see `docs/4-systems/alarm.md` "Guard navigation".
+`CastleGuard.cs`, `GuardMovementTests` and the `GuardBrain` rules named below were deleted on 2026-10-02 (owner's
+approval); the `CastleGuard.cs:N` line numbers refer to the frozen copy `docs/reference/guard-legacy/CastleGuard.cs.txt`.
+The hue and cry's re-sending is now the director's repeat (#239, alarm.md).*
+
+- **Stuck watchdog** (`CastleGuard.WatchProgress`, `CastleGuard.cs:882`). A guard with a destination
+  that covers under 0.3 m in 1.5 s (`GuardBrain.IsStuck`, `StuckProgress`, `StuckSeconds`,
+  `GuardBrain.cs:87`) first gets a fresh path, then (next window) a reachable detour point 2-5 m
+  from its goal, and if none exists it gives the goal up: the patrol point is skipped, an
+  investigation ends, a sweep point is replaced. It is off for a guard that can see its target
+  (standing to strike is not stuck) and for speed 0 (the turret).
+- **Snapping** (`SnapToMesh`, `Reachable`, `CastleGuard.cs:809,820`; `MoveTo`, `:841`). Every
+  destination is snapped to the nearest NavMesh point (6 m) before it is sent, and arrival is judged
+  against the snapped point, so a player on a table or a noise in a wall is still reachable.
+  `SetDestination` is only re-sent when the target moved over 0.75 m or the agent has no path.
+- **A chaser stops short of the player** (#200; `ChaseToward`, `CastleGuard.cs:693`, called from `Act`,
+  `:666`). It used to send the player's own position to the agent, so the guard walked its body into
+  the player and the physics depenetration pushed the dynamic player body out sideways, against walls
+  and (thin ones) through them. The destination is now a point 0.8 of the strike range (`k_strikeStopFraction`,
+  `:823`; the sight range for projectile guards) short of the target, and inside that distance the
+  guard stands and faces the target. `NavMeshAgent.stoppingDistance` was tried first and does not hold
+  the agent (it braked into the target anyway, measured). `GuardShoveTests` reproduces it.
+  **Host-side cause fixed** (#200): the guard was an immovable, infinite-mass body driven into a dynamic
+  player pinned against a 0.5 m wall. `CastleGuard.Awake` (`CastleGuard.cs:160`) now gives every agent guard
+  a finite-mass (80) dynamic Rigidbody, added if the prefab lacks one; on the server `FixedUpdate`
+  (`:312`) sets `agent.updatePosition = false` and drives the body by the agent's `desiredVelocity`
+  (horizontal, gravity kept), then syncs `agent.nextPosition` to the body, so the transform is never written
+  (no #104 jitter). A client keeps it kinematic under the replicated transform. Levo hands the body back to
+  the kinematic path (`UpdateLevitation`, `Land`). Frango's shove now goes through `IShovable.Shove`
+  (`CastleGuard.cs:343`, `PrimarySpellEffects.cs:117`) as a short velocity burst. Test:
+  `GuardShoveTests.Test_AGuardDrivenIntoAPlayerAgainstAThinWallCannotCrushThemThrough` (player centre
+  reached x 16.48 through the wall before; stays on the near side now). **Open:** the co-op run after this
+  change shows stuck_s 378.9 of 1778.9 (was 65.0 of 1773.9), see `after-200b-report.txt`; not yet diagnosed.
+- **Searching sweeps** (`Search`, `:689`; `GuardBrain.SweepOffset`, `GuardBrain.cs:104`). The last
+  known spot first, then ring points 4/6/8 m around it (100 degrees apart), skipping any that are
+  off the mesh or cut off, until the search ends.
+- **Investigating looks around** (`Investigate`, `:719`): on arrival it turns on the spot for
+  `GuardBrain.LookAroundSeconds` (1.6 s), then returns to the route.
+- **No route, no standing** (`Patrol` `:742`, `Wander` `:769`): fewer than two usable waypoints
+  wanders between reachable points 3-8 m from where the guard was posted. `GuardSpawner` also gives
+  a one-point route a second point (`NearbyPoint`, `GuardSpawner.cs:166`).
+- **Noise steers the hunt** (`OnNoiseHeard`, `CastleGuard.cs:642`; `GuardBrain.ShouldFollowNoise`):
+  a noise that passes `ShouldInvestigate` moves a searching guard's last-known spot (and restarts
+  the sweep and the patience) to the noise origin; a chaser that has lost sight does the same. A
+  guard that can see its target ignores it. Patrolling guards still investigate as before.
+- **The hue and cry keeps hunting** (`KeepHunting`, `CastleGuard.cs:566`; `GuardBrain.ShouldHunt`, `HuntOffset`,
+  `HuntDelay`): while the alarm is `HueAndCry`, every searching or investigating guard is re-sent
+  every 3.0-3.9 s (staggered by instance id) to a point 3-5 m, random direction, from the nearest
+  registered intruder, snapped to the mesh. Roughly-known, not exact, so players can still break away.
+  Server only, like all guard AI.
+- **Registries and the alarm sit on the `EnemyDirector`** (#205). Guards and players register with it
+  (`CastleGuard.cs:143` reads its intruders, `IntruderTag.cs:1` registers a player in `OnEnable` and
+  retries in `Start`, as the director may spawn later). `RaidDirector` still calls
+  `ResetForNewRaid` on the same component; it never clears intruders, `IntruderTag` owns them. See
+  `alarm.md` for the event bus and the hue and cry request.
+
+Measured with `Tools/Unity/coop_guard_check.sh` (Editor host + Development client, seed 3508293, 20
+guards, all provoked into a chase at the start, 90 s): seconds spent with a destination farther than
+1 m away and under 0.2 m/s of movement went from **451.0 of 1798.9 guard-seconds (25.1%)** to **71.1
+of 1768.5 (4.0%)**; seven guards were stuck 63-84 s each before, none more than 22 s after. Files in
+`docs/generated/playability-2026-09-30/`. Tests: `GuardMovementTests` (20) and `GuardTests` (28).
+Not checked: a player standing on furniture, and the in-game feel of the sweep (no one watched it).
+
 ## Invariants
 
 - **No guard is posted, or patrols, within two rooms of the arrival portal**

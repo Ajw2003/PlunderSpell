@@ -1,0 +1,302 @@
+audio-calm-client.raw: 2000 frames, avg 294 fps, frame ms p50 3.23 p95 4.23 p99 7.62 max 19.62; spikes (>2x p50) 42; GC alloc 47.8 KB/frame
+top self time, ms per frame:
+  0.354  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.354  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  0.147  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.127  Profiler.FlushMemoryCounters
+  0.120  Inl_On Record Render Graph
+  0.105  PurrNet.Runtime.dll!PurrNet::NetworkTransform.Update() [Invoke]
+  0.104  Material.SetPassFast
+  0.102  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+  0.095  WaitForJobGroupID
+  0.094  Plunderspell.Voice.dll!::MainThreadPump.Update() [Invoke]
+  0.086  DXGI.WaitOnSwapChain
+  0.085  ParticleSystem.Update
+  0.071  Profiler.CollectAudioStats
+  0.047  BehaviourUpdate
+  0.040  GC.Collect
+  0.037  Shadows.ExtractShaderPassContext
+  0.035  Inl_UniversalRenderPipeline.RenderSingleCameraInternal: Eye
+  0.032  Shadows.ScheduleRenderJobs
+  0.030  PlayerLoop
+  0.027  Shadows.ExecuteDrawShadows
+  0.027  Physics.Raycast
+  0.022  Inl_UniversalRenderPipeline.ComputeShadowCasterCullingInfos
+  0.022  PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  0.022  Inl_RenderCameraStack
+  0.022  ExecuteRenderQueueJob
+  0.021  AudioSource.Update
+  0.021  Inl_Forward+ Setup
+  0.021  TransformChangeSystem
+  0.020  GC.Alloc
+  0.019  ExecuteRenderGraph
+top self time in spike frames, ms per spike frame:
+  2.921  Plunderspell.Voice.dll!::MainThreadPump.Update() [Invoke]
+  0.899  GC.Collect
+  0.425  Unity.Pipeline.dll!Unity.Pipeline::RuntimePipelineDriver.Update() [Invoke]
+  0.387  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  0.359  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.156  Profiler.FlushMemoryCounters
+  0.155  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.141  Inl_On Record Render Graph
+  0.113  ParticleSystem.Update
+  0.111  WaitForJobGroupID
+  0.110  PurrNet.Runtime.dll!PurrNet::NetworkTransform.Update() [Invoke]
+  0.106  Material.SetPassFast
+  0.105  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+  0.098  Profiler.CollectAudioStats
+  0.064  GarbageCollector.CollectIncremental
+GC allocation by allocating marker, KB per frame:
+  43.77  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  2.16  UnityEngine.IMGUIModule.dll!UnityEngine::GUIUtility.BeginGUI() [Invoke]
+  1.16  Unity.Pipeline.dll!Unity.Pipeline::RuntimePipelineDriver.Update() [Invoke]
+  0.27  Plunderspell.RaidHud.dll!Plunderspell.UI::DamageFeedbackView.Update() [Invoke]
+  0.19  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.14  PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  0.07  Plunderspell.Voice.dll!::MainThreadPump.Update() [Invoke]
+  0.04  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudPresenter.Update() [Invoke]
+  0.01  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+  0.00  Plunderspell.Audio.dll!Plunderspell.Audio::StepAudio.Update() [Invoke]
+  0.00  Plunderspell.Audio.dll!Plunderspell.Audio::AudioDirector.Update() [Invoke]
+  0.00  Unity.Pipeline.dll!Unity.Pipeline::CodeReloadStatusOverlay.Update() [Invoke]
+samples over 1 ms self time, total ms over the capture (parent > marker):
+  121.2  BehaviourUpdate > Plunderspell.Voice.dll!::MainThreadPump.Update() [Invoke]
+  51.3  WaitForLastPresentation > DXGI.WaitOnSwapChain
+  42.2  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke] > GC.Collect
+  35.5  GarbageCollector.CollectIncremental > GC.Collect
+  17.8  BehaviourUpdate > Unity.Pipeline.dll!Unity.Pipeline::RuntimePipelineDriver.Update() [Invoke]
+  3.0  Plunderspell.Voice.dll!::MainThreadPump.Update() [Invoke] > GC.Collect
+  1.0  Unity.Pipeline.dll!Unity.Pipeline::RuntimePipelineDriver.Update() [Invoke] > GC.Alloc
+worst frames: 19.6ms@1999, 9.8ms@1885, 9.7ms@833, 9.5ms@972, 9.1ms@397, 8.9ms@1398, 8.6ms@1539, 8.6ms@1191
+
+
+audio-calm-host.raw: 1529 frames, avg 134 fps, frame ms p50 7.31 p95 9.13 p99 11.61 max 33.39; spikes (>2x p50) 4; GC alloc 68.9 KB/frame
+top self time, ms per frame:
+  0.687  OnGUI
+  0.654  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.516  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  0.353  Profiler.FlushMemoryCounters
+  0.247  TextGenerator.GenerateText
+  0.225  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.207  Material.SetPassFast
+  0.184  Inl_On Record Render Graph
+  0.169  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+  0.162  WaitForJobGroupID
+  0.155  ParticleSystem.Update
+  0.139  PurrNet.Runtime.dll!PurrNet::NetworkTransform.Update() [Invoke]
+  0.134  PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  0.131  Profiler.CollectAudioStats
+  0.113  Plunderspell.Alarm.dll!Plunderspell.Alarm::EnemyDirector.Update() [Invoke]
+  0.097  BehaviourUpdate
+  0.065  FlushDirty
+  0.065  IMGUIContainer
+  0.064  Inl_Forward+ Setup
+  0.060  Inl_UniversalRenderPipeline.RenderSingleCameraInternal: Eye
+  0.058  AssetDatabase.GetGUIDFromAssetPathV2
+  0.057  Physics.CapsuleCastNonAlloc
+  0.053  Plunderspell.Loot.dll!Plunderspell.Loot::LootPickup.FixedUpdate() [Invoke]
+  0.052  ParticleSystem.Update2
+  0.051  TextGenerator.Prepare
+  0.046  UpdateScene
+  0.042  Inl_RenderCameraStack
+  0.040  GC.Alloc
+  0.038  Inl_Setup Light Constants
+  0.036  EditorResources.Load
+top self time in spike frames, ms per spike frame:
+  3.670  EditorApplication.update: Unity.Pipeline.Threading.Dispatcher.ProcessWorkQueue
+  3.309  GC.Collect
+  2.676  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  1.480  GfxDeviceD3D12.WaitForLastPresentation.WaitForGPU
+  1.078  OnGUI
+  0.787  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.786  Profiler.FlushMemoryCounters
+  0.756  GarbageCollector.CollectIncremental
+  0.598  PxScene.simulate
+  0.395  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.347  TextGenerator.GenerateText
+  0.345  WaitForJobGroupID
+  0.265  Material.SetPassFast
+  0.235  ParticleSystem.Update
+  0.232  Inl_On Record Render Graph
+GC allocation by allocating marker, KB per frame:
+  43.76  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  19.74  OnGUI
+  1.80  UnityEngine.IMGUIModule.dll!UnityEngine::GUIUtility.BeginGUI() [Invoke]
+  1.27  EditorApplication.update: Unity.Pipeline.Threading.Dispatcher.ProcessWorkQueue
+  0.39  PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  0.37  GameView.PrepareRepaint
+  0.36  IMGUIContainer
+  0.27  Plunderspell.RaidHud.dll!Plunderspell.UI::DamageFeedbackView.Update() [Invoke]
+  0.24  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.20  EditorApplication.update: UnityEditor.PackageManager.UI.Internal.ApplicationProxy.OnUpdate
+  0.19  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.14  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+samples over 1 ms self time, total ms over the capture (parent > marker):
+  36.3  TimeUpdate.WaitForLastPresentationAndUpdateTime > GarbageCollector.CollectIncremental
+  32.3  IMGUIContainer > OnGUI
+  28.2  UnityEditor.CoreModule.dll!UnityEditor::EditorApplication.Internal_CallUpdateFunctions() [Invoke] > EditorApplication.update: Unity.Pipeline.Threading.Dispatcher.ProcessWorkQueue
+  20.6  GUI.Repaint > Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  16.3  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke] > GC.Collect
+  12.1  Plunderspell.Guards.dll!Plunderspell.Guards::Guard.Update() [Invoke] > GuardPathPlanner.Smooth
+  5.9  GfxDeviceD3D12.WaitForLastPresentation > GfxDeviceD3D12.WaitForLastPresentation.WaitForGPU
+  5.8  BehaviourUpdate > PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  5.4  BehaviourUpdate > Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  2.2  Physics.Simulate > PxScene.simulate
+  1.8  Profiler.FlushCounters > Profiler.FlushMemoryCounters
+worst frames: 33.4ms@790, 24.0ms@1371, 19.1ms@630, 15.6ms@77, 14.2ms@1528, 13.8ms@781, 13.7ms@431, 13.0ms@787
+
+
+audio-huecry-client.raw: 2000 frames, avg 232 fps, frame ms p50 3.93 p95 5.99 p99 9.19 max 243.41; spikes (>2x p50) 44; GC alloc 53.3 KB/frame
+top self time, ms per frame:
+  0.492  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.376  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  0.254  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+  0.156  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.151  Profiler.FlushMemoryCounters
+  0.137  Inl_On Record Render Graph
+  0.127  Plunderspell.Voice.dll!::MainThreadPump.Update() [Invoke]
+  0.126  DXGI.WaitOnSwapChain
+  0.120  PurrNet.Runtime.dll!PurrNet::NetworkTransform.Update() [Invoke]
+  0.116  Material.SetPassFast
+  0.103  WaitForJobGroupID
+  0.101  ParticleSystem.Update
+  0.094  Profiler.CollectAudioStats
+  0.056  BehaviourUpdate
+  0.052  Shadows.ExtractShaderPassContext
+  0.047  GC.Collect
+  0.044  Shadows.ScheduleRenderJobs
+  0.041  Plunderspell.RaidHud.dll!Plunderspell.UI::DamageFeedbackView.OnGUI() [Invoke]
+  0.039  Physics.Raycast
+  0.037  Shadows.ExecuteDrawShadows
+  0.037  PlayerLoop
+  0.036  Inl_UniversalRenderPipeline.RenderSingleCameraInternal: Eye
+  0.036  AudioSource.Update
+  0.035  ExecuteRenderQueueJob
+  0.029  PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  0.026  Inl_UniversalRenderPipeline.ComputeShadowCasterCullingInfos
+  0.026  Inl_RenderCameraStack
+  0.024  Inl_Forward+ Setup
+  0.022  ExecuteRenderGraph
+  0.022  Inl_Setup Light Constants
+top self time in spike frames, ms per spike frame:
+  4.971  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+  3.119  Plunderspell.Voice.dll!::MainThreadPump.Update() [Invoke]
+  0.541  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.526  GC.Collect
+  0.462  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  0.416  Unity.Pipeline.dll!Unity.Pipeline::RuntimePipelineDriver.Update() [Invoke]
+  0.301  FontEngine.Get_GPOS_Lookups
+  0.229  GarbageCollector.CollectIncremental
+  0.207  DXGI.WaitOnSwapChain
+  0.184  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.179  Profiler.FlushMemoryCounters
+  0.176  Inl_On Record Render Graph
+  0.143  ParticleSystem.Update
+  0.139  PurrNet.Runtime.dll!PurrNet::NetworkTransform.Update() [Invoke]
+  0.126  WaitForJobGroupID
+GC allocation by allocating marker, KB per frame:
+  46.09  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  2.16  UnityEngine.IMGUIModule.dll!UnityEngine::GUIUtility.BeginGUI() [Invoke]
+  1.73  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+  1.22  Plunderspell.RaidHud.dll!Plunderspell.UI::DamageFeedbackView.OnGUI() [Invoke]
+  1.16  Unity.Pipeline.dll!Unity.Pipeline::RuntimePipelineDriver.Update() [Invoke]
+  0.27  Plunderspell.RaidHud.dll!Plunderspell.UI::DamageFeedbackView.Update() [Invoke]
+  0.19  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.15  PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  0.09  Plunderspell.Voice.dll!::MainThreadPump.Update() [Invoke]
+  0.08  Plunderspell.Net.dll!::PlayerNetworkOwnership.OnGUI() [Invoke]
+  0.04  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudPresenter.Update() [Invoke]
+  0.03  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+samples over 1 ms self time, total ms over the capture (parent > marker):
+  211.3  Plunderspell.Net.dll!::PlayerNetworkOwnership.OnGUI() [Invoke] > UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+  174.8  BehaviourUpdate > Plunderspell.Voice.dll!::MainThreadPump.Update() [Invoke]
+  146.4  WaitForLastPresentation > DXGI.WaitOnSwapChain
+  44.6  GarbageCollector.CollectIncremental > GC.Collect
+  42.5  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke] > GC.Collect
+  22.0  TimeUpdate.WaitForLastPresentationAndUpdateTime > GarbageCollector.CollectIncremental
+  18.2  BehaviourUpdate > Unity.Pipeline.dll!Unity.Pipeline::RuntimePipelineDriver.Update() [Invoke]
+  13.2  FontEngine.Get_GPOS_Table > FontEngine.Get_GPOS_Lookups
+  5.5  EngineJob > FontEngine.GlyphRasterizer.Calculate3x3AAEDT
+  3.3  BehaviourUpdate > Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  3.0  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke] > GC.Collect
+  3.0  Plunderspell.RaidHud.dll!Plunderspell.UI::DamageFeedbackView.OnGUI() [Invoke] > GC.Collect
+worst frames: 243.4ms@1760, 19.9ms@1999, 19.8ms@367, 13.8ms@1761, 12.7ms@1590, 11.4ms@1468, 11.4ms@257, 11.1ms@1979
+
+
+audio-huecry-host.raw: 1333 frames, avg 116 fps, frame ms p50 8.07 p95 10.28 p99 15.23 max 202.27; spikes (>2x p50) 10; GC alloc 71.8 KB/frame
+top self time, ms per frame:
+  0.841  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.709  OnGUI
+  0.515  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  0.388  GuardPathPlanner.Smooth
+  0.361  Profiler.FlushMemoryCounters
+  0.315  TextGenerator.GenerateText
+  0.226  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.212  Material.SetPassFast
+  0.186  Inl_On Record Render Graph
+  0.170  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+  0.160  ParticleSystem.Update
+  0.155  PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  0.144  PurrNet.Runtime.dll!PurrNet::NetworkTransform.Update() [Invoke]
+  0.141  WaitForJobGroupID
+  0.139  Profiler.CollectAudioStats
+  0.115  Plunderspell.Alarm.dll!Plunderspell.Alarm::EnemyDirector.Update() [Invoke]
+  0.101  BehaviourUpdate
+  0.076  FlushDirty
+  0.069  IMGUIContainer
+  0.065  TextGenerator.Prepare
+  0.064  Inl_Forward+ Setup
+  0.062  Inl_UniversalRenderPipeline.RenderSingleCameraInternal: Eye
+  0.060  AssetDatabase.GetGUIDFromAssetPathV2
+  0.059  Plunderspell.Loot.dll!Plunderspell.Loot::LootPickup.FixedUpdate() [Invoke]
+  0.058  ExecuteRenderQueueJob
+  0.055  Physics.CapsuleCastNonAlloc
+  0.055  Shadows.ScheduleRenderJobs
+  0.054  Shadows.ExtractShaderPassContext
+  0.053  ParticleSystem.Update2
+  0.049  UpdateScene
+top self time in spike frames, ms per spike frame:
+  47.188  GuardPathPlanner.Smooth
+  1.379  GC.Collect
+  1.353  EditorApplication.update: Unity.Pipeline.Threading.Dispatcher.ProcessWorkQueue
+  1.122  GuardPathPlanner.Search
+  1.019  GarbageCollector.CollectIncremental
+  0.982  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.849  OnGUI
+  0.739  PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  0.567  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  0.394  Profiler.FlushMemoryCounters
+  0.319  TextGenerator.GenerateText
+  0.252  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.245  Plunderspell.Guards.dll!Plunderspell.Guards::Guard.Update() [Invoke]
+  0.244  ParticleSystem.Update
+  0.239  PurrNet.Runtime.dll!PurrNet::NetworkTransform.Update() [Invoke]
+GC allocation by allocating marker, KB per frame:
+  46.08  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  19.97  OnGUI
+  1.80  UnityEngine.IMGUIModule.dll!UnityEngine::GUIUtility.BeginGUI() [Invoke]
+  1.46  EditorApplication.update: Unity.Pipeline.Threading.Dispatcher.ProcessWorkQueue
+  0.37  IMGUIContainer
+  0.37  PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  0.37  GameView.PrepareRepaint
+  0.28  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetDimensions() [Invoke]
+  0.27  Plunderspell.RaidHud.dll!Plunderspell.UI::DamageFeedbackView.Update() [Invoke]
+  0.20  EditorApplication.update: UnityEditor.PackageManager.UI.Internal.ApplicationProxy.OnUpdate
+  0.19  Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  0.16  UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+samples over 1 ms self time, total ms over the capture (parent > marker):
+  512.9  Plunderspell.Guards.dll!Plunderspell.Guards::Guard.Update() [Invoke] > GuardPathPlanner.Smooth
+  61.0  BehaviourUpdate > Plunderspell.Atmosphere.dll!Plunderspell.Atmosphere::CastleAtmosphere.Update() [Invoke]
+  40.9  TimeUpdate.WaitForLastPresentationAndUpdateTime > GarbageCollector.CollectIncremental
+  28.5  IMGUIContainer > OnGUI
+  26.6  UnityEditor.CoreModule.dll!UnityEditor::EditorApplication.Internal_CallUpdateFunctions() [Invoke] > EditorApplication.update: Unity.Pipeline.Threading.Dispatcher.ProcessWorkQueue
+  15.6  BehaviourUpdate > PurrNet.Runtime.dll!PurrNet::NetworkManager.Update() [Invoke]
+  13.8  GarbageCollector.CollectIncremental > GC.Collect
+  10.8  Plunderspell.Guards.dll!Plunderspell.Guards::Guard.Update() [Invoke] > GuardPathPlanner.Search
+  9.6  GUI.Repaint > Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke]
+  4.7  Plunderspell.Guards.dll!Plunderspell.Guards::Guard.Update() [Invoke] > Mono.JIT
+  3.1  Plunderspell.RaidHud.dll!Plunderspell.UI::RaidHudView.OnGUI() [Invoke] > GC.Collect
+  2.0  Plunderspell.Items.dll!::NetworkedProjectile.OnCollisionEnter() [Invoke] > Mono.JIT
+worst frames: 202.3ms@50, 130.3ms@386, 97.6ms@727, 67.0ms@1078, 36.2ms@106, 23.4ms@825, 22.8ms@387, 18.9ms@51
+
+

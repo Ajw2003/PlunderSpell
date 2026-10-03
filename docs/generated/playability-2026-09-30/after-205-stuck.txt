@@ -1,0 +1,2 @@
+guard -171072 t 43 dt 1.7 pos (-49.83, 0.00, 9.17) state Patrolling dest (-48.00, 0.00, 0.00) distDest 9.3 vel (0.00, 0.00, 0.00) desired (-1.41, 0.00, -0.76) onMesh True agentGap 0.08 ground Ground n=(0.00, 1.00, 0.00) slope=0 touching [STATIC:LateBastion(Clone)/LDefault]
+guard -171072 t 64 dt 1.6 pos (-49.83, 0.00, 14.83) state Patrolling dest (-48.00, 0.00, 24.00) distDest 9.3 vel (0.00, 0.00, 0.00) desired (1.60, 0.00, 0.00) onMesh True agentGap 0.08 ground Ground n=(0.00, 1.00, 0.00) slope=0 touching [STATIC:LateBastion(Clone)/LDefault]

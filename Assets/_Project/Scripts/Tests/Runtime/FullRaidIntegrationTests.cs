@@ -30,14 +30,14 @@ namespace Plunderspell.Tests
         {
             PlayerPrefs.DeleteAll();
             SpellEffectRegistry.Reset();
-            CastleGuard.ClearIntruders();
+            TestDirector.Reset();
         }
 
         [TearDown]
         public void TearDown()
         {
             SpellEffectRegistry.Reset();
-            CastleGuard.ClearIntruders();
+            TestDirector.Reset();
             VoiceServiceLocator.Clear();
             foreach (Object o in _spawned)
                 if (o != null)
@@ -89,18 +89,19 @@ namespace Plunderspell.Tests
         {
             var alarmGo = Track(new GameObject("Alarm"));
             alarmGo.AddComponent<BoxCollider>();
-            AlarmFSMManager alarm = alarmGo.AddComponent<AlarmFSMManager>();
+            EnemyDirector alarm = alarmGo.AddComponent<EnemyDirector>();
 
             var guardGo = Track(new GameObject("Guard"));
             guardGo.transform.position = new Vector3(0f, 0f, 6f);
             guardGo.AddComponent<BoxCollider>();
             guardGo.AddComponent<StatusEffectReceiver>();
-            CastleGuard guard = guardGo.AddComponent<CastleGuard>();
+            Guard guard = guardGo.AddComponent<Guard>();
             guard.Configure(alarm);
 
             SpellEffectRegistry.Execute(new SpellEffectContext(
                 SpellId.Saltus, CastVolume.Shout, Vector3.zero, Vector3.forward));
             SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, null, ~0, 0);
+            guard.Tick(0.1f);   // the fresh guard decides what a noise means on its next tick
 
             Assert.GreaterOrEqual((int)alarm.State, (int)AlarmState.Stirred,
                 "A shouted leap and its slam must wake the castle.");
@@ -114,7 +115,7 @@ namespace Plunderspell.Tests
         public void Test_ARousedCastleLocksItsDoors()
         {
             var alarmGo = Track(new GameObject("Alarm"));
-            AlarmFSMManager alarm = alarmGo.AddComponent<AlarmFSMManager>();
+            EnemyDirector alarm = alarmGo.AddComponent<EnemyDirector>();
 
             var doorGo = Track(new GameObject("Door"));
             CastleDoor door = doorGo.AddComponent<CastleDoor>();
