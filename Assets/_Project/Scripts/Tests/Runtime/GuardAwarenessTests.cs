@@ -62,11 +62,11 @@ namespace Plunderspell.Tests
         public void APlayerFarAboveTheGuardIsNotSeen()
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
-            _rig.MakeIntruder(new Vector3(0f, 9f, 1.5f));
+            _rig.MakeIntruder(new Vector3(0f, 14f, 1.5f));
 
             Look(guard);
 
-            Assert.That(guard.Sight.Visible, Is.Null, "8 m up and 1.5 m ahead is nearly straight up, past the 70 degree limit");
+            Assert.That(guard.Sight.Visible, Is.Null, "13 m up and 1.5 m ahead is nearly straight up, past the 80 degree limit (#238 part 2)");
         }
 
         [Test]
