@@ -57,6 +57,9 @@ namespace Plunderspell.Guards
         /// <summary>The melee strike (#210). Combat strikes through it when the guard has a turn.</summary>
         public GuardMeleeAttack MeleeAttack { get; private set; }
 
+        /// <summary>Whether a player can be got at on foot (#237). Chase and Combat ask it of melee guards.</summary>
+        public GuardReachability Reach { get; private set; }
+
         /// <summary>This guard's asking for, and holding of, an attack turn (#210).</summary>
         public GuardAttackTurn AttackTurn { get; private set; }
 
@@ -112,6 +115,8 @@ namespace Plunderspell.Guards
             RangedAttack = new GuardRangedAttack(this);
             MeleeAttack = new GuardMeleeAttack(this);
             AttackTurn = new GuardAttackTurn(this);
+            Reach = new GuardReachability(this);
+            _ = new GuardHelpResponse(this);
             Leads = new GuardLeads(Link, Hearing, () => Random);
             _shove = new GuardShove(transform, _tuning);
             Lift = new GuardLift(transform, Status);

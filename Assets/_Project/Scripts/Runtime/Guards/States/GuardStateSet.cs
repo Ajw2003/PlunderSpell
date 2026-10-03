@@ -15,6 +15,7 @@ namespace Plunderspell.Guards
             Investigate = new InvestigateState(guard);
             Chase = new ChaseState(guard);
             Combat = new CombatState(guard);
+            HoldBelow = new HoldBelowState(guard);
             Stunned = new StunnedState(guard);
             Slept = new SleptState(guard);
             OnFire = new OnFireState(guard);
@@ -32,6 +33,9 @@ namespace Plunderspell.Guards
 
         /// <summary>Fighting a player in reach, taking turns (#210).</summary>
         public CombatState Combat { get; }
+
+        /// <summary>A melee guard holding below a player it cannot reach, throwing stones (#237).</summary>
+        public HoldBelowState HoldBelow { get; }
 
         /// <summary>Stunned, or levitated until it lands (#211).</summary>
         public GuardState Stunned { get; }

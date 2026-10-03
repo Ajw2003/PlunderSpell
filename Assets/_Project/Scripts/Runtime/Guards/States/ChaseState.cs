@@ -75,6 +75,13 @@ namespace Plunderspell.Guards
             _target = seen;
             _lastSeenSpot = seen.position;
             _secondsSinceSeen = 0f;
+            // A melee guard that cannot get at the player stops chasing and throws instead (#237).
+            if (!Context.RangedAttack.IsRanged && Context.Reach.IsUnreachable(seen, deltaTime))
+            {
+                Context.States.HoldBelow.Hold(seen);
+                return Context.States.HoldBelow;
+            }
+
             RetargetWhenDue(deltaTime);
             Context.RangedAttack.TryFire(seen, deltaTime);
             return NoticeReach(seen);

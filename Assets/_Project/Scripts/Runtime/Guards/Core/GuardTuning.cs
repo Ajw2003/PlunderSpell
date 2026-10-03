@@ -86,6 +86,31 @@ namespace Plunderspell.Guards
         [Tooltip("Radius of the sphere swept along a shot to look for a teammate in the way, in metres (#210).")]
         public float ShotClearanceRadius = 0.3f;
 
+        [Header("Unreachable player (#237)")]
+        [Tooltip("A player whose feet are this far above the nearest walkable floor, or with no floor near, cannot be reached on foot, in metres. Jump height is about 1 m, so the confirm time below covers jumps.")]
+        public float UnreachableHeight = 0.9f;
+
+        [Tooltip("The player must stay unreachable this long before a melee guard stops chasing and throws, in seconds.")]
+        public float UnreachableConfirmSeconds = 1f;
+
+        [Tooltip("How long a guard holding below keeps waiting for a player it has stopped seeing before it goes to investigate, in seconds.")]
+        public float UnreachableLoseSightSeconds = 3f;
+
+        [Tooltip("A melee guard's stone. Empty uses the default stone prefab (Resources/GuardStone).")]
+        public GameObject ThrownPrefab;
+
+        [Tooltip("Metres per second a thrown stone leaves at. Slower than a bolt.")]
+        public float ThrowSpeed = 10f;
+
+        [Tooltip("Seconds between throws. Slower than a bolt.")]
+        public float ThrowCooldownSeconds = 2.5f;
+
+        [Tooltip("A stone does this share of AttackDamage, so it scales with the lobby like a strike.")]
+        public float ThrowDamageShare = 0.4f;
+
+        [Tooltip("How far from the player's spot a guard that cannot reach it stands to throw, in metres.")]
+        public float ThrowStandOff = 4f;
+
         [Header("Movement body")]
         [Tooltip("Body shape the navigation service sweeps with.")]
         public float BodyRadius = 0.4f;

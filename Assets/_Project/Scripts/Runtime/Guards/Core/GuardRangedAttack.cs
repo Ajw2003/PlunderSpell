@@ -18,7 +18,10 @@ namespace Plunderspell.Guards
     {
         private readonly Guard _guard;
         private readonly GuardLineOfFire _lineOfFire;
+        private static GameObject _defaultStone;
+
         private float _cooldownLeft;
+        private float _throwCooldownLeft;
 
         public GuardRangedAttack(Guard guard)
         {
@@ -35,7 +38,14 @@ namespace Plunderspell.Guards
         public bool LastShotBlocked { get; private set; }
 
         /// <summary>Counts the cooldown down on the guard's own step time, so a test can drive it.</summary>
-        public void CoolDown(float deltaTime) => _cooldownLeft = Mathf.Max(0f, _cooldownLeft - deltaTime);
+        public void CoolDown(float deltaTime)
+        {
+            _cooldownLeft = Mathf.Max(0f, _cooldownLeft - deltaTime);
+            _throwCooldownLeft = Mathf.Max(0f, _throwCooldownLeft - deltaTime);
+        }
+
+        /// <summary>True when the throw cooldown is over (#237). A melee guard throws only at a player it cannot reach.</summary>
+        public bool IsThrowReady => _throwCooldownLeft <= 0f;
 
         /// <summary>
         /// Counts the cooldown down and fires at <paramref name="target"/> when it is ready, in sight range
@@ -45,7 +55,37 @@ namespace Plunderspell.Guards
         {
             CoolDown(deltaTime);
             LastShotBlocked = false;
-            if (!IsRanged || !IsReady)
+            GuardTuning tuning = _guard.Tuning;
+            return IsRanged && Shoot(target, tuning.ProjectilePrefab, tuning.ProjectileSpeed, tuning.AttackDamage,
+                ref _cooldownLeft, tuning.AttackCooldownSeconds);
+        }
+
+        /// <summary>
+        /// A melee guard's stone (#237): the same shot path as <see cref="TryFire"/> (cooldown, line-of-fire
+        /// check, signal, engaged event, projectile), with its own slower, weaker numbers and its own cooldown.
+        /// Returns true on a throw.
+        /// </summary>
+        public bool TryThrow(Transform target, float deltaTime)
+        {
+            CoolDown(deltaTime);
+            LastShotBlocked = false;
+            GuardTuning tuning = _guard.Tuning;
+            GameObject stone = tuning.ThrownPrefab != null ? tuning.ThrownPrefab : DefaultStone();
+            return stone != null && Shoot(target, stone, tuning.ThrowSpeed, tuning.AttackDamage * tuning.ThrowDamageShare,
+                ref _throwCooldownLeft, tuning.ThrowCooldownSeconds);
+        }
+
+        // The stone every melee guard throws unless its tuning names another. Loaded once for the whole game.
+        private static GameObject DefaultStone()
+        {
+            if (_defaultStone == null)
+                _defaultStone = Resources.Load<GameObject>("GuardStone");
+            return _defaultStone;
+        }
+
+        private bool Shoot(Transform target, GameObject prefab, float speed, float damage, ref float cooldownLeft, float cooldownSeconds)
+        {
+            if (cooldownLeft > 0f)
                 return false;
 
             GuardTuning tuning = _guard.Tuning;
@@ -59,20 +99,19 @@ namespace Plunderspell.Guards
             if (LastShotBlocked)
                 return false;
 
-            _cooldownLeft = tuning.AttackCooldownSeconds;
+            cooldownLeft = cooldownSeconds;
             _guard.AttackSignal.Signal(GuardAttackKind.Projectile);
             _guard.Link.Director?.Publish(new GuardEngaged(_guard, target));
-            Launch(origin, toTarget.normalized);
+            Launch(prefab, origin, toTarget.normalized, speed, damage);
             return true;
         }
 
-        private void Launch(Vector3 origin, Vector3 direction)
+        private void Launch(GameObject prefab, Vector3 origin, Vector3 direction, float speed, float damage)
         {
-            GuardTuning tuning = _guard.Tuning;
-            GameObject shot = Object.Instantiate(tuning.ProjectilePrefab, origin, Quaternion.LookRotation(direction));
+            GameObject shot = Object.Instantiate(prefab, origin, Quaternion.LookRotation(direction));
             if (shot.TryGetComponent(out NetworkedProjectile projectile))
             {
-                projectile.Damage = Mathf.RoundToInt(tuning.AttackDamage);
+                projectile.Damage = Mathf.RoundToInt(damage);
                 projectile.Instigator = _guard.gameObject;
             }
 
@@ -84,7 +123,7 @@ namespace Plunderspell.Guards
             }
 
             if (shot.TryGetComponent(out Rigidbody body))
-                body.linearVelocity = direction * tuning.ProjectileSpeed;
+                body.linearVelocity = direction * speed;
         }
     }
 }

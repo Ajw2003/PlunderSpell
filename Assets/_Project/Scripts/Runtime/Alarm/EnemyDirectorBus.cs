@@ -24,6 +24,7 @@ namespace Plunderspell.Alarm
         public event Action<AlarmChanged> OnAlarmChanged;
         public event Action<GuardDied> OnGuardDied;
         public event Action<InvestigateRequest> OnInvestigateRequest;
+        public event Action<UnreachableIntruderReported> OnUnreachableIntruder;
         public event Action<MoveRequest> OnMoveRequest;
         public event Action<PathReady> OnPathReady;
         public event Action<Arrived> OnArrived;
@@ -89,6 +90,8 @@ namespace Plunderspell.Alarm
         }
 
         public void Publish(InvestigateRequest e) => OnInvestigateRequest?.Invoke(e);
+
+        public void Publish(UnreachableIntruderReported e) => OnUnreachableIntruder?.Invoke(e);
 
         public void Publish(MoveRequest e) => OnMoveRequest?.Invoke(e);
 

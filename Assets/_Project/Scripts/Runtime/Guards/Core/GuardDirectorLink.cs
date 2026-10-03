@@ -22,6 +22,10 @@ namespace Plunderspell.Guards
         /// <summary>Raised with the spot to look at when the director asks guards to investigate and this one is in range.</summary>
         public event Action<Vector3> InvestigateRequested;
 
+        /// <summary>Raised with the player when another guard within <see cref="HueAndCryRadius"/> cannot reach
+        /// them and asks for help (#237).</summary>
+        public event Action<Transform> HelpCalled;
+
         public GuardDirectorLink(Component guard)
         {
             _guard = guard;
@@ -44,6 +48,7 @@ namespace Plunderspell.Guards
                 return;
 
             director.OnInvestigateRequest += HandleInvestigateRequest;
+            director.OnUnreachableIntruder += HandleUnreachableIntruder;
             director.RegisterGuard(_guard);
         }
 
@@ -53,8 +58,17 @@ namespace Plunderspell.Guards
                 return;
 
             Director.OnInvestigateRequest -= HandleInvestigateRequest;
+            Director.OnUnreachableIntruder -= HandleUnreachableIntruder;
             Director.UnregisterGuard(_guard);
             Director = null;
+        }
+
+        private void HandleUnreachableIntruder(UnreachableIntruderReported call)
+        {
+            if (call.Guard == _guard || call.Guard == null || call.Intruder == null)
+                return;
+            if (Vector3.Distance(_guard.transform.position, call.Guard.transform.position) <= HueAndCryRadius)
+                HelpCalled?.Invoke(call.Intruder);
         }
 
         // When several players are asked about in one frame the guard keeps the nearest.

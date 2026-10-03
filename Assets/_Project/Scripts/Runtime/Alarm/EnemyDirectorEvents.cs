@@ -71,6 +71,15 @@ namespace Plunderspell.Alarm
         public GuardDied(Component guard, Vector3 position) { Guard = guard; Position = position; }
     }
 
+    /// <summary>A guard sees a player it cannot reach (on a table, a ledge, a rail) and asks for help (#237).
+    /// Nearby guards decide what to do with it: ranged ones come to shoot, melee ones go and hold below.</summary>
+    public readonly struct UnreachableIntruderReported
+    {
+        public readonly Component Guard;
+        public readonly Transform Intruder;
+        public UnreachableIntruderReported(Component guard, Transform intruder) { Guard = guard; Intruder = intruder; }
+    }
+
     /// <summary>A request that guards investigate <see cref="Position"/>. Guards' states decide whether
     /// and how to act on it; nothing outside a guard moves it.</summary>
     public readonly struct InvestigateRequest

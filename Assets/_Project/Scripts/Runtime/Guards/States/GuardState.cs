@@ -1,4 +1,5 @@
 using StateMachine;
+using UnityEngine;
 
 namespace Plunderspell.Guards
 {
@@ -16,5 +17,22 @@ namespace Plunderspell.Guards
 
         /// <summary>The value written to the replicated state while this state is active.</summary>
         public abstract GuardAlertState AlertState { get; }
+
+        /// <summary>
+        /// Turns the guard (yaw only) toward <paramref name="target"/>. The position stays with the navigation
+        /// service. Without facing, a guard that walked round to its place would have the player behind it and
+        /// lose sight of them.
+        /// </summary>
+        protected void FaceToward(Transform target, float deltaTime)
+        {
+            Vector3 toTarget = target.position - Context.transform.position;
+            toTarget.y = 0f;
+            if (toTarget.sqrMagnitude < 0.0001f)
+                return;
+
+            Quaternion facing = Quaternion.LookRotation(toTarget, Vector3.up);
+            Context.transform.rotation = Quaternion.RotateTowards(Context.transform.rotation, facing,
+                Context.Tuning.TurnDegreesPerSecond * deltaTime);
+        }
     }
 }

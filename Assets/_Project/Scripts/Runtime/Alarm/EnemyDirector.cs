@@ -131,6 +131,7 @@ namespace Plunderspell.Alarm
         public event Action<AlarmChanged> OnAlarmChanged { add => Bus.OnAlarmChanged += value; remove => Bus.OnAlarmChanged -= value; }
         public event Action<GuardDied> OnGuardDied { add => Bus.OnGuardDied += value; remove => Bus.OnGuardDied -= value; }
         public event Action<InvestigateRequest> OnInvestigateRequest { add => Bus.OnInvestigateRequest += value; remove => Bus.OnInvestigateRequest -= value; }
+        public event Action<UnreachableIntruderReported> OnUnreachableIntruder { add => Bus.OnUnreachableIntruder += value; remove => Bus.OnUnreachableIntruder -= value; }
         public event Action<MoveRequest> OnMoveRequest { add => Bus.OnMoveRequest += value; remove => Bus.OnMoveRequest -= value; }
         public event Action<PathReady> OnPathReady { add => Bus.OnPathReady += value; remove => Bus.OnPathReady -= value; }
         public event Action<Arrived> OnArrived { add => Bus.OnArrived += value; remove => Bus.OnArrived -= value; }
@@ -150,6 +151,7 @@ namespace Plunderspell.Alarm
         public void Publish(GuardDied e) => Bus.Publish(e);
         public void Publish(NoiseReported e) => Bus.Publish(e);
         public void Publish(InvestigateRequest e) => Bus.Publish(e);
+        public void Publish(UnreachableIntruderReported e) => Bus.Publish(e);
         public void Publish(PathReady e) => Bus.Publish(e);
         public void Publish(Arrived e) => Bus.Publish(e);
         public void Publish(Blocked e) => Bus.Publish(e);

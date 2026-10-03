@@ -79,25 +79,17 @@ namespace Plunderspell.Guards
             if (leaving != null)
                 return leaving;
 
+            // A player out of a melee guard's reach (too high for the strike) is not fought on the ring (#237).
+            if (!IsRanged && _secondsSinceSeen <= 0f && Context.Reach.IsUnreachable(_target, deltaTime))
+            {
+                Context.States.HoldBelow.Hold(_target);
+                return Context.States.HoldBelow;
+            }
+
             _secondsToRetarget -= deltaTime;
-            FaceTarget(deltaTime);
+            FaceToward(_target, deltaTime);
             Fight(deltaTime);
             return this;
-        }
-
-        // Only the turn (yaw) is written here; the position stays with the navigation service. Without
-        // facing, a guard that walked round to its place on the ring would have the player behind it and
-        // lose sight of them.
-        private void FaceTarget(float deltaTime)
-        {
-            Vector3 toTarget = _target.position - Context.transform.position;
-            toTarget.y = 0f;
-            if (toTarget.sqrMagnitude < 0.0001f)
-                return;
-
-            Quaternion facing = Quaternion.LookRotation(toTarget, Vector3.up);
-            Context.transform.rotation = Quaternion.RotateTowards(Context.transform.rotation, facing,
-                Context.Tuning.TurnDegreesPerSecond * deltaTime);
         }
 
         private void NoteSight(float deltaTime)
