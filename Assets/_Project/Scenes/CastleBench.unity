@@ -244,6 +244,10 @@ MonoBehaviour:
   _roster: {fileID: 11400000, guid: 13b9eb649aa2acf4bb2be962b0d7622e, type: 2}
   _guardPrefab: {fileID: 0}
   _densityScale: 0.5
+  _speedScale: 0.8
+  _damageScale: 0.65
+  _extraGuardsPerPlayer: 0.35
+  _extraHealthPerPlayer: 0.25
   _container: {fileID: 0}
 --- !u!4 &122750406
 Transform:
@@ -317,83 +321,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef23c0dc492261d5cfee2711e0f3c4e6, type: 3}
---- !u!1 &432734483
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 432734486}
-  - component: {fileID: 432734485}
-  - component: {fileID: 432734484}
-  m_Layer: 0
-  m_Name: Navigation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &432734484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 432734483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b48b288594878bb498682f10a12821e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.CastleNavMeshBaker
---- !u!114 &432734485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 432734483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
-  m_SerializedVersion: 0
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 1
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
-  m_BuildHeightMesh: 0
---- !u!4 &432734486
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 432734483}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &465128395
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,6 +464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.ProceduralCastleGenerator
   registry: {fileID: 11400000, guid: d89396c4b851d67c8a7be3752b5d9f73, type: 2}
+  m_dressing: {fileID: 0}
   defaultSeed: 12345
   cellSize: 12
   roomContainer: {fileID: 16838996}
@@ -645,6 +573,29 @@ MonoBehaviour:
   _noiseWeight: 15
   _decayDelay: 3
   _decayRate: 5
+  _sightingPoints: 20
+  _attackPoints: 6
+  _rousedChasers: 2
+  _hueAndCryChasers: 3
+  _attackTurnTuning:
+    MeleeTurnsPerTarget: 1
+    RangedTurnsPerTarget: 1
+    TurnTimeoutSeconds: 3
+  _navigationTuning:
+    SweepMask:
+      serializedVersion: 2
+      m_Bits: 4294967291
+    StepHeight: 0.35
+    SkinWidth: 0.03
+    SeparationSpacing: 1
+    SeparationSpeedShare: 0.8
+    WaypointRadius: 0.2
+    ArriveRadius: 0.3
+    BlockedSeconds: 0.5
+    ProgressShare: 0.25
+    VerticalSpeed: 8
+    TurnDegreesPerSecond: 270
+    PivotAboveFloor: 0
 --- !u!65 &583573528
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1315,8 +1266,8 @@ MonoBehaviour:
   _extractionZone: {fileID: 620742464}
   _lair: {fileID: 1192079045}
   _alarm: {fileID: 1774613633}
-  _navigation: {fileID: 432734484}
   _playerRoot: {fileID: 0}
+  _eraContent: {fileID: 0}
   _fixedSeed: 0
 --- !u!114 &1216212166
 MonoBehaviour:
@@ -1751,6 +1702,29 @@ MonoBehaviour:
   _noiseWeight: 15
   _decayDelay: 3
   _decayRate: 5
+  _sightingPoints: 20
+  _attackPoints: 6
+  _rousedChasers: 2
+  _hueAndCryChasers: 3
+  _attackTurnTuning:
+    MeleeTurnsPerTarget: 1
+    RangedTurnsPerTarget: 1
+    TurnTimeoutSeconds: 3
+  _navigationTuning:
+    SweepMask:
+      serializedVersion: 2
+      m_Bits: 4294967291
+    StepHeight: 0.35
+    SkinWidth: 0.03
+    SeparationSpacing: 1
+    SeparationSpeedShare: 0.8
+    WaypointRadius: 0.2
+    ArriveRadius: 0.3
+    BlockedSeconds: 0.5
+    ProgressShare: 0.25
+    VerticalSpeed: 8
+    TurnDegreesPerSecond: 270
+    PivotAboveFloor: 0
 --- !u!65 &1774613634
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2087,7 +2061,6 @@ SceneRoots:
   - {fileID: 620742466}
   - {fileID: 63111250}
   - {fileID: 689106985}
-  - {fileID: 432734486}
   - {fileID: 1216212167}
   - {fileID: 1192079046}
   - {fileID: 498449288}
