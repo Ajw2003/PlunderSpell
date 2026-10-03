@@ -21,7 +21,7 @@ this document, not a reason to go grep the repo.
 | `Tools/AssetPipeline/` | Blender-driven generation of weapon/loot/castle-module props |
 | `Tools/EnemyForge/` | Blender-driven generation of the enemy roster (mesh, rig, textures) |
 | `Tools/ArtForge/` | Blender-driven generation of the art bible's plunder, structures and enemies, built on EnemyForge; review sheets in `docs/art/models/` ([README](../../Tools/ArtForge/README.md)) |
-| `Tools/Unity/coop_carry_check.sh` | runs a host and a client on one PC with nobody at the keyboard and checks two-player carrying; see [`net`](../4-systems/net.md) |
+| `Tools/Unity/` | scripts that drive the live Editor and the co-op checks (host plus built client, nobody at the keyboard), and how to wait on Unity without a wait that can never finish ([README](../../Tools/Unity/README.md)) |
 | `Tools/github/sync_milestones.py` | sets the GitHub milestones M0-M7 and their issues from the roadmap |
 | `Tools/AudioForge/` | builds every sound and music track from `manifest.csv` into `Assets/_Project/Audio/` ([README](../../Tools/AudioForge/README.md)); listening page `docs/generated/audio-preview/` |
 | `Tools/mkissues.py` | files the playtesting backlog to GitHub issues; see `docs/generated/github-issues.json` |
