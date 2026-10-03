@@ -121,6 +121,7 @@ lacks; the rest are older and either merged in another form or abandoned.
   while the alarm stays at Hue and Cry, and every guard answers it at any distance (other requests keep 40 m);
   full PlayMode 345 of 345. Co-op: 19 of 20 guards investigating at once after the alarm was raised, but the
   players died within about 20 s, so the repeat itself was not seen in play (tests cover it).
+  #236: fire overrules Somnus (`StatusEffectReceiver.Ignite` wakes a sleeper, `Sleep` on a burning target does nothing, a woken guard goes to OnFire); reverses the #212 sleep-over-fire rule, stun still outranks fire. Co-op: slept guard ignited went OnFire at once.
   Guards now climb stairs: the sweep's step-over is 0.7 m (two risers); at 0.35 m no staircase in any Age
   was climbable (alarm.md, Guard navigation, "Stairs"). Seen in co-op on the Late turret stair, up and down.
   The #214 parity table is checked (`docs/plans/guard-core-inventory.md`): 36 of 39 rows match. Open, the

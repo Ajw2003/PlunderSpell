@@ -323,17 +323,20 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
     `Tuning.PanicSpeed` (5.5, faster than a chase). Arrival or a Blocked answer clears the navigator's destination,
     so the next tick picks again; a failed pick or a Blocked answer waits `Tuning.PanicRetrySeconds` first. Leads are
     never read, and entry stops the walk and gives back any attack turn (`:35`).
-  - **Priority.** Stun, levitation and sleep outrank burning. `GuardStateSet.TryInterrupt`
-    (`States/GuardStateSet.cs:58`) sends a status change to Stunned or Slept whenever the guard is incapacitated, and to
-    OnFire only when it is not already held. A burning guard that is stunned stays stunned, and `IncapacitatedState.Recover`
-    (`:34`) enters OnFire when the hold ends with the fire still going. Why: a guard that cannot move cannot run about.
-    `Guard.OnStatusChanged` (`Guard.cs:222`) calls it.
+  - **Priority (#212, changed by #236).** Stun and levitation outrank burning; fire overrules sleep (owner, 2026-10-02,
+    see Decisions). `StatusEffectReceiver.Ignite` wakes a sleeper and `Sleep` does nothing while burning, so a burning
+    guard is never asleep. `GuardStateSet.TryInterrupt` (`States/GuardStateSet.cs:58`) sends a status change to Stunned
+    or Slept while the guard is incapacitated, and to OnFire when it is burning and not held, even straight out of
+    Slept. A burning guard that is stunned stays stunned, and `IncapacitatedState.Recover` (`:34`) enters OnFire when
+    the stun ends with the fire still going. Why: a guard that cannot move cannot run about, but fire should wake it.
+    `Guard.OnStatusChanged` (`Guard.cs:232`) calls it.
   - **When the fire ends** (`AfterTheFire`, `OnFireState.cs:72`). Health 0 goes to Dead (`:48`, see the Dead entry below).
     A player in sight and in reach (melee reach, or the ranged engage range) goes to Combat, in sight only to Chase.
     Otherwise `GuardRecovery.PatrolOrInvestigate` (`States/GuardRecovery.cs:15`), the same rule a stun or sleep uses:
     a lead or a Roused castle goes to Investigate, else Patrol.
   - Tests: `GuardOnFireTests` (panic between distinct points, no attack and turn released, exits to Combat, Chase,
-    Patrol and Dead, stun and sleep outranking the fire).
+    Patrol and Dead, stun outranking the fire, fire waking a sleeper into OnFire, Somnus ignored while burning);
+    `StatusEffectReceiverFireSleepTests` (the receiver rule alone).
 - **Dead (#213).** `Guard.OnDied` (`Guard.cs:228`) clears status, publishes `GuardDied` and enters `States/DeadState.cs:21`.
   - **On entry** it stops and unregisters the mover (`Navigator.Detach`, `GuardNavigator.cs:53`), leaves the director
     registry (`Link.Detach`, which also releases a held attack turn), and closes the eyes and ears

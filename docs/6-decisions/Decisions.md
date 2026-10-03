@@ -3,6 +3,20 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-02 — Fire overrules Somnus
+
+**Context.** #212 ruled that stun and sleep outrank burning, so a sleeping guard that was set alight kept
+sleeping until the sleep ended, then panicked. The owner saw a guard burn alive without waking (#236).
+
+**Decision (owner, 2026-10-02).** Fire overrules Somnus. Igniting a sleeper wakes it
+(`StatusEffectReceiver.Ignite`), `Sleep` on a burning target does nothing, and a guard that wakes this way goes
+to OnFire, not Patrol or Investigate. Stun and levitation still outrank fire. The receiver is shared, so a
+sleeping player set alight wakes too.
+
+**Consequence.** Reverses the sleep half of the #212 rule (stun and sleep outrank fire). `GuardStateSet.TryInterrupt`
+no longer ignores fire while the guard is in a held state that has ended; `docs/4-systems/alarm.md` (OnFire,
+Priority) is updated.
+
 ## 2026-10-02 — Levo lifts the fresh guard; every guard answers the hue and cry
 
 **Context.** The #214 inventory listed "Levo's float-and-fall" as replaced by the Stunned state, but the
