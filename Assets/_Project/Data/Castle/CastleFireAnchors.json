@@ -134,6 +134,36 @@
     ]
    }
   ],
+  "BronzeBastion": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Beacon",
+    "lit": 2,
+    "p": [
+     0.0,
+     -3.75,
+     5.6
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     0.0,
+     -1.65,
+     2.9
+    ]
+   }
+  ],
   "BronzeBathRoom": [
    {
     "facing": [
@@ -401,6 +431,36 @@
      -1.85,
      -5.5,
      2.6
+    ]
+   }
+  ],
+  "BronzeLionGate": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     -2.9,
+     -2.58,
+     2.78
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     2.9,
+     -2.58,
+     2.78
     ]
    }
   ],
@@ -833,6 +893,38 @@
      -1.85,
      -5.5,
      2.6
+    ]
+   }
+  ],
+  "BronzeWallCorner": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Beacon",
+    "lit": 2,
+    "p": [
+     -3.8,
+     -3.8,
+     5.6
+    ]
+   }
+  ],
+  "BronzeWallStraight": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     0.0,
+     -3.75,
+     2.9
     ]
    }
   ],
@@ -1596,6 +1688,66 @@
     ]
    }
   ],
+  "LateBarbican": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     -3.2,
+     -2.224,
+     2.8
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     3.2,
+     -2.224,
+     2.8
+    ]
+   }
+  ],
+  "LateBastion": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Beacon",
+    "lit": 2,
+    "p": [
+     -1.4,
+     -1.815,
+     4.02
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     0.0,
+     1.119,
+     2.9
+    ]
+   }
+  ],
   "LateBrewhouse": [
    {
     "facing": [
@@ -2193,6 +2345,52 @@
      -1.85,
      -5.5,
      2.6
+    ]
+   }
+  ],
+  "LateWallCorner": [
+   {
+    "facing": [
+     1.0,
+     0.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     -1.485,
+     -3.517,
+     2.8
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     -3.517,
+     -1.485,
+     2.8
+    ]
+   }
+  ],
+  "LateWallStraight": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": true,
+    "kind": "Sconce",
+    "lit": 0,
+    "p": [
+     0.0,
+     -3.95,
+     2.9
     ]
    }
   ],
