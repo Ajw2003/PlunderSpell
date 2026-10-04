@@ -38,6 +38,12 @@ namespace Plunderspell.Raid
         [Tooltip("Spawns the garrison into the generated castle.")]
         [SerializeField] private GuardSpawner _guardSpawner;
 
+        [Tooltip("Spawns the doors where castle zones meet (#248). Optional: without it the castle has no doors.")]
+        [SerializeField] private CastleDoorSpawner _doorSpawner;
+
+        /// <summary>The door spawner, for scenes built by tooling.</summary>
+        public CastleDoorSpawner DoorSpawner { get => _doorSpawner; set => _doorSpawner = value; }
+
         [Tooltip("The zone that ends the raid.")]
         [SerializeField] private ExtractionZone _extractionZone;
 
@@ -291,6 +297,7 @@ namespace Plunderspell.Raid
             {
                 _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
                 _guardSpawner?.SpawnFor(Castle, seed, Era, ArrivalModuleIndex, LobbySize);
+                _doorSpawner?.SpawnFor(Castle);
             }
 
             return Castle;
@@ -340,6 +347,7 @@ namespace Plunderspell.Raid
             PublishCampaign();
             _lootSpawner?.Clear();
             _guardSpawner?.Clear();
+            _doorSpawner?.Clear();
 
             // Deliberately NOT clearing the director's Intruders: IntruderTag owns that list by
             // component lifetime, and wiping it here would leave every surviving player invisible
