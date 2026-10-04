@@ -54,6 +54,7 @@ namespace Plunderspell.Castle
             if (!grid.IsUsable)
                 return graph;
             CastleNavStitcher.LoadTiles(grid, data, registry);
+            CastleNavSealedArchways.Clear(grid, data);
             int stamped = CastleNavObstacles.Stamp(grid, obstacles); // before areas, so a cart that seals a gap splits them
             if (obstacles != null && obstacles.Count > 0)
                 Debug.Log($"[CastleNav] {obstacles.Count} dressing pieces took {stamped} cells out of the walk map.");
