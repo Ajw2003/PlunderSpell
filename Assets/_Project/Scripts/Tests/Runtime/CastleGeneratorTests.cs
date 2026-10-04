@@ -159,6 +159,21 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void Test_ExactlyOneFinalChamberAtTheCryptLevel()
+        {
+            var gen = MakeGenerator();
+
+            foreach (int seed in new[] { 1, 42, 777, 12345, -9, 20260917 })
+            {
+                ProceduralCastleData data = gen.Generate(seed);
+                var finals = data.PlacedModules.Where(m => m.RoomId == "CryptChamberFinal").ToList();
+
+                Assert.AreEqual(1, finals.Count, $"seed {seed}: final chambers");
+                Assert.AreEqual(CastleLevels.Crypt, finals[0].Level, $"seed {seed}: final chamber level");
+            }
+        }
+
+        [Test]
         public void Test_InteriorRoomCountIsPlayable()
         {
             var gen = MakeGenerator();

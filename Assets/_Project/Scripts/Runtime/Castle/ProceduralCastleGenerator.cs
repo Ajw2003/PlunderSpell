@@ -131,7 +131,7 @@ namespace Plunderspell.Castle
                     PlannedRoomKind.StairUp => ResolveRoomId(StairUpId),
                     PlannedRoomKind.StairDown => ResolveRoomId(StairDownId),
                     PlannedRoomKind.FinalChamber => ResolveRoomId(k_CryptFinalId),
-                    _ => PickWeighted(registry != null ? registry.GetModulesForZone(room.Zone) : null, rng, room.Zone),
+                    _ => PickWeighted(PlainRoomPool(room.Zone), rng, room.Zone),
                 };
                 bool stair = room.Kind == PlannedRoomKind.StairUp || room.Kind == PlannedRoomKind.StairDown;
                 // A stair's prefab is authored with its exit facing local north; a room faces inward as before.
@@ -143,6 +143,18 @@ namespace Plunderspell.Castle
                 if (room.Kind == PlannedRoomKind.FinalChamber)
                     data.CryptStartIndex = index;
             }
+        }
+
+        /// <summary>
+        /// The zone's pool without the final chamber, which the planner places exactly once. A copy,
+        /// so the registry's own list is untouched; order is kept, so the draw stays deterministic.
+        /// </summary>
+        private List<CastleRoomModuleData> PlainRoomPool(CastleZone zone)
+        {
+            if (registry == null)
+                return null;
+            string finalId = ResolveRoomId(k_CryptFinalId);
+            return registry.GetModulesForZone(zone).FindAll(entry => entry.RoomId != finalId);
         }
 
         /// <summary>Where a module stands in height and, for a stair, how it opens. Ground, one storey, by default.</summary>
