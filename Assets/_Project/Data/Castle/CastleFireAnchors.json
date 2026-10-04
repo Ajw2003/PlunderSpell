@@ -2134,6 +2134,66 @@
     ]
    }
   ],
+  "MedievalStairDown": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     3.8,
+     -3.8,
+     1.61
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     3.8,
+     3.8,
+     4.91
+    ]
+   }
+  ],
+  "MedievalStairUp": [
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     3.8,
+     -3.8,
+     1.61
+    ]
+   },
+   {
+    "facing": [
+     0.0,
+     1.0
+    ],
+    "holder": false,
+    "kind": "Brazier",
+    "lit": 0,
+    "p": [
+     3.8,
+     3.8,
+     5.91
+    ]
+   }
+  ],
   "RoyalBedchamber": [
    {
     "facing": [
