@@ -16,7 +16,19 @@ checked with screenshots. Roofs come after; "outside" needs a design talk first.
   still picks stair rooms (plan task 7, #255).
 - #255 task 5 done (`51c63544`): the walk map looks up rooms per floor. Found: every gallery stairwell
   (KeepStairwell, LateTurretStair, BronzeMegaronStair) now lands on the keep floor, and guards are blocked
-  climbing them there (3 `GuardClimbsTheStairToItsGallery` failures); being fixed.
+  climbing them there (3 `GuardClimbsTheStairToItsGallery` failures). Two causes, both fixed: archway cells
+  under door plugs stayed walkable (`60e3bbac`), and the floor under a guard was the nearest cell in 3D, which
+  picked the ramp below a gallery edge; it now comes from the guard's own column (`9c1153ad`).
+- #255 tasks 6-7 done (`6d00a7c7`, `9a990794`): the castle check searches floor by floor; arrival, entrances,
+  dressing and the portal safe ring read the ground floor; stairs are never posts, arrival or loot rooms;
+  guards stand on their floor top and patrol on their own level. Tests: CastleGeneratorTests 13/13,
+  CastleArrivalTests 18/18, Guard PlayMode 134/134, Nav EditMode 20/20. Loot EditMode 8/10, the two failures
+  (`LootAmountTests...AboutDoubleTheOldHaul`, `LootBalanceTests...OuterZonesHoldNothingTooHeavyToLift`) fail
+  the same without these changes.
+- Raid check, seed 777 (`Tools/Unity/eval/guards_per_floor.cs`): arrival at (-12, 1.25, -12), a ground room;
+  9 guards, 3 per floor, all on their floor and patrolling 20 s later. One sample caught a keep guard 0.3 m
+  into the slab at x 6.0, the seam beside the up-stair's head; the next six samples had every keep guard at
+  4.61. Not chased.
 
 ---
 
