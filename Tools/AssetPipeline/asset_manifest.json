@@ -171,6 +171,18 @@
       "preview": "f4c7d6935debf0d4:23a9d68e53fd",
       "tris": 876
     },
+    "BronzeStairDown": {
+      "budget": 1000,
+      "content": "eb152e429bf2e2b7",
+      "preview": "eb152e429bf2e2b7:459f95d244e7",
+      "tris": 728
+    },
+    "BronzeStairUp": {
+      "budget": 1000,
+      "content": "c34d889c1220c7b7",
+      "preview": "c34d889c1220c7b7:459f95d244e7",
+      "tris": 812
+    },
     "BronzeSword": {
       "budget": 400,
       "content": "415b1b204fe7d963",
@@ -503,6 +515,18 @@
       "content": "4f4e4f7aaa7a2e71",
       "preview": "4f4e4f7aaa7a2e71:23a9d68e53fd",
       "tris": 1664
+    },
+    "LateStairDown": {
+      "budget": 1000,
+      "content": "a76627cbba86f16a",
+      "preview": "a76627cbba86f16a:459f95d244e7",
+      "tris": 728
+    },
+    "LateStairUp": {
+      "budget": 1000,
+      "content": "f742ee1daf93694f",
+      "preview": "f742ee1daf93694f:459f95d244e7",
+      "tris": 812
     },
     "LateStateBedchamber": {
       "budget": 2000,
