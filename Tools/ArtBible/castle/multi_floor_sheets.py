@@ -287,9 +287,9 @@ def human(sh, x, ground_y, k):
     sh.add(f'<g fill="{INK}" opacity=".5"><ellipse cx="{f(x)}" cy="{f(ground_y - h + h * .07)}" rx="{f(h * .05)}" ry="{f(h * .07)}"/>'
            f'<rect x="{f(x - h * .08)}" y="{f(ground_y - h * .85)}" width="{f(h * .16)}" height="{f(h * .85)}" rx="{f(h * .04)}"/></g>')
 
-# ---- the newel stair (docs/art/data/high.json "spiral-stair"): drum 4.0 m across outside, 2.4 m inside,
+# ---- the newel stair (docs/art/data/high.json "spiral-stair"): drum 4.6 m across outside, 3.0 m inside,
 # in the cell's north-east corner, clockwise going up, 15 degrees a tread; here it climbs a ward storey.
-DRUM_OUT, DRUM_IN, NEWEL = 2.0, 1.2, 0.12          # radii, metres
+DRUM_OUT, DRUM_IN, NEWEL = 2.3, 1.5, 0.12          # radii, metres: 3.0 m stair space, the narrowest the walk map climbs
 DRUM_C = (3.5, 3.5)                                # drum centre, kit metres from the cell centre (+y north)
 TREAD_DEG = 15.0
 
@@ -322,7 +322,7 @@ def newel_plan(sh, left, top, k):
            f'transform="rotate(45 {f(dx)} {f(dy)})"/>')
     sh.extra_frame.append(f'<text x="{f(X(0))}" y="{f(Yp(6) - 26)}" text-anchor="middle" font-family="{MONO}" font-size="11" '
                           f'letter-spacing="3" fill="{FAINT}">STAIR CELL · PLAN</text>')
-    sh.text(X(0), Yp(6) - 12, "ward room as lobby · drum 4.0 / 2.4 m, NE", 8.5, DIM, "middle")
+    sh.text(X(0), Yp(6) - 12, "ward room as lobby · drum 4.6 / 3.0 m, NE", 8.5, DIM, "middle")
     sh.text(X(0), Yp(-6) + 16, "archways 2.60 × 2.88 · drum door 0.90 × 2.10", 8.5, DIM, "middle")
     sh.text(cx, cy + DRUM_OUT * k + 12, "UP, CLOCKWISE", 8, INK, "middle", ls="1")
 

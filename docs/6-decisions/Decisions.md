@@ -1270,3 +1270,23 @@ Streaming. Set by `Tools/Unity/eval/audio_load_types.cs`.
 
 **Status.** Standing (#244). Reverses the "Streaming, the owner's choice, is unchanged" line of the
 2026-09-27 entry; `docs/4-systems/audio.md` updated.
+
+## 2026-10-03 — Castles get floors; stairs follow the art bible, and the newel drum widens to 3.0 m
+
+**Context.** #197 asked for stairs that lead somewhere. A survey showed every stair reaches a
+gallery, but the castle has one storey. The owner chose real floors: a 5 × 5 ground floor (bailey
+ring, inner ward ring), a 3 × 3 keep tower above, a 3 × 3 crypt below, two stairs up and one down,
+and doors where zones meet (draft sheets: `docs/art/castle/concept/`). This reorders the 2026-09-26
+handoff (`docs/plans/roofs-floors-multicell-handoff.md`: roofs, then multi-cell rooms, then floors):
+floors come first, using the existing rooms.
+
+**Decision.** Stairs take each Age's period form from the art bible: High Medieval's newel stair,
+a newel in a corner turret for Late Medieval, a dog-leg round a light well for the Bronze Age. The
+newel drum widens from 2.4 m to 3.0 m inside (4.6 m outside), and `docs/art/data/high.json` and
+`Tools/ArtBible/generators/high/s_stair.py` are updated to match.
+
+**Why.** At 2.4 m the guards' 0.5 m walk map cannot climb the stair: around so small a circle the
+next cell is 3-4 treads higher than the 0.45 m step limit. 3.0 m is the narrowest that works
+(`Tools/ArtBible/castle/newel_walkmap_check.py`).
+
+**Status.** Design draft; the floors design is still being written (#197).
