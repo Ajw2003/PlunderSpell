@@ -27,7 +27,7 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
 - **Courtyards are carved, not grown.** Candidate cells are shuffled by the seeded RNG and removed
   one at a time, each removal kept only if a flood fill shows the remaining interior is still a
   single 4-connected region. The origin (the path's start) and the cell inward of the gate (its
-  end) are never candidates. That is what guarantees the A* validator can always walk out.
+  end) are never candidates. That is what guarantees the validator can always walk out.
 - **Wall pieces face outward, and that is not the same rotation as a room.** `build_wall_straight`
   in `Tools/AssetPipeline/castle_builders.py` raises its wall on the module's *south* side, which
   lands on local −Z after the Blender Z-up correction, so `RotationForOutwardWall` yaws the module
@@ -35,10 +35,26 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   room *toward* its anchor. `build_wall_corner` raises south *and* west, so unrotated its two faces
   cover the south-west pair; `RotationForCorner` yaws by that piece's south face, which carries the
   west face onto the corner's other outward side.
-- **`CastlePathValidator.ValidatePath`** rasterises every placed module into a walkable grid at
-  `CellScale`×`CellScale` resolution per layout cell (so adjacent modules' footprints touch and
-  stay 4-connected) and runs a 4-directional A* from the crypt start to the extraction exit. This
-  runs once at generation time, never per-frame.
+- **`CastlePathValidator.ValidatePath`** searches floor by floor: a breadth-first search over (cell, level)
+  from the crypt's final chamber to the extraction exit. Rooms meet through archways that are open on both
+  sides (`CastleStairRule`), and a stair joins its two levels. It replaced a flat raster that every stacked
+  castle passed (#255). This runs once at generation time, never per-frame.
+- **Floors (#247, #253).** A placed module has a `Level` (-1 crypt, 0 ground, 1 keep; `CastleLevels`) and
+  `Storeys`. The ground is 5 × 5 inside a radius-3 curtain wall; the keep (roots at 4.30, floor 4.60) and the
+  crypt (roots at -3.30, floor -3.00) are the inner 3 × 3. `CastleFloorPlanner` decides which room goes where;
+  the final chamber is one of the 8 crypt cells round the centre, by seed. Arrival, entrances, dressing, the
+  portal safe ring and guard posts read the ground floor; stairs are never posts, arrival or loot rooms.
+  Design: `docs/plans/multi-floor-castle.md`.
+- **Stairs (#256).** Two up-stairs (ground cells (-1, 0) and (1, 0)) and one down-stair (the centre) are
+  two-storey modules whose root is at the bottom of the lowest slab and whose exit faces local +Z. Each Age's
+  is its existing stairwell's L stair to a gallery, plus a flight to the keep floor, with wells cut in the
+  slabs for 2.40 m headroom (`Tools/AssetPipeline/castle_builders_stairs.py`, Editor menu Tools/Plunderspell/
+  Forge Stairs). They live in each registry's `Stairs` list as `StairUp` / `StairDown`. Re-forging wipes their
+  nav tiles: bake again after it.
+- **Doors (#248).** `CastleDoorPlanner` lists a door at every open ward-bailey archway, each stair head into
+  the keep and the crypt stair's foot (13 for the seeds tested); `CastleDoorSpawner` spawns them on the server
+  after the castle is built, so they replicate like guards. Open, locked and barred are synced; a client's
+  hand, force, Porta, lock and bar go to the server. Checked in co-op: `Tools/Unity/coop_door_check.sh`.
 - **`CastleNetworkManager`** is the only thing that crosses the network: the seed, as a PurrNet
   `SyncVar<int>`. Every peer's `OnSeedChanged` handler calls the same deterministic `Generate`
   locally — no mesh, module list, or transform is ever sent. If a layout fails validation, the
@@ -126,9 +142,10 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
 - **The curtain wall is a closed loop.** Every cell on the outer ring perimeter carries a
   `CurtainWall` module and there is exactly one gatehouse, for every seed.
   `Test_CurtainWallIsAClosedLoop` holds it.
-- **The interior stays one 4-connected region and stays playable.** Courtyards are only carved
-  where connectivity survives, and `Test_InteriorRoomCountIsPlayable` keeps the room count in
-  40-60 so the castle is neither a corridor nor a city.
+- **Every floor is reached through the stairs, and the castle stays playable.** Courtyards are only
+  carved from the bailey ring where every level stays connected, and `CastlePathValidator` walks (cell,
+  level). `Test_InteriorRoomCountIsPlayable` pins 36-40 rooms above the crypt, 7 keep rooms, 9 crypt modules
+  (the down-stair included) and 3 stairs.
 - **A module never leaves its grid cell.** `room_kit.FOOTPRINT` equals
   `ProceduralCastleGenerator.cellSize` (12 m) exactly, and `validate_in_blender` fails the asset
   build for any castle module whose XY bounding box reaches past ±6.05 m. Without that gate a
@@ -158,10 +175,6 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   crash — clients drift apart with no error, because nothing here re-validates against a
   replicated layout, only against the seed. See `plunderspell.md` §7 for why this is called out as
   a hard constraint rather than a style preference.
-- **A module's rasterised footprint must stay `CellScale`-aligned with its neighbours.** A room
-  prefab whose collider doesn't match the grid footprint the generator assumed can pass placement
-  but fail path validation (or the reverse), because the two use different representations of the
-  same layout.
 
 ## Nav tiles
 
@@ -208,8 +221,13 @@ Guards are server-side, so only the server needs to query it. Issue #221, plan
   archway, and joins the area ids of the cells it connects.
 - **Coarse layer**, `CastleNavPortalGraph`: nodes are the links, edges are the walking cost across a room
   between two of its archways, flooded once at build (`ComputeRoomCrossings`, `:62`).
+- **Floors**: `CastleNavModuleLookup` registers each module at every level it spans, tile heights are offset
+  by the module's height, and the stitcher joins neighbours by matching floor heights across tile layers.
+  Archway cells on a side the generator sealed are dropped (`CastleNavSealedArchways`), so nothing routes
+  into a door plug.
 - **Queries**: `NearestWalkableCell` (3D distance within 3 m by default, so a gallery and the floor under it
-  are told apart), `IsReachable` (a single comparison of area ids), `FindPath` (`CastleNavGraph.cs:98`):
+  are told apart; used for path planning), `FloorCellUnder` (`CastleNavFloorLookup`: the guard's own column
+  first, then the layer nearest in height, so a guard at a gallery edge is not dropped onto the ramp below), `IsReachable` (a single comparison of area ids), `FindPath` (`CastleNavGraph.cs:98`):
   portal A* (`CastleNavPortalSearch.cs:54`) picks the archways, grid A* (`CastleNavGridSearch.cs:34`) walks
   each room, and `CastleNavPathFinder.Find` (`:28`) stitches the hops. All buffers are preallocated; the heap
   and the path list only grow during warm-up. The path follows 4-connected cells, so whatever moves along it

@@ -6,9 +6,26 @@ anything worked on the new floors; #253 lists what the owner saw. Order chosen b
 and stone on placeholders, #255 guards on every floor (tasks 5-7), #248 doors, #256 stairs built by extending
 each Age's existing stairwell (owner's pick over stepped placeholders), #257 every Age and its lights
 checked with screenshots. Roofs come after; "outside" needs a design talk first.
-- #248 doors built, not yet seen in co-op: `CastleDoorPlanner` (10 ward-bailey, 2 keep, 1 crypt door for seed
-  12345 on all three registries), three door prefabs from `Tools/Plunderspell/Forge Castle Doors`, entries in
-  the network prefab list, and `CastleDoorSpawner` (server-side, wired into `RaidDirector` and `RaidScene`).
+- #248 doors: `CastleDoorPlanner` (10 ward-bailey, 2 keep, 1 crypt door for seed 12345 on all three
+  registries), three door prefabs from `Tools/Plunderspell/Forge Castle Doors`, entries in the network prefab
+  list, and `CastleDoorSpawner` (server-side, wired into `RaidDirector` and `RaidScene`). Two gaps found and
+  fixed (`a155364c`): nothing could open them by hand (the prefabs had no `CastleDoorHandle`, which lived inside
+  `LootInteractor.cs` and so could not sit on a prefab), and open, lock and bar only changed on the machine that
+  acted. Co-op check (`Tools/Unity/coop_door_check.sh`, seed 777): 13 doors on both sides; the client's hand
+  opens one for both; the host's lockdown locks all 13 on the client; a locked door refuses the client's hand;
+  the client's Porta opens it for both.
+- #256 stairs: each Age's existing stairwell, extended. `Tools/AssetPipeline/castle_builders_stairs.py` reuses
+  the kit's L stair to its gallery, adds a flight from the gallery to the keep floor (4.60) and cuts wells in
+  the slabs for 2.40 m headroom; the down-stair uses the same flights 0.30 -> 3.60. One forge for all Ages
+  (`Tools/Plunderspell/Forge Stairs`); the braziers' fires are wired. In a raid a player walked the High
+  Medieval pair: feet 0.30 -> 1.60 landing -> 2.90 gallery -> 4.60 keep floor, and lobby -> -3.00 crypt floor
+  (`Tools/Unity/eval/stair_leg.cs`). Late and Bronze were not walked; the flood test passes on all three.
+  The wells have no railings.
+- #257 every Age (`Tools/Unity/ages_check.sh`, run twice, `docs/generated/ages-check-2026-10-04/`, a contact
+  sheet per Age): all four build the three floors; fires keep 23-35, ground 82-86, crypt 17-24, each with its
+  light; none float or are buried (`eval/light_audit.cs`) except one hearth flame inside its own fireplace.
+  Looked at all 44 views: lights sit on their sconces and braziers on every floor. Fog is heavy (#250); every
+  room is open to the sky (roofs next).
 - #254 done (`4d40187a`): the raid scene's `Ground` plane at height 0 ran through the down-stair's well, so
   players stood on it. Ground is now one mesh with a 12 m hole over the centre cell
   (`Editor/GroundStairWellCutter.cs`). In Play mode the real controller walked from the lobby floor (0.40) to
