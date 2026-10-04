@@ -15,9 +15,9 @@ judgement until that milestone's acceptance is checked, and only M0's has been.
 | M3 Other Ages | 15 | ~60% | Bronze and Late have their own rooms; High Medieval and Powder borrow |
 | M4 Lair and Market | 15 | ~5% | Debt is a number on the Lair screen; no market, no 3D Lair |
 | M5 Household awake | 10 | ~35% | Guards patrol, investigate noise, chase and search, and a shout or the hue and cry calls guards in (#163); the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
-| M6 Castle fights back | 10 | ~5% | Doors and hazards are layout tags; revamp phases 3-5 not started |
+| M6 Castle fights back | 10 | ~20% | Stacked castle (crypt, ground, keep) with ramp stairs; 13 networked doors that lock at the alarm (#248, co-op checked 2026-10-04); hazards are layout tags |
 | M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, post-processing, a partial settings menu; no animation; every sound file built but on a branch and not played by the game (below) |
-| **Total** | 100 | **≈ 42%** | |
+| **Total** | 100 | **≈ 43%** | |
 
 **Open issues, 2026-09-28:** 44, every one on a milestone (`docs/2-roadmap/Roadmap.md`). The same
 day twelve that were already done or superseded were closed with a note on each: #127, #131,
@@ -186,7 +186,7 @@ surfaced it as not actually functional yet.
 | M3 — Open the other Ages | Era content wired in; Bronze Age and High Medieval raids differ | 🟡 The Lair's era now picks the raid's rooms, loot and garrison through `EraContentCatalogue` ([`raid-scene-assembly.md`, "Eras"](../4-systems/raid-scene-assembly.md)). Bronze Age has its own full room set, 5 items, 3 enemies. High Medieval: the original rooms, 5 items, 4 enemies. Late Medieval: its own InnerWard and Keep, 5 items, 1 enemy. Age of Powder: High Medieval rooms, 5 items, 2 enemies. Castle art: the Bronze Age and Late Medieval sets are fully modelled, 25 rooms and wall pieces plus 4 door plugs each ([`BronzeAge.md`](../art/rooms/BronzeAge.md), [`LateMedieval.md`](../art/rooms/LateMedieval.md)); Enemies: all 16 modelled and rostered. Unfinished art: all 26 Powder rooms ([`docs/plans/era-castle-rooms.md`](../plans/era-castle-rooms.md)) | 🟡 — verified 2026-09-24 in the live Editor through Lair → Set Out, one seed per era; not yet playtested by a person. Acceptance tightened 2026-09-26: every era on its own room set, so this is not met while High Medieval and Powder borrow rooms |
 | M4 — The Lair and the Market | Not started | ❌ No market code (`grep -i market` finds nothing in `Assets/_Project/Scripts`); debt exists only as numbers (`LairState`, `LairScreen`) | ❌ |
 | M5 — The household is awake | Partly built | 🟡 Guards patrol, investigate noise, chase and search (`GuardAlertState`); no hit reaction or crouch in the raid | ❌ |
-| M6 — The castle fights back | Not started | ❌ Doors don't open and stairs can lead nowhere (#111); murder-holes and arrow-loops are layout tags (#44); castle revamp phases 3-5 not started | ❌ |
+| M6 — The castle fights back | Partly built | 🟡 Castles stack three floors joined by placeholder ramp stairs (#247, #255); guards spawn and patrol on every floor. 13 doors per castle where zones meet open by hand, lock at the alarm and open to Porta, the same for host and client (#248; `Tools/Unity/coop_door_check.sh`, 2026-10-04). Period stairs (#256), roofs and per-floor tuning (#250) not done; murder-holes and arrow-loops are layout tags (#44); castle revamp phases 3-5 not started | ❌ |
 | M7 — Final art and performance pass | Partly built | 🟡 Build tool (#53), Low/Medium/High quality levels, a settings menu; no animation; first profiling pass 2026-10-03 (#242, `docs/generated/perf-2026-10-03/README.md`): sound streaming, guard route smoothing, HUD and fire-glow costs cut | ❌ |
 
 **2026-09-24 — art bible plunder and enemies modelled, and per-era raid content wired in.**
@@ -238,8 +238,8 @@ gain"). The view shakes when you are hit, land a hit, hear a cast nearby (a shou
 than a whisper) or land a slam; there is no hit-stop, since the raid's time is shared (#51;
 `docs/4-systems/damage.md`, "Camera shake"). A spell audit in a live raid (#106;
 `docs/generated/spell-audit-2026-09-26/`): Somnus now finds a guard slightly off the crosshair, and
-a guard dropped by Levo falls and takes about 16 damage instead of landing unhurt. Porta still has
-nothing to open, because the castle places no doors (#111). Spell bursts render in a standalone build (they were magenta
+a guard dropped by Levo falls and takes about 16 damage instead of landing unhurt. Porta had
+nothing to open until doors were placed on 2026-10-04 (#248). Spell bursts render in a standalone build (they were magenta
 error spheres), and now fade as intended (#127; `docs/4-systems/spells.md`, "What the visuals
 actually look like"). The main menu and Lair no longer show "No cameras rendering" in the Editor
 (#131; `docs/4-systems/raid-scene-assembly.md`, "Getting into a raid"). Every weapon and the five
