@@ -27,7 +27,9 @@ namespace Plunderspell.Castle
                 }
                 grid.MarkTile(module);
                 int turns = QuarterTurns(placed.Rotation);
-                CopyCells(grid, module, entry.NavTile, turns);
+                // Tile heights are module-local; a keep or crypt module stands at its own root height.
+                CopyCells(grid, module, entry.NavTile, turns,
+                    (short)Mathf.RoundToInt(placed.Position.y * CastleNavTile.HeightScale));
                 CopyArchways(grid, module, entry.NavTile.PortalNorth, 0, turns);
                 CopyArchways(grid, module, entry.NavTile.PortalEast, 1, turns);
                 CopyArchways(grid, module, entry.NavTile.PortalSouth, 2, turns);
@@ -60,7 +62,7 @@ namespace Plunderspell.Castle
             }
         }
 
-        private static void CopyCells(CastleNavGrid grid, int module, CastleNavTile tile, int turns)
+        private static void CopyCells(CastleNavGrid grid, int module, CastleNavTile tile, int turns, short offsetCm)
         {
             for (int layer = 0; layer < CastleNavTile.Layers; layer++)
             {
@@ -74,7 +76,7 @@ namespace Plunderspell.Castle
                         int turnedColumn = column, turnedRow = row;
                         Rotate(turns, ref turnedColumn, ref turnedRow);
                         grid.SetWalkable(module * CastleNavGrid.CellsPerModule + CastleNavTile.Index(layer, turnedColumn, turnedRow),
-                            tile.HeightCm[source]);
+                            (short)(tile.HeightCm[source] + offsetCm));
                     }
                 }
             }
@@ -102,15 +104,21 @@ namespace Plunderspell.Castle
             {
                 if (!grid.HasTile(module))
                     continue;
-                for (int side = 0; side < 4; side++)
+                ProceduralCastleData.PlacedModule placed = data.PlacedModules[module];
+                for (int level = placed.Level; level <= placed.TopLevel; level++)
                 {
-                    Vector2Int at = data.PlacedModules[module].GridPosition + CastleNavGrid.SideOffset(side);
-                    int other = grid.ModuleAtGridCell(at.x, at.y);
-                    if (other <= module || !grid.HasTile(other) ||
-                        !CastleNavArchwayRule.IsOpen(data, data.PlacedModules[module], data.PlacedModules[other]))
-                        continue;
-                    if (TryJoin(grid, areas, module, side, other, out NavLink link))
-                        links.Add(link);
+                    for (int side = 0; side < 4; side++)
+                    {
+                        Vector2Int at = placed.GridPosition + CastleNavGrid.SideOffset(side);
+                        int other = grid.ModuleAtGridCell(at.x, at.y, level);
+                        // Each pair is looked at once, from the lower index: no two multi-storey modules
+                        // sit side by side on two shared levels in this layout, so a pair meets on one level only.
+                        if (other <= module || !grid.HasTile(other) ||
+                            !CastleNavArchwayRule.IsOpen(data, placed, data.PlacedModules[other], level))
+                            continue;
+                        if (TryJoin(grid, areas, module, side, other, out NavLink link))
+                            links.Add(link);
+                    }
                 }
             }
             return links;
@@ -120,30 +128,36 @@ namespace Plunderspell.Castle
         private static bool TryJoin(CastleNavGrid grid, CastleNavAreas areas, int module, int side, int other, out NavLink link)
         {
             int otherSide = (side + 2) % 4;
-            int middle = -1;
+            int linkCell = -1, linkAcross = -1;
             float middleOffset = float.MaxValue;
             for (int along = 0; along < CastleNavGrid.TileSize; along++)
             {
                 if (!grid.IsArchway(module, side, along) || !grid.IsArchway(other, otherSide, along))
                     continue;
-                int cell = CastleNavGrid.EdgeCell(module, side, along);
-                int across = CastleNavGrid.EdgeCell(other, otherSide, along);
-                if (!grid.IsWalkable(cell) || !grid.IsWalkable(across) || !grid.IsStep(cell, across))
-                    continue;
-                areas.Join(grid, cell, across);
                 float offset = Mathf.Abs(along - (CastleNavGrid.TileSize - 1) * 0.5f);
-                if (offset < middleOffset)
+                // Every layer pair, so a stair head (layer 1) meets a keep room (layer 0).
+                for (int la = 0; la < CastleNavTile.Layers; la++)
                 {
-                    middleOffset = offset;
-                    middle = along;
+                    for (int lb = 0; lb < CastleNavTile.Layers; lb++)
+                    {
+                        int cell = CastleNavGrid.EdgeCell(module, side, along) + la * CastleNavGrid.ColumnsPerModule;
+                        int across = CastleNavGrid.EdgeCell(other, otherSide, along) + lb * CastleNavGrid.ColumnsPerModule;
+                        if (!grid.IsWalkable(cell) || !grid.IsWalkable(across) || !grid.IsStep(cell, across))
+                            continue;
+                        areas.Join(grid, cell, across);
+                        if (offset < middleOffset)
+                        {
+                            middleOffset = offset;
+                            linkCell = cell;
+                            linkAcross = across;
+                        }
+                    }
                 }
             }
             link = default;
-            if (middle < 0)
+            if (linkCell < 0)
                 return false;
-            int linkCell = CastleNavGrid.EdgeCell(module, side, middle);
-            link = new NavLink(module, other, linkCell, CastleNavGrid.EdgeCell(other, otherSide, middle),
-                grid.CellPosition(linkCell));
+            link = new NavLink(module, other, linkCell, linkAcross, grid.CellPosition(linkCell));
             return true;
         }
     }
