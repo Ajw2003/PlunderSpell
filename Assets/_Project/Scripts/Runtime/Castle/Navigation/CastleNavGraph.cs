@@ -86,6 +86,12 @@ namespace Plunderspell.Castle
             return _grid == null ? CastleNavGrid.NoCell : _grid.NearestWalkableCell(position, maxDistance);
         }
 
+        /// <summary>The floor cell under a point, chosen by its own column first (<see cref="CastleNavFloorLookup"/>).</summary>
+        public int FloorCellUnder(Vector3 position, float maxDistance)
+        {
+            return _grid == null ? CastleNavGrid.NoCell : CastleNavFloorLookup.Find(_grid, position, maxDistance);
+        }
+
         /// <summary>
         /// True when a guard could walk from one cell to the other through archways that are not
         /// closed. With no door closed this is a single area-id comparison; with one closed it also
