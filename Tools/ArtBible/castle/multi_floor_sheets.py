@@ -35,8 +35,8 @@ CRYPT_SLAB = CRYPT_FLOOR - FZ                  # -3.30
 UP_RISE = KEEP_FLOOR - FZ                      # 4.30
 DOWN_RISE = FZ - CRYPT_FLOOR                   # 3.30
 RISER = 0.18
-UP_RISERS = round(UP_RISE / RISER)             # 24
-DOWN_RISERS = round(DOWN_RISE / RISER)         # 18
+UP_RISERS = round(UP_RISE / 0.187)             # 23: the newel sheet's ~0.188 m riser over a ward storey
+DOWN_RISERS = round(DOWN_RISE / 0.187)         # 18
 
 UP_STAIRS = [(-1, 0), (1, 0)]                  # ground ward cells whose stair climbs into the keep
 DOWN_STAIR = (0, 0)                            # ground centre: stair down to the crypt
@@ -287,15 +287,91 @@ def human(sh, x, ground_y, k):
     sh.add(f'<g fill="{INK}" opacity=".5"><ellipse cx="{f(x)}" cy="{f(ground_y - h + h * .07)}" rx="{f(h * .05)}" ry="{f(h * .07)}"/>'
            f'<rect x="{f(x - h * .08)}" y="{f(ground_y - h * .85)}" width="{f(h * .16)}" height="{f(h * .85)}" rx="{f(h * .04)}"/></g>')
 
+# ---- the newel stair (docs/art/data/high.json "spiral-stair"): drum 4.0 m across outside, 2.4 m inside,
+# in the cell's north-east corner, clockwise going up, 15 degrees a tread; here it climbs a ward storey.
+DRUM_OUT, DRUM_IN, NEWEL = 2.0, 1.2, 0.12          # radii, metres
+DRUM_C = (3.5, 3.5)                                # drum centre, kit metres from the cell centre (+y north)
+TREAD_DEG = 15.0
+
+
+def newel_plan(sh, left, top, k):
+    """Plan of a stair cell: the room as a lobby, archways on four sides, the drum in the NE corner."""
+    X = lambda x: left + (x + 6) * k                       # noqa: E731
+    Yp = lambda y: top + (6 - y) * k                       # noqa: E731
+    sh.add(f'<rect x="{f(X(-6))}" y="{f(Yp(6))}" width="{f(12 * k)}" height="{f(12 * k)}" fill="{GROUND_BG}" stroke="{FAINT}"/>')
+    wall = COL["InnerWard"]
+    for side in ("N", "S", "E", "W"):                      # 0.5 m walls with a 2.60 m archway in the middle
+        for a0, a1 in ((-6, -1.3), (1.3, 6)):
+            if side in ("N", "S"):
+                y0 = 5.5 if side == "N" else -6
+                sh.add(f'<rect x="{f(X(a0))}" y="{f(Yp(y0 + .5))}" width="{f((a1 - a0) * k)}" height="{f(.5 * k)}" fill="{wall}"/>')
+            else:
+                x0 = 5.5 if side == "E" else -6
+                sh.add(f'<rect x="{f(X(x0))}" y="{f(Yp(a1))}" width="{f(.5 * k)}" height="{f((a1 - a0) * k)}" fill="{wall}"/>')
+    cx, cy = X(DRUM_C[0]), Yp(DRUM_C[1])
+    sh.circle(cx, cy, DRUM_OUT * k, "#5C574A", darken("#5C574A", .5), 1)
+    sh.circle(cx, cy, DRUM_IN * k, "#2A251D")
+    for i in range(int(360 / TREAD_DEG)):                  # tread edges
+        t = math.radians(i * TREAD_DEG)
+        sh.line(cx + NEWEL * k * math.cos(t), cy - NEWEL * k * math.sin(t),
+                cx + DRUM_IN * k * math.cos(t), cy - DRUM_IN * k * math.sin(t), STAIR, .8, op=.7)
+    sh.circle(cx, cy, NEWEL * k, INK)
+    t = math.radians(225)                                  # the door into the drum faces the room (south-west)
+    dx, dy = cx + DRUM_OUT * .92 * k * math.cos(t), cy - DRUM_OUT * .92 * k * math.sin(t)
+    sh.add(f'<rect x="{f(dx - 6)}" y="{f(dy - 3)}" width="12" height="6" fill="{DOOR}" stroke="{INK}" stroke-width=".6" '
+           f'transform="rotate(45 {f(dx)} {f(dy)})"/>')
+    sh.extra_frame.append(f'<text x="{f(X(0))}" y="{f(Yp(6) - 26)}" text-anchor="middle" font-family="{MONO}" font-size="11" '
+                          f'letter-spacing="3" fill="{FAINT}">STAIR CELL · PLAN</text>')
+    sh.text(X(0), Yp(6) - 12, "ward room as lobby · drum 4.0 / 2.4 m, NE", 8.5, DIM, "middle")
+    sh.text(X(0), Yp(-6) + 16, "archways 2.60 × 2.88 · drum door 0.90 × 2.10", 8.5, DIM, "middle")
+    sh.text(cx, cy + DRUM_OUT * k + 12, "UP, CLOCKWISE", 8, INK, "middle", ls="1")
+
+
+def newel_section(sh, cx, base_y, k, foot_h, head_h, risers, title, door_note):
+    """Section through the drum: walls cut, the newel, and the treads round it (front half bright, back dim)."""
+    Yc = lambda h: base_y - (h - foot_h) * k               # noqa: E731
+    rise = (head_h - foot_h) / risers
+    top = head_h + 2.2
+    sh.add(f'<rect x="{f(cx - DRUM_IN * k)}" y="{f(Yc(top))}" width="{f(2 * DRUM_IN * k)}" height="{f(Yc(foot_h) - Yc(top))}" fill="#1E1A14"/>')
+    for sgn in (-1, 1):                                    # the drum wall, cut
+        x0 = cx + sgn * DRUM_IN * k
+        x1 = cx + sgn * DRUM_OUT * k
+        sh.add(f'<rect x="{f(min(x0, x1))}" y="{f(Yc(top))}" width="{f(abs(x1 - x0))}" height="{f(Yc(foot_h) - Yc(top))}" '
+               f'fill="#5C574A" stroke="{darken("#5C574A", .5)}" stroke-width=".8"/>')
+    for front in (False, True):                            # treads: the back half first, then the front
+        for i in range(risers):
+            t = math.radians(i * TREAD_DEG)
+            if (math.cos(t) > 0) != front:
+                continue
+            x = cx + math.sin(t) * (DRUM_IN + NEWEL) / 2 * k
+            half = max(3.0, abs(math.cos(t)) * (DRUM_IN - NEWEL) / 2 * k)
+            y = Yc(foot_h + (i + 1) * rise)
+            col = STAIR if front else darken(STAIR, .45)
+            sh.add(f'<rect x="{f(x - half)}" y="{f(y)}" width="{f(2 * half)}" height="{f(rise * k * .8)}" fill="{col}" opacity=".9"/>')
+    sh.add(f'<rect x="{f(cx - NEWEL * k)}" y="{f(Yc(top))}" width="{f(2 * NEWEL * k)}" height="{f(Yc(foot_h) - Yc(top))}" fill="{INK}" opacity=".75"/>')
+    sh.add(f'<rect x="{f(cx - DRUM_OUT * k - 10)}" y="{f(Yc(foot_h))}" width="{f(2 * DRUM_OUT * k + 20)}" height="{f(FZ * k)}" fill="#5E5040"/>')
+    sh.line(cx - DRUM_OUT * k - 30, Yc(head_h), cx + DRUM_OUT * k + 30, Yc(head_h), FAINT, .8, dash="3 3")
+    sh.add(f'<rect x="{f(cx + DRUM_OUT * k)}" y="{f(Yc(head_h + 2.1))}" width="6" height="{f(2.1 * k)}" fill="{DOOR}" stroke="{INK}" stroke-width=".6"/>')
+    sh.text(cx + DRUM_OUT * k + 12, Yc(head_h + 1.0), door_note, 8.5, INK)
+    sh.add(f'<rect x="{f(cx - DRUM_OUT * k - 6)}" y="{f(Yc(foot_h + 2.1))}" width="6" height="{f(2.1 * k)}" fill="{DOOR}" stroke="{INK}" stroke-width=".6"/>')
+    sh.text(cx - DRUM_OUT * k - 12, Yc(head_h) + 3, f"{head_h:+.2f}", 8.5, DIM, "end")
+    sh.text(cx - DRUM_OUT * k - 12, Yc(foot_h) + 3, f"{foot_h:+.2f}", 8.5, DIM, "end")
+    human(sh, cx - DRUM_OUT * k - 48, Yc(foot_h), k)
+    sh.extra_frame.append(f'<text x="{f(cx)}" y="{f(Yc(top) - 26)}" text-anchor="middle" font-family="{MONO}" font-size="11" '
+                          f'letter-spacing="3" fill="{FAINT}">NEWEL STAIR · {title}</text>')
+    sh.text(cx, Yc(top) - 12, f"{risers} risers × {rise:.3f} · {TREAD_DEG:.0f} degrees a tread · {risers * TREAD_DEG:.0f} in all",
+            8.5, DIM, "middle")
+
+
 
 def sections_sheet():
     sh = Sheet("structure", "PLUNDERSPELL · CASTLE LAYOUT · DESIGN DRAFT 2026-10-03", "The Stacked Castle · Sections",
-               f"keep floor +{KEEP_FLOOR:.2f} · crypt floor {CRYPT_FLOOR:+.2f} · riser {RISER:.2f} m",
-               "whole castle 1 m = 12 px · stair cells 1 m = 24 px", MATERIALS, seed=12)
+               f"keep floor +{KEEP_FLOOR:.2f} · crypt floor {CRYPT_FLOOR:+.2f} · newel risers about 0.19 m",
+               "whole castle 1 m = 12 px · stair plan 1 m = 15 px · drums 1 m = 26 px", MATERIALS, seed=12)
     # --- section A-A, E-W through the centre row, looking north
     k = 12.0
     x0 = 600 - 3.5 * CELL * k            # west edge of the curtain cell
-    zero = 330                            # screen y of height 0
+    zero = 300                            # screen y of height 0
     Y = lambda h: zero - h * k            # noqa: E731
     Xs = lambda x: 600 + x * k            # noqa: E731
     sh.line(60, zero, 1140, zero, FAINT, 1)
@@ -315,14 +391,17 @@ def sections_sheet():
         sh.add(f'<rect x="{f(l)}" y="{f(Y(0))}" width="{f(r - l)}" height="{f(Y(CRYPT_SLAB) - Y(0))}" '
                f'fill="{COL["Crypt"]}" stroke="{darken(COL["Crypt"], .5)}" stroke-width=".8"/>')
         sh.add(f'<rect x="{f(l + 6)}" y="{f(Y(-.05))}" width="{f(r - l - 12)}" height="{f(Y(CRYPT_FLOOR) - Y(-.05))}" fill="#14120E" opacity=".55"/>')
-    for (x, _) in UP_STAIRS:                                  # straight run drawn in section
-        a = (Xs(x * CELL - 4.5 * (1 if x > 0 else -1)), Y(FZ))
-        b = (Xs(x * CELL + 4.5 * (1 if x > 0 else -1)), Y(KEEP_FLOOR))
-        sh.line(*a, *b, STAIR, 2.4)
-    sh.line(Xs(-4.0), Y(FZ), Xs(4.0), Y(CRYPT_FLOOR), STAIR, 2.4)
+    for (x, _), (lo, hi) in [(c, (FZ, KEEP_FLOOR)) for c in UP_STAIRS] + [(DOWN_STAIR, (CRYPT_FLOOR, FZ))]:
+        l, r = Xs(x * CELL + DRUM_C[0] - DRUM_IN), Xs(x * CELL + DRUM_C[0] + DRUM_IN)
+        sh.add(f'<rect x="{f(l)}" y="{f(Y(hi))}" width="{f(r - l)}" height="{f(Y(lo) - Y(hi))}" fill="{STAIR}" opacity=".75"/>')
+        n = 6
+        for i in range(n):                                    # a zigzag for the turning treads
+            y0, y1 = Y(lo + (hi - lo) * i / n), Y(lo + (hi - lo) * (i + 1) / n)
+            xa, xb = (l, r) if i % 2 == 0 else (r, l)
+            sh.line(xa, y0, xb, y1, darken(STAIR, .5), 1)
     labels = [(-3, "CURTAIN"), (-2, "BAILEY"), (-1, "UP · WARD"), (0, "DN · WARD"), (1, "UP · WARD"), (2, "BAILEY"), (3, "GATE")]
     for x, s in labels:
-        sh.text(Xs(x * CELL), Y(CRYPT_SLAB) + 34, s, 8.5, INK, "middle", ls="1")
+        sh.text(Xs(x * CELL), Y(CRYPT_SLAB) + 22, s, 8.5, INK, "middle", ls="1")
     sh.text(Xs(0), Y(KEEP_TOP) - 8, "KEEP · LEVEL 1", 9, INK, "middle", ls="2")
     sh.text(Xs(-1.5 * CELL) - 8, Y(CRYPT_FLOOR / 2) + 3, "CRYPT · LEVEL −1", 9, INK, "end", ls="2")
     marks = sorted([(KEEP_TOP, f"+{KEEP_TOP:.2f} keep top"), (KEEP_FLOOR, f"+{KEEP_FLOOR:.2f} keep floor"),
@@ -336,56 +415,21 @@ def sections_sheet():
         sh.line(1050, Y(h), 1062, Y(h), FAINT, 1)
         sh.line(1062, Y(h), 1074, ty, FAINT, .7)
         sh.text(1078, ty + 3, text, 8.5, DIM)
-    sh.extra_frame.append(f'<text x="600" y="170" text-anchor="middle" font-family="{MONO}" font-size="11" letter-spacing="3" '
+    sh.extra_frame.append(f'<text x="600" y="158" text-anchor="middle" font-family="{MONO}" font-size="11" letter-spacing="3" '
                           f'fill="{FAINT}">SECTION A–A · E–W THROUGH THE CENTRE ROW, LOOKING NORTH · 1 m = 12 px</text>')
 
-    # --- the two stairwell cells at builder scale
-    k2 = 24.0
-
-    def cell_section(left, base_y, floor_h, top_h, foot_h, head_h, risers, title, note, slab_h, door_note):
-        Yc = lambda h: base_y - (h - floor_h) * k2     # noqa: E731
-        Xc = lambda x: left + (x + 6) * k2               # noqa: E731
-        sh.add(f'<rect x="{f(Xc(-6))}" y="{f(Yc(top_h))}" width="{f(12 * k2)}" height="{f(Yc(floor_h - FZ) - Yc(top_h))}" '
-               f'fill="{GROUND_BG}" stroke="{FAINT}" stroke-width="1"/>')
-        sh.add(f'<rect x="{f(Xc(-6))}" y="{f(Yc(floor_h))}" width="{f(12 * k2)}" height="{f(FZ * k2)}" fill="#5E5040"/>')
-        run = risers * 0.28                                   # going 0.28 m a tread
-        x_start = -run / 2
-        step_w, step_h = 0.28 * k2, (head_h - foot_h) / risers * k2
-        pts = [(Xc(x_start), Yc(foot_h))]
-        for i in range(risers):
-            xa = Xc(x_start + i * 0.28)
-            ya = Yc(foot_h) - (i + 1) * step_h
-            pts += [(xa, ya), (xa + step_w, ya)]
-        pts += [(pts[-1][0], Yc(foot_h))]
-        d = "M" + " L".join(f"{f(a)} {f(b)}" for a, b in pts) + " Z"
-        sh.add(f'<path d="{d}" fill="{STAIR}" opacity=".85" stroke="{darken(STAIR, .5)}" stroke-width=".6"/>')
-        human(sh, Xc(x_start - 1.2), Yc(foot_h), k2)
-        # the floor the stair climbs through: a slab with a well over the flight
-        well0, well1 = x_start - 0.2, x_start + run + 0.2
-        for a, b in ((-6, well0), (well1, 6)):
-            sh.add(f'<rect x="{f(Xc(a))}" y="{f(Yc(slab_h))}" width="{f((b - a) * k2)}" height="{f(FZ * k2)}" fill="#5E5040"/>')
-        sh.line(Xc(well0), Yc(slab_h) - 3, Xc(well1), Yc(slab_h) - 3, INK, .8, dash="2 2")
-        sh.text(Xc(0), Yc(floor_h - FZ) + 18, f"STAIR WELL {well1 - well0:.1f} m long in the slab at {slab_h:+.2f} (dotted)",
-                8.5, INK, "middle", ls="1")
-        # the door at the stair's far end
-        sh.add(f'<rect x="{f(Xc(5.5))}" y="{f(Yc(head_h + 2.1))}" width="{f(0.5 * k2)}" height="{f(2.1 * k2)}" fill="{DOOR}" '
-               f'stroke="{INK}" stroke-width=".6"/>')
-        sh.text(Xc(6) + 8, Yc(head_h + 1.0), door_note, 8.5, INK, "start")
-        sh.extra_frame.append(f'<text x="{f(Xc(0))}" y="{f(Yc(top_h) - 24)}" text-anchor="middle" font-family="{MONO}" '
-                              f'font-size="11" letter-spacing="3" fill="{FAINT}">{title}</text>')
-        sh.text(Xc(0), Yc(top_h) - 10, note, 9, DIM, "middle")
-        sh.text(Xc(x_start + run / 2), Yc(head_h) - 8, f"{risers} risers × {(head_h - foot_h) / risers:.3f} · going 0.28 · run {run:.1f} m",
-                8.5, INK, "middle")
-        sh.text(Xc(-6) - 6, Yc(foot_h) + 3, f"{foot_h:+.2f}", 8.5, DIM, "end")
-        sh.text(Xc(-6) - 6, Yc(head_h) + 3, f"{head_h:+.2f}", 8.5, DIM, "end")
-        sh.line(Xc(-6) - 4, Yc(head_h), Xc(6), Yc(head_h), FAINT, .8, dash="3 3")
-
-    cell_section(110, 690, FZ, KEEP_TOP, FZ, KEEP_FLOOR, UP_RISERS,
-                 "UP-STAIR CELL · WARD → KEEP", "double-height module · one straight flight shown; may fold into an L",
-                 KEEP_FLOOR, "DOOR → keep")
-    cell_section(660, 690, CRYPT_FLOOR, FZ + CLEAR["InnerWard"], CRYPT_FLOOR, FZ, DOWN_RISERS,
-                 "DOWN-STAIR CELL · WARD → CRYPT", "ground centre room over the crypt's centre cell",
-                 FZ, "DOOR (N) → crypt")
+    # --- the stair cells: the art bible's newel stair (docs/art/data/high.json, spiral-stair) at ward height
+    newel_plan(sh, 70, 478, 15.0)
+    newel_section(sh, 450, 690, 26.0, FZ, KEEP_FLOOR, UP_RISERS, "UP · WARD → KEEP", "DOOR 0.90 → keep")
+    newel_section(sh, 760, 690, 26.0, CRYPT_FLOOR, FZ, DOWN_RISERS, "DOWN · WARD → CRYPT", "DOOR (N) → crypt")
+    ages = [("HIGH MEDIEVAL", "newel stair in a drum, NE corner (art bible)"),
+            ("LATE MEDIEVAL", "newel stair in a corner turret, gun-loop"),
+            ("BRONZE AGE", "gypsum dog-leg round a light well"),
+            ("AGE OF POWDER", "dog-leg great stair (to be drawn)")]
+    sh.text(950, 470, "STAIR FORM BY AGE", 9.5, INK, ls="2")
+    for i, (age, form) in enumerate(ages):
+        sh.text(950, 492 + i * 30, age, 9, INK, ls="1")
+        sh.text(950, 505 + i * 30, form, 8.5, DIM)
     return sh
 
 

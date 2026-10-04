@@ -413,7 +413,7 @@
     <text x="640" y="652" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">CRYPT</text>
     <text x="715" y="652" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">9 rooms under the inner 3 × 3 at -3.00 m; final chamber ◆ seeded</text>
     <text x="640" y="668" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">STAIRS</text>
-    <text x="715" y="668" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">2 up (W, E ward cells, 24 risers) · 1 down (centre, 18 risers)</text>
+    <text x="715" y="668" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">2 up (W, E ward cells, 23 risers) · 1 down (centre, 18 risers)</text>
     <text x="640" y="684" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">DOORS</text>
     <text x="715" y="684" font-family="Overpass Mono, monospace" font-size="9.5" fill="#9A9078">12 bailey↔ward · 1 at each stair top · 1 at the crypt foot</text>
     <text x="640" y="700" font-family="Overpass Mono, monospace" font-size="9.5" fill="#DCD2BA" letter-spacing="1">ROOMS</text>
