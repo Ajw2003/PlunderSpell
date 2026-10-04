@@ -93,22 +93,35 @@ namespace Plunderspell.Raid
                 if (module.IsExtractionExit || i == castle.ExtractionExitIndex)
                     continue;
 
+                // A stair is a passage, not a post (#247).
+                if (module.Storeys > 1)
+                    continue;
+
                 // Rolled before the safe-ring check so the rest of the garrison stays where it was.
                 if (rng.NextDouble() > DensityFor(module.Zone, densityScale))
                     continue;
 
-                if (hasSafeCentre && ChebyshevDistance(module.GridPosition, safeCentre) <= SafeEntranceRadius)
+                // The portal is on the ground, so only ground rooms are in its safe ring (#247).
+                if (hasSafeCentre && module.Level == CastleLevels.Ground
+                    && ChebyshevDistance(module.GridPosition, safeCentre) <= SafeEntranceRadius)
                     continue;
 
                 placements.Add(new GuardPlacement(
                     i,
-                    module.Position + Vector3.up * 0.1f,
+                    StandingPoint(module),
                     BuildRoute(castle, i, rng, hasSafeCentre, safeCentre),
                     module.Zone));
             }
 
             return placements;
         }
+
+        private const float FloorSlab = 0.30f;
+        private const float FloorClearance = 0.1f;
+
+        /// <summary>On top of the module's floor slab: a module root is the slab's underside (#247).</summary>
+        public static Vector3 StandingPoint(ProceduralCastleData.PlacedModule module) =>
+            module.Position + Vector3.up * (FloorSlab + FloorClearance);
 
         private static int ChebyshevDistance(Vector2Int a, Vector2Int b) =>
             Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y));
@@ -122,7 +135,7 @@ namespace Plunderspell.Raid
             System.Random rng, bool hasSafeCentre, Vector2Int safeCentre)
         {
             ProceduralCastleData.PlacedModule home = castle.PlacedModules[moduleIndex];
-            var route = new List<Vector3> { home.Position };
+            var route = new List<Vector3> { StandingPoint(home) };
 
             var neighbours = new List<Vector3>();
             for (int i = 0; i < castle.PlacedModules.Count; i++)
@@ -133,10 +146,14 @@ namespace Plunderspell.Raid
                 Vector2Int delta = castle.PlacedModules[i].GridPosition - home.GridPosition;
                 if (Math.Abs(delta.x) + Math.Abs(delta.y) != 1)
                     continue;
-                // A patrol never walks into the safe ring around the portal.
-                if (hasSafeCentre && ChebyshevDistance(castle.PlacedModules[i].GridPosition, safeCentre) <= SafeEntranceRadius)
+                // A keep room is not next to the ward room below it, and a stair is no stop (#247).
+                if (castle.PlacedModules[i].Level != home.Level || castle.PlacedModules[i].Storeys > 1)
                     continue;
-                neighbours.Add(castle.PlacedModules[i].Position);
+                // A patrol never walks into the safe ring around the portal.
+                if (hasSafeCentre && castle.PlacedModules[i].Level == CastleLevels.Ground
+                    && ChebyshevDistance(castle.PlacedModules[i].GridPosition, safeCentre) <= SafeEntranceRadius)
+                    continue;
+                neighbours.Add(StandingPoint(castle.PlacedModules[i]));
             }
 
             int take = Mathf.Min(2, neighbours.Count);

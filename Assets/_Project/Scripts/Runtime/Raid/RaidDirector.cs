@@ -435,7 +435,7 @@ namespace Plunderspell.Raid
                 return ArrivalPoint;
             Vector2Int inward = CastleEntrancePlanner.InwardCell(arrival.GridPosition);
             foreach (ProceduralCastleData.PlacedModule module in Castle.PlacedModules)
-                if (module.GridPosition == inward)
+                if (module.GridPosition == inward && module.Level == CastleLevels.Ground)   // the ground room, not the keep above it (#247)
                     return module.Position;
             return ArrivalPoint;
         }
