@@ -1,0 +1,1 @@
+fires keep 23 ground 82 crypt 18 | lights keep 23 ground 83 crypt 18 | floating 0 buried 0
