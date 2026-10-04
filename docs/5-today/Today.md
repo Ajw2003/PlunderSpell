@@ -26,6 +26,7 @@ checked with screenshots. Roofs come after; "outside" needs a design talk first.
   light; none float or are buried (`eval/light_audit.cs`) except one hearth flame inside its own fireplace.
   Looked at all 44 views: lights sit on their sconces and braziers on every floor. Fog is heavy (#250); every
   room is open to the sky (roofs next).
+- Full PlayMode suite at the end: 379/379 pass.
 - #254 done (`4d40187a`): the raid scene's `Ground` plane at height 0 ran through the down-stair's well, so
   players stood on it. Ground is now one mesh with a 12 m hole over the centre cell
   (`Editor/GroundStairWellCutter.cs`). In Play mode the real controller walked from the lobby floor (0.40) to
