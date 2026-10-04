@@ -1,2 +1,1 @@
-fires keep 35 ground 86 crypt 24 | lights keep 35 ground 87 crypt 24 | floating 0 buried 1
-buried Fire_Hearth(Clone) at (-8.00, 1.92, -7.70)
+fires keep 35 ground 86 crypt 24 | lights keep 35 ground 87 crypt 24 | sconces with no wall 0 | floating 0
