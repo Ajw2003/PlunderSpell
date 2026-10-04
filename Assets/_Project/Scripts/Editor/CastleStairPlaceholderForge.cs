@@ -16,10 +16,15 @@ namespace Plunderspell.EditorTools
         private const string PrefabDir = "Assets/_Project/Prefabs/Castle";
         private static readonly string[] Registries = { "CastleRoomRegistry", "CastleRoomRegistry_BronzeAge", "CastleRoomRegistry_LateMedieval" };
         private const float Half = 6f, Wall = 0.5f, In = Half - Wall, Slab = 0.3f, ArchHalf = 1.3f;
+        // Borrowed from the existing stairwell so the placeholders sit in the castle's look (#254).
+        private const string StyleModel = "Assets/_Project/Art/Models/Castle/KeepStairwell.fbx";
+        private static Material s_stone, s_oak;
 
         [MenuItem("Tools/Plunderspell/Forge Stair Placeholders")]
         public static void Forge()
         {
+            s_stone = StyleMaterial("KeepStairwell_iron");
+            s_oak = StyleMaterial("KeepStairwell_oak");
             GameObject up = BuildUp();
             GameObject down = BuildDown();
             foreach (string name in Registries)
@@ -101,6 +106,7 @@ namespace Plunderspell.EditorTools
             cube.transform.localPosition = new Vector3((x0 + x1) / 2f, (y0 + y1) / 2f, (z0 + z1) / 2f);
             cube.transform.localScale = new Vector3(x1 - x0, y1 - y0, z1 - z0);
             cube.isStatic = true;
+            cube.GetComponent<Renderer>().sharedMaterial = s_stone;
         }
 
         // A 0.3 m thick ramp rising along +X from (xFoot, yFoot) to (xHead, yHead), between z0 and z1.
@@ -117,6 +123,18 @@ namespace Plunderspell.EditorTools
             cube.transform.localPosition = mid - cube.transform.localRotation * new Vector3(0f, 0.15f, 0f);
             cube.transform.localScale = new Vector3(length, 0.3f, z1 - z0);
             cube.isStatic = true;
+            cube.GetComponent<Renderer>().sharedMaterial = s_oak;
+        }
+
+        private static Material StyleMaterial(string name)
+        {
+            foreach (Object asset in AssetDatabase.LoadAllAssetsAtPath(StyleModel))
+            {
+                if (asset is Material material && material.name == name)
+                    return material;
+            }
+            Debug.LogWarning($"[StairForge] {name} not found in {StyleModel}; the placeholder keeps the default material.");
+            return null;
         }
 
         private static GameObject Save(GameObject root, string roomId)

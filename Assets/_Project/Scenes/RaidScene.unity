@@ -332,6 +332,7 @@ MonoBehaviour:
   _attackPoints: 6
   _rousedChasers: 2
   _hueAndCryChasers: 3
+  _hueAndCryRepeatSeconds: 3
   _attackTurnTuning:
     MeleeTurnsPerTarget: 1
     RangedTurnsPerTarget: 1
@@ -723,7 +724,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 16adb4121df54dc4c9c8cb5b4ce09ba4, type: 2}
 --- !u!33 &477194058
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -731,7 +732,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477194055}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 16adb4121df54dc4c9c8cb5b4ce09ba4, type: 2}
 --- !u!4 &477194059
 Transform:
   m_ObjectHideFlags: 0
@@ -742,7 +743,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 11.6, y: 11.6, z: 11.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -972,7 +973,6 @@ MonoBehaviour:
   defaultSeed: 12345
   cellSize: 12
   roomContainer: {fileID: 545191289}
-  m_curtainWallRadius: 4
   m_interiorFillFraction: 0.9
   m_bastionSpacing: 3
 --- !u!4 &865774667
