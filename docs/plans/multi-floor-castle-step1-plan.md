@@ -764,11 +764,11 @@ namespace Plunderspell.EditorTools
             var root = new GameObject("StairUpPlaceholder");
             Box(root, "LobbySlab", -Half, 0f, -Half, Half, Slab, Half);
             Walls(root, "Lobby", Slab, Slab + 4.0f, 2.88f, allSides: true);                 // ward room, 4.00 clear
-            // Head floor at 4.30-4.60 with a well over the ramp's upper part (x -1.0..4.4, z 1.4..3.8).
-            Box(root, "HeadSlabW", -Half, 4.3f, -Half, -1.0f, 4.6f, Half);
+            // Head floor at 4.30-4.60 with a well over the ramp's upper part (x -1.5..4.4, z 1.4..3.8): from x -1.5 a guard on the ramp has 2.40 m under the slab edge (needs 2.30).
+            Box(root, "HeadSlabW", -Half, 4.3f, -Half, -1.5f, 4.6f, Half);
             Box(root, "HeadSlabE", 4.4f, 4.3f, -Half, Half, 4.6f, Half);
-            Box(root, "HeadSlabS", -1.0f, 4.3f, -Half, 4.4f, 4.6f, 1.4f);
-            Box(root, "HeadSlabN", -1.0f, 4.3f, 3.8f, 4.4f, 4.6f, Half);
+            Box(root, "HeadSlabS", -1.5f, 4.3f, -Half, 4.4f, 4.6f, 1.4f);
+            Box(root, "HeadSlabN", -1.5f, 4.3f, 3.8f, 4.4f, 4.6f, Half);
             Walls(root, "Head", 4.6f, 4.6f + 4.6f, 3.31f, allSides: false);                  // keep storey, opens north only
             Ramp(root, "Ramp", -5.0f, Slab, 4.4f, 4.6f, 1.6f, 3.6f);                         // along +X, z 1.6..3.6
             return Save(root, ProceduralCastleGenerator.StairUpId);
@@ -779,11 +779,11 @@ namespace Plunderspell.EditorTools
             var root = new GameObject("StairDownPlaceholder");
             Box(root, "FootSlab", -Half, 0f, -Half, Half, Slab, Half);
             Walls(root, "Foot", Slab, 3.3f, 2.16f, allSides: false);                        // crypt storey, opens north only
-            // Lobby floor at 3.30-3.60 with a well over the ramp (x -1.6..3.9, z -3.8..-1.4).
-            Box(root, "LobbySlabW", -Half, 3.3f, -Half, -1.6f, 3.6f, Half);
+            // Lobby floor at 3.30-3.60 with a well over the ramp (x -2.0..3.9, z -3.8..-1.4): 2.40 m headroom at the slab edge (needs 2.30).
+            Box(root, "LobbySlabW", -Half, 3.3f, -Half, -2.0f, 3.6f, Half);
             Box(root, "LobbySlabE", 3.9f, 3.3f, -Half, Half, 3.6f, Half);
-            Box(root, "LobbySlabS", -1.6f, 3.3f, -Half, 3.9f, 3.6f, -3.8f);
-            Box(root, "LobbySlabN", -1.6f, 3.3f, -1.4f, 3.9f, 3.6f, Half);
+            Box(root, "LobbySlabS", -2.0f, 3.3f, -Half, 3.9f, 3.6f, -3.8f);
+            Box(root, "LobbySlabN", -2.0f, 3.3f, -1.4f, 3.9f, 3.6f, Half);
             Walls(root, "Lobby", 3.6f, 3.6f + 4.0f, 2.88f, allSides: true);                  // ward room, 4.00 clear
             Ramp(root, "Ramp", -3.3f, Slab, 3.9f, 3.6f, -3.6f, -1.6f);                       // along +X, z -3.6..-1.6
             return Save(root, ProceduralCastleGenerator.StairDownId);
@@ -1230,4 +1230,5 @@ The test moves the final chamber to `Keep + 5`: no module stands on that level, 
   | 4.6, tests | Tasks 1-8 |
 
   Doors (3), stair art (4.5) and fog tuning are #248, #249 and #250, not this plan.
-- **Risk to watch:** the placeholder ramps are geometry I have only reasoned about. Task 4's tile pictures and Task 8's survey are where a ramp that is too steep, or a head floor too narrow for a guard, would show. If either fails, fix the forge's numbers (`Ramp`, the well boxes) and re-bake, rather than loosening the walk map's step rule.
+- **Ramp geometry, modelled 2026-10-03** against the baker's rules (normal ≥ 0.70, 0.45 m step, a 0.4 × 1.85 m guard capsule lifted 0.46 m): both ramps 24.6°, 0.23 m rise per cell, headroom at the well edge 2.40 m (up and down) after widening the wells (the first numbers left 2.28 m, a gap in the walk map). Access strips beside the wells hold 2-3 rows of cells.
+- **Risk to watch:** the model is not the baker. Task 4's tile pictures and Task 8's survey are where a ramp that is too steep, or a head floor too narrow for a guard, would show. If either fails, fix the forge's numbers (`Ramp`, the well boxes) and re-bake, rather than loosening the walk map's step rule.
