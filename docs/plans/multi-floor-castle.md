@@ -1,7 +1,7 @@
 # Multi-floor castles (design, 2026-10-03)
 
-Follow-up to #197 ("stairs lead somewhere and doors open"). Status: **layout and stairs approved by the
-owner on 2026-10-03; the systems section below is waiting for review.** No code yet.
+Follow-up to #197 ("stairs lead somewhere and doors open"). Status: **approved by the owner on
+2026-10-03.** Steps filed as #247-#250; step 1 plan: [`multi-floor-castle-step1-plan.md`](multi-floor-castle-step1-plan.md). No code yet.
 
 Concept sheets: `docs/art/castle/concept/multi-floor-layout.png` (plans of the three floors and an
 exploded three-quarter view) and `multi-floor-sections.png` (a section through the castle and both stair
@@ -69,7 +69,7 @@ with connections between floors and doors where zones meet.
   Keep 3.31, Crypt 2.16), oak leaves. It must be added to PurrNet's network prefab list
   (`Assets/_Project/Net/NetworkPrefabs.asset`).
 
-## 4. Systems (for review)
+## 4. Systems
 
 The approach: **a level becomes a third grid coordinate.** `PlacedModule` gains an `int Level` field
 (0 by default) and keeps its `Vector2Int GridPosition`, so the 73 existing references across 19 files
