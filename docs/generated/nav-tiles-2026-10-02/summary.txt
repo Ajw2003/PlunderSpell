@@ -26,6 +26,8 @@ TombCorridor | 66.7 (428 surfaces) | 2 | 4/4/4/4 | 200 | 3488
 BurialVault | 66.7 (384 surfaces) | 1 | 4/4/4/4 | 204 | 3488
 CryptChamberFinal | 61.6 (391 surfaces) | 2 | 4/4/4/4 | 251 | 3488
 CryptStairwell | 69.6 (404 surfaces) | 2 | 4/4/4/4 | 202 | 3488
+StairUp | 74.5 (796 surfaces) | 2 | 4/4/4/4 | 104 | 3488
+StairDown | 73.1 (792 surfaces) | 2 | 4/4/4/4 | 104 | 3488
 ## CastleRoomRegistry_BronzeAge
 GatehouseModule | 72.0 (415 surfaces) | 1 | 24/15/4/17 | 208 | 3576
 WallStraight | 75.2 (433 surfaces) | 1 | 24/18/0/18 | 152 | 3576
@@ -52,6 +54,8 @@ BronzeGraveCircle | 54.2 (324 surfaces) | 2 | 4/4/4/4 | 256 | 3488
 BronzeLarnaxVault | 63.9 (368 surfaces) | 1 | 4/4/4/4 | 264 | 3488
 CryptChamberFinal | 47.6 (274 surfaces) | 1 | 4/4/4/4 | 338 | 3488
 BronzeShaftStair | 64.8 (379 surfaces) | 2 | 4/4/4/4 | 198 | 3488
+StairUp | 74.5 (796 surfaces) | 2 | 4/4/4/4 | 104 | 3488
+StairDown | 73.1 (792 surfaces) | 2 | 4/4/4/4 | 104 | 3488
 ## CastleRoomRegistry_LateMedieval
 GatehouseModule | 66.1 (381 surfaces) | 1 | 24/19/4/19 | 96 | 3588
 WallStraight | 79.2 (456 surfaces) | 1 | 24/19/0/19 | 164 | 3580
@@ -78,6 +82,8 @@ LateOubliette | 57.3 (334 surfaces) | 2 | 4/4/4/4 | 296 | 3488
 LateCharnelHouse | 68.2 (393 surfaces) | 1 | 4/4/4/4 | 192 | 3488
 CryptChamberFinal | 60.6 (365 surfaces) | 2 | 4/4/4/4 | 301 | 3488
 LateUndercroftStair | 68.1 (395 surfaces) | 2 | 4/4/4/4 | 204 | 3488
+StairUp | 74.5 (796 surfaces) | 2 | 4/4/4/4 | 104 | 3488
+StairDown | 73.1 (792 surfaces) | 2 | 4/4/4/4 | 104 | 3488
 ## GeneratedRoomRegistry 1
 CryptChamberFinal | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504
 CurtainWall_Room | 77.8 (448 surfaces) | 1 | 6/6/6/6 | 68 | 3504

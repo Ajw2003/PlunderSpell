@@ -24,6 +24,10 @@ namespace Plunderspell.Castle
         [Tooltip("Relative spawn frequency within its zone's weighted pool (>=1).")]
         public int Weight = 1;
 
+        [Tooltip("For a module spanning two storeys (a stair): the local height of its upper floor's top. " +
+                 "0 for a one-storey room. The nav tile baker seeds archways on this floor too.")]
+        public float UpperFloorHeight;
+
         [Tooltip("Where loot can sit in this room (table tops, chest lids, shelves, altars), as " +
                  "offsets from the module's position before its placement rotation. Written by " +
                  "Tools/Plunderspell/Import Castle Loot Anchors from the asset pipeline's " +
@@ -52,6 +56,10 @@ namespace Plunderspell.Castle
         [Tooltip("One door-plug prefab per enclosed zone, used to seal an archway that faces an " +
                  "empty cell. Zone is the only field that matters; RoomId is for readability.")]
         public List<CastleRoomModuleData> DoorPlugs = new List<CastleRoomModuleData>();
+
+        [Tooltip("Stair modules (#247): placed by the floor planner at fixed cells, never picked at random, so " +
+                 "kept out of Modules. Written by Tools/Plunderspell/Forge Stair Placeholders.")]
+        public List<CastleRoomModuleData> Stairs = new List<CastleRoomModuleData>();
 
         /// <summary>Returns all modules that belong to the requested zone.</summary>
         public List<CastleRoomModuleData> GetModulesForZone(CastleZone zone)
@@ -87,6 +95,11 @@ namespace Plunderspell.Castle
             {
                 if (Modules[i] != null && Modules[i].RoomId == roomId)
                     return Modules[i];
+            }
+            for (int i = 0; i < Stairs.Count; i++)
+            {
+                if (Stairs[i] != null && Stairs[i].RoomId == roomId)
+                    return Stairs[i];
             }
             return null;
         }
