@@ -42,7 +42,7 @@ namespace Plunderspell.EditorTools
                 if (registry == null)
                     continue;
                 registries++;
-                foreach (CastleRoomModuleData entry in registry.Modules)
+                foreach (CastleRoomModuleData entry in System.Linq.Enumerable.Concat(registry.Modules, registry.Stairs))
                 {
                     if (entry == null)
                         continue;
