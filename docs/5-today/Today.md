@@ -1,5 +1,17 @@
 # Today
 
+**2026-10-03 - first performance pass, PR #246 opened, 28 finished issues closed.** Measured a co-op
+raid with the Profiler (`Tools/Unity/perf_capture.sh`, results in `docs/generated/perf-2026-10-03/README.md`)
+and fixed the worst causes: guard route smoothing froze the host up to 204 ms in a hue and cry (now 33 ms,
+#243); every sound streamed from disk (short sounds now load into memory, owner approved, #244); the HUD
+made 46 KB of garbage a frame (26 KB, #245, still open); fire glow sorting (#217, still open). Finding: in
+Editor Play mode the Editor takes about half the host's frame (~135 fps vs ~290 in the build). Full PlayMode
+suite 373/373. PR #246 merges the whole `claude/playability-fixes` branch (186 commits). The owner closed 28
+finished issues; why they piled up is filed as Ajw2003/AjsClaudeCodeTools#141. Lightmap baking was checked:
+the bake call is Editor-only in 6000.3.15f1 and the build ships no `UnityEditor` assemblies.
+
+---
+
 **2026-10-02 (evening) - guards move again: the walk map was empty for two of the three Ages.** The owner
 saw guards stuck and standing still in co-op. Measured with `Tools/Unity/coop_guard_check.sh` (Late
 Medieval, seed 3508293): every guard stood still for the whole 90 s. Cause: `CastleNavTileBaker` baked only
