@@ -83,6 +83,20 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void Test_PathValidatorRejectsACutStair()
+        {
+            var gen = MakeGenerator();
+            ProceduralCastleData data = gen.Generate(42);
+            Assert.IsTrue(CastlePathValidator.ValidatePath(data, out _), "seed 42 should be walkable");
+            int final = data.CryptStartIndex;
+            var chamber = data.PlacedModules[final];
+            chamber.Level = CastleLevels.Keep + 5;              // move the final chamber off every floor
+            data.PlacedModules[final] = chamber;
+            Assert.IsFalse(CastlePathValidator.ValidatePath(data, out List<Vector2Int> path), "a final chamber no floor reaches must fail");
+            Assert.AreEqual(0, path.Count);
+        }
+
+        [Test]
         public void Test_PathValidatorOnEmptyData()
         {
             var empty = new ProceduralCastleData(0);
