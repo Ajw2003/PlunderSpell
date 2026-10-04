@@ -1,5 +1,25 @@
 # Today
 
+**2026-10-03 (evening) - the stacked castle, picked up after the owner's playtest (#253).** The previous
+session finished tasks 1-4 of 8 in `docs/plans/multi-floor-castle-step1-plan.md` (#247) and stopped before
+anything worked on the new floors; #253 lists what the owner saw. Order chosen by the owner: #254 crypt entry
+and stone on placeholders, #255 guards on every floor (tasks 5-7), #248 doors, #256 stairs built by extending
+each Age's existing stairwell (owner's pick over stepped placeholders), #257 every Age and its lights
+checked with screenshots. Roofs come after; "outside" needs a design talk first.
+- #254 done (`4d40187a`): the raid scene's `Ground` plane at height 0 ran through the down-stair's well, so
+  players stood on it. Ground is now one mesh with a 12 m hole over the centre cell
+  (`Editor/GroundStairWellCutter.cs`). In Play mode the real controller walked from the lobby floor (0.40) to
+  the crypt's `FootSlab` at -3.00 (`Tools/Unity/eval/walk_down_stair.cs`; picture
+  `docs/generated/castle-floors-2026-10-03/`). Re-running the stair forge wipes the stairs' walk-map tiles;
+  bake again after it.
+- Seen in that run: the arrival portal stands inside the down-stair at (0, -2.05, 0). The arrival planner
+  still picks stair rooms (plan task 7, #255).
+- #255 task 5 done (`51c63544`): the walk map looks up rooms per floor. Found: every gallery stairwell
+  (KeepStairwell, LateTurretStair, BronzeMegaronStair) now lands on the keep floor, and guards are blocked
+  climbing them there (3 `GuardClimbsTheStairToItsGallery` failures); being fixed.
+
+---
+
 **2026-10-03 - first performance pass, PR #246 opened, 28 finished issues closed.** Measured a co-op
 raid with the Profiler (`Tools/Unity/perf_capture.sh`, results in `docs/generated/perf-2026-10-03/README.md`)
 and fixed the worst causes: guard route smoothing froze the host up to 204 ms in a hue and cry (now 33 ms,
