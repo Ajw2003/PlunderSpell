@@ -26,8 +26,8 @@ TombCorridor | 66.7 (428 surfaces) | 2 | 4/4/4/4 | 200 | 3488
 BurialVault | 66.7 (384 surfaces) | 1 | 4/4/4/4 | 204 | 3488
 CryptChamberFinal | 61.6 (391 surfaces) | 2 | 4/4/4/4 | 251 | 3488
 CryptStairwell | 69.6 (404 surfaces) | 2 | 4/4/4/4 | 202 | 3488
-StairUp | 74.5 (796 surfaces) | 2 | 4/4/4/4 | 104 | 3488
-StairDown | 73.1 (792 surfaces) | 2 | 4/4/4/4 | 104 | 3488
+StairUp | 73.3 (743 surfaces) | 2 | 4/4/4/4 | 194 | 3488
+StairDown | 73.6 (784 surfaces) | 2 | 4/4/4/4 | 194 | 3488
 ## CastleRoomRegistry_BronzeAge
 GatehouseModule | 72.0 (415 surfaces) | 1 | 24/15/4/17 | 208 | 3576
 WallStraight | 75.2 (433 surfaces) | 1 | 24/18/0/18 | 152 | 3576
