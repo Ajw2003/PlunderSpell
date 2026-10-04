@@ -327,8 +327,9 @@ def _chest(bm, uv, x, y, fz, w=1.0, d=0.6, h=0.55, trim=None, body=TIMBER):
         _box(bm, uv, trim, (x, y, fz + h + 0.02), (w, d, 0.05))
 
 
-def _stair_flights(bm, uv, fz, top, pigment, steps=4):
+def _stair_flights(bm, uv, fz, top, pigment, steps=4, tread=None):
     """The two flights of the L stair, `steps` risers each, from fz up to fz + top.
+    `tread` fixes the tread depth (the flights then run as far as they need); by default they fill the quadrant.
     The first flight starts at the walkway's edge and climbs west along the
     south wall to a corner landing; the second climbs north along the west
     wall. The foot must face open floor: a stair whose bottom step
@@ -336,6 +337,8 @@ def _stair_flights(bm, uv, fz, top, pigment, steps=4):
     does not join a stair's side to the floor, so nobody could climb it."""
     rise = top / (2 * steps)
     x0, x_land = -Q0 - 0.1, -IN + 1.5    # first flight: east (foot) to the landing
+    if tread:
+        x0 = x_land + steps * tread
     run_x = (x0 - x_land) / steps
     y_south = -IN + 0.75             # centre line of the first flight
     for i in range(steps):
@@ -347,6 +350,8 @@ def _stair_flights(bm, uv, fz, top, pigment, steps=4):
     _box(bm, uv, pigment, (-IN + 0.75, -IN + 0.75, (fz + z_mid) / 2), (1.5, 1.5, z_mid - fz))
     # Second flight north along the west wall to the bridge.
     y0, y_top = -IN + 1.5, -Q0 - 0.2
+    if tread:
+        y_top = y0 + steps * tread
     run_y = (y_top - y0) / steps
     for i in range(steps):
         y = y0 + (i + 0.5) * run_y

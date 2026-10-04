@@ -572,13 +572,15 @@
     },
     "MedievalStairDown": {
       "budget": 1000,
-      "content": "35d6b694c7104206",
-      "tris": 680
+      "content": "e60634f31486b209",
+      "preview": "e60634f31486b209:459f95d244e7",
+      "tris": 728
     },
     "MedievalStairUp": {
       "budget": 1000,
-      "content": "9b55e5f95829126b",
-      "tris": 788
+      "content": "0c6b2599e5d5ac02",
+      "preview": "0c6b2599e5d5ac02:459f95d244e7",
+      "tris": 812
     },
     "PaviseShield": {
       "budget": 500,

@@ -7,7 +7,7 @@ slab, exit faces +Z. Geometry contract: Editor/CastleStairPlaceholderForge.cs.
                      4.60, opens north only). Lobby stair -> railed gallery at 2.90 ->
                      third flight east along the north wall to the head floor.
   MedievalStairDown: crypt storey (opens north only) under a ward lobby (floor top 3.60,
-                     archways all round). Two 6-riser flights straight to the lobby floor.
+                     archways all round). Two 8-riser flights straight to the lobby floor.
 
 A guard needs 2.40 m under any slab edge (guard 2.30 tall), so each slab has a well cut over
 every walking surface that would be closer than that.
@@ -54,8 +54,9 @@ def build_medieval_stair_up(bm, uv):
     _storey(bm, uv, "InnerWard", rk.SIDES)
     top, gallery = 2.6, SLAB + 2.6
     cb._stair_to_gallery(bm, uv, SLAB, top, STONE, METAL)      # 8 risers of 0.325 to the gallery at 2.90
-    steps, head = 6, 4.6
-    _flight_east(bm, uv, gallery, (head - gallery) / steps, steps, -Q0 - 6 * 0.3, 0.3, IN - 0.75, STONE)   # 6 risers of 0.283
+    # 8 risers of 0.2125: the nav tile samples every 0.5 m and joins cells at most 0.45 apart, so two risers must fit in that.
+    steps, head, tread = 8, 4.6, 0.3
+    _flight_east(bm, uv, gallery, (head - gallery) / steps, steps, -Q0 - steps * tread, tread, IN - 0.75, STONE)
     # Head floor 4.30-4.60; the well takes the gallery and every flight past the landing (surface 1.60, 2.70 m under the slab).
     _slab_with_well(bm, uv, 4.3, head, ZONE_FLOOR["Keep"], (-IN, -Q0, -4.2, IN))
     _walls(bm, uv, "Keep", head, ("north",))
@@ -66,9 +67,10 @@ def build_medieval_stair_up(bm, uv):
 def build_medieval_stair_down(bm, uv):
     _storey(bm, uv, "Crypt", ("north",))
     top, lobby = 3.3, 3.6
-    cb._stair_flights(bm, uv, SLAB, top, STONE, steps=6)       # 12 risers of 0.275 to the lobby floor
-    # Lobby floor 3.30-3.60; the well takes both flights past the second tread (surface 0.85, 2.45 m under the slab).
-    _slab_with_well(bm, uv, 3.3, lobby, ZONE_FLOOR["InnerWard"], (-IN, -2.5, -IN, -Q0 - 0.2))
+    # 16 risers of 0.206, treads 0.3, to the lobby floor: the nav tile joins cells at most 0.45 apart, so two risers must fit in that.
+    cb._stair_flights(bm, uv, SLAB, top, STONE, steps=8, tread=0.3)
+    # Lobby floor 3.30-3.60; the well takes both flights past the second tread (surface 0.71, 2.59 m under the slab edge).
+    _slab_with_well(bm, uv, 3.3, lobby, ZONE_FLOOR["InnerWard"], (-IN, -2.1, -IN, -IN + 1.5 + 8 * 0.3))
     _walls(bm, uv, "InnerWard", lobby, rk.SIDES)
     cb._brazier(bm, uv, 3.8, -3.8, SLAB)
     cb._brazier(bm, uv, 3.8, 3.8, lobby)
