@@ -1,6 +1,7 @@
 using System.IO;
 using PurrNet;
 using Plunderspell.Castle;
+using Plunderspell.Loot;
 using Plunderspell.Raid;
 using UnityEditor;
 using UnityEngine;
@@ -76,6 +77,11 @@ namespace Plunderspell.EditorTools
             var serialized = new SerializedObject(door);
             serialized.FindProperty("_hinge").objectReferenceValue = hinge.transform;
             serialized.ApplyModifiedPropertiesWithoutUndo();
+
+            // On the leaf, beside the collider the player's interact ray hits, so GetComponentInParent finds it.
+            var handleSerialized = new SerializedObject(leaf.AddComponent<CastleDoorHandle>());
+            handleSerialized.FindProperty("_door").objectReferenceValue = door;
+            handleSerialized.ApplyModifiedPropertiesWithoutUndo();
 
             PrefabUtility.SaveAsPrefabAsset(root, $"{PrefabDir}/{name}.prefab");
             Object.DestroyImmediate(root);

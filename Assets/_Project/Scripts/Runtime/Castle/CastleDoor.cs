@@ -19,13 +19,6 @@ namespace Plunderspell.Castle
     /// </summary>
     public class CastleDoor : NetworkBehaviour, IHandOpenable
     {
-        [Header("State")]
-        [Tooltip("Locked doors need Porta (or a key); an unlocked door opens by hand.")]
-        [SerializeField] private bool _locked;
-
-        [Tooltip("Barred doors cannot be opened by hand at all — only forced, or opened by Porta.")]
-        [SerializeField] private bool _barred;
-
         [Header("Noise")]
         [Tooltip("Radius of the noise made by forcing this door, in metres.")]
         [SerializeField] private float _forceNoiseRadius = 12f;
@@ -44,12 +37,19 @@ namespace Plunderspell.Castle
         [Tooltip("Degrees the hinge swings when open.")]
         [SerializeField] private float _openAngle = 90f;
 
+        // Locked: needs Porta (or a key). Barred: cannot be opened by hand at all, only forced or spelled open.
+        // All three are synced so every peer sees the same door; only the server (or an offline door) writes them.
         private readonly SyncVar<bool> _isOpen = new SyncVar<bool>(false);
+        private readonly SyncVar<bool> _locked = new SyncVar<bool>(false);
+        private readonly SyncVar<bool> _barred = new SyncVar<bool>(false);
         private Quaternion _closedRotation;
 
         public bool IsOpen => _isOpen.value;
-        public bool IsLocked => _locked;
-        public bool IsBarred => _barred;
+        public bool IsLocked => _locked.value;
+        public bool IsBarred => _barred.value;
+
+        // Offline (tests, solo) there is no server to ask, so the door decides for itself.
+        private bool DecidesLocally => !isSpawned || isServer;
 
         /// <summary>Raised on state change so audio and UI can react. True when it just opened.</summary>
         public event Action<bool> OpenStateChanged;
@@ -59,6 +59,8 @@ namespace Plunderspell.Castle
             if (_hinge == null)
                 _hinge = transform;
             _closedRotation = _hinge.localRotation;
+            // The hinge and the event follow the synced state, so they run on every peer, not only the one that asked.
+            _isOpen.onChanged += ApplyOpenState;
         }
 
         /// <summary>
@@ -69,15 +71,27 @@ namespace Plunderspell.Castle
         {
             if (IsOpen)
                 return;
-            SetOpen(true);
+            if (DecidesLocally)
+                _isOpen.value = true;
+            else
+                OpenOnServer();
         }
 
         public void Close()
         {
             if (!IsOpen)
                 return;
-            SetOpen(false);
+            if (DecidesLocally)
+                _isOpen.value = false;
+            else
+                CloseOnServer();
         }
+
+        [ServerRpc(requireOwnership: false)]
+        private void OpenOnServer() => _isOpen.value = true;
+
+        [ServerRpc(requireOwnership: false)]
+        private void CloseOnServer() => _isOpen.value = false;
 
         /// <summary>
         /// A player pushing the door by hand. Fails on a locked or barred door — which is the moment
@@ -87,12 +101,19 @@ namespace Plunderspell.Castle
         {
             if (IsOpen)
                 return true;
-            if (_locked || _barred)
+            if (IsLocked || IsBarred)
                 return false;
 
-            SetOpen(true);
+            // A client answers from the synced lock state; the server re-checks it before opening.
+            if (DecidesLocally)
+                _isOpen.value = true;
+            else
+                TryOpenByHandOnServer();
             return true;
         }
+
+        [ServerRpc(requireOwnership: false)]
+        private void TryOpenByHandOnServer() => TryOpenByHand();
 
         /// <summary>
         /// Shoulder it open. Always works, always loud: the noise is emitted through the normal
@@ -103,23 +124,53 @@ namespace Plunderspell.Castle
             if (IsOpen)
                 return true;
 
-            SetOpen(true);
+            if (!DecidesLocally)
+            {
+                ForceOpenOnServer();
+                return true;
+            }
+
+            _isOpen.value = true;
             NoiseBroadcaster.Broadcast(transform.position, _forceNoiseRadius, _forceNoiseStrength,
                 NoiseType.ItemDrop, ~0, _geometryLayers);
             return true;
         }
 
-        /// <summary>Locks the door. The alarm calls this castle-wide when it reaches Roused.</summary>
-        public void Lock() => _locked = true;
+        [ServerRpc(requireOwnership: false)]
+        private void ForceOpenOnServer() => ForceOpen();
 
-        public void Unlock() => _locked = false;
+        /// <summary>Locks the door. The alarm calls this castle-wide when it reaches Roused.</summary>
+        public void Lock() => SetLocked(true);
+
+        public void Unlock() => SetLocked(false);
 
         /// <summary>Bars the door — cannot be opened by hand at all, only forced or spelled open.</summary>
-        public void Bar() => _barred = true;
+        public void Bar() => SetBarred(true);
 
-        private void SetOpen(bool open)
+        private void SetLocked(bool locked)
         {
-            _isOpen.value = open;
+            if (DecidesLocally)
+                _locked.value = locked;
+            else
+                SetLockedOnServer(locked);
+        }
+
+        private void SetBarred(bool barred)
+        {
+            if (DecidesLocally)
+                _barred.value = barred;
+            else
+                SetBarredOnServer(barred);
+        }
+
+        [ServerRpc(requireOwnership: false)]
+        private void SetLockedOnServer(bool locked) => _locked.value = locked;
+
+        [ServerRpc(requireOwnership: false)]
+        private void SetBarredOnServer(bool barred) => _barred.value = barred;
+
+        private void ApplyOpenState(bool open)
+        {
             if (_hinge != null)
             {
                 _hinge.localRotation = open
