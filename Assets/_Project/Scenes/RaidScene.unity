@@ -583,6 +583,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 139000814}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &220281198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 220281200}
+  - component: {fileID: 220281199}
+  m_Layer: 0
+  m_Name: CastleDoorSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &220281199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220281198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8baf1a4e11d525c41a348364061e04f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.CastleDoorSpawner
+  _innerWardDoor: {fileID: 3285197116216700095, guid: cf608af3cf91c7a49a20701395761244, type: 3}
+  _keepDoor: {fileID: 4263236125279616805, guid: e9ac83bf530acf841a56dd9abea078ba, type: 3}
+  _cryptDoor: {fileID: 3146156532954152746, guid: 5034bcba116d36947bc53cb17fce7a69, type: 3}
+--- !u!4 &220281200
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220281198}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &298889174
 GameObject:
   m_ObjectHideFlags: 0
@@ -1197,6 +1244,7 @@ MonoBehaviour:
   _castleNetwork: {fileID: 0}
   _lootSpawner: {fileID: 1666543508}
   _guardSpawner: {fileID: 298889175}
+  _doorSpawner: {fileID: 220281199}
   _extractionZone: {fileID: 1730551205}
   _lair: {fileID: 998072463}
   _alarm: {fileID: 176129642}
@@ -1820,3 +1868,4 @@ SceneRoots:
   - {fileID: 194298984}
   - {fileID: 139000814}
   - {fileID: 1000908552}
+  - {fileID: 220281200}

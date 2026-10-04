@@ -6,6 +6,9 @@ anything worked on the new floors; #253 lists what the owner saw. Order chosen b
 and stone on placeholders, #255 guards on every floor (tasks 5-7), #248 doors, #256 stairs built by extending
 each Age's existing stairwell (owner's pick over stepped placeholders), #257 every Age and its lights
 checked with screenshots. Roofs come after; "outside" needs a design talk first.
+- #248 doors built, not yet seen in co-op: `CastleDoorPlanner` (10 ward-bailey, 2 keep, 1 crypt door for seed
+  12345 on all three registries), three door prefabs from `Tools/Plunderspell/Forge Castle Doors`, entries in
+  the network prefab list, and `CastleDoorSpawner` (server-side, wired into `RaidDirector` and `RaidScene`).
 - #254 done (`4d40187a`): the raid scene's `Ground` plane at height 0 ran through the down-stair's well, so
   players stood on it. Ground is now one mesh with a 12 m hole over the centre cell
   (`Editor/GroundStairWellCutter.cs`). In Play mode the real controller walked from the lobby floor (0.40) to
