@@ -74,6 +74,7 @@ namespace Plunderspell.Atmosphere
         private readonly List<float> _sqrDistances = new List<float>();
         private readonly List<bool> _isLit = new List<bool>();
         private readonly List<FireRules.LightGrant> _grants = new List<FireRules.LightGrant>();
+        private readonly List<FireRules.LightGrant> _previousGrants = new List<FireRules.LightGrant>();
         private readonly List<int> _order = new List<int>();
 
         private AlarmState _state = AlarmState.Calm;
@@ -383,14 +384,16 @@ namespace Plunderspell.Atmosphere
             Vector3 eye = camera.transform.position;
             _sqrDistances.Clear();
             _isLit.Clear();
+            _previousGrants.Clear();
             for (int i = 0; i < fires.Count; i++)
             {
                 _sqrDistances.Add(FireRules.SqrDistance(fires[i].GlowPosition, eye));
                 _isLit.Add(fires[i].IsBurning);
+                _previousGrants.Add(fires[i].Grant);
             }
 
             TierBudget budget = AtmosphereQuality.BudgetFor(_tier);
-            FireRules.ShareLights(_sqrDistances, _isLit, budget.ShadowedFires, budget.UnshadowedFires, _grants, _order);
+            FireRules.ShareLights(_sqrDistances, _isLit, budget.ShadowedFires, budget.UnshadowedFires, _grants, _order, _previousGrants);
             for (int i = 0; i < fires.Count; i++)
                 fires[i].ApplyGrant(_grants[i]);
         }
