@@ -89,6 +89,7 @@ together and what was deliberately left undocumented, and why.
   ArtForge enemies get into a raid (built: all 16 are in their era's roster) and how they get
   animated (**awaiting approval**; no enemy is animated yet, #141). Review page:
   [`docs/generated/enemy-animation-plan/`](../generated/enemy-animation-plan/index.html).
+- [`docs/plans/multi-floor-castle.md`](../plans/multi-floor-castle.md): **layout and stairs approved, systems awaiting review** (2026-10-03, #197). Castles get a keep floor and a crypt below, joined by period stairs, with doors where zones meet.
 - [`docs/plans/guards-hear-chatter.md`](../plans/guards-hear-chatter.md): **awaiting approval.**
   Guards hear what players say between casts (opt-in, local speech-to-text, words sent only to the
   host), react to it as noise, and remember the words for a later local-language-model stage.
