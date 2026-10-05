@@ -54,6 +54,8 @@ namespace Plunderspell.Guards
             _secondsSinceSeen = 0f;
             _inReach = false;
             MoveToward(_lastSeenSpot);
+            if (!_alreadySpotted)
+                Context.Cry.Raise();
             Context.Link.Director?.Publish(new IntruderSpotted(Context, _target, _lastSeenSpot, !_alreadySpotted));
         }
 
