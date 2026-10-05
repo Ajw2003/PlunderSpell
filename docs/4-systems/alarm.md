@@ -48,8 +48,17 @@ past — those belong to `Guards`/`Castle` respectively.
   Older legacy text: each guard within 40 m took the nearest (`CastleGuard.cs:269`) and went to Investigating through `AlertTo`.
   Nothing outside a guard moves it. The fresh guard takes it up as a lead for its Investigate state
   (see "Leads and Investigate (#208)" below).
-- **`EnemyDirector`** is a server-authoritative FSM: `ApplyNoise(strength)` adds
-  `strength * _noiseWeight` to a 0–100 level and stamps the time; `TickDecay` bleeds the level off
+- **The castle needs witnesses** (2026-10-04, #259; design `docs/plans/alarm-witnesses.md`). The director no
+  longer hears noise itself. A guard that hears an intruder's noise reports it (`Guard.cs:125`), and
+  `DirectorAlarm.ReportHeardNoise` (`DirectorAlarm.cs:62`) scores `strength * _noiseWeight` once per guard every
+  2 s. A guard's first sighting (`ReportSighting(guardId)`, `:72`) adds 20 and makes it a witness; a chasing guard
+  is a witness too. Roused needs level 50 and 3 witnesses, Hue and Cry 80 and 5 (`_rousedWitnesses`,
+  `_hueAndCryWitnesses` on `EnemyDirector`); points keep accumulating while the witnesses are missing. On its
+  first sighting a guard cries out (`GuardCry.cs`: a `NoiseType.GuardCry`, 18 m, strength 0.4, so three walls
+  silence it); guards that hear the cry take the crier's position as a lead (`GuardLeads.cs`), and if they see the
+  intruder they cry in turn. A cry scores no points. One guard hearing one burst of noise goes to look and leaves
+  the castle Calm (`FullRaidIntegrationTests.Test_OneGuardHearingAShoutedLeapDoesNotStirTheCastle`).
+- **`EnemyDirector`** is a server-authoritative FSM over a 0–100 level; `TickDecay` bleeds the level off
   at a fixed rate once `_decayDelay` seconds have passed with no noise. `UpdateState` maps the
   level to a state at fixed thresholds (20 / 50 / 80).
 - **The latch is the whole point.** Once the computed state reaches `Roused`, `_locked` is set and
@@ -61,8 +70,8 @@ past — those belong to `Guards`/`Castle` respectively.
   between halved a far guard's shout to one or two points: several guards chasing and hitting you
   never got past Stirred. Now `CastleGuard` also calls `ReportSighting` (+20) when it starts a chase,
   `ReportAttack` (+6) each time it attacks, and `ReportChase(id, chasing)` as it starts and stops
-  chasing. Two guards chasing at once lift the level to at least Roused (50), three to Hue and Cry
-  (80). The numbers are serialized on `EnemyDirector`.
+  chasing. Three guards chasing at once lift the level to at least Roused (50), five to Hue and Cry
+  (80); two and three until #259. The numbers are serialized on `EnemyDirector`.
   **Until 2026-09-26 none of this reached the alarm in a real raid** (#163): `GuardSpawner` calls
   `CastleGuard.Configure(null, route)` after the guard's `Awake` has found the alarm, and `Configure`
   overwrote it with null. A live raid had 10 guards and 0 connected to the alarm; a guard breaking
@@ -84,8 +93,8 @@ past — those belong to `Guards`/`Castle` respectively.
   chasers, and for 20 s nothing raises the alarm. Before this it only set the level to 0, and the
   latch kept the last raid's Hue and Cry, so the next raid began in it.
 - **Replication is a state broadcast, not per-value sync.** `EnemyDirector` runs the FSM only on
-  the server (`if (isSpawned && !isServer) return;` in `Update`); a client-side `OnNoiseHeard` call
-  forwards to the server via `ReportNoiseServer` instead of applying locally. State *changes* fan
+  the server (`if (isSpawned && !isServer) return;` in `Update`); guards hear on the server only
+  (`Guard.OnNoiseHeard` checks `IsAuthority`), so every report reaches the alarm there. State *changes* fan
   out via an `[ObserversRpc(bufferLast: true)]`, so a client that spawns late still receives the
   current state instead of only future transitions.
 
@@ -95,7 +104,7 @@ past — those belong to `Guards`/`Castle` respectively.
   `if (_locked && computed < _alarmState.value) computed = _alarmState.value;` is the entire
   guarantee behind "the alarm never decays" in the pitch — remove it and a quiet stretch after a
   loud one would let the castle stand back down.
-- **Pure logic stays network-free.** `ApplyNoise`, `UpdateState` and `TickDecay` take no PurrNet
+- **Pure logic stays network-free.** `ReportHeardNoise`, `UpdateState` and `TickDecay` take no PurrNet
   types as parameters and can run under EditMode tests with no server/spawn state at all; only the
   `SyncVar` fields and the RPC wrapper around them are network-aware. Adding a network call inside
   one of those three methods would break that testability for no behavioural gain.
@@ -117,7 +126,8 @@ past — those belong to `Guards`/`Castle` respectively.
 
 `NoiseType.Speech` (appended last) carries `NoiseEvent.Transcript`. `NoiseBroadcaster.BroadcastSpeech`
 delivers it to every `INoiseListener` like any noise, then asks each `IEavesdropper.Overhear` whether the
-words were taken in and returns that count (the alarm hears the noise but is not an eavesdropper).
+words were taken in and returns that count. Since #259 the director hears nothing itself; speech raises the
+alarm only through a guard that hears it.
 `CastleGuard` is one: an asleep or stunned guard answers false; otherwise it stores `LastOverheard`.
 
 ## Guard navigation

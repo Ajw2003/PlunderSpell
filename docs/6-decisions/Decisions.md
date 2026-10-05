@@ -3,6 +3,20 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-04 — The castle hears through its guards and needs witnesses
+
+**Context.** In the owner's playtest one sighting and one Somnus took the castle from Calm to Hue and Cry (#259).
+The director scored every noise from its own castle-wide trigger, and two or three guards chasing forced Roused
+and Hue and Cry.
+
+**Decision (owner, 2026-10-04).** Keep the triggers and the guards' senses; make escalation need witnesses, spread
+by guards calling each other. A guard that spots you cries out; guards that hear the cry come over, and each that
+sees you cries in turn. The castle scores only noise its guards heard, once per guard. Roused needs 3 guards that
+have seen an intruder, Hue and Cry 5; chasers forcing a state go from 2 and 3 to 3 and 5.
+
+**Consequence.** Reverses "the alarm hears noise from the castle-wide trigger" (alarm.md, #139) and the 2/3 chaser
+floors. Design: `docs/plans/alarm-witnesses.md`; how it works: `docs/4-systems/alarm.md`.
+
 ## 2026-10-02 — Fire overrules Somnus
 
 **Context.** #212 ruled that stun and sleep outrank burning, so a sleeping guard that was set alight kept
