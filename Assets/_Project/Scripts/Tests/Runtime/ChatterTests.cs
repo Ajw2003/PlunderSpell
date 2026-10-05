@@ -210,7 +210,7 @@ namespace Plunderspell.Tests
         }
 
         [Test]
-        public void Test_TheAlarmHearsSpeechButIsNotCountedAsAGuard()
+        public void Test_TheDirectorIsNotAListenerAndIsNotCountedAsAGuard()
         {
             var alarmGo = Track(new GameObject("Alarm"));
             alarmGo.transform.position = new Vector3(0f, 0f, 2f);
@@ -223,7 +223,8 @@ namespace Plunderspell.Tests
             int understood = relay.Resolve("hello", CastVolume.Shout, Vector3.zero);
 
             Assert.AreEqual(0, understood);
-            Assert.Greater(alarm.AlarmLevel, before, "The alarm still hears the noise.");
+            // The castle hears only through its guards (#259); with none in earshot, a shout raises nothing.
+            Assert.AreEqual(before, alarm.AlarmLevel, "The director no longer hears noise itself.");
         }
 
         [Test]

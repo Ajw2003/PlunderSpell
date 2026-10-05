@@ -148,9 +148,14 @@ namespace Plunderspell.Tests.Integration
             var go = Track(new GameObject("Alarm"));
             var alarm = go.AddComponent<EnemyDirector>();
 
-            // 6 noise events at strength 1.0 (weight 15) → 90 ≥ 80 → HueAndCry, latched.
+            // Six guards each hear a strength-1.0 noise (weight 15) → 90 ≥ 80; five of them have seen an
+            // intruder (#259) → HueAndCry, latched.
+            alarm.SetAlarmLevel(0f, 5);
             for (int i = 0; i < 6; i++)
-                alarm.ApplyNoise(1.0f);
+            {
+                var guard = Track(new GameObject("Guard" + i));
+                alarm.Publish(new NoiseReported(guard.transform, Vector3.zero, 1.0f));
+            }
 
             Assert.AreEqual(AlarmState.HueAndCry, alarm.State);
             Assert.IsTrue(alarm.IsLocked, "Alarm should latch (_locked) at Roused/HueAndCry.");

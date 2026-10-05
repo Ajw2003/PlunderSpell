@@ -130,7 +130,7 @@ namespace Plunderspell.Tests
             guard.OnNoiseHeard(noise);
             Assert.That(guard.Hearing.NoticedCount, Is.EqualTo(0), "background noise while Calm");
 
-            _rig.Director.SetAlarmLevel(60f);
+            _rig.Director.SetAlarmLevel(60f, 3); // Roused needs three witnesses (#259)
             guard.OnNoiseHeard(noise);
             Assert.That(guard.Hearing.NoticedCount, Is.EqualTo(1), "the same noise matters once Roused");
             Assert.That(heardAt, Is.EqualTo(noise.Origin));

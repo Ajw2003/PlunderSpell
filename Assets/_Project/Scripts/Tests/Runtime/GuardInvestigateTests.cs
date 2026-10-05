@@ -89,7 +89,7 @@ namespace Plunderspell.Tests
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
             Transform player = _rig.MakeIntruder(new Vector3(0f, 0f, 60f));
-            _rig.Director.SetAlarmLevel(100f);
+            _rig.Director.SetAlarmLevel(100f, 5); // Hue and Cry needs five witnesses (#259)
             guard.Tick(Step);
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.Investigate));
 
@@ -107,7 +107,7 @@ namespace Plunderspell.Tests
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
             Transform player = _rig.MakeIntruder(new Vector3(0f, 0f, 60f));
-            _rig.Director.SetAlarmLevel(100f);
+            _rig.Director.SetAlarmLevel(100f, 5); // Hue and Cry needs five witnesses (#259)
             guard.Tick(Step);
             _rig.Director.SetAlarmLevel(0f);
             Vector3 spotBefore = ((InvestigateState)guard.CurrentState).Spot;
