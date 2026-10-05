@@ -1,5 +1,13 @@
 # Today
 
+**2026-10-05 - the owner played it: "finally starting to feel like a game".** They saved that build as a local
+branch, `Staging` (`aaeb9b94`). Since then: the alarm needs witnesses (#259: guards cry for help, the castle hears
+only through its guards; 3 witnesses for the lockdown, 5 for the hue and cry), curtain fires per Age (#258), and the
+spell tests moved to a listening guard (`325852e9`). House-rules plugin updated to 2.52.0 (unanswered prompts are
+refused after 5 minutes). The #259 live raid check is not run yet. Next agent: `docs/plans/handoff-2026-10-05-guards-castle.md`.
+
+---
+
 **2026-10-03 (evening) - the stacked castle, picked up after the owner's playtest (#253).** The previous
 session finished tasks 1-4 of 8 in `docs/plans/multi-floor-castle-step1-plan.md` (#247) and stopped before
 anything worked on the new floors; #253 lists what the owner saw. Order chosen by the owner: #254 crypt entry
