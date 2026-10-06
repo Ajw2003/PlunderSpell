@@ -51,9 +51,9 @@ namespace Plunderspell.Atmosphere
         [Tooltip("How dark the outlines round silhouettes and sharp corners are: 0 turns them off.")]
         [Range(0f, 1f)] public float OutlineStrength = 0.35f;
         [Tooltip("How sharp a step in depth must be to get an outline. Lower draws more lines.")]
-        public float OutlineThreshold = 0.05f;
+        public float OutlineThreshold = 0.025f;
         [Tooltip("How much the paper's grain and blotches darken the picture: 0 turns them off.")]
-        [Range(0f, 0.3f)] public float PaperGrain = 0.05f;
+        [Range(0f, 0.3f)] public float PaperGrain = 0.14f;
 
         /// <summary>The tints for one Age.</summary>
         public EraTint ForEra(HistoricalEra era)
