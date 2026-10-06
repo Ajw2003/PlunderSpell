@@ -15,13 +15,16 @@ from diffusers import ZImagePipeline
 
 OUT = Path(__file__).resolve().parents[2] / "docs" / "art" / "concept" / "painted"
 SEED = 231
+# Bumped whenever STYLE changes, so earlier takes stay on disk beside the new ones.
+TAKE = "v2"
 
 STYLE = (
     "hand-painted concept art for a stylised stealth video game, cel shaded with flat colour bands and crisp "
     "shadow shapes, thick visible gouache brush strokes on every surface, dirt and grime and soot settled in the "
     "crevices, worn edges, chipped plaster, dark ink linework, muted umber and vellum palette, deep warm "
     "shadows falling away into black, lit only by candles, torches and hearth fire, painterly, illustrated, "
-    "no text, no people in the foreground"
+    "low-key night scene, most of the frame in deep umber shadow, only small warm pools of fire light, "
+    "desaturated, no text, no people in the foreground"
 )
 
 AGES = {
@@ -67,7 +70,7 @@ def main(ages):
             for scene, prompt in prompts_for(age):
                 image = pipe(prompt=prompt, width=1344, height=768, num_inference_steps=9, guidance_scale=0.0,
                              generator=torch.Generator("cuda").manual_seed(SEED)).images[0]
-                path = OUT / f"{age}-{scene}.png"
+                path = OUT / f"{age}-{scene}-{TAKE}.png"
                 image.save(path)
                 log.write(f"{path.name}\tseed {SEED}\t{prompt}\n")
                 print("wrote", path, flush=True)
