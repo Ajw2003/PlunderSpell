@@ -271,7 +271,7 @@ namespace Plunderspell.Atmosphere
             Color stone = tint.Stone.maxColorComponent > 0f ? tint.Stone : Color.white;
             Shader.SetGlobalVector(s_stoneTint, new Vector4(stone.r, stone.g, stone.b, 1f));
             Shader.SetGlobalVector(s_hatch, new Vector4(_profile.HatchStrength, _profile.HatchLinesPerMetre, _profile.HatchStart, 0f));
-            Shader.SetGlobalVector(s_paint, new Vector4(_profile.PaperGrain, _profile.OutlineStrength, 0f, 0f));
+            Shader.SetGlobalVector(s_paint, new Vector4(_profile.PaperGrain, _profile.OutlineStrength, _profile.SootStrength, 0f));
             Shader.SetGlobalVector(s_cel, new Vector4(_profile.CelAmount, _profile.CelSoftness, 0f, 0f));
             if (tint.Flame.maxColorComponent > 0f)
                 _current.FlameColor *= tint.Flame;

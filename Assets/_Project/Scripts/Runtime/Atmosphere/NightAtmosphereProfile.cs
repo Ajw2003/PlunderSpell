@@ -52,7 +52,9 @@ namespace Plunderspell.Atmosphere
                  "crevices): 0 turns them off.")]
         [Range(0f, 1f)] public float OutlineStrength = 0.35f;
         [Tooltip("How much the paint grain and blotches on walls darken them: 0 turns them off.")]
-        [Range(0f, 0.3f)] public float PaperGrain = 0.14f;
+        [Range(0f, 0.7f)] public float PaperGrain = 0.14f;
+        [Tooltip("How much extra soot darkens the foot of walls: 0 leaves only each material's own grime.")]
+        [Range(0f, 0.8f)] public float SootStrength = 0.3f;
 
         /// <summary>The tints for one Age.</summary>
         public EraTint ForEra(HistoricalEra era)

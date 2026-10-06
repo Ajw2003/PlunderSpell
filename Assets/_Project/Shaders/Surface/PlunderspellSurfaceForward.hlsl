@@ -139,9 +139,11 @@ half PaperGrain(float3 positionWS, half3 normalWS)
         return 1.0h;
     half3 w = abs(normalWS);
     float2 uv = w.y >= max(w.x, w.z) ? positionWS.xz : (w.x >= w.z ? positionWS.zy : positionWS.xy);
-    half blotch = ValueNoise(uv * 1.0);
+    // Two-tone mottling: a 1 m noise snapped into patches of light and dark paint, edges softened.
+    half n = 0.65h * ValueNoise(uv * 0.9) + 0.35h * ValueNoise(uv * 2.3 + 17.0);
+    half blotch = smoothstep(0.42h, 0.56h, n);
     half fibre = ValueNoise(uv * 24.0);
-    return 1.0h - _PlunderPaint.x * (0.65h * blotch + 0.35h * fibre);
+    return 1.0h - _PlunderPaint.x * (0.8h * blotch + 0.2h * fibre);
 }
 
 // Ink edges (#266): a crisp dark band where the surface turns away from the eye, and the baked soot
@@ -177,6 +179,8 @@ half4 SurfaceFragment(Varyings input) : SV_Target
     half wall = 1.0h - abs(normalWS.y);
     half aboveGround = saturate((input.positionWS.y - 0.3) / 1.6);
     albedo *= lerp(1.0h, lerp(_GroundGrime, 1.0h, aboveGround), wall);
+    // Extra soot low on walls (#268): darkens the bottom 1.5 m beyond the material's own grime.
+    albedo *= lerp(1.0h, lerp(1.0h - (half)_PlunderPaint.z, 1.0h, aboveGround), wall);
 
     InputData inputData = (InputData)0;
     inputData.positionWS = input.positionWS;
