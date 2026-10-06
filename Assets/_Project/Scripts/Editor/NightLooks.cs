@@ -17,18 +17,18 @@ namespace Plunderspell.EditorTools
         // the cool grey "iron", so it is warmed more than darkened; the others build in pale
         // limestone, sandstone and plaster, so they are darkened more.
         public static readonly NightAtmosphereProfile.EraTint HighMedievalTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(1.5f, 2.2f, 1.0f), Flame = Color.white };
+            { Stone = new Color(1.12f, 0.97f, 0.82f), Flame = Color.white };
         public static readonly NightAtmosphereProfile.EraTint BronzeAgeTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(1.3f, 1.75f, 0.45f), Flame = new Color(1f, 1.04f, 1.08f) };
+            { Stone = new Color(0.72f, 0.62f, 0.52f), Flame = new Color(1f, 1.04f, 1.08f) };
         public static readonly NightAtmosphereProfile.EraTint LateMedievalTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(1.4f, 1.9f, 0.6f), Flame = Color.white };
+            { Stone = new Color(0.74f, 0.64f, 0.54f), Flame = Color.white };
         public static readonly NightAtmosphereProfile.EraTint AgeOfPowderTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(0.8f, 1.2f, 0.8f), Flame = new Color(1f, 0.97f, 0.92f) };
+            { Stone = new Color(0.66f, 0.6f, 0.54f), Flame = new Color(1f, 0.97f, 0.92f) };
 
         public static AtmosphereLook Calm(VolumeProfile post) => new AtmosphereLook
         {
             FogColor = new Color(0.15f, 0.10f, 0.068f),
-            FogDensity = 0.012f,
+            FogDensity = 0.038f,
             FogBaseHeight = 0f,
             FogHeightFalloff = 0.075f,
             SkyDistance = 140f,
@@ -36,14 +36,14 @@ namespace Plunderspell.EditorTools
             MoonIntensity = 0.035f,
             MoonScatter = 0.02f,
             MoonAnisotropy = 0.55f,
-            AmbientSky = new Color(0.4f, 0.38f, 0.28f),
-            AmbientEquator = new Color(0.6f, 0.55f, 0.32f),
-            AmbientGround = new Color(0.3f, 0.24f, 0.15f),
+            AmbientSky = new Color(0.075f, 0.072f, 0.08f),
+            AmbientEquator = new Color(0.12f, 0.085f, 0.06f),
+            AmbientGround = new Color(0.07f, 0.05f, 0.036f),
             SkyZenith = new Color(0.012f, 0.012f, 0.016f),
             SkyHorizon = new Color(0.05f, 0.04f, 0.035f),
             FlameColor = new Color(1.0f, 0.5f, 0.18f),
             FireIntensity = 1.4f,
-            FireScatter = 0.35f,
+            FireScatter = 1.9f,
             FireAnisotropy = 0.6f,
             Post = post,
         };
@@ -54,7 +54,7 @@ namespace Plunderspell.EditorTools
             look.FogColor = new Color(0.17f, 0.11f, 0.07f);
             look.FlameColor = new Color(1.0f, 0.49f, 0.18f);
             look.FireIntensity = 1.5f;
-            look.FireScatter = 0.4f;
+            look.FireScatter = 2.1f;
             look.SkyHorizon = new Color(0.06f, 0.045f, 0.035f);
             return look;
         }
@@ -63,12 +63,12 @@ namespace Plunderspell.EditorTools
         {
             AtmosphereLook look = Calm(post);
             look.FogColor = new Color(0.22f, 0.12f, 0.06f);
-            look.FogDensity = 0.013f;
+            look.FogDensity = 0.034f;
             look.FlameColor = new Color(1.0f, 0.42f, 0.13f);
             look.FireIntensity = 1.5f;
-            look.FireScatter = 0.45f;
+            look.FireScatter = 2.3f;
             look.SkyHorizon = new Color(0.09f, 0.05f, 0.03f);
-            look.AmbientEquator = new Color(0.55f, 0.36f, 0.2f);
+            look.AmbientEquator = new Color(0.15f, 0.09f, 0.055f);
             return look;
         }
 
@@ -76,13 +76,13 @@ namespace Plunderspell.EditorTools
         {
             AtmosphereLook look = Calm(post);
             look.FogColor = new Color(0.25f, 0.1f, 0.05f);
-            look.FogDensity = 0.013f;
+            look.FogDensity = 0.030f;
             look.FlameColor = new Color(1.0f, 0.34f, 0.10f);
             look.FireIntensity = 1.55f;
-            look.FireScatter = 0.5f;
+            look.FireScatter = 2.4f;
             look.SkyZenith = new Color(0.03f, 0.012f, 0.01f);
             look.SkyHorizon = new Color(0.12f, 0.045f, 0.025f);
-            look.AmbientEquator = new Color(0.56f, 0.3f, 0.18f);
+            look.AmbientEquator = new Color(0.17f, 0.08f, 0.05f);
             look.AmbientGround = new Color(0.08f, 0.04f, 0.028f);
             return look;
         }
