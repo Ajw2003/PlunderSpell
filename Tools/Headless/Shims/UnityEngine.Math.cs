@@ -11,6 +11,10 @@ namespace UnityEngine
         public Vector2(float x, float y) { this.x = x; this.y = y; }
         public static Vector2 zero => new Vector2(0f, 0f);
         public static Vector2 one => new Vector2(1f, 1f);
+        public static Vector2 up => new Vector2(0f, 1f);
+        public static Vector2 down => new Vector2(0f, -1f);
+        public static Vector2 left => new Vector2(-1f, 0f);
+        public static Vector2 right => new Vector2(1f, 0f);
         public float magnitude => (float)Math.Sqrt(x * x + y * y);
         public float sqrMagnitude => x * x + y * y;
         public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(a.x + b.x, a.y + b.y);
@@ -18,6 +22,22 @@ namespace UnityEngine
         public static Vector2 operator *(Vector2 a, float s) => new Vector2(a.x * s, a.y * s);
         public static float Distance(Vector2 a, Vector2 b) => (a - b).magnitude;
         public override string ToString() => $"({x}, {y})";
+    }
+
+    public struct Vector4 : IEquatable<Vector4>
+    {
+        public float x, y, z, w;
+        public Vector4(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; }
+        public static Vector4 zero => new Vector4(0f, 0f, 0f, 0f);
+        public static Vector4 one => new Vector4(1f, 1f, 1f, 1f);
+        public static implicit operator Vector4(Vector3 v) => new Vector4(v.x, v.y, v.z, 0f);
+        public static implicit operator Vector3(Vector4 v) => new Vector3(v.x, v.y, v.z);
+        public bool Equals(Vector4 o) => x == o.x && y == o.y && z == o.z && w == o.w;
+        public override bool Equals(object o) => o is Vector4 v && Equals(v);
+        public override int GetHashCode() => HashCode.Combine(x, y, z, w);
+        public static bool operator ==(Vector4 a, Vector4 b) => a.Equals(b);
+        public static bool operator !=(Vector4 a, Vector4 b) => !a.Equals(b);
+        public override string ToString() => $"({x}, {y}, {z}, {w})";
     }
 
     [Serializable]
@@ -153,6 +173,38 @@ namespace UnityEngine
         public Quaternion(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; }
 
         public static Quaternion identity => new Quaternion(0f, 0f, 0f, 1f);
+
+        /// <summary>Euler angles in degrees (each 0..360), by the same decomposition Unity uses (Z, X, then Y).</summary>
+        public Vector3 eulerAngles
+        {
+            get
+            {
+                const float rad2deg = 57.29578f;
+                float unit = x * x + y * y + z * z + w * w;
+                float test = x * w - y * z;
+                Vector3 v;
+                if (test > 0.4995f * unit)
+                    v = new Vector3(Mathf.PI / 2f, 2f * Mathf.Atan2(y, x), 0f);
+                else if (test < -0.4995f * unit)
+                    v = new Vector3(-Mathf.PI / 2f, -2f * Mathf.Atan2(y, x), 0f);
+                else
+                {
+                    // Unity reorders the quaternion as (w, z, x, y) before extracting the angles.
+                    float qx = w, qy = z, qz = x, qw = y;
+                    v = new Vector3(
+                        (float)Math.Asin(2f * (qx * qz - qw * qy)),
+                        Mathf.Atan2(2f * qx * qw + 2f * qy * qz, 1f - 2f * (qz * qz + qw * qw)),
+                        Mathf.Atan2(2f * qx * qy + 2f * qz * qw, 1f - 2f * (qy * qy + qz * qz)));
+                }
+                return new Vector3(Wrap360(v.x * rad2deg), Wrap360(v.y * rad2deg), Wrap360(v.z * rad2deg));
+            }
+        }
+
+        private static float Wrap360(float degrees)
+        {
+            degrees %= 360f;
+            return degrees < 0f ? degrees + 360f : degrees;
+        }
 
         /// <summary>Angle in degrees (0..360) and unit axis, as Unity returns them.</summary>
         public void ToAngleAxis(out float angle, out Vector3 axis)
@@ -324,6 +376,49 @@ namespace UnityEngine
         public static bool Approximately(float a, float b) =>
             Math.Abs(b - a) < Max(1E-06f * Max(Math.Abs(a), Math.Abs(b)), Epsilon * 8f);
         public static float Sign(float v) => v >= 0f ? 1f : -1f;
+        public static float Exp(float v) => (float)Math.Exp(v);
+        public static float Log10(float v) => (float)Math.Log10(v);
+
+        /// <summary>
+        /// Classic 2D gradient noise (Perlin's improved noise) remapped to 0..1, like Unity's. It is
+        /// not Unity's exact permutation table, so values differ from the editor's -- smooth,
+        /// deterministic and bounded the same way, which is all the game relies on (shake, flicker).
+        /// </summary>
+        public static float PerlinNoise(float x, float y)
+        {
+            int xi = (int)Math.Floor(x) & 255, yi = (int)Math.Floor(y) & 255;
+            float xf = x - (float)Math.Floor(x), yf = y - (float)Math.Floor(y);
+            float u = Fade(xf), v = Fade(yf);
+            int aa = s_perm[s_perm[xi] + yi], ab = s_perm[s_perm[xi] + yi + 1];
+            int ba = s_perm[s_perm[xi + 1] + yi], bb = s_perm[s_perm[xi + 1] + yi + 1];
+            float n = Lerp(Lerp(Grad(aa, xf, yf), Grad(ba, xf - 1f, yf), u),
+                           Lerp(Grad(ab, xf, yf - 1f), Grad(bb, xf - 1f, yf - 1f), u), v);
+            return Clamp01(n * 0.7071f + 0.5f);
+        }
+
+        private static float Fade(float t) => t * t * t * (t * (t * 6f - 15f) + 10f);
+        private static float Grad(int hash, float x, float y)
+        {
+            switch (hash & 3)
+            {
+                case 0: return x + y;
+                case 1: return -x + y;
+                case 2: return x - y;
+                default: return -x - y;
+            }
+        }
+
+        private static readonly int[] s_perm = BuildPermutation();
+        private static int[] BuildPermutation()
+        {
+            var rng = new System.Random(1337);
+            var p = new int[256];
+            for (int i = 0; i < 256; i++) p[i] = i;
+            for (int i = 255; i > 0; i--) { int j = rng.Next(i + 1); (p[i], p[j]) = (p[j], p[i]); }
+            var table = new int[512];
+            for (int i = 0; i < 512; i++) table[i] = p[i & 255];
+            return table;
+        }
     }
 
     [Serializable]
@@ -346,6 +441,8 @@ namespace UnityEngine
 
         public static Color operator *(Color c, float scale) => new Color(c.r * scale, c.g * scale, c.b * scale, c.a * scale);
         public static Color operator *(float scale, Color c) => c * scale;
+        public static Color operator *(Color a, Color b) => new Color(a.r * b.r, a.g * b.g, a.b * b.b, a.a * b.a);
+        public static Color operator +(Color a, Color b) => new Color(a.r + b.r, a.g + b.g, a.b + b.b, a.a + b.a);
 
         public static Color Lerp(Color a, Color b, float t)
         {

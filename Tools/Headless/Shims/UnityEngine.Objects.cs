@@ -94,11 +94,14 @@ namespace UnityEngine
         public static T[] FindObjectsOfType<T>() where T : Component => SceneRegistry.FindComponents<T>().ToArray();
         public static T FindObjectOfType<T>() where T : Component => SceneRegistry.FindComponents<T>().FirstOrDefault();
         public static T[] FindObjectsByType<T>(FindObjectsSortMode mode) where T : Component => FindObjectsOfType<T>();
+        /// <summary>Approximation: the registry holds live components only, so <paramref name="inactive"/> is not honoured.</summary>
+        public static T[] FindObjectsByType<T>(FindObjectsInactive inactive, FindObjectsSortMode mode) where T : Component => FindObjectsOfType<T>();
         public static T FindFirstObjectByType<T>() where T : Component => FindObjectOfType<T>();
         public static T FindAnyObjectByType<T>() where T : Component => FindObjectOfType<T>();
     }
 
     public enum FindObjectsSortMode { None, InstanceID }
+    public enum FindObjectsInactive { Exclude, Include }
 
     /// <summary>
     /// The headless stand-in for the active scene: every live GameObject is registered here. Named
@@ -265,6 +268,8 @@ namespace UnityEngine
             CollectInChildren(results);
         }
 
+        public void GetComponentsInChildren<T>(List<T> results) => GetComponentsInChildren(false, results);
+
         private void CollectInChildren<T>(List<T> results)
         {
             results.AddRange(_components.OfType<T>());
@@ -360,6 +365,7 @@ namespace UnityEngine
         public T GetComponentInChildren<T>(bool includeInactive = false) => _gameObject.GetComponentInChildren<T>(includeInactive);
         public T[] GetComponentsInChildren<T>(bool includeInactive = false) => _gameObject.GetComponentsInChildren<T>(includeInactive);
         public void GetComponentsInChildren<T>(bool includeInactive, List<T> results) => _gameObject.GetComponentsInChildren(includeInactive, results);
+        public void GetComponentsInChildren<T>(List<T> results) => _gameObject.GetComponentsInChildren(false, results);
         public T GetComponentInParent<T>(bool includeInactive = false) => _gameObject.GetComponentInParent<T>(includeInactive);
         public T AddComponent<T>() where T : Component => _gameObject.AddComponent<T>();
         public bool TryGetComponent<T>(out T component) => _gameObject.TryGetComponent(out component);
@@ -549,6 +555,12 @@ namespace UnityEngine
     {
         private readonly float _seconds;
         public WaitForSeconds(float seconds) => _seconds = seconds;
+        public float Seconds => _seconds;
+    }
+    public sealed class WaitForSecondsRealtime
+    {
+        private readonly float _seconds;
+        public WaitForSecondsRealtime(float seconds) => _seconds = seconds;
         public float Seconds => _seconds;
     }
     public sealed class WaitForFixedUpdate { }
