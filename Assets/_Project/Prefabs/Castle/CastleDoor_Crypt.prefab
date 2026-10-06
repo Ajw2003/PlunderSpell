@@ -82,7 +82,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   _hinge: {fileID: 5831502544625963045}
-  _openAngle: 90
+  _openAngle: -90
 --- !u!1 &6433467820445795735
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,7 +204,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3711560959101535822, guid: c5b8370d858ef934dbcd4a5b330568a7, type: 3}
+  - {fileID: 2100000, guid: cb28ab6857174694cbc9ed38a31e15ca, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

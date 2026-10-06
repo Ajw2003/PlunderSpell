@@ -19,12 +19,18 @@ namespace Plunderspell.Loot
 
         private IOpenable Door => _door as IOpenable;
 
-        /// <summary>Opens the door if it can be opened by hand. Returns true if it opened.</summary>
+        /// <summary>Closes the door if it is open (#276), otherwise opens it if it can be opened by hand.
+        /// Returns true if the door moved.</summary>
         public bool Interact()
         {
             IOpenable door = Door;
-            if (door == null || door.IsOpen)
+            if (door == null)
                 return false;
+            if (door.IsOpen)
+            {
+                door.Close();
+                return true;
+            }
 
             // Reflection-free: the door exposes hand/force opening through its own component API,
             // which the handle discovers via the optional interface below.

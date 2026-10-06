@@ -61,5 +61,38 @@ namespace Plunderspell.Tests
             Assert.IsFalse(_door.TryOpenByHand(), "barred refuses a hand");
             Assert.IsTrue(_door.ForceOpen(), "forcing always works");
         }
+
+        [Test]
+        public void TheHandClosesAnOpenDoor()
+        {
+            var handle = _go.AddComponent<Plunderspell.Loot.CastleDoorHandle>();
+            handle.SetDoor(_door);
+
+            Assert.IsTrue(handle.Interact(), "opens");
+            Assert.IsTrue(_door.IsOpen);
+            Assert.IsTrue(handle.Interact(), "closes again (#276)");
+            Assert.IsFalse(_door.IsOpen);
+        }
+
+        // A door faces into the room it leads to; at a stair head its back is the stair, so the open leaf must
+        // land on the front side, never across the steps (#276).
+        [TestCase("CastleDoor_InnerWard")]
+        [TestCase("CastleDoor_Keep")]
+        [TestCase("CastleDoor_Crypt")]
+        public void AForgedDoorSwingsIntoTheRoomItFaces(string prefabName)
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/_Project/Prefabs/Castle/{prefabName}.prefab");
+            GameObject door = Object.Instantiate(prefab);
+            try
+            {
+                door.GetComponent<CastleDoor>().Open();
+                Vector3 leaf = door.transform.InverseTransformPoint(door.GetComponentInChildren<Renderer>().bounds.center);
+                Assert.Greater(leaf.z, 0.5f, $"open leaf centre at local {leaf}");
+            }
+            finally
+            {
+                Object.DestroyImmediate(door);
+            }
+        }
     }
 }

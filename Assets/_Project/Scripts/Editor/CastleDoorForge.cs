@@ -30,7 +30,7 @@ namespace Plunderspell.EditorTools
         [MenuItem("Tools/Plunderspell/Forge Castle Doors")]
         public static void Forge()
         {
-            Material oak = StyleMaterial("KeepStairwell_oak");
+            Material oak = FlatOak(StyleMaterial("KeepStairwell_oak"));
             Directory.CreateDirectory(PrefabDir);
             foreach ((string name, CastleZone zone) in Doors)
                 Build(name, ArtBibleEnemyCatalog.ArchwayHeight(zone), oak);
@@ -76,6 +76,9 @@ namespace Plunderspell.EditorTools
 
             var serialized = new SerializedObject(door);
             serialized.FindProperty("_hinge").objectReferenceValue = hinge.transform;
+            // Swing into the room the door faces: a stair door faces out of its stairwell, and +90 laid the
+            // open leaf across the stair head or the bottom steps (#276).
+            serialized.FindProperty("_openAngle").floatValue = -90f;
             serialized.ApplyModifiedPropertiesWithoutUndo();
 
             // On the leaf, beside the collider the player's interact ray hits, so GetComponentInParent finds it.
@@ -85,6 +88,23 @@ namespace Plunderspell.EditorTools
 
             PrefabUtility.SaveAsPrefabAsset(root, $"{PrefabDir}/{name}.prefab");
             Object.DestroyImmediate(root);
+        }
+
+        // The kit's oak samples one swatch of the palette atlas through the model's UVs; a cube's UVs span the whole
+        // atlas, so the leaf showed every swatch (#273). The leaf gets the oak colour flat, no atlas.
+        private const string FlatOakPath = PrefabDir + "/CastleDoor_Oak.mat";
+        private static readonly Color OakColour = new Color(0x5E / 255f, 0x46 / 255f, 0x30 / 255f);
+
+        private static Material FlatOak(Material kitOak)
+        {
+            if (kitOak == null)
+                return null;
+            var flat = new Material(kitOak) { name = "CastleDoor_Oak" };
+            flat.SetTexture("_BaseMap", null);
+            flat.SetColor("_BaseColor", OakColour);
+            AssetDatabase.DeleteAsset(FlatOakPath);
+            AssetDatabase.CreateAsset(flat, FlatOakPath);
+            return flat;
         }
 
         private static Material StyleMaterial(string name)
