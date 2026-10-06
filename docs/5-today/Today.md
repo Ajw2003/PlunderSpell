@@ -1,5 +1,19 @@
 # Today
 
+**2026-10-05 (night) - the owner's four fixes (#262), plus downed teammates (#270).** On `claude/project-thread-x1cqae`.
+- Doors (#263, `0e3bc979`): guards open closed doors they walk into. Hue and cry (#264, `5066321d`): the lockdown
+  bars every door and guards treated barred as walls, so half the garrison never came; now guards pass barred doors
+  (players still need Porta or force). Swarm check: within 20 m of the host at 23 s, 5 -> 12. Left: #271.
+- Spawning outside (#265, `001932c5`): 8 logged outside spawns (2026-09-26 to 09-30) all land inside on today's
+  code; the 2026-10-03 arrival rewrite fixed it. The built game in `Build/` predates that.
+- Painted look: screen ink pass removed, paint on surfaces (#266); new local concept art per Age
+  (`docs/art/concept/painted/`, recipe in its README, #267); four tuning rounds (#268, head `00d2faef`) match fog,
+  fill, paint and wall colour to the art. What still differs is room content, filed as #269.
+- Downed teammates (#270, `d961818e`): guards ignore downed players and keep their target unless another is under
+  2/3 the distance. Not seen in a co-op raid yet.
+
+---
+
 **2026-10-06 - the painted look (#231), owner's pick for juice and art.** The castle shader already
 banded fire light and tinted shadows warm; added the ink: cross-hatching in the shadows of every
 `Plunderspell/Surface` material (castle, and guards and loot through `SurfaceConverter`), outlines from
