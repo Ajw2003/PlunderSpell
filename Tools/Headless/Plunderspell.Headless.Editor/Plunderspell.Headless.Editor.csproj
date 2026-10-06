@@ -19,6 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Unity ships this same library (com.unity.nuget.newtonsoft-json); CastleFireAnchorImporter parses with it. -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Plunderspell.Headless/Plunderspell.Headless.csproj" />
   </ItemGroup>
 
@@ -30,8 +35,13 @@
       real Unity Editor directly instead (see docs/plans/GitIssues/Issue_53_Plan.md). Same
       reasoning as the Steam invite gateway exclusion in the Runtime project.
     -->
+    <!--
+      Also excluded: SteamAppIdBuildCopier, an IPostprocessBuildWithReport that reads BuildReport:
+      the same unmodelled build pipeline as PlayerBuilder, for the same reason.
+    -->
     <Compile Include="../../../Assets/_Project/Scripts/Editor/**/*.cs"
-              Exclude="../../../Assets/_Project/Scripts/Editor/PlayerBuilder.cs">
+              Exclude="../../../Assets/_Project/Scripts/Editor/PlayerBuilder.cs;
+                        ../../../Assets/_Project/Scripts/Editor/SteamAppIdBuildCopier.cs">
       <Link>Editor/%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
   </ItemGroup>

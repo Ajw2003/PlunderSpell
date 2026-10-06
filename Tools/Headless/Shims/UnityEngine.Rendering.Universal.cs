@@ -9,6 +9,13 @@ namespace UnityEngine.Rendering
 {
     public struct ScriptableRenderContext { }
 
+    public abstract class RenderPipelineAsset : ScriptableObject { }
+
+    public static class GraphicsSettings
+    {
+        public static RenderPipelineAsset defaultRenderPipeline { get; set; }
+    }
+
     /// <summary>The render-pipeline callbacks. Nothing renders headlessly, so nothing ever raises them.</summary>
     public static class RenderPipelineManager
     {
@@ -150,4 +157,25 @@ namespace UnityEngine.Rendering.Universal
         public bool isActive { get; private set; } = true;
         public void SetActive(bool active) => isActive = active;
     }
+
+    public enum RenderingMode { Forward, ForwardPlus, Deferred, DeferredPlus }
+
+    public abstract class ScriptableRendererData : ScriptableObject
+    {
+        public List<ScriptableRendererFeature> rendererFeatures { get; } = new List<ScriptableRendererFeature>();
+    }
+
+    public class UniversalRendererData : ScriptableRendererData
+    {
+        public RenderingMode renderingMode;
+    }
+
+    public class UniversalAdditionalLightData : MonoBehaviour
+    {
+        public const int AdditionalLightsShadowResolutionTierLow = 0;
+        public const int AdditionalLightsShadowResolutionTierMedium = 1;
+        public const int AdditionalLightsShadowResolutionTierHigh = 2;
+    }
+
+    public class UniversalRenderPipelineAsset : RenderPipelineAsset { }
 }

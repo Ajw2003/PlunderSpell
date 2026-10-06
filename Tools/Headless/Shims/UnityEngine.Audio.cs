@@ -10,6 +10,8 @@ namespace UnityEngine.Audio
     {
         private readonly Dictionary<string, float> _parameters = new Dictionary<string, float>();
 
+        /// <summary>No mixer asset is ever loaded headlessly, so there are no groups to match.</summary>
+        public AudioMixerGroup[] FindMatchingGroups(string subPath) => new AudioMixerGroup[0];
         public bool SetFloat(string name, float value) { _parameters[name] = value; return true; }
         public bool GetFloat(string name, out float value) => _parameters.TryGetValue(name, out value);
     }

@@ -298,6 +298,7 @@ namespace UnityEngine
         public Material sharedMaterial;
         public Rendering.ShadowCastingMode shadowCastingMode = Rendering.ShadowCastingMode.On;
         public bool receiveShadows = true;
+        public Rendering.LightProbeUsage lightProbeUsage = Rendering.LightProbeUsage.BlendProbes;
 
         /// <summary>A zero-size box at the renderer's position -- no real mesh extents headlessly.</summary>
         public Bounds bounds => new Bounds(transform.position, Vector3.zero);
@@ -317,6 +318,9 @@ namespace UnityEngine
     public class MeshRenderer : Renderer { }
 
     public class TrailRenderer : Renderer { }
+
+    /// <summary>Handed to the model-import hooks; no animation data exists headlessly.</summary>
+    public class AnimationClip : Object { }
 
     public enum LineAlignment { View, TransformZ }
 
@@ -405,6 +409,17 @@ namespace UnityEngine
     }
     public class Mesh : Object
     {
+        public Vector3[] normals = Array.Empty<Vector3>();
+        public Vector2[] uv = Array.Empty<Vector2>();
+        public void Clear() { vertices = Array.Empty<Vector3>(); triangles = Array.Empty<int>(); normals = Array.Empty<Vector3>(); uv = Array.Empty<Vector2>(); }
+        public void SetVertices(List<Vector3> list) => vertices = list.ToArray();
+        public void SetNormals(List<Vector3> list) => normals = list.ToArray();
+        /// <summary>Only channel 0 (<see cref="uv"/>) is kept.</summary>
+        public void SetUVs(int channel, List<Vector2> list) { if (channel == 0) uv = list.ToArray(); }
+        /// <summary>One submesh only: the shim keeps a single triangle list.</summary>
+        public void SetTriangles(List<int> list, int submesh) => triangles = list.ToArray();
+        /// <summary>No-op: <see cref="bounds"/> is always computed from the current vertices.</summary>
+        public void RecalculateBounds() { }
         public int[] triangles = Array.Empty<int>();
         public Vector3[] vertices = Array.Empty<Vector3>();
         public int vertexCount => vertices.Length;
@@ -466,6 +481,7 @@ namespace UnityEngine
         public void Release() { }
     }
     public enum ParticleSystemStopBehavior { StopEmittingAndClear, StopEmitting }
+    public enum ParticleSystemSimulationSpace { Local, World, Custom }
     public enum ParticleSystemShapeType { Sphere, Hemisphere, Cone, Box }
 
     /// <summary>
@@ -485,8 +501,13 @@ namespace UnityEngine
         public struct MinMaxGradient
         {
             public Color color;
-            public MinMaxGradient(Color color) { this.color = color; }
+            public Color colorMax;
+            public Gradient gradient;
+            public MinMaxGradient(Color color) { this.color = color; colorMax = color; gradient = null; }
+            public MinMaxGradient(Color min, Color max) { color = min; colorMax = max; gradient = null; }
+            public MinMaxGradient(Gradient gradient) { color = Color.white; colorMax = Color.white; this.gradient = gradient; }
             public static implicit operator MinMaxGradient(Color color) => new MinMaxGradient(color);
+            public static implicit operator MinMaxGradient(Gradient gradient) => new MinMaxGradient(gradient);
         }
 
         public class MainModule
@@ -498,12 +519,16 @@ namespace UnityEngine
             public MinMaxCurve startSize = 1f;
             public MinMaxGradient startColor = Color.white;
             public float gravityModifier;
+            public float duration = 5f;
+            public ParticleSystemSimulationSpace simulationSpace;
+            public int maxParticles = 1000;
         }
 
         public class EmissionModule
         {
             public bool enabled = true;
             public float rateOverTimeMultiplier = 10f;
+            public MinMaxCurve rateOverTime = 10f;
         }
 
         public class ShapeModule
@@ -511,6 +536,20 @@ namespace UnityEngine
             public bool enabled = true;
             public ParticleSystemShapeType shapeType = ParticleSystemShapeType.Cone;
             public float radius = 1f;
+            public float angle = 25f;
+        }
+
+        public class NoiseModule
+        {
+            public bool enabled;
+            public MinMaxCurve strength = 1f;
+            public float frequency = 0.5f;
+        }
+
+        public class ColorOverLifetimeModule
+        {
+            public bool enabled;
+            public MinMaxGradient color;
         }
 
         private readonly MainModule _main = new MainModule();
@@ -519,6 +558,10 @@ namespace UnityEngine
         public MainModule main => _main;
         public EmissionModule emission => _emission;
         public ShapeModule shape => _shape;
+        private readonly NoiseModule _noise = new NoiseModule();
+        private readonly ColorOverLifetimeModule _colorOverLifetime = new ColorOverLifetimeModule();
+        public NoiseModule noise => _noise;
+        public ColorOverLifetimeModule colorOverLifetime => _colorOverLifetime;
 
         public bool IsPlaying { get; private set; }
         /// <summary>Particles requested through <see cref="Emit"/>; they never age out headlessly.</summary>
@@ -542,6 +585,10 @@ namespace UnityEngine
         public LightType type = LightType.Point;
         public float range = 10f;
         public LightShadows shadows = LightShadows.None;
+        public float shadowStrength = 1f;
+        public float shadowBias = 0.05f;
+        public float shadowNormalBias = 0.4f;
+        public float shadowNearPlane = 0.2f;
     }
 
     [Flags]
@@ -786,6 +833,27 @@ namespace UnityEngine
         public void Move(Vector3 motion) => transform.position += motion;
     }
 
+    /// <summary>Handle onto the shim's single physics world; every query forwards to <see cref="Physics"/>.</summary>
+    public struct PhysicsScene
+    {
+        public bool Raycast(Vector3 origin, Vector3 direction, out RaycastHit hit, float maxDistance = float.PositiveInfinity,
+            int layerMask = Physics.DefaultRaycastLayers, QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal) =>
+            Physics.Raycast(origin, direction, out hit, maxDistance, layerMask, q);
+
+        /// <summary>Same capsule approximation as <see cref="Physics.CheckCapsule"/>.</summary>
+        public int OverlapCapsule(Vector3 point0, Vector3 point1, float radius, Collider[] results,
+            int layerMask = Physics.DefaultRaycastLayers, QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal)
+        {
+            int n = 0;
+            foreach (Collider c in Physics.CapsuleOverlaps(point0, point1, radius, layerMask))
+            {
+                if (n >= results.Length) break;
+                results[n++] = c;
+            }
+            return n;
+        }
+    }
+
     public struct RaycastHit
     {
         public Collider collider;
@@ -851,9 +919,14 @@ namespace UnityEngine
         public static bool CheckCapsule(Vector3 point0, Vector3 point1, float radius, int layerMask = ~0,
             QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal)
         {
+            return CapsuleOverlaps(point0, point1, radius, layerMask).Any();
+        }
+
+        internal static IEnumerable<Collider> CapsuleOverlaps(Vector3 point0, Vector3 point1, float radius, int layerMask)
+        {
             Vector3 mid = (point0 + point1) * 0.5f;
             float reach = radius + (point1 - point0).magnitude * 0.5f;
-            return Live(layerMask).Any(c => c.bounds.SqrDistance(mid) <= reach * reach);
+            return Live(layerMask).Where(c => c.bounds.SqrDistance(mid) <= reach * reach);
         }
 
         /// <summary>
@@ -1085,6 +1158,7 @@ namespace UnityEngine.Rendering
     public enum GraphicsDeviceType { Null = 4, Direct3D11 = 2, OpenGLCore = 17, Vulkan = 21, Metal = 16 }
     public enum CullMode { Off, Front, Back }
     public enum ShadowCastingMode { Off, On, TwoSided, ShadowsOnly }
+    public enum LightProbeUsage { Off, BlendProbes, UseProxyVolume, CustomProvided }
 }
 
 namespace UnityEngine
@@ -1111,6 +1185,9 @@ namespace UnityEngine.SceneManagement
 {
     public struct Scene
     {
+        /// <summary>The one implicit physics world every headless collider lives in.</summary>
+        public PhysicsScene GetPhysicsScene() => default;
+
         public string name;
         public int buildIndex;
         public string path;
@@ -1140,6 +1217,8 @@ namespace UnityEngine.SceneManagement
         public static Scene CreateScene(string name) => new Scene { name = name, isLoaded = true };
         public static void SetActiveScene(Scene scene) { }
         public static AsyncOperation UnloadSceneAsync(Scene scene) => new AsyncOperation();
+        /// <summary>Every object already lives in the one implicit scene, so there is nothing to move.</summary>
+        public static void MoveGameObjectToScene(GameObject go, Scene scene) { }
         public static void LoadScene(string name) { }
         public static void LoadScene(int index) { }
         public static event Action<Scene, Scene> activeSceneChanged;
