@@ -27,15 +27,15 @@ namespace Plunderspell.Tests
             PlayerPrefs.SetFloat(AudioLevels.MasterKey, _master);
             PlayerPrefs.SetFloat(AudioLevels.MusicKey, _music);
             PlayerPrefs.SetFloat(AudioLevels.SfxKey, _sfx);
-            var bank = Resources.FindObjectsOfTypeAll<SoundBank>();
-            if (bank.Length > 0)
-                AudioLevels.Bind(bank[0].Mixer);
+            SoundBank bank = AudioBootstrapper.FindBank();
+            if (bank != null)
+                AudioLevels.Bind(bank.Mixer);
         }
 
         [UnityTest]
         public IEnumerator FreshLaunchAppliesSavedVolumesToTheMixer()
         {
-            SoundBank bank = Resources.FindObjectsOfTypeAll<SoundBank>()[0];
+            SoundBank bank = AudioBootstrapper.FindBank();
             PlayerPrefs.SetFloat(AudioLevels.MasterKey, 0.5f);
             PlayerPrefs.SetFloat(AudioLevels.MusicKey, 0.25f);
             PlayerPrefs.SetFloat(AudioLevels.SfxKey, 0.75f);
