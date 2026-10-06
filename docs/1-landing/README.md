@@ -89,6 +89,11 @@ together and what was deliberately left undocumented, and why.
   ArtForge enemies get into a raid (built: all 16 are in their era's roster) and how they get
   animated (**awaiting approval**; no enemy is animated yet, #141). Review page:
   [`docs/generated/enemy-animation-plan/`](../generated/enemy-animation-plan/index.html).
+- [`docs/plans/diegetic-ui-lair-market.md`](../plans/diegetic-ui-lair-market.md): **awaiting approval**
+  (#284). The raid HUD is replaced by things in the world (a grimoire, a pocket watch, fires that show
+  the alarm); only the crosshair and damage feedback stay on screen. Loot comes home to a physical
+  Lair, and is sold in a Market to vendors who haggle. Illustrated review page:
+  [`docs/generated/diegetic-proposal/`](../generated/diegetic-proposal/index.html).
 - [`docs/plans/guards-hear-chatter.md`](../plans/guards-hear-chatter.md): **awaiting approval.**
   Guards hear what players say between casts (opt-in, local speech-to-text, words sent only to the
   host), react to it as noise, and remember the words for a later local-language-model stage.
