@@ -5,7 +5,7 @@ using UnityEngine;
 // Gates input/camera/simulation on network ownership for the minimal local-multiplayer test
 // (docs/plans/steam-coop-framework.md Phase 3). One physical client always ends up with more
 // than one active MainCamera/AudioListener and double-simulated remote bodies unless this runs.
-public class PlayerNetworkOwnership : NetworkBehaviour
+public class PlayerNetworkOwnership : NetworkBehaviour, Interfaces.IDownable
 {
     [SerializeField] private PlayerInputController _inputController;
     [SerializeField] private GameObject _playerCamera;

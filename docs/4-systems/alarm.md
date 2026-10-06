@@ -226,6 +226,10 @@ Measured numbers: `docs/generated/guard-awareness-2026-10-02/findings.md`.
   dragged scrapes every 0.8 s, 2 x sqrt(kg) m at 0.3 (`LootDragNoise`). Server only. In-game hook not yet verified (see findings).
 - **Walls.** The raid player's emitter now counts Default-layer walls. `NoiseBroadcaster.CountWalls` ignores the listener's own body,
   other listeners and anything carrying a Rigidbody, and aims at the middle of the listener. Two walls hide a footstep from a calm guard.
+- **Targeting (#270).** Guards ignore downed players entirely: `Interfaces.Downable.IsDown` (implemented via `IDownable` by
+  `PlayerNetworkOwnership`) is checked in `GuardSight.Look` and `HueAndCry.Raise`, so a downed player is never seen, attacked or sent
+  guards to. A guard keeps its current target while it still sees them; it switches only when the target is lost or down, or another
+  standing visible player is under two-thirds of the current target's distance. Test: `GuardDownedTargetTests`.
 - **Tests.** `GuardAwarenessTests`, `NoiseSourceTests`, `GuardSightReachTests`, `PlayerCreepTests`.
 
 ## A player the guard cannot reach (#237)

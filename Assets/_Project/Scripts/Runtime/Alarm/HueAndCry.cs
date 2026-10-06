@@ -27,7 +27,7 @@ namespace Plunderspell.Alarm
             _secondsSinceRaise = 0f;
             for (int i = 0; i < _registry.Intruders.Count; i++)
             {
-                if (_registry.Intruders[i] != null)
+                if (_registry.Intruders[i] != null && !Interfaces.Downable.IsDown(_registry.Intruders[i]))
                     _publish(new InvestigateRequest(_registry.Intruders[i].position, InvestigateReason.HueAndCry));
             }
         }
