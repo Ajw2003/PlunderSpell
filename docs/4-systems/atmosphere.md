@@ -51,10 +51,12 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
   one, so nothing is inked outside a raid). Cross-hatching: `HatchInk` in
   `PlunderspellSurfaceForward.hlsl` draws diagonal strokes on the surface's dominant world plane once
   its light falls below `HatchStart`, a crossing layer below half that, wobbled by the detail texture
-  and faded out where strokes get closer than a few pixels (`_PlunderHatch`). Outlines and paper: the
-  `Ink` pass of `NightFog.shader`, drawn by `NightFogFeature` just after the fog (drawn before it, the fog's glow washed it out), multiplies in a line
-  wherever the Laplacian of raw depth jumps (silhouettes and sharp corners; flat surfaces give zero)
-  and a faint paper grain (`_PlunderInk`). Film grain was already on at High (`ApplyQuality`).
+  and faded out where strokes get closer than a few pixels (`_PlunderHatch`). Grain and ink edges (#266): painted on the
+  surface in `PlunderspellSurfaceForward.hlsl`, in world space so they stay put as the camera moves; there is no
+  full-screen ink pass (removed at the owner's request). `PaperGrain` is value noise on the dominant world plane,
+  ~1 m blotches plus a fine fibre layer, strength `PaperGrain`. `EdgeInk` darkens a crisp band where the surface
+  turns from the eye (1 - N.V) and deepens the baked vertex-colour soot in crevices, strength `OutlineStrength`.
+  Both arrive as `_PlunderPaint` (x grain, y edge ink; zero outside a raid). `OutlineThreshold` is gone. Film grain was already on at High (`ApplyQuality`).
 - **Bailey.** `CastleDressingPlanner` (own seed stream) dresses straight curtain cells, the gate
   yards, the sealed gate and carved courtyards from `CastleDressingSet`; the generator places them
   before the NavMesh bake.

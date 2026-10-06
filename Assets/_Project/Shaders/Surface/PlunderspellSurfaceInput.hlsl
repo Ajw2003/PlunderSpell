@@ -41,4 +41,8 @@ float4 _PlunderHatch;
 // edges are. 0 leaves each material's own _BandAmount and _BandSoftness.
 float4 _PlunderCel;
 
+// Also set by CastleAtmosphere (#266): x paper grain, y ink edges, painted onto the surface in world
+// space. All 0 when no atmosphere is running.
+float4 _PlunderPaint;
+
 #endif

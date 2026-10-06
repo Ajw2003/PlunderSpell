@@ -6,6 +6,7 @@
 // off in soft bands with a warm-dark tint on the shadowed side instead of grey.
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Random.hlsl"
 
 struct Attributes
 {
@@ -118,6 +119,43 @@ half HatchInk(float3 positionWS, half3 normalWS, half light, half detail)
     return max(first, second) * (half)_PlunderHatch.x;
 }
 
+// Value noise on a world-plane coordinate, smoothly interpolated between hashed lattice corners.
+half ValueNoise(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = smoothstep(0.0, 1.0, frac(p));
+    half a = GenerateHashedRandomFloat(asuint((int2)i));
+    half b = GenerateHashedRandomFloat(asuint((int2)i + int2(1, 0)));
+    half c = GenerateHashedRandomFloat(asuint((int2)i + int2(0, 1)));
+    half d = GenerateHashedRandomFloat(asuint((int2)i + int2(1, 1)));
+    return lerp(lerp(a, b, f.x), lerp(c, d, f.x), f.y);
+}
+
+// Paper and paint grain (#266): blotches about a metre across plus a fine fibre layer, on the
+// surface's dominant world plane so they stay put as the camera moves. Returns a multiplier.
+half PaperGrain(float3 positionWS, half3 normalWS)
+{
+    if (_PlunderPaint.x <= 0.0h)
+        return 1.0h;
+    half3 w = abs(normalWS);
+    float2 uv = w.y >= max(w.x, w.z) ? positionWS.xz : (w.x >= w.z ? positionWS.zy : positionWS.xy);
+    half blotch = ValueNoise(uv * 1.0);
+    half fibre = ValueNoise(uv * 24.0);
+    return 1.0h - _PlunderPaint.x * (0.65h * blotch + 0.35h * fibre);
+}
+
+// Ink edges (#266): a crisp dark band where the surface turns away from the eye, and the baked soot
+// in crevices (vertex colour red) deepened to a line. Returns how much ink, 0 to 1.
+half EdgeInk(float3 positionWS, half3 normalWS, half soot)
+{
+    if (_PlunderPaint.y <= 0.0h)
+        return 0.0h;
+    half3 viewDir = (half3)normalize(GetWorldSpaceViewDir(positionWS));
+    half rim = smoothstep(0.62h, 0.72h, 1.0h - saturate(abs(dot(normalWS, viewDir))));
+    half crease = smoothstep(0.75h, 0.45h, soot);
+    return saturate(max(rim, crease)) * (half)_PlunderPaint.y;
+}
+
 half4 SurfaceFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
@@ -174,6 +212,8 @@ half4 SurfaceFragment(Varyings input) : SV_Target
     // Ink darkens towards black but keeps a little of the colour under it, like pen over paint.
     half brightness = 1.0h - exp(-dot(lighting, half3(0.2126h, 0.7152h, 0.0722h)));
     color *= 1.0h - 0.75h * HatchInk(input.positionWS, normalWS, brightness, detail);
+    color *= PaperGrain(input.positionWS, normalWS);
+    color *= 1.0h - 0.85h * EdgeInk(input.positionWS, normalWS, input.color.r);
     // Always on: LootHighlight lights plunder by setting _EmissionColor on a property block.
     color += SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, input.uv).rgb * _EmissionColor.rgb;
     return half4(color, 1.0h);

@@ -48,11 +48,10 @@ namespace Plunderspell.Atmosphere
         [Tooltip("How dark a surface must be before strokes appear: 0 never, 1 everywhere. The second, " +
                  "crossing layer starts at half this.")]
         [Range(0f, 1f)] public float HatchStart = 0.35f;
-        [Tooltip("How dark the outlines round silhouettes and sharp corners are: 0 turns them off.")]
+        [Tooltip("How dark the ink edges painted on surfaces are (where they turn from the eye, and in " +
+                 "crevices): 0 turns them off.")]
         [Range(0f, 1f)] public float OutlineStrength = 0.35f;
-        [Tooltip("How sharp a step in depth must be to get an outline. Lower draws more lines.")]
-        public float OutlineThreshold = 0.025f;
-        [Tooltip("How much the paper's grain and blotches darken the picture: 0 turns them off.")]
+        [Tooltip("How much the paint grain and blotches on walls darken them: 0 turns them off.")]
         [Range(0f, 0.3f)] public float PaperGrain = 0.14f;
 
         /// <summary>The tints for one Age.</summary>

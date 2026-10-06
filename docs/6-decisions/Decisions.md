@@ -3,6 +3,12 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-05 — Screen ink pass removed; the painted look lives on the surfaces
+
+The owner said the Ink pass ran as an overlay rather than texture like the castle shader and chose to remove it
+entirely (#266, part of #262). Paper grain and outlines are now painted in world space by the surface shader
+(`_PlunderPaint`); see docs/4-systems/atmosphere.md. Status: Active.
+
 ## 2026-10-04 — The castle hears through its guards and needs witnesses
 
 **Context.** In the owner's playtest one sighting and one Somnus took the castle from Calm to Hue and Cry (#259).
