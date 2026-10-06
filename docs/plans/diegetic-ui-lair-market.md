@@ -1,6 +1,8 @@
 # Proposal: the raid HUD goes into the world, the Lair becomes a place, and the Market haggles
 
-**Status: proposal, 2026-10-06. Nothing here is built. For the owner to review.** Issue #284, part
+**Status: approved 2026-10-06, with the proposed answer to every open decision (see the end). The
+grimoire and the watch stay flat UI for now, not 3D models. The Lair (#286) and the Market (#287)
+are being modelled.** Issue #284, part
 of #174; relates to #26–#31, #33, #108, #130. Concept art: `docs/art/concept/diegetic/`,
 `docs/art/concept/raidview/`, `docs/art/concept/lair/`. Illustrated version of this page:
 [`docs/generated/diegetic-proposal/index.html`](../generated/diegetic-proposal/index.html).
@@ -163,21 +165,21 @@ A good haggler gets most of `L`. A greedy one leaves with the piece still in the
 - **Buying** happens at the same stalls: weapons, tools and scrolls, always priced above the
   same thing's raid worth (#29's mark-up rule).
 
-## What has to be modelled (the Blender 5 session)
+## What has to be modelled
 
 | Model | For | Pieces | Issue |
 |---|---|---|---|
-| Grimoire | Raid | body, cover, page | #282 |
-| Pocket watch | Raid | case, lid, hour hand, minute hand | #283 |
+| Grimoire | Raid | not modelled for now: flat UI (owner, 2026-10-06) | #282 |
+| Pocket watch | Raid | not modelled for now: flat UI (owner, 2026-10-06) | #283 |
 | Off-hand glow, rune ring, glowing letters | Raid | effects, not meshes | new |
 | Fire-state lighting | Raid | lighting/particles on existing fires (overlaps #278) | new |
-| Lair cellar | Lair | room shell, vault, hearth | new (#31) |
-| Ledger table, ledger, strongbox ×4 | Lair | props | new (#33) |
-| Century dial (orrery) | Lair | four rings that turn | new |
-| Weapon rack, Market door | Lair | props | new |
-| Market yard, well, four stalls, slate boards | Market | room shell + props | new (#27) |
-| Goldsmith's scales | Market | beam and two pans | new |
-| Coin, coin stack, pouch | Lair/Market | props | new |
+| Lair cellar | Lair | room shell, vault, hearth | #286 (#31) |
+| Ledger table, ledger, strongbox ×4 | Lair | props | #286 (#33) |
+| Century dial (orrery) | Lair | four rings that turn | #286 |
+| Weapon rack, Market door | Lair | props | #286 |
+| Market yard, well, four stalls, slate boards | Market | room shell + props | #287 (#27) |
+| Goldsmith's scales | Market | beam and two pans | #287 |
+| Coin, coin stack, pouch | Lair/Market | props | #287 |
 | Four vendors | Market | characters, rigged, idle and talking animations | new; the biggest single cost |
 
 ## In what order
@@ -207,7 +209,12 @@ Each phase can ship alone and be played.
   are added to the lexicon and tested exactly like spell words.
 - **Scope.** Phase 4 alone is four characters. Phases 1 to 3 are worth building without it.
 
-## Open decisions for the owner
+## Decisions (settled 2026-10-06)
+
+The owner approved the proposal's answer to each: the Collector takes the debt after the Market;
+haggling is by voice (*Plus / Satis / Vale*, bindable to keys); coins are physical pouches; reading
+the grimoire slows you and stops you carrying; the watch face is the portal-light ring; `Tab` and
+`T`. As asked:
 
 1. **Debt order.** Is the debt taken before you can spend (#29 as written), or after the Market,
    by the Collector (this proposal)?
