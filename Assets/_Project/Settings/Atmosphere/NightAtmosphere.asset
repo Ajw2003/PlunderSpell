@@ -109,3 +109,11 @@ MonoBehaviour:
   AgeOfPowder:
     Stone: {r: 0.66, g: 0.6, b: 0.54, a: 1}
     Flame: {r: 1, g: 0.97, b: 0.92, a: 1}
+  CelAmount: 1
+  CelSoftness: 0.04
+  HatchStrength: 0
+  HatchLinesPerMetre: 9
+  HatchStart: 0.35
+  OutlineStrength: 0.35
+  OutlineThreshold: 0.025
+  PaperGrain: 0.14
