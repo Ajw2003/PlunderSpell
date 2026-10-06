@@ -1,5 +1,9 @@
 # Today
 
+**2026-10-06 - guard voices on the new guards (#280).** On `claude/project-thread-x1cqae`. Nine voice commits from
+`claude/voice-mimicry-improvements-7a0b29` cherry-picked (not the mimic prototype); the director follows `Guard`. Every Age
+logged its own `[GuardSpeech]` lines; details in `docs/4-systems/audio.md`.
+
 **2026-10-05 (night) - the owner's four fixes (#262), plus downed teammates (#270).** On `claude/project-thread-x1cqae`.
 - Doors (#263, `0e3bc979`): guards open closed doors they walk into. Hue and cry (#264, `5066321d`): the lockdown
   bars every door and guards treated barred as walls, so half the garrison never came; now guards pass barred doors

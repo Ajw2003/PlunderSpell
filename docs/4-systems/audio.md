@@ -251,6 +251,18 @@ AudioSource held a rendered clip on Creatures. Two knights got different pitch (
 checked: a second machine, so that the network id matching on host and client is read from PurrNet's
 code, not measured; and how any of it sounds.
 
+**On the new guards (#280, 2026-10-06).** Merged from `claude/voice-mimicry-improvements-7a0b29`, voices only: the
+mimic prototype (local model) stays on its branch, so the "Guard mimicry (prototype)" group (`mimic_`) is off and has
+nothing behind it. `GuardVoiceDirector` follows `Plunderspell.Guards.Guard` (state, attack signal, health, `IsDead`,
+`objectId`) found through `EnemyDirector.GuardsOf`, the same way as before the merge. The Age of a guard is not read from the
+raid: it comes from the guard's prefab name (`GuardVoices.Resolve`, `AudioLookups.cs`: PalaceLevy is bronze,
+HouseholdKnight high, GothicManAtArms late, Cuirassier powder), and each raid spawns the roster of its era, so the
+lines follow the raid's Age. On: "Guard speech (recorded clips)". Muted in `SoundFocusSettings.asset`: "Guard and hound
+voices" (`vo_`, hounds too), "Guard sounds" (`sfx_enemy`), "Guard footsteps and armor" (`guard_foley`) and "Guard
+mimicry (prototype)". The 19 per-footstep switches from the owner are unchanged. Checked 2026-10-06, solo Editor
+raid, seed 777, 45 s per Age: `[GuardSpeech]` lines in bronze, high, late and powder (23 to 26 per Age), frame about
+8 to 9 ms with 9 guards.
+
 ## Finding things that raise events
 
 Static events (`CastResolved`, `PhraseResolved`, `Damage.Dealt`, `LootValue.Ruined`) are subscribed in
