@@ -1,3 +1,4 @@
+using Interfaces;
 using UnityEngine;
 
 namespace Plunderspell.Alarm
@@ -35,7 +36,9 @@ namespace Plunderspell.Alarm
             if (distance > MinimumStep)
             {
                 Vector3 direction = step / distance;
-                position = SweptMove(mover, position, direction, distance, out Vector3 hitNormal);
+                position = SweptMove(mover, position, direction, distance, out Vector3 hitNormal, out Collider blocker);
+                if (OpenDoorIn(blocker))
+                    position = SweptMove(mover, start, direction, distance, out hitNormal, out _);
                 float remaining = distance - Vector3.Distance(start, position);
                 if (remaining > MinimumStep && hitNormal != Vector3.zero)
                     position = Slide(mover, position, direction, remaining, hitNormal);
@@ -46,9 +49,21 @@ namespace Plunderspell.Alarm
             return share;
         }
 
-        private Vector3 SweptMove(GuardMover mover, Vector3 from, Vector3 direction, float distance, out Vector3 hitNormal)
+        // Guards are castle staff with keys: a closed door that cut the step short is opened (unlocked or
+        // locked alike); a barred one stays shut. Without this a guard routed through a door stalls on it.
+        private static bool OpenDoorIn(Collider blocker)
         {
-            float allowed = _sweep.AllowedDistance(mover, from, direction, distance, out hitNormal);
+            IHandOpenable door = blocker != null ? blocker.GetComponentInParent<IHandOpenable>() : null;
+            if (door == null || door.IsOpen || door.IsBarred)
+                return false;
+            door.Open();
+            Physics.SyncTransforms();
+            return true;
+        }
+
+        private Vector3 SweptMove(GuardMover mover, Vector3 from, Vector3 direction, float distance, out Vector3 hitNormal, out Collider blocker)
+        {
+            float allowed = _sweep.AllowedDistance(mover, from, direction, distance, out hitNormal, out blocker);
             return from + direction * allowed;
         }
 
@@ -62,7 +77,7 @@ namespace Plunderspell.Alarm
             float slideDistance = remaining * along.magnitude;
             if (slideDistance <= MinimumStep)
                 return from;
-            return SweptMove(mover, from, along.normalized, slideDistance, out _);
+            return SweptMove(mover, from, along.normalized, slideDistance, out _, out _);
         }
 
         // Rises or falls toward the floor under the new spot, a little each tick, so stairs read as a climb.

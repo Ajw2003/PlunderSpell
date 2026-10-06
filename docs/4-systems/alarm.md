@@ -154,6 +154,9 @@ prefab carries the fresh guard since #214.
   `GuardSeparation.PushFor` (`:21`, pushes any pair closer than 1 m apart, standing guards included), cut
   down by `GuardSweep.AllowedDistance`, then `GuardMoverStepper.Move` sets the transform and settles height
   onto the graph's floor height (stairs). No Rigidbody, no agent.
+- **Doors** (#263). When the sweep's blocking collider belongs to a closed `IHandOpenable` that is not barred,
+  `GuardMoverStepper.Move` calls `Open()` and sweeps the step again: guards have keys, so unlocked and locked
+  doors open for them; barred ones stay shut.
 - **Sliding** (2026-10-02). When the sweep cuts a step short, `GuardMoverStepper.Slide` keeps the part of the
   step along the surface it hit and sweeps that too, so a route that clips an archway jamb or a cart's corner
   slides past it. A guard walking square into a wall keeps none of its step and is still reported held up,
