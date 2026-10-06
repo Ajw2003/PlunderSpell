@@ -10,7 +10,8 @@ lowest slab, exit faces +Z. Geometry contract: Editor/CastleStairPlaceholderForg
                   all round). Two 8-riser flights straight to the lobby floor.
 
 A guard needs 2.40 m under any slab edge (guard 2.30 tall), so each slab has a well cut over
-every walking surface that would be closer than that.
+every walking surface that would be closer than that. Every well edge a flight does not arrive at
+has a railing on the slab side (#260), so nobody walks off it.
 """
 import castle_builders as cb
 import castle_builders_bronze as bronze
@@ -51,6 +52,19 @@ def _slab_with_well(bm, uv, z0, z1, floor, well):
         cb._box(bm, uv, floor, ((ax0 + ax1) / 2, (ay0 + ay1) / 2, (z0 + z1) / 2), (ax1 - ax0, ay1 - ay0, z1 - z0))
 
 
+RAIL_H, RAIL_T = 0.9, 0.08    # the gallery's railings (castle_builders._stair_to_gallery)
+
+
+def _rail_x(bm, uv, pigment, floor_z, x, y0, y1):
+    """A railing along x = `x` from y0 to y1, standing on floor_z."""
+    cb._box(bm, uv, pigment, (x, (y0 + y1) / 2, floor_z + RAIL_H / 2), (RAIL_T, y1 - y0, RAIL_H))
+
+
+def _rail_y(bm, uv, pigment, floor_z, y, x0, x1):
+    """A railing along y = `y` from x0 to x1, standing on floor_z."""
+    cb._box(bm, uv, pigment, ((x0 + x1) / 2, y, floor_z + RAIL_H / 2), (x1 - x0, RAIL_T, RAIL_H))
+
+
 def _flight_east(bm, uv, z0, rise, steps, x_foot, tread, y, pigment):
     """A 1.5 m wide flight climbing east from x_foot along y, `steps` risers of `rise` above z0."""
     for i in range(steps):
@@ -67,6 +81,9 @@ def _stair_up(bm, uv, kit):
     _flight_east(bm, uv, gallery, (head - gallery) / steps, steps, -Q0 - steps * tread, tread, IN - 0.75, kit["flight"])
     # Head floor 4.30-4.60; the well takes the gallery and every flight past the landing (surface 1.60, 2.70 m under the slab).
     _slab_with_well(bm, uv, 4.3, head, kit["floor"]["Keep"], (-IN, -Q0, -4.2, IN))
+    # Rails on the well's east edge (the third flight arrives at its north end, y 4.0-5.5) and south edge.
+    _rail_x(bm, uv, kit["rail"], head, -Q0 + RAIL_T / 2, -4.2 - RAIL_T, IN - 1.5)
+    _rail_y(bm, uv, kit["rail"], head, -4.2 - RAIL_T / 2, -IN, -Q0)
     _walls(bm, uv, kit, "Keep", head, ("north",))
     cb._brazier(bm, uv, 3.8, -3.8, SLAB)
     cb._brazier(bm, uv, 3.8, 3.8, head)
@@ -78,7 +95,11 @@ def _stair_down(bm, uv, kit):
     # 16 risers of 0.206, treads 0.3, to the lobby floor: the nav tile joins cells at most 0.45 apart, so two risers must fit in that.
     cb._stair_flights(bm, uv, SLAB, top, kit["flight"], steps=8, tread=0.3)
     # Lobby floor 3.30-3.60; the well takes both flights past the second tread (surface 0.71, 2.59 m under the slab edge).
-    _slab_with_well(bm, uv, 3.3, lobby, kit["floor"]["InnerWard"], (-IN, -2.1, -IN, -IN + 1.5 + 8 * 0.3))
+    well_north = -IN + 1.5 + 8 * 0.3
+    _slab_with_well(bm, uv, 3.3, lobby, kit["floor"]["InnerWard"], (-IN, -2.1, -IN, well_north))
+    # Rails on the well's east edge and north edge; the second flight arrives at the north edge's west end (x -5.5 to -4.0).
+    _rail_x(bm, uv, kit["rail"], lobby, -2.1 + RAIL_T / 2, -IN, well_north + RAIL_T)
+    _rail_y(bm, uv, kit["rail"], lobby, well_north + RAIL_T / 2, -IN + 1.5, -2.1)
     _walls(bm, uv, kit, "InnerWard", lobby, rk.SIDES)
     cb._brazier(bm, uv, 3.8, -3.8, SLAB)
     cb._brazier(bm, uv, 3.8, 3.8, lobby)
