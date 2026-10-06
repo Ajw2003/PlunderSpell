@@ -140,10 +140,10 @@ half PaperGrain(float3 positionWS, half3 normalWS)
     half3 w = abs(normalWS);
     float2 uv = w.y >= max(w.x, w.z) ? positionWS.xz : (w.x >= w.z ? positionWS.zy : positionWS.xy);
     // Two-tone mottling: a 1 m noise snapped into patches of light and dark paint, edges softened.
-    half n = 0.65h * ValueNoise(uv * 0.9) + 0.35h * ValueNoise(uv * 2.3 + 17.0);
-    half blotch = smoothstep(0.42h, 0.56h, n);
+    half n = 0.65h * ValueNoise(uv * _PlunderBlotch.x) + 0.35h * ValueNoise(uv * _PlunderBlotch.y + 17.0);
+    half blotch = smoothstep((half)_PlunderBlotch.z, (half)_PlunderBlotch.w, n);
     // The fine layer fades where its cells shrink under a pixel; at a grazing angle it shimmered (#275).
-    float2 fibreUv = uv * 24.0;
+    float2 fibreUv = uv * _PlunderFine.x;
     half fibre = lerp(0.5h, ValueNoise(fibreUv), saturate(1.5h - 2.0h * length(fwidth(fibreUv))));
     return 1.0h - _PlunderPaint.x * (0.8h * blotch + 0.2h * fibre);
 }
@@ -155,11 +155,11 @@ half EdgeInk(float3 positionWS, half3 normalWS, half soot)
     if (_PlunderPaint.y <= 0.0h)
         return 0.0h;
     half3 viewDir = (half3)normalize(GetWorldSpaceViewDir(positionWS));
-    half rim = smoothstep(0.62h, 0.72h, 1.0h - saturate(abs(dot(normalWS, viewDir))));
+    half rim = smoothstep((half)_PlunderInk.x, (half)_PlunderInk.y, 1.0h - saturate(abs(dot(normalWS, viewDir))));
     // Only where the surface curves: on a flat wall the rim's edge is a curve that slid over the
     // upper wall as the camera moved (#275). A flat face has no change of normal across a pixel.
-    rim *= saturate(length(fwidth(normalWS)) * 8.0h);
-    half crease = smoothstep(0.75h, 0.45h, soot);
+    rim *= saturate(length(fwidth(normalWS)) * (half)_PlunderInk.z);
+    half crease = smoothstep((half)_PlunderSoot.x, (half)_PlunderSoot.y, soot);
     return saturate(max(rim, crease)) * (half)_PlunderPaint.y;
 }
 
@@ -182,7 +182,7 @@ half4 SurfaceFragment(Varyings input) : SV_Target
     // Soot: crevices baked into vertex colour by the pipeline, and grime rising from the ground on walls.
     albedo *= lerp(1.0h, input.color.r, _VertexSoot);
     half wall = 1.0h - abs(normalWS.y);
-    half aboveGround = saturate((input.positionWS.y - 0.3) / 1.6);
+    half aboveGround = saturate((input.positionWS.y - (_PlunderSoot.w > 0.0 ? _PlunderSoot.z : 0.3)) / (_PlunderSoot.w > 0.0 ? _PlunderSoot.w : 1.6));
     albedo *= lerp(1.0h, lerp(_GroundGrime, 1.0h, aboveGround), wall);
     // Extra soot low on walls (#268): darkens the bottom 1.5 m beyond the material's own grime.
     albedo *= lerp(1.0h, lerp(1.0h - (half)_PlunderPaint.z, 1.0h, aboveGround), wall);
@@ -222,7 +222,7 @@ half4 SurfaceFragment(Varyings input) : SV_Target
     half brightness = 1.0h - exp(-dot(lighting, half3(0.2126h, 0.7152h, 0.0722h)));
     color *= 1.0h - 0.75h * HatchInk(input.positionWS, normalWS, brightness, detail);
     color *= PaperGrain(input.positionWS, normalWS);
-    color *= 1.0h - 0.85h * EdgeInk(input.positionWS, normalWS, input.color.r);
+    color *= 1.0h - (half)_PlunderInk.w * EdgeInk(input.positionWS, normalWS, input.color.r);
     // Always on: LootHighlight lights plunder by setting _EmissionColor on a property block.
     color += SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, input.uv).rgb * _EmissionColor.rgb;
     return half4(color, 1.0h);

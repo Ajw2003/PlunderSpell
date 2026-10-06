@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d2bc58b041d0984486880217349b189, type: 3}
   m_Name: NightAtmosphere
   m_EditorClassIdentifier: Plunderspell.Atmosphere::Plunderspell.Atmosphere.NightAtmosphereProfile
+  FogAmount: 1
+  FireGlowAmount: 1
   TransitionSeconds: 2
   Calm:
     FogColor: {r: 0.15, g: 0.1, b: 0.068, a: 1}
@@ -115,6 +117,21 @@ MonoBehaviour:
   HatchLinesPerMetre: 9
   HatchStart: 0.35
   OutlineStrength: 0.35
-  OutlineThreshold: 0.025
+  InkDarkness: 0.85
+  OutlineEdgeStart: 0.62
+  OutlineEdgeEnd: 0.72
+  OutlineCurvatureGain: 8
+  CreviceInkStart: 0.75
+  CreviceInkEnd: 0.45
   PaperGrain: 0.14
+  BlotchScale: 0.9
+  SmallBlotchScale: 2.3
+  BlotchContrastStart: 0.42
+  BlotchContrastEnd: 0.56
+  FineGrainScale: 24
   SootStrength: 0
+  SootStartHeight: 0.3
+  SootFadeHeight: 1.6
+  FireHaloSoftness: 0.6
+  SkyClarityCurve: 0.6
+  OccludedGlow: 0.2
