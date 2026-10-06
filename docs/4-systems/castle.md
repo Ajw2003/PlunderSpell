@@ -95,7 +95,10 @@ this produces) and it does not decide when to escalate (`AlarmFSMManager`, see `
   front of a way in, nobody arriving outside the wall, and every side having an entrance. Checked
   on the real castle for 12 seeds: every arrival had a complete NavMesh path to the crypt (when that was the walk map), and the
   three strip arrivals (seeds 43, 64, 88) have no plug in front and open looking at the archway
-  (`docs/generated/issue-140-entrances/`).
+  (`docs/generated/issue-140-entrances/`). #265 (2026-10-05): eight raids from 2026-09-26 to 09-30 logged a player
+  placed past the curtain wall; on today's code those seeds and 60 per Age put every player inside
+  (`Tests/Editor/CastleSpawnInsideWallTests`). The gate fallback, used only when no room qualifies, stands one
+  Bronze Age player in the sealed gate's passage, 1.1 m past the wall face but inside the boundary.
 - **`CastleLockdown`** subscribes to `AlarmState` and locks (`Roused`) then bars (`HueAndCry`)
   every door — deliberately one-way, matching the alarm's own latch, so the castle can't hand back
   a mistake the players already paid for.

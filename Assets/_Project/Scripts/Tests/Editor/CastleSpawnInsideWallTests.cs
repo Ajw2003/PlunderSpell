@@ -40,10 +40,50 @@ namespace Plunderspell.Tests.Editor
                     Check(failures, seed, zone, "arrival", arrival, innerFace);
                     for (int player = 0; player < 4; player++)
                         Check(failures, seed, zone, $"player {player}", RaidDirector.PlayerSpawn(arrival, player), innerFace);
-                    // Not covered: the gate fallback (ResolveSpawn) puts BronzeAge player 0 at x 38.5, outside the 37.39 inner face, on every seed (#265).
+                    // Not checked: the gate fallback (no arrival room, never seen in a raid) stands BronzeAge player 0 at x 38.5, in the sealed gate's passage, 1.1 m past the wall face but inside the boundary (#265).
                 }
                 Debug.Log($"[#265] {registryName}: curtain wall inner face {innerFace:F2} m; {failures.Count} spawns outside.");
                 Assert.IsEmpty(failures, $"inner face {innerFace:F2} m:\n" + string.Join("\n", failures));
+            }
+            finally
+            {
+                go.GetComponent<ProceduralCastleGenerator>().ClearGenerated();
+                Object.DestroyImmediate(go);
+            }
+        }
+
+                // Raids that logged a player placed past the wall (#265): the owner's built game, then co-op checks, 2026-09-26 to 09-30.
+        [TestCase("CastleRoomRegistry", 106769780)]
+        [TestCase("CastleRoomRegistry_BronzeAge", 175929404)]
+        [TestCase("CastleRoomRegistry", 175929404)]
+        [TestCase("CastleRoomRegistry_BronzeAge", 194821776)]
+        [TestCase("CastleRoomRegistry_LateMedieval", 3508293)]
+        [TestCase("CastleRoomRegistry_BronzeAge", 29168489)]
+        [TestCase("CastleRoomRegistry", 29394975)]
+        public void LoggedOutsideSpawnSeedsSpawnInsideTheWall(string registryName, int raidSeed)
+        {
+            var go = new GameObject("CastleGen");
+            try
+            {
+                var generator = go.AddComponent<ProceduralCastleGenerator>();
+                generator.Registry = AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>($"Assets/_Project/Data/Castle/{registryName}.asset");
+                int seed = raidSeed;
+                ProceduralCastleData castle = generator.Generate(seed);
+                while (!CastlePathValidator.ValidatePath(castle, out _))
+                    castle = generator.Generate(++seed);   // as RaidDirector.GenerateWalkable does
+                Physics.SyncTransforms();
+                float innerFace = InnerFace(castle);
+
+                Vector3 arrival = CastleSpawnResolver.ResolveArrival(castle, seed, out int module);
+                var report = new List<string> { $"seed {seed}, inner face {innerFace:F2}, arrival {arrival} in {castle.PlacedModules[module].Zone} {castle.PlacedModules[module].GridPosition}" };
+                for (int player = 0; player < 4; player++)
+                    report.Add($"player {player} {RaidDirector.PlayerSpawn(arrival, player)}");
+                Debug.Log($"[#265] {registryName} " + string.Join("; ", report));
+                var failures = new List<string>();
+                Check(failures, seed, castle.PlacedModules[module].Zone, "arrival", arrival, innerFace);
+                for (int player = 0; player < 4; player++)
+                    Check(failures, seed, castle.PlacedModules[module].Zone, $"player {player}", RaidDirector.PlayerSpawn(arrival, player), innerFace);
+                Assert.IsEmpty(failures, string.Join("\n", report) + "\n" + string.Join("\n", failures));
             }
             finally
             {
