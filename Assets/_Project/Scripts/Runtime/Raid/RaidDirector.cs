@@ -448,6 +448,15 @@ namespace Plunderspell.Raid
             return ArrivalPoint;
         }
 
+        /// <summary>Where player number <paramref name="index"/> (0-based) stands: their point on the ring round the portal, moved to clear floor.</summary>
+        public static Vector3 PlayerSpawn(Vector3 arrivalPoint, int index)
+        {
+            float angle = index * Mathf.PI * 0.5f;
+            var anchor = new Vector3(arrivalPoint.x + Mathf.Cos(angle) * PlayerRingRadius, 0f,
+                arrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
+            return CastleSpawnResolver.FirstClearStandingPoint(anchor);
+        }
+
         /// <summary>
         /// Stands the player beside the arrival portal of the castle just built. Derived here, from
         /// the seed this raid actually rolled, rather than baked into the scene — a baked spawn is
@@ -474,10 +483,7 @@ namespace Plunderspell.Raid
             int index = player.TryGetComponent(out NetworkIdentity identity) && identity.owner.HasValue
                 ? Mathf.Max(0, (int)(ulong)identity.owner.Value.id - 1)
                 : 0;
-            float angle = index * Mathf.PI * 0.5f;
-            var anchor = new Vector3(ArrivalPoint.x + Mathf.Cos(angle) * PlayerRingRadius, 0f,
-                ArrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
-            Vector3 spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
+            Vector3 spawn = PlayerSpawn(ArrivalPoint, index);
 
             // Face the portal, so the first thing a player sees is the way home; on the curtain strip,
             // face the way in instead, which the portal otherwise puts off to one side (#140).
