@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Plunderspell.Tests
 {
-    /// <summary>A guard mover that walks into a closed door opens it and goes through; a barred door stays shut (#263).</summary>
+    /// <summary>A guard mover that walks into a closed door opens it and goes through; a barred door too, guards having keys (#264/#263).</summary>
     public class GuardOpensDoorTests
     {
         private readonly List<Object> _spawned = new List<Object>();
@@ -30,13 +30,13 @@ namespace Plunderspell.Tests
         }
 
         [Test]
-        public void Test_AGuardWalkingIntoABarredDoorLeavesItShut()
+        public void Test_AGuardWalkingIntoABarredDoorOpensItAndGetsPast()
         {
             CastleDoor door = BuildDoor();
             door.Bar();
             float x = WalkInto(door);
-            Assert.That(door.IsOpen, Is.False);
-            Assert.That(x, Is.LessThan(0.8f), "the guard is held at the door");
+            Assert.That(door.IsOpen, Is.True);
+            Assert.That(x, Is.GreaterThan(1.5f), "the guard gets past the barred door");
         }
 
         // A door at x = 1 hinged at the origin: closed it is a slab across the path at z = 0.5, open it swings out of the way.
