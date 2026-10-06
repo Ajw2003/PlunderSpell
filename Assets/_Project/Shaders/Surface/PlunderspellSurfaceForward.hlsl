@@ -142,7 +142,9 @@ half PaperGrain(float3 positionWS, half3 normalWS)
     // Two-tone mottling: a 1 m noise snapped into patches of light and dark paint, edges softened.
     half n = 0.65h * ValueNoise(uv * 0.9) + 0.35h * ValueNoise(uv * 2.3 + 17.0);
     half blotch = smoothstep(0.42h, 0.56h, n);
-    half fibre = ValueNoise(uv * 24.0);
+    // The fine layer fades where its cells shrink under a pixel; at a grazing angle it shimmered (#275).
+    float2 fibreUv = uv * 24.0;
+    half fibre = lerp(0.5h, ValueNoise(fibreUv), saturate(1.5h - 2.0h * length(fwidth(fibreUv))));
     return 1.0h - _PlunderPaint.x * (0.8h * blotch + 0.2h * fibre);
 }
 
@@ -154,6 +156,9 @@ half EdgeInk(float3 positionWS, half3 normalWS, half soot)
         return 0.0h;
     half3 viewDir = (half3)normalize(GetWorldSpaceViewDir(positionWS));
     half rim = smoothstep(0.62h, 0.72h, 1.0h - saturate(abs(dot(normalWS, viewDir))));
+    // Only where the surface curves: on a flat wall the rim's edge is a curve that slid over the
+    // upper wall as the camera moved (#275). A flat face has no change of normal across a pixel.
+    rim *= saturate(length(fwidth(normalWS)) * 8.0h);
     half crease = smoothstep(0.75h, 0.45h, soot);
     return saturate(max(rim, crease)) * (half)_PlunderPaint.y;
 }
