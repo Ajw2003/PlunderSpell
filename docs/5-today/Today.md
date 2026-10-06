@@ -5,7 +5,9 @@ banded fire light and tinted shadows warm; added the ink: cross-hatching in the 
 `Plunderspell/Surface` material (castle, and guards and loot through `SurfaceConverter`), outlines from
 depth and a paper grain in a new `Ink` pass before the fog. Settings on the `NightAtmosphere` profile
 (`docs/4-systems/atmosphere.md`, "Ink"). Written in the cloud on `claude/project-thread-x1cqae`; nothing
-compiled or looked at yet, that needs the owner's Editor.
+compiled or looked at yet, that needs the owner's Editor. Then the owner asked for less hatching and
+harsh lines and more cel shading: hatching now off by default, outlines lighter, and new `CelAmount`
+and `CelSoftness` settings make every surface's fire light snap to crisp flat bands.
 
 ---
 

@@ -69,13 +69,15 @@ half SampleDetail(float3 positionWS, half3 normalWS)
 // smooth gradient. _BandAmount mixes the banded result with the smooth one.
 half BandLight(half strength)
 {
+    half amount = _PlunderCel.x > 0.0 ? (half)_PlunderCel.x : _BandAmount;
+    half softness = _PlunderCel.y > 0.0 ? (half)_PlunderCel.y : _BandSoftness;
     half t = 1.0h - exp(-strength);
     half v = t * _Bands;
     half i = floor(v);
     half f = v - i;
-    half stepped = (i + smoothstep(0.5h - _BandSoftness, 0.5h + _BandSoftness, f)) / _Bands;
+    half stepped = (i + smoothstep(0.5h - softness, 0.5h + softness, f)) / _Bands;
     half banded = -log(max(1.0h - stepped, 0.02h));
-    return lerp(strength, banded, _BandAmount);
+    return lerp(strength, banded, amount);
 }
 
 // Fires light in bands; the moon, a faint fill, stays smooth, or banding would round it to nothing.

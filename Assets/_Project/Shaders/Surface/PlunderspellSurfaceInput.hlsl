@@ -37,4 +37,8 @@ half4 _PlunderStoneTint;
 // must be before strokes appear. All 0 when no atmosphere is running, so nothing is hatched.
 float4 _PlunderHatch;
 
+// Also set by CastleAtmosphere: x how much light is snapped to flat bands, y how soft the band
+// edges are. 0 leaves each material's own _BandAmount and _BandSoftness.
+float4 _PlunderCel;
+
 #endif

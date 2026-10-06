@@ -53,6 +53,7 @@ namespace Plunderspell.Atmosphere
         private static readonly int s_stoneTint = Shader.PropertyToID("_PlunderStoneTint");
         private static readonly int s_hatch = Shader.PropertyToID("_PlunderHatch");
         private static readonly int s_ink = Shader.PropertyToID("_PlunderInk");
+        private static readonly int s_cel = Shader.PropertyToID("_PlunderCel");
 
         private const int k_MaxScatterLights = 32;
         private const float k_ScatterReach = 70f;
@@ -150,6 +151,7 @@ namespace Plunderspell.Atmosphere
             Shader.SetGlobalVector(s_stoneTint, Vector4.zero);
             Shader.SetGlobalVector(s_hatch, Vector4.zero);
             Shader.SetGlobalVector(s_ink, Vector4.zero);
+            Shader.SetGlobalVector(s_cel, Vector4.zero);
             RestoreRenderSettings();
             DestroyVolumes();
             if (_skyInstance != null)
@@ -270,6 +272,7 @@ namespace Plunderspell.Atmosphere
             Shader.SetGlobalVector(s_stoneTint, new Vector4(stone.r, stone.g, stone.b, 1f));
             Shader.SetGlobalVector(s_hatch, new Vector4(_profile.HatchStrength, _profile.HatchLinesPerMetre, _profile.HatchStart, 0f));
             Shader.SetGlobalVector(s_ink, new Vector4(_profile.OutlineStrength, _profile.PaperGrain, _profile.OutlineThreshold, 0f));
+            Shader.SetGlobalVector(s_cel, new Vector4(_profile.CelAmount, _profile.CelSoftness, 0f, 0f));
             if (tint.Flame.maxColorComponent > 0f)
                 _current.FlameColor *= tint.Flame;
         }

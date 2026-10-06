@@ -43,8 +43,11 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
   `Tools/AssetPipeline/make_detail_textures.py`), triplanar unless Low, grime at wall feet, SSAO,
   fire light in soft bands, warm shadow tint. `CastleSurfaceMaterials` switches castle FBX materials
   at import by pigment. `SurfaceConverter` moves spawned guards and loot onto it.
-- **Ink** (#231, 2026-10-06, not yet seen in the Editor). Two parts, both tuned on the
-  `NightAtmosphere` profile's Ink fields and pushed as globals by `CastleAtmosphere` (zero without
+- **Painted look** (#231, 2026-10-06, not yet seen in the Editor). Cel shading: `CelAmount` and
+  `CelSoftness` override every material's band amount and softness through `_PlunderCel` (crisper,
+  fully banded fire light by default). Hatching is off by default (`HatchStrength` 0) and outlines are
+  light, after the owner asked for less hatching and harsh lines and more cel shading. Two ink parts,
+  both tuned on the `NightAtmosphere` profile's Painted look fields and pushed as globals by `CastleAtmosphere` (zero without
   one, so nothing is inked outside a raid). Cross-hatching: `HatchInk` in
   `PlunderspellSurfaceForward.hlsl` draws diagonal strokes on the surface's dominant world plane once
   its light falls below `HatchStart`, a crossing layer below half that, wobbled by the detail texture
