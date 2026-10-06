@@ -1310,3 +1310,8 @@ next cell is 3-4 treads higher than the 0.45 m step limit. 3.0 m is the narrowes
 (`Tools/ArtBible/castle/newel_walkmap_check.py`).
 
 **Status.** Design draft; the floors design is still being written (#197).
+
+
+## 2026-10-05: the bar shuts players out, not guards (#264)
+
+The 2026-10-02 rule that a barred door blocks guards is reversed. At Hue and Cry every door was barred, so the garrison could not reach the players: 9 of 17 guards stayed Patrolling after `Blocked(DoorClosed)`. Now a barred door costs `LockedDoorCost` like a locked one and guards open it when they walk into it. Players are unchanged (Porta, forcing). Tier: systems (`docs/4-systems/alarm.md`).

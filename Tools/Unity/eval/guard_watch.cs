@@ -67,8 +67,29 @@ if (action == "provoke")
 if (action == "huecry")
 {
     // Raises the castle to Hue and Cry (#239): the director publishes the request and repeats it on its interval.
-    directorType.GetMethod("SetAlarmLevel").Invoke(director, new object[] { 100f });
+    directorType.GetMethod("SetAlarmLevel").Invoke(director, new object[] { 100f, 6 });
     return "alarm " + directorType.GetProperty("State").GetValue(director) + " level " + directorType.GetProperty("AlarmLevel").GetValue(director);
+}
+
+if (action == "watchblocked")
+{
+    // Counts navigation Blocked events by reason and by the guard's height relative to the local player, for the swarm check.
+    var tally = new System.Collections.Generic.Dictionary<string, int>();
+    System.AppDomain.CurrentDomain.SetData("blockedTally", tally);
+    var wp = (UnityEngine.Component)playerTypeW.GetProperty("Local").GetValue(null);
+    Plunderspell.Alarm.EnemyDirector.Current.OnBlocked += b =>
+    {
+        string floor = UnityEngine.Mathf.Abs(b.Position.y - wp.transform.position.y) < 3f ? "sameFloor" : "otherFloor";
+        string k = b.Reason + "/" + floor;
+        tally[k] = tally.ContainsKey(k) ? tally[k] + 1 : 1;
+    };
+    return "watching blocked";
+}
+
+if (action == "blockedreport")
+{
+    var t = System.AppDomain.CurrentDomain.GetData("blockedTally") as System.Collections.Generic.Dictionary<string, int>;
+    return "blocked " + (t == null ? "not watching" : string.Join(" ", t.Select(kv => kv.Key + "=" + kv.Value)));
 }
 
 if (action == "swarm")
@@ -77,7 +98,7 @@ if (action == "swarm")
     var swarmPlayer = (UnityEngine.Component)playerTypeW.GetProperty("Local").GetValue(null);
     if (swarmPlayer == null) return "swarm no local player";
     var playerPos = swarmPlayer.transform.position;
-    int within10 = 0, within20 = 0, liveGuards = 0;
+    int within10 = 0, within20 = 0, liveGuards = 0, patrolSameFloor = 0, patrolOtherFloor = 0;
     foreach (var g in active)
     {
         var guard = (UnityEngine.Component)g;
@@ -86,11 +107,12 @@ if (action == "swarm")
         liveGuards++;
         states[guardState] = states.ContainsKey(guardState) ? states[guardState] + 1 : 1;
         float away = UnityEngine.Vector3.Distance(guard.transform.position, playerPos);
+        if (guardState == "Patrolling") { if (UnityEngine.Mathf.Abs(guard.transform.position.y - playerPos.y) < 3f) patrolSameFloor++; else patrolOtherFloor++; }
         if (away <= 10f) within10++;
         if (away <= 20f) within20++;
     }
     return "swarm within10m " + within10 + " within20m " + within20 + " liveGuards " + liveGuards
-        + " states " + string.Join(" ", states.Select(kv => kv.Key + "=" + kv.Value));
+        + " patrolSameFloor " + patrolSameFloor + " patrolOtherFloor " + patrolOtherFloor + " states " + string.Join(" ", states.Select(kv => kv.Key + "=" + kv.Value));
 }
 
 if (action == "dump")

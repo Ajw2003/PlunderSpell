@@ -97,6 +97,7 @@ if [ "$norepeat" = yes ]; then
 fi
 file="$out/swarm-$label-samples.txt"
 log "swarm before: $(evf swarm)"
+log "$(evf watchblocked)"
 log "$(evf huecry)"
 start=$(date +%s)
 : > "$file"
@@ -104,6 +105,7 @@ for _ in $(seq 0 12); do
     printf '%s %s\n' "$(( $(date +%s) - start ))s" "$(evf swarm)" | tee -a "$file"
     sleep 5
 done
+log "$(evf blockedreport)"
 log "state after: $("${E[@]}" host state 2>&1)"
 if [ "$solo" = no ]; then
     echo "client log error lines: $(grep -ci 'error\|exception' "$out/swarm-$label-client.log")" | tee -a "$out/swarm-$label-run.log"
