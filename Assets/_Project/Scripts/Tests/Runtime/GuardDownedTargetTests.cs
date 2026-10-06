@@ -79,7 +79,10 @@ namespace Plunderspell.Tests
         {
             Guard guard = GuardAtOrigin();
             FakePlayer player = Player(new Vector3(0f, 0f, 10f));
+            // A first sighting cries for help and investigates (#259), so the chase is entered directly.
             Look(guard);
+            guard.States.Chase.Follow(player.transform, false);
+            guard.ChangeState(guard.States.Chase);
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.Chase), "setup: chasing");
 
             player.IsDown = true;
