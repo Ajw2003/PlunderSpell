@@ -54,9 +54,9 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
   and faded out where strokes get closer than a few pixels (`_PlunderHatch`). Grain and ink edges (#266): painted on the
   surface in `PlunderspellSurfaceForward.hlsl`, in world space so they stay put as the camera moves; there is no
   full-screen ink pass (removed at the owner's request). `PaperGrain` is value noise on the dominant world plane,
-  ~1 m blotches plus a fine fibre layer, strength `PaperGrain`. `EdgeInk` darkens a crisp band where the surface
+  two-tone ~1 m patches (noise snapped by a smoothstep, #268) plus a fine fibre layer, strength `PaperGrain` (0-0.7). `EdgeInk` darkens a crisp band where the surface
   turns from the eye (1 - N.V) and deepens the baked vertex-colour soot in crevices, strength `OutlineStrength`.
-  Both arrive as `_PlunderPaint` (x grain, y edge ink; zero outside a raid). `OutlineThreshold` is gone. Film grain was already on at High (`ApplyQuality`).
+  `SootStrength` darkens the bottom 1.5 m of walls on top of `_GroundGrime`. All arrive as `_PlunderPaint` (x grain, y edge ink, z soot; zero outside a raid). `OutlineThreshold` is gone. Film grain was already on at High (`ApplyQuality`).
 - **Bailey.** `CastleDressingPlanner` (own seed stream) dresses straight curtain cells, the gate
   yards, the sealed gate and carved courtyards from `CastleDressingSet`; the generator places them
   before the NavMesh bake.

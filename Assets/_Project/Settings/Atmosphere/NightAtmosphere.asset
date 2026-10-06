@@ -24,8 +24,8 @@ MonoBehaviour:
     MoonIntensity: 0.035
     MoonScatter: 0.02
     MoonAnisotropy: 0.55
-    AmbientSky: {r: 0.34, g: 0.27, b: 0.2, a: 1}
-    AmbientEquator: {r: 0.5, g: 0.36, b: 0.22, a: 1}
+    AmbientSky: {r: 0.34, g: 0.3, b: 0.23, a: 1}
+    AmbientEquator: {r: 0.5, g: 0.4, b: 0.28, a: 1}
     AmbientGround: {r: 0.26, g: 0.18, b: 0.12, a: 1}
     SkyZenith: {r: 0.012, g: 0.012, b: 0.016, a: 1}
     SkyHorizon: {r: 0.05, g: 0.04, b: 0.035, a: 1}
@@ -45,8 +45,8 @@ MonoBehaviour:
     MoonIntensity: 0.035
     MoonScatter: 0.02
     MoonAnisotropy: 0.55
-    AmbientSky: {r: 0.34, g: 0.27, b: 0.2, a: 1}
-    AmbientEquator: {r: 0.5, g: 0.36, b: 0.22, a: 1}
+    AmbientSky: {r: 0.34, g: 0.3, b: 0.23, a: 1}
+    AmbientEquator: {r: 0.5, g: 0.4, b: 0.28, a: 1}
     AmbientGround: {r: 0.26, g: 0.18, b: 0.12, a: 1}
     SkyZenith: {r: 0.012, g: 0.012, b: 0.016, a: 1}
     SkyHorizon: {r: 0.06, g: 0.045, b: 0.035, a: 1}
@@ -66,8 +66,8 @@ MonoBehaviour:
     MoonIntensity: 0.035
     MoonScatter: 0.02
     MoonAnisotropy: 0.55
-    AmbientSky: {r: 0.34, g: 0.27, b: 0.2, a: 1}
-    AmbientEquator: {r: 0.55, g: 0.36, b: 0.22, a: 1}
+    AmbientSky: {r: 0.34, g: 0.3, b: 0.23, a: 1}
+    AmbientEquator: {r: 0.55, g: 0.4, b: 0.28, a: 1}
     AmbientGround: {r: 0.26, g: 0.18, b: 0.12, a: 1}
     SkyZenith: {r: 0.012, g: 0.012, b: 0.016, a: 1}
     SkyHorizon: {r: 0.09, g: 0.05, b: 0.03, a: 1}
@@ -87,8 +87,8 @@ MonoBehaviour:
     MoonIntensity: 0.035
     MoonScatter: 0.02
     MoonAnisotropy: 0.55
-    AmbientSky: {r: 0.34, g: 0.27, b: 0.2, a: 1}
-    AmbientEquator: {r: 0.575, g: 0.36, b: 0.22, a: 1}
+    AmbientSky: {r: 0.34, g: 0.3, b: 0.23, a: 1}
+    AmbientEquator: {r: 0.575, g: 0.4, b: 0.28, a: 1}
     AmbientGround: {r: 0.26, g: 0.18, b: 0.12, a: 1}
     SkyZenith: {r: 0.03, g: 0.012, b: 0.01, a: 1}
     SkyHorizon: {r: 0.08, g: 0.03, b: 0.018, a: 1}
@@ -98,22 +98,22 @@ MonoBehaviour:
     FireAnisotropy: 0.6
     Post: {fileID: 11400000, guid: d582a3cdf61de364e87d6d159d6fd06f, type: 2}
   BronzeAge:
-    Stone: {r: 0.95, g: 0.85, b: 0.68, a: 1}
+    Stone: {r: 0.9, g: 0.9, b: 0.72, a: 1}
     Flame: {r: 1, g: 1.04, b: 1.08, a: 1}
   HighMedieval:
-    Stone: {r: 1.12, g: 0.97, b: 0.82, a: 1}
+    Stone: {r: 0.95, g: 0.95, b: 0.85, a: 1}
     Flame: {r: 1, g: 1, b: 1, a: 1}
   LateMedieval:
-    Stone: {r: 0.95, g: 0.85, b: 0.7, a: 1}
+    Stone: {r: 0.9, g: 0.88, b: 0.75, a: 1}
     Flame: {r: 1, g: 1, b: 1, a: 1}
   AgeOfPowder:
-    Stone: {r: 0.9, g: 0.85, b: 0.78, a: 1}
+    Stone: {r: 0.9, g: 0.9, b: 0.85, a: 1}
     Flame: {r: 1, g: 0.97, b: 0.92, a: 1}
   CelAmount: 1
-  CelSoftness: 0.3
+  CelSoftness: 0.45
   HatchStrength: 0
   HatchLinesPerMetre: 9
   HatchStart: 0.35
   OutlineStrength: 0.6
-  PaperGrain: 0.45
+  PaperGrain: 0.6
   SootStrength: 0.4

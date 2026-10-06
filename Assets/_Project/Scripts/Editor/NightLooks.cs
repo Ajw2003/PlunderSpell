@@ -17,13 +17,13 @@ namespace Plunderspell.EditorTools
         // the cool grey "iron", so it is warmed more than darkened; the others build in pale
         // limestone, sandstone and plaster, so they are darkened more.
         public static readonly NightAtmosphereProfile.EraTint HighMedievalTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(1.12f, 0.97f, 0.82f), Flame = Color.white };
+            { Stone = new Color(0.95f, 0.95f, 0.85f), Flame = Color.white };
         public static readonly NightAtmosphereProfile.EraTint BronzeAgeTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(0.95f, 0.85f, 0.68f), Flame = new Color(1f, 1.04f, 1.08f) };
+            { Stone = new Color(0.9f, 0.9f, 0.72f), Flame = new Color(1f, 1.04f, 1.08f) };
         public static readonly NightAtmosphereProfile.EraTint LateMedievalTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(0.95f, 0.85f, 0.7f), Flame = Color.white };
+            { Stone = new Color(0.9f, 0.88f, 0.75f), Flame = Color.white };
         public static readonly NightAtmosphereProfile.EraTint AgeOfPowderTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(0.9f, 0.85f, 0.78f), Flame = new Color(1f, 0.97f, 0.92f) };
+            { Stone = new Color(0.9f, 0.9f, 0.85f), Flame = new Color(1f, 0.97f, 0.92f) };
 
         public static AtmosphereLook Calm(VolumeProfile post) => new AtmosphereLook
         {
@@ -36,8 +36,8 @@ namespace Plunderspell.EditorTools
             MoonIntensity = 0.035f,
             MoonScatter = 0.02f,
             MoonAnisotropy = 0.55f,
-            AmbientSky = new Color(0.34f, 0.27f, 0.2f),
-            AmbientEquator = new Color(0.5f, 0.36f, 0.22f),
+            AmbientSky = new Color(0.34f, 0.3f, 0.23f),
+            AmbientEquator = new Color(0.5f, 0.4f, 0.28f),
             AmbientGround = new Color(0.26f, 0.18f, 0.12f),
             SkyZenith = new Color(0.012f, 0.012f, 0.016f),
             SkyHorizon = new Color(0.05f, 0.04f, 0.035f),
