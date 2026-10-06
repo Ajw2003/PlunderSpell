@@ -43,6 +43,15 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
   `Tools/AssetPipeline/make_detail_textures.py`), triplanar unless Low, grime at wall feet, SSAO,
   fire light in soft bands, warm shadow tint. `CastleSurfaceMaterials` switches castle FBX materials
   at import by pigment. `SurfaceConverter` moves spawned guards and loot onto it.
+- **Ink** (#231, 2026-10-06, not yet seen in the Editor). Two parts, both tuned on the
+  `NightAtmosphere` profile's Ink fields and pushed as globals by `CastleAtmosphere` (zero without
+  one, so nothing is inked outside a raid). Cross-hatching: `HatchInk` in
+  `PlunderspellSurfaceForward.hlsl` draws diagonal strokes on the surface's dominant world plane once
+  its light falls below `HatchStart`, a crossing layer below half that, wobbled by the detail texture
+  and faded out where strokes get closer than a few pixels (`_PlunderHatch`). Outlines and paper: the
+  `Ink` pass of `NightFog.shader`, drawn by `NightFogFeature` just before the fog, multiplies in a line
+  wherever the Laplacian of raw depth jumps (silhouettes and sharp corners; flat surfaces give zero)
+  and a faint paper grain (`_PlunderInk`). Film grain was already on at High (`ApplyQuality`).
 - **Bailey.** `CastleDressingPlanner` (own seed stream) dresses straight curtain cells, the gate
   yards, the sealed gate and carved courtyards from `CastleDressingSet`; the generator places them
   before the NavMesh bake.

@@ -33,4 +33,8 @@ SAMPLER(sampler_DetailMap);
 // a is how much of it applies (0 when no atmosphere is running, so nothing turns black).
 half4 _PlunderStoneTint;
 
+// Also set by CastleAtmosphere (#231): x hatch strength, y strokes per metre, z how dark a surface
+// must be before strokes appear. All 0 when no atmosphere is running, so nothing is hatched.
+float4 _PlunderHatch;
+
 #endif

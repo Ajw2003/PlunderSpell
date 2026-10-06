@@ -1,5 +1,14 @@
 # Today
 
+**2026-10-06 - the painted look (#231), owner's pick for juice and art.** The castle shader already
+banded fire light and tinted shadows warm; added the ink: cross-hatching in the shadows of every
+`Plunderspell/Surface` material (castle, and guards and loot through `SurfaceConverter`), outlines from
+depth and a paper grain in a new `Ink` pass before the fog. Settings on the `NightAtmosphere` profile
+(`docs/4-systems/atmosphere.md`, "Ink"). Written in the cloud on `claude/project-thread-x1cqae`; nothing
+compiled or looked at yet, that needs the owner's Editor.
+
+---
+
 **2026-10-05 - the owner played it: "finally starting to feel like a game".** They saved that build as a local
 branch, `Staging` (`aaeb9b94`). Since then: the alarm needs witnesses (#259: guards cry for help, the castle hears
 only through its guards; 3 witnesses for the lockdown, 5 for the hue and cry), curtain fires per Age (#258), and the

@@ -51,6 +51,8 @@ namespace Plunderspell.Atmosphere
         private static readonly int s_skyMoonDir = Shader.PropertyToID("_MoonDir");
         private static readonly int s_skyMoonColor = Shader.PropertyToID("_MoonColor");
         private static readonly int s_stoneTint = Shader.PropertyToID("_PlunderStoneTint");
+        private static readonly int s_hatch = Shader.PropertyToID("_PlunderHatch");
+        private static readonly int s_ink = Shader.PropertyToID("_PlunderInk");
 
         private const int k_MaxScatterLights = 32;
         private const float k_ScatterReach = 70f;
@@ -146,6 +148,8 @@ namespace Plunderspell.Atmosphere
             NightFogFeature.IsActive = false;
             Shader.SetGlobalVector(s_scatter, Vector4.zero);
             Shader.SetGlobalVector(s_stoneTint, Vector4.zero);
+            Shader.SetGlobalVector(s_hatch, Vector4.zero);
+            Shader.SetGlobalVector(s_ink, Vector4.zero);
             RestoreRenderSettings();
             DestroyVolumes();
             if (_skyInstance != null)
@@ -264,6 +268,8 @@ namespace Plunderspell.Atmosphere
             NightAtmosphereProfile.EraTint tint = _profile.ForEra(era);
             Color stone = tint.Stone.maxColorComponent > 0f ? tint.Stone : Color.white;
             Shader.SetGlobalVector(s_stoneTint, new Vector4(stone.r, stone.g, stone.b, 1f));
+            Shader.SetGlobalVector(s_hatch, new Vector4(_profile.HatchStrength, _profile.HatchLinesPerMetre, _profile.HatchStart, 0f));
+            Shader.SetGlobalVector(s_ink, new Vector4(_profile.OutlineStrength, _profile.PaperGrain, _profile.OutlineThreshold, 0f));
             if (tint.Flame.maxColorComponent > 0f)
                 _current.FlameColor *= tint.Flame;
         }

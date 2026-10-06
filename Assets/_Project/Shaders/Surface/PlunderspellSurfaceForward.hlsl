@@ -86,6 +86,36 @@ half3 LightContribution(Light light, half3 normalWS, bool banded)
     return light.color * (banded ? BandLight(strength) : strength);
 }
 
+// One set of pen strokes along coordinate c: 1 on a stroke, 0 between. Strokes thicken with
+// coverage, are anti-aliased by their screen size, and fade out where they would be closer than
+// about two pixels, so distant walls go plain instead of shimmering.
+half HatchStrokes(float c, half coverage)
+{
+    float aa = fwidth(c);
+    half halfWidth = 0.08h + 0.22h * coverage;
+    half d = abs(frac(c) - 0.5h);
+    half stroke = 1.0h - smoothstep(halfWidth - aa, halfWidth + aa, d);
+    return stroke * coverage * saturate(1.5h - aa * 3.0h);
+}
+
+// Cross-hatching in the shadows (#231): a first layer of diagonal strokes once the light falls
+// below _PlunderHatch.z, a crossing layer below half that. Drawn on the surface's dominant world
+// plane, wobbled by the detail texture so the strokes read as hand-drawn, not ruled.
+// ponytail: dominant-plane projection seams on curved meshes; blend the three planes if it shows.
+half HatchInk(float3 positionWS, half3 normalWS, half light, half detail)
+{
+    half start = (half)_PlunderHatch.z;
+    if (_PlunderHatch.x <= 0.0h || start <= 0.0h)
+        return 0.0h;
+    float3 p = positionWS * _PlunderHatch.y;
+    half3 w = abs(normalWS);
+    float2 uv = w.y >= max(w.x, w.z) ? p.xz : (w.x >= w.z ? p.zy : p.xy);
+    float wobble = (detail - 0.5h) * 0.6h;
+    half first = HatchStrokes(uv.x + uv.y + wobble, saturate((start - light) / start));
+    half second = HatchStrokes(uv.x - uv.y - wobble, saturate((start * 0.5h - light) / (start * 0.5h)));
+    return max(first, second) * (half)_PlunderHatch.x;
+}
+
 half4 SurfaceFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
@@ -139,6 +169,9 @@ half4 SurfaceFragment(Varyings input) : SV_Target
     #endif
 
     half3 color = albedo * lighting;
+    // Ink darkens towards black but keeps a little of the colour under it, like pen over paint.
+    half brightness = 1.0h - exp(-dot(lighting, half3(0.2126h, 0.7152h, 0.0722h)));
+    color *= 1.0h - 0.75h * HatchInk(input.positionWS, normalWS, brightness, detail);
     // Always on: LootHighlight lights plunder by setting _EmissionColor on a property block.
     color += SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, input.uv).rgb * _EmissionColor.rgb;
     return half4(color, 1.0h);
