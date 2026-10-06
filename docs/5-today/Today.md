@@ -8,6 +8,10 @@ depth and a paper grain in a new `Ink` pass before the fog. Settings on the `Nig
 compiled or looked at yet, that needs the owner's Editor. Then the owner asked for less hatching and
 harsh lines and more cel shading: hatching now off by default, outlines lighter, and new `CelAmount`
 and `CelSoftness` settings make every surface's fire light snap to crisp flat bands.
+The owner's first after-shots looked nothing like the cel-shaded concept art
+(`/mnt/project-files/concept-art/cel-shaded/`): that art pulls every colour towards umber and vellum and
+lays a heavy blotchy paper over it. So the grades now desaturate (-30 calm to -20 hue and cry, was -4 to
++6, `NightLooks.cs`), the paper grain is stronger (0.14) and outlines catch smaller steps (0.025).
 
 ---
 

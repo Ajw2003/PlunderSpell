@@ -87,19 +87,19 @@ namespace Plunderspell.EditorTools
             return look;
         }
 
-        public static void CalmGrade(VolumeProfile p) => Grade(p, exposure: 0.55f, contrast: 10f, saturation: -4f,
+        public static void CalmGrade(VolumeProfile p) => Grade(p, exposure: 0.55f, contrast: 10f, saturation: -30f,
             filter: new Color(1.04f, 1.0f, 0.93f), bloom: 0.9f, vignette: 0.33f,
             lift: new Vector4(0.99f, 0.99f, 1.02f, 0f), gain: new Vector4(1.05f, 1.0f, 0.92f, 0f));
 
-        public static void StirredGrade(VolumeProfile p) => Grade(p, exposure: 0.55f, contrast: 14f, saturation: -2f,
+        public static void StirredGrade(VolumeProfile p) => Grade(p, exposure: 0.55f, contrast: 14f, saturation: -28f,
             filter: new Color(1.05f, 0.99f, 0.91f), bloom: 1.05f, vignette: 0.36f,
             lift: new Vector4(1.0f, 0.99f, 1.0f, 0f), gain: new Vector4(1.06f, 0.99f, 0.9f, 0f));
 
-        public static void RousedGrade(VolumeProfile p) => Grade(p, exposure: 0.35f, contrast: 20f, saturation: 2f,
+        public static void RousedGrade(VolumeProfile p) => Grade(p, exposure: 0.35f, contrast: 20f, saturation: -24f,
             filter: new Color(1.07f, 0.97f, 0.88f), bloom: 1.3f, vignette: 0.4f,
             lift: new Vector4(1.0f, 0.98f, 0.98f, 0f), gain: new Vector4(1.08f, 0.98f, 0.88f, 0f));
 
-        public static void HueAndCryGrade(VolumeProfile p) => Grade(p, exposure: 0.2f, contrast: 30f, saturation: 6f,
+        public static void HueAndCryGrade(VolumeProfile p) => Grade(p, exposure: 0.2f, contrast: 30f, saturation: -20f,
             filter: new Color(1.1f, 0.94f, 0.85f), bloom: 1.6f, vignette: 0.46f,
             lift: new Vector4(1.02f, 0.96f, 0.95f, 0f), gain: new Vector4(1.1f, 0.96f, 0.85f, 0f));
 
