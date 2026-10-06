@@ -69,6 +69,20 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
 - **Quality.** Low/Medium/High URP assets in `Assets/Settings/`; `AtmosphereQuality` applies the
   saved level or the machine default (Deck → Low) before the first scene.
 
+## Tuning the look
+
+Every visual number lives on one asset, `Assets/_Project/Settings/Atmosphere/NightAtmosphere.asset`
+(`NightAtmosphereProfile`, with the four per-state `AtmosphereLook`s). Open it from the menu
+**Tools > Plunderspell > Castle Look Settings** (selects and pings it). Every field has a plain-English tooltip.
+
+- **Overall** (top): `FogAmount` and `FireGlowAmount` multiply the per-state fog density and fire halo (1 = as tuned).
+- **Per state:** fog, moon, ambient light, sky, fire, colour grade. **Per Age:** stone and flame tints.
+- **Painted look:** light bands, hatching, ink outlines (angle, curvature, crevice, darkness), paint grain (blotch and
+  fine grain sizes, contrast), soot height; plus fire halo softness, sky clarity curve and how much glow shows through walls.
+- **Live:** `CastleAtmosphere.Update` pushes the profile to the shaders every frame, so Inspector edits show at once in Play.
+  Painted-look shape numbers go out as the globals `_PlunderBlotch`, `_PlunderFine`, `_PlunderInk`, `_PlunderSoot`.
+- Per-material import values (`CastleSurfaceMaterials`) are separate and not on this asset.
+
 ## Rebuilding
 
 All from the live Editor (`bash Tools/Unity/eval.sh '<C#>'`):
