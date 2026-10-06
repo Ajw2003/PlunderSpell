@@ -36,3 +36,14 @@ Prompt (scene + Age look + shared style, in that order):
 
 Known gap: this image is brighter and more saturated than the moodboard's candle-lit, umber night. The next
 version of the prompt pushes it darker; this recipe stays as the record of the first one.
+
+## Take v2: the target set (2026-10-05)
+
+`<age>-<scene>-v2.png` for all four Ages, contact sheet `sheet-v2.png`. Same recipe, run as
+`python Tools/ArtForge/painted_concepts.py` at commit `35d023e2`: the style block gains "low-key night scene, most
+of the frame in deep umber shadow, only small warm pools of fire light, desaturated". About 5 to 10 minutes an
+image with the Unity Editor sharing the GPU. Every prompt is logged in `prompts.txt`.
+
+What the in-game look has to take from it (#268): every surface carries large two-tone painted blotches
+(lighter and darker patches a metre or so across, not fine grain), light falls in flat cel pools, shadows go
+umber rather than grey, edges get dark ink, and soot spatters gather low on walls and in corners.
