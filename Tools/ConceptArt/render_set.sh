@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Renders the painted-look concept set from existing repo screenshots and model sheets.
-# Usage: bash Tools/ConceptArt/render_set.sh <out-dir>
+# Usage: bash Tools/ConceptArt/render_set.sh <out-dir> [extra paintover flags, e.g. --cel]
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-O="${1:?out dir}"; mkdir -p "$O"
+O="${1:?out dir}"; shift; EXTRA=("$@"); mkdir -p "$O"
 G=docs/generated; M=docs/art/models
-P() { python3 Tools/ConceptArt/paintover.py "$@"; }
+P() { python3 Tools/ConceptArt/paintover.py "$@" ${EXTRA[@]+"${EXTRA[@]}"}; }
 P $G/look-samples-2026-09-24/calm.png $O/01-courtyard-calm.png --warm 0.6 --scale 1.5 &
 P $G/look-samples-2026-09-24/alert.png $O/02-courtyard-alarm.png --warm 0.2 --scale 1.5 &
 P $G/era-integration-2026-09-24/latemedieval-enemy-a.png $O/03-late-medieval-guard.png --warm 0.4 &

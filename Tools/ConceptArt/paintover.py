@@ -1,7 +1,7 @@
 """Paint over a game screenshot in PlunderSpell's target look: painterly fill, ink outlines,
 cross-hatching in the shadows, paper and film grain, graded to the art bible pigments.
 
-Usage: python3 paintover.py <in.png> <out.png> [--crop x0,y0,x1,y1] [--scale 2] [--warm 0..1]
+Usage: python3 paintover.py <in.png> <out.png> [--crop x0,y0,x1,y1] [--scale 2] [--warm 0..1] [--cel]
 Needs pillow, numpy, opencv-python-headless.
 """
 import argparse
@@ -91,23 +91,42 @@ def hatching(lum, rng):
     return np.clip(ink, 0, 1)
 
 
-def outlines(src, rng):
-    """Ink contour from colour and value edges, thickened and wobbled like a dip pen."""
+def outlines(src, rng, cel=False):
+    """Ink contour from colour and value edges, thickened and wobbled like a dip pen.
+    cel: fewer interior lines, thinner, steadier - a clean contour rather than pen work."""
     g = cv2.cvtColor(src, cv2.COLOR_BGR2LAB)
     g = cv2.bilateralFilter(g, 9, 40, 9)
     e = np.zeros(src.shape[:2], np.uint8)
     for ch in range(3):
-        e |= cv2.Canny(g[..., ch], 12, 36)
+        e |= cv2.Canny(g[..., ch], *((30, 90) if cel else (12, 36)))
     h, w = e.shape
-    dx = cv2.resize(rng.normal(0, 1.4, (h // 40 + 2, w // 40 + 2)).astype(np.float32), (w, h))
-    dy = cv2.resize(rng.normal(0, 1.4, (h // 40 + 2, w // 40 + 2)).astype(np.float32), (w, h))
+    dx = cv2.resize(rng.normal(0, 0.5 if cel else 1.4, (h // 40 + 2, w // 40 + 2)).astype(np.float32), (w, h))
+    dy = cv2.resize(rng.normal(0, 0.5 if cel else 1.4, (h // 40 + 2, w // 40 + 2)).astype(np.float32), (w, h))
     mx, my = np.meshgrid(np.arange(w, dtype=np.float32), np.arange(h, dtype=np.float32))
     e = cv2.remap(e, mx + dx, my + dy, cv2.INTER_LINEAR)
-    thick = max(2, w // 700)
+    thick = max(1, w // 1300) if cel else max(2, w // 700)
     e = cv2.dilate(e, np.ones((thick + 1, thick + 1), np.uint8))
     e = cv2.GaussianBlur(e.astype(np.float32) / 255, (0, 0), 0.8)
     pressure = cv2.resize(rng.random((h // 60 + 2, w // 60 + 2)).astype(np.float32), (w, h), interpolation=cv2.INTER_CUBIC)
     return np.clip(e * (0.75 + 0.5 * pressure), 0, 1)
+
+
+def cel_flat(src, scale):
+    """Flat colour per surface: mean-shift at capture resolution merges each face's gradient into one
+    tone, so the steps follow geometry instead of light falloff."""
+    small = cv2.resize(src, None, fx=1 / scale, fy=1 / scale, interpolation=cv2.INTER_AREA)
+    flat = cv2.pyrMeanShiftFiltering(small, sp=14, sr=22, maxLevel=2)
+    flat = cv2.resize(flat, (src.shape[1], src.shape[0]), interpolation=cv2.INTER_CUBIC)
+    return cv2.edgePreservingFilter(flat, flags=cv2.RECURS_FILTER, sigma_s=30, sigma_r=0.15)
+
+
+def cel_shadow(col):
+    """One hard lit/shadow step (at the shot's 30th value percentile); shadow leans cool and darker."""
+    lum = (col @ np.array([0.114, 0.587, 0.299])).astype(np.float32)
+    cut = np.percentile(lum, 30)
+    shadow = np.clip((cut - lum) / 0.01 + 0.5, 0, 1)[..., None]
+    out = col * (1 - shadow) + col * np.array([1.05, 0.9, 0.78]) * 0.8 * shadow  # BGR
+    return np.clip(out, 0, 1), lum
 
 
 def paper(h, w, rng):
@@ -128,6 +147,7 @@ def main():
     ap.add_argument("--scale", type=float, default=2.0)
     ap.add_argument("--warm", type=float, default=0.5)
     ap.add_argument("--seed", type=int, default=3)
+    ap.add_argument("--cel", action="store_true", help="flat cel bands, light outlines, almost no hatching")
     a = ap.parse_args()
     rng = np.random.default_rng(a.seed)
     img = cv2.imread(a.src, cv2.IMREAD_COLOR)
@@ -139,15 +159,21 @@ def main():
     img = cv2.resize(img, None, fx=a.scale, fy=a.scale, interpolation=cv2.INTER_CUBIC)
     h, w = img.shape[:2]
 
-    ink_lines = outlines(img, rng)
-    painted = painterly(img)
-    col = grade(painted, a.warm)
-    lum = col @ np.array([0.114, 0.587, 0.299])
-    lum = cv2.GaussianBlur(lum.astype(np.float32), (0, 0), 3)
-    hatch = hatching(lum, rng)
+    ink_lines = outlines(img, rng, a.cel)
     ink = BONE_BLACK[::-1]
-    col = col * (1 - 0.6 * hatch[..., None]) + ink * 0.6 * hatch[..., None]
-    col = col * (1 - 0.9 * ink_lines[..., None]) + ink * 0.9 * ink_lines[..., None]
+    if a.cel:
+        col, lum = cel_shadow(grade(cel_flat(img, a.scale), a.warm))
+        hatch = hatching(lum, rng) * np.clip((np.percentile(lum, 10) - lum) / 0.03, 0, 1)  # deepest shadow only
+        col = col * (1 - 0.25 * hatch[..., None]) + ink * 0.25 * hatch[..., None]
+        col = col * (1 - 0.7 * ink_lines[..., None]) + ink * 0.7 * ink_lines[..., None]
+    else:
+        painted = painterly(img)
+        col = grade(painted, a.warm)
+        lum = col @ np.array([0.114, 0.587, 0.299])
+        lum = cv2.GaussianBlur(lum.astype(np.float32), (0, 0), 3)
+        hatch = hatching(lum, rng)
+        col = col * (1 - 0.6 * hatch[..., None]) + ink * 0.6 * hatch[..., None]
+        col = col * (1 - 0.9 * ink_lines[..., None]) + ink * 0.9 * ink_lines[..., None]
     col = col * paper(h, w, rng)[..., None]
     grain = cv2.GaussianBlur(rng.normal(0, 1, (h, w)).astype(np.float32), (0, 0), 0.7)
     col = col + 0.025 * grain[..., None] / grain.std()
