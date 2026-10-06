@@ -56,7 +56,7 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
   full-screen ink pass (removed at the owner's request). `PaperGrain` is value noise on the dominant world plane,
   two-tone ~1 m patches (noise snapped by a smoothstep, #268) plus a fine fibre layer, strength `PaperGrain` (0-0.7). `EdgeInk` darkens a crisp band where the surface
   turns from the eye (1 - N.V) and deepens the baked vertex-colour soot in crevices, strength `OutlineStrength`.
-  `SootStrength` darkens the bottom 1.5 m of walls on top of `_GroundGrime`. All arrive as `_PlunderPaint` (x grain, y edge ink, z soot; zero outside a raid). `OutlineThreshold` is gone. Film grain was already on at High (`ApplyQuality`).
+  `SootStrength` darkens the bottom 1.5 m of walls on top of `_GroundGrime`. All arrive as `_PlunderPaint` (x grain, y edge ink, z soot; zero outside a raid). `OutlineThreshold` is gone. Per-Age stone tints (#268 round 4) are values above 1 on purpose: they lift the kit's grey stone to each Age's tan/ochre/limestone at night; measured against the concept art by `Tools/Unity/wall_colour_table.py`. Film grain was already on at High (`ApplyQuality`).
 - **Bailey.** `CastleDressingPlanner` (own seed stream) dresses straight curtain cells, the gate
   yards, the sealed gate and carved courtyards from `CastleDressingSet`; the generator places them
   before the NavMesh bake.

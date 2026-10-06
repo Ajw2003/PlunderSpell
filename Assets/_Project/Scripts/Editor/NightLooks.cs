@@ -17,13 +17,13 @@ namespace Plunderspell.EditorTools
         // the cool grey "iron", so it is warmed more than darkened; the others build in pale
         // limestone, sandstone and plaster, so they are darkened more.
         public static readonly NightAtmosphereProfile.EraTint HighMedievalTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(0.95f, 0.95f, 0.85f), Flame = Color.white };
+            { Stone = new Color(1.5f, 2.2f, 1.0f), Flame = Color.white };
         public static readonly NightAtmosphereProfile.EraTint BronzeAgeTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(0.9f, 0.9f, 0.72f), Flame = new Color(1f, 1.04f, 1.08f) };
+            { Stone = new Color(1.3f, 1.75f, 0.45f), Flame = new Color(1f, 1.04f, 1.08f) };
         public static readonly NightAtmosphereProfile.EraTint LateMedievalTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(0.9f, 0.88f, 0.75f), Flame = Color.white };
+            { Stone = new Color(1.4f, 1.9f, 0.6f), Flame = Color.white };
         public static readonly NightAtmosphereProfile.EraTint AgeOfPowderTint = new NightAtmosphereProfile.EraTint
-            { Stone = new Color(0.9f, 0.9f, 0.85f), Flame = new Color(1f, 0.97f, 0.92f) };
+            { Stone = new Color(0.8f, 1.2f, 0.8f), Flame = new Color(1f, 0.97f, 0.92f) };
 
         public static AtmosphereLook Calm(VolumeProfile post) => new AtmosphereLook
         {
@@ -36,9 +36,9 @@ namespace Plunderspell.EditorTools
             MoonIntensity = 0.035f,
             MoonScatter = 0.02f,
             MoonAnisotropy = 0.55f,
-            AmbientSky = new Color(0.34f, 0.3f, 0.23f),
-            AmbientEquator = new Color(0.5f, 0.4f, 0.28f),
-            AmbientGround = new Color(0.26f, 0.18f, 0.12f),
+            AmbientSky = new Color(0.4f, 0.38f, 0.28f),
+            AmbientEquator = new Color(0.6f, 0.55f, 0.32f),
+            AmbientGround = new Color(0.3f, 0.24f, 0.15f),
             SkyZenith = new Color(0.012f, 0.012f, 0.016f),
             SkyHorizon = new Color(0.05f, 0.04f, 0.035f),
             FlameColor = new Color(1.0f, 0.5f, 0.18f),
