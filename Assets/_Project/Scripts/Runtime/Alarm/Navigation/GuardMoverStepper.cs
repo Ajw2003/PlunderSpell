@@ -50,11 +50,11 @@ namespace Plunderspell.Alarm
         }
 
         // Guards are castle staff with keys: a closed door that cut the step short is opened (unlocked or
-        // locked alike); a barred one stays shut. Without this a guard routed through a door stalls on it.
+        // locked or barred alike, #264). Without this a guard routed through a door stalls on it.
         private static bool OpenDoorIn(Collider blocker)
         {
             IHandOpenable door = blocker != null ? blocker.GetComponentInParent<IHandOpenable>() : null;
-            if (door == null || door.IsOpen || door.IsBarred)
+            if (door == null || door.IsOpen)
                 return false;
             door.Open();
             Physics.SyncTransforms();
