@@ -15,10 +15,82 @@ MonoBehaviour:
   FilterOn: 1
   PlayEverythingElse: 0
   Groups:
-  - Label: Footsteps and movement
+  - Label: 'Footsteps (any not listed below)'
     Play: 1
     Prefixes:
     - foley_
+  - Label: 'Step: stone'
+    Play: 1
+    Prefixes:
+    - foley_step_stone
+  - Label: 'Step: wood'
+    Play: 1
+    Prefixes:
+    - foley_step_wood
+  - Label: 'Step: earth'
+    Play: 1
+    Prefixes:
+    - foley_step_earth
+  - Label: 'Step: rushes'
+    Play: 1
+    Prefixes:
+    - foley_step_rushes
+  - Label: 'Step: tile'
+    Play: 1
+    Prefixes:
+    - foley_step_tile
+  - Label: 'Step: metal'
+    Play: 1
+    Prefixes:
+    - foley_step_metal
+  - Label: 'Step: water'
+    Play: 1
+    Prefixes:
+    - foley_step_water
+  - Label: 'Step: hound'
+    Play: 1
+    Prefixes:
+    - foley_step_hound
+  - Label: 'Gear rustle: linen'
+    Play: 1
+    Prefixes:
+    - foley_gear_linen
+  - Label: 'Gear rustle: leather'
+    Play: 1
+    Prefixes:
+    - foley_gear_leather
+  - Label: 'Gear rustle: mail'
+    Play: 1
+    Prefixes:
+    - foley_gear_mail
+  - Label: 'Gear rustle: plate'
+    Play: 1
+    Prefixes:
+    - foley_gear_plate
+  - Label: 'Gear rustle: bronze plate'
+    Play: 1
+    Prefixes:
+    - foley_gear_bronze_plate
+  - Label: 'Gear rustle: robe'
+    Play: 1
+    Prefixes:
+    - foley_robe
+  - Label: 'Player: jump'
+    Play: 1
+    Prefixes:
+    - foley_player_jump
+  - Label: 'Player: landing'
+    Play: 1
+    Prefixes:
+    - foley_player_land_heavy
+  - Label: 'Player: landing (light)'
+    Play: 1
+    Prefixes:
+    - foley_player_land
+  - Label: 'Player: dodge'
+    Play: 1
+    Prefixes:
+    - foley_player_dodge
   - Label: Guard and hound voices
     Play: 1
     Prefixes:

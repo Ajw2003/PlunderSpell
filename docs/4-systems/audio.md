@@ -212,6 +212,12 @@ the Project window and edit it in the Inspector. Changes apply at once, in Play 
 - **Overrides**: exact sound names that ignore their group (the five spell sounds still waiting on a
   replacement are here, muted).
 - **Play Everything Else**: for a sound no group or override names.
+- **Footsteps, one switch each** (2026-10-06, owner's request to find a step they dislike): the old
+  single "Footsteps and movement" group is split into 19 groups: `Step:` stone, wood, earth, rushes,
+  tile, metal, water, hound; `Gear rustle:` linen, leather, mail, plate, bronze plate, robe; `Player:`
+  jump, landing, landing (light), dodge; and "Footsteps (any not listed below)" for any new `foley_`
+  sound. Players and guards share the `Step:` sounds, so one switch mutes both. Checked: with
+  "Step: stone" off, stone was blocked and wood, landings and plate rustle still played.
 
 As shipped (the owner's ticks, 2026-09-30): footsteps and movement, guard and hound voices, guard
 sounds, weapons, UI, spells, music, player, portal and loot, and hazards play; physics, ambience,
