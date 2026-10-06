@@ -8,8 +8,8 @@ namespace Plunderspell.Atmosphere
     /// <summary>
     /// Draws the castle's night fog over the camera colour after the opaques, before transparents,
     /// so flames and the portal draw on top and fog themselves (NightFogCommon.hlsl). One full-screen
-    /// triangle, blended scene * transmittance + light; no colour copy. Just before it, the shader's
-    /// Ink pass multiplies in outlines and paper grain (#231), so the fog softens distant lines.
+    /// triangle, blended scene * transmittance + light; no colour copy. Just after it, the shader's
+    /// Ink pass multiplies in outlines and paper grain (#231); drawn before, the fog's glow washed it out.
     ///
     /// The fog's colour, density and the fires it scatters are shader globals owned by
     /// <see cref="CastleAtmosphere"/>. With no atmosphere in the scene the density global is zero and
@@ -48,12 +48,12 @@ namespace Plunderspell.Atmosphere
             if (_material == null)
                 _material = CoreUtils.CreateEngineMaterial(_shader);
 
-            _inkPass.Material = _material;
-            _inkPass.ConfigureInput(ScriptableRenderPassInput.Depth);
-            renderer.EnqueuePass(_inkPass);
             _pass.Material = _material;
             _pass.ConfigureInput(ScriptableRenderPassInput.Depth);
             renderer.EnqueuePass(_pass);
+            _inkPass.Material = _material;
+            _inkPass.ConfigureInput(ScriptableRenderPassInput.Depth);
+            renderer.EnqueuePass(_inkPass);
         }
 
         protected override void Dispose(bool disposing)

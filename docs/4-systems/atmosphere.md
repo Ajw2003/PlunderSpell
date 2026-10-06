@@ -52,7 +52,7 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
   `PlunderspellSurfaceForward.hlsl` draws diagonal strokes on the surface's dominant world plane once
   its light falls below `HatchStart`, a crossing layer below half that, wobbled by the detail texture
   and faded out where strokes get closer than a few pixels (`_PlunderHatch`). Outlines and paper: the
-  `Ink` pass of `NightFog.shader`, drawn by `NightFogFeature` just before the fog, multiplies in a line
+  `Ink` pass of `NightFog.shader`, drawn by `NightFogFeature` just after the fog (drawn before it, the fog's glow washed it out), multiplies in a line
   wherever the Laplacian of raw depth jumps (silhouettes and sharp corners; flat surfaces give zero)
   and a faint paper grain (`_PlunderInk`). Film grain was already on at High (`ApplyQuality`).
 - **Bailey.** `CastleDressingPlanner` (own seed stream) dresses straight curtain cells, the gate

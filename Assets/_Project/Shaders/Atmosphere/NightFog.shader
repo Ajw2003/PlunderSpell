@@ -1,7 +1,7 @@
 // Full-screen fog for the castle at night. Drawn by Plunderspell.Atmosphere.NightFogFeature after the
 // opaques, blended over the camera colour as scene * transmittance + in-scattered light.
-// Pass 1, "Ink" (#231), is drawn just before the fog by the same feature, so it ships in builds
-// with it and fades into the fog like everything else.
+// Pass 1, "Ink" (#231), is drawn just after the fog by the same feature, so it ships in builds
+// with it. Drawn before, the fog's glow washed it out.
 Shader "Hidden/Plunderspell/NightFog"
 {
     SubShader
