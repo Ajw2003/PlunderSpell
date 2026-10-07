@@ -202,7 +202,7 @@ namespace StateMachine
             // isActiveAndEnabled, not enabled: a remote player's camera object is switched off by
             // PlayerNetworkOwnership before Start, and must not claim to be this machine's player.
             if (!LocalDecidedByNetwork && Local == null && view != null && view.isActiveAndEnabled)
-                Local = this;
+                SetLocal(this);
 
             Plunderspell.Core.GameServices.Initialize();
             Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (Plunderspell.Core.GameStateChanged e) => OnGameStateChanged(e.Previous, e.Current));
@@ -232,6 +232,14 @@ namespace StateMachine
         /// <summary>The player this machine renders through (its camera is live). Null until one exists.</summary>
         public static PlayerStateMachine Local { get; private set; }
 
+        private static void SetLocal(PlayerStateMachine player)
+        {
+            if (Local == player)
+                return;
+            Local = player;
+            Code.Scripts.EventSystems.EventManager.Instance?.Publish(new LocalPlayerChanged(player));
+        }
+
         /// <summary>
         /// Asked when this machine's player dies: true when a teammate is still alive to watch.
         /// Installed by Plunderspell.Net; offline there is nobody to watch, so it is always false.
@@ -242,13 +250,13 @@ namespace StateMachine
 
         /// <summary>Makes this body the one this machine plays as. Called by the network ownership
         /// component when this machine turns out to own it, which can happen after Start.</summary>
-        public void ClaimLocal() => Local = this;
+        public void ClaimLocal() => SetLocal(this);
 
         /// <summary>Undoes <see cref="ClaimLocal"/> when this machine turns out not to own the body.</summary>
         public void ReleaseLocal()
         {
             if (Local == this)
-                Local = null;
+                SetLocal(null);
         }
 
         /// <summary>
@@ -292,7 +300,7 @@ namespace StateMachine
         {
             Code.Scripts.EventSystems.EventManager.Instance?.UnsubscribeFromAllEvents(this);
             if (Local == this)
-                Local = null;
+                SetLocal(null);
         }
 
         public void Walk()

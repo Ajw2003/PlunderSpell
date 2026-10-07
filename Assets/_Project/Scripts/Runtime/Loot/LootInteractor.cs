@@ -78,6 +78,7 @@ namespace Plunderspell.Loot
         public void UpdateFocus()
         {
             LootPickup previous = Focus;
+            CastleDoorHandle previousDoor = FocusDoor;
             Focus = null;
             FocusDoor = null;
 
@@ -93,6 +94,9 @@ namespace Plunderspell.Loot
                 Focus = hit.collider.GetComponentInParent<LootPickup>();
                 FocusDoor = hit.collider.GetComponentInParent<CastleDoorHandle>();
             }
+
+            if (FocusDoor != previousDoor)
+                EventManager.Instance?.Publish(new DoorFocusChanged(FocusDoor));
 
             if (Focus != previous)
             {
