@@ -22,7 +22,8 @@ from selling; *Plus* is the only ask; keys first, voice later).
 3. *Plus*: the offer rises 10% (`Raised`), or the vendor refuses (`Refused`) and loses patience; at
    zero patience he will not take that piece for the rest of the night (`WillNotBuy`). The Fence has
    patience 1, so his first over-limit *Plus* ends it.
-4. *Satis*: `LairHubManager.BankSale(coins)` (coins are the figure said, rounded), the piece is removed
+4. *Satis*: a coin pouch holding the coins (the figure said, rounded) is put on the counter (`SellCounter.PutPouchOnCounter`,
+   `SellCounter.cs:262`; see "Coins are pouches" below), the piece is removed
    from the haul pile (`HaulLanding.Remove`, so the save drops it) and from any raid spawner, and
    destroyed. *Vale*: "Farewell"; lifting the piece off and putting it back opens 10% lower.
 5. A piece taken off the counter without a word just closes the haggle.
@@ -81,7 +82,7 @@ PlayerPrefs, so a run elsewhere that is not on the test slot can still change sl
   reads the keys only while a line is showing and it stands within 3 m.
 - Every line is said once on the server (`Say`), shown there and sent to all by `[ObserversRpc]
   LineToObservers` (`:242`), so host and client read the same text. Each side clears it after 6 s.
-- `BankSale` runs on the server only; the piece is removed from the pile save and destroyed there, which
+- The sale (and so the pouch's spawn) runs on the server only; the piece is removed from the pile save and destroyed there, which
   despawns it on every client.
 - The subtitle stands half a metre in front of the vendor (toward the counter) at chest height, under
   the stall roof (`MarketYardForge.cs:164`). Each counter top has a 4 cm rim (`AddLip`, `:182`) so a piece set
@@ -91,6 +92,37 @@ PlayerPrefs, so a run elsewhere that is not on the test slot can still change sl
   the host's gold plus debt moves by the coins sold, the piece is gone on both. Logs and the client's
   capture of the counter in `docs/generated/coop-lair-2026-10-07/`. The 1/2/3 keys themselves are still
   not machine-checked.
+
+## Coins are pouches (#313, step 7 part 1)
+
+A sale no longer banks. The vendor puts a `CoinPouch` on the counter (`CoinPouch.cs`, prefab
+`Assets/_Project/Prefabs/Market/CoinPouch.prefab`, built by `CoinPouchForge.BuildCoinPouch`; the `MarketYardForge` wires
+the prefab into each `SellCounter`, `MarketYardForge.cs:184`). Server-spawned, so it is a networked piece.
+
+- Carried like loot: it has a `LootPickup`, an `Item` and a network transform. Its weight is 0.01 kg a coin with a 0.3 kg
+  floor (`CoinPouch.WeightFor`, `CoinPouch.cs:21`), set on the body from the synced coin count, so a client's body weighs the
+  same. A 130-coin pouch is 1.3 kg.
+- **Not loot.** It has no `LootValue`, and that is the only thing extraction (`ExtractionZone`), the haul pile
+  (`HaulLanding`, which saves `LootValue` items) and the counters (`SellCounter.OpenOnRestingPiece`) look for. A pouch on
+  a counter never opens a haggle. Its `LootItem` (`Data/Market/CoinPouchItem.asset`, Worth 0) exists only for the carry numbers.
+- **Strongboxes.** `LairRoomForge.AddStrongboxLid` (`LairRoomForge.cs:140`) gives each of the four `LairStrongbox` props a
+  trigger slab on its lid carrying a `LairStrongbox` with a seat: strongbox n is seat n, the player whose owner id is n (as
+  the spawns). A pouch let go inside (not in a hand) is banked on the server (`LairStrongbox.Accept`,
+  `LairStrongbox.cs:29`): `LairHubManager.BankPouch(seat, coins)` (`LairHubManager.cs:177`) adds the coins to that seat's
+  purse, publishes `PurseChanged`, and the pouch is destroyed (despawned everywhere).
+- **Purses** are four saved numbers per slot (`Purse0` to `Purse3` in PlayerPrefs, `LairHubManager.Purse`/`PeekPurse`,
+  wiped by `ResetSlot`).
+- **For now every purse also pays the one shared debt**, exactly as `BankSale` did: `BankPouch` calls `BankSale(coins)`. So
+  the loop still works; this is a stand-in until the next builder splits the debt in equal shares per wizard and adds the
+  Collector (`Decisions.md`, 2026-10-07). Purses only grow until the Collector takes shares from them.
+- `NetworkPrefabs.asset` gained exactly one entry, the CoinPouch prefab (guid `e6524070a36f7b64b81c47f26463a0a0`),
+  appended after the existing ones; no existing entry moved.
+- Not done (to be an issue if wanted): a pouch not yet banked is not saved, so quitting with one on the counter loses its
+  coins; a client's own `LairHubManager` does not show the host's purses (it is local state, like gold and debt today).
+- Checked 2026-10-07: `Tools/Unity/pouch_solo_check.sh` (solo, test slot; log and capture of the pouch on the counter in
+  `docs/generated/pouch-solo-2026-10-07/`) and `coop_lair_check.sh` twice (`docs/generated/coop-lair-2026-10-07/pouch-run1-*`,
+  `pouch-run2-*`): the pouch exists on both sides with the coins sold, the host moves it into strongbox 2 (the client's
+  seat), both see it gone, purse 2 grew by the sale and slot 1 was unchanged.
 
 ## Checked
 
