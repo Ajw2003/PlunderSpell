@@ -197,14 +197,35 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   server or offline only, carrying `PiecesOf` (`ExtractionZone.cs:249`): the `LootItem` of every unbroken piece in the zone.
   A piece is identified by its `LootItem` because that is what `RaidLootTable` already maps to a prefab
   (`RaidLootTable.PrefabFor`), so no new id scheme.
-- `HaulLanding.cs:33` (child `HaulLanding` of the Lair room, local (4.0, 0.30, 0), built in `LairRoomForge.cs`) spawns them
+- `HaulLanding.cs:64` (child `HaulLanding` of the Lair room, local (4.0, 0.30, 0), built in `LairRoomForge.cs`) spawns them
   on the server through its own `LootSpawner.SpawnPile` (`LootSpawner.cs:133`): same `SpawnLoose` path, kinematic then
-  released after the settle delay. Positions come from `HaulLayout.Offsets` (a 7 x 3 grid, 0.45 m apart, stacked above that).
-- A new haul replaces the pile; `RaidPhase.Generating` clears it (`HaulLanding.cs:24`). The pile belongs to its own spawner,
-  so `RaidDirector.ApplyResult`'s `_lootSpawner.Clear()` (`RaidDirector.cs:337`) leaves it, and it sits at x 1000, far from the pad.
-  Banking is unchanged (`ApplyExtractionResult`); the pile is the LAST raid's haul only and is not saved.
-- Solo Play check 2026-10-06: two pieces (worth 2400) placed on the pad, `CallExtraction`: phase Resolved, state LairRoom,
-  gold 2800 to 5200, both pieces at (1003.55, 0.31, -0.90) and (1003.55, 0.31, -1.35). Co-op and the capture are not checked.
+  released after the settle delay. Positions come from `HaulLayout.Offsets(count, start)` (`HaulLayout.cs:23`; a 7 x 3 grid,
+  0.45 m apart, stacked above that). The pile belongs to its own spawner, so `RaidDirector.ApplyResult`'s
+  `_lootSpawner.Clear()` leaves it, and it sits at x 1000, far from the pad.
+- The pile persists and grows (#312, the owner's decision of 2026-10-07: extraction stops banking). `SpawnPile` adds and no
+  longer clears, and nothing clears the pile at raid start. A new haul starts its layout after the pieces already there
+  (`start` = live piece count, `HaulLanding.cs:112`), so it lies beside them, in layers when the floor grid is full. Known
+  ceiling: after a piece is removed from the middle, a new one can land on a cell still in use.
+- Saving: `HaulPileSave` (`Runtime/Lair/HaulPileSave.cs`) keeps the pile per save slot as one PlayerPrefs string, the asset
+  names of the pieces' `LootItem`s joined by `|`. The asset name is the id: stable across runs, already how the loot tables
+  list items, and it keeps the Lair assembly free of the loot assembly. The save is rebuilt from the pieces that exist
+  (`HaulLanding.Save`, `:131`) on every change: a haul landing, a restore, `Remove` (`:58`, takes a piece out of the pile by its
+  object, for a pickup or a sale) and a per-frame count check (`Update`, `:39`) that notices a piece destroyed anywhere else.
+  Names no table can resolve are kept in the save, never erased.
+- Restoring: on the server once it runs (`ServerReady`, `:55`: offline, or the host's server up) and again on
+  `SaveSlotLoaded` (`LairEvents.cs`, published by `LairHubManager.LoadSlot`, `LairHubManager.cs:62`; the old pile is cleared
+  first). Names resolve through every era's loot table in the director's `EraContentCatalogue` (`RaidDirector.EraContent`)
+  plus the raid spawner's own (`AllTables`, `:153`); a mixed-era pile is spawned per table to get each prefab.
+  `LairHubManager.ResetSlot` wipes the slot's pile.
+- Banking moved: `ApplyExtractionResult` (`LairHubManager.cs:118`) now only records `LastRaidWorth`; gold and the debt
+  pay-down are `LairHubManager.BankSale(coins)` (`:125`), for the Market. The per-raid debt tick (`OnNewSession`) is unchanged.
+- Solo Play check 2026-10-06 (before #312): two pieces (worth 2400) placed on the pad, `CallExtraction`: phase Resolved,
+  state LairRoom, both pieces at (1003.55, 0.31, -0.90) and (1003.55, 0.31, -1.35).
+- Check 2026-10-07 (#312): solo, the saved four pieces came back on Play; extraction left gold 0 and debt 650 as they were
+  (last raid worth 2400), the pile grew to six and the save listed six; `BankSale(100)` took the debt 650 to 550 (gold 0, all
+  of it went to the debt); destroying one piece dropped it from the save. Co-op twice running (`coop_lair_check.sh`): pile 0
+  to 2, then 2 to 4, identical on host and client. Logs `docs/generated/coop-lair-2026-10-07/run1-*`, `run2-*`. The client
+  screenshot looks at a table and does not show the pile.
 
 ## Guards that can actually hurt you
 
