@@ -1,3 +1,4 @@
+using Plunderspell.Items;
 using System.Collections.Generic;
 using PurrNet;
 using Plunderspell.Loot;

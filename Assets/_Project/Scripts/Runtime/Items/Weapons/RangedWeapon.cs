@@ -1,6 +1,7 @@
 using Interfaces;
 using Plunderspell.Acoustics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>One bolt, then a long reload. See docs/6-decisions/Decisions.md, "A ranged shot spawns ahead of the
 /// wielder instead of tracking their colliders".</summary>
@@ -11,25 +12,26 @@ public class RangedWeapon : MonoBehaviour
     // Metres in front of the fire origin the shot spawns at, clear of the wielder's own collider.
     private const float k_muzzleOffset = 0.8f;
 
-    [SerializeField] private RangedWeaponStats m_stats;
+    [FormerlySerializedAs("m_stats")]
+    [SerializeField] private RangedWeaponStats _stats;
 
-    private AcousticEmitter m_emitter;
-    private bool m_isLoaded = true;
-    private float m_reloadStartTime;
+    private AcousticEmitter _emitter;
+    private bool _isLoaded = true;
+    private float _reloadStartTime;
 
     /// <summary>True while the player is holding this weapon up to fire.</summary>
     public bool IsAiming { get; private set; }
 
-    public bool IsLoaded => m_isLoaded;
+    public bool IsLoaded => _isLoaded;
 
     /// <summary>0 while loaded/ready, ramping to 1 across the reload.</summary>
-    public float ReloadProgress01 => m_isLoaded || m_stats == null
+    public float ReloadProgress01 => _isLoaded || _stats == null
         ? 0f
-        : Mathf.Clamp01((Time.time - m_reloadStartTime) / m_stats.ReloadDuration);
+        : Mathf.Clamp01((Time.time - _reloadStartTime) / _stats.ReloadDuration);
 
     private void Awake()
     {
-        m_emitter = GetComponent<AcousticEmitter>();
+        _emitter = GetComponent<AcousticEmitter>();
     }
 
     public void SetAiming(bool aiming)
@@ -41,11 +43,11 @@ public class RangedWeapon : MonoBehaviour
     /// <see cref="IsAiming"/> and a loaded weapon; no-ops (returns false) otherwise.</summary>
     public bool TryFire(Vector3 origin, Vector3 direction)
     {
-        if (m_stats == null || !m_isLoaded || !IsAiming)
+        if (_stats == null || !_isLoaded || !IsAiming)
             return false;
 
-        m_isLoaded = false;
-        m_reloadStartTime = Time.time;
+        _isLoaded = false;
+        _reloadStartTime = Time.time;
 
         SpawnProjectile(origin, direction);
         AlertNearbyListeners();
@@ -54,9 +56,9 @@ public class RangedWeapon : MonoBehaviour
 
     private void Update()
     {
-        if (!m_isLoaded && ReloadProgress01 >= 1f)
+        if (!_isLoaded && ReloadProgress01 >= 1f)
         {
-            m_isLoaded = true;
+            _isLoaded = true;
         }
     }
 
@@ -73,18 +75,18 @@ public class RangedWeapon : MonoBehaviour
     /// </summary>
     public void SpawnCosmeticShot(Vector3 spawnPoint, Vector3 direction)
     {
-        if (m_stats == null || m_stats.ProjectilePrefab == null)
+        if (_stats == null || _stats.ProjectilePrefab == null)
             return;
-        GameObject shot = Instantiate(m_stats.ProjectilePrefab, spawnPoint, Quaternion.LookRotation(direction));
+        GameObject shot = Instantiate(_stats.ProjectilePrefab, spawnPoint, Quaternion.LookRotation(direction));
         if (shot.TryGetComponent(out NetworkedProjectile projectile))
             projectile.Damage = 0;
         if (shot.TryGetComponent(out Rigidbody body))
-            body.linearVelocity = direction * m_stats.ProjectileSpeed;
+            body.linearVelocity = direction * _stats.ProjectileSpeed;
     }
 
     private void SpawnProjectile(Vector3 origin, Vector3 direction)
     {
-        if (m_stats.ProjectilePrefab == null)
+        if (_stats.ProjectilePrefab == null)
             return;
 
         // Spawning at the muzzle rather than the eye clears the wielder's own capsule collider by
@@ -92,23 +94,23 @@ public class RangedWeapon : MonoBehaviour
         // burst is centred on where it lands, not where it starts") — no per-frame collision-ignore
         // bookkeeping needed.
         Vector3 spawnPoint = origin + direction * k_muzzleOffset;
-        GameObject shot = Instantiate(m_stats.ProjectilePrefab, spawnPoint, Quaternion.LookRotation(direction));
+        GameObject shot = Instantiate(_stats.ProjectilePrefab, spawnPoint, Quaternion.LookRotation(direction));
 
         if (shot.TryGetComponent(out NetworkedProjectile projectile))
         {
-            projectile.Damage = (int)m_stats.Damage;
+            projectile.Damage = (int)_stats.Damage;
             projectile.Instigator = TryGetComponent(out Item item) ? item.Holder : null;
         }
 
         if (shot.TryGetComponent(out Rigidbody body))
-            body.linearVelocity = direction * m_stats.ProjectileSpeed;
+            body.linearVelocity = direction * _stats.ProjectileSpeed;
 
         Fired?.Invoke(this, spawnPoint, direction);
     }
 
     private void AlertNearbyListeners()
     {
-        m_emitter.NoiseType = NoiseType.Gunshot;
-        m_emitter.EmitNoise(m_stats.NoiseRadius, m_stats.NoiseStrength);
+        _emitter.NoiseType = NoiseType.Gunshot;
+        _emitter.EmitNoise(_stats.NoiseRadius, _stats.NoiseStrength);
     }
 }

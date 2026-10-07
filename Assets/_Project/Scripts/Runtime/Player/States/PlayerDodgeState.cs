@@ -37,8 +37,8 @@ namespace StateMachine.States
 
         private void Hold()
         {
-            float vertical = _stateMachine._rb.linearVelocity.y;
-            _stateMachine._rb.linearVelocity = _direction * _speed + Vector3.up * vertical;
+            float vertical = _stateMachine.Rb.linearVelocity.y;
+            _stateMachine.Rb.linearVelocity = _direction * _speed + Vector3.up * vertical;
         }
 
         // Hands control back to walk or idle. This used to be Exit, but ChangeState now runs Exit on the
