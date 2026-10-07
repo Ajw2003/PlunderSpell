@@ -317,9 +317,10 @@ Every event one system sends another now goes through `EventManager` (the owner'
 clock, debt, carried item and chant progress (#302). The raid HUD (#303) and the damage feedback, camera shake, music
 and backdrop camera (#304) learn state from those events instead of polling; the microphone meter moved to Settings.
 Verified: compile clean, PlayMode 430/430, EditMode 225 pass with the three known failures, and a co-op raid (Editor
-host plus built client) on which both HUD models followed the clock and alarm
-(`docs/generated/hud-events-303/`). Not verified: the mic meter against a real microphone, and music, shake and
-damage feedback in a co-op raid (they are covered by tests only). Still C# events by design: `StatusChanged` and
+host plus built client) on which both HUD models followed the clock and alarm, the raid stems were playing on both
+machines, and a 10-point hit on each machine's own player raised the shake to 0.55, one floating number and a 0.45
+red edge on both (`Tools/Unity/hud_events_check.sh`, output in `docs/generated/hud-events-303/`). Not verified: the mic
+meter against a real microphone (none on this machine). Still C# events by design: `StatusChanged` and
 `GuardHealth.Died` (only their own guard listens). Still a C# event, not asked for: `PlayerStateMachine.SlamLanded`.
 Not merged to `main`: all of it is on `claude/staging-2026-10-07`.
 
