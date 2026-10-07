@@ -36,6 +36,24 @@ namespace Plunderspell.Core
             }
         }
 
+        /// <summary>Raised when <see cref="Microphone"/> actually changes value.</summary>
+        public static event Action<string> MicrophoneChanged;
+
+        /// <summary>The chosen microphone's device name; empty means automatic.</summary>
+        public static string Microphone
+        {
+            get => PlayerPrefs.GetString(MicrophoneKey, string.Empty);
+            set
+            {
+                value = value ?? string.Empty;
+                if (value == Microphone)
+                    return;
+                PlayerPrefs.SetString(MicrophoneKey, value);
+                PlayerPrefs.Save();
+                MicrophoneChanged?.Invoke(value);
+            }
+        }
+
         /// <summary>Raised when <see cref="GuardsHearChatter"/> actually changes value.</summary>
         public static event Action<bool> GuardsHearChatterChanged;
 
