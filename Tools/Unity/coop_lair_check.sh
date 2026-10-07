@@ -119,6 +119,38 @@ n="${h#pile }"; n="${n%% *}"
 [ "$h" = "$c" ] && [ "$n" = "$((b + 2))" ] && r=ok || r=no; check $r "both see the same pile, grown by the two extracted pieces ($b -> $n)"
 L client shot "$(cygpath -m "$repo/$out/$label-client-pile.png")" >/dev/null 2>&1 || true
 
+# Selling (#314): the host sets a piece on the Goldsmith's counter (server side); the CLIENT answers Plus then Satis
+# through the counter's word path; both sides must show the same line, the host's gold and debt must move by the sold
+# coins, and the piece must be gone on both sides.
+log "client: $(L client travel /LairRoom/MarketDoor)"; sleep 2
+log "client: $(L client look)"
+log "host: $(L host put 4)"
+for _ in $(seq 1 15); do hl="$(L host line)"; case "$hl" in *coin*) break ;; esac; sleep 1; done
+sleep 1; hl="$(L host line)"; cl="$(L client line)"; log "host: $hl"; log "client: $cl"
+r=no; [ "$hl" = "$cl" ] && case "$hl" in *coin*) r=ok ;; esac
+check $r "both see the vendor's opening offer"
+m0="$(L host money)"; log "host before: $m0"
+log "client: $(L client speak Plus)"; sleep 2
+hl="$(L host line)"; cl="$(L client line)"; log "host: $hl"; log "client: $cl"
+r=no; [ "$hl" = "$cl" ] && case "$hl" in *"Very well"*|*"Too much"*|*"Enough"*) r=ok ;; esac
+check $r "the client's Plus is answered, and both see the same line"
+L client shot "$(cygpath -m "$repo/$out/$label-client-counter.png")" >/dev/null 2>&1 || true
+log "client: $(L client speak Satis)"; sleep 2
+hl="$(L host line)"; cl="$(L client line)"; log "host: $hl"; log "client: $cl"
+r=no; [ "$hl" = "$cl" ] && case "$hl" in *Done*) r=ok ;; esac
+check $r "the client's Satis sells it, and both see the same line"
+m1="$(L host money)"; log "host after: $m1"
+coins="${hl##*: }"; coins="${coins%% coin*}"
+python -c "
+import re, sys
+a = [float(x) for x in re.findall(r'[0-9.]+', sys.argv[1])]; b = [float(x) for x in re.findall(r'[0-9.]+', sys.argv[2])]
+sys.exit(0 if abs((a[1] - b[1]) + (b[0] - a[0]) - float(sys.argv[3])) < 0.01 else 1)" "$m0" "$m1" "$coins" 2>/dev/null && r=ok || r=no
+check $r "the host's gold and debt moved by the $coins coins sold"
+sleep 1
+hp="$(L host piece)"; cp="$(L client piece)"; log "host: $hp"; log "client: $cp"
+r=no; [ "$hp" = "pieces 0" ] && [ "$cp" = "pieces 0" ] && r=ok
+check $r "the piece is gone on both sides"
+
 # SocketError is a type name in LiteNetLib's stack frames, not an error.
 log "client log error lines: $(grep -i 'error\|exception' "$out/$label-client.log" | grep -vc 'SocketError')"
 [ "$fails" -eq 0 ] && log "PASS all Lair checks" || log "FAIL $fails Lair checks"

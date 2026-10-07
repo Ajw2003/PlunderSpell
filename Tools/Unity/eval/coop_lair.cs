@@ -8,6 +8,12 @@
 //   pile               the loot pieces within 5 m of the Lair's HaulLanding
 //   pad <n>            host: put n raid pieces on the extraction pad
 //   shot <path>        save a screenshot (absolute path, forward slashes)
+//   put <entry>        host: set loot-table entry <entry> down on the Goldsmith's counter (through the pile's spawner, on the server)
+//   look               stand the local player 2 m in front of the Goldsmith's counter, facing it
+//   line               the Goldsmith counter's subtitle text on this side
+//   speak <word>       the local player's word at the Goldsmith counter: Plus, Satis or Vale (what keys 1/2/3 call)
+//   money              the Lair's banked gold and debt (read on the host: it is the server)
+//   piece              how many loot pieces lie on the Goldsmith counter on this side
 string action = "__ACTION__";
 string arg = "__ARG__";
 const System.Reflection.BindingFlags All = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static
@@ -42,8 +48,65 @@ UnityEngine.Component LocalPlayer() => Get(T("StateMachine.PlayerStateMachine"),
 object State() => Get(Get(T("Plunderspell.Core.GameServices"), "GameState"), "CurrentState");
 UnityEngine.Object[] FindAll(string type) => UnityEngine.Object.FindObjectsByType(T(type), UnityEngine.FindObjectsSortMode.None);
 
+UnityEngine.Component GoldsmithCounter()
+{
+    foreach (var o in FindAll("Plunderspell.Raid.SellCounter"))
+        if (Get(o, "Vendor").ToString() == "Goldsmith") return (UnityEngine.Component)o;
+    throw new System.Exception("no Goldsmith counter");
+}
+
 switch (action)
 {
+    case "put":
+    {
+        var landing = FindAll("Plunderspell.Raid.HaulLanding")[0];
+        var pile = Get(landing, "_pile");
+        object table = null;
+        foreach (var sp in FindAll("Plunderspell.Raid.LootSpawner"))
+            if (sp != pile && Get(sp, "Table") != null) table = Get(sp, "Table");
+        var entry = ((System.Collections.IList)Get(table, "Entries"))[int.Parse(arg)];
+        var at = GoldsmithCounter().GetComponentInChildren<UnityEngine.BoxCollider>().bounds.center + UnityEngine.Vector3.up * 0.1f;
+        var go = (UnityEngine.GameObject)pile.GetType().GetMethod("SpawnLoose").Invoke(pile, new object[] { Get(entry, "Item"), Get(entry, "Prefab"), at });
+        return "put " + go.name;
+    }
+    case "look":
+    {
+        var counter = GoldsmithCounter().transform;
+        var player = LocalPlayer();
+        var from = counter.position + (player.transform.position - counter.position).normalized * 2f;
+        from.y = player.transform.position.y;
+        var look = UnityEngine.Quaternion.LookRotation(new UnityEngine.Vector3(counter.position.x - from.x, 0f, counter.position.z - from.z));
+        var body = player.GetComponent<UnityEngine.Rigidbody>();
+        if (body != null) { body.linearVelocity = UnityEngine.Vector3.zero; body.isKinematic = true; body.position = from; }
+        player.transform.position = from;
+        // The camera turns apart from the body (as view.sh does): yaw it at the counter, a little down.
+        float yaw = look.eulerAngles.y;
+        player.GetType().GetMethod("FaceYaw").Invoke(player, new object[] { yaw });
+        UnityEngine.Camera.main.transform.localRotation = UnityEngine.Quaternion.Euler(8f, yaw, 0f);
+        return "looking at the Goldsmith from " + V(from);
+    }
+    case "line":
+        return "line " + ((UnityEngine.TextMesh)Get(GoldsmithCounter(), "_subtitle")).text;
+    case "speak":
+    {
+        var counter = GoldsmithCounter();
+        var word = System.Enum.Parse(T("Plunderspell.Market.HaggleWord"), arg);
+        counter.GetType().GetMethod("Speak").Invoke(counter, new object[] { word });
+        return "spoke " + arg;
+    }
+    case "money":
+    {
+        var lair = FindAll("Plunderspell.Lair.LairHubManager")[0];
+        return "gold " + Get(lair, "AccumulatedGold") + " debt " + Get(lair, "TotalDebt");
+    }
+    case "piece":
+    {
+        var box = GoldsmithCounter().GetComponentInChildren<UnityEngine.BoxCollider>();
+        int n = 0;
+        foreach (var o in FindAll("Plunderspell.Loot.LootValue"))
+            if (box.bounds.Contains(((UnityEngine.Component)o).transform.position)) n++;
+        return "pieces " + n;
+    }
     case "where":
     {
         var player = LocalPlayer();

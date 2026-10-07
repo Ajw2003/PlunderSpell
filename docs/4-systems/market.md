@@ -43,11 +43,31 @@ from selling; *Plus* is the only ask; keys first, voice later).
 
 ## What must stay true
 
-- The sale runs on the server (solo and host) only. A client's counter does nothing: co-op selling
-  needs a `[ServerRpc]` for the word and an `[ObserversRpc]` for the subtitle, and the counters are
-  scene objects, not networked ones. It is the next step (#312, then #314).
-- The Market and `NetworkPrefabs.asset` are unchanged by this: no networked prefab was added.
+- The sale runs on the server (solo and host) only; see "Co-op" below.
+- `NetworkPrefabs.asset` is unchanged: the counters are scene network objects, not prefabs.
 - Each haggle's lines live in `VendorLines`, not in the component.
+
+## Co-op (#314)
+
+- `SellCounter` is a PurrNet `NetworkBehaviour` on each `MarketCounter`, with a scene `NetworkIdentity`
+  that `MarketYardForge.AddSellCounter` adds (`MarketYardForge.cs:177`). The prefab sits in `RaidScene`, so
+  PurrNet numbers it as a scene object; no network prefab, so `NetworkPrefabs.asset` does not change.
+- The server owns the `Haggle` and the sale. `Decides` (`SellCounter.cs:84`) is "unspawned or server":
+  those sides open, answer and sell as before. A client's `Speak` (`SellCounter.cs:124`, what keys
+  1/2/3 call) sends the word with `[ServerRpc(requireOwnership: false)] WordToServer` (`:133`); a client
+  reads the keys only while a line is showing and it stands within 3 m.
+- Every line is said once on the server (`Say`), shown there and sent to all by `[ObserversRpc]
+  LineToObservers` (`:242`), so host and client read the same text. Each side clears it after 6 s.
+- `BankSale` runs on the server only; the piece is removed from the pile save and destroyed there, which
+  despawns it on every client.
+- The subtitle stands half a metre in front of the vendor (toward the counter) at chest height, under
+  the stall roof (`MarketYardForge.cs:164`). Each counter top has a 4 cm rim (`AddLip`, `:182`) so a piece set
+  near the edge stays on it.
+- Checked: `Tools/Unity/coop_lair_check.sh` (selling part, `eval/coop_lair.cs`): the host puts a piece on the
+  Goldsmith's counter, the client's Plus then Satis go through `Speak`; both sides show the same lines,
+  the host's gold plus debt moves by the coins sold, the piece is gone on both. Logs and the client's
+  capture of the counter in `docs/generated/coop-lair-2026-10-07/`. The 1/2/3 keys themselves are still
+  not machine-checked.
 
 ## Checked
 
