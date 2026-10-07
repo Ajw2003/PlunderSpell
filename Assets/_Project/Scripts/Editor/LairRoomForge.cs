@@ -86,7 +86,7 @@ namespace Plunderspell.EditorTools
             box.size = new Vector3(1.2f, 2.4f, 2.4f);
             portal.AddComponent<Plunderspell.Raid.LairPortalTrigger>();
 
-            // Where the last raid's haul lands: floor level, between the spawns and the portal's run (#310).
+            // Where the last raid's haul lands: on the floor 1.2 m in front of the arriving players (#310).
             var landing = new GameObject("HaulLanding");
             landing.transform.SetParent(root.transform, false);
             landing.transform.localPosition = new Vector3(4.0f, Floor, 0f);
@@ -99,6 +99,36 @@ namespace Plunderspell.EditorTools
             // The book on the table is its own object, so looking at it opens the ledger too.
             root.transform.Find("LairLedgerTable").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
             root.transform.Find("LairLedger").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
+
+            AddMarketDoor(root);
+        }
+
+        public const string MarketDoorName = "MarketDoor";
+        public const string MarketDoorArrivalsName = "MarketDoorArrivals";
+
+        /// <summary>
+        /// The Market door in the back wall (Blender x -0.7, 2.6 x 2.16 m; lair_builders.py DOOR_CX): look at
+        /// it and press E to go to the Market. Its leaf is part of the cellar mesh, so a thin collider of its
+        /// own sits just in front of it for the look to hit. RaidSceneRooms points it at the Market's spawns.
+        /// Players coming back stand at MarketDoorArrivals, just inside the door, facing into the room.
+        /// </summary>
+        private static void AddMarketDoor(GameObject root)
+        {
+            var door = new GameObject(MarketDoorName);
+            door.transform.SetParent(root.transform, false);
+            door.transform.localPosition = BlenderPlacement.ToUnity(new Vector3(-0.7f, 4.95f, Floor + 1.08f));
+            door.AddComponent<BoxCollider>().size = new Vector3(2.6f, 2.16f, 0.1f);
+            door.AddComponent<Plunderspell.Raid.RoomTravel>();
+
+            var arrivals = new GameObject(MarketDoorArrivalsName);
+            arrivals.transform.SetParent(root.transform, false);
+            for (int i = 0; i < 4; i++)
+            {
+                var spawn = new GameObject($"Spawn{i + 1}");
+                spawn.transform.SetParent(arrivals.transform, false);
+                spawn.transform.localPosition = BlenderPlacement.ToUnity(new Vector3(-2.2f + i * 1.0f, 3.8f, Floor));
+                spawn.transform.localRotation = Quaternion.LookRotation(BlenderPlacement.ToUnity(Vector3.down));
+            }
         }
 
         private static void Place(GameObject root, string model, Vector3 blenderPosition, Vector3 blenderDegrees,

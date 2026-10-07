@@ -19,12 +19,18 @@ namespace Plunderspell.EditorTools
         public static void PlaceRooms()
         {
             var scene = EditorSceneManager.OpenScene(ScenePath);
-            Place(scene, LairRoomForge.PrefabPath, "LairRoom", LairPosition);
-            Place(scene, MarketYardForge.PrefabPath, "MarketYard", MarketPosition);
+            GameObject lair = Place(scene, LairRoomForge.PrefabPath, "LairRoom", LairPosition);
+            GameObject market = Place(scene, MarketYardForge.PrefabPath, "MarketYard", MarketPosition);
+            if (lair != null && market != null)
+            {
+                // The Lair's Market door leads to the Market's spawns; the Market's way out to just inside that door.
+                Connect(lair.transform.Find(LairRoomForge.MarketDoorName), market.transform.Find("PlayerSpawns"));
+                Connect(market.transform.Find(MarketYardForge.LairExitName), lair.transform.Find(LairRoomForge.MarketDoorArrivalsName));
+            }
             EditorSceneManager.SaveScene(scene);
         }
 
-        private static void Place(UnityEngine.SceneManagement.Scene scene, string prefabPath, string name, Vector3 position)
+        private static GameObject Place(UnityEngine.SceneManagement.Scene scene, string prefabPath, string name, Vector3 position)
         {
             foreach (GameObject existing in scene.GetRootGameObjects())
                 if (existing.name == name)
@@ -34,12 +40,29 @@ namespace Plunderspell.EditorTools
             if (prefab == null)
             {
                 Debug.LogError($"[RaidSceneRooms] No prefab at {prefabPath}; build it first. {name} is not in {ScenePath}.");
-                return;
+                return null;
             }
 
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
             instance.transform.position = position;
             Debug.Log($"[RaidSceneRooms] Placed {name} at {position} in {ScenePath}.");
+            return instance;
+        }
+
+        /// <summary>Points the RoomTravel on <paramref name="from"/> at <paramref name="to"/>, saved as a scene override.</summary>
+        private static void Connect(Transform from, Transform to)
+        {
+            var travel = from != null ? from.GetComponent<Plunderspell.Raid.RoomTravel>() : null;
+            if (travel == null || to == null)
+            {
+                Debug.LogError($"[RaidSceneRooms] Cannot connect {(from != null ? from.name : "a missing door")} to " +
+                               $"{(to != null ? to.name : "a missing destination")}; rebuild both room prefabs.");
+                return;
+            }
+
+            var serialized = new SerializedObject(travel);
+            serialized.FindProperty("_destination").objectReferenceValue = to;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }

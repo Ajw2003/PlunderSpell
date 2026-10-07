@@ -14,6 +14,7 @@ namespace Plunderspell.EditorTools
     public static class MarketYardForge
     {
         public const string PrefabPath = "Assets/_Project/Prefabs/Market/MarketYard.prefab";
+        public const string LairExitName = "LairExit";
         private const string PlacementsPath = "Tools/AssetPipeline/placements/market.json";
         private const string ModelDirectory = "Assets/_Project/Art/Models/Market";
         private const float Floor = 0.30f;
@@ -77,6 +78,19 @@ namespace Plunderspell.EditorTools
                 spawn.transform.localPosition = BlenderPlacement.ToUnity(new Vector3(-1.5f + i * 1.0f, -8.0f, Floor));
                 spawn.transform.localRotation = Quaternion.LookRotation(BlenderPlacement.ToUnity(Vector3.up));
             }
+
+            // The way back to the Lair: walking out through the 4 m way in (Blender y -10) takes you home.
+            // It spans y -10.1..-9.5, clear of the spawns at y -8. RaidSceneRooms points it at the Lair door.
+            var exit = new GameObject(LairExitName);
+            exit.transform.SetParent(root.transform, false);
+            exit.transform.localPosition = BlenderPlacement.ToUnity(new Vector3(0f, -9.8f, Floor + 1.2f));
+            var box = exit.AddComponent<BoxCollider>();
+            box.isTrigger = true;
+            box.size = new Vector3(4.0f, 2.4f, 0.6f);
+            var travel = exit.AddComponent<Plunderspell.Raid.RoomTravel>();
+            var travelObject = new SerializedObject(travel);
+            travelObject.FindProperty("_trigger").enumValueIndex = (int)Plunderspell.Raid.RoomTravel.Trigger.WalkThrough;
+            travelObject.ApplyModifiedPropertiesWithoutUndo();
 
             Directory.CreateDirectory(Path.GetDirectoryName(PrefabPath));
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
