@@ -288,7 +288,9 @@ mockup.
 of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog
 (High), vertex soot bake, Deck profiling, enemies/loot on the surface shader unseen in play,
 PlayMode suite not re-run, `ArtAssetImportTests` fails (art-bible animations, enemy emissive HDR;
-predates this branch).
+predates this branch). Fixed 2026-10-07 (#329): the emission hook never ran for embedded materials,
+and the validator counted the animation-only FBX as models. Same day, full suites on `claude/lair-market`:
+EditMode 234 (231 pass, 3 skipped), PlayMode 488 pass.
 
 **2026-09-25 — raids arrive and leave by portal; the castle is sealed** (branch
 `claude/night-atmosphere`, night atmosphere step 0). The team arrives at a seeded spot in the outer
