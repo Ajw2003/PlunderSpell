@@ -17,6 +17,8 @@
 //   pouch              the coin pouches this side sees (#313): count, then the first one's coins, mass and loot-value presence
 //   pouchto <n>        host: move the coin pouch through its rigidbody into strongbox n's lid (n 1 to 4), as if let go there
 //   purse <n>          the Lair's purse n (read on the host: it is the server)
+//   bank <n>:<coins>   host: bank coins into purse n (1 to 4), as a let-go pouch does
+//   ledger             host: the debt, the four purses, paid last collection, seats present and the Collector's line (#313)
 //   slot1              what the Lair's saved slot 1 holds (debt, gold, four purses), read without loading it
 string action = "__ACTION__";
 string arg = "__ARG__";
@@ -137,6 +139,27 @@ switch (action)
     {
         var lair = FindAll("Plunderspell.Lair.LairHubManager")[0];
         return "purse " + lair.GetType().GetMethod("Purse").Invoke(lair, new object[] { int.Parse(arg) - 1 });
+    }
+    case "bank":
+    {
+        // host: bank <seat 1 to 4>:<coins> into that purse, as a let-go pouch would (LairHubManager.BankPouch)
+        var lair = FindAll("Plunderspell.Lair.LairHubManager")[0];
+        var parts = arg.Split(':');
+        lair.GetType().GetMethod("BankPouch").Invoke(lair, new object[] { int.Parse(parts[0]) - 1, int.Parse(parts[1]) });
+        return "banked " + parts[1] + " into purse " + parts[0];
+    }
+    case "ledger":
+    {
+        // host: the debt, the four purses, what each paid at the last collection, the seats present, the Collector's line
+        var lair = FindAll("Plunderspell.Lair.LairHubManager")[0];
+        var t = lair.GetType();
+        string s = "debt " + Get(lair, "TotalDebt") + " purses";
+        for (int seat = 0; seat < 4; seat++) s += " " + t.GetMethod("Purse").Invoke(lair, new object[] { seat });
+        s += " paid";
+        for (int seat = 0; seat < 4; seat++) s += " " + t.GetMethod("PaidLast").Invoke(lair, new object[] { seat });
+        s += " present";
+        for (int seat = 0; seat < 4; seat++) s += " " + ((bool)t.GetMethod("IsPresent").Invoke(lair, new object[] { seat }) ? 1 : 0);
+        return s + " line " + Get(lair, "CollectorLine");
     }
     case "slot1":
     {

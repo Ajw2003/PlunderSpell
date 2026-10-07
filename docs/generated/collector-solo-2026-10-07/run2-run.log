@@ -1,0 +1,21 @@
+13:59:23 test slot 99 wiped, owner's slot to restore: 1
+13:59:24 before: slot1 debt 300 gold 0 purses 0 0 paid 0
+13:59:34 state MainMenu
+13:59:35 solo, slot 99
+13:59:35 player: player
+13:59:36 banked 200 into purse I
+13:59:37 debt purse-I paid-I | line, before setting out: 500 200 0 | 
+13:59:38 ledger open
+13:59:40 capture: docs/generated/collector-solo-2026-10-07/run2-ledger-before.png
+13:59:41 back in the room
+13:59:42 phase Raiding seed 108546273 arrival module 61 at (-32.50, 1.25, -24.00)
+13:59:45 debt purse-I paid-I | line, after setting out: 350 0 200 | The Collector takes 200 from I.
+13:59:45 PASS the Collector took the 200 from purse I (debt 500 -> 300, then +50 for the raid = 350), paid-last 200, and said so
+13:59:45 saved in slot 99: purse I 0 paid 200 debt 350
+13:59:46 ledger open
+13:59:48 capture: docs/generated/collector-solo-2026-10-07/run2-ledger-after.png
+13:59:49 after: slot1 debt 300 gold 0 purses 0 0 paid 0
+13:59:49 PASS the owner's slot 1 is unchanged (slot1 debt 300 gold 0 purses 0 0 paid 0)
+13:59:49 PASS all Collector solo checks
+13:59:49 cleaning up
+13:59:50 active slot 1

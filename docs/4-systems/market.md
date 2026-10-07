@@ -112,9 +112,39 @@ the prefab into each `SellCounter`, `MarketYardForge.cs:184`). Server-spawned, s
   purse, publishes `PurseChanged`, and the pouch is destroyed (despawned everywhere).
 - **Purses** are four saved numbers per slot (`Purse0` to `Purse3` in PlayerPrefs, `LairHubManager.Purse`/`PeekPurse`,
   wiped by `ResetSlot`).
-- **For now every purse also pays the one shared debt**, exactly as `BankSale` did: `BankPouch` calls `BankSale(coins)`. So
-  the loop still works; this is a stand-in until the next builder splits the debt in equal shares per wizard and adds the
-  Collector (`Decisions.md`, 2026-10-07). Purses only grow until the Collector takes shares from them.
+- **Banking only fills the purse** (#313, second part; it no longer calls `BankSale`, `LairHubManager.cs:193`). The debt is paid
+  only by the Collector (below).
+
+## The Collector (#313, step 7 part 2)
+
+The owner's decision (`Decisions.md`, 2026-10-07: equal shares) leaves the details open; these are the parent's defaults, to be
+tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 per setting out).
+
+- **When:** once per setting out, on the host or solo, before the raid starts: `RaidDirector.StartRaid` calls `SetPresent` then
+  `Collect()` (`RaidDirector.cs:229`), then `OnNewSession` raises the debt. A client's `StartRaid` returns early, so only the
+  host collects.
+- **Who is present:** seats with a player body (`RaidDirector.SeatsPresent`, `RaidDirector.cs:180`: owner id n is seat n-1; a lone
+  offline player is seat 1). Between raids the host refreshes it twice a second (`RaidDirector.cs:173`) so the ledger can show it.
+- **The arithmetic** is `Market/CollectorRules.cs` (no Unity; `Tools/MarketRules`, 8 tests): share = ceil(debt / wizards present);
+  he takes min(purse, share) from each present seat, never more than the debt in all (rounding up cannot overcharge). A short
+  purse is not covered by anyone else's; a friend covers a share by banking a pouch into that friend's strongbox.
+- **Records:** `LairHubManager.Collect` (`LairHubManager.cs:237`) sets `PaidLast(seat)` (saved per slot: `PaidLast0` to `PaidLast3`,
+  wiped by `ResetSlot`), pays the debt by the sum, logs the existing `DEBT_CLEARED` when it reaches 0, and publishes
+  `PurseChanged`, `CollectorPaid`, `CollectorSpoke(line)`, `DebtChanged`. With nothing to take his line is "The Collector finds
+  the purses empty." Anything left in a purse is that wizard's.
+- **The ledger** (`LairScreen.ShowPurses`, `LairScreen.cs:124`): Owed (kept), then a Purses cell with one column per seat that is
+  present or has a purse or paid last time (I to IV): Purse, Owes (the share due tonight), Paid (last collection), then Last raid.
+  The Banked cell is gone from the screen: sales no longer bank, so it would read 0 (the number still exists in the model).
+- **His line** ("The Collector takes 120 from I, 80 from II.") is `LairHubManager.CollectorLine`, shown in place of the "Debt grows"
+  note on the Lair screen (`LairScreen.cs:398`) and logged. It is a screen line, not world-space: the company has already left
+  the Lair when he speaks, so the screen shows it on coming home. A spoken or world line is not done.
+- **Clients:** a client's `LairHubManager` is its own local save; only the debt is replicated (`ShowHostCampaign`). A client
+  therefore cannot yet see its own purse, share or paid figure, nor the Collector's line. Needs the purses replicated (a SyncVar
+  per seat on `RaidDirector`); not done, wants its own issue.
+- Checked 2026-10-07: `Tools/Unity/collector_solo_check.sh` (`docs/generated/collector-solo-2026-10-07/`, ledger captures before
+  and after) and `coop_lair_check.sh` twice (`docs/generated/coop-lair-2026-10-07/collector-run2-*`, `collector-run3-*`): banking
+  paid no debt; with purses 100 and the sale's coins and debt 550 (share 275) the Collector took 100 and 275, the debt fell to
+  225 (+50 for the raid is included), slot 1 unchanged.
 - `NetworkPrefabs.asset` gained exactly one entry, the CoinPouch prefab (guid `e6524070a36f7b64b81c47f26463a0a0`),
   appended after the existing ones; no existing entry moved.
 - Not done (to be an issue if wanted): a pouch not yet banked is not saved, so quitting with one on the counter loses its

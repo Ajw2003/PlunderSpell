@@ -42,7 +42,10 @@
    debt (needs the shared debt split per wizard, #130); the Collector takes what is due after the Market.
    *Part 1 done 2026-10-07 (#313):* a sale puts a carryable networked `CoinPouch` on the counter (not loot), four
    strongboxes (seat n = player n) bank it into saved per-seat purses and, for now, still pay the one shared debt; solo and
-   two co-op runs checked. *Still to do:* the per-wizard ledger, the equal debt shares and the Collector (`docs/4-systems/market.md`, "Coins are pouches").
+   two co-op runs checked. *Part 2 done 2026-10-07 (#313):* banking only fills the purse; when the company sets out the Collector
+   takes min(purse, equal share of the debt left) from each wizard present, per-seat paid-last-collection is saved, and the Lair
+   screen's ledger has a column per seat (purse, share due, paid) with his line; solo and two co-op runs checked (`docs/4-systems/market.md`,
+   "The Collector"). *Still to do:* a client seeing its own purse and share (purses are not replicated), a world-space or spoken line.
 8. **Co-op.** Everything above replicated for four players over PurrNet (who holds what, coins, ledger).
 
 Steps 1 and 2 alone give a walkable Lair; 1, 2 and 5 a walkable Lair and Market; 3 to 7 make them playable.

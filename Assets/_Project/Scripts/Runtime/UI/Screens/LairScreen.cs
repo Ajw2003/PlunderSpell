@@ -108,8 +108,8 @@ namespace Plunderspell.UI.Screens
             float column = (unit * 2f - 60f) / Seats;
             for (int seat = 0; seat < Seats; seat++)
             {
-                _purseColumns[seat] = UIFactory.CreateText(purses, $"Seat{seat + 1}", string.Empty, 21, UITheme.TextDim, TextAnchor.UpperLeft, UIFonts.Mono);
-                UIFactory.PlaceTopLeft(_purseColumns[seat].rectTransform, 30f + column * seat, 58f, column - 8f, 96f);
+                _purseColumns[seat] = UIFactory.CreateText(purses, $"Seat{seat + 1}", string.Empty, 19, UITheme.TextDim, TextAnchor.UpperLeft, UIFonts.Mono);
+                UIFactory.PlaceTopLeft(_purseColumns[seat].rectTransform, 30f + column * seat, 52f, column - 8f, 100f);
             }
 
             _lastRaid = UIFactory.CreateText(last, "LastRaidLabel", string.Empty, 22, UITheme.TextDim, TextAnchor.UpperLeft, UIFonts.Body);

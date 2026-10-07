@@ -220,7 +220,10 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
 - Banking moved: `ApplyExtractionResult` (`LairHubManager.cs:118`) now only records `LastRaidWorth`; gold and the debt
   pay-down are `LairHubManager.BankSale(coins)` (`:148`), reached since #313 through a coin pouch dropped in a strongbox
   (`BankPouch`, `:177`), not at the sale. The pouch is not loot (no `LootValue`), so it never joins a haul or the pile
-  save; see `docs/4-systems/market.md`, "Coins are pouches". The per-raid debt tick (`OnNewSession`) is unchanged.
+  save; see `docs/4-systems/market.md`, "Coins are pouches". Since #313 part 2 `BankPouch` (`LairHubManager.cs:193`) only fills
+  the purse, and setting out calls the Collector first: `StartRaid` (`RaidDirector.cs:229`) runs `SetPresent` and
+  `LairHubManager.Collect()`, which takes each present wizard's share of the debt (`market.md`, "The Collector"); the per-raid
+  debt tick (`OnNewSession`) follows it, unchanged.
 - Solo Play check 2026-10-06 (before #312): two pieces (worth 2400) placed on the pad, `CallExtraction`: phase Resolved,
   state LairRoom, both pieces at (1003.55, 0.31, -0.90) and (1003.55, 0.31, -1.35).
 - Check 2026-10-07 (#312): solo, the saved four pieces came back on Play; extraction left gold 0 and debt 650 as they were

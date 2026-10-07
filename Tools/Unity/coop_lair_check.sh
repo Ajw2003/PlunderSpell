@@ -154,7 +154,7 @@ check $r "the piece is gone on both sides"
 
 # The pouch (#313): the sale left one on the counter, on both sides, holding the coins sold and not loot; the host moves it into
 # strongbox 2 (the client's seat, the client being owner 2); both then see it gone, purse 2 grew by the sale, purse 1 did not,
-# and the debt paid down by it (BankSale, until the debt splits). Purses live on the server: only the host reads them.
+# and the debt did not move (only the Collector pays it). Purses live on the server: only the host reads them.
 hpo="$(L host pouch)"; cpo="$(L client pouch)"; log "host: $hpo"; log "client: $cpo"
 r=no; [ "$hpo" = "$cpo" ] && case "$hpo" in "pouches 1 coins $coins "*"lootvalue False") r=ok ;; esac
 check $r "both see one pouch holding the $coins coins sold, and it is not loot"
@@ -167,11 +167,31 @@ p1="$(L host purse 2)"; p1b="$(L host purse 1)"; log "host after: $p1 / strongbo
 r=no; [ "${p1#purse }" = "$(( ${p0#purse } + coins ))" ] && [ "$p0b" = "$p1b" ] && r=ok
 check $r "purse 2 grew by the $coins coins sold and purse 1 did not"
 m2="$(L host money)"; log "host after the box: $m2"
+[ "$m0" = "$m2" ] && r=ok || r=no
+check $r "banking the pouch paid no debt: the host's gold and debt did not move ($m0)"
+
+# The Collector (#313): the host banks 100 into purse 1 (less than a share), purse 2 holds the sale's coins (more than a share);
+# the host sets out; each present wizard (two) owes ceil(debt/2); the Collector takes min(purse, share) from each, the debt falls by
+# the sum, then grows by the 50 of the new raid. The host's ledger is read before and after. Purses and the debt live on the server.
+log "host: $(L host bank 1:100)"
+led0="$(L host ledger)"; log "host before setting out: $led0"
+timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/set_out.cs >/dev/null
+wait_for host "state Playing" 30
+wait_for client "state Playing" 30
+led1="$(L host ledger)"; log "host after setting out: $led1"
 python -c "
-import re, sys
-a = [float(x) for x in re.findall(r'[0-9.]+', sys.argv[1])]; b = [float(x) for x in re.findall(r'[0-9.]+', sys.argv[2])]
-sys.exit(0 if abs((a[1] - b[1]) + (b[0] - a[0]) - float(sys.argv[3])) < 0.01 else 1)" "$m0" "$m2" "$coins" 2>/dev/null && r=ok || r=no
-check $r "the host's gold and debt moved by the $coins coins once banked"
+import math, re, sys
+a = re.match(r'debt (\S+) purses (\d+) (\d+) \d+ \d+ paid .* present 1 1 0 0', sys.argv[1]); b = re.match(r'debt (\S+) purses (\d+) (\d+) \d+ \d+ paid (\d+) (\d+) 0 0 present 1 1 0 0 line (.*)', sys.argv[2])
+if not a or not b: sys.exit(1)
+d0 = float(a.group(1)); p = [int(a.group(2)), int(a.group(3))]
+share = math.ceil(d0 / 2); take = [min(x, share) for x in p]
+left = d0 - sum(take); d1 = left + (50 if left > 0 else 0)
+ok = (float(b.group(1)) == d1 and [int(b.group(2)), int(b.group(3))] == [p[0] - take[0], p[1] - take[1]]
+      and [int(b.group(4)), int(b.group(5))] == take and 'The Collector takes' in b.group(6))
+print('expected debt', d1, 'purses', [p[0] - take[0], p[1] - take[1]], 'paid', take, 'share', share)
+sys.exit(0 if ok else 1)" "$led0" "$led1" 2>&1 | while read -r line; do log "$line"; done
+[ "${PIPESTATUS[0]}" = 0 ] && r=ok || r=no
+check $r "each present wizard paid min(purse, half the debt left), the debt fell by the sum (then +50), and the Collector said so"
 s1_after="$(L host slot1)"; log "host: $s1_after"
 [ "$s1_before" = "$s1_after" ] && r=ok || r=no
 check $r "the owner's slot 1 is unchanged by the check ($s1_before)"
