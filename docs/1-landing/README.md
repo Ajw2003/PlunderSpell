@@ -59,6 +59,7 @@ together and what was deliberately left undocumented, and why.
 | [`castle`](../4-systems/castle.md) | Deterministic seed-driven castle layout and path validation |
 | [`alarm`](../4-systems/alarm.md) | Noise propagation and the castle-wide alarm state machine |
 | [`raid`](../4-systems/raid.md) | The loop: Lair → castle → haul → extraction → Lair |
+| [`market`](../4-systems/market.md) | The Market's counters and vendors, and haggling: selling the haul for coins |
 | [`raid-scene-assembly`](../4-systems/raid-scene-assembly.md) | Wiring the authored art (castle rooms, loot, enemies) into the playable scene |
 | [`enemy-asset-pipeline`](../4-systems/enemy-asset-pipeline.md) | Generating the enemy roster from Python/Blender |
 | [`damage`](../4-systems/damage.md) | One damage pathway, blame, and hit feedback you can read |
