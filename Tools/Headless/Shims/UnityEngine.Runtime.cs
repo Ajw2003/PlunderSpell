@@ -810,7 +810,26 @@ namespace UnityEngine
         /// <summary>Stored only: the AABB physics world has no friction model.</summary>
         public PhysicsMaterial sharedMaterial;
 
-        public Bounds bounds => new Bounds(transform.position + center, size);
+        /// <summary>
+        /// Local-space box this collider fills. Approximation: sphere/capsule are their bounding boxes.
+        /// </summary>
+        protected virtual Vector3 LocalSize => size;
+
+        /// <summary>
+        /// World AABB. Honours lossyScale like Unity (centre and size scale; Unity scales a sphere by the max
+        /// axis and a capsule radius by the max of x/z, which Abs-scaling per axis approximates). Rotation is
+        /// ignored: the box stays axis-aligned (Unity would take the AABB of the rotated box).
+        /// </summary>
+        public virtual Bounds bounds
+        {
+            get
+            {
+                Vector3 s = transform.lossyScale;
+                Vector3 c = Vector3.Scale(center, s);
+                Vector3 z = LocalSize;
+                return new Bounds(transform.position + c, new Vector3(Mathf.Abs(z.x * s.x), Mathf.Abs(z.y * s.y), Mathf.Abs(z.z * s.z)));
+            }
+        }
         public Rigidbody attachedRigidbody => GetComponentInParent<Rigidbody>();
 
         /// <summary>Nearest point on the collider's axis-aligned box (every shim collider is one).</summary>
@@ -823,9 +842,13 @@ namespace UnityEngine
     public class SphereCollider : Collider
     {
         public float radius = 0.5f;
-        public new Bounds bounds => new Bounds(transform.position + center, Vector3.one * (radius * 2f));
+        protected override Vector3 LocalSize => Vector3.one * (radius * 2f);
     }
-    public class CapsuleCollider : Collider { public float radius = 0.5f; public float height = 2f; }
+    public class CapsuleCollider : Collider
+    {
+        public float radius = 0.5f; public float height = 2f;
+        protected override Vector3 LocalSize => new Vector3(radius * 2f, Mathf.Max(height, radius * 2f), radius * 2f);
+    }
     public class MeshCollider : Collider { public bool convex; public Mesh sharedMesh; }
     public class CharacterController : Collider
     {
@@ -1000,39 +1023,92 @@ namespace UnityEngine
         public static int RaycastNonAlloc(Vector3 origin, Vector3 direction, RaycastHit[] results,
             float maxDistance = float.PositiveInfinity, int layerMask = DefaultRaycastLayers,
             QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal) =>
-            Fill(results, SweepAll(origin, direction, maxDistance, layerMask, 0f));
+            SweepInto(results, origin, direction, maxDistance, layerMask, 0f);
 
         /// <summary>Approximation: the swept sphere is the ray against bounds grown by the radius (every shim collider is an AABB).</summary>
         public static int SphereCastNonAlloc(Vector3 origin, float radius, Vector3 direction, RaycastHit[] results,
             float maxDistance = float.PositiveInfinity, int layerMask = DefaultRaycastLayers,
             QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal) =>
-            Fill(results, SweepAll(origin, direction, maxDistance, layerMask, radius));
+            SweepInto(results, origin, direction, maxDistance, layerMask, radius);
 
         /// <summary>Approximation: swept as a sphere of the capsule's radius from the capsule's midpoint; its height is ignored.</summary>
         public static int CapsuleCastNonAlloc(Vector3 point1, Vector3 point2, float radius, Vector3 direction,
             RaycastHit[] results, float maxDistance = float.PositiveInfinity, int layerMask = DefaultRaycastLayers,
             QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal) =>
-            Fill(results, SweepAll((point1 + point2) * 0.5f, direction, maxDistance, layerMask, radius));
+            SweepInto(results, (point1 + point2) * 0.5f, direction, maxDistance, layerMask, radius);
 
-        private static int Fill(RaycastHit[] results, RaycastHit[] hits)
+        /// <summary>
+        /// Allocation-free (the guard navigation tests assert zero allocation per tick, as Unity's NonAlloc
+        /// calls give): keeps the nearest results.Length hits sorted nearest first. For a swept sphere the
+        /// normal is the real one, from the nearest point of the unswollen box to the sphere's centre at the
+        /// hit, so a swept body that clips a corner gets a normal it can slide along; a plain ray keeps -dir.
+        /// </summary>
+        /// <summary>
+        /// A swept sphere meets the box rounded at its edges and corners, not the box grown into a bigger
+        /// box (whose square corners stop a body that Unity would let slide past). The grown box only
+        /// brackets the entry time; from there sphere-trace the distance to the real box (1-Lipschitz, so
+        /// each step is safe) until the sphere touches.
+        /// </summary>
+        private static bool TraceRoundedBox(Bounds raw, Vector3 origin, Vector3 dir, float maxDistance, float radius, ref float t)
         {
-            int n = Math.Min(results.Length, hits.Length);
-            Array.Copy(hits, results, n);
-            return n;
+            for (int i = 0; i < 64; i++)
+            {
+                Vector3 p = origin + dir * t;
+                float gap = (p - raw.ClosestPoint(p)).magnitude - radius;
+                if (gap <= 1e-4f) return true;
+                t += gap;
+                if (t > maxDistance) return false;
+            }
+            return false; // grazing a corner: never converged, so it does not touch
         }
 
-        private static RaycastHit[] SweepAll(Vector3 origin, Vector3 direction, float maxDistance, int layerMask, float grow)
+        private static int SweepInto(RaycastHit[] results, Vector3 origin, Vector3 direction, float maxDistance, int layerMask, float grow)
         {
-            var hits = new List<RaycastHit>();
             Vector3 dir = direction.normalized;
-            foreach (Collider c in Live(layerMask))
+            int n = 0;
+            for (int i = 0; i < _colliders.Count; i++)
             {
-                Bounds b = c.bounds;
+                Collider c = _colliders[i];
+                if (c == null || !c.enabled || c.gameObject == null || !c.gameObject.activeInHierarchy
+                    || (layerMask & (1 << c.gameObject.layer)) == 0)
+                    continue;
+                Bounds raw = c.bounds;
+                Bounds b = raw;
                 b.extents += new Vector3(grow, grow, grow);
-                if (!SegmentIntersectsBounds(origin, dir, maxDistance, b, out float distance)) continue;
-                hits.Add(new RaycastHit { collider = c, distance = distance, point = origin + dir * distance, normal = -dir });
+                float distance;
+                if (grow > 0f && b.Contains(origin))
+                {
+                    // Inside the grown box but maybe outside the rounded shape (its square corners are
+                    // empty): trace from here, else a body in a corner zone tunnels through. Already
+                    // touching the real shape means overlapping at the start: no hit, as for a ray.
+                    distance = 0f;
+                    if ((origin - raw.ClosestPoint(origin)).magnitude <= grow) continue;
+                    if (!TraceRoundedBox(raw, origin, dir, maxDistance, grow, ref distance)) continue;
+                }
+                else
+                {
+                    if (!SegmentIntersectsBounds(origin, dir, maxDistance, b, out distance)) continue;
+                    if (grow > 0f && !TraceRoundedBox(raw, origin, dir, maxDistance, grow, ref distance)) continue;
+                }
+
+                Vector3 point = origin + dir * distance;
+                Vector3 normal = -dir;
+                if (grow > 0f)
+                {
+                    Vector3 nearest = raw.ClosestPoint(point);
+                    Vector3 away = point - nearest;
+                    if (away.sqrMagnitude > 1e-10f) { normal = away.normalized; point = nearest; }
+                }
+
+                int at = n;
+                while (at > 0 && results[at - 1].distance > distance) at--;
+                if (at >= results.Length) continue;
+                int last = Math.Min(n, results.Length - 1);
+                for (int k = last; k > at; k--) results[k] = results[k - 1];
+                results[at] = new RaycastHit { collider = c, distance = distance, point = point, normal = normal };
+                if (n < results.Length) n++;
             }
-            return hits.OrderBy(h => h.distance).ToArray();
+            return n;
         }
 
         public static bool Raycast(Vector3 origin, Vector3 direction, float maxDistance, int layerMask,

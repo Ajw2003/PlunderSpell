@@ -94,11 +94,20 @@ debugged):
   `LootSettleAndInputGatingTests` x3, `Test_SpawnedLootIsFrozenUntilTheSceneHasSettled`,
   `Test_NoOneIsStoodOverAHole`, `Test_ResolveArrivalFallsBackToTheGateWhenNothingQualifies` (needs a
   generated castle from assets).
-- Likely shim gap or real bug, NOT investigated (guard sight/nav/awareness over the shimmed physics, plain
-  assertion failures with no asset in the message): `GuardNavigationServiceTests` x2,
-  `GuardPatrolBarredDoorTests`, `GuardAwarenessTests` (`OneWallMufflesAFootstepButTwoHideIt`),
-  `GuardCoreBodyTests` (shove), `GuardShoveTests`, `GuardOnFireTests` x2, `GuardSightReachTests` x2,
-  `GuardUnreachableTests` x3. These may be raycast/physics fidelity; a follow-up issue should triage them.
+- Guard physics group (#289, triaged one by one; the 13 listed there). Fixed in the shims: `Collider.bounds` ignored
+  `lossyScale` (and capsule radius/height), so `CreatePrimitive` walls were 1 m cubes (`GuardSightReachTests` x2,
+  `GuardAwarenessTests.OneWallMufflesAFootstepButTwoHideIt`, `GuardCoreBodyTests` shove); `Quaternion.RotateTowards`
+  snapped to the target instead of turning at the given rate, so a panicking guard faced away within one tick
+  (`GuardOnFireTests` x2); sphere/capsule casts now return the real contact normal and treat box corners as
+  rounded, so a guard clipping a jamb slides past (`GuardNavigationServiceTests.AGuardThatClipsAWallCorner...`);
+  the NonAlloc casts no longer allocate (`TicksAllocateNothing`). Left as known limits: `GuardUnreachableTests` x3
+  (the thrown stone is `Resources.Load<GameObject>("GuardStone")`, which headless returns null for),
+  `GuardPatrolBarredDoorTests` (loads `CastleRoomRegistry.asset`), `GuardShoveTests` (a `[UnityTest]` that needs
+  Update/FixedUpdate and rigidbody simulation; the bridge only advances the clock). No game bug was found.
+  Note: the guard chase/nav tests are intermittent in the full run (roughly one run in four fails one of
+  `ARangedGuardRaisesTheAttackSignalWhileItIsMoving`, `AMoveRequestReachesArrivedThroughTheNavigationService`,
+  `AGuardChasingAPlayerPinnedAgainstAWall...`; the unmodified shims also gave 109 failed in one of six runs, and the
+  first fails alone at baseline). Cause not found.
 - One exclusion added (see below): `NightFogFeature.cs`.
 
 **Two deliberate compromises on faithfulness**, both flagged inline where they matter:

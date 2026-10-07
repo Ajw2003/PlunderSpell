@@ -324,7 +324,13 @@ namespace UnityEngine
         }
 
         public static Quaternion Lerp(Quaternion a, Quaternion b, float t) => Slerp(a, b, t);
-        public static Quaternion RotateTowards(Quaternion from, Quaternion to, float maxDegreesDelta) => Slerp(from, to, 1f);
+        /// <summary>Unity's: turns at most maxDegreesDelta toward `to` (it was a snap to `to`, which made every turn-rate limit a no-op).</summary>
+        public static Quaternion RotateTowards(Quaternion from, Quaternion to, float maxDegreesDelta)
+        {
+            float angle = Angle(from, to);
+            if (angle <= 0f) return to;
+            return Slerp(from, to, Mathf.Min(1f, maxDegreesDelta / angle));
+        }
         public static float Angle(Quaternion a, Quaternion b)
         {
             float dot = Mathf.Clamp(Math.Abs(a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w), -1f, 1f);
