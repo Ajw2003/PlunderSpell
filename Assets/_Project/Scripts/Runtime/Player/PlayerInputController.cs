@@ -118,11 +118,13 @@ namespace Player
 
             _stateMachine.ChangeState(_stateMachine.WalkState);
             _stateMachine.Move(context.ReadValue<Vector2>());
+            EventManager.Instance?.Publish(new PlayerWalkEvent { enable = true });
         }
 
         private void OnMoveCanceled(InputAction.CallbackContext context)
         {
             _stateMachine.Move(Vector2.zero);
+            EventManager.Instance?.Publish(new PlayerWalkEvent { enable = false });
         }
 
         private void AttackInputs(bool enable)
@@ -130,10 +132,12 @@ namespace Player
             if (enable)
             {
                 _input.PlayerActions.Attack.performed += OnAttackPerformed;
+                _input.PlayerActions.Attack.canceled += OnAttackCanceled;
             }
             else
             {
                 _input.PlayerActions.Attack.performed -= OnAttackPerformed;
+                _input.PlayerActions.Attack.canceled -= OnAttackCanceled;
             }
         }
 
@@ -143,18 +147,23 @@ namespace Player
                 return;
 
             _stateMachine.Attack();
-            EventManager.Instance?.Publish(new PlayerAttackEvent());
+            EventManager.Instance?.Publish(new PlayerAttackEvent { enable = true });
         }
+
+        private void OnAttackCanceled(InputAction.CallbackContext context) =>
+            EventManager.Instance?.Publish(new PlayerAttackEvent { enable = false });
 
         private void JumpInputs(bool enable)
         {
             if (enable)
             {
                 _input.PlayerActions.Jump.performed += OnJumpPerformed;
+                _input.PlayerActions.Jump.canceled += OnJumpCanceled;
             }
             else
             {
                 _input.PlayerActions.Jump.performed -= OnJumpPerformed;
+                _input.PlayerActions.Jump.canceled -= OnJumpCanceled;
             }
         }
 
@@ -164,7 +173,11 @@ namespace Player
                 return;
 
             _stateMachine.Jump();
+            EventManager.Instance?.Publish(new PlayerJumpEvent { enable = true });
         }
+
+        private void OnJumpCanceled(InputAction.CallbackContext context) =>
+            EventManager.Instance?.Publish(new PlayerJumpEvent { enable = false });
 
         private void LookInputs(bool enable)
         {

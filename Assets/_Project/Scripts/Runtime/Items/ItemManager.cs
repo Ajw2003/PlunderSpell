@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Items;
 using Code.Scripts.Singleton;
 using UnityEngine;
@@ -19,6 +20,14 @@ public class ItemManager : SingletonBase<ItemManager>
     private Item _hoveredItem;
     private Vector3 _hoveredPoint;
     private Item _draggedItem;
+
+    private void SetDraggedItem(Item item)
+    {
+        if (item == _draggedItem)
+            return;
+        _draggedItem = item;
+        EventManager.Instance?.Publish(new CarriedItemChanged(item));
+    }
 
     // The local player's grab beam (#144). Other players' beams are drawn by the carry relay.
     private GrabBeam _beam;
@@ -119,7 +128,7 @@ public class ItemManager : SingletonBase<ItemManager>
         {
             Vector3 throwDirection = _mainCamera.transform.forward;
             _draggedItem.Throw(throwDirection, _throwForce);
-            _draggedItem = null;
+            SetDraggedItem(null);
         }
     }
 
@@ -256,7 +265,7 @@ public class ItemManager : SingletonBase<ItemManager>
             Item.RequestDrive?.Invoke(item);
 
         _pendingDrag = null;
-        _draggedItem = item;
+        SetDraggedItem(item);
         _draggedItem.SetViewYaw(_mainCamera.transform.eulerAngles.y);
         _draggedItem.StartDragging(_mainCamera.transform.root.gameObject, grabPoint);
         if (IsHeldInHand(item))
@@ -278,7 +287,7 @@ public class ItemManager : SingletonBase<ItemManager>
         if (_draggedItem != null)
         {
             _draggedItem.StopDragging();
-            _draggedItem = null;
+            SetDraggedItem(null);
         }
     }
 

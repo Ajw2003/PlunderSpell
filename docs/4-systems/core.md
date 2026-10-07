@@ -36,6 +36,19 @@ paid for everywhere — keep it small.
   the main thread, so `IVoiceInputService` no longer has an event); `ChatterResolved` (`Acoustics/AcousticsEvents.cs`).
   Left as direct calls because the listener is part of the same object: `StatusEffectReceiver.StatusChanged` and
   `GuardHealth.Died` (only their own guard listens). `PlayerStateMachine.SlamLanded` (the spell system listens) is not in #301's list and is still a C# event.
+- **Change events (#302).** Published by the owner of the value, each time it changes, carrying the new value, so a view
+  never has to poll: `AlarmLevelChanged` (`Alarm/AlarmLevelEvents.cs`, from `EnemyDirector.Update` on every peer, since
+  PurrNet 1.15 SyncVars have no hooks); `ExtractionTimerChanged` (`Extraction/ExtractionTimerEvents.cs`, same way, every
+  frame the clock moves); `DebtChanged`, `BankedGoldChanged`, `AgeChosen` (`Lair/LairEvents.cs`, from `LairHubManager`:
+  load, a raid's result, a new session, a client showing the host's campaign, choosing an Age); `CarriedItemChanged`
+  (`Items/CarriedItemEvents.cs`, from `ItemManager`); `DoorFocusChanged` beside `LootFocusChanged`
+  (`Loot/LootEvents.cs`); `LocalPlayerChanged` (`Player/LocalPlayerChanged.cs`, whenever `PlayerStateMachine.Local`
+  changes); `MicLevelChanged` (`Voice/MicLevelEvents.cs`, each time Vosk reads a different loudness);
+  `ChantProgressChanged` (`Spells/ChantEvents.cs`, every frame of a chant, then once with `Chanting` false). Input:
+  `PlayerAttackEvent`, `PlayerJumpEvent` and `PlayerWalkEvent` are now structs published with `enable` true on performed
+  and false on cancelled. `ChangeEventTests` covers the ledger, Age, alarm level, clock and local player; the mic level,
+  chant, carried item, door focus and input events have no test yet (they need a microphone, a voice service, the item
+  scene or real input devices).
 - **`BaseStateMachine` / `IState` / `PlayerState`** — `Enter`/`Update`/`Exit`/`FixedUpdate`. States
   are plain C# objects constructed once in `Awake`, not MonoBehaviours, which keeps their logic
   testable without a scene.

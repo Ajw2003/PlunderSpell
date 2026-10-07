@@ -42,6 +42,14 @@ namespace Plunderspell.Voice
         /// <summary>How loud the microphone is right now (RMS, 0..1), for a level meter while listening.</summary>
         public float CurrentRms { get; private set; }
 
+        private void SetCurrentRms(float rms)
+        {
+            if (rms == CurrentRms)
+                return;
+            CurrentRms = rms;
+            EventManager.Instance?.Publish(new MicLevelChanged(rms));
+        }
+
         /// <summary>The microphone being listened on, or null when none is open.</summary>
         public string CurrentDevice { get; private set; }
 
@@ -208,7 +216,7 @@ namespace Plunderspell.Voice
             // Only what is said from now on: the open microphone has been recording all along.
             _lastSamplePosition = Microphone.GetPosition(_micDevice);
             LastPeakRms = 0f;
-            CurrentRms = 0f;
+            SetCurrentRms(0f);
             _gain = Plunderspell.Core.AudioInputSettings.MicGain;
             CurrentDevice = _micDevice;
             IsListening = true;
@@ -240,7 +248,7 @@ namespace Plunderspell.Voice
             }
 
             // The microphone is left open for the next cast; see WarmUp.
-            CurrentRms = 0f;
+            SetCurrentRms(0f);
             CurrentDevice = null;
             Debug.Log("[Vosk] Stopped listening.");
             // A microphone picked in Settings mid-cast reaches chatter now the cast is over.
@@ -422,7 +430,7 @@ namespace Plunderspell.Voice
 
             // Gain first, so recognition, loudness and the level meter all hear the same voice.
             VoiceUtility.ApplyGain(buffer, count, casting ? _gain : _chatterGain);
-            CurrentRms = VoiceUtility.ComputeRms(buffer, count);
+            SetCurrentRms(VoiceUtility.ComputeRms(buffer, count));
             if (casting)
                 LastPeakRms = Mathf.Max(LastPeakRms, CurrentRms);
             else

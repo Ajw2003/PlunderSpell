@@ -12,6 +12,13 @@ namespace Plunderspell.Loot
         public LootRuined(LootValue piece, float worthLost) { Piece = piece; WorthLost = worthLost; }
     }
 
+    /// <summary>The door handle the player is looking at changed; null when none is in focus.</summary>
+    public readonly struct DoorFocusChanged : IEvent
+    {
+        public readonly CastleDoorHandle Focus;
+        public DoorFocusChanged(CastleDoorHandle focus) { Focus = focus; }
+    }
+
     /// <summary>The loot the player is looking at changed; null when nothing is in focus.</summary>
     public readonly struct LootFocusChanged : IEvent
     {

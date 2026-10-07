@@ -178,8 +178,17 @@ namespace Plunderspell.Extraction
         /// <summary>Stops a leaving countdown in progress, e.g. because the raid was lost.</summary>
         public void CancelPlayerExtraction() => GameServices.Extraction?.CancelExtraction();
 
+        private float _publishedTime = -1f;
+
         private void Update()
         {
+            // Every peer, including clients that only receive the replicated clock, tells listeners when it moves.
+            if (_timeRemaining.value != _publishedTime)
+            {
+                _publishedTime = _timeRemaining.value;
+                EventManager.Instance?.Publish(new ExtractionTimerChanged(_publishedTime));
+            }
+
             if ((isSpawned && !isServer) || _extractionComplete.value)
                 return;
 

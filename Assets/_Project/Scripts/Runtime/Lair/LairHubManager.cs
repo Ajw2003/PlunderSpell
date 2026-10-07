@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Inventory;
 using UnityEngine;
 
@@ -38,6 +39,17 @@ namespace Plunderspell.Lair
             SelectedEra = state.SelectedEra;
             TotalDebt = state.TotalDebt;
             AccumulatedGold = state.AccumulatedGold;
+            PublishLedger(float.NaN, float.NaN);
+            EventManager.Instance?.Publish(new AgeChosen(SelectedEra));
+        }
+
+        // Publishes the debt and the banked gold when they differ from the given earlier values (NaN: always).
+        private void PublishLedger(float oldDebt, float oldGold)
+        {
+            if (TotalDebt != oldDebt)
+                EventManager.Instance?.Publish(new DebtChanged(TotalDebt));
+            if (AccumulatedGold != oldGold)
+                EventManager.Instance?.Publish(new BankedGoldChanged(AccumulatedGold));
         }
 
         /// <summary>Makes <paramref name="slot"/> the save in use and loads it; the last-raid lines belonged to the old one.</summary>
@@ -80,9 +92,12 @@ namespace Plunderspell.Lair
         /// <summary>Select the historical era for the next raid and persist it.</summary>
         public void SelectEra(HistoricalEra era)
         {
+            bool changed = era != SelectedEra;
             SelectedEra = era;
             PlayerPrefs.SetInt(SaveSlots.Key(KeySelectedEra, SaveSlots.Active), (int)era);
             PlayerPrefs.Save();
+            if (changed)
+                EventManager.Instance?.Publish(new AgeChosen(era));
         }
 
         /// <summary>What the most recent raid brought home, for the Lair's "last raid" line. -1 before any raid.</summary>
@@ -101,6 +116,8 @@ namespace Plunderspell.Lair
         /// </summary>
         public void ApplyExtractionResult(float worthExtracted)
         {
+            float debtBefore = TotalDebt;
+            float goldBefore = AccumulatedGold;
             LastRaidWorth = Mathf.Max(0f, worthExtracted);
             AccumulatedGold += Mathf.Max(0f, worthExtracted);
 
@@ -119,6 +136,7 @@ namespace Plunderspell.Lair
                 TotalDebt = Mathf.Max(0f, TotalDebt - payment);
             }
 
+            PublishLedger(debtBefore, goldBefore);
             Save();
         }
 
@@ -130,7 +148,9 @@ namespace Plunderspell.Lair
         {
             if (TotalDebt > 0f)
             {
+                float debtBefore = TotalDebt;
                 TotalDebt += DebtIncreasePerSession;
+                PublishLedger(debtBefore, AccumulatedGold);
                 Save();
             }
         }
@@ -142,9 +162,12 @@ namespace Plunderspell.Lair
         /// </summary>
         public void ShowHostCampaign(float debt, float gold, float lastRaidWorth)
         {
+            float debtBefore = TotalDebt;
+            float goldBefore = AccumulatedGold;
             TotalDebt = debt;
             AccumulatedGold = gold;
             LastRaidWorth = lastRaidWorth;
+            PublishLedger(debtBefore, goldBefore);
         }
 
         /// <summary>Snapshot the current lair meta-state.</summary>

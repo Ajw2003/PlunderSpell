@@ -174,8 +174,17 @@ namespace Plunderspell.Alarm
             Alarm.NoteNoiseNow();
         }
 
+        private float _publishedLevel = -1f;
+
         private void Update()
         {
+            // Every peer, including clients that only receive the replicated value, tells listeners when it moves.
+            if (Alarm.Level != _publishedLevel)
+            {
+                _publishedLevel = Alarm.Level;
+                EventManager.Instance?.Publish(new AlarmLevelChanged(_publishedLevel));
+            }
+
             // Only the server integrates decay; clients receive state via replication.
             if (isSpawned && !isServer)
                 return;

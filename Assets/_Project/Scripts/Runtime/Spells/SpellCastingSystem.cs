@@ -163,6 +163,7 @@ namespace Plunderspell.Spells
             _body = null;
             _subscribed = false;
             _chantSpell = SpellId.None;
+            PublishChant();
             if (Local == this)
                 Local = null;
         }
@@ -180,6 +181,25 @@ namespace Plunderspell.Spells
                 SpellId spell = _chantSpell;
                 _chantSpell = SpellId.None;
                 Cast(spell, _chantVolume);
+            }
+
+            PublishChant();
+        }
+
+        private bool _chantPublished;
+
+        // A chant's progress changes every frame it runs, so it is published every frame, then once more when it ends.
+        private void PublishChant()
+        {
+            if (IsChanting)
+            {
+                EventManager.Instance?.Publish(new ChantProgressChanged(true, ChantingWord, ChantProgress));
+                _chantPublished = true;
+            }
+            else if (_chantPublished)
+            {
+                EventManager.Instance?.Publish(new ChantProgressChanged(false, string.Empty, 0f));
+                _chantPublished = false;
             }
         }
 
