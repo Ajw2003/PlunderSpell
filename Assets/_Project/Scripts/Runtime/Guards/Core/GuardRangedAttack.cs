@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Alarm;
 using UnityEngine;
 
@@ -101,7 +102,7 @@ namespace Plunderspell.Guards
 
             cooldownLeft = cooldownSeconds;
             _guard.AttackSignal.Signal(GuardAttackKind.Projectile);
-            _guard.Link.Director?.Publish(new GuardEngaged(_guard, target));
+            EventManager.Instance?.Publish(new GuardEngaged(_guard, target));
             Launch(prefab, origin, toTarget.normalized, speed, damage);
             return true;
         }

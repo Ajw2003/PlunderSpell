@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using NUnit.Framework;
 using Plunderspell.Acoustics;
 using Plunderspell.Alarm;
@@ -30,8 +31,8 @@ namespace Plunderspell.Tests
             EnemyDirector alarm = _rig.Director;
 
             alarm.ReportSighting(1);
-            alarm.Publish(new NoiseReported(alarm, Vector3.zero, 0.9f));
-            alarm.Publish(new NoiseReported(alarm, Vector3.zero, 0.6f));
+            EventManager.Instance.Publish(new NoiseReported(alarm, Vector3.zero, 0.9f));
+            EventManager.Instance.Publish(new NoiseReported(alarm, Vector3.zero, 0.6f));
 
             Assert.That(alarm.State, Is.EqualTo(AlarmState.Stirred));
         }

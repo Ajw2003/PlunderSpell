@@ -1,3 +1,4 @@
+using EventSystems;
 using UnityEngine;
 
 namespace Plunderspell.Alarm
@@ -16,7 +17,7 @@ namespace Plunderspell.Alarm
     // Alarm assembly needs no reference to Guards: a guard is carried as a Component.
 
     /// <summary>A guard heard an intruder's noise, with where, how strong, and which guard (#259).</summary>
-    public readonly struct NoiseReported
+    public readonly struct NoiseReported : IEvent
     {
         public readonly Component Guard;
         public readonly Vector3 Origin;
@@ -28,7 +29,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>A guard saw an intruder and gave chase.</summary>
-    public readonly struct IntruderSpotted
+    public readonly struct IntruderSpotted : IEvent
     {
         public readonly Component Guard;
         public readonly Transform Intruder;
@@ -42,7 +43,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>A guard stopped chasing.</summary>
-    public readonly struct IntruderLost
+    public readonly struct IntruderLost : IEvent
     {
         public readonly Component Guard;
         public readonly Vector3 LastKnownPosition;
@@ -53,7 +54,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>A guard struck or fired at a player.</summary>
-    public readonly struct GuardEngaged
+    public readonly struct GuardEngaged : IEvent
     {
         public readonly Component Guard;
         public readonly Transform Target;
@@ -61,14 +62,14 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>The alarm state changed.</summary>
-    public readonly struct AlarmChanged
+    public readonly struct AlarmChanged : IEvent
     {
         public readonly AlarmState State;
         public AlarmChanged(AlarmState state) { State = state; }
     }
 
     /// <summary>A guard died.</summary>
-    public readonly struct GuardDied
+    public readonly struct GuardDied : IEvent
     {
         public readonly Component Guard;
         public readonly Vector3 Position;
@@ -77,7 +78,7 @@ namespace Plunderspell.Alarm
 
     /// <summary>A guard sees a player it cannot reach (on a table, a ledge, a rail) and asks for help (#237).
     /// Nearby guards decide what to do with it: ranged ones come to shoot, melee ones go and hold below.</summary>
-    public readonly struct UnreachableIntruderReported
+    public readonly struct UnreachableIntruderReported : IEvent
     {
         public readonly Component Guard;
         public readonly Transform Intruder;
@@ -86,7 +87,7 @@ namespace Plunderspell.Alarm
 
     /// <summary>A request that guards investigate <see cref="Position"/>. Guards' states decide whether
     /// and how to act on it; nothing outside a guard moves it.</summary>
-    public readonly struct InvestigateRequest
+    public readonly struct InvestigateRequest : IEvent
     {
         public readonly Vector3 Position;
         public readonly InvestigateReason Reason;

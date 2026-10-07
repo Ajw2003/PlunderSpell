@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Alarm;
@@ -62,7 +63,7 @@ namespace Plunderspell.Tests
             GuardPatrolRoute route = PlanRound(guard);
             Vector3 blockedPoint = route.Current;
 
-            _rig.Director.Publish(new Blocked(guard, guard.transform.position, BlockedReason.Obstacle));
+            EventManager.Instance.Publish(new Blocked(guard, guard.transform.position, BlockedReason.Obstacle));
 
             Assert.That(route.Count, Is.EqualTo(3), "an obstacle may clear, so the round keeps its size");
             Assert.That(route.Current, Is.Not.EqualTo(blockedPoint));
@@ -77,7 +78,7 @@ namespace Plunderspell.Tests
             GuardPatrolRoute route = PlanRound(guard);
             Vector3 blockedPoint = route.Current;
 
-            _rig.Director.Publish(new Blocked(guard, guard.transform.position, BlockedReason.DoorClosed));
+            EventManager.Instance.Publish(new Blocked(guard, guard.transform.position, BlockedReason.DoorClosed));
 
             Assert.That(route.Count, Is.EqualTo(2));
             Assert.That(route.HasPointNear(blockedPoint, 0.01f), Is.False);

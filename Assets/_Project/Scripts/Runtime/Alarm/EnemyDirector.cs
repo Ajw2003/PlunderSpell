@@ -1,4 +1,5 @@
 using System;
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using PurrNet;
 using UnityEngine;
@@ -128,46 +129,8 @@ namespace Plunderspell.Alarm
 
         public bool IsIntruder(Transform intruder) => _registry.IsIntruder(intruder);
 
-        // Events: the bus holds them; these forward so subscribers keep talking to the director. ------
-
-        public event Action<NoiseReported> OnNoiseReported { add => Bus.OnNoiseReported += value; remove => Bus.OnNoiseReported -= value; }
-        public event Action<IntruderSpotted> OnIntruderSpotted { add => Bus.OnIntruderSpotted += value; remove => Bus.OnIntruderSpotted -= value; }
-        public event Action<IntruderLost> OnIntruderLost { add => Bus.OnIntruderLost += value; remove => Bus.OnIntruderLost -= value; }
-        public event Action<GuardEngaged> OnGuardEngaged { add => Bus.OnGuardEngaged += value; remove => Bus.OnGuardEngaged -= value; }
-        public event Action<AlarmChanged> OnAlarmChanged { add => Bus.OnAlarmChanged += value; remove => Bus.OnAlarmChanged -= value; }
-        public event Action<GuardDied> OnGuardDied { add => Bus.OnGuardDied += value; remove => Bus.OnGuardDied -= value; }
-        public event Action<InvestigateRequest> OnInvestigateRequest { add => Bus.OnInvestigateRequest += value; remove => Bus.OnInvestigateRequest -= value; }
-        public event Action<UnreachableIntruderReported> OnUnreachableIntruder { add => Bus.OnUnreachableIntruder += value; remove => Bus.OnUnreachableIntruder -= value; }
-        public event Action<MoveRequest> OnMoveRequest { add => Bus.OnMoveRequest += value; remove => Bus.OnMoveRequest -= value; }
-        public event Action<PathReady> OnPathReady { add => Bus.OnPathReady += value; remove => Bus.OnPathReady -= value; }
-        public event Action<Arrived> OnArrived { add => Bus.OnArrived += value; remove => Bus.OnArrived -= value; }
-        public event Action<Blocked> OnBlocked { add => Bus.OnBlocked += value; remove => Bus.OnBlocked -= value; }
-        public event Action<AttackTurnRequested> OnAttackTurnRequested { add => Bus.OnAttackTurnRequested += value; remove => Bus.OnAttackTurnRequested -= value; }
-        public event Action<AttackTurnGranted> OnAttackTurnGranted { add => Bus.OnAttackTurnGranted += value; remove => Bus.OnAttackTurnGranted -= value; }
-        public event Action<AttackTurnDenied> OnAttackTurnDenied { add => Bus.OnAttackTurnDenied += value; remove => Bus.OnAttackTurnDenied -= value; }
-        public event Action<AttackTurnReleased> OnAttackTurnReleased { add => Bus.OnAttackTurnReleased += value; remove => Bus.OnAttackTurnReleased -= value; }
-
-        public void Publish(AttackTurnRequested e) => Bus.Publish(e);
-        public void Publish(AttackTurnGranted e) => Bus.Publish(e);
-        public void Publish(AttackTurnDenied e) => Bus.Publish(e);
-        public void Publish(AttackTurnReleased e) => Bus.Publish(e);
-        public void Publish(IntruderSpotted e) => Bus.Publish(e);
-        public void Publish(IntruderLost e) => Bus.Publish(e);
-        public void Publish(GuardEngaged e) => Bus.Publish(e);
-        public void Publish(GuardDied e) => Bus.Publish(e);
-        public void Publish(NoiseReported e) => Bus.Publish(e);
-        public void Publish(InvestigateRequest e) => Bus.Publish(e);
-        public void Publish(UnreachableIntruderReported e) => Bus.Publish(e);
-        public void Publish(PathReady e) => Bus.Publish(e);
-        public void Publish(Arrived e) => Bus.Publish(e);
-        public void Publish(Blocked e) => Bus.Publish(e);
-
-        /// <summary>Asks the navigation service to walk a guard. Touching <see cref="Navigation"/> first makes sure the service exists to hear it.</summary>
-        public void Publish(MoveRequest e)
-        {
-            _ = Navigation;
-            Bus.Publish(e);
-        }
+        // The guards' reports and the director's requests travel on EventManager; the bus below is the
+        // director's ear for the ones it must act on (score the alarm, hand out attack turns).
 
         // Alarm ----------------------------------------------------------------------------------------
 
@@ -190,12 +153,19 @@ namespace Plunderspell.Alarm
 
         private void Awake() => Current = this;
 
-        private void OnEnable() => Current = this;
+        private void OnEnable()
+        {
+            Current = this;
+            Bus.Listen();
+            _navigation?.Listen();
+        }
 
         private void OnDisable()
         {
             if (Current == this)
                 Current = null;
+            Bus.StopListening();
+            _navigation?.StopListening();
         }
 
         protected override void OnSpawned()
@@ -222,7 +192,9 @@ namespace Plunderspell.Alarm
                 HueAndCryRaiser.Repeat(deltaTime);
         }
 
-        private HueAndCry HueAndCryRaiser => _hueAndCry ??= new HueAndCry(_registry, Publish, _hueAndCryRepeatSeconds);
+        private HueAndCry HueAndCryRaiser => _hueAndCry ??= new HueAndCry(_registry, PublishInvestigate, _hueAndCryRepeatSeconds);
+
+        private static void PublishInvestigate(InvestigateRequest request) => EventManager.Instance?.Publish(request);
 
         internal void ReleaseAttackTurnOf(Component guard) => _attackTurns?.Release(guard);
 
@@ -245,7 +217,7 @@ namespace Plunderspell.Alarm
         private void RaiseStateChanged(AlarmState newState)
         {
             AlarmStateChanged?.Invoke(newState);
-            Bus.Publish(new AlarmChanged(newState));
+            EventManager.Instance?.Publish(new AlarmChanged(newState));
         }
     }
 }
