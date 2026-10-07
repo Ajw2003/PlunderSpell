@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Checks the Lair room and the Market in local co-op (#314): the Editor hosts in Play mode, a Development build
 # joins. Each player must arrive at their own Lair spawn; the client goes through the Market door and back, and
-# the host must see its body move; after a raid both come home to their spawns and both see the same haul pile.
+# the host must see its body move; after a raid both come home to their spawns and both see the same haul pile, grown by the two pieces extracted (it is saved, so it keeps the earlier runs' pieces).
 # Actions live in eval/coop_lair.cs. Start-up copied from coop_door_check.sh.
 # Usage: bash Tools/Unity/coop_lair_check.sh <label> [--build|--no-build]
 # Needs the Editor open on this project, not in Play mode. Leaves it stopped. Prints PASS or FAIL lines.
@@ -98,7 +98,10 @@ case "$h" in *"1100."*|*"1101."*) check ok "the host sees the client in the Mark
 log "client: $(L client travel /MarketYard/LairExit)"; sleep 2
 near client /LairRoom/MarketDoorArrivals/Spawn2 0.6 "the client's way out leads back inside the Lair door"
 
-# A raid: both set out, two pieces come home, both see the pile at home.
+# A raid: both set out, two pieces come home, both see the same pile, grown by exactly those two.
+# The pile is saved across runs, so what the host sees before setting out is the starting count.
+before="$(L host pile)"; log "host before: $before"
+b="${before#pile }"; b="${b%% *}"
 seed=777
 log "castle: $(ev "var d = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.RaidDirector>(); d.SetFixedSeed($seed); return \"seed $seed\";")"
 timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/set_out.cs >/dev/null
@@ -112,7 +115,8 @@ wait_for client "state LairRoom" 30
 sleep 3
 near client /LairRoom/PlayerSpawns/Spawn2 0.6 "the client comes home to Lair spawn 2"
 h="$(L host pile)"; c="$(L client pile)"; log "host: $h"; log "client: $c"
-case "$h" in "pile 2 "*) [ "$h" = "$c" ] && r=ok || r=no ;; *) r=no ;; esac; check $r "both see the same two-piece haul pile"
+n="${h#pile }"; n="${n%% *}"
+[ "$h" = "$c" ] && [ "$n" = "$((b + 2))" ] && r=ok || r=no; check $r "both see the same pile, grown by the two extracted pieces ($b -> $n)"
 L client shot "$(cygpath -m "$repo/$out/$label-client-pile.png")" >/dev/null 2>&1 || true
 
 # SocketError is a type name in LiteNetLib's stack frames, not an error.

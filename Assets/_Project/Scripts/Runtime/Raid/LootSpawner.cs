@@ -127,16 +127,18 @@ namespace Plunderspell.Raid
             go != null ? go.GetComponent<Rigidbody>() : null;
 
         /// <summary>
-        /// Replaces whatever this spawner holds with these pieces at these points, using prefabs from
-        /// <paramref name="prefabs"/>, and settles them like a raid's loot. The Lair's haul pile (#310).
+        /// Adds these pieces at these points to whatever this spawner already holds, using prefabs from
+        /// <paramref name="prefabs"/>, and settles them like a raid's loot. The Lair's haul pile (#310, #312).
         /// </summary>
         public void SpawnPile(IReadOnlyList<LootItem> items, IReadOnlyList<Vector3> positions, RaidLootTable prefabs)
         {
-            Clear();
             for (int i = 0; i < items.Count && i < positions.Count; i++)
                 SpawnLoose(items[i], prefabs != null ? prefabs.PrefabFor(items[i]) : null, positions[i]);
             BeginSettling();
         }
+
+        /// <summary>Takes one piece out of this spawner's care (it was picked up or sold); the object itself is left alone.</summary>
+        public bool Remove(GameObject piece) => _spawned.Remove(piece);
 
         /// <summary>Spawns a single loose piece of loot — what Aurum Voco conjures.</summary>
         public GameObject SpawnLoose(LootItem item, GameObject prefab, Vector3 position)

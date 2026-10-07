@@ -35,6 +35,15 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void AHaulStartingAfterEarlierPiecesContinuesTheSameGrid()
+        {
+            var all = HaulLayout.Offsets(25);
+            var later = HaulLayout.Offsets(5, 20);
+            for (int i = 0; i < 5; i++)
+                Assert.AreEqual(all[20 + i], later[i], "A later haul takes the next cells, layers when full.");
+        }
+
+        [Test]
         public void FirstLayerStaysInsideTheLandingPad()
         {
             foreach (Vector3 o in HaulLayout.Offsets(21))

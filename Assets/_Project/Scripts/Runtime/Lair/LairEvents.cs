@@ -19,6 +19,13 @@ namespace Plunderspell.Lair
         public BankedGoldChanged(float gold) { Gold = gold; }
     }
 
+    /// <summary>A different save slot was made active and loaded (the Lair's floor pile follows it).</summary>
+    public readonly struct SaveSlotLoaded : IEvent
+    {
+        public readonly int Slot;
+        public SaveSlotLoaded(int slot) { Slot = slot; }
+    }
+
     /// <summary>The Age (historical era) for the next raid was chosen or loaded.</summary>
     public readonly struct AgeChosen : IEvent
     {

@@ -16,12 +16,15 @@ namespace Plunderspell.Raid
         public const int Rows = 3;
         public const float LayerHeight = 0.4f;
 
-        /// <summary>Offsets from the pad's centre: columns along Z, rows along X, layers up.</summary>
-        public static List<Vector3> Offsets(int count)
+        /// <summary>
+        /// Offsets from the pad's centre: columns along Z, rows along X, layers up. <paramref name="start"/>
+        /// skips that many cells, so a new haul continues after the pieces already lying there.
+        /// </summary>
+        public static List<Vector3> Offsets(int count, int start = 0)
         {
             List<Vector2> cells = CellsCentreFirst();
             var offsets = new List<Vector3>(count);
-            for (int i = 0; i < count; i++)
+            for (int i = start; i < start + count; i++)
             {
                 Vector2 cell = cells[i % cells.Count];
                 offsets.Add(new Vector3(cell.y * Spacing, i / cells.Count * LayerHeight, cell.x * Spacing));
