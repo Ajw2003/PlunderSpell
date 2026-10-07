@@ -220,7 +220,31 @@ DRESSING_SPECS = [
     dict(key="CourtyardFormalGarden", builder="build_courtyard_formal_garden", tri_budget=1200, subdir="Castle/Dressing", module="castle_builders_dressing", zone="Keep", kind="wall"),
 ]
 
-ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS + DRESSING_SPECS
+# The Lair (docs/plans/diegetic-ui-lair-market.md, issue 286), built in
+# lair_builders.py: a one-off ~14 x 10 m vaulted cellar (NOT a 12 m castle cell,
+# so it has no cell-footprint check) and the props that furnish it. The four
+# LairCenturyDialRing pieces are authored flat and centred on their axle; see the
+# pivot note at the top of lair_builders.py and the README's Lair section.
+def _lair(key, builder, budget):
+    return dict(key=key, builder=builder, tri_budget=budget, subdir="Lair", module="lair_builders")
+
+
+LAIR_SPECS = [
+    _lair("LairCellar", "build_lair_cellar", 2800),
+    _lair("LairPortalArch", "build_lair_portal_arch", 500),
+    _lair("LairLedgerTable", "build_lair_ledger_table", 300),
+    _lair("LairLedger", "build_lair_ledger", 900),
+    _lair("LairStrongbox", "build_lair_strongbox", 320),
+    _lair("LairCenturyDialStand", "build_lair_century_dial_stand", 380),
+    _lair("LairCenturyDialRing1", "build_lair_century_dial_ring_1", 750),
+    _lair("LairCenturyDialRing2", "build_lair_century_dial_ring_2", 750),
+    _lair("LairCenturyDialRing3", "build_lair_century_dial_ring_3", 750),
+    _lair("LairCenturyDialRing4", "build_lair_century_dial_ring_4", 750),
+    _lair("LairWeaponRack", "build_lair_weapon_rack", 330),
+    _lair("LairCandle", "build_lair_candle", 340),
+]
+
+ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS + DRESSING_SPECS + LAIR_SPECS
 
 
 

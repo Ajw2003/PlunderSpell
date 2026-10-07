@@ -194,6 +194,56 @@ will drift out of date if regenerated and not recommitted.
 4. Re-run `build_assets.py` the same way — fix and re-run until
    `N/N assets passed`, same as a prop.
 
+## Lair
+
+The physical Lair of `docs/plans/diegetic-ui-lair-market.md` ("The Lair, as a place",
+concept `docs/art/concept/lair/lair.png`; issue 286): `LAIR_SPECS` in `asset_specs.py`,
+builders in `lair_builders.py`, output in `Assets/_Project/Art/Models/Lair/`. Static
+meshes only: no behaviour, no Unity wiring. Existing pigments only (the atlas is full).
+
+| Key | What it is | Tris / budget | Pivot (the origin, in Unity) |
+|---|---|---|---|
+| `LairCellar` | Barrel-vaulted cellar, 14 x 10 m interior (16.4 x 11.6 m outside), vault springs 2.6 m and crowns 4.2 m above the floor. 0.30 m floor slab, walkable floor at Z = 0.30 (scale.md). Long north (back) wall: the Market door (2.6 x 2.16 m, an arch with a plank leaf), and the hearth, chimney breast, firebox 1.2 m wide and a fire (logs, embers, flames). West wall: an arched recess 3.2 m wide and 0.7 m deep for the portal arch. Three stone ribs and pilasters. **Not a 12 m castle cell** (no footprint check). | 1670 / 2800 | Centre of the floor, slab underside on Z = 0 |
+| `LairPortalArch` | Freestanding stone arch, 2.6 m wide, 3.2 m tall, 0.5 m deep, on a 2.8 x 1.0 m threshold slab with the four portal stones (verdigris) on its front. | 288 / 500 | Base centre; stones on local -Y |
+| `LairLedgerTable` | Long oak table, 3.2 x 1.0 m, top at 0.80 m, open underneath along its length. | 168 / 300 | Base centre |
+| `LairLedger` | Great open book, 0.72 x 0.52 m, 7 cm tall; four columns I-IV implied by strips, heading bars and ruled lines, a ribbon marker. | 564 / 900 | Base centre of the cover |
+| `LairStrongbox` | Iron-banded oak box, 0.6 x 0.4 x 0.4 m with a domed lid; the hasp is on local -Y. Placed four times. | 180 / 320 | Base centre |
+| `LairCenturyDialStand` | Tripod on a round plinth (0.75 m radius), brass hub and axle; the axle top is at Z = 1.32. | 216 / 380 | Base centre |
+| `LairCenturyDialRing1..4` | Four nested brass rings, radii 0.30 / 0.42 / 0.54 / 0.66 m, each its own mesh with four lugs and one coloured bead (verdigris, lapis, madder, orpiment). | 448 each / 750 | **The ring's centre, i.e. its axle** (see below) |
+| `LairWeaponRack` | Oak rack, 1.6 m wide, 0.5 m deep, 1.72 m tall: posts, rails, low shelf, iron pegs. Stands against a wall. | 188 / 330 | Base centre |
+| `LairCandle` | Candle in an iron holder, 0.28 m tall. | 200 / 340 | Base centre of the foot |
+
+**Pivot choice for the rings.** The validator wants the lowest vertex within 3 cm of
+Z = 0, and a ring that turns about its own axle has half of itself below its pivot. So each
+ring is authored *flat*: a horizontal annulus about the Z axis with a 2.6 cm tube radius, so
+it spans Z = -0.026..+0.026 and passes the rule while its pivot is exactly its axle. In Unity,
+place all four rings at the stand's axle (stand-local (0, 1.18, 0) in Unity Y-up, a little
+below the axle top at 1.32), tilt each one to taste, and rotate it about its own local up axis
+to turn it.
+
+**Placement reference** (Blender Z-up, cellar origin; `render_lair_scene.py`'s `PLACEMENTS`
+is the working copy): portal arch (-7.2, 0, 0.30) turned 90 degrees about Z, so its stones face
+the room, inside the recess; ledger table (-0.8, -1.0, 0.30); ledger on it at +0.80 m;
+strongboxes at table x +/-0.35 and +/-1.05, y 0.62 m in front of the table's centre line;
+candle on the table at x +1.0; dial stand (2.2, -0.2, 0.30); weapon rack (-4.2, 4.7, 0.30)
+against the north wall; hearth light at (3.5, 4.35, 1.1). Nothing is on the floor in front of the
+portal arch. To convert to Unity: `Unity(X, Y, Z) = Blender(X, Z, -Y)` (see above).
+
+**Rebuild and review.**
+
+```bash
+PYTHONHASHSEED=0 blender -b -P Tools/AssetPipeline/build_assets.py -- --only Lair
+python3 Tools/AssetPipeline/validate_asset.py --all --only Lair
+PYTHONHASHSEED=0 blender -b -P Tools/AssetPipeline/render_previews_only.py -- Lair
+blender -b -P Tools/AssetPipeline/render_room_overhead.py -- LairCellar   # roof cut away
+python3 Tools/AssetPipeline/make_contact_sheet.py     # also writes docs/art/models/lair/lair-review.png
+blender -b -P Tools/AssetPipeline/render_lair_scene.py                    # docs/art/models/lair/lair-assembled.png, ~4 min
+```
+
+`render_lair_scene.py` takes `LAIR_PREVIEW_RES=640` for a quick low-res test and
+`LAIR_CAM="x,y,z,tx,ty,tz"` for another view. Cycles self-shadows coplanar overlapping
+faces black, so stacked Lair pieces differ by a hair in width or depth.
+
 ## Verifying the Unity side
 
 The pipeline validates geometry in Blender, which says nothing about whether

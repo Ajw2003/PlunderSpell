@@ -382,6 +382,78 @@
       "preview": "3005cd95684fe80c:23a9d68e53fd",
       "tris": 564
     },
+    "LairCandle": {
+      "budget": 340,
+      "content": "da39e17c5acc4706",
+      "preview": "da39e17c5acc4706:23a9d68e53fd",
+      "tris": 200
+    },
+    "LairCellar": {
+      "budget": 2800,
+      "content": "97443381ae7887ca",
+      "preview": "97443381ae7887ca:23a9d68e53fd",
+      "tris": 1670
+    },
+    "LairCenturyDialRing1": {
+      "budget": 750,
+      "content": "4a0645043b0565da",
+      "preview": "4a0645043b0565da:23a9d68e53fd",
+      "tris": 448
+    },
+    "LairCenturyDialRing2": {
+      "budget": 750,
+      "content": "3636c3c247acb468",
+      "preview": "3636c3c247acb468:23a9d68e53fd",
+      "tris": 448
+    },
+    "LairCenturyDialRing3": {
+      "budget": 750,
+      "content": "61447f6fa00d6dd7",
+      "preview": "61447f6fa00d6dd7:23a9d68e53fd",
+      "tris": 448
+    },
+    "LairCenturyDialRing4": {
+      "budget": 750,
+      "content": "7bf2e46bee3e7ba4",
+      "preview": "7bf2e46bee3e7ba4:23a9d68e53fd",
+      "tris": 448
+    },
+    "LairCenturyDialStand": {
+      "budget": 380,
+      "content": "39bb3f9da55cd406",
+      "preview": "39bb3f9da55cd406:23a9d68e53fd",
+      "tris": 216
+    },
+    "LairLedger": {
+      "budget": 900,
+      "content": "be66b6c898a13bce",
+      "preview": "be66b6c898a13bce:23a9d68e53fd",
+      "tris": 564
+    },
+    "LairLedgerTable": {
+      "budget": 300,
+      "content": "8a78f885d4bed80f",
+      "preview": "8a78f885d4bed80f:23a9d68e53fd",
+      "tris": 168
+    },
+    "LairPortalArch": {
+      "budget": 500,
+      "content": "be4f2b5c246aa7be",
+      "preview": "be4f2b5c246aa7be:23a9d68e53fd",
+      "tris": 288
+    },
+    "LairStrongbox": {
+      "budget": 320,
+      "content": "649dbd6d0bcd707e",
+      "preview": "649dbd6d0bcd707e:23a9d68e53fd",
+      "tris": 180
+    },
+    "LairWeaponRack": {
+      "budget": 330,
+      "content": "f77250dcb59b1fb1",
+      "preview": "f77250dcb59b1fb1:23a9d68e53fd",
+      "tris": 188
+    },
     "LateArmouryHall": {
       "budget": 3200,
       "content": "9550bfdeeb3e5586",

@@ -31,10 +31,42 @@ def _aim(obj, target):
     obj.rotation_euler = (Vector(target) - obj.location).to_track_quat("-Z", "Y").to_euler()
 
 
+def _cut_roof(obj, above=2.4):
+    """The Lair's barrel vault would hide the whole room from above: delete every
+    connected piece that starts above Z = `above` (the vault segments and ribs),
+    leaving walls, pilasters, hearth and floor. Only this render is cut; the FBX is not."""
+    import bmesh
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.faces.ensure_lookup_table()
+    seen, doomed = set(), []
+    for f in bm.faces:
+        if f.index in seen:
+            continue
+        stack, island = [f], []
+        seen.add(f.index)
+        while stack:
+            face = stack.pop()
+            island.append(face)
+            for e in face.edges:
+                for g in e.link_faces:
+                    if g.index not in seen:
+                        seen.add(g.index)
+                        stack.append(g)
+        if min(v.co.z for g in island for v in g.verts) > above:
+            doomed += island
+    bmesh.ops.delete(bm, geom=doomed, context="FACES")
+    bm.to_mesh(obj.data)
+    bm.free()
+
+
 def render_overhead(spec):
     rp.clear_scene()
     rp.setup_world_background()
-    rp.import_asset(spec)
+    obj = rp.import_asset(spec)
+    lair = spec["subdir"] == "Lair"
+    if lair:
+        _cut_roof(obj)
     # Unity is Y-up and the FBX import turns it back to Blender's Z-up, so the
     # module sits as it was built: +Y north, floor on Z = 0.
     cam_data = bpy.data.cameras.new("OverheadCam")
@@ -43,6 +75,9 @@ def render_overhead(spec):
     bpy.context.collection.objects.link(cam)
     cam.location = (0.0, -6.5, 21.0)
     _aim(cam, (0.0, 0.2, 0.0))
+    if lair:   # ~16 x 12 m outside: bigger than a castle cell
+        cam.location = (0.0, -4.5, 15.5)
+        _aim(cam, (0.0, 0.3, 0.0))
     bpy.context.scene.camera = cam
 
     sun = bpy.data.lights.new("Sun", type="SUN")
@@ -80,7 +115,7 @@ def main():
         print("usage: blender -b -P render_room_overhead.py -- <KeyOrPrefix> [...]")
         sys.exit(2)
     specs = [s for s in asset_specs.ALL_SPECS
-             if s["subdir"].startswith("Castle") and asset_specs.key_matches(s["key"], ",".join(argv))]
+             if s["subdir"].startswith(("Castle", "Lair")) and asset_specs.key_matches(s["key"], ",".join(argv))]
     if not specs:
         print(f"ERROR: no castle module matches {argv}")
         sys.exit(1)

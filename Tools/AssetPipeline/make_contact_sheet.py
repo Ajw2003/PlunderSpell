@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import asset_specs  # noqa: E402
 
 PREVIEWS_DIR = os.path.join(os.path.dirname(__file__), "previews")
+LAIR_DOCS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "docs", "art", "models", "lair")
 THUMB = 260
 PAD = 14
 LABEL_H = 26
@@ -26,7 +27,9 @@ def main():
     # shows one Age's castle side by side (docs/plans/era-castle-rooms.md).
     # Door plugs are single boxes the size of an archway: nothing to see, and no
     # preview is rendered for them, so they stay off every sheet.
-    era_keys = {spec["key"] for spec in asset_specs.ERA_CASTLE_SPECS}
+    # The Lair's props have a review sheet of their own, in docs/art/models/lair/.
+    write_sheet([s["key"] for s in asset_specs.LAIR_SPECS], "lair-review.png", out_dir=LAIR_DOCS_DIR)
+    era_keys = {spec["key"] for spec in asset_specs.ERA_CASTLE_SPECS} | {spec["key"] for spec in asset_specs.LAIR_SPECS}
     write_sheet([s["key"] for s in asset_specs.ALL_SPECS if s["key"] not in era_keys and "DoorPlug" not in s["key"]],
                 "_contact_sheet.png")
     for era in dict.fromkeys(s["era"] for s in asset_specs.ERA_CASTLE_SPECS):
@@ -34,7 +37,7 @@ def main():
         write_sheet(keys, f"_contact_sheet_{era}.png", required=False)
 
 
-def write_sheet(keys, filename, required=True):
+def write_sheet(keys, filename, required=True, out_dir=PREVIEWS_DIR):
     """required=False (an Age still being built) skips the sheet, saying which renders
     it is waiting for, instead of stopping the run."""
     paths = [os.path.join(PREVIEWS_DIR, f"{k}.png") for k in keys]
@@ -68,7 +71,8 @@ def write_sheet(keys, filename, required=True):
         sheet.paste(img, (x, y))
         draw.text((x + 4, y + THUMB + 4), key, fill=(220, 210, 186), font=font)
 
-    out = os.path.join(PREVIEWS_DIR, filename)
+    out = os.path.normpath(os.path.join(out_dir, filename))
+    os.makedirs(os.path.dirname(out), exist_ok=True)
     sheet.save(out)
     print(f"wrote {out}")
 
