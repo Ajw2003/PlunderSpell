@@ -6,12 +6,13 @@ namespace Plunderspell.Alarm
     /// The director's listener: the director's ears on the shared <see cref="EventManager"/>. When a guard reports
     /// (noise, a sighting, a death, an attack-turn request) this does what the director owes that event:
     /// scoring the alarm, counting chasers, handing an attack turn out or taking it back.
+    /// It is not a bus and holds no events of its own: <see cref="EventManager"/> is the only event bus in the game.
     /// </summary>
-    public sealed class EnemyDirectorBus
+    public sealed class EnemyDirectorListener
     {
         private readonly EnemyDirector _director;
 
-        public EnemyDirectorBus(EnemyDirector director)
+        public EnemyDirectorListener(EnemyDirector director)
         {
             _director = director;
         }

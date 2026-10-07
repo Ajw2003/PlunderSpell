@@ -48,7 +48,7 @@ namespace Plunderspell.Audio
         public EnemyDirector Alarm { get; private set; }
         public ExtractionZone Zone { get; private set; }
         public AudioSourcePool Pool => _pool;
-        public LoopBus Loops => _loops;
+        public LoopPool Loops => _loops;
         public SoundBank Bank => _bank;
         public MusicDirector Music => _music;
 
@@ -56,7 +56,7 @@ namespace Plunderspell.Audio
         private AudioSourcePool _pool;
         private AudioSourcePool _stepPool;
         private AudioSourcePool _voicePool;
-        private LoopBus _loops;
+        private LoopPool _loops;
         private MusicDirector _music;
         private PushToCastController _pushToCast;
         private AudioListener _listener;
@@ -80,7 +80,7 @@ namespace Plunderspell.Audio
             _pool = new AudioSourcePool(transform, PoolSize);
             _stepPool = new AudioSourcePool(transform, StepPoolSize);
             _voicePool = new AudioSourcePool(transform, VoicePoolSize);
-            _loops = new LoopBus(transform, LoopSlots);
+            _loops = new LoopPool(transform, LoopSlots);
 
             AudioLevels.Bind(bank.Mixer);
 

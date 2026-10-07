@@ -8,7 +8,7 @@ namespace Plunderspell.Alarm
 {
     /// <summary>
     /// The server-side enemy mediator (#205), kept thin: a NetworkBehaviour that owns the parts and ticks
-    /// them (<see cref="EnemyRegistry"/>, <see cref="EnemyDirectorBus"/>, <see cref="DirectorAlarm"/>,
+    /// them (<see cref="EnemyRegistry"/>, <see cref="EnemyDirectorListener"/>, <see cref="DirectorAlarm"/>,
     /// <see cref="HueAndCry"/>, <see cref="GuardNavigationService"/>, <see cref="AttackTurnMediator"/>).
     /// Nothing here moves a guard: a request is only relayed, and each guard's state machine decides.
     /// It lives in the Alarm assembly, below Guards, so guards are <see cref="Component"/>s and events plain data.
@@ -62,7 +62,7 @@ namespace Plunderspell.Alarm
 
         // The parts below are made on first use, after the Inspector values load, so EditMode tests need no Awake.
         private DirectorAlarm _alarm;
-        private EnemyDirectorBus _bus;
+        private EnemyDirectorListener _listener;
         private HueAndCry _hueAndCry;
         private AttackTurnMediator _attackTurns;
         private GuardNavigationService _navigation;
@@ -90,7 +90,7 @@ namespace Plunderspell.Alarm
             _rousedWitnesses, _hueAndCryWitnesses),
             OnAlarmStateChanged);
 
-        private EnemyDirectorBus Bus => _bus ??= new EnemyDirectorBus(this);
+        private EnemyDirectorListener Listener => _listener ??= new EnemyDirectorListener(this);
 
         /// <summary>Who may attack which player right now (#210).</summary>
         public AttackTurnMediator AttackTurns => _attackTurns ??= new AttackTurnMediator(this, _attackTurnTuning);
@@ -156,7 +156,7 @@ namespace Plunderspell.Alarm
         private void OnEnable()
         {
             Current = this;
-            Bus.Listen();
+            Listener.Listen();
             _navigation?.Listen();
         }
 
@@ -164,7 +164,7 @@ namespace Plunderspell.Alarm
         {
             if (Current == this)
                 Current = null;
-            Bus.StopListening();
+            Listener.StopListening();
             _navigation?.StopListening();
         }
 

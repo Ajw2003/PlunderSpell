@@ -151,7 +151,7 @@ namespace Plunderspell.Audio
         private void Update()
         {
             float now = Time.unscaledTime;
-            LoopBus loops = _director.Loops;
+            LoopPool loops = _director.Loops;
             for (int i = 0; i < TrackedMax; i++)
             {
                 Tracked t = _tracked[i];

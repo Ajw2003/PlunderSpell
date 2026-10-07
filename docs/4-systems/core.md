@@ -50,6 +50,13 @@ paid for everywhere — keep it small.
   door focus and `CastingInputTests` the chant. No test yet: mic level (needs a real microphone), the carried item
   (`ItemManager` starts a drag only from a camera ray and an input callback) and the attack/jump/walk input events
   (need the Input System's actions driven).
+- **Per-frame reads removed (#304).** `DamageFeedbackView`, `CameraShakeDirector` and `MusicDirector` no longer read other
+  systems each frame; they follow the events above. `BackdropCamera` no longer counts cameras every frame: it looks when
+  `GameStateChanged` or a scene load says cameras may have changed, and once more the next frame. **Limit:** a camera
+  that comes or goes with none of those happening (a player body despawning mid-raid, say) is not noticed until the next
+  such event; the backdrop renders under every other camera, so the cost of a stale "on" is only wasted draw, but a stale
+  "off" with no camera left shows an empty frame until then. If that is ever seen, `LocalPlayerChanged` is the event to
+  add (it lives in the Player assembly, which the UI assembly cannot reference today).
 - **`BaseStateMachine` / `IState` / `PlayerState`** — `Enter`/`Update`/`Exit`/`FixedUpdate`. States
   are plain C# objects constructed once in `Awake`, not MonoBehaviours, which keeps their logic
   testable without a scene.
