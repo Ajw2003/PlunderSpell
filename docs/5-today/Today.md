@@ -6,6 +6,8 @@ name around the hat band (shrunk to fit, or a different name for the game), and 
 when they fall. Plan: `docs/plans/wizard-character.md`; concept plates and the approved page in
 `docs/art/concept/wizard/`; issues #335 (parent) and #336–#341. The fallen hat replaces the
 laid-down body and ends the unused two-person body carry. Handed to a local agent with Unity.
+Placed by the owner the same day: the blocked-out wizard and its functions are M2 (#335–#339, #341),
+the colour and name on Lair things are M4 (#340), the finished model is M7.
 
 ---
 

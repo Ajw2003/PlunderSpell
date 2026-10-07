@@ -11,7 +11,7 @@ judgement until that milestone's acceptance is checked, and only M0's has been.
 |---|---:|---:|---|
 | M0 Fork clean | 5 | 100% | Acceptance checked |
 | M1 Prove the voice | 10 | ~70% | Works for one person on one machine; #50 never measured |
-| M2 Vertical slice | 20 | ~75% | Loop plays solo and over UDP; carrying together works (#169); #55 never run; Steam outside the Editor broken (#167, #168); #164, #170-#172 open |
+| M2 Vertical slice | 20 | ~75% | Loop plays solo and over UDP; carrying together works (#169); #55 never run; Steam outside the Editor broken (#167, #168); #164, #170-#172 open; the wizard (#335–#339, #341) added 2026-10-07, not started, share not re-measured |
 | M3 Other Ages | 15 | ~60% | Bronze and Late have their own rooms; High Medieval and Powder borrow |
 | M4 Lair and Market | 15 | ~5% | Debt is a number on the Lair screen; no market, no 3D Lair |
 | M5 Household awake | 10 | ~35% | Guards patrol, investigate noise, chase and search, and a shout or the hue and cry calls guards in (#163); the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
@@ -382,10 +382,6 @@ the 21-item backlog above.
 
 ## Cross-cutting issues that belong to no milestone
 
-- **Players have no character yet** (2026-10-07). They are capsules, and nothing shows who is
-  who in co-op. The approved plan is `docs/plans/wizard-character.md` (#335–#341), not started and not
-  yet placed on a milestone: its blockout and the colour, name and fallen-hat systems would sit
-  before M7, and the final wizard model in M7.
 - **The `isSpawned`/`isServer` trap has already caused three separate silent failures** (voice
   casting, the extraction clock, trigger tracking — see `docs/4-systems/raid.md`,
   `docs/4-systems/voice.md` and `docs/4-systems/alarm.md`) because `if (!isServer) return;` is true on
