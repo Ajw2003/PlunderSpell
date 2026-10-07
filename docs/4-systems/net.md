@@ -172,8 +172,9 @@ next raid, from the Lair or from that screen, and a client follows the host from
 
 ### The host's campaign on a friend's Lair
 
-`RaidDirector` replicates the host's debt, bank and last haul; a client shows them with
-`LairHubManager.ShowHostCampaign`, which does not save, and reloads its own campaign when it leaves
+`RaidDirector` replicates the host's debt, bank and last haul, and (#314) one string of purses, paid-last,
+seats present and the Collector's line; a client shows them with
+`LairHubManager.ShowHostCampaign` and `ShowHostLedger`, which do not save, and reloads its own campaign when it leaves
 the session. A friend's own save is never touched by joining.
 
 ## Traps
