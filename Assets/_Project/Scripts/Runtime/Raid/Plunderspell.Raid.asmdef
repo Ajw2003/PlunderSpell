@@ -10,6 +10,7 @@
         "Plunderspell.Lair",
         "Plunderspell.Market",
         "Plunderspell.Inventory",
+        "Plunderspell.Items",
         "Plunderspell.Alarm",
         "Plunderspell.Acoustics",
         "Plunderspell.Guards",

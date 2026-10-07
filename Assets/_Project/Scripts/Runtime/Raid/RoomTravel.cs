@@ -49,7 +49,19 @@ namespace Plunderspell.Raid
                 ? Mathf.Clamp((int)(ulong)identity.owner.Value.id - 1, 0, 3)
                 : 0;
             Transform spawn = _destination.Find($"Spawn{index + 1}");
+            Item carried = CarriedTravel.Find();
+            Transform view = Camera.main != null ? Camera.main.transform : player.transform;
+            Vector3 bodyBefore = player.transform.position;
+            float yawBefore = view.eulerAngles.y;
+            Pose pieceBefore = carried != null ? new Pose(carried.transform.position, carried.transform.rotation) : default;
+
             PlayerPlacement.StandAt(player, spawn != null ? spawn : _destination);
+
+            if (carried != null)
+            {
+                float yawDelta = view.eulerAngles.y - yawBefore;
+                CarriedTravel.Place(carried, CarriedTravel.Moved(pieceBefore, bodyBefore, player.transform.position, yawDelta));
+            }
         }
     }
 }

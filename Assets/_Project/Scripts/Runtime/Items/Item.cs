@@ -29,6 +29,10 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// installed by Plunderspell.Net.</summary>
     public static System.Action<Item, Vector3, float> RequestThrow;
 
+    /// <summary>Asks the server to move a held piece to a pose when its holder changes room (#333) and
+    /// this machine does not control the body; installed by Plunderspell.Net.</summary>
+    public static System.Action<Item, Vector3, Quaternion> RequestMove;
+
     private Rigidbody _rb;
     private bool _isDragging = false;
     private Vector3 _targetPosition;
@@ -897,6 +901,22 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
         {
             _carryableCreature.PickUp();
         }
+    }
+
+    /// <summary>The holder was moved to another room (#333): forget how fast the beam's target was
+    /// moving, so the jump is not read as a speed. Runs on every holder's machine.</summary>
+    public void ForgetTargetMotion() => _hasTargetVelocity = false;
+
+    /// <summary>Puts the held piece at a new pose with no velocity, still held (#333). On the
+    /// machine that controls its body; a client holder asks the server through CarryBeamRelay.</summary>
+    public void TeleportTo(Vector3 position, Quaternion rotation)
+    {
+        _rb.position = position;
+        _rb.rotation = rotation;
+        transform.SetPositionAndRotation(position, rotation);
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+        ForgetTargetMotion();
     }
 
     public void StopDragging()
