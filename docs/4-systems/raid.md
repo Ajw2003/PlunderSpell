@@ -176,12 +176,19 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   `GameState.Lair` still means "the Lair screen is open" (cursor free).
 - Entered from Play Solo (`MainMenuScreen.cs:198`), hosting/joining (`CoopSession.cs`), a resolved raid
   (`RaidBootstrapper.cs:87`) and the game-over button (`GameOverScreen.cs:89`).
-- `LairRoomSpawner.cs:39` stands the local player at `PlayerSpawns/Spawn{owner}` (retried in `Update` until the body exists).
+- `LairRoomSpawner.cs:45` stands the local player at `PlayerSpawns/Spawn{owner}` (retried in `Update` until the body exists),
+  only on arrival: `IsArrival` (`LairRoomSpawner.cs:23`) is false when coming from the Lair screen, so closing the
+  ledger leaves the player where they stood (until 2026-10-07 it snapped them back to the portal).
 - `LairPortalTrigger.cs:16`: the local player walking in while in LairRoom, host or solo, sets `Playing`.
 - `LairLedgerHandle.cs:16` reads E itself and opens the Lair screen when the main camera's centre ray hits the table or the book within 3 m (`IsLookedAt`, `LairLedgerHandle.cs:23`). It does not go through `LootInteractor`: the raid player carries none, and picks loot up with the mouse through `ItemManager`. Esc in
   LairRoom does the same (`GameFlowInput.cs`); the Lair screen's "Back to the Room" returns.
-- The instance sits at (1000, 0, 0) in `RaidScene`, clear of the castle (curtain wall about 45 m round the origin).
-  Placed by `Tools/Plunderspell/Place Lair Room In Raid Scene` (`LairRoomForge.cs`).
+- The Market door: `RoomTravel.cs:23` reads E when the camera looks at the door's own collider (the leaf is part of the
+  cellar mesh) and `Travel` (`RoomTravel.cs:38`) stands the player at the Market's `PlayerSpawns/Spawn{owner}`. The
+  Market's `LairExit` trigger across its south way in (`RoomTravel.cs:29`) brings them back to `MarketDoorArrivals`,
+  just inside the Lair's door. The state stays `LairRoom` throughout.
+- The Lair sits at (1000, 0, 0) and the Market at (1100, 0, 0) in `RaidScene`, clear of the castle (curtain wall about
+  45 m round the origin). `Tools/Plunderspell/Place Lair And Market In Raid Scene` (`RaidSceneRooms.cs`) places both
+  and connects the door and the way out.
 - Evidence: `docs/generated/lair-room-2026-10-06/`.
 
 ### How the haul comes home (#310)
