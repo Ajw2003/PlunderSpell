@@ -14,7 +14,14 @@ namespace Code.Scripts.EventSystems
         private readonly Dictionary<Type, List<EventSubscription>> _subscriptions = new();
         private readonly List<EventSubscription> _pendingRemovals = new();
         private bool _isPublishing;
-        protected override bool PersistBetweenScenes => false;
+        protected override bool PersistBetweenScenes => true;
+
+        // One bus from start-up to quit, so subscriptions survive scene loads and no scene has to hold one.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void CreateForPlay()
+        {
+            if (Instance == null) new GameObject(nameof(EventManager)).AddComponent<EventManager>();
+        }
 
         private class EventSubscription
         {
@@ -48,35 +55,67 @@ namespace Code.Scripts.EventSystems
             if (!_subscriptions.TryGetValue(eventType, out var subscriptionList))
                 return;
 
-            foreach (var subscription in subscriptionList)
-            {
-                if (subscription.TargetReference.Target == target)
-                {
-                    if (_isPublishing)
-                    {
-                        subscription.MarkedForRemoval = true;
-                        _pendingRemovals.Add(subscription);
-                    }
-                    else
-                    {
-                        subscriptionList.Remove(subscription);
-                        break;
-                    }
-                }
-            }
+            RemoveTargetFrom(subscriptionList, target);
         }
 
         public void UnsubscribeFromAllEvents(object target)
         {
-            foreach (var kvp in _subscriptions)
+            foreach (var subscriptionList in _subscriptions.Values)
             {
-                var eventType = kvp.Key;
+                RemoveTargetFrom(subscriptionList, target);
+            }
+        }
 
-                var unsubscribeMethod = typeof(EventManager)
-                    .GetMethod("Unsubscribe")
-                    ?.MakeGenericMethod(eventType);
+        // Removes every subscription the target holds in the list, not just the first.
+        // Mid-publish, removal is deferred so the publishing loop's indices stay valid.
+        private void RemoveTargetFrom(List<EventSubscription> subscriptionList, object target)
+        {
+            for (int i = subscriptionList.Count - 1; i >= 0; i--)
+            {
+                var subscription = subscriptionList[i];
+                if (subscription.TargetReference.Target != target) continue;
 
-                if (unsubscribeMethod != null) unsubscribeMethod.Invoke(this, new object[] { target });
+                if (_isPublishing)
+                {
+                    if (subscription.MarkedForRemoval) continue;
+                    subscription.MarkedForRemoval = true;
+                    _pendingRemovals.Add(subscription);
+                }
+                else
+                {
+                    subscriptionList.RemoveAt(i);
+                }
+            }
+        }
+
+        // Live subscriptions held by the target; leak tests check this is 0 after a screen closes.
+        public int SubscriptionCount(object target)
+        {
+            int count = 0;
+            foreach (var subscriptionList in _subscriptions.Values)
+            {
+                foreach (var subscription in subscriptionList)
+                {
+                    if (!subscription.MarkedForRemoval && subscription.TargetReference.Target == target) count++;
+                }
+            }
+            return count;
+        }
+
+        // Live subscriptions on the whole bus whose targets still exist.
+        public int TotalSubscriptionCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (var subscriptionList in _subscriptions.Values)
+                {
+                    foreach (var subscription in subscriptionList)
+                    {
+                        if (!subscription.MarkedForRemoval && subscription.TargetReference.Target != null) count++;
+                    }
+                }
+                return count;
             }
         }
 
