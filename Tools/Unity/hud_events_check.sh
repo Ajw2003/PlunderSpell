@@ -11,6 +11,7 @@
 set -uo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/settings_restore.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test_slot.sh"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
 label="${1:?usage: hud_events_check.sh <label> [--build|--no-build]}"; shift
@@ -41,12 +42,14 @@ cleanup() {
     unity command editor_stop "${cli[@]}" >/dev/null 2>&1 || true
     unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":false}' --confirm true "${cli[@]}" >/dev/null 2>&1 || true
     settings_restore
+    log "$(test_slot_restore 2>&1)"
 }
 trap cleanup EXIT
 
 playing="$(bash Tools/Unity/eval.sh 'return UnityEditor.EditorApplication.isPlaying + " " + UnityEditor.EditorApplication.isCompiling;')" || { log "FAIL Editor did not answer"; exit 1; }
 if [ "$playing" != "False False" ]; then log "FAIL Editor is playing or compiling ($playing)"; trap - EXIT; exit 1; fi
 settings_save || { log "FAIL cannot save ProjectSettings before building"; trap - EXIT; exit 1; }
+msg="$(test_slot_use)" || { log "FAIL cannot switch to the test slot: $msg"; trap - EXIT; exit 1; }; log "$msg"
 
 if [ "$build" = auto ]; then
     build=no; [ -f Build/DevTest/.built ] || build=yes

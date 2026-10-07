@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # Checks the Lair room and the Market in local co-op (#314): the Editor hosts in Play mode, a Development build
 # joins. Each player must arrive at their own Lair spawn; the client goes through the Market door and back, and
-# the host must see its body move; after a raid both come home to their spawns and both see the same haul pile, grown by the two pieces extracted (it is saved, so it keeps the earlier runs' pieces).
+# the host must see its body move; after a raid both come home to their spawns and both see the same haul pile, grown by the two pieces extracted. It plays in the test slot (SaveSlots.TestSlot), wiped at the start, so every run begins from an empty pile and the owner's slots are untouched (test_slot.sh).
 # Actions live in eval/coop_lair.cs. Start-up copied from coop_door_check.sh.
 # Usage: bash Tools/Unity/coop_lair_check.sh <label> [--build|--no-build]
 # Needs the Editor open on this project, not in Play mode. Leaves it stopped. Prints PASS or FAIL lines.
 set -uo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/settings_restore.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test_slot.sh"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
 label="${1:?usage: coop_lair_check.sh <label> [options]}"; shift
@@ -34,12 +35,14 @@ cleanup() {
     unity command editor_stop "${cli[@]}" >/dev/null 2>&1 || true
     unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":false}' --confirm true "${cli[@]}" >/dev/null 2>&1 || true
     settings_restore
+    log "$(test_slot_restore 2>&1)"
 }
 trap cleanup EXIT
 
 playing="$(bash Tools/Unity/eval.sh 'return UnityEditor.EditorApplication.isPlaying + " " + UnityEditor.EditorApplication.isCompiling;')" || { log "FAIL Editor did not answer"; exit 1; }
 if [ "$playing" != "False False" ]; then log "FAIL Editor is playing or compiling ($playing)"; trap - EXIT; exit 1; fi
 settings_save || { log "FAIL cannot save ProjectSettings before building"; trap - EXIT; exit 1; }
+msg="$(test_slot_use)" || { log "FAIL cannot switch to the test slot: $msg"; exit 1; }; log "$msg"
 
 if [ "$build" = auto ]; then
     build=no; [ -f Build/DevTest/.built ] || build=yes

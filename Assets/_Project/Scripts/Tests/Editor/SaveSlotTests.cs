@@ -67,6 +67,16 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
+        public void Test_TestSlotIsKeptButNeverOneOfTheMenuSlots()
+        {
+            SaveSlots.Active = SaveSlots.TestSlot;
+            Assert.AreEqual(SaveSlots.TestSlot, SaveSlots.Active);
+            Assert.Greater(SaveSlots.TestSlot, SaveSlots.Count, "The menu steps through 1 to Count only.");
+            SaveSlots.Active = 7;
+            Assert.AreEqual(SaveSlots.Count, SaveSlots.Active, "Any other out-of-range slot still clamps.");
+        }
+
+        [Test]
         public void Test_SlotsKeepSeparateCampaigns()
         {
             LairHubManager.ResetSlot(2);
