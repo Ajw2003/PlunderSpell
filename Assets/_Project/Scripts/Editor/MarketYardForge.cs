@@ -160,9 +160,10 @@ namespace Plunderspell.EditorTools
             figure.transform.position = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z) + toStall.normalized * 1.0f + Vector3.up * 0.45f;
             figure.transform.localScale = new Vector3(0.6f, 0.9f, 0.6f);
 
+            // Chest height, half a metre in front of the vendor (towards the counter): under the stall roof, facing the player.
             var text = new GameObject("Subtitle");
             text.transform.SetParent(yard, false);
-            text.transform.position = figure.transform.position + Vector3.up * 1.1f;
+            text.transform.position = figure.transform.position - toStall.normalized * 0.5f + Vector3.up * 0.5f;
             var mesh = text.AddComponent<TextMesh>();
             mesh.anchor = TextAnchor.LowerCenter;
             mesh.alignment = TextAlignment.Center;
@@ -170,7 +171,32 @@ namespace Plunderspell.EditorTools
             mesh.fontSize = 48;
             mesh.color = Color.white;
 
+            AddLip(counter, bounds, offset);
+
+            // A scene network object, so the server owns the haggle and the client's word reaches it (NetworkPrefabs is untouched).
+            counter.AddComponent<PurrNet.NetworkIdentity>();
             counter.AddComponent<SellCounter>().Set(vendor, zone, figure.GetComponent<Renderer>(), mesh);
+        }
+
+        /// <summary>A 4 cm rim round the counter top, so a piece set down near the edge stays on it.</summary>
+        private static void AddLip(GameObject counter, Bounds bounds, Vector3 offset)
+        {
+            const float rim = 0.04f;
+            var lip = new GameObject("Lip");
+            lip.transform.SetParent(counter.transform, false);
+            lip.transform.localPosition = new Vector3(offset.x, bounds.max.y - counter.transform.position.y + rim * 0.5f, offset.z);
+            Vector3 half = bounds.size * 0.5f;
+            AddRim(lip, new Vector3(0f, 0f, half.z), new Vector3(bounds.size.x, rim, rim));
+            AddRim(lip, new Vector3(0f, 0f, -half.z), new Vector3(bounds.size.x, rim, rim));
+            AddRim(lip, new Vector3(half.x, 0f, 0f), new Vector3(rim, rim, bounds.size.z));
+            AddRim(lip, new Vector3(-half.x, 0f, 0f), new Vector3(rim, rim, bounds.size.z));
+        }
+
+        private static void AddRim(GameObject lip, Vector3 centre, Vector3 size)
+        {
+            var box = lip.AddComponent<BoxCollider>();
+            box.center = centre;
+            box.size = size;
         }
 
         private static Vector3 ToVector(float[] xyz) => new Vector3(xyz[0], xyz[1], xyz[2]);

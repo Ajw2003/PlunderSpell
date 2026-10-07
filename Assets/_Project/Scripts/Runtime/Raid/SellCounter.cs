@@ -10,10 +10,11 @@ namespace Plunderspell.Raid
 {
     /// <summary>
     /// One Market counter and its vendor. A loot piece resting on the counter's trigger volume opens a haggle;
-    /// the local player answers within reach with 1 Plus, 2 Satis, 3 Vale. The sale runs on the server only (solo and host);
-    /// a client's counter does nothing yet (co-op is #312's next step). See docs/4-systems/market.md.
+    /// the local player answers within reach with 1 Plus, 2 Satis, 3 Vale. The server owns the haggle and the sale; a client's
+    /// word goes to it by <see cref="WordToServer"/> and every line reaches every player by <see cref="LineToObservers"/>.
+    /// Unspawned (a scene without a session) the counter is its own authority. See docs/4-systems/market.md.
     /// </summary>
-    public class SellCounter : MonoBehaviour
+    public class SellCounter : NetworkBehaviour
     {
         [SerializeField] private Vendor _vendor;
         [Tooltip("The counter top: a piece resting inside it is offered to the vendor.")]
@@ -79,7 +80,8 @@ namespace Plunderspell.Raid
             _piece = null;
         }
 
-        private static bool IsServer() => NetworkManager.main == null || NetworkManager.main.isServer;
+        // Unspawned is its own authority; PurrNet's [ServerRpc] does nothing on an unspawned object.
+        private bool Decides => !isSpawned || isServer;
 
         private void Update()
         {
@@ -88,8 +90,12 @@ namespace Plunderspell.Raid
                 _subtitle.text = "";
                 _clearAt = 0f;
             }
-            if (!IsServer())
+            if (!Decides)
+            {
+                if (PlayerIsNear() && _subtitle != null && _subtitle.text != "")
+                    ReadKeys(); // the server knows if a haggle is open; this side only sees its lines
                 return;
+            }
 
             if (_haggle != null && (_piece == null || !Rests(_piece)))
                 _haggle = null; // taken off the counter without a word
@@ -109,10 +115,22 @@ namespace Plunderspell.Raid
 
         private void ReadKeys()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) Answer(HaggleWord.Plus);
-            else if (Input.GetKeyDown(KeyCode.Alpha2)) Answer(HaggleWord.Satis);
-            else if (Input.GetKeyDown(KeyCode.Alpha3)) Answer(HaggleWord.Vale);
+            if (Input.GetKeyDown(KeyCode.Alpha1)) Speak(HaggleWord.Plus);
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) Speak(HaggleWord.Satis);
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) Speak(HaggleWord.Vale);
         }
+
+        /// <summary>The local player's word: answered here when this side decides, else sent to the server. The keys call this.</summary>
+        public void Speak(HaggleWord word)
+        {
+            if (Decides)
+                Answer(word);
+            else
+                WordToServer((int)word);
+        }
+
+        [ServerRpc(requireOwnership: false)]
+        private void WordToServer(int word) => Answer((HaggleWord)word);
 
         private bool PlayerIsNear()
         {
@@ -208,13 +226,27 @@ namespace Plunderspell.Raid
             FindFirstObjectByType<HaulLanding>()?.Remove(piece);
             foreach (LootSpawner spawner in FindObjectsByType<LootSpawner>(FindObjectsSortMode.None))
                 spawner.Remove(piece);
-            Destroy(piece);
+            Destroy(piece); // on a spawned piece the server's destroy despawns it for every client
         }
 
         private void Say(string line)
         {
             if (_subtitle == null)
                 return;
+            Show(line);
+            if (isSpawned && isServer)
+                LineToObservers(line);
+        }
+
+        [ObserversRpc]
+        private void LineToObservers(string line)
+        {
+            if (!isServer) // the host showed it in Say
+                Show(line);
+        }
+
+        private void Show(string line)
+        {
             _subtitle.text = line;
             _clearAt = Time.time + LineSeconds;
         }
