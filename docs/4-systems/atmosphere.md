@@ -28,6 +28,14 @@ reddens with each alarm state. Spec: `docs/plans/night-atmosphere.md`. Built on
   rooftops that stood dark against glowing fog now stand, a little fogged, against a dark sky, so
   their silhouettes are softer. Before/after captures from the same spots:
   `docs/generated/night-sky-2026-09-26/`.
+- **Every room has a fire at Calm (#317, 2026-10-07).** The alarm shows in the castle through its fires, so a room with no
+  fire burning at Calm shows nothing. Three modules had none (`WallCorner`, `BronzeWallCorner`, `CourtyardMidden`: only a
+  beacon or a brazier that lights later); each now has one that burns at Calm (a sconce on the wall away from the tower, a
+  brazier clear of the heaps). Re-checked from `CastleFireAnchors.json`: 89 modules, 64 with one fire lit at Calm, 18 with
+  two, 6 with three, 1 with four, none with none. The guard is `NightAtmosphereTests`
+  `Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere` (it failed on `WallCorner` before the change).
+  Most modules still have only one calm fire; more torches, forges and braziers are for whoever finds a stretch that
+  reads dark, in `castle_builders.py`, then `build_assets.py -- --only <Module>` and `Tools/Plunderspell/Import Castle Fire Anchors`.
 - **Fire.** The Blender builders register fire anchors (`castle_builders._fire`), `build_assets.py`
   writes `Assets/_Project/Data/Castle/CastleFireAnchors.json`, `CastleFireAnchorImporter` copies them
   into the three room registries and `CastleDressingSet`. `CastleFireSpawner` lights one
