@@ -289,7 +289,7 @@ namespace Plunderspell.Tests
             var player = MakePlayer(new Vector3(0f, 300f, -800f));
             yield return null;
 
-            Assert.AreEqual(RigidbodyInterpolation.Interpolate, player._rb.interpolation,
+            Assert.AreEqual(RigidbodyInterpolation.Interpolate, player.Rb.interpolation,
                 "An uninterpolated body moves its camera only on 50 Hz physics steps: the whole view judders (#104).");
 
             Quaternion bodyBefore = player.transform.rotation;
@@ -309,15 +309,15 @@ namespace Plunderspell.Tests
         public IEnumerator Test_IdleStandsStill()
         {
             var player = MakePlayer(new Vector3(20f, 300f, -800f));
-            player._rb.useGravity = false;
+            player.Rb.useGravity = false;
             yield return null;
 
-            player._rb.linearVelocity = new Vector3(5f, 0f, 3f);
+            player.Rb.linearVelocity = new Vector3(5f, 0f, 3f);
             player.Idle();
             yield return null;
             yield return null;
 
-            Vector3 v = player._rb.linearVelocity;
+            Vector3 v = player.Rb.linearVelocity;
             Assert.Less(new Vector2(v.x, v.z).magnitude, 0.01f,
                 "Arriving in Idle while moving used to coast forever, off the edge of the map.");
         }

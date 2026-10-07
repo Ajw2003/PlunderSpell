@@ -1,6 +1,7 @@
 using Interfaces;
 using StateMachine.States;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace StateMachine
 {
@@ -52,9 +53,11 @@ namespace StateMachine
         /// <summary>Share of walk speed while creeping. 5 m/s * 0.4 = 2 m/s, under the 2.2 m/s crouch band of FootstepNoiseEmitter.</summary>
         public const float CreepPace = 0.4f;
 
-        public Rigidbody _rb;
+        [SerializeField] private Rigidbody _rb;
+        public Rigidbody Rb { get => _rb; set => _rb = value; }
 
-        public float walkSpeed;
+        [FormerlySerializedAs("walkSpeed")] [SerializeField] private float _walkSpeed;
+        public float WalkSpeed { get => _walkSpeed; set => _walkSpeed = value; }
         public float JumpForce;
         public float FallMultiplier = 2.5f;
 
@@ -62,7 +65,8 @@ namespace StateMachine
         public float AirControl = 0.7f;
 
         public float DodgeForce;
-        public float respawnSpeed;
+        [FormerlySerializedAs("respawnSpeed")] [SerializeField] private float _respawnSpeed;
+        public float RespawnSpeed { get => _respawnSpeed; set => _respawnSpeed = value; }
 
         public float MouseSensitivity = 100f;
         public Transform CameraTransform;
