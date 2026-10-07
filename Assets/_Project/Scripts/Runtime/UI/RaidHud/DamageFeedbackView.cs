@@ -66,8 +66,11 @@ namespace Plunderspell.UI
         private readonly Dictionary<Component, Flash> _flashes = new Dictionary<Component, Flash>();
         private readonly Dictionary<Component, Renderer> _topRenderers = new Dictionary<Component, Renderer>();
         private readonly List<Component> _scratch = new List<Component>();
-        private Transform _cachedLocal;
-        private IHealth _cachedHealth;
+        // How full each recently hurt target's health is, as the damage event reported it, and the local
+        // player's own, from PlayerStatsChanged: nothing here asks a health component each frame (#304).
+        private readonly Dictionary<Component, float> _hurtFraction = new Dictionary<Component, float>();
+        private float _youFraction = 1f;
+        private bool _inWorld = true;
         private MaterialPropertyBlock _flashBlock;
 
         private float _vignette;
@@ -114,6 +117,21 @@ namespace Plunderspell.UI
         {
             EventManager.Instance?.Subscribe(this, (DamageDealt e) => OnDamage(e.Report));
             EventManager.Instance?.Subscribe(this, (Plunderspell.Loot.LootRuined e) => OnLootRuined(e.Piece, e.WorthLost));
+            EventManager.Instance?.Subscribe(this, (Plunderspell.Core.PlayerStatsChanged e) => ReadYourHealth());
+            EventManager.Instance?.Subscribe(this, (Plunderspell.Core.GameStateChanged e) => _inWorld = InWorld(e.Current));
+            ReadYourHealth();
+            var gameState = Plunderspell.Core.GameServices.GameState;
+            _inWorld = gameState == null || InWorld(gameState.CurrentState);
+        }
+
+        private static bool InWorld(Plunderspell.Core.GameState state) =>
+            state == Plunderspell.Core.GameState.Playing || state == Plunderspell.Core.GameState.Paused;
+
+        // The player's health is mirrored into PlayerStats, which says when it changes.
+        private void ReadYourHealth()
+        {
+            Plunderspell.Core.PlayerStats stats = Plunderspell.Core.GameServices.PlayerStats;
+            _youFraction = stats != null && stats.MaxHealth > 0 ? (float)stats.Health / stats.MaxHealth : 1f;
         }
 
         private void OnDisable()
@@ -178,6 +196,8 @@ namespace Plunderspell.UI
             else
             {
                 _recentlyHurt[report.Target] = Time.time;
+                if (report.MaxHealth > 0f)
+                    _hurtFraction[report.Target] = Mathf.Clamp01(report.HealthAfter / report.MaxHealth);
                 if (!_topRenderers.ContainsKey(report.Target))
                     _topRenderers[report.Target] = report.Target.GetComponentInChildren<Renderer>();
             }
@@ -321,6 +341,7 @@ namespace Plunderspell.UI
             foreach (Component key in _scratch)
             {
                 _recentlyHurt.Remove(key);
+                _hurtFraction.Remove(key);
                 _topRenderers.Remove(key);
             }
         }
@@ -343,30 +364,14 @@ namespace Plunderspell.UI
             DrawHurtLines();
         }
 
-        private static bool IsInWorld()
-        {
-            var gameState = Plunderspell.Core.GameServices.GameState;
-            return gameState == null || gameState.CurrentState == Plunderspell.Core.GameState.Playing
-                                     || gameState.CurrentState == Plunderspell.Core.GameState.Paused;
-        }
+        private bool IsInWorld() => _inWorld;
 
         private void DrawVignette()
         {
             float lowHealth = 0f;
-            Transform local = LocalPlayerRoot();
-            // Re-query only when the local player changes or the cached health is destroyed.
-            if (local != _cachedLocal || (_cachedHealth != null && (_cachedHealth as Component) == null))
-            {
-                _cachedLocal = local;
-                _cachedHealth = local != null ? local.GetComponentInChildren<IHealth>() : null;
-            }
-            IHealth you = _cachedHealth;
-            if (you != null && (you as Component) != null && you.MaxHealth > 0f)
-            {
-                float fraction = you.CurrentHealth / you.MaxHealth;
-                if (fraction < 0.3f && fraction > 0f)
-                    lowHealth = (0.3f - fraction) / 0.3f * (0.35f + 0.15f * Mathf.Sin(Time.time * 6f));
-            }
+            float fraction = _youFraction;
+            if (fraction < 0.3f && fraction > 0f)
+                lowHealth = (0.3f - fraction) / 0.3f * (0.35f + 0.15f * Mathf.Sin(Time.time * 6f));
 
             float alpha = Mathf.Max(_vignette, lowHealth);
             if (alpha <= 0.01f)
@@ -384,7 +389,7 @@ namespace Plunderspell.UI
             foreach (var pair in _recentlyHurt)
             {
                 Component target = pair.Key;
-                if (target == null || !(target is IHealth health) || health.MaxHealth <= 0f)
+                if (target == null || !_hurtFraction.TryGetValue(target, out float fraction))
                     continue;
 
                 Vector3 top = TopOf(target) + Vector3.up * 0.35f;
@@ -402,7 +407,6 @@ namespace Plunderspell.UI
                 GUI.DrawTexture(new Rect(bar.x - 1f, bar.y - 1f, bar.width + 2f, bar.height + 2f), _white);
                 Color fill = IsPlayer(target) ? k_friendBarColour : k_enemyBarColour;
                 GUI.color = new Color(fill.r, fill.g, fill.b, alpha);
-                float fraction = Mathf.Clamp01(health.CurrentHealth / health.MaxHealth);
                 GUI.DrawTexture(new Rect(bar.x, bar.y, bar.width * fraction, bar.height), _white);
                 GUI.color = previous;
             }

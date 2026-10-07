@@ -1,3 +1,5 @@
+using Plunderspell.Core;
+using Code.Scripts.EventSystems;
 using System.Collections;
 using NUnit.Framework;
 using Plunderspell.UI;
@@ -38,13 +40,36 @@ namespace Plunderspell.Tests
 
             _player = new GameObject("PlayerEye");
             var eye = _player.AddComponent<Camera>();
+            // The backdrop no longer counts cameras every frame: it looks when the game changes mode or a scene loads.
+            EventManager.Instance.Publish(new GameStateChanged(GameState.Lair, GameState.Playing));
+            yield return null;
             yield return null;
             Assert.IsFalse(backdrop.IsRendering, "A player camera exists: the backdrop must step aside.");
 
             eye.enabled = false;
+            EventManager.Instance.Publish(new GameStateChanged(GameState.Playing, GameState.GameOver));
+            yield return null;
             yield return null;
             Assert.AreEqual(!othersBefore, backdrop.IsRendering,
                 "With the player camera gone, the backdrop must come back.");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_TheBackdropDoesNotCountCamerasWithoutAnEvent()
+        {
+            _backdrop = new GameObject("Backdrop");
+            var backdrop = _backdrop.AddComponent<BackdropCamera>();
+            yield return null;
+            bool before = backdrop.IsRendering;
+
+            _player = new GameObject("PlayerEye");
+            _player.AddComponent<Camera>();
+            yield return null;
+            yield return null;
+
+            Assert.AreEqual(before, backdrop.IsRendering, "Nothing announced a change, so nothing was looked at.");
+            backdrop.enabled = false;
+            Assert.AreEqual(0, EventManager.Instance.SubscriptionCount(backdrop), "A disabled backdrop leaves the bus.");
         }
 
         [UnityTest]
