@@ -1075,9 +1075,21 @@ namespace UnityEngine
                 Bounds raw = c.bounds;
                 Bounds b = raw;
                 b.extents += new Vector3(grow, grow, grow);
-                if (!SegmentIntersectsBounds(origin, dir, maxDistance, b, out float distance)) continue;
-
-                if (grow > 0f && !TraceRoundedBox(raw, origin, dir, maxDistance, grow, ref distance)) continue;
+                float distance;
+                if (grow > 0f && b.Contains(origin))
+                {
+                    // Inside the grown box but maybe outside the rounded shape (its square corners are
+                    // empty): trace from here, else a body in a corner zone tunnels through. Already
+                    // touching the real shape means overlapping at the start: no hit, as for a ray.
+                    distance = 0f;
+                    if ((origin - raw.ClosestPoint(origin)).magnitude <= grow) continue;
+                    if (!TraceRoundedBox(raw, origin, dir, maxDistance, grow, ref distance)) continue;
+                }
+                else
+                {
+                    if (!SegmentIntersectsBounds(origin, dir, maxDistance, b, out distance)) continue;
+                    if (grow > 0f && !TraceRoundedBox(raw, origin, dir, maxDistance, grow, ref distance)) continue;
+                }
 
                 Vector3 point = origin + dir * distance;
                 Vector3 normal = -dir;
