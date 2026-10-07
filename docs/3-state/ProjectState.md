@@ -319,8 +319,10 @@ and backdrop camera (#304) learn state from those events instead of polling; the
 Verified: compile clean, PlayMode 430/430, EditMode 225 pass with the three known failures, and a co-op raid (Editor
 host plus built client) on which both HUD models followed the clock and alarm, the raid stems were playing on both
 machines, and a 10-point hit on each machine's own player raised the shake to 0.55, one floating number and a 0.45
-red edge on both (`Tools/Unity/hud_events_check.sh`, output in `docs/generated/hud-events-303/`). Not verified: the mic
-meter against a real microphone (none on this machine). Still C# events by design: `StatusChanged` and
+red edge on both (`Tools/Unity/hud_events_check.sh`, output in `docs/generated/hud-events-303/`). The Settings mic meter source is verified against
+the real headset microphone (`MicMeterTests`: level events arrive, nothing is recognised, it stops when switched off).
+Not verified: the meter bar with a person speaking at the whisper and shout marks, and the Unity-only checks the
+owner still has from the earlier handoff. Still C# events by design: `StatusChanged` and
 `GuardHealth.Died` (only their own guard listens). Still a C# event, not asked for: `PlayerStateMachine.SlamLanded`.
 Not merged to `main`: all of it is on `claude/staging-2026-10-07`.
 
