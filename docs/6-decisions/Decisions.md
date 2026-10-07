@@ -3,6 +3,21 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-07 — The debt splits in equal shares; coins are pouches; loot gets a category
+
+**Context.** Step 7 of the Lair and Market (#313): the debt is one shared number (`LairHubManager.TotalDebt`), a sale
+banks straight into it, and vendors pay the same for every piece because a `LootItem` has no category
+(`docs/4-systems/market.md`).
+
+**Decision (owner, 2026-10-07).** Each wizard in the company owes an equal share of the debt, and the Collector takes
+each share from that wizard's own strongbox; a friend can still hand over coins to cover another's share (#130). Coins
+are physical pouches: a sale puts a pouch on the counter, it is carried home with weight like loot, and dropping it in
+a strongbox banks it. Every loot item gets a category (Metal, Holy, Curio, Arms, Other) so each vendor's interest
+follows the design (1.3 for his kind, 0.7 otherwise; the Fence 1.0 for all).
+
+**Consequence.** Replaces the single shared debt and the straight-to-ledger `BankSale` of the entry below once step 7
+lands. Status: Active.
+
 ## 2026-10-07 — Loot is earned by selling it; the unsold pile stays; Plus is the only ask
 
 **Context.** Until the Market could sell, the haul was banked automatically at extraction and the Lair's pile showed
