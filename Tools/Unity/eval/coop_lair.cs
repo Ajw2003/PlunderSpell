@@ -20,6 +20,8 @@
 //   bank <n>:<coins>   host: bank coins into purse n (1 to 4), as a let-go pouch does
 //   ledger             host: the debt, the four purses, paid last collection, seats present and the Collector's line (#313)
 //   slot1              what the Lair's saved slot 1 holds (debt, gold, four purses), read without loading it
+//   activeslot         the save slot this side plays in and what it has SAVED (debt, gold, four purses, paid), read without loading
+//   lairscreen         show the Lair screen on this side (it is hidden in the Lair room), so a shot can capture the ledger
 string action = "__ACTION__";
 string arg = "__ARG__";
 const System.Reflection.BindingFlags All = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static
@@ -168,6 +170,23 @@ switch (action)
         string s = "slot1 debt " + Get(state, "TotalDebt") + " gold " + Get(state, "AccumulatedGold") + " purses";
         for (int seat = 0; seat < 4; seat++) s += " " + hub.GetMethod("PeekPurse").Invoke(null, new object[] { 1, seat });
         return s;
+    }
+    case "activeslot":
+    {
+        var hub = T("Plunderspell.Lair.LairHubManager");
+        int slot = (int)Get(T("Plunderspell.Lair.SaveSlots"), "Active");
+        var state = hub.GetMethod("Peek").Invoke(null, new object[] { slot });
+        string s = "slot " + slot + " saved debt " + Get(state, "TotalDebt") + " gold " + Get(state, "AccumulatedGold") + " purses";
+        for (int seat = 0; seat < 4; seat++) s += " " + hub.GetMethod("PeekPurse").Invoke(null, new object[] { slot, seat });
+        s += " paid";
+        for (int seat = 0; seat < 4; seat++) s += " " + hub.GetMethod("PeekPaidLast").Invoke(null, new object[] { slot, seat });
+        return s;
+    }
+    case "lairscreen":
+    {
+        var screens = UnityEngine.Object.FindObjectsByType(T("Plunderspell.UI.Screens.LairScreen"), UnityEngine.FindObjectsInactive.Include, UnityEngine.FindObjectsSortMode.None);
+        foreach (var screen in screens) screen.GetType().GetMethod("SetVisible").Invoke(screen, new object[] { true });
+        return "lair screens shown " + screens.Length;
     }
     case "where":
     {

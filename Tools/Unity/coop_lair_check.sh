@@ -89,6 +89,7 @@ client_pid=$!
 log "client started (pid $client_pid)"
 wait_for client "state LairRoom local" 60
 sleep 3
+cs_before="$(L client activeslot)"; log "client's own save before: $cs_before"
 
 # Arriving: each at their own spawn (the client is owner 2).
 near host /LairRoom/PlayerSpawns/Spawn1 0.6 "the host stands at Lair spawn 1"
@@ -192,6 +193,17 @@ print('expected debt', d1, 'purses', [p[0] - take[0], p[1] - take[1]], 'paid', t
 sys.exit(0 if ok else 1)" "$led0" "$led1" 2>&1 | while read -r line; do log "$line"; done
 [ "${PIPESTATUS[0]}" = 0 ] && r=ok || r=no
 check $r "each present wizard paid min(purse, half the debt left), the debt fell by the sum (then +50), and the Collector said so"
+# The client's Lair (#314): it must show the host's ledger exactly (debt, purses, paid, seats, the Collector's line), shown
+# but never saved: the client's own save slot, read from its PlayerPrefs through its eval (activeslot), must not change.
+sleep 2
+cled="$(L client ledger)"; log "client ledger: $cled"; log "host ledger:   $led1"
+[ "$cled" = "$led1" ] && r=ok || r=no
+check $r "the client's Lair shows the host's ledger exactly, Collector's line included"
+log "client: $(L client lairscreen)"; sleep 1
+L client shot "$(cygpath -m "$repo/$out/$label-client-ledger.png")" >/dev/null 2>&1 || true
+cs_after="$(L client activeslot)"; log "client's own save after: $cs_after"
+[ "$cs_before" = "$cs_after" ] && r=ok || r=no
+check $r "the client's own save slot is untouched ($cs_before)"
 s1_after="$(L host slot1)"; log "host: $s1_after"
 [ "$s1_before" = "$s1_after" ] && r=ok || r=no
 check $r "the owner's slot 1 is unchanged by the check ($s1_before)"

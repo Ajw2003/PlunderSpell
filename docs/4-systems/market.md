@@ -138,9 +138,12 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
 - **His line** ("The Collector takes 120 from I, 80 from II.") is `LairHubManager.CollectorLine`, shown in place of the "Debt grows"
   note on the Lair screen (`LairScreen.cs:398`) and logged. It is a screen line, not world-space: the company has already left
   the Lair when he speaks, so the screen shows it on coming home. A spoken or world line is not done.
-- **Clients:** a client's `LairHubManager` is its own local save; only the debt is replicated (`ShowHostCampaign`). A client
-  therefore cannot yet see its own purse, share or paid figure, nor the Collector's line. Needs the purses replicated (a SyncVar
-  per seat on `RaidDirector`); not done, wants its own issue.
+- **Clients:** a client's `LairHubManager` is its own local save, but its Lair screen shows the host's ledger (#314):
+  `RaidDirector._hostLedger`, one `SyncVar<string>` ("purses|paid|present|Collector line", `LairHubManager.HostLedger`), is
+  shown by `ShowHostLedger`, which raises the same events as the host and saves nothing (the share is derived from debt and
+  seats present). The host re-publishes on every purse or seat change. Checked twice in `coop_lair_check.sh`: after the
+  Collector collects the client's debt, purses, paid, seats and line equal the host's, and the client's own slot (read from its
+  PlayerPrefs, `activeslot`) is unchanged; capture `docs/generated/coop-lair-2026-10-07/run2-client-ledger.png`.
 - Checked 2026-10-07: `Tools/Unity/collector_solo_check.sh` (`docs/generated/collector-solo-2026-10-07/`, ledger captures before
   and after) and `coop_lair_check.sh` twice (`docs/generated/coop-lair-2026-10-07/collector-run2-*`, `collector-run3-*`): banking
   paid no debt; with purses 100 and the sale's coins and debt 550 (share 275) the Collector took 100 and 275, the debt fell to
