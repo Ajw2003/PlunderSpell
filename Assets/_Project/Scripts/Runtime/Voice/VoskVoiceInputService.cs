@@ -50,6 +50,41 @@ namespace Plunderspell.Voice
             EventManager.Instance?.Publish(new MicLevelChanged(rms));
         }
 
+        private bool _meterEnabled;
+
+        /// <summary>
+        /// Opens the microphone and publishes its loudness as <see cref="MicLevelChanged"/> without
+        /// recognising anything. The Settings screen turns this on while it is open, so the player can
+        /// test and tune the microphone away from a raid.
+        /// </summary>
+        public bool MeterEnabled
+        {
+            get => _meterEnabled;
+            set
+            {
+                if (_meterEnabled == value)
+                    return;
+                _meterEnabled = value;
+#if !HEADLESS
+                if (value)
+                {
+                    if (Microphone.devices == null || Microphone.devices.Length == 0
+                        || !OpenMicrophone(MicrophonePicker.Resolve()))
+                    {
+                        _meterEnabled = false;
+                        return;
+                    }
+                    EnsurePump();
+                    _lastSamplePosition = Microphone.GetPosition(_micDevice);
+                }
+                else if (!IsListening)
+                {
+                    SetCurrentRms(0f);
+                }
+#endif
+            }
+        }
+
         /// <summary>The microphone being listened on, or null when none is open.</summary>
         public string CurrentDevice { get; private set; }
 
@@ -263,7 +298,7 @@ namespace Plunderspell.Voice
         /// mid-cast (the next cast opens the new device; StopListening calls this afterwards).</summary>
         private void SwitchChatterMicrophone()
         {
-            if (!_chatterEnabled || IsListening)
+            if (!(_chatterEnabled || _meterEnabled) || IsListening)
                 return;
             string device = MicrophonePicker.Resolve();
             if (device == _micDevice && _micClip != null)
@@ -393,9 +428,10 @@ namespace Plunderspell.Voice
         private void ReadMicrophone(bool flush = false)
         {
             bool casting = IsListening;
-            if (!(casting || _chatterEnabled) || _micClip == null)
+            if (!(casting || _chatterEnabled || _meterEnabled) || _micClip == null)
                 return;
-            if (casting ? _recognizer == null : (_chatterRecognizer == null && !EnsureChatterRecognizer()))
+            bool recognising = casting || _chatterEnabled;
+            if (recognising && (casting ? _recognizer == null : (_chatterRecognizer == null && !EnsureChatterRecognizer())))
             {
                 // Chatter with the model still loading: skip ahead rather than replay old audio later.
                 _lastSamplePosition = Microphone.GetPosition(_micDevice);
@@ -429,8 +465,11 @@ namespace Plunderspell.Voice
             _lastSamplePosition = (_lastSamplePosition + count) % _micClip.samples;
 
             // Gain first, so recognition, loudness and the level meter all hear the same voice.
-            VoiceUtility.ApplyGain(buffer, count, casting ? _gain : _chatterGain);
+            float gain = casting ? _gain : _chatterEnabled ? _chatterGain : Plunderspell.Core.AudioInputSettings.MicGain;
+            VoiceUtility.ApplyGain(buffer, count, gain);
             SetCurrentRms(VoiceUtility.ComputeRms(buffer, count));
+            if (!casting && !_chatterEnabled)
+                return; // only metering: nothing to recognise
             if (casting)
                 LastPeakRms = Mathf.Max(LastPeakRms, CurrentRms);
             else

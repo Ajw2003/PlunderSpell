@@ -38,7 +38,12 @@ Assemblies: `Plunderspell.Raid` (loop, spawning), `Plunderspell.Guards` (the gar
   delegated to **`GuardBrain`**, which is pure.
 
 - **`RaidHudPresenter`** gathers the raid into a plain `RaidHudModel`; `RaidHudView` draws it with
-  IMGUI. What the player is *told* is logic and is tested; how it is drawn is not.
+  IMGUI. What the player is *told* is logic and is tested; how it is drawn is not. Since #303 the presenter has no
+  `Update`: it reads every source once on enable (`Refresh`, also what the public `Build()` does for tests) and then
+  reassembles the model only when a bus event says a value changed (phase, clock, alarm state and level, debt, banked
+  gold, haul, carried item, loot and door focus, ranged weapon, cast, local player, game state, mana, cast key, chant).
+  The view draws `presenter.Model` and reads no other system. The presenter leaves the bus when disabled
+  (`RaidHudEventTests`).
 
 ## How loot settles
 
@@ -148,7 +153,7 @@ through it, so there is one place this can be forgotten rather than five.
 ### The haul is visible while the raid runs
 
 `ExtractionZone` tracks `LootValue` in its trigger and publishes `HaulInZoneChanged(worth, pieces)` as
-loot enters and leaves. `RaidHudPresenter` reads `WorthInZone`/`PiecesInZone` into the model and the
+loot enters and leaves. `RaidHudPresenter` takes the worth and piece count from that event into the model and the
 view draws it beside the debt — the number the debt is measured against. An empty pad reads
 "bring loot to the pad" rather than "0 gold", because a zero looks like a broken counter.
 

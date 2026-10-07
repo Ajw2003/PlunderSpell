@@ -49,6 +49,7 @@ public class RangedWeapon : MonoBehaviour
 
         _isLoaded = false;
         _reloadStartTime = Time.time;
+        EventManager.Instance?.Publish(new RangedWeaponStatusChanged(this, false, 0f));
 
         SpawnProjectile(origin, direction);
         AlertNearbyListeners();
@@ -57,17 +58,13 @@ public class RangedWeapon : MonoBehaviour
 
     private void Update()
     {
-        if (!_isLoaded && ReloadProgress01 >= 1f)
-        {
-            _isLoaded = true;
-        }
-    }
+        if (_isLoaded)
+            return;
 
-    /// <summary>
-    /// Raised on the firing machine after a real shot: (weapon, where the shot left the muzzle, its
-    /// direction). Plunderspell.Net shows the same shot on every other machine with
-    /// <see cref="SpawnCosmeticShot"/>.
-    /// </summary>
+        if (ReloadProgress01 >= 1f)
+            _isLoaded = true;
+        EventManager.Instance?.Publish(new RangedWeaponStatusChanged(this, _isLoaded, ReloadProgress01));
+    }
 
     /// <summary>
     /// A copy of another machine's shot: the same projectile flying the same way, carrying no damage.

@@ -25,6 +25,19 @@ public readonly struct ItemImpactedRemotely : IEvent
     }
 }
 
+/// <summary>A ranged weapon's readiness changed: it fired (not loaded), it is reloading (progress 0..1, each frame),
+/// or it is ready again (#303).</summary>
+public readonly struct RangedWeaponStatusChanged : IEvent
+{
+    public readonly RangedWeapon Weapon;
+    public readonly bool Loaded;
+    public readonly float ReloadProgress;
+    public RangedWeaponStatusChanged(RangedWeapon weapon, bool loaded, float reloadProgress)
+    {
+        Weapon = weapon; Loaded = loaded; ReloadProgress = reloadProgress;
+    }
+}
+
 /// <summary>A ranged weapon fired a shot from <see cref="SpawnPoint"/> along <see cref="Direction"/>.</summary>
 public readonly struct RangedWeaponFired : IEvent
 {

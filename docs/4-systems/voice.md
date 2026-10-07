@@ -75,8 +75,9 @@ every phrase, including a fizzle (which casts nothing, so never reaches `CastRes
 HUD captions it for 3.5 s: green `"igneous" -> IGNIS (Normal)` for a clean cast, orange
 `"a nice" -> AGNIS - MISFIRE`, grey `"potato" - fizzled, not a spell`. The quoted text is exactly
 what the recogniser output, so a mis-recognition reads differently from a real mispronunciation.
-While V is held the same spot shows the open microphone and a live level meter with the
-whisper/shout marks.
+While V is held the same spot shows the open microphone's name. The live level meter with the
+whisper/shout marks moved to Settings (#303): `VoskVoiceInputService.MeterEnabled`, which the Settings screen switches
+on while it is open, opens the microphone and publishes `MicLevelChanged` without recognising anything.
 
 ### Microphone gain
 
@@ -128,7 +129,7 @@ tunables: `docs/plans/guards-hear-chatter.md`.
 - **A machine with no microphone, or no model installed, silently downgrades to keyboard-only
   casting**, even in a real Windows build. The console says so, the player's screen does not.
 - **The loudness thresholds (`Whisper` < 0.1, `Shout` > 0.4 RMS) were set without a real
-  microphone.** Headset gain varies a lot, which is what the Settings gain slider is for: hold V
-  and watch the level meter against the whisper/shout marks while adjusting it.
+  microphone.** Headset gain varies a lot, which is what the Settings gain slider is for: open
+  Settings and watch the level meter there against the whisper/shout marks while adjusting it.
 - **Unity's `Microphone` device list includes virtual devices** (e.g. "Virtual Desktop Audio").
   The service uses the system default (`null`), not `devices[0]`, for exactly this reason.
