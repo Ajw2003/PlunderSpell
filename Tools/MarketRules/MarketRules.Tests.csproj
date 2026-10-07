@@ -5,6 +5,7 @@
   <ItemGroup>
     <Compile Include="..\..\Assets\_Project\Scripts\Runtime\Market\*.cs" />
     <Compile Include="..\..\Assets\_Project\Scripts\Tests\Runtime\HaggleTests.cs" />
+    <Compile Include="..\..\Assets\_Project\Scripts\Tests\Runtime\CollectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />

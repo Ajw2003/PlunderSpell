@@ -4,7 +4,8 @@
     "references": [
         "Plunderspell.Foundation",
         "Plunderspell.Extraction",
-        "Plunderspell.Inventory"
+        "Plunderspell.Inventory",
+        "Plunderspell.Market"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

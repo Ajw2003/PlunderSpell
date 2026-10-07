@@ -1,5 +1,6 @@
 using Code.Scripts.EventSystems;
 using Plunderspell.Inventory;
+using Plunderspell.Market;
 using UnityEngine;
 
 namespace Plunderspell.Lair
@@ -18,6 +19,7 @@ namespace Plunderspell.Lair
         private const string KeyTotalDebt = "TotalDebt";
         private const string KeyAccumulatedGold = "AccumulatedGold";
         private const string KeyPurse = "Purse";
+        private const string KeyPaidLast = "PaidLast";
 
         // Defaults.
         private const float DefaultDebt = 500f;
@@ -35,6 +37,8 @@ namespace Plunderspell.Lair
         public const int Seats = 4;
 
         private readonly int[] _purses = new int[Seats];
+        private readonly int[] _paidLast = new int[Seats];
+        private readonly bool[] _present = { true, false, false, false };
 
         /// <summary>The coins banked into <paramref name="seat"/>'s strongbox (0 to 3). Saved per slot.</summary>
         public int Purse(int seat) => _purses[seat];
@@ -54,7 +58,9 @@ namespace Plunderspell.Lair
                 _purses[seat] = PeekPurse(SaveSlots.Active, seat);
                 if (_purses[seat] != old)
                     EventManager.Instance?.Publish(new PurseChanged(seat, _purses[seat]));
+                _paidLast[seat] = PeekPaidLast(SaveSlots.Active, seat);
             }
+            CollectorLine = string.Empty;
             PublishLedger(float.NaN, float.NaN);
             EventManager.Instance?.Publish(new AgeChosen(SelectedEra));
         }
@@ -85,9 +91,15 @@ namespace Plunderspell.Lair
             PlayerPrefs.SetFloat(SaveSlots.Key(KeyTotalDebt, slot), TotalDebt);
             PlayerPrefs.SetFloat(SaveSlots.Key(KeyAccumulatedGold, slot), AccumulatedGold);
             for (int seat = 0; seat < Seats; seat++)
+            {
                 PlayerPrefs.SetInt(SaveSlots.Key(KeyPurse + seat, slot), _purses[seat]);
+                PlayerPrefs.SetInt(SaveSlots.Key(KeyPaidLast + seat, slot), _paidLast[seat]);
+            }
             PlayerPrefs.Save();
         }
+
+        /// <summary>What one seat paid at the last collection in <paramref name="slot"/>, without loading it.</summary>
+        public static int PeekPaidLast(int slot, int seat) => PlayerPrefs.GetInt(SaveSlots.Key(KeyPaidLast + seat, slot), 0);
 
         /// <summary>The coins in one seat's purse in <paramref name="slot"/>, without loading it.</summary>
         public static int PeekPurse(int slot, int seat) => PlayerPrefs.GetInt(SaveSlots.Key(KeyPurse + seat, slot), 0);
@@ -109,7 +121,10 @@ namespace Plunderspell.Lair
             PlayerPrefs.DeleteKey(SaveSlots.Key(KeyTotalDebt, slot));
             PlayerPrefs.DeleteKey(SaveSlots.Key(KeyAccumulatedGold, slot));
             for (int seat = 0; seat < Seats; seat++)
+            {
                 PlayerPrefs.DeleteKey(SaveSlots.Key(KeyPurse + seat, slot));
+                PlayerPrefs.DeleteKey(SaveSlots.Key(KeyPaidLast + seat, slot));
+            }
             HaulPileSave.Clear(slot);
             PlayerPrefs.Save();
         }
@@ -171,8 +186,9 @@ namespace Plunderspell.Lair
         }
 
         /// <summary>
-        /// A pouch dropped in <paramref name="seat"/>'s strongbox: its coins go into that purse. Until the debt splits in
-        /// equal shares (the next step of #306) every purse also pays down the one shared debt, exactly as <see cref="BankSale"/> does.
+        /// A pouch dropped in <paramref name="seat"/>'s strongbox: its coins go into that purse and nothing else. The debt is
+        /// paid only when the Collector calls (<see cref="Collect"/>). A friend covers another's share by banking into
+        /// that friend's strongbox.
         /// </summary>
         public void BankPouch(int seat, int coins)
         {
@@ -180,8 +196,73 @@ namespace Plunderspell.Lair
                 return;
             _purses[seat] += coins;
             EventManager.Instance?.Publish(new PurseChanged(seat, _purses[seat]));
-            BankSale(coins); // saves
+            Save();
         }
+
+        /// <summary>How much each seat paid at the last collection. Saved per slot.</summary>
+        public int PaidLast(int seat) => _paidLast[seat];
+
+        /// <summary>Whether a wizard sits at <paramref name="seat"/> tonight (set by the host; seat 0 alone when solo).</summary>
+        public bool IsPresent(int seat) => _present[seat];
+
+        /// <summary>One wizard's share of the debt left if the Collector called now.</summary>
+        public int ShareDue()
+        {
+            int here = 0;
+            foreach (bool seated in _present)
+                here += seated ? 1 : 0;
+            return CollectorRules.Share(TotalDebt, here);
+        }
+
+        /// <summary>The Collector's last line ("The Collector takes 120 from I, 80 from II."), or empty before he has called.</summary>
+        public string CollectorLine { get; private set; } = string.Empty;
+
+        /// <summary>Marks which seats have a wizard (a connected player). Published as <see cref="PresentChanged"/> when it differs.</summary>
+        public void SetPresent(bool[] present)
+        {
+            bool changed = false;
+            for (int seat = 0; seat < Seats; seat++)
+            {
+                changed |= _present[seat] != present[seat];
+                _present[seat] = present[seat];
+            }
+            if (changed)
+                EventManager.Instance?.Publish(new PresentChanged());
+        }
+
+        /// <summary>
+        /// The Collector calls, once per setting out, on the server or solo: each wizard present owes an equal share of the debt
+        /// left, and he takes the lesser of that share and their purse (<see cref="CollectorRules"/>). The debt is paid by the sum.
+        /// </summary>
+        public void Collect()
+        {
+            if (TotalDebt <= 0f)
+                return;
+            int[] taken = CollectorRules.Take(TotalDebt, _purses, _present);
+            float debtBefore = TotalDebt;
+            var parts = new System.Collections.Generic.List<string>();
+            int sum = 0;
+            for (int seat = 0; seat < Seats; seat++)
+            {
+                _paidLast[seat] = taken[seat];
+                _purses[seat] -= taken[seat];
+                sum += taken[seat];
+                EventManager.Instance?.Publish(new PurseChanged(seat, _purses[seat]));
+                EventManager.Instance?.Publish(new CollectorPaid(seat, taken[seat]));
+                if (taken[seat] > 0)
+                    parts.Add($"{taken[seat]} from {Numerals[seat]}");
+            }
+            TotalDebt = Mathf.Max(0f, TotalDebt - sum);
+            if (TotalDebt <= 0f)
+                Debug.Log("DEBT_CLEARED");
+            CollectorLine = parts.Count > 0 ? $"The Collector takes {string.Join(", ", parts)}." : "The Collector finds the purses empty.";
+            Debug.Log($"[Lair] {CollectorLine} Debt {debtBefore} -> {TotalDebt}.");
+            EventManager.Instance?.Publish(new CollectorSpoke(CollectorLine));
+            PublishLedger(debtBefore, AccumulatedGold);
+            Save();
+        }
+
+        private static readonly string[] Numerals = { "I", "II", "III", "IV" };
 
         /// <summary>
         /// Called at raid start. While any debt remains it ticks up by

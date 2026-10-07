@@ -27,6 +27,24 @@ namespace Plunderspell.Lair
         public PurseChanged(int seat, int coins) { Seat = seat; Coins = coins; }
     }
 
+    /// <summary>What a seat paid the Collector at the last collection changed (#313).</summary>
+    public readonly struct CollectorPaid : IEvent
+    {
+        public readonly int Seat;
+        public readonly int Coins;
+        public CollectorPaid(int seat, int coins) { Seat = seat; Coins = coins; }
+    }
+
+    /// <summary>The Collector said his line after collecting.</summary>
+    public readonly struct CollectorSpoke : IEvent
+    {
+        public readonly string Line;
+        public CollectorSpoke(string line) { Line = line; }
+    }
+
+    /// <summary>Which seats have a wizard changed.</summary>
+    public readonly struct PresentChanged : IEvent { }
+
     /// <summary>A different save slot was made active and loaded (the Lair's floor pile follows it).</summary>
     public readonly struct SaveSlotLoaded : IEvent
     {

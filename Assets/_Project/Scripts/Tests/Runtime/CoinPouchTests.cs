@@ -77,10 +77,45 @@ namespace Plunderspell.Tests
 
             Assert.AreEqual(120, lair.Purse(1));
             Assert.AreEqual(0, lair.Purse(0));
-            Assert.AreEqual(380f, lair.TotalDebt, 0.01f, "Until the debt splits, every purse pays the shared debt.");
+            Assert.AreEqual(500f, lair.TotalDebt, 0.01f, "Banking fills the purse; only the Collector pays the debt.");
             Assert.AreEqual(120, LairHubManager.PeekPurse(SaveSlots.TestSlot, 1), "The purse is saved.");
             Object.DestroyImmediate(box.gameObject);
             Object.DestroyImmediate(pouch.gameObject);
+        }
+
+        [Test]
+        public void Test_TheCollectorTakesEachPresentWizardsShareOrTheirPurse()
+        {
+            var lair = _lair.GetComponent<LairHubManager>();
+            lair.BankPouch(0, 400);
+            lair.BankPouch(1, 100);
+            lair.BankPouch(2, 900); // seat 3 is not present: left alone
+            lair.SetPresent(new[] { true, true, false, false });
+
+            lair.Collect();
+
+            Assert.AreEqual(150, lair.Purse(0), "I owed half of 500 (250) and had 400.");
+            Assert.AreEqual(0, lair.Purse(1), "II had 100, less than the 250 share: all of it goes.");
+            Assert.AreEqual(900, lair.Purse(2));
+            Assert.AreEqual(250, lair.PaidLast(0));
+            Assert.AreEqual(100, lair.PaidLast(1));
+            Assert.AreEqual(150f, lair.TotalDebt, 0.01f, "The debt fell by the sum, 350.");
+            Assert.AreEqual("The Collector takes 250 from I, 100 from II.", lair.CollectorLine);
+            Assert.AreEqual(250, LairHubManager.PeekPaidLast(SaveSlots.TestSlot, 0), "Paid last collection is saved.");
+        }
+
+        [Test]
+        public void Test_AFriendCoversAShareAndTheDebtReachesZero()
+        {
+            var lair = _lair.GetComponent<LairHubManager>();
+            lair.SetPresent(new[] { true, true, false, false });
+            lair.BankPouch(0, 250);
+            lair.BankPouch(1, 250); // I put II's share in II's strongbox
+
+            lair.Collect();
+
+            Assert.AreEqual(0f, lair.TotalDebt, 0.01f);
+            Assert.AreEqual(0, lair.Purse(0) + lair.Purse(1));
         }
     }
 }

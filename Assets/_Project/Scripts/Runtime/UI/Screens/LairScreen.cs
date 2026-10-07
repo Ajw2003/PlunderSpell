@@ -52,7 +52,6 @@ namespace Plunderspell.UI.Screens
         private const int MaxFriendsShown = 12;
 
         private Text _debt;
-        private Text _gold;
         private Text _lastRaid;
         private Text _debtNote;
         private Text _session;
@@ -100,14 +99,37 @@ namespace Plunderspell.UI.Screens
 
             float unit = (1920f - Side * 2f - 2f - 2f) / 4f;
             RectTransform owed = BuildLedgerCell(frame.rectTransform, "OwedCell", 1f, unit, "Owed");
-            RectTransform banked = BuildLedgerCell(frame.rectTransform, "BankedCell", 1f + unit + 1f, unit, "Banked");
-            RectTransform last = BuildLedgerCell(frame.rectTransform, "LastRaidCell", 1f + (unit + 1f) * 2f, unit * 2f, "Last raid");
+            RectTransform purses = BuildLedgerCell(frame.rectTransform, "PursesCell", 1f + unit + 1f, unit * 2f, "Purses");
+            RectTransform last = BuildLedgerCell(frame.rectTransform, "LastRaidCell", 1f + (unit + 1f) * 3f, unit, "Last raid");
 
             AddFigure(owed, "DebtLabel", unit, out _debt);
-            AddFigure(banked, "GoldLabel", unit, out _gold);
 
-            _lastRaid = UIFactory.CreateText(last, "LastRaidLabel", string.Empty, 25, UITheme.TextDim, TextAnchor.UpperLeft, UIFonts.Body);
-            UIFactory.PlaceTopLeft(_lastRaid.rectTransform, 30f, 60f, unit * 2f - 60f, 80f);
+            // The Collector's columns, one per seat, I to IV (#313): purse, share due tonight, paid at the last collection.
+            float column = (unit * 2f - 60f) / Seats;
+            for (int seat = 0; seat < Seats; seat++)
+            {
+                _purseColumns[seat] = UIFactory.CreateText(purses, $"Seat{seat + 1}", string.Empty, 21, UITheme.TextDim, TextAnchor.UpperLeft, UIFonts.Mono);
+                UIFactory.PlaceTopLeft(_purseColumns[seat].rectTransform, 30f + column * seat, 58f, column - 8f, 96f);
+            }
+
+            _lastRaid = UIFactory.CreateText(last, "LastRaidLabel", string.Empty, 22, UITheme.TextDim, TextAnchor.UpperLeft, UIFonts.Body);
+            UIFactory.PlaceTopLeft(_lastRaid.rectTransform, 30f, 60f, unit - 60f, 90f);
+        }
+
+        private const int Seats = LairHubManager.Seats;
+        private readonly Text[] _purseColumns = new Text[Seats];
+        private static readonly string[] Numerals = { "I", "II", "III", "IV" };
+
+        // One column per seat that has a purse, owes tonight or paid last time.
+        private void ShowPurses()
+        {
+            string value = ColorUtility.ToHtmlStringRGB(UITheme.Value);
+            for (int seat = 0; seat < Seats; seat++)
+            {
+                bool shown = _lair.IsPresent(seat) || _lair.Purse(seat) > 0 || _lair.PaidLast(seat) > 0;
+                _purseColumns[seat].text = !shown ? string.Empty
+                    : $"<color=#{value}>{Numerals[seat]}</color>\nPurse {_lair.Purse(seat):N0}\nOwes  {(_lair.IsPresent(seat) ? _lair.ShareDue() : 0):N0}\nPaid  {_lair.PaidLast(seat):N0}";
+            }
         }
 
         private static RectTransform BuildLedgerCell(RectTransform frame, string name, float x, float width, string eyebrowText)
@@ -239,6 +261,9 @@ namespace Plunderspell.UI.Screens
         {
             EventManager.Instance?.UnsubscribeFromAllEvents(this);
             EventManager.Instance?.Subscribe(this, (CoopChanged e) => Refresh());
+            EventManager.Instance?.Subscribe(this, (PurseChanged e) => Refresh());
+            EventManager.Instance?.Subscribe(this, (PresentChanged e) => Refresh());
+            EventManager.Instance?.Subscribe(this, (CollectorSpoke e) => Refresh());
             Refresh();
         }
 
@@ -360,7 +385,6 @@ namespace Plunderspell.UI.Screens
             if (_lair == null)
             {
                 _debt.text = "No lair in this scene.";
-                _gold.text = string.Empty;
                 _lastRaid.text = string.Empty;
                 _debtNote.text = string.Empty;
                 _summary.text = string.Empty;
@@ -369,8 +393,10 @@ namespace Plunderspell.UI.Screens
 
             LairState state = _lair.GetLairState();
             _debt.text = state.TotalDebt.ToString("N0");
-            _gold.text = state.AccumulatedGold.ToString("N0");
-            _debtNote.text = UITheme.Tracked($"Debt grows by {_lair.DebtIncreasePerSession:N0} each raid it stands", UITheme.Label);
+            ShowPurses();
+            // The Collector's last line takes the note's place until the next collection clears it.
+            _debtNote.text = _lair.CollectorLine.Length > 0 ? _lair.CollectorLine
+                : UITheme.Tracked($"Debt grows by {_lair.DebtIncreasePerSession:N0} each raid it stands", UITheme.Label);
 
             // The coop session does not say how many are in the Lair, so the summary names the Age only.
             _summary.text = UITheme.Tracked(Label(state.SelectedEra), UITheme.Label);

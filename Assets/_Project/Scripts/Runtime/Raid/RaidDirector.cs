@@ -165,6 +165,31 @@ namespace Plunderspell.Raid
         {
             if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(Seed))
                 BuildCastle(Seed);
+
+            // The Lair's ledger shows tonight's shares, so the host keeps the seats present up to date between raids.
+            if ((!isSpawned || isServer) && _phase.value == RaidPhase.InLair && Time.unscaledTime >= _nextSeatCheck)
+            {
+                _nextSeatCheck = Time.unscaledTime + 0.5f;
+                _lair?.SetPresent(SeatsPresent());
+            }
+        }
+
+        private float _nextSeatCheck;
+
+        /// <summary>The seats with a wizard: owner 1 is seat 0 and so on; a lone offline player is seat 0.</summary>
+        private static bool[] SeatsPresent()
+        {
+            var present = new bool[LairHubManager.Seats];
+            foreach (StateMachine.PlayerStateMachine player in FindObjectsByType<StateMachine.PlayerStateMachine>(FindObjectsSortMode.None))
+            {
+                int seat = player.TryGetComponent(out NetworkIdentity identity) && identity.owner.HasValue
+                    ? Mathf.Max(0, (int)(ulong)identity.owner.Value.id - 1)
+                    : 0;
+                present[Mathf.Min(seat, LairHubManager.Seats - 1)] = true;
+            }
+            if (!System.Array.Exists(present, seated => seated))
+                present[0] = true; // solo with the body not found yet: seat 1 alone
+            return present;
         }
 
         private void OnDestroy()
@@ -197,6 +222,13 @@ namespace Plunderspell.Raid
 
             _layout.value = PackLayout(Seed, era);
             _lair?.SelectEra(era);
+
+            // The Collector calls first, on the debt as it stands (equal shares, #313); then the debt grows.
+            if (_lair != null)
+            {
+                _lair.SetPresent(SeatsPresent());
+                _lair.Collect();
+            }
 
             // Debt grows every time you set out, which is what puts a clock on the whole campaign.
             _lair?.OnNewSession();
