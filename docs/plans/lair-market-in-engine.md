@@ -14,6 +14,7 @@
 | Blender reference layouts of each room | `Tools/AssetPipeline/render_lair_scene.py`, `render_market_scene.py`, README "Lair" and "Market" | done; placements are the reference for the Unity scenes |
 | Lair bookkeeping that already existed | `Runtime/Lair/LairHubManager.cs`, `LairState.cs` | debt, banked gold, chosen Age, saved per slot; **debt is one shared number, not per wizard** |
 | The Lair room prefab (step 2, #308) | `Editor/LairRoomForge.cs` → `Prefabs/Lair/LairRoom.prefab` | built 2026-10-06; render from the Blender camera `docs/art/models/lair/lair-unity.png` (`Tools/Unity/eval/lair_room_capture.cs`) matches `lair-assembled.png`. Axis map is `(-X, Z, -Y)`, not the README's castle rule. No portal glow sheet yet |
+| Getting there and back (step 3, #309) | `GameState.LairRoom`, `Runtime/Raid/LairRoomSpawner.cs`, `LairPortalTrigger.cs`, `LairLedgerHandle.cs` | done 2026-10-06: sessions start in the room, the portal sets out, extraction returns to it, E at the ledger opens the Lair screen. Solo checked in Play mode; co-op not checked. See `docs/4-systems/raid.md` |
 | Lair screen that already existed | `Runtime/UI/Screens/LairScreen.cs` | a flat menu screen; this is what the room replaces |
 
 ## Left to do, in order

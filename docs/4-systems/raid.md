@@ -168,6 +168,22 @@ and **both are deleted with it**:
   tallies. It exists so the seven test files still holding `LootPickup` keep asserting something
   during the transition rather than being rewritten twice.
 
+## The Lair room (2026-10-06, #309)
+
+Sessions start, and extraction/death returns, in the walkable Lair room, not the flat screen.
+
+- `GameState.LairRoom` (`GameState.cs`): cursor captured, input accepted, Lair music, no screen, RaidHud hidden.
+  `GameState.Lair` still means "the Lair screen is open" (cursor free).
+- Entered from Play Solo (`MainMenuScreen.cs:198`), hosting/joining (`CoopSession.cs`), a resolved raid
+  (`RaidBootstrapper.cs:87`) and the game-over button (`GameOverScreen.cs:89`).
+- `LairRoomSpawner.cs:39` stands the local player at `PlayerSpawns/Spawn{owner}` (retried in `Update` until the body exists).
+- `LairPortalTrigger.cs:16`: the local player walking in while in LairRoom, host or solo, sets `Playing`.
+- `LairLedgerHandle.cs:10` (an `IInteractable`, which `LootInteractor` falls back to) opens the Lair screen on E. Esc in
+  LairRoom does the same (`GameFlowInput.cs`); the Lair screen's "Back to the Room" returns.
+- The instance sits at (1000, 0, 0) in `RaidScene`, clear of the castle (curtain wall about 45 m round the origin).
+  Placed by `Tools/Plunderspell/Place Lair Room In Raid Scene` (`LairRoomForge.cs`).
+- Evidence: `docs/generated/lair-room-2026-10-06/`.
+
 ## Guards that can actually hurt you
 
 `CastleGuard` could see, hear, shout and chase, but had no attack of any kind — it would run at a
