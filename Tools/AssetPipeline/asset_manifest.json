@@ -636,6 +636,96 @@
       "preview": "9d7f8b37efc23520:23a9d68e53fd",
       "tris": 472
     },
+    "MarketAntiquarianCabinet": {
+      "budget": 1400,
+      "content": "8a6f47e4e4432562",
+      "preview": "8a6f47e4e4432562:23a9d68e53fd",
+      "tris": 838
+    },
+    "MarketAnvil": {
+      "budget": 180,
+      "content": "c626f9e91e8d7353",
+      "preview": "c626f9e91e8d7353:23a9d68e53fd",
+      "tris": 112
+    },
+    "MarketCoin": {
+      "budget": 100,
+      "content": "1a1a266cf06c86bf",
+      "preview": "1a1a266cf06c86bf:23a9d68e53fd",
+      "tris": 64
+    },
+    "MarketCoinStack": {
+      "budget": 450,
+      "content": "cb0a7ad2e244deaf",
+      "preview": "cb0a7ad2e244deaf:23a9d68e53fd",
+      "tris": 288
+    },
+    "MarketCounter": {
+      "budget": 260,
+      "content": "64f1eaad59275f5c",
+      "preview": "64f1eaad59275f5c:23a9d68e53fd",
+      "tris": 168
+    },
+    "MarketFenceCart": {
+      "budget": 1000,
+      "content": "136a78353fdcfaec",
+      "preview": "136a78353fdcfaec:23a9d68e53fd",
+      "tris": 676
+    },
+    "MarketGoldsmithStall": {
+      "budget": 1000,
+      "content": "7eb2470ae2ad4c0d",
+      "preview": "7eb2470ae2ad4c0d:23a9d68e53fd",
+      "tris": 600
+    },
+    "MarketLantern": {
+      "budget": 300,
+      "content": "a3246a1e1fe1dcd5",
+      "preview": "a3246a1e1fe1dcd5:23a9d68e53fd",
+      "tris": 200
+    },
+    "MarketPardonerBooth": {
+      "budget": 1000,
+      "content": "3f4c590ef702d5ac",
+      "preview": "3f4c590ef702d5ac:23a9d68e53fd",
+      "tris": 484
+    },
+    "MarketPouch": {
+      "budget": 300,
+      "content": "e44d2ecc2f7e3678",
+      "preview": "e44d2ecc2f7e3678:23a9d68e53fd",
+      "tris": 212
+    },
+    "MarketScalesBase": {
+      "budget": 300,
+      "content": "f5e3ae4fbd5c23a2",
+      "preview": "f5e3ae4fbd5c23a2:23a9d68e53fd",
+      "tris": 164
+    },
+    "MarketScalesBeam": {
+      "budget": 200,
+      "content": "0bd8c42014b00a21",
+      "preview": "0bd8c42014b00a21:23a9d68e53fd",
+      "tris": 100
+    },
+    "MarketScalesPan": {
+      "budget": 300,
+      "content": "32744f06425eb722",
+      "preview": "32744f06425eb722:23a9d68e53fd",
+      "tris": 204
+    },
+    "MarketSlateBoard": {
+      "budget": 300,
+      "content": "f52cb4d846f1bcdb",
+      "preview": "f52cb4d846f1bcdb:23a9d68e53fd",
+      "tris": 204
+    },
+    "MarketYard": {
+      "budget": 4200,
+      "content": "56f8a758b039293d",
+      "preview": "56f8a758b039293d:23a9d68e53fd",
+      "tris": 2756
+    },
     "Matchlock": {
       "budget": 650,
       "content": "31c3023179b83c4d",

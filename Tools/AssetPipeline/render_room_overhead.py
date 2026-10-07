@@ -78,6 +78,9 @@ def render_overhead(spec):
     if lair:   # ~16 x 12 m outside: bigger than a castle cell
         cam.location = (0.0, -4.5, 15.5)
         _aim(cam, (0.0, 0.3, 0.0))
+    if spec["subdir"] == "Market":   # the open-air 20 x 20 m yard: no roof to cut
+        cam.location = (0.0, -12.0, 27.0)
+        _aim(cam, (0.0, 0.5, 0.0))
     bpy.context.scene.camera = cam
 
     sun = bpy.data.lights.new("Sun", type="SUN")
@@ -87,7 +90,7 @@ def render_overhead(spec):
     bpy.context.collection.objects.link(sun_obj)
     sun_obj.rotation_euler = (math.radians(38), math.radians(-18), math.radians(25))
     fill = bpy.data.lights.new("Fill", type="AREA")
-    fill.energy = 2600
+    fill.energy = 2600 if spec["subdir"] != "Market" else 9000
     fill.size = 14
     fill.color = pal.hex_to_rgb01(pal.PIGMENTS["vellum"])
     fill_obj = bpy.data.objects.new("Fill", fill)
@@ -115,7 +118,7 @@ def main():
         print("usage: blender -b -P render_room_overhead.py -- <KeyOrPrefix> [...]")
         sys.exit(2)
     specs = [s for s in asset_specs.ALL_SPECS
-             if s["subdir"].startswith(("Castle", "Lair")) and asset_specs.key_matches(s["key"], ",".join(argv))]
+             if s["subdir"].startswith(("Castle", "Lair", "Market")) and asset_specs.key_matches(s["key"], ",".join(argv))]
     if not specs:
         print(f"ERROR: no castle module matches {argv}")
         sys.exit(1)

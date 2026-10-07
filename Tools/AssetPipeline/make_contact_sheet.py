@@ -16,6 +16,7 @@ import asset_specs  # noqa: E402
 
 PREVIEWS_DIR = os.path.join(os.path.dirname(__file__), "previews")
 LAIR_DOCS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "docs", "art", "models", "lair")
+MARKET_DOCS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "docs", "art", "models", "market")
 THUMB = 260
 PAD = 14
 LABEL_H = 26
@@ -29,7 +30,10 @@ def main():
     # preview is rendered for them, so they stay off every sheet.
     # The Lair's props have a review sheet of their own, in docs/art/models/lair/.
     write_sheet([s["key"] for s in asset_specs.LAIR_SPECS], "lair-review.png", out_dir=LAIR_DOCS_DIR)
-    era_keys = {spec["key"] for spec in asset_specs.ERA_CASTLE_SPECS} | {spec["key"] for spec in asset_specs.LAIR_SPECS}
+    # ...and so do the Market's, in docs/art/models/market/.
+    write_sheet([s["key"] for s in asset_specs.MARKET_SPECS], "market-review.png", out_dir=MARKET_DOCS_DIR)
+    era_keys = ({spec["key"] for spec in asset_specs.ERA_CASTLE_SPECS} | {spec["key"] for spec in asset_specs.LAIR_SPECS}
+                | {spec["key"] for spec in asset_specs.MARKET_SPECS})
     write_sheet([s["key"] for s in asset_specs.ALL_SPECS if s["key"] not in era_keys and "DoorPlug" not in s["key"]],
                 "_contact_sheet.png")
     for era in dict.fromkeys(s["era"] for s in asset_specs.ERA_CASTLE_SPECS):
