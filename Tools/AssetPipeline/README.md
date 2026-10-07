@@ -227,7 +227,9 @@ the room, inside the recess; ledger table (-0.8, -1.0, 0.30); ledger on it at +0
 strongboxes at table x +/-0.35 and +/-1.05, y 0.62 m in front of the table's centre line;
 candle on the table at x +1.0; dial stand (2.2, -0.2, 0.30); weapon rack (-4.2, 4.7, 0.30)
 against the north wall; hearth light at (3.5, 4.35, 1.1). Nothing is on the floor in front of the
-portal arch. To convert to Unity: `Unity(X, Y, Z) = Blender(X, Z, -Y)` (see above).
+portal arch. To convert to Unity: `Unity(X, Y, Z) = Blender(-X, Z, -Y)`. **X flips** for the Lair, against the
+rule above: measured 2026-10-06 on the imported cellar, whose hearth (Blender x +3.5) lands at Unity x -3.5, and a
+turn about Blender Z is the opposite turn about Unity Y. `LairRoomForge.ToUnity` / `ToUnityRotation` apply it.
 
 **Rebuild and review.**
 

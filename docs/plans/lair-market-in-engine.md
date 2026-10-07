@@ -9,10 +9,11 @@
 |---|---|---|
 | The design, approved with every proposed answer | `docs/plans/diegetic-ui-lair-market.md` (#285) | done |
 | Concept art: Lair, Market, one haggle | `docs/art/concept/lair/` | done |
-| Lair models: cellar, portal arch, ledger table, ledger, strongbox, century dial (stand + 4 turning rings), weapon rack, candle | `Assets/_Project/Art/Models/Lair/` (#288) | built and validated in Blender; never imported into Unity |
+| Lair models: cellar, portal arch, ledger table, ledger, strongbox, century dial (stand + 4 turning rings), weapon rack, candle | `Assets/_Project/Art/Models/Lair/` (#288) | built and validated in Blender; `.meta` files committed; import checked 2026-10-06 (scale in metres, no missing materials) |
 | Market models: yard with well, fence cart, goldsmith stall, anvil, pardoner booth, antiquarian cabinet, counter, slate board, scales (base, tipping beam, pan), lantern, coin, coin stack, pouch | `Assets/_Project/Art/Models/Market/` (#293) | built and validated in Blender; never imported into Unity |
 | Blender reference layouts of each room | `Tools/AssetPipeline/render_lair_scene.py`, `render_market_scene.py`, README "Lair" and "Market" | done; placements are the reference for the Unity scenes |
 | Lair bookkeeping that already existed | `Runtime/Lair/LairHubManager.cs`, `LairState.cs` | debt, banked gold, chosen Age, saved per slot; **debt is one shared number, not per wizard** |
+| The Lair room prefab (step 2, #308) | `Editor/LairRoomForge.cs` → `Prefabs/Lair/LairRoom.prefab` | built 2026-10-06; render from the Blender camera `docs/art/models/lair/lair-unity.png` (`Tools/Unity/eval/lair_room_capture.cs`) matches `lair-assembled.png`. Axis map is `(-X, Z, -Y)`, not the README's castle rule. No portal glow sheet yet |
 | Lair screen that already existed | `Runtime/UI/Screens/LairScreen.cs` | a flat menu screen; this is what the room replaces |
 
 ## Left to do, in order
