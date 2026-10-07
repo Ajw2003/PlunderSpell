@@ -29,6 +29,13 @@ paid for everywhere — keep it small.
   `RaidDirector`, `ExtractionZone`, `RaidContext`) publish with `EventManager.Instance?.Publish`, so with no bus
   (an Edit Mode test that never made one) nothing is delivered; `TestEventBus.Create()` makes one. Events carry
   the new values, but a view that needs more reads the source (`GameServices.PlayerStats`, `GameServices.Coop`).
+- **Combat, spell, item, loot and voice events (#301).** Also bus events: `DamageDealt` (`Core/Interfaces/DamageEvents.cs`);
+  `PhraseResolved`, `CastResolved`, `GoldConjured`, `GoldScattered` (`Spells/SpellEvents.cs`); `ItemImpacted`,
+  `ItemImpactedRemotely`, `RangedWeaponFired` (`Items/ItemEvents.cs`); `LootRuined`, `LootFocusChanged`
+  (`Loot/LootEvents.cs`); `PhraseRecognized`, `ChatterHeard` (`Voice/VoiceEvents.cs`, published by the voice services on
+  the main thread, so `IVoiceInputService` no longer has an event); `ChatterResolved` (`Acoustics/AcousticsEvents.cs`).
+  Left as direct calls because the listener is part of the same object: `StatusEffectReceiver.StatusChanged` and
+  `GuardHealth.Died` (only their own guard listens). `PlayerStateMachine.SlamLanded` (the spell system listens) is not in #301's list and is still a C# event.
 - **`BaseStateMachine` / `IState` / `PlayerState`** — `Enter`/`Update`/`Exit`/`FixedUpdate`. States
   are plain C# objects constructed once in `Awake`, not MonoBehaviours, which keeps their logic
   testable without a scene.

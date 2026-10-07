@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Voice;
 using UnityEngine;
 
@@ -81,13 +82,12 @@ namespace Plunderspell.Acoustics
         {
             _voiceService = VoiceServiceLocator.Current;
             if (_voiceService != null)
-                _voiceService.OnPhraseRecognized += HandlePhraseRecognized;
+                EventManager.Instance?.Subscribe(this, (PhraseRecognized e) => HandlePhraseRecognized(e.Result));
         }
 
         private void OnDisable()
         {
-            if (_voiceService != null)
-                _voiceService.OnPhraseRecognized -= HandlePhraseRecognized;
+            EventManager.Instance?.Unsubscribe<PhraseRecognized>(this);
         }
 
         private void Update()

@@ -14,8 +14,6 @@ namespace Plunderspell.Voice
         public MockVoiceInputService Keyboard { get; }
 
         public bool IsListening => Speech.IsListening || Keyboard.IsListening;
-        public event Action<VoiceRecognitionResult> OnPhraseRecognized;
-        public event Action<ChatterReport> ChatterHeard;
 
         public bool ChatterEnabled
         {
@@ -27,9 +25,6 @@ namespace Plunderspell.Voice
         {
             Speech = speech;
             Keyboard = keyboard;
-            Speech.OnPhraseRecognized += Forward;
-            Keyboard.OnPhraseRecognized += Forward;
-            Speech.ChatterHeard += report => ChatterHeard?.Invoke(report);
         }
 
         public void StartListening()
@@ -46,7 +41,5 @@ namespace Plunderspell.Voice
 
         public void SetVocabulary(IReadOnlyDictionary<string, string> heardToCanonical) =>
             Speech.SetVocabulary(heardToCanonical);
-
-        private void Forward(VoiceRecognitionResult result) => OnPhraseRecognized?.Invoke(result);
     }
 }

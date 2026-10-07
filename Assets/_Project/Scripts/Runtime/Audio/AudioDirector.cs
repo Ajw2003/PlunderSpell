@@ -95,9 +95,9 @@ namespace Plunderspell.Audio
 
         private void OnEnable()
         {
-            SpellCastingSystem.PhraseResolved += OnPhraseResolved;
-            SpellCastingSystem.CastResolved += OnCastResolved;
-            Damage.Dealt += OnDamageDealt;
+            EventManager.Instance?.Subscribe(this, (PhraseResolved e) => OnPhraseResolved(e.Report));
+            EventManager.Instance?.Subscribe(this, (CastResolved e) => OnCastResolved(e.Report));
+            EventManager.Instance?.Subscribe(this, (DamageDealt e) => OnDamageDealt(e.Report));
             EventManager.Instance?.Subscribe(this, (PortalOpened e) => OnPortalOpened(e.Point));
             EventManager.Instance?.Subscribe(this, (HaulInZoneChanged e) => OnHaulChanged(e.Worth, e.Pieces));
             EventManager.Instance?.Subscribe(this, (ExtractionResolved e) => OnExtractionResolved(e.Worth, e.Saved));
@@ -105,10 +105,6 @@ namespace Plunderspell.Audio
 
         private void OnDisable()
         {
-            SpellCastingSystem.PhraseResolved -= OnPhraseResolved;
-            SpellCastingSystem.CastResolved -= OnCastResolved;
-            Damage.Dealt -= OnDamageDealt;
-
             if (Alarm != null)
                 Alarm.AlarmStateChanged -= OnAlarmStateChanged;
             EventManager.Instance?.UnsubscribeFromAllEvents(this);

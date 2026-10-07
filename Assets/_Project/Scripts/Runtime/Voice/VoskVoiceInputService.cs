@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,8 +26,6 @@ namespace Plunderspell.Voice
     public class VoskVoiceInputService : IVoiceInputService, IPhraseVocabularyTarget, IChatterSource
     {
         public bool IsListening { get; private set; }
-        public event Action<VoiceRecognitionResult> OnPhraseRecognized;
-        public event Action<ChatterReport> ChatterHeard;
 
         private bool _chatterEnabled;
 
@@ -314,8 +313,8 @@ namespace Plunderspell.Voice
                 return null;
 
             string recognised = null;
-            void Capture(VoiceRecognitionResult r) => recognised = r.NormalizedText;
-            OnPhraseRecognized += Capture;
+            var capture = new object();
+            EventManager.Instance?.Subscribe(capture, (PhraseRecognized e) => recognised = e.Result.NormalizedText);
             try
             {
                 _recognizer.AcceptWaveform(samples, samples.Length);
@@ -324,7 +323,7 @@ namespace Plunderspell.Voice
             }
             finally
             {
-                OnPhraseRecognized -= Capture;
+                EventManager.Instance?.UnsubscribeFromAllEvents(capture);
             }
             return recognised;
         }
@@ -509,7 +508,7 @@ namespace Plunderspell.Voice
                 return;
 
             Debug.Log($"[Chatter] Heard \"{heard}\" (rms={peak:0.00})");
-            ChatterHeard?.Invoke(new ChatterReport(heard, peak, VoiceUtility.ClassifyVolume(peak)));
+            EventManager.Instance?.Publish(new ChatterHeard(new ChatterReport(heard, peak, VoiceUtility.ClassifyVolume(peak))));
         }
 
         /// <summary>Recognises a finished recording as chatter would, without a microphone. Test seam for fixtures.</summary>
@@ -560,7 +559,7 @@ namespace Plunderspell.Voice
                 volume: VoiceUtility.ClassifyVolume(LastPeakRms));
 
             Debug.Log($"[Vosk] Heard \"{heard}\" -> {result}");
-            OnPhraseRecognized?.Invoke(result);
+            EventManager.Instance?.Publish(new PhraseRecognized(result));
         }
 
         private void EnsurePump()

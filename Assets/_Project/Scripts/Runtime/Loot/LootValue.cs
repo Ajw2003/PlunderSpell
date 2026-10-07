@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using UnityEngine;
 
 namespace Plunderspell.Loot
@@ -35,16 +36,13 @@ namespace Plunderspell.Loot
         public LootItem Item => m_item;
 
         /// <summary>Marks the piece ruined, dropping its worth to zero.</summary>
-        /// <summary>Raised the moment a piece is ruined: (the piece, the worth it just lost).</summary>
-        public static event System.Action<LootValue, float> Ruined;
-
         public void Ruin()
         {
             if (m_isRuined)
                 return;
             float lost = Worth;
             m_isRuined = true;
-            Ruined?.Invoke(this, lost);
+            EventManager.Instance?.Publish(new LootRuined(this, lost));
         }
 
         /// <summary>Editor/tooling seam: point this at an authored definition.</summary>

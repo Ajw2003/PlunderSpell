@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using Interfaces;
 using Plunderspell.Acoustics;
@@ -171,7 +172,7 @@ namespace Plunderspell.Spells
             EmitCastNoise(ctx);
 
             Vector3 where = ctx.Origin + ctx.Direction * 1.5f;
-            GoldConjured?.Invoke(SpellTuning.AurumVocoWorth * ctx.Power, where);
+            EventManager.Instance?.Publish(new GoldConjured(SpellTuning.AurumVocoWorth * ctx.Power, where));
             EmitEffectNoise(ctx, SpellTuning.AurumVocoNoiseRadius, SpellTuning.AurumVocoNoiseStrength,
                 NoiseType.ItemDrop);
             return 1;

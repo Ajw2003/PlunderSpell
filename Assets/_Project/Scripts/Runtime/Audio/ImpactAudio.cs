@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using Interfaces;
 using Plunderspell.Loot;
@@ -7,8 +8,8 @@ namespace Plunderspell.Audio
 {
     /// <summary>
     /// Sounds for loose pieces: an impact when one hits something, its break, and a scrape or roll while
-    /// it slides or rolls along the floor. The impact comes from <see cref="Item.Impacted"/>, the one
-    /// hook added to gameplay code; the break from <see cref="LootValue.Ruined"/>. See
+    /// it slides or rolls along the floor. The impact comes from <see cref="ItemImpacted"/>, the one
+    /// hook added to gameplay code; the break from <see cref="LootRuined"/>. See
     /// docs/4-systems/audio.md.
     /// </summary>
     public sealed class ImpactAudio : MonoBehaviour
@@ -55,16 +56,14 @@ namespace Plunderspell.Audio
 
         private void OnEnable()
         {
-            Item.Impacted += OnImpact;
-            Item.ImpactedRemotely += PlayImpact;
-            LootValue.Ruined += OnRuined;
+            EventManager.Instance?.Subscribe(this, (ItemImpacted e) => OnImpact(e.Item, e.Collision));
+            EventManager.Instance?.Subscribe(this, (ItemImpactedRemotely e) => PlayImpact(e.Item, e.Speed, e.Point, e.StruckCreature));
+            EventManager.Instance?.Subscribe(this, (LootRuined e) => OnRuined(e.Piece, e.WorthLost));
         }
 
         private void OnDisable()
         {
-            Item.Impacted -= OnImpact;
-            Item.ImpactedRemotely -= PlayImpact;
-            LootValue.Ruined -= OnRuined;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private LootMaterial MaterialOf(Component piece)

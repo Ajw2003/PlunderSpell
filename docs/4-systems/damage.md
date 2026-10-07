@@ -16,7 +16,7 @@ numbers through `IHealth`; this system only decides how damage reaches them and 
 
 - **One call.** `Damage.Apply(target, amount, source, instigator, point, kind, impactVelocity)`
   hurts an `IHealth`, measures how much health it actually lost, and — only if it lost some —
-  raises `Damage.Dealt` with a `DamageReport`. Every weapon, spell, guard, fire and flying object
+  publishes a `DamageDealt` event with a `DamageReport`. Every weapon, spell, guard, fire and flying object
   calls it: `MeleeWeapon`, `NetworkedProjectile`, `Item` (impacts), `CastleGuard` and
   `MonsterAttackState` (enemy attacks), `MonsterPickedUpState` (choking), `MisfireSpellEffects`
   (corpse blast), `StatusEffectReceiver` (burning). `grep "\.TakeDamage(" Runtime/` finds nothing

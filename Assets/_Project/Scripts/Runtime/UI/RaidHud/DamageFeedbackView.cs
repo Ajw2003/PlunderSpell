@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using Interfaces;
 using UnityEngine;
@@ -6,7 +7,7 @@ namespace Plunderspell.UI
 {
     // doc-ref 7f7c docs/4-systems/damage.md
     /// <summary>
-    /// Draws every <see cref="Damage.Dealt"/> hit: numbers, flashes, enemy health bars, a hit marker,
+    /// Draws every <see cref="DamageDealt"/> hit: numbers, flashes, enemy health bars, a hit marker,
     /// and a madder screen edge plus a "what hurt you" line for the local player. Creates itself.
     /// </summary>
     public class DamageFeedbackView : MonoBehaviour
@@ -111,14 +112,13 @@ namespace Plunderspell.UI
 
         private void OnEnable()
         {
-            Damage.Dealt += OnDamage;
-            Plunderspell.Loot.LootValue.Ruined += OnLootRuined;
+            EventManager.Instance?.Subscribe(this, (DamageDealt e) => OnDamage(e.Report));
+            EventManager.Instance?.Subscribe(this, (Plunderspell.Loot.LootRuined e) => OnLootRuined(e.Piece, e.WorthLost));
         }
 
         private void OnDisable()
         {
-            Damage.Dealt -= OnDamage;
-            Plunderspell.Loot.LootValue.Ruined -= OnLootRuined;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             foreach (Flash flash in _flashes.Values)
                 Restore(flash);
             _flashes.Clear();

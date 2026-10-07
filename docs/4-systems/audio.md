@@ -53,17 +53,17 @@ warning bell. Those run the same `Play` path, but nothing has shown them reachin
 |---|---|---|---|
 | Pointer enters a button | `UIButtonFocus.OnPointerEnter` | `ui_button_hover` | UI |
 | Button pressed | listener added in `UIFactory.CreateButton` | `ui_button_click`, or `ui_button_back` when the label holds Back, Close, Cancel or Resume | UI |
-| Spell cast resolves | `SpellCastingSystem.CastResolved` | `sfx_spell_<word>_cast` (Somnus: `_cast_soft` or `_cast_loud` by volume) | SFX/Spells |
+| Spell cast resolves | `CastResolved` event | `sfx_spell_<word>_cast` (Somnus: `_cast_soft` or `_cast_loud` by volume) | SFX/Spells |
 | Misfire resolves | `CastResolved` with a misfire id | `sfx_spell_<word>_misfire`, and `sting_spell_misfire` | SFX/Spells, Music |
-| No word matched | `SpellCastingSystem.PhraseResolved` | `sfx_spell_fizzle` at the listener | SFX/Spells |
+| No word matched | `PhraseResolved` event | `sfx_spell_fizzle` at the listener | SFX/Spells |
 | Word refused for mana | `PhraseResolved` | `sfx_spell_no_mana` at the listener | SFX/Spells |
-| Any hit that cost health | `Damage.Dealt` | by kind: impact `phys_impact_body`, melee `sfx_wpn_blade_hit_flesh`, projectile `sfx_wpn_xbow_bolt_hit_flesh`, enemy attack `sfx_wpn_blunt_hit_flesh` | SFX/World, SFX/Weapons |
-| The local player is hit | `Damage.Dealt` | `sfx_player_hurt`, or `_heavy` at 30 percent of max health or more | SFX/Foley |
-| The local player dies | `Damage.Dealt` with `Killed` | `sfx_player_death` | SFX/Foley |
+| Any hit that cost health | `DamageDealt` event | by kind: impact `phys_impact_body`, melee `sfx_wpn_blade_hit_flesh`, projectile `sfx_wpn_xbow_bolt_hit_flesh`, enemy attack `sfx_wpn_blunt_hit_flesh` | SFX/World, SFX/Weapons |
+| The local player is hit | `DamageDealt` event | `sfx_player_hurt`, or `_heavy` at 30 percent of max health or more | SFX/Foley |
+| The local player dies | `DamageDealt` event with `Killed` | `sfx_player_death` | SFX/Foley |
 | A guard swings | `CastleGuard.Attacked` (melee) | `sfx_wpn_bronze_swing` in the Bronze Age, otherwise `sfx_wpn_blade_swing` | SFX/Weapons |
 | A guard throws or shoots | `CastleGuard.Attacked` (projectile) | `sfx_throw_whoosh_light` | SFX/World |
 | A door opens or closes | `CastleDoor.OpenStateChanged` | `sfx_door_wood_open`, `sfx_door_wood_close` | SFX/World |
-| A piece of loot is ruined | `LootValue.Ruined` | `phys_break_ceramic` | SFX/World |
+| A piece of loot is ruined | `LootRuined` event | `phys_break_ceramic` | SFX/World |
 | The alarm rises | `AlarmFSMManager.AlarmStateChanged` | `sting_alarm_<stirred, roused, huecry>_<age>` | Music |
 | The portal opens | `PortalOpened` event | `sting_portal_opened` | Music |
 | Time runs low | `ExtractionZone.TimeRemaining` at 120, 60 and 30 s | `sting_portal_warning`, variant 1, 2, 3 | Music |
@@ -153,7 +153,7 @@ plays `foley_player_dodge` (the dodge key is gone; Velox is the only dash). Step
 
 ## Physics impacts (Phase A2)
 
-`ImpactAudio` listens to `Item.Impacted`, the one hook added to gameplay code: a static event
+`ImpactAudio` listens to the `ItemImpacted` event, the one hook added to gameplay code: a static event
 declared on `Item` and raised on the first line of its `OnCollisionEnter`, before that method's own
 early returns. It picks `phys_impact_<material>_<light|heavy>` from the piece's material and speed
 (heavy at 3 kg or 6 m/s), plays `phys_impact_body` when the thing it hit has health, and scales
@@ -163,7 +163,7 @@ every 0.12 s.
 Material is read from the piece's name by `LootMaterials` (a keyword list, first match wins, stone
 by default), since loot has no material field and the data assets were not edited. A test requires that
 every `LootItem` asset in the project matches a keyword, so a new piece added without one fails the
-suite. Breaks come from `LootValue.Ruined`, which every break passes through on every peer, so
+suite. Breaks come from `LootRuined` event, which every break passes through on every peer, so
 `LootPickup.BreakItem` did not need touching: glass, wood, book and coin-spill by material, the large
 glass break for a mirror, the liquid break for an amphora, and the ceramic crack for metal and stone.
 
@@ -265,9 +265,9 @@ raid, seed 777, 45 s per Age: `[GuardSpeech]` lines in bronze, high, late and po
 
 ## Finding things that raise events
 
-Static events (`CastResolved`, `PhraseResolved`, `Damage.Dealt`, `LootValue.Ruined`) are subscribed in
+Events on `EventManager` (`CastResolved`, `PhraseResolved`, `DamageDealt`, `LootRuined`, and since #300 `PortalOpened`, `HaulInZoneChanged`, `ExtractionResolved`) are subscribed in
 `OnEnable`. The rest belong to objects that appear later, so `AudioDirector.Discover` runs once a
-second and subscribes to any it has not met: the raid director, the alarm, the extraction zone, the
+second and subscribes to any it has not met: the alarm, the
 push-to-cast controller, and every guard in `CastleGuard.Active`. Doors have no such list, so while the
 raid phase is `Raiding` they are searched every 5 s with `FindObjectsByType`, which allocates one
 array each time (never per frame). A door built after a search is heard within 5 s, which is well
@@ -336,7 +336,7 @@ joins, the host lifts the piece nearest its camera 2 m and drops it, both sides 
 
 **Fix (2026-09-30).** The machine simulating a piece sends each audible impact (speed 1.2 m/s and
 up, 0.12 s apart, the same floor and guard as `ImpactAudio`) through the server to everyone else
-(`LootPickup.ShareImpact` → `ImpactObservers`), who raise `Item.ImpactedRemotely`; `ImpactAudio`
+(`LootPickup.ShareImpact` → `ImpactObservers`), who publish `ItemImpactedRemotely`; `ImpactAudio`
 plays it like its own. A client draws the piece `NetworkTransform.ticksBehind` ticks behind, so it
 holds a relayed impact, and applies a break (hiding the piece, its sound), that long
 (`LootPickup.ReplicationDelay`). The script now stages one piece per scenario in front of the host
@@ -478,7 +478,7 @@ Everything the plan put out of scope, and every sound in the M7 set that has no 
 
 - `Guard.StateChanged` (`Guards/Core/Guard.cs`) is raised on each peer when the replicated state changes;
   guard voices read the replicated state. (The legacy `CastleGuard.StateChanged` was host-only; that file is deleted.)
-- The `LocalPlayerDied` event, `RangedWeapon.Fired`, `PlayerStateMachine.SlamLanded`,
+- The `LocalPlayerDied` event, `RangedWeaponFired`, `PlayerStateMachine.SlamLanded`,
   `GoldConjured` and `GoldScattered` exist and are unused. `sting_player_down` is built into the names
   class but nothing plays it.
 

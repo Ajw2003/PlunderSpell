@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Interfaces;
 using PurrNet;
 using UnityEngine;
@@ -97,7 +98,7 @@ namespace Plunderspell.Loot
             {
                 SetHighlight(previous, false);
                 SetHighlight(Focus, true);
-                FocusChanged?.Invoke(Focus);
+                EventManager.Instance?.Publish(new LootFocusChanged(Focus));
             }
         }
 
