@@ -43,6 +43,7 @@ playing="$(bash Tools/Unity/eval.sh 'return UnityEditor.EditorApplication.isPlay
 if [ "$playing" != "False False" ]; then log "FAIL Editor is playing or compiling ($playing)"; trap - EXIT; exit 1; fi
 settings_save || { log "FAIL cannot save ProjectSettings before building"; trap - EXIT; exit 1; }
 test_slot_use || { log "FAIL cannot switch to the test slot: $test_slot_msg"; exit 1; }; log "$test_slot_msg"
+s1_before="$(ev 'var h = Plunderspell.Lair.LairHubManager.Peek(1); return "slot1 debt " + h.TotalDebt + " gold " + h.AccumulatedGold + " purses " + Plunderspell.Lair.LairHubManager.PeekPurse(1, 0) + " " + Plunderspell.Lair.LairHubManager.PeekPurse(1, 1) + " " + Plunderspell.Lair.LairHubManager.PeekPurse(1, 2) + " " + Plunderspell.Lair.LairHubManager.PeekPurse(1, 3);')"; log "before: $s1_before"
 
 if [ "$build" = auto ]; then
     build=no; [ -f Build/DevTest/.built ] || build=yes
@@ -144,15 +145,36 @@ r=no; [ "$hl" = "$cl" ] && case "$hl" in *Done*) r=ok ;; esac
 check $r "the client's Satis sells it, and both see the same line"
 m1="$(L host money)"; log "host after: $m1"
 coins="${hl##*: }"; coins="${coins%% coin*}"
-python -c "
-import re, sys
-a = [float(x) for x in re.findall(r'[0-9.]+', sys.argv[1])]; b = [float(x) for x in re.findall(r'[0-9.]+', sys.argv[2])]
-sys.exit(0 if abs((a[1] - b[1]) + (b[0] - a[0]) - float(sys.argv[3])) < 0.01 else 1)" "$m0" "$m1" "$coins" 2>/dev/null && r=ok || r=no
-check $r "the host's gold and debt moved by the $coins coins sold"
+r=no; [ "$m0" = "$m1" ] && r=ok
+check $r "the sale banked nothing yet: the host's gold and debt did not move"
 sleep 1
 hp="$(L host piece)"; cp="$(L client piece)"; log "host: $hp"; log "client: $cp"
 r=no; [ "$hp" = "pieces 0" ] && [ "$cp" = "pieces 0" ] && r=ok
 check $r "the piece is gone on both sides"
+
+# The pouch (#313): the sale left one on the counter, on both sides, holding the coins sold and not loot; the host moves it into
+# strongbox 2 (the client's seat, the client being owner 2); both then see it gone, purse 2 grew by the sale, purse 1 did not,
+# and the debt paid down by it (BankSale, until the debt splits). Purses live on the server: only the host reads them.
+hpo="$(L host pouch)"; cpo="$(L client pouch)"; log "host: $hpo"; log "client: $cpo"
+r=no; [ "$hpo" = "$cpo" ] && case "$hpo" in "pouches 1 coins $coins "*"lootvalue False") r=ok ;; esac
+check $r "both see one pouch holding the $coins coins sold, and it is not loot"
+p0="$(L host purse 2)"; p0b="$(L host purse 1)"; log "host before: $p0 / strongbox 1: $p0b"
+log "host: $(L host pouchto 2)"; sleep 3
+hpo="$(L host pouch)"; cpo="$(L client pouch)"; log "host: $hpo"; log "client: $cpo"
+r=no; [ "$hpo" = "pouches 0" ] && [ "$cpo" = "pouches 0" ] && r=ok
+check $r "the pouch is gone on both sides after strongbox 2"
+p1="$(L host purse 2)"; p1b="$(L host purse 1)"; log "host after: $p1 / strongbox 1: $p1b"
+r=no; [ "${p1#purse }" = "$(( ${p0#purse } + coins ))" ] && [ "$p0b" = "$p1b" ] && r=ok
+check $r "purse 2 grew by the $coins coins sold and purse 1 did not"
+m2="$(L host money)"; log "host after the box: $m2"
+python -c "
+import re, sys
+a = [float(x) for x in re.findall(r'[0-9.]+', sys.argv[1])]; b = [float(x) for x in re.findall(r'[0-9.]+', sys.argv[2])]
+sys.exit(0 if abs((a[1] - b[1]) + (b[0] - a[0]) - float(sys.argv[3])) < 0.01 else 1)" "$m0" "$m2" "$coins" 2>/dev/null && r=ok || r=no
+check $r "the host's gold and debt moved by the $coins coins once banked"
+s1_after="$(L host slot1)"; log "host: $s1_after"
+[ "$s1_before" = "$s1_after" ] && r=ok || r=no
+check $r "the owner's slot 1 is unchanged by the check ($s1_before)"
 
 # SocketError is a type name in LiteNetLib's stack frames, not an error.
 log "client log error lines: $(grep -i 'error\|exception' "$out/$label-client.log" | grep -vc 'SocketError')"

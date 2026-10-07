@@ -14,6 +14,10 @@
 //   speak <word>       the local player's word at the Goldsmith counter: Plus, Satis or Vale (what keys 1/2/3 call)
 //   money              the Lair's banked gold and debt (read on the host: it is the server)
 //   piece              how many loot pieces lie on the Goldsmith counter on this side
+//   pouch              the coin pouches this side sees (#313): count, then the first one's coins, mass and loot-value presence
+//   pouchto <n>        host: move the coin pouch through its rigidbody into strongbox n's lid (n 1 to 4), as if let go there
+//   purse <n>          the Lair's purse n (read on the host: it is the server)
+//   slot1              what the Lair's saved slot 1 holds (debt, gold, four purses), read without loading it
 string action = "__ACTION__";
 string arg = "__ARG__";
 const System.Reflection.BindingFlags All = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static
@@ -106,6 +110,41 @@ switch (action)
         foreach (var o in FindAll("Plunderspell.Loot.LootValue"))
             if (box.bounds.Contains(((UnityEngine.Component)o).transform.position)) n++;
         return "pieces " + n;
+    }
+    case "pouch":
+    {
+        var pouches = FindAll("Plunderspell.Raid.CoinPouch");
+        if (pouches.Length == 0) return "pouches 0";
+        var p = (UnityEngine.Component)pouches[0];
+        return "pouches " + pouches.Length + " coins " + Get(p, "Coins") + " mass " + p.GetComponent<UnityEngine.Rigidbody>().mass.ToString("F2")
+            + " lootvalue " + (p.GetComponent(T("Plunderspell.Loot.LootValue")) != null);
+    }
+    case "pouchto":
+    {
+        int seat = int.Parse(arg) - 1;
+        var p = (UnityEngine.Component)FindAll("Plunderspell.Raid.CoinPouch")[0];
+        foreach (var o in FindAll("Plunderspell.Raid.LairStrongbox"))
+        {
+            if ((int)Get(o, "Seat") != seat) continue;
+            var body = p.GetComponent<UnityEngine.Rigidbody>();
+            var at = ((UnityEngine.Component)o).GetComponent<UnityEngine.BoxCollider>().bounds.center;
+            body.linearVelocity = UnityEngine.Vector3.zero; body.position = at; p.transform.position = at;
+            return "pouch set into strongbox " + arg + " at " + V(at);
+        }
+        return "no strongbox " + arg;
+    }
+    case "purse":
+    {
+        var lair = FindAll("Plunderspell.Lair.LairHubManager")[0];
+        return "purse " + lair.GetType().GetMethod("Purse").Invoke(lair, new object[] { int.Parse(arg) - 1 });
+    }
+    case "slot1":
+    {
+        var hub = T("Plunderspell.Lair.LairHubManager");
+        var state = hub.GetMethod("Peek").Invoke(null, new object[] { 1 });
+        string s = "slot1 debt " + Get(state, "TotalDebt") + " gold " + Get(state, "AccumulatedGold") + " purses";
+        for (int seat = 0; seat < 4; seat++) s += " " + hub.GetMethod("PeekPurse").Invoke(null, new object[] { 1, seat });
+        return s;
     }
     case "where":
     {
