@@ -3,8 +3,8 @@ using UnityEngine;
 namespace Plunderspell.Loot
 {
     /// <summary>
-    /// Brightens a lootable object while the player is looking at it, so "you can pick this up" is
-    /// something the world says rather than something the player has to guess by walking into it.
+    /// Lights a lootable object, or a door, in verdigris while the player is looking at it and in reach, so "you can use
+    /// this" is something the world says rather than a line of text (#318).
     ///
     /// Why a property block rather than an outline shader, and why this is attached at runtime:
     /// docs/6-decisions/Decisions.md, "Focus glow is a property block, added at runtime".
@@ -14,11 +14,11 @@ namespace Plunderspell.Loot
         [Tooltip("Renderers that glow. Filled from this object's children when left empty.")]
         [SerializeField] private Renderer[] m_renderers;
 
-        [Tooltip("Emissive colour added while focused.")]
-        [SerializeField] private Color m_glow = new Color(1f, 0.85f, 0.35f);
+        [Tooltip("Emissive colour added while focused: the UI's verdigris, the colour of 'you can touch this'.")]
+        [SerializeField] private Color m_glow = new Color(0.37f, 0.64f, 0.53f);
 
         [Tooltip("Strength of the added emission.")]
-        [SerializeField] private float m_intensity = 1.6f;
+        [SerializeField] private float m_intensity = 1.8f;
 
         private static readonly int s_emissionColor = Shader.PropertyToID("_EmissionColor");
 

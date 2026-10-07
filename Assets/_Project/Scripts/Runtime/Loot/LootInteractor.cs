@@ -96,7 +96,11 @@ namespace Plunderspell.Loot
             }
 
             if (FocusDoor != previousDoor)
+            {
+                SetHighlight(previousDoor, false);
+                SetHighlight(FocusDoor, true);
                 EventManager.Instance?.Publish(new DoorFocusChanged(FocusDoor));
+            }
 
             if (Focus != previous)
             {
@@ -166,23 +170,31 @@ namespace Plunderspell.Loot
         /// looked at. Added here rather than authored onto each prefab so conjured and test-built
         /// loot highlights too, and so no piece of loot can be shipped without it.
         /// </summary>
-        private static void SetHighlight(LootPickup pickup, bool highlighted)
+        private static void SetHighlight(Component target, bool highlighted)
         {
-            if (pickup == null)
+            if (target == null)
                 return;
 
-            var highlight = pickup.GetComponent<LootHighlight>();
+            // A broken piece is worth nothing, so it does not call to be picked up.
+            if (highlighted && target is LootPickup pickup && pickup.IsBroken)
+                return;
+
+            var highlight = target.GetComponent<LootHighlight>();
             if (highlight == null)
             {
                 if (!highlighted)
                     return;
-                highlight = pickup.gameObject.AddComponent<LootHighlight>();
+                highlight = target.gameObject.AddComponent<LootHighlight>();
             }
 
             highlight.SetHighlighted(highlighted);
         }
 
-        private void OnDisable() => SetHighlight(Focus, false);
+        private void OnDisable()
+        {
+            SetHighlight(Focus, false);
+            SetHighlight(FocusDoor, false);
+        }
     }
 
 }
