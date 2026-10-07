@@ -93,7 +93,7 @@ public static class TestSceneBuilder
 
         // Adding PlayerStateMachine pulls in Rigidbody via its [RequireComponent] attribute.
         PlayerStateMachine stateMachine = player.AddComponent<PlayerStateMachine>();
-        stateMachine.walkSpeed = PlayerWalkSpeed;
+        stateMachine.WalkSpeed = PlayerWalkSpeed;
         stateMachine.JumpForce = PlayerJumpForce;
 
         SetGroundCheckFields(stateMachine);

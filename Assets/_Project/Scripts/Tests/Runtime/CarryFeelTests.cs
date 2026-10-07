@@ -1,3 +1,4 @@
+using Plunderspell.Items;
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;

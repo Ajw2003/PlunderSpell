@@ -27,7 +27,7 @@ namespace Plunderspell.Tests
             var eye = new GameObject("Eye");
             eye.transform.SetParent(_player.transform, false);
             machine.CameraTransform = eye.transform;
-            machine.walkSpeed = 5f;   // RaidPlayer.prefab
+            machine.WalkSpeed = 5f;   // RaidPlayer.prefab
             machine.Creeping = creeping;
             machine.MovementDirection = Vector2.up;
 
