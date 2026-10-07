@@ -14,6 +14,12 @@ paid for everywhere — keep it small.
   destroyed listener does not keep its subscriber alive or throw on publish. Publishing is
   reentrancy-safe: unsubscribes that happen *during* a publish are queued and applied afterwards
   rather than mutating the list mid-iteration.
+  There is one bus from start-up to quit: `EventManager.CreateForPlay` (`Runtime/Core/Events/EventManager.cs:21`)
+  makes it before the first scene loads and it lives in `DontDestroyOnLoad`, so subscriptions survive scene loads
+  and no scene has to hold one (#298). `Unsubscribe<T>` and `UnsubscribeFromAllEvents` remove every subscription
+  the listener holds. `SubscriptionCount(target)` and `TotalSubscriptionCount` let a test prove a closed screen
+  left nothing listening. Every subscriber unsubscribes when it closes, changes state, is disabled or the game
+  quits (owner's rule, `docs/6-decisions/Decisions.md`, 2026-10-06).
 - **`BaseStateMachine` / `IState` / `PlayerState`** — `Enter`/`Update`/`Exit`/`FixedUpdate`. States
   are plain C# objects constructed once in `Awake`, not MonoBehaviours, which keeps their logic
   testable without a scene.
@@ -22,7 +28,7 @@ paid for everywhere — keep it small.
 
 - **`SingletonBase.Instance` never creates anything.** An absent instance means no scene owner has
   been set up yet; that is information the caller needs, not a problem to paper over by spawning a
-  GameObject.
+  GameObject. The one exception is the event bus, made once at start-up by `EventManager.CreateForPlay`.
 - **A subclass overriding `OnDestroy` must call `base.OnDestroy()`.** See Traps.
 
 ## Spell-target interfaces
