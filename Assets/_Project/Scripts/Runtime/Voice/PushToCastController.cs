@@ -50,7 +50,10 @@ namespace Plunderspell.Voice
         {
             // Gated on the state rather than by disabling this component, so the mic is never left
             // open across a pause and the animator hash survives the menu.
-            if (!Plunderspell.Core.GameServices.IsPlaying)
+            // The Lair room counts too: haggle words are spoken at the Market counters.
+            var gameState = Plunderspell.Core.GameServices.GameState;
+            if (gameState == null || (gameState.CurrentState != Plunderspell.Core.GameState.Playing &&
+                                      gameState.CurrentState != Plunderspell.Core.GameState.LairRoom))
             {
                 if (IsCasting)
                     EndCasting();

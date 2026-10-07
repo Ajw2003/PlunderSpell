@@ -37,7 +37,9 @@ namespace Player
             state == Plunderspell.Core.GameState.Playing || state == Plunderspell.Core.GameState.LairRoom;
 
         /// <summary>Whether the world should react to input right now.</summary>
-        private bool AcceptsInput => Plunderspell.Core.GameServices.IsPlaying;
+        private bool AcceptsInput =>
+            Plunderspell.Core.GameServices.GameState != null &&
+            AcceptsInputIn(Plunderspell.Core.GameServices.GameState.CurrentState);
 
         private void Update()
         {
