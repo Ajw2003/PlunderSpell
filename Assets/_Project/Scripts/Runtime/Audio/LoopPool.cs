@@ -8,7 +8,7 @@ namespace Plunderspell.Audio
     /// heard; a slot nobody drove this frame fades out and is freed. Nothing is created after the
     /// constructor.
     /// </summary>
-    public sealed class LoopBus
+    public sealed class LoopPool
     {
         private const float FadeInSeconds = 0.1f;
         private const float FadeOutSeconds = 0.25f;
@@ -20,7 +20,7 @@ namespace Plunderspell.Audio
         private readonly bool[] _used;
         private readonly float[] _baseVolume;
 
-        public LoopBus(Transform parent, int size)
+        public LoopPool(Transform parent, int size)
         {
             _sources = new AudioSource[size];
             _keys = new int[size];

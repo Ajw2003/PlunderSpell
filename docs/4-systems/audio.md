@@ -27,7 +27,9 @@ check below reads what is playing and on which mixer group, and none of it can j
   sets the 3D reach from the noise class (15, 20, 30, 45 and 70 metres for none to max). A name with
   no entry logs one warning and returns null. The same sound is not started twice within 40 ms.
 - **`MusicDirector`** owns six looping sources: four stems and two beds. Beds cross-fade over 1.5 s;
-  stems over 2 s.
+  stems over 2 s. Since #304 it decides what to play only when something changes: `GameStateChanged`,
+  `RaidPhaseChanged`, `AlarmChanged` and `RaidContextPublished` update the state it keeps, and
+  `ExtractionTimerChanged` drives the portal warning bell. Its `Update` only runs the cross-fade.
 - **`AudioLevels`** maps the Settings sliders onto the mixer.
 
 ## How it starts
@@ -168,7 +170,7 @@ suite. Breaks come from `LootRuined` event, which every break passes through on 
 glass break for a mirror, the liquid break for an amphora, and the ceramic crack for metal and stone.
 
 A piece that has just hit something is tracked for 6 s (up to 8 pieces). While it is on the floor and
-moving it drives a `LoopBus` slot: `phys_roll_loop` when it spins, otherwise the scrape for its
+moving it drives a `LoopPool` slot: `phys_roll_loop` when it spins, otherwise the scrape for its
 material. The bus has six pooled sources, one loop per piece, fading in over 0.1 s and out over 0.25 s.
 
 **The `stashing` branch.** The one gameplay edit is two additive hunks in `Item.cs`: the event
@@ -301,7 +303,7 @@ The code's defaults (`SoundFocusSettings.cs`, used only for a fresh asset) match
 triggers are unchanged and wait for replacement files. `SoundFocus` (`Assets/_Project/Scripts/Runtime/Audio/SoundFocus.cs`)
 reads the asset from Resources; with the asset missing, everything plays and one warning is logged.
 The check sits in `AudioDirector.Play` (after the bank lookup, so a misspelt name is still reported),
-`LoopBus.Drive` and `MusicDirector.StartLayer`. Code can switch the filter off for a run without
+`LoopPool.Drive` and `MusicDirector.StartLayer`. Code can switch the filter off for a run without
 touching the asset (`SoundFocus.Enabled = false`, undone by `SoundFocus.ClearOverride()`); the tests
 and `AudioLatencyProbe` do. Tests: `SoundFocusTests` (the rules on a settings object of their own,
 and the shipped asset loading).

@@ -18,9 +18,34 @@ namespace Plunderspell.Tests
         private GameObject _backdrop;
         private GameObject _player;
 
+        private readonly System.Collections.Generic.List<BackdropCamera> _stoodDown = new System.Collections.Generic.List<BackdropCamera>();
+
+        // The menu owns a backdrop camera too. Two backdrops each count the other as a camera, so these tests stand
+        // the menu's down while they run and give it back (and have it look again) afterwards.
+        private void StandDownOthers(BackdropCamera mine)
+        {
+            foreach (BackdropCamera other in Object.FindObjectsByType<BackdropCamera>(FindObjectsSortMode.None))
+            {
+                if (other != mine && other.enabled)
+                {
+                    other.enabled = false;
+                    _stoodDown.Add(other);
+                }
+            }
+        }
+
         [TearDown]
         public void TearDown()
         {
+            foreach (BackdropCamera other in _stoodDown)
+            {
+                if (other != null)
+                {
+                    other.enabled = true;
+                    other.RecheckSoon();
+                }
+            }
+            _stoodDown.Clear();
             if (_backdrop != null)
                 Object.Destroy(_backdrop);
             if (_player != null)
@@ -32,6 +57,7 @@ namespace Plunderspell.Tests
         {
             _backdrop = new GameObject("Backdrop");
             var backdrop = _backdrop.AddComponent<BackdropCamera>();
+            StandDownOthers(backdrop);
             yield return null;
 
             bool othersBefore = Camera.allCamerasCount > (backdrop.IsRendering ? 1 : 0);
@@ -59,6 +85,7 @@ namespace Plunderspell.Tests
         {
             _backdrop = new GameObject("Backdrop");
             var backdrop = _backdrop.AddComponent<BackdropCamera>();
+            StandDownOthers(backdrop);
             yield return null;
             bool before = backdrop.IsRendering;
 

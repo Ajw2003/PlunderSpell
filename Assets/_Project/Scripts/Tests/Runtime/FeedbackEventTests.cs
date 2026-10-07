@@ -62,7 +62,8 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_AHurtTargetsHealthBarComesFromTheEvent()
         {
-            var view = Make<DamageFeedbackView>("Feedback");
+            DamageFeedbackView view = DamageFeedbackView.Instance; // the one the game made; a second would replace it
+            Assert.IsNotNull(view, "The damage feedback view creates itself.");
             var target = Make<BoxCollider>("Guard");
 
             EventManager.Instance.Publish(new DamageDealt(new DamageReport(target, null, null, 70f, Vector3.zero, DamageKind.Melee, 30f, 100f)));
@@ -74,7 +75,8 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_TheLowHealthVignetteFollowsThePlayerStatsEvent()
         {
-            var view = Make<DamageFeedbackView>("Feedback");
+            DamageFeedbackView view = DamageFeedbackView.Instance;
+            Assert.IsNotNull(view, "The damage feedback view creates itself.");
             GameServices.Initialize();
             PlayerStats stats = GameServices.PlayerStats;
             int original = stats.Health;
@@ -115,17 +117,27 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_AllThreeLeaveTheBusWhenDisabled()
         {
-            var shake = Make<CameraShakeDirector>("Shake");
-            var view = Make<DamageFeedbackView>("Feedback");
+            // The two singletons are switched off and on again rather than replaced, so the game's own survive.
+            CameraShakeDirector shake = CameraShakeDirector.Instance;
+            DamageFeedbackView view = DamageFeedbackView.Instance;
             var backdrop = Make<BackdropCamera>("Backdrop");
+            Assert.IsNotNull(shake);
+            Assert.IsNotNull(view);
 
             shake.enabled = false;
             view.enabled = false;
             backdrop.enabled = false;
-
-            Assert.AreEqual(0, EventManager.Instance.SubscriptionCount(shake));
-            Assert.AreEqual(0, EventManager.Instance.SubscriptionCount(view));
-            Assert.AreEqual(0, EventManager.Instance.SubscriptionCount(backdrop));
+            try
+            {
+                Assert.AreEqual(0, EventManager.Instance.SubscriptionCount(shake));
+                Assert.AreEqual(0, EventManager.Instance.SubscriptionCount(view));
+                Assert.AreEqual(0, EventManager.Instance.SubscriptionCount(backdrop));
+            }
+            finally
+            {
+                shake.enabled = true;
+                view.enabled = true;
+            }
         }
     }
 }
