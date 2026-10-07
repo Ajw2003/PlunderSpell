@@ -15,7 +15,7 @@ MonoBehaviour:
   Worth: 800
   IsArtifact: 0
   Category: 4
-  WeightKg: 12
+  WeightKg: 8
   Fragility: 999
   DisplayName: Rolled Tapestry
   Icon: {fileID: 0}
