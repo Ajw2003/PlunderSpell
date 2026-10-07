@@ -363,8 +363,9 @@ Not checked: a player standing on furniture, and the in-game feel of the sweep (
 - **A looted room holds several items, one per anchor** (2026-09-24). `LootPlacementPlanner` rolls
   the zone's density for whether a room has anything, then 1 to `RaidLootTable.MaxPerRoomFor(zone)`
   items (outer bailey 1, inner ward 2, keep 3), never more than the room's anchors and never two on
-  one anchor. Inner ward and keep are always looted, the outer bailey half the time: 44-53 items a
-  raid across the four eras, up from about 22 at one per room (`LootAmountTests`).
+  one anchor. Inner ward and keep are always looted, the outer bailey half the time (always, in High
+  Medieval and Age of Powder, whose rooms hold fewer anchors; 2026-10-07, #330): stairs hold no loot (#247),
+  so a raid holds about 41-43 items, up from about 22 at one per room (`LootAmountTests`, floor 40).
 
 - **The zone is re-armed on every `StartRaid`.** It carries the previous raid's result until then;
   a raid that starts against a completed zone cannot be left.
