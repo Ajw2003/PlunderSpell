@@ -3,6 +3,29 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-07 — The wizard: one outfit, a colour you pick, your name on your hat; a fallen wizard leaves only the hat
+
+**Context.** Players are capsules (`RaidPlayer.prefab`, `Visual` uses the built-in capsule mesh), and
+co-op had no way to tell who is who. A proposal for the player character went through three
+rounds with the owner on 2026-10-07: four fixed wizards with different hats and marks; then one
+outfit with a dye list and names across the shoulders; then the version below.
+
+**Decision (owner, 2026-10-07).** Every player wears the same wizard outfit. Each picks any red,
+green and blue value in the lobby; no two players in a raid may wear exactly the same three values,
+first come first served. The player's name runs around the hat band only; it defaults to the Steam
+name, long names shrink to fit rather than being cut, and the lobby clearly offers a different name
+for the game. When a wizard falls, the body is gone and only the hat is left, which a teammate
+carries home.
+
+**Consequence.** The fallen hat replaces the laid-down body (`ShowDownPose`,
+`docs/4-systems/net.md`, "Spectating and a party wipe") and settles the 2026-09-23 entry's "Not
+decided" on co-op downing in a different direction: there is no 12 kg two-person body carry
+(`DownedPlayerCarryAdapter`, used today only by a test). What carrying the hat out does is still
+open. Plan: [`docs/plans/wizard-character.md`](../plans/wizard-character.md); issues #335–#341.
+Nothing is built yet.
+
+**Status.** Standing.
+
 ## 2026-10-02 — Fire overrules Somnus
 
 **Context.** #212 ruled that stun and sleep outrank burning, so a sleeping guard that was set alight kept

@@ -25,7 +25,7 @@ MILESTONES = [
      'Four real players complete a raid together through the built game, and loot they carry '
      'out changes what the Lair shows next time.',
      [143, 140, 110, 106, 152, 134, 155, 169, 171, 172, 158, 164, 154, 127, 131, 51, 167, 168,
-      170, 55]),
+      170, 55, 335, 336, 337, 338, 339, 341]),
     ('M3 — Open the other Ages', 15, 'open',
      'Each era brings its own rooms, loot, enemies and weapons.',
      'A different era gives a measurably different raid, every era builds from its own room set '
@@ -35,7 +35,7 @@ MILESTONES = [
      'The fourth pillar: a Lair you walk around, and a market where purchases stay bought.',
      'Across three sessions with relaunches, a player pays their debt, spends the rest at a '
      'stall, and finds the purchase and the hoard still there in the Lair.',
-     [30, 31, 33, 130, 26, 27, 28, 29, 108]),
+     [30, 31, 33, 130, 26, 27, 28, 29, 108, 340]),
     ('M5 — The household is awake', 10, 'open',
      'Enemies notice, react and hunt; the player can creep past by crouching.',
      'In a recorded solo raid per era: guards react to hits, investigate thrown objects, lose '

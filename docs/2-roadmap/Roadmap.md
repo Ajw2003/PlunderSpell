@@ -107,6 +107,12 @@ back. And, because each one breaks or undermines a real raid:
   works (#168). Two different Steam accounts can join each other, checked by an automated two-PC
   test the agent drives (#170; plan
   [`docs/plans/GitIssues/Issue_170_Plan.md`](../plans/GitIssues/Issue_170_Plan.md)).
+- **The wizard, blocked out and in engine** (added by the owner, 2026-10-07; parent #335, plan
+  [`docs/plans/wizard-character.md`](../plans/wizard-character.md)). Players are a wizard instead of
+  a capsule (#336); each picks a colour, never an exact match of a teammate's (#337); their name runs
+  around the hat band (#338); a fallen wizard leaves only the hat, which a teammate carries home
+  (#339); and a co-op playtest checks that players can tell who is who (#341). Four players need to
+  know who is who, so this is part of the slice. Blockout only: the finished model is M7.
 
 **Acceptance:** four real players complete a raid together, start to finish, through the actual
 built game (not a scripted test), and loot they carry out changes what the Lair shows next time
@@ -152,6 +158,8 @@ haul mean something between raids.
   prices for all four stalls (#28); the mark-up and "spend what is left after the debt" rules
   (#29).
 - Progression: start with fewer spells and unlock more over time (#108).
+- Each wizard's colour and name on their strongbox, ledger column and coin pouch (#340, after the
+  strongbox and ledger themselves, #313).
 
 **Acceptance:** across three consecutive sessions, with the game quit and relaunched between
 them, a player pays their debt, spends what is left at a stall, and finds both the purchase and
@@ -223,7 +231,8 @@ build goes to someone who was not there.
   `claude/eloquent-dirac-i10hep`, not yet on `main`).
 - Art: main menu art (#16), an icon set (#34, #40), Steam lobby and invite branding (#58), the
   pitch's lighting frames (#59), post-processing (#121, closed: built with the night atmosphere),
-  castles that no longer look bland (#23), and the Lair's lighting (#32).
+  castles that no longer look bland (#23), the Lair's lighting (#32), and the finished wizard model
+  in place of the M2 blockout (`docs/plans/wizard-character.md`; animation is #11).
 - Performance: a budget and a profiling pass for full-art raids (#54), with a Steam Deck as the
   low end (the night atmosphere's quality levels already target it). Lights and shadows no longer
   pop in (#165, #166).
