@@ -41,10 +41,7 @@ namespace Plunderspell.Castle
         private readonly int[] _areaId;
         // Archway cells per module and world side, by index along that side's edge.
         private readonly bool[] _archway;
-        private readonly Vector2Int _lookupOrigin;
-        private readonly int _lookupWidth;
-        private readonly int _lookupHeight;
-        private readonly int[] _moduleAtGridCell;
+        private readonly CastleNavModuleLookup _lookup;
 
         /// <summary>Modules in the layout, walkable or not.</summary>
         public int ModuleCount { get; }
@@ -67,18 +64,7 @@ namespace Plunderspell.Castle
             for (int cell = 0; cell < _areaId.Length; cell++)
                 _areaId[cell] = -1;
 
-            Vector2Int min = placed[0].GridPosition, max = min;
-            for (int module = 0; module < ModuleCount; module++)
-            {
-                min = Vector2Int.Min(min, placed[module].GridPosition);
-                max = Vector2Int.Max(max, placed[module].GridPosition);
-            }
-            _lookupOrigin = min;
-            _lookupWidth = max.x - min.x + 1;
-            _lookupHeight = max.y - min.y + 1;
-            _moduleAtGridCell = new int[_lookupWidth * _lookupHeight];
-            for (int i = 0; i < _moduleAtGridCell.Length; i++)
-                _moduleAtGridCell[i] = -1;
+            _lookup = new CastleNavModuleLookup(placed);
             IsUsable = RegisterModules(placed);
         }
 
@@ -89,7 +75,7 @@ namespace Plunderspell.Castle
             {
                 ProceduralCastleData.PlacedModule pm = placed[module];
                 _modulePosition[module] = pm.Position;
-                _moduleAtGridCell[(pm.GridPosition.y - _lookupOrigin.y) * _lookupWidth + (pm.GridPosition.x - _lookupOrigin.x)] = module;
+                _lookup.Register(module, pm);
                 if (Mathf.Abs(pm.Position.x - pm.GridPosition.x * ModuleSpan) > 0.01f ||
                     Mathf.Abs(pm.Position.z - pm.GridPosition.y * ModuleSpan) > 0.01f)
                 {
@@ -147,14 +133,8 @@ namespace Plunderspell.Castle
         public static int ModuleOf(int cell) => cell / CellsPerModule;
         public static int LocalCell(int cell) => cell % CellsPerModule;
 
-        /// <summary>The module placed at a grid cell, or -1.</summary>
-        public int ModuleAtGridCell(int gridX, int gridY)
-        {
-            int x = gridX - _lookupOrigin.x, y = gridY - _lookupOrigin.y;
-            if (x < 0 || y < 0 || x >= _lookupWidth || y >= _lookupHeight)
-                return -1;
-            return _moduleAtGridCell[y * _lookupWidth + x];
-        }
+        /// <summary>The module placed at a grid cell on a storey, or -1.</summary>
+        public int ModuleAtGridCell(int gridX, int gridY, int level = CastleLevels.Ground) => _lookup.At(gridX, gridY, level);
 
         /// <summary>Grid offset of the neighbour across a world side (0 north, 1 east, 2 south, 3 west).</summary>
         public static Vector2Int SideOffset(int side) => new Vector2Int(s_sideColumnOffset[side], s_sideRowOffset[side]);
@@ -246,10 +226,10 @@ namespace Plunderspell.Castle
         public int CastleRow(float worldZ) => Mathf.FloorToInt((worldZ + HalfSpan) / CastleNavTile.CellSize);
 
         /// <summary>The cell at castle-wide column and row on a layer, or <see cref="NoCell"/> where no module with a tile is.</summary>
-        public int CellAt(int castleColumn, int castleRow, int layer)
+        public int CellAt(int castleColumn, int castleRow, int layer, int level = CastleLevels.Ground)
         {
             int gridX = FloorDiv(castleColumn, TileSize), gridY = FloorDiv(castleRow, TileSize);
-            int module = ModuleAtGridCell(gridX, gridY);
+            int module = ModuleAtGridCell(gridX, gridY, level);
             if (module < 0 || !_moduleHasTile[module])
                 return NoCell;
             int column = castleColumn - gridX * TileSize, row = castleRow - gridY * TileSize;
@@ -260,10 +240,21 @@ namespace Plunderspell.Castle
         private void ConsiderColumn(Vector3 position, int castleColumn, int castleRow, ref int best, ref float bestSqr)
         {
             int gridX = FloorDiv(castleColumn, TileSize), gridY = FloorDiv(castleRow, TileSize);
-            int module = ModuleAtGridCell(gridX, gridY);
-            if (module < 0 || !_moduleHasTile[module])
-                return;
             int column = castleColumn - gridX * TileSize, row = castleRow - gridY * TileSize;
+            int lastModule = -1;
+            for (int level = CastleLevels.Lowest; level < CastleLevels.Lowest + CastleLevels.Count; level++)
+            {
+                int module = ModuleAtGridCell(gridX, gridY, level);
+                // A stair is seen at both its levels; score it once.
+                if (module < 0 || module == lastModule || !_moduleHasTile[module])
+                    continue;
+                lastModule = module;
+                ConsiderModuleColumn(position, module, column, row, ref best, ref bestSqr);
+            }
+        }
+
+        private void ConsiderModuleColumn(Vector3 position, int module, int column, int row, ref int best, ref float bestSqr)
+        {
             float dx = _modulePosition[module].x - HalfSpan + (column + 0.5f) * CastleNavTile.CellSize - position.x;
             float dz = _modulePosition[module].z - HalfSpan + (row + 0.5f) * CastleNavTile.CellSize - position.z;
             for (int layer = 0; layer < CastleNavTile.Layers; layer++)

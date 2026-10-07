@@ -105,9 +105,10 @@ namespace Plunderspell.Tests
         {
             var alarm = CreateAlarm();
 
-            alarm.OnNoiseHeard(new NoiseEvent(Vector3.zero, 1.0f, NoiseType.Gunshot));
+            // The castle scores noise a guard heard (#259), so the noise arrives as a guard's report.
+            alarm.Publish(new NoiseReported(alarm, Vector3.zero, 1.0f));
 
-            Assert.Greater(alarm.AlarmLevel, 0f, "A strength-1.0 noise must raise the alarm level.");
+            Assert.Greater(alarm.AlarmLevel, 0f, "A strength-1.0 noise a guard heard must raise the alarm level.");
 
             Object.DestroyImmediate(alarm.gameObject);
         }
@@ -130,7 +131,7 @@ namespace Plunderspell.Tests
         {
             var alarm = CreateAlarm();
 
-            alarm.SetAlarmLevel(55f); // 50–80 → Roused, and latches the lock
+            alarm.SetAlarmLevel(55f, 3); // needs three witnesses (#259); 50–80 → Roused, and latches the lock
             Assert.AreEqual(AlarmState.Roused, alarm.State, "Level 55 should be Roused.");
             Assert.IsTrue(alarm.IsLocked, "Reaching Roused must latch the lock.");
 

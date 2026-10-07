@@ -15,12 +15,16 @@ namespace Plunderspell.Alarm
     // The director's event payloads. Plain readonly structs so raising one never allocates, and so the
     // Alarm assembly needs no reference to Guards: a guard is carried as a Component.
 
-    /// <summary>A sound reached the director, with where and how strong.</summary>
+    /// <summary>A guard heard an intruder's noise, with where, how strong, and which guard (#259).</summary>
     public readonly struct NoiseReported
     {
+        public readonly Component Guard;
         public readonly Vector3 Origin;
         public readonly float Strength;
-        public NoiseReported(Vector3 origin, float strength) { Origin = origin; Strength = strength; }
+        public NoiseReported(Component guard, Vector3 origin, float strength)
+        {
+            Guard = guard; Origin = origin; Strength = strength;
+        }
     }
 
     /// <summary>A guard saw an intruder and gave chase.</summary>

@@ -100,6 +100,40 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
+        public void Test_AFireKeepsItsLightUntilARivalIsClearlyCloser()
+        {
+            var lit = new List<bool> { true, true };
+            var previous = new List<FireRules.LightGrant> { FireRules.LightGrant.Unshadowed, FireRules.LightGrant.None };
+            var grants = new List<FireRules.LightGrant>();
+
+            FireRules.ShareLights(new List<float> { 100f, 90f }, lit, 0, 1, grants, new List<int>(), previous);
+            Assert.AreEqual(FireRules.LightGrant.Unshadowed, grants[0], "A fire at the boundary keeps its light.");
+            Assert.AreEqual(FireRules.LightGrant.None, grants[1]);
+
+            FireRules.ShareLights(new List<float> { 100f, 70f }, lit, 0, 1, grants, new List<int>(), previous);
+            Assert.AreEqual(FireRules.LightGrant.None, grants[0]);
+            Assert.AreEqual(FireRules.LightGrant.Unshadowed, grants[1], "A clearly closer rival takes the light.");
+        }
+
+        [Test]
+        public void Test_WithoutPreviousGrantsSharingIsUnchanged()
+        {
+            var distances = new List<float> { 25f, 1f, 9f, 4f, 16f, 0.5f };
+            var lit = new List<bool> { true, true, true, true, true, false };
+            var grants = new List<FireRules.LightGrant>();
+
+            FireRules.ShareLights(distances, lit, 2, 2, grants, new List<int>(), previous: null);
+
+            CollectionAssert.AreEqual(
+                new[]
+                {
+                    FireRules.LightGrant.None, FireRules.LightGrant.Shadowed, FireRules.LightGrant.Unshadowed,
+                    FireRules.LightGrant.Shadowed, FireRules.LightGrant.Unshadowed, FireRules.LightGrant.None,
+                },
+                grants);
+        }
+
+        [Test]
         public void Test_EqualDistancesShareLightsTheSameWayEveryTime()
         {
             var distances = new List<float> { 4f, 4f, 4f };

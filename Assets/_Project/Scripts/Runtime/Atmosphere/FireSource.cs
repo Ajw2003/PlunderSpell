@@ -59,6 +59,12 @@ namespace Plunderspell.Atmosphere
         private float _targetFlare = 1f;
         private Vector3 _flameRootScale = Vector3.one;
         private float _emberRate;
+        private float _lightShare;
+        private float _shadowShare;
+        private float _shadowStrength = 1f;
+
+        // The budget re-ranks every 0.2 s; fading over a few re-ranks hides a light or shadow popping in or out.
+        private const float GrantFadeSeconds = 0.5f;
 
         /// <summary>What kind of fire this is.</summary>
         public FireKind Kind => _kind;
@@ -77,6 +83,9 @@ namespace Plunderspell.Atmosphere
 
         /// <summary>The light's brightness right now, flicker included, before the budget.</summary>
         public float CurrentIntensity { get; private set; }
+
+        /// <summary>The light the budget last granted; the light fades toward it.</summary>
+        public FireRules.LightGrant Grant { get; private set; }
 
         /// <summary>The point light, for the budget.</summary>
         public Light Light => _light;
@@ -117,6 +126,11 @@ namespace Plunderspell.Atmosphere
                 _emberRate = _embers.emission.rateOverTimeMultiplier;
             if (_lightSource == null)
                 _lightSource = GetComponent<LightSource>();
+            if (_light != null)
+            {
+                _shadowStrength = _light.shadowStrength;
+                _lightShare = _light.enabled ? 1f : 0f;
+            }
         }
 
         private void OnEnable() => s_all.Add(this);
@@ -159,8 +173,28 @@ namespace Plunderspell.Atmosphere
             if (_light != null)
             {
                 _light.color = flameColor;
-                _light.intensity = CurrentIntensity;
+                float fadeStep = deltaTime / GrantFadeSeconds;
+                bool burning = _lit > 0.01f;
+                _lightShare = Mathf.MoveTowards(_lightShare, Grant != FireRules.LightGrant.None && burning ? 1f : 0f, fadeStep);
+                _shadowShare = Mathf.MoveTowards(_shadowShare, Grant == FireRules.LightGrant.Shadowed && burning ? 1f : 0f, fadeStep);
+
+                _light.intensity = CurrentIntensity * _lightShare;
                 _light.range = CurrentRange;
+
+                bool on = _lightShare > 0.001f;
+                if (_light.enabled != on)
+                    _light.enabled = on;
+
+                if (_shadowShare > 0.001f)
+                {
+                    if (_light.shadows != LightShadows.Soft)
+                        _light.shadows = LightShadows.Soft;
+                    _light.shadowStrength = _shadowStrength * _shadowShare;
+                }
+                else if (_light.shadows != LightShadows.None)
+                {
+                    _light.shadows = LightShadows.None;
+                }
             }
 
             if (_flameRoot != null)
@@ -192,17 +226,10 @@ namespace Plunderspell.Atmosphere
                 _lightSource.Set(_lit > 0.5f, CurrentRange, Mathf.Clamp01(_lit * _flare / FireRules.FullAlertFlare));
         }
 
-        /// <summary>Applies the budget's grant: whether the light is on, and whether it casts shadows.</summary>
+        /// <summary>Records the budget's grant; <see cref="Burn"/> fades the light and shadow toward it.</summary>
         public void ApplyGrant(FireRules.LightGrant grant)
         {
-            if (_light == null)
-                return;
-            bool on = grant != FireRules.LightGrant.None && _lit > 0.01f;
-            if (_light.enabled != on)
-                _light.enabled = on;
-            LightShadows shadows = grant == FireRules.LightGrant.Shadowed ? LightShadows.Soft : LightShadows.None;
-            if (_light.shadows != shadows)
-                _light.shadows = shadows;
+            Grant = grant;
         }
     }
 }

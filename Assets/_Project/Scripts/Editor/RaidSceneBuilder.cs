@@ -99,6 +99,7 @@ namespace Plunderspell.EditorTools
 
             RaidDirector director = BuildDirector(generator, lootSpawner, guardSpawner, extraction,
                 lair, alarm, player.transform);
+            CastleDoorForge.WireSpawner(director);
             BuildHud(director, extraction, alarm, lair, player.GetComponentInChildren<LootInteractor>());
 
             EditorSceneManager.MarkSceneDirty(scene);

@@ -52,6 +52,8 @@ the short distance to the floor.
 un-freezing it would drop it out of the carrier's hand socket. It is public so a test can settle the
 haul without waiting the delay out in real time.
 
+`LootSpawner` also checks each spawned piece's height against the headroom above it (#272): a piece that would poke into a ceiling (the 1.65 m altarpiece on a crypt niche or stair) moves to the room's next loot anchor that fits, else onto the room floor.
+
 ## Carrying and extracting
 
 There were two pickup systems on the same objects. Loot prefabs carried **both** `LootPickup` (a

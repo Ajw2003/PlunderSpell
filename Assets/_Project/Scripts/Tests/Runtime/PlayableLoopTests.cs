@@ -394,6 +394,9 @@ namespace Plunderspell.Tests
 
                 foreach (GuardPlacement guard in GuardPlacementPlanner.Plan(castle, seed))
                 {
+                    // The safe ring is the ground floor's; a keep guard above it is a storey away (#255).
+                    if (castle.PlacedModules[guard.ModuleIndex].Level != CastleLevels.Ground)
+                        continue;
                     Vector2Int at = castle.PlacedModules[guard.ModuleIndex].GridPosition;
                     int distance = Mathf.Max(Mathf.Abs(at.x - entrance.x), Mathf.Abs(at.y - entrance.y));
                     Assert.Greater(distance, GuardPlacementPlanner.SafeEntranceRadius,
@@ -405,7 +408,9 @@ namespace Plunderspell.Tests
                     {
                         foreach (ProceduralCastleData.PlacedModule module in castle.PlacedModules)
                         {
-                            if ((module.Position - stop).sqrMagnitude > 0.01f)
+                            // Patrol stops are floor-top points, not module roots.
+                            if (module.Level != CastleLevels.Ground
+                                || (GuardPlacementPlanner.StandingPoint(module) - stop).sqrMagnitude > 0.01f)
                                 continue;
                             int stopDistance = Mathf.Max(Mathf.Abs(module.GridPosition.x - entrance.x),
                                 Mathf.Abs(module.GridPosition.y - entrance.y));

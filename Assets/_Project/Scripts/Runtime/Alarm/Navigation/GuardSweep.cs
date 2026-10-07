@@ -27,9 +27,9 @@ namespace Plunderspell.Alarm
         /// <summary>
         /// How far the mover may go from <paramref name="from"/> along <paramref name="direction"/> (unit
         /// length), up to <paramref name="distance"/>. <paramref name="hitNormal"/> is the surface that cut
-        /// the step short, or zero when nothing did. Triggers and guards' own colliders are ignored.
+        /// the step short, or zero when nothing did; <paramref name="blocker"/> is its collider, or null. Triggers and guards' own colliders are ignored.
         /// </summary>
-        public float AllowedDistance(GuardMover mover, Vector3 from, Vector3 direction, float distance, out Vector3 hitNormal)
+        public float AllowedDistance(GuardMover mover, Vector3 from, Vector3 direction, float distance, out Vector3 hitNormal, out Collider blocker)
         {
             // The bottom sphere starts a step above the floor so stair risers and low clutter do not stop it.
             Vector3 bottom = from + Vector3.up * (_tuning.StepHeight + mover.Radius);
@@ -40,12 +40,14 @@ namespace Plunderspell.Alarm
 
             float nearest = distance + _tuning.SkinWidth;
             hitNormal = Vector3.zero;
+            blocker = null;
             for (int i = 0; i < count; i++)
             {
                 if (BlocksStep(_hits[i], direction) && _hits[i].distance < nearest)
                 {
                     nearest = _hits[i].distance;
                     hitNormal = _hits[i].normal;
+                    blocker = _hits[i].collider;
                 }
             }
             return Mathf.Clamp(nearest - _tuning.SkinWidth, 0f, distance);

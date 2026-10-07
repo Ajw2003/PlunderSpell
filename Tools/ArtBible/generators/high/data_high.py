@@ -74,7 +74,7 @@ age = {
         },
         {
             "slug": "spiral-stair", "name": "The Newel Stair", "zone": "Keep",
-            "footprint": "12 × 12 m, one cell; stair drum Ø 4.0 m outside / 2.4 m inside in the north-east corner, lobby room around it", "height_m": 4.6,
+            "footprint": "12 × 12 m, one cell; stair drum Ø 4.6 m outside / 3.0 m inside in the north-east corner, lobby room around it", "height_m": 4.6,
             "summary": "A clockwise newel stair in a stone drum, linking one floor to the next — built for a right-handed defender coming down.",
             "description": ("Behold the stair that turns clockwise, as every good castle stair does, so that the man above has "
                             "his sword arm free and you have yours jammed against a pillar. It is a stone drum in the corner "
@@ -82,9 +82,9 @@ age = {
                             "your hand. It links one floor to the next, and it is where the altarpiece will be dropped, "
                             "because it is always dropped on the stairs."),
             "build": [
-                "Drum: cylinder 4.00 m outside diameter, 0.80 m ashlar wall, 2.40 m inside diameter; centre at (8.6, 3.4) m in the cell. Rises from the floor slab through the ceiling to the next storey (+4.90 m floor-to-floor).",
+                "Drum: cylinder 4.60 m outside diameter, 0.80 m ashlar wall, 3.00 m inside diameter (no narrower: the guards' 0.5 m walk map cannot climb a tighter turn, Tools/ArtBible/castle/newel_walkmap_check.py); centre at (8.6, 3.4) m in the cell. Rises from the floor slab through the ceiling to the next storey (+4.90 m floor-to-floor).",
                 "Newel: solid limestone column 0.25 m dia, built in drums 0.188 m tall — each drum is carved in one piece with its tread (the period method), so the newel shows a joint every riser.",
-                "Treads: 26 wedge treads per storey, 15° each, rise 0.188 m; going 0.35 m at the wall, 0.03 m at the newel; tread 1.20 m long from newel to wall; nosing worn into a dip 0.02 m deep where feet land, pale and polished.",
+                "Treads: 26 wedge treads per storey, 15° each, rise 0.188 m; going 0.39 m at the wall, 0.03 m at the newel; tread 1.38 m long from newel to wall; nosing worn into a dip 0.02 m deep where feet land, pale and polished.",
                 "Handedness: ascent turns clockwise seen from above — a climber's right hand is on the newel side. Author the helix clockwise; mirroring it is the one mistake that ruins the module.",
                 "Soffit: helical underside 0.28–0.34 m below each tread line, rough-tooled, soot-streaked above the rushlight niche.",
                 "Doorways: 0.90 × 2.10 m pointed door from the lobby at the bottom (south-west of the drum) with an oak leaf 0.08 m thick and two strap hinges; matching opening at the top onto the next floor.",
@@ -580,7 +580,11 @@ age = {
     ],
 }
 
-with open("/home/user/PlunderSpell/docs/art/data/high.json", "w") as f:
+# WARNING (2026-10-03): docs/art/data/high.json has been edited by hand since this script last ran
+# (loot worth and fragility were rebalanced there). Running this script reverts those values; edit
+# the JSON directly, or bring these numbers up to date first.
+import os
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "docs", "art", "data", "high.json"), "w", encoding="utf-8", newline="\n") as f:
     json.dump(age, f, ensure_ascii=False, indent=2)
     f.write("\n")
 print("ok")

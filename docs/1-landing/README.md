@@ -89,6 +89,7 @@ together and what was deliberately left undocumented, and why.
   ArtForge enemies get into a raid (built: all 16 are in their era's roster) and how they get
   animated (**awaiting approval**; no enemy is animated yet, #141). Review page:
   [`docs/generated/enemy-animation-plan/`](../generated/enemy-animation-plan/index.html).
+- [`docs/plans/multi-floor-castle.md`](../plans/multi-floor-castle.md): **approved** (2026-10-03, #197; steps #247-#250, step 1 plan [`multi-floor-castle-step1-plan.md`](../plans/multi-floor-castle-step1-plan.md)). Castles get a keep floor and a crypt below, joined by period stairs, with doors where zones meet.
 - [`docs/plans/diegetic-ui-lair-market.md`](../plans/diegetic-ui-lair-market.md): **approved 2026-10-06**
   (#284); the Lair (#286) and Market (#287) are being modelled. The raid HUD is replaced by things in the world (a grimoire, a pocket watch, fires that show
   the alarm); only the crosshair and damage feedback stay on screen. Loot comes home to a physical

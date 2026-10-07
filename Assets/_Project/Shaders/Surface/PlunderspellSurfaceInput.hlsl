@@ -33,4 +33,26 @@ SAMPLER(sampler_DetailMap);
 // a is how much of it applies (0 when no atmosphere is running, so nothing turns black).
 half4 _PlunderStoneTint;
 
+// Also set by CastleAtmosphere (#231): x hatch strength, y strokes per metre, z how dark a surface
+// must be before strokes appear. All 0 when no atmosphere is running, so nothing is hatched.
+float4 _PlunderHatch;
+
+// Also set by CastleAtmosphere: x how much light is snapped to flat bands, y how soft the band
+// edges are. 0 leaves each material's own _BandAmount and _BandSoftness.
+float4 _PlunderCel;
+
+// Also set by CastleAtmosphere (#266): x paper grain, y ink edges, painted onto the surface in world
+// space. All 0 when no atmosphere is running.
+float4 _PlunderPaint;
+
+// Also set by CastleAtmosphere (#277), the painted look's shapes. _PlunderBlotch: x big blotch scale,
+// y small blotch scale, z and w blotch contrast start and end. _PlunderFine: x fine grain scale.
+// _PlunderInk: x and y rim angle start and end, z curvature gain, w ink darkness.
+// _PlunderSoot: x and y crevice ink start and end, z soot start height, w soot fade height.
+// All 0 when no atmosphere is running, where the strengths in _PlunderPaint are 0 too.
+float4 _PlunderBlotch;
+float4 _PlunderFine;
+float4 _PlunderInk;
+float4 _PlunderSoot;
+
 #endif

@@ -1,5 +1,108 @@
 # Today
 
+**2026-10-06 - guard voices on the new guards (#280).** On `claude/project-thread-x1cqae`. Nine voice commits from
+`claude/voice-mimicry-improvements-7a0b29` cherry-picked (not the mimic prototype); the director follows `Guard`. Every Age
+logged its own `[GuardSpeech]` lines; details in `docs/4-systems/audio.md`.
+
+**2026-10-05 (night) - the owner's four fixes (#262), plus downed teammates (#270).** On `claude/project-thread-x1cqae`.
+- Doors (#263, `0e3bc979`): guards open closed doors they walk into. Hue and cry (#264, `5066321d`): the lockdown
+  bars every door and guards treated barred as walls, so half the garrison never came; now guards pass barred doors
+  (players still need Porta or force). Swarm check: within 20 m of the host at 23 s, 5 -> 12. Left: #271.
+- Spawning outside (#265, `001932c5`): 8 logged outside spawns (2026-09-26 to 09-30) all land inside on today's
+  code; the 2026-10-03 arrival rewrite fixed it. The built game in `Build/` predates that.
+- Painted look: screen ink pass removed, paint on surfaces (#266); new local concept art per Age
+  (`docs/art/concept/painted/`, recipe in its README, #267); four tuning rounds (#268, head `00d2faef`) match fog,
+  fill, paint and wall colour to the art. What still differs is room content, filed as #269.
+- Downed teammates (#270, `d961818e`): guards ignore downed players and keep their target unless another is under
+  2/3 the distance. Not seen in a co-op raid yet.
+
+---
+
+**2026-10-06 - the painted look (#231), owner's pick for juice and art.** The castle shader already
+banded fire light and tinted shadows warm; added the ink: cross-hatching in the shadows of every
+`Plunderspell/Surface` material (castle, and guards and loot through `SurfaceConverter`), outlines from
+depth and a paper grain in a new `Ink` pass before the fog. Settings on the `NightAtmosphere` profile
+(`docs/4-systems/atmosphere.md`, "Ink"). Written in the cloud on `claude/project-thread-x1cqae`; nothing
+compiled or looked at yet, that needs the owner's Editor. Then the owner asked for less hatching and
+harsh lines and more cel shading: hatching now off by default, outlines lighter, and new `CelAmount`
+and `CelSoftness` settings make every surface's fire light snap to crisp flat bands.
+The owner's first after-shots looked nothing like the cel-shaded concept art
+(`/mnt/project-files/concept-art/cel-shaded/`): that art pulls every colour towards umber and vellum and
+lays a heavy blotchy paper over it. So the grades now desaturate (-30 calm to -20 hue and cry, was -4 to
++6, `NightLooks.cs`), the paper grain is stronger (0.14) and outlines catch smaller steps (0.025).
+
+---
+
+**2026-10-05 - the owner played it: "finally starting to feel like a game".** They saved that build as a local
+branch, `Staging` (`aaeb9b94`). Since then: the alarm needs witnesses (#259: guards cry for help, the castle hears
+only through its guards; 3 witnesses for the lockdown, 5 for the hue and cry), curtain fires per Age (#258), and the
+spell tests moved to a listening guard (`325852e9`). House-rules plugin updated to 2.52.0 (unanswered prompts are
+refused after 5 minutes). The #259 live raid check is not run yet. Next agent: `docs/plans/handoff-2026-10-05-guards-castle.md`.
+
+---
+
+**2026-10-03 (evening) - the stacked castle, picked up after the owner's playtest (#253).** The previous
+session finished tasks 1-4 of 8 in `docs/plans/multi-floor-castle-step1-plan.md` (#247) and stopped before
+anything worked on the new floors; #253 lists what the owner saw. Order chosen by the owner: #254 crypt entry
+and stone on placeholders, #255 guards on every floor (tasks 5-7), #248 doors, #256 stairs built by extending
+each Age's existing stairwell (owner's pick over stepped placeholders), #257 every Age and its lights
+checked with screenshots. Roofs come after; "outside" needs a design talk first.
+- #248 doors: `CastleDoorPlanner` (10 ward-bailey, 2 keep, 1 crypt door for seed 12345 on all three
+  registries), three door prefabs from `Tools/Plunderspell/Forge Castle Doors`, entries in the network prefab
+  list, and `CastleDoorSpawner` (server-side, wired into `RaidDirector` and `RaidScene`). Two gaps found and
+  fixed (`a155364c`): nothing could open them by hand (the prefabs had no `CastleDoorHandle`, which lived inside
+  `LootInteractor.cs` and so could not sit on a prefab), and open, lock and bar only changed on the machine that
+  acted. Co-op check (`Tools/Unity/coop_door_check.sh`, seed 777): 13 doors on both sides; the client's hand
+  opens one for both; the host's lockdown locks all 13 on the client; a locked door refuses the client's hand;
+  the client's Porta opens it for both.
+- #256 stairs: each Age's existing stairwell, extended. `Tools/AssetPipeline/castle_builders_stairs.py` reuses
+  the kit's L stair to its gallery, adds a flight from the gallery to the keep floor (4.60) and cuts wells in
+  the slabs for 2.40 m headroom; the down-stair uses the same flights 0.30 -> 3.60. One forge for all Ages
+  (`Tools/Plunderspell/Forge Stairs`); the braziers' fires are wired. In a raid a player walked the High
+  Medieval pair: feet 0.30 -> 1.60 landing -> 2.90 gallery -> 4.60 keep floor, and lobby -> -3.00 crypt floor
+  (`Tools/Unity/eval/stair_leg.cs`). Late and Bronze were not walked; the flood test passes on all three.
+  The wells have no railings.
+- #257 every Age (`Tools/Unity/ages_check.sh`, run twice, `docs/generated/ages-check-2026-10-04/`, a contact
+  sheet per Age): all four build the three floors; fires keep 23-35, ground 82-86, crypt 17-24, each with its
+  light; none float or are buried (`eval/light_audit.cs`) except one hearth flame inside its own fireplace.
+  Looked at all 44 views: lights sit on their sconces and braziers on every floor. Fog is heavy (#250); every
+  room is open to the sky (roofs next).
+- Full PlayMode suite at the end: 379/379 pass.
+- #254 done (`4d40187a`): the raid scene's `Ground` plane at height 0 ran through the down-stair's well, so
+  players stood on it. Ground is now one mesh with a 12 m hole over the centre cell
+  (`Editor/GroundStairWellCutter.cs`). In Play mode the real controller walked from the lobby floor (0.40) to
+  the crypt's `FootSlab` at -3.00 (`Tools/Unity/eval/walk_down_stair.cs`; picture
+  `docs/generated/castle-floors-2026-10-03/`). Re-running the stair forge wipes the stairs' walk-map tiles;
+  bake again after it.
+- Seen in that run: the arrival portal stands inside the down-stair at (0, -2.05, 0). The arrival planner
+  still picks stair rooms (plan task 7, #255).
+- #255 task 5 done (`51c63544`): the walk map looks up rooms per floor. Found: every gallery stairwell
+  (KeepStairwell, LateTurretStair, BronzeMegaronStair) now lands on the keep floor, and guards are blocked
+  climbing them there (3 `GuardClimbsTheStairToItsGallery` failures). Two causes, both fixed: archway cells
+  under door plugs stayed walkable (`60e3bbac`), and the floor under a guard was the nearest cell in 3D, which
+  picked the ramp below a gallery edge; it now comes from the guard's own column (`9c1153ad`).
+- #255 tasks 6-7 done (`6d00a7c7`, `9a990794`): the castle check searches floor by floor; arrival, entrances,
+  dressing and the portal safe ring read the ground floor; stairs are never posts, arrival or loot rooms;
+  guards stand on their floor top and patrol on their own level. Tests: CastleGeneratorTests 13/13,
+  CastleArrivalTests 18/18, Guard PlayMode 134/134, Nav EditMode 20/20. Loot EditMode 8/10, the two failures
+  (`LootAmountTests...AboutDoubleTheOldHaul`, `LootBalanceTests...OuterZonesHoldNothingTooHeavyToLift`) fail
+  the same without these changes.
+- Raid check, seed 777 (`Tools/Unity/eval/guards_per_floor.cs`): arrival at (-12, 1.25, -12), a ground room;
+  9 guards, 3 per floor, all on their floor and patrolling 20 s later. One sample caught a keep guard 0.3 m
+  into the slab at x 6.0, the seam beside the up-stair's head; the next six samples had every keep guard at
+  4.61. Not chased.
+
+---
+
+**2026-10-03 - first performance pass, PR #246 opened, 28 finished issues closed.** Measured a co-op
+raid with the Profiler (`Tools/Unity/perf_capture.sh`, results in `docs/generated/perf-2026-10-03/README.md`)
+and fixed the worst causes: guard route smoothing froze the host up to 204 ms in a hue and cry (now 33 ms,
+#243); every sound streamed from disk (short sounds now load into memory, owner approved, #244); the HUD
+made 46 KB of garbage a frame (26 KB, #245, still open); fire glow sorting (#217, still open). Finding: in
+Editor Play mode the Editor takes about half the host's frame (~135 fps vs ~290 in the build). Full PlayMode
+suite 373/373. PR #246 merges the whole `claude/playability-fixes` branch (186 commits). The owner closed 28
+finished issues; why they piled up is filed as Ajw2003/AjsClaudeCodeTools#141. Lightmap baking was checked:
+the bake call is Editor-only in 6000.3.15f1 and the build ships no `UnityEditor` assemblies.
 **2026-10-06 - proposal: the HUD goes into the world, the Lair becomes a place, the Market haggles.**
 Asked for by the owner, ahead of any code: spells in a grimoire you open, the timer on a pocket watch,
 the alarm read from the castle's fires, and the rest of the HUD replaced except the crosshair and

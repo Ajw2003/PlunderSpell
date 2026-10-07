@@ -200,7 +200,7 @@ namespace Plunderspell.Tests
         {
             RaidHudPresenter hud = MakeHud(out ExtractionZone zone, out EnemyDirector alarm, out _);
             zone.SetRaidDuration(125f);
-            alarm.SetAlarmLevel(60f);
+            alarm.SetAlarmLevel(60f, 3); // Roused needs three witnesses (#259)
 
             RaidHudModel model = hud.Build();
 
@@ -268,7 +268,7 @@ namespace Plunderspell.Tests
             alarm.SetAlarmLevel(30f);
             StringAssert.Contains("STIRRED", hud.Build().AlarmText);
 
-            alarm.SetAlarmLevel(90f);
+            alarm.SetAlarmLevel(90f, 5); // Hue and Cry needs five witnesses (#259)
             StringAssert.Contains("HUE AND CRY", hud.Build().AlarmText);
         }
     }

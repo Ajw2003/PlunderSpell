@@ -22,6 +22,13 @@ namespace Plunderspell.Guards
         /// <summary>Raised with where the noise came from and how strong it was, when it is worth a look.</summary>
         public event Action<Vector3, float> NoiseNoticed;
 
+        /// <summary>Raised with where another guard cried out, when this guard (awake) heard it.</summary>
+        public event Action<Vector3> CryHeard;
+
+        /// <summary>Raised for every intruder noise this guard heard while awake, worth a look or not: the
+        /// castle scores what its guards hear (#259).</summary>
+        public event Action<Vector3, float> NoiseHeard;
+
         public GuardHearing(StatusEffectReceiver status)
         {
             _status = status;
@@ -39,12 +46,22 @@ namespace Plunderspell.Guards
             if (_closed)
                 return;
 
+            // A cry is the guards talking: it neither wakes a sleeper nor counts as a noise to report.
+            if (noise.Type == NoiseType.GuardCry)
+            {
+                if (_status == null || !_status.IsAsleep)
+                    CryHeard?.Invoke(noise.Origin);
+                return;
+            }
+
             if (_status != null && _status.IsAsleep && noise.Strength >= WakeThreshold)
                 _status.WakeUp();
 
             // A noise too quiet to wake the guard goes unheard; it must not wait as a lead for when it wakes.
             if (_status != null && _status.IsAsleep)
                 return;
+
+            NoiseHeard?.Invoke(noise.Origin, noise.Strength);
 
             if (!GuardBrain.ShouldInvestigate(noise.Strength, alarm))
                 return;

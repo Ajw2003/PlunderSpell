@@ -96,6 +96,17 @@ minus 80, 1 is 0, 0.5 is about minus 6), applies the saved values when the direc
 the exposed parameters. Before this layer the saved Master value was not applied at start-up at all;
 it is now. With no mixer loaded, Master falls back to `AudioListener.volume`.
 
+**Start-up is checked, not trusted (#181).** The owner reported sliders showing the saved value while
+the sound sat elsewhere until a slider was moved. Checked 2026-09-30: with music playing in a live
+Editor session the mixer matched the saved values exactly (master -1.32 dB, music -13.87 dB), and in a
+test run the values held over ten frames, after a looping sound started, and after
+`AudioSettings.Reset`. So the fault was **not reproduced**; a mixer that drops values set before its
+first real use would only show in a fresh process, which was not measured. `AudioLevels` now reads the
+mixer back every frame for 2 s after `Bind` and after any `AudioSettings.OnAudioConfigurationChanged`,
+puts any value that differs back, and logs `[Audio] The mixer dropped the saved volumes` (up to five
+times), so a recurrence names itself in the log. Sliders also call `PlayerPrefs.Save()` now.
+Tests: `SavedAudioSettingsTests`. If the log line ever appears, that was the cause.
+
 Two things differ from the plan, and both came from measuring.
 
 - **The Casting dip is not a snapshot transition.** In Unity 6000.3 a snapshot transition overwrites an
@@ -189,6 +200,69 @@ zero, on every peer. A guard that vanishes while the raid phase is `Raiding` is 
 speaks its death line from where it last stood. A guard destroyed for any other reason during a raid
 would do the same; none is known.
 
+## Guard speech from recorded clips (issue #184, part of #179)
+
+Human guards no longer play the named `vo_<age>_<voice>_<line>` sounds. `GuardVoiceDirector.Speak`
+(`GuardVoiceDirector.cs:203`) still decides when a guard talks, with the same triggers and limits above,
+but what plays is a recorded line re-voiced per guard:
+
+1. `GuardSpeechBank` loads every clip in `Resources/GuardVoice/<age>/` once and picks a random clip of
+   the guard's Age and line (file names `vo_<age>_base_<situation>_<NN>`). An Age with no clip for a
+   line borrows it from powder, then high, late, bronze, so a guard is never silent.
+2. `GuardVoiceProfiles` gives the guard's archetype pitch (130 Hz levy, 95 Hz champion, and so on;
+   unknown 120 Hz) and a `DisguiseProfile` from a seed. The seed is the guard's PurrNet network object
+   id (`NetworkIdentity.objectId`), which is the same on the host and every client, so a guard has one
+   voice everywhere and two guards of one archetype differ. Before the guard has spawned the id is 0;
+   the seed then comes from prefab name and first position instead (`GuardVoiceProfiles.SeedFor`).
+3. `GuardSpeechRenderer.TryGet` renders on a worker thread (`Task.Run`), peak-normalises to 0.8, and
+   `Pump()` (called from `GuardVoiceDirector.Update`) turns finished renders into clips on the main
+   thread; the cache keeps the last 48 (an evicted clip is destroyed). `TryGet` returns false while a
+   clip renders and the director keeps the line pending for up to 1 s (`PendingSeconds`), asking for the
+   same clip each frame, so the first line a guard says is late by a few frames and not dropped. The
+   blocking `Get` is for tests and tools. A blocking render over 40 ms logs a warning.
+4. `AudioDirector.PlayClip` plays it through the voice pool (six voices, nearest win) on the mixer
+   group and reach of the bank's first `vo_` entry (Creatures), so the volume sliders reach it. The
+   director's situation gain is 0.5 for murmur, lost and asleep, 0.75 for alert, search, hurt and
+   death, 1.0 for chase and attack. The `SoundFocus` gate is `guardspeech_<situation>`, checked before
+   rendering.
+5. A guard stays silent until its own clip ends (`Record.SpeakingUntil`), so a 10 s snore does not
+   overlap the 6 s asleep timer. The side effect is that a state change during a long clip gets no line.
+
+Each spoken line logs `[GuardSpeech] <guard> (<age>/<voice>) <situation> <clip> pitch x.. speed x..`.
+Hounds are unchanged (still the named `vo_hound_*` sounds).
+
+**Switched off for the guard-speech test** (in `SoundFocusSettings.asset` and the code defaults):
+"Guard and hound voices" (`vo_`, so hounds are silent too), "Guard sounds" (`sfx_enemy`), "Guard mimicry
+(prototype)" (`mimic_`) and the new "Guard footsteps and armor" (`guard_foley`). `AudioDirector.Discover`
+adds `StepAudio` to guards only while `guard_foley` is allowed; the player's steps are unchanged.
+`Mimic.GuardMimic` is no longer added in `AudioDirector.Initialize`; its files and tests remain. To turn
+any of it back on, tick the group in `SoundFocusSettings.asset` (guard footsteps apply to guards seen
+after the change). The new "Guard speech (recorded clips)" group (`guardspeech_`) is on.
+
+**Real recordings replace the stand-ins**: drop them into `Tools/GuardVoice/takes/<age>/` with the same
+file names, then run `python Tools/GuardVoice/sync_base_to_game.py`. For each line it copies the real
+take if there is one, else the stand-in from `takes-tts/`, into `Resources/GuardVoice/`, removes files
+not in `record-lines.json`, and prints how many are real. `GuardVoiceImportSettings` (Editor) imports
+those clips decompressed, PCM, mono, which the re-voicing needs to read samples.
+
+Checked 2026-09-30, solo Editor raid only: guards moved beside the player and driven through
+Investigating, Chasing, Searching, Patrolling and damaged logged `[GuardSpeech]` lines, and a playing
+AudioSource held a rendered clip on Creatures. Two knights got different pitch (x0.82 and x0.84). Not
+checked: a second machine, so that the network id matching on host and client is read from PurrNet's
+code, not measured; and how any of it sounds.
+
+**On the new guards (#280, 2026-10-06).** Merged from `claude/voice-mimicry-improvements-7a0b29`, voices only: the
+mimic prototype (local model) stays on its branch, so the "Guard mimicry (prototype)" group (`mimic_`) is off and has
+nothing behind it. `GuardVoiceDirector` follows `Plunderspell.Guards.Guard` (state, attack signal, health, `IsDead`,
+`objectId`) found through `EnemyDirector.GuardsOf`, the same way as before the merge. The Age of a guard is not read from the
+raid: it comes from the guard's prefab name (`GuardVoices.Resolve`, `AudioLookups.cs`: PalaceLevy is bronze,
+HouseholdKnight high, GothicManAtArms late, Cuirassier powder), and each raid spawns the roster of its era, so the
+lines follow the raid's Age. On: "Guard speech (recorded clips)". Muted in `SoundFocusSettings.asset`: "Guard and hound
+voices" (`vo_`, hounds too), "Guard sounds" (`sfx_enemy`), "Guard footsteps and armor" (`guard_foley`) and "Guard
+mimicry (prototype)". The 19 per-footstep switches from the owner are unchanged. Checked 2026-10-06, solo Editor
+raid, seed 777, 45 s per Age: `[GuardSpeech]` lines in bronze, high, late and powder (23 to 26 per Age), frame about
+8 to 9 ms with 9 guards.
+
 ## Finding things that raise events
 
 Static events (`CastResolved`, `PhraseResolved`, `Damage.Dealt`, `LootValue.Ruined`) are subscribed in
@@ -212,9 +286,16 @@ the Project window and edit it in the Inspector. Changes apply at once, in Play 
 - **Overrides**: exact sound names that ignore their group (the five spell sounds still waiting on a
   replacement are here, muted).
 - **Play Everything Else**: for a sound no group or override names.
+- **Footsteps, one switch each** (2026-10-06, owner's request to find a step they dislike): the old
+  single "Footsteps and movement" group is split into 19 groups: `Step:` stone, wood, earth, rushes,
+  tile, metal, water, hound; `Gear rustle:` linen, leather, mail, plate, bronze plate, robe; `Player:`
+  jump, landing, landing (light), dodge; and "Footsteps (any not listed below)" for any new `foley_`
+  sound. Players and guards share the `Step:` sounds, so one switch mutes both. Checked: with
+  "Step: stone" off, stone was blocked and wood, landings and plate rustle still played.
 
-As shipped (the owner's ticks, 2026-09-30): footsteps and movement, guard and hound voices, guard
-sounds, weapons, UI, spells, music, player, portal and loot, and hazards play; physics, ambience,
+As shipped (the owner's ticks, 2026-09-30; guard and hound voices, guard sounds, guard mimicry and guard
+footsteps then switched off for the guard-speech test, see above): footsteps and movement, guard
+speech clips, weapons, UI, spells, music, player, portal and loot, and hazards play; physics, ambience,
 stingers and castle are muted, and three spell sounds waiting on round two are muted by override.
 The code's defaults (`SoundFocusSettings.cs`, used only for a fresh asset) match. Physics was muted because its tone read wrong (leather on stone sounded like metal); the
 triggers are unchanged and wait for replacement files. `SoundFocus` (`Assets/_Project/Scripts/Runtime/Audio/SoundFocus.cs`)
@@ -458,3 +539,19 @@ Play-mode reads (which `AudioSource`s were playing, on which group) are in
 `docs/5-today/Today.md` for the day they were taken. They show the sources, the clips and the groups.
 They cannot show how anything sounds, or whether a level is right, and the listening pass is still to
 do.
+
+### Trap: frame drops from guard speech (fixed 2026-09-30, #184)
+
+The first version rendered each guard's line on the main thread the first time a guard said it. The
+pitch match in `VoiceDisguise.BestMatch` compared 441 candidate positions over a 550-sample window 80
+times per second of audio, about 14 ms per second of audio on a fast .NET runtime (measured: 20 ms for a
+1.5 s clip, 138 ms for the 10 s snore), and the Editor log showed 163 to 309 ms renders, each a frozen
+frame. Two changes: the search is now coarse then fine (every fourth candidate on every fourth sample,
+then the nine nearest at full resolution: 2.3 ms for 1.5 s, 15 ms for 10 s on the same runtime; in the
+Unity Editor 26 ms for the 5.1 s shout clip and 52 ms for the snore), and rendering happens off the
+main thread, where `TryGet` costs 0.08 ms. Measured with `Tools/Unity/frame_cost_check.sh` in a solo
+Editor raid with "Guards hear my voice" on: about 5 to 6 ms per frame, and with 15 guards all made to
+speak at once the worst frames were 34 to 51 ms, one frame per pass, with no slow-render warnings. How
+much of that one frame is the speech and how much is the script teleporting 15 guards was not
+separated. The always-listening recogniser showed no measurable cost in silence (same frame times with
+it on and off); its cost while someone talks was not measured.

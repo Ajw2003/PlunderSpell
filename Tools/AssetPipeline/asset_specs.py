@@ -64,6 +64,13 @@ CASTLE_SPECS = [
     dict(key="BurialVault",       builder="build_burial_vault",       tri_budget=900, subdir="Castle"),
     dict(key="CryptChamberFinal", builder="build_crypt_chamber_final",tri_budget=800, subdir="Castle"),
     dict(key="CryptStairwell",    builder="build_crypt_stairwell",    tri_budget=600, subdir="Castle"),
+    # Two-storey stairs for the stacked castle (castle_builders_stairs.py, #256)
+    dict(key="MedievalStairUp",   builder="build_medieval_stair_up",   tri_budget=1000, subdir="Castle", module="castle_builders_stairs", kind="room"),
+    dict(key="MedievalStairDown", builder="build_medieval_stair_down", tri_budget=1000, subdir="Castle", module="castle_builders_stairs", kind="room"),
+    dict(key="LateStairUp",       builder="build_late_stair_up",       tri_budget=1000, subdir="Castle/LateMedieval", module="castle_builders_stairs", era="LateMedieval", zone="InnerWard", kind="room"),
+    dict(key="LateStairDown",     builder="build_late_stair_down",     tri_budget=1000, subdir="Castle/LateMedieval", module="castle_builders_stairs", era="LateMedieval", zone="InnerWard", kind="room"),
+    dict(key="BronzeStairUp",     builder="build_bronze_stair_up",     tri_budget=1000, subdir="Castle/BronzeAge", module="castle_builders_stairs", era="BronzeAge", zone="InnerWard", kind="room"),
+    dict(key="BronzeStairDown",   builder="build_bronze_stair_down",   tri_budget=1000, subdir="Castle/BronzeAge", module="castle_builders_stairs", era="BronzeAge", zone="InnerWard", kind="room"),
     # Door plugs — one per enclosed zone, sized to that zone's archway.
     # Not RoomIds: the generator instantiates these to seal an archway that
     # ends up facing an empty cell (CastleRoomRegistry.DoorPlugs).

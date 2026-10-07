@@ -25,6 +25,15 @@ namespace Plunderspell.Audio
         private const float DipInSeconds = 0.12f;
         private const float DipOutSeconds = 0.3f;
 
+        /// <summary>
+        /// How long after binding, and after the audio restarts, the saved values are checked against the
+        /// mixer every frame and put back if the mixer has dropped them.
+        /// </summary>
+        public const float SettleSeconds = 2f;
+
+        private const float ToleranceDb = 0.25f;
+        private const int MaxWarnings = 5;
+
         private static AudioMixer s_mixer;
         private static float s_master = 1f;
         private static float s_music = 1f;
@@ -38,6 +47,9 @@ namespace Plunderspell.Audio
         /// lost, the mixer sits at 0 dB until the next SetFloat; later pushes stick.
         /// </summary>
         public const float StartupPushSeconds = 1.5f;
+        private static float s_settleLeft;
+        private static bool s_watchingConfiguration;
+        private static int s_warnings;
 
         /// <summary>The casting dip in force right now, 0 when not casting.</summary>
         public static float CastingDb => s_castingDb;
@@ -61,8 +73,17 @@ namespace Plunderspell.Audio
             s_master = PlayerPrefs.GetFloat(MasterKey, 1f);
             s_music = PlayerPrefs.GetFloat(MusicKey, 1f);
             s_sfx = PlayerPrefs.GetFloat(SfxKey, 1f);
+            s_warnings = 0;
             Push();
             KeepPushing();
+            s_settleLeft = s_mixer != null ? SettleSeconds : 0f;
+
+            // A device change or an audio restart can reset the mixer's exposed values; apply them again.
+            if (!s_watchingConfiguration)
+            {
+                AudioSettings.OnAudioConfigurationChanged += HandleConfigurationChanged;
+                s_watchingConfiguration = true;
+            }
         }
 
         /// <summary>Pushes the current values now and again each frame for <see cref="StartupPushSeconds"/>; call after anything that may reset the mixer.</summary>
@@ -86,12 +107,35 @@ namespace Plunderspell.Audio
             s_master = s_music = s_sfx = 1f;
             s_castingDb = 0f;
             s_keepPushingUntil = 0f;
+            s_settleLeft = 0f;
+            s_warnings = 0;
+        }
+
+        /// <summary>
+        /// Called every frame by the director. For <see cref="SettleSeconds"/> after binding or an audio
+        /// restart it reads the mixer back and, if a value differs from the saved one, logs it and sets it again.
+        /// </summary>
+        public static void Settle(float deltaTime)
+        {
+            if (s_mixer == null || s_settleLeft <= 0f)
+                return;
+            s_settleLeft -= deltaTime;
+            VerifyMixer();
+        }
+
+        /// <summary>The audio was restarted or its device changed: the mixer may have lost the saved values.</summary>
+        public static void HandleConfigurationChanged(bool deviceWasChanged)
+        {
+            if (s_mixer == null)
+                return;
+            Push();
+            s_settleLeft = SettleSeconds;
         }
 
         public static void SetMaster(float linear, bool save = true)
         {
             if (save)
-                PlayerPrefs.SetFloat(MasterKey, linear);
+                Save(MasterKey, linear);
             s_master = linear;
             Push();
         }
@@ -99,7 +143,7 @@ namespace Plunderspell.Audio
         public static void SetMusic(float linear, bool save = true)
         {
             if (save)
-                PlayerPrefs.SetFloat(MusicKey, linear);
+                Save(MusicKey, linear);
             s_music = linear;
             Push();
         }
@@ -107,9 +151,41 @@ namespace Plunderspell.Audio
         public static void SetEffects(float linear, bool save = true)
         {
             if (save)
-                PlayerPrefs.SetFloat(SfxKey, linear);
+                Save(SfxKey, linear);
             s_sfx = linear;
             Push();
+        }
+
+        private static void Save(string key, float linear)
+        {
+            PlayerPrefs.SetFloat(key, linear);
+            PlayerPrefs.Save();
+        }
+
+        private static void VerifyMixer()
+        {
+            if (Differs(MasterParameter, LinearToDb(s_master)) || Differs(MusicParameter, Combine(s_music, s_castingDb))
+                || Differs(SfxParameter, Combine(s_sfx, s_castingDb)) || Differs(UiParameter, LinearToDb(s_sfx)))
+            {
+                if (s_warnings < MaxWarnings)
+                {
+                    s_warnings++;
+                    Debug.LogWarning("[Audio] The mixer dropped the saved volumes; applying them again. " + DescribeMixer());
+                }
+                Push();
+            }
+        }
+
+        private static bool Differs(string parameter, float expectedDb) =>
+            !s_mixer.GetFloat(parameter, out float actual) || Mathf.Abs(actual - expectedDb) > ToleranceDb;
+
+        private static string DescribeMixer()
+        {
+            s_mixer.GetFloat(MasterParameter, out float master);
+            s_mixer.GetFloat(MusicParameter, out float music);
+            s_mixer.GetFloat(SfxParameter, out float sfx);
+            return $"Mixer master {master:0.0} dB (want {LinearToDb(s_master):0.0}), music {music:0.0} dB (want {Combine(s_music, s_castingDb):0.0}), " +
+                   $"effects {sfx:0.0} dB (want {Combine(s_sfx, s_castingDb):0.0}).";
         }
 
         /// <summary>

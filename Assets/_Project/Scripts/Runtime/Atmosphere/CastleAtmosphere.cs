@@ -41,9 +41,6 @@ namespace Plunderspell.Atmosphere
         private static readonly int s_scatter = Shader.PropertyToID("_NF_Scatter");
         private static readonly int s_sky = Shader.PropertyToID("_NF_Sky");
 
-        /// <summary>How quickly the sky clears with elevation: an exponent on the up component, so
-        /// the horizon keeps the fires' glow and overhead opens up.</summary>
-        private const float k_SkyClarityCurve = 0.6f;
         private static readonly int s_lightPos = Shader.PropertyToID("_NF_LightPos");
         private static readonly int s_lightColor = Shader.PropertyToID("_NF_LightColor");
         private static readonly int s_skyZenith = Shader.PropertyToID("_Zenith");
@@ -51,6 +48,13 @@ namespace Plunderspell.Atmosphere
         private static readonly int s_skyMoonDir = Shader.PropertyToID("_MoonDir");
         private static readonly int s_skyMoonColor = Shader.PropertyToID("_MoonColor");
         private static readonly int s_stoneTint = Shader.PropertyToID("_PlunderStoneTint");
+        private static readonly int s_hatch = Shader.PropertyToID("_PlunderHatch");
+        private static readonly int s_paint = Shader.PropertyToID("_PlunderPaint");
+        private static readonly int s_cel = Shader.PropertyToID("_PlunderCel");
+        private static readonly int s_blotch = Shader.PropertyToID("_PlunderBlotch");
+        private static readonly int s_ink = Shader.PropertyToID("_PlunderInk");
+        private static readonly int s_soot = Shader.PropertyToID("_PlunderSoot");
+        private static readonly int s_fine = Shader.PropertyToID("_PlunderFine");
 
         private const int k_MaxScatterLights = 32;
         private const float k_ScatterReach = 70f;
@@ -58,10 +62,6 @@ namespace Plunderspell.Atmosphere
         private const float k_VisibilityInterval = 0.1f;
         private const float k_ConvertInterval = 0.5f;
         private const float k_VisibilityFade = 6f;
-        private const float k_OccludedGlow = 0.2f;
-        // Closest a view ray counts as passing to a flame, metres. Keeps the glow's centre soft
-        // rather than a pinpoint that bloom turns into a white disc.
-        private const float k_HaloCore = 0.6f;
         private const string k_TriplanarKeyword = "_PLUNDER_TRIPLANAR";
 
         private readonly float[] _weights = new float[4];
@@ -74,6 +74,7 @@ namespace Plunderspell.Atmosphere
         private readonly List<float> _sqrDistances = new List<float>();
         private readonly List<bool> _isLit = new List<bool>();
         private readonly List<FireRules.LightGrant> _grants = new List<FireRules.LightGrant>();
+        private readonly List<FireRules.LightGrant> _previousGrants = new List<FireRules.LightGrant>();
         private readonly List<int> _order = new List<int>();
 
         private AlarmState _state = AlarmState.Calm;
@@ -145,6 +146,13 @@ namespace Plunderspell.Atmosphere
             NightFogFeature.IsActive = false;
             Shader.SetGlobalVector(s_scatter, Vector4.zero);
             Shader.SetGlobalVector(s_stoneTint, Vector4.zero);
+            Shader.SetGlobalVector(s_hatch, Vector4.zero);
+            Shader.SetGlobalVector(s_paint, Vector4.zero);
+            Shader.SetGlobalVector(s_cel, Vector4.zero);
+            Shader.SetGlobalVector(s_blotch, Vector4.zero);
+            Shader.SetGlobalVector(s_ink, Vector4.zero);
+            Shader.SetGlobalVector(s_soot, Vector4.zero);
+            Shader.SetGlobalVector(s_fine, Vector4.zero);
             RestoreRenderSettings();
             DestroyVolumes();
             if (_skyInstance != null)
@@ -263,6 +271,16 @@ namespace Plunderspell.Atmosphere
             NightAtmosphereProfile.EraTint tint = _profile.ForEra(era);
             Color stone = tint.Stone.maxColorComponent > 0f ? tint.Stone : Color.white;
             Shader.SetGlobalVector(s_stoneTint, new Vector4(stone.r, stone.g, stone.b, 1f));
+            Shader.SetGlobalVector(s_hatch, new Vector4(_profile.HatchStrength, _profile.HatchLinesPerMetre, _profile.HatchStart, 0f));
+            Shader.SetGlobalVector(s_paint, new Vector4(_profile.PaperGrain, _profile.OutlineStrength, _profile.SootStrength, 0f));
+            Shader.SetGlobalVector(s_cel, new Vector4(_profile.CelAmount, _profile.CelSoftness, 0f, 0f));
+            Shader.SetGlobalVector(s_blotch, new Vector4(_profile.BlotchScale, _profile.SmallBlotchScale,
+                _profile.BlotchContrastStart, _profile.BlotchContrastEnd));
+            Shader.SetGlobalVector(s_ink, new Vector4(_profile.OutlineEdgeStart, _profile.OutlineEdgeEnd,
+                _profile.OutlineCurvatureGain, _profile.InkDarkness));
+            Shader.SetGlobalVector(s_soot, new Vector4(_profile.CreviceInkStart, _profile.CreviceInkEnd,
+                _profile.SootStartHeight, _profile.SootFadeHeight));
+            Shader.SetGlobalVector(s_fine, new Vector4(_profile.FineGrainScale, 0f, 0f, 0f));
             if (tint.Flame.maxColorComponent > 0f)
                 _current.FlameColor *= tint.Flame;
         }
@@ -291,19 +309,19 @@ namespace Plunderspell.Atmosphere
         private void ApplyFog()
         {
             Shader.SetGlobalColor(s_fogColor, _current.FogColor);
-            Shader.SetGlobalVector(s_fogParams, new Vector4(_current.FogDensity, _current.FogBaseHeight,
+            Shader.SetGlobalVector(s_fogParams, new Vector4(_current.FogDensity * _profile.FogAmount, _current.FogBaseHeight,
                 Mathf.Max(0.001f, _current.FogHeightFalloff), _current.SkyDistance));
             Vector3 moonDir = MoonDirection();
             Shader.SetGlobalVector(s_moonDir, new Vector4(moonDir.x, moonDir.y, moonDir.z, _current.MoonAnisotropy));
             Shader.SetGlobalColor(s_moonColor, _current.MoonColor * _current.MoonScatter);
-            Shader.SetGlobalVector(s_sky, new Vector4(Mathf.Clamp01(_current.SkyClarity), k_SkyClarityCurve, 0f, 0f));
+            Shader.SetGlobalVector(s_sky, new Vector4(Mathf.Clamp01(_current.SkyClarity), _profile.SkyClarityCurve, 0f, 0f));
 
             int count;
             using (GatherMarker.Auto())
                 count = GatherScatterLights();
             Shader.SetGlobalVectorArray(s_lightPos, _lightPos);
             Shader.SetGlobalVectorArray(s_lightColor, _lightColor);
-            Shader.SetGlobalVector(s_scatter, new Vector4(_current.FireScatter, _current.FireAnisotropy, k_HaloCore, count));
+            Shader.SetGlobalVector(s_scatter, new Vector4(_current.FireScatter * _profile.FireGlowAmount, _current.FireAnisotropy, _profile.FireHaloSoftness, count));
         }
 
         /// <summary>
@@ -351,7 +369,7 @@ namespace Plunderspell.Atmosphere
                     using var probing = ProbeMarker.Auto();
                     bool blocked = Physics.Linecast(eye, glow, ~0, QueryTriggerInteraction.Ignore)
                                    && Physics.Linecast(eye, glow + Vector3.up * 1.5f, ~0, QueryTriggerInteraction.Ignore);
-                    float target = blocked ? k_OccludedGlow : 1f;
+                    float target = blocked ? _profile.OccludedGlow : 1f;
                     seen = Mathf.MoveTowards(seen, target, k_VisibilityFade * k_VisibilityInterval);
                     _visibility[fire] = seen;
                 }
@@ -383,14 +401,16 @@ namespace Plunderspell.Atmosphere
             Vector3 eye = camera.transform.position;
             _sqrDistances.Clear();
             _isLit.Clear();
+            _previousGrants.Clear();
             for (int i = 0; i < fires.Count; i++)
             {
                 _sqrDistances.Add(FireRules.SqrDistance(fires[i].GlowPosition, eye));
                 _isLit.Add(fires[i].IsBurning);
+                _previousGrants.Add(fires[i].Grant);
             }
 
             TierBudget budget = AtmosphereQuality.BudgetFor(_tier);
-            FireRules.ShareLights(_sqrDistances, _isLit, budget.ShadowedFires, budget.UnshadowedFires, _grants, _order);
+            FireRules.ShareLights(_sqrDistances, _isLit, budget.ShadowedFires, budget.UnshadowedFires, _grants, _order, _previousGrants);
             for (int i = 0; i < fires.Count; i++)
                 fires[i].ApplyGrant(_grants[i]);
         }

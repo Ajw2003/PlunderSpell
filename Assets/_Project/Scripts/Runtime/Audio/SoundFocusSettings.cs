@@ -58,8 +58,8 @@ namespace Plunderspell.Audio
         public List<Group> Groups = new List<Group>
         {
             new Group("Footsteps and movement", true, "foley_"),
-            new Group("Guard and hound voices", true, "vo_"),
-            new Group("Guard sounds", true, "sfx_enemy"),
+            new Group("Guard and hound voices", false, "vo_"),
+            new Group("Guard sounds", false, "sfx_enemy"),
             new Group("Weapons: swings, bolts, hits", true, "sfx_wpn"),
             new Group("Menu and UI", true, "ui_"),
             new Group("Spells", true, "sfx_spell_"),
@@ -74,6 +74,9 @@ namespace Plunderspell.Audio
             new Group("Portal, loot, extraction, results, lair", true,
                 "sfx_portal", "sfx_extract", "sfx_loot", "sfx_result", "sfx_lair"),
             new Group("Hazards, fire, status, debris", true, "sfx_hazard", "sfx_fire", "sfx_status", "sfx_debris"),
+            new Group("Guard mimicry (prototype)", false, "mimic_"),
+            new Group("Guard speech (recorded clips)", true, "guardspeech_"),
+            new Group("Guard footsteps and armor", false, "guard_foley"),
         };
 
         [Tooltip("Exact sound names that ignore their group.")]

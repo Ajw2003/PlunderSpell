@@ -33,7 +33,7 @@ Each voice reads every line below. Replace `<voice>` in the file name with the v
 | File | Say |
 |---|---|
 | `vo_late_<voice>_alert_01.wav` | Halte! Who's there? |
-| `vo_late_<voice>_alert_02.wav` | Qui vive? |
+| `vo_late_<voice>_alert_02.wav` | Qui est là? |
 | `vo_late_<voice>_alert_03.wav` | *(quietly)* Somthyng stirreth... |
 
 ### chase — seen you, shouting for help. LOUD

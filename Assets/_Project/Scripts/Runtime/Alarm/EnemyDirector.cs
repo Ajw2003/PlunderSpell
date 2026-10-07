@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using PurrNet;
-using Plunderspell.Acoustics;
 using UnityEngine;
 
 namespace Plunderspell.Alarm
@@ -15,7 +14,7 @@ namespace Plunderspell.Alarm
     /// PurrNet 1.15 has no SyncVar hooks, and a <see cref="SyncVar{T}"/> must be a field of this class, so the
     /// alarm is handed them; a state change reaches every peer through <see cref="BroadcastAlarmState"/>.
     /// </summary>
-    public class EnemyDirector : NetworkBehaviour, INoiseListener
+    public class EnemyDirector : NetworkBehaviour
     {
         [Header("Tuning")]
         [Tooltip("Alarm points added per unit of noise strength.")]
@@ -35,10 +34,16 @@ namespace Plunderspell.Alarm
         [SerializeField] private float _attackPoints = 6f;
 
         [Tooltip("Guards chasing at once that force the castle to at least Roused.")]
-        [SerializeField] private int _rousedChasers = 2;
+        [SerializeField] private int _rousedChasers = 3;
 
         [Tooltip("Guards chasing at once that force Hue and Cry.")]
-        [SerializeField] private int _hueAndCryChasers = 3;
+        [SerializeField] private int _hueAndCryChasers = 5;
+
+        [Tooltip("Distinct guards that must have seen an intruder this raid before the alarm can be Roused (the lockdown).")]
+        [SerializeField] private int _rousedWitnesses = 3;
+
+        [Tooltip("Distinct guards that must have seen an intruder this raid before the alarm can be Hue and Cry.")]
+        [SerializeField] private int _hueAndCryWitnesses = 5;
 
         [Header("Hue and cry")]
         [Tooltip("Seconds between repeats of the hue and cry, at the players' current positions, while the alarm stays at Hue and Cry.")]
@@ -80,7 +85,8 @@ namespace Plunderspell.Alarm
         internal bool IsAuthority => !isSpawned || isServer;
 
         internal DirectorAlarm Alarm => _alarm ??= new DirectorAlarm(_alarmLevel, _alarmState, new AlarmTuning(
-            _noiseWeight, _decayDelay, _decayRate, _sightingPoints, _attackPoints, _rousedChasers, _hueAndCryChasers),
+            _noiseWeight, _decayDelay, _decayRate, _sightingPoints, _attackPoints, _rousedChasers, _hueAndCryChasers,
+            _rousedWitnesses, _hueAndCryWitnesses),
             OnAlarmStateChanged);
 
         private EnemyDirectorBus Bus => _bus ??= new EnemyDirectorBus(this);
@@ -165,9 +171,7 @@ namespace Plunderspell.Alarm
 
         // Alarm ----------------------------------------------------------------------------------------
 
-        public void ApplyNoise(float strength) => Alarm.ApplyNoise(strength);
-
-        public void ReportSighting() => Alarm.ReportSighting();
+        public void ReportSighting(int guardId) => Alarm.ReportSighting(guardId);
 
         public void ReportAttack() => Alarm.ReportAttack();
 
@@ -178,7 +182,7 @@ namespace Plunderspell.Alarm
         public void TickDecay(float deltaTime) => Alarm.TickDecay(deltaTime);
 
         /// <summary>Test/setup helper: force the alarm level and immediately re-evaluate state.</summary>
-        public void SetAlarmLevel(float level) => Alarm.SetLevel(level);
+        public void SetAlarmLevel(float level, int witnesses = 0) => Alarm.SetLevel(level, witnesses);
 
         public void UpdateState() => Alarm.UpdateState();
 
@@ -221,23 +225,6 @@ namespace Plunderspell.Alarm
         private HueAndCry HueAndCryRaiser => _hueAndCry ??= new HueAndCry(_registry, Publish, _hueAndCryRepeatSeconds);
 
         internal void ReleaseAttackTurnOf(Component guard) => _attackTurns?.Release(guard);
-
-        /// <summary><see cref="INoiseListener"/> entry point. A client forwards to the server; the server (or single-player, or a test) applies it directly.</summary>
-        public void OnNoiseHeard(NoiseEvent noise)
-        {
-            if (isSpawned && !isServer)
-            {
-                ReportNoiseServer(noise.Origin, noise.Strength, (int)noise.Type);
-                return;
-            }
-            Publish(new NoiseReported(noise.Origin, noise.Strength));
-        }
-
-        [ServerRpc(requireOwnership: false)]
-        private void ReportNoiseServer(Vector3 origin, float strength, int type)
-        {
-            Publish(new NoiseReported(origin, strength));
-        }
 
         // The hue and cry is a request, not an order: guards decide what to do with it.
         private void OnAlarmStateChanged(AlarmState newState)

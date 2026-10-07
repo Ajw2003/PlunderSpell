@@ -3,6 +3,26 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-05 — Screen ink pass removed; the painted look lives on the surfaces
+
+The owner said the Ink pass ran as an overlay rather than texture like the castle shader and chose to remove it
+entirely (#266, part of #262). Paper grain and outlines are now painted in world space by the surface shader
+(`_PlunderPaint`); see docs/4-systems/atmosphere.md. Status: Active.
+
+## 2026-10-04 — The castle hears through its guards and needs witnesses
+
+**Context.** In the owner's playtest one sighting and one Somnus took the castle from Calm to Hue and Cry (#259).
+The director scored every noise from its own castle-wide trigger, and two or three guards chasing forced Roused
+and Hue and Cry.
+
+**Decision (owner, 2026-10-04).** Keep the triggers and the guards' senses; make escalation need witnesses, spread
+by guards calling each other. A guard that spots you cries out; guards that hear the cry come over, and each that
+sees you cries in turn. The castle scores only noise its guards heard, once per guard. Roused needs 3 guards that
+have seen an intruder, Hue and Cry 5; chasers forcing a state go from 2 and 3 to 3 and 5.
+
+**Consequence.** Reverses "the alarm hears noise from the castle-wide trigger" (alarm.md, #139) and the 2/3 chaser
+floors. Design: `docs/plans/alarm-witnesses.md`; how it works: `docs/4-systems/alarm.md`.
+
 ## 2026-10-02 — Fire overrules Somnus
 
 **Context.** #212 ruled that stun and sleep outrank burning, so a sleeping guard that was set alight kept
@@ -1270,3 +1290,28 @@ Streaming. Set by `Tools/Unity/eval/audio_load_types.cs`.
 
 **Status.** Standing (#244). Reverses the "Streaming, the owner's choice, is unchanged" line of the
 2026-09-27 entry; `docs/4-systems/audio.md` updated.
+
+## 2026-10-03 — Castles get floors; stairs follow the art bible, and the newel drum widens to 3.0 m
+
+**Context.** #197 asked for stairs that lead somewhere. A survey showed every stair reaches a
+gallery, but the castle has one storey. The owner chose real floors: a 5 × 5 ground floor (bailey
+ring, inner ward ring), a 3 × 3 keep tower above, a 3 × 3 crypt below, two stairs up and one down,
+and doors where zones meet (draft sheets: `docs/art/castle/concept/`). This reorders the 2026-09-26
+handoff (`docs/plans/roofs-floors-multicell-handoff.md`: roofs, then multi-cell rooms, then floors):
+floors come first, using the existing rooms.
+
+**Decision.** Stairs take each Age's period form from the art bible: High Medieval's newel stair,
+a newel in a corner turret for Late Medieval, a dog-leg round a light well for the Bronze Age. The
+newel drum widens from 2.4 m to 3.0 m inside (4.6 m outside), and `docs/art/data/high.json` and
+`Tools/ArtBible/generators/high/s_stair.py` are updated to match.
+
+**Why.** At 2.4 m the guards' 0.5 m walk map cannot climb the stair: around so small a circle the
+next cell is 3-4 treads higher than the 0.45 m step limit. 3.0 m is the narrowest that works
+(`Tools/ArtBible/castle/newel_walkmap_check.py`).
+
+**Status.** Design draft; the floors design is still being written (#197).
+
+
+## 2026-10-05: the bar shuts players out, not guards (#264)
+
+The 2026-10-02 rule that a barred door blocks guards is reversed. At Hue and Cry every door was barred, so the garrison could not reach the players: 9 of 17 guards stayed Patrolling after `Blocked(DoorClosed)`. Now a barred door costs `LockedDoorCost` like a locked one and guards open it when they walk into it. Players are unchanged (Porta, forcing). Tier: systems (`docs/4-systems/alarm.md`).

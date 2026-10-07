@@ -30,7 +30,7 @@ namespace Plunderspell.Atmosphere
         {
             if (_shader == null)
                 _shader = Shader.Find("Hidden/Plunderspell/NightFog");
-            _pass = new NightFogPass { renderPassEvent = RenderPassEvent.BeforeRenderingTransparents };
+            _pass = new NightFogPass("Night Fog", 0) { renderPassEvent = RenderPassEvent.BeforeRenderingTransparents };
         }
 
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
@@ -60,14 +60,20 @@ namespace Plunderspell.Atmosphere
         {
             public Material Material;
 
+            private readonly string _name;
+            private readonly int _shaderPass;
+
             private class PassData
             {
                 public Material Material;
+                public int ShaderPass;
             }
 
-            public NightFogPass()
+            public NightFogPass(string name, int shaderPass)
             {
-                profilingSampler = new ProfilingSampler("Night Fog");
+                _name = name;
+                _shaderPass = shaderPass;
+                profilingSampler = new ProfilingSampler(name);
             }
 
             public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
@@ -77,13 +83,14 @@ namespace Plunderspell.Atmosphere
                     return;
 
                 using (IRasterRenderGraphBuilder builder =
-                       renderGraph.AddRasterRenderPass("Night Fog", out PassData data, profilingSampler))
+                       renderGraph.AddRasterRenderPass(_name, out PassData data, profilingSampler))
                 {
                     data.Material = Material;
+                    data.ShaderPass = _shaderPass;
                     builder.UseTexture(resources.cameraDepthTexture);
                     builder.SetRenderAttachment(resources.activeColorTexture, 0, AccessFlags.ReadWrite);
                     builder.SetRenderFunc((PassData passData, RasterGraphContext context) =>
-                        context.cmd.DrawProcedural(Matrix4x4.identity, passData.Material, 0,
+                        context.cmd.DrawProcedural(Matrix4x4.identity, passData.Material, passData.ShaderPass,
                             MeshTopology.Triangles, 3, 1));
                 }
             }

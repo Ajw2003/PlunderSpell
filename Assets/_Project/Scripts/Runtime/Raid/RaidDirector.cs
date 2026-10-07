@@ -38,6 +38,12 @@ namespace Plunderspell.Raid
         [Tooltip("Spawns the garrison into the generated castle.")]
         [SerializeField] private GuardSpawner _guardSpawner;
 
+        [Tooltip("Spawns the doors where castle zones meet (#248). Optional: without it the castle has no doors.")]
+        [SerializeField] private CastleDoorSpawner _doorSpawner;
+
+        /// <summary>The door spawner, for scenes built by tooling.</summary>
+        public CastleDoorSpawner DoorSpawner { get => _doorSpawner; set => _doorSpawner = value; }
+
         [Tooltip("The zone that ends the raid.")]
         [SerializeField] private ExtractionZone _extractionZone;
 
@@ -291,6 +297,7 @@ namespace Plunderspell.Raid
             {
                 _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
                 _guardSpawner?.SpawnFor(Castle, seed, Era, ArrivalModuleIndex, LobbySize);
+                _doorSpawner?.SpawnFor(Castle);
             }
 
             return Castle;
@@ -340,6 +347,7 @@ namespace Plunderspell.Raid
             PublishCampaign();
             _lootSpawner?.Clear();
             _guardSpawner?.Clear();
+            _doorSpawner?.Clear();
 
             // Deliberately NOT clearing the director's Intruders: IntruderTag owns that list by
             // component lifetime, and wiping it here would leave every surviving player invisible
@@ -435,9 +443,18 @@ namespace Plunderspell.Raid
                 return ArrivalPoint;
             Vector2Int inward = CastleEntrancePlanner.InwardCell(arrival.GridPosition);
             foreach (ProceduralCastleData.PlacedModule module in Castle.PlacedModules)
-                if (module.GridPosition == inward)
+                if (module.GridPosition == inward && module.Level == CastleLevels.Ground)   // the ground room, not the keep above it (#247)
                     return module.Position;
             return ArrivalPoint;
+        }
+
+        /// <summary>Where player number <paramref name="index"/> (0-based) stands: their point on the ring round the portal, moved to clear floor.</summary>
+        public static Vector3 PlayerSpawn(Vector3 arrivalPoint, int index)
+        {
+            float angle = index * Mathf.PI * 0.5f;
+            var anchor = new Vector3(arrivalPoint.x + Mathf.Cos(angle) * PlayerRingRadius, 0f,
+                arrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
+            return CastleSpawnResolver.FirstClearStandingPoint(anchor);
         }
 
         /// <summary>
@@ -466,10 +483,7 @@ namespace Plunderspell.Raid
             int index = player.TryGetComponent(out NetworkIdentity identity) && identity.owner.HasValue
                 ? Mathf.Max(0, (int)(ulong)identity.owner.Value.id - 1)
                 : 0;
-            float angle = index * Mathf.PI * 0.5f;
-            var anchor = new Vector3(ArrivalPoint.x + Mathf.Cos(angle) * PlayerRingRadius, 0f,
-                ArrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
-            Vector3 spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
+            Vector3 spawn = PlayerSpawn(ArrivalPoint, index);
 
             // Face the portal, so the first thing a player sees is the way home; on the curtain strip,
             // face the way in instead, which the portal otherwise puts off to one side (#140).

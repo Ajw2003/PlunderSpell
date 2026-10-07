@@ -56,7 +56,7 @@ namespace Plunderspell.Alarm
             if (!_director.IsAuthority)
                 return;
             if (e.FirstSighting)
-                _director.Alarm.ReportSighting();
+                _director.Alarm.ReportSighting(e.Guard != null ? e.Guard.GetInstanceID() : 0);
             _director.Alarm.ReportChase(e.Guard != null ? e.Guard.GetInstanceID() : 0, true);
         }
 
@@ -86,7 +86,7 @@ namespace Plunderspell.Alarm
         {
             OnNoiseReported?.Invoke(e);
             if (_director.IsAuthority)
-                _director.Alarm.ApplyNoise(e.Strength);
+                _director.Alarm.ReportHeardNoise(e.Guard != null ? e.Guard.GetInstanceID() : 0, e.Strength);
         }
 
         public void Publish(InvestigateRequest e) => OnInvestigateRequest?.Invoke(e);
