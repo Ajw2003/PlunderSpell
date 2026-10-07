@@ -80,8 +80,8 @@ namespace Plunderspell.Market
                 return HaggleOutcome.Raised;
             }
 
-            // The design's "2 patience above 1.2 x the limit" cannot happen: the offer never exceeds the limit
-            // and a Plus asks 1.1 x the offer. Left out until asks can be larger (docs/plans/lair-market-in-engine.md).
+            // One patience per refusal. The design's "2 above 1.2 x the limit" could never fire and was dropped
+            // (docs/6-decisions/Decisions.md, 2026-10-07).
             Patience--;
             if (Patience > 0)
                 return HaggleOutcome.Refused;

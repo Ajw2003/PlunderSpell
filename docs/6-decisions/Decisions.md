@@ -3,6 +3,21 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-07 — Loot is earned by selling it; the unsold pile stays; Plus is the only ask
+
+**Context.** Until the Market could sell, the haul was banked automatically at extraction and the Lair's pile showed
+only the last raid, replaced each time (owner, 2026-10-07). Selling (#312) makes automatic banking pay twice, and the
+haggle design's "2 patience above 1.2 x the limit" cannot fire: a Plus asks 1.1 x an offer that never exceeds the
+limit (`docs/plans/lair-market-in-engine.md`).
+
+**Decision (owner, 2026-10-07).** Extraction stops banking; coins come only from selling in the Market. Unsold pieces
+stay on the Lair floor across raids, saved per save slot, and new hauls land beside them. The greedy-ask rule is
+dropped: Plus is the only ask, each refusal costs one patience. Haggling is on keys first (1 Plus, 2 Satis, 3 Vale);
+the three words join the voice lexicon as the next step.
+
+**Consequence.** Replaces the pile-replaced-each-raid default of #310 and the design's automatic Fence appraisal
+for phase 2 (`docs/plans/diegetic-ui-lair-market.md`, "In what order"). Status: Active.
+
 ## 2026-10-06 — Systems talk to each other through the event bus; views learn state by events
 
 **Context.** The raid HUD, music and camera shake polled other systems every frame (`docs/plans/ui-events-mvc.md`).
