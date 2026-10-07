@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Code.Scripts.EventSystems;
 using NUnit.Framework;
 using Plunderspell.Alarm;
 using Plunderspell.Castle;
@@ -32,6 +33,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             foreach (Object o in _spawned)
                 if (o != null)
                     Object.DestroyImmediate(o);
@@ -136,6 +138,38 @@ namespace Plunderspell.Tests
             player.Interact();
 
             Assert.IsNull(player.Carried, "Shattered loot is worthless and not worth carrying.");
+        }
+
+        [Test]
+        public void Test_FocusChangesArePublishedOnceEach()
+        {
+            LootInteractor player = MakePlayer();
+            LootPickup vase = MakeLoot("Vase", 2f, new Vector3(0f, 0f, 2f));
+            var loot = new List<LootPickup>();
+            var doors = new List<CastleDoorHandle>();
+            EventManager.Instance.Subscribe(this, (LootFocusChanged e) => loot.Add(e.Focus));
+            EventManager.Instance.Subscribe(this, (DoorFocusChanged e) => doors.Add(e.Focus));
+
+            player.UpdateFocus();
+            player.UpdateFocus();
+            Assert.AreEqual(new[] { vase }, loot, "Focusing the vase is announced once; looking at it again is silent.");
+            Assert.IsEmpty(doors);
+
+            vase.transform.position = new Vector3(0f, 0f, 40f);
+            Physics.SyncTransforms();
+            player.UpdateFocus();
+            Assert.AreEqual(2, loot.Count);
+            Assert.IsNull(loot[1], "Looking away announces that nothing is in focus.");
+
+            var doorGo = Track(new GameObject("Door"));
+            doorGo.transform.position = new Vector3(0f, 0f, 2f);
+            doorGo.AddComponent<BoxCollider>();
+            CastleDoor door = doorGo.AddComponent<CastleDoor>();
+            CastleDoorHandle handle = doorGo.AddComponent<CastleDoorHandle>();
+            handle.SetDoor(door);
+            Physics.SyncTransforms();
+            player.UpdateFocus();
+            CollectionAssert.AreEqual(new[] { handle }, doors, "A door coming into view is announced.");
         }
 
         [Test]

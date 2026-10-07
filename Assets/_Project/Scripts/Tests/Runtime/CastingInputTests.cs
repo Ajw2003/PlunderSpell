@@ -105,6 +105,8 @@ namespace Plunderspell.Tests
             SpellId resolved = SpellId.None;
             void Record(SpellCastingSystem.CastReport report) => resolved = report.Spell;
             EventManager.Instance.Subscribe(this, (CastResolved e) => Record(e.Report));
+            var chant = new System.Collections.Generic.List<ChantProgressChanged>();
+            EventManager.Instance.Subscribe(this, (ChantProgressChanged e) => chant.Add(e));
 
             try
             {
@@ -130,6 +132,9 @@ namespace Plunderspell.Tests
 
                 Assert.AreEqual(SpellId.Somnus, resolved,
                     "Holding V and pressing 6 must resolve to Somnus once the chant ends.");
+                Assert.IsTrue(chant.Count >= 2 && chant[0].Chanting, "The chant must announce itself as it starts.");
+                Assert.Greater(chant[chant.Count - 2].Progress, chant[0].Progress, "Its progress must rise.");
+                Assert.IsFalse(chant[chant.Count - 1].Chanting, "…and say so once when it ends.");
                 int cost = caster.ManaCostOf(SpellId.Somnus);
                 Assert.Greater(cost, 0, "Somnus must cost mana.");
                 Assert.LessOrEqual(GameServices.PlayerStats.Mana, manaBefore - cost + 1,
