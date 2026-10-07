@@ -2,7 +2,8 @@
     "name": "Plunderspell.Inventory",
     "rootNamespace": "Plunderspell.Inventory",
     "references": [
-        "PurrNet.Runtime"
+        "PurrNet.Runtime",
+        "Plunderspell.Foundation"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

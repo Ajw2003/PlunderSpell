@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using UnityEngine;
 
@@ -23,16 +24,14 @@ namespace Plunderspell.UI
 
         private void OnEnable()
         {
-            if (GameServices.GameState != null)
-                GameServices.GameState.StateChanged += OnStateChanged;
+            EventManager.Instance?.Subscribe(this, (GameStateChanged e) => Apply());
 
             Apply();
         }
 
         private void OnDisable()
         {
-            if (GameServices.GameState != null)
-                GameServices.GameState.StateChanged -= OnStateChanged;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         /// <summary>
@@ -44,8 +43,6 @@ namespace Plunderspell.UI
             m_hasFocus = hasFocus;
             Apply();
         }
-
-        private void OnStateChanged(GameState previous, GameState next) => Apply();
 
         /// <summary>Re-asserts the cursor state. Public so tests can drive it without a focus event.</summary>
         public void Apply()

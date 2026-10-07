@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using Plunderspell.Inventory;
 using UnityEngine;
@@ -46,11 +47,11 @@ namespace Plunderspell.Raid
             // rather than relying on one.
             GameServices.Initialize();
 
-            GameServices.GameState.StateChanged += OnGameStateChanged;
+            EventManager.Instance?.Subscribe(this, (GameStateChanged e) => OnGameStateChanged(e.Previous, e.Current));
             if (_director != null)
             {
-                _director.RaidResolved += OnRaidResolved;
-                _director.PhaseChanged += OnPhaseChanged;
+                EventManager.Instance?.Subscribe(this, (RaidResolved e) => OnRaidResolved(e.Worth, e.Saved));
+                EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) => OnPhaseChanged(e.Phase));
             }
 
             // Offline the director is its own authority; networked, only the host may freeze time.
@@ -59,13 +60,7 @@ namespace Plunderspell.Raid
 
         private void OnDisable()
         {
-            if (GameServices.GameState != null)
-                GameServices.GameState.StateChanged -= OnGameStateChanged;
-            if (_director != null)
-            {
-                _director.RaidResolved -= OnRaidResolved;
-                _director.PhaseChanged -= OnPhaseChanged;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             GameServices.IsSessionAuthority = () => true;
         }
 

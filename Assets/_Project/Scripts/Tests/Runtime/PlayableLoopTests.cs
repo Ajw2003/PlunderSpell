@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using Interfaces;
@@ -32,6 +33,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             GameServices.Extraction.CancelExtraction();
             GameServices.GameState.ChangeState(_stateBefore);
             foreach (Object o in _spawned)
@@ -172,7 +174,7 @@ namespace Plunderspell.Tests
 
             float worth = -1f;
             int saved = -1;
-            zone.ExtractionResolved += (w, s) => { worth = w; saved = s; };
+            EventManager.Instance.Subscribe(this, (ExtractionResolved e) => { worth = e.Worth; saved = e.Saved; });
 
             yield return new WaitForSeconds(0.5f);
             Assert.AreEqual(1, zone.PiecesInZone,

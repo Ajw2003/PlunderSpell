@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using System.Collections.Generic;
 using Interfaces;
@@ -59,16 +60,6 @@ namespace Plunderspell.Extraction
 
         /// <summary>True once the extraction has been resolved.</summary>
         public bool ExtractionComplete => _extractionComplete.value;
-
-        /// <summary>Raised on every peer when the extraction resolves: (worthExtracted, playersSaved).</summary>
-        public event Action<float, int> ExtractionResolved;
-
-        /// <summary>
-        /// Raised whenever loot enters or leaves the zone: (worthInZone, pieceCount). The HUD shows a
-        /// running total from this, so a player can see the haul grow as they stack it on the pad
-        /// rather than only learning what it was worth after the raid has already ended.
-        /// </summary>
-        public event Action<float, int> HaulInZoneChanged;
 
         /// <summary>Worth of everything currently standing in the zone.</summary>
         public float WorthInZone => ComputeWorth(_lootInZone);
@@ -268,7 +259,7 @@ namespace Plunderspell.Extraction
             // SyncVar; a client gets the value the server already set in ResolveExtraction.
             if (!isSpawned || isServer)
                 _extractionComplete.value = true;
-            ExtractionResolved?.Invoke(worth, saved);
+            EventManager.Instance?.Publish(new ExtractionResolved(worth, saved));
         }
 
         // -----------------------------------------------------------------------------------------
@@ -358,7 +349,7 @@ namespace Plunderspell.Extraction
             return changed;
         }
 
-        private void OnHaulChanged() => HaulInZoneChanged?.Invoke(WorthInZone, _lootInZone.Count);
+        private void OnHaulChanged() => EventManager.Instance?.Publish(new HaulInZoneChanged(WorthInZone, _lootInZone.Count));
 
         // Loot inside the portal is held still and cannot break (#158).
         private readonly HashSet<LootValue> _restingLoot = new HashSet<LootValue>();

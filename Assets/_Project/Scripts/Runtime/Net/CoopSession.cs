@@ -2,6 +2,7 @@
 #define DISABLESTEAMWORKS
 #endif
 
+using Code.Scripts.EventSystems;
 using System;
 using Plunderspell.Core;
 using PurrNet;
@@ -42,7 +43,6 @@ namespace Plunderspell.Net
         public string Status => _status;
         public bool IsInSession => _manager != null && (_manager.isServer || _manager.isClient);
         public bool CanInvite => _hostingLobby;
-        public event Action Changed;
 
         private void Awake()
         {
@@ -182,7 +182,7 @@ namespace Plunderspell.Net
         private void OnServerConnectionState(ConnectionState state)
         {
             Debug.Log($"[Coop] Server {state}.");
-            Changed?.Invoke();
+            EventManager.Instance?.Publish(new CoopChanged());
         }
 
         private void OnClientConnectionState(ConnectionState state)
@@ -203,14 +203,14 @@ namespace Plunderspell.Net
                 GameServices.GameState.ChangeState(GameState.MainMenu);
             }
 
-            Changed?.Invoke();
+            EventManager.Instance?.Publish(new CoopChanged());
         }
 
         private void SetStatus(string status)
         {
             _status = status;
             Debug.Log($"[Coop] {status}");
-            Changed?.Invoke();
+            EventManager.Instance?.Publish(new CoopChanged());
         }
 
         // -----------------------------------------------------------------------------------------

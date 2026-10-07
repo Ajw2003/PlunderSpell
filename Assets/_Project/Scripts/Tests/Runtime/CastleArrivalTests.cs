@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Castle;
@@ -21,6 +22,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             foreach (Object o in _spawned)
                 if (o != null)
                     Object.DestroyImmediate(o);
@@ -390,7 +392,7 @@ namespace Plunderspell.Tests
             director.Configure(generator, null, zone, lair, playerRoot: playerGo.transform);
 
             Vector3 opened = Vector3.positiveInfinity;
-            director.PortalOpened += point => opened = point;
+            EventManager.Instance.Subscribe(this, (PortalOpened e) => opened = e.Point);
 
             director.SetFixedSeed(4242);
             director.StartRaid(HistoricalEra.HighMedieval);

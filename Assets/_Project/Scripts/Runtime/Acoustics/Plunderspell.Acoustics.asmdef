@@ -2,6 +2,7 @@
     "name": "Plunderspell.Acoustics",
     "rootNamespace": "Plunderspell.Acoustics",
     "references": [
+        "Plunderspell.Foundation",
         "PurrNet.Runtime",
         "Plunderspell.Voice",
         "Plunderspell.Core"

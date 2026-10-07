@@ -1,7 +1,9 @@
 {
     "name": "Plunderspell.Core",
     "rootNamespace": "Plunderspell.Core",
-    "references": [],
+    "references": [
+        "Plunderspell.Foundation"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

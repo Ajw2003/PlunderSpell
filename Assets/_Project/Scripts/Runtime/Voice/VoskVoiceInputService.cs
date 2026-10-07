@@ -573,7 +573,7 @@ namespace Plunderspell.Voice
                 UnityEngine.Object.DontDestroyOnLoad(go);
             _pump = go.AddComponent<MainThreadPump>();
             _pump.Init(this);
-            Plunderspell.Core.AudioInputSettings.MicrophoneChanged += HandleMicrophoneChanged;
+            Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (Plunderspell.Core.MicrophoneChanged e) => HandleMicrophoneChanged(e.Device));
         }
 
         /// <summary>Hidden helper that reads the microphone on the Unity main thread each frame.</summary>
@@ -590,7 +590,7 @@ namespace Plunderspell.Voice
             {
                 if (_owner == null)
                     return;
-                Plunderspell.Core.AudioInputSettings.MicrophoneChanged -= _owner.HandleMicrophoneChanged;
+                Code.Scripts.EventSystems.EventManager.Instance?.UnsubscribeFromAllEvents(_owner);
                 _owner.CloseMicrophone();
             }
         }

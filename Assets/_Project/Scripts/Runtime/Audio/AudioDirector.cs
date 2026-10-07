@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using Interfaces;
 using Plunderspell.Alarm;
@@ -97,6 +98,9 @@ namespace Plunderspell.Audio
             SpellCastingSystem.PhraseResolved += OnPhraseResolved;
             SpellCastingSystem.CastResolved += OnCastResolved;
             Damage.Dealt += OnDamageDealt;
+            EventManager.Instance?.Subscribe(this, (PortalOpened e) => OnPortalOpened(e.Point));
+            EventManager.Instance?.Subscribe(this, (HaulInZoneChanged e) => OnHaulChanged(e.Worth, e.Pieces));
+            EventManager.Instance?.Subscribe(this, (ExtractionResolved e) => OnExtractionResolved(e.Worth, e.Saved));
         }
 
         private void OnDisable()
@@ -107,13 +111,7 @@ namespace Plunderspell.Audio
 
             if (Alarm != null)
                 Alarm.AlarmStateChanged -= OnAlarmStateChanged;
-            if (Zone != null)
-            {
-                Zone.HaulInZoneChanged -= OnHaulChanged;
-                Zone.ExtractionResolved -= OnExtractionResolved;
-            }
-            if (Raid != null)
-                Raid.PortalOpened -= OnPortalOpened;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private void OnDestroy()
@@ -390,8 +388,6 @@ namespace Plunderspell.Audio
             if (Raid == null)
             {
                 Raid = FindFirstObjectByType<RaidDirector>();
-                if (Raid != null)
-                    Raid.PortalOpened += OnPortalOpened;
             }
 
             if (Alarm == null)
@@ -407,8 +403,6 @@ namespace Plunderspell.Audio
                 if (Zone != null)
                 {
                     _lastHaulCount = Zone.PiecesInZone;
-                    Zone.HaulInZoneChanged += OnHaulChanged;
-                    Zone.ExtractionResolved += OnExtractionResolved;
                 }
             }
 
