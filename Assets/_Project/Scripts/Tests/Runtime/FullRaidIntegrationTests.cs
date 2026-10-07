@@ -283,7 +283,9 @@ namespace Plunderspell.Tests
             Assert.AreEqual(carriedWorth, director.LastWorthExtracted, 0.01f,
                 "Only intact loot inside the zone pays out.");
             Assert.AreEqual(1, director.LastPlayersSaved);
-            Assert.Less(lair.TotalDebt, debtDuringRaid, "The takings pay down the debt.");
+            Assert.AreEqual(debtDuringRaid, lair.TotalDebt, "The takings are not banked at extraction; only a sale pays the debt.");
+            lair.BankSale(director.LastWorthExtracted);
+            Assert.Less(lair.TotalDebt, debtDuringRaid, "Selling the takings pays down the debt.");
             Assert.AreEqual(0, lootSpawner.Spawned.Count, "The castle is cleared away after the raid.");
 
             // And back out again.

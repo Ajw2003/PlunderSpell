@@ -19,6 +19,19 @@ namespace Plunderspell.Tests.Editor
             "Slot3.TotalDebt", "Slot3.AccumulatedGold", "Slot3.SelectedEra",
         };
 
+        [Test]
+        public void Test_HaulPileIsSavedPerSlotAndWipedWithIt()
+        {
+            string[] none = new string[0];
+            HaulPileSave.Save(2, new[] { "Goblet", "Crown" });
+            Assert.AreEqual(new[] { "Goblet", "Crown" }, HaulPileSave.Load(2));
+            Assert.AreEqual(none, HaulPileSave.Load(3), "Another slot has its own pile.");
+
+            LairHubManager.ResetSlot(2);
+            Assert.AreEqual(none, HaulPileSave.Load(2), "A reset slot is a new campaign with an empty floor.");
+            HaulPileSave.Clear(3);
+        }
+
         private readonly string[] _saved = new string[s_keys.Length];
         private GameObject _host;
 
@@ -62,7 +75,7 @@ namespace Plunderspell.Tests.Editor
             var lair = _host.AddComponent<LairHubManager>();
 
             lair.LoadSlot(2);
-            lair.ApplyExtractionResult(120f);
+            lair.BankSale(120f);
             lair.SelectEra(HistoricalEra.LateMedieval);
             Assert.IsTrue(LairHubManager.HasSave(2));
             Assert.AreEqual(380f, LairHubManager.Peek(2).TotalDebt, 0.01f, "120 banked pays 120 of the 500 debt.");

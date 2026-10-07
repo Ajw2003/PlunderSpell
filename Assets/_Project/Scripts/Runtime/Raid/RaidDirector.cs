@@ -61,6 +61,9 @@ namespace Plunderspell.Raid
         [Tooltip("Per-era rooms, loot and garrison. Empty: every era raids with the scene defaults.")]
         [SerializeField] private EraContentCatalogue _eraContent;
 
+        /// <summary>Every era's content, so a saved piece of any era can be found again.</summary>
+        public EraContentCatalogue EraContent => _eraContent;
+
         [Header("Raid setup")]
         [Tooltip("Seed for the next raid. Left at 0, a fresh one is rolled per raid.")]
         [SerializeField] private int _fixedSeed;
@@ -324,8 +327,8 @@ namespace Plunderspell.Raid
         }
 
         /// <summary>
-        /// Applies an extraction result: bank the worth against the debt, record the summary and
-        /// return to the Lair. Public and network-free so the economics are testable on their own.
+        /// Applies an extraction result: record what was carried home (nothing is banked; coins come
+        /// from selling in the Market) and return to the Lair. Public and network-free so the economics are testable on their own.
         /// </summary>
         public void ApplyResult(float worthExtracted, int playersSaved)
         {

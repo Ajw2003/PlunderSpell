@@ -59,6 +59,7 @@ namespace Plunderspell.Lair
             LastRaidWorth = -1f;
             LastRaidLeftBehind = 0;
             Load();
+            EventManager.Instance?.Publish(new SaveSlotLoaded(slot));
         }
 
         private void Save()
@@ -86,6 +87,7 @@ namespace Plunderspell.Lair
             PlayerPrefs.DeleteKey(SaveSlots.Key(KeySelectedEra, slot));
             PlayerPrefs.DeleteKey(SaveSlots.Key(KeyTotalDebt, slot));
             PlayerPrefs.DeleteKey(SaveSlots.Key(KeyAccumulatedGold, slot));
+            HaulPileSave.Clear(slot);
             PlayerPrefs.Save();
         }
 
@@ -110,16 +112,21 @@ namespace Plunderspell.Lair
         public void RecordLeftBehind(int count) => LastRaidLeftBehind = Mathf.Max(0, count);
 
         /// <summary>
-        /// Apply the worth extracted from a completed raid. Gold is banked, then applied toward the
-        /// debt. When the accumulated gold covers the full debt the game reaches the endgame stub
-        /// (debt cleared); otherwise as much debt as possible is paid down.
+        /// Records what a completed raid carried home, for the "last raid" line. Banks nothing: coins
+        /// come only from selling the haul in the Market (<see cref="BankSale"/>).
         /// </summary>
-        public void ApplyExtractionResult(float worthExtracted)
+        public void ApplyExtractionResult(float worthExtracted) => LastRaidWorth = Mathf.Max(0f, worthExtracted);
+
+        /// <summary>
+        /// Bank the coins from a sale. Gold is banked, then applied toward the debt. When the accumulated
+        /// gold covers the full debt the game reaches the endgame stub (debt cleared); otherwise as much
+        /// debt as possible is paid down.
+        /// </summary>
+        public void BankSale(float coins)
         {
             float debtBefore = TotalDebt;
             float goldBefore = AccumulatedGold;
-            LastRaidWorth = Mathf.Max(0f, worthExtracted);
-            AccumulatedGold += Mathf.Max(0f, worthExtracted);
+            AccumulatedGold += Mathf.Max(0f, coins);
 
             if (AccumulatedGold >= TotalDebt)
             {

@@ -280,7 +280,7 @@ namespace Plunderspell.Tests
         // --- Economy -----------------------------------------------------------------------
 
         [Test]
-        public void Test_ExtractedWorthPaysDownTheDebt()
+        public void Test_ExtractedWorthIsRecordedButOnlyASalePaysTheDebt()
         {
             RaidDirector director = MakeDirector(out LairHubManager lair, out _, out _);
             director.SetFixedSeed(5);
@@ -289,7 +289,10 @@ namespace Plunderspell.Tests
             float debtAtStart = lair.TotalDebt;
             director.ApplyResult(200f, 2);
 
-            Assert.Less(lair.TotalDebt, debtAtStart, "Extracted worth must reduce the debt.");
+            Assert.AreEqual(debtAtStart, lair.TotalDebt, "Extraction banks nothing; coins come from selling in the Market.");
+            Assert.AreEqual(200f, lair.LastRaidWorth, 0.001f, "What was carried home is still recorded.");
+            lair.BankSale(200f);
+            Assert.Less(lair.TotalDebt, debtAtStart, "A sale pays the debt down.");
             Assert.AreEqual(200f, director.LastWorthExtracted, 0.001f);
             Assert.AreEqual(2, director.LastPlayersSaved);
         }

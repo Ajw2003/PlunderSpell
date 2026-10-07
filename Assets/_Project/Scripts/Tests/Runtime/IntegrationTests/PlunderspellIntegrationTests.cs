@@ -203,7 +203,51 @@ namespace Plunderspell.Tests.Integration
 
             float before = lair.TotalDebt; // 500 default
             lair.ApplyExtractionResult(200f);
-            Assert.Less(lair.TotalDebt, before, "Debt should be reduced after extraction payment.");
+            Assert.AreEqual(before, lair.TotalDebt, "Extraction banks nothing: coins come only from a sale.");
+            Assert.AreEqual(0f, lair.AccumulatedGold, "Extraction adds no gold.");
+            Assert.AreEqual(200f, lair.LastRaidWorth, "Extraction still records what was carried home.");
+
+            lair.BankSale(200f);
+            Assert.AreEqual(before - 200f, lair.TotalDebt, 0.01f, "A sale pays the debt down.");
+        }
+
+        [Test]
+        public void Test_BankSale_PartPaymentLeavesDebt()
+        {
+            PlayerPrefs.DeleteKey("TotalDebt");
+            PlayerPrefs.DeleteKey("AccumulatedGold");
+            var lair = Track(new GameObject("Lair")).AddComponent<LairHubManager>();
+            lair.Load();
+
+            lair.BankSale(120f);
+            Assert.AreEqual(380f, lair.TotalDebt, 0.01f);
+            Assert.AreEqual(0f, lair.AccumulatedGold, 0.01f, "All of the sale went to the debt.");
+        }
+
+        [Test]
+        public void Test_BankSale_CoveringTheDebtClearsItAndKeepsTheRest()
+        {
+            PlayerPrefs.DeleteKey("TotalDebt");
+            PlayerPrefs.DeleteKey("AccumulatedGold");
+            var lair = Track(new GameObject("Lair")).AddComponent<LairHubManager>();
+            lair.Load();
+
+            lair.BankSale(650f);
+            Assert.AreEqual(0f, lair.TotalDebt, 0.01f);
+            Assert.AreEqual(150f, lair.AccumulatedGold, 0.01f, "What the debt did not need stays banked.");
+        }
+
+        [Test]
+        public void Test_BankSale_IgnoresNegativeCoins()
+        {
+            PlayerPrefs.DeleteKey("TotalDebt");
+            PlayerPrefs.DeleteKey("AccumulatedGold");
+            var lair = Track(new GameObject("Lair")).AddComponent<LairHubManager>();
+            lair.Load();
+
+            lair.BankSale(-50f);
+            Assert.AreEqual(500f, lair.TotalDebt, 0.01f);
+            Assert.AreEqual(0f, lair.AccumulatedGold, 0.01f);
         }
 
         // ===== Downed player bulk ============================================================
