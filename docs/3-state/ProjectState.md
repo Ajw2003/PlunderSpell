@@ -382,6 +382,10 @@ the 21-item backlog above.
 
 ## Cross-cutting issues that belong to no milestone
 
+- **Players have no character yet** (2026-10-07). They are capsules, and nothing shows who is
+  who in co-op. The approved plan is `docs/plans/wizard-character.md` (#335–#341), not started and not
+  yet placed on a milestone: its blockout and the colour, name and fallen-hat systems would sit
+  before M7, and the final wizard model in M7.
 - **The `isSpawned`/`isServer` trap has already caused three separate silent failures** (voice
   casting, the extraction clock, trigger tracking — see `docs/4-systems/raid.md`,
   `docs/4-systems/voice.md` and `docs/4-systems/alarm.md`) because `if (!isServer) return;` is true on

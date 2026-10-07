@@ -106,6 +106,11 @@ together and what was deliberately left undocumented, and why.
   [`docs/generated/github-issues-moodboard-gap.json`](../generated/github-issues-moodboard-gap.json)
   once filed). Its one open creative-direction question, the bestiary's thematic split, was
   decided on 2026-09-24: each Age's enemies are its household.
+- [`docs/plans/wizard-character.md`](../plans/wizard-character.md) — **approved 2026-10-07, not
+  started.** The player character: one wizard outfit for everyone, a colour each player picks (no
+  two exact matches in a raid), their name around the hat band, and a fallen wizard leaves only the
+  hat. For a local agent with Unity; issues #335–#341. Concept plates in
+  `docs/art/concept/wizard/`.
 - **Work on other branches.** `docs/3-state/ProjectState.md`, "Work not on `main` yet", lists
   every branch holding work `main` lacks. The audio plan (`docs/plans/audio.md`) and
   `Tools/AudioForge/` are now merged into `ccr-6bf1f02d-o8jhoy` together with the in-game audio layer.

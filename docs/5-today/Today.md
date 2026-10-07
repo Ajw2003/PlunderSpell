@@ -1,5 +1,14 @@
 # Today
 
+**2026-10-07 - the wizard is designed and approved; nothing is built.** Players will share one
+wizard outfit, pick any colour (no two exact matches in a raid, first come first served), have their
+name around the hat band (shrunk to fit, or a different name for the game), and leave only their hat
+when they fall. Plan: `docs/plans/wizard-character.md`; concept plates and the approved page in
+`docs/art/concept/wizard/`; issues #335 (parent) and #336–#341. The fallen hat replaces the
+laid-down body and ends the unused two-person body carry. Handed to a local agent with Unity.
+
+---
+
 **2026-10-02 (evening) - guards move again: the walk map was empty for two of the three Ages.** The owner
 saw guards stuck and standing still in co-op. Measured with `Tools/Unity/coop_guard_check.sh` (Late
 Medieval, seed 3508293): every guard stood still for the whole 90 s. Cause: `CastleNavTileBaker` baked only
