@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 40
   IsArtifact: 0
-  Bulk: 3
+  Category: 3
+  WeightKg: 3
   Fragility: 999
   DisplayName: Powder Grenade
   Icon: {fileID: 0}

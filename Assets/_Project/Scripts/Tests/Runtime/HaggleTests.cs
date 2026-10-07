@@ -69,6 +69,21 @@ namespace Plunderspell.Tests
             Assert.AreEqual(first.Offer * HaggleRules.CameBackOpening, again.Offer, 0.001f);
         }
 
+        [TestCase(Vendor.Fence, LootCategory.Metal, 1f)]
+        [TestCase(Vendor.Fence, LootCategory.Other, 1f)]
+        [TestCase(Vendor.Goldsmith, LootCategory.Metal, 1.3f)]
+        [TestCase(Vendor.Goldsmith, LootCategory.Holy, 0.7f)]
+        [TestCase(Vendor.Pardoner, LootCategory.Holy, 1.3f)]
+        [TestCase(Vendor.Pardoner, LootCategory.Arms, 0.7f)]
+        [TestCase(Vendor.Antiquarian, LootCategory.Curio, 1.3f)]
+        [TestCase(Vendor.Antiquarian, LootCategory.Arms, 1.3f)]
+        [TestCase(Vendor.Antiquarian, LootCategory.Metal, 0.7f)]
+        [TestCase(Vendor.Antiquarian, LootCategory.Other, 0.7f)]
+        public void EachVendorWantsHisKindOfPiece(Vendor vendor, LootCategory category, float interest)
+        {
+            Assert.AreEqual(interest, HaggleRules.Interest(vendor, category), 0.0001f);
+        }
+
         [TestCase(Vendor.Fence, 1)]
         [TestCase(Vendor.Goldsmith, 3)]
         [TestCase(Vendor.Pardoner, 3)]

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 260
   IsArtifact: 0
-  Bulk: 3
+  Category: 0
+  WeightKg: 3
   Fragility: 7
   DisplayName: Silver Service Tureen
   Icon: {fileID: 0}

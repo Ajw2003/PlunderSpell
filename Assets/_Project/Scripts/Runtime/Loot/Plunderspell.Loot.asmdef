@@ -6,7 +6,8 @@
         "Plunderspell.Foundation",
         "Plunderspell.Acoustics",
         "Plunderspell.Player",
-        "Plunderspell.Items"
+        "Plunderspell.Items",
+        "Plunderspell.Market"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

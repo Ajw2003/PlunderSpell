@@ -192,7 +192,7 @@ namespace Plunderspell.Raid
         {
             int id = value.gameObject.GetInstanceID();
             // worth = LootValue.Worth (the item's Worth, 0 once ruined: a LootValue has no partial condition).
-            // interest = 1: LootItem has no category or material to map, so every vendor wants every piece equally for now.
+            // interest = this vendor's liking for the piece's LootItem.Category (HaggleRules.Interest); no item: Other.
             float worth = value.Worth;
             if (worth <= 0f)
             {
@@ -201,10 +201,12 @@ namespace Plunderspell.Raid
                 return;
             }
 
+            LootCategory category = value.Item != null ? value.Item.Category : LootCategory.Other;
+            float interest = HaggleRules.Interest(_vendor, category);
             float mood = HaggleRules.RollMood(new System.Random(_nightSeed + (int)_vendor));
             // The same seed for the same piece all night, so coming back opens exactly 10% lower.
             var rng = new System.Random(_nightSeed ^ id);
-            _haggle = HaggleRules.Open(_vendor, worth, 1f, mood, rng, _walkedAway.Contains(id));
+            _haggle = HaggleRules.Open(_vendor, worth, interest, mood, rng, _walkedAway.Contains(id));
             _piece = value.gameObject;
             Say(VendorLines.Opening(_vendor, Coins()));
         }

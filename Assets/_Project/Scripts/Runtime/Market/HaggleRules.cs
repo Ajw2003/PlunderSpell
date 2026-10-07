@@ -10,6 +10,16 @@ namespace Plunderspell.Market
         Antiquarian,
     }
 
+    /// <summary>What a piece is made of or for, which decides who wants it most.</summary>
+    public enum LootCategory
+    {
+        Metal,
+        Holy,
+        Curio,
+        Arms,
+        Other,
+    }
+
     /// <summary>
     /// The numbers behind a haggle, from docs/plans/diegetic-ui-lair-market.md ("The numbers behind it").
     /// Every coefficient is a starting point to tune.
@@ -34,6 +44,24 @@ namespace Plunderspell.Market
                 case Vendor.Goldsmith: return 3;
                 case Vendor.Pardoner: return 3;
                 case Vendor.Antiquarian: return 4;
+                default: throw new ArgumentOutOfRangeException(nameof(vendor), vendor, null);
+            }
+        }
+
+        public const float Keen = 1.3f, Cool = 0.7f;
+
+        /// <summary>
+        /// How much a vendor wants a piece: the Fence 1.0 for everything; the Goldsmith 1.3 for Metal, the Pardoner
+        /// 1.3 for Holy, the Antiquarian 1.3 for Curio and Arms; otherwise 0.7.
+        /// </summary>
+        public static float Interest(Vendor vendor, LootCategory category)
+        {
+            switch (vendor)
+            {
+                case Vendor.Fence: return 1f;
+                case Vendor.Goldsmith: return category == LootCategory.Metal ? Keen : Cool;
+                case Vendor.Pardoner: return category == LootCategory.Holy ? Keen : Cool;
+                case Vendor.Antiquarian: return category == LootCategory.Curio || category == LootCategory.Arms ? Keen : Cool;
                 default: throw new ArgumentOutOfRangeException(nameof(vendor), vendor, null);
             }
         }

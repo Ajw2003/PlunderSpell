@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 45
   IsArtifact: 0
-  Bulk: 2
+  Category: 0
+  WeightKg: 2
   Fragility: 14
   DisplayName: Silver Plate
   Icon: {fileID: 0}
