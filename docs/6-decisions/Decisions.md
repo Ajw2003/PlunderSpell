@@ -3,6 +3,22 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-06 (later) — The event bus move landed; "Bus" now names only `EventManager`
+
+**Context.** The 2026-10-06 entry below was carried out as #298-#304 on `claude/staging-2026-10-07`. Two things in it
+turned out differently from how it was written.
+
+**Decision.** (1) `EnemyDirectorBus` did not "fold into" `EventManager` as a class: its events moved onto
+`EventManager` and what was left, the director's subscriber that scores the alarm and hands out attack turns, is now
+`EnemyDirectorListener`. `LoopBus` (a pool of looping audio sources) became `LoopPool`. The owner asked that no name
+suggest a second event bus or duplicate logic, so "Bus" is reserved for `EventManager`. (2) `BackdropCamera` checks
+for cameras when the game state changes or a scene loads rather than every frame, because Unity gives no event when a
+camera is enabled. A camera that comes or goes with neither is not noticed until the next one (the cost is in
+`docs/4-systems/core.md`). Adding `LocalPlayerChanged` to it would close that, but the UI assembly cannot reference the
+Player assembly where that event lives.
+
+**Consequence.** The 2026-10-06 entry stands; this one adds to it. Status: Active.
+
 ## 2026-10-06 — Systems talk to each other through the event bus; views learn state by events
 
 **Context.** The raid HUD, music and camera shake polled other systems every frame (`docs/plans/ui-events-mvc.md`).

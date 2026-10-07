@@ -43,7 +43,9 @@ Assemblies: `Plunderspell.Raid` (loop, spawning), `Plunderspell.Guards` (the gar
   reassembles the model only when a bus event says a value changed (phase, clock, alarm state and level, debt, banked
   gold, haul, carried item, loot and door focus, ranged weapon, cast, local player, game state, mana, cast key, chant).
   The view draws `presenter.Model` and reads no other system. The presenter leaves the bus when disabled
-  (`RaidHudEventTests`).
+  (`RaidHudEventTests`). The microphone level meter is not on the raid HUD any more: the HUD names the open
+  microphone while V is held, and the live meter with the whisper and shout marks is in Settings (`voice.md`). The
+  rules this follows (roles, structs, always unsubscribe) are in `core.md`, "The event rule".
 
 ## How loot settles
 

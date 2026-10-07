@@ -1,5 +1,16 @@
 # Today
 
+**2026-10-06 (night) - the event bus move is done on staging (#297, steps #298-#304; #305 is these docs).** Every
+event between systems is on `EventManager`; the raid HUD, damage feedback, camera shake, music and backdrop camera follow
+events instead of polling; the mic meter is in Settings. Naming fixed so nothing but `EventManager` is called a bus
+(`EnemyDirectorListener`, `LoopPool`). On `claude/staging-2026-10-07`, not `main`. Unity: PlayMode 430/430, EditMode 225
+pass / 3 known failures, and a co-op raid on which both HUD models followed the clock and alarm. Not verified: the mic
+meter with a real microphone; music, shake and damage feedback in co-op. The issues (#297-#305) are open for the owner to
+close. Next, in the owner's order: the diegetic raid UI, the Lair room, the Market (`docs/plans/diegetic-ui-lair-market.md`,
+`docs/plans/lair-market-in-engine.md` steps 2-8), each needing a parent issue and one child per step first.
+
+---
+
 **2026-10-06 (night) - staging pushes again, leftover branches merged, Unity compiles it.** A local merge had
 committed the 470 MB `Assets/StreamingAssets/LLM/` model, which GitHub refused; it is out of history and in
 `.gitignore` (still on disk). Merged into `claude/staging-2026-10-07`: `claude/playability-fixes` (#260 railings,
