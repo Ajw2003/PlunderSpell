@@ -19,6 +19,15 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void ASmallHaulLiesAtTheCentre()
+        {
+            var offsets = HaulLayout.Offsets(3);
+            Assert.AreEqual(Vector3.zero, offsets[0]);
+            foreach (Vector3 o in offsets)
+                Assert.LessOrEqual(o.magnitude, HaulLayout.Spacing + 0.001f);
+        }
+
+        [Test]
         public void OverflowStacksAboveTheFirstLayer()
         {
             var offsets = HaulLayout.Offsets(22);
