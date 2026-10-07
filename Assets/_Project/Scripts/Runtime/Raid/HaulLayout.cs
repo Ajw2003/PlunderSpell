@@ -5,7 +5,7 @@ namespace Plunderspell.Raid
 {
     /// <summary>
     /// Where each piece of the haul lies on the Lair floor: a grid so pieces do not overlap, filled
-    /// from the middle of the pad outward, stacked in layers if there are more pieces than cells.
+    /// row by row, stacked in layers if there are more pieces than cells.
     /// </summary>
     public static class HaulLayout
     {

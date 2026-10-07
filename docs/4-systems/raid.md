@@ -184,6 +184,21 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   Placed by `Tools/Plunderspell/Place Lair Room In Raid Scene` (`LairRoomForge.cs`).
 - Evidence: `docs/generated/lair-room-2026-10-06/`.
 
+### How the haul comes home (#310)
+
+- `ExtractionZone.ResolveExtraction` (`ExtractionZone.cs:240`) publishes `HaulExtracted` (`ExtractionEvents.cs:21`),
+  server or offline only, carrying `PiecesOf` (`ExtractionZone.cs:249`): the `LootItem` of every unbroken piece in the zone.
+  A piece is identified by its `LootItem` because that is what `RaidLootTable` already maps to a prefab
+  (`RaidLootTable.PrefabFor`), so no new id scheme.
+- `HaulLanding.cs:33` (child `HaulLanding` of the Lair room, local (4.0, 0.30, 0), built in `LairRoomForge.cs`) spawns them
+  on the server through its own `LootSpawner.SpawnPile` (`LootSpawner.cs:133`): same `SpawnLoose` path, kinematic then
+  released after the settle delay. Positions come from `HaulLayout.Offsets` (a 7 x 3 grid, 0.45 m apart, stacked above that).
+- A new haul replaces the pile; `RaidPhase.Generating` clears it (`HaulLanding.cs:24`). The pile belongs to its own spawner,
+  so `RaidDirector.ApplyResult`'s `_lootSpawner.Clear()` (`RaidDirector.cs:337`) leaves it, and it sits at x 1000, far from the pad.
+  Banking is unchanged (`ApplyExtractionResult`); the pile is the LAST raid's haul only and is not saved.
+- Solo Play check 2026-10-06: two pieces (worth 2400) placed on the pad, `CallExtraction`: phase Resolved, state LairRoom,
+  gold 2800 to 5200, both pieces at (1003.55, 0.31, -0.90) and (1003.55, 0.31, -1.35). Co-op and the capture are not checked.
+
 ## Guards that can actually hurt you
 
 `CastleGuard` could see, hear, shout and chase, but had no attack of any kind — it would run at a
