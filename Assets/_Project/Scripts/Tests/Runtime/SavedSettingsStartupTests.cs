@@ -112,6 +112,28 @@ namespace Plunderspell.Tests
             }
         }
 
+        [Test]
+        public void MicrophoneChangedFiresOnceOnlyWhenTheValueChanges()
+        {
+            string before = AudioInputSettings.Microphone;
+            var heard = new System.Collections.Generic.List<string>();
+            void Record(string name) => heard.Add(name);
+            try
+            {
+                AudioInputSettings.Microphone = "Mic A";
+                AudioInputSettings.MicrophoneChanged += Record;
+                AudioInputSettings.Microphone = "Mic B";
+                AudioInputSettings.Microphone = "Mic B";
+                Assert.AreEqual(new[] { "Mic B" }, heard.ToArray(), "one event, none for the same value");
+                Assert.AreEqual("Mic B", AudioInputSettings.Microphone);
+            }
+            finally
+            {
+                AudioInputSettings.MicrophoneChanged -= Record;
+                AudioInputSettings.Microphone = before;
+            }
+        }
+
         private static void AssertDb(SoundBank bank, string parameter, float expected)
         {
             Assert.IsTrue(bank.Mixer.GetFloat(parameter, out float db), parameter);
