@@ -18,7 +18,7 @@ namespace Player
         private void Awake()
         {
             _creep = new InputAction("Creep", InputActionType.Button, "<Keyboard>/c");
-            _input ??= new PlayerInputs();
+            _input = GameInput.Actions;
             _stateMachine = GetComponent<PlayerStateMachine>();
             EventManager.Instance?.Subscribe(this, (PlayerIdleEvent e) => EnableAllInputs());
         }
@@ -82,12 +82,6 @@ namespace Player
             }
         }
 
-        // Opening the inventory used to free the cursor from here. Cursor lock and visibility are
-        // now owned solely by CursorLockPolicy, which follows GameState; a second writer is what left
-        // the cursor stuck between a menu and the world.
-        private void OpenInventoryInput(bool enable)
-        {
-        }
 
         private void ItemInteractionInputs(bool enable)
         {
@@ -101,7 +95,6 @@ namespace Player
             {
                 _input.Inventory.Clicked.started -= OnItemClickedPerformed;
                 _input.Inventory.Clicked.canceled -= OnItemClickedPerformed;
-                _input.Inventory.Disable();
             }
         }
 
@@ -208,9 +201,9 @@ namespace Player
         }
 
         /// <summary>
-        /// Generated Input System actions are unmanaged and leak if they are only ever enabled.
-        /// Unity asserts on the leak the second time a scene carrying a player is loaded, which is
-        /// how this surfaced. See docs/4-systems/spells.md, "Two ways to cast".
+        /// Unsubscribes from the shared actions (GameInput owns and disposes them, on quit). The per-player
+        /// _creep action is unmanaged and leaks if only ever enabled, which is how this surfaced: Unity asserts
+        /// on the second scene load carrying a player. See docs/4-systems/spells.md, "Two ways to cast".
         /// </summary>
         private void OnDestroy()
         {
@@ -219,8 +212,6 @@ namespace Player
 
             DisableAllInputs();
             _creep.Dispose();
-            _input.Disable();
-            _input.Dispose();
             _input = null;
         }
 
@@ -230,17 +221,15 @@ namespace Player
             JumpInputs(false);
             AttackInputs(false);
             LookInputs(false);
-            OpenInventoryInput(false);
             ItemInteractionInputs(false);
         }
 
         private void EnableAllInputs()
         {
-            if (_input == null) _input = new PlayerInputs();
+            _input = GameInput.Actions;
             _input.Enable();
             _creep.Enable();
 
-            OpenInventoryInput(true);
             WalkInputs(true);
             // No dodge key: dodging is the Velox spell (docs/4-systems/spells.md, "Velox and Saltus").
             JumpInputs(true);
