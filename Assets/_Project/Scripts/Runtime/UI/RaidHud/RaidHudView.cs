@@ -28,7 +28,6 @@ namespace Plunderspell.UI
         // Everything is laid out in 1080p units (the mockup's CSS pixels) and scaled to the screen.
         private const float k_referenceHeight = 1080f;
         private const float k_edge = 36f;
-        private const float k_meterMax = 0.6f;
         private const float k_pulseSeconds = 2.4f;
 
         // Mirrors MockVoiceInputService.keybindMap; the HUD only needs the words, not the service.
@@ -69,8 +68,6 @@ namespace Plunderspell.UI
         private static readonly string SpellFooter = Theme.Tracked("Shift shout · Ctrl whisper", 12);
         private static readonly string KeyboardCasting = "● " + Theme.Tracked("Keyboard casting · press 1–8", 14);
         private static readonly string ListeningOn = "● " + Theme.Tracked("Listening on", 14) + " ";
-        private static readonly string WhisperLabel = Theme.Tracked("Whisper", 12);
-        private static readonly string ShoutLabel = Theme.Tracked("Shout", 12);
         private static readonly string CarryingLabel = Theme.Tracked("Carrying", 14);
         private static readonly string TowingLabel = Theme.Tracked("Towing", 14);
         private static readonly string TooHeavy = Theme.Tracked(" · too heavy to lift", 14);
@@ -78,19 +75,6 @@ namespace Plunderspell.UI
         private static readonly string PiecesLabel = Theme.Tracked("pieces", 14);
         private const string NothingInPortal = "Nothing in the portal yet";
 
-        private Plunderspell.Voice.PushToCastController _pushToCast;
-
-        /// <summary>This machine's player's push-to-cast, looked up once that player exists: it is
-        /// spawned by the network after the HUD wakes.</summary>
-        private Plunderspell.Voice.PushToCastController PushToCast
-        {
-            get
-            {
-                if (_pushToCast == null && StateMachine.PlayerStateMachine.Local != null)
-                    _pushToCast = StateMachine.PlayerStateMachine.Local.GetComponentInChildren<Plunderspell.Voice.PushToCastController>();
-                return _pushToCast;
-            }
-        }
         private RaidHudPresenter _presenter;
         private CrosshairView _crosshair;
 
@@ -234,10 +218,6 @@ namespace Plunderspell.UI
             _captionAt = Time.time;
         }
 
-        /// <summary>The live speech service, or null when casting is keyboard-only.</summary>
-        private static Plunderspell.Voice.VoskVoiceInputService Speech =>
-            (Plunderspell.Voice.VoiceServiceLocator.Current as Plunderspell.Voice.CombinedVoiceInputService)?.Speech;
-
         private void OnGUI()
         {
             if (!_visible || _presenter == null || Event.current.type != EventType.Repaint)
@@ -245,12 +225,9 @@ namespace Plunderspell.UI
 
             // IMGUI draws over the uGUI canvas, so an always-on HUD hides the main menu and the
             // lair behind it. Only draw once the player is actually in the world.
-            if (Plunderspell.Core.GameServices.GameState == null)
-                return;
-
-            Plunderspell.Core.GameState state = Plunderspell.Core.GameServices.GameState.CurrentState;
-            if (state != Plunderspell.Core.GameState.Playing &&
-                state != Plunderspell.Core.GameState.Paused)
+            RaidHudModel model = _presenter.Model;
+            if (model.State != Plunderspell.Core.GameState.Playing &&
+                model.State != Plunderspell.Core.GameState.Paused)
                 return;
 
             float scale = Screen.height / k_referenceHeight;
@@ -258,7 +235,6 @@ namespace Plunderspell.UI
                 return;
 
             EnsureStyles();
-            RaidHudModel model = _presenter.Build();
 
             Matrix4x4 previousMatrix = GUI.matrix;
             GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(scale, scale, 1f));
@@ -273,8 +249,8 @@ namespace Plunderspell.UI
 
             DrawPrompt(model, centre);
             DrawCarrying(model, centre);
-            DrawSpellbook(width - k_edge);
-            DrawChant(centre);
+            DrawSpellbook(model, width - k_edge);
+            DrawChant(model, centre);
             DrawListening(model, centre);
 
             GUI.matrix = previousMatrix;
@@ -430,38 +406,23 @@ namespace Plunderspell.UI
         /// </summary>
         private void DrawListening(RaidHudModel model, float centre)
         {
-            bool casting = PushToCast != null && PushToCast.IsCasting;
+            bool casting = model.IsCasting;
             bool carrying = !string.IsNullOrEmpty(model.CarriedLootName);
 
             if (casting)
             {
-                Plunderspell.Voice.VoskVoiceInputService speech = Speech;
-                bool listening = speech != null && speech.IsListening;
+                // Which microphone is open. The level meter lives in Settings now, where it can be tuned (#303).
                 string title = KeyboardCasting;
-                if (listening)
+                if (model.ListenDevice != null)
                 {
-                    if (!string.Equals(_listenDevice, speech.CurrentDevice, StringComparison.Ordinal))
+                    if (!string.Equals(_listenDevice, model.ListenDevice, StringComparison.Ordinal))
                     {
-                        _listenDevice = speech.CurrentDevice;
+                        _listenDevice = model.ListenDevice;
                         _listenLine = ListeningOn + _listenDevice;
                     }
                     title = _listenLine;
                 }
                 DrawTextCentre(centre, 938f, title, _mono14, Theme.Voice);
-
-                if (listening)
-                {
-                    var meter = new Rect(centre - 220f, 960f, 440f, 12f);
-                    DrawBar(meter, Mathf.Clamp01(speech.CurrentRms / k_meterMax), Theme.Voice, 1f, 0.75f);
-
-                    // Whisper and shout marks.
-                    float whisper = meter.x + meter.width * (Plunderspell.Voice.VoiceUtility.WhisperThreshold / k_meterMax);
-                    float shout = meter.x + meter.width * (Plunderspell.Voice.VoiceUtility.ShoutThreshold / k_meterMax);
-                    Fill(new Rect(whisper - 0.5f, meter.y - 3f, 1f, meter.height + 6f), Theme.TextDim);
-                    Fill(new Rect(shout - 0.5f, meter.y - 3f, 1f, meter.height + 6f), Theme.TextDim);
-                    DrawTextCentre(whisper, 986f, WhisperLabel, _mono12, Theme.TextFaint);
-                    DrawTextCentre(shout, 986f, ShoutLabel, _mono12, Theme.TextFaint);
-                }
             }
             else if (Time.time - _captionAt < k_captionSeconds)
             {
@@ -481,13 +442,12 @@ namespace Plunderspell.UI
         /// A keyed cast is chanted before it fires (#116): show which word and how far along, just
         /// under the crosshair, so the wait reads as the spell gathering rather than lag.
         /// </summary>
-        private void DrawChant(float centre)
+        private void DrawChant(RaidHudModel model, float centre)
         {
-            Plunderspell.Spells.SpellCastingSystem caster = Plunderspell.Spells.SpellCastingSystem.Local;
-            if (caster == null || !caster.IsChanting)
+            if (!model.Chanting)
                 return;
 
-            string word = caster.ChantingWord;
+            string word = model.ChantWord;
             if (!string.Equals(_chantWord, word, StringComparison.Ordinal))
             {
                 _chantWord = word;
@@ -495,17 +455,17 @@ namespace Plunderspell.UI
             }
 
             DrawTextCentre(centre, 640f, _chantLine, _display26, Theme.Voice);
-            DrawBar(new Rect(centre - 110f, 660f, 220f, 8f), caster.ChantProgress, Theme.Voice, 1f, 0.75f);
+            DrawBar(new Rect(centre - 110f, 660f, 220f, 8f), model.ChantProgress, Theme.Voice, 1f, 0.75f);
         }
 
         /// <summary>
         /// The casting controls. Push-to-cast is not guessable: you hold a key to open the mic and
         /// then say (here, press) the word, so without this the spells are invisible.
         /// </summary>
-        private void DrawSpellbook(float right)
+        private void DrawSpellbook(RaidHudModel model, float right)
         {
             // The pause panel takes the right edge and the panel would sit on its buttons.
-            if (!_showSpellbook || Plunderspell.Core.GameServices.GameState.CurrentState == Plunderspell.Core.GameState.Paused)
+            if (!_showSpellbook || model.State == Plunderspell.Core.GameState.Paused)
                 return;
 
             const float width = 340f;
@@ -515,7 +475,7 @@ namespace Plunderspell.UI
             float x = right - width;
             float y = k_referenceHeight - 34f - height;
 
-            bool casting = PushToCast != null && PushToCast.IsCasting;
+            bool casting = model.IsCasting;
 
             // The panel is a hairline: a Line border (lapis while a cast is being heard) round the surface.
             Fill(new Rect(x, y, width, height), casting ? Theme.VoiceLo : Theme.Line);
@@ -527,7 +487,7 @@ namespace Plunderspell.UI
             string rightHeader = ManaHeader;
             if (casting)
             {
-                bool speech = Speech != null;
+                bool speech = model.ListenDevice != null;
                 left = speech ? ListeningHeader : CastingHeader;
                 rightHeader = speech ? OrNumbers : PressNumber;
             }
@@ -537,8 +497,8 @@ namespace Plunderspell.UI
             Fill(new Rect(x + padX, y + 49f, width - padX * 2f, 1f), Theme.Line);
 
             // Each word with its mana cost, struck through when the pool cannot cover it right now.
-            Plunderspell.Spells.SpellLexicon lexicon = Plunderspell.Spells.SpellCastingSystem.Local?.Lexicon;
-            int mana = Plunderspell.Core.GameServices.PlayerStats?.Mana ?? int.MaxValue;
+            Plunderspell.Spells.SpellLexicon lexicon = _presenter.Lexicon;
+            int mana = model.Mana;
             for (int i = 0; i < Spellbook.Length; i++)
             {
                 int cost = lexicon != null && lexicon.FindByWord(Spellbook[i]) is Plunderspell.Spells.SpellWord word

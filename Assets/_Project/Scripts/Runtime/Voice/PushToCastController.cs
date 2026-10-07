@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -78,6 +79,7 @@ namespace Plunderspell.Voice
 
             SetCastingVisual(true);
             OnCastingStateChanged?.Invoke(true);
+            EventManager.Instance?.Publish(new CastingStateChanged(this, true));
         }
 
         private void EndCasting()
@@ -91,6 +93,7 @@ namespace Plunderspell.Voice
 
             SetCastingVisual(false);
             OnCastingStateChanged?.Invoke(false);
+            EventManager.Instance?.Publish(new CastingStateChanged(this, false));
         }
 
         private void SetCastingVisual(bool casting)

@@ -1,3 +1,5 @@
+using Plunderspell.Voice;
+using Code.Scripts.EventSystems;
 using System;
 using System.Collections.Generic;
 using Plunderspell.Audio;
@@ -64,7 +66,7 @@ namespace Plunderspell.UI.Screens
             AddMicrophoneRow(voice);
             AddMicGainRow(voice);
             AddChatterRow(voice);
-            AddNote(voice, "Hold V in a raid to see the level meter.");
+            AddMicLevelRow(voice);
 
             UIFactory.CreateEyebrow(graphics, "Eyebrow", "Graphics");
             AddQualityRow(graphics);
@@ -191,6 +193,40 @@ namespace Plunderspell.UI.Screens
             PlaceControl((RectTransform)_graphics.transform, 52f);
         }
 
+        // The meter's full scale: RMS 0.6 is a shout well past the shout mark.
+        private const float MicMeterMax = 0.6f;
+
+        private Image _micLevelFill;
+
+        /// <summary>
+        /// A live level meter with the whisper and shout marks, for testing and tuning the microphone and its
+        /// gain here rather than in a raid. Fed by MicLevelChanged while this screen is open (#303).
+        /// </summary>
+        private void AddMicLevelRow(Transform parent)
+        {
+            RectTransform row = AddRow(parent, "MicLevelRow", "Level", 14f, out Text value);
+            value.gameObject.SetActive(false);
+
+            Image bar = UIFactory.CreateProgressBar(row, "MicLevelBar", UITheme.Voice, new Vector2(0f, 14f), out _micLevelFill);
+            PlaceControl(bar.rectTransform, 14f);
+            AddMeterMark(bar.rectTransform, "WhisperMark", VoiceUtility.WhisperThreshold / MicMeterMax);
+            AddMeterMark(bar.rectTransform, "ShoutMark", VoiceUtility.ShoutThreshold / MicMeterMax);
+            UIFactory.SetBarFill(_micLevelFill, 0f);
+        }
+
+        private static void AddMeterMark(RectTransform bar, string name, float at)
+        {
+            Image mark = UIFactory.CreateImage(bar, name, UITheme.TextDim);
+            mark.rectTransform.anchorMin = new Vector2(at, 0f);
+            mark.rectTransform.anchorMax = new Vector2(at, 1f);
+            mark.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            mark.rectTransform.sizeDelta = new Vector2(2f, 0f);
+            mark.rectTransform.anchoredPosition = Vector2.zero;
+        }
+
+        private static VoskVoiceInputService Speech =>
+            (VoiceServiceLocator.Current as CombinedVoiceInputService)?.Speech;
+
         private void OnMicGainChanged(float value)
         {
             AudioInputSettings.MicGain = value;
@@ -217,6 +253,21 @@ namespace Plunderspell.UI.Screens
                 _chatter.SetSelected(AudioInputSettings.GuardsHearChatter ? 1 : 0);
             if (_graphics != null)
                 _graphics.SetSelected(QualitySettings.GetQualityLevel());
+
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            EventManager.Instance?.Subscribe(this, (MicLevelChanged e) => UIFactory.SetBarFill(_micLevelFill, e.Level / MicMeterMax));
+            if (Speech != null)
+                Speech.MeterEnabled = true;
+        }
+
+        // Closing, a change of game state and quitting all hide this screen: stop listening and let the microphone rest.
+        private void OnDisable()
+        {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            if (Speech != null)
+                Speech.MeterEnabled = false;
+            if (_micLevelFill != null)
+                UIFactory.SetBarFill(_micLevelFill, 0f);
         }
 
         /// <summary>
