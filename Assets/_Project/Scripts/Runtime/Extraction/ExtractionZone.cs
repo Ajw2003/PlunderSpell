@@ -236,10 +236,25 @@ namespace Plunderspell.Extraction
             _extractionComplete.value = true;
             CancelPlayerExtraction();
 
+            // Server (or offline) only: this method never runs on a client peer. The Lair lands these (#310).
+            EventManager.Instance?.Publish(new HaulExtracted(PiecesOf(_lootInZone)));
+
             if (isSpawned && isServer)
                 BroadcastExtractionResult(totalWorth, playersSaved);
             else
                 ApplyExtractionResult(totalWorth, playersSaved);
+        }
+
+        /// <summary>The authored definition of every unbroken piece in the list, so the same pieces can be spawned again.</summary>
+        public static List<LootItem> PiecesOf(IEnumerable<LootValue> loot)
+        {
+            var items = new List<LootItem>();
+            foreach (LootValue piece in loot)
+            {
+                if (piece != null && !piece.IsRuined && piece.Item != null)
+                    items.Add(piece.Item);
+            }
+            return items;
         }
 
         /// <summary>

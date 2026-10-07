@@ -86,6 +86,16 @@ namespace Plunderspell.EditorTools
             box.size = new Vector3(1.2f, 2.4f, 2.4f);
             portal.AddComponent<Plunderspell.Raid.LairPortalTrigger>();
 
+            // Where the last raid's haul lands: floor level, between the spawns and the portal's run (#310).
+            var landing = new GameObject("HaulLanding");
+            landing.transform.SetParent(root.transform, false);
+            landing.transform.localPosition = new Vector3(4.0f, Floor, 0f);
+            var pile = landing.AddComponent<Plunderspell.Raid.LootSpawner>();
+            var haul = landing.AddComponent<Plunderspell.Raid.HaulLanding>();
+            var haulObject = new SerializedObject(haul);
+            haulObject.FindProperty("_pile").objectReferenceValue = pile;
+            haulObject.ApplyModifiedPropertiesWithoutUndo();
+
             // The book on the table is its own object, so looking at it opens the ledger too.
             root.transform.Find("LairLedgerTable").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
             root.transform.Find("LairLedger").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
