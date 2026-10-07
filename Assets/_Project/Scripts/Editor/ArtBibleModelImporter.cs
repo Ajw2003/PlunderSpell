@@ -198,7 +198,16 @@ namespace Plunderspell.EditorTools
         // Materials
         // -----------------------------------------------------------------------------------------
 
-        private void OnPostprocessMaterial(Material material)
+        // After URP's own FBX material preprocessor (order 1), so its defaults do not overwrite ours.
+        public override int GetPostprocessOrder() => 100;
+
+        // Bumped when the material rules change: the imported materials live in Library, not git.
+        public override uint GetVersion() => 1;
+
+        // Models import their materials through a MaterialDescription, the only hook that sees
+        // embedded materials; OnPostprocessMaterial is never called for them (docs/4-systems/atmosphere.md:101).
+        private void OnPreprocessMaterialDescription(UnityEditor.AssetImporters.MaterialDescription description,
+            Material material, AnimationClip[] clips)
         {
             if (!KindOf(assetPath).HasValue)
                 return;
