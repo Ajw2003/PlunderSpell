@@ -110,6 +110,8 @@ InitTestScene*.unity*
 # Headless verification harness build output
 Tools/Headless/**/bin/
 Tools/Headless/**/obj/
+Tools/MarketRules/bin/
+Tools/MarketRules/obj/
 .claude/worktrees/
 
 # Profiler captures from Tools/Unity/perf_capture.sh: ~0.5-1 GB each, over GitHub's 100 MB file limit.
