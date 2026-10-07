@@ -1,3 +1,4 @@
+using EventSystems;
 using UnityEngine;
 
 namespace Plunderspell.Alarm
@@ -7,7 +8,7 @@ namespace Plunderspell.Alarm
 
     /// <summary>A guard in combat asks for a turn to attack <see cref="Target"/>. Answered with
     /// <see cref="AttackTurnGranted"/> or <see cref="AttackTurnDenied"/>.</summary>
-    public readonly struct AttackTurnRequested
+    public readonly struct AttackTurnRequested : IEvent
     {
         public readonly Component Guard;
         public readonly Transform Target;
@@ -20,7 +21,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>The guard may attack now. The turn is held until released, the guard dies, or it times out.</summary>
-    public readonly struct AttackTurnGranted
+    public readonly struct AttackTurnGranted : IEvent
     {
         public readonly Component Guard;
         public readonly Transform Target;
@@ -28,7 +29,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>Too many guards are already attacking that player; the guard waits and asks again.</summary>
-    public readonly struct AttackTurnDenied
+    public readonly struct AttackTurnDenied : IEvent
     {
         public readonly Component Guard;
         public readonly Transform Target;
@@ -36,7 +37,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>The guard is done with its turn (the strike ended, or it left combat).</summary>
-    public readonly struct AttackTurnReleased
+    public readonly struct AttackTurnReleased : IEvent
     {
         public readonly Component Guard;
         public AttackTurnReleased(Component guard) { Guard = guard; }

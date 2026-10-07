@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using Interfaces;
 using PurrNet;
@@ -122,7 +123,7 @@ namespace Plunderspell.Guards
             _ = new GuardHelpResponse(this);
             Leads = new GuardLeads(Link, Hearing, () => Random);
             Cry = new GuardCry(this);
-            Hearing.NoiseHeard += (origin, strength) => Link.Director?.Publish(new NoiseReported(this, origin, strength));
+            Hearing.NoiseHeard += (origin, strength) => EventManager.Instance?.Publish(new NoiseReported(this, origin, strength));
             _shove = new GuardShove(transform, _tuning);
             Lift = new GuardLift(transform, Status);
             States = new GuardStateSet(this);
@@ -249,7 +250,7 @@ namespace Plunderspell.Guards
         private void OnDied()
         {
             Status.ClearAll();
-            Link.Director?.Publish(new GuardDied(this, transform.position));
+            EventManager.Instance?.Publish(new GuardDied(this, transform.position));
             _machine.ChangeState(States.Dead);
         }
 

@@ -18,7 +18,7 @@ namespace Code.Scripts.Singleton
             if (!_instance)
             {
                 _instance = this as T;
-                if (PersistBetweenScenes) DontDestroyOnLoad(gameObject);
+                if (PersistBetweenScenes && Application.isPlaying) DontDestroyOnLoad(gameObject);
             }
             else if (_instance != this)
             {

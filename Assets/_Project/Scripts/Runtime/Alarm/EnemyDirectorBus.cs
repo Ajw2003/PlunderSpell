@@ -1,12 +1,11 @@
-using System;
+using Code.Scripts.EventSystems;
 
 namespace Plunderspell.Alarm
 {
     /// <summary>
-    /// The director's event bus: plain C# events carrying readonly structs, so raising one allocates
-    /// nothing. <c>Publish</c> raises the event, then does what the director owes that event: scoring
-    /// the alarm, counting chasers, handing an attack turn out or taking it back. The director forwards
-    /// its own events and Publish calls here, so callers still talk to the director.
+    /// The director's listener: the director's ears on the shared <see cref="EventManager"/>. When a guard reports
+    /// (noise, a sighting, a death, an attack-turn request) this does what the director owes that event:
+    /// scoring the alarm, counting chasers, handing an attack turn out or taking it back.
     /// </summary>
     public sealed class EnemyDirectorBus
     {
@@ -17,42 +16,37 @@ namespace Plunderspell.Alarm
             _director = director;
         }
 
-        public event Action<NoiseReported> OnNoiseReported;
-        public event Action<IntruderSpotted> OnIntruderSpotted;
-        public event Action<IntruderLost> OnIntruderLost;
-        public event Action<GuardEngaged> OnGuardEngaged;
-        public event Action<AlarmChanged> OnAlarmChanged;
-        public event Action<GuardDied> OnGuardDied;
-        public event Action<InvestigateRequest> OnInvestigateRequest;
-        public event Action<UnreachableIntruderReported> OnUnreachableIntruder;
-        public event Action<MoveRequest> OnMoveRequest;
-        public event Action<PathReady> OnPathReady;
-        public event Action<Arrived> OnArrived;
-        public event Action<Blocked> OnBlocked;
-        public event Action<AttackTurnRequested> OnAttackTurnRequested;
-        public event Action<AttackTurnGranted> OnAttackTurnGranted;
-        public event Action<AttackTurnDenied> OnAttackTurnDenied;
-        public event Action<AttackTurnReleased> OnAttackTurnReleased;
-
-        public void Publish(AttackTurnRequested e)
+        /// <summary>Starts hearing the guards' reports on the shared bus. Safe to call twice.</summary>
+        public void Listen()
         {
-            OnAttackTurnRequested?.Invoke(e);
+            EventManager bus = EventManager.Instance;
+            if (bus == null)
+                return;
+
+            StopListening();
+            bus.Subscribe(this, (AttackTurnRequested e) => OnAttackTurnRequested(e));
+            bus.Subscribe(this, (AttackTurnReleased e) => OnAttackTurnReleased(e));
+            bus.Subscribe(this, (IntruderSpotted e) => OnIntruderSpotted(e));
+            bus.Subscribe(this, (IntruderLost e) => OnIntruderLost(e));
+            bus.Subscribe(this, (GuardEngaged e) => OnGuardEngaged(e));
+            bus.Subscribe(this, (GuardDied e) => OnGuardDied(e));
+            bus.Subscribe(this, (NoiseReported e) => OnNoiseReported(e));
+        }
+
+        public void StopListening() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
+
+        private void OnAttackTurnRequested(AttackTurnRequested e)
+        {
             _director.AttackTurns.Handle(e);
         }
 
-        public void Publish(AttackTurnGranted e) => OnAttackTurnGranted?.Invoke(e);
-
-        public void Publish(AttackTurnDenied e) => OnAttackTurnDenied?.Invoke(e);
-
-        public void Publish(AttackTurnReleased e)
+        private void OnAttackTurnReleased(AttackTurnReleased e)
         {
-            OnAttackTurnReleased?.Invoke(e);
             _director.AttackTurns.Release(e.Guard);
         }
 
-        public void Publish(IntruderSpotted e)
+        private void OnIntruderSpotted(IntruderSpotted e)
         {
-            OnIntruderSpotted?.Invoke(e);
             if (!_director.IsAuthority)
                 return;
             if (e.FirstSighting)
@@ -60,47 +54,29 @@ namespace Plunderspell.Alarm
             _director.Alarm.ReportChase(e.Guard != null ? e.Guard.GetInstanceID() : 0, true);
         }
 
-        public void Publish(IntruderLost e)
+        private void OnIntruderLost(IntruderLost e)
         {
-            OnIntruderLost?.Invoke(e);
             if (_director.IsAuthority)
                 _director.Alarm.ReportChase(e.Guard != null ? e.Guard.GetInstanceID() : 0, false);
         }
 
-        public void Publish(GuardEngaged e)
+        private void OnGuardEngaged(GuardEngaged e)
         {
-            OnGuardEngaged?.Invoke(e);
             if (_director.IsAuthority)
                 _director.Alarm.ReportAttack();
         }
 
-        public void Publish(GuardDied e)
+        private void OnGuardDied(GuardDied e)
         {
-            OnGuardDied?.Invoke(e);
             _director.ReleaseAttackTurnOf(e.Guard);
             if (_director.IsAuthority)
                 _director.Alarm.ReportChase(e.Guard != null ? e.Guard.GetInstanceID() : 0, false);
         }
 
-        public void Publish(NoiseReported e)
+        private void OnNoiseReported(NoiseReported e)
         {
-            OnNoiseReported?.Invoke(e);
             if (_director.IsAuthority)
                 _director.Alarm.ReportHeardNoise(e.Guard != null ? e.Guard.GetInstanceID() : 0, e.Strength);
         }
-
-        public void Publish(InvestigateRequest e) => OnInvestigateRequest?.Invoke(e);
-
-        public void Publish(UnreachableIntruderReported e) => OnUnreachableIntruder?.Invoke(e);
-
-        public void Publish(MoveRequest e) => OnMoveRequest?.Invoke(e);
-
-        public void Publish(PathReady e) => OnPathReady?.Invoke(e);
-
-        public void Publish(Arrived e) => OnArrived?.Invoke(e);
-
-        public void Publish(Blocked e) => OnBlocked?.Invoke(e);
-
-        public void Publish(AlarmChanged e) => OnAlarmChanged?.Invoke(e);
     }
 }

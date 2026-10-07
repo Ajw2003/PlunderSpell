@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using Plunderspell.Alarm;
 using UnityEngine;
@@ -47,18 +48,18 @@ namespace Plunderspell.Guards
             if (director == null)
                 return;
 
-            director.OnInvestigateRequest += HandleInvestigateRequest;
-            director.OnUnreachableIntruder += HandleUnreachableIntruder;
+            EventManager.Instance?.Subscribe(this, (InvestigateRequest request) => HandleInvestigateRequest(request));
+            EventManager.Instance?.Subscribe(this, (UnreachableIntruderReported call) => HandleUnreachableIntruder(call));
             director.RegisterGuard(_guard);
         }
 
         public void Detach()
         {
+            // Always leave the bus, even when the director was destroyed first and there is nothing to unregister from.
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             if (Director == null)
                 return;
 
-            Director.OnInvestigateRequest -= HandleInvestigateRequest;
-            Director.OnUnreachableIntruder -= HandleUnreachableIntruder;
             Director.UnregisterGuard(_guard);
             Director = null;
         }

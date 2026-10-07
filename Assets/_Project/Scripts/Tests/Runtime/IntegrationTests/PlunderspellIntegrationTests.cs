@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
@@ -154,7 +155,7 @@ namespace Plunderspell.Tests.Integration
             for (int i = 0; i < 6; i++)
             {
                 var guard = Track(new GameObject("Guard" + i));
-                alarm.Publish(new NoiseReported(guard.transform, Vector3.zero, 1.0f));
+                EventManager.Instance.Publish(new NoiseReported(guard.transform, Vector3.zero, 1.0f));
             }
 
             Assert.AreEqual(AlarmState.HueAndCry, alarm.State);

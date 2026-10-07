@@ -26,10 +26,13 @@ past — those belong to `Guards`/`Castle` respectively.
   so scenes keep their component). The director (`Assets/_Project/Scripts/Runtime/Alarm/EnemyDirector.cs:18`)
   is a thin NetworkBehaviour (248 lines; it was 472 before #211) that owns and ticks one class per job, all in
   `Runtime/Alarm/`: `EnemyRegistry.cs:11` (guard and intruder lists, replacing the static
-  `CastleGuard.Active`/`Intruders`; `RegisterGuard` :104 forwards to it), `EnemyDirectorBus.cs:11` (the typed events
-  and every `Publish` with the scoring each one owes, :36-101), `DirectorAlarm.cs:20` (level, state, latch,
-  decay, grace, chasers), `HueAndCry.cs:9`, and the tuning copy `AlarmTuning.cs:7`. The director forwards its
-  events and `Publish` calls to the bus (`EnemyDirector.cs:123-153`), so callers did not change. The
+  `CastleGuard.Active`/`Intruders`; `RegisterGuard` :104 forwards to it), `EnemyDirectorBus.cs:11` (the director's ears on
+  `EventManager`: `Listen` subscribes the scoring each guard report owes, :22-34), `DirectorAlarm.cs:20` (level, state, latch,
+  decay, grace, chasers), `HueAndCry.cs:9`, and the tuning copy `AlarmTuning.cs:7`. Every event between guards, the
+  director and the navigation service is an `IEvent` struct on the shared `EventManager` (#299): guards publish
+  `EventManager.Instance?.Publish(new NoiseReported(...))` and the director hears it through that bus. The director has no
+  `OnX` events or `Publish` overloads any more; it subscribes in `OnEnable` and leaves the bus in `OnDisable`.
+  Listeners that serve many guards filter on the event's `Guard`. The bus is global, so there is one director's worth of traffic at a time. The
   `SyncVar`s stay fields of the director (PurrNet needs that) and are handed to the alarm (`:78`); the
   Inspector tuning fields stay on the director so scenes keep their values, and are copied into `AlarmTuning`
   when the alarm is first used (so live edits of them in Play mode no longer reach the alarm). Payload structs
@@ -144,8 +147,8 @@ The director owns a server-side navigation service (#222, plan `docs/plans/bespo
 server-only `Update`. The fresh guard (#206, below) is the only thing that moves through it; every guard
 prefab carries the fresh guard since #214.
 
-- **Events** on the existing bus (`GuardNavigationEvents.cs`, readonly structs): `Publish(MoveRequest(guard,
-  destination, speed, reason))` in; `OnPathReady`, `OnArrived`, `OnBlocked(reason)` out. Blocked reasons: no
+- **Events** on the existing bus (`GuardNavigationEvents.cs`, readonly structs): `MoveRequest(guard,
+  destination, speed, reason)` published in; `PathReady`, `Arrived`, `Blocked(reason)` published out, all on `EventManager`. Blocked reasons: no
   map, no walkable cell, unreachable, door closed, obstacle (the sweep held the guard up for 0.5 s).
 - **Why an interface.** Castle references Alarm, so Alarm cannot name `CastleNavGraph`. The service plans
   through `IGuardNavigationMap` (`IGuardNavigationMap.cs`); `CastleGuardNavigationMap`
@@ -253,7 +256,7 @@ The nav map has no cells on tables, rails or ledges, so a melee guard used to ru
   `Editor/StoneForge`, not a PurrNet network prefab (like the bolt). It gives up to Investigate after `UnreachableLoseSightSeconds` (3 s) unseen,
   and returns to Chase (then Combat) as soon as the player is reachable.
 - **Throws use the ranged attack turn**, so the director's limit on shooters per player covers stones; the turn is released straight after each throw.
-- **Call for help**: entering the state publishes `UnreachableIntruderReported` on the director's bus. `GuardDirectorLink.HelpCalled` reaches free
+- **Call for help**: entering the state publishes `UnreachableIntruderReported` on the event bus. `GuardDirectorLink.HelpCalled` reaches free
   guards (Patrol or Investigate) within 40 m; `Core/GuardHelpResponse`: ranged guards go to Chase at once, melee guards are given the player's spot as a
   sighting lead and walk at investigate pace, so they come second and hold below themselves.
 - **Tests**: `GuardUnreachableTests` (throws and stays; not through a teammate; melee returns; help call). The one real co-op run did not work (the guard stayed on patrol and never saw
@@ -331,7 +334,7 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
 - **Combat and attack turns (#210).** `States/CombatState.cs:20`, entered from Chase. The guard asks the director
   for a turn by event: `AttackTurnRequested` is published (`GuardAttackTurn.Request`, `Core/GuardAttackTurn.cs:52`),
   `AttackTurnMediator.Handle` (`Alarm/AttackTurnMediator.cs:53`) answers `AttackTurnGranted` or `AttackTurnDenied`
-  (`EnemyDirectorBus.cs:36-52`; `director.AttackTurns` is the mediator, `EnemyDirector.cs:85`). **Limit: 1 melee and 1 ranged turn
+  (the bus hears the request, `EnemyDirectorBus.cs:36-43`; `director.AttackTurns` is the mediator, `EnemyDirector.cs:85`). **Limit: 1 melee and 1 ranged turn
   per player** (`AttackTurnTuning.cs:14`). That is the number in issue #210; the legacy guard had no tokens, no
   windup and no turns, every guard in reach struck on its own 1.4 s cooldown (`CastleGuard.cs.txt:1157-1180`).
   A turn ends when the guard releases it (`CombatState.cs:156`, after a 0.5 s `AttackRecoverySeconds` that spreads

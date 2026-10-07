@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Alarm;
@@ -169,7 +170,7 @@ namespace Plunderspell.Tests
             Assert.AreEqual(AlarmState.Calm, alarm.State, "The last raid's Hue and Cry must not carry over (#136).");
             Assert.IsFalse(alarm.IsLocked);
 
-            alarm.Publish(new NoiseReported(alarm, Vector3.zero, 1f));
+            EventManager.Instance.Publish(new NoiseReported(alarm, Vector3.zero, 1f));
             alarm.ReportSighting(1);
             alarm.ReportChase(1, true);
             alarm.ReportChase(2, true);

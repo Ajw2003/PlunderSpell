@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Alarm;
 using UnityEngine;
 
@@ -32,33 +33,32 @@ namespace Plunderspell.Guards
             if (_director == null)
                 return;
 
-            _director.OnAttackTurnGranted += OnGranted;
-            _director.OnAttackTurnDenied += OnDenied;
+            EventManager.Instance?.Subscribe(this, (AttackTurnGranted answer) => OnGranted(answer));
+            EventManager.Instance?.Subscribe(this, (AttackTurnDenied answer) => OnDenied(answer));
         }
 
         /// <summary>Gives any turn back and stops listening.</summary>
         public void End()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             if (_director == null)
                 return;
 
             Release();
-            _director.OnAttackTurnGranted -= OnGranted;
-            _director.OnAttackTurnDenied -= OnDenied;
             _director = null;
         }
 
         /// <summary>Asks for a turn on <paramref name="target"/>. The answer arrives before this returns.</summary>
         public void Request(Transform target, bool ranged)
         {
-            _director?.Publish(new AttackTurnRequested(_guard, target, ranged));
+            EventManager.Instance?.Publish(new AttackTurnRequested(_guard, target, ranged));
         }
 
         /// <summary>Gives the turn back so another guard can attack.</summary>
         public void Release()
         {
             if (_director != null && _granted)
-                _director.Publish(new AttackTurnReleased(_guard));
+                EventManager.Instance?.Publish(new AttackTurnReleased(_guard));
             _granted = false;
         }
 

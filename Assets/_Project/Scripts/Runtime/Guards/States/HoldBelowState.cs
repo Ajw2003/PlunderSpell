@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Alarm;
 using StateMachine;
 using UnityEngine;
@@ -48,8 +49,8 @@ namespace Plunderspell.Guards
             _sidestep = 0;
             Context.Navigator.Stop();
             Context.AttackTurn.Begin();
-            Context.Link.Director?.Publish(new IntruderSpotted(Context, _target, _lastSeenSpot, false));
-            Context.Link.Director?.Publish(new UnreachableIntruderReported(Context, _target));
+            EventManager.Instance?.Publish(new IntruderSpotted(Context, _target, _lastSeenSpot, false));
+            EventManager.Instance?.Publish(new UnreachableIntruderReported(Context, _target));
         }
 
         public override void Exit()
@@ -57,7 +58,7 @@ namespace Plunderspell.Guards
             Context.AttackTurn.End();
             Context.Navigator.Stop();
             Context.Reach.Reset();
-            Context.Link.Director?.Publish(new IntruderLost(Context, _lastSeenSpot));
+            EventManager.Instance?.Publish(new IntruderLost(Context, _lastSeenSpot));
         }
 
         public override State<Guard> Tick(float deltaTime)

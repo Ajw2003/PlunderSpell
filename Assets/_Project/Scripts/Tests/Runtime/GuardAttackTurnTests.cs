@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using NUnit.Framework;
 using Plunderspell.Alarm;
 using Plunderspell.Guards;
@@ -20,7 +21,11 @@ namespace Plunderspell.Tests
         }
 
         [TearDown]
-        public void TearDown() => _rig.TearDown();
+        public void TearDown()
+        {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            _rig.TearDown();
+        }
 
         private Guard MeleeGuardInCombatWith(Transform player, Vector3 position)
         {
@@ -41,8 +46,8 @@ namespace Plunderspell.Tests
             int shortestGapInSteps = int.MaxValue;
             int lastStrikeStep = -1000;
             int strikesSeen = 0;
-            _rig.Director.OnAttackTurnGranted += granted =>
-                mostHolding = Mathf.Max(mostHolding, _rig.Director.AttackTurns.TurnsOn(victim.transform, false));
+            EventManager.Instance.Subscribe(this, (AttackTurnGranted granted) =>
+                mostHolding = Mathf.Max(mostHolding, _rig.Director.AttackTurns.TurnsOn(victim.transform, false)));
 
             for (int i = 0; i < 160; i++)
             {

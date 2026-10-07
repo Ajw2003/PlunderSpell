@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using NUnit.Framework;
 using Plunderspell.Acoustics;
 using Plunderspell.Alarm;
@@ -106,7 +107,7 @@ namespace Plunderspell.Tests
             var alarm = CreateAlarm();
 
             // The castle scores noise a guard heard (#259), so the noise arrives as a guard's report.
-            alarm.Publish(new NoiseReported(alarm, Vector3.zero, 1.0f));
+            EventManager.Instance.Publish(new NoiseReported(alarm, Vector3.zero, 1.0f));
 
             Assert.Greater(alarm.AlarmLevel, 0f, "A strength-1.0 noise a guard heard must raise the alarm level.");
 
