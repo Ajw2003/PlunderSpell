@@ -1,5 +1,18 @@
 # Today
 
+**2026-10-06 (night) - staging pushes again, leftover branches merged, Unity compiles it.** A local merge had
+committed the 470 MB `Assets/StreamingAssets/LLM/` model, which GitHub refused; it is out of history and in
+`.gitignore` (still on disk). Merged into `claude/staging-2026-10-07`: `claude/playability-fixes` (#260 railings,
+silent Editor Play fix, alarm witness check), `claude/project-thread-zc980w` (cel-shaded paintovers),
+`ccr-6bf1f02d-o8jhoy` (co-op chatter check), `claude/carry-cleanup-169`. Left unmerged on purpose: the guard-mimic LLM
+prototype, voice-mimicry (cherry-picked already), and branches older than the RogueAi rename. Unity: compile clean,
+`NetworkPrefabs.asset` unchanged; EditMode 220 pass / 3 fail / 3 skip, the three known failures
+(`ArtAssetImportTests`, `LootAmountTests...AboutDoubleTheOldHaul`, `LootBalanceTests...TooHeavyToLift`); PlayMode
+413/413. The owner chose the event-bus scope (every event between systems, `docs/6-decisions/Decisions.md`); next:
+that move, then the diegetic raid UI, the Lair, the Market.
+
+---
+
 **2026-10-07 - handoff to a local session with Unity.** `claude/staging-2026-10-07` holds everything finished in
 the cloud session (#285, #288, #290-#296). Unity has not compiled it since the `Time.Reset/Advance` test fix
 (`7edf7559`). Next, on aj's PC: compile and test staging in Unity, do the Unity-only checks each PR names, then move

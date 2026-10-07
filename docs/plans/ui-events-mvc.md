@@ -1,6 +1,8 @@
 # Plan: views learn about state through events, not per-frame polling
 
-**Status: proposed 2026-10-07, two decisions waiting on the owner (end of this page). Nothing built.**
+**Status: decided 2026-10-06 by the owner, and wider than proposed: every event between systems moves onto the bus,
+not only what views listen to; continuous values are published on every change; the mic readout moves to Settings.
+See `docs/6-decisions/Decisions.md` (2026-10-06) and "Decisions (settled)" at the end. Building now.**
 Asked for by the owner: "ensure we are properly using the MVC design pattern and events to communicate anything per
 frame like the hud was doing … communication should be on a need to know basis with light weight events that our
 event bus handles, and if it becomes a bottleneck we multithread it or make it async."
@@ -76,3 +78,22 @@ this work is reused, not thrown away with the HUD.
      while active. No per-frame events.
    - An event on every change, even every frame.
    - Leave them as a direct read in the view; events only for discrete changes.
+
+## Decisions (settled 2026-10-06)
+
+1. **Scope: every event between systems, at once.** All plain C# events that one system raises for another move
+   onto `EventManager`, along with the enemy director's private `EnemyDirectorBus`. A component talking to its own
+   object stays a direct call: a guard's navigator, senses and states (`GuardNavigator.Reached`,
+   `GuardHearing.NoiseHeard`, `ChaseState.InReach`, ...), a door's own `OpenStateChanged`, one player's
+   `StateMachine.StateChanged`. A guard's reports to the director do go on the bus (#252).
+2. **Continuous values are published on every change.** Mic level and chant progress raise an event when they
+   change; input raises one on both performed and cancelled. No sampling or rate cap.
+3. **The mic readout leaves the raid HUD.** Mic sensitivity and the live level meter belong in Settings, for testing
+   and tuning there.
+4. **Unsubscribing is part of the contract.** Every subscriber unsubscribes when its screen closes, its state
+   changes, its object is disabled or destroyed, or the game quits. A test proves that after a screen closes or a
+   scene unloads, nothing it subscribed is still listening.
+
+Before the move, `EventManager` itself needs: to survive scene loads and exist in EditMode tests (it is a scene
+singleton today, `PersistBetweenScenes => false`), an `UnsubscribeFromAllEvents` without reflection (it calls
+`MethodInfo.Invoke` per event type today), and a way to count live subscriptions for the leak test.

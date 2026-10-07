@@ -3,6 +3,22 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-06 — Systems talk to each other through the event bus; views learn state by events
+
+**Context.** The raid HUD, music and camera shake polled other systems every frame (`docs/plans/ui-events-mvc.md`).
+The game had 87 plain C# events and a second, private bus inside the enemy director; `EventManager` was barely used.
+
+**Decision (owner, 2026-10-06).** Every event one system sends another goes through `EventManager`, all at once, not
+only the ones views listen to. A component talking to its own object (a guard's navigator, senses and states; a
+door's own open state; one player's state machine) stays a direct call. Values that change continuously (mic level,
+chant progress, input) are published on every change, input on both performed and cancelled; the mic sensitivity
+readout moves out of the raid HUD into Settings. Every subscriber unsubscribes when its screen closes, its state
+changes, or the game quits.
+
+**Consequence.** Replaces the plan's recommended scope (bus only for what views listen to) and its "sample at
+~15/s" answer. The enemy director's own bus (`EnemyDirectorBus`) folds into `EventManager`. Plan:
+`docs/plans/ui-events-mvc.md`. Status: Active.
+
 ## 2026-10-05 — Screen ink pass removed; the painted look lives on the surfaces
 
 The owner said the Ink pass ran as an overlay rather than texture like the castle shader and chose to remove it
