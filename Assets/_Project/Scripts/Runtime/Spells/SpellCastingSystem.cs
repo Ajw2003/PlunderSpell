@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Interfaces;
 using Plunderspell.Core;
 using PurrNet;
@@ -125,7 +126,7 @@ namespace Plunderspell.Spells
                 if (_voice is IPhraseVocabularyTarget speech && _lexicon != null)
                     speech.SetVocabulary(_lexicon.BuildHeardVocabulary());
 
-                _voice.OnPhraseRecognized += HandlePhrase;
+                EventManager.Instance?.Subscribe(this, (PhraseRecognized e) => HandlePhrase(e.Result));
                 _subscribed = true;
                 Local = this;
 
@@ -155,8 +156,8 @@ namespace Plunderspell.Spells
 
         private void Unsubscribe()
         {
-            if (_subscribed && _voice != null)
-                _voice.OnPhraseRecognized -= HandlePhrase;
+            if (_subscribed)
+                EventManager.Instance?.Unsubscribe<PhraseRecognized>(this);
             if (_body != null)
                 _body.SlamLanded -= HandleSlamLanded;
             _body = null;
@@ -222,8 +223,8 @@ namespace Plunderspell.Spells
             bool chant = resolved != SpellId.None && !notEnoughMana && result.FromKeyboard &&
                          SpellTuning.KeyboardCastSeconds > 0f;
 
-            PhraseResolved?.Invoke(new PhraseReport(result.RawText, result.NormalizedText, resolved,
-                result.Volume, notEnoughMana, chant));
+            EventManager.Instance?.Publish(new PhraseResolved(new PhraseReport(result.RawText, result.NormalizedText, resolved,
+                result.Volume, notEnoughMana, chant)));
             if (resolved == SpellId.None)
             {
                 Debug.Log($"[SpellCast] Phrase \"{result.NormalizedText}\" fizzled (no match).");
@@ -389,7 +390,7 @@ namespace Plunderspell.Spells
             else
                 Debug.Log($"[SpellCast] Player {who} cast {spellId} (Volume: {volume}, affected: {affected})");
 
-            CastResolved?.Invoke(new CastReport(spellId, volume, affected, who, origin, direction));
+            EventManager.Instance?.Publish(new CastResolved(new CastReport(spellId, volume, affected, who, origin, direction)));
         }
 
         /// <summary>What a resolved cast did. The HUD's cast feed reads these.</summary>
@@ -454,18 +455,12 @@ namespace Plunderspell.Spells
             public bool IsMisfire => SpellCatalogue.IsMisfire(Result);
         }
 
-        /// <summary>Raised on the caster's machine for every phrase, cast or not.</summary>
-        public static event System.Action<PhraseReport> PhraseResolved;
-
-        /// <summary>Raised on every peer when a cast resolves. UI and audio subscribe.</summary>
-        public static event System.Action<CastReport> CastResolved;
-
         /// <summary>
         /// Announces a cast to the presentation layer without routing a real one through the voice
-        /// pipeline and a transport. An event cannot be raised from outside its declaring class, so
-        /// without this the HUD's cast feed and the spell visuals are both untestable.
+        /// pipeline and a transport. Kept so a test can announce a cast without a
+        /// real one; without it the HUD's cast feed and the spell visuals are both untestable.
         /// </summary>
-        public static void AnnounceForTesting(CastReport report) => CastResolved?.Invoke(report);
+        public static void AnnounceForTesting(CastReport report) => EventManager.Instance?.Publish(new CastResolved(report));
 
         /// <summary>True if the resolved id is one of the misfire outcomes.</summary>
         public static bool IsMisfire(SpellId id) => SpellCatalogue.IsMisfire(id);

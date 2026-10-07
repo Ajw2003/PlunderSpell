@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Interfaces;
 using Plunderspell.Spells;
 using Plunderspell.Voice;
@@ -40,14 +41,13 @@ namespace Plunderspell.UI
 
         private void OnEnable()
         {
-            Damage.Dealt += OnDamage;
-            SpellCastingSystem.CastResolved += OnCast;
+            EventManager.Instance?.Subscribe(this, (DamageDealt e) => OnDamage(e.Report));
+            EventManager.Instance?.Subscribe(this, (CastResolved e) => OnCast(e.Report));
         }
 
         private void OnDisable()
         {
-            Damage.Dealt -= OnDamage;
-            SpellCastingSystem.CastResolved -= OnCast;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             WatchSlams(null);
         }
 

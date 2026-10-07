@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections;
 using NUnit.Framework;
 using Plunderspell.Core;
@@ -103,7 +104,7 @@ namespace Plunderspell.Tests
         {
             SpellId resolved = SpellId.None;
             void Record(SpellCastingSystem.CastReport report) => resolved = report.Spell;
-            SpellCastingSystem.CastResolved += Record;
+            EventManager.Instance.Subscribe(this, (CastResolved e) => Record(e.Report));
 
             try
             {
@@ -139,7 +140,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                SpellCastingSystem.CastResolved -= Record;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
 
@@ -154,7 +155,7 @@ namespace Plunderspell.Tests
             yield return null;
 
             GameServices.PlayerStats.SpendMana(GameServices.PlayerStats.Mana);
-            SpellCastingSystem.CastResolved += Record;
+            EventManager.Instance.Subscribe(this, (CastResolved e) => Record(e.Report));
             try
             {
                 Press(m_keyboard.vKey);
@@ -173,7 +174,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                SpellCastingSystem.CastResolved -= Record;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
 
@@ -186,7 +187,7 @@ namespace Plunderspell.Tests
         {
             SpellId resolved = SpellId.None;
             void Record(SpellCastingSystem.CastReport report) => resolved = report.Spell;
-            SpellCastingSystem.CastResolved += Record;
+            EventManager.Instance.Subscribe(this, (CastResolved e) => Record(e.Report));
 
             try
             {
@@ -200,7 +201,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                SpellCastingSystem.CastResolved -= Record;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
 

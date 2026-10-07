@@ -47,9 +47,6 @@ namespace Plunderspell.Acoustics
         [SerializeField] private LayerMask _listenerLayers = ~0;
         [SerializeField] private LayerMask _geometryLayers;
 
-        /// <summary>Raised on the speaker's machine when a line has been resolved.</summary>
-        public static event Action<ChatterOutcome> ChatterResolved;
-
         private IChatterSource _source;
         private bool _subscribed;
         private bool _warnedNoSource;
@@ -98,7 +95,7 @@ namespace Plunderspell.Acoustics
                 return;
             }
 
-            _source.ChatterHeard += HandleChatter;
+            EventManager.Instance?.Subscribe(this, (ChatterHeard e) => HandleChatter(e.Report));
             EventManager.Instance?.Subscribe(this, (GuardsHearChatterChanged e) => HandleSettingChanged(e.Enabled));
             _source.ChatterEnabled = AudioInputSettings.GuardsHearChatter;
             _subscribed = true;
@@ -109,7 +106,7 @@ namespace Plunderspell.Acoustics
             if (!_subscribed)
                 return;
             _subscribed = false;
-            _source.ChatterHeard -= HandleChatter;
+            EventManager.Instance?.Unsubscribe<ChatterHeard>(this);
             EventManager.Instance?.Unsubscribe<GuardsHearChatterChanged>(this);
             _source.ChatterEnabled = false;
         }
@@ -128,7 +125,7 @@ namespace Plunderspell.Acoustics
             if (!isSpawned)
             {
                 int understood = Resolve(report.Transcript, report.Volume, MouthPosition);
-                ChatterResolved?.Invoke(new ChatterOutcome(report.Transcript, report.Volume, understood));
+                EventManager.Instance?.Publish(new ChatterResolved(new ChatterOutcome(report.Transcript, report.Volume, understood)));
                 return;
             }
 
@@ -152,7 +149,7 @@ namespace Plunderspell.Acoustics
         [TargetRpc]
         private void TellSpeaker(PlayerID speaker, string transcript, byte volumeByte, int guardsWhoUnderstood)
         {
-            ChatterResolved?.Invoke(new ChatterOutcome(transcript, (CastVolume)volumeByte, guardsWhoUnderstood));
+            EventManager.Instance?.Publish(new ChatterResolved(new ChatterOutcome(transcript, (CastVolume)volumeByte, guardsWhoUnderstood)));
         }
 
         /// <summary>

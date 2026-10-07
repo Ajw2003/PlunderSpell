@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Interfaces
         Choke,
     }
 
-    /// <summary>One hit that actually cost something health, as reported by <see cref="Damage.Dealt"/>.</summary>
+    /// <summary>One hit that actually cost something health, as published in <see cref="DamageDealt"/>.</summary>
     public readonly struct DamageReport
     {
         /// <summary>The component that lost health (the <see cref="IHealth"/> itself).</summary>
@@ -60,15 +61,11 @@ namespace Interfaces
     /// <summary>
     /// The one way anything in the game loses health. Every weapon, spell, guard, fire and flying
     /// object calls <see cref="Apply"/>; it hurts the target and, if health really dropped, raises
-    /// <see cref="Dealt"/> with who did it and where. Feedback (numbers, flashes, health bars) and
+    /// <see cref="DamageDealt"/> with who did it and where. Feedback (numbers, flashes, health bars) and
     /// any future kill feed or stats hang off that one event instead of off each weapon.
     /// </summary>
     public static class Damage
     {
-        /// <summary>Raised after every hit that cost health. Listeners must not deal damage back
-        /// synchronously.</summary>
-        public static event Action<DamageReport> Dealt;
-
         /// <summary>Signature of <see cref="Forward"/>; the arguments are <see cref="Apply"/>'s.</summary>
         public delegate bool ForwardHit(IHealth target, float amount, GameObject source, GameObject instigator,
             Vector3 point, DamageKind kind, float impactVelocity);
@@ -80,9 +77,9 @@ namespace Interfaces
         /// </summary>
         public static ForwardHit Forward;
 
-        /// <summary>Raises <see cref="Dealt"/> for a hit applied on another machine, so the player who
+        /// <summary>Publishes <see cref="DamageDealt"/> for a hit applied on another machine, so the player who
         /// landed it still sees the numbers and the flash.</summary>
-        public static void ReportRemote(DamageReport report) => Dealt?.Invoke(report);
+        public static void ReportRemote(DamageReport report) => EventManager.Instance?.Publish(new DamageDealt(report));
 
         /// <summary>
         /// Hurts <paramref name="target"/>. <paramref name="impactVelocity"/> routes to the
@@ -115,8 +112,8 @@ namespace Interfaces
             if (lost <= 0f)
                 return 0f;
 
-            Dealt?.Invoke(new DamageReport(component, source, instigator, lost, point, kind, after,
-                component != null ? target.MaxHealth : before));
+            EventManager.Instance?.Publish(new DamageDealt(new DamageReport(component, source, instigator, lost, point, kind, after,
+                component != null ? target.MaxHealth : before)));
             return lost;
         }
 

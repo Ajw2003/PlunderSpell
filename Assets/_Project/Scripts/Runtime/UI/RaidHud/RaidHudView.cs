@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using Plunderspell.Alarm;
 using Plunderspell.Raid;
@@ -151,14 +152,13 @@ namespace Plunderspell.UI
 
         private void OnEnable()
         {
-            Plunderspell.Spells.SpellCastingSystem.PhraseResolved += OnPhrase;
-            Plunderspell.Acoustics.PlayerChatterRelay.ChatterResolved += OnChatter;
+            EventManager.Instance?.Subscribe(this, (Plunderspell.Spells.PhraseResolved e) => OnPhrase(e.Report));
+            EventManager.Instance?.Subscribe(this, (Plunderspell.Acoustics.ChatterResolved e) => OnChatter(e.Outcome));
         }
 
         private void OnDisable()
         {
-            Plunderspell.Spells.SpellCastingSystem.PhraseResolved -= OnPhrase;
-            Plunderspell.Acoustics.PlayerChatterRelay.ChatterResolved -= OnChatter;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         /// <summary>The caption for a line the player just said between casts, and its colour. Pure, for tests.</summary>

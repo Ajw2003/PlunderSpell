@@ -80,7 +80,7 @@ namespace Plunderspell.Tests
 
             var reports = new List<DamageReport>();
             void Record(DamageReport r) => reports.Add(r);
-            Damage.Dealt += Record;
+            EventManager.Instance.Subscribe(this, (DamageDealt e) => Record(e.Report));
             try
             {
                 float lost = Damage.Apply(target, 20f, goblet, thrower, Vector3.one, DamageKind.Impact);
@@ -93,7 +93,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                Damage.Dealt -= Record;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
 
@@ -103,7 +103,7 @@ namespace Plunderspell.Tests
             var target = Track(new GameObject("Target")).AddComponent<Dummy>();
             int reports = 0;
             void Count(DamageReport _) => reports++;
-            Damage.Dealt += Count;
+            EventManager.Instance.Subscribe(this, (DamageDealt e) => Count(e.Report));
             try
             {
                 // Below the dummy's impact threshold: it shrugs it off, so no number should appear.
@@ -116,7 +116,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                Damage.Dealt -= Count;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
 
@@ -127,7 +127,7 @@ namespace Plunderspell.Tests
             var target = player.AddComponent<Dummy>();
             DamageReport last = default;
             void Keep(DamageReport r) => last = r;
-            Damage.Dealt += Keep;
+            EventManager.Instance.Subscribe(this, (DamageDealt e) => Keep(e.Report));
             try
             {
                 Damage.Apply(target, 999f, player, player, Vector3.zero, DamageKind.Burn);
@@ -136,7 +136,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                Damage.Dealt -= Keep;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
 

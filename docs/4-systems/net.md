@@ -117,7 +117,7 @@ networked items can have a remote beam; weapons and loot both qualify. How the b
 
 A ranged weapon's shot is a local projectile on the machine that fired it, where its hit is judged.
 `ShotRelay` shows the same shot on every other machine as a copy with no damage
-(`RangedWeapon.Fired`, `RangedWeapon.SpawnCosmeticShot`).
+(`RangedWeaponFired`, `RangedWeapon.SpawnCosmeticShot`).
 
 ### Guard attacks reach every peer
 

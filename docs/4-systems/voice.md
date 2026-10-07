@@ -13,7 +13,7 @@ means or what happens when one misfires.
 ## How it works
 
 - **`IVoiceInputService`** (`IVoiceInputService.cs`) is the only surface consumers see:
-  `StartListening()` / `StopListening()` / `OnPhraseRecognized`. Two implementations exist behind
+  `StartListening()` / `StopListening()`, publishing a `PhraseRecognized` event. Two implementations exist behind
   it, chosen automatically:
   - **`VoskVoiceInputService`** — the real path. The 68 MB model
     (`Assets/StreamingAssets/VoskModels/small-en-us/`) loads once, off the main thread, when the
@@ -70,7 +70,7 @@ fail. Tune a word by editing its `SpellWord` asset and re-running the test.
 
 ### What you said, on screen
 
-Added 2026-09-23 (#49). `SpellCastingSystem.PhraseResolved` fires on the caster's machine for
+Added 2026-09-23 (#49). The `PhraseResolved` event is published on the caster's machine for
 every phrase, including a fizzle (which casts nothing, so never reaches `CastResolved`). The raid
 HUD captions it for 3.5 s: green `"igneous" -> IGNIS (Normal)` for a clean cast, orange
 `"a nice" -> AGNIS - MISFIRE`, grey `"potato" - fizzled, not a spell`. The quoted text is exactly
@@ -104,7 +104,7 @@ tunables: `docs/plans/guards-hear-chatter.md`.
   either one is allowed to do it — a provider that rolls its own would make Whisper/Shout and
   misfire matching behave differently depending on which one is active, including between a dev's
   editor session and a shipped Windows build.
-- **`OnPhraseRecognized` only fires on the main thread**, and so does every `Microphone` /
+- **`PhraseRecognized` is only published on the main thread**, and so does every `Microphone` /
   `AudioClip` call — Unity throws on those from any other thread. The previous design read the mic
   from a worker thread, threw on its first pass, and a bare `catch { break; }` hid it, so no audio
   ever reached the recogniser.

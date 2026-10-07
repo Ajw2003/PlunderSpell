@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Alarm;
 using Plunderspell.Extraction;
 using Plunderspell.Lair;
@@ -48,9 +49,9 @@ namespace Plunderspell.UI
 
         private void Awake() => AutoWire();
 
-        private void OnEnable() => SpellCastingSystem.CastResolved += OnCastResolved;
+        private void OnEnable() => EventManager.Instance?.Subscribe(this, (CastResolved e) => OnCastResolved(e.Report));
 
-        private void OnDisable() => SpellCastingSystem.CastResolved -= OnCastResolved;
+        private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
 
         private void Update() => Model = Build();
 

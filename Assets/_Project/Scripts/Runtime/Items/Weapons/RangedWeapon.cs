@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Interfaces;
 using Plunderspell.Acoustics;
 using UnityEngine;
@@ -67,7 +68,6 @@ public class RangedWeapon : MonoBehaviour
     /// direction). Plunderspell.Net shows the same shot on every other machine with
     /// <see cref="SpawnCosmeticShot"/>.
     /// </summary>
-    public static event System.Action<RangedWeapon, Vector3, Vector3> Fired;
 
     /// <summary>
     /// A copy of another machine's shot: the same projectile flying the same way, carrying no damage.
@@ -105,7 +105,7 @@ public class RangedWeapon : MonoBehaviour
         if (shot.TryGetComponent(out Rigidbody body))
             body.linearVelocity = direction * _stats.ProjectileSpeed;
 
-        Fired?.Invoke(this, spawnPoint, direction);
+        EventManager.Instance?.Publish(new RangedWeaponFired(this, spawnPoint, direction));
     }
 
     private void AlertNearbyListeners()
