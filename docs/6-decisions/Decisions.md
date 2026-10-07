@@ -1361,3 +1361,26 @@ next cell is 3-4 treads higher than the 0.45 m step limit. 3.0 m is the narrowes
 ## 2026-10-05: the bar shuts players out, not guards (#264)
 
 The 2026-10-02 rule that a barred door blocks guards is reversed. At Hue and Cry every door was barred, so the garrison could not reach the players: 9 of 17 guards stayed Patrolling after `Blocked(DoorClosed)`. Now a barred door costs `LockedDoorCost` like a locked one and guards open it when they walk into it. Players are unchanged (Porta, forcing). Tier: systems (`docs/4-systems/alarm.md`).
+
+## 2026-10-07: old-input keys came back in the Lair and Market work; how, and the guard (#347, #350)
+
+**What happened.** Three new classes read keys through the old `UnityEngine.Input` class, though the project
+moved to the new Input System (`docs/4-systems/spells.md`, "Casting runs on the new Input System";
+`docs/plans/steam-coop-framework.md`: "Unify on the new Input System; delete legacy `Input.GetAxis` paths").
+
+1. 2026-10-07 `0899d091` (#309): the planning session itself wrote `LairLedgerHandle` with `Input.GetKeyDown(E)`,
+   copying the key reading of `LootInteractor`, an old-input class from 2026-09-14 that was never converted.
+2. `e4690bb3` (#311): the Market door builder copied the ledger's pattern into `RoomTravel`.
+3. `2edd3a3b` (#312): the planning session's prompt to the Market builder named the ledger as the pattern to follow,
+   in so many words: "key reading pattern: LairLedgerHandle.cs (Input.GetKeyDown; legacy input is enabled)". The
+   builder did as told in `SellCounter` (keys 1/2/3), and then reported it could not press those keys in its check
+   because "legacy Input cannot be injected". That was the warning sign, and it was read as a test limitation.
+
+**Why it got through.** The rule lived only in a system doc and a plan, not in the coding standards the sessions load
+(`csharp-unity-standards.md` says nothing about input), so nothing at write time said no. Active Input Handling was
+"Both", so the old calls worked and nothing failed. Old-input code (`LootInteractor`, `RaidBootstrapper`, the
+playtest controllers) was still in the tree to be copied. Nothing checked new code for it.
+
+**The guard.** #350 moves every key onto the input actions asset and sets Active Input Handling to the new Input
+System only, so an old-input call throws the first time it runs. Further guards proposed to the owner: a test that
+fails on any `UnityEngine.Input` use under `Assets/_Project`, and an input line in the shared C# standards.
