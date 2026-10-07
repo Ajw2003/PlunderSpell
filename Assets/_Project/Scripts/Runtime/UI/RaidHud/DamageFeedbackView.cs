@@ -63,7 +63,10 @@ namespace Plunderspell.UI
         private readonly List<HurtLine> _hurtLines = new List<HurtLine>();
         private readonly Dictionary<Component, float> _recentlyHurt = new Dictionary<Component, float>();
         private readonly Dictionary<Component, Flash> _flashes = new Dictionary<Component, Flash>();
+        private readonly Dictionary<Component, Renderer> _topRenderers = new Dictionary<Component, Renderer>();
         private readonly List<Component> _scratch = new List<Component>();
+        private Transform _cachedLocal;
+        private IHealth _cachedHealth;
         private MaterialPropertyBlock _flashBlock;
 
         private float _vignette;
@@ -175,6 +178,8 @@ namespace Plunderspell.UI
             else
             {
                 _recentlyHurt[report.Target] = Time.time;
+                if (!_topRenderers.ContainsKey(report.Target))
+                    _topRenderers[report.Target] = report.Target.GetComponentInChildren<Renderer>();
             }
 
             if (youDidIt && !targetIsYou)
@@ -283,8 +288,16 @@ namespace Plunderspell.UI
         private void Update()
         {
             float now = Time.time;
-            _numbers.RemoveAll(n => now - n.Born > k_numberSeconds);
-            _hurtLines.RemoveAll(l => now - l.Born > k_hurtLineSeconds);
+            for (int i = _numbers.Count - 1; i >= 0; i--)
+            {
+                if (now - _numbers[i].Born > k_numberSeconds)
+                    _numbers.RemoveAt(i);
+            }
+            for (int i = _hurtLines.Count - 1; i >= 0; i--)
+            {
+                if (now - _hurtLines[i].Born > k_hurtLineSeconds)
+                    _hurtLines.RemoveAt(i);
+            }
             _vignette = Mathf.MoveTowards(_vignette, 0f, Time.deltaTime * 0.55f);
 
             _scratch.Clear();
@@ -306,7 +319,10 @@ namespace Plunderspell.UI
                     _scratch.Add(pair.Key);
             }
             foreach (Component key in _scratch)
+            {
                 _recentlyHurt.Remove(key);
+                _topRenderers.Remove(key);
+            }
         }
 
         private void OnGUI()
@@ -338,7 +354,13 @@ namespace Plunderspell.UI
         {
             float lowHealth = 0f;
             Transform local = LocalPlayerRoot();
-            IHealth you = local != null ? local.GetComponentInChildren<IHealth>() : null;
+            // Re-query only when the local player changes or the cached health is destroyed.
+            if (local != _cachedLocal || (_cachedHealth != null && (_cachedHealth as Component) == null))
+            {
+                _cachedLocal = local;
+                _cachedHealth = local != null ? local.GetComponentInChildren<IHealth>() : null;
+            }
+            IHealth you = _cachedHealth;
             if (you != null && (you as Component) != null && you.MaxHealth > 0f)
             {
                 float fraction = you.CurrentHealth / you.MaxHealth;
@@ -442,9 +464,9 @@ namespace Plunderspell.UI
             }
         }
 
-        private static Vector3 TopOf(Component target)
+        private Vector3 TopOf(Component target)
         {
-            var renderer = target.GetComponentInChildren<Renderer>();
+            _topRenderers.TryGetValue(target, out Renderer renderer);
             if (renderer != null)
                 return new Vector3(target.transform.position.x, renderer.bounds.max.y, target.transform.position.z);
             return target.transform.position + Vector3.up * 2f;
