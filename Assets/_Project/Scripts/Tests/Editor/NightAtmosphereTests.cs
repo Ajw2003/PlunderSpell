@@ -226,5 +226,25 @@ namespace Plunderspell.Tests.Editor
                 }
             }
         }
+
+        [TestCase("Assets/_Project/Data/Castle/CastleRoomRegistry.asset")]
+        [TestCase("Assets/_Project/Data/Castle/CastleRoomRegistry_BronzeAge.asset")]
+        [TestCase("Assets/_Project/Data/Castle/CastleRoomRegistry_LateMedieval.asset")]
+        public void Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere(string registryPath)
+        {
+            var registry = AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>(registryPath);
+            Assert.IsNotNull(registry);
+
+            foreach (CastleRoomModuleData module in registry.Modules)
+            {
+                if (module.Zone == CastleZone.CurtainWall && module.RoomId == "Drawbridge")
+                    continue;
+                bool burnsAtCalm = false;
+                foreach (CastleFireAnchor anchor in module.FireAnchors)
+                    burnsAtCalm |= FireRules.IsLit(anchor.Kind, anchor.LitFrom, AlarmState.Calm);
+                Assert.IsTrue(burnsAtCalm,
+                    $"{module.RoomId} has no fire lit at Calm, so the alarm shows nothing there (#317); add a torch in castle_builders.");
+            }
+        }
     }
 }

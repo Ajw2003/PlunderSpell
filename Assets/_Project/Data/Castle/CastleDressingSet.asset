@@ -67,6 +67,11 @@ MonoBehaviour:
       Kind: 1
       LitFrom: 1
       BringsHolder: 1
+    - Position: {x: -3.6, y: 0.04, z: -4.4}
+      Yaw: 0
+      Kind: 1
+      LitFrom: 0
+      BringsHolder: 1
   - Id: CourtyardTiltyard
     Kind: 2
     Zone: 2

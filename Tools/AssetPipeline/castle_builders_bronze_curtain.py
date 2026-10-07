@@ -114,6 +114,8 @@ def build_bronze_wall_corner(bm, uv):
         _steps_up(bm, uv, te, 1, WALL_DEPTH, side, WALK_Z + 0.1, top + 0.1, 3)
     # A beacon on the middle of the tower's walk (its top is top + 0.1).
     cb._fire("Beacon", -H + t / 2, -H + t / 2, top + 0.1, lit=2)
+    # A torch on the south wall's inner face, away from the tower, so the corner has a fire at Calm (#317).
+    cb._fire("Sconce", 3.0, -H + WALL_DEPTH - 0.15, 2.9, facing=(0.0, 1.0), lit=0)
 
 
 def build_bronze_bastion(bm, uv):
