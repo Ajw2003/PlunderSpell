@@ -125,6 +125,11 @@ namespace Plunderspell.UI
             useGUILayout = false;
             _presenter = GetComponent<RaidHudPresenter>();
             _crosshair = GetComponent<CrosshairView>();
+            // The held-key panels live beside the HUD; a scene built before they existed gets them here.
+            if (GetComponent<HudHoldKeys>() == null)
+                gameObject.AddComponent<HudHoldKeys>();
+            if (GetComponent<WatchView>() == null)
+                gameObject.AddComponent<WatchView>();
         }
 
         // The last phrase the voice service produced, so a misheard word reads differently from a
