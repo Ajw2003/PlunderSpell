@@ -8,6 +8,7 @@
         "Plunderspell.Loot",
         "Plunderspell.Extraction",
         "Plunderspell.Lair",
+        "Plunderspell.Market",
         "Plunderspell.Inventory",
         "Plunderspell.Alarm",
         "Plunderspell.Acoustics",

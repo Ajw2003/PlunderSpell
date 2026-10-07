@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using Plunderspell.Market;
+using Plunderspell.Raid;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,6 +24,10 @@ namespace Plunderspell.EditorTools
 
         /// <summary>Small props that a player should be able to walk through or knock, not stand on.</summary>
         private static readonly string[] NoCollider = { "MarketCoin", "MarketCoinStack", "MarketPouch", "MarketLantern" };
+
+        /// <summary>The stall model of each vendor, indexed by <see cref="Vendor"/>: how a counter finds its vendor.</summary>
+        private static readonly string[] StallModels =
+            { "MarketFenceCart", "MarketGoldsmithStall", "MarketPardonerBooth", "MarketAntiquarianCabinet" };
 
         private static readonly Color Warm = new Color(1.0f, 0.62f, 0.28f);
 
@@ -59,9 +66,19 @@ namespace Plunderspell.EditorTools
             var placements = JsonUtility.FromJson<Placements>(File.ReadAllText(PlacementsPath));
             var root = new GameObject("MarketYard");
 
+            var counters = new List<GameObject>();
+            var stalls = new Dictionary<Vendor, GameObject>();
             foreach (Model model in placements.models)
-                BlenderPlacement.PlaceModel(root.transform, $"{ModelDirectory}/{model.key}.fbx", ToVector(model.position),
+            {
+                GameObject slot = BlenderPlacement.PlaceModel(root.transform, $"{ModelDirectory}/{model.key}.fbx", ToVector(model.position),
                     new Vector3(0f, 0f, model.zDegrees), withCollider: Array.IndexOf(NoCollider, model.key) < 0);
+                if (model.key == "MarketCounter")
+                    counters.Add(slot);
+                else if (Array.IndexOf(StallModels, model.key) >= 0)
+                    stalls[(Vendor)Array.IndexOf(StallModels, model.key)] = slot;
+            }
+            foreach (GameObject counter in counters)
+                AddSellCounter(counter, stalls);
 
             // The render's lanterns are 70-160 W Cycles lights; Unity's intensity is set by eye, scaled the same way.
             for (int i = 0; i < placements.lights.Length; i++)
@@ -96,6 +113,64 @@ namespace Plunderspell.EditorTools
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             UnityEngine.Object.DestroyImmediate(root);
             Debug.Log($"[Market] Built {PrefabPath}: {placements.models.Length} models, {placements.lights.Length} lights.");
+        }
+
+        /// <summary>
+        /// Gives a counter its vendor (the one whose stall model stands nearest), a trigger volume on its top, a placeholder
+        /// capsule figure behind it (towards the stall, no collider) and a world-space subtitle above the figure.
+        /// </summary>
+        private static void AddSellCounter(GameObject counter, Dictionary<Vendor, GameObject> stalls)
+        {
+            Vendor vendor = Vendor.Fence;
+            float nearest = float.MaxValue;
+            foreach (KeyValuePair<Vendor, GameObject> stall in stalls)
+            {
+                float distance = Vector3.Distance(counter.transform.position, stall.Value.transform.position);
+                if (distance < nearest)
+                {
+                    nearest = distance;
+                    vendor = stall.Key;
+                }
+            }
+
+            // The counter's size in its own axes: measure it unturned, then turn it back.
+            Quaternion turn = counter.transform.rotation;
+            counter.transform.rotation = Quaternion.identity;
+            Bounds bounds = counter.GetComponentInChildren<Renderer>().bounds;
+            foreach (Renderer part in counter.GetComponentsInChildren<Renderer>())
+                bounds.Encapsulate(part.bounds);
+            counter.transform.rotation = turn;
+
+            Vector3 offset = bounds.center - counter.transform.position;
+            var top = new GameObject("SellZone");
+            top.transform.SetParent(counter.transform, false);
+            top.transform.localPosition = new Vector3(offset.x, bounds.max.y + 0.2f - counter.transform.position.y, offset.z);
+            var zone = top.AddComponent<BoxCollider>();
+            zone.isTrigger = true;
+            zone.size = new Vector3(bounds.size.x, 0.6f, bounds.size.z); // a hand's breadth under the top to half a metre over it
+
+            // Behind the counter is towards its stall (the Fence's cart), a metre from the counter's middle.
+            Vector3 toStall = stalls[vendor].transform.position - counter.transform.position;
+            toStall.y = 0f;
+            Transform yard = counter.transform.parent;
+            var figure = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            figure.name = "VendorFigure";
+            UnityEngine.Object.DestroyImmediate(figure.GetComponent<Collider>());
+            figure.transform.SetParent(yard, false);
+            figure.transform.position = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z) + toStall.normalized * 1.0f + Vector3.up * 0.45f;
+            figure.transform.localScale = new Vector3(0.6f, 0.9f, 0.6f);
+
+            var text = new GameObject("Subtitle");
+            text.transform.SetParent(yard, false);
+            text.transform.position = figure.transform.position + Vector3.up * 1.1f;
+            var mesh = text.AddComponent<TextMesh>();
+            mesh.anchor = TextAnchor.LowerCenter;
+            mesh.alignment = TextAlignment.Center;
+            mesh.characterSize = 0.05f;
+            mesh.fontSize = 48;
+            mesh.color = Color.white;
+
+            counter.AddComponent<SellCounter>().Set(vendor, zone, figure.GetComponent<Renderer>(), mesh);
         }
 
         private static Vector3 ToVector(float[] xyz) => new Vector3(xyz[0], xyz[1], xyz[2]);

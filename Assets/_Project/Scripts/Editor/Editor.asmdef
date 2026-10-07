@@ -19,6 +19,7 @@
         "Plunderspell.Loot",
         "Plunderspell.Playtest",
         "Plunderspell.Raid",
+        "Plunderspell.Market",
         "Plunderspell.Status",
         "Plunderspell.RaidHud",
         "Unity.AI.Navigation",
