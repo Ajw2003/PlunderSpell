@@ -50,6 +50,7 @@ Use the wrappers below, which already wait correctly. If you must write your own
 | `coop_swarm_check.sh <label>` | Co-op raid; raises the hue and cry and counts guards near the host. |
 | `guard_awareness_check.sh` | Co-op raid; measures what a calm guard hears and sees of the host's player (#238). |
 | `coop_carry_check.sh` | Co-op two-player carry check (#169). |
+| `coop_lair_check.sh <label>` | Co-op Lair room and Market (#314): each player at their own spawn, the Market door and back, coming home from a raid, the same haul pile on both sides. About a minute without a build. |
 | `coop_drop_latency.sh` | Co-op timing of physics sounds on host and client. |
 | `night_captures.sh` | Fixed-camera night captures for comparing with the look samples. |
 | `pin.sh`, `settings_restore.sh` | Sourced helpers: pin calls to this Editor; save and restore ProjectSettings around a build. |

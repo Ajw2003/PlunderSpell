@@ -1,7 +1,7 @@
 // Play mode only. One side of Tools/Unity/coop_carry_check.sh: runs the same way in the Editor (the
 // host) and in a Development build (the client), so it reaches the game only through reflection,
 // which is all the build's eval can do. coop_carry_check.sh replaces the two placeholders below.
-//   host_udp          host a local-network session and go to the Lair
+//   host_udp          host a local-network session and go to the Lair room
 //   state             one line: game state, connection, local player position, what is held
 //   stage <kind>:<n>  host: move the n-th spawned piece of that weight ("light" up to 3 kg, "heavy"
 //                     10-16 kg) in front of the host's player and print its network id. A fresh n per
@@ -197,7 +197,7 @@ switch (action)
         var session = FindAll("Plunderspell.Net.CoopSession")[0];
         Call(session, "StartHost", Get(session, "_udpTransport"), "Hosting on the local network (carry check).");
         var manager = Get(gameStates, "GameState");
-        Call(manager, "ChangeState", System.Enum.Parse(T("Plunderspell.Core.GameState"), "Lair"));
+        Call(manager, "ChangeState", System.Enum.Parse(T("Plunderspell.Core.GameState"), "LairRoom"));   // the room, as CoopSession's own host paths go (#309)
         return "hosting";
     }
     case "state":
