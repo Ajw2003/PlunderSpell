@@ -46,9 +46,10 @@ paid for everywhere — keep it small.
   changes); `MicLevelChanged` (`Voice/MicLevelEvents.cs`, each time Vosk reads a different loudness);
   `ChantProgressChanged` (`Spells/ChantEvents.cs`, every frame of a chant, then once with `Chanting` false). Input:
   `PlayerAttackEvent`, `PlayerJumpEvent` and `PlayerWalkEvent` are now structs published with `enable` true on performed
-  and false on cancelled. `ChangeEventTests` covers the ledger, Age, alarm level, clock and local player; the mic level,
-  chant, carried item, door focus and input events have no test yet (they need a microphone, a voice service, the item
-  scene or real input devices).
+  and false on cancelled. `ChangeEventTests` covers the ledger, Age, alarm level, clock and local player; `HudAndInteractionTests` covers loot and
+  door focus and `CastingInputTests` the chant. No test yet: mic level (needs a real microphone), the carried item
+  (`ItemManager` starts a drag only from a camera ray and an input callback) and the attack/jump/walk input events
+  (need the Input System's actions driven).
 - **`BaseStateMachine` / `IState` / `PlayerState`** — `Enter`/`Update`/`Exit`/`FixedUpdate`. States
   are plain C# objects constructed once in `Awake`, not MonoBehaviours, which keeps their logic
   testable without a scene.
