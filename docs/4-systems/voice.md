@@ -99,6 +99,10 @@ the samples. Utterances with peak RMS under `ChatterFilter.MinChatterRms` (0.02)
 leaves the machine; in co-op only the words go to the host (`PlayerChatterRelay`, see net.md). Plan and
 tunables: `docs/plans/guards-hear-chatter.md`.
 
+### Haggling words (#312)
+
+`HaggleWords` (`Runtime/Market/HaggleWords.cs`) lists the English spellings the model may output for Plus, Satis and Vale. `SpellCastingSystem` adds them to the recogniser vocabulary (`SpellCastingSystem.cs:132`), never over a spell's own spelling, and `HandlePhrase` (`:239`) returns at once for these words: no spell, no misfire, no fizzle caption. `HaggleVoiceRouter` (`Runtime/Raid/HaggleVoiceRouter.cs`) hears the same `PhraseRecognized` and sends the word to the nearest counter with an open haggle within 3 m, else ignores it. Tests: `HaggleWordsTests`. Not tested with a real microphone.
+
 ## Invariants
 
 - **Both providers must classify and normalise identically.** `VoiceUtility` is the single place

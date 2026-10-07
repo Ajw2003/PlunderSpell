@@ -63,13 +63,39 @@ namespace Plunderspell.Raid
         }
 
         // A night runs from setting out to setting out: a new raid forgets who walked away and rolls a new mood.
-        private void OnEnable() => EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) =>
+        private void OnEnable()
         {
-            if (e.Phase == RaidPhase.Generating)
-                NewNight();
-        });
+            All.Add(this);
+            HaggleVoiceRouter.Ensure();
+            EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) =>
+            {
+                if (e.Phase == RaidPhase.Generating)
+                    NewNight();
+            });
+        }
 
-        private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
+        private void OnDisable()
+        {
+            All.Remove(this);
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+        }
+
+        /// <summary>Every enabled counter, for <see cref="HaggleVoiceRouter"/>.</summary>
+        public static readonly List<SellCounter> All = new List<SellCounter>();
+
+        /// <summary>
+        /// Metres from the local player when a spoken word would reach this counter (player in reach and a haggle open;
+        /// a client only sees the vendor's line, as <see cref="Update"/> does), else infinity.
+        /// </summary>
+        public float ListeningDistance()
+        {
+            bool open = Decides ? _haggle != null : _subtitle != null && _subtitle.text != "";
+            Camera eye = Camera.main;
+            if (!open || eye == null || _top == null)
+                return float.PositiveInfinity;
+            float distance = Vector3.Distance(eye.transform.position, _top.bounds.center);
+            return distance <= _reach ? distance : float.PositiveInfinity;
+        }
 
         private void NewNight()
         {

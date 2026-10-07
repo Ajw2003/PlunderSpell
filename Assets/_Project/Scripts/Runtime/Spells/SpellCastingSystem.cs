@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Code.Scripts.EventSystems;
 using Interfaces;
 using Plunderspell.Core;
+using Plunderspell.Market;
 using PurrNet;
 using Plunderspell.Voice;
 using UnityEngine;
@@ -124,7 +126,11 @@ namespace Plunderspell.Spells
             {
                 // Real speech can only hear English, so it needs told which spellings mean which word.
                 if (_voice is IPhraseVocabularyTarget speech && _lexicon != null)
-                    speech.SetVocabulary(_lexicon.BuildHeardVocabulary());
+                {
+                    Dictionary<string, string> heard = _lexicon.BuildHeardVocabulary();
+                    HaggleWords.AddTo(heard); // Plus / Satis / Vale: never over a spell's spelling
+                    speech.SetVocabulary(heard);
+                }
 
                 EventManager.Instance?.Subscribe(this, (PhraseRecognized e) => HandlePhrase(e.Result));
                 _subscribed = true;
@@ -232,6 +238,10 @@ namespace Plunderspell.Spells
         /// <summary>Owner-side handler: resolve the phrase and request a networked cast.</summary>
         private void HandlePhrase(VoiceRecognitionResult result)
         {
+            // A haggling word belongs to the Market (HaggleVoiceRouter): never a spell, a misfire or a fizzle caption.
+            if (HaggleWords.TryParse(result.NormalizedText, out _))
+                return;
+
             SpellId resolved = MisfireEngine.Resolve(result, _lexicon);
             if (resolved != SpellId.None && result.FromKeyboard && IsChanting)
             {

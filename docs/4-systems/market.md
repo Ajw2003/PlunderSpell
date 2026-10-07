@@ -18,7 +18,7 @@ from selling; *Plus* is the only ask; keys first, voice later).
 1. A loot piece lies still inside the counter's trigger box (not carried, speed under 0.2 m/s) and
    that vendor has not refused it tonight. The vendor says the opening offer as a subtitle.
 2. Within 3 m of the counter, the local player presses **1 Plus**, **2 Satis**, **3 Vale**
-   (`SellCounter.Answer` is the same call, for tests and tools).
+   (`SellCounter.Answer` is the same call, for tests and tools). Saying the word aloud does the same: `HaggleVoiceRouter.Hear` calls `SellCounter.Speak` (`SellCounter.cs:150`) on the nearest counter whose `ListeningDistance` (`:90`) is finite (haggle open, player within 3 m); see voice.md.
 3. *Plus*: the offer rises 10% (`Raised`), or the vendor refuses (`Refused`) and loses patience; at
    zero patience he will not take that piece for the rest of the night (`WillNotBuy`). The Fence has
    patience 1, so his first over-limit *Plus* ends it.
