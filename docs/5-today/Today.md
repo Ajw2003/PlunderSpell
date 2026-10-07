@@ -4,8 +4,9 @@
 event between systems is on `EventManager`; the raid HUD, damage feedback, camera shake, music and backdrop camera follow
 events instead of polling; the mic meter is in Settings. Naming fixed so nothing but `EventManager` is called a bus
 (`EnemyDirectorListener`, `LoopPool`). On `claude/staging-2026-10-07`, not `main`. Unity: PlayMode 430/430, EditMode 225
-pass / 3 known failures, and a co-op raid on which both HUD models followed the clock and alarm. Not verified: the mic
-meter with a real microphone; music, shake and damage feedback in co-op. The issues (#297-#305) are open for the owner to
+pass / 3 known failures, and a co-op raid on which both HUD models followed the clock and alarm, the stems played on both
+machines, and a hit raised the shake, a floating number and the red edge on both. Not verified: the mic meter with a
+real microphone (none on this machine). The issues (#297-#305) are open for the owner to
 close. Next, in the owner's order: the diegetic raid UI, the Lair room, the Market (`docs/plans/diegetic-ui-lair-market.md`,
 `docs/plans/lair-market-in-engine.md` steps 2-8), each needing a parent issue and one child per step first.
 
