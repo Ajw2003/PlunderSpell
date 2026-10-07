@@ -1,13 +1,32 @@
-using Interfaces;
 using Plunderspell.Core;
 using UnityEngine;
 
 namespace Plunderspell.Raid
 {
-    /// <summary>The ledger table: E opens today's Lair screen (debt, banked gold, Age, company).</summary>
-    public class LairLedgerHandle : MonoBehaviour, IInteractable
+    /// <summary>
+    /// The ledger table: E while looking at it in the Lair room opens today's Lair screen (debt, banked
+    /// gold, Age, company). It reads the key itself because nothing on the raid player handles E.
+    /// </summary>
+    public class LairLedgerHandle : MonoBehaviour
     {
-        public void Interact()
+        [SerializeField] private KeyCode _openKey = KeyCode.E;
+        [Tooltip("How far from the camera the table can be opened, in metres.")]
+        [SerializeField] private float _reach = 3f;
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(_openKey) && IsLookedAt(Camera.main))
+                Open();
+        }
+
+        /// <summary>Whether <paramref name="eye"/>'s centre ray hits this table within reach.</summary>
+        public bool IsLookedAt(Camera eye) =>
+            eye != null
+            && Physics.Raycast(eye.transform.position, eye.transform.forward, out RaycastHit hit, _reach,
+                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)
+            && hit.collider.transform.IsChildOf(transform);
+
+        public void Open()
         {
             if (GameServices.GameState.CurrentState == GameState.LairRoom)
                 GameServices.GameState.ChangeState(GameState.Lair);

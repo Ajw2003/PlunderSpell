@@ -89,7 +89,9 @@ namespace Plunderspell.EditorTools
             box.size = new Vector3(1.2f, 2.4f, 2.4f);
             portal.AddComponent<Plunderspell.Raid.LairPortalTrigger>();
 
+            // The book on the table is its own object, so looking at it opens the ledger too.
             root.transform.Find("LairLedgerTable").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
+            root.transform.Find("LairLedger").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
         }
 
         /// <summary>RaidScene is authored, not built, so the room is placed into it here. 1000 m east of the origin:

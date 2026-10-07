@@ -178,7 +178,7 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   (`RaidBootstrapper.cs:87`) and the game-over button (`GameOverScreen.cs:89`).
 - `LairRoomSpawner.cs:39` stands the local player at `PlayerSpawns/Spawn{owner}` (retried in `Update` until the body exists).
 - `LairPortalTrigger.cs:16`: the local player walking in while in LairRoom, host or solo, sets `Playing`.
-- `LairLedgerHandle.cs:10` (an `IInteractable`, which `LootInteractor` falls back to) opens the Lair screen on E. Esc in
+- `LairLedgerHandle.cs:16` reads E itself and opens the Lair screen when the main camera's centre ray hits the table or the book within 3 m (`IsLookedAt`, `LairLedgerHandle.cs:23`). It does not go through `LootInteractor`: the raid player carries none, and picks loot up with the mouse through `ItemManager`. Esc in
   LairRoom does the same (`GameFlowInput.cs`); the Lair screen's "Back to the Room" returns.
 - The instance sits at (1000, 0, 0) in `RaidScene`, clear of the castle (curtain wall about 45 m round the origin).
   Placed by `Tools/Plunderspell/Place Lair Room In Raid Scene` (`LairRoomForge.cs`).
