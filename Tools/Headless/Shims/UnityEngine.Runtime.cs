@@ -13,6 +13,7 @@ namespace UnityEngine
     [AttributeUsage(AttributeTargets.Field)] public class HideInInspector : Attribute { }
     [AttributeUsage(AttributeTargets.Field)] public class NonReorderableAttribute : Attribute { }
     public class PropertyAttribute : Attribute { }
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public class HeaderAttribute : PropertyAttribute { public HeaderAttribute(string header) { } }
     public class TooltipAttribute : PropertyAttribute { public TooltipAttribute(string tooltip) { } }
     public class RangeAttribute : PropertyAttribute { public RangeAttribute(float min, float max) { } }
@@ -23,6 +24,14 @@ namespace UnityEngine
         public TextAreaAttribute(int minLines, int maxLines) { }
     }
     public class SpaceAttribute : PropertyAttribute { public SpaceAttribute() { } public SpaceAttribute(float height) { } }
+    [AttributeUsage(AttributeTargets.Class)]
+    public class DefaultExecutionOrderAttribute : Attribute { public DefaultExecutionOrderAttribute(int order) { } }
+    [AttributeUsage(AttributeTargets.Field)]
+    public class ColorUsageAttribute : PropertyAttribute
+    {
+        public ColorUsageAttribute(bool showAlpha) { }
+        public ColorUsageAttribute(bool showAlpha, bool hdr) { }
+    }
     [AttributeUsage(AttributeTargets.Class)]
     public class CreateAssetMenuAttribute : Attribute
     {
@@ -178,6 +187,8 @@ namespace UnityEngine
     {
         public static Rendering.GraphicsDeviceType graphicsDeviceType => Rendering.GraphicsDeviceType.Null;
         public static string deviceName => "headless";
+        public static string deviceModel => "headless";
+        public static string graphicsDeviceName => "headless";
     }
 
     public static class Microphone
@@ -189,11 +200,27 @@ namespace UnityEngine
         public static void GetDeviceCaps(string device, out int min, out int max) { min = 0; max = 0; }
     }
 
+    public enum AudioDataLoadState { Unloaded, Loading, Loaded, Failed }
+    public enum AudioClipLoadType { DecompressOnLoad, CompressedInMemory, Streaming }
+    public enum AudioRolloffMode { Logarithmic, Linear, Custom }
+
+    public struct AudioConfiguration { public int sampleRate; public int dspBufferSize; }
+
+    /// <summary>The audio engine's clock and config. Nothing plays, so dspTime is the game clock and Reset does nothing.</summary>
+    public static class AudioSettings
+    {
+        public static double dspTime => Time.time;
+        public static AudioConfiguration GetConfiguration() => new AudioConfiguration { sampleRate = 48000, dspBufferSize = 1024 };
+        public static bool Reset(AudioConfiguration config) => true;
+    }
+
     public class AudioClip : Object
     {
         public int channels = 1;
         public int frequency = 16000;
         public int samples;
+        public AudioDataLoadState loadState = AudioDataLoadState.Loaded;
+        public AudioClipLoadType loadType = AudioClipLoadType.DecompressOnLoad;
         public bool GetData(float[] data, int offset) => true;
     }
 
@@ -203,10 +230,21 @@ namespace UnityEngine
         public float volume = 1f;
         public bool loop;
         public bool playOnAwake;
+        public Audio.AudioMixerGroup outputAudioMixerGroup;
         public bool isPlaying { get; private set; }
         public void Play() => isPlaying = true;
         public void Stop() => isPlaying = false;
         public void PlayOneShot(AudioClip c, float volumeScale = 1f) { }
+        public float pitch = 1f;
+        public float spatialBlend;
+        public float minDistance = 1f;
+        public float maxDistance = 500f;
+        public AudioRolloffMode rolloffMode;
+        /// <summary>Stored only: playback never advances headlessly.</summary>
+        public float time;
+        public int timeSamples;
+        /// <summary>Treated as started now: there is no audio clock to wait on.</summary>
+        public void PlayScheduled(double dspTime) => isPlaying = true;
     }
 
     /// <summary>In-memory PlayerPrefs. Deterministic and resettable, unlike the real registry-backed one.</summary>
@@ -258,14 +296,71 @@ namespace UnityEngine
         public bool enabled = true;
         public Material material;
         public Material sharedMaterial;
+        public Rendering.ShadowCastingMode shadowCastingMode = Rendering.ShadowCastingMode.On;
+        public bool receiveShadows = true;
+        public Rendering.LightProbeUsage lightProbeUsage = Rendering.LightProbeUsage.BlendProbes;
 
         /// <summary>A zero-size box at the renderer's position -- no real mesh extents headlessly.</summary>
         public Bounds bounds => new Bounds(transform.position, Vector3.zero);
+
+        public Material[] sharedMaterials
+        {
+            get => _materials ?? (_materials = new[] { sharedMaterial });
+            set { _materials = value; sharedMaterial = value != null && value.Length > 0 ? value[0] : null; }
+        }
+        private Material[] _materials;
+        public void GetSharedMaterials(List<Material> results) { results.Clear(); results.AddRange(sharedMaterials); }
+        public void SetSharedMaterials(List<Material> materials) => sharedMaterials = materials.ToArray();
 
         public void SetPropertyBlock(MaterialPropertyBlock block) { }
         public void GetPropertyBlock(MaterialPropertyBlock block) { }
     }
     public class MeshRenderer : Renderer { }
+
+    public class TrailRenderer : Renderer { }
+
+    /// <summary>Handed to the model-import hooks; no animation data exists headlessly.</summary>
+    public class AnimationClip : Object { }
+
+    public enum LineAlignment { View, TransformZ }
+
+    /// <summary>Records the polyline and its look; nothing is drawn.</summary>
+    public class LineRenderer : Renderer
+    {
+        private Vector3[] _positions = new Vector3[0];
+        public bool useWorldSpace = true;
+        public int numCapVertices;
+        public int numCornerVertices;
+        public LineAlignment alignment;
+        public Gradient colorGradient;
+        public float startWidth;
+        public float endWidth;
+        public int positionCount
+        {
+            get => _positions.Length;
+            set => System.Array.Resize(ref _positions, value);
+        }
+        public void SetPositions(Vector3[] positions)
+        {
+            if (_positions.Length < positions.Length) System.Array.Resize(ref _positions, positions.Length);
+            System.Array.Copy(positions, _positions, System.Math.Min(positions.Length, _positions.Length));
+        }
+        public void SetPosition(int index, Vector3 position) => _positions[index] = position;
+        public Vector3 GetPosition(int index) => _positions[index];
+    }
+
+    public enum PhysicsMaterialCombine { Average, Minimum, Multiply, Maximum }
+
+    public class PhysicsMaterial : Object
+    {
+        public float staticFriction = 0.6f;
+        public float dynamicFriction = 0.6f;
+        public float bounciness;
+        public PhysicsMaterialCombine frictionCombine;
+        public PhysicsMaterialCombine bounceCombine;
+        public PhysicsMaterial() { }
+        public PhysicsMaterial(string name) { this.name = name; }
+    }
     public class SkinnedMeshRenderer : Renderer
     {
         public Mesh sharedMesh;
@@ -280,15 +375,26 @@ namespace UnityEngine
     public class Material : Object
     {
         public Color color;
+        public int renderQueue = -1;
         public Shader shader;
         public Material() { }
         public Material(Material src) { }
         public Material(Shader shader) => this.shader = shader;
         public Texture mainTexture;
         public void SetColor(string name, Color value) { _colors[name] = value; if (name == "_Color" || name == "_BaseColor") color = value; }
-        public void SetColor(int nameID, Color value) => color = value;
-        public void SetFloat(string name, float value) { }
-        public void SetFloat(int nameID, float value) { }
+        public void SetColor(int nameID, Color value) => SetColor(Shader.NameOf(nameID), value);
+        private readonly Dictionary<string, float> _floats = new Dictionary<string, float>();
+        private readonly Dictionary<string, Vector4> _vectors = new Dictionary<string, Vector4>();
+        public void SetFloat(string name, float value) => _floats[name] = value;
+        public void SetFloat(int nameID, float value) => SetFloat(Shader.NameOf(nameID), value);
+        public float GetFloat(string name) => _floats.TryGetValue(name, out float f) ? f : 0f;
+        public float GetFloat(int nameID) => GetFloat(Shader.NameOf(nameID));
+        public void SetVector(string name, Vector4 value) => _vectors[name] = value;
+        public void SetVector(int nameID, Vector4 value) => SetVector(Shader.NameOf(nameID), value);
+        public Vector4 GetVector(string name) => _vectors.TryGetValue(name, out Vector4 v) ? v : Vector4.zero;
+        public void SetTexture(int nameID, Texture value) => SetTexture(Shader.NameOf(nameID), value);
+        public Texture GetTexture(int nameID) => GetTexture(Shader.NameOf(nameID));
+        public Color GetColor(int nameID) => GetColor(Shader.NameOf(nameID));
         public MaterialGlobalIlluminationFlags globalIlluminationFlags;
         private readonly Dictionary<string, Color> _colors = new Dictionary<string, Color>();
         private readonly Dictionary<string, Texture> _textures = new Dictionary<string, Texture>();
@@ -304,6 +410,17 @@ namespace UnityEngine
     }
     public class Mesh : Object
     {
+        public Vector3[] normals = Array.Empty<Vector3>();
+        public Vector2[] uv = Array.Empty<Vector2>();
+        public void Clear() { vertices = Array.Empty<Vector3>(); triangles = Array.Empty<int>(); normals = Array.Empty<Vector3>(); uv = Array.Empty<Vector2>(); }
+        public void SetVertices(List<Vector3> list) => vertices = list.ToArray();
+        public void SetNormals(List<Vector3> list) => normals = list.ToArray();
+        /// <summary>Only channel 0 (<see cref="uv"/>) is kept.</summary>
+        public void SetUVs(int channel, List<Vector2> list) { if (channel == 0) uv = list.ToArray(); }
+        /// <summary>One submesh only: the shim keeps a single triangle list.</summary>
+        public void SetTriangles(List<int> list, int submesh) => triangles = list.ToArray();
+        /// <summary>No-op: <see cref="bounds"/> is always computed from the current vertices.</summary>
+        public void RecalculateBounds() { }
         public int[] triangles = Array.Empty<int>();
         public Vector3[] vertices = Array.Empty<Vector3>();
         public int vertexCount => vertices.Length;
@@ -364,11 +481,100 @@ namespace UnityEngine
 
         public void Release() { }
     }
+    public enum ParticleSystemStopBehavior { StopEmittingAndClear, StopEmitting }
+    public enum ParticleSystemSimulationSpace { Local, World, Custom }
+    public enum ParticleSystemShapeType { Sphere, Hemisphere, Cone, Box }
+
+    /// <summary>
+    /// Configuration is recorded, nothing is simulated. The modules are reference types here (they
+    /// are write-through structs in Unity), so a write through <c>ps.main</c> persists the same way.
+    /// </summary>
     public class ParticleSystem : Component
     {
+        public struct MinMaxCurve
+        {
+            public float constantMin, constantMax;
+            public MinMaxCurve(float constant) { constantMin = constantMax = constant; }
+            public MinMaxCurve(float min, float max) { constantMin = min; constantMax = max; }
+            public static implicit operator MinMaxCurve(float constant) => new MinMaxCurve(constant);
+        }
+
+        public struct MinMaxGradient
+        {
+            public Color color;
+            public Color colorMax;
+            public Gradient gradient;
+            public MinMaxGradient(Color color) { this.color = color; colorMax = color; gradient = null; }
+            public MinMaxGradient(Color min, Color max) { color = min; colorMax = max; gradient = null; }
+            public MinMaxGradient(Gradient gradient) { color = Color.white; colorMax = Color.white; this.gradient = gradient; }
+            public static implicit operator MinMaxGradient(Color color) => new MinMaxGradient(color);
+            public static implicit operator MinMaxGradient(Gradient gradient) => new MinMaxGradient(gradient);
+        }
+
+        public class MainModule
+        {
+            public bool loop = true;
+            public bool playOnAwake = true;
+            public MinMaxCurve startLifetime = 5f;
+            public MinMaxCurve startSpeed = 5f;
+            public MinMaxCurve startSize = 1f;
+            public MinMaxGradient startColor = Color.white;
+            public float gravityModifier;
+            public float duration = 5f;
+            public ParticleSystemSimulationSpace simulationSpace;
+            public int maxParticles = 1000;
+        }
+
+        public class EmissionModule
+        {
+            public bool enabled = true;
+            public float rateOverTimeMultiplier = 10f;
+            public MinMaxCurve rateOverTime = 10f;
+        }
+
+        public class ShapeModule
+        {
+            public bool enabled = true;
+            public ParticleSystemShapeType shapeType = ParticleSystemShapeType.Cone;
+            public float radius = 1f;
+            public float angle = 25f;
+        }
+
+        public class NoiseModule
+        {
+            public bool enabled;
+            public MinMaxCurve strength = 1f;
+            public float frequency = 0.5f;
+        }
+
+        public class ColorOverLifetimeModule
+        {
+            public bool enabled;
+            public MinMaxGradient color;
+        }
+
+        private readonly MainModule _main = new MainModule();
+        private readonly EmissionModule _emission = new EmissionModule();
+        private readonly ShapeModule _shape = new ShapeModule();
+        public MainModule main => _main;
+        public EmissionModule emission => _emission;
+        public ShapeModule shape => _shape;
+        private readonly NoiseModule _noise = new NoiseModule();
+        private readonly ColorOverLifetimeModule _colorOverLifetime = new ColorOverLifetimeModule();
+        public NoiseModule noise => _noise;
+        public ColorOverLifetimeModule colorOverLifetime => _colorOverLifetime;
+
         public bool IsPlaying { get; private set; }
+        /// <summary>Particles requested through <see cref="Emit"/>; they never age out headlessly.</summary>
+        public int particleCount { get; private set; }
         public void Play() => IsPlaying = true;
         public void Stop() => IsPlaying = false;
+        public void Stop(bool withChildren, ParticleSystemStopBehavior behavior)
+        {
+            IsPlaying = false;
+            if (behavior == ParticleSystemStopBehavior.StopEmittingAndClear) particleCount = 0;
+        }
+        public void Emit(int count) => particleCount += count;
     }
     public class ParticleSystemRenderer : Renderer { }
     public enum LightShadows { None, Hard, Soft }
@@ -380,6 +586,10 @@ namespace UnityEngine
         public LightType type = LightType.Point;
         public float range = 10f;
         public LightShadows shadows = LightShadows.None;
+        public float shadowStrength = 1f;
+        public float shadowBias = 0.05f;
+        public float shadowNormalBias = 0.4f;
+        public float shadowNearPlane = 0.2f;
     }
 
     [Flags]
@@ -446,6 +656,19 @@ namespace UnityEngine
         /// <summary>Returns the first camera in the headless scene, mirroring Camera.main's tag lookup.</summary>
         public static Camera main => _main != null ? _main : (_main = Object.FindObjectOfType<Camera>());
         public float fieldOfView = 60f;
+        public float depth;
+
+        /// <summary>Every enabled camera on an active object, in the headless scene.</summary>
+        private static List<Camera> Live() =>
+            Object.FindObjectsOfType<Camera>().Where(c => c.isActiveAndEnabled).ToList();
+        public static int allCamerasCount => Live().Count;
+        public static int GetAllCameras(Camera[] cameras)
+        {
+            List<Camera> live = Live();
+            int n = Math.Min(cameras.Length, live.Count);
+            for (int i = 0; i < n; i++) cameras[i] = live[i];
+            return n;
+        }
         public CameraClearFlags clearFlags;
         public Color backgroundColor;
         public bool orthographic;
@@ -529,6 +752,28 @@ namespace UnityEngine
         public Quaternion rotation { get => transform.rotation; set => transform.rotation = value; }
         public void AddForce(Vector3 force, ForceMode mode = ForceMode.Force) => velocity += force / Mathf.Max(mass, 0.0001f);
         public void AddExplosionForce(float force, Vector3 position, float radius) { }
+
+        /// <summary>Local-space centre of mass; the shim never recomputes it from colliders.</summary>
+        public Vector3 centerOfMass = Vector3.zero;
+        public Vector3 worldCenterOfMass => transform.position + transform.rotation * centerOfMass;
+        public Vector3 inertiaTensor = Vector3.one;
+        public Quaternion inertiaTensorRotation = Quaternion.identity;
+        /// <summary>Unity 6 name for <see cref="angularDrag"/>.</summary>
+        public float angularDamping { get => angularDrag; set => angularDrag = value; }
+
+        /// <summary>The point's velocity: the body's plus the spin about its centre of mass.</summary>
+        public Vector3 GetPointVelocity(Vector3 worldPoint) =>
+            velocity + Vector3.Cross(angularVelocity, worldPoint - worldCenterOfMass);
+
+        /// <summary>Linear part only, applied like <see cref="AddForce"/>; no torque is derived from the offset (no rotational simulation).</summary>
+        public void AddForceAtPosition(Vector3 force, Vector3 position, ForceMode mode = ForceMode.Force) => AddForce(force, mode);
+
+        /// <summary>Applied instantly like <see cref="AddForce"/>, through the diagonal inertia tensor (principal-frame rotation ignored).</summary>
+        public void AddTorque(Vector3 torque, ForceMode mode = ForceMode.Force) =>
+            angularVelocity += new Vector3(
+                torque.x / Mathf.Max(inertiaTensor.x, 0.0001f),
+                torque.y / Mathf.Max(inertiaTensor.y, 0.0001f),
+                torque.z / Mathf.Max(inertiaTensor.z, 0.0001f));
         public bool freezeRotation;
         public void MovePosition(Vector3 p) => transform.position = p;
         public void MoveRotation(Quaternion r) => transform.rotation = r;
@@ -562,6 +807,8 @@ namespace UnityEngine
         public bool enabled = true;
         public Vector3 center = Vector3.zero;
         public Vector3 size = Vector3.one;
+        /// <summary>Stored only: the AABB physics world has no friction model.</summary>
+        public PhysicsMaterial sharedMaterial;
 
         public Bounds bounds => new Bounds(transform.position + center, size);
         public Rigidbody attachedRigidbody => GetComponentInParent<Rigidbody>();
@@ -585,6 +832,27 @@ namespace UnityEngine
         public bool isGrounded => true;
         public Vector3 velocity;
         public void Move(Vector3 motion) => transform.position += motion;
+    }
+
+    /// <summary>Handle onto the shim's single physics world; every query forwards to <see cref="Physics"/>.</summary>
+    public struct PhysicsScene
+    {
+        public bool Raycast(Vector3 origin, Vector3 direction, out RaycastHit hit, float maxDistance = float.PositiveInfinity,
+            int layerMask = Physics.DefaultRaycastLayers, QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal) =>
+            Physics.Raycast(origin, direction, out hit, maxDistance, layerMask, q);
+
+        /// <summary>Same capsule approximation as <see cref="Physics.CheckCapsule"/>.</summary>
+        public int OverlapCapsule(Vector3 point0, Vector3 point1, float radius, Collider[] results,
+            int layerMask = Physics.DefaultRaycastLayers, QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal)
+        {
+            int n = 0;
+            foreach (Collider c in Physics.CapsuleOverlaps(point0, point1, radius, layerMask))
+            {
+                if (n >= results.Length) break;
+                results[n++] = c;
+            }
+            return n;
+        }
     }
 
     public struct RaycastHit
@@ -652,9 +920,14 @@ namespace UnityEngine
         public static bool CheckCapsule(Vector3 point0, Vector3 point1, float radius, int layerMask = ~0,
             QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal)
         {
+            return CapsuleOverlaps(point0, point1, radius, layerMask).Any();
+        }
+
+        internal static IEnumerable<Collider> CapsuleOverlaps(Vector3 point0, Vector3 point1, float radius, int layerMask)
+        {
             Vector3 mid = (point0 + point1) * 0.5f;
             float reach = radius + (point1 - point0).magnitude * 0.5f;
-            return Live(layerMask).Any(c => c.bounds.SqrDistance(mid) <= reach * reach);
+            return Live(layerMask).Where(c => c.bounds.SqrDistance(mid) <= reach * reach);
         }
 
         /// <summary>
@@ -718,6 +991,55 @@ namespace UnityEngine
             }
             return hits.OrderBy(h => h.distance).ToArray();
         }
+
+        /// <summary>Unity's default query mask: every layer but Ignore Raycast (2).</summary>
+        public const int DefaultRaycastLayers = ~(1 << 2);
+        public const int AllLayers = ~0;
+
+        /// <summary>Hits sorted nearest first (Unity's NonAlloc order is unspecified), truncated to the buffer.</summary>
+        public static int RaycastNonAlloc(Vector3 origin, Vector3 direction, RaycastHit[] results,
+            float maxDistance = float.PositiveInfinity, int layerMask = DefaultRaycastLayers,
+            QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal) =>
+            Fill(results, SweepAll(origin, direction, maxDistance, layerMask, 0f));
+
+        /// <summary>Approximation: the swept sphere is the ray against bounds grown by the radius (every shim collider is an AABB).</summary>
+        public static int SphereCastNonAlloc(Vector3 origin, float radius, Vector3 direction, RaycastHit[] results,
+            float maxDistance = float.PositiveInfinity, int layerMask = DefaultRaycastLayers,
+            QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal) =>
+            Fill(results, SweepAll(origin, direction, maxDistance, layerMask, radius));
+
+        /// <summary>Approximation: swept as a sphere of the capsule's radius from the capsule's midpoint; its height is ignored.</summary>
+        public static int CapsuleCastNonAlloc(Vector3 point1, Vector3 point2, float radius, Vector3 direction,
+            RaycastHit[] results, float maxDistance = float.PositiveInfinity, int layerMask = DefaultRaycastLayers,
+            QueryTriggerInteraction q = QueryTriggerInteraction.UseGlobal) =>
+            Fill(results, SweepAll((point1 + point2) * 0.5f, direction, maxDistance, layerMask, radius));
+
+        private static int Fill(RaycastHit[] results, RaycastHit[] hits)
+        {
+            int n = Math.Min(results.Length, hits.Length);
+            Array.Copy(hits, results, n);
+            return n;
+        }
+
+        private static RaycastHit[] SweepAll(Vector3 origin, Vector3 direction, float maxDistance, int layerMask, float grow)
+        {
+            var hits = new List<RaycastHit>();
+            Vector3 dir = direction.normalized;
+            foreach (Collider c in Live(layerMask))
+            {
+                Bounds b = c.bounds;
+                b.extents += new Vector3(grow, grow, grow);
+                if (!SegmentIntersectsBounds(origin, dir, maxDistance, b, out float distance)) continue;
+                hits.Add(new RaycastHit { collider = c, distance = distance, point = origin + dir * distance, normal = -dir });
+            }
+            return hits.OrderBy(h => h.distance).ToArray();
+        }
+
+        public static bool Raycast(Vector3 origin, Vector3 direction, float maxDistance, int layerMask,
+            QueryTriggerInteraction q) => Raycast(origin, direction, out _, maxDistance, layerMask, q);
+
+        public static bool Linecast(Vector3 start, Vector3 end, int layerMask, QueryTriggerInteraction q) =>
+            Linecast(start, end, layerMask);
 
         public static Vector3 gravity { get; set; } = new Vector3(0f, -9.81f, 0f);
 
@@ -835,17 +1157,29 @@ namespace UnityEngine
 namespace UnityEngine.Rendering
 {
     public enum GraphicsDeviceType { Null = 4, Direct3D11 = 2, OpenGLCore = 17, Vulkan = 21, Metal = 16 }
+    public enum RenderQueue { Background = 1000, Geometry = 2000, AlphaTest = 2450, GeometryLast = 2500, Transparent = 3000, Overlay = 4000 }
     public enum CullMode { Off, Front, Back }
+    public enum ShadowCastingMode { Off, On, TwoSided, ShadowsOnly }
+    public enum LightProbeUsage { Off, BlendProbes, UseProxyVolume, CustomProvided }
 }
 
 namespace UnityEngine
 {
     public enum AmbientMode { Skybox, Trilight, Flat, Custom }
+    public enum FogMode { Linear = 1, Exponential = 2, ExponentialSquared = 3 }
 
     public static class RenderSettings
     {
         public static AmbientMode ambientMode { get; set; }
         public static Color ambientLight { get; set; }
+        public static Color ambientSkyColor { get; set; }
+        public static Color ambientEquatorColor { get; set; }
+        public static Color ambientGroundColor { get; set; }
+        public static bool fog { get; set; }
+        public static FogMode fogMode { get; set; } = FogMode.Exponential;
+        public static Color fogColor { get; set; }
+        public static float fogDensity { get; set; } = 0.01f;
+        public static Material skybox { get; set; }
     }
 }
 
@@ -853,6 +1187,9 @@ namespace UnityEngine.SceneManagement
 {
     public struct Scene
     {
+        /// <summary>The one implicit physics world every headless collider lives in.</summary>
+        public PhysicsScene GetPhysicsScene() => default;
+
         public string name;
         public int buildIndex;
         public string path;
@@ -882,6 +1219,8 @@ namespace UnityEngine.SceneManagement
         public static Scene CreateScene(string name) => new Scene { name = name, isLoaded = true };
         public static void SetActiveScene(Scene scene) { }
         public static AsyncOperation UnloadSceneAsync(Scene scene) => new AsyncOperation();
+        /// <summary>Every object already lives in the one implicit scene, so there is nothing to move.</summary>
+        public static void MoveGameObjectToScene(GameObject go, Scene scene) { }
         public static void LoadScene(string name) { }
         public static void LoadScene(int index) { }
         public static event Action<Scene, Scene> activeSceneChanged;
@@ -958,6 +1297,7 @@ namespace UnityEngine.UI
     {
         public string text = string.Empty;
         public int fontSize;
+        public float lineSpacing = 1f;
         public TextAnchor alignment;
         public Font font;
         public HorizontalWrapMode horizontalOverflow;
@@ -1047,6 +1387,8 @@ namespace UnityEngine.AI
     public static class NavMesh
     {
         public const int AllAreas = ~0;
+        /// <summary>No baked data exists headlessly, so there is nothing to remove.</summary>
+        public static void RemoveAllNavMeshData() { }
         public static bool SamplePosition(Vector3 source, out NavMeshHit hit, float maxDistance, int areaMask)
         {
             hit = new NavMeshHit { position = source, distance = 0f, hit = true };
@@ -1080,11 +1422,20 @@ namespace UnityEngine
     {
         public GradientColorKey[] colorKeys = Array.Empty<GradientColorKey>();
         public GradientAlphaKey[] alphaKeys = Array.Empty<GradientAlphaKey>();
+        public void SetKeys(GradientColorKey[] color, GradientAlphaKey[] alpha) { colorKeys = color; alphaKeys = alpha; }
         public Color Evaluate(float t) => colorKeys.Length == 0 ? Color.white : colorKeys[0].color;
     }
 
-    public struct GradientColorKey { public Color color; public float time; }
-    public struct GradientAlphaKey { public float alpha; public float time; }
+    public struct GradientColorKey
+    {
+        public Color color; public float time;
+        public GradientColorKey(Color color, float time) { this.color = color; this.time = time; }
+    }
+    public struct GradientAlphaKey
+    {
+        public float alpha; public float time;
+        public GradientAlphaKey(float alpha, float time) { this.alpha = alpha; this.time = time; }
+    }
 }
 
 namespace UnityEngine.Serialization
@@ -1229,13 +1580,36 @@ namespace UnityEngine
     public class Shader : Object
     {
         public static Shader Find(string name) => new Shader { name = name };
-        public static int PropertyToID(string name) => name.GetHashCode();
+        private static readonly Dictionary<int, string> s_names = new Dictionary<int, string>();
+        public static int PropertyToID(string name)
+        {
+            int id = name.GetHashCode();
+            lock (s_names) s_names[id] = name;
+            return id;
+        }
+        /// <summary>The name an id was issued for; an id never issued by PropertyToID maps to a placeholder.</summary>
+        internal static string NameOf(int id)
+        {
+            lock (s_names) return s_names.TryGetValue(id, out string n) ? n : "#" + id;
+        }
+
+        // Globals are recorded, not uploaded, so a test can read back what the game set.
+        public static readonly Dictionary<int, Vector4> GlobalVectors = new Dictionary<int, Vector4>();
+        public static readonly Dictionary<int, Color> GlobalColors = new Dictionary<int, Color>();
+        public static readonly HashSet<string> GlobalKeywords = new HashSet<string>();
+        public static void SetGlobalVector(int nameID, Vector4 value) => GlobalVectors[nameID] = value;
+        public static void SetGlobalVectorArray(int nameID, Vector4[] values) { }
+        public static void SetGlobalColor(int nameID, Color value) => GlobalColors[nameID] = value;
+        public static void EnableKeyword(string keyword) => GlobalKeywords.Add(keyword);
+        public static void DisableKeyword(string keyword) => GlobalKeywords.Remove(keyword);
     }
 
     public class AudioListener : Behaviour
     {
         public static float volume { get; set; } = 1f;
         public static bool pause { get; set; }
+        /// <summary>Nothing is mixed, so the output is silence.</summary>
+        public static void GetOutputData(float[] samples, int channel) => System.Array.Clear(samples, 0, samples.Length);
     }
 
     /// <summary>The quality levels of a fresh project (Low, Medium, High); switching just records the index.</summary>
@@ -1257,11 +1631,29 @@ namespace UnityEngine
     }
 
     /// <summary>Only used as a Resources.Load&lt;Font&gt; target in this codebase; never actually loaded headlessly.</summary>
-    public class Font : Object { }
+    /// <summary>No font data headlessly: metrics read 0, which the game treats as "unknown" and falls back from.</summary>
+    public class Font : Object
+    {
+        public int fontSize;
+        public int ascent;
+        public int lineHeight;
+        public void RequestCharactersInTexture(string characters, int size) { }
+    }
+
+    public enum EventType { MouseDown = 0, MouseUp = 1, MouseMove = 2, MouseDrag = 3, KeyDown = 4, KeyUp = 5, ScrollWheel = 6, Repaint = 7, Layout = 8, Used = 12 }
+
+    /// <summary>IMGUI event. Never raised headlessly; <see cref="current"/> is settable so a test can drive OnGUI.</summary>
+    public class Event
+    {
+        public static Event current { get; set; } = new Event();
+        public EventType type = EventType.Layout;
+    }
 
     public static class Resources
     {
         public static T Load<T>(string path) where T : class => null;
         public static T GetBuiltinResource<T>(string path) where T : class => null;
+        /// <summary>No asset loading headlessly (see <see cref="Load{T}"/>), so no loaded assets exist to find.</summary>
+        public static T[] FindObjectsOfTypeAll<T>() where T : Object => Array.Empty<T>();
     }
 }
