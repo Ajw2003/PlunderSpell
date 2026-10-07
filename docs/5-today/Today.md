@@ -41,6 +41,16 @@ lays a heavy blotchy paper over it. So the grades now desaturate (-30 calm to -2
 
 ---
 
+**2026-10-05 (evening) - working the handoff (`docs/plans/handoff-2026-10-05-guards-castle.md`).** #259 live check
+done: the witness rule and the cry chain work in a raid (Roused at the third witness); the check script needed
+fixing first (`a361a020`). Full PlayMode run 391/393: the flaky #233 test, and `SavedSettingsStartupTests`, which
+exposed Editor Play starting silent when the SoundBank was not in memory (fixed, `ea76aba9`). #240 not reproduced:
+the only automatic way back to the menu is a co-op client losing the host (`CoopSession.cs:199`); waiting on how the
+owner was playing. #260 railings built and baked (`0748331f`) but the Edit Mode flood test
+(`CastleStairPlaceholderTests`) has not run: its permission prompt went unanswered. #250, #261, #233, #241 not started.
+
+---
+
 **2026-10-05 - the owner played it: "finally starting to feel like a game".** They saved that build as a local
 branch, `Staging` (`aaeb9b94`). Since then: the alarm needs witnesses (#259: guards cry for help, the castle hears
 only through its guards; 3 witnesses for the lockdown, 5 for the hue and cry), curtain fires per Age (#258), and the

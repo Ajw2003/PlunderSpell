@@ -58,6 +58,12 @@ past — those belong to `Guards`/`Castle` respectively.
   silence it); guards that hear the cry take the crier's position as a lead (`GuardLeads.cs`), and if they see the
   intruder they cry in turn. A cry scores no points. One guard hearing one burst of noise goes to look and leaves
   the castle Calm (`FullRaidIntegrationTests.Test_OneGuardHearingAShoutedLeapDoesNotStirTheCastle`).
+  Seen live 2026-10-05 (`Tools/Unity/alarm_witness_check.sh`, seed 777, log
+  `docs/generated/castle-floors-2026-10-03/alarm-witness-run1.txt`): one witness holds the castle at Stirred even at
+  level 100; with two guards brought within earshot, both came on the cry, cried in turn, and the third witness made
+  it Roused within 2 s. Also seen: a guard in a fight cycles Combat -> Investigating -> Chasing every 1-3 s and cries
+  each time it re-enters the chase; on seed 777 the ground floor's three guards patrol too far apart to hear each
+  other's cries.
 - **`EnemyDirector`** is a server-authoritative FSM over a 0–100 level; `TickDecay` bleeds the level off
   at a fixed rate once `_decayDelay` seconds have passed with no noise. `UpdateState` maps the
   level to a state at fixed thresholds (20 / 50 / 80).

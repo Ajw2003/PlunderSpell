@@ -31,6 +31,13 @@ the remaining guard, raid, alarm and castle fixes, not adding new systems.
 | #258 | curtain fires no longer float in Bronze and Late | `eval/light_audit.cs`: 0 floating, 0 wall-less sconces, all Ages |
 | #259 | alarm needs witnesses; guards cry for help | AlarmWitnessTests 13/13; **live raid check NOT run yet** |
 
+## Progress, 2026-10-05 evening
+
+Item 1 done (live check, full suite 391/393, SoundBank fix). Item 2 (#240) waits on the owner. Item 4 (#260) built,
+UNTESTED: run `bash Tools/Unity/run_tests.sh Plunderspell.Tests.CastleStairPlaceholderTests EditMode` (an Edit Mode
+test: in PlayMode the filter matches 0 tests and run_tests.sh waits forever instead of failing). Items 3, 5-7 not
+started. See `docs/5-today/Today.md`.
+
 ## To do, in this order (owner chose the scope on 2026-10-05)
 
 1. **#259 live check.** Run the raid check that was interrupted:

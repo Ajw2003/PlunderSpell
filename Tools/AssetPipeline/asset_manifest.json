@@ -173,15 +173,15 @@
     },
     "BronzeStairDown": {
       "budget": 1000,
-      "content": "eb152e429bf2e2b7",
+      "content": "764df6f975c3e1b2",
       "preview": "eb152e429bf2e2b7:459f95d244e7",
-      "tris": 728
+      "tris": 752
     },
     "BronzeStairUp": {
       "budget": 1000,
-      "content": "c34d889c1220c7b7",
+      "content": "567eb9c06fe9fc18",
       "preview": "c34d889c1220c7b7:459f95d244e7",
-      "tris": 812
+      "tris": 836
     },
     "BronzeSword": {
       "budget": 400,
@@ -590,15 +590,15 @@
     },
     "LateStairDown": {
       "budget": 1000,
-      "content": "a76627cbba86f16a",
+      "content": "69736b00a1de5c47",
       "preview": "a76627cbba86f16a:459f95d244e7",
-      "tris": 728
+      "tris": 752
     },
     "LateStairUp": {
       "budget": 1000,
-      "content": "f742ee1daf93694f",
+      "content": "bf78ee526c102851",
       "preview": "f742ee1daf93694f:459f95d244e7",
-      "tris": 812
+      "tris": 836
     },
     "LateStateBedchamber": {
       "budget": 2000,
@@ -758,15 +758,15 @@
     },
     "MedievalStairDown": {
       "budget": 1000,
-      "content": "e60634f31486b209",
+      "content": "20ae20eb311f32d6",
       "preview": "e60634f31486b209:459f95d244e7",
-      "tris": 728
+      "tris": 752
     },
     "MedievalStairUp": {
       "budget": 1000,
-      "content": "0c6b2599e5d5ac02",
+      "content": "0dd994841db4d1ae",
       "preview": "0c6b2599e5d5ac02:459f95d244e7",
-      "tris": 812
+      "tris": 836
     },
     "PaviseShield": {
       "budget": 500,
