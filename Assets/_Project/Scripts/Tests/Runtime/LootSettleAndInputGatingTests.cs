@@ -233,6 +233,7 @@ namespace Plunderspell.Tests
         public void Test_TheCursorIsCapturedOnlyWhilePlaying()
         {
             Assert.IsTrue(CursorLockPolicy.ShouldCapture(GameState.Playing));
+            Assert.IsTrue(CursorLockPolicy.ShouldCapture(GameState.LairRoom));
 
             foreach (GameState state in new[]
                      {
@@ -335,6 +336,7 @@ namespace Plunderspell.Tests
         public void Test_InputIsAcceptedOnlyWhilePlaying()
         {
             Assert.IsTrue(PlayerInputController.AcceptsInputIn(GameState.Playing));
+            Assert.IsTrue(PlayerInputController.AcceptsInputIn(GameState.LairRoom));
 
             foreach (GameState state in new[]
                      {

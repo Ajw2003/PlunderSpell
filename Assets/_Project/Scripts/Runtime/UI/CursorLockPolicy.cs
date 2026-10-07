@@ -20,7 +20,7 @@ namespace Plunderspell.UI
         /// Whether the cursor should be captured in this state. Pure, so the rule can be asserted
         /// without a window or a focus event.
         /// </summary>
-        public static bool ShouldCapture(GameState state) => state == GameState.Playing;
+        public static bool ShouldCapture(GameState state) => state == GameState.Playing || state == GameState.LairRoom;
 
         private void OnEnable()
         {

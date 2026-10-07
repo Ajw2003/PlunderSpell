@@ -67,10 +67,47 @@ namespace Plunderspell.EditorTools
                 spawn.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);
             }
 
+            AddBehaviours(root);
+
             Directory.CreateDirectory(Path.GetDirectoryName(PrefabPath));
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             Object.DestroyImmediate(root);
             Debug.Log($"[Lair] Built {PrefabPath}.");
+        }
+
+        /// <summary>The room's behaviour: the spawner, a portal trigger in front of the arch, the ledger handle.</summary>
+        private static void AddBehaviours(GameObject root)
+        {
+            root.AddComponent<Plunderspell.Raid.LairRoomSpawner>();
+
+            // Unity x 6.0..7.2 in front of the arch stones (x 7.2); the spawns at x 5.2 stand clear of it.
+            var portal = new GameObject("LairPortalTrigger");
+            portal.transform.SetParent(root.transform, false);
+            portal.transform.localPosition = new Vector3(6.6f, Floor + 1.2f, 0f);
+            var box = portal.AddComponent<BoxCollider>();
+            box.isTrigger = true;
+            box.size = new Vector3(1.2f, 2.4f, 2.4f);
+            portal.AddComponent<Plunderspell.Raid.LairPortalTrigger>();
+
+            root.transform.Find("LairLedgerTable").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
+        }
+
+        /// <summary>RaidScene is authored, not built, so the room is placed into it here. 1000 m east of the origin:
+        /// the castle's curtain wall reaches 3 cells of 12 m (about 45 m) round the origin.</summary>
+        [MenuItem("Tools/Plunderspell/Place Lair Room In Raid Scene")]
+        public static void PlaceInRaidScene()
+        {
+            const string scenePath = "Assets/_Project/Scenes/RaidScene.unity";
+            var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(scenePath);
+            foreach (GameObject existing in scene.GetRootGameObjects())
+                if (existing.name == "LairRoom")
+                    Object.DestroyImmediate(existing);
+
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
+            instance.transform.position = new Vector3(1000f, 0f, 0f);
+            UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);
+            Debug.Log($"[Lair] Placed LairRoom at {instance.transform.position} in {scenePath}.");
         }
 
         private static void Place(GameObject root, string model, Vector3 blenderPosition, Vector3 blenderDegrees,

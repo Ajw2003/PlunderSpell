@@ -218,6 +218,9 @@ namespace Plunderspell.UI.Screens
             var back = UIFactory.CreateButton(transform, "BackButton", "\u2039 Back to Menu", BackToMenu, new Vector2(300f, 64f), ButtonKind.Quiet);
             UIFactory.PlaceBottomLeft(back.GetComponent<RectTransform>(), Side, FooterButtonBottom + 6f, 300f, 64f);
 
+            var room = UIFactory.CreateButton(transform, "BackToRoomButton", "‹ Back to the Room", BackToRoom, new Vector2(340f, 64f), ButtonKind.Quiet);
+            UIFactory.PlaceBottomLeft(room.GetComponent<RectTransform>(), Side + 320f, FooterButtonBottom + 6f, 340f, 64f);
+
             _setOut = UIFactory.CreateButton(transform, "SetOutButton", "Set Out", SetOut, new Vector2(SetOutWidth, SetOutHeight),
                 ButtonKind.Primary, "ENTER", 32).gameObject;
             UIFactory.PlaceBottomRight(_setOut.GetComponent<RectTransform>(), Side, FooterButtonBottom, SetOutWidth, SetOutHeight);
@@ -327,6 +330,8 @@ namespace Plunderspell.UI.Screens
                 GameServices.Coop.PlaySolo();
             GameServices.GameState.ChangeState(GameState.Playing);
         }
+
+        private static void BackToRoom() => GameServices.GameState.ChangeState(GameState.LairRoom);
 
         private static void BackToMenu()
         {

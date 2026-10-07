@@ -99,7 +99,7 @@ namespace Plunderspell.Net
             }
 
             StartHost(_udpTransport, $"Hosting on the local network (Steam unavailable: {SteamBootstrap.Problem})");
-            GameServices.GameState.ChangeState(GameState.Lair);
+            GameServices.GameState.ChangeState(GameState.LairRoom);
         }
 
         public void Leave()
@@ -161,7 +161,7 @@ namespace Plunderspell.Net
                 if (args[i] == HostUdpArg)
                 {
                     StartHost(_udpTransport, "Hosting on the local network (command line).");
-                    GameServices.GameState.ChangeState(GameState.Lair);
+                    GameServices.GameState.ChangeState(GameState.LairRoom);
                     return;
                 }
 
@@ -194,7 +194,7 @@ namespace Plunderspell.Net
             if (state == ConnectionState.Connected && !_manager.isServer)
             {
                 SetStatus("Joined. Waiting for the host to set out.");
-                GameServices.GameState.ChangeState(GameState.Lair);
+                GameServices.GameState.ChangeState(GameState.LairRoom);
             }
             else if (state == ConnectionState.Disconnected && !_manager.isServer && _status.StartsWith("Join"))
             {
@@ -254,7 +254,7 @@ namespace Plunderspell.Net
             SteamFriends.SetRichPresence("connect", $"{ConnectLobbyArg} {_lobby.m_SteamID}");
 
             StartHost(_steamTransport, "Hosting. Invite a friend with the Invite Friend button.");
-            GameServices.GameState.ChangeState(GameState.Lair);
+            GameServices.GameState.ChangeState(GameState.LairRoom);
         }
 
         public void InviteFriends()

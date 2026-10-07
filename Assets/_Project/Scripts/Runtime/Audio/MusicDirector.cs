@@ -67,7 +67,8 @@ namespace Plunderspell.Audio
             switch (state)
             {
                 case GameState.MainMenu: return new MusicPlan("mus_title_loop", false, false);
-                case GameState.Lair: return new MusicPlan("mus_lair_loop", false, false);
+                case GameState.Lair:
+                case GameState.LairRoom: return new MusicPlan("mus_lair_loop", false, false);
                 case GameState.GameOver: return new MusicPlan("mus_results_failure_loop", false, false);
                 case GameState.Victory: return new MusicPlan("mus_results_success_loop", false, false);
                 case GameState.Playing:

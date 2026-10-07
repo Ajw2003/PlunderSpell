@@ -194,6 +194,7 @@ namespace Plunderspell.Tests.Editor
         {
             Assert.AreEqual("mus_title_loop", MusicDirector.Choose(GameState.MainMenu, false).Bed);
             Assert.AreEqual("mus_lair_loop", MusicDirector.Choose(GameState.Lair, false).Bed);
+            Assert.AreEqual("mus_lair_loop", MusicDirector.Choose(GameState.LairRoom, false).Bed);
             Assert.AreEqual("mus_results_failure_loop", MusicDirector.Choose(GameState.GameOver, false).Bed);
             Assert.AreEqual("mus_results_success_loop", MusicDirector.Choose(GameState.Victory, false).Bed);
             Assert.IsTrue(MusicDirector.Choose(GameState.Playing, true).RaidStems);

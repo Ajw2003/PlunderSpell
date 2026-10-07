@@ -251,6 +251,63 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Plunderspell.RaidHud::Plunderspell.UI.CrosshairView
   _visible: 1
+--- !u!1001 &108411883
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1438687874750422623, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_Name
+      value: LairRoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
 --- !u!1 &139000813
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,6 +389,8 @@ MonoBehaviour:
   _attackPoints: 6
   _rousedChasers: 3
   _hueAndCryChasers: 5
+  _rousedWitnesses: 3
+  _hueAndCryWitnesses: 5
   _hueAndCryRepeatSeconds: 3
   _attackTurnTuning:
     MeleeTurnsPerTarget: 1
@@ -1869,3 +1928,4 @@ SceneRoots:
   - {fileID: 139000814}
   - {fileID: 1000908552}
   - {fileID: 220281200}
+  - {fileID: 108411883}

@@ -23,6 +23,10 @@ namespace Plunderspell.UI
                 {
                     GameServices.GameState.ChangeState(GameState.Paused);
                 }
+                else if (state == GameState.LairRoom)
+                {
+                    GameServices.GameState.ChangeState(GameState.Lair);
+                }
                 else if (state == GameState.Paused)
                 {
                     GameServices.GameState.ChangeState(GameState.Playing);

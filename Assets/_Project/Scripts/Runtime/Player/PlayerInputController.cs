@@ -34,7 +34,7 @@ namespace Player
         /// "Issue 9's gate belongs on the raid's player, not only on the playtest harness".
         /// </summary>
         public static bool AcceptsInputIn(Plunderspell.Core.GameState state) =>
-            state == Plunderspell.Core.GameState.Playing;
+            state == Plunderspell.Core.GameState.Playing || state == Plunderspell.Core.GameState.LairRoom;
 
         /// <summary>Whether the world should react to input right now.</summary>
         private bool AcceptsInput => Plunderspell.Core.GameServices.IsPlaying;

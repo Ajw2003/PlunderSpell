@@ -8,6 +8,8 @@ namespace Plunderspell.Core
         Paused,
         Settings,
         GameOver,
-        Victory
+        Victory,
+        /// <summary>Walking the Lair room: cursor captured, no screen. Appended last so saved ints keep their meaning.</summary>
+        LairRoom
     }
 }

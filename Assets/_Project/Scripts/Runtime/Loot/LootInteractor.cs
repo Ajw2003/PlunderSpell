@@ -47,6 +47,9 @@ namespace Plunderspell.Loot
         /// <summary>Raised when what the player is looking at changes. The HUD prompt reads this.</summary>
         public event System.Action<LootPickup> FocusChanged;
 
+        // Fallback when the ray hits neither loot nor a door (the Lair ledger table).
+        private IInteractable _focusInteractable;
+
         private void Awake()
         {
             if (_eye == null)
@@ -81,6 +84,7 @@ namespace Plunderspell.Loot
             CastleDoorHandle previousDoor = FocusDoor;
             Focus = null;
             FocusDoor = null;
+            _focusInteractable = null;
 
             Vector3 origin = _eye != null ? _eye.position : transform.position;
             Vector3 direction = _eye != null ? _eye.forward : transform.forward;
@@ -93,6 +97,8 @@ namespace Plunderspell.Loot
             {
                 Focus = hit.collider.GetComponentInParent<LootPickup>();
                 FocusDoor = hit.collider.GetComponentInParent<CastleDoorHandle>();
+                if (Focus == null && FocusDoor == null)
+                    _focusInteractable = hit.collider.GetComponentInParent<IInteractable>();
             }
 
             if (FocusDoor != previousDoor)
@@ -115,6 +121,12 @@ namespace Plunderspell.Loot
             if (FocusDoor != null)
             {
                 FocusDoor.Interact();
+                return;
+            }
+
+            if (Focus == null && _focusInteractable != null)
+            {
+                _focusInteractable.Interact();
                 return;
             }
 

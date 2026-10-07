@@ -195,7 +195,7 @@ namespace Plunderspell.UI.Screens
         private void OnPlayClicked()
         {
             GameServices.Coop?.PlaySolo();
-            GameServices.GameState.ChangeState(GameState.Lair);
+            GameServices.GameState.ChangeState(GameState.LairRoom);
         }
 
         /// <summary>The session moves to the Lair itself once hosting has started: over Steam that
