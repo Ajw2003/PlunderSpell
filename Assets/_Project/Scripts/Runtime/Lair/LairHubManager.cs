@@ -294,6 +294,57 @@ namespace Plunderspell.Lair
             PublishLedger(debtBefore, goldBefore);
         }
 
+        /// <summary>
+        /// The per-seat ledger as one string for the host to replicate: purses, paid last, seats present, then the
+        /// Collector's line (last, so it may hold anything but the separator).
+        /// </summary>
+        public string HostLedger()
+        {
+            string purses = string.Join(",", _purses);
+            string paid = string.Join(",", _paidLast);
+            string present = string.Join(",", System.Array.ConvertAll(_present, seated => seated ? 1 : 0));
+            return $"{purses}|{paid}|{present}|{CollectorLine}";
+        }
+
+        /// <summary>
+        /// Shows the host's purses, paid-last, seats present and Collector line on a client (see <see cref="HostLedger"/>).
+        /// Raises the events the ledger listens to and, like <see cref="ShowHostCampaign"/>, saves nothing.
+        /// </summary>
+        public void ShowHostLedger(string ledger)
+        {
+            string[] parts = ledger.Split(new[] { '|' }, 4);
+            if (parts.Length < 4)
+                return;
+            string[] purses = parts[0].Split(',');
+            string[] paid = parts[1].Split(',');
+            string[] present = parts[2].Split(',');
+            if (purses.Length != Seats || paid.Length != Seats || present.Length != Seats)
+                return;
+
+            var seated = new bool[Seats];
+            for (int seat = 0; seat < Seats; seat++)
+            {
+                int coins = int.Parse(purses[seat]);
+                int taken = int.Parse(paid[seat]);
+                seated[seat] = present[seat] == "1";
+                bool purseChanged = coins != _purses[seat];
+                bool paidChanged = taken != _paidLast[seat];
+                _purses[seat] = coins;
+                _paidLast[seat] = taken;
+                if (purseChanged)
+                    EventManager.Instance?.Publish(new PurseChanged(seat, coins));
+                if (paidChanged)
+                    EventManager.Instance?.Publish(new CollectorPaid(seat, taken));
+            }
+            SetPresent(seated);
+            if (parts[3] != CollectorLine)
+            {
+                CollectorLine = parts[3];
+                if (CollectorLine.Length > 0)
+                    EventManager.Instance?.Publish(new CollectorSpoke(CollectorLine));
+            }
+        }
+
         /// <summary>Snapshot the current lair meta-state.</summary>
         public LairState GetLairState() => new LairState(TotalDebt, AccumulatedGold, SelectedEra);
     }

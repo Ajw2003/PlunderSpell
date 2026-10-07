@@ -83,6 +83,9 @@ namespace Plunderspell.Raid
         private readonly SyncVar<float> _hostGold = new SyncVar<float>(0f);
         private readonly SyncVar<float> _hostLastRaidWorth = new SyncVar<float>(-1f);
 
+        // The host's purses, paid-last, seats present and Collector line as one string (LairHubManager.HostLedger).
+        private readonly SyncVar<string> _hostLedger = new SyncVar<string>(string.Empty);
+
         /// <summary>Where the session is in the loop.</summary>
         public RaidPhase Phase => _phase.value;
 
@@ -126,10 +129,19 @@ namespace Plunderspell.Raid
             _hostDebt.onChanged += OnHostCampaignReplicated;
             _hostGold.onChanged += OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged += OnHostCampaignReplicated;
+            _hostLedger.onChanged += OnHostLedgerReplicated;
             if (isServer)
+            {
+                // A pouch banked or a wizard arriving changes the ledger between raids; the host publishes it as it happens.
+                EventManager.Instance?.Subscribe(this, (PurseChanged e) => PublishCampaign());
+                EventManager.Instance?.Subscribe(this, (PresentChanged e) => PublishCampaign());
                 PublishCampaign();
+            }
             else
+            {
                 OnHostCampaignReplicated(0f);
+                OnHostLedgerReplicated(string.Empty);
+            }
             SubscribeToZone();
             Debug.Log($"[Raid] Director spawned as {(isServer ? "server" : "client")}: phase {_phase.value}, seed {Seed}.");
         }
@@ -142,6 +154,12 @@ namespace Plunderspell.Raid
             _hostDebt.onChanged -= OnHostCampaignReplicated;
             _hostGold.onChanged -= OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged -= OnHostCampaignReplicated;
+            _hostLedger.onChanged -= OnHostLedgerReplicated;
+            if (isServer)
+            {
+                EventManager.Instance?.Unsubscribe<PurseChanged>(this);
+                EventManager.Instance?.Unsubscribe<PresentChanged>(this);
+            }
 
             // Leaving a friend's session: back to this machine's own saved campaign.
             if (!isServer)
@@ -633,6 +651,13 @@ namespace Plunderspell.Raid
             _hostDebt.value = _lair.TotalDebt;
             _hostGold.value = _lair.AccumulatedGold;
             _hostLastRaidWorth.value = _lair.LastRaidWorth;
+            _hostLedger.value = _lair.HostLedger();
+        }
+
+        private void OnHostLedgerReplicated(string _)
+        {
+            if (!isServer && _lair != null && _hostLedger.value.Length > 0)
+                _lair.ShowHostLedger(_hostLedger.value);
         }
 
         private void OnHostCampaignReplicated(float _)
