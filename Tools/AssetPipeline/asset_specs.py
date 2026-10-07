@@ -244,7 +244,33 @@ LAIR_SPECS = [
     _lair("LairCandle", "build_lair_candle", 340),
 ]
 
-ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS + DRESSING_SPECS + LAIR_SPECS
+# The Market (docs/plans/diegetic-ui-lair-market.md, issue 287), built in market_builders.py.
+# MarketYard is a one-off ~20 x 20 m open-air yard: NOT a 12 m castle cell, so it has no
+# cell-footprint check (only "Castle*" modules are held to it). The props are separate
+# meshes with base pivots; MarketScalesBeam's pivot is its fulcrum (see market_builders.py).
+def _market(key, builder, budget):
+    return dict(key=key, builder=builder, tri_budget=budget, subdir="Market", module="market_builders")
+
+
+MARKET_SPECS = [
+    _market("MarketYard", "build_market_yard", 4200),
+    _market("MarketFenceCart", "build_market_fence_cart", 1000),
+    _market("MarketGoldsmithStall", "build_market_goldsmith_stall", 1000),
+    _market("MarketAnvil", "build_market_anvil", 180),
+    _market("MarketPardonerBooth", "build_market_pardoner_booth", 1000),
+    _market("MarketAntiquarianCabinet", "build_market_antiquarian_cabinet", 1400),
+    _market("MarketCounter", "build_market_counter", 260),
+    _market("MarketSlateBoard", "build_market_slate_board", 300),
+    _market("MarketScalesBase", "build_market_scales_base", 300),
+    _market("MarketScalesBeam", "build_market_scales_beam", 200),
+    _market("MarketScalesPan", "build_market_scales_pan", 300),
+    _market("MarketLantern", "build_market_lantern", 300),
+    _market("MarketCoin", "build_market_coin", 100),
+    _market("MarketCoinStack", "build_market_coin_stack", 450),
+    _market("MarketPouch", "build_market_pouch", 300),
+]
+
+ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS + DRESSING_SPECS + LAIR_SPECS + MARKET_SPECS
 
 
 
