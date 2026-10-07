@@ -53,6 +53,7 @@ Use the wrappers below, which already wait correctly. If you must write your own
 | `coop_lair_check.sh <label>` | Co-op Lair room and Market (#314): each player at their own spawn, the Market door and back, coming home from a raid, the same haul pile on both sides. About a minute without a build. |
 | `coop_drop_latency.sh` | Co-op timing of physics sounds on host and client. |
 | `night_captures.sh` | Fixed-camera night captures for comparing with the look samples. |
+| `test_slot.sh` | Sourced by checks that play a campaign (#313): plays in the test save slot (`SaveSlots.TestSlot`, 99), which the Main Menu never offers, wipes it at the start and puts the owner's slot back at the end. `coop_lair_check.sh`, `coop_carry_check.sh` and `hud_events_check.sh` use it; a new campaign-playing check should too. |
 | `pin.sh`, `settings_restore.sh` | Sourced helpers: pin calls to this Editor; save and restore ProjectSettings around a build. |
 
 The co-op scripts build the client (`Build/DevTest`) when anything under `Assets` changed since the last

@@ -54,7 +54,7 @@ cleanup() {
     unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":false}' --confirm true "${cli[@]}" >/dev/null 2>&1 || true
     # The Pipeline build rewrites ProjectSettings; put back the byte-exact copy saved at the start.
     settings_restore
-    log "$(test_slot_restore 2>&1)"
+    test_slot_restore; log "$test_slot_msg"
 }
 trap cleanup EXIT
 
@@ -70,7 +70,7 @@ if [ "$playing" != "False False" ]; then
 fi
 
 settings_save || { log "FAIL cannot save ProjectSettings before building"; trap - EXIT; exit 1; }
-msg="$(test_slot_use)" || { log "FAIL cannot switch to the test slot: $msg"; trap - EXIT; exit 1; }; log "$msg"
+test_slot_use || { log "FAIL cannot switch to the test slot: $test_slot_msg"; trap - EXIT; exit 1; }; log "$test_slot_msg"
 
 # ---------------------------------------------------------------------------------------------
 # The client build.

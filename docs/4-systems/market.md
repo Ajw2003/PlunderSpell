@@ -31,9 +31,32 @@ from selling; *Plus* is the only ask; keys first, voice later).
 
 - **worth** = `LootValue.Worth` (the item's `Worth`, 0 once ruined). A piece has no partial
   condition yet, so a ruined piece is worth nothing and the vendor says so.
-- **interest** = 1 for every vendor and every piece: `LootItem` carries no category or material to
-  map to "metal", "holy" or "out of its era". A category field is the next change if the vendors
-  are to differ.
+- **interest** = `HaggleRules.Interest(vendor, category)` (#313), from the piece's `LootItem.Category`
+  (`LootCategory`: Metal, Holy, Curio, Arms, Other; the enum lives in `Runtime/Market/HaggleRules.cs` so the
+  rules stay free of Unity). The Fence 1.0 for everything; the Goldsmith 1.3 for Metal; the Pardoner 1.3
+  for Holy; the Antiquarian 1.3 for Curio and Arms; otherwise 0.7. Tested in `HaggleTests`. Not yet applied:
+  "out of its era" (no era on a piece). Checked solo, 2026-10-07: one golden goblet (Metal, worth 150) opened
+  at 100 (limit 181.2) at the Goldsmith's and at 60 (limit 94.1) at the Pardoner's; `Tools/Unity/eval/market_category_offers.cs`.
+- **categories**: set by `Editor/LootCategoryForge.cs` (menu *Tools/Plunderspell/Set Loot Categories*), which holds the
+  table below; the generated placeholders under `Data/Generated` each exist twice (`<name>` and `<name> 1`), same category.
+
+| Category | Pieces |
+|---|---|
+| Metal | Silver Service Tureen, Gold Death-Mask, Oxhide Ingot, Tripod Cauldron, Coin Coffer, Silver Ewer, Gilded Nef, Jewelled Hat-Badge, Copper Pot, Golden Goblet, Conjured Coin, Silver Plate, Crown of the Founder, Tin Cup |
+| Holy | Arm Reliquary, Gilded Altarpiece, Illuminated Psalter, Glass Reliquary |
+| Curio | Astrolabe, Cabinet of Curiosities, Nautilus Cup, Venetian Mirror, Faience Hippopotamus, Ancient Relic |
+| Arms | Parade Armour on its Stand, Arming Sword, Bronze Sword, Crossbow, Flintlock Pistol, Longsword, Matchlock, Pavise Shield, Plate Helm, Powder Grenade, Round Shield |
+| Other | Sealed Amphora, Banker's Ledger, Rolled Tapestry, Heavy Chest, Gilded Chest |
+
+## The test save slot (#313)
+
+The checks that play a campaign (`coop_lair_check.sh`, `coop_carry_check.sh`, `hud_events_check.sh`) play in
+`SaveSlots.TestSlot` (99), not the owner's slot 1. The Main Menu steps through slots 1 to `SaveSlots.Count` (3) only, so it
+never offers 99; `SaveSlots.Active` accepts it and every other out-of-range number still clamps. `Tools/Unity/test_slot.sh`
+remembers the active slot, wipes slot 99 (campaign and haul pile) and makes it active before Play, and puts the old one
+back when the check ends (its exit trap), so every run starts from an empty pile. If a check is killed outright the
+active slot stays 99 until the next check or `SaveSlots.Active = 1`. Other Editors on this PC share the same
+PlayerPrefs, so a run elsewhere that is not on the test slot can still change slot 1.
 - **mood**: one roll per vendor per night. A night runs from setting out to setting out
   (`RaidPhaseChanged` to `Generating`); each counter draws a seed then and derives its mood from it.
 - **Opening roll**: seeded from the night and the piece, so the same piece opens the same all night
