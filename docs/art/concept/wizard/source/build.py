@@ -162,6 +162,6 @@ page = f"""<title>Plunderspell Wizards Proposal</title>
 </main>"""
 
 
-out = pathlib.Path(__file__).with_name("index.html")
+out = pathlib.Path(__file__).parent.parent / "proposal.html"
 out.write_text(page)
 print("wrote", out, len(page), "bytes")
