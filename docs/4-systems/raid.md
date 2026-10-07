@@ -47,6 +47,25 @@ Assemblies: `Plunderspell.Raid` (loop, spawning), `Plunderspell.Guards` (the gar
   microphone while V is held, and the live meter with the whisper and shout marks is in Settings (`voice.md`). The
   rules this follows (roles, structs, always unsubscribe) are in `core.md`, "The event rule".
 
+  **What is on the screen in a raid (#315, 2026-10-07).** The always-on HUD is only what the world does not yet say for
+  itself: the prompt under the crosshair, the ranged weapon's state, the chant bar, and what was heard while casting
+  (`RaidHudView`), plus the crosshair and damage feedback. The rest moved:
+  - **The clock is the pocket watch** (`WatchView`, flat UI for now): hold `T`. A ring of 60 ticks of portal-light empties
+    anticlockwise as the raid runs down, one hand points at what is left, and a caption says whole minutes (or "under a
+    minute"); in the last minute the ring turns madder and pulses. The existing portal-warning bell (2 min, 1 min, 30 s,
+    `MusicDirector`) is the sound; a ticking sound is not built.
+  - **The spell list is the grimoire** (`GrimoireView`, flat UI for now): hold `Tab`. Left page: the eight spells with their
+    keys and costs (struck through when mana cannot cover one). Right page: the keys (page 0) or one spell (its word, cost
+    and description), turned with the scroll wheel, with the last three casts in the margin. It opens by itself for 8 s the
+    first time a raid starts (`Hud.GrimoireSeen`). While it is open the local body walks at 60% (`PlayerStateMachine.ReadingPace`)
+    and `ItemManager` will not start a lift; it will not open while something is carried. Pages are not blank until a spell
+    is learned: the progressive unlock (#108) does not exist yet.
+  - **The alarm is the castle's fires** (`atmosphere.md`); phase text, carried item name, debt, banked gold and the haul number
+    are gone from the raid. Debt and gold are on the Lair screen.
+  - `HudHoldKeys` reads `T` and `Tab` each frame and publishes `WatchRaised` and `GrimoireOpened` on change; the presenter
+    carries both into the model. Still on the screen until their world cues exist: the interaction prompt (#318), the
+    ranged weapon line (#321), the chant bar (#322) and the heard-phrase caption (#323).
+
 ## How loot settles
 
 `LootSpawner.SpawnFor` freezes every spawned rigidbody (`isKinematic = true`, velocities zeroed),

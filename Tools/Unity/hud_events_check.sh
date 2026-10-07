@@ -104,5 +104,13 @@ log "host   music: $(rt host "$music")"
 log "client music: $(rt client "$music")"
 log "host   hit: $(rt host "$hit")"
 log "client hit: $(rt client "$hit")"
+# The held-key panels (#324, #325): raise each by its event, as the key would, and look at the host's screen.
+panel() { # panel <name> <C# that raises it> <C# that puts it away>
+    log "panel $1: $(ev "$2" 2>&1 | tail -1)"; sleep 1
+    log "panel $1 screenshot: $(timeout 90 bash Tools/Unity/capture.sh "$out/$label-$1.png" screen 2>&1 | tail -1)"
+    ev "$3" >/dev/null 2>&1 || true
+}
+panel watch 'Code.Scripts.EventSystems.EventManager.Instance.Publish(new Plunderspell.UI.WatchRaised(true)); return "watch up";' 'Code.Scripts.EventSystems.EventManager.Instance.Publish(new Plunderspell.UI.WatchRaised(false)); return "down";'
+panel grimoire 'Code.Scripts.EventSystems.EventManager.Instance.Publish(new GrimoireOpened(true)); return "book open";' 'Code.Scripts.EventSystems.EventManager.Instance.Publish(new GrimoireOpened(false)); return "closed";'
 log "screenshot: $(timeout 90 bash Tools/Unity/capture.sh "$out/$label-host.png" screen 2>&1 | tail -1)"
 echo "client log error lines: $(grep -ci 'error\|exception' "$out/$label-client.log")" | tee -a "$out/$label-run.log"
