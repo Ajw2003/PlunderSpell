@@ -5,6 +5,7 @@ the goldsmith's counter with coins, lanterns lit with warm point lights, a dark 
 1.80 m figure for scale. Cycles CPU, 128 samples, 1280 x 720 (a few minutes on 4 cores).
 
     blender -b -P Tools/AssetPipeline/render_market_scene.py [-- --out path.png]
+    blender -b -P Tools/AssetPipeline/render_market_scene.py -- --placements Tools/AssetPipeline/placements/market.json
 
 Output: docs/art/models/market/market-assembled.png. Imports the FBXs exactly as Unity will, so
 the placements here are also the reference for the Unity prefab: see the Market section of the
@@ -33,6 +34,7 @@ WARM = (1.0, 0.62, 0.28)
 STALLS = {"gold": (-4.0, 4.6), "pardoner": (4.0, 4.6), "antiq": (5.9, -1.0), "fence": (-4.3, -1.4)}
 CART = (-6.9, -1.4)
 LANTERNS = []     # (x, y, z of the lantern base, watts)
+PLACED = []       # (key, (x, y, z), z rotation in degrees): every model placed, for --placements
 
 
 def facing(p):
@@ -56,6 +58,7 @@ def place(key, x, y, z, rot_deg=0.0, glow=False):
     o = import_fbx(key)
     o.location = (x, y, z)
     o.rotation_euler = (0, 0, math.radians(rot_deg))
+    PLACED.append((key, (x, y, z), rot_deg))
     if glow:
         rls.glow(o)
     return o
@@ -93,6 +96,19 @@ def counter_stuff(p, th, ly, with_scales=False):
         at("MarketCoinStack", p, th, 0.42, ly - 0.12, top, extra=1.0)
         at("MarketCoin", p, th, 0.1, ly - 0.15, top, extra=0.5)
         at("MarketPouch", p, th, -0.5, ly + 0.05, top)
+
+
+def write_placements(path):
+    """Writes every placed model and lantern light (Blender coordinates) for the Unity Market builder,
+    MarketYardForge, so the Unity prefab and this render are placed by the same code."""
+    import json
+    data = {
+        "models": [{"key": k, "position": list(p), "zDegrees": r} for k, p, r in PLACED],
+        "lights": [{"position": [x, y, z + 0.17], "watts": w} for x, y, z, w in LANTERNS],
+    }
+    with open(path, "w") as f:
+        json.dump(data, f, indent=1)
+    print("wrote", path, len(PLACED), "models", len(LANTERNS), "lights")
 
 
 def world_setup():
@@ -148,6 +164,9 @@ def main():
     for i, (x, y, z, w) in enumerate(LANTERNS):
         place("MarketLantern", x, y, z, glow=True)
         rls.point("L%d" % i, (x, y, z + 0.17), w, WARM, 0.08)
+    if "--placements" in argv:
+        write_placements(argv[argv.index("--placements") + 1])
+        return
     rls.add_human(*HUMAN)
 
     cam = bpy.data.objects.new("Cam", bpy.data.cameras.new("Cam"))
