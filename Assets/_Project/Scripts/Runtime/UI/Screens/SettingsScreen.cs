@@ -247,8 +247,7 @@ namespace Plunderspell.UI.Screens
             int position = ((index + 1 + step) % count + count) % count;
             index = position - 1;
 
-            PlayerPrefs.SetString(AudioInputSettings.MicrophoneKey, index < 0 ? string.Empty : devices[index]);
-            PlayerPrefs.Save();
+            AudioInputSettings.Microphone = index < 0 ? string.Empty : devices[index];
             RefreshMicrophoneLabel();
         }
 

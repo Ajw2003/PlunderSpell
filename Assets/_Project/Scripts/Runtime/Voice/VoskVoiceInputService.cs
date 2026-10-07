@@ -243,10 +243,31 @@ namespace Plunderspell.Voice
             CurrentRms = 0f;
             CurrentDevice = null;
             Debug.Log("[Vosk] Stopped listening.");
+            // A microphone picked in Settings mid-cast reaches chatter now the cast is over.
+            SwitchChatterMicrophone();
 #endif
         }
 
 #if !HEADLESS
+        private void HandleMicrophoneChanged(string device) => SwitchChatterMicrophone();
+
+        /// <summary>Moves chatter onto the Settings microphone if it is on another device. Does nothing
+        /// mid-cast (the next cast opens the new device; StopListening calls this afterwards).</summary>
+        private void SwitchChatterMicrophone()
+        {
+            if (!_chatterEnabled || IsListening)
+                return;
+            string device = MicrophonePicker.Resolve();
+            if (device == _micDevice && _micClip != null)
+                return;
+            if (!OpenMicrophone(device))
+                return;
+            _lastSamplePosition = Microphone.GetPosition(_micDevice);
+            _chatterPeakRms = 0f;
+            // Drop half-heard words from the old device.
+            _chatterRecognizer?.Reset();
+        }
+
         /// <summary>Closes the microphone device if it is open. Blocks for a moment; never call it
         /// on the cast key's release.</summary>
         public void CloseMicrophone()
@@ -540,6 +561,7 @@ namespace Plunderspell.Voice
                 UnityEngine.Object.DontDestroyOnLoad(go);
             _pump = go.AddComponent<MainThreadPump>();
             _pump.Init(this);
+            Plunderspell.Core.AudioInputSettings.MicrophoneChanged += HandleMicrophoneChanged;
         }
 
         /// <summary>Hidden helper that reads the microphone on the Unity main thread each frame.</summary>
@@ -552,7 +574,13 @@ namespace Plunderspell.Voice
                 _owner?.ReadMicrophone();
             }
 
-            private void OnDestroy() => _owner?.CloseMicrophone();
+            private void OnDestroy()
+            {
+                if (_owner == null)
+                    return;
+                Plunderspell.Core.AudioInputSettings.MicrophoneChanged -= _owner.HandleMicrophoneChanged;
+                _owner.CloseMicrophone();
+            }
         }
 #endif
     }
