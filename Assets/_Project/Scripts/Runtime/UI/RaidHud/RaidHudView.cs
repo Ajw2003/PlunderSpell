@@ -130,6 +130,8 @@ namespace Plunderspell.UI
                 gameObject.AddComponent<HudHoldKeys>();
             if (GetComponent<WatchView>() == null)
                 gameObject.AddComponent<WatchView>();
+            if (GetComponent<GrimoireView>() == null)
+                gameObject.AddComponent<GrimoireView>();
         }
 
         // The last phrase the voice service produced, so a misheard word reads differently from a

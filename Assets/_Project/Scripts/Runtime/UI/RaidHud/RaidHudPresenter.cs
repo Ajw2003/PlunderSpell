@@ -77,6 +77,9 @@ namespace Plunderspell.UI
         private string _castLine = string.Empty;
         private bool _watchUp;
         private float _timeTotal;
+        private bool _grimoireOpen;
+        private string[] _recentCasts;
+        private const int RecentCastCount = 3;
 
         private void Awake() => AutoWire();
 
@@ -91,6 +94,7 @@ namespace Plunderspell.UI
             bus.Subscribe(this, (RaidPhaseChanged e) => { _phase = e.Phase; Assemble(); });
             bus.Subscribe(this, (ExtractionTimerChanged e) => { _time = e.SecondsRemaining; Assemble(); });
             bus.Subscribe(this, (WatchRaised e) => { _watchUp = e.Up; Assemble(); });
+            bus.Subscribe(this, (GrimoireOpened e) => { _grimoireOpen = e.Open; Assemble(); });
             bus.Subscribe(this, (AlarmChanged e) => { _alarmState = e.State; Assemble(); });
             bus.Subscribe(this, (AlarmLevelChanged e) => { _alarmLevel = e.Level; Assemble(); });
             bus.Subscribe(this, (DebtChanged e) => { _debt = e.Debt; Assemble(); });
@@ -222,7 +226,8 @@ namespace Plunderspell.UI
         {
             Model = new RaidHudModel(_phase, _time, _alarmState, _alarmLevel, _carriedName, _carriedNeedsTwo,
                 _prompt, _hasTarget, _debt, _gold, _castLine, _haulWorth, _haulPieces, _rangedStatus,
-                _casting, _listenDevice, _chanting, _chantWord, _chantProgress, _mana, _state, _watchUp, _timeTotal);
+                _casting, _listenDevice, _chanting, _chantWord, _chantProgress, _mana, _state, _watchUp, _timeTotal,
+                _grimoireOpen, _recentCasts);
         }
 
         /// <summary>What the currently held ranged weapon (if any) is doing right now.</summary>
@@ -305,10 +310,22 @@ namespace Plunderspell.UI
                 : $"{report.Spell} ({report.Affected} affected)";
             _lastCastAt = Time.time;
             _castLine = _lastCastLine;
+            RememberCast(_lastCastLine);
             // The line fades by timer, not by polling: clear it when its time is up.
             CancelInvoke(nameof(ClearCastLine));
             Invoke(nameof(ClearCastLine), _castLineDuration);
             Assemble();
+        }
+
+        // The margin of the grimoire keeps the last few casts, newest first.
+        private void RememberCast(string line)
+        {
+            int keep = Mathf.Min(RecentCastCount, (_recentCasts?.Length ?? 0) + 1);
+            var next = new string[keep];
+            next[0] = line;
+            for (int i = 1; i < keep; i++)
+                next[i] = _recentCasts[i - 1];
+            _recentCasts = next;
         }
 
         private void ClearCastLine()

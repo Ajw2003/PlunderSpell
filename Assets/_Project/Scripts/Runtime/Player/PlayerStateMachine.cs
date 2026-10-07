@@ -53,6 +53,12 @@ namespace StateMachine
         /// <summary>Share of walk speed while creeping. 5 m/s * 0.4 = 2 m/s, under the 2.2 m/s crouch band of FootstepNoiseEmitter.</summary>
         public const float CreepPace = 0.4f;
 
+        /// <summary>Walk pace while the grimoire is open (#325): reading takes both hands.</summary>
+        public const float ReadingPace = 0.6f;
+
+        /// <summary>True while this machine's player has the grimoire open. Only ever set on the local body.</summary>
+        public bool ReadingGrimoire { get; private set; }
+
         [SerializeField] private Rigidbody _rb;
         public Rigidbody Rb { get => _rb; set => _rb = value; }
 
@@ -206,6 +212,7 @@ namespace StateMachine
 
             Plunderspell.Core.GameServices.Initialize();
             Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (Plunderspell.Core.GameStateChanged e) => OnGameStateChanged(e.Previous, e.Current));
+            Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (GrimoireOpened e) => ReadingGrimoire = e.Open && IsLocal);
             PublishHealth();
         }
 
