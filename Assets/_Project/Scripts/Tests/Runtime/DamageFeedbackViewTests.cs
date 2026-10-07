@@ -1,3 +1,6 @@
+// Headless harness only: these tests step the harness's simulated clock (Time.Reset/Advance), which
+// Unity's Time does not have, and the allocation check measures the harness, not the Editor's Mono.
+#if HEADLESS
 using System.Reflection;
 using Interfaces;
 using NUnit.Framework;
@@ -73,3 +76,4 @@ namespace Plunderspell.Tests
         }
     }
 }
+#endif
