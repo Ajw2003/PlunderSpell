@@ -19,6 +19,14 @@ namespace Plunderspell.Lair
         public BankedGoldChanged(float gold) { Gold = gold; }
     }
 
+    /// <summary>The coins in one wizard's purse (the seat's strongbox) changed.</summary>
+    public readonly struct PurseChanged : IEvent
+    {
+        public readonly int Seat;
+        public readonly int Coins;
+        public PurseChanged(int seat, int coins) { Seat = seat; Coins = coins; }
+    }
+
     /// <summary>A different save slot was made active and loaded (the Lair's floor pile follows it).</summary>
     public readonly struct SaveSlotLoaded : IEvent
     {

@@ -33,8 +33,9 @@ namespace Plunderspell.EditorTools
             Place(root, "LairCandle", new Vector3(Table.x + 1.0f, Table.y + 0.25f, Floor + 0.80f), Vector3.zero);
             Place(root, "LairCenturyDialStand", new Vector3(Dial.x, Dial.y, Floor), Vector3.zero);
             Place(root, "LairWeaponRack", new Vector3(-4.2f, 4.7f, Floor), Vector3.zero);
-            foreach (float dx in new[] { -1.05f, -0.35f, 0.35f, 1.05f })
-                Place(root, "LairStrongbox", new Vector3(Table.x + dx, Table.y - 0.62f, Floor), Vector3.zero);
+            var boxOffsets = new[] { -1.05f, -0.35f, 0.35f, 1.05f };
+            for (int seat = 0; seat < boxOffsets.Length; seat++)
+                AddStrongboxLid(Place(root, "LairStrongbox", new Vector3(Table.x + boxOffsets[seat], Table.y - 0.62f, Floor), Vector3.zero), seat);
 
             // The dial's rings turn, so they get no collider and sit inside the stand's own reach.
             var ringTilts = new[]
@@ -131,7 +132,27 @@ namespace Plunderspell.EditorTools
             }
         }
 
-        private static void Place(GameObject root, string model, Vector3 blenderPosition, Vector3 blenderDegrees,
+        /// <summary>
+        /// The box's lid is a trigger slab over its top (a hand's breadth into the box to a third of a metre above it): a
+        /// coin pouch let go in it is banked into this seat's purse (<see cref="Plunderspell.Raid.LairStrongbox"/>).
+        /// The slot is unturned under an unturned root, so the model's world bounds are its bounds in the slot's axes.
+        /// </summary>
+        private static void AddStrongboxLid(GameObject slot, int seat)
+        {
+            Bounds bounds = slot.GetComponentInChildren<Renderer>().bounds;
+            foreach (Renderer part in slot.GetComponentsInChildren<Renderer>())
+                bounds.Encapsulate(part.bounds);
+
+            var lid = new GameObject($"StrongboxLid{seat + 1}");
+            lid.transform.SetParent(slot.transform, false);
+            lid.transform.position = new Vector3(bounds.center.x, bounds.max.y + 0.1f, bounds.center.z);
+            var trigger = lid.AddComponent<BoxCollider>();
+            trigger.isTrigger = true;
+            trigger.size = new Vector3(bounds.size.x, 0.5f, bounds.size.z);
+            lid.AddComponent<Plunderspell.Raid.LairStrongbox>().SetSeat(seat);
+        }
+
+        private static GameObject Place(GameObject root, string model, Vector3 blenderPosition, Vector3 blenderDegrees,
             bool withCollider = true) =>
             BlenderPlacement.PlaceModel(root.transform, $"{ModelDirectory}/{model}.fbx", blenderPosition, blenderDegrees,
                 withCollider);

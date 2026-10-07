@@ -173,9 +173,16 @@ namespace Plunderspell.EditorTools
 
             AddLip(counter, bounds, offset);
 
-            // A scene network object, so the server owns the haggle and the client's word reaches it (NetworkPrefabs is untouched).
+            // A scene network object, so the server owns the haggle and the client's word reaches it. A sale puts a network-spawned CoinPouch prefab on it.
             counter.AddComponent<PurrNet.NetworkIdentity>();
-            counter.AddComponent<SellCounter>().Set(vendor, zone, figure.GetComponent<Renderer>(), mesh);
+            var sellCounter = counter.AddComponent<SellCounter>();
+            sellCounter.Set(vendor, zone, figure.GetComponent<Renderer>(), mesh);
+            var pouch = AssetDatabase.LoadAssetAtPath<GameObject>(CoinPouchForge.PrefabPath);
+            if (pouch == null)
+                Debug.LogError($"[Market] No {CoinPouchForge.PrefabPath}; build the coin pouch first, or {counter.name} sells for nothing.");
+            var counterObject = new SerializedObject(sellCounter);
+            counterObject.FindProperty("_pouchPrefab").objectReferenceValue = pouch != null ? pouch.GetComponent<CoinPouch>() : null;
+            counterObject.ApplyModifiedPropertiesWithoutUndo();
         }
 
         /// <summary>A 4 cm rim round the counter top, so a piece set down near the edge stays on it.</summary>

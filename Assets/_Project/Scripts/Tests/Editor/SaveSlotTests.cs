@@ -17,6 +17,7 @@ namespace Plunderspell.Tests.Editor
             "TotalDebt", "AccumulatedGold", "SelectedEra",
             "Slot2.TotalDebt", "Slot2.AccumulatedGold", "Slot2.SelectedEra",
             "Slot3.TotalDebt", "Slot3.AccumulatedGold", "Slot3.SelectedEra",
+            "Slot2.Purse0", "Slot2.Purse3", "Slot3.Purse0", "Slot3.Purse3",
         };
 
         [Test]
@@ -42,7 +43,7 @@ namespace Plunderspell.Tests.Editor
             {
                 string key = s_keys[i];
                 _saved[i] = !PlayerPrefs.HasKey(key) ? null
-                    : key.EndsWith("Era") || key == "Save.ActiveSlot" ? "i" + PlayerPrefs.GetInt(key)
+                    : key.EndsWith("Era") || key.Contains("Purse") || key == "Save.ActiveSlot" ? "i" + PlayerPrefs.GetInt(key)
                     : "f" + PlayerPrefs.GetFloat(key).ToString("R");
             }
         }
@@ -103,6 +104,32 @@ namespace Plunderspell.Tests.Editor
             LairHubManager.ResetSlot(2);
             Assert.IsFalse(LairHubManager.HasSave(2));
             Assert.AreEqual(500f, LairHubManager.Peek(2).TotalDebt, 0.01f, "A reset slot is a new campaign.");
+        }
+
+        [Test]
+        public void Test_PursesAreSavedPerSlot()
+        {
+            LairHubManager.ResetSlot(2);
+            LairHubManager.ResetSlot(3);
+            _host = new GameObject("Lair");
+            var lair = _host.AddComponent<LairHubManager>();
+
+            lair.LoadSlot(2);
+            lair.BankPouch(0, 40);
+            lair.BankPouch(3, 25);
+            lair.BankPouch(3, 5);
+            Assert.AreEqual(40, LairHubManager.PeekPurse(2, 0));
+            Assert.AreEqual(30, LairHubManager.PeekPurse(2, 3));
+            Assert.AreEqual(0, LairHubManager.PeekPurse(3, 0), "Another slot has its own purses.");
+
+            lair.LoadSlot(3);
+            Assert.AreEqual(0, lair.Purse(3), "Loading another slot shows its purses.");
+            lair.LoadSlot(2);
+            Assert.AreEqual(40, lair.Purse(0));
+            Assert.AreEqual(30, lair.Purse(3));
+
+            LairHubManager.ResetSlot(2);
+            Assert.AreEqual(0, LairHubManager.PeekPurse(2, 3), "A reset slot is a new campaign with empty purses.");
         }
 
         [Test]

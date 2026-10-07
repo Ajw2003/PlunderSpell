@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Code.Scripts.EventSystems;
-using Plunderspell.Lair;
 using Plunderspell.Loot;
 using Plunderspell.Market;
 using PurrNet;
@@ -23,6 +22,8 @@ namespace Plunderspell.Raid
         [SerializeField] private TextMesh _subtitle;
         [Tooltip("How close the local player must stand to answer, in metres.")]
         [SerializeField] private float _reach = 3f;
+        [Tooltip("The coin pouch a sale puts on the counter.")]
+        [SerializeField] private CoinPouch _pouchPrefab;
 
         private const float RestingSpeed = 0.2f;
         private const float LineSeconds = 6f;
@@ -249,12 +250,25 @@ namespace Plunderspell.Raid
 
         private void Sell(GameObject piece, int coins)
         {
-            FindFirstObjectByType<LairHubManager>()?.BankSale(coins);
+            PutPouchOnCounter(coins);
             // Out of the pile first so its save drops the piece, then out of any raid spawner's list.
             FindFirstObjectByType<HaulLanding>()?.Remove(piece);
             foreach (LootSpawner spawner in FindObjectsByType<LootSpawner>(FindObjectsSortMode.None))
                 spawner.Remove(piece);
             Destroy(piece); // on a spawned piece the server's destroy despawns it for every client
+        }
+
+        // The coins come as a pouch, banked only when someone carries it to a strongbox (LairStrongbox).
+        private void PutPouchOnCounter(int coins)
+        {
+            if (_pouchPrefab == null)
+            {
+                Debug.LogWarning($"[Market] {name} has no pouch prefab, so the {coins} coins of this sale are lost.");
+                return;
+            }
+            Vector3 at = _top.bounds.center + Vector3.up * 0.15f;
+            CoinPouch pouch = Instantiate(_pouchPrefab, at, _pouchPrefab.transform.rotation);
+            pouch.Fill(coins);
         }
 
         private void Say(string line)
