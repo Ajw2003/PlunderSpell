@@ -1,5 +1,13 @@
 # Today
 
+**2026-10-07 - handoff to a local session with Unity.** `claude/staging-2026-10-07` holds everything finished in
+the cloud session (#285, #288, #290-#296). Unity has not compiled it since the `Time.Reset/Advance` test fix
+(`7edf7559`). Next, on aj's PC: compile and test staging in Unity, do the Unity-only checks each PR names, then move
+the HUD onto events (`docs/plans/ui-events-mvc.md`, two decisions waiting on aj). Everything a local agent needs:
+`docs/plans/handoff-2026-10-07-staging-and-ui-events.md`.
+
+---
+
 **2026-10-06 - guard voices on the new guards (#280).** On `claude/project-thread-x1cqae`. Nine voice commits from
 `claude/voice-mimicry-improvements-7a0b29` cherry-picked (not the mimic prototype); the director follows `Guard`. Every Age
 logged its own `[GuardSpeech]` lines; details in `docs/4-systems/audio.md`.
