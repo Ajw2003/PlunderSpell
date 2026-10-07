@@ -23,6 +23,7 @@ namespace Plunderspell.UI
         private static readonly Vector2 Centre = new Vector2(190f, 800f);
 
         private RaidHudPresenter _presenter;
+        private float _scale = 1f;
         private GUIStyle _label;
         private Texture2D _white;
         private readonly string[] _minuteText = new string[61];
@@ -61,6 +62,7 @@ namespace Plunderspell.UI
                 return;
 
             EnsureStyles();
+            _scale = scale;
             Matrix4x4 previous = GUI.matrix;
             GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(scale, scale, 1f));
             Draw(model);
@@ -98,7 +100,7 @@ namespace Plunderspell.UI
         private void DrawTick(int index, Color colour)
         {
             Matrix4x4 saved = GUI.matrix;
-            GUIUtility.RotateAroundPivot(index * (360f / Ticks), Centre);
+            GUIUtility.RotateAroundPivot(index * (360f / Ticks), Centre * _scale); // the pivot is in screen pixels, before the layout scale
             Fill(new Rect(Centre.x - 1.5f, Centre.y - Radius, 3f, TickLength), colour);
             GUI.matrix = saved;
         }
@@ -106,7 +108,7 @@ namespace Plunderspell.UI
         private void DrawHand(int lit, Color colour)
         {
             Matrix4x4 saved = GUI.matrix;
-            GUIUtility.RotateAroundPivot(lit * (360f / Ticks), Centre);
+            GUIUtility.RotateAroundPivot(lit * (360f / Ticks), Centre * _scale);
             Fill(new Rect(Centre.x - 1f, Centre.y - (Radius - TickLength - 6f), 2f, Radius - TickLength - 6f), colour);
             GUI.matrix = saved;
             Fill(new Rect(Centre.x - 3f, Centre.y - 3f, 6f, 6f), colour);

@@ -32,14 +32,14 @@ namespace Plunderspell.UI
 
         private static readonly string[] KeyLines =
         {
-            "Hold [V]    open the microphone and say a word",
-            "Press 1 to 8   cast without a microphone",
-            "Shift shout  ·  Ctrl whisper  ·  C creep",
-            "[E] use or lift   ·   [Q] drop",
-            "Hold [RMB] aim, [G] fire a held crossbow",
-            "Hold [T]    the pocket watch",
-            "Hold [Tab]  this book. Reading takes both hands:",
-            "you walk slower and cannot lift anything.",
+            "Hold [V]   open the mic, say a word",
+            "Press 1-8  cast without a mic",
+            "Shift shout · Ctrl whisper · C creep",
+            "[E] use or lift  ·  [Q] drop",
+            "Hold [RMB] aim, [G] fire a crossbow",
+            "Hold [T]   the pocket watch",
+            "Hold [Tab] this book: both hands busy,",
+            "so you walk slower and cannot lift.",
         };
 
         private RaidHudPresenter _presenter;
