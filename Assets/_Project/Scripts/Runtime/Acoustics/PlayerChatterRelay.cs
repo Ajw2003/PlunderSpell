@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using Plunderspell.Core;
 using Plunderspell.Voice;
@@ -98,7 +99,7 @@ namespace Plunderspell.Acoustics
             }
 
             _source.ChatterHeard += HandleChatter;
-            AudioInputSettings.GuardsHearChatterChanged += HandleSettingChanged;
+            EventManager.Instance?.Subscribe(this, (GuardsHearChatterChanged e) => HandleSettingChanged(e.Enabled));
             _source.ChatterEnabled = AudioInputSettings.GuardsHearChatter;
             _subscribed = true;
         }
@@ -109,7 +110,7 @@ namespace Plunderspell.Acoustics
                 return;
             _subscribed = false;
             _source.ChatterHeard -= HandleChatter;
-            AudioInputSettings.GuardsHearChatterChanged -= HandleSettingChanged;
+            EventManager.Instance?.Unsubscribe<GuardsHearChatterChanged>(this);
             _source.ChatterEnabled = false;
         }
 

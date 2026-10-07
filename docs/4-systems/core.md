@@ -20,6 +20,15 @@ paid for everywhere — keep it small.
   the listener holds. `SubscriptionCount(target)` and `TotalSubscriptionCount` let a test prove a closed screen
   left nothing listening. Every subscriber unsubscribes when it closes, changes state, is disabled or the game
   quits (owner's rule, `docs/6-decisions/Decisions.md`, 2026-10-06).
+- **Game-flow events (#300).** These are `IEvent` structs on the bus, not C# events: `GameStateChanged`,
+  `PlayerStatsChanged`, `ExtractionStarted/Cancelled/Completed/Progress`, `MicrophoneChanged`,
+  `GuardsHearChatterChanged`, `CoopChanged`, `LocalPlayerDied` (`Runtime/Core/GameFlow/GameFlowEvents.cs`);
+  `PortalOpened`, `RaidPhaseChanged`, `RaidResolved` (`Raid/RaidEvents.cs`); `ExtractionResolved`,
+  `HaulInZoneChanged` (`Extraction/ExtractionEvents.cs`); `RaidContextPublished` (`Inventory/RaidContextEvents.cs`).
+  The sources (`GameStateManager`, `PlayerStats`, `ExtractionController`, `AudioInputSettings`, `CoopSession`,
+  `RaidDirector`, `ExtractionZone`, `RaidContext`) publish with `EventManager.Instance?.Publish`, so with no bus
+  (an Edit Mode test that never made one) nothing is delivered; `TestEventBus.Create()` makes one. Events carry
+  the new values, but a view that needs more reads the source (`GameServices.PlayerStats`, `GameServices.Coop`).
 - **`BaseStateMachine` / `IState` / `PlayerState`** — `Enter`/`Update`/`Exit`/`FixedUpdate`. States
   are plain C# objects constructed once in `Awake`, not MonoBehaviours, which keeps their logic
   testable without a scene.

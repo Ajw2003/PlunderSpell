@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using Plunderspell.Lair;
 using UnityEngine;
@@ -178,11 +179,8 @@ namespace Plunderspell.UI.Screens
 
         protected override void OnShown()
         {
-            if (GameServices.Coop != null)
-            {
-                GameServices.Coop.Changed -= RefreshStatus;
-                GameServices.Coop.Changed += RefreshStatus;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            EventManager.Instance?.Subscribe(this, (CoopChanged e) => RefreshStatus());
             RefreshStatus();
             _resetArmed = false;
             RefreshSaveLabel();

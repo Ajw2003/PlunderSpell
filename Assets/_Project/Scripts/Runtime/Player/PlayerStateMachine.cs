@@ -205,7 +205,7 @@ namespace StateMachine
                 Local = this;
 
             Plunderspell.Core.GameServices.Initialize();
-            Plunderspell.Core.GameServices.GameState.StateChanged += OnGameStateChanged;
+            Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (Plunderspell.Core.GameStateChanged e) => OnGameStateChanged(e.Previous, e.Current));
             PublishHealth();
         }
 
@@ -238,9 +238,6 @@ namespace StateMachine
         /// </summary>
         public static System.Func<bool> SpectateOnDeath = () => false;
 
-        /// <summary>Raised when the local player dies. The raid treats it as a lost raid.</summary>
-        public static event System.Action LocalPlayerDied;
-
         public bool IsLocal => Local == this;
 
         /// <summary>Makes this body the one this machine plays as. Called by the network ownership
@@ -268,7 +265,7 @@ namespace StateMachine
             if (IsLocal)
             {
                 bool spectate = SpectateOnDeath();
-                LocalPlayerDied?.Invoke();
+                Code.Scripts.EventSystems.EventManager.Instance?.Publish(new Plunderspell.Core.LocalPlayerDied());
                 // In co-op with a teammate still standing, the network layer hands the view to them
                 // and ends the raid only when everyone is down; otherwise this is a lost raid now.
                 if (!spectate && Plunderspell.Core.GameServices.GameState != null)
@@ -293,8 +290,7 @@ namespace StateMachine
 
         private void OnDestroy()
         {
-            if (Plunderspell.Core.GameServices.GameState != null)
-                Plunderspell.Core.GameServices.GameState.StateChanged -= OnGameStateChanged;
+            Code.Scripts.EventSystems.EventManager.Instance?.UnsubscribeFromAllEvents(this);
             if (Local == this)
                 Local = null;
         }

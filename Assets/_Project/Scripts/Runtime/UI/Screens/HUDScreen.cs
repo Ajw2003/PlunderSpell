@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,27 +92,21 @@ namespace Plunderspell.UI.Screens
         protected override void OnShown()
         {
             RefreshStats();
-            GameServices.PlayerStats.StatsChanged += RefreshStats;
-            GameServices.Extraction.ExtractionStarted += OnExtractionStarted;
-            GameServices.Extraction.ExtractionCancelled += OnExtractionEnded;
-            GameServices.Extraction.ExtractionCompleted += OnExtractionEnded;
-            GameServices.Extraction.ExtractionProgress += OnExtractionProgress;
+            EventManager bus = EventManager.Instance;
+            if (bus == null)
+                return;
+
+            bus.UnsubscribeFromAllEvents(this);
+            bus.Subscribe(this, (PlayerStatsChanged e) => RefreshStats());
+            bus.Subscribe(this, (ExtractionStarted e) => OnExtractionStarted());
+            bus.Subscribe(this, (ExtractionCancelled e) => OnExtractionEnded());
+            bus.Subscribe(this, (ExtractionCompleted e) => OnExtractionEnded());
+            bus.Subscribe(this, (ExtractionProgress e) => OnExtractionProgress(e.Progress));
         }
 
         private void OnDisable()
         {
-            if (GameServices.PlayerStats != null)
-            {
-                GameServices.PlayerStats.StatsChanged -= RefreshStats;
-            }
-
-            if (GameServices.Extraction != null)
-            {
-                GameServices.Extraction.ExtractionStarted -= OnExtractionStarted;
-                GameServices.Extraction.ExtractionCancelled -= OnExtractionEnded;
-                GameServices.Extraction.ExtractionCompleted -= OnExtractionEnded;
-                GameServices.Extraction.ExtractionProgress -= OnExtractionProgress;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private void RefreshStats()

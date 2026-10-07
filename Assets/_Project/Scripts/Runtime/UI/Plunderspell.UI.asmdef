@@ -2,6 +2,7 @@
     "name": "Plunderspell.UI",
     "rootNamespace": "Plunderspell.UI",
     "references": [
+        "Plunderspell.Foundation",
         "Plunderspell.Core",
         "Unity.InputSystem",
         "Plunderspell.Lair",

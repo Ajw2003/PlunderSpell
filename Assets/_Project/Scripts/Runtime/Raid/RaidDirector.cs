@@ -1,4 +1,5 @@
 using System;
+using Code.Scripts.EventSystems;
 using Interfaces;
 using PurrNet;
 using Plunderspell.Alarm;
@@ -111,18 +112,6 @@ namespace Plunderspell.Raid
         /// arriving does not start the leaving countdown.
         /// </summary>
         public const float PlayerRingRadius = 3.5f;
-
-        /// <summary>
-        /// Raised on every peer once the portal stands for a raid, with the floor point under it.
-        /// The portal's light and glow listen for it.
-        /// </summary>
-        public event Action<Vector3> PortalOpened;
-
-        /// <summary>Raised on every phase change. HUD and scene loading subscribe.</summary>
-        public event Action<RaidPhase> PhaseChanged;
-
-        /// <summary>Raised when a raid resolves: (worth extracted, players saved).</summary>
-        public event Action<float, int> RaidResolved;
 
         private bool _subscribedToZone;
 
@@ -354,7 +343,7 @@ namespace Plunderspell.Raid
             // to guards for the rest of the session.
 
             SetPhase(RaidPhase.Resolved);
-            RaidResolved?.Invoke(worthExtracted, playersSaved);
+            EventManager.Instance?.Publish(new RaidResolved(worthExtracted, playersSaved));
         }
 
         /// <summary>
@@ -510,7 +499,7 @@ namespace Plunderspell.Raid
             var floorPoint = new Vector3(ArrivalPoint.x, feet, ArrivalPoint.z);
             if (_extractionZone != null)
                 _extractionZone.PlaceAsPortal(floorPoint);
-            PortalOpened?.Invoke(floorPoint);
+            EventManager.Instance?.Publish(new PortalOpened(floorPoint));
         }
 
         /// <summary>Puts the invisible boundary round the castle just built.</summary>
@@ -549,7 +538,7 @@ namespace Plunderspell.Raid
                 // A client only mirrors the summary; the server owns the economy.
                 LastWorthExtracted = worth;
                 LastPlayersSaved = saved;
-                RaidResolved?.Invoke(worth, saved);
+                EventManager.Instance?.Publish(new RaidResolved(worth, saved));
                 return;
             }
 
@@ -560,7 +549,7 @@ namespace Plunderspell.Raid
         {
             if (_subscribedToZone || _extractionZone == null)
                 return;
-            _extractionZone.ExtractionResolved += OnExtractionResolved;
+            EventManager.Instance?.Subscribe(this, (ExtractionResolved e) => OnExtractionResolved(e.Worth, e.Saved));
             _subscribedToZone = true;
         }
 
@@ -568,7 +557,7 @@ namespace Plunderspell.Raid
         {
             if (!_subscribedToZone || _extractionZone == null)
                 return;
-            _extractionZone.ExtractionResolved -= OnExtractionResolved;
+            EventManager.Instance?.Unsubscribe<ExtractionResolved>(this);
             _subscribedToZone = false;
         }
 
@@ -577,7 +566,7 @@ namespace Plunderspell.Raid
             if (_phase.value == phase)
                 return;
             _phase.value = phase;
-            PhaseChanged?.Invoke(phase);
+            EventManager.Instance?.Publish(new RaidPhaseChanged(phase));
         }
 
         /// <summary>
@@ -635,7 +624,7 @@ namespace Plunderspell.Raid
                 Castle = null;
             }
 
-            PhaseChanged?.Invoke(phase);
+            EventManager.Instance?.Publish(new RaidPhaseChanged(phase));
         }
 
         /// <summary>

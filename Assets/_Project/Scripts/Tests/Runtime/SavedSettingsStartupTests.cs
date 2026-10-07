@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections;
 using NUnit.Framework;
 using Plunderspell.Atmosphere;
@@ -117,11 +118,10 @@ namespace Plunderspell.Tests
         {
             string before = AudioInputSettings.Microphone;
             var heard = new System.Collections.Generic.List<string>();
-            void Record(string name) => heard.Add(name);
             try
             {
                 AudioInputSettings.Microphone = "Mic A";
-                AudioInputSettings.MicrophoneChanged += Record;
+                EventManager.Instance.Subscribe(this, (MicrophoneChanged e) => heard.Add(e.Device));
                 AudioInputSettings.Microphone = "Mic B";
                 AudioInputSettings.Microphone = "Mic B";
                 Assert.AreEqual(new[] { "Mic B" }, heard.ToArray(), "one event, none for the same value");
@@ -129,7 +129,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                AudioInputSettings.MicrophoneChanged -= Record;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
                 AudioInputSettings.Microphone = before;
             }
         }

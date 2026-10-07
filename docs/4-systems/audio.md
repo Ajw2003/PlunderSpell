@@ -65,10 +65,10 @@ warning bell. Those run the same `Play` path, but nothing has shown them reachin
 | A door opens or closes | `CastleDoor.OpenStateChanged` | `sfx_door_wood_open`, `sfx_door_wood_close` | SFX/World |
 | A piece of loot is ruined | `LootValue.Ruined` | `phys_break_ceramic` | SFX/World |
 | The alarm rises | `AlarmFSMManager.AlarmStateChanged` | `sting_alarm_<stirred, roused, huecry>_<age>` | Music |
-| The portal opens | `RaidDirector.PortalOpened` | `sting_portal_opened` | Music |
+| The portal opens | `PortalOpened` event | `sting_portal_opened` | Music |
 | Time runs low | `ExtractionZone.TimeRemaining` at 120, 60 and 30 s | `sting_portal_warning`, variant 1, 2, 3 | Music |
-| An item enters the extraction zone | `ExtractionZone.HaulInZoneChanged` (count rose) | `sfx_extract_item_cross` | UI |
-| Extraction resolves with someone saved | `ExtractionZone.ExtractionResolved` | `sting_extract_success` | Music |
+| An item enters the extraction zone | `HaulInZoneChanged` event (count rose) | `sfx_extract_item_cross` | UI |
+| Extraction resolves with someone saved | `ExtractionResolved` event | `sting_extract_success` | Music |
 
 The portal warning is armed only after the timer has been seen above 120 s in a raid, so a stale zero
 never rings it. 
@@ -478,7 +478,7 @@ Everything the plan put out of scope, and every sound in the M7 set that has no 
 
 - `Guard.StateChanged` (`Guards/Core/Guard.cs`) is raised on each peer when the replicated state changes;
   guard voices read the replicated state. (The legacy `CastleGuard.StateChanged` was host-only; that file is deleted.)
-- `PlayerStateMachine.LocalPlayerDied`, `RangedWeapon.Fired`, `PlayerStateMachine.SlamLanded`,
+- The `LocalPlayerDied` event, `RangedWeapon.Fired`, `PlayerStateMachine.SlamLanded`,
   `GoldConjured` and `GoldScattered` exist and are unused. `sting_player_down` is built into the names
   class but nothing plays it.
 

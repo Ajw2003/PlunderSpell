@@ -11,7 +11,7 @@ Assemblies: `Plunderspell.Raid` (loop, spawning), `Plunderspell.Guards` (the gar
 - **`RaidDirector`** owns the loop and the phase (`InLair` / `Generating` / `Raiding` /
   `Extracting` / `Resolved`). `StartRaid(era)` re-arms the extraction zone, rolls a seed, builds a
   castle, plans and spawns the haul and the garrison, resets the alarm and starts the clock.
-  `CallExtraction()` ends it early; the zone's tally comes back through `ExtractionResolved`, which
+  `CallExtraction()` ends it early; the zone's tally comes back through the `ExtractionResolved` event, which
   banks the worth against the debt.
 
 - **One seed drives the whole raid.** It is chosen on the server, replicated by
@@ -75,7 +75,7 @@ by the gatehouse, and nothing exists outside the curtain wall.
   Every peer derives the same point from the seed, so nothing new is networked.
 - **The portal is the `ExtractionZone`.** `RaidDirector.OpenPortal` (`RaidDirector.cs:441`) calls
   `ExtractionZone.PlaceAsPortal` (`ExtractionZone.cs:90`), which moves the zone to the arrival and
-  shrinks its trigger to 4 × 4 × 4 m. `RaidDirector.PortalOpened` fires with the floor point.
+  shrinks its trigger to 4 × 4 × 4 m. The `PortalOpened` event is published with the floor point.
 - **Players ring it.** Each stands `RaidDirector.PlayerRingRadius` (3.5 m, `RaidDirector.cs:107`)
   from its centre by owner number, outside the trigger, facing it (`PlayerStateMachine.FaceYaw`),
   except on the curtain strip, where they face the entrance (`RaidDirector.FacingTarget`).
@@ -147,7 +147,7 @@ through it, so there is one place this can be forgotten rather than five.
 
 ### The haul is visible while the raid runs
 
-`ExtractionZone` tracks `LootValue` in its trigger and raises `HaulInZoneChanged(worth, pieces)` as
+`ExtractionZone` tracks `LootValue` in its trigger and publishes `HaulInZoneChanged(worth, pieces)` as
 loot enters and leaves. `RaidHudPresenter` reads `WorthInZone`/`PiecesInZone` into the model and the
 view draws it beside the debt — the number the debt is measured against. An empty pad reads
 "bring loot to the pad" rather than "0 gold", because a zero looks like a broken counter.

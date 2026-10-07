@@ -285,7 +285,7 @@ The raid no longer starts on scene load. The flow is
   directly. Set Out moves to `GameState.Playing`.
 - `RaidBootstrapper` listens for that transition and calls `RaidDirector.StartRaid()`, taking the
   era from the lair. It ignores Paused -> Playing, which are returns, not departures.
-- When `RaidDirector.RaidResolved` fires, the bootstrapper puts the game back in `GameState.Lair`
+- When the `RaidResolved` event is published, the bootstrapper puts the game back in `GameState.Lair`
   so the takings land against the debt.
 - `_autoStart` still exists on `RaidBootstrapper` but defaults to **false**. Turn it on to skip the
   menu while iterating on the raid itself.

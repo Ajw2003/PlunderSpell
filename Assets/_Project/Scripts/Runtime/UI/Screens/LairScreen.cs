@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using Plunderspell.Inventory;
 using Plunderspell.Lair;
@@ -233,13 +234,12 @@ namespace Plunderspell.UI.Screens
         /// <summary>Refreshed every time the screen appears, so it reflects the raid just finished.</summary>
         protected override void OnShown()
         {
-            if (GameServices.Coop != null)
-            {
-                GameServices.Coop.Changed -= Refresh;
-                GameServices.Coop.Changed += Refresh;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            EventManager.Instance?.Subscribe(this, (CoopChanged e) => Refresh());
             Refresh();
         }
+
+        private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
 
         /// <summary>
         /// Steam's own invite dialog when its overlay is hooked in; otherwise (a build started outside

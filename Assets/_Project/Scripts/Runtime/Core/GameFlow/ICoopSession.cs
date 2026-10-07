@@ -17,8 +17,7 @@ namespace Plunderspell.Core
         /// <summary>True while hosting a Steam lobby that friends can be invited to.</summary>
         bool CanInvite { get; }
 
-        /// <summary>Raised whenever <see cref="Status"/> or the flags above change.</summary>
-        event System.Action Changed;
+        // A change to Status or the flags above is published as a CoopChanged event on EventManager.
 
         /// <summary>Starts a session only this machine can join.</summary>
         void PlaySolo();

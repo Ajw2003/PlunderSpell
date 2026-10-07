@@ -1,4 +1,4 @@
-using System;
+using Code.Scripts.EventSystems;
 
 namespace Plunderspell.Core
 {
@@ -7,8 +7,6 @@ namespace Plunderspell.Core
     {
         public GameState CurrentState { get; private set; } = GameState.MainMenu;
         public GameState PreviousState { get; private set; } = GameState.MainMenu;
-
-        public event Action<GameState, GameState> StateChanged;
 
         public void ChangeState(GameState next)
         {
@@ -19,7 +17,7 @@ namespace Plunderspell.Core
 
             PreviousState = CurrentState;
             CurrentState = next;
-            StateChanged?.Invoke(PreviousState, CurrentState);
+            EventManager.Instance?.Publish(new GameStateChanged(PreviousState, CurrentState));
         }
     }
 }

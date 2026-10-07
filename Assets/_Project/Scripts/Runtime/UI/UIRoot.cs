@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using Plunderspell.UI.Screens;
 using UnityEngine;
@@ -31,7 +32,7 @@ namespace Plunderspell.UI
             backdrop.transform.SetParent(transform, false);
             backdrop.AddComponent<BackdropCamera>();
 
-            GameServices.GameState.StateChanged += OnStateChanged;
+            EventManager.Instance?.Subscribe(this, (GameStateChanged e) => ApplyState(e.Current));
         }
 
         private void Start()
@@ -41,10 +42,7 @@ namespace Plunderspell.UI
 
         private void OnDestroy()
         {
-            if (GameServices.GameState != null)
-            {
-                GameServices.GameState.StateChanged -= OnStateChanged;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private static T BuildScreen<T>(Transform parent, string name) where T : UIScreen
@@ -61,11 +59,6 @@ namespace Plunderspell.UI
             var screen = go.AddComponent<T>();
             screen.Build();
             return screen;
-        }
-
-        private void OnStateChanged(GameState previous, GameState next)
-        {
-            ApplyState(next);
         }
 
         private void ApplyState(GameState state)

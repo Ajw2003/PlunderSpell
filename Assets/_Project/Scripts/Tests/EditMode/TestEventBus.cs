@@ -2,14 +2,14 @@ using System.Reflection;
 using Code.Scripts.EventSystems;
 using UnityEngine;
 
-namespace Plunderspell.Tests.Editor
+namespace Plunderspell.Tests.EditMode
 {
     /// <summary>
     /// A shared <see cref="EventManager"/> for Edit Mode tests. Edit Mode never runs Awake, so nothing sets
     /// <c>EventManager.Instance</c>; this runs Awake and OnDestroy by hand so director and guard code that
     /// publishes on the shared bus can be tested.
     /// </summary>
-    internal static class TestEventBus
+    public static class TestEventBus
     {
         private const BindingFlags Hidden = BindingFlags.Instance | BindingFlags.NonPublic;
         private static GameObject _owner;
