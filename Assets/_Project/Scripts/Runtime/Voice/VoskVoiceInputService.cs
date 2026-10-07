@@ -34,6 +34,7 @@ namespace Plunderspell.Voice
         public const string ModelRelativePath = "VoskModels/small-en-us";
         private const int SampleRate = 16000;
         private const int MicLoopSeconds = 2;
+        private const int ChunkSamples = 1024; // 64 ms at 16 kHz: fixed read size so buffers are never reallocated
         private const string UnknownToken = "[unk]";
 
         /// <summary>The loudest moment of the last phrase (RMS, 0..1), for a loudness meter or calibration.</summary>
@@ -66,7 +67,7 @@ namespace Plunderspell.Voice
         // thread for ~90 ms on every release of the cast key, and opening it again cost as much on
         // the next press. It is opened once (WarmUp) and closed when the service goes away.
         private int _lastSamplePosition;
-        private float[] _floatBuffer = new float[SampleRate];
+        private float[] _floatBuffer = new float[ChunkSamples];
 
         // The Settings microphone gain, read when the cast key goes down so a change applies to the
         // next cast without a lookup every frame.
@@ -76,7 +77,7 @@ namespace Plunderspell.Voice
         private VoskRecognizer _chatterRecognizer;
         private float _chatterPeakRms;
         private float _chatterGain = 1f;
-        private short[] _shortBuffer = new short[SampleRate];
+        private short[] _shortBuffer = new short[ChunkSamples];
         private MainThreadPump _pump;
 
         public VoskVoiceInputService()
@@ -202,7 +203,7 @@ namespace Plunderspell.Voice
             // Words said just before the key went down are chatter, not part of the spell.
             if (_chatterEnabled)
             {
-                ReadMicrophone();
+                ReadMicrophone(flush: true);
                 FlushChatter();
             }
             // Only what is said from now on: the open microphone has been recording all along.
@@ -225,7 +226,7 @@ namespace Plunderspell.Voice
             IsListening = false;
 #else
             // Take whatever was said right up to the release before closing the mic.
-            ReadMicrophone();
+            ReadMicrophone(flush: true);
             IsListening = false;
 
             try
@@ -359,8 +360,9 @@ namespace Plunderspell.Voice
         }
 
         /// <summary>Feeds every sample recorded since the last call to whichever recogniser owns the
-        /// microphone now: the cast one while the key is held, else the chatter one. Main thread only.</summary>
-        private void ReadMicrophone()
+        /// microphone now: the cast one while the key is held, else the chatter one. Main thread only.
+        /// <paramref name="flush"/> also takes the last part-chunk, for the moments that must hear everything.</summary>
+        private void ReadMicrophone(bool flush = false)
         {
             bool casting = IsListening;
             if (!(casting || _chatterEnabled) || _micClip == null)
@@ -376,37 +378,47 @@ namespace Plunderspell.Voice
             int available = position - _lastSamplePosition;
             if (available < 0)
                 available += _micClip.samples; // wrapped around the loop clip
-            if (available <= 0)
-                return;
 
-            if (_floatBuffer.Length != available)
-                _floatBuffer = new float[available];
-            if (_shortBuffer.Length < available)
-                _shortBuffer = new short[available];
+            // Whole chunks only, so the buffers never change size; the rest waits for the next frame.
+            while (available >= ChunkSamples)
+            {
+                FeedChunk(_floatBuffer, casting);
+                available -= ChunkSamples;
+            }
 
+            // A flush takes everything up to now. Once per cast, so the exact-size array is fine.
+            if (flush && available > 0)
+                FeedChunk(new float[available], casting);
+        }
+
+        /// <summary>Reads <c>buffer.Length</c> samples from the last read position, advances it by that
+        /// much (wrapping the loop clip) and feeds them to the recogniser that owns the microphone.</summary>
+        private void FeedChunk(float[] buffer, bool casting)
+        {
+            int count = buffer.Length;
             // GetData wraps around the end of a looping clip on its own.
-            _micClip.GetData(_floatBuffer, _lastSamplePosition);
-            _lastSamplePosition = position;
+            _micClip.GetData(buffer, _lastSamplePosition);
+            _lastSamplePosition = (_lastSamplePosition + count) % _micClip.samples;
 
             // Gain first, so recognition, loudness and the level meter all hear the same voice.
-            VoiceUtility.ApplyGain(_floatBuffer, available, casting ? _gain : _chatterGain);
-            CurrentRms = VoiceUtility.ComputeRms(_floatBuffer, available);
+            VoiceUtility.ApplyGain(buffer, count, casting ? _gain : _chatterGain);
+            CurrentRms = VoiceUtility.ComputeRms(buffer, count);
             if (casting)
                 LastPeakRms = Mathf.Max(LastPeakRms, CurrentRms);
             else
                 _chatterPeakRms = Mathf.Max(_chatterPeakRms, CurrentRms);
-            for (int i = 0; i < available; i++)
-                _shortBuffer[i] = (short)Mathf.Clamp(_floatBuffer[i] * short.MaxValue, short.MinValue, short.MaxValue);
+            for (int i = 0; i < count; i++)
+                _shortBuffer[i] = (short)Mathf.Clamp(buffer[i] * short.MaxValue, short.MinValue, short.MaxValue);
 
             try
             {
                 // True means the recogniser found the end of an utterance: emit it now.
                 if (casting)
                 {
-                    if (_recognizer.AcceptWaveform(_shortBuffer, available))
+                    if (_recognizer.AcceptWaveform(_shortBuffer, count))
                         EmitFromJson(_recognizer.Result());
                 }
-                else if (_chatterRecognizer.AcceptWaveform(_shortBuffer, available))
+                else if (_chatterRecognizer.AcceptWaveform(_shortBuffer, count))
                 {
                     EmitChatter(_chatterRecognizer.Result());
                 }
