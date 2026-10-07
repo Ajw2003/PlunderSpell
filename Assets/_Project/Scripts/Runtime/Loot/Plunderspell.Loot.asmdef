@@ -6,6 +6,7 @@
         "Plunderspell.Foundation",
         "Plunderspell.Acoustics",
         "Plunderspell.Player",
+        "Unity.InputSystem",
         "Plunderspell.Items",
         "Plunderspell.Market"
     ],

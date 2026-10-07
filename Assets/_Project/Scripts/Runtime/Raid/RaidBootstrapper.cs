@@ -1,3 +1,4 @@
+using Player;
 using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using Plunderspell.Inventory;
@@ -26,13 +27,6 @@ namespace Plunderspell.Raid
 
         [Tooltip("Seconds to wait before auto-starting, so other components finish waking up.")]
         [SerializeField] private float _startDelay = 0.25f;
-
-        [Header("Playtest keys")]
-        [Tooltip("Calls the extraction — leave now with whatever is inside the zone.")]
-        [SerializeField] private KeyCode _callExtractionKey = KeyCode.F5;
-
-        [Tooltip("Returns to the Lair after a raid resolves, then starts the next one.")]
-        [SerializeField] private KeyCode _nextRaidKey = KeyCode.F6;
 
         private RaidDirector _director;
         private float _elapsed;
@@ -122,10 +116,10 @@ namespace Plunderspell.Raid
                 }
             }
 
-            if (Input.GetKeyDown(_callExtractionKey))
+            if (GameInput.Actions.Debug.CallExtraction.WasPressedThisFrame())
                 _director.CallExtraction();
 
-            if (Input.GetKeyDown(_nextRaidKey))
+            if (GameInput.Actions.Debug.NextRaid.WasPressedThisFrame())
                 StartNextRaid();
         }
 

@@ -1,3 +1,4 @@
+using Player;
 using Code.Scripts.EventSystems;
 using Interfaces;
 using PurrNet;
@@ -24,8 +25,6 @@ namespace Plunderspell.Loot
         [SerializeField] private LayerMask _interactableLayers = ~0;
 
         [Header("Input")]
-        [SerializeField] private KeyCode _interactKey = KeyCode.E;
-        [SerializeField] private KeyCode _dropKey = KeyCode.Q;
 
         [Header("Wiring")]
         [Tooltip("Camera the reach ray is cast from. Falls back to this transform.")]
@@ -61,13 +60,13 @@ namespace Plunderspell.Loot
 
 
 
-            if (Input.GetKeyDown(_interactKey))
+            if (GameInput.Actions.PlayerActions.Interact.WasPressedThisFrame())
             {
                 UpdateFocus();
                 Interact();
             }
 
-            else if (Input.GetKeyDown(_dropKey))
+            else if (GameInput.Actions.PlayerActions.Drop.WasPressedThisFrame())
                 Drop();
         }
 

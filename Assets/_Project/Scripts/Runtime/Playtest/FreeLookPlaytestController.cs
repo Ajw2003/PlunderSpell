@@ -1,3 +1,4 @@
+using Player;
 using Plunderspell.Acoustics;
 using UnityEngine;
 
@@ -23,12 +24,10 @@ namespace Plunderspell.Playtest
 
         [Header("Look")]
         [SerializeField] private float _mouseSensitivity = 2.5f;
+        // The old Mouse X axis was pixel delta times about 0.05; keeps the same feel at the same sensitivity.
+        private const float MouseDeltaToDegrees = 0.05f;
         [SerializeField] private float _maxPitch = 85f;
 
-        [Header("Keys")]
-        [SerializeField] private KeyCode _sprintKey = KeyCode.LeftShift;
-        [SerializeField] private KeyCode _crouchKey = KeyCode.LeftControl;
-        [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
 
         [Header("Noise")]
         [Tooltip("Emits footsteps. Found on this GameObject when left empty.")]
@@ -78,8 +77,9 @@ namespace Plunderspell.Playtest
 
         private void Look()
         {
-            float yaw = Input.GetAxis("Mouse X") * _mouseSensitivity;
-            float pitchDelta = Input.GetAxis("Mouse Y") * _mouseSensitivity;
+            Vector2 mouse = GameInput.Actions.PlayerActions.Look.ReadValue<Vector2>() * MouseDeltaToDegrees;
+            float yaw = mouse.x * _mouseSensitivity;
+            float pitchDelta = mouse.y * _mouseSensitivity;
 
             transform.Rotate(0f, yaw, 0f);
 
@@ -90,9 +90,9 @@ namespace Plunderspell.Playtest
 
         private void UpdateStance()
         {
-            if (Input.GetKey(_crouchKey))
+            if (GameInput.Actions.PlayerActions.Dodge.IsPressed())
                 Stance = MoveStance.Crouch;
-            else if (Input.GetKey(_sprintKey))
+            else if (GameInput.Actions.PlayerActions.Sprint.IsPressed())
                 Stance = MoveStance.Run;
             else
                 Stance = MoveStance.Walk;
@@ -100,8 +100,9 @@ namespace Plunderspell.Playtest
 
         private void Move()
         {
-            Vector3 wish = transform.right * Input.GetAxisRaw("Horizontal") +
-                           transform.forward * Input.GetAxisRaw("Vertical");
+            Vector2 moveInput = GameInput.Actions.PlayerActions.Move.ReadValue<Vector2>();
+            Vector3 wish = transform.right * moveInput.x +
+                           transform.forward * moveInput.y;
             if (wish.sqrMagnitude > 1f)
                 wish = wish.normalized;
 
@@ -112,7 +113,7 @@ namespace Plunderspell.Playtest
             // Horizontal velocity is driven directly; vertical is left to gravity and the jump.
             _body.linearVelocity = new Vector3(target.x, velocity.y, target.z);
 
-            if (Input.GetKey(_jumpKey) && Mathf.Abs(velocity.y) < 0.01f)
+            if (GameInput.Actions.PlayerActions.Jump.IsPressed() && Mathf.Abs(velocity.y) < 0.01f)
                 _body.linearVelocity = new Vector3(target.x, _jumpSpeed, target.z);
 
             AccumulateFootsteps(target, Time.fixedDeltaTime);

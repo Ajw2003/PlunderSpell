@@ -1,3 +1,4 @@
+using Player;
 using Plunderspell.Core;
 using UnityEngine;
 
@@ -9,13 +10,12 @@ namespace Plunderspell.Raid
     /// </summary>
     public class LairLedgerHandle : MonoBehaviour
     {
-        [SerializeField] private KeyCode _openKey = KeyCode.E;
         [Tooltip("How far from the camera the table can be opened, in metres.")]
         [SerializeField] private float _reach = 3f;
 
         private void Update()
         {
-            if (Input.GetKeyDown(_openKey) && IsLookedAt(Camera.main))
+            if (GameInput.Actions.PlayerActions.Interact.WasPressedThisFrame() && IsLookedAt(Camera.main))
                 Open();
         }
 

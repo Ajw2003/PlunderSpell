@@ -1,3 +1,4 @@
+using Player;
 using System.Collections.Generic;
 using Plunderspell.Guards;
 using Plunderspell.Raid;
@@ -26,9 +27,6 @@ namespace Plunderspell.Playtest
         [Tooltip("Hides the panel without disabling spawning, for a clean screenshot.")]
         [SerializeField] private bool m_isPanelVisible = true;
 
-        [Tooltip("Key that shows or hides the panel.")]
-        [SerializeField] private KeyCode m_toggleKey = KeyCode.F1;
-
         private CombatBench m_bench;
         private int m_selectedEnemy;
         private int m_count = 1;
@@ -42,7 +40,7 @@ namespace Plunderspell.Playtest
 
         private void Update()
         {
-            if (Input.GetKeyDown(m_toggleKey))
+            if (GameInput.Actions.Debug.ToggleBenchHud.WasPressedThisFrame())
             {
                 m_isPanelVisible = !m_isPanelVisible;
             }
@@ -60,7 +58,7 @@ namespace Plunderspell.Playtest
                 Mathf.Min(Screen.height - k_PanelMargin * 2f, 420f));
 
             GUILayout.BeginArea(panel, GUI.skin.box);
-            GUILayout.Label($"<b>Combat bench</b>  ({m_toggleKey} hides)", RichLabel());
+            GUILayout.Label($"<b>Combat bench</b>  (F1 hides)", RichLabel());
 
             if (entries.Count == 0)
             {

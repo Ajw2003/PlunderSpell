@@ -1,3 +1,4 @@
+using Player;
 using System.Collections.Generic;
 using Code.Scripts.EventSystems;
 using Plunderspell.Loot;
@@ -142,9 +143,9 @@ namespace Plunderspell.Raid
 
         private void ReadKeys()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) Speak(HaggleWord.Plus);
-            else if (Input.GetKeyDown(KeyCode.Alpha2)) Speak(HaggleWord.Satis);
-            else if (Input.GetKeyDown(KeyCode.Alpha3)) Speak(HaggleWord.Vale);
+            if (GameInput.Actions.Haggle.Plus.WasPressedThisFrame()) Speak(HaggleWord.Plus);
+            else if (GameInput.Actions.Haggle.Satis.WasPressedThisFrame()) Speak(HaggleWord.Satis);
+            else if (GameInput.Actions.Haggle.Vale.WasPressedThisFrame()) Speak(HaggleWord.Vale);
         }
 
         /// <summary>The local player's word: answered here when this side decides, else sent to the server. The keys call this.</summary>

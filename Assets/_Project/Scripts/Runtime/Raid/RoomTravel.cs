@@ -1,3 +1,4 @@
+using Player;
 using Plunderspell.Core;
 using PurrNet;
 using StateMachine;
@@ -17,12 +18,11 @@ namespace Plunderspell.Raid
         [SerializeField] private Trigger _trigger = Trigger.LookAndPress;
         [Tooltip("Has children Spawn1..Spawn4: where each player lands, facing each spawn's forward.")]
         [SerializeField] private Transform _destination;
-        [SerializeField] private KeyCode _key = KeyCode.E;
         [SerializeField] private float _reach = 3f;
 
         private void Update()
         {
-            if (_trigger == Trigger.LookAndPress && Input.GetKeyDown(_key) && LookTarget.IsLookedAt(Camera.main, transform, _reach))
+            if (_trigger == Trigger.LookAndPress && GameInput.Actions.PlayerActions.Interact.WasPressedThisFrame() && LookTarget.IsLookedAt(Camera.main, transform, _reach))
                 Travel(PlayerStateMachine.Local);
         }
 
