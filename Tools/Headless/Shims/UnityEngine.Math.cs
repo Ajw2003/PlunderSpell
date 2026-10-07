@@ -79,6 +79,8 @@ namespace UnityEngine
         public Vector3(float x, float y) : this(x, y, 0f) { }
 
         public static Vector3 zero => new Vector3(0f, 0f, 0f);
+        public static Vector3 positiveInfinity => new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+        public static Vector3 negativeInfinity => new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
         public static Vector3 one => new Vector3(1f, 1f, 1f);
         public static Vector3 up => new Vector3(0f, 1f, 0f);
         public static Vector3 down => new Vector3(0f, -1f, 0f);
@@ -336,6 +338,12 @@ namespace UnityEngine
         public const float PI = 3.14159265358979f;
         public static float Atan2(float y, float x) => (float)System.Math.Atan2(y, x);
         public const float Epsilon = 1.1920929E-07f;
+        public static float DeltaAngle(float current, float target)
+        {
+            float d = (target - current) % 360f;
+            if (d > 180f) d -= 360f; else if (d < -180f) d += 360f;
+            return d;
+        }
         public const float Infinity = float.PositiveInfinity;
         public const float NegativeInfinity = float.NegativeInfinity;
         public const float Deg2Rad = PI / 180f;

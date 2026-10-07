@@ -172,7 +172,10 @@ namespace UnityEngine
 
         public Component AddComponent(Type type)
         {
-            AddRequiredComponents(type);
+            // Cycle guard: Guard <-> GuardDeathPlayback require each other; Unity tolerates that, so a type
+            // already mid-add on this object counts as present.
+            if (!_adding.Add(type)) return null;
+            try { AddRequiredComponents(type); } finally { _adding.Remove(type); }
             var component = (Component)Activator.CreateInstance(type, nonPublic: true);
             component.BindTo(this);
             _components.Add(component);
@@ -185,6 +188,7 @@ namespace UnityEngine
         /// Mirrors the editor's [RequireComponent] behaviour: adding a component first adds anything
         /// it declares as required (recursively), so a component's Awake can rely on it being there.
         /// </summary>
+        private readonly HashSet<Type> _adding = new HashSet<Type>();
         private void AddRequiredComponents(Type type)
         {
             foreach (RequireComponent attr in type.GetCustomAttributes(typeof(RequireComponent), true))
@@ -240,6 +244,7 @@ namespace UnityEngine
         public static GameObject[] FindGameObjectsWithTag(string tag) =>
             SceneRegistry.AllObjects.Where(g => g != null && g.tag == tag).ToArray();
         public Component GetComponent(Type t) => _components.FirstOrDefault(t.IsInstanceOfType);
+        public Component GetComponent(string typeName) => _components.FirstOrDefault(c => c.GetType().Name == typeName);
         public T[] GetComponents<T>() => _components.OfType<T>().ToArray();
         public void GetComponents<T>(List<T> results) { results.Clear(); results.AddRange(_components.OfType<T>()); }
 
@@ -360,6 +365,7 @@ namespace UnityEngine
 
         public T GetComponent<T>() => _gameObject.GetComponent<T>();
         public Component GetComponent(Type t) => _gameObject.GetComponent(t);
+        public Component GetComponent(string typeName) => _gameObject.GetComponent(typeName);
         public T[] GetComponents<T>() => _gameObject.GetComponents<T>();
         public void GetComponents<T>(List<T> results) => _gameObject.GetComponents(results);
         public T GetComponentInChildren<T>(bool includeInactive = false) => _gameObject.GetComponentInChildren<T>(includeInactive);

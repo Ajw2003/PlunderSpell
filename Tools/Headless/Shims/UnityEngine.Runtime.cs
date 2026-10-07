@@ -375,6 +375,7 @@ namespace UnityEngine
     public class Material : Object
     {
         public Color color;
+        public int renderQueue = -1;
         public Shader shader;
         public Material() { }
         public Material(Material src) { }
@@ -1156,6 +1157,7 @@ namespace UnityEngine
 namespace UnityEngine.Rendering
 {
     public enum GraphicsDeviceType { Null = 4, Direct3D11 = 2, OpenGLCore = 17, Vulkan = 21, Metal = 16 }
+    public enum RenderQueue { Background = 1000, Geometry = 2000, AlphaTest = 2450, GeometryLast = 2500, Transparent = 3000, Overlay = 4000 }
     public enum CullMode { Off, Front, Back }
     public enum ShadowCastingMode { Off, On, TwoSided, ShadowsOnly }
     public enum LightProbeUsage { Off, BlendProbes, UseProxyVolume, CustomProvided }
@@ -1385,6 +1387,8 @@ namespace UnityEngine.AI
     public static class NavMesh
     {
         public const int AllAreas = ~0;
+        /// <summary>No baked data exists headlessly, so there is nothing to remove.</summary>
+        public static void RemoveAllNavMeshData() { }
         public static bool SamplePosition(Vector3 source, out NavMeshHit hit, float maxDistance, int areaMask)
         {
             hit = new NavMeshHit { position = source, distance = 0f, hit = true };
