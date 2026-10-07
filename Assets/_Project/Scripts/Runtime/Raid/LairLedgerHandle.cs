@@ -20,11 +20,7 @@ namespace Plunderspell.Raid
         }
 
         /// <summary>Whether <paramref name="eye"/>'s centre ray hits this table within reach.</summary>
-        public bool IsLookedAt(Camera eye) =>
-            eye != null
-            && Physics.Raycast(eye.transform.position, eye.transform.forward, out RaycastHit hit, _reach,
-                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)
-            && hit.collider.transform.IsChildOf(transform);
+        public bool IsLookedAt(Camera eye) => LookTarget.IsLookedAt(eye, transform, _reach);
 
         public void Open()
         {

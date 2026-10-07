@@ -7,20 +7,26 @@ using UnityEngine;
 namespace Plunderspell.Raid
 {
     /// <summary>
-    /// On entering <see cref="GameState.LairRoom"/>, stands the local player at their own spawn in the
+    /// On arriving in <see cref="GameState.LairRoom"/>, stands the local player at their own spawn in the
     /// Lair room (PlayerSpawns/Spawn{owner}) facing into the room. A session's body may arrive a frame
     /// after the state changes, so the move is retried until a local player exists.
     /// </summary>
     public class LairRoomSpawner : MonoBehaviour
     {
-        private const float BodyHeightAboveFloor = 1.0f;
         private bool _pending;
+
+        /// <summary>
+        /// Whether entering the room from <paramref name="previous"/> is an arrival (from the menu, a raid,
+        /// the death screen) rather than closing the Lair screen, which leaves the player where they stood:
+        /// at the ledger, or in the Market.
+        /// </summary>
+        public static bool IsArrival(GameState previous) => previous != GameState.Lair;
 
         private void OnEnable()
         {
             EventManager.Instance?.Subscribe(this, (GameStateChanged e) =>
             {
-                if (e.Current == GameState.LairRoom)
+                if (e.Current == GameState.LairRoom && IsArrival(e.Previous))
                     _pending = true;
             });
         }
@@ -50,15 +56,7 @@ namespace Plunderspell.Raid
             }
 
             RaidDirector.ClearCarriedOverState(player.gameObject);
-            Vector3 position = spawn.position + Vector3.up * BodyHeightAboveFloor;
-            player.FaceYaw(spawn.eulerAngles.y);
-            if (player.TryGetComponent(out Rigidbody body))
-            {
-                body.position = position;
-                body.linearVelocity = Vector3.zero;
-            }
-            player.transform.position = position;
-            Debug.Log($"[Lair] Placed {player.name} at {player.transform.position} (spawn {index + 1}).");
+            PlayerPlacement.StandAt(player, spawn);
         }
     }
 }
