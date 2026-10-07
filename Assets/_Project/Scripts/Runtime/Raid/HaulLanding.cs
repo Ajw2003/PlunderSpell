@@ -108,10 +108,16 @@ namespace Plunderspell.Raid
         }
 
         // Adds pieces beside the ones already there, continuing the grid after them.
-        // ponytail: starts after the piece count, so pieces removed from the middle can leave a new one overlapping; track free cells if that shows.
+        // New pieces take the first free cells, so one removed from the middle of the pile leaves a gap that is refilled.
         private void Spawn(IReadOnlyList<LootItem> pieces, RaidLootTable table)
         {
-            var points = HaulLayout.Offsets(pieces.Count, LivePieces().Count);
+            var taken = new List<Vector3>();
+            foreach (GameObject go in _pile.Spawned)
+            {
+                if (go != null)
+                    taken.Add(transform.InverseTransformPoint(go.transform.position));
+            }
+            var points = HaulLayout.FreeOffsets(pieces.Count, taken);
             for (int i = 0; i < points.Count; i++)
                 points[i] = transform.TransformPoint(points[i]) + Vector3.up * LootPlacementPlanner.AnchorLift;
             _pile.SpawnPile(pieces, points, table);

@@ -32,6 +32,39 @@ namespace Plunderspell.Raid
             return offsets;
         }
 
+        /// <summary>
+        /// Offsets for <paramref name="count"/> new pieces on the cells no <paramref name="occupied"/> piece is near
+        /// (pad-local positions): the first free cells centre-first, stacking a layer up only when every cell has a piece.
+        /// </summary>
+        public static List<Vector3> FreeOffsets(int count, IReadOnlyList<Vector3> occupied)
+        {
+            List<Vector2> cells = CellsCentreFirst();
+            var stack = new int[cells.Count];
+            foreach (Vector3 piece in occupied)
+            {
+                for (int c = 0; c < cells.Count; c++)
+                {
+                    if (new Vector2(piece.x - cells[c].y * Spacing, piece.z - cells[c].x * Spacing).magnitude < Spacing * 0.75f)
+                    {
+                        stack[c]++;
+                        break;
+                    }
+                }
+            }
+
+            var offsets = new List<Vector3>(count);
+            for (int i = 0; i < count; i++)
+            {
+                int pick = 0;
+                for (int c = 1; c < cells.Count; c++)
+                    if (stack[c] < stack[pick])
+                        pick = c;
+                offsets.Add(new Vector3(cells[pick].y * Spacing, stack[pick] * LayerHeight, cells[pick].x * Spacing));
+                stack[pick]++;
+            }
+            return offsets;
+        }
+
         /// <summary>Every (column, row) cell, centred on zero, nearest the centre first.</summary>
         private static List<Vector2> CellsCentreFirst()
         {

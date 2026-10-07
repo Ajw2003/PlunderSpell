@@ -44,6 +44,24 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void ANewHaulFillsTheGapLeftByARemovedPiece()
+        {
+            var pile = HaulLayout.Offsets(5);
+            pile.RemoveAt(2);
+            Vector3 gap = HaulLayout.Offsets(5)[2];
+            var landed = HaulLayout.FreeOffsets(1, pile);
+            Assert.AreEqual(gap, landed[0], "The one free cell is the one that was emptied, not the next after the count.");
+        }
+
+        [Test]
+        public void AFullPadStacksANewPieceOnTheCentreCell()
+        {
+            var landed = HaulLayout.FreeOffsets(1, HaulLayout.Offsets(21));
+            Assert.AreEqual(HaulLayout.LayerHeight, landed[0].y, 0.001f);
+            Assert.AreEqual(0f, landed[0].x, 0.001f);
+        }
+
+        [Test]
         public void FirstLayerStaysInsideTheLandingPad()
         {
             foreach (Vector3 o in HaulLayout.Offsets(21))
