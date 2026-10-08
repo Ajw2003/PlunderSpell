@@ -22,7 +22,7 @@ namespace Plunderspell.Tests
         {
             string page = LedgerPageText.RightPage(new[] { 120, 0, 0, 0 }, new[] { 0, 0, 0, 0 },
                 new[] { true, false, false, false }, 250, "The Collector takes 5 from I.");
-            StringAssert.Contains("I  Purse 120  Owes 250  Paid 0", page);
+            StringAssert.Contains("I  Purse 120\n    Owes 250  Paid 0", page);
             StringAssert.DoesNotContain("II ", page);
             StringAssert.Contains("The Collector takes 5 from I.", page);
         }

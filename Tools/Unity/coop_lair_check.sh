@@ -199,6 +199,10 @@ sleep 2
 cled="$(L client ledger)"; log "client ledger: $cled"; log "host ledger:   $led1"
 [ "$cled" = "$led1" ] && r=ok || r=no
 check $r "the client's Lair shows the host's ledger exactly, Collector's line included"
+# The ledger book on the table (#357) says the same on both sides, and says something (the debt page and the purses page).
+bh="$(L host book)"; bc="$(L client book)"; log "host book:   $bh"; log "client book: $bc"
+r=no; [ "$bh" = "$bc" ] && case "$bh" in *"Owed"*"Purses"*"Collector takes"*) r=ok ;; esac
+check $r "the client's ledger book reads exactly as the host's, Collector's line included"
 log "client: $(L client lairscreen)"; sleep 1
 L client shot "$(cygpath -m "$repo/$out/$label-client-ledger.png")" >/dev/null 2>&1 || true
 cs_after="$(L client activeslot)"; log "client's own save after: $cs_after"

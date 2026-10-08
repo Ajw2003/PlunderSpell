@@ -31,7 +31,7 @@ namespace Plunderspell.Lair
             {
                 if (!present[seat] && purses[seat] <= 0 && paidLast[seat] <= 0)
                     continue;
-                page.Append($"{Numerals[seat]}  Purse {Coins(purses[seat])}  Owes {Coins(present[seat] ? shareDue : 0)}  Paid {Coins(paidLast[seat])}\n");
+                page.Append($"{Numerals[seat]}  Purse {Coins(purses[seat])}\n    Owes {Coins(present[seat] ? shareDue : 0)}  Paid {Coins(paidLast[seat])}\n");
             }
             if (collectorLine.Length > 0)
                 page.Append('\n').Append(collectorLine);

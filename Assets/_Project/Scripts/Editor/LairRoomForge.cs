@@ -141,8 +141,9 @@ namespace Plunderspell.EditorTools
             var text = go.AddComponent<TMPro.TextMeshPro>();
             if (font != null)
                 text.font = font;
-            text.fontSize = 14f;
-            text.color = new Color(0.16f, 0.10f, 0.06f);
+            text.fontSize = 24f;
+            text.color = new Color(0.08f, 0.05f, 0.03f);
+            text.margin = new Vector4(1f, 5f, 1f, 0f); // below the book's printed heading bars
             text.alignment = TMPro.TextAlignmentOptions.TopLeft;
             text.textWrappingMode = TMPro.TextWrappingModes.Normal;
             text.richText = true;

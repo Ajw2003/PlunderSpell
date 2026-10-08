@@ -197,6 +197,16 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   `PlayerInputController.AcceptsInputIn`), so the Lair room and the Market have one, and its "over something" look follows
   the piece the left mouse would grab. `ItemManager`'s grab ray ignores trigger volumes: a counter's sell zone used to hide
   the piece on it (#353; `Tools/Unity/market_grab_check.sh`, `docs/generated/market-grab-2026-10-07/`).
+- The ledger book on the table is readable (#357, `docs/generated/ledger-book-2026-10-07/`). `LairRoomForge.AddLedgerPages` puts two
+  TextMeshPro 3D texts on the open book's pages (0.17 m either side of its middle, tops from the model's bounds), and
+  `LairLedgerBook.cs` fills them from `LairHubManager`, so a client's book shows the host's ledger the same way its Lair screen does
+  (`RaidDirector._hostLedger` -> `ShowHostLedger`). Left page: Owed with "the debt grows by N each raid it stands", then Last raid
+  (left-behind pieces included); right page: purses I-IV for the seats in play, then the Collector's line. The wording is
+  `LedgerPageText.cs` (pure, `LedgerPageTextTests`), the same as `LairScreen.Refresh`/`ShowPurses`. It redraws on the Lair events
+  (`DebtChanged`, `PurseChanged`, `PresentChanged`, `CollectorPaid`, `CollectorSpoke`, `SaveSlotLoaded`); the last raid has no event, so
+  `Update` compares its two values. The font is Spectral (the UI's body face) as a TMP asset made by the forge
+  (`Resources/UI/Fonts/Spectral-Regular SDF.asset`). The book faces the strongbox side (+Z in the Lair), so that is where it reads
+  the right way up. The Lair screen and E/Esc are unchanged (#359). `Tools/Unity/coop_lair_check.sh` checks the client's book text equals the host's (left-behind count included). Known gap: the printed heading bars and ruled lines of the book texture run under the text.
 - Evidence: `docs/generated/lair-room-2026-10-06/`.
 
 ### How the haul comes home (#310)

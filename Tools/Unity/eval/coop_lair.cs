@@ -20,7 +20,8 @@
 //   purse <n>          the Lair's purse n (read on the host: it is the server)
 //   bank <n>:<coins>   host: bank coins into purse n (1 to 4), as a let-go pouch does
 //   ledger             host: the debt, the four purses, paid last collection, seats present and the Collector's line (#313)
-//   slot1              what the Lair's saved slot 1 holds (debt, gold, four purses), read without loading it
+//   book               the ledger book's two pages' text on this side (#357)
+//   slot1            what the Lair's saved slot 1 holds (debt, gold, four purses), read without loading it
 //   activeslot         the save slot this side plays in and what it has SAVED (debt, gold, four purses, paid), read without loading
 //   lairscreen         show the Lair screen on this side (it is hidden in the Lair room), so a shot can capture the ledger
 //   grab pile|pouch    stand the local player 1.8 m from the first pile piece (or the coin pouch), looking at it, and grab it
@@ -262,6 +263,12 @@ switch (action)
         s += " present";
         for (int seat = 0; seat < 4; seat++) s += " " + ((bool)t.GetMethod("IsPresent").Invoke(lair, new object[] { seat }) ? 1 : 0);
         return s + " line " + Get(lair, "CollectorLine");
+    }
+    case "book":
+    {
+        // what the ledger book on the Lair table says on this side (#357), newlines as "/", so host and client lines compare equal
+        var book = FindAll("Plunderspell.Raid.LairLedgerBook")[0];
+        return "book left [" + ((string)Get(book, "LeftText")).Replace("\n", "/") + "] right [" + ((string)Get(book, "RightText")).Replace("\n", "/") + "]";
     }
     case "slot1":
     {
