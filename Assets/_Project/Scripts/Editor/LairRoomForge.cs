@@ -136,7 +136,7 @@ namespace Plunderspell.EditorTools
             words.transform.localScale = Vector3.one * 0.01f;
             var text = words.AddComponent<TMPro.TextMeshPro>();
             text.font = LedgerFont();
-            text.fontSize = 22f;
+            text.fontSize = 32f;
             text.color = new Color(0.10f, 0.06f, 0.02f);
             text.alignment = TMPro.TextAlignmentOptions.Top;
             text.textWrappingMode = TMPro.TextWrappingModes.Normal;
