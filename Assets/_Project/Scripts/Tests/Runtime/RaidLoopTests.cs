@@ -396,6 +396,21 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void Test_ALostRaidLeavesNoAlarmBehindInTheLair()
+        {
+            RaidDirector director = MakeDirector(out LairHubManager lair, out ExtractionZone zone, out LootSpawner spawner);
+            EnemyDirector enemies = TestDirector.Ensure();
+            director.Configure(MakeGenerator(), spawner, zone, lair, enemies);
+            enemies.SetAlarmLevel(100f, 3);
+            Assert.AreNotEqual(AlarmState.Calm, enemies.State, "The fixture must start with a raised alarm.");
+
+            director.ApplyResult(0f, 0);
+
+            Assert.AreEqual(AlarmState.Calm, enemies.State, "The Roused grade stayed on the Lair after the raid ended (#352).");
+            Assert.AreEqual(0f, enemies.AlarmLevel);
+        }
+
+        [Test]
         public void Test_PlayersStayVisibleToGuardsAcrossRaids()
         {
             RaidDirector director = MakeDirector(out _, out ExtractionZone zone, out _);

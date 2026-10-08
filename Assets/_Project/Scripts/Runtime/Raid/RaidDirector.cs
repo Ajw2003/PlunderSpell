@@ -391,6 +391,9 @@ namespace Plunderspell.Raid
             _guardSpawner?.Clear();
             _doorSpawner?.Clear();
 
+            // The raid is over, so its alarm is: otherwise the Roused or Hue and Cry grade stays on the Lair (#352).
+            _alarm?.ResetForNewRaid(0f);
+
             // Deliberately NOT clearing the director's Intruders: IntruderTag owns that list by
             // component lifetime, and wiping it here would leave every surviving player invisible
             // to guards for the rest of the session.

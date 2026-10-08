@@ -101,6 +101,8 @@ past — those belong to `Guards`/`Castle` respectively.
   `ResetForNewRaid(CastleGuard.ArrivalGraceSeconds)`: level 0, state Calm, the latch released, no
   chasers, and for 20 s nothing raises the alarm. Before this it only set the level to 0, and the
   latch kept the last raid's Hue and Cry, so the next raid began in it.
+- **A raid ending clears the alarm too** (2026-10-07, #352). `RaidDirector.ApplyResult` (extraction and death both) calls
+  `ResetForNewRaid(0f)`, so the Roused or Hue and Cry colour grade no longer stays on the Lair and Market after you return.
 - **Replication is a state broadcast, not per-value sync.** `EnemyDirector` runs the FSM only on
   the server (`if (isSpawned && !isServer) return;` in `Update`); guards hear on the server only
   (`Guard.OnNoiseHeard` checks `IsAuthority`), so every report reaches the alarm there. State *changes* fan
