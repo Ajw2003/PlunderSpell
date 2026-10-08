@@ -14,14 +14,15 @@ repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
 label="${1:?usage: perf_capture.sh <label> [options]}"; shift
 build=auto
+walk=no
 while [ $# -gt 0 ]; do
     case "$1" in
-        --build) build=yes ;; --no-build) build=no ;;
+        --build) build=yes ;; --no-build) build=no ;; --walk) walk=yes ;;
         *) echo "unknown option $1"; exit 1 ;;
     esac
     shift
 done
-out="docs/generated/fire-fade-2026-10-03"; mkdir -p "$out"
+out="docs/generated/fire-fade-2026-10-03"; [ "$walk" = yes ] && out="docs/generated/fire-fade-2026-10-07"; mkdir -p "$out"
 E=(timeout 90 bash Tools/Unity/coop_eval.sh)
 cli=(--no-banner --format json)
 client_pid=""
@@ -48,6 +49,30 @@ trap cleanup EXIT
 
 playing="$(bash Tools/Unity/eval.sh 'return UnityEditor.EditorApplication.isPlaying + " " + UnityEditor.EditorApplication.isCompiling;')" || { log "FAIL Editor did not answer"; exit 1; }
 if [ "$playing" != "False False" ]; then log "FAIL Editor is playing or compiling ($playing)"; trap - EXIT; exit 1; fi
+
+if [ "$walk" = yes ]; then
+    # Solo walk (#354): the camera flies through a raid castle at Calm, the alarm goes up at 8 s, and every fire's
+    # light intensity, shadow strength and halo strength is recorded each frame (eval/fire_fade.cs walk / report).
+    # Prints PASS when no quantity moves more than full x frame time / 1 s plus 5% of full between frames.
+    trap 'unity command editor_stop --no-banner >/dev/null 2>&1 || true' EXIT
+    ff() { timeout 60 bash Tools/Unity/eval.sh "$(sed "s|__ACTION__|$1|" Tools/Unity/eval/fire_fade.cs)"; }
+    unity command editor_play "${cli[@]}" >/dev/null
+    for _ in $(seq 1 30); do sleep 2; [ "$(ev 'return UnityEditor.EditorApplication.isPlaying.ToString();' 2>/dev/null)" = True ] && break; done
+    sleep 3
+    log "start: $(ev --file Tools/Unity/eval/start_solo_raid.cs)"
+    sleep 4
+    log "set out: $(ev --file Tools/Unity/eval/set_out_seed.cs)"
+    sleep 15
+    log "walk: $(ff walk)"
+    for i in 1 2 3 4 5 6; do
+        sleep 4
+        log "shot $i: $(timeout 90 bash Tools/Unity/capture.sh "$out/$label-shot$i.png" screen 2>&1 | tail -1)"
+    done
+    sleep 6
+    ff report | tee "$out/$label-report.txt"
+    exit 0
+fi
+
 settings_save || { log "FAIL cannot save ProjectSettings before building"; trap - EXIT; exit 1; }
 
 if [ "$build" = auto ]; then

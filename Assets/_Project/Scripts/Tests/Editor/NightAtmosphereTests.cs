@@ -18,6 +18,33 @@ namespace Plunderspell.Tests.Editor
     public class NightAtmosphereTests
     {
         [Test]
+        public void Test_AHaloFadesInAndOutWhenAFireJoinsOrLeavesTheChosenSet()
+        {
+            var go = new GameObject("fire");
+            try
+            {
+                var fire = go.AddComponent<FireSource>();
+                fire.SetHaloTarget(1f);
+                fire.EaseHalo(0.1f, 1f);
+                Assert.That(fire.Halo, Is.EqualTo(0.1f).Within(0.001f), "Joining the set must not pop the halo in.");
+                for (int i = 0; i < 20; i++)
+                    fire.EaseHalo(0.1f, 1f);
+                Assert.AreEqual(1f, fire.Halo, 0.001f);
+
+                fire.SetHaloTarget(0f);
+                fire.EaseHalo(0.1f, 1f);
+                Assert.That(fire.Halo, Is.EqualTo(0.9f).Within(0.001f), "Leaving the set must not pop the halo out.");
+                for (int i = 0; i < 20; i++)
+                    fire.EaseHalo(0.1f, 1f);
+                Assert.AreEqual(0f, fire.Halo, 0.001f);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
         public void Test_HearthsAlwaysBurnAndBeaconsWaitForTheAlarm()
         {
             foreach (AlarmState state in System.Enum.GetValues(typeof(AlarmState)))

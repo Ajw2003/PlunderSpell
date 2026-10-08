@@ -19,6 +19,9 @@ namespace Plunderspell.Atmosphere
         [Tooltip("One dial for the glow of fire in the mist (the soft halo round every flame). 1 is as tuned " +
                  "below; 0 removes the halos, 2 doubles them. Try 0 to 2.")]
         [Range(0f, 4f)] public float FireGlowAmount = 1f;
+        [Tooltip("Seconds every part of a fire takes to fade in or out: its light, shadow, flame, colour, embers and " +
+                 "fog halo. Nothing about a fire pops; it all eases over this time. Try 0.5 to 2.")]
+        public float FireFadeSeconds = 1f;
         [Tooltip("Seconds the whole look takes to change when the alarm goes up or down. Short is abrupt, " +
                  "long is gradual. Try 1 to 4.")]
         public float TransitionSeconds = 2f;
