@@ -65,6 +65,7 @@ together and what was deliberately left undocumented, and why.
 | [`damage`](../4-systems/damage.md) | One damage pathway, blame, and hit feedback you can read |
 | [`combat-bench`](../4-systems/combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
 | [`audio`](../4-systems/audio.md) | Mixer, SoundBank, sounds played from game events, music by state and alarm, volume sliders, and what is still silent |
+| [`player-animation`](../4-systems/player-animation.md) | The wizard's body: model, clips, animator and what each machine sees |
 | [`scale`](../4-systems/scale.md) | The 1.8m standard human, and the room, archway and enemy heights measured against it |
 
 ## Everything else worth reaching

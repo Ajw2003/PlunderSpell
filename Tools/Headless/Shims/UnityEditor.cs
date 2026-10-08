@@ -284,6 +284,21 @@ namespace UnityEditor
         public ModelImporterAvatarSetup avatarSetup = ModelImporterAvatarSetup.NoAvatar;
         public ModelImporterMaterialImportMode materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
         public HumanDescription humanDescription;
+        public ModelImporterClipAnimation[] defaultClipAnimations = new ModelImporterClipAnimation[0];
+        public ModelImporterClipAnimation[] clipAnimations = new ModelImporterClipAnimation[0];
+    }
+
+    public class ModelImporterClipAnimation
+    {
+        public string name;
+        public string takeName;
+        public bool loopTime;
+        public bool lockRootRotation;
+        public bool lockRootHeightY;
+        public bool lockRootPositionXZ;
+        public bool keepOriginalOrientation;
+        public bool keepOriginalPositionY;
+        public bool keepOriginalPositionXZ;
     }
 
     public enum TextureImporterType { Default, NormalMap, GUI, Sprite, Cursor, Cookie, Lightmap, SingleChannel }

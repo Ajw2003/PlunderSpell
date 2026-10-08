@@ -6,14 +6,16 @@
   "Footstep": "a foot plants; drives FootstepNoiseEmitter (param foot L/R)",
   "AttackHit": "the frame damage applies",
   "ProjectileRelease": "the missile leaves the hand/weapon",
-  "PropDetach": "a prop leaves the rig (param prop = bone name): lantern, helm, shield, match"
+  "PropDetach": "a prop leaves the rig (param prop = bone name): lantern, helm, shield, match",
+  "SpellRelease": "the cast leaves the right hand (player cast_release)"
  },
  "layers": {
   "base": "shared humanoid motion on the reference skeleton (Humanoid_Base.fbx)",
   "carry": "a base clip with the enemy's carry pose on the upper-body mask (arms, shoulders, prop bones)",
   "family": "one weapon-family clip shared by every enemy with that weapon, on the reference skeleton",
   "signature": "a motion only one enemy has, in that enemy's own FBX (moves its prop bones)",
-  "hound": "the hound's Generic rig"
+  "hound": "the hound's Generic rig",
+  "player": "the player wizard (issue #361): Humanoid_Player.fbx on the reference skeleton, built by anim_player.py, not by anim.py"
  },
  "playback": "An enemy clip plays its source at playback_rate. Locomotion: rate = agent speed / authored speed, which keeps the feet planted; the Animator speed parameter should drive it.",
  "clips": {
@@ -1510,6 +1512,200 @@
    "status": "planned",
    "enemy": "petardier",
    "notes": "ends in the ragdoll/gib; no event (the blast is gameplay)"
+  },
+  "player_idle": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 3.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "player",
+   "enemy": null,
+   "notes": "library.idle's motion, hunched: shifty, impatient"
+  },
+  "player_walk": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 1.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 2.0,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "player",
+   "enemy": null,
+   "notes": "2.0 m/s; slow-movement blend"
+  },
+  "player_jog": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 0.6,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 5.0,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "player",
+   "enemy": null,
+   "notes": "5.0 m/s: the player's walk input (brisk jog)"
+  },
+  "crouch_idle": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 2.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "player",
+   "enemy": null,
+   "notes": "knees bent, hips ~0.40 m low, arms tucked"
+  },
+  "crouch_walk": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 0.6,
+   "loop": true,
+   "additive": false,
+   "speed_mps": 2.0,
+   "events": [
+    {
+     "type": "Footstep",
+     "t": 0.0,
+     "param": {
+      "foot": "L"
+     }
+    },
+    {
+     "type": "Footstep",
+     "t": 0.5,
+     "param": {
+      "foot": "R"
+     }
+    }
+   ],
+   "status": "player",
+   "enemy": null,
+   "notes": "creep key 2.0 m/s, hips 0.30 m low, short steps"
+  },
+  "jump_takeoff": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 0.266667,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "player",
+   "enemy": null,
+   "notes": "coil and spring; last frame airborne (feet_ik lifts both feet)"
+  },
+  "jump_air": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 0.6,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "player",
+   "enemy": null,
+   "notes": "tucked legs (FK), arms out and up, slight flail"
+  },
+  "jump_land": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 0.333333,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "player",
+   "enemy": null,
+   "notes": "absorb with the knees, recover to the idle stance"
+  },
+  "cast_hold": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 1.2,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "player",
+   "enemy": null,
+   "notes": "upper body matters (Avatar mask): right hand raised forward, palm out, tremble"
+  },
+  "cast_release": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 0.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [
+    {
+     "type": "SpellRelease",
+     "t": 0.4,
+     "param": null
+    }
+   ],
+   "status": "player",
+   "enemy": null,
+   "notes": "forward thrust of the right hand, SpellRelease at 0.2 s, relax toward idle arms"
+  },
+  "death_collapse": {
+   "layer": "player",
+   "family": null,
+   "fbx": "Humanoid_Player.fbx",
+   "length_s": 1.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "player",
+   "enemy": null,
+   "notes": "stagger, knees buckle, falls forward and lies still from 1.3 s; the game hides the body and drops the Hat"
   }
  },
  "carry_variants": [

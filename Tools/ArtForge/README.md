@@ -11,11 +11,11 @@ and the geometry validator are EnemyForge's own code, imported through `sys.path
 EnemyForge's files are untouched. Read `docs/4-systems/enemy-asset-pipeline.md`,
 especially **Traps**: every trap there applies here too.
 
-**Status:** all 20 **items** are built. The rigged **enemy** path works end to end
-and has two samples that set the bar for the other 14: `high/lantern-warden` (a
-humanoid on `figures.Human`) and `high/alaunt-hound` (a quadruped on
-`figures.Quadruped`). No structure blueprints exist in this module yet (another
-agent owns structures).
+**Status (2026-10-08):** all 20 **items**, all 16 **enemies** and the player **wizard**
+(`players/lair/wizard`) are built and reviewed. `high/lantern-warden` (a humanoid on
+`figures.Human`) and `high/alaunt-hound` (a quadruped on `figures.Quadruped`) are the
+reference blueprints. No structure blueprints exist in this module (another agent owns
+structures). AnimForge (below) builds the enemy clips and the player's clips.
 
 ## Requirements
 
@@ -373,6 +373,25 @@ until the stills read as the concept **and** the POSED views deform cleanly.
 chain, quilted gambeson, laced front, belt kit (warden); C-section quilted coat with
 painted bordure, chevron strips, harness straps, spiked collar (hound).
 
+## Players
+
+Kind `players` has one "age", `lair` (`docs/art/data/lair.json`, key `players`), and one
+model so far: the wizard (`blueprints/players_lair.py`, `figures.Human(height=1.80)`).
+`build.py players` / `render.py players` default to `--age lair`; outputs go to
+`Assets/Models/ArtBible/Players/Lair/Wizard/` and `docs/art/models/lair/wizard.png`
+(six-view sheet like enemies, beside `docs/art/concept/wizard/1-the-wizard.png`).
+Validation is the enemy one; the reserved-pigment rule does not apply to players.
+Bones are the Unity Humanoid set plus `Hat` (child of Head, rigid, a prop: excluded from
+the 1.80 m body height).
+
+**Dyed vs fixed.** A model is one baked material slot, so tinting uses a mask:
+`Blueprint.dye_families` lists the families a player colour dyes, and the bake writes
+`Textures/<Name>_DyeMask.png` (non-colour, white on dyed texels, black elsewhere).
+Dyed: `robe_wool` (robe, cape, sleeves), `hat_felt` (colour x0.72), `hat_band` (x0.50,
+also the robe's front seam). Fixed: `skin`, `glove_leather` (belt, glove), `boot_leather`,
+`calfskin`, `brass`, `eye_dark`, `beard_hair`. The BaseMap holds the default colour
+`#4F7299`; tint = `BaseMap * (picked / #4F7299)` where the mask is white.
+
 ## Validation
 
 `validate.py` runs EnemyForge's `validate()` through an adapter, which checks:
@@ -542,6 +561,27 @@ reads those from `anim_spec.json`. FBX takes are named `<armature>|<clip>`
 Every bone is keyed on every frame at 30 fps with linear interpolation. `Hips` carries
 location (bob, sway, the fall); nothing else translates except a detached prop. `Root` never
 moves: **every clip is in place** and the NavMeshAgent moves the guard.
+
+### Player clips (issue #361)
+
+The player wizard's 11 clips are built separately so `anim.py` and the enemy FBX files are
+untouched: motion in `anim_forge/library_player.py` (+ `poses_player.py`), spec rows in
+`anim_spec.json` with layer and status `player` (the `a1` check skips them; `anim_spec_check.py`
+knows the layer, status and the `SpellRelease` event).
+
+```bash
+python3.11 Tools/ArtForge/anim_player.py build     # Animations/Humanoid_Player.fbx + player_anim_manifest.json
+python3.11 Tools/ArtForge/anim_player.py review [--only ID ...] [--no-mp4] [--blend PATH]
+```
+
+Clips: `player_idle`, `player_walk` (2.0 m/s), `player_jog` (5.0 m/s), `crouch_idle`,
+`crouch_walk` (2.0 m/s, hips 0.30 m low), `jump_takeoff`, `jump_air` (FK legs), `jump_land`,
+`cast_hold` (upper body; right hand bare), `cast_release` (`SpellRelease` at 0.2 s),
+`death_collapse` (falls prone, still from 1.3 s, no bone below the floor). All in place, on the
+reference skeleton (no `Hat` bone is keyed). Review sheets go to `docs/art/anim/player/` on
+`Players/Lair/Wizard/Wizard.blend` (the Lantern Warden, in `warden_check/`, if it is missing).
+Gait additions (defaults leave enemy clips unchanged): `GaitParams.crouch`, `.hip_pitch`;
+`Frame.leg_hint` (prone knees up); `forge.rigs(blend)`.
 
 ### Layout
 

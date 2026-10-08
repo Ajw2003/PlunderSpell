@@ -253,6 +253,8 @@ public static class ArtAssetImportValidator
                 break;
 
             case ArtBibleModelImporter.Kind.HumanoidEnemy:
+            case ArtBibleModelImporter.Kind.HumanoidPlayer:
+            case ArtBibleModelImporter.Kind.HumanoidClips:
                 if (importer.animationType != ModelImporterAnimationType.Human)
                     Fail(report, $"{key}: rigged as {importer.animationType}, not Humanoid");
                 if (avatar == null || !avatar.isHuman || !avatar.isValid)

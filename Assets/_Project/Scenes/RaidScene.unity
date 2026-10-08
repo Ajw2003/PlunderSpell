@@ -204,7 +204,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Plunderspell.RaidHud::Plunderspell.UI.RaidHudView
   _visible: 1
-  _showSpellbook: 1
 --- !u!114 &74181998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -692,6 +691,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 104809133256606644, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 639129895767115266, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 1438687874750422623, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
       propertyPath: m_Name
       value: LairRoom
@@ -735,6 +742,10 @@ PrefabInstance:
     - target: {fileID: 4504084957452755292, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5062143964107016309, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
       objectReference: {fileID: 0}
     - target: {fileID: 8350634930591022618, guid: e73e68d0e31d56e4181bf01b5e653e6b, type: 3}
       propertyPath: _destination
@@ -1931,6 +1942,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 98919859702383595, guid: 173905fd202cbf148978fb0dac121cca, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 1169735928589709557, guid: 173905fd202cbf148978fb0dac121cca, type: 3}
       propertyPath: m_Name
       value: MarketYard
@@ -1939,6 +1954,14 @@ PrefabInstance:
       propertyPath: _destination
       value: 
       objectReference: {fileID: 376584456}
+    - target: {fileID: 5849675414967896275, guid: 173905fd202cbf148978fb0dac121cca, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148463356942810207, guid: 173905fd202cbf148978fb0dac121cca, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 8144971651897201651, guid: 173905fd202cbf148978fb0dac121cca, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1100
@@ -1978,6 +2001,10 @@ PrefabInstance:
     - target: {fileID: 8144971651897201651, guid: 173905fd202cbf148978fb0dac121cca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8928846606570210603, guid: 173905fd202cbf148978fb0dac121cca, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

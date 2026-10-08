@@ -2535,7 +2535,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/High/LanternWarden/glTF/LanternWarden.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/High/LanternWarden/LanternWarden.blend"
       },
-      "build_seconds": 3.6
+      "build_seconds": 3.5
     },
     {
       "key": "enemies/late/gothic-knight",
@@ -3481,6 +3481,124 @@
         "blend": "Assets/Models/ArtBible/Enemies/Powder/Petardier/Petardier.blend"
       },
       "build_seconds": 3.4
+    },
+    {
+      "key": "players/lair/wizard",
+      "kind": "players",
+      "age": "lair",
+      "slug": "wizard",
+      "name": "Wizard",
+      "title": "Wizard",
+      "passed": true,
+      "stats": {
+        "vertices": 2731,
+        "faces": 2573,
+        "triangles": 5334,
+        "islands": 33,
+        "lowest_z": 0.0,
+        "height": 2.283,
+        "width": 0.739,
+        "budget": 7000,
+        "bbox_m": "0.739x0.468x2.283",
+        "height_body_m": 1.8,
+        "height_spec_m": 1.8,
+        "height_with_props_m": 2.283,
+        "rig_bones": 21,
+        "skinned_bones": 20,
+        "mean_influences": 1.71
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 1.8,
+        "tri_budget": 7000
+      },
+      "families": {
+        "robe_wool": {
+          "name": "Robe wool (dyed)",
+          "base": "#4F7299",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hat_felt": {
+          "name": "Hat felt (dyed)",
+          "base": "#39526E",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "hat_band": {
+          "name": "Hat band (dyed)",
+          "base": "#28394D",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        },
+        "skin": {
+          "name": "Skin",
+          "base": "#D9B08C",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "glove_leather": {
+          "name": "Glove leather",
+          "base": "#5A4026",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "boot_leather": {
+          "name": "Boot leather",
+          "base": "#2A2118",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "calfskin": {
+          "name": "Calfskin",
+          "base": "#7A5233",
+          "rough": 0.7,
+          "metal": 0.0,
+          "emit": null
+        },
+        "brass": {
+          "name": "Brass",
+          "base": "#B58A3C",
+          "rough": 0.4,
+          "metal": 1.0,
+          "emit": null
+        },
+        "eye_dark": {
+          "name": "Eye dark",
+          "base": "#1A1410",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "beard_hair": {
+          "name": "Beard hair",
+          "base": "#6E5C48",
+          "rough": 0.9,
+          "metal": 0.0,
+          "emit": null
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Height 1.80 m is to the crown of the skull; the hat (own bone, child of Head, prop: excluded from the height check) adds about 0.47 m.",
+        "Dyed families: robe_wool (robe, cape, sleeves, seam excepted), hat_felt, hat_band. The robe's front seam is painted hat_band (darker, dyed). The baked <Name>_DyeMask.png is white on the dyed families.",
+        "Right hand (-X) bare, left (+X) gloved; grimoire at the right hip, pouch and watch at the left. Arms hang relaxed; no props in the hands.",
+        "Not built: fingers, the hat-band name (a runtime texture), cloth springs."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Players/Lair/Wizard/Wizard.fbx",
+        "gltf": "Assets/Models/ArtBible/Players/Lair/Wizard/glTF/Wizard.gltf",
+        "blend": "Assets/Models/ArtBible/Players/Lair/Wizard/Wizard.blend"
+      },
+      "build_seconds": 3.9
     }
   ]
 }

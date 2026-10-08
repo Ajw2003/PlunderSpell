@@ -50,6 +50,9 @@ class Blueprint:
     bbox_overrides: dict[str, tuple[float, str]] = field(default_factory=dict)
     # A structure/enemy that legitimately carries orpiment gold says why here.
     gold_reason: str | None = None
+    # Families a player's colour dyes (players only). Their faces are baked white into
+    # an extra greyscale <Name>_DyeMask.png, so one material slot can still be tinted.
+    dye_families: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
     @property
