@@ -1,0 +1,168 @@
+20:13:27 test slot 99 wiped, owner's slot to restore: 1
+20:13:34 state MainMenu
+20:13:35 solo, slot 99
+20:13:36 player: player
+20:13:39 facing the book from (1002.29, 1.50, 1.21)
+20:13:41 looked at the book: False
+20:13:44 after E at the book: LairRoom
+20:13:45 capture: docs/generated/no-lair-screen-2026-10-07/01-book-after-E.png
+20:13:46 book: <size=130%>Owed</size>/<size=220%>500</size>/the debt grows by 50 each raid it stands//<size=130%>Last raid</size>/No raid yet. || <size=130%>Purses</size>/I  Purse 0/    Owes 500  Paid 0/
+20:13:46 PASS E at the book left the player in the Lair room and the book still reads
+20:13:50 after Esc: LairRoom, resumes to Playing
+20:13:51 cursor: Locked False
+20:13:51 FAIL Esc in the Lair room opened the pause menu
+20:13:52 capture: docs/generated/no-lair-screen-2026-10-07/02-pause-menu-solo.png
+20:13:53 lobby host forced on; CanInvite True
+20:13:54 capture: docs/generated/no-lair-screen-2026-10-07/03-pause-menu-invite.png
+20:13:55 clicked Invite Friend
+20:13:57 capture: docs/generated/no-lair-screen-2026-10-07/04-pause-menu-friends.png
+20:14:01 after Esc again: Paused
+20:14:01 FAIL Esc in the pause menu returned to the Lair room, not Playing
+20:14:02 before W: 1002.36,2.30,1.10
+20:14:06 while W held: 1002.36,2.30,1.10
+20:14:07 FAIL after Resume, W through the Input System moved the player (1002.36,2.30,1.10 -> 1002.36,2.30,1.10)
+20:14:07 short of the portal at (1004.40, 2.30, 0.00)
+20:14:09 stepped in at (1006.60, 1.50, 0.00)
+20:14:11 line: 0.00
+20:14:12 capture: docs/generated/no-lair-screen-2026-10-07/05-client-portal-line.png
+20:14:19 alpha 0.00 peak 0.00
+20:14:19 state after the client stepped in: Paused
+20:14:19 FAIL a client walking into the portal did not set out
+20:14:19 FAIL 4 no-lair-screen checks
+20:14:20 cleaning up
+20:14:22 active slot 1
+20:14:53 test slot 99 wiped, owner's slot to restore: 1
+20:15:01 state MainMenu
+20:15:02 solo, slot 99
+20:15:03 player: player
+20:15:06 facing the book from (1002.29, 1.50, 1.21)
+20:15:10 after E at the book: LairRoom
+20:15:11 capture: docs/generated/no-lair-screen-2026-10-07/01-book-after-E.png
+20:15:12 book: <size=130%>Owed</size>/<size=220%>500</size>/the debt grows by 50 each raid it stands//<size=130%>Last raid</size>/No raid yet. || <size=130%>Purses</size>/I  Purse 0/    Owes 500  Paid 0/
+20:15:12 PASS E at the book left the player in the Lair room and the book still reads
+20:15:16 after Esc: Paused, resumes to LairRoom
+20:15:17 cursor: None True
+20:15:17 PASS Esc in the Lair room opened the pause menu
+20:15:18 capture: docs/generated/no-lair-screen-2026-10-07/02-pause-menu-solo.png
+20:15:19 lobby host forced on; CanInvite True
+20:15:20 capture: docs/generated/no-lair-screen-2026-10-07/03-pause-menu-invite.png
+20:15:21 clicked Invite Friend
+20:15:23 capture: docs/generated/no-lair-screen-2026-10-07/04-pause-menu-friends.png
+20:15:27 after Esc again: Paused
+20:15:27 FAIL Esc in the pause menu returned to the Lair room, not Playing
+20:15:27 before W: 1002.36,2.30,1.10
+20:15:32 while W held: 1002.36,2.30,1.10
+20:15:32 FAIL after Resume, W through the Input System moved the player (1002.36,2.30,1.10 -> 1002.36,2.30,1.10)
+20:15:33 short of the portal at (1004.40, 2.30, 0.00)
+20:15:35 stepped in at (1006.60, 1.50, 0.00)
+20:15:37 line: 0.00
+20:15:38 capture: docs/generated/no-lair-screen-2026-10-07/05-client-portal-line.png
+20:15:44 alpha 0.00 peak 0.00
+20:15:45 state after the client stepped in: Paused
+20:15:45 FAIL a client walking into the portal did not set out
+20:15:45 FAIL 3 no-lair-screen checks
+20:15:45 cleaning up
+20:15:47 active slot 1
+20:16:36 test slot 99 wiped, owner's slot to restore: 1
+20:16:44 state MainMenu
+20:16:45 solo, slot 99
+20:16:46 player: player
+20:16:49 facing the book from (1002.29, 1.50, 1.21)
+20:16:54 after E at the book: LairRoom
+20:16:54 capture: docs/generated/no-lair-screen-2026-10-07/01-book-after-E.png
+20:16:55 book: <size=130%>Owed</size>/<size=220%>500</size>/the debt grows by 50 each raid it stands//<size=130%>Last raid</size>/No raid yet. || <size=130%>Purses</size>/I  Purse 0/    Owes 500  Paid 0/
+20:16:55 PASS E at the book left the player in the Lair room and the book still reads
+20:17:00 after Esc: Paused, resumes to LairRoom
+20:17:00 cursor: None True
+20:17:00 PASS Esc in the Lair room opened the pause menu
+20:17:01 capture: docs/generated/no-lair-screen-2026-10-07/02-pause-menu-solo.png
+20:17:05 after Esc again: LairRoom
+20:17:05 PASS Esc in the pause menu returned to the Lair room, not Playing
+20:17:06 before W: 1002.36,2.30,1.10
+20:17:10 while W held: 993.40,1.50,0.25
+20:17:11 PASS after Resume, W through the Input System moved the player (1002.36,2.30,1.10 -> 993.40,1.50,0.25)
+20:17:11 lobby host forced on; CanInvite True; state Paused
+20:17:13 capture: docs/generated/no-lair-screen-2026-10-07/03-pause-menu-invite.png
+20:17:14 clicked InviteButton
+20:17:16 capture: docs/generated/no-lair-screen-2026-10-07/04-pause-menu-friends.png
+20:17:16 clicked ResumeButton
+20:17:18 after clicking Resume: LairRoom
+20:17:18 PASS the Resume button returned to the Lair room
+20:17:19 short of the portal at (1004.40, 1.50, 0.00)
+20:17:21 stepped in at (1006.60, 1.50, 0.00)
+20:17:23 line: 1.00
+20:17:24 capture: docs/generated/no-lair-screen-2026-10-07/05-client-portal-line.png
+20:17:30 alpha 0.00 peak 1.00
+20:17:31 state after the client stepped in: LairRoom
+20:17:31 PASS a client walking into the portal did not set out
+20:17:31 PASS all no-lair-screen checks
+20:17:31 cleaning up
+20:17:33 active slot 1
+20:17:50 test slot 99 wiped, owner's slot to restore: 1
+20:17:58 state MainMenu
+20:17:59 solo, slot 99
+20:17:59 player: player
+20:18:02 facing the book from (1002.29, 1.50, 1.21)
+20:18:07 after E at the book: LairRoom
+20:18:08 capture: docs/generated/no-lair-screen-2026-10-07/01-book-after-E.png
+20:18:09 book: <size=130%>Owed</size>/<size=220%>500</size>/the debt grows by 50 each raid it stands//<size=130%>Last raid</size>/No raid yet. || <size=130%>Purses</size>/I  Purse 0/    Owes 500  Paid 0/
+20:18:09 PASS E at the book left the player in the Lair room and the book still reads
+20:18:13 after Esc: Paused, resumes to LairRoom
+20:18:14 cursor: None True
+20:18:14 PASS Esc in the Lair room opened the pause menu
+20:18:15 capture: docs/generated/no-lair-screen-2026-10-07/02-pause-menu-solo.png
+20:18:18 after Esc again: LairRoom
+20:18:18 PASS Esc in the pause menu returned to the Lair room, not Playing
+20:18:19 before W: 1002.36,2.30,1.10
+20:18:23 while W held: 993.40,1.50,0.25
+20:18:24 PASS after Resume, W through the Input System moved the player (1002.36,2.30,1.10 -> 993.40,1.50,0.25)
+20:18:25 lobby host forced on; CanInvite True; state Paused
+20:18:27 capture: docs/generated/no-lair-screen-2026-10-07/03-pause-menu-invite.png
+20:18:27 clicked InviteButton
+20:18:29 capture: docs/generated/no-lair-screen-2026-10-07/04-pause-menu-friends.png
+20:18:33 after Esc with the friend list open: LairRoom
+20:18:33 PASS Esc with the friend list open returned to the Lair room
+20:18:34 short of the portal at (1004.40, 1.50, 0.00)
+20:18:36 stepped in at (1006.60, 1.50, 0.00)
+20:18:38 line: 1.00
+20:18:38 capture: docs/generated/no-lair-screen-2026-10-07/05-client-portal-line.png
+20:18:45 alpha 0.00 peak 1.00
+20:18:46 state after the client stepped in: LairRoom
+20:18:46 PASS a client walking into the portal did not set out
+20:18:46 PASS all no-lair-screen checks
+20:18:46 cleaning up
+20:18:48 active slot 1
+20:26:20 test slot 99 wiped, owner's slot to restore: 1
+20:26:29 state MainMenu
+20:26:29 solo, slot 99
+20:26:30 player: player
+20:26:33 facing the book from (1002.29, 1.50, 1.21)
+20:26:38 after E at the book: LairRoom
+20:26:38 capture: docs/generated/no-lair-screen-2026-10-07/01-book-after-E.png
+20:26:39 book: <size=130%>Owed</size>/<size=220%>500</size>/the debt grows by 50 each raid it stands//<size=130%>Last raid</size>/No raid yet. || <size=130%>Purses</size>/I  Purse 0/    Owes 500  Paid 0/
+20:26:39 PASS E at the book left the player in the Lair room and the book still reads
+20:26:43 after Esc: Paused, resumes to LairRoom
+20:26:44 cursor: None True
+20:26:44 PASS Esc in the Lair room opened the pause menu
+20:26:44 capture: docs/generated/no-lair-screen-2026-10-07/02-pause-menu-solo.png
+20:26:48 after Esc again: LairRoom
+20:26:48 PASS Esc in the pause menu returned to the Lair room, not Playing
+20:26:49 before W: 1002.36,2.30,1.10
+20:26:53 while W held: 993.40,1.50,0.25
+20:26:54 PASS after Resume, W through the Input System moved the player (1002.36,2.30,1.10 -> 993.40,1.50,0.25)
+20:26:54 lobby host forced on; CanInvite True; state Paused
+20:26:56 capture: docs/generated/no-lair-screen-2026-10-07/03-pause-menu-invite.png
+20:26:57 clicked InviteButton
+20:26:58 capture: docs/generated/no-lair-screen-2026-10-07/04-pause-menu-friends.png
+20:27:02 after Esc with the friend list open: LairRoom
+20:27:02 PASS Esc with the friend list open returned to the Lair room
+20:27:03 short of the portal at (1004.40, 1.50, 0.00)
+20:27:04 stepped in at (1006.60, 1.50, 0.00)
+20:27:06 line: 0.99
+20:27:07 capture: docs/generated/no-lair-screen-2026-10-07/05-client-portal-line.png
+20:27:14 alpha 0.00 peak 1.00
+20:27:14 state after the client stepped in: LairRoom
+20:27:14 PASS a client walking into the portal did not set out
+20:27:14 PASS all no-lair-screen checks
+20:27:14 cleaning up
+20:27:16 active slot 1

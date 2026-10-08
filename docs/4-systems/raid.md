@@ -177,15 +177,23 @@ and **both are deleted with it**:
 Sessions start, and extraction/death returns, in the walkable Lair room, not the flat screen.
 
 - `GameState.LairRoom` (`GameState.cs`): cursor captured, input accepted, Lair music, no screen, RaidHud hidden.
-  `GameState.Lair` still means "the Lair screen is open" (cursor free).
+  There is no Lair screen any more (#359): `GameState.Lair` (value 1) and `LairScreen` are gone, and the other values keep their numbers.
+  Where its parts went: the ledger is the book, the Age is the dial, Set Out is the portal, "Waiting for the host to set out" is the
+  portal line below, Invite Friend and the online-friends list (`PauseInviteSection.cs`, only while `ICoopSession.CanInvite`) and Back to Menu
+  ("Quit to Main Menu", which also leaves the session) are in the pause menu, and "Back to the Room" is dropped.
 - Entered from Play Solo (`MainMenuScreen.cs:198`), hosting/joining (`CoopSession.cs`), a resolved raid
   (`RaidBootstrapper.cs:87`) and the game-over button (`GameOverScreen.cs:89`).
 - `LairRoomSpawner.cs:45` stands the local player at `PlayerSpawns/Spawn{owner}` (retried in `Update` until the body exists),
-  only on arrival: `IsArrival` (`LairRoomSpawner.cs:23`) is false when coming from the Lair screen, so closing the
-  ledger leaves the player where they stood (until 2026-10-07 it snapped them back to the portal).
-- `LairPortalTrigger.cs:16`: the local player walking in while in LairRoom, host or solo, sets `Playing`.
-- `LairLedgerHandle.cs:16` reads E itself and opens the Lair screen when the main camera's centre ray hits the table or the book within 3 m (`IsLookedAt`, `LairLedgerHandle.cs:23`). It does not go through `LootInteractor`: the raid player carries none, and picks loot up with the mouse through `ItemManager`. Esc in
-  LairRoom does the same (`GameFlowInput.cs`); the Lair screen's "Back to the Room" returns.
+  only on arrival: `IsArrival` is false when coming from the pause menu, so resuming leaves the player where they stood.
+- `LairPortalTrigger.cs`: the local player walking in while in LairRoom sets `Playing` when it is the host or solo. A client sees
+  "The host sets out" at the arch instead (`HostSetsOutLine.cs`: TMP world text in the ledger's Spectral font, built in code under the
+  trigger, eased in and out over 1 s with a SmoothStep) and follows when the host goes (`RaidBootstrapper.OnPhaseChanged`, which
+  also pulls a client out of a pause opened in the Lair).
+- E at the table or the book opens nothing (`LairLedgerHandle` is gone, #359): the book is read in place. Esc in LairRoom opens the
+  pause menu (`GameFlowInput.cs`); Resume (the button or Esc) goes to `GameStateManager.PausedFrom`, the state the pause began in
+  (LairRoom or Playing; Settings in between keeps it), not always Playing. The cursor and input rules already treat `Paused` as a
+  screen from either place (`CursorLockPolicy.ShouldCapture`, `PlayerInputController.AcceptsInputIn`), and `UIRoot` shows the HUD
+  screen only for a pause begun in a raid. `Tools/Unity/no_lair_screen_check.sh` drives all of it (`docs/generated/no-lair-screen-2026-10-07/`).
 - The Market door: `RoomTravel.cs:23` reads E when the camera looks at the door's own collider (the leaf is part of the
   cellar mesh) and `Travel` (`RoomTravel.cs:38`) stands the player at the Market's `PlayerSpawns/Spawn{owner}`. The
   Market's `LairExit` trigger across its south way in (`RoomTravel.cs:29`) brings them back to `MarketDoorArrivals`,
@@ -199,18 +207,18 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   the piece on it (#353; `Tools/Unity/market_grab_check.sh`, `docs/generated/market-grab-2026-10-07/`).
 - The ledger book on the table is readable (#357, `docs/generated/ledger-book-2026-10-07/`). `LairRoomForge.AddLedgerPages` puts two
   TextMeshPro 3D texts on the open book's pages (0.17 m either side of its middle, tops from the model's bounds), and
-  `LairLedgerBook.cs` fills them from `LairHubManager`, so a client's book shows the host's ledger the same way its Lair screen does
+  `LairLedgerBook.cs` fills them from `LairHubManager`, so a client's book shows the host's ledger the same way the old Lair screen did
   (`RaidDirector._hostLedger` -> `ShowHostLedger`). Left page: Owed with "the debt grows by N each raid it stands", then Last raid
   (left-behind pieces included); right page: purses I-IV for the seats in play, then the Collector's line. The wording is
-  `LedgerPageText.cs` (pure, `LedgerPageTextTests`), the same as `LairScreen.Refresh`/`ShowPurses`. It redraws on the Lair events
+  `LedgerPageText.cs` (pure, `LedgerPageTextTests`), the words the Lair screen used to show. It redraws on the Lair events
   (`DebtChanged`, `PurseChanged`, `PresentChanged`, `CollectorPaid`, `CollectorSpoke`, `SaveSlotLoaded`); the last raid has no event, so
   `Update` compares its two values. The font is Spectral (the UI's body face) as a TMP asset made by the forge
   (`Resources/UI/Fonts/Spectral-Regular SDF.asset`). The book faces the strongbox side (+Z in the Lair), so that is where it reads
-  the right way up. The Lair screen and E/Esc are unchanged (#359). `Tools/Unity/coop_lair_check.sh` checks the client's book text equals the host's (left-behind count included). Known gap: the printed heading bars and ruled lines of the book texture run under the text.
+  the right way up. `Tools/Unity/coop_lair_check.sh` checks the client's book text equals the host's (left-behind count included). Known gap: the printed heading bars and ruled lines of the book texture run under the text.
 - The century dial chooses the Age to set out for (#358, `docs/generated/century-dial-2026-10-07/`). Look at the dial's stand and press E
-  (`LairCenturyDial.cs`, on `LairCenturyDialStand`): `LairHubManager.SelectEra(AgeNames.Next(...))`, the same call the Lair screen's cards
-  make, so `RaidDirector.StartRaid()` and the portal start the chosen Age unchanged. Order and words are `AgeNames.cs` (pure,
-  `AgeNamesTests`; the Lair screen's cards read the same arrays). Host only: a client's E does nothing (`IsSessionAuthority`). Clients
+  (`LairCenturyDial.cs`, on `LairCenturyDialStand`): `LairHubManager.SelectEra(AgeNames.Next(...))`, the call the Lair screen's cards
+  used to make, so `RaidDirector.StartRaid()` and the portal start the chosen Age unchanged. Order and words are `AgeNames.cs` (pure,
+  `AgeNamesTests`). Host only: a client's E does nothing (`IsSessionAuthority`). Clients
   learn the Age through `RaidDirector._hostEra` (a `SyncVar<int>` on the already-registered director, published on `AgeChosen`, shown by
   `LairHubManager.ShowHostEra`, which saves nothing), so no new networked object. The four rings ease to a per-Age pose over 1 s
   (`TurnSeconds`; each ring turns about the vertical by Age x 25 x ring number, alternating), and the brass plaque on the stand's portal

@@ -10,7 +10,7 @@ namespace Plunderspell.Raid
     /// <summary>
     /// The century dial in the Lair room chooses the Age to set out for (#358). Looking at the stand and pressing E turns
     /// it to the next Age; only the host (the session authority) chooses, a client's E does nothing. The chosen Age is
-    /// <see cref="LairHubManager"/>'s selected era, the same one the Lair screen's cards set and a raid starts in, and the
+    /// <see cref="LairHubManager"/>'s selected era, the one a raid starts in, and the
     /// client learns it through <c>RaidDirector</c>. The rings ease to that Age's pose and the plaque eases to its words
     /// (<see cref="AgeNames.Plaque"/>) over <see cref="TurnSeconds"/>, so every player's dial follows.
     /// </summary>

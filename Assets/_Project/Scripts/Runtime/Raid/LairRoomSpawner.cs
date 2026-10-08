@@ -17,10 +17,9 @@ namespace Plunderspell.Raid
 
         /// <summary>
         /// Whether entering the room from <paramref name="previous"/> is an arrival (from the menu, a raid,
-        /// the death screen) rather than closing the Lair screen, which leaves the player where they stood:
-        /// at the ledger, or in the Market.
+        /// the death screen) rather than resuming from the pause menu, which leaves the player where they stood.
         /// </summary>
-        public static bool IsArrival(GameState previous) => previous != GameState.Lair;
+        public static bool IsArrival(GameState previous) => previous != GameState.Paused;
 
         private void OnEnable()
         {

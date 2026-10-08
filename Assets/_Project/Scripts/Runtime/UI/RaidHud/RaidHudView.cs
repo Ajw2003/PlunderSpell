@@ -234,6 +234,9 @@ namespace Plunderspell.UI
             if (model.State != Plunderspell.Core.GameState.Playing &&
                 model.State != Plunderspell.Core.GameState.Paused)
                 return;
+            var gameState = Plunderspell.Core.GameServices.GameState;
+            if (gameState != null && !gameState.RaidOnScreen)
+                return; // paused in the Lair: no raid clock or alarm behind the pause menu
 
             float scale = Screen.height / k_referenceHeight;
             if (scale <= 0f)

@@ -25,7 +25,9 @@
 //   turndial <era>     host: choose the Age (BronzeAge, HighMedieval, LateMedieval, AgeOfPowder) as the dial's E press does (#358)
 //   slot1            what the Lair's saved slot 1 holds (debt, gold, four purses), read without loading it
 //   activeslot         the save slot this side plays in and what it has SAVED (debt, gold, four purses, paid), read without loading
-//   lairscreen         show the Lair screen on this side (it is hidden in the Lair room), so a shot can capture the ledger
+//   portalwalk         the local player walks into the portal arch's trigger (#359): a client sees "The host sets out", the host sets out
+//   portalline         the opacity of the client's "The host sets out" line at the arch now (0 to 1)
+//   pausemenu          open the pause menu on this side, as Esc does (#359)
 //   grab pile|pouch    stand the local player 1.8 m from the first pile piece (or the coin pouch), looking at it, and grab it
 //                      the way a left-click does (ItemManager.StartDragging, the piece's own point as the grab point) (#333)
 //   held               what the local player holds: name, dragging, holders, offset in the player's view frame, speed, position
@@ -305,11 +307,34 @@ switch (action)
         for (int seat = 0; seat < 4; seat++) s += " " + hub.GetMethod("PeekPaidLast").Invoke(null, new object[] { slot, seat });
         return s;
     }
-    case "lairscreen":
+    case "portalwalk":
     {
-        var screens = UnityEngine.Object.FindObjectsByType(T("Plunderspell.UI.Screens.LairScreen"), UnityEngine.FindObjectsInactive.Include, UnityEngine.FindObjectsSortMode.None);
-        foreach (var screen in screens) screen.GetType().GetMethod("SetVisible").Invoke(screen, new object[] { true });
-        return "lair screens shown " + screens.Length;
+        // the local player walks into the portal arch's trigger (#359): stands 1.2 m short of it, facing the arch, then steps into it
+        var trigger = (UnityEngine.Component)FindAll("Plunderspell.Raid.LairPortalTrigger")[0];
+        var centre = trigger.GetComponent<UnityEngine.BoxCollider>().bounds.center;
+        var player = LocalPlayer();
+        var body = player.GetComponent<UnityEngine.Rigidbody>();
+        var short_ = new UnityEngine.Vector3(centre.x - 2.4f, player.transform.position.y, centre.z);
+        if (body != null) { body.linearVelocity = UnityEngine.Vector3.zero; body.position = short_; }
+        player.transform.position = short_;
+        player.GetType().GetMethod("FaceYaw").Invoke(player, new object[] { 90f });
+        UnityEngine.Camera.main.transform.localRotation = UnityEngine.Quaternion.Euler(0f, 90f, 0f);
+        var into = new UnityEngine.Vector3(centre.x, short_.y, centre.z);
+        if (body != null) body.position = into;
+        player.transform.position = into;
+        return "walked into the portal at " + V(into);
+    }
+    case "portalline":
+    {
+        var line = Get(FindAll("Plunderspell.Raid.LairPortalTrigger")[0], "HostLine");
+        return "portal line alpha " + ((float)Get(line, "Alpha")).ToString("F2") + " peak " + ((float)Get(line, "PeakAlpha")).ToString("F2");
+    }
+    case "pausemenu":
+    {
+        // show the pause menu from where the player stands (Esc, as GameFlowInput does)
+        var states = Get(T("Plunderspell.Core.GameServices"), "GameState");
+        states.GetType().GetMethod("ChangeState").Invoke(states, new object[] { System.Enum.Parse(T("Plunderspell.Core.GameState"), "Paused") });
+        return "state " + State() + " resumes to " + Get(states, "PausedFrom");
     }
     case "where":
     {

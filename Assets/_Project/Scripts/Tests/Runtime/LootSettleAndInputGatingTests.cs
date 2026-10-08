@@ -237,7 +237,7 @@ namespace Plunderspell.Tests
 
             foreach (GameState state in new[]
                      {
-                         GameState.MainMenu, GameState.Lair, GameState.Paused,
+                         GameState.MainMenu, GameState.Paused,
                          GameState.Settings,
                      })
             {
@@ -357,7 +357,7 @@ namespace Plunderspell.Tests
 
             foreach (GameState state in new[]
                      {
-                         GameState.MainMenu, GameState.Lair, GameState.Paused,
+                         GameState.MainMenu, GameState.Paused,
                          GameState.Settings,
                      })
             {

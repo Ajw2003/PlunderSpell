@@ -120,7 +120,20 @@ before="$(L host pile)"; log "host before: $before"
 b="${before#pile }"; b="${b%% *}"
 seed=777
 log "castle: $(ev "var d = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.RaidDirector>(); d.SetFixedSeed($seed); return \"seed $seed\";")"
-timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/set_out.cs >/dev/null
+
+# The portal (#359): a client walking in only sees "The host sets out" at the arch (it fades in over half a second, out over the next),
+# and the raid does not start; the host walking in sets out, and the client follows.
+log "client: $(L client portalwalk)"
+L client shot "$(cygpath -m "$repo/$out/$label-client-portal-line.png")" >/dev/null 2>&1 || true
+sleep 2
+la="$(L client portalline)"; log "client: $la"
+a="${la##* }"; python -c "import sys; sys.exit(0 if float(sys.argv[1]) > 0.9 else 1)" "$a" 2>/dev/null && r=ok || r=no
+check $r "the client walking into the portal saw the line at the arch come to full opacity ($la)"
+check "$([ "${la% peak *}" = "portal line alpha 0.00" ] && echo ok || echo no)" "the line has faded out again ($la)"
+hs="$(L host where)"; cs="$(L client where)"; log "host: $hs"; log "client: $cs"
+r=no; case "$hs" in "state LairRoom"*) case "$cs" in "state LairRoom"*) r=ok ;; esac ;; esac
+check $r "the client at the portal did not start the raid (both still in the Lair room)"
+log "host: $(L host portalwalk)"
 wait_for host "state Playing" 30
 wait_for client "state Playing" 30
 sleep 3
@@ -214,8 +227,6 @@ check $r "the client's Lair shows the host's ledger exactly, Collector's line in
 bh="$(L host book)"; bc="$(L client book)"; log "host book:   $bh"; log "client book: $bc"
 r=no; [ "$bh" = "$bc" ] && case "$bh" in *"Owed"*"Purses"*"Collector takes"*) r=ok ;; esac
 check $r "the client's ledger book reads exactly as the host's, Collector's line included"
-log "client: $(L client lairscreen)"; sleep 1
-L client shot "$(cygpath -m "$repo/$out/$label-client-ledger.png")" >/dev/null 2>&1 || true
 cs_after="$(L client activeslot)"; log "client's own save after: $cs_after"
 [ "$cs_before" = "$cs_after" ] && r=ok || r=no
 check $r "the client's own save slot is untouched ($cs_before)"

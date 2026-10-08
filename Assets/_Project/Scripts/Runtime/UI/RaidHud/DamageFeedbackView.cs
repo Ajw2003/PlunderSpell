@@ -346,8 +346,7 @@ namespace Plunderspell.UI
         private static bool IsInWorld()
         {
             var gameState = Plunderspell.Core.GameServices.GameState;
-            return gameState == null || gameState.CurrentState == Plunderspell.Core.GameState.Playing
-                                     || gameState.CurrentState == Plunderspell.Core.GameState.Paused;
+            return gameState == null || gameState.RaidOnScreen;
         }
 
         private void DrawVignette()

@@ -73,7 +73,7 @@ namespace Plunderspell.EditorTools
             Debug.Log($"[Lair] Built {PrefabPath}.");
         }
 
-        /// <summary>The room's behaviour: the spawner, a portal trigger in front of the arch, the ledger handle.</summary>
+        /// <summary>The room's behaviour: the spawner, a portal trigger in front of the arch.</summary>
         private static void AddBehaviours(GameObject root)
         {
             root.AddComponent<Plunderspell.Raid.LairRoomSpawner>();
@@ -96,10 +96,6 @@ namespace Plunderspell.EditorTools
             var haulObject = new SerializedObject(haul);
             haulObject.FindProperty("_pile").objectReferenceValue = pile;
             haulObject.ApplyModifiedPropertiesWithoutUndo();
-
-            // The book on the table is its own object, so looking at it opens the ledger too.
-            root.transform.Find("LairLedgerTable").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
-            root.transform.Find("LairLedger").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
 
             AddMarketDoor(root);
             AddLedgerPages(root);

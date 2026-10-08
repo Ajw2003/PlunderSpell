@@ -291,7 +291,7 @@ namespace StateMachine
         /// <summary>Setting out again after dying: a fresh body, full health.</summary>
         private void OnGameStateChanged(Plunderspell.Core.GameState previous, Plunderspell.Core.GameState next)
         {
-            bool freshRaid = previous == Plunderspell.Core.GameState.Lair || previous == Plunderspell.Core.GameState.LairRoom
+            bool freshRaid = previous == Plunderspell.Core.GameState.LairRoom
                              || previous == Plunderspell.Core.GameState.GameOver;
             if (next == Plunderspell.Core.GameState.Playing && freshRaid && dead)
                 ReviveTo(1f);

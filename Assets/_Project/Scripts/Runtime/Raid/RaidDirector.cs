@@ -139,7 +139,7 @@ namespace Plunderspell.Raid
                 // A pouch banked or a wizard arriving changes the ledger between raids; the host publishes it as it happens.
                 EventManager.Instance?.Subscribe(this, (PurseChanged e) => PublishCampaign());
                 EventManager.Instance?.Subscribe(this, (PresentChanged e) => PublishCampaign());
-                EventManager.Instance?.Subscribe(this, (AgeChosen e) => PublishCampaign()); // the century dial or the Lair screen
+                EventManager.Instance?.Subscribe(this, (AgeChosen e) => PublishCampaign()); // the century dial
                 PublishCampaign();
             }
             else

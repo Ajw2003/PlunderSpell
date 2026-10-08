@@ -10,7 +10,6 @@ namespace Plunderspell.UI
     public class UIRoot : MonoBehaviour
     {
         private MainMenuScreen _mainMenu;
-        private LairScreen _lair;
         private PauseMenuScreen _pauseMenu;
         private HUDScreen _hud;
         private SettingsScreen _settings;
@@ -22,7 +21,6 @@ namespace Plunderspell.UI
             var root = canvas.transform;
 
             _mainMenu = BuildScreen<MainMenuScreen>(root, "MainMenuScreen");
-            _lair = BuildScreen<LairScreen>(root, "LairScreen");
             _pauseMenu = BuildScreen<PauseMenuScreen>(root, "PauseMenuScreen");
             _hud = BuildScreen<HUDScreen>(root, "HUDScreen");
             _settings = BuildScreen<SettingsScreen>(root, "SettingsScreen");
@@ -64,9 +62,8 @@ namespace Plunderspell.UI
         private void ApplyState(GameState state)
         {
             _mainMenu.SetVisible(state == GameState.MainMenu);
-            _lair.SetVisible(state == GameState.Lair);
             _pauseMenu.SetVisible(state == GameState.Paused);
-            _hud.SetVisible(state == GameState.Playing || state == GameState.Paused);
+            _hud.SetVisible(GameServices.GameState.RaidOnScreen);
             _settings.SetVisible(state == GameState.Settings);
             _gameOver.SetVisible(state == GameState.GameOver || state == GameState.Victory);
 

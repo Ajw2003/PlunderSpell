@@ -4,7 +4,7 @@ namespace Plunderspell.Lair
 {
     /// <summary>
     /// The four Ages in the order the century dial turns through them (#358), with each one's name, stratum, date
-    /// and one-line character from the pitch bible. The Lair screen's cards and the dial's plaque read the same words.
+    /// and one-line character from the pitch bible. The dial's plaque reads these words.
     /// </summary>
     public static class AgeNames
     {

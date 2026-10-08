@@ -68,7 +68,9 @@ namespace Plunderspell.Raid
             // From the "You died" screen as well as the Lair: after a party wipe the host may set out
             // again before a friend has clicked through to the Lair.
             GameState current = GameServices.GameState.CurrentState;
-            if (isClient && phase == RaidPhase.Raiding && (current == GameState.Lair || current == GameState.LairRoom || current == GameState.GameOver))
+            GameStateManager states = GameServices.GameState;
+            bool pausedInLair = current == GameState.Paused && states.PausedFrom == GameState.LairRoom;
+            if (isClient && phase == RaidPhase.Raiding && (current == GameState.LairRoom || pausedInLair || current == GameState.GameOver))
                 GameServices.GameState.ChangeState(GameState.Playing);
         }
 

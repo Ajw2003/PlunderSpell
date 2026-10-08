@@ -3,7 +3,7 @@ using Plunderspell.Lair;
 
 namespace Plunderspell.Tests
 {
-    /// <summary>The ledger book's pages say what the Lair screen's ledger says (#357).</summary>
+    /// <summary>The ledger book's pages say the ledger (#357).</summary>
     public class LedgerPageTextTests
     {
         [Test]

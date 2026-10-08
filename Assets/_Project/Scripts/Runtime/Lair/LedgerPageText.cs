@@ -3,9 +3,8 @@ using System.Globalization;
 namespace Plunderspell.Lair
 {
     /// <summary>
-    /// The words on the two pages of the ledger book on the Lair table (#357): the same wording as the Lair
-    /// screen's ledger (<c>LairScreen.Refresh</c>, <c>LairScreen.ShowPurses</c>), as plain functions of the
-    /// ledger's values. Numbers use the invariant culture so both players' books read alike.
+    /// The words on the two pages of the ledger book on the Lair table (#357): as plain functions of the
+    /// ledger's values (the Lair screen that once showed them is gone, #359). Numbers use the invariant culture so both players' books read alike.
     /// </summary>
     public static class LedgerPageText
     {

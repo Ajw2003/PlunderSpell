@@ -4,7 +4,7 @@ using Plunderspell.Raid;
 
 namespace Plunderspell.Tests
 {
-    /// <summary>Closing the Lair screen leaves the player where they stood; every other way in is an arrival (#309).</summary>
+    /// <summary>Resuming from the pause menu leaves the player where they stood; every other way in is an arrival (#309, #359).</summary>
     public class LairRoomSpawnerTests
     {
         [TestCase(GameState.MainMenu)]
@@ -16,9 +16,39 @@ namespace Plunderspell.Tests
         }
 
         [Test]
-        public void ClosingTheLairScreenDoesNotMoveThePlayer()
+        public void ResumingFromThePauseMenuDoesNotMoveThePlayer()
         {
-            Assert.IsFalse(LairRoomSpawner.IsArrival(GameState.Lair));
+            Assert.IsFalse(LairRoomSpawner.IsArrival(GameState.Paused));
+        }
+
+        [Test]
+        public void PausingInTheLairResumesToTheLairAndPausingInARaidToTheRaid()
+        {
+            var states = new GameStateManager();
+            states.ChangeState(GameState.LairRoom);
+            states.ChangeState(GameState.Paused);
+            states.ChangeState(GameState.Settings);
+            states.ChangeState(GameState.Paused);
+            Assert.AreEqual(GameState.LairRoom, states.PausedFrom, "Settings in between must not forget where the pause began.");
+
+            states.ChangeState(GameState.Playing);
+            states.ChangeState(GameState.Paused);
+            Assert.AreEqual(GameState.Playing, states.PausedFrom);
+        }
+
+        [Test]
+        public void TheRaidHudDrawsOverARaidPauseButNotOverTheLair()
+        {
+            var states = new GameStateManager();
+            states.ChangeState(GameState.LairRoom);
+            Assert.IsFalse(states.RaidOnScreen);
+            states.ChangeState(GameState.Paused);
+            Assert.IsFalse(states.RaidOnScreen, "paused in the Lair: the raid clock and alarm showed behind the pause menu");
+
+            states.ChangeState(GameState.Playing);
+            Assert.IsTrue(states.RaidOnScreen);
+            states.ChangeState(GameState.Paused);
+            Assert.IsTrue(states.RaidOnScreen);
         }
     }
 }

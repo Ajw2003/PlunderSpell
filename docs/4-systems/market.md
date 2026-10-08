@@ -132,13 +132,13 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
   wiped by `ResetSlot`), pays the debt by the sum, logs the existing `DEBT_CLEARED` when it reaches 0, and publishes
   `PurseChanged`, `CollectorPaid`, `CollectorSpoke(line)`, `DebtChanged`. With nothing to take his line is "The Collector finds
   the purses empty." Anything left in a purse is that wizard's.
-- **The ledger** (`LairScreen.ShowPurses`, `LairScreen.cs:124`): Owed (kept), then a Purses cell with one column per seat that is
+- **The ledger** (the ledger book's pages since #357/#359, `LedgerPageText.cs`; the Lair screen is gone): Owed (kept), then purses for each seat that is
   present or has a purse or paid last time (I to IV): Purse, Owes (the share due tonight), Paid (last collection), then Last raid.
-  The Banked cell is gone from the screen: sales no longer bank, so it would read 0 (the number still exists in the model).
+  There is no Banked figure: sales no longer bank, so it would read 0 (the number still exists in the model).
 - **His line** ("The Collector takes 120 from I, 80 from II.") is `LairHubManager.CollectorLine`, shown in place of the "Debt grows"
-  note on the Lair screen (`LairScreen.cs:398`) and logged. It is a screen line, not world-space: the company has already left
-  the Lair when he speaks, so the screen shows it on coming home. A spoken or world line is not done.
-- **Clients:** a client's `LairHubManager` is its own local save, but its Lair screen shows the host's ledger (#314):
+  note on the ledger book's page and logged: the company has already left the Lair when he speaks, so the book shows it on
+  coming home. A spoken line is not done.
+- **Clients:** a client's `LairHubManager` is its own local save, but its ledger book shows the host's ledger (#314):
   `RaidDirector._hostLedger`, one `SyncVar<string>` ("purses|paid|present|Collector line", `LairHubManager.HostLedger`), is
   shown by `ShowHostLedger`, which raises the same events as the host and saves nothing (the share is derived from debt and
   seats present). The host re-publishes on every purse or seat change. Checked twice in `coop_lair_check.sh`: after the

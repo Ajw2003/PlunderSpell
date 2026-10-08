@@ -1727,7 +1727,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3194873863029261755}
-  - component: {fileID: 570798498768119375}
   m_Layer: 0
   m_Name: LairLedger
   m_TagString: Untagged
@@ -1751,19 +1750,6 @@ Transform:
   - {fileID: 5443256514809404041}
   m_Father: {fileID: 4504084957452755292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &570798498768119375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6220559278107129982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18dff2d9e6713b64b9f198d7a16500fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.LairLedgerHandle
-  _reach: 3
 --- !u!1 &7136901540869750157
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,7 +1759,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8159769850381306345}
-  - component: {fileID: 840651666516976491}
   m_Layer: 0
   m_Name: LairLedgerTable
   m_TagString: Untagged
@@ -1797,19 +1782,6 @@ Transform:
   - {fileID: 452489746902507793}
   m_Father: {fileID: 4504084957452755292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &840651666516976491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7136901540869750157}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18dff2d9e6713b64b9f198d7a16500fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.LairLedgerHandle
-  _reach: 3
 --- !u!1 &7310181792680637509
 GameObject:
   m_ObjectHideFlags: 0
