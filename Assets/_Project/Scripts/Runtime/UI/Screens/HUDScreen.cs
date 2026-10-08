@@ -92,6 +92,9 @@ namespace Plunderspell.UI.Screens
         protected override void OnShown()
         {
             RefreshStats();
+            // Hidden, this screen hears no extraction events, so a countdown that ended meanwhile (death, the raid ending)
+            // left the bar at its last reading, e.g. "LEAVING IN 1.0S". Read the countdown itself instead.
+            _extractionGroup.SetActive(GameServices.Extraction != null && GameServices.Extraction.IsExtracting);
             EventManager bus = EventManager.Instance;
             if (bus == null)
                 return;

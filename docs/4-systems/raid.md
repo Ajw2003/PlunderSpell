@@ -133,6 +133,10 @@ whatever loot is on the pad, and the Lair shows "Last raid: brought home N coin"
 cannot start in a raid's first 10 s, so a player who spawns beside the pad does not leave by
 accident. F5 still works for playtesting.
 
+The bar is a uGUI screen that listens for the countdown's events only while shown. When it is shown again it reads
+`GameServices.Extraction.IsExtracting` (`HUDScreen.OnShown`), so a countdown that ended while it was hidden (death, the
+raid ending) no longer leaves "LEAVING IN 1.0S" stuck on the next raid (#351).
+
 The zone finds what is on it by **polling an overlap box four times a second**, not by trigger
 enter/exit. Unity sends no trigger events between a kinematic body and a static trigger, and loot
 is kinematic while it settles after spawning, so a piece already on the pad when it was released
@@ -189,6 +193,10 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
 - The Lair sits at (1000, 0, 0) and the Market at (1100, 0, 0) in `RaidScene`, clear of the castle (curtain wall about
   45 m round the origin). `Tools/Plunderspell/Place Lair And Market In Raid Scene` (`RaidSceneRooms.cs`) places both
   and connects the door and the way out.
+- The crosshair shows wherever the world takes input (`CrosshairView.ShownIn`, the same rule as
+  `PlayerInputController.AcceptsInputIn`), so the Lair room and the Market have one, and its "over something" look follows
+  the piece the left mouse would grab. `ItemManager`'s grab ray ignores trigger volumes: a counter's sell zone used to hide
+  the piece on it (#353; `Tools/Unity/market_grab_check.sh`, `docs/generated/market-grab-2026-10-07/`).
 - Evidence: `docs/generated/lair-room-2026-10-06/`.
 
 ### How the haul comes home (#310)
