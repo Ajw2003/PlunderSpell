@@ -140,6 +140,15 @@ namespace Plunderspell.Lair
                 EventManager.Instance?.Publish(new AgeChosen(era));
         }
 
+        /// <summary>Shows the Age the host chose on a client (the century dial, #358). Saves nothing, like <see cref="ShowHostLedger"/>.</summary>
+        public void ShowHostEra(HistoricalEra era)
+        {
+            if (era == SelectedEra)
+                return;
+            SelectedEra = era;
+            EventManager.Instance?.Publish(new AgeChosen(era));
+        }
+
         /// <summary>What the most recent raid brought home, for the Lair's "last raid" line. -1 before any raid.</summary>
         public float LastRaidWorth { get; private set; } = -1f;
 

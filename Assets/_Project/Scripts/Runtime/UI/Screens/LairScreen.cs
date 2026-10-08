@@ -16,24 +16,11 @@ namespace Plunderspell.UI.Screens
     /// </summary>
     public class LairScreen : UIScreen
     {
-        private static readonly HistoricalEra[] Eras =
-        {
-            HistoricalEra.BronzeAge,
-            HistoricalEra.HighMedieval,
-            HistoricalEra.LateMedieval,
-            HistoricalEra.AgeOfPowder,
-        };
-
-        // Each Age's stratum numeral, date and one-line character come from the pitch bible.
-        private static readonly string[] Strata = { "Stratum I", "Stratum II", "Stratum III", "Stratum IV" };
-        private static readonly string[] Dates = { "c. 1200 BC", "c. 1250", "c. 1450", "c. 1620" };
-        private static readonly string[] Blurbs =
-        {
-            "Painted plaster, grain stores, and kings who are also gods. Fire runs faster here.",
-            "Curtain walls, spiral stairs, and a chapel worth more than everything around it.",
-            "Fortresses within fortresses, built by men who had you in mind. They hunt in pairs.",
-            "Glass by the acre and magazines of black powder. One stray Ignis ends the evening.",
-        };
+        // The Ages and their words are shared with the century dial's plaque in the Lair room (AgeNames, #358).
+        private static HistoricalEra[] Eras => AgeNames.Order;
+        private static string[] Strata => AgeNames.Strata;
+        private static string[] Dates => AgeNames.Dates;
+        private static string[] Blurbs => AgeNames.Blurbs;
 
         // Positions are the mockup's .lr-* classes, in 1920x1080 canvas units.
         private const float Side = 120f;
@@ -433,16 +420,6 @@ namespace Plunderspell.UI.Screens
             Refresh();
         }
 
-        private static string Label(HistoricalEra era)
-        {
-            switch (era)
-            {
-                case HistoricalEra.BronzeAge: return "Bronze Age";
-                case HistoricalEra.HighMedieval: return "High Medieval";
-                case HistoricalEra.LateMedieval: return "Late Medieval";
-                case HistoricalEra.AgeOfPowder: return "Age of Powder";
-                default: return era.ToString();
-            }
-        }
+        private static string Label(HistoricalEra era) => AgeNames.Label(era);
     }
 }

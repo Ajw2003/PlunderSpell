@@ -86,6 +86,9 @@ namespace Plunderspell.Raid
         // The host's purses, paid-last, seats present and Collector line as one string (LairHubManager.HostLedger).
         private readonly SyncVar<string> _hostLedger = new SyncVar<string>(string.Empty);
 
+        // The Age the host's century dial has chosen for the next raid (#358); -1 until the host has published it.
+        private readonly SyncVar<int> _hostEra = new SyncVar<int>(-1);
+
         /// <summary>Where the session is in the loop.</summary>
         public RaidPhase Phase => _phase.value;
 
@@ -130,15 +133,18 @@ namespace Plunderspell.Raid
             _hostGold.onChanged += OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged += OnHostCampaignReplicated;
             _hostLedger.onChanged += OnHostLedgerReplicated;
+            _hostEra.onChanged += OnHostEraReplicated;
             if (isServer)
             {
                 // A pouch banked or a wizard arriving changes the ledger between raids; the host publishes it as it happens.
                 EventManager.Instance?.Subscribe(this, (PurseChanged e) => PublishCampaign());
                 EventManager.Instance?.Subscribe(this, (PresentChanged e) => PublishCampaign());
+                EventManager.Instance?.Subscribe(this, (AgeChosen e) => PublishCampaign()); // the century dial or the Lair screen
                 PublishCampaign();
             }
             else
             {
+                OnHostEraReplicated(0);
                 OnHostCampaignReplicated(0f);
                 OnHostLedgerReplicated(string.Empty);
             }
@@ -159,7 +165,9 @@ namespace Plunderspell.Raid
             {
                 EventManager.Instance?.Unsubscribe<PurseChanged>(this);
                 EventManager.Instance?.Unsubscribe<PresentChanged>(this);
+                EventManager.Instance?.Unsubscribe<AgeChosen>(this);
             }
+            _hostEra.onChanged -= OnHostEraReplicated;
 
             // Leaving a friend's session: back to this machine's own saved campaign.
             if (!isServer)
@@ -655,6 +663,13 @@ namespace Plunderspell.Raid
             _hostGold.value = _lair.AccumulatedGold;
             _hostLastRaidWorth.value = _lair.LastRaidWorth;
             _hostLedger.value = _lair.HostLedger();
+            _hostEra.value = (int)_lair.GetLairState().SelectedEra;
+        }
+
+        private void OnHostEraReplicated(int _)
+        {
+            if (!isServer && _lair != null && _hostEra.value >= 0)
+                _lair.ShowHostEra((HistoricalEra)_hostEra.value);
         }
 
         private void OnHostLedgerReplicated(string _)

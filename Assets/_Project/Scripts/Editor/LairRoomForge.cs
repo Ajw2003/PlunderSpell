@@ -103,6 +103,71 @@ namespace Plunderspell.EditorTools
 
             AddMarketDoor(root);
             AddLedgerPages(root);
+            AddCenturyDial(root);
+        }
+
+        private const string PlaqueMaterialPath = "Assets/_Project/Prefabs/Lair/LairPlaqueBrass.mat";
+        private static readonly Vector3 PlaqueSize = new Vector3(0.03f, 0.40f, 0.62f);
+
+        /// <summary>
+        /// The dial's behaviour (<see cref="Plunderspell.Raid.LairCenturyDial"/>, #358) on the stand, and a brass plaque on the
+        /// stand's face toward the portal (+X, where the players arrive) carrying the chosen Age's name, date and blurb in
+        /// the ledger's Spectral TMP font. The text is scaled 0.01 like the ledger pages: its rect is in centimetres.
+        /// </summary>
+        private static void AddCenturyDial(GameObject root)
+        {
+            Transform stand = root.transform.Find("LairCenturyDialStand");
+            Bounds bounds = stand.GetComponentInChildren<Renderer>().bounds;
+            foreach (Renderer part in stand.GetComponentsInChildren<Renderer>())
+                bounds.Encapsulate(part.bounds);
+
+            var plate = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            plate.name = "DialPlaque";
+            Object.DestroyImmediate(plate.GetComponent<BoxCollider>()); // text to read, not a thing to bump into
+            plate.transform.SetParent(root.transform, false);
+            plate.transform.position = new Vector3(bounds.max.x + PlaqueSize.x * 0.5f, Floor + 0.95f, stand.position.z);
+            plate.transform.localScale = PlaqueSize;
+            plate.GetComponent<Renderer>().sharedMaterial = BrassMaterial();
+
+            var words = new GameObject("PlaqueText");
+            words.transform.SetParent(root.transform, false); // not under the squashed plate, which would shear it
+            words.transform.position = plate.transform.position + Vector3.right * (PlaqueSize.x * 0.5f + 0.002f);
+            words.transform.rotation = Quaternion.LookRotation(Vector3.left);
+            words.transform.localScale = Vector3.one * 0.01f;
+            var text = words.AddComponent<TMPro.TextMeshPro>();
+            text.font = LedgerFont();
+            text.fontSize = 22f;
+            text.color = new Color(0.10f, 0.06f, 0.02f);
+            text.alignment = TMPro.TextAlignmentOptions.Top;
+            text.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            text.richText = true;
+            text.margin = new Vector4(2f, 3f, 2f, 3f);
+            text.rectTransform.sizeDelta = new Vector2(PlaqueSize.z, PlaqueSize.y) * 100f;
+
+            var rings = new Transform[4];
+            for (int n = 0; n < rings.Length; n++)
+                rings[n] = root.transform.Find($"LairCenturyDialRing{n + 1}");
+            var dial = stand.gameObject.AddComponent<Plunderspell.Raid.LairCenturyDial>();
+            var dialObject = new SerializedObject(dial);
+            dialObject.FindProperty("_plaque").objectReferenceValue = text;
+            SerializedProperty ringList = dialObject.FindProperty("_rings");
+            ringList.arraySize = rings.Length;
+            for (int n = 0; n < rings.Length; n++)
+                ringList.GetArrayElementAtIndex(n).objectReferenceValue = rings[n];
+            dialObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static Material BrassMaterial()
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<Material>(PlaqueMaterialPath);
+            if (existing != null)
+                return existing;
+            var brass = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "LairPlaqueBrass" };
+            brass.SetColor("_BaseColor", new Color(0.78f, 0.58f, 0.24f));
+            brass.SetFloat("_Metallic", 0.85f);
+            brass.SetFloat("_Smoothness", 0.55f);
+            AssetDatabase.CreateAsset(brass, PlaqueMaterialPath);
+            return brass;
         }
 
         private const string LedgerFontPath = "Assets/_Project/Resources/UI/Fonts/Spectral-Regular SDF.asset";
