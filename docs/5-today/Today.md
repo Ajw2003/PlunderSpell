@@ -1,5 +1,13 @@
 # Today
 
+**2026-10-08 - new staging branch, diegetic UI merge handed to Unity.** `claude/staging-2026-10-08` is cut from
+`claude/lair-market` (`0d5b0fe7`), the most complete branch; #368 lists every branch's unmerged work. The merge of
+`claude/rimlight-318` minus the WIP glow commit was resolved in the cloud but not committed: no code lands without a
+Unity check (owner). The headless harness does not compile `claude/lair-market` itself (40 errors, missing shims).
+Steps and conflict resolutions: `docs/plans/handoff-2026-10-08-staging-merge.md`.
+
+---
+
 **2026-10-06 (night) - staging pushes again, leftover branches merged, Unity compiles it.** A local merge had
 committed the 470 MB `Assets/StreamingAssets/LLM/` model, which GitHub refused; it is out of history and in
 `.gitignore` (still on disk). Merged into `claude/staging-2026-10-07`: `claude/playability-fixes` (#260 railings,
