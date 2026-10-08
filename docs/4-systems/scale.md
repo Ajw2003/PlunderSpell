@@ -16,9 +16,11 @@ own how a room is laid out (`castle.md`) or how the scene is assembled (`raid-sc
 
 **A standard human is 1.80 m tall**, with eyes at **1.65 m** and a body radius of **0.40 m**.
 
-That is the player (`RaidSceneBuilder.PlayerHeight` / `EyeHeight` / `PlayerRadius`) and it is the
-`Watchman`, the plainest guard in the roster. Everything else is described as a multiple or
-fraction of it rather than as an independent number.
+That is the player (`CastleSpawnResolver.PlayerHeight` / `PlayerRadius`,
+`Assets/_Project/Scripts/Runtime/Castle/CastleSpawnResolver.cs:19`, and `RaidSceneBuilder.EyeHeight`),
+whose wizard model stands 1.80 m to the crown with the hat on top (`docs/art/data/lair.json`), and it
+is the `Lantern Warden`, the plainest guard of the High Medieval household. Everything else is
+described as a multiple or fraction of it rather than as an independent number.
 
 ## Rooms
 
@@ -56,23 +58,54 @@ and is wide enough for two abreast.
 
 ## Enemies
 
-`EnemyPrefabForge.Specs` carries a standing height per enemy, and the forge scales each model
-uniformly from its authored height to it. The authored heights in
-`Assets/Models/Enemies/enemy_manifest.json` disagreed with each other by a factor of four; this is
-what reconciles them.
+Two forges size the roster, and the roster asset (`Assets/_Project/Data/Enemies/EnemyRoster.asset`)
+is written by both. Decided 2026-09-24 (`docs/6-decisions/Decisions.md`): each Age's enemies are its
+own household, the older supernatural enemies stay for the Crypt only, and the original household
+four are retired.
 
-| Enemy | Standing height | Zones |
-|---|---|---|
-| WarHound | 0.85 m | OuterBailey, InnerWard |
-| SigilWisp | 1.20 m | InnerWard, Keep |
-| HexTurret | 1.60 m | CurtainWall, Keep |
-| CryptRisen | 1.75 m | Crypt |
-| Watchman | 1.80 m | CurtainWall, OuterBailey |
-| ManAtArms | 1.85 m | OuterBailey, InnerWard |
-| Sergeant | 1.90 m | InnerWard, Keep |
-| VaultWarden | 2.10 m | Keep, Crypt |
-| ArcRevenant | 2.10 m | Keep, Crypt |
-| GildedColossus | 2.50 m | Crypt |
+**The art-bible household, 16 enemies, each posted only in its own Age.** Heights are `height_m` in
+`docs/art/data/<age>.json`, built at that height by ArtForge and posted by
+`ArtBibleEnemyForge` (`Tools ▸ Plunderspell ▸ Forge Art Bible Enemies + Roster`).
+
+| Age | Enemy | Height | Zones |
+|---|---|---|---|
+| Bronze | Palace Levy | 1.70 m | CurtainWall, OuterBailey |
+| Bronze | Wall Slinger | 1.66 m | CurtainWall, InnerWard |
+| Bronze | Dendra Champion | 1.92 m | Keep, InnerWard |
+| Bronze | Keeper of the Flame | 1.72 m | Keep, InnerWard, Crypt |
+| High | Lantern Warden | 1.80 m | CurtainWall, OuterBailey |
+| High | Castle Crossbowman | 1.78 m | CurtainWall, InnerWard |
+| High | Household Knight | 1.95 m | Keep, InnerWard |
+| High | Alaunt War-hound | 0.85 m | OuterBailey, InnerWard |
+| Late | Sallet Halberdier | 1.82 m | CurtainWall, OuterBailey |
+| Late | Handgunner | 1.78 m | CurtainWall, InnerWard |
+| Late | Gothic Man-at-Arms | 1.95 m | InnerWard, Keep |
+| Late | Pavisier | 1.80 m | CurtainWall, OuterBailey |
+| Powder | Palace Guard | 1.85 m | CurtainWall, OuterBailey |
+| Powder | Musketeer | 1.92 m | CurtainWall, InnerWard |
+| Powder | Cuirassier | 1.95 m | Keep, InnerWard |
+| Powder | Petardier | 1.76 m | InnerWard, Keep |
+
+**The supernatural six, Crypt only, any Age.** `EnemyPrefabForge.Specs`
+(`Assets/_Project/Scripts/Editor/EnemyPrefabForge.cs:66`) carries a standing height per enemy and
+scales each model uniformly from its authored height to it; the authored heights in
+`Assets/Models/Enemies/enemy_manifest.json` disagreed with each other by a factor of four.
+
+| Enemy | Standing height |
+|---|---|
+| SigilWisp | 1.20 m |
+| HexTurret | 1.60 m |
+| CryptRisen | 1.75 m |
+| VaultWarden | 2.10 m |
+| ArcRevenant | 2.10 m |
+| GildedColossus | 2.50 m |
+
+**Retired: the household four** (`Watchman` 1.80 m, `ManAtArms` 1.85 m, `Sergeant` 1.90 m,
+`WarHound` 0.85 m). `EnemyPrefabForge` still builds their prefabs, and `ArtBibleEnemyForge`
+removes them from the roster (`ArtBibleEnemyForge.ReplacedEnemies`). **As of 2026-10-08 the
+committed roster asset still holds the old ten postings**, because the art-bible forge has not been
+run in the Editor yet (`docs/3-state/ProjectState.md`, "Era reaches the raid"); until it is, raids
+spawn the old roster.
 
 The `GildedColossus` is the ceiling case. It is posted to the Crypt, the shortest zone, so its
 2.50 m is set against the Crypt's 3.00 m clear height — head and shoulders over any guard, half a
@@ -81,7 +114,7 @@ metre of air above it, and no clipping through the room it fights in.
 ## Invariants
 
 - **A standard human is 1.80 m.** Any new character height is stated relative to that figure, and
-  the roster table above is the full list — an enemy without an entry has not been scaled.
+  the roster tables above are the full list — an enemy without an entry has not been scaled.
 - **No enemy is taller than the clear height of the shortest zone it is posted to.** The
   `GildedColossus` at 2.50 m against the Crypt's 3.00 m is the tightest pair in the game.
 - **Every archway clears 1.80 m.** The Crypt's 2.16 m opening is the smallest; anything that
@@ -103,6 +136,11 @@ meshes and are read from renderer bounds; enemies are rigged and are read from t
 | `Test_EveryRoomModuleClearsAStandardHuman` | every registry room's clear height exceeds 1.80 m |
 | `Test_NoEnemyIsTallerThanTheRoomsItIsPostedTo` | no enemy exceeds the shortest zone's clear height |
 | `Test_EveryEnemyStandsOnItsOwnOrigin` | every enemy's lowest drawn vertex is within 0.10 m of its origin |
+| `Test_EveryArtBibleEnemyIsTheHeightItWasBuiltAt` | each forged art-bible enemy draws at its `height_m` |
+| `Test_EveryArtBibleEnemyStandsOnItsOwnOrigin` | the same origin rule for the art-bible set |
+| `Test_NoArtBibleEnemyIsTallerThanTheRoomsItIsPostedTo` | the zone rule for the art-bible set |
+
+The three art-bible tests are ignored until the art-bible forge has been run (no prefabs to measure).
 
 `Tools ▸ Plunderspell ▸ Capture Enemy Stance Screenshots` photographs the roster on a ground slab and
 writes `stance-report.txt` beside the images. The committed before/after set for issue 94 is in

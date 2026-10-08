@@ -11,11 +11,11 @@ and the geometry validator are EnemyForge's own code, imported through `sys.path
 EnemyForge's files are untouched. Read `docs/4-systems/enemy-asset-pipeline.md`,
 especially **Traps**: every trap there applies here too.
 
-**Status:** all 20 **items** are built. The rigged **enemy** path works end to end
-and has two samples that set the bar for the other 14: `high/lantern-warden` (a
-humanoid on `figures.Human`) and `high/alaunt-hound` (a quadruped on
-`figures.Quadruped`). No structure blueprints exist in this module yet (another
-agent owns structures).
+**Status (2026-10-08):** all 20 **items**, all 16 **enemies** and the player **wizard**
+(`players/lair/wizard`) are built and reviewed. `high/lantern-warden` (a humanoid on
+`figures.Human`) and `high/alaunt-hound` (a quadruped on `figures.Quadruped`) are the
+reference blueprints. No structure blueprints exist in this module (another agent owns
+structures). AnimForge (below) builds the enemy clips and the player's clips.
 
 ## Requirements
 

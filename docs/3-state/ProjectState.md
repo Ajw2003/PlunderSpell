@@ -16,7 +16,7 @@ judgement until that milestone's acceptance is checked, and only M0's has been.
 | M4 Lair and Market | 15 | ~5% | Debt is a number on the Lair screen; no market, no 3D Lair |
 | M5 Household awake | 10 | ~35% | Guards patrol, investigate noise, chase and search, and a shout or the hue and cry calls guards in (#163); the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
 | M6 Castle fights back | 10 | ~5% | Doors and hazards are layout tags; revamp phases 3-5 not started |
-| M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, post-processing, a partial settings menu; no animation; every sound file built but on a branch and not played by the game (below) |
+| M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, post-processing, a partial settings menu; the player wizard modelled with clips, wired in code but not yet run in Unity (#336, #361, #362); no enemy animation in game; every sound file built but on a branch and not played by the game (below) |
 | **Total** | 100 | **≈ 42%** | |
 
 **Open issues, 2026-09-28:** 44, every one on a milestone (`docs/2-roadmap/Roadmap.md`). The same
@@ -187,7 +187,7 @@ surfaced it as not actually functional yet.
 | M4 — The Lair and the Market | Not started | ❌ No market code (`grep -i market` finds nothing in `Assets/_Project/Scripts`); debt exists only as numbers (`LairState`, `LairScreen`) | ❌ |
 | M5 — The household is awake | Partly built | 🟡 Guards patrol, investigate noise, chase and search (`GuardAlertState`); no hit reaction or crouch in the raid | ❌ |
 | M6 — The castle fights back | Not started | ❌ Doors don't open and stairs can lead nowhere (#111); murder-holes and arrow-loops are layout tags (#44); castle revamp phases 3-5 not started | ❌ |
-| M7 — Final art and performance pass | Partly built | 🟡 Build tool (#53), Low/Medium/High quality levels, a settings menu; no animation; first profiling pass 2026-10-03 (#242, `docs/generated/perf-2026-10-03/README.md`): sound streaming, guard route smoothing, HUD and fire-glow costs cut | ❌ |
+| M7 — Final art and performance pass | Partly built | 🟡 Build tool (#53), Low/Medium/High quality levels, a settings menu; the player wizard modelled and its clips built, Unity wiring written but untested (#362); no enemy animation in game; first profiling pass 2026-10-03 (#242, `docs/generated/perf-2026-10-03/README.md`): sound streaming, guard route smoothing, HUD and fire-glow costs cut | ❌ |
 
 **2026-09-24 — art bible plunder and enemies modelled, and per-era raid content wired in.**
 All 20 plunder items and all 16 enemies from the art bible (`docs/art/`) exist as validated,

@@ -1,5 +1,18 @@
 # Today
 
+**2026-10-08 - the wizard gets a body and clips; the art docs are checked against the code.** The
+player wizard (#335) is modelled through ArtForge (#336: `docs/art/models/lair/wizard.png`), its
+clips are authored with AnimForge (#361: idle, walk, jog, crouch, jump, cast, death collapse), and the
+Unity side is written (#362: importer, a generated animator, `WizardAnimationDriver`, crouch/cast/jump
+synced over the network). Death: the owner chose collapse, then the body vanishes (the hat is #339).
+The Unity side has not been run in the Editor. The owner also found the art docs had drifted
+(`scale.md` still showed the retired enemy roster): `scale.md`, `BRIEF.md`, the ArtForge status line
+and the systems index are fixed, and `Tools/docs/check_art_docs.py` plus `.github/workflows/docs.yml`
+now fail on that kind of drift. The workflow is being made into a portable `art-pipeline` plugin in
+Ajw2003/AjsClaudeCodeTools (#161 there).
+
+---
+
 **2026-10-02 (evening) - guards move again: the walk map was empty for two of the three Ages.** The owner
 saw guards stuck and standing still in co-op. Measured with `Tools/Unity/coop_guard_check.sh` (Late
 Medieval, seed 3508293): every guard stood still for the whole 90 s. Cause: `CastleNavTileBaker` baked only

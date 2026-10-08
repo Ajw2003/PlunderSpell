@@ -28,7 +28,8 @@ The pitch's threat is human — "the household", guards, a war-hound at your hee
 is a person or an animal that plausibly defended a building in that century. No constructs,
 spirits or casters. (This takes the pitch's side of the bestiary fork raised in
 [`docs/plans/moodboard-gap-closure.md`](../plans/moodboard-gap-closure.md) §2.6 for the new
-roster; it does not delete or rework the five existing supernatural enemies.)
+roster; it does not delete or rework the six existing supernatural enemies, which stay for the
+Crypt only. The original household four are retired: see `docs/4-systems/scale.md`, "Enemies".)
 
 Each Age's four enemies fill four roles: **patrol** (the common guard), **ranged**, **heavy**
 (the one you avoid), and **special** (the Age's signature threat).
@@ -57,8 +58,9 @@ Each Age's four enemies fill four roles: **patrol** (the common guard), **ranged
   orpiment unless the gold on it is itself stealable; it never uses verdigris or lapis.
 - Budgets (per model, LOD0): patrol/ranged enemy ≤ 8k tris, heavy ≤ 12k, beast ≤ 6k; hand-held
   plunder ≤ 1.5k, two-hand plunder ≤ 3k, dual-carry plunder ≤ 5k; structure modules ≤ 25k per
-  12 m cell. One 2048² texture set per enemy (Albedo, Normal, packed ORM), 1024² per plunder
-  item, trim sheets + tiling sets for structures. LOD1 50%, LOD2 20%.
+  12 m cell. One 1024² texture set per enemy and per plunder item (baked BaseMap, packed ORM and
+  MetallicGloss; the owner kept 1024 on 2026-09-24 until profiling says otherwise,
+  `docs/plans/artbible-enemies-in-engine.md`), trim sheets + tiling sets for structures. LOD1 50%, LOD2 20%.
 
 ## Concept art conventions
 
@@ -74,6 +76,14 @@ render beside it (`<slug>.png`, 2400 × 1600).
   sockets (door / window / arrow-loop / stair / murder-hole) labelled.
 - A palette strip of the model's own material swatches, hex labelled.
 - Callout and label text in `Overpass Mono`; titles in `Eczar`.
+
+## The player
+
+Every player is the same wizard, sized as the standard human (1.80 m to the crown, the hat on top).
+Its spec is `docs/art/data/lair.json` and its concept is `docs/art/concept/wizard/1-the-wizard.png`;
+its design is decided in the plan `wizard-character.md` on branch `claude/wizard-character-plan`
+(issue #335, not merged yet). The dyed parts (robe, cape,
+sleeves, hat, band) take the player's chosen colour; everything else is fixed.
 
 ## Where it goes
 
