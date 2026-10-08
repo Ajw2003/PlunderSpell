@@ -19,7 +19,8 @@
         "Plunderspell.Voice",
         "Plunderspell.Core",
         "Plunderspell.Player",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -102,6 +102,78 @@ namespace Plunderspell.EditorTools
             root.transform.Find("LairLedger").gameObject.AddComponent<Plunderspell.Raid.LairLedgerHandle>();
 
             AddMarketDoor(root);
+            AddLedgerPages(root);
+        }
+
+        private const string LedgerFontPath = "Assets/_Project/Resources/UI/Fonts/Spectral-Regular SDF.asset";
+
+        // Blender's ledger (lair_builders.py build_lair_ledger): two vellum pages 0.33 x 0.47 m, centred 0.17 m either side of
+        // the book's middle, whose tops lie in the book's bounds. The model is turned 180 degrees about the vertical against
+        // Blender, so the spine runs across the reader standing on the strongbox side (+Z), and the pages' text turns to face them.
+        private const float PageOffset = 0.17f;
+        private static readonly Vector2 PageSize = new Vector2(0.30f, 0.43f);
+        private const float PageInk = 0.003f;
+
+        /// <summary>The open book's two pages as 3D text (<see cref="Plunderspell.Raid.LairLedgerBook"/>), in dark ink on the vellum (#357).</summary>
+        private static void AddLedgerPages(GameObject root)
+        {
+            Transform book = root.transform.Find("LairLedger");
+            float top = book.GetComponentInChildren<Renderer>().bounds.max.y + PageInk;
+            TMPro.TMP_FontAsset font = LedgerFont();
+
+            var pages = new GameObject("LedgerPages");
+            pages.transform.SetParent(root.transform, false);
+            var ledgerBook = pages.AddComponent<Plunderspell.Raid.LairLedgerBook>();
+            var bookObject = new SerializedObject(ledgerBook);
+            bookObject.FindProperty("_leftPage").objectReferenceValue = AddPage(pages, "LeftPage", font, new Vector3(book.position.x + PageOffset, top, book.position.z));
+            bookObject.FindProperty("_rightPage").objectReferenceValue = AddPage(pages, "RightPage", font, new Vector3(book.position.x - PageOffset, top, book.position.z));
+            bookObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // Scaled 0.01 so the rect is in centimetres and the font size reads in about centimetres of em.
+        private static TMPro.TextMeshPro AddPage(GameObject pages, string name, TMPro.TMP_FontAsset font, Vector3 at)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(pages.transform, false);
+            go.transform.position = at;
+            go.transform.rotation = Quaternion.Euler(90f, 180f, 0f);
+            go.transform.localScale = Vector3.one * 0.01f;
+            var text = go.AddComponent<TMPro.TextMeshPro>();
+            if (font != null)
+                text.font = font;
+            text.fontSize = 14f;
+            text.color = new Color(0.16f, 0.10f, 0.06f);
+            text.alignment = TMPro.TextAlignmentOptions.TopLeft;
+            text.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            text.richText = true;
+            text.rectTransform.sizeDelta = PageSize * 100f;
+            return text;
+        }
+
+        /// <summary>A serif TMP font (Spectral, already the UI's body face), made once from the TTF and kept as an asset.</summary>
+        private static TMPro.TMP_FontAsset LedgerFont()
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(LedgerFontPath);
+            if (existing != null)
+                return existing;
+
+            var source = AssetDatabase.LoadAssetAtPath<Font>("Assets/_Project/Resources/UI/Fonts/Spectral-Regular.ttf");
+            TMPro.TMP_FontAsset made = TMPro.TMP_FontAsset.CreateFontAsset(source, 90, 9, UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDFAA, 1024, 1024,
+                TMPro.AtlasPopulationMode.Dynamic);
+            AssetDatabase.CreateAsset(made, LedgerFontPath);
+            made.material.name = "Spectral-Regular SDF Material";
+            AssetDatabase.AddObjectToAsset(made.material, made);
+            made.atlasTexture.name = "Spectral-Regular SDF Atlas";
+            AssetDatabase.AddObjectToAsset(made.atlasTexture, made);
+
+            // Every glyph the pages use, so playing never has to add one and dirty the asset.
+            var glyphs = new System.Text.StringBuilder("·");
+            for (char c = ' '; c <= '~'; c++)
+                glyphs.Append(c);
+            made.TryAddCharacters(glyphs.ToString());
+            EditorUtility.SetDirty(made);
+            AssetDatabase.SaveAssets();
+            return made;
         }
 
         public const string MarketDoorName = "MarketDoor";
