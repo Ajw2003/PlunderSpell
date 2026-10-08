@@ -207,6 +207,16 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   `Update` compares its two values. The font is Spectral (the UI's body face) as a TMP asset made by the forge
   (`Resources/UI/Fonts/Spectral-Regular SDF.asset`). The book faces the strongbox side (+Z in the Lair), so that is where it reads
   the right way up. The Lair screen and E/Esc are unchanged (#359). `Tools/Unity/coop_lair_check.sh` checks the client's book text equals the host's (left-behind count included). Known gap: the printed heading bars and ruled lines of the book texture run under the text.
+- The century dial chooses the Age to set out for (#358, `docs/generated/century-dial-2026-10-07/`). Look at the dial's stand and press E
+  (`LairCenturyDial.cs`, on `LairCenturyDialStand`): `LairHubManager.SelectEra(AgeNames.Next(...))`, the same call the Lair screen's cards
+  make, so `RaidDirector.StartRaid()` and the portal start the chosen Age unchanged. Order and words are `AgeNames.cs` (pure,
+  `AgeNamesTests`; the Lair screen's cards read the same arrays). Host only: a client's E does nothing (`IsSessionAuthority`). Clients
+  learn the Age through `RaidDirector._hostEra` (a `SyncVar<int>` on the already-registered director, published on `AgeChosen`, shown by
+  `LairHubManager.ShowHostEra`, which saves nothing), so no new networked object. The four rings ease to a per-Age pose over 1 s
+  (`TurnSeconds`; each ring turns about the vertical by Age x 25 x ring number, alternating), and the brass plaque on the stand's portal
+  side (`DialPlaque`/`PlaqueText`, TMP in the ledger's Spectral font, built by `LairRoomForge.AddCenturyDial`) fades out, swaps its words
+  and fades in over the same second. `Tools/Unity/century_dial_check.sh` drives E through the Input System; `coop_lair_check.sh` checks
+  the client follows.
 - Evidence: `docs/generated/lair-room-2026-10-06/`.
 
 ### How the haul comes home (#310)

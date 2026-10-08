@@ -103,6 +103,17 @@ case "$h" in *"1100."*|*"1101."*) check ok "the host sees the client in the Mark
 log "client: $(L client travel /MarketYard/LairExit)"; sleep 2
 near client /LairRoom/MarketDoorArrivals/Spawn2 0.6 "the client's way out leads back inside the Lair door"
 
+# The century dial (#358): the host chooses the Late Medieval; the client's dial, plaque and chosen Age follow, and the
+# plaque reads the same on both sides. Then back to the Bronze Age, so the raid below is the one it always was.
+log "host: $(L host turndial LateMedieval)"; sleep 3
+dh="$(L host dial)"; dc="$(L client dial)"; log "host: $dh"; log "client: $dc"
+r=no; [ "$dh" = "$dc" ] && case "$dc" in "dial LateMedieval ["*"Late Medieval"*"c. 1450"*) r=ok ;; esac
+check $r "the client's dial and plaque follow the host's choice of the Late Medieval"
+L client shot "$(cygpath -m "$repo/$out/$label-client-dial.png")" >/dev/null 2>&1 || true
+log "host: $(L host turndial BronzeAge)"; sleep 3
+dc="$(L client dial)"; log "client: $dc"
+case "$dc" in "dial BronzeAge ["*"Bronze Age"*) check ok "the client's dial follows the host back to the Bronze Age" ;; *) check no "the client's dial follows the host back to the Bronze Age" ;; esac
+
 # A raid: both set out, two pieces come home, both see the same pile, grown by exactly those two.
 # The pile is saved across runs, so what the host sees before setting out is the starting count.
 before="$(L host pile)"; log "host before: $before"

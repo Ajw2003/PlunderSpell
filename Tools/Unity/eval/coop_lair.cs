@@ -21,6 +21,8 @@
 //   bank <n>:<coins>   host: bank coins into purse n (1 to 4), as a let-go pouch does
 //   ledger             host: the debt, the four purses, paid last collection, seats present and the Collector's line (#313)
 //   book               the ledger book's two pages' text on this side (#357)
+//   dial               the century dial's Age and plaque text on this side (#358)
+//   turndial <era>     host: choose the Age (BronzeAge, HighMedieval, LateMedieval, AgeOfPowder) as the dial's E press does (#358)
 //   slot1            what the Lair's saved slot 1 holds (debt, gold, four purses), read without loading it
 //   activeslot         the save slot this side plays in and what it has SAVED (debt, gold, four purses, paid), read without loading
 //   lairscreen         show the Lair screen on this side (it is hidden in the Lair room), so a shot can capture the ledger
@@ -269,6 +271,20 @@ switch (action)
         // what the ledger book on the Lair table says on this side (#357), newlines as "/", so host and client lines compare equal
         var book = FindAll("Plunderspell.Raid.LairLedgerBook")[0];
         return "book left [" + ((string)Get(book, "LeftText")).Replace("\n", "/") + "] right [" + ((string)Get(book, "RightText")).Replace("\n", "/") + "]";
+    }
+    case "dial":
+    {
+        // the century dial's Age and plaque on this side (#358), newlines as "/"
+        var dial = FindAll("Plunderspell.Raid.LairCenturyDial")[0];
+        return "dial " + Get(dial, "ShownEra") + " [" + ((string)Get(dial, "PlaqueText")).Replace("\n", "/") + "]";
+    }
+    case "turndial":
+    {
+        // host: choose an Age by name through LairHubManager.SelectEra, the call the dial's E press makes (#358)
+        var hub = T("Plunderspell.Lair.LairHubManager");
+        var chosen = FindAll("Plunderspell.Lair.LairHubManager")[0];
+        hub.GetMethod("SelectEra").Invoke(chosen, new object[] { System.Enum.Parse(T("Plunderspell.Inventory.HistoricalEra"), arg) });
+        return "chose " + arg;
     }
     case "slot1":
     {
