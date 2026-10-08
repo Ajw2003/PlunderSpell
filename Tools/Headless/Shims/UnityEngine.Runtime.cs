@@ -258,6 +258,7 @@ namespace UnityEngine
         public bool enabled = true;
         public Material material;
         public Material sharedMaterial;
+        public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
 
         /// <summary>A zero-size box at the renderer's position -- no real mesh extents headlessly.</summary>
         public Bounds bounds => new Bounds(transform.position, Vector3.zero);
@@ -836,6 +837,7 @@ namespace UnityEngine.Rendering
 {
     public enum GraphicsDeviceType { Null = 4, Direct3D11 = 2, OpenGLCore = 17, Vulkan = 21, Metal = 16 }
     public enum CullMode { Off, Front, Back }
+    public enum ShadowCastingMode { Off, On, TwoSided, ShadowsOnly }
 }
 
 namespace UnityEngine

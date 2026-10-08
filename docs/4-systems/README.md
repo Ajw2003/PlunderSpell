@@ -19,6 +19,7 @@ everything else feeds.
 | [`damage.md`](damage.md) | The one damage pathway, who gets blamed, and the feedback that makes every hit readable |
 | [`combat-bench.md`](combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
 | [`audio.md`](audio.md) | The audio layer: mixer, SoundBank, the director that plays sounds from game events, the music, the volume sliders, and the gap list of what is still silent |
+| [`player-animation.md`](player-animation.md) | The wizard's body: model, clips, importer, animator, the driver and what is synced |
 | [`scale.md`](scale.md) | The metre: the 1.8m standard human, per-zone room and archway heights, enemy sizes, and where the player spawns |
 
 ## Considered and folded into another doc
