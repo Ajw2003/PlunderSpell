@@ -57,7 +57,7 @@ namespace Plunderspell.Tests
         public void ARousedCastleSendsARecoveredGuardToInvestigate()
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
-            _rig.Director.SetAlarmLevel(60f);
+            _rig.Director.SetAlarmLevel(60f, 3); // Roused needs three witnesses (#259)
 
             guard.Status.Stun(0.5f);
             Advance(guard, 0.7f);

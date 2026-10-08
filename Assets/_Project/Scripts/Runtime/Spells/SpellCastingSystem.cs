@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using Code.Scripts.EventSystems;
 using Interfaces;
 using Plunderspell.Core;
+using Plunderspell.Market;
 using PurrNet;
 using Plunderspell.Voice;
 using UnityEngine;
@@ -123,9 +126,13 @@ namespace Plunderspell.Spells
             {
                 // Real speech can only hear English, so it needs told which spellings mean which word.
                 if (_voice is IPhraseVocabularyTarget speech && _lexicon != null)
-                    speech.SetVocabulary(_lexicon.BuildHeardVocabulary());
+                {
+                    Dictionary<string, string> heard = _lexicon.BuildHeardVocabulary();
+                    HaggleWords.AddTo(heard); // Plus / Satis / Vale: never over a spell's spelling
+                    speech.SetVocabulary(heard);
+                }
 
-                _voice.OnPhraseRecognized += HandlePhrase;
+                EventManager.Instance?.Subscribe(this, (PhraseRecognized e) => HandlePhrase(e.Result));
                 _subscribed = true;
                 Local = this;
 
@@ -155,13 +162,14 @@ namespace Plunderspell.Spells
 
         private void Unsubscribe()
         {
-            if (_subscribed && _voice != null)
-                _voice.OnPhraseRecognized -= HandlePhrase;
+            if (_subscribed)
+                EventManager.Instance?.Unsubscribe<PhraseRecognized>(this);
             if (_body != null)
                 _body.SlamLanded -= HandleSlamLanded;
             _body = null;
             _subscribed = false;
             _chantSpell = SpellId.None;
+            PublishChant();
             if (Local == this)
                 Local = null;
         }
@@ -179,6 +187,25 @@ namespace Plunderspell.Spells
                 SpellId spell = _chantSpell;
                 _chantSpell = SpellId.None;
                 Cast(spell, _chantVolume);
+            }
+
+            PublishChant();
+        }
+
+        private bool _chantPublished;
+
+        // A chant's progress changes every frame it runs, so it is published every frame, then once more when it ends.
+        private void PublishChant()
+        {
+            if (IsChanting)
+            {
+                EventManager.Instance?.Publish(new ChantProgressChanged(true, ChantingWord, ChantProgress));
+                _chantPublished = true;
+            }
+            else if (_chantPublished)
+            {
+                EventManager.Instance?.Publish(new ChantProgressChanged(false, string.Empty, 0f));
+                _chantPublished = false;
             }
         }
 
@@ -211,6 +238,10 @@ namespace Plunderspell.Spells
         /// <summary>Owner-side handler: resolve the phrase and request a networked cast.</summary>
         private void HandlePhrase(VoiceRecognitionResult result)
         {
+            // A haggling word belongs to the Market (HaggleVoiceRouter): never a spell, a misfire or a fizzle caption.
+            if (HaggleWords.TryParse(result.NormalizedText, out _))
+                return;
+
             SpellId resolved = MisfireEngine.Resolve(result, _lexicon);
             if (resolved != SpellId.None && result.FromKeyboard && IsChanting)
             {
@@ -222,8 +253,8 @@ namespace Plunderspell.Spells
             bool chant = resolved != SpellId.None && !notEnoughMana && result.FromKeyboard &&
                          SpellTuning.KeyboardCastSeconds > 0f;
 
-            PhraseResolved?.Invoke(new PhraseReport(result.RawText, result.NormalizedText, resolved,
-                result.Volume, notEnoughMana, chant));
+            EventManager.Instance?.Publish(new PhraseResolved(new PhraseReport(result.RawText, result.NormalizedText, resolved,
+                result.Volume, notEnoughMana, chant)));
             if (resolved == SpellId.None)
             {
                 Debug.Log($"[SpellCast] Phrase \"{result.NormalizedText}\" fizzled (no match).");
@@ -389,7 +420,7 @@ namespace Plunderspell.Spells
             else
                 Debug.Log($"[SpellCast] Player {who} cast {spellId} (Volume: {volume}, affected: {affected})");
 
-            CastResolved?.Invoke(new CastReport(spellId, volume, affected, who, origin, direction));
+            EventManager.Instance?.Publish(new CastResolved(new CastReport(spellId, volume, affected, who, origin, direction)));
         }
 
         /// <summary>What a resolved cast did. The HUD's cast feed reads these.</summary>
@@ -454,18 +485,12 @@ namespace Plunderspell.Spells
             public bool IsMisfire => SpellCatalogue.IsMisfire(Result);
         }
 
-        /// <summary>Raised on the caster's machine for every phrase, cast or not.</summary>
-        public static event System.Action<PhraseReport> PhraseResolved;
-
-        /// <summary>Raised on every peer when a cast resolves. UI and audio subscribe.</summary>
-        public static event System.Action<CastReport> CastResolved;
-
         /// <summary>
         /// Announces a cast to the presentation layer without routing a real one through the voice
-        /// pipeline and a transport. An event cannot be raised from outside its declaring class, so
-        /// without this the HUD's cast feed and the spell visuals are both untestable.
+        /// pipeline and a transport. Kept so a test can announce a cast without a
+        /// real one; without it the HUD's cast feed and the spell visuals are both untestable.
         /// </summary>
-        public static void AnnounceForTesting(CastReport report) => CastResolved?.Invoke(report);
+        public static void AnnounceForTesting(CastReport report) => EventManager.Instance?.Publish(new CastResolved(report));
 
         /// <summary>True if the resolved id is one of the misfire outcomes.</summary>
         public static bool IsMisfire(SpellId id) => SpellCatalogue.IsMisfire(id);

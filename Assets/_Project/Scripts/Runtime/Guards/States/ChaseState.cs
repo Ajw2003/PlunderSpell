@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using Plunderspell.Alarm;
 using StateMachine;
@@ -54,13 +55,15 @@ namespace Plunderspell.Guards
             _secondsSinceSeen = 0f;
             _inReach = false;
             MoveToward(_lastSeenSpot);
-            Context.Link.Director?.Publish(new IntruderSpotted(Context, _target, _lastSeenSpot, !_alreadySpotted));
+            if (!_alreadySpotted)
+                Context.Cry.Raise();
+            EventManager.Instance?.Publish(new IntruderSpotted(Context, _target, _lastSeenSpot, !_alreadySpotted));
         }
 
         public override void Exit()
         {
             Context.Navigator.Stop();
-            Context.Link.Director?.Publish(new IntruderLost(Context, _lastSeenSpot));
+            EventManager.Instance?.Publish(new IntruderLost(Context, _lastSeenSpot));
         }
 
         public override State<Guard> Tick(float deltaTime)

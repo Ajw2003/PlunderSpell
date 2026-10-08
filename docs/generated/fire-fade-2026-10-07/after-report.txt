@@ -1,0 +1,6 @@
+frames 4938, fires 146, 30.0 s; rule: change per frame <= full x dt / 1 s + 0.05 x full
+light intensity: 0 frames over the rule on 0 fires; worst Fire_Brazier(Clone) at t 19.05 (frame 21.3 ms) jumped 0.25 of full 10.92 in one frame (2% of full, 0.3x the allowance)
+shadow strength: 0 frames over the rule on 0 fires; worst Fire_Brazier(Clone) at t 11.84 (frame 13.0 ms) jumped 0.01 of full 0.41 in one frame (3% of full, 0.5x the allowance)
+halo strength: 0 frames over the rule on 0 fires; worst Fire_Sconce(Clone) at t 15.67 (frame 14.5 ms) jumped 0.05 of full 1.03 in one frame (5% of full, 0.7x the allowance)
+PASS
+

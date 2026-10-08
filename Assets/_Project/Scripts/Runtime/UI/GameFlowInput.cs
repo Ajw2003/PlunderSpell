@@ -19,13 +19,13 @@ namespace Plunderspell.UI
 
             if (keyboard.escapeKey.wasPressedThisFrame)
             {
-                if (state == GameState.Playing)
+                if (state == GameState.Playing || state == GameState.LairRoom)
                 {
                     GameServices.GameState.ChangeState(GameState.Paused);
                 }
                 else if (state == GameState.Paused)
                 {
-                    GameServices.GameState.ChangeState(GameState.Playing);
+                    GameServices.GameState.ChangeState(GameServices.GameState.PausedFrom);
                 }
             }
         }

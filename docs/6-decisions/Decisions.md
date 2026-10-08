@@ -3,6 +3,88 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-07 — The debt splits in equal shares; coins are pouches; loot gets a category
+
+**Context.** Step 7 of the Lair and Market (#313): the debt is one shared number (`LairHubManager.TotalDebt`), a sale
+banks straight into it, and vendors pay the same for every piece because a `LootItem` has no category
+(`docs/4-systems/market.md`).
+
+**Decision (owner, 2026-10-07).** Each wizard in the company owes an equal share of the debt, and the Collector takes
+each share from that wizard's own strongbox; a friend can still hand over coins to cover another's share (#130). Coins
+are physical pouches: a sale puts a pouch on the counter, it is carried home with weight like loot, and dropping it in
+a strongbox banks it. Every loot item gets a category (Metal, Holy, Curio, Arms, Other) so each vendor's interest
+follows the design (1.3 for his kind, 0.7 otherwise; the Fence 1.0 for all).
+
+**Consequence.** Replaces the single shared debt and the straight-to-ledger `BankSale` of the entry below once step 7
+lands. Status: Active.
+
+## 2026-10-07 — Loot is earned by selling it; the unsold pile stays; Plus is the only ask
+
+**Context.** Until the Market could sell, the haul was banked automatically at extraction and the Lair's pile showed
+only the last raid, replaced each time (owner, 2026-10-07). Selling (#312) makes automatic banking pay twice, and the
+haggle design's "2 patience above 1.2 x the limit" cannot fire: a Plus asks 1.1 x an offer that never exceeds the
+limit (`docs/plans/lair-market-in-engine.md`).
+
+**Decision (owner, 2026-10-07).** Extraction stops banking; coins come only from selling in the Market. Unsold pieces
+stay on the Lair floor across raids, saved per save slot, and new hauls land beside them. The greedy-ask rule is
+dropped: Plus is the only ask, each refusal costs one patience. Haggling is on keys first (1 Plus, 2 Satis, 3 Vale);
+the three words join the voice lexicon as the next step.
+
+**Consequence.** Replaces the pile-replaced-each-raid default of #310 and the design's automatic Fence appraisal
+for phase 2 (`docs/plans/diegetic-ui-lair-market.md`, "In what order"). Status: Active.
+
+## 2026-10-06 (later) — The event bus move landed; "Bus" now names only `EventManager`
+
+**Context.** The 2026-10-06 entry below was carried out as #298-#304 on `claude/staging-2026-10-07`. Two things in it
+turned out differently from how it was written.
+
+**Decision.** (1) `EnemyDirectorBus` did not "fold into" `EventManager` as a class: its events moved onto
+`EventManager` and what was left, the director's subscriber that scores the alarm and hands out attack turns, is now
+`EnemyDirectorListener`. `LoopBus` (a pool of looping audio sources) became `LoopPool`. The owner asked that no name
+suggest a second event bus or duplicate logic, so "Bus" is reserved for `EventManager`. (2) `BackdropCamera` checks
+for cameras when the game state changes or a scene loads rather than every frame, because Unity gives no event when a
+camera is enabled. A camera that comes or goes with neither is not noticed until the next one (the cost is in
+`docs/4-systems/core.md`). Adding `LocalPlayerChanged` to it would close that, but the UI assembly cannot reference the
+Player assembly where that event lives.
+
+**Consequence.** The 2026-10-06 entry stands; this one adds to it. Status: Active.
+
+## 2026-10-06 — Systems talk to each other through the event bus; views learn state by events
+
+**Context.** The raid HUD, music and camera shake polled other systems every frame (`docs/plans/ui-events-mvc.md`).
+The game had 87 plain C# events and a second, private bus inside the enemy director; `EventManager` was barely used.
+
+**Decision (owner, 2026-10-06).** Every event one system sends another goes through `EventManager`, all at once, not
+only the ones views listen to. A component talking to its own object (a guard's navigator, senses and states; a
+door's own open state; one player's state machine) stays a direct call. Values that change continuously (mic level,
+chant progress, input) are published on every change, input on both performed and cancelled; the mic sensitivity
+readout moves out of the raid HUD into Settings. Every subscriber unsubscribes when its screen closes, its state
+changes, or the game quits.
+
+**Consequence.** Replaces the plan's recommended scope (bus only for what views listen to) and its "sample at
+~15/s" answer. The enemy director's own bus (`EnemyDirectorBus`) folds into `EventManager`. Plan:
+`docs/plans/ui-events-mvc.md`. Status: Active.
+
+## 2026-10-05 — Screen ink pass removed; the painted look lives on the surfaces
+
+The owner said the Ink pass ran as an overlay rather than texture like the castle shader and chose to remove it
+entirely (#266, part of #262). Paper grain and outlines are now painted in world space by the surface shader
+(`_PlunderPaint`); see docs/4-systems/atmosphere.md. Status: Active.
+
+## 2026-10-04 — The castle hears through its guards and needs witnesses
+
+**Context.** In the owner's playtest one sighting and one Somnus took the castle from Calm to Hue and Cry (#259).
+The director scored every noise from its own castle-wide trigger, and two or three guards chasing forced Roused
+and Hue and Cry.
+
+**Decision (owner, 2026-10-04).** Keep the triggers and the guards' senses; make escalation need witnesses, spread
+by guards calling each other. A guard that spots you cries out; guards that hear the cry come over, and each that
+sees you cries in turn. The castle scores only noise its guards heard, once per guard. Roused needs 3 guards that
+have seen an intruder, Hue and Cry 5; chasers forcing a state go from 2 and 3 to 3 and 5.
+
+**Consequence.** Reverses "the alarm hears noise from the castle-wide trigger" (alarm.md, #139) and the 2/3 chaser
+floors. Design: `docs/plans/alarm-witnesses.md`; how it works: `docs/4-systems/alarm.md`.
+
 ## 2026-10-02 — Fire overrules Somnus
 
 **Context.** #212 ruled that stun and sleep outrank burning, so a sleeping guard that was set alight kept
@@ -1270,3 +1352,51 @@ Streaming. Set by `Tools/Unity/eval/audio_load_types.cs`.
 
 **Status.** Standing (#244). Reverses the "Streaming, the owner's choice, is unchanged" line of the
 2026-09-27 entry; `docs/4-systems/audio.md` updated.
+
+## 2026-10-03 — Castles get floors; stairs follow the art bible, and the newel drum widens to 3.0 m
+
+**Context.** #197 asked for stairs that lead somewhere. A survey showed every stair reaches a
+gallery, but the castle has one storey. The owner chose real floors: a 5 × 5 ground floor (bailey
+ring, inner ward ring), a 3 × 3 keep tower above, a 3 × 3 crypt below, two stairs up and one down,
+and doors where zones meet (draft sheets: `docs/art/castle/concept/`). This reorders the 2026-09-26
+handoff (`docs/plans/roofs-floors-multicell-handoff.md`: roofs, then multi-cell rooms, then floors):
+floors come first, using the existing rooms.
+
+**Decision.** Stairs take each Age's period form from the art bible: High Medieval's newel stair,
+a newel in a corner turret for Late Medieval, a dog-leg round a light well for the Bronze Age. The
+newel drum widens from 2.4 m to 3.0 m inside (4.6 m outside), and `docs/art/data/high.json` and
+`Tools/ArtBible/generators/high/s_stair.py` are updated to match.
+
+**Why.** At 2.4 m the guards' 0.5 m walk map cannot climb the stair: around so small a circle the
+next cell is 3-4 treads higher than the 0.45 m step limit. 3.0 m is the narrowest that works
+(`Tools/ArtBible/castle/newel_walkmap_check.py`).
+
+**Status.** Design draft; the floors design is still being written (#197).
+
+
+## 2026-10-05: the bar shuts players out, not guards (#264)
+
+The 2026-10-02 rule that a barred door blocks guards is reversed. At Hue and Cry every door was barred, so the garrison could not reach the players: 9 of 17 guards stayed Patrolling after `Blocked(DoorClosed)`. Now a barred door costs `LockedDoorCost` like a locked one and guards open it when they walk into it. Players are unchanged (Porta, forcing). Tier: systems (`docs/4-systems/alarm.md`).
+
+## 2026-10-07: old-input keys came back in the Lair and Market work; how, and the guard (#347, #350)
+
+**What happened.** Three new classes read keys through the old `UnityEngine.Input` class, though the project
+moved to the new Input System (`docs/4-systems/spells.md`, "Casting runs on the new Input System";
+`docs/plans/steam-coop-framework.md`: "Unify on the new Input System; delete legacy `Input.GetAxis` paths").
+
+1. 2026-10-07 `0899d091` (#309): the planning session itself wrote `LairLedgerHandle` with `Input.GetKeyDown(E)`,
+   copying the key reading of `LootInteractor`, an old-input class from 2026-09-14 that was never converted.
+2. `e4690bb3` (#311): the Market door builder copied the ledger's pattern into `RoomTravel`.
+3. `2edd3a3b` (#312): the planning session's prompt to the Market builder named the ledger as the pattern to follow,
+   in so many words: "key reading pattern: LairLedgerHandle.cs (Input.GetKeyDown; legacy input is enabled)". The
+   builder did as told in `SellCounter` (keys 1/2/3), and then reported it could not press those keys in its check
+   because "legacy Input cannot be injected". That was the warning sign, and it was read as a test limitation.
+
+**Why it got through.** The rule lived only in a system doc and a plan, not in the coding standards the sessions load
+(`csharp-unity-standards.md` says nothing about input), so nothing at write time said no. Active Input Handling was
+"Both", so the old calls worked and nothing failed. Old-input code (`LootInteractor`, `RaidBootstrapper`, the
+playtest controllers) was still in the tree to be copied. Nothing checked new code for it.
+
+**The guard.** #350 moves every key onto the input actions asset and sets Active Input Handling to the new Input
+System only, so an old-input call throws the first time it runs. Further guards proposed to the owner: a test that
+fails on any `UnityEngine.Input` use under `Assets/_Project`, and an input line in the shared C# standards.

@@ -18,7 +18,7 @@ public class PlayerWalkState : PlayerState
         Vector3 moveDirection = CameraRelativeInput();
 
         // Preserve the vertical component so this doesn't interfere with jumping/falling.
-        float verticalSpeed = _stateMachine._rb.linearVelocity.y;
+        float verticalSpeed = _stateMachine.Rb.linearVelocity.y;
 
         // Carrying what you can lift never slows the legs: its weight shows as lag on the beam
         // (#144). Towing a piece too heavy to lift does (docs/4-systems/damage.md, "Weight").
@@ -26,9 +26,11 @@ public class PlayerWalkState : PlayerState
         float pace = carried != null ? carried.TowSpeedMultiplier : 1f;
         if (_stateMachine.Creeping)
             pace *= PlayerStateMachine.CreepPace;
+        if (_stateMachine.ReadingGrimoire)
+            pace *= PlayerStateMachine.ReadingPace;
         if (_stateMachine.IsStaggered)
             pace = 0f;
-        _stateMachine._rb.linearVelocity = (moveDirection * _stateMachine.walkSpeed * pace) + (Vector3.up * verticalSpeed);
+        _stateMachine.Rb.linearVelocity = (moveDirection * _stateMachine.WalkSpeed * pace) + (Vector3.up * verticalSpeed);
     }
 
     public override void Exit()

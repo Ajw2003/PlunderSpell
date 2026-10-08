@@ -280,12 +280,11 @@ parent)` overwrites the root rotation, which is what laid every room on its edge
 The raid no longer starts on scene load. The flow is
 **Main menu -> Lair -> Set Out -> raid -> back to the Lair**:
 
-- `MainMenuScreen`'s Play goes to `GameState.Lair`, not straight to `Playing`.
-- `LairScreen` shows the debt, the banked gold and the four eras, and reads `LairHubManager`
-  directly. Set Out moves to `GameState.Playing`.
+- `MainMenuScreen`'s Play goes to the walkable Lair (`GameState.LairRoom`), not straight to `Playing`. The flat Lair screen this
+  section first described is gone (#359): the ledger book, the century dial and the portal replace it (`raid.md`, "The Lair room").
 - `RaidBootstrapper` listens for that transition and calls `RaidDirector.StartRaid()`, taking the
   era from the lair. It ignores Paused -> Playing, which are returns, not departures.
-- When `RaidDirector.RaidResolved` fires, the bootstrapper puts the game back in `GameState.Lair`
+- When the `RaidResolved` event is published, the bootstrapper puts the game back in `GameState.Lair`
   so the takings land against the debt.
 - `_autoStart` still exists on `RaidBootstrapper` but defaults to **false**. Turn it on to skip the
   menu while iterating on the raid itself.

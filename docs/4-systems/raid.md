@@ -11,7 +11,7 @@ Assemblies: `Plunderspell.Raid` (loop, spawning), `Plunderspell.Guards` (the gar
 - **`RaidDirector`** owns the loop and the phase (`InLair` / `Generating` / `Raiding` /
   `Extracting` / `Resolved`). `StartRaid(era)` re-arms the extraction zone, rolls a seed, builds a
   castle, plans and spawns the haul and the garrison, resets the alarm and starts the clock.
-  `CallExtraction()` ends it early; the zone's tally comes back through `ExtractionResolved`, which
+  `CallExtraction()` ends it early; the zone's tally comes back through the `ExtractionResolved` event, which
   banks the worth against the debt.
 
 - **One seed drives the whole raid.** It is chosen on the server, replicated by
@@ -38,7 +38,33 @@ Assemblies: `Plunderspell.Raid` (loop, spawning), `Plunderspell.Guards` (the gar
   delegated to **`GuardBrain`**, which is pure.
 
 - **`RaidHudPresenter`** gathers the raid into a plain `RaidHudModel`; `RaidHudView` draws it with
-  IMGUI. What the player is *told* is logic and is tested; how it is drawn is not.
+  IMGUI. What the player is *told* is logic and is tested; how it is drawn is not. Since #303 the presenter has no
+  `Update`: it reads every source once on enable (`Refresh`, also what the public `Build()` does for tests) and then
+  reassembles the model only when a bus event says a value changed (phase, clock, alarm state and level, debt, banked
+  gold, haul, carried item, loot and door focus, ranged weapon, cast, local player, game state, mana, cast key, chant).
+  The view draws `presenter.Model` and reads no other system. The presenter leaves the bus when disabled
+  (`RaidHudEventTests`). The microphone level meter is not on the raid HUD any more: the HUD names the open
+  microphone while V is held, and the live meter with the whisper and shout marks is in Settings (`voice.md`). The
+  rules this follows (roles, structs, always unsubscribe) are in `core.md`, "The event rule".
+
+  **What is on the screen in a raid (#315, 2026-10-07).** The always-on HUD is only what the world does not yet say for
+  itself: the prompt under the crosshair, the ranged weapon's state, the chant bar, and what was heard while casting
+  (`RaidHudView`), plus the crosshair and damage feedback. The rest moved:
+  - **The clock is the pocket watch** (`WatchView`, flat UI for now): hold `T`. A ring of 60 ticks of portal-light empties
+    anticlockwise as the raid runs down, one hand points at what is left, and a caption says whole minutes (or "under a
+    minute"); in the last minute the ring turns madder and pulses. The existing portal-warning bell (2 min, 1 min, 30 s,
+    `MusicDirector`) is the sound; a ticking sound is not built.
+  - **The spell list is the grimoire** (`GrimoireView`, flat UI for now): hold `Tab`. Left page: the eight spells with their
+    keys and costs (struck through when mana cannot cover one). Right page: the keys (page 0) or one spell (its word, cost
+    and description), turned with the scroll wheel, with the last three casts in the margin. It opens by itself for 8 s the
+    first time a raid starts (`Hud.GrimoireSeen`). While it is open the local body walks at 60% (`PlayerStateMachine.ReadingPace`)
+    and `ItemManager` will not start a lift; it will not open while something is carried. Pages are not blank until a spell
+    is learned: the progressive unlock (#108) does not exist yet.
+  - **The alarm is the castle's fires** (`atmosphere.md`); phase text, carried item name, debt, banked gold and the haul number
+    are gone from the raid. Debt and gold are on the Lair screen.
+  - `HudHoldKeys` reads `T` and `Tab` each frame and publishes `WatchRaised` and `GrimoireOpened` on change; the presenter
+    carries both into the model. Still on the screen until their world cues exist: the interaction prompt (#318), the
+    ranged weapon line (#321), the chant bar (#322) and the heard-phrase caption (#323).
 
 ## How loot settles
 
@@ -51,6 +77,8 @@ the short distance to the floor.
 `ReleaseSpawned` skips anything carried or broken — a carried item is kinematic on purpose, and
 un-freezing it would drop it out of the carrier's hand socket. It is public so a test can settle the
 haul without waiting the delay out in real time.
+
+`LootSpawner` also checks each spawned piece's height against the headroom above it (#272): a piece that would poke into a ceiling (the 1.65 m altarpiece on a crypt niche or stair) moves to the room's next loot anchor that fits, else onto the room floor.
 
 ## Carrying and extracting
 
@@ -73,7 +101,7 @@ by the gatehouse, and nothing exists outside the curtain wall.
   Every peer derives the same point from the seed, so nothing new is networked.
 - **The portal is the `ExtractionZone`.** `RaidDirector.OpenPortal` (`RaidDirector.cs:441`) calls
   `ExtractionZone.PlaceAsPortal` (`ExtractionZone.cs:90`), which moves the zone to the arrival and
-  shrinks its trigger to 4 × 4 × 4 m. `RaidDirector.PortalOpened` fires with the floor point.
+  shrinks its trigger to 4 × 4 × 4 m. The `PortalOpened` event is published with the floor point.
 - **Players ring it.** Each stands `RaidDirector.PlayerRingRadius` (3.5 m, `RaidDirector.cs:107`)
   from its centre by owner number, outside the trigger, facing it (`PlayerStateMachine.FaceYaw`),
   except on the curtain strip, where they face the entrance (`RaidDirector.FacingTarget`).
@@ -126,6 +154,10 @@ whatever loot is on the pad, and the Lair shows "Last raid: brought home N coin"
 cannot start in a raid's first 10 s, so a player who spawns beside the pad does not leave by
 accident. F5 still works for playtesting.
 
+The bar is a uGUI screen that listens for the countdown's events only while shown. When it is shown again it reads
+`GameServices.Extraction.IsExtracting` (`HUDScreen.OnShown`), so a countdown that ended while it was hidden (death, the
+raid ending) no longer leaves "LEAVING IN 1.0S" stuck on the next raid (#351).
+
 The zone finds what is on it by **polling an overlap box four times a second**, not by trigger
 enter/exit. Unity sends no trigger events between a kinematic body and a static trigger, and loot
 is kinematic while it settles after spawning, so a piece already on the pad when it was released
@@ -145,8 +177,8 @@ through it, so there is one place this can be forgotten rather than five.
 
 ### The haul is visible while the raid runs
 
-`ExtractionZone` tracks `LootValue` in its trigger and raises `HaulInZoneChanged(worth, pieces)` as
-loot enters and leaves. `RaidHudPresenter` reads `WorthInZone`/`PiecesInZone` into the model and the
+`ExtractionZone` tracks `LootValue` in its trigger and publishes `HaulInZoneChanged(worth, pieces)` as
+loot enters and leaves. `RaidHudPresenter` takes the worth and piece count from that event into the model and the
 view draws it beside the debt — the number the debt is measured against. An empty pad reads
 "bring loot to the pad" rather than "0 gold", because a zero looks like a broken counter.
 
@@ -160,6 +192,104 @@ and **both are deleted with it**:
 - `ExtractionZone.TrackLoot(LootPickup)` is an overload that attaches the `LootValue` the zone now
   tallies. It exists so the seven test files still holding `LootPickup` keep asserting something
   during the transition rather than being rewritten twice.
+
+## The Lair room (2026-10-06, #309)
+
+Sessions start, and extraction/death returns, in the walkable Lair room, not the flat screen.
+
+- The Lair room and the Market are safe (#355): `Damage.InSafePlace`, the hook `GameServices` installs for `GameStateManager.InSafePlace` (`LairRoom`, or `Paused` from it). `Tools/Unity/safe_lair_check.sh`. `Damage.Apply` returns 0 and `LootPickup.BreakItem` / `WouldBreak` do nothing while it is true, so nothing loses health and no piece breaks or is ruined. Raids are unaffected.
+
+- `GameState.LairRoom` (`GameState.cs`): cursor captured, input accepted, Lair music, no screen, RaidHud hidden.
+  There is no Lair screen any more (#359): `GameState.Lair` (value 1) and `LairScreen` are gone, and the other values keep their numbers.
+  Where its parts went: the ledger is the book, the Age is the dial, Set Out is the portal, "Waiting for the host to set out" is the
+  portal line below, Invite Friend and the online-friends list (`PauseInviteSection.cs`, only while `ICoopSession.CanInvite`) and Back to Menu
+  ("Quit to Main Menu", which also leaves the session) are in the pause menu, and "Back to the Room" is dropped.
+- Entered from Play Solo (`MainMenuScreen.cs:198`), hosting/joining (`CoopSession.cs`), a resolved raid
+  (`RaidBootstrapper.cs:87`) and the game-over button (`GameOverScreen.cs:89`).
+- `LairRoomSpawner.cs:45` stands the local player at `PlayerSpawns/Spawn{owner}` (retried in `Update` until the body exists),
+  only on arrival: `IsArrival` is false when coming from the pause menu, so resuming leaves the player where they stood.
+- `LairPortalTrigger.cs`: the local player walking in while in LairRoom sets `Playing` when it is the host or solo. A client sees
+  "The host sets out" at the arch instead (`HostSetsOutLine.cs`: TMP world text in the ledger's Spectral font, built in code under the
+  trigger, eased in and out over 1 s with a SmoothStep) and follows when the host goes (`RaidBootstrapper.OnPhaseChanged`, which
+  also pulls a client out of a pause opened in the Lair).
+- E at the table or the book opens nothing (`LairLedgerHandle` is gone, #359): the book is read in place. Esc in LairRoom opens the
+  pause menu (`GameFlowInput.cs`); Resume (the button or Esc) goes to `GameStateManager.PausedFrom`, the state the pause began in
+  (LairRoom or Playing; Settings in between keeps it), not always Playing. The cursor and input rules already treat `Paused` as a
+  screen from either place (`CursorLockPolicy.ShouldCapture`, `PlayerInputController.AcceptsInputIn`), and `UIRoot` shows the HUD
+  screen only for a pause begun in a raid. `Tools/Unity/no_lair_screen_check.sh` drives all of it (`docs/generated/no-lair-screen-2026-10-07/`).
+- The Market door: `RoomTravel.cs:23` reads E when the camera looks at the door's own collider (the leaf is part of the
+  cellar mesh) and `Travel` (`RoomTravel.cs:38`) stands the player at the Market's `PlayerSpawns/Spawn{owner}`. The
+  Market's `LairExit` trigger across its south way in (`RoomTravel.cs:29`) brings them back to `MarketDoorArrivals`,
+  just inside the Lair's door. The state stays `LairRoom` throughout.
+- The Lair sits at (1000, 0, 0) and the Market at (1100, 0, 0) in `RaidScene`, clear of the castle (curtain wall about
+  45 m round the origin). `Tools/Plunderspell/Place Lair And Market In Raid Scene` (`RaidSceneRooms.cs`) places both
+  and connects the door and the way out.
+- The crosshair shows wherever the world takes input (`CrosshairView.ShownIn`, the same rule as
+  `PlayerInputController.AcceptsInputIn`), so the Lair room and the Market have one, and its "over something" look follows
+  the piece the left mouse would grab. `ItemManager`'s grab ray ignores trigger volumes: a counter's sell zone used to hide
+  the piece on it (#353; `Tools/Unity/market_grab_check.sh`, `docs/generated/market-grab-2026-10-07/`).
+- The ledger book on the table is readable (#357, `docs/generated/ledger-book-2026-10-07/`). `LairRoomForge.AddLedgerPages` puts two
+  TextMeshPro 3D texts on the open book's pages (0.17 m either side of its middle, tops from the model's bounds), and
+  `LairLedgerBook.cs` fills them from `LairHubManager`, so a client's book shows the host's ledger the same way the old Lair screen did
+  (`RaidDirector._hostLedger` -> `ShowHostLedger`). Left page: Owed with "the debt grows by N each raid it stands", then Last raid
+  (left-behind pieces included); right page: purses I-IV for the seats in play, then the Collector's line. The wording is
+  `LedgerPageText.cs` (pure, `LedgerPageTextTests`), the words the Lair screen used to show. It redraws on the Lair events
+  (`DebtChanged`, `PurseChanged`, `PresentChanged`, `CollectorPaid`, `CollectorSpoke`, `SaveSlotLoaded`); the last raid has no event, so
+  `Update` compares its two values. The font is Spectral (the UI's body face) as a TMP asset made by the forge
+  (`Resources/UI/Fonts/Spectral-Regular SDF.asset`). The book faces the strongbox side (+Z in the Lair), so that is where it reads
+  the right way up. `Tools/Unity/coop_lair_check.sh` checks the client's book text equals the host's (left-behind count included). Known gap: the printed heading bars and ruled lines of the book texture run under the text.
+- The century dial chooses the Age to set out for (#358, `docs/generated/century-dial-2026-10-07/`). Look at the dial's stand and press E
+  (`LairCenturyDial.cs`, on `LairCenturyDialStand`): `LairHubManager.SelectEra(AgeNames.Next(...))`, the call the Lair screen's cards
+  used to make, so `RaidDirector.StartRaid()` and the portal start the chosen Age unchanged. Order and words are `AgeNames.cs` (pure,
+  `AgeNamesTests`). Host only: a client's E does nothing (`IsSessionAuthority`). Clients
+  learn the Age through `RaidDirector._hostEra` (a `SyncVar<int>` on the already-registered director, published on `AgeChosen`, shown by
+  `LairHubManager.ShowHostEra`, which saves nothing), so no new networked object. The four rings ease to a per-Age pose over 1 s
+  (`TurnSeconds`; each ring turns about the vertical by Age x 25 x ring number, alternating), and the brass plaque on the stand's portal
+  side (`DialPlaque`/`PlaqueText`, TMP in the ledger's Spectral font, built by `LairRoomForge.AddCenturyDial`) fades out, swaps its words
+  and fades in over the same second. `Tools/Unity/century_dial_check.sh` drives E through the Input System; `coop_lair_check.sh` checks
+  the client follows.
+- Evidence: `docs/generated/lair-room-2026-10-06/`.
+
+### How the haul comes home (#310)
+
+- `ExtractionZone.ResolveExtraction` (`ExtractionZone.cs:240`) publishes `HaulExtracted` (`ExtractionEvents.cs:21`),
+  server or offline only, carrying `PiecesOf` (`ExtractionZone.cs:249`): the `LootItem` of every unbroken piece in the zone.
+  A piece is identified by its `LootItem` because that is what `RaidLootTable` already maps to a prefab
+  (`RaidLootTable.PrefabFor`), so no new id scheme.
+- `HaulLanding.cs:64` (child `HaulLanding` of the Lair room, local (4.0, 0.30, 0), built in `LairRoomForge.cs`) spawns them
+  on the server through its own `LootSpawner.SpawnPile` (`LootSpawner.cs:133`): same `SpawnLoose` path, kinematic then
+  released after the settle delay. Positions come from `HaulLayout.Offsets(count, start)` (`HaulLayout.cs:23`; a 7 x 3 grid,
+  0.45 m apart, stacked above that). The pile belongs to its own spawner, so `RaidDirector.ApplyResult`'s
+  `_lootSpawner.Clear()` leaves it, and it sits at x 1000, far from the pad.
+- The pile persists and grows (#312, the owner's decision of 2026-10-07: extraction stops banking). `SpawnPile` adds and no
+  longer clears, and nothing clears the pile at raid start. A new haul starts its layout after the pieces already there
+  (`start` = live piece count, `HaulLanding.cs:112`), so it lies beside them, in layers when the floor grid is full. Known
+  ceiling: after a piece is removed from the middle, a new one can land on a cell still in use.
+- Saving: `HaulPileSave` (`Runtime/Lair/HaulPileSave.cs`) keeps the pile per save slot as one PlayerPrefs string, the asset
+  names of the pieces' `LootItem`s joined by `|`. The asset name is the id: stable across runs, already how the loot tables
+  list items, and it keeps the Lair assembly free of the loot assembly. The save is rebuilt from the pieces that exist
+  (`HaulLanding.Save`, `:131`) on every change: a haul landing, a restore, `Remove` (`:58`, takes a piece out of the pile by its
+  object, for a pickup or a sale) and a per-frame count check (`Update`, `:39`) that notices a piece destroyed anywhere else.
+  Names no table can resolve are kept in the save, never erased.
+- Restoring: on the server once it runs (`ServerReady`, `:55`: offline, or the host's server up) and again on
+  `SaveSlotLoaded` (`LairEvents.cs`, published by `LairHubManager.LoadSlot`, `LairHubManager.cs:62`; the old pile is cleared
+  first). Names resolve through every era's loot table in the director's `EraContentCatalogue` (`RaidDirector.EraContent`)
+  plus the raid spawner's own (`AllTables`, `:153`); a mixed-era pile is spawned per table to get each prefab.
+  `LairHubManager.ResetSlot` wipes the slot's pile.
+- Banking moved: `ApplyExtractionResult` (`LairHubManager.cs:118`) now only records `LastRaidWorth`; gold and the debt
+  pay-down are `LairHubManager.BankSale(coins)` (`:148`), reached since #313 through a coin pouch dropped in a strongbox
+  (`BankPouch`, `:177`), not at the sale. The pouch is not loot (no `LootValue`), so it never joins a haul or the pile
+  save; see `docs/4-systems/market.md`, "Coins are pouches". Since #313 part 2 `BankPouch` (`LairHubManager.cs:193`) only fills
+  the purse, and setting out calls the Collector first: `StartRaid` (`RaidDirector.cs:229`) runs `SetPresent` and
+  `LairHubManager.Collect()`, which takes each present wizard's share of the debt (`market.md`, "The Collector"); the per-raid
+  debt tick (`OnNewSession`) follows it, unchanged.
+- Solo Play check 2026-10-06 (before #312): two pieces (worth 2400) placed on the pad, `CallExtraction`: phase Resolved,
+  state LairRoom, both pieces at (1003.55, 0.31, -0.90) and (1003.55, 0.31, -1.35).
+- Check 2026-10-07 (#312): solo, the saved four pieces came back on Play; extraction left gold 0 and debt 650 as they were
+  (last raid worth 2400), the pile grew to six and the save listed six; `BankSale(100)` took the debt 650 to 550 (gold 0, all
+  of it went to the debt); destroying one piece dropped it from the save. Co-op twice running (`coop_lair_check.sh`): pile 0
+  to 2, then 2 to 4, identical on host and client. Logs `docs/generated/coop-lair-2026-10-07/run1-*`, `run2-*`. The client
+  screenshot looks at a table and does not show the pile.
 
 ## Guards that can actually hurt you
 
@@ -292,8 +422,9 @@ Not checked: a player standing on furniture, and the in-game feel of the sweep (
 - **A looted room holds several items, one per anchor** (2026-09-24). `LootPlacementPlanner` rolls
   the zone's density for whether a room has anything, then 1 to `RaidLootTable.MaxPerRoomFor(zone)`
   items (outer bailey 1, inner ward 2, keep 3), never more than the room's anchors and never two on
-  one anchor. Inner ward and keep are always looted, the outer bailey half the time: 44-53 items a
-  raid across the four eras, up from about 22 at one per room (`LootAmountTests`).
+  one anchor. Inner ward and keep are always looted, the outer bailey half the time (always, in High
+  Medieval and Age of Powder, whose rooms hold fewer anchors; 2026-10-07, #330): stairs hold no loot (#247),
+  so a raid holds about 41-43 items, up from about 22 at one per room (`LootAmountTests`, floor 40).
 
 - **The zone is re-armed on every `StartRaid`.** It carries the previous raid's result until then;
   a raid that starts against a completed zone cannot be left.

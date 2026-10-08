@@ -1,0 +1,109 @@
+{
+  "slug": "lair",
+  "name": "The Lair",
+  "year": "now",
+  "stratum": "home",
+  "headline": "The wizards' own place: the players and what they carry home",
+  "intro": "Not a raid age but the home of the player characters. Every player is the same wizard in the same outfit; only the colour (the dyed materials) and the name on the hat band differ. See docs/plans/wizard-character.md.",
+  "palette": [
+    {
+      "name": "Player colour",
+      "hex": "#4F7299",
+      "use": "robe, cape, sleeves; the default, tinted per player"
+    },
+    {
+      "name": "Brass",
+      "hex": "#B58A3C",
+      "use": "buckle, watch, clasp, grimoire corners"
+    },
+    {
+      "name": "Calfskin",
+      "hex": "#7A5233",
+      "use": "grimoire, coin pouch"
+    },
+    {
+      "name": "Glove leather",
+      "hex": "#5A4026",
+      "use": "belt, glove"
+    }
+  ],
+  "players": [
+    {
+      "slug": "wizard",
+      "name": "Wizard",
+      "role": "player",
+      "height_m": 1.8,
+      "summary": "Every player: a penniless, badly behaved wizard in a pointed hat, a short cape and a long robe, a grimoire at one hip and a coin pouch at the other.",
+      "description": "One outfit for every player. Only the colour of the robe, cape, sleeves, hat and band (a player's pick) and the name stitched round the hat band change. The right hand is bare and casts; the left wears a leather glove and grabs loot.",
+      "silhouette": "A tall pointed hat with its tip flopped back, a cape across the shoulders, then a robe that bells out to the ankles: hat, cape, bell.",
+      "build": [
+        "Body: standard human 1.80 m to the crown of the skull (docs/4-systems/scale.md); the hat adds about 0.5 m on top and is visual only.",
+        "Hat: tall cone with a short brim, the tip flopping back; own bone (Hat, child of Head) so it can be hidden from the owner's camera and dropped. Hat band separate, family hat_band.",
+        "Cape: short shoulder cape to mid-chest back, brass clasp at the throat.",
+        "Robe: long, to the ankles (hem 0.08 m above the floor), front seam, bells out below the belt. Wide sleeves.",
+        "Belt: leather with a brass buckle. Grimoire (calfskin book, brass corners) at the wizard's RIGHT hip; portal watch (brass) on a chain and a coin pouch (calfskin) at the LEFT hip.",
+        "Hands: RIGHT bare (skin, the casting hand), LEFT in a leather glove. Soft boots.",
+        "Face: short scruffy beard (Beard hair). Arms relaxed at the sides; animation drives them, no props in the hands.",
+        "Dyed families (tinted per player): robe_wool, hat_felt (x0.72), hat_band (x0.50). Fixed: everything else. The baked DyeMask marks the dyed texels."
+      ],
+      "materials": [
+        {
+          "name": "Robe wool (dyed)",
+          "hex": "#4F7299",
+          "notes": "Robe, cape and sleeves; the player's colour. DYED."
+        },
+        {
+          "name": "Hat felt (dyed)",
+          "hex": "#39526E",
+          "notes": "Hat: player colour x0.72. DYED."
+        },
+        {
+          "name": "Hat band (dyed)",
+          "hex": "#28394D",
+          "notes": "Hat band: player colour x0.50. DYED."
+        },
+        {
+          "name": "Skin",
+          "hex": "#D9B08C",
+          "notes": "Face, bare right hand."
+        },
+        {
+          "name": "Glove leather",
+          "hex": "#5A4026",
+          "notes": "Belt and the left glove."
+        },
+        {
+          "name": "Boot leather",
+          "hex": "#2A2118",
+          "notes": "Soft boots."
+        },
+        {
+          "name": "Calfskin",
+          "hex": "#7A5233",
+          "notes": "Grimoire and coin pouch."
+        },
+        {
+          "name": "Brass",
+          "hex": "#B58A3C",
+          "notes": "Clasp, buckle, watch, grimoire corners, roughness 0.4."
+        },
+        {
+          "name": "Eye dark",
+          "hex": "#1A1410",
+          "notes": "Eyes."
+        },
+        {
+          "name": "Beard hair",
+          "hex": "#6E5C48",
+          "notes": "A short scruffy beard; roughness 0.9."
+        }
+      ],
+      "budget": "≤ 7k tris (body 4.5k, hat + band 0.8k, cape 0.4k, belt kit 1.3k), one 1024² set (BaseMap, ORM) + DyeMask.",
+      "dont": [
+        "Don't put the player's colour on anything but the dyed families.",
+        "Don't put props in the hands; animation owns the arms."
+      ],
+      "concept": "concept/wizard/1-the-wizard.png"
+    }
+  ]
+}

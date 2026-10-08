@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The Market rules (Runtime/Market, no Unity references) and their tests, built and run by plain .NET:
+       dotnet test Tools/MarketRules/MarketRules.Tests.csproj -->
+  <PropertyGroup><TargetFramework>net8.0</TargetFramework><LangVersion>9.0</LangVersion><IsPackable>false</IsPackable><Nullable>disable</Nullable></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Assets\_Project\Scripts\Runtime\Market\*.cs" />
+    <Compile Include="..\..\Assets\_Project\Scripts\Tests\Runtime\HaggleTests.cs" />
+    <Compile Include="..\..\Assets\_Project\Scripts\Tests\Runtime\CollectorTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+</Project>

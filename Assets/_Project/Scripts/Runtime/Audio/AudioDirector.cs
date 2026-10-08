@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using Interfaces;
 using Plunderspell.Alarm;
@@ -37,6 +38,7 @@ namespace Plunderspell.Audio
         private const float PollSeconds = 1f;
         private const float DoorScanSeconds = 5f;
         private const float MinRepeatSeconds = 0.04f;
+        private const string GuardFoleyGroupName = "guard_foley";
 
         private static readonly float[] NoiseMaxDistance = { 15f, 20f, 30f, 45f, 70f };
 
@@ -46,7 +48,7 @@ namespace Plunderspell.Audio
         public EnemyDirector Alarm { get; private set; }
         public ExtractionZone Zone { get; private set; }
         public AudioSourcePool Pool => _pool;
-        public LoopBus Loops => _loops;
+        public LoopPool Loops => _loops;
         public SoundBank Bank => _bank;
         public MusicDirector Music => _music;
 
@@ -54,10 +56,11 @@ namespace Plunderspell.Audio
         private AudioSourcePool _pool;
         private AudioSourcePool _stepPool;
         private AudioSourcePool _voicePool;
-        private LoopBus _loops;
+        private LoopPool _loops;
         private MusicDirector _music;
         private PushToCastController _pushToCast;
         private AudioListener _listener;
+        private SoundEntry _voiceEntry;
 
         private readonly HashSet<string> _reported = new HashSet<string>();
         private readonly Dictionary<string, float> _lastPlayed = new Dictionary<string, float>();
@@ -77,7 +80,7 @@ namespace Plunderspell.Audio
             _pool = new AudioSourcePool(transform, PoolSize);
             _stepPool = new AudioSourcePool(transform, StepPoolSize);
             _voicePool = new AudioSourcePool(transform, VoicePoolSize);
-            _loops = new LoopBus(transform, LoopSlots);
+            _loops = new LoopPool(transform, LoopSlots);
 
             AudioLevels.Bind(bank.Mixer);
 
@@ -92,26 +95,19 @@ namespace Plunderspell.Audio
 
         private void OnEnable()
         {
-            SpellCastingSystem.PhraseResolved += OnPhraseResolved;
-            SpellCastingSystem.CastResolved += OnCastResolved;
-            Damage.Dealt += OnDamageDealt;
+            EventManager.Instance?.Subscribe(this, (PhraseResolved e) => OnPhraseResolved(e.Report));
+            EventManager.Instance?.Subscribe(this, (CastResolved e) => OnCastResolved(e.Report));
+            EventManager.Instance?.Subscribe(this, (DamageDealt e) => OnDamageDealt(e.Report));
+            EventManager.Instance?.Subscribe(this, (PortalOpened e) => OnPortalOpened(e.Point));
+            EventManager.Instance?.Subscribe(this, (HaulInZoneChanged e) => OnHaulChanged(e.Worth, e.Pieces));
+            EventManager.Instance?.Subscribe(this, (ExtractionResolved e) => OnExtractionResolved(e.Worth, e.Saved));
         }
 
         private void OnDisable()
         {
-            SpellCastingSystem.PhraseResolved -= OnPhraseResolved;
-            SpellCastingSystem.CastResolved -= OnCastResolved;
-            Damage.Dealt -= OnDamageDealt;
-
             if (Alarm != null)
                 Alarm.AlarmStateChanged -= OnAlarmStateChanged;
-            if (Zone != null)
-            {
-                Zone.HaulInZoneChanged -= OnHaulChanged;
-                Zone.ExtractionResolved -= OnExtractionResolved;
-            }
-            if (Raid != null)
-                Raid.PortalOpened -= OnPortalOpened;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private void OnDestroy()
@@ -124,6 +120,7 @@ namespace Plunderspell.Audio
         {
             AudioLevels.TickStartup();
             AudioLevels.TickCasting(_pushToCast != null && _pushToCast.IsCasting, Time.unscaledDeltaTime);
+            AudioLevels.Settle(Time.unscaledDeltaTime);
 
             if (Time.unscaledTime < _pollAt)
                 return;
@@ -192,6 +189,53 @@ namespace Plunderspell.Audio
             source.transform.position = position;
             source.Play();
             return source;
+        }
+
+        /// <summary>
+        /// Plays a clip made at run time (a re-voiced guard line) through the voice pool and the mixer group the
+        /// guard voices use, so the volume sliders reach it. Returns null when no voice source is free.
+        /// </summary>
+        public AudioSource PlayClip(AudioClip clip, Vector3 position, float volumeScale, SoundPoolKind pool)
+        {
+            if (_bank == null || clip == null || !TryFindVoiceEntry(out SoundEntry reference))
+                return null;
+
+            AudioSource source = AcquireFor(pool, position);
+            if (source == null)
+                return null;
+
+            source.Stop();
+            source.clip = clip;
+            source.outputAudioMixerGroup = reference.Group;
+            source.loop = false;
+            source.volume = volumeScale;
+            source.pitch = 1f;
+            source.spatialBlend = 1f;
+            source.minDistance = 2f;
+            source.maxDistance = NoiseMaxDistance[(int)reference.Noise];
+            source.rolloffMode = AudioRolloffMode.Logarithmic;
+            source.transform.position = position;
+            source.Play();
+            return source;
+        }
+
+        // The recorded guard lines are not in the SoundBank, so they borrow the group and reach of the
+        // old guard voices, the bank's first "vo_" entry.
+        private bool TryFindVoiceEntry(out SoundEntry entry)
+        {
+            if (_voiceEntry == null)
+            {
+                foreach (SoundEntry candidate in _bank.Entries)
+                {
+                    if (candidate.Name.StartsWith("vo_", System.StringComparison.Ordinal) && candidate.Group != null)
+                    {
+                        _voiceEntry = candidate;
+                        break;
+                    }
+                }
+            }
+            entry = _voiceEntry;
+            return entry != null;
         }
 
         /// <summary>Voices are capped at six at once and the nearest win: a new line takes a free source, else the farthest one playing if it is farther than the new line.</summary>
@@ -340,8 +384,6 @@ namespace Plunderspell.Audio
             if (Raid == null)
             {
                 Raid = FindFirstObjectByType<RaidDirector>();
-                if (Raid != null)
-                    Raid.PortalOpened += OnPortalOpened;
             }
 
             if (Alarm == null)
@@ -357,8 +399,6 @@ namespace Plunderspell.Audio
                 if (Zone != null)
                 {
                     _lastHaulCount = Zone.PiecesInZone;
-                    Zone.HaulInZoneChanged += OnHaulChanged;
-                    Zone.ExtractionResolved += OnExtractionResolved;
                 }
             }
 
@@ -373,7 +413,8 @@ namespace Plunderspell.Audio
                     guard.AttackSignal.Attacked += kind => OnGuardAttacked(guard, kind);
             }
 
-            for (int i = 0; i < guards.Count; i++)
+            bool guardsStep = SoundFocus.Allows(GuardFoleyGroupName);
+            for (int i = 0; i < guards.Count && guardsStep; i++)
             {
                 Guard guard = guards[i] as Guard;
                 if (guard != null && _steppers.Add(guard.GetInstanceID()))

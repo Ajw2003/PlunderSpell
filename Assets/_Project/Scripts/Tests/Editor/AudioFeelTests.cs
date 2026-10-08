@@ -181,7 +181,7 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
-        public void LoopBusGivesOneSlotPerKeyAndNeverMoreThanItsSize()
+        public void LoopPoolGivesOneSlotPerKeyAndNeverMoreThanItsSize()
         {
             SoundBank bank = LoadBank();
             Assert.IsTrue(bank.TryGet(LootMaterials.Roll, out SoundEntry entry));
@@ -190,16 +190,16 @@ namespace Plunderspell.Tests.Editor
             SoundFocus.Enabled = false;
             try
             {
-                var bus = new LoopBus(root.transform, 3);
+                var loops = new LoopPool(root.transform, 3);
                 for (int frame = 0; frame < 5; frame++)
                 {
                     for (int key = 1; key <= 10; key++)
-                        bus.Drive(key, entry, 1f, Vector3.zero);
+                        loops.Drive(key, entry, 1f, Vector3.zero);
                 }
-                Assert.LessOrEqual(bus.Active, 3);
-                Assert.AreEqual(3, root.GetComponentsInChildren<AudioSource>().Length, "No source was created after the bus was made.");
-                Assert.IsNotNull(bus.SourceFor(1));
-                Assert.IsNull(bus.SourceFor(10), "The bus was full, so a late key waits.");
+                Assert.LessOrEqual(loops.Active, 3);
+                Assert.AreEqual(3, root.GetComponentsInChildren<AudioSource>().Length, "No source was created after the pool was made.");
+                Assert.IsNotNull(loops.SourceFor(1));
+                Assert.IsNull(loops.SourceFor(10), "The pool was full, so a late key waits.");
             }
             finally
             {

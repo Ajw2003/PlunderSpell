@@ -1,0 +1,32 @@
+10:01:59 build: no (auto)
+10:02:06 host: state MainMenu local none
+10:02:07 host: state LairRoom local 1005.2,1.5,1.5
+10:02:07 client started (pid 12432)
+10:02:15 client: state LairRoom local 1005.2,1.5,0.5
+10:02:19 host: distance 0.00 from /LairRoom/PlayerSpawns/Spawn1 at 1005.2,0.3,1.5
+10:02:19 PASS the host stands at Lair spawn 1
+10:02:20 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+10:02:20 PASS the client stands at Lair spawn 2
+10:02:21 client: travelled through /LairRoom/MarketDoor to 1100.5,1.3,8.0
+10:02:24 client: distance 0.00 from /MarketYard/PlayerSpawns/Spawn2 at 1100.5,0.3,8.0
+10:02:24 PASS the client's Market door leads to Market spawn 2
+10:02:24 host: bodies 1005.2,1.5,1.5; 1100.5,1.5,8.0; 
+10:02:24 PASS the host sees the client in the Market
+10:02:25 client: travelled through /MarketYard/LairExit to 1001.2,1.3,-3.8
+10:02:28 client: distance 0.00 from /LairRoom/MarketDoorArrivals/Spawn2 at 1001.2,0.3,-3.8
+10:02:28 PASS the client's way out leads back inside the Lair door
+10:02:29 castle: seed 777
+10:02:30 host: state Playing local -8.5,1.5,-12.0
+10:02:31 client: state Playing local -12.0,1.5,-8.5
+10:02:35 host: on the pad 2
+10:02:37 host: extracting
+10:02:38 host: state LairRoom local 1005.2,1.5,1.5
+10:02:39 client: state LairRoom local 1005.2,1.5,0.5
+10:02:43 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+10:02:43 PASS the client comes home to Lair spawn 2
+10:02:44 host: pile 2 CabinetOfCuriosities(Clone) NautilusCup(Clone)
+10:02:44 client: pile 2 NautilusCup(Clone) CabinetOfCuriosities(Clone)
+10:02:44 FAIL both see the same two-piece haul pile
+10:02:45 client log error lines: 0
+10:02:45 FAIL 1 Lair checks
+10:02:46 cleaning up

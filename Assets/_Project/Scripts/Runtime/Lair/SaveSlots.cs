@@ -10,18 +10,23 @@ namespace Plunderspell.Lair
     {
         public const int Count = 3;
 
+        /// <summary>The slot the automated checks play in. Above <see cref="Count"/>, so the Main Menu never offers it.</summary>
+        public const int TestSlot = 99;
+
         private const string ActiveKey = "Save.ActiveSlot";
 
         /// <summary>The slot in use, 1 to <see cref="Count"/>.</summary>
         public static int Active
         {
-            get => Mathf.Clamp(PlayerPrefs.GetInt(ActiveKey, 1), 1, Count);
+            get => Valid(PlayerPrefs.GetInt(ActiveKey, 1));
             set
             {
-                PlayerPrefs.SetInt(ActiveKey, Mathf.Clamp(value, 1, Count));
+                PlayerPrefs.SetInt(ActiveKey, Valid(value));
                 PlayerPrefs.Save();
             }
         }
+
+        private static int Valid(int slot) => slot == TestSlot ? slot : Mathf.Clamp(slot, 1, Count);
 
         /// <summary>
         /// The PlayerPrefs key for <paramref name="baseKey"/> in <paramref name="slot"/>. Slot 1 keeps

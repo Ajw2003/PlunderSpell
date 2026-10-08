@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 1400
   IsArtifact: 1
-  Bulk: 1
+  Category: 0
+  WeightKg: 1
   Fragility: 8
   DisplayName: Gold Death-Mask
   Icon: {fileID: 0}

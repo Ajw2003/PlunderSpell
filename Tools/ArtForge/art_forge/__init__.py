@@ -17,5 +17,10 @@ ENEMY_FORGE_DIR = os.path.join(TOOLS_DIR, "EnemyForge")
 if ENEMY_FORGE_DIR not in sys.path:
     sys.path.insert(0, ENEMY_FORGE_DIR)
 
-KINDS = ("items", "structures", "enemies")
+KINDS = ("items", "structures", "enemies", "players")
 AGES = ("bronze", "high", "late", "powder")
+PLAYER_AGES = ("lair",)   # the one "age" of the players kind: docs/art/data/lair.json
+
+
+def default_ages(kind: str) -> tuple[str, ...]:
+    return PLAYER_AGES if kind == "players" else AGES

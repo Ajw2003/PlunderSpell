@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using Interfaces;
@@ -32,6 +33,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             GameServices.Extraction.CancelExtraction();
             GameServices.GameState.ChangeState(_stateBefore);
             foreach (Object o in _spawned)
@@ -78,7 +80,7 @@ namespace Plunderspell.Tests
 
             var reports = new List<DamageReport>();
             void Record(DamageReport r) => reports.Add(r);
-            Damage.Dealt += Record;
+            EventManager.Instance.Subscribe(this, (DamageDealt e) => Record(e.Report));
             try
             {
                 float lost = Damage.Apply(target, 20f, goblet, thrower, Vector3.one, DamageKind.Impact);
@@ -91,7 +93,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                Damage.Dealt -= Record;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
 
@@ -101,7 +103,7 @@ namespace Plunderspell.Tests
             var target = Track(new GameObject("Target")).AddComponent<Dummy>();
             int reports = 0;
             void Count(DamageReport _) => reports++;
-            Damage.Dealt += Count;
+            EventManager.Instance.Subscribe(this, (DamageDealt e) => Count(e.Report));
             try
             {
                 // Below the dummy's impact threshold: it shrugs it off, so no number should appear.
@@ -114,7 +116,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                Damage.Dealt -= Count;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
 
@@ -125,7 +127,7 @@ namespace Plunderspell.Tests
             var target = player.AddComponent<Dummy>();
             DamageReport last = default;
             void Keep(DamageReport r) => last = r;
-            Damage.Dealt += Keep;
+            EventManager.Instance.Subscribe(this, (DamageDealt e) => Keep(e.Report));
             try
             {
                 Damage.Apply(target, 999f, player, player, Vector3.zero, DamageKind.Burn);
@@ -134,7 +136,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                Damage.Dealt -= Keep;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
 
@@ -172,7 +174,7 @@ namespace Plunderspell.Tests
 
             float worth = -1f;
             int saved = -1;
-            zone.ExtractionResolved += (w, s) => { worth = w; saved = s; };
+            EventManager.Instance.Subscribe(this, (ExtractionResolved e) => { worth = e.Worth; saved = e.Saved; });
 
             yield return new WaitForSeconds(0.5f);
             Assert.AreEqual(1, zone.PiecesInZone,
@@ -289,7 +291,7 @@ namespace Plunderspell.Tests
             var player = MakePlayer(new Vector3(0f, 300f, -800f));
             yield return null;
 
-            Assert.AreEqual(RigidbodyInterpolation.Interpolate, player._rb.interpolation,
+            Assert.AreEqual(RigidbodyInterpolation.Interpolate, player.Rb.interpolation,
                 "An uninterpolated body moves its camera only on 50 Hz physics steps: the whole view judders (#104).");
 
             Quaternion bodyBefore = player.transform.rotation;
@@ -309,15 +311,15 @@ namespace Plunderspell.Tests
         public IEnumerator Test_IdleStandsStill()
         {
             var player = MakePlayer(new Vector3(20f, 300f, -800f));
-            player._rb.useGravity = false;
+            player.Rb.useGravity = false;
             yield return null;
 
-            player._rb.linearVelocity = new Vector3(5f, 0f, 3f);
+            player.Rb.linearVelocity = new Vector3(5f, 0f, 3f);
             player.Idle();
             yield return null;
             yield return null;
 
-            Vector3 v = player._rb.linearVelocity;
+            Vector3 v = player.Rb.linearVelocity;
             Assert.Less(new Vector2(v.x, v.z).magnitude, 0.01f,
                 "Arriving in Idle while moving used to coast forever, off the edge of the map.");
         }
@@ -394,6 +396,9 @@ namespace Plunderspell.Tests
 
                 foreach (GuardPlacement guard in GuardPlacementPlanner.Plan(castle, seed))
                 {
+                    // The safe ring is the ground floor's; a keep guard above it is a storey away (#255).
+                    if (castle.PlacedModules[guard.ModuleIndex].Level != CastleLevels.Ground)
+                        continue;
                     Vector2Int at = castle.PlacedModules[guard.ModuleIndex].GridPosition;
                     int distance = Mathf.Max(Mathf.Abs(at.x - entrance.x), Mathf.Abs(at.y - entrance.y));
                     Assert.Greater(distance, GuardPlacementPlanner.SafeEntranceRadius,
@@ -405,7 +410,9 @@ namespace Plunderspell.Tests
                     {
                         foreach (ProceduralCastleData.PlacedModule module in castle.PlacedModules)
                         {
-                            if ((module.Position - stop).sqrMagnitude > 0.01f)
+                            // Patrol stops are floor-top points, not module roots.
+                            if (module.Level != CastleLevels.Ground
+                                || (GuardPlacementPlanner.StandingPoint(module) - stop).sqrMagnitude > 0.01f)
                                 continue;
                             int stopDistance = Mathf.Max(Mathf.Abs(module.GridPosition.x - entrance.x),
                                 Mathf.Abs(module.GridPosition.y - entrance.y));

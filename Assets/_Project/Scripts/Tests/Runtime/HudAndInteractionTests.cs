@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Code.Scripts.EventSystems;
 using NUnit.Framework;
 using Plunderspell.Alarm;
 using Plunderspell.Castle;
@@ -32,6 +33,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             foreach (Object o in _spawned)
                 if (o != null)
                     Object.DestroyImmediate(o);
@@ -69,6 +71,14 @@ namespace Plunderspell.Tests
         }
 
         // --- Interaction ---------------------------------------------------------------------
+
+        [Test]
+        public void Test_CrosshairShowsWhereverTheWorldTakesInput_LairRoomAndMarketIncluded()
+        {
+            foreach (Plunderspell.Core.GameState state in System.Enum.GetValues(typeof(Plunderspell.Core.GameState)))
+                Assert.AreEqual(Player.PlayerInputController.AcceptsInputIn(state), CrosshairView.ShownIn(state), state.ToString());
+            Assert.IsTrue(CrosshairView.ShownIn(Plunderspell.Core.GameState.LairRoom), "The Lair room and the Market need a crosshair (#353).");
+        }
 
         [Test]
         public void Test_LookingAtLootFocusesIt()
@@ -139,6 +149,38 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void Test_FocusChangesArePublishedOnceEach()
+        {
+            LootInteractor player = MakePlayer();
+            LootPickup vase = MakeLoot("Vase", 2f, new Vector3(0f, 0f, 2f));
+            var loot = new List<LootPickup>();
+            var doors = new List<CastleDoorHandle>();
+            EventManager.Instance.Subscribe(this, (LootFocusChanged e) => loot.Add(e.Focus));
+            EventManager.Instance.Subscribe(this, (DoorFocusChanged e) => doors.Add(e.Focus));
+
+            player.UpdateFocus();
+            player.UpdateFocus();
+            Assert.AreEqual(new[] { vase }, loot, "Focusing the vase is announced once; looking at it again is silent.");
+            Assert.IsEmpty(doors);
+
+            vase.transform.position = new Vector3(0f, 0f, 40f);
+            Physics.SyncTransforms();
+            player.UpdateFocus();
+            Assert.AreEqual(2, loot.Count);
+            Assert.IsNull(loot[1], "Looking away announces that nothing is in focus.");
+
+            var doorGo = Track(new GameObject("Door"));
+            doorGo.transform.position = new Vector3(0f, 0f, 2f);
+            doorGo.AddComponent<BoxCollider>();
+            CastleDoor door = doorGo.AddComponent<CastleDoor>();
+            CastleDoorHandle handle = doorGo.AddComponent<CastleDoorHandle>();
+            handle.SetDoor(door);
+            Physics.SyncTransforms();
+            player.UpdateFocus();
+            CollectionAssert.AreEqual(new[] { handle }, doors, "A door coming into view is announced.");
+        }
+
+        [Test]
         public void Test_ADoorInReachIsOpenedByTheInteractKey()
         {
             LootInteractor player = MakePlayer();
@@ -200,7 +242,7 @@ namespace Plunderspell.Tests
         {
             RaidHudPresenter hud = MakeHud(out ExtractionZone zone, out EnemyDirector alarm, out _);
             zone.SetRaidDuration(125f);
-            alarm.SetAlarmLevel(60f);
+            alarm.SetAlarmLevel(60f, 3); // Roused needs three witnesses (#259)
 
             RaidHudModel model = hud.Build();
 
@@ -268,7 +310,7 @@ namespace Plunderspell.Tests
             alarm.SetAlarmLevel(30f);
             StringAssert.Contains("STIRRED", hud.Build().AlarmText);
 
-            alarm.SetAlarmLevel(90f);
+            alarm.SetAlarmLevel(90f, 5); // Hue and Cry needs five witnesses (#259)
             StringAssert.Contains("HUE AND CRY", hud.Build().AlarmText);
         }
     }

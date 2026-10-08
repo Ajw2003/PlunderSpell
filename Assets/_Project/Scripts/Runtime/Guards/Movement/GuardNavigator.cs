@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using Plunderspell.Alarm;
 using UnityEngine;
@@ -44,20 +45,18 @@ namespace Plunderspell.Guards
             if (director == null)
                 return;
 
-            director.OnPathReady += HandlePathReady;
-            director.OnArrived += HandleArrived;
-            director.OnBlocked += HandleBlocked;
+            EventManager.Instance?.Subscribe(this, (PathReady answer) => HandlePathReady(answer));
+            EventManager.Instance?.Subscribe(this, (Arrived answer) => HandleArrived(answer));
+            EventManager.Instance?.Subscribe(this, (Blocked answer) => HandleBlocked(answer));
             director.Navigation.Register(_guard, _tuning.BodyRadius, _tuning.BodyHeight);
         }
 
         public void Detach()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             if (_director == null)
                 return;
 
-            _director.OnPathReady -= HandlePathReady;
-            _director.OnArrived -= HandleArrived;
-            _director.OnBlocked -= HandleBlocked;
             _director.Navigation.Unregister(_guard);
             _director = null;
             Destination = null;
@@ -70,7 +69,7 @@ namespace Plunderspell.Guards
                 return;
 
             Destination = destination;
-            _director.Publish(new MoveRequest(_guard, destination, speed, reason));
+            EventManager.Instance?.Publish(new MoveRequest(_guard, destination, speed, reason));
         }
 
         /// <summary>Stops the guard where it stands. No event follows: the caller asked for it.</summary>

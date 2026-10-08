@@ -42,12 +42,26 @@ namespace PurrNet
 {
     public enum CompressionLevel { None, Fast, Balanced, Best }
 
+    /// <summary>PurrNet's variable-length integer; headlessly just the value, convertible to ulong as the real one is.</summary>
+    public readonly struct PackedULong : IEquatable<PackedULong>
+    {
+        public readonly ulong value;
+        public PackedULong(ulong value) { this.value = value; }
+        public bool Equals(PackedULong o) => value == o.value;
+        public override bool Equals(object o) => o is PackedULong p && Equals(p);
+        public override int GetHashCode() => value.GetHashCode();
+        public static bool operator ==(PackedULong a, PackedULong b) => a.value == b.value;
+        public static bool operator !=(PackedULong a, PackedULong b) => a.value != b.value;
+        public static implicit operator ulong(PackedULong p) => p.value;
+        public override string ToString() => value.ToString();
+    }
+
     public readonly struct PlayerID : IEquatable<PlayerID>
     {
-        public readonly ushort id;
+        public readonly PackedULong id;
         public readonly bool isBot;
 
-        public PlayerID(ushort id, bool isBot = false) { this.id = id; this.isBot = isBot; }
+        public PlayerID(ushort id, bool isBot = false) { this.id = new PackedULong(id); this.isBot = isBot; }
 
         public bool Equals(PlayerID other) => id == other.id && isBot == other.isBot;
         public override bool Equals(object obj) => obj is PlayerID p && Equals(p);
@@ -122,6 +136,9 @@ namespace PurrNet
         public bool isOwner => isSpawned && _owner.HasValue && _owner == NetworkHarness.LocalPlayer;
         public bool isController => isSpawned && (_owner.HasValue ? isOwner : isServer);
         public bool hasConnectedOwner => _owner.HasValue;
+        public bool hasOwner => _owner.HasValue;
+        /// <summary>The manager this object is spawned under: the scene's, and null while unspawned, as in PurrNet.</summary>
+        public NetworkManager networkManager => isSpawned ? NetworkManager.main : null;
         public PlayerID? owner => _owner;
         public PlayerID? localPlayer => NetworkHarness.LocalPlayer;
         /// <summary>PurrNet's non-null local player; the harness's, or player 0 when it has none.</summary>
@@ -147,6 +164,8 @@ namespace PurrNet
         public void RaiseSpawned() => InvokeMessage("OnSpawned");
         public void RaiseDespawned() => InvokeMessage("OnDespawned");
 
+        /// <summary>PurrNet's NetworkIdentity declares this virtual so subclasses can override it.</summary>
+        protected virtual void OnDestroy() { }
         protected virtual void OnSpawned() { }
         protected virtual void OnDespawned() { }
         protected virtual void OnSpawned(bool asServer) { }
@@ -163,6 +182,8 @@ namespace PurrNet
     public class NetworkTransform : NetworkIdentity
     {
         public bool ownerAuth = true;
+        /// <summary>Ticks of interpolation delay; nothing is interpolated headlessly, so none.</summary>
+        public uint ticksBehind => 0;
     }
 
     /// <summary>
@@ -348,6 +369,11 @@ namespace PurrNet
     public class NetworkManager : UnityEngine.MonoBehaviour
     {
         public static NetworkManager main { get; private set; }
+
+        public class TickManager { public uint tickRate = 30; }
+        public TickManager tickModule { get; } = new TickManager();
+        /// <summary>Approximation: the single simulated host is the only player while running.</summary>
+        public int playerCount => NetworkHarness.IsRunning ? 1 : 0;
         public NetworkRules networkRules;
 
         public bool isServer => NetworkHarness.IsServer;

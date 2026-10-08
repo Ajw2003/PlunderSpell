@@ -72,8 +72,7 @@ MonoBehaviour:
   _range: 10
   _flameOffset: {x: 0, y: 1.7, z: 0}
   _flickerAmount: 0.06
-  _flickerSpeed: 2.2
-  _easeSeconds: 1.5
+  _flickerSpeed: 1.2
   _useOwnColor: 1
   _ownColor: {r: 0.5, g: 0.42, b: 0.78, a: 1}
 --- !u!1 &3016540616349929675

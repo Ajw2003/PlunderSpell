@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 1000
   IsArtifact: 0
-  Bulk: 12
+  Category: 0
+  WeightKg: 12
   Fragility: 999
   DisplayName: Tripod Cauldron
   Icon: {fileID: 0}

@@ -7,6 +7,7 @@
         "Plunderspell.Acoustics",
         "PurrNet.Runtime",
         "Plunderspell.Items",
+        "Plunderspell.Market",
         "Plunderspell.Core"
     ],
     "includePlatforms": [],

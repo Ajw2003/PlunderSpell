@@ -771,8 +771,8 @@ MonoBehaviour:
   _decayRate: 5
   _sightingPoints: 20
   _attackPoints: 6
-  _rousedChasers: 2
-  _hueAndCryChasers: 3
+  _rousedChasers: 3
+  _hueAndCryChasers: 5
   _attackTurnTuning:
     MeleeTurnsPerTarget: 1
     RangedTurnsPerTarget: 1

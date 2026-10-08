@@ -1,0 +1,7 @@
+total 393  passed 391  failed 2  skipped 0
+FAILED Plunderspell.Tests.GuardChaseTests.ARangedGuardRaisesTheAttackSignalWhileItIsMoving:   at least one shot was fired after it had started running
+  Expected: greater than or equal to 1
+  But was:  0
+
+FAILED Plunderspell.Tests.SavedSettingsStartupTests.FreshLaunchAppliesSavedVolumesToTheMixer: System.IndexOutOfRangeException : Index was outside the bounds of the array.
+FAIL

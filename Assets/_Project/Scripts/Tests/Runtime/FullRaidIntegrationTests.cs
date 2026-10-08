@@ -90,23 +90,50 @@ namespace Plunderspell.Tests
             var alarmGo = Track(new GameObject("Alarm"));
             alarmGo.AddComponent<BoxCollider>();
             EnemyDirector alarm = alarmGo.AddComponent<EnemyDirector>();
-
-            var guardGo = Track(new GameObject("Guard"));
-            guardGo.transform.position = new Vector3(0f, 0f, 6f);
-            guardGo.AddComponent<BoxCollider>();
-            guardGo.AddComponent<StatusEffectReceiver>();
-            Guard guard = guardGo.AddComponent<Guard>();
-            guard.Configure(alarm);
+            Guard near = MakeListeningGuard(alarm, new Vector3(0f, 0f, 6f));
+            Guard other = MakeListeningGuard(alarm, new Vector3(6f, 0f, 0f));
 
             SpellEffectRegistry.Execute(new SpellEffectContext(
                 SpellId.Saltus, CastVolume.Shout, Vector3.zero, Vector3.forward));
             SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, null, ~0, 0);
-            guard.Tick(0.1f);   // the fresh guard decides what a noise means on its next tick
+            near.Tick(0.1f);   // the fresh guard decides what a noise means on its next tick
+            other.Tick(0.1f);
 
+            // The castle hears through its guards, once per guard (#259): two guards hearing a shouted leap wake it.
             Assert.GreaterOrEqual((int)alarm.State, (int)AlarmState.Stirred,
-                "A shouted leap and its slam must wake the castle.");
-            Assert.AreEqual(GuardAlertState.Investigating, guard.State,
+                "A shouted leap and its slam heard by two guards must wake the castle.");
+            Assert.AreEqual(GuardAlertState.Investigating, near.State,
                 "…and bring a guard to look.");
+        }
+
+        [Test]
+        public void Test_OneGuardHearingAShoutedLeapDoesNotStirTheCastle()
+        {
+            var alarmGo = Track(new GameObject("Alarm"));
+            alarmGo.AddComponent<BoxCollider>();
+            EnemyDirector alarm = alarmGo.AddComponent<EnemyDirector>();
+            Guard guard = MakeListeningGuard(alarm, new Vector3(0f, 0f, 6f));
+
+            SpellEffectRegistry.Execute(new SpellEffectContext(
+                SpellId.Saltus, CastVolume.Shout, Vector3.zero, Vector3.forward));
+            SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, null, ~0, 0);
+            guard.Tick(0.1f);
+
+            // One guard reports one burst of noise once (#259): it goes to look, but the castle is not yet uneasy.
+            Assert.Greater(alarm.AlarmLevel, 0f, "The guard reports what it heard.");
+            Assert.AreEqual(AlarmState.Calm, alarm.State, "One witness to one noise does not stir the castle.");
+            Assert.AreEqual(GuardAlertState.Investigating, guard.State, "The guard still goes to look.");
+        }
+
+        private Guard MakeListeningGuard(EnemyDirector alarm, Vector3 at)
+        {
+            var guardGo = Track(new GameObject("Guard"));
+            guardGo.transform.position = at;
+            guardGo.AddComponent<BoxCollider>();
+            guardGo.AddComponent<StatusEffectReceiver>();
+            Guard guard = guardGo.AddComponent<Guard>();
+            guard.Configure(alarm);
+            return guard;
         }
 
         // --- The alarm closing the castle ------------------------------------------------------
@@ -126,7 +153,7 @@ namespace Plunderspell.Tests
             CastleLockdown lockdown = lockdownGo.AddComponent<CastleLockdown>();
             lockdown.Configure(alarm);
 
-            alarm.SetAlarmLevel(55f);
+            alarm.SetAlarmLevel(55f, 3); // Roused needs three witnesses (#259)
             Assert.AreEqual(AlarmState.Roused, alarm.State);
             Assert.IsTrue(lockdown.IsLockedDown);
 
@@ -256,7 +283,9 @@ namespace Plunderspell.Tests
             Assert.AreEqual(carriedWorth, director.LastWorthExtracted, 0.01f,
                 "Only intact loot inside the zone pays out.");
             Assert.AreEqual(1, director.LastPlayersSaved);
-            Assert.Less(lair.TotalDebt, debtDuringRaid, "The takings pay down the debt.");
+            Assert.AreEqual(debtDuringRaid, lair.TotalDebt, "The takings are not banked at extraction; only a sale pays the debt.");
+            lair.BankSale(director.LastWorthExtracted);
+            Assert.Less(lair.TotalDebt, debtDuringRaid, "Selling the takings pays down the debt.");
             Assert.AreEqual(0, lootSpawner.Spawned.Count, "The castle is cleared away after the raid.");
 
             // And back out again.

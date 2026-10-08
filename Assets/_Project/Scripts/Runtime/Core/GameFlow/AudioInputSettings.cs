@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using UnityEngine;
 
@@ -36,8 +37,20 @@ namespace Plunderspell.Core
             }
         }
 
-        /// <summary>Raised when <see cref="GuardsHearChatter"/> actually changes value.</summary>
-        public static event Action<bool> GuardsHearChatterChanged;
+        /// <summary>The chosen microphone's device name; empty means automatic.</summary>
+        public static string Microphone
+        {
+            get => PlayerPrefs.GetString(MicrophoneKey, string.Empty);
+            set
+            {
+                value = value ?? string.Empty;
+                if (value == Microphone)
+                    return;
+                PlayerPrefs.SetString(MicrophoneKey, value);
+                PlayerPrefs.Save();
+                EventManager.Instance?.Publish(new MicrophoneChanged(value));
+            }
+        }
 
         /// <summary>Opt-in: keep listening between casts and let guards overhear ordinary talk. Default off.</summary>
         public static bool GuardsHearChatter
@@ -49,7 +62,7 @@ namespace Plunderspell.Core
                     return;
                 PlayerPrefs.SetInt(GuardsHearChatterKey, value ? 1 : 0);
                 PlayerPrefs.Save();
-                GuardsHearChatterChanged?.Invoke(value);
+                EventManager.Instance?.Publish(new GuardsHearChatterChanged(value));
             }
         }
     }

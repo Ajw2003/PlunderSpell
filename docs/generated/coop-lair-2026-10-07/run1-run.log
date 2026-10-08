@@ -1,0 +1,176 @@
+10:21:46 build: yes (auto)
+10:21:46 building Build/DevTest
+10:22:08 build Succeeded
+10:22:15 host: state MainMenu local none
+10:22:17 host: state LairRoom local 1005.2,1.5,1.5
+10:22:17 client started (pid 15724)
+10:22:24 client: state LairRoom local 44.5,1.3,1.6
+10:22:28 host: distance 0.00 from /LairRoom/PlayerSpawns/Spawn1 at 1005.2,0.3,1.5
+10:22:28 PASS the host stands at Lair spawn 1
+10:22:29 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+10:22:29 PASS the client stands at Lair spawn 2
+10:22:30 client: travelled through /LairRoom/MarketDoor to 1100.5,1.3,8.0
+10:22:33 client: distance 0.00 from /MarketYard/PlayerSpawns/Spawn2 at 1100.5,0.3,8.0
+10:22:33 PASS the client's Market door leads to Market spawn 2
+10:22:34 host: bodies 1100.5,1.5,8.0; 1005.2,1.5,1.5; 
+10:22:34 PASS the host sees the client in the Market
+10:22:35 client: travelled through /MarketYard/LairExit to 1001.2,1.3,-3.8
+10:22:38 client: distance 0.00 from /LairRoom/MarketDoorArrivals/Spawn2 at 1001.2,0.3,-3.8
+10:22:38 PASS the client's way out leads back inside the Lair door
+10:22:38 host before: pile 0 
+10:22:39 castle: seed 777
+10:22:40 host: state Playing local -8.5,1.5,-12.0
+10:22:41 client: state Playing local -12.0,1.5,-8.5
+10:22:45 host: on the pad 2
+10:22:48 host: extracting
+10:22:48 host: state LairRoom local 1005.2,1.5,1.5
+10:22:49 client: state LairRoom local 1005.2,1.5,0.5
+10:22:53 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+10:22:53 PASS the client comes home to Lair spawn 2
+10:22:55 host: pile 2 OxhideIngot(Clone) RoundShield(Clone)
+10:22:55 client: pile 2 OxhideIngot(Clone) RoundShield(Clone)
+10:22:55 PASS both see the same pile, grown by the two extracted pieces (0 -> 2)
+10:22:56 client log error lines: 0
+10:22:56 PASS all Lair checks
+10:22:56 cleaning up
+11:23:39 build: yes (auto)
+11:23:40 building Build/DevTest
+11:24:02 build Succeeded
+11:24:09 host: state MainMenu local none
+11:24:11 host: state LairRoom local 1005.2,1.5,1.5
+11:24:11 client started (pid 23838)
+11:24:18 client: state LairRoom local 44.5,1.3,1.6
+11:24:22 host: distance 0.00 from /LairRoom/PlayerSpawns/Spawn1 at 1005.2,0.3,1.5
+11:24:22 PASS the host stands at Lair spawn 1
+11:24:23 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+11:24:23 PASS the client stands at Lair spawn 2
+11:24:24 client: travelled through /LairRoom/MarketDoor to 1100.5,1.3,8.0
+11:24:27 client: distance 0.00 from /MarketYard/PlayerSpawns/Spawn2 at 1100.5,0.3,8.0
+11:24:27 PASS the client's Market door leads to Market spawn 2
+11:24:28 host: bodies 1100.5,1.5,8.0; 1005.2,1.5,1.5; 
+11:24:28 PASS the host sees the client in the Market
+11:24:29 client: travelled through /MarketYard/LairExit to 1001.2,1.3,-3.8
+11:24:32 client: distance 0.00 from /LairRoom/MarketDoorArrivals/Spawn2 at 1001.2,0.3,-3.8
+11:24:32 PASS the client's way out leads back inside the Lair door
+11:24:32 host before: pile 2 FaienceHippopotamus(Clone) GoldDeathMask(Clone)
+11:24:33 castle: seed 777
+11:24:34 host: state Playing local -8.5,1.5,-12.0
+11:24:35 client: state Playing local -12.0,1.5,-8.5
+11:24:39 host: on the pad 2
+11:24:41 host: extracting
+11:24:42 host: state LairRoom local 1005.2,1.5,1.5
+11:24:43 client: state LairRoom local 1005.2,1.5,0.5
+11:24:47 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+11:24:47 PASS the client comes home to Lair spawn 2
+11:24:49 host: pile 4 FaienceHippopotamus(Clone) GoldDeathMask(Clone) GoldDeathMask(Clone) OxhideIngot(Clone)
+11:24:49 client: pile 4 FaienceHippopotamus(Clone) GoldDeathMask(Clone) GoldDeathMask(Clone) OxhideIngot(Clone)
+11:24:49 PASS both see the same pile, grown by the two extracted pieces (2 -> 4)
+11:24:51 client: travelled through /LairRoom/MarketDoor to 1100.5,1.3,8.0
+11:24:54 client: looking at the Goldsmith from 1103.1,1.5,-2.2
+11:24:54 host: put FaienceHippopotamus(Clone)
+11:24:57 host: line The Goldsmith: 433 coin.
+11:24:57 client: line The Goldsmith: 433 coin.
+11:24:57 PASS both see the vendor's opening offer
+11:24:58 host before: gold 0 debt 550
+11:24:59 client: spoke Plus
+11:25:03 host: line The Goldsmith: Very well. 477 coin.
+11:25:03 client: line The Goldsmith: Very well. 477 coin.
+11:25:03 PASS the client's Plus is answered, and both see the same line
+11:25:05 client: spoke Satis
+11:25:08 host: line The Goldsmith: 477 coin, counted out. Done.
+11:25:08 client: line The Goldsmith: 477 coin, counted out. Done.
+11:25:08 PASS the client's Satis sells it, and both see the same line
+11:25:09 host after: gold 0 debt 73
+11:25:09 PASS the host's gold and debt moved by the 477 coins sold
+11:25:12 host: pieces 0
+11:25:12 client: pieces 0
+11:25:12 PASS the piece is gone on both sides
+11:25:12 client log error lines: 0
+11:25:12 PASS all Lair checks
+11:25:12 cleaning up
+14:19:28 test slot 99 wiped, owner's slot to restore: 1
+14:19:28 before: slot1 debt 300 gold 0 purses 0 0 0 0
+14:19:29 build: yes (auto)
+14:19:29 building Build/DevTest
+14:19:47 build Succeeded
+14:19:57 host: state MainMenu local none
+14:19:59 host: state LairRoom local 1005.2,1.5,1.5
+14:19:59 client started (pid 50689)
+14:20:08 client: state LairRoom local 1005.2,1.5,0.5
+14:20:12 client's own save before: slot 1 saved debt 840 gold 0 purses 0 0 0 0 paid 0 0 0 0
+14:20:13 host: distance 0.00 from /LairRoom/PlayerSpawns/Spawn1 at 1005.2,0.3,1.5
+14:20:13 PASS the host stands at Lair spawn 1
+14:20:14 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+14:20:14 PASS the client stands at Lair spawn 2
+14:20:16 client: travelled through /LairRoom/MarketDoor to 1100.5,1.3,8.0
+14:20:19 client: distance 0.00 from /MarketYard/PlayerSpawns/Spawn2 at 1100.5,0.3,8.0
+14:20:19 PASS the client's Market door leads to Market spawn 2
+14:20:20 host: bodies 1100.5,1.5,8.0; 1005.2,1.5,1.5; 
+14:20:20 PASS the host sees the client in the Market
+14:20:21 client: travelled through /MarketYard/LairExit to 1001.2,1.3,-3.8
+14:20:24 client: distance 0.00 from /LairRoom/MarketDoorArrivals/Spawn2 at 1001.2,0.3,-3.8
+14:20:24 PASS the client's way out leads back inside the Lair door
+14:20:25 host before: pile 0 
+14:20:26 castle: seed 777
+14:20:27 host: state Playing local -8.5,1.5,-12.0
+14:20:29 client: state Playing local -12.0,1.5,-8.5
+14:20:33 host: on the pad 2
+14:20:35 host: extracting
+14:20:36 host: state LairRoom local 1005.2,1.5,1.5
+14:20:38 client: state LairRoom local 1005.2,1.5,0.5
+14:20:42 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+14:20:42 PASS the client comes home to Lair spawn 2
+14:20:44 host: pile 2 FaienceHippopotamus(Clone) TripodCauldron(Clone)
+14:20:44 client: pile 2 FaienceHippopotamus(Clone) TripodCauldron(Clone)
+14:20:44 PASS both see the same pile, grown by the two extracted pieces (0 -> 2)
+14:20:47 client: travelled through /LairRoom/MarketDoor to 1100.5,1.3,8.0
+14:20:50 client: looking at the Goldsmith from 1103.1,1.5,-2.2
+14:20:51 host: put FaienceHippopotamus(Clone)
+14:20:55 host: line The Goldsmith: 335 coin.
+14:20:55 client: line The Goldsmith: 335 coin.
+14:20:55 PASS both see the vendor's opening offer
+14:20:56 host before: gold 0 debt 550
+14:20:57 client: spoke Plus
+14:21:02 host: line The Goldsmith: Very well. 369 coin.
+14:21:02 client: line The Goldsmith: Very well. 369 coin.
+14:21:02 PASS the client's Plus is answered, and both see the same line
+14:21:04 client: spoke Satis
+14:21:09 host: line The Goldsmith: 369 coin, counted out. Done.
+14:21:09 client: line The Goldsmith: 369 coin, counted out. Done.
+14:21:09 PASS the client's Satis sells it, and both see the same line
+14:21:10 host after: gold 0 debt 550
+14:21:10 PASS the sale banked nothing yet: the host's gold and debt did not move
+14:21:14 host: pieces 0
+14:21:14 client: pieces 0
+14:21:14 PASS the piece is gone on both sides
+14:21:16 host: pouches 1 coins 369 mass 3.69 lootvalue False
+14:21:16 client: pouches 1 coins 369 mass 3.69 lootvalue False
+14:21:16 PASS both see one pouch holding the 369 coins sold, and it is not loot
+14:21:18 host before: purse 0 / strongbox 1: purse 0
+14:21:19 host: pouch set into strongbox 2 at 1001.2,0.8,1.6
+14:21:24 host: pouches 0
+14:21:24 client: pouches 0
+14:21:24 PASS the pouch is gone on both sides after strongbox 2
+14:21:26 host after: purse 369 / strongbox 1: purse 0
+14:21:26 PASS purse 2 grew by the 369 coins sold and purse 1 did not
+14:21:26 host after the box: gold 0 debt 550
+14:21:27 PASS banking the pouch paid no debt: the host's gold and debt did not move (gold 0 debt 550)
+14:21:27 host: banked 100 into purse 1
+14:21:28 host before setting out: debt 550 purses 100 369 0 0 paid 0 0 0 0 present 1 1 0 0 line The Collector finds the purses empty.
+14:21:30 host: state Playing local -8.5,1.5,-12.0
+14:21:32 client: state Playing local 1103.1,1.5,-2.2
+14:21:33 host after setting out: debt 225 purses 0 94 0 0 paid 100 275 0 0 present 1 1 0 0 line The Collector takes 100 from I, 275 from II.
+14:21:33 expected debt 225.0 purses [0, 94] paid [100, 275] share 275
+14:21:33 PASS each present wizard paid min(purse, half the debt left), the debt fell by the sum (then +50), and the Collector said so
+14:21:37 client ledger: debt 225 purses 0 94 0 0 paid 100 275 0 0 present 1 1 0 0 line The Collector takes 100 from I, 275 from II.
+14:21:37 host ledger:   debt 225 purses 0 94 0 0 paid 100 275 0 0 present 1 1 0 0 line The Collector takes 100 from I, 275 from II.
+14:21:37 PASS the client's Lair shows the host's ledger exactly, Collector's line included
+14:21:38 client: lair screens shown 1
+14:21:42 client's own save after: slot 1 saved debt 840 gold 0 purses 0 0 0 0 paid 0 0 0 0
+14:21:42 PASS the client's own save slot is untouched (slot 1 saved debt 840 gold 0 purses 0 0 0 0 paid 0 0 0 0)
+14:21:43 host: slot1 debt 300 gold 0 purses 0 0 0 0
+14:21:43 PASS the owner's slot 1 is unchanged by the check (slot1 debt 300 gold 0 purses 0 0 0 0)
+14:21:43 client log error lines: 0
+14:21:43 PASS all Lair checks
+14:21:43 cleaning up
+14:21:48 active slot 1

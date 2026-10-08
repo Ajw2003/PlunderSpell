@@ -59,11 +59,13 @@ together and what was deliberately left undocumented, and why.
 | [`castle`](../4-systems/castle.md) | Deterministic seed-driven castle layout and path validation |
 | [`alarm`](../4-systems/alarm.md) | Noise propagation and the castle-wide alarm state machine |
 | [`raid`](../4-systems/raid.md) | The loop: Lair → castle → haul → extraction → Lair |
+| [`market`](../4-systems/market.md) | The Market's counters and vendors, and haggling: selling the haul for coins |
 | [`raid-scene-assembly`](../4-systems/raid-scene-assembly.md) | Wiring the authored art (castle rooms, loot, enemies) into the playable scene |
 | [`enemy-asset-pipeline`](../4-systems/enemy-asset-pipeline.md) | Generating the enemy roster from Python/Blender |
 | [`damage`](../4-systems/damage.md) | One damage pathway, blame, and hit feedback you can read |
 | [`combat-bench`](../4-systems/combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
 | [`audio`](../4-systems/audio.md) | Mixer, SoundBank, sounds played from game events, music by state and alarm, volume sliders, and what is still silent |
+| [`player-animation`](../4-systems/player-animation.md) | The wizard's body: model, clips, animator and what each machine sees |
 | [`scale`](../4-systems/scale.md) | The 1.8m standard human, and the room, archway and enemy heights measured against it |
 
 ## Everything else worth reaching
@@ -89,6 +91,12 @@ together and what was deliberately left undocumented, and why.
   ArtForge enemies get into a raid (built: all 16 are in their era's roster) and how they get
   animated (**awaiting approval**; no enemy is animated yet, #141). Review page:
   [`docs/generated/enemy-animation-plan/`](../generated/enemy-animation-plan/index.html).
+- [`docs/plans/multi-floor-castle.md`](../plans/multi-floor-castle.md): **approved** (2026-10-03, #197; steps #247-#250, step 1 plan [`multi-floor-castle-step1-plan.md`](../plans/multi-floor-castle-step1-plan.md)). Castles get a keep floor and a crypt below, joined by period stairs, with doors where zones meet.
+- [`docs/plans/diegetic-ui-lair-market.md`](../plans/diegetic-ui-lair-market.md): **approved 2026-10-06**
+  (#284); the Lair (#286) and Market (#287) are being modelled. The raid HUD is replaced by things in the world (a grimoire, a pocket watch, fires that show
+  the alarm); only the crosshair and damage feedback stay on screen. Loot comes home to a physical
+  Lair, and is sold in a Market to vendors who haggle. Illustrated review page:
+  [`docs/generated/diegetic-proposal/`](../generated/diegetic-proposal/index.html).
 - [`docs/plans/guards-hear-chatter.md`](../plans/guards-hear-chatter.md): **awaiting approval.**
   Guards hear what players say between casts (opt-in, local speech-to-text, words sent only to the
   host), react to it as noise, and remember the words for a later local-language-model stage.

@@ -13,7 +13,7 @@ public class PlayerJumpState : PlayerState
     {
         // A Saltus launch has already set the upward speed.
         if (!_stateMachine.TakeSpellLaunch())
-            _stateMachine._rb.AddForce(Vector3.up * _stateMachine.JumpForce, ForceMode.Impulse);
+            _stateMachine.Rb.AddForce(Vector3.up * _stateMachine.JumpForce, ForceMode.Impulse);
         _jumpTime = Time.time;
     }
 
@@ -33,22 +33,22 @@ public class PlayerJumpState : PlayerState
         Vector3 moveInput = CameraRelativeInput();
         if (moveInput.sqrMagnitude <= 0.01f) return;
 
-        float steeringForce = _stateMachine.walkSpeed * _stateMachine.AirControl * 5f;
-        _stateMachine._rb.AddForce(moveInput * steeringForce, ForceMode.Acceleration);
+        float steeringForce = _stateMachine.WalkSpeed * _stateMachine.AirControl * 5f;
+        _stateMachine.Rb.AddForce(moveInput * steeringForce, ForceMode.Acceleration);
 
         ClampHorizontalVelocity();
     }
 
     private void ClampHorizontalVelocity()
     {
-        Vector3 velocity = _stateMachine._rb.linearVelocity;
+        Vector3 velocity = _stateMachine.Rb.linearVelocity;
         Vector3 verticalVelocity = Vector3.up * velocity.y;
         Vector3 horizontalVelocity = velocity - verticalVelocity;
 
-        if (horizontalVelocity.magnitude > _stateMachine.walkSpeed)
+        if (horizontalVelocity.magnitude > _stateMachine.WalkSpeed)
         {
-            horizontalVelocity = horizontalVelocity.normalized * _stateMachine.walkSpeed;
-            _stateMachine._rb.linearVelocity = horizontalVelocity + verticalVelocity;
+            horizontalVelocity = horizontalVelocity.normalized * _stateMachine.WalkSpeed;
+            _stateMachine.Rb.linearVelocity = horizontalVelocity + verticalVelocity;
         }
     }
 

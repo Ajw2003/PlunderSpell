@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 1500
   IsArtifact: 0
+  Category: 3
   WeightKg: 12
   Fragility: 8
   DisplayName: Parade Armour on its Stand

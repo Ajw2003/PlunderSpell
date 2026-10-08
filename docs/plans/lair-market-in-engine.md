@@ -1,0 +1,52 @@
+# The Lair and the Market: what exists, and what is left before they can be played in Unity
+
+**2026-10-07.** Inventory taken on `claude/staging-2026-10-07`. Design: `docs/plans/diegetic-ui-lair-market.md`
+(approved 2026-10-06, #284).
+
+## Done
+
+| What | Where | State |
+|---|---|---|
+| The design, approved with every proposed answer | `docs/plans/diegetic-ui-lair-market.md` (#285) | done |
+| Concept art: Lair, Market, one haggle | `docs/art/concept/lair/` | done |
+| Lair models: cellar, portal arch, ledger table, ledger, strongbox, century dial (stand + 4 turning rings), weapon rack, candle | `Assets/_Project/Art/Models/Lair/` (#288) | built and validated in Blender; `.meta` files committed; import checked 2026-10-06 (scale in metres, no missing materials) |
+| Market models: yard with well, fence cart, goldsmith stall, anvil, pardoner booth, antiquarian cabinet, counter, slate board, scales (base, tipping beam, pan), lantern, coin, coin stack, pouch | `Assets/_Project/Art/Models/Market/` (#293) | built and validated in Blender; never imported into Unity |
+| Blender reference layouts of each room | `Tools/AssetPipeline/render_lair_scene.py`, `render_market_scene.py`, README "Lair" and "Market" | done; placements are the reference for the Unity scenes |
+| Lair bookkeeping that already existed | `Runtime/Lair/LairHubManager.cs`, `LairState.cs` | debt, banked gold, chosen Age, saved per slot; **debt is one shared number, not per wizard** |
+| The Lair room prefab (step 2, #308) | `Editor/LairRoomForge.cs` → `Prefabs/Lair/LairRoom.prefab` | built 2026-10-06; render from the Blender camera `docs/art/models/lair/lair-unity.png` (`Tools/Unity/eval/lair_room_capture.cs`) matches `lair-assembled.png`. Axis map is `(-X, Z, -Y)`, not the README's castle rule. No portal glow sheet yet |
+| Getting there and back (step 3, #309) | `GameState.LairRoom`, `Runtime/Raid/LairRoomSpawner.cs`, `LairPortalTrigger.cs`, `LairLedgerHandle.cs` | done 2026-10-06: sessions start in the room, the portal sets out, extraction returns to it, E at the ledger opens the Lair screen. Solo checked in Play mode; co-op not checked. See `docs/4-systems/raid.md` |
+| The haul lands in the room (step 4, #310) | `HaulExtracted` event, `Runtime/Raid/HaulLanding.cs`, `HaulLayout.cs`, `LootSpawner.SpawnPile`, `HaulLanding` child in `LairRoomForge.cs` | done 2026-10-06, changed 2026-10-07 (#312): each raid's unbroken pieces spawn on the Lair floor at x 4.0 beside the unsold ones; the pile persists across raids and is saved per save slot (`HaulPileSave`), respawned on the server at load and on a slot change; extraction no longer banks (`LairHubManager.BankSale` does, for the Market). Solo and co-op (twice running, pile 0 to 2 to 4) checked in Play mode; nothing sells yet |
+| The Market yard prefab (step 5, #311, first half) | `Editor/MarketYardForge.cs` → `Prefabs/Market/MarketYard.prefab`, from `Tools/AssetPipeline/placements/market.json` (written by `render_market_scene.py --placements`, so Unity and the render share one placement code) | built 2026-10-06: 47 models, 10 lantern lights, 4 spawns inside the south way in; render `docs/art/models/market/market-unity.png` matches `market-assembled.png`. Placed in `RaidScene` at (1100, 0, 0) beside the Lair (1000, 0, 0) by `Tools/Plunderspell/Place Lair And Market In Raid Scene`. Not yet reachable: the Market door and the way back are next. Windows and lanterns are not emissive yet |
+| The Market door and the way back (step 5, #311, second half) | `Runtime/Raid/RoomTravel.cs`; `LairRoomForge` (door collider, `MarketDoorArrivals`), `MarketYardForge` (`LairExit`), `RaidSceneRooms` (connects them) | done 2026-10-07, solo Play mode: looked at the door from 2.2 m, travelled to the Market's Spawn1 (1101.5, 8.0) facing the well; stood in the gate, returned to (1002.2, -3.8) just inside the Lair door. Captures `docs/generated/market-door-2026-10-07/`. Co-op not checked |
+| The haggle rules (step 6, #312, first part) | `Runtime/Market/Haggle.cs`, `HaggleRules.cs` (assembly `Plunderspell.Market`, no Unity references) | written 2026-10-07: limit, opening offer, Plus/Satis/Vale, patience per vendor (Fence 1, Goldsmith 3, Pardoner 3, Antiquarian 4), the 10% lower opening on a second visit. `dotnet test Tools/MarketRules/MarketRules.Tests.csproj`: 11 passed. Voice, 2026-10-07 (#312): `Market/HaggleWords.cs` is the heard-spelling table; `SpellCastingSystem.cs:132` adds it to the recogniser vocabulary and `:239` skips haggling words; `Raid/HaggleVoiceRouter.cs` calls `SellCounter.Speak` on the nearest open counter within 3 m. Not tested with a real microphone. Second part, 2026-10-07 (#312): `Runtime/Raid/SellCounter.cs` and `VendorLines.cs`, added to each `MarketCounter` by `MarketYardForge`: a piece resting on a counter opens a haggle, answered with keys 1 Plus / 2 Satis / 3 Vale within 3 m, a sale banks coins and removes the piece from the pile save. Solo and host only (a client's counter does nothing; co-op selling is next). Interest was 1.0 for every vendor; since #313 (step 7) `LootItem.Category` (Metal, Holy, Curio, Arms, Other, set on all 48 assets) drives `HaggleRules.Interest` (1.3 his kind, 0.7 otherwise, Fence 1.0): the same Metal goblet opened at 100 at the Goldsmith's and 60 at the Pardoner's, solo; the checks now play in a hidden test save slot (`SaveSlots.TestSlot`, `Tools/Unity/test_slot.sh`), table in `docs/4-systems/market.md`. A new haul now lands on the pile's free cells (`HaulLayout.FreeOffsets`). See `docs/4-systems/market.md` The design's "2 patience above 1.2 x L" could never fire and was dropped (owner, Decisions 2026-10-07) |
+| Co-op for steps 2-5 (step 8, #314, first part) | `Tools/Unity/coop_lair_check.sh`, `Tools/Unity/eval/coop_lair.cs` | passed twice running 2026-10-07 (Editor host + Development build client): host at Lair spawn 1, client at spawn 2; the client's Market door to Market spawn 2, seen there by the host; the way out back inside the Lair door; after a raid the client home at spawn 2; both see the same pile, grown by the two pieces extracted (the pile is saved, so the check reads the starting count first; rerun 2026-10-07 for #312: 0 to 2, then 2 to 4); no errors in the client log. Logs and client screenshots `docs/generated/coop-lair-2026-10-07/`. The pile lies 1.2 m ahead on the floor, so it sits at the bottom edge of a level view: worth tuning |
+| Co-op ledger (step 8, #314, third part) | `RaidDirector._hostLedger`, `LairHubManager.HostLedger/ShowHostLedger`, `coop_lair_check.sh` | done 2026-10-07: a client's Lair shows the host's purses, paid, seats and Collector line, not saved; co-op check passed twice (client ledger equals host's, client slot unchanged, host slot 1 unchanged); capture `docs/generated/coop-lair-2026-10-07/run2-client-ledger.png` |
+| Co-op selling (step 8, #314, second part) | `Runtime/Raid/SellCounter.cs` (now a `NetworkBehaviour`), `MarketYardForge` (scene `NetworkIdentity`, subtitle in front of the vendor, `AddLip`), selling part of `coop_lair_check.sh` | done 2026-10-07: the server owns the haggle; a client's word goes by `[ServerRpc]`, every line by `[ObserversRpc]`. Solo Goldsmith haggle still sells (offer 102, Plus 112, debt 550 to 438). Co-op check passed twice running (client Plus then Satis, same line both sides, host debt/gold moved by the coins, piece gone both sides). `NetworkPrefabs.asset` unchanged (scene object). See `docs/4-systems/market.md` Co-op. Keys 1/2/3 not machine-checked |
+| Lair screen that already existed | `Runtime/UI/Screens/LairScreen.cs` | a flat menu screen; this is what the room replaces |
+
+## Left to do, in order
+
+1. **Import.** Open the project in Unity so the 27 new models import and get their `.meta` files; check scale (a 1.8 m
+   player beside the 2.16 m Lair door) and materials. Commit the `.meta` files.
+2. **Lair scene.** A scene (built by an Editor script, as the castle benches are) with the cellar and every prop placed
+   as in the Blender reference, lights for the hearth and candle, colliders, and a spawn point for each player.
+3. **Getting there and back.** Start a session in the Lair room instead of on the Lair screen; the portal arch starts a
+   raid (today the screen's button does); extraction brings players back to the room.
+4. **Loot comes home as objects.** Today the haul is turned into a number at extraction. It has to be kept as a list
+   of pieces and spawned on the Lair floor in front of the portal.
+5. **The Market scene** and the Market door in the Lair that leads to it, with the yard, stalls, counters and slates
+   placed as in the Blender reference.
+6. **Selling.** Put a piece on a counter → the vendor's offer → *Plus / Satis / Vale* (voice, bindable to keys) → coins.
+   The rules are written in the design (worth, hidden limit, patience per vendor). Vendors can be a placeholder figure
+   plus subtitles at first.
+7. **Coins and the debt.** Coins as physical pouches; a strongbox per wizard banks them; the ledger shows each wizard's
+   debt (needs the shared debt split per wizard, #130); the Collector takes what is due after the Market.
+   *Part 1 done 2026-10-07 (#313):* a sale puts a carryable networked `CoinPouch` on the counter (not loot), four
+   strongboxes (seat n = player n) bank it into saved per-seat purses and, for now, still pay the one shared debt; solo and
+   two co-op runs checked. *Part 2 done 2026-10-07 (#313):* banking only fills the purse; when the company sets out the Collector
+   takes min(purse, equal share of the debt left) from each wizard present, per-seat paid-last-collection is saved, and the Lair
+   screen's ledger has a column per seat (purse, share due, paid) with his line; solo and two co-op runs checked (`docs/4-systems/market.md`,
+   "The Collector"). *Still to do:* a client seeing its own purse and share (purses are not replicated), a world-space or spoken line.
+8. **Co-op.** Everything above replicated for four players over PurrNet (who holds what, coins, ledger).
+
+Steps 1 and 2 alone give a walkable Lair; 1, 2 and 5 a walkable Lair and Market; 3 to 7 make them playable.

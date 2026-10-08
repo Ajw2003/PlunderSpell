@@ -92,6 +92,9 @@ namespace Interfaces
     /// </summary>
     public interface IHandOpenable : IOpenable
     {
+        /// <summary>Barred: cannot be opened by hand, and guards do not open it either.</summary>
+        bool IsBarred { get; }
+
         /// <summary>Open it by hand. False when locked or barred.</summary>
         bool TryOpenByHand();
 

@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using Plunderspell.UI.Screens;
 using UnityEngine;
@@ -9,7 +10,6 @@ namespace Plunderspell.UI
     public class UIRoot : MonoBehaviour
     {
         private MainMenuScreen _mainMenu;
-        private LairScreen _lair;
         private PauseMenuScreen _pauseMenu;
         private HUDScreen _hud;
         private SettingsScreen _settings;
@@ -21,7 +21,6 @@ namespace Plunderspell.UI
             var root = canvas.transform;
 
             _mainMenu = BuildScreen<MainMenuScreen>(root, "MainMenuScreen");
-            _lair = BuildScreen<LairScreen>(root, "LairScreen");
             _pauseMenu = BuildScreen<PauseMenuScreen>(root, "PauseMenuScreen");
             _hud = BuildScreen<HUDScreen>(root, "HUDScreen");
             _settings = BuildScreen<SettingsScreen>(root, "SettingsScreen");
@@ -31,7 +30,7 @@ namespace Plunderspell.UI
             backdrop.transform.SetParent(transform, false);
             backdrop.AddComponent<BackdropCamera>();
 
-            GameServices.GameState.StateChanged += OnStateChanged;
+            EventManager.Instance?.Subscribe(this, (GameStateChanged e) => ApplyState(e.Current));
         }
 
         private void Start()
@@ -41,10 +40,7 @@ namespace Plunderspell.UI
 
         private void OnDestroy()
         {
-            if (GameServices.GameState != null)
-            {
-                GameServices.GameState.StateChanged -= OnStateChanged;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private static T BuildScreen<T>(Transform parent, string name) where T : UIScreen
@@ -63,17 +59,11 @@ namespace Plunderspell.UI
             return screen;
         }
 
-        private void OnStateChanged(GameState previous, GameState next)
-        {
-            ApplyState(next);
-        }
-
         private void ApplyState(GameState state)
         {
             _mainMenu.SetVisible(state == GameState.MainMenu);
-            _lair.SetVisible(state == GameState.Lair);
             _pauseMenu.SetVisible(state == GameState.Paused);
-            _hud.SetVisible(state == GameState.Playing || state == GameState.Paused);
+            _hud.SetVisible(GameServices.GameState.RaidOnScreen);
             _settings.SetVisible(state == GameState.Settings);
             _gameOver.SetVisible(state == GameState.GameOver || state == GameState.Victory);
 

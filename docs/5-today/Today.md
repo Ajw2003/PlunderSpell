@@ -1,5 +1,212 @@
 # Today
 
+**2026-10-08 (night, latest) - co-op on one PC by hand (#372).** The menu's Host Co-op always used Steam when Steam ran, and a second copy on the same PC is the same Steam account, which Steam will not let join itself. Now: `CoopSession.HostLocal()` / `JoinLocal()` (UDP, 127.0.0.1, as the `-coop-host` / `-coop-join` arguments do), **Host on this PC** / **Join on this PC** on the main menu in the Editor and Development builds only, and `Tools/Unity/coop_local.sh`, which rebuilds the client if needed, presses Play, hosts, and starts the client joined beside the Editor. Checked: the script once end to end (2 players, 62 s with the build) and the owner played both sides from it and recorded it working. Not yet checked: clicking the two menu buttons, and a release build hiding them. Also fixed: `place_windows.ps1` looked for an Editor titled `PlunderSpell - ...` and so found none in a worktree.
+
+---
+
+**2026-10-08 (night, later) - the wizard is on the player in game (#362).** `WizardPlayerSetup`'s two steps ran: the `Wizard` controller and upper-body mask built, and the wizard installed on `RaidPlayer.prefab` and `Player.prefab` (the capsule stays for colliders, hidden). New `Tools/Unity/wizard_coop_check.sh`: host and client in the Lair, the client holds C, V and S through the Input System, and the host's copy of the client's wizard reads Crouch, Casting and Speed 5 (moved 3.6 m); PASS twice, 0 client errors, pictures in `docs/generated/wizard-362/final-*`. Keys go to the client because the Editor's Input System ignores the keyboard while its Game view is not focused. Suites with the wizard installed: EditMode 243 pass / 0 fail, PlayMode 518/518. Revert point before the install: `0f471202`.
+
+---
+
+**2026-10-08 (night) - the wizard merged onto the new staging (#368 item 2), and Unity dialogs no longer stall the check scripts (#371).** `claude/busy-mendel-t5y57j` merged on `claude/merge-2026-10-08` (PR #370): conflicts only in headless tooling and docs. First run in Unity found what the cloud could not: the wizard model and dye mask had imported before their import rules compiled (Generic rig, sRGB), fixed by a re-import; two `WizardAnimationTests` gave the Animator no controller, so they could never pass (an Animator keeps parameters only with a controller that has a layer, once bound): fixed in the test. EditMode 243 pass / 3 skipped / 0 fail, PlayMode 518/518. Not done yet: the wizard's two install steps on the player prefabs (#362). The long "main thread timed out" stalls were a modal "Scene(s) Have Been Modified" dialog waiting for a click: `pin.sh` now names any dialog on a failed call, `run_tests.sh` and `recompile.sh` stop on one in 1-6 s instead of 10 minutes, and `run_tests.sh` saves dirty scenes first (checked twice each, with a real dialog).
+
+---
+
+**2026-10-08 (later) - the diegetic raid UI is merged onto the new staging (#368 item 1), on `claude/merge-2026-10-08`.** `claude/staging-2026-10-07` (rimlight-318 minus the WIP glow) merged onto `claude/staging-2026-10-08` with the handoff's three resolutions; one more break the cloud could not see: five incoming tests used `GameState.Lair`, removed in #359, now `GameState.LairRoom`. Unity: compiles clean, EditMode 239 pass / 3 skipped / 0 fail, PlayMode 518/518. Co-op (`hud_events_check.sh staging-1008-merge`): both HUD models follow clock and alarm, a hit raises shake, number and vignette on both, the watch and grimoire draw (`docs/generated/hud-events-303/staging-1008-merge-*`). Not run: `coop_lair_check.sh` (its permission prompts timed out). The #318 glow and its unfinished WIP (`e93b3718`) stay on `claude/rimlight-318`.
+
+---
+
+**2026-10-08 - new staging branch, diegetic UI merge handed to Unity.** `claude/staging-2026-10-08` is cut from
+`claude/lair-market` (`0d5b0fe7`), the most complete branch; #368 lists every branch's unmerged work. The merge of
+`claude/rimlight-318` minus the WIP glow commit was resolved in the cloud but not committed: no code lands without a
+Unity check (owner). The headless harness does not compile `claude/lair-market` itself (40 errors, missing shims).
+Steps and conflict resolutions: `docs/plans/handoff-2026-10-08-staging-merge.md`.
+
+---
+
+**2026-10-07 - the raid screen is down to what the world cannot yet say (#315, steps #324-#326).** Hold `T` for the pocket
+watch (a ring of portal-light that empties as the raid runs down) and `Tab` for the grimoire (the spells, the keys, the last
+casts; it opens by itself once for a first raid, slows you to 60% and stops you lifting). The always-on clock, alarm bar,
+phase text, debt, banked gold, haul number, carried-item name, spell list and last-cast line are off the raid screen; the
+castle's fires carry the alarm. Still on screen until their world cues exist: the interaction prompt, the ranged weapon line,
+the chant bar and the heard-phrase caption (#318-#323). Tests: 10 new (watch, grimoire) pass; the full headless PlayMode run
+shows the same environment failures as plain staging. Not seen in the game yet (see the issues); on `claude/hud-strip-326`.
+
+---
+
+**2026-10-06 (night) - the event bus move is done on staging (#297, steps #298-#304; #305 is these docs).** Every
+event between systems is on `EventManager`; the raid HUD, damage feedback, camera shake, music and backdrop camera follow
+events instead of polling; the mic meter is in Settings. Naming fixed so nothing but `EventManager` is called a bus
+(`EnemyDirectorListener`, `LoopPool`). On `claude/staging-2026-10-07`, not `main`. Unity: PlayMode 430/430, EditMode 225
+pass / 3 known failures, and a co-op raid on which both HUD models followed the clock and alarm, the stems played on both
+machines, and a hit raised the shake, a floating number and the red edge on both. The mic meter source is verified
+against the real headset (`MicMeterTests`). Not verified: the bar with someone speaking at the whisper and shout marks. The issues (#297-#305) are open for the owner to
+close. Next, in the owner's order: the diegetic raid UI, the Lair room, the Market (`docs/plans/diegetic-ui-lair-market.md`,
+`docs/plans/lair-market-in-engine.md` steps 2-8), each needing a parent issue and one child per step first.
+
+---
+
+**2026-10-06 (night) - staging pushes again, leftover branches merged, Unity compiles it.** A local merge had
+committed the 470 MB `Assets/StreamingAssets/LLM/` model, which GitHub refused; it is out of history and in
+`.gitignore` (still on disk). Merged into `claude/staging-2026-10-07`: `claude/playability-fixes` (#260 railings,
+silent Editor Play fix, alarm witness check), `claude/project-thread-zc980w` (cel-shaded paintovers),
+`ccr-6bf1f02d-o8jhoy` (co-op chatter check), `claude/carry-cleanup-169`. Left unmerged on purpose: the guard-mimic LLM
+prototype, voice-mimicry (cherry-picked already), and branches older than the RogueAi rename. Unity: compile clean,
+`NetworkPrefabs.asset` unchanged; EditMode 220 pass / 3 fail / 3 skip, the three known failures
+(`ArtAssetImportTests`, `LootAmountTests...AboutDoubleTheOldHaul`, `LootBalanceTests...TooHeavyToLift`); PlayMode
+413/413. The owner chose the event-bus scope (every event between systems, `docs/6-decisions/Decisions.md`); next:
+that move, then the diegetic raid UI, the Lair, the Market.
+
+---
+
+**2026-10-07 - handoff to a local session with Unity.** `claude/staging-2026-10-07` holds everything finished in
+the cloud session (#285, #288, #290-#296). Unity has not compiled it since the `Time.Reset/Advance` test fix
+(`7edf7559`). Next, on aj's PC: compile and test staging in Unity, do the Unity-only checks each PR names, then move
+the HUD onto events (`docs/plans/ui-events-mvc.md`, two decisions waiting on aj). Everything a local agent needs:
+`docs/plans/handoff-2026-10-07-staging-and-ui-events.md`.
+
+---
+
+**2026-10-06 - guard voices on the new guards (#280).** On `claude/project-thread-x1cqae`. Nine voice commits from
+`claude/voice-mimicry-improvements-7a0b29` cherry-picked (not the mimic prototype); the director follows `Guard`. Every Age
+logged its own `[GuardSpeech]` lines; details in `docs/4-systems/audio.md`.
+
+**2026-10-05 (night) - the owner's four fixes (#262), plus downed teammates (#270).** On `claude/project-thread-x1cqae`.
+- Doors (#263, `0e3bc979`): guards open closed doors they walk into. Hue and cry (#264, `5066321d`): the lockdown
+  bars every door and guards treated barred as walls, so half the garrison never came; now guards pass barred doors
+  (players still need Porta or force). Swarm check: within 20 m of the host at 23 s, 5 -> 12. Left: #271.
+- Spawning outside (#265, `001932c5`): 8 logged outside spawns (2026-09-26 to 09-30) all land inside on today's
+  code; the 2026-10-03 arrival rewrite fixed it. The built game in `Build/` predates that.
+- Painted look: screen ink pass removed, paint on surfaces (#266); new local concept art per Age
+  (`docs/art/concept/painted/`, recipe in its README, #267); four tuning rounds (#268, head `00d2faef`) match fog,
+  fill, paint and wall colour to the art. What still differs is room content, filed as #269.
+- Downed teammates (#270, `d961818e`): guards ignore downed players and keep their target unless another is under
+  2/3 the distance. Not seen in a co-op raid yet.
+
+---
+
+**2026-10-06 - the painted look (#231), owner's pick for juice and art.** The castle shader already
+banded fire light and tinted shadows warm; added the ink: cross-hatching in the shadows of every
+`Plunderspell/Surface` material (castle, and guards and loot through `SurfaceConverter`), outlines from
+depth and a paper grain in a new `Ink` pass before the fog. Settings on the `NightAtmosphere` profile
+(`docs/4-systems/atmosphere.md`, "Ink"). Written in the cloud on `claude/project-thread-x1cqae`; nothing
+compiled or looked at yet, that needs the owner's Editor. Then the owner asked for less hatching and
+harsh lines and more cel shading: hatching now off by default, outlines lighter, and new `CelAmount`
+and `CelSoftness` settings make every surface's fire light snap to crisp flat bands.
+The owner's first after-shots looked nothing like the cel-shaded concept art
+(`/mnt/project-files/concept-art/cel-shaded/`): that art pulls every colour towards umber and vellum and
+lays a heavy blotchy paper over it. So the grades now desaturate (-30 calm to -20 hue and cry, was -4 to
++6, `NightLooks.cs`), the paper grain is stronger (0.14) and outlines catch smaller steps (0.025).
+
+---
+
+**2026-10-05 (evening) - working the handoff (`docs/plans/handoff-2026-10-05-guards-castle.md`).** #259 live check
+done: the witness rule and the cry chain work in a raid (Roused at the third witness); the check script needed
+fixing first (`a361a020`). Full PlayMode run 391/393: the flaky #233 test, and `SavedSettingsStartupTests`, which
+exposed Editor Play starting silent when the SoundBank was not in memory (fixed, `ea76aba9`). #240 not reproduced:
+the only automatic way back to the menu is a co-op client losing the host (`CoopSession.cs:199`); waiting on how the
+owner was playing. #260 railings built and baked (`0748331f`) but the Edit Mode flood test
+(`CastleStairPlaceholderTests`) has not run: its permission prompt went unanswered. #250, #261, #233, #241 not started.
+
+---
+
+**2026-10-05 - the owner played it: "finally starting to feel like a game".** They saved that build as a local
+branch, `Staging` (`aaeb9b94`). Since then: the alarm needs witnesses (#259: guards cry for help, the castle hears
+only through its guards; 3 witnesses for the lockdown, 5 for the hue and cry), curtain fires per Age (#258), and the
+spell tests moved to a listening guard (`325852e9`). House-rules plugin updated to 2.52.0 (unanswered prompts are
+refused after 5 minutes). The #259 live raid check is not run yet. Next agent: `docs/plans/handoff-2026-10-05-guards-castle.md`.
+
+---
+
+**2026-10-03 (evening) - the stacked castle, picked up after the owner's playtest (#253).** The previous
+session finished tasks 1-4 of 8 in `docs/plans/multi-floor-castle-step1-plan.md` (#247) and stopped before
+anything worked on the new floors; #253 lists what the owner saw. Order chosen by the owner: #254 crypt entry
+and stone on placeholders, #255 guards on every floor (tasks 5-7), #248 doors, #256 stairs built by extending
+each Age's existing stairwell (owner's pick over stepped placeholders), #257 every Age and its lights
+checked with screenshots. Roofs come after; "outside" needs a design talk first.
+- #248 doors: `CastleDoorPlanner` (10 ward-bailey, 2 keep, 1 crypt door for seed 12345 on all three
+  registries), three door prefabs from `Tools/Plunderspell/Forge Castle Doors`, entries in the network prefab
+  list, and `CastleDoorSpawner` (server-side, wired into `RaidDirector` and `RaidScene`). Two gaps found and
+  fixed (`a155364c`): nothing could open them by hand (the prefabs had no `CastleDoorHandle`, which lived inside
+  `LootInteractor.cs` and so could not sit on a prefab), and open, lock and bar only changed on the machine that
+  acted. Co-op check (`Tools/Unity/coop_door_check.sh`, seed 777): 13 doors on both sides; the client's hand
+  opens one for both; the host's lockdown locks all 13 on the client; a locked door refuses the client's hand;
+  the client's Porta opens it for both.
+- #256 stairs: each Age's existing stairwell, extended. `Tools/AssetPipeline/castle_builders_stairs.py` reuses
+  the kit's L stair to its gallery, adds a flight from the gallery to the keep floor (4.60) and cuts wells in
+  the slabs for 2.40 m headroom; the down-stair uses the same flights 0.30 -> 3.60. One forge for all Ages
+  (`Tools/Plunderspell/Forge Stairs`); the braziers' fires are wired. In a raid a player walked the High
+  Medieval pair: feet 0.30 -> 1.60 landing -> 2.90 gallery -> 4.60 keep floor, and lobby -> -3.00 crypt floor
+  (`Tools/Unity/eval/stair_leg.cs`). Late and Bronze were not walked; the flood test passes on all three.
+  The wells have no railings.
+- #257 every Age (`Tools/Unity/ages_check.sh`, run twice, `docs/generated/ages-check-2026-10-04/`, a contact
+  sheet per Age): all four build the three floors; fires keep 23-35, ground 82-86, crypt 17-24, each with its
+  light; none float or are buried (`eval/light_audit.cs`) except one hearth flame inside its own fireplace.
+  Looked at all 44 views: lights sit on their sconces and braziers on every floor. Fog is heavy (#250); every
+  room is open to the sky (roofs next).
+- Full PlayMode suite at the end: 379/379 pass.
+- #254 done (`4d40187a`): the raid scene's `Ground` plane at height 0 ran through the down-stair's well, so
+  players stood on it. Ground is now one mesh with a 12 m hole over the centre cell
+  (`Editor/GroundStairWellCutter.cs`). In Play mode the real controller walked from the lobby floor (0.40) to
+  the crypt's `FootSlab` at -3.00 (`Tools/Unity/eval/walk_down_stair.cs`; picture
+  `docs/generated/castle-floors-2026-10-03/`). Re-running the stair forge wipes the stairs' walk-map tiles;
+  bake again after it.
+- Seen in that run: the arrival portal stands inside the down-stair at (0, -2.05, 0). The arrival planner
+  still picks stair rooms (plan task 7, #255).
+- #255 task 5 done (`51c63544`): the walk map looks up rooms per floor. Found: every gallery stairwell
+  (KeepStairwell, LateTurretStair, BronzeMegaronStair) now lands on the keep floor, and guards are blocked
+  climbing them there (3 `GuardClimbsTheStairToItsGallery` failures). Two causes, both fixed: archway cells
+  under door plugs stayed walkable (`60e3bbac`), and the floor under a guard was the nearest cell in 3D, which
+  picked the ramp below a gallery edge; it now comes from the guard's own column (`9c1153ad`).
+- #255 tasks 6-7 done (`6d00a7c7`, `9a990794`): the castle check searches floor by floor; arrival, entrances,
+  dressing and the portal safe ring read the ground floor; stairs are never posts, arrival or loot rooms;
+  guards stand on their floor top and patrol on their own level. Tests: CastleGeneratorTests 13/13,
+  CastleArrivalTests 18/18, Guard PlayMode 134/134, Nav EditMode 20/20. Loot EditMode 8/10, the two failures
+  (`LootAmountTests...AboutDoubleTheOldHaul`, `LootBalanceTests...OuterZonesHoldNothingTooHeavyToLift`) fail
+  the same without these changes.
+- Raid check, seed 777 (`Tools/Unity/eval/guards_per_floor.cs`): arrival at (-12, 1.25, -12), a ground room;
+  9 guards, 3 per floor, all on their floor and patrolling 20 s later. One sample caught a keep guard 0.3 m
+  into the slab at x 6.0, the seam beside the up-stair's head; the next six samples had every keep guard at
+  4.61. Not chased.
+
+---
+
+**2026-10-03 - first performance pass, PR #246 opened, 28 finished issues closed.** Measured a co-op
+raid with the Profiler (`Tools/Unity/perf_capture.sh`, results in `docs/generated/perf-2026-10-03/README.md`)
+and fixed the worst causes: guard route smoothing froze the host up to 204 ms in a hue and cry (now 33 ms,
+#243); every sound streamed from disk (short sounds now load into memory, owner approved, #244); the HUD
+made 46 KB of garbage a frame (26 KB, #245, still open); fire glow sorting (#217, still open). Finding: in
+Editor Play mode the Editor takes about half the host's frame (~135 fps vs ~290 in the build). Full PlayMode
+suite 373/373. PR #246 merges the whole `claude/playability-fixes` branch (186 commits). The owner closed 28
+finished issues; why they piled up is filed as Ajw2003/AjsClaudeCodeTools#141. Lightmap baking was checked:
+the bake call is Editor-only in 6000.3.15f1 and the build ships no `UnityEditor` assemblies.
+**2026-10-06 - proposal: the HUD goes into the world, the Lair becomes a place, the Market haggles.**
+Asked for by the owner, ahead of any code: spells in a grimoire you open, the timer on a pocket watch,
+the alarm read from the castle's fires, and the rest of the HUD replaced except the crosshair and
+damage feedback. Debt and haul leave the raid: loot lands in a physical Lair and is sold in a Market to
+four vendors who haggle (*Plus / Satis / Vale*). Plan `docs/plans/diegetic-ui-lair-market.md` (#284,
+under #174) accounts for all 17 raid HUD elements; seven concept sheets in `docs/art/concept/{diegetic,
+raidview,lair}/`, generated by `Tools/ArtBible/generators/diegetic/`; review page
+`docs/generated/diegetic-proposal/`. Six open decisions wait on the owner. Not done: any model. Blender
+is 4.0 here and the owner chose to allowlist Blender 5, so the grimoire (#282) and watch (#283) are
+modelled next session. The headless harness repair (#281) is parked half-done on `ccr-ae9369ba-5izxio`
+(WIP commit a0bc71e2, does not compile yet).
+
+---
+
+**2026-10-08 - the wizard gets a body and clips; the art docs are checked against the code.** The
+player wizard (#335) is modelled through ArtForge (#336: `docs/art/models/lair/wizard.png`), its
+clips are authored with AnimForge (#361: idle, walk, jog, crouch, jump, cast, death collapse), and the
+Unity side is written (#362: importer, a generated animator, `WizardAnimationDriver`, crouch/cast/jump
+synced over the network). Death: the owner chose collapse, then the body vanishes (the hat is #339).
+The Unity side has not been run in the Editor. The owner also found the art docs had drifted
+(`scale.md` still showed the retired enemy roster): `scale.md`, `BRIEF.md`, the ArtForge status line
+and the systems index are fixed, and `Tools/docs/check_art_docs.py` plus `.github/workflows/docs.yml`
+now fail on that kind of drift. The workflow is being made into a portable `art-pipeline` plugin in
+Ajw2003/AjsClaudeCodeTools (#161 there).
+
+---
+
 **2026-10-02 (evening) - guards move again: the walk map was empty for two of the three Ages.** The owner
 saw guards stuck and standing still in co-op. Measured with `Tools/Unity/coop_guard_check.sh` (Late
 Medieval, seed 3508293): every guard stood still for the whole 90 s. Cause: `CastleNavTileBaker` baked only

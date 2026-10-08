@@ -13,11 +13,11 @@ judgement until that milestone's acceptance is checked, and only M0's has been.
 | M1 Prove the voice | 10 | ~70% | Works for one person on one machine; #50 never measured |
 | M2 Vertical slice | 20 | ~75% | Loop plays solo and over UDP; carrying together works (#169); #55 never run; Steam outside the Editor broken (#167, #168); #164, #170-#172 open |
 | M3 Other Ages | 15 | ~60% | Bronze and Late have their own rooms; High Medieval and Powder borrow |
-| M4 Lair and Market | 15 | ~5% | Debt is a number on the Lair screen; no market, no 3D Lair |
+| M4 Lair and Market | 15 | ~8% | Debt is a number on the Lair screen; no market; the Lair room is walkable, solo and co-op; the Market yard is reachable; extraction no longer banks (coins come from `LairHubManager.BankSale`) and the unsold haul pile persists per save slot; a sale puts a coin pouch on the counter (carryable, networked, not loot) and dropping it in a wizard's strongbox banks it into that seat's saved purse only; the Collector takes each wizard present's equal share of the debt (min of purse and share) when the company sets out, and the Lair screen's ledger shows purse, share and paid per seat (#313, solo and two co-op runs checked; and since #314 a client's Lair shows the host's ledger, checked in two co-op runs); the four Market counters haggle and sell, on keys 1/2/3, solo and co-op (the server owns the haggle, a client's word goes by ServerRpc, #314; Plus / Satis / Vale are in the voice vocabulary and routed to the nearest open counter within 3 m, #312; not yet tested with a real microphone); 2026-10-07 the Lair went in-world: no Lair screen (#359) — the ledger book's pages carry the ledger (#357), the century dial chooses the Age (#358), Esc opens the pause menu with Invite Friend, a client at the portal is told the host sets out; each Market counter has a chalk slate (#360); nothing is hurt or broken in the Lair or Market (#355); heavy pieces sell from the floor at a counter's foot (#356); all checked in co-op with `coop_lair_check.sh`, full suites EditMode 236/236 run, PlayMode 501/501 |
 | M5 Household awake | 10 | ~35% | Guards patrol, investigate noise, chase and search, and a shout or the hue and cry calls guards in (#163); the raid player's footsteps are always a walk (`FootstepNoiseEmitter.cs:85`); crouch and run exist only on the playtest controller |
-| M6 Castle fights back | 10 | ~5% | Doors and hazards are layout tags; revamp phases 3-5 not started |
-| M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, post-processing, a partial settings menu; no animation; every sound file built but on a branch and not played by the game (below) |
-| **Total** | 100 | **≈ 42%** | |
+| M6 Castle fights back | 10 | ~20% | Stacked castle (crypt, ground, keep) with ramp stairs; 13 networked doors that lock at the alarm (#248, co-op checked 2026-10-04); hazards are layout tags |
+| M7 Final art and perf | 15 | ~15% | Hit and spell feedback, the build tool, quality levels, post-processing, a partial settings menu; the player wizard modelled with clips, imported and tested in Unity on the new staging (2026-10-08: EditMode 243 pass / 0 fail, PlayMode 518/518) and installed on both player prefabs, checked in co-op: idle, crouch, cast and walk read on the other machine (`wizard_coop_check.sh`, #336, #361, #362); no enemy animation in game; every sound file built but on a branch and not played by the game (below) |
+| **Total** | 100 | **≈ 43%** | |
 
 **Open issues, 2026-09-28:** 44, every one on a milestone (`docs/2-roadmap/Roadmap.md`). The same
 day twelve that were already done or superseded were closed with a note on each: #127, #131,
@@ -42,7 +42,7 @@ lacks; the rest are older and either merged in another form or abandoned.
 
   #211 is in (2026-10-02): the fresh guard has Stunned and Slept states (Levo holds a guard Stunned
   until it lands and pauses its mover; a loud noise wakes a sleeper early), walking guards now face
-  where they go, and `EnemyDirector` is split into registry, bus, alarm and hue-and-cry classes
+  where they go, and `EnemyDirector` is split into registry, listener (called a bus until #304), alarm and hue-and-cry classes
   (472 to 248 lines). Details and file:line in `docs/4-systems/alarm.md`.
 
   #212 is in (2026-10-02): the fresh guard has an OnFire state. A burning guard panic-runs to random
@@ -133,6 +133,17 @@ lacks; the rest are older and either merged in another form or abandoned.
   was climbable (alarm.md, Guard navigation, "Stairs"). Seen in co-op on the Late turret stair, up and down.
   The #214 parity table is checked (`docs/plans/guard-core-inventory.md`): 36 of 39 rows match. Open, the
   owner's call: the alarm no longer speeds guards up (`GuardBrain.MoveSpeed` is called by no state).
+- **`claude/voice-mimicry-improvements-7a0b29`** (2026-09-30; merged here 2026-10-06 as voices only, #280, the mimic prototype stays on its branch; issues
+  #179 to #187): replaces word recognition with recorded clips. Built and tested: saved volumes checked
+  against the mixer after start-up (the stale-volume fault itself was not reproduced; see
+  `docs/4-systems/audio.md`), a pause segmenter, a saved clip bank and a guard voice disguise (24 EditMode
+  tests), a recording script and browser recorder page, and 116 stand-in guard lines made with Windows'
+  voices plus synthesised snores (`Tools/GuardVoice/takes-tts/`, checked for length, level and clipping;
+  nobody has listened to them yet, `listen.html` there is for that). Guard speech swap built (#184):
+  human guards now play those clips, re-voiced per guard, through the mixer; the old guard voices, guard
+  sounds, guard steps and the mimic are switched off in `SoundFocusSettings.asset`. Checked solo in the
+  Editor only (lines logged, rendered clip playing); not checked in co-op or by ear. Not yet wired: the
+  mic-to-bank capture, the always-on mic setting.
 - **`claude/carry-cleanup-169`** (1 commit, 2026-09-28, branched from today's `main`). The
   two-player carry check now moves to the most open floor within 25 m before staging, which fixed
   `client_grabs` failing now and then (the aim point landed behind a wall), and its traces record
@@ -152,6 +163,14 @@ lacks; the rest are older and either merged in another form or abandoned.
 - **`ccr-6bf1f02d-o8jhoy`** also holds, since 2026-09-29: the raid always has one audio listener,
   an output-device picker in Settings, three save slots on the main menu, and a reduced playtest
   sound set (spells, music, ambience muted; `docs/4-systems/audio.md`, `docs/4-systems/core.md`).
+- **PR #177, `claude/guards-player-chatter-plan-ac93ff`** (guards overhear player chatter, opt-in),
+  checked 2026-09-30 by merging it into `ccr-6bf1f02d-o8jhoy` on a local scratch branch
+  (`claude/check-pr-177`, not pushed): it compiles, its 11 `ChatterTests` pass, and in co-op
+  (`Tools/Unity/coop_chatter_check.sh`) a line fed into the joining player's relay reached the host,
+  a guard 3 m away took in the words and the caption came back "overheard by a guard". It conflicts
+  with this branch's Settings screen (written against `main`'s older one); the scratch branch places
+  the toggle as an Off/On row in the Voice column. Not checked: real speech through the second Vosk
+  recogniser (needs someone talking into the microphone).
 - **`claude/busy-bose-a7647f`** (1 commit, 2026-09-26): a test-only fix to
   `GuardAttackTests` so the guard's own `Update` does not swing during the test's yield frame.
   The test it touches is the "known failure" named throughout the 2026-09-26 test runs.
@@ -184,10 +203,10 @@ surfaced it as not actually functional yet.
 | M1 — Prove the voice | Code complete, acceptance unchecked | ✅ merged (`feature/m1-voice-casting`) | ❌ — no real-microphone, multi-accent, latency measurement exists anywhere in the repo |
 | M2 — The vertical slice | Code complete, real art wired in, acceptance unchecked | ✅ merged; the raid scene now assembles from 25 castle rooms, 5 loot prefabs and 10 enemy prefabs instead of primitives (`docs/4-systems/raid-scene-assembly.md`), and the menu → lair → raid → lair flow is live (`fc22668`) | ❌ — 116/116 automated tests pass; no record of four real people playing a raid together, and the 2026-09-16 playtesting backlog (below) found 21 rough edges standing between the built loop and something you'd hand a friend |
 | M3 — Open the other Ages | Era content wired in; Bronze Age and High Medieval raids differ | 🟡 The Lair's era now picks the raid's rooms, loot and garrison through `EraContentCatalogue` ([`raid-scene-assembly.md`, "Eras"](../4-systems/raid-scene-assembly.md)). Bronze Age has its own full room set, 5 items, 3 enemies. High Medieval: the original rooms, 5 items, 4 enemies. Late Medieval: its own InnerWard and Keep, 5 items, 1 enemy. Age of Powder: High Medieval rooms, 5 items, 2 enemies. Castle art: the Bronze Age and Late Medieval sets are fully modelled, 25 rooms and wall pieces plus 4 door plugs each ([`BronzeAge.md`](../art/rooms/BronzeAge.md), [`LateMedieval.md`](../art/rooms/LateMedieval.md)); Enemies: all 16 modelled and rostered. Unfinished art: all 26 Powder rooms ([`docs/plans/era-castle-rooms.md`](../plans/era-castle-rooms.md)) | 🟡 — verified 2026-09-24 in the live Editor through Lair → Set Out, one seed per era; not yet playtested by a person. Acceptance tightened 2026-09-26: every era on its own room set, so this is not met while High Medieval and Powder borrow rooms |
-| M4 — The Lair and the Market | Not started | ❌ No market code (`grep -i market` finds nothing in `Assets/_Project/Scripts`); debt exists only as numbers (`LairState`, `LairScreen`) | ❌ |
+| M4 — The Lair and the Market | Started 2026-10-06 (#306) | 🟡 `Tools/Plunderspell/Build Lair Room` builds `Prefabs/Lair/LairRoom.prefab` from the Lair models at the Blender placements (render: `docs/art/models/lair/lair-unity.png`); the room is in `RaidScene` and playable solo (sessions start there, the portal sets out, extraction returns, the ledger book is read in place and the century dial chooses the Age (the Lair screen is gone, #359); two-player co-op checked 2026-10-07). The Market yard is reachable through the Lair's Market door and back (solo and in two-player co-op, `coop_lair_check.sh`); the haggle rules are tested code and now drive the four Market counters (`SellCounter`, 2026-10-07, #312: a piece resting on a counter opens a haggle, keys 1 Plus / 2 Satis / 3 Vale, a sale calls `BankSale` and drops the piece from the pile save; checked in solo Play; since #314 the counters are scene network objects and a client sells too, checked twice in co-op with `coop_lair_check.sh`, `docs/4-systems/market.md` Co-op; since #313 every `LootItem` has a category and the vendors pay 1.3 for their kind, 0.7 otherwise, the Fence 1.0, and the checks play in a hidden test save slot so they leave the owner's slot 1 alone, `docs/4-systems/market.md`); debt exists only as numbers (`LairState`, `LairScreen`). 2026-10-07 (#312): extraction records the haul's worth but banks nothing (`BankSale` is the only way in), and unsold pieces stay on the Lair floor across raids, saved per slot, checked solo and in two co-op runs; the Market counters now sell them (solo, host and client), so gold can rise | ❌ |
 | M5 — The household is awake | Partly built | 🟡 Guards patrol, investigate noise, chase and search (`GuardAlertState`); no hit reaction or crouch in the raid | ❌ |
-| M6 — The castle fights back | Not started | ❌ Doors don't open and stairs can lead nowhere (#111); murder-holes and arrow-loops are layout tags (#44); castle revamp phases 3-5 not started | ❌ |
-| M7 — Final art and performance pass | Partly built | 🟡 Build tool (#53), Low/Medium/High quality levels, a settings menu; no animation; first profiling pass 2026-10-03 (#242, `docs/generated/perf-2026-10-03/README.md`): sound streaming, guard route smoothing, HUD and fire-glow costs cut | ❌ |
+| M6 — The castle fights back | Partly built | 🟡 Castles stack three floors joined by placeholder ramp stairs (#247, #255); guards spawn and patrol on every floor. 13 doors per castle where zones meet open by hand, lock at the alarm and open to Porta, the same for host and client (#248; `Tools/Unity/coop_door_check.sh`, 2026-10-04). Period stairs (#256), roofs and per-floor tuning (#250) not done; murder-holes and arrow-loops are layout tags (#44); castle revamp phases 3-5 not started | ❌ |
+| M7 — Final art and performance pass | Partly built | 🟡 Build tool (#53), Low/Medium/High quality levels, a settings menu; the player wizard modelled and its clips built, installed on the player prefabs and checked in co-op (#362); no enemy animation in game; first profiling pass 2026-10-03 (#242, `docs/generated/perf-2026-10-03/README.md`): sound streaming, guard route smoothing, HUD and fire-glow costs cut | ❌ |
 
 **2026-09-24 — art bible plunder and enemies modelled, and per-era raid content wired in.**
 All 20 plunder items and all 16 enemies from the art bible (`docs/art/`) exist as validated,
@@ -238,8 +257,8 @@ gain"). The view shakes when you are hit, land a hit, hear a cast nearby (a shou
 than a whisper) or land a slam; there is no hit-stop, since the raid's time is shared (#51;
 `docs/4-systems/damage.md`, "Camera shake"). A spell audit in a live raid (#106;
 `docs/generated/spell-audit-2026-09-26/`): Somnus now finds a guard slightly off the crosshair, and
-a guard dropped by Levo falls and takes about 16 damage instead of landing unhurt. Porta still has
-nothing to open, because the castle places no doors (#111). Spell bursts render in a standalone build (they were magenta
+a guard dropped by Levo falls and takes about 16 damage instead of landing unhurt. Porta had
+nothing to open until doors were placed on 2026-10-04 (#248). Spell bursts render in a standalone build (they were magenta
 error spheres), and now fade as intended (#127; `docs/4-systems/spells.md`, "What the visuals
 actually look like"). The main menu and Lair no longer show "No cameras rendering" in the Editor
 (#131; `docs/4-systems/raid-scene-assembly.md`, "Getting into a raid"). Every weapon and the five
@@ -269,7 +288,9 @@ mockup.
 of `docs/plans/night-atmosphere.md` built: see `docs/4-systems/atmosphere.md`. Open: volumetric fog
 (High), vertex soot bake, Deck profiling, enemies/loot on the surface shader unseen in play,
 PlayMode suite not re-run, `ArtAssetImportTests` fails (art-bible animations, enemy emissive HDR;
-predates this branch).
+predates this branch). Fixed 2026-10-07 (#329): the emission hook never ran for embedded materials,
+and the validator counted the animation-only FBX as models. Same day, full suites on `claude/lair-market`:
+EditMode 234 (231 pass, 3 skipped), PlayMode 488 pass.
 
 **2026-09-25 — raids arrive and leave by portal; the castle is sealed** (branch
 `claude/night-atmosphere`, night atmosphere step 0). The team arrives at a seeded spot in the outer
@@ -289,6 +310,23 @@ bale) along every generated castle's curtain wall, matching the chosen look at
 anchors, no quality levels, no shader — and is meant to be replaced once
 `docs/plans/night-atmosphere.md` steps 1-2 are actually built. Captures:
 `docs/generated/night-look-preview-2026-09-25/`.
+
+## The event bus (#297, 2026-10-06)
+
+Every event one system sends another now goes through `EventManager` (the owner's decision of 2026-10-06, the rule is in
+`docs/4-systems/core.md`, "The event rule"): game flow, raid and extraction (#300), combat, spells, items, loot, voice
+(#301), the enemy director and guards' reports (#299), and the change events a view needs, such as alarm level, raid
+clock, debt, carried item and chant progress (#302). The raid HUD (#303) and the damage feedback, camera shake, music
+and backdrop camera (#304) learn state from those events instead of polling; the microphone meter moved to Settings.
+Verified: compile clean, PlayMode 430/430, EditMode 225 pass with the three known failures, and a co-op raid (Editor
+host plus built client) on which both HUD models followed the clock and alarm, the raid stems were playing on both
+machines, and a 10-point hit on each machine's own player raised the shake to 0.55, one floating number and a 0.45
+red edge on both (`Tools/Unity/hud_events_check.sh`, output in `docs/generated/hud-events-303/`). The Settings mic meter source is verified against
+the real headset microphone (`MicMeterTests`: level events arrive, nothing is recognised, it stops when switched off).
+Not verified: the meter bar with a person speaking at the whisper and shout marks, and the Unity-only checks the
+owner still has from the earlier handoff. Still C# events by design: `StatusChanged` and
+`GuardHealth.Died` (only their own guard listens). Still a C# event, not asked for: `PlayerStateMachine.SlamLanded`.
+Not merged to `main`: all of it is on `claude/staging-2026-10-07`.
 
 ## What used to be not what it looked like
 
@@ -439,6 +477,19 @@ second holder lets go; and it despawns when a holding client quits. Results and 
 `docs/generated/coop-carry-2026-09-27/`. Also found: `CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`
 already failed before any #169 change (0.054 m jolt against a 0.05 m limit).
 
+**2026-09-28, carry check stages where there is room.** `client_grabs` failed now and then
+because the fixed castle's spawn room was too tight: the second player's aim point landed behind
+a wall. The host now moves, once per session, to the most open walkable spot within 25 m (2.5 m
+of room became 6.0 m). The open-way scan now looks from both players' spots and at head height,
+and treats a step or drop in the floor as blocked. It found a dais edge that had pinned a staged
+piece under its lip. `client_grabs` passed on the next three runs. The trace now also records the
+combined grip and whether the piece counts as too heavy on each side. Open, and a real game bug:
+two holders sometimes cannot lift the Rolled Tapestry (`heavy_lifted_together` failed on 2 of the
+last 4 runs, always with it). Grip reads 200 with two holders, the host aims at eye height, and
+the roll does not move at all, while the client's target stays near the floor after it learns the
+piece is liftable (`coop-carry-2026-09-28/trace/heavy_lifted_together-*.csv`). The cause is not
+confirmed yet. The Parade Armour lifts fine in the same spot.
+
 **2026-09-27, two client-side raid bugs fixed.** A client built the castle twice as a raid
 started (first in the last raid's era, then again): the seed and era were separate SyncVars and
 arrived apart. They now travel as one packed value (`RaidDirector._layout`). And a client logged
@@ -459,8 +510,9 @@ distance away while the piece rose toward it); a hold now counts as strained onl
 closing on its target. Checked: `CarryFeelTests` 19/19 (four new), and `coop_carry_check.sh` 10/10
 (`step5-run6.log`) with every scenario's frame sheet looked at, including two gold beams holding
 the Rolled Tapestry up in `frames/heavy_lifted_together.png`. The earlier throw and
-both-grab failures were the check's own: the old castle was cramped, and a pavise shield, taller
-than a player, jammed against the wall (seen in the recording). The check now skips light pieces
+both-grab failures were the check's own: the old castle was cramped, and a 0.9 m pavise shield
+jammed against the wall (seen in the recording; first written up as taller than a player, which it
+is not). The check now skips light pieces
 over 1 m, uses a more open castle (seed 3508293) and clears the guards, which otherwise end the
 raid within minutes. Still to do: removing the old two-person code (6), docs (8), the two-PC
 Steam test (#170).

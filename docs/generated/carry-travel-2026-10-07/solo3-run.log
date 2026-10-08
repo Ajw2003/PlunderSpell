@@ -1,0 +1,47 @@
+15:03:34 test slot 99 wiped, owner's slot to restore: 1
+15:03:47 state MainMenu
+15:03:48 solo, slot 99
+15:03:49 player: player
+15:03:52 spawned GoldenGoblet(Clone) on the pile at 1004.0,0.6,0.0
+15:03:57 grabbed GoldenGoblet(Clone) at 1004.0,0.3,0.0 from 1005.1,1.5,1.4
+15:04:00 in the Lair: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.9 speed 0.00 at 1003.3,2.2,-0.9 body 1005.1,1.5,1.4
+15:04:00 PASS the piece is held on the beam in the Lair
+15:04:01 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+15:04:02 just through the door: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.9 speed 0.00 at 1101.5,2.2,5.1 body 1101.5,1.5,8.0
+15:04:05 two seconds later: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.9 speed 0.00 at 1101.5,2.2,5.1 body 1101.5,1.5,8.0
+15:04:05 PASS just through the Market door the piece sits at the same offset from the player, in their view frame
+15:04:05 PASS still held after the door
+15:04:05 PASS after the door it is slow, in the Market (x over 1050) and within 4 m of the player
+15:04:05 PASS two seconds later it still hangs at that offset
+15:04:07 capture: docs/generated/carry-travel-2026-10-07/solo3-holding-in-the-market.png
+15:04:08 walking from (1101.50, 1.50, 8.00) to (1103.61, 1.51, -4.15)
+15:04:15 held at the counter: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.1 speed 0.02 at 1103.5,2.2,-3.6 body 1103.1,1.5,-1.5
+15:04:16 dropped
+15:04:20 pieces 0
+15:04:20 FAIL the dropped piece lies on the Goldsmith's counter (pieces 0)
+15:04:46 line 
+15:04:47 before: gold 0 debt 500
+15:04:47 spoke Plus
+15:04:50 line 
+15:04:51 spoke Satis
+15:04:53 line 
+15:04:53 FAIL the haggle ends in a sale
+15:04:55 pouches 0
+15:04:55 FAIL the sale left one coin pouch
+15:04:55 before: purse 0
+15:04:56 no pouch
+15:04:59 pouch in the Market: held none
+15:04:59 travelled through /MarketYard/LairExit to 1002.2,1.3,-3.8
+15:05:00 pouch just through the gate: held none
+15:05:00 FAIL just through the gate the pouch sits at the same offset from the player
+15:05:00 FAIL pouch still held after the gate
+15:05:01 walking from (1002.20, 1.50, -3.80) to (1001.85, 0.81, 1.63)
+15:05:05 held at the strongbox: held none
+15:05:06 dropped
+15:05:09 pouches 0
+15:05:10 after: purse 0
+15:05:10 PASS the pouch is banked and gone
+15:05:10 FAIL purse 1 grew (purse 0 -> purse 0)
+15:05:10 FAIL 6 carry-travel checks
+15:05:10 cleaning up
+15:05:11 active slot 1

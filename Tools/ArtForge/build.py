@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import art_forge  # noqa: E402  (puts Tools/EnemyForge on sys.path)
 import bpy  # noqa: E402,F401
 
-from art_forge import AGES, KINDS, REPO_ROOT, assemble, blueprints, materials, validate  # noqa: E402
+from art_forge import AGES, KINDS, PLAYER_AGES, REPO_ROOT, default_ages, assemble, blueprints, materials, validate  # noqa: E402
 
 OUT_ROOT = os.path.join(REPO_ROOT, "Assets", "Models", "ArtBible")
 MANIFEST = os.path.join(OUT_ROOT, "artforge_manifest.json")
@@ -92,7 +92,7 @@ def write_manifest(path: str, results: list[dict]) -> None:
         existing[item["key"]] = item
 
     order = {k: i for i, k in enumerate(KINDS)}
-    ages = {a: i for i, a in enumerate(AGES)}
+    ages = {a: i for i, a in enumerate(AGES + PLAYER_AGES)}
     ordered = sorted(existing.values(),
                      key=lambda e: (order.get(e["kind"], 9), ages.get(e["age"], 9), e["slug"]))
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -118,14 +118,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("kind", choices=KINDS)
-    parser.add_argument("--age", choices=AGES, action="append",
+    parser.add_argument("--age", choices=AGES + PLAYER_AGES, action="append",
                         help="limit to one age (repeatable); default all")
     parser.add_argument("--only", nargs="*", default=None, help="slugs to build")
     parser.add_argument("--resolution", type=int, default=1024, help="baked texture size")
     parser.add_argument("--out", default=OUT_ROOT, help="output root (default: %(default)s)")
     args = parser.parse_args()
 
-    ages = args.age or list(AGES)
+    ages = args.age or list(default_ages(args.kind))
     chosen = select(args.kind, ages, args.only)
     if not chosen:
         print(f"No {args.kind} blueprints exist yet for {', '.join(ages)}; nothing to build.")

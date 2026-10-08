@@ -280,7 +280,7 @@ namespace Plunderspell.Tests
         // --- Economy -----------------------------------------------------------------------
 
         [Test]
-        public void Test_ExtractedWorthPaysDownTheDebt()
+        public void Test_ExtractedWorthIsRecordedButOnlyASalePaysTheDebt()
         {
             RaidDirector director = MakeDirector(out LairHubManager lair, out _, out _);
             director.SetFixedSeed(5);
@@ -289,7 +289,10 @@ namespace Plunderspell.Tests
             float debtAtStart = lair.TotalDebt;
             director.ApplyResult(200f, 2);
 
-            Assert.Less(lair.TotalDebt, debtAtStart, "Extracted worth must reduce the debt.");
+            Assert.AreEqual(debtAtStart, lair.TotalDebt, "Extraction banks nothing; coins come from selling in the Market.");
+            Assert.AreEqual(200f, lair.LastRaidWorth, 0.001f, "What was carried home is still recorded.");
+            lair.BankSale(200f);
+            Assert.Less(lair.TotalDebt, debtAtStart, "A sale pays the debt down.");
             Assert.AreEqual(200f, director.LastWorthExtracted, 0.001f);
             Assert.AreEqual(2, director.LastPlayersSaved);
         }
@@ -390,6 +393,21 @@ namespace Plunderspell.Tests
 
             Assert.AreEqual(300f, director.LastWorthExtracted, 0.001f,
                 "A second raid must pay out like the first.");
+        }
+
+        [Test]
+        public void Test_ALostRaidLeavesNoAlarmBehindInTheLair()
+        {
+            RaidDirector director = MakeDirector(out LairHubManager lair, out ExtractionZone zone, out LootSpawner spawner);
+            EnemyDirector enemies = TestDirector.Ensure();
+            director.Configure(MakeGenerator(), spawner, zone, lair, enemies);
+            enemies.SetAlarmLevel(100f, 3);
+            Assert.AreNotEqual(AlarmState.Calm, enemies.State, "The fixture must start with a raised alarm.");
+
+            director.ApplyResult(0f, 0);
+
+            Assert.AreEqual(AlarmState.Calm, enemies.State, "The Roused grade stayed on the Lair after the raid ended (#352).");
+            Assert.AreEqual(0f, enemies.AlarmLevel);
         }
 
         [Test]

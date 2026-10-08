@@ -36,7 +36,7 @@ console.
 
 Visuals are a **presentation layer**, deliberately not part of the effects.
 `SpellEffectRegistry`'s effects stay pure (no scene lookups, no spawning) so they remain testable by
-handing them a context. `SpellVfxDirector` subscribes to `SpellCastingSystem.CastResolved` instead,
+handing them a context. `SpellVfxDirector` subscribes to the `CastResolved` event instead,
 which fires on every peer — so a teammate's spell is visible to everyone, not just to whoever spoke.
 
 `CastReport` carries `Origin` and `Direction`, derived from the same `CastOrigin`/`CastDirection`

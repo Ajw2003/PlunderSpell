@@ -8,7 +8,9 @@
         "Plunderspell.Loot",
         "Plunderspell.Extraction",
         "Plunderspell.Lair",
+        "Plunderspell.Market",
         "Plunderspell.Inventory",
+        "Plunderspell.Items",
         "Plunderspell.Alarm",
         "Plunderspell.Acoustics",
         "Plunderspell.Guards",
@@ -16,7 +18,9 @@
         "Plunderspell.Spells",
         "Plunderspell.Voice",
         "Plunderspell.Core",
-        "Plunderspell.Player"
+        "Plunderspell.Player",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

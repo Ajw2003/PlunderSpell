@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6885375425522255443
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      propertyPath: m_Name
+      value: MedievalStairDown
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1444598244053576171}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1683226404453847268}
+  m_SourcePrefab: {fileID: 100100000, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+--- !u!1 &6002363348958083842 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+  m_PrefabInstance: {fileID: 6885375425522255443}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1444598244053576171
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6002363348958083842}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5138796271938762226, guid: 9cb3692e846eeaa41affd8da3f7faee9, type: 3}
+--- !u!114 &1683226404453847268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6002363348958083842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1271bb0bc296be02d9bc55a769045dd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Castle::Plunderspell.Castle.CastleRoomModule
+  Zone: 2
+  RoomId: StairDown
+  Sockets: []
+  GridPosition: {x: 0, y: 0}
+  IsExtractionExit: 0
+  IsCryptEntry: 0

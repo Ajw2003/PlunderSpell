@@ -192,7 +192,11 @@ public static class ArtAssetImportValidator
         }
 
         string[] models = Directory.GetFiles(root, "*.fbx", SearchOption.AllDirectories)
-            .Select(ToAssetPath).OrderBy(path => path).ToArray();
+            .Select(ToAssetPath)
+            // Animation-only FBX are not rigged models; their import (plan A2) is not built yet.
+            // docs/plans/artbible-enemy-animations.md:8,96,110
+            .Where(path => !path.StartsWith(ArtBibleModelImporter.Root + "Animations/", System.StringComparison.OrdinalIgnoreCase))
+            .OrderBy(path => path).ToArray();
         if (models.Length == 0)
         {
             Fail(report, $"no .fbx files under {ArtBibleModelImporter.Root}");
@@ -249,6 +253,8 @@ public static class ArtAssetImportValidator
                 break;
 
             case ArtBibleModelImporter.Kind.HumanoidEnemy:
+            case ArtBibleModelImporter.Kind.HumanoidPlayer:
+            case ArtBibleModelImporter.Kind.HumanoidClips:
                 if (importer.animationType != ModelImporterAnimationType.Human)
                     Fail(report, $"{key}: rigged as {importer.animationType}, not Humanoid");
                 if (avatar == null || !avatar.isHuman || !avatar.isValid)

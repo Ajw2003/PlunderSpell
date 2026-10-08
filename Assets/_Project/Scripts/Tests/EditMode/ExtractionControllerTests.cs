@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using NUnit.Framework;
 using Plunderspell.Core;
 
@@ -5,6 +6,12 @@ namespace Plunderspell.Tests.EditMode
 {
     public class ExtractionControllerTests
     {
+        [SetUp]
+        public void SetUp() => TestEventBus.Create();
+
+        [TearDown]
+        public void TearDown() => TestEventBus.Destroy();
+
         [Test]
         public void StartExtraction_SetsIsExtractingTrue()
         {
@@ -20,7 +27,7 @@ namespace Plunderspell.Tests.EditMode
         {
             var controller = new ExtractionController(extractionDurationSeconds: 2f);
             bool completed = false;
-            controller.ExtractionCompleted += () => completed = true;
+            EventManager.Instance.Subscribe(this, (ExtractionCompleted e) => completed = true);
 
             controller.StartExtraction();
             controller.Tick(2.5f);

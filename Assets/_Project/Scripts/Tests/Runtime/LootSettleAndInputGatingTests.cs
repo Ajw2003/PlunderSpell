@@ -233,10 +233,11 @@ namespace Plunderspell.Tests
         public void Test_TheCursorIsCapturedOnlyWhilePlaying()
         {
             Assert.IsTrue(CursorLockPolicy.ShouldCapture(GameState.Playing));
+            Assert.IsTrue(CursorLockPolicy.ShouldCapture(GameState.LairRoom));
 
             foreach (GameState state in new[]
                      {
-                         GameState.MainMenu, GameState.Lair, GameState.Paused,
+                         GameState.MainMenu, GameState.Paused,
                          GameState.Settings,
                      })
             {
@@ -327,6 +328,23 @@ namespace Plunderspell.Tests
         }
 
         /// <summary>
+        /// The walkable Lair room takes input like a raid (#347): the controller once checked "raid playing" only,
+        /// so the room's player could neither walk nor look while the pure rule said yes.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator Test_TheRaidPlayerWalksInTheLairRoom()
+        {
+            PlayerStateMachine player = MakeRaidPlayer();
+
+            GameServices.GameState.ChangeState(GameState.LairRoom);
+            player.Move(new Vector2(0f, 1f));
+            yield return null;
+
+            Assert.AreEqual(1f, player.MovementDirection.y, 0.01f,
+                "In the Lair room the gate must not clear movement the input system delivered.");
+        }
+
+        /// <summary>
         /// The same states the cursor rule uses, asserted against the input rule, so the two cannot
         /// drift into disagreeing about what "playing" means — a menu the cursor is free on but the
         /// player still walks behind is exactly what #9 was.
@@ -335,10 +353,11 @@ namespace Plunderspell.Tests
         public void Test_InputIsAcceptedOnlyWhilePlaying()
         {
             Assert.IsTrue(PlayerInputController.AcceptsInputIn(GameState.Playing));
+            Assert.IsTrue(PlayerInputController.AcceptsInputIn(GameState.LairRoom));
 
             foreach (GameState state in new[]
                      {
-                         GameState.MainMenu, GameState.Lair, GameState.Paused,
+                         GameState.MainMenu, GameState.Paused,
                          GameState.Settings,
                      })
             {

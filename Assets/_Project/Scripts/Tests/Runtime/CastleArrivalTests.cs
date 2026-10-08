@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Castle;
@@ -21,6 +22,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             foreach (Object o in _spawned)
                 if (o != null)
                     Object.DestroyImmediate(o);
@@ -240,6 +242,8 @@ namespace Plunderspell.Tests
                 foreach (GuardPlacement guard in GuardPlacementPlanner.Plan(castle, seed, 1f, arrival))
                 {
                     Vector2Int at = castle.PlacedModules[guard.ModuleIndex].GridPosition;
+                    if (castle.PlacedModules[guard.ModuleIndex].Level != CastleLevels.Ground)
+                        continue;   // the safe ring covers the portal's own floor only (#247)
                     Assert.Greater(Chebyshev(at, safe), GuardPlacementPlanner.SafeEntranceRadius,
                         $"Seed {seed}: a guard posted beside the portal kills the team on arrival.");
 
@@ -247,12 +251,49 @@ namespace Plunderspell.Tests
                     {
                         foreach (ProceduralCastleData.PlacedModule module in castle.PlacedModules)
                         {
-                            if ((module.Position - stop).sqrMagnitude > 0.01f)
+                            // Stops stand on the floor top; the safe ring is a ground-floor idea (#247).
+                            if (module.Level != CastleLevels.Ground
+                                || (GuardPlacementPlanner.StandingPoint(module) - stop).sqrMagnitude > 0.01f)
                                 continue;
                             Assert.Greater(Chebyshev(module.GridPosition, safe), GuardPlacementPlanner.SafeEntranceRadius,
                                 $"Seed {seed}: a patrol walks into the safe ring round the portal.");
                         }
                     }
+                }
+            }
+        }
+
+        [Test]
+        public void Test_ArrivalIsAGroundFloorSingleStoreyRoom()
+        {
+            ProceduralCastleGenerator generator = MakeGenerator();
+            for (int seed = 1; seed <= 25; seed++)
+            {
+                ProceduralCastleData castle = generator.Generate(seed);
+                ProceduralCastleData.PlacedModule room = castle.PlacedModules[CastleArrivalPlanner.ChooseModule(castle, seed)];
+                Assert.AreEqual(CastleLevels.Ground, room.Level, $"Seed {seed}: arrival must be on the ground floor.");
+                Assert.LessOrEqual(room.Storeys, 1, $"Seed {seed}: arrival must not be a stair.");
+                Assert.GreaterOrEqual(CastleArrivalPlanner.AnchorFor(castle, CastleArrivalPlanner.ChooseModule(castle, seed)).y, 0f,
+                    $"Seed {seed}: arrival point is below the ground.");
+            }
+        }
+
+        [Test]
+        public void Test_GuardsStandOnTheirOwnFloorAndPatrolWithinIt()
+        {
+            ProceduralCastleGenerator generator = MakeGenerator();
+            for (int seed = 1; seed <= 25; seed++)
+            {
+                ProceduralCastleData castle = generator.Generate(seed);
+                foreach (GuardPlacement guard in GuardPlacementPlanner.Plan(castle, seed))
+                {
+                    ProceduralCastleData.PlacedModule home = castle.PlacedModules[guard.ModuleIndex];
+                    Assert.LessOrEqual(home.Storeys, 1, $"Seed {seed}: a stair is not a post.");
+                    Assert.GreaterOrEqual(guard.Position.y, home.Position.y + 0.30f,
+                        $"Seed {seed}: a guard stands inside the floor slab.");
+                    foreach (Vector3 stop in guard.PatrolRoute)
+                        Assert.AreEqual(guard.Position.y, stop.y, 0.01f,
+                            $"Seed {seed}: a patrol leaves the guard's floor.");
                 }
             }
         }
@@ -351,7 +392,7 @@ namespace Plunderspell.Tests
             director.Configure(generator, null, zone, lair, playerRoot: playerGo.transform);
 
             Vector3 opened = Vector3.positiveInfinity;
-            director.PortalOpened += point => opened = point;
+            EventManager.Instance.Subscribe(this, (PortalOpened e) => opened = e.Point);
 
             director.SetFixedSeed(4242);
             director.StartRaid(HistoricalEra.HighMedieval);

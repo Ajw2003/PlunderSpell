@@ -1,3 +1,5 @@
+using Plunderspell.Tests.EditMode;
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Alarm;
@@ -35,11 +37,12 @@ namespace Plunderspell.Tests.Editor
             _generatorGo = new GameObject("GuardNavTestGenerator");
             _generator = _generatorGo.AddComponent<ProceduralCastleGenerator>();
             _generator.Registry = registry;
+            TestEventBus.Create();
             _director = new GameObject("Director").AddComponent<EnemyDirector>();
             _director.Navigation.Tuning.SweepMask = 0;
-            _director.OnPathReady += _ready.Add;
-            _director.OnArrived += _arrived.Add;
-            _director.OnBlocked += _blocked.Add;
+            EventManager.Instance.Subscribe(this, (PathReady e) => _ready.Add(e));
+            EventManager.Instance.Subscribe(this, (Arrived e) => _arrived.Add(e));
+            EventManager.Instance.Subscribe(this, (Blocked e) => _blocked.Add(e));
             _guard = new GameObject("Guard");
             _director.Navigation.Register(_guard.transform);
         }
@@ -54,6 +57,7 @@ namespace Plunderspell.Tests.Editor
             _ready.Clear();
             _arrived.Clear();
             _blocked.Clear();
+            TestEventBus.Destroy();
         }
 
         [Test]
@@ -64,7 +68,7 @@ namespace Plunderspell.Tests.Editor
             Vector3 goal = FarthestReachable(graph, data, start);
             _guard.transform.position = start;
 
-            _director.Publish(new MoveRequest(_guard.transform, goal, 6f, MoveReason.Investigate));
+            EventManager.Instance.Publish(new MoveRequest(_guard.transform, goal, 6f, MoveReason.Investigate));
             Assert.That(_ready.Count, Is.EqualTo(1), "a route should exist across the castle");
             var rawCells = new List<Vector3>();
             graph.FindPath(start, goal, rawCells);
@@ -75,7 +79,7 @@ namespace Plunderspell.Tests.Editor
             Assert.That(Vector3.Distance(Flat(_guard.transform.position), Flat(goal)), Is.LessThan(0.6f));
 
             _guard.transform.position = start;
-            _director.Publish(new MoveRequest(_guard.transform, goal, 6f, MoveReason.Investigate));
+            EventManager.Instance.Publish(new MoveRequest(_guard.transform, goal, 6f, MoveReason.Investigate));
             Assert.That(_director.Navigation.Planner.CacheHits, Is.EqualTo(1), "the same start and goal cells should reuse the route");
         }
 
@@ -103,7 +107,7 @@ namespace Plunderspell.Tests.Editor
             LowestAndHighestCell(graph, module, out Vector3 low, out Vector3 high);
             Assert.That(high.y - low.y, Is.GreaterThan(1f), "the gallery should sit well above the floor");
             _guard.transform.position = low;
-            _director.Publish(new MoveRequest(_guard.transform, high, 4f, MoveReason.Patrol));
+            EventManager.Instance.Publish(new MoveRequest(_guard.transform, high, 4f, MoveReason.Patrol));
             Assert.That(_ready.Count, Is.EqualTo(1));
 
             float highestReached = low.y;
@@ -136,7 +140,7 @@ namespace Plunderspell.Tests.Editor
             bool stillReachable = graph.IsReachable(start, goal);
             Assert.That(graph.FindPath(start, goal, route), Is.EqualTo(stillReachable), "IsReachable and FindPath must agree");
 
-            _director.Publish(new MoveRequest(_guard.transform, goal, 6f, MoveReason.Chase));
+            EventManager.Instance.Publish(new MoveRequest(_guard.transform, goal, 6f, MoveReason.Chase));
             if (stillReachable)
                 Assert.That(_ready.Count, Is.EqualTo(1));
             else
@@ -147,7 +151,7 @@ namespace Plunderspell.Tests.Editor
             Assert.That(graph.IsReachable(start, goal), Is.False, "with every door shut the far room is cut off");
             _ready.Clear();
             _blocked.Clear();
-            _director.Publish(new MoveRequest(_guard.transform, goal, 6f, MoveReason.Chase));
+            EventManager.Instance.Publish(new MoveRequest(_guard.transform, goal, 6f, MoveReason.Chase));
             Assert.That(_ready.Count, Is.EqualTo(0));
             Assert.That(_blocked.Count, Is.EqualTo(1));
             Assert.That(_blocked[0].Reason, Is.EqualTo(BlockedReason.DoorClosed));

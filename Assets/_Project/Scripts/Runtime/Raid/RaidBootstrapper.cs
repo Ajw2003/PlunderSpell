@@ -1,3 +1,5 @@
+using Player;
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using Plunderspell.Inventory;
 using UnityEngine;
@@ -26,13 +28,6 @@ namespace Plunderspell.Raid
         [Tooltip("Seconds to wait before auto-starting, so other components finish waking up.")]
         [SerializeField] private float _startDelay = 0.25f;
 
-        [Header("Playtest keys")]
-        [Tooltip("Calls the extraction — leave now with whatever is inside the zone.")]
-        [SerializeField] private KeyCode _callExtractionKey = KeyCode.F5;
-
-        [Tooltip("Returns to the Lair after a raid resolves, then starts the next one.")]
-        [SerializeField] private KeyCode _nextRaidKey = KeyCode.F6;
-
         private RaidDirector _director;
         private float _elapsed;
         private bool _started;
@@ -46,11 +41,11 @@ namespace Plunderspell.Raid
             // rather than relying on one.
             GameServices.Initialize();
 
-            GameServices.GameState.StateChanged += OnGameStateChanged;
+            EventManager.Instance?.Subscribe(this, (GameStateChanged e) => OnGameStateChanged(e.Previous, e.Current));
             if (_director != null)
             {
-                _director.RaidResolved += OnRaidResolved;
-                _director.PhaseChanged += OnPhaseChanged;
+                EventManager.Instance?.Subscribe(this, (RaidResolved e) => OnRaidResolved(e.Worth, e.Saved));
+                EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) => OnPhaseChanged(e.Phase));
             }
 
             // Offline the director is its own authority; networked, only the host may freeze time.
@@ -59,13 +54,7 @@ namespace Plunderspell.Raid
 
         private void OnDisable()
         {
-            if (GameServices.GameState != null)
-                GameServices.GameState.StateChanged -= OnGameStateChanged;
-            if (_director != null)
-            {
-                _director.RaidResolved -= OnRaidResolved;
-                _director.PhaseChanged -= OnPhaseChanged;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             GameServices.IsSessionAuthority = () => true;
         }
 
@@ -79,7 +68,9 @@ namespace Plunderspell.Raid
             // From the "You died" screen as well as the Lair: after a party wipe the host may set out
             // again before a friend has clicked through to the Lair.
             GameState current = GameServices.GameState.CurrentState;
-            if (isClient && phase == RaidPhase.Raiding && (current == GameState.Lair || current == GameState.GameOver))
+            GameStateManager states = GameServices.GameState;
+            bool pausedInLair = current == GameState.Paused && states.PausedFrom == GameState.LairRoom;
+            if (isClient && phase == RaidPhase.Raiding && (current == GameState.LairRoom || pausedInLair || current == GameState.GameOver))
                 GameServices.GameState.ChangeState(GameState.Playing);
         }
 
@@ -89,7 +80,7 @@ namespace Plunderspell.Raid
             // A lost raid leaves the "You died" screen up; its button goes to the Lair.
             if (GameServices.GameState.CurrentState == GameState.GameOver)
                 return;
-            GameServices.GameState.ChangeState(GameState.Lair);
+            GameServices.GameState.ChangeState(GameState.LairRoom);
         }
 
         /// <summary>
@@ -127,10 +118,10 @@ namespace Plunderspell.Raid
                 }
             }
 
-            if (Input.GetKeyDown(_callExtractionKey))
+            if (GameInput.Actions.Debug.CallExtraction.WasPressedThisFrame())
                 _director.CallExtraction();
 
-            if (Input.GetKeyDown(_nextRaidKey))
+            if (GameInput.Actions.Debug.NextRaid.WasPressedThisFrame())
                 StartNextRaid();
         }
 

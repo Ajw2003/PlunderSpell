@@ -1,3 +1,5 @@
+using Player;
+using Code.Scripts.EventSystems;
 using Interfaces;
 using PurrNet;
 using UnityEngine;
@@ -23,8 +25,6 @@ namespace Plunderspell.Loot
         [SerializeField] private LayerMask _interactableLayers = ~0;
 
         [Header("Input")]
-        [SerializeField] private KeyCode _interactKey = KeyCode.E;
-        [SerializeField] private KeyCode _dropKey = KeyCode.Q;
 
         [Header("Wiring")]
         [Tooltip("Camera the reach ray is cast from. Falls back to this transform.")]
@@ -60,13 +60,13 @@ namespace Plunderspell.Loot
 
 
 
-            if (Input.GetKeyDown(_interactKey))
+            if (GameInput.Actions.PlayerActions.Interact.WasPressedThisFrame())
             {
                 UpdateFocus();
                 Interact();
             }
 
-            else if (Input.GetKeyDown(_dropKey))
+            else if (GameInput.Actions.PlayerActions.Drop.WasPressedThisFrame())
                 Drop();
         }
 
@@ -77,6 +77,7 @@ namespace Plunderspell.Loot
         public void UpdateFocus()
         {
             LootPickup previous = Focus;
+            CastleDoorHandle previousDoor = FocusDoor;
             Focus = null;
             FocusDoor = null;
 
@@ -93,11 +94,14 @@ namespace Plunderspell.Loot
                 FocusDoor = hit.collider.GetComponentInParent<CastleDoorHandle>();
             }
 
+            if (FocusDoor != previousDoor)
+                EventManager.Instance?.Publish(new DoorFocusChanged(FocusDoor));
+
             if (Focus != previous)
             {
                 SetHighlight(previous, false);
                 SetHighlight(Focus, true);
-                FocusChanged?.Invoke(Focus);
+                EventManager.Instance?.Publish(new LootFocusChanged(Focus));
             }
         }
 
@@ -178,48 +182,6 @@ namespace Plunderspell.Loot
         }
 
         private void OnDisable() => SetHighlight(Focus, false);
-    }
-
-    /// <summary>
-    /// Put on a door's collider so <see cref="LootInteractor"/> can find it without the Loot assembly
-    /// referencing Castle (which would cycle back through Core's interfaces). Opening by hand fails
-    /// on a locked door — which is the moment the player decides whether to spend a word on Porta or
-    /// make a noise forcing it.
-    /// </summary>
-    public class CastleDoorHandle : MonoBehaviour
-    {
-        [Tooltip("The door this handle opens. Any component implementing IOpenable.")]
-        [SerializeField] private MonoBehaviour _door;
-
-        [Tooltip("If true, a failed hand-open forces the door instead — loudly.")]
-        [SerializeField] private bool _forceWhenLocked;
-
-        private IOpenable Door => _door as IOpenable;
-
-        /// <summary>Opens the door if it can be opened by hand. Returns true if it opened.</summary>
-        public bool Interact()
-        {
-            IOpenable door = Door;
-            if (door == null || door.IsOpen)
-                return false;
-
-            // Reflection-free: the door exposes hand/force opening through its own component API,
-            // which the handle discovers via the optional interface below.
-            if (_door is IHandOpenable byHand)
-            {
-                if (byHand.TryOpenByHand())
-                    return true;
-                if (_forceWhenLocked)
-                    return byHand.ForceOpen();
-                return false;
-            }
-
-            door.Open();
-            return true;
-        }
-
-        /// <summary>Assigns the door at runtime (used by tooling-built scenes and tests).</summary>
-        public void SetDoor(MonoBehaviour door) => _door = door;
     }
 
 }

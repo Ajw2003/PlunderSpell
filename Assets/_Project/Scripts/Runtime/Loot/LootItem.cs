@@ -1,3 +1,4 @@
+using Plunderspell.Market;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -24,6 +25,9 @@ namespace Plunderspell.Loot
 
         [Tooltip("Artifact-tier loot pays a bonus on a clean (unbroken) extraction.")]
         public bool IsArtifact = false;
+
+        [Tooltip("What the piece is, which decides how keenly each Market vendor wants it.")]
+        public LootCategory Category = LootCategory.Other;
 
         [Header("Physics")]
         [Tooltip("Weight in kg. The one weight to tune: the item's body takes this mass when it spawns, " +

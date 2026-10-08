@@ -1,4 +1,4 @@
-using System;
+using Code.Scripts.EventSystems;
 using UnityEngine;
 
 namespace Plunderspell.Core
@@ -9,13 +9,6 @@ namespace Plunderspell.Core
         public float DurationSeconds { get; }
         public bool IsExtracting { get; private set; }
         public float RemainingSeconds { get; private set; }
-
-        public event Action ExtractionStarted;
-        public event Action ExtractionCancelled;
-        public event Action ExtractionCompleted;
-
-        /// <summary>Normalized 0..1 progress, raised each Tick while extracting.</summary>
-        public event Action<float> ExtractionProgress;
 
         public ExtractionController(float extractionDurationSeconds)
         {
@@ -31,7 +24,7 @@ namespace Plunderspell.Core
 
             IsExtracting = true;
             RemainingSeconds = DurationSeconds;
-            ExtractionStarted?.Invoke();
+            EventManager.Instance?.Publish(new ExtractionStarted());
         }
 
         public void CancelExtraction()
@@ -42,7 +35,7 @@ namespace Plunderspell.Core
             }
 
             IsExtracting = false;
-            ExtractionCancelled?.Invoke();
+            EventManager.Instance?.Publish(new ExtractionCancelled());
         }
 
         public void Tick(float deltaTime)
@@ -54,12 +47,12 @@ namespace Plunderspell.Core
 
             RemainingSeconds -= deltaTime;
             float progress = 1f - Mathf.Clamp01(RemainingSeconds / DurationSeconds);
-            ExtractionProgress?.Invoke(progress);
+            EventManager.Instance?.Publish(new ExtractionProgress(progress));
 
             if (RemainingSeconds <= 0f)
             {
                 IsExtracting = false;
-                ExtractionCompleted?.Invoke();
+                EventManager.Instance?.Publish(new ExtractionCompleted());
             }
         }
     }

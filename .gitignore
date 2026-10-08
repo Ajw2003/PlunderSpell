@@ -110,8 +110,14 @@ InitTestScene*.unity*
 # Headless verification harness build output
 Tools/Headless/**/bin/
 Tools/Headless/**/obj/
+Tools/MarketRules/bin/
+Tools/MarketRules/obj/
 .claude/worktrees/
 
 # Profiler captures from Tools/Unity/perf_capture.sh: ~0.5-1 GB each, over GitHub's 100 MB file limit.
 # The summaries (*-report.txt) next to them are committed.
 docs/generated/perf-*/*.raw
+
+# Local LLM model (~470 MB) is over GitHub's 100 MB limit; never commit (see docs/plans/playability-pass-handoff-2026-09-30.md)
+/Assets/StreamingAssets/LLM/
+/Assets/StreamingAssets/LLM.meta

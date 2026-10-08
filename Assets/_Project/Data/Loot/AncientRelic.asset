@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Worth: 500
   IsArtifact: 1
-  Bulk: 5
+  Category: 2
+  WeightKg: 5
   Fragility: 6
   DisplayName: Ancient Relic
   Icon: {fileID: 0}

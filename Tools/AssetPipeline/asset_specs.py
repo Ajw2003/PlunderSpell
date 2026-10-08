@@ -64,6 +64,13 @@ CASTLE_SPECS = [
     dict(key="BurialVault",       builder="build_burial_vault",       tri_budget=900, subdir="Castle"),
     dict(key="CryptChamberFinal", builder="build_crypt_chamber_final",tri_budget=800, subdir="Castle"),
     dict(key="CryptStairwell",    builder="build_crypt_stairwell",    tri_budget=600, subdir="Castle"),
+    # Two-storey stairs for the stacked castle (castle_builders_stairs.py, #256)
+    dict(key="MedievalStairUp",   builder="build_medieval_stair_up",   tri_budget=1000, subdir="Castle", module="castle_builders_stairs", kind="room"),
+    dict(key="MedievalStairDown", builder="build_medieval_stair_down", tri_budget=1000, subdir="Castle", module="castle_builders_stairs", kind="room"),
+    dict(key="LateStairUp",       builder="build_late_stair_up",       tri_budget=1000, subdir="Castle/LateMedieval", module="castle_builders_stairs", era="LateMedieval", zone="InnerWard", kind="room"),
+    dict(key="LateStairDown",     builder="build_late_stair_down",     tri_budget=1000, subdir="Castle/LateMedieval", module="castle_builders_stairs", era="LateMedieval", zone="InnerWard", kind="room"),
+    dict(key="BronzeStairUp",     builder="build_bronze_stair_up",     tri_budget=1000, subdir="Castle/BronzeAge", module="castle_builders_stairs", era="BronzeAge", zone="InnerWard", kind="room"),
+    dict(key="BronzeStairDown",   builder="build_bronze_stair_down",   tri_budget=1000, subdir="Castle/BronzeAge", module="castle_builders_stairs", era="BronzeAge", zone="InnerWard", kind="room"),
     # Door plugs — one per enclosed zone, sized to that zone's archway.
     # Not RoomIds: the generator instantiates these to seal an archway that
     # ends up facing an empty cell (CastleRoomRegistry.DoorPlugs).
@@ -220,7 +227,57 @@ DRESSING_SPECS = [
     dict(key="CourtyardFormalGarden", builder="build_courtyard_formal_garden", tri_budget=1200, subdir="Castle/Dressing", module="castle_builders_dressing", zone="Keep", kind="wall"),
 ]
 
-ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS + DRESSING_SPECS
+# The Lair (docs/plans/diegetic-ui-lair-market.md, issue 286), built in
+# lair_builders.py: a one-off ~14 x 10 m vaulted cellar (NOT a 12 m castle cell,
+# so it has no cell-footprint check) and the props that furnish it. The four
+# LairCenturyDialRing pieces are authored flat and centred on their axle; see the
+# pivot note at the top of lair_builders.py and the README's Lair section.
+def _lair(key, builder, budget):
+    return dict(key=key, builder=builder, tri_budget=budget, subdir="Lair", module="lair_builders")
+
+
+LAIR_SPECS = [
+    _lair("LairCellar", "build_lair_cellar", 2800),
+    _lair("LairPortalArch", "build_lair_portal_arch", 500),
+    _lair("LairLedgerTable", "build_lair_ledger_table", 300),
+    _lair("LairLedger", "build_lair_ledger", 900),
+    _lair("LairStrongbox", "build_lair_strongbox", 320),
+    _lair("LairCenturyDialStand", "build_lair_century_dial_stand", 380),
+    _lair("LairCenturyDialRing1", "build_lair_century_dial_ring_1", 750),
+    _lair("LairCenturyDialRing2", "build_lair_century_dial_ring_2", 750),
+    _lair("LairCenturyDialRing3", "build_lair_century_dial_ring_3", 750),
+    _lair("LairCenturyDialRing4", "build_lair_century_dial_ring_4", 750),
+    _lair("LairWeaponRack", "build_lair_weapon_rack", 330),
+    _lair("LairCandle", "build_lair_candle", 340),
+]
+
+# The Market (docs/plans/diegetic-ui-lair-market.md, issue 287), built in market_builders.py.
+# MarketYard is a one-off ~20 x 20 m open-air yard: NOT a 12 m castle cell, so it has no
+# cell-footprint check (only "Castle*" modules are held to it). The props are separate
+# meshes with base pivots; MarketScalesBeam's pivot is its fulcrum (see market_builders.py).
+def _market(key, builder, budget):
+    return dict(key=key, builder=builder, tri_budget=budget, subdir="Market", module="market_builders")
+
+
+MARKET_SPECS = [
+    _market("MarketYard", "build_market_yard", 4200),
+    _market("MarketFenceCart", "build_market_fence_cart", 1000),
+    _market("MarketGoldsmithStall", "build_market_goldsmith_stall", 1000),
+    _market("MarketAnvil", "build_market_anvil", 180),
+    _market("MarketPardonerBooth", "build_market_pardoner_booth", 1000),
+    _market("MarketAntiquarianCabinet", "build_market_antiquarian_cabinet", 1400),
+    _market("MarketCounter", "build_market_counter", 260),
+    _market("MarketSlateBoard", "build_market_slate_board", 300),
+    _market("MarketScalesBase", "build_market_scales_base", 300),
+    _market("MarketScalesBeam", "build_market_scales_beam", 200),
+    _market("MarketScalesPan", "build_market_scales_pan", 300),
+    _market("MarketLantern", "build_market_lantern", 300),
+    _market("MarketCoin", "build_market_coin", 100),
+    _market("MarketCoinStack", "build_market_coin_stack", 450),
+    _market("MarketPouch", "build_market_pouch", 300),
+]
+
+ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS + DRESSING_SPECS + LAIR_SPECS + MARKET_SPECS
 
 
 

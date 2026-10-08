@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using Interfaces;
 using UnityEngine;
@@ -27,6 +28,10 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// <summary>Asks the server to apply a throw thrown by a machine that does not control the body;
     /// installed by Plunderspell.Net.</summary>
     public static System.Action<Item, Vector3, float> RequestThrow;
+
+    /// <summary>Asks the server to move a held piece to a pose when its holder changes room (#333) and
+    /// this machine does not control the body; installed by Plunderspell.Net.</summary>
+    public static System.Action<Item, Vector3, Quaternion> RequestMove;
 
     private Rigidbody _rb;
     private bool _isDragging = false;
@@ -203,19 +208,10 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// towing, the tow pace and pull, throws and impact damage all scale from it.</summary>
     public float Mass => _rb != null ? _rb.mass : 1f;
 
-    /// <summary>Raised at the start of every collision this item is in. Audio listens; see docs/4-systems/audio.md.</summary>
-    public static event System.Action<Item, Collision> Impacted;
-
-    /// <summary>
-    /// Raised for an impact another machine simulated (a co-op client never simulates the host's
-    /// pieces, so it raises no collision of its own): the piece, the contact's relative speed, the
-    /// contact point, and whether it struck a creature. Relayed by <c>LootPickup</c>.
-    /// </summary>
-    public static event System.Action<Item, float, Vector3, bool> ImpactedRemotely;
-
-    /// <summary>Raises <see cref="ImpactedRemotely"/>; called by the network relay.</summary>
+    /// <summary>Publishes <see cref="ItemImpactedRemotely"/> for an impact another machine simulated (a co-op
+    /// client never simulates the host's pieces, so it has no collision of its own); called by the network relay.</summary>
     public static void RaiseRemoteImpact(Item item, float speed, Vector3 point, bool struckCreature) =>
-        ImpactedRemotely?.Invoke(item, speed, point, struckCreature);
+        EventManager.Instance?.Publish(new ItemImpactedRemotely(item, speed, point, struckCreature));
 
     /// <summary>How much of the beam's strength holding this up takes: 0 weightless, 1 at the limit.
     /// Over 1 it cannot be lifted and drags. The beam's colour reads this.</summary>
@@ -813,7 +809,7 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
 
     private void OnCollisionEnter(Collision collision)
     {
-        Impacted?.Invoke(this, collision);
+        EventManager.Instance?.Publish(new ItemImpacted(this, collision));
         if (Time.time < _lastDamageTime + _damageCooldown) return;
 
         // Only the item's own motion hurts: walking into a cauldron on the floor is not being hit
@@ -905,6 +901,22 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
         {
             _carryableCreature.PickUp();
         }
+    }
+
+    /// <summary>The holder was moved to another room (#333): forget how fast the beam's target was
+    /// moving, so the jump is not read as a speed. Runs on every holder's machine.</summary>
+    public void ForgetTargetMotion() => _hasTargetVelocity = false;
+
+    /// <summary>Puts the held piece at a new pose with no velocity, still held (#333). On the
+    /// machine that controls its body; a client holder asks the server through CarryBeamRelay.</summary>
+    public void TeleportTo(Vector3 position, Quaternion rotation)
+    {
+        _rb.position = position;
+        _rb.rotation = rotation;
+        transform.SetPositionAndRotation(position, rotation);
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+        ForgetTargetMotion();
     }
 
     public void StopDragging()

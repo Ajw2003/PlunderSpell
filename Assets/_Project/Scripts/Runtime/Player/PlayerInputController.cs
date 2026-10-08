@@ -18,7 +18,7 @@ namespace Player
         private void Awake()
         {
             _creep = new InputAction("Creep", InputActionType.Button, "<Keyboard>/c");
-            _input ??= new PlayerInputs();
+            _input = GameInput.Actions;
             _stateMachine = GetComponent<PlayerStateMachine>();
             EventManager.Instance?.Subscribe(this, (PlayerIdleEvent e) => EnableAllInputs());
         }
@@ -34,10 +34,12 @@ namespace Player
         /// "Issue 9's gate belongs on the raid's player, not only on the playtest harness".
         /// </summary>
         public static bool AcceptsInputIn(Plunderspell.Core.GameState state) =>
-            state == Plunderspell.Core.GameState.Playing;
+            state == Plunderspell.Core.GameState.Playing || state == Plunderspell.Core.GameState.LairRoom;
 
         /// <summary>Whether the world should react to input right now.</summary>
-        private bool AcceptsInput => Plunderspell.Core.GameServices.IsPlaying;
+        private bool AcceptsInput =>
+            Plunderspell.Core.GameServices.GameState != null &&
+            AcceptsInputIn(Plunderspell.Core.GameServices.GameState.CurrentState);
 
         private void Update()
         {
@@ -80,12 +82,6 @@ namespace Player
             }
         }
 
-        // Opening the inventory used to free the cursor from here. Cursor lock and visibility are
-        // now owned solely by CursorLockPolicy, which follows GameState; a second writer is what left
-        // the cursor stuck between a menu and the world.
-        private void OpenInventoryInput(bool enable)
-        {
-        }
 
         private void ItemInteractionInputs(bool enable)
         {
@@ -99,7 +95,6 @@ namespace Player
             {
                 _input.Inventory.Clicked.started -= OnItemClickedPerformed;
                 _input.Inventory.Clicked.canceled -= OnItemClickedPerformed;
-                _input.Inventory.Disable();
             }
         }
 
@@ -118,11 +113,13 @@ namespace Player
 
             _stateMachine.ChangeState(_stateMachine.WalkState);
             _stateMachine.Move(context.ReadValue<Vector2>());
+            EventManager.Instance?.Publish(new PlayerWalkEvent { enable = true });
         }
 
         private void OnMoveCanceled(InputAction.CallbackContext context)
         {
             _stateMachine.Move(Vector2.zero);
+            EventManager.Instance?.Publish(new PlayerWalkEvent { enable = false });
         }
 
         private void AttackInputs(bool enable)
@@ -130,10 +127,12 @@ namespace Player
             if (enable)
             {
                 _input.PlayerActions.Attack.performed += OnAttackPerformed;
+                _input.PlayerActions.Attack.canceled += OnAttackCanceled;
             }
             else
             {
                 _input.PlayerActions.Attack.performed -= OnAttackPerformed;
+                _input.PlayerActions.Attack.canceled -= OnAttackCanceled;
             }
         }
 
@@ -143,18 +142,23 @@ namespace Player
                 return;
 
             _stateMachine.Attack();
-            EventManager.Instance?.Publish(new PlayerAttackEvent());
+            EventManager.Instance?.Publish(new PlayerAttackEvent { enable = true });
         }
+
+        private void OnAttackCanceled(InputAction.CallbackContext context) =>
+            EventManager.Instance?.Publish(new PlayerAttackEvent { enable = false });
 
         private void JumpInputs(bool enable)
         {
             if (enable)
             {
                 _input.PlayerActions.Jump.performed += OnJumpPerformed;
+                _input.PlayerActions.Jump.canceled += OnJumpCanceled;
             }
             else
             {
                 _input.PlayerActions.Jump.performed -= OnJumpPerformed;
+                _input.PlayerActions.Jump.canceled -= OnJumpCanceled;
             }
         }
 
@@ -164,7 +168,11 @@ namespace Player
                 return;
 
             _stateMachine.Jump();
+            EventManager.Instance?.Publish(new PlayerJumpEvent { enable = true });
         }
+
+        private void OnJumpCanceled(InputAction.CallbackContext context) =>
+            EventManager.Instance?.Publish(new PlayerJumpEvent { enable = false });
 
         private void LookInputs(bool enable)
         {
@@ -193,9 +201,9 @@ namespace Player
         }
 
         /// <summary>
-        /// Generated Input System actions are unmanaged and leak if they are only ever enabled.
-        /// Unity asserts on the leak the second time a scene carrying a player is loaded, which is
-        /// how this surfaced. See docs/4-systems/spells.md, "Two ways to cast".
+        /// Unsubscribes from the shared actions (GameInput owns and disposes them, on quit). The per-player
+        /// _creep action is unmanaged and leaks if only ever enabled, which is how this surfaced: Unity asserts
+        /// on the second scene load carrying a player. See docs/4-systems/spells.md, "Two ways to cast".
         /// </summary>
         private void OnDestroy()
         {
@@ -204,8 +212,6 @@ namespace Player
 
             DisableAllInputs();
             _creep.Dispose();
-            _input.Disable();
-            _input.Dispose();
             _input = null;
         }
 
@@ -215,17 +221,15 @@ namespace Player
             JumpInputs(false);
             AttackInputs(false);
             LookInputs(false);
-            OpenInventoryInput(false);
             ItemInteractionInputs(false);
         }
 
         private void EnableAllInputs()
         {
-            if (_input == null) _input = new PlayerInputs();
+            _input = GameInput.Actions;
             _input.Enable();
             _creep.Enable();
 
-            OpenInventoryInput(true);
             WalkInputs(true);
             // No dodge key: dodging is the Velox spell (docs/4-systems/spells.md, "Velox and Saltus").
             JumpInputs(true);

@@ -16,7 +16,7 @@ numbers through `IHealth`; this system only decides how damage reaches them and 
 
 - **One call.** `Damage.Apply(target, amount, source, instigator, point, kind, impactVelocity)`
   hurts an `IHealth`, measures how much health it actually lost, and — only if it lost some —
-  raises `Damage.Dealt` with a `DamageReport`. Every weapon, spell, guard, fire and flying object
+  publishes a `DamageDealt` event with a `DamageReport`. Every weapon, spell, guard, fire and flying object
   calls it: `MeleeWeapon`, `NetworkedProjectile`, `Item` (impacts), `CastleGuard` and
   `MonsterAttackState` (enemy attacks), `MonsterPickedUpState` (choking), `MisfireSpellEffects`
   (corpse blast), `StatusEffectReceiver` (burning). `grep "\.TakeDamage(" Runtime/` finds nothing
@@ -33,7 +33,8 @@ numbers through `IHealth`; this system only decides how damage reaches them and 
   - whatever was hit **flashes red** for 0.12 s (a `MaterialPropertyBlock` on its renderers,
     restored afterwards);
   - a **health bar** appears over anything recently hurt for 4 s — red over an enemy, green over
-    another player;
+    another player. Its fullness is the health the `DamageDealt` event reported (`HealthAfter / MaxHealth`),
+    not a read of the target each frame; the local player's low-health edge follows `PlayerStatsChanged` (#304);
   - a **hit marker** on the crosshair when you landed the hit (red on a kill);
   - when *you* are hurt: a **red screen edge** sized by the hit, a line naming what did it
     ("−18 Watchman", "−17 yourself (fire)") — repeated hits from the same thing merge into one
@@ -52,7 +53,8 @@ Screenshots of every case: `docs/generated/playtest-2026-09-23/05`–`12`.
 
 Added 2026-09-26 for #51. `CameraShakeDirector`
 (`Assets/_Project/Scripts/Runtime/UI/RaidHud/CameraShakeDirector.cs`) creates itself like the
-feedback view and shakes only this machine's view. The shake itself is `ShakeTrauma`
+feedback view and shakes only this machine's view. It learns who the local player is from `LocalPlayerChanged`
+(#304) rather than looking `PlayerStateMachine.Local` up every frame. The shake itself is `ShakeTrauma`
 (`ShakeTrauma.cs`, plain C#): events add "trauma" (0 to 1), it drains at 1.5 a second, and the view
 turns by trauma squared times Perlin noise, up to 5° of pitch and yaw and 6° of roll. Squaring it
 means small events are small and big ones stack into a jolt.
@@ -211,6 +213,8 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
   corner. `ImpactDamageTests` covers both, and a 3 m drop still shattering it.
 
 ## Invariants
+
+- **No health is lost in a safe place (#355).** `Apply` returns 0 before the network forward while `Damage.InSafePlace` (the Lair room, the Market, or a pause begun there), so a client cannot be hurt either. The rule is `GameStateManager.InSafePlace`, installed by `GameServices.Initialize` as the `Damage.SafePlace` hook (this assembly sits below the game state, so it cannot reference it). Loot breakage asks the same `Damage.InSafePlace` in `LootPickup`.
 
 - **Nothing calls `IHealth.TakeDamage` except `Damage.Apply`.** A direct call still hurts, but no
   number, flash, bar or blame appears, and the player cannot tell it happened — exactly the bug

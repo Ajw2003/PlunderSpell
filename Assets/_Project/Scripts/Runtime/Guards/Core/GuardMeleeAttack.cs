@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Interfaces;
 using Plunderspell.Alarm;
 using UnityEngine;
@@ -39,7 +40,7 @@ namespace Plunderspell.Guards
 
             _cooldownLeft = _guard.Tuning.AttackCooldownSeconds;
             _guard.AttackSignal.Signal(GuardAttackKind.Melee);
-            _guard.Link.Director?.Publish(new GuardEngaged(_guard, target));
+            EventManager.Instance?.Publish(new GuardEngaged(_guard, target));
             if (target.TryGetComponent(out IHealth health))
             {
                 Damage.Apply(health, _guard.Tuning.AttackDamage, _guard.gameObject, _guard.gameObject,

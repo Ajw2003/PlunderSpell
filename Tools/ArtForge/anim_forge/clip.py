@@ -77,6 +77,7 @@ class Frame:
     lhand: float
     elbows: dict
     extras: dict[str, Quaternion]
+    leg_hint: Vector | None = None        # knee direction override (a prone body: knees up)
 
 
 class Clip:

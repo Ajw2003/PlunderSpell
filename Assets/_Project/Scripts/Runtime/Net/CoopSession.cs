@@ -2,6 +2,7 @@
 #define DISABLESTEAMWORKS
 #endif
 
+using Code.Scripts.EventSystems;
 using System;
 using Plunderspell.Core;
 using PurrNet;
@@ -25,6 +26,7 @@ namespace Plunderspell.Net
         private const string ConnectLobbyArg = "+connect_lobby";
         private const string HostUdpArg = "-coop-host";
         private const string JoinUdpArg = "-coop-join";
+        private const string ThisPc = "127.0.0.1";
         private const int MaxPlayers = 4;
 
         [SerializeField] private NetworkManager _manager;
@@ -42,7 +44,6 @@ namespace Plunderspell.Net
         public string Status => _status;
         public bool IsInSession => _manager != null && (_manager.isServer || _manager.isClient);
         public bool CanInvite => _hostingLobby;
-        public event Action Changed;
 
         private void Awake()
         {
@@ -99,8 +100,21 @@ namespace Plunderspell.Net
             }
 
             StartHost(_udpTransport, $"Hosting on the local network (Steam unavailable: {SteamBootstrap.Problem})");
-            GameServices.GameState.ChangeState(GameState.Lair);
+            GameServices.GameState.ChangeState(GameState.LairRoom);
         }
+
+        /// <summary>Hosts over UDP even with Steam running, as <c>-coop-host</c> does: a second copy of the game on
+        /// the same PC is the same Steam account and cannot join its own lobby (#372).</summary>
+        public void HostLocal()
+        {
+            if (LeaveThenRetry(HostLocal))
+                return;
+            StartHost(_udpTransport, "Hosting on this PC (local network).");
+            GameServices.GameState.ChangeState(GameState.LairRoom);
+        }
+
+        /// <summary>Joins a game hosted on this same PC, as <c>-coop-join 127.0.0.1</c> does (#372).</summary>
+        public void JoinLocal() => JoinUdp(ThisPc);
 
         public void Leave()
         {
@@ -161,7 +175,7 @@ namespace Plunderspell.Net
                 if (args[i] == HostUdpArg)
                 {
                     StartHost(_udpTransport, "Hosting on the local network (command line).");
-                    GameServices.GameState.ChangeState(GameState.Lair);
+                    GameServices.GameState.ChangeState(GameState.LairRoom);
                     return;
                 }
 
@@ -182,7 +196,7 @@ namespace Plunderspell.Net
         private void OnServerConnectionState(ConnectionState state)
         {
             Debug.Log($"[Coop] Server {state}.");
-            Changed?.Invoke();
+            EventManager.Instance?.Publish(new CoopChanged());
         }
 
         private void OnClientConnectionState(ConnectionState state)
@@ -194,7 +208,7 @@ namespace Plunderspell.Net
             if (state == ConnectionState.Connected && !_manager.isServer)
             {
                 SetStatus("Joined. Waiting for the host to set out.");
-                GameServices.GameState.ChangeState(GameState.Lair);
+                GameServices.GameState.ChangeState(GameState.LairRoom);
             }
             else if (state == ConnectionState.Disconnected && !_manager.isServer && _status.StartsWith("Join"))
             {
@@ -203,14 +217,14 @@ namespace Plunderspell.Net
                 GameServices.GameState.ChangeState(GameState.MainMenu);
             }
 
-            Changed?.Invoke();
+            EventManager.Instance?.Publish(new CoopChanged());
         }
 
         private void SetStatus(string status)
         {
             _status = status;
             Debug.Log($"[Coop] {status}");
-            Changed?.Invoke();
+            EventManager.Instance?.Publish(new CoopChanged());
         }
 
         // -----------------------------------------------------------------------------------------
@@ -254,7 +268,7 @@ namespace Plunderspell.Net
             SteamFriends.SetRichPresence("connect", $"{ConnectLobbyArg} {_lobby.m_SteamID}");
 
             StartHost(_steamTransport, "Hosting. Invite a friend with the Invite Friend button.");
-            GameServices.GameState.ChangeState(GameState.Lair);
+            GameServices.GameState.ChangeState(GameState.LairRoom);
         }
 
         public void InviteFriends()

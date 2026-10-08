@@ -17,8 +17,7 @@ namespace Plunderspell.Core
         /// <summary>True while hosting a Steam lobby that friends can be invited to.</summary>
         bool CanInvite { get; }
 
-        /// <summary>Raised whenever <see cref="Status"/> or the flags above change.</summary>
-        event System.Action Changed;
+        // A change to Status or the flags above is published as a CoopChanged event on EventManager.
 
         /// <summary>Starts a session only this machine can join.</summary>
         void PlaySolo();
@@ -26,6 +25,13 @@ namespace Plunderspell.Core
         /// <summary>Starts a session friends can join: a Steam lobby when Steam is running, otherwise
         /// a LAN host.</summary>
         void HostCoop();
+
+        /// <summary>Hosts on the local network even with Steam running, so a second copy of the game on this
+        /// PC can join (it is the same Steam account, which cannot join its own lobby). Testing only (#372).</summary>
+        void HostLocal();
+
+        /// <summary>Joins a game hosted on this same PC over the local network (#372).</summary>
+        void JoinLocal();
 
         /// <summary>Opens Steam's invite dialog for the current lobby.</summary>
         void InviteFriends();

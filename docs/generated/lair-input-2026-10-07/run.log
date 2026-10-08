@@ -1,0 +1,38 @@
+17:02:15 test slot 99 wiped, owner's slot to restore: 1
+17:02:22 state MainMenu
+17:02:23 solo, slot 99
+17:02:24 player: player
+17:02:27 before W: 1005.20,1.50,1.50
+17:02:27 keys: W
+17:02:29 keys: W
+17:02:31 while W held: 1002.81,1.51,1.50
+17:02:32 keys: none
+17:02:32 PASS holding W through the Input System moved the player (1005.20,1.50,1.50 -> 1002.81,1.51,1.50)
+17:02:34 facing the door from (1001.17, 1.50, -3.52)
+17:02:35 looked at: True
+17:02:36 keys: E
+17:02:38 keys: none
+17:02:41 after E: 1001.17,1.50,-3.52
+17:02:41 FAIL pressing E at the Market door took the player to the Market (1001.17,1.50,-3.52)
+17:02:41 FAIL 1 lair input checks
+17:02:41 cleaning up
+17:02:43 active slot 1
+17:03:16 test slot 99 wiped, owner's slot to restore: 1
+17:03:23 state MainMenu
+17:03:24 solo, slot 99
+17:03:25 player: player
+17:03:27 before W: 1005.20,1.50,1.50
+17:03:28 keys: W
+17:03:30 keys: W
+17:03:32 while W held: 1002.81,1.51,1.50
+17:03:32 keys: none
+17:03:33 PASS holding W through the Input System moved the player (1005.20,1.50,1.50 -> 1002.81,1.51,1.50)
+17:03:34 facing the door from (1001.17, 1.50, -3.52)
+17:03:36 looked at: True
+17:03:37 keys: E
+17:03:39 keys: none
+17:03:42 after E: 1101.50,1.50,8.00
+17:03:42 PASS pressing E at the Market door took the player to the Market (1101.50,1.50,8.00)
+17:03:42 PASS all lair input checks
+17:03:42 cleaning up
+17:03:44 active slot 1

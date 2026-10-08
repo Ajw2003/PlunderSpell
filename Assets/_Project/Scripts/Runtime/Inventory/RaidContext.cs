@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 
 namespace Plunderspell.Inventory
@@ -28,15 +29,12 @@ namespace Plunderspell.Inventory
         /// <summary>False in the Lair, before the first raid is built, and after <see cref="Clear"/>.</summary>
         public static bool HasCurrent { get; private set; }
 
-        /// <summary>Raised on this peer whenever a raid publishes its context.</summary>
-        public static event Action<RaidContext> Published;
-
         /// <summary>Publishes the context of the raid about to be built.</summary>
         public static void Publish(RaidContext context)
         {
             Current = context;
             HasCurrent = true;
-            Published?.Invoke(context);
+            EventManager.Instance?.Publish(new RaidContextPublished(context));
         }
 
         /// <summary>Forgets the current raid. Called on returning to the Lair, and by test teardown.</summary>

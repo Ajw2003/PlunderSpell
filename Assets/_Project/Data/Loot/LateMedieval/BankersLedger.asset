@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 140
   IsArtifact: 0
-  Bulk: 1.5
+  Category: 4
+  WeightKg: 1.5
   Fragility: 999
   DisplayName: Banker's Ledger
   Icon: {fileID: 0}

@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Alarm;
@@ -129,17 +130,20 @@ namespace Plunderspell.Tests
         // --- The director's own rules ----------------------------------------------------------
 
         [Test]
-        public void Test_ThreeGuardsChasingIsHueAndCry()
+        public void Test_FiveGuardsChasingIsHueAndCry()
         {
             EnemyDirector alarm = _rig.Director;
 
             alarm.ReportChase(1, true);
-            Assert.Less(alarm.State, AlarmState.Roused, "One guard on the chase is not the castle up in arms.");
             alarm.ReportChase(2, true);
-            Assert.AreEqual(AlarmState.Roused, alarm.State, "Two guards chasing at once rouse the castle.");
+            Assert.Less(alarm.State, AlarmState.Roused, "Two guards on the chase is not the castle up in arms (#259).");
             alarm.ReportChase(3, true);
+            Assert.AreEqual(AlarmState.Roused, alarm.State, "Three guards chasing at once rouse the castle.");
+            alarm.ReportChase(4, true);
+            Assert.AreEqual(AlarmState.Roused, alarm.State, "Four is still the lockdown.");
+            alarm.ReportChase(5, true);
             Assert.AreEqual(AlarmState.HueAndCry, alarm.State,
-                "Several guards chasing and attacking must reach Hue and Cry (#139).");
+                "Five guards chasing at once must reach Hue and Cry (#139, #259).");
         }
 
         [Test]
@@ -147,7 +151,7 @@ namespace Plunderspell.Tests
         {
             EnemyDirector alarm = _rig.Director;
 
-            alarm.ReportSighting();
+            alarm.ReportSighting(1);
             float afterSighting = alarm.AlarmLevel;
             alarm.ReportAttack();
 
@@ -159,22 +163,22 @@ namespace Plunderspell.Tests
         public void Test_ANewRaidStartsCalmAndStaysCalmThroughTheGrace()
         {
             EnemyDirector alarm = _rig.Director;
-            alarm.SetAlarmLevel(100f);
+            alarm.SetAlarmLevel(100f, 5);
             Assert.AreEqual(AlarmState.HueAndCry, alarm.State);
 
             alarm.ResetForNewRaid(20f);
             Assert.AreEqual(AlarmState.Calm, alarm.State, "The last raid's Hue and Cry must not carry over (#136).");
             Assert.IsFalse(alarm.IsLocked);
 
-            alarm.ApplyNoise(1f);
-            alarm.ReportSighting();
+            EventManager.Instance.Publish(new NoiseReported(alarm, Vector3.zero, 1f));
+            alarm.ReportSighting(1);
             alarm.ReportChase(1, true);
             alarm.ReportChase(2, true);
             alarm.ReportChase(3, true);
             Assert.AreEqual(0f, alarm.AlarmLevel, "Nothing raises the alarm during the arrival grace.");
 
             alarm.ResetForNewRaid(0f);
-            alarm.ReportSighting();
+            alarm.ReportSighting(1);
             Assert.Greater(alarm.AlarmLevel, 0f, "After the grace the alarm works again.");
         }
 

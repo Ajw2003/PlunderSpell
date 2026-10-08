@@ -78,7 +78,23 @@ def bake(obj: bpy.types.Object, bp: Blueprint, authoring: list[bpy.types.Materia
             f"families the parts declare {sorted(expected)} ({names}) — a family's "
             f"faces were lost (a part too thin for the bevel?) and the bake would be wrong")
 
-    baked = ef_materials.bake_channels(obj, authoring, bp.name, texture_dir, resolution)
+    dyed = [k for k, _f in bp.ordered_families() if k in bp.dye_families]
+    if dyed:
+        # Players: one extra baked channel, white on dyed families, black elsewhere, so
+        # Unity can tint the single material slot (README, "Players").
+        for (key, _fam), mat in zip(bp.ordered_families(), authoring):
+            value = mat.node_tree.nodes.new("ShaderNodeRGB")
+            white = 1.0 if key in dyed else 0.0
+            value.outputs[0].default_value = (white, white, white, 1.0)
+            ef_materials._CHANNEL_SOCKETS[mat.name]["DyeMask"] = value.outputs[0]
+        old_channels, old_data = ef_materials.CHANNELS, ef_materials.DATA_CHANNELS
+        ef_materials.CHANNELS = old_channels + ("DyeMask",)
+        ef_materials.DATA_CHANNELS = old_data | {"DyeMask"}
+    try:
+        baked = ef_materials.bake_channels(obj, authoring, bp.name, texture_dir, resolution)
+    finally:
+        if dyed:
+            ef_materials.CHANNELS, ef_materials.DATA_CHANNELS = old_channels, old_data
     packed = ef_materials.pack_channel_maps(bp.name, baked, texture_dir)
 
     obj.data.materials.clear()

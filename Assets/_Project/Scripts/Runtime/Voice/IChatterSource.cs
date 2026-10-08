@@ -24,7 +24,7 @@ namespace Plunderspell.Voice
     public interface IChatterSource
     {
         bool ChatterEnabled { get; set; }
-        event Action<ChatterReport> ChatterHeard;
+        // Talk it hears is published on EventManager as ChatterHeard.
     }
 
     /// <summary>Decides which recognised utterances are worth reporting.</summary>

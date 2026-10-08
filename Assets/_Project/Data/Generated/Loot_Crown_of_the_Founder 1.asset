@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 650
   IsArtifact: 1
-  Bulk: 12
+  Category: 0
+  WeightKg: 12
   Fragility: 6
   DisplayName: Crown of the Founder
   Icon: {fileID: 0}

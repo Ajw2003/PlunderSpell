@@ -70,5 +70,20 @@ namespace Plunderspell.Tests
             Assert.AreEqual(savedDebt, lair.TotalDebt, "Joining a friend overwrote this machine's saved debt.");
             Assert.AreEqual(savedGold, lair.AccumulatedGold, "Joining a friend overwrote this machine's saved gold.");
         }
+
+        [Test]
+        public void Test_ShowingTheHostsLedgerMatchesTheHostAndSavesNothing()
+        {
+            _go = new GameObject("Lair");
+            var lair = _go.AddComponent<LairHubManager>();
+            int savedPurse = lair.Purse(0);
+
+            lair.ShowHostLedger("7,8,0,0|5,6,0,0|1,1,0,0|The Collector takes 5 from I, 6 from II.");
+            Assert.AreEqual("7,8,0,0|5,6,0,0|1,1,0,0|The Collector takes 5 from I, 6 from II.", lair.HostLedger());
+            Assert.IsTrue(lair.IsPresent(1));
+
+            lair.Load();
+            Assert.AreEqual(savedPurse, lair.Purse(0), "Showing the host's ledger overwrote this machine's saved purse.");
+        }
     }
 }

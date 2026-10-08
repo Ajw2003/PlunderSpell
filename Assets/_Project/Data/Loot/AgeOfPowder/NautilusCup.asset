@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 1800
   IsArtifact: 1
-  Bulk: 1
+  Category: 2
+  WeightKg: 1
   Fragility: 4.5
   DisplayName: Nautilus Cup
   Icon: {fileID: 0}

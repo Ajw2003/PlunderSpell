@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Extraction;
@@ -18,6 +19,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             foreach (Object o in m_tracked)
             {
                 if (o != null)
@@ -93,11 +95,11 @@ namespace Plunderspell.Tests
 
             float lastWorth = -1f;
             int lastPieces = -1;
-            zone.HaulInZoneChanged += (worth, pieces) =>
+            EventManager.Instance.Subscribe(this, (HaulInZoneChanged e) =>
             {
-                lastWorth = worth;
-                lastPieces = pieces;
-            };
+                lastWorth = e.Worth;
+                lastPieces = e.Pieces;
+            });
 
             zone.TrackLoot(MakePiece("Plate", 40f));
 
@@ -112,7 +114,7 @@ namespace Plunderspell.Tests
             zone.TrackLoot(MakePiece("Chalice", 120f));
 
             float resolvedWorth = -1f;
-            zone.ExtractionResolved += (worth, _) => resolvedWorth = worth;
+            EventManager.Instance.Subscribe(this, (ExtractionResolved e) => resolvedWorth = e.Worth);
 
             zone.ResolveExtraction();
 

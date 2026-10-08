@@ -86,6 +86,6 @@ namespace Plunderspell.UI.Screens
         }
 
         /// <summary>Both outcomes go back to the Lair: that is where the debt is paid and the next raid starts.</summary>
-        private void OnReturnClicked() => GameServices.GameState.ChangeState(GameState.Lair);
+        private void OnReturnClicked() => GameServices.GameState.ChangeState(GameState.LairRoom);
     }
 }

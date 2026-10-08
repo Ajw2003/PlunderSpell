@@ -194,6 +194,113 @@ will drift out of date if regenerated and not recommitted.
 4. Re-run `build_assets.py` the same way — fix and re-run until
    `N/N assets passed`, same as a prop.
 
+## Lair
+
+The physical Lair of `docs/plans/diegetic-ui-lair-market.md` ("The Lair, as a place",
+concept `docs/art/concept/lair/lair.png`; issue 286): `LAIR_SPECS` in `asset_specs.py`,
+builders in `lair_builders.py`, output in `Assets/_Project/Art/Models/Lair/`. Static
+meshes only: no behaviour, no Unity wiring. Existing pigments only (the atlas is full).
+
+| Key | What it is | Tris / budget | Pivot (the origin, in Unity) |
+|---|---|---|---|
+| `LairCellar` | Barrel-vaulted cellar, 14 x 10 m interior (16.4 x 11.6 m outside), vault springs 2.6 m and crowns 4.2 m above the floor. 0.30 m floor slab, walkable floor at Z = 0.30 (scale.md). Long north (back) wall: the Market door (2.6 x 2.16 m, an arch with a plank leaf), and the hearth, chimney breast, firebox 1.2 m wide and a fire (logs, embers, flames). West wall: an arched recess 3.2 m wide and 0.7 m deep for the portal arch. Three stone ribs and pilasters. **Not a 12 m castle cell** (no footprint check). | 1670 / 2800 | Centre of the floor, slab underside on Z = 0 |
+| `LairPortalArch` | Freestanding stone arch, 2.6 m wide, 3.2 m tall, 0.5 m deep, on a 2.8 x 1.0 m threshold slab with the four portal stones (verdigris) on its front. | 288 / 500 | Base centre; stones on local -Y |
+| `LairLedgerTable` | Long oak table, 3.2 x 1.0 m, top at 0.80 m, open underneath along its length. | 168 / 300 | Base centre |
+| `LairLedger` | Great open book, 0.72 x 0.52 m, 7 cm tall; four columns I-IV implied by strips, heading bars and ruled lines, a ribbon marker. | 564 / 900 | Base centre of the cover |
+| `LairStrongbox` | Iron-banded oak box, 0.6 x 0.4 x 0.4 m with a domed lid; the hasp is on local -Y. Placed four times. | 180 / 320 | Base centre |
+| `LairCenturyDialStand` | Tripod on a round plinth (0.75 m radius), brass hub and axle; the axle top is at Z = 1.32. | 216 / 380 | Base centre |
+| `LairCenturyDialRing1..4` | Four nested brass rings, radii 0.30 / 0.42 / 0.54 / 0.66 m, each its own mesh with four lugs and one coloured bead (verdigris, lapis, madder, orpiment). | 448 each / 750 | **The ring's centre, i.e. its axle** (see below) |
+| `LairWeaponRack` | Oak rack, 1.6 m wide, 0.5 m deep, 1.72 m tall: posts, rails, low shelf, iron pegs. Stands against a wall. | 188 / 330 | Base centre |
+| `LairCandle` | Candle in an iron holder, 0.28 m tall. | 200 / 340 | Base centre of the foot |
+
+**Pivot choice for the rings.** The validator wants the lowest vertex within 3 cm of
+Z = 0, and a ring that turns about its own axle has half of itself below its pivot. So each
+ring is authored *flat*: a horizontal annulus about the Z axis with a 2.6 cm tube radius, so
+it spans Z = -0.026..+0.026 and passes the rule while its pivot is exactly its axle. In Unity,
+place all four rings at the stand's axle (stand-local (0, 1.18, 0) in Unity Y-up, a little
+below the axle top at 1.32), tilt each one to taste, and rotate it about its own local up axis
+to turn it.
+
+**Placement reference** (Blender Z-up, cellar origin; `render_lair_scene.py`'s `PLACEMENTS`
+is the working copy): portal arch (-7.2, 0, 0.30) turned 90 degrees about Z, so its stones face
+the room, inside the recess; ledger table (-0.8, -1.0, 0.30); ledger on it at +0.80 m;
+strongboxes at table x +/-0.35 and +/-1.05, y 0.62 m in front of the table's centre line;
+candle on the table at x +1.0; dial stand (2.2, -0.2, 0.30); weapon rack (-4.2, 4.7, 0.30)
+against the north wall; hearth light at (3.5, 4.35, 1.1). Nothing is on the floor in front of the
+portal arch. To convert to Unity: `Unity(X, Y, Z) = Blender(-X, Z, -Y)`. **X flips** for the Lair, against the
+rule above: measured 2026-10-06 on the imported cellar, whose hearth (Blender x +3.5) lands at Unity x -3.5, and a
+turn about Blender Z is the opposite turn about Unity Y. `LairRoomForge.ToUnity` / `ToUnityRotation` apply it.
+
+**Rebuild and review.**
+
+```bash
+PYTHONHASHSEED=0 blender -b -P Tools/AssetPipeline/build_assets.py -- --only Lair
+python3 Tools/AssetPipeline/validate_asset.py --all --only Lair
+PYTHONHASHSEED=0 blender -b -P Tools/AssetPipeline/render_previews_only.py -- Lair
+blender -b -P Tools/AssetPipeline/render_room_overhead.py -- LairCellar   # roof cut away
+python3 Tools/AssetPipeline/make_contact_sheet.py     # also writes docs/art/models/lair/lair-review.png
+blender -b -P Tools/AssetPipeline/render_lair_scene.py                    # docs/art/models/lair/lair-assembled.png, ~4 min
+```
+
+`render_lair_scene.py` takes `LAIR_PREVIEW_RES=640` for a quick low-res test and
+`LAIR_CAM="x,y,z,tx,ty,tz"` for another view. Cycles self-shadows coplanar overlapping
+faces black, so stacked Lair pieces differ by a hair in width or depth.
+
+## Market
+
+The physical Market of `docs/plans/diegetic-ui-lair-market.md` ("The Market, and haggling",
+concept `docs/art/concept/lair/market.png`; issue 287): `MARKET_SPECS` in `asset_specs.py`,
+builders in `market_builders.py`, output in `Assets/_Project/Art/Models/Market/`. Static meshes
+only (the four vendors are characters and not part of this). Existing pigments only. Every stall
+prop has its front (counter side, slate side) toward local -Y.
+
+| Key | What it is | Tris / budget | Pivot |
+|---|---|---|---|
+| `MarketYard` | ~20 x 20 m open-air night yard, no roof. Flagged slab (walkable top Z = 0.30), cobbled round, central stone well (round wall 0.9 m high, two posts, crossbeam, windlass, rope, bucket), six lantern posts, low walls E/W/S (4 m way in on the south side), four house fronts on the north side with lit and dark windows. **Not a 12 m castle cell** (no footprint check). | 2756 / 4200 | Centre of the yard, slab underside on Z = 0 |
+| `MarketFenceCart` | Hand-cart: 1.5 m bed, two 0.9 m spoked wheels, tarp, shafts to the ground toward -X. | 676 / 1000 | Base centre of the bed |
+| `MarketGoldsmithStall` | Stall frame 2.4 m wide, back wall, shelf of gold bars (1.8 m), striped scalloped awning, valance hangs to 2.05 m. Lantern chain at local (0.9, -0.4), hook at 1.85 m. | 600 / 1000 | Base centre |
+| `MarketAnvil` | Anvil on an oak stump, 0.69 m tall, horn toward +X. | 112 / 180 | Base centre |
+| `MarketPardonerBooth` | Roofed booth 2.4 x 1.8 m, gable roof to 3.2 m, cross on the ridge, hung relics. Lantern chain at local (0.9, -0.85), hook at 2.0 m. | 484 / 1000 | Base centre |
+| `MarketAntiquarianCabinet` | Cabinet of curiosities 1.2 x 0.5 x 2.4 m, three shelves (globe, hourglass, blade, jug, cone, balls, gem). | 838 / 1400 | Base centre |
+| `MarketCounter` | The haggle counter, 1.8 x 0.6 m, top at 1.00 m, flat. One mesh reused at every stall. | 168 / 260 | Base centre |
+| `MarketSlateBoard` | Chalk slate on a post, 1.6 m tall, facing -Y. | 204 / 300 | Base centre |
+| `MarketScalesBase` | Scales' stand; the beam sits on its top at 0.50 m. | 164 / 300 | Base centre |
+| `MarketScalesBeam` | The beam, 0.56 m long. **Pivot is the fulcrum**, so it can tip: authored centred, within +/-0.03 m in Z (same trick as the Lair's rings). | 100 / 200 | Fulcrum |
+| `MarketScalesPan` | One pan with three chains; used twice, at beam x = +/-0.28 m, base 0.26 m below the beam. | 204 / 300 | Base centre of the dish |
+| `MarketLantern` | Hanging lantern, 0.42 m with its ring; the glowing core is orpiment. | 200 / 300 | Base centre |
+| `MarketCoin` | One coin, 4 cm across, 4 mm thick. | 64 / 100 | Base centre |
+| `MarketCoinStack` | Eight coins, 3 cm tall. | 288 / 450 | Base centre |
+| `MarketPouch` | Drawstring pouch, 0.18 m. | 212 / 300 | Base centre |
+
+**Small items.** The validator has no minimum size, only the 3 cm pivot tolerance, so the coin
+needed no exception: it is bottom-flush like everything else.
+
+**Placement reference** (Blender Z-up, yard origin, floor at 0.30; `render_market_scene.py` is the
+working copy). Each stall faces the well: stall pos goldsmith (-4.0, 4.6), pardoner (4.0, 4.6),
+antiquarian (5.9, -1.0), fence counter (-4.3, -1.4) with the cart at (-6.9, -1.4). In stall-local
+terms: counter at (0, -0.6) goldsmith, (0, -0.95) pardoner, (0, -1.25) antiquarian, (0, 0) fence;
+scales base at counter x -0.4 on the counter top, beam at +0.50 m above that, pans at +/-0.28;
+slate board at (-1.9, -1.5) goldsmith, (1.9, -1.8) pardoner, (-1.9, -1.9) antiquarian, (1.9, -0.9)
+fence; anvil at goldsmith-local (1.9, -0.6). Lantern hooks: the six posts (`post_hook()` in
+`market_builders.py`), the well crossbeam (`WELL_LANTERN`), and the two stall chains above; a
+lantern's base is 0.41 m below its hook. Convert with `Unity(X, Y, Z) = Blender(X, Z, -Y)`.
+
+**Rebuild and review.**
+
+```bash
+PYTHONHASHSEED=0 blender -b -P Tools/AssetPipeline/build_assets.py -- --only Market
+python3 Tools/AssetPipeline/validate_asset.py --all --only Market
+PYTHONHASHSEED=0 blender -b -P Tools/AssetPipeline/render_previews_only.py -- Market
+blender -b -P Tools/AssetPipeline/render_room_overhead.py -- MarketYard
+python3 Tools/AssetPipeline/make_contact_sheet.py     # also writes docs/art/models/market/market-review.png
+blender -b -P Tools/AssetPipeline/render_market_scene.py   # docs/art/models/market/market-assembled.png, ~2 min on 4 cores
+```
+
+`render_market_scene.py` takes `MARKET_PREVIEW_RES=640` and `MARKET_CAM="x,y,z,tx,ty,tz"`. This
+Blender build has no OpenImageDenoise, so the render is noisy at 128 samples. In the tiny-object
+previews (coin, coin stack) the side faces render black: a preview-lighting effect of the
+radius-scaled rig; they are lit normally in the assembled scene.
+
 ## Verifying the Unity side
 
 The pipeline validates geometry in Blender, which says nothing about whether

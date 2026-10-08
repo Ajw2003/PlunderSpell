@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,7 +56,7 @@ namespace Plunderspell.Alarm
             int held = IndexOf(request.Guard);
             if (held >= 0 && _turns[held].Target == request.Target)
             {
-                _director.Publish(new AttackTurnGranted(request.Guard, request.Target));
+                EventManager.Instance?.Publish(new AttackTurnGranted(request.Guard, request.Target));
                 return;
             }
 
@@ -63,7 +64,7 @@ namespace Plunderspell.Alarm
             int limit = request.Ranged ? _tuning.RangedTurnsPerTarget : _tuning.MeleeTurnsPerTarget;
             if (TurnsOn(request.Target, request.Ranged) >= limit)
             {
-                _director.Publish(new AttackTurnDenied(request.Guard, request.Target));
+                EventManager.Instance?.Publish(new AttackTurnDenied(request.Guard, request.Target));
                 return;
             }
 
@@ -74,7 +75,7 @@ namespace Plunderspell.Alarm
                 Ranged = request.Ranged,
                 SecondsLeft = _tuning.TurnTimeoutSeconds
             });
-            _director.Publish(new AttackTurnGranted(request.Guard, request.Target));
+            EventManager.Instance?.Publish(new AttackTurnGranted(request.Guard, request.Target));
         }
 
         /// <summary>Takes back whatever turn <paramref name="guard"/> holds. Silent: the caller knows.</summary>

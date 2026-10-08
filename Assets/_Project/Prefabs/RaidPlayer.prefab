@@ -218,7 +218,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5433598261400293409}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 3153026314507338630}
   - component: {fileID: 4651255249886544541}
   - component: {fileID: 4760078615528847383}
+  - component: {fileID: 276842265270628093}
   m_Layer: 0
   m_Name: RaidPlayer
   m_TagString: Untagged
@@ -304,6 +305,7 @@ Transform:
   m_Children:
   - {fileID: 3166163962045577426}
   - {fileID: 662490087184818401}
+  - {fileID: 7788038297644179359}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &4736100138716452366
@@ -407,6 +409,10 @@ MonoBehaviour:
   _walkRadius: 4
   _runRadius: 8
   _footstepStrength: 0.4
+  _landingRadius: 6
+  _heavyLandingRadius: 12
+  _landingStrength: 0.5
+  _heavyLandingStrength: 0.8
   _whisperRadius: 0.5
   _normalRadius: 5
   _shoutRadius: 12
@@ -424,6 +430,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3c818760ff4441b74d1eee492ba9c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Plunderspell.Acoustics::Plunderspell.Acoustics.PlayerChatterRelay
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
   _whisperRadius: 1.5
   _normalRadius: 6
   _shoutRadius: 14
@@ -511,12 +526,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Player::StateMachine.PlayerStateMachine
   _spellBook: {fileID: 0}
   _rb: {fileID: 0}
-  walkSpeed: 5
+  _walkSpeed: 5
   JumpForce: 25
   FallMultiplier: 2.5
   AirControl: 0.7
   DodgeForce: 5
-  respawnSpeed: 1
+  _respawnSpeed: 1
   MouseSensitivity: 10
   CameraTransform: {fileID: 662490087184818401}
   _groundCheckRadius: 0.3
@@ -599,6 +614,23 @@ MonoBehaviour:
   _ownerOnly:
   - {fileID: 6240598286512211357}
   - {fileID: 6388949961367640457}
+--- !u!114 &276842265270628093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7184054742281660173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d77d9f32bd4004498db73fb8b153d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Player::Player.WizardAnimationDriver
+  _animator: {fileID: 4248169079497934309}
+  _body: {fileID: 6388949961367640457}
+  _cast: {fileID: 6240598286512211357}
+  _speedSmoothing: 12
+  _vanishAfterSeconds: 1.6
 --- !u!1 &7665378923298313893
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,3 +662,78 @@ Transform:
   m_Children: []
   m_Father: {fileID: 662490087184818401}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7754656416866334836
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2728099172172530629}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_Name
+      value: Wizard
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: aa7e497e66128614980d5c35cd81b5c3, type: 2}
+    - target: {fileID: 5866666021909216657, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+--- !u!95 &4248169079497934309 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+  m_PrefabInstance: {fileID: 7754656416866334836}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7788038297644179359 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f061f8ee4805b7242a9c51ba119630cd, type: 3}
+  m_PrefabInstance: {fileID: 7754656416866334836}
+  m_PrefabAsset: {fileID: 0}

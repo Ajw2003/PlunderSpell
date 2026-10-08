@@ -209,3 +209,18 @@ MonoBehaviour:
   - prefab: {fileID: 1301011979685859898, guid: ebbe2acfb9458094f979775d21ad6bc1, type: 3}
     pooled: 0
     warmupCount: 5
+  - prefab: {fileID: 3146156532954152746, guid: 5034bcba116d36947bc53cb17fce7a69, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 3285197116216700095, guid: cf608af3cf91c7a49a20701395761244, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 4263236125279616805, guid: e9ac83bf530acf841a56dd9abea078ba, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 1169735928589709557, guid: 173905fd202cbf148978fb0dac121cca, type: 3}
+    pooled: 0
+    warmupCount: 5
+  - prefab: {fileID: 7380442523789308280, guid: e6524070a36f7b64b81c47f26463a0a0, type: 3}
+    pooled: 0
+    warmupCount: 5

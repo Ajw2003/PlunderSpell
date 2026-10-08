@@ -18,6 +18,19 @@ namespace Plunderspell.EditorTools
         public const string Root = "Assets/Models/ArtBible/";
         public const string EnemyRoot = Root + "Enemies/";
         public const string ItemRoot = Root + "Items/";
+        public const string PlayerRoot = Root + "Players/";
+
+        /// <summary>The wizard's clips (Tools/ArtForge/anim_player.py), on the reference human.</summary>
+        public const string PlayerClipsPath = Root + "Animations/Humanoid_Player.fbx";
+
+        /// <summary>
+        /// The player clips that loop. Must match the <c>loop</c> flags in
+        /// <c>Animations/player_anim_manifest.json</c>; <c>WizardAnimationTests</c> checks it.
+        /// </summary>
+        public static readonly HashSet<string> LoopingPlayerClips = new HashSet<string>
+        {
+            "player_idle", "player_walk", "player_jog", "crouch_idle", "crouch_walk", "jump_air", "cast_hold"
+        };
 
         /// <summary>
         /// The baked emission map is 8-bit and clamps at 1.0; the shipping material scales it back up.
@@ -54,14 +67,16 @@ namespace Plunderspell.EditorTools
         };
 
         /// <summary>Texture suffixes that hold numbers, not colour, and must import linear.</summary>
-        public static readonly string[] LinearTextureSuffixes = { "_ORM", "_MetallicGloss", "_Metallic", "_Roughness" };
+        public static readonly string[] LinearTextureSuffixes = { "_ORM", "_MetallicGloss", "_Metallic", "_Roughness", "_DyeMask" };
 
         /// <summary>What kind of ArtBible asset a path is, or null for anything outside it.</summary>
         public enum Kind
         {
             HumanoidEnemy,
             GenericEnemy,
-            Item
+            Item,
+            HumanoidPlayer,
+            HumanoidClips
         }
 
         /// <summary>Classifies a model path. Pure, so the rules are tested without an import.</summary>
@@ -72,6 +87,10 @@ namespace Plunderspell.EditorTools
                 return null;
             if (assetPath.StartsWith(ItemRoot, StringComparison.OrdinalIgnoreCase))
                 return Kind.Item;
+            if (assetPath.StartsWith(PlayerRoot, StringComparison.OrdinalIgnoreCase))
+                return Kind.HumanoidPlayer;
+            if (string.Equals(assetPath, PlayerClipsPath, StringComparison.OrdinalIgnoreCase))
+                return Kind.HumanoidClips;
             if (!assetPath.StartsWith(EnemyRoot, StringComparison.OrdinalIgnoreCase))
                 return null;
             string name = Path.GetFileNameWithoutExtension(assetPath);
@@ -126,6 +145,8 @@ namespace Plunderspell.EditorTools
                     break;
 
                 case Kind.HumanoidEnemy:
+                case Kind.HumanoidPlayer:
+                case Kind.HumanoidClips:
                     importer.animationType = ModelImporterAnimationType.Human;
                     importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
                     importer.humanDescription = HumanDescriptionFor(importer.humanDescription);
@@ -158,7 +179,7 @@ namespace Plunderspell.EditorTools
         /// </summary>
         private void OnPostprocessModel(GameObject root)
         {
-            if (KindOf(assetPath) != Kind.HumanoidEnemy)
+            if (!IsHumanoid(KindOf(assetPath)))
                 return;
 
             var importer = (ModelImporter)assetImporter;
@@ -175,6 +196,35 @@ namespace Plunderspell.EditorTools
                 if (AssetImporter.GetAtPath(path) is ModelImporter again)
                     again.SaveAndReimport();
             };
+        }
+
+        private static bool IsHumanoid(Kind? kind) =>
+            kind == Kind.HumanoidEnemy || kind == Kind.HumanoidPlayer || kind == Kind.HumanoidClips;
+
+        /// <summary>
+        /// Names the player clips after their AnimForge id (the FBX take is "ReferenceHuman|id") and
+        /// sets loop and in-place flags, so nothing is set by hand in the Inspector.
+        /// </summary>
+        private void OnPreprocessAnimation()
+        {
+            if (KindOf(assetPath) != Kind.HumanoidClips)
+                return;
+
+            var importer = (ModelImporter)assetImporter;
+            ModelImporterClipAnimation[] clips = importer.defaultClipAnimations;
+            foreach (ModelImporterClipAnimation clip in clips)
+            {
+                int bar = clip.takeName.LastIndexOf('|');
+                clip.name = bar >= 0 ? clip.takeName.Substring(bar + 1) : clip.takeName;
+                clip.loopTime = LoopingPlayerClips.Contains(clip.name);
+                clip.lockRootRotation = true;
+                clip.lockRootHeightY = false;
+                clip.lockRootPositionXZ = true;
+                clip.keepOriginalOrientation = true;
+                clip.keepOriginalPositionY = true;
+                clip.keepOriginalPositionXZ = true;
+            }
+            importer.clipAnimations = clips;
         }
 
         /// <summary>Every transform under the model, with its rest-pose local transform.</summary>
@@ -198,7 +248,16 @@ namespace Plunderspell.EditorTools
         // Materials
         // -----------------------------------------------------------------------------------------
 
-        private void OnPostprocessMaterial(Material material)
+        // After URP's own FBX material preprocessor (order 1), so its defaults do not overwrite ours.
+        public override int GetPostprocessOrder() => 100;
+
+        // Bumped when the material rules change: the imported materials live in Library, not git.
+        public override uint GetVersion() => 1;
+
+        // Models import their materials through a MaterialDescription, the only hook that sees
+        // embedded materials; OnPostprocessMaterial is never called for them (docs/4-systems/atmosphere.md:101).
+        private void OnPreprocessMaterialDescription(UnityEditor.AssetImporters.MaterialDescription description,
+            Material material, AnimationClip[] clips)
         {
             if (!KindOf(assetPath).HasValue)
                 return;

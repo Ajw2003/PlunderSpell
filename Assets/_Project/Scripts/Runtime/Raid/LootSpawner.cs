@@ -56,7 +56,7 @@ namespace Plunderspell.Raid
             Physics.SyncTransforms();
 
             for (int i = 0; i < plan.Count; i++)
-                Spawn(plan[i]);
+                Spawn(plan[i], castle, registry);
 
             BeginSettling();
             return _lastPlan;
@@ -126,6 +126,20 @@ namespace Plunderspell.Raid
         private static Rigidbody RigidbodyOf(GameObject go) =>
             go != null ? go.GetComponent<Rigidbody>() : null;
 
+        /// <summary>
+        /// Adds these pieces at these points to whatever this spawner already holds, using prefabs from
+        /// <paramref name="prefabs"/>, and settles them like a raid's loot. The Lair's haul pile (#310, #312).
+        /// </summary>
+        public void SpawnPile(IReadOnlyList<LootItem> items, IReadOnlyList<Vector3> positions, RaidLootTable prefabs)
+        {
+            for (int i = 0; i < items.Count && i < positions.Count; i++)
+                SpawnLoose(items[i], prefabs != null ? prefabs.PrefabFor(items[i]) : null, positions[i]);
+            BeginSettling();
+        }
+
+        /// <summary>Takes one piece out of this spawner's care (it was picked up or sold); the object itself is left alone.</summary>
+        public bool Remove(GameObject piece) => _spawned.Remove(piece);
+
         /// <summary>Spawns a single loose piece of loot — what Aurum Voco conjures.</summary>
         public GameObject SpawnLoose(LootItem item, GameObject prefab, Vector3 position)
         {
@@ -160,12 +174,52 @@ namespace Plunderspell.Raid
             return go;
         }
 
-        private void Spawn(LootPlacement placement)
+        private void Spawn(LootPlacement placement, ProceduralCastleData castle, CastleRoomRegistry registry)
         {
             RaidLootTable.Entry entry = placement.Entry;
             if (entry?.Item == null)
                 return;
-            SpawnLoose(entry.Item, entry.Prefab, placement.Position);
+            GameObject go = SpawnLoose(entry.Item, entry.Prefab, placement.Position);
+            if (go == null || Fits(go))
+                return;
+
+            // #272: a tall piece on a low shelf or stair poked through the ceiling. Same room, so the
+            // loot density and value do not change: the next anchor in authored order with headroom,
+            // else the room's floor.
+            ProceduralCastleData.PlacedModule module = castle.PlacedModules[placement.ModuleIndex];
+            Vector3[] anchors = registry?.GetById(module.RoomId)?.LootAnchors;
+            for (int a = 0; anchors != null && a < anchors.Length; a++)
+            {
+                go.transform.position = module.Position + module.Rotation * anchors[a] + Vector3.up * LootPlacementPlanner.AnchorLift;
+                if (Fits(go))
+                    return;
+            }
+            Vector3 stand = CastleSpawnResolver.FirstClearStandingPoint(module.Position);
+            // The standing point is a body's centre, about a metre up: lower the pivot onto the floor under it.
+            go.transform.position = Physics.Raycast(stand, Vector3.down, out RaycastHit floor, 3f, ~0, QueryTriggerInteraction.Ignore)
+                ? floor.point + Vector3.up * LootPlacementPlanner.AnchorLift
+                : stand;
+        }
+
+        /// <summary>True when nothing solid is within the piece's height above its pivot.</summary>
+        private static bool Fits(GameObject go)
+        {
+            Renderer[] renderers = go.GetComponentsInChildren<Renderer>();
+            if (renderers.Length == 0)
+                return true;
+            Bounds b = renderers[0].bounds;
+            for (int i = 1; i < renderers.Length; i++)
+                b.Encapsulate(renderers[i].bounds);
+            Physics.SyncTransforms();
+            float height = b.max.y - go.transform.position.y;
+            RaycastHit[] hits = Physics.RaycastAll(go.transform.position + Vector3.up * 0.1f, Vector3.up,
+                height, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (!hits[i].transform.IsChildOf(go.transform))
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>Destroys everything spawned for the last raid. Called when a raid ends.</summary>

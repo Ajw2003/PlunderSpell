@@ -1,6 +1,7 @@
 using Interfaces;
 using StateMachine.States;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace StateMachine
 {
@@ -52,9 +53,17 @@ namespace StateMachine
         /// <summary>Share of walk speed while creeping. 5 m/s * 0.4 = 2 m/s, under the 2.2 m/s crouch band of FootstepNoiseEmitter.</summary>
         public const float CreepPace = 0.4f;
 
-        public Rigidbody _rb;
+        /// <summary>Walk pace while the grimoire is open (#325): reading takes both hands.</summary>
+        public const float ReadingPace = 0.6f;
 
-        public float walkSpeed;
+        /// <summary>True while this machine's player has the grimoire open. Only ever set on the local body.</summary>
+        public bool ReadingGrimoire { get; private set; }
+
+        [SerializeField] private Rigidbody _rb;
+        public Rigidbody Rb { get => _rb; set => _rb = value; }
+
+        [FormerlySerializedAs("walkSpeed")] [SerializeField] private float _walkSpeed;
+        public float WalkSpeed { get => _walkSpeed; set => _walkSpeed = value; }
         public float JumpForce;
         public float FallMultiplier = 2.5f;
 
@@ -62,7 +71,8 @@ namespace StateMachine
         public float AirControl = 0.7f;
 
         public float DodgeForce;
-        public float respawnSpeed;
+        [FormerlySerializedAs("respawnSpeed")] [SerializeField] private float _respawnSpeed;
+        public float RespawnSpeed { get => _respawnSpeed; set => _respawnSpeed = value; }
 
         public float MouseSensitivity = 100f;
         public Transform CameraTransform;
@@ -198,10 +208,11 @@ namespace StateMachine
             // isActiveAndEnabled, not enabled: a remote player's camera object is switched off by
             // PlayerNetworkOwnership before Start, and must not claim to be this machine's player.
             if (!LocalDecidedByNetwork && Local == null && view != null && view.isActiveAndEnabled)
-                Local = this;
+                SetLocal(this);
 
             Plunderspell.Core.GameServices.Initialize();
-            Plunderspell.Core.GameServices.GameState.StateChanged += OnGameStateChanged;
+            Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (Plunderspell.Core.GameStateChanged e) => OnGameStateChanged(e.Previous, e.Current));
+            Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (GrimoireOpened e) => ReadingGrimoire = e.Open && IsLocal);
             PublishHealth();
         }
 
@@ -228,26 +239,31 @@ namespace StateMachine
         /// <summary>The player this machine renders through (its camera is live). Null until one exists.</summary>
         public static PlayerStateMachine Local { get; private set; }
 
+        private static void SetLocal(PlayerStateMachine player)
+        {
+            if (Local == player)
+                return;
+            Local = player;
+            Code.Scripts.EventSystems.EventManager.Instance?.Publish(new LocalPlayerChanged(player));
+        }
+
         /// <summary>
         /// Asked when this machine's player dies: true when a teammate is still alive to watch.
         /// Installed by Plunderspell.Net; offline there is nobody to watch, so it is always false.
         /// </summary>
         public static System.Func<bool> SpectateOnDeath = () => false;
 
-        /// <summary>Raised when the local player dies. The raid treats it as a lost raid.</summary>
-        public static event System.Action LocalPlayerDied;
-
         public bool IsLocal => Local == this;
 
         /// <summary>Makes this body the one this machine plays as. Called by the network ownership
         /// component when this machine turns out to own it, which can happen after Start.</summary>
-        public void ClaimLocal() => Local = this;
+        public void ClaimLocal() => SetLocal(this);
 
         /// <summary>Undoes <see cref="ClaimLocal"/> when this machine turns out not to own the body.</summary>
         public void ReleaseLocal()
         {
             if (Local == this)
-                Local = null;
+                SetLocal(null);
         }
 
         /// <summary>
@@ -264,7 +280,7 @@ namespace StateMachine
             if (IsLocal)
             {
                 bool spectate = SpectateOnDeath();
-                LocalPlayerDied?.Invoke();
+                Code.Scripts.EventSystems.EventManager.Instance?.Publish(new Plunderspell.Core.LocalPlayerDied());
                 // In co-op with a teammate still standing, the network layer hands the view to them
                 // and ends the raid only when everyone is down; otherwise this is a lost raid now.
                 if (!spectate && Plunderspell.Core.GameServices.GameState != null)
@@ -282,17 +298,17 @@ namespace StateMachine
         /// <summary>Setting out again after dying: a fresh body, full health.</summary>
         private void OnGameStateChanged(Plunderspell.Core.GameState previous, Plunderspell.Core.GameState next)
         {
-            bool freshRaid = previous == Plunderspell.Core.GameState.Lair || previous == Plunderspell.Core.GameState.GameOver;
+            bool freshRaid = previous == Plunderspell.Core.GameState.LairRoom
+                             || previous == Plunderspell.Core.GameState.GameOver;
             if (next == Plunderspell.Core.GameState.Playing && freshRaid && dead)
                 ReviveTo(1f);
         }
 
         private void OnDestroy()
         {
-            if (Plunderspell.Core.GameServices.GameState != null)
-                Plunderspell.Core.GameServices.GameState.StateChanged -= OnGameStateChanged;
+            Code.Scripts.EventSystems.EventManager.Instance?.UnsubscribeFromAllEvents(this);
             if (Local == this)
-                Local = null;
+                SetLocal(null);
         }
 
         public void Walk()

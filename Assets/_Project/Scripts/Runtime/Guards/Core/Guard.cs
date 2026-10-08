@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using Interfaces;
 using PurrNet;
@@ -67,6 +68,9 @@ namespace Plunderspell.Guards
         public GuardLeads Leads { get; private set; }
         public GuardStateSet States { get; private set; }
 
+        /// <summary>The cry for help on a first sighting (#259).</summary>
+        public GuardCry Cry { get; private set; }
+
         /// <summary>Levo's lift and the fall after it (the guard has no physics body for the spell to push).</summary>
         public GuardLift Lift { get; private set; }
         private GuardShove _shove;
@@ -118,6 +122,8 @@ namespace Plunderspell.Guards
             Reach = new GuardReachability(this);
             _ = new GuardHelpResponse(this);
             Leads = new GuardLeads(Link, Hearing, () => Random);
+            Cry = new GuardCry(this);
+            Hearing.NoiseHeard += (origin, strength) => EventManager.Instance?.Publish(new NoiseReported(this, origin, strength));
             _shove = new GuardShove(transform, _tuning);
             Lift = new GuardLift(transform, Status);
             States = new GuardStateSet(this);
@@ -206,7 +212,8 @@ namespace Plunderspell.Guards
         /// <summary>A noise reached the guard. The server decides; a client's copy ignores it.</summary>
         public void OnNoiseHeard(NoiseEvent noise)
         {
-            if (IsAuthority)
+            // A guard does not hear its own cry; the broadcast reaches the crier too.
+            if (IsAuthority && !Cry.IsCrying)
                 Hearing.Hear(noise, Link.Alarm);
         }
 
@@ -243,7 +250,7 @@ namespace Plunderspell.Guards
         private void OnDied()
         {
             Status.ClearAll();
-            Link.Director?.Publish(new GuardDied(this, transform.position));
+            EventManager.Instance?.Publish(new GuardDied(this, transform.position));
             _machine.ChangeState(States.Dead);
         }
 

@@ -1,0 +1,240 @@
+#!/usr/bin/env bash
+# Checks the Lair room and the Market in local co-op (#314): the Editor hosts in Play mode, a Development build
+# joins. Each player must arrive at their own Lair spawn; the client goes through the Market door and back, and
+# the host must see its body move; after a raid both come home to their spawns and both see the same haul pile, grown by the two pieces extracted. It plays in the test slot (SaveSlots.TestSlot), wiped at the start, so every run begins from an empty pile and the owner's slots are untouched (test_slot.sh).
+# Actions live in eval/coop_lair.cs. Start-up copied from coop_door_check.sh.
+# Usage: bash Tools/Unity/coop_lair_check.sh <label> [--build|--no-build]
+# Needs the Editor open on this project, not in Play mode. Leaves it stopped. Prints PASS or FAIL lines.
+set -uo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/settings_restore.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test_slot.sh"
+repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$repo"
+label="${1:?usage: coop_lair_check.sh <label> [options]}"; shift
+build=auto
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --build) build=yes ;; --no-build) build=no ;;
+        *) echo "unknown option $1"; exit 1 ;;
+    esac
+    shift
+done
+out="docs/generated/coop-lair-$(date +%F)"; mkdir -p "$out"
+E=(timeout 90 bash Tools/Unity/coop_eval.sh)
+cli=(--no-banner --format json)
+client_pid=""
+log() { printf '%s %s\n' "$(date +%T)" "$*" | tee -a "$out/$label-run.log"; }
+field() { python -c "import json,sys; r=json.load(sys.stdin)['data']['result']; r=json.loads(r) if isinstance(r,str) else r; print(r.get(sys.argv[1]))" "$1"; }
+ev() { timeout 90 bash Tools/Unity/eval.sh "$@"; }
+cleanup() {
+    log "cleaning up"
+    if [ -n "$client_pid" ] && kill -0 "$client_pid" 2>/dev/null; then
+        "${E[@]}" client quit >/dev/null 2>&1 || true; sleep 2; kill "$client_pid" 2>/dev/null || true
+    fi
+    unity command editor_stop "${cli[@]}" >/dev/null 2>&1 || true
+    unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":false}' --confirm true "${cli[@]}" >/dev/null 2>&1 || true
+    settings_restore
+    test_slot_restore; log "$test_slot_msg"
+}
+trap cleanup EXIT
+
+playing="$(bash Tools/Unity/eval.sh 'return UnityEditor.EditorApplication.isPlaying + " " + UnityEditor.EditorApplication.isCompiling;')" || { log "FAIL Editor did not answer"; exit 1; }
+if [ "$playing" != "False False" ]; then log "FAIL Editor is playing or compiling ($playing)"; trap - EXIT; exit 1; fi
+settings_save || { log "FAIL cannot save ProjectSettings before building"; trap - EXIT; exit 1; }
+test_slot_use || { log "FAIL cannot switch to the test slot: $test_slot_msg"; exit 1; }; log "$test_slot_msg"
+s1_before="$(ev 'var h = Plunderspell.Lair.LairHubManager.Peek(1); return "slot1 debt " + h.TotalDebt + " gold " + h.AccumulatedGold + " purses " + Plunderspell.Lair.LairHubManager.PeekPurse(1, 0) + " " + Plunderspell.Lair.LairHubManager.PeekPurse(1, 1) + " " + Plunderspell.Lair.LairHubManager.PeekPurse(1, 2) + " " + Plunderspell.Lair.LairHubManager.PeekPurse(1, 3);')"; log "before: $s1_before"
+
+if [ "$build" = auto ]; then
+    build=no; [ -f Build/DevTest/.built ] || build=yes
+    if [ "$build" = no ] && [ -n "$(find Assets ProjectSettings -newer Build/DevTest/.built -type f ! -path '*/Tests/*' ! -path 'ProjectSettings/Packages/*' ! -name '*.meta' ! -name 'ProjectSettings.asset' -print -quit)" ]; then build=yes; fi
+    log "build: $build (auto)"
+fi
+if [ "$build" = yes ]; then
+    log "building Build/DevTest"
+    unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":true}' --confirm true "${cli[@]}" >/dev/null
+    unity command build --target StandaloneWindows64 --outputPath Build/DevTest/Plunderspell.exe --options '["Development"]' --confirm true "${cli[@]}" >/dev/null
+    status=""
+    for _ in $(seq 1 120); do sleep 5; status="$(unity command build_status "${cli[@]}" | field status)"; [ "$status" = "completed" ] && break; done
+    result="$(unity command build_status "${cli[@]}" | field result)"
+    unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":false}' --confirm true "${cli[@]}" >/dev/null
+    [ "$result" = "Succeeded" ] || { log "FAIL build: $status $result"; exit 1; }
+    touch Build/DevTest/.built; log "build $result"
+fi
+
+L() { COOP_EVAL_FILE="$repo/Tools/Unity/eval/coop_lair.cs" timeout 90 bash Tools/Unity/coop_eval.sh "$@" 2>&1; }
+wait_for() { # wait_for <side> <text> <seconds>: until that side's "where" line contains the text
+    for _ in $(seq 1 "$3"); do
+        state="$(L "$1" where)"
+        case "$state" in *"$2"*) log "$1: $state"; return 0 ;; esac
+        sleep 1
+    done
+    log "FAIL $1 never reached '$2'; last: ${state:0:300}"; exit 1
+}
+fails=0
+check() { if [ "$1" = ok ]; then log "PASS $2"; else log "FAIL $2"; fails=$((fails + 1)); fi; }
+near() { # near <side> <scene path> <metres> <what>: the side's local player stands within that distance of the object
+    local r d; r="$(L "$1" at "$2")"; log "$1: $r"
+    d="${r#distance }"; d="${d%% *}"
+    python -c "import sys; sys.exit(0 if float(sys.argv[1]) <= float(sys.argv[2]) else 1)" "$d" "$3" 2>/dev/null && check ok "$4" || check no "$4"
+}
+
+unity command editor_play "${cli[@]}" >/dev/null
+wait_for host "state MainMenu" 60
+"${E[@]}" host host_udp >/dev/null
+wait_for host "state LairRoom" 20
+./Build/DevTest/Plunderspell.exe -coop-join 127.0.0.1 -screen-fullscreen 0 -screen-width 960 -screen-height 540 \
+    -logFile "$(cygpath -w "$repo/$out/$label-client.log")" >/dev/null 2>&1 &
+client_pid=$!
+log "client started (pid $client_pid)"
+wait_for client "state LairRoom local" 60
+sleep 3
+cs_before="$(L client activeslot)"; log "client's own save before: $cs_before"
+
+# Arriving: each at their own spawn (the client is owner 2).
+near host /LairRoom/PlayerSpawns/Spawn1 0.6 "the host stands at Lair spawn 1"
+near client /LairRoom/PlayerSpawns/Spawn2 0.6 "the client stands at Lair spawn 2"
+
+# The Market door and back, client side; the host must see the body go and come back.
+log "client: $(L client travel /LairRoom/MarketDoor)"; sleep 2
+near client /MarketYard/PlayerSpawns/Spawn2 0.6 "the client's Market door leads to Market spawn 2"
+h="$(L host bodies)"; log "host: $h"
+case "$h" in *"1100."*|*"1101."*) check ok "the host sees the client in the Market" ;; *) check no "the host sees the client in the Market" ;; esac
+log "client: $(L client travel /MarketYard/LairExit)"; sleep 2
+near client /LairRoom/MarketDoorArrivals/Spawn2 0.6 "the client's way out leads back inside the Lair door"
+
+# The century dial (#358): the host chooses the Late Medieval; the client's dial, plaque and chosen Age follow, and the
+# plaque reads the same on both sides. Then back to the Bronze Age, so the raid below is the one it always was.
+log "host: $(L host turndial LateMedieval)"; sleep 3
+dh="$(L host dial)"; dc="$(L client dial)"; log "host: $dh"; log "client: $dc"
+r=no; [ "$dh" = "$dc" ] && case "$dc" in "dial LateMedieval ["*"Late Medieval"*"c. 1450"*) r=ok ;; esac
+check $r "the client's dial and plaque follow the host's choice of the Late Medieval"
+L client shot "$(cygpath -m "$repo/$out/$label-client-dial.png")" >/dev/null 2>&1 || true
+log "host: $(L host turndial BronzeAge)"; sleep 3
+dc="$(L client dial)"; log "client: $dc"
+case "$dc" in "dial BronzeAge ["*"Bronze Age"*) check ok "the client's dial follows the host back to the Bronze Age" ;; *) check no "the client's dial follows the host back to the Bronze Age" ;; esac
+
+# A raid: both set out, two pieces come home, both see the same pile, grown by exactly those two.
+# The pile is saved across runs, so what the host sees before setting out is the starting count.
+before="$(L host pile)"; log "host before: $before"
+b="${before#pile }"; b="${b%% *}"
+seed=777
+log "castle: $(ev "var d = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.RaidDirector>(); d.SetFixedSeed($seed); return \"seed $seed\";")"
+
+# The portal (#359): a client walking in only sees "The host sets out" at the arch (it fades in over half a second, out over the next),
+# and the raid does not start; the host walking in sets out, and the client follows.
+log "client: $(L client portalwalk)"
+L client shot "$(cygpath -m "$repo/$out/$label-client-portal-line.png")" >/dev/null 2>&1 || true
+sleep 2
+la="$(L client portalline)"; log "client: $la"
+a="${la##* }"; python -c "import sys; sys.exit(0 if float(sys.argv[1]) > 0.9 else 1)" "$a" 2>/dev/null && r=ok || r=no
+check $r "the client walking into the portal saw the line at the arch come to full opacity ($la)"
+check "$([ "${la% peak *}" = "portal line alpha 0.00" ] && echo ok || echo no)" "the line has faded out again ($la)"
+hs="$(L host where)"; cs="$(L client where)"; log "host: $hs"; log "client: $cs"
+r=no; case "$hs" in "state LairRoom"*) case "$cs" in "state LairRoom"*) r=ok ;; esac ;; esac
+check $r "the client at the portal did not start the raid (both still in the Lair room)"
+log "host: $(L host portalwalk)"
+wait_for host "state Playing" 30
+wait_for client "state Playing" 30
+sleep 3
+log "host: $(L host pad 2)"; sleep 2
+log "host: $(ev 'UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.RaidDirector>().CallExtraction(); return "extracting";')"
+wait_for host "state LairRoom" 30
+wait_for client "state LairRoom" 30
+sleep 3
+near client /LairRoom/PlayerSpawns/Spawn2 0.6 "the client comes home to Lair spawn 2"
+h="$(L host pile)"; c="$(L client pile)"; log "host: $h"; log "client: $c"
+n="${h#pile }"; n="${n%% *}"
+[ "$h" = "$c" ] && [ "$n" = "$((b + 2))" ] && r=ok || r=no; check $r "both see the same pile, grown by the two extracted pieces ($b -> $n)"
+L client shot "$(cygpath -m "$repo/$out/$label-client-pile.png")" >/dev/null 2>&1 || true
+
+# Selling (#314): the host sets a piece on the Goldsmith's counter (server side); the CLIENT answers Plus then Satis
+# through the counter's word path; both sides must show the same line, the host's gold and debt must move by the sold
+# coins, and the piece must be gone on both sides.
+log "client: $(L client travel /LairRoom/MarketDoor)"; sleep 2
+log "client: $(L client look)"
+log "host: $(L host put 4)"
+for _ in $(seq 1 15); do hl="$(L host line)"; case "$hl" in *coin*) break ;; esac; sleep 1; done
+sleep 1; hl="$(L host line)"; cl="$(L client line)"; log "host: $hl"; log "client: $cl"
+r=no; [ "$hl" = "$cl" ] && case "$hl" in *coin*) r=ok ;; esac
+check $r "both see the vendor's opening offer"
+m0="$(L host money)"; log "host before: $m0"
+log "client: $(L client speak Plus)"; sleep 2
+hl="$(L host line)"; cl="$(L client line)"; log "host: $hl"; log "client: $cl"
+r=no; [ "$hl" = "$cl" ] && case "$hl" in *"Very well"*|*"Too much"*|*"Enough"*) r=ok ;; esac
+check $r "the client's Plus is answered, and both see the same line"
+L client shot "$(cygpath -m "$repo/$out/$label-client-counter.png")" >/dev/null 2>&1 || true
+log "client: $(L client speak Satis)"; sleep 2
+hl="$(L host line)"; cl="$(L client line)"; log "host: $hl"; log "client: $cl"
+r=no; [ "$hl" = "$cl" ] && case "$hl" in *Done*) r=ok ;; esac
+check $r "the client's Satis sells it, and both see the same line"
+m1="$(L host money)"; log "host after: $m1"
+coins="${hl##*| }"; coins="${coins%% coin*}"
+r=no; [ "$m0" = "$m1" ] && r=ok
+check $r "the sale banked nothing yet: the host's gold and debt did not move"
+sleep 1
+hp="$(L host piece)"; cp="$(L client piece)"; log "host: $hp"; log "client: $cp"
+r=no; [ "$hp" = "pieces 0" ] && [ "$cp" = "pieces 0" ] && r=ok
+check $r "the piece is gone on both sides"
+
+# The pouch (#313): the sale left one on the counter, on both sides, holding the coins sold and not loot; the host moves it into
+# strongbox 2 (the client's seat, the client being owner 2); both then see it gone, purse 2 grew by the sale, purse 1 did not,
+# and the debt did not move (only the Collector pays it). Purses live on the server: only the host reads them.
+hpo="$(L host pouch)"; cpo="$(L client pouch)"; log "host: $hpo"; log "client: $cpo"
+r=no; [ "$hpo" = "$cpo" ] && case "$hpo" in "pouches 1 coins $coins "*"lootvalue False") r=ok ;; esac
+check $r "both see one pouch holding the $coins coins sold, and it is not loot"
+p0="$(L host purse 2)"; p0b="$(L host purse 1)"; log "host before: $p0 / strongbox 1: $p0b"
+log "host: $(L host pouchto 2)"; sleep 3
+hpo="$(L host pouch)"; cpo="$(L client pouch)"; log "host: $hpo"; log "client: $cpo"
+r=no; [ "$hpo" = "pouches 0" ] && [ "$cpo" = "pouches 0" ] && r=ok
+check $r "the pouch is gone on both sides after strongbox 2"
+p1="$(L host purse 2)"; p1b="$(L host purse 1)"; log "host after: $p1 / strongbox 1: $p1b"
+r=no; [ "${p1#purse }" = "$(( ${p0#purse } + coins ))" ] && [ "$p0b" = "$p1b" ] && r=ok
+check $r "purse 2 grew by the $coins coins sold and purse 1 did not"
+m2="$(L host money)"; log "host after the box: $m2"
+[ "$m0" = "$m2" ] && r=ok || r=no
+check $r "banking the pouch paid no debt: the host's gold and debt did not move ($m0)"
+
+# The Collector (#313): the host banks 100 into purse 1 (less than a share), purse 2 holds the sale's coins (more than a share);
+# the host sets out; each present wizard (two) owes ceil(debt/2); the Collector takes min(purse, share) from each, the debt falls by
+# the sum, then grows by the 50 of the new raid. The host's ledger is read before and after. Purses and the debt live on the server.
+log "host: $(L host bank 1:100)"
+led0="$(L host ledger)"; log "host before setting out: $led0"
+timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/set_out.cs >/dev/null
+wait_for host "state Playing" 30
+wait_for client "state Playing" 30
+led1="$(L host ledger)"; log "host after setting out: $led1"
+python -c "
+import math, re, sys
+a = re.match(r'debt (\S+) purses (\d+) (\d+) \d+ \d+ paid .* present 1 1 0 0', sys.argv[1]); b = re.match(r'debt (\S+) purses (\d+) (\d+) \d+ \d+ paid (\d+) (\d+) 0 0 present 1 1 0 0 line (.*)', sys.argv[2])
+if not a or not b: sys.exit(1)
+d0 = float(a.group(1)); p = [int(a.group(2)), int(a.group(3))]
+share = math.ceil(d0 / 2); take = [min(x, share) for x in p]
+left = d0 - sum(take); d1 = left + (50 if left > 0 else 0)
+ok = (float(b.group(1)) == d1 and [int(b.group(2)), int(b.group(3))] == [p[0] - take[0], p[1] - take[1]]
+      and [int(b.group(4)), int(b.group(5))] == take and 'The Collector takes' in b.group(6))
+print('expected debt', d1, 'purses', [p[0] - take[0], p[1] - take[1]], 'paid', take, 'share', share)
+sys.exit(0 if ok else 1)" "$led0" "$led1" 2>&1 | while read -r line; do log "$line"; done
+[ "${PIPESTATUS[0]}" = 0 ] && r=ok || r=no
+check $r "each present wizard paid min(purse, half the debt left), the debt fell by the sum (then +50), and the Collector said so"
+# The client's Lair (#314): it must show the host's ledger exactly (debt, purses, paid, seats, the Collector's line), shown
+# but never saved: the client's own save slot, read from its PlayerPrefs through its eval (activeslot), must not change.
+sleep 2
+cled="$(L client ledger)"; log "client ledger: $cled"; log "host ledger:   $led1"
+[ "$cled" = "$led1" ] && r=ok || r=no
+check $r "the client's Lair shows the host's ledger exactly, Collector's line included"
+# The ledger book on the table (#357) says the same on both sides, and says something (the debt page and the purses page).
+bh="$(L host book)"; bc="$(L client book)"; log "host book:   $bh"; log "client book: $bc"
+r=no; [ "$bh" = "$bc" ] && case "$bh" in *"Owed"*"Purses"*"Collector takes"*) r=ok ;; esac
+check $r "the client's ledger book reads exactly as the host's, Collector's line included"
+cs_after="$(L client activeslot)"; log "client's own save after: $cs_after"
+[ "$cs_before" = "$cs_after" ] && r=ok || r=no
+check $r "the client's own save slot is untouched ($cs_before)"
+s1_after="$(L host slot1)"; log "host: $s1_after"
+[ "$s1_before" = "$s1_after" ] && r=ok || r=no
+check $r "the owner's slot 1 is unchanged by the check ($s1_before)"
+
+# SocketError is a type name in LiteNetLib's stack frames, not an error.
+log "client log error lines: $(grep -i 'error\|exception' "$out/$label-client.log" | grep -vc 'SocketError')"
+[ "$fails" -eq 0 ] && log "PASS all Lair checks" || log "FAIL $fails Lair checks"
+exit $((fails > 0))

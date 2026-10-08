@@ -171,6 +171,18 @@
       "preview": "f4c7d6935debf0d4:23a9d68e53fd",
       "tris": 876
     },
+    "BronzeStairDown": {
+      "budget": 1000,
+      "content": "764df6f975c3e1b2",
+      "preview": "eb152e429bf2e2b7:459f95d244e7",
+      "tris": 752
+    },
+    "BronzeStairUp": {
+      "budget": 1000,
+      "content": "567eb9c06fe9fc18",
+      "preview": "c34d889c1220c7b7:459f95d244e7",
+      "tris": 836
+    },
     "BronzeSword": {
       "budget": 400,
       "content": "415b1b204fe7d963",
@@ -382,6 +394,78 @@
       "preview": "3005cd95684fe80c:23a9d68e53fd",
       "tris": 564
     },
+    "LairCandle": {
+      "budget": 340,
+      "content": "da39e17c5acc4706",
+      "preview": "da39e17c5acc4706:23a9d68e53fd",
+      "tris": 200
+    },
+    "LairCellar": {
+      "budget": 2800,
+      "content": "97443381ae7887ca",
+      "preview": "97443381ae7887ca:23a9d68e53fd",
+      "tris": 1670
+    },
+    "LairCenturyDialRing1": {
+      "budget": 750,
+      "content": "4a0645043b0565da",
+      "preview": "4a0645043b0565da:23a9d68e53fd",
+      "tris": 448
+    },
+    "LairCenturyDialRing2": {
+      "budget": 750,
+      "content": "3636c3c247acb468",
+      "preview": "3636c3c247acb468:23a9d68e53fd",
+      "tris": 448
+    },
+    "LairCenturyDialRing3": {
+      "budget": 750,
+      "content": "61447f6fa00d6dd7",
+      "preview": "61447f6fa00d6dd7:23a9d68e53fd",
+      "tris": 448
+    },
+    "LairCenturyDialRing4": {
+      "budget": 750,
+      "content": "7bf2e46bee3e7ba4",
+      "preview": "7bf2e46bee3e7ba4:23a9d68e53fd",
+      "tris": 448
+    },
+    "LairCenturyDialStand": {
+      "budget": 380,
+      "content": "39bb3f9da55cd406",
+      "preview": "39bb3f9da55cd406:23a9d68e53fd",
+      "tris": 216
+    },
+    "LairLedger": {
+      "budget": 900,
+      "content": "be66b6c898a13bce",
+      "preview": "be66b6c898a13bce:23a9d68e53fd",
+      "tris": 564
+    },
+    "LairLedgerTable": {
+      "budget": 300,
+      "content": "8a78f885d4bed80f",
+      "preview": "8a78f885d4bed80f:23a9d68e53fd",
+      "tris": 168
+    },
+    "LairPortalArch": {
+      "budget": 500,
+      "content": "be4f2b5c246aa7be",
+      "preview": "be4f2b5c246aa7be:23a9d68e53fd",
+      "tris": 288
+    },
+    "LairStrongbox": {
+      "budget": 320,
+      "content": "649dbd6d0bcd707e",
+      "preview": "649dbd6d0bcd707e:23a9d68e53fd",
+      "tris": 180
+    },
+    "LairWeaponRack": {
+      "budget": 330,
+      "content": "f77250dcb59b1fb1",
+      "preview": "f77250dcb59b1fb1:23a9d68e53fd",
+      "tris": 188
+    },
     "LateArmouryHall": {
       "budget": 3200,
       "content": "9550bfdeeb3e5586",
@@ -504,6 +588,18 @@
       "preview": "4f4e4f7aaa7a2e71:23a9d68e53fd",
       "tris": 1664
     },
+    "LateStairDown": {
+      "budget": 1000,
+      "content": "69736b00a1de5c47",
+      "preview": "a76627cbba86f16a:459f95d244e7",
+      "tris": 752
+    },
+    "LateStairUp": {
+      "budget": 1000,
+      "content": "bf78ee526c102851",
+      "preview": "f742ee1daf93694f:459f95d244e7",
+      "tris": 836
+    },
     "LateStateBedchamber": {
       "budget": 2000,
       "content": "5683dae7091d1d81",
@@ -564,11 +660,113 @@
       "preview": "9d7f8b37efc23520:23a9d68e53fd",
       "tris": 472
     },
+    "MarketAntiquarianCabinet": {
+      "budget": 1400,
+      "content": "8a6f47e4e4432562",
+      "preview": "8a6f47e4e4432562:23a9d68e53fd",
+      "tris": 838
+    },
+    "MarketAnvil": {
+      "budget": 180,
+      "content": "c626f9e91e8d7353",
+      "preview": "c626f9e91e8d7353:23a9d68e53fd",
+      "tris": 112
+    },
+    "MarketCoin": {
+      "budget": 100,
+      "content": "1a1a266cf06c86bf",
+      "preview": "1a1a266cf06c86bf:23a9d68e53fd",
+      "tris": 64
+    },
+    "MarketCoinStack": {
+      "budget": 450,
+      "content": "cb0a7ad2e244deaf",
+      "preview": "cb0a7ad2e244deaf:23a9d68e53fd",
+      "tris": 288
+    },
+    "MarketCounter": {
+      "budget": 260,
+      "content": "64f1eaad59275f5c",
+      "preview": "64f1eaad59275f5c:23a9d68e53fd",
+      "tris": 168
+    },
+    "MarketFenceCart": {
+      "budget": 1000,
+      "content": "136a78353fdcfaec",
+      "preview": "136a78353fdcfaec:23a9d68e53fd",
+      "tris": 676
+    },
+    "MarketGoldsmithStall": {
+      "budget": 1000,
+      "content": "7eb2470ae2ad4c0d",
+      "preview": "7eb2470ae2ad4c0d:23a9d68e53fd",
+      "tris": 600
+    },
+    "MarketLantern": {
+      "budget": 300,
+      "content": "a3246a1e1fe1dcd5",
+      "preview": "a3246a1e1fe1dcd5:23a9d68e53fd",
+      "tris": 200
+    },
+    "MarketPardonerBooth": {
+      "budget": 1000,
+      "content": "3f4c590ef702d5ac",
+      "preview": "3f4c590ef702d5ac:23a9d68e53fd",
+      "tris": 484
+    },
+    "MarketPouch": {
+      "budget": 300,
+      "content": "e44d2ecc2f7e3678",
+      "preview": "e44d2ecc2f7e3678:23a9d68e53fd",
+      "tris": 212
+    },
+    "MarketScalesBase": {
+      "budget": 300,
+      "content": "f5e3ae4fbd5c23a2",
+      "preview": "f5e3ae4fbd5c23a2:23a9d68e53fd",
+      "tris": 164
+    },
+    "MarketScalesBeam": {
+      "budget": 200,
+      "content": "0bd8c42014b00a21",
+      "preview": "0bd8c42014b00a21:23a9d68e53fd",
+      "tris": 100
+    },
+    "MarketScalesPan": {
+      "budget": 300,
+      "content": "32744f06425eb722",
+      "preview": "32744f06425eb722:23a9d68e53fd",
+      "tris": 204
+    },
+    "MarketSlateBoard": {
+      "budget": 300,
+      "content": "f52cb4d846f1bcdb",
+      "preview": "f52cb4d846f1bcdb:23a9d68e53fd",
+      "tris": 204
+    },
+    "MarketYard": {
+      "budget": 4200,
+      "content": "56f8a758b039293d",
+      "preview": "56f8a758b039293d:23a9d68e53fd",
+      "tris": 2756
+    },
     "Matchlock": {
       "budget": 650,
       "content": "31c3023179b83c4d",
       "preview": "31c3023179b83c4d:23a9d68e53fd",
       "tris": 188
+    },
+    "MedievalStairDown": {
+      "budget": 1000,
+      "content": "20ae20eb311f32d6",
+      "preview": "e60634f31486b209:459f95d244e7",
+      "tris": 752
+    },
+    "MedievalStairUp": {
+      "budget": 1000,
+      "content": "0dd994841db4d1ae",
+      "preview": "0c6b2599e5d5ac02:459f95d244e7",
+      "tris": 836
     },
     "PaviseShield": {
       "budget": 500,

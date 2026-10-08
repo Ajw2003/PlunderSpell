@@ -1,4 +1,4 @@
-using System;
+using Code.Scripts.EventSystems;
 using UnityEngine;
 
 namespace Plunderspell.Core
@@ -12,8 +12,6 @@ namespace Plunderspell.Core
         public int Mana { get; private set; }
         public int Gold { get; private set; }
 
-        public event Action StatsChanged;
-
         public PlayerStats(int maxHealth = 100, int maxMana = 50)
         {
             MaxHealth = maxHealth;
@@ -25,7 +23,7 @@ namespace Plunderspell.Core
         public void ApplyDamage(int amount)
         {
             Health = Mathf.Clamp(Health - amount, 0, MaxHealth);
-            StatsChanged?.Invoke();
+            EventManager.Instance?.Publish(new PlayerStatsChanged());
         }
 
         /// <summary>Mirrors the player body's real health, which owns the number. The HUD reads this.</summary>
@@ -38,13 +36,13 @@ namespace Plunderspell.Core
             }
 
             Health = clamped;
-            StatsChanged?.Invoke();
+            EventManager.Instance?.Publish(new PlayerStatsChanged());
         }
 
         public void Heal(int amount)
         {
             Health = Mathf.Clamp(Health + amount, 0, MaxHealth);
-            StatsChanged?.Invoke();
+            EventManager.Instance?.Publish(new PlayerStatsChanged());
         }
 
         public bool SpendMana(int amount)
@@ -55,14 +53,14 @@ namespace Plunderspell.Core
             }
 
             Mana -= amount;
-            StatsChanged?.Invoke();
+            EventManager.Instance?.Publish(new PlayerStatsChanged());
             return true;
         }
 
         public void RestoreMana(int amount)
         {
             Mana = Mathf.Clamp(Mana + amount, 0, MaxMana);
-            StatsChanged?.Invoke();
+            EventManager.Instance?.Publish(new PlayerStatsChanged());
         }
 
         /// <summary>Fills mana to the maximum, as a fresh body arriving in a raid does.</summary>
@@ -71,7 +69,7 @@ namespace Plunderspell.Core
         public void AddGold(int amount)
         {
             Gold += amount;
-            StatsChanged?.Invoke();
+            EventManager.Instance?.Publish(new PlayerStatsChanged());
         }
     }
 }

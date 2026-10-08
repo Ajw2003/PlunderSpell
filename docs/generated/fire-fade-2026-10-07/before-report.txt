@@ -1,0 +1,6 @@
+frames 5004, fires 146, 30.0 s; rule: change per frame <= full x dt / 1 s + 0.03 x full
+light intensity: 12 frames over the rule on 11 fires; worst Fire_Sconce(Clone) at t 28.29 jumped 0.69 of full 6.16 in one frame (11% of full, 1.6x the allowance)
+shadow strength: 7 frames over the rule on 7 fires; worst Fire_Brazier(Clone) at t 4.96 jumped 0.10 of full 1.00 in one frame (10% of full, 1.2x the allowance)
+halo strength: 1182 frames over the rule on 98 fires; worst Fire_Brazier(Clone) at t 24.24 jumped 9.13 of full 9.13 in one frame (100% of full, 28.8x the allowance)
+FAIL 1201 frame-jumps over the rule
+

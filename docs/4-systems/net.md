@@ -117,7 +117,7 @@ networked items can have a remote beam; weapons and loot both qualify. How the b
 
 A ranged weapon's shot is a local projectile on the machine that fired it, where its hit is judged.
 `ShotRelay` shows the same shot on every other machine as a copy with no damage
-(`RangedWeapon.Fired`, `RangedWeapon.SpawnCosmeticShot`).
+(`RangedWeaponFired`, `RangedWeapon.SpawnCosmeticShot`).
 
 ### Guard attacks reach every peer
 
@@ -172,8 +172,9 @@ next raid, from the Lair or from that screen, and a client follows the host from
 
 ### The host's campaign on a friend's Lair
 
-`RaidDirector` replicates the host's debt, bank and last haul; a client shows them with
-`LairHubManager.ShowHostCampaign`, which does not save, and reloads its own campaign when it leaves
+`RaidDirector` replicates the host's debt, bank and last haul, and (#314) one string of purses, paid-last,
+seats present and the Collector's line; a client shows them with
+`LairHubManager.ShowHostCampaign` and `ShowHostLedger`, which do not save, and reloads its own campaign when it leaves
 the session. A friend's own save is never touched by joining.
 
 ## Traps
@@ -252,7 +253,10 @@ above other windows, so the recording shows the games. Every run uses the same c
 3508293, LateMedieval, a spawn with room to work) and clears the guards, which otherwise reach the
 players and end the raid a few minutes in: with a random seed the spawn sometimes lands on the extraction pad, which
 ends the raid within seconds, and the pieces available to stage change. Staging avoids the
-portal, which holds pieces up and freezes them, and skips light pieces over 1 m across. The build is redone only when something under
+portal, which holds pieces up and freezes them, and skips light pieces over 1 m across. Once per
+session the host first moves to the most open walkable spot within 25 m (`coop_eval.sh host
+relocate`), judged from both players' spots at head height, with a floor step or drop counting as a
+wall. The build is redone only when something under
 `Assets/` or `ProjectSettings/` is newer than `Build/DevTest/.built`; `--build` and `--no-build`
 override that. `--shots` screenshots every scenario, `--no-video` skips recording. Every run first checks the client built the castle exactly once
 (`castle_built_once`). `--raid-end` runs no carry scenarios: it ends the raid from the host and

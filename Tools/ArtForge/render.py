@@ -33,7 +33,7 @@ import art_forge  # noqa: E402  (puts Tools/EnemyForge on sys.path)
 import bpy  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
-from art_forge import AGES, KINDS, REPO_ROOT, blueprints, spec  # noqa: E402
+from art_forge import AGES, KINDS, PLAYER_AGES, REPO_ROOT, default_ages, blueprints, spec  # noqa: E402
 
 try:
     from PIL import Image, ImageDraw, ImageFont
@@ -67,7 +67,7 @@ REFERENCE_HEIGHT = 1.80
 
 
 def views_for(kind: str) -> list[tuple[str, float, float]]:
-    return ENEMY_VIEWS if kind == "enemies" else VIEWS
+    return ENEMY_VIEWS if kind in ("enemies", "players") else VIEWS
 
 FONT_PATHS = ["/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
               "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"]
@@ -336,7 +336,7 @@ def render_views(blend_path: str, out_dir: str, resolution: int, samples: int,
         _world()
         _studio((lo + hi) / 2.0, (hi - lo).length)
         _ground((hi - lo).length)
-        if kind == "enemies" and label == "FRONT":
+        if kind in ("enemies", "players") and label == "FRONT":
             rlo, rhi = _reference_human(lo.x)
             lo = Vector([min(a, b) for a, b in zip(lo, rlo)])
             hi = Vector([max(a, b) for a, b in zip(hi, rhi)])
@@ -443,13 +443,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("kind", choices=KINDS)
-    parser.add_argument("--age", choices=AGES, action="append")
+    parser.add_argument("--age", choices=AGES + PLAYER_AGES, action="append")
     parser.add_argument("--only", nargs="*", default=None)
     parser.add_argument("--samples", type=int, default=32)
     parser.add_argument("--resolution", type=int, default=700, help="pixels per view")
     args = parser.parse_args()
 
-    ages = args.age or list(AGES)
+    ages = args.age or list(default_ages(args.kind))
     chosen = blueprints.available(args.kind, ages)
     if args.only:
         missing = sorted(set(args.only) - {s for _a, s in chosen})
