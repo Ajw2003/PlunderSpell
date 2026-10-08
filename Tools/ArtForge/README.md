@@ -562,6 +562,27 @@ Every bone is keyed on every frame at 30 fps with linear interpolation. `Hips` c
 location (bob, sway, the fall); nothing else translates except a detached prop. `Root` never
 moves: **every clip is in place** and the NavMeshAgent moves the guard.
 
+### Player clips (issue #361)
+
+The player wizard's 11 clips are built separately so `anim.py` and the enemy FBX files are
+untouched: motion in `anim_forge/library_player.py` (+ `poses_player.py`), spec rows in
+`anim_spec.json` with layer and status `player` (the `a1` check skips them; `anim_spec_check.py`
+knows the layer, status and the `SpellRelease` event).
+
+```bash
+python3.11 Tools/ArtForge/anim_player.py build     # Animations/Humanoid_Player.fbx + player_anim_manifest.json
+python3.11 Tools/ArtForge/anim_player.py review [--only ID ...] [--no-mp4] [--blend PATH]
+```
+
+Clips: `player_idle`, `player_walk` (2.0 m/s), `player_jog` (5.0 m/s), `crouch_idle`,
+`crouch_walk` (2.0 m/s, hips 0.30 m low), `jump_takeoff`, `jump_air` (FK legs), `jump_land`,
+`cast_hold` (upper body; right hand bare), `cast_release` (`SpellRelease` at 0.2 s),
+`death_collapse` (falls prone, still from 1.3 s, no bone below the floor). All in place, on the
+reference skeleton (no `Hat` bone is keyed). Review sheets go to `docs/art/anim/player/` on
+`Players/Lair/Wizard/Wizard.blend` (the Lantern Warden, in `warden_check/`, if it is missing).
+Gait additions (defaults leave enemy clips unchanged): `GaitParams.crouch`, `.hip_pitch`;
+`Frame.leg_hint` (prone knees up); `forge.rigs(blend)`.
+
 ### Layout
 
 ```
