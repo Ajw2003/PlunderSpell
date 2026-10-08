@@ -26,7 +26,7 @@ past — those belong to `Guards`/`Castle` respectively.
   so scenes keep their component). The director (`Assets/_Project/Scripts/Runtime/Alarm/EnemyDirector.cs:18`)
   is a thin NetworkBehaviour (248 lines; it was 472 before #211) that owns and ticks one class per job, all in
   `Runtime/Alarm/`: `EnemyRegistry.cs:11` (guard and intruder lists, replacing the static
-  `CastleGuard.Active`/`Intruders`; `RegisterGuard` :104 forwards to it), `EnemyDirectorBus.cs:11` (the director's ears on
+  `CastleGuard.Active`/`Intruders`; `RegisterGuard` :104 forwards to it), `EnemyDirectorListener.cs:11` (the director's ears on
   `EventManager`: `Listen` subscribes the scoring each guard report owes, :22-34), `DirectorAlarm.cs:20` (level, state, latch,
   decay, grace, chasers), `HueAndCry.cs:9`, and the tuning copy `AlarmTuning.cs:7`. Every event between guards, the
   director and the navigation service is an `IEvent` struct on the shared `EventManager` (#299): guards publish
@@ -149,7 +149,7 @@ The director owns a server-side navigation service (#222, plan `docs/plans/bespo
 server-only `Update`. The fresh guard (#206, below) is the only thing that moves through it; every guard
 prefab carries the fresh guard since #214.
 
-- **Events** on the existing bus (`GuardNavigationEvents.cs`, readonly structs): `MoveRequest(guard,
+- **Events** on `EventManager` (`GuardNavigationEvents.cs`, readonly structs): `MoveRequest(guard,
   destination, speed, reason)` published in; `PathReady`, `Arrived`, `Blocked(reason)` published out, all on `EventManager`. Blocked reasons: no
   map, no walkable cell, unreachable, door closed, obstacle (the sweep held the guard up for 0.5 s).
 - **Why an interface.** Castle references Alarm, so Alarm cannot name `CastleNavGraph`. The service plans
@@ -336,7 +336,7 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
 - **Combat and attack turns (#210).** `States/CombatState.cs:20`, entered from Chase. The guard asks the director
   for a turn by event: `AttackTurnRequested` is published (`GuardAttackTurn.Request`, `Core/GuardAttackTurn.cs:52`),
   `AttackTurnMediator.Handle` (`Alarm/AttackTurnMediator.cs:53`) answers `AttackTurnGranted` or `AttackTurnDenied`
-  (the bus hears the request, `EnemyDirectorBus.cs:36-43`; `director.AttackTurns` is the mediator, `EnemyDirector.cs:85`). **Limit: 1 melee and 1 ranged turn
+  (the director's listener hears the request, `EnemyDirectorListener.cs:36-43`; `director.AttackTurns` is the mediator, `EnemyDirector.cs:85`). **Limit: 1 melee and 1 ranged turn
   per player** (`AttackTurnTuning.cs:14`). That is the number in issue #210; the legacy guard had no tokens, no
   windup and no turns, every guard in reach struck on its own 1.4 s cooldown (`CastleGuard.cs.txt:1157-1180`).
   A turn ends when the guard releases it (`CombatState.cs:156`, after a 0.5 s `AttackRecoverySeconds` that spreads

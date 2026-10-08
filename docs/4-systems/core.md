@@ -6,6 +6,32 @@ machine contract. Ported from `RogueLikeSlop@ThirdPerson`.
 `Plunderspell.Foundation` references nothing. Every other assembly references it, so anything added here is
 paid for everywhere — keep it small.
 
+## The event rule
+
+One event bus carries everything one system tells another, and it is `EventManager`. Nothing else in the code is a
+bus: `EnemyDirectorListener` is the director's subscriber and `LoopPool` is a pool of audio sources (both were
+called "Bus" until #304, which read as duplicate logic and was not). `TestEventBus` only makes an `EventManager`
+for Edit Mode tests. The rules, decided 2026-10-06 (`docs/6-decisions/Decisions.md`):
+
+- **What goes on the bus:** an event one system raises for another. A component talking to its own object (a guard's
+  navigator, senses and states, a door's own open state, one player's state machine) stays a direct call.
+- **Events are structs** (`readonly struct ... : IEvent`) with the new value in them, so publishing allocates nothing
+  and no listener has to look the value up. They are published by the system that owns the value, only when it
+  changes. Continuous values (mic loudness, chant progress, the raid clock, the alarm level) publish on every change;
+  input publishes on both performed and cancelled.
+- **Publish with `EventManager.Instance?.Publish(...)`.** The instance is made before the first scene loads and lives
+  to quit; with none (an Edit Mode test that did not make one) nothing is delivered.
+- **Always unsubscribe.** A listener subscribes in `OnEnable` (or when its screen opens) and calls
+  `UnsubscribeFromAllEvents(this)` when it closes, changes state, is disabled or quits. Tests prove it with
+  `SubscriptionCount(listener) == 0`.
+- **Model, presenter, view.** A model is a plain data snapshot (`RaidHudModel`). A presenter subscribes to the events
+  it needs, updates the model when one fires, and is the only thing that knows which systems feed the view. A view
+  draws the model it was given and reads no other system. IMGUI's `OnGUI` still runs each frame (drawing is not
+  communication); it reads a cached model. The raid HUD is the worked example (`raid.md`).
+- **Not every per-frame thing is an event.** Simulation that is per-frame by nature (movement, physics, guard ticks,
+  camera follow, a cross-fade) stays an `Update`. A thing that has to react to a camera appearing, which Unity gives no
+  event for, is checked on the events that can cause it (`BackdropCamera`, with its limit below).
+
 ## How it works
 
 - **`SingletonBase<T>`** — one scene-owned instance per type, claimed in `Awake`. A second instance
@@ -50,6 +76,13 @@ paid for everywhere — keep it small.
   door focus and `CastingInputTests` the chant. No test yet: mic level (needs a real microphone), the carried item
   (`ItemManager` starts a drag only from a camera ray and an input callback) and the attack/jump/walk input events
   (need the Input System's actions driven).
+- **Per-frame reads removed (#304).** `DamageFeedbackView`, `CameraShakeDirector` and `MusicDirector` no longer read other
+  systems each frame; they follow the events above. `BackdropCamera` no longer counts cameras every frame: it looks when
+  `GameStateChanged` or a scene load says cameras may have changed, and once more the next frame. **Limit:** a camera
+  that comes or goes with none of those happening (a player body despawning mid-raid, say) is not noticed until the next
+  such event; the backdrop renders under every other camera, so the cost of a stale "on" is only wasted draw, but a stale
+  "off" with no camera left shows an empty frame until then. If that is ever seen, `LocalPlayerChanged` is the event to
+  add (it lives in the Player assembly, which the UI assembly cannot reference today).
 - **`BaseStateMachine` / `IState` / `PlayerState`** — `Enter`/`Update`/`Exit`/`FixedUpdate`. States
   are plain C# objects constructed once in `Awake`, not MonoBehaviours, which keeps their logic
   testable without a scene.

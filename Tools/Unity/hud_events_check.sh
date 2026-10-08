@@ -34,6 +34,9 @@ rt() {
         | python -c "import json,sys; t=sys.stdin.read(); e,_=json.JSONDecoder().raw_decode(t[t.find('{'):]); r=(e.get('data') or {}).get('result'); r=json.loads(r) if isinstance(r,str) and r.startswith('{') else r; print(r.get('result') if isinstance(r,dict) else r or e.get('errors'))"
 }
 model='var t = System.Type.GetType("Plunderspell.UI.RaidHudPresenter, Plunderspell.RaidHud"); var p = UnityEngine.Object.FindFirstObjectByType(t); if (p == null) return "no presenter"; var m = t.GetProperty("Model").GetValue(p); var mt = m.GetType(); System.Func<string, string> F = n => mt.GetField(n).GetValue(m).ToString(); return "phase=" + F("Phase") + " time=" + F("TimeRemaining") + " alarm=" + F("Alarm") + " level=" + F("AlarmLevel") + " debt=" + F("Debt") + " state=" + F("State");'
+# What the music is doing, and what a hit on this machine's own player does to the shake and the damage feedback (#304).
+music='var t = System.Type.GetType("Plunderspell.Audio.AudioDirector, Plunderspell.Audio"); var d = t.GetProperty("Instance").GetValue(null); if (d == null) return "no audio director"; var m = t.GetProperty("Music").GetValue(d); if (m == null) return "no music"; var mt = m.GetType(); return "bed=" + mt.GetProperty("CurrentBed").GetValue(m) + " stems=" + mt.GetProperty("StemsPlaying").GetValue(m);'
+hit='var pt = System.Type.GetType("StateMachine.PlayerStateMachine, Plunderspell.Player"); var p = (UnityEngine.Component)pt.GetProperty("Local").GetValue(null); if (p == null) return "no local player"; var st = System.Type.GetType("Plunderspell.UI.CameraShakeDirector, Plunderspell.RaidHud"); var sh = st.GetProperty("Instance").GetValue(null); var ft = System.Type.GetType("Plunderspell.UI.DamageFeedbackView, Plunderspell.RaidHud"); var fv = ft.GetProperty("Instance").GetValue(null); var before = "trauma " + st.GetProperty("Trauma").GetValue(sh) + " numbers " + ft.GetProperty("LiveNumberCount").GetValue(fv); var ih = p.GetComponentInChildren(System.Type.GetType("Interfaces.IHealth, Plunderspell.Foundation")); if (ih == null) return "no health"; var dt = System.Type.GetType("Interfaces.Damage, Plunderspell.Foundation"); var kind = System.Enum.Parse(System.Type.GetType("Interfaces.DamageKind, Plunderspell.Foundation"), "Melee"); var lost = dt.GetMethod("Apply").Invoke(null, new object[] { ih, 10f, null, null, p.transform.position, kind, -1f }); return "before: " + before + "; lost " + lost + "; after: trauma " + st.GetProperty("Trauma").GetValue(sh) + " numbers " + ft.GetProperty("LiveNumberCount").GetValue(fv) + " vignette " + ft.GetProperty("Vignette").GetValue(fv);'
 cleanup() {
     log "cleaning up"
     if [ -n "$client_pid" ] && kill -0 "$client_pid" 2>/dev/null; then
@@ -100,5 +103,17 @@ log "alarm raised: $(ev 'var d = Plunderspell.Alarm.EnemyDirector.Current; if (d
 sleep 2
 log "host   after alarm: $(rt host "$model")"
 log "client after alarm: $(rt client "$model")"
+log "host   music: $(rt host "$music")"
+log "client music: $(rt client "$music")"
+log "host   hit: $(rt host "$hit")"
+log "client hit: $(rt client "$hit")"
+# The held-key panels (#324, #325): raise each by its event, as the key would, and look at the host's screen.
+panel() { # panel <name> <C# that raises it> <C# that puts it away>
+    log "panel $1: $(ev "$2" 2>&1 | tail -1)"; sleep 1
+    log "panel $1 screenshot: $(timeout 90 bash Tools/Unity/capture.sh "$out/$label-$1.png" screen 2>&1 | tail -1)"
+    ev "$3" >/dev/null 2>&1 || true
+}
+panel watch 'Code.Scripts.EventSystems.EventManager.Instance.Publish(new Plunderspell.UI.WatchRaised(true)); return "watch up";' 'Code.Scripts.EventSystems.EventManager.Instance.Publish(new Plunderspell.UI.WatchRaised(false)); return "down";'
+panel grimoire 'Code.Scripts.EventSystems.EventManager.Instance.Publish(new GrimoireOpened(true)); return "book open";' 'Code.Scripts.EventSystems.EventManager.Instance.Publish(new GrimoireOpened(false)); return "closed";'
 log "screenshot: $(timeout 90 bash Tools/Unity/capture.sh "$out/$label-host.png" screen 2>&1 | tail -1)"
 echo "client log error lines: $(grep -ci 'error\|exception' "$out/$label-client.log")" | tee -a "$out/$label-run.log"

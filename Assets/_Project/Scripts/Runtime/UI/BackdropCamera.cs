@@ -1,4 +1,7 @@
+using System.Collections;
+using Code.Scripts.EventSystems;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Plunderspell.UI
 {
@@ -30,7 +33,39 @@ namespace Plunderspell.UI
             UpdateEnabled();
         }
 
-        private void LateUpdate() => UpdateEnabled();
+        // A camera comes or goes when a scene loads or unloads or the game changes mode (a raid starts, a player dies), so those are the moments to look (and once more a frame later, when Unity has enabled
+        // the new camera), instead of counting cameras every frame (#304).
+        private void OnEnable()
+        {
+            EventManager.Instance?.Subscribe(this, (Plunderspell.Core.GameStateChanged e) => RecheckSoon());
+            SceneManager.sceneLoaded += OnSceneChanged;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+        }
+
+        private void OnDisable()
+        {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            SceneManager.sceneLoaded -= OnSceneChanged;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        }
+
+        private void OnSceneChanged(Scene scene, LoadSceneMode mode) => RecheckSoon();
+
+        private void OnSceneUnloaded(Scene scene) => RecheckSoon();
+
+        /// <summary>Decides now whether this camera should render, and again next frame.</summary>
+        public void RecheckSoon()
+        {
+            UpdateEnabled();
+            if (isActiveAndEnabled)
+                StartCoroutine(RecheckNextFrame());
+        }
+
+        private IEnumerator RecheckNextFrame()
+        {
+            yield return null;
+            UpdateEnabled();
+        }
 
         private void UpdateEnabled()
         {

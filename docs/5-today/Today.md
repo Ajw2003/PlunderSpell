@@ -1,5 +1,27 @@
 # Today
 
+**2026-10-07 - the raid screen is down to what the world cannot yet say (#315, steps #324-#326).** Hold `T` for the pocket
+watch (a ring of portal-light that empties as the raid runs down) and `Tab` for the grimoire (the spells, the keys, the last
+casts; it opens by itself once for a first raid, slows you to 60% and stops you lifting). The always-on clock, alarm bar,
+phase text, debt, banked gold, haul number, carried-item name, spell list and last-cast line are off the raid screen; the
+castle's fires carry the alarm. Still on screen until their world cues exist: the interaction prompt, the ranged weapon line,
+the chant bar and the heard-phrase caption (#318-#323). Tests: 10 new (watch, grimoire) pass; the full headless PlayMode run
+shows the same environment failures as plain staging. Not seen in the game yet (see the issues); on `claude/hud-strip-326`.
+
+---
+
+**2026-10-06 (night) - the event bus move is done on staging (#297, steps #298-#304; #305 is these docs).** Every
+event between systems is on `EventManager`; the raid HUD, damage feedback, camera shake, music and backdrop camera follow
+events instead of polling; the mic meter is in Settings. Naming fixed so nothing but `EventManager` is called a bus
+(`EnemyDirectorListener`, `LoopPool`). On `claude/staging-2026-10-07`, not `main`. Unity: PlayMode 430/430, EditMode 225
+pass / 3 known failures, and a co-op raid on which both HUD models followed the clock and alarm, the stems played on both
+machines, and a hit raised the shake, a floating number and the red edge on both. The mic meter source is verified
+against the real headset (`MicMeterTests`). Not verified: the bar with someone speaking at the whisper and shout marks. The issues (#297-#305) are open for the owner to
+close. Next, in the owner's order: the diegetic raid UI, the Lair room, the Market (`docs/plans/diegetic-ui-lair-market.md`,
+`docs/plans/lair-market-in-engine.md` steps 2-8), each needing a parent issue and one child per step first.
+
+---
+
 **2026-10-06 (night) - staging pushes again, leftover branches merged, Unity compiles it.** A local merge had
 committed the 470 MB `Assets/StreamingAssets/LLM/` model, which GitHub refused; it is out of history and in
 `.gitignore` (still on disk). Merged into `claude/staging-2026-10-07`: `claude/playability-fixes` (#260 railings,

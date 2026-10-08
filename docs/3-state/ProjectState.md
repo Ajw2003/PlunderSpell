@@ -42,7 +42,7 @@ lacks; the rest are older and either merged in another form or abandoned.
 
   #211 is in (2026-10-02): the fresh guard has Stunned and Slept states (Levo holds a guard Stunned
   until it lands and pauses its mover; a loud noise wakes a sleeper early), walking guards now face
-  where they go, and `EnemyDirector` is split into registry, bus, alarm and hue-and-cry classes
+  where they go, and `EnemyDirector` is split into registry, listener (called a bus until #304), alarm and hue-and-cry classes
   (472 to 248 lines). Details and file:line in `docs/4-systems/alarm.md`.
 
   #212 is in (2026-10-02): the fresh guard has an OnFire state. A burning guard panic-runs to random
@@ -310,6 +310,23 @@ bale) along every generated castle's curtain wall, matching the chosen look at
 anchors, no quality levels, no shader — and is meant to be replaced once
 `docs/plans/night-atmosphere.md` steps 1-2 are actually built. Captures:
 `docs/generated/night-look-preview-2026-09-25/`.
+
+## The event bus (#297, 2026-10-06)
+
+Every event one system sends another now goes through `EventManager` (the owner's decision of 2026-10-06, the rule is in
+`docs/4-systems/core.md`, "The event rule"): game flow, raid and extraction (#300), combat, spells, items, loot, voice
+(#301), the enemy director and guards' reports (#299), and the change events a view needs, such as alarm level, raid
+clock, debt, carried item and chant progress (#302). The raid HUD (#303) and the damage feedback, camera shake, music
+and backdrop camera (#304) learn state from those events instead of polling; the microphone meter moved to Settings.
+Verified: compile clean, PlayMode 430/430, EditMode 225 pass with the three known failures, and a co-op raid (Editor
+host plus built client) on which both HUD models followed the clock and alarm, the raid stems were playing on both
+machines, and a 10-point hit on each machine's own player raised the shake to 0.55, one floating number and a 0.45
+red edge on both (`Tools/Unity/hud_events_check.sh`, output in `docs/generated/hud-events-303/`). The Settings mic meter source is verified against
+the real headset microphone (`MicMeterTests`: level events arrive, nothing is recognised, it stops when switched off).
+Not verified: the meter bar with a person speaking at the whisper and shout marks, and the Unity-only checks the
+owner still has from the earlier handoff. Still C# events by design: `StatusChanged` and
+`GuardHealth.Died` (only their own guard listens). Still a C# event, not asked for: `PlayerStateMachine.SlamLanded`.
+Not merged to `main`: all of it is on `claude/staging-2026-10-07`.
 
 ## What used to be not what it looked like
 
