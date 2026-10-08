@@ -35,6 +35,12 @@ Use the wrappers below, which already wait correctly. If you must write your own
 3. **Bound every wait** and say what happens at the cap. No open-ended loops, no `sleep` without one.
 4. **One long command looks like a stalled agent.** The stall watch only sees tool calls, so a single
    10-minute Bash call reads as STALLED. Prefer short bounded checks.
+5. **"Main thread operation timed out" usually means a dialog is waiting for a click** (#371). A modal
+   Unity prompt such as "Scene(s) Have Been Modified" holds the main thread, and it never ends by
+   itself. `pin.sh`'s `unity` wrapper prints `BLOCKED: … waiting for a click on '<title>' [buttons]` when
+   it sees one; call `exit_if_unity_dialog` in your wait loop to stop instead of running to the cap,
+   or `unity_dialog` to just list them (`Tools/Unity/unity_dialog.ps1`). Nothing clicks a dialog by
+   itself. `run_tests.sh` saves scenes with unsaved edits before a run, so that dialog does not come up.
 
 ## The scripts
 
