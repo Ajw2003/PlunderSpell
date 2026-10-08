@@ -268,26 +268,21 @@ namespace Plunderspell.UI
             if (Interactor == null)
                 return string.Empty;
 
-            if (Interactor.FocusDoor != null)
-                return "Press [E] to open the door";
-
+            // What you can use now says so in the world: it glows verdigris (#318). The keys are in the grimoire.
+            // The one thing the glow does not say yet is that a piece needs two, until grip marks do (#319).
             LootPickup focus = Interactor.Focus;
-            if (focus == null)
-                return carried != null ? "Press [Q] to drop" : string.Empty;
-
-            string name = NameOf(focus);
-
-            if (focus.IsBroken)
-                return $"{name} — broken, worthless";
+            if (Interactor.FocusDoor != null || focus == null || focus.IsBroken)
+                return string.Empty;
 
             if (focus.Data != null && focus.Data.RequiresDualCarry)
             {
+                string name = NameOf(focus);
                 return focus.IsBeingCarried
                     ? $"Press [E] to take the other end of {name} — needs two"
                     : $"Press [E] to lift {name} — needs two";
             }
 
-            return focus.IsBeingCarried ? string.Empty : $"Press [E] to pick up {name}";
+            return string.Empty;
         }
 
         /// <summary>True while the crosshair is over something the interact key would act on.</summary>

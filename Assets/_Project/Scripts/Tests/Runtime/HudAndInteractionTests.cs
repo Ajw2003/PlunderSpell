@@ -278,6 +278,55 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void Test_WhatYouCanUseGlowsAndTheScreenSaysNothingAboutIt()
+        {
+            RaidHudPresenter hud = MakeHud(out _, out _, out LootInteractor interactor);
+            LootPickup plate = MakeLoot("Silver Plate", 2f, new Vector3(0f, 0f, 2f));
+
+            interactor.UpdateFocus();
+            RaidHudModel model = hud.Build();
+
+            Assert.IsTrue(plate.GetComponent<LootHighlight>().IsHighlighted, "A piece in reach glows (#318).");
+            Assert.IsEmpty(model.InteractPrompt, "The glow says it: no line of text for an ordinary piece.");
+            Assert.IsTrue(model.HasInteractTarget, "The crosshair still changes over it.");
+        }
+
+        [Test]
+        public void Test_ADoorInReachGlowsToo()
+        {
+            RaidHudPresenter hud = MakeHud(out _, out _, out LootInteractor interactor);
+            var doorGo = Track(new GameObject("Door"));
+            doorGo.transform.position = new Vector3(0f, 0f, 2f);
+            doorGo.AddComponent<BoxCollider>();
+            CastleDoor door = doorGo.AddComponent<CastleDoor>();
+            CastleDoorHandle handle = doorGo.AddComponent<CastleDoorHandle>();
+            handle.SetDoor(door);
+
+            interactor.UpdateFocus();
+
+            Assert.IsTrue(handle.GetComponent<LootHighlight>().IsHighlighted, "A door you can open glows.");
+            Assert.IsEmpty(hud.Build().InteractPrompt);
+
+            doorGo.transform.position = new Vector3(0f, 0f, 40f);
+            Physics.SyncTransforms();
+            interactor.UpdateFocus();
+            Assert.IsFalse(handle.GetComponent<LootHighlight>().IsHighlighted, "Looking away puts the glow out.");
+        }
+
+        [Test]
+        public void Test_ABrokenPieceDoesNotCallToBePickedUp()
+        {
+            MakeHud(out _, out _, out LootInteractor interactor);
+            LootPickup vase = MakeLoot("Vase", 2f, new Vector3(0f, 0f, 2f));
+            vase.Break();
+
+            interactor.UpdateFocus();
+
+            LootHighlight glow = vase.GetComponent<LootHighlight>();
+            Assert.IsTrue(glow == null || !glow.IsHighlighted, "A worthless piece does not glow.");
+        }
+
+        [Test]
         public void Test_TheHudNamesWhatYouAreCarrying()
         {
             RaidHudPresenter hud = MakeHud(out _, out _, out LootInteractor interactor);
