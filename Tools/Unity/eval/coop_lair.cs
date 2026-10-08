@@ -9,6 +9,7 @@
 //   pad <n>            host: put n raid pieces on the extraction pad
 //   shot <path>        save a screenshot (absolute path, forward slashes)
 //   put <entry>        host: set loot-table entry <entry> down on the Goldsmith's counter (through the pile's spawner, on the server)
+//   spawnpile <entry>  host or solo: set loot-table entry <entry> down on the Lair's haul pile, through the pile's spawner (#333)
 //   look               stand the local player 2 m in front of the Goldsmith's counter, facing it
 //   line               the Goldsmith counter's subtitle text on this side
 //   speak <word>       the local player's word at the Goldsmith counter: Plus, Satis or Vale (what keys 1/2/3 call)
@@ -22,6 +23,12 @@
 //   slot1              what the Lair's saved slot 1 holds (debt, gold, four purses), read without loading it
 //   activeslot         the save slot this side plays in and what it has SAVED (debt, gold, four purses, paid), read without loading
 //   lairscreen         show the Lair screen on this side (it is hidden in the Lair room), so a shot can capture the ledger
+//   grab pile|pouch    stand the local player 1.8 m from the first pile piece (or the coin pouch), looking at it, and grab it
+//                      the way a left-click does (ItemManager.StartDragging, the piece's own point as the grab point) (#333)
+//   held               what the local player holds: name, dragging, holders, offset in the player's view frame, speed, position
+//   drop               let go of what the local player holds (ItemManager.ForceRelease)
+//   lookat <path>      stand the local player 2 m from the scene object at <path>, facing it, a little down, body free
+//   findnear <x,z>     the loot pieces and coin pouches within 3 m of that point on this side (names and positions)
 string action = "__ACTION__";
 string arg = "__ARG__";
 const System.Reflection.BindingFlags All = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static
@@ -77,6 +84,18 @@ switch (action)
         var go = (UnityEngine.GameObject)pile.GetType().GetMethod("SpawnLoose").Invoke(pile, new object[] { Get(entry, "Item"), Get(entry, "Prefab"), at });
         return "put " + go.name;
     }
+    case "spawnpile":
+    {
+        var landing = FindAll("Plunderspell.Raid.HaulLanding")[0];
+        var pile = Get(landing, "_pile");
+        object table = null;
+        foreach (var sp in FindAll("Plunderspell.Raid.LootSpawner"))
+            if (sp != pile && Get(sp, "Table") != null) table = Get(sp, "Table");
+        var entry = ((System.Collections.IList)Get(table, "Entries"))[int.Parse(arg)];
+        var at = ((UnityEngine.Component)landing).transform.position + UnityEngine.Vector3.up * 0.3f;
+        var go = (UnityEngine.GameObject)pile.GetType().GetMethod("SpawnLoose").Invoke(pile, new object[] { Get(entry, "Item"), Get(entry, "Prefab"), at });
+        return "spawned " + go.name + " on the pile at " + V(at);
+    }
     case "look":
     {
         var counter = GoldsmithCounter().transform;
@@ -92,6 +111,87 @@ switch (action)
         player.GetType().GetMethod("FaceYaw").Invoke(player, new object[] { yaw });
         UnityEngine.Camera.main.transform.localRotation = UnityEngine.Quaternion.Euler(8f, yaw, 0f);
         return "looking at the Goldsmith from " + V(from);
+    }
+    case "grab":
+    {
+        UnityEngine.Component target = null;
+        if (arg == "pouch")
+        {
+            var pouches = FindAll("Plunderspell.Raid.CoinPouch");
+            if (pouches.Length == 0) return "no pouch";
+            target = (UnityEngine.Component)pouches[0];
+        }
+        else
+        {
+            var landing = UnityEngine.GameObject.Find("/LairRoom/HaulLanding").transform;
+            foreach (var o in FindAll("Plunderspell.Loot.LootValue"))
+            {
+                var piece = (UnityEngine.Component)o;
+                if ((piece.transform.position - landing.position).sqrMagnitude < 25f && (target == null || string.CompareOrdinal(piece.name, target.name) < 0)) target = piece;
+            }
+            if (target == null) return "no pile piece";
+        }
+        var player = LocalPlayer();
+        var p = target.transform.position;
+        var away = player.transform.position - p; away.y = 0f;
+        if (away.sqrMagnitude < 0.01f) away = UnityEngine.Vector3.back;
+        var from = p + away.normalized * 1.8f; from.y = player.transform.position.y;
+        float yaw = UnityEngine.Quaternion.LookRotation(new UnityEngine.Vector3(p.x - from.x, 0f, p.z - from.z)).eulerAngles.y;
+        var body = player.GetComponent<UnityEngine.Rigidbody>();
+        if (body != null) { body.linearVelocity = UnityEngine.Vector3.zero; body.position = from; }
+        player.transform.position = from;
+        player.GetType().GetMethod("FaceYaw").Invoke(player, new object[] { yaw });
+        var cam = UnityEngine.Camera.main.transform;
+        float pitch = UnityEngine.Mathf.Atan2(cam.position.y - p.y, 1.8f) * UnityEngine.Mathf.Rad2Deg;
+        cam.localRotation = UnityEngine.Quaternion.Euler(pitch, yaw, 0f);
+        var items = Get(T("ItemManager"), "Instance");
+        items.GetType().GetMethod("StartDragging", All).Invoke(items, new object[] { target.GetComponent(T("Item")), p });
+        return "grabbed " + target.name + " at " + V(p) + " from " + V(from);
+    }
+    case "held":
+    {
+        var item = Get(Get(T("ItemManager"), "Instance"), "CarriedItem") as UnityEngine.Component;
+        if (item == null) return "held none";
+        var player = LocalPlayer();
+        var cam = UnityEngine.Camera.main.transform;
+        var rel = UnityEngine.Quaternion.Inverse(UnityEngine.Quaternion.Euler(0f, cam.eulerAngles.y, 0f)) * (item.transform.position - player.transform.position);
+        return "held " + item.name + " dragging " + Get(item, "IsDragging") + " holders " + Get(item, "HolderCount") + " rel " + V(rel)
+            + " speed " + item.GetComponent<UnityEngine.Rigidbody>().linearVelocity.magnitude.ToString("F2") + " at " + V(item.transform.position) + " body " + V(player.transform.position);
+    }
+    case "drop":
+    {
+        var items = Get(T("ItemManager"), "Instance");
+        items.GetType().GetMethod("ForceRelease").Invoke(items, null);
+        return "dropped";
+    }
+    case "lookat":
+    {
+        var at = UnityEngine.GameObject.Find(arg);
+        if (at == null) return "no " + arg;
+        var player = LocalPlayer();
+        var away = player.transform.position - at.transform.position; away.y = 0f;
+        var from = at.transform.position + away.normalized * 2f; from.y = player.transform.position.y;
+        float yaw = UnityEngine.Quaternion.LookRotation(new UnityEngine.Vector3(at.transform.position.x - from.x, 0f, at.transform.position.z - from.z)).eulerAngles.y;
+        var body = player.GetComponent<UnityEngine.Rigidbody>();
+        if (body != null) { body.linearVelocity = UnityEngine.Vector3.zero; body.position = from; }
+        player.transform.position = from;
+        player.GetType().GetMethod("FaceYaw").Invoke(player, new object[] { yaw });
+        UnityEngine.Camera.main.transform.localRotation = UnityEngine.Quaternion.Euler(8f, yaw, 0f);
+        return "standing at " + V(from) + " looking at " + arg;
+    }
+    case "findnear":
+    {
+        var parts = arg.Split(',');
+        var centre = new UnityEngine.Vector3(float.Parse(parts[0], System.Globalization.CultureInfo.InvariantCulture), 0f, float.Parse(parts[1], System.Globalization.CultureInfo.InvariantCulture));
+        string s = "";
+        foreach (var type in new[] { "Plunderspell.Loot.LootValue", "Plunderspell.Raid.CoinPouch" })
+            foreach (var o in FindAll(type))
+            {
+                var piece = (UnityEngine.Component)o;
+                var d = piece.transform.position - centre; d.y = 0f;
+                if (d.magnitude < 3f) s += piece.name + " " + V(piece.transform.position) + "; ";
+            }
+        return "near " + s;
     }
     case "line":
         return "line " + ((UnityEngine.TextMesh)Get(GoldsmithCounter(), "_subtitle")).text;

@@ -1,0 +1,47 @@
+14:59:07 test slot 99 wiped, owner's slot to restore: 1
+14:59:20 state MainMenu
+14:59:21 solo, slot 99
+14:59:21 player: player
+14:59:25 spawned GoldenGoblet(Clone) on the pile at 1004.0,0.6,0.0
+14:59:29 grabbed GoldenGoblet(Clone) at 1004.0,0.3,0.0 from 1005.1,1.5,1.4
+14:59:31 in the Lair: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.9 speed 0.00 at 1003.3,2.2,-0.9 body 1005.1,1.5,1.4
+14:59:32 PASS the piece is held on the beam in the Lair
+14:59:32 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+14:59:33 just through the door: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.9 speed 0.01 at 1101.5,2.2,5.1 body 1101.5,1.5,8.0
+14:59:36 two seconds later: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.9 speed 0.00 at 1101.5,2.2,5.1 body 1101.5,1.5,8.0
+14:59:37 PASS just through the Market door the piece sits at the same offset from the player, in their view frame
+14:59:37 PASS still held after the door
+14:59:37 PASS after the door it is slow, in the Market (x over 1050) and within 4 m of the player
+14:59:37 PASS two seconds later it still hangs at that offset
+14:59:39 capture: docs/generated/carry-travel-2026-10-07/solo1-holding-in-the-market.png
+14:59:40 looking at the Goldsmith from 1103.3,1.5,-2.2
+14:59:43 held at the counter: held none
+14:59:44 dropped
+14:59:48 pieces 0
+14:59:48 FAIL the dropped piece lies on the Goldsmith's counter (pieces 0)
+15:00:17 line 
+15:00:18 before: gold 0 debt 500
+15:00:19 spoke Plus
+15:00:22 line 
+15:00:23 spoke Satis
+15:00:26 line 
+15:00:26 FAIL the haggle ends in a sale
+15:00:28 pouches 0
+15:00:28 FAIL the sale left one coin pouch
+15:00:29 before: purse 0
+15:00:30 no pouch
+15:00:33 pouch in the Market: held none
+15:00:34 travelled through /MarketYard/LairExit to 1002.2,1.3,-3.8
+15:00:35 pouch just through the gate: held none
+15:00:35 FAIL just through the gate the pouch sits at the same offset from the player
+15:00:35 FAIL pouch still held after the gate
+15:00:36 standing at 1002.0,1.5,-0.4 looking at /LairRoom/LairStrongbox/StrongboxLid1
+15:00:40 held at the strongbox: held none
+15:00:41 dropped
+15:00:45 pouches 0
+15:00:46 after: purse 0
+15:00:46 PASS the pouch is banked and gone
+15:00:46 FAIL purse 1 grew (purse 0 -> purse 0)
+15:00:46 FAIL 6 carry-travel checks
+15:00:46 cleaning up
+15:00:48 active slot 1
