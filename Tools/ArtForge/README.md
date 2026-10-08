@@ -373,6 +373,25 @@ until the stills read as the concept **and** the POSED views deform cleanly.
 chain, quilted gambeson, laced front, belt kit (warden); C-section quilted coat with
 painted bordure, chevron strips, harness straps, spiked collar (hound).
 
+## Players
+
+Kind `players` has one "age", `lair` (`docs/art/data/lair.json`, key `players`), and one
+model so far: the wizard (`blueprints/players_lair.py`, `figures.Human(height=1.80)`).
+`build.py players` / `render.py players` default to `--age lair`; outputs go to
+`Assets/Models/ArtBible/Players/Lair/Wizard/` and `docs/art/models/lair/wizard.png`
+(six-view sheet like enemies, beside `docs/art/concept/wizard/1-the-wizard.png`).
+Validation is the enemy one; the reserved-pigment rule does not apply to players.
+Bones are the Unity Humanoid set plus `Hat` (child of Head, rigid, a prop: excluded from
+the 1.80 m body height).
+
+**Dyed vs fixed.** A model is one baked material slot, so tinting uses a mask:
+`Blueprint.dye_families` lists the families a player colour dyes, and the bake writes
+`Textures/<Name>_DyeMask.png` (non-colour, white on dyed texels, black elsewhere).
+Dyed: `robe_wool` (robe, cape, sleeves), `hat_felt` (colour x0.72), `hat_band` (x0.50,
+also the robe's front seam). Fixed: `skin`, `glove_leather` (belt, glove), `boot_leather`,
+`calfskin`, `brass`, `eye_dark`, `beard_hair`. The BaseMap holds the default colour
+`#4F7299`; tint = `BaseMap * (picked / #4F7299)` where the mask is white.
+
 ## Validation
 
 `validate.py` runs EnemyForge's `validate()` through an adapter, which checks:

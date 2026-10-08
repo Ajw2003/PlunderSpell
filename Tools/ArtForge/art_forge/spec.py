@@ -15,7 +15,7 @@ from collections import OrderedDict
 from dataclasses import dataclass, field
 from functools import lru_cache
 
-from . import AGES, KINDS, REPO_ROOT
+from . import AGES, KINDS, PLAYER_AGES, REPO_ROOT
 
 DATA_DIR = os.path.join(REPO_ROOT, "docs", "art", "data")
 ART_DIR = os.path.join(REPO_ROOT, "docs", "art")
@@ -189,6 +189,8 @@ class Entry:
 
     @property
     def concept_png(self) -> str:
+        if self.kind == "players":   # the owner-approved plate: concept/wizard/1-the-wizard.png
+            return os.path.join(ART_DIR, "concept", self.slug, f"1-the-{self.slug}.png")
         return os.path.join(ART_DIR, "concept", self.age, f"{self.slug}.png")
 
     def family(self, slug: str) -> dict:
@@ -200,8 +202,8 @@ class Entry:
 
 @lru_cache(maxsize=None)
 def load_age(age: str) -> dict:
-    if age not in AGES:
-        raise ValueError(f"unknown age {age!r}; expected one of {AGES}")
+    if age not in AGES + PLAYER_AGES:
+        raise ValueError(f"unknown age {age!r}; expected one of {AGES + PLAYER_AGES}")
     with open(os.path.join(DATA_DIR, f"{age}.json"), encoding="utf-8") as handle:
         return json.load(handle)
 
