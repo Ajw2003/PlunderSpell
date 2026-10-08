@@ -1,5 +1,9 @@
 # Today
 
+**2026-10-08 (night, later) - the wizard is on the player in game (#362).** `WizardPlayerSetup`'s two steps ran: the `Wizard` controller and upper-body mask built, and the wizard installed on `RaidPlayer.prefab` and `Player.prefab` (the capsule stays for colliders, hidden). New `Tools/Unity/wizard_coop_check.sh`: host and client in the Lair, the client holds C, V and S through the Input System, and the host's copy of the client's wizard reads Crouch, Casting and Speed 5 (moved 3.6 m); PASS twice, 0 client errors, pictures in `docs/generated/wizard-362/final-*`. Keys go to the client because the Editor's Input System ignores the keyboard while its Game view is not focused. Suites with the wizard installed: EditMode 243 pass / 0 fail, PlayMode 518/518. Revert point before the install: `0f471202`.
+
+---
+
 **2026-10-08 (night) - the wizard merged onto the new staging (#368 item 2), and Unity dialogs no longer stall the check scripts (#371).** `claude/busy-mendel-t5y57j` merged on `claude/merge-2026-10-08` (PR #370): conflicts only in headless tooling and docs. First run in Unity found what the cloud could not: the wizard model and dye mask had imported before their import rules compiled (Generic rig, sRGB), fixed by a re-import; two `WizardAnimationTests` gave the Animator no controller, so they could never pass (an Animator keeps parameters only with a controller that has a layer, once bound): fixed in the test. EditMode 243 pass / 3 skipped / 0 fail, PlayMode 518/518. Not done yet: the wizard's two install steps on the player prefabs (#362). The long "main thread timed out" stalls were a modal "Scene(s) Have Been Modified" dialog waiting for a click: `pin.sh` now names any dialog on a failed call, `run_tests.sh` and `recompile.sh` stop on one in 1-6 s instead of 10 minutes, and `run_tests.sh` saves dirty scenes first (checked twice each, with a real dialog).
 
 ---

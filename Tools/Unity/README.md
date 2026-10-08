@@ -52,6 +52,7 @@ Use the wrappers below, which already wait correctly. If you must write your own
 | `capture.sh` | Saves the Editor's game view to a PNG anywhere in the repo. |
 | `view.sh` | Play mode: parks the local player's camera at a point and angle, optionally captures. |
 | `coop_eval.sh host\|client <action>` | Runs one action of `eval/coop_carry.cs` on the host (Editor) or the client (built player). |
+| `wizard_coop_check.sh <label>` | Co-op in the Lair; the client crouches, casts and walks, and the host's copy of its wizard must read each (#362). Screenshots in `docs/generated/wizard-362/`. |
 | `coop_guard_check.sh <label>` | Co-op raid; sends every guard after the host and measures how long guards stand still. |
 | `coop_swarm_check.sh <label>` | Co-op raid; raises the hue and cry and counts guards near the host. |
 | `guard_awareness_check.sh` | Co-op raid; measures what a calm guard hears and sees of the host's player (#238). |
