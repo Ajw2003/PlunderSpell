@@ -22,6 +22,19 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void TheLairAndAPauseBegunThereAreSafeARaidIsNot()
+        {
+            var states = new GameStateManager();
+            states.ChangeState(GameState.LairRoom);
+            Assert.IsTrue(states.InSafePlace);
+            states.ChangeState(GameState.Paused);
+            Assert.IsTrue(states.InSafePlace);
+            states.ChangeState(GameState.Playing);
+            states.ChangeState(GameState.Paused);
+            Assert.IsFalse(states.InSafePlace);
+        }
+
+        [Test]
         public void PausingInTheLairResumesToTheLairAndPausingInARaidToTheRaid()
         {
             var states = new GameStateManager();

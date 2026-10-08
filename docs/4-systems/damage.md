@@ -212,6 +212,8 @@ hung from the point you grabbed, pulled by a spring of limited strength** (`Item
 
 ## Invariants
 
+- **No health is lost in a safe place (#355).** `Apply` returns 0 before the network forward while `Damage.InSafePlace` (the Lair room, the Market, or a pause begun there), so a client cannot be hurt either. The rule is `GameStateManager.InSafePlace`, installed by `GameServices.Initialize` as the `Damage.SafePlace` hook (this assembly sits below the game state, so it cannot reference it). Loot breakage asks the same `Damage.InSafePlace` in `LootPickup`.
+
 - **Nothing calls `IHealth.TakeDamage` except `Damage.Apply`.** A direct call still hurts, but no
   number, flash, bar or blame appears, and the player cannot tell it happened — exactly the bug
   #14 reopened on.

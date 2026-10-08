@@ -77,6 +77,15 @@ namespace Interfaces
         /// </summary>
         public static ForwardHit Forward;
 
+        /// <summary>
+        /// Installed by GameServices: true while nothing may be hurt or broken (the Lair room and Market, #355). Null
+        /// (tests, benches) means never. A hook rather than a reference, since this assembly sits below the game state.
+        /// </summary>
+        public static Func<bool> SafePlace;
+
+        /// <summary>Nothing loses health and no item breaks here right now. Loot breakage asks this too.</summary>
+        public static bool InSafePlace => SafePlace != null && SafePlace();
+
         /// <summary>Publishes <see cref="DamageDealt"/> for a hit applied on another machine, so the player who
         /// landed it still sees the numbers and the flash.</summary>
         public static void ReportRemote(DamageReport report) => EventManager.Instance?.Publish(new DamageDealt(report));
@@ -92,6 +101,10 @@ namespace Interfaces
             // IHealth is an interface, so Unity's destroyed-object check needs the concrete Object.
             var component = target as Component;
             if (target == null || component == null || amount <= 0f)
+                return 0f;
+
+            // The Lair room and Market are safe (#355). Checked before Forward so a client cannot be hurt either.
+            if (InSafePlace)
                 return 0f;
 
             if (Forward != null && Forward(target, amount, source, instigator, point, kind, impactVelocity))

@@ -289,6 +289,7 @@ namespace Plunderspell.Loot
         {
             return _data != null &&
                    !_inPortal &&
+                   !Damage.InSafePlace &&
                    !IsBeingCarried &&
                    !IsBroken &&
                    relativeVelocityMagnitude > _data.Fragility;
@@ -312,6 +313,10 @@ namespace Plunderspell.Loot
         /// </summary>
         public void BreakItem()
         {
+            // The Lair room and Market are safe (#355); this also covers Ruin, which only ApplyBrokenState calls.
+            if (Damage.InSafePlace)
+                return;
+
             // A client carrying the piece simulates it, so it judges the impact and asks the server
             // to break it; the server is the only one that marks it broken.
             if (isSpawned && !isServer)

@@ -15,6 +15,10 @@ namespace Plunderspell.Core
         public bool RaidOnScreen =>
             CurrentState == GameState.Playing || (CurrentState == GameState.Paused && PausedFrom == GameState.Playing);
 
+        /// <summary>The Lair room or Market, or a pause begun there: nothing loses health and no item breaks (#355).</summary>
+        public bool InSafePlace =>
+            CurrentState == GameState.LairRoom || (CurrentState == GameState.Paused && PausedFrom == GameState.LairRoom);
+
         public void ChangeState(GameState next)
         {
             if (next == CurrentState)

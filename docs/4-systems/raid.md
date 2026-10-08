@@ -176,6 +176,8 @@ and **both are deleted with it**:
 
 Sessions start, and extraction/death returns, in the walkable Lair room, not the flat screen.
 
+- The Lair room and the Market are safe (#355): `Damage.InSafePlace`, the hook `GameServices` installs for `GameStateManager.InSafePlace` (`LairRoom`, or `Paused` from it). `Tools/Unity/safe_lair_check.sh`. `Damage.Apply` returns 0 and `LootPickup.BreakItem` / `WouldBreak` do nothing while it is true, so nothing loses health and no piece breaks or is ruined. Raids are unaffected.
+
 - `GameState.LairRoom` (`GameState.cs`): cursor captured, input accepted, Lair music, no screen, RaidHud hidden.
   There is no Lair screen any more (#359): `GameState.Lair` (value 1) and `LairScreen` are gone, and the other values keep their numbers.
   Where its parts went: the ledger is the book, the Age is the dial, Set Out is the portal, "Waiting for the host to set out" is the

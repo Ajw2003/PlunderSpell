@@ -27,6 +27,9 @@ namespace Plunderspell.Core
         public static bool IsPlaying =>
             GameState != null && GameState.CurrentState == Core.GameState.Playing;
 
+        /// <summary>The one "is this a safe place right now" rule: <see cref="GameStateManager.InSafePlace"/>. Installed as Interfaces.Damage.SafePlace, which Damage.Apply and LootPickup breakage check.</summary>
+        public static bool IsSafePlace => GameState != null && GameState.InSafePlace;
+
         public static void Initialize()
         {
             if (IsInitialized)
@@ -37,6 +40,7 @@ namespace Plunderspell.Core
             GameState = new GameStateManager();
             PlayerStats = new PlayerStats(maxMana: 100);
             Extraction = new ExtractionController(extractionDurationSeconds: 8f);
+            Interfaces.Damage.SafePlace = () => IsSafePlace;
             IsInitialized = true;
         }
     }
