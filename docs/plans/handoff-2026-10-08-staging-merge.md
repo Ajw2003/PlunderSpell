@@ -10,7 +10,9 @@ For a local session with Unity. Tracking issue: #368.
   ID), grouped into what to merge, what to decide, and what is already covered.
 - **The diegetic raid UI merge was started in the cloud and stopped before committing**, because the owner
   ruled that no code change lands without a Unity check. Nothing from it is pushed. Redo it locally using
-  the steps below.
+  the steps below, or start from the cloud's resolved merge on `claude/wip-staging-merge-unverified`
+  (`98507951`, a real two-parent merge of `0d5b0fe7` and `claude/staging-2026-10-07`). It is pushed only as a
+  backup: it has not been opened in Unity, and it does not include this handoff commit.
 
 ## The merge to do: `claude/rimlight-318` minus the glow commit
 
