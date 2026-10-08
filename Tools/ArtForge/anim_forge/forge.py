@@ -50,10 +50,10 @@ def check_against_spec(defs: dict, spec: dict) -> list[str]:
     return problems
 
 
-def rigs() -> tuple[Skeleton, Skeleton, bpy.types.Object, bpy.types.Object]:
+def rigs(blend: str = WARDEN_BLEND) -> tuple[Skeleton, Skeleton, bpy.types.Object, bpy.types.Object]:
     """Open the warden's .blend and build the reference armature beside it. Returns
     (ref, warden, warden_rig_object, warden_mesh_object)."""
-    bpy.ops.wm.open_mainfile(filepath=WARDEN_BLEND)
+    bpy.ops.wm.open_mainfile(filepath=blend)
     wrig = next(o for o in bpy.context.scene.objects if o.type == "ARMATURE")
     wmesh = next(o for o in bpy.context.scene.objects if o.type == "MESH")
     for pb in wrig.pose.bones:

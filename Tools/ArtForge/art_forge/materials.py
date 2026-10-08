@@ -153,7 +153,8 @@ def build_authoring_material(asset: str, family: str, fam: dict,
     return mat
 
 
-_SINGULAR = {"items": "item", "structures": "structure", "enemies": "enemy"}
+_SINGULAR = {"items": "item", "structures": "structure", "enemies": "enemy",
+             "players": "player"}
 
 
 def discipline_violations(kind: str, name: str, families: dict[str, dict],

@@ -1,0 +1,38 @@
+name: Docs
+
+# The docs drifted from the code once already (scale.md kept the retired roster for weeks after
+# the art-bible enemies replaced it). These two checks need nothing but Python, so they run on
+# every change to the docs, the art data or the forges they describe.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'Tools/**'
+      - 'Assets/_Project/Scripts/Editor/**'
+      - 'CLAUDE.md'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'Tools/**'
+      - 'Assets/_Project/Scripts/Editor/**'
+      - 'CLAUDE.md'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docs-agree-with-code:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Every relative link points at a file
+        run: python3 Tools/docs/check_doc_links.py --list
+
+      - name: The art docs agree with the art data and the forges
+        run: python3 Tools/docs/check_art_docs.py

@@ -69,8 +69,8 @@ def hang(skel: Skeleton, frames: list[Solved], fps: int, loop: bool,
             # The bail stops the lantern swinging past `limit` from hanging.
             if d.angle(DOWN) > math.radians(limit):
                 side = (d - DOWN * d.dot(DOWN)).normalized()
-                a = math.radians(limit)
-                d = DOWN * math.cos(a) + side * math.sin(a)
+                ang = math.radians(limit)
+                d = DOWN * math.cos(ang) + side * math.sin(ang)
                 prev = p + d * ROD            # the stop kills the swing's speed
             bob = p + d * ROD
         out_dirs.append((bob - b).normalized())
