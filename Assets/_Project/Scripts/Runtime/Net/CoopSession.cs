@@ -26,6 +26,7 @@ namespace Plunderspell.Net
         private const string ConnectLobbyArg = "+connect_lobby";
         private const string HostUdpArg = "-coop-host";
         private const string JoinUdpArg = "-coop-join";
+        private const string ThisPc = "127.0.0.1";
         private const int MaxPlayers = 4;
 
         [SerializeField] private NetworkManager _manager;
@@ -101,6 +102,19 @@ namespace Plunderspell.Net
             StartHost(_udpTransport, $"Hosting on the local network (Steam unavailable: {SteamBootstrap.Problem})");
             GameServices.GameState.ChangeState(GameState.LairRoom);
         }
+
+        /// <summary>Hosts over UDP even with Steam running, as <c>-coop-host</c> does: a second copy of the game on
+        /// the same PC is the same Steam account and cannot join its own lobby (#372).</summary>
+        public void HostLocal()
+        {
+            if (LeaveThenRetry(HostLocal))
+                return;
+            StartHost(_udpTransport, "Hosting on this PC (local network).");
+            GameServices.GameState.ChangeState(GameState.LairRoom);
+        }
+
+        /// <summary>Joins a game hosted on this same PC, as <c>-coop-join 127.0.0.1</c> does (#372).</summary>
+        public void JoinLocal() => JoinUdp(ThisPc);
 
         public void Leave()
         {

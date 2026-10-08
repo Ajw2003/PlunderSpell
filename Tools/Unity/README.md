@@ -52,6 +52,7 @@ Use the wrappers below, which already wait correctly. If you must write your own
 | `capture.sh` | Saves the Editor's game view to a PNG anywhere in the repo. |
 | `view.sh` | Play mode: parks the local player's camera at a point and angle, optionally captures. |
 | `coop_eval.sh host\|client <action>` | Runs one action of `eval/coop_carry.cs` on the host (Editor) or the client (built player). |
+| `coop_local.sh [--build\|--no-build]` | **Play co-op on this PC by hand** (#372): rebuilds the client if the game changed, presses Play, hosts on this PC, starts the client joined at 127.0.0.1 and puts it beside the Editor. Leaves both running, in your own save slot. The main menu's **Host on this PC** / **Join on this PC** buttons (Editor and Development builds only) do the same by clicking. |
 | `wizard_coop_check.sh <label>` | Co-op in the Lair; the client crouches, casts and walks, and the host's copy of its wizard must read each (#362). Screenshots in `docs/generated/wizard-362/`. |
 | `coop_guard_check.sh <label>` | Co-op raid; sends every guard after the host and measures how long guards stand still. |
 | `coop_swarm_check.sh <label>` | Co-op raid; raises the hue and cry and counts guards near the host. |

@@ -1,5 +1,9 @@
 # Today
 
+**2026-10-08 (night, latest) - co-op on one PC by hand (#372).** The menu's Host Co-op always used Steam when Steam ran, and a second copy on the same PC is the same Steam account, which Steam will not let join itself. Now: `CoopSession.HostLocal()` / `JoinLocal()` (UDP, 127.0.0.1, as the `-coop-host` / `-coop-join` arguments do), **Host on this PC** / **Join on this PC** on the main menu in the Editor and Development builds only, and `Tools/Unity/coop_local.sh`, which rebuilds the client if needed, presses Play, hosts, and starts the client joined beside the Editor. Checked: the script once end to end (2 players, 62 s with the build) and the owner played both sides from it and recorded it working. Not yet checked: clicking the two menu buttons, and a release build hiding them. Also fixed: `place_windows.ps1` looked for an Editor titled `PlunderSpell - ...` and so found none in a worktree.
+
+---
+
 **2026-10-08 (night, later) - the wizard is on the player in game (#362).** `WizardPlayerSetup`'s two steps ran: the `Wizard` controller and upper-body mask built, and the wizard installed on `RaidPlayer.prefab` and `Player.prefab` (the capsule stays for colliders, hidden). New `Tools/Unity/wizard_coop_check.sh`: host and client in the Lair, the client holds C, V and S through the Input System, and the host's copy of the client's wizard reads Crouch, Casting and Speed 5 (moved 3.6 m); PASS twice, 0 client errors, pictures in `docs/generated/wizard-362/final-*`. Keys go to the client because the Editor's Input System ignores the keyboard while its Game view is not focused. Suites with the wizard installed: EditMode 243 pass / 0 fail, PlayMode 518/518. Revert point before the install: `0f471202`.
 
 ---
