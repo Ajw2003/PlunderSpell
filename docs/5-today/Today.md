@@ -1,10 +1,36 @@
 # Today
 
+**2026-10-08 (later) - the diegetic raid UI is merged onto the new staging (#368 item 1), on `claude/merge-2026-10-08`.** `claude/staging-2026-10-07` (rimlight-318 minus the WIP glow) merged onto `claude/staging-2026-10-08` with the handoff's three resolutions; one more break the cloud could not see: five incoming tests used `GameState.Lair`, removed in #359, now `GameState.LairRoom`. Unity: compiles clean, EditMode 239 pass / 3 skipped / 0 fail, PlayMode 518/518. Co-op (`hud_events_check.sh staging-1008-merge`): both HUD models follow clock and alarm, a hit raises shake, number and vignette on both, the watch and grimoire draw (`docs/generated/hud-events-303/staging-1008-merge-*`). Not run: `coop_lair_check.sh` (its permission prompts timed out). The #318 glow and its unfinished WIP (`e93b3718`) stay on `claude/rimlight-318`.
+
+---
+
 **2026-10-08 - new staging branch, diegetic UI merge handed to Unity.** `claude/staging-2026-10-08` is cut from
 `claude/lair-market` (`0d5b0fe7`), the most complete branch; #368 lists every branch's unmerged work. The merge of
 `claude/rimlight-318` minus the WIP glow commit was resolved in the cloud but not committed: no code lands without a
 Unity check (owner). The headless harness does not compile `claude/lair-market` itself (40 errors, missing shims).
 Steps and conflict resolutions: `docs/plans/handoff-2026-10-08-staging-merge.md`.
+
+---
+
+**2026-10-07 - the raid screen is down to what the world cannot yet say (#315, steps #324-#326).** Hold `T` for the pocket
+watch (a ring of portal-light that empties as the raid runs down) and `Tab` for the grimoire (the spells, the keys, the last
+casts; it opens by itself once for a first raid, slows you to 60% and stops you lifting). The always-on clock, alarm bar,
+phase text, debt, banked gold, haul number, carried-item name, spell list and last-cast line are off the raid screen; the
+castle's fires carry the alarm. Still on screen until their world cues exist: the interaction prompt, the ranged weapon line,
+the chant bar and the heard-phrase caption (#318-#323). Tests: 10 new (watch, grimoire) pass; the full headless PlayMode run
+shows the same environment failures as plain staging. Not seen in the game yet (see the issues); on `claude/hud-strip-326`.
+
+---
+
+**2026-10-06 (night) - the event bus move is done on staging (#297, steps #298-#304; #305 is these docs).** Every
+event between systems is on `EventManager`; the raid HUD, damage feedback, camera shake, music and backdrop camera follow
+events instead of polling; the mic meter is in Settings. Naming fixed so nothing but `EventManager` is called a bus
+(`EnemyDirectorListener`, `LoopPool`). On `claude/staging-2026-10-07`, not `main`. Unity: PlayMode 430/430, EditMode 225
+pass / 3 known failures, and a co-op raid on which both HUD models followed the clock and alarm, the stems played on both
+machines, and a hit raised the shake, a floating number and the red edge on both. The mic meter source is verified
+against the real headset (`MicMeterTests`). Not verified: the bar with someone speaking at the whisper and shout marks. The issues (#297-#305) are open for the owner to
+close. Next, in the owner's order: the diegetic raid UI, the Lair room, the Market (`docs/plans/diegetic-ui-lair-market.md`,
+`docs/plans/lair-market-in-engine.md` steps 2-8), each needing a parent issue and one child per step first.
 
 ---
 

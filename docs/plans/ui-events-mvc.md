@@ -2,7 +2,7 @@
 
 **Status: decided 2026-10-06 by the owner, and wider than proposed: every event between systems moves onto the bus,
 not only what views listen to; continuous values are published on every change; the mic readout moves to Settings.
-See `docs/6-decisions/Decisions.md` (2026-10-06) and "Decisions (settled)" at the end. Building now.**
+See `docs/6-decisions/Decisions.md` (2026-10-06) and "Decisions (settled)" at the end. Built 2026-10-06 as #298-#304 on `claude/staging-2026-10-07`; the standing rules are now in `docs/4-systems/core.md`, "The event rule".**
 Asked for by the owner: "ensure we are properly using the MVC design pattern and events to communicate anything per
 frame like the hud was doing … communication should be on a need to know basis with light weight events that our
 event bus handles, and if it becomes a bottleneck we multithread it or make it async."

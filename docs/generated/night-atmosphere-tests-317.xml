@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="16" result="Passed" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.0950927">
+  <test-suite type="TestSuite" id="1000" name="PurrnetTest" fullname="PurrnetTest" runstate="Runnable" testcasecount="234" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.095093" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1291" name="Plunderspell.Tests.Editor.dll" fullname="C:/Users/aj/Desktop/GameDev/PlunderSpell/Library/ScriptAssemblies/Plunderspell.Tests.Editor.dll" runstate="Runnable" testcasecount="221" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.088604" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27356" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1292" name="Plunderspell" fullname="Plunderspell" runstate="Runnable" testcasecount="221" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.086889" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1293" name="Tests" fullname="Plunderspell.Tests" runstate="Runnable" testcasecount="221" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.085279" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1294" name="Editor" fullname="Plunderspell.Tests.Editor" runstate="Runnable" testcasecount="221" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.083752" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1215" name="NightAtmosphereTests" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.080118" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1227" name="Test_AFireAnchorComesThroughInModuleSpaceFacingTheRightWay" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_AFireAnchorComesThroughInModuleSpaceFacingTheRightWay" methodname="Test_AFireAnchorComesThroughInModuleSpaceFacingTheRightWay" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1709253566" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.020990" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1221" name="Test_AFireKeepsItsLightUntilARivalIsClearlyCloser" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_AFireKeepsItsLightUntilARivalIsClearlyCloser" methodname="Test_AFireKeepsItsLightUntilARivalIsClearlyCloser" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1387953499" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.001285" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1225" name="Test_ASteamDeckStartsOnLowAndEverythingElseOnMedium" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_ASteamDeckStartsOnLowAndEverythingElseOnMedium" methodname="Test_ASteamDeckStartsOnLowAndEverythingElseOnMedium" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="798603170" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000310" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1218" name="Test_BraziersFlareWhenRousedAndEverythingAtTheHueAndCry" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_BraziersFlareWhenRousedAndEverythingAtTheHueAndCry" methodname="Test_BraziersFlareWhenRousedAndEverythingAtTheHueAndCry" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="237949625" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000450" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1224" name="Test_EachGraphicsLevelSpendsWhatTheSpecSays" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_EachGraphicsLevelSpendsWhatTheSpecSays" methodname="Test_EachGraphicsLevelSpendsWhatTheSpecSays" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1985162145" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000277" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1223" name="Test_EqualDistancesShareLightsTheSameWayEveryTime" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_EqualDistancesShareLightsTheSameWayEveryTime" methodname="Test_EqualDistancesShareLightsTheSameWayEveryTime" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="997904156" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000666" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1228" name="Test_EveryHighMedievalRoomHasFireAndTheWallHasTorches" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_EveryHighMedievalRoomHasFireAndTheWallHasTorches" methodname="Test_EveryHighMedievalRoomHasFireAndTheWallHasTorches" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1069920517" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.015797" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1232" name="Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.024706" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1229" name="Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere(&quot;Assets/_Project/Data/Castle/CastleRoomRegistry.asset&quot;)" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere(&quot;Assets/_Project/Data/Castle/CastleRoomRegistry.asset&quot;)" methodname="Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1377840274" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000387" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1230" name="Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere(&quot;Assets/_Project/Data/Castle/CastleRoomRegistry_BronzeAge.asset&quot;)" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere(&quot;Assets/_Project/Data/Castle/CastleRoomRegistry_BronzeAge.asset&quot;)" methodname="Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1133294757" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.011400" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1231" name="Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere(&quot;Assets/_Project/Data/Castle/CastleRoomRegistry_LateMedieval.asset&quot;)" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere(&quot;Assets/_Project/Data/Castle/CastleRoomRegistry_LateMedieval.asset&quot;)" methodname="Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1728733774" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.011138" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1216" name="Test_HearthsAlwaysBurnAndBeaconsWaitForTheAlarm" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_HearthsAlwaysBurnAndBeaconsWaitForTheAlarm" methodname="Test_HearthsAlwaysBurnAndBeaconsWaitForTheAlarm" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="271796166" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000378" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1226" name="Test_QualityLevelNamesMapToTiers" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_QualityLevelNamesMapToTiers" methodname="Test_QualityLevelNamesMapToTiers" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1611165315" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000418" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1217" name="Test_SomeSconcesAreLitAtCalmAndAllOnceStirred" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_SomeSconcesAreLitAtCalmAndAllOnceStirred" methodname="Test_SomeSconcesAreLitAtCalmAndAllOnceStirred" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1186600438" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000152" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1219" name="Test_TheClosingPortalNeverFlashesMoreThanThreeTimesASecond" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_TheClosingPortalNeverFlashesMoreThanThreeTimesASecond" methodname="Test_TheClosingPortalNeverFlashesMoreThanThreeTimesASecond" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="1448937935" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.004511" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1220" name="Test_TheNearestLitFiresGetShadowsThenLightThenNothing" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_TheNearestLitFiresGetShadowsThenLightThenNothing" methodname="Test_TheNearestLitFiresGetShadowsThenLightThenNothing" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="121617170" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000573" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1222" name="Test_WithoutPreviousGrantsSharingIsUnchanged" fullname="Plunderspell.Tests.Editor.NightAtmosphereTests.Test_WithoutPreviousGrantsSharingIsUnchanged" methodname="Test_WithoutPreviousGrantsSharingIsUnchanged" classname="Plunderspell.Tests.Editor.NightAtmosphereTests" runstate="Runnable" seed="2102170385" result="Passed" start-time="2026-10-07 17:05:13Z" end-time="2026-10-07 17:05:13Z" duration="0.000451" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/aj/AppData/LocalLow/DefaultCompany/PurrnetTest\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

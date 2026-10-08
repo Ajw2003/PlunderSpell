@@ -54,9 +54,20 @@ public class ItemManager : SingletonBase<ItemManager>
     private static bool IsHeldInHand(Item item) =>
         item.TryGetComponent(out RangedWeapon _) || item.TryGetComponent(out MeleeWeapon _);
 
-    private void OnEnable() => RenderPipelineManager.beginCameraRendering += PoseHeldWeapon;
+    private bool _grimoireOpen;
 
-    private void OnDisable() => RenderPipelineManager.beginCameraRendering -= PoseHeldWeapon;
+    private void OnEnable()
+    {
+        RenderPipelineManager.beginCameraRendering += PoseHeldWeapon;
+        // Reading the grimoire takes both hands: nothing can be lifted while it is open (#325).
+        EventManager.Instance?.Subscribe(this, (GrimoireOpened e) => _grimoireOpen = e.Open);
+    }
+
+    private void OnDisable()
+    {
+        RenderPipelineManager.beginCameraRendering -= PoseHeldWeapon;
+        EventManager.Instance?.UnsubscribeFromAllEvents(this);
+    }
 
     /// <summary>Stands an in-hand weapon in the hand just before the view renders, after the
     /// camera has moved this frame, so it never lags or jitters against the view.</summary>
@@ -250,6 +261,9 @@ public class ItemManager : SingletonBase<ItemManager>
     /// the crosshair was on: it hangs from there, as in R.E.P.O. (#144).</summary>
     private void StartDragging(Item item, Vector3 grabPoint)
     {
+        if (_grimoireOpen)
+            return;
+
         // A weapon is still handed to one player at a time (posed to their view every frame, so it
         // cannot be shared): wait for ownership before picking it up, same as before. A beam piece
         // has no such hand-off — any number of players can hold it — so it asks the server to take

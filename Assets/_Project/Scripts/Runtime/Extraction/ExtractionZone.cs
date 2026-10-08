@@ -33,6 +33,9 @@ namespace Plunderspell.Extraction
                  "countdown, so a player who spawns beside it does not leave by accident.")]
         [SerializeField] private float _minimumRaidSecondsBeforeLeaving = 10f;
 
+        /// <summary>How long a raid lasts, in seconds, so a display can show what share of it is left.</summary>
+        public float RaidLength => RaidDurationSeconds;
+
         // Replicated state (PurrNet field-based SyncVars; inline-initialised so never null).
         private readonly SyncVar<float> _timeRemaining = new SyncVar<float>(0f);
         private readonly SyncVar<bool> _extractionComplete = new SyncVar<bool>(false);

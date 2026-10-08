@@ -26,6 +26,8 @@ public class PlayerWalkState : PlayerState
         float pace = carried != null ? carried.TowSpeedMultiplier : 1f;
         if (_stateMachine.Creeping)
             pace *= PlayerStateMachine.CreepPace;
+        if (_stateMachine.ReadingGrimoire)
+            pace *= PlayerStateMachine.ReadingPace;
         if (_stateMachine.IsStaggered)
             pace = 0f;
         _stateMachine.Rb.linearVelocity = (moveDirection * _stateMachine.WalkSpeed * pace) + (Vector3.up * verticalSpeed);

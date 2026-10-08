@@ -159,6 +159,8 @@ def build_wall_corner(bm, uv):
     top = rk.tower_drum(bm, uv, 2.1, h + 1.4, STONE, loc=(*corner, 0), trim=ZONE_ACCENT["CurtainWall"], segments=10)
     rk.crenellations(bm, uv, top, STONE, size=4.2, center=corner)
     _fire("Beacon", corner[0], corner[1], top, lit=2)
+    # A torch on the wall away from the tower, so the corner has a fire at Calm and shows the alarm (#317).
+    _fire("Sconce", 3.0, -rk.HALF + rk.WALL_T, 2.9, facing=(0.0, 1.0), lit=0)
 
 
 def build_bastion(bm, uv):

@@ -21,6 +21,7 @@ namespace Plunderspell.UI
 
         private readonly ShakeTrauma _trauma = new ShakeTrauma();
         private PlayerStateMachine _slamSource;
+        private PlayerStateMachine _local;
 
         public static CameraShakeDirector Instance { get; private set; }
 
@@ -43,11 +44,14 @@ namespace Plunderspell.UI
         {
             EventManager.Instance?.Subscribe(this, (DamageDealt e) => OnDamage(e.Report));
             EventManager.Instance?.Subscribe(this, (CastResolved e) => OnCast(e.Report));
+            EventManager.Instance?.Subscribe(this, (LocalPlayerChanged e) => SetLocal(e.Player));
+            SetLocal(PlayerStateMachine.Local);
         }
 
         private void OnDisable()
         {
             EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            _local = null;
             WatchSlams(null);
         }
 
@@ -99,16 +103,21 @@ namespace Plunderspell.UI
         /// <summary>Trauma for a Saltus slam landing at <paramref name="speed"/> metres a second.</summary>
         public static float ForSlam(float speed) => 0.45f + 0.55f * Mathf.Clamp01(speed / 25f);
 
-        private void Update()
+        // The local player changes rarely, so it is learnt from LocalPlayerChanged rather than looked up every frame (#304).
+        private void SetLocal(PlayerStateMachine local)
         {
-            PlayerStateMachine local = PlayerStateMachine.Local;
+            _local = local;
             WatchSlams(local);
             if (local == null)
-            {
                 _trauma.Clear();
+        }
+
+        private void Update()
+        {
+            // A body destroyed without announcing itself reads as none.
+            if (_local == null)
                 return;
-            }
-            local.ViewShake = _trauma.Step(Time.deltaTime);
+            _local.ViewShake = _trauma.Step(Time.deltaTime);
         }
 
         private void WatchSlams(PlayerStateMachine local)
@@ -126,7 +135,7 @@ namespace Plunderspell.UI
 
         private void OnDamage(DamageReport report)
         {
-            PlayerStateMachine local = PlayerStateMachine.Local;
+            PlayerStateMachine local = _local;
             if (local == null || report.Target == null)
                 return;
 
@@ -146,7 +155,7 @@ namespace Plunderspell.UI
 
         private void OnCast(SpellCastingSystem.CastReport report)
         {
-            PlayerStateMachine local = PlayerStateMachine.Local;
+            PlayerStateMachine local = _local;
             if (local == null)
                 return;
             _trauma.Add(ForCast(report.Volume, Vector3.Distance(local.transform.position, report.Origin)));
