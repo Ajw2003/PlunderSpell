@@ -3505,7 +3505,7 @@
         "height_with_props_m": 2.283,
         "rig_bones": 21,
         "skinned_bones": 20,
-        "mean_influences": 1.67
+        "mean_influences": 1.71
       },
       "spec": {
         "dims_WDH_m": null,
@@ -3598,7 +3598,7 @@
         "gltf": "Assets/Models/ArtBible/Players/Lair/Wizard/glTF/Wizard.gltf",
         "blend": "Assets/Models/ArtBible/Players/Lair/Wizard/Wizard.blend"
       },
-      "build_seconds": 3.5
+      "build_seconds": 3.9
     }
   ]
 }

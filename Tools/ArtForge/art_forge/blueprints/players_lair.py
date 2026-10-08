@@ -150,7 +150,7 @@ def wizard(entry: Entry):
              "max": (0.017, -0.02, fig.belt_z - 0.03)}]
     parts = [fig.torso_part("robe_wool", pad=ROBE_PAD, hem=0.08, hem_flare=1.95,
                             collar=0.02, segments=48, paint=seam)]
-    parts[0].extras["skirt"]["strength"] = 1.0   # a lifted knee must drag the whole hem
+    parts[0].extras["skirt"]["strength"] = 0.5   # drapes: a lifted knee drags half the hem, the rest hangs from the Hips
     for side in ("L", "R"):
         parts.append(_sleeve(fig, side, "robe_wool"))
         parts += fig.hand_part(side, "skin" if side == "R" else "glove_leather")
