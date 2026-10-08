@@ -73,6 +73,14 @@ namespace Plunderspell.Tests
         // --- Interaction ---------------------------------------------------------------------
 
         [Test]
+        public void Test_CrosshairShowsWhereverTheWorldTakesInput_LairRoomAndMarketIncluded()
+        {
+            foreach (Plunderspell.Core.GameState state in System.Enum.GetValues(typeof(Plunderspell.Core.GameState)))
+                Assert.AreEqual(Player.PlayerInputController.AcceptsInputIn(state), CrosshairView.ShownIn(state), state.ToString());
+            Assert.IsTrue(CrosshairView.ShownIn(Plunderspell.Core.GameState.LairRoom), "The Lair room and the Market need a crosshair (#353).");
+        }
+
+        [Test]
         public void Test_LookingAtLootFocusesIt()
         {
             LootInteractor player = MakePlayer();

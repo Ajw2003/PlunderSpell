@@ -226,6 +226,11 @@ namespace Plunderspell.UI
             // IMGUI draws over the uGUI canvas, so an always-on HUD hides the main menu and the
             // lair behind it. Only draw once the player is actually in the world.
             RaidHudModel model = _presenter.Model;
+            // The crosshair's "over something" look follows the interact target, or a piece the left mouse
+            // would grab, wherever the crosshair shows (#353).
+            if (_crosshair != null && CrosshairView.ShownIn(model.State))
+                _crosshair.HasTarget = model.HasInteractTarget ||
+                    (ItemManager.Instance != null && ItemManager.Instance.HoveredItem != null);
             if (model.State != Plunderspell.Core.GameState.Playing &&
                 model.State != Plunderspell.Core.GameState.Paused)
                 return;
@@ -243,9 +248,6 @@ namespace Plunderspell.UI
 
             DrawTopLeft(model);
             DrawTopRight(model, width - k_edge);
-
-            if (_crosshair != null)
-                _crosshair.HasTarget = model.HasInteractTarget;
 
             DrawPrompt(model, centre);
             DrawCarrying(model, centre);

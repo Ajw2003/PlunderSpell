@@ -176,7 +176,9 @@ public class ItemManager : SingletonBase<ItemManager>
         // Reach, not line of sight: the hover ray used to be 100 m long, so anything visible
         // could be yanked across the room.
         float reach = Mathf.Min(_raycastDistance, _maxDragDepth);
-        if (Physics.Raycast(ray, out RaycastHit hit, reach, _itemLayerMask))
+        // Trigger volumes (a counter's sell zone, the extraction pad) are not in the way of a grab:
+        // the first one on the ray used to hide the piece behind it (#353).
+        if (Physics.Raycast(ray, out RaycastHit hit, reach, _itemLayerMask, QueryTriggerInteraction.Ignore))
         {
             if (hit.collider.TryGetComponent(out Item item))
             {

@@ -1,0 +1,65 @@
+18:29:06 test slot 99 wiped, owner's slot to restore: 1
+18:29:13 state MainMenu
+18:29:14 solo, slot 99
+18:29:15 player: player
+18:29:18 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+18:29:20 state: LairRoom
+18:29:21 put GoldenGoblet(Clone)
+18:29:25 aiming at GoldenGoblet(Clone) from (1103.04, 1.50, -2.49)
+18:29:28 ray hits SellZone; hovered GoldenGoblet(Clone) crosshair over-something False
+18:29:29 capture: docs/generated/market-grab-2026-10-07/after.png
+18:29:30 mouse: left
+18:29:31 after the click: held GoldenGoblet(Clone) dragging True holders 1 rel -0.2,-0.1,2.0 speed 0.02 at 1103.5,1.4,-4.4 body 1103.0,1.5,-2.5
+18:29:32 PASS a left click through the Input System picks the piece up in the Market
+18:29:32 walking to (1103.61, 1.51, -4.15)
+18:29:38 held at the counter: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.0,1.7 speed 0.02 at 1103.7,1.5,-4.5 body 1103.2,1.5,-2.8
+18:29:39 mouse: none
+18:29:43 pieces 0
+18:29:43 FAIL letting go the button drops the piece on the Goldsmith's counter (pieces 0)
+18:29:43 FAIL 1 Market grab checks
+18:29:43 cleaning up
+18:29:45 active slot 1
+18:30:04 test slot 99 wiped, owner's slot to restore: 1
+18:30:11 state MainMenu
+18:30:12 solo, slot 99
+18:30:13 player: player
+18:30:16 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+18:30:19 state: LairRoom
+18:30:19 put GoldenGoblet(Clone)
+18:30:23 aiming at GoldenGoblet(Clone) from (1103.04, 1.50, -2.49)
+18:30:26 ray hits SellZone; hovered GoldenGoblet(Clone) crosshair over-something False; interactor focus none
+18:30:27 capture: docs/generated/market-grab-2026-10-07/after.png
+18:30:28 mouse: left
+18:30:30 after the click: held none
+18:30:30 FAIL a left click through the Input System picks the piece up in the Market
+18:30:30 walking to (1103.61, 1.51, -4.15)
+18:30:36 held at the counter: held none
+18:30:37 mouse: none
+18:30:41 pieces 1
+18:30:42 after letting go: held none
+18:30:42 PASS letting go the button lets go of the piece at the Goldsmith's counter (the counter may take it for a sale)
+18:30:42 FAIL 1 Market grab checks
+18:30:42 cleaning up
+18:30:44 active slot 1
+18:31:28 test slot 99 wiped, owner's slot to restore: 1
+18:31:35 state MainMenu
+18:31:36 solo, slot 99
+18:31:37 player: player
+18:31:40 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+18:31:43 state: LairRoom
+18:31:44 put GoldenGoblet(Clone)
+18:31:48 aiming at GoldenGoblet(Clone) from (1103.04, 1.50, -2.49)
+18:31:51 ray hits SellZone; hovered GoldenGoblet(Clone) crosshair over-something True; interactor focus none
+18:31:52 capture: docs/generated/market-grab-2026-10-07/after.png
+18:31:53 mouse: left
+18:31:55 after the click: held GoldenGoblet(Clone) dragging True holders 1 rel -0.2,-0.1,2.0 speed 0.00 at 1103.5,1.4,-4.4 body 1103.0,1.5,-2.5
+18:31:55 PASS a left click through the Input System picks the piece up in the Market
+18:31:56 walking to (1103.61, 1.51, -4.15)
+18:32:02 held at the counter: held GoldenGoblet(Clone) dragging True holders 1 rel -0.2,-0.1,2.1 speed 0.03 at 1104.0,1.4,-4.8 body 1103.2,1.5,-2.8
+18:32:03 mouse: none
+18:32:07 pieces 0
+18:32:08 after letting go: held none
+18:32:08 PASS letting go the button lets go of the piece at the Goldsmith's counter (the counter may take it for a sale)
+18:32:08 PASS all Market grab checks
+18:32:08 cleaning up
+18:32:10 active slot 1
