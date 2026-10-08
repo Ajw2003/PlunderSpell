@@ -84,6 +84,10 @@ PlayerPrefs, so a run elsewhere that is not on the test slot can still change sl
   LineToObservers` (`:242`), so host and client read the same text. Each side clears it after 6 s.
 - The sale (and so the pouch's spawn) runs on the server only; the piece is removed from the pile save and destroyed there, which
   despawns it on every client.
+- **Selling from the floor (#356, owner's choice).** A piece too heavy to lift alone (`Item.IsTooHeavyToLift`) can be towed
+  to a counter's foot: each counter has a second trigger, `SellFoot` (`MarketYardForge.AddSellFoot`), on the floor in front
+  of it on the player's side, as wide as the counter, 1.25 m deep and 1 m high. `SellCounter.OpenOnRestingPiece` looks in
+  both boxes. `Tools/Unity/floor_sale_check.sh`: a 15 kg chest set there sold for 216 coin (`docs/generated/floor-sale-2026-10-07/`).
 - The slate (#360) stands on each counter facing the player: a dark board, chalk-white TextMesh Pro in the ledger's Spectral
   font. Idle it names the vendor and what he buys dearly; in a haggle it shows his name, his line ("Very well. 114 coin.")
   and "1 Plus · 2 Satis · 3 Vale" (`SlateText.cs`, pure, `SlateTextTests`). `CounterSlate.cs` fades out, swaps and fades

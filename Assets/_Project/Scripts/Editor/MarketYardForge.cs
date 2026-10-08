@@ -169,17 +169,42 @@ namespace Plunderspell.EditorTools
             CounterSlate slate = CounterSlateBuilder.Build(yard, slateAt, toStall.normalized);
 
             AddLip(counter, bounds, offset);
+            BoxCollider foot = AddSellFoot(counter, bounds, turn, toStall.normalized);
 
             // A scene network object, so the server owns the haggle and the client's word reaches it. A sale puts a network-spawned CoinPouch prefab on it.
             counter.AddComponent<PurrNet.NetworkIdentity>();
             var sellCounter = counter.AddComponent<SellCounter>();
-            sellCounter.Set(vendor, zone, figure.GetComponent<Renderer>(), slate);
+            sellCounter.Set(vendor, zone, foot, figure.GetComponent<Renderer>(), slate);
             var pouch = AssetDatabase.LoadAssetAtPath<GameObject>(CoinPouchForge.PrefabPath);
             if (pouch == null)
                 Debug.LogError($"[Market] No {CoinPouchForge.PrefabPath}; build the coin pouch first, or {counter.name} sells for nothing.");
             var counterObject = new SerializedObject(sellCounter);
             counterObject.FindProperty("_pouchPrefab").objectReferenceValue = pouch != null ? pouch.GetComponent<CoinPouch>() : null;
             counterObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>
+        /// The floor in front of the counter on the player's side (away from the stall), as wide as the counter, a metre
+        /// and a quarter deep and a metre high: a piece too heavy to lift alone is towed here to sell (#356).
+        /// </summary>
+        private static BoxCollider AddSellFoot(GameObject counter, Bounds bounds, Quaternion turn, Vector3 toStall)
+        {
+            Vector3 back = Quaternion.Inverse(turn) * toStall;
+            float halfDepth = Mathf.Abs(back.x) * bounds.size.x * 0.5f + Mathf.Abs(back.z) * bounds.size.z * 0.5f;
+            float width = Mathf.Abs(back.z) * bounds.size.x + Mathf.Abs(back.x) * bounds.size.z;
+            const float depth = 1.25f, height = 1f;
+
+            var foot = new GameObject("SellFoot");
+            foot.transform.SetParent(counter.transform.parent, false);
+            // bounds were measured with the counter unturned: turn its centre's offset back to find it in the yard.
+            Vector3 centre = counter.transform.position + turn * (bounds.center - counter.transform.position);
+            foot.transform.position = new Vector3(centre.x, bounds.min.y + height * 0.5f, centre.z)
+                                      - toStall * (halfDepth + depth * 0.5f);
+            foot.transform.rotation = Quaternion.LookRotation(-toStall, Vector3.up);
+            var zone = foot.AddComponent<BoxCollider>();
+            zone.isTrigger = true;
+            zone.size = new Vector3(width, height, depth);
+            return zone;
         }
 
         /// <summary>A 4 cm rim round the counter top, so a piece set down near the edge stays on it.</summary>

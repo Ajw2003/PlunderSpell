@@ -19,6 +19,8 @@ namespace Plunderspell.Raid
         [SerializeField] private Vendor _vendor;
         [Tooltip("The counter top: a piece resting inside it is offered to the vendor.")]
         [SerializeField] private BoxCollider _top;
+        [Tooltip("The floor in front of the counter, on the player's side: a piece too heavy to lift alone is towed here to sell (#356).")]
+        [SerializeField] private BoxCollider _foot;
         [SerializeField] private Renderer _figure;
         [Tooltip("The chalk slate on the counter that shows his name, his words and the keys.")]
         [SerializeField] private CounterSlate _slate;
@@ -45,10 +47,11 @@ namespace Plunderspell.Raid
         public Haggle Open => _haggle;
 
         /// <summary>The wiring the Market prefab's builder does, in one call.</summary>
-        public void Set(Vendor vendor, BoxCollider top, Renderer figure, CounterSlate slate)
+        public void Set(Vendor vendor, BoxCollider top, BoxCollider foot, Renderer figure, CounterSlate slate)
         {
             _vendor = vendor;
             _top = top;
+            _foot = foot;
             _figure = figure;
             _slate = slate;
         }
@@ -163,23 +166,35 @@ namespace Plunderspell.Raid
         /// <summary>The first piece lying still on the counter that he has not refused tonight.</summary>
         private void OpenOnRestingPiece()
         {
-            foreach (Collider hit in Physics.OverlapBox(_top.bounds.center, _top.size * 0.5f, _top.transform.rotation,
-                         Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            foreach (BoxCollider zone in new[] { _top, _foot })
             {
-                LootValue value = hit.GetComponentInParent<LootValue>();
-                if (value == null || _refused.Contains(value.gameObject.GetInstanceID()) || !Rests(value.gameObject))
+                if (zone == null)
                     continue;
-                Begin(value);
-                return;
+                foreach (Collider hit in Physics.OverlapBox(zone.bounds.center, zone.size * 0.5f, zone.transform.rotation,
+                             Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                {
+                    LootValue value = hit.GetComponentInParent<LootValue>();
+                    if (value == null || _refused.Contains(value.gameObject.GetInstanceID()) || !Rests(value.gameObject))
+                        continue;
+                    Begin(value);
+                    return;
+                }
             }
+        }
+
+        private static bool Inside(BoxCollider zone, Vector3 point)
+        {
+            if (zone == null)
+                return false;
+            Vector3 local = zone.transform.InverseTransformPoint(point) - zone.center;
+            return Mathf.Abs(local.x) <= zone.size.x * 0.5f && Mathf.Abs(local.y) <= zone.size.y * 0.5f && Mathf.Abs(local.z) <= zone.size.z * 0.5f;
         }
 
         private bool Rests(GameObject piece)
         {
             if (piece.TryGetComponent(out LootPickup pickup) && pickup.IsBeingCarried)
                 return false;
-            Vector3 local = _top.transform.InverseTransformPoint(piece.transform.position) - _top.center;
-            if (Mathf.Abs(local.x) > _top.size.x * 0.5f || Mathf.Abs(local.y) > _top.size.y * 0.5f || Mathf.Abs(local.z) > _top.size.z * 0.5f)
+            if (!Inside(_top, piece.transform.position) && !Inside(_foot, piece.transform.position))
                 return false;
             return !piece.TryGetComponent(out Rigidbody body) || body.isKinematic || body.linearVelocity.sqrMagnitude < RestingSpeed * RestingSpeed;
         }
