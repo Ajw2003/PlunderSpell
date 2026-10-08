@@ -11,12 +11,12 @@ from selling; *Plus* is the only ask; keys first, voice later).
 | Haggle rules | `Runtime/Market/Haggle.cs`, `HaggleRules.cs` | Pure C# (no Unity): limit, opening offer, *Plus* / *Satis* / *Vale*, patience, the 10% lower opening on a second visit. `dotnet test Tools/MarketRules/MarketRules.Tests.csproj` |
 | Counter | `Runtime/Raid/SellCounter.cs` | One counter and its vendor: finds a piece resting on the counter top, opens the haggle, takes the answer, banks the sale |
 | Lines | `Runtime/Raid/VendorLines.cs` | Each vendor's colour and subtitle wording (placeholder text) |
-| Prefab | `Editor/MarketYardForge.cs` | Adds a `SellCounter` to each `MarketCounter`: the vendor is the one whose stall model (cart, stall, booth, cabinet) stands nearest; a trigger box on the top; a capsule figure (no collider) a metre behind towards the stall; a `TextMesh` subtitle above it |
+| Prefab | `Editor/MarketYardForge.cs` | Adds a `SellCounter` to each `MarketCounter`: the vendor is the one whose stall model (cart, stall, booth, cabinet) stands nearest; a trigger box on the top; a capsule figure (no collider) a metre behind towards the stall; a chalk slate on the counter (`CounterSlateBuilder.cs`) |
 
 ## How one haggle runs
 
 1. A loot piece lies still inside the counter's trigger box (not carried, speed under 0.2 m/s) and
-   that vendor has not refused it tonight. The vendor says the opening offer as a subtitle.
+   that vendor has not refused it tonight. The vendor's opening offer is written on his counter's slate.
 2. Within 3 m of the counter, the local player presses **1 Plus**, **2 Satis**, **3 Vale**
    (`SellCounter.Answer` is the same call, for tests and tools). Saying the word aloud does the same: `HaggleVoiceRouter.Hear` calls `SellCounter.Speak` (`SellCounter.cs:150`) on the nearest counter whose `ListeningDistance` (`:90`) is finite (haggle open, player within 3 m); see voice.md.
 3. *Plus*: the offer rises 10% (`Raised`), or the vendor refuses (`Refused`) and loses patience; at
@@ -84,8 +84,12 @@ PlayerPrefs, so a run elsewhere that is not on the test slot can still change sl
   LineToObservers` (`:242`), so host and client read the same text. Each side clears it after 6 s.
 - The sale (and so the pouch's spawn) runs on the server only; the piece is removed from the pile save and destroyed there, which
   despawns it on every client.
-- The subtitle stands half a metre in front of the vendor (toward the counter) at chest height, under
-  the stall roof (`MarketYardForge.cs:164`). Each counter top has a 4 cm rim (`AddLip`, `:182`) so a piece set
+- The slate (#360) stands on each counter facing the player: a dark board, chalk-white TextMesh Pro in the ledger's Spectral
+  font. Idle it names the vendor and what he buys dearly; in a haggle it shows his name, his line ("Very well. 114 coin.")
+  and "1 Plus · 2 Satis · 3 Vale" (`SlateText.cs`, pure, `SlateTextTests`). `CounterSlate.cs` fades out, swaps and fades
+  in over 1 s. It is fed from the same line every player already receives, so host and client read the same slate
+  (`coop_lair_check.sh`). The floating `TextMesh` subtitle is gone. `Tools/Unity/slate_check.sh`,
+  `docs/generated/counter-slate-2026-10-07/`. Each counter top has a 4 cm rim (`AddLip`, `:182`) so a piece set
   near the edge stays on it.
 - Checked: `Tools/Unity/coop_lair_check.sh` (selling part, `eval/coop_lair.cs`): the host puts a piece on the
   Goldsmith's counter, the client's Plus then Satis go through `Speak`; both sides show the same lines,

@@ -20,7 +20,8 @@ namespace Plunderspell.Raid
         [Tooltip("The counter top: a piece resting inside it is offered to the vendor.")]
         [SerializeField] private BoxCollider _top;
         [SerializeField] private Renderer _figure;
-        [SerializeField] private TextMesh _subtitle;
+        [Tooltip("The chalk slate on the counter that shows his name, his words and the keys.")]
+        [SerializeField] private CounterSlate _slate;
         [Tooltip("How close the local player must stand to answer, in metres.")]
         [SerializeField] private float _reach = 3f;
         [Tooltip("The coin pouch a sale puts on the counter.")]
@@ -33,6 +34,8 @@ namespace Plunderspell.Raid
         private GameObject _piece;
         private int _nightSeed;
         private float _clearAt;
+        private string _line = ""; // his last line, on every side; empty when the slate shows what he wants
+        private bool _open;        // whether that line came with the haggle still open
 
         // Pieces he refused for the rest of the night, and pieces the player said Vale over (instance ids).
         private readonly HashSet<int> _refused = new HashSet<int>();
@@ -42,12 +45,12 @@ namespace Plunderspell.Raid
         public Haggle Open => _haggle;
 
         /// <summary>The wiring the Market prefab's builder does, in one call.</summary>
-        public void Set(Vendor vendor, BoxCollider top, Renderer figure, TextMesh subtitle)
+        public void Set(Vendor vendor, BoxCollider top, Renderer figure, CounterSlate slate)
         {
             _vendor = vendor;
             _top = top;
             _figure = figure;
-            _subtitle = subtitle;
+            _slate = slate;
         }
 
         private void Awake()
@@ -55,13 +58,7 @@ namespace Plunderspell.Raid
             NewNight();
             if (_figure != null)
                 _figure.material.color = VendorLines.Colour(_vendor);
-            if (_subtitle != null)
-            {
-                var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                _subtitle.font = font;
-                _subtitle.GetComponent<MeshRenderer>().sharedMaterial = font.material;
-                _subtitle.text = "";
-            }
+            _slate?.Show(SlateText.For(_vendor, false, ""));
         }
 
         // A night runs from setting out to setting out: a new raid forgets who walked away and rolls a new mood.
@@ -91,7 +88,7 @@ namespace Plunderspell.Raid
         /// </summary>
         public float ListeningDistance()
         {
-            bool open = Decides ? _haggle != null : _subtitle != null && _subtitle.text != "";
+            bool open = Decides ? _haggle != null : _line != "";
             Camera eye = Camera.main;
             if (!open || eye == null || _top == null)
                 return float.PositiveInfinity;
@@ -113,32 +110,29 @@ namespace Plunderspell.Raid
 
         private void Update()
         {
-            if (_subtitle != null && _clearAt > 0f && Time.time > _clearAt && _haggle == null)
+            if (_slate != null && _clearAt > 0f && Time.time > _clearAt && !_open)
             {
-                _subtitle.text = "";
+                _line = "";
+                _slate.Show(SlateText.For(_vendor, false, ""));
                 _clearAt = 0f;
             }
             if (!Decides)
             {
-                if (PlayerIsNear() && _subtitle != null && _subtitle.text != "")
+                if (PlayerIsNear() && _line != "")
                     ReadKeys(); // the server knows if a haggle is open; this side only sees its lines
                 return;
             }
 
             if (_haggle != null && (_piece == null || !Rests(_piece)))
+            {
                 _haggle = null; // taken off the counter without a word
+                Announce(_line, false);
+            }
 
             if (_haggle == null)
                 OpenOnRestingPiece();
             else if (PlayerIsNear())
                 ReadKeys();
-        }
-
-        private void LateUpdate()
-        {
-            Camera eye = Camera.main;
-            if (_subtitle != null && eye != null)
-                _subtitle.transform.rotation = Quaternion.LookRotation(_subtitle.transform.position - eye.transform.position);
         }
 
         private void ReadKeys()
@@ -272,25 +266,30 @@ namespace Plunderspell.Raid
             pouch.Fill(coins);
         }
 
-        private void Say(string line)
+        private void Say(string line) => Announce(line, _haggle != null && !_haggle.IsOver);
+
+        // The one path to every player's slate: the line, and whether the haggle is still open (for the keys under it).
+        private void Announce(string line, bool open)
         {
-            if (_subtitle == null)
+            if (_slate == null)
                 return;
-            Show(line);
+            Show(line, open);
             if (isSpawned && isServer)
-                LineToObservers(line);
+                LineToObservers(line, open);
         }
 
         [ObserversRpc]
-        private void LineToObservers(string line)
+        private void LineToObservers(string line, bool open)
         {
-            if (!isServer) // the host showed it in Say
-                Show(line);
+            if (!isServer) // the host showed it in Announce
+                Show(line, open);
         }
 
-        private void Show(string line)
+        private void Show(string line, bool open)
         {
-            _subtitle.text = line;
+            _line = line;
+            _open = open;
+            _slate.Show(SlateText.For(_vendor, open, line));
             _clearAt = Time.time + LineSeconds;
         }
     }

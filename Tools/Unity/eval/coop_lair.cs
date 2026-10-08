@@ -199,7 +199,7 @@ switch (action)
         return "near " + s;
     }
     case "line":
-        return "line " + ((UnityEngine.TextMesh)Get(GoldsmithCounter(), "_subtitle")).text;
+        return "line " + ((string)Get(Get(GoldsmithCounter(), "_slate"), "Text")).Replace("\n", " | ");
     case "speak":
     {
         var counter = GoldsmithCounter();

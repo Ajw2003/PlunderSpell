@@ -117,7 +117,7 @@ namespace Plunderspell.EditorTools
 
         /// <summary>
         /// Gives a counter its vendor (the one whose stall model stands nearest), a trigger volume on its top, a placeholder
-        /// capsule figure behind it (towards the stall, no collider) and a world-space subtitle above the figure.
+        /// capsule figure behind it (towards the stall, no collider) and a chalk slate standing on the counter.
         /// </summary>
         private static void AddSellCounter(GameObject counter, Dictionary<Vendor, GameObject> stalls)
         {
@@ -160,23 +160,20 @@ namespace Plunderspell.EditorTools
             figure.transform.position = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z) + toStall.normalized * 1.0f + Vector3.up * 0.45f;
             figure.transform.localScale = new Vector3(0.6f, 0.9f, 0.6f);
 
-            // Chest height, half a metre in front of the vendor (towards the counter): under the stall roof, facing the player.
-            var text = new GameObject("Subtitle");
-            text.transform.SetParent(yard, false);
-            text.transform.position = figure.transform.position - toStall.normalized * 0.5f + Vector3.up * 0.5f;
-            var mesh = text.AddComponent<TextMesh>();
-            mesh.anchor = TextAnchor.LowerCenter;
-            mesh.alignment = TextAlignment.Center;
-            mesh.characterSize = 0.05f;
-            mesh.fontSize = 48;
-            mesh.color = Color.white;
+            // The chalk slate stands on the counter top at its stall edge, facing the player's side.
+            Vector3 back = Quaternion.Inverse(turn) * toStall.normalized;
+            float depth = Mathf.Abs(back.x) * bounds.size.x * 0.5f + Mathf.Abs(back.z) * bounds.size.z * 0.5f - 0.15f;
+            // A little to the player's right: the stalls' scales stand mid-counter and would hide the words.
+            Vector3 right = Vector3.Cross(Vector3.up, toStall.normalized);
+            Vector3 slateAt = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z) + toStall.normalized * depth + right * 0.4f;
+            CounterSlate slate = CounterSlateBuilder.Build(yard, slateAt, toStall.normalized);
 
             AddLip(counter, bounds, offset);
 
             // A scene network object, so the server owns the haggle and the client's word reaches it. A sale puts a network-spawned CoinPouch prefab on it.
             counter.AddComponent<PurrNet.NetworkIdentity>();
             var sellCounter = counter.AddComponent<SellCounter>();
-            sellCounter.Set(vendor, zone, figure.GetComponent<Renderer>(), mesh);
+            sellCounter.Set(vendor, zone, figure.GetComponent<Renderer>(), slate);
             var pouch = AssetDatabase.LoadAssetAtPath<GameObject>(CoinPouchForge.PrefabPath);
             if (pouch == null)
                 Debug.LogError($"[Market] No {CoinPouchForge.PrefabPath}; build the coin pouch first, or {counter.name} sells for nothing.");

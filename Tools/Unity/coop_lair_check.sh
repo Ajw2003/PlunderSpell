@@ -169,7 +169,7 @@ hl="$(L host line)"; cl="$(L client line)"; log "host: $hl"; log "client: $cl"
 r=no; [ "$hl" = "$cl" ] && case "$hl" in *Done*) r=ok ;; esac
 check $r "the client's Satis sells it, and both see the same line"
 m1="$(L host money)"; log "host after: $m1"
-coins="${hl##*: }"; coins="${coins%% coin*}"
+coins="${hl##*| }"; coins="${coins%% coin*}"
 r=no; [ "$m0" = "$m1" ] && r=ok
 check $r "the sale banked nothing yet: the host's gold and debt did not move"
 sleep 1
