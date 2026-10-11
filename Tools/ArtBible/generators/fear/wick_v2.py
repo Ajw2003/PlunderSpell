@@ -33,6 +33,33 @@ def ease(t, start, end):
     return u * u * (3 - 2 * u)
 
 
+def fire(s, x, y, h, lean=0.0, seed=0, op=1.0):
+    """A burning tongue cluster rooted at (x, y), h tall, leaning by lean (fraction of h)."""
+    import random
+    r = random.Random(seed * 7919 + int(x * 13) + int(y * 7))
+    outer = s.lg(MADDER, "#7A2A18", 0, 1, 0, 0)
+    inner = s.lg(FLAME, MADDER, 0, 1, 0, 0)
+    out = [f'<g opacity="{op:.2f}">']
+    for k in range(3):
+        hh = h * r.uniform(.55, 1.0) * (1 if k == 1 else .8)
+        dx = (k - 1) * h * .16 + r.uniform(-.05, .05) * h
+        w = h * .2
+        tx, ty = x + dx + lean * hh, y - hh
+        for fill, sc in ((outer, 1.0), (inner, .55)):
+            ww = w * sc; th = hh * (sc * .85 + .15)
+            tx2, ty2 = x + dx + lean * th, y - th
+            out.append(f'<path d="M{x+dx-ww:.1f},{y:.1f} C{x+dx-ww*1.1:.1f},{y-th*.45:.1f} {tx2-ww*.6:.1f},{ty2+th*.35:.1f} {tx2:.1f},{ty2:.1f} '
+                       f'C{tx2+ww*.3:.1f},{ty2+th*.4:.1f} {x+dx+ww*1.2:.1f},{y-th*.4:.1f} {x+dx+ww:.1f},{y:.1f} Z" fill="{fill}"/>')
+    out.append('</g>')
+    return ''.join(out)
+
+
+def embers(s, x0, y0, w, h, n, seed=1):
+    import random
+    r = random.Random(seed)
+    return ''.join(f'<circle cx="{x0+r.random()*w:.1f}" cy="{y0+r.random()*h:.1f}" r="{r.uniform(.4,1.1):.2f}" fill="{r.choice([MADDER, FLAME, GLOW_HORN])}" opacity="{r.uniform(.5,1):.2f}"/>' for _ in range(n))
+
+
 class Body:
     """Key points of the front view at turn amount t (0 = the human warden, 1 = the Wick), in cm, y up negative."""
     def __init__(self, t):
@@ -101,7 +128,10 @@ def coat(s, b, cid):
                + f'<path d="M{sw*.35:.1f},{sy-hump} C{sw*.8:.1f},{sy+40} {hw*.8:.1f},{wy} {hw+2},{hy+4} L{hw+6},{hy+4} L{sw+6},{sy-hump} Z" fill="{BLACK}" opacity=".32"/>'
                + f'<path d="M{-sw+2},{sy+8} C{-sw+1},{sy+40} {-ww},{wy-20} {-hw+3},{hy-6}" fill="none" stroke="{shade(WOOL,1.3)}" stroke-width="1.6" opacity=".45"/>'
                + s.flecks(-hw, sy, hw * 2, hy - sy, 90, "#3A2E1E", .2, .8, .35)
-               + s.flecks(-hw, hy - 18, hw * 2, 18, 50, "#2A2418", .2, .6, .5) + '</g>')
+               + s.flecks(-hw, hy - 18, hw * 2, 18, 50, "#2A2418", .2, .6, .5)
+               + (f'<path d="M{-sw-4},{sy-hump} Q0,{sy+18} {sw+4},{sy-hump} L{sw+4},{sy+14} Q0,{sy+40} {-sw-4},{sy+14} Z" fill="#1A120C" opacity="{.55*b.open:.2f}"/>'
+                  f'<path d="M{-hw-4},{hy+4} Q0,{hy-30} {hw+4},{hy+4} Z" fill="#1A120C" opacity="{.6*b.open:.2f}"/>'
+                  + s.flecks(-hw, sy, hw * 2, hy - sy, 40, MADDER, .3, 1.0, .7 * b.open) if b.open > 0 else '') + '</g>')
     # the hem, torn into strips that hang lower as the man grows out of the coat
     if b.open > .2:
         for i in range(9):
@@ -279,8 +309,11 @@ def head(s, b, scale=1.0):
     out.append(kettle_hat(s, 0, top - 1, tilt=-5, scale=1.15 + .1 * o))
     for k in range(-2, 3):
         out.append(f'<circle cx="{k*3.4:.1f}" cy="{top-7+abs(k)*1.2:.1f}" r=".9" fill="{BLACK}"/>')
-    # smoke from the vents
-    out.append(f'<path d="M-3,{top-15} q-3,-6 1,-11 q4,-5 0,-10 M4,{top-14} q3,-7 -1,-12" fill="none" stroke="#635C4C" stroke-width=".7" opacity=".7"/>')
+    # fire jets out of the vents and runs over the brim
+    for i, (x, h) in enumerate(((-7, 18), (-2.5, 26), (2.5, 24), (7, 17))):
+        out.append(fire(s, x, top - 8, h * o, lean=x * .02, seed=50 + i))
+    for sg in (-1, 1):
+        out.append(fire(s, sg * 19, top - 2, 10 * o, lean=sg * .2, seed=55 + sg))
     # the face, peeled down in four flaps that hang over the shoulders like scraped horn panes
     for sg in (-1, 1):
         for k, (dx, ln) in enumerate(((7, 20), (15, 16))):
@@ -300,6 +333,10 @@ def front(s, t, cx, k, cid):
     out = [f'<g transform="translate({cx},690) scale({k})">', f'<ellipse cx="0" cy="0" rx="{38+20*b.g:.0f}" ry="2.8" fill="#0B0A08" opacity=".75"/>']
     if t >= .2:   # the lantern on the floor, dark: its flame has gone into him
         out.append(lantern_box(s, 30 + 14 * b.g, -15, lit=False, tilt=78))
+    if b.open > 0:   # a mantle of fire behind him, rising off his back above the shoulders
+        for i in range(9):
+            u = -1 + i / 4
+            out.append(fire(s, u * b.sw * .9, b.sh_y + 30 - abs(u) * 10, (70 - abs(u) * 30) * b.open, lean=u * .25, seed=80 + i, op=.85))
     out.append(legs(s, b))
     out.append(arm(s, b, -1))
     out.append(coat(s, b, cid))
@@ -307,8 +344,36 @@ def front(s, t, cx, k, cid):
     out.append(belt(s, b))
     out.append(arm(s, b, 1))
     out.append(head(s, b))
+    out.append(burning(s, b))
     out.append('</g>')
     return ''.join(out), b
+
+
+def burning(s, b):
+    """He is on fire: the shoulders, the torn coat, the hem, the chest and the head all burn."""
+    o = b.open
+    if o <= 0:
+        return ''
+    out = [f'<ellipse cx="0" cy="-1" rx="{60*o:.0f}" ry="5" fill="{MADDER}" opacity="{.35*o:.2f}"/>']
+    sw, sy = b.sw, b.sh_y
+    for i, u in enumerate((-.95, -.7, -.45, .45, .7, .95)):   # along both shoulders
+        x = u * sw; y = sy + abs(u) * 4 - 2
+        out.append(fire(s, x, y, (30 + 14 * (i % 2)) * o, lean=-.12 * u, seed=i))
+    for i, (x, y) in enumerate(((-28, .35), (24, .5), (32, .75), (-34, .7), (16, .25))):   # out of the tears in the coat
+        yy = sy + (b.hip_y - sy) * y
+        out.append(fire(s, x * sw / 44, yy, 20 * o, lean=.1, seed=10 + i))
+    for i in range(7):   # the hem burning as it hangs
+        x = -b.hem_w + 6 + i * (b.hem_w * 2 - 12) / 6
+        out.append(fire(s, x, b.hem_y + 4, (16 + (i * 5) % 9) * o, seed=20 + i))
+    for i, f in enumerate((-.8, .8, -.4, .4)):   # flame leaking out between the ribs
+        yy = b.neck_y + 18 + i * 14
+        out.append(fire(s, f * 15 * o, yy, 10 * o, lean=f * .4, seed=30 + i))
+    for sg in (-1, 1):   # along the arms to the elbow
+        ex, ey = sg * (b.sw + 6 + 18 * b.g), b.sh_y + 40 + 38 * b.g
+        out.append(fire(s, ex, ey - 6, 18 * o, lean=sg * .15, seed=40 + sg))
+        out.append(fire(s, (ex + sg * (b.sw - 4)) / 2, (ey + b.sh_y) / 2, 9 * o, lean=sg * .1, seed=42 + sg))
+    out.append(embers(s, -sw * 1.6, b.crown - 30, sw * 3.2, (b.hip_y - b.crown) + 30, int(60 * o), seed=5))
+    return ''.join(out)
 
 
 def side_view(s, cx, k):
@@ -348,6 +413,11 @@ def side_view(s, cx, k):
     for i in range(5):
         x = -14 + i * 8
         out.append(f'<path d="M{x},{hy+29} l4,0 l-1,{8+i%3*4} l-2,-2 Z" fill="{shade(WOOL,.75)}"/>')
+    for i in range(6):   # the back burning along the spine, and the hem
+        yy = b.sh_y + 4 + i * (hy - b.sh_y) / 6
+        out.append(fire(s, -24, yy, 26 + (i % 2) * 14, lean=-.3, seed=60 + i))
+    for i in range(4):
+        out.append(fire(s, -12 + i * 9, hy + 32, 18, seed=70 + i))
     # the head, low and forward between the shoulders
     nx, ny = 10, b.sh_y + 2
     out.append(f'<g transform="translate({nx},{ny}) rotate(-24)">')
@@ -355,6 +425,7 @@ def side_view(s, cx, k):
     out.append(head(s, hb))
     out.append('</g>')
     out.append('</g>')
+    out.append(f'<ellipse cx="10" cy="-1" rx="55" ry="5" fill="{MADDER}" opacity=".35"/>' + embers(s, -50, b.crown - 30, 100, 220, 50, seed=8))
     # arms hang from the rotated shoulder, the glaive arm nearest
     ang = math.radians(24)
     sx = 0 + (0 * math.cos(ang) - (b.sh_y + 8 - hy) * math.sin(ang))
@@ -387,13 +458,13 @@ def sheet_true_form():
                  + text(110, y - 6, "arch 2.59 m: it stoops through", 10, "#9A9078"))
     P = lambda x, y: (round(400 + K * x, 1), round(690 + K * y, 1))
     S = lambda x, y: (round(690 + K * x, 1), round(690 + K * y, 1))
-    C = [callout(*P(-6, b.crown + 6), 960, 175, "Kettle hat as the lantern's cap", "vents punched through; smoke"),
+    C = [callout(*P(-6, b.crown + 6), 960, 175, "Kettle hat as the lantern's cap", "fire jets from the vents"),
          callout(*P(9, b.neck_y - 20), 960, 225, "Head: a cage of four bone bars", "the flame burns inside, 0.30 m"),
          callout(*P(-17, b.neck_y + 9), 960, 275, "Face peeled into four panes", "hangs open; one eye still looks"),
-         callout(*P(14, (b.neck_y + b.hip_y) / 2), 960, 330, "Ribs opened into lantern bars", "the candle burns in the chest"),
+         callout(*P(14, (b.neck_y + b.hip_y) / 2), 960, 330, "Ribs opened into lantern bars", "fire leaks out between them"),
          callout(*P(-60, -80), 960, 385, "The glaive grown into the arm", "blade 0.70 m from the wrist"),
          callout(*P(66, -60), 960, 440, "Fingers 0.40 m, bone-tipped", "the hand that catches"),
-         callout(*P(44, -6), 960, 495, "His lantern, dark on the floor", "its flame left it for him"),
+         callout(*P(44, -6), 960, 495, "Burning: back, shoulders, coat", "his lantern lies dark; he is lit"),
          callout(*S(22, -200), 960, 550, "Hunched 24° from the hip", "the light carried low and ahead")]
     rows = [("Size", "3.10 m standing, shoulders 0.88 m across. Stoops to 2.50 m under the 2.59 m arch; the light goes first.")]
     head_ = frame_open(s, "FEAR PASS · LANTERN WARDEN · TRUE FORM · ROUND 2", "The Wick", "H 3.10 m · stoops to 2.50 m · ≤ 10k tris", "1 m = 180 px · ground y 690", glow_cx="35%", glow_cy="30%")
@@ -435,7 +506,7 @@ def sheet_turn():
     Q = lambda x, y: (round(hx + k * x, 1), round(hy + k * y, 1))
     inset.append(callout(*Q(-20, 7), ix + 18, iy + 430, "Last eye", "tracks you", side="right"))
     inset.append(callout(*Q(11, 6), ix + iw - 18, iy + 430, "Half a jaw", "it still chews", side="left"))
-    inset.append(callout(*Q(0, -45), ix + iw - 18, iy + 60, "Vented cap", "smoke from the holes", side="left"))
+    inset.append(callout(*Q(0, -45), ix + iw - 18, iy + 60, "Vented cap", "fire from the holes", side="left"))
     inset.append(callout(*Q(-12, -20), ix + 18, iy + 110, "Bone bars", "with knuckles", side="right"))
     rows = [("The turn, proposed", "1.6 s from being seen to the hunt. For the first 0.9 s it is busy turning: the one moment to run."),
             ("Its counter, proposed", "It sees only by its own flame. Out of the light you are hidden; in it, you are seen.")]

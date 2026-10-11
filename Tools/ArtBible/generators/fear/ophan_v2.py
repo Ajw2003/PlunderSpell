@@ -6,7 +6,7 @@
   ophan-v2-2-in-the-castle   inside a Keep cell, larger than the room, and its rim up close
 
 From the source: a wheel within a wheel, their rims high and dreadful and full of eyes all round;
-four faces (a man, a lion, an ox, an eagle); wings, six of them as the seraphim have, two covering
+(the source's four faces are replaced, at the owner's call, by one great eye at its heart); wings, six of them as the seraphim have, two covering
 the face, two covering the feet, two spread; fire with lightning going out of it.
 The magical twist: it is a clock of the world. Its great rim is engraved with the years of the four
 Ages, it stands in several moments at once (faint echoes of it a heartbeat early and late), and
@@ -119,6 +119,24 @@ def faces(s, cy, k=1.0):
     return ''.join(out)
 
 
+def great_eye(s, cy, w):
+    """One eye at the heart of the wheels, w wide: a vellum eye, a lapis iris, a pupil like the portal."""
+    h = w * .46
+    iris = s.rg(GHOST, LAPIS, 1, 1, .5, .5, .5)
+    lid = s.lg(shade(PEWTER, 1.25), shade(PEWTER, .45), 0, 0, 0, 1)
+    rays = ''.join(f'<path d="M{math.cos(a)*h*.36:.1f},{cy+math.sin(a)*h*.36:.1f} L{math.cos(a)*h*.62:.1f},{cy+math.sin(a)*h*.62:.1f}" stroke="{DEEP}" stroke-width="{w*.006:.1f}" opacity=".6"/>'
+                   for a in (2 * math.pi * i / 36 for i in range(36)))
+    return (f'<circle cx="0" cy="{cy}" r="{w*.75:.0f}" fill="{s.rg(GHOST, LAPIS, .55, 0, .5, .5, .5)}"/>'
+            f'<path d="M{-w/2:.0f},{cy} Q0,{cy-h*1.35:.0f} {w/2:.0f},{cy} Q0,{cy+h*1.35:.0f} {-w/2:.0f},{cy} Z" fill="{lid}" stroke="{BLACK}" stroke-width="{w*.025:.1f}"/>'
+            f'<path d="M{-w*.44:.0f},{cy} Q0,{cy-h*1.12:.0f} {w*.44:.0f},{cy} Q0,{cy+h*1.12:.0f} {-w*.44:.0f},{cy} Z" fill="{BONE}" stroke="{BLACK}" stroke-width="{w*.012:.1f}"/>'
+            f'<circle cx="0" cy="{cy}" r="{h*.66:.0f}" fill="{iris}" stroke="{BLACK}" stroke-width="{w*.012:.1f}"/>' + rays +
+            f'<circle cx="0" cy="{cy}" r="{h*.3:.0f}" fill="{DEEP}"/><circle cx="0" cy="{cy}" r="{h*.3:.0f}" fill="none" stroke="{GHOST}" stroke-width="{w*.008:.1f}"/>'
+            f'<circle cx="{-h*.16:.0f}" cy="{cy-h*.16:.0f}" r="{h*.08:.0f}" fill="{GHOST}"/>'
+            # lashes of hammered pewter round the lid
+            + ''.join(f'<path d="M{math.cos(a)*w*.5:.0f},{cy+math.sin(a)*h*1.0:.0f} L{math.cos(a)*w*.62:.0f},{cy+math.sin(a)*h*1.35:.0f}" stroke="{shade(PEWTER,.6)}" stroke-width="{w*.018:.1f}" stroke-linecap="round"/>'
+                      for a in (math.pi + math.pi * (i + .5) / 9 for i in range(9))))
+
+
 def lightning(cy, R, seed=3):
     import random
     r = random.Random(seed)
@@ -157,13 +175,13 @@ def ophan(s, cy, R, with_wings=True, echoes=True, wings_scale=1.0):
     out.append(rim(s, R * .92, R * .3, -16, R * .07, cy, 14, R * .07, back=True))
     out.append(f'<circle cx="0" cy="{cy}" r="{R*.42:.0f}" fill="{core}"/>')
     out.append(lightning(cy, R * .95))
-    out.append(faces(s, cy, k=R / 300))
     out.append(rim(s, R * .24, R, 0, R * .065, cy, 12, R * .065, marks=0))
+    out.append(great_eye(s, cy, R * .9))
     out.append(rim(s, R, R, 0, R * .085, cy, 28, R * .085, marks=48))
     if with_wings:
-        # the two wings that cover its face, crossed low over the core so only the man's brow shows
-        out.append(wing(s, (-R * .55, cy - R * .1), (R * .6, cy + R * .42), R * .3, 7, flip=1, tint=.92, eyes=2))
-        out.append(wing(s, (R * .55, cy - R * .1), (-R * .6, cy + R * .42), R * .3, 7, flip=-1, tint=.92, eyes=2))
+        # two wings crossed beneath the eye
+        out.append(wing(s, (-R * .6, cy + R * .25), (R * .62, cy + R * .7), R * .28, 7, flip=1, tint=.92, eyes=2))
+        out.append(wing(s, (R * .6, cy + R * .25), (-R * .62, cy + R * .7), R * .28, 7, flip=-1, tint=.92, eyes=2))
     return ''.join(out)
 
 
@@ -205,7 +223,7 @@ def sheet_wheels():
     C = [callout(*P(R * .7, cy - R * .7), 900, 150, "The great wheel, 5.8 m across", "48 hour marks; the four Ages' years"),
          callout(*P(-R * .05, cy - R), 900, 205, "A wheel within a wheel", "at right angles: it goes any way"),
          callout(*P(R * .97, cy + R * .1), 900, 260, "Rims full of eyes, all round", "each looking its own way"),
-         callout(*P(0, cy - R * .2), 900, 315, "Four faces: man, lion, ox, eagle", "two wings veil them"),
+         callout(*P(R * .12, cy - R * .12), 900, 315, "One great eye at its heart", "2.6 m wide, a portal for a pupil"),
          callout(*P(R * 1.5, cy - R * 1.2), 900, 370, "Six wings, as the seraphim", "two spread, 11 m tip to tip"),
          callout(*P(R * .5, cy + R * 1.2), 900, 425, "Two wings cover its feet", "it never touches the floor"),
          callout(*P(-R * .35, cy + R * .6), 320, 470, "Echoes: it is a heartbeat early", "and late, all at once", side="left"),

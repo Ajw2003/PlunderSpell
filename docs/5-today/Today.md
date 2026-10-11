@@ -1,5 +1,16 @@
 # Today
 
+**2026-10-11 (latest, later) - the Wick on fire, the Ophan with one eye (#386).** Owner's notes on
+round two: more of the Wick on fire, and the Ophan's four faces cut for one great eye at its heart.
+`wick_v2.py` now sets him burning (a mantle off his back, shoulders, coat tears, hem, fire from the
+hat's vents); `ophan_v2.py` replaces the faces with a 2.6 m eye with a portal for a pupil. Both
+sheets re-rendered and looked at. The two are now alone on a new page,
+`docs/art/concept/fear/the-wick-and-the-ophan.html` (published for the owner); the old proposal
+page and round one's sheets stay in the repo. Waiting on the owner to confirm both, the turn timing,
+the counters, and lapis for the Ophan. Nothing modelled yet.
+
+---
+
 **2026-10-11 (latest) - round two of the two horrors (#386).** The owner picked the Wick and the
 Ophan of Hours and asked for more detail: the Wick more daunting, the Ophan closer to the source
 and far larger. New `Tools/ArtBible/generators/fear/wick_v2.py` and `ophan_v2.py` draw four sheets
