@@ -52,23 +52,42 @@ artifacts. Each raid then has two goals:
    eventually, maybe, you can fight the creature instead of always looking over your shoulder and
    risking your life for its trinkets.
 
+**The creature hunts you through time.**
+- The Lair and the Market stand outside time, so they are always safe.
+- Its demand, the quota, falls due every 3 to 5 raids as a base. The number is configurable.
+- If the portal closes while you are still in the castle, you are left behind.
+- If the creature catches you empty-handed, you die in that raid.
+- Dying in a castle loses every item you brought in and every item you meant to bring back. The
+  castle keeps everything you don't take.
+- Learned spells stay learned. A spell text you found but had not yet learned is lost with you.
+- Spells are learned only in the Lair during calm, never under duress in a raid.
+- If the company fails to fetch the artifacts, the creature hunts them on the next raid and takes
+  all of the spoils from that raid and every one after, until what it is owed is fetched.
+- Nobody starts over. It is purgatory, and the only way out is to grow strong enough to defeat a
+  celestial being. That is the mountain the company climbs, and only together.
+
 **Spells come from two places.** Some spells can only be bought in the Market; some of the later,
 more special spells can only be learned by finding an ancient text in a castle.
 
+**More of the two-form guard (owner, 2026-10-11).** A guard turns when it confirms it has seen you,
+or when it is hit; hearing you only makes it suspicious, still human. A missed or too-loud Somnus
+wakes its target, which sees you at once and turns.
+
+**Somnus is bought in the Market** with coin from the first hauls.
+
 ## First slice
 
-1. The spell lockdown: Porta at the start, Somnus learned early, the rest locked, backfire
+1. The spell lockdown: Porta at the start, Somnus bought in the Market, the rest locked, backfire
    consequences.
 2. One two-form guard, with its true-form model and animation, added to the existing roster.
 3. More guards spawning on the ground floors.
+4. The creature and its artifact quota in place of the debt.
 
 Later slices: the rest of the roster as horrors, each with its own senses, behaviour and counter.
 
 ## Open questions
 
-- What exactly triggers the change to true form: being seen, being heard, being hit?
-- How Somnus is first learned (bought, or found), and which spells come from which source.
-- The creature: what it is, where it lives (the Lair?), what happens when you come back
-  without its artifacts, and how the Lair's ledger, the Collector and coin pouches change.
-- What does a Somnus misfire cost?
+- Which later spells come from the Market and which only from ancient texts.
+- The creature: what it is, whether it appears in the castle while hunting, how the company learns
+  what it wants, and how the Lair's ledger, the Collector and coin pouches change.
 - What happens to found weapons and to throwing heavy objects at guards?
