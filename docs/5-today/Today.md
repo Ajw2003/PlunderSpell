@@ -1,5 +1,18 @@
 # Today
 
+**2026-10-11 (night, later) - the Wick made scarier (#406).** Owner: "far more texture, drop
+the glow, fire as geo for now, shaders later". The bake gained opt-in surface detail
+(`weave`, `gradients`, `streaks`, `cracks`, `flecks` in `art_forge/materials.py`); the Wick
+uses them on every family (sooted, grimed, blood-streaked, cracked). No emission anywhere. Fire
+is back as painted three-tone geometry (shoulders, a mantle off the back, a crown over the cap,
+vents, coat tears, hem, elbows, the candle), 10,596 tris of a budget raised to 12k for it; the
+FireMask is still baked for the shader to come. The flames broke heat weighting (8 of 8 tries
+once), so `Blueprint.heat_skip_props` holds props out of the solve: 6 of 6 builds then passed.
+Lantern Warden and wizard rebuilt to scratch: textures identical to the pixel. Sheet
+`docs/art/models/fear/wick.png` looked at over three more passes and re-recorded.
+
+---
+
 **2026-10-11 (night) - the Wick is modelled (#406, under #386).** Spec in `docs/art/data/fear.json`
 (a new `fear` group in ArtForge, `--age fear`, so the Ages' rosters of four stay as they are),
 blueprint `Tools/ArtForge/art_forge/blueprints/enemies_fear.py`, model in

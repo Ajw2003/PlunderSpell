@@ -383,16 +383,25 @@ JSON `concept` names a `.png` is reviewed beside that plate. The Wick (the Lante
 form, `blueprints/enemies_fear.py`) is `figures.Human(height=3.0, arm_length=1.35)`: `arm_length`
 scales upper arm, forearm and hand, default 1.0.
 
-**Fire is a shader, not geometry** (owner, 2026-10-11). `Blueprint.fire_families = {family:
-strength}` bakes an extra greyscale `<Name>_FireMask.png` beside the BaseMap (1 = flames, lower
-= smoulder, 0 = none), the same way players bake a DyeMask; the engine's fire shader reads it.
-The ordinary review sheet shows the model unlit, so look at the fire's placement with
+**Fire is painted geometry for now, a shader later** (owner, 2026-10-11). The Wick's flames
+are three-tone tongues (`_flame`, `_blaze` in `enemies_fear.py`: a dark madder shell, madder,
+a pale core nearer the viewer), with no emission, rigid props on the bone they sit on.
+`Blueprint.heat_skip_props = True` lifts those ~90 small islands out of the heat-weighting
+solve and puts them back after; with them in it, Blender's solver failed 8 tries in 8.
+`Blueprint.fire_families = {family: strength}` still bakes `<Name>_FireMask.png` (1 = flames,
+lower = smoulder) for the shader that will replace them; see where it lands with
 
 ```bash
 python3.11 Tools/ArtForge/fire_preview.py enemies fear wick   # -> docs/art/models/fear/wick-fire.png
 ```
 
-which lights the mask as madder glow, front and three-quarter (a stand-in, not the shader).
+(the mask lit as madder glow: a stand-in, not the shader).
+
+**Surface detail.** Families can ask the bake for more texture than blotch noise: `weave`,
+`gradients` (soot from above, mud from below), `streaks`, `cracks` and `flecks`, all set in
+`family_overrides` and documented at the top of `art_forge/materials.py`. None is on unless a
+family names it, so every model built before them bakes the same (checked to the pixel on the
+Lantern Warden and the wizard). The Wick uses all five.
 
 ## Players
 

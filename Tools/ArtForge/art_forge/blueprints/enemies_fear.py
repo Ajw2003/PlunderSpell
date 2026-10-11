@@ -21,6 +21,80 @@ from . import blueprint
 PAD = 0.05   # the stretched gambeson over the frame
 
 
+def _tongue(at, height: float, width: float, mat: str, bone: str, lean, sway: float) -> Part:
+    """One flame tongue: a sweep from a round root through an S-curve to a point."""
+    at = Vector(at)
+    side = Vector((-lean[1], lean[0], 0.0))
+    if side.length < 1e-6:
+        side = Vector((1.0, 0.0, 0.0))
+    side = side.normalized() * height * 0.09 * sway
+    pts = [at]
+    for u, wob in ((0.22, 0.6), (0.45, 1.0), (0.68, -0.8), (0.86, -0.3), (1.0, 0.4)):
+        pts.append(at + Vector((lean[0] * height * u, lean[1] * height * u, height * u)) + side * wob)
+    w = width
+    return Part("sweep", (0, 0, 0), (1, 1, 1), mat=mat, bone=bone, segments=6, extras={
+        "path": [tuple(p) for p in pts],
+        "sections": [(w * 0.7, w * 0.55), (w * 1.1, w * 0.8), (w * 1.0, w * 0.72), (w * 0.62, w * 0.45),
+                     (w * 0.3, w * 0.22), (0, 0)],
+        "up": (0.0, 1.0, 0.0), "prop": True, "bevel": False, "smooth": True})
+
+
+def _flame(at, height: float, width: float, bone: str, lean=(0.0, 0.0), sway: float = 1.0,
+           layers: int = 3) -> list[Part]:
+    """A painted flame in three tones, each layer smaller and nearer the viewer (-Y): a dark
+    madder shell, madder, and a pale core. Geometry for now; a fire shader replaces it later
+    (owner, 2026-10-11). Props: rigid on `bone`, left out of the height check."""
+    at = Vector(at)
+    parts = [_tongue(at, height, width, "flame_shadow", bone, lean, sway)]
+    if layers >= 2:
+        parts.append(_tongue(at + Vector((0, -width * 0.38, height * 0.02)), height * 0.78, width * 0.74,
+                             "flame", bone, lean, -sway * 0.8))
+    if layers >= 3:
+        parts.append(_tongue(at + Vector((0, -width * 0.66, height * 0.04)), height * 0.48, width * 0.46,
+                             "lit_horn_flame_core", bone, lean, sway * 0.6))
+    return parts
+
+
+def _blaze(at, height: float, width: float, bone: str, lean=(0.0, 0.0), n: int = 3,
+           spread: float = 1.0, layers: int = 3) -> list[Part]:
+    """A cluster of n tongues side by side, the middle one tallest."""
+    at = Vector(at)
+    side = Vector((-lean[1], lean[0], 0.0)) if (lean[0] or lean[1]) else Vector((1.0, 0.0, 0.0))
+    side = side.normalized() if side.length > 1e-6 else Vector((1.0, 0.0, 0.0))
+    parts = []
+    for i in range(n):
+        u = i - (n - 1) / 2
+        h = height * (1.0 - 0.28 * abs(u) / max(1, (n - 1) / 2))
+        parts += _flame(at + side * (u * width * 1.3 * spread), h, width * (0.85 if u else 1.0), bone,
+                        lean=(lean[0] + u * 0.12, lean[1]), sway=1.0 if i % 2 else -1.0, layers=layers)
+    return parts
+
+
+def _fire(fig: Human) -> list[Part]:
+    """Fire on the back and shoulders, out of the coat's tears, along the hem, at the elbows."""
+    parts = []
+    sz = fig.shoulder_z
+    back_y = fig.lean((0, 0, sz)).y
+    for s, bone in ((1.0, "Shoulder.L"), (-1.0, "Shoulder.R")):
+        parts += _blaze((s * 0.16, back_y + 0.04, sz + 0.0), 0.62, 0.075, bone, lean=(s * 0.10, 0.10), n=3)
+        parts += _blaze((s * 0.36, back_y + 0.02, sz - 0.05), 0.46, 0.065, bone, lean=(s * 0.22, 0.06), n=2)
+    parts += _blaze((0.0, back_y + 0.22, sz - 0.10), 0.80, 0.10, "Chest", lean=(0.0, 0.22), n=3, spread=1.2,
+                    layers=2)
+    for z, ang, h in ((2.08, -48.0, 0.30), (1.92, -132.0, 0.28), (1.62, -42.0, 0.22)):
+        p = fig.surface(z, ang, pad=PAD + 0.01)
+        parts += _flame(p, h, 0.06, "Spine" if z < 1.9 else "Chest", lean=(0.0, -0.12))
+    for i, a in enumerate((-150, -118, -90, -62, -30)):
+        r = math.radians(a)
+        p = (math.cos(r) * 0.38, math.sin(r) * 0.30, 1.07)
+        parts += _flame(p, 0.24 + 0.08 * (i % 2), 0.07, "Hips", lean=(math.cos(r) * 0.15, -0.05),
+                        sway=1.0 if i % 2 else -1.0, layers=2 if i % 2 else 3)
+    for side, bone in (("L", "UpperArm.L"), ("R", "UpperArm.R")):
+        e = fig.joint(f"elbow.{side}")
+        s = 1.0 if side == "L" else -1.0
+        parts += _flame(e + Vector((s * 0.07, 0.02, 0.02)), 0.34, 0.07, bone, lean=(s * 0.2, 0.0))
+    return parts
+
+
 def _cage_and_cap(fig: Human) -> list[Part]:
     """The head: four bone bars rising 0.36 m from the neck, bowed out to 0.30 m across,
     knuckled, meeting at an iron ring; the flame inside; the kettle hat, 1.25x, as the vented
@@ -49,13 +123,8 @@ def _cage_and_cap(fig: Human) -> list[Part]:
                               segments=6, rings=4, extras={"rigid": True, "bevel": False}))
     parts.append(Part("torus", tuple(ct + Vector((0, 0, -0.004))), (0.13, 0.13, 0.13), mat="blackened_iron",
                       bone="Cage", segments=10, rings=4, minor=0.14, extras={"rigid": True, "bevel": False}))
-    # the flame inside the cage: hot at the root, madder above, rooted in a blackened wick
-    base = c0 + Vector((0.0, 0.0, 0.03))
-    fpath = [tuple(fig.lean((0, 0, base.z + d))) for d in (0.0, 0.05, 0.12, 0.20, 0.27, 0.32)]
-    parts.append(Part("sweep", (0, 0, 0), (1, 1, 1), mat="flame", bone="Cage", segments=8, extras={
-        "path": fpath, "sections": [(0.03, 0.03), (0.07, 0.065), (0.075, 0.07), (0.055, 0.05), (0.025, 0.022), (0, 0)],
-        "paint": [{"mat": "lit_horn_flame_core", "min": (-1, -2, base.z - 0.01), "max": (1, 2, base.z + 0.15)}],
-        "prop": True, "smooth": True, "bevel": False}))
+    # the flame inside the cage, in three tones, rooted in a blackened wick
+    parts += _flame(c0 + Vector((0.0, 0.0, 0.03)), 0.36, 0.085, "Cage", lean=(0.0, -0.05), sway=0.6)
     parts.append(Part("cyl", tuple(c0 + Vector((0, 0, 0.01))), (0.03, 0.03, 0.04), mat="char", bone="Cage",
                       segments=6, extras={"rigid": True, "bevel": False}))
     # the cap: the warden's kettle hat at 1.25x, lifted on the cage
@@ -76,8 +145,11 @@ def _cage_and_cap(fig: Human) -> list[Part]:
         rr = 0.085 * s
         at = hat_base + Vector((math.cos(a) * rr, math.sin(a) * rr, 0.10))
         vents.append(at)
+        parts += _flame(at + Vector((0, -0.01, 0.01)), 0.20 + 0.07 * (k % 2), 0.035, "Hat",
+                        lean=(math.cos(a) * 0.6, -0.35), sway=1.0 if k % 2 else -1.0, layers=2)
         parts.append(Part("sphere", tuple(at), (0.030, 0.030, 0.030), mat="vent_fire", bone="Hat",
                           segments=6, rings=4, extras={"rigid": True, "bevel": False}))
+    parts += _blaze(hat_base + Vector((0, 0.02, dome_h - 0.02)), 0.34, 0.06, "Hat", n=3, layers=3)
     return parts
 
 
@@ -140,8 +212,7 @@ def _chest(fig: Human) -> list[Part]:
     foot = fig.surface(z0 + 0.02, -90.0, pad=PAD + 0.05)
     parts.append(Part("cyl", tuple(foot + Vector((0, 0, 0.10))), (0.06, 0.06, 0.20), mat="tallow", bone="Spine",
                       segments=8, extras={"rigid": True, "bevel": False}))
-    parts.append(Part("sphere", tuple(foot + Vector((0, 0, 0.205))), (0.05, 0.05, 0.03), mat="vent_fire", bone="Spine",
-                      segments=6, rings=4, extras={"rigid": True, "bevel": False}))   # the candle's lit top
+    parts += _flame(foot + Vector((0, 0, 0.20)), 0.26, 0.05, "Spine", sway=0.7)   # the candle, burning
     return parts
 
 
@@ -223,7 +294,7 @@ def wick(entry: Entry):
         {"mat": "burning_wool", "min": (-0.42, -2, 1.80), "max": (-0.22, -0.05, 2.02)},
         {"mat": "burning_wool", "min": (0.24, -2, 1.48), "max": (0.42, -0.05, 1.66)},
         {"mat": "blood", "min": (-0.17, -2, 1.82), "max": (0.17, cav_y, 2.40)},
-        {"mat": "lit_horn_flame_core", "min": (-0.12, -2, 1.88), "max": (0.12, cav_y, 2.34)},
+        {"mat": "flame_shadow", "min": (-0.12, -2, 1.88), "max": (0.12, cav_y, 2.34)},
     ]
     parts = [fig.torso_part("gambeson_wool", pad=PAD, hem=1.05, hem_flare=1.38, quilt=0.09,
                             segments=32, paint=torso_paint)]
@@ -250,27 +321,54 @@ def wick(entry: Entry):
                       rot=(90, 0, 20), segments=4, rings=4, minor=0.2, extras={"rigid": True, "bevel": False}))
     parts += _blade_arm(fig)
     parts += _grasping_hand(fig)
+    parts += _fire(fig)
 
     return blueprint(
         entry, parts, bevel=0.004, **fig.rig(),
         # Fire is a shader in engine, not geometry (owner, 2026-10-11): the FireMask says where.
-        fire_families={"burning_wool": 1.0, "vent_fire": 1.0, "flame": 1.0,
+        heat_skip_props=True,   # ~90 small flame islands break Blender's heat solve otherwise
+        fire_families={"burning_wool": 1.0, "vent_fire": 1.0, "flame": 1.0, "flame_shadow": 1.0,
                        "lit_horn_flame_core": 0.8, "char": 0.35},
         family_overrides={
-            # Emissive families: the shipping material scales emission 9x, so the baked mask
-            # stores the colour dimmed, as the warden's horn panes do.
-            "flame": {"emit": "#4A1E0C", "rough": 0.6},
-            "vent_fire": {"emit": "#4A1E0C", "rough": 0.6},
-            "burning_wool": {"grain": 0.45},   # dark in the BaseMap; the fire shader brings the light
-            "lit_horn_flame_core": {"emit": "#5A4628", "rough": 0.5},
-            "blackened_iron": {"rough": 0.55, "wear_to": "#2A2826", "wear_amount": 0.4},
-            "gambeson_wool": {"grain": 0.34},
+            # No glow (owner, 2026-10-11): the fire is painted, in three tones, until the shader.
+            "flame_shadow": {"emit": None, "rough": 0.8, "grain": 0.18,
+                             "streaks": {"colour": "#4A1A10", "amount": 0.5, "scale": 40.0}},
+            "flame": {"emit": None, "rough": 0.7, "grain": 0.12,
+                      "streaks": {"colour": "#E0803A", "amount": 0.45, "scale": 45.0}},
+            "lit_horn_flame_core": {"emit": None, "rough": 0.6, "grain": 0.08,
+                                    "gradients": [{"colour": "#F4E2B0", "z0": 0.0, "z1": 3.2, "amount": 0.4}]},
+            "vent_fire": {"emit": None},
+            "gambeson_wool": {"grain": 0.42, "weave": (0.010, 0.22),
+                              "gradients": [{"colour": "#1E1610", "z0": 2.05, "z1": 2.60, "amount": 0.9},
+                                            {"colour": "#3A2C1E", "z0": 1.55, "z1": 1.05, "amount": 0.85}],
+                              "streaks": {"colour": "#8A7656", "amount": 0.32, "scale": 22.0},
+                              "flecks": [{"colour": "#2A1E16", "amount": 0.18, "scale": 130.0},
+                                         {"colour": "#6E2E24", "amount": 0.10, "scale": 70.0}]},
+            "burning_wool": {"grain": 0.5, "cracks": {"colour": "#8A3A1A", "amount": 0.6, "scale": 30.0, "width": 0.06},
+                             "flecks": [{"colour": "#C4542E", "amount": 0.25, "scale": 140.0}]},
+            "char": {"grain": 0.45, "cracks": {"colour": "#5A2A16", "amount": 0.55, "scale": 26.0, "width": 0.05},
+                     "flecks": [{"colour": "#0E0A08", "amount": 0.4, "scale": 110.0}]},
+            "skin": {"grain": 0.4, "cracks": {"colour": "#6E2E24", "amount": 0.45, "scale": 55.0, "width": 0.03},
+                     "streaks": {"colour": "#5A2218", "amount": 0.4, "scale": 35.0},
+                     "flecks": [{"colour": "#5A4030", "amount": 0.3, "scale": 140.0}]},
+            "blood": {"grain": 0.3, "streaks": {"colour": "#3A1410", "amount": 0.6, "scale": 30.0},
+                      "flecks": [{"colour": "#8E3A26", "amount": 0.3, "scale": 90.0}]},
+            "bone": {"grain": 0.32, "cracks": {"colour": "#6A5A44", "amount": 0.6, "scale": 48.0, "width": 0.025},
+                     "gradients": [{"colour": "#7A6448", "z0": 2.9, "z1": 2.4, "amount": 0.5}],
+                     "flecks": [{"colour": "#3A2E1E", "amount": 0.3, "scale": 120.0}]},
+            "woad_hose": {"grain": 0.38, "weave": (0.008, 0.2),
+                          "gradients": [{"colour": "#1E2630", "z0": 0.9, "z1": 0.05, "amount": 0.85}],
+                          "streaks": {"colour": "#2E3A48", "amount": 0.4, "scale": 30.0}},
+            "leather": {"grain": 0.4, "cracks": {"colour": "#2A1E16", "amount": 0.5, "scale": 60.0, "width": 0.03}},
+            "tallow": {"grain": 0.3, "streaks": {"colour": "#A89870", "amount": 0.5, "scale": 50.0}},
+            "blackened_iron": {"rough": 0.55, "wear_to": "#2A2826", "wear_amount": 0.4,
+                               "flecks": [{"colour": "#5A3A28", "amount": 0.3, "scale": 70.0}]},
         },
         notes=[
-            "Fire is drawn by a shader in engine, not by geometry: TheWick_FireMask.png is white "
-            "where flames burn (back, shoulders, hem, coat tears, elbows, the hat's vents, the "
-            "cage flame) and grey where the wool smoulders. The only flame mesh is the one "
-            "teardrop inside the head cage, the surface the head's fire shader runs on.",
+            "Fire is geometry for now (owner, 2026-10-11): painted three-tone tongues, no glow, "
+            "props rigid on the bone they sit on, left out of the height check. A fire shader "
+            "replaces them later; TheWick_FireMask.png is still baked for it (white = flames, "
+            "grey = smoulder).",
             "The lantern is not on this model: it is the warden's, dropped at the turn and left "
             "where it falls.",
             "Not built: the hunch of the shoulders above the neck (figures.Human has no shoulder "

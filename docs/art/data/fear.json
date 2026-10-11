@@ -19,14 +19,14 @@
       "build": [
         "Body: stature 3.00 m to the top of the bone cage, the kettle hat bringing the crown to 3.10 m; shoulders 0.88 m across; a hunch of about 14° forward from the waist; legs long and too thin, the woad hose split at both knees.",
         "Head: no skull. Four bone bars rise 0.36 m from the neck, bowed out to 0.30 m across, knuckled like vertebrae, meeting at an iron ring under the hat.",
-        "Flame: inside the cage, a 0.30 m teardrop rooted in a blackened wick, emissive; the fire shader runs on it.",
+        "Flame: inside the cage, 0.36 m, three tones like the body's fire, rooted in a blackened wick.",
         "Cap: the warden's one-piece kettle hat scaled 1.25 (brim 0.50 m), lifted on the cage; four vent holes punched in the dome, fire jetting from them.",
         "Face: peeled into four flaps hanging from the neck over the collar, 0.16-0.22 m long, skin outside and blood inside; one eye left on the outer left flap, half a jaw of teeth on the right.",
         "Gambeson: the warden's quilted coat stretched over the frame to a hem at 1.05 m, its quilting pulled apart, the hem torn into strips; charred at the shoulders and hem.",
         "Chest: the lacing burst; a 0.30 m wide cavity from the collar to the belt, lit from inside, crossed by six bone ribs bowed outward like the lantern's iron bars; a tallow candle 0.20 m tall on the spine at its foot, flame 0.16 m.",
         "Arms: reach past the knee (wrists at about 1.30 m), elbows thrown out. Right arm: the glaive's 0.70 m blade grows from the wrist, edge forward, point down; skin grown over the socket. Left hand: open, four fingers 0.40 m long, bone-tipped.",
         "Belt: burst, one end hanging, the iron buckle still on it.",
-        "Fire: a shader in engine, not geometry (owner, 2026-10-11). The model bakes TheWick_FireMask.png: white where flames burn (back and shoulders, the hem, the coat's tears, the elbows, the hat's vents, the candle's top, the cage flame), grey (0.35) where the charred wool only smoulders, black elsewhere. The one flame mesh is the 0.30 m teardrop inside the head cage, for the head's fire to run on.",
+        "Fire: painted geometry for now (owner, 2026-10-11), to be replaced by a fire shader: three-tone tongues (dark madder shell, madder, a pale core nearer the viewer), no glow, on the back and shoulders (0.46-0.80 m), out of the coat's tears, along the hem, at both elbows, from the hat's vents and over its crown; rigid on the bone they sit on. TheWick_FireMask.png is still baked for the shader: white where flames burn, grey (0.35) where the charred wool smoulders.",
         "Not on this model: the lantern. It belongs to the human-form warden and is dropped at the turn as a loose physics prop, left where it falls."
       ],
       "materials": [
@@ -91,6 +91,11 @@
           "notes": "The burst belt and the turnshoes."
         },
         {
+          "name": "Flame shadow",
+          "hex": "#7A2C1A",
+          "notes": "Dark madder: the outer shell of every painted flame tongue."
+        },
+        {
           "name": "Flame",
           "hex": "#C4542E",
           "notes": "Madder: the teardrop flame inside the head cage; emissive."
@@ -112,7 +117,7 @@
       "breakables": [
         "None: a true form is never damaged or killed (fear pass, 'A true form never turns back')."
       ],
-      "budget": "≤ 10k tris (body 6.5k, cage and cap 1.2k, blade 0.4k), one 1024² set with an emission map and a FireMask.",
+      "budget": "≤ 12k tris (body 5.7k, flames as temporary geometry up to 6k until the fire shader), one 1024² set with a FireMask.",
       "dont": [
         "Don't give it a skull or a face on the cage: the head is a lantern now.",
         "Don't carry the lantern: it stays where the warden dropped it.",

@@ -282,8 +282,12 @@ def build_rigged(bp: Blueprint, model_dir: str, resolution: int):
     """
     obj, _ordered = prepare(bp)
     rig = ef_assemble.build_armature(bp, obj)
+    held = rigmod.hold_out_props(obj, bp) if bp.heat_skip_props else None
     heat = rigmod.smooth_weights_with_retry(ef_assemble.apply_smooth_weights, obj, rig,
                                             max_influences=rigmod.MAX_INFLUENCES)
+    if held is not None:
+        obj = rigmod.put_back(obj, held)
+        heat["props_held_out"] = True
     rigmod.dedupe_armature_modifiers(obj, rig)
     rules = rigmod.apply_bind_rules(obj, bp)
     bake(obj, bp, _authoring(obj), os.path.join(model_dir, "Textures"), resolution)

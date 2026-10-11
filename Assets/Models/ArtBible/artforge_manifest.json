@@ -3491,26 +3491,26 @@
       "title": "The Wick",
       "passed": true,
       "stats": {
-        "vertices": 2974,
-        "faces": 2898,
-        "triangles": 5664,
-        "islands": 73,
+        "vertices": 5610,
+        "faces": 5530,
+        "triangles": 10596,
+        "islands": 158,
         "lowest_z": 0.0,
-        "height": 3.038,
+        "height": 3.362,
         "width": 1.68,
-        "budget": 10000,
-        "bbox_m": "1.680x1.552x3.038",
+        "budget": 12000,
+        "bbox_m": "1.680x1.552x3.362",
         "height_body_m": 3.038,
         "height_spec_m": 3.1,
-        "height_with_props_m": 3.038,
+        "height_with_props_m": 3.362,
         "rig_bones": 23,
         "skinned_bones": 21,
-        "mean_influences": 1.47
+        "mean_influences": 1.26
       },
       "spec": {
         "dims_WDH_m": null,
         "height_m": 3.1,
-        "tri_budget": 10000
+        "tri_budget": 12000
       },
       "families": {
         "gambeson_wool": {
@@ -3565,16 +3565,16 @@
         "lit_horn_flame_core": {
           "name": "Lit horn flame core",
           "base": "#E8C987",
-          "rough": 0.5,
+          "rough": 0.6,
           "metal": 0.0,
-          "emit": "#5A4628"
+          "emit": null
         },
         "vent_fire": {
           "name": "Vent fire",
           "base": "#C4542E",
-          "rough": 0.6,
+          "rough": 0.75,
           "metal": 0.0,
-          "emit": "#4A1E0C"
+          "emit": null
         },
         "tallow": {
           "name": "Tallow",
@@ -3597,18 +3597,27 @@
           "metal": 0.0,
           "emit": null
         },
+        "flame_shadow": {
+          "name": "Flame shadow",
+          "base": "#7A2C1A",
+          "rough": 0.8,
+          "metal": 0.0,
+          "emit": null
+        },
         "flame": {
           "name": "Flame",
           "base": "#C4542E",
-          "rough": 0.6,
+          "rough": 0.7,
           "metal": 0.0,
-          "emit": "#4A1E0C"
+          "emit": null
         }
       },
       "failures": [],
-      "warnings": [],
+      "warnings": [
+        "82 vertices got no allowed heat weight and were blended to the nearest allowed bones by distance"
+      ],
       "notes": [
-        "Fire is drawn by a shader in engine, not by geometry: TheWick_FireMask.png is white where flames burn (back, shoulders, hem, coat tears, elbows, the hat's vents, the cage flame) and grey where the wool smoulders. The only flame mesh is the one teardrop inside the head cage, the surface the head's fire shader runs on.",
+        "Fire is geometry for now (owner, 2026-10-11): painted three-tone tongues, no glow, props rigid on the bone they sit on, left out of the height check. A fire shader replaces them later; TheWick_FireMask.png is still baked for it (white = flames, grey = smoulder).",
         "The lantern is not on this model: it is the warden's, dropped at the turn and left where it falls.",
         "Not built: the hunch of the shoulders above the neck (figures.Human has no shoulder raise; stoop 22 degrees stands in), toes bursting through the shoes."
       ],
@@ -3618,7 +3627,7 @@
         "gltf": "Assets/Models/ArtBible/Enemies/Fear/TheWick/glTF/TheWick.gltf",
         "blend": "Assets/Models/ArtBible/Enemies/Fear/TheWick/TheWick.blend"
       },
-      "build_seconds": 4.5
+      "build_seconds": 5.7
     },
     {
       "key": "players/lair/wizard",
