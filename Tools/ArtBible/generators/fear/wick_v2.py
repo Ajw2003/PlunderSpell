@@ -270,18 +270,7 @@ def head(s, b, scale=1.0):
         out.append(kettle_hat(s, 0, y0 - 17))
         return ''.join(out)
     if t < .6:
-        # the face splits down the middle and light comes out of the crack; the hat lifts off the skull
-        lift = 10 * b.head_open
-        out.append(glow(s, 0, y0 - 10, 40 * b.head_open + 8))
-        out.append(f'<path d="M-11,{y0-17} L11,{y0-17} L11.5,{y0-1} Q0,{y0+5} -11.5,{y0-1} Z" fill="{gwd}" stroke="{shade(WOOL,.4)}" stroke-width=".35"/>')
-        out.append(f'<path d="M-8,{y0-16} Q-8.5,{y0-4} 0,{y0-.5} Q8.5,{y0-4} 8,{y0-16} Z" fill="{gs}" stroke="{shade(SKIN,.45)}" stroke-width=".35"/>')
-        w = 1 + 3 * b.head_open
-        out.append(f'<path d="M0,{y0-17-lift} L{w},{y0-12} L{-w*.6:.1f},{y0-8} L{w*.8:.1f},{y0-4} L0,{y0}" fill="none" stroke="{GLOW_HORN}" stroke-width="{w:.1f}" stroke-linejoin="bevel"/>')
-        out.append(f'<path d="M-6,{y0-11.5} L-2.5,{y0-12.5} M2.5,{y0-12.5} L6,{y0-11.5}" stroke="{BLACK}" stroke-width=".9"/>')
-        out.append(f'<path d="M-3,{y0-4} Q0,{y0-1} 3,{y0-4}" fill="{FLESH}" stroke="{BLACK}" stroke-width=".4"/>')
-        for k in (-1, 1):   # bone bars starting to push up through the scalp
-            out.append(f'<path d="M{k*5},{y0-16} L{k*5.5},{y0-17-lift}" stroke="{BONE}" stroke-width="1.4"/>')
-        out.append(kettle_hat(s, 0, y0 - 17 - lift, tilt=-4 * b.head_open))
+        out.append(split_face(s, y0, b.head_open))
         return ''.join(out)
     # the lantern-head: a cage of four bone bars rising out of the neck, the flame inside, the hat as the cap
     o = b.head_open
@@ -328,11 +317,63 @@ def head(s, b, scale=1.0):
     return ''.join(out)
 
 
-def front(s, t, cx, k, cid):
+def split_face(s, y0, o):
+    """The moment the face splits: four pieces part along jagged cracks, light pours out between them,
+    the hat lifts on the first bone bars, the coif tears open at the sides."""
+    gs = s.form(SKIN); gwd = s.form(shade(WOOL, .82))
+    lift = 12 * o
+    gap = .6 + 3.4 * o
+    cy = y0 - 8
+    out = [glow(s, 0, cy, 34 * o + 10)]
+    # the coif, torn open at both cheeks
+    out.append(f'<path d="M-11,{y0-17} L-3,{y0-17} L-5,{y0-9} L-11.5,{y0-1} Z M11,{y0-17} L3,{y0-17} L5,{y0-9} L11.5,{y0-1} Z" fill="{gwd}" stroke="{shade(WOOL,.4)}" stroke-width=".35"/>')
+    # the light inside the head, bright where the pieces part
+    out.append(f'<ellipse cx="0" cy="{cy}" rx="{6+3*o:.1f}" ry="{8+2*o:.1f}" fill="{GLOW_HORN}"/>')
+    out.append(f'<ellipse cx="0" cy="{cy}" rx="{2.5+2*o:.1f}" ry="{4+3*o:.1f}" fill="{FLAME}"/>')
+    for ang in (0, 90, 180, 270, 45, 135, 225, 315):   # rays out through the cracks
+        a = math.radians(ang)
+        ln = (14 if ang % 90 == 0 else 9) * (.4 + o)
+        out.append(f'<path d="M0,{cy} L{math.cos(a)*ln:.1f},{cy+math.sin(a)*ln:.1f}" stroke="{GLOW_HORN}" stroke-width="{1.4 if ang % 90 == 0 else .8}" opacity=".7"/>')
+    # one quarter of the face, upper left, with jagged inner edges; the others are mirrors of it
+    ul = [(-8, -16), (0, -16), (-.7, -14), (.5, -12.2), (-.5, -10), (0, -8), (-2, -8.7), (-4, -7.5), (-6, -8.6), (-8.3, -8), (-8.4, -12)]
+    for sx, sy in ((-1, -1), (1, -1), (-1, 1), (1, 1)):
+        pts = []
+        for x, y in ul:
+            x = x * -sx
+            y = -8 + (y + 8) * -sy
+            pts.append((x, y))
+        if sy > 0:   # the lower pieces end at the chin, not the brow
+            pts = [(x, max(y, -16) if y > -8 else y) for x, y in pts]
+            pts = [(x, -8 + min(y + 8, 7.5 - abs(x) * .3)) for x, y in pts]
+        d = "M" + " L".join(f"{x:.1f},{y0+y:.1f}" for x, y in pts) + " Z"
+        dx, dy = sx * gap, sy * gap * .8
+        rot = sx * sy * -10 * o
+        piece = [f'<path d="{d}" fill="{gs}" stroke="{shade(SKIN,.4)}" stroke-width=".4"/>']
+        inner = [(x, y) for x, y in pts if abs(x) < 1 or abs(y + 8) < 1.2]
+        piece.append('<path d="M' + ' L'.join(f'{x:.1f},{y0+y:.1f}' for x, y in inner) + f'" fill="none" stroke="{FLESH}" stroke-width="1.1"/>')
+        if sy < 0:   # an eye on each upper piece, wide open
+            ex = sx * 4
+            piece.append(f'<path d="M{ex-2.2:.1f},{y0-11.5} Q{ex:.1f},{y0-13.3} {ex+2.2:.1f},{y0-11.5} Q{ex:.1f},{y0-10} {ex-2.2:.1f},{y0-11.5} Z" fill="{BONE}" stroke="{BLACK}" stroke-width=".35"/>'
+                         f'<circle cx="{ex:.1f}" cy="{y0-11.6}" r=".75" fill="{BLACK}"/>')
+        else:        # half a mouth on each lower piece, stretched open
+            piece.append(f'<path d="M{sx*.2:.1f},{y0-5.2} L{sx*3.4:.1f},{y0-4.8} Q{sx*3:.1f},{y0-1.6} {sx*.2:.1f},{y0-1.4} Z" fill="{FLESH}" stroke="{BLACK}" stroke-width=".4"/>')
+            for k in range(3):   # half a mouth, gaping, with its teeth
+                tx = sx * (.8 + k * .9)
+                piece.append(f'<path d="M{tx-.35:.2f},{y0-5.05} L{tx:.2f},{y0-4} L{tx+.35:.2f},{y0-5.05} Z" fill="{BONE}"/>')
+        out.append(f'<g transform="translate({dx:.1f},{dy:.1f}) rotate({rot:.1f},{sx*8:.1f},{y0-8})">' + ''.join(piece) + '</g>')
+    # the first bone bars push up through the scalp and lift the hat off
+    for k in (-1, 1):
+        out.append(f'<path d="M{k*3.5},{y0-15} L{k*4.5},{y0-17-lift}" stroke="{BONE}" stroke-width="1.6" stroke-linecap="round"/>')
+    out.append(kettle_hat(s, 0, y0 - 17 - lift, tilt=-5 * o))
+    return ''.join(out)
+
+
+def front(s, t, cx, k, cid, lantern_at=None):
+    """lantern_at: where the dropped, dark lantern lies, in cm from his centre; None when it is out of frame."""
     b = Body(t)
     out = [f'<g transform="translate({cx},690) scale({k})">', f'<ellipse cx="0" cy="0" rx="{38+20*b.g:.0f}" ry="2.8" fill="#0B0A08" opacity=".75"/>']
-    if t >= .2:   # the lantern on the floor, dark: its flame has gone into him
-        out.append(lantern_box(s, 30 + 14 * b.g, -15, lit=False, tilt=78))
+    if lantern_at is not None and t >= .2:   # the lantern on the floor where it fell, dark: its flame has gone into him
+        out.append(lantern_box(s, lantern_at, -15, lit=False, tilt=78))
     if b.open > 0:   # a mantle of fire behind him, rising off his back above the shoulders
         for i in range(9):
             u = -1 + i / 4
@@ -449,7 +490,7 @@ def side_view(s, cx, k):
 def sheet_true_form():
     s = Sheet("wick-v2-1-true-form")
     K = 1.8
-    fr, b = front(s, 1, 400, K, "wickF")
+    fr, b = front(s, 1, 400, K, "wickF", lantern_at=-92)
     sd = side_view(s, 690, K)
     G = 690
     marks = []
@@ -464,7 +505,7 @@ def sheet_true_form():
          callout(*P(14, (b.neck_y + b.hip_y) / 2), 960, 330, "Ribs opened into lantern bars", "fire leaks out between them"),
          callout(*P(-60, -80), 960, 385, "The glaive grown into the arm", "blade 0.70 m from the wrist"),
          callout(*P(66, -60), 960, 440, "Fingers 0.40 m, bone-tipped", "the hand that catches"),
-         callout(*P(44, -6), 960, 495, "Burning: back, shoulders, coat", "his lantern lies dark; he is lit"),
+         callout(*P(-92, -10), 960, 495, "His lantern, left where it fell", "dark: its flame went into him"),
          callout(*S(22, -200), 960, 550, "Hunched 24° from the hip", "the light carried low and ahead")]
     rows = [("Size", "3.10 m standing, shoulders 0.88 m across. Stoops to 2.50 m under the 2.59 m arch; the light goes first.")]
     head_ = frame_open(s, "FEAR PASS · LANTERN WARDEN · TRUE FORM · ROUND 2", "The Wick", "H 3.10 m · stoops to 2.50 m · ≤ 10k tris", "1 m = 180 px · ground y 690", glow_cx="35%", glow_cy="30%")
@@ -477,15 +518,27 @@ def sheet_turn():
     s = Sheet("wick-v2-2-the-turn")
     K = 1.1
     stages = [(0.0, 165, "1 · SEEN", "0.0 s", "lantern drops"),
-              (0.42, 315, "2 · CAP LIFTS", "0.4 s", "face splits"),
+              (0.42, 315, "2 · FACE SPLITS", "0.4 s", "lantern dropped"),
               (0.72, 480, "3 · COAT BURSTS", "0.9 s", "ribs open, grows"),
-              (1.0, 665, "4 · TURNED", "1.6 s", "hunts, for good")]
+              (1.0, 665, "4 · TURNED", "1.6 s", "lantern left behind")]
     figs, labels = [], []
     for i, (t, x, lab, when, what) in enumerate(stages):
-        f, _ = front(s, t, x, K, f"turnC{i}")
+        f, _ = front(s, t, x, K, f"turnC{i}", lantern_at=28 if i == 1 else None)
         figs.append(f)
         labels.append(text(x, 712, lab, 10.5, "#9A9078", "middle", extra=' letter-spacing="1.5"')
                       + text(x, 727, f"{when} · {what}", 9.5, "#635C4C", "middle"))
+    # a magnifier on the moment the face splits, over stage 2
+    b2 = Body(.42)
+    mx, my, mr = 300, 300, 112
+    hx2, hy2 = 315, 690 + 1.1 * (b2.neck_y - 8)
+    s.clip(f"M{mx-mr},{my} a{mr},{mr} 0 1,0 {2*mr},0 a{mr},{mr} 0 1,0 {-2*mr},0 Z", "splitMag")
+    figs.append(f'<path d="M{mx+mr*.55:.0f},{my+mr*.83:.0f} L{hx2-6:.0f},{hy2-4:.0f}" stroke="#9A9078" stroke-width=".8"/>'
+                f'<circle cx="{hx2}" cy="{hy2}" r="12" fill="none" stroke="#9A9078" stroke-width=".8"/>'
+                f'<circle cx="{mx}" cy="{my}" r="{mr}" fill="#17140F" stroke="#9A9078" stroke-width="1.2"/>'
+                f'<g clip-path="url(#splitMag)"><g transform="translate({mx},{my+70}) scale(5.4)">'
+                f'<path d="M-30,20 Q-20,2 -10,0 L10,0 Q20,2 30,20 L30,30 L-30,30 Z" fill="{s.form(WOOL)}" stroke="{shade(WOOL,.4)}" stroke-width=".3"/>'
+                + split_face(s, 0, ease(.42, .2, .75)) + '</g></g>'
+                + text(mx, my - mr - 10, "0.4 s · the face splits in four, light first", 10, "#9A9078", "middle"))
     # arrow of time under the stages
     figs.append(f'<path d="M130,742 L740,742" stroke="#635C4C" stroke-width="1"/><path d="M740,742 l-6,-3 l0,6 Z" fill="#635C4C"/>')
     # the close-up of the head, in an inset

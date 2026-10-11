@@ -229,7 +229,7 @@ def sheet_wheels():
          callout(*P(-R * .35, cy + R * .6), 320, 470, "Echoes: it is a heartbeat early", "and late, all at once", side="left"),
          callout(*P(R * 1.1, -2), 900, 480, "The floor keeps time", "rings of hour marks spread out")]
     rows = [("Size", "9.6 m from the lower wing tips to the upper; 11 m wide. The castle's tallest ceiling is 5.2 m. It does not fit, and it does not need to.")]
-    head_ = frame_open(s, "FEAR PASS · THE CREATURE · ROUND 2", "The Ophan of Hours", "H 9.6 m · wings 11 m · lapis: the owner's call", "1 m = 55 px · ground y 690", glow_cx="42%", glow_cy="45%", glow_col="#1E1A2A")
+    head_ = frame_open(s, "FEAR PASS · THE CREATURE · ROUND 2", "The Ophan of Hours", "H 9.6 m · wings 11 m · lapis approved 2026-10-11", "1 m = 55 px · ground y 690", glow_cx="42%", glow_cy="45%", glow_col="#1E1A2A")
     ladder = metre_ladder(px_per_m=55, top_m=10, step=1)
     parts = [ladder, human(cx=150, px_per_m=55), view_label(cx, "FRONT"), ''.join(f), ''.join(C), notes(900, 540, rows, width=260)]
     write_plate(s, head_, parts, palette([("tarnished pewter", PEWTER), ("wings, eyes (vellum)", BONE), ("pupil (bone black)", BLACK), ("portal light (lapis)", LAPIS), ("lightning, core", GHOST), ("hollow (deep lapis)", DEEP)]))
@@ -311,7 +311,7 @@ def sheet_castle():
     rows = [("When it comes", "As the portal's clock runs low the floors begin to tick. Then the light, then the wheels, through whatever is in the way."),
             ("Why you cannot fight it", "It is larger than the castle and not wholly in one moment. A blow lands on where it was."),
             ("Its counter, proposed", "None. Carry what it asked for, or reach the portal before it reaches you.")]
-    head_ = frame_open(s, "FEAR PASS · THE CREATURE · ROUND 2", "The Ophan in the castle", "larger than the room it is in", "lapis: the owner's call", glow_cx="35%", glow_cy="50%", glow_col="#1E1A2A")
+    head_ = frame_open(s, "FEAR PASS · THE CREATURE · ROUND 2", "The Ophan in the castle", "larger than the room it is in", "lapis approved 2026-10-11", glow_cx="35%", glow_cy="50%", glow_col="#1E1A2A")
     parts = [''.join(out), ''.join(C), ''.join(ins), notes(ix, 490, rows, width=400)]
     write_plate(s, head_, parts, '')
 

@@ -1,5 +1,15 @@
 # Today
 
+**2026-10-11 (latest) - the Wick and the Ophan approved (#386).** The owner approved both
+designs, the Wick's turn and counter, and lapis for the Ophan, after two last changes: the lantern
+is now left where it fell rather than travelling with him (`wick_v2.py`, `front(lantern_at=...)`),
+and the face split is drawn as four pieces parting on a cross of light with a magnified view at
+0.4 s. Written into `docs/7-design/fear-pass.md` ("The true form", "The creature"), a dated
+Decisions entry for the lapis exception, and `docs/art/BRIEF.md`. Next: spec and model both
+through the art pipeline. Nothing modelled yet.
+
+---
+
 **2026-10-11 (latest, later) - the Wick on fire, the Ophan with one eye (#386).** Owner's notes on
 round two: more of the Wick on fire, and the Ophan's four faces cut for one great eye at its heart.
 `wick_v2.py` now sets him burning (a mantle off his back, shoulders, coat tears, hem, fire from the
