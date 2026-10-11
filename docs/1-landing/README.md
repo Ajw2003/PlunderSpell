@@ -114,6 +114,8 @@ together and what was deliberately left undocumented, and why.
   [`docs/generated/github-issues-moodboard-gap.json`](../generated/github-issues-moodboard-gap.json)
   once filed). Its one open creative-direction question, the bestiary's thematic split, was
   decided on 2026-09-24: each Age's enemies are its household.
+- [`docs/plans/fear-pass.md`](../plans/fear-pass.md) — **design in progress (#386).** Raids you barely
+  survive: guards with a Lovecraftian true form, spells earned from Porta up, more guards on the ground floors.
 - [`docs/plans/wizard-character.md`](../plans/wizard-character.md) — **approved 2026-10-07, not
   started.** The player character: one wizard outfit for everyone, a colour each player picks (no
   two exact matches in a raid), their name around the hat band, and a fallen wizard leaves only the

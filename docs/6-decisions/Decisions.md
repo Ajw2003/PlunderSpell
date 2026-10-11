@@ -3,6 +3,24 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-11 — Raids are about fear: guards have a true form, and spells are earned
+
+**Context.** Stealth is optional today: players start with every spell, Ignis does damage, guards can
+be killed, and raids drop weapons (`docs/4-systems/spells.md`, #123). The owner wants raids to feel
+like Lethal Company, where you barely escape with your life (#386, under #380).
+
+**Decision (owner, 2026-10-11).** Guards look like ordinary castle foes until one sees you or is
+provoked, then morph into a Lovecraftian true form. The human form can be stunned by a hard blow to
+the head; the true form can only be run from. A new player has Porta only, learns Somnus early (guards
+only, costly if misused), unlocks Velox and Saltus mid-game, and offensive spells stay locked as
+late-game tools. Every backfire has a real consequence, every guard type has a hard counter its
+behaviour hints at, and more guards stand on the ground floors so the threat is seen, and
+underestimated, from the moment you enter.
+
+**Consequence.** Replaces the pitch bible's eight spells from the start (`docs/plunderspell.md`
+section 4) and limits its "anything with mass can kill a man" (section 5) to stunning a guard's human
+form. Design: [`docs/plans/fear-pass.md`](../plans/fear-pass.md). Status: Active.
+
 ## 2026-10-07 — The debt splits in equal shares; coins are pouches; loot gets a category
 
 **Context.** Step 7 of the Lair and Market (#313): the debt is one shared number (`LairHubManager.TotalDebt`), a sale

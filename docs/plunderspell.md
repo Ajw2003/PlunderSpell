@@ -103,6 +103,10 @@ is always funnier than the thing you meant.
 | `CADAVER SURGE` (5 syl) | long, deliberate | Raise the dead as a porter. Slow. Obedient. It carries your gold, and it follows you home. | 480 ms | it rises. it is not obedient |
 | `PORTA` (2 syl) | final | The way out, torn open here and now. Ruinously dear. You will say it exactly once, and too late. | 200 ms | it opens on the *wrong century* |
 
+> **Changed 2026-10-11.** Spells are now earned, not all known from the start: Porta first, Somnus
+> soon after, offensive spells late. See Decisions, "Raids are about fear", and
+> [`plans/fear-pass.md`](plans/fear-pass.md).
+
 **It needs nothing but you.** The listening happens inside the game, on the player's own machine. No
 key to buy, no coin per hour, and no distant outage can take the thing off the air.
 
@@ -121,6 +125,9 @@ trick.
 Every object has mass, and anything with mass can kill a man. There is no separate art of combat
 here: braining a guard with a candlestick and stealing a candlestick are the very same act,
 performed with different feeling.
+
+> **Changed 2026-10-11.** A blow now only stuns a guard in its human form; once it shows its true
+> form, you run. See Decisions, "Raids are about fear", and [`plans/fear-pass.md`](plans/fear-pass.md).
 
 Harm comes from how fast a thing was moving. Which means a sword is merely a heavy object with a
 sharp end that you swung hard — and the whole castle becomes an armoury. A dropped portcullis. A
