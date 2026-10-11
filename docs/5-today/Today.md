@@ -1,5 +1,18 @@
 # Today
 
+**2026-10-11 - one staging branch again, and a friends build (#368).** Several worktrees had left the
+owner unsure where work stopped. Checked every branch by patch content: everything finished is on
+`claude/merge-2026-10-08`; the new `claude/staging-2026-10-11` is that plus the wizard plan docs
+(#349, item 3). Owner's calls: the #318 glow WIP stays on `claude/rimlight-318`; the voice-mimicry
+branch is dropped (its `archive/` tag already pointed at its tip); the `claude/busy-bose-a7647f`
+test fix is obsolete (the guard tests were rewritten in #214). Unity: compile clean, EditMode
+243 / 3 skipped / 0 fail, PlayMode 518/518. Release build at `Build/Windows`, zipped as
+`Build/Plunderspell-playtest-2026-10-11.zip` (630 MB, the `_DoNotShip` Burst folder left out); it
+starts clean with Steam (app 480). Not done: a raid played in the release build. Left over: a
+half-finished merge in the `PlunderSpell-lair` worktree from an attempt the owner stopped.
+
+---
+
 **2026-10-08 (night, latest) - co-op on one PC by hand (#372).** The menu's Host Co-op always used Steam when Steam ran, and a second copy on the same PC is the same Steam account, which Steam will not let join itself. Now: `CoopSession.HostLocal()` / `JoinLocal()` (UDP, 127.0.0.1, as the `-coop-host` / `-coop-join` arguments do), **Host on this PC** / **Join on this PC** on the main menu in the Editor and Development builds only, and `Tools/Unity/coop_local.sh`, which rebuilds the client if needed, presses Play, hosts, and starts the client joined beside the Editor. Checked: the script once end to end (2 players, 62 s with the build) and the owner played both sides from it and recorded it working. Not yet checked: clicking the two menu buttons, and a release build hiding them. Also fixed: `place_windows.ps1` looked for an Editor titled `PlunderSpell - ...` and so found none in a worktree.
 
 ---

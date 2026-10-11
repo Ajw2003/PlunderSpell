@@ -30,12 +30,16 @@ the unused two-person code is still in `LootPickup` (`InitiateDualCarry`) and
 ## Work not on `main` yet
 
 **Current, checked 2026-10-11 by patch content (`git cherry`) against every branch.** The real
-baseline is **`claude/merge-2026-10-08`** (PR #370, tracked by #368): `main` is 187 commits behind
-it and has nothing it lacks. It holds the in-world Lair and Market, the diegetic raid UI and event
-feedback, the wizard on the player (#362) and co-op on one PC (#372). Last Unity run at its tip
-(2026-10-08): EditMode 243 pass / 3 skipped / 0 fail, PlayMode 518/518, `coop_lair_check.sh` and
-`wizard_coop_check.sh` PASS in co-op. Not checked there yet: a release build from
-Tools/Plunderspell/Build Standalone Player (`Build/Windows`), and the #372 menu buttons hidden in it.
+baseline is **`claude/staging-2026-10-11`**: `claude/merge-2026-10-08` (PR #370, tracked by #368)
+plus the wizard plan docs (#349). `main` is 189 commits behind it and has nothing it lacks. It
+holds the in-world Lair and Market, the diegetic raid UI and event feedback, the wizard on the
+player (#362) and co-op on one PC (#372). Unity on 2026-10-11 at its tip: compile clean, EditMode
+243 pass / 3 skipped / 0 fail, PlayMode 518/518 (logs `docs/generated/staging-2026-10-11-*`). The
+co-op checks `coop_lair_check.sh` and `wizard_coop_check.sh` passed on 2026-10-08 on the same code
+less those docs. Release build (Tools/Plunderspell/Build Standalone Player, `Build/Windows`) built
+and started clean (Steam ready, 0 error lines); the #372 buttons are built only when
+`Debug.isDebugBuild` (`MainMenuScreen.cs:54`), not seen on screen. A raid in the release build
+has not been played.
 
 Still outside it, each needing a keep-or-drop call:
 - `claude/rimlight-318`: 2 WIP commits of the #318 verdigris glow (unfinished).
