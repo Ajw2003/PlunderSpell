@@ -1,5 +1,22 @@
 # Today
 
+**2026-10-11 (night) - the Wick is modelled (#406, under #386).** Spec in `docs/art/data/fear.json`
+(a new `fear` group in ArtForge, `--age fear`, so the Ages' rosters of four stay as they are),
+blueprint `Tools/ArtForge/art_forge/blueprints/enemies_fear.py`, model in
+`Assets/Models/ArtBible/Enemies/Fear/TheWick/`: 5,664 tris (budget 10k), body 3.04 m vs 3.10 m,
+Unity Humanoid plus Cage, Hat and Blade bones. Owner's call mid-build: **fire is a shader, not
+geometry**, so the flame tongues came out and the build bakes `TheWick_FireMask.png` (white =
+flames, grey = smoulder); `Tools/ArtForge/fire_preview.py` shows where it burns
+(`docs/art/models/fear/wick-fire.png`). Shared forge changes, each checked by rebuilding the
+Lantern Warden and the wizard to a scratch folder (same tris and influences as committed):
+`figures.Human(arm_length=)`, `Blueprint.fire_families`, and a heat-weighting retry for a
+partial collapse (seen once, mean influences 1.02; the retry path has not fired since, 8 of 8
+builds clean). Review sheet `docs/art/models/fear/wick.png`, opened over three passes and
+recorded in `docs/art/reviews/`. Not done: clips, the Unity import (the importer has no rules for
+the Fear folder yet) and the fire shader, all engine work, untested here.
+
+---
+
 **2026-10-11 (latest) - the Wick and the Ophan approved (#386).** The owner approved both
 designs, the Wick's turn and counter, and lapis for the Ophan, after two last changes: the lantern
 is now left where it fell rather than travelling with him (`wick_v2.py`, `front(lantern_at=...)`),

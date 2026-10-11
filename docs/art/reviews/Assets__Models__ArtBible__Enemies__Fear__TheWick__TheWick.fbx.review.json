@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Enemies/Fear/TheWick/TheWick.fbx",
+  "sheet": "docs/art/models/fear/wick.png",
+  "verdict": "pass",
+  "seen": "Three passes against wick-v2-1-true-form. Reads: 3.04 m hunched figure, bone cage head with the teardrop flame under the 1.25x kettle-hat cap with four lit vents, face flaps hanging at the collar, six bone ribs over the lit chest cavity with the candle, arms past the knee, glaive blade from the right wrist, four 0.40 m bone-tipped fingers on the left, thin woad legs with skin and bone at split knees. Fixed on the way: thighs painted skin by a too-wide knee band (now a knee patch), flames as thorn spikes (owner then moved fire to a shader: geometry removed, FireMask baked, preview wick-fire.png opened and placement matches the concept), face flaps lost under the collar (moved out), hunch too slight (stoop 22). Posed views bend cleanly at shoulder, elbow, knee; the one partly collapsed binding seen (mean influences 1.02) is now retried. Not like the concept: the shoulders do not rise above the neck (figure has no shoulder raise), the cavity is a rectangle not a lens, no torn hem strips; fire itself only visible in engine.",
+  "date": "2026-10-11T23:21:11+0000"
+}

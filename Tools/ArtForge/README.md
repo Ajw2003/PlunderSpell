@@ -11,8 +11,9 @@ and the geometry validator are EnemyForge's own code, imported through `sys.path
 EnemyForge's files are untouched. Read `docs/4-systems/enemy-asset-pipeline.md`,
 especially **Traps**: every trap there applies here too.
 
-**Status (2026-10-08):** all 20 **items**, all 16 **enemies** and the player **wizard**
-(`players/lair/wizard`) are built and reviewed. `high/lantern-warden` (a humanoid on
+**Status (2026-10-11):** all 20 **items**, all 16 **enemies**, the player **wizard**
+(`players/lair/wizard`) and the fear pass's first true form, **the Wick**
+(`enemies/fear/wick`, #386), are built and reviewed. `high/lantern-warden` (a humanoid on
 `figures.Human`) and `high/alaunt-hound` (a quadruped on `figures.Quadruped`) are the
 reference blueprints. No structure blueprints exist in this module (another agent owns
 structures). AnimForge (below) builds the enemy clips and the player's clips.
@@ -372,6 +373,26 @@ until the stills read as the concept **and** the POSED views deform cleanly.
 `enemies_high.py` is the complete reference: hat lathe, glaive prism, lantern swing
 chain, quilted gambeson, laced front, belt kit (warden); C-section quilted coat with
 painted bordure, chevron strips, harness straps, spiked collar (hound).
+
+## The fear pass (`--age fear`)
+
+Horrors outside the four Ages' fixed rosters of four live in `docs/art/data/fear.json`
+(`art_forge.FEAR_AGES`), so the art bible's per-Age counts stay as they are. Build them with
+`--age fear`: `python3 Tools/ArtForge/build.py enemies --age fear --only wick`. An entry whose
+JSON `concept` names a `.png` is reviewed beside that plate. The Wick (the Lantern Warden's true
+form, `blueprints/enemies_fear.py`) is `figures.Human(height=3.0, arm_length=1.35)`: `arm_length`
+scales upper arm, forearm and hand, default 1.0.
+
+**Fire is a shader, not geometry** (owner, 2026-10-11). `Blueprint.fire_families = {family:
+strength}` bakes an extra greyscale `<Name>_FireMask.png` beside the BaseMap (1 = flames, lower
+= smoulder, 0 = none), the same way players bake a DyeMask; the engine's fire shader reads it.
+The ordinary review sheet shows the model unlit, so look at the fire's placement with
+
+```bash
+python3.11 Tools/ArtForge/fire_preview.py enemies fear wick   # -> docs/art/models/fear/wick-fire.png
+```
+
+which lights the mask as madder glow, front and three-quarter (a stand-in, not the shader).
 
 ## Players
 

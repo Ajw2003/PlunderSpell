@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Enemies/Fear/TheWick/TheWick.blend",
+  "sheet": "docs/art/models/fear/wick.png",
+  "verdict": "pass",
+  "seen": "Same build as TheWick.fbx, exported together by Tools/ArtForge/build.py; reviewed on the same sheet docs/art/models/fear/wick.png (see the TheWick.fbx record for what was seen and fixed).",
+  "date": "2026-10-11T23:21:16+0000"
+}

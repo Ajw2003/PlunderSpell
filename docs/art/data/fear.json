@@ -1,0 +1,125 @@
+{
+  "slug": "fear",
+  "name": "The fear pass",
+  "intro": "Horrors outside the four Ages' fixed rosters: the true forms guards turn into, and the creature that hunts the company through time (#386). Designs approved by the owner on 2026-10-11; see docs/7-design/fear-pass.md, 'The true form' and 'The creature'.",
+  "enemies": [
+    {
+      "slug": "wick",
+      "name": "The Wick",
+      "role": "true form",
+      "of": "high/lantern-warden",
+      "zones": [
+        "CurtainWall",
+        "OuterBailey"
+      ],
+      "height_m": 3.1,
+      "summary": "The Lantern Warden's true form: the man turned into his own lantern, and burning.",
+      "description": "What the Lantern Warden turns into when it sees you or is struck. 3.10 m, hunched, the light carried high and ahead. His ribs have opened into the lantern's bars round a candle burning in his chest; his head is a cage of bone with the flame inside and his kettle hat lifted on top as the vented cap; his face hangs open in four flaps. The glaive has grown into one arm. He burns along his back, shoulders, coat and hem. His real lantern is left on the floor where he dropped it, dark.",
+      "silhouette": "A flame at the height of the wall-walk under a broad iron brim, burning shoulders 0.88 m across, arms to the knee: light, brim, fire, in that order.",
+      "build": [
+        "Body: stature 3.00 m to the top of the bone cage, the kettle hat bringing the crown to 3.10 m; shoulders 0.88 m across; a hunch of about 14° forward from the waist; legs long and too thin, the woad hose split at both knees.",
+        "Head: no skull. Four bone bars rise 0.36 m from the neck, bowed out to 0.30 m across, knuckled like vertebrae, meeting at an iron ring under the hat.",
+        "Flame: inside the cage, a 0.30 m teardrop rooted in a blackened wick, emissive; the fire shader runs on it.",
+        "Cap: the warden's one-piece kettle hat scaled 1.25 (brim 0.50 m), lifted on the cage; four vent holes punched in the dome, fire jetting from them.",
+        "Face: peeled into four flaps hanging from the neck over the collar, 0.16-0.22 m long, skin outside and blood inside; one eye left on the outer left flap, half a jaw of teeth on the right.",
+        "Gambeson: the warden's quilted coat stretched over the frame to a hem at 1.05 m, its quilting pulled apart, the hem torn into strips; charred at the shoulders and hem.",
+        "Chest: the lacing burst; a 0.30 m wide cavity from the collar to the belt, lit from inside, crossed by six bone ribs bowed outward like the lantern's iron bars; a tallow candle 0.20 m tall on the spine at its foot, flame 0.16 m.",
+        "Arms: reach past the knee (wrists at about 1.30 m), elbows thrown out. Right arm: the glaive's 0.70 m blade grows from the wrist, edge forward, point down; skin grown over the socket. Left hand: open, four fingers 0.40 m long, bone-tipped.",
+        "Belt: burst, one end hanging, the iron buckle still on it.",
+        "Fire: a shader in engine, not geometry (owner, 2026-10-11). The model bakes TheWick_FireMask.png: white where flames burn (back and shoulders, the hem, the coat's tears, the elbows, the hat's vents, the candle's top, the cage flame), grey (0.35) where the charred wool only smoulders, black elsewhere. The one flame mesh is the 0.30 m teardrop inside the head cage, for the head's fire to run on.",
+        "Not on this model: the lantern. It belongs to the human-form warden and is dropped at the turn as a loose physics prop, left where it falls."
+      ],
+      "materials": [
+        {
+          "name": "Gambeson wool",
+          "hex": "#C4B89C",
+          "notes": "The warden's undyed quilted wool, stretched; roughness 0.9."
+        },
+        {
+          "name": "Char",
+          "hex": "#2A1E16",
+          "notes": "Scorched wool at the shoulders, round the tears and at the hem."
+        },
+        {
+          "name": "Burning wool",
+          "hex": "#3A2418",
+          "notes": "Wool where it burns: the back and shoulders, the hem, the coat's tears, the elbows. White in the FireMask; faintly emissive."
+        },
+        {
+          "name": "Woad hose",
+          "hex": "#3E5470",
+          "notes": "As on the warden, split at the knees."
+        },
+        {
+          "name": "Skin",
+          "hex": "#A07A5C",
+          "notes": "Face flaps, knees, hands, fingers, the skin over the blade's socket."
+        },
+        {
+          "name": "Bone",
+          "hex": "#DCD2BA",
+          "notes": "Vellum: the cage bars, ribs, teeth, finger tips; roughness 0.55."
+        },
+        {
+          "name": "Blood",
+          "hex": "#6E2E24",
+          "notes": "Madder darkened: the inside of the flaps and the lips of the chest cavity. The only madder that is not fire."
+        },
+        {
+          "name": "Lit horn flame core",
+          "hex": "#E8C987",
+          "notes": "The chest cavity's inner glow and the bright core of every flame; emissive."
+        },
+        {
+          "name": "Vent fire",
+          "hex": "#C4542E",
+          "notes": "Madder: the hat's four vents and the candle's lit top, where fire jets out; emissive, white in the FireMask."
+        },
+        {
+          "name": "Tallow",
+          "hex": "#D8C9A0",
+          "notes": "The candle in the chest."
+        },
+        {
+          "name": "Blackened iron",
+          "hex": "#6F7479",
+          "notes": "The kettle hat, the blade, the buckle, the cage ring."
+        },
+        {
+          "name": "Leather",
+          "hex": "#5A4030",
+          "notes": "The burst belt and the turnshoes."
+        },
+        {
+          "name": "Flame",
+          "hex": "#C4542E",
+          "notes": "Madder: the teardrop flame inside the head cage; emissive."
+        }
+      ],
+      "rig": {
+        "skeleton": "Unity Humanoid (Mecanim) as figures.Human, plus Cage (child of Head), Hat (child of Cage, the vented cap), Blade (rigid on Hand.R), and flame bones are not separate: flames are rigid on the bone they sit on.",
+        "animations": [
+          "turn_reveal - 1.6 s, the four beats of the turn (seen, the face splits at 0.4 s, the coat bursts at 0.9 s, turned at 1.6 s); played on the warden then swapped to this model at 0.9 s",
+          "idle_burning - 3 s loop, hunched, the head cage sways, fingers flex",
+          "stalk - 1.4 m/s, long slow strides, the light carried ahead",
+          "hunt_run - 4.2 m/s, low and fast, arms swinging forward",
+          "stoop_arch - 0.5 s additive, drops the crown to 2.50 m under a 2.59 m arch",
+          "search_sweep - 2.5 s, the head cage turns 90 degrees each way, light sweeping",
+          "catch_kill - 1.2 s, the left hand closes on the player at chest height; the kill",
+          "hit_flinch - 0.4 s, the fire flares, it does not stop"
+        ]
+      },
+      "breakables": [
+        "None: a true form is never damaged or killed (fear pass, 'A true form never turns back')."
+      ],
+      "budget": "≤ 10k tris (body 6.5k, cage and cap 1.2k, blade 0.4k), one 1024² set with an emission map and a FireMask.",
+      "dont": [
+        "Don't give it a skull or a face on the cage: the head is a lantern now.",
+        "Don't carry the lantern: it stays where the warden dropped it.",
+        "Don't let the fire hide the silhouette: brim, cage flame and shoulders must read first.",
+        "Don't use madder outside fire and blood."
+      ],
+      "concept": "concept/fear/wick-v2-1-true-form.png"
+    }
+  ]
+}

@@ -86,6 +86,15 @@ four are retired.
 | Powder | Cuirassier | 1.95 m | Keep, InnerWard |
 | Powder | Petardier | 1.76 m | InnerWard, Keep |
 
+**The fear pass's true forms (#386).** What a guard turns into when it sees you or is struck
+(`docs/7-design/fear-pass.md`, "The true form"). Heights are `height_m` in `docs/art/data/fear.json`,
+built by ArtForge (`--age fear`). A true form stands where its guard stood, so it keeps that guard's
+zones; one taller than an archway stoops through it (a `stoop_arch` clip) rather than shrinking.
+
+| Of | Enemy | Height | Zones |
+|---|---|---|---|
+| Lantern Warden | The Wick | 3.10 m | CurtainWall, OuterBailey (stoops to 2.50 m under the 2.59 m arch) |
+
 **The supernatural six, Crypt only, any Age.** `EnemyPrefabForge.Specs`
 (`Assets/_Project/Scripts/Editor/EnemyPrefabForge.cs:66`) carries a standing height per enemy and
 scales each model uniformly from its authored height to it; the authored heights in

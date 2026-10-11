@@ -226,6 +226,8 @@ class Human(Figure):
     arm_l/_r   ArmPose for each arm's bind pose.
     stance     degrees each leg splays out from vertical.
     segments   sides of torso/limb sections (torso uses 2x; see quilting below).
+    arm_length scale on upper arm, forearm and hand length (1.0 = human; the Wick's
+               arms, which hang past his knees, use more).
     """
 
     forward = ["Foot.L", "Foot.R"]
@@ -234,9 +236,10 @@ class Human(Figure):
     def __init__(self, height: float = 1.76, bulk: float = 1.0,
                  shoulders: float | None = None, stoop: float = 0.0,
                  arm_l: ArmPose | None = None, arm_r: ArmPose | None = None,
-                 stance: float = 2.5, segments: int = 12):
+                 stance: float = 2.5, segments: int = 12, arm_length: float = 1.0):
         super().__init__()
         h = self.h = float(height)
+        self.arm_k = float(arm_length)
         self.bulk = float(bulk)
         self.stoop = float(stoop)
         self.segments = segments
@@ -271,14 +274,14 @@ class Human(Figure):
         sp, sw = math.radians(pose.spread), math.radians(pose.swing)
         upper = Vector((s * math.sin(sp) * math.cos(sw), -math.sin(sw),
                         -math.cos(sp) * math.cos(sw))).normalized()
-        elbow = shoulder + upper * (0.172 * h)
+        elbow = shoulder + upper * (0.172 * h * self.arm_k)
         forward = Vector((0.0, -1.0, 0.0))
         perp = forward - forward.dot(upper) * upper
         perp.normalize()
         e = math.radians(pose.elbow)
         fore = (upper * math.cos(e) + perp * math.sin(e)).normalized()
-        wrist = elbow + fore * (0.145 * h)
-        hand_tip = wrist + fore * (0.090 * h)
+        wrist = elbow + fore * (0.145 * h * self.arm_k)
+        hand_tip = wrist + fore * (0.090 * h * self.arm_k)
         return shoulder, elbow, wrist, hand_tip, fore
 
     def _make_bones(self, stance: float) -> None:
@@ -454,10 +457,12 @@ class Human(Figure):
         start = shoulder + Vector((-s * 0.036 * h, 0.0, -0.024 * h))
         up_dir = (elbow - shoulder).normalized()
         fore_dir = (wrist - elbow).normalized()
+        k = self.arm_k
         pts = [start, shoulder,
-               shoulder + up_dir * 0.172 * h * 0.35, shoulder + up_dir * 0.172 * h * 0.70,
+               shoulder + up_dir * 0.172 * h * k * 0.35, shoulder + up_dir * 0.172 * h * k * 0.70,
                elbow,
-               elbow + fore_dir * 0.145 * h * 0.35, elbow + fore_dir * 0.145 * h * 0.72, wrist]
+               elbow + fore_dir * 0.145 * h * k * 0.35, elbow + fore_dir * 0.145 * h * k * 0.72,
+               wrist]
         radii = [0.024, 0.030, 0.029, 0.026, 0.0225, 0.024, 0.021, 0.0165]
         if quilt_rings:
             pts, radii = _resample(pts, radii, quilt_rings)

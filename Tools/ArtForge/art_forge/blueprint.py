@@ -53,6 +53,10 @@ class Blueprint:
     # Families a player's colour dyes (players only). Their faces are baked white into
     # an extra greyscale <Name>_DyeMask.png, so one material slot can still be tinted.
     dye_families: list[str] = field(default_factory=list)
+    # Where fire burns, for a fire shader in engine instead of flame geometry: {family:
+    # strength 0..1} baked into an extra greyscale <Name>_FireMask.png (1 = flames,
+    # lower = embers and smoulder, 0 = no fire). The Wick (fear pass) uses it.
+    fire_families: dict[str, float] = field(default_factory=dict)
     notes: list[str] = field(default_factory=list)
 
     @property

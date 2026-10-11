@@ -20,6 +20,10 @@ if ENEMY_FORGE_DIR not in sys.path:
 KINDS = ("items", "structures", "enemies", "players")
 AGES = ("bronze", "high", "late", "powder")
 PLAYER_AGES = ("lair",)   # the one "age" of the players kind: docs/art/data/lair.json
+# The fear pass's horrors (#386): true forms and the creature, outside the four Ages' fixed
+# rosters of four. docs/art/data/fear.json; build with --age fear.
+FEAR_AGES = ("fear",)
+ALL_AGES = AGES + PLAYER_AGES + FEAR_AGES
 
 
 def default_ages(kind: str) -> tuple[str, ...]:

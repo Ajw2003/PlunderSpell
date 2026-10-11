@@ -302,10 +302,14 @@ def apply_pose(rig: bpy.types.Object, pose: dict | None = None) -> list[str]:
 
 
 HEAT_TRIES = 8
+# A partial collapse: some bones solved, most vertices left on one bone. Every healthy
+# enemy so far averages 1.41-1.97 influences; the Wick's failed binding averaged 1.02.
+HEAT_MIN_MEAN = 1.2
 
 
 def smooth_weights_with_retry(apply_smooth_weights, mesh_obj, rig, tries: int = HEAT_TRIES, **kwargs) -> dict:
-    """Run EnemyForge's heat weighting, retrying when it silently collapses to one bone.
+    """Run EnemyForge's heat weighting, retrying when it silently collapses to one bone,
+    or partly collapses (mean influences under HEAT_MIN_MEAN).
 
     Blender's bone heat weighting ("failed to find solution for one or more bones")
     fails at random on the same mesh, and on failure EnemyForge keeps the rigid
@@ -336,9 +340,10 @@ def smooth_weights_with_retry(apply_smooth_weights, mesh_obj, rig, tries: int = 
             rig.location = (0.0, 0.0, 0.0)
             mesh_obj.matrix_parent_inverse.identity()
             bpy.context.view_layer.update()
-        if not stats.get("auto_weights") or stats.get("max_influences", 0) > 1:
+        if not stats.get("auto_weights") or (stats.get("max_influences", 0) > 1 and
+                                             stats.get("mean_influences", HEAT_MIN_MEAN) >= HEAT_MIN_MEAN):
             break
-        print(f"  {mesh_obj.name}: heat weighting collapsed to one bone "
-              f"(attempt {attempt}/{tries}), retrying")
+        print(f"  {mesh_obj.name}: heat weighting collapsed (max {stats.get('max_influences')}, "
+              f"mean {stats.get('mean_influences')} influences; attempt {attempt}/{tries}), retrying")
     stats["heat_attempts"] = attempt
     return stats
