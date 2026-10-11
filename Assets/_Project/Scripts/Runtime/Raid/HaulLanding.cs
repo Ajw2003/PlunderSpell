@@ -24,9 +24,26 @@ namespace Plunderspell.Raid
 
         private bool _restored;
         private int _savedCount = -1;
+        private float _nextMoveCheck;
 
-        // Saved names no loot table could resolve: kept in the save so a missing table never erases a piece.
-        private readonly List<string> _unresolved = new List<string>();
+        private const float MoveCheckInterval = 2f;
+        // Below this a piece is only settling or jostled, not moved: not worth a save.
+        private const float MovedDistance = 0.05f;
+
+        // Where each piece was when last saved, to notice one that has since been moved.
+        private readonly Dictionary<GameObject, Vector3> _savedPositions = new Dictionary<GameObject, Vector3>();
+
+        // Saved entries no loot table could resolve: kept in the save (with any pose) so a missing table never erases a piece.
+        private readonly List<HaulPileEntry> _unresolved = new List<HaulPileEntry>();
+
+        // One table's share of a restore: posed pieces go back where they were, the rest take the grid.
+        private class RestoreBatch
+        {
+            public readonly List<LootItem> Grid = new List<LootItem>();
+            public readonly List<LootItem> Posed = new List<LootItem>();
+            public readonly List<Vector3> Positions = new List<Vector3>();
+            public readonly List<Quaternion> Rotations = new List<Quaternion>();
+        }
 
         private void OnEnable()
         {
@@ -45,8 +62,46 @@ namespace Plunderspell.Raid
                 return;
             }
             // A piece destroyed elsewhere (sold, broken) is no longer in the pile: keep the save in step.
-            if (_pile != null && LivePieces().Count != _savedCount)
+            if (_pile == null)
+                return;
+            if (LiveCount() != _savedCount)
                 Save();
+            else if (Time.unscaledTime >= _nextMoveCheck && IsServer())
+            {
+                _nextMoveCheck = Time.unscaledTime + MoveCheckInterval;
+                if (AnyPieceMoved())
+                    Save();
+            }
+        }
+
+        // Quitting from the Lair menu is a quit too; scene teardown is not used because pieces may already be gone.
+        private void OnApplicationQuit()
+        {
+            if (_restored && _pile != null && IsServer())
+                Save();
+        }
+
+        private int LiveCount()
+        {
+            int count = 0;
+            foreach (GameObject go in _pile.Spawned)
+            {
+                if (go != null && go.TryGetComponent(out LootValue value) && value.Item != null)
+                    count++;
+            }
+            return count;
+        }
+
+        private bool AnyPieceMoved()
+        {
+            foreach (GameObject go in _pile.Spawned)
+            {
+                // A piece not in the dictionary is a count change, which Update already catches.
+                if (go != null && _savedPositions.TryGetValue(go, out Vector3 saved)
+                    && (go.transform.position - saved).sqrMagnitude > MovedDistance * MovedDistance)
+                    return true;
+            }
+            return false;
         }
 
         private static bool IsServer() => NetworkManager.main == null || !NetworkManager.main.isClientOnly;
@@ -91,19 +146,32 @@ namespace Plunderspell.Raid
                 return;
 
             // A restored pile can mix eras, so pieces are spawned per table to get each one's prefab.
-            var byTable = new Dictionary<RaidLootTable, List<LootItem>>();
-            foreach (string id in HaulPileSave.Load(SaveSlots.Active))
+            var byTable = new Dictionary<RaidLootTable, RestoreBatch>();
+            foreach (HaulPileEntry entry in HaulPileSave.LoadEntries(SaveSlots.Active))
             {
-                LootItem item = Resolve(id, out RaidLootTable table);
+                LootItem item = Resolve(entry.Name, out RaidLootTable table);
                 if (item == null)
-                    _unresolved.Add(id);
-                else if (byTable.TryGetValue(table, out List<LootItem> items))
-                    items.Add(item);
+                {
+                    _unresolved.Add(entry);
+                    continue;
+                }
+                if (!byTable.TryGetValue(table, out RestoreBatch batch))
+                    byTable[table] = batch = new RestoreBatch();
+                if (!entry.HasPose)
+                    batch.Grid.Add(item);
                 else
-                    byTable[table] = new List<LootItem> { item };
+                {
+                    batch.Posed.Add(item);
+                    batch.Positions.Add(entry.Position);
+                    batch.Rotations.Add(entry.Rotation);
+                }
             }
-            foreach (KeyValuePair<RaidLootTable, List<LootItem>> group in byTable)
-                Spawn(group.Value, group.Key);
+            // Posed pieces first, so the grid pieces see their cells as taken. SpawnPile holds them kinematic
+            // until its settle delay passes, so physics cannot fling a piece placed on or inside another.
+            foreach (KeyValuePair<RaidLootTable, RestoreBatch> group in byTable)
+                _pile.SpawnPile(group.Value.Posed, group.Value.Positions, group.Value.Rotations, group.Key);
+            foreach (KeyValuePair<RaidLootTable, RestoreBatch> group in byTable)
+                Spawn(group.Value.Grid, group.Key);
             Save();
         }
 
@@ -123,25 +191,20 @@ namespace Plunderspell.Raid
             _pile.SpawnPile(pieces, points, table);
         }
 
-        private List<LootItem> LivePieces()
-        {
-            var items = new List<LootItem>();
-            foreach (GameObject go in _pile.Spawned)
-            {
-                if (go != null && go.TryGetComponent(out LootValue value) && value.Item != null)
-                    items.Add(value.Item);
-            }
-            return items;
-        }
-
         private void Save()
         {
-            var ids = new List<string>();
-            foreach (LootItem item in LivePieces())
-                ids.Add(item.name);
-            _savedCount = ids.Count;
-            ids.AddRange(_unresolved);
-            HaulPileSave.Save(SaveSlots.Active, ids.ToArray());
+            var entries = new List<HaulPileEntry>();
+            _savedPositions.Clear();
+            foreach (GameObject go in _pile.Spawned)
+            {
+                if (go == null || !go.TryGetComponent(out LootValue value) || value.Item == null)
+                    continue;
+                entries.Add(new HaulPileEntry(value.Item.name, go.transform.position, go.transform.rotation));
+                _savedPositions[go] = go.transform.position;
+            }
+            _savedCount = entries.Count;
+            entries.AddRange(_unresolved);
+            HaulPileSave.SaveEntries(SaveSlots.Active, entries);
         }
 
         /// <summary>The raid's current loot table, which maps each piece back to its prefab.</summary>
