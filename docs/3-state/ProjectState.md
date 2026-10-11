@@ -29,6 +29,27 @@ the unused two-person code is still in `LootPickup` (`InitiateDualCarry`) and
 
 ## Work not on `main` yet
 
+**Current, checked 2026-10-11 by patch content (`git cherry`) against every branch.** The real
+baseline is **`claude/merge-2026-10-08`** (PR #370, tracked by #368): `main` is 187 commits behind
+it and has nothing it lacks. It holds the in-world Lair and Market, the diegetic raid UI and event
+feedback, the wizard on the player (#362) and co-op on one PC (#372). Last Unity run at its tip
+(2026-10-08): EditMode 243 pass / 3 skipped / 0 fail, PlayMode 518/518, `coop_lair_check.sh` and
+`wizard_coop_check.sh` PASS in co-op. Not checked there yet: a release build from
+Tools/Plunderspell/Build Standalone Player (`Build/Windows`), and the #372 menu buttons hidden in it.
+
+Still outside it, each needing a keep-or-drop call:
+- `claude/rimlight-318`: 2 WIP commits of the #318 verdigris glow (unfinished).
+- `claude/wizard-character-plan` (PR #349): the wizard plan doc and concept plates, docs only.
+- `claude/voice-mimicry-improvements-7a0b29`: 6 commits, the LLM mimic prototype and older guard
+  voice work; the rest of its voice commits were cherry-picked on 2026-10-06.
+- `claude/busy-bose-a7647f`: 1 test fix for the old `CastleGuard`; obsolete, `GuardAttackTests`
+  was rewritten for the fresh guard (#214).
+
+Every other branch, including the unpushed local `claude/watch-324` and
+`backup/pre-lfs-fix-2026-10-06`, is already inside `claude/merge-2026-10-08`.
+
+The history below was written 2026-09-28 and is kept as the record of how the work got here.
+
 Checked 2026-09-28 against every branch on `origin`. Two branches hold recent work that `main`
 lacks; the rest are older and either merged in another form or abandoned.
 
