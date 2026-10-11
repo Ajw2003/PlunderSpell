@@ -55,10 +55,17 @@ namespace Plunderspell.Raid
 
         private void Update()
         {
+            // Leaving the session destroys the networked pile but not the save: never save that empty pile,
+            // and restore from the save when the next session starts.
+            if (!ServerReady())
+            {
+                if (_restored)
+                    ForgetTornDownPile();
+                return;
+            }
             if (!_restored)
             {
-                if (ServerReady())
-                    Restore();
+                Restore();
                 return;
             }
             // A piece destroyed elsewhere (sold, broken) is no longer in the pile: keep the save in step.
@@ -79,6 +86,14 @@ namespace Plunderspell.Raid
         {
             if (_restored && _pile != null && IsServer())
                 Save();
+        }
+
+        private void ForgetTornDownPile()
+        {
+            _restored = false;
+            _savedCount = -1;
+            _savedPositions.Clear();
+            _unresolved.Clear();
         }
 
         private int LiveCount()
