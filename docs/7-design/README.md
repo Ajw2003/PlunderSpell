@@ -19,7 +19,7 @@ the game we are making.
 
 | Design | Status | What it settles |
 |---|---|---|
-| [`fear-pass.md`](fear-pass.md) | design in progress (#386) | Raids you barely survive: two-form guards, spells earned from Porta up, a creature that wants artifacts instead of a debt |
+| [`fear-pass.md`](fear-pass.md) | approved 2026-10-11 (#386) | Raids you barely survive: two-form guards, spells earned from Porta up, a creature that wants artifacts instead of a debt |
 | [`diegetic-ui-lair-market.md`](diegetic-ui-lair-market.md) | approved 2026-10-06, built | The HUD moved into the world, the physical Lair, the haggling Market |
 | [`wizard-character.md`](wizard-character.md) | approved 2026-10-07, built | One wizard outfit, a colour each, the name on the hat, a fallen wizard leaves the hat |
 

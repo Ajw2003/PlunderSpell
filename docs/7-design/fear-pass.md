@@ -1,7 +1,7 @@
 # The fear pass: raids you barely survive
 
-**Status: design in progress (#386, under #380).** Direction set by the owner on 2026-10-11; questions
-still open below. No code until the written design is approved.
+**Status: approved 2026-10-11 (#386, under #380).** Direction and all four parts of the first slice
+approved by the owner on 2026-10-11. Next: an implementation plan with one issue per step.
 
 ## What the owner wants
 
@@ -56,7 +56,8 @@ artifacts. Each raid then has two goals:
 - The Lair and the Market stand outside time, so they are always safe.
 - Its demand, the quota, falls due every 3 to 5 raids as a base. The number is configurable.
 - If the portal closes while you are still in the castle, you are left behind.
-- If the creature catches you empty-handed, you die in that raid.
+- If the creature catches you empty-handed, you die in that raid. If it catches you carrying its
+  artifacts, it takes them, the quota counts as paid, and you live.
 - Dying in a castle loses every item you brought in and every item you meant to bring back. The
   castle keeps everything you don't take.
 - Learned spells stay learned. A spell text you found but had not yet learned is lost with you.
@@ -75,19 +76,62 @@ wakes its target, which sees you at once and turns.
 
 **Somnus is bought in the Market** with coin from the first hauls.
 
-## First slice
+**The creature (owner, 2026-10-11).** It is a physical thing that arrives in the castle late. Its
+demand is written in the Lair's ledger book. It replaces the Collector, who goes. The first two-form
+guard is the common High Medieval guard.
 
-1. The spell lockdown: Porta at the start, Somnus bought in the Market, the rest locked, backfire
-   consequences.
-2. One two-form guard, with its true-form model and animation, added to the existing roster.
-3. More guards spawning on the ground floors.
-4. The creature and its artifact quota in place of the debt.
+## The first slice (approved 2026-10-11)
 
-Later slices: the rest of the roster as horrors, each with its own senses, behaviour and counter.
+### 1. Spells are earned
+`SpellCastingSystem`, the save slot, the Market.
+- Each save slot keeps the set of spells the company has learned. A new save knows Porta only.
+- Casting an unlearned spell does nothing but fizzle as a misheard word does today, and it still
+  makes its noise, so speaking keeps its cost.
+- A Market vendor sells the Somnus scroll. A carried scroll teaches nothing until it is read at a
+  lectern in the Lair while the Lair is calm; a scroll lost in a castle is gone.
+- Somnus works only on guards. A miss, or a cast that is too loud, wakes its target, which sees you
+  at once and turns.
+- Offensive spells and found weapons are locked or taken out of the loot tables for now; their code
+  stays for later.
 
-## Open questions
+### 2. The two-form guard
+The existing `Guard` and its states.
+- The same guard object gains a one-way **True form** state. Seeing you, or being hit, triggers it;
+  hearing you only sends it to investigate, still human.
+- On turning it swaps to a second model and a faster, sharper-sensed tuning, plays a reveal, and
+  raises a fear event on every machine (sound, camera, music).
+- A true form never turns back and kills on a catch. The human form is stunned and knocked down by a
+  hard blow to the head, and is never killed.
+- Built first on the common High Medieval guard, with its model and clips made through the art
+  pipeline; its look is designed with the owner before it is modelled.
+- More guards stand on the ground floors, so the threat is seen from the gate.
+
+### 3. The creature and its quota
+Replacing the debt and the Collector in `LairHubManager`.
+- Each save slot keeps the quota: the wanted artifacts and the raids left (3 to 5 by default, from a
+  tuning asset). The ledger book's pages show the demand, with a sketch of each artifact, instead of
+  the debt.
+- Wanted artifacts are marked loot in the castles. Carried home and placed in the Lair, they pay the
+  quota and the next demand appears.
+- Unpaid when the count runs out, every raid is a hunt until it is paid. The creature arrives in the
+  castle as the portal's clock runs low, and each hunted raid's spoils are taken.
+- Caught carrying its artifacts: it takes them, the quota is paid, you live. Caught empty-handed: you
+  die.
+- Death loses what you carried and any unread scrolls; learned spells and the Lair stay. The portal
+  closing leaves anyone inside behind.
+- The Collector and the debt shares go. Coin only buys things in the Market.
+
+### 4. Order and checks
+Spells first, then the guard, then the creature, each on its own branch as a pull request into
+staging. Each gets tests for its rules, a co-op check script run with the Editor host and a built
+client like the existing ones, and before-and-after screenshots looked at. The true form's and the
+creature's art go through the art pipeline with a review sheet each.
+
+Later slices: the rest of the roster as horrors, each with its own senses, behaviour and counter;
+Velox and Saltus mid-game; the later spells.
+
+## Still open (not needed for the first slice)
 
 - Which later spells come from the Market and which only from ancient texts.
-- The creature: what it is, whether it appears in the castle while hunting, how the company learns
-  what it wants, and how the Lair's ledger, the Collector and coin pouches change.
-- What happens to found weapons and to throwing heavy objects at guards?
+- What the creature and the true form look like (designed with the owner before modelling).
+- Whether a thrown heavy object can stun a human-form guard as a blow to the head does.
