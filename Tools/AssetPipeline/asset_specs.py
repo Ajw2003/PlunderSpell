@@ -207,6 +207,19 @@ POWDER_CASTLE_SPECS = [
 
 ERA_CASTLE_SPECS = BRONZE_CASTLE_SPECS + LATE_CASTLE_SPECS + POWDER_CASTLE_SPECS
 
+# The Age of Powder's rooms have sheets (docs/art/rooms/) but no builders yet: these modules are
+# still stubs. Their pieces stay listed above (the room and contact sheets use them) and sit out of
+# ALL_SPECS, so the pipeline builds what exists. Take a module out of this set when its builders land;
+# a builder missing from any other module still fails the build.
+MODULES_NOT_YET_BUILT = {
+    "castle_builders_powder_curtain",
+    "castle_builders_powder_bailey",
+    "castle_builders_powder_ward",
+    "castle_builders_powder_keep",
+    "castle_builders_powder_crypt",
+}
+BUILT_ERA_CASTLE_SPECS = [s for s in ERA_CASTLE_SPECS if s["module"] not in MODULES_NOT_YET_BUILT]
+
 # The outer bailey's dressing and the courtyard yards (docs/plans/night-atmosphere.md,
 # section 4), built in castle_builders_dressing.py. Not rooms: a curtain dressing
 # shares a cell with the wall module, a courtyard fills a carved interior cell, and
@@ -227,7 +240,7 @@ DRESSING_SPECS = [
     dict(key="CourtyardFormalGarden", builder="build_courtyard_formal_garden", tri_budget=1200, subdir="Castle/Dressing", module="castle_builders_dressing", zone="Keep", kind="wall"),
 ]
 
-# The Lair (docs/plans/diegetic-ui-lair-market.md, issue 286), built in
+# The Lair (docs/7-design/diegetic-ui-lair-market.md, issue 286), built in
 # lair_builders.py: a one-off ~14 x 10 m vaulted cellar (NOT a 12 m castle cell,
 # so it has no cell-footprint check) and the props that furnish it. The four
 # LairCenturyDialRing pieces are authored flat and centred on their axle; see the
@@ -251,7 +264,7 @@ LAIR_SPECS = [
     _lair("LairCandle", "build_lair_candle", 340),
 ]
 
-# The Market (docs/plans/diegetic-ui-lair-market.md, issue 287), built in market_builders.py.
+# The Market (docs/7-design/diegetic-ui-lair-market.md, issue 287), built in market_builders.py.
 # MarketYard is a one-off ~20 x 20 m open-air yard: NOT a 12 m castle cell, so it has no
 # cell-footprint check (only "Castle*" modules are held to it). The props are separate
 # meshes with base pivots; MarketScalesBeam's pivot is its fulcrum (see market_builders.py).
@@ -277,7 +290,7 @@ MARKET_SPECS = [
     _market("MarketPouch", "build_market_pouch", 300),
 ]
 
-ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + ERA_CASTLE_SPECS + DRESSING_SPECS + LAIR_SPECS + MARKET_SPECS
+ALL_SPECS = WEAPON_SPECS + LOOT_SPECS + CASTLE_SPECS + BUILT_ERA_CASTLE_SPECS + DRESSING_SPECS + LAIR_SPECS + MARKET_SPECS
 
 
 
