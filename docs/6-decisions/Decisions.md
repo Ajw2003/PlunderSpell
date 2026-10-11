@@ -3,6 +3,20 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-11 — Per-frame code only for what changes every frame
+
+**Context.** Agents kept putting change-detection, saves and timers in `Update`. The Lair pile save wiped a
+save (#378). The audit found 67 of 103 per-frame methods did not need to run every frame
+(`docs/plans/update-audit-2026-10-11.md`).
+
+**Decision (owner, 2026-10-11).** `Update`, `LateUpdate` and `FixedUpdate` are only for work that changes every
+frame, each marked `// per-frame: <reason>`. All other per-frame code is an EVENT, a TIMER or removed. Input comes
+through `GameInput` actions, not polling. Several flags describing one thing become one state. MVC, singletons,
+factories and SOLID stand.
+
+**Consequence.** Fixes are tracked in #389-#402. The house-rules plugin gains a matching standard and a hook
+(Ajw2003/AjsClaudeCodeTools#218). See `docs/4-systems/core.md`, "When Update is allowed". Status: Active.
+
 ## 2026-10-11 — A seventh docs tier for design
 
 **Context.** The pitch bible sat loose in `docs/`, live designs were mixed in with build plans in
