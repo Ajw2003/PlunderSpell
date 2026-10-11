@@ -1,5 +1,18 @@
 # Today
 
+**2026-10-11 (later) - concept options for the two fear-pass horrors (#386).** From the handoff
+`docs/plans/handoff-2026-10-11-true-form-and-creature.md`, the look questions only: three true
+forms for the Lantern Warden (The Wick, The Hollow Coat, The Crawler) and three creatures (The
+Ophan of Hours, The Tithe-Abbot, The Hound of the Angles), drawn by
+`Tools/ArtBible/generators/fear/` on the art-bible sheet at true scale, rendered to
+`docs/art/concept/fear/*.png`, and set side by side in `docs/art/concept/fear/proposal.html`
+(published for the owner). Every plate was opened and fixed at least once. Waiting on the owner:
+confirm the Lantern Warden is the guard meant, pick one of each, and say whether the creature may
+use lapis (the bible keeps lapis off enemies). Nothing modelled yet; the reveal, counters and
+ground-floor counts are still open.
+
+---
+
 **2026-10-11 - one staging branch again, and a friends build (#368).** Several worktrees had left the
 owner unsure where work stopped. Checked every branch by patch content: everything finished is on
 `claude/merge-2026-10-08`; the new `claude/staging-2026-10-11` is that plus the wizard plan docs
