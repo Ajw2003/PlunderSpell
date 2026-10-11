@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Animations/Humanoid_Player.fbx",
+  "sheet": "docs/art/anim/player/player_jog.png",
+  "verdict": "pass",
+  "seen": "player_jog on the wizard: 8 frames read as a brisk jog with arms swinging opposite legs, robe follows the legs, footsteps L at 0.00 and R at 0.50, foot slide 0.0 cm on the reference and 1.5 cm on the wizard. Not authored this session: on disk from the #361 merge.",
+  "date": "2026-10-11T17:47:46-0600"
+}
