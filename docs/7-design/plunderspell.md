@@ -5,7 +5,7 @@
 
 Status: pitch / design bible v0.2 — no implementation yet.
 Illustrated mood board: `docs/generated/plunderspell-moodboard.html` (open it in a browser).
-Engineering plan: [`docs/plans/plunderspell.md`](plans/plunderspell.md).
+Engineering plan: [`docs/plans/plunderspell.md`](../plans/plunderspell.md).
 
 *A note on the voice: the pitch is written to be read aloud, and it is written by a herald who is
 being paid to oversell. Everything from §9 onward drops the act and is plain, checkable fact — the
@@ -105,7 +105,7 @@ is always funnier than the thing you meant.
 
 > **Changed 2026-10-11.** Spells are now earned, not all known from the start: Porta first, Somnus
 > soon after, offensive spells late. See Decisions, "Raids are about fear", and
-> [`plans/fear-pass.md`](plans/fear-pass.md).
+> [`fear-pass.md`](fear-pass.md).
 
 **It needs nothing but you.** The listening happens inside the game, on the player's own machine. No
 key to buy, no coin per hour, and no distant outage can take the thing off the air.
@@ -127,7 +127,7 @@ here: braining a guard with a candlestick and stealing a candlestick are the ver
 performed with different feeling.
 
 > **Changed 2026-10-11.** A blow now only stuns a guard in its human form; once it shows its true
-> form, you run. See Decisions, "Raids are about fear", and [`plans/fear-pass.md`](plans/fear-pass.md).
+> form, you run. See Decisions, "Raids are about fear", and [`fear-pass.md`](fear-pass.md).
 
 Harm comes from how fast a thing was moving. Which means a sword is merely a heavy object with a
 sharp end that you swung hard — and the whole castle becomes an armoury. A dropped portcullis. A
@@ -224,7 +224,7 @@ you have already woken.** Nobody walks calmly out of a good night.
 > project, so it is not a reference, not a prototype scaffold and not a shortcut. Do not open those
 > files, do not diff against them, and never merge, cherry-pick or rebase that branch into this
 > lineage. The generator is written from this specification and from castle architecture, nothing
-> else. See [`docs/plans/plunderspell.md`](plans/plunderspell.md) for the full provenance note.
+> else. See [`docs/plans/plunderspell.md`](../plans/plunderspell.md) for the full provenance note.
 
 ---
 

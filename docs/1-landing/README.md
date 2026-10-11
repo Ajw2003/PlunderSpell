@@ -38,6 +38,7 @@ this document, not a reason to go grep the repo.
 | 4 | [`docs/4-systems/`](../4-systems/README.md) | How each runtime-critical system works |
 | 5 | [`docs/5-today/Today.md`](../5-today/Today.md) | What's being worked on today, and why |
 | 6 | [`docs/6-decisions/Decisions.md`](../6-decisions/Decisions.md) | Why a decision was made, and what it replaced |
+| 7 | [`docs/7-design/`](../7-design/README.md) | What the game is meant to be: the bible, live designs, and every current visual reference |
 
 Plus `docs/plans/` (a plan for a specific piece of work, live until executed), `docs/archive/`
 (documents that were correct once and are now inert — moved, never deleted), `docs/generated/`
@@ -70,7 +71,7 @@ together and what was deliberately left undocumented, and why.
 
 ## Everything else worth reaching
 
-- [`docs/plunderspell.md`](../plunderspell.md) — the pitch/design bible (v0.2). Written to be read
+- [`docs/7-design/plunderspell.md`](../7-design/plunderspell.md) — the pitch/design bible (v0.2). Written to be read
   aloud; §9 onward is plain fact. Illustrated mood board:
   [`docs/generated/plunderspell-moodboard.html`](../generated/plunderspell-moodboard.html).
 - [`docs/plans/plunderspell.md`](../plans/plunderspell.md) — the engineering plan the roadmap was
@@ -92,7 +93,7 @@ together and what was deliberately left undocumented, and why.
   animated (**awaiting approval**; no enemy is animated yet, #141). Review page:
   [`docs/generated/enemy-animation-plan/`](../generated/enemy-animation-plan/index.html).
 - [`docs/plans/multi-floor-castle.md`](../plans/multi-floor-castle.md): **approved** (2026-10-03, #197; steps #247-#250, step 1 plan [`multi-floor-castle-step1-plan.md`](../plans/multi-floor-castle-step1-plan.md)). Castles get a keep floor and a crypt below, joined by period stairs, with doors where zones meet.
-- [`docs/plans/diegetic-ui-lair-market.md`](../plans/diegetic-ui-lair-market.md): **approved 2026-10-06**
+- [`docs/7-design/diegetic-ui-lair-market.md`](../7-design/diegetic-ui-lair-market.md): **approved 2026-10-06**
   (#284); the Lair (#286) and Market (#287) are being modelled. The raid HUD is replaced by things in the world (a grimoire, a pocket watch, fires that show
   the alarm); only the crosshair and damage feedback stay on screen. Loot comes home to a physical
   Lair, and is sold in a Market to vendors who haggle. Illustrated review page:
@@ -114,10 +115,10 @@ together and what was deliberately left undocumented, and why.
   [`docs/generated/github-issues-moodboard-gap.json`](../generated/github-issues-moodboard-gap.json)
   once filed). Its one open creative-direction question, the bestiary's thematic split, was
   decided on 2026-09-24: each Age's enemies are its household.
-- [`docs/plans/fear-pass.md`](../plans/fear-pass.md) — **design in progress (#386).** Raids you barely
+- [`docs/7-design/fear-pass.md`](../7-design/fear-pass.md) — **design in progress (#386).** Raids you barely
   survive: guards with a Lovecraftian true form, spells earned from Porta up, more guards on the ground floors.
-- [`docs/plans/wizard-character.md`](../plans/wizard-character.md) — **approved 2026-10-07, not
-  started.** The player character: one wizard outfit for everyone, a colour each player picks (no
+- [`docs/7-design/wizard-character.md`](../7-design/wizard-character.md) — **approved 2026-10-07, built
+  (#336, #361, #362).** The player character: one wizard outfit for everyone, a colour each player picks (no
   two exact matches in a raid), their name around the hat band, and a fallen wizard leaves only the
   hat. For a local agent with Unity; issues #335–#341. Concept plates in
   `docs/art/concept/wizard/`.

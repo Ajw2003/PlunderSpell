@@ -181,7 +181,7 @@ resort. Do not add threading without a measurement that asks for it.
 
 No presenter or view in §4.3 reads another system in `Update`/`OnGUI`; the raid HUD model is built only on events;
 Profiler numbers before/after are in the PR; Unity EditMode + PlayMode and the headless suite show nothing newly
-failing; docs updated. Then the diegetic UI work (`docs/plans/diegetic-ui-lair-market.md`, phase 1) builds on these
+failing; docs updated. Then the diegetic UI work (`docs/7-design/diegetic-ui-lair-market.md`, phase 1) builds on these
 events: the fires listen to the alarm, the watch to the timer, the ledger to the debt.
 
 ---

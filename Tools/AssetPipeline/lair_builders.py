@@ -1,6 +1,6 @@
 """
 The Lair: the physical cellar the player returns to between raids, and its props
-(docs/plans/diegetic-ui-lair-market.md, "The Lair, as a place"; concept image
+(docs/7-design/diegetic-ui-lair-market.md, "The Lair, as a place"; concept image
 docs/art/concept/lair/lair.png). Issue 286.
 
 Runs only inside Blender's Python, like every other builder. Every key is built

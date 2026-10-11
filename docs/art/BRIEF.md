@@ -4,7 +4,7 @@ This is the brief every per-Age handoff sheet in `docs/art/` was written against
 3D artist (or a later agent adding a fifth Age) can see the rules the sheets obey, rather than
 reverse-engineering them from the sheets.
 
-Source of truth for the look: the pitch bible [`docs/plunderspell.md`](../plunderspell.md) and its
+Source of truth for the look: the pitch bible [`docs/7-design/plunderspell.md`](../7-design/plunderspell.md) and its
 mood board [`docs/generated/plunderspell-moodboard.html`](../generated/plunderspell-moodboard.html).
 Source of truth for sizes: [`docs/4-systems/scale.md`](../4-systems/scale.md).
 

@@ -4,7 +4,7 @@
   "year": "now",
   "stratum": "home",
   "headline": "The wizards' own place: the players and what they carry home",
-  "intro": "Not a raid age but the home of the player characters. Every player is the same wizard in the same outfit; only the colour (the dyed materials) and the name on the hat band differ. See docs/plans/wizard-character.md.",
+  "intro": "Not a raid age but the home of the player characters. Every player is the same wizard in the same outfit; only the colour (the dyed materials) and the name on the hat band differ. See docs/7-design/wizard-character.md.",
   "palette": [
     {
       "name": "Player colour",

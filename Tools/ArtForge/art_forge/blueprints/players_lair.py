@@ -3,7 +3,7 @@
 One outfit for every player; only the colour of the dyed families (robe_wool,
 hat_felt, hat_band) and the name on the hat band change. Built on figures.Human like
 the Lantern Warden. The hat is on its own bone (Hat, child of Head) so the game can
-hide it from the owner's camera and drop it. See docs/plans/wizard-character.md.
+hide it from the owner's camera and drop it. See docs/7-design/wizard-character.md.
 """
 
 from __future__ import annotations

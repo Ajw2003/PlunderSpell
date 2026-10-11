@@ -1,6 +1,6 @@
 # Player animation: the wizard's body
 
-Every player is the same wizard (plan: `docs/plans/wizard-character.md` on
+Every player is the same wizard (plan: `docs/7-design/wizard-character.md` on
 `claude/wizard-character-plan`, issue #335). This page covers how the wizard's body is built,
 animated and driven in game. Issues: #336 (model), #361 (clips), #362 (wiring).
 

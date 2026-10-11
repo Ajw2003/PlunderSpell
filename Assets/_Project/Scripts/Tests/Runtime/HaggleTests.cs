@@ -4,7 +4,7 @@ using Plunderspell.Market;
 
 namespace Plunderspell.Tests
 {
-    /// <summary>The haggle rules from docs/plans/diegetic-ui-lair-market.md, "The numbers behind it" (#312).</summary>
+    /// <summary>The haggle rules from docs/7-design/diegetic-ui-lair-market.md, "The numbers behind it" (#312).</summary>
     public class HaggleTests
     {
         [Test]

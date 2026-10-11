@@ -27,7 +27,7 @@ pushed at `8434f4ee`. Read first: `CLAUDE.md`, `docs/1-landing/README.md`, this 
 
 1. **#299**: `Alarm/EnemyDirectorBus.cs` + `EnemyDirector.cs:73,133-148` onto `EventManager`; guards report to the
    director by event (#252). Then #300, #301, #302, #303, #304, #305 in order.
-2. Then diegetic raid UI (phase 1 of `docs/plans/diegetic-ui-lair-market.md`; grimoire and watch stay flat UI), then
+2. Then diegetic raid UI (phase 1 of `docs/7-design/diegetic-ui-lair-market.md`; grimoire and watch stay flat UI), then
    the Lair room, then the Market (`docs/plans/lair-market-in-engine.md` steps 2-8). Each needs a parent issue plus
    one child per step before code (house rule). aj chose this order.
 

@@ -22,7 +22,7 @@ settled at the Lair, in a ledger with one column per wizard.
 - The owner asked for it (#174, and on 2026-10-06: "the rest of the UI should go away and be
   replaced with diegetic replacements").
 - The pitch already argues for it: "It also lets a man read his own greed without a single number
-  on the screen" (`docs/plunderspell.md`, §5). The raid HUD today is mostly numbers.
+  on the screen" (`docs/7-design/plunderspell.md`, §5). The raid HUD today is mostly numbers.
 - The Lair is a menu screen (#30, #31) and the Market does not exist (#26, #27). Both are on the
   M4 roadmap. Building them as places gives the gold somewhere physical to land.
 - Haggling turns selling into a game, where today the haul is banked automatically. It is also

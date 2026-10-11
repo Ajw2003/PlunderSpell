@@ -1,6 +1,6 @@
 # Market and haggling
 
-The Market yard is where the haul becomes coins. Design: `docs/plans/diegetic-ui-lair-market.md`
+The Market yard is where the haul becomes coins. Design: `docs/7-design/diegetic-ui-lair-market.md`
 ("The Market, and haggling"); decisions: `docs/6-decisions/Decisions.md` 2026-10-07 (coins come only
 from selling; *Plus* is the only ask; keys first, voice later).
 

@@ -52,7 +52,7 @@ the first steps are batching (queue during the frame, deliver once) and fewer su
 main thread is a last resort, because listeners then cannot touch Unity objects. Nothing is threaded now: no
 measurement asks for it.
 
-**Fits the diegetic UI.** The approved diegetic UI (`docs/plans/diegetic-ui-lair-market.md`) replaces most of this HUD.
+**Fits the diegetic UI.** The approved diegetic UI (`docs/7-design/diegetic-ui-lair-market.md`) replaces most of this HUD.
 The change events are what the fires (alarm level), the watch (timer) and the Lair ledger (debt) will listen to, so
 this work is reused, not thrown away with the HUD.
 

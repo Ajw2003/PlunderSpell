@@ -1,13 +1,13 @@
 # The Lair and the Market: what exists, and what is left before they can be played in Unity
 
-**2026-10-07.** Inventory taken on `claude/staging-2026-10-07`. Design: `docs/plans/diegetic-ui-lair-market.md`
+**2026-10-07.** Inventory taken on `claude/staging-2026-10-07`. Design: `docs/7-design/diegetic-ui-lair-market.md`
 (approved 2026-10-06, #284).
 
 ## Done
 
 | What | Where | State |
 |---|---|---|
-| The design, approved with every proposed answer | `docs/plans/diegetic-ui-lair-market.md` (#285) | done |
+| The design, approved with every proposed answer | `docs/7-design/diegetic-ui-lair-market.md` (#285) | done |
 | Concept art: Lair, Market, one haggle | `docs/art/concept/lair/` | done |
 | Lair models: cellar, portal arch, ledger table, ledger, strongbox, century dial (stand + 4 turning rings), weapon rack, candle | `Assets/_Project/Art/Models/Lair/` (#288) | built and validated in Blender; `.meta` files committed; import checked 2026-10-06 (scale in metres, no missing materials) |
 | Market models: yard with well, fence cart, goldsmith stall, anvil, pardoner booth, antiquarian cabinet, counter, slate board, scales (base, tipping beam, pan), lantern, coin, coin stack, pouch | `Assets/_Project/Art/Models/Market/` (#293) | built and validated in Blender; never imported into Unity |

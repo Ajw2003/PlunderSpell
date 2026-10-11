@@ -50,7 +50,7 @@ within 0.15 m. This is what shows the model was built to its sheet.
   "zone": "Keep",
   "role": "ThroneRoomKeep",           // the High Medieval room it stands in for (the plan's "Role")
   "summary": "One line.",
-  "description": "3–5 sentences in the herald's voice (docs/plunderspell.md): what the room is, how it plays.",
+  "description": "3–5 sentences in the herald's voice (docs/7-design/plunderspell.md): what the room is, how it plays.",
   "source": "optional: the art bible structure it adapts",
   "kit_changes": ["optional: each place the kit overrides the art bible, and why"],
   "build": ["8–12 bullets: part, primitive shape, real dimensions and kit coordinates, material"],

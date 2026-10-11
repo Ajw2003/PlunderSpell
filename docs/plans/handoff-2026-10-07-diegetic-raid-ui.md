@@ -2,7 +2,7 @@
 
 **For:** a fresh agent on aj's PC (aj may be away; work in order of gameplay impact, no need to ask). **Branch:**
 `claude/rimlight-318` has one WIP commit (`1391e480`) on top of staging; `claude/staging-2026-10-07` is clean and pushed
-(at `46359ec2`). Read first: `CLAUDE.md`, `docs/1-landing/README.md`, this file, then `docs/plans/diegetic-ui-lair-market.md`.
+(at `46359ec2`). Read first: `CLAUDE.md`, `docs/1-landing/README.md`, this file, then `docs/7-design/diegetic-ui-lair-market.md`.
 
 ## Where things stand
 

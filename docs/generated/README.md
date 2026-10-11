@@ -6,7 +6,7 @@ gets regenerated from the tool that made it, not patched in place.
 | File | Produced by | What it is |
 |---|---|---|
 | `castle-generator-visualization.html` | hand-authored, standalone | Interactive visualization of the procedural castle generator's ward layout. Open directly in a browser. |
-| `plunderspell-moodboard.html` | hand-authored, standalone | Illustrated mood board for the pitch bible (`docs/plunderspell.md`) — palette, light, per-era art direction. Open directly in a browser. |
+| `plunderspell-moodboard.html` | hand-authored, standalone | Illustrated mood board for the pitch bible (`docs/7-design/plunderspell.md`) — palette, light, per-era art direction. Open directly in a browser. |
 | `plunderspell-art-bible-moodboard.html` | `Tools/ArtBible/build_art_bible.py` | Companion mood board covering only structures, enemies and plunder of the four Ages, with every concept sheet inline. Generated from `docs/art/data/*.json` — edit those, not this. |
 | `art-bible-models/` | `Tools/ArtForge/gallery.py` | Gallery of every ArtForge review sheet (items and enemies): concept beside the finished model, grouped by Age, with a full-size viewer. Rerun the script after re-rendering sheets. |
 | `ui-preview.html` | hand-authored, standalone | Source-accurate HTML preview of the six UI screens, built alongside `UIScreenshotPlayModeTests.cs`'s captures in `UI_Verification_Screenshots/`. |

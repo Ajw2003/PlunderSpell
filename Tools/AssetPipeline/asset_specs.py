@@ -227,7 +227,7 @@ DRESSING_SPECS = [
     dict(key="CourtyardFormalGarden", builder="build_courtyard_formal_garden", tri_budget=1200, subdir="Castle/Dressing", module="castle_builders_dressing", zone="Keep", kind="wall"),
 ]
 
-# The Lair (docs/plans/diegetic-ui-lair-market.md, issue 286), built in
+# The Lair (docs/7-design/diegetic-ui-lair-market.md, issue 286), built in
 # lair_builders.py: a one-off ~14 x 10 m vaulted cellar (NOT a 12 m castle cell,
 # so it has no cell-footprint check) and the props that furnish it. The four
 # LairCenturyDialRing pieces are authored flat and centred on their axle; see the
@@ -251,7 +251,7 @@ LAIR_SPECS = [
     _lair("LairCandle", "build_lair_candle", 340),
 ]
 
-# The Market (docs/plans/diegetic-ui-lair-market.md, issue 287), built in market_builders.py.
+# The Market (docs/7-design/diegetic-ui-lair-market.md, issue 287), built in market_builders.py.
 # MarketYard is a one-off ~20 x 20 m open-air yard: NOT a 12 m castle cell, so it has no
 # cell-footprint check (only "Castle*" modules are held to it). The props are separate
 # meshes with base pivots; MarketScalesBeam's pivot is its fulcrum (see market_builders.py).

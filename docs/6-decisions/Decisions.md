@@ -3,6 +3,19 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-11 — A seventh docs tier for design
+
+**Context.** The pitch bible sat loose in `docs/`, live designs were mixed in with build plans in
+`docs/plans/`, and visual references were scattered, so there was no one place for design work.
+
+**Decision (owner, 2026-10-11).** `docs/7-design/` holds the bible, the live designs and the pitch
+deck when one exists, and indexes every current visual reference. The bible, `fear-pass.md`,
+`diegetic-ui-lair-market.md` and `wizard-character.md` moved in, and every link was repointed
+(`Tools/docs/relink_moves.py`). `docs/art/` stays put because the art tools write into it.
+
+**Consequence.** Adds a tier beyond the house-rules six; the `docstiers` check only requires the six,
+so it is unaffected. Archives keep the old paths as written. Status: Active.
+
 ## 2026-10-11 — Raids are about fear: guards have a true form, and spells are earned
 
 **Context.** Stealth is optional today: players start with every spell, Ignis does damage, guards can
@@ -17,9 +30,9 @@ late-game tools. Every backfire has a real consequence, every guard type has a h
 behaviour hints at, and more guards stand on the ground floors so the threat is seen, and
 underestimated, from the moment you enter.
 
-**Consequence.** Replaces the pitch bible's eight spells from the start (`docs/plunderspell.md`
+**Consequence.** Replaces the pitch bible's eight spells from the start (`docs/7-design/plunderspell.md`
 section 4) and limits its "anything with mass can kill a man" (section 5) to stunning a guard's human
-form. Design: [`docs/plans/fear-pass.md`](../plans/fear-pass.md). Status: Active.
+form. Design: [`docs/7-design/fear-pass.md`](../7-design/fear-pass.md). Status: Active.
 
 ## 2026-10-07 — The debt splits in equal shares; coins are pouches; loot gets a category
 
@@ -49,7 +62,7 @@ dropped: Plus is the only ask, each refusal costs one patience. Haggling is on k
 the three words join the voice lexicon as the next step.
 
 **Consequence.** Replaces the pile-replaced-each-raid default of #310 and the design's automatic Fence appraisal
-for phase 2 (`docs/plans/diegetic-ui-lair-market.md`, "In what order"). Status: Active.
+for phase 2 (`docs/7-design/diegetic-ui-lair-market.md`, "In what order"). Status: Active.
 
 ## 2026-10-06 (later) — The event bus move landed; "Bus" now names only `EventManager`
 
@@ -121,7 +134,7 @@ carries home.
 `docs/4-systems/net.md`, "Spectating and a party wipe") and settles the 2026-09-23 entry's "Not
 decided" on co-op downing in a different direction: there is no 12 kg two-person body carry
 (`DownedPlayerCarryAdapter`, used today only by a test). What carrying the hat out does is still
-open. Plan: [`docs/plans/wizard-character.md`](../plans/wizard-character.md); issues #335–#341.
+open. Plan: [`docs/7-design/wizard-character.md`](../7-design/wizard-character.md); issues #335–#341.
 Nothing is built yet.
 
 **Status.** Standing.
@@ -418,7 +431,7 @@ ahead of the `IHealth` check, purely as a performance optimization.
 ## 2026-09-17 — Melee weight is read from InventoryItem, not duplicated onto MeleeWeaponStats
 
 **Context.** Issue 37's melee system needs a weapon's weight to drive both swing speed and damage.
-`InventoryItem.Weight` (in stone, matching the pitch's Heft column in `docs/plunderspell.md`, "I
+`InventoryItem.Weight` (in stone, matching the pitch's Heft column in `docs/7-design/plunderspell.md`, "I
 present the field") already exists and is already authored on every weapon asset (`BronzeSword.asset`,
 `Longsword.asset`).
 
@@ -639,7 +652,7 @@ RPC — never raw audio.
 
 **Why.** Stated as a design pillar, not just an implementation detail: no server cost per player,
 no latency floor from a network round trip, and no voice data ever leaves the house
-(`docs/plunderspell.md` §4).
+(`docs/7-design/plunderspell.md` §4).
 
 **Status.** Standing.
 
@@ -676,7 +689,7 @@ silhouette found in the same pass (nothing masses above the curtain wall but the
 **Why.** The user's standing directive is to get each feature working and find out whether the game
 is mechanically fun before doing more art. A roofless castle is fully walkable, lootable and
 testable, so roofs block nothing in Phase 1. They are a precondition for the lighting the pitch
-calls for ("one candle, one fire, falling into black", `docs/plunderspell.md`), which cannot read in
+calls for ("one candle, one fire, falling into black", `docs/7-design/plunderspell.md`), which cannot read in
 a room open to the sky — so this must not be lost.
 
 **Status.** Standing. Not currently covered by any of the 55 filed backlog issues; this entry is

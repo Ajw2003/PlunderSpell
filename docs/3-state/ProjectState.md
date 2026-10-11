@@ -430,7 +430,7 @@ for one further failure mode of the same kind.
 ## The moodboard gap-closure backlog
 
 A second, separate audit pass (2026-09-16, same day as the docs-structure pass above) checked the
-built game against `docs/plunderspell.md` and the mood board pillar by pillar, rather than against
+built game against `docs/7-design/plunderspell.md` and the mood board pillar by pillar, rather than against
 the raid loop the playtesting backlog above was filed against. Full findings and reasoning:
 [`docs/plans/moodboard-gap-closure.md`](../plans/moodboard-gap-closure.md). Headline: the voice and
 physics-loot pillars are real and mostly match the pitch; **the Mystical Market pillar (the fourth

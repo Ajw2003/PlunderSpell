@@ -3,7 +3,7 @@
 What "done" means, milestone by milestone. Where things stand against it lives in
 [`docs/3-state/ProjectState.md`](../3-state/ProjectState.md); this document only defines the target.
 
-**Changed 2026-09-26.** This roadmap used to be the pitch's four milestones (`docs/plunderspell.md`
+**Changed 2026-09-26.** This roadmap used to be the pitch's four milestones (`docs/7-design/plunderspell.md`
 §11, "Four milestones to knowing whether it is any fun"), which stop at the vertical slice and the
 other Ages. It now runs to a game a stranger can play: M0-M3 are kept, M3's acceptance is
 tightened, and M4-M7 are new. Why, and what was considered:
@@ -108,7 +108,7 @@ back. And, because each one breaks or undermines a real raid:
   test the agent drives (#170; plan
   [`docs/plans/GitIssues/Issue_170_Plan.md`](../plans/GitIssues/Issue_170_Plan.md)).
 - **The wizard, blocked out and in engine** (added by the owner, 2026-10-07; parent #335, plan
-  [`docs/plans/wizard-character.md`](../plans/wizard-character.md)). Players are a wizard instead of
+  [`docs/7-design/wizard-character.md`](../7-design/wizard-character.md)). Players are a wizard instead of
   a capsule (#336); each picks a colour, never an exact match of a teammate's (#337); their name runs
   around the hat band (#338); a fallen wizard leaves only the hat, which a teammate carries home
   (#339); and a co-op playtest checks that players can tell who is who (#341). Four players need to
@@ -232,7 +232,7 @@ build goes to someone who was not there.
 - Art: main menu art (#16), an icon set (#34, #40), Steam lobby and invite branding (#58), the
   pitch's lighting frames (#59), post-processing (#121, closed: built with the night atmosphere),
   castles that no longer look bland (#23), the Lair's lighting (#32), and the finished wizard model
-  in place of the M2 blockout (`docs/plans/wizard-character.md`; animation is #11).
+  in place of the M2 blockout (`docs/7-design/wizard-character.md`; animation is #11).
 - Performance: a budget and a profiling pass for full-art raids (#54), with a Steam Deck as the
   low end (the night atmosphere's quality levels already target it). Lights and shadows no longer
   pop in (#165, #166).

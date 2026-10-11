@@ -2,7 +2,7 @@ using System;
 
 namespace Plunderspell.Market
 {
-    /// <summary>The three haggling words (docs/plans/diegetic-ui-lair-market.md, "One haggle").</summary>
+    /// <summary>The three haggling words (docs/7-design/diegetic-ui-lair-market.md, "One haggle").</summary>
     public enum HaggleWord
     {
         /// <summary>"More": ask 10% above the coins on the counter.</summary>

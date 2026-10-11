@@ -21,7 +21,7 @@ namespace Plunderspell.Market
     }
 
     /// <summary>
-    /// The numbers behind a haggle, from docs/plans/diegetic-ui-lair-market.md ("The numbers behind it").
+    /// The numbers behind a haggle, from docs/7-design/diegetic-ui-lair-market.md ("The numbers behind it").
     /// Every coefficient is a starting point to tune.
     /// </summary>
     public static class HaggleRules

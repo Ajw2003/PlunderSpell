@@ -196,7 +196,7 @@ will drift out of date if regenerated and not recommitted.
 
 ## Lair
 
-The physical Lair of `docs/plans/diegetic-ui-lair-market.md` ("The Lair, as a place",
+The physical Lair of `docs/7-design/diegetic-ui-lair-market.md` ("The Lair, as a place",
 concept `docs/art/concept/lair/lair.png`; issue 286): `LAIR_SPECS` in `asset_specs.py`,
 builders in `lair_builders.py`, output in `Assets/_Project/Art/Models/Lair/`. Static
 meshes only: no behaviour, no Unity wiring. Existing pigments only (the atlas is full).
@@ -248,7 +248,7 @@ faces black, so stacked Lair pieces differ by a hair in width or depth.
 
 ## Market
 
-The physical Market of `docs/plans/diegetic-ui-lair-market.md` ("The Market, and haggling",
+The physical Market of `docs/7-design/diegetic-ui-lair-market.md` ("The Market, and haggling",
 concept `docs/art/concept/lair/market.png`; issue 287): `MARKET_SPECS` in `asset_specs.py`,
 builders in `market_builders.py`, output in `Assets/_Project/Art/Models/Market/`. Static meshes
 only (the four vendors are characters and not part of this). Existing pigments only. Every stall

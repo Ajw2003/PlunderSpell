@@ -1,6 +1,6 @@
 """
 The Market: the lantern-lit night yard between the Ages, its four stalls and their props
-(docs/plans/diegetic-ui-lair-market.md, "The Market, and haggling"; concept
+(docs/7-design/diegetic-ui-lair-market.md, "The Market, and haggling"; concept
 docs/art/concept/lair/market.png). Issue 287.
 
 Runs only inside Blender's Python, like every other builder. Same toolbox as the Lair
