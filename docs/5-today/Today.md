@@ -1,5 +1,16 @@
 # Today
 
+**2026-10-11 (latest) - round two of the two horrors (#386).** The owner picked the Wick and the
+Ophan of Hours and asked for more detail: the Wick more daunting, the Ophan closer to the source
+and far larger. New `Tools/ArtBible/generators/fear/wick_v2.py` and `ophan_v2.py` draw four sheets
+(`docs/art/concept/fear/wick-v2-*.png`, `ophan-v2-*.png`): the Wick at 3.10 m as a man turned into
+his own lantern, with its turn in four stages and its head up close; the Ophan at 9.6 m (wheels
+within wheels, eyes, four faces, six wings) and inside a Keep cell it is bigger than. Added to the
+proposal page as round two. Waiting on the owner to confirm both, the turn timing and counter
+proposals, and lapis for the Ophan. Nothing modelled yet.
+
+---
+
 **2026-10-11 (later) - concept options for the two fear-pass horrors (#386).** From the handoff
 `docs/plans/handoff-2026-10-11-true-form-and-creature.md`, the look questions only: three true
 forms for the Lantern Warden (The Wick, The Hollow Coat, The Crawler) and three creatures (The
