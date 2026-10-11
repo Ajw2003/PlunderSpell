@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Players/Lair/Wizard/glTF/Wizard.gltf",
+  "sheet": "docs/art/models/lair/wizard.png",
+  "verdict": "pass",
+  "seen": "Matches concept 1-the-wizard: tall curled hat, cape over robe in #4F7299 blue, brass clasp, belt with buckle, grimoire at left hip, pouch and watch chain at right, brown gloved hand; 1.80 m body, 5334 tris. Hat band name text not shown on the model (runtime). Not modelled this session: on disk from the #336 merge when the branch was switched.",
+  "date": "2026-10-11T17:47:46-0600"
+}
