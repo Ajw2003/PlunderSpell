@@ -1,8 +1,8 @@
 # Handoff: per-frame code to events and timers, and the audit's other fixes (2026-10-11)
 
 For a fresh session in this repo. Parent issue #389, children #390-#402. The finding behind every item, with
-`file:line`, is in the audit: [`update-audit-2026-10-11.md`](update-audit-2026-10-11.md) (summary and "Second read")
-and its [part 1](update-audit-2026-10-11-part1.md) and [part 2](update-audit-2026-10-11-part2.md). Those three
+`file:line`, is in the audit: `docs/plans/update-audit-2026-10-11.md` (summary and "Second read")
+and its part 1 (`docs/plans/update-audit-2026-10-11-part1.md`) and part 2 (`docs/plans/update-audit-2026-10-11-part2.md`). Those three
 files are on branch `AjsAgent/update-audit` (PR #388) until it merges into `staging-2026-10-11`: read them there
 with `git show AjsAgent/update-audit:docs/plans/update-audit-2026-10-11.md`.
 
