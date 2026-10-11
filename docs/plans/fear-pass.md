@@ -40,6 +40,21 @@ they enter. More guards spawn on the ground floors, so the entry already demands
 see the guards and underestimate them before they learn how wrong they were. Enemies should still be
 able to sneak up on you.
 
+**A true form stays turned** for the rest of the raid: every mistake makes the castle worse for good.
+**One catch kills:** if a true form reaches you, you are down, so the chase is the whole fight.
+
+**The debt goes; a creature wants artifacts.** The money debt is weak (why would time-travelling
+wizards owe dues?) and is dropped, at least in its current form. Instead, a creature demands specific
+artifacts. Each raid then has two goals:
+1. **Main:** fetch the items the creature wants before the portal closes and what you have been
+   running from catches up with you empty-handed.
+2. **Second:** carry home whatever else you can, to sell in the Market for upgrades, so that
+   eventually, maybe, you can fight the creature instead of always looking over your shoulder and
+   risking your life for its trinkets.
+
+**Spells come from two places.** Some spells can only be bought in the Market; some of the later,
+more special spells can only be learned by finding an ancient text in a castle.
+
 ## First slice
 
 1. The spell lockdown: Porta at the start, Somnus learned early, the rest locked, backfire
@@ -51,8 +66,9 @@ Later slices: the rest of the roster as horrors, each with its own senses, behav
 
 ## Open questions
 
-- What triggers the change to true form, and does a guard ever change back?
-- What counts as progress for unlocking spells (debt paid, raids survived, Ages reached, bought)?
-- How lethal is a true form: one hit, or a short chase you can lose?
+- What exactly triggers the change to true form: being seen, being heard, being hit?
+- How Somnus is first learned (bought, or found), and which spells come from which source.
+- The creature: what it is, where it lives (the Lair?), what happens when you come back
+  without its artifacts, and how the Lair's ledger, the Collector and coin pouches change.
 - What does a Somnus misfire cost?
 - What happens to found weapons and to throwing heavy objects at guards?
