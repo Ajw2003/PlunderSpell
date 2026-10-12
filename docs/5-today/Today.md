@@ -1,5 +1,139 @@
 # Today
 
+**2026-10-12 (latest) - import rules for the fear art, written but not run (#413, under #386).**
+`ArtBibleModelImporter` now imports the Ophan of Hours Generic (a fear-folder list,
+`ArtBibleEnemyCatalog.FearGenericRigModels`, so the Ages' test-held list is untouched) and binds its
+glow (`FearEmissiveModels`, read through `IsEmissiveModel`, also by the validator); the Wick's
+`_FireMask` imports linear; `Humanoid_Fear.fbx` (Humanoid) and `TheOphanOfHours_Generic.fbx` (new
+`Kind.GenericClips`) get clip names, loop flags (`LoopingFearClips`) and events (`FearClipEvents`).
+Importer version 1 -> 2. Seven tests in `Tests/Editor/FearImportTests.cs`. **Untested:** no Unity
+here; the four C# files parse clean under Roslyn (syntax only, no Unity references), nothing more.
+The handoff's "The import rules" lists the four checks to run first in the Editor. Pull request into
+`staging-2026-10-11` opened with the art and these rules.
+
+---
+
+**2026-10-12 (later) - the Ophan's clips; the handoff now covers the engine work (#412, under #386).**
+Five clips on the Ophan's own Generic rig, built by a new `Tools/ArtForge/anim_ophan.py` (no
+humanoid solve or retarget): `ophan_hover_turn` (6 s loop), `ophan_advance` (4 s loop),
+`ophan_fix_gaze` (1.5 s), `ophan_take` (2 s, `AttackHit` at 0.9 s, the take or the kill) and
+`ophan_arrive` (4 s, grows from a point by a scale curve on Core). Exported to
+`Assets/Models/ArtBible/Animations/TheOphanOfHours_Generic.fbx`; the build re-imports it and checks
+every take's length, that both loops are seamless (0.000°) and that no mesh point goes under the
+floor (lowest 0.12 m; the first take went 2 cm under, its stoop was reduced). Built twice, same
+result. Sheets and movies in `docs/art/anim/fear/ophan_*`, each opened; the take's sweep was faint
+from the review camera, so a side view was added. `staging-2026-10-11` merged into the branch (one
+conflict in `Decisions.md`, both entries kept). The handoff's "Working in the engine" lists what the
+importer gets wrong today (the Ophan would import as Humanoid and fail the validator; neither clip
+file has a rule; the Ophan's glow and the Wick's fire mask are not handled), all read from the code,
+none run in Unity.
+
+---
+
+**2026-10-12 - paused for the week.** Usage ran out. The handoff's "Pick up here" lists what is next: the Ophan's clips (ask first), the Unity import rule for the Fear folder, the open owner questions, then the pull request.
+
+---
+
+**2026-10-12 - the Ophan of Hours is modelled (#411, under #386).** Spec entry `ophan` in
+`docs/art/data/fear.json`, blueprint `ophan()` in `Tools/ArtForge/art_forge/blueprints/enemies_fear.py`,
+model in `Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/`: three wheels with eyes round their
+rims and hour marks, one great eye with a lapis iris and the portal for a pupil, six wings; floats
+0.29 m off the floor; 9.46 m tall (spec 9.6), 11.9 m across; 11,378 of 16k tris; a generic rig of
+18 bones. Lapis passes the discipline check through a new `Blueprint.arcane_reason`. The first
+wings read as combs; more, wider feathers and thicker rims fixed it. Sheet
+`docs/art/models/fear/ophan.png` looked at and recorded. Not on the model: core glow, echoes,
+lightning (engine VFX). Unity, untested: the importer would take it as Humanoid; the handoff says
+what to do.
+
+---
+
+**2026-10-12 - the Wick's animations (#406).** Nine clips, a third AnimForge track
+(`Tools/ArtForge/anim_wick.py`, `anim_forge/library_wick.py`, layer `fear` in `anim_spec.json`):
+`warden_turn` (on the Lantern Warden, the lantern drops at 0.4 s and is left lying), then the swap,
+then `wick_emerge`; `wick_idle`, `wick_stalk` (1.4 m/s), `wick_hunt` (4.2 m/s), `wick_search`,
+`wick_catch` (AttackHit 0.5 s), and additive `wick_flinch` and `wick_stoop` (crown 2.33 m).
+Exported to `Assets/Models/ArtBible/Animations/Humanoid_Fear.fbx`, re-imported with all nine takes;
+no IK shortfall, no bone under the floor, slide 0.3 / 0.2 cm on the Wick. Sheet + MP4 per clip in
+`docs/art/anim/fear/`, each looked at; the emerge's first burst read as a "dab" and was redone as a
+rear-up. Not done: the Unity side (importer rules for these, the Animator, the swap), untested here.
+
+---
+
+**2026-10-11 (night, later) - the Wick made scarier (#406).** Owner: "far more texture, drop
+the glow, fire as geo for now, shaders later". The bake gained opt-in surface detail
+(`weave`, `gradients`, `streaks`, `cracks`, `flecks` in `art_forge/materials.py`); the Wick
+uses them on every family (sooted, grimed, blood-streaked, cracked). No emission anywhere. Fire
+is back as painted three-tone geometry (shoulders, a mantle off the back, a crown over the cap,
+vents, coat tears, hem, elbows, the candle), 10,596 tris of a budget raised to 12k for it; the
+FireMask is still baked for the shader to come. The flames broke heat weighting (8 of 8 tries
+once), so `Blueprint.heat_skip_props` holds props out of the solve: 6 of 6 builds then passed.
+Lantern Warden and wizard rebuilt to scratch: textures identical to the pixel. Sheet
+`docs/art/models/fear/wick.png` looked at over three more passes and re-recorded.
+
+---
+
+**2026-10-11 (night) - the Wick is modelled (#406, under #386).** Spec in `docs/art/data/fear.json`
+(a new `fear` group in ArtForge, `--age fear`, so the Ages' rosters of four stay as they are),
+blueprint `Tools/ArtForge/art_forge/blueprints/enemies_fear.py`, model in
+`Assets/Models/ArtBible/Enemies/Fear/TheWick/`: 5,664 tris (budget 10k), body 3.04 m vs 3.10 m,
+Unity Humanoid plus Cage, Hat and Blade bones. Owner's call mid-build: **fire is a shader, not
+geometry**, so the flame tongues came out and the build bakes `TheWick_FireMask.png` (white =
+flames, grey = smoulder); `Tools/ArtForge/fire_preview.py` shows where it burns
+(`docs/art/models/fear/wick-fire.png`). Shared forge changes, each checked by rebuilding the
+Lantern Warden and the wizard to a scratch folder (same tris and influences as committed):
+`figures.Human(arm_length=)`, `Blueprint.fire_families`, and a heat-weighting retry for a
+partial collapse (seen once, mean influences 1.02; the retry path has not fired since, 8 of 8
+builds clean). Review sheet `docs/art/models/fear/wick.png`, opened over three passes and
+recorded in `docs/art/reviews/`. Not done: clips, the Unity import (the importer has no rules for
+the Fear folder yet) and the fire shader, all engine work, untested here.
+
+---
+
+**2026-10-11 (latest) - the Wick and the Ophan approved (#386).** The owner approved both
+designs, the Wick's turn and counter, and lapis for the Ophan, after two last changes: the lantern
+is now left where it fell rather than travelling with him (`wick_v2.py`, `front(lantern_at=...)`),
+and the face split is drawn as four pieces parting on a cross of light with a magnified view at
+0.4 s. Written into `docs/7-design/fear-pass.md` ("The true form", "The creature"), a dated
+Decisions entry for the lapis exception, and `docs/art/BRIEF.md`. Next: spec and model both
+through the art pipeline. Nothing modelled yet.
+
+---
+
+**2026-10-11 (latest, later) - the Wick on fire, the Ophan with one eye (#386).** Owner's notes on
+round two: more of the Wick on fire, and the Ophan's four faces cut for one great eye at its heart.
+`wick_v2.py` now sets him burning (a mantle off his back, shoulders, coat tears, hem, fire from the
+hat's vents); `ophan_v2.py` replaces the faces with a 2.6 m eye with a portal for a pupil. Both
+sheets re-rendered and looked at. The two are now alone on a new page,
+`docs/art/concept/fear/the-wick-and-the-ophan.html` (published for the owner); the old proposal
+page and round one's sheets stay in the repo. Waiting on the owner to confirm both, the turn timing,
+the counters, and lapis for the Ophan. Nothing modelled yet.
+
+---
+
+**2026-10-11 (latest) - round two of the two horrors (#386).** The owner picked the Wick and the
+Ophan of Hours and asked for more detail: the Wick more daunting, the Ophan closer to the source
+and far larger. New `Tools/ArtBible/generators/fear/wick_v2.py` and `ophan_v2.py` draw four sheets
+(`docs/art/concept/fear/wick-v2-*.png`, `ophan-v2-*.png`): the Wick at 3.10 m as a man turned into
+his own lantern, with its turn in four stages and its head up close; the Ophan at 9.6 m (wheels
+within wheels, eyes, four faces, six wings) and inside a Keep cell it is bigger than. Added to the
+proposal page as round two. Waiting on the owner to confirm both, the turn timing and counter
+proposals, and lapis for the Ophan. Nothing modelled yet.
+
+---
+
+**2026-10-11 (later) - concept options for the two fear-pass horrors (#386).** From the handoff
+`docs/plans/handoff-2026-10-11-true-form-and-creature.md`, the look questions only: three true
+forms for the Lantern Warden (The Wick, The Hollow Coat, The Crawler) and three creatures (The
+Ophan of Hours, The Tithe-Abbot, The Hound of the Angles), drawn by
+`Tools/ArtBible/generators/fear/` on the art-bible sheet at true scale, rendered to
+`docs/art/concept/fear/*.png`, and set side by side in `docs/art/concept/fear/proposal.html`
+(published for the owner). Every plate was opened and fixed at least once. Waiting on the owner:
+confirm the Lantern Warden is the guard meant, pick one of each, and say whether the creature may
+use lapis (the bible keeps lapis off enemies). Nothing modelled yet; the reveal, counters and
+ground-floor counts are still open.
+
+---
+
 **2026-10-11 - one staging branch again, and a friends build (#368).** Several worktrees had left the
 owner unsure where work stopped. Checked every branch by patch content: everything finished is on
 `claude/merge-2026-10-08`; the new `claude/staging-2026-10-11` is that plus the wizard plan docs

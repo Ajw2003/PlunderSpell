@@ -168,6 +168,23 @@ namespace Plunderspell.EditorTools
             "KeeperOfTheFlame", "LanternWarden", "Handgunner", "Musketeer", "PalaceGuard", "Petardier"
         };
 
+        /// <summary>
+        /// The fear pass's models (<c>docs/art/data/fear.json</c>, #386) rigged Generic. Separate from
+        /// <see cref="GenericRigModels"/>, which mirrors the four Ages only; <c>ArtBibleEnemyCatalogTests</c>
+        /// checks this one against fear.json's <c>rig.skeleton</c>.
+        /// </summary>
+        public static readonly string[] FearGenericRigModels = { "TheOphanOfHours" };
+
+        /// <summary>
+        /// The fear pass's models with a glowing family (the Ophan's portal pupil). Checked against the
+        /// manifest's <c>emit</c> fields like <see cref="EmissiveModels"/>.
+        /// </summary>
+        public static readonly string[] FearEmissiveModels = { "TheOphanOfHours" };
+
+        /// <summary>True when the importer should bind this model's baked emission map.</summary>
+        public static bool IsEmissiveModel(string modelName) =>
+            EmissiveModels.Contains(modelName) || FearEmissiveModels.Contains(modelName);
+
         /// <summary>Roster weights by role (the plan's E2).</summary>
         public static int WeightFor(ArtBibleRole role)
         {
@@ -419,7 +436,8 @@ namespace Plunderspell.EditorTools
             return spec;
         }
 
-        private static bool HasEmissiveFamily(object asset)
+        /// <summary>True when a manifest asset entry has a material family with an <c>emit</c> colour.</summary>
+        public static bool HasEmissiveFamily(object asset)
         {
             if (!(ArtBibleJson.Get(asset, "families") is Dictionary<string, object> families))
                 return false;

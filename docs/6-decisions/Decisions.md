@@ -3,6 +3,18 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-11 — The Ophan may use lapis
+
+**Context.** The art bible keeps lapis (`#7A6AA0`, voice and portals) off every enemy
+(`docs/art/BRIEF.md`, "Look"). The fear pass's creature, the Ophan of Hours, comes through time the
+way the portal does.
+
+**Decision (owner, 2026-10-11).** The Ophan may use lapis: its core, its great eye's iris, its
+lightning and its echoes. It is the one exception; every other enemy keeps the rule. The Wick and
+the Ophan were approved the same day (`docs/7-design/fear-pass.md`, "The true form" and "The creature").
+
+**Consequence.** `docs/art/BRIEF.md` names the exception. Status: Active.
+
 ## 2026-10-11 — Per-frame code only for what changes every frame
 
 **Context.** Agents kept putting change-detection, saves and timers in `Update`. The Lair pile save wiped a

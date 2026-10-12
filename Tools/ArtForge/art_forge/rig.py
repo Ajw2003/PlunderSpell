@@ -252,6 +252,43 @@ def facing_problems(bp: Blueprint) -> list[str]:
     return problems
 
 
+def hold_out_props(obj: bpy.types.Object, bp: Blueprint):
+    """Split the faces of prop parts into their own object, so heat weighting solves the
+    body alone (Blueprint.heat_skip_props). Returns that object, or None if there are no
+    props. The split copies the vertex groups, so the props keep their rigid weights."""
+    props = prop_part_ids(bp)
+    layer = obj.data.attributes.get(kit.PART_LAYER)
+    values = [a.value for a in layer.data]
+    if not any(v in props for v in values):
+        return None
+    before = set(bpy.data.objects)
+    bpy.ops.object.select_all(action="DESELECT")
+    bpy.context.view_layer.objects.active = obj
+    obj.select_set(True)
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="DESELECT")
+    bpy.ops.object.mode_set(mode="OBJECT")
+    for poly in obj.data.polygons:
+        poly.select = values[poly.index] in props
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.separate(type="SELECTED")
+    bpy.ops.object.mode_set(mode="OBJECT")
+    new = [o for o in bpy.data.objects if o not in before]
+    if len(new) != 1:
+        raise RuntimeError(f"{obj.name}: holding out props made {len(new)} objects, expected 1")
+    return new[0]
+
+
+def put_back(obj: bpy.types.Object, held: bpy.types.Object) -> bpy.types.Object:
+    """Join the held-out props back into the body object (groups merge by name)."""
+    bpy.ops.object.select_all(action="DESELECT")
+    held.select_set(True)
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.join()
+    return obj
+
+
 def prop_part_ids(bp: Blueprint) -> set[int]:
     out = set()
     for number, part in enumerate(bp.parts):
@@ -302,10 +339,15 @@ def apply_pose(rig: bpy.types.Object, pose: dict | None = None) -> list[str]:
 
 
 HEAT_TRIES = 8
+# A partial collapse: some bones solved, most vertices left on one bone. Every healthy
+# enemy so far averages 1.25-1.97 influences (the Wick lowest, its rigid flames counted); the
+# Wick's failed binding averaged 1.02.
+HEAT_MIN_MEAN = 1.1
 
 
 def smooth_weights_with_retry(apply_smooth_weights, mesh_obj, rig, tries: int = HEAT_TRIES, **kwargs) -> dict:
-    """Run EnemyForge's heat weighting, retrying when it silently collapses to one bone.
+    """Run EnemyForge's heat weighting, retrying when it silently collapses to one bone,
+    or partly collapses (mean influences under HEAT_MIN_MEAN).
 
     Blender's bone heat weighting ("failed to find solution for one or more bones")
     fails at random on the same mesh, and on failure EnemyForge keeps the rigid
@@ -336,9 +378,10 @@ def smooth_weights_with_retry(apply_smooth_weights, mesh_obj, rig, tries: int = 
             rig.location = (0.0, 0.0, 0.0)
             mesh_obj.matrix_parent_inverse.identity()
             bpy.context.view_layer.update()
-        if not stats.get("auto_weights") or stats.get("max_influences", 0) > 1:
+        if not stats.get("auto_weights") or (stats.get("max_influences", 0) > 1 and
+                                             stats.get("mean_influences", HEAT_MIN_MEAN) >= HEAT_MIN_MEAN):
             break
-        print(f"  {mesh_obj.name}: heat weighting collapsed to one bone "
-              f"(attempt {attempt}/{tries}), retrying")
+        print(f"  {mesh_obj.name}: heat weighting collapsed (max {stats.get('max_influences')}, "
+              f"mean {stats.get('mean_influences')} influences; attempt {attempt}/{tries}), retrying")
     stats["heat_attempts"] = attempt
     return stats

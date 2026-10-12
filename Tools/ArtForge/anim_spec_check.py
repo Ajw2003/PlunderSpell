@@ -22,10 +22,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
 SPEC = os.path.join(HERE, "anim_spec.json")
 MANIFEST = os.path.join(REPO, "Assets", "Models", "ArtBible", "Animations", "anim_manifest.json")
-AGES = ["bronze", "high", "late", "powder"]
-LAYERS = {"base", "carry", "family", "signature", "hound", "player"}
+AGES = ["bronze", "high", "late", "powder", "fear"]   # fear: docs/art/data/fear.json (#386)
+LAYERS = {"base", "carry", "family", "signature", "hound", "player", "fear"}
 EVENTS = {"Footstep", "AttackHit", "ProjectileRelease", "PropDetach", "SpellRelease"}
-STATUSES = {"a1", "planned", "dropped", "player"}
+STATUSES = {"a1", "planned", "dropped", "player", "fear"}
 
 
 def json_clip_names(text: str) -> list[str]:

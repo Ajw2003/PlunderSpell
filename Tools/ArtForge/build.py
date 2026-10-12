@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import art_forge  # noqa: E402  (puts Tools/EnemyForge on sys.path)
 import bpy  # noqa: E402,F401
 
-from art_forge import AGES, KINDS, PLAYER_AGES, REPO_ROOT, default_ages, assemble, blueprints, materials, validate  # noqa: E402
+from art_forge import ALL_AGES, KINDS, REPO_ROOT, default_ages, assemble, blueprints, materials, validate  # noqa: E402
 
 OUT_ROOT = os.path.join(REPO_ROOT, "Assets", "Models", "ArtBible")
 MANIFEST = os.path.join(OUT_ROOT, "artforge_manifest.json")
@@ -37,7 +37,9 @@ def model_dir(kind: str, age: str, pascal: str, out_root: str = OUT_ROOT) -> str
 def build_one(kind: str, age: str, slug: str, resolution: int, out_root: str) -> dict:
     bp = blueprints.make(kind, age, slug)
     used = dict(bp.ordered_families())
-    violations = materials.discipline_violations(kind, bp.name, used, bp.gold_reason)
+    violations = materials.discipline_violations(kind, bp.name, used, bp.gold_reason, bp.arcane_reason)
+    if bp.arcane_reason:
+        print(f"  arcane pigment allowed: {bp.arcane_reason}")
     if violations:
         raise RuntimeError("; ".join(violations))
 
@@ -92,7 +94,7 @@ def write_manifest(path: str, results: list[dict]) -> None:
         existing[item["key"]] = item
 
     order = {k: i for i, k in enumerate(KINDS)}
-    ages = {a: i for i, a in enumerate(AGES + PLAYER_AGES)}
+    ages = {a: i for i, a in enumerate(ALL_AGES)}
     ordered = sorted(existing.values(),
                      key=lambda e: (order.get(e["kind"], 9), ages.get(e["age"], 9), e["slug"]))
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -118,7 +120,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("kind", choices=KINDS)
-    parser.add_argument("--age", choices=AGES + PLAYER_AGES, action="append",
+    parser.add_argument("--age", choices=ALL_AGES, action="append",
                         help="limit to one age (repeatable); default all")
     parser.add_argument("--only", nargs="*", default=None, help="slugs to build")
     parser.add_argument("--resolution", type=int, default=1024, help="baked texture size")
