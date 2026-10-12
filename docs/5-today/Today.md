@@ -1,5 +1,9 @@
 # Today
 
+**2026-10-12 - paused for the week.** Usage ran out. The handoff's "Pick up here" lists what is next: the Ophan's clips (ask first), the Unity import rule for the Fear folder, the open owner questions, then the pull request.
+
+---
+
 **2026-10-12 - the Ophan of Hours is modelled (#411, under #386).** Spec entry `ophan` in
 `docs/art/data/fear.json`, blueprint `ophan()` in `Tools/ArtForge/art_forge/blueprints/enemies_fear.py`,
 model in `Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/`: three wheels with eyes round their

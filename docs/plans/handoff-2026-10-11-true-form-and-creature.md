@@ -16,6 +16,23 @@ handoff.
 - One question is still open for Part A: how many more ground-floor guards (4 below).
 - All of this is on branch `AjsAgent/fear-pass-handoff`, not yet in a pull request.
 
+### Pick up here (paused 2026-10-12, usage ran out for the week)
+
+Last commit before the pause: `3f162461` (the Ophan's model). Nothing is uncommitted. In order:
+
+1. **The Ophan's clips** (the owner has not yet said go; ask first): `hover_turn`, `advance`,
+   `fix_gaze`, `take`, `arrive`. They are already rows in `Tools/ArtForge/anim_spec.json` with
+   status `planned`, sources `ophan_*`, target fbx `TheOphanOfHours_Generic.fbx`. The rig is generic
+   (bones in `ophan()`, `art_forge/blueprints/enemies_fear.py`), so this is not a Humanoid retarget
+   like `anim_wick.py`; the hound's generic clips are the nearer model. Review every clip's sheet,
+   then set the status to `fear`.
+2. **Unity, which needs a machine with the editor** (none in the cloud container): give the Fear
+   folder its own import rule (Ophan generic, Wick humanoid, `Humanoid_Fear.fbx` as clips, `_FireMask`
+   linear). Details under "The art you build on" and Part B, question 1.
+3. **Owner questions still open:** Part A's guard count (4 below); Part B questions 2-4.
+4. When the branch is ready: a pull request into `staging-2026-10-11` (never `main`), body
+   `Refs #386`, `#406`, `#411`.
+
 ## Read first
 
 1. [`docs/7-design/fear-pass.md`](../7-design/fear-pass.md): the approved design. Its "The first
