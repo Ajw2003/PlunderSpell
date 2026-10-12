@@ -16,7 +16,7 @@
   "signature": "a motion only one enemy has, in that enemy's own FBX (moves its prop bones)",
   "hound": "the hound's Generic rig",
   "player": "the player wizard (issue #361): Humanoid_Player.fbx on the reference skeleton, built by anim_player.py, not by anim.py",
-  "fear": "the fear pass (#386): Humanoid_Fear.fbx on the reference skeleton, built by anim_wick.py, not by anim.py; the Wick's clips and the warden's half of the turn"
+  "fear": "the fear pass (#386): Humanoid_Fear.fbx on the reference skeleton, built by anim_wick.py, not by anim.py; the Wick's clips and the warden's half of the turn; and the Ophan of Hours' five clips on its own Generic rig (TheOphanOfHours_Generic.fbx), built by anim_ophan.py"
  },
  "playback": "An enemy clip plays its source at playback_rate. Locomotion: rate = agent speed / authored speed, which keeps the feet planted; the Animator speed parameter should drive it.",
  "clips": {
@@ -1877,7 +1877,7 @@
    "additive": false,
    "speed_mps": null,
    "events": [],
-   "status": "planned",
+   "status": "fear",
    "enemy": "ophan",
    "notes": "the wheels turn at different rates, the wings breathe, the eye drifts"
   },
@@ -1890,7 +1890,7 @@
    "additive": false,
    "speed_mps": null,
    "events": [],
-   "status": "planned",
+   "status": "fear",
    "enemy": "ophan",
    "notes": "the drift through walls: wheels faster, wings beating slow"
   },
@@ -1903,7 +1903,7 @@
    "additive": false,
    "speed_mps": null,
    "events": [],
-   "status": "planned",
+   "status": "fear",
    "enemy": "ophan",
    "notes": "the eye snaps to a player, every wheel stops for a beat"
   },
@@ -1915,10 +1915,15 @@
    "loop": false,
    "additive": false,
    "speed_mps": null,
-   "events": [],
-   "status": "planned",
+   "events": [
+    {
+     "type": "AttackHit",
+     "t": 0.45
+    }
+   ],
+   "status": "fear",
    "enemy": "ophan",
-   "notes": "the lower wings sweep forward to take what it came for"
+   "notes": "the lower wings sweep forward to take what it came for; AttackHit at 0.45 (0.9 s): the take if carrying its artifacts, else the kill"
   },
   "ophan_arrive": {
    "layer": "fear",
@@ -1929,7 +1934,7 @@
    "additive": false,
    "speed_mps": null,
    "events": [],
-   "status": "planned",
+   "status": "fear",
    "enemy": "ophan",
    "notes": "unfolds out of a point of light"
   }
@@ -5841,7 +5846,7 @@
      "clip": "hover_turn",
      "source": "ophan_hover_turn",
      "layer": "fear",
-     "status": "planned",
+     "status": "fear",
      "loop": true,
      "length_s": 6.0
     },
@@ -5849,7 +5854,7 @@
      "clip": "advance",
      "source": "ophan_advance",
      "layer": "fear",
-     "status": "planned",
+     "status": "fear",
      "loop": true,
      "length_s": 4.0
     },
@@ -5857,7 +5862,7 @@
      "clip": "fix_gaze",
      "source": "ophan_fix_gaze",
      "layer": "fear",
-     "status": "planned",
+     "status": "fear",
      "loop": false,
      "length_s": 1.5
     },
@@ -5865,7 +5870,7 @@
      "clip": "take",
      "source": "ophan_take",
      "layer": "fear",
-     "status": "planned",
+     "status": "fear",
      "loop": false,
      "length_s": 2.0
     },
@@ -5873,7 +5878,7 @@
      "clip": "arrive",
      "source": "ophan_arrive",
      "layer": "fear",
-     "status": "planned",
+     "status": "fear",
      "loop": false,
      "length_s": 4.0
     }

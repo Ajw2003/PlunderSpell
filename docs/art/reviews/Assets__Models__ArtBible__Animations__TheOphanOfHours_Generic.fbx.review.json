@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Animations/TheOphanOfHours_Generic.fbx",
+  "sheet": "docs/art/anim/fear/ophan_take.png",
+  "verdict": "pass",
+  "seen": "Five clips on the Ophan's own Generic rig, one sheet each in docs/art/anim/fear/ (8 stills on the real model) plus MP4, all opened; MP4 frame counts read back in Blender (loops play twice). ophan_hover_turn: the three wheels turn one turn each per 6 s at different moment-to-moment rates, the wings breathe, the eye drifts, the whole bobs 12 cm; seamless loop (seam 0.000 deg). ophan_advance: leans 8 deg forward, wheels one turn per 4 s, upper wings beat every 2 s, seamless. ophan_fix_gaze: the great eye snaps 25 deg to its side and 18 deg down in 0.1 s, every wheel stops and holds to 1.05 s, the upper wings flare, then the wheels start again. ophan_take: lower wings draw back, then sweep forward and down while it stoops (AttackHit 0.9 s), hold, let go; the sweep was faint from the three-quarter camera, so a side view was rendered too (docs/art/anim/fear/ophan_take-side.png) and shows it plainly. ophan_arrive: grows from 2 % at heart height while turning a quarter round, wheels spin down from fast, wings open with the upper pair last; ends at hover_turn's start. Lowest mesh point over every clip 0.12 m (the first take build went 2 cm under the floor; the stoop was reduced). The FBX re-imports with all five takes at the right frame counts, and Core's scale curve survives (2 % at frame 1).",
+  "date": "2026-10-12T01:04:37+0000"
+}

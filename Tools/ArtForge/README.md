@@ -647,6 +647,30 @@ on the Wick and printed on each sheet). The Wick's own A-pose is not kept by the
 so every clip carries `HUNCH` (arms out and forward, elbows bent, spine bowed, head thrust).
 Its Cage, Hat, Blade and flame bones are never keyed; they ride on Head and Hand.R.
 
+**The Ophan of Hours' clips (#412)** are on its own Generic rig (18 bones: Root, Core, three
+wheels, Eye, six wings on two bones each), so they skip the humanoid solver and the retarget:
+`anim_ophan.py` gives each bone a turn about its head in world axes, relative to its parent (the
+same convention as `poses.py`), keys every bone every frame (rotation, location, scale) and
+exports from the model's own `.blend`.
+
+```bash
+python3.11 Tools/ArtForge/anim_ophan.py build    # Animations/TheOphanOfHours_Generic.fbx + ophan_anim_manifest.json
+python3.11 Tools/ArtForge/anim_ophan.py review [--only ID ...] [--no-mp4]   # docs/art/anim/fear/ophan_*
+```
+
+| Clip | Length | What |
+|---|---|---|
+| `ophan_hover_turn` | 6.0 s loop | one turn of each wheel at different moment-to-moment rates; wings breathe every 3 s; eye drifts; bobs 12 cm |
+| `ophan_advance` | 4.0 s loop | leans 8° forward, wheels one turn in 4 s, upper wings beat every 2 s (the agent moves it) |
+| `ophan_fix_gaze` | 1.5 s | the eye snaps 25° aside and 18° down in 0.1 s; every wheel stops and holds to 1.05 s; then they start again |
+| `ophan_take` | 2.0 s | lower wings draw back, sweep forward and down as it stoops (`AttackHit` 0.45, 0.9 s), hold, let go |
+| `ophan_arrive` | 4.0 s | grows from 2 % at heart height (a **scale** curve on Core) as it turns a quarter round; wheels spin down; wings open, upper pair last; ends on `hover_turn`'s first frame |
+
+`build` fails on a mesh point below the floor, a loop whose first and last frames differ, or a
+take missing from (or the wrong length in) the re-imported FBX. Lowest mesh point over all five
+clips: 0.12 m. Takes are `TheOphanOfHours_Rig|<clip>`. The movie's frames are rendered on the real
+model; `ophan_take-side.png` is an extra side view, where the sweep reads best.
+
 ### Layout
 
 ```
