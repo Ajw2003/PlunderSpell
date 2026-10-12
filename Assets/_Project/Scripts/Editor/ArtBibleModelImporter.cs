@@ -32,6 +32,54 @@ namespace Plunderspell.EditorTools
             "player_idle", "player_walk", "player_jog", "crouch_idle", "crouch_walk", "jump_air", "cast_hold"
         };
 
+        /// <summary>The fear pass's models (#386): the Wick and the Ophan of Hours.</summary>
+        public const string FearRoot = EnemyRoot + "Fear/";
+
+        /// <summary>The Wick's clips and the warden's half of the turn (Tools/ArtForge/anim_wick.py), Humanoid.</summary>
+        public const string FearClipsPath = Root + "Animations/Humanoid_Fear.fbx";
+
+        /// <summary>The Ophan of Hours' clips (Tools/ArtForge/anim_ophan.py), on its own Generic rig.</summary>
+        public const string OphanClipsPath = Root + "Animations/TheOphanOfHours_Generic.fbx";
+
+        /// <summary>
+        /// The fear clips that loop. Must match the <c>loop</c> flags in
+        /// <c>Animations/fear_anim_manifest.json</c> and <c>ophan_anim_manifest.json</c>;
+        /// <c>FearImportTests</c> checks it.
+        /// </summary>
+        public static readonly HashSet<string> LoopingFearClips = new HashSet<string>
+        {
+            "wick_idle", "wick_stalk", "wick_hunt", "wick_search", "ophan_hover_turn", "ophan_advance"
+        };
+
+        /// <summary>One animation event: the receiver method, normalized time, and its string parameter.</summary>
+        public readonly struct ClipEvent
+        {
+            public readonly string Function;
+            public readonly float NormalizedTime;
+            public readonly string Parameter;
+
+            public ClipEvent(string function, float normalizedTime, string parameter = "")
+            {
+                Function = function;
+                NormalizedTime = normalizedTime;
+                Parameter = parameter;
+            }
+        }
+
+        /// <summary>
+        /// The fear clips' events, as in <c>Tools/ArtForge/anim_spec.json</c> (event type = method name,
+        /// the foot or prop as the string parameter). Kept as a constant because the importer must not
+        /// read data files at import time; <c>FearImportTests</c> checks it against both manifests.
+        /// </summary>
+        public static readonly IReadOnlyDictionary<string, ClipEvent[]> FearClipEvents = new Dictionary<string, ClipEvent[]>
+        {
+            ["warden_turn"] = new[] { new ClipEvent("PropDetach", 0.4444f, "LanternRing") },
+            ["wick_stalk"] = new[] { new ClipEvent("Footstep", 0f, "L"), new ClipEvent("Footstep", 0.5f, "R") },
+            ["wick_hunt"] = new[] { new ClipEvent("Footstep", 0f, "L"), new ClipEvent("Footstep", 0.5f, "R") },
+            ["wick_catch"] = new[] { new ClipEvent("AttackHit", 0.4167f) },
+            ["ophan_take"] = new[] { new ClipEvent("AttackHit", 0.45f) },
+        };
+
         /// <summary>
         /// The baked emission map is 8-bit and clamps at 1.0; the shipping material scales it back up.
         /// Must equal <c>EMISSION_STRENGTH</c> in Tools/EnemyForge/enemy_forge/materials.py.
@@ -67,7 +115,8 @@ namespace Plunderspell.EditorTools
         };
 
         /// <summary>Texture suffixes that hold numbers, not colour, and must import linear.</summary>
-        public static readonly string[] LinearTextureSuffixes = { "_ORM", "_MetallicGloss", "_Metallic", "_Roughness", "_DyeMask" };
+        public static readonly string[] LinearTextureSuffixes =
+            { "_ORM", "_MetallicGloss", "_Metallic", "_Roughness", "_DyeMask", "_FireMask" };
 
         /// <summary>What kind of ArtBible asset a path is, or null for anything outside it.</summary>
         public enum Kind
@@ -76,7 +125,8 @@ namespace Plunderspell.EditorTools
             GenericEnemy,
             Item,
             HumanoidPlayer,
-            HumanoidClips
+            HumanoidClips,
+            GenericClips
         }
 
         /// <summary>Classifies a model path. Pure, so the rules are tested without an import.</summary>
@@ -89,12 +139,18 @@ namespace Plunderspell.EditorTools
                 return Kind.Item;
             if (assetPath.StartsWith(PlayerRoot, StringComparison.OrdinalIgnoreCase))
                 return Kind.HumanoidPlayer;
-            if (string.Equals(assetPath, PlayerClipsPath, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(assetPath, PlayerClipsPath, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(assetPath, FearClipsPath, StringComparison.OrdinalIgnoreCase))
                 return Kind.HumanoidClips;
+            if (string.Equals(assetPath, OphanClipsPath, StringComparison.OrdinalIgnoreCase))
+                return Kind.GenericClips;
             if (!assetPath.StartsWith(EnemyRoot, StringComparison.OrdinalIgnoreCase))
                 return null;
             string name = Path.GetFileNameWithoutExtension(assetPath);
-            return ArtBibleEnemyCatalog.GenericRigModels.Contains(name) ? Kind.GenericEnemy : Kind.HumanoidEnemy;
+            string[] generic = assetPath.StartsWith(FearRoot, StringComparison.OrdinalIgnoreCase)
+                ? ArtBibleEnemyCatalog.FearGenericRigModels
+                : ArtBibleEnemyCatalog.GenericRigModels;
+            return generic.Contains(name) ? Kind.GenericEnemy : Kind.HumanoidEnemy;
         }
 
         /// <summary>True for a texture that holds data (ORM, metallic, roughness) rather than colour.</summary>
@@ -138,7 +194,10 @@ namespace Plunderspell.EditorTools
                     importer.importAnimation = false;
                     break;
 
+                // The Ophan's clip file carries the same bone names as its model, so an avatar built
+                // from the clip file binds to the model's transforms by path.
                 case Kind.GenericEnemy:
+                case Kind.GenericClips:
                     importer.animationType = ModelImporterAnimationType.Generic;
                     importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
                     importer.motionNodeName = GenericRootBone;
@@ -202,12 +261,15 @@ namespace Plunderspell.EditorTools
             kind == Kind.HumanoidEnemy || kind == Kind.HumanoidPlayer || kind == Kind.HumanoidClips;
 
         /// <summary>
-        /// Names the player clips after their AnimForge id (the FBX take is "ReferenceHuman|id") and
-        /// sets loop and in-place flags, so nothing is set by hand in the Inspector.
+        /// Names the player's and the fear pass's clips after their AnimForge id (the FBX take is
+        /// "&lt;armature&gt;|id"), sets loop and in-place flags and adds the fear clips' events, so nothing
+        /// is set by hand in the Inspector. Additive use (wick_flinch, wick_stoop) is the Animator
+        /// layer's setting, not the clip's.
         /// </summary>
         private void OnPreprocessAnimation()
         {
-            if (KindOf(assetPath) != Kind.HumanoidClips)
+            Kind? kind = KindOf(assetPath);
+            if (kind != Kind.HumanoidClips && kind != Kind.GenericClips)
                 return;
 
             var importer = (ModelImporter)assetImporter;
@@ -216,7 +278,15 @@ namespace Plunderspell.EditorTools
             {
                 int bar = clip.takeName.LastIndexOf('|');
                 clip.name = bar >= 0 ? clip.takeName.Substring(bar + 1) : clip.takeName;
-                clip.loopTime = LoopingPlayerClips.Contains(clip.name);
+                clip.loopTime = LoopingPlayerClips.Contains(clip.name) || LoopingFearClips.Contains(clip.name);
+                clip.events = FearClipEvents.TryGetValue(clip.name, out ClipEvent[] events)
+                    ? events.Select(e => new AnimationEvent
+                    {
+                        functionName = e.Function,
+                        time = e.NormalizedTime,
+                        stringParameter = e.Parameter
+                    }).ToArray()
+                    : Array.Empty<AnimationEvent>();
                 clip.lockRootRotation = true;
                 clip.lockRootHeightY = false;
                 clip.lockRootPositionXZ = true;
@@ -252,7 +322,7 @@ namespace Plunderspell.EditorTools
         public override int GetPostprocessOrder() => 100;
 
         // Bumped when the material rules change: the imported materials live in Library, not git.
-        public override uint GetVersion() => 1;
+        public override uint GetVersion() => 2;
 
         // Models import their materials through a MaterialDescription, the only hook that sees
         // embedded materials; OnPostprocessMaterial is never called for them (docs/4-systems/atmosphere.md:101).
@@ -292,7 +362,7 @@ namespace Plunderspell.EditorTools
                 material.EnableKeyword("_METALLICSPECGLOSSMAP");
             }
 
-            bool emissive = ArtBibleEnemyCatalog.EmissiveModels.Contains(name);
+            bool emissive = ArtBibleEnemyCatalog.IsEmissiveModel(name);
             Texture2D emission = emissive ? LoadTexture(textures + "_Emission.png") : null;
             if (emission != null)
             {
