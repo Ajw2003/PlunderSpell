@@ -1,5 +1,18 @@
 # Today
 
+**2026-10-12 (latest) - import rules for the fear art, written but not run (#413, under #386).**
+`ArtBibleModelImporter` now imports the Ophan of Hours Generic (a fear-folder list,
+`ArtBibleEnemyCatalog.FearGenericRigModels`, so the Ages' test-held list is untouched) and binds its
+glow (`FearEmissiveModels`, read through `IsEmissiveModel`, also by the validator); the Wick's
+`_FireMask` imports linear; `Humanoid_Fear.fbx` (Humanoid) and `TheOphanOfHours_Generic.fbx` (new
+`Kind.GenericClips`) get clip names, loop flags (`LoopingFearClips`) and events (`FearClipEvents`).
+Importer version 1 -> 2. Seven tests in `Tests/Editor/FearImportTests.cs`. **Untested:** no Unity
+here; the four C# files parse clean under Roslyn (syntax only, no Unity references), nothing more.
+The handoff's "The import rules" lists the four checks to run first in the Editor. Pull request into
+`staging-2026-10-11` opened with the art and these rules.
+
+---
+
 **2026-10-12 (later) - the Ophan's clips; the handoff now covers the engine work (#412, under #386).**
 Five clips on the Ophan's own Generic rig, built by a new `Tools/ArtForge/anim_ophan.py` (no
 humanoid solve or retarget): `ophan_hover_turn` (6 s loop), `ophan_advance` (4 s loop),
