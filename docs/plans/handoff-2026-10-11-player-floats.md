@@ -35,12 +35,16 @@ on the floor; whatever the hover was hiding gets fixed properly.
 
 1. **The one failing test.** Full PlayMode with the fix: 520 run, 519 passed. Failing:
    `MovementSpellTests.Test_AMisfiredSaltusIsAFeebleHopThatLocksTheLegs`, peak 1.02 m against a 1.0 m
-   limit, every run. A misfire launches at 14 x 0.25 = 3.5 m/s, which under gravity alone peaks near
-   0.62 m, so something adds about 40 cm. Leading suspicion: the capsule now touches the floor, and
-   contact or depenetration adds lift at launch; also check whether `IsGrounded` is still true for the
-   first ~0.4 m of the rise (the cast reaches 1.4 m below the body) and what the jump state does then.
-   Run `bash Tools/Unity/run_tests.sh Test_AMisfiredSaltusIsAFeebleHopThatLocksTheLegs PlayMode` and
-   read the TRACE. Fix the cause, never the limit.
+   limit, every run. **Cause found from the trace** (`height/vy/Grounded` per physics step):
+   `v0=6.25 0:0.12/6.1/G 1:0.24/5.9/G 2:0.35/5.7/G 3:0.46/5.5/G 4:0.56/5.0/a ... 14:1.02/0.1/a`.
+   The launch is 6.25 m/s (the tuning profile asset, not the code default 14 x 0.25), and
+   `IsGrounded` stays true for the first 0.46 m of the rise because the SphereCast reaches 1.4 m
+   below the body. While "grounded", `ApplyExtraFallGravity` is skipped, so the hop rises higher.
+   The old 29 cm hover hid this by leaving the cast's range sooner. **Fix:** set `IsGrounded` only
+   when the measured height is within a small tolerance of `_groundedHeight` (a few cm; keep the snap
+   working on the way down and on steps), in `GroundCheck`. Then remove the TRACE from the test.
+   Fix the cause, never the limit. Check jump, stairs and Saltus tests after: anything reading
+   `IsGrounded` (grep it) now sees air sooner.
 2. Full PlayMode again (`bash Tools/Unity/run_tests.sh Tests PlayMode`), then EditMode.
 3. Co-op: `bash Tools/Unity/wizard_coop_check.sh float-after --build`. The feet check must pass
    (capsule within 3 cm). Look at the screenshots.

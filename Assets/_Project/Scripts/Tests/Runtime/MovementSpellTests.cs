@@ -191,7 +191,7 @@ namespace Plunderspell.Tests
             {
                 yield return new WaitForFixedUpdate();
                 peak = Mathf.Max(peak, player.transform.position.y);
-                trace.Append($"{i}:{player.transform.position.y - startY:0.00}/{player.Rb.linearVelocity.y:0.0}/{(player.IsGrounded ? "G" : "a")}/{player.CurrentState?.GetType().Name.Replace("Player", "").Replace("State", "")} ");
+                trace.Append($"{i}:{player.transform.position.y - startY:0.00}/{player.Rb.linearVelocity.y:0.0}/{(player.IsGrounded ? "G" : "a")} ");
             }
             Assert.Less(peak - startY, 1f, $"A misfire is a feeble hop, not a leap; peaked {peak - startY:0.00} m. TRACE {trace}");
         }
