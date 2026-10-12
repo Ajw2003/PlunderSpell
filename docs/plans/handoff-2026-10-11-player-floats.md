@@ -1,5 +1,7 @@
 # Handoff: the player body floats 29 cm above the floor (2026-10-11)
 
+**Done 2026-10-11 evening:** items 1-3 and 5 below (see `docs/5-today/Today.md`). Item 4, stairs and Market tiles, was not checked.
+
 Branch `AjsAgent/player-floats`, cut from `AjsAgent/per-frame-bugs-391` (PR #410, open into
 `staging-2026-10-11`, waiting for the owner to merge). Base this branch's PR on staging once #410 is in.
 

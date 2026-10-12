@@ -186,14 +186,12 @@ namespace Plunderspell.Tests
             Assert.IsFalse(player.IsSlamArmed, "…and never arms the slam.");
 
             float peak = startY;
-            var trace = new System.Text.StringBuilder($"v0={player.Rb.linearVelocity.y:0.00} ");
             for (int i = 0; i < 40; i++)
             {
                 yield return new WaitForFixedUpdate();
                 peak = Mathf.Max(peak, player.transform.position.y);
-                trace.Append($"{i}:{player.transform.position.y - startY:0.00}/{player.Rb.linearVelocity.y:0.0}/{(player.IsGrounded ? "G" : "a")} ");
             }
-            Assert.Less(peak - startY, 1f, $"A misfire is a feeble hop, not a leap; peaked {peak - startY:0.00} m. TRACE {trace}");
+            Assert.Less(peak - startY, 1f, $"A misfire is a feeble hop, not a leap; peaked {peak - startY:0.00} m.");
         }
 
         [UnityTest]
