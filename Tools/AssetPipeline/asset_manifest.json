@@ -10,25 +10,25 @@
     "ArmouredCourtyard": {
       "budget": 700,
       "content": "a0025e460fe85b88",
-      "preview": "618f9273e1fe5927:23a9d68e53fd",
+      "preview": "a0025e460fe85b88:23a9d68e53fd",
       "tris": 456
     },
     "BarracksBunk": {
       "budget": 1000,
       "content": "a49dd30ecf8f55ca",
-      "preview": "52d01e5b6ac5e97e:23a9d68e53fd",
+      "preview": "a49dd30ecf8f55ca:23a9d68e53fd",
       "tris": 660
     },
     "Bastion": {
       "budget": 550,
       "content": "f096dd7276e0a48b",
-      "preview": "0b34885c68677bc4:23a9d68e53fd",
+      "preview": "f096dd7276e0a48b:23a9d68e53fd",
       "tris": 352
     },
     "BlacksmithShop": {
       "budget": 700,
       "content": "cff206bc7b8f1861",
-      "preview": "fc3daed51c05ef61:23a9d68e53fd",
+      "preview": "cff206bc7b8f1861:23a9d68e53fd",
       "tris": 468
     },
     "BronzeBastion": {
@@ -58,21 +58,25 @@
     "BronzeDoorPlugCrypt": {
       "budget": 40,
       "content": "55ec4899c773a8d3",
+      "preview": "55ec4899c773a8d3:23a9d68e53fd",
       "tris": 12
     },
     "BronzeDoorPlugInnerWard": {
       "budget": 40,
       "content": "060668c6a0f19b83",
+      "preview": "060668c6a0f19b83:23a9d68e53fd",
       "tris": 12
     },
     "BronzeDoorPlugKeep": {
       "budget": 40,
       "content": "c9de847543c1d1e1",
+      "preview": "c9de847543c1d1e1:23a9d68e53fd",
       "tris": 12
     },
     "BronzeDoorPlugOuterBailey": {
       "budget": 40,
       "content": "52863aac2d1f84e7",
+      "preview": "52863aac2d1f84e7:23a9d68e53fd",
       "tris": 12
     },
     "BronzeDromos": {
@@ -150,7 +154,7 @@
     "BronzePithosMagazine": {
       "budget": 4800,
       "content": "f25a5a8cdb6d5104",
-      "preview": "?:23a9d68e53fd",
+      "preview": "f25a5a8cdb6d5104:23a9d68e53fd",
       "tris": 3232
     },
     "BronzeQueensHall": {
@@ -174,13 +178,13 @@
     "BronzeStairDown": {
       "budget": 1000,
       "content": "764df6f975c3e1b2",
-      "preview": "eb152e429bf2e2b7:459f95d244e7",
+      "preview": "764df6f975c3e1b2:23a9d68e53fd",
       "tris": 752
     },
     "BronzeStairUp": {
       "budget": 1000,
       "content": "567eb9c06fe9fc18",
-      "preview": "c34d889c1220c7b7:459f95d244e7",
+      "preview": "567eb9c06fe9fc18:23a9d68e53fd",
       "tris": 836
     },
     "BronzeSword": {
@@ -204,7 +208,7 @@
     "BronzeTreasury": {
       "budget": 2000,
       "content": "6a665b2499872ce8",
-      "preview": "2f02721eeaaea9a9:23a9d68e53fd",
+      "preview": "6a665b2499872ce8:23a9d68e53fd",
       "tris": 1436
     },
     "BronzeWallCorner": {
@@ -222,13 +226,13 @@
     "BurialVault": {
       "budget": 900,
       "content": "2b1708d9ee2d235a",
-      "preview": "1fe151ce69a80ac6:23a9d68e53fd",
+      "preview": "2b1708d9ee2d235a:23a9d68e53fd",
       "tris": 588
     },
     "ChapelRoom": {
       "budget": 900,
       "content": "1cd26652b4827a2d",
-      "preview": "36c73c1b6a368107:23a9d68e53fd",
+      "preview": "1cd26652b4827a2d:23a9d68e53fd",
       "tris": 584
     },
     "CopperPot": {
@@ -240,110 +244,127 @@
     "CourtyardCloisterGarth": {
       "budget": 800,
       "content": "cbfdb8a7ec1bf081",
+      "preview": "cbfdb8a7ec1bf081:23a9d68e53fd",
       "tris": 84
     },
     "CourtyardFormalGarden": {
       "budget": 1200,
       "content": "66999dd0afd92c5d",
+      "preview": "66999dd0afd92c5d:23a9d68e53fd",
       "tris": 224
     },
     "CourtyardHerbGarden": {
       "budget": 800,
       "content": "03cbd72ebd13cb09",
+      "preview": "03cbd72ebd13cb09:23a9d68e53fd",
       "tris": 108
     },
     "CourtyardMidden": {
       "budget": 1600,
       "content": "92d48187bafd5bc5",
+      "preview": "92d48187bafd5bc5:23a9d68e53fd",
       "tris": 336
     },
     "CourtyardTiltyard": {
       "budget": 800,
       "content": "5d8717e0349af559",
+      "preview": "5d8717e0349af559:23a9d68e53fd",
       "tris": 160
     },
     "CourtyardWellYard": {
       "budget": 1200,
       "content": "8b7e62f2d2c41d27",
+      "preview": "8b7e62f2d2c41d27:23a9d68e53fd",
       "tris": 172
     },
     "CryptAntechamber": {
       "budget": 600,
       "content": "3b9ba47edc2a5c56",
-      "preview": "017e67bcb3e4778f:23a9d68e53fd",
+      "preview": "3b9ba47edc2a5c56:23a9d68e53fd",
       "tris": 416
     },
     "CryptChamberFinal": {
       "budget": 800,
       "content": "2a195cf9a471cdc1",
-      "preview": "f8e0237cfd829fa6:23a9d68e53fd",
+      "preview": "2a195cf9a471cdc1:23a9d68e53fd",
       "tris": 756
     },
     "CryptStairwell": {
       "budget": 600,
       "content": "ea331bf0a88a340b",
-      "preview": "9406ff2f2bfdfb1c:23a9d68e53fd",
+      "preview": "ea331bf0a88a340b:23a9d68e53fd",
       "tris": 440
     },
     "DoorPlugCrypt": {
       "budget": 40,
       "content": "0bd4ad1682c9e4bd",
+      "preview": "0bd4ad1682c9e4bd:23a9d68e53fd",
       "tris": 12
     },
     "DoorPlugInnerWard": {
       "budget": 40,
       "content": "5e6c5a31028d5aa6",
+      "preview": "5e6c5a31028d5aa6:23a9d68e53fd",
       "tris": 12
     },
     "DoorPlugKeep": {
       "budget": 40,
       "content": "1b4806096d57f183",
+      "preview": "1b4806096d57f183:23a9d68e53fd",
       "tris": 12
     },
     "DoorPlugOuterBailey": {
       "budget": 40,
       "content": "aad6576fa7dcec00",
+      "preview": "aad6576fa7dcec00:23a9d68e53fd",
       "tris": 12
     },
     "Drawbridge": {
       "budget": 650,
       "content": "90bcb7810125cd8d",
-      "preview": "9849e63d1c4e394d:23a9d68e53fd",
+      "preview": "90bcb7810125cd8d:23a9d68e53fd",
       "tris": 208
     },
     "DressingGateSealed": {
       "budget": 400,
       "content": "f870eb372edbc4ef",
+      "preview": "f870eb372edbc4ef:23a9d68e53fd",
       "tris": 180
     },
     "DressingGateYard": {
       "budget": 1600,
       "content": "eb18abccb9cff54e",
+      "preview": "eb18abccb9cff54e:23a9d68e53fd",
       "tris": 324
     },
     "DressingLeanTo": {
       "budget": 1600,
       "content": "971afe8e64e88f27",
+      "preview": "971afe8e64e88f27:23a9d68e53fd",
       "tris": 616
     },
     "DressingPens": {
       "budget": 1600,
       "content": "71c2189ba5243bd4",
+      "preview": "71c2189ba5243bd4:23a9d68e53fd",
       "tris": 288
     },
     "DressingPlain": {
       "budget": 400,
       "content": "29d56ca8746f6be4",
+      "preview": "29d56ca8746f6be4:23a9d68e53fd",
       "tris": 48
     },
     "DressingTraining": {
       "budget": 1600,
       "content": "2d759e51de7e31d8",
+      "preview": "2d759e51de7e31d8:23a9d68e53fd",
       "tris": 376
     },
     "DressingWoodpile": {
       "budget": 1600,
       "content": "fc7a92c15c48d4b0",
+      "preview": "fc7a92c15c48d4b0:23a9d68e53fd",
       "tris": 432
     },
     "FlintlockPistol": {
@@ -355,7 +376,7 @@
     "GatehouseModule": {
       "budget": 700,
       "content": "88ff236d868bbcf9",
-      "preview": "8dd203b3a951df91:23a9d68e53fd",
+      "preview": "88ff236d868bbcf9:23a9d68e53fd",
       "tris": 444
     },
     "GoldenGoblet": {
@@ -367,13 +388,13 @@
     "GreatHallMain": {
       "budget": 1350,
       "content": "558e571ac7dd6db2",
-      "preview": "e6d547e987ae1b54:23a9d68e53fd",
+      "preview": "558e571ac7dd6db2:23a9d68e53fd",
       "tris": 904
     },
     "GuardRoomInner": {
       "budget": 850,
       "content": "b2285ec7b91270e4",
-      "preview": "3fc20812489a8702:23a9d68e53fd",
+      "preview": "b2285ec7b91270e4:23a9d68e53fd",
       "tris": 556
     },
     "HeavyChest": {
@@ -385,13 +406,13 @@
     "KeepStairwell": {
       "budget": 600,
       "content": "679427efb231e8e1",
-      "preview": "0e2b34f846682118:23a9d68e53fd",
+      "preview": "679427efb231e8e1:23a9d68e53fd",
       "tris": 584
     },
     "KitchenRoom": {
       "budget": 850,
       "content": "0261002a64d77a4f",
-      "preview": "3005cd95684fe80c:23a9d68e53fd",
+      "preview": "0261002a64d77a4f:23a9d68e53fd",
       "tris": 564
     },
     "LairCandle": {
@@ -517,21 +538,25 @@
     "LateDoorPlugCrypt": {
       "budget": 40,
       "content": "55ec4899c773a8d3",
+      "preview": "55ec4899c773a8d3:23a9d68e53fd",
       "tris": 12
     },
     "LateDoorPlugInnerWard": {
       "budget": 40,
       "content": "7356d7a6c9be4690",
+      "preview": "7356d7a6c9be4690:23a9d68e53fd",
       "tris": 12
     },
     "LateDoorPlugKeep": {
       "budget": 40,
       "content": "67a4c8214d45ad81",
+      "preview": "67a4c8214d45ad81:23a9d68e53fd",
       "tris": 12
     },
     "LateDoorPlugOuterBailey": {
       "budget": 40,
       "content": "5df3f960e1b9b63c",
+      "preview": "5df3f960e1b9b63c:23a9d68e53fd",
       "tris": 12
     },
     "LateDrawbridge": {
@@ -543,7 +568,7 @@
     "LateEffigyCrypt": {
       "budget": 1600,
       "content": "1e01a9fac09407b5",
-      "preview": "cbfb52e75dbdf736:23a9d68e53fd",
+      "preview": "1e01a9fac09407b5:23a9d68e53fd",
       "tris": 992
     },
     "LateGreatHall": {
@@ -591,13 +616,13 @@
     "LateStairDown": {
       "budget": 1000,
       "content": "69736b00a1de5c47",
-      "preview": "a76627cbba86f16a:459f95d244e7",
+      "preview": "69736b00a1de5c47:23a9d68e53fd",
       "tris": 752
     },
     "LateStairUp": {
       "budget": 1000,
       "content": "bf78ee526c102851",
-      "preview": "f742ee1daf93694f:459f95d244e7",
+      "preview": "bf78ee526c102851:23a9d68e53fd",
       "tris": 836
     },
     "LateStateBedchamber": {
@@ -657,7 +682,7 @@
     "LordsSolar": {
       "budget": 750,
       "content": "a94b4e27f38693f4",
-      "preview": "9d7f8b37efc23520:23a9d68e53fd",
+      "preview": "a94b4e27f38693f4:23a9d68e53fd",
       "tris": 472
     },
     "MarketAntiquarianCabinet": {
@@ -759,13 +784,13 @@
     "MedievalStairDown": {
       "budget": 1000,
       "content": "20ae20eb311f32d6",
-      "preview": "e60634f31486b209:459f95d244e7",
+      "preview": "20ae20eb311f32d6:23a9d68e53fd",
       "tris": 752
     },
     "MedievalStairUp": {
       "budget": 1000,
       "content": "0dd994841db4d1ae",
-      "preview": "0c6b2599e5d5ac02:459f95d244e7",
+      "preview": "0dd994841db4d1ae:23a9d68e53fd",
       "tris": 836
     },
     "PaviseShield": {
@@ -779,6 +804,30 @@
       "content": "993a7bc4cc563ef5",
       "preview": "993a7bc4cc563ef5:23a9d68e53fd",
       "tris": 116
+    },
+    "PowderDoorPlugCrypt": {
+      "budget": 40,
+      "content": "09bca6f80e02e44f",
+      "preview": "09bca6f80e02e44f:23a9d68e53fd",
+      "tris": 12
+    },
+    "PowderDoorPlugInnerWard": {
+      "budget": 40,
+      "content": "d04e6932eb52414d",
+      "preview": "d04e6932eb52414d:23a9d68e53fd",
+      "tris": 12
+    },
+    "PowderDoorPlugKeep": {
+      "budget": 40,
+      "content": "ab8aa32a71b2513d",
+      "preview": "ab8aa32a71b2513d:23a9d68e53fd",
+      "tris": 12
+    },
+    "PowderDoorPlugOuterBailey": {
+      "budget": 40,
+      "content": "9fd4ba464553e2c3",
+      "preview": "9fd4ba464553e2c3:23a9d68e53fd",
+      "tris": 12
     },
     "PowderGrenade": {
       "budget": 250,
@@ -795,7 +844,7 @@
     "RoyalBedchamber": {
       "budget": 400,
       "content": "97b167fc22dc6908",
-      "preview": "faa6d80436f05626:23a9d68e53fd",
+      "preview": "97b167fc22dc6908:23a9d68e53fd",
       "tris": 396
     },
     "SilverPlate": {
@@ -807,49 +856,49 @@
     "StableBlock": {
       "budget": 400,
       "content": "01b4936490dfe9b8",
-      "preview": "92be76aff688e7eb:23a9d68e53fd",
+      "preview": "01b4936490dfe9b8:23a9d68e53fd",
       "tris": 396
     },
     "StorehouseRoom": {
       "budget": 950,
       "content": "5c08f20a335424bd",
-      "preview": "f62c9262b860c9d9:23a9d68e53fd",
+      "preview": "5c08f20a335424bd:23a9d68e53fd",
       "tris": 624
     },
     "ThroneRoomKeep": {
       "budget": 800,
       "content": "027b916bce0fbaaa",
-      "preview": "c63dd9a352f267ab:23a9d68e53fd",
+      "preview": "027b916bce0fbaaa:23a9d68e53fd",
       "tris": 536
     },
     "TombCorridor": {
       "budget": 900,
       "content": "4eac9b0c26d5c944",
-      "preview": "0739e1f4da9910d1:23a9d68e53fd",
+      "preview": "4eac9b0c26d5c944:23a9d68e53fd",
       "tris": 600
     },
     "TreasuryVault": {
       "budget": 850,
       "content": "910b7b6acb9310ee",
-      "preview": "b135ee6abac497de:23a9d68e53fd",
+      "preview": "910b7b6acb9310ee:23a9d68e53fd",
       "tris": 660
     },
     "WallCorner": {
       "budget": 400,
       "content": "3fc6e7cd93573702",
-      "preview": "61927294b8458126:23a9d68e53fd",
+      "preview": "3fc6e7cd93573702:23a9d68e53fd",
       "tris": 216
     },
     "WallStraight": {
       "budget": 550,
       "content": "e25924a6291501d7",
-      "preview": "e8808d6e6a8b62f9:23a9d68e53fd",
+      "preview": "e25924a6291501d7:23a9d68e53fd",
       "tris": 192
     },
     "WellCourtyard": {
       "budget": 800,
       "content": "a130aeca722598c5",
-      "preview": "6b6d53f6a4c18ba9:23a9d68e53fd",
+      "preview": "a130aeca722598c5:23a9d68e53fd",
       "tris": 532
     }
   }

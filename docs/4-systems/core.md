@@ -28,6 +28,33 @@ for Edit Mode tests. The rules, decided 2026-10-06 (`docs/6-decisions/Decisions.
   it needs, updates the model when one fires, and is the only thing that knows which systems feed the view. A view
   draws the model it was given and reads no other system. IMGUI's `OnGUI` still runs each frame (drawing is not
   communication); it reads a cached model. The raid HUD is the worked example (`raid.md`).
+
+## When Update is allowed
+
+Decided 2026-10-11 (`docs/6-decisions/Decisions.md`). `Update`, `LateUpdate` and `FixedUpdate` are only for work that
+genuinely changes every frame: movement, physics, camera follow, a value that visibly changes every frame. Each one
+kept carries `// per-frame: <reason>` on the line above it. Everything else goes in one of four buckets:
+
+- **KEEP.** Real per-frame work, with the comment. `Player/PlayerStateMachine.cs:381` is `FixedUpdate` physics.
+- **EVENT.** It polls for a change; listen for the event instead. `Raid/LairCenturyDial.cs:59-61` polls the selected
+  era; it listens for `AgeChosen`.
+- **TIMER.** It counts down or runs only sometimes; use a coroutine or timer that exists only while active.
+  `Status/StatusEffectReceiver.cs:87` becomes a coroutine per active status. A fade that runs only sometimes is a
+  TIMER too: `Raid/CounterSlate.cs:49`.
+- **REMOVE.** It does work something else already does. `Raid/RaidDirector.cs:192-193` builds on a client what the
+  replication handlers already build.
+
+Also:
+
+- **Input** comes through `GameInput`'s actions as performed/canceled callbacks, never `Keyboard.current`,
+  `Mouse.current` or a hard-coded key. `Tests/Editor/NoOldInputTests.cs` already blocks `UnityEngine.Input`.
+- **Several booleans that describe one thing become one state** (an enum or state classes). Example: `Items/Item.cs`
+  (#400).
+- **Never save, or notice a change, from a per-frame check.** The Lair pile once saved an empty, torn-down pile that
+  way (#378).
+
+The audit is `docs/plans/update-audit-2026-10-11.md`; the fixes are planned in
+`docs/plans/handoff-2026-10-11-per-frame-fixes.md` (issues #389-#402).
 - **Not every per-frame thing is an event.** Simulation that is per-frame by nature (movement, physics, guard ticks,
   camera follow, a cross-fade) stays an `Update`. A thing that has to react to a camera appearing, which Unity gives no
   event for, is checked on the events that can cause it (`BackdropCamera`, with its limit below).
