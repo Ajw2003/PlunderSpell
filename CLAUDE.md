@@ -5,6 +5,11 @@
 Start at [`docs/1-landing/README.md`](docs/1-landing/README.md) — it indexes the roadmap, current project state,
 per-system docs, and everything else worth reaching. Don't duplicate its content here.
 
+## Per-frame code
+
+`Update`, `LateUpdate` and `FixedUpdate` are only for work that genuinely changes every frame, each marked `// per-frame: <reason>`.
+See `docs/4-systems/core.md`, "When Update is allowed".
+
 ## Commit everything — paper trail and asset backup take priority
 
 The user wants a durable record of all work in this repo: every asset,
