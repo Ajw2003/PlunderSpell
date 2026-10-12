@@ -1,5 +1,17 @@
 # Today
 
+**2026-10-12 - the Wick's animations (#406).** Nine clips, a third AnimForge track
+(`Tools/ArtForge/anim_wick.py`, `anim_forge/library_wick.py`, layer `fear` in `anim_spec.json`):
+`warden_turn` (on the Lantern Warden, the lantern drops at 0.4 s and is left lying), then the swap,
+then `wick_emerge`; `wick_idle`, `wick_stalk` (1.4 m/s), `wick_hunt` (4.2 m/s), `wick_search`,
+`wick_catch` (AttackHit 0.5 s), and additive `wick_flinch` and `wick_stoop` (crown 2.33 m).
+Exported to `Assets/Models/ArtBible/Animations/Humanoid_Fear.fbx`, re-imported with all nine takes;
+no IK shortfall, no bone under the floor, slide 0.3 / 0.2 cm on the Wick. Sheet + MP4 per clip in
+`docs/art/anim/fear/`, each looked at; the emerge's first burst read as a "dab" and was redone as a
+rear-up. Not done: the Unity side (importer rules for these, the Animator, the swap), untested here.
+
+---
+
 **2026-10-11 (night, later) - the Wick made scarier (#406).** Owner: "far more texture, drop
 the glow, fire as geo for now, shaders later". The bake gained opt-in surface detail
 (`weave`, `gradients`, `streaks`, `cracks`, `flecks` in `art_forge/materials.py`); the Wick

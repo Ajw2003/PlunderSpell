@@ -104,14 +104,14 @@
       "rig": {
         "skeleton": "Unity Humanoid (Mecanim) as figures.Human, plus Cage (child of Head), Hat (child of Cage, the vented cap), Blade (rigid on Hand.R), and flame bones are not separate: flames are rigid on the bone they sit on.",
         "animations": [
-          "turn_reveal - 1.6 s, the four beats of the turn (seen, the face splits at 0.4 s, the coat bursts at 0.9 s, turned at 1.6 s); played on the warden then swapped to this model at 0.9 s",
-          "idle_burning - 3 s loop, hunched, the head cage sways, fingers flex",
-          "stalk - 1.4 m/s, long slow strides, the light carried ahead",
-          "hunt_run - 4.2 m/s, low and fast, arms swinging forward",
-          "stoop_arch - 0.5 s additive, drops the crown to 2.50 m under a 2.59 m arch",
-          "search_sweep - 2.5 s, the head cage turns 90 degrees each way, light sweeping",
-          "catch_kill - 1.2 s, the left hand closes on the player at chest height; the kill",
-          "hit_flinch - 0.4 s, the fire flares, it does not stop"
+          "turn_reveal — 1.6 s, the four beats of the turn (seen, the face splits at 0.4 s, the coat bursts at 0.9 s, turned at 1.6 s); played on the warden then swapped to this model at 0.9 s",
+          "idle_burning — 3 s loop, hunched, the head cage sways, fingers flex",
+          "stalk — 1.4 m/s, long slow strides, the light carried ahead",
+          "hunt_run — 4.2 m/s, low and fast, arms swinging forward",
+          "stoop_arch — 0.5 s additive, drops the crown to 2.50 m under a 2.59 m arch",
+          "search_sweep — 2.5 s, the head cage turns 90 degrees each way, light sweeping",
+          "catch_kill — 1.2 s, the left hand closes on the player at chest height; the kill",
+          "hit_flinch — 0.4 s, the fire flares, it does not stop"
         ]
       },
       "breakables": [

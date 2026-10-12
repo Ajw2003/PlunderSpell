@@ -613,6 +613,37 @@ reference skeleton (no `Hat` bone is keyed). Review sheets go to `docs/art/anim/
 Gait additions (defaults leave enemy clips unchanged): `GaitParams.crouch`, `.hip_pitch`;
 `Frame.leg_hint` (prone knees up); `forge.rigs(blend)`.
 
+### The fear pass's clips (#386)
+
+The Wick (the Lantern Warden's true form) and the warden's half of the turn, a third track
+beside the enemies' and the player's: motion in `anim_forge/library_wick.py`, spec rows with
+layer and status `fear` (and the Wick's JSON clips under `enemies.wick`), checked by
+`anim_spec_check.py` (which reads `docs/art/data/fear.json` too).
+
+```bash
+python3.11 Tools/ArtForge/anim_wick.py build     # Animations/Humanoid_Fear.fbx + fear_anim_manifest.json
+python3.11 Tools/ArtForge/anim_wick.py review [--only ID ...] [--no-mp4]   # docs/art/anim/fear/
+```
+
+| Clip | Length | On | What |
+|---|---|---|---|
+| `warden_turn` | 0.9 s | warden | rigid; hands to the face; the face splits and the lantern drops (`PropDetach` 0.4 s); doubles over. The model swaps at the end |
+| `wick_emerge` | 0.7 s | Wick | from the doubled pose: rears up, arms raised like claws, cage head back; settles into the hunch |
+| `wick_idle` | 3.0 s loop | Wick | hunched; breathes, sways, the left hand curls |
+| `wick_stalk` | 1.4 s loop | Wick | 1.4 m/s, long slow strides |
+| `wick_hunt` | 0.7 s loop | Wick | 4.2 m/s, low and fast |
+| `wick_search` | 2.5 s loop | Wick | the cage head sweeps 74° each way |
+| `wick_catch` | 1.2 s | Wick | lunge; the left hand closes at chest height (`AttackHit` 0.5 s) |
+| `wick_flinch` | 0.4 s additive | Wick | jerked back by a blow; it does not stop |
+| `wick_stoop` | 0.5 s additive | Wick | crown down to 2.33 m, under the 2.59 m arch |
+
+The Wick is 1.705x the reference at the hips, and a Humanoid retarget scales the hips (so
+the planted feet) by that. Its gaits are therefore authored at agent speed / 1.705 on the
+reference; on the Wick they plant at 1.4 and 4.2 m/s (worst slide 0.3 cm and 0.2 cm, measured
+on the Wick and printed on each sheet). The Wick's own A-pose is not kept by the retarget,
+so every clip carries `HUNCH` (arms out and forward, elbows bent, spine bowed, head thrust).
+Its Cage, Hat, Blade and flame bones are never keyed; they ride on Head and Hand.R.
+
 ### Layout
 
 ```
