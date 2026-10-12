@@ -54,3 +54,4 @@ jobs:
           path: |
             Tools/AssetPipeline/previews/
             Tools/AssetPipeline/asset_manifest.json
+            Assets/_Project/Art/Models/Castle/AgeOfPowder/
