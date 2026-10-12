@@ -501,7 +501,8 @@ namespace StateMachine
 
         private void SnapToGroundHeight(RaycastHit hit, Vector3 up)
         {
-            float currentHeight = hit.distance - 0.5f;
+            // The floor is a radius below where the sphere stopped; leaving it out floated the body one radius up.
+            float currentHeight = hit.distance + _groundCheckRadius - 0.5f;
             float error = currentHeight - _groundedHeight;
             if (Mathf.Abs(error) <= 0.001f) return;
 
