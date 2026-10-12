@@ -1,5 +1,22 @@
 # Today
 
+**2026-10-12 (later) - the Ophan's clips; the handoff now covers the engine work (#412, under #386).**
+Five clips on the Ophan's own Generic rig, built by a new `Tools/ArtForge/anim_ophan.py` (no
+humanoid solve or retarget): `ophan_hover_turn` (6 s loop), `ophan_advance` (4 s loop),
+`ophan_fix_gaze` (1.5 s), `ophan_take` (2 s, `AttackHit` at 0.9 s, the take or the kill) and
+`ophan_arrive` (4 s, grows from a point by a scale curve on Core). Exported to
+`Assets/Models/ArtBible/Animations/TheOphanOfHours_Generic.fbx`; the build re-imports it and checks
+every take's length, that both loops are seamless (0.000°) and that no mesh point goes under the
+floor (lowest 0.12 m; the first take went 2 cm under, its stoop was reduced). Built twice, same
+result. Sheets and movies in `docs/art/anim/fear/ophan_*`, each opened; the take's sweep was faint
+from the review camera, so a side view was added. `staging-2026-10-11` merged into the branch (one
+conflict in `Decisions.md`, both entries kept). The handoff's "Working in the engine" lists what the
+importer gets wrong today (the Ophan would import as Humanoid and fail the validator; neither clip
+file has a rule; the Ophan's glow and the Wick's fire mask are not handled), all read from the code,
+none run in Unity.
+
+---
+
 **2026-10-12 - paused for the week.** Usage ran out. The handoff's "Pick up here" lists what is next: the Ophan's clips (ask first), the Unity import rule for the Fear folder, the open owner questions, then the pull request.
 
 ---

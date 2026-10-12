@@ -5,33 +5,121 @@ two-form guard, then the creature. Each starts with a short look-and-behaviour d
 approves, then the build. The spell lockdown (part 1 of the slice) is separate work and not in this
 handoff.
 
-## Where this stands (updated 2026-10-12)
+## Where this stands (updated 2026-10-12, later)
 
-- **Part A's design is approved, and its art is built.** The true form is **the Wick**
-  (`docs/7-design/fear-pass.md`, "The true form"). Its model and its nine clips are built and
-  reviewed (#406, under #386); what remains for Part A is the code and the Unity side, below.
-- **Part B's look is approved.** The creature is **the Ophan of Hours**, allowed lapis
-  (`fear-pass.md`, "The creature"; Decisions, 2026-10-11, "The Ophan may use lapis"). Its model is
-  built and reviewed (#411); its clips are the next art step. Its behaviour questions (2-4 under Part B) are still open.
-- One question is still open for Part A: how many more ground-floor guards (4 below).
-- All of this is on branch `AjsAgent/fear-pass-handoff`, not yet in a pull request.
+- **All the art for both is done, and none of the engine work has started.** The Wick (#406):
+  model plus nine clips. The Ophan of Hours (#411, #412): model plus five clips. Every one has a
+  sheet that was opened and a review record in `docs/art/reviews/`. Nothing has been imported into
+  Unity yet: the cloud container this was built in has no editor.
+- **Designs approved:** the Wick (`docs/7-design/fear-pass.md`, "The true form") and the Ophan,
+  allowed lapis (`fear-pass.md`, "The creature"; Decisions, 2026-10-11, "The Ophan may use lapis").
+- **Still open with the owner:** Part A, how many more ground-floor guards (question 4 below);
+  Part B, questions 2-4 (where the artifacts are placed, how it hunts, what "spoils taken" looks
+  like). Ask them before the work that depends on each one, not before starting.
+- **Branch:** `AjsAgent/fear-pass-handoff`, with `staging-2026-10-11` merged in on 2026-10-12 (one
+  conflict, in `Decisions.md`, where both sides had added an entry; kept both). No pull request yet.
 
-### Pick up here (paused 2026-10-12, usage ran out for the week)
+### Pick up here: the engine work, in order
 
-Last commit before the pause: `3f162461` (the Ophan's model). Nothing is uncommitted. In order:
+Read **"Working in the engine"** just below first. Then:
 
-1. **The Ophan's clips** (the owner has not yet said go; ask first): `hover_turn`, `advance`,
-   `fix_gaze`, `take`, `arrive`. They are already rows in `Tools/ArtForge/anim_spec.json` with
-   status `planned`, sources `ophan_*`, target fbx `TheOphanOfHours_Generic.fbx`. The rig is generic
-   (bones in `ophan()`, `art_forge/blueprints/enemies_fear.py`), so this is not a Humanoid retarget
-   like `anim_wick.py`; the hound's generic clips are the nearer model. Review every clip's sheet,
-   then set the status to `fear`.
-2. **Unity, which needs a machine with the editor** (none in the cloud container): give the Fear
-   folder its own import rule (Ophan generic, Wick humanoid, `Humanoid_Fear.fbx` as clips, `_FireMask`
-   linear). Details under "The art you build on" and Part B, question 1.
-3. **Owner questions still open:** Part A's guard count (4 below); Part B questions 2-4.
-4. When the branch is ready: a pull request into `staging-2026-10-11` (never `main`), body
-   `Refs #386`, `#406`, `#411`.
+1. **Import rules** (`ArtBibleModelImporter.cs`), then import both models and the two clip files,
+   and run the ArtBible validator. Its own child issue under #386.
+2. **The Wick in the game** (Part A): prefab, Animator, the turn on the Lantern Warden, the
+   true-form state, the "guard turned" event, tests, a co-op check. Ask the guard-count question
+   before touching guard placement.
+3. **The Ophan in the game** (Part B): prefab and Animator first (needs no owner answers), then the
+   quota once questions 2-4 are answered.
+4. **Pull request** into `staging-2026-10-11` (never `main`), body `Refs #386, #406, #411, #412`
+   (never Closes/Fixes), saying what was and was not checked in Unity.
+
+## Working in the engine (written 2026-10-12)
+
+Everything in this section was read from the code on this branch; none of it has been run in Unity.
+
+### What the importer does today, and what that means for the fear art
+
+`Assets/_Project/Scripts/Editor/ArtBibleModelImporter.cs` sorts every `.fbx` under
+`Assets/Models/ArtBible/` with `KindOf` (`:83`):
+
+| File | What `KindOf` says now | What it needs |
+|---|---|---|
+| `Enemies/Fear/TheWick/TheWick.fbx` | `HumanoidEnemy` (any name under `Enemies/` not in the generic list) | nothing: this is right |
+| `Enemies/Fear/TheOphanOfHours/TheOphanOfHours.fbx` | `HumanoidEnemy`: **wrong**, a wheel has no human bones, and `ArtAssetImportValidator` (`:255-261`) will then fail it for "no valid Humanoid avatar" | Generic, avatar from this model, motion node `Root` (what `Kind.GenericEnemy` sets, `:141-145`) |
+| `Animations/Humanoid_Fear.fbx` (the Wick's 9 clips) | `null`: no rule, Unity's defaults | Humanoid clips like `Humanoid_Player.fbx` (`:23-24`, `:92-93`), named after the take, loop flags from the spec |
+| `Animations/TheOphanOfHours_Generic.fbx` (the Ophan's 5 clips) | `null` | Generic clips, avatar copied from the Ophan model so they bind; names and loop flags from the spec |
+
+Also:
+- **Don't add the Ophan to `ArtBibleEnemyCatalog.GenericRigModels`** (`ArtBibleEnemyCatalog.cs:160`).
+  `ArtBibleEnemyCatalogTests.Test_TheGenericRigListMatchesTheArtBible` (`:212`) holds that list equal
+  to the generic enemies of the four Ages' JSON (`AgeSlugs`, `:153`, has no `fear`), so the test
+  would fail. Give `Enemies/Fear/` its own rule ahead of the generic-list check: one name set for the
+  generic fear models (`TheOphanOfHours`), everything else humanoid.
+- **Its glow:** the Ophan bakes `TheOphanOfHours_Emission.png` (the portal pupil), but the importer
+  binds emission only for names in `ArtBibleEnemyCatalog.EmissiveModels` (`:166`, checked by
+  `Test_TheEmissiveListMatchesTheManifest`, again over the four Ages only). Same answer: a fear-folder
+  list, not that one. The Wick has no emission (owner, 2026-10-11).
+- **`_FireMask`** is not in `LinearTextureSuffixes` (`:70`); add it, or the Wick's mask imports as
+  colour.
+- **Loop flags:** the player's are a hand-kept set, `LoopingPlayerClips` (`:30`), held to its
+  manifest by `WizardAnimationTests.LoopFlagsMatchTheClipManifest`. Do the same for the fear clips
+  against `Animations/fear_anim_manifest.json` (the Wick) and `Animations/ophan_anim_manifest.json`
+  (the Ophan). Looping: `wick_idle`, `wick_stalk`, `wick_hunt`, `wick_search`, `ophan_hover_turn`,
+  `ophan_advance`. `wick_flinch` and `wick_stoop` are **additive**.
+- **Events** (`Footstep`, `AttackHit`, `PropDetach`) are not in any FBX. They are in
+  `Tools/ArtForge/anim_spec.json` and both manifests, at normalized time. The player importer does not
+  add events either; add them in `OnPreprocessAnimation` for the fear clips, or from code at runtime.
+  `ophan_take` has `AttackHit` at 0.45 (0.9 s): that is the take if the player carries its artifacts,
+  else the kill.
+- **Takes are named `<armature>|<clip>`** (`ReferenceHuman|wick_hunt`,
+  `TheOphanOfHours_Rig|ophan_take`); strip up to the `|` as the player rule does (`:217-218`).
+- The validator skips everything under `Animations/` (`ArtAssetImportValidator.cs:198`), so it will
+  not catch a bad clip import; check the clips by eye (below).
+
+### The Ophan's clips, for the Animator
+
+Generic rig, 18 bones. **Root never moves**: the NavMeshAgent moves it, and it never touches the
+floor (lowest mesh point 0.12 m over every clip). Sheets and movies in `docs/art/anim/fear/ophan_*`.
+- `ophan_arrive` (4 s) grows it from 2 % at heart height with a **scale** curve on `Core`. Keep scale
+  curves on in the import; confirm in the preview that frame 0 is a point, not the full creature.
+  It ends on `ophan_hover_turn`'s first frame, so arrive into hover needs no blend.
+- `ophan_hover_turn` (6 s) and `ophan_advance` (4 s) loop seamlessly (every wheel makes whole
+  turns). Drive the blend between them by the agent's speed.
+- `ophan_fix_gaze` (1.5 s) gives the snap and the stopped wheels; the eye looks 25° aside and 18°
+  down, a canonical direction. Aim `Eye` at the real player in code (a look-at on that bone in
+  `LateUpdate`, which is per-frame work and allowed, see below).
+- Not on the model or in the clips, all engine VFX: the lapis core glow, the echoes, the lightning,
+  the floor's hour rings, the stone pulled back to quarry rock.
+
+### The Wick's clips, for the Animator
+
+As in "The art you build on" below. `warden_turn` plays on the Lantern Warden (its own humanoid
+avatar), the rest on the Wick. `wick_stalk` is authored for 1.4 m/s and `wick_hunt` for 4.2 m/s on
+the Wick; play them at agent speed / authored speed.
+
+### How to work, on this project
+
+- **Animator by code:** `WizardPlayerSetup.cs` builds the wizard's Animator Controller from its clips
+  (`Plunderspell/Wizard/Build Animator Controller`, `:32`) and installs it (`:117`). Copy that shape
+  for the Wick and the Ophan, so nothing is set by hand in the Inspector. Enemy prefabs are forged by
+  `EnemyPrefabForge.cs` (`Tools/Plunderspell/Forge Enemy Prefabs + Roster`, `:89`).
+- **New rule from staging (Decisions, 2026-10-11, "Per-frame code only for what changes every
+  frame"):** `Update`, `LateUpdate` and `FixedUpdate` are only for work that changes every frame, each
+  marked `// per-frame: <reason>`. Everything else is an event, a timer, or removed. The turn, the
+  quota and the creature's arrival are events on `EventManager`, not polled flags. See
+  `docs/4-systems/core.md`, "When Update is allowed".
+- **Unity commands** (all from the repo root, never `cd` or `git -C`): check the Editor is not in
+  Play mode (`Tools/Unity/README.md`, "Before anything"), then `bash Tools/Unity/recompile.sh`, then
+  `bash Tools/Unity/run_tests.sh <filter> EditMode` and `PlayMode`. Never pipe them through `tail` or
+  `head`. Keep logs with `git add -f docs/generated/<name>.log`.
+- **Look at the result:** a screenshot of each model imported (the Wick standing, the Ophan
+  floating), the clips playing in the preview, before-and-after screenshots of the guard turning, all
+  opened and looked at before saying anything works. The Unity baseline on staging was compile clean,
+  EditMode 243 pass / 3 skipped, PlayMode 518/518 (`docs/3-state/ProjectState.md`); keep it there.
+- **To rebuild the art** (only if a clip or model must change): see `Tools/ArtForge/README.md`,
+  "The fear pass's clips". Needs `python3.11` with `bpy` 5.0.1 (`python3.11 -m pip install bpy==5.0.1
+  pillow`); `anim_wick.py build` and `anim_ophan.py build` each take seconds, a full review about
+  twenty minutes.
 
 ## Read first
 
@@ -197,7 +285,8 @@ EditMode and PlayMode suites green; `docs/4-systems/alarm.md` updated; a pull re
    model under `EnemyRoot` that is not in `ArtBibleEnemyCatalog.GenericRigModels` down the Humanoid
    path, which a wheel cannot satisfy. Don't just add the Ophan to that list: a test
    (`Test_TheGenericRigListMatchesTheArtBible`) holds it equal to the four Ages' generic enemies.
-   Give the Fear folder its own rule instead. Its clips come next. Its counter: none (carry what it
+   Give the Fear folder its own rule instead ("Working in the engine"). Its five clips are built
+   and reviewed (#412): `Animations/TheOphanOfHours_Generic.fbx`. Its counter: none (carry what it
    asked for, or reach the portal first).
 
 Still open:
