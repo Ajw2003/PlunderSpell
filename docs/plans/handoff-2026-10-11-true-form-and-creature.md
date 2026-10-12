@@ -5,6 +5,17 @@ two-form guard, then the creature. Each starts with a short look-and-behaviour d
 approves, then the build. The spell lockdown (part 1 of the slice) is separate work and not in this
 handoff.
 
+## Where this stands (updated 2026-10-12)
+
+- **Part A's design is approved, and its art is built.** The true form is **the Wick**
+  (`docs/7-design/fear-pass.md`, "The true form"). Its model and its nine clips are built and
+  reviewed (#406, under #386); what remains for Part A is the code and the Unity side, below.
+- **Part B's look is approved.** The creature is **the Ophan of Hours**, allowed lapis
+  (`fear-pass.md`, "The creature"; Decisions, 2026-10-11, "The Ophan may use lapis"). Its model is
+  the next art step. Its behaviour questions (2-4 under Part B) are still open.
+- One question is still open for Part A: how many more ground-floor guards (4 below).
+- All of this is on branch `AjsAgent/fear-pass-handoff`, not yet in a pull request.
+
 ## Read first
 
 1. [`docs/7-design/fear-pass.md`](../7-design/fear-pass.md): the approved design. Its "The first
@@ -56,20 +67,55 @@ until they exist.
 - The turn raises a fear moment on every machine: a reveal animation, sound, camera, music.
 - More guards stand on the ground floors, so the threat is seen from the gate and underestimated.
 
-### What the owner still has to approve (design step, before code)
-1. **The true form's look.** Lovecraftian horror that frightens a seasoned horror player, inside the
-   game's painted look and its period, with fantasy licence. Make concept sheets through the art
-   pipeline (`Tools/ArtBible/`, see `docs/art/WORKFLOW.md`), show them beside the Lantern Warden's
-   current sheet, and get a pick.
-2. **The reveal:** how long the turn takes, what the player sees and hears, whether the turn is a
-   moment of escape (the guard is busy turning) or not.
-3. **Its counter.** The design says every guard type has a hard counter its behaviour hints at. For
-   this first one, propose one or two (e.g. it hunts by the lantern's light, so darkness hides you)
-   and let the owner choose.
-4. **How many more ground-floor guards**, and whether that is per Age or High Medieval only.
+### What the owner approved (2026-10-11), and what is still open
+1. **The look: approved, the Wick.** The man turned into his own lantern, burning: 3.10 m, a cage of
+   bone for a head with the kettle hat as its cap, ribs opened round a candle, the glaive grown into
+   one arm, 0.40 m fingers on the other hand. Written up in `fear-pass.md`, "The true form".
+2. **The reveal: approved.** 1.6 s in four beats: seen (0 s), the face splits in four and the
+   lantern drops (0.4 s), the coat bursts and he grows (0.9 s), turned (1.6 s). The first 0.9 s,
+   while it is busy turning, is the one moment to run. The lantern is **left where it fell**, dark.
+3. **The counter: approved.** It sees only by its own fire: out of its light you are hidden, in it
+   you are seen.
+4. **Still open: how many more ground-floor guards**, and whether that is per Age or High Medieval
+   only. Ask the owner before the guard-placement change.
 
-Write the answers into `docs/7-design/fear-pass.md` under a new "The true form" heading, and a
-dated entry in `docs/6-decisions/Decisions.md` for anything that reverses earlier behaviour.
+### The art you build on (done, #406)
+- **Spec:** `docs/art/data/fear.json` (`enemies[wick]`), a `fear` group outside the Ages' rosters
+  of four. Height 3.10 m (body 3.04 m), Outer Bailey and Curtain Wall like the warden; listed in
+  `docs/4-systems/scale.md`.
+- **Model:** `Assets/Models/ArtBible/Enemies/Fear/TheWick/TheWick.fbx` (+ `.blend`, glTF,
+  `Textures/`), 10,596 tris (budget 12k). Unity Humanoid bones plus `Cage` (on Head), `Hat` (on
+  Cage) and `Blade` (on Hand.R), 23 in all. Built by
+  `python3.11 Tools/ArtForge/build.py enemies --age fear --only wick`; review sheet
+  `docs/art/models/fear/wick.png`.
+- **Fire is painted geometry for now** (owner, 2026-10-11): three-tone flame tongues, no glow,
+  rigid on the bone they sit on, to be replaced by a fire shader later. The shader's mask is already
+  baked: `Textures/TheWick_FireMask.png` (white = flames, grey = smoulder); preview
+  `docs/art/models/fear/wick-fire.png`.
+- **Clips:** `Assets/Models/ArtBible/Animations/Humanoid_Fear.fbx` (reference skeleton, Humanoid),
+  listed in `Tools/ArtForge/anim_spec.json` (layer `fear`) and
+  `Animations/fear_anim_manifest.json`; built by `python3.11 Tools/ArtForge/anim_wick.py build`,
+  sheets and MP4s in `docs/art/anim/fear/`. All in place (the NavMeshAgent moves it):
+
+  | Clip | Length | Plays on | Events / notes |
+  |---|---|---|---|
+  | `warden_turn` | 0.9 s | the Lantern Warden | `PropDetach` LanternRing at 0.444 (0.4 s): the lantern drops as a loose physics prop |
+  | `wick_emerge` | 0.7 s | the Wick | swap the model at the end of `warden_turn`; rears up, settles into the hunch |
+  | `wick_idle` | 3.0 s loop | the Wick | |
+  | `wick_stalk` | 1.4 s loop | the Wick | agent 1.4 m/s; `Footstep` L 0.0, R 0.5 |
+  | `wick_hunt` | 0.7 s loop | the Wick | agent 4.2 m/s; `Footstep` L 0.0, R 0.5 |
+  | `wick_search` | 2.5 s loop | the Wick | the head (and its light) sweeps 74 deg each way |
+  | `wick_catch` | 1.2 s | the Wick | `AttackHit` at 0.417 (0.5 s): the kill |
+  | `wick_flinch` | 0.4 s additive | the Wick | on a hit; it does not stop |
+  | `wick_stoop` | 0.5 s additive | the Wick | held by layer weight under arches: crown 2.33 m |
+
+- **Not done, all Unity, none of it run yet.** In `Assets/_Project/Scripts/Editor/ArtBibleModelImporter.cs`:
+  the Wick's model already falls under the enemy rule (`EnemyRoot`, so `Kind.HumanoidEnemy`), but
+  `Humanoid_Fear.fbx` matches no rule (only `Humanoid_Player.fbx` is special-cased), so it needs
+  one like the player clips' (Humanoid, loop flags and events from `anim_spec.json`); and
+  `_FireMask` is not in `LinearTextureSuffixes`, so it would import as colour (add it beside
+  `_DyeMask` when the fire shader comes). Then the Wick's prefab and Animator, the model swap at
+  0.9 s, the lantern detach on the warden, and the fire shader.
 
 ### Where it goes in the code
 - `Assets/_Project/Scripts/Runtime/Guards/Core/Guard.cs` (267 lines): the guard. Its states are in
@@ -87,12 +133,17 @@ dated entry in `docs/6-decisions/Decisions.md` for anything that reverses earlie
 - Events go through `EventManager` only (Decisions, 2026-10-06): publish a "guard turned" event for
   the fear moment; views (camera, music, sound) subscribe.
 - Enemy art pipeline: `docs/4-systems/enemy-asset-pipeline.md`; animations:
-  `docs/plans/artbible-enemy-animations.md`.
+  `docs/plans/artbible-enemy-animations.md`; the Wick's art and clips: "The art you build on" above.
+- The turn in code: play `warden_turn` on the warden, detach its lantern at the `PropDetach` event
+  and leave it lying, swap to the Wick model at 0.9 s and play `wick_emerge`, then the true-form
+  state runs `wick_stalk` / `wick_hunt` at 1.4 / 4.2 m/s. Raise the "guard turned" event at 0 s so
+  the camera, sound and music start with the turn.
 
 ### Done when
 Tests for the turn rules (sight turns, hearing does not, hit turns, never turns back, catch kills,
-human form stuns and never dies); the true-form model with a review sheet you opened and a review
-record (the `art-pipeline` gate checks this); a co-op check script in which a guard sees the client,
+human form stuns and never dies); ~~the true-form model with a review sheet you opened and a review
+record~~ (done: `docs/art/models/fear/wick.png`, records in `docs/art/reviews/`); the Wick imported
+in Unity with its clips playing, a screenshot looked at; a co-op check script in which a guard sees the client,
 turns on both machines and kills on a catch; before-and-after screenshots you looked at; the full
 EditMode and PlayMode suites green; `docs/4-systems/alarm.md` updated; a pull request into
 `staging-2026-10-11` with `Refs #386` (never Closes/Fixes).
@@ -116,9 +167,16 @@ EditMode and PlayMode suites green; `docs/4-systems/alarm.md` updated; a pull re
 - The Lair and the Market stand outside time and are always safe. Coin now only buys things in the
   Market.
 
-### What the owner still has to approve (design step, before code)
-1. **What the creature is and looks like**: a celestial being that hunts through time. Concept
-   sheets through the art pipeline, as for Part A.
+### What the owner approved, and what is still open
+1. **What the creature is and looks like: approved, the Ophan of Hours** (2026-10-11). After
+   Ezekiel and Isaiah: a wheel within a wheel 5.8 m across, rims full of eyes, six wings (11 m
+   across), lightning, one great eye at its heart with a portal for a pupil; 9.6 m tall, larger than
+   the castle, passing through walls (the stone pulled back to quarry rock and closing behind it).
+   Allowed lapis. Concept `docs/art/concept/fear/ophan-v2-*.png`; written up in `fear-pass.md`,
+   "The creature". Its model is the next art step, then its clips. Its counter: none (carry what it
+   asked for, or reach the portal first).
+
+Still open:
 2. **Where the artifacts are placed in the Lair** to pay the quota (an altar, the portal, the ledger
    desk) and how the next demand is chosen (which artifacts, per Age).
 3. **How it hunts** once it arrives: speed, senses, whether it can be hidden from, how long before the
