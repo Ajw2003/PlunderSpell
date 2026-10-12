@@ -532,7 +532,7 @@ MonoBehaviour:
   AirControl: 0.7
   DodgeForce: 5
   _respawnSpeed: 1
-  MouseSensitivity: 10
+  MouseSensitivity: 0.16666667
   CameraTransform: {fileID: 662490087184818401}
   _groundCheckRadius: 0.3
   _groundCheckDistance: 1.6
