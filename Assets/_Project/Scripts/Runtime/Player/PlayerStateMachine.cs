@@ -74,7 +74,7 @@ namespace StateMachine
         [FormerlySerializedAs("respawnSpeed")] [SerializeField] private float _respawnSpeed;
         public float RespawnSpeed { get => _respawnSpeed; set => _respawnSpeed = value; }
 
-        public float MouseSensitivity = 100f;
+        public float MouseSensitivity = 1.6667f;
         public Transform CameraTransform;
 
         [Header("Ground Check Settings")]
@@ -138,8 +138,8 @@ namespace StateMachine
                 return;
             }
 
-            float mouseX = lookDelta.x * MouseSensitivity * Time.deltaTime;
-            float mouseY = lookDelta.y * MouseSensitivity * Time.deltaTime;
+            float mouseX = lookDelta.x * MouseSensitivity;
+            float mouseY = lookDelta.y * MouseSensitivity;
 
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);

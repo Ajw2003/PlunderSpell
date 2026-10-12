@@ -210,6 +210,7 @@ namespace Player
             if (_input == null)
                 return;
 
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             DisableAllInputs();
             _creep.Dispose();
             _input = null;
@@ -229,6 +230,9 @@ namespace Player
             _input = GameInput.Actions;
             _input.Enable();
             _creep.Enable();
+
+            // Idle fires this again and again; detaching first keeps one handler per action, not a stack.
+            DisableAllInputs();
 
             WalkInputs(true);
             // No dodge key: dodging is the Velox spell (docs/4-systems/spells.md, "Velox and Saltus").
