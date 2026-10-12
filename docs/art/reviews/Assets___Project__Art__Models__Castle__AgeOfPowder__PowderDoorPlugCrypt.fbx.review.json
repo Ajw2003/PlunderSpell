@@ -1,0 +1,7 @@
+{
+  "model": "Assets/_Project/Art/Models/Castle/AgeOfPowder/PowderDoorPlugCrypt.fbx",
+  "sheet": "docs/art/models/castle/powder-door-plugs-review.png",
+  "verdict": "pass",
+  "seen": "Plain closed slab, as rooms/README says plugs are (no concept sheet by design). Same box and proportions as LateDoorPlugCrypt beside it; paler grey-white stone than Late's warm sandstone, no gaps or stray geometry. Not modelled this session: arrived on the staging switch from CI commit 2a0d5da9.",
+  "date": "2026-10-11T19:50:44-0600"
+}
