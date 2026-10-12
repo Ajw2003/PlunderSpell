@@ -3483,6 +3483,94 @@
       "build_seconds": 3.4
     },
     {
+      "key": "enemies/fear/ophan",
+      "kind": "enemies",
+      "age": "fear",
+      "slug": "ophan",
+      "name": "TheOphanOfHours",
+      "title": "The Ophan of Hours",
+      "passed": true,
+      "stats": {
+        "vertices": 6209,
+        "faces": 6731,
+        "triangles": 11378,
+        "islands": 264,
+        "lowest_z": 0.2881,
+        "height": 9.745,
+        "width": 11.91,
+        "budget": 16000,
+        "bbox_m": "11.910x5.937x9.457",
+        "height_body_m": 9.457,
+        "height_spec_m": 9.6,
+        "height_with_props_m": 9.457,
+        "rig_bones": 18,
+        "skinned_bones": 16,
+        "mean_influences": 1.04
+      },
+      "spec": {
+        "dims_WDH_m": null,
+        "height_m": 9.6,
+        "tri_budget": 16000
+      },
+      "families": {
+        "pewter": {
+          "name": "Pewter",
+          "base": "#8C8A80",
+          "rough": 0.45,
+          "metal": 1.0,
+          "emit": null
+        },
+        "vellum": {
+          "name": "Vellum",
+          "base": "#DCD2BA",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "bone_black": {
+          "name": "Bone black",
+          "base": "#14120E",
+          "rough": 0.55,
+          "metal": 0.0,
+          "emit": null
+        },
+        "lapis": {
+          "name": "Lapis",
+          "base": "#7A6AA0",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "deep_lapis": {
+          "name": "Deep lapis",
+          "base": "#2A2638",
+          "rough": 0.75,
+          "metal": 0.0,
+          "emit": null
+        },
+        "portal_light": {
+          "name": "Portal light",
+          "base": "#B9B2D6",
+          "rough": 0.3,
+          "metal": 0.0,
+          "emit": "#3A3450"
+        }
+      },
+      "failures": [],
+      "warnings": [],
+      "notes": [
+        "Generic rig, no body: the wheels turn on GreatWheel / InnerWheel / TiltWheel, the eye looks on Eye, each wing beats on two bones. Every part is rigid; the small rim eyes, hour marks and lashes are props held out of the heat solve.",
+        "Floats: grounded=False. Its echoes, lightning, the floor's hour rings and the stone pulled back to the quarry are engine work (VFX), not on this model."
+      ],
+      "resolution": 1024,
+      "files": {
+        "fbx": "Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/TheOphanOfHours.fbx",
+        "gltf": "Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/glTF/TheOphanOfHours.gltf",
+        "blend": "Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/TheOphanOfHours.blend"
+      },
+      "build_seconds": 5.3
+    },
+    {
       "key": "enemies/fear/wick",
       "kind": "enemies",
       "age": "fear",

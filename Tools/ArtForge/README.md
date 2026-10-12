@@ -13,7 +13,8 @@ especially **Traps**: every trap there applies here too.
 
 **Status (2026-10-11):** all 20 **items**, all 16 **enemies**, the player **wizard**
 (`players/lair/wizard`) and the fear pass's first true form, **the Wick**
-(`enemies/fear/wick`, #386), are built and reviewed. `high/lantern-warden` (a humanoid on
+(`enemies/fear/wick`, #386), and its creature, **the Ophan of Hours** (`enemies/fear/ophan`,
+#411), are built and reviewed. `high/lantern-warden` (a humanoid on
 `figures.Human`) and `high/alaunt-hound` (a quadruped on `figures.Quadruped`) are the
 reference blueprints. No structure blueprints exist in this module (another agent owns
 structures). AnimForge (below) builds the enemy clips and the player's clips.
@@ -381,7 +382,9 @@ Horrors outside the four Ages' fixed rosters of four live in `docs/art/data/fear
 `--age fear`: `python3 Tools/ArtForge/build.py enemies --age fear --only wick`. An entry whose
 JSON `concept` names a `.png` is reviewed beside that plate. The Wick (the Lantern Warden's true
 form, `blueprints/enemies_fear.py`) is `figures.Human(height=3.0, arm_length=1.35)`: `arm_length`
-scales upper arm, forearm and hand, default 1.0.
+scales upper arm, forearm and hand, default 1.0. The Ophan is a generic rig (`_Frame`: Root, Core,
+three wheels, the Eye, six wings with tips), floats (`grounded=False`), and is the one enemy allowed
+lapis: `Blueprint.arcane_reason` names why, and the discipline check skips the lapis rule for it.
 
 **Fire is painted geometry for now, a shader later** (owner, 2026-10-11). The Wick's flames
 are three-tone tongues (`_flame`, `_blaze` in `enemies_fear.py`: a dark madder shell, madder,

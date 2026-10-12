@@ -1,5 +1,18 @@
 # Today
 
+**2026-10-12 - the Ophan of Hours is modelled (#411, under #386).** Spec entry `ophan` in
+`docs/art/data/fear.json`, blueprint `ophan()` in `Tools/ArtForge/art_forge/blueprints/enemies_fear.py`,
+model in `Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/`: three wheels with eyes round their
+rims and hour marks, one great eye with a lapis iris and the portal for a pupil, six wings; floats
+0.29 m off the floor; 9.46 m tall (spec 9.6), 11.9 m across; 11,378 of 16k tris; a generic rig of
+18 bones. Lapis passes the discipline check through a new `Blueprint.arcane_reason`. The first
+wings read as combs; more, wider feathers and thicker rims fixed it. Sheet
+`docs/art/models/fear/ophan.png` looked at and recorded. Not on the model: core glow, echoes,
+lightning (engine VFX). Unity, untested: the importer would take it as Humanoid; the handoff says
+what to do.
+
+---
+
 **2026-10-12 - the Wick's animations (#406).** Nine clips, a third AnimForge track
 (`Tools/ArtForge/anim_wick.py`, `anim_forge/library_wick.py`, layer `fear` in `anim_spec.json`):
 `warden_turn` (on the Lantern Warden, the lantern drops at 0.4 s and is left lying), then the swap,

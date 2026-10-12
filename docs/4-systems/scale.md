@@ -95,6 +95,15 @@ zones; one taller than an archway stoops through it (a `stoop_arch` clip) rather
 |---|---|---|---|
 | Lantern Warden | The Wick | 3.10 m | CurtainWall, OuterBailey (stoops to 2.50 m under the 2.59 m arch) |
 
+**The fear pass's creature (#386).** The Ophan of Hours (`fear.json`, `ophan`) is 9.6 m from its lowest
+feather to its highest and 11 m across the spread wings, floating 0.3 m off the floor. It is larger
+than any room on purpose: the castle's tallest ceiling is 5.2 m, and it passes through stone rather
+than fitting (`docs/7-design/fear-pass.md`, "The creature"). It never stoops or ducks.
+
+| Of | Enemy | Height | Zones |
+|---|---|---|---|
+| (none) | The Ophan of Hours | 9.60 m | CurtainWall, OuterBailey, InnerWard, Keep, Crypt (through the walls) |
+
 **The supernatural six, Crypt only, any Age.** `EnemyPrefabForge.Specs`
 (`Assets/_Project/Scripts/Editor/EnemyPrefabForge.cs:66`) carries a standing height per enemy and
 scales each model uniformly from its authored height to it; the authored heights in

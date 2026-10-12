@@ -12,7 +12,7 @@ handoff.
   reviewed (#406, under #386); what remains for Part A is the code and the Unity side, below.
 - **Part B's look is approved.** The creature is **the Ophan of Hours**, allowed lapis
   (`fear-pass.md`, "The creature"; Decisions, 2026-10-11, "The Ophan may use lapis"). Its model is
-  the next art step. Its behaviour questions (2-4 under Part B) are still open.
+  built and reviewed (#411); its clips are the next art step. Its behaviour questions (2-4 under Part B) are still open.
 - One question is still open for Part A: how many more ground-floor guards (4 below).
 - All of this is on branch `AjsAgent/fear-pass-handoff`, not yet in a pull request.
 
@@ -173,7 +173,14 @@ EditMode and PlayMode suites green; `docs/4-systems/alarm.md` updated; a pull re
    across), lightning, one great eye at its heart with a portal for a pupil; 9.6 m tall, larger than
    the castle, passing through walls (the stone pulled back to quarry rock and closing behind it).
    Allowed lapis. Concept `docs/art/concept/fear/ophan-v2-*.png`; written up in `fear-pass.md`,
-   "The creature". Its model is the next art step, then its clips. Its counter: none (carry what it
+   "The creature". Its model is built and reviewed (#411): `Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/`,
+   11,378 tris of 16k, 9.46 m tall, a generic rig of 18 bones, sheet `docs/art/models/fear/ophan.png`.
+   Not on the model, for the engine: the lapis core glow, the echoes, the lightning, the floor's hour
+   rings, the stone pulled back to quarry. **Unity, untested here:** `ArtBibleModelImporter` sends any
+   model under `EnemyRoot` that is not in `ArtBibleEnemyCatalog.GenericRigModels` down the Humanoid
+   path, which a wheel cannot satisfy. Don't just add the Ophan to that list: a test
+   (`Test_TheGenericRigListMatchesTheArtBible`) holds it equal to the four Ages' generic enemies.
+   Give the Fear folder its own rule instead. Its clips come next. Its counter: none (carry what it
    asked for, or reach the portal first).
 
 Still open:

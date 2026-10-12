@@ -302,14 +302,17 @@ _SINGULAR = {"items": "item", "structures": "structure", "enemies": "enemy",
 
 
 def discipline_violations(kind: str, name: str, families: dict[str, dict],
-                          gold_reason: str | None = None) -> list[str]:
+                          gold_reason: str | None = None,
+                          arcane_reason: str | None = None) -> list[str]:
     """The mood board's pigment rules, applied to the families an asset uses.
 
     - Orpiment gold is for value only: items may use it freely. A structure or
       enemy may only carry it when the art bible marks that material as stealable
       (its name or notes say plunder / loot / stealable) or the blueprint gives a
       reason in `gold_reason`.
-    - Enemies never wear verdigris or lapis (arcane and voice pigments).
+    - Enemies never wear verdigris or lapis (arcane and voice pigments), unless the
+      blueprint names an owner's exception in `arcane_reason` (the Ophan, Decisions
+      2026-10-11).
     """
     problems = []
     for key, fam in families.items():
@@ -321,7 +324,7 @@ def discipline_violations(kind: str, name: str, families: dict[str, dict],
                     f"{name}: {_SINGULAR.get(kind, kind)} uses orpiment-gold family {key!r} "
                     f"({fam['base']}); gold is for plunder only — mark it stealable "
                     f"in the art bible or set Blueprint.gold_reason")
-        if kind == "enemies" and spec_mod.is_reserved_arcane(fam):
+        if kind == "enemies" and spec_mod.is_reserved_arcane(fam) and not arcane_reason:
             problems.append(
                 f"{name}: enemy uses {key!r} ({fam['base']}), which reads as "
                 f"verdigris/lapis; the brief forbids both on enemy costume")

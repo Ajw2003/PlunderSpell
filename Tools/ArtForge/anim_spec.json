@@ -1867,6 +1867,71 @@
    "status": "fear",
    "enemy": "wick",
    "notes": "additive, held by layer weight: takes the crown under a 2.59 m arch"
+  },
+  "ophan_hover_turn": {
+   "layer": "fear",
+   "family": null,
+   "fbx": "TheOphanOfHours_Generic.fbx",
+   "length_s": 6.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "ophan",
+   "notes": "the wheels turn at different rates, the wings breathe, the eye drifts"
+  },
+  "ophan_advance": {
+   "layer": "fear",
+   "family": null,
+   "fbx": "TheOphanOfHours_Generic.fbx",
+   "length_s": 4.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "ophan",
+   "notes": "the drift through walls: wheels faster, wings beating slow"
+  },
+  "ophan_fix_gaze": {
+   "layer": "fear",
+   "family": null,
+   "fbx": "TheOphanOfHours_Generic.fbx",
+   "length_s": 1.5,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "ophan",
+   "notes": "the eye snaps to a player, every wheel stops for a beat"
+  },
+  "ophan_take": {
+   "layer": "fear",
+   "family": null,
+   "fbx": "TheOphanOfHours_Generic.fbx",
+   "length_s": 2.0,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "ophan",
+   "notes": "the lower wings sweep forward to take what it came for"
+  },
+  "ophan_arrive": {
+   "layer": "fear",
+   "family": null,
+   "fbx": "TheOphanOfHours_Generic.fbx",
+   "length_s": 4.0,
+   "loop": false,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "planned",
+   "enemy": "ophan",
+   "notes": "unfolds out of a point of light"
   }
  },
  "carry_variants": [
@@ -5768,6 +5833,52 @@
     }
    ],
    "notes": "turn_reveal is two clips: warden_turn (0.9 s) on the Lantern Warden, then the model swap, then wick_emerge (0.7 s) on the Wick."
+  },
+  "ophan": {
+   "age": "fear",
+   "clips": [
+    {
+     "clip": "hover_turn",
+     "source": "ophan_hover_turn",
+     "layer": "fear",
+     "status": "planned",
+     "loop": true,
+     "length_s": 6.0
+    },
+    {
+     "clip": "advance",
+     "source": "ophan_advance",
+     "layer": "fear",
+     "status": "planned",
+     "loop": true,
+     "length_s": 4.0
+    },
+    {
+     "clip": "fix_gaze",
+     "source": "ophan_fix_gaze",
+     "layer": "fear",
+     "status": "planned",
+     "loop": false,
+     "length_s": 1.5
+    },
+    {
+     "clip": "take",
+     "source": "ophan_take",
+     "layer": "fear",
+     "status": "planned",
+     "loop": false,
+     "length_s": 2.0
+    },
+    {
+     "clip": "arrive",
+     "source": "ophan_arrive",
+     "layer": "fear",
+     "status": "planned",
+     "loop": false,
+     "length_s": 4.0
+    }
+   ],
+   "notes": "Generic rig (Root, Core, three wheels, Eye, six wings): the wheels turn, the eye looks, the wings beat; nothing walks. advance's drift is moved by the agent, not root motion."
   }
  }
 }

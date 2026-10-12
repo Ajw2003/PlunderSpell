@@ -37,7 +37,9 @@ def model_dir(kind: str, age: str, pascal: str, out_root: str = OUT_ROOT) -> str
 def build_one(kind: str, age: str, slug: str, resolution: int, out_root: str) -> dict:
     bp = blueprints.make(kind, age, slug)
     used = dict(bp.ordered_families())
-    violations = materials.discipline_violations(kind, bp.name, used, bp.gold_reason)
+    violations = materials.discipline_violations(kind, bp.name, used, bp.gold_reason, bp.arcane_reason)
+    if bp.arcane_reason:
+        print(f"  arcane pigment allowed: {bp.arcane_reason}")
     if violations:
         raise RuntimeError("; ".join(violations))
 
