@@ -1,3 +1,5 @@
+<!doctype html>
+<!-- house-rules make_page 2.67.0 -->
 <title>The Wick and the Ophan, In Game</title><!-- also set this to PAGE.title: galleries read this tag, not the script -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
@@ -163,6 +165,37 @@ details[open] > summary .more::after{content:" ▲"} details:not([open]) > summa
 .g.done span.c{background:var(--ok-soft);color:var(--ok)}
 .sd{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:8px;font-size:.94rem}
 .owntext{display:block;width:100%;box-sizing:border-box;margin-top:8px;border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit;background:var(--bg);color:var(--fg);min-height:44px}
+/* pictures: thumbnail opens a full-width overlay; compare is two frames wide, one slider frame narrow. Never --you: orange means the user acts. */
+.pic{display:grid;gap:6px;justify-items:start;max-width:100%;min-width:0}
+.pic button{display:grid;gap:6px;justify-items:start;max-width:100%;padding:6px;background:var(--card);border:1px solid var(--line);border-radius:10px;text-align:left}
+.pic img,.cmp img{display:block;max-width:100%;height:auto;background:var(--bg)}
+.pic,.pic button{width:100%;box-sizing:border-box}
+/* A tall screenshot shrunk to fit a short box is a sliver: fill the width and show its top instead. */
+.pic button img{width:100%;max-height:280px;object-fit:cover;object-position:top;border-radius:6px}
+.pic figcaption,.cmp figcaption{font-size:.86rem;color:var(--muted)}
+.pic,.cmp{margin:0}
+.cmp{display:grid;gap:6px;min-width:0}
+.cmp-side{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cmp-side > div{display:grid;gap:4px;align-content:start;min-width:0;border:1px solid var(--line);border-radius:10px;padding:6px;background:var(--card)}
+.cmp-side b,.cmp-slide label{font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.cmp-slide{display:none;gap:6px;min-width:0}
+.cmp-frame{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg)}
+.cmp-frame img{width:100%}
+.cmp-frame img + img{position:absolute;inset:0;height:100%;object-fit:fill;clip-path:inset(0 0 0 var(--pos,50%))}
+.cmp-slide input[type=range]{width:100%;accent-color:var(--accent);min-height:44px;margin:0}
+@media (max-width:639px){.cmp-side{display:none}.cmp-slide{display:grid}}
+dialog.lightbox{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--fg);padding:12px;width:min(96vw,960px);max-height:94vh;box-sizing:border-box;overflow:auto}
+dialog.lightbox::backdrop{background:rgba(0,0,0,.6)}
+dialog.lightbox img{display:block;width:100%;height:auto}
+dialog.lightbox p{margin-top:8px;font-size:.9rem}
+dialog.lightbox button{margin-top:10px}
+</style>
+<style>
+/* house-rules make_page: project style from docs/page-style.json */
+:root,:root[data-theme],:root:not([data-theme="light"]){--bg:#14120E;--card:#1E1A14;--fg:#DCD2BA;--muted:#9A9078;--line:#332D22;--you:#5FA288;--you-soft:#1F2820;--accent:#2E4C41;--accent-soft:#181B16;--gap:#C4542E;--gap-soft:#2E1C13;--ok:#9A9078;--ok-soft:#28251E;--display:"Eczar",Georgia,serif;--body:"Spectral",Georgia,serif;--label:"Overpass Mono",ui-monospace,monospace;color-scheme:dark}
+@media (prefers-color-scheme: light){:root{--bg:#14120E;--card:#1E1A14;--fg:#DCD2BA;--muted:#9A9078;--line:#332D22;--you:#5FA288;--you-soft:#1F2820;--accent:#2E4C41;--accent-soft:#181B16;--gap:#C4542E;--gap-soft:#2E1C13;--ok:#9A9078;--ok-soft:#28251E;--display:"Eczar",Georgia,serif;--body:"Spectral",Georgia,serif;--label:"Overpass Mono",ui-monospace,monospace;color-scheme:dark}}
+@media (prefers-color-scheme: dark){:root{--bg:#14120E;--card:#1E1A14;--fg:#DCD2BA;--muted:#9A9078;--line:#332D22;--you:#5FA288;--you-soft:#1F2820;--accent:#2E4C41;--accent-soft:#181B16;--gap:#C4542E;--gap-soft:#2E1C13;--ok:#9A9078;--ok-soft:#28251E;--display:"Eczar",Georgia,serif;--body:"Spectral",Georgia,serif;--label:"Overpass Mono",ui-monospace,monospace;color-scheme:dark}}
+*{border-radius:0!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></symbol>
@@ -233,6 +266,9 @@ details[open] > summary .more::after{content:" ▲"} details:not([open]) > summa
 
 <script>
 // ---- PAGE: the only part you edit. Example content shows every field. ----------------------
+// Tiny inline SVGs so the template stays one file; real pages use a data: URI or a path next to the page.
+const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#e3eafc"/><circle cx="160" cy="90" r="40" fill="#2f5bd3"/></svg>');
+const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
 const PAGE = {
   "title": "The Wick and the Ophan, In Game",
   "eyebrow": "Build plan for approval · Raids feel frightening (#386) · nothing built yet",
@@ -309,7 +345,15 @@ const PAGE = {
         "A seen or hurt Lantern Warden chases and fights like any guard.",
         "A guard that turns into the Wick and never turns back.",
         "Being seen by a warden becomes the moment a raid goes wrong; running and hiding are the answer."
-      ]
+      ],
+      {
+        "src": "fear-entities-in-game-pics/wick_catch.png",
+        "alt": "The Wick's design sheet and its catch clip, eight frames",
+        "caption": "The Wick, already modelled and animated: its catch clip, the lunge that downs or kills."
+      },
+      {
+        "visual": true
+      }
     ],
     [
       "chg",
@@ -341,7 +385,15 @@ const PAGE = {
         "Nothing; the guard just switches state.",
         "A reveal you can see and hear from across a room.",
         "You get a beat of warning before it hunts."
-      ]
+      ],
+      {
+        "src": "fear-entities-in-game-pics/warden_turn.png",
+        "alt": "Eight frames of the Lantern Warden doubling over as its lantern drops",
+        "caption": "The first 0.9 s, already animated: the lantern drops at 0.4 s, the model swaps at 0.9 s. The Wick's emerge clip follows."
+      },
+      {
+        "visual": true
+      }
     ],
     [
       "new",
@@ -365,7 +417,15 @@ const PAGE = {
         "The models exist only as imported files.",
         "Ready-to-place creatures with their clips wired.",
         "Nothing to set up by hand in the Inspector."
-      ]
+      ],
+      {
+        "src": "fear-entities-in-game-pics/wick-and-ophan.png",
+        "alt": "The Wick and the Ophan of Hours side by side in Unity",
+        "caption": "Both models as they import in Unity today, before any prefab exists."
+      },
+      {
+        "visual": true
+      }
     ],
     [
       "new",
@@ -377,7 +437,15 @@ const PAGE = {
         "Raids end when the portal closes.",
         "A creature that comes for you near the end.",
         "Lingering for loot becomes dangerous."
-      ]
+      ],
+      {
+        "src": "fear-entities-in-game-pics/ophan_arrive.png",
+        "alt": "Eight frames of the Ophan unfolding out of a point of light",
+        "caption": "The Ophan's arrival clip, already animated: 4 s, unfolding out of a point of light."
+      },
+      {
+        "visual": true
+      }
     ],
     [
       "chg",
@@ -397,7 +465,17 @@ const PAGE = {
         "Debt pages.",
         "The demand and its artifacts."
       ],
-      "Built in the third piece."
+      "Built in the third piece.",
+      null,
+      null,
+      {
+        "src": "fear-entities-in-game-pics/LairLedger.png",
+        "alt": "The Lair's ledger book model, open on its tally pages",
+        "caption": "The ledger as it is today. The demand pages are not drawn yet; they come in the third piece."
+      },
+      {
+        "visual": true
+      }
     ],
     [
       "keep",
@@ -473,7 +551,12 @@ const PAGE = {
           "A",
           "Downs them, as a death does today",
           1,
-          "A teammate can still carry the body out to revive them."
+          "A teammate can still carry the body out to revive them.",
+          {
+            "src": "fear-entities-in-game-pics/wick_catch.png",
+            "alt": "The Wick's catch clip",
+            "caption": "The catch at 0.5 s; with option A it downs the player."
+          }
         ],
         [
           "B",
@@ -555,7 +638,12 @@ const PAGE = {
           "A",
           "The Ophan takes them at the portal as you leave",
           1,
-          "You watch it happen."
+          "You watch it happen.",
+          {
+            "src": "fear-entities-in-game-pics/ophan_take.png",
+            "alt": "The Ophan's take clip",
+            "caption": "The take, already animated: the lower wings sweep forward at 0.9 s."
+          }
         ],
         [
           "B",
@@ -574,7 +662,7 @@ const PAGE = {
     "next": "On approval I log it, build the Wick piece, and show you before-and-after screenshots from a co-op run before opening its pull request.",
     "todo": [
       "Pick an answer for each choice under Choices.",
-      "Tap <b>Copy my reply</b>.",
+      "Tap <b>Copy my reply<\/b>.",
       "Paste it into the chat and send it, or say what to change."
     ]
   }
@@ -583,6 +671,30 @@ const PAGE = {
 
 const ic = id => `<svg class="ico"><use href="#i-${id}"/></svg>`;
 const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+// A picture is found by shape (src or before), not position, because flow and files before it are optional.
+const picOf = (a, from) => a.slice(from).find(x => x && typeof x === "object" && !Array.isArray(x) && (x.src || x.before));
+let picN = 0; const PICS = [];
+const picHtml = p => {
+  if (!p) return "";
+  if (p.before && p.after) {
+    const id = "cmp" + (picN++), cap = p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : "";
+    const im = x => `<img src="${esc(x.src)}" alt="${esc(x.alt || p.caption || "")}">`;
+    return `<figure class="cmp"><div class="cmp-side"><div><b>Before</b>${im(p.before)}</div><div><b>After</b>${im(p.after)}</div></div>
+      <div class="cmp-slide"><div class="cmp-frame">${im(p.before)}${im(p.after)}</div><label for="${id}">Reveal after over before: drag to compare</label><input type="range" id="${id}" min="0" max="100" value="50" aria-label="Compare before and after: ${esc(p.caption || "")}"></div>${cap}</figure>`;
+  }
+  const alt = p.alt || p.caption || "", k = PICS.push({ src: p.src, alt, caption: p.caption || "" }) - 1;
+  return `<figure class="pic"><button type="button" data-pic="${k}" aria-label="Open full width: ${esc(alt)}"><img src="${esc(p.src)}" alt="${esc(alt)}">${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ""}</button></figure>`;
+};
+document.addEventListener("input", e => { if (e.target.matches(".cmp-slide input[type=range]")) e.target.closest(".cmp-slide").querySelector(".cmp-frame").style.setProperty("--pos", e.target.value + "%"); });
+const box = document.createElement("dialog"); box.className = "lightbox"; box.setAttribute("aria-label", "Picture");
+box.innerHTML = `<img alt=""><p></p><button type="button" class="secondary">Close</button>`; document.body.appendChild(box);
+let boxFrom = null;
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-pic]");
+  if (b) { const p = PICS[+b.dataset.pic]; boxFrom = b; box.querySelector("img").src = p.src; box.querySelector("img").alt = p.alt; box.querySelector("p").textContent = p.caption; box.showModal(); return; }
+  if (e.target === box || e.target.closest("dialog.lightbox")) box.close();  // tap anywhere on it closes; Escape does too
+});
+box.addEventListener("close", () => { if (boxFrom) boxFrom.focus(); boxFrom = null; });
 document.title = PAGE.title;
 document.getElementById("title").textContent = PAGE.title;
 document.getElementById("eyebrow").textContent = PAGE.eyebrow;
@@ -601,10 +713,10 @@ glance.innerHTML = PAGE.short.items.map(([i, s, t, k], n) =>
   `${n ? '<span class="arrow" aria-hidden="true">›</span>' : ""}<button type="button" class="g${k === "you" ? " you" : k === "done" ? " done" : ""}" data-s="${n}" aria-pressed="false"><span class="c">${ic(i)}</span>${esc(s)}</button>`).join("");
 function showItem(n) {
   glance.querySelectorAll(".g").forEach(b => b.setAttribute("aria-pressed", +b.dataset.s === n));
-  const [, , t, , creates, requires] = PAGE.short.items[n];
+  const [, , t, , creates, requires] = PAGE.short.items[n], pic = picOf(PAGE.short.items[n], 6);
   const needsYou = !/^Nothing/.test(requires);
   sd.innerHTML = `<h3>${esc(t)}</h3><div class="cr"><div class="crb"><span class="crh">${ic("swap")}Creates or changes</span><p>${esc(creates)}</p></div>
-    <div class="crb${needsYou ? " you" : ""}"><span class="crh">${ic("hand")}Requires</span><p>${esc(requires)}</p></div></div>`;
+    <div class="crb${needsYou ? " you" : ""}"><span class="crh">${ic("hand")}Requires</span><p>${esc(requires)}</p></div></div>${picHtml(pic)}`;
 }
 glance.addEventListener("click", e => { const b = e.target.closest("[data-s]"); if (b) showItem(+b.dataset.s); });
 if (PAGE.short.items.length) showItem(0);
@@ -620,15 +732,14 @@ if (document.getElementById("cc")) {
   const files = fs => !fs || !fs.length ? "" : `<div class="files"><h4>${fs.length} ${fs.length === 1 ? "file" : "files"} \u00b7 ${lineCounts(fs.reduce((t, f) => t + f[1], 0), fs.reduce((t, f) => t + f[2], 0))}</h4>` +
     fs.map(([p, a, r, parts]) => `<div class="frow"><code>${esc(p)}</code><span class="n">${lineCounts(a, r)}</span></div>` +
       (parts && parts.length ? `<ul class="parts">${parts.map(([w, pa, pr]) => `<li><span>${esc(w)}</span><span class="n">${lineCounts(pa, pr)}</span></li>`).join("")}</ul>` : "")).join("") + `</div>`;
-  document.getElementById("cc").innerHTML = PAGE.changes.map(([k, t, s, ft, d, fl, fs]) =>
-    `<details class="ci"><summary><span class="tag ${k}">${{ new: "New", chg: "Changed", keep: "Kept" }[k]}</span><span><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="more">More</span></summary>
-     <div class="detail">${ft ? `<div class="fromto"><span>${esc(ft[0])}</span><span aria-hidden="true">→</span><span class="to">${esc(ft[1])}</span></div>` : ""}${fl ? flow(fl) : ""}<p>${esc(d)}</p>${files(fs)}</div></details>`).join("");
+  document.getElementById("cc").innerHTML = PAGE.changes.map(([k, t, s, ft, d, fl0, fs0], n) => { const row = PAGE.changes[n], pic = picOf(row, 5), fl = Array.isArray(fl0) ? fl0 : null, fs = Array.isArray(fs0) ? fs0 : null; return `<details class="ci"><summary><span class="tag ${k}">${{ new: "New", chg: "Changed", keep: "Kept" }[k]}</span><span><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="more">More</span></summary>
+     <div class="detail">${ft ? `<div class="fromto"><span>${esc(ft[0])}</span><span aria-hidden="true">→</span><span class="to">${esc(ft[1])}</span></div>` : ""}${fl ? flow(fl) : ""}<p>${esc(d)}</p>${picHtml(pic)}${files(fs)}</div></details>`; }).join("");
 }
 
 if (document.getElementById("qs")) {
   document.getElementById("qs").innerHTML = PAGE.choices.map(([id, q, opts, why], n) =>
     `<fieldset class="q" style="border:0;padding:0;margin:0;min-width:0"><legend style="padding:0"><h3><span class="qn">${n + 1}</span>${esc(q)}</h3></legend>
-     ${opts.map(([v, l, rec, d]) => `<label class="opt"><input type="radio" name="${id}" value="${v}"><span><b>${v} · ${esc(l)}</b>${rec ? '<span class="rec">' + ic("check") + 'Suggested</span>' : ""}${d ? `<small>${esc(d)}</small>` : ""}</span></label>`).join("")}
+     ${opts.map(o => { const [v, l, rec, d] = o; return `<label class="opt"><input type="radio" name="${id}" value="${v}"><span><b>${v} · ${esc(l)}</b>${rec ? '<span class="rec">' + ic("check") + 'Suggested</span>' : ""}${d ? `<small>${esc(d)}</small>` : ""}</span></label>${picHtml(picOf(o, 4))}`; }).join("")}
      <label class="opt own"><input type="radio" name="${id}" value="own"><span><b>Something else</b><small>Write your own answer.</small><input type="text" class="owntext" data-for="${id}" aria-label="Your own answer to: ${esc(q)}" placeholder="Type your idea here"></span></label>
      ${why ? `<details class="why"><summary>Why I suggest this</summary><p>${esc(why)}</p></details>` : ""}</fieldset>`).join("");
 }

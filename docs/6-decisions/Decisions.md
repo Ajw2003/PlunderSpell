@@ -3,6 +3,18 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-15 — Proposal pages take the game's own look
+
+**Status.** Decided by the owner.
+
+**Context.** The house-rules page builder now refuses to build without `docs/page-style.json`.
+
+**Decision.** The style file is drafted from `docs/generated/design-system/project/tokens.json`.
+Verdigris (#5FA288) means "you act", madder (#C4542E) means blocking, and deep verdigris
+(#2E4C41) is the accent. Lapis stays reserved for the voice and orpiment for loot, as the tokens
+say, so neither appears on a page. A page proposing a visual change must carry a picture. The
+fear-entities proposal of 2026-10-14 was rebuilt in this look, with the art review sheets attached.
+
 ## 2026-10-14 — Build plan proposed: the Wick and the Ophan in raids
 
 **Status.** Proposed, waiting on the owner.
