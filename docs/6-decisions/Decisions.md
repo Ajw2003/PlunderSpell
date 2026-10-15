@@ -3,7 +3,31 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
-## 2026-10-15 — Proposal pages take the game's own look
+## 2026-10-15 — Build plan approved: the Wick and the Ophan in raids
+
+**Status.** Approved by the owner. Replaces the proposal entry of 2026-10-14 below.
+
+**Context.** The owner answered the six open choices on
+`docs/plans/fear-entities/fear-entities-in-game.html`. The four answers already settled in
+`docs/plans/handoff-2026-10-11-true-form-and-creature.md` stand: a Wick catch kills, more guards
+stand on the ground floors, the dropped lantern is left where it fell, and the Ophan passes through
+walls and cannot be hidden from.
+
+**Decision.**
+- **Order.** The Wick (#417) and the quota (#419) are built at the same time by two builders, since
+  they touch different files. The Ophan (#418) comes last, as one whole feature (arrival, hunt and
+  catch) in one pull request, merged only when complete.
+- **Guards.** One more guard per ground-floor zone, in every Age.
+- **The Ophan's hunt.** It arrives 90 s before the portal closes at 2.5 m/s, and speeds up to the
+  players' speed (5 m/s, `RaidPlayer.prefab`) by the time 30 s are left.
+- **Paying.** Artifacts are placed on a new altar beside the Lair's portal. Each next demand is drawn
+  at random from the artifacts of the Age being raided.
+- **A hunted raid's outcome.** Caught empty-handed: killed. Caught carrying the artifact it wants:
+  it takes the artifact and the player lives. Reaching the portal before being caught: the player
+  lives and keeps the whole haul. This replaces the handoff's rule that every hunted raid's spoils
+  are taken.
+
+
 
 **Status.** Decided by the owner.
 
@@ -17,7 +41,7 @@ fear-entities proposal of 2026-10-14 was rebuilt in this look, with the art revi
 
 ## 2026-10-14 — Build plan proposed: the Wick and the Ophan in raids
 
-**Status.** Proposed, waiting on the owner.
+**Status.** Superseded by "Build plan approved: the Wick and the Ophan in raids", 2026-10-15.
 
 **Context.** The Wick's and the Ophan's models and clips import cleanly in Unity (checked
 2026-10-14, Today). Nothing puts them in a raid yet.
