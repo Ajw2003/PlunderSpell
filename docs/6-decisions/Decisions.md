@@ -3,6 +3,18 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-15 — The Wick: three calls the builder made, confirmed by the owner (#417)
+
+**Status.** Decided by the owner.
+
+**Decision.**
+- The Wick cannot be killed either: damage always leaves a Lantern Warden one health point, in
+  both forms (`GuardTrueForm.LimitDamage`). Running and hiding stay the only answer.
+- A hard blow to the head stuns the human warden for 6 s, and it turns into the Wick when it gets
+  up: the blow is a hit, and a hit turns it.
+- `ScaleInvariantTests` skips the inactive Wick model inside a Lantern Warden. The Wick stoops to
+  2.5 m under arches, so its 3.1 m standing height is not a guard's ceiling check.
+
 ## 2026-10-15 — The fear-entities plan: five issues and a systems doc
 
 **Status.** Planned; waiting on the owner's build plan approval.
