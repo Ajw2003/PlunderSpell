@@ -3,6 +3,18 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-15 — The fear-entities plan: five issues and a systems doc
+
+**Status.** Planned; waiting on the owner's build plan approval.
+
+**Context.** The owner approved the design ("Design approved: fear entities"). The picks logged in
+"Build plan approved: the Wick and the Ophan in raids" below added two pieces of work.
+
+**Plan.** Five issues, all part of #386: #417 the Wick, #420 one more guard per ground-floor zone in
+every Age, #419 the quota (after the owner approves `docs/plans/debt-to-quota/retiring-the-debt.html`),
+#421 the altar model, and #418 the Ophan, last. The order and the rules are in
+`docs/4-systems/fear.md`.
+
 ## 2026-10-15 — Build plan approved: the Wick and the Ophan in raids
 
 **Status.** Approved by the owner. Replaces the proposal entry of 2026-10-14 below.
