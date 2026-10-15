@@ -93,19 +93,31 @@ sleep 5
 log "spawn: $(host spawn)"
 sleep 2
 log "look: $(host look)"
+log "client: $(read_side client face)"
 sleep 1
 both "before the turn"
 shots before
+slow() { log "slow $1: host $(read_side host slow "$1") | client $(read_side client slow "$1")"; }
 log "provoke: $(host provoke)"
+slow 0.2   # screenshots take seconds; the Wick hunts at 4.2 m/s
 shots turning
 both "start of the turn"
-sleep 1
-both "after the turn (the model swapped)"
-shots swapped
-sleep 6
-both "hunting"
-shots hunting
 sleep 8
+shots standing
+both "the Wick standing (model swapped)"
+sleep 2
+shots stalking
+both "stalking or hunting"
+# The catch: wait (bounded) for the host's warden to reach Combat, slow right down, then shoot.
+for _ in $(seq 1 60); do
+    case "$(read_side host read)" in *"state=Combat"*) break ;; esac
+    sleep 0.5
+done
+slow 0.05
+shots catch
+both "at the catch"
+slow 1
+sleep 3
 both "after the catch"
 shots after
 log "client log error lines: $(grep -ci 'error\|exception' "$out/$label-client.log")"

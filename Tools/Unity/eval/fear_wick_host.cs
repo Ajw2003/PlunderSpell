@@ -1,5 +1,5 @@
 // Play mode, host (Editor) only. Actions of Tools/Unity/fear_wick_check.sh (#417); the script fills in the action.
-//   spawn    clear the garrison, end the arrival grace and stand one Lantern Warden 4 m in front of the host's
+//   spawn    clear the garrison, end the arrival grace and stand one Lantern Warden 10 m in front of the host's
 //            player with its back to both players, so it sees nobody yet
 //   provoke  turn the warden round to face the host's player, within its sight: it confirms a sighting
 //   look     put the host's view on the warden
@@ -18,7 +18,7 @@ if (action == "spawn")
     Plunderspell.Guards.GuardArrivalGrace.End();
     var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>("Assets/_Project/Prefabs/Enemies/HighMedieval/LanternWarden.prefab");
     var forward = me.transform.forward; forward.y = 0f; forward.Normalize();
-    var spot = me.transform.position + forward * 4f;
+    var spot = me.transform.position + forward * 7f;
     // PurrNet's proxy, since code compiled by the eval is not rewritten to spawn on the network by itself.
     var made = (UnityEngine.GameObject)PurrNet.UnityProxy.Instantiate(prefab, spot, UnityEngine.Quaternion.LookRotation(forward));
     made.GetComponent<Plunderspell.Guards.Guard>().Configure(Plunderspell.Alarm.EnemyDirector.Current);
@@ -33,6 +33,9 @@ if (action == "provoke")
     warden.Status.ClearAll();
     warden.transform.rotation = UnityEngine.Quaternion.LookRotation(toward);
     warden.Sight.LookNext();
+    // Straight to Chase on the player: the first look that sees them is the confirmed sighting that turns it.
+    warden.States.Chase.Follow(me.transform);
+    warden.ChangeState(warden.States.Chase);
     return "warden now faces the host's player, " + toward.magnitude.ToString("F1") + " m away; sees "
         + (warden.Sight.Visible != null ? warden.Sight.Visible.name : "nobody") + ", intruders known "
         + Plunderspell.Alarm.EnemyDirector.IntrudersOf(warden.Link.Director).Count + ", director " + (warden.Link.Director != null);
