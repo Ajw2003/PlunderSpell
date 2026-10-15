@@ -17,7 +17,7 @@ namespace Plunderspell.EditorTools
     {
         public const string ModelPath = ArtBibleModelImporter.FearRoot + "TheWick/TheWick.fbx";
         public const string ControllerPath = ArtBibleModelImporter.FearRoot + "TheWick/TheWick.controller";
-        public const string PrefabPath = "Assets/_Project/Prefabs/Enemies/Fear/TheWick.prefab";
+        public const string PrefabPath = "Assets/_Project/Prefabs/Fear/TheWick.prefab";
 
         /// <summary>Agent speeds the walk and run clips were authored for (handoff, Part A clip table).</summary>
         public const float StalkSpeed = 1.4f;

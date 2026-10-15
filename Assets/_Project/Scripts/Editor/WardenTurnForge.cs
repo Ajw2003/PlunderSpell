@@ -17,8 +17,9 @@ namespace Plunderspell.EditorTools
     {
         public const string WardenPrefabPath = "Assets/_Project/Prefabs/Enemies/HighMedieval/LanternWarden.prefab";
         public const string ControllerPath = ArtBibleModelImporter.EnemyRoot + "High/LanternWarden/LanternWarden.controller";
-        public const string LanternPrefabPath = "Assets/_Project/Prefabs/Enemies/Fear/FallenLantern.prefab";
-        public const string LanternMaterialPath = "Assets/_Project/Prefabs/Enemies/Fear/FallenLantern.mat";
+        // Outside Prefabs/Enemies: the lantern and the Wick's model are parts of the warden's turn, not roster enemies.
+        public const string LanternPrefabPath = "Assets/_Project/Prefabs/Fear/FallenLantern.prefab";
+        public const string LanternMaterialPath = "Assets/_Project/Prefabs/Fear/FallenLantern.mat";
 
         [MenuItem("Plunderspell/Fear/Build The Warden's Turn")]
         public static void Build()
@@ -74,7 +75,10 @@ namespace Plunderspell.EditorTools
                 var collider = body.AddComponent<CapsuleCollider>();
                 collider.radius = 0.11f;
                 collider.height = 0.32f;
-                body.AddComponent<Rigidbody>().mass = 1.5f;
+                var physics = body.AddComponent<Rigidbody>();
+                physics.mass = 1.5f;
+                physics.linearDamping = 3f; // it comes to rest where it fell, not rolls on
+                physics.angularDamping = 6f;
                 body.AddComponent<NetworkTransform>();
                 return PrefabUtility.SaveAsPrefabAsset(body, LanternPrefabPath);
             }

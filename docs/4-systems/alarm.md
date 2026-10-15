@@ -437,3 +437,29 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
 - **Tests.** `GuardCoreSensesTests` (throttle, stagger, cone, own-collider line of sight, grace, wake, threshold)
   and `GuardCoreBodyTests` (a move request reaching Arrived through the service, health, lobby scaling, the
   replicated state, death, shove, attack signal), both PlayMode in `Tests/Runtime`.
+
+## The Lantern Warden's true form (#417)
+
+Only a guard whose `GuardTuning.TrueForm.CanTurn` is set turns (the Lantern Warden prefab). The rules are in
+`Core/GuardTrueForm.cs`, decided on the server; every number is in `Core/TrueFormTuning.cs`.
+
+- **What turns it.** Confirmed sight: `ChaseState.Tick` asks `TurnOnSight` the first time it really sees a player
+  (`ChaseState.cs:79`), so a cry that sends it chasing a player it has not seen does not turn it. A hit:
+  `GuardTrueForm` listens for `DamageDealt` on the bus (`GuardTrueForm.cs:50`). A missed Somnus: `GuardHearing` raises
+  `WokenByNoise` when a noise of 0.5 or more wakes a sleeper (`GuardHearing.cs:64`) and a `VoiceCast` noise turns it.
+  Hearing awake only investigates, as for every guard. One way: `Guard.IsTurned` is a replicated SyncVar (`Guard.cs:54`).
+- **The turn.** `States/TurningState.cs` (alert state `Turning`) stops the guard for `TurnSeconds` (1.6 s) and on entry
+  writes the Wick's numbers over its tuning (`TrueFormTuning.BecomeWick`: stalk 1.4, chase 4.2, field of view 360, a
+  catch that deals 100000), limits its eyes to the light radius (`GuardSight.SeeOnlyInLight`) and calls `MarkTurned`.
+  After it, the ordinary Patrol, Investigate, Chase and Combat states run at the Wick's speeds: a seen player is hunted,
+  a hit or a woken sleeper sends it to look where it was hit or woken. A catch is the Combat melee strike at 100000 damage.
+- **Human form.** `LimitDamage` (`Guard.TakeDamage`) always leaves one point of health, in either form. A hit of 20 or
+  more at 1.5 m or higher over the feet is a hard blow to the head: it stuns the guard for 6 s (`Fall`, `GuardTrueForm.cs:71`)
+  and it turns when the stun ends (the hit is not forgotten). Any other hit turns it at once.
+- **Every machine.** `Guard.TurnBegan` fires on every peer (the host in `MarkTurned`, a client from the replicated flag);
+  `Core/GuardTurnView.cs` raises `GuardTurned` on the bus there, plays `warden_turn`, drops the lantern at the clip's
+  `PropDetach` event (`Core/WardenLanternDrop.cs`: the host spawns `FallenLantern.prefab`, a networked rigidbody; the
+  warden's lantern bone shrinks to nothing on every machine) and swaps in the Wick child at `SwapSeconds` (0.9 s). The
+  Wick's Animator speed follows the guard's real movement (the one per-frame piece, marked in the code).
+- **Built by** `Plunderspell > Fear > Build The Wick` (`Editor/WickPrefabForge.cs`) and `Build The Warden's Turn`
+  (`Editor/WardenTurnForge.cs`). Tests: `Tests/Runtime/GuardTrueFormTests.cs`. Co-op check: `Tools/Unity/fear_wick_check.sh`.

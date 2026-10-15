@@ -1,6 +1,6 @@
 # Fear: the Wick, the Ophan and the quota
 
-**Status: planned, not built.** This doc describes the approved plan (Decisions, 2026-10-15, "Build
+**Status: the Wick is built (#417); the rest is planned, not built.** This doc describes the approved plan (Decisions, 2026-10-15, "Build
 plan approved: the Wick and the Ophan in raids"). Each section is rewritten from the code as its
 piece lands. Design: `docs/7-design/fear-pass.md`. Plan page:
 `docs/plans/fear-entities/fear-entities-in-game.html`. Debt inventory:
@@ -21,11 +21,19 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
 
 ## Rules that must stay true
 
-- **The turn is one-way.** A Lantern Warden turns when it confirms sight of a player, is hit, or is
-  woken by a missed Somnus; hearing only sends it to investigate. Once turned it stays the Wick for
-  the raid. In human form it is never killed: a hard blow to the head stuns it.
-- **The Wick kills on a catch**, sees only inside its own fire's light, stalks at 1.4 m/s and hunts
-  at 4.2 m/s. The dropped lantern is a loose physics object, in the same place on every machine.
+- **The turn is one-way (built, #417).** A Lantern Warden turns when it confirms sight of a player
+  (`ChaseState.cs:79`), is hit (`DamageDealt`, `GuardTrueForm.cs:50`), or is woken from Somnus by a cast's noise
+  (`GuardHearing.cs:64`); hearing only sends it to investigate. Once turned (`Guard.IsTurned`, a replicated flag,
+  `Guard.cs:54`) it stays the Wick for the raid. In either form it is never killed (`GuardTrueForm.LimitDamage`
+  leaves one health point); in human form a hard blow to the head (20 damage or more, 1.5 m or higher) stuns it
+  for 6 s and it turns when it gets up.
+- **The Wick kills on a catch** (the Combat strike deals 100000), sees only inside its own fire's light (6 m all round,
+  `GuardSight.SeeOnlyInLight`), stalks at 1.4 m/s and hunts at 4.2 m/s (`TrueFormTuning.BecomeWick`). The dropped
+  lantern is a loose networked rigidbody the host spawns (`WardenLanternDrop`), in the same place on every machine,
+  left where it fell, dark. Mechanism: `docs/4-systems/alarm.md`, "The Lantern Warden's true form (#417)".
+- **The "guard turned" event** (`GuardTurned`, `Alarm/EnemyDirectorEvents.cs`) is raised on every machine at the
+  start of the turn (`GuardTurnView`); `AudioDirector` plays the player-down sting on it as a placeholder, and the
+  camera and music hook in there.
 - **A demand falls due every 3 to 5 raids** (a tuning asset). Each is drawn at random from the
   artifacts of the Age being raided, shown in the Lair's ledger, and paid by placing the artifacts on
   the altar beside the portal. While a demand is unpaid, every raid is hunted.
