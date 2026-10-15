@@ -50,18 +50,18 @@ code { font: 13px var(--mono); }
 
 <main>
   <header style="display:grid;gap:10px">
-    <span class="eyebrow">Fear pass · #386 · proposal, 2026-10-14</span>
+    <span class="eyebrow">Proposal for issue #386, Raids feel frightening · 2026-10-14</span>
     <h1>The Wick and the Ophan, in game</h1>
-    <p class="lede">Both creatures' models and clips are built and, as of today, import cleanly in Unity. None of them appear in a raid yet. This page proposes how to put them there and asks five questions only you can answer.</p>
+    <p class="lede">The models and animation clips for both creatures are built and, as of today, import cleanly in Unity. Neither appears in a raid yet. This page proposes how to put them there and asks five questions only you can answer.</p>
   </header>
 
   <section>
     <h2>Where it stands today</h2>
     <figure>
       <img src="wick-and-ophan.png" alt="The Wick, 3.1 metres tall, standing beside the Ophan of Hours, 9.5 metres tall, rendered in the Unity Editor">
-      <figcaption>Rendered in the Editor today, seen from behind. The Wick is 3.1 m tall and the Ophan is 9.5 m. Checks passed: compile clean, the 7 fear import tests, EditMode 250 passed and 3 skipped.</figcaption>
+      <figcaption>Rendered in the Editor today, seen from behind. The Wick is 3.1 m tall and the Ophan is 9.5 m. Checks passed: the code compiles with no errors, the 7 fear import tests pass, and the full editor test suite shows 250 passed and 3 skipped.</figcaption>
     </figure>
-    <p>One thing found today shapes the build: the Ophan's Animator has to sit on its <code>TheOphanOfHours_Rig</code> child object. If it sits on the top object, its clips miss every bone and draw the creature a hundred times too big.</p>
+    <p>One thing found today shapes the build: the Ophan's Animator has to sit on its <code>TheOphanOfHours_Rig</code> child object. If it sits on the top object instead, its animation clips miss every bone and the creature is drawn a hundred times too big.</p>
   </section>
 
   <section>
@@ -70,16 +70,16 @@ code { font: 13px var(--mono); }
       <tr><th>Existing</th><th>Fate</th><th>Why</th></tr>
       <tr><td>The guard's state machine: Patrol, Investigate, Chase, Combat, HoldBelow, Stunned, Slept, OnFire, Dead (<code>GuardStateSet.cs</code>)</td><td><span class="tag change">reuse</span></td><td>The Wick becomes one more state, True Form, on the same Lantern Warden guard. No new enemy class.</td></tr>
       <tr><td>The Lantern Warden prefab, weight 12 in the High Medieval roster</td><td><span class="tag change">change</span></td><td>It carries the Wick model too, hidden until the turn.</td></tr>
-      <tr><td>Guard death (<code>DeadState</code>, <code>GuardDeathPlayback</code>)</td><td><span class="tag change">change</span></td><td>The design says a human-form guard is never killed; a hit to the head stuns it instead. Dead stays only for the other guard types.</td></tr>
+      <tr><td>Guard death (<code>DeadState</code>, <code>GuardDeathPlayback</code>)</td><td><span class="tag change">change</span></td><td>The design says a guard in human form is never killed; a hit to the head stuns it instead. The Dead state stays only for the other guard types.</td></tr>
       <tr><td>The wizard's Animator built by code (<code>WizardPlayerSetup.cs</code>), the enemy prefab forge (<code>EnemyPrefabForge.cs</code>)</td><td><span class="tag keep">keep</span></td><td>Copied for both creatures, so nothing is set by hand in the Inspector.</td></tr>
       <tr><td><code>EventManager</code></td><td><span class="tag keep">keep</span></td><td>New events: a guard turned, the Ophan arrived, the Ophan caught someone. Camera, sound and music listen to them.</td></tr>
-      <tr><td>The debt and the Collector (6 files read <code>TotalDebt</code>; <code>CollectorRules.cs</code>)</td><td><span class="tag drop">replace, piece 3</span></td><td>The Ophan's artifact quota replaces them. A keep/change/drop list with line numbers comes before that piece starts.</td></tr>
+      <tr><td>The debt and the Collector (6 files read <code>TotalDebt</code>; <code>CollectorRules.cs</code>)</td><td><span class="tag drop">replace, piece 3</span></td><td>The Ophan's artifact quota replaces them. Before piece 3 starts, I will bring you a list of what to keep, change or drop, with line numbers.</td></tr>
     </table></div>
   </section>
 
   <section>
     <h2>The build, in three pieces</h2>
-    <p>Each piece is its own pull request into <code>staging-2026-10-11</code>, with tests, a co-op check (Editor host plus a built client) and screenshots I have looked at.</p>
+    <p>Each piece is its own pull request into the <code>staging-2026-10-11</code> branch. Each comes with tests, a co-op check (the Unity Editor as host plus a built client joining it) and screenshots I have looked at.</p>
     <div class="pieces">
       <div class="piece">
         <span class="who wick">Piece 1 · the Wick</span>
@@ -163,6 +163,6 @@ code { font: 13px var(--mono); }
     <h2>To approve</h2>
     <p>Reply with the phrase and your picks, for example:</p>
     <code>Build plan approved: fear entities 1A 2A 3A 4A 5A</code>
-    <p>Or tell me what to change. Answers 3 to 5 only matter for pieces 2 and 3, so piece 1 can start on 1 and 2 alone.</p>
+    <p>Or tell me what to change. Choices 3 to 5 only affect pieces 2 and 3, so piece 1 can start once you have answered choices 1 and 2.</p>
   </section>
 </main>
