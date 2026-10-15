@@ -3,6 +3,18 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-14 — Build plan proposed: the Wick and the Ophan in raids
+
+**Status.** Proposed, waiting on the owner.
+
+**Context.** The Wick's and the Ophan's models and clips import cleanly in Unity (checked
+2026-10-14, Today). Nothing puts them in a raid yet.
+
+**Proposal.** Three pieces, one pull request each into `staging-2026-10-11`: #417 The Lantern
+Warden turns into the Wick in raids; #418 The Ophan of Hours arrives in hunted raids and catches
+players; #419 The Ophan's artifact quota replaces the debt and the Collector. Seven choices for the
+owner, on the page `docs/plans/fear-entities/fear-entities-in-game.html`.
+
 ## 2026-10-11 — The Ophan may use lapis
 
 **Context.** The art bible keeps lapis (`#7A6AA0`, voice and portals) off every enemy
