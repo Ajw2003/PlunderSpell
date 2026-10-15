@@ -73,7 +73,7 @@ namespace Plunderspell.Raid
         /// on the gatehouse, as it did before players arrived by portal.
         /// </summary>
         public static List<GuardPlacement> Plan(ProceduralCastleData castle, int seed,
-            float densityScale = 1f, int safeModuleIndex = -1)
+            float densityScale = 1f, int safeModuleIndex = -1, bool addGroundFloorExtras = true)
         {
             var placements = new List<GuardPlacement>();
             if (castle?.PlacedModules == null)
@@ -113,7 +113,47 @@ namespace Plunderspell.Raid
                     module.Zone));
             }
 
+            if (addGroundFloorExtras)
+                AddGroundFloorExtraGuards(castle, seed, placements, hasSafeCentre, safeCentre);
             return placements;
+        }
+
+        /// <summary>
+        /// The fear rule (#420): every zone that has a ground-floor room gets one more guard, on top of
+        /// the chance rolls and the lobby scaling, so the threat is seen from the gate. It prefers a
+        /// room no guard holds yet. Its own random stream, so the rest of the garrison stays put.
+        /// </summary>
+        private static void AddGroundFloorExtraGuards(ProceduralCastleData castle, int seed,
+            List<GuardPlacement> placements, bool hasSafeCentre, Vector2Int safeCentre)
+        {
+            var rng = new System.Random(unchecked(seed * 31 + 9187));
+            var guardedRooms = new HashSet<int>();
+            foreach (GuardPlacement placement in placements)
+                guardedRooms.Add(placement.ModuleIndex);
+
+            foreach (CastleZone zone in Enum.GetValues(typeof(CastleZone)))
+            {
+                var free = new List<int>();
+                var held = new List<int>();
+                for (int i = 0; i < castle.PlacedModules.Count; i++)
+                {
+                    ProceduralCastleData.PlacedModule module = castle.PlacedModules[i];
+                    bool isGroundRoom = module.Zone == zone && module.Level == CastleLevels.Ground
+                        && module.Storeys <= 1 && !module.IsExtractionExit && i != castle.ExtractionExitIndex;
+                    if (!isGroundRoom || (hasSafeCentre
+                        && ChebyshevDistance(module.GridPosition, safeCentre) <= SafeEntranceRadius))
+                        continue;
+                    (guardedRooms.Contains(i) ? held : free).Add(i);
+                }
+
+                List<int> choices = free.Count > 0 ? free : held;
+                if (choices.Count == 0)
+                    continue;
+
+                int room = choices[rng.Next(0, choices.Count)];
+                placements.Add(new GuardPlacement(room, StandingPoint(castle.PlacedModules[room]),
+                    BuildRoute(castle, room, rng, hasSafeCentre, safeCentre), zone));
+            }
         }
 
         private const float FloorSlab = 0.30f;
