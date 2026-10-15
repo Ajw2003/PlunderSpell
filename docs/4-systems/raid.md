@@ -129,6 +129,21 @@ defaults, not playtested. A zone's chance of a guard is capped at 1, so the cryp
 seed 100454263: 1 player met 8 guards at 80 health, 2 players 8 at 100, 4 players 15 at 140. Not
 tried: an actual four-machine lobby.
 
+### One more guard per ground-floor zone (2026-10-15, #420)
+
+After the chance rolls, `GuardPlacementPlanner.Plan` calls `AddGroundFloorExtraGuards`
+(`GuardPlacementPlanner.cs:117`, defined at `:126`): every zone that has a ground-floor room gets
+exactly one extra guard, in every Age, so the threat is seen from the gate. The extra prefers a
+room no guard holds yet, never stands in the arrival's safe ring or the exit, and skips stairs. Zones
+with no eligible ground room (or all inside the safe ring) get none. It has its own random stream
+(`seed * 31 + 9187`), so the guards that were already planned keep their rooms and order; the extras
+are appended after them. Lobby scaling only moves the density, so it applies on top. The spawner
+draws the extra from the Age's roster by its zone like any other guard (`GuardSpawner.cs:110`).
+`Plan(..., addGroundFloorExtras: false)` gives the old garrison for comparison.
+`GroundFloorExtraGuardTests` checks four Ages over seeds 1-20: old guards unchanged, one extra per
+zone, extras on the ground only. The Age of Powder has no registry of its own, so it builds from the
+default rooms. Screenshots: `docs/generated/fear-guards-2026-10-15/`.
+
 ### Loot in the portal (2026-09-26, #158)
 
 Loot put down inside the portal stops moving and cannot break, for the players' sanity and so a
