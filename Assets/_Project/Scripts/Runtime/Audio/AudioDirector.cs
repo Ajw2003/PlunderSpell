@@ -101,6 +101,8 @@ namespace Plunderspell.Audio
             EventManager.Instance?.Subscribe(this, (PortalOpened e) => OnPortalOpened(e.Point));
             EventManager.Instance?.Subscribe(this, (HaulInZoneChanged e) => OnHaulChanged(e.Worth, e.Pieces));
             EventManager.Instance?.Subscribe(this, (ExtractionResolved e) => OnExtractionResolved(e.Worth, e.Saved));
+            // The player-down sting stands in until the turn has its own sound (#417).
+            EventManager.Instance?.Subscribe(this, (GuardTurned e) => Play(SoundNames.PlayerDownSting, ListenerPosition));
         }
 
         private void OnDisable()
