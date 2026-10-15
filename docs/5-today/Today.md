@@ -1,5 +1,21 @@
 # Today
 
+**2026-10-14 - the fear art's import rules checked in Unity (#413, under #386).** Run on this PC's
+Editor, logs in `docs/generated/fear-import-413/`: compile clean; `FearImportTests` 7/7; EditMode
+250 pass / 3 skipped (the old 243 plus the 7 new); `ArtBibleModelsImportWithTheirOwnedSettings`
+passes. After a forced reimport (`fear_import_report.cs`, output `import-report.log`): the Wick is
+Humanoid with a valid avatar and no glow, the Ophan Generic with a valid avatar and its emission on,
+all nine Wick clips and five Ophan clips named, looped and carrying the events the handoff lists,
+`TheWick_FireMask` sRGB off. `wick-and-ophan.png` shows both standing at their heights (rest pose,
+seen from behind). **Found:** the Ophan's clips address bones from its armature down (`Root/Core/...`)
+and write a x100 scale on their top node, while the model's bones sit under `TheOphanOfHours_Rig`. So
+the Ophan's Animator must sit on the `TheOphanOfHours_Rig` child, not the model's top object, or every
+bone is missed and the creature is drawn a hundred times too big. Sampled there, `ophan_arrive` frame
+0 sets `Core` to 0.02, as authored. Not looked at by eye: the clips playing (a preview scene does not
+re-skin, so the picture is the rest pose) and the Ophan's pupil glow.
+
+---
+
 **2026-10-12 (latest) - import rules for the fear art, written but not run (#413, under #386).**
 `ArtBibleModelImporter` now imports the Ophan of Hours Generic (a fear-folder list,
 `ArtBibleEnemyCatalog.FearGenericRigModels`, so the Ages' test-held list is untouched) and binds its

@@ -25,8 +25,10 @@ handoff.
 
 Read **"Working in the engine"** just below first. Then:
 
-1. **Check the import rules in Unity** (#413): written and in the pull request, never compiled
-   here. The four steps under "The import rules" below.
+1. ~~**Check the import rules in Unity** (#413)~~ **Done 2026-10-14**: all four steps passed (Today,
+   2026-10-14; logs in `docs/generated/fear-import-413/`). One finding for step 3: put the Ophan's
+   Animator on its `TheOphanOfHours_Rig` child, because its clips bind from the armature down and set
+   a x100 scale on whatever object holds the Animator.
 2. **The Wick in the game** (Part A): prefab, Animator, the turn on the Lantern Warden, the
    true-form state, the "guard turned" event, tests, a co-op check. Ask the guard-count question
    before touching guard placement.
