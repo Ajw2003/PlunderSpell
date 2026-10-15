@@ -1,0 +1,43 @@
+{
+  "title": "Retiring the Debt",
+  "eyebrow": "Keep, change or drop list for approval · #419 The Ophan's artifact quota replaces the debt and the Collector · nothing built yet",
+  "replyPrefix": "Debt list approved: quota, picks",
+  "reply": "",
+  "short": {
+    "lead": "Before the quota is built, this page lists everything the coin debt and the Collector do today and what happens to each. The debt lives in 10 game files and 11 test files. Seven behaviours change into the quota, four are dropped, and three stay as they are. Three choices are open.",
+    "hint": "Tap a step to see what it creates and what it needs from you.",
+    "key": [["Done", "done"], ["We build it", ""], ["You act on it", "you"]],
+    "items": [
+      ["search", "Read", "Every debt behaviour, read from the code", "done", "The rows under Changes, each with its file and line, read on 2026-10-15.", "Nothing from you."],
+      ["lock", "You approve", "You approve this list", "you", "A decisions-log entry, and the quota builder may start.", "Your three picks, sent with \"Debt list approved: quota\"."],
+      ["list", "The quota", "The quota builder works from this list", "", "Issue #419, The Ophan's artifact quota replaces the debt and the Collector, built at the same time as issue #417, The Lantern Warden turns into the Wick in raids.", "Nothing more; the list is the builder's checklist."]
+    ]
+  },
+  "changes": [
+    ["chg", "The debt total becomes the quota's state", "The saved 500-coin debt becomes the open demand, the raids left before it is due, and what sits on the altar.", ["A coin total, 500 at the start (LairHubManager.cs:25, LairState.cs:13).", "The open demand, raids left until it is due, and the artifacts placed."], "Saved the same way the debt is today, one set of keys per save slot. The save-exists check (LairHubManager.cs:115) reads the new key instead of the debt key."],
+    ["chg", "The set-out moment rolls the demand", "Where the Collector collects today, the count of raids left drops by one, and a new demand is rolled every 3 to 5 raids.", ["The Collector takes each seat's share, then the debt grows by 50 (RaidDirector.cs:252-261).", "The count drops by one; at zero a demand is rolled from the Age being raided, and the raid is marked hunted while it is unpaid."], "Issue #418, The Ophan of Hours arrives in hunted raids, will read the hunted mark later."],
+    ["chg", "Lair events", "The debt and Collector events are renamed for the quota.", ["DebtChanged, CollectorPaid, CollectorSpoke (LairEvents.cs:8-13, 30-43).", "QuotaChanged, ArtifactPaid, DemandMade."], "Same event manager, same listeners; only the names and what they carry change."],
+    ["chg", "The Lair screen's ledger", "The Owed panel and the Collector's line become the demand.", ["Owed 350 coin, each purse's share and payment, and \"The Collector takes 200 from I\" (LedgerPageText.cs:16-37).", "The demanded artifacts with a sketch of each, and raids left until the demand is due. Purses and the last raid stay."], "The sketches come from the artifacts' existing art.", {"src": "docs/generated/collector-solo-2026-10-07/run1-ledger-after.png", "alt": "The Lair screen with Owed 350 coin, a purse owing 350, and the Collector's line", "caption": "The Lair screen today (2026-10-07): the Owed panel, the purse's owes and paid lines, and the Collector's line at top right all change."}, {"visual": true}],
+    ["chg", "Co-op copies of the ledger", "The host still sends the ledger to the client; the message carries the demand instead of the debt.", ["Purses, paid, presence and the Collector's line in one string (LairHubManager.cs:292-355, RaidDirector.cs:81-87).", "Purses, presence and the demand."], "The client still never saves the host's campaign."],
+    ["chg", "Selling and purses", "Coin from a sale is banked as Market money only; nothing pays a debt.", ["A sale banks coin, then pays the debt down (LairHubManager.cs:168-209).", "A sale banks coin into the seat's purse, spent only in the Market."], "Each seat's strongbox stays."],
+    ["chg", "The main menu's save line", "The \"debt\" word on each save goes; what replaces it is choice 2.", ["\"Save 1 · debt 350 · gold 120\" (MainMenuScreen.cs:141).", "See the second choice, on what each save line shows."], "Text only."],
+    ["chg", "The Collector and its equal shares", "Dropped.", ["Each present seat pays min(purse, share), shares rounded up (CollectorRules.cs:13-38, LairHubManager.cs:215-272).", "Nothing; the Ophan takes artifacts, not coin."], "A friend covering another's share goes with it. CollectorTests.cs is deleted."],
+    ["chg", "The debt growing each raid", "Dropped.", ["+50 coin each time you set out (LairHubManager.cs:31, 277-289).", "Nothing; the 3-to-5-raid demand is the clock now."], "Whether it comes back later is the third choice."],
+    ["chg", "Clearing the debt", "Dropped.", ["Reaching zero logs DEBT_CLEARED, the old ending (LairHubManager.cs:178-184, 265-266).", "Nothing; demands never end."], "The design says the only way out is one day defeating the Ophan together. Whether it gets an issue to come back later is the third choice."],
+    ["chg", "The raid HUD's debt value", "Dropped.", ["The HUD carries the debt but never draws it (RaidHudModel.cs:28, RaidHudPresenter.cs:65, 142).", "Nothing."], "No picture: nothing on screen changes."],
+    ["keep", "Who is in the Lair, banked gold, and the last raid line", "Kept as they are.", null, "Presence tracking (LairHubManager.cs:230-240), BankedGoldChanged (LairEvents.cs:15-20) and the ledger's last-raid line (LedgerPageText.cs:19-21)."],
+    ["keep", "Tests", "Ten test files are rewritten to the quota; one is deleted.", null, "Deleted: CollectorTests.cs. Rewritten: CoinPouchTests, PlunderspellIntegrationTests, RaidLoopTests, CoopRulesTests, FullRaidIntegrationTests, LedgerPageTextTests, RaidHudEventTests, HudAndInteractionTests, ChangeEventTests, and the editor's SaveSlotTests."]
+  ],
+  "choices": [
+    ["saves", "What happens to saves made before the quota?", [["A", "Kept: the old debt is ignored and the first demand is rolled on the next set-out", 1, "Gold, purses, the chosen Age and learned spells carry over."], ["B", "Wiped: every save starts a new campaign", 0, ""]], "Nothing a player earned is lost, and the debt has no meaning once the Collector is gone."],
+    ["menu", "What does each save line on the main menu show?", [["A", "\"Save 1 · demand in 3 raids · gold 120\", or \"hunted\" while a demand is unpaid", 1, ""], ["B", "\"Save 1 · gold 120\"", 0, ""]], "It tells you at a glance whether that campaign is in danger."],
+    ["return", "Do the debt growing and the debt-cleared ending get issues to bring them back later?", [["A", "No; both are gone for good", 1, "The quota replaces the growing clock, and the design's only ending is defeating the Ophan."], ["B", "Yes; one issue for each", 0, ""]], "Neither fits the design you approved on 2026-10-11."]
+  ],
+  "wrapup": {
+    "summary": "The keep, change or drop list for retiring the coin debt and the Collector, which the quota builder works from.",
+    "changing": "Seven debt behaviours become the quota, four are dropped (the Collector, the growing debt, the debt-cleared ending and the HUD's unused debt value), and three stay.",
+    "blocking": "Your three picks: old saves, the main menu's save line, and whether the two dropped debt features get issues.",
+    "next": "On approval I log it and start the quota builder alongside the Wick builder.",
+    "todo": ["Pick an answer for each choice under Choices.", "Tap <b>Copy my reply</b>.", "Paste it into the chat and send it, or say what to change."]
+  }
+}
