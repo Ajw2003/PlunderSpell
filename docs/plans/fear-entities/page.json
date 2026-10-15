@@ -4,7 +4,7 @@
   "replyPrefix": "Build plan approved: fear entities, picks",
   "reply": "",
   "short": {
-    "lead": "The Wick and the Ophan of Hours are modelled, animated and, as of today, import cleanly in Unity, but neither appears in a raid. This plan puts them there in three pieces, each its own pull request: the Lantern Warden turning into the Wick, the Ophan hunting, and the Ophan's artifact demand replacing the debt. Seven choices decide the details.",
+    "lead": "The Wick and the Ophan of Hours are modelled, animated and, as of today, import cleanly in Unity, but neither appears in a raid. This plan puts them there in three pieces, each its own pull request: the Lantern Warden turning into the Wick, the Ophan hunting, and the Ophan's artifact demand replacing the debt. Four answers were already settled on 2026-10-11 and are shown as settled; six choices are still open.",
     "hint": "Tap a step to see what it creates and what it needs from you.",
     "key": [
       [
@@ -35,7 +35,7 @@
         "You approve this plan",
         "you",
         "A decisions-log entry for the approved plan, and the three issues below move from planned to being built.",
-        "Your seven picks, sent with \"Build plan approved: fear entities\"."
+        "Your six picks, sent with \"Build plan approved: fear entities\"."
       ],
       [
         "eye",
@@ -43,7 +43,7 @@
         "The Lantern Warden turns into the Wick",
         "",
         "Issue #417, The Lantern Warden turns into the Wick in raids. A guard that sees you, is hit, or is woken by a missed Somnus turns in 1.6 s on every machine, then hunts and kills on a catch.",
-        "Your picks for the order, the ground-floor guards, what a catch does and the dropped lantern."
+        "Your picks for the build order and how many more ground-floor guards."
       ],
       [
         "search",
@@ -51,7 +51,7 @@
         "The Ophan of Hours hunts",
         "",
         "Issue #418, The Ophan of Hours arrives in hunted raids and catches players. It arrives as the portal's clock runs low and takes artifacts or lives. A test switch forces a hunt until the quota exists.",
-        "Your picks for how it hunts and what taking the spoils looks like."
+        "Your picks for when it arrives and how fast it moves, and what taking the spoils looks like."
       ],
       [
         "list",
@@ -59,7 +59,7 @@
         "The artifact demand replaces the debt",
         "",
         "Issue #419, The Ophan's artifact quota replaces the debt and the Collector. Every 3 to 5 raids it demands artifacts, shown in the Lair's ledger; unpaid, every raid is hunted.",
-        "Your pick for where artifacts are placed, and later a keep, change or drop list for the debt code to approve."
+        "Your picks for where artifacts are placed and how each next demand is chosen, and later a keep, change or drop list for the debt code to approve."
       ]
     ]
   },
@@ -78,7 +78,7 @@
       {
         "src": "docs/art/anim/fear/wick_catch.png",
         "alt": "The Wick's design sheet and its catch clip, eight frames",
-        "caption": "The Wick, already modelled and animated: its catch clip, the lunge that downs or kills."
+        "caption": "The Wick, already modelled and animated: its catch clip, the lunge that kills."
       },
       {
         "visual": true
@@ -109,7 +109,7 @@
       "The turn itself",
       "1.6 s seen on every machine: the face splits, the lantern drops, the coat bursts, the Wick rears up.",
       null,
-      "Plays the warden's turn clip, drops the lantern at its marked moment, swaps to the Wick model at 0.9 s and plays its emerge clip. The first 0.9 s is the one moment to run.",
+      "Plays the warden's turn clip, drops the lantern at its marked moment, swaps to the Wick model at 0.9 s and plays its emerge clip. The first 0.9 s is the one moment to run. The lantern drops as a loose physics object, in the same place on every machine, and is left where it fell, dark.",
       [
         "Nothing; the guard just switches state.",
         "A reveal you can see and hear from across a room.",
@@ -208,6 +208,13 @@
     ],
     [
       "keep",
+      "Already settled on 2026-10-11",
+      "Your answers from the original handoff; nothing here needs a pick.",
+      null,
+      "A catch by the Wick kills the player; death loses what they carried. More guards do stand on the ground floors; only how many is open. The dropped lantern is left where it fell, dark. The Ophan passes through walls and cannot be hidden from: carry what it asked for, or reach the portal first. Source: docs/plans/handoff-2026-10-11-true-form-and-creature.md, Part A and Part B."
+    ],
+    [
+      "keep",
       "The event manager, the guard state machine and the downed-player system",
       "Reused as they are.",
       null,
@@ -230,7 +237,7 @@
           "A",
           "The Wick, then the Ophan, then the quota",
           1,
-          "The Ophan uses a test switch for hunts until the quota exists."
+          "The order the 2026-10-11 handoff gave. The Ophan uses a test switch for hunts until the quota exists."
         ],
         [
           "B",
@@ -242,97 +249,54 @@
           "C",
           "The Wick, then the quota, then the Ophan",
           0,
-          "The order the 2026-10-11 handoff gave."
+          ""
         ]
       ],
       "Both creatures reach the game soonest, and each piece lands whole and tested."
     ],
     [
       "guards",
-      "Do more guards stand on the ground floors?",
+      "How many more guards stand on the ground floors, and in which Ages?",
       [
         [
           "A",
-          "None for now; decide after playing with the Wick",
+          "One more per ground-floor zone, High Medieval only",
           1,
-          ""
+          "Only the Lantern Warden has a true form, and it is a High Medieval guard."
         ],
         [
           "B",
-          "One more per ground-floor zone, High Medieval only",
+          "One more per ground-floor zone, in every Age",
           0,
           ""
         ],
         [
           "C",
-          "One more per ground-floor zone, in every Age",
+          "Two more per ground-floor zone, High Medieval only",
           0,
           ""
         ]
       ],
-      "The Wick changes how dangerous a single guard is, so the right count is hard to judge before playing it."
-    ],
-    [
-      "catch",
-      "What does a catch by the Wick do to a player?",
-      [
-        [
-          "A",
-          "Downs them, as a death does today",
-          1,
-          "A teammate can still carry the body out to revive them.",
-          {
-            "src": "docs/art/anim/fear/wick_catch.png",
-            "alt": "The Wick's catch clip",
-            "caption": "The catch at 0.5 s; with option A it downs the player."
-          }
-        ],
-        [
-          "B",
-          "Takes them out of the raid outright",
-          0,
-          "The body cannot be carried home."
-        ]
-      ],
-      "It reuses the downed system co-op already depends on, and keeps the rescue moment that makes co-op tense."
-    ],
-    [
-      "lantern",
-      "How does the dropped lantern behave?",
-      [
-        [
-          "A",
-          "A loose physics object, in the same place on every machine",
-          1,
-          ""
-        ],
-        [
-          "B",
-          "Decoration only; each machine drops its own copy",
-          0,
-          ""
-        ]
-      ],
-      "The design says it is left where it fell, so both players should find it in the same place."
+      "Settled: more guards do stand there. One more per zone in the Age that has the Wick is the smallest change that shows the threat from the gate."
     ],
     [
       "hunt",
-      "How does the Ophan hunt once it arrives?",
+      "When does the Ophan arrive, and how fast does it move?",
       [
         [
           "A",
-          "Arrives 90 s before the portal closes, drifts through walls at 2.5 m/s, always knows where you are",
+          "90 s before the portal closes, drifting at 2.5 m/s",
           1,
-          "Hiding does not work; reaching the portal does."
+          "Players walk at 5 m/s in a raid, so it closes in only on whoever lingers or is lost."
         ],
         [
           "B",
-          "Same arrival and speed, but hunts by sight like a guard",
+          "60 s before the portal closes, at 3.5 m/s",
           0,
-          "Hiding works."
+          "Shorter and faster, still under a player's 5 m/s; less time to reach the portal."
         ]
       ],
-      "It matches the approved counter: carry what it asked for, or reach the portal first."
+      "Settled: it passes through walls and cannot be hidden from. These numbers only set how close the race to the portal is."
     ],
     [
       "altar",
@@ -358,6 +322,31 @@
         ]
       ],
       "One clear spot, close to where the haul comes home."
+    ],
+    [
+      "demand",
+      "How is each next demand chosen?",
+      [
+        [
+          "A",
+          "Drawn at random from the artifacts of the Age you are raiding",
+          1,
+          ""
+        ],
+        [
+          "B",
+          "A fixed list written for each Age, worked through in order",
+          0,
+          "Every save meets the same demands."
+        ],
+        [
+          "C",
+          "Drawn only from artifacts you have already seen in a castle",
+          0,
+          ""
+        ]
+      ],
+      "The handoff asks for it per Age; random draws keep each run different with no extra writing."
     ],
     [
       "spoils",
@@ -386,8 +375,8 @@
   ],
   "wrapup": {
     "summary": "A plan to put the Wick and the Ophan of Hours into raids, in three pieces, each its own pull request into the staging-2026-10-11 branch with tests, a co-op check and screenshots I have looked at.",
-    "changing": "The Lantern Warden gains a true form that kills; a Lantern Warden in human form can no longer be killed; hunted raids bring the Ophan; the debt and the Collector give way to the Ophan's artifact demand.",
-    "blocking": "Your seven picks. The Wick piece needs only the first four; the Ophan's three wait until that piece is built.",
+    "changing": "The Lantern Warden gains a true form whose catch kills; a Lantern Warden in human form can no longer be killed; hunted raids bring the Ophan; the debt and the Collector give way to the Ophan's artifact demand.",
+    "blocking": "Your six picks. The Wick piece needs only the first two; the Ophan's four wait until that piece is built.",
     "next": "On approval I log it, build the Wick piece, and show you before-and-after screenshots from a co-op run before opening its pull request.",
     "todo": [
       "Pick an answer for each choice under Choices.",
