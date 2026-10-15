@@ -25,6 +25,8 @@ namespace Plunderspell.Guards
         /// <summary>Burning and running about at random (the OnFire state, #212).</summary>
         OnFire = 6,
         /// <summary>Down for good, toppling and fading (the Dead state, #213).</summary>
-        Dead = 7
+        Dead = 7,
+        /// <summary>The Lantern Warden turning into the Wick (the Turning state, #417).</summary>
+        Turning = 8
     }
 }

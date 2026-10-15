@@ -1,5 +1,76 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8421950949542539516
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 9117720253176823680}
+    m_Modifications:
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2186113291201439577, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_Name
+      value: TheWick
+      objectReference: {fileID: 0}
+    - target: {fileID: 2186113291201439577, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+--- !u!4 &7060998923948461343 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1521498521870679523, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+  m_PrefabInstance: {fileID: 8421950949542539516}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7689445223993005989 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2186113291201439577, guid: 8586df7375da7c942bb0a5b01c9e7269, type: 3}
+  m_PrefabInstance: {fileID: 8421950949542539516}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8719566180987197547
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -68,9 +139,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: LanternWarden
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f3e24d611d1d71b47b0d62b1231b56e9, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7060998923948461343}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
       insertIndex: -1
@@ -87,7 +169,23 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6898745568346984785}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7345842207574226122}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6576813762709409343}
   m_SourcePrefab: {fileID: 100100000, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
+--- !u!95 &2911729543301621242 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
+  m_PrefabInstance: {fileID: 8719566180987197547}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5380926932059654356 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5499181330384039745, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
+  m_PrefabInstance: {fileID: 8719566180987197547}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8485756894605829434 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
@@ -199,6 +297,7 @@ MonoBehaviour:
     FieldOfView: 110
     EyeHeight: 1.6199999
     TargetAimHeight: 1
+    TargetLowAimHeight: -0.9
     GeometryLayers:
       serializedVersion: 2
       m_Bits: 1
@@ -221,6 +320,14 @@ MonoBehaviour:
     ProjectileSpeed: 18
     AttackCooldownSeconds: 1.4
     ShotClearanceRadius: 0.3
+    UnreachableHeight: 0.9
+    UnreachableConfirmSeconds: 1
+    UnreachableLoseSightSeconds: 3
+    ThrownPrefab: {fileID: 0}
+    ThrowSpeed: 10
+    ThrowCooldownSeconds: 2.5
+    ThrowDamageShare: 0.4
+    ThrowStandOff: 4
     BodyRadius: 0.3837706
     BodyHeight: 1.8
     AttackDamage: 12
@@ -238,3 +345,47 @@ MonoBehaviour:
     FadeSeconds: 1.5
     DustParticleCount: 24
     MaxHealth: 80
+    TrueForm:
+      CanTurn: 1
+      TurnSeconds: 1.6
+      SwapSeconds: 0.9
+      StalkSpeed: 1.4
+      HuntSpeed: 4.2
+      LightRadius: 6
+      CatchDamage: 100000
+      HeadHeight: 1.5
+      HardBlowDamage: 20
+      HeadStunSeconds: 6
+--- !u!114 &7345842207574226122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8485756894605829434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 288fb8a2c0a41cd40830e800f5d26755, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.FearAnimationEvents
+--- !u!114 &6576813762709409343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8485756894605829434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34ae455540e06584493d4b93627a8845, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Guards::Plunderspell.Guards.GuardTurnView
+  _wardenAnimator: {fileID: 2911729543301621242}
+  _wick: {fileID: 7689445223993005989}
+  _lanternRing: {fileID: 5380926932059654356}
+  _looseLanternPrefab: {fileID: 900608428796147805, guid: 346b7b084ea5c0d4688e2740b729ee32, type: 3}
+--- !u!4 &9117720253176823680 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0a5a3aec241cf4a45bc900809353a4a0, type: 3}
+  m_PrefabInstance: {fileID: 8719566180987197547}
+  m_PrefabAsset: {fileID: 0}

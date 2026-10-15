@@ -30,6 +30,7 @@ namespace Plunderspell.Guards
         private readonly SyncVar<GuardAlertState> _state = new SyncVar<GuardAlertState>(GuardAlertState.Patrolling);
         private readonly SyncVar<float> _health = new SyncVar<float>(100f);
         private readonly SyncVar<int> _attackSignal = new SyncVar<int>(GuardAttackSignal.None);
+        private readonly SyncVar<bool> _turned = new SyncVar<bool>(false);
 
         private readonly StateMachine<Guard> _machine = new StateMachine<Guard>();
         private EnemyDirector _configuredDirector;
@@ -38,7 +39,23 @@ namespace Plunderspell.Guards
         /// <summary>Raised on this peer when the guard's replicated state changes.</summary>
         public event Action<GuardAlertState> StateChanged;
 
+        /// <summary>Raised on every peer when the guard starts turning into the Wick (#417).</summary>
+        public event Action TurnBegan;
+
         public GuardTuning Tuning => _tuning;
+
+        /// <summary>The Wick rules (#417); inert unless the tuning lets this guard turn.</summary>
+        public GuardTrueForm TrueForm { get; private set; }
+
+        /// <summary>Replicated and one way: true from the start of the turn to the end of the raid.</summary>
+        public bool IsTurned => _turned.value;
+
+        /// <summary>Server side: the turn has begun (called by <see cref="TurningState"/>).</summary>
+        public void MarkTurned()
+        {
+            _turned.value = true;
+            TurnBegan?.Invoke();
+        }
 
         /// <summary>The guard's own random numbers, seeded from where it was posted so the server picks the
         /// same patrol every time. Tests replace the seed with <see cref="Reseed"/>.</summary>
@@ -92,8 +109,8 @@ namespace Plunderspell.Guards
         // IHealth
         public float CurrentHealth => Health.Current;
         public float MaxHealth => Health.Max;
-        public void TakeDamage(float damage) => Health.TakeDamage(damage);
-        public void TakeDamage(float damage, float impactVelocity) => Health.TakeDamage(damage);
+        public void TakeDamage(float damage) => Health.TakeDamage(TrueForm.LimitDamage(damage));
+        public void TakeDamage(float damage, float impactVelocity) => TakeDamage(damage);
 
         // IShovable
         void IShovable.Shove(Vector3 metres) => _shove.Start(metres);
@@ -127,6 +144,7 @@ namespace Plunderspell.Guards
             _shove = new GuardShove(transform, _tuning);
             Lift = new GuardLift(transform, Status);
             States = new GuardStateSet(this);
+            TrueForm = new GuardTrueForm(this);
 
             Health.Died += OnDied;
             Status.StatusChanged += OnStatusChanged;
@@ -148,6 +166,7 @@ namespace Plunderspell.Guards
             {
                 Health.Died -= OnDied;
                 Status.StatusChanged -= OnStatusChanged;
+                TrueForm.Dispose();
             }
             base.OnDestroy();
         }
@@ -160,6 +179,7 @@ namespace Plunderspell.Guards
             // A client replays what the server decided.
             AttackSignal.StartReplaying();
             _state.onChanged += OnReplicatedState;
+            _turned.onChanged += OnReplicatedTurned;
         }
 
         protected override void OnDespawned()
@@ -167,6 +187,7 @@ namespace Plunderspell.Guards
             base.OnDespawned();
             AttackSignal.StopReplaying();
             _state.onChanged -= OnReplicatedState;
+            _turned.onChanged -= OnReplicatedTurned;
         }
 
         private static EnemyDirector FindDirector()
@@ -263,5 +284,11 @@ namespace Plunderspell.Guards
         }
 
         private void OnReplicatedState(GuardAlertState alert) => StateChanged?.Invoke(alert);
+
+        private void OnReplicatedTurned(bool turned)
+        {
+            if (turned)
+                TurnBegan?.Invoke();
+        }
     }
 }
