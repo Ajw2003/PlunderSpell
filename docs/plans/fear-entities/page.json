@@ -4,7 +4,7 @@
   "replyPrefix": "Build plan approved: fear entities, picks",
   "reply": "",
   "short": {
-    "lead": "The Wick and the Ophan of Hours are modelled, animated and, as of today, import cleanly in Unity, but neither appears in a raid. This plan puts them there in three pieces, each its own pull request: the Lantern Warden turning into the Wick, the Ophan hunting, and the Ophan's artifact demand replacing the debt. Four answers were already settled on 2026-10-11 and are shown as settled; six choices are still open.",
+    "lead": "The Wick and the Ophan of Hours are modelled, animated and, as of today, import cleanly in Unity, but neither appears in a raid. This plan puts them there in three pieces, each its own pull request: the Lantern Warden turning into the Wick, the Ophan hunting, and the Ophan's artifact demand replacing the debt. Four answers were already settled on 2026-10-11 and are listed under \"Already settled on 2026-10-11\" in Changes; six choices are still open.",
     "hint": "Tap a step to see what it creates and what it needs from you.",
     "key": [
       [
@@ -43,7 +43,7 @@
         "The Lantern Warden turns into the Wick",
         "",
         "Issue #417, The Lantern Warden turns into the Wick in raids. A guard that sees you, is hit, or is woken by a missed Somnus turns in 1.6 s on every machine, then hunts and kills on a catch.",
-        "Your picks for the build order and how many more ground-floor guards."
+        "Your picks on the order the pieces are built in, and on how many more guards stand on the ground floors."
       ],
       [
         "search",
@@ -51,7 +51,7 @@
         "The Ophan of Hours hunts",
         "",
         "Issue #418, The Ophan of Hours arrives in hunted raids and catches players. It arrives as the portal's clock runs low and takes artifacts or lives. A test switch forces a hunt until the quota exists.",
-        "Your picks for when it arrives and how fast it moves, and what taking the spoils looks like."
+        "Your picks on when the Ophan arrives, how fast it moves, and how it takes the spoils."
       ],
       [
         "list",
@@ -59,7 +59,7 @@
         "The artifact demand replaces the debt",
         "",
         "Issue #419, The Ophan's artifact quota replaces the debt and the Collector. Every 3 to 5 raids it demands artifacts, shown in the Lair's ledger; unpaid, every raid is hunted.",
-        "Your picks for where artifacts are placed and how each next demand is chosen, and later a keep, change or drop list for the debt code to approve."
+        "Your picks on where artifacts are placed in the Lair and how each next demand is chosen. Later, you also approve a list of what to keep, change or drop in the debt code."
       ]
     ]
   },
@@ -69,7 +69,7 @@
       "The guard's True Form state",
       "A one-way state on the same Lantern Warden: once turned, it stays the Wick for the rest of the raid.",
       null,
-      "Added to the guard's state set beside Patrol, Investigate, Chase, Combat, Stunned and the rest, and synced to every machine the same way the guard's alert state already is. Faster (1.4 m/s stalking, 4.2 m/s hunting), sees only inside its own fire's light, and a catch kills.",
+      "Added to the guard's state set beside Patrol, Investigate, Chase, Combat, Stunned and the rest, and synced to every machine the same way the guard's alert state already is. The Wick moves faster (1.4 m/s stalking, 4.2 m/s hunting), sees only inside the light of its own fire, and kills on a catch.",
       [
         "A seen or hurt Lantern Warden chases and fights like any guard.",
         "A guard that turns into the Wick and never turns back.",
@@ -161,7 +161,7 @@
       "Hunted raids and the Ophan's arrival",
       "On a hunted raid the Ophan arrives as the portal's clock runs low.",
       null,
-      "Hangs off the raid's existing clock. A test switch forces a hunted raid so it can be seen before the quota exists.",
+      "It uses the raid's existing portal clock. A test switch forces a hunted raid so it can be seen before the quota exists.",
       [
         "Raids end when the portal closes.",
         "A creature that comes for you near the end.",
@@ -194,7 +194,7 @@
         "Debt pages.",
         "The demand and its artifacts."
       ],
-      "Built in the third piece.",
+      "Built in the third piece, issue #419, The Ophan's artifact quota replaces the debt and the Collector.",
       null,
       null,
       {
@@ -376,7 +376,7 @@
   "wrapup": {
     "summary": "A plan to put the Wick and the Ophan of Hours into raids, in three pieces, each its own pull request into the staging-2026-10-11 branch with tests, a co-op check and screenshots I have looked at.",
     "changing": "The Lantern Warden gains a true form whose catch kills; a Lantern Warden in human form can no longer be killed; hunted raids bring the Ophan; the debt and the Collector give way to the Ophan's artifact demand.",
-    "blocking": "Your six picks. The Wick piece needs only the first two; the Ophan's four wait until that piece is built.",
+    "blocking": "Your six picks. The Wick piece needs only the build order and the extra guards. The other four (the Ophan's arrival and speed, where artifacts are placed, how each demand is chosen, and how the spoils are taken) can wait until the Wick piece is built.",
     "next": "On approval I log it, build the Wick piece, and show you before-and-after screenshots from a co-op run before opening its pull request.",
     "todo": [
       "Pick an answer for each choice under Choices.",
