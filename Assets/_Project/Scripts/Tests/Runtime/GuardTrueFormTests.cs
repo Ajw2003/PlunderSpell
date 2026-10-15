@@ -117,6 +117,9 @@ namespace Plunderspell.Tests
             Advance(warden, 5f); // sees the player, turns, hunts, catches
 
             Assert.That(warden.IsTurned, Is.True);
+            Assert.That(victim.DamageTaken, Is.EqualTo(0f), "the strike alone kills nobody: the catch lands on AttackHit");
+
+            warden.MeleeAttack.LandCatch(); // what wick_catch's AttackHit event calls
             Assert.That(victim.DamageTaken, Is.GreaterThanOrEqualTo(victim.MaxHealth));
         }
 

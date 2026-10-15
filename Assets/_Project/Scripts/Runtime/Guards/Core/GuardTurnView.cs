@@ -37,6 +37,8 @@ namespace Plunderspell.Guards
             _wickAnimator = _wick.GetComponent<Animator>();
             _lantern = new WardenLanternDrop(_guard, _lanternRing, _looseLanternPrefab);
             _guard.TurnBegan += OnTurnBegan;
+            // Only the host decides the kill; it lands where the clip's AttackHit event fires.
+            _wick.GetComponent<FearAnimationEvents>().HitLanded += () => { if (_guard.IsAuthority) _guard.MeleeAttack.LandCatch(); };
             GetComponent<FearAnimationEvents>().PropDetached += _ => _lantern.Drop();
         }
 
