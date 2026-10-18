@@ -118,6 +118,7 @@ namespace Plunderspell.Net
 
         public void Leave()
         {
+            EventManager.Instance?.Publish(new SessionEnding());
             LeaveSteamLobby();
             if (_manager.isClient)
                 _manager.StopClient();

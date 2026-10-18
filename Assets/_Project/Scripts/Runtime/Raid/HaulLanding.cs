@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Code.Scripts.EventSystems;
+using Plunderspell.Core;
 using Plunderspell.Extraction;
 using Plunderspell.Lair;
 using Plunderspell.Loot;
@@ -15,6 +16,7 @@ namespace Plunderspell.Raid
     /// names of its pieces' LootItems; it is respawned when the server is ready and when another slot
     /// loads. The save is always rebuilt from the pieces that exist, so a piece that leaves the pile
     /// (<see cref="Remove"/>) or is destroyed leaves the save too. Its pieces are its own spawner's, so
+    /// the raid's loot clear never touches them. No per-frame code: it saves on events only (a haul landing, a piece leaving,
     /// the raid's loot clear never touches them. See docs/4-systems/raid.md, "How the haul comes home".
     /// </summary>
     public class HaulLanding : MonoBehaviour
@@ -23,15 +25,6 @@ namespace Plunderspell.Raid
         [SerializeField] private LootSpawner _pile;
 
         private bool _restored;
-        private int _savedCount = -1;
-        private float _nextMoveCheck;
-
-        private const float MoveCheckInterval = 2f;
-        // Below this a piece is only settling or jostled, not moved: not worth a save.
-        private const float MovedDistance = 0.05f;
-
-        // Where each piece was when last saved, to notice one that has since been moved.
-        private readonly Dictionary<GameObject, Vector3> _savedPositions = new Dictionary<GameObject, Vector3>();
 
         // Saved entries no loot table could resolve: kept in the save (with any pose) so a missing table never erases a piece.
         private readonly List<HaulPileEntry> _unresolved = new List<HaulPileEntry>();
@@ -45,78 +38,48 @@ namespace Plunderspell.Raid
             public readonly List<Quaternion> Rotations = new List<Quaternion>();
         }
 
+        // Saves happen only at these moments, all events: a haul lands, a piece leaves, the company sets out,
+        // the session ends, the application quits. Restores: the server starting and a save slot loading.
         private void OnEnable()
         {
             EventManager.Instance?.Subscribe(this, (HaulExtracted e) => Land(e));
             EventManager.Instance?.Subscribe(this, (SaveSlotLoaded e) => Reload());
+            EventManager.Instance?.Subscribe(this, (CoopChanged e) => OnCoopChanged());
+            EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) => OnPhaseChanged(e.Phase));
+            EventManager.Instance?.Subscribe(this, (SessionEnding e) => SaveIfLive());
+            // The server may have started before this object was enabled.
+            OnCoopChanged();
         }
 
         private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
 
-        private void Update()
+        // Quitting from the Lair menu is a quit too; scene teardown is not used because pieces may already be gone.
+        private void OnApplicationQuit() => SaveIfLive();
+
+        // The server started: restore. The server stopped: its pile is gone but the save is not, so forget the
+        // pile and restore from the save when the next session starts.
+        private void OnCoopChanged()
         {
-            // Leaving the session destroys the networked pile but not the save: never save that empty pile,
-            // and restore from the save when the next session starts.
             if (!ServerReady())
             {
-                if (_restored)
-                    ForgetTornDownPile();
-                return;
+                _restored = false;
+                _unresolved.Clear();
             }
-            if (!_restored)
-            {
+            else if (!_restored)
                 Restore();
-                return;
-            }
-            // A piece destroyed elsewhere (sold, broken) is no longer in the pile: keep the save in step.
-            if (_pile == null)
-                return;
-            if (LiveCount() != _savedCount)
+        }
+
+        private void OnPhaseChanged(RaidPhase phase)
+        {
+            if (phase == RaidPhase.Generating)
+                SaveIfLive();
+        }
+
+        // Never saves a pile that was not restored or no longer exists: that would wipe the save.
+        private void SaveIfLive()
+        {
+            if (_restored && _pile != null && ServerReady() && IsServer())
                 Save();
-            else if (Time.unscaledTime >= _nextMoveCheck && IsServer())
-            {
-                _nextMoveCheck = Time.unscaledTime + MoveCheckInterval;
-                if (AnyPieceMoved())
-                    Save();
-            }
-        }
-
-        // Quitting from the Lair menu is a quit too; scene teardown is not used because pieces may already be gone.
-        private void OnApplicationQuit()
-        {
-            if (_restored && _pile != null && IsServer())
-                Save();
-        }
-
-        private void ForgetTornDownPile()
-        {
-            _restored = false;
-            _savedCount = -1;
-            _savedPositions.Clear();
-            _unresolved.Clear();
-        }
-
-        private int LiveCount()
-        {
-            int count = 0;
-            foreach (GameObject go in _pile.Spawned)
-            {
-                if (go != null && go.TryGetComponent(out LootValue value) && value.Item != null)
-                    count++;
-            }
-            return count;
-        }
-
-        private bool AnyPieceMoved()
-        {
-            foreach (GameObject go in _pile.Spawned)
-            {
-                // A piece not in the dictionary is a count change, which Update already catches.
-                if (go != null && _savedPositions.TryGetValue(go, out Vector3 saved)
-                    && (go.transform.position - saved).sqrMagnitude > MovedDistance * MovedDistance)
-                    return true;
-            }
-            return false;
         }
 
         private static bool IsServer() => NetworkManager.main == null || !NetworkManager.main.isClientOnly;
@@ -148,7 +111,6 @@ namespace Plunderspell.Raid
                 return;
             _pile.Clear();
             _unresolved.Clear();
-            _savedCount = -1;
             _restored = false;
             if (ServerReady())
                 Restore();
@@ -209,15 +171,12 @@ namespace Plunderspell.Raid
         private void Save()
         {
             var entries = new List<HaulPileEntry>();
-            _savedPositions.Clear();
             foreach (GameObject go in _pile.Spawned)
             {
                 if (go == null || !go.TryGetComponent(out LootValue value) || value.Item == null)
                     continue;
                 entries.Add(new HaulPileEntry(value.Item.name, go.transform.position, go.transform.rotation));
-                _savedPositions[go] = go.transform.position;
             }
-            _savedCount = entries.Count;
             entries.AddRange(_unresolved);
             HaulPileSave.SaveEntries(SaveSlots.Active, entries);
         }

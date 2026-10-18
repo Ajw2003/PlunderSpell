@@ -59,4 +59,9 @@ namespace Plunderspell.Core
     public readonly struct CoopChanged : IEvent
     {
     }
+
+    /// <summary>The co-op session is about to end, published by <c>CoopSession.Leave()</c> before the network stops, so anything networked can save while it still exists.</summary>
+    public readonly struct SessionEnding : IEvent
+    {
+    }
 }

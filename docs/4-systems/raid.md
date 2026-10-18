@@ -269,17 +269,14 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   names of the pieces' `LootItem`s joined by `|`, each followed by `@` and its world position and rotation (#378). The asset
   name is the id: stable across runs, already how the loot tables list items, and it keeps the Lair assembly free of the loot
   assembly (the pose is a plain `HaulPileEntry`, `HaulPileEntry.cs`). A name with no `@` is a save from before poses and still
-  loads, without a pose. The save is rebuilt from the pieces that exist (`HaulLanding.Save`, `:194`) on every change: a haul landing,
-  a restore, `Remove` (takes a piece out of the pile by its object, for a pickup or a sale), a count check every frame
-  (`Update`) that notices a piece destroyed anywhere else, and a check every 2 s (`HaulLanding.AnyPieceMoved`, `:95`) for a piece
-  moved more than 5 cm since the last save, plus one on `OnApplicationQuit` (`:78`). Names no table can resolve are kept in the save
+  loads, without a pose. The save is rebuilt from the pieces that exist (`HaulLanding.Save`) at these events only, with no `Update` and no poll (#378): a haul landing (`HaulExtracted`), `Remove` (a pickup or a sale), the company setting out (`RaidPhaseChanged` to `Generating`), `SessionEnding` (published by `CoopSession.Leave()` before the network stops), and `OnApplicationQuit`. A piece moved within the Lair is saved at the next of those. Names no table can resolve are kept in the save
   with their pose, never erased.
 - Pieces come back where they were left (#378): `HaulLanding.Restore` (`:142`) spawns a saved piece that has a pose at that pose through
   the `SpawnPile` overload that takes rotations (`LootSpawner.cs`), held kinematic until the settle delay passes so physics
   cannot fling it. Pieces without a pose, and every fresh haul (`Land`), still take the `HaulLayout` grid, which skips cells the
   restored pieces occupy. Known limit: a piece moved less than 2 s before the Editor or game is closed without a normal quit
   is saved at its older spot.
-- Restoring: on the server once it runs (`ServerReady`, `:55`: offline, or the host's server up) and again on
+- Restoring: when the server starts (`CoopChanged` with the server running, also checked on enable; `HaulLanding.OnCoopChanged`) and again on
   `SaveSlotLoaded` (`LairEvents.cs`, published by `LairHubManager.LoadSlot`, `LairHubManager.cs:62`; the old pile is cleared
   first). Names resolve through every era's loot table in the director's `EraContentCatalogue` (`RaidDirector.EraContent`)
   plus the raid spawner's own (`AllTables`, `:153`); a mixed-era pile is spawned per table to get each prefab.
