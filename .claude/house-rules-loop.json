@@ -1,0 +1,215 @@
+{
+  "feature": "Ophan beam fixes 1A 2A 3*",
+  "stage": "plan",
+  "skip": false,
+  "approvals": [
+    {
+      "stage": "Design approved",
+      "name": "fear entities",
+      "at": 1792054348
+    },
+    {
+      "stage": "Build plan approved",
+      "name": "fear entities",
+      "at": 1792054739
+    },
+    {
+      "stage": "Design approved",
+      "name": "ophan arrival 1A 2B 3* 4* 5B 6A 7*",
+      "at": 1793074236
+    },
+    {
+      "stage": "Design approved",
+      "name": "ophan beam 1* 2A 3A",
+      "at": 1793074455
+    },
+    {
+      "stage": "Design approved",
+      "name": "ophan beam 1* 2A 3A\"",
+      "at": 1793074500
+    },
+    {
+      "stage": "Design approved",
+      "name": "X 1A 2B\" or \"",
+      "at": 1793077882
+    },
+    {
+      "stage": "Design approved",
+      "name": "demand page 1* 2A 3A 4A 5A",
+      "at": 1793129019
+    },
+    {
+      "stage": "Build plan approved",
+      "name": "demand page</message>",
+      "at": 1793131255
+    },
+    {
+      "stage": "Design approved",
+      "name": "Ophan Gym 1A 2* 3A 4A",
+      "at": 1793133068
+    },
+    {
+      "stage": "Build plan approved",
+      "name": "demand page</message>",
+      "at": 1793138832
+    },
+    {
+      "stage": "Design approved",
+      "name": "Ophan beam fixes 1A 2A 3*",
+      "at": 1793141000
+    }
+  ],
+  "labels": {
+    "Ajw2003/PlunderSpell#420": [
+      "AjsAgent created this",
+      "in progress",
+      "gameplay",
+      "AjsAgent created this",
+      "in progress",
+      "art"
+    ],
+    "Ajw2003/PlunderSpell#421": [
+      "AjsAgent created this",
+      "in progress",
+      "gameplay",
+      "AjsAgent created this",
+      "in progress",
+      "art"
+    ],
+    "Ajw2003/PlunderSpell#433": [
+      "needs review"
+    ],
+    "Ajw2003/PlunderSpell#446": [
+      "AjsAgent created this",
+      "in progress",
+      "lair",
+      "ui"
+    ],
+    "Ajw2003/PlunderSpell#447": [
+      "AjsAgent created this",
+      "in progress",
+      "lair",
+      "vfx"
+    ],
+    "Ajw2003/PlunderSpell#448": [
+      "AjsAgent created this",
+      "in progress",
+      "lair",
+      "networking"
+    ],
+    "Ajw2003/PlunderSpell#449": [
+      "AjsAgent created this",
+      "in progress",
+      "ui",
+      "gameplay"
+    ],
+    "Ajw2003/PlunderSpell#450": [
+      "AjsAgent created this",
+      "in progress",
+      "gameplay",
+      "networking"
+    ],
+    "Ajw2003/PlunderSpell#451": [
+      "AjsAgent created this",
+      "testing",
+      "in progress"
+    ],
+    "Ajw2003/PlunderSpell#456": [
+      "AjsAgent created this",
+      "in progress",
+      "lair",
+      "art"
+    ],
+    "Ajw2003/PlunderSpell#457": [
+      "AjsAgent created this",
+      "in progress",
+      "lair",
+      "art"
+    ],
+    "Ajw2003/PlunderSpell#458": [
+      "AjsAgent created this",
+      "in progress",
+      "lair",
+      "art"
+    ]
+  },
+  "log_mark": "bd3ee572990b03c4e44b251da6a7da6d9f8f5ae096d8f42e50aa462d94fff67b",
+  "redo": false,
+  "issues": [],
+  "features": {
+    "fear entities": {
+      "name": "fear entities",
+      "issues": [
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 420,
+          "labelled": true
+        },
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 421,
+          "labelled": true
+        }
+      ],
+      "stage": "qa"
+    },
+    "demand page 1* 2a 3a 4a 5a": {
+      "name": "demand page 1* 2A 3A 4A 5A",
+      "issues": [
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 446,
+          "labelled": true
+        },
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 447,
+          "labelled": true
+        },
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 448,
+          "labelled": true
+        },
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 449,
+          "labelled": true
+        },
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 450,
+          "labelled": true
+        }
+      ],
+      "stage": "build"
+    },
+    "ophan gym 1a 2* 3a 4a": {
+      "name": "Ophan Gym 1A 2* 3A 4A",
+      "issues": [
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 451,
+          "labelled": true
+        },
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 456,
+          "labelled": true
+        },
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 457,
+          "labelled": true
+        },
+        {
+          "repo": "Ajw2003/PlunderSpell",
+          "number": 458,
+          "labelled": true
+        }
+      ],
+      "stage": "build"
+    }
+  },
+  "qa_page": "docs/plans/demand-page-419/qa.html"
+}
