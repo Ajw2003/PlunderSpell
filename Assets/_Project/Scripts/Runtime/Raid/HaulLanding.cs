@@ -16,8 +16,9 @@ namespace Plunderspell.Raid
     /// names of its pieces' LootItems; it is respawned when the server is ready and when another slot
     /// loads. The save is always rebuilt from the pieces that exist, so a piece that leaves the pile
     /// (<see cref="Remove"/>) or is destroyed leaves the save too. Its pieces are its own spawner's, so
-    /// the raid's loot clear never touches them. No per-frame code: it saves on events only (a haul landing, a piece leaving,
-    /// the raid's loot clear never touches them. See docs/4-systems/raid.md, "How the haul comes home".
+    /// the raid's loot clear never touches them. No per-frame code: it saves on events only (a haul landing, a piece
+    /// leaving, the company setting out, the session ending, the application quitting). See docs/4-systems/raid.md,
+    /// "How the haul comes home".
     /// </summary>
     public class HaulLanding : MonoBehaviour
     {
