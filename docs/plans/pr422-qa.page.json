@@ -1,6 +1,6 @@
 {
   "title": "QA: Lair loot keeps its place",
-  "eyebrow": "QA for pull request 422 · nothing here is closed until you have tested",
+  "eyebrow": "QA for pull request 422, which keeps the Lair's haul pile in place · nothing here is closed until you have tested",
   "approval": "QA passed: lair loot keeps its place",
   "qa": {
     "feature": "lair loot keeps its place",
@@ -9,19 +9,56 @@
       "A crash while the Lair is open has not been tried, so moves made since the last save moment would be lost, as accepted on 2026-10-11",
       "I have not played it by hand: every check was a script, and no person has moved a piece, quit and come back",
       "The new SessionEnding event was checked by the Lair pile script and the unit tests, not in a long multi-raid session",
-      "I did not re-run any check after the final comment-only commit, d14f57cd"
+      "No check was re-run after the final comment-only commit, d14f57cd"
     ],
     "files": {}
   },
   "short": {
     "lead": "Pull request 422 makes the Lair's unsold haul pile keep each piece's place when you quit to the menu and come back. It saves and restores on events, with no code that runs every frame. The checks below passed in the logs I read; none of it has been played by hand.",
     "hint": "Tap an item to see what was checked and what you can try yourself.",
-    "key": [["Checked by script", "done"], ["You test this", "you"]],
+    "key": [
+      [
+        "Checked by script",
+        "done"
+      ],
+      [
+        "You test this",
+        "you"
+      ]
+    ],
     "items": [
-      ["check", "Unit tests", "EditMode and PlayMode", "done", "EditMode: 254 passed, 0 failed, 3 skipped (baseline 243 passed). PlayMode: 520 of 520 passed (baseline 518). Logs: docs/generated/lair-pile-2026-10-18-editmode.log and lair-pile-2026-10-18-playmode.log.", "Nothing from you."],
-      ["check", "Pile check", "lair_pile_check.sh, run twice", "done", "Both runs ended with PASS all Lair pile checks: a moved piece stays where it was left after quitting to the menu, after hosting again, and after a restart; the pile still holds every piece (2 to 2). Logs: docs/generated/lair-pile-2026-10-18/run1-run.log and run2-run.log.", "Nothing from you."],
-      ["check", "Lair check", "coop_lair_check.sh, run once", "done", "Ended with PASS all Lair checks: the counters, the sale, the pouch, the ledger and the client's view. Log: docs/generated/coop-lair-2026-10-18/run1-run.log.", "Nothing from you."],
-      ["hand", "Play it", "Move a piece, quit, come back", "you", "In the Lair, carry a haul piece to a new spot, quit to the menu, host again and look for the piece where you left it.", "Try it solo and with a friend joining, then say what you saw."]
+      [
+        "check",
+        "Unit tests",
+        "EditMode and PlayMode",
+        "done",
+        "EditMode: 254 passed, 0 failed, 3 skipped (baseline 243 passed). PlayMode: 520 of 520 passed (baseline 518). Logs: docs/generated/lair-pile-2026-10-18-editmode.log and lair-pile-2026-10-18-playmode.log.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Pile check",
+        "lair_pile_check.sh, run twice",
+        "done",
+        "Both runs ended with PASS all Lair pile checks: a moved piece stays where it was left after quitting to the menu, after hosting again, and after a restart; the pile still holds every piece (2 to 2). Logs: docs/generated/lair-pile-2026-10-18/run1-run.log and run2-run.log.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Lair check",
+        "coop_lair_check.sh, run once",
+        "done",
+        "Ended with PASS all Lair checks: the counters, the sale, the pouch, the ledger and the client's view. Log: docs/generated/coop-lair-2026-10-18/run1-run.log.",
+        "Nothing from you."
+      ],
+      [
+        "hand",
+        "Play it",
+        "Move a piece, quit, come back",
+        "you",
+        "In the Lair, carry a haul piece to a new spot, quit to the menu, host again and look for the piece where you left it.",
+        "Try it solo and with a friend joining, then say what you saw."
+      ]
     ]
   },
   "wrapup": {
@@ -29,6 +66,10 @@
     "changing": "The haul pile now saves when a haul lands, a piece is removed, the company sets out, the session ends and the game quits.",
     "blocking": "Nothing is closed. Issue 378, \"need to save state of items in the lair so that when you return they are still there\", stays open until you have tested it.",
     "next": "After you pass it, the pull request can merge into staging, and the per-frame cleanup moves on to issue 392, \"Every key and mouse read goes through the input actions as callbacks\".",
-    "todo": ["Play the steps under Play it.", "Tap <b>Copy my reply</b>.", "Send it with \"QA passed: lair loot keeps its place\", or tell me what failed."]
+    "todo": [
+      "Play the steps under Play it.",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with \"QA passed: lair loot keeps its place\", or tell me what failed."
+    ]
   }
 }
