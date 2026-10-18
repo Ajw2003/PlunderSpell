@@ -26,7 +26,10 @@ Inputs, per machine:
 - **Speed** is measured from how far the body moved each frame, so the owner's body and a
   teammate's body (which follows `NetworkTransform`) animate the same way.
 - **Crouch** is the creep key (`C`, `PlayerStateMachine.Creeping`), 2 m/s.
-- **Airborne** is `!PlayerStateMachine.IsGrounded` on the owner.
+- **Airborne** is `!PlayerStateMachine.IsGrounded` on the owner. Grounded means the ground cast found a floor
+  and the body is within 15 cm of its ride height (`GroundCheck`, `PlayerStateMachine.cs:479`); the cast
+  reaches further so the snap can catch a step down. The ride height is measured to the floor, one
+  cast radius below where the sphere stops, so the capsule rests on the floor (it floated 29 cm before 2026-10-11).
 - **Casting** is `PushToCastController.IsCasting` (holding `V`). Letting go plays the release.
 - **Dead** is `PlayerStateMachine.dead` on the owner and `PlayerNetworkOwnership.IsDown` elsewhere.
 

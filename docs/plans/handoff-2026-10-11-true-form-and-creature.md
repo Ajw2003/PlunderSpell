@@ -1,0 +1,160 @@
+# Handoff: the two-form guard, then the creature (2026-10-11)
+
+For the next agent. Two pieces of the approved fear pass, done **one after the other**: first the
+two-form guard, then the creature. Each starts with a short look-and-behaviour design the owner
+approves, then the build. The spell lockdown (part 1 of the slice) is separate work and not in this
+handoff.
+
+## Read first
+
+1. [`docs/7-design/fear-pass.md`](../7-design/fear-pass.md): the approved design. Its "The first
+   slice" section is the spec; the "Decided" bullets above it are the owner's own words, condensed.
+2. `docs/6-decisions/Decisions.md`, "2026-10-11 — Raids are about fear".
+3. [`docs/4-systems/alarm.md`](../4-systems/alarm.md): how guards see, hear, chase and attack today,
+   especially "Sight and hearing rules (#238)" and "The fresh guard core (#206)".
+4. `docs/art/WORKFLOW.md` and the `art-pipeline` skill, before any modelling.
+
+Issues: parent #380, this work is #386. Make one child issue per step below (`Part of #386`,
+labels `AjsAgent created this` plus a category) before writing code; a hook blocks source edits
+until they exist.
+
+## Branches and how to work here (learned the hard way on 2026-10-11)
+
+- **Target:** every pull request goes into `staging-2026-10-11`. Never into `main`.
+- **Your branches:** `AjsAgent/<topic>`, cut from `staging-2026-10-11`. These are agent-owned: you
+  may commit and push them without asking. `claude/` branches are the old naming; do not make new ones.
+- **Never `cd` or `git -C`** in a shell command. The guard refuses any command whose repo it cannot
+  follow, and a refusal must not be routed around. Run everything from the repo root.
+- **No worktree isolation for builders.** A builder in `.claude/worktrees/...` must `cd` to work,
+  which the guard refuses, and Unity is only open on the main folder. Work in
+  `C:/Users/aj/Desktop/GameDev/PlunderSpell` on your branch, one builder at a time.
+- **Unity:** the Editor runs on the main folder. Check it is not in Play mode before recompiling
+  (`Tools/Unity/README.md`, "Before anything"). Use `bash Tools/Unity/recompile.sh` and
+  `bash Tools/Unity/run_tests.sh <filter> EditMode|PlayMode`. Never pipe them through `tail`/`head`.
+  Write their output to a log under `docs/generated/` if you want to keep it (`*.log` is ignored,
+  so add it with `git add -f`).
+- **Leave alone** the Unity import noise in the tree: the two wizard `.fbx.meta` files, the
+  Spectral font asset, `ProjectSettings.asset`, `UI_Verification_Screenshots/01_MainMenu.png` and
+  `docs/generated/nav-graph-2026-10-02/timings.txt`. Commit only the paths you changed.
+- **Co-op by default:** every in-game check runs the Editor as host plus a built client, as the
+  existing `Tools/Unity/*_check.sh` scripts do (`coop_lair_check.sh`, `wizard_coop_check.sh` are
+  good models).
+
+## Part A: the two-form guard
+
+### What is decided
+- The first guard to get a true form is the common High Medieval guard. In the roster
+  (`Assets/_Project/Data/Enemies/EnemyRoster_HighMedieval.asset`) the most common entry is the
+  **Lantern Warden** (`Assets/_Project/Prefabs/Enemies/HighMedieval/LanternWarden.prefab`, weight
+  12 in two zones). **Confirm with the owner that this is the guard they mean** before modelling.
+- It turns, one way and for the rest of the raid, when it confirms it has **seen** a player or when
+  it is **hit**. Hearing only makes it investigate, still human.
+- A missed or too-loud Somnus wakes its target, which sees the caster at once and turns.
+- Human form: a hard blow to the head stuns it and knocks it down. It is never killed.
+- True form: faster, sharper senses, **kills on a catch**, never turns back. Run and hide is the only
+  answer.
+- The turn raises a fear moment on every machine: a reveal animation, sound, camera, music.
+- More guards stand on the ground floors, so the threat is seen from the gate and underestimated.
+
+### What the owner still has to approve (design step, before code)
+1. **The true form's look.** Lovecraftian horror that frightens a seasoned horror player, inside the
+   game's painted look and its period, with fantasy licence. Make concept sheets through the art
+   pipeline (`Tools/ArtBible/`, see `docs/art/WORKFLOW.md`), show them beside the Lantern Warden's
+   current sheet, and get a pick.
+2. **The reveal:** how long the turn takes, what the player sees and hears, whether the turn is a
+   moment of escape (the guard is busy turning) or not.
+3. **Its counter.** The design says every guard type has a hard counter its behaviour hints at. For
+   this first one, propose one or two (e.g. it hunts by the lantern's light, so darkness hides you)
+   and let the owner choose.
+4. **How many more ground-floor guards**, and whether that is per Age or High Medieval only.
+
+Write the answers into `docs/7-design/fear-pass.md` under a new "The true form" heading, and a
+dated entry in `docs/6-decisions/Decisions.md` for anything that reverses earlier behaviour.
+
+### Where it goes in the code
+- `Assets/_Project/Scripts/Runtime/Guards/Core/Guard.cs` (267 lines): the guard. Its states are in
+  `Guards/States/` and gathered by `GuardStateSet.cs` (Patrol, Investigate, Chase, Combat,
+  HoldBelow, Stunned, Slept, OnFire, Dead). The design calls for a one-way **True form** state on
+  the same guard object, swapping the visual to a second model and its tuning to a faster,
+  sharper-sensed one, and networked so every machine sees the turn.
+- Senses: `Guards/Senses/GuardSight.cs`, `GuardHearing.cs`. The trigger is "sight confirmed or hit".
+- Health and death: `Guards/Core/GuardHealth.cs`, `GuardDeathPlayback.cs`. The design says a guard
+  is never killed now; stun already exists (`StunnedState.cs`).
+- Attacks: `Guards/Core/GuardAttackTurn.cs`, `Alarm/AttackTurnMediator.cs`. A true form's catch
+  kills outright.
+- Guard counts per floor come from the castle's guard placement (see `docs/4-systems/alarm.md`
+  and `docs/4-systems/castle.md` for where posts are planned).
+- Events go through `EventManager` only (Decisions, 2026-10-06): publish a "guard turned" event for
+  the fear moment; views (camera, music, sound) subscribe.
+- Enemy art pipeline: `docs/4-systems/enemy-asset-pipeline.md`; animations:
+  `docs/plans/artbible-enemy-animations.md`.
+
+### Done when
+Tests for the turn rules (sight turns, hearing does not, hit turns, never turns back, catch kills,
+human form stuns and never dies); the true-form model with a review sheet you opened and a review
+record (the `art-pipeline` gate checks this); a co-op check script in which a guard sees the client,
+turns on both machines and kills on a catch; before-and-after screenshots you looked at; the full
+EditMode and PlayMode suites green; `docs/4-systems/alarm.md` updated; a pull request into
+`staging-2026-10-11` with `Refs #386` (never Closes/Fixes).
+
+## Part B: the creature (after Part A is merged)
+
+### What is decided
+- The debt and the Collector are removed. A creature demands specific **artifacts**.
+- Its demand, the quota, falls due every **3 to 5 raids** by default, from a tuning asset, and is
+  configurable. The Lair's **ledger book** shows the demand, with a sketch of each artifact, in place
+  of the debt pages.
+- Wanted artifacts are marked loot in the castles. Carried home and placed in the Lair, they pay the
+  quota and the next demand appears.
+- Unpaid when the count runs out: every raid is a **hunt** until it is paid. The creature arrives
+  physically in the castle as the portal's clock runs low, and each hunted raid's spoils are taken.
+- Caught **carrying its artifacts**: it takes them, the quota counts as paid, you live. Caught
+  **empty-handed**: you die.
+- Death loses what you carried and any unread spell scrolls; learned spells and the Lair stay. The
+  portal closing leaves anyone inside behind. Nobody ever starts over: it is purgatory, escaped only
+  by one day growing strong enough to defeat a celestial being, together.
+- The Lair and the Market stand outside time and are always safe. Coin now only buys things in the
+  Market.
+
+### What the owner still has to approve (design step, before code)
+1. **What the creature is and looks like**: a celestial being that hunts through time. Concept
+   sheets through the art pipeline, as for Part A.
+2. **Where the artifacts are placed in the Lair** to pay the quota (an altar, the portal, the ledger
+   desk) and how the next demand is chosen (which artifacts, per Age).
+3. **How it hunts** once it arrives: speed, senses, whether it can be hidden from, how long before the
+   portal closes it appears.
+4. **What "spoils are taken" looks like** on a hunted raid (taken at the portal, or vanishing from the
+   Lair on return).
+
+### Where it goes in the code
+- `Assets/_Project/Scripts/Runtime/Lair/LairHubManager.cs` (360 lines): `TotalDebt`
+  (`LairHubManager.cs:33`), the debt's save keys (`:19`, `:91`, `:109`, `:121`), the per-session
+  increase (`:31`) and the Collector line (`:63`). The quota replaces these; keep it per save slot
+  through `SaveSlots.Key` like everything else.
+- `Assets/_Project/Scripts/Runtime/Market/CollectorRules.cs` (40 lines): the Collector's shares. Goes.
+- `Assets/_Project/Scripts/Runtime/Raid/LairLedgerBook.cs` (77 lines) and
+  `Assets/_Project/Scripts/Runtime/Lair/LedgerPageText.cs` (40 lines): the ledger's pages. They show
+  the demand instead of the debt.
+- `Assets/_Project/Scripts/Runtime/Lair/LairEvents.cs`: `DebtChanged` and friends; replace with
+  quota events on `EventManager`.
+- `Assets/_Project/Scripts/Runtime/Raid/RaidDirector.cs`: the raid's flow and clock. The creature's
+  arrival hangs off the portal's clock running low.
+- `Assets/_Project/Scripts/Runtime/Raid/HaulLanding.cs`: how the haul lands in the Lair (being
+  changed by #378 to keep each piece's place; take that change before starting).
+- Loot categories exist since #313 (`docs/4-systems/market.md`); an artifact is loot marked as
+  wanted.
+- Inventory before removing anything: the debt and Collector touch the Lair screen's old ledger, the
+  Market's sale flow and `coop_lair_check.sh`. List keep/change/drop with file:line before building,
+  and open an issue for anything dropped that should come back.
+
+### Done when
+Tests for the quota (counts down per raid, paid by placing artifacts, unpaid makes raids hunts,
+caught-with-artifacts pays, caught-empty kills, death keeps learned spells); the creature's model
+with a review sheet and review record; a co-op check in which the quota is paid on both machines and
+one in which the creature arrives and catches the client; screenshots looked at; full suites green;
+`docs/4-systems/market.md` and `raid.md` updated, the Lair's `docs/3-state/ProjectState.md` M4 row
+rewritten; a pull request into `staging-2026-10-11` with `Refs #386`.
+
+## Before you stop, each time
+Update `docs/5-today/Today.md` and `docs/3-state/ProjectState.md`, commit on your branch, push, and
+say in the pull request what was and was not checked in Unity.

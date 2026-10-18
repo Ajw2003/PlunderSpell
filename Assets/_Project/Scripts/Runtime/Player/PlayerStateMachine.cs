@@ -74,7 +74,7 @@ namespace StateMachine
         [FormerlySerializedAs("respawnSpeed")] [SerializeField] private float _respawnSpeed;
         public float RespawnSpeed { get => _respawnSpeed; set => _respawnSpeed = value; }
 
-        public float MouseSensitivity = 100f;
+        public float MouseSensitivity = 1.6667f;
         public Transform CameraTransform;
 
         [Header("Ground Check Settings")]
@@ -84,6 +84,9 @@ namespace StateMachine
         [SerializeField] private float _groundSnapSpeed = 15f;
         [SerializeField] private LayerMask _groundLayer;
         public bool IsGrounded { get; private set; }
+
+        // How far above ride height still counts as standing: covers a step down before the snap settles it.
+        private const float GroundedTolerance = 0.15f;
 
         [Header("Physics Damage Settings")]
         public float MinVelocityForDamage = 5f;
@@ -138,8 +141,8 @@ namespace StateMachine
                 return;
             }
 
-            float mouseX = lookDelta.x * MouseSensitivity * Time.deltaTime;
-            float mouseY = lookDelta.y * MouseSensitivity * Time.deltaTime;
+            float mouseX = lookDelta.x * MouseSensitivity;
+            float mouseY = lookDelta.y * MouseSensitivity;
 
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
@@ -480,7 +483,9 @@ namespace StateMachine
             float verticalSpeed = Vector3.Dot(_rb.linearVelocity, up);
 
             bool hitGround = Physics.SphereCast(origin, _groundCheckRadius, -up, out RaycastHit hit, _groundCheckDistance, _groundLayer);
-            IsGrounded = hitGround;
+            // The cast reaches well below the feet so the snap can catch a step down; grounded means standing
+            // near ride height, or the first half-metre of every jump counted as grounded and skipped fall gravity.
+            IsGrounded = hitGround && HeightAboveGround(hit) <= _groundedHeight + GroundedTolerance;
 
             // Only snap while not actively rising - snapping mid-jump would cancel the jump.
             if (hitGround && verticalSpeed <= 0f)
@@ -499,10 +504,16 @@ namespace StateMachine
             _rb.linearVelocity -= up * verticalSpeed;
         }
 
+        // The cast starts 0.5 m above the pivot, and the floor is a radius below where the sphere stopped;
+        // leaving the radius out floated the body one radius up.
+        private float HeightAboveGround(RaycastHit hit)
+        {
+            return hit.distance + _groundCheckRadius - 0.5f;
+        }
+
         private void SnapToGroundHeight(RaycastHit hit, Vector3 up)
         {
-            float currentHeight = hit.distance - 0.5f;
-            float error = currentHeight - _groundedHeight;
+            float error = HeightAboveGround(hit) - _groundedHeight;
             if (Mathf.Abs(error) <= 0.001f) return;
 
             float correction = error * _groundSnapSpeed * Time.fixedDeltaTime;

@@ -55,6 +55,21 @@ other='var pt = System.Type.GetType("StateMachine.PlayerStateMachine, Plunderspe
 stand="$other"' if (other == null) return "no other body"; var me = (UnityEngine.Component)pt.GetProperty("Local").GetValue(null); var away = me.transform.position - other.transform.position; away.y = 0f; if (away.sqrMagnitude < 0.01f) away = UnityEngine.Vector3.forward; var from = other.transform.position + away.normalized * 3f; from.y = me.transform.position.y; var body = me.GetComponent<UnityEngine.Rigidbody>(); if (body != null) { body.linearVelocity = UnityEngine.Vector3.zero; body.position = from; } me.transform.position = from; var d = other.transform.position - from; d.y = 0f; float yaw = UnityEngine.Quaternion.LookRotation(d).eulerAngles.y; pt.GetMethod("FaceYaw").Invoke(me, new object[] { yaw }); pt.GetField("_xRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(me, 8f); return "host 3 m from the client at " + from;'
 # Actor (client): turn to face the host's body.
 face="$other"' if (other == null) return "no other body"; var me = (UnityEngine.Component)pt.GetProperty("Local").GetValue(null); var d = other.transform.position - me.transform.position; d.y = 0f; pt.GetMethod("FaceYaw").Invoke(me, new object[] { UnityEngine.Quaternion.LookRotation(d).eulerAngles.y }); return "client faces the host";'
+# Viewer (host): for each body it has (its own and its copy of the client's), the height above the floor right under it
+# of the capsule's bottom, the lower foot bone and the mesh's lowest point. Ends "worst capsule gap <cm>".
+feet='var pt = System.Type.GetType("StateMachine.PlayerStateMachine, Plunderspell.Player"); var sb = new System.Text.StringBuilder(); float worst = 0f;
+foreach (UnityEngine.Component p in UnityEngine.Object.FindObjectsByType(pt, UnityEngine.FindObjectsSortMode.None)) {
+  var col = p.GetComponent<UnityEngine.CapsuleCollider>(); if (col == null) { sb.Append("no capsule; "); continue; }
+  float bottom = col.bounds.min.y; float floor = float.NaN;
+  foreach (var h in UnityEngine.Physics.RaycastAll(col.bounds.center, UnityEngine.Vector3.down, 5f)) if (!h.collider.transform.IsChildOf(p.transform) && (float.IsNaN(floor) || h.point.y > floor)) floor = h.point.y;
+  if (float.IsNaN(floor)) { sb.Append("no floor under a body; "); continue; }
+  var a = p.GetComponentInChildren<UnityEngine.Animator>(); float foot = float.NaN;
+  if (a != null && a.isHuman) foot = UnityEngine.Mathf.Min(a.GetBoneTransform(UnityEngine.HumanBodyBones.LeftFoot).position.y, a.GetBoneTransform(UnityEngine.HumanBodyBones.RightFoot).position.y);
+  float mesh = float.NaN; foreach (var r in p.GetComponentsInChildren<UnityEngine.SkinnedMeshRenderer>()) mesh = float.IsNaN(mesh) ? r.bounds.min.y : UnityEngine.Mathf.Min(mesh, r.bounds.min.y);
+  float gap = (bottom - floor) * 100f; if (UnityEngine.Mathf.Abs(gap) > UnityEngine.Mathf.Abs(worst)) worst = gap;
+  sb.Append(((bool)pt.GetProperty("IsLocal").GetValue(p) ? "own" : "other") + ": capsule " + gap.ToString("F1") + " cm, foot bone " + ((foot - floor) * 100f).ToString("F1") + " cm, mesh " + ((mesh - floor) * 100f).ToString("F1") + " cm; ");
+}
+return sb + "worst capsule gap " + worst.ToString("F1");'
 # Viewer (host): what its copy of the client's wizard animator holds now.
 anim="$other"' if (other == null) return "no other body"; var a = other.GetComponentInChildren<UnityEngine.Animator>(); if (a == null) return "no animator on the other body"; var at = other.transform.position; return "at " + at.x.ToString("F2") + "," + at.z.ToString("F2") + " Speed=" + a.GetFloat("Speed").ToString("F2") + " Crouch=" + a.GetBool("Crouch") + " Casting=" + a.GetBool("Casting") + " Dead=" + a.GetBool("Dead") + " avatarHuman=" + (a.avatar != null && a.avatar.isHuman) + " controller=" + (a.runtimeAnimatorController != null ? a.runtimeAnimatorController.name : "none");'
 
@@ -133,6 +148,11 @@ pose() {
     sleep 1.5
 }
 pose idle none "Crouch=False Casting=False Dead=False avatarHuman=True controller=Wizard"
+# Standing still, both bodies' feet must be on the floor: a capsule more than 3 cm up reads as floating.
+grounded="$(rt host "$feet")"; log "host sees feet: $grounded"
+python -c "import re,sys; m=re.search(r'worst capsule gap (-?[0-9.]+)', sys.argv[1]); sys.exit(0 if m and abs(float(m.group(1))) <= 3 else 1)" "$grounded" \
+    && check ok "both bodies stand on the floor (capsule within 3 cm)" \
+    || check no "both bodies stand on the floor (capsule within 3 cm); saw: $grounded"
 pose crouch C "Crouch=True"
 pose cast V "Casting=True"
 # Backwards (S), away from the host, into the open floor; read soon, before a wall can stop the walk.

@@ -31,7 +31,7 @@ namespace Plunderspell.Tests
             machine.Creeping = creeping;
             machine.MovementDirection = Vector2.up;
 
-            machine.WalkState.Update();
+            machine.WalkState.FixedUpdate();
             Vector3 velocity = _player.GetComponent<Rigidbody>().linearVelocity;
             return new Vector2(velocity.x, velocity.z).magnitude;
         }
