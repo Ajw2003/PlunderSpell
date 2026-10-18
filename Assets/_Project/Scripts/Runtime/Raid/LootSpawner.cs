@@ -137,26 +137,36 @@ namespace Plunderspell.Raid
             BeginSettling();
         }
 
+        /// <summary>As above, but each piece also keeps the rotation it was left with (the restored Lair pile).</summary>
+        public void SpawnPile(IReadOnlyList<LootItem> items, IReadOnlyList<Vector3> positions, IReadOnlyList<Quaternion> rotations, RaidLootTable prefabs)
+        {
+            for (int i = 0; i < items.Count && i < positions.Count && i < rotations.Count; i++)
+                SpawnLoose(items[i], prefabs != null ? prefabs.PrefabFor(items[i]) : null, positions[i], rotations[i]);
+            BeginSettling();
+        }
+
         /// <summary>Takes one piece out of this spawner's care (it was picked up or sold); the object itself is left alone.</summary>
         public bool Remove(GameObject piece) => _spawned.Remove(piece);
 
         /// <summary>Spawns a single loose piece of loot — what Aurum Voco conjures.</summary>
-        public GameObject SpawnLoose(LootItem item, GameObject prefab, Vector3 position)
+        public GameObject SpawnLoose(LootItem item, GameObject prefab, Vector3 position, Quaternion? rotation = null)
         {
             if (item == null)
                 return null;
 
             EnsureContainer();
             GameObject go = prefab != null
-                // Keep the prefab's own rotation: it carries the Blender axis correction, and
-                // passing identity here lays the loot on its side.
-                ? Instantiate(prefab, position, prefab.transform.rotation, _container)
+                // Keep the prefab's own rotation unless one is given: it carries the Blender axis
+                // correction, and passing identity here lays the loot on its side.
+                ? Instantiate(prefab, position, rotation ?? prefab.transform.rotation, _container)
                 : new GameObject($"Loot_{item.DisplayName}");
 
             if (prefab == null)
             {
                 go.transform.SetParent(_container, false);
                 go.transform.position = position;
+                if (rotation.HasValue)
+                    go.transform.rotation = rotation.Value;
             }
 
             var pickup = go.GetComponent<LootPickup>();

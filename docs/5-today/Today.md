@@ -1,5 +1,9 @@
 # Today
 
+**2026-10-18 - Lair loot keeps its place, by events (#378, need to save state of items in the lair).** `HaulLanding` has no `Update`: it saves on haul landing, `Remove`, setting out, the new `SessionEnding` event (from `CoopSession.Leave()`, before the network stops) and quit; it restores on `CoopChanged` with the server running and on `SaveSlotLoaded`. EditMode 254 passed / 3 skipped / 0 failed, PlayMode 520/520, `lair_pile_check.sh` twice PASS, `coop_lair_check.sh` PASS (`docs/generated/lair-pile-2026-10-18-*.log`). Not opened as a PR yet.
+
+---
+
 **2026-10-11 (evening) - the player stands on the floor (follows #391).** Both bodies stood 29 cm up: the ground snap
 took the SphereCast's `hit.distance` as the floor, but the floor is one cast radius (0.3 m) further down. Fixed in
 `PlayerStateMachine.HeightAboveGround`. That exposed a second fault the hover had hidden: `IsGrounded` was true

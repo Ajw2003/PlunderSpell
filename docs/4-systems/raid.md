@@ -266,12 +266,17 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   (`start` = live piece count, `HaulLanding.cs:112`), so it lies beside them, in layers when the floor grid is full. Known
   ceiling: after a piece is removed from the middle, a new one can land on a cell still in use.
 - Saving: `HaulPileSave` (`Runtime/Lair/HaulPileSave.cs`) keeps the pile per save slot as one PlayerPrefs string, the asset
-  names of the pieces' `LootItem`s joined by `|`. The asset name is the id: stable across runs, already how the loot tables
-  list items, and it keeps the Lair assembly free of the loot assembly. The save is rebuilt from the pieces that exist
-  (`HaulLanding.Save`, `:131`) on every change: a haul landing, a restore, `Remove` (`:58`, takes a piece out of the pile by its
-  object, for a pickup or a sale) and a per-frame count check (`Update`, `:39`) that notices a piece destroyed anywhere else.
-  Names no table can resolve are kept in the save, never erased.
-- Restoring: on the server once it runs (`ServerReady`, `:55`: offline, or the host's server up) and again on
+  names of the pieces' `LootItem`s joined by `|`, each followed by `@` and its world position and rotation (#378). The asset
+  name is the id: stable across runs, already how the loot tables list items, and it keeps the Lair assembly free of the loot
+  assembly (the pose is a plain `HaulPileEntry`, `HaulPileEntry.cs`). A name with no `@` is a save from before poses and still
+  loads, without a pose. The save is rebuilt from the pieces that exist (`HaulLanding.Save`) at these events only, with no `Update` and no poll (#378): a haul landing (`HaulExtracted`), `Remove` (a pickup or a sale), the company setting out (`RaidPhaseChanged` to `Generating`), `SessionEnding` (published by `CoopSession.Leave()` before the network stops), and `OnApplicationQuit`. A piece moved within the Lair is saved at the next of those. Names no table can resolve are kept in the save
+  with their pose, never erased.
+- Pieces come back where they were left (#378): `HaulLanding.Restore` (`:142`) spawns a saved piece that has a pose at that pose through
+  the `SpawnPile` overload that takes rotations (`LootSpawner.cs`), held kinematic until the settle delay passes so physics
+  cannot fling it. Pieces without a pose, and every fresh haul (`Land`), still take the `HaulLayout` grid, which skips cells the
+  restored pieces occupy. Known limit: a piece moved less than 2 s before the Editor or game is closed without a normal quit
+  is saved at its older spot.
+- Restoring: when the server starts (`CoopChanged` with the server running, also checked on enable; `HaulLanding.OnCoopChanged`) and again on
   `SaveSlotLoaded` (`LairEvents.cs`, published by `LairHubManager.LoadSlot`, `LairHubManager.cs:62`; the old pile is cleared
   first). Names resolve through every era's loot table in the director's `EraContentCatalogue` (`RaidDirector.EraContent`)
   plus the raid spawner's own (`AllTables`, `:153`); a mixed-era pile is spawned per table to get each prefab.

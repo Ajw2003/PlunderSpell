@@ -1,0 +1,38 @@
+settings: saved a byte-exact copy of the settings files
+02:04:25 test slot 99 wiped, owner's slot to restore: 1
+02:04:45 build: no (auto)
+02:04:53 host: state MainMenu local none
+02:04:55 host: state LairRoom local 1005.2,1.2,1.5
+02:04:57 client started (pid 1813)
+02:05:07 client: state LairRoom local 1005.2,1.2,0.5
+02:05:11 host: spawned CopperPot(Clone) on the pile at 1004.0,0.6,0.0
+02:05:12 host: spawned CopperPot(Clone) on the pile at 1004.0,0.6,0.0
+02:05:16 host: pile 2 CopperPot(Clone) CopperPot(Clone)
+02:05:17 host: distance 1.92 from /LairRoom/HaulLanding at 1004.0,0.3,0.0
+02:05:18 host: moved CopperPot(Clone) to 1006.0,0.5,1.0 yaw 90
+02:05:25 host before: pose 1006.0,0.6,1.0 yaw 90
+02:05:25 client before: pose 1006.0,0.6,1.0 yaw 90
+02:05:25 PASS both sides see the moved piece in the same place before quitting
+02:05:26 host: state MainMenu
+02:05:27 host: state MainMenu local none
+02:05:33 host: state LairRoom local 1005.2,1.2,1.5
+02:05:35 client started (pid 2153)
+02:05:44 client: state LairRoom local 1005.2,1.2,0.5
+02:05:49 host after: pose 1006.0,0.6,1.0 yaw 90
+02:05:49 client after: pose 1006.0,0.6,1.0 yaw 90
+02:05:49 PASS after quitting to the menu and hosting again, the host sees the piece where it was left
+02:05:49 PASS the rejoined client sees the piece where it was left
+02:05:50 host: pile 2 CopperPot(Clone) CopperPot(Clone)
+02:05:50 host: near CopperPot(Clone) 1006.0,0.6,1.0; CopperPot(Clone) 1004.0,0.3,0.1; 
+02:05:50 PASS the moved piece is still at the spot it was moved to, not back in the grid
+02:05:50 PASS the pile still holds every piece (2 -> 2)
+02:06:03 host: state MainMenu local none
+02:06:05 host: state LairRoom local 1005.2,1.2,1.5
+02:06:07 host after a fresh start: pose 1006.0,0.6,1.0 yaw 90
+02:06:07 PASS after the game is started again, the piece is still where it was left
+02:06:07 client log error lines: 0
+02:06:07 PASS all Lair pile checks
+02:06:07 cleaning up
+settings: ProjectSettings/ProjectSettings.asset unchanged
+settings: ProjectSettings/Packages/com.unity.pipeline/RuntimePipelineConfig.json unchanged
+02:06:09 active slot 1
