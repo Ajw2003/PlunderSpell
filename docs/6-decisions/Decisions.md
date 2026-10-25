@@ -3,6 +3,14 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-25 — Core loops: a new cycle after the Ophan, and a campaign of 15 to 25 hours
+
+**Context.** Stage 2 of the core-loops work (`docs/plans/core-loops/analysis/analysis.md`) asked four questions. The owner's direction of 2026-10-25 (`docs/plans/core-loops/owner-direction-2026-10-25.md`) answered two of them (what coin buys, and gambling); two stayed open.
+
+**Decision (owner, 2026-10-25).** The analysis is approved ("Design approved: core-loops analysis 1* 2A"). After the Ophan of Hours is beaten, a new cycle starts, harder and richer, "but with the ability to expand further and possibly add future expansion". A regular group should take about 15 to 25 hours to beat the Ophan. Every world event gets its own designed warning signs: "the fire can't be the only visual".
+
+**Consequence.** The stage 3 proposal (`docs/plans/core-loops/proposal/`) builds the campaign as a quota ladder, the Ophan, then repeatable cycles that new content can extend, and designs each event's conveyance one by one. Status: Active.
+
 ## 2026-10-11 — Per-frame code only for what changes every frame
 
 **Context.** Agents kept putting change-detection, saves and timers in `Update`. The Lair pile save wiped a

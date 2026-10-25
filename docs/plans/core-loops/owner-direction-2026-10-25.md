@@ -103,5 +103,11 @@ one-off features.
 |---|---|
 | What coin buys | spells, tools and weapons that counter challenges, plus cosmetics and emotes (close to option A) |
 | Gambling | blackjack and cards in a separate area of the Market, later hail Mary mechanisms (option B, a separate den, plus hail Mary) |
-| After the Ophan | not answered |
-| Campaign length | not answered |
+| After the Ophan | a new cycle, harder and richer, that can be expanded with future content (option A, 22:20 UTC) |
+| Campaign length | about 15 to 25 hours (option A, 22:20 UTC) |
+
+## Event conveyance (owner, 22:20 UTC)
+
+- "The fire can't be the only visual, there needs to be bespoke conveyance for each event and that
+  needs to be planned and designed, not just blanketly addressed." Each event gets its own sights and
+  sounds that warn of it, designed one by one.

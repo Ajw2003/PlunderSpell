@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" width="900" height="560"><rect width="900" height="560" fill="#1E1A14"/>
+<defs><marker id="a0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2E9E7A"/></marker><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#D45A30"/></marker><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4A8BD0"/></marker><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C8609A"/></marker></defs>
+<text x="24" y="30" fill="#DCD2BA" font-size="18" font-family="Spectral, Georgia, serif">Three loops, three clocks of reward</text>
+<rect x="24" y="56" width="270" height="444" rx="10" fill="none" stroke="#D45A30" stroke-width="2"/>
+<text x="38" y="84" fill="#D45A30" font-size="16" font-family="Spectral, Georgia, serif" font-weight="600">Primary: the raid</text>
+<text x="38" y="104" fill="#9A9078" font-size="12" font-family="Spectral, Georgia, serif">12 to 15 minutes, rewards every few seconds</text>
+<rect x="38" y="126" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="50" y="151" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Choose an Age on the dial</text>
+<line x1="159.0" y1="167" x2="159.0" y2="186" stroke="#D45A30" stroke-width="2" marker-end="url(#a1)"/>
+<rect x="38" y="188" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="50" y="213" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Enter the castle</text>
+<line x1="159.0" y1="229" x2="159.0" y2="248" stroke="#D45A30" stroke-width="2" marker-end="url(#a1)"/>
+<rect x="38" y="250" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="50" y="275" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Read the loot: variant, weight, fire</text>
+<line x1="159.0" y1="291" x2="159.0" y2="310" stroke="#D45A30" stroke-width="2" marker-end="url(#a1)"/>
+<rect x="38" y="312" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="50" y="337" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Counter guards and the event</text>
+<line x1="159.0" y1="353" x2="159.0" y2="372" stroke="#D45A30" stroke-width="2" marker-end="url(#a1)"/>
+<rect x="38" y="374" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="50" y="399" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Carry it out before the portal closes</text>
+<rect x="312" y="56" width="270" height="444" rx="10" fill="none" stroke="#4A8BD0" stroke-width="2"/>
+<text x="326" y="84" fill="#4A8BD0" font-size="16" font-family="Spectral, Georgia, serif" font-weight="600">Secondary: Lair and Market</text>
+<text x="326" y="104" fill="#9A9078" font-size="12" font-family="Spectral, Georgia, serif">about 5 minutes, a purchase every visit</text>
+<rect x="326" y="126" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="338" y="151" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Haul lands in the Lair</text>
+<line x1="447.0" y1="167" x2="447.0" y2="186" stroke="#4A8BD0" stroke-width="2" marker-end="url(#a2)"/>
+<rect x="326" y="188" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="338" y="213" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Sell and haggle</text>
+<line x1="447.0" y1="229" x2="447.0" y2="248" stroke="#4A8BD0" stroke-width="2" marker-end="url(#a2)"/>
+<rect x="326" y="250" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="338" y="275" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Hand in a vendor quest</text>
+<line x1="447.0" y1="291" x2="447.0" y2="310" stroke="#4A8BD0" stroke-width="2" marker-end="url(#a2)"/>
+<rect x="326" y="312" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="338" y="337" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Buy a spell, tool, weapon or hat</text>
+<line x1="447.0" y1="353" x2="447.0" y2="372" stroke="#4A8BD0" stroke-width="2" marker-end="url(#a2)"/>
+<rect x="326" y="374" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="338" y="399" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Blackjack in the den</text>
+<line x1="447.0" y1="415" x2="447.0" y2="434" stroke="#4A8BD0" stroke-width="2" marker-end="url(#a2)"/>
+<rect x="326" y="436" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="338" y="461" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Ledger: the Ophan's next demand</text>
+<rect x="600" y="56" width="270" height="444" rx="10" fill="none" stroke="#2E9E7A" stroke-width="2"/>
+<text x="614" y="84" fill="#2E9E7A" font-size="16" font-family="Spectral, Georgia, serif" font-weight="600">Tertiary: the campaign</text>
+<text x="614" y="104" fill="#9A9078" font-size="12" font-family="Spectral, Georgia, serif">15 to 25 hours, then new cycles</text>
+<rect x="614" y="126" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="626" y="151" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Meet a demand: a rung on the ladder</text>
+<line x1="735.0" y1="167" x2="735.0" y2="186" stroke="#2E9E7A" stroke-width="2" marker-end="url(#a0)"/>
+<rect x="614" y="188" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="626" y="213" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Three rungs open the next Age</text>
+<line x1="735.0" y1="229" x2="735.0" y2="248" stroke="#2E9E7A" stroke-width="2" marker-end="url(#a0)"/>
+<rect x="614" y="250" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="626" y="275" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Twelve rungs: face the Ophan</text>
+<line x1="735.0" y1="291" x2="735.0" y2="310" stroke="#2E9E7A" stroke-width="2" marker-end="url(#a0)"/>
+<rect x="614" y="312" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="626" y="337" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">Beat it: the next cycle, harder</text>
+<line x1="735.0" y1="353" x2="735.0" y2="372" stroke="#2E9E7A" stroke-width="2" marker-end="url(#a0)"/>
+<rect x="614" y="374" width="242" height="40" rx="6" fill="#332D22"/>
+<text x="626" y="399" fill="#DCD2BA" font-size="13" font-family="Spectral, Georgia, serif">New cycles and Ages as data</text>
+<path d="M280,394 C314,394 298,146 326,146" fill="none" stroke="#9A9078" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#a2)"/>
+<path d="M568,456 C602,456 586,146 614,146" fill="none" stroke="#9A9078" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#a0)"/>
+<text x="24" y="530" fill="#9A9078" font-size="12" font-family="Spectral, Georgia, serif">Each raid feeds the Market; each Market visit pays toward the next purchase and the next demand; the dial sends you back into a raid.</text>
+<text x="24" y="548" fill="#9A9078" font-size="12" font-family="Spectral, Georgia, serif">Times are estimates: no full loop has been timed yet.</text>
+</svg>

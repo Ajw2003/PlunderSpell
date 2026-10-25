@@ -1,5 +1,7 @@
 # Today
 
+**2026-10-25 (later): core-loops proposal written.** The owner approved the analysis (a new cycle after the Ophan; 15 to 25 hours; each event gets its own warning signs). The stage 3 proposal is in `docs/plans/core-loops/proposal/`: the three loops, loot variants, spreading fire and water, curses and the Echo, seven world events, true forms for all sixteen guards, buying, quests, blackjack, the Ophan's ladder and cycles, a timeline and four workstream briefs. Waits on the owner's approval and six choices.
+
 **2026-10-25 - core-loops research and analysis (stages 1 and 2 of 4).** The owner asked for research, analysis, a
 proposal and then delegation for the game's primary, secondary and tertiary loops. Done so far, in
 `docs/plans/core-loops/`: raw research (the game by branch, ten viral indie games, How to Fish, every Lethal Company and

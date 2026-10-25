@@ -1,6 +1,6 @@
 # Core loops: research, analysis, proposal, delegation
 
-**Status: stages 1 and 2 done 2026-10-25. The owner's direction is in [`owner-direction-2026-10-25.md`](owner-direction-2026-10-25.md); two of the page's choices (after the Ophan, campaign length) are still open before stage 3.**
+**Status: stages 1 and 2 done and approved 2026-10-25 (a new cycle after the Ophan; 15 to 25 hours). Stage 3, the proposal, waits on the owner's approval and six choices.**
 
 The owner asked (2026-10-25) to research, plan, propose and then build PlunderSpell's primary,
 secondary and tertiary loops: enemies with unique attacks and counters in the manner of Lethal
@@ -11,8 +11,8 @@ in four stages, each approved before the next:
 | Stage | Output | Status |
 |---|---|---|
 | 1. Raw research | `research/` (below) | done |
-| 2. Analysis and an easy-to-read page | `analysis/analysis.md`, page `analysis/analysis.html` (published as https://claude.ai/artifact/4Mebn1titQFAEKqqpheaXT) | done; four choices wait on the owner |
-| 3. Proposal page: loops, enemy roster, progression, economy, gambling, timeline, four workstreams | `proposal/` | waiting |
+| 2. Analysis and an easy-to-read page | `analysis/analysis.md`, page `analysis/analysis.html` (published as https://claude.ai/artifact/4Mebn1titQFAEKqqpheaXT) | approved 2026-10-25 |
+| 3. Proposal page: loops, enemy roster, progression, economy, gambling, timeline, four workstreams | `proposal/proposal.md`, page `proposal/proposal.html`, briefs in `proposal/briefs/` | written; waits on approval |
 | 4. Delegation across the owner's four accounts, then building | issues and branches | waiting for approval of stage 3 |
 
 ## Stage 1 files
@@ -32,3 +32,10 @@ in four stages, each approved before the next:
 - [`analysis/analysis.html`](analysis/analysis.html): the page, built by `make_page.py` from `analysis/analysis.page.json`.
 - [`analysis/mods-analysis.md`](analysis/mods-analysis.md): what the content mods teach.
 - `analysis/charts/`: the four charts (with mods.svg) as SVG and PNG (retention, sales, the three clocks of reward).
+
+## Stage 3 files
+
+- [`proposal/proposal.md`](proposal/proposal.md): the proposal in full.
+- [`proposal/proposal.html`](proposal/proposal.html): the page, built by `make_page.py` from `proposal/proposal.page.json`.
+- [`proposal/briefs/`](proposal/briefs/): one self-contained brief per workstream (W1 economy and Market, W2 loot, fire and curses, W3 the household, W4 world and campaign).
+- `proposal/charts/`: the loops diagram and the timeline, as SVG and PNG.

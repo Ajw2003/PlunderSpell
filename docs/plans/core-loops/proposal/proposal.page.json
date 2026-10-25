@@ -1,0 +1,466 @@
+{
+ "title": "PlunderSpell core loops: the proposal",
+ "eyebrow": "Stage 3 of 4 · proposal · nothing built",
+ "approval": "Design approved: core-loops proposal",
+ "short": {
+  "lead": "Coin finally buys things. Every piece of loot can be more than a price. The castle reacts to what you do through seven events, each with its own warning. Every guard gets a true form with its own counter, as the Wick already has. Above it all, the Ophan's ladder of twelve demands gives the campaign its 15 to 25 hours and a new cycle after it. Four streams build it in parallel, each from a brief that stands alone.",
+  "hint": "Tap a card for the detail. The full design of each system is under What this creates or changes.",
+  "key": [
+   [
+    "Proposed",
+    ""
+   ],
+   [
+    "Needs your answer",
+    "you"
+   ],
+   [
+    "Exists already",
+    "done"
+   ]
+  ],
+  "items": [
+   [
+    "hand",
+    "Built on",
+    "What this reuses, merges and cuts",
+    "done",
+    "Reused: the raid loop (RaidDirector), the century dial, selling and haggling, the four vendors, coin pouches and strongboxes, the vendor slate (becomes the quest board), loot categories, the alarm's fires, lockdown doors, the one guard brain, the Wick, the Ophan's design, the earlier mimic branches' microphone capture, and the blackjack flow from The Fall of Golden Bay 2D. Cut: the Collector's debt, as the fear pass (the approved redesign that made raids about fear) decided on 2026-10-11. Missing today: anything to buy.",
+    "Nothing from you."
+   ],
+   [
+    "loop",
+    "Three loops",
+    "The raid, the Market, the campaign",
+    "",
+    "Primary, the raid (about 12 to 15 minutes): choose an Age, read the loot, counter guards and events, get out. Secondary, the Lair and Market (about 5 minutes): sell, hand in quests, buy, gamble, see the Ophan's next demand and the next Age's threats. Tertiary, the campaign (15 to 25 hours): twelve demands, three per Age, open the Ages one by one, then the Ophan, then a harder cycle that future content extends. A raid plus its Market visit is about 20 minutes, so twelve demands at 3 to 5 raids each is 12 to 20 hours of raiding; failed demands, gambling and the confrontation bring it to 15 to 25. No full loop has been timed yet.",
+    "Nothing from you.",
+    {
+     "src": "docs/plans/core-loops/proposal/charts/loops.png",
+     "alt": "Three columns. Primary, the raid: choose an Age, enter, read the loot, counter guards and the event, carry it out. Secondary, Lair and Market: haul lands, sell, quest, buy, blackjack, ledger shows the next demand. Tertiary, the campaign: meet a demand, three rungs open the next Age, twelve rungs face the Ophan, beat it for the next cycle, new cycles as data.",
+     "caption": "Each raid feeds the Market, each Market visit pays toward the next purchase and demand, and the dial sends you back in."
+    }
+   ],
+   [
+    "eye",
+    "World events",
+    "Seven events, each with its own warning",
+    "",
+    "Three come from your actions: the vault seals when you lift a treasury's centrepiece, wildfire when fire reaches a third room, a collapse when an old floor takes too much. Four come at random: plague rats, the Ophan arriving early, the full moon that turns every guard, and an invasion through the front gate. No two share a sign. Each has a far sign you can read from another room, a sound of its own, a clock in the world (the moon's height, the ram's rhythm, a crack's length), a change in what the guards do, a counter and a reward. The alarm's fire stays the alarm's language only.",
+    "Pick which two events are built first (choice 5) and how often random events come (choice 2)."
+   ],
+   [
+    "search",
+    "True forms",
+    "Every guard gets the Wick's treatment",
+    "",
+    "Sixteen true forms, one per enemy type, each with one sense, one attack, one tell and one counter. Phase 1 builds one per Age: the Wick (built), the Hearth-Mother (Bronze: sees heat, throws fire; Aqua douses her pots), the Visor (Late Medieval: moves only when nobody looks), the Doorman (Powder: waits as a door; Porta's knock tells real doors from it). The full roster is in the detail below and in proposal.md.",
+    "Pick how many true forms to build first (choice 4)."
+   ],
+   [
+    "hammer",
+    "Coin buys things",
+    "A Market that sells, with quests and a den",
+    "",
+    "Every piece of stock counters a named threat: spells (Somnus, Aqua, Purgo, Velox, Saltus), tools (hood, bucket, chalk, mirror, sounding rod, meat), weapons with their own play style (cudgel, sling, net, censer; none kills a true form), Lair rooms, and cosmetics and emotes at a new fifth stall, the Tailor. Each price band costs about two to three raids' coin at your level. Vendors post quests that pay 1.5 times plus a named reward. Blackjack has its own den.",
+    "Pick where worth shows as numbers on screen (choice 1)."
+   ],
+   [
+    "list",
+    "Four streams",
+    "One stream per account, minimal overlap",
+    "",
+    "W1 builds the economy and Market. W2 builds loot variants, fire and water, curses and the Echo. W3 builds the guards of each Age (the household) and their true forms. W4 builds world events, the campaign and the shared contracts. Each owns its own folders and talks to the others only through events and interfaces W4 writes down in week 0, so four people can work at once. Each brief stands alone: docs/plans/core-loops/proposal/briefs/.",
+    "Nothing from you."
+   ],
+   [
+    "next",
+    "Timeline",
+    "Week 0, three phases of three weeks, then a stretch",
+    "",
+    "Week 0: merge the Wick (#417), pull request #414 (the Wick and the Ophan's art) and pull request #422 (the Lair pile that keeps its place), and write the contracts. Phase 1, weeks 1 to 3: buying, gold and platinum loot, spreading fire and water, the first true form after the Wick, the event system with its first two events, the Ophan's ladder. Phase 2, weeks 4 to 6: quests, blackjack, curses and the Echo, two more true forms, the other random events, Ages unlocking. Phase 3, weeks 7 to 9: cosmetics, wildfire and collapse, the Ophan's confrontation, the second cycle, the mod loader, a timed tuning pass. The weeks are an estimate from the size of each step; nothing has been timed.",
+    "Nothing from you.",
+    {
+     "src": "docs/plans/core-loops/proposal/charts/timeline.png",
+     "alt": "Gantt chart across weeks 0 to 10. Week 0: Wick merge and contracts. Phases 1 to 3 of three weeks each run four streams in parallel. Week 10: Thunderstore as a stretch.",
+     "caption": "Four streams in parallel. The weeks are estimates."
+    }
+   ],
+   [
+    "lock",
+    "Your answers",
+    "Six choices, then approval",
+    "you",
+    "Numbers on screen, how often events come, how Ages unlock, how many true forms first, which events first, and how the Echo's voice clips are handled. Each has a suggestion marked.",
+    "Pick your answers under Choices, then send the approval phrase."
+   ]
+  ]
+ },
+ "changes": [
+  [
+   "new",
+   "Loot variants",
+   "Gold, platinum, flammable and cursed, each a rule with a counter.",
+   null,
+   "Plain is worth x1. Gold is worth x2 and is tougher (it breaks at 1.5 times the plain breaking threshold), 1.3 times the weight, 12% of pieces. Platinum x3.5, fragile (breaks at half the threshold; each hard knock cracks it and drops a step of worth), a cold shine guards see from further away, 4%. Flammable (cloth, wood, paper and wax pieces): catches within 1 m of a flame, burns to ash in 8 s, drops sparks; 15% of those pieces. Cursed is worth x2.5 and carries one curse: the Echo, the Weight or the Whisper; 3%, 5% in later cycles; Purgo cleanses it. Moonsilver is worth x5 and appears only on full-moon nights. All chances are starting values for tuning.",
+   [
+    "Every piece has only a price and a category.",
+    "A LootVariant data asset rolled at spawn.",
+    "Each grab is a small gamble and a choice: carry it fast, carry it carefully, or leave it."
+   ]
+  ],
+  [
+   "new",
+   "Fire that spreads, and water that stops it",
+   "The alarm's fires stay; a separate fire spreads through things that burn.",
+   null,
+   "Every furnishing and piece has a material; wood, cloth, paper and wax burn. Torches, braziers, hearths, burning guards, Ignis (the fire spell), misfires, the Hearth-Mother's pots, the Wick's light and any burning piece can light them. Fire jumps 1.5 m every 3 s, every 10 s through a closed door. A burning player has 6 s to reach water or be doused. If not, they go down, which is likely death but not certain. Water: Aqua (a bought spell, a 4 m cone), a bucket (one douse), and fixed water per Age: a cistern and jars (Bronze), a well and troughs (High Medieval), a laver and rain barrels (Late Medieval), a fountain and fire buckets (Powder).",
+   [
+    "Fires grow with the alarm; guards and players can burn, but nothing spreads.",
+    "Materials, spread, Aqua, the bucket and water placed by the room generator.",
+    "Carrying a book past a torch is a decision."
+   ]
+  ],
+  [
+   "new",
+   "Curses and the Echo",
+   "A copy of you that walks the castle and speaks in your own voice.",
+   null,
+   "Carry a piece with the Echo curse for 40 s and a copy of you (your colours, your hat, your name) walks out of the nearest dark doorway, wanders, speaks in short clips of your own voice from this raid, and kills you if it catches you. Drop or cleanse the piece first and nothing comes. Clips are 1 to 4 s, cut only from moments the microphone was already live for casting, held in memory, wiped on quit, sent to others only while your Echo exists, with an opt-out. No speech recognition and no voice synthesis, as in Mirage and Skinwalkers, the Lethal Company mods that do this. The microphone capture comes from the earlier mimic branches. Two simpler curses: the Weight (heavier every 20 s) and the Whisper (guards within 8 m hear it).",
+   [
+    "Mimic prototypes on two old branches.",
+    "Curses as data, the Echo, Purgo.",
+    "The scariest moment in the game is your friend's voice from the wrong room."
+   ]
+  ],
+  [
+   "new",
+   "Event: the vault seals",
+   "Greed: lift the treasury's centrepiece and the castle locks behind you.",
+   null,
+   "Trigger: lifting a treasury's centrepiece from its pedestal. Far sign: none needed. The pedestal sinks a hand's width with a stone grind, and dust sifts from every lintel between the treasury and the portal. Sound: counterweights ticking inside the walls, slow, then faster. Clock in the world: portcullises drop room by room toward the treasury, each after a chain rattle overhead, so you hear which falls next; 90 s in all. What the guards do: they run toward the treasury. Counter: put the piece back and it stops; use Levo to hold a portcullis for 5 s, or Velox to outrun it. Reward: the centrepiece is worth about three ordinary hauls.",
+   [
+    "Lockdown doors exist (Decisions, 2026-10-02).",
+    "A WorldEvent data asset with its own warning cues, phases, counter and reward.",
+    "A raid that changes because of what you did, or what the night brought, and warns you in its own way."
+   ]
+  ],
+  [
+   "new",
+   "Event: wildfire",
+   "Fire reaches a third room and the wing burns.",
+   null,
+   "Trigger: the spreading fire reaches a third room. Far sign: smoke layers at the ceiling and flows through doorways, showing which way the fire moves; ash falls like snow. Sound: timber cracking under a low, rising roar. Clock in the world: the smoke layer sinks; at head height you choke and slow. What the guards do: they drop their rounds to fight the fire with buckets, leaving a safe lane through the rooms they leave. Counter: Aqua, the Age's water, closed doors. Reward: burnt tapestries and panelling reveal hidden alcoves with loot.",
+   [
+    "The alarm's fires and the burning status exist; spreading does not.",
+    "A WorldEvent data asset with its own warning cues, phases, counter and reward.",
+    "A fire you lit comes back as a threat to the whole wing, with a warning you can read."
+   ]
+  ],
+  [
+   "new",
+   "Event: the collapse",
+   "An old floor takes too much and gives way.",
+   null,
+   "Trigger: a petard, the Dendra Champion's charge, or several heavy pieces dropped in one upper room. Far sign: cracks spread across the ceiling plaster and visibly grow. Sound: a deep groan in the beams; loose stones skitter down the stairs. Clock in the world: the crack's length; every candle flame in the room leans toward the weak spot. What the guards do: they refuse to enter the room. Counter: spread the weight, use Levo to move pieces across, or cross the gap with Saltus. Reward: the floor drops into a sealed crypt, or opens a shortcut down.",
+   [
+    "Nothing like it exists.",
+    "A WorldEvent data asset with its own warning cues, phases, counter and reward.",
+    "An overloaded floor tells you in the ceiling before it falls."
+   ]
+  ],
+  [
+   "new",
+   "Event: plague rats",
+   "Swarms spread through the castle, and the sick cough.",
+   null,
+   "Trigger: about one raid in eight, High Medieval and later. Far sign: chalk crosses on doors (the period's plague mark), dead rats in corners, loot already gnawed and worth less. Sound: scratching inside the walls, moving room to room. Clock in the world: swarms creep along the skirting from room to room; the ledger map shows the gnawed rooms grow. What the guards do: infected guards cough loudly every 20 s, so you hear them coming. Counter: fire drives a swarm back; a touched player coughs too, a noise guards hear, until you use Purgo or take the Pardoner's remedy. Reward: rooms the rats hold are empty of guards.",
+   [
+    "Nothing like it exists.",
+    "A WorldEvent data asset with its own warning cues, phases, counter and reward.",
+    "A sickness you can hear coming."
+   ]
+  ],
+  [
+   "new",
+   "Event: the Ophan comes early",
+   "On a demand raid, time goes wrong and the Ophan arrives long before the portal closes.",
+   null,
+   "Trigger: about one demand raid in four. Far sign: hourglasses run upward, wax climbs back up the candle, and a line of wall briefly shows raw quarry rock where it will pass. Sound: one high chord of its wheels, louder each minute; the portal's hum goes out of tune. Clock in the world: lapis light grows in the windows from outside. What the guards do: they kneel and stop moving when the chord sounds. Counter: have the demanded artifact in hand; it always spawns on a demand raid, so this never depends on luck. Reward: hand it over early and the portal stays open 60 s longer.",
+   [
+    "The Ophan is designed (#418, its arrival and catch), not built.",
+    "A WorldEvent data asset with its own warning cues, phases, counter and reward.",
+    "A demand raid where time itself warns you."
+   ]
+  ],
+  [
+   "new",
+   "Event: the full moon",
+   "At moonrise every guard turns, as the Wick turns.",
+   null,
+   "Trigger: about one raid in eight, every Age. Far sign: the moon hangs huge and low in every window, and moonlight shafts creep across the floors as it rises. Sound: war-hounds (or courtyard dogs) howl, more often as it climbs. Clock in the world: the moon's height; at moonrise, 5 minutes in, every guard turns at once. What the guards do: before moonrise they twitch, scratch, and stop on their rounds to stare at windows. Counter: be out by then, or rely on each true form's own counter. Reward: moonsilver, a x5 variant that only spawns on these nights.",
+   [
+    "The true-form turn exists in the Wick.",
+    "A WorldEvent data asset with its own warning cues, phases, counter and reward.",
+    "A night with a deadline you can see in the sky."
+   ]
+  ],
+  [
+   "new",
+   "Event: the invasion",
+   "The next Age's household storms the gate, and you are caught in the middle.",
+   null,
+   "Trigger: about one raid in eight, every Age. Far sign: guards leave their posts and run for the walls, so the inner castle empties; fire arrows thud into shutters. Sound: war horns, then a ram on the front gate, one blow every 8 s, faster each time. Clock in the world: the ram's rhythm. What the guards do: they fight the invaders; the invaders fight everyone, you included, and carry off loot. Counter: let them fight, avoid the gatehouse, use the empty keep. Reward: the invaders' war chest, dropped where their captain falls.",
+   [
+    "The next Age's household exists as art and tuning.",
+    "A WorldEvent data asset with its own warning cues, phases, counter and reward.",
+    "A siege you can hear coming, with you in the middle."
+   ]
+  ],
+  [
+   "new",
+   "The household's true forms",
+   "Sixteen forms, one sense, attack, tell and counter each.",
+   null,
+   "Phase 1, one per Age. The Hearth-Mother (Keeper of the Flame, Bronze): sees heat, throws fire pots; Aqua douses her pots, a burning piece lures her. The Wick (Lantern Warden, High Medieval, built): sees only in its own light; the hood dims yours. The Visor (Sallet Halberdier, Late Medieval): moves only when nobody looks; one watches while the others move. The Doorman (Palace Guard, Powder): waits as a door, hinges on the wrong side, no creak; Porta's knock tells, chalk marks checked doors. Later, each with its counter: the Furrow (feels footsteps; stand still on a rug), the Whirr (a sling that knocks loot from your hands), the Bell (blind charge into a wall). Then the Windlass (a bolt pins you until a friend pulls you free), the Tithe (follows your most valuable piece; drop it), the Hush (hears every cast; stay silent), the Match (Aqua puts out its match), the Harness (re-forms; use Levo to lift its helm away), the Wall (seals doorways; jump it with Saltus), the Volley (shoots through wood; water wets the powder), the Rider (cannot take corners), the Fuse (Aqua puts out the fuse, or you lure it to a door you want opened).",
+   [
+    "One true form, the Wick, on a branch.",
+    "A TrueFormDef data asset and three new forms in phase 1.",
+    "Every Age has a monster you learn, and knowing it is progress."
+   ]
+  ],
+  [
+   "new",
+   "Buying",
+   "Every piece of stock counters a named threat.",
+   null,
+   "Spells cost 1,000 to 6,000 coin, cheapest to dearest: Somnus, Aqua, Purgo, Velox, Saltus. Tools 50 to 800 (hood, bucket, chalk, hand mirror, sounding rod, meat). Weapons 300 to 2,500, each a play style (cudgel, sling, throwing net, censer), for human forms only. Lair rooms 2,000 to 8,000. Cosmetics and emotes 100 to 2,000 at the Tailor, a fifth stall. Early raids bring home about 200 to 600 coin, late ones 2,000 to 4,000, so each price band costs about two to three raids' coin at your level. You buy by saying Emo (Latin for I buy) or pressing the buy key, and haggling works both ways. All prices are starting values.",
+   [
+    "Coin pays only the Collector, who is being cut.",
+    "Stock as data, buying, and what the company owns, saved.",
+    "Every haul turns into something you feel next raid."
+   ]
+  ],
+  [
+   "new",
+   "Vendor quests",
+   "Each vendor pins a job to the slate.",
+   null,
+   "A quest names a category, an Age, a minimum condition and sometimes a variant (a Holy piece of the High Medieval, gold or better). It pays 1.5 times the piece's price plus a named reward: a tool, a cosmetic or a discount. Quests are optional, so they may depend on luck. The Ophan never asks for a variant unless it is guaranteed to spawn.",
+   [
+    "The slate shows vendor lines.",
+    "Quests as data on the slate.",
+    "A raid can be a job with a target, not only a sweep."
+   ]
+  ],
+  [
+   "chg",
+   "Numbers on screen",
+   "You asked for worth to rise visibly; the diegetic rule (show only what exists in the game world) says the number goes.",
+   [
+    "No numbers: worth is learned at the counter.",
+    "Numbers where they change (choice 1)."
+   ],
+   "The diegetic design (docs/7-design/diegetic-ui-lair-market.md) removed the haul's worth from the screen. The owner's direction asks for worth that goes up and down visibly, in growing steps. Choice 1 settles where numbers appear; the suggestion keeps the raid without them.",
+   null
+  ],
+  [
+   "new",
+   "Blackjack den",
+   "A table at the back of the Market, from the Golden Bay code.",
+   null,
+   "Kept from The Fall of Golden Bay 2D: the flow (deal, your turn, dealer hits on 16 or less, result) and the win, lose and tie events through EventManager. Changed: a six-deck shoe shuffled from the raid seed instead of an endless random deck; soft aces instead of an ace always 11; bets as coin pouches on the felt, 3 to 2 on a blackjack; up to four players at a 3D table with the host dealing; a table limit per Age; Plus to hit and Satis to stand, the haggle words. In-game coin only. Hail Mary bets, a last big gamble that can save a bad run, come later.",
+   [
+    "Blackjack exists in another of your projects, single player, no betting.",
+    "A networked table with bets in its own den.",
+    "A quick gamble with friends between raids."
+   ]
+  ],
+  [
+   "new",
+   "The Ophan's ladder and the next cycle",
+   "Twelve demands, the confrontation, then a harder cycle.",
+   null,
+   "The ledger shows twelve rungs, three per Age. Meeting an Age's third demand opens the next Age on the dial, whose plaque previews its household and likely events. The demanded artifact is always pinned in a demand raid, so required progress never depends on luck. Caught empty-handed you die, the rung waits, and the artifact spawns again next raid. After the twelfth, the Ophan's own castle. Beat it and the next cycle starts: spells, tools and cosmetics kept, coin reset, harder tuning, more events, rarer variants. A cycle is a data asset, so new Ages, events or cycles can be added later.",
+   [
+    "The Ophan is designed, not built.",
+    "The ladder, Age unlocks, the threat preview, the confrontation and cycles.",
+    "There is always a next rung, and a next cycle after the last one."
+   ]
+  ],
+  [
+   "chg",
+   "The Collector's debt",
+   "Cut, as the fear pass decided on 2026-10-11.",
+   [
+    "Each wizard owes a share of a debt.",
+    "The Ophan's demands give the pressure instead."
+   ],
+   "Removed with the buying step, so coin has one job: spending.",
+   null
+  ],
+  [
+   "new",
+   "Content as data, mods later",
+   "Everything above is data first.",
+   null,
+   "Variants, curses, events, stock, quests, true-form tuning and cycles are data assets. Phase 3 adds a loader that reads the same definitions from JSON in a mods folder; publishing on Thunderstore is the stretch goal.",
+   [
+    "Some tuning is in data assets already.",
+    "One ContentDef base and a JSON loader.",
+    "One person can add content without code, and modders can later."
+   ]
+  ]
+ ],
+ "choices": [
+  [
+   "numbers",
+   "Where should worth show as numbers on screen?",
+   [
+    [
+     "A",
+     "In the Lair and Market, at the moment of change",
+     1,
+     "A sale's +240, the purse tally, price tags; the raid stays without numbers."
+    ],
+    [
+     "B",
+     "Everywhere, the raid's haul included",
+     0,
+     "The most feedback, and the most HUD."
+    ],
+    [
+     "C",
+     "Nowhere: keep the diegetic rule",
+     0,
+     "Worth is learned only at the counter."
+    ]
+   ],
+   "It gives the visible climb you asked for without putting numbers back into the raid's fear."
+  ],
+  [
+   "events",
+   "How often should random events come?",
+   [
+    [
+     "A",
+     "About one raid in two, never two in one raid",
+     1,
+     "Events caused by your actions (the vault seals, wildfire, the collapse) still fire whenever you trigger them."
+    ],
+    [
+     "B",
+     "Every raid",
+     0,
+     "Never a quiet raid."
+    ],
+    [
+     "C",
+     "About one raid in four",
+     0,
+     "Events stay rare and special."
+    ]
+   ],
+   "Often enough that you expect something, rare enough that a quiet raid is a relief."
+  ],
+  [
+   "ages",
+   "How should the Ages unlock?",
+   [
+    [
+     "A",
+     "By the Ophan's ladder, three demands per Age",
+     1,
+     "Progress you can see on the ledger."
+    ],
+    [
+     "B",
+     "Bought in the Market",
+     0,
+     "Coin opens them."
+    ],
+    [
+     "C",
+     "All four open from the start",
+     0,
+     "Choice from the first raid."
+    ]
+   ],
+   "It ties the hours clock to the end goal, as How to Fish's islands do."
+  ],
+  [
+   "forms",
+   "How many true forms should be built first?",
+   [
+    [
+     "A",
+     "One per Age: the Wick, the Hearth-Mother, the Visor, the Doorman",
+     1,
+     "Every Age has its monster."
+    ],
+    [
+     "B",
+     "Two: the Wick and the Hearth-Mother",
+     0,
+     "Faster, two Ages without one."
+    ],
+    [
+     "C",
+     "All four of one Age",
+     0,
+     "One Age finished in depth."
+    ]
+   ],
+   "Every Age you can pick on the dial then has a threat with its own counter."
+  ],
+  [
+   "firstevents",
+   "Which two events should be built first?",
+   [
+    [
+     "A",
+     "The vault seals and the full moon",
+     1,
+     "They reuse lockdown doors and the true-form turn."
+    ],
+    [
+     "B",
+     "Plague rats and the invasion",
+     0,
+     "Newer content, more to build."
+    ]
+   ],
+   "Least new code for one action event and one random event."
+  ],
+  [
+   "echo",
+   "How should the Echo's voice clips be handled?",
+   [
+    [
+     "A",
+     "Sent to the others only while your Echo exists, in memory only, with an opt-out",
+     1,
+     "Everyone hears it, as with Mirage."
+    ],
+    [
+     "B",
+     "Never leave your machine",
+     0,
+     "Only you hear your Echo; far less frightening."
+    ]
+   ],
+   "It is the horror you asked for, with clips that never touch a disk."
+  ]
+ ],
+ "wrapup": {
+  "summary": "A proposal for PlunderSpell's three loops: buying, loot variants, spreading fire and water, curses and the Echo, seven world events each with its own warning, a true form for every guard, quests, blackjack, the Ophan's ladder and cycles, built by four streams.",
+  "changing": "Nothing is built yet. Approval opens the issues and the four threads.",
+  "blocking": "Your six choices and the approval phrase.",
+  "next": "After approval I open the parent issue and one issue per stream, and start four threads in this project, one per brief; the Wick (#417) and pull requests #414 and #422 merge first.",
+  "todo": [
+   "Pick your answers (Choices).",
+   "Tap <b>Copy my reply</b>.",
+   "Send it, or say what to change."
+  ]
+ }
+}
