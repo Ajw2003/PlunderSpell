@@ -76,6 +76,19 @@ one-off features.
 - Random in-world events add nuance, like How to Fish's random bosses or the Lycanites Mobs mod for
   Minecraft.
 
+## A living world: events from your actions and at random (owner, 22:07 UTC)
+
+- More focus on the environment triggering events. The game already tells its story through the
+  environment (the fires show how worried you should be).
+- **Your actions have consequences in the world**, like FacilityMeltdown: an act sets off an event.
+- **Random events, like Lycanites Mobs.** The owner's examples:
+  - plague rats that spread through the castle;
+  - the Ophan deciding to show up early;
+  - a full moon that turns every enemy, as the Wick turns;
+  - an invasion: new enemies pour in through the front gate and the players are caught in the middle
+    of the fighting.
+- "I want this world to feel alive, and dangerous, and for your actions to have clear consequences."
+
 ## Mods
 
 - Mods help explain why these games spike, fall sharply and still keep a dedicated base. Lethal Company,
