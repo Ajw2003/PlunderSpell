@@ -121,3 +121,23 @@ one-off features.
   riskier the extraction because of it, the more it is worth. Make the logic intuitive."
 - **Ages:** all open from the start, as in Lethal Company. Random events may make one Age more appealing, but they
   are hidden at first; a later unlock gives foresight, so you are told in advance what event a raid has.
+
+## Answers on the comparison page (owner, 23:21 UTC)
+
+Given on "Principles v2 against the core loops proposal" (https://claude.ai/artifact/6wwKL72YCFBrzjWChr1XML),
+reply "Comparison read: principles v2 vs core loops 1* 2* 3A 4* 5A 6A 7A". These feed area 1, the hook and the
+first five minutes.
+
+- **The 15-second line (own answer):** none of the offered lines. It must still convey what you do in the game:
+  "fish, shoot fish, sell fish" tells you the loop; "shout spells, the castle hears you" does not.
+- **The first spell (own answer):** find a fun spell a new save can use first that does not harm progression or
+  make you overpowered. It must be fun, not make things easy, which Ignis partly does.
+- **The castle hears ordinary talk:** yes by default, with an off switch (3A).
+- **The first raid (own answer):** a raid runs 5 minutes at most. Start in the Lair. The first raid goes to a
+  default, pre-chosen Age (as Lethal Company pre-picks a moon) that you can override. Before you leave, the Ophan's
+  first demand is already visible, due at the end of the first raid rather than in 3 to 5 raids, and the Ophan
+  hunts you in the last 60 seconds. The first demand must be easy to find, hard to miss, and never an item that
+  cannot be found in that Age.
+- **Worth during a raid:** losses shown in the world, numbers only in the Lair and Market (5A).
+- **Dead wizards:** a ghost that whispers, and the castle hears it (6A).
+- **Playtest:** a gate at the end of the first build phase, before the next is built (7A).
