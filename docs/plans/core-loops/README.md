@@ -21,4 +21,5 @@ in four stages, each approved before the next:
 - [`research/indie-hits-raw.md`](research/indie-hits-raw.md): sales, players, loops and reasons for spread of ten games.
 - [`research/enemy-designs-raw.md`](research/enemy-designs-raw.md): every Lethal Company and R.E.P.O. monster's sense, attack and counter.
 - [`research/reward-and-gambling-raw.md`](research/reward-and-gambling-raw.md): reward psychology, quotas, gambling shapes, rating risks.
+- [`research/how-to-fish-raw.md`](research/how-to-fish-raw.md): How to Fish (10 M+ in under two months), Gamble With Your Friends, Webfishing and Dredge.
 - [`research/sources.md`](research/sources.md): every page read.

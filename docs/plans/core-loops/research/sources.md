@@ -31,5 +31,15 @@
   https://gamedevreports.substack.com/p/alinea-analytics-co-op-games-generated
 - Reward psychology: https://gamespace.com/all-articles/news/a-slot-machine-is-just-a-video-game-with-different-stakes-heres-the-research-that-proves-it/
 
-Pages that failed to load: TweakTown (Schedule I), the PSU variable-reward article, Destructoid's
+## How to Fish and related (added 2026-10-25)
+
+- https://store.steampowered.com/app/4001890/How_to_Fish/ (linked by the owner)
+- https://wnhub.io/ru/news/finance/item-52368 · https://www.player.one/how-fish-steams-newest-viral-hit-why-are-chaotic-co-op-games-taking-over-163910 ·
+  https://univers-simu.com/news/how-to-fish-374000-joueurs-steam-127093/ · https://insertcoins.press/en/articles/how-to-fish-test ·
+  https://howtofishgame.com/ (unofficial fan guide)
+- Gamble With Your Friends: https://wnhub.io/news/finance/item-51060 ·
+  https://www.gamereactor.eu/the-latest-friendslop-hit-is-here-as-gamble-with-your-friends-sells-a-million-copies-in-less-than-two-weeks-1716843/
+- Webfishing: https://en.wikipedia.org/wiki/Webfishing · Dredge: https://en.wikipedia.org/wiki/Dredge_(video_game)
+
+Pages that failed to load: game8 (How to Fish casino guide, blocked), TweakTown (Schedule I), the PSU variable-reward article, Destructoid's
 R.E.P.O. money guide, gamegeeker (Schedule I), levvvel (Vampire Survivors).
