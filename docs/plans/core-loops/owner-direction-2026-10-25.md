@@ -141,3 +141,8 @@ first five minutes.
 - **Worth during a raid:** losses shown in the world, numbers only in the Lair and Market (5A).
 - **Dead wizards:** a ghost that whispers, and the castle hears it (6A).
 - **Playtest:** a gate at the end of the first build phase, before the next is built (7A).
+
+Still open for area 1, asked on the comparison thread's follow-up page (https://claude.ai/artifact/TKguGwq5PzSpeoRXCamM4u):
+the loop line in the "fish, shoot fish, sell fish" shape; the first spell; whether the 5-minute limit applies to
+every raid (if so, the 15 to 25 hour estimate needs redoing); the default first Age; where the first demanded piece
+sits. Not to be asked again here.
