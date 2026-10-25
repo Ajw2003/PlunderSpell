@@ -1,9 +1,9 @@
 {
   "title": "The hook: options for the open answers",
-  "eyebrow": "Area 1 · round 3 · the loop line's last beat",
-  "approval": "Hook options: area 1 round 3",
+  "eyebrow": "Area 1 · round 4 · the loop line's last beat",
+  "approval": "Hook options: area 1 round 4",
   "short": {
-    "lead": "You said 'Shout spells, rob castles, feed the Ophan' is close, but a stranger does not know what the Ophan is. These four keep the first two beats and hint at the Ophan instead of naming it, using your own summary of the loop: plunder, cast, escape, sell, upgrade, meet its demands until you can defeat it.",
+    "lead": "You liked 'the thing that owns you' from round 3, but 'thing' is vague and 'feed' sounds like business. These four keep 'owns you', name something celestial, and use a fantasy verb for keeping it pleased. The Ophan is an angel from old lore, a burning wheel full of eyes, so 'angel' and 'heaven' are true to it, not only flavour.",
     "hint": "Tap a card to see what it covers. The one question is under Choices.",
     "key": [
       [
@@ -31,7 +31,8 @@
           "Round 1, question 3, raid length: every raid is 5 minutes at most.",
           "Round 1, question 4, the default first Age: High Medieval.",
           "Round 1, question 5, the first demand: deep in the vault, and you are told so. It must be a real challenge you can fail, neither too easy nor impossible.",
-          "Round 2, the loop line: 'Shout spells, rob castles, feed the Ophan' is close; the last beat must hint at the Ophan without needing to know it."
+          "Round 2, the loop line: 'Shout spells, rob castles, feed the Ophan' is close; the last beat must hint at the Ophan without needing to know it.",
+          "Round 3, the last beat: 'owns you' stays, because it says you do not want it to and hints you can end it. It needs a celestial hint, the sense of keeping it happy, and a fantasy tone, not a business one."
         ],
         [
           "Nothing from you."
@@ -43,9 +44,9 @@
         "Hinting at the Ophan",
         "you",
         [
-          "Your loop: plunder, cast spells, escape alive, sell, upgrade, and meet the Ophan's demands until you can grow strong enough to defeat it.",
-          "Like Lethal Company, but the quota is a specific artifact, progression persists, and there is a long goal shared with friends.",
-          "Each option names what the Ophan is to you (it owns you, it wants things, you will beat it) rather than what it is called."
+          "Keep: 'owns you'.",
+          "Add: something celestial, and the need to keep it pleased.",
+          "Tone: fantasy, not business. 'Feed' and 'pay' read as a transaction."
         ],
         [
           "Pick one, or write your own."
@@ -56,38 +57,38 @@
   "choices": [
     [
       "line",
-      "Which last beat hints at the Ophan best?",
+      "Which ending reads best?",
       [
         [
           "A",
-          "\"Shout spells, rob castles, feed the thing that owns you.\"",
+          "\"Shout spells, rob castles, appease the angel that owns you.\"",
           1,
-          "Servitude and mystery in one phrase; a viewer wants to see 'the thing'."
+          "'Appease' is keeping a power happy so it does not turn on you; 'angel' is what an Ophan is."
         ],
         [
           "B",
-          "\"Shout spells, rob castles, pay your master, until you can kill it.\"",
+          "\"Shout spells, rob castles, bring offerings to the god that owns you.\"",
           0,
-          "Says the long goal outright: serve now, kill it later."
+          "The most plainly fantasy, with the ritual of an offering; 'god' overstates the Ophan a little."
         ],
         [
           "C",
-          "\"Shout spells, rob castles, feed the monster that hunts you.\"",
+          "\"Shout spells, rob castles, appease the heaven that owns you.\"",
           0,
-          "Adds the fear of being hunted, which the last 60 seconds of a raid deliver."
+          "Grander and stranger; it hints at something vast rather than a single being."
         ],
         [
           "D",
-          "\"Shout spells, rob castles, serve it, then slay it.\"",
+          "\"Shout spells, rob castles, keep the burning wheel that owns you pleased.\"",
           0,
-          "The shortest; 'it' stays a mystery, and the arc is in four words."
+          "Pictures the Ophan itself, which makes a viewer curious, but it is the longest."
         ]
       ],
-      "It keeps the rhythm of the line you liked and makes a stranger ask what owns them, which is the hook."
+      "It says all three things you asked for in four words: you serve it, it is celestial, and it must stay pleased."
     ]
   ],
   "wrapup": {
-    "summary": "Round 3 of the hook options: four ways to hint at the Ophan in the loop line.",
+    "summary": "Round 4 of the hook options: four celestial, fantasy endings for the loop line.",
     "changing": "Nothing yet. Your pick goes to the core loops thread as area 1 direction.",
     "blocking": "Your pick for the loop line, or your own line.",
     "next": "The core loops thread carries on designing area 1 with your answers.",
