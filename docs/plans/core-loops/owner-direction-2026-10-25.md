@@ -146,3 +146,14 @@ Still open for area 1, asked on the comparison thread's follow-up page (https://
 the loop line in the "fish, shoot fish, sell fish" shape; the first spell; whether the 5-minute limit applies to
 every raid (if so, the 15 to 25 hour estimate needs redoing); the default first Age; where the first demanded piece
 sits. Not to be asked again here.
+
+## Area 1 answers on the hook options page (owner, 23:27 UTC)
+
+Reply "Hook options: area 1 1* 2A 3A 4A 5*", given in the comparison thread.
+
+- **First spell for a new save:** Frango (2A).
+- **Every raid lasts 5 minutes at most** (3A). The 15 to 25 hour campaign estimate must be redone with this.
+- **Default first Age:** High Medieval (4A), which can be overridden.
+- **The first demanded piece (own answer):** deep in the vault, and the players are told so. "You must be allowed
+  to fail and challenged here. Making it too easy isn't fun, making it impossible isn't either."
+- **The loop line (own answer):** still open; asked for three more ideas, since none so far captures the full loop.
