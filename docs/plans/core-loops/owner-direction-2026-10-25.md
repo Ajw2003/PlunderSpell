@@ -157,3 +157,12 @@ Reply "Hook options: area 1 1* 2A 3A 4A 5*", given in the comparison thread.
 - **The first demanded piece (own answer):** deep in the vault, and the players are told so. "You must be allowed
   to fail and challenged here. Making it too easy isn't fun, making it impossible isn't either."
 - **The loop line (own answer):** still open; asked for three more ideas, since none so far captures the full loop.
+
+## The whole game loop, in the owner's words (23:32 UTC)
+
+- "Plunder, cast spells, escape alive, sell, upgrade, and meet the Ophan's demands until you can grow strong
+  enough to defeat it."
+- Similar to Lethal Company, but the quota is a specific artifact rather than an amount, progression persists,
+  and there is a long goal to work towards with friends.
+- Loop line: "Shout spells, rob castles, feed the Ophan" is close, but it needs prior knowledge of what the Ophan
+  is; the line should hint at it instead of naming it. Versions are being drafted in the comparison thread.
