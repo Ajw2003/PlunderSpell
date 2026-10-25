@@ -1,5 +1,16 @@
 # Today
 
+**2026-10-25 - core-loops research and analysis (stages 1 and 2 of 4).** The owner asked for research, analysis, a
+proposal and then delegation for the game's primary, secondary and tertiary loops. Done so far, in
+`docs/plans/core-loops/`: raw research (the game by branch, ten viral indie games, How to Fish, every Lethal Company and
+R.E.P.O. monster's counter, reward and gambling, player retention, content mods), an analysis with a page (published as
+an artifact) and four charts. Finding: PlunderSpell has seconds-long rewards and an approved end goal (the Ophan) but no
+hour-to-hour ladder, because coins buy nothing yet. The owner's direction (variants, fire, cursed objects with a voice
+mimic, vendor quests, blackjack, events, cosmetics, mods) is in `owner-direction-2026-10-25.md`. Next: the page's two
+open choices (after the Ophan, campaign length), then stage 3, the proposal.
+
+---
+
 **2026-10-11 (evening) - the player stands on the floor (follows #391).** Both bodies stood 29 cm up: the ground snap
 took the SphereCast's `hit.distance` as the floor, but the floor is one cast radius (0.3 m) further down. Fixed in
 `PlayerStateMachine.HeightAboveGround`. That exposed a second fault the hover had hidden: `IsGrounded` was true
