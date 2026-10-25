@@ -277,10 +277,10 @@ const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http
 const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
 const PAGE = {
   "title": "The hook: options for the open answers",
-  "eyebrow": "Area 1 · round 2 · the loop line only",
-  "approval": "Hook options: area 1 round 2",
+  "eyebrow": "Area 1 · round 3 · the loop line's last beat",
+  "approval": "Hook options: area 1 round 3",
   "short": {
-    "lead": "Round 1 settled the first spell, the raid length, the first Age and the first demand. The four lines in round 1 each told only part of the loop. These three try to cover all of it: the voice, the castle, getting out, the Ophan you serve, and beating it in the end.",
+    "lead": "You said 'Shout spells, rob castles, feed the Ophan' is close, but a stranger does not know what the Ophan is. These four keep the first two beats and hint at the Ophan instead of naming it, using your own summary of the loop: plunder, cast, escape, sell, upgrade, meet its demands until you can defeat it.",
     "hint": "Tap a card to see what it covers. The one question is under Choices.",
     "key": [
       [
@@ -307,7 +307,8 @@ const PAGE = {
           "Round 1, question 2, the first spell: Frango.",
           "Round 1, question 3, raid length: every raid is 5 minutes at most.",
           "Round 1, question 4, the default first Age: High Medieval.",
-          "Round 1, question 5, the first demand: deep in the vault, and you are told so. It must be a real challenge you can fail, neither too easy nor impossible."
+          "Round 1, question 5, the first demand: deep in the vault, and you are told so. It must be a real challenge you can fail, neither too easy nor impossible.",
+          "Round 2, the loop line: 'Shout spells, rob castles, feed the Ophan' is close; the last beat must hint at the Ophan without needing to know it."
         ],
         [
           "Nothing from you."
@@ -315,13 +316,13 @@ const PAGE = {
       ],
       [
         "bulb",
-        "Loop line",
-        "A line that covers the whole loop",
+        "Last beat",
+        "Hinting at the Ophan",
         "you",
         [
-          "Your rule: it must say what you do, the way 'fish fish, shoot fish, sell fish' does, and cover the full loop.",
-          "The full loop: go into a castle in another Age, cast spells by speaking, steal loot, avoid getting caught, get out before the portal closes, pay the Ophan what it demands, spend the rest on getting stronger, and one day beat the Ophan.",
-          "Each line below is checked against those beats."
+          "Your loop: plunder, cast spells, escape alive, sell, upgrade, and meet the Ophan's demands until you can grow strong enough to defeat it.",
+          "Like Lethal Company, but the quota is a specific artifact, progression persists, and there is a long goal shared with friends.",
+          "Each option names what the Ophan is to you (it owns you, it wants things, you will beat it) rather than what it is called."
         ],
         [
           "Pick one, or write your own."
@@ -332,38 +333,44 @@ const PAGE = {
   "choices": [
     [
       "line",
-      "Which line tells the whole loop?",
+      "Which last beat hints at the Ophan best?",
       [
         [
           "A",
-          "\"Shout spells, rob castles, feed the Ophan, keep the rest.\"",
+          "\"Shout spells, rob castles, feed the thing that owns you.\"",
           1,
-          "Voice, theft, the master and the reward in four beats. 'Keep the rest' hints at getting stronger. Getting caught and the final fight are left to the trailer."
+          "Servitude and mystery in one phrase; a viewer wants to see 'the thing'."
         ],
         [
           "B",
-          "\"Shout spells, steal gold, don't get caught. Pay the Ophan, until you can kill it.\"",
+          "\"Shout spells, rob castles, pay your master, until you can kill it.\"",
           0,
-          "Covers every beat, including the fear and the ending, but it is two sentences."
+          "Says the long goal outright: serve now, kill it later."
         ],
         [
           "C",
-          "\"Rob the past, shout your spells, make it home. Feed the Ophan, then end it.\"",
+          "\"Shout spells, rob castles, feed the monster that hunts you.\"",
           0,
-          "Adds time travel and getting out alive; 'end it' carries the final fight."
+          "Adds the fear of being hunted, which the last 60 seconds of a raid deliver."
+        ],
+        [
+          "D",
+          "\"Shout spells, rob castles, serve it, then slay it.\"",
+          0,
+          "The shortest; 'it' stays a mystery, and the arc is in four words."
         ]
       ],
-      "It reads in one breath like How to Fish's line, and each beat is something you do every raid."
+      "It keeps the rhythm of the line you liked and makes a stranger ask what owns them, which is the hook."
     ]
   ],
   "wrapup": {
-    "summary": "Round 2 of the hook options: three loop lines that try to cover the whole loop.",
+    "summary": "Round 3 of the hook options: four ways to hint at the Ophan in the loop line.",
     "changing": "Nothing yet. Your pick goes to the core loops thread as area 1 direction.",
     "blocking": "Your pick for the loop line, or your own line.",
     "next": "The core loops thread carries on designing area 1 with your answers.",
     "todo": [
       "Pick a line (Choices).",
-      "Tap <b>Copy my reply<\/b> and send it: \"Hook options: area 1 round 2\", or say what to change."
+      "Tap <b>Copy my reply<\/b> and send it: \"Hook options: area 1 round 3\", or say what to change."
     ]
   }
 };
