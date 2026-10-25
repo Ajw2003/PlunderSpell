@@ -1,6 +1,6 @@
 # Core loops: research, analysis, proposal, delegation
 
-**Status: stage 1 (raw research) done 2026-10-25, waiting for the owner's go-ahead on stage 2.**
+**Status: stages 1 and 2 done 2026-10-25. Waiting for the owner's answers to the analysis page's four choices before stage 3.**
 
 The owner asked (2026-10-25) to research, plan, propose and then build PlunderSpell's primary,
 secondary and tertiary loops: enemies with unique attacks and counters in the manner of Lethal
@@ -11,7 +11,7 @@ in four stages, each approved before the next:
 | Stage | Output | Status |
 |---|---|---|
 | 1. Raw research | `research/` (below) | done |
-| 2. Analysis and an easy-to-read page | `analysis/` | waiting |
+| 2. Analysis and an easy-to-read page | `analysis/analysis.md`, page `analysis/analysis.html` (published as https://claude.ai/artifact/4Mebn1titQFAEKqqpheaXT) | done; four choices wait on the owner |
 | 3. Proposal page: loops, enemy roster, progression, economy, gambling, timeline, four workstreams | `proposal/` | waiting |
 | 4. Delegation across the owner's four accounts, then building | issues and branches | waiting for approval of stage 3 |
 
@@ -22,4 +22,11 @@ in four stages, each approved before the next:
 - [`research/enemy-designs-raw.md`](research/enemy-designs-raw.md): every Lethal Company and R.E.P.O. monster's sense, attack and counter.
 - [`research/reward-and-gambling-raw.md`](research/reward-and-gambling-raw.md): reward psychology, quotas, gambling shapes, rating risks.
 - [`research/how-to-fish-raw.md`](research/how-to-fish-raw.md): How to Fish (10 M+ in under two months), Gamble With Your Friends, Webfishing and Dredge.
+- [`research/progression-and-retention-raw.md`](research/progression-and-retention-raw.md): player counts over time, endings, Cookie Clicker, Scritchy Scratchy, roguelite progression.
 - [`research/sources.md`](research/sources.md): every page read.
+
+## Stage 2 files
+
+- [`analysis/analysis.md`](analysis/analysis.md): the analysis in full.
+- [`analysis/analysis.html`](analysis/analysis.html): the page, built by `make_page.py` from `analysis/analysis.page.json`.
+- `analysis/charts/`: the three charts as SVG and PNG (retention, sales, the three clocks of reward).
