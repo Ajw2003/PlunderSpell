@@ -277,10 +277,10 @@ const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http
 const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
 const PAGE = {
   "title": "PlunderSpell core loops: what the hits teach",
-  "eyebrow": "Stage 2 of 4 · analysis · nothing built",
+  "eyebrow": "Stage 2 of 4 · analysis, with content mods · nothing built",
   "approval": "Design approved: core-loops analysis",
   "short": {
-    "lead": "Viral co-op games spread through chaos, but they keep players through progress. How to Fish sold 10 million copies by doing both, then lost 78% of its players in a month because its ladder was only three islands long. PlunderSpell has the chaos and an approved end goal. What it lacks is the middle: coins buy nothing yet, so there is no hour-to-hour climb.",
+    "lead": "Viral co-op games spread through chaos, but they keep players through progress. How to Fish sold 10 million copies by doing both, then lost 78% of its players in a month because its ladder was only three islands long. PlunderSpell has the chaos and an approved end goal. What it lacks is the middle: coins buy nothing yet, so there is no hour-to-hour climb. The most popular content mods point the same way: friends' voices, cosmetics, one-trick monsters, and upgrades that counter a named threat.",
     "hint": "Tap a finding to see the evidence and what it means for PlunderSpell.",
     "key": [
       [
@@ -353,6 +353,27 @@ const PAGE = {
         "Nothing from you."
       ],
       [
+        "file",
+        "Content mods",
+        "What the popular content mods teach",
+        "",
+        "Content mods make up 22 of the top 60 on Lethal Company's Thunderstore list, 22 of the top 40 on R.E.P.O.'s, and 27 of the top 50 on CurseForge's Minecraft list. The winners are: your friends' voices played back by monsters (Skinwalkers, 17.7 M downloads; it replays clips and needs no speech recognition), emotes and cosmetics (TooManyEmotes, 18 M; sold in the game's store), one monster with one trick (Mimics, 14.3 M), upgrades that counter a named threat (Lategame Upgrades, 10.7 M: Silver Bullets for the Ghost Girl), contracts that give a run a job, greed that sets off an event (FacilityMeltdown, 4.6 M), loot with behaviour, creatures tied to places with random events and summoned bosses (Lycanites Mobs), and a casino with blackjack (LethalCasino, 3.9 M). All of it is driven by data and config, which is what lets other people add content. Full analysis: docs/plans/core-loops/analysis/mods-analysis.md.",
+        "Nothing from you.",
+        {
+          "src": "analysis-pics/mods.png",
+          "alt": "Bar chart of the most-downloaded content mods: TooManyEmotes 18 million, Skinwalkers 17.7, More Suits 17, Mimics 14.3, MoreHead 11, Lategame Upgrades 10.7, LethalThings 8.6, Mirage 6.4, NeedyCats 5.9, LC Office 5.4, MoreUpgrades 4.8, FacilityMeltdown 4.6, Wesleys Enemies 4.5, Mimic 4.1, LethalCasino 3.9, SillyValuables 2.4.",
+          "caption": "Coloured by what the mod adds. Thunderstore download counts, read 2026-10-25."
+        }
+      ],
+      [
+        "list",
+        "Your direction",
+        "What you asked for on 2026-10-25",
+        "done",
+        "Recorded in docs/plans/core-loops/owner-direction-2026-10-25.md: easy-to-tweak systems that give the most nuance for the least effort; How to Fish's random variants, events, shop and weapons; numbers going up on screen; Lethal Company's choice of where to go, with each Age's own threats and counters; platinum, gold, cursed and flammable loot; a cursed object that brings a voice mimic like Lethal Company's mask; fire everywhere, with a water spell; vendor quests that pay by quality; the Ophan never asking for luck; coin buying counters, cosmetics and emotes; blackjack first, from The Fall of Golden Bay 2D; a review of the stakes; random events and bosses; Thunderstore support as a stretch goal.",
+        "Nothing from you; the proposal is built on this."
+      ],
+      [
         "check",
         "Keep",
         "What PlunderSpell already has",
@@ -363,10 +384,10 @@ const PAGE = {
       [
         "hand",
         "Your answers",
-        "Four questions that shape the proposal",
+        "Two questions are still open",
         "you",
-        "Stage 3, the proposal, is built on your answers to the four Choices below: what follows the Ophan, what coin buys, how long the climb is, and whether there is gambling.",
-        "Pick an answer for each choice, then send the reply."
+        "Your message answered what coin buys (counters, cosmetics and emotes) and the gambling question (blackjack in its own corner of the Market). Two choices below are still open: what follows the Ophan, and how long the climb should be.",
+        "Pick an answer for each of the two choices, then send the reply."
       ]
     ]
   },
@@ -465,25 +486,6 @@ const PAGE = {
       "Option A gives a reason to keep playing, the gap that cost How to Fish its players."
     ],
     [
-      "coin",
-      "What should coin mostly buy?",
-      [
-        [
-          "A",
-          "New things to do, plus a few small stat upgrades",
-          1,
-          "Spells, tools, Lair rooms and routes."
-        ],
-        [
-          "B",
-          "Mostly stat upgrades",
-          0,
-          "Like R.E.P.O.: strength, stamina, health."
-        ]
-      ],
-      "Option A keeps the castle frightening while the company grows."
-    ],
-    [
       "length",
       "How long should a regular group take to beat the Ophan?",
       [
@@ -507,37 +509,12 @@ const PAGE = {
         ]
       ],
       "Option A is my estimate, not a measured figure: longer than How to Fish, whose players left once it was done, and short enough for a friend group to finish."
-    ],
-    [
-      "gamble",
-      "Should there be gambling?",
-      [
-        [
-          "A",
-          "Wagers woven into the loop, in-game coin only",
-          1,
-          "Dice with vendors, double or nothing on a haul, cursed relics."
-        ],
-        [
-          "B",
-          "A separate dice den only",
-          0,
-          "One place in the Market."
-        ],
-        [
-          "C",
-          "No gambling",
-          0,
-          "Keep luck in the loot alone."
-        ]
-      ],
-      "Option A gives random spikes without a casino look, which is what cost Balatro its rating."
     ]
   ],
   "wrapup": {
-    "summary": "An analysis of twelve indie hits, showing that PlunderSpell lacks the hour-to-hour progress ladder between its raids and its end goal.",
+    "summary": "An analysis of twelve indie hits and their most popular content mods, showing that PlunderSpell lacks the hour-to-hour progress ladder between its raids and its end goal.",
     "changing": "Nothing is built. Stage 3 turns this into a proposal page with the loops, the enemy roster, the timeline and four workstreams.",
-    "blocking": "Your answers to the four choices.",
+    "blocking": "Your answers to the two open choices: after the Ophan, and campaign length.",
     "next": "Once you send your answers, I write the stage 3 proposal.",
     "todo": [
       "Pick your answers (Choices).",

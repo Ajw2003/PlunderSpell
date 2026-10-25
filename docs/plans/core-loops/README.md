@@ -1,6 +1,6 @@
 # Core loops: research, analysis, proposal, delegation
 
-**Status: stages 1 and 2 done 2026-10-25. Waiting for the owner's answers to the analysis page's four choices before stage 3.**
+**Status: stages 1 and 2 done 2026-10-25. The owner's direction is in [`owner-direction-2026-10-25.md`](owner-direction-2026-10-25.md); two of the page's choices (after the Ophan, campaign length) are still open before stage 3.**
 
 The owner asked (2026-10-25) to research, plan, propose and then build PlunderSpell's primary,
 secondary and tertiary loops: enemies with unique attacks and counters in the manner of Lethal
@@ -23,10 +23,12 @@ in four stages, each approved before the next:
 - [`research/reward-and-gambling-raw.md`](research/reward-and-gambling-raw.md): reward psychology, quotas, gambling shapes, rating risks.
 - [`research/how-to-fish-raw.md`](research/how-to-fish-raw.md): How to Fish (10 M+ in under two months), Gamble With Your Friends, Webfishing and Dredge.
 - [`research/progression-and-retention-raw.md`](research/progression-and-retention-raw.md): player counts over time, endings, Cookie Clicker, Scritchy Scratchy, roguelite progression.
+- [`research/content-mods-raw.md`](research/content-mods-raw.md): the most-downloaded content mods for Lethal Company, R.E.P.O. and Minecraft.
 - [`research/sources.md`](research/sources.md): every page read.
 
 ## Stage 2 files
 
 - [`analysis/analysis.md`](analysis/analysis.md): the analysis in full.
 - [`analysis/analysis.html`](analysis/analysis.html): the page, built by `make_page.py` from `analysis/analysis.page.json`.
-- `analysis/charts/`: the three charts as SVG and PNG (retention, sales, the three clocks of reward).
+- [`analysis/mods-analysis.md`](analysis/mods-analysis.md): what the content mods teach.
+- `analysis/charts/`: the four charts (with mods.svg) as SVG and PNG (retention, sales, the three clocks of reward).
