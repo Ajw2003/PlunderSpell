@@ -277,11 +277,11 @@ const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http
 const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
 const PAGE = {
   "title": "The hook: options for the open answers",
-  "eyebrow": "Area 1 · options only · nothing decided for you",
-  "approval": "Hook options: area 1",
+  "eyebrow": "Area 1 · round 2 · the loop line only",
+  "approval": "Hook options: area 1 round 2",
   "short": {
-    "lead": "Your answers on the comparison page left three things open: a loop line that says what you do, a first spell that is fun without making raids easy, and a few details of the first raid. This page only offers options. Each question has my suggestion marked and room for your own answer.",
-    "hint": "Tap a card to see what it covers. The questions are under Choices.",
+    "lead": "Round 1 settled the first spell, the raid length, the first Age and the first demand. The four lines in round 1 each told only part of the loop. These three try to cover all of it: the voice, the castle, getting out, the Ophan you serve, and beating it in the end.",
+    "hint": "Tap a card to see what it covers. The one question is under Choices.",
     "key": [
       [
         "Already yours",
@@ -303,7 +303,11 @@ const PAGE = {
           "Losses show in the world during a raid; numbers appear only in the Lair and Market.",
           "A dead wizard becomes a ghost that whispers, and the castle hears it.",
           "A playtest gate comes after the first build phase.",
-          "The first raid starts in the Lair, goes to a pre-chosen Age you can override, carries a visible Ophan demand due at its end, and the Ophan hunts in the last 60 seconds. The demand is easy to find and always obtainable in that Age."
+          "The first raid starts in the Lair, goes to a pre-chosen Age you can override, carries a visible Ophan demand due at its end, and the Ophan hunts in the last 60 seconds. The demand is easy to find and always obtainable in that Age.",
+          "Round 1, question 2, the first spell: Frango.",
+          "Round 1, question 3, raid length: every raid is 5 minutes at most.",
+          "Round 1, question 4, the default first Age: High Medieval.",
+          "Round 1, question 5, the first demand: deep in the vault, and you are told so. It must be a real challenge you can fail, neither too easy nor impossible."
         ],
         [
           "Nothing from you."
@@ -312,43 +316,15 @@ const PAGE = {
       [
         "bulb",
         "Loop line",
-        "A line that says what you do",
+        "A line that covers the whole loop",
         "you",
         [
-          "Your rule: it must tell the loop the way 'fish fish, shoot fish, sell fish' does.",
-          "The loop today: go into a castle, grab loot, cast spells by speaking, get out before the portal closes, sell in the Market.",
-          "Four lines are offered in question 1."
+          "Your rule: it must say what you do, the way 'fish fish, shoot fish, sell fish' does, and cover the full loop.",
+          "The full loop: go into a castle in another Age, cast spells by speaking, steal loot, avoid getting caught, get out before the portal closes, pay the Ophan what it demands, spend the rest on getting stronger, and one day beat the Ophan.",
+          "Each line below is checked against those beats."
         ],
         [
-          "Pick one or write your own."
-        ]
-      ],
-      [
-        "flask",
-        "First spell",
-        "A first spell that is fun, not easy",
-        "you",
-        [
-          "Your rule: fun, does not make raids easy, does not hurt progression.",
-          "I read 'progression' as: the spell is not one the Market sells, and it does not counter a threat you are meant to buy an answer to.",
-          "The options use spells that already work in the game, plus one new idea, because a built spell can be playtested this week."
-        ],
-        [
-          "Pick one or write your own."
-        ]
-      ],
-      [
-        "list",
-        "First raid",
-        "Three details your answer left open",
-        "you",
-        [
-          "Whether 5 minutes is the limit for every raid or the first one only.",
-          "Which Age the first raid goes to by default.",
-          "Where the first demanded piece sits."
-        ],
-        [
-          "Answer questions 3 to 5."
+          "Pick one, or write your own."
         ]
       ]
     ]
@@ -356,144 +332,38 @@ const PAGE = {
   "choices": [
     [
       "line",
-      "Which line tells the loop?",
+      "Which line tells the whole loop?",
       [
         [
           "A",
-          "\"Steal gold, shout spells, sell gold.\"",
+          "\"Shout spells, rob castles, feed the Ophan, keep the rest.\"",
           1,
-          "Three verbs, the same shape as How to Fish's line, and the voice is in the middle."
+          "Voice, theft, the master and the reward in four beats. 'Keep the rest' hints at getting stronger. Getting caught and the final fight are left to the trailer."
         ],
         [
           "B",
-          "\"Loot the castle, shout the spells, sell the loot.\"",
+          "\"Shout spells, steal gold, don't get caught. Pay the Ophan, until you can kill it.\"",
           0,
-          "Names the place, a little longer."
+          "Covers every beat, including the fear and the ending, but it is two sentences."
         ],
         [
           "C",
-          "\"Grab gold, shout spells, pay the Ophan.\"",
+          "\"Rob the past, shout your spells, make it home. Feed the Ophan, then end it.\"",
           0,
-          "Brings in the master you serve instead of the Market."
-        ],
-        [
-          "D",
-          "\"Shout spells, steal gold, run.\"",
-          0,
-          "Leads with the twist and ends on the fear."
+          "Adds time travel and getting out alive; 'end it' carries the final fight."
         ]
       ],
-      "It reads in one breath and every word is something you do in the game."
-    ],
-    [
-      "spell",
-      "Which spell can a new save use first?",
-      [
-        [
-          "A",
-          "Frango, shatter",
-          1,
-          "Breaks locks, doors and walls, and also every fragile thing you are holding. Fun, loud, and it can cost you your haul."
-        ],
-        [
-          "B",
-          "Aurum Voco, call the gold",
-          0,
-          "Shows gold through walls for 4 seconds, but you shine too and every guard can see you. Helps find the first demand."
-        ],
-        [
-          "C",
-          "Levo, lift",
-          0,
-          "Lift and throw anything, guards included. The most physics comedy, but it makes heavy loot easier, which cuts against your worth rule."
-        ],
-        [
-          "D",
-          "A new spell: Vox, throw your voice",
-          0,
-          "Your shout comes from where you point, so the castle that listens hears you somewhere else. Fits the hook, but it is new work and untested."
-        ]
-      ],
-      "Frango is already built, makes good clips, and carries its own cost: a careless cast smashes your own loot, so it never makes a raid easy."
-    ],
-    [
-      "length",
-      "Is 5 minutes the limit for every raid?",
-      [
-        [
-          "A",
-          "Yes, every raid is 5 minutes at most",
-          1,
-          "As you wrote it. The 15 to 25 hour campaign estimate assumed 12 to 15 minute raids, so it gets redone in the campaign area."
-        ],
-        [
-          "B",
-          "Only the first raid; later raids run longer",
-          0,
-          "The first raid teaches; later raids leave room for greed."
-        ]
-      ],
-      "It is the literal reading of your answer; the campaign length can be fitted to it later."
-    ],
-    [
-      "age",
-      "Which Age is the default first raid?",
-      [
-        [
-          "A",
-          "High Medieval",
-          1,
-          "The Wick, the one true form already built, lives there, and the Ophan's art exists."
-        ],
-        [
-          "B",
-          "Bronze",
-          0,
-          "The earliest Age, so the story runs forward in time."
-        ],
-        [
-          "C",
-          "A random Age each new save",
-          0,
-          "Variety, but the opening is harder to tune."
-        ]
-      ],
-      "It lets the first raid show a true form that already works."
-    ],
-    [
-      "piece",
-      "Where does the first demanded piece sit?",
-      [
-        [
-          "A",
-          "In the first big room, lit by the Ophan's lapis glow",
-          1,
-          "Hard to miss, but you still walk away from the portal to get it."
-        ],
-        [
-          "B",
-          "In sight of the portal",
-          0,
-          "Impossible to miss, nearly no risk."
-        ],
-        [
-          "C",
-          "Anywhere, with its sketch in the ledger",
-          0,
-          "As later demands work; easy to miss on a first raid."
-        ]
-      ],
-      "It keeps your 'easy to find, hard to miss' rule while the trip back still matters."
+      "It reads in one breath like How to Fish's line, and each beat is something you do every raid."
     ]
   ],
   "wrapup": {
-    "summary": "Options for the three things your comparison answers left open: the loop line, the first spell, and three first-raid details.",
-    "changing": "Nothing yet. Your picks go to the core loops thread as area 1 input.",
-    "blocking": "Your five picks, or your own answers.",
-    "next": "The core loops thread designs area 1 with you, using these picks.",
+    "summary": "Round 2 of the hook options: three loop lines that try to cover the whole loop.",
+    "changing": "Nothing yet. Your pick goes to the core loops thread as area 1 direction.",
+    "blocking": "Your pick for the loop line, or your own line.",
+    "next": "The core loops thread carries on designing area 1 with your answers.",
     "todo": [
-      "Pick your answers (Choices).",
-      "Tap <b>Copy my reply<\/b> and send it: \"Hook options: area 1\", or say what to change."
+      "Pick a line (Choices).",
+      "Tap <b>Copy my reply<\/b> and send it: \"Hook options: area 1 round 2\", or say what to change."
     ]
   }
 };
