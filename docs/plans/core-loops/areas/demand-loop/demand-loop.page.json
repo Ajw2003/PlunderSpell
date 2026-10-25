@@ -1,0 +1,313 @@
+{
+ "title": "The Ophan's demand: six questions",
+ "eyebrow": "Design area: the demand loop · step 1 of 2 · nothing built",
+ "approval": "Design approved: demand loop questions",
+ "short": {
+  "lead": "Each of the six open questions about the Ophan's demand has two or three options here, with my suggestion marked and room for your own answer. Every option is a number or a switch in one data file, OphanDemandTuning. That way, if a first guess plays badly, you change the number in the Unity Inspector instead of the code. Some options come from the fear pass you approved on 2026-10-11 (docs/7-design/fear-pass.md, \"The creature hunts you through time\"), and they're marked as such.",
+  "hint": "Tap a card for what's already settled or what one question decides. Every number is on the card \"The numbers\".",
+  "key": [
+   [
+    "Settled",
+    ""
+   ],
+   [
+    "Your answer",
+    "you"
+   ],
+   [
+    "Settled by you",
+    "done"
+   ]
+  ],
+  "items": [
+   [
+    "check",
+    "Settled",
+    "What you have already decided",
+    "done",
+    [
+     "A raid lasts 5 minutes at most.",
+     "The first demand shows in the Lair before the first raid and is due at the end of it.",
+     "The first piece is deep in the vault, and the players are told so. You must be able to fail it.",
+     "The Ophan hunts in the last 60 seconds of a raid.",
+     "Caught carrying the piece, it takes the piece and you live. Caught empty-handed, you die.",
+     "From the fear pass: a piece carried home and placed in the Lair also pays the demand; the Lair and the Market are always safe."
+    ],
+    [
+     "Nothing from you."
+    ]
+   ],
+   [
+    "list",
+    "The numbers",
+    "Every number, with the default that matches my suggestions",
+    "",
+    [
+     "RaidSeconds 300: how long a raid lasts.",
+     "HuntWindowSeconds 60: how long before the portal closes the Ophan arrives.",
+     "FirstDemandDueAfterRaids 1.",
+     "RaidsBetweenDemandsMin 3 and Max 5: set both to 1 for a demand every raid.",
+     "HuntEveryRaidWhileOwed on; SpoilsTakenWhileOwed 1.0: the share of a hunted raid's haul it takes (0.5 takes half).",
+     "ExtraPiecesPerMissedDemand 0; MaxPiecesPerDemand 3.",
+     "UnscheduledVisitChance 0.0: the chance it comes when nothing is due.",
+     "HuntSecondsAfterPaid 0: 0 leaves at once, 300 hunts until the portal closes.",
+     "DemandsToConfront 12: paid demands before you can face it.",
+     "PieceMarkRadius 6 m (0 is off); PieceMarkLastsForDemands 3.",
+     "FirstPieceMinRoomsFromPortal 6: how deep \"deep in the vault\" is, in rooms."
+    ],
+    [
+     "Nothing from you. Your answers set the defaults."
+    ]
+   ],
+   [
+    "loop",
+    "How often",
+    "1. How often a demand falls due",
+    "you",
+    [
+     "After the first demand, the next is due in 1 raid, in a fixed number of raids, or in a random number between two limits."
+    ],
+    [
+     "Your answer to choice 1."
+    ]
+   ],
+   [
+    "stop",
+    "Failing",
+    "2. What failing a demand costs",
+    "you",
+    [
+     "Death in that raid, and possibly something that carries over: every raid becomes a hunt until you pay, or the next demand gets bigger."
+    ],
+    [
+     "Your answer to choice 2."
+    ]
+   ],
+   [
+    "eye",
+    "When it comes",
+    "3. When the Ophan comes",
+    "you",
+    [
+     "Only on raids where a demand is due or still owed, or on every raid, or mostly on due raids with a small chance on the others."
+    ],
+    [
+     "Your answer to choice 3."
+    ]
+   ],
+   [
+    "hand",
+    "The holder",
+    "4. Whether one holder saves everyone",
+    "you",
+    [
+     "When it takes the piece, it either leaves at once or keeps hunting the empty-handed for a while. This is one number: how many seconds it keeps hunting after being paid."
+    ],
+    [
+     "Your answer to choice 4."
+    ]
+   ],
+   [
+    "next",
+    "Toward the end",
+    "5. What a paid demand gives you",
+    "you",
+    [
+     "A rung on a ladder toward facing it, one of its weaknesses revealed, or nothing directly, so that strength comes only from what you buy."
+    ],
+    [
+     "Your answer to choice 5."
+    ]
+   ],
+   [
+    "search",
+    "Recognising it",
+    "6. How players recognise the piece",
+    "you",
+    [
+     "The ledger's sketch alone, or the sketch plus a faint mark on the piece when you are close. Both come with a setting for how close."
+    ],
+    [
+     "Your answer to choice 6."
+    ]
+   ]
+  ]
+ },
+ "changes": [
+  [
+   "new",
+   "OphanDemandTuning, one data file for the demand",
+   "Every number on this page in one asset, edited in the Inspector.",
+   null,
+   "It follows the pattern of TrueFormTuning on the Wick branch: each number has a tooltip saying what it does. The fields and their defaults are on the In short card \"The numbers\". A test checks that every default loads and that no value is out of range.",
+   [
+    "The fear pass says the interval is configurable, but no tuning file exists yet.",
+    "One asset holding every number for the demand.",
+    "When a playtest feels wrong, you change a number, not the code."
+   ]
+  ]
+ ],
+ "choices": [
+  [
+   "often",
+   "After the first demand, how often does one fall due?",
+   [
+    [
+     "A",
+     "A random number of raids between 3 and 5",
+     1,
+     "This is the fear pass's rule. At 5 minutes a raid, that's a demand every 15 to 25 minutes. Fields: RaidsBetweenDemandsMin 3, Max 5."
+    ],
+    [
+     "B",
+     "Every raid",
+     0,
+     "Every raid has a target, so pressure is constant. Fields: Min 1, Max 1."
+    ],
+    [
+     "C",
+     "A fixed number of raids, such as every 2",
+     0,
+     "Easy to plan around. Fields: Min 2, Max 2."
+    ]
+   ],
+   "Between demands, the in-between raids are free to spend on loot and upgrades. A range keeps the deadline from becoming a routine."
+  ],
+  [
+   "fail",
+   "What does failing a demand cost?",
+   [
+    [
+     "A",
+     "Every raid is a hunt until you pay, and it takes that raid's haul",
+     1,
+     "This is the fear pass's rule. Fields: HuntEveryRaidWhileOwed on, SpoilsTakenWhileOwed 1.0, which can be eased to 0.5."
+    ],
+    [
+     "B",
+     "Death in that raid only; the demand is due again next raid",
+     0,
+     "The mildest option. Fields: HuntEveryRaidWhileOwed on, SpoilsTakenWhileOwed 0."
+    ],
+    [
+     "C",
+     "The next demand gains an extra piece, up to a cap",
+     0,
+     "The debt grows. Fields: ExtraPiecesPerMissedDemand 1, MaxPiecesPerDemand 3."
+    ]
+   ],
+   "It's already approved, it hurts without wiping progress, and the share it takes can be softened with one number."
+  ],
+  [
+   "comes",
+   "When does the Ophan come?",
+   [
+    [
+     "A",
+     "Only when a demand is due or still owed",
+     1,
+     "This is the fear pass's rule. Field: UnscheduledVisitChance 0."
+    ],
+    [
+     "B",
+     "On every raid, in the last 60 seconds",
+     0,
+     "Every raid ends in a chase, even when nothing is due. Field: UnscheduledVisitChance 1.0."
+    ],
+    [
+     "C",
+     "When a demand is due, plus a small chance on other raids",
+     0,
+     "There's a surprise now and then. Field: UnscheduledVisitChance 0.1."
+    ]
+   ],
+   "Its visits stay meaningful, and the chance field is already there if you want surprises later."
+  ],
+  [
+   "holder",
+   "When it takes the piece, does that save everyone?",
+   [
+    [
+     "A",
+     "Yes, it leaves at once",
+     1,
+     "Everyone protects the carrier. Field: HuntSecondsAfterPaid 0."
+    ],
+    [
+     "B",
+     "It keeps hunting the empty-handed for a short while",
+     0,
+     "The others must still run. Field: HuntSecondsAfterPaid 15."
+    ],
+    [
+     "C",
+     "No, it hunts the empty-handed until the portal closes",
+     0,
+     "Each player is on their own. Field: HuntSecondsAfterPaid 300."
+    ]
+   ],
+   "The whole raid becomes about getting one piece to one person, which suits a co-op game. The number can be raised if that's too easy."
+  ],
+  [
+   "toward",
+   "What does a paid demand give you toward defeating it?",
+   [
+    [
+     "A",
+     "A rung on a visible ladder; after enough rungs you can face it",
+     1,
+     "Field: DemandsToConfront 12. The rungs show in the ledger."
+    ],
+    [
+     "B",
+     "One of its weaknesses revealed, as a ledger page",
+     0,
+     "You face it when you have the weaknesses and the gear to use them. Field: WeaknessesToReveal."
+    ],
+    [
+     "C",
+     "Nothing directly; strength comes only from what you buy",
+     0,
+     "You choose when you feel strong enough."
+    ]
+   ],
+   "It's the simplest to build and to tune, and progress is always visible. Option B can be added later on top."
+  ],
+  [
+   "recognise",
+   "How do players recognise the demanded piece?",
+   [
+    [
+     "A",
+     "The ledger's sketch, plus a faint mark on the piece when you are near",
+     1,
+     "Fields: PieceMarkRadius 6 m, PieceMarkLastsForDemands 3, after which only the sketch is left."
+    ],
+    [
+     "B",
+     "The ledger's sketch only",
+     0,
+     "Hardest; you must know it by sight. Field: PieceMarkRadius 0."
+    ],
+    [
+     "C",
+     "The mark is always on",
+     0,
+     "The easiest. Field: PieceMarkLastsForDemands set very high."
+    ]
+   ],
+   "Helps new players at first, then the help fades so recognising pieces becomes a skill."
+  ]
+ ],
+ "wrapup": {
+  "summary": "Six questions about the Ophan's demand, each with options, and one data file that holds every number.",
+  "changing": "Nothing is built yet. Your answers become the demand loop's design, and step 2 is the page for building it.",
+  "blocking": "Your answers to the six choices.",
+  "next": "Once you answer, I write the build plan for the demand loop as its own page. After that comes upgrading, which covers what coin buys.",
+  "todo": [
+   "Pick your answers (Choices).",
+   "Tap <b>Copy my reply</b>.",
+   "Send it, or say what to change."
+  ]
+ }
+}
