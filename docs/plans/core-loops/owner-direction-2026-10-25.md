@@ -166,3 +166,10 @@ Reply "Hook options: area 1 1* 2A 3A 4A 5*", given in the comparison thread.
   and there is a long goal to work towards with friends.
 - Loop line: "Shout spells, rob castles, feed the Ophan" is close, but it needs prior knowledge of what the Ophan
   is; the line should hint at it instead of naming it. Versions are being drafted in the comparison thread.
+
+## The loop line, decided (owner, 23:43 UTC)
+
+- **"Shout spells, rob castles, appease the Ophan that owns you."**
+- This reverses "don't name the Ophan": a quick search explains the name, "angel" reads too positive to be scary,
+  and "that owns you" carries the fear and servitude, so the name can keep its mystery.
+- With this, every hook option for area 1 is answered.
