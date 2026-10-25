@@ -3,6 +3,17 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-25 — Core-loops proposal denied; design goes one area at a time, with the owner
+
+**Context.** The stage 3 proposal (`docs/plans/core-loops/proposal/`) designed every system, sixteen true forms and seven events at once and left the owner six choices.
+
+**Decision (owner, 2026-10-25).** Denied: it decided far too much without asking and gave no real way to adjust or change the enemies and events. Design now runs in phases: first an overarching plan of design areas, then one area at a time, where every part is open to the owner's choice and the owner's own ideas come first. Answers the owner gave on the denied page, kept as direction:
+- **Worth is diegetic but inferable.** Worth scales with rarity and with how hard and risky a piece is to get out intact and alive: a heavy rug is worth more than an easy, durable book; a fragile platinum ship is worth a lot because it breaks easily. The logic should feel intuitive.
+- **Ages are all open from the start**, as in Lethal Company. Random events may make one Age more appealing, but they are hidden at first; a later unlock gives foresight, telling you in advance which event a raid has.
+- Provisional picks from the page: random events about one raid in two; true forms one per Age first; the vault seals and the full moon as the first events; the Echo's clips shared only while an Echo exists, with an opt-out. Each is revisited when its area is designed.
+
+**Consequence.** The proposal stays on file as a reference, marked denied. No issues or workstream threads start until the areas are designed and approved. Status: Active.
+
 ## 2026-10-25 — Core loops: a new cycle after the Ophan, and a campaign of 15 to 25 hours
 
 **Context.** Stage 2 of the core-loops work (`docs/plans/core-loops/analysis/analysis.md`) asked four questions. The owner's direction of 2026-10-25 (`docs/plans/core-loops/owner-direction-2026-10-25.md`) answered two of them (what coin buys, and gambling); two stayed open.

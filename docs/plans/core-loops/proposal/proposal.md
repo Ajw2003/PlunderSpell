@@ -1,5 +1,9 @@
 # Proposal: PlunderSpell's three loops, and how four people build them
 
+> **Denied by the owner, 2026-10-25.** It decided too much at once. Kept only as a reference of ideas; nothing in it
+> is agreed. Design now runs one area at a time (`docs/6-decisions/Decisions.md`, 2026-10-25, "Core-loops proposal
+> denied").
+
 Stage 3 of the core-loops work (`docs/plans/core-loops/README.md`), written 2026-10-25. It is built on the
 approved analysis (`../analysis/analysis.md`), the owner's direction (`../owner-direction-2026-10-25.md`) and
 the decision of 2026-10-25 in `docs/6-decisions/Decisions.md` (a new cycle after the Ophan; a campaign of 15

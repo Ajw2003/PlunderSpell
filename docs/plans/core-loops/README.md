@@ -1,6 +1,6 @@
 # Core loops: research, analysis, proposal, delegation
 
-**Status: stages 1 and 2 done and approved 2026-10-25 (a new cycle after the Ophan; 15 to 25 hours). Stage 3, the proposal, waits on the owner's approval and six choices.**
+**Status: stages 1 and 2 done and approved 2026-10-25 (a new cycle after the Ophan; 15 to 25 hours). Stage 3's all-at-once proposal was denied the same day; design now goes one area at a time with the owner.**
 
 The owner asked (2026-10-25) to research, plan, propose and then build PlunderSpell's primary,
 secondary and tertiary loops: enemies with unique attacks and counters in the manner of Lethal
@@ -12,7 +12,7 @@ in four stages, each approved before the next:
 |---|---|---|
 | 1. Raw research | `research/` (below) | done |
 | 2. Analysis and an easy-to-read page | `analysis/analysis.md`, page `analysis/analysis.html` (published as https://claude.ai/artifact/4Mebn1titQFAEKqqpheaXT) | approved 2026-10-25 |
-| 3. Proposal page: loops, enemy roster, progression, economy, gambling, timeline, four workstreams | `proposal/proposal.md`, page `proposal/proposal.html`, briefs in `proposal/briefs/` | written; waits on approval |
+| 3. Proposal page: loops, enemy roster, progression, economy, gambling, timeline, four workstreams | `proposal/proposal.md`, page `proposal/proposal.html`, briefs in `proposal/briefs/` | denied 2026-10-25; kept as a reference only |
 | 4. Delegation across the owner's four accounts, then building | issues and branches | waiting for approval of stage 3 |
 
 ## Stage 1 files

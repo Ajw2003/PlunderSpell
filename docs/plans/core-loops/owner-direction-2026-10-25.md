@@ -111,3 +111,13 @@ one-off features.
 - "The fire can't be the only visual, there needs to be bespoke conveyance for each event and that
   needs to be planned and designed, not just blanketly addressed." Each event gets its own sights and
   sounds that warn of it, designed one by one.
+
+## After the proposal was denied (owner, 23:07 UTC)
+
+- "We need to do the design in phases, steps, not all at once." Everything should be a choice to some degree;
+  first an overarching plan, then each part broken down further.
+- **Worth:** diegetic, but inferable from criteria players already understand. It scales with rarity and with how
+  hard and risky the piece makes extraction: heavy to move, fragile, alive. "The harder it makes your life and the
+  riskier the extraction because of it, the more it is worth. Make the logic intuitive."
+- **Ages:** all open from the start, as in Lethal Company. Random events may make one Age more appealing, but they
+  are hidden at first; a later unlock gives foresight, so you are told in advance what event a raid has.
