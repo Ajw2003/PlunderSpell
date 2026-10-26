@@ -1,0 +1,40 @@
+settings: saved a byte-exact copy of the settings files
+02:01:59 test slot 99 wiped, owner's slot to restore: 1
+02:01:59 build: yes (auto)
+02:01:59 building Build/DevTest
+02:02:37 build Succeeded
+02:02:45 host: state MainMenu local none
+02:02:47 host: state LairRoom local 1005.2,1.2,1.5
+02:02:49 client started (pid 1780)
+02:03:06 client: state LairRoom local 1005.2,1.2,0.5
+02:03:10 host: spawned CopperPot(Clone) on the pile at 1004.0,0.6,0.0
+02:03:11 host: spawned CopperPot(Clone) on the pile at 1004.0,0.6,0.0
+02:03:16 host: pile 2 CopperPot(Clone) CopperPot(Clone)
+02:03:17 host: distance 1.92 from /LairRoom/HaulLanding at 1004.0,0.3,0.0
+02:03:18 host: moved CopperPot(Clone) to 1006.0,0.5,1.0 yaw 90
+02:03:26 host before: pose 1006.0,0.6,1.0 yaw 90
+02:03:26 client before: pose 1006.0,0.6,1.0 yaw 90
+02:03:26 PASS both sides see the moved piece in the same place before quitting
+02:03:28 host: state MainMenu
+02:03:29 host: state MainMenu local none
+02:03:37 host: state LairRoom local 1005.2,1.2,1.5
+02:03:39 client started (pid 2159)
+02:03:48 client: state LairRoom local 1005.2,1.2,0.5
+02:03:54 host after: pose 1006.0,0.6,1.0 yaw 90
+02:03:54 client after: pose 1006.0,0.6,1.0 yaw 90
+02:03:54 PASS after quitting to the menu and hosting again, the host sees the piece where it was left
+02:03:54 PASS the rejoined client sees the piece where it was left
+02:03:55 host: pile 2 CopperPot(Clone) CopperPot(Clone)
+02:03:56 host: near CopperPot(Clone) 1004.0,0.3,0.1; CopperPot(Clone) 1006.0,0.6,1.0; 
+02:03:56 PASS the moved piece is still at the spot it was moved to, not back in the grid
+02:03:56 PASS the pile still holds every piece (2 -> 2)
+02:04:11 host: state MainMenu local none
+02:04:13 host: state LairRoom local 1005.2,1.2,1.5
+02:04:16 host after a fresh start: pose 1006.0,0.6,1.0 yaw 90
+02:04:17 PASS after the game is started again, the piece is still where it was left
+02:04:17 client log error lines: 0
+02:04:17 PASS all Lair pile checks
+02:04:17 cleaning up
+settings: ProjectSettings/ProjectSettings.asset restored from the saved copy
+settings: ProjectSettings/Packages/com.unity.pipeline/RuntimePipelineConfig.json unchanged
+02:04:19 active slot 1

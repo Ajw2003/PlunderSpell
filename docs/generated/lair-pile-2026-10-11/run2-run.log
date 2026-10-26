@@ -1,0 +1,34 @@
+16:22:57 test slot 99 wiped, owner's slot to restore: 1
+16:23:05 host: state MainMenu local none
+16:23:07 host: state LairRoom local 1005.2,1.5,1.5
+16:23:09 client started (pid 1083)
+16:23:18 client: state LairRoom local 1005.2,1.5,0.5
+16:23:22 host: spawned CopperPot(Clone) on the pile at 1004.0,0.6,0.0
+16:23:23 host: spawned CopperPot(Clone) on the pile at 1004.0,0.6,0.0
+16:23:27 host: pile 2 CopperPot(Clone) CopperPot(Clone)
+16:23:28 host: distance 1.92 from /LairRoom/HaulLanding at 1004.0,0.3,0.0
+16:23:29 host: moved CopperPot(Clone) to 1006.0,0.5,1.0 yaw 90
+16:23:36 host before: pose 1006.0,0.6,1.0 yaw 90
+16:23:36 client before: pose 1006.0,0.6,1.0 yaw 90
+16:23:36 PASS both sides see the moved piece in the same place before quitting
+16:23:38 host: state MainMenu
+16:23:39 host: state MainMenu local none
+16:23:46 host: state LairRoom local 1005.2,1.5,1.5
+16:23:48 client started (pid 1409)
+16:23:57 client: state LairRoom local 1005.2,1.5,0.5
+16:24:02 host after: no piece CopperPot(Clone)
+16:24:02 client after: no piece CopperPot(Clone)
+16:24:02 FAIL after quitting to the menu and hosting again, the host sees the piece where it was left
+16:24:02 FAIL the rejoined client sees the piece where it was left
+16:24:03 host: pile 0 
+16:24:04 host: near 
+16:24:04 FAIL the moved piece is still at the spot it was moved to, not back in the grid
+16:24:04 FAIL the pile still holds every piece (2 -> 0)
+16:24:18 host: state MainMenu local none
+16:24:20 host: state LairRoom local 1005.2,1.5,1.5
+16:24:23 host after a fresh start: no piece CopperPot(Clone)
+16:24:23 FAIL after the game is started again, the piece is still where it was left
+16:24:23 client log error lines: 0
+16:24:23 FAIL 5 Lair pile checks
+16:24:23 cleaning up
+16:24:25 active slot 1

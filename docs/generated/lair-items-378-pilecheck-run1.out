@@ -1,0 +1,41 @@
+settings: saved a byte-exact copy of the settings files
+16:20:13 test slot 99 wiped, owner's slot to restore: 1
+16:20:13 build: yes (auto)
+16:20:13 building Build/DevTest
+16:21:01 build Succeeded
+16:21:09 host: state MainMenu local none
+16:21:11 host: state LairRoom local 1005.2,1.5,1.5
+16:21:13 client started (pid 844)
+16:21:31 client: state LairRoom local 1005.2,1.5,0.5
+16:21:36 host: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  Number of parameters specified does not match the expected number."}]
+16:21:37 host: ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  Number of parameters specified does not match the expected number."}]
+16:21:41 host: pile 0 
+16:21:42 host: distance 1.92 from /LairRoom/HaulLanding at 1004.0,0.3,0.0
+16:21:43 host: no pile piece
+16:21:50 host before: no piece no pile piece
+16:21:50 client before: no piece no pile piece
+16:21:50 FAIL both sides see the moved piece in the same place before quitting
+16:21:52 host: state MainMenu
+16:21:53 host: state MainMenu local none
+16:22:00 host: state LairRoom local 1005.2,1.5,1.5
+16:22:02 client started (pid 1278)
+16:22:11 client: state LairRoom local 1005.2,1.5,0.5
+16:22:17 host after: no piece no pile piece
+16:22:17 client after: no piece no pile piece
+16:22:17 FAIL after quitting to the menu and hosting again, the host sees the piece where it was left
+16:22:17 FAIL the rejoined client sees the piece where it was left
+16:22:18 host: pile 0 
+16:22:19 host: near 
+16:22:19 FAIL the moved piece is still at the spot it was moved to, not back in the grid
+16:22:19 PASS the pile still holds every piece (0 -> 0)
+16:22:34 host: state MainMenu local none
+16:22:35 host: state LairRoom local 1005.2,1.5,1.5
+16:22:38 host after a fresh start: no piece no pile piece
+16:22:38 FAIL after the game is started again, the piece is still where it was left
+16:22:38 client log error lines: 0
+16:22:39 FAIL 5 Lair pile checks
+16:22:39 cleaning up
+settings: ProjectSettings/ProjectSettings.asset restored from the saved copy
+settings: ProjectSettings/Packages/com.unity.pipeline/RuntimePipelineConfig.json unchanged
+16:22:40 active slot 1
+exit 1

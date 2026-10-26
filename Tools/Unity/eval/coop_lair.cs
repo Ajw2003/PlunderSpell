@@ -34,6 +34,9 @@
 //   drop               let go of what the local player holds (ItemManager.ForceRelease)
 //   lookat <path>      stand the local player 2 m from the scene object at <path>, facing it, a little down, body free
 //   findnear <x,z>     the loot pieces and coin pouches within 3 m of that point on this side (names and positions)
+//   movepiece <x,z,deg> host: move the first pile piece to that floor point, turned deg about up, as if put down there (#378)
+//   piecepose <x,z>    this side's piece nearest that floor point (within 1 m): position and yaw (#378)
+//   quitmenu           the pause menu's Quit: leave the session and go to the main menu (#378)
 string action = "__ACTION__";
 string arg = "__ARG__";
 const System.Reflection.BindingFlags All = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static
@@ -86,7 +89,7 @@ switch (action)
             if (sp != pile && Get(sp, "Table") != null) table = Get(sp, "Table");
         var entry = ((System.Collections.IList)Get(table, "Entries"))[int.Parse(arg)];
         var at = GoldsmithCounter().GetComponentInChildren<UnityEngine.BoxCollider>().bounds.center + UnityEngine.Vector3.up * 0.1f;
-        var go = (UnityEngine.GameObject)pile.GetType().GetMethod("SpawnLoose").Invoke(pile, new object[] { Get(entry, "Item"), Get(entry, "Prefab"), at });
+        var go = (UnityEngine.GameObject)pile.GetType().GetMethod("SpawnLoose").Invoke(pile, new object[] { Get(entry, "Item"), Get(entry, "Prefab"), at, null });
         return "put " + go.name;
     }
     case "spawnpile":
@@ -98,7 +101,7 @@ switch (action)
             if (sp != pile && Get(sp, "Table") != null) table = Get(sp, "Table");
         var entry = ((System.Collections.IList)Get(table, "Entries"))[int.Parse(arg)];
         var at = ((UnityEngine.Component)landing).transform.position + UnityEngine.Vector3.up * 0.3f;
-        var go = (UnityEngine.GameObject)pile.GetType().GetMethod("SpawnLoose").Invoke(pile, new object[] { Get(entry, "Item"), Get(entry, "Prefab"), at });
+        var go = (UnityEngine.GameObject)pile.GetType().GetMethod("SpawnLoose").Invoke(pile, new object[] { Get(entry, "Item"), Get(entry, "Prefab"), at, null });
         return "spawned " + go.name + " on the pile at " + V(at);
     }
     case "look":
@@ -396,6 +399,48 @@ switch (action)
             moved++;
         }
         return "on the pad " + moved;
+    }
+    case "movepiece":
+    {
+        var landing = FindAll("Plunderspell.Raid.HaulLanding")[0];
+        var pile = Get(landing, "_pile");
+        UnityEngine.GameObject first = null;
+        foreach (var go in (System.Collections.IEnumerable)Get(pile, "Spawned"))
+            if (go != null) { first = (UnityEngine.GameObject)go; break; }
+        if (first == null) return "no pile piece";
+        var p = arg.Split(',');
+        var c = System.Globalization.CultureInfo.InvariantCulture;
+        var at = new UnityEngine.Vector3(float.Parse(p[0], c), first.transform.position.y + 0.2f, float.Parse(p[1], c));
+        var turn = UnityEngine.Quaternion.Euler(0f, float.Parse(p[2], c), 0f);
+        var body = first.GetComponent<UnityEngine.Rigidbody>();
+        if (body != null) { body.linearVelocity = UnityEngine.Vector3.zero; body.angularVelocity = UnityEngine.Vector3.zero; body.position = at; body.rotation = turn; }
+        first.transform.SetPositionAndRotation(at, turn);
+        return "moved " + first.name + " to " + V(at) + " yaw " + p[2];
+    }
+    case "piecepose":
+    {
+        // Nearest piece to the point, since two pieces of the same kind share a name.
+        var p = arg.Split(',');
+        var c = System.Globalization.CultureInfo.InvariantCulture;
+        var point = new UnityEngine.Vector3(float.Parse(p[0], c), 0f, float.Parse(p[1], c));
+        UnityEngine.Component best = null;
+        float bestDistance = float.MaxValue;
+        foreach (var o in FindAll("Plunderspell.Loot.LootValue"))
+        {
+            var piece = (UnityEngine.Component)o;
+            var d = piece.transform.position - point; d.y = 0f;
+            if (d.magnitude < bestDistance) { bestDistance = d.magnitude; best = piece; }
+        }
+        if (best == null || bestDistance > 1f) return "no piece within 1 m of " + arg;
+        return "pose " + V(best.transform.position) + " yaw " + best.transform.eulerAngles.y.ToString("F0");
+    }
+    case "quitmenu":
+    {
+        var coop = Get(T("Plunderspell.Core.GameServices"), "Coop");
+        coop.GetType().GetMethod("Leave").Invoke(coop, null);
+        var states = Get(T("Plunderspell.Core.GameServices"), "GameState");
+        states.GetType().GetMethod("ChangeState").Invoke(states, new object[] { System.Enum.Parse(T("Plunderspell.Core.GameState"), "MainMenu") });
+        return "state " + State();
     }
     case "shot":
         UnityEngine.ScreenCapture.CaptureScreenshot(arg);

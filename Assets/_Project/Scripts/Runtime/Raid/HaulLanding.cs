@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Code.Scripts.EventSystems;
+using Plunderspell.Core;
 using Plunderspell.Extraction;
 using Plunderspell.Lair;
 using Plunderspell.Loot;
@@ -15,7 +16,9 @@ namespace Plunderspell.Raid
     /// names of its pieces' LootItems; it is respawned when the server is ready and when another slot
     /// loads. The save is always rebuilt from the pieces that exist, so a piece that leaves the pile
     /// (<see cref="Remove"/>) or is destroyed leaves the save too. Its pieces are its own spawner's, so
-    /// the raid's loot clear never touches them. See docs/4-systems/raid.md, "How the haul comes home".
+    /// the raid's loot clear never touches them. No per-frame code: it saves on events only (a haul landing, a piece
+    /// leaving, the company setting out, the session ending, the application quitting). See docs/4-systems/raid.md,
+    /// "How the haul comes home".
     /// </summary>
     public class HaulLanding : MonoBehaviour
     {
@@ -23,29 +26,60 @@ namespace Plunderspell.Raid
         [SerializeField] private LootSpawner _pile;
 
         private bool _restored;
-        private int _savedCount = -1;
 
-        // Saved names no loot table could resolve: kept in the save so a missing table never erases a piece.
-        private readonly List<string> _unresolved = new List<string>();
+        // Saved entries no loot table could resolve: kept in the save (with any pose) so a missing table never erases a piece.
+        private readonly List<HaulPileEntry> _unresolved = new List<HaulPileEntry>();
 
+        // One table's share of a restore: posed pieces go back where they were, the rest take the grid.
+        private class RestoreBatch
+        {
+            public readonly List<LootItem> Grid = new List<LootItem>();
+            public readonly List<LootItem> Posed = new List<LootItem>();
+            public readonly List<Vector3> Positions = new List<Vector3>();
+            public readonly List<Quaternion> Rotations = new List<Quaternion>();
+        }
+
+        // Saves happen only at these moments, all events: a haul lands, a piece leaves, the company sets out,
+        // the session ends, the application quits. Restores: the server starting and a save slot loading.
         private void OnEnable()
         {
             EventManager.Instance?.Subscribe(this, (HaulExtracted e) => Land(e));
             EventManager.Instance?.Subscribe(this, (SaveSlotLoaded e) => Reload());
+            EventManager.Instance?.Subscribe(this, (CoopChanged e) => OnCoopChanged());
+            EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) => OnPhaseChanged(e.Phase));
+            EventManager.Instance?.Subscribe(this, (SessionEnding e) => SaveIfLive());
+            // The server may have started before this object was enabled.
+            OnCoopChanged();
         }
 
         private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
 
-        private void Update()
+        // Quitting from the Lair menu is a quit too; scene teardown is not used because pieces may already be gone.
+        private void OnApplicationQuit() => SaveIfLive();
+
+        // The server started: restore. The server stopped: its pile is gone but the save is not, so forget the
+        // pile and restore from the save when the next session starts.
+        private void OnCoopChanged()
         {
-            if (!_restored)
+            if (!ServerReady())
             {
-                if (ServerReady())
-                    Restore();
-                return;
+                _restored = false;
+                _unresolved.Clear();
             }
-            // A piece destroyed elsewhere (sold, broken) is no longer in the pile: keep the save in step.
-            if (_pile != null && LivePieces().Count != _savedCount)
+            else if (!_restored)
+                Restore();
+        }
+
+        private void OnPhaseChanged(RaidPhase phase)
+        {
+            if (phase == RaidPhase.Generating)
+                SaveIfLive();
+        }
+
+        // Never saves a pile that was not restored or no longer exists: that would wipe the save.
+        private void SaveIfLive()
+        {
+            if (_restored && _pile != null && ServerReady() && IsServer())
                 Save();
         }
 
@@ -78,7 +112,6 @@ namespace Plunderspell.Raid
                 return;
             _pile.Clear();
             _unresolved.Clear();
-            _savedCount = -1;
             _restored = false;
             if (ServerReady())
                 Restore();
@@ -91,19 +124,32 @@ namespace Plunderspell.Raid
                 return;
 
             // A restored pile can mix eras, so pieces are spawned per table to get each one's prefab.
-            var byTable = new Dictionary<RaidLootTable, List<LootItem>>();
-            foreach (string id in HaulPileSave.Load(SaveSlots.Active))
+            var byTable = new Dictionary<RaidLootTable, RestoreBatch>();
+            foreach (HaulPileEntry entry in HaulPileSave.LoadEntries(SaveSlots.Active))
             {
-                LootItem item = Resolve(id, out RaidLootTable table);
+                LootItem item = Resolve(entry.Name, out RaidLootTable table);
                 if (item == null)
-                    _unresolved.Add(id);
-                else if (byTable.TryGetValue(table, out List<LootItem> items))
-                    items.Add(item);
+                {
+                    _unresolved.Add(entry);
+                    continue;
+                }
+                if (!byTable.TryGetValue(table, out RestoreBatch batch))
+                    byTable[table] = batch = new RestoreBatch();
+                if (!entry.HasPose)
+                    batch.Grid.Add(item);
                 else
-                    byTable[table] = new List<LootItem> { item };
+                {
+                    batch.Posed.Add(item);
+                    batch.Positions.Add(entry.Position);
+                    batch.Rotations.Add(entry.Rotation);
+                }
             }
-            foreach (KeyValuePair<RaidLootTable, List<LootItem>> group in byTable)
-                Spawn(group.Value, group.Key);
+            // Posed pieces first, so the grid pieces see their cells as taken. SpawnPile holds them kinematic
+            // until its settle delay passes, so physics cannot fling a piece placed on or inside another.
+            foreach (KeyValuePair<RaidLootTable, RestoreBatch> group in byTable)
+                _pile.SpawnPile(group.Value.Posed, group.Value.Positions, group.Value.Rotations, group.Key);
+            foreach (KeyValuePair<RaidLootTable, RestoreBatch> group in byTable)
+                Spawn(group.Value.Grid, group.Key);
             Save();
         }
 
@@ -123,25 +169,17 @@ namespace Plunderspell.Raid
             _pile.SpawnPile(pieces, points, table);
         }
 
-        private List<LootItem> LivePieces()
-        {
-            var items = new List<LootItem>();
-            foreach (GameObject go in _pile.Spawned)
-            {
-                if (go != null && go.TryGetComponent(out LootValue value) && value.Item != null)
-                    items.Add(value.Item);
-            }
-            return items;
-        }
-
         private void Save()
         {
-            var ids = new List<string>();
-            foreach (LootItem item in LivePieces())
-                ids.Add(item.name);
-            _savedCount = ids.Count;
-            ids.AddRange(_unresolved);
-            HaulPileSave.Save(SaveSlots.Active, ids.ToArray());
+            var entries = new List<HaulPileEntry>();
+            foreach (GameObject go in _pile.Spawned)
+            {
+                if (go == null || !go.TryGetComponent(out LootValue value) || value.Item == null)
+                    continue;
+                entries.Add(new HaulPileEntry(value.Item.name, go.transform.position, go.transform.rotation));
+            }
+            entries.AddRange(_unresolved);
+            HaulPileSave.SaveEntries(SaveSlots.Active, entries);
         }
 
         /// <summary>The raid's current loot table, which maps each piece back to its prefab.</summary>
