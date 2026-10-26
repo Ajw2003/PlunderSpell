@@ -3,6 +3,14 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-26 — The Ophan's demand holds it off; defeating it comes from lore
+
+**Context.** The demand loop's design page asked what a paid demand gives toward defeating the Ophan (`docs/plans/core-loops/areas/demand-loop/`).
+
+**Decision (owner, 2026-10-26).** A demand is a deterrent, never the way to win. The Ophan starts omnipotent and undefeatable; its weakness is learned from lore found in the world, as in Lethal Company and the Wesley's Moons mod. The demand falls due every 3 to 5 raids after the first, failing makes every raid a hunt that takes the haul, the Ophan comes only when a demand is due or owed, it leaves once it takes the piece, and the piece is recognised by the ledger's sketch plus a fading mark. Every number lives in one tuning asset.
+
+**Consequence.** Lore and world-building become a design area of their own, needed before the way to defeat the Ophan is designed. Status: Active.
+
 ## 2026-10-25 — Core-loops proposal denied; design goes one area at a time, with the owner
 
 **Context.** The stage 3 proposal (`docs/plans/core-loops/proposal/`) designed every system, sixteen true forms and seven events at once and left the owner six choices.

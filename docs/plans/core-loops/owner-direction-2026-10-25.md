@@ -173,3 +173,20 @@ Reply "Hook options: area 1 1* 2A 3A 4A 5*", given in the comparison thread.
 - This reverses "don't name the Ophan": a quick search explains the name, "angel" reads too positive to be scary,
   and "that owns you" carries the fear and servitude, so the name can keep its mystery.
 - With this, every hook option for area 1 is answered.
+
+## The demand loop's questions, answered (owner, 2026-10-26 03:58 UTC)
+
+"Design approved: demand loop questions 1A 2A 3A 4A 5* 6A", on
+`docs/plans/core-loops/areas/demand-loop/demand-loop.html` (https://claude.ai/artifact/9qKm7RHD8JdiWYds2Ssk5S).
+
+1. After the first, a demand falls due every 3 to 5 raids, at random (A).
+2. Failing: every raid is a hunt and its haul is taken until the demand is paid (A, the fear pass's rule).
+3. The Ophan comes only when a demand is due or still owed (A).
+4. When it takes the piece it leaves at once; one holder saves everyone (A).
+5. (Own answer) **The demand has nothing to do with progression.** It holds off the beast, "a deterrent but never
+   the solution". The Ophan starts omnipotent and undefeatable; over play you learn of a weakness through lore found
+   in the world, as in Lethal Company and especially the Wesley's Moons mod. That needs writing and world-building
+   first, lore that fits the world and makes the progression make sense, without making this a narrative game.
+   So `DemandsToConfront` is dropped from the tuning, and **lore and world-building** becomes its own design area.
+6. Players recognise the piece by the ledger's sketch plus a faint mark when near, which fades after the first few
+   demands (A).
