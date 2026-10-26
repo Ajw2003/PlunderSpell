@@ -1,0 +1,32 @@
+settings: saved a byte-exact copy of the settings files
+03:20:03 build: yes (auto)
+03:20:03 building Build/DevTest
+03:20:21 build Succeeded
+03:20:29 host: state MainMenu players 0 local none holding nothing
+03:20:30 host: state LairRoom players 1 local 1005.200,1.499,1.500 holding nothing
+03:20:30 client started (pid 5853)
+03:20:39 client: state LairRoom players 2 local 1005.200,1.499,0.500 holding nothing
+03:20:41 host: state Playing players 2 local -20.500,1.500,-24.000 holding nothing
+03:20:43 client: state Playing players 2 local -24.000,1.497,-20.500 holding nothing
+03:20:48 spawn: warden at (-20.50, 1.50, -20.00), facing away, held still
+03:20:51 look: host looks at the warden
+03:20:53 before the turn | host:   LanternWarden(Clone) state=Incapacitated turned=False wickShowing=False at=(-20.50, 0.33, -20.00) | player local=False health=100 | player local=True health=100 | 
+03:20:54 before the turn | client: LanternWarden(Clone) state=Incapacitated turned=False wickShowing=False at=(-20.50, 0.33, -20.00) | player local=True health=100 | player local=False health=100 | 
+03:20:56 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final-before-client.png
+03:20:57 provoke: warden now faces the host's player, 4.0 m away; sees nobody, intruders known 2, director True
+03:20:59 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final-turning-client.png
+03:21:00 start of the turn | host:   LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(-20.98, 0.31, -22.47) | lantern at (-19.89, 1.05, -20.60) | player local=False health=100 | player local=True health=-99900 | 
+03:21:01 start of the turn | client: LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(-23.80, 0.31, -21.28) | lantern at (-19.90, 1.05, -20.61) | player local=True health=100 | player local=False health=100 | 
+03:21:03 after the turn (the model swapped) | host:   LanternWarden(Clone) state=Investigating turned=True wickShowing=True at=(-25.06, 0.31, -20.11) | lantern at (-19.90, 1.05, -20.61) | player local=False health=100 | player local=True health=-99900 | 
+03:21:04 after the turn (the model swapped) | client: LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(-24.75, 0.31, -20.92) | lantern at (-19.90, 1.05, -20.61) | player local=True health=-99900 | player local=False health=100 | 
+03:21:06 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final-swapped-client.png
+03:21:13 hunting | host:   LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(-18.45, 0.31, -24.43) | lantern at (-19.90, 1.05, -20.61) | player local=False health=100 | player local=True health=-99900 | 
+03:21:14 hunting | client: LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(-17.19, 0.31, -23.32) | lantern at (-19.90, 1.05, -20.61) | player local=True health=-99900 | player local=False health=100 | 
+03:21:16 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final-hunting-client.png
+03:21:25 after the catch | host:   LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(-18.88, 0.31, -23.20) | lantern at (-19.90, 1.05, -20.61) | player local=False health=100 | player local=True health=-99900 | 
+03:21:26 after the catch | client: LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(-20.31, 0.31, -22.93) | lantern at (-19.90, 1.05, -20.61) | player local=True health=-99900 | player local=False health=100 | 
+03:21:28 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final-after-client.png
+03:21:28 client log error lines: 2
+03:21:28 cleaning up
+settings: ProjectSettings/ProjectSettings.asset restored from the saved copy
+settings: ProjectSettings/Packages/com.unity.pipeline/RuntimePipelineConfig.json unchanged

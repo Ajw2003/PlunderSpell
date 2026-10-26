@@ -29,6 +29,10 @@ namespace Plunderspell.Guards
         /// castle scores what its guards hear (#259).</summary>
         public event Action<Vector3, float> NoiseHeard;
 
+        /// <summary>Raised with the noise that woke a sleeper early. A cast's own noise waking its Somnus target is
+        /// a missed Somnus (#417).</summary>
+        public event Action<NoiseEvent> WokenByNoise;
+
         public GuardHearing(StatusEffectReceiver status)
         {
             _status = status;
@@ -55,7 +59,10 @@ namespace Plunderspell.Guards
             }
 
             if (_status != null && _status.IsAsleep && noise.Strength >= WakeThreshold)
+            {
                 _status.WakeUp();
+                WokenByNoise?.Invoke(noise);
+            }
 
             // A noise too quiet to wake the guard goes unheard; it must not wait as a lead for when it wakes.
             if (_status != null && _status.IsAsleep)

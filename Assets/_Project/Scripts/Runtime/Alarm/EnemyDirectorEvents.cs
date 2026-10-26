@@ -76,6 +76,15 @@ namespace Plunderspell.Alarm
         public GuardDied(Component guard, Vector3 position) { Guard = guard; Position = position; }
     }
 
+    /// <summary>A guard began turning into its true form (#417), raised on every machine at the start of the
+    /// turn. The camera, the sound and the music hook in here.</summary>
+    public readonly struct GuardTurned : IEvent
+    {
+        public readonly Component Guard;
+        public readonly Vector3 Position;
+        public GuardTurned(Component guard, Vector3 position) { Guard = guard; Position = position; }
+    }
+
     /// <summary>A guard sees a player it cannot reach (on a table, a ledge, a rail) and asks for help (#237).
     /// Nearby guards decide what to do with it: ranged ones come to shoot, melee ones go and hold below.</summary>
     public readonly struct UnreachableIntruderReported : IEvent

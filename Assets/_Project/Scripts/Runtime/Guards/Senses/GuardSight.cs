@@ -21,6 +21,7 @@ namespace Plunderspell.Guards
         private readonly GuardSightThrottle _throttle;
         private readonly RaycastHit[] _hits = new RaycastHit[HitBufferSize];
         private bool _closed;
+        private float _lightRadius;
 
         public GuardSight(Transform body, GuardTuning tuning, int guardId)
         {
@@ -58,8 +59,11 @@ namespace Plunderspell.Guards
             }
 
             if (_throttle.IsLookDue(deltaTime))
-                Look(intruders, GuardBrain.SightRange(_tuning.SightRange * GuardBrain.BaseSightScale, alarm));
+                Look(intruders, _lightRadius > 0f ? _lightRadius : GuardBrain.SightRange(_tuning.SightRange * GuardBrain.BaseSightScale, alarm));
         }
+
+        /// <summary>The Wick (#417) sees only inside its own fire's light: this far, whatever the alarm.</summary>
+        public void SeeOnlyInLight(float radius) => _lightRadius = radius;
 
         private void Look(IReadOnlyList<Transform> intruders, float range)
         {

@@ -246,6 +246,7 @@ public static class ArtAssetImportValidator
                 break;
 
             case ArtBibleModelImporter.Kind.GenericEnemy:
+            case ArtBibleModelImporter.Kind.GenericClips:
                 if (importer.animationType != ModelImporterAnimationType.Generic)
                     Fail(report, $"{key}: rigged as {importer.animationType}, not Generic");
                 if (importer.motionNodeName != ArtBibleModelImporter.GenericRootBone)
@@ -263,7 +264,7 @@ public static class ArtAssetImportValidator
                 break;
         }
 
-        bool emissive = ArtBibleEnemyCatalog.EmissiveModels.Contains(key);
+        bool emissive = ArtBibleEnemyCatalog.IsEmissiveModel(key);
         foreach (Material material in AssetDatabase.LoadAllAssetsAtPath(assetPath).OfType<Material>())
         {
             if (material.shader == null || material.shader.name != ArtBibleModelImporter.LitShaderName)

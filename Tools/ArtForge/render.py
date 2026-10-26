@@ -33,7 +33,7 @@ import art_forge  # noqa: E402  (puts Tools/EnemyForge on sys.path)
 import bpy  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
-from art_forge import AGES, KINDS, PLAYER_AGES, REPO_ROOT, default_ages, blueprints, spec  # noqa: E402
+from art_forge import ALL_AGES, KINDS, REPO_ROOT, default_ages, blueprints, spec  # noqa: E402
 
 try:
     from PIL import Image, ImageDraw, ImageFont
@@ -443,7 +443,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("kind", choices=KINDS)
-    parser.add_argument("--age", choices=AGES + PLAYER_AGES, action="append")
+    parser.add_argument("--age", choices=ALL_AGES, action="append")
     parser.add_argument("--only", nargs="*", default=None)
     parser.add_argument("--samples", type=int, default=32)
     parser.add_argument("--resolution", type=int, default=700, help="pixels per view")

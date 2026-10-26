@@ -1,0 +1,92 @@
+<title>The Wick and the Ophan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Eczar:wght@600;700&family=Overpass+Mono:wght@400;600&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* Layout: one long night-watch ledger. Each question is a band: the question, then its plates at full width, each plate with a short verdict line beneath. Single dark look on purpose: the plates are drawn on bone black. */
+:root {
+  --ink: #14120E;        /* bone black, the page */
+  --ink-2: #1C1914;      /* a raised band */
+  --rule: #332D22;
+  --vellum: #DCD2BA;     /* text */
+  --dim: #9A9078;        /* secondary text */
+  --faint: #635C4C;      /* labels */
+  --madder: #C4542E;     /* the guard's flame */
+  --lapis: #7A6AA0;      /* the creature's light */
+  --display: "Eczar", Georgia, serif;
+  --body: "Spectral", Georgia, serif;
+  --mono: "Overpass Mono", ui-monospace, monospace;
+  color-scheme: dark;
+}
+body { background: var(--ink); color: var(--vellum); font-family: var(--body); font-size: 17px; line-height: 1.55; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 80px; display: grid; gap: 56px; }
+header { display: grid; gap: 14px; max-width: 68ch; }
+.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--faint); }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(34px, 6vw, 56px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 600; font-size: clamp(26px, 4vw, 36px); line-height: 1.1; margin: 0; text-wrap: balance; }
+h3 { font-family: var(--display); font-weight: 600; font-size: 24px; margin: 0; }
+p { margin: 0; max-width: 68ch; }
+.lede { color: var(--dim); }
+section { display: grid; gap: 22px; border-top: 1px solid var(--rule); padding-top: 32px; }
+section.guard h2 em { color: var(--madder); font-style: normal; }
+section.creature h2 em { color: var(--lapis); font-style: normal; }
+.ask { font-family: var(--mono); font-size: 14px; color: var(--vellum); background: var(--ink-2); border: 1px solid var(--rule); padding: 14px 16px; max-width: 72ch; }
+.ask b { color: var(--dim); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; font-size: 11px; display: block; margin-bottom: 4px; }
+.plates { display: grid; gap: 34px; }
+figure { margin: 0; display: grid; gap: 12px; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); }
+figcaption { display: grid; grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); gap: 6px 24px; align-items: baseline; }
+figcaption .tag { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+figcaption h3 { grid-column: 1; }
+figcaption p { grid-column: 2; grid-row: 1 / span 2; }
+.ref figcaption h3 { color: var(--dim); }
+.counter { color: var(--dim); font-style: italic; }
+ol.next { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; max-width: 68ch; }
+footer { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+@media (max-width: 700px) {
+  figcaption { grid-template-columns: minmax(0, 1fr); }
+  figcaption p { grid-column: 1; grid-row: auto; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">PlunderSpell · fear pass · #386 · approved 2026-10-11</div>
+    <h1>The Wick and the Ophan</h1>
+    <p class="lede">The two horrors as they stand now: the Lantern Warden's true form, and the creature that hunts the company through time. Each is drawn at true scale beside the 1.80 m reference human. Both approved on 2026-10-11, with lapis allowed for the Ophan; next they are modelled.</p>
+  </header>
+
+  <section class="guard">
+    <div class="kicker">The two-form guard</div>
+    <h2>The Wick, <em>on fire</em></h2>
+    <p>3.10 m tall, shoulders 0.88 m across, hunched; it stoops to 2.50 m to pass a 2.59 m arch, light first. The man has become his own lantern, and he is burning. His ribs open into the lantern's bars around the candle in his chest, and fire leaks out between them. His head is a cage of bone with the flame inside and the kettle hat lifted on top as the cap, fire jetting from its vents. Fire runs along his back and shoulders, out of the tears in his coat and along its hem. His face hangs open in four flaps, one eye still looking. The glaive has grown into his arm. His real lantern stays where he dropped it, dark.</p>
+    <div class="ask"><b>Approved</b>The turn: 1.6 s from being seen to the hunt, the first 0.9 s spent turning, the one moment to run. Its counter: it sees only by its own fire, so you are hidden outside the light.</div>
+    <div class="plates">
+      <figure>
+        <img src="wick-v2-1-true-form.png" alt="The Wick: a 3.10 m hunched burning figure in a quilted coat, fire along its back, shoulders, coat tears and hem, its chest opened into rib bars around a candle, its head a cage of bone bars holding a flame under a kettle hat with fire jetting from its vents, the face peeled into four hanging flaps, a glaive blade growing from one wrist and long bone-tipped fingers on the other hand; front and side views beside a 1.80 m human, with the 2.59 m arch marked." loading="lazy">
+        <figcaption><span class="tag">Front and side · 3.10 m</span><h3>The Wick</h3><p>True scale, with the arch it must stoop through. <span class="counter">From the gate it is the tallest thing in the bailey, and it is burning.</span></p></figcaption>
+      </figure>
+      <figure>
+        <img src="wick-v2-2-the-turn.png" alt="The turn in four stages: the warden seen, dropping his lantern; the face splitting with light as the hat lifts; the coat bursting into flame as the ribs open and he grows; turned, 3.10 m and burning. Beside it, a close-up of the head: fire jetting from the vented kettle hat, bone bars with knuckles, the flame inside, the peeled face with one eye and half a jaw." loading="lazy">
+        <figcaption><span class="tag">The turn · 1.6 s</span><h3>The turn, and the head up close</h3><p>Seen; the face splits in four, light first (magnified above stage 2); the coat catches and bursts; turned. <span class="counter">The lantern is dropped at the split and left behind, dark: the tell that the turn has started.</span></p></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="creature">
+    <div class="kicker">The creature and its quota</div>
+    <h2>The Ophan of Hours, <em>beyond fighting</em></h2>
+    <p>9.6 m tall with an 11 m wingspan; the castle's tallest ceiling is 5.2 m. From Ezekiel and Isaiah: a wheel within a wheel, rims high and dreadful and full of eyes all round, six wings as the seraphim have (two spread, two crossed beneath, two covering its feet), and lightning going out of it. At its heart, one great eye 2.6 m wide, with a portal for a pupil. The magical twist: it is a clock of the world. Its great rim is engraved with the four Ages' years, it stands a heartbeat early and late at once, and stone it passes through is pulled back to raw quarry rock, then closes behind it. It never uses a door.</p>
+    <div class="ask"><b>Approved</b>Larger than the castle, passing through its walls, and allowed lapis, the portal colour the art bible keeps off every other enemy.</div>
+    <div class="plates">
+      <figure>
+        <img src="ophan-v2-1-the-wheels.png" alt="The Ophan of Hours: a great pewter wheel 5.8 m across with hour marks and engraved years, a second wheel at right angles and a third tilted, eyes all round every rim, one great lapis eye at the centre, lightning, six feathered wings spanning 11 m, faint echoes of the wheels to each side, rings of hour marks on the floor; a 1.80 m human stands tiny at the left." loading="lazy">
+        <figcaption><span class="tag">Front · 9.6 m</span><h3>The Ophan of Hours</h3><p>The whole being at true scale. <span class="counter">The person at the left is you.</span></p></figcaption>
+      </figure>
+      <figure>
+        <img src="ophan-v2-2-in-the-castle.png" alt="The Ophan in a two-storey Keep cell, 12 m wide, its great eye at the centre: its wheel passes through the floor between storeys and its wings break out through both end walls, where the stone has turned to raw quarry rock edged in lapis; two 1.80 m players stand in the corner. Beside it, a close-up of the great rim: hour marks, eyes, and AD 1640 engraved in portal light." loading="lazy">
+        <figcaption><span class="tag">In the castle</span><h3>Larger than the house</h3><p>When it comes, the floors tick first, then the light, then the wheels, through whatever is in the way. <span class="counter">Counter: none. Carry what it asked for, or reach the portal first.</span></p></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer>Sheets drawn by code: Tools/ArtBible/generators/fear/wick_v2.py and ophan_v2.py · docs/art/concept/fear/</footer>
+</div>

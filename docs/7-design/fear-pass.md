@@ -130,8 +130,40 @@ creature's art go through the art pipeline with a review sheet each.
 Later slices: the rest of the roster as horrors, each with its own senses, behaviour and counter;
 Velox and Saltus mid-game; the later spells.
 
+## The true form (approved 2026-10-11)
+
+The Lantern Warden is the first two-form guard. Its true form is **the Wick**: the man turned into
+his own lantern, and burning. Sheets: `docs/art/concept/fear/wick-v2-1-true-form.png` and
+`wick-v2-2-the-turn.png`, drawn by `Tools/ArtBible/generators/fear/wick_v2.py`; the page the owner
+approved from is `docs/art/concept/fear/the-wick-and-the-ophan.html`.
+- **Look.** 3.10 m, shoulders 0.88 m, hunched; stoops to 2.50 m under a 2.59 m arch, its light
+  first. Ribs opened into the lantern's bars round a candle in the chest; the head a cage of four
+  bone bars holding the flame, the kettle hat lifted on top as the vented cap; the face peeled into
+  four hanging flaps, one eye still looking; the glaive grown into one arm, 0.40 m bone-tipped
+  fingers on the other hand. Fire on the back, shoulders, coat tears, hem and from the hat's vents.
+- **The turn.** 1.6 s from being seen to the hunt, in four beats: seen (the lantern drops), the face
+  splits in four with light pouring out (0.4 s), the coat bursts into flame and he grows (0.9 s),
+  turned (1.6 s). The first 0.9 s, while it is busy turning, is the one moment to run.
+- **The lantern** is dropped at the split and **left where it fell**, dark: its flame went into him.
+  It does not travel with him.
+- **Its counter.** It sees only by its own fire. Out of its light you are hidden; in it, you are seen.
+
+## The creature (approved 2026-10-11)
+
+The creature is **the Ophan of Hours**. Sheets: `docs/art/concept/fear/ophan-v2-1-the-wheels.png`
+and `ophan-v2-2-in-the-castle.png`, drawn by `Tools/ArtBible/generators/fear/ophan_v2.py`.
+- **Look.** After Ezekiel 1 and 10 and Isaiah 6: a wheel within a wheel (the great wheel 5.8 m
+  across), rims full of eyes all round, six wings (two spread, 11 m tip to tip; two crossed beneath;
+  two covering its feet), lightning going out of it, and at its heart **one great eye** 2.6 m wide
+  with a portal for a pupil, in place of the source's four faces (owner's call). 9.6 m tall.
+- **Colour.** Tarnished pewter, vellum, bone black and **lapis**: the owner allowed the creature the
+  portal colour the art bible keeps off enemies (Decisions, 2026-10-11, "The Ophan may use lapis").
+- **The twist.** A clock of the world: the four Ages' years engraved on its great rim; it stands a
+  heartbeat early and late at once; stone it passes through is pulled back to raw quarry rock, then
+  closes behind it. It never uses a door, and it is larger than the castle.
+- **Its counter.** None. Carry what it asked for, or reach the portal before it reaches you.
+
 ## Still open (not needed for the first slice)
 
 - Which later spells come from the Market and which only from ancient texts.
-- What the creature and the true form look like (designed with the owner before modelling).
 - Whether a thrown heavy object can stun a human-form guard as a blow to the head does.

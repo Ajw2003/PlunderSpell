@@ -55,7 +55,8 @@ Each Age's four enemies fill four roles: **patrol** (the common guard), **ranged
 - Pigments only: Bone Black `#14120E`, Vellum `#DCD2BA`, Verdigris `#5FA288` (arcane / touchable
   glow only), Orpiment `#C9A227` (gold and value **only** — nothing else in the game is gold),
   Madder `#C4542E` (fire, alarm, blood), Lapis `#7A6AA0` (voice, portals). Enemy costume never uses
-  orpiment unless the gold on it is itself stealable; it never uses verdigris or lapis.
+  orpiment unless the gold on it is itself stealable; it never uses verdigris or lapis. The one exception is the
+  fear pass's creature, the Ophan of Hours, which may use lapis (Decisions, 2026-10-11).
 - Budgets (per model, LOD0): patrol/ranged enemy ≤ 8k tris, heavy ≤ 12k, beast ≤ 6k; hand-held
   plunder ≤ 1.5k, two-hand plunder ≤ 3k, dual-carry plunder ≤ 5k; structure modules ≤ 25k per
   12 m cell. One 1024² texture set per enemy and per plunder item (baked BaseMap, packed ORM and

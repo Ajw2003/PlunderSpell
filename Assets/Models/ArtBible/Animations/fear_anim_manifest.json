@@ -1,0 +1,227 @@
+{
+ "about": "Written by Tools/ArtForge/anim_wick.py build. Events are copied from anim_spec.json (normalized time).",
+ "fps": 30,
+ "hip_scale_wick": 1.7045,
+ "fbx": [
+  {
+   "file": "Assets/Models/ArtBible/Animations/Humanoid_Fear.fbx",
+   "skeleton": "reference human: figures.Human() 1.76 m. Plays on the Wick (hip scale 1.705) and, for warden_turn, on the Lantern Warden; the Wick's Cage, Hat and Blade bones are never keyed",
+   "bones": 20,
+   "clips": [
+    {
+     "clip": "warden_turn",
+     "take": "ReferenceHuman|warden_turn",
+     "layer": "fear",
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "PropDetach",
+       "t": 0.4444,
+       "param": {
+        "prop": "LanternRing"
+       }
+      }
+     ],
+     "agent_speed_mps": null,
+     "frames": 28,
+     "length_s": 0.9,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "wick_emerge",
+     "take": "ReferenceHuman|wick_emerge",
+     "layer": "fear",
+     "loop": false,
+     "additive": false,
+     "events": [],
+     "agent_speed_mps": null,
+     "frames": 22,
+     "length_s": 0.7,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "wick_idle",
+     "take": "ReferenceHuman|wick_idle",
+     "layer": "fear",
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "agent_speed_mps": null,
+     "frames": 91,
+     "length_s": 3.0,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "wick_stalk",
+     "take": "ReferenceHuman|wick_stalk",
+     "layer": "fear",
+     "loop": true,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "agent_speed_mps": 1.4,
+     "frames": 43,
+     "length_s": 1.4,
+     "ik_shortfall_m": 0.0,
+     "speed_ref_mps": 0.8213,
+     "stride_ref_m": 1.15,
+     "hip_drop_ref_m": 0.0,
+     "foot_slide_ref_max_m": 0.0001,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.5
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "wick_hunt",
+     "take": "ReferenceHuman|wick_hunt",
+     "layer": "fear",
+     "loop": true,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "agent_speed_mps": 4.2,
+     "frames": 22,
+     "length_s": 0.7,
+     "ik_shortfall_m": 0.0,
+     "speed_ref_mps": 2.464,
+     "stride_ref_m": 1.725,
+     "hip_drop_ref_m": 0.0,
+     "foot_slide_ref_max_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.524
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "wick_search",
+     "take": "ReferenceHuman|wick_search",
+     "layer": "fear",
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "agent_speed_mps": null,
+     "frames": 76,
+     "length_s": 2.5,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": 0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "wick_catch",
+     "take": "ReferenceHuman|wick_catch",
+     "layer": "fear",
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.4167
+      }
+     ],
+     "agent_speed_mps": null,
+     "frames": 37,
+     "length_s": 1.2,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.389
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "wick_flinch",
+     "take": "ReferenceHuman|wick_flinch",
+     "layer": "fear",
+     "loop": false,
+     "additive": true,
+     "events": [],
+     "agent_speed_mps": null,
+     "frames": 13,
+     "length_s": 0.4,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "wick_stoop",
+     "take": "ReferenceHuman|wick_stoop",
+     "layer": "fear",
+     "loop": false,
+     "additive": true,
+     "events": [],
+     "agent_speed_mps": null,
+     "frames": 16,
+     "length_s": 0.5,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    }
+   ]
+  }
+ ]
+}

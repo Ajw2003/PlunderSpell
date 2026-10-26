@@ -50,9 +50,19 @@ class Blueprint:
     bbox_overrides: dict[str, tuple[float, str]] = field(default_factory=dict)
     # A structure/enemy that legitimately carries orpiment gold says why here.
     gold_reason: str | None = None
+    # An enemy allowed verdigris or lapis by the owner says why here (the brief forbids both).
+    arcane_reason: str | None = None
     # Families a player's colour dyes (players only). Their faces are baked white into
     # an extra greyscale <Name>_DyeMask.png, so one material slot can still be tinted.
     dye_families: list[str] = field(default_factory=list)
+    # Where fire burns, for a fire shader in engine instead of flame geometry: {family:
+    # strength 0..1} baked into an extra greyscale <Name>_FireMask.png (1 = flames,
+    # lower = embers and smoulder, 0 = no fire). The Wick (fear pass) uses it.
+    fire_families: dict[str, float] = field(default_factory=dict)
+    # Leave prop parts out of the heat-weighting solve and put them back afterwards (they
+    # are bound rigidly by the bind rules anyway). For models with many small prop islands
+    # near joints, which make Blender's solver fail (the Wick's ~90 flame tongues).
+    heat_skip_props: bool = False
     notes: list[str] = field(default_factory=list)
 
     @property
