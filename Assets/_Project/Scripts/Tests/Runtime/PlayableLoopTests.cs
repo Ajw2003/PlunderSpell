@@ -324,6 +324,26 @@ namespace Plunderspell.Tests
                 "Arriving in Idle while moving used to coast forever, off the edge of the map.");
         }
 
+        // --- A teammate's copy follows its owner down (#437) ------------------------------------
+
+        [UnityTest]
+        public IEnumerator Test_ATeammatesCopyFollowsItsOwnerDownAndBackUp()
+        {
+            var copy = MakePlayer(new Vector3(40f, 300f, -800f));
+            copy.Rb.useGravity = false;
+            copy.LocalDecidedByNetwork = true; // another machine's body: never this machine's player
+            yield return null;
+
+            copy.FollowOwnerDown(true);
+            Assert.IsTrue(copy.dead, "The Wick caught the owner; the host kept their copy standing at full health.");
+            Assert.IsFalse(copy.IsAlive, "The raid counts living players from IsAlive.");
+            Assert.AreEqual(0f, copy.CurrentHealth);
+
+            copy.FollowOwnerDown(false);
+            Assert.IsFalse(copy.dead, "A revived owner must come back up on every machine.");
+            Assert.AreEqual(copy.MaxHealth, copy.CurrentHealth);
+        }
+
         // --- Pause (#107, deprecated by #129) ----------------------------------------------------
 
         [Test]

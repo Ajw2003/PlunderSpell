@@ -107,10 +107,13 @@ public class PlayerNetworkOwnership : NetworkBehaviour, Interfaces.IDownable
     /// <summary>
     /// Lays a downed player's visible body on the ground, on every machine, so teammates can see who
     /// is down; stands it back up on revive. Only the mesh moves: the collider and the replicated
-    /// transform are untouched, so nothing about movement or hits changes.
+    /// transform are untouched, so nothing about movement or hits changes. A body this machine does
+    /// not own also takes the owner's dead flag, so this machine counts it as down too.
     /// </summary>
     private void ShowDownPose(bool down)
     {
+        if (!isOwner && TryGetComponent(out StateMachine.PlayerStateMachine body))
+            body.FollowOwnerDown(down);
         // The wizard collapses and vanishes through its own animation instead.
         if (_wizard != null)
         {

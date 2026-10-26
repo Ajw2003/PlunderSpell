@@ -167,7 +167,14 @@ replicates through a `NetworkTransform` on the player's `Eye` (remote cameras ar
 components on an active object for exactly this). When the server sees every body down it tells
 every machine (`PartyDown`), and all of them go to "You died". A downed body is laid on the
 ground on every machine (`ShowDownPose`: only the `Visual` mesh turns, the collider and the
-replicated transform do not). A dead player revives on entering the
+replicated transform do not). The flag also moves the copy's own state: on every machine but the
+owner's, `ShowDownPose` calls `PlayerStateMachine.FollowOwnerDown`, which sets the copy's health to 0
+and runs `Die()` on down, and `ReviveTo(1)` on back up. Nothing on another machine ever damages a
+body it does not own, so before this the copy stayed `dead = false` at full health after its owner
+was caught, and the host's `RaidDirector.CountLivingPlayers` and `ExtractionZone` (both read
+`IsAlive`) counted a dead teammate as alive. Health itself is not replicated: a copy reads 0 when
+down and full when up. `Tools/Unity/fear_wick_check.sh` fails if the other machine does not read
+the caught player as dead, down and drawn down. A dead player revives on entering the
 next raid, from the Lair or from that screen, and a client follows the host from either.
 
 ### The host's campaign on a friend's Lair

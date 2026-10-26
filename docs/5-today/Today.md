@@ -1,5 +1,16 @@
 # Today
 
+**2026-10-26 (later) - a player caught by the Wick now dies on both machines (PR #437, `AjsAgent/staging-2026-10-26`).**
+Measured first (`fear_wick_check.sh staging-2026-10-26-before`, FAIL): the owner's down flag did reach the other
+machine (`netDown=True`) and the wizard did collapse there (`drawnDown=True`), but that machine's copy stayed
+`dead=False` at health 100, so `RaidDirector.CountLivingPlayers` and `ExtractionZone` counted a dead teammate as alive.
+Fix: `PlayerStateMachine.FollowOwnerDown`, called from `PlayerNetworkOwnership.ShowDownPose` on bodies this machine does
+not own (mechanism in `docs/4-systems/net.md`, "Spectating and a party wipe"). The Wick check now fails if the other
+machine still sees the caught player alive. Round 3: compile clean, EditMode 261 pass / 3 skipped, PlayMode 529/529
+(528 plus the new `Test_ATeammatesCopyFollowsItsOwnerDownAndBackUp`), Wick check PASS both ways (`-after`: host caught,
+the client reads it dead at health 0; `-after2`: client caught, the host reads it dead at health 0), `coop_lair_check.sh
+staging-2026-10-26-r3` PASS all (27 PASS, 0 FAIL, 0 client error lines). Decision logged: nothing broken reaches main.
+
 **2026-10-26 - one staging branch for #414, #436 and #422 (`AjsAgent/staging-2026-10-26`).** Built from
 `staging-2026-10-11` in its own worktree. Round 1 merged #436 (which already holds every #414 commit): compile clean,
 EditMode 250 pass / 3 skipped, PlayMode 528/528, `fear_wick_check.sh staging-2026-10-26-r1` ran (the Wick shows on

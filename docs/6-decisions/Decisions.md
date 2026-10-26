@@ -3,6 +3,18 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-26 — Nothing broken reaches main
+
+**Status.** Decided by the owner.
+
+**Decision.** Nothing broken reaches main; main stays the ground truth where things work. A staging
+branch merges into main only after every bug its checks find is fixed and shown fixed, with the
+suites and the co-op checks run again on the fixed branch.
+
+**Why.** The staging check for PR #437 found that a player caught by the Wick in co-op died only on
+their own machine; the other machine kept them alive at health 100. The owner asked for the fix and
+its proof on the staging branch before #437 merges, rather than merging and fixing after.
+
 ## 2026-10-15 — The Wick: three calls the builder made, confirmed by the owner (#417)
 
 **Status.** Decided by the owner.

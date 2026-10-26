@@ -4,6 +4,7 @@
 //                is; the loose lanterns' positions; each player body's health
 //   slow <scale> set Time.timeScale on this machine (1 restores)
 //   face         turn this machine's player to look at the warden
+//   faceteammate turn this machine's player to look at the other player's body
 //   shot <path>  save a screenshot of this machine's view (absolute path, forward slashes)
 string action = "__ACTION__";
 string arg = "__ARG__";
@@ -58,6 +59,19 @@ if (action == "face")
     playerType.GetMethod("FaceYaw").Invoke(me, new object[] { UnityEngine.Quaternion.LookRotation(toward).eulerAngles.y });
     return "facing the warden, " + toward.magnitude.ToString("F1") + " m away";
 }
+if (action == "faceteammate")
+{
+    // Turn this machine's player to look at the other player's body, for the caught-player screenshots.
+    var playerType = T("StateMachine.PlayerStateMachine");
+    var me = (UnityEngine.Component)playerType.GetProperty("Local").GetValue(null);
+    UnityEngine.Component mate = null;
+    foreach (UnityEngine.Component p in UnityEngine.Object.FindObjectsByType(playerType, UnityEngine.FindObjectsSortMode.None))
+        if (p != me) mate = p;
+    if (me == null || mate == null) return "no local player or no teammate";
+    var toward = mate.transform.position - me.transform.position; toward.y = 0f;
+    playerType.GetMethod("FaceYaw").Invoke(me, new object[] { UnityEngine.Quaternion.LookRotation(toward).eulerAngles.y });
+    return "facing the teammate, " + toward.magnitude.ToString("F1") + " m away";
+}
 
 var sb = new System.Text.StringBuilder();
 foreach (UnityEngine.Component guard in UnityEngine.Object.FindObjectsByType(T("Plunderspell.Guards.Guard"), UnityEngine.FindObjectsSortMode.None))
@@ -74,6 +88,12 @@ foreach (var body in UnityEngine.Object.FindObjectsByType<UnityEngine.Rigidbody>
 }
 foreach (UnityEngine.Component player in UnityEngine.Object.FindObjectsByType(T("StateMachine.PlayerStateMachine"), UnityEngine.FindObjectsSortMode.None))
 {
-    sb.Append("player local=" + Get(player, "IsLocal") + " health=" + Get(player, "CurrentHealth") + " | ");
+    // dead is this machine's copy; netDown is the owner's replicated flag; drawnDown is the wizard's Dead pose here.
+    var net = player.GetComponent(T("PlayerNetworkOwnership"));
+    var animator = player.GetComponentInChildren<UnityEngine.Animator>();
+    sb.Append("player local=" + Get(player, "IsLocal") + " health=" + Get(player, "CurrentHealth")
+        + " dead=" + Get(player, "dead") + " netDown=" + (net != null ? Get(net, "IsDown") : "?")
+        + " drawnDown=" + (animator != null ? animator.GetBool("Dead").ToString() : "?")
+        + " shown=" + (animator != null && System.Array.Exists(animator.GetComponentsInChildren<UnityEngine.Renderer>(), r => r.enabled)) + " | ");
 }
 return sb.ToString();

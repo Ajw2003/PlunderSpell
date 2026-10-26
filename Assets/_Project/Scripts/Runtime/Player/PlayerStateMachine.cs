@@ -334,6 +334,24 @@ namespace StateMachine
             PublishHealth();
         }
 
+        /// <summary>
+        /// For another machine's body: follows its owner's replicated down flag. Nothing here damages
+        /// that body, so without this it stayed alive at full health after its owner died. Health
+        /// itself is not replicated; down means 0, back up means full. See docs/4-systems/net.md.
+        /// </summary>
+        public void FollowOwnerDown(bool down)
+        {
+            if (down && !dead)
+            {
+                _health = 0f;
+                Die();
+            }
+            else if (!down && dead)
+            {
+                ReviveTo(1f);
+            }
+        }
+
         public void TakeDamage(float damage)
         {
             if (dead) return;

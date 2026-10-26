@@ -108,6 +108,33 @@ both "the Wick standing (model swapped)"
 sleep 2
 shots stalking
 both "stalking or hunting"
+# The caught player as the other machine sees it: wait (bounded) for either machine's own player to be dead,
+# turn the other machine's player to look at that body, then shoot both. The other machine must read the caught
+# player as dead, down and drawn down; it once kept them standing at health 100.
+# has <read> <regex>: whether one player entry of a read (entries split on '|') matches.
+has() { tr '|' '
+' <<<"$1" | grep -qE "$2"; }
+caught=""
+for _ in $(seq 1 40); do
+    if has "$(read_side host read)" 'local=True health=[^ ]+ dead=True'; then caught=host; watcher=client
+    elif has "$(read_side client read)" 'local=True health=[^ ]+ dead=True'; then caught=client; watcher=host; fi
+    [ -n "$caught" ] && break
+    sleep 0.5
+done
+if [ -z "$caught" ]; then
+    log "FAIL nobody was caught within 20 s"; exit 1
+fi
+# Near-freeze the watcher first: on the host that also stops the Wick, so it cannot catch the watcher mid-shot.
+log "caught: the $caught's player; the $watcher slows: $(read_side "$watcher" slow 0.02); looks: $(read_side "$watcher" faceteammate)"
+sleep 1
+shots caught-player
+both "the caught player"
+seen="$(read_side "$watcher" read)"
+if has "$seen" 'local=False health=[^ ]+ dead=True netDown=True drawnDown=True'; then
+    log "PASS the $watcher sees the $caught's player down"
+else
+    log "FAIL the $watcher still sees the $caught's player alive or standing: $seen"; exit 1
+fi
 # The catch: wait (bounded) for the host's warden to reach Combat, slow right down, then shoot.
 for _ in $(seq 1 60); do
     case "$(read_side host read)" in *"state=Combat"*) break ;; esac
