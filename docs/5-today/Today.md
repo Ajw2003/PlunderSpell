@@ -1,5 +1,16 @@
 # Today
 
+**2026-10-26 - one staging branch for #414, #436 and #422 (`AjsAgent/staging-2026-10-26`).** Built from
+`staging-2026-10-11` in its own worktree. Round 1 merged #436 (which already holds every #414 commit): compile clean,
+EditMode 250 pass / 3 skipped, PlayMode 528/528, `fear_wick_check.sh staging-2026-10-26-r1` ran (the Wick shows on
+both machines, the lantern agrees, a catch kills). Round 2 merged #422 (Today.md conflict only, both entries kept):
+compile clean, EditMode 261 pass / 3 skipped, PlayMode 528/528, `coop_lair_check.sh staging-2026-10-26-r2` PASS all,
+0 client error lines. The 254 EditMode baseline came from #422's own branch; staging alone runs 243, #436 adds 7 and
+#422 adds 11. **Found, already in #436's own run4:** a caught player's death shows only on their own machine; the
+other machine still reads health 100 and draws them standing. Logs in `docs/generated/staging-2026-10-26/`.
+
+---
+
 **2026-10-18 - Lair loot keeps its place, by events (#378, need to save state of items in the lair).** `HaulLanding` has no `Update`: it saves on haul landing, `Remove`, setting out, the new `SessionEnding` event (from `CoopSession.Leave()`, before the network stops) and quit; it restores on `CoopChanged` with the server running and on `SaveSlotLoaded`. EditMode 254 passed / 3 skipped / 0 failed, PlayMode 520/520, `lair_pile_check.sh` twice PASS, `coop_lair_check.sh` PASS (`docs/generated/lair-pile-2026-10-18-*.log`). Not opened as a PR yet.
 
 ---
