@@ -283,14 +283,14 @@ const PAGE = {
     "feature": "staging into main",
     "base": "origin/main",
     "unverified": [
-      "I have not played it by hand: every check was a script",
-      "lair_pile_check.sh was not run on the merged branch, only coop_lair_check.sh",
-      "A caught player's death shows only on their own machine; the other machine still reads health 100. #436's own run4 shows the same, so this merge did not cause it, but it is not fixed"
+      "I have not played it by hand: every check was run by a script",
+      "I did not run lair_pile_check.sh on the merged branch. I ran only coop_lair_check.sh.",
+      "When a player is caught and dies, the death shows only on their own machine, and the other machine still reads health 100. The last recorded run of #436's own Wick check (run4) shows the same thing, so this merge did not cause it, but it is not fixed."
     ],
     "files": {}
   },
   "short": {
-    "lead": "Pull request 437 carries three pull requests into main in one go: #436, the Wick (which already holds all of #414, the fear art), then #422, lair loot saves. I merged them one at a time on a new branch and ran the checks after each. Every check passed in the logs I read, and none of it has been played by hand.",
+    "lead": "Pull request 437 carries three pull requests into main in one go: #436, the Wick; #414, the fear art, which #436 already holds in full; and #422, which saves lair loot. I merged them one at a time on a new branch and ran the checks after each. Every check passed in the logs I read. None of it has been played by hand.",
     "hint": "Tap an item to see what was checked and what you can try yourself.",
     "key": [
       [
@@ -324,7 +324,7 @@ const PAGE = {
         "Wick check",
         "fear_wick_check.sh, co-op",
         "done",
-        "The warden turns into the Wick on both machines, the lantern lands in the same place on both, and a catch kills the caught player. The 2 client error lines are stack frames containing the word SocketError, not errors. Screenshots: docs/generated/fear-wick-2026-10-15/staging-2026-10-26-r1-*.",
+        "The warden turns into the Wick on both machines, the lantern lands in the same place on both, and a catch kills the caught player. The 2 error lines on the client are stack frames that contain the word SocketError. They are not errors. Screenshots: docs/generated/fear-wick-2026-10-15/staging-2026-10-26-r1-*.",
         "Nothing from you."
       ],
       [
@@ -340,7 +340,7 @@ const PAGE = {
         "Lair check",
         "coop_lair_check.sh, co-op",
         "done",
-        "PASS all Lair checks (26 lines), 0 client error lines. Log: docs/generated/staging-2026-10-26/round2-coop-lair-check.log.",
+        "The script printed PASS for all Lair checks (26 lines), with 0 client error lines. Log: docs/generated/staging-2026-10-26/round2-coop-lair-check.log.",
         "Nothing from you."
       ],
       [
@@ -348,14 +348,14 @@ const PAGE = {
         "Play it",
         "One co-op raid and back",
         "you",
-        "Host with a friend joining, get seen by a Lantern Warden so it turns into the Wick, then come home and move a haul piece, quit to the menu and host again.",
-        "Say whether the Wick looked right on both screens and whether the piece stayed where you left it."
+        "Host a co-op game with a friend joining. Let a Lantern Warden see you, so it turns into the Wick. Then come home, move one piece of loot in the Lair's pile, quit to the menu and host again.",
+        "Tell me whether the Wick looked right on both screens, and whether the piece was still where you left it after you hosted again."
       ]
     ]
   },
   "wrapup": {
     "summary": "Pull request 437 brings #436 (with #414) and #422 into main, and every script check passed after each merge.",
-    "changing": "Main gains the Wick in raids, the fear art with its import rules, and lair loot that keeps its place.",
+    "changing": "Main gains the Wick in raids, the fear art with its Unity import settings, and lair loot that stays where you put it.",
     "blocking": "Nothing is merged or closed. #414, #436 and #422 stay open until 437 merges.",
     "next": "After you pass it, merge 437, then close #414, #436 and #422.",
     "todo": [
@@ -368,7 +368,7 @@ const PAGE = {
     [
       "chg",
       "Files changed, counted from git against origin/main",
-      "3293 files, +4046363 −13202",
+      "3295 files, +4086485 −13202",
       null,
       "The added and removed counts come from git (git diff --numstat origin/main...HEAD); the estimates beside them come from the plan.",
       null,
@@ -39806,6 +39806,30 @@ const PAGE = {
           ]
         ],
         [
+          "docs/plans/pr437-qa.html",
+          40032,
+          0,
+          [
+            [
+              "Not in the plan",
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          "docs/plans/pr437-qa.page.json",
+          90,
+          0,
+          [
+            [
+              "Not in the plan",
+              0,
+              0
+            ]
+          ]
+        ],
+        [
           "docs/plans/ui-events-mvc.md",
           99,
           0,
@@ -39896,7 +39920,7 @@ const PAGE = {
       "Still unverified",
       "3 things not yet proven",
       null,
-      "I have not played it by hand: every check was a script. lair_pile_check.sh was not run on the merged branch, only coop_lair_check.sh. A caught player's death shows only on their own machine; the other machine still reads health 100. #436's own run4 shows the same, so this merge did not cause it, but it is not fixed.",
+      "I have not played it by hand: every check was run by a script. I did not run lair_pile_check.sh on the merged branch. I ran only coop_lair_check.sh. When a player is caught and dies, the death shows only on their own machine, and the other machine still reads health 100. The last recorded run of #436's own Wick check (run4) shows the same thing, so this merge did not cause it, but it is not fixed.",
       null,
       null
     ]
