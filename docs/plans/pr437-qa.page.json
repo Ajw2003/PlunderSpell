@@ -1,0 +1,90 @@
+{
+  "title": "QA: Staging into main",
+  "eyebrow": "QA for pull request 437, which brings the Wick, the fear art and the lair loot saves into main · nothing here is closed until you have tested",
+  "approval": "QA passed: staging into main",
+  "qa": {
+    "feature": "staging into main",
+    "base": "origin/main",
+    "unverified": [
+      "I have not played it by hand: every check was a script",
+      "lair_pile_check.sh was not run on the merged branch, only coop_lair_check.sh",
+      "A caught player's death shows only on their own machine; the other machine still reads health 100. #436's own run4 shows the same, so this merge did not cause it, but it is not fixed"
+    ],
+    "files": {}
+  },
+  "short": {
+    "lead": "Pull request 437 carries three pull requests into main in one go: #436, the Wick (which already holds all of #414, the fear art), then #422, lair loot saves. I merged them one at a time on a new branch and ran the checks after each. Every check passed in the logs I read, and none of it has been played by hand.",
+    "hint": "Tap an item to see what was checked and what you can try yourself.",
+    "key": [
+      [
+        "Checked by script",
+        "done"
+      ],
+      [
+        "You test this",
+        "you"
+      ]
+    ],
+    "items": [
+      [
+        "check",
+        "Merges",
+        "#436 (with #414), then #422",
+        "done",
+        "#436 merged cleanly. #422 clashed only in docs/5-today/Today.md, where two diary entries were added at the top; I kept both. Merging the result into main is clean.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Round 1 tests",
+        "Staging plus #436",
+        "done",
+        "Compile clean. EditMode: 250 passed, 0 failed, 3 skipped. PlayMode: 528 of 528 passed. Logs: docs/generated/staging-2026-10-26/round1-*.log.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Wick check",
+        "fear_wick_check.sh, co-op",
+        "done",
+        "The warden turns into the Wick on both machines, the lantern lands in the same place on both, and a catch kills the caught player. The 2 client error lines are stack frames containing the word SocketError, not errors. Screenshots: docs/generated/fear-wick-2026-10-15/staging-2026-10-26-r1-*.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Round 2 tests",
+        "Plus #422",
+        "done",
+        "Compile clean. EditMode: 261 passed, 0 failed, 3 skipped (243 on staging, plus 7 from #436 and 11 from #422; no test was lost). PlayMode: 528 of 528 passed. Logs: docs/generated/staging-2026-10-26/round2-*.log.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Lair check",
+        "coop_lair_check.sh, co-op",
+        "done",
+        "PASS all Lair checks (26 lines), 0 client error lines. Log: docs/generated/staging-2026-10-26/round2-coop-lair-check.log.",
+        "Nothing from you."
+      ],
+      [
+        "hand",
+        "Play it",
+        "One co-op raid and back",
+        "you",
+        "Host with a friend joining, get seen by a Lantern Warden so it turns into the Wick, then come home and move a haul piece, quit to the menu and host again.",
+        "Say whether the Wick looked right on both screens and whether the piece stayed where you left it."
+      ]
+    ]
+  },
+  "wrapup": {
+    "summary": "Pull request 437 brings #436 (with #414) and #422 into main, and every script check passed after each merge.",
+    "changing": "Main gains the Wick in raids, the fear art with its import rules, and lair loot that keeps its place.",
+    "blocking": "Nothing is merged or closed. #414, #436 and #422 stay open until 437 merges.",
+    "next": "After you pass it, merge 437, then close #414, #436 and #422.",
+    "todo": [
+      "Play the steps under Play it.",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with \"QA passed: staging into main\", or tell me what failed."
+    ]
+  }
+}
