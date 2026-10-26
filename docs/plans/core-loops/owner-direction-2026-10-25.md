@@ -190,3 +190,8 @@ Reply "Hook options: area 1 1* 2A 3A 4A 5*", given in the comparison thread.
    So `DemandsToConfront` is dropped from the tuning, and **lore and world-building** becomes its own design area.
 6. Players recognise the piece by the ledger's sketch plus a faint mark when near, which fades after the first few
    demands (A).
+
+## Playtesting (owner, 2026-10-26 04:08 UTC)
+
+- No four-player playtests for now: the owner has two Steam accounts and two PCs. Playtests are solo first, then
+  two players. **The game must be fun solo**, not only survivable, because the owner tests alone.
