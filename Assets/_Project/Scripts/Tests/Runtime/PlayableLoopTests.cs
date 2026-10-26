@@ -316,8 +316,8 @@ namespace Plunderspell.Tests
 
             player.Rb.linearVelocity = new Vector3(5f, 0f, 3f);
             player.Idle();
-            yield return null;
-            yield return null;
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
 
             Vector3 v = player.Rb.linearVelocity;
             Assert.Less(new Vector2(v.x, v.z).magnitude, 0.01f,

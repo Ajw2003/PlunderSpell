@@ -7,13 +7,18 @@ public class PlayerWalkState : PlayerState
     {
     }
 
-    public override void Update()
+    public override void Enter()
+    {
+        // Once per entry, not per tick: a missing camera stays missing and would flood the log.
+        if (_stateMachine.CameraTransform == null)
+            Debug.LogWarning("CameraTransform is not assigned in PlayerStateMachine. Cannot apply camera-relative movement.");
+    }
+
+    // Velocity is a physics write, so it belongs on the physics step, not the render frame.
+    public override void FixedUpdate()
     {
         if (_stateMachine.CameraTransform == null)
-        {
-            Debug.LogWarning("CameraTransform is not assigned in PlayerStateMachine. Cannot apply camera-relative movement.");
             return;
-        }
 
         Vector3 moveDirection = CameraRelativeInput();
 

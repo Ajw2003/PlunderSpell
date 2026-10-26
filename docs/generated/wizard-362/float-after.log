@@ -1,0 +1,39 @@
+settings: saved a byte-exact copy of the settings files
+19:45:10 test slot 99 wiped, owner's slot to restore: 1
+19:45:10 building Build/DevTest
+19:45:38 build Succeeded
+19:45:47 host: state MainMenu players 0 local none holding nothing
+19:45:48 host: state LairRoom players 1 local 1005.200,1.211,1.500 holding nothing
+19:45:48 client started (pid 949)
+19:45:57 client: state LairRoom players 2 local 44.500,1.250,1.600 holding nothing
+19:46:00 host 3 m from the client at (1005.20, 1.21, 3.50)
+19:46:02 client faces the host
+19:46:05 client keys: none
+19:46:07 host sees idle: at 1005.20,0.50 Speed=0.00 Crouch=False Casting=False Dead=False avatarHuman=True controller=Wizard
+19:46:08 idle screenshot: saved docs/generated/wizard-362/float-after-idle.png 1280 x 720
+19:46:09 PASS the host's copy of the client's wizard reads idle (Crouch=False Casting=False Dead=False avatarHuman=True controller=Wizard)
+19:46:10 client keys: none
+19:46:12 host sees feet: other: capsule 0.1 cm, foot bone 8.8 cm, mesh -10.3 cm; own: capsule 0.0 cm, foot bone 8.6 cm, mesh -10.4 cm; worst capsule gap 0.1
+19:46:12 PASS both bodies stand on the floor (capsule within 3 cm)
+19:46:13 client keys: C
+19:46:15 host sees crouch: at 1005.20,0.50 Speed=0.00 Crouch=True Casting=False Dead=False avatarHuman=True controller=Wizard
+19:46:15 crouch screenshot: saved docs/generated/wizard-362/float-after-crouch.png 1280 x 720
+19:46:16 PASS the host's copy of the client's wizard reads crouch (Crouch=True)
+19:46:17 client keys: none
+19:46:20 client keys: V
+19:46:22 host sees cast: at 1005.20,0.50 Speed=0.00 Crouch=False Casting=True Dead=False avatarHuman=True controller=Wizard
+19:46:22 cast screenshot: saved docs/generated/wizard-362/float-after-cast.png 1280 x 720
+19:46:23 PASS the host's copy of the client's wizard reads cast (Casting=True)
+19:46:24 client keys: none
+19:46:26 host sees before walking: at 1005.20,0.50 Speed=0.00 Crouch=False Casting=False Dead=False avatarHuman=True controller=Wizard
+19:46:27 client keys: S
+19:46:28 host sees walking: at 1005.19,-2.67 Speed=4.89 Crouch=False Casting=False Dead=False avatarHuman=True controller=Wizard
+19:46:29 walk screenshot: saved docs/generated/wizard-362/float-after-walk.png 1280 x 720
+19:46:30 client keys: none
+19:46:30 PASS the host's copy of the client's wizard reads walking (Speed above 0.5)
+19:46:30 client log error lines: 0
+19:46:30 PASS all wizard poses
+19:46:30 cleaning up
+settings: ProjectSettings/ProjectSettings.asset restored from the saved copy
+settings: ProjectSettings/Packages/com.unity.pipeline/RuntimePipelineConfig.json unchanged
+19:46:36 active slot 1

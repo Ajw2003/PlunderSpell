@@ -163,6 +163,17 @@ ground-floor counts are still open.
 
 ---
 
+**2026-10-11 (evening) - the player stands on the floor (follows #391).** Both bodies stood 29 cm up: the ground snap
+took the SphereCast's `hit.distance` as the floor, but the floor is one cast radius (0.3 m) further down. Fixed in
+`PlayerStateMachine.HeightAboveGround`. That exposed a second fault the hover had hidden: `IsGrounded` was true
+anywhere within the 1.4 m cast, so the first half-metre of every jump counted as grounded and skipped the extra fall
+gravity (a misfired Saltus peaked 1.02 m). Grounded now means within 15 cm of ride height. Checks: EditMode 243 /
+3 skipped / 0 fail, PlayMode 520/520 (`docs/generated/player-floats-*.log`); co-op `wizard_coop_check.sh float-after`
+PASS, capsule 0.1 cm off the floor on both bodies (was 29.2), pictures `docs/generated/wizard-362/float-*`. Not
+checked: stairs and the Market tiles in co-op (overlaps #385).
+
+---
+
 **2026-10-11 - one staging branch again, and a friends build (#368).** Several worktrees had left the
 owner unsure where work stopped. Checked every branch by patch content: everything finished is on
 `claude/merge-2026-10-08`; the new `claude/staging-2026-10-11` is that plus the wizard plan docs
