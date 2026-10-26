@@ -1,0 +1,321 @@
+{
+ "title": "The Ophan's demand: build plan",
+ "eyebrow": "Design area: the demand loop · step 2 of 2 · nothing built",
+ "approval": "Build plan approved: demand loop",
+ "short": {
+  "lead": "This turns your answers into five build steps. The first lands what's already made: the Wick and the Ophan's art. The next three build the tuning file and 5-minute raids, the Ophan's arrival, and the demand itself, which replaces the coin debt. The last is a four-player playtest before anything else gets built. Most of the work is already filed as issue #418 (the Ophan arrives and catches players) and issue #419 (the artifact quota replaces the debt), so the plan updates those rather than starting over. Five choices are open, and every one has room for your own answer.",
+  "hint": "Tap a step for what it does and what it needs. Under Changes is the list of what the debt code keeps, changes or drops.",
+  "key": [
+   [
+    "Build step",
+    ""
+   ],
+   [
+    "Needs you",
+    "you"
+   ],
+   [
+    "Already exists",
+    "done"
+   ]
+  ],
+  "items": [
+   [
+    "check",
+    "Exists",
+    "What is already built or filed",
+    "done",
+    [
+     "The Wick (#417, the Lantern Warden turns into the Wick) is finished on the branch AjsAgent/fear-wick, with tests and a co-op check, but no pull request is open yet.",
+     "The Ophan's model, its five clips and the import rules are in pull request #414, not yet checked in Unity.",
+     "Issue #418 (the Ophan arrives in hunted raids and catches players) and issue #419 (the Ophan's artifact quota replaces the debt and the Collector) are filed and match most of your answers.",
+     "A raid lasts 600 s today (ExtractionZone.RaidDurationSeconds). The portal bell rings at 120, 60 and 30 s left (MusicDirector).",
+     "The coin debt and the Collector live in 8 runtime files and 11 test files (listed under Changes)."
+    ],
+    [
+     "Nothing from you."
+    ]
+   ],
+   [
+    "lock",
+    "Step 1",
+    "Land what is already made",
+    "you",
+    [
+     "I open the Wick's pull request into staging-2026-10-11.",
+     "You merge #414 (the Wick and the Ophan's art), the Wick's pull request, and #422 (the Lair pile that keeps its place), so every later step starts from one base."
+    ],
+    [
+     "Your merges. Merging can't be undone cleanly, so it stays your call."
+    ]
+   ],
+   [
+    "hammer",
+    "Step 2",
+    "The tuning file and 5-minute raids",
+    "",
+    [
+     "OphanDemandTuning, one data asset holding every number from the questions page, with DemandsToConfront dropped.",
+     "The raid's length is read from RaidSeconds (300) instead of the 600 s set on ExtractionZone.",
+     "A test checks that every default loads and that no value is out of range."
+    ],
+    [
+     "Nothing from you."
+    ]
+   ],
+   [
+    "eye",
+    "Step 3",
+    "The Ophan arrives and catches (#418, updated)",
+    "",
+    [
+     "On a raid where a demand is due or owed, the Ophan arrives HuntWindowSeconds (60) before the portal closes, passes through walls and hunts.",
+     "Caught holding the piece: it takes the piece and leaves at once, and everyone is safe. Caught empty-handed: you die.",
+     "It reuses the Wick's kill and the guard-turned event, and is tested on both machines in a co-op check."
+    ],
+    [
+     "Your answer to choice 2: how its coming is announced."
+    ]
+   ],
+   [
+    "loop",
+    "Step 4",
+    "The demand replaces the debt (#419, updated)",
+    "",
+    [
+     "Before the first raid, the ledger shows the first demand: a sketch of a piece deep in the vault, at least FirstPieceMinRoomsFromPortal (6) rooms in. It is due at the end of that raid.",
+     "After that, a demand falls due every 3 to 5 raids. Placing the piece in the Lair, or being caught holding it, pays it.",
+     "While a demand is owed, every raid is a hunt and its haul is taken.",
+     "The piece has a faint mark within 6 m for the first 3 demands.",
+     "The coin debt and the Collector go, per the list under Changes."
+    ],
+    [
+     "Your answer to choice 3, on the debt code."
+    ]
+   ],
+   [
+    "search",
+    "Step 5",
+    "A four-player playtest",
+    "you",
+    [
+     "Four players run the first raid and three more, timed against the 5-minute checklist you answered in the comparison thread.",
+     "What feels wrong is fixed by changing numbers in the tuning file.",
+     "Upgrading isn't designed or built until this has been played."
+    ],
+    [
+     "You and three friends, about 30 minutes."
+    ]
+   ],
+   [
+    "hand",
+    "Unity",
+    "Who runs Unity",
+    "you",
+    [
+     "Steps 2 to 4 need Unity to compile and run the tests and the co-op checks. This cloud container has no Unity, so those checks have to run on a machine that does."
+    ],
+    [
+     "Your answer to choice 4."
+    ]
+   ]
+  ]
+ },
+ "changes": [
+  [
+   "chg",
+   "LairHubManager: the debt",
+   "TotalDebt, its save key, DefaultDebt (500) and DebtIncreasePerSession (50) go.",
+   [
+    "The company owes coin, paid when the Collector calls.",
+    "The company owes the Ophan a piece."
+   ],
+   "The save slot instead keeps the current demand: which piece, and how many raids are left. Old saves with a debt still load, and the debt is ignored.",
+   null
+  ],
+  [
+   "chg",
+   "CollectorRules.cs and the Collector's events",
+   "Dropped: the shares, the take and the Collector's line.",
+   [
+    "The Collector takes each wizard's share at setting out.",
+    "Nothing collects coin; coin only buys things."
+   ],
+   "Also drops the Collector's two events in LairEvents.cs. CollectorTests.cs and the debt parts of CoopRulesTests.cs are replaced by tests for the demand.",
+   null
+  ],
+  [
+   "chg",
+   "RaidDirector: the call at setting out",
+   "The Collector's call and the debt's growth at setting out go; the replicated debt becomes the replicated demand.",
+   [
+    "Setting out: the Collector calls, then the debt grows by 50; clients get the host's debt.",
+    "Setting out: the demand's raid count steps down; clients get the host's demand."
+   ],
+   "The host still owns the campaign state and replicates it to clients, as it does today (RaidDirector, the host-campaign sync).",
+   null
+  ],
+  [
+   "chg",
+   "LairLedgerBook and LedgerPageText",
+   "The left page shows the demand, not the debt.",
+   [
+    "Debt, the increase per session, and the worth shown.",
+    "The demanded piece's sketch, where it is (deep in the vault), and raids left."
+   ],
+   "LedgerPageTextTests.cs is updated to match.",
+   null
+  ],
+  [
+   "chg",
+   "RaidHudPresenter and MainMenuScreen",
+   "They stop reading the debt.",
+   [
+    "Both show or read the debt.",
+    "Neither does; the ledger is the one place the demand shows."
+   ],
+   "The save slot line on the menu shows the demand instead of \"debt 500\". The HUD tests that read DebtChanged (RaidHudEventTests.cs, HudAndInteractionTests.cs) change with it.",
+   null
+  ],
+  [
+   "keep",
+   "Purses, strongboxes, coin pouches and selling",
+   "Untouched.",
+   null,
+   "Coin still comes from selling and is kept per wizard. With the debt gone it has nothing to buy until the upgrading area is designed and built.",
+   null
+  ],
+  [
+   "new",
+   "OphanDemandTuning",
+   "The one data file for every demand number.",
+   null,
+   "RaidSeconds 300, HuntWindowSeconds 60, FirstDemandDueAfterRaids 1, RaidsBetweenDemandsMin 3 and Max 5, HuntEveryRaidWhileOwed on, SpoilsTakenWhileOwed 1.0, ExtraPiecesPerMissedDemand 0, UnscheduledVisitChance 0, HuntSecondsAfterPaid 0, PieceMarkRadius 6 m, PieceMarkLastsForDemands 3, FirstPieceMinRoomsFromPortal 6.",
+   [
+    "The numbers are scattered or don't exist yet.",
+    "One asset, edited in the Inspector.",
+    "A playtest that feels wrong is fixed by changing a number."
+   ]
+  ]
+ ],
+ "choices": [
+  [
+   "issues",
+   "How should this be tracked?",
+   [
+    [
+     "A",
+     "Update #418 and #419 with your answers, and add issues for step 2 and step 5",
+     1,
+     "Uses the issues already filed under the fear pass (#386)."
+    ],
+    [
+     "B",
+     "A new parent issue with five fresh children",
+     0,
+     "A clean list; #418 and #419 are closed as replaced."
+    ]
+   ],
+   "The filed issues already describe most of steps 3 and 4."
+  ],
+  [
+   "announce",
+   "How does the Ophan announce that it's coming?",
+   [
+    [
+     "A",
+     "Its own warning, designed with you as a small step before step 3",
+     1,
+     "Your rule: every event gets its own warning, not one shared sign."
+    ],
+    [
+     "B",
+     "The portal bell at 60 s left, as it rings today",
+     0,
+     "Nothing new to design."
+    ],
+    [
+     "C",
+     "No warning; it simply arrives",
+     0,
+     "The most frightening, and the least fair."
+    ]
+   ],
+   "It's the moment the whole raid builds toward, so it deserves its own design."
+  ],
+  [
+   "debt",
+   "What happens to the coin debt code?",
+   [
+    [
+     "A",
+     "Remove it, per the list under Changes",
+     1,
+     "The fear pass already chose this (2026-10-11), and nothing else uses it."
+    ],
+    [
+     "B",
+     "Leave it in, switched off",
+     0,
+     "Easy to bring back, but it's dead code to maintain."
+    ]
+   ],
+   "Git keeps it if it's ever wanted again."
+  ],
+  [
+   "unity",
+   "Who runs Unity for steps 2 to 4?",
+   [
+    [
+     "A",
+     "A Remote Control session on your PC, started from this thread",
+     1,
+     "I drive Unity on your machine and you approve the session."
+    ],
+    [
+     "B",
+     "A session on one of your other accounts that has Unity",
+     0,
+     "I write the brief, and that session builds."
+    ],
+    [
+     "C",
+     "You run the checks yourself",
+     0,
+     "I hand over exact steps and you send back the results."
+    ]
+   ],
+   "This keeps your hands for decisions, not for running tests."
+  ],
+  [
+   "order",
+   "Which comes first, step 3 or step 4?",
+   [
+    [
+     "A",
+     "Step 3, the Ophan's arrival, then step 4, the demand",
+     1,
+     "This is the order the issues were filed in; the demand needs the hunt to mean anything."
+    ],
+    [
+     "B",
+     "Step 4 first, with a stand-in hunt",
+     0,
+     "The ledger and the vault piece can be seen sooner."
+    ]
+   ],
+   "A demand without the hunter is just a list."
+  ]
+ ],
+ "wrapup": {
+  "summary": "A five-step build plan for the demand loop, reusing the Wick, the Ophan's art and issues #418 and #419.",
+  "changing": "Nothing is built yet. Approving this opens the issues and the Wick's pull request.",
+  "blocking": "Your answers to the five choices, and later your merges in step 1.",
+  "next": "After approval I update the issues and open the Wick's pull request. If you pick 2A, I bring you the Ophan's warning to design before step 3.",
+  "todo": [
+   "Pick your answers (Choices).",
+   "Tap <b>Copy my reply</b>.",
+   "Send it, or say what to change."
+  ]
+ }
+}
