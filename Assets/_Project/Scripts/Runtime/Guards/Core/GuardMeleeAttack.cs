@@ -16,6 +16,7 @@ namespace Plunderspell.Guards
     {
         private readonly Guard _guard;
         private float _cooldownLeft;
+        private Transform _pendingCatch;
 
         public GuardMeleeAttack(Guard guard)
         {
@@ -41,12 +42,31 @@ namespace Plunderspell.Guards
             _cooldownLeft = _guard.Tuning.AttackCooldownSeconds;
             _guard.AttackSignal.Signal(GuardAttackKind.Melee);
             EventManager.Instance?.Publish(new GuardEngaged(_guard, target));
+            // The Wick's catch (#417) lands on the AttackHit event of wick_catch, not at the strike.
+            if (_guard.IsTurned)
+                _pendingCatch = target;
+            else
+                Hit(target);
+            return true;
+        }
+
+        /// <summary>The Wick's catch lands (the AttackHit event): hurts the player it reached, if still near.</summary>
+        public void LandCatch()
+        {
+            Transform target = _pendingCatch;
+            _pendingCatch = null;
+            if (target != null && Vector3.Distance(_guard.transform.position, target.position) <= _guard.Tuning.MeleeReach * 1.5f)
+                Hit(target);
+        }
+
+        private void Hit(Transform target)
+        {
+            Vector3 origin = _guard.transform.position + Vector3.up * _guard.Tuning.EyeHeight;
             if (target.TryGetComponent(out IHealth health))
             {
                 Damage.Apply(health, _guard.Tuning.AttackDamage, _guard.gameObject, _guard.gameObject,
                     Damage.PointOn(target, origin), DamageKind.EnemyAttack);
             }
-            return true;
         }
     }
 }

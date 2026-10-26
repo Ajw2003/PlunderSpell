@@ -42,6 +42,12 @@ and started clean (Steam ready, 0 error lines); the #372 buttons are built only 
 has not been played.
 
 Still outside it, each needing a keep-or-drop call:
+- `AjsAgent/fear-pass-handoff` (2026-10-12, #386): the fear pass's approved designs, and the art
+  for the Wick (model and nine clips, #406) and the Ophan of Hours (model and five clips, #411,
+  #412), with `staging-2026-10-11` merged in, and the import rules for all four fear files (#413),
+  written but never compiled or run in Unity. The engine work is listed in
+  `docs/plans/handoff-2026-10-11-true-form-and-creature.md`. In a pull request into
+  `staging-2026-10-11`.
 - `claude/rimlight-318`: 2 WIP commits of the #318 verdigris glow (unfinished).
 - `claude/wizard-character-plan` (PR #349): the wizard plan doc and concept plates, docs only.
 - `claude/voice-mimicry-improvements-7a0b29`: 6 commits, the LLM mimic prototype and older guard

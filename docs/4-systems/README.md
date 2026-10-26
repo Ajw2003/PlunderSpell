@@ -21,6 +21,7 @@ everything else feeds.
 | [`combat-bench.md`](combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
 | [`audio.md`](audio.md) | The audio layer: mixer, SoundBank, the director that plays sounds from game events, the music, the volume sliders, and the gap list of what is still silent |
 | [`player-animation.md`](player-animation.md) | The wizard's body: model, clips, importer, animator, the driver and what is synced |
+| [`fear.md`](fear.md) | Planned: the Wick, the Ophan of Hours and the artifact quota that replaces the debt |
 | [`scale.md`](scale.md) | The metre: the 1.8m standard human, per-zone room and archway heights, enemy sizes, and where the player spawns |
 
 ## Considered and folded into another doc

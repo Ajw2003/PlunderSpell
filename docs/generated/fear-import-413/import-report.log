@@ -1,0 +1,21 @@
+TheWick.fbx: rig=Human avatar=valid/human
+   material TheWick emission=False emissionMap=True
+TheOphanOfHours.fbx: rig=Generic avatar=valid/generic
+   material TheOphanOfHours emission=True emissionMap=True
+Humanoid_Fear.fbx: rig=Human avatar=valid/human
+   warden_turn take=warden_turn loop=False [PropDetach@0.444 LanternRing]
+   wick_emerge take=wick_emerge loop=False
+   wick_idle take=wick_idle loop=True
+   wick_stalk take=wick_stalk loop=True [Footstep@0.000 L] [Footstep@0.500 R]
+   wick_hunt take=wick_hunt loop=True [Footstep@0.000 L] [Footstep@0.500 R]
+   wick_search take=wick_search loop=True
+   wick_catch take=wick_catch loop=False [AttackHit@0.417 ]
+   wick_flinch take=wick_flinch loop=False
+   wick_stoop take=wick_stoop loop=False
+TheOphanOfHours_Generic.fbx: rig=Generic avatar=valid/generic
+   ophan_hover_turn take=ophan_hover_turn loop=True
+   ophan_advance take=ophan_advance loop=True
+   ophan_fix_gaze take=ophan_fix_gaze loop=False
+   ophan_take take=ophan_take loop=False [AttackHit@0.450 ]
+   ophan_arrive take=ophan_arrive loop=False
+TheWick_FireMask sRGB=False

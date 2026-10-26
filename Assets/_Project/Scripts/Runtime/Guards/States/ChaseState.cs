@@ -75,6 +75,10 @@ namespace Plunderspell.Guards
             if (seen == null)
                 return KeepRunningToLastSeenSpot(deltaTime);
 
+            // A Lantern Warden that confirms a sight turns into the Wick (#417).
+            if (Context.TrueForm.TurnOnSight(seen))
+                return null;
+
             _target = seen;
             _lastSeenSpot = seen.position;
             _secondsSinceSeen = 0f;

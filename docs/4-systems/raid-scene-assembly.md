@@ -203,7 +203,21 @@ steps, all code-owned (`docs/plans/artbible-enemies-in-engine.md`, E0–E2).
   `emit` fields) get their emission map at **×9 HDR** (`EmissionStrength`, equal to
   `EMISSION_STRENGTH` in `Tools/EnemyForge/enemy_forge/materials.py`, also test-checked).
 - Textures: compressed, mipmapped, no Read/Write, capped at **1024** (`TextureSize`, the one flag to
-  change for a 2048 rebake). ORM, MetallicGloss, Metallic and Roughness import **linear**.
+  change for a 2048 rebake). ORM, MetallicGloss, Metallic and Roughness import **linear**, as do
+  the wizard's `_DyeMask` and the Wick's `_FireMask`.
+- **The fear pass (#413, under #386; written 2026-10-12, not yet run in Unity).** `Enemies/Fear/`
+  has its own lists, because the Ages' lists are test-held to the four Ages' JSON:
+  `ArtBibleEnemyCatalog.FearGenericRigModels` (the Ophan of Hours imports Generic, root `Root`; the
+  Wick falls through to Humanoid) and `FearEmissiveModels` (the Ophan's portal pupil glows at ×9).
+  `IsEmissiveModel` reads both emissive lists. Two clip files have rules: `Animations/Humanoid_Fear.fbx`
+  (the Wick's nine, `Kind.HumanoidClips` like the player's) and
+  `Animations/TheOphanOfHours_Generic.fbx` (`Kind.GenericClips`: Generic, avatar from the file,
+  root `Root`; its bone names match the model's, so its clips bind by path). Clips are named after the
+  take, loop flags come from `LoopingFearClips`, and events (`Footstep`, `AttackHit`, `PropDetach`,
+  string parameter = foot or prop) from `FearClipEvents`. `FearImportTests` holds both constants to
+  `fear_anim_manifest.json` and `ophan_anim_manifest.json`, and the fear lists to
+  `docs/art/data/fear.json` and the ArtForge manifest. No receiver for these events exists yet; the
+  prefabs that play them must add one, or Unity logs "has no receiver" on each event.
 
 `ArtAssetImportValidator.ValidateArtBible` checks every one of those settings on the imported
 assets, and `ArtAssetImportTests.ArtBibleModelsImportWithTheirOwnedSettings` runs it.

@@ -370,6 +370,13 @@ namespace Plunderspell.Tests.Editor
                         continue;
                     }
 
+                    // The Lantern Warden carries the Wick as an inactive child until it turns (#417); the
+                    // Wick stands only in the Outer Bailey and on the Curtain Wall, never under a Crypt ceiling.
+                    if (renderer.gameObject.name == "TheWick" && !renderer.gameObject.activeInHierarchy)
+                    {
+                        continue;
+                    }
+
                     Bounds bounds = renderer.bounds;
                     lowest = Mathf.Min(lowest, bounds.min.y);
                     highest = Mathf.Max(highest, bounds.max.y);

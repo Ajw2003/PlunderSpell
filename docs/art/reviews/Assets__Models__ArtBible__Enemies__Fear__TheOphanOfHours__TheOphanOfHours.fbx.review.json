@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/TheOphanOfHours.fbx",
+  "sheet": "docs/art/models/fear/ophan.png",
+  "verdict": "pass",
+  "seen": "Looked at all six views against ophan-v2-1. Great wheel facing forward with hour marks and eye dots round the rim, inner wheel at right angles, tilted wheel through them; the great eye at the centre under pewter lids, lapis iris, deep lapis pupil with the portal ring. Upper wings spread to 11.9 m as overlapping feathered wings (first pass read as combs; more, wider feathers and thicker rims fixed it), middle pair crossed under the eye, lower pair hanging over where feet would be. Floats: lowest point 0.29 m. Posed views turn the wheels and beat the wings with no tearing. 11,378 of 16k tris; body 9.457 m vs spec 9.6 m (within 5%). Still unlike the concept: no lapis core glow, and the echoes and lightning are engine VFX, not on the model.",
+  "date": "2026-10-12T00:22:45+0000"
+}

@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Enemies/Fear/TheWick/glTF/TheWick.gltf",
+  "sheet": "docs/art/models/fear/wick.png",
+  "verdict": "pass",
+  "seen": "Owner round 2: 'far more texture, drop the glow, fire as geometry for now, not scary yet'. Looked at three more passes. Now: coat soot-black from the shoulders down to 2.05 m, grimed to the hem, woven, streaked and spattered (a first pass read as bark, softened); woad hose muddied from the knee; skin veined and blood-streaked; bone cracked and grimed; leather cracked; iron rust-flecked. No emission anywhere. Fire back as geometry: three-tone tongues (dark madder shell, madder, pale core) in clusters on the shoulders, a mantle off the back, a crown over the cap, jets from the four vents, the coat tears, the hem, both elbows, the candle; cage flame 0.36 m. The chest cavity is dark red flesh behind six bone ribs with the candle burning, where it was a pale cream egg without its glow. Posed views bend cleanly; the flames follow the shoulders and raised arm. 10,596 tris of a 12k budget. Heat weighting failed 8 of 8 tries once with the flames in the solve; flames are now held out of it (6 of 6 builds pass, one after 2 retries). Still unlike the concept: shoulders do not rise above the neck, the cavity is rectangular, no torn hem strips.",
+  "date": "2026-10-11T23:33:22+0000"
+}

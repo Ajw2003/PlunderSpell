@@ -3,6 +3,90 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-15 — The Wick: three calls the builder made, confirmed by the owner (#417)
+
+**Status.** Decided by the owner.
+
+**Decision.**
+- The Wick cannot be killed either: damage always leaves a Lantern Warden one health point, in
+  both forms (`GuardTrueForm.LimitDamage`). Running and hiding stay the only answer.
+- A hard blow to the head stuns the human warden for 6 s, and it turns into the Wick when it gets
+  up: the blow is a hit, and a hit turns it.
+- `ScaleInvariantTests` skips the inactive Wick model inside a Lantern Warden. The Wick stoops to
+  2.5 m under arches, so its 3.1 m standing height is not a guard's ceiling check.
+
+## 2026-10-15 — The fear-entities plan: five issues and a systems doc
+
+**Status.** Planned; waiting on the owner's build plan approval.
+
+**Context.** The owner approved the design ("Design approved: fear entities"). The picks logged in
+"Build plan approved: the Wick and the Ophan in raids" below added two pieces of work.
+
+**Plan.** Five issues, all part of #386: #417 the Wick, #420 one more guard per ground-floor zone in
+every Age, #419 the quota (after the owner approves `docs/plans/debt-to-quota/retiring-the-debt.html`),
+#421 the altar model, and #418 the Ophan, last. The order and the rules are in
+`docs/4-systems/fear.md`.
+
+## 2026-10-15 — Build plan approved: the Wick and the Ophan in raids
+
+**Status.** Approved by the owner. Replaces the proposal entry of 2026-10-14 below.
+
+**Context.** The owner answered the six open choices on
+`docs/plans/fear-entities/fear-entities-in-game.html`. The four answers already settled in
+`docs/plans/handoff-2026-10-11-true-form-and-creature.md` stand: a Wick catch kills, more guards
+stand on the ground floors, the dropped lantern is left where it fell, and the Ophan passes through
+walls and cannot be hidden from.
+
+**Decision.**
+- **Order.** The Wick (#417) and the quota (#419) are built at the same time by two builders, since
+  they touch different files. The Ophan (#418) comes last, as one whole feature (arrival, hunt and
+  catch) in one pull request, merged only when complete.
+- **Guards.** One more guard per ground-floor zone, in every Age.
+- **The Ophan's hunt.** It arrives 90 s before the portal closes at 2.5 m/s, and speeds up to the
+  players' speed (5 m/s, `RaidPlayer.prefab`) by the time 30 s are left.
+- **Paying.** Artifacts are placed on a new altar beside the Lair's portal. Each next demand is drawn
+  at random from the artifacts of the Age being raided.
+- **A hunted raid's outcome.** Caught empty-handed: killed. Caught carrying the artifact it wants:
+  it takes the artifact and the player lives. Reaching the portal before being caught: the player
+  lives and keeps the whole haul. This replaces the handoff's rule that every hunted raid's spoils
+  are taken.
+
+
+
+**Status.** Decided by the owner.
+
+**Context.** The house-rules page builder now refuses to build without `docs/page-style.json`.
+
+**Decision.** The style file is drafted from `docs/generated/design-system/project/tokens.json`.
+Verdigris (#5FA288) means "you act", madder (#C4542E) means blocking, and deep verdigris
+(#2E4C41) is the accent. Lapis stays reserved for the voice and orpiment for loot, as the tokens
+say, so neither appears on a page. A page proposing a visual change must carry a picture. The
+fear-entities proposal of 2026-10-14 was rebuilt in this look, with the art review sheets attached.
+
+## 2026-10-14 — Build plan proposed: the Wick and the Ophan in raids
+
+**Status.** Superseded by "Build plan approved: the Wick and the Ophan in raids", 2026-10-15.
+
+**Context.** The Wick's and the Ophan's models and clips import cleanly in Unity (checked
+2026-10-14, Today). Nothing puts them in a raid yet.
+
+**Proposal.** Three pieces, one pull request each into `staging-2026-10-11`: #417 The Lantern
+Warden turns into the Wick in raids; #418 The Ophan of Hours arrives in hunted raids and catches
+players; #419 The Ophan's artifact quota replaces the debt and the Collector. Seven choices for the
+owner, on the page `docs/plans/fear-entities/fear-entities-in-game.html`.
+
+## 2026-10-11 — The Ophan may use lapis
+
+**Context.** The art bible keeps lapis (`#7A6AA0`, voice and portals) off every enemy
+(`docs/art/BRIEF.md`, "Look"). The fear pass's creature, the Ophan of Hours, comes through time the
+way the portal does.
+
+**Decision (owner, 2026-10-11).** The Ophan may use lapis: its core, its great eye's iris, its
+lightning and its echoes. It is the one exception; every other enemy keeps the rule. The Wick and
+the Ophan were approved the same day (`docs/7-design/fear-pass.md`, "The true form" and "The creature").
+
+**Consequence.** `docs/art/BRIEF.md` names the exception. Status: Active.
+
 ## 2026-10-11 — Per-frame code only for what changes every frame
 
 **Context.** Agents kept putting change-detection, saves and timers in `Update`. The Lair pile save wiped a
