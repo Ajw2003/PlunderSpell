@@ -195,3 +195,11 @@ Reply "Hook options: area 1 1* 2A 3A 4A 5*", given in the comparison thread.
 
 - No four-player playtests for now: the owner has two Steam accounts and two PCs. Playtests are solo first, then
   two players. **The game must be fun solo**, not only survivable, because the owner tests alone.
+
+## The demand loop's build plan, approved (owner, 2026-10-26 04:10 UTC)
+
+"Build plan approved: demand loop 1A 2A 3A 4A 5A", on
+`docs/plans/core-loops/areas/demand-loop/build-plan.html`: tracked as #431 with #432 to #435, plus #418 and #419
+updated and moved under it; the Ophan gets its own designed warning (#434); the coin debt code is removed; Unity runs
+in a Remote Control session on the owner's PC; the Ophan's arrival is built before the demand. The Wick's pull
+request is #436.
