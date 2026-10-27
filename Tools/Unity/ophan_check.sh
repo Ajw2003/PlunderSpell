@@ -9,7 +9,7 @@
 # Guards are removed first, so the only harm is the Ophan's. Every step logs what each machine reads (state shown, target, beaming, health, scorched rooms) and saves a
 # screenshot from each machine's own view, slowed down so the tells hold still for it. The client stays behind
 # stone as the witness.
-# Usage: bash Tools/Unity/ophan_check.sh <label> [--build|--no-build]
+# Usage: [FILM=1] bash Tools/Unity/ophan_check.sh <label> [--build|--no-build]   (FILM=1 also records short clips)
 #   label  names docs/generated/ophan-418/<label>-*
 # Needs the Editor open on this project, not in Play mode. Leaves it stopped. Start-up from fear_wick_check.sh.
 set -uo pipefail
@@ -36,6 +36,32 @@ slow() { log "slow $1: host $(side host slow "$1") | client $(side client slow "
 shots() {
     bash Tools/Unity/capture.sh "$out/$label-$1-host.png" screen >/dev/null 2>&1 || log "host shot $1 failed"
     log "client shot: $(side client shot "$(cygpath -m "$repo/$out")/$label-$1-client.png")"
+}
+# film <name> <host|client|lift|follow> <frames>: with FILM=1 set, a burst of frames into $out/film/<label>-<name>/, made into
+# an .mp4 and a looping .gif at the end. lift frames come from a camera beside the piece being taken.
+film() {
+    [ -n "${FILM:-}" ] || return 0
+    local dir="$out/film/$label-$1" i f
+    mkdir -p "$dir"
+    for i in $(seq 1 "$3"); do
+        f="$(printf '%03d' "$i").png"
+        case "$2" in
+            host) bash Tools/Unity/capture.sh "$dir/$f" screen >/dev/null 2>&1 ;;
+            lift) side host liftshot "$(cygpath -m "$repo/$dir")/$f" >/dev/null ;;
+            # The hunted host moves to the next covered spot along, and the client films the eye following.
+            follow) side host place step >/dev/null; side client shot "$(cygpath -m "$repo/$dir")/$f" >/dev/null; sleep 0.3 ;;
+            *) side client shot "$(cygpath -m "$repo/$dir")/$f" >/dev/null; sleep 0.3 ;;
+        esac
+    done
+    log "filmed $1: $3 frames from the $2"
+}
+encode_films() {
+    [ -n "${FILM:-}" ] || return 0
+    local dir
+    for dir in "$out"/film/"$label"-*/; do
+        dir="${dir%/}"
+        ffmpeg -y -loglevel error -framerate 6 -i "$dir/%03d.png" -vf "scale=960:-2" -pix_fmt yuv420p "$dir.mp4"             && ffmpeg -y -loglevel error -framerate 6 -i "$dir/%03d.png" -vf "scale=640:-1:flags=lanczos,split[a][b];[a]palettegen[p];[b][p]paletteuse" "$dir.gif"             && log "encoded $dir.mp4 and .gif" || log "FAIL encoding $dir"
+    done
 }
 # until_host <regex> <tries>: poll the host's read (twice a second) until it matches.
 until_host() {
@@ -141,6 +167,7 @@ log "client: $(side client face)"
 sleep 1
 both "watching"
 shots watching
+film watching client 10
 
 slow 0.25   # first: the lock-on is 3 s, and the calls below take seconds each
 log "host: $(side host place open)"
@@ -148,8 +175,12 @@ log "the carrier steps out | host: $(side host read)"
 until_host 'shown Locking' 20
 sleep 2
 shots lock-artifact
+[ -n "${FILM:-}" ] && slow 0.1   # filming takes about 2 s a frame; the lock-on is only 3 game s
+film lock-on client 6
 both "locking on to the artifact carrier"
 until_host 'shown Leaving' 60 || exit 1
+[ -n "${FILM:-}" ] && slow 0.1
+film lift lift 20
 # Still at a quarter speed: about 1.5 s into its 4 s leave the piece is on its way up the beam.
 sleep 6
 slow 0.05
@@ -166,8 +197,12 @@ take_up grabany
 log "after the take | host: $taken"
 log "after the take | client: $(side client read)"
 check "the take: the piece is gone" 'holding nothing' "$taken"
-check "the take: the host shows the piece rising" 'lifted ' "$taken"
-check "the take: the client shows the piece rising" 'lifted ' "$(side client read)"
+if [ -z "${FILM:-}" ]; then
+    check "the take: the host shows the piece rising" 'lifted ' "$taken"
+    check "the take: the client shows the piece rising" 'lifted ' "$(side client read)"
+else
+    log "(filming: the lift was filmed instead, and is over by now)"
+fi
 check "the take: the carrier is not hurt" 'local=True health=100 dead=False' "$(tr '|' '\n' <<<"$taken")"
 
 # ---- 2. The slow beam, cover, the charge and the scorch ----------------------------------------------------
@@ -179,6 +214,7 @@ hunted_safely
 # A quarter speed from before the lock-on until the host is back in cover: at full speed the drain (25 a second)
 # kills before the screenshots and reads are done.
 slow 0.25
+film eye-follows follow 10
 log "host: $(side host place open)"
 until_host 'shown Locking' 20
 sleep 2
@@ -188,6 +224,7 @@ until_host 'beaming True' 60
 # A twentieth speed while the shots and reads are taken, so the drain leaves the host alive to reach cover.
 slow 0.05
 shots beam
+film beam client 10
 log "slow beam | host: $(side host read)"
 check "the slow beam: the client shows it beaming" 'beaming True' "$(side client read)"
 log "host: $(side host place cover)"
@@ -207,10 +244,12 @@ shots cover
 until_host 'shown Charging' 60 || exit 1
 sleep 4
 shots charge
+film charge client 12
 both "charging"
 until_host 'scorched [1-9]' 60
 slow 0.05
 shots charged
+film charged client 10
 fired="$(side host read)"
 log "after the charged beam | host: $fired"
 client_seen="$(side client read)"
@@ -228,9 +267,11 @@ check "after the kill it locks on to the next player first" 'shown Locking' "$af
 check "the next player is unhurt by the lock-on" 'local=False health=100 dead=False' "$(tr '|' '\n' <<<"$after")"
 log "client: $(side client face)"
 shots hunts-on
+film hunts-on client 10
 both "after the kill, it hunts on"
 slow 1
 
+encode_films
 log "client log error lines: $(grep -ciE 'error|exception' "$out/$label-client.log")"
 [ "$failed" = 0 ] && log "DONE all checks passed" || log "DONE with failures"
 exit "$failed"
