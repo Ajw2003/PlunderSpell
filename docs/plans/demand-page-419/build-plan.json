@@ -1,0 +1,54 @@
+{
+  "title": "Building the Demand Page",
+  "eyebrow": "Build plan for approval · The Ophan's demand in the ledger (#446, part of #419) · nothing new built yet",
+  "replyPrefix": "Build plan approved: demand page",
+  "approval": "Build plan approved: demand page",
+  "reply": "",
+  "short": {
+    "lead": "Your design picks (\"Design approved: demand page 1* 2A 3A 4A 5A\") become four steps, each its own issue under #446, all built together on the branch the drawing is already on. There are no choices left on this page: approve it and the build starts.",
+    "hint": "Tap a step to see what it creates and what it needs from you.",
+    "key": [["Done", "done"], ["We build it", ""], ["You act on it", "you"]],
+    "items": [
+      ["check", "Design", "Your design picks", "done", "Logged in the decisions log on 2026-10-27, and written into the ledger's systems doc.", "Nothing from you."],
+      ["lock", "You approve", "You approve this plan", "you", "The four issues below move to being built.", "Send \"Build plan approved: demand page\"."],
+      ["eye", "#447", "Glowing words", "", "The right page says only \"The Ophan demands\", in a steady white, amber or red, its brightness swelling and fading.", "Nothing more."],
+      ["list", "#448", "Tear the page out", "", "E on the book tears the drawing out for the company; the book shows a torn stub on every machine.", "Nothing more."],
+      ["search", "#449", "Raise it with R", "", "Holding R raises the carried page in front of your view while you keep walking.", "Nothing more."],
+      ["check", "#450", "Lost and found", "", "A dropped page falls where its carrier falls; the book draws it again at home if nobody brings it back.", "Nothing more."]
+    ]
+  },
+  "changes": [
+    ["chg", "The right page (#447)", "Only \"The Ophan demands\", centred, glowing by how soon the demand is due.",
+      ["The piece's name, where it lies, the last raid and every purse.", "Three words in a steady glow: faint white with 3 raids left, amber with 2, red when due this raid."],
+      "Your own answer to choice 1: the colour never changes within a state; the brightness swells and fades. With 3 raids left one swell takes 5 s and stays dim; with 2, about 3.5 s and brighter; when due, 2 s and brightest, so it catches the corner of your eye. The page's own copy of the font material carries the glow, so no other text changes. Until the demand itself (#419) is built, a setting on the book gives the raids left.",
+      ["Six lines compete with the drawing.", "The drawing carries the page; the words only warn.", "You read urgency from across the Lair without a number."],
+      {"src": "docs/generated/demand-page-2026-10-27/both-pages-close.png", "alt": "The open ledger today, with six lines of words on the right page", "caption": "Today's right page, which becomes the three glowing words."},
+      {"visual": true}],
+    ["new", "Tearing the page out (#448)", "One drawing for the company: E on the book tears it out, and the book shows a torn stub.",
+      null,
+      "Choice 3A. The host decides whether the page is torn and who holds it, and every machine shows the stub. Each machine draws the picture itself from the same model, so only \"torn, and by whom\" travels over the network. The book is whole again when the company comes home without it.",
+      ["The drawing stays in the book.", "One page the company has to look after.", "Whoever tears it is the one who knows what to look for."]],
+    ["new", "Raising the page (#449)", "Hold R to raise the carried page in front of your view; you can keep walking.",
+      null,
+      "Choice 4A. A new Read Page action on R, the one free key next to the movement keys; Interact stays on E, Pick Up on F, Drop on Q. The page never uses the hand that carries loot, so you can hold a piece and compare it with the drawing.",
+      ["No way to see the drawing in a raid.", "A glance at the sketch, mid-raid, without stopping.", "Compare loot on a shelf against the page in hand."],
+      {"src": "docs/generated/demand-page-2026-10-27/drawing.png", "alt": "The ink-and-wash drawing of the Arm Reliquary", "caption": "The drawing that is raised in front of the view."},
+      {"visual": true}],
+    ["new", "Lost and found (#450)", "A dead or dropping carrier leaves the page where they stand; anyone can pick it up.",
+      null,
+      "Choice 5A. The page lies in the world as a small object anyone can pick up with F. A page left in the castle is gone when the company comes home, and the book draws it again.",
+      ["Nothing to lose.", "A loss with a way back.", "Losing the page hurts this raid, never the whole demand."]],
+    ["new", "Checks before it is shown to you", "Tests for the glow colours, a two-player check, and pictures looked at.",
+      null,
+      "A test checks the colour for 3, 2 and 1 raids left. The existing demand-page check gains a picture of each colour. A two-player check, with the Editor as host and a built client, tears, raises, drops and picks up the page and confirms both machines agree. The full test suites run on the branch.",
+      null]
+  ],
+  "choices": [],
+  "wrapup": {
+    "summary": "The plan for building your approved demand page: three glowing words, a drawing torn out and carried, raised with R, and found again if dropped.",
+    "changing": "The book loses its numbers and gains a glow; players gain a page to carry, raise and lose.",
+    "blocking": "Your approval of this plan. The lock on code edits opens with it.",
+    "next": "I build all four steps together on AjsAgent/demand-ledger-page-419, then send pictures of the three glows, the torn book and the raised page, with the two-player check's result.",
+    "todo": ["Read the four steps.", "Send \"Build plan approved: demand page\", or say what to change."]
+  }
+}

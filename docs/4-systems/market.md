@@ -151,8 +151,22 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
   parts and a brown wash. The drawing is the texture of `LedgerSketchPage.mat`, a fresh URP Lit sheet in the vellum's own
   colour laid over the ruled page. The right page reads `LedgerPageText.DemandLines` (what the Ophan demands, "deep in
   the vault", the last raid) above the purses, auto-sized to fit. The piece is fixed to the Arm Reliquary by
-  `LairRoomForge` until the demand itself chooses it. Check: `Tools/Unity/demand_page_check.sh`, pictures in
+  `LairRoomForge` until the demand itself chooses it. Both pages lie on clean vellum sheets (`RightSheet`,
+  `DemandSketchPage`) so the book's ruled columns never show. Check: `Tools/Unity/demand_page_check.sh`, pictures in
   `docs/generated/demand-page-2026-10-27/`.
+  **Planned, approved 2026-10-27 (decision "The demand in the ledger is a picture and three glowing words"):**
+  - *Glowing words.* The right page holds only `LairLedgerBook.Words`, "The Ophan demands". The TMP page uses its own
+    material copy with glow on. Colour is steady: faint white with 3 raids left, amber with 2, red when due this raid.
+    Only the intensity moves: it swells and fades over 2 to 5 s, faster and brighter when the demand is due. That is the
+    book's one per-frame job. Raids left come from a prototype field until #419's demand supplies them.
+  - *Torn page.* One drawing per company. E on the book (the existing Interact) tears it out: the server spawns a
+    networked page object owned by the tearer and the book's left sheet shows a torn stub on every machine. Each machine
+    draws the picture itself from the same model, so only "torn, and by whom" crosses the network.
+  - *Raising it.* A new `ReadPage` action on R in `PlayerInputs.inputactions`, held: the carried page is raised in front
+    of the local camera, and the player keeps walking. It does not take the loot-carrying hand.
+  - *Lost and found.* The carrier's death or a Drop lets the page fall where they stand, as a pickable world object. On
+    coming home, a page nobody carries is gone and the book's sheet is whole again.
+  - The words and the urgency colour stay in the book: only the picture leaves it.
 - **His line** ("The Collector takes 120 from I, 80 from II.") is `LairHubManager.CollectorLine`, shown in place of the "Debt grows"
   note on the ledger book's page and logged: the company has already left the Lair when he speaks, so the book shows it on
   coming home. A spoken line is not done.
