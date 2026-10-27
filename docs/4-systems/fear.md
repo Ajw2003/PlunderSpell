@@ -58,6 +58,15 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
   its last 2 m, or its last 25 m on the target's own machine, where a camera-facing line that close would fill the view
   (`OphanLook.DrawBeam`). The co-op check is `Tools/Unity/ophan_check.sh` (guards removed, hunts switched off so it brings the Ophan itself).
   Until #419 exists, a test switch forces a hunted raid. Plan page: `docs/plans/ophan-sky-418/ophan-sky-418.html`.
+- **The Ophan Gym (#451, planned 2026-10-27, being built on `AjsAgent/ophan-gym-418`).** A hand-test copy of the main level,
+  `Assets/_Project/Scenes/OphanGym.unity`, rebuilt from `RaidScene.unity` by *Tools > Plunderspell > Build Ophan Gym* so it
+  never goes stale; the only addition is one `OphanGym` object, and the real game never loads it. In the gym the raid lasts
+  10 minutes, the Ophan hunts every raid and arrives 30 s in, and one artifact is always placed in the castle under a pillar
+  of light with a countdown on screen: reach it in time and the Ophan takes it and spares you, miss it and it hunts you.
+  F7 summons it again, F8 stops damage to the local player, F9 removes the guards, F10 cycles time (1, 0.5, 0.25); a client's
+  key asks the host. `bash Tools/Unity/coop_local.sh --gym` plays it in co-op with its own client in `Build/OphanGym`.
+  It reuses the Ophan's own `ArriveNow` and the `OphanOfHours.HuntOverride` switch; no Ophan code changes for it.
+  Plan page: `docs/plans/ophan-gym-plan.html`.
 - **Every machine sees the same thing.** The turn, the lantern, the arrival and each catch are
   decided on the host and shown on every client (the Ophan's target, beams, scorched rooms and takes too); nothing here is polled each frame (`core.md`,
   "When Update is allowed").
