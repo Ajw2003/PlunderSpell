@@ -216,4 +216,4 @@ The owner's reply to `areas/ophan-arrival/ophan-arrival.page.html`: "Design appr
 - **6A.** After it kills an empty-handed player, it keeps hunting the others until the portal closes.
 - **7, the owner's own answer:** "build it and warn it's coming with a loud menstrual hum and screen shake". Read as a loud *monstrous* hum (a likely typo), pending the owner's correction.
 
-What this changes in #418: no walking, drifting or catching through walls. The Ophan appears in the sky, larger than life, and attacks with beams of light after a set lock-on delay. Its warning is a loud hum with screen shake. Follow-up questions on how the beam plays are on `areas/ophan-arrival/ophan-beam.page.html`.
+What this changes in #418: no walking, drifting or catching through walls. The Ophan appears in the sky, larger than life, and attacks with beams of light after a set lock-on delay. Its warning is a loud hum with screen shake. Follow-up questions on how the beam plays are on the build plan page `docs/plans/ophan-sky-418/` (branch `AjsAgent/ophan-arrival-418`). The three-question page `areas/ophan-arrival/ophan-beam.page.html` was withdrawn in its favour.
