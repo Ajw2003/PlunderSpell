@@ -1,6 +1,6 @@
 {
  "title": "QA: the Ophan of Hours in the sky",
- "eyebrow": "QA for issue #418 (steps #439 to #444) · merged into staging on your PC, not main · manual co-op test still owed",
+ "eyebrow": "QA for pull request 445, issue #418 (steps #439 to #444) · merged into staging, not main · manual co-op test still owed",
  "approval": "QA passed: the Ophan in the sky",
  "qa": {
   "feature": "the Ophan in the sky",
@@ -87,10 +87,9 @@
  "wrapup": {
   "summary": "The Ophan in the sky is built and passes every script check on its branch and on staging.",
   "changing": "Every raid is hunted for now (a test switch on OphanOfHours) until the demand (#419) decides when.",
-  "blocking": "The pull request into staging needs your OK before I open it, and staging is not pushed until then. #418 stays open until your QA pass. Main is not touched.",
+  "blocking": "#418 stays open until your QA pass. Main is not touched; PR #437 still waits on your manual co-op test.",
   "next": "After you pass it, #419 (the demand itself) branches off staging.",
   "todo": [
-   "Reply \"yes, open the PR\" so I can open it and push staging.",
    "Play the steps under Play it.",
    "Tap <b>Copy my reply</b>.",
    "Send it with the words \"QA passed: the Ophan in the sky\", or tell me what failed."
