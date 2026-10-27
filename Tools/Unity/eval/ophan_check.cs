@@ -253,6 +253,8 @@ switch (action)
             var rb = value.GetComponent<UnityEngine.Rigidbody>();
             if (item == null || rb == null || artifact != wantArtifact || rb.mass > 12f) continue;
             float worth = (float)Get(value, "Worth");
+            // In the Ophan Gym the race artifact under the pillar is the one to take.
+            if (value.GetComponent("OphanGymBeacon") != null) worth = float.MaxValue;
             if (worth > bestWorth) { bestWorth = worth; best = item; }
         }
         if (best == null) return "no " + (wantArtifact ? "artifact" : "piece") + " to grab";

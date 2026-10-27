@@ -31,8 +31,11 @@ namespace Plunderspell.Playtest
         /// <summary>Game time on this machine when this raid started, or a negative number outside a raid.</summary>
         public float RaidStartedAt { get; private set; } = -1f;
 
-        /// <summary>The Ophan's state as this machine knows it.</summary>
-        public OphanState OphanState => _ophan != null ? _ophan.State : OphanState.Absent;
+        /// <summary>The Ophan's state as this machine knows it: the hunt on the host, what it was told to show elsewhere.</summary>
+        public OphanState OphanState =>
+            _ophan == null ? OphanState.Absent
+            : isServer ? _ophan.State
+            : _ophan.Look != null ? _ophan.Look.State : OphanState.Absent;
 
         /// <summary>True while this machine's own player takes no damage (F8).</summary>
         public bool IsLocalPlayerUntouchable { get; private set; }

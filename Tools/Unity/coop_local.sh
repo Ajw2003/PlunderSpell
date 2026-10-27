@@ -7,15 +7,25 @@
 #   - Editor already in Play mode: hosts on this PC if it is not in a session yet (the menu's "Host on this PC"
 #     does the same), then starts the client. It cannot rebuild while playing and says so if the build is old.
 # Plays in your own save slot, not the checks' test slot. To end: close the client window, stop Play.
-# Usage: bash Tools/Unity/coop_local.sh [--build|--no-build]
+# --gym plays the Ophan Gym (#455) instead: OphanGym.unity is rebuilt from RaidScene.unity when the main level is
+# newer, the Editor opens it, and its own client is built into Build/OphanGym, so Build/DevTest is left alone.
+# Usage: bash Tools/Unity/coop_local.sh [--build|--no-build] [--gym]
 set -uo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/settings_restore.sh"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
 build=auto
+scene=Assets/_Project/Scenes/RaidScene.unity
+gym_scene=Assets/_Project/Scenes/OphanGym.unity
+client=Build/DevTest
+scenes=()   # the main client builds the Build Settings scene list; the gym's builds the gym alone
 while [ $# -gt 0 ]; do
-    case "$1" in --build) build=yes ;; --no-build) build=no ;; *) echo "unknown option $1"; exit 1 ;; esac
+    case "$1" in
+        --build) build=yes ;; --no-build) build=no ;;
+        --gym) scene="$gym_scene"; client=Build/OphanGym; scenes=(--scenes "[\"$gym_scene\"]") ;;
+        *) echo "unknown option $1"; exit 1 ;;
+    esac
     shift
 done
 cli=(--no-banner --format json)
@@ -36,9 +46,25 @@ if tasklist //FI "IMAGENAME eq Plunderspell.exe" 2>/dev/null | grep -q Plundersp
     exit 1
 fi
 
+open="$(ev 'return UnityEngine.SceneManagement.SceneManager.GetActiveScene().path;')"
+if [ "$playing" = yes ] && [ "$open" != "$scene" ]; then
+    say "The Editor is playing $open, not $scene. Stop Play and run this again."
+    exit 1
+fi
+if [ "$playing" = no ]; then
+    if [ "$scene" = "$gym_scene" ] && { [ ! -f "$gym_scene" ] || [ Assets/_Project/Scenes/RaidScene.unity -nt "$gym_scene" ]; }; then
+        say "$(ev 'return Plunderspell.EditorTools.OphanGymBuilder.Build();')"
+    fi
+    if [ "$(ev 'return UnityEngine.SceneManagement.SceneManager.GetActiveScene().path;')" != "$scene" ]; then
+        opened="$(ev "if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty) return \"the open scene has unsaved changes\"; UnityEditor.SceneManagement.EditorSceneManager.OpenScene(\"$scene\"); return \"opened\";")"
+        [ "$opened" = opened ] || { say "Cannot open $scene: $opened. Save or discard them and run this again."; exit 1; }
+        say "Opened $scene in the Editor."
+    fi
+fi
+
 stale=no
-[ -f Build/DevTest/.built ] || stale=yes
-if [ "$stale" = no ] && [ -n "$(find Assets ProjectSettings -newer Build/DevTest/.built -type f ! -path '*/Tests/*' ! -path 'ProjectSettings/Packages/*' ! -name '*.meta' ! -name 'ProjectSettings.asset' -print -quit)" ]; then stale=yes; fi
+[ -f "$client/.built" ] || stale=yes
+if [ "$stale" = no ] && [ -n "$(find Assets ProjectSettings -newer "$client/.built" -type f ! -path '*/Tests/*' ! -path 'ProjectSettings/Packages/*' ! -name '*.meta' ! -name 'ProjectSettings.asset' -print -quit)" ]; then stale=yes; fi
 [ "$build" = auto ] && build="$stale"
 if [ "$build" = yes ] && [ "$playing" = yes ]; then
     say "The client build is older than your changes, but the Editor is in Play mode and cannot build. Using the old build;"
@@ -47,18 +73,18 @@ if [ "$build" = yes ] && [ "$playing" = yes ]; then
 fi
 if [ "$build" = yes ]; then
     settings_save || { say "Cannot save ProjectSettings before building."; exit 1; }
-    say "Building the client (Build/DevTest), about 30 s..."
+    say "Building the client ($client), about 30 s..."
     unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":true}' --confirm true "${cli[@]}" >/dev/null
-    unity command build --target StandaloneWindows64 --outputPath Build/DevTest/Plunderspell.exe --options '["Development"]' --confirm true "${cli[@]}" >/dev/null
+    unity command build --target StandaloneWindows64 --outputPath "$client/Plunderspell.exe" "${scenes[@]}" --options '["Development"]' --confirm true "${cli[@]}" >/dev/null
     status=""
     for _ in $(seq 1 180); do sleep 5; status="$(unity command build_status "${cli[@]}" | field status)"; [ "$status" = "completed" ] && break; done
     result="$(unity command build_status "${cli[@]}" | field result)"
     unity command set_runtime_pipeline_settings --settings '{"enableInBuilds":false}' --confirm true "${cli[@]}" >/dev/null
     settings_restore
     [ "$result" = "Succeeded" ] || { say "The build did not succeed: $status $result"; exit 1; }
-    touch Build/DevTest/.built; say "Build succeeded."
+    touch "$client/.built"; say "Build succeeded."
 fi
-[ -f Build/DevTest/Plunderspell.exe ] || { say "No client build yet: run this with the Editor out of Play mode so it can build one."; exit 1; }
+[ -f "$client/Plunderspell.exe" ] || { say "No client build yet: run this with the Editor out of Play mode so it can build one."; exit 1; }
 
 if [ "$playing" = no ]; then
     say "Pressing Play in the Editor..."
@@ -76,8 +102,8 @@ case "$host" in
     *) say "The Editor is already in a session that is not on the local network ($host). Leave it (pause menu) and run this again."; exit 1 ;;
 esac
 
-./Build/DevTest/Plunderspell.exe -coop-join 127.0.0.1 -screen-fullscreen 0 -screen-width 1280 -screen-height 720 >/dev/null 2>&1 &
-say "Client window starting (Build/DevTest, pid $!), joining 127.0.0.1..."
+"./$client/Plunderspell.exe" -coop-join 127.0.0.1 -screen-fullscreen 0 -screen-width 1280 -screen-height 720 >/dev/null 2>&1 &
+say "Client window starting ($client, pid $!), joining 127.0.0.1..."
 players=""
 for _ in $(seq 1 60); do
     players="$(ev 'return StateMachine.PlayerStateMachine.Local == null ? "0" : UnityEngine.Object.FindObjectsByType<StateMachine.PlayerStateMachine>(UnityEngine.FindObjectsSortMode.None).Length.ToString();' 2>/dev/null)"

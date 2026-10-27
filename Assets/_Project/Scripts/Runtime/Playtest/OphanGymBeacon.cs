@@ -9,8 +9,9 @@ namespace Plunderspell.Playtest
     public sealed class OphanGymBeacon : MonoBehaviour
     {
         private const float PillarMetres = 80f;
-        private const float PillarWidth = 0.6f;
-        private static readonly Color Gold = new Color(1f, 0.8f, 0.3f, 0.8f);
+        // Wide enough to read as a pillar 60 m away over the castle walls; 0.6 m was a hairline.
+        private const float PillarWidth = 1.5f;
+        private static readonly Color Gold = new Color(1f, 0.8f, 0.3f, 1f);
 
         private LineRenderer _pillar;
 
@@ -26,7 +27,7 @@ namespace Plunderspell.Playtest
             _pillar.receiveShadows = false;
             _pillar.sharedMaterial = Resources.Load<Material>("GrabBeam");
             _pillar.startColor = Gold;
-            _pillar.endColor = new Color(Gold.r, Gold.g, Gold.b, 0f);
+            _pillar.endColor = new Color(Gold.r, Gold.g, Gold.b, 0.2f);
         }
 
         // per-frame: the piece is carried, thrown and tumbles, and the pillar stands upright over wherever it is
