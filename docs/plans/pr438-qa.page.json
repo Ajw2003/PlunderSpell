@@ -1,0 +1,81 @@
+{
+  "title": "QA: 5-minute raids and the Ophan's tuning",
+  "eyebrow": "QA for pull request 438, issue #433 · merged into staging, not main · manual co-op test still owed",
+  "approval": "QA passed: Ophan demand tuning",
+  "qa": {
+    "feature": "Ophan demand tuning",
+    "base": "origin/AjsAgent/staging-2026-10-26",
+    "unverified": [
+      "Nobody has played it by hand yet: every check was run by a script (manual co-op test still owed).",
+      "Nothing reads the demand numbers yet. Steps #418 and #419 will; this step only checks that the asset holds them."
+    ],
+    "files": {}
+  },
+  "short": {
+    "lead": "Raids now last 5 minutes. The raid's length and every number of the Ophan's demand live in one asset, Resources/OphanDemandTuning.asset, which you can edit in the Inspector. I tested it on its own branch, merged it into staging and tested it again there. Every check passed both times.",
+    "hint": "Tap an item to see what was checked and what you can try yourself.",
+    "key": [
+      [
+        "Checked by script",
+        "done"
+      ],
+      [
+        "You test this",
+        "you"
+      ]
+    ],
+    "items": [
+      [
+        "check",
+        "The asset",
+        "Every #433 field, with a tooltip and a range",
+        "done",
+        "OphanDemandTuning holds the agreed defaults, and all 13 numbers have an Inspector range. The 600-second raid setting on the extraction zone is gone; the zone reads RaidSeconds (300) instead. The raid scenes were already set to 300, so raids were already 5 minutes in play.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Tests",
+        "EditMode and PlayMode, on both branches",
+        "done",
+        "EditMode: 264 passed, 0 failed, 3 skipped (the 261 before, plus 3 new tests: the defaults, the ranges, and that the numbers agree with each other). PlayMode: 529 of 529 passed. Same results on the feature branch and on staging.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "5-minute raid",
+        "raid_length_check.sh",
+        "done",
+        "At the start of the raid, the pocket watch read \"5 min\" with all 60 ticks lit. The raid then ended on its own clock after 300.2 game seconds on the feature branch and 300.6 on staging. The check runs at 10× speed until about 12 seconds are left, then at normal speed, with the guards removed so none can end the raid early. Screenshot: docs/generated/ophan-demand-tuning-433/feature-r2-watch-start.png.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Co-op checks",
+        "The Wick check and the Lair check",
+        "done",
+        "Both passed on both branches. The Lair check passed all 27 of its checks with 0 client errors.",
+        "Nothing from you."
+      ],
+      [
+        "hand",
+        "Play it",
+        "One raid, start to end",
+        "you",
+        "Set out on a raid, hold T, and watch the clock run out without leaving.",
+        "Tell me whether the watch read 5 min at the start and the raid ended at 5 minutes. Then open OphanDemandTuning in the Inspector and say whether the tooltips read clearly."
+      ]
+    ]
+  },
+  "wrapup": {
+    "summary": "Raids last 5 minutes, and the Ophan's numbers are in one asset; every script check passed on the feature branch and on staging.",
+    "changing": "The raid's length now comes from OphanDemandTuning.RaidSeconds. Nothing else changes in play yet.",
+    "blocking": "#433 stays open until your QA pass. Main is not touched.",
+    "next": "After you pass it, the next step of the demand loop branches off staging.",
+    "todo": [
+      "Play the steps under Play it.",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with the words \"QA passed: Ophan demand tuning\", or tell me what failed."
+    ]
+  }
+}
