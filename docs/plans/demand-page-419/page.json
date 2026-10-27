@@ -1,0 +1,72 @@
+{
+  "title": "The Demand in the Ledger",
+  "eyebrow": "Design for approval · The Ophan's demand (#419) · drawing and clean pages built, the rest not yet",
+  "replyPrefix": "Design approved: demand page",
+  "approval": "Design approved: demand page",
+  "reply": "",
+  "short": {
+    "lead": "The ledger in the Lair already shows the demanded piece as an ink-and-wash drawing across the whole left page, and both pages sit on clean vellum. You have since decided that the book shows nothing but that picture and the words \"The Ophan demands\", glowing white, amber or red as the demand nears, and that the picture can be ripped out and carried into the raid. Five choices are still open; every change is then built in one go.",
+    "hint": "Tap a step to see what it creates and what it needs from you.",
+    "key": [["Done", "done"], ["We build it", ""], ["You act on it", "you"]],
+    "items": [
+      ["check", "Drawing", "The piece drawn across the left page", "done", "Built and pushed on 2026-10-27: a hidden camera photographs the piece's own model once, and the photo is turned into ink outline, hatching and a brown wash. Any piece can be demanded without drawn art.", "Nothing from you."],
+      ["check", "Clean pages", "Both pages on one clean sheet", "done", "Built and pushed on 2026-10-27, after you said the right page looked broken: the book's ruled columns no longer cut through anything.", "Nothing from you."],
+      ["lock", "You pick", "You choose the five open answers", "you", "The choices below, and this page's decisions written into the project's decisions log.", "Your picks, sent with \"Design approved: demand page\"."],
+      ["eye", "Glowing words", "Only \"The Ophan demands\", glowing by urgency", "", "The right page loses the item's name, the last raid and the purses. The words glow faint white with 3 raids left, amber with 2 and red when the demand is due this raid.", "Your picks on how the ink glows and where the purses go."],
+      ["list", "Torn page", "The drawing can be ripped out and carried", "", "A player tears the left page out in the Lair, carries it into the raid and raises it to look at mid-raid.", "Your picks on who carries it, how it is looked at, and what happens when it is lost."]
+    ]
+  },
+  "changes": [
+    ["chg", "The right page", "Only the words \"The Ophan demands\", centred, in ink that glows off the page.",
+      ["The Ophan demands, the Arm Reliquary, deep in the vault, due this raid, then the last raid and every purse.", "\"The Ophan demands\" and nothing else. The drawing is the only clue to what is wanted."],
+      "Decided by you on 2026-10-27: in a magic medieval world information is fleeting, so players infer what they need instead of reading it.",
+      ["Six lines of words compete with the drawing.", "The illustration carries the page.", "Players learn the piece by its look, and the urgency by colour."],
+      {"src": "docs/generated/demand-page-2026-10-27/both-pages-close.png", "alt": "The open ledger: the drawing on the left, six lines of words on the right", "caption": "Today: the right page still holds the name, the last raid and the purses."},
+      {"visual": true}],
+    ["new", "The glow tells how soon it is due", "Faint white with 3 raids left, amber with 2, red when it is due this raid.",
+      null,
+      "Decided by you on 2026-10-27. Until the demand itself is built (#419), a test setting picks the raids left, so all three colours can be shown in game.",
+      ["Nothing says when the demand falls due.", "One colour, read at a glance from across the Lair.", "Red means this raid; nobody counts raids."]],
+    ["new", "The drawing can be ripped out", "Torn from the book in the Lair and carried into the raid, to be looked at when needed.",
+      null,
+      "Decided by you on 2026-10-27. Only the picture leaves the book; the glowing words stay on their page.",
+      ["The picture is only in the Lair.", "The picture goes where the piece is.", "You compare a shelf of loot against the sketch in your hand."],
+      {"src": "docs/generated/demand-page-2026-10-27/drawing.png", "alt": "The ink-and-wash drawing of the Arm Reliquary", "caption": "The page that would be torn out, as it is drawn today."},
+      {"visual": true}],
+    ["drop", "The demand's name, place and due date in words", "Removed from the book.",
+      ["Named in words on the right page.", "Gone: the drawing and the glow carry it."],
+      "The rule that the first piece lies deep in the vault stays in the game; the book just no longer says it."]
+  ],
+  "choices": [
+    ["glow", "How does the ink glow?", [
+      ["A", "A soft halo that breathes, faster when it is due", 1, "The halo swells and fades every two to five seconds; red breathes about twice as fast."],
+      ["B", "A steady halo", 0, "The same colours, no movement."],
+      ["C", "A breathing halo that also lights the table", 0, "A small coloured light above the page tints the table and the book."]
+    ], "Movement draws the eye across a dark room, and a faster red feels urgent without a number."],
+    ["purses", "The purses and the last raid leave the book. Where do they go?", [
+      ["A", "Nowhere for now", 1, "The demand work (#419) already removes the debt and the Collector; the purses are decided with it."],
+      ["B", "Onto each wizard's strongbox lid", 0, "Each player reads their own coins on their own box."],
+      ["C", "On the next spread of the ledger", 0, "Look at the book and press E to turn to a plain page of accounts."]
+    ], "It keeps this change to the demand page alone, as you asked."],
+    ["tear", "Who tears the page out, and how many are there?", [
+      ["A", "One page for the company; whoever tears it carries it", 1, "Look at the book and press E. The book shows a torn stub until you come home."],
+      ["B", "Every player tears their own copy", 0, "The book draws a fresh page each time one is torn."]
+    ], "One page makes it something to protect and pass along, which suits a game about carrying things out alive."],
+    ["view", "How is the page looked at during a raid?", [
+      ["A", "Hold a key to raise it in front of your view, still walking", 1, "Like holding up a map: it covers part of the screen, and you can keep moving."],
+      ["B", "A key opens it full screen and you stop", 0, "Easier to read, but you stand still while looking."],
+      ["C", "It is a carried object you hold in your hands", 0, "It takes the hand that would carry loot."]
+    ], "It stays in the world, never a menu, and costs a little attention rather than a stop."],
+    ["lost", "What happens when the carrier dies or drops it?", [
+      ["A", "It falls where they fall, and anyone can pick it up", 1, "If nobody does, the ledger draws it again when the company comes home."],
+      ["B", "It is lost until the next demand", 0, "The company goes on from memory alone."]
+    ], "A loss with a way back: the drawing matters, but losing it never locks the company out of a demand."]
+  ],
+  "wrapup": {
+    "summary": "The rest of the demand page's design: the book shows only the drawing and \"The Ophan demands\", glowing by urgency, and the drawing can be torn out and carried into a raid.",
+    "changing": "The right page loses everything but the glowing words; a torn-out page becomes something you carry and raise to look at.",
+    "blocking": "Your five picks. Nothing more is built until then, and then every change is built together.",
+    "next": "On approval I log the decisions, build everything on the same branch, and send in-game pictures of the three glow colours and the torn page, plus a two-player check.",
+    "todo": ["Pick an answer for each choice under Choices.", "Tap <b>Copy my reply</b>.", "Paste it into the chat and send it, or say what to change."]
+  }
+}
