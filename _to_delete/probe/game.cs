@@ -1,0 +1,13 @@
+var model = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>("Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.fbx");
+var piece = UnityEngine.Object.Instantiate(model, new UnityEngine.Vector3(0, -2000, 0), UnityEngine.Quaternion.Euler(0, 35, 0));
+var rs = piece.GetComponentsInChildren<UnityEngine.Renderer>(); var b = rs[0].bounds; foreach (var r in rs) b.Encapsulate(r.bounds);
+var rig = new UnityEngine.GameObject("probecam"); var cam = rig.AddComponent<UnityEngine.Camera>(); cam.enabled = false;
+cam.cameraType = UnityEngine.CameraType.Game;
+float d = b.extents.magnitude / UnityEngine.Mathf.Sin(8f * UnityEngine.Mathf.Deg2Rad);
+rig.transform.position = b.center + UnityEngine.Quaternion.Euler(18, 0, 0) * UnityEngine.Vector3.back * d; rig.transform.LookAt(b.center);
+cam.fieldOfView = 22; cam.aspect = 512f / 730f; cam.nearClipPlane = 0.05f; cam.farClipPlane = d * 3; cam.clearFlags = UnityEngine.CameraClearFlags.SolidColor; cam.backgroundColor = new UnityEngine.Color(1, 0, 1, 1);
+var rt = UnityEngine.RenderTexture.GetTemporary(512, 730, 24, UnityEngine.RenderTextureFormat.ARGB32); cam.targetTexture = rt; cam.Render();
+UnityEngine.RenderTexture.active = rt; var t = new UnityEngine.Texture2D(512, 730, UnityEngine.TextureFormat.RGBA32, false); t.ReadPixels(new UnityEngine.Rect(0, 0, 512, 730), 0, 0); UnityEngine.RenderTexture.active = null;
+System.IO.File.WriteAllBytes("C:/Users/aj/Desktop/GameDev/PlunderSpell-demand/_to_delete/probe/photo-Game.png", UnityEngine.ImageConversion.EncodeToPNG(t));
+UnityEngine.Object.Destroy(piece); UnityEngine.Object.Destroy(rig);
+return "bounds " + b + " renderers " + rs.Length + " mat " + rs[0].sharedMaterial.shader.name + " col " + t.GetPixel(2, 2) + " centre " + t.GetPixel(256, 365);
