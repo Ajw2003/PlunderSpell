@@ -1,5 +1,15 @@
 # Today
 
+**2026-10-27 - prototype: the demanded piece drawn in ink across the ledger's left page (#419,
+`AjsAgent/demand-ledger-page-419`, cut from `AjsAgent/staging-2026-10-26`).** Design waived by the owner. The left page is
+an ink-and-wash drawing of the Arm Reliquary made live from its model (`LedgerDemandSketch`, `InkSketch`); the right page
+names it above the last raid and the purses; the Owed and Collector lines are no longer shown. Mechanism in
+`docs/4-systems/market.md`, "The ledger". Compile clean; PlayMode `InkSketchTests` 1/1 and `LedgerPageTextTests` 3/3;
+`demand_page_check.sh` PASS 6/6 (pictures in `docs/generated/demand-page-2026-10-27/`); `coop_lair_check.sh demand-419`
+24 PASS, 1 FAIL: its book comparison reads `LairLedgerBook.LeftText`, which this change removed (the ledger numbers
+behind the book still matched the host's in the PASS before it; the book pages themselves were not compared). Restoring `LeftText` is a one-line fix waiting on a "skip design" for
+the code-edit gate.
+
 **2026-10-27 - one tuning asset for the Ophan's demand, and 5-minute raids (#433, `AjsAgent/ophan-demand-tuning-433`).**
 `OphanDemandTuning` (`Runtime/Core/GameFlow`, asset `Resources/OphanDemandTuning.asset`) holds every #433 number with a
 tooltip and a range. `ExtractionZone.RaidLength` reads `RaidSeconds` (300); its serialized `RaidDurationSeconds` (600

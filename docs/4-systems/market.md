@@ -143,6 +143,16 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
 - **The ledger** (the ledger book's pages since #357/#359, `LedgerPageText.cs`; the Lair screen is gone): Owed (kept), then purses for each seat that is
   present or has a purse or paid last time (I to IV): Purse, Owes (the share due tonight), Paid (last collection), then Last raid.
   There is no Banked figure: sales no longer bank, so it would read 0 (the number still exists in the model).
+  **Prototype of the demand page (#419, 2026-10-27, branch `AjsAgent/demand-ledger-page-419`):** the left page is now the
+  demanded piece drawn across the whole page, and the Owed lines and the Collector's line are no longer shown. On Start,
+  `LedgerDemandSketch` (`Runtime/Raid`) photographs the piece's model once, at 2000 m below the world, with an
+  orthographic Preview-type camera (a Preview camera keeps the night fog off the photo) against a magenta backdrop.
+  `InkSketch.Draw` (`Runtime/Lair`) turns the photo into ink: a wobbling outline, inner edges, diagonal hatching on dark
+  parts and a brown wash. The drawing is the texture of `LedgerSketchPage.mat`, a fresh URP Lit sheet in the vellum's own
+  colour laid over the ruled page. The right page reads `LedgerPageText.DemandLines` (what the Ophan demands, "deep in
+  the vault", the last raid) above the purses, auto-sized to fit. The piece is fixed to the Arm Reliquary by
+  `LairRoomForge` until the demand itself chooses it. Check: `Tools/Unity/demand_page_check.sh`, pictures in
+  `docs/generated/demand-page-2026-10-27/`.
 - **His line** ("The Collector takes 120 from I, 80 from II.") is `LairHubManager.CollectorLine`, shown in place of the "Debt grows"
   note on the ledger book's page and logged: the company has already left the Lair when he speaks, so the book shows it on
   coming home. A spoken line is not done.
