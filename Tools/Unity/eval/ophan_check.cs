@@ -7,8 +7,8 @@
 //   read             the Ophan's state, target and whether it is beaming as this machine shows it; scorched rooms;
 //                    every player's health and dead flag; what the local player holds
 //   face             turn the local view to look at the Ophan's eye
-//   place open|cover put the local player on a castle floor with a clear line to the Ophan's eye (open) or with
-//                    castle stone between (cover); prints where
+//   place open|cover|step  put the local player on a castle floor with a clear line to the Ophan's eye (open) or with
+//                    castle stone between (cover), or (step) another covered spot about 8 m to the side; prints where
 //   grabartifact     host: bring a spawned artifact piece in front of the local player and grab it
 //   grabany          bring the most valuable spawned non-artifact piece in front of the local player and grab it
 //   release          let go of whatever is held
@@ -185,6 +185,8 @@ switch (action)
 
     case "place":
     {
+        // "step": another covered spot about 8 m to the side of this one, so the eye can be seen to follow.
+        bool step = arg == "step";
         bool open = arg == "open";
         // The host judges cover from the point the hunt aims from, not the eye bone (it bobs and turns, at 150 times
         // its size tens of metres off); a client only has the eye bone.
@@ -192,7 +194,8 @@ switch (action)
         var player = LocalPlayer();
         var body = player.GetComponent<UnityEngine.Rigidbody>();
         // The castle has its own navigation grid, not a Unity NavMesh: find floors by casting down over every room.
-        var start = player.transform.position;
+        var here = player.transform.position;
+        var start = step ? here + UnityEngine.Vector3.Cross(UnityEngine.Vector3.up, eye - here).normalized * 8f : here;
         UnityEngine.Vector3? best = null;
         float bestDistance = float.MaxValue;
         var floors = new System.Collections.Generic.List<UnityEngine.Vector3>();
@@ -219,6 +222,7 @@ switch (action)
             // beam has something to scorch).
             if (!open && !(UnityEngine.Physics.Raycast(head, (eye - head).normalized, out var near, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)
                 && Call(T("Plunderspell.Raid.ScorchedRooms"), "RoomOf", near.collider) != null)) continue;
+            if (step && (c - here).sqrMagnitude < 4f * 4f) continue;
             float d = (c - start).sqrMagnitude;
             if (d < bestDistance) { bestDistance = d; best = c; }
         }

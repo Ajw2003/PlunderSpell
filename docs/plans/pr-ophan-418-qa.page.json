@@ -8,12 +8,13 @@
   "unverified": [
    "Nobody has played it by hand yet: every check was run by a script (manual co-op test still owed).",
    "The drone and screen shake have not been listened to or felt by a person.",
-   "The slow beam seen from a third player's spot reads as a short, wide shard near the eye; whether that looks right is your call."
+   "The slow beam seen from a third player's spot reads as a short, wide shard near the eye; whether that looks right is your call.",
+   "The clips are slowed down and taken frame by frame (about 6 frames a second of playback), so they show what happens, not how smooth it looks at full speed."
   ],
   "files": {}
  },
  "short": {
-  "lead": "In the last minute of a raid the Ophan of Hours hangs in the sky with its wings spread, watches whoever carries the most, locks on, and drains them with a beam unless stone is between you. Hide too long and it charges a beam that goes through stone, kills, and scorches the room open. Carry an artifact into its beam and it lifts the piece into the sky, spares you, and leaves. Every script check passed on its branch and again on staging.",
+  "lead": "In the last minute of a raid the Ophan of Hours hangs in the sky with its wings spread, watches whoever carries the most, locks on, and drains them with a beam unless stone is between you. Hide too long and it charges a beam that goes through stone, kills, and scorches the room open. Carry an artifact into its beam and it lifts the piece into the sky, spares you, and leaves. Every script check passed on its branch and again on staging. Pictures are on each item below; the Changes tab has short looping clips and a before-and-after of the beam.",
   "hint": "Tap an item to see what was checked and what you can try yourself.",
   "key": [
    [
@@ -32,7 +33,12 @@
     "It no longer floods your own view",
     "done",
     "On the target's own screen the beam fades out over its last 25 m and is 0.8 m wide at you, so you see the eye glow and your health drop, not a white wedge. Screenshot: docs/generated/ophan-418/staging-beam-host.png.",
-    "Nothing from you."
+    "Nothing from you.",
+    {
+     "src": "docs/generated/ophan-418/staging-beam-host.png",
+     "alt": "The hunted player's own view while the slow beam drains them",
+     "caption": "Your own view while being drained: the eye glows, health falls (90 here), and no white wedge covers the screen."
+    }
    ],
    [
     "check",
@@ -40,7 +46,12 @@
     "A new held pose in the sky",
     "done",
     "ophan_spread holds after the arrival: 13.2 m wide by 7.8 m tall on the model (the old hover was 11.7 by 9.5). Review sheet: docs/art/anim/fear/ophan_spread.png.",
-    "Nothing from you."
+    "Nothing from you.",
+    {
+     "src": "docs/art/anim/fear/ophan_spread.gif",
+     "alt": "The spread-wing pose turning on the review stage",
+     "caption": "The new held pose, looping: wings spread wide, rings turning, eye drifting."
+    }
    ],
    [
     "check",
@@ -48,7 +59,12 @@
     "An artifact's carrier is spared",
     "done",
     "The host carried an artifact into the open: after the 3-second lock-on the piece was gone, the host stayed at 100 health, the Ophan left, and both machines showed the piece rising up the beam. Screenshot: staging-lift-host.png.",
-    "Nothing from you."
+    "Nothing from you.",
+    {
+     "src": "docs/generated/ophan-418/staging-lift-host.png",
+     "alt": "A taken piece rising up toward the Ophan's eye",
+     "caption": "The taken piece (the gold mask, left of the eye) on its way up into the sky."
+    }
    ],
    [
     "check",
@@ -56,7 +72,12 @@
     "The full hunt, in co-op",
     "done",
     "Lock-on, then the drain; stepping behind stone stopped it and health held; after 3 s in cover the eye swelled and blazed, the charged beam killed through the stone, and both machines showed the room scorched black.",
-    "Nothing from you."
+    "Nothing from you.",
+    {
+     "src": "docs/generated/ophan-418/film/qa-charge.gif",
+     "alt": "The Ophan's eye swelling and blazing, then the charged beam firing",
+     "caption": "The charge, from the other player's view: the eye swells and blazes, then the charged beam fires."
+    }
    ],
    [
     "check",
@@ -64,7 +85,12 @@
     "After a kill, the next player gets the lock-on",
     "done",
     "In co-op the Ophan used to drain the next player at once after a kill. Now any new target gets the full 3-second lock-on first. Covered by a new test and the co-op check.",
-    "Nothing from you."
+    "Nothing from you.",
+    {
+     "src": "docs/generated/ophan-418/staging-hunts-on-client.png",
+     "alt": "The other player's view as the Ophan locks on to them",
+     "caption": "After the kill: the next player is locked on first (health still 100)."
+    }
    ],
    [
     "check",
@@ -72,7 +98,12 @@
     "Feature branch and staging",
     "done",
     "Staging: EditMode 274 passed / 3 skipped, PlayMode 529 of 529, the Ophan check 14 of 14, and the Wick, Lair (27 of 27) and raid-length (301.3 s) checks all passed. The feature branch matched, apart from one carry-feel timing test known to be flaky since September, which passed on a rerun.",
-    "Nothing from you."
+    "Nothing from you.",
+    {
+     "src": "docs/generated/ophan-418/staging-scorched-host.png",
+     "alt": "A castle room from above with its walls scorched black",
+     "caption": "The scorched room from above: its walls are burnt black on both machines, so the slow beam now passes through it."
+    }
    ],
    [
     "hand",
@@ -94,5 +125,114 @@
    "Tap <b>Copy my reply</b>.",
    "Send it with the words \"QA passed: the Ophan in the sky\", or tell me what failed."
   ]
- }
+ },
+ "changes": [
+  [
+   "chg",
+   "The slow beam's look",
+   "It used to flood the hunted player's view.",
+   [
+    "A white wedge filled the screen",
+    "Your view stays clear; the eye glows"
+   ],
+   "The beam is 0.8 m wide where it reaches you and fades out over its last 25 m on your own screen (2 m on anyone else's).",
+   null,
+   null,
+   {
+    "before": {
+     "src": "docs/generated/ophan-418/solo-beam.png",
+     "alt": "Before: a huge white wedge covering the top of the hunted player's view"
+    },
+    "after": {
+     "src": "docs/generated/ophan-418/staging-beam-host.png",
+     "alt": "After: the hunted player's view with the eye glowing and no wedge"
+    },
+    "caption": "The hunted player's own view, before and after."
+   }
+  ],
+  [
+   "new",
+   "Eye follows its target",
+   "Clip: the hunted player moves between hiding spots.",
+   null,
+   "Ten frames, slowed down. The hunted player steps about 8 m along behind cover each frame, and the eye's pupil turns to follow (the turn is exaggerated so it reads from a kilometre).",
+   null,
+   null,
+   {
+    "src": "docs/generated/ophan-418/film/qa-eye-follows.gif",
+    "alt": "The Ophan's pupil turning from side to side",
+    "caption": "The eye following a player who moves along behind cover."
+   }
+  ],
+  [
+   "new",
+   "Watching, rings turning",
+   "Clip: the Ophan watching from the sky.",
+   null,
+   "From the other player's view, slowed down. The rings turn slowly about their own axes while it watches; they spin faster during the lock-on and fastest during the charge.",
+   null,
+   null,
+   {
+    "src": "docs/generated/ophan-418/film/qa-watching.gif",
+    "alt": "The Ophan watching, its rings turning slowly",
+    "caption": "Watching: the slow ring spin and the drifting eye."
+   }
+  ],
+  [
+   "new",
+   "The lock-on",
+   "Clip: the eye narrows and pulses.",
+   null,
+   "The hunted player has stepped into the open carrying an artifact. Over 3 seconds the eye narrows and its pulse quickens, then the take happens.",
+   null,
+   null,
+   {
+    "src": "docs/generated/ophan-418/film/qa-lock-on.gif",
+    "alt": "The Ophan's eye narrowing and pulsing",
+    "caption": "The lock-on tell."
+   }
+  ],
+  [
+   "new",
+   "The slow beam, from outside",
+   "Clip: what another player sees.",
+   null,
+   "From the other player's view. The beam from the eye shows as a short, wide shard near the eye, because walls hide the rest of it. Judge whether this reads well enough.",
+   null,
+   null,
+   {
+    "src": "docs/generated/ophan-418/film/qa-beam.gif",
+    "alt": "A short wide beam leaving the Ophan's eye",
+    "caption": "The slow beam as another player sees it."
+   }
+  ],
+  [
+   "new",
+   "The charge and the charged beam",
+   "Clip: swell, blaze, fire.",
+   null,
+   "The hunted player has hidden for 3 seconds. The eye swells and blazes, the charged beam fires through the stone and kills them, and then the Ophan turns to the next player. The red edge at the end is the next player being drained, after the lock-on.",
+   null,
+   null,
+   {
+    "src": "docs/generated/ophan-418/film/qa-charge.gif",
+    "alt": "The eye swelling and blazing, then a beam firing",
+    "caption": "The charge and the charged beam."
+   }
+  ],
+  [
+   "new",
+   "The lift",
+   "Clip: a camera beside the taken piece.",
+   null,
+   "A camera that follows the taken piece up the beam toward the eye. The first frames start inside the castle walls, so this clip is rough; the still on the The take item shows the piece more clearly.",
+   null,
+   null,
+   {
+    "src": "docs/generated/ophan-418/film/qa-lift.gif",
+    "alt": "A camera rising from the castle toward the Ophan",
+    "caption": "The lift, following the piece up."
+   }
+  ]
+ ]
 }
