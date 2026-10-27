@@ -1,0 +1,99 @@
+{
+ "title": "QA: the Ophan of Hours in the sky",
+ "eyebrow": "QA for issue #418 (steps #439 to #444) · merged into staging on your PC, not main · manual co-op test still owed",
+ "approval": "QA passed: the Ophan in the sky",
+ "qa": {
+  "feature": "the Ophan in the sky",
+  "base": "origin/AjsAgent/staging-2026-10-26",
+  "unverified": [
+   "Nobody has played it by hand yet: every check was run by a script (manual co-op test still owed).",
+   "The drone and screen shake have not been listened to or felt by a person.",
+   "The slow beam seen from a third player's spot reads as a short, wide shard near the eye; whether that looks right is your call."
+  ],
+  "files": {}
+ },
+ "short": {
+  "lead": "In the last minute of a raid the Ophan of Hours hangs in the sky with its wings spread, watches whoever carries the most, locks on, and drains them with a beam unless stone is between you. Hide too long and it charges a beam that goes through stone, kills, and scorches the room open. Carry an artifact into its beam and it lifts the piece into the sky, spares you, and leaves. Every script check passed on its branch and again on staging.",
+  "hint": "Tap an item to see what was checked and what you can try yourself.",
+  "key": [
+   [
+    "Checked by script",
+    "done"
+   ],
+   [
+    "You test this",
+    "you"
+   ]
+  ],
+  "items": [
+   [
+    "check",
+    "The beam's look",
+    "It no longer floods your own view",
+    "done",
+    "On the target's own screen the beam fades out over its last 25 m and is 0.8 m wide at you, so you see the eye glow and your health drop, not a white wedge. Screenshot: docs/generated/ophan-418/staging-beam-host.png.",
+    "Nothing from you."
+   ],
+   [
+    "check",
+    "Wings spread (#443)",
+    "A new held pose in the sky",
+    "done",
+    "ophan_spread holds after the arrival: 13.2 m wide by 7.8 m tall on the model (the old hover was 11.7 by 9.5). Review sheet: docs/art/anim/fear/ophan_spread.png.",
+    "Nothing from you."
+   ],
+   [
+    "check",
+    "The take",
+    "An artifact's carrier is spared",
+    "done",
+    "The host carried an artifact into the open: after the 3-second lock-on the piece was gone, the host stayed at 100 health, the Ophan left, and both machines showed the piece rising up the beam. Screenshot: staging-lift-host.png.",
+    "Nothing from you."
+   ],
+   [
+    "check",
+    "Beam, cover, charge, scorch",
+    "The full hunt, in co-op",
+    "done",
+    "Lock-on, then the drain; stepping behind stone stopped it and health held; after 3 s in cover the eye swelled and blazed, the charged beam killed through the stone, and both machines showed the room scorched black.",
+    "Nothing from you."
+   ],
+   [
+    "check",
+    "A bug found and fixed",
+    "After a kill, the next player gets the lock-on",
+    "done",
+    "In co-op the Ophan used to drain the next player at once after a kill. Now any new target gets the full 3-second lock-on first. Covered by a new test and the co-op check.",
+    "Nothing from you."
+   ],
+   [
+    "check",
+    "Tests and other checks",
+    "Feature branch and staging",
+    "done",
+    "Staging: EditMode 274 passed / 3 skipped, PlayMode 529 of 529, the Ophan check 14 of 14, and the Wick, Lair (27 of 27) and raid-length (301.3 s) checks all passed. The feature branch matched, apart from one carry-feel timing test known to be flaky since September, which passed on a rerun.",
+    "Nothing from you."
+   ],
+   [
+    "hand",
+    "Play it",
+    "One hunted raid, two players",
+    "you",
+    "Set out with a friend and stay until the last minute. One of you picks up loot and stands in the open; then hide behind a wall for a few seconds; then try it carrying an artifact.",
+    "Tell me how the drone and shake feel, whether the beam reads from both views, and whether the lifted piece is easy to see."
+   ]
+  ]
+ },
+ "wrapup": {
+  "summary": "The Ophan in the sky is built and passes every script check on its branch and on staging.",
+  "changing": "Every raid is hunted for now (a test switch on OphanOfHours) until the demand (#419) decides when.",
+  "blocking": "The pull request into staging needs your OK before I open it, and staging is not pushed until then. #418 stays open until your QA pass. Main is not touched.",
+  "next": "After you pass it, #419 (the demand itself) branches off staging.",
+  "todo": [
+   "Reply \"yes, open the PR\" so I can open it and push staging.",
+   "Play the steps under Play it.",
+   "Tap <b>Copy my reply</b>.",
+   "Send it with the words \"QA passed: the Ophan in the sky\", or tell me what failed."
+  ]
+ }
+}
