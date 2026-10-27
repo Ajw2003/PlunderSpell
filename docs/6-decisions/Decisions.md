@@ -3,6 +3,23 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-27 — Build plan approved: the Ophan in the sky (#418)
+
+**Status.** Decided by the owner: "Build plan approved: ophan in the sky 1C 2A 3A 4A 5A 6A 7A 8A 9A".
+
+**Decision.** On the plan page `docs/plans/ophan-sky-418/ophan-sky-418.html`, round 5:
+1C it is 150 times its model, about 900 m out, more than the whole view; 2A its wings get a new spread pose; 3A "worth"
+is the sell value of the piece a player carries; 4A its rings spin fastest while charging, half that while locking on,
+slowly while watching, and spin down as it leaves; 5A the lock-on's tell is a quickening pulse of the eye and the
+charge's is the eye swelling and brightening; 6A the hum is a code-made drone stand-in plus the existing camera shake;
+7A the slow beam drains 25 health a second and the charged beam charges for 3 s after 3 s in cover, then waits 10 s;
+8A cover is real stone between its eye and the target; 9A the charged beam scorches the room open. The player camera's
+far clip plane rises to 3000 m. This replaces the 2026-10-15 hunt in `docs/4-systems/fear.md` (arrival at 90 s,
+2.5 to 5 m/s, passing through walls, catching). Steps: #439 to #444.
+
+**Why.** The owner asked for a threat that "dwarfs the Castle", is "huge enough and far enough and powerful enough to
+genuinely seem unbeatable", and whose eye follows you.
+
 ## 2026-10-27 — The Ophan is a celestial threat in the sky, attacking with beams
 
 **Status.** Decided by the owner (design approved; build plan still to come).
