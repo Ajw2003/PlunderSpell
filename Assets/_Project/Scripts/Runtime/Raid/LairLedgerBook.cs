@@ -6,23 +6,23 @@ using UnityEngine;
 namespace Plunderspell.Raid
 {
     /// <summary>
-    /// Writes the Lair ledger onto the open book on the table (#357): the left page holds what is owed and the
-    /// last raid, the right page the purses and the Collector's line (wording in <see cref="LedgerPageText"/>).
+    /// Writes the Lair ledger onto the open book on the table (#357). The left page is the demanded piece's drawing
+    /// (<see cref="LedgerDemandSketch"/>, #419); the right page names it, then the last raid and the purses (wording in
+    /// <see cref="LedgerPageText"/>). Prototype: the piece is set by LairRoomForge until the demand itself chooses it.
     /// Numbers come from <see cref="LairHubManager"/>, which on a client has been given the host's ledger, so
     /// both players' books agree. Redrawn when the ledger's events fire; the last raid has no event, so each
     /// frame only compares its two values.
     /// </summary>
     public class LairLedgerBook : MonoBehaviour
     {
-        [SerializeField] private TextMeshPro _leftPage;
         [SerializeField] private TextMeshPro _rightPage;
+        [SerializeField] private Plunderspell.Loot.LootItem _demanded;
 
         private LairHubManager _lair;
         private float _shownWorth = float.NaN;
         private int _shownLeftBehind = -1;
         private bool _dirty = true;
 
-        public string LeftText => _leftPage.text;
         public string RightText => _rightPage.text;
 
         private void OnEnable()
@@ -70,8 +70,9 @@ namespace Plunderspell.Raid
                 present[seat] = _lair.IsPresent(seat);
             }
 
-            _leftPage.text = LedgerPageText.LeftPage(_lair.TotalDebt, _lair.DebtIncreasePerSession, _shownWorth, _shownLeftBehind);
-            _rightPage.text = LedgerPageText.RightPage(purses, paid, present, _lair.ShareDue(), _lair.CollectorLine);
+            string piece = _demanded != null ? _demanded.DisplayName : "nothing yet";
+            _rightPage.text = LedgerPageText.DemandLines(piece, _shownWorth, _shownLeftBehind)
+                + LedgerPageText.RightPage(purses, paid, present, _lair.ShareDue(), string.Empty);
         }
     }
 }

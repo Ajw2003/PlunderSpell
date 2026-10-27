@@ -18,6 +18,16 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void DemandLines_NameThePieceWhereItLiesAndTheLastRaid()
+        {
+            string page = LedgerPageText.DemandLines("Arm Reliquary", 300f, 1);
+            StringAssert.Contains("The Ophan demands", page);
+            StringAssert.Contains("Arm Reliquary", page);
+            StringAssert.Contains("deep in the vault", page);
+            StringAssert.Contains("Brought home 300 coin · 1 left behind", page);
+        }
+
+        [Test]
         public void RightPage_ShowsOnlySeatsInPlayAndTheCollectorLine()
         {
             string page = LedgerPageText.RightPage(new[] { 120, 0, 0, 0 }, new[] { 0, 0, 0, 0 },

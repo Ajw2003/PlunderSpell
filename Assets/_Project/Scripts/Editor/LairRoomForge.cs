@@ -175,7 +175,18 @@ namespace Plunderspell.EditorTools
         private static readonly Vector2 PageSize = new Vector2(0.30f, 0.43f);
         private const float PageInk = 0.003f;
 
-        /// <summary>The open book's two pages as 3D text (<see cref="Plunderspell.Raid.LairLedgerBook"/>), in dark ink on the vellum (#357).</summary>
+        // Prototype of the demand (#419): until the demand chooses its piece, the ledger always shows the High Medieval
+        // arm reliquary, an artifact of the default first Age.
+        private const string DemandedItemPath = "Assets/_Project/Data/Loot/HighMedieval/ArmReliquary.asset";
+        private const string DemandedModelPath = "Assets/Models/ArtBible/Items/High/ArmReliquary/ArmReliquary.fbx";
+        private const string SketchPageMaterialPath = "Assets/_Project/Prefabs/Lair/LedgerSketchPage.mat";
+        private static readonly Vector2 SketchPageSize = new Vector2(0.325f, 0.465f);
+
+        /// <summary>
+        /// The open book's two pages (<see cref="Plunderspell.Raid.LairLedgerBook"/>): the left page is the demanded piece drawn
+        /// in ink across the whole page (<see cref="Plunderspell.Raid.LedgerDemandSketch"/>, #419), the right page 3D text in
+        /// dark ink on the vellum (#357).
+        /// </summary>
         private static void AddLedgerPages(GameObject root)
         {
             Transform book = root.transform.Find("LairLedger");
@@ -186,9 +197,63 @@ namespace Plunderspell.EditorTools
             pages.transform.SetParent(root.transform, false);
             var ledgerBook = pages.AddComponent<Plunderspell.Raid.LairLedgerBook>();
             var bookObject = new SerializedObject(ledgerBook);
-            bookObject.FindProperty("_leftPage").objectReferenceValue = AddPage(pages, "LeftPage", font, new Vector3(book.position.x + PageOffset, top, book.position.z));
             bookObject.FindProperty("_rightPage").objectReferenceValue = AddPage(pages, "RightPage", font, new Vector3(book.position.x - PageOffset, top, book.position.z));
+            bookObject.FindProperty("_demanded").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Plunderspell.Loot.LootItem>(DemandedItemPath);
             bookObject.ApplyModifiedPropertiesWithoutUndo();
+
+            AddSketchPage(pages, new Vector3(book.position.x + PageOffset, top, book.position.z), VellumColour(book));
+        }
+
+        /// <summary>
+        /// A fresh sheet over the left page, without the book's ruled lines, in the vellum's own colour and lit by the room;
+        /// the drawing is its texture. Turned like the text, so the drawing reads upright.
+        /// </summary>
+        private static void AddSketchPage(GameObject pages, Vector3 at, Color vellum)
+        {
+            var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            quad.name = "DemandSketchPage";
+            Object.DestroyImmediate(quad.GetComponent<MeshCollider>()); // ink, not a thing to bump into
+            quad.transform.SetParent(pages.transform, false);
+            quad.transform.position = at;
+            quad.transform.rotation = Quaternion.Euler(90f, 180f, 0f);
+            quad.transform.localScale = new Vector3(SketchPageSize.x, SketchPageSize.y, 1f);
+            var page = quad.GetComponent<MeshRenderer>();
+            page.sharedMaterial = SketchPageMaterial(vellum);
+            page.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+            var sketch = quad.AddComponent<Plunderspell.Raid.LedgerDemandSketch>();
+            var sketchObject = new SerializedObject(sketch);
+            sketchObject.FindProperty("_model").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(DemandedModelPath);
+            sketchObject.FindProperty("_page").objectReferenceValue = page;
+            sketchObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static Material SketchPageMaterial(Color vellum)
+        {
+            var sheet = AssetDatabase.LoadAssetAtPath<Material>(SketchPageMaterialPath);
+            if (sheet == null)
+            {
+                sheet = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "LedgerSketchPage" };
+                AssetDatabase.CreateAsset(sheet, SketchPageMaterialPath);
+            }
+            sheet.SetColor("_BaseColor", vellum);
+            sheet.SetFloat("_Smoothness", 0.15f);
+            EditorUtility.SetDirty(sheet);
+            return sheet;
+        }
+
+        /// <summary>The colour of the book's vellum: its palette texture read where the vellum's faces take their colour.</summary>
+        private static Color VellumColour(Transform book)
+        {
+            var renderer = book.GetComponentInChildren<MeshRenderer>();
+            Mesh mesh = renderer.GetComponent<MeshFilter>().sharedMesh;
+            int submesh = System.Array.FindIndex(renderer.sharedMaterials, material => material.name == "LairLedger_vellum");
+            Vector2 uv = mesh.uv[mesh.GetTriangles(submesh)[0]];
+            var palette = new Texture2D(2, 2);
+            palette.LoadImage(File.ReadAllBytes(AssetDatabase.GetAssetPath(renderer.sharedMaterials[submesh].mainTexture)));
+            Color vellum = palette.GetPixelBilinear(uv.x, uv.y);
+            Object.DestroyImmediate(palette);
+            return vellum;
         }
 
         // Scaled 0.01 so the rect is in centimetres and the font size reads in about centimetres of em.
@@ -203,6 +268,10 @@ namespace Plunderspell.EditorTools
             if (font != null)
                 text.font = font;
             text.fontSize = 24f;
+            // The demand's lines sit above the purses on this one page (#419): shrink rather than run off the page.
+            text.enableAutoSizing = true;
+            text.fontSizeMin = 12f;
+            text.fontSizeMax = 24f;
             text.color = new Color(0.08f, 0.05f, 0.03f);
             text.margin = new Vector4(1f, 5f, 1f, 0f); // below the book's printed heading bars
             text.alignment = TMPro.TextAlignmentOptions.TopLeft;

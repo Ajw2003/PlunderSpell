@@ -13,13 +13,22 @@ namespace Plunderspell.Lair
         private static string Coins(float value) => value.ToString("N0", CultureInfo.InvariantCulture);
 
         /// <summary>Left page: what is owed, how fast it grows, and what the last raid brought home.</summary>
-        public static string LeftPage(float debt, float debtPerRaid, float lastRaidWorth, int leftBehind)
+        public static string LeftPage(float debt, float debtPerRaid, float lastRaidWorth, int leftBehind) =>
+            $"<size=130%>Owed</size>\n<size=220%>{Coins(debt)}</size>\nthe debt grows by {Coins(debtPerRaid)} each raid it stands\n\n<size=130%>Last raid</size>\n{LastRaid(lastRaidWorth, leftBehind)}";
+
+        /// <summary>
+        /// Opposite the page the piece is drawn across (#419), above the purses: what the Ophan demands, where it lies,
+        /// when it is due, and what the last raid brought home.
+        /// </summary>
+        public static string DemandLines(string piece, float lastRaidWorth, int leftBehind) =>
+            $"<size=130%>The Ophan demands</size>\n<size=160%>{piece}</size>\nIt lies deep in the vault. Bring it home before this raid ends.\n\n<size=130%>Last raid</size>\n{LastRaid(lastRaidWorth, leftBehind)}\n\n";
+
+        private static string LastRaid(float worth, int leftBehind)
         {
             string behind = leftBehind == 0 ? string.Empty : $" · {leftBehind} left behind";
-            string lastRaid = lastRaidWorth < 0f ? "No raid yet."
-                : lastRaidWorth > 0f ? $"Brought home {Coins(lastRaidWorth)} coin{behind}"
+            return worth < 0f ? "No raid yet."
+                : worth > 0f ? $"Brought home {Coins(worth)} coin{behind}"
                 : $"Came home with nothing{behind}";
-            return $"<size=130%>Owed</size>\n<size=220%>{Coins(debt)}</size>\nthe debt grows by {Coins(debtPerRaid)} each raid it stands\n\n<size=130%>Last raid</size>\n{lastRaid}";
         }
 
         /// <summary>Right page: one block per seat that has a purse, owes tonight or paid last time, then the Collector's line.</summary>
