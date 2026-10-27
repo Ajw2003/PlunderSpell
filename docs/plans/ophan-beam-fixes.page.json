@@ -1,0 +1,46 @@
+{
+  "title": "Ophan beam fixes",
+  "eyebrow": "Options for the three things you found playing",
+  "approval": "Design approved: Ophan beam fixes",
+  "short": {
+    "lead": "I reproduced two of the three problems in the Ophan Gym. The beams are drawn, but they point straight at anyone looking up at the Ophan, so you see them end-on as a sliver by the eye. The charged beam's kill lands at the same instant as its flash, and the wall in its path only turns dark. How each should look is your call, so here are options with my suggestion marked.",
+    "hint": "Tap an item to see what I found and what it needs from you.",
+    "key": [["I found it", ""], ["You pick or answer", "you"]],
+    "items": [
+      ["bulb", "Slow beam", "Why the slow beam can't be seen", "", "The slow beam is a flat ribbon from the eye to its target, turned to face the camera. You look up at the Ophan along almost the same line the beam travels, so the ribbon is end-on to you. Another player standing 6 m away sees the same thing. Measured in co-op: the beam was on, 1 km long, 40 m wide at the eye and 0.8 m at the target, and on screen it was only a small light patch under the eye.", "Pick a look (Choices, slow beam).",
+       {"src": "../generated/ophan-gym-451/beam-witness-client.png", "alt": "A second player's view while the Ophan drains the first player: the Ophan fills the sky and only a small light patch shows under its eye.", "caption": "A second player 6 m from the target, while the beam drains the target. The beam reads as a light patch under the eye."}],
+      ["bulb", "Target's view", "What the target sees", "", "On the target's own machine the beam is also faded over its last 25 m, so it doesn't fill their screen. The orange line here is the player's own carry beam, not the Ophan's.", "Covered by the same pick.",
+       {"src": "../generated/ophan-gym-451/beam-target-host.png", "alt": "The target's view while being drained: the Ophan behind a held chest, with no beam coming from the eye.", "caption": "The target, being drained at 25 health a second. No beam from the eye."}],
+      ["bulb", "Charged hit", "Why the charged hit feels unfair", "", "After its 3 s charge the Ophan fires, and on that same frame the hit lands, the target dies and the rooms in between are marked scorched. Scorched only means their walls are tinted dark (the design you approved on 2026-10-27, pick 9A). Nothing breaks, so you are dead before anything shows you the wall gave way.", "Pick a sequence (Choices, charged hit)."],
+      ["lock", "Warden", "The Lantern Warden in the floor", "you", "I couldn't make it happen. I checked seven High Medieval castles in the gym, on the host and on the client, as a guard and after turning into the Wick. Every Warden's feet were within 0.16 m of the floor under it, the same as every other guard.", "Tell me where you saw it (Choices, Warden).",
+       {"src": "../generated/ophan-gym-451/warden-2.png", "alt": "A Lantern Warden after turning into the Wick, standing on a stone path.", "caption": "A Warden after the turn, standing on the floor as it should."}]
+    ]
+  },
+  "changes": [
+    ["chg", "The Ophan's slow and charged beams", "Drawn so you can see them come from the eye, from any angle.", ["A flat ribbon facing the camera, invisible end-on", "Your pick from the slow beam choice"], "Only the beam's look changes in OphanLook. Who it hits, its damage and cover rules stay as they are.", null],
+    ["chg", "The charged beam's hit", "You see it break through before it kills you.", ["Kill and flash on the same frame; walls only darken", "Your pick from the charged hit choice"], "The 3 s charge and the 10 s cooldown stay as they are.", null]
+  ],
+  "choices": [
+    ["slow", "How should the slow beam look, so it reads from the eye to you?", [
+      ["A", "A shaft of light", 1, "A glowing tapered tube from the eye to the target instead of a flat ribbon. Seen end-on it is a ring of light closing in around the eye, so the target sees it pour toward them, and anyone else sees a solid shaft."],
+      ["B", "A blazing eye and a pool of light", 0, "Keep the ribbon, and add a flare on the eye whenever it beams plus a column of light around the target. Easy to read, but nothing visibly travels between them."],
+      ["C", "A curved beam", 0, "Bend the beam into a slight arc, so it is never end-on. Always visible, but it no longer looks like a straight line from the eye."]
+    ], "Only a solid shape can be seen end-on, and the target is the one person who most needs to see it."],
+    ["charged", "What should happen when the charged beam hits?", [
+      ["A", "It burns through, then hits", 1, "The beam fires, a glowing hole bursts in the wall in its path with dust and embers, and the kill lands half a second later. The hole is only a visual: the walls stay solid to walk into, as approved."],
+      ["B", "Instant kill, but you see the hole", 0, "The kill stays on the same frame, the wall bursts as in option A, and your camera holds on the hole for 2 s before the death screen."],
+      ["C", "A warning while it charges", 0, "Nothing changes at the hit, but for its 3 s charge the wall between you and the eye glows hotter and hotter, so you know it is coming through."]
+    ], "Seeing the wall go before the hit lands is what makes the death feel fair, and half a second still kills you if you stay."],
+    ["warden", "Where did you see the Lantern Warden in the floor?", [
+      ["A", "I'll describe it", 1, "Tell me the room or floor, whether it was still a guard or already the Wick, and whether you were the host or the client. I'll reproduce it from that."],
+      ["B", "Add a floor check instead", 0, "I add a check to the co-op runs that reports any guard whose feet are more than 0.3 m off the floor, and run it across many castles until it turns up."]
+    ], "A description finds it fastest; the check is the fallback if you can't remember."]
+  ],
+  "wrapup": {
+    "summary": "Options for the three things you found: the beams can't be seen, the charged hit kills before you can see the wall go, and the Lantern Warden in the floor.",
+    "changing": "The beams' look in OphanLook and the charged hit's timing in OphanOfHours. The gym, the beams' damage and cover rules, and the Warden's code stay as they are until you answer.",
+    "blocking": "Your picks for the slow beam and the charged hit, and where you saw the Warden.",
+    "next": "I build your picks, film both beams from the target and from a second player in the gym, run the suites and co-op checks, and open the gym's pull request into staging with these fixes in it.",
+    "todo": ["Pick your answers (Choices).", "Tap <b>Copy my reply</b>.", "Send it with \"Design approved: Ophan beam fixes\", or what to change."]
+  }
+}
