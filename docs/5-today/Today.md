@@ -1,5 +1,14 @@
 # Today
 
+**2026-10-27 - one tuning asset for the Ophan's demand, and 5-minute raids (#433, `AjsAgent/ophan-demand-tuning-433`).**
+`OphanDemandTuning` (`Runtime/Core/GameFlow`, asset `Resources/OphanDemandTuning.asset`) holds every #433 number with a
+tooltip and a range. `ExtractionZone.RaidLength` reads `RaidSeconds` (300); its serialized `RaidDurationSeconds` (600
+by default, already 300 in the raid scenes) is gone and `RaidSceneBuilder` no longer sets it. Feature branch: compile
+clean, EditMode 264 pass / 3 skipped (261 plus 3 new `OphanDemandTuningTests`), PlayMode 529/529, new
+`raid_length_check.sh feature-r2` PASS (watch reads "5 min" with all 60 ticks at the start; the clock ran 300.2 game s,
+at time scale 10 until 12 s were left), `fear_wick_check.sh ophan-433-feature` PASS, `coop_lair_check.sh
+ophan-433-feature` PASS all (27 PASS, 0 client error lines). Manual co-op test still owed.
+
 **2026-10-26 (later) - a player caught by the Wick now dies on both machines (PR #437, `AjsAgent/staging-2026-10-26`).**
 Measured first (`fear_wick_check.sh staging-2026-10-26-before`, FAIL): the owner's down flag did reach the other
 machine (`netDown=True`) and the wizard did collapse there (`drawnDown=True`), but that machine's copy stayed

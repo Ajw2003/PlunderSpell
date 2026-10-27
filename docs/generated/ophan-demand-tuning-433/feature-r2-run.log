@@ -1,0 +1,13 @@
+20:52:20 host: state MainMenu players 0 local none holding nothing
+20:52:20 solo: solo started; state LairRoom
+20:52:21 host: state LairRoom players 1 local 1005.200,1.211,1.500 holding nothing
+20:52:22 set out: phase Raiding seed 91419094 arrival module 14 at (12.00, 1.25, -12.00)
+20:52:22 host: state Playing players 1 local 15.500,1.210,-12.000 holding nothing
+20:52:23 garrison: garrison cleared
+20:52:24 watch: watch raised
+20:52:25 start: state Playing length 300.0 left 296.6 done False ticks 60 caption '5 min' gametime 5.0
+20:52:26 time scale: time scale 10
+20:52:55 near the end, real time: time scale 1 | state Playing length 300.0 left 11.9 done False ticks 3 caption 'under a minute' gametime 289.7
+20:53:02 end: state LairRoom length 300.0 left 0.0 done True ticks 0 caption 'the way is shut' gametime 301.8
+20:53:03 PASS raid length 300.0 s; the clock ran 300.2 game s before the raid ended (time scale 10 while it ran)
+20:53:03 cleaning up

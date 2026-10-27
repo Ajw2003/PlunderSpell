@@ -24,9 +24,8 @@ namespace Plunderspell.Extraction
     [RequireComponent(typeof(Collider))]
     public class ExtractionZone : NetworkBehaviour
     {
-        [Header("Raid timing")]
-        [Tooltip("Length of a raid in seconds (default 10 minutes).")]
-        [SerializeField] private float RaidDurationSeconds = 600f;
+        // The raid's length lives in OphanDemandTuning.RaidSeconds; only tests set this override.
+        private float _raidSecondsOverride;
 
         [Header("Leaving")]
         [Tooltip("Seconds of the raid that must pass before standing on the pad starts the extraction " +
@@ -34,7 +33,7 @@ namespace Plunderspell.Extraction
         [SerializeField] private float _minimumRaidSecondsBeforeLeaving = 10f;
 
         /// <summary>How long a raid lasts, in seconds, so a display can show what share of it is left.</summary>
-        public float RaidLength => RaidDurationSeconds;
+        public float RaidLength => _raidSecondsOverride > 0f ? _raidSecondsOverride : OphanDemandTuning.Default.RaidSeconds;
 
         // Replicated state (PurrNet field-based SyncVars; inline-initialised so never null).
         private readonly SyncVar<float> _timeRemaining = new SyncVar<float>(0f);
@@ -124,7 +123,7 @@ namespace Plunderspell.Extraction
             // here; the manager can. A client's clock is the server's, replicated.
             if (NetworkManager.main != null && NetworkManager.main.isClientOnly)
                 return;
-            _timeRemaining.value = RaidDurationSeconds;
+            _timeRemaining.value = RaidLength;
             _extractionComplete.value = false;
         }
 
@@ -161,7 +160,7 @@ namespace Plunderspell.Extraction
             if (leaving == null)
                 return;
 
-            bool raidRunning = RaidDurationSeconds - _timeRemaining.value >= _minimumRaidSecondsBeforeLeaving;
+            bool raidRunning = RaidLength - _timeRemaining.value >= _minimumRaidSecondsBeforeLeaving;
             bool someoneOnThePad = LivingPlayersInZone > 0 && GameServices.IsPlaying;
 
             if (!someoneOnThePad || !raidRunning)
@@ -416,14 +415,14 @@ namespace Plunderspell.Extraction
         // -----------------------------------------------------------------------------------------
 
         /// <summary>
-        /// Sets the raid length. Used by scene tooling and by the director when a raid's duration
-        /// depends on the era. Takes effect on the next spawn, or immediately when already running.
+        /// Overrides the raid length for tests; a real raid reads <see cref="OphanDemandTuning.RaidSeconds"/>.
+        /// Takes effect on the next spawn, or immediately when already running.
         /// </summary>
         public void SetRaidDuration(float seconds)
         {
-            RaidDurationSeconds = Mathf.Max(1f, seconds);
+            _raidSecondsOverride = Mathf.Max(1f, seconds);
             if (!_extractionComplete.value)
-                _timeRemaining.value = RaidDurationSeconds;
+                _timeRemaining.value = RaidLength;
         }
 
         /// <summary>

@@ -14,6 +14,14 @@ Assemblies: `Plunderspell.Raid` (loop, spawning), `Plunderspell.Guards` (the gar
   `CallExtraction()` ends it early; the zone's tally comes back through the `ExtractionResolved` event, which
   banks the worth against the debt.
 
+- **The raid's length and the Ophan's demand numbers live in one asset**,
+  `Assets/_Project/Resources/OphanDemandTuning.asset` (`Plunderspell.Core.OphanDemandTuning`, #433), each field with
+  a tooltip and an Inspector range. `ExtractionZone.RaidLength` reads `RaidSeconds` (300 s, so a raid is 5
+  minutes); the zone's old serialized `RaidDurationSeconds` (600 s by default, 300 in the raid scenes) is gone, and
+  `SetRaidDuration` is now only a test override. The demand fields (hunt window, how often demands fall due, what a
+  missed demand costs, the marked piece) are read by the demand loop's later steps (#418, #419).
+  `OphanDemandTuningTests` checks the shipped defaults and that every number has a range and sits inside it.
+
 - **One seed drives the whole raid.** It is chosen on the server, replicated by
   `CastleNetworkManager`, and feeds the castle layout, the loot plan and the garrison — three
   independent RNG streams derived from it, so changing one cannot shift the others. Four peers build
