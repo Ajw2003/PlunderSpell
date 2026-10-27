@@ -82,7 +82,9 @@ namespace Plunderspell.Playtest
             else
                 Debug.LogWarning("[OphanGym] found no carryable artifact to mark, and the loot table has none to place.");
             yield return new WaitForSeconds(ArriveAfterSeconds - 1f);
-            SummonOnServer();
+            // F7 may have brought it already; arriving again would restart its hunt mid-test.
+            if (OphanState == OphanState.Absent)
+                SummonOnServer();
         }
 
         /// <summary>The castle's carryable artifact nearest <see cref="RaceMetres"/> from the gate, or a new one.</summary>

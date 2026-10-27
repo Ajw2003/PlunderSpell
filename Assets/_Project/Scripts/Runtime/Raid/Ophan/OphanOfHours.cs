@@ -25,6 +25,8 @@ namespace Plunderspell.Raid
         public const string PrefabResource = "Fear/TheOphanOfHours";
         private const float RepickSeconds = 1f;
         private const float TakeDespawnDelaySeconds = 1f;
+        // The charged beam bursts through the stone first and lands this long after, so the target sees the wall go (#461).
+        private const float ChargedHitDelaySeconds = 0.5f;
 
         [SerializeField] private OphanTuning _tuning = new OphanTuning();
 
@@ -187,7 +189,7 @@ namespace Plunderspell.Raid
         private static Vector3 AimPoint(PlayerStateMachine body) => body.transform.position + Vector3.up * 1.2f;
 
         /// <summary>Whether castle stone, other than a scorched room's, lies on the line from its eye to the target.</summary>
-        private bool StoneBetween(Vector3 from, Vector3 to, out List<CastleRoomModule> rooms)
+        private bool StoneBetween(Vector3 from, Vector3 to, out List<CastleRoomModule> rooms, List<Vector3> entries = null)
         {
             rooms = null;
             Vector3 line = to - from;
@@ -204,6 +206,7 @@ namespace Plunderspell.Raid
                 if (ScorchedRooms.IsScorched(room))
                     continue;
                 blocked = true;
+                entries?.Add(_hits[i].point);
                 if (room != null)
                     (rooms ??= new List<CastleRoomModule>()).Add(room);
             }
@@ -212,15 +215,25 @@ namespace Plunderspell.Raid
 
         private void FireCharged(Vector3 aim)
         {
-            StoneBetween(_eyePoint, aim, out List<CastleRoomModule> rooms);
+            // Where it enters the stone, and (cast back from the target) where it breaks out on the target's side.
+            var holes = new List<Vector3>();
+            StoneBetween(aim, _eyePoint, out _, holes);
+            StoneBetween(_eyePoint, aim, out List<CastleRoomModule> rooms, holes);
             var indices = new List<int>();
             if (rooms != null)
                 foreach (CastleRoomModule room in rooms)
                     if (!indices.Contains(ScorchedRooms.IndexOf(room)))
                         indices.Add(ScorchedRooms.IndexOf(room));
-            Damage.Apply(_target, _tuning.ChargedBeamDamage, gameObject, gameObject, aim, DamageKind.Spell);
-            ShowCharged(aim, indices.ToArray());
-            Debug.Log($"[Ophan] charged beam at {aim}; {indices.Count} room(s) scorched.");
+            ShowCharged(aim, indices.ToArray(), holes.ToArray());
+            StartCoroutine(HitAfterTheBurst(_target, aim));
+            Debug.Log($"[Ophan] charged beam at {aim}; {indices.Count} room(s) scorched, {holes.Count} wall(s) burst.");
+        }
+
+        private IEnumerator HitAfterTheBurst(PlayerStateMachine target, Vector3 aim)
+        {
+            yield return new WaitForSeconds(ChargedHitDelaySeconds);
+            if (target != null && !target.dead)
+                Damage.Apply(target, _tuning.ChargedBeamDamage, gameObject, gameObject, aim, DamageKind.Spell);
         }
 
         private void Take(LootValue artifact)
@@ -281,10 +294,13 @@ namespace Plunderspell.Raid
         }
 
         [ObserversRpc]
-        private void ShowCharged(Vector3 at, int[] rooms)
+        private void ShowCharged(Vector3 at, int[] rooms, Vector3[] holes)
         {
             if (_look != null)
                 _look.FlashCharged(at);
+            Vector3 eye = _look != null ? _look.EyePoint : _eyePoint;
+            foreach (Vector3 hole in holes)
+                OphanWallBurst.At(hole, (at - eye).normalized);
             foreach (int index in rooms)
                 ScorchedRooms.Scorch(ScorchedRooms.RoomAt(index));
         }

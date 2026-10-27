@@ -22,8 +22,8 @@ namespace Plunderspell.Raid
         // At a kilometre a player is a few degrees off its centre; the eye's turn is magnified so it can be seen to follow.
         private const float EyeFollowGain = 8f, EyeFollowMaxDegrees = 35f;
         private const float BeamWidthAtEye = 40f, BeamWidthAtTarget = 0.8f, ChargedWidthAtEye = 90f, ChargedWidthAtTarget = 8f;
-        // The beam fades out over its last metres. Seen from the target's own eyes it runs from beside the camera to the
-        // sky, and a camera-facing line that close fills the view, so on the target's machine it fades out further away.
+        // The beam fades out over its last metres. Seen from the target's own eyes it runs from around the camera to the
+        // sky, and a shaft that close fills the view, so on the target's machine it fades out further away.
         private const float FadeMetresOnTarget = 25f, FadeMetresSeenByOthers = 2f;
         private const float LiftGrowthPerMetre = 0.03f;
         private const float ChargedFlashSeconds = 0.6f;
@@ -35,10 +35,7 @@ namespace Plunderspell.Raid
         private Renderer[] _renderers;
         private MaterialPropertyBlock _block;
         private Color _baseEmission;
-        private LineRenderer _beam;
-        private readonly Gradient _beamGradient = new Gradient();
-        private readonly GradientColorKey[] _beamColours = new GradientColorKey[2];
-        private readonly GradientAlphaKey[] _beamAlphas = new GradientAlphaKey[3];
+        private OphanBeamShaft _beam;
         private Vector3 _flashTarget;
         private float _flashUntil = float.NegativeInfinity;
         private Vector3 _restScale;
@@ -72,7 +69,7 @@ namespace Plunderspell.Raid
             _baseEmission = shared != null && shared.HasProperty("_EmissionColor") ? shared.GetColor("_EmissionColor") : Color.white;
             _restScale = transform.localScale;
             _restPosition = transform.position;
-            _beam = BuildBeam();
+            _beam = new OphanBeamShaft();
             _stateSince = Time.time;
             _spin = 1f; // arriving, the rings turn as the clip turns them
         }
@@ -126,6 +123,7 @@ namespace Plunderspell.Raid
         {
             if (_lifted != null)
                 Destroy(_lifted.gameObject);
+            _beam?.Destroy();
         }
 
         private void RaiseLifted()
@@ -242,25 +240,20 @@ namespace Plunderspell.Raid
             bool slow = Beaming && Target != null && State == OphanState.Draining;
             // The take: after its flash, the slow beam's look holds on the piece the whole way up.
             bool lifting = !flashing && _lifted != null;
-            _beam.enabled = flashing || slow || lifting;
-            if (!_beam.enabled)
+            _beam.Visible = flashing || slow || lifting;
+            if (!_beam.Visible)
                 return;
             Vector3 end = flashing ? _flashTarget : lifting ? _lifted.position : Target.position + Vector3.up * 1.2f;
-            _beam.SetPosition(0, EyePoint);
-            _beam.SetPosition(1, end);
-            _beam.startWidth = flashing ? ChargedWidthAtEye : BeamWidthAtEye;
-            _beam.endWidth = flashing ? ChargedWidthAtTarget : BeamWidthAtTarget;
-            Color colour = flashing ? new Color(1f, 1f, 1f, 1f) : new Color(1f, 0.85f, 0.55f, 0.85f);
-            bool onLocalPlayer = !flashing && PlayerStateMachine.Local != null && Target == PlayerStateMachine.Local.transform;
-            float fadeMetres = onLocalPlayer ? FadeMetresOnTarget : FadeMetresSeenByOthers;
-            float fadeStart = 1f - Mathf.Clamp01(fadeMetres / Mathf.Max(1f, Vector3.Distance(EyePoint, end)));
-            _beamColours[0] = new GradientColorKey(colour, 0f);
-            _beamColours[1] = new GradientColorKey(colour, 1f);
-            _beamAlphas[0] = new GradientAlphaKey(colour.a, 0f);
-            _beamAlphas[1] = new GradientAlphaKey(colour.a, fadeStart);
-            _beamAlphas[2] = new GradientAlphaKey(0f, 1f);
-            _beamGradient.SetKeys(_beamColours, _beamAlphas);
-            _beam.colorGradient = _beamGradient;
+            // Drawn on both faces and added onto the scene, so it is half the old ribbon's strength.
+            Color colour = flashing ? new Color(1f, 1f, 1f, 1f) : new Color(1f, 0.85f, 0.55f, 0.45f);
+            // The charged flash fades near the player it strikes too, or its 8 m end whites out the wall bursting.
+            bool onLocalPlayer = PlayerStateMachine.Local != null && (flashing
+                ? Vector3.Distance(end, PlayerStateMachine.Local.transform.position) < 3f
+                : Target == PlayerStateMachine.Local.transform);
+            _beam.Draw(EyePoint, end,
+                flashing ? ChargedWidthAtEye : BeamWidthAtEye,
+                flashing ? ChargedWidthAtTarget : BeamWidthAtTarget,
+                colour, onLocalPlayer ? FadeMetresOnTarget : FadeMetresSeenByOthers);
         }
 
         private void DriftAway(float inState)
@@ -270,21 +263,6 @@ namespace Plunderspell.Raid
             float t = Mathf.Clamp01(inState / Mathf.Max(0.01f, _tuning.LeaveSeconds));
             transform.localScale = _restScale * Mathf.Lerp(1f, 0.05f, t * t);
             transform.position = _restPosition + Vector3.up * (t * _tuning.Distance * 0.5f);
-        }
-
-        private LineRenderer BuildBeam()
-        {
-            var go = new GameObject("OphanBeam");
-            go.transform.SetParent(transform, false);
-            var line = go.AddComponent<LineRenderer>();
-            line.positionCount = 2;
-            line.useWorldSpace = true;
-            line.numCapVertices = 4;
-            line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            line.receiveShadows = false;
-            line.sharedMaterial = Resources.Load<Material>("GrabBeam");
-            line.enabled = false;
-            return line;
         }
 
         /// <summary>
