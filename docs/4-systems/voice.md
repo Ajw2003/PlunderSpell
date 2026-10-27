@@ -13,7 +13,7 @@ means or what happens when one misfires.
 ## How it works
 
 - **`IVoiceInputService`** (`IVoiceInputService.cs`) is the only surface consumers see:
-  `StartListening()` / `StopListening()` / `OnPhraseRecognized`. Two implementations exist behind
+  `StartListening()` / `StopListening()`, publishing a `PhraseRecognized` event. Two implementations exist behind
   it, chosen automatically:
   - **`VoskVoiceInputService`** — the real path. The 68 MB model
     (`Assets/StreamingAssets/VoskModels/small-en-us/`) loads once, off the main thread, when the
@@ -70,13 +70,14 @@ fail. Tune a word by editing its `SpellWord` asset and re-running the test.
 
 ### What you said, on screen
 
-Added 2026-09-23 (#49). `SpellCastingSystem.PhraseResolved` fires on the caster's machine for
+Added 2026-09-23 (#49). The `PhraseResolved` event is published on the caster's machine for
 every phrase, including a fizzle (which casts nothing, so never reaches `CastResolved`). The raid
 HUD captions it for 3.5 s: green `"igneous" -> IGNIS (Normal)` for a clean cast, orange
 `"a nice" -> AGNIS - MISFIRE`, grey `"potato" - fizzled, not a spell`. The quoted text is exactly
 what the recogniser output, so a mis-recognition reads differently from a real mispronunciation.
-While V is held the same spot shows the open microphone and a live level meter with the
-whisper/shout marks.
+While V is held the same spot shows the open microphone's name. The live level meter with the
+whisper/shout marks moved to Settings (#303): `VoskVoiceInputService.MeterEnabled`, which the Settings screen switches
+on while it is open, opens the microphone and publishes `MicLevelChanged` without recognising anything.
 
 ### Microphone gain
 
@@ -98,13 +99,17 @@ the samples. Utterances with peak RMS under `ChatterFilter.MinChatterRms` (0.02)
 leaves the machine; in co-op only the words go to the host (`PlayerChatterRelay`, see net.md). Plan and
 tunables: `docs/plans/guards-hear-chatter.md`.
 
+### Haggling words (#312)
+
+`HaggleWords` (`Runtime/Market/HaggleWords.cs`) lists the English spellings the model may output for Plus, Satis and Vale. `SpellCastingSystem` adds them to the recogniser vocabulary (`SpellCastingSystem.cs:132`), never over a spell's own spelling, and `HandlePhrase` (`:239`) returns at once for these words: no spell, no misfire, no fizzle caption. `HaggleVoiceRouter` (`Runtime/Raid/HaggleVoiceRouter.cs`) hears the same `PhraseRecognized` and sends the word to the nearest counter with an open haggle within 3 m, else ignores it. Tests: `HaggleWordsTests`. Not tested with a real microphone.
+
 ## Invariants
 
 - **Both providers must classify and normalise identically.** `VoiceUtility` is the single place
   either one is allowed to do it — a provider that rolls its own would make Whisper/Shout and
   misfire matching behave differently depending on which one is active, including between a dev's
   editor session and a shipped Windows build.
-- **`OnPhraseRecognized` only fires on the main thread**, and so does every `Microphone` /
+- **`PhraseRecognized` is only published on the main thread**, and so does every `Microphone` /
   `AudioClip` call — Unity throws on those from any other thread. The previous design read the mic
   from a worker thread, threw on its first pass, and a bare `catch { break; }` hid it, so no audio
   ever reached the recogniser.
@@ -128,7 +133,7 @@ tunables: `docs/plans/guards-hear-chatter.md`.
 - **A machine with no microphone, or no model installed, silently downgrades to keyboard-only
   casting**, even in a real Windows build. The console says so, the player's screen does not.
 - **The loudness thresholds (`Whisper` < 0.1, `Shout` > 0.4 RMS) were set without a real
-  microphone.** Headset gain varies a lot, which is what the Settings gain slider is for: hold V
-  and watch the level meter against the whisper/shout marks while adjusting it.
+  microphone.** Headset gain varies a lot, which is what the Settings gain slider is for: open
+  Settings and watch the level meter there against the whisper/shout marks while adjusting it.
 - **Unity's `Microphone` device list includes virtual devices** (e.g. "Virtual Desktop Audio").
   The service uses the system default (`null`), not `devices[0]`, for exactly this reason.

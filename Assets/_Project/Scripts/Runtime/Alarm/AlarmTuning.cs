@@ -13,9 +13,11 @@ namespace Plunderspell.Alarm
         public readonly float AttackPoints;
         public readonly int RousedChasers;
         public readonly int HueAndCryChasers;
+        public readonly int RousedWitnesses;
+        public readonly int HueAndCryWitnesses;
 
         public AlarmTuning(float noiseWeight, float decayDelay, float decayRate, float sightingPoints,
-            float attackPoints, int rousedChasers, int hueAndCryChasers)
+            float attackPoints, int rousedChasers, int hueAndCryChasers, int rousedWitnesses, int hueAndCryWitnesses)
         {
             NoiseWeight = noiseWeight;
             DecayDelay = decayDelay;
@@ -24,6 +26,8 @@ namespace Plunderspell.Alarm
             AttackPoints = attackPoints;
             RousedChasers = rousedChasers;
             HueAndCryChasers = hueAndCryChasers;
+            RousedWitnesses = rousedWitnesses;
+            HueAndCryWitnesses = hueAndCryWitnesses;
         }
     }
 }

@@ -1,0 +1,34 @@
+09:58:21 build: yes (auto)
+09:58:21 building Build/DevTest
+10:00:04 build Succeeded
+10:00:11 host: state MainMenu local none
+10:00:13 host: state LairRoom local 44.5,1.2,0.0
+10:00:13 client started (pid 11807)
+10:00:28 client: state LairRoom local 1005.2,1.5,0.5
+10:00:31 host: distance 960.70 from /LairRoom/PlayerSpawns/Spawn1 at 1005.2,0.3,1.5
+10:00:31 FAIL the host stands at Lair spawn 1
+10:00:32 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+10:00:32 PASS the client stands at Lair spawn 2
+10:00:33 client: travelled through /LairRoom/MarketDoor to 1100.5,1.3,8.0
+10:00:36 client: distance 0.00 from /MarketYard/PlayerSpawns/Spawn2 at 1100.5,0.3,8.0
+10:00:36 PASS the client's Market door leads to Market spawn 2
+10:00:37 host: bodies 44.5,1.2,0.0; 1100.5,1.5,8.0; 
+10:00:37 PASS the host sees the client in the Market
+10:00:38 client: travelled through /MarketYard/LairExit to 1001.2,1.3,-3.8
+10:00:41 client: distance 0.00 from /LairRoom/MarketDoorArrivals/Spawn2 at 1001.2,0.3,-3.8
+10:00:41 PASS the client's way out leads back inside the Lair door
+10:00:41 castle: seed 777
+10:00:43 host: state Playing local -8.5,1.5,-12.0
+10:00:44 client: state Playing local -12.0,1.5,-8.5
+10:00:47 host: on the pad 2
+10:00:50 host: extracting
+10:00:51 host: state LairRoom local 1005.2,1.5,1.5
+10:00:52 client: state LairRoom local 1005.2,1.5,0.5
+10:00:56 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+10:00:56 PASS the client comes home to Lair spawn 2
+10:00:57 host: pile 2 NautilusCup(Clone) VenetianMirror(Clone)
+10:00:57 client: pile 2 NautilusCup(Clone) VenetianMirror(Clone)
+10:00:57 PASS both see the same two-piece haul pile
+10:00:58 client log error lines: 2
+10:00:58 FAIL 1 Lair checks
+10:00:58 cleaning up

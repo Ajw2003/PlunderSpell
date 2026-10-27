@@ -1,5 +1,464 @@
 # Today
 
+**2026-10-27 (later) - the Ophan in the sky, proved in co-op (#418: #441, #442, #443, #444; `AjsAgent/ophan-arrival-418`).**
+The slow beam no longer floods the target's view: 0.8 m wide at the target and faded over its last 25 m on the
+target's own machine (2 m elsewhere). New held pose `ophan_spread` (#443): the hover's wheels and eye with the wings
+spread, 13.2 m wide by 7.8 m tall (hover 11.7 by 9.5), review sheet `docs/art/anim/fear/ophan_spread.png`; the
+controller now goes Arrive, then Spread. The take now lifts a copy of the piece up the beam into the sky on every
+machine (it only flashed before). Found in co-op and fixed: after the charged beam killed one player the Ophan drained
+the next at once with no lock-on (`OphanHunt.Retarget`, new `Test_ANewTargetGetsTheFullLockOnFirst`). New co-op check
+`Tools/Unity/ophan_check.sh coop`: all 14 checks PASS (the take spares its carrier and both machines show the piece
+rising; the client shows the slow beam; cover holds health at 85; the charged beam kills through stone and both
+machines show the room scorched; the next player gets the lock-on first). Screenshots and log in
+`docs/generated/ophan-418/coop-*`. Feature branch: EditMode 274 pass / 3 skipped, PlayMode 528/529 (the known-flaky
+`CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`, 0.080 m; 20/20 on a rerun), `fear_wick_check`, `coop_lair_check` (27
+PASS) and `raid_length_check` (now with hunts off; 300.5 game s) PASS. Merged into `AjsAgent/staging-2026-10-26`
+locally and run again there: compile clean, EditMode 274 pass / 3 skipped, PlayMode 529/529, `ophan_check.sh staging`
+14/14, Wick, Lair (27) and raid-length (301.3 game s) PASS. Manual co-op test still owed.
+
+**2026-10-27 - one tuning asset for the Ophan's demand, and 5-minute raids (#433, `AjsAgent/ophan-demand-tuning-433`).**
+`OphanDemandTuning` (`Runtime/Core/GameFlow`, asset `Resources/OphanDemandTuning.asset`) holds every #433 number with a
+tooltip and a range. `ExtractionZone.RaidLength` reads `RaidSeconds` (300); its serialized `RaidDurationSeconds` (600
+by default, already 300 in the raid scenes) is gone and `RaidSceneBuilder` no longer sets it. Feature branch: compile
+clean, EditMode 264 pass / 3 skipped (261 plus 3 new `OphanDemandTuningTests`), PlayMode 529/529, new
+`raid_length_check.sh feature-r2` PASS (watch reads "5 min" with all 60 ticks at the start; the clock ran 300.2 game s,
+at time scale 10 until 12 s were left), `fear_wick_check.sh ophan-433-feature` PASS, `coop_lair_check.sh
+ophan-433-feature` PASS all (27 PASS, 0 client error lines). Merged into `AjsAgent/staging-2026-10-26` locally (PR #438)
+and run again there: compile clean, EditMode 264 pass / 3 skipped, PlayMode 529/529, `raid_length_check.sh staging-r1`
+PASS (300.6 game s), `fear_wick_check.sh ophan-433-staging` PASS, `coop_lair_check.sh ophan-433-staging` PASS all (27
+PASS, 0 client error lines). Logs in `docs/generated/ophan-demand-tuning-433/`. Manual co-op test still owed.
+
+**2026-10-26 (later) - a player caught by the Wick now dies on both machines (PR #437, `AjsAgent/staging-2026-10-26`).**
+Measured first (`fear_wick_check.sh staging-2026-10-26-before`, FAIL): the owner's down flag did reach the other
+machine (`netDown=True`) and the wizard did collapse there (`drawnDown=True`), but that machine's copy stayed
+`dead=False` at health 100, so `RaidDirector.CountLivingPlayers` and `ExtractionZone` counted a dead teammate as alive.
+Fix: `PlayerStateMachine.FollowOwnerDown`, called from `PlayerNetworkOwnership.ShowDownPose` on bodies this machine does
+not own (mechanism in `docs/4-systems/net.md`, "Spectating and a party wipe"). The Wick check now fails if the other
+machine still sees the caught player alive. Round 3: compile clean, EditMode 261 pass / 3 skipped, PlayMode 529/529
+(528 plus the new `Test_ATeammatesCopyFollowsItsOwnerDownAndBackUp`), Wick check PASS both ways (`-after`: host caught,
+the client reads it dead at health 0; `-after2`: client caught, the host reads it dead at health 0), `coop_lair_check.sh
+staging-2026-10-26-r3` PASS all (27 PASS, 0 FAIL, 0 client error lines). Decision logged: nothing broken reaches main.
+
+**2026-10-26 - one staging branch for #414, #436 and #422 (`AjsAgent/staging-2026-10-26`).** Built from
+`staging-2026-10-11` in its own worktree. Round 1 merged #436 (which already holds every #414 commit): compile clean,
+EditMode 250 pass / 3 skipped, PlayMode 528/528, `fear_wick_check.sh staging-2026-10-26-r1` ran (the Wick shows on
+both machines, the lantern agrees, a catch kills). Round 2 merged #422 (Today.md conflict only, both entries kept):
+compile clean, EditMode 261 pass / 3 skipped, PlayMode 528/528, `coop_lair_check.sh staging-2026-10-26-r2` PASS all,
+0 client error lines. The 254 EditMode baseline came from #422's own branch; staging alone runs 243, #436 adds 7 and
+#422 adds 11. **Found, already in #436's own run4:** a caught player's death shows only on their own machine; the
+other machine still reads health 100 and draws them standing. Logs in `docs/generated/staging-2026-10-26/`.
+
+---
+
+**2026-10-18 - Lair loot keeps its place, by events (#378, need to save state of items in the lair).** `HaulLanding` has no `Update`: it saves on haul landing, `Remove`, setting out, the new `SessionEnding` event (from `CoopSession.Leave()`, before the network stops) and quit; it restores on `CoopChanged` with the server running and on `SaveSlotLoaded`. EditMode 254 passed / 3 skipped / 0 failed, PlayMode 520/520, `lair_pile_check.sh` twice PASS, `coop_lair_check.sh` PASS (`docs/generated/lair-pile-2026-10-18-*.log`). Not opened as a PR yet.
+
+---
+
+**2026-10-14 (later) - the build plan for the Wick and the Ophan in raids, rebuilt from the template.**
+`docs/plans/fear-entities/fear-entities-in-game.html` is generated by `build_page.py` from the
+house-rules handover template and `page.json`; built twice, same output; checked at phone width
+(every part, a step's detail, a change opened, all seven choices picked and the reply read back).
+Added what the first page lacked: the three issues (#417 The Lantern Warden turns into the Wick in
+raids, #418 The Ophan of Hours arrives in hunted raids and catches players, #419 The Ophan's artifact
+quota replaces the debt and the Collector, each `in progress`), a decisions-log entry, the Somnus
+trigger, the clip-marker receiver, the turn's sync, the placeholder sting, and two new choices (what
+a Wick catch does to a player; how the dropped lantern behaves). Dark mode not seen: the local
+preview always renders light and the published link needs a sign-in in the built-in browser.
+
+---
+
+**2026-10-14 - the fear art's import rules checked in Unity (#413, under #386).** Run on this PC's
+Editor, logs in `docs/generated/fear-import-413/`: compile clean; `FearImportTests` 7/7; EditMode
+250 pass / 3 skipped (the old 243 plus the 7 new); `ArtBibleModelsImportWithTheirOwnedSettings`
+passes. After a forced reimport (`fear_import_report.cs`, output `import-report.log`): the Wick is
+Humanoid with a valid avatar and no glow, the Ophan Generic with a valid avatar and its emission on,
+all nine Wick clips and five Ophan clips named, looped and carrying the events the handoff lists,
+`TheWick_FireMask` sRGB off. `wick-and-ophan.png` shows both standing at their heights (rest pose,
+seen from behind). **Found:** the Ophan's clips address bones from its armature down (`Root/Core/...`)
+and write a x100 scale on their top node, while the model's bones sit under `TheOphanOfHours_Rig`. So
+the Ophan's Animator must sit on the `TheOphanOfHours_Rig` child, not the model's top object, or every
+bone is missed and the creature is drawn a hundred times too big. Sampled there, `ophan_arrive` frame
+0 sets `Core` to 0.02, as authored. Not looked at by eye: the clips playing (a preview scene does not
+re-skin, so the picture is the rest pose) and the Ophan's pupil glow.
+
+---
+
+**2026-10-12 (latest) - import rules for the fear art, written but not run (#413, under #386).**
+`ArtBibleModelImporter` now imports the Ophan of Hours Generic (a fear-folder list,
+`ArtBibleEnemyCatalog.FearGenericRigModels`, so the Ages' test-held list is untouched) and binds its
+glow (`FearEmissiveModels`, read through `IsEmissiveModel`, also by the validator); the Wick's
+`_FireMask` imports linear; `Humanoid_Fear.fbx` (Humanoid) and `TheOphanOfHours_Generic.fbx` (new
+`Kind.GenericClips`) get clip names, loop flags (`LoopingFearClips`) and events (`FearClipEvents`).
+Importer version 1 -> 2. Seven tests in `Tests/Editor/FearImportTests.cs`. **Untested:** no Unity
+here; the four C# files parse clean under Roslyn (syntax only, no Unity references), nothing more.
+The handoff's "The import rules" lists the four checks to run first in the Editor. Pull request into
+`staging-2026-10-11` opened with the art and these rules.
+
+---
+
+**2026-10-12 (later) - the Ophan's clips; the handoff now covers the engine work (#412, under #386).**
+Five clips on the Ophan's own Generic rig, built by a new `Tools/ArtForge/anim_ophan.py` (no
+humanoid solve or retarget): `ophan_hover_turn` (6 s loop), `ophan_advance` (4 s loop),
+`ophan_fix_gaze` (1.5 s), `ophan_take` (2 s, `AttackHit` at 0.9 s, the take or the kill) and
+`ophan_arrive` (4 s, grows from a point by a scale curve on Core). Exported to
+`Assets/Models/ArtBible/Animations/TheOphanOfHours_Generic.fbx`; the build re-imports it and checks
+every take's length, that both loops are seamless (0.000°) and that no mesh point goes under the
+floor (lowest 0.12 m; the first take went 2 cm under, its stoop was reduced). Built twice, same
+result. Sheets and movies in `docs/art/anim/fear/ophan_*`, each opened; the take's sweep was faint
+from the review camera, so a side view was added. `staging-2026-10-11` merged into the branch (one
+conflict in `Decisions.md`, both entries kept). The handoff's "Working in the engine" lists what the
+importer gets wrong today (the Ophan would import as Humanoid and fail the validator; neither clip
+file has a rule; the Ophan's glow and the Wick's fire mask are not handled), all read from the code,
+none run in Unity.
+
+---
+
+**2026-10-12 - paused for the week.** Usage ran out. The handoff's "Pick up here" lists what is next: the Ophan's clips (ask first), the Unity import rule for the Fear folder, the open owner questions, then the pull request.
+
+---
+
+**2026-10-12 - the Ophan of Hours is modelled (#411, under #386).** Spec entry `ophan` in
+`docs/art/data/fear.json`, blueprint `ophan()` in `Tools/ArtForge/art_forge/blueprints/enemies_fear.py`,
+model in `Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/`: three wheels with eyes round their
+rims and hour marks, one great eye with a lapis iris and the portal for a pupil, six wings; floats
+0.29 m off the floor; 9.46 m tall (spec 9.6), 11.9 m across; 11,378 of 16k tris; a generic rig of
+18 bones. Lapis passes the discipline check through a new `Blueprint.arcane_reason`. The first
+wings read as combs; more, wider feathers and thicker rims fixed it. Sheet
+`docs/art/models/fear/ophan.png` looked at and recorded. Not on the model: core glow, echoes,
+lightning (engine VFX). Unity, untested: the importer would take it as Humanoid; the handoff says
+what to do.
+
+---
+
+**2026-10-12 - the Wick's animations (#406).** Nine clips, a third AnimForge track
+(`Tools/ArtForge/anim_wick.py`, `anim_forge/library_wick.py`, layer `fear` in `anim_spec.json`):
+`warden_turn` (on the Lantern Warden, the lantern drops at 0.4 s and is left lying), then the swap,
+then `wick_emerge`; `wick_idle`, `wick_stalk` (1.4 m/s), `wick_hunt` (4.2 m/s), `wick_search`,
+`wick_catch` (AttackHit 0.5 s), and additive `wick_flinch` and `wick_stoop` (crown 2.33 m).
+Exported to `Assets/Models/ArtBible/Animations/Humanoid_Fear.fbx`, re-imported with all nine takes;
+no IK shortfall, no bone under the floor, slide 0.3 / 0.2 cm on the Wick. Sheet + MP4 per clip in
+`docs/art/anim/fear/`, each looked at; the emerge's first burst read as a "dab" and was redone as a
+rear-up. Not done: the Unity side (importer rules for these, the Animator, the swap), untested here.
+
+---
+
+**2026-10-11 (night, later) - the Wick made scarier (#406).** Owner: "far more texture, drop
+the glow, fire as geo for now, shaders later". The bake gained opt-in surface detail
+(`weave`, `gradients`, `streaks`, `cracks`, `flecks` in `art_forge/materials.py`); the Wick
+uses them on every family (sooted, grimed, blood-streaked, cracked). No emission anywhere. Fire
+is back as painted three-tone geometry (shoulders, a mantle off the back, a crown over the cap,
+vents, coat tears, hem, elbows, the candle), 10,596 tris of a budget raised to 12k for it; the
+FireMask is still baked for the shader to come. The flames broke heat weighting (8 of 8 tries
+once), so `Blueprint.heat_skip_props` holds props out of the solve: 6 of 6 builds then passed.
+Lantern Warden and wizard rebuilt to scratch: textures identical to the pixel. Sheet
+`docs/art/models/fear/wick.png` looked at over three more passes and re-recorded.
+
+---
+
+**2026-10-11 (night) - the Wick is modelled (#406, under #386).** Spec in `docs/art/data/fear.json`
+(a new `fear` group in ArtForge, `--age fear`, so the Ages' rosters of four stay as they are),
+blueprint `Tools/ArtForge/art_forge/blueprints/enemies_fear.py`, model in
+`Assets/Models/ArtBible/Enemies/Fear/TheWick/`: 5,664 tris (budget 10k), body 3.04 m vs 3.10 m,
+Unity Humanoid plus Cage, Hat and Blade bones. Owner's call mid-build: **fire is a shader, not
+geometry**, so the flame tongues came out and the build bakes `TheWick_FireMask.png` (white =
+flames, grey = smoulder); `Tools/ArtForge/fire_preview.py` shows where it burns
+(`docs/art/models/fear/wick-fire.png`). Shared forge changes, each checked by rebuilding the
+Lantern Warden and the wizard to a scratch folder (same tris and influences as committed):
+`figures.Human(arm_length=)`, `Blueprint.fire_families`, and a heat-weighting retry for a
+partial collapse (seen once, mean influences 1.02; the retry path has not fired since, 8 of 8
+builds clean). Review sheet `docs/art/models/fear/wick.png`, opened over three passes and
+recorded in `docs/art/reviews/`. Not done: clips, the Unity import (the importer has no rules for
+the Fear folder yet) and the fire shader, all engine work, untested here.
+
+---
+
+**2026-10-11 (latest) - the Wick and the Ophan approved (#386).** The owner approved both
+designs, the Wick's turn and counter, and lapis for the Ophan, after two last changes: the lantern
+is now left where it fell rather than travelling with him (`wick_v2.py`, `front(lantern_at=...)`),
+and the face split is drawn as four pieces parting on a cross of light with a magnified view at
+0.4 s. Written into `docs/7-design/fear-pass.md` ("The true form", "The creature"), a dated
+Decisions entry for the lapis exception, and `docs/art/BRIEF.md`. Next: spec and model both
+through the art pipeline. Nothing modelled yet.
+
+---
+
+**2026-10-11 (latest, later) - the Wick on fire, the Ophan with one eye (#386).** Owner's notes on
+round two: more of the Wick on fire, and the Ophan's four faces cut for one great eye at its heart.
+`wick_v2.py` now sets him burning (a mantle off his back, shoulders, coat tears, hem, fire from the
+hat's vents); `ophan_v2.py` replaces the faces with a 2.6 m eye with a portal for a pupil. Both
+sheets re-rendered and looked at. The two are now alone on a new page,
+`docs/art/concept/fear/the-wick-and-the-ophan.html` (published for the owner); the old proposal
+page and round one's sheets stay in the repo. Waiting on the owner to confirm both, the turn timing,
+the counters, and lapis for the Ophan. Nothing modelled yet.
+
+---
+
+**2026-10-11 (latest) - round two of the two horrors (#386).** The owner picked the Wick and the
+Ophan of Hours and asked for more detail: the Wick more daunting, the Ophan closer to the source
+and far larger. New `Tools/ArtBible/generators/fear/wick_v2.py` and `ophan_v2.py` draw four sheets
+(`docs/art/concept/fear/wick-v2-*.png`, `ophan-v2-*.png`): the Wick at 3.10 m as a man turned into
+his own lantern, with its turn in four stages and its head up close; the Ophan at 9.6 m (wheels
+within wheels, eyes, four faces, six wings) and inside a Keep cell it is bigger than. Added to the
+proposal page as round two. Waiting on the owner to confirm both, the turn timing and counter
+proposals, and lapis for the Ophan. Nothing modelled yet.
+
+---
+
+**2026-10-11 (later) - concept options for the two fear-pass horrors (#386).** From the handoff
+`docs/plans/handoff-2026-10-11-true-form-and-creature.md`, the look questions only: three true
+forms for the Lantern Warden (The Wick, The Hollow Coat, The Crawler) and three creatures (The
+Ophan of Hours, The Tithe-Abbot, The Hound of the Angles), drawn by
+`Tools/ArtBible/generators/fear/` on the art-bible sheet at true scale, rendered to
+`docs/art/concept/fear/*.png`, and set side by side in `docs/art/concept/fear/proposal.html`
+(published for the owner). Every plate was opened and fixed at least once. Waiting on the owner:
+confirm the Lantern Warden is the guard meant, pick one of each, and say whether the creature may
+use lapis (the bible keeps lapis off enemies). Nothing modelled yet; the reveal, counters and
+ground-floor counts are still open.
+
+---
+
+**2026-10-11 (evening) - the player stands on the floor (follows #391).** Both bodies stood 29 cm up: the ground snap
+took the SphereCast's `hit.distance` as the floor, but the floor is one cast radius (0.3 m) further down. Fixed in
+`PlayerStateMachine.HeightAboveGround`. That exposed a second fault the hover had hidden: `IsGrounded` was true
+anywhere within the 1.4 m cast, so the first half-metre of every jump counted as grounded and skipped the extra fall
+gravity (a misfired Saltus peaked 1.02 m). Grounded now means within 15 cm of ride height. Checks: EditMode 243 /
+3 skipped / 0 fail, PlayMode 520/520 (`docs/generated/player-floats-*.log`); co-op `wizard_coop_check.sh float-after`
+PASS, capsule 0.1 cm off the floor on both bodies (was 29.2), pictures `docs/generated/wizard-362/float-*`. Not
+checked: stairs and the Market tiles in co-op (overlaps #385).
+
+---
+
+**2026-10-11 - one staging branch again, and a friends build (#368).** Several worktrees had left the
+owner unsure where work stopped. Checked every branch by patch content: everything finished is on
+`claude/merge-2026-10-08`; the new `claude/staging-2026-10-11` is that plus the wizard plan docs
+(#349, item 3). Owner's calls: the #318 glow WIP stays on `claude/rimlight-318`; the voice-mimicry
+branch is dropped (its `archive/` tag already pointed at its tip); the `claude/busy-bose-a7647f`
+test fix is obsolete (the guard tests were rewritten in #214). Unity: compile clean, EditMode
+243 / 3 skipped / 0 fail, PlayMode 518/518. Release build at `Build/Windows`, zipped as
+`Build/Plunderspell-playtest-2026-10-11.zip` (630 MB, the `_DoNotShip` Burst folder left out); it
+starts clean with Steam (app 480). Not done: a raid played in the release build. Left over: a
+half-finished merge in the `PlunderSpell-lair` worktree from an attempt the owner stopped.
+
+---
+
+**2026-10-08 (night, latest) - co-op on one PC by hand (#372).** The menu's Host Co-op always used Steam when Steam ran, and a second copy on the same PC is the same Steam account, which Steam will not let join itself. Now: `CoopSession.HostLocal()` / `JoinLocal()` (UDP, 127.0.0.1, as the `-coop-host` / `-coop-join` arguments do), **Host on this PC** / **Join on this PC** on the main menu in the Editor and Development builds only, and `Tools/Unity/coop_local.sh`, which rebuilds the client if needed, presses Play, hosts, and starts the client joined beside the Editor. Checked: the script once end to end (2 players, 62 s with the build) and the owner played both sides from it and recorded it working. Not yet checked: clicking the two menu buttons, and a release build hiding them. Also fixed: `place_windows.ps1` looked for an Editor titled `PlunderSpell - ...` and so found none in a worktree.
+
+---
+
+**2026-10-08 (night, later) - the wizard is on the player in game (#362).** `WizardPlayerSetup`'s two steps ran: the `Wizard` controller and upper-body mask built, and the wizard installed on `RaidPlayer.prefab` and `Player.prefab` (the capsule stays for colliders, hidden). New `Tools/Unity/wizard_coop_check.sh`: host and client in the Lair, the client holds C, V and S through the Input System, and the host's copy of the client's wizard reads Crouch, Casting and Speed 5 (moved 3.6 m); PASS twice, 0 client errors, pictures in `docs/generated/wizard-362/final-*`. Keys go to the client because the Editor's Input System ignores the keyboard while its Game view is not focused. Suites with the wizard installed: EditMode 243 pass / 0 fail, PlayMode 518/518. Revert point before the install: `0f471202`.
+
+---
+
+**2026-10-08 (night) - the wizard merged onto the new staging (#368 item 2), and Unity dialogs no longer stall the check scripts (#371).** `claude/busy-mendel-t5y57j` merged on `claude/merge-2026-10-08` (PR #370): conflicts only in headless tooling and docs. First run in Unity found what the cloud could not: the wizard model and dye mask had imported before their import rules compiled (Generic rig, sRGB), fixed by a re-import; two `WizardAnimationTests` gave the Animator no controller, so they could never pass (an Animator keeps parameters only with a controller that has a layer, once bound): fixed in the test. EditMode 243 pass / 3 skipped / 0 fail, PlayMode 518/518. Not done yet: the wizard's two install steps on the player prefabs (#362). The long "main thread timed out" stalls were a modal "Scene(s) Have Been Modified" dialog waiting for a click: `pin.sh` now names any dialog on a failed call, `run_tests.sh` and `recompile.sh` stop on one in 1-6 s instead of 10 minutes, and `run_tests.sh` saves dirty scenes first (checked twice each, with a real dialog).
+
+---
+
+**2026-10-08 (later) - the diegetic raid UI is merged onto the new staging (#368 item 1), on `claude/merge-2026-10-08`.** `claude/staging-2026-10-07` (rimlight-318 minus the WIP glow) merged onto `claude/staging-2026-10-08` with the handoff's three resolutions; one more break the cloud could not see: five incoming tests used `GameState.Lair`, removed in #359, now `GameState.LairRoom`. Unity: compiles clean, EditMode 239 pass / 3 skipped / 0 fail, PlayMode 518/518. Co-op (`hud_events_check.sh staging-1008-merge`): both HUD models follow clock and alarm, a hit raises shake, number and vignette on both, the watch and grimoire draw (`docs/generated/hud-events-303/staging-1008-merge-*`). Not run: `coop_lair_check.sh` (its permission prompts timed out). The #318 glow and its unfinished WIP (`e93b3718`) stay on `claude/rimlight-318`.
+
+---
+
+**2026-10-08 - new staging branch, diegetic UI merge handed to Unity.** `claude/staging-2026-10-08` is cut from
+`claude/lair-market` (`0d5b0fe7`), the most complete branch; #368 lists every branch's unmerged work. The merge of
+`claude/rimlight-318` minus the WIP glow commit was resolved in the cloud but not committed: no code lands without a
+Unity check (owner). The headless harness does not compile `claude/lair-market` itself (40 errors, missing shims).
+Steps and conflict resolutions: `docs/plans/handoff-2026-10-08-staging-merge.md`.
+
+---
+
+**2026-10-07 - the raid screen is down to what the world cannot yet say (#315, steps #324-#326).** Hold `T` for the pocket
+watch (a ring of portal-light that empties as the raid runs down) and `Tab` for the grimoire (the spells, the keys, the last
+casts; it opens by itself once for a first raid, slows you to 60% and stops you lifting). The always-on clock, alarm bar,
+phase text, debt, banked gold, haul number, carried-item name, spell list and last-cast line are off the raid screen; the
+castle's fires carry the alarm. Still on screen until their world cues exist: the interaction prompt, the ranged weapon line,
+the chant bar and the heard-phrase caption (#318-#323). Tests: 10 new (watch, grimoire) pass; the full headless PlayMode run
+shows the same environment failures as plain staging. Not seen in the game yet (see the issues); on `claude/hud-strip-326`.
+
+---
+
+**2026-10-06 (night) - the event bus move is done on staging (#297, steps #298-#304; #305 is these docs).** Every
+event between systems is on `EventManager`; the raid HUD, damage feedback, camera shake, music and backdrop camera follow
+events instead of polling; the mic meter is in Settings. Naming fixed so nothing but `EventManager` is called a bus
+(`EnemyDirectorListener`, `LoopPool`). On `claude/staging-2026-10-07`, not `main`. Unity: PlayMode 430/430, EditMode 225
+pass / 3 known failures, and a co-op raid on which both HUD models followed the clock and alarm, the stems played on both
+machines, and a hit raised the shake, a floating number and the red edge on both. The mic meter source is verified
+against the real headset (`MicMeterTests`). Not verified: the bar with someone speaking at the whisper and shout marks. The issues (#297-#305) are open for the owner to
+close. Next, in the owner's order: the diegetic raid UI, the Lair room, the Market (`docs/7-design/diegetic-ui-lair-market.md`,
+`docs/plans/lair-market-in-engine.md` steps 2-8), each needing a parent issue and one child per step first.
+
+---
+
+**2026-10-06 (night) - staging pushes again, leftover branches merged, Unity compiles it.** A local merge had
+committed the 470 MB `Assets/StreamingAssets/LLM/` model, which GitHub refused; it is out of history and in
+`.gitignore` (still on disk). Merged into `claude/staging-2026-10-07`: `claude/playability-fixes` (#260 railings,
+silent Editor Play fix, alarm witness check), `claude/project-thread-zc980w` (cel-shaded paintovers),
+`ccr-6bf1f02d-o8jhoy` (co-op chatter check), `claude/carry-cleanup-169`. Left unmerged on purpose: the guard-mimic LLM
+prototype, voice-mimicry (cherry-picked already), and branches older than the RogueAi rename. Unity: compile clean,
+`NetworkPrefabs.asset` unchanged; EditMode 220 pass / 3 fail / 3 skip, the three known failures
+(`ArtAssetImportTests`, `LootAmountTests...AboutDoubleTheOldHaul`, `LootBalanceTests...TooHeavyToLift`); PlayMode
+413/413. The owner chose the event-bus scope (every event between systems, `docs/6-decisions/Decisions.md`); next:
+that move, then the diegetic raid UI, the Lair, the Market.
+
+---
+
+**2026-10-07 - handoff to a local session with Unity.** `claude/staging-2026-10-07` holds everything finished in
+the cloud session (#285, #288, #290-#296). Unity has not compiled it since the `Time.Reset/Advance` test fix
+(`7edf7559`). Next, on aj's PC: compile and test staging in Unity, do the Unity-only checks each PR names, then move
+the HUD onto events (`docs/plans/ui-events-mvc.md`, two decisions waiting on aj). Everything a local agent needs:
+`docs/plans/handoff-2026-10-07-staging-and-ui-events.md`.
+
+---
+
+**2026-10-06 - guard voices on the new guards (#280).** On `claude/project-thread-x1cqae`. Nine voice commits from
+`claude/voice-mimicry-improvements-7a0b29` cherry-picked (not the mimic prototype); the director follows `Guard`. Every Age
+logged its own `[GuardSpeech]` lines; details in `docs/4-systems/audio.md`.
+
+**2026-10-05 (night) - the owner's four fixes (#262), plus downed teammates (#270).** On `claude/project-thread-x1cqae`.
+- Doors (#263, `0e3bc979`): guards open closed doors they walk into. Hue and cry (#264, `5066321d`): the lockdown
+  bars every door and guards treated barred as walls, so half the garrison never came; now guards pass barred doors
+  (players still need Porta or force). Swarm check: within 20 m of the host at 23 s, 5 -> 12. Left: #271.
+- Spawning outside (#265, `001932c5`): 8 logged outside spawns (2026-09-26 to 09-30) all land inside on today's
+  code; the 2026-10-03 arrival rewrite fixed it. The built game in `Build/` predates that.
+- Painted look: screen ink pass removed, paint on surfaces (#266); new local concept art per Age
+  (`docs/art/concept/painted/`, recipe in its README, #267); four tuning rounds (#268, head `00d2faef`) match fog,
+  fill, paint and wall colour to the art. What still differs is room content, filed as #269.
+- Downed teammates (#270, `d961818e`): guards ignore downed players and keep their target unless another is under
+  2/3 the distance. Not seen in a co-op raid yet.
+
+---
+
+**2026-10-06 - the painted look (#231), owner's pick for juice and art.** The castle shader already
+banded fire light and tinted shadows warm; added the ink: cross-hatching in the shadows of every
+`Plunderspell/Surface` material (castle, and guards and loot through `SurfaceConverter`), outlines from
+depth and a paper grain in a new `Ink` pass before the fog. Settings on the `NightAtmosphere` profile
+(`docs/4-systems/atmosphere.md`, "Ink"). Written in the cloud on `claude/project-thread-x1cqae`; nothing
+compiled or looked at yet, that needs the owner's Editor. Then the owner asked for less hatching and
+harsh lines and more cel shading: hatching now off by default, outlines lighter, and new `CelAmount`
+and `CelSoftness` settings make every surface's fire light snap to crisp flat bands.
+The owner's first after-shots looked nothing like the cel-shaded concept art
+(`/mnt/project-files/concept-art/cel-shaded/`): that art pulls every colour towards umber and vellum and
+lays a heavy blotchy paper over it. So the grades now desaturate (-30 calm to -20 hue and cry, was -4 to
++6, `NightLooks.cs`), the paper grain is stronger (0.14) and outlines catch smaller steps (0.025).
+
+---
+
+**2026-10-05 (evening) - working the handoff (`docs/plans/handoff-2026-10-05-guards-castle.md`).** #259 live check
+done: the witness rule and the cry chain work in a raid (Roused at the third witness); the check script needed
+fixing first (`a361a020`). Full PlayMode run 391/393: the flaky #233 test, and `SavedSettingsStartupTests`, which
+exposed Editor Play starting silent when the SoundBank was not in memory (fixed, `ea76aba9`). #240 not reproduced:
+the only automatic way back to the menu is a co-op client losing the host (`CoopSession.cs:199`); waiting on how the
+owner was playing. #260 railings built and baked (`0748331f`) but the Edit Mode flood test
+(`CastleStairPlaceholderTests`) has not run: its permission prompt went unanswered. #250, #261, #233, #241 not started.
+
+---
+
+**2026-10-05 - the owner played it: "finally starting to feel like a game".** They saved that build as a local
+branch, `Staging` (`aaeb9b94`). Since then: the alarm needs witnesses (#259: guards cry for help, the castle hears
+only through its guards; 3 witnesses for the lockdown, 5 for the hue and cry), curtain fires per Age (#258), and the
+spell tests moved to a listening guard (`325852e9`). House-rules plugin updated to 2.52.0 (unanswered prompts are
+refused after 5 minutes). The #259 live raid check is not run yet. Next agent: `docs/plans/handoff-2026-10-05-guards-castle.md`.
+
+---
+
+**2026-10-03 (evening) - the stacked castle, picked up after the owner's playtest (#253).** The previous
+session finished tasks 1-4 of 8 in `docs/plans/multi-floor-castle-step1-plan.md` (#247) and stopped before
+anything worked on the new floors; #253 lists what the owner saw. Order chosen by the owner: #254 crypt entry
+and stone on placeholders, #255 guards on every floor (tasks 5-7), #248 doors, #256 stairs built by extending
+each Age's existing stairwell (owner's pick over stepped placeholders), #257 every Age and its lights
+checked with screenshots. Roofs come after; "outside" needs a design talk first.
+- #248 doors: `CastleDoorPlanner` (10 ward-bailey, 2 keep, 1 crypt door for seed 12345 on all three
+  registries), three door prefabs from `Tools/Plunderspell/Forge Castle Doors`, entries in the network prefab
+  list, and `CastleDoorSpawner` (server-side, wired into `RaidDirector` and `RaidScene`). Two gaps found and
+  fixed (`a155364c`): nothing could open them by hand (the prefabs had no `CastleDoorHandle`, which lived inside
+  `LootInteractor.cs` and so could not sit on a prefab), and open, lock and bar only changed on the machine that
+  acted. Co-op check (`Tools/Unity/coop_door_check.sh`, seed 777): 13 doors on both sides; the client's hand
+  opens one for both; the host's lockdown locks all 13 on the client; a locked door refuses the client's hand;
+  the client's Porta opens it for both.
+- #256 stairs: each Age's existing stairwell, extended. `Tools/AssetPipeline/castle_builders_stairs.py` reuses
+  the kit's L stair to its gallery, adds a flight from the gallery to the keep floor (4.60) and cuts wells in
+  the slabs for 2.40 m headroom; the down-stair uses the same flights 0.30 -> 3.60. One forge for all Ages
+  (`Tools/Plunderspell/Forge Stairs`); the braziers' fires are wired. In a raid a player walked the High
+  Medieval pair: feet 0.30 -> 1.60 landing -> 2.90 gallery -> 4.60 keep floor, and lobby -> -3.00 crypt floor
+  (`Tools/Unity/eval/stair_leg.cs`). Late and Bronze were not walked; the flood test passes on all three.
+  The wells have no railings.
+- #257 every Age (`Tools/Unity/ages_check.sh`, run twice, `docs/generated/ages-check-2026-10-04/`, a contact
+  sheet per Age): all four build the three floors; fires keep 23-35, ground 82-86, crypt 17-24, each with its
+  light; none float or are buried (`eval/light_audit.cs`) except one hearth flame inside its own fireplace.
+  Looked at all 44 views: lights sit on their sconces and braziers on every floor. Fog is heavy (#250); every
+  room is open to the sky (roofs next).
+- Full PlayMode suite at the end: 379/379 pass.
+- #254 done (`4d40187a`): the raid scene's `Ground` plane at height 0 ran through the down-stair's well, so
+  players stood on it. Ground is now one mesh with a 12 m hole over the centre cell
+  (`Editor/GroundStairWellCutter.cs`). In Play mode the real controller walked from the lobby floor (0.40) to
+  the crypt's `FootSlab` at -3.00 (`Tools/Unity/eval/walk_down_stair.cs`; picture
+  `docs/generated/castle-floors-2026-10-03/`). Re-running the stair forge wipes the stairs' walk-map tiles;
+  bake again after it.
+- Seen in that run: the arrival portal stands inside the down-stair at (0, -2.05, 0). The arrival planner
+  still picks stair rooms (plan task 7, #255).
+- #255 task 5 done (`51c63544`): the walk map looks up rooms per floor. Found: every gallery stairwell
+  (KeepStairwell, LateTurretStair, BronzeMegaronStair) now lands on the keep floor, and guards are blocked
+  climbing them there (3 `GuardClimbsTheStairToItsGallery` failures). Two causes, both fixed: archway cells
+  under door plugs stayed walkable (`60e3bbac`), and the floor under a guard was the nearest cell in 3D, which
+  picked the ramp below a gallery edge; it now comes from the guard's own column (`9c1153ad`).
+- #255 tasks 6-7 done (`6d00a7c7`, `9a990794`): the castle check searches floor by floor; arrival, entrances,
+  dressing and the portal safe ring read the ground floor; stairs are never posts, arrival or loot rooms;
+  guards stand on their floor top and patrol on their own level. Tests: CastleGeneratorTests 13/13,
+  CastleArrivalTests 18/18, Guard PlayMode 134/134, Nav EditMode 20/20. Loot EditMode 8/10, the two failures
+  (`LootAmountTests...AboutDoubleTheOldHaul`, `LootBalanceTests...OuterZonesHoldNothingTooHeavyToLift`) fail
+  the same without these changes.
+- Raid check, seed 777 (`Tools/Unity/eval/guards_per_floor.cs`): arrival at (-12, 1.25, -12), a ground room;
+  9 guards, 3 per floor, all on their floor and patrolling 20 s later. One sample caught a keep guard 0.3 m
+  into the slab at x 6.0, the seam beside the up-stair's head; the next six samples had every keep guard at
+  4.61. Not chased.
+
+---
+
+**2026-10-03 - first performance pass, PR #246 opened, 28 finished issues closed.** Measured a co-op
+raid with the Profiler (`Tools/Unity/perf_capture.sh`, results in `docs/generated/perf-2026-10-03/README.md`)
+and fixed the worst causes: guard route smoothing froze the host up to 204 ms in a hue and cry (now 33 ms,
+#243); every sound streamed from disk (short sounds now load into memory, owner approved, #244); the HUD
+made 46 KB of garbage a frame (26 KB, #245, still open); fire glow sorting (#217, still open). Finding: in
+Editor Play mode the Editor takes about half the host's frame (~135 fps vs ~290 in the build). Full PlayMode
+suite 373/373. PR #246 merges the whole `claude/playability-fixes` branch (186 commits). The owner closed 28
+finished issues; why they piled up is filed as Ajw2003/AjsClaudeCodeTools#141. Lightmap baking was checked:
+the bake call is Editor-only in 6000.3.15f1 and the build ships no `UnityEditor` assemblies.
+**2026-10-06 - proposal: the HUD goes into the world, the Lair becomes a place, the Market haggles.**
+Asked for by the owner, ahead of any code: spells in a grimoire you open, the timer on a pocket watch,
+the alarm read from the castle's fires, and the rest of the HUD replaced except the crosshair and
+damage feedback. Debt and haul leave the raid: loot lands in a physical Lair and is sold in a Market to
+four vendors who haggle (*Plus / Satis / Vale*). Plan `docs/7-design/diegetic-ui-lair-market.md` (#284,
+under #174) accounts for all 17 raid HUD elements; seven concept sheets in `docs/art/concept/{diegetic,
+raidview,lair}/`, generated by `Tools/ArtBible/generators/diegetic/`; review page
+`docs/generated/diegetic-proposal/`. Six open decisions wait on the owner. Not done: any model. Blender
+is 4.0 here and the owner chose to allowlist Blender 5, so the grimoire (#282) and watch (#283) are
+modelled next session. The headless harness repair (#281) is parked half-done on `ccr-ae9369ba-5izxio`
+(WIP commit a0bc71e2, does not compile yet).
+
+---
+
+**2026-10-08 - the wizard gets a body and clips; the art docs are checked against the code.** The
+player wizard (#335) is modelled through ArtForge (#336: `docs/art/models/lair/wizard.png`), its
+clips are authored with AnimForge (#361: idle, walk, jog, crouch, jump, cast, death collapse), and the
+Unity side is written (#362: importer, a generated animator, `WizardAnimationDriver`, crouch/cast/jump
+synced over the network). Death: the owner chose collapse, then the body vanishes (the hat is #339).
+The Unity side has not been run in the Editor. The owner also found the art docs had drifted
+(`scale.md` still showed the retired enemy roster): `scale.md`, `BRIEF.md`, the ArtForge status line
+and the systems index are fixed, and `Tools/docs/check_art_docs.py` plus `.github/workflows/docs.yml`
+now fail on that kind of drift. The workflow is being made into a portable `art-pipeline` plugin in
+Ajw2003/AjsClaudeCodeTools (#161 there).
+
+---
+
+**2026-10-07 - the wizard is designed and approved; nothing is built.** Players will share one
+wizard outfit, pick any colour (no two exact matches in a raid, first come first served), have their
+name around the hat band (shrunk to fit, or a different name for the game), and leave only their hat
+when they fall. Plan: `docs/7-design/wizard-character.md`; concept plates and the approved page in
+`docs/art/concept/wizard/`; issues #335 (parent) and #336–#341. The fallen hat replaces the
+laid-down body and ends the unused two-person body carry. Handed to a local agent with Unity.
+Placed by the owner the same day: the blocked-out wizard and its functions are M2 (#335–#339, #341),
+the colour and name on Lair things are M4 (#340), the finished model is M7.
+
+---
+
 **2026-10-02 (evening) - guards move again: the walk map was empty for two of the three Ages.** The owner
 saw guards stuck and standing still in co-op. Measured with `Tools/Unity/coop_guard_check.sh` (Late
 Medieval, seed 3508293): every guard stood still for the whole 90 s. Cause: `CastleNavTileBaker` baked only
@@ -729,7 +1188,7 @@ playtesting backlog since anyone last touched `docs/`, and `docs/` itself had ti
 
 ## Later, same day — moodboard gap-closure pass
 
-A second pass, requested directly: audit the built game against `docs/plunderspell.md` and the
+A second pass, requested directly: audit the built game against `docs/7-design/plunderspell.md` and the
 mood board pillar by pillar (not against the raid loop, which the morning's 21-item backlog
 already covers), write up the findings, and file GitHub issues for everything needed to close the
 gap — "exhaustive," including content that has no art or systems work behind it yet at all.

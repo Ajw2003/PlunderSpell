@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Interfaces;
 using Plunderspell.Alarm;
 using UnityEngine;
 
@@ -13,12 +14,14 @@ namespace Plunderspell.Guards
     public sealed class GuardSight
     {
         private const int HitBufferSize = 8;
+        private const float SwitchDistanceRatio = 2f / 3f;
 
         private readonly Transform _body;
         private readonly GuardTuning _tuning;
         private readonly GuardSightThrottle _throttle;
         private readonly RaycastHit[] _hits = new RaycastHit[HitBufferSize];
         private bool _closed;
+        private float _lightRadius;
 
         public GuardSight(Transform body, GuardTuning tuning, int guardId)
         {
@@ -56,8 +59,11 @@ namespace Plunderspell.Guards
             }
 
             if (_throttle.IsLookDue(deltaTime))
-                Look(intruders, GuardBrain.SightRange(_tuning.SightRange * GuardBrain.BaseSightScale, alarm));
+                Look(intruders, _lightRadius > 0f ? _lightRadius : GuardBrain.SightRange(_tuning.SightRange * GuardBrain.BaseSightScale, alarm));
         }
+
+        /// <summary>The Wick (#417) sees only inside its own fire's light: this far, whatever the alarm.</summary>
+        public void SeeOnlyInLight(float radius) => _lightRadius = radius;
 
         private void Look(IReadOnlyList<Transform> intruders, float range)
         {
@@ -65,21 +71,33 @@ namespace Plunderspell.Guards
             Vector3 eye = _body.position + Vector3.up * _tuning.EyeHeight;
             Transform best = null;
             float bestDistance = float.MaxValue;
+            Transform kept = null;
+            float keptDistance = 0f;
 
             for (int i = 0; i < intruders.Count; i++)
             {
                 Transform intruder = intruders[i];
-                if (intruder == null)
+                if (intruder == null || Downable.IsDown(intruder))
                     continue;
 
                 float distance = Vector3.Distance(eye, intruder.position + Vector3.up * _tuning.TargetAimHeight);
-                if (distance >= bestDistance || !SeesAnyAimPoint(eye, intruder, range))
+                bool isCurrent = intruder == Visible;
+                if ((distance >= bestDistance && !isCurrent) || !SeesAnyAimPoint(eye, intruder, range))
                     continue;
 
-                bestDistance = distance;
-                best = intruder;
+                if (isCurrent)
+                {
+                    kept = intruder;
+                    keptDistance = distance;
+                }
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    best = intruder;
+                }
             }
-            Visible = best;
+            // Stickiness (#270): keep the current target while it is seen, unless another is under 2/3 as far.
+            Visible = kept != null && bestDistance >= keptDistance * SwitchDistanceRatio ? kept : best;
         }
 
         // A sighting needs one clear aim point, head first (the usual hit): a ledge edge or a lintel that hides

@@ -59,6 +59,8 @@ class GaitParams:
     elbow: float = 14.0
     elbow_swing: float = 12.0
     head_bob: float = 2.0
+    crouch: float = 0.0         # extra hip lowering (m), e.g. a sneak
+    hip_pitch: float = 0.0      # pelvis tipped forward (deg), balances a crouch
 
 
 class GaitClip(Clip):
@@ -135,7 +137,7 @@ class GaitClip(Clip):
     def hips(self, t: float) -> Vector:
         p = self.p
         w = 4.0 * math.pi * (t / p.cycle - p.duty / 2.0)
-        z = p.bob * math.cos(w) * (-1.0 if p.run else 1.0) - p.bob - self.drop
+        z = p.bob * math.cos(w) * (-1.0 if p.run else 1.0) - p.bob - self.drop - p.crouch
         x = p.sway * math.cos(2.0 * math.pi * (t / p.cycle - p.duty / 2.0))
         return Vector((x, 0.0, z))
 
@@ -151,7 +153,7 @@ class GaitClip(Clip):
         c = math.cos(2.0 * math.pi * t / p.cycle)
         c2 = math.cos(4.0 * math.pi * (t / p.cycle - p.duty / 2.0))
         pose = {
-            "Hips": (0.0, roll, yaw),
+            "Hips": (p.hip_pitch, roll, yaw),
             "Spine": (p.lean * 0.6, -roll * 0.6, -yaw * 0.9),
             "Chest": (p.lean * 0.4 + (1.0 if p.run else 0.5) * c2, -roll * 0.4, -yaw * 0.7),
             "Neck": (-p.lean * 0.5, 0.0, yaw * 0.3),

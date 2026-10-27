@@ -90,6 +90,7 @@ def late_run(bm, uv, u0, u1, side="south", loops=(), timber=True):
 def build_late_wall_straight(bm, uv):
     """docs/art/rooms/concept/LateMedieval/LateWallStraight.svg"""
     late_run(bm, uv, -H, H, loops=(-3.6, 0.0, 3.6))
+    cb._fire("Sconce", 0.0, -H + FACE + MASS, 2.9, facing=(0.0, 1.0), lit=0)       # on the mass's inner face
 
 
 OCT = Euler((0, 0, math.radians(22.5)))    # an 8-sided cylinder turned so its flats face the axes
@@ -140,6 +141,9 @@ def build_late_wall_corner(bm, uv):
     keyhole_loop(bm, uv, "west", c)
     for side in ("south", "west"):
         late_run(bm, uv, run0, H, side=side, loops=(2.1,))
+    # The tower is roofed, so no beacon: sconces on its east and north flats, below the walk doors.
+    cb._fire("Sconce", c + apo, c, 2.8, facing=(1.0, 0.0), lit=0)
+    cb._fire("Sconce", c, c + apo, 2.8, facing=(0.0, 1.0), lit=0)
 
 
 def build_late_bastion(bm, uv):
@@ -183,6 +187,10 @@ def build_late_bastion(bm, uv):
     # The machicolated runs on from both flanks.
     late_run(bm, uv, -H, -2.6, loops=(-4.45,))
     late_run(bm, uv, 2.6, H, loops=(4.45,))
+    # A beacon on the flagged platform (top plat + 0.02), clear of the bombard and gunstones; a sconce on the
+    # drum's north flat.
+    cb._fire("Beacon", -1.4, cy + 0.4, plat + 0.02, lit=2)
+    cb._fire("Sconce", 0.0, cy + apo, 2.9, facing=(0.0, 1.0), lit=0)
 
 
 def build_late_drawbridge(bm, uv):
@@ -237,6 +245,7 @@ def build_late_barbican(bm, uv):
     for sgn in (-1, 1):
         octagonal_tower(bm, uv, sgn * tx, ty, r=tr, outward=(225, 270, 315, 45, 90, 135), doors=(0, 180))
         keyhole_loop(bm, uv, "south", sgn * tx)
+        cb._fire("Sconce", sgn * tx, ty + tapo, 2.8, facing=(0.0, 1.0), lit=0)     # on the tower's north flat
     # The runs outside the towers, and the gate wall between them with the gate and its lintel.
     late_run(bm, uv, -H, -tx - tflat, loops=(-5.0,))
     late_run(bm, uv, tx + tflat, H, loops=(5.0,))

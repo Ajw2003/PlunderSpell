@@ -1,0 +1,164 @@
+{
+  "title": "PlunderSpell week of 11 to 18 Oct",
+  "eyebrow": "Weekly breakdown and next-step choice",
+  "approval": "Design approved: next push",
+  "short": {
+    "lead": "The newest commit is from 15 Oct, so nothing has landed in the last three days. Across the week, 80 commits on all branches changed 487 files (19,234 lines added, 1,694 removed), measured from the last commit before 11 Oct to the tip of the fear-wick branch. The fear pass is the design that makes raids frightening. It now has a working Wick, but the pull request that holds its art, \"Fear pass: the Wick and the Ophan of Hours, art, clips and import rules\" (pull request 414), is blocked by merge conflicts.",
+    "hint": "Tap an item to see what happened and what is waiting. Source: git log and the GitHub issue list; the code itself was not opened.",
+    "key": [
+      [
+        "Done this week",
+        "done"
+      ],
+      [
+        "Waits on you",
+        "you"
+      ],
+      [
+        "Work in progress",
+        ""
+      ]
+    ],
+    "items": [
+      [
+        "check",
+        "Staging",
+        "Staging merge and baseline",
+        "done",
+        "The in-world Lair and Market merged into a new staging branch through the pull request \"New staging: the in-world Lair and Market, plus the diegetic raid UI\" (pull request 370). Lair loot now keeps its place after you leave and return (issue 378, \"save state of items in the lair so they are still there when you return\").",
+        "Nothing from you."
+      ],
+      [
+        "search",
+        "Audit",
+        "Per-frame audit and first fixes",
+        "done",
+        "The audit of code that runs every frame read 103 methods and found 67 that do not need to run every frame. The rule is in the project docs and four bugs are fixed.",
+        "Nothing from you."
+      ],
+      [
+        "hammer",
+        "Pipeline",
+        "Asset pipeline",
+        "done",
+        "The asset pipeline builds only what exists, previews refresh from CI, and four Powder door plugs have art review records.",
+        "Nothing from you."
+      ],
+      [
+        "bulb",
+        "Fear design",
+        "Fear pass design",
+        "done",
+        "The direction was written and approved. It was split into five issues. Three cover the creatures. They are issue 417, \"The Lantern Warden turns into the Wick in raids\"; issue 418, \"The Ophan of Hours arrives in hunted raids and catches players\"; and issue 419, \"The Ophan's artifact quota replaces the debt and the Collector\". The other two are issue 420, \"One more guard stands in each ground-floor zone, in every Age\", and issue 421, \"Model the altar beside the Lair's portal where artifacts are placed\". Both creatures are modelled and animated.",
+        "Nothing from you."
+      ],
+      [
+        "loop",
+        "Wick",
+        "The Wick works in the engine",
+        "",
+        "The Lantern Warden turns into the Wick, and its catch kills on the AttackHit animation event. Each Age gets one more ground-floor guard.",
+        "Open pull requests for issue 417 (\"The Lantern Warden turns into the Wick in raids\") and issue 420 (\"One more guard stands in each ground-floor zone, in every Age\"), then test them."
+      ],
+      [
+        "stop",
+        "Blocked",
+        "The Wick and Ophan art pull request has merge conflicts",
+        "you",
+        "Pull request 414, \"Fear pass: the Wick and the Ophan of Hours, art, clips and import rules\", holds the Wick and Ophan art. Both code branches sit on top of it.",
+        "Nothing yet: I resolve the conflicts, and you approve the merge."
+      ],
+      [
+        "hand",
+        "Decision",
+        "What goes first after the Wick and Ophan art pull request merges",
+        "you",
+        "Either the hunting creature and its artifact quota, or the per-frame cleanup of code that checks every frame. Both are described under Your choices.",
+        "Pick one under Your choices."
+      ]
+    ]
+  },
+  "changes": [
+    [
+      "chg",
+      "Staging branch",
+      "In-world Lair and Market merged, loot persists.",
+      null,
+      "Pull request 370, \"New staging: the in-world Lair and Market, plus the diegetic raid UI\", and pull request 349, \"The wizard: approved character plan (docs only)\", merged. A release-build smoke log, filed under issue 368 (\"Bring every unmerged branch's work into the new staging branch\"), shows the Steam host, Lair loop and raid loop running, with one null-reference error from PurrNet (the networking library) at quit. The Lair's haul pile now saves on events instead of every frame (issue 378, \"save state of items in the lair so they are still there when you return\"). That work is finished on its own branch and is not merged into staging yet.",
+      null,
+      null
+    ],
+    [
+      "chg",
+      "Per-frame code",
+      "Audit done, rule written, four bugs fixed.",
+      null,
+      "The pull request \"Fix stacking input handlers, frame-rate mouse look, and movement on the render frame\" (pull request 410) fixed four bugs. The four were input handlers stacking up, mouse look tied to frame rate, physics running in Update, and a warning logged every frame. Separately, the player now stands on the floor instead of 29 cm above it (pull request 415, \"The player stands on the floor instead of 29 cm above it\"). The rest of the audit is eleven issues, 392 to 402, and none has started. The first is issue 392, \"Every key and mouse read goes through the input actions as callbacks\".",
+      null,
+      null
+    ],
+    [
+      "chg",
+      "Asset pipeline",
+      "Skips unbuilt rooms; previews refresh from CI.",
+      null,
+      "Three pull requests merged: 404, \"Asset pipeline builds what exists; unbuilt Powder rooms sit out\"; 407, \"Refresh the asset manifest and previews from CI's rebuild\"; and 416, \"Art review records for the Age of Powder door plugs\".",
+      null,
+      null
+    ],
+    [
+      "new",
+      "Wick and Ophan of Hours",
+      "Models, clips, import rules and the working Wick.",
+      null,
+      "The Wick (the Lantern Warden's true form) and the Ophan of Hours (a creature that hunts through time) were modelled, and the Ophan has five clips. Import rules were checked in Unity (issue 413, \"Import rules for the fear art\"). The Lantern Warden turns into the Wick, and it cannot turn back. The change comes with a lantern drop and a model swap (issue 417, \"The Lantern Warden turns into the Wick in raids\").",
+      [
+        "Guards are only guards.",
+        "A guard that turns into the Wick, and a creature that hunts.",
+        "Raids feel frightening: no fighting back early."
+      ],
+      null
+    ],
+    [
+      "keep",
+      "Open issues",
+      "237 issues are open and none were closed this week.",
+      null,
+      "The five fear-pass issues are in progress. Issue 417 (\"The Lantern Warden turns into the Wick in raids\") and issue 420 (\"One more guard stands in each ground-floor zone, in every Age\") have working code on the fear-wick and fear-guards branches. Four other open issues are waiting. One builds the Age of Powder's 26 castle room pieces (issue 405, \"Build the Age of Powder's 26 castle room pieces\"). Another gives casting a better animation that shows the book (issue 373, \"fix casting animation to show book and look cooler\"). A third decides which spells are unlocked at the start versus earned later (issue 379, \"Play around with the idea of which spells need to be unlocked at the start vs what gets unlocked as you progress\"). The last is a second performance pass for the Steam Deck and an RTX 5070 (issue 377, \"second performance pass, optimize for 120fps steam deck native low end and 1440p rtx 5070 highest end\"). The tracking issue that has to be finished before staging can go to main is issue 380, \"Fixes and the fear pass before staging goes to main\".",
+      null,
+      null
+    ]
+  ],
+  "choices": [
+    [
+      "first",
+      "After pull request 414 (the Wick and Ophan art) merges, which push goes first?",
+      [
+        [
+          "A",
+          "The creature: issue 418, \"The Ophan of Hours arrives in hunted raids and catches players\", and issue 419, \"The Ophan's artifact quota replaces the debt and the Collector\"",
+          1,
+          "It is what makes raids feel different, and the Wick work is already built and ready to go once pull request 414 (the Wick and Ophan art) is merged. Issue 419, \"The Ophan's artifact quota replaces the debt and the Collector\", also needs your approval of the \"keep, change or drop\" page for the debt and the Collector it retires."
+        ],
+        [
+          "B",
+          "The per-frame cleanup: issues 392 to 402 (the first is issue 392, \"Every key and mouse read goes through the input actions as callbacks\"), which move code that checks every frame onto events and timers",
+          0,
+          "Lower risk, but it does not change what players feel."
+        ]
+      ],
+      "My suggestion is A, after pull request 414 (the Wick and Ophan art) is merged."
+    ]
+  ],
+  "wrapup": {
+    "summary": "A weekly breakdown of PlunderSpell and one choice about what goes first.",
+    "changing": "Nothing is being changed by this page.",
+    "blocking": "Pull request 414, which holds the Wick and Ophan art, needs its merge conflicts resolved, and the next push needs your pick.",
+    "next": "After you pick, I start on the first step: resolving the merge conflicts in pull request 414 (the Wick and Ophan art).",
+    "todo": [
+      "Pick your answer under Your choices.",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with \"Design approved: next push\", or tell me what to change."
+    ]
+  }
+}

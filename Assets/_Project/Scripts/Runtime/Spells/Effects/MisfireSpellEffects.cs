@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using Interfaces;
 using Plunderspell.Acoustics;
@@ -192,9 +193,6 @@ namespace Plunderspell.Spells
     {
         public override SpellId Id => SpellId.MisfireAurumVoco;
 
-        /// <summary>Raised per scattered coin pile: (worth, world position).</summary>
-        public static event System.Action<float, Vector3> GoldScattered;
-
         /// <summary>How many pieces the conjured pile breaks into when it misfires.</summary>
         public const int ScatterPieces = 4;
 
@@ -209,7 +207,7 @@ namespace Plunderspell.Spells
             {
                 float angle = i * (360f / ScatterPieces);
                 Vector3 offset = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward * 2.5f;
-                GoldScattered?.Invoke(each, ctx.Origin + offset);
+                EventManager.Instance?.Publish(new GoldScattered(each, ctx.Origin + offset));
             }
 
             EmitEffectNoise(ctx, SpellTuning.AurumVocoNoiseRadius * 2f, 0.9f, NoiseType.ItemDrop);

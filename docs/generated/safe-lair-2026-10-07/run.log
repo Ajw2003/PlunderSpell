@@ -1,0 +1,14 @@
+21:04:00 test slot 99 wiped, owner's slot to restore: 1
+21:04:11 state MainMenu
+21:04:12 solo, slot 99
+21:04:13 player: player
+21:04:14 spawned GoldenGoblet(Clone) on the pile at 1004.0,0.6,0.0
+21:04:17 player hit in the Lair: lost 0 health 100 -> 100
+21:04:18 PASS a 25-point hit in the Lair costs the player nothing
+21:04:18 hard impact in the Lair: piece GoldenGoblet(Clone) would break False broken False
+21:04:18 PASS a piece in the Lair neither would break nor breaks on a 1000 m/s impact
+21:04:19 the same impact in a raid: raid: safe False would break True
+21:04:19 PASS in a raid the same impact would break it (the rule stays in the Lair)
+21:04:19 PASS all safe-Lair checks
+21:04:19 cleaning up
+21:04:20 active slot 1

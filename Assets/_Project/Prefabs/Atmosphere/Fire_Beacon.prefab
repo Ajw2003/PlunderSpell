@@ -188,9 +188,8 @@ MonoBehaviour:
   _intensity: 9
   _range: 18
   _flameOffset: {x: 0, y: 1.6000001, z: 0}
-  _flickerAmount: 0.18
-  _flickerSpeed: 2.2
-  _easeSeconds: 1.5
+  _flickerAmount: 0.1
+  _flickerSpeed: 1.2
   _useOwnColor: 0
   _ownColor: {r: 0.48, g: 0.42, b: 0.63, a: 1}
 --- !u!1 &4025645755934388549

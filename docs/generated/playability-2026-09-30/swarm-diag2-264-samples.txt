@@ -1,0 +1,13 @@
+0s swarm within10m 0 within20m 1 liveGuards 17 patrolSameFloor 1 patrolOtherFloor 9 states Patrolling=10 Investigating=7
+6s swarm within10m 0 within20m 2 liveGuards 17 patrolSameFloor 4 patrolOtherFloor 9 states Patrolling=13 Investigating=2 Chasing=2
+11s swarm within10m 0 within20m 4 liveGuards 17 patrolSameFloor 3 patrolOtherFloor 9 states Patrolling=12 Investigating=3 Chasing=2
+17s swarm within10m 1 within20m 5 liveGuards 17 patrolSameFloor 3 patrolOtherFloor 9 states Patrolling=12 Chasing=1 Combat=2 Investigating=2
+23s swarm within10m 2 within20m 5 liveGuards 17 patrolSameFloor 2 patrolOtherFloor 9 states Patrolling=11 Combat=3 Investigating=3
+28s swarm within10m 2 within20m 5 liveGuards 17 patrolSameFloor 1 patrolOtherFloor 9 states Patrolling=10 Chasing=2 Combat=2 Investigating=3
+34s swarm within10m 4 within20m 7 liveGuards 17 patrolSameFloor 1 patrolOtherFloor 9 states Patrolling=10 Chasing=2 Combat=3 Investigating=2
+40s swarm within10m 6 within20m 8 liveGuards 17 patrolSameFloor 0 patrolOtherFloor 9 states Patrolling=9 Combat=6 Investigating=2
+46s swarm within10m 7 within20m 8 liveGuards 17 patrolSameFloor 1 patrolOtherFloor 9 states Patrolling=10 Combat=6 Chasing=1
+51s swarm within10m 0 within20m 0 liveGuards 0 patrolSameFloor 0 patrolOtherFloor 0 states 
+57s swarm within10m 0 within20m 0 liveGuards 0 patrolSameFloor 0 patrolOtherFloor 0 states 
+63s swarm within10m 0 within20m 0 liveGuards 0 patrolSameFloor 0 patrolOtherFloor 0 states 
+68s swarm within10m 0 within20m 0 liveGuards 0 patrolSameFloor 0 patrolOtherFloor 0 states 

@@ -1,0 +1,191 @@
+20:32:41 test slot 99 wiped, owner's slot to restore: 1
+20:32:50 state MainMenu
+20:32:51 solo, slot 99
+20:32:51 player: player
+20:32:54 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+20:32:57 looking at the Goldsmith from 1103.3,1.5,-2.2
+20:33:01 capture docs/generated/counter-slate-2026-10-07/idle.png; line The Goldsmith - buys metal dearly
+20:33:01 PASS idle slate names the Goldsmith and what he buys
+20:33:02 put GoldenGoblet(Clone)
+20:33:08 capture docs/generated/counter-slate-2026-10-07/haggle-open.png; line The Goldsmith | 130 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:33:09 PASS open haggle shows the keys
+20:33:11 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Runtime Error\n  Object reference not set to an instance of an object"
+ }
+]
+20:33:15 capture docs/generated/counter-slate-2026-10-07/haggle-plus.png; line The Goldsmith | 130 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:33:21 capture docs/generated/counter-slate-2026-10-07/sold.png; line The Goldsmith | 130 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:33:22 FAIL the sale shows his last word
+20:33:30 capture docs/generated/counter-slate-2026-10-07/idle-again.png; line The Goldsmith | 130 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:33:31 FAIL the slate returns to what he buys
+20:33:31 FAIL 2 slate checks
+20:33:31 cleaning up
+20:33:33 active slot 1
+20:34:03 test slot 99 wiped, owner's slot to restore: 1
+20:34:11 state MainMenu
+20:34:12 solo, slot 99
+20:34:13 player: player
+20:34:16 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+20:34:19 looking at the Goldsmith from 1103.3,1.5,-2.2
+20:34:22 capture docs/generated/counter-slate-2026-10-07/idle.png; line The Goldsmith - buys metal dearly
+20:34:23 PASS idle slate names the Goldsmith and what he buys
+20:34:24 put GoldenGoblet(Clone)
+20:34:29 capture docs/generated/counter-slate-2026-10-07/haggle-open.png; line The Goldsmith | 115 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:34:30 PASS open haggle shows the keys
+20:34:31 mid-swap: alpha 1.00 shown The Goldsmith | Very well. 126 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:34:35 capture docs/generated/counter-slate-2026-10-07/haggle-plus.png; line The Goldsmith | Very well. 126 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:34:41 capture docs/generated/counter-slate-2026-10-07/sold.png; line The Goldsmith | 126 coin, counted out. Done.
+20:34:42 FAIL the sale shows his last word
+20:34:50 capture docs/generated/counter-slate-2026-10-07/idle-again.png; line The Goldsmith - buys metal dearly
+20:34:51 PASS the slate returns to what he buys
+20:34:51 FAIL 1 slate checks
+20:34:51 cleaning up
+20:34:52 active slot 1
+20:35:39 test slot 99 wiped, owner's slot to restore: 1
+20:35:47 state MainMenu
+20:35:47 solo, slot 99
+20:35:48 player: player
+20:35:51 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+20:35:53 looking at the Goldsmith from 1103.3,1.5,-2.2
+20:35:56 capture docs/generated/counter-slate-2026-10-07/idle.png; line The Goldsmith - buys metal dearly
+20:35:57 PASS idle slate names the Goldsmith and what he buys
+20:35:58 put GoldenGoblet(Clone)
+20:36:03 capture docs/generated/counter-slate-2026-10-07/haggle-open.png; line The Goldsmith | 116 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:36:04 PASS open haggle shows the keys
+20:36:05 mid-swap: alpha 1.00 shown The Goldsmith | Very well. 128 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:36:09 capture docs/generated/counter-slate-2026-10-07/haggle-plus.png; line The Goldsmith | Very well. 128 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:36:15 capture docs/generated/counter-slate-2026-10-07/sold.png; line The Goldsmith | 128 coin, counted out. Done.
+20:36:16 FAIL the sale shows his last word
+20:36:24 capture docs/generated/counter-slate-2026-10-07/idle-again.png; line The Goldsmith - buys metal dearly
+20:36:25 PASS the slate returns to what he buys
+20:36:25 FAIL 1 slate checks
+20:36:25 cleaning up
+20:36:26 active slot 1
+20:37:09 test slot 99 wiped, owner's slot to restore: 1
+20:37:17 state MainMenu
+20:37:18 solo, slot 99
+20:37:19 player: player
+20:37:21 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+20:37:24 looking at the Goldsmith from 1103.3,1.5,-2.2
+20:37:27 capture docs/generated/counter-slate-2026-10-07/idle.png; line The Goldsmith - buys metal dearly
+20:37:28 PASS idle slate names the Goldsmith and what he buys
+20:37:29 put GoldenGoblet(Clone)
+20:37:34 capture docs/generated/counter-slate-2026-10-07/haggle-open.png; line The Goldsmith | 131 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:37:34 PASS open haggle shows the keys
+20:37:36 mid-swap: alpha 1.00 shown The Goldsmith | Very well. 144 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:37:40 capture docs/generated/counter-slate-2026-10-07/haggle-plus.png; line The Goldsmith | Very well. 144 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:37:46 capture docs/generated/counter-slate-2026-10-07/sold.png; line The Goldsmith | 144 coin, counted out. Done.
+20:37:46 PASS the sale shows his last word
+20:37:55 capture docs/generated/counter-slate-2026-10-07/idle-again.png; line The Goldsmith - buys metal dearly
+20:37:55 PASS the slate returns to what he buys
+20:37:55 PASS all slate checks
+20:37:55 cleaning up
+20:37:57 active slot 1
+20:38:33 test slot 99 wiped, owner's slot to restore: 1
+20:38:44 state MainMenu
+20:38:45 solo, slot 99
+20:38:45 player: player
+20:38:48 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+20:38:51 looking at the Goldsmith from 1103.3,1.5,-2.2
+20:38:54 capture docs/generated/counter-slate-2026-10-07/idle.png; line The Goldsmith - buys metal dearly
+20:38:55 PASS idle slate names the Goldsmith and what he buys
+20:38:56 put GoldenGoblet(Clone)
+20:39:01 capture docs/generated/counter-slate-2026-10-07/haggle-open.png; line The Goldsmith | 138 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:39:01 PASS open haggle shows the keys
+20:39:03 mid-swap: alpha 1.00 shown The Goldsmith | Very well. 152 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:39:07 capture docs/generated/counter-slate-2026-10-07/haggle-plus.png; line The Goldsmith | Very well. 152 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:39:14 capture docs/generated/counter-slate-2026-10-07/sold.png; line The Goldsmith | 152 coin, counted out. Done.
+20:39:14 PASS the sale shows his last word
+20:39:22 capture docs/generated/counter-slate-2026-10-07/idle-again.png; line The Goldsmith - buys metal dearly
+20:39:22 PASS the slate returns to what he buys
+20:39:22 PASS all slate checks
+20:39:23 cleaning up
+20:39:24 active slot 1
+20:39:56 test slot 99 wiped, owner's slot to restore: 1
+20:40:05 state MainMenu
+20:40:06 solo, slot 99
+20:40:06 player: player
+20:40:09 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+20:40:12 looking at the Goldsmith from 1103.3,1.5,-2.2
+20:40:15 capture docs/generated/counter-slate-2026-10-07/idle.png; line The Goldsmith - buys metal dearly
+20:40:15 PASS idle slate names the Goldsmith and what he buys
+20:40:16 put GoldenGoblet(Clone)
+20:40:21 capture docs/generated/counter-slate-2026-10-07/haggle-open.png; line The Goldsmith | 106 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:40:22 PASS open haggle shows the keys
+20:40:24 mid-swap: alpha 1.00 shown The Goldsmith | 106 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:40:28 capture docs/generated/counter-slate-2026-10-07/haggle-plus.png; line The Goldsmith | 106 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:40:34 capture docs/generated/counter-slate-2026-10-07/sold.png; line The Goldsmith | 106 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:40:34 FAIL the sale shows his last word
+20:40:43 capture docs/generated/counter-slate-2026-10-07/idle-again.png; line The Goldsmith | 106 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:40:43 FAIL the slate returns to what he buys
+20:40:43 FAIL 2 slate checks
+20:40:43 cleaning up
+20:40:45 active slot 1
+20:41:14 test slot 99 wiped, owner's slot to restore: 1
+20:41:23 state MainMenu
+20:41:23 solo, slot 99
+20:41:24 player: player
+20:41:27 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+20:41:30 looking at the Goldsmith from 1103.3,1.5,-2.2
+20:41:33 capture docs/generated/counter-slate-2026-10-07/idle.png; line The Goldsmith - buys metal dearly
+20:41:34 PASS idle slate names the Goldsmith and what he buys
+20:41:34 put GoldenGoblet(Clone)
+20:41:39 capture docs/generated/counter-slate-2026-10-07/haggle-open.png; line The Goldsmith | 115 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:41:40 PASS open haggle shows the keys
+20:41:41 sampling the slate opacity each frame for 6 s
+20:41:49 opacity per frame: 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 0.99 0.99 0.99 0.99 0.98 0.98 0.97 0.97 0.97 0.96 0.96 0.95 0.95 0.94 0.94 0.93 0.93 0.92 0.91 0.91 0.90 0.89 0.89 0.88 0.87 0.86 0.85 0.85 0.84 0.83 0.82 0.81 0.80 0.80 0.79 0.78 0.77 0.76 0.75 0.74 0.73 0.72 0.71 0.70 0.69 0.68 0.67 0.66 0.65 0.64 0.63 0.62 0.61 0.59 0.58 0.57 0.56 0.55 0.54 0.53 0.52 0.51 0.50 0.49 0.48 0.46 0.45 0.44 0.43 0.42 0.41 0.40 0.39 0.38 0.37 0.36 0.35 0.34 0.33 0.31 0.31 0.30 0.29 0.28 0.27 0.26 0.25 0.24 0.23 0.22 0.21 0.20 0.19 0.18 0.17 0.16 0.15 0.15 0.14 0.13 0.12 0.11 0.11 0.10 0.09 0.08 0.08 0.07 0.07 0.06 0.05 0.05 0.04 0.04 0.03 0.03 0.03 0.02 0.02 0.02 0.01 0.01 0.01 0.01 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.06 0.07 0.08 0.08 0.09 0.09 0.10 0.11 0.11 0.12 0.13 0.14 0.14 0.15 0.16 0.17 0.18 0.19 0.20 0.20 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.30 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.40 0.41 0.42 0.43 0.44 0.45 0.47 0.48 0.49 0.50 0.51 0.52 0.53 0.54 0.55 0.56 0.57 0.58 0.59 0.60 0.61 0.62 0.64 0.65 0.66 0.67 0.68 0.69 0.70 0.71 0.72 0.73 0.74 0.74 0.75 0.76 0.77 0.78 0.79 0.80 0.81 0.82 0.83 0.83 0.84 0.85 0.86 0.87 0.87 0.88 0.89 0.90 0.90 0.91 0.92 0.92 0.93 0.93 0.94 0.94 0.95 0.95 0.96 0.96 0.97 0.97 0.97 0.98 0.98 0.98 0.99 0.99 0.99 0.99 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 
+20:41:49 PASS Plus faded the slate out and back in over several frames, never a snap
+20:41:51 capture docs/generated/counter-slate-2026-10-07/haggle-plus.png; line The Goldsmith | Very well. 126 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:41:58 capture docs/generated/counter-slate-2026-10-07/sold.png; line The Goldsmith - buys metal dearly
+20:41:58 FAIL the sale shows his last word
+20:42:06 capture docs/generated/counter-slate-2026-10-07/idle-again.png; line The Goldsmith - buys metal dearly
+20:42:07 PASS the slate returns to what he buys
+20:42:07 FAIL 1 slate checks
+20:42:07 cleaning up
+20:42:08 active slot 1
+20:42:28 test slot 99 wiped, owner's slot to restore: 1
+20:42:36 state MainMenu
+20:42:37 solo, slot 99
+20:42:38 player: player
+20:42:41 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+20:42:43 looking at the Goldsmith from 1103.3,1.5,-2.2
+20:42:47 capture docs/generated/counter-slate-2026-10-07/idle.png; line The Goldsmith - buys metal dearly
+20:42:47 PASS idle slate names the Goldsmith and what he buys
+20:42:48 put GoldenGoblet(Clone)
+20:42:53 capture docs/generated/counter-slate-2026-10-07/haggle-open.png; line The Goldsmith | 100 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:42:54 PASS open haggle shows the keys
+20:42:55 sampling the slate opacity each frame for 6 s
+20:43:03 opacity: no 1650 samples, min 1.0 last 1.0 0 in between
+20:43:03 FAIL Plus faded the slate out and back in over several frames, never a snap
+20:43:04 capture docs/generated/counter-slate-2026-10-07/haggle-plus.png; line The Goldsmith | 100 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:43:10 capture docs/generated/counter-slate-2026-10-07/sold.png; line The Goldsmith | 100 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:43:10 FAIL the sale shows his last word
+20:43:20 capture docs/generated/counter-slate-2026-10-07/idle-again.png; line The Goldsmith | 100 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:43:21 FAIL the slate returns to what he buys
+20:43:21 FAIL 3 slate checks
+20:43:21 cleaning up
+20:43:23 active slot 1
+20:43:35 test slot 99 wiped, owner's slot to restore: 1
+20:43:44 state MainMenu
+20:43:44 solo, slot 99
+20:43:45 player: player
+20:43:48 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+20:43:51 looking at the Goldsmith from 1103.3,1.5,-2.2
+20:43:54 capture docs/generated/counter-slate-2026-10-07/idle.png; line The Goldsmith - buys metal dearly
+20:43:55 PASS idle slate names the Goldsmith and what he buys
+20:43:56 put GoldenGoblet(Clone)
+20:44:01 capture docs/generated/counter-slate-2026-10-07/haggle-open.png; line The Goldsmith | 104 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:44:01 PASS open haggle shows the keys
+20:44:02 sampling the slate opacity each frame for 6 s
+20:44:12 opacity: ok 1613 samples, min 0.0 last 1.0 189 in between
+20:44:12 PASS Plus faded the slate out and back in over several frames, never a snap
+20:44:13 capture docs/generated/counter-slate-2026-10-07/haggle-plus.png; line The Goldsmith | Very well. 114 coin. | <size=60%>1 Plus · 2 Satis · 3 Vale</size>
+20:44:19 capture docs/generated/counter-slate-2026-10-07/sold.png; line The Goldsmith | 114 coin, counted out. Done.
+20:44:19 PASS the sale shows his last word
+20:44:30 capture docs/generated/counter-slate-2026-10-07/idle-again.png; line The Goldsmith - buys metal dearly
+20:44:30 PASS the slate returns to what he buys
+20:44:30 PASS all slate checks
+20:44:30 cleaning up
+20:44:32 active slot 1

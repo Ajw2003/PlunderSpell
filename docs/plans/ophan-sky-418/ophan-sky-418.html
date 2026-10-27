@@ -1,0 +1,863 @@
+<!doctype html>
+<!-- house-rules make_page 2.73.0 -->
+<meta charset="utf-8">
+<title>The Ophan in the Sky</title><!-- also set this to PAGE.title: galleries read this tag, not the script -->
+<style>
+/* Layout: a four-step walkthrough. One step on screen at a time; a stepper on top; the same wrap-up block closes every page. */
+:root{
+  --bg:#f3f5f8; --card:#ffffff; --fg:#17202e; --muted:#566174; --line:#d5dbe6;
+  --accent:#2f5bd3; --accent-soft:#e3eafc;
+  --you:#b35f00; --you-soft:#fdeed9;
+  --ok:#1f7a4d; --ok-soft:#dff3e8; --gap:#b4232f; --gap-soft:#fbe1e3;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10151f; --card:#18202d; --fg:#eef2f8; --muted:#a4afc0; --line:#2d3748;
+  --accent:#86a7ff; --accent-soft:#1f2c4a; --you:#f2b35c; --you-soft:#3a2a12;
+  --ok:#62d69d; --ok-soft:#173527; --gap:#ff8089; --gap-soft:#3d1a1f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10151f; --card:#18202d; --fg:#eef2f8; --muted:#a4afc0; --line:#2d3748;
+  --accent:#86a7ff; --accent-soft:#1f2c4a; --you:#f2b35c; --you-soft:#3a2a12;
+  --ok:#62d69d; --ok-soft:#173527; --gap:#ff8089; --gap-soft:#3d1a1f; color-scheme:dark}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font:17px/1.55 var(--body)}
+.wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:20px 48px;display:grid;gap:20px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:1.9rem;font-weight:800}
+h2{font-size:1.45rem;font-weight:800}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.ico{width:24px;height:24px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* stepper */
+.stepper{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;background:var(--bg);padding-block:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.stepper button{border:0;background:none;display:grid;justify-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--muted)}
+.stepper .bar{width:100%;height:6px;border-radius:3px;background:var(--line)}
+.stepper button.done .bar{background:var(--accent)}
+.stepper button[aria-current="step"]{color:var(--fg);font-weight:700}
+.stepper button[aria-current="step"] .bar{background:var(--accent)}
+
+.panel{display:grid;gap:18px}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:12px}
+.lead{font-size:1.1rem}
+
+/* at-a-glance strip */
+.glance{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.g{display:grid;justify-items:center;gap:4px;width:56px;text-align:center;font-size:.72rem;color:var(--muted)}
+.g span.c{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.g.you span.c{border-radius:12px;background:var(--you-soft);color:var(--you)}
+.arrow{color:var(--muted);font-size:1.1rem}
+.g{border:0;background:none;padding:0;cursor:pointer}
+.lk{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--you-soft);color:var(--you);margin-right:6px;vertical-align:-5px}
+.glance .lk .ico{width:14px;height:14px}
+.cr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.crb{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;gap:6px;align-content:start;min-width:0}
+.crb.you{border-color:var(--you);background:var(--you-soft)}
+.crh{display:flex;gap:6px;align-items:center;font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.crb.you .crh{color:var(--you)}
+.crh .ico{width:16px;height:16px}
+.crb p,.crb li{font-size:.9rem}
+.crb ul.cl{margin:0;padding-left:1.1em;display:grid;gap:4px}
+.g.done span.c{background:var(--ok-soft);color:var(--ok);border-radius:50%}
+.g[aria-pressed="true"] span.c{outline:3px solid var(--accent);outline-offset:2px}
+.g.you[aria-pressed="true"] span.c{outline-color:var(--you)}
+.g[aria-pressed="true"]{color:var(--fg);font-weight:700}
+.sd{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:8px;font-size:.94rem}
+.sd h3{display:flex;gap:8px;align-items:center}
+.sd .back{padding-left:0}
+.key{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.key i{display:inline-block;width:14px;height:14px;vertical-align:-2px;margin-right:6px;border-radius:50%;background:var(--accent-soft);border:2px solid var(--accent)}
+.key i.y{border-radius:4px;background:var(--you-soft);border-color:var(--you)}
+
+/* stage list */
+.stages{display:grid;gap:8px}
+.st{background:var(--card);border:1px solid var(--line);border-radius:12px}
+.st > summary{list-style:none;display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:10px 12px;cursor:pointer;min-height:48px}
+.st > summary::-webkit-details-marker{display:none}
+.st .c{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.st.you .c{border-radius:11px;background:var(--you-soft);color:var(--you)}
+.st.you{border-color:var(--you)}
+.st .nm b{display:block}
+.st .nm small{color:var(--muted);font-size:.85rem}
+.more{font-size:.78rem;color:var(--accent);font-weight:700;white-space:nowrap}
+details[open] > summary .more::after{content:" ▲"} details:not([open]) > summary .more::after{content:" ▼"}
+.detail{padding:0 14px 14px 68px;display:grid;gap:8px;font-size:.92rem}
+@media (max-width:420px){.detail{padding-left:14px}}
+.row{display:grid;grid-template-columns:72px 1fr;gap:8px}
+.row > span:first-child{font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.back{display:flex;gap:8px;align-items:center;font-size:.88rem;color:var(--you);padding-left:12px}
+
+/* created / changed */
+.cc{display:grid;gap:8px}
+.ci{background:var(--card);border:1px solid var(--line);border-radius:12px}
+.ci > summary{list-style:none;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;cursor:pointer;min-height:48px}
+.ci > summary::-webkit-details-marker{display:none}
+.tag{font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.tag.new{background:var(--ok-soft);color:var(--ok)} .tag.chg{background:var(--accent-soft);color:var(--accent)} .tag.keep{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.ci b{display:block}
+.ci small{color:var(--muted);font-size:.86rem}
+.ci .detail{padding:0 14px 14px 14px}
+.fromto{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;font-size:.88rem}
+.fromto span{border-radius:8px;padding:6px 8px;background:var(--bg)}
+.fromto span.to{background:var(--accent-soft)}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:stretch;font-size:.84rem}
+.flow > span{border-radius:8px;padding:8px;background:var(--bg);display:grid;gap:2px;align-content:start;min-width:0}
+.flow > span.mid{background:var(--accent-soft)}
+.flow > i{align-self:center;color:var(--muted);font-style:normal}
+.flow small{font-size:.66rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+@media (max-width:479px){.flow{grid-template-columns:minmax(0,1fr)}.flow > i{justify-self:center;transform:rotate(90deg)}}
+.files{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.files h4{margin:0;font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.frow{display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-size:.86rem;align-items:baseline}
+.frow code{font-size:.82rem;word-break:break-all}
+.files .n{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted)}
+.parts{margin:0 0 4px;padding-left:18px;display:grid;gap:4px;font-size:.86rem}
+.parts li span:first-child{margin-right:8px}
+
+/* choices */
+.q{display:grid;gap:8px}
+.q h3{display:flex;gap:10px;align-items:flex-start}
+.qn{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--bg);font:800 .85rem var(--display);flex:none}
+.opt{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;min-height:48px}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.opt input[type=radio]{width:20px;height:20px;margin-top:2px;accent-color:var(--accent)}
+.opt small{display:block;color:var(--muted);font-size:.86rem}
+.owntext{display:block;width:100%;box-sizing:border-box;margin-top:8px;border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit;background:var(--bg);color:var(--fg);min-height:44px}
+.rec{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:2px}
+.rec .ico{width:12px;height:12px}
+.why{font-size:.88rem}
+.why summary{cursor:pointer;color:var(--accent);font-weight:700;min-height:32px}
+.why p{margin-top:6px;color:var(--muted)}
+
+/* wrap-up */
+.wrapup{display:grid;gap:10px}
+.wu{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.wu .c{width:40px;height:40px;border-radius:10px;display:grid;place-items:center}
+.wu h3{margin-bottom:2px}
+.wu p,.wu li{font-size:.94rem}
+.wu ol{margin:4px 0 0;padding-left:20px;display:grid;gap:4px}
+.wu.do{border:2px solid var(--you)}
+.reply{display:grid;gap:8px}
+.reply pre{white-space:pre-wrap;margin:0;background:var(--card);border:1px dashed var(--accent);border-radius:10px;padding:12px;font-size:.92rem}
+.primary{background:var(--accent);color:var(--bg);border:0;border-radius:12px;padding:14px 18px;font-weight:800;min-height:48px}
+.secondary{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-weight:700;min-height:48px}
+.nav{display:flex;justify-content:space-between;gap:10px}
+.nav .primary{margin-left:auto}
+.status{font-size:.88rem;color:var(--muted)}
+.missing{color:var(--gap);font-weight:700}
+@media (prefers-reduced-motion:no-preference){.panel{animation:in .2s ease-out}@keyframes in{from{opacity:.4;transform:translateY(4px)}}}
+</style>
+<style>
+.cr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.crb{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;gap:6px;align-content:start;min-width:0}
+.crb.you{border-color:var(--you);background:var(--you-soft)}
+.crh{display:flex;gap:6px;align-items:center;font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.crb.you .crh{color:var(--you)}
+.crh .ico{width:16px;height:16px}
+.crb p{font-size:.9rem}
+.g{border:0;background:none;padding:0;cursor:pointer}
+.g[aria-pressed="true"] span.c{outline:3px solid var(--accent);outline-offset:2px}
+.g.you[aria-pressed="true"] span.c{outline-color:var(--you)}
+.g[aria-pressed="true"]{color:var(--fg);font-weight:700}
+.g.done span.c{background:var(--ok-soft);color:var(--ok)}
+.sd{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:8px;font-size:.94rem}
+.owntext{display:block;width:100%;box-sizing:border-box;margin-top:8px;border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit;background:var(--bg);color:var(--fg);min-height:44px}
+/* pictures: thumbnail opens a full-width overlay; compare is two frames wide, one slider frame narrow. Never --you: orange means the user acts. */
+.pic{display:grid;gap:6px;justify-items:start;max-width:100%;min-width:0}
+.pic button{display:grid;gap:6px;justify-items:start;max-width:100%;padding:6px;background:var(--card);border:1px solid var(--line);border-radius:10px;text-align:left}
+.pic img,.cmp img{display:block;max-width:100%;height:auto;background:var(--bg)}
+.pic,.pic button{width:100%;box-sizing:border-box}
+/* A tall screenshot shrunk to fit a short box is a sliver: fill the width and show its top instead. */
+.pic button img{width:100%;max-height:280px;object-fit:cover;object-position:top;border-radius:6px}
+.pic figcaption,.cmp figcaption{font-size:.86rem;color:var(--muted)}
+.pic,.cmp{margin:0}
+.cmp{display:grid;gap:6px;min-width:0}
+.cmp-side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+body{overflow-wrap:anywhere}
+.crb p,.crb li,.fromto span,.flow > span,.ci .detail p,.sd{overflow-wrap:anywhere;min-width:0}
+@media (max-width:479px){.cr{grid-template-columns:minmax(0,1fr)}}
+.cmp-side > div{display:grid;gap:4px;align-content:start;min-width:0;border:1px solid var(--line);border-radius:10px;padding:6px;background:var(--card)}
+.cmp-side b,.cmp-slide label{font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.cmp-slide{display:none;gap:6px;min-width:0}
+.cmp-frame{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg)}
+.cmp-frame img{width:100%}
+.cmp-frame img + img{position:absolute;inset:0;height:100%;object-fit:fill;clip-path:inset(0 0 0 var(--pos,50%))}
+.cmp-slide input[type=range]{width:100%;accent-color:var(--accent);min-height:44px;margin:0}
+@media (max-width:639px){.cmp-side{display:none}.cmp-slide{display:grid}}
+dialog.lightbox{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--fg);padding:12px;width:min(96vw,960px);max-height:94vh;box-sizing:border-box;overflow:auto}
+dialog.lightbox::backdrop{background:rgba(0,0,0,.6)}
+dialog.lightbox img{display:block;width:100%;height:auto}
+dialog.lightbox p{margin-top:8px;font-size:.9rem}
+dialog.lightbox button{margin-top:10px}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Eczar:wght@400;700&family=Spectral:wght@400;700&family=Overpass+Mono:wght@400;700&display=swap">
+<style>
+/* house-rules make_page: project style from docs/page-style.json */
+:root,:root[data-theme],:root:not([data-theme="light"]){--bg:#14120E;--card:#1E1A14;--fg:#DCD2BA;--muted:#9A9078;--line:#332D22;--you:#5FA288;--you-soft:#1F2820;--accent:#2E4C41;--accent-soft:#181B16;--gap:#C4542E;--gap-soft:#2E1C13;--ok:#9A9078;--ok-soft:#28251E;--display:"Eczar",Georgia,serif;--body:"Spectral",Georgia,serif;--label:"Overpass Mono",ui-monospace,monospace;color-scheme:dark}
+@media (prefers-color-scheme: light){:root{--bg:#14120E;--card:#1E1A14;--fg:#DCD2BA;--muted:#9A9078;--line:#332D22;--you:#5FA288;--you-soft:#1F2820;--accent:#2E4C41;--accent-soft:#181B16;--gap:#C4542E;--gap-soft:#2E1C13;--ok:#9A9078;--ok-soft:#28251E;--display:"Eczar",Georgia,serif;--body:"Spectral",Georgia,serif;--label:"Overpass Mono",ui-monospace,monospace;color-scheme:dark}}
+@media (prefers-color-scheme: dark){:root{--bg:#14120E;--card:#1E1A14;--fg:#DCD2BA;--muted:#9A9078;--line:#332D22;--you:#5FA288;--you-soft:#1F2820;--accent:#2E4C41;--accent-soft:#181B16;--gap:#C4542E;--gap-soft:#2E1C13;--ok:#9A9078;--ok-soft:#28251E;--display:"Eczar",Georgia,serif;--body:"Spectral",Georgia,serif;--label:"Overpass Mono",ui-monospace,monospace;color-scheme:dark}}
+*{border-radius:0!important}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+  <symbol id="i-hammer" viewBox="0 0 24 24"><path d="M14 4l6 6-3 3-6-6z"/><path d="M11 7L3 15l3 3 8-8"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
+  <symbol id="i-loop" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8h14l-3-3M20 16H6l3 3"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 13V5a1.5 1.5 0 0 1 3 0v6m0-1V4a1.5 1.5 0 0 1 3 0v6m0-1V6a1.5 1.5 0 0 1 3 0v8a7 7 0 0 1-7 7h-1a6 6 0 0 1-5-3l-2-4a1.5 1.5 0 0 1 2.6-1.5L8 14"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></symbol>
+</defs></svg>
+
+<!--
+  Handover page template (house-rules, issue #233). The approved format: four parts in this order -
+  In short, Changes, Choices, Wrap-up - and a part is left out only when it would be empty.
+  Copy this file, edit PAGE below, and nothing else. Every part keeps four rules:
+  detail only on tap; names, never bare numbers; one colour, one meaning (orange = the user acts,
+  green = done, nothing else orange); I check it first (phone width, light and dark, every tap,
+  a bare-number search). Rule: rules/detail/show-dont-tell.md.
+-->
+<div class="wrap">
+  <header style="display:grid;gap:6px">
+    <span class="eyebrow" id="eyebrow"></span>
+    <h1 id="title"></h1>
+  </header>
+  <nav class="stepper" aria-label="Steps" id="stepper"></nav>
+  <section class="panel" data-part="short" aria-labelledby="h-short">
+    <h2 id="h-short" tabindex="-1">In short</h2>
+    <div class="card">
+      <p class="lead" id="lead"></p>
+      <div class="key" id="key"></div>
+      <div class="glance" id="glance" role="group" aria-label="Tap an item for detail."></div>
+      <p class="muted" style="font-size:.85rem" id="hint"></p>
+      <div class="sd" id="sd" aria-live="polite"></div>
+    </div>
+  </section>
+  <section class="panel" data-part="changes" aria-labelledby="h-changes" hidden>
+    <h2 id="h-changes" tabindex="-1">What this creates or changes</h2>
+    <p class="muted" id="cc-count"></p>
+    <div class="cc" id="cc"></div>
+  </section>
+  <section class="panel" data-part="choices" aria-labelledby="h-choices" hidden>
+    <h2 id="h-choices" tabindex="-1">Your choices</h2>
+    <p class="muted">My suggestion is marked, nothing is picked for you, and each has room for your own answer.</p>
+    <div id="qs" style="display:grid;gap:22px"></div>
+  </section>
+  <section class="panel" data-part="wrapup" aria-labelledby="h-wrapup" hidden>
+    <h2 id="h-wrapup" tabindex="-1">Wrap-up</h2>
+    <div class="wrapup" id="wrapup"></div>
+    <div class="reply">
+      <pre id="out" aria-live="polite"></pre>
+      <p class="status" id="miss"></p>
+      <button class="primary" id="copy" type="button">Copy my reply</button>
+      <p class="status" id="st"></p>
+    </div>
+  </section>
+  <div class="nav">
+    <button class="secondary" id="prev" type="button">‹ Back</button>
+    <button class="primary" id="next" type="button">Next ›</button>
+  </div>
+</div>
+
+<script>
+// ---- PAGE: the only part you edit. Example content shows every field. ----------------------
+// Tiny inline SVGs so the template stays one file; real pages use a data: URI or a path next to the page.
+const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#e3eafc"/><circle cx="160" cy="90" r="40" fill="#2f5bd3"/></svg>');
+const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
+const PAGE = {
+  "title": "The Ophan in the Sky",
+  "eyebrow": "Build plan for approval, round 5 · issue #418, the Ophan of Hours · your answers through 2026-10-27 · nothing built yet",
+  "replyPrefix": "Build plan approved: ophan in the sky, picks",
+  "reply": "",
+  "short": {
+    "lead": "The Ophan hangs far off in the sky, a kilometre or more from the castle, so large it dwarfs it. Its eye follows its target as they move: whoever carries the most worth, then the next down the list. Its rings spin faster or slower with what it is doing, and its eye glows and grows as it charges to full blast, with a similar tell for the lock-on. It appears 60 seconds before the portal closes with a loud hum and screen shake. Its slow beam locks on over 3 seconds and drains health fast; cover stops it. Its charged beam kills in one hit and can break cover. A beam on the carrier of the wanted piece lifts the piece into the sky, spares them, and sends the Ophan away. Nine things are still open under Choices, each with my suggestion marked.",
+    "hint": "Tap a step to see what it creates and what it needs from you.",
+    "key": [
+      [
+        "Done",
+        "done"
+      ],
+      [
+        "We build it",
+        ""
+      ],
+      [
+        "You act on it",
+        "you"
+      ]
+    ],
+    "items": [
+      [
+        "check",
+        "Your answers",
+        "Settled: arrival 1A 2B 3* 4* 5B 6A 7*, beam 1* 2A 3A, your scale photos, far off in the sky, and the eye, rings and tells",
+        "done",
+        "Wanted means any piece flagged IsArtifact until the demand (#419) exists. It targets whoever carries the most and keeps hunting after a kill. It stays in the sky and never chases or catches. The slow beam locks on over 3 seconds; getting under cover escapes it, and walls block it. The charged beam kills in one hit and can take cover down. A beam on the carrier lifts the wanted piece into the sky; they live and it leaves. Its warning is a loud hum and screen shake. Its size comes from your two photos. Recorded in docs/6-decisions/Decisions.md, 2026-10-27. Its eye follows its target as they move, choosing whoever carries the most worth, then down the list. Its rings spin faster or slower by state. Its eye glows and grows while charging, up to full blast, with a similar tell for the lock-on.",
+        "Nothing from you."
+      ],
+      [
+        "lock",
+        "You approve",
+        "This plan and the five picks below",
+        "you",
+        "A decisions-log entry, the systems doc, and the build starts on the branch AjsAgent/ophan-arrival-418.",
+        "Your picks, sent with \"Build plan approved: ophan in the sky\"."
+      ],
+      [
+        "eye",
+        "Step 1",
+        "The Ophan appears in the sky",
+        "",
+        "A prefab of the Ophan with its Animator on TheOphanOfHours_Rig. HuntWindowSeconds (60 s) before the portal closes, it plays its 4-second arrival clip high over the castle, and every machine hears the hum and feels the shake. A test switch forces a hunted raid until the quota (#419) exists. Its eye turns to follow its target every frame, and its three rings spin at a speed set by what it is doing.",
+        "Nothing until the build is shown."
+      ],
+      [
+        "eye",
+        "Step 2",
+        "The two beams",
+        "",
+        "The slow beam: a 3-second lock, then health drains while nothing blocks the line from the Ophan to you. The charged beam: one hit, and it breaks the cover it passes through, as set under Choices. A hit on a carrier lifts the wanted piece away instead. Deaths go through the same path as the Wick's catch, so every machine sees them. The beam numbers sit on the Ophan's own component, the way the Wick's numbers sit on the guard; the #433 asset keeps exactly its approved fields.",
+        "Nothing until the build is shown."
+      ],
+      [
+        "eye",
+        "Step 3",
+        "Tests and the co-op check",
+        "",
+        "Tests for the arrival, a hit with an artifact, a hit without one, and leaving once paid. A co-op check where the Ophan strikes the client, with screenshots from both machines that I look at. Then both full suites, the raid-length check, the Wick check and the lair check.",
+        "Nothing from you."
+      ],
+      [
+        "hand",
+        "You test",
+        "Play one hunted raid",
+        "you",
+        "Once it passes, a pull request into staging carries \"Manual co-op test still owed\".",
+        "Whether it reads as a threat you cannot fight."
+      ]
+    ]
+  },
+  "changes": [
+    [
+      "new",
+      "Your far reference",
+      "A third to half of the screen's height, towering over the treeline.",
+      null,
+      "Measured from your photo: its body takes about 26% of the screen's height above the trees, and its raised arm reaches about 39%.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "page-pics/ophan-scale-far.jpg",
+        "alt": "Your far scale reference",
+        "caption": "Far: a giant towering over the treeline."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "Your close reference",
+      "It fills almost the whole screen.",
+      null,
+      "Measured from your photo: about 95% of the screen's height.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "page-pics/ophan-scale-close.jpg",
+        "alt": "Your close scale reference",
+        "caption": "Close: it fills the screen."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "Option C from a courtyard",
+      "150 times its model: 1.4 km tall, 1.65 km across, 900 m out.",
+      null,
+      "A preview in a real raid in the Editor, through the player's 60-degree view, from an open courtyard 1.1 km away. It is 68 degrees tall, more than the whole view, so its wings run off the top of the screen; it is 75 degrees across. The castle's towers stand under it like toys.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "page-pics/courtyard-150x-900m.png",
+        "alt": "The Ophan at 150 times its size over the castle, from a courtyard",
+        "caption": "Option C, from a courtyard: it overflows the view."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "Option B from inside a room",
+      "117 times its model: 1.1 km tall, 1.3 km across, 1 km out.",
+      null,
+      "From inside a room, which is open to the sky: 51 degrees tall (84% of the view's height) and 57 degrees across. Its eye looks straight down at you over the room's walls.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "page-pics/room-117x-1000m.png",
+        "alt": "The Ophan at 117 times its size, seen from inside a room",
+        "caption": "Option B, from inside a room."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "Option A from the wall-walk",
+      "52 times its model: 500 m tall, 570 m across, 600 m out.",
+      null,
+      "From the curtain wall's walk: 38 degrees tall (63% of the view's height) and 43 degrees across. Large, but it sits inside the sky rather than filling it.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "page-pics/wallwalk-52x-600m.png",
+        "alt": "The Ophan at 52 times its size, seen from the wall-walk",
+        "caption": "Option A, from the wall-walk."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "The player's camera cuts it off today",
+      "Its far clip plane is 1000 m; the Ophan sits 700 m to 1.2 km away.",
+      null,
+      "This is the same courtyard view as option B, drawn with the player's own camera setting: everything beyond 1000 m is not drawn, so only a sliver of the Ophan shows. The build raises the player camera's far clip plane to 3000 m. That is one setting, and the castle is small enough that it costs nothing measurable. Fog is off in raids today; the castle's light haze only softens the Ophan's lower edge.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "page-pics/courtyard-playerclip-117x-1000m.png",
+        "alt": "The Ophan cut off by the player's 1000 m far clip plane",
+        "caption": "Option B with today's 1000 m far clip: most of it is not drawn."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "The rig can do all of it",
+      "The eye and the three rings are their own bones, and the pupil already glows.",
+      null,
+      "Checked in the model file: the GreatWheel, InnerWheel and TiltWheel bones each carry their own ring (3,530, 1,600 and 1,634 vertices), and the Eye bone carries the eye (1,049 vertices). Code can turn and scale those four bones every frame after the animation plays, so the eye can follow a player and the rings can speed up and slow down without new clips. Its one material has an emission map, so the glow can be raised from code. The pupil is the part that glows, at nine times brightness (docs/4-systems/raid-scene-assembly.md).",
+      [
+        "",
+        "",
+        ""
+      ],
+      null,
+      {
+        "visual": false
+      }
+    ],
+    [
+      "new",
+      "What the castle can break today",
+      "Walls and floors are one piece, and rooms have no roofs.",
+      null,
+      "Each room's floor and four walls are a single mesh with a single collider, so no wall can be removed without the floor going too. No room has a roof: the sky is open above every room, and only the crypt and the keep's lower storey have anything overhead. Door plugs are the only separate pieces. The castle is never sent over the network: every machine builds it from one shared seed, so any broken wall needs its own sync.",
+      [
+        "",
+        "",
+        ""
+      ],
+      null,
+      {
+        "visual": false
+      }
+    ],
+    [
+      "new",
+      "What a beam looks like from a kilometre away",
+      "A thin line would vanish; it has to be drawn huge.",
+      null,
+      "At a kilometre, a beam two metres wide is a tenth of a degree across, too thin to see. So the beam is drawn tens of metres wide where it leaves the eye, narrowing to a pool of light on the target, and it glows. Because the source is so far away, the warning has to show at the eye itself: the eye brightens through the 3-second lock and the charge, which every player can see wherever they stand.",
+      [
+        "",
+        "",
+        ""
+      ],
+      null,
+      {
+        "visual": false
+      }
+    ]
+  ],
+  "choices": [
+    [
+      "size",
+      "How big, and how far off? (It always faces the castle, eye first, and never comes near it.)",
+      [
+        [
+          "A",
+          "52 times its model, 600 m out: 63% of the view's height",
+          0,
+          "Large, but it sits in the sky rather than filling it."
+        ],
+        [
+          "B",
+          "117 times its model, 1 km out: 84% of the view's height",
+          0,
+          "Fills most of the view; you can take it in at a glance."
+        ],
+        [
+          "C",
+          "150 times its model, 900 m out: more than the whole view",
+          1,
+          "You cannot take it all in at once; you look up and around to see it, which is what taking up the sky means."
+        ]
+      ],
+      "Farther off also means it looks the same from everywhere in the castle: it never seems to come closer."
+    ],
+    [
+      "wings",
+      "You asked for it wider. Its wings rise in a V, so on screen it is taller than it is wide. Spread them?",
+      [
+        [
+          "A",
+          "Yes: a new held pose with the wings spread flat, so it is about half again as wide as it is tall",
+          1,
+          "About a day in the art pipeline: one new pose on the existing rig, checked on a review sheet like the other clips."
+        ],
+        [
+          "B",
+          "No: keep the V; the size alone is enough",
+          0,
+          ""
+        ]
+      ],
+      "The model is 11 m across and 9.6 m tall; only a pose change makes it read wider."
+    ],
+    [
+      "worth",
+      "What does \"most worth\" mean when it picks its target?",
+      [
+        [
+          "A",
+          "The sell value of the piece a player is carrying, the same worth the portal's tally counts",
+          1,
+          "The same number the haul is judged by, so carrying the best loot is what makes you the target."
+        ],
+        [
+          "B",
+          "Artifacts first, then sell value",
+          0,
+          "Whoever holds an artifact is always first."
+        ],
+        [
+          "C",
+          "Weight carried",
+          0,
+          ""
+        ]
+      ],
+      "Your rule: the most worth first, then down the list."
+    ],
+    [
+      "rings",
+      "Which state spins the rings fastest?",
+      [
+        [
+          "A",
+          "Charging the charged beam is fastest, winding up to full blast; the lock-on is half that; hanging and watching is a slow turn; leaving, they spin down to a stop",
+          1,
+          "The faster the rings, the closer the blow, so you can read its state from anywhere."
+        ],
+        [
+          "B",
+          "The lock-on is fastest, and the charge slows them to a grinding stop before the blast",
+          0,
+          ""
+        ]
+      ],
+      "Speed tells you what is coming."
+    ],
+    [
+      "tells",
+      "How does the lock-on's tell differ from the charge's?",
+      [
+        [
+          "A",
+          "Lock-on: the eye narrows and pulses, the pulse quickening over the 3 seconds. Charge: the eye swells to half again its size and brightens steadily to full blast",
+          1,
+          "A quickening pulse means move now; a swelling glow means get out of the way of what comes next. They read differently at a glance."
+        ],
+        [
+          "B",
+          "Both glow and grow, in different colours: gold for the lock-on, white for the charge",
+          0,
+          ""
+        ],
+        [
+          "C",
+          "The lock-on shows only by the eye turning on you; only the charge glows",
+          0,
+          ""
+        ]
+      ],
+      "Both tells sit at the eye, which every player can see from anywhere."
+    ],
+    [
+      "hum",
+      "The hum: you wrote \"a loud menstrual hum\". Which did you mean?",
+      [
+        [
+          "A",
+          "A monstrous hum: a low, loud drone for the 4-second arrival, made in code until real audio exists, with the existing camera shake",
+          1,
+          "There is no Ophan sound in the project yet; a generated drone is a stand-in you can replace. The game already has a camera-shake system."
+        ],
+        [
+          "B",
+          "Another word: tell me",
+          0,
+          ""
+        ]
+      ],
+      "A stand-in hum now, real audio later."
+    ],
+    [
+      "numbers",
+      "The beams' numbers",
+      [
+        [
+          "A",
+          "Slow beam: 25 health a second (4 seconds from full). Charged beam: it charges for 3 seconds once its target has been behind cover for 3 seconds, then waits 10 seconds before it can charge again",
+          1,
+          "Fast enough to frighten, slow enough to reach cover; hiding works for a moment, then it blasts the cover."
+        ],
+        [
+          "B",
+          "Slow beam 50 a second (2 seconds); charged beam on a fixed timer every 15 seconds",
+          0,
+          ""
+        ],
+        [
+          "C",
+          "Slow beam 15 a second (about 7 seconds); charged beam every 20 seconds",
+          0,
+          ""
+        ]
+      ],
+      "The 3-second lock-on is already settled by your answer."
+    ],
+    [
+      "cover",
+      "What counts as cover from the slow beam?",
+      [
+        [
+          "A",
+          "Real stone: cover is whenever the straight line from the Ophan's eye to you passes through a wall, or a floor above you",
+          1,
+          "It comes in low from one side, about 30 degrees up, so the wall on its side of a room shields you; the crypt and the keep's lower storey shield you everywhere."
+        ],
+        [
+          "B",
+          "Being inside any room counts as cover",
+          0,
+          "Easier to read, but a room open to the sky would hide you from something looking straight into it."
+        ]
+      ],
+      "The castle has no roofs today, so this decides how much shelter there is."
+    ],
+    [
+      "break",
+      "How much does the charged beam break?",
+      [
+        [
+          "A",
+          "It scorches the stone open: for the rest of the raid the slow beam passes through that room's walls, drawn burnt, on every machine",
+          1,
+          "The smallest build, about two days: one synced list of scorched rooms and a burnt material, no new art. The walls stay solid to walk into."
+        ],
+        [
+          "B",
+          "It knocks the hit wall down",
+          0,
+          "About two weeks: every room in every Age has its walls split from its floor in the art pipeline, plus a sync of fallen walls and updated guard paths."
+        ],
+        [
+          "C",
+          "It punches a hole where it hits",
+          0,
+          "The largest and riskiest, several weeks: cutting meshes and rebuilding colliders while the game runs, kept the same on every machine."
+        ]
+      ],
+      "Rooms are one piece today, so how much it breaks sets the size of the build."
+    ]
+  ],
+  "wrapup": {
+    "summary": "A plan for the Ophan of Hours as a celestial threat far off in the sky, large enough to dwarf the castle, eye always on the players: a hum and screen shake, a slow beam that cover stops, and a one-hit charged beam that breaks cover.",
+    "changing": "Hunted raids end with the Ophan overhead. A beam takes an artifact and spares the carrier, or kills a player who carries none. Until the quota exists, only the test switch brings it.",
+    "blocking": "Your six picks under Choices. Nothing is built until you approve.",
+    "next": "On approval I log the decision, write the systems doc, file the steps as issues under #418 and build on the feature branch. It is not merged into staging until it passes.",
+    "todo": [
+      "Pick an answer for each choice under Choices.",
+      "Tap <b>Copy my reply<\/b>.",
+      "Tap <b>Copy my reply<\/b> and send it: \"Build plan approved: ophan in the sky\", or say what to change."
+    ]
+  },
+  "approval": "Build plan approved: ophan in the sky"
+};
+// ---- End of PAGE. Nothing below needs editing. ----------------------------------------------
+
+const ic = id => `<svg class="ico"><use href="#i-${id}"/></svg>`;
+const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+// A picture is found by shape (src or before), not position, because flow and files before it are optional.
+const picOf = (a, from) => a.slice(from).find(x => x && typeof x === "object" && !Array.isArray(x) && (x.src || x.before));
+let picN = 0; const PICS = [];
+const picHtml = p => {
+  if (!p) return "";
+  if (p.before && p.after) {
+    const id = "cmp" + (picN++), cap = p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : "";
+    const im = x => `<img src="${esc(x.src)}" alt="${esc(x.alt || p.caption || "")}">`;
+    return `<figure class="cmp"><div class="cmp-side"><div><b>Before</b>${im(p.before)}</div><div><b>After</b>${im(p.after)}</div></div>
+      <div class="cmp-slide"><div class="cmp-frame">${im(p.before)}${im(p.after)}</div><label for="${id}">Reveal after over before: drag to compare</label><input type="range" id="${id}" min="0" max="100" value="50" aria-label="Compare before and after: ${esc(p.caption || "")}"></div>${cap}</figure>`;
+  }
+  const alt = p.alt || p.caption || "", k = PICS.push({ src: p.src, alt, caption: p.caption || "" }) - 1;
+  return `<figure class="pic"><button type="button" data-pic="${k}" aria-label="Open full width: ${esc(alt)}"><img src="${esc(p.src)}" alt="${esc(alt)}">${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ""}</button></figure>`;
+};
+document.addEventListener("input", e => { if (e.target.matches(".cmp-slide input[type=range]")) e.target.closest(".cmp-slide").querySelector(".cmp-frame").style.setProperty("--pos", e.target.value + "%"); });
+const box = document.createElement("dialog"); box.className = "lightbox"; box.setAttribute("aria-label", "Picture");
+box.innerHTML = `<img alt=""><p></p><button type="button" class="secondary">Close</button>`; document.body.appendChild(box);
+let boxFrom = null;
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-pic]");
+  if (b) { const p = PICS[+b.dataset.pic]; boxFrom = b; box.querySelector("img").src = p.src; box.querySelector("img").alt = p.alt; box.querySelector("p").textContent = p.caption; box.showModal(); return; }
+  if (e.target === box || e.target.closest("dialog.lightbox")) box.close();  // tap anywhere on it closes; Escape does too
+});
+box.addEventListener("close", () => { if (boxFrom) boxFrom.focus(); boxFrom = null; });
+document.title = PAGE.title;
+document.getElementById("title").textContent = PAGE.title;
+document.getElementById("eyebrow").textContent = PAGE.eyebrow;
+document.getElementById("lead").textContent = PAGE.short.lead;
+document.getElementById("hint").textContent = PAGE.short.hint;
+document.getElementById("key").innerHTML = PAGE.short.key.map(([l, k]) =>
+  `<span><i class="${k === "you" ? "y" : ""}"${k === "done" ? ' style="background:var(--ok-soft);border-color:var(--ok)"' : ""}></i>${esc(l)}</span>`).join("");
+
+// A part is left out only when it would be empty.
+const PARTS = [["short", "In short"], ["changes", "Changes"], ["choices", "Choices"], ["wrapup", "Wrap-up"]]
+  .filter(([id]) => id === "short" || id === "wrapup" || (PAGE[id] && PAGE[id].length));
+document.querySelectorAll("[data-part]").forEach(p => { if (!PARTS.some(([id]) => id === p.dataset.part)) p.remove(); });
+
+const flow = fl => `<div class="flow"><span><small>What exists today</small>${esc(fl[0])}</span><i aria-hidden="true">→</i><span class="mid"><small>What this creates</small>${esc(fl[1])}</span><i aria-hidden="true">→</i><span><small>How it impacts you</small>${esc(fl[2])}</span></div>`;
+const lst = v => Array.isArray(v) ? `<ul class="cl">${v.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<p>${esc(v)}</p>`;
+const glance = document.getElementById("glance"), sd = document.getElementById("sd");
+glance.innerHTML = PAGE.short.items.map(([i, s, t, k], n) =>
+  `${n ? '<span class="arrow" aria-hidden="true">›</span>' : ""}<button type="button" class="g${k === "you" ? " you" : k === "done" ? " done" : ""}" data-s="${n}" aria-pressed="false"><span class="c">${ic(i)}</span>${esc(s)}</button>`).join("");
+function showItem(n) {
+  glance.querySelectorAll(".g").forEach(b => b.setAttribute("aria-pressed", +b.dataset.s === n));
+  const [, , t, , creates, requires] = PAGE.short.items[n], pic = picOf(PAGE.short.items[n], 6);
+  const row = PAGE.short.items[n], summary = PAGE.kind === "summary";
+  const strip = Array.isArray(row[6]) && row[6].length === 3 && row[6].every(x => typeof x === "string") ? row[6] : null;
+  const needsYou = !summary && !/^Nothing/.test(Array.isArray(requires) ? requires.join(" ") : requires);
+  sd.innerHTML = `<h3>${esc(t)}</h3>${strip ? flow(strip) : ""}<div class="cr"><div class="crb"><span class="crh">${ic("swap")}Creates or changes</span>${lst(creates)}</div>
+    <div class="crb${needsYou ? " you" : ""}"><span class="crh">${summary ? ic("check") + "Decided by" : ic("hand") + "Requires"}</span>${lst(requires)}</div></div>${picHtml(pic)}`;
+}
+glance.addEventListener("click", e => { const b = e.target.closest("[data-s]"); if (b) showItem(+b.dataset.s); });
+if (PAGE.short.items.length) showItem(0);
+
+if (document.getElementById("cc")) {
+  const counts = { new: 0, chg: 0, keep: 0 }; PAGE.changes.forEach(c => counts[c[0]]++);
+  document.getElementById("cc-count").textContent =
+    `${counts.new} new, ${counts.chg} changed, ${counts.keep} kept. Tap one for before and after.`;
+  // A New item's picture (#241): what sets it off -> what it does -> what you get.
+  // Every item's files (#241), shown only once it is opened: each file once, then its parts in plain words.
+  const lineCounts = (a, r) => `+${a} \u2212${r}`;
+  const files = fs => !fs || !fs.length ? "" : `<div class="files"><h4>${fs.length} ${fs.length === 1 ? "file" : "files"} \u00b7 ${lineCounts(fs.reduce((t, f) => t + f[1], 0), fs.reduce((t, f) => t + f[2], 0))}</h4>` +
+    fs.map(([p, a, r, parts]) => `<div class="frow"><code>${esc(p)}</code><span class="n">${lineCounts(a, r)}</span></div>` +
+      (parts && parts.length ? `<ul class="parts">${parts.map(([w, pa, pr]) => `<li><span>${esc(w)}</span><span class="n">${lineCounts(pa, pr)}</span></li>`).join("")}</ul>` : "")).join("") + `</div>`;
+  document.getElementById("cc").innerHTML = PAGE.changes.map(([k, t, s, ft, d, fl0, fs0], n) => { const row = PAGE.changes[n], pic = picOf(row, 5), fl = Array.isArray(fl0) ? fl0 : null, fs = Array.isArray(fs0) ? fs0 : null; return `<details class="ci"><summary><span class="tag ${k}">${{ new: "New", chg: "Changed", keep: "Kept" }[k]}</span><span><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="more">More</span></summary>
+     <div class="detail">${ft ? `<div class="fromto"><span>${esc(ft[0])}</span><span aria-hidden="true">→</span><span class="to">${esc(ft[1])}</span></div>` : ""}${fl ? flow(fl) : ""}<p>${esc(d)}</p>${picHtml(pic)}${files(fs)}</div></details>`; }).join("");
+}
+
+if (document.getElementById("qs")) {
+  document.getElementById("qs").innerHTML = PAGE.choices.map(([id, q, opts, why], n) =>
+    `<fieldset class="q" style="border:0;padding:0;margin:0;min-width:0"><legend style="padding:0"><h3><span class="qn">${n + 1}</span>${esc(q)}</h3></legend>
+     ${opts.map(o => { const [v, l, rec, d] = o; return `<label class="opt"><input type="radio" name="${id}" value="${v}"><span><b>${v} · ${esc(l)}</b>${rec ? '<span class="rec">' + ic("check") + 'Suggested</span>' : ""}${d ? `<small>${esc(d)}</small>` : ""}</span></label>${picHtml(picOf(o, 4))}`; }).join("")}
+     <label class="opt own"><input type="radio" name="${id}" value="own"><span><b>Something else</b><small>Write your own answer.</small><input type="text" class="owntext" data-for="${id}" aria-label="Your own answer to: ${esc(q)}" placeholder="Type your idea here"></span></label>
+     ${why ? `<details class="why"><summary>Why I suggest this</summary><p>${esc(why)}</p></details>` : ""}</fieldset>`).join("");
+}
+
+const W = PAGE.wrapup;
+document.getElementById("wrapup").innerHTML = [
+  ["file", "Summary", W.summary, "accent"], ["swap", "What's changing", W.changing, "accent"],
+  ["stop", "What's blocking", W.blocking, "gap"], ["next", "What's next", W.next, "ok"]
+].map(([i, h, t, c]) => `<div class="wu"><span class="c" style="background:var(--${c}-soft);color:var(--${c})">${ic(i)}</span><div><h3>${h}</h3><p>${esc(t)}</p></div></div>`).join("") +
+  `<div class="wu do"><span class="c" style="background:var(--you-soft);color:var(--you)">${ic("hand")}</span><div><h3>What you need to do</h3><ol>${W.todo.map(x => `<li>${x}</li>`).join("")}</ol></div></div>`;
+
+const out = document.getElementById("out"), miss = document.getElementById("miss");
+function reply() {
+  const picks = PAGE.choices.map(([id], i) => {
+    const c = document.querySelector(`input[name=${id}]:checked`);
+    if (c && c.value === "own") { const t = document.querySelector(`.owntext[data-for=${id}]`).value.trim(); return [i + 1, t ? "own" : null, t]; }
+    return [i + 1, c && c.value];
+  });
+  const A = PAGE.approval || PAGE.replyPrefix;  // replyPrefix: only for pages built before approval existed
+  out.textContent = picks.length
+    ? A + " " + picks.map(([n, v]) => `${n}${v === "own" ? "*" : v || "?"}`).join(" ") +
+      picks.filter(([, v]) => v === "own").map(([n, , t]) => `\nChoice ${n}, my own answer: ${t}`).join("")
+    : A;  // no choices: the approval phrase alone, such as "QA passed: <feature>"
+  const m = picks.filter(([, v]) => !v).map(([n]) => n);
+  miss.innerHTML = m.length ? `<span class="missing">Still to pick: choice ${m.join(", ")}.</span> <button type="button" class="secondary" style="min-height:36px;padding:4px 10px" id="goq">Go to choices</button>` : "";
+  const g = document.getElementById("goq"); if (g) g.onclick = () => go(PARTS.findIndex(([id]) => id === "choices") + 1);
+}
+document.addEventListener("change", reply);
+document.addEventListener("input", e => { if (e.target.classList.contains("owntext")) { const r = document.querySelector(`input[name=${e.target.dataset.for}][value=own]`); if (e.target.value.trim()) r.checked = true; reply(); } });
+document.getElementById("copy").onclick = () => { const st = document.getElementById("st");
+  navigator.clipboard.writeText(out.textContent).then(() => st.textContent = "Copied. Paste it into the chat.")
+  .catch(() => { const r = document.createRange(); r.selectNodeContents(out); getSelection().removeAllRanges(); getSelection().addRange(r); st.textContent = "Couldn't copy automatically. The reply is selected; copy it by hand."; }); };
+
+let cur = 1;
+const stepper = document.getElementById("stepper");
+stepper.style.gridTemplateColumns = `repeat(${PARTS.length},1fr)`;
+stepper.innerHTML = PARTS.map(([, s], i) => `<button type="button" data-go="${i + 1}"><span class="bar"></span>${s}</button>`).join("");
+function go(n, focus = true) {
+  cur = Math.min(PARTS.length, Math.max(1, n));
+  const id = PARTS[cur - 1][0];
+  document.querySelectorAll("[data-part]").forEach(p => p.hidden = p.dataset.part !== id);
+  stepper.querySelectorAll("button").forEach((b, i) => { b.classList.toggle("done", i + 1 < cur); if (i + 1 === cur) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current"); });
+  document.getElementById("prev").hidden = cur === 1;
+  const nx = document.getElementById("next"); nx.hidden = cur === PARTS.length; nx.textContent = cur === PARTS.length - 1 ? "Wrap-up ›" : "Next ›";
+  if (focus) { document.getElementById("h-" + id).focus({ preventScroll: true }); window.scrollTo({ top: 0 }); }
+}
+stepper.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) go(+b.dataset.go); });
+document.getElementById("prev").onclick = () => go(cur - 1);
+document.getElementById("next").onclick = () => go(cur + 1);
+go(1, false); reply();
+</script>

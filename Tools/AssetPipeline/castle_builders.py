@@ -159,6 +159,8 @@ def build_wall_corner(bm, uv):
     top = rk.tower_drum(bm, uv, 2.1, h + 1.4, STONE, loc=(*corner, 0), trim=ZONE_ACCENT["CurtainWall"], segments=10)
     rk.crenellations(bm, uv, top, STONE, size=4.2, center=corner)
     _fire("Beacon", corner[0], corner[1], top, lit=2)
+    # A torch on the wall away from the tower, so the corner has a fire at Calm and shows the alarm (#317).
+    _fire("Sconce", 3.0, -rk.HALF + rk.WALL_T, 2.9, facing=(0.0, 1.0), lit=0)
 
 
 def build_bastion(bm, uv):
@@ -327,17 +329,18 @@ def _chest(bm, uv, x, y, fz, w=1.0, d=0.6, h=0.55, trim=None, body=TIMBER):
         _box(bm, uv, trim, (x, y, fz + h + 0.02), (w, d, 0.05))
 
 
-def _stair_to_gallery(bm, uv, fz, top, pigment, rail, deck=TIMBER):
-    """An L-shaped stair in the south-west quadrant up to a railed gallery
-    filling the north-west quadrant, bridged over the walkway above head
-    height. The first flight starts at the walkway's edge and climbs west
-    along the south wall to a corner landing; the second climbs north along
-    the west wall. The foot must face open floor: a stair whose bottom step
+def _stair_flights(bm, uv, fz, top, pigment, steps=4, tread=None):
+    """The two flights of the L stair, `steps` risers each, from fz up to fz + top.
+    `tread` fixes the tread depth (the flights then run as far as they need); by default they fill the quadrant.
+    The first flight starts at the walkway's edge and climbs west along the
+    south wall to a corner landing; the second climbs north along the west
+    wall. The foot must face open floor: a stair whose bottom step
     sits against a wall can only be mounted from the side, and the NavMesh
     does not join a stair's side to the floor, so nobody could climb it."""
-    steps = 4                        # per flight
     rise = top / (2 * steps)
     x0, x_land = -Q0 - 0.1, -IN + 1.5    # first flight: east (foot) to the landing
+    if tread:
+        x0 = x_land + steps * tread
     run_x = (x0 - x_land) / steps
     y_south = -IN + 0.75             # centre line of the first flight
     for i in range(steps):
@@ -349,11 +352,20 @@ def _stair_to_gallery(bm, uv, fz, top, pigment, rail, deck=TIMBER):
     _box(bm, uv, pigment, (-IN + 0.75, -IN + 0.75, (fz + z_mid) / 2), (1.5, 1.5, z_mid - fz))
     # Second flight north along the west wall to the bridge.
     y0, y_top = -IN + 1.5, -Q0 - 0.2
+    if tread:
+        y_top = y0 + steps * tread
     run_y = (y_top - y0) / steps
     for i in range(steps):
         y = y0 + (i + 0.5) * run_y
         z = z_mid + rise * (i + 1)
         _box(bm, uv, pigment, (-IN + 0.75, y, (fz + z) / 2), (1.5, run_y, z - fz))
+
+
+def _stair_to_gallery(bm, uv, fz, top, pigment, rail, deck=TIMBER):
+    """An L-shaped stair (_stair_flights) in the south-west quadrant up to a
+    railed gallery filling the north-west quadrant, bridged over the walkway
+    above head height."""
+    _stair_flights(bm, uv, fz, top, pigment)
     # Bridge over the east-west walkway, then the gallery.
     _box(bm, uv, deck, (-IN + 0.75, 0, fz + top - 0.1), (1.5, 2 * Q0 + 0.4, 0.2))
     _box(bm, uv, deck, (-(IN + Q0) / 2, (IN + Q0) / 2, fz + top - 0.1), (IN - Q0, IN - Q0, 0.2))

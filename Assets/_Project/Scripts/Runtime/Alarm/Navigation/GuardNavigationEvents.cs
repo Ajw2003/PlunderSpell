@@ -1,3 +1,4 @@
+using EventSystems;
 using UnityEngine;
 
 namespace Plunderspell.Alarm
@@ -34,7 +35,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>Asks the navigation service to walk a guard to a point.</summary>
-    public readonly struct MoveRequest
+    public readonly struct MoveRequest : IEvent
     {
         public readonly Component Guard;
         public readonly Vector3 Destination;
@@ -52,7 +53,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>A route to the destination exists and the guard has started along it.</summary>
-    public readonly struct PathReady
+    public readonly struct PathReady : IEvent
     {
         public readonly Component Guard;
         public readonly Vector3 Destination;
@@ -70,7 +71,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>The guard reached its destination.</summary>
-    public readonly struct Arrived
+    public readonly struct Arrived : IEvent
     {
         public readonly Component Guard;
         public readonly Vector3 Position;
@@ -83,7 +84,7 @@ namespace Plunderspell.Alarm
     }
 
     /// <summary>The guard cannot get to its destination. It stands where it is until asked again.</summary>
-    public readonly struct Blocked
+    public readonly struct Blocked : IEvent
     {
         public readonly Component Guard;
         public readonly Vector3 Position;

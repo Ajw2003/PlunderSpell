@@ -30,11 +30,15 @@ namespace Plunderspell.UI
         /// nothing to interact with (the bench) just never sets this and stays idle.</summary>
         public bool HasTarget { get; set; }
 
+        /// <summary>The crosshair shows wherever the world takes input: a raid, the Lair room and the Market (#353).</summary>
+        public static bool ShownIn(Plunderspell.Core.GameState state) =>
+            Player.PlayerInputController.AcceptsInputIn(state);
+
         private void OnGUI()
         {
             if (!_visible || Plunderspell.Core.GameServices.GameState == null)
                 return;
-            if (Plunderspell.Core.GameServices.GameState.CurrentState != Plunderspell.Core.GameState.Playing)
+            if (!ShownIn(Plunderspell.Core.GameServices.GameState.CurrentState))
                 return;
 
             float scale = Screen.height / k_referenceHeight;

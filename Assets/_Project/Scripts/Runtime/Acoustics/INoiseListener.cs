@@ -13,7 +13,9 @@ namespace Plunderspell.Acoustics
         Explosion,
         MeleeSwing,
         /// <summary>Ordinary talk between casts; carries <see cref="NoiseEvent.Transcript"/>. Appended last so stored values do not shift.</summary>
-        Speech
+        Speech,
+        /// <summary>A guard's cry for help on first sighting an intruder (#259). Guards take it as a lead; it never scores alarm points.</summary>
+        GuardCry
     }
 
     /// <summary>

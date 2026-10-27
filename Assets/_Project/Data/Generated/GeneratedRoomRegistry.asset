@@ -17,6 +17,7 @@ MonoBehaviour:
     Zone: 4
     Prefab: {fileID: 8444660228056335261, guid: 2470226b74710184b967b3cebfdb46d8, type: 3}
     Weight: 1
+    UpperFloorHeight: 0
     LootAnchors: []
     FireAnchors: []
     NavTile:
@@ -31,6 +32,7 @@ MonoBehaviour:
     Zone: 0
     Prefab: {fileID: 8444660228056335261, guid: 2470226b74710184b967b3cebfdb46d8, type: 3}
     Weight: 10
+    UpperFloorHeight: 0
     LootAnchors: []
     FireAnchors: []
     NavTile:
@@ -45,6 +47,7 @@ MonoBehaviour:
     Zone: 1
     Prefab: {fileID: 8444660228056335261, guid: 2470226b74710184b967b3cebfdb46d8, type: 3}
     Weight: 10
+    UpperFloorHeight: 0
     LootAnchors: []
     FireAnchors: []
     NavTile:
@@ -59,6 +62,7 @@ MonoBehaviour:
     Zone: 2
     Prefab: {fileID: 8444660228056335261, guid: 2470226b74710184b967b3cebfdb46d8, type: 3}
     Weight: 10
+    UpperFloorHeight: 0
     LootAnchors: []
     FireAnchors: []
     NavTile:
@@ -73,6 +77,7 @@ MonoBehaviour:
     Zone: 3
     Prefab: {fileID: 8444660228056335261, guid: 2470226b74710184b967b3cebfdb46d8, type: 3}
     Weight: 10
+    UpperFloorHeight: 0
     LootAnchors: []
     FireAnchors: []
     NavTile:
@@ -87,6 +92,7 @@ MonoBehaviour:
     Zone: 4
     Prefab: {fileID: 8444660228056335261, guid: 2470226b74710184b967b3cebfdb46d8, type: 3}
     Weight: 10
+    UpperFloorHeight: 0
     LootAnchors: []
     FireAnchors: []
     NavTile:
@@ -98,3 +104,4 @@ MonoBehaviour:
       PortalWest: d800f0000801200138015001
       LevelCount: 1
   DoorPlugs: []
+  Stairs: []

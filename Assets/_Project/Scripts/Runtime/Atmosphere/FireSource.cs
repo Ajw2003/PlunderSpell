@@ -38,10 +38,9 @@ namespace Plunderspell.Atmosphere
         [SerializeField] private float _range = 8f;
         [Tooltip("Where the light and the glow sit, relative to the fire's base.")]
         [SerializeField] private Vector3 _flameOffset = new Vector3(0f, 1.6f, 0f);
-        [SerializeField] private float _flickerAmount = 0.18f;
-        [SerializeField] private float _flickerSpeed = 2.2f;
-        [Tooltip("Seconds to catch light, flare or die down.")]
-        [SerializeField] private float _easeSeconds = 1.5f;
+        [Tooltip("How far the flame breathes either side of steady: gentle, never a harsh swing.")]
+        [SerializeField] private float _flickerAmount = 0.10f;
+        [SerializeField] private float _flickerSpeed = 1.2f;
 
         [Header("Own colour")]
         [Tooltip("Burn this colour at a steady strength instead of the night's flame colour. The portal: " +
@@ -59,6 +58,30 @@ namespace Plunderspell.Atmosphere
         private float _targetFlare = 1f;
         private Vector3 _flameRootScale = Vector3.one;
         private float _emberRate;
+        private float _lightShare;
+        private float _shadowShare;
+        private float _shadowStrength = 1f;
+
+        private Color _lightColorNow;
+        private bool _colorSet;
+        private float _halo;
+        private float _haloTarget;
+
+        /// <summary>
+        /// How strongly this fire's fog halo is drawn, 0 to 1. It eases toward 1 while the fog pass
+        /// has chosen the fire and toward 0 otherwise, over the shared fire fade time.
+        /// </summary>
+        public float Halo => _halo;
+
+        /// <summary>Where the halo is heading: 1 while chosen, 0 otherwise.</summary>
+        public float HaloTarget => _haloTarget;
+
+        /// <summary>Aims the halo: 1 while the fire is chosen for the fog pass, 0 when not.</summary>
+        public void SetHaloTarget(float target) => _haloTarget = target;
+
+        /// <summary>Moves the halo toward its target; the atmosphere calls this once a frame.</summary>
+        public void EaseHalo(float deltaTime, float fadeSeconds) =>
+            _halo = Mathf.MoveTowards(_halo, _haloTarget, deltaTime / Mathf.Max(0.01f, fadeSeconds));
 
         /// <summary>What kind of fire this is.</summary>
         public FireKind Kind => _kind;
@@ -77,6 +100,9 @@ namespace Plunderspell.Atmosphere
 
         /// <summary>The light's brightness right now, flicker included, before the budget.</summary>
         public float CurrentIntensity { get; private set; }
+
+        /// <summary>The light the budget last granted; the light fades toward it.</summary>
+        public FireRules.LightGrant Grant { get; private set; }
 
         /// <summary>The point light, for the budget.</summary>
         public Light Light => _light;
@@ -117,6 +143,11 @@ namespace Plunderspell.Atmosphere
                 _emberRate = _embers.emission.rateOverTimeMultiplier;
             if (_lightSource == null)
                 _lightSource = GetComponent<LightSource>();
+            if (_light != null)
+            {
+                _shadowStrength = _light.shadowStrength;
+                _lightShare = _light.enabled ? 1f : 0f;
+            }
         }
 
         private void OnEnable() => s_all.Add(this);
@@ -139,28 +170,62 @@ namespace Plunderspell.Atmosphere
         }
 
         /// <summary>Called by the atmosphere every frame with the night's fire colour and multiplier.</summary>
-        public void Burn(Color flameColor, float intensityScale, float deltaTime)
+        public void Burn(Color flameColor, float intensityScale, float deltaTime, float fadeSeconds)
         {
-            float step = _easeSeconds > 0f ? deltaTime / _easeSeconds : 1f;
+            // Everything visual about a fire moves toward its target over this one time (#354).
+            fadeSeconds = Mathf.Max(0.01f, fadeSeconds);
+            float step = deltaTime / fadeSeconds;
             _lit = Mathf.MoveTowards(_lit, _targetLit, step);
             _flare = Mathf.MoveTowards(_flare, _targetFlare, step);
 
             float t = Time.time * _flickerSpeed + _seed;
             float flicker = 1f + _flickerAmount * (Mathf.PerlinNoise(t, _seed) * 2f - 1f)
-                               + _flickerAmount * 0.5f * (Mathf.PerlinNoise(t * 3.1f, _seed + 7f) * 2f - 1f);
+                               + _flickerAmount * 0.5f * (Mathf.PerlinNoise(t * 1.7f, _seed + 7f) * 2f - 1f);
 
             if (_useOwnColor)
             {
                 flameColor = _ownColor;
                 intensityScale = 1f;
             }
+            if (!_colorSet)
+            {
+                _lightColorNow = flameColor;
+                _colorSet = true;
+            }
+            else
+            {
+                // Reaches about 95% of the way in one fade time.
+                _lightColorNow = Color.Lerp(_lightColorNow, flameColor, 1f - Mathf.Exp(-3f * step));
+            }
+            flameColor = _lightColorNow;
             CurrentIntensity = _intensity * intensityScale * _lit * _flare * flicker * Strength;
 
             if (_light != null)
             {
                 _light.color = flameColor;
-                _light.intensity = CurrentIntensity;
+                float fadeStep = step;
+                bool burning = _lit > 0.01f;
+                _lightShare = Mathf.MoveTowards(_lightShare, Grant != FireRules.LightGrant.None && burning ? 1f : 0f, fadeStep);
+                _shadowShare = Mathf.MoveTowards(_shadowShare, Grant == FireRules.LightGrant.Shadowed && burning ? 1f : 0f, fadeStep);
+
+                _light.intensity = CurrentIntensity * _lightShare;
                 _light.range = CurrentRange;
+
+                bool on = _lightShare > 0f;
+                if (_light.enabled != on)
+                    _light.enabled = on;
+
+                // The shadow type changes only when its strength is already 0.
+                if (_shadowShare > 0f)
+                {
+                    if (_light.shadows != LightShadows.Soft)
+                        _light.shadows = LightShadows.Soft;
+                    _light.shadowStrength = _shadowStrength * _shadowShare;
+                }
+                else if (_light.shadows != LightShadows.None)
+                {
+                    _light.shadows = LightShadows.None;
+                }
             }
 
             if (_flameRoot != null)
@@ -192,17 +257,10 @@ namespace Plunderspell.Atmosphere
                 _lightSource.Set(_lit > 0.5f, CurrentRange, Mathf.Clamp01(_lit * _flare / FireRules.FullAlertFlare));
         }
 
-        /// <summary>Applies the budget's grant: whether the light is on, and whether it casts shadows.</summary>
+        /// <summary>Records the budget's grant; <see cref="Burn"/> fades the light and shadow toward it.</summary>
         public void ApplyGrant(FireRules.LightGrant grant)
         {
-            if (_light == null)
-                return;
-            bool on = grant != FireRules.LightGrant.None && _lit > 0.01f;
-            if (_light.enabled != on)
-                _light.enabled = on;
-            LightShadows shadows = grant == FireRules.LightGrant.Shadowed ? LightShadows.Soft : LightShadows.None;
-            if (_light.shadows != shadows)
-                _light.shadows = shadows;
+            Grant = grant;
         }
     }
 }

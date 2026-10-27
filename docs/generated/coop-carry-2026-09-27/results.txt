@@ -390,3 +390,94 @@ PASS opposite_pulls_snap
 PASS both_grab_same_piece
 PASS client_lets_go
 PASS client_quits_holding
+
+# run 23:27:34 (carry)
+PASS castle_built_once
+FAIL held point 0.55 m from host's aim host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+FAIL aims 1.52 m apart, host's held point 1.41 m off, client's 0.27 m off: one pull is ignored both_grab_same_piece
+FAIL held point 1.27 m from host's aim client_lets_go
+FAIL 1.21 m from the host aim after the client left client_quits_holding
+
+# run 23:32:34 (carry)
+PASS castle_built_once
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 23:37:57 (carry)
+PASS castle_built_once
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+FAIL held host=False client=False, wanted both; heavy host=True client=True, wanted light=both; piece rose -0.32 m (wanted at least 0.6 m, or to within 0.3 m of the aim height) heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 23:45:30 (carry)
+PASS castle_built_once
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+FAIL held host=False client=False, wanted both; heavy host=True client=True, wanted light=both; piece rose 0.00 m (wanted at least 0.6 m, or to within 0.3 m of the aim height) heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding
+
+# run 23:50:18 (carry)
+PASS castle_built_once
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+FAIL held host=False client=False, wanted both; needs both aim points both_grab_same_piece
+FAIL held host=False client=False, wanted host; host has no aim point client_lets_go
+FAIL host lost the piece: pos -18.606,0.676,-33.460 held False aim none grip none load 0.15 heavy False | kinematic False portalFrozen False inPortal False controls True holders 0 owner  broken False snapped True client_quits_holding
+
+# run 23:55:09 (carry)
+PASS castle_built_once
+FAIL unreadable: host 'pos -50.569,1.866,-44.625 held True aim -50.576,1.940,-44.634 grip -50.576,1.918,-44.634 load 0.05 heavy False | kinematic False portalFrozen False inPortal False controls True holders 1 owner 001 bro' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 40"}]' host_grabs
+FAIL unreadable: host 'pos -51.278,0.002,-45.333 held False aim none grip none load 0.15 heavy False | kinematic False portalFrozen False inPortal False controls True holders 0 owner 001 broken False snapped False' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 133"}]' client_grabs
+FAIL unreadable: before 'pos -51.280,0.002,-45.345 held False aim none grip none load 0.15 heavy False | kinematic False portalFrozen False inPortal False controls True holders 0 owner 001 broken False snapped False' after_host 'pos -51.280,0.002,-45.345 held False aim none grip none load 0.15 heavy False | kinematic False portalFrozen False inPortal False controls True holders 0 owner 001 broken False snapped False' after_client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\\n  no piece with network id 145"}]' client_throws
+FAIL unreadable: host 'pos -51.278,0.002,-45.333 held False aim none grip none load 0.15 heavy False | kinematic False portalFrozen False inPortal False controls True holders 0 owner 001 broken False snapped False' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 142"}]' client_holds_close
+PASS heavy_alone_tows
+FAIL unreadable: host 'pos -51.573,0.001,-46.078 held True aim -51.904,1.219,-46.435 grip -51.904,1.219,-46.435 load 1.18 heavy True | kinematic False portalFrozen False inPortal False controls True holders 1 owner 001 brok' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 16"}]' heavy_lifted_together
+FAIL unreadable: host 'pos -50.212,1.864,-48.725 held True aim -50.222,1.939,-48.719 grip -50.222,1.915,-48.719 load 0.05 heavy False | kinematic False portalFrozen False inPortal False controls True holders 1 owner 001 bro' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 49"}]' opposite_pulls_snap
+FAIL unreadable: host 'pos -49.909,1.852,-45.785 held True aim -49.977,1.940,-45.811 grip -49.977,1.917,-45.811 load 0.29 heavy False | kinematic False portalFrozen False inPortal False controls True holders 1 owner 001 bro' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 34"}]' both_grab_same_piece
+FAIL unreadable: host 'pos -49.909,1.851,-45.785 held True aim -49.977,1.938,-45.811 grip -49.977,1.917,-45.811 load 0.29 heavy False | kinematic False portalFrozen False inPortal False controls True holders 1 owner 001 bro' client 'ERROR [{"code": "COMMAND_FAILED", "message": "Runtime Error\n  no piece with network id 34"}]' client_lets_go
+PASS client_quits_holding
+
+# run 23:59:56 (carry)
+PASS castle_built_once
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+PASS heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding

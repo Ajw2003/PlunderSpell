@@ -15,12 +15,16 @@ namespace Plunderspell.Castle
         /// gate's outward side: closed, the gate is sealed (<see cref="CastleBoundary"/>).
         /// </summary>
         public static bool IsOpen(ProceduralCastleData data, ProceduralCastleData.PlacedModule a,
-            ProceduralCastleData.PlacedModule b)
+            ProceduralCastleData.PlacedModule b, int level)
         {
             bool roomA = ProceduralCastleGenerator.IsEnclosedRoom(a.Zone);
             bool roomB = ProceduralCastleGenerator.IsEnclosedRoom(b.Zone);
             if (roomA && roomB)
-                return true;
+                return CastleStairRule.Opens(a, level, b.GridPosition - a.GridPosition) &&
+                       CastleStairRule.Opens(b, level, a.GridPosition - b.GridPosition);
+            // The curtain wall stands on the ground only.
+            if (level != CastleLevels.Ground)
+                return false;
             if (roomA != roomB)
             {
                 ProceduralCastleData.PlacedModule wall = roomA ? b : a;

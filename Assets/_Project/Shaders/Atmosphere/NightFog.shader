@@ -1,5 +1,6 @@
 // Full-screen fog for the castle at night. Drawn by Plunderspell.Atmosphere.NightFogFeature after the
 // opaques, blended over the camera colour as scene * transmittance + in-scattered light.
+// The painted look (grain, ink edges) lives on the surfaces, in PlunderspellSurfaceForward.hlsl (#266).
 Shader "Hidden/Plunderspell/NightFog"
 {
     SubShader

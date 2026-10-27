@@ -1,0 +1,119 @@
+18:14:36 test slot 99 wiped, owner's slot to restore: 1
+18:14:44 state MainMenu
+18:14:44 solo
+18:14:45 player: player
+18:14:48 set out
+18:14:49 state Playing
+18:14:53 health -50
+18:14:54 state GameOver
+18:14:56 returned
+18:14:56 state LairRoom
+18:15:00 captured docs/generated/death-return-2026-10-07/before.png
+18:15:01 vignette 0, health -50/100, hurtLines 0
+18:15:01 cleaning up
+18:15:03 active slot 1
+18:17:29 test slot 99 wiped, owner's slot to restore: 1
+18:17:37 state MainMenu
+18:17:37 solo
+18:17:38 player: player
+18:17:41 set out
+18:17:42 state Playing
+18:17:46 captured docs/generated/death-return-2026-10-07/before-raid.png
+18:17:47 health -50
+18:17:47 state GameOver
+18:17:49 captured docs/generated/death-return-2026-10-07/before-gameover.png
+18:17:50 returned
+18:17:51 state LairRoom
+18:17:55 captured docs/generated/death-return-2026-10-07/before.png
+18:17:55 vignette 0, health -50/100, hurtLines 0
+18:17:55 cleaning up
+18:17:57 active slot 1
+18:18:33 test slot 99 wiped, owner's slot to restore: 1
+18:18:40 state MainMenu
+18:18:41 solo
+18:18:42 player: player
+18:18:45 set out
+18:18:46 state Playing
+18:18:49 captured docs/generated/death-return-2026-10-07/before-raid.png
+18:18:50 health -440
+18:18:51 state GameOver
+18:18:53 captured docs/generated/death-return-2026-10-07/before-gameover.png
+18:18:54 returned
+18:18:54 state LairRoom
+18:18:58 captured docs/generated/death-return-2026-10-07/before.png
+18:18:59 vignette 0, health -440/100, hurtLines 0
+18:18:59 cleaning up
+18:19:00 active slot 1
+18:19:28 test slot 99 wiped, owner's slot to restore: 1
+18:19:36 state MainMenu
+18:19:36 solo
+18:19:37 player: player
+18:19:40 set out
+18:19:41 state Playing
+18:19:45 captured docs/generated/death-return-2026-10-07/before-raid.png
+18:19:46 [
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Compilation Failed\n  'EnemyDirector' does not contain a definition for 'AlarmState' and no accessible extension method 'AlarmState' accepting a first argument of type 'EnemyDirector' could be found (are you missing a using directive or an assembly reference?) (line 1, col 327)\n  Unreachable code detected (line 2, col 12)"
+ }
+]
+18:19:50 health -440
+18:19:50 state GameOver
+18:19:52 captured docs/generated/death-return-2026-10-07/before-gameover.png
+18:19:53 returned
+18:19:54 state LairRoom
+18:19:58 captured docs/generated/death-return-2026-10-07/before.png
+18:19:59 vignette 0, health -440/100, hurtLines 0
+18:19:59 cleaning up
+18:20:00 active slot 1
+18:20:05 test slot 99 wiped, owner's slot to restore: 1
+18:20:12 state MainMenu
+18:20:13 solo
+18:20:14 player: player
+18:20:17 set out
+18:20:18 state Playing
+18:20:22 captured docs/generated/death-return-2026-10-07/before-raid.png
+18:20:23 alarm Calm
+18:20:26 health -440
+18:20:27 state GameOver
+18:20:29 captured docs/generated/death-return-2026-10-07/before-gameover.png
+18:20:30 returned
+18:20:31 state LairRoom
+18:20:35 captured docs/generated/death-return-2026-10-07/before.png
+18:20:35 vignette 0, health -440/100, hurtLines 0
+18:20:35 cleaning up
+18:20:37 active slot 1
+18:21:06 test slot 99 wiped, owner's slot to restore: 1
+18:21:13 state MainMenu
+18:21:14 solo
+18:21:15 player: player
+18:21:18 set out
+18:21:19 state Playing
+18:21:22 captured docs/generated/death-return-2026-10-07/before-raid.png
+18:21:23 alarm Calm
+18:21:27 health -440
+18:21:28 state GameOver
+18:21:30 captured docs/generated/death-return-2026-10-07/before-gameover.png
+18:21:30 returned
+18:21:31 state LairRoom
+18:21:35 captured docs/generated/death-return-2026-10-07/before.png
+18:21:36 alarm Roused, vignette 0, health -440/100, hurtLines 0
+18:21:36 cleaning up
+18:21:37 active slot 1
+18:23:28 test slot 99 wiped, owner's slot to restore: 1
+18:23:36 state MainMenu
+18:23:36 solo
+18:23:37 player: player
+18:23:40 set out
+18:23:41 state Playing
+18:23:45 captured docs/generated/death-return-2026-10-07/after-raid.png
+18:23:46 alarm Calm
+18:23:50 health -440
+18:23:51 state GameOver
+18:23:52 captured docs/generated/death-return-2026-10-07/after-gameover.png
+18:23:53 returned
+18:23:54 state LairRoom
+18:23:58 captured docs/generated/death-return-2026-10-07/after.png
+18:23:59 alarm Calm, vignette 0, health -440/100, hurtLines 0
+18:23:59 cleaning up
+18:24:00 active slot 1

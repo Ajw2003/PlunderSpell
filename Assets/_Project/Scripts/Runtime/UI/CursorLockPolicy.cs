@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using UnityEngine;
 
@@ -19,20 +20,18 @@ namespace Plunderspell.UI
         /// Whether the cursor should be captured in this state. Pure, so the rule can be asserted
         /// without a window or a focus event.
         /// </summary>
-        public static bool ShouldCapture(GameState state) => state == GameState.Playing;
+        public static bool ShouldCapture(GameState state) => state == GameState.Playing || state == GameState.LairRoom;
 
         private void OnEnable()
         {
-            if (GameServices.GameState != null)
-                GameServices.GameState.StateChanged += OnStateChanged;
+            EventManager.Instance?.Subscribe(this, (GameStateChanged e) => Apply());
 
             Apply();
         }
 
         private void OnDisable()
         {
-            if (GameServices.GameState != null)
-                GameServices.GameState.StateChanged -= OnStateChanged;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         /// <summary>
@@ -44,8 +43,6 @@ namespace Plunderspell.UI
             m_hasFocus = hasFocus;
             Apply();
         }
-
-        private void OnStateChanged(GameState previous, GameState next) => Apply();
 
         /// <summary>Re-asserts the cursor state. Public so tests can drive it without a focus event.</summary>
         public void Apply()

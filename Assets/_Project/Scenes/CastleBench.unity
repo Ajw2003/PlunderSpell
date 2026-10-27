@@ -575,8 +575,8 @@ MonoBehaviour:
   _decayRate: 5
   _sightingPoints: 20
   _attackPoints: 6
-  _rousedChasers: 2
-  _hueAndCryChasers: 3
+  _rousedChasers: 3
+  _hueAndCryChasers: 5
   _attackTurnTuning:
     MeleeTurnsPerTarget: 1
     RangedTurnsPerTarget: 1
@@ -1704,8 +1704,8 @@ MonoBehaviour:
   _decayRate: 5
   _sightingPoints: 20
   _attackPoints: 6
-  _rousedChasers: 2
-  _hueAndCryChasers: 3
+  _rousedChasers: 3
+  _hueAndCryChasers: 5
   _attackTurnTuning:
     MeleeTurnsPerTarget: 1
     RangedTurnsPerTarget: 1
@@ -1953,7 +1953,7 @@ MonoBehaviour:
   AirControl: 0.7
   DodgeForce: 5
   respawnSpeed: 1
-  MouseSensitivity: 10
+  MouseSensitivity: 0.16666667
   CameraTransform: {fileID: 1255362076}
   _groundCheckRadius: 0.3
   _groundCheckDistance: 1.6

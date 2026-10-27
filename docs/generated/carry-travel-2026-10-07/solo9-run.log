@@ -1,0 +1,51 @@
+15:14:50 test slot 99 wiped, owner's slot to restore: 1
+15:15:02 state MainMenu
+15:15:03 solo, slot 99
+15:15:03 player: player
+15:15:06 spawned GoldenGoblet(Clone) on the pile at 1004.0,0.6,0.0
+15:15:10 grabbed GoldenGoblet(Clone) at 1004.0,0.3,0.0 from 1005.1,1.5,1.4
+15:15:13 in the Lair: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.9 speed 0.00 at 1003.3,2.2,-0.9 body 1005.1,1.5,1.4
+15:15:13 PASS the piece is held on the beam in the Lair
+15:15:14 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+15:15:15 just through the door: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.9 speed 0.01 at 1101.5,2.2,5.1 body 1101.5,1.5,8.0
+15:15:17 two seconds later: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,0.7,2.9 speed 0.02 at 1101.5,2.2,5.1 body 1101.5,1.5,8.0
+15:15:18 PASS just through the Market door the piece sits at the same offset from the player, in their view frame
+15:15:18 PASS still held after the door
+15:15:18 PASS after the door it is slow, in the Market (x over 1050) and within 4 m of the player
+15:15:18 PASS two seconds later it still hangs at that offset
+15:15:20 capture: docs/generated/carry-travel-2026-10-07/solo9-holding-in-the-market.png
+15:15:20 walking from (1101.50, 1.50, 8.00) to (1103.61, 1.51, -4.15)
+15:15:27 held at the counter: held GoldenGoblet(Clone) dragging True holders 1 rel 0.0,-0.1,2.2 speed 0.05 at 1103.5,1.4,-3.6 body 1103.1,1.5,-1.5
+15:15:28 dropped
+15:15:32 near GoldenGoblet(Clone) 1103.5,1.4,-3.6; 
+15:15:33 colliders under the box centre: box trigger True on SellZone; MarketYard y0.31; SellZone y1.81; MarketCounter y1.31; MarketGoldsmithStall y2.71; at piece: MarketYard y0.31; at piece: GoldenGoblet(Clone) y1.55; 
+15:15:34 counter box:Center: (1103.61, 1.51, -4.15), Extents: (0.91, 0.30, 0.84)
+15:15:34 pieces 1
+15:15:34 PASS the dropped piece lies on the Goldsmith's counter
+15:15:59 line 
+15:16:00 haggle open: open False piece at (1103.53, 1.43, -3.63) speed 0 kinematic False carried False worth 150
+15:16:00 before: gold 0 debt 500
+15:16:01 spoke Plus
+15:16:04 line 
+15:16:04 spoke Satis
+15:16:07 line 
+15:16:07 FAIL the haggle ends in a sale
+15:16:08 pouches 0
+15:16:08 FAIL the sale left one coin pouch
+15:16:09 before: purse 0
+15:16:10 no pouch
+15:16:12 pouch in the Market: held none
+15:16:13 travelled through /MarketYard/LairExit to 1002.2,1.3,-3.8
+15:16:13 pouch just through the gate: held none
+15:16:14 FAIL just through the gate the pouch sits at the same offset from the player
+15:16:14 FAIL pouch still held after the gate
+15:16:14 walking from (1002.20, 1.50, -3.80) to (1001.85, 0.81, 1.63)
+15:16:19 held at the strongbox: held none
+15:16:19 dropped
+15:16:23 pouches 0
+15:16:23 after: purse 0
+15:16:23 PASS the pouch is banked and gone
+15:16:24 FAIL purse 1 grew (purse 0 -> purse 0)
+15:16:24 FAIL 5 carry-travel checks
+15:16:24 cleaning up
+15:16:25 active slot 1

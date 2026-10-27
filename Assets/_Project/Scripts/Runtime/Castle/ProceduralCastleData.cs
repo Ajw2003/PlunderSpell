@@ -54,6 +54,17 @@ namespace Plunderspell.Castle
             public Vector2Int GridPosition;
             public bool IsExtractionExit;
             public bool IsCryptEntry;
+            /// <summary>The storey the module stands on (<see cref="CastleLevels"/>); its lowest one if it spans more.</summary>
+            public int Level;
+            /// <summary>How many storeys the module spans: 2 for a stair, 0 or 1 for a room.</summary>
+            public int Storeys;
+            /// <summary>For a stair, the level where it opens one way only (the head of an up-stair, the foot of a down-stair).</summary>
+            public int ExitLevel;
+            /// <summary>For a stair, the grid direction it opens toward on <see cref="ExitLevel"/>.</summary>
+            public Vector2Int ExitFacing;
+
+            /// <summary>The highest storey the module occupies.</summary>
+            public int TopLevel => Level + Mathf.Max(1, Storeys) - 1;
 
             public PlacedModule(string roomId, Vector3 position, Quaternion rotation,
                 CastleZone zone, Vector2Int gridPosition)
@@ -65,6 +76,10 @@ namespace Plunderspell.Castle
                 GridPosition = gridPosition;
                 IsExtractionExit = false;
                 IsCryptEntry = false;
+                Level = CastleLevels.Ground;
+                Storeys = 0;
+                ExitLevel = CastleLevels.Ground;
+                ExitFacing = Vector2Int.zero;
             }
         }
     }

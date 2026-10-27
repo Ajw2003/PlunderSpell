@@ -1,0 +1,704 @@
+Mono path[0] = 'C:/Users/aj/Desktop/GameDev/PlunderSpell/Build/Windows/Plunderspell_Data/Managed'
+Mono config path = 'C:/Users/aj/Desktop/GameDev/PlunderSpell/Build/Windows/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.3.15f1 (c1aa84e375f6)
+[Subsystems] Discovering subsystems at path C:/Users/aj/Desktop/GameDev/PlunderSpell/Build/Windows/Plunderspell_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 5070
+[D3D12 Device Filter] Driver Version: 32.0.16.1714
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11943 MB
+[D3D12 Device Filter] Processor Count: 12
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 5070 (ID=0x2f04)
+    Vendor:          NVIDIA
+    VRAM:            11943 MB
+    App VRAM Budget: 11175 MB
+    Driver:          32.0.16.1714
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.092 seconds
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.556500 ms
+[Atmosphere] Graphics Medium (default for this machine).
+Setting breakpad minidump AppID = 480
+SteamInternal_SetMinidumpSteamID:  Caching Steam ID:  76561198144141024 [API loaded no]
+[Steam] Ready. Signed in as MSQ | Derpface (76561198144141024), app 480, overlay off (the game was not started by Steam).
+[VoiceServiceLocator] Auto-registered speech + keyboard casting.
+[Coop] Creating a Steam lobby...
+[Coop] Server Connecting.
+[Coop] Server Connected.
+[Coop] Hosting. Invite a friend with the Invite Friend button.
+[Raid] Director spawned as server: phase InLair, seed 0.
+[Coop] Client Connecting.
+[Coop] Client Connected.
+[Coop] This machine plays as RaidPlayer(Clone) (owner 001).
+[Vosk] Opened 'Microphone (BlackShark V2 Pro PS 2.4)' @ 16000Hz.
+[Chatter] Listening between casts.
+WARNING (VoskAPI:Recognizer():recognizer.cc:84) Ignoring word missing in vocabulary: 'ignace'
+WARNING (VoskAPI:Recognizer():recognizer.cc:84) Ignoring word missing in vocabulary: 'sultus'
+WARNING (VoskAPI:Recognizer():recognizer.cc:84) Ignoring word missing in vocabulary: 'satis'
+[Coop] This machine plays as RaidPlayer(Clone) (owner 001).
+[Lair] Placed RaidPlayer(Clone) at (1005.20, 1.30, 1.50) (PlayerSpawns/Spawn1).
+Reduced additional punctual light shadows resolution by 2 to make 18 shadow maps fit in the 4096x4096 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+[Lair] Placed RaidPlayer(Clone) at (1101.50, 1.30, 8.00) (PlayerSpawns/Spawn1).
+[Lair] Placed RaidPlayer(Clone) at (1002.20, 1.30, -3.80) (MarketDoorArrivals/Spawn1).
+[Lair] The Collector finds the purses empty. Debt 840 -> 840.
+[Raid] Host's castle arrived: seed 3124899, BronzeAge (phase Generating).
+[Raid] BronzeAge content: rooms CastleRoomRegistry_BronzeAge, loot RaidLootTable_BronzeAge, enemies EnemyRoster_BronzeAge.
+[Raid] Building the castle from seed 3124899, BronzeAge (host).
+[CastleNav] 19 dressing pieces took 170 cells out of the walk map.
+[Raid] Placed RaidPlayer(Clone) at (3.50, 1.25, -24.00).
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[MockVoice] Emit "PORTA" (conf=1.00, rms=0.17, vol=Normal)
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[SpellCast] Local cast Porta (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Porta (Volume: Normal, affected: 1)
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_03 pitch x0.82 speed x1.09
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) murmur vo_bronze_base_murmur_02 pitch x1.25 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.83 speed x1.02
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.82 speed x1.05
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_04 pitch x0.84 speed x0.93
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.83 speed x0.96
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x0.97
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.81 speed x0.94
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.84 speed x0.93
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.82 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.83 speed x1.02
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.97
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.83 speed x0.96
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_01 pitch x0.84 speed x0.93
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.82 speed x1.05
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) murmur vo_bronze_base_murmur_04 pitch x1.21 speed x1.08
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_02 pitch x1.25 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.83 speed x0.96
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.82 speed x0.97
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_03 pitch x1.25 speed x1.05
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_03 pitch x1.25 speed x1.05
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[MockVoice] Emit "VELOX" (conf=1.00, rms=0.35, vol=Normal)
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_01 pitch x1.21 speed x1.08
+[Lockdown] The castle locks its doors (15).
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_03 pitch x1.25 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.05
+[SpellCast] Local cast Velox (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Velox (Volume: Normal, affected: 1)
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.25 speed x1.05
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_02 pitch x1.21 speed x1.08
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.25 speed x1.05
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_01 pitch x1.25 speed x1.05
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_01 pitch x1.21 speed x1.08
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.16, vol=Normal)
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) murmur vo_bronze_base_murmur_02 pitch x1.21 speed x1.08
+[SpellCast] Local cast Ignis (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Ignis (Volume: Normal, affected: 0)
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.25 speed x1.05
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.16, vol=Normal)
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.82 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.83 speed x1.02
+[SpellCast] Local cast Ignis (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Ignis (Volume: Normal, affected: 0)
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_04 pitch x0.84 speed x0.93
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_02 pitch x1.25 speed x1.05
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.30, vol=Normal)
+[SpellCast] Local cast Ignis (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Ignis (Volume: Normal, affected: 1)
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) hurt vo_bronze_base_hurt_01 pitch x1.25 speed x1.05
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) hurt vo_bronze_base_hurt_01 pitch x1.25 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.83 speed x0.96
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.82 speed x0.97
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.82 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.83 speed x1.02
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.83 speed x0.96
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.84 speed x0.93
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_03 pitch x0.81 speed x0.94
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.83 speed x1.02
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x1.16 speed x0.97
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x0.96
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_02 pitch x0.81 speed x0.94
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_03 pitch x0.82 speed x0.97
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) murmur vo_bronze_base_murmur_04 pitch x1.21 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.82 speed x1.05
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.84 speed x0.93
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) murmur vo_bronze_base_murmur_01 pitch x1.25 speed x1.05
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_02 pitch x0.81 speed x0.94
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x1.16 speed x0.97
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.21 speed x1.08
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.09
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.21, vol=Normal)
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x1.16 speed x0.97
+[SpellCast] Local cast Ignis (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Ignis (Volume: Normal, affected: 1)
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) hurt vo_bronze_base_hurt_03 pitch x1.21 speed x1.08
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.97
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.26, vol=Normal)
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.26, vol=Normal)
+[SpellCast] Already chanting Ignis; "FRANGO" ignored.
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.81 speed x0.94
+[SpellCast] Local cast Ignis (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Ignis (Volume: Normal, affected: 1)
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) hurt vo_bronze_base_hurt_02 pitch x1.21 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.83 speed x0.96
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.24, vol=Normal)
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.83 speed x1.02
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) murmur vo_bronze_base_murmur_03 pitch x1.26 speed x0.97
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) hurt vo_bronze_base_hurt_02 pitch x1.21 speed x1.08
+[SpellCast] Local cast Ignis (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Ignis (Volume: Normal, affected: 1)
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.82 speed x0.97
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_01 pitch x0.82 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) hurt vo_bronze_base_hurt_03 pitch x1.21 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x1.16 speed x0.97
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_03 pitch x0.82 speed x0.97
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_02 pitch x0.82 speed x1.09
+[GuardSpeech] (gone) (bronze/levy) death vo_bronze_base_death_02 pitch x1.21 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x1.05
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.84 speed x0.93
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.83 speed x0.96
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) murmur vo_bronze_base_murmur_01 pitch x1.25 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x1.16 speed x0.97
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.83 speed x1.02
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.81 speed x0.94
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.97
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.83 speed x0.96
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.82 speed x0.97
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x1.16 speed x0.97
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.84 speed x0.93
+[Lair] Placed RaidPlayer(Clone) at (1005.20, 1.30, 1.50) (PlayerSpawns/Spawn1).
+[Lair] Placed RaidPlayer(Clone) at (1101.50, 1.30, 8.00) (PlayerSpawns/Spawn1).
+[Lair] Placed RaidPlayer(Clone) at (1002.20, 1.30, -3.80) (MarketDoorArrivals/Spawn1).
+[Lair] The Collector finds the purses empty. Debt 890 -> 890.
+[Raid] Host's castle arrived: seed 2680566, BronzeAge (phase Generating).
+[Raid] BronzeAge content: rooms CastleRoomRegistry_BronzeAge, loot RaidLootTable_BronzeAge, enemies EnemyRoster_BronzeAge.
+[Raid] Building the castle from seed 2680566, BronzeAge (host).
+[CastleNav] 19 dressing pieces took 289 cells out of the walk map.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+[Raid] Placed RaidPlayer(Clone) at (15.50, 1.25, 24.00).
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.18 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.80 speed x1.03
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.07
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.83 speed x0.91
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.18 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.07
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_01 pitch x1.18 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x1.20 speed x0.96
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.81 speed x0.99
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.80 speed x1.03
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_02 pitch x1.18 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.83 speed x0.91
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.82 speed x1.07
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_02 pitch x1.18 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.80 speed x1.03
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.17, vol=Normal)
+[SpellCast] Local cast Ignis (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Ignis (Volume: Normal, affected: 1)
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) hurt vo_bronze_base_hurt_03 pitch x1.18 speed x1.09
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.82 speed x1.07
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) hurt vo_bronze_base_hurt_02 pitch x1.18 speed x1.09
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.18 speed x1.09
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.17, vol=Normal)
+[SpellCast] Local cast Frango (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Frango (Volume: Normal, affected: 1)
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.17, vol=Normal)
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_01 pitch x1.18 speed x1.09
+[SpellCast] Local cast Frango (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Frango (Volume: Normal, affected: 1)
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.83 speed x0.91
+[GuardSpeech] (gone) (bronze/levy) death vo_bronze_base_death_01 pitch x1.18 speed x1.09
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.18 speed x1.01
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_01 pitch x1.20 speed x1.01
+[MockVoice] StartListening
+[Vosk] Listening on 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.27, vol=Normal)
+[SpellCast] Local cast Ignis (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Ignis (Volume: Normal, affected: 0)
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.21, vol=Normal)
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.20 speed x1.01
+[SpellCast] Local cast Frango (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Frango (Volume: Normal, affected: 0)
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.07
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_01 pitch x1.18 speed x1.01
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.17, vol=Normal)
+[Vosk] Heard nothing it recognises.
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.20 speed x1.01
+[SpellCast] Local cast Frango (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Frango (Volume: Normal, affected: 1)
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.32, vol=Normal)
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.83 speed x0.91
+[SpellCast] Local cast Frango (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Frango (Volume: Normal, affected: 0)
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_03 pitch x1.20 speed x1.01
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.31, vol=Normal)
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.80 speed x1.03
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_02 pitch x1.18 speed x1.01
+[Vosk] Heard nothing it recognises.
+[SpellCast] Local cast Frango (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Frango (Volume: Normal, affected: 1)
+[MockVoice] Emit "IGNIS" (conf=1.00, rms=0.20, vol=Normal)
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.20 speed x1.01
+[SpellCast] Local cast Ignis (Volume: Normal)
+[SpellCast] Player RaidPlayer(Clone) cast Ignis (Volume: Normal, affected: 1)
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) hurt vo_bronze_base_hurt_03 pitch x1.18 speed x1.01
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.23, vol=Normal)
+[SpellCast] Not enough mana for Frango (20 needed).
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.20 speed x1.01
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) hurt vo_bronze_base_hurt_03 pitch x1.18 speed x1.01
+[Vosk] Heard nothing it recognises.
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.24, vol=Normal)
+[SpellCast] Not enough mana for Frango (20 needed).
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.83 speed x0.91
+[MockVoice] Emit "FRANGO" (conf=1.00, rms=0.15, vol=Normal)
+[SpellCast] Not enough mana for Frango (20 needed).
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.18 speed x1.01
+[MockVoice] StopListening
+[Vosk] Heard nothing it recognises.
+[Vosk] Stopped listening.
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_03 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.82 speed x1.07
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_02 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.82 speed x1.07
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.20 speed x1.01
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_03 pitch x1.18 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.83 speed x0.91
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x1.20 speed x0.96
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) murmur vo_bronze_base_murmur_03 pitch x1.20 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.80 speed x1.03
+Impact Damage Dealt: 11 (Impact: 4.1)
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.82 speed x1.07
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) murmur vo_bronze_base_murmur_01 pitch x1.20 speed x1.01
+[GuardSpeech] (gone) (bronze/levy) death vo_bronze_base_death_02 pitch x1.18 speed x1.01
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.83 speed x0.91
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_02 pitch x1.20 speed x1.01
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_02 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x1.20 speed x0.96
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) murmur vo_bronze_base_murmur_01 pitch x1.20 speed x1.09
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_03 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.80 speed x1.03
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.83 speed x0.91
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.82 speed x1.07
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.81 speed x0.99
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_03 pitch x1.20 speed x1.01
+Impact Damage Dealt: 17 (Impact: 6.2)
+Impact Damage Dealt: 34 (Impact: 12.6)
+[GuardSpeech] (gone) (bronze/slinger) death vo_bronze_base_death_01 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.83 speed x0.91
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x1.20 speed x0.96
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.81 speed x0.99
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.82 speed x1.07
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.80 speed x1.03
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.81 speed x0.99
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.82 speed x1.07
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.83 speed x0.91
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.80 speed x1.03
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x1.20 speed x0.96
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.80 speed x1.03
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.81 speed x0.99
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.82 speed x1.07
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x1.20 speed x0.96
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.83 speed x0.91
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x1.07
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.80 speed x1.03
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_03 pitch x0.81 speed x0.99
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.82 speed x1.07
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x1.20 speed x0.96
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.83 speed x0.91
+[Coop] Every player is down; the raid is lost.
+[Lair] Placed RaidPlayer(Clone) at (1005.20, 1.30, 1.50) (PlayerSpawns/Spawn1).
+[Lair] The Collector finds the purses empty. Debt 940 -> 940.
+[Raid] Host's castle arrived: seed 3909286, BronzeAge (phase Generating).
+[Raid] BronzeAge content: rooms CastleRoomRegistry_BronzeAge, loot RaidLootTable_BronzeAge, enemies EnemyRoster_BronzeAge.
+[Raid] Building the castle from seed 3909286, BronzeAge (host).
+[CastleNav] 19 dressing pieces took 292 cells out of the walk map.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+Destroying GameObjects immediately is not permitted during physics trigger/contact, animation event callbacks, rendering callbacks or OnValidate. You must use Destroy instead.
+[Raid] Placed RaidPlayer(Clone) at (27.50, 1.25, -24.00).
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_04 pitch x0.81 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_04 pitch x0.83 speed x0.90
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.84 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.80 speed x1.08
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_03 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.81 speed x0.89
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.81 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.84 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_01 pitch x0.83 speed x0.90
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_02 pitch x0.81 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.81 speed x0.89
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.81 speed x1.05
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_01 pitch x1.20 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_02 pitch x0.81 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.84 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.83 speed x0.90
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.82 speed x0.88
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) murmur vo_bronze_base_murmur_04 pitch x1.19 speed x1.06
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_02 pitch x0.80 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.82 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_01 pitch x1.20 speed x1.01
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) murmur vo_bronze_base_murmur_01 pitch x1.16 speed x0.95
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.81 speed x0.89
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_02 pitch x0.83 speed x1.04
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_03 pitch x0.81 speed x1.05
+[Lockdown] The castle bars its doors (13).
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.84 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_03 pitch x0.81 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.82 speed x0.88
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_01 pitch x0.83 speed x0.90
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_01 pitch x0.80 speed x1.08
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.81 speed x1.05
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_02 pitch x1.19 speed x1.06
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_02 pitch x1.16 speed x0.95
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.84 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.81 speed x0.89
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_01 pitch x1.20 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) attack vo_bronze_base_attack_03 pitch x0.80 speed x1.08
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) attack vo_bronze_base_attack_03 pitch x0.81 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_01 pitch x0.83 speed x0.90
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_02 pitch x0.80 speed x1.08
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_02 pitch x0.81 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_02 pitch x1.19 speed x1.06
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_01 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.82 speed x0.88
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_04 pitch x0.81 speed x1.05
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_01 pitch x0.80 speed x1.08
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_01 pitch x1.19 speed x1.06
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.81 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.80 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.81 speed x0.89
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) murmur vo_bronze_base_murmur_02 pitch x1.20 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_02 pitch x0.83 speed x0.90
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.82 speed x0.88
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_03 pitch x1.16 speed x0.95
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.81 speed x0.89
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_02 pitch x0.81 speed x1.04
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_01 pitch x0.83 speed x0.90
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_02 pitch x1.17 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_01 pitch x0.81 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.84 speed x1.01
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_02 pitch x1.19 speed x1.06
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) attack vo_bronze_base_attack_02 pitch x0.80 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_01 pitch x0.82 speed x1.09
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_02 pitch x1.17 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_02 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.81 speed x0.89
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_03 pitch x1.16 speed x0.95
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.17 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) attack vo_bronze_base_attack_01 pitch x0.80 speed x1.08
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_03 pitch x1.19 speed x1.06
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.82 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.16 speed x0.95
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_01 pitch x0.83 speed x0.90
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_01 pitch x1.17 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.19 speed x1.06
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_02 pitch x0.80 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.81 speed x0.89
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_01 pitch x0.81 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.84 speed x1.01
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.20 speed x1.01
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.16 speed x0.95
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_03 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.83 speed x1.04
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) lost vo_bronze_base_lost_01 pitch x1.17 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.19 speed x1.06
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.81 speed x1.04
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.83 speed x0.90
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_01 pitch x1.19 speed x1.06
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.16 speed x0.95
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_03 pitch x0.80 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.84 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_01 pitch x0.81 speed x0.89
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_02 pitch x0.81 speed x1.05
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.83 speed x0.90
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_01 pitch x1.19 speed x1.06
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_02 pitch x1.16 speed x0.95
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_02 pitch x1.35 speed x0.92
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_03 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.81 speed x0.89
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_02 pitch x1.17 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_03 pitch x0.80 speed x1.08
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.20 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_01 pitch x0.81 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.84 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.82 speed x0.88
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_02 pitch x1.35 speed x0.92
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_02 pitch x0.81 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_03 pitch x1.19 speed x1.06
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_02 pitch x0.83 speed x0.90
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_01 pitch x1.17 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_02 pitch x1.35 speed x0.92
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.19 speed x1.06
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.83 speed x1.04
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_03 pitch x0.80 speed x1.08
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_01 pitch x1.20 speed x1.01
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_02 pitch x1.35 speed x0.92
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.84 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_02 pitch x0.80 speed x1.08
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) attack vo_bronze_base_attack_01 pitch x0.81 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) attack vo_bronze_base_attack_02 pitch x0.81 speed x0.89
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_03 pitch x1.19 speed x1.06
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_02 pitch x1.16 speed x0.95
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) attack vo_bronze_base_attack_03 pitch x0.83 speed x0.90
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) attack vo_bronze_base_attack_03 pitch x0.82 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) attack vo_bronze_base_attack_02 pitch x1.20 speed x1.01
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) lost vo_bronze_base_lost_02 pitch x1.35 speed x0.92
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.84 speed x1.01
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.17 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.16 speed x0.95
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.82 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_03 pitch x0.81 speed x1.05
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_03 pitch x1.17 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.84 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.82 speed x0.88
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_01 pitch x0.80 speed x1.08
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_01 pitch x1.17 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.19 speed x1.06
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.82 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_02 pitch x1.20 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.81 speed x1.04
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.81 speed x1.05
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_03 pitch x0.83 speed x0.90
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_01 pitch x1.16 speed x0.95
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.84 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_03 pitch x0.81 speed x0.89
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.82 speed x1.09
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_02 pitch x1.17 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_03 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.83 speed x1.04
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_03 pitch x1.35 speed x0.92
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) attack vo_bronze_base_attack_01 pitch x1.17 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_02 pitch x0.81 speed x1.04
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_01 pitch x0.83 speed x0.90
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.81 speed x0.89
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_03 pitch x1.20 speed x1.01
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_02 pitch x1.17 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.19 speed x1.06
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_02 pitch x0.80 speed x1.08
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_01 pitch x1.16 speed x0.95
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_03 pitch x1.20 speed x1.01
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_02 pitch x1.17 speed x1.09
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_03 pitch x0.83 speed x0.90
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_01 pitch x1.19 speed x1.06
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_02 pitch x0.81 speed x0.89
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) chase vo_bronze_base_chase_01 pitch x0.81 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_01 pitch x1.20 speed x1.01
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) chase vo_bronze_base_chase_02 pitch x1.17 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_01 pitch x0.82 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_03 pitch x1.16 speed x0.95
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_02 pitch x1.35 speed x0.92
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) alert vo_bronze_base_alert_01 pitch x1.17 speed x1.09
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_03 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) chase vo_bronze_base_chase_01 pitch x0.81 speed x0.89
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_03 pitch x1.16 speed x0.95
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) lost vo_bronze_base_lost_01 pitch x1.35 speed x0.92
+[GuardSpeech] WallSlinger(Clone) (bronze/slinger) lost vo_bronze_base_lost_01 pitch x1.17 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_03 pitch x1.16 speed x0.95
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_02 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_03 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.84 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_01 pitch x0.81 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_02 pitch x1.19 speed x1.06
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_02 pitch x0.80 speed x1.08
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) murmur vo_bronze_base_murmur_03 pitch x0.81 speed x1.05
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_01 pitch x1.16 speed x0.95
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_01 pitch x0.83 speed x0.90
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.81 speed x0.89
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.84 speed x1.01
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_01 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_03 pitch x1.16 speed x0.95
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) alert vo_bronze_base_alert_03 pitch x0.83 speed x0.90
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) lost vo_bronze_base_lost_02 pitch x1.20 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_02 pitch x0.81 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.84 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_02 pitch x0.81 speed x0.89
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_04 pitch x0.82 speed x1.09
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.84 speed x1.01
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) alert vo_bronze_base_alert_01 pitch x1.20 speed x1.01
+[GuardSpeech] DendraChampion(Clone) (bronze/champion) lost vo_bronze_base_lost_02 pitch x0.81 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) lost vo_bronze_base_lost_01 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) murmur vo_bronze_base_murmur_01 pitch x0.81 speed x0.89
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.82 speed x0.88
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.84 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_03 pitch x0.83 speed x1.04
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_02 pitch x0.83 speed x1.04
+[GuardSpeech] PalaceLevy(Clone) (bronze/levy) chase vo_bronze_base_chase_03 pitch x1.20 speed x1.01
+[GuardSpeech] KeeperOfTheFlame(Clone) (bronze/keeper) alert vo_bronze_base_alert_01 pitch x0.83 speed x1.04
+[Lair] Placed RaidPlayer(Clone) at (1005.20, 1.30, 1.50) (PlayerSpawns/Spawn1).
+[Coop] Client Disconnecting.
+[Coop] Client Disconnected.
+[Coop] Server Disconnecting.
+[Coop] Server Disconnected.
+[Coop] Not connected.
+[Chatter] Stopped listening between casts.
+[Coop] Creating a Steam lobby...
+[Coop] Server Connecting.
+[Coop] Server Connected.
+[Coop] Hosting. Invite a friend with the Invite Friend button.
+[Coop] Client Connecting.
+[Coop] Client Connected.
+[Raid] Director spawned as server: phase Resolved, seed 3909286.
+[Coop] This machine plays as RaidPlayer(Clone) (owner 001).
+[Chatter] Listening between casts.
+WARNING (VoskAPI:Recognizer():recognizer.cc:84) Ignoring word missing in vocabulary: 'ignace'
+WARNING (VoskAPI:Recognizer():recognizer.cc:84) Ignoring word missing in vocabulary: 'sultus'
+WARNING (VoskAPI:Recognizer():recognizer.cc:84) Ignoring word missing in vocabulary: 'satis'
+[Coop] This machine plays as RaidPlayer(Clone) (owner 001).
+[Lair] Placed RaidPlayer(Clone) at (1005.20, 1.30, 1.50) (PlayerSpawns/Spawn1).
+[Coop] Client Disconnecting.
+[Coop] Client Disconnected.
+[Coop] Server Disconnecting.
+[Coop] Server Disconnected.
+[Coop] Not connected.
+[Chatter] Stopped listening between casts.
+NullReferenceException: Object reference not set to an instance of an object
+  at PurrNet.NetworkManager.OnTick () [0x0004d] in <e4ac0f15aa274170b280c3b137e7ef3b>:0 
+  at PurrNet.NetworkManager.OnClientTick () [0x00008] in <e4ac0f15aa274170b280c3b137e7ef3b>:0 
+  at PurrNet.Modules.TickManager.HandleTick () [0x00072] in <e4ac0f15aa274170b280c3b137e7ef3b>:0 
+  at PurrNet.Modules.TickManager.Update () [0x00000] in <e4ac0f15aa274170b280c3b137e7ef3b>:0 
+  at PurrNet.ModulesCollection.TriggerOnUpdate () [0x00010] in <e4ac0f15aa274170b280c3b137e7ef3b>:0 
+  at PurrNet.NetworkManager.Update () [0x0000b] in <e4ac0f15aa274170b280c3b137e7ef3b>:0 
+
+[Vosk] Closed 'Microphone (BlackShark V2 Pro PS 2.4)'.
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.

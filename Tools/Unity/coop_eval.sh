@@ -3,6 +3,7 @@
 # its result. The host is the Editor in Play mode; the client is the Development build in
 # Build/DevTest, reached by its process name.
 # Usage: bash Tools/Unity/coop_eval.sh host|client <action> [arg]
+# COOP_EVAL_FILE=<path> runs another script with the same placeholders (e.g. eval/coop_doors.cs).
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 
@@ -11,7 +12,7 @@ action="${2:?usage: coop_eval.sh host|client <action> [arg]}"
 arg="${3:-}"
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-code="$(sed -e "s|__ACTION__|$action|" -e "s|__ARG__|$arg|" "$here/eval/coop_carry.cs")"
+code="$(sed -e "s|__ACTION__|$action|" -e "s|__ARG__|$arg|" "${COOP_EVAL_FILE:-$here/eval/coop_carry.cs}")"
 
 target=()
 [ "$side" = "client" ] && target=(--runtime Plunderspell)

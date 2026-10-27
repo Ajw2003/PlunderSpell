@@ -51,7 +51,7 @@ namespace Plunderspell.Tests
             eye.transform.SetParent(go.transform, false);
             eye.transform.localPosition = Vector3.up * 0.6f;
             player.CameraTransform = eye.transform;
-            player.walkSpeed = 5f;
+            player.WalkSpeed = 5f;
             player.JumpForce = 25f;
             player.DodgeForce = 5f;
             typeof(PlayerStateMachine).GetField("_groundLayer", BindingFlags.NonPublic | BindingFlags.Instance)

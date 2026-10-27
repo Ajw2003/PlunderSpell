@@ -1,0 +1,32 @@
+settings: saved a byte-exact copy of the settings files
+03:13:03 build: yes (auto)
+03:13:03 building Build/DevTest
+03:13:36 build Succeeded
+03:13:44 host: state MainMenu players 0 local none holding nothing
+03:13:46 host: state LairRoom players 1 local 1005.200,1.499,1.500 holding nothing
+03:13:46 client started (pid 2844)
+03:14:03 client: state LairRoom players 2 local 1005.200,1.501,0.500 holding nothing
+03:14:04 host: state Playing players 2 local -20.500,1.497,12.000 holding nothing
+03:14:05 client: state Playing players 2 local -24.000,1.501,15.500 holding nothing
+03:14:11 spawn: warden at (-20.50, 1.50, 19.00), facing away
+03:14:14 look: host looks at the warden
+03:14:16 before the turn | host:   LanternWarden(Clone) state=Patrolling turned=False wickShowing=False at=(-20.72, 1.50, 18.42) | player local=True health=100 | player local=False health=100 | 
+03:14:17 before the turn | client: player local=True health=100 | player local=False health=100 | 
+03:14:19 client shot: shot requested /c/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/run1-before-client.png
+03:14:19 provoke: warden now faces the host's player, 6.4 m away
+03:14:21 start of the turn | host:   LanternWarden(Clone) state=Patrolling turned=False wickShowing=False at=(-20.75, 1.50, 18.42) | player local=True health=100 | player local=False health=100 | 
+03:14:22 start of the turn | client: player local=True health=100 | player local=False health=100 | 
+03:14:24 client shot: shot requested /c/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/run1-turning-client.png
+03:14:26 after the turn (the model swapped) | host:   LanternWarden(Clone) state=Patrolling turned=False wickShowing=False at=(-20.75, 1.50, 18.42) | player local=True health=100 | player local=False health=100 | 
+03:14:27 after the turn (the model swapped) | client: player local=True health=100 | player local=False health=100 | 
+03:14:29 client shot: shot requested /c/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/run1-swapped-client.png
+03:14:36 hunting | host:   LanternWarden(Clone) state=Patrolling turned=False wickShowing=False at=(-20.75, 1.50, 18.42) | player local=True health=100 | player local=False health=100 | 
+03:14:37 hunting | client: player local=True health=100 | player local=False health=100 | 
+03:14:39 client shot: shot requested /c/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/run1-hunting-client.png
+03:14:47 after the catch | host:   LanternWarden(Clone) state=Patrolling turned=False wickShowing=False at=(-20.75, 1.50, 18.42) | player local=True health=100 | player local=False health=100 | 
+03:14:49 after the catch | client: player local=True health=100 | player local=False health=100 | 
+03:14:50 client shot: shot requested /c/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/run1-after-client.png
+03:14:50 client log error lines: 2
+03:14:50 cleaning up
+settings: ProjectSettings/ProjectSettings.asset restored from the saved copy
+settings: ProjectSettings/Packages/com.unity.pipeline/RuntimePipelineConfig.json unchanged

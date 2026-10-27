@@ -1,4 +1,4 @@
-using System;
+using Code.Scripts.EventSystems;
 
 namespace Plunderspell.Core
 {
@@ -8,7 +8,16 @@ namespace Plunderspell.Core
         public GameState CurrentState { get; private set; } = GameState.MainMenu;
         public GameState PreviousState { get; private set; } = GameState.MainMenu;
 
-        public event Action<GameState, GameState> StateChanged;
+        /// <summary>Where Resume goes: the state the pause menu was opened from (Playing or LairRoom). Settings in between does not change it.</summary>
+        public GameState PausedFrom { get; private set; } = GameState.Playing;
+
+        /// <summary>A raid is on screen: playing, or paused from a raid. The raid HUD and its feedback draw only then, never over the Lair.</summary>
+        public bool RaidOnScreen =>
+            CurrentState == GameState.Playing || (CurrentState == GameState.Paused && PausedFrom == GameState.Playing);
+
+        /// <summary>The Lair room or Market, or a pause begun there: nothing loses health and no item breaks (#355).</summary>
+        public bool InSafePlace =>
+            CurrentState == GameState.LairRoom || (CurrentState == GameState.Paused && PausedFrom == GameState.LairRoom);
 
         public void ChangeState(GameState next)
         {
@@ -17,9 +26,14 @@ namespace Plunderspell.Core
                 return;
             }
 
+            if (next == GameState.Paused && CurrentState != GameState.Settings)
+            {
+                PausedFrom = CurrentState == GameState.LairRoom ? GameState.LairRoom : GameState.Playing;
+            }
+
             PreviousState = CurrentState;
             CurrentState = next;
-            StateChanged?.Invoke(PreviousState, CurrentState);
+            EventManager.Instance?.Publish(new GameStateChanged(PreviousState, CurrentState));
         }
     }
 }

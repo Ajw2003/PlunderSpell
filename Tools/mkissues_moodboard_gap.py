@@ -32,7 +32,7 @@ def add(title, labels, body):
 add("EPIC: The Mystical Market pillar does not exist",
     "epic,market",
 """## Problem
-`docs/plunderspell.md`'s mood board devotes a full pillar to the Mystical Market (the
+`docs/7-design/plunderspell.md`'s mood board devotes a full pillar to the Mystical Market (the
 Spellmonger's Stall, the Smith's Stall, the Alchemist's Stall, the Curiosity Dealer) with specific
 rules: it always costs more than finding the same thing in a dungeon, it remembers what it's sold
 a player, and whatever's left after the debt is settled is spent here. None of it exists in the
@@ -55,7 +55,7 @@ There is nowhere in the game to spend gold on anything but the debt. No market s
 screen, no purchase flow.
 
 ## Context
-The pitch (`docs/plunderspell.md`, "The Mystical Market" section) describes the market as bound to
+The pitch (`docs/7-design/plunderspell.md`, "The Mystical Market" section) describes the market as bound to
 the lair the same way the lair itself persists between sessions: "buy a thing once and it stays
 bought, even for a fellow who wanders in a month from now, poorer than you and grateful for it."
 `LairHubManager` already tracks debt and banked gold (`docs/4-systems/raid-scene-assembly.md`); a
@@ -114,7 +114,7 @@ add("EPIC: The Lair is a menu screen, not the physical place the pitch describes
     "epic,lair,art",
 """## Problem
 The pitch's Lair is physical and lived-in: "damp, yours, and permanent," lit by "one candle, one
-fire, falling away into black - the only safe frame in the whole game" (`docs/plunderspell.md`
+fire, falling away into black - the only safe frame in the whole game" (`docs/7-design/plunderspell.md`
 §9). What's built (`LairScreen`, per `docs/4-systems/raid-scene-assembly.md`) is a UI screen showing
 debt, banked gold and the four eras - there is no 3D lair space anywhere in `Assets/Models` or
 `Assets/_Project/Art` (which holds only `Models/Castle`, `Models/Loot`, `Models/Weapons` and
@@ -155,7 +155,7 @@ safe frame in the whole game" - a deliberate contrast with every other lit space
 rig, concept reference or mood target exists for it.
 
 ## Context
-Blocked on the 3D-lair-space issue existing first. See `docs/plunderspell.md` §9 ("Six frames the
+Blocked on the 3D-lair-space issue existing first. See `docs/7-design/plunderspell.md` §9 ("Six frames the
 game should be able to produce") and `docs/plans/moodboard-gap-closure.md` §2.7 for the other five
 frames, which are tracked separately (see the lighting-reference issue).
 
@@ -200,7 +200,7 @@ needs status icons.
 - At minimum: 8 spell icons, one per weapon in the final roster, one per loot category, 4 era
   icons, and icons for the status effects `StatusEffectReceiver` implements (burn, stun, sleep,
   and whatever else is added).
-- Icons follow the palette discipline from `docs/plunderspell.md` §9 (verdigris for
+- Icons follow the palette discipline from `docs/7-design/plunderspell.md` §9 (verdigris for
   glowing/arcane/touchable things, orpiment reserved for gold/value only, nothing else permitted
   to read as gold).""")
 
@@ -256,7 +256,7 @@ add("No melee combat system exists - reach/heft/noise stats aren't a swing mecha
 The pitch's whole framing of weapons is melee-first: "a sword is merely a heavy object with a
 sharp end that you swung hard" (§5), and every weapon in the arsenal table (§8) carries Reach,
 Heft and Noise stats. What's built is physics-based throwing with velocity-scaled impact damage
-(`docs/plunderspell.md` §10) - there is no documented swing/attack input, no reach-based hit
+(`docs/7-design/plunderspell.md` §10) - there is no documented swing/attack input, no reach-based hit
 detection, and no system in `docs/4-systems/` that reads a weapon's Reach or Noise stat during a
 melee swing.
 
@@ -406,7 +406,7 @@ as a guard firing position.
 ## Context
 The pitch's castle-architecture framing treats these as real defensive features, not decoration.
 Turning even one (murder-hole) into an actual gameplay hazard would make the "going home is always
-a fighting retreat" promise (`docs/plunderspell.md` §7) concrete rather than purely a layout shape.
+a fighting retreat" promise (`docs/7-design/plunderspell.md` §7) concrete rather than purely a layout shape.
 
 ## Acceptance criteria
 - At least one socket type (murder-hole is the suggested first) has a real functional effect in
@@ -536,7 +536,7 @@ effect plays" and "a hit *feels* like it landed."
 add("Throwing and swinging have no wind-up or follow-through animation weight",
     "animation,juice,enhancement",
 """## Problem
-Picking up, aiming and throwing an object (`docs/plunderspell.md` §5: "seize anything, turn it
+Picking up, aiming and throwing an object (`docs/7-design/plunderspell.md` §5: "seize anything, turn it
 about in front of you, push it out or draw it close, then let fly") has no documented wind-up or
 follow-through animation - the same gap applies to the not-yet-built melee swing.
 
@@ -645,7 +645,7 @@ been checked against the mood board's visual language (pigment palette, Eczar/Sp
 vellum-and-candlelight framing).
 
 ## Acceptance criteria
-- The lobby/invite UI uses the project's established palette and type per `docs/plunderspell.md`
+- The lobby/invite UI uses the project's established palette and type per `docs/7-design/plunderspell.md`
   §9, consistent with any other screen getting an art pass (main menu, lair).""")
 
 # ── Lighting reference ────────────────────────────────────────────────────────
@@ -653,7 +653,7 @@ vellum-and-candlelight framing).
 add("The pitch's six reference lighting frames have no concept art or lighting targets",
     "art,lighting,design",
 """## Problem
-`docs/plunderspell.md` §9 names six specific lighting frames as a production target: the Lair, the
+`docs/7-design/plunderspell.md` §9 names six specific lighting frames as a production target: the Lair, the
 Treasury, the Portal, the Hue & Cry, the Approach, and a Bronze Age Interior - each with a one-line
 mood description. None have concept art, a defined lighting rig, or even an agreed camera setup to
 check "did we hit this" against.

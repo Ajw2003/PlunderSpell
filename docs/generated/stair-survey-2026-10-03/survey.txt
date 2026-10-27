@@ -1,0 +1,7 @@
+CastleRoomRegistry / KeepStairwell
+  ok raised area 50 cells, top +2.6 m  (x15)
+CastleRoomRegistry_BronzeAge / BronzeMegaronStair
+  ok raised area 50 cells, top +2.6 m  (x10)
+CastleRoomRegistry_LateMedieval / LateTurretStair
+  ok raised area 50 cells, top +2.6 m  (x10)
+

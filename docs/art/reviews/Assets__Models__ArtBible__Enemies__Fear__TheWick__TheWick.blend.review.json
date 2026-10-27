@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Enemies/Fear/TheWick/TheWick.blend",
+  "sheet": "docs/art/models/fear/wick.png",
+  "verdict": "pass",
+  "seen": "Wick sheet: 3.04 m body vs 3.1 spec, 10596 tris, flaming lantern head cage with kettle hat, gambeson body, glaive arm and bone-tipped fingers match the concept in all six views; unchanged, arrived via the staging merge of #414.",
+  "date": "2026-10-27T02:45:27+0000"
+}

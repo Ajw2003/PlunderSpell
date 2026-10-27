@@ -1,0 +1,14 @@
+t 28.62 grant None on False share 0.00 shadows None strength 1.00
+t 29.25 grant None on False share 0.00 shadows None strength 1.00
+t 29.89 grant None on False share 0.00 shadows None strength 1.00
+t 30.51 grant None on False share 0.00 shadows None strength 1.00
+t 31.18 grant None on False share 0.00 shadows None strength 1.00
+t 31.83 grant None on False share 0.00 shadows None strength 1.00
+t 32.46 grant None on False share 0.00 shadows None strength 1.00
+t 33.09 grant None on False share 0.00 shadows None strength 1.00
+t 33.74 grant None on False share 0.00 shadows None strength 1.00
+t 34.35 grant None on False share 0.00 shadows None strength 1.00
+t 34.96 grant None on False share 0.00 shadows None strength 1.00
+t 35.61 grant None on False share 0.00 shadows None strength 1.00
+t 36.29 grant None on False share 0.00 shadows None strength 1.00
+t 36.92 grant None on False share 0.00 shadows None strength 1.00

@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,8 +26,6 @@ namespace Plunderspell.Voice
     public class VoskVoiceInputService : IVoiceInputService, IPhraseVocabularyTarget, IChatterSource
     {
         public bool IsListening { get; private set; }
-        public event Action<VoiceRecognitionResult> OnPhraseRecognized;
-        public event Action<ChatterReport> ChatterHeard;
 
         private bool _chatterEnabled;
 
@@ -34,6 +33,7 @@ namespace Plunderspell.Voice
         public const string ModelRelativePath = "VoskModels/small-en-us";
         private const int SampleRate = 16000;
         private const int MicLoopSeconds = 2;
+        private const int ChunkSamples = 1024; // 64 ms at 16 kHz: fixed read size so buffers are never reallocated
         private const string UnknownToken = "[unk]";
 
         /// <summary>The loudest moment of the last phrase (RMS, 0..1), for a loudness meter or calibration.</summary>
@@ -41,6 +41,49 @@ namespace Plunderspell.Voice
 
         /// <summary>How loud the microphone is right now (RMS, 0..1), for a level meter while listening.</summary>
         public float CurrentRms { get; private set; }
+
+        private void SetCurrentRms(float rms)
+        {
+            if (rms == CurrentRms)
+                return;
+            CurrentRms = rms;
+            EventManager.Instance?.Publish(new MicLevelChanged(rms));
+        }
+
+        private bool _meterEnabled;
+
+        /// <summary>
+        /// Opens the microphone and publishes its loudness as <see cref="MicLevelChanged"/> without
+        /// recognising anything. The Settings screen turns this on while it is open, so the player can
+        /// test and tune the microphone away from a raid.
+        /// </summary>
+        public bool MeterEnabled
+        {
+            get => _meterEnabled;
+            set
+            {
+                if (_meterEnabled == value)
+                    return;
+                _meterEnabled = value;
+#if !HEADLESS
+                if (value)
+                {
+                    if (Microphone.devices == null || Microphone.devices.Length == 0
+                        || !OpenMicrophone(MicrophonePicker.Resolve()))
+                    {
+                        _meterEnabled = false;
+                        return;
+                    }
+                    EnsurePump();
+                    _lastSamplePosition = Microphone.GetPosition(_micDevice);
+                }
+                else if (!IsListening)
+                {
+                    SetCurrentRms(0f);
+                }
+#endif
+            }
+        }
 
         /// <summary>The microphone being listened on, or null when none is open.</summary>
         public string CurrentDevice { get; private set; }
@@ -66,7 +109,7 @@ namespace Plunderspell.Voice
         // thread for ~90 ms on every release of the cast key, and opening it again cost as much on
         // the next press. It is opened once (WarmUp) and closed when the service goes away.
         private int _lastSamplePosition;
-        private float[] _floatBuffer = new float[SampleRate];
+        private float[] _floatBuffer = new float[ChunkSamples];
 
         // The Settings microphone gain, read when the cast key goes down so a change applies to the
         // next cast without a lookup every frame.
@@ -76,7 +119,7 @@ namespace Plunderspell.Voice
         private VoskRecognizer _chatterRecognizer;
         private float _chatterPeakRms;
         private float _chatterGain = 1f;
-        private short[] _shortBuffer = new short[SampleRate];
+        private short[] _shortBuffer = new short[ChunkSamples];
         private MainThreadPump _pump;
 
         public VoskVoiceInputService()
@@ -202,13 +245,13 @@ namespace Plunderspell.Voice
             // Words said just before the key went down are chatter, not part of the spell.
             if (_chatterEnabled)
             {
-                ReadMicrophone();
+                ReadMicrophone(flush: true);
                 FlushChatter();
             }
             // Only what is said from now on: the open microphone has been recording all along.
             _lastSamplePosition = Microphone.GetPosition(_micDevice);
             LastPeakRms = 0f;
-            CurrentRms = 0f;
+            SetCurrentRms(0f);
             _gain = Plunderspell.Core.AudioInputSettings.MicGain;
             CurrentDevice = _micDevice;
             IsListening = true;
@@ -225,7 +268,7 @@ namespace Plunderspell.Voice
             IsListening = false;
 #else
             // Take whatever was said right up to the release before closing the mic.
-            ReadMicrophone();
+            ReadMicrophone(flush: true);
             IsListening = false;
 
             try
@@ -240,13 +283,34 @@ namespace Plunderspell.Voice
             }
 
             // The microphone is left open for the next cast; see WarmUp.
-            CurrentRms = 0f;
+            SetCurrentRms(0f);
             CurrentDevice = null;
             Debug.Log("[Vosk] Stopped listening.");
+            // A microphone picked in Settings mid-cast reaches chatter now the cast is over.
+            SwitchChatterMicrophone();
 #endif
         }
 
 #if !HEADLESS
+        private void HandleMicrophoneChanged(string device) => SwitchChatterMicrophone();
+
+        /// <summary>Moves chatter onto the Settings microphone if it is on another device. Does nothing
+        /// mid-cast (the next cast opens the new device; StopListening calls this afterwards).</summary>
+        private void SwitchChatterMicrophone()
+        {
+            if (!(_chatterEnabled || _meterEnabled) || IsListening)
+                return;
+            string device = MicrophonePicker.Resolve();
+            if (device == _micDevice && _micClip != null)
+                return;
+            if (!OpenMicrophone(device))
+                return;
+            _lastSamplePosition = Microphone.GetPosition(_micDevice);
+            _chatterPeakRms = 0f;
+            // Drop half-heard words from the old device.
+            _chatterRecognizer?.Reset();
+        }
+
         /// <summary>Closes the microphone device if it is open. Blocks for a moment; never call it
         /// on the cast key's release.</summary>
         public void CloseMicrophone()
@@ -292,8 +356,8 @@ namespace Plunderspell.Voice
                 return null;
 
             string recognised = null;
-            void Capture(VoiceRecognitionResult r) => recognised = r.NormalizedText;
-            OnPhraseRecognized += Capture;
+            var capture = new object();
+            EventManager.Instance?.Subscribe(capture, (PhraseRecognized e) => recognised = e.Result.NormalizedText);
             try
             {
                 _recognizer.AcceptWaveform(samples, samples.Length);
@@ -302,7 +366,7 @@ namespace Plunderspell.Voice
             }
             finally
             {
-                OnPhraseRecognized -= Capture;
+                EventManager.Instance?.UnsubscribeFromAllEvents(capture);
             }
             return recognised;
         }
@@ -359,13 +423,15 @@ namespace Plunderspell.Voice
         }
 
         /// <summary>Feeds every sample recorded since the last call to whichever recogniser owns the
-        /// microphone now: the cast one while the key is held, else the chatter one. Main thread only.</summary>
-        private void ReadMicrophone()
+        /// microphone now: the cast one while the key is held, else the chatter one. Main thread only.
+        /// <paramref name="flush"/> also takes the last part-chunk, for the moments that must hear everything.</summary>
+        private void ReadMicrophone(bool flush = false)
         {
             bool casting = IsListening;
-            if (!(casting || _chatterEnabled) || _micClip == null)
+            if (!(casting || _chatterEnabled || _meterEnabled) || _micClip == null)
                 return;
-            if (casting ? _recognizer == null : (_chatterRecognizer == null && !EnsureChatterRecognizer()))
+            bool recognising = casting || _chatterEnabled;
+            if (recognising && (casting ? _recognizer == null : (_chatterRecognizer == null && !EnsureChatterRecognizer())))
             {
                 // Chatter with the model still loading: skip ahead rather than replay old audio later.
                 _lastSamplePosition = Microphone.GetPosition(_micDevice);
@@ -376,37 +442,50 @@ namespace Plunderspell.Voice
             int available = position - _lastSamplePosition;
             if (available < 0)
                 available += _micClip.samples; // wrapped around the loop clip
-            if (available <= 0)
-                return;
 
-            if (_floatBuffer.Length != available)
-                _floatBuffer = new float[available];
-            if (_shortBuffer.Length < available)
-                _shortBuffer = new short[available];
+            // Whole chunks only, so the buffers never change size; the rest waits for the next frame.
+            while (available >= ChunkSamples)
+            {
+                FeedChunk(_floatBuffer, casting);
+                available -= ChunkSamples;
+            }
 
+            // A flush takes everything up to now. Once per cast, so the exact-size array is fine.
+            if (flush && available > 0)
+                FeedChunk(new float[available], casting);
+        }
+
+        /// <summary>Reads <c>buffer.Length</c> samples from the last read position, advances it by that
+        /// much (wrapping the loop clip) and feeds them to the recogniser that owns the microphone.</summary>
+        private void FeedChunk(float[] buffer, bool casting)
+        {
+            int count = buffer.Length;
             // GetData wraps around the end of a looping clip on its own.
-            _micClip.GetData(_floatBuffer, _lastSamplePosition);
-            _lastSamplePosition = position;
+            _micClip.GetData(buffer, _lastSamplePosition);
+            _lastSamplePosition = (_lastSamplePosition + count) % _micClip.samples;
 
             // Gain first, so recognition, loudness and the level meter all hear the same voice.
-            VoiceUtility.ApplyGain(_floatBuffer, available, casting ? _gain : _chatterGain);
-            CurrentRms = VoiceUtility.ComputeRms(_floatBuffer, available);
+            float gain = casting ? _gain : _chatterEnabled ? _chatterGain : Plunderspell.Core.AudioInputSettings.MicGain;
+            VoiceUtility.ApplyGain(buffer, count, gain);
+            SetCurrentRms(VoiceUtility.ComputeRms(buffer, count));
+            if (!casting && !_chatterEnabled)
+                return; // only metering: nothing to recognise
             if (casting)
                 LastPeakRms = Mathf.Max(LastPeakRms, CurrentRms);
             else
                 _chatterPeakRms = Mathf.Max(_chatterPeakRms, CurrentRms);
-            for (int i = 0; i < available; i++)
-                _shortBuffer[i] = (short)Mathf.Clamp(_floatBuffer[i] * short.MaxValue, short.MinValue, short.MaxValue);
+            for (int i = 0; i < count; i++)
+                _shortBuffer[i] = (short)Mathf.Clamp(buffer[i] * short.MaxValue, short.MinValue, short.MaxValue);
 
             try
             {
                 // True means the recogniser found the end of an utterance: emit it now.
                 if (casting)
                 {
-                    if (_recognizer.AcceptWaveform(_shortBuffer, available))
+                    if (_recognizer.AcceptWaveform(_shortBuffer, count))
                         EmitFromJson(_recognizer.Result());
                 }
-                else if (_chatterRecognizer.AcceptWaveform(_shortBuffer, available))
+                else if (_chatterRecognizer.AcceptWaveform(_shortBuffer, count))
                 {
                     EmitChatter(_chatterRecognizer.Result());
                 }
@@ -476,7 +555,7 @@ namespace Plunderspell.Voice
                 return;
 
             Debug.Log($"[Chatter] Heard \"{heard}\" (rms={peak:0.00})");
-            ChatterHeard?.Invoke(new ChatterReport(heard, peak, VoiceUtility.ClassifyVolume(peak)));
+            EventManager.Instance?.Publish(new ChatterHeard(new ChatterReport(heard, peak, VoiceUtility.ClassifyVolume(peak))));
         }
 
         /// <summary>Recognises a finished recording as chatter would, without a microphone. Test seam for fixtures.</summary>
@@ -527,7 +606,7 @@ namespace Plunderspell.Voice
                 volume: VoiceUtility.ClassifyVolume(LastPeakRms));
 
             Debug.Log($"[Vosk] Heard \"{heard}\" -> {result}");
-            OnPhraseRecognized?.Invoke(result);
+            EventManager.Instance?.Publish(new PhraseRecognized(result));
         }
 
         private void EnsurePump()
@@ -540,6 +619,7 @@ namespace Plunderspell.Voice
                 UnityEngine.Object.DontDestroyOnLoad(go);
             _pump = go.AddComponent<MainThreadPump>();
             _pump.Init(this);
+            Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (Plunderspell.Core.MicrophoneChanged e) => HandleMicrophoneChanged(e.Device));
         }
 
         /// <summary>Hidden helper that reads the microphone on the Unity main thread each frame.</summary>
@@ -552,7 +632,13 @@ namespace Plunderspell.Voice
                 _owner?.ReadMicrophone();
             }
 
-            private void OnDestroy() => _owner?.CloseMicrophone();
+            private void OnDestroy()
+            {
+                if (_owner == null)
+                    return;
+                Code.Scripts.EventSystems.EventManager.Instance?.UnsubscribeFromAllEvents(_owner);
+                _owner.CloseMicrophone();
+            }
         }
 #endif
     }

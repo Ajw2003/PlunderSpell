@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 70
   IsArtifact: 0
-  Bulk: 3
+  Category: 3
+  WeightKg: 3
   Fragility: 999
   DisplayName: Round Shield
   Icon: {fileID: 0}

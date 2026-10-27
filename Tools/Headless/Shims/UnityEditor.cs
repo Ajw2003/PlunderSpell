@@ -80,6 +80,15 @@ namespace UnityEditor
         /// <summary>No serialized enum metadata headlessly: an empty name list and index 0.</summary>
         public string[] enumNames { get; set; } = Array.Empty<string>();
         public int enumValueIndex { get; set; }
+        public long longValue { get; set; }
+        public UnityEngine.Vector3 vector3Value { get; set; }
+        public UnityEngine.Color colorValue { get; set; }
+
+        // No serialized data model headlessly: elements and relatives are throwaway properties, so
+        // a write through them is accepted and dropped, like every other write on this shim.
+        public int arraySize { get; set; }
+        public SerializedProperty GetArrayElementAtIndex(int index) => new SerializedProperty();
+        public SerializedProperty FindPropertyRelative(string name) => new SerializedProperty();
     }
 
     public static class EditorGUILayout
@@ -149,8 +158,28 @@ namespace UnityEditor
         public static bool IsValidFolder(string path) => true;
         public static string CreateFolder(string parent, string name) => $"{parent}/{name}";
         public static bool DeleteAsset(string path) => true;
+        public static void StartAssetEditing() { }
+        public static void StopAssetEditing() { }
+        public static bool CopyAsset(string path, string newPath) => true;
+        public static void AddObjectToAsset(UnityEngine.Object objectToAdd, UnityEngine.Object assetObject) { }
+        public static bool IsSubAsset(UnityEngine.Object obj) => false;
+        /// <summary>No asset database headlessly, so nothing has a GUID or file id.</summary>
+        public static bool TryGetGUIDAndLocalFileIdentifier(UnityEngine.Object obj, out string guid, out long localId)
+        {
+            guid = string.Empty;
+            localId = 0;
+            return false;
+        }
         public static void ImportAsset(string path) { }
         public static void ImportAsset(string path, ImportAssetOptions options) { }
+    }
+
+    /// <summary>The preloaded-assets list is kept in memory, as the real one is kept in ProjectSettings.</summary>
+    public static class PlayerSettings
+    {
+        private static UnityEngine.Object[] s_preloaded = Array.Empty<UnityEngine.Object>();
+        public static UnityEngine.Object[] GetPreloadedAssets() => s_preloaded;
+        public static void SetPreloadedAssets(UnityEngine.Object[] assets) => s_preloaded = assets;
     }
 
     public enum InteractionMode { UserAction, AutomatedAction }
@@ -165,6 +194,8 @@ namespace UnityEditor
         }
         public static UnityEngine.Object InstantiatePrefab(UnityEngine.Object target) => target;
         public static UnityEngine.Object InstantiatePrefab(UnityEngine.Object target, Scene scene) => target;
+        public static UnityEngine.Object InstantiatePrefab(UnityEngine.Object target, Transform parent) =>
+            UnityEngine.Object.Instantiate(target, parent);
 
         /// <summary>No real prefab asset headlessly, so this returns an empty stand-in root.</summary>
         public static GameObject LoadPrefabContents(string path) => new GameObject("PrefabContents");
@@ -222,6 +253,8 @@ namespace UnityEditor
         public string assetPath { get; set; } = string.Empty;
         public AssetImporter assetImporter { get; set; }
         public UnityEditor.AssetImporters.AssetImportContext context { get; set; }
+        public virtual int GetPostprocessOrder() => 0;
+        public virtual uint GetVersion() => 0;
     }
 
     /// <summary>
@@ -251,10 +284,27 @@ namespace UnityEditor
         public ModelImporterAvatarSetup avatarSetup = ModelImporterAvatarSetup.NoAvatar;
         public ModelImporterMaterialImportMode materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
         public HumanDescription humanDescription;
+        public ModelImporterClipAnimation[] defaultClipAnimations = new ModelImporterClipAnimation[0];
+        public ModelImporterClipAnimation[] clipAnimations = new ModelImporterClipAnimation[0];
+    }
+
+    public class ModelImporterClipAnimation
+    {
+        public string name;
+        public string takeName;
+        public bool loopTime;
+        public bool lockRootRotation;
+        public bool lockRootHeightY;
+        public bool lockRootPositionXZ;
+        public bool keepOriginalOrientation;
+        public bool keepOriginalPositionY;
+        public bool keepOriginalPositionXZ;
     }
 
     public enum TextureImporterType { Default, NormalMap, GUI, Sprite, Cursor, Cookie, Lightmap, SingleChannel }
     public enum TextureImporterCompression { Uncompressed, Compressed, CompressedHQ, CompressedLQ }
+
+    public enum TextureImporterAlphaSource { None, FromInput, FromGrayScale }
 
     public class TextureImporter : AssetImporter
     {
@@ -264,6 +314,11 @@ namespace UnityEditor
         public bool isReadable;
         public int maxTextureSize = 2048;
         public TextureImporterCompression textureCompression = TextureImporterCompression.Compressed;
+        public TextureWrapMode wrapMode;
+        public TextureImporterAlphaSource alphaSource;
+        public bool alphaIsTransparency;
+        public FilterMode filterMode;
+        public int anisoLevel = 1;
     }
 }
 
@@ -275,6 +330,9 @@ namespace UnityEditor.SceneManagement
 
     public static class EditorSceneManager
     {
+        /// <summary>Every shim scene is the one implicit world, so a preview scene is just a named handle.</summary>
+        public static Scene NewPreviewScene() => new Scene { name = "Preview", isLoaded = true };
+        public static void ClosePreviewScene(Scene scene) { }
         public static Scene NewScene(NewSceneSetup setup, NewSceneMode mode) =>
             new Scene { name = "GeneratedScene" };
         public static bool SaveScene(Scene scene, string path) => true;
@@ -295,6 +353,9 @@ namespace UnityEditor.SceneManagement
 
 namespace UnityEditor.AssetImporters
 {
+    /// <summary>The FBX importer's per-material hand-over; the real one is only built by the importer, so this is empty.</summary>
+    public class MaterialDescription { }
+
     /// <summary>Import dependencies are recorded by the real importer only; nothing is tracked here.</summary>
     public class AssetImportContext
     {

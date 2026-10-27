@@ -6,7 +6,9 @@
         "Plunderspell.Foundation",
         "Plunderspell.Acoustics",
         "Plunderspell.Player",
-        "Plunderspell.Items"
+        "Unity.InputSystem",
+        "Plunderspell.Items",
+        "Plunderspell.Market"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

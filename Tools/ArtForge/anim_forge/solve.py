@@ -164,6 +164,8 @@ def solve(ref: Skeleton, frame: Frame, weapon_bone: str | None = WEAPON) -> Solv
         fwd = Qx["Hips"] @ Vector((0.0, -1.0, 0.0))
         for side, (ankle, q_foot) in frame.feet.items():
             hint = (fwd + Vector((0.12 if side == "L" else -0.12, 0.0, 0.0))).normalized()
+            if frame.leg_hint is not None:
+                hint = frame.leg_hint
             q_up, q_lo, short = chain_ik(ref, posed, f"UpperLeg.{side}", f"LowerLeg.{side}",
                                          ankle, hint)
             Qx[f"UpperLeg.{side}"], Qx[f"LowerLeg.{side}"] = q_up, q_lo

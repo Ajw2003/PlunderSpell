@@ -82,6 +82,8 @@ def build_bronze_wall_straight(bm, uv):
     _mass(bm, uv, -H, H, WALL_DEPTH, seed=0)
     _walk(bm, uv, -H, H, WALL_DEPTH)
     _parapet(bm, uv, -H, H)
+    # A sconce on the inner face; the shallowest block reaches WALL_DEPTH - 0.15.
+    cb._fire("Sconce", 0.0, -H + WALL_DEPTH - 0.15, 2.9, facing=(0.0, 1.0), lit=0)
 
 
 def _steps_up(bm, uv, u_face, u_dir, depth, side, low, high, n):
@@ -110,6 +112,10 @@ def build_bronze_wall_corner(bm, uv):
         _walk(bm, uv, te, H, WALL_DEPTH, side=side)
         _parapet(bm, uv, te, H, side=side)
         _steps_up(bm, uv, te, 1, WALL_DEPTH, side, WALK_Z + 0.1, top + 0.1, 3)
+    # A beacon on the middle of the tower's walk (its top is top + 0.1).
+    cb._fire("Beacon", -H + t / 2, -H + t / 2, top + 0.1, lit=2)
+    # A torch on the south wall's inner face, away from the tower, so the corner has a fire at Calm (#317).
+    cb._fire("Sconce", 3.0, -H + WALL_DEPTH - 0.15, 2.9, facing=(0.0, 1.0), lit=0)
 
 
 def build_bronze_bastion(bm, uv):
@@ -127,6 +133,9 @@ def build_bronze_bastion(bm, uv):
         _walk(bm, uv, u0, u1, WALL_DEPTH)
         _parapet(bm, uv, u0, u1)
         _steps_up(bm, uv, sgn * tw, sgn, WALL_DEPTH, "south", WALK_Z + 0.1, top + 0.1, 3)
+    # A beacon on the bastion's walk (top + 0.1) and a sconce on its inner face (shallowest block: td - 0.15).
+    cb._fire("Beacon", 0.0, -H + td / 2, top + 0.1, lit=2)
+    cb._fire("Sconce", 0.0, -H + td - 0.15, 2.9, facing=(0.0, 1.0), lit=0)
 
 
 def build_bronze_gate_approach(bm, uv):
@@ -199,6 +208,7 @@ def build_bronze_lion_gate(bm, uv):
         cb._box(bm, uv, METAL, (x, face + 0.125, 2.2), (0.08, 0.25, 0.08))
         mk.paint(bm, mk.add_cylinder(bm, 0.04, 0.5, loc=(x, face + 0.22, 2.35), segments=6), TIMBER, uv)
         mk.paint(bm, mk.add_cylinder(bm, 0.07, 0.18, loc=(x, face + 0.22, 2.69), segments=6, radius2=0.01), RED, uv)
+        cb._fire("Sconce", x, face + 0.22, 2.78, facing=(0.0, 1.0), lit=0, holder=False)   # the torch's own iron
     cb._box(bm, uv, TIMBER, (-4.2, face + 0.35, 0.08), (3.2, 0.16, 0.16))           # the bar, down
     # The stair: fourteen 0.30 m rises west to east up the east mass's north face to the walk.
     x0, steps = 2.75, 14

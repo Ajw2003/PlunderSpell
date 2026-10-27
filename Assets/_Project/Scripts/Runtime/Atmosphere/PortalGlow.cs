@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Extraction;
 using Plunderspell.Raid;
 using UnityEngine;
@@ -40,20 +41,13 @@ namespace Plunderspell.Atmosphere
 
         private void OnEnable()
         {
-            if (_director != null)
-            {
-                _director.PortalOpened += OnPortalOpened;
-                _director.PhaseChanged += OnPhaseChanged;
-            }
+            EventManager.Instance?.Subscribe(this, (PortalOpened e) => OnPortalOpened(e.Point));
+            EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) => OnPhaseChanged(e.Phase));
         }
 
         private void OnDisable()
         {
-            if (_director != null)
-            {
-                _director.PortalOpened -= OnPortalOpened;
-                _director.PhaseChanged -= OnPhaseChanged;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private void OnPortalOpened(Vector3 floorPoint)

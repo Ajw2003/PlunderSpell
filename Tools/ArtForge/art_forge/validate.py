@@ -101,7 +101,7 @@ def validate(obj: bpy.types.Object, bp: Blueprint) -> Report:
         if bp.entry.height_m and size[2] > bp.entry.height_m * (1 + DIM_TOLERANCE):
             report.warnings.append(f"height {size[2]:.2f} m exceeds the spec's "
                                    f"{bp.entry.height_m:.2f} m by more than 10 %")
-    elif bp.kind == "enemies":
+    elif bp.kind in ("enemies", "players"):
         _check_enemy(report, obj, bp, lo, hi)
     return report
 

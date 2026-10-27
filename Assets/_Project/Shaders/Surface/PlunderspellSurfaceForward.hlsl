@@ -6,6 +6,7 @@
 // off in soft bands with a warm-dark tint on the shadowed side instead of grey.
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Random.hlsl"
 
 struct Attributes
 {
@@ -69,13 +70,15 @@ half SampleDetail(float3 positionWS, half3 normalWS)
 // smooth gradient. _BandAmount mixes the banded result with the smooth one.
 half BandLight(half strength)
 {
+    half amount = _PlunderCel.x > 0.0 ? (half)_PlunderCel.x : _BandAmount;
+    half softness = _PlunderCel.y > 0.0 ? (half)_PlunderCel.y : _BandSoftness;
     half t = 1.0h - exp(-strength);
     half v = t * _Bands;
     half i = floor(v);
     half f = v - i;
-    half stepped = (i + smoothstep(0.5h - _BandSoftness, 0.5h + _BandSoftness, f)) / _Bands;
+    half stepped = (i + smoothstep(0.5h - softness, 0.5h + softness, f)) / _Bands;
     half banded = -log(max(1.0h - stepped, 0.02h));
-    return lerp(strength, banded, _BandAmount);
+    return lerp(strength, banded, amount);
 }
 
 // Fires light in bands; the moon, a faint fill, stays smooth, or banding would round it to nothing.
@@ -84,6 +87,80 @@ half3 LightContribution(Light light, half3 normalWS, bool banded)
     half facing = saturate(dot(normalWS, light.direction));
     half strength = facing * light.distanceAttenuation * light.shadowAttenuation;
     return light.color * (banded ? BandLight(strength) : strength);
+}
+
+// One set of pen strokes along coordinate c: 1 on a stroke, 0 between. Strokes thicken with
+// coverage, are anti-aliased by their screen size, and fade out where they would be closer than
+// about two pixels, so distant walls go plain instead of shimmering.
+half HatchStrokes(float c, half coverage)
+{
+    float aa = fwidth(c);
+    half halfWidth = 0.08h + 0.22h * coverage;
+    half d = abs(frac(c) - 0.5h);
+    half stroke = 1.0h - smoothstep(halfWidth - aa, halfWidth + aa, d);
+    return stroke * coverage * saturate(1.5h - aa * 3.0h);
+}
+
+// Cross-hatching in the shadows (#231): a first layer of diagonal strokes once the light falls
+// below _PlunderHatch.z, a crossing layer below half that. Drawn on the surface's dominant world
+// plane, wobbled by the detail texture so the strokes read as hand-drawn, not ruled.
+// ponytail: dominant-plane projection seams on curved meshes; blend the three planes if it shows.
+half HatchInk(float3 positionWS, half3 normalWS, half light, half detail)
+{
+    half start = (half)_PlunderHatch.z;
+    if (_PlunderHatch.x <= 0.0h || start <= 0.0h)
+        return 0.0h;
+    float3 p = positionWS * _PlunderHatch.y;
+    half3 w = abs(normalWS);
+    float2 uv = w.y >= max(w.x, w.z) ? p.xz : (w.x >= w.z ? p.zy : p.xy);
+    float wobble = (detail - 0.5h) * 0.6h;
+    half first = HatchStrokes(uv.x + uv.y + wobble, saturate((start - light) / start));
+    half second = HatchStrokes(uv.x - uv.y - wobble, saturate((start * 0.5h - light) / (start * 0.5h)));
+    return max(first, second) * (half)_PlunderHatch.x;
+}
+
+// Value noise on a world-plane coordinate, smoothly interpolated between hashed lattice corners.
+half ValueNoise(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = smoothstep(0.0, 1.0, frac(p));
+    half a = GenerateHashedRandomFloat(asuint((int2)i));
+    half b = GenerateHashedRandomFloat(asuint((int2)i + int2(1, 0)));
+    half c = GenerateHashedRandomFloat(asuint((int2)i + int2(0, 1)));
+    half d = GenerateHashedRandomFloat(asuint((int2)i + int2(1, 1)));
+    return lerp(lerp(a, b, f.x), lerp(c, d, f.x), f.y);
+}
+
+// Paper and paint grain (#266): blotches about a metre across plus a fine fibre layer, on the
+// surface's dominant world plane so they stay put as the camera moves. Returns a multiplier.
+half PaperGrain(float3 positionWS, half3 normalWS)
+{
+    if (_PlunderPaint.x <= 0.0h)
+        return 1.0h;
+    half3 w = abs(normalWS);
+    float2 uv = w.y >= max(w.x, w.z) ? positionWS.xz : (w.x >= w.z ? positionWS.zy : positionWS.xy);
+    // Two-tone mottling: a 1 m noise snapped into patches of light and dark paint, edges softened.
+    half n = 0.65h * ValueNoise(uv * _PlunderBlotch.x) + 0.35h * ValueNoise(uv * _PlunderBlotch.y + 17.0);
+    half blotch = smoothstep((half)_PlunderBlotch.z, (half)_PlunderBlotch.w, n);
+    // The fine layer fades where its cells shrink under a pixel; at a grazing angle it shimmered (#275).
+    float2 fibreUv = uv * _PlunderFine.x;
+    half fibre = lerp(0.5h, ValueNoise(fibreUv), saturate(1.5h - 2.0h * length(fwidth(fibreUv))));
+    return 1.0h - _PlunderPaint.x * (0.8h * blotch + 0.2h * fibre);
+}
+
+// Ink edges (#266): a crisp dark band where the surface turns away from the eye, and the baked soot
+// in crevices (vertex colour red) deepened to a line. Returns how much ink, 0 to 1.
+half EdgeInk(float3 positionWS, half3 normalWS, half soot)
+{
+    if (_PlunderPaint.y <= 0.0h)
+        return 0.0h;
+    half3 viewDir = (half3)normalize(GetWorldSpaceViewDir(positionWS));
+    half rim = smoothstep((half)_PlunderInk.x, (half)_PlunderInk.y, 1.0h - saturate(abs(dot(normalWS, viewDir))));
+    // Only where the surface curves: on a flat wall the rim's edge is a curve that slid over the
+    // upper wall as the camera moved (#275). A flat face has no change of normal across a pixel.
+    rim *= saturate(length(fwidth(normalWS)) * (half)_PlunderInk.z);
+    half crease = smoothstep((half)_PlunderSoot.x, (half)_PlunderSoot.y, soot);
+    return saturate(max(rim, crease)) * (half)_PlunderPaint.y;
 }
 
 half4 SurfaceFragment(Varyings input) : SV_Target
@@ -105,8 +182,10 @@ half4 SurfaceFragment(Varyings input) : SV_Target
     // Soot: crevices baked into vertex colour by the pipeline, and grime rising from the ground on walls.
     albedo *= lerp(1.0h, input.color.r, _VertexSoot);
     half wall = 1.0h - abs(normalWS.y);
-    half aboveGround = saturate((input.positionWS.y - 0.3) / 1.6);
+    half aboveGround = saturate((input.positionWS.y - (_PlunderSoot.w > 0.0 ? _PlunderSoot.z : 0.3)) / (_PlunderSoot.w > 0.0 ? _PlunderSoot.w : 1.6));
     albedo *= lerp(1.0h, lerp(_GroundGrime, 1.0h, aboveGround), wall);
+    // Extra soot low on walls (#268): darkens the bottom 1.5 m beyond the material's own grime.
+    albedo *= lerp(1.0h, lerp(1.0h - (half)_PlunderPaint.z, 1.0h, aboveGround), wall);
 
     InputData inputData = (InputData)0;
     inputData.positionWS = input.positionWS;
@@ -139,6 +218,11 @@ half4 SurfaceFragment(Varyings input) : SV_Target
     #endif
 
     half3 color = albedo * lighting;
+    // Ink darkens towards black but keeps a little of the colour under it, like pen over paint.
+    half brightness = 1.0h - exp(-dot(lighting, half3(0.2126h, 0.7152h, 0.0722h)));
+    color *= 1.0h - 0.75h * HatchInk(input.positionWS, normalWS, brightness, detail);
+    color *= PaperGrain(input.positionWS, normalWS);
+    color *= 1.0h - (half)_PlunderInk.w * EdgeInk(input.positionWS, normalWS, input.color.r);
     // Always on: LootHighlight lights plunder by setting _EmissionColor on a property block.
     color += SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, input.uv).rgb * _EmissionColor.rgb;
     return half4(color, 1.0h);

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 1800
   IsArtifact: 1
-  Bulk: 14
+  Category: 1
+  WeightKg: 14
   Fragility: 6
   DisplayName: Gilded Altarpiece
   Icon: {fileID: 0}

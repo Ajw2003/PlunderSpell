@@ -1,0 +1,51 @@
+{
+  "name": "PlunderSpell",
+  "drafted_from": "docs\\generated\\design-system\\project\\tokens.json",
+  "themes": [
+    "dark"
+  ],
+  "colors": {
+    "background": "#14120E",
+    "surface": "#1E1A14",
+    "text": "#DCD2BA",
+    "text_muted": "#9A9078",
+    "line": "#332D22"
+  },
+  "roles": {
+    "you_act": {
+      "color": "#5FA288",
+      "why": "verdigris, the game's interactive colour; aj approved 2026-10-15"
+    },
+    "blocking": {
+      "color": "#C4542E",
+      "why": "madder, the game's danger colour; aj approved 2026-10-15"
+    },
+    "accent": {
+      "color": "#2E4C41",
+      "why": "verdigris-lo, the game's low-emphasis green; aj picked it over lapis 2026-10-15"
+    },
+    "done": {
+      "color": "#9A9078",
+      "why": "vellum-dim; aj approved 2026-10-15"
+    }
+  },
+  "reserved": [
+    {
+      "color": "#C9A227",
+      "rule": "orpiment: gold and loot only"
+    },
+    {
+      "color": "#7A6AA0",
+      "rule": "lapis: the voice only (incantations, portals)"
+    }
+  ],
+  "fonts": {
+    "display": "Eczar",
+    "body": "Spectral",
+    "label": "Overpass Mono"
+  },
+  "shape": {
+    "corner_radius": 0
+  },
+  "pictures": "required"
+}

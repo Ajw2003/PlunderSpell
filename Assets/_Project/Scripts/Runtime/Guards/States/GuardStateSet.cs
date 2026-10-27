@@ -20,7 +20,11 @@ namespace Plunderspell.Guards
             Slept = new SleptState(guard);
             OnFire = new OnFireState(guard);
             Dead = new DeadState(guard);
+            Turning = new TurningState(guard);
         }
+
+        /// <summary>The Lantern Warden turning into the Wick (#417).</summary>
+        public TurningState Turning { get; }
 
         /// <summary>Walking about (#207).</summary>
         public GuardState Patrol { get; }

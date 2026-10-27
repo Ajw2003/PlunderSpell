@@ -1,0 +1,5 @@
+Age           | lit art             | lit game            | shadow art          | shadow game        
+BronzeAge     | 109, 64, 26 L 71 | 100, 59, 41 L 66 | 109, 65, 28 L 71 |  65, 36, 22 L 41
+HighMedieval  | 102, 66, 38 L 72 |  89, 58, 39 L 63 |  52, 36, 20 L 38 |  64, 42, 24 L 45
+LateMedieval  | 109, 73, 37 L 78 |  99, 68, 47 L 73 |  66, 41, 21 L 45 |  81, 52, 29 L 56
+AgeOfPowder   |  53, 42, 30 L 44 |  69, 40, 26 L 45 |  44, 32, 20 L 33 |  45, 27, 18 L 30

@@ -86,7 +86,7 @@ namespace Plunderspell.EditorTools
 
         private static void BakeRegistry(CastleRoomRegistry registry, string overlayFolder, Scene scene, StringBuilder report)
         {
-            foreach (CastleRoomModuleData entry in registry.Modules)
+            foreach (CastleRoomModuleData entry in System.Linq.Enumerable.Concat(registry.Modules, registry.Stairs))
             {
                 if (entry == null || entry.Prefab == null)
                     continue;
@@ -96,7 +96,7 @@ namespace Plunderspell.EditorTools
                 Physics.SyncTransforms();
                 // The drawbridge spans a moat, so a virtual ground under it would be a lie.
                 bool strip = entry.Zone == CastleZone.CurtainWall && entry.RoomId != DrawbridgeId;
-                CastleNavTile tile = BakeModule(scene.GetPhysicsScene(), strip, out int dropped);
+                CastleNavTile tile = BakeModule(scene.GetPhysicsScene(), strip, entry.UpperFloorHeight, out int dropped);
                 Object.DestroyImmediate(go);
 
                 entry.NavTile = tile;
@@ -122,7 +122,7 @@ namespace Plunderspell.EditorTools
                    $" | {dropped} | {bytes}";
         }
 
-        private static CastleNavTile BakeModule(PhysicsScene physics, bool strip, out int dropped)
+        private static CastleNavTile BakeModule(PhysicsScene physics, bool strip, float upperFloor, out int dropped)
         {
             int cells = N * N;
             var walk = new bool[Scratch * cells];
@@ -188,10 +188,10 @@ namespace Plunderspell.EditorTools
                 // an entrance is wherever the room's archway meets it.
                 if (!strip && Mathf.Abs(c) > ArchHalfWidth)
                     continue;
-                if (LowestSurface(walk, height, i, N - 1) >= 0) north.Add((ushort)((N - 1) * N + i));
-                if (LowestSurface(walk, height, N - 1, i) >= 0) east.Add((ushort)(i * N + N - 1));
-                if (LowestSurface(walk, height, i, 0) >= 0) south.Add((ushort)i);
-                if (LowestSurface(walk, height, 0, i) >= 0) west.Add((ushort)(i * N));
+                if (LowestSurface(walk, height, i, N - 1) >= 0 || SurfaceAt(walk, height, i, N - 1, upperFloor) >= 0) north.Add((ushort)((N - 1) * N + i));
+                if (LowestSurface(walk, height, N - 1, i) >= 0 || SurfaceAt(walk, height, N - 1, i, upperFloor) >= 0) east.Add((ushort)(i * N + N - 1));
+                if (LowestSurface(walk, height, i, 0) >= 0 || SurfaceAt(walk, height, i, 0, upperFloor) >= 0) south.Add((ushort)i);
+                if (LowestSurface(walk, height, 0, i) >= 0 || SurfaceAt(walk, height, 0, i, upperFloor) >= 0) west.Add((ushort)(i * N));
             }
 
             // Wall tops, lintels and sealed-off pockets are walkable on their own; keep only what
@@ -203,11 +203,13 @@ namespace Plunderspell.EditorTools
             {
                 foreach (ushort p in side)
                 {
-                    int s = LowestSurface(walk, height, p % N, p / N);
-                    if (!reached[s])
+                    foreach (int s in new[] { LowestSurface(walk, height, p % N, p / N), SurfaceAt(walk, height, p % N, p / N, upperFloor) })
                     {
-                        reached[s] = true;
-                        stack.Push(s);
+                        if (s >= 0 && !reached[s])
+                        {
+                            reached[s] = true;
+                            stack.Push(s);
+                        }
                     }
                 }
             }
@@ -296,6 +298,21 @@ namespace Plunderspell.EditorTools
                     best = i;
             }
             return best >= 0 && height[best] <= MaxDoorwayFloor ? best : -1;
+        }
+
+        // The surface in a column whose height is within 0.1 m of a floor, or -1: a stair's upper floor
+        // (#247) is an archway floor too, though it is not the column's lowest surface.
+        private static int SurfaceAt(bool[] walk, float[] height, int x, int z, float floor)
+        {
+            if (floor <= 0f)
+                return -1;
+            for (int layer = 0; layer < Scratch; layer++)
+            {
+                int i = (layer * N + z) * N + x;
+                if (walk[i] && Mathf.Abs(height[i] - floor) < 0.1f)
+                    return i;
+            }
+            return -1;
         }
 
         /// <summary>Top-down overlay, north up: one panel per layer. Green walkable (brighter =

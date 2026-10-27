@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guard voice recorder</title>
+<!-- record.html is GENERATED from this template by make_recording_script.py. Edit the template. -->
+<style>
+  :root { --bg:#14161a; --panel:#1f2329; --text:#f2f2f2; --dim:#b4bac4; --accent:#ffd166;
+          --good:#7ee787; --bad:#ff7b72; --line:#3a414b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:18px/1.45 system-ui, "Segoe UI", sans-serif; }
+  .wrap { display:grid; grid-template-columns: 1fr 300px; gap:16px; max-width:1200px; margin:0 auto; padding:16px; }
+  @media (max-width: 800px) { .wrap { grid-template-columns: 1fr; } }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  h1 { font-size:20px; margin:0 0 8px; }
+  label, select, button { font-size:18px; }
+  select { background:var(--bg); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:6px; }
+  button { background:#2c333c; color:var(--text); border:2px solid var(--line); border-radius:8px; padding:10px 16px; cursor:pointer; }
+  button:hover:not(:disabled) { border-color:var(--accent); }
+  button:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  button.primary { background:var(--accent); color:#111; border-color:var(--accent); font-weight:700; }
+  button.rec { background:#b3261e; border-color:#ff9b94; font-weight:700; }
+  .how { color:var(--dim); font-size:16px; margin:6px 0; }
+  .say { font-size:38px; line-height:1.2; font-weight:700; margin:12px 0; min-height:1.2em; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:99px; font-weight:700; border:2px solid; margin-right:8px; }
+  .badge.quiet { color:#8ecbff; border-color:#8ecbff; }
+  .badge.normal { color:var(--text); border-color:var(--text); }
+  .badge.loud { color:var(--bad); border-color:var(--bad); }
+  .dir { color:var(--accent); font-style:italic; margin:6px 0; }
+  .bar { height:10px; background:var(--bg); border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+  .bar > div { height:100%; background:var(--accent); width:0; }
+  .meter { height:22px; }
+  .meter > div { background:var(--good); }
+  .row { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0; align-items:center; }
+  .msg { min-height:1.5em; font-weight:600; }
+  .warn { color:var(--bad); }
+  .ok { color:var(--good); }
+  ol { list-style:none; margin:0; padding:0; max-height:70vh; overflow:auto; }
+  li button { width:100%; text-align:left; padding:6px 8px; font-size:15px; border-width:1px; margin-bottom:3px; }
+  li.cur button { border-color:var(--accent); border-width:2px; }
+  .tick { display:inline-block; width:1.4em; font-weight:700; }
+  .tick.done { color:var(--good); }
+  .small { font-size:15px; color:var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<main class="panel">
+  <h1>Guard voice recorder</h1>
+  <div class="row">
+    <label for="age">Age:</label><select id="age"></select>
+    <button id="folder" type="button">Choose output folder</button>
+  </div>
+  <p class="small" id="saveinfo"></p>
+  <p class="how" id="how"></p>
+  <p class="small"><b>One voice for every line.</b> Read all lines as yourself in one voice; the game disguises it into many guards later.</p>
+  <hr style="border-color:var(--line)">
+  <div class="small" id="pos"></div>
+  <div class="bar" aria-hidden="true"><div id="progress"></div></div>
+  <p class="small" id="situation"></p>
+  <div class="say" id="say"></div>
+  <div><span class="badge" id="loud"></span><span id="tone"></span></div>
+  <div class="dir" id="dir"></div>
+  <div class="small" id="note"></div>
+  <p class="small" id="gainHint"></p>
+  <div class="small">Input level</div>
+  <div class="bar meter" aria-hidden="true"><div id="meter"></div></div>
+  <div class="row">
+    <button id="rec" type="button" class="primary">Record (Space)</button>
+    <button id="play" type="button" disabled>Play back</button>
+    <button id="redo" type="button" disabled>Redo</button>
+    <button id="keep" type="button" disabled>Keep and next (Enter)</button>
+  </div>
+  <div class="row">
+    <button id="prev" type="button">Previous</button>
+    <button id="skip" type="button">Skip</button>
+  </div>
+  <div class="msg" id="take" aria-live="polite"></div>
+  <div class="msg" id="warning" aria-live="assertive"></div>
+  <p class="small">Leave about a second of silence before and after each take. Record in a dead room, 20 cm from the mic.
+     Perform bigger than feels natural.</p>
+</main>
+<aside class="panel">
+  <h1>Lines</h1>
+  <p class="small" id="count"></p>
+  <ol id="list"></ol>
+</aside>
+</div>
+
+<script id="data" type="application/json">__LINES_JSON__</script>
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById("data").textContent);
+const $ = (id) => document.getElementById(id);
+
+// ---- state ----
+let ageIdx = 0, lineIdx = 0;
+let dirHandle = null;
+let take = null;          // {samples: Float32Array, rate, peak, seconds} for the current, unkept take
+let done = {};            // file name -> true, for the current age
+let recording = null;     // live capture object
+let playing = null;
+const STORE = "guardvoice.progress.";
+
+// localStorage can throw or be absent (private window, file:// quirks); the page must work without it.
+function loadProgress(age) {
+  try { return JSON.parse(localStorage.getItem(STORE + age) || "{}"); } catch (e) { return {}; }
+}
+function saveProgress(age) {
+  try { localStorage.setItem(STORE + age, JSON.stringify({ done: done, line: lineIdx })); } catch (e) { /* no storage: fine */ }
+}
+
+const curAge = () => DATA.ages[ageIdx];
+const curLine = () => curAge().lines[lineIdx];
+
+function setAge(i) {
+  ageIdx = i;
+  const saved = loadProgress(curAge().id);
+  done = saved.done || {};
+  lineIdx = Math.min(saved.line || 0, curAge().lines.length - 1);
+  discardTake();
+  buildList();
+  render();
+}
+
+function buildList() {
+  const ol = $("list"); ol.textContent = "";
+  curAge().lines.forEach((ln, i) => {
+    const li = document.createElement("li"); li.id = "li" + i;
+    const b = document.createElement("button"); b.type = "button";
+    b.addEventListener("click", () => jump(i));
+    li.appendChild(b); ol.appendChild(li);
+  });
+}
+
+function refreshList() {
+  curAge().lines.forEach((ln, i) => {
+    const li = $("li" + i);
+    li.className = i === lineIdx ? "cur" : "";
+    const ok = !!done[ln.file];
+    const b = li.firstChild;
+    b.textContent = "";
+    const t = document.createElement("span");
+    // A tick character AND a text label, so colour is never the only signal.
+    t.className = "tick" + (ok ? " done" : ""); t.textContent = ok ? "✓" : "○";
+    b.appendChild(t);
+    b.appendChild(document.createTextNode(ln.situation + " " + ln.number + (ln.text ? ": " + ln.text : "")));
+    b.setAttribute("aria-label", (ok ? "recorded: " : "not recorded: ") + ln.file);
+  });
+  const n = Object.keys(done).length;
+  $("count").textContent = n + " of " + curAge().lines.length + " recorded";
+}
+
+function render() {
+  const a = curAge(), ln = curLine();
+  $("how").textContent = "How to sound: " + a.howToSound + " (" + a.language + ")";
+  $("pos").textContent = "Line " + (lineIdx + 1) + " of " + a.lines.length + "  |  " + ln.file + (done[ln.file] ? "  |  recorded" : "");
+  $("progress").style.width = (100 * Object.keys(done).length / a.lines.length) + "%";
+  $("situation").textContent = "Situation: " + ln.situation;
+  $("say").textContent = ln.text || "(no words: make the sound)";
+  const lb = $("loud"); lb.className = "badge " + ln.loudness;
+  lb.textContent = ln.loudness === "loud" ? "LOUD" : ln.loudness === "quiet" ? "quiet" : "normal volume";
+  $("tone").textContent = ln.tone;
+  $("dir").textContent = ln.direction ? "Direction: " + ln.direction : "";
+  $("note").textContent = (ln.note ? ln.note + " " : "") + "Take must be at least " + ln.minSeconds + " s.";
+  $("gainHint").textContent = ln.loudness === "loud" ? "Turn the mic gain DOWN for this line so it does not clip." : "";
+  $("gainHint").className = "small" + (ln.loudness === "loud" ? " warn" : "");
+  $("saveinfo").textContent = dirHandle
+    ? "Saving each kept take straight into the chosen folder."
+    : window.showDirectoryPicker
+      ? "Suggested folder: Tools/GuardVoice/takes/" + a.id + "/ . Until you choose one, kept takes download instead."
+      : "This browser cannot pick a folder, so each kept take is offered as a download. Use Chrome or Edge to save into a folder.";
+  updateButtons();
+  refreshList();
+  const cur = $("li" + lineIdx); if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: "nearest" });
+}
+
+function updateButtons() {
+  const isRec = !!recording;
+  $("rec").textContent = isRec ? "Stop (Space)" : "Record (Space)";
+  $("rec").className = isRec ? "rec" : "primary";
+  $("play").disabled = !take || isRec;
+  $("redo").disabled = !take || isRec;
+  $("keep").disabled = !take || isRec || take.seconds < curLine().minSeconds;
+}
+
+function jump(i) { if (recording) return; discardTake(); lineIdx = i; saveProgress(curAge().id); render(); }
+function discardTake() { stopPlay(); take = null; $("take").textContent = ""; $("warning").textContent = ""; $("warning").className = "msg"; }
+
+// ---- capture ----
+// AudioWorklet code is built as a Blob so the page stays one file and works from file://.
+const WORKLET_SRC = "class Cap extends AudioWorkletProcessor{process(i){const c=i[0][0];if(c)this.port.postMessage(c.slice());return true;}}registerProcessor('cap',Cap);";
+
+async function startRecording() {
+  $("warning").textContent = ""; $("warning").className = "msg";
+  let stream;
+  try {
+    // Processing off: echo cancel / noise suppression / auto gain would colour the voice the game disguises later.
+    stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
+  } catch (e) {
+    $("warning").textContent = "Could not open the microphone: " + e.message + ". Allow microphone access and try again.";
+    $("warning").className = "msg warn"; return;
+  }
+  discardTake();
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  await ctx.resume();
+  const src = ctx.createMediaStreamSource(stream);
+  const chunks = []; let length = 0, peak = 0;
+  const onChunk = (data) => {
+    chunks.push(data); length += data.length;
+    let p = 0; for (let i = 0; i < data.length; i++) { const v = Math.abs(data[i]); if (v > p) p = v; }
+    if (p > peak) peak = p;
+    $("meter").style.width = Math.min(100, p * 100) + "%";
+    $("meter").style.background = p >= 0.99 ? "var(--bad)" : "var(--good)";
+  };
+  const rec = { stream, ctx, src, chunks, get length() { return length; }, get peak() { return peak; } };
+  let usedWorklet = false;
+  if (ctx.audioWorklet && window.AudioWorkletNode) {
+    try {
+      const url = URL.createObjectURL(new Blob([WORKLET_SRC], { type: "application/javascript" }));
+      await ctx.audioWorklet.addModule(url); URL.revokeObjectURL(url);
+      const node = new AudioWorkletNode(ctx, "cap", { numberOfOutputs: 0 });
+      node.port.onmessage = (ev) => onChunk(ev.data);
+      src.connect(node); rec.node = node; usedWorklet = true;
+    } catch (e) { usedWorklet = false; }
+  }
+  if (!usedWorklet) {
+    // Fallback for browsers without worklets. Deprecated but widely available.
+    const node = ctx.createScriptProcessor(4096, 1, 1);
+    node.onaudioprocess = (ev) => onChunk(new Float32Array(ev.inputBuffer.getChannelData(0)));
+    const mute = ctx.createGain(); mute.gain.value = 0;
+    src.connect(node); node.connect(mute); mute.connect(ctx.destination); rec.node = node;
+  }
+  recording = rec; updateButtons();
+  rec.timer = setInterval(() => { $("take").textContent = "Recording... " + (rec.length / ctx.sampleRate).toFixed(1) + " s"; }, 100);
+}
+
+async function stopRecording() {
+  const rec = recording; recording = null;
+  clearInterval(rec.timer);
+  rec.src.disconnect(); if (rec.node) rec.node.disconnect();
+  rec.stream.getTracks().forEach((t) => t.stop());
+  const rate = rec.ctx.sampleRate;
+  await rec.ctx.close();
+  const samples = new Float32Array(rec.length); let off = 0;
+  for (const c of rec.chunks) { samples.set(c, off); off += c.length; }
+  take = { samples, rate, peak: rec.peak, seconds: samples.length / rate };
+  window.__lastTake = take; // exposed for testing only
+  $("meter").style.width = "0";
+  showTakeInfo(); updateButtons();
+}
+
+function showTakeInfo() {
+  const ln = curLine();
+  $("take").textContent = "Take: " + take.seconds.toFixed(1) + " s, peak " + take.peak.toFixed(2) + ", " + take.rate + " Hz.";
+  const warns = [];
+  if (take.seconds < ln.minSeconds) warns.push("Too short: this line needs at least " + ln.minSeconds + " s. Press Redo.");
+  if (take.peak >= 0.99) warns.push("CLIPPING: the sound hit the maximum and is distorted. Turn the mic gain down and Redo.");
+  if (take.peak < 0.05) warns.push("Nearly silent: the mic may be muted, too far away, or the gain is too low. Check and Redo.");
+  $("warning").textContent = warns.length ? warns.join(" ") : "Take looks good.";
+  $("warning").className = "msg" + (warns.length ? " warn" : " ok");
+}
+
+// ---- WAV encoding: 16-bit PCM, mono ----
+function encodeWav(samples, rate) {
+  const buf = new ArrayBuffer(44 + samples.length * 2), v = new DataView(buf);
+  const str = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  str(0, "RIFF"); v.setUint32(4, 36 + samples.length * 2, true); str(8, "WAVE");
+  str(12, "fmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  str(36, "data"); v.setUint32(40, samples.length * 2, true);
+  for (let i = 0; i < samples.length; i++) {
+    const s = Math.max(-1, Math.min(1, samples[i]));
+    v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+  }
+  return new Blob([buf], { type: "audio/wav" });
+}
+
+// ---- playback ----
+function stopPlay() { if (playing) { try { playing.stop(); } catch (e) { /* already ended */ } playing = null; } }
+function playTake() {
+  stopPlay();
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const b = ctx.createBuffer(1, take.samples.length, take.rate); b.copyToChannel(take.samples, 0);
+  const s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination);
+  s.onended = () => { ctx.close(); if (playing === s) playing = null; };
+  s.start(); playing = s;
+}
+
+// ---- saving ----
+async function chooseFolder() {
+  if (!window.showDirectoryPicker) { $("warning").textContent = "This browser cannot pick a folder. Kept takes will download instead."; return; }
+  try { dirHandle = await window.showDirectoryPicker({ mode: "readwrite" }); } catch (e) { return; /* cancelled */ }
+  render();
+}
+
+async function saveTake(name, blob) {
+  if (dirHandle) {
+    const fh = await dirHandle.getFileHandle(name, { create: true });
+    const w = await fh.createWritable(); await w.write(blob); await w.close();
+  } else {
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }
+}
+
+async function keep() {
+  if ($("keep").disabled) return;
+  const ln = curLine();
+  const blob = encodeWav(take.samples, take.rate);
+  window.__lastKept = { name: ln.file, blob: blob, rate: take.rate, peak: take.peak, seconds: take.seconds }; // for testing
+  try { await saveTake(ln.file, blob); }
+  catch (e) { $("warning").textContent = "Could not save " + ln.file + ": " + e.message; $("warning").className = "msg warn"; return; }
+  done[ln.file] = true;
+  discardTake();
+  if (lineIdx < curAge().lines.length - 1) lineIdx++;
+  saveProgress(curAge().id);
+  render();
+  $("warning").textContent = "Saved " + ln.file; $("warning").className = "msg ok";
+}
+
+// ---- wiring ----
+function toggleRecord() { if (recording) stopRecording(); else startRecording(); }
+$("rec").addEventListener("click", toggleRecord);
+$("play").addEventListener("click", () => { if (take) playTake(); });
+$("redo").addEventListener("click", () => { discardTake(); updateButtons(); });
+$("keep").addEventListener("click", keep);
+$("prev").addEventListener("click", () => { if (lineIdx > 0) jump(lineIdx - 1); });
+$("skip").addEventListener("click", () => { if (lineIdx < curAge().lines.length - 1) jump(lineIdx + 1); });
+$("folder").addEventListener("click", chooseFolder);
+$("age").addEventListener("change", (e) => setAge(+e.target.value));
+document.addEventListener("keydown", (e) => {
+  if (e.target && e.target.tagName === "SELECT") return;
+  // preventDefault stops a focused button also firing its own click on Space/Enter.
+  if (e.code === "Space") { e.preventDefault(); if (!e.repeat) toggleRecord(); }
+  else if (e.code === "Enter") { e.preventDefault(); if (!e.repeat) keep(); }
+});
+
+DATA.ages.forEach((a, i) => { const o = document.createElement("option"); o.value = i; o.textContent = a.title; $("age").appendChild(o); });
+setAge(0);
+</script>
+</body>
+</html>

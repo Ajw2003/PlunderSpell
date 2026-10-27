@@ -1,21 +1,21 @@
 using System;
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using PurrNet;
-using Plunderspell.Acoustics;
 using UnityEngine;
 
 namespace Plunderspell.Alarm
 {
     /// <summary>
     /// The server-side enemy mediator (#205), kept thin: a NetworkBehaviour that owns the parts and ticks
-    /// them (<see cref="EnemyRegistry"/>, <see cref="EnemyDirectorBus"/>, <see cref="DirectorAlarm"/>,
+    /// them (<see cref="EnemyRegistry"/>, <see cref="EnemyDirectorListener"/>, <see cref="DirectorAlarm"/>,
     /// <see cref="HueAndCry"/>, <see cref="GuardNavigationService"/>, <see cref="AttackTurnMediator"/>).
     /// Nothing here moves a guard: a request is only relayed, and each guard's state machine decides.
     /// It lives in the Alarm assembly, below Guards, so guards are <see cref="Component"/>s and events plain data.
     /// PurrNet 1.15 has no SyncVar hooks, and a <see cref="SyncVar{T}"/> must be a field of this class, so the
     /// alarm is handed them; a state change reaches every peer through <see cref="BroadcastAlarmState"/>.
     /// </summary>
-    public class EnemyDirector : NetworkBehaviour, INoiseListener
+    public class EnemyDirector : NetworkBehaviour
     {
         [Header("Tuning")]
         [Tooltip("Alarm points added per unit of noise strength.")]
@@ -35,10 +35,16 @@ namespace Plunderspell.Alarm
         [SerializeField] private float _attackPoints = 6f;
 
         [Tooltip("Guards chasing at once that force the castle to at least Roused.")]
-        [SerializeField] private int _rousedChasers = 2;
+        [SerializeField] private int _rousedChasers = 3;
 
         [Tooltip("Guards chasing at once that force Hue and Cry.")]
-        [SerializeField] private int _hueAndCryChasers = 3;
+        [SerializeField] private int _hueAndCryChasers = 5;
+
+        [Tooltip("Distinct guards that must have seen an intruder this raid before the alarm can be Roused (the lockdown).")]
+        [SerializeField] private int _rousedWitnesses = 3;
+
+        [Tooltip("Distinct guards that must have seen an intruder this raid before the alarm can be Hue and Cry.")]
+        [SerializeField] private int _hueAndCryWitnesses = 5;
 
         [Header("Hue and cry")]
         [Tooltip("Seconds between repeats of the hue and cry, at the players' current positions, while the alarm stays at Hue and Cry.")]
@@ -56,7 +62,7 @@ namespace Plunderspell.Alarm
 
         // The parts below are made on first use, after the Inspector values load, so EditMode tests need no Awake.
         private DirectorAlarm _alarm;
-        private EnemyDirectorBus _bus;
+        private EnemyDirectorListener _listener;
         private HueAndCry _hueAndCry;
         private AttackTurnMediator _attackTurns;
         private GuardNavigationService _navigation;
@@ -80,10 +86,11 @@ namespace Plunderspell.Alarm
         internal bool IsAuthority => !isSpawned || isServer;
 
         internal DirectorAlarm Alarm => _alarm ??= new DirectorAlarm(_alarmLevel, _alarmState, new AlarmTuning(
-            _noiseWeight, _decayDelay, _decayRate, _sightingPoints, _attackPoints, _rousedChasers, _hueAndCryChasers),
+            _noiseWeight, _decayDelay, _decayRate, _sightingPoints, _attackPoints, _rousedChasers, _hueAndCryChasers,
+            _rousedWitnesses, _hueAndCryWitnesses),
             OnAlarmStateChanged);
 
-        private EnemyDirectorBus Bus => _bus ??= new EnemyDirectorBus(this);
+        private EnemyDirectorListener Listener => _listener ??= new EnemyDirectorListener(this);
 
         /// <summary>Who may attack which player right now (#210).</summary>
         public AttackTurnMediator AttackTurns => _attackTurns ??= new AttackTurnMediator(this, _attackTurnTuning);
@@ -122,52 +129,12 @@ namespace Plunderspell.Alarm
 
         public bool IsIntruder(Transform intruder) => _registry.IsIntruder(intruder);
 
-        // Events: the bus holds them; these forward so subscribers keep talking to the director. ------
-
-        public event Action<NoiseReported> OnNoiseReported { add => Bus.OnNoiseReported += value; remove => Bus.OnNoiseReported -= value; }
-        public event Action<IntruderSpotted> OnIntruderSpotted { add => Bus.OnIntruderSpotted += value; remove => Bus.OnIntruderSpotted -= value; }
-        public event Action<IntruderLost> OnIntruderLost { add => Bus.OnIntruderLost += value; remove => Bus.OnIntruderLost -= value; }
-        public event Action<GuardEngaged> OnGuardEngaged { add => Bus.OnGuardEngaged += value; remove => Bus.OnGuardEngaged -= value; }
-        public event Action<AlarmChanged> OnAlarmChanged { add => Bus.OnAlarmChanged += value; remove => Bus.OnAlarmChanged -= value; }
-        public event Action<GuardDied> OnGuardDied { add => Bus.OnGuardDied += value; remove => Bus.OnGuardDied -= value; }
-        public event Action<InvestigateRequest> OnInvestigateRequest { add => Bus.OnInvestigateRequest += value; remove => Bus.OnInvestigateRequest -= value; }
-        public event Action<UnreachableIntruderReported> OnUnreachableIntruder { add => Bus.OnUnreachableIntruder += value; remove => Bus.OnUnreachableIntruder -= value; }
-        public event Action<MoveRequest> OnMoveRequest { add => Bus.OnMoveRequest += value; remove => Bus.OnMoveRequest -= value; }
-        public event Action<PathReady> OnPathReady { add => Bus.OnPathReady += value; remove => Bus.OnPathReady -= value; }
-        public event Action<Arrived> OnArrived { add => Bus.OnArrived += value; remove => Bus.OnArrived -= value; }
-        public event Action<Blocked> OnBlocked { add => Bus.OnBlocked += value; remove => Bus.OnBlocked -= value; }
-        public event Action<AttackTurnRequested> OnAttackTurnRequested { add => Bus.OnAttackTurnRequested += value; remove => Bus.OnAttackTurnRequested -= value; }
-        public event Action<AttackTurnGranted> OnAttackTurnGranted { add => Bus.OnAttackTurnGranted += value; remove => Bus.OnAttackTurnGranted -= value; }
-        public event Action<AttackTurnDenied> OnAttackTurnDenied { add => Bus.OnAttackTurnDenied += value; remove => Bus.OnAttackTurnDenied -= value; }
-        public event Action<AttackTurnReleased> OnAttackTurnReleased { add => Bus.OnAttackTurnReleased += value; remove => Bus.OnAttackTurnReleased -= value; }
-
-        public void Publish(AttackTurnRequested e) => Bus.Publish(e);
-        public void Publish(AttackTurnGranted e) => Bus.Publish(e);
-        public void Publish(AttackTurnDenied e) => Bus.Publish(e);
-        public void Publish(AttackTurnReleased e) => Bus.Publish(e);
-        public void Publish(IntruderSpotted e) => Bus.Publish(e);
-        public void Publish(IntruderLost e) => Bus.Publish(e);
-        public void Publish(GuardEngaged e) => Bus.Publish(e);
-        public void Publish(GuardDied e) => Bus.Publish(e);
-        public void Publish(NoiseReported e) => Bus.Publish(e);
-        public void Publish(InvestigateRequest e) => Bus.Publish(e);
-        public void Publish(UnreachableIntruderReported e) => Bus.Publish(e);
-        public void Publish(PathReady e) => Bus.Publish(e);
-        public void Publish(Arrived e) => Bus.Publish(e);
-        public void Publish(Blocked e) => Bus.Publish(e);
-
-        /// <summary>Asks the navigation service to walk a guard. Touching <see cref="Navigation"/> first makes sure the service exists to hear it.</summary>
-        public void Publish(MoveRequest e)
-        {
-            _ = Navigation;
-            Bus.Publish(e);
-        }
+        // The guards' reports and the director's requests travel on EventManager; the bus below is the
+        // director's ear for the ones it must act on (score the alarm, hand out attack turns).
 
         // Alarm ----------------------------------------------------------------------------------------
 
-        public void ApplyNoise(float strength) => Alarm.ApplyNoise(strength);
-
-        public void ReportSighting() => Alarm.ReportSighting();
+        public void ReportSighting(int guardId) => Alarm.ReportSighting(guardId);
 
         public void ReportAttack() => Alarm.ReportAttack();
 
@@ -178,7 +145,7 @@ namespace Plunderspell.Alarm
         public void TickDecay(float deltaTime) => Alarm.TickDecay(deltaTime);
 
         /// <summary>Test/setup helper: force the alarm level and immediately re-evaluate state.</summary>
-        public void SetAlarmLevel(float level) => Alarm.SetLevel(level);
+        public void SetAlarmLevel(float level, int witnesses = 0) => Alarm.SetLevel(level, witnesses);
 
         public void UpdateState() => Alarm.UpdateState();
 
@@ -186,12 +153,19 @@ namespace Plunderspell.Alarm
 
         private void Awake() => Current = this;
 
-        private void OnEnable() => Current = this;
+        private void OnEnable()
+        {
+            Current = this;
+            Listener.Listen();
+            _navigation?.Listen();
+        }
 
         private void OnDisable()
         {
             if (Current == this)
                 Current = null;
+            Listener.StopListening();
+            _navigation?.StopListening();
         }
 
         protected override void OnSpawned()
@@ -200,8 +174,17 @@ namespace Plunderspell.Alarm
             Alarm.NoteNoiseNow();
         }
 
+        private float _publishedLevel = -1f;
+
         private void Update()
         {
+            // Every peer, including clients that only receive the replicated value, tells listeners when it moves.
+            if (Alarm.Level != _publishedLevel)
+            {
+                _publishedLevel = Alarm.Level;
+                EventManager.Instance?.Publish(new AlarmLevelChanged(_publishedLevel));
+            }
+
             // Only the server integrates decay; clients receive state via replication.
             if (isSpawned && !isServer)
                 return;
@@ -218,26 +201,11 @@ namespace Plunderspell.Alarm
                 HueAndCryRaiser.Repeat(deltaTime);
         }
 
-        private HueAndCry HueAndCryRaiser => _hueAndCry ??= new HueAndCry(_registry, Publish, _hueAndCryRepeatSeconds);
+        private HueAndCry HueAndCryRaiser => _hueAndCry ??= new HueAndCry(_registry, PublishInvestigate, _hueAndCryRepeatSeconds);
+
+        private static void PublishInvestigate(InvestigateRequest request) => EventManager.Instance?.Publish(request);
 
         internal void ReleaseAttackTurnOf(Component guard) => _attackTurns?.Release(guard);
-
-        /// <summary><see cref="INoiseListener"/> entry point. A client forwards to the server; the server (or single-player, or a test) applies it directly.</summary>
-        public void OnNoiseHeard(NoiseEvent noise)
-        {
-            if (isSpawned && !isServer)
-            {
-                ReportNoiseServer(noise.Origin, noise.Strength, (int)noise.Type);
-                return;
-            }
-            Publish(new NoiseReported(noise.Origin, noise.Strength));
-        }
-
-        [ServerRpc(requireOwnership: false)]
-        private void ReportNoiseServer(Vector3 origin, float strength, int type)
-        {
-            Publish(new NoiseReported(origin, strength));
-        }
 
         // The hue and cry is a request, not an order: guards decide what to do with it.
         private void OnAlarmStateChanged(AlarmState newState)
@@ -258,7 +226,7 @@ namespace Plunderspell.Alarm
         private void RaiseStateChanged(AlarmState newState)
         {
             AlarmStateChanged?.Invoke(newState);
-            Bus.Publish(new AlarmChanged(newState));
+            EventManager.Instance?.Publish(new AlarmChanged(newState));
         }
     }
 }

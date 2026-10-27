@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Interfaces;
 using NUnit.Framework;
 using Plunderspell.Alarm;
@@ -21,7 +22,11 @@ namespace Plunderspell.Tests
         }
 
         [TearDown]
-        public void TearDown() => _rig.TearDown();
+        public void TearDown()
+        {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            _rig.TearDown();
+        }
 
         [Test]
         public void AMoveRequestReachesArrivedThroughTheNavigationService()
@@ -118,7 +123,7 @@ namespace Plunderspell.Tests
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
             Component diedGuard = null;
-            _rig.Director.OnGuardDied += died => diedGuard = died.Guard;
+            EventManager.Instance.Subscribe(this, (GuardDied died) => diedGuard = died.Guard);
 
             guard.TakeDamage(500f);
 

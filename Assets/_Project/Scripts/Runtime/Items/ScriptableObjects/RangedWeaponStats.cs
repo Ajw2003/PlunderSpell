@@ -1,6 +1,6 @@
 using UnityEngine;
 
-/// <summary>Stats for a ranged weapon: one shot, then a long reload. See docs/plunderspell.md's
+/// <summary>Stats for a ranged weapon: one shot, then a long reload. See docs/7-design/plunderspell.md's
 /// weapon table and docs/plans/GitIssues/Issue_39_Plan.md.</summary>
 [CreateAssetMenu(fileName = "RangedWeaponStats", menuName = "Scriptable Objects/Ranged Weapon Stats")]
 public class RangedWeaponStats : ScriptableObject

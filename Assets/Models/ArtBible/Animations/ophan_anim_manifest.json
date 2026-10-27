@@ -1,0 +1,92 @@
+{
+ "about": "Written by Tools/ArtForge/anim_ophan.py build. Events are copied from anim_spec.json (normalized time).",
+ "fps": 30,
+ "fbx": [
+  {
+   "file": "Assets\\Models\\ArtBible\\Animations\\TheOphanOfHours_Generic.fbx",
+   "skeleton": "the Ophan's own Generic rig (TheOphanOfHours_Rig, 18 bones); no retarget. Root never moves; Core bobs, and scales in ophan_arrive",
+   "clips": [
+    {
+     "clip": "ophan_hover_turn",
+     "take": "TheOphanOfHours_Rig|ophan_hover_turn",
+     "layer": "fear",
+     "loop": true,
+     "additive": false,
+     "length_s": 6.0,
+     "events": [],
+     "frames": 181,
+     "lowest_point_m": 0.138,
+     "highest_point_m": 10.162,
+     "loop_seam_deg": 0.0
+    },
+    {
+     "clip": "ophan_spread",
+     "take": "TheOphanOfHours_Rig|ophan_spread",
+     "layer": "fear",
+     "loop": true,
+     "additive": false,
+     "length_s": 6.0,
+     "events": [],
+     "frames": 181,
+     "lowest_point_m": 1.154,
+     "highest_point_m": 9.373,
+     "loop_seam_deg": 0.0
+    },
+    {
+     "clip": "ophan_advance",
+     "take": "TheOphanOfHours_Rig|ophan_advance",
+     "layer": "fear",
+     "loop": true,
+     "additive": false,
+     "length_s": 4.0,
+     "events": [],
+     "frames": 121,
+     "lowest_point_m": 0.247,
+     "highest_point_m": 10.823,
+     "loop_seam_deg": 0.0
+    },
+    {
+     "clip": "ophan_fix_gaze",
+     "take": "TheOphanOfHours_Rig|ophan_fix_gaze",
+     "layer": "fear",
+     "loop": false,
+     "additive": false,
+     "length_s": 1.5,
+     "events": [],
+     "frames": 46,
+     "lowest_point_m": 0.288,
+     "highest_point_m": 10.633
+    },
+    {
+     "clip": "ophan_take",
+     "take": "TheOphanOfHours_Rig|ophan_take",
+     "layer": "fear",
+     "loop": false,
+     "additive": false,
+     "length_s": 2.0,
+     "events": [
+      {
+       "type": "AttackHit",
+       "t": 0.45
+      }
+     ],
+     "frames": 61,
+     "lowest_point_m": 0.13,
+     "highest_point_m": 10.583
+    },
+    {
+     "clip": "ophan_arrive",
+     "take": "TheOphanOfHours_Rig|ophan_arrive",
+     "layer": "fear",
+     "loop": false,
+     "additive": false,
+     "length_s": 4.0,
+     "events": [],
+     "frames": 121,
+     "lowest_point_m": 0.123,
+     "highest_point_m": 10.137
+    }
+   ]
+  }
+ ]
+}

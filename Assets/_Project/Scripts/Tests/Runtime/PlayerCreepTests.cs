@@ -27,11 +27,11 @@ namespace Plunderspell.Tests
             var eye = new GameObject("Eye");
             eye.transform.SetParent(_player.transform, false);
             machine.CameraTransform = eye.transform;
-            machine.walkSpeed = 5f;   // RaidPlayer.prefab
+            machine.WalkSpeed = 5f;   // RaidPlayer.prefab
             machine.Creeping = creeping;
             machine.MovementDirection = Vector2.up;
 
-            machine.WalkState.Update();
+            machine.WalkState.FixedUpdate();
             Vector3 velocity = _player.GetComponent<Rigidbody>().linearVelocity;
             return new Vector2(velocity.x, velocity.z).magnitude;
         }

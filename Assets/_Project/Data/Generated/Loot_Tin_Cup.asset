@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 15
   IsArtifact: 0
-  Bulk: 1
+  Category: 0
+  WeightKg: 1
   Fragility: 30
   DisplayName: Tin Cup
   Icon: {fileID: 0}

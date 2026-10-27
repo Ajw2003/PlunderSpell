@@ -79,6 +79,17 @@ namespace Plunderspell.Raid
             }
         }
 
+        /// <summary>The prefab authored for a loot item, or null when the table has none for it.</summary>
+        public GameObject PrefabFor(LootItem item)
+        {
+            for (int i = 0; i < Entries.Count; i++)
+            {
+                if (Entries[i] != null && Entries[i].Item == item && Entries[i].Prefab != null)
+                    return Entries[i].Prefab;
+            }
+            return null;
+        }
+
         /// <summary>Every entry belonging to a zone, in authored order.</summary>
         public List<Entry> EntriesFor(CastleZone zone)
         {

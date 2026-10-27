@@ -1,0 +1,42 @@
+18:26:52 test slot 99 wiped, owner's slot to restore: 1
+18:26:59 state MainMenu
+18:27:00 solo, slot 99
+18:27:00 player: player
+18:27:04 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+18:27:06 state: LairRoom
+18:27:07 put GoldenGoblet(Clone)
+18:27:11 aiming at GoldenGoblet(Clone) from (1103.21, 1.50, -2.45)
+18:27:14 hovered none crosshair over-something False
+18:27:14 capture: docs/generated/market-grab-2026-10-07/before.png
+18:27:15 mouse: left
+18:27:17 after the click: held none
+18:27:17 FAIL a left click through the Input System picks the piece up in the Market
+18:27:18 walking to (1103.61, 1.51, -4.15)
+18:27:24 held at the counter: held none
+18:27:25 mouse: none
+18:27:28 pieces 1
+18:27:28 PASS letting go the button drops the piece on the Goldsmith's counter
+18:27:29 FAIL 1 Market grab checks
+18:27:29 cleaning up
+18:27:31 active slot 1
+18:27:43 test slot 99 wiped, owner's slot to restore: 1
+18:27:50 state MainMenu
+18:27:51 solo, slot 99
+18:27:52 player: player
+18:27:55 travelled through /LairRoom/MarketDoor to 1101.5,1.3,8.0
+18:27:58 state: LairRoom
+18:27:58 put GoldenGoblet(Clone)
+18:28:02 aiming at GoldenGoblet(Clone) from (1103.04, 1.50, -2.49)
+18:28:05 ray hits SellZone; hovered none crosshair over-something False
+18:28:06 capture: docs/generated/market-grab-2026-10-07/before.png
+18:28:07 mouse: left
+18:28:09 after the click: held none
+18:28:09 FAIL a left click through the Input System picks the piece up in the Market
+18:28:10 walking to (1103.61, 1.51, -4.15)
+18:28:15 held at the counter: held none
+18:28:16 mouse: none
+18:28:20 pieces 1
+18:28:20 PASS letting go the button drops the piece on the Goldsmith's counter
+18:28:20 FAIL 1 Market grab checks
+18:28:20 cleaning up
+18:28:22 active slot 1

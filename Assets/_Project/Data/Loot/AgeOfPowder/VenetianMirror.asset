@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 900
   IsArtifact: 0
-  Bulk: 6
+  Category: 2
+  WeightKg: 6
   Fragility: 4.5
   DisplayName: Venetian Mirror
   Icon: {fileID: 0}

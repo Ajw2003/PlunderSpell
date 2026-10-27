@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 600
   IsArtifact: 0
-  Bulk: 8
+  Category: 0
+  WeightKg: 8
   Fragility: 8
   DisplayName: Coin Coffer
   Icon: {fileID: 0}

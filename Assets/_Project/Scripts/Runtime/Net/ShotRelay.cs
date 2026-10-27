@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using PurrNet;
 using UnityEngine;
 
@@ -13,13 +14,13 @@ namespace Plunderspell.Net
         protected override void OnSpawned()
         {
             base.OnSpawned();
-            RangedWeapon.Fired += OnFiredHere;
+            EventManager.Instance?.Subscribe(this, (RangedWeaponFired e) => OnFiredHere(e.Weapon, e.SpawnPoint, e.Direction));
         }
 
         protected override void OnDespawned()
         {
             base.OnDespawned();
-            RangedWeapon.Fired -= OnFiredHere;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private void OnFiredHere(RangedWeapon weapon, Vector3 spawnPoint, Vector3 direction)

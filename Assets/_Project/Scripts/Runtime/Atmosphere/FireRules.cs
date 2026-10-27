@@ -14,6 +14,9 @@ namespace Plunderspell.Atmosphere
         /// <summary>How much bigger and hotter a fire burns at full alert.</summary>
         public const float FullAlertFlare = 1.5f;
 
+        /// <summary>Squared-distance multiplier per grant level already held (0.8 is about 10% in distance).</summary>
+        public const float HoldBias = 0.8f;
+
         /// <summary>Whether a fire first lit at <paramref name="litFrom"/> burns in <paramref name="state"/>.</summary>
         public static bool IsLit(FireKind kind, int litFrom, AlarmState state)
         {
@@ -57,8 +60,14 @@ namespace Plunderspell.Atmosphere
         /// <param name="isLit">Whether each fire is burning.</param>
         /// <param name="grants">Filled with one grant per fire.</param>
         /// <param name="order">Scratch list, reused to avoid allocating each frame.</param>
+        /// <param name="previous">
+        /// The grants from the last share, if any. Each level a fire already holds shrinks its squared
+        /// distance by <see cref="HoldBias"/>, so a fire at a rank boundary keeps its light until a rival
+        /// is clearly closer instead of flickering between grants.
+        /// </param>
         public static void ShareLights(IReadOnlyList<float> sqrDistances, IReadOnlyList<bool> isLit,
-            int shadowed, int unshadowed, List<LightGrant> grants, List<int> order)
+            int shadowed, int unshadowed, List<LightGrant> grants, List<int> order,
+            IReadOnlyList<LightGrant> previous = null)
         {
             grants.Clear();
             order.Clear();
@@ -71,7 +80,14 @@ namespace Plunderspell.Atmosphere
 
             order.Sort((a, b) =>
             {
-                int byDistance = sqrDistances[a].CompareTo(sqrDistances[b]);
+                float distanceA = sqrDistances[a];
+                float distanceB = sqrDistances[b];
+                if (previous != null)
+                {
+                    distanceA *= Mathf.Pow(HoldBias, (int)previous[a]);
+                    distanceB *= Mathf.Pow(HoldBias, (int)previous[b]);
+                }
+                int byDistance = distanceA.CompareTo(distanceB);
                 return byDistance != 0 ? byDistance : a.CompareTo(b);
             });
 

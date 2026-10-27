@@ -45,7 +45,7 @@ namespace Plunderspell.Castle
 
         public bool TryGetFloorHeight(Vector3 position, out float floorHeight)
         {
-            int cell = _graph.NearestWalkableCell(position, FloorSearchDistance);
+            int cell = _graph.FloorCellUnder(position, FloorSearchDistance);
             floorHeight = cell >= 0 ? _graph.CellPosition(cell).y : 0f;
             return cell >= 0;
         }

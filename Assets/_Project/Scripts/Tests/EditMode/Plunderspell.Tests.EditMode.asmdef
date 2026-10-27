@@ -4,6 +4,7 @@
     "references": [
         "Plunderspell.Core",
         "Plunderspell.Foundation",
+        "Plunderspell.UI",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

@@ -100,7 +100,11 @@ namespace Plunderspell.Castle
             // Carved interior cells: whatever the ring's interior leaves empty.
             var occupied = new HashSet<Vector2Int>();
             foreach (ProceduralCastleData.PlacedModule module in castle.PlacedModules)
-                occupied.Add(module.GridPosition);
+            {
+                // Bailey dressing fills ground cells only; a keep room above a cell does not occupy it (#247).
+                if (module.Level == CastleLevels.Ground)
+                    occupied.Add(module.GridPosition);
+            }
             int limit = curtainWallRadius - 1;
             for (int x = -limit; x <= limit; x++)
             {

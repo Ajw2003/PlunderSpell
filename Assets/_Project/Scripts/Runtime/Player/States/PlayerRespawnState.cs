@@ -14,7 +14,7 @@ namespace StateMachine.States
             _stateMachine.dead = false;
             Task.Run(async () =>
             {
-                await Task.Delay(TimeSpan.FromSeconds(_stateMachine.respawnSpeed));
+                await Task.Delay(TimeSpan.FromSeconds(_stateMachine.RespawnSpeed));
                 Exit();
             });
         }

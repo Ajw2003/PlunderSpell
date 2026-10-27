@@ -15,16 +15,88 @@ MonoBehaviour:
   FilterOn: 1
   PlayEverythingElse: 0
   Groups:
-  - Label: Footsteps and movement
+  - Label: 'Footsteps (any not listed below)'
     Play: 1
     Prefixes:
     - foley_
-  - Label: Guard and hound voices
+  - Label: 'Step: stone'
     Play: 1
+    Prefixes:
+    - foley_step_stone
+  - Label: 'Step: wood'
+    Play: 1
+    Prefixes:
+    - foley_step_wood
+  - Label: 'Step: earth'
+    Play: 1
+    Prefixes:
+    - foley_step_earth
+  - Label: 'Step: rushes'
+    Play: 1
+    Prefixes:
+    - foley_step_rushes
+  - Label: 'Step: tile'
+    Play: 1
+    Prefixes:
+    - foley_step_tile
+  - Label: 'Step: metal'
+    Play: 1
+    Prefixes:
+    - foley_step_metal
+  - Label: 'Step: water'
+    Play: 1
+    Prefixes:
+    - foley_step_water
+  - Label: 'Step: hound'
+    Play: 1
+    Prefixes:
+    - foley_step_hound
+  - Label: 'Gear rustle: linen'
+    Play: 1
+    Prefixes:
+    - foley_gear_linen
+  - Label: 'Gear rustle: leather'
+    Play: 1
+    Prefixes:
+    - foley_gear_leather
+  - Label: 'Gear rustle: mail'
+    Play: 1
+    Prefixes:
+    - foley_gear_mail
+  - Label: 'Gear rustle: plate'
+    Play: 1
+    Prefixes:
+    - foley_gear_plate
+  - Label: 'Gear rustle: bronze plate'
+    Play: 1
+    Prefixes:
+    - foley_gear_bronze_plate
+  - Label: 'Gear rustle: robe'
+    Play: 1
+    Prefixes:
+    - foley_robe
+  - Label: 'Player: jump'
+    Play: 1
+    Prefixes:
+    - foley_player_jump
+  - Label: 'Player: landing'
+    Play: 1
+    Prefixes:
+    - foley_player_land_heavy
+  - Label: 'Player: landing (light)'
+    Play: 1
+    Prefixes:
+    - foley_player_land
+  - Label: 'Player: dodge'
+    Play: 1
+    Prefixes:
+    - foley_player_dodge
+  - Label: Guard and hound voices
+    Play: 0
     Prefixes:
     - vo_
   - Label: Guard sounds
-    Play: 1
+    Play: 0
     Prefixes:
     - sfx_enemy
   - Label: 'Weapons: swings, bolts, hits'
@@ -87,6 +159,18 @@ MonoBehaviour:
     - sfx_fire
     - sfx_status
     - sfx_debris
+  - Label: Guard mimicry (prototype)
+    Play: 0
+    Prefixes:
+    - mimic_
+  - Label: Guard speech (recorded clips)
+    Play: 1
+    Prefixes:
+    - guardspeech_
+  - Label: Guard footsteps and armor
+    Play: 0
+    Prefixes:
+    - guard_foley
   Overrides:
   - Sound: sfx_spell_ignis_impact
     Play: 0

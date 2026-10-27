@@ -19,9 +19,11 @@
         "Plunderspell.Loot",
         "Plunderspell.Playtest",
         "Plunderspell.Raid",
+        "Plunderspell.Market",
         "Plunderspell.Status",
         "Plunderspell.RaidHud",
         "Unity.AI.Navigation",
+        "Unity.TextMeshPro",
         "Plunderspell.Atmosphere",
         "Unity.RenderPipelines.Universal.Runtime",
         "Unity.RenderPipelines.Core.Runtime"

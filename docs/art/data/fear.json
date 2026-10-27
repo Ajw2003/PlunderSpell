@@ -1,0 +1,209 @@
+{
+  "slug": "fear",
+  "name": "The fear pass",
+  "intro": "Horrors outside the four Ages' fixed rosters: the true forms guards turn into, and the creature that hunts the company through time (#386). Designs approved by the owner on 2026-10-11; see docs/7-design/fear-pass.md, 'The true form' and 'The creature'.",
+  "enemies": [
+    {
+      "slug": "wick",
+      "name": "The Wick",
+      "role": "true form",
+      "of": "high/lantern-warden",
+      "zones": [
+        "CurtainWall",
+        "OuterBailey"
+      ],
+      "height_m": 3.1,
+      "summary": "The Lantern Warden's true form: the man turned into his own lantern, and burning.",
+      "description": "What the Lantern Warden turns into when it sees you or is struck. 3.10 m, hunched, the light carried high and ahead. His ribs have opened into the lantern's bars round a candle burning in his chest; his head is a cage of bone with the flame inside and his kettle hat lifted on top as the vented cap; his face hangs open in four flaps. The glaive has grown into one arm. He burns along his back, shoulders, coat and hem. His real lantern is left on the floor where he dropped it, dark.",
+      "silhouette": "A flame at the height of the wall-walk under a broad iron brim, burning shoulders 0.88 m across, arms to the knee: light, brim, fire, in that order.",
+      "build": [
+        "Body: stature 3.00 m to the top of the bone cage, the kettle hat bringing the crown to 3.10 m; shoulders 0.88 m across; a hunch of about 14° forward from the waist; legs long and too thin, the woad hose split at both knees.",
+        "Head: no skull. Four bone bars rise 0.36 m from the neck, bowed out to 0.30 m across, knuckled like vertebrae, meeting at an iron ring under the hat.",
+        "Flame: inside the cage, 0.36 m, three tones like the body's fire, rooted in a blackened wick.",
+        "Cap: the warden's one-piece kettle hat scaled 1.25 (brim 0.50 m), lifted on the cage; four vent holes punched in the dome, fire jetting from them.",
+        "Face: peeled into four flaps hanging from the neck over the collar, 0.16-0.22 m long, skin outside and blood inside; one eye left on the outer left flap, half a jaw of teeth on the right.",
+        "Gambeson: the warden's quilted coat stretched over the frame to a hem at 1.05 m, its quilting pulled apart, the hem torn into strips; charred at the shoulders and hem.",
+        "Chest: the lacing burst; a 0.30 m wide cavity from the collar to the belt, lit from inside, crossed by six bone ribs bowed outward like the lantern's iron bars; a tallow candle 0.20 m tall on the spine at its foot, flame 0.16 m.",
+        "Arms: reach past the knee (wrists at about 1.30 m), elbows thrown out. Right arm: the glaive's 0.70 m blade grows from the wrist, edge forward, point down; skin grown over the socket. Left hand: open, four fingers 0.40 m long, bone-tipped.",
+        "Belt: burst, one end hanging, the iron buckle still on it.",
+        "Fire: painted geometry for now (owner, 2026-10-11), to be replaced by a fire shader: three-tone tongues (dark madder shell, madder, a pale core nearer the viewer), no glow, on the back and shoulders (0.46-0.80 m), out of the coat's tears, along the hem, at both elbows, from the hat's vents and over its crown; rigid on the bone they sit on. TheWick_FireMask.png is still baked for the shader: white where flames burn, grey (0.35) where the charred wool smoulders.",
+        "Not on this model: the lantern. It belongs to the human-form warden and is dropped at the turn as a loose physics prop, left where it falls."
+      ],
+      "materials": [
+        {
+          "name": "Gambeson wool",
+          "hex": "#C4B89C",
+          "notes": "The warden's undyed quilted wool, stretched; roughness 0.9."
+        },
+        {
+          "name": "Char",
+          "hex": "#2A1E16",
+          "notes": "Scorched wool at the shoulders, round the tears and at the hem."
+        },
+        {
+          "name": "Burning wool",
+          "hex": "#3A2418",
+          "notes": "Wool where it burns: the back and shoulders, the hem, the coat's tears, the elbows. White in the FireMask; faintly emissive."
+        },
+        {
+          "name": "Woad hose",
+          "hex": "#3E5470",
+          "notes": "As on the warden, split at the knees."
+        },
+        {
+          "name": "Skin",
+          "hex": "#A07A5C",
+          "notes": "Face flaps, knees, hands, fingers, the skin over the blade's socket."
+        },
+        {
+          "name": "Bone",
+          "hex": "#DCD2BA",
+          "notes": "Vellum: the cage bars, ribs, teeth, finger tips; roughness 0.55."
+        },
+        {
+          "name": "Blood",
+          "hex": "#6E2E24",
+          "notes": "Madder darkened: the inside of the flaps and the lips of the chest cavity. The only madder that is not fire."
+        },
+        {
+          "name": "Lit horn flame core",
+          "hex": "#E8C987",
+          "notes": "The chest cavity's inner glow and the bright core of every flame; emissive."
+        },
+        {
+          "name": "Vent fire",
+          "hex": "#C4542E",
+          "notes": "Madder: the hat's four vents and the candle's lit top, where fire jets out; emissive, white in the FireMask."
+        },
+        {
+          "name": "Tallow",
+          "hex": "#D8C9A0",
+          "notes": "The candle in the chest."
+        },
+        {
+          "name": "Blackened iron",
+          "hex": "#6F7479",
+          "notes": "The kettle hat, the blade, the buckle, the cage ring."
+        },
+        {
+          "name": "Leather",
+          "hex": "#5A4030",
+          "notes": "The burst belt and the turnshoes."
+        },
+        {
+          "name": "Flame shadow",
+          "hex": "#7A2C1A",
+          "notes": "Dark madder: the outer shell of every painted flame tongue."
+        },
+        {
+          "name": "Flame",
+          "hex": "#C4542E",
+          "notes": "Madder: the teardrop flame inside the head cage; emissive."
+        }
+      ],
+      "rig": {
+        "skeleton": "Unity Humanoid (Mecanim) as figures.Human, plus Cage (child of Head), Hat (child of Cage, the vented cap), Blade (rigid on Hand.R), and flame bones are not separate: flames are rigid on the bone they sit on.",
+        "animations": [
+          "turn_reveal — 1.6 s, the four beats of the turn (seen, the face splits at 0.4 s, the coat bursts at 0.9 s, turned at 1.6 s); played on the warden then swapped to this model at 0.9 s",
+          "idle_burning — 3 s loop, hunched, the head cage sways, fingers flex",
+          "stalk — 1.4 m/s, long slow strides, the light carried ahead",
+          "hunt_run — 4.2 m/s, low and fast, arms swinging forward",
+          "stoop_arch — 0.5 s additive, drops the crown to 2.50 m under a 2.59 m arch",
+          "search_sweep — 2.5 s, the head cage turns 90 degrees each way, light sweeping",
+          "catch_kill — 1.2 s, the left hand closes on the player at chest height; the kill",
+          "hit_flinch — 0.4 s, the fire flares, it does not stop"
+        ]
+      },
+      "breakables": [
+        "None: a true form is never damaged or killed (fear pass, 'A true form never turns back')."
+      ],
+      "budget": "≤ 12k tris (body 5.7k, flames as temporary geometry up to 6k until the fire shader), one 1024² set with a FireMask.",
+      "dont": [
+        "Don't give it a skull or a face on the cage: the head is a lantern now.",
+        "Don't carry the lantern: it stays where the warden dropped it.",
+        "Don't let the fire hide the silhouette: brim, cage flame and shoulders must read first.",
+        "Don't use madder outside fire and blood."
+      ],
+      "concept": "concept/fear/wick-v2-1-true-form.png"
+    },
+    {
+      "slug": "ophan",
+      "name": "The Ophan of Hours",
+      "role": "creature",
+      "of": null,
+      "zones": [
+        "CurtainWall",
+        "OuterBailey",
+        "InnerWard",
+        "Keep",
+        "Crypt"
+      ],
+      "height_m": 9.6,
+      "summary": "The creature that hunts the company through time: a wheel within a wheel, full of eyes, larger than the castle.",
+      "description": "A celestial being after Ezekiel 1 and 10 and Isaiah 6. It arrives in the castle as the portal's clock runs low and wants specific artifacts. A great wheel 5.8 m across with a second wheel at right angles and a third tilted through them, their rims full of eyes all round; six wings, two spread 11 m, two crossed beneath the heart, two covering its feet; at its heart one great eye 2.6 m wide with a portal for a pupil. It floats, and it is larger than any room: stone it passes through is pulled back to raw quarry rock and closes behind it. It never uses a door.",
+      "silhouette": "A wheel taller than the hall, edged with eyes, two great wings raised above it, and one eye at the centre looking at you.",
+      "build": [
+        "Frame: floats with its lowest feathers 0.3 m off the floor; centre of the wheels 4.5 m up; 9.6 m from the lowest feather to the highest, 11 m across the spread wings.",
+        "Great wheel: a rim 5.8 m across, 0.26 m thick, facing forward; 24 hour marks round its outer edge; 24 eyes set in its face.",
+        "Inner wheel: 5.6 m across at right angles to the great wheel (a wheel within a wheel), 10 eyes along it.",
+        "Tilted wheel: 5.3 m across, tipped 72 degrees from upright, 10 eyes along its top.",
+        "Great eye: at the centre, 2.6 m wide and 1.3 m tall, a vellum eyeball under heavy pewter lids with hammered lashes; a lapis iris 1.1 m across and a deep lapis pupil, the portal.",
+        "Wings: six, vellum feathers on a pewter-edged arm. The upper pair spread up and out to 11 m tip to tip, four eyes along each; the middle pair cross beneath the great eye; the lower pair hang down over where feet would be, two eyes each.",
+        "Rim eyes: vellum ellipsoids 0.22 x 0.14 m with bone-black pupils, each looking its own way.",
+        "Not on this model, for the engine: the faint echoes of the wheels a heartbeat early and late (a shader or duplicate meshes), the lightning, the floor's rings of hour marks, and the stone pulled back to the quarry where it passes."
+      ],
+      "materials": [
+        {
+          "name": "Pewter",
+          "hex": "#8C8A80",
+          "notes": "Tarnished: the wheels, hour marks, the eye's lids and lashes, the wings' leading edges. Metallic, roughness 0.45."
+        },
+        {
+          "name": "Vellum",
+          "hex": "#DCD2BA",
+          "notes": "The wings' feathers, the eyes' whites."
+        },
+        {
+          "name": "Bone black",
+          "hex": "#14120E",
+          "notes": "The rim eyes' pupils."
+        },
+        {
+          "name": "Lapis",
+          "hex": "#7A6AA0",
+          "notes": "The great eye's iris. Allowed on this one enemy (Decisions, 2026-10-11, 'The Ophan may use lapis')."
+        },
+        {
+          "name": "Deep lapis",
+          "hex": "#2A2638",
+          "notes": "The great eye's pupil: the portal."
+        },
+        {
+          "name": "Portal light",
+          "hex": "#B9B2D6",
+          "notes": "The ring of light round the pupil; emissive."
+        }
+      ],
+      "rig": {
+        "skeleton": "Generic: Root > Core > GreatWheel, InnerWheel, TiltWheel, Eye; Core > WingUpper.L/R > .Tip, WingMid.L/R > .Tip, WingLower.L/R > .Tip. The wheels turn, the eye looks, the wings beat; nothing walks.",
+        "animations": [
+          "hover_turn — 6 s loop, the wheels turn at different rates, the wings breathe, the eye drifts",
+          "advance — 4 s loop, the drift forward through walls: wheels faster, wings beating slow",
+          "fix_gaze — 1.5 s, the eye snaps to a player, every wheel stops for a beat",
+          "take — 2 s, the lower wings sweep forward to take what it came for (artifacts, or a life)",
+          "arrive — 4 s, unfolds out of a point of light"
+        ]
+      },
+      "breakables": [
+        "None: it cannot be harmed (fear pass, 'The creature')."
+      ],
+      "budget": "≤ 16k tris (wheels and marks 3k, eyes 5k, great eye 1k, wings 5k), one 1024² set with an emission map.",
+      "dont": [
+        "Don't give it a body or a face other than the great eye.",
+        "Don't use orpiment: its metal is tarnished pewter.",
+        "Don't let it touch the floor."
+      ],
+      "concept": "concept/fear/ophan-v2-1-the-wheels.png"
+    }
+  ]
+}

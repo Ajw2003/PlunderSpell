@@ -3,9 +3,8 @@ using UnityEngine;
 namespace Plunderspell.Castle
 {
     /// <summary>
-    /// Tells the nav graph what the lockdown did to the doors (#222, bespoke-navigation.md Design 5). A
-    /// barred door closes its archway, so guards route round it or report it blocked. A locked door
-    /// only costs: guards still use it, but prefer a way round if one is not much longer.
+    /// Tells the nav graph what the lockdown did to the doors (#222, bespoke-navigation.md Design 5). Locked
+    /// and barred doors (#264) only cost: guards, who have keys, still use them but prefer a way round if one is not much longer.
     /// </summary>
     public static class CastleLockdownNavigation
     {
@@ -27,9 +26,8 @@ namespace Plunderspell.Castle
 
         private static float CostOf(CastleDoor door)
         {
-            if (door.IsBarred)
-                return CastleNavGraph.ClosedDoor;
-            return door.IsLocked ? LockedDoorCost : 0f;
+            // Guards are castle staff with keys (#264): a barred door costs like a locked one, it never blocks them.
+            return door.IsLocked || door.IsBarred ? LockedDoorCost : 0f;
         }
     }
 }

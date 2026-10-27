@@ -241,6 +241,8 @@ def build_courtyard_midden(bm, uv):
     for x, y in ((-4.4, 3.8), (-3.5, 4.4)):
         _barrel(bm, uv, x, y)
     cb._fire("Brazier", 3.6, 3.6, 0.04, lit=1)
+    # One that burns at Calm, clear of the heaps and barrels, so the midden shows the alarm too (#317).
+    cb._fire("Brazier", -3.6, -4.4, 0.04, lit=0)
 
 
 def build_courtyard_well_yard(bm, uv):

@@ -1,10 +1,11 @@
+using Code.Scripts.EventSystems;
 using UnityEngine;
 
 namespace Plunderspell.Spells.Vfx
 {
     /// <summary>
     /// Turns a resolved cast into something you can see. Listens to
-    /// <see cref="SpellCastingSystem.CastResolved"/>, which fires on every peer, so a teammate's
+    /// <see cref="CastResolved"/>, which fires on every peer, so a teammate's
     /// spell is visible to everyone rather than only to whoever spoke.
     ///
     /// See docs/4-systems/spells.md, "Seeing a cast", including why a spell's bolt carries no damage.
@@ -23,9 +24,9 @@ namespace Plunderspell.Spells.Vfx
         /// <summary>Clearance past the burst's own radius, so its near edge doesn't graze the camera.</summary>
         private const float k_burstClearance = 0.15f;
 
-        private void OnEnable() => SpellCastingSystem.CastResolved += OnCastResolved;
+        private void OnEnable() => EventManager.Instance?.Subscribe(this, (CastResolved e) => OnCastResolved(e.Report));
 
-        private void OnDisable() => SpellCastingSystem.CastResolved -= OnCastResolved;
+        private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
 
         private void OnCastResolved(SpellCastingSystem.CastReport report)
         {

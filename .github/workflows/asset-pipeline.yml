@@ -50,4 +50,8 @@ jobs:
         if: always()
         with:
           name: prop-previews
-          path: Tools/AssetPipeline/previews/
+          # The manifest too: it records each preview's fingerprint, so a refresh needs both.
+          path: |
+            Tools/AssetPipeline/previews/
+            Tools/AssetPipeline/asset_manifest.json
+            Assets/_Project/Art/Models/Castle/AgeOfPowder/

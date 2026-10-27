@@ -70,6 +70,46 @@ simulation (`PlayableLoopTests`, `LootSettleAndInputGatingTests`, `Test_SpawnedL
 (`Test_SpellNumbersComeFromTheAuthoredAsset`). Which of those were already failing before the
 harness broke is not known: there was no green run to compare against.
 
+**2026-10-07:** the harness had stopped compiling again (the new URP rendering, audio mixer and profiler
+code). Shims added for: `UnityEngine.Rendering.Universal` (renderer features/passes, `RenderQueue`),
+`UnityEngine.Audio` (`AudioMixer`/`AudioMixerGroup.audioMixer`/`FindSnapshot`/`ClearFloat`; snapshots are
+placeholders), `Unity.Profiling`, `Mathf.DeltaAngle`, `Vector3.positiveInfinity/negativeInfinity`,
+`Material.renderQueue`, `NavMesh.RemoveAllNavMeshData`, `GameObject/Component.GetComponent(string)`, plus the
+UnityEditor additions in the WIP commits. The `[RequireComponent]` shim also now tolerates cycles
+(`Guard` <-> `GuardDeathPlayback`), which had overflowed the stack and aborted the whole test run.
+`NightFogFeature` is handled by a stub in `Plunderspell.Atmosphere.NightFogFeature.cs`. Result, two identical
+runs: **497 tests, 385 pass, 4 skipped, 108 fail.** Classification (by assertion site; not individually
+debugged):
+- Known limit, asset/scene/importer/Resources (no SoundBank, registries, catalogues, loot tables, fonts,
+  prefabs or `.unity` files load): `AudioFeelTests`/`AudioLayerTests` x ~11 and `SavedSettingsStartupTests`
+  (SoundBank.asset), `AuthoredRaidSceneTests` x5, `RaidSceneCastingTests` x2, `CombatBenchCastingTests` x2,
+  `ArtAssetImportTests`, `GeneratedPropsImportCleanly`, `EraContentTests` x5, `LootAmountTests`,
+  `LootBalanceTests` x2, `LootGripTests` x2, `CastleNavTileTests` x3, `CastleNavGraphTests` x4,
+  `GuardNavigationCastleTests` x5, `ScaleInvariantTests` x3, `SoundFocusTests`, `UIFontsTests` x3,
+  `ChatterTests`, `NightAtmosphereTests`, `Test_SpellNumbersComeFromTheAuthoredAsset`,
+  `Test_ABurstUsesItsOwnTransparentMaterial`, `SpellVfxTests` x2, `CombatBenchTests`, `BackdropCameraTests` x2,
+  `RaidListenerFallbackTests`, `GuardDeadStateTests` (`GuardDust` needs a loaded asset).
+- Known limit, no FixedUpdate/rigidbody sim or CreatePrimitive collider: `CarryFeelTests` x14,
+  `MovementSpellTests` x7, `PlayableLoopTests` x5, `PortalRestTests`, `ImpactDamageTests` x2,
+  `LootSettleAndInputGatingTests` x3, `Test_SpawnedLootIsFrozenUntilTheSceneHasSettled`,
+  `Test_NoOneIsStoodOverAHole`, `Test_ResolveArrivalFallsBackToTheGateWhenNothingQualifies` (needs a
+  generated castle from assets).
+- Guard physics group (#289, triaged one by one; the 13 listed there). Fixed in the shims: `Collider.bounds` ignored
+  `lossyScale` (and capsule radius/height), so `CreatePrimitive` walls were 1 m cubes (`GuardSightReachTests` x2,
+  `GuardAwarenessTests.OneWallMufflesAFootstepButTwoHideIt`, `GuardCoreBodyTests` shove); `Quaternion.RotateTowards`
+  snapped to the target instead of turning at the given rate, so a panicking guard faced away within one tick
+  (`GuardOnFireTests` x2); sphere/capsule casts now return the real contact normal and treat box corners as
+  rounded, so a guard clipping a jamb slides past (`GuardNavigationServiceTests.AGuardThatClipsAWallCorner...`);
+  the NonAlloc casts no longer allocate (`TicksAllocateNothing`). Left as known limits: `GuardUnreachableTests` x3
+  (the thrown stone is `Resources.Load<GameObject>("GuardStone")`, which headless returns null for),
+  `GuardPatrolBarredDoorTests` (loads `CastleRoomRegistry.asset`), `GuardShoveTests` (a `[UnityTest]` that needs
+  Update/FixedUpdate and rigidbody simulation; the bridge only advances the clock). No game bug was found.
+  Note: the guard chase/nav tests are intermittent in the full run (roughly one run in four fails one of
+  `ARangedGuardRaisesTheAttackSignalWhileItIsMoving`, `AMoveRequestReachesArrivedThroughTheNavigationService`,
+  `AGuardChasingAPlayerPinnedAgainstAWall...`; the unmodified shims also gave 109 failed in one of six runs, and the
+  first fails alone at baseline). Cause not found.
+- One exclusion added (see below): `NightFogFeature.cs`.
+
 **Two deliberate compromises on faithfulness**, both flagged inline where they matter:
 - `Renderer.bounds` returns a zero-size box at the renderer's position rather than the mesh's real
   extents, since there is no real mesh data to measure headlessly. Anything that reasons about an
@@ -101,6 +141,9 @@ auto-adding dependencies before a component's `Awake` runs.
 - `Editor/PlayerBuilder.cs` (issue #53) — calls `BuildPipeline.BuildPlayer`/`BuildReport`, which the
   `UnityEditor` shim does not model. A shimmed "successful build" would prove nothing; this is
   verified against the real Unity Editor directly instead.
+- `Atmosphere/NightFogFeature.cs` — pure URP render-graph plumbing (a `ScriptableRenderPass`), no testable
+  logic. `Shims/Plunderspell.Atmosphere.NightFogFeature.cs` stands in, carrying only the `IsActive` switch
+  `CastleAtmosphere` flips.
 
 Everything else under `Assets/_Project/Scripts/Runtime` is compiled, including the
 `HEADLESS`-guarded Vosk provider.

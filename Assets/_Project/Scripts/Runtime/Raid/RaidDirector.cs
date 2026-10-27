@@ -1,4 +1,5 @@
 using System;
+using Code.Scripts.EventSystems;
 using Interfaces;
 using PurrNet;
 using Plunderspell.Alarm;
@@ -38,6 +39,12 @@ namespace Plunderspell.Raid
         [Tooltip("Spawns the garrison into the generated castle.")]
         [SerializeField] private GuardSpawner _guardSpawner;
 
+        [Tooltip("Spawns the doors where castle zones meet (#248). Optional: without it the castle has no doors.")]
+        [SerializeField] private CastleDoorSpawner _doorSpawner;
+
+        /// <summary>The door spawner, for scenes built by tooling.</summary>
+        public CastleDoorSpawner DoorSpawner { get => _doorSpawner; set => _doorSpawner = value; }
+
         [Tooltip("The zone that ends the raid.")]
         [SerializeField] private ExtractionZone _extractionZone;
 
@@ -53,6 +60,9 @@ namespace Plunderspell.Raid
 
         [Tooltip("Per-era rooms, loot and garrison. Empty: every era raids with the scene defaults.")]
         [SerializeField] private EraContentCatalogue _eraContent;
+
+        /// <summary>Every era's content, so a saved piece of any era can be found again.</summary>
+        public EraContentCatalogue EraContent => _eraContent;
 
         [Header("Raid setup")]
         [Tooltip("Seed for the next raid. Left at 0, a fresh one is rolled per raid.")]
@@ -72,6 +82,12 @@ namespace Plunderspell.Raid
         private readonly SyncVar<float> _hostDebt = new SyncVar<float>(0f);
         private readonly SyncVar<float> _hostGold = new SyncVar<float>(0f);
         private readonly SyncVar<float> _hostLastRaidWorth = new SyncVar<float>(-1f);
+
+        // The host's purses, paid-last, seats present and Collector line as one string (LairHubManager.HostLedger).
+        private readonly SyncVar<string> _hostLedger = new SyncVar<string>(string.Empty);
+
+        // The Age the host's century dial has chosen for the next raid (#358); -1 until the host has published it.
+        private readonly SyncVar<int> _hostEra = new SyncVar<int>(-1);
 
         /// <summary>Where the session is in the loop.</summary>
         public RaidPhase Phase => _phase.value;
@@ -106,18 +122,6 @@ namespace Plunderspell.Raid
         /// </summary>
         public const float PlayerRingRadius = 3.5f;
 
-        /// <summary>
-        /// Raised on every peer once the portal stands for a raid, with the floor point under it.
-        /// The portal's light and glow listen for it.
-        /// </summary>
-        public event Action<Vector3> PortalOpened;
-
-        /// <summary>Raised on every phase change. HUD and scene loading subscribe.</summary>
-        public event Action<RaidPhase> PhaseChanged;
-
-        /// <summary>Raised when a raid resolves: (worth extracted, players saved).</summary>
-        public event Action<float, int> RaidResolved;
-
         private bool _subscribedToZone;
 
         protected override void OnSpawned()
@@ -128,10 +132,22 @@ namespace Plunderspell.Raid
             _hostDebt.onChanged += OnHostCampaignReplicated;
             _hostGold.onChanged += OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged += OnHostCampaignReplicated;
+            _hostLedger.onChanged += OnHostLedgerReplicated;
+            _hostEra.onChanged += OnHostEraReplicated;
             if (isServer)
+            {
+                // A pouch banked or a wizard arriving changes the ledger between raids; the host publishes it as it happens.
+                EventManager.Instance?.Subscribe(this, (PurseChanged e) => PublishCampaign());
+                EventManager.Instance?.Subscribe(this, (PresentChanged e) => PublishCampaign());
+                EventManager.Instance?.Subscribe(this, (AgeChosen e) => PublishCampaign()); // the century dial
                 PublishCampaign();
+            }
             else
+            {
+                OnHostEraReplicated(0);
                 OnHostCampaignReplicated(0f);
+                OnHostLedgerReplicated(string.Empty);
+            }
             SubscribeToZone();
             Debug.Log($"[Raid] Director spawned as {(isServer ? "server" : "client")}: phase {_phase.value}, seed {Seed}.");
         }
@@ -144,6 +160,14 @@ namespace Plunderspell.Raid
             _hostDebt.onChanged -= OnHostCampaignReplicated;
             _hostGold.onChanged -= OnHostCampaignReplicated;
             _hostLastRaidWorth.onChanged -= OnHostCampaignReplicated;
+            _hostLedger.onChanged -= OnHostLedgerReplicated;
+            if (isServer)
+            {
+                EventManager.Instance?.Unsubscribe<PurseChanged>(this);
+                EventManager.Instance?.Unsubscribe<PresentChanged>(this);
+                EventManager.Instance?.Unsubscribe<AgeChosen>(this);
+            }
+            _hostEra.onChanged -= OnHostEraReplicated;
 
             // Leaving a friend's session: back to this machine's own saved campaign.
             if (!isServer)
@@ -167,6 +191,31 @@ namespace Plunderspell.Raid
         {
             if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(Seed))
                 BuildCastle(Seed);
+
+            // The Lair's ledger shows tonight's shares, so the host keeps the seats present up to date between raids.
+            if ((!isSpawned || isServer) && _phase.value == RaidPhase.InLair && Time.unscaledTime >= _nextSeatCheck)
+            {
+                _nextSeatCheck = Time.unscaledTime + 0.5f;
+                _lair?.SetPresent(SeatsPresent());
+            }
+        }
+
+        private float _nextSeatCheck;
+
+        /// <summary>The seats with a wizard: owner 1 is seat 0 and so on; a lone offline player is seat 0.</summary>
+        private static bool[] SeatsPresent()
+        {
+            var present = new bool[LairHubManager.Seats];
+            foreach (StateMachine.PlayerStateMachine player in FindObjectsByType<StateMachine.PlayerStateMachine>(FindObjectsSortMode.None))
+            {
+                int seat = player.TryGetComponent(out NetworkIdentity identity) && identity.owner.HasValue
+                    ? Mathf.Max(0, (int)(ulong)identity.owner.Value.id - 1)
+                    : 0;
+                present[Mathf.Min(seat, LairHubManager.Seats - 1)] = true;
+            }
+            if (!System.Array.Exists(present, seated => seated))
+                present[0] = true; // solo with the body not found yet: seat 1 alone
+            return present;
         }
 
         private void OnDestroy()
@@ -199,6 +248,13 @@ namespace Plunderspell.Raid
 
             _layout.value = PackLayout(Seed, era);
             _lair?.SelectEra(era);
+
+            // The Collector calls first, on the debt as it stands (equal shares, #313); then the debt grows.
+            if (_lair != null)
+            {
+                _lair.SetPresent(SeatsPresent());
+                _lair.Collect();
+            }
 
             // Debt grows every time you set out, which is what puts a clock on the whole campaign.
             _lair?.OnNewSession();
@@ -291,6 +347,7 @@ namespace Plunderspell.Raid
             {
                 _lootSpawner?.SpawnFor(Castle, seed, _generator != null ? _generator.Registry : null);
                 _guardSpawner?.SpawnFor(Castle, seed, Era, ArrivalModuleIndex, LobbySize);
+                _doorSpawner?.SpawnFor(Castle);
             }
 
             return Castle;
@@ -328,8 +385,8 @@ namespace Plunderspell.Raid
         }
 
         /// <summary>
-        /// Applies an extraction result: bank the worth against the debt, record the summary and
-        /// return to the Lair. Public and network-free so the economics are testable on their own.
+        /// Applies an extraction result: record what was carried home (nothing is banked; coins come
+        /// from selling in the Market) and return to the Lair. Public and network-free so the economics are testable on their own.
         /// </summary>
         public void ApplyResult(float worthExtracted, int playersSaved)
         {
@@ -340,13 +397,17 @@ namespace Plunderspell.Raid
             PublishCampaign();
             _lootSpawner?.Clear();
             _guardSpawner?.Clear();
+            _doorSpawner?.Clear();
+
+            // The raid is over, so its alarm is: otherwise the Roused or Hue and Cry grade stays on the Lair (#352).
+            _alarm?.ResetForNewRaid(0f);
 
             // Deliberately NOT clearing the director's Intruders: IntruderTag owns that list by
             // component lifetime, and wiping it here would leave every surviving player invisible
             // to guards for the rest of the session.
 
             SetPhase(RaidPhase.Resolved);
-            RaidResolved?.Invoke(worthExtracted, playersSaved);
+            EventManager.Instance?.Publish(new RaidResolved(worthExtracted, playersSaved));
         }
 
         /// <summary>
@@ -435,9 +496,18 @@ namespace Plunderspell.Raid
                 return ArrivalPoint;
             Vector2Int inward = CastleEntrancePlanner.InwardCell(arrival.GridPosition);
             foreach (ProceduralCastleData.PlacedModule module in Castle.PlacedModules)
-                if (module.GridPosition == inward)
+                if (module.GridPosition == inward && module.Level == CastleLevels.Ground)   // the ground room, not the keep above it (#247)
                     return module.Position;
             return ArrivalPoint;
+        }
+
+        /// <summary>Where player number <paramref name="index"/> (0-based) stands: their point on the ring round the portal, moved to clear floor.</summary>
+        public static Vector3 PlayerSpawn(Vector3 arrivalPoint, int index)
+        {
+            float angle = index * Mathf.PI * 0.5f;
+            var anchor = new Vector3(arrivalPoint.x + Mathf.Cos(angle) * PlayerRingRadius, 0f,
+                arrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
+            return CastleSpawnResolver.FirstClearStandingPoint(anchor);
         }
 
         /// <summary>
@@ -466,10 +536,7 @@ namespace Plunderspell.Raid
             int index = player.TryGetComponent(out NetworkIdentity identity) && identity.owner.HasValue
                 ? Mathf.Max(0, (int)(ulong)identity.owner.Value.id - 1)
                 : 0;
-            float angle = index * Mathf.PI * 0.5f;
-            var anchor = new Vector3(ArrivalPoint.x + Mathf.Cos(angle) * PlayerRingRadius, 0f,
-                ArrivalPoint.z + Mathf.Sin(angle) * PlayerRingRadius);
-            Vector3 spawn = CastleSpawnResolver.FirstClearStandingPoint(anchor);
+            Vector3 spawn = PlayerSpawn(ArrivalPoint, index);
 
             // Face the portal, so the first thing a player sees is the way home; on the curtain strip,
             // face the way in instead, which the portal otherwise puts off to one side (#140).
@@ -496,7 +563,7 @@ namespace Plunderspell.Raid
             var floorPoint = new Vector3(ArrivalPoint.x, feet, ArrivalPoint.z);
             if (_extractionZone != null)
                 _extractionZone.PlaceAsPortal(floorPoint);
-            PortalOpened?.Invoke(floorPoint);
+            EventManager.Instance?.Publish(new PortalOpened(floorPoint));
         }
 
         /// <summary>Puts the invisible boundary round the castle just built.</summary>
@@ -535,7 +602,7 @@ namespace Plunderspell.Raid
                 // A client only mirrors the summary; the server owns the economy.
                 LastWorthExtracted = worth;
                 LastPlayersSaved = saved;
-                RaidResolved?.Invoke(worth, saved);
+                EventManager.Instance?.Publish(new RaidResolved(worth, saved));
                 return;
             }
 
@@ -546,7 +613,7 @@ namespace Plunderspell.Raid
         {
             if (_subscribedToZone || _extractionZone == null)
                 return;
-            _extractionZone.ExtractionResolved += OnExtractionResolved;
+            EventManager.Instance?.Subscribe(this, (ExtractionResolved e) => OnExtractionResolved(e.Worth, e.Saved));
             _subscribedToZone = true;
         }
 
@@ -554,7 +621,7 @@ namespace Plunderspell.Raid
         {
             if (!_subscribedToZone || _extractionZone == null)
                 return;
-            _extractionZone.ExtractionResolved -= OnExtractionResolved;
+            EventManager.Instance?.Unsubscribe<ExtractionResolved>(this);
             _subscribedToZone = false;
         }
 
@@ -563,7 +630,7 @@ namespace Plunderspell.Raid
             if (_phase.value == phase)
                 return;
             _phase.value = phase;
-            PhaseChanged?.Invoke(phase);
+            EventManager.Instance?.Publish(new RaidPhaseChanged(phase));
         }
 
         /// <summary>
@@ -595,6 +662,20 @@ namespace Plunderspell.Raid
             _hostDebt.value = _lair.TotalDebt;
             _hostGold.value = _lair.AccumulatedGold;
             _hostLastRaidWorth.value = _lair.LastRaidWorth;
+            _hostLedger.value = _lair.HostLedger();
+            _hostEra.value = (int)_lair.GetLairState().SelectedEra;
+        }
+
+        private void OnHostEraReplicated(int _)
+        {
+            if (!isServer && _lair != null && _hostEra.value >= 0)
+                _lair.ShowHostEra((HistoricalEra)_hostEra.value);
+        }
+
+        private void OnHostLedgerReplicated(string _)
+        {
+            if (!isServer && _lair != null && _hostLedger.value.Length > 0)
+                _lair.ShowHostLedger(_hostLedger.value);
         }
 
         private void OnHostCampaignReplicated(float _)
@@ -621,7 +702,7 @@ namespace Plunderspell.Raid
                 Castle = null;
             }
 
-            PhaseChanged?.Invoke(phase);
+            EventManager.Instance?.Publish(new RaidPhaseChanged(phase));
         }
 
         /// <summary>

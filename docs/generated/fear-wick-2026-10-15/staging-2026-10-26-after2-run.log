@@ -1,0 +1,38 @@
+13:16:54 host: state MainMenu players 0 local none holding nothing
+13:16:55 host: state LairRoom players 1 local 1005.200,1.211,1.500 holding nothing
+13:16:55 client started (pid 1034)
+13:17:04 client: state LairRoom players 2 local 1005.200,1.211,0.500 holding nothing
+13:17:05 host: state Playing players 2 local -20.500,1.210,-12.000 holding nothing
+13:17:06 client: state Playing players 2 local -24.000,1.210,-8.500 holding nothing
+13:17:12 spawn: warden at (-20.50, 1.21, -5.00), facing away, held still
+13:17:15 look: host looks at the warden
+13:17:16 client: facing the warden, 4.9 m away
+13:17:17 before the turn | host:   LanternWarden(Clone) state=Incapacitated turned=False wickShowing=False at=(-20.50, 0.31, -5.00) | player local=True health=100 dead=False netDown=False drawnDown=False shown=True | player local=False health=100 dead=False netDown=False drawnDown=False shown=True | 
+13:17:18 before the turn | client: LanternWarden(Clone) state=Incapacitated turned=False wickShowing=False at=(-20.50, 0.31, -5.00) | player local=False health=100 dead=False netDown=False drawnDown=False shown=True | player local=True health=100 dead=False netDown=False drawnDown=False shown=True | 
+13:17:20 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell-staging/docs/generated/fear-wick-2026-10-15/staging-2026-10-26-after2-before-client.png
+13:17:21 provoke: warden now faces the host's player, 7.0 m away; sees nobody, intruders known 2, director True
+13:17:23 slow 0.2: host time scale 0.2 | client time scale 0.2
+13:17:24 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell-staging/docs/generated/fear-wick-2026-10-15/staging-2026-10-26-after2-turning-client.png
+13:17:25 start of the turn | host:   LanternWarden(Clone) state=Turning turned=True wickShowing=False at=(-23.53, 0.31, -5.30) | lantern at (-23.35, 1.95, -5.77) | player local=True health=100 dead=False netDown=False drawnDown=False shown=True | player local=False health=100 dead=False netDown=False drawnDown=False shown=True | 
+13:17:26 start of the turn | client: LanternWarden(Clone) state=Turning turned=True wickShowing=True at=(-23.53, 0.31, -5.30) | lantern at (-23.37, 1.74, -5.87) | player local=False health=100 dead=False netDown=False drawnDown=False shown=True | player local=True health=100 dead=False netDown=False drawnDown=False shown=True | 
+13:17:35 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell-staging/docs/generated/fear-wick-2026-10-15/staging-2026-10-26-after2-standing-client.png
+13:17:36 the Wick standing (model swapped) | host:   LanternWarden(Clone) state=Chasing turned=True wickShowing=True at=(-23.30, 0.31, -8.02) | lantern at (-23.15, 0.42, -6.24) | player local=True health=100 dead=False netDown=False drawnDown=False shown=True | player local=False health=0 dead=True netDown=True drawnDown=True shown=True | 
+13:17:37 the Wick standing (model swapped) | client: LanternWarden(Clone) state=Chasing turned=True wickShowing=True at=(-22.93, 0.31, -8.63) | lantern at (-23.15, 0.42, -6.24) | player local=False health=100 dead=False netDown=False drawnDown=False shown=True | player local=True health=-99900 dead=True netDown=True drawnDown=True shown=True | 
+13:17:41 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell-staging/docs/generated/fear-wick-2026-10-15/staging-2026-10-26-after2-stalking-client.png
+13:17:41 stalking or hunting | host:   LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(-21.56, 0.31, -11.96) | lantern at (-23.15, 0.42, -6.24) | player local=True health=100 dead=False netDown=False drawnDown=False shown=True | player local=False health=0 dead=True netDown=True drawnDown=True shown=True | 
+13:17:42 stalking or hunting | client: LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(-21.48, 0.31, -12.70) | lantern at (-23.15, 0.42, -6.24) | player local=False health=100 dead=False netDown=False drawnDown=False shown=True | player local=True health=-99900 dead=True netDown=True drawnDown=True shown=True | 
+13:17:45 caught: the client's player; the host slows: time scale 0.02; looks: facing the teammate, 4.9 m away
+13:17:48 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell-staging/docs/generated/fear-wick-2026-10-15/staging-2026-10-26-after2-caught-player-client.png
+13:17:48 the caught player | host:   LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(-21.03, 0.31, -13.13) | lantern at (-23.15, 0.42, -6.24) | player local=True health=100 dead=False netDown=False drawnDown=False shown=True | player local=False health=0 dead=True netDown=True drawnDown=True shown=False | 
+13:17:49 the caught player | client: LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(-21.01, 0.31, -13.07) | lantern at (-23.15, 0.42, -6.24) | player local=False health=100 dead=False netDown=False drawnDown=False shown=True | player local=True health=-99900 dead=True netDown=True drawnDown=True shown=False | 
+13:17:50 PASS the host sees the client's player down
+13:17:52 slow 0.05: host time scale 0.05 | client time scale 0.05
+13:17:54 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell-staging/docs/generated/fear-wick-2026-10-15/staging-2026-10-26-after2-catch-client.png
+13:17:55 at the catch | host:   LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(-20.96, 0.31, -12.67) | lantern at (-23.15, 0.42, -6.24) | player local=True health=100 dead=False netDown=False drawnDown=False shown=True | player local=False health=0 dead=True netDown=True drawnDown=True shown=False | 
+13:17:56 at the catch | client: LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(-20.98, 0.31, -12.66) | lantern at (-23.15, 0.42, -6.24) | player local=False health=100 dead=False netDown=False drawnDown=False shown=True | player local=True health=-99900 dead=True netDown=True drawnDown=True shown=False | 
+13:17:57 slow 1: host time scale 1 | client time scale 1
+13:18:01 after the catch | host:   LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(-22.11, 0.31, -10.10) | lantern at (-23.15, 0.42, -6.24) | player local=True health=-99900 dead=True netDown=True drawnDown=True shown=False | player local=False health=0 dead=True netDown=True drawnDown=True shown=False | 
+13:18:02 after the catch | client: LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(-22.59, 0.31, -8.90) | lantern at (-23.15, 0.42, -6.24) | player local=False health=0 dead=True netDown=True drawnDown=True shown=False | player local=True health=-99900 dead=True netDown=True drawnDown=True shown=False | 
+13:18:03 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell-staging/docs/generated/fear-wick-2026-10-15/staging-2026-10-26-after2-after-client.png
+13:18:03 client log error lines: 2
+13:18:03 cleaning up

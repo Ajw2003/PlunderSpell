@@ -28,7 +28,11 @@ namespace Plunderspell.Castle
 
             var zoneByCell = new Dictionary<Vector2Int, CastleZone>();
             foreach (ProceduralCastleData.PlacedModule module in castle.PlacedModules)
-                zoneByCell[module.GridPosition] = module.Zone;
+            {
+                // Entrances open onto the ground floor; keep and crypt rooms share these cells (#247).
+                if (module.Level == CastleLevels.Ground)
+                    zoneByCell[module.GridPosition] = module.Zone;
+            }
 
             for (int i = 0; i < castle.PlacedModules.Count; i++)
             {

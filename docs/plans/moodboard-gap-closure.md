@@ -1,6 +1,6 @@
 # Moodboard gap closure
 
-What it would take for Plunderspell as built to match `docs/plunderspell.md` (pitch bible v0.2)
+What it would take for Plunderspell as built to match `docs/7-design/plunderspell.md` (pitch bible v0.2)
 and the project's mood board (`docs/generated/plunderspell-moodboard.html`, synced from the
 project doc `plunderspell-moodboard (4).html`). Live until the backlog below is triaged and
 either executed or explicitly descoped; then archive it.
@@ -40,7 +40,7 @@ of them. The gap is not definition — it's that casting one produces no visible
 **The weapon *system* mostly doesn't exist yet, separately from the weapon *roster* not matching.**
 The pitch describes twelve named weapons with reach/heft/noise stats and a melee feel ("a sword is
 merely a heavy object with a sharp end that you swung hard"). What's built is physics-based
-throwing/impact damage (`docs/plunderspell.md` §10: "Physics grab / carry / rotate / throw with
+throwing/impact damage (`docs/7-design/plunderspell.md` §10: "Physics grab / carry / rotate / throw with
 velocity-scaled impact damage") plus eight generically-named weapon models
 (`Assets/_Project/Prefabs/Weapons/`) that aren't wired into a raid at all (issue #17). There is no
 evidence anywhere in `docs/4-systems/` of a swing/reach/heft-driven melee attack — see §4.
@@ -72,7 +72,7 @@ Not built:
 ### 2.2 Physics loot — built, treasury is unauthored
 
 Built: grab/carry/throw, velocity-scaled damage, bulk in stone, two-person heavy carries (listed
-built in `docs/plunderspell.md` §10).
+built in `docs/7-design/plunderspell.md` §10).
 
 Not built:
 - **The treasury the pitch describes doesn't exist.** Five generic loot prefabs
@@ -103,7 +103,7 @@ are specifically unaddressed by that filing and worth calling out on their own:
 
 ### 2.4 The Mystical Market — does not exist
 
-This is the single largest pillar-level gap. `docs/plunderspell.md`'s mood board devotes a full
+This is the single largest pillar-level gap. `docs/7-design/plunderspell.md`'s mood board devotes a full
 section to it (the Spellmonger's Stall, the Smith's Stall, the Alchemist's Stall, the Curiosity
 Dealer — unlearned incantations, weapon upgrades, one-use consumables, category-less curios), with
 specific rules (buying here always costs more than finding it in a dungeon; it remembers what it's
@@ -150,7 +150,7 @@ Issue #19 already covers material/lighting blandness and issue #21 covers the mi
 asset. Two things the mood board specifies that aren't covered by either filing:
 
 - **The six reference lighting frames** the pitch names as a production target (Lair, Treasury,
-  Portal, the Hue & Cry, the Approach, Bronze Age Interior — `docs/plunderspell.md` §9) have no
+  Portal, the Hue & Cry, the Approach, Bronze Age Interior — `docs/7-design/plunderspell.md` §9) have no
   concept art, lighting rig, or even a defined camera setup to check "did we hit this" against.
   Three of the six frames (Lair, Portal, Approach) aren't castle-interior lighting at all, so
   issue #19's castle-materials fix won't touch them even once it's done.

@@ -8,7 +8,7 @@ wizard loot-extraction co-op game: voice-cast spells, physics-driven melee and i
 into different historical Ages, plunder castles/villages/kingdoms, extract back to your lair.
 
 The vision, palette, weapon set, spell lexicon and Age structure live in
-[`docs/plunderspell.md`](../plunderspell.md), with an illustrated mood board at
+[`docs/7-design/plunderspell.md`](../7-design/plunderspell.md), with an illustrated mood board at
 [`docs/generated/plunderspell-moodboard.html`](../generated/plunderspell-moodboard.html). This document is the
 engineering plan for getting there.
 

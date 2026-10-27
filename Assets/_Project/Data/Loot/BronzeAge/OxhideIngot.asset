@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 180
   IsArtifact: 0
-  Bulk: 4
+  Category: 0
+  WeightKg: 4
   Fragility: 999
   DisplayName: Oxhide Ingot
   Icon: {fileID: 0}

@@ -117,6 +117,10 @@ namespace Plunderspell.Tests
             _shotTemplate.AddComponent<Rigidbody>().useGravity = false;
             Guard guard = _rig.MakeGuard(Vector3.zero);
             guard.Tuning.ProjectilePrefab = _shotTemplate;
+            // The guard hands over to Combat at 8 m, about 1.1 s in, and Combat shoots from a ring place on a
+            // turn, not on the move (#210). A shorter cooldown puts a Chase shot well before that, so the test
+            // no longer depends on where the ring place falls (it comes from the guard's instance id).
+            guard.Tuning.AttackCooldownSeconds = 0.5f;
             _rig.MakeIntruder(new Vector3(0f, 0f, 13f));
             int shotsWhileMoving = 0;
             guard.AttackSignal.Attacked += kind =>

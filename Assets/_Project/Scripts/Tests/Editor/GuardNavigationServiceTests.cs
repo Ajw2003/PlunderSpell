@@ -1,3 +1,5 @@
+using Plunderspell.Tests.EditMode;
+using Code.Scripts.EventSystems;
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
@@ -23,10 +25,11 @@ namespace Plunderspell.Tests.Editor
         [SetUp]
         public void SetUp()
         {
+            TestEventBus.Create();
             _director = Make("Director").AddComponent<EnemyDirector>();
             _director.Navigation.SetMap(new FlatNavigationMap());
-            _director.OnBlocked += _blocked.Add;
-            _director.OnArrived += _arrived.Add;
+            EventManager.Instance.Subscribe(this, (Blocked e) => _blocked.Add(e));
+            EventManager.Instance.Subscribe(this, (Arrived e) => _arrived.Add(e));
         }
 
         [TearDown]
@@ -37,6 +40,7 @@ namespace Plunderspell.Tests.Editor
             _created.Clear();
             _blocked.Clear();
             _arrived.Clear();
+            TestEventBus.Destroy();
         }
 
         [Test]
@@ -48,7 +52,7 @@ namespace Plunderspell.Tests.Editor
             Vector3 playerBefore = player.transform.position;
             GameObject guard = MakeGuard(new Vector3(0f, 0f, 0f));
 
-            _director.Publish(new MoveRequest(guard.transform, new Vector3(8f, 0f, 0f), 3f, MoveReason.Chase));
+            EventManager.Instance.Publish(new MoveRequest(guard.transform, new Vector3(8f, 0f, 0f), 3f, MoveReason.Chase));
             RunTicks(400);
 
             float playerFace = playerBefore.x - 0.4f;
@@ -66,7 +70,7 @@ namespace Plunderspell.Tests.Editor
         public void GuardWalksToAnOpenDestinationAndArrives()
         {
             GameObject guard = MakeGuard(Vector3.zero);
-            _director.Publish(new MoveRequest(guard.transform, new Vector3(6f, 0f, 3f), 3f, MoveReason.Patrol));
+            EventManager.Instance.Publish(new MoveRequest(guard.transform, new Vector3(6f, 0f, 3f), 3f, MoveReason.Patrol));
             RunTicks(400);
 
             Assert.That(_arrived.Count, Is.EqualTo(1));
@@ -84,7 +88,7 @@ namespace Plunderspell.Tests.Editor
             Physics.SyncTransforms();
             GameObject guard = MakeGuard(Vector3.zero);
 
-            _director.Publish(new MoveRequest(guard.transform, new Vector3(8f, 0f, 0f), 3f, MoveReason.Patrol));
+            EventManager.Instance.Publish(new MoveRequest(guard.transform, new Vector3(8f, 0f, 0f), 3f, MoveReason.Patrol));
             RunTicks(400);
 
             Assert.That(_blocked.Count, Is.EqualTo(0), "clipping a corner must not block the walk");
@@ -102,7 +106,7 @@ namespace Plunderspell.Tests.Editor
             AddBody(walker);
             Physics.SyncTransforms();
 
-            _director.Publish(new MoveRequest(walker.transform, new Vector3(8f, 0f, 0f), 3f, MoveReason.Chase));
+            EventManager.Instance.Publish(new MoveRequest(walker.transform, new Vector3(8f, 0f, 0f), 3f, MoveReason.Chase));
             RunTicks(400);
 
             Assert.That(_blocked.Count, Is.EqualTo(0), "another guard's body must not block the sweep");
@@ -116,7 +120,7 @@ namespace Plunderspell.Tests.Editor
             for (int i = 0; i < guards.Length; i++)
             {
                 guards[i] = MakeGuard(new Vector3(i % 5 * 0.4f, 0f, i / 5 * 0.4f));
-                _director.Publish(new MoveRequest(guards[i].transform, new Vector3(15f, 0f, 0f), 3f, MoveReason.Chase));
+                EventManager.Instance.Publish(new MoveRequest(guards[i].transform, new Vector3(15f, 0f, 0f), 3f, MoveReason.Chase));
             }
 
             RunTicks(1500);
@@ -139,7 +143,7 @@ namespace Plunderspell.Tests.Editor
             for (int i = 0; i < 20; i++)
             {
                 GameObject guard = MakeGuard(new Vector3(i * 1.5f, 0f, 0f));
-                _director.Publish(new MoveRequest(guard.transform, new Vector3(i * 1.5f, 0f, 40f), 2f, MoveReason.Patrol));
+                EventManager.Instance.Publish(new MoveRequest(guard.transform, new Vector3(i * 1.5f, 0f, 40f), 2f, MoveReason.Patrol));
             }
             RunTicks(50); // warm-up: first sweeps and first JIT
 

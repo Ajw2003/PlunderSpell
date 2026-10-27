@@ -18,6 +18,33 @@ namespace Plunderspell.Tests.Editor
     public class NightAtmosphereTests
     {
         [Test]
+        public void Test_AHaloFadesInAndOutWhenAFireJoinsOrLeavesTheChosenSet()
+        {
+            var go = new GameObject("fire");
+            try
+            {
+                var fire = go.AddComponent<FireSource>();
+                fire.SetHaloTarget(1f);
+                fire.EaseHalo(0.1f, 1f);
+                Assert.That(fire.Halo, Is.EqualTo(0.1f).Within(0.001f), "Joining the set must not pop the halo in.");
+                for (int i = 0; i < 20; i++)
+                    fire.EaseHalo(0.1f, 1f);
+                Assert.AreEqual(1f, fire.Halo, 0.001f);
+
+                fire.SetHaloTarget(0f);
+                fire.EaseHalo(0.1f, 1f);
+                Assert.That(fire.Halo, Is.EqualTo(0.9f).Within(0.001f), "Leaving the set must not pop the halo out.");
+                for (int i = 0; i < 20; i++)
+                    fire.EaseHalo(0.1f, 1f);
+                Assert.AreEqual(0f, fire.Halo, 0.001f);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
         public void Test_HearthsAlwaysBurnAndBeaconsWaitForTheAlarm()
         {
             foreach (AlarmState state in System.Enum.GetValues(typeof(AlarmState)))
@@ -97,6 +124,40 @@ namespace Plunderspell.Tests.Editor
             Assert.AreEqual(FireRules.LightGrant.Unshadowed, grants[4]);
             Assert.AreEqual(FireRules.LightGrant.None, grants[0], "Past the budget a fire is flame and glow only.");
             Assert.AreEqual(FireRules.LightGrant.None, grants[5], "An unlit fire gets no light, however close.");
+        }
+
+        [Test]
+        public void Test_AFireKeepsItsLightUntilARivalIsClearlyCloser()
+        {
+            var lit = new List<bool> { true, true };
+            var previous = new List<FireRules.LightGrant> { FireRules.LightGrant.Unshadowed, FireRules.LightGrant.None };
+            var grants = new List<FireRules.LightGrant>();
+
+            FireRules.ShareLights(new List<float> { 100f, 90f }, lit, 0, 1, grants, new List<int>(), previous);
+            Assert.AreEqual(FireRules.LightGrant.Unshadowed, grants[0], "A fire at the boundary keeps its light.");
+            Assert.AreEqual(FireRules.LightGrant.None, grants[1]);
+
+            FireRules.ShareLights(new List<float> { 100f, 70f }, lit, 0, 1, grants, new List<int>(), previous);
+            Assert.AreEqual(FireRules.LightGrant.None, grants[0]);
+            Assert.AreEqual(FireRules.LightGrant.Unshadowed, grants[1], "A clearly closer rival takes the light.");
+        }
+
+        [Test]
+        public void Test_WithoutPreviousGrantsSharingIsUnchanged()
+        {
+            var distances = new List<float> { 25f, 1f, 9f, 4f, 16f, 0.5f };
+            var lit = new List<bool> { true, true, true, true, true, false };
+            var grants = new List<FireRules.LightGrant>();
+
+            FireRules.ShareLights(distances, lit, 2, 2, grants, new List<int>(), previous: null);
+
+            CollectionAssert.AreEqual(
+                new[]
+                {
+                    FireRules.LightGrant.None, FireRules.LightGrant.Shadowed, FireRules.LightGrant.Unshadowed,
+                    FireRules.LightGrant.Shadowed, FireRules.LightGrant.Unshadowed, FireRules.LightGrant.None,
+                },
+                grants);
         }
 
         [Test]
@@ -190,6 +251,26 @@ namespace Plunderspell.Tests.Editor
                     Assert.LessOrEqual(Mathf.Abs(anchor.Position.z), 6f, $"{module.RoomId}: a fire outside its 12 m cell.");
                     Assert.GreaterOrEqual(anchor.Position.y, 0f, $"{module.RoomId}: a fire below the floor.");
                 }
+            }
+        }
+
+        [TestCase("Assets/_Project/Data/Castle/CastleRoomRegistry.asset")]
+        [TestCase("Assets/_Project/Data/Castle/CastleRoomRegistry_BronzeAge.asset")]
+        [TestCase("Assets/_Project/Data/Castle/CastleRoomRegistry_LateMedieval.asset")]
+        public void Test_EveryRoomHasAFireBurningAtCalmSoTheAlarmShowsEverywhere(string registryPath)
+        {
+            var registry = AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>(registryPath);
+            Assert.IsNotNull(registry);
+
+            foreach (CastleRoomModuleData module in registry.Modules)
+            {
+                if (module.Zone == CastleZone.CurtainWall && module.RoomId == "Drawbridge")
+                    continue;
+                bool burnsAtCalm = false;
+                foreach (CastleFireAnchor anchor in module.FireAnchors)
+                    burnsAtCalm |= FireRules.IsLit(anchor.Kind, anchor.LitFrom, AlarmState.Calm);
+                Assert.IsTrue(burnsAtCalm,
+                    $"{module.RoomId} has no fire lit at Calm, so the alarm shows nothing there (#317); add a torch in castle_builders.");
             }
         }
     }

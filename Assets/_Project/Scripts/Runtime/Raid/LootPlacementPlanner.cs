@@ -84,6 +84,10 @@ namespace Plunderspell.Raid
                 if (module.IsExtractionExit || i == castle.ExtractionExitIndex)
                     continue;
 
+                // A stair is a passage; the placeholder stairs have no loot anchors (#247).
+                if (module.Storeys > 1)
+                    continue;
+
                 // Only in rooms (see the summary above).
                 if (registry != null && module.Zone == CastleZone.CurtainWall)
                     continue;

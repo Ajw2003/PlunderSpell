@@ -102,7 +102,7 @@ namespace Plunderspell.Tests
             _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 25f));
             Assert.That(Sees(guard), Is.False, "out of range while Calm");
 
-            _rig.Director.SetAlarmLevel(60f);
+            _rig.Director.SetAlarmLevel(60f, 3); // Roused needs three witnesses (#259)
             Assert.That(Sees(guard), Is.True, "the same player is in range once the castle is Roused");
         }
 

@@ -1,3 +1,4 @@
+import os
 """Helpers for the High Medieval concept sheets. Emits SVG strings on the art-bible frame."""
 import random, math, colorsys
 from xml.sax.saxutils import escape
@@ -5,7 +6,7 @@ from xml.sax.saxutils import escape
 MONO = "Overpass Mono, monospace"
 SERIF = "Eczar, Georgia, serif"
 AGE_NAME = "THE HIGH MEDIEVAL"
-OUT = "/home/user/PlunderSpell/docs/art/concept/high/"
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "docs", "art", "concept", "high") + os.sep
 
 
 def hexrgb(h):
@@ -156,7 +157,7 @@ def view_label(x, s, y=730):
 def write(sheet, head, parts, tail_palette):
     svg = head + '\n'.join(parts) + '\n' + tail_palette + '\n</svg>\n'
     path = OUT + sheet.slug + '.svg'
-    with open(path, 'w') as f:
+    with open(path, 'w', encoding='utf-8') as f:
         f.write(svg)
     n = svg.count('<') - svg.count('</')
     print(f"wrote {path}  (~{n} elements)")

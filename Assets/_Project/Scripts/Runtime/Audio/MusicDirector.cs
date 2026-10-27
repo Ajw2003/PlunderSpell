@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Alarm;
 using Plunderspell.Core;
 using Plunderspell.Extraction;
@@ -54,6 +55,12 @@ namespace Plunderspell.Audio
         private int _nextWarning;
         private bool _warningsArmed;
 
+        // What decides the music, kept current by the events that change it (#304).
+        private GameState _state = GameState.MainMenu;
+        private bool _raidRunning;
+        private int _alarmIndex;
+        private HistoricalEra _raidEra;
+
         public string CurrentBed => _bed;
         public bool StemsPlaying => _stemsOn;
         public AudioSource[] Layers => _layers;
@@ -67,7 +74,7 @@ namespace Plunderspell.Audio
             switch (state)
             {
                 case GameState.MainMenu: return new MusicPlan("mus_title_loop", false, false);
-                case GameState.Lair: return new MusicPlan("mus_lair_loop", false, false);
+                case GameState.LairRoom: return new MusicPlan("mus_lair_loop", false, false);
                 case GameState.GameOver: return new MusicPlan("mus_results_failure_loop", false, false);
                 case GameState.Victory: return new MusicPlan("mus_results_success_loop", false, false);
                 case GameState.Playing:
@@ -96,23 +103,65 @@ namespace Plunderspell.Audio
                 source.volume = 0f;
                 _layers[i] = source;
             }
+
+            ReadCurrentState();
+            Apply();
         }
 
-        private void Update()
+        private void OnEnable()
         {
-            if (_layers == null || GameServices.GameState == null)
+            EventManager bus = EventManager.Instance;
+            if (bus == null)
                 return;
 
-            RaidDirector raid = _director.Raid;
-            bool raidRunning = raid != null && (raid.Phase == RaidPhase.Raiding || raid.Phase == RaidPhase.Extracting);
-            MusicPlan plan = Choose(GameServices.GameState.CurrentState, raidRunning);
+            bus.Subscribe(this, (GameStateChanged e) => { _state = e.Current; Apply(); });
+            bus.Subscribe(this, (RaidPhaseChanged e) =>
+            {
+                _raidRunning = e.Phase == RaidPhase.Raiding || e.Phase == RaidPhase.Extracting;
+                Apply();
+            });
+            bus.Subscribe(this, (RaidContextPublished e) => { _raidEra = e.Context.Era; });
+            bus.Subscribe(this, (AlarmChanged e) => { _alarmIndex = StemIndex(e.State); Apply(); });
+            bus.Subscribe(this, (ExtractionTimerChanged e) => UpdatePortalWarning(e.SecondsRemaining));
+        }
 
+        private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
+
+        // Only the crossfade runs every frame; what to play is decided when something changes.
+        private void Update()
+        {
+            if (_layers == null)
+                return;
+            Fade(Time.unscaledDeltaTime);
+        }
+
+        /// <summary>Reads the game state, raid and alarm once, for when the director starts after the raid has.</summary>
+        private void ReadCurrentState()
+        {
+            if (GameServices.GameState != null)
+                _state = GameServices.GameState.CurrentState;
+            RaidDirector raid = _director.Raid;
+            if (raid != null)
+            {
+                _raidRunning = raid.Phase == RaidPhase.Raiding || raid.Phase == RaidPhase.Extracting;
+                _raidEra = raid.Era;
+            }
+            EnemyDirector alarm = _director.Alarm;
+            _alarmIndex = alarm != null ? StemIndex(alarm.State) : 0;
+        }
+
+        private void Apply()
+        {
+            if (_layers == null)
+                return;
+
+            MusicPlan plan = Choose(_state, _raidRunning);
             if (!plan.Hold)
             {
                 if (plan.RaidStems)
                 {
                     SetBed(null);
-                    SetStems(true, raid.Era);
+                    SetStems(true, _raidEra);
                 }
                 else
                 {
@@ -123,14 +172,12 @@ namespace Plunderspell.Audio
 
             if (_stemsOn)
             {
-                EnemyDirector alarm = _director.Alarm;
-                int alarmIndex = alarm != null ? StemIndex(alarm.State) : 0;
                 for (int i = 0; i < StemCount; i++)
-                    _target[i] = i <= alarmIndex ? _gain[i] : 0f;
+                    _target[i] = i <= _alarmIndex ? _gain[i] : 0f;
             }
 
-            UpdatePortalWarning(raidRunning);
-            Fade(Time.unscaledDeltaTime);
+            if (!_raidRunning)
+                DisarmPortalWarning();
         }
 
         private void SetBed(string bedName)
@@ -217,18 +264,21 @@ namespace Plunderspell.Audio
             }
         }
 
-        /// <summary>The portal warning bell at 2 minutes, 1 minute and 30 seconds left, more urgent each time.</summary>
-        private void UpdatePortalWarning(bool raidRunning)
+        private void DisarmPortalWarning()
         {
-            ExtractionZone zone = _director.Zone;
-            if (!raidRunning || zone == null)
+            _warningsArmed = false;
+            _nextWarning = 0;
+        }
+
+        /// <summary>The portal warning bell at 2 minutes, 1 minute and 30 seconds left, more urgent each time.</summary>
+        private void UpdatePortalWarning(float left)
+        {
+            if (!_raidRunning)
             {
-                _warningsArmed = false;
-                _nextWarning = 0;
+                DisarmPortalWarning();
                 return;
             }
 
-            float left = zone.TimeRemaining;
             if (!_warningsArmed)
             {
                 // Arm only once the timer has been seen above the first warning, so a stale zero never rings it.

@@ -13,8 +13,8 @@ namespace StateMachine.States
 
         public override void Enter()
         {
-            if (_stateMachine._rb != null)
-                _stateMachine._rb.linearVelocity = UnityEngine.Vector3.zero;
+            if (_stateMachine.Rb != null)
+                _stateMachine.Rb.linearVelocity = UnityEngine.Vector3.zero;
             _stateMachine.MovementDirection = UnityEngine.Vector2.zero;
         }
     }

@@ -14,6 +14,17 @@ Family spec keys (all but `base` optional):
            (gilt rubbed to bole, silver to tarnish); wear_amount 0..1 (default 0.35)
   ridges   (spacing_m, strength): horizontal bands along Z, e.g. wheel ridges on
            a pot, planks on a door. strength 0..1 darkening.
+
+Surface detail, all optional and off unless a family names it (added for the Wick, #406):
+  weave      (spacing_m, strength): a cloth's threads, bands along X and Z multiplied.
+  gradients  [{"colour", "z0", "z1", "amount"}]: blend toward colour as height goes from
+             z0 to z1 (z0 > z1 darkens downward from z0: soot from the shoulders; z0 < z1
+             works the other way: mud and grime up from the floor).
+  streaks    {"colour", "amount", "scale"}: vertical runs (blood, soot, damp), noise
+             stretched along Z.
+  cracks     {"colour", "amount", "scale", "width"}: a Voronoi crack network (bone, char,
+             veined skin).
+  flecks     [{"colour", "amount", "scale"}]: spots (ash, embers, rust).
 """
 
 from __future__ import annotations
@@ -47,6 +58,137 @@ def _mix(nodes, links, blend: str, factor, a, b, location):
     links.new(a, node.inputs[6])
     links.new(b, node.inputs[7])
     return node
+
+
+def _rgb(nodes, hex_colour: str, location):
+    node = nodes.new("ShaderNodeRGB")
+    node.outputs[0].default_value = (*_srgb(hex_colour), 1.0)
+    node.location = location
+    return node.outputs[0]
+
+
+def _threshold(nodes, links, value_socket, lo: float, hi: float, location):
+    """A soft step: 0 below lo, 1 above hi."""
+    ramp = nodes.new("ShaderNodeMapRange")
+    ramp.clamp = True
+    ramp.inputs["From Min"].default_value = lo
+    ramp.inputs["From Max"].default_value = max(lo + 1e-3, hi)
+    ramp.location = location
+    links.new(value_socket, ramp.inputs["Value"])
+    return ramp.outputs["Result"]
+
+
+def _scaled_coords(nodes, links, coords, sx: float, sy: float, sz: float, location):
+    node = nodes.new("ShaderNodeVectorMath")
+    node.operation = "MULTIPLY"
+    node.inputs[1].default_value = (sx, sy, sz)
+    node.location = location
+    links.new(coords.outputs["Object"], node.inputs[0])
+    return node.outputs["Vector"]
+
+
+def _surface_detail(nodes, links, coords, colour, fam: dict):
+    """weave, gradients, streaks, cracks and flecks (see the module docstring), in that order."""
+    y = 900
+    if fam.get("weave"):
+        spacing, strength = fam["weave"]
+        bands = []
+        for axis in ("X", "Z"):
+            wave = nodes.new("ShaderNodeTexWave")
+            wave.wave_type = "BANDS"
+            wave.bands_direction = axis
+            wave.inputs["Scale"].default_value = 3.14159265 / (10.0 * max(1e-4, spacing))
+            wave.inputs["Distortion"].default_value = 1.2
+            wave.location = (-1100, y)
+            links.new(coords.outputs["Object"], wave.inputs["Vector"])
+            bands.append(wave.outputs["Fac"])
+            y += 160
+        both = nodes.new("ShaderNodeMath")
+        both.operation = "MULTIPLY"
+        both.location = (-900, y)
+        links.new(bands[0], both.inputs[0])
+        links.new(bands[1], both.inputs[1])
+        level = nodes.new("ShaderNodeMapRange")
+        level.inputs["To Min"].default_value = 1.0 - strength
+        level.inputs["To Max"].default_value = 1.0
+        level.location = (-800, y)
+        links.new(both.outputs[0], level.inputs["Value"])
+        colour = _mix(nodes, links, "MULTIPLY", 1.0, colour, level.outputs["Result"], (-700, y)).outputs[2]
+        y += 200
+    for g in fam.get("gradients", []):
+        sep = nodes.new("ShaderNodeSeparateXYZ")
+        sep.location = (-1100, y)
+        links.new(coords.outputs["Object"], sep.inputs[0])
+        ramp = nodes.new("ShaderNodeMapRange")
+        ramp.clamp = True
+        ramp.inputs["From Min"].default_value = g["z0"]
+        ramp.inputs["From Max"].default_value = g["z1"]
+        ramp.inputs["To Max"].default_value = g.get("amount", 0.6)
+        ramp.location = (-950, y)
+        links.new(sep.outputs["Z"], ramp.inputs["Value"])
+        wobble = _noise(nodes, links, coords, 3.0, 4.0, (-1100, y - 120))
+        mixf = nodes.new("ShaderNodeMath")
+        mixf.operation = "MULTIPLY"
+        mixf.location = (-850, y)
+        links.new(ramp.outputs["Result"], mixf.inputs[0])
+        links.new(wobble.outputs["Fac"], mixf.inputs[1])
+        boost = nodes.new("ShaderNodeMath")
+        boost.operation = "MULTIPLY"
+        boost.inputs[1].default_value = 1.8
+        boost.use_clamp = True
+        boost.location = (-800, y)
+        links.new(mixf.outputs[0], boost.inputs[0])
+        colour = _mix(nodes, links, "MIX", boost.outputs[0], colour,
+                      _rgb(nodes, g["colour"], (-950, y + 120)), (-700, y)).outputs[2]
+        y += 260
+    s = fam.get("streaks")
+    if s:
+        vec = _scaled_coords(nodes, links, coords, s.get("scale", 30.0), s.get("scale", 30.0),
+                             s.get("scale", 30.0) * 0.07, (-1250, y))
+        noise = nodes.new("ShaderNodeTexNoise")
+        noise.inputs["Scale"].default_value = 1.0
+        noise.inputs["Detail"].default_value = 6.0
+        noise.location = (-1100, y)
+        links.new(vec, noise.inputs["Vector"])
+        a = s.get("amount", 0.4)
+        f = _threshold(nodes, links, noise.outputs["Fac"], 0.62 - a * 0.25, 0.70 - a * 0.25, (-950, y))
+        colour = _mix(nodes, links, "MIX", f, colour, _rgb(nodes, s["colour"], (-950, y + 120)), (-700, y)).outputs[2]
+        y += 260
+    c = fam.get("cracks")
+    if c:
+        vor = nodes.new("ShaderNodeTexVoronoi")
+        vor.feature = "DISTANCE_TO_EDGE"
+        vor.inputs["Scale"].default_value = c.get("scale", 40.0)
+        vor.location = (-1100, y)
+        warp = _noise(nodes, links, coords, 8.0, 2.0, (-1250, y - 120))
+        add = nodes.new("ShaderNodeVectorMath")
+        add.operation = "ADD"
+        add.location = (-1180, y)
+        scale = nodes.new("ShaderNodeVectorMath")
+        scale.operation = "SCALE"
+        scale.inputs["Scale"].default_value = 0.08
+        links.new(warp.outputs["Color"], scale.inputs[0])
+        links.new(coords.outputs["Object"], add.inputs[0])
+        links.new(scale.outputs["Vector"], add.inputs[1])
+        links.new(add.outputs["Vector"], vor.inputs["Vector"])
+        w = c.get("width", 0.05)
+        edge = nodes.new("ShaderNodeMapRange")
+        edge.clamp = True
+        edge.inputs["From Min"].default_value = w
+        edge.inputs["From Max"].default_value = 0.0
+        edge.inputs["To Max"].default_value = c.get("amount", 0.7)
+        edge.location = (-950, y)
+        links.new(vor.outputs["Distance"], edge.inputs["Value"])
+        colour = _mix(nodes, links, "MIX", edge.outputs["Result"], colour,
+                      _rgb(nodes, c["colour"], (-950, y + 120)), (-700, y)).outputs[2]
+        y += 260
+    for fl in fam.get("flecks", []):
+        noise = _noise(nodes, links, coords, fl.get("scale", 120.0), 2.0, (-1100, y))
+        a = fl.get("amount", 0.2)
+        f = _threshold(nodes, links, noise.outputs["Fac"], 0.66 - a * 0.2, 0.70 - a * 0.2, (-950, y))
+        colour = _mix(nodes, links, "MIX", f, colour, _rgb(nodes, fl["colour"], (-950, y + 120)), (-700, y)).outputs[2]
+        y += 220
+    return colour
 
 
 def build_authoring_material(asset: str, family: str, fam: dict,
@@ -99,6 +241,8 @@ def build_authoring_material(asset: str, family: str, fam: dict,
         links.new(wave.outputs["Fac"], ridge.inputs["Value"])
         colour = _mix(nodes, links, "MULTIPLY", 1.0, colour,
                       ridge.outputs["Result"], (-700, 600)).outputs[2]
+
+    colour = _surface_detail(nodes, links, coords, colour, fam)
 
     # Weathering darkens the surface unevenly rather than tinting it.
     shade = _mix(nodes, links, "MULTIPLY", min(1.0, fam.get("grain", 0.25) * wear),
@@ -153,18 +297,22 @@ def build_authoring_material(asset: str, family: str, fam: dict,
     return mat
 
 
-_SINGULAR = {"items": "item", "structures": "structure", "enemies": "enemy"}
+_SINGULAR = {"items": "item", "structures": "structure", "enemies": "enemy",
+             "players": "player"}
 
 
 def discipline_violations(kind: str, name: str, families: dict[str, dict],
-                          gold_reason: str | None = None) -> list[str]:
+                          gold_reason: str | None = None,
+                          arcane_reason: str | None = None) -> list[str]:
     """The mood board's pigment rules, applied to the families an asset uses.
 
     - Orpiment gold is for value only: items may use it freely. A structure or
       enemy may only carry it when the art bible marks that material as stealable
       (its name or notes say plunder / loot / stealable) or the blueprint gives a
       reason in `gold_reason`.
-    - Enemies never wear verdigris or lapis (arcane and voice pigments).
+    - Enemies never wear verdigris or lapis (arcane and voice pigments), unless the
+      blueprint names an owner's exception in `arcane_reason` (the Ophan, Decisions
+      2026-10-11).
     """
     problems = []
     for key, fam in families.items():
@@ -176,7 +324,7 @@ def discipline_violations(kind: str, name: str, families: dict[str, dict],
                     f"{name}: {_SINGULAR.get(kind, kind)} uses orpiment-gold family {key!r} "
                     f"({fam['base']}); gold is for plunder only — mark it stealable "
                     f"in the art bible or set Blueprint.gold_reason")
-        if kind == "enemies" and spec_mod.is_reserved_arcane(fam):
+        if kind == "enemies" and spec_mod.is_reserved_arcane(fam) and not arcane_reason:
             problems.append(
                 f"{name}: enemy uses {key!r} ({fam['base']}), which reads as "
                 f"verdigris/lapis; the brief forbids both on enemy costume")

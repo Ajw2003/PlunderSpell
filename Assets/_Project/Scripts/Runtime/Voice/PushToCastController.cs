@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -49,7 +50,10 @@ namespace Plunderspell.Voice
         {
             // Gated on the state rather than by disabling this component, so the mic is never left
             // open across a pause and the animator hash survives the menu.
-            if (!Plunderspell.Core.GameServices.IsPlaying)
+            // The Lair room counts too: haggle words are spoken at the Market counters.
+            var gameState = Plunderspell.Core.GameServices.GameState;
+            if (gameState == null || (gameState.CurrentState != Plunderspell.Core.GameState.Playing &&
+                                      gameState.CurrentState != Plunderspell.Core.GameState.LairRoom))
             {
                 if (IsCasting)
                     EndCasting();
@@ -78,6 +82,7 @@ namespace Plunderspell.Voice
 
             SetCastingVisual(true);
             OnCastingStateChanged?.Invoke(true);
+            EventManager.Instance?.Publish(new CastingStateChanged(this, true));
         }
 
         private void EndCasting()
@@ -91,6 +96,7 @@ namespace Plunderspell.Voice
 
             SetCastingVisual(false);
             OnCastingStateChanged?.Invoke(false);
+            EventManager.Instance?.Publish(new CastingStateChanged(this, false));
         }
 
         private void SetCastingVisual(bool casting)

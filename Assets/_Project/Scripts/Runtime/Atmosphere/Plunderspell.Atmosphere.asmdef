@@ -2,6 +2,7 @@
     "name": "Plunderspell.Atmosphere",
     "rootNamespace": "Plunderspell.Atmosphere",
     "references": [
+        "Plunderspell.Foundation",
         "PurrNet.Runtime",
         "Plunderspell.Castle",
         "Plunderspell.Raid",

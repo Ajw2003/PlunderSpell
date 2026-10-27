@@ -78,7 +78,33 @@ def bake(obj: bpy.types.Object, bp: Blueprint, authoring: list[bpy.types.Materia
             f"families the parts declare {sorted(expected)} ({names}) — a family's "
             f"faces were lost (a part too thin for the bevel?) and the bake would be wrong")
 
-    baked = ef_materials.bake_channels(obj, authoring, bp.name, texture_dir, resolution)
+    # Extra greyscale masks, one baked channel each, so the single material slot can
+    # still be tinted (players' DyeMask, README "Players") or set burning by a shader
+    # (FireMask): {channel: {family: value}}.
+    masks = {}
+    dyed = {k: 1.0 for k, _f in bp.ordered_families() if k in bp.dye_families}
+    if dyed:
+        masks["DyeMask"] = dyed
+    if bp.fire_families:
+        unknown = set(bp.fire_families) - {k for k, _f in bp.ordered_families()}
+        if unknown:
+            raise ValueError(f"{bp.name}: fire_families names families no part uses: {sorted(unknown)}")
+        masks["FireMask"] = dict(bp.fire_families)
+    for channel, values in masks.items():
+        for (key, _fam), mat in zip(bp.ordered_families(), authoring):
+            value = mat.node_tree.nodes.new("ShaderNodeRGB")
+            v = float(values.get(key, 0.0))
+            value.outputs[0].default_value = (v, v, v, 1.0)
+            ef_materials._CHANNEL_SOCKETS[mat.name][channel] = value.outputs[0]
+    if masks:
+        old_channels, old_data = ef_materials.CHANNELS, ef_materials.DATA_CHANNELS
+        ef_materials.CHANNELS = old_channels + tuple(masks)
+        ef_materials.DATA_CHANNELS = old_data | set(masks)
+    try:
+        baked = ef_materials.bake_channels(obj, authoring, bp.name, texture_dir, resolution)
+    finally:
+        if masks:
+            ef_materials.CHANNELS, ef_materials.DATA_CHANNELS = old_channels, old_data
     packed = ef_materials.pack_channel_maps(bp.name, baked, texture_dir)
 
     obj.data.materials.clear()
@@ -256,8 +282,12 @@ def build_rigged(bp: Blueprint, model_dir: str, resolution: int):
     """
     obj, _ordered = prepare(bp)
     rig = ef_assemble.build_armature(bp, obj)
+    held = rigmod.hold_out_props(obj, bp) if bp.heat_skip_props else None
     heat = rigmod.smooth_weights_with_retry(ef_assemble.apply_smooth_weights, obj, rig,
                                             max_influences=rigmod.MAX_INFLUENCES)
+    if held is not None:
+        obj = rigmod.put_back(obj, held)
+        heat["props_held_out"] = True
     rigmod.dedupe_armature_modifiers(obj, rig)
     rules = rigmod.apply_bind_rules(obj, bp)
     bake(obj, bp, _authoring(obj), os.path.join(model_dir, "Textures"), resolution)

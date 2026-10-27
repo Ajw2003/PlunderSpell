@@ -164,5 +164,8 @@ namespace Plunderspell.Guards
 
         [Header("Health")]
         public float MaxHealth = 100f;
+
+        [Header("True form (#417)")]
+        public TrueFormTuning TrueForm = new TrueFormTuning();
     }
 }

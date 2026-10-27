@@ -13,6 +13,7 @@
         "Plunderspell.Acoustics",
         "PurrNet.Runtime",
         "Plunderspell.Foundation",
+        "Plunderspell.Tests.EditMode",
         "Plunderspell.Playtest",
         "Plunderspell.RaidHud",
         "Plunderspell.UI",

@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Spells;
@@ -17,6 +18,7 @@ namespace Plunderspell.Tests
         [TearDown]
         public void TearDown()
         {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
             VoiceServiceLocator.Clear();
             foreach (var o in _spawned)
                 if (o != null)
@@ -69,7 +71,7 @@ namespace Plunderspell.Tests
             var lexicon = BuildTestLexicon();
 
             VoiceRecognitionResult? captured = null;
-            mock.OnPhraseRecognized += r => captured = r;
+            EventManager.Instance.Subscribe(this, (PhraseRecognized e) => captured = e.Result);
 
             mock.StartListening();
             mock.SimulateKeyPress(KeyCode.Alpha1); // -> "IGNIS"
@@ -86,7 +88,7 @@ namespace Plunderspell.Tests
         {
             var mock = MakeMock();
             bool fired = false;
-            mock.OnPhraseRecognized += _ => fired = true;
+            EventManager.Instance.Subscribe(this, (PhraseRecognized e) => fired = true);
 
             // Not calling StartListening()
             mock.SimulateKeyPress(KeyCode.Alpha1);

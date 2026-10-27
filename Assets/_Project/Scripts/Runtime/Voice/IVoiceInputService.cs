@@ -70,8 +70,7 @@ namespace Plunderspell.Voice
         /// <summary>Stop capturing and flush any pending recognition.</summary>
         void StopListening();
 
-        /// <summary>Raised (on the main thread) whenever a phrase is recognised.</summary>
-        event Action<VoiceRecognitionResult> OnPhraseRecognized;
+        // A recognised phrase is published on EventManager as a PhraseRecognized, on the main thread.
     }
 
     /// <summary>

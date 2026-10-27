@@ -42,13 +42,19 @@ namespace Plunderspell.EditorTools
                 if (registry == null)
                     continue;
                 registries++;
-                foreach (CastleRoomModuleData entry in registry.Modules)
+                foreach (CastleRoomModuleData entry in System.Linq.Enumerable.Concat(registry.Modules, registry.Stairs))
                 {
                     if (entry == null)
                         continue;
                     // An era room keeps the stand-in's RoomId but its own model, named by its pipeline key.
                     string key = entry.Prefab != null && rooms.ContainsKey(entry.Prefab.name) ? entry.Prefab.name : entry.RoomId;
+                    // Another Age's model never borrows the stand-in's anchors: they sit on a different shape.
+                    bool otherModel = entry.Prefab != null && entry.Prefab.name != entry.RoomId;
+                    if (otherModel)
+                        key = entry.Prefab.name;
                     entry.FireAnchors = rooms.TryGetValue(key, out CastleFireAnchor[] found) ? found : new CastleFireAnchor[0];
+                    if (otherModel && entry.FireAnchors.Length == 0)
+                        Debug.Log($"[FireAnchors] {path}: {entry.RoomId} uses {entry.Prefab.name}, which records no fire anchors.");
                     if (entry.FireAnchors.Length > 0)
                     {
                         modules++;

@@ -3,6 +3,307 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-27 — Build plan approved: the Ophan in the sky (#418)
+
+**Status.** Decided by the owner: "Build plan approved: ophan in the sky 1C 2A 3A 4A 5A 6A 7A 8A 9A".
+
+**Decision.** On the plan page `docs/plans/ophan-sky-418/ophan-sky-418.html`, round 5:
+1C it is 150 times its model, about 900 m out, more than the whole view; 2A its wings get a new spread pose; 3A "worth"
+is the sell value of the piece a player carries; 4A its rings spin fastest while charging, half that while locking on,
+slowly while watching, and spin down as it leaves; 5A the lock-on's tell is a quickening pulse of the eye and the
+charge's is the eye swelling and brightening; 6A the hum is a code-made drone stand-in plus the existing camera shake;
+7A the slow beam drains 25 health a second and the charged beam charges for 3 s after 3 s in cover, then waits 10 s;
+8A cover is real stone between its eye and the target; 9A the charged beam scorches the room open. The player camera's
+far clip plane rises to 3000 m. This replaces the 2026-10-15 hunt in `docs/4-systems/fear.md` (arrival at 90 s,
+2.5 to 5 m/s, passing through walls, catching). Steps: #439 to #444.
+
+**Why.** The owner asked for a threat that "dwarfs the Castle", is "huge enough and far enough and powerful enough to
+genuinely seem unbeatable", and whose eye follows you.
+
+## 2026-10-27 — The Ophan is a celestial threat in the sky, attacking with beams
+
+**Status.** Decided by the owner (design approved; build plan still to come).
+
+**Decision.** The Ophan never walks, chases or catches. Sixty seconds before the portal closes it
+appears in the sky, larger than life, announced by a loud hum and screen shake. It targets
+whoever carries the most. It has two attacks. A slow beam locks on over 3 seconds and drains
+health fast; walls and roofs block it. A charged beam kills in one hit and can break the wall or
+roof you are hiding behind. A beam on someone carrying the wanted piece lifts the piece into the
+sky, spares them, and sends the Ophan away. Until the demand (#419) exists, any piece marked as an
+artifact counts as wanted. After a kill it keeps hunting the others. This replaces the walking,
+wall-drifting Ophan in #418 and settles #430's sky idea in favour of the sky.
+
+**Why.** In the owner's words: "it appears in the sky larger than life a threat you shouldn't
+believe you can defeat until the lore shows you otherwise", and "it needs to appear a celestial
+level threat". The full answers are in
+`docs/plans/core-loops/owner-direction-2026-10-25.md`, "The Ophan's arrival, answered" and "The
+Ophan's beams, answered".
+
+## 2026-10-27 — Features go through feature branches and a tested staging branch
+
+**Status.** Decided by the owner.
+
+**Decision.** Each feature gets its own feature branch, cut from the current staging branch
+(`AjsAgent/staging-2026-10-26`). The feature is tested there and shown to work with no known bugs,
+the same bar as main. Then it is pushed, merged into staging locally, and staging is tested
+again. If no bugs show up, the next feature branches off the updated staging. This repeats until
+the core loop and the secondary loops are built and testable. Main is not touched in between.
+
+**Still owed.** The owner has not run a manual co-op test of anything on staging yet and will not
+for a while. Every pull request and QA page carries a "manual co-op test still owed" note until he
+does. The automated co-op checks still run on every round.
+
+**Why.** In the owner's words: "features get made on feature branches, tested and made sure they
+work and don't contain bugs same as the rule for main, then are pushed and merged into staging
+locally and tested, then if no bugs arise we rebranch off staging and continue going until we
+have the core loop and secondary loops built and testable."
+
+## 2026-10-26 — Nothing broken reaches main
+
+**Status.** Decided by the owner.
+
+**Decision.** Nothing broken reaches main; main stays the ground truth where things work. A staging
+branch merges into main only after every bug its checks find is fixed and shown fixed, with the
+suites and the co-op checks run again on the fixed branch.
+
+**Why.** The staging check for PR #437 found that a player caught by the Wick in co-op died only on
+their own machine; the other machine kept them alive at health 100. The owner asked for the fix and
+its proof on the staging branch before #437 merges, rather than merging and fixing after.
+
+## 2026-10-15 — The Wick: three calls the builder made, confirmed by the owner (#417)
+
+**Status.** Decided by the owner.
+
+**Decision.**
+- The Wick cannot be killed either: damage always leaves a Lantern Warden one health point, in
+  both forms (`GuardTrueForm.LimitDamage`). Running and hiding stay the only answer.
+- A hard blow to the head stuns the human warden for 6 s, and it turns into the Wick when it gets
+  up: the blow is a hit, and a hit turns it.
+- `ScaleInvariantTests` skips the inactive Wick model inside a Lantern Warden. The Wick stoops to
+  2.5 m under arches, so its 3.1 m standing height is not a guard's ceiling check.
+
+## 2026-10-15 — The fear-entities plan: five issues and a systems doc
+
+**Status.** Planned; waiting on the owner's build plan approval.
+
+**Context.** The owner approved the design ("Design approved: fear entities"). The picks logged in
+"Build plan approved: the Wick and the Ophan in raids" below added two pieces of work.
+
+**Plan.** Five issues, all part of #386: #417 the Wick, #420 one more guard per ground-floor zone in
+every Age, #419 the quota (after the owner approves `docs/plans/debt-to-quota/retiring-the-debt.html`),
+#421 the altar model, and #418 the Ophan, last. The order and the rules are in
+`docs/4-systems/fear.md`.
+
+## 2026-10-15 — Build plan approved: the Wick and the Ophan in raids
+
+**Status.** Approved by the owner. Replaces the proposal entry of 2026-10-14 below.
+
+**Context.** The owner answered the six open choices on
+`docs/plans/fear-entities/fear-entities-in-game.html`. The four answers already settled in
+`docs/plans/handoff-2026-10-11-true-form-and-creature.md` stand: a Wick catch kills, more guards
+stand on the ground floors, the dropped lantern is left where it fell, and the Ophan passes through
+walls and cannot be hidden from.
+
+**Decision.**
+- **Order.** The Wick (#417) and the quota (#419) are built at the same time by two builders, since
+  they touch different files. The Ophan (#418) comes last, as one whole feature (arrival, hunt and
+  catch) in one pull request, merged only when complete.
+- **Guards.** One more guard per ground-floor zone, in every Age.
+- **The Ophan's hunt.** It arrives 90 s before the portal closes at 2.5 m/s, and speeds up to the
+  players' speed (5 m/s, `RaidPlayer.prefab`) by the time 30 s are left.
+- **Paying.** Artifacts are placed on a new altar beside the Lair's portal. Each next demand is drawn
+  at random from the artifacts of the Age being raided.
+- **A hunted raid's outcome.** Caught empty-handed: killed. Caught carrying the artifact it wants:
+  it takes the artifact and the player lives. Reaching the portal before being caught: the player
+  lives and keeps the whole haul. This replaces the handoff's rule that every hunted raid's spoils
+  are taken.
+
+
+
+**Status.** Decided by the owner.
+
+**Context.** The house-rules page builder now refuses to build without `docs/page-style.json`.
+
+**Decision.** The style file is drafted from `docs/generated/design-system/project/tokens.json`.
+Verdigris (#5FA288) means "you act", madder (#C4542E) means blocking, and deep verdigris
+(#2E4C41) is the accent. Lapis stays reserved for the voice and orpiment for loot, as the tokens
+say, so neither appears on a page. A page proposing a visual change must carry a picture. The
+fear-entities proposal of 2026-10-14 was rebuilt in this look, with the art review sheets attached.
+
+## 2026-10-14 — Build plan proposed: the Wick and the Ophan in raids
+
+**Status.** Superseded by "Build plan approved: the Wick and the Ophan in raids", 2026-10-15.
+
+**Context.** The Wick's and the Ophan's models and clips import cleanly in Unity (checked
+2026-10-14, Today). Nothing puts them in a raid yet.
+
+**Proposal.** Three pieces, one pull request each into `staging-2026-10-11`: #417 The Lantern
+Warden turns into the Wick in raids; #418 The Ophan of Hours arrives in hunted raids and catches
+players; #419 The Ophan's artifact quota replaces the debt and the Collector. Seven choices for the
+owner, on the page `docs/plans/fear-entities/fear-entities-in-game.html`.
+
+## 2026-10-11 — The Ophan may use lapis
+
+**Context.** The art bible keeps lapis (`#7A6AA0`, voice and portals) off every enemy
+(`docs/art/BRIEF.md`, "Look"). The fear pass's creature, the Ophan of Hours, comes through time the
+way the portal does.
+
+**Decision (owner, 2026-10-11).** The Ophan may use lapis: its core, its great eye's iris, its
+lightning and its echoes. It is the one exception; every other enemy keeps the rule. The Wick and
+the Ophan were approved the same day (`docs/7-design/fear-pass.md`, "The true form" and "The creature").
+
+**Consequence.** `docs/art/BRIEF.md` names the exception. Status: Active.
+
+## 2026-10-11 — Per-frame code only for what changes every frame
+
+**Context.** Agents kept putting change-detection, saves and timers in `Update`. The Lair pile save wiped a
+save (#378). The audit found 67 of 103 per-frame methods did not need to run every frame
+(`docs/plans/update-audit-2026-10-11.md`).
+
+**Decision (owner, 2026-10-11).** `Update`, `LateUpdate` and `FixedUpdate` are only for work that changes every
+frame, each marked `// per-frame: <reason>`. All other per-frame code is an EVENT, a TIMER or removed. Input comes
+through `GameInput` actions, not polling. Several flags describing one thing become one state. MVC, singletons,
+factories and SOLID stand.
+
+**Consequence.** Fixes are tracked in #389-#402. The house-rules plugin gains a matching standard and a hook
+(Ajw2003/AjsClaudeCodeTools#218). See `docs/4-systems/core.md`, "When Update is allowed". Status: Active.
+
+## 2026-10-11 — A seventh docs tier for design
+
+**Context.** The pitch bible sat loose in `docs/`, live designs were mixed in with build plans in
+`docs/plans/`, and visual references were scattered, so there was no one place for design work.
+
+**Decision (owner, 2026-10-11).** `docs/7-design/` holds the bible, the live designs and the pitch
+deck when one exists, and indexes every current visual reference. The bible, `fear-pass.md`,
+`diegetic-ui-lair-market.md` and `wizard-character.md` moved in, and every link was repointed
+(`Tools/docs/relink_moves.py`). `docs/art/` stays put because the art tools write into it.
+
+**Consequence.** Adds a tier beyond the house-rules six; the `docstiers` check only requires the six,
+so it is unaffected. Archives keep the old paths as written. Status: Active.
+
+## 2026-10-11 — Raids are about fear: guards have a true form, and spells are earned
+
+**Context.** Stealth is optional today: players start with every spell, Ignis does damage, guards can
+be killed, and raids drop weapons (`docs/4-systems/spells.md`, #123). The owner wants raids to feel
+like Lethal Company, where you barely escape with your life (#386, under #380).
+
+**Decision (owner, 2026-10-11).** Guards look like ordinary castle foes until one sees you or is
+provoked, then morph into a Lovecraftian true form. The human form can be stunned by a hard blow to
+the head; the true form can only be run from. A new player has Porta only, learns Somnus early (guards
+only, costly if misused), unlocks Velox and Saltus mid-game, and offensive spells stay locked as
+late-game tools. Every backfire has a real consequence, every guard type has a hard counter its
+behaviour hints at, and more guards stand on the ground floors so the threat is seen, and
+underestimated, from the moment you enter.
+
+**Consequence.** Replaces the pitch bible's eight spells from the start (`docs/7-design/plunderspell.md`
+section 4) and limits its "anything with mass can kill a man" (section 5) to stunning a guard's human
+form. Design: [`docs/7-design/fear-pass.md`](../7-design/fear-pass.md). Status: Active.
+
+## 2026-10-07 — The debt splits in equal shares; coins are pouches; loot gets a category
+
+**Context.** Step 7 of the Lair and Market (#313): the debt is one shared number (`LairHubManager.TotalDebt`), a sale
+banks straight into it, and vendors pay the same for every piece because a `LootItem` has no category
+(`docs/4-systems/market.md`).
+
+**Decision (owner, 2026-10-07).** Each wizard in the company owes an equal share of the debt, and the Collector takes
+each share from that wizard's own strongbox; a friend can still hand over coins to cover another's share (#130). Coins
+are physical pouches: a sale puts a pouch on the counter, it is carried home with weight like loot, and dropping it in
+a strongbox banks it. Every loot item gets a category (Metal, Holy, Curio, Arms, Other) so each vendor's interest
+follows the design (1.3 for his kind, 0.7 otherwise; the Fence 1.0 for all).
+
+**Consequence.** Replaces the single shared debt and the straight-to-ledger `BankSale` of the entry below once step 7
+lands. Status: Active.
+
+## 2026-10-07 — Loot is earned by selling it; the unsold pile stays; Plus is the only ask
+
+**Context.** Until the Market could sell, the haul was banked automatically at extraction and the Lair's pile showed
+only the last raid, replaced each time (owner, 2026-10-07). Selling (#312) makes automatic banking pay twice, and the
+haggle design's "2 patience above 1.2 x the limit" cannot fire: a Plus asks 1.1 x an offer that never exceeds the
+limit (`docs/plans/lair-market-in-engine.md`).
+
+**Decision (owner, 2026-10-07).** Extraction stops banking; coins come only from selling in the Market. Unsold pieces
+stay on the Lair floor across raids, saved per save slot, and new hauls land beside them. The greedy-ask rule is
+dropped: Plus is the only ask, each refusal costs one patience. Haggling is on keys first (1 Plus, 2 Satis, 3 Vale);
+the three words join the voice lexicon as the next step.
+
+**Consequence.** Replaces the pile-replaced-each-raid default of #310 and the design's automatic Fence appraisal
+for phase 2 (`docs/7-design/diegetic-ui-lair-market.md`, "In what order"). Status: Active.
+
+## 2026-10-06 (later) — The event bus move landed; "Bus" now names only `EventManager`
+
+**Context.** The 2026-10-06 entry below was carried out as #298-#304 on `claude/staging-2026-10-07`. Two things in it
+turned out differently from how it was written.
+
+**Decision.** (1) `EnemyDirectorBus` did not "fold into" `EventManager` as a class: its events moved onto
+`EventManager` and what was left, the director's subscriber that scores the alarm and hands out attack turns, is now
+`EnemyDirectorListener`. `LoopBus` (a pool of looping audio sources) became `LoopPool`. The owner asked that no name
+suggest a second event bus or duplicate logic, so "Bus" is reserved for `EventManager`. (2) `BackdropCamera` checks
+for cameras when the game state changes or a scene loads rather than every frame, because Unity gives no event when a
+camera is enabled. A camera that comes or goes with neither is not noticed until the next one (the cost is in
+`docs/4-systems/core.md`). Adding `LocalPlayerChanged` to it would close that, but the UI assembly cannot reference the
+Player assembly where that event lives.
+
+**Consequence.** The 2026-10-06 entry stands; this one adds to it. Status: Active.
+
+## 2026-10-06 — Systems talk to each other through the event bus; views learn state by events
+
+**Context.** The raid HUD, music and camera shake polled other systems every frame (`docs/plans/ui-events-mvc.md`).
+The game had 87 plain C# events and a second, private bus inside the enemy director; `EventManager` was barely used.
+
+**Decision (owner, 2026-10-06).** Every event one system sends another goes through `EventManager`, all at once, not
+only the ones views listen to. A component talking to its own object (a guard's navigator, senses and states; a
+door's own open state; one player's state machine) stays a direct call. Values that change continuously (mic level,
+chant progress, input) are published on every change, input on both performed and cancelled; the mic sensitivity
+readout moves out of the raid HUD into Settings. Every subscriber unsubscribes when its screen closes, its state
+changes, or the game quits.
+
+**Consequence.** Replaces the plan's recommended scope (bus only for what views listen to) and its "sample at
+~15/s" answer. The enemy director's own bus (`EnemyDirectorBus`) folds into `EventManager`. Plan:
+`docs/plans/ui-events-mvc.md`. Status: Active.
+
+## 2026-10-05 — Screen ink pass removed; the painted look lives on the surfaces
+
+The owner said the Ink pass ran as an overlay rather than texture like the castle shader and chose to remove it
+entirely (#266, part of #262). Paper grain and outlines are now painted in world space by the surface shader
+(`_PlunderPaint`); see docs/4-systems/atmosphere.md. Status: Active.
+
+## 2026-10-04 — The castle hears through its guards and needs witnesses
+
+**Context.** In the owner's playtest one sighting and one Somnus took the castle from Calm to Hue and Cry (#259).
+The director scored every noise from its own castle-wide trigger, and two or three guards chasing forced Roused
+and Hue and Cry.
+
+**Decision (owner, 2026-10-04).** Keep the triggers and the guards' senses; make escalation need witnesses, spread
+by guards calling each other. A guard that spots you cries out; guards that hear the cry come over, and each that
+sees you cries in turn. The castle scores only noise its guards heard, once per guard. Roused needs 3 guards that
+have seen an intruder, Hue and Cry 5; chasers forcing a state go from 2 and 3 to 3 and 5.
+
+**Consequence.** Reverses "the alarm hears noise from the castle-wide trigger" (alarm.md, #139) and the 2/3 chaser
+floors. Design: `docs/plans/alarm-witnesses.md`; how it works: `docs/4-systems/alarm.md`.
+
+## 2026-10-07 — The wizard: one outfit, a colour you pick, your name on your hat; a fallen wizard leaves only the hat
+
+**Context.** Players are capsules (`RaidPlayer.prefab`, `Visual` uses the built-in capsule mesh), and
+co-op had no way to tell who is who. A proposal for the player character went through three
+rounds with the owner on 2026-10-07: four fixed wizards with different hats and marks; then one
+outfit with a dye list and names across the shoulders; then the version below.
+
+**Decision (owner, 2026-10-07).** Every player wears the same wizard outfit. Each picks any red,
+green and blue value in the lobby; no two players in a raid may wear exactly the same three values,
+first come first served. The player's name runs around the hat band only; it defaults to the Steam
+name, long names shrink to fit rather than being cut, and the lobby clearly offers a different name
+for the game. When a wizard falls, the body is gone and only the hat is left, which a teammate
+carries home.
+
+**Consequence.** The fallen hat replaces the laid-down body (`ShowDownPose`,
+`docs/4-systems/net.md`, "Spectating and a party wipe") and settles the 2026-09-23 entry's "Not
+decided" on co-op downing in a different direction: there is no 12 kg two-person body carry
+(`DownedPlayerCarryAdapter`, used today only by a test). What carrying the hat out does is still
+open. Plan: [`docs/7-design/wizard-character.md`](../7-design/wizard-character.md); issues #335–#341.
+Nothing is built yet.
+
+**Status.** Standing.
+
 ## 2026-10-02 — Fire overrules Somnus
 
 **Context.** #212 ruled that stun and sleep outrank burning, so a sleeping guard that was set alight kept
@@ -295,7 +596,7 @@ ahead of the `IHealth` check, purely as a performance optimization.
 ## 2026-09-17 — Melee weight is read from InventoryItem, not duplicated onto MeleeWeaponStats
 
 **Context.** Issue 37's melee system needs a weapon's weight to drive both swing speed and damage.
-`InventoryItem.Weight` (in stone, matching the pitch's Heft column in `docs/plunderspell.md`, "I
+`InventoryItem.Weight` (in stone, matching the pitch's Heft column in `docs/7-design/plunderspell.md`, "I
 present the field") already exists and is already authored on every weapon asset (`BronzeSword.asset`,
 `Longsword.asset`).
 
@@ -516,7 +817,7 @@ RPC — never raw audio.
 
 **Why.** Stated as a design pillar, not just an implementation detail: no server cost per player,
 no latency floor from a network round trip, and no voice data ever leaves the house
-(`docs/plunderspell.md` §4).
+(`docs/7-design/plunderspell.md` §4).
 
 **Status.** Standing.
 
@@ -553,7 +854,7 @@ silhouette found in the same pass (nothing masses above the curtain wall but the
 **Why.** The user's standing directive is to get each feature working and find out whether the game
 is mechanically fun before doing more art. A roofless castle is fully walkable, lootable and
 testable, so roofs block nothing in Phase 1. They are a precondition for the lighting the pitch
-calls for ("one candle, one fire, falling into black", `docs/plunderspell.md`), which cannot read in
+calls for ("one candle, one fire, falling into black", `docs/7-design/plunderspell.md`), which cannot read in
 a room open to the sky — so this must not be lost.
 
 **Status.** Standing. Not currently covered by any of the 55 filed backlog issues; this entry is
@@ -1270,3 +1571,51 @@ Streaming. Set by `Tools/Unity/eval/audio_load_types.cs`.
 
 **Status.** Standing (#244). Reverses the "Streaming, the owner's choice, is unchanged" line of the
 2026-09-27 entry; `docs/4-systems/audio.md` updated.
+
+## 2026-10-03 — Castles get floors; stairs follow the art bible, and the newel drum widens to 3.0 m
+
+**Context.** #197 asked for stairs that lead somewhere. A survey showed every stair reaches a
+gallery, but the castle has one storey. The owner chose real floors: a 5 × 5 ground floor (bailey
+ring, inner ward ring), a 3 × 3 keep tower above, a 3 × 3 crypt below, two stairs up and one down,
+and doors where zones meet (draft sheets: `docs/art/castle/concept/`). This reorders the 2026-09-26
+handoff (`docs/plans/roofs-floors-multicell-handoff.md`: roofs, then multi-cell rooms, then floors):
+floors come first, using the existing rooms.
+
+**Decision.** Stairs take each Age's period form from the art bible: High Medieval's newel stair,
+a newel in a corner turret for Late Medieval, a dog-leg round a light well for the Bronze Age. The
+newel drum widens from 2.4 m to 3.0 m inside (4.6 m outside), and `docs/art/data/high.json` and
+`Tools/ArtBible/generators/high/s_stair.py` are updated to match.
+
+**Why.** At 2.4 m the guards' 0.5 m walk map cannot climb the stair: around so small a circle the
+next cell is 3-4 treads higher than the 0.45 m step limit. 3.0 m is the narrowest that works
+(`Tools/ArtBible/castle/newel_walkmap_check.py`).
+
+**Status.** Design draft; the floors design is still being written (#197).
+
+
+## 2026-10-05: the bar shuts players out, not guards (#264)
+
+The 2026-10-02 rule that a barred door blocks guards is reversed. At Hue and Cry every door was barred, so the garrison could not reach the players: 9 of 17 guards stayed Patrolling after `Blocked(DoorClosed)`. Now a barred door costs `LockedDoorCost` like a locked one and guards open it when they walk into it. Players are unchanged (Porta, forcing). Tier: systems (`docs/4-systems/alarm.md`).
+
+## 2026-10-07: old-input keys came back in the Lair and Market work; how, and the guard (#347, #350)
+
+**What happened.** Three new classes read keys through the old `UnityEngine.Input` class, though the project
+moved to the new Input System (`docs/4-systems/spells.md`, "Casting runs on the new Input System";
+`docs/plans/steam-coop-framework.md`: "Unify on the new Input System; delete legacy `Input.GetAxis` paths").
+
+1. 2026-10-07 `0899d091` (#309): the planning session itself wrote `LairLedgerHandle` with `Input.GetKeyDown(E)`,
+   copying the key reading of `LootInteractor`, an old-input class from 2026-09-14 that was never converted.
+2. `e4690bb3` (#311): the Market door builder copied the ledger's pattern into `RoomTravel`.
+3. `2edd3a3b` (#312): the planning session's prompt to the Market builder named the ledger as the pattern to follow,
+   in so many words: "key reading pattern: LairLedgerHandle.cs (Input.GetKeyDown; legacy input is enabled)". The
+   builder did as told in `SellCounter` (keys 1/2/3), and then reported it could not press those keys in its check
+   because "legacy Input cannot be injected". That was the warning sign, and it was read as a test limitation.
+
+**Why it got through.** The rule lived only in a system doc and a plan, not in the coding standards the sessions load
+(`csharp-unity-standards.md` says nothing about input), so nothing at write time said no. Active Input Handling was
+"Both", so the old calls worked and nothing failed. Old-input code (`LootInteractor`, `RaidBootstrapper`, the
+playtest controllers) was still in the tree to be copied. Nothing checked new code for it.
+
+**The guard.** #350 moves every key onto the input actions asset and sets Active Input Handling to the new Input
+System only, so an old-input call throws the first time it runs. Further guards proposed to the owner: a test that
+fails on any `UnityEngine.Input` use under `Assets/_Project`, and an input line in the shared C# standards.

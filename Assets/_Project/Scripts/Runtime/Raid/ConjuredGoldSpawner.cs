@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Loot;
 using Plunderspell.Spells;
 using UnityEngine;
@@ -33,14 +34,13 @@ namespace Plunderspell.Raid
 
         private void OnEnable()
         {
-            AurumVocoEffect.GoldConjured += OnGoldConjured;
-            MisfireAurumVocoEffect.GoldScattered += OnGoldConjured;
+            EventManager.Instance?.Subscribe(this, (GoldConjured e) => OnGoldConjured(e.Worth, e.Where));
+            EventManager.Instance?.Subscribe(this, (GoldScattered e) => OnGoldConjured(e.Worth, e.Where));
         }
 
         private void OnDisable()
         {
-            AurumVocoEffect.GoldConjured -= OnGoldConjured;
-            MisfireAurumVocoEffect.GoldScattered -= OnGoldConjured;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private void OnGoldConjured(float worth, Vector3 position) => Conjure(worth, position);

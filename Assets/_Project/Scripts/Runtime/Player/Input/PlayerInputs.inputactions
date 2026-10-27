@@ -61,7 +61,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "OpenInventory",
+                    "name": "Interact",
                     "type": "Button",
                     "id": "1a5dd3cd-017f-4c50-8d63-416c916f47b6",
                     "expectedControlType": "",
@@ -73,6 +73,15 @@
                     "name": "PickUp",
                     "type": "Button",
                     "id": "8b8c2727-8e08-46df-86ee-a90278233c76",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Drop",
+                    "type": "Button",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d1f01",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -274,7 +283,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "OpenInventory",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -286,6 +295,153 @@
                     "processors": "",
                     "groups": "",
                     "action": "PickUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d1f02",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Haggle",
+            "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2000",
+            "actions": [
+                {
+                    "name": "Plus",
+                    "type": "Button",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2001",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Satis",
+                    "type": "Button",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2002",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Vale",
+                    "type": "Button",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2003",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2011",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Plus",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2012",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Satis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2013",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Vale",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Debug",
+            "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3000",
+            "actions": [
+                {
+                    "name": "CallExtraction",
+                    "type": "Button",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3001",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NextRaid",
+                    "type": "Button",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3002",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleBenchHud",
+                    "type": "Button",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3003",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3011",
+                    "path": "<Keyboard>/f5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CallExtraction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3012",
+                    "path": "<Keyboard>/f6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextRaid",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3013",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleBenchHud",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

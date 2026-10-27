@@ -54,6 +54,7 @@ namespace Plunderspell.Castle
             if (!grid.IsUsable)
                 return graph;
             CastleNavStitcher.LoadTiles(grid, data, registry);
+            CastleNavSealedArchways.Clear(grid, data);
             int stamped = CastleNavObstacles.Stamp(grid, obstacles); // before areas, so a cart that seals a gap splits them
             if (obstacles != null && obstacles.Count > 0)
                 Debug.Log($"[CastleNav] {obstacles.Count} dressing pieces took {stamped} cells out of the walk map.");
@@ -83,6 +84,12 @@ namespace Plunderspell.Castle
         public int NearestWalkableCell(Vector3 position, float maxDistance = 3f)
         {
             return _grid == null ? CastleNavGrid.NoCell : _grid.NearestWalkableCell(position, maxDistance);
+        }
+
+        /// <summary>The floor cell under a point, chosen by its own column first (<see cref="CastleNavFloorLookup"/>).</summary>
+        public int FloorCellUnder(Vector3 position, float maxDistance)
+        {
+            return _grid == null ? CastleNavGrid.NoCell : CastleNavFloorLookup.Find(_grid, position, maxDistance);
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections;
 using NUnit.Framework;
 using Plunderspell.Atmosphere;
@@ -27,15 +28,15 @@ namespace Plunderspell.Tests
             PlayerPrefs.SetFloat(AudioLevels.MasterKey, _master);
             PlayerPrefs.SetFloat(AudioLevels.MusicKey, _music);
             PlayerPrefs.SetFloat(AudioLevels.SfxKey, _sfx);
-            var bank = Resources.FindObjectsOfTypeAll<SoundBank>();
-            if (bank.Length > 0)
-                AudioLevels.Bind(bank[0].Mixer);
+            SoundBank bank = AudioBootstrapper.FindBank();
+            if (bank != null)
+                AudioLevels.Bind(bank.Mixer);
         }
 
         [UnityTest]
         public IEnumerator FreshLaunchAppliesSavedVolumesToTheMixer()
         {
-            SoundBank bank = Resources.FindObjectsOfTypeAll<SoundBank>()[0];
+            SoundBank bank = AudioBootstrapper.FindBank();
             PlayerPrefs.SetFloat(AudioLevels.MasterKey, 0.5f);
             PlayerPrefs.SetFloat(AudioLevels.MusicKey, 0.25f);
             PlayerPrefs.SetFloat(AudioLevels.SfxKey, 0.75f);
@@ -109,6 +110,27 @@ namespace Plunderspell.Tests
             {
                 PlayerPrefs.SetFloat(AudioInputSettings.MicGainKey, gain);
                 PlayerPrefs.SetInt(AudioInputSettings.GuardsHearChatterKey, chatter);
+            }
+        }
+
+        [Test]
+        public void MicrophoneChangedFiresOnceOnlyWhenTheValueChanges()
+        {
+            string before = AudioInputSettings.Microphone;
+            var heard = new System.Collections.Generic.List<string>();
+            try
+            {
+                AudioInputSettings.Microphone = "Mic A";
+                EventManager.Instance.Subscribe(this, (MicrophoneChanged e) => heard.Add(e.Device));
+                AudioInputSettings.Microphone = "Mic B";
+                AudioInputSettings.Microphone = "Mic B";
+                Assert.AreEqual(new[] { "Mic B" }, heard.ToArray(), "one event, none for the same value");
+                Assert.AreEqual("Mic B", AudioInputSettings.Microphone);
+            }
+            finally
+            {
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
+                AudioInputSettings.Microphone = before;
             }
         }
 

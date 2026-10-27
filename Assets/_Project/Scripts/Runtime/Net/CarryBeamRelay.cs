@@ -1,3 +1,4 @@
+using Plunderspell.Items;
 using System.Collections.Generic;
 using PurrNet;
 using Plunderspell.Loot;
@@ -98,6 +99,31 @@ namespace Plunderspell.Net
             if (items != null && item != null && items.CarriedItem != null
                 && items.CarriedItem.GetComponentInParent<NetworkIdentity>() == item)
                 items.ForceRelease();
+        }
+
+        /// <summary>The local holder travelled to another room (#333): the server controls the piece's
+        /// body, so it moves it there, with no velocity.</summary>
+        public void MoveCarried(Item item, Vector3 position, Quaternion rotation)
+        {
+            NetworkIdentity id = item != null ? item.GetComponentInParent<NetworkIdentity>() : null;
+            if (id != null && id.isSpawned)
+                CarriedMoved(id, position, rotation);
+        }
+
+        [ServerRpc(requireOwnership: false)]
+        private void CarriedMoved(NetworkIdentity item, Vector3 position, Quaternion rotation, RPCInfo info = default)
+        {
+            if (item == null || !item.TryGetComponent(out Item component))
+                return;
+            // Someone else holds it too: it stays, and the traveller lets go.
+            if (component.HolderCount > 1)
+            {
+                TellHolderToRelease(info.sender, item);
+                return;
+            }
+            // The pull heard so far aims at the old room; the next message carries a fresh one.
+            component.RemoveRemotePull(LootPickup.HolderKey(info.sender));
+            component.TeleportTo(position, rotation);
         }
 
         private void SendLocalBeam()

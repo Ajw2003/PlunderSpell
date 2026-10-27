@@ -48,6 +48,33 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
+        public void AStackedColumn_FindsTheFloorYouStandOn()
+        {
+            ProceduralCastleData data = _generator.Generate(42);
+            CastleNavGraph graph = data.NavGraph;
+            int keep = graph.NearestWalkableCell(new Vector3(0f, 4.7f, 0f));
+            int crypt = graph.NearestWalkableCell(new Vector3(0f, 0f, 12f) + Vector3.up * -2.9f);
+            Assert.That(graph.CellPosition(keep).y, Is.EqualTo(4.6f).Within(0.05f), "a point on the keep floor found another floor");
+            Assert.That(graph.CellPosition(crypt).y, Is.EqualTo(-3.0f).Within(0.05f), "a point in the crypt found another floor");
+        }
+
+        [Test]
+        public void TheStairsJoinTheFloors()
+        {
+            foreach (int seed in new[] { 1, 42, 777 })
+            {
+                ProceduralCastleData data = _generator.Generate(seed);
+                CastleNavGraph graph = data.NavGraph;
+                // A bailey room the seed kept (courtyards have no tile, so a fixed cell could be one).
+                Vector3 bailey = System.Linq.Enumerable.First(data.PlacedModules, m => m.Zone == CastleZone.OuterBailey).Position + Vector3.up * 0.4f;
+                Vector3 keep = new Vector3(0f, 4.7f, 12f);
+                Vector3 crypt = data.PlacedModules[data.CryptStartIndex].Position + Vector3.up * 0.4f;
+                Assert.IsTrue(graph.IsReachable(bailey, keep), $"seed {seed}: no walk from the bailey up to the keep");
+                Assert.IsTrue(graph.IsReachable(bailey, crypt), $"seed {seed}: no walk from the bailey down to the final chamber");
+            }
+        }
+
+        [Test]
         public void SameSeedGivesTheSameGraph()
         {
             ProceduralCastleData first = _generator.Generate(12345);
@@ -141,7 +168,9 @@ namespace Plunderspell.Tests.Editor
                     var path = new NavMeshPath();
                     foreach (ProceduralCastleData.PlacedModule m in data.PlacedModules)
                     {
-                        if (!ProceduralCastleGenerator.IsEnclosedRoom(m.Zone))
+                        // The probes sample the ground floor height; keep, crypt and stair modules stand at other
+                        // heights, and the stairs have their own floor tests (TheStairsJoinTheFloors).
+                        if (!ProceduralCastleGenerator.IsEnclosedRoom(m.Zone) || m.Level != CastleLevels.Ground || m.Storeys > 1)
                             continue;
                         rooms++;
                         int roomNav = 0, roomGraph = 0;

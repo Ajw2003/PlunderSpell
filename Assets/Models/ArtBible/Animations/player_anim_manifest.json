@@ -1,0 +1,303 @@
+{
+ "about": "Written by Tools/ArtForge/anim_player.py build. Events are copied from anim_spec.json (normalized time).",
+ "fps": 30,
+ "fbx": [
+  {
+   "file": "Assets/Models/ArtBible/Animations/Humanoid_Player.fbx",
+   "skeleton": "reference human: figures.Human() 1.76 m (no Hat bone; the wizard's Hat bone is never keyed)",
+   "bones": 20,
+   "clips": [
+    {
+     "clip": "player_idle",
+     "take": "ReferenceHuman|player_idle",
+     "layer": "player",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 91,
+     "length_s": 3.0,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "player_walk",
+     "take": "ReferenceHuman|player_walk",
+     "layer": "player",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "frames": 27,
+     "length_s": 0.8667,
+     "ik_shortfall_m": 0.0,
+     "speed_mps": 2.0,
+     "stride_m": 1.733,
+     "hip_drop_m": 0.056,
+     "foot_slide_ref_max_m": 0.0001,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.5
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "player_jog",
+     "take": "ReferenceHuman|player_jog",
+     "layer": "player",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "frames": 19,
+     "length_s": 0.6,
+     "ik_shortfall_m": 0.0,
+     "speed_mps": 5.0,
+     "stride_m": 3.0,
+     "hip_drop_m": 0.066,
+     "foot_slide_ref_max_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.5
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "crouch_idle",
+     "take": "ReferenceHuman|crouch_idle",
+     "layer": "player",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 61,
+     "length_s": 2.0,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "crouch_walk",
+     "take": "ReferenceHuman|crouch_walk",
+     "layer": "player",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [
+      {
+       "type": "Footstep",
+       "t": 0.0,
+       "param": {
+        "foot": "L"
+       }
+      },
+      {
+       "type": "Footstep",
+       "t": 0.5,
+       "param": {
+        "foot": "R"
+       }
+      }
+     ],
+     "frames": 19,
+     "length_s": 0.6,
+     "ik_shortfall_m": 0.0,
+     "speed_mps": 2.0,
+     "stride_m": 1.2,
+     "hip_drop_m": 0.0,
+     "foot_slide_ref_max_m": 0.0001,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "R",
+       "t": 0.5
+      },
+      {
+       "foot": "L",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "jump_takeoff",
+     "take": "ReferenceHuman|jump_takeoff",
+     "layer": "player",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [],
+     "frames": 9,
+     "length_s": 0.2667,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "jump_air",
+     "take": "ReferenceHuman|jump_air",
+     "layer": "player",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 19,
+     "length_s": 0.6,
+     "ik_shortfall_m": 0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.167
+      },
+      {
+       "foot": "R",
+       "t": 0.667
+      }
+     ]
+    },
+    {
+     "clip": "jump_land",
+     "take": "ReferenceHuman|jump_land",
+     "layer": "player",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [],
+     "frames": 11,
+     "length_s": 0.3333,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.2
+      },
+      {
+       "foot": "R",
+       "t": 0.2
+      }
+     ]
+    },
+    {
+     "clip": "cast_hold",
+     "take": "ReferenceHuman|cast_hold",
+     "layer": "player",
+     "family": null,
+     "loop": true,
+     "additive": false,
+     "events": [],
+     "frames": 37,
+     "length_s": 1.2,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": []
+    },
+    {
+     "clip": "cast_release",
+     "take": "ReferenceHuman|cast_release",
+     "layer": "player",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [
+      {
+       "type": "SpellRelease",
+       "t": 0.4,
+       "param": null
+      }
+     ],
+     "frames": 16,
+     "length_s": 0.5,
+     "ik_shortfall_m": 0.0,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 1.0
+      },
+      {
+       "foot": "R",
+       "t": 1.0
+      }
+     ]
+    },
+    {
+     "clip": "death_collapse",
+     "take": "ReferenceHuman|death_collapse",
+     "layer": "player",
+     "family": null,
+     "loop": false,
+     "additive": false,
+     "events": [],
+     "frames": 46,
+     "length_s": 1.5,
+     "ik_shortfall_m": 0.0002,
+     "lowest_sole_ref_m": -0.0,
+     "lowest_bone_ref_m": 0.0,
+     "detected_footsteps": [
+      {
+       "foot": "L",
+       "t": 0.756
+      },
+      {
+       "foot": "R",
+       "t": 0.756
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

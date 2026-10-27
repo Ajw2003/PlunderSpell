@@ -3,6 +3,7 @@
     "rootNamespace": "Plunderspell.Alarm",
     "references": [
         "PurrNet.Runtime",
+        "Plunderspell.Foundation",
         "Plunderspell.Acoustics"
     ],
     "includePlatforms": [],

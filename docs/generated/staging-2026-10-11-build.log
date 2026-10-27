@@ -1,0 +1,9 @@
+[
+ {
+  "code": "COMMAND_FAILED",
+  "message": "Pipeline server returned 400 Bad Request: Internal Server Error. Main thread operation timed out after 5000ms"
+ }
+]
+eval exit 1
+Build succeeded: Build/Windows\Plunderspell.exe (909887489 bytes)
+wait done

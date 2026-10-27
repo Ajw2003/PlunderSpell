@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using System.Collections.Generic;
 using Interfaces;
@@ -23,14 +24,16 @@ namespace Plunderspell.Extraction
     [RequireComponent(typeof(Collider))]
     public class ExtractionZone : NetworkBehaviour
     {
-        [Header("Raid timing")]
-        [Tooltip("Length of a raid in seconds (default 10 minutes).")]
-        [SerializeField] private float RaidDurationSeconds = 600f;
+        // The raid's length lives in OphanDemandTuning.RaidSeconds; only tests set this override.
+        private float _raidSecondsOverride;
 
         [Header("Leaving")]
         [Tooltip("Seconds of the raid that must pass before standing on the pad starts the extraction " +
                  "countdown, so a player who spawns beside it does not leave by accident.")]
         [SerializeField] private float _minimumRaidSecondsBeforeLeaving = 10f;
+
+        /// <summary>How long a raid lasts, in seconds, so a display can show what share of it is left.</summary>
+        public float RaidLength => _raidSecondsOverride > 0f ? _raidSecondsOverride : OphanDemandTuning.Default.RaidSeconds;
 
         // Replicated state (PurrNet field-based SyncVars; inline-initialised so never null).
         private readonly SyncVar<float> _timeRemaining = new SyncVar<float>(0f);
@@ -59,16 +62,6 @@ namespace Plunderspell.Extraction
 
         /// <summary>True once the extraction has been resolved.</summary>
         public bool ExtractionComplete => _extractionComplete.value;
-
-        /// <summary>Raised on every peer when the extraction resolves: (worthExtracted, playersSaved).</summary>
-        public event Action<float, int> ExtractionResolved;
-
-        /// <summary>
-        /// Raised whenever loot enters or leaves the zone: (worthInZone, pieceCount). The HUD shows a
-        /// running total from this, so a player can see the haul grow as they stack it on the pad
-        /// rather than only learning what it was worth after the raid has already ended.
-        /// </summary>
-        public event Action<float, int> HaulInZoneChanged;
 
         /// <summary>Worth of everything currently standing in the zone.</summary>
         public float WorthInZone => ComputeWorth(_lootInZone);
@@ -130,7 +123,7 @@ namespace Plunderspell.Extraction
             // here; the manager can. A client's clock is the server's, replicated.
             if (NetworkManager.main != null && NetworkManager.main.isClientOnly)
                 return;
-            _timeRemaining.value = RaidDurationSeconds;
+            _timeRemaining.value = RaidLength;
             _extractionComplete.value = false;
         }
 
@@ -167,7 +160,7 @@ namespace Plunderspell.Extraction
             if (leaving == null)
                 return;
 
-            bool raidRunning = RaidDurationSeconds - _timeRemaining.value >= _minimumRaidSecondsBeforeLeaving;
+            bool raidRunning = RaidLength - _timeRemaining.value >= _minimumRaidSecondsBeforeLeaving;
             bool someoneOnThePad = LivingPlayersInZone > 0 && GameServices.IsPlaying;
 
             if (!someoneOnThePad || !raidRunning)
@@ -187,8 +180,17 @@ namespace Plunderspell.Extraction
         /// <summary>Stops a leaving countdown in progress, e.g. because the raid was lost.</summary>
         public void CancelPlayerExtraction() => GameServices.Extraction?.CancelExtraction();
 
+        private float _publishedTime = -1f;
+
         private void Update()
         {
+            // Every peer, including clients that only receive the replicated clock, tells listeners when it moves.
+            if (_timeRemaining.value != _publishedTime)
+            {
+                _publishedTime = _timeRemaining.value;
+                EventManager.Instance?.Publish(new ExtractionTimerChanged(_publishedTime));
+            }
+
             if ((isSpawned && !isServer) || _extractionComplete.value)
                 return;
 
@@ -236,10 +238,25 @@ namespace Plunderspell.Extraction
             _extractionComplete.value = true;
             CancelPlayerExtraction();
 
+            // Server (or offline) only: this method never runs on a client peer. The Lair lands these (#310).
+            EventManager.Instance?.Publish(new HaulExtracted(PiecesOf(_lootInZone)));
+
             if (isSpawned && isServer)
                 BroadcastExtractionResult(totalWorth, playersSaved);
             else
                 ApplyExtractionResult(totalWorth, playersSaved);
+        }
+
+        /// <summary>The authored definition of every unbroken piece in the list, so the same pieces can be spawned again.</summary>
+        public static List<LootItem> PiecesOf(IEnumerable<LootValue> loot)
+        {
+            var items = new List<LootItem>();
+            foreach (LootValue piece in loot)
+            {
+                if (piece != null && !piece.IsRuined && piece.Item != null)
+                    items.Add(piece.Item);
+            }
+            return items;
         }
 
         /// <summary>
@@ -268,7 +285,7 @@ namespace Plunderspell.Extraction
             // SyncVar; a client gets the value the server already set in ResolveExtraction.
             if (!isSpawned || isServer)
                 _extractionComplete.value = true;
-            ExtractionResolved?.Invoke(worth, saved);
+            EventManager.Instance?.Publish(new ExtractionResolved(worth, saved));
         }
 
         // -----------------------------------------------------------------------------------------
@@ -358,7 +375,7 @@ namespace Plunderspell.Extraction
             return changed;
         }
 
-        private void OnHaulChanged() => HaulInZoneChanged?.Invoke(WorthInZone, _lootInZone.Count);
+        private void OnHaulChanged() => EventManager.Instance?.Publish(new HaulInZoneChanged(WorthInZone, _lootInZone.Count));
 
         // Loot inside the portal is held still and cannot break (#158).
         private readonly HashSet<LootValue> _restingLoot = new HashSet<LootValue>();
@@ -398,14 +415,14 @@ namespace Plunderspell.Extraction
         // -----------------------------------------------------------------------------------------
 
         /// <summary>
-        /// Sets the raid length. Used by scene tooling and by the director when a raid's duration
-        /// depends on the era. Takes effect on the next spawn, or immediately when already running.
+        /// Overrides the raid length for tests; a real raid reads <see cref="OphanDemandTuning.RaidSeconds"/>.
+        /// Takes effect on the next spawn, or immediately when already running.
         /// </summary>
         public void SetRaidDuration(float seconds)
         {
-            RaidDurationSeconds = Mathf.Max(1f, seconds);
+            _raidSecondsOverride = Mathf.Max(1f, seconds);
             if (!_extractionComplete.value)
-                _timeRemaining.value = RaidDurationSeconds;
+                _timeRemaining.value = RaidLength;
         }
 
         /// <summary>

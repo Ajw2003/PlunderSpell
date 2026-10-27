@@ -11,11 +11,13 @@ and the geometry validator are EnemyForge's own code, imported through `sys.path
 EnemyForge's files are untouched. Read `docs/4-systems/enemy-asset-pipeline.md`,
 especially **Traps**: every trap there applies here too.
 
-**Status:** all 20 **items** are built. The rigged **enemy** path works end to end
-and has two samples that set the bar for the other 14: `high/lantern-warden` (a
-humanoid on `figures.Human`) and `high/alaunt-hound` (a quadruped on
-`figures.Quadruped`). No structure blueprints exist in this module yet (another
-agent owns structures).
+**Status (2026-10-11):** all 20 **items**, all 16 **enemies**, the player **wizard**
+(`players/lair/wizard`) and the fear pass's first true form, **the Wick**
+(`enemies/fear/wick`, #386), and its creature, **the Ophan of Hours** (`enemies/fear/ophan`,
+#411), are built and reviewed. `high/lantern-warden` (a humanoid on
+`figures.Human`) and `high/alaunt-hound` (a quadruped on `figures.Quadruped`) are the
+reference blueprints. No structure blueprints exist in this module (another agent owns
+structures). AnimForge (below) builds the enemy clips and the player's clips.
 
 ## Requirements
 
@@ -373,6 +375,56 @@ until the stills read as the concept **and** the POSED views deform cleanly.
 chain, quilted gambeson, laced front, belt kit (warden); C-section quilted coat with
 painted bordure, chevron strips, harness straps, spiked collar (hound).
 
+## The fear pass (`--age fear`)
+
+Horrors outside the four Ages' fixed rosters of four live in `docs/art/data/fear.json`
+(`art_forge.FEAR_AGES`), so the art bible's per-Age counts stay as they are. Build them with
+`--age fear`: `python3 Tools/ArtForge/build.py enemies --age fear --only wick`. An entry whose
+JSON `concept` names a `.png` is reviewed beside that plate. The Wick (the Lantern Warden's true
+form, `blueprints/enemies_fear.py`) is `figures.Human(height=3.0, arm_length=1.35)`: `arm_length`
+scales upper arm, forearm and hand, default 1.0. The Ophan is a generic rig (`_Frame`: Root, Core,
+three wheels, the Eye, six wings with tips), floats (`grounded=False`), and is the one enemy allowed
+lapis: `Blueprint.arcane_reason` names why, and the discipline check skips the lapis rule for it.
+
+**Fire is painted geometry for now, a shader later** (owner, 2026-10-11). The Wick's flames
+are three-tone tongues (`_flame`, `_blaze` in `enemies_fear.py`: a dark madder shell, madder,
+a pale core nearer the viewer), with no emission, rigid props on the bone they sit on.
+`Blueprint.heat_skip_props = True` lifts those ~90 small islands out of the heat-weighting
+solve and puts them back after; with them in it, Blender's solver failed 8 tries in 8.
+`Blueprint.fire_families = {family: strength}` still bakes `<Name>_FireMask.png` (1 = flames,
+lower = smoulder) for the shader that will replace them; see where it lands with
+
+```bash
+python3.11 Tools/ArtForge/fire_preview.py enemies fear wick   # -> docs/art/models/fear/wick-fire.png
+```
+
+(the mask lit as madder glow: a stand-in, not the shader).
+
+**Surface detail.** Families can ask the bake for more texture than blotch noise: `weave`,
+`gradients` (soot from above, mud from below), `streaks`, `cracks` and `flecks`, all set in
+`family_overrides` and documented at the top of `art_forge/materials.py`. None is on unless a
+family names it, so every model built before them bakes the same (checked to the pixel on the
+Lantern Warden and the wizard). The Wick uses all five.
+
+## Players
+
+Kind `players` has one "age", `lair` (`docs/art/data/lair.json`, key `players`), and one
+model so far: the wizard (`blueprints/players_lair.py`, `figures.Human(height=1.80)`).
+`build.py players` / `render.py players` default to `--age lair`; outputs go to
+`Assets/Models/ArtBible/Players/Lair/Wizard/` and `docs/art/models/lair/wizard.png`
+(six-view sheet like enemies, beside `docs/art/concept/wizard/1-the-wizard.png`).
+Validation is the enemy one; the reserved-pigment rule does not apply to players.
+Bones are the Unity Humanoid set plus `Hat` (child of Head, rigid, a prop: excluded from
+the 1.80 m body height).
+
+**Dyed vs fixed.** A model is one baked material slot, so tinting uses a mask:
+`Blueprint.dye_families` lists the families a player colour dyes, and the bake writes
+`Textures/<Name>_DyeMask.png` (non-colour, white on dyed texels, black elsewhere).
+Dyed: `robe_wool` (robe, cape, sleeves), `hat_felt` (colour x0.72), `hat_band` (x0.50,
+also the robe's front seam). Fixed: `skin`, `glove_leather` (belt, glove), `boot_leather`,
+`calfskin`, `brass`, `eye_dark`, `beard_hair`. The BaseMap holds the default colour
+`#4F7299`; tint = `BaseMap * (picked / #4F7299)` where the mask is white.
+
 ## Validation
 
 `validate.py` runs EnemyForge's `validate()` through an adapter, which checks:
@@ -542,6 +594,82 @@ reads those from `anim_spec.json`. FBX takes are named `<armature>|<clip>`
 Every bone is keyed on every frame at 30 fps with linear interpolation. `Hips` carries
 location (bob, sway, the fall); nothing else translates except a detached prop. `Root` never
 moves: **every clip is in place** and the NavMeshAgent moves the guard.
+
+### Player clips (issue #361)
+
+The player wizard's 11 clips are built separately so `anim.py` and the enemy FBX files are
+untouched: motion in `anim_forge/library_player.py` (+ `poses_player.py`), spec rows in
+`anim_spec.json` with layer and status `player` (the `a1` check skips them; `anim_spec_check.py`
+knows the layer, status and the `SpellRelease` event).
+
+```bash
+python3.11 Tools/ArtForge/anim_player.py build     # Animations/Humanoid_Player.fbx + player_anim_manifest.json
+python3.11 Tools/ArtForge/anim_player.py review [--only ID ...] [--no-mp4] [--blend PATH]
+```
+
+Clips: `player_idle`, `player_walk` (2.0 m/s), `player_jog` (5.0 m/s), `crouch_idle`,
+`crouch_walk` (2.0 m/s, hips 0.30 m low), `jump_takeoff`, `jump_air` (FK legs), `jump_land`,
+`cast_hold` (upper body; right hand bare), `cast_release` (`SpellRelease` at 0.2 s),
+`death_collapse` (falls prone, still from 1.3 s, no bone below the floor). All in place, on the
+reference skeleton (no `Hat` bone is keyed). Review sheets go to `docs/art/anim/player/` on
+`Players/Lair/Wizard/Wizard.blend` (the Lantern Warden, in `warden_check/`, if it is missing).
+Gait additions (defaults leave enemy clips unchanged): `GaitParams.crouch`, `.hip_pitch`;
+`Frame.leg_hint` (prone knees up); `forge.rigs(blend)`.
+
+### The fear pass's clips (#386)
+
+The Wick (the Lantern Warden's true form) and the warden's half of the turn, a third track
+beside the enemies' and the player's: motion in `anim_forge/library_wick.py`, spec rows with
+layer and status `fear` (and the Wick's JSON clips under `enemies.wick`), checked by
+`anim_spec_check.py` (which reads `docs/art/data/fear.json` too).
+
+```bash
+python3.11 Tools/ArtForge/anim_wick.py build     # Animations/Humanoid_Fear.fbx + fear_anim_manifest.json
+python3.11 Tools/ArtForge/anim_wick.py review [--only ID ...] [--no-mp4]   # docs/art/anim/fear/
+```
+
+| Clip | Length | On | What |
+|---|---|---|---|
+| `warden_turn` | 0.9 s | warden | rigid; hands to the face; the face splits and the lantern drops (`PropDetach` 0.4 s); doubles over. The model swaps at the end |
+| `wick_emerge` | 0.7 s | Wick | from the doubled pose: rears up, arms raised like claws, cage head back; settles into the hunch |
+| `wick_idle` | 3.0 s loop | Wick | hunched; breathes, sways, the left hand curls |
+| `wick_stalk` | 1.4 s loop | Wick | 1.4 m/s, long slow strides |
+| `wick_hunt` | 0.7 s loop | Wick | 4.2 m/s, low and fast |
+| `wick_search` | 2.5 s loop | Wick | the cage head sweeps 74° each way |
+| `wick_catch` | 1.2 s | Wick | lunge; the left hand closes at chest height (`AttackHit` 0.5 s) |
+| `wick_flinch` | 0.4 s additive | Wick | jerked back by a blow; it does not stop |
+| `wick_stoop` | 0.5 s additive | Wick | crown down to 2.33 m, under the 2.59 m arch |
+
+The Wick is 1.705x the reference at the hips, and a Humanoid retarget scales the hips (so
+the planted feet) by that. Its gaits are therefore authored at agent speed / 1.705 on the
+reference; on the Wick they plant at 1.4 and 4.2 m/s (worst slide 0.3 cm and 0.2 cm, measured
+on the Wick and printed on each sheet). The Wick's own A-pose is not kept by the retarget,
+so every clip carries `HUNCH` (arms out and forward, elbows bent, spine bowed, head thrust).
+Its Cage, Hat, Blade and flame bones are never keyed; they ride on Head and Hand.R.
+
+**The Ophan of Hours' clips (#412)** are on its own Generic rig (18 bones: Root, Core, three
+wheels, Eye, six wings on two bones each), so they skip the humanoid solver and the retarget:
+`anim_ophan.py` gives each bone a turn about its head in world axes, relative to its parent (the
+same convention as `poses.py`), keys every bone every frame (rotation, location, scale) and
+exports from the model's own `.blend`.
+
+```bash
+python3.11 Tools/ArtForge/anim_ophan.py build    # Animations/TheOphanOfHours_Generic.fbx + ophan_anim_manifest.json
+python3.11 Tools/ArtForge/anim_ophan.py review [--only ID ...] [--no-mp4]   # docs/art/anim/fear/ophan_*
+```
+
+| Clip | Length | What |
+|---|---|---|
+| `ophan_hover_turn` | 6.0 s loop | one turn of each wheel at different moment-to-moment rates; wings breathe every 3 s; eye drifts; bobs 12 cm |
+| `ophan_advance` | 4.0 s loop | leans 8° forward, wheels one turn in 4 s, upper wings beat every 2 s (the agent moves it) |
+| `ophan_fix_gaze` | 1.5 s | the eye snaps 25° aside and 18° down in 0.1 s; every wheel stops and holds to 1.05 s; then they start again |
+| `ophan_take` | 2.0 s | lower wings draw back, sweep forward and down as it stoops (`AttackHit` 0.45, 0.9 s), hold, let go |
+| `ophan_arrive` | 4.0 s | grows from 2 % at heart height (a **scale** curve on Core) as it turns a quarter round; wheels spin down; wings open, upper pair last; ends on `hover_turn`'s first frame |
+
+`build` fails on a mesh point below the floor, a loop whose first and last frames differ, or a
+take missing from (or the wrong length in) the re-imported FBX. Lowest mesh point over all five
+clips: 0.12 m. Takes are `TheOphanOfHours_Rig|<clip>`. The movie's frames are rendered on the real
+model; `ophan_take-side.png` is an extra side view, where the sweep reads best.
 
 ### Layout
 

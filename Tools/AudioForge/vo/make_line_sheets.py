@@ -27,16 +27,16 @@ AGES = {
             "murmur": ["*(muttering)* Sitos, sitos... panta sitos. *(grain, grain, always grain)*",
                        "*(hum a little tune, 4–5 seconds)*",
                        "*(yawn)* Aaah... nyx makra. *(long night)*",
-                       "Ho wanax... pantote ho wanax. *(the king... always the king)*"],
+                       "Wanax... pantote wanax. *(the king... always the king)*"],
             "alert": ["Tis? Tis ekei? *(who? who's there?)*", "Ti touto? *(what's this?)*",
                       "*(quietly)* Akouō ti... *(I hear something)*"],
             "chase": ["KLEPTAI! KLEPTAI! *(thieves!)*", "DEURO! DEURO, PHYLAKES! *(here, guards!)*",
                       "LABETE AUTOUS! *(seize them!)*"],
             "search": ["Pou ei...? *(where are you?)*", "Exelthe, mikre klepta... *(come out, little thief)*"],
-            "lost": ["Ouden. ...Mys. *(nothing. a mouse)*", "Oimoi. Ho wanax ou mathēsetai. *(alas. the king won't hear of it)*"],
+            "lost": ["Ouden. ...Mys. *(nothing. a mouse)*", "Oimoi. Wanax ou mathēsetai. *(alas. the king won't hear of it)*"],
             "attack": ["*(effort)* Ha!", "*(effort)* Hyah!", "*(effort)* Hup!"],
             "hurt": ["Aiai!", "Ow— oimoi!", "*(pained grunt)*"],
-            "death": ["*(theatrical)* Ōh... ho wanax...", "*(a yell, cut off)* Aaa—"],
+            "death": ["*(theatrical)* Ōh... wanax...", "*(a yell, cut off)* Aaa—"],
             "asleep": ["*(slow deep snore, 3 breaths)*", "*(snore with a little mumble)*"],
             "grabbed": ["Ti?! Aphes me! *(what?! put me down!)*", "Ou! Ou! OU! *(no! no! NO!)*",
                         "*(indignant, muffled protest)*"],
@@ -80,7 +80,7 @@ AGES = {
             "murmur": ["*(counting under breath)* ...two and twenti, thre and twenti, turne.",
                        "Hmm. The bellman's late agayn.", "*(hum a marching tune, 4–5 seconds)*",
                        "*(yawn)* Seconde wacche. Alwey the seconde wacche."],
-            "alert": ["Halte! Who's there?", "Qui vive?", "*(quietly)* Somthyng stirreth..."],
+            "alert": ["Halte! Who's there?", "Qui est là?", "*(quietly)* Somthyng stirreth..."],
             "chase": ["À L'ARME! À L'ARME!", "SAINCT GEORGE! THEVES!", "Two by two, lads — TAKE THEM!"],
             "search": ["Come out, come out...", "We hold the gates, thef. Every one."],
             "lost": ["Nothing. Write it in the book.", "...Tell no-one."],
@@ -157,7 +157,7 @@ def main():
         md += ["## Checklist per voice", "",
                f"{sum(len(t) for t in spec['lines'].values())} files per voice; "
                f"{sum(len(t) for t in spec['lines'].values()) * len(spec['voices'])} for this Age.", ""]
-        (out_dir / f"{age}.md").write_text("\n".join(md))
+        (out_dir / f"{age}.md").write_text("\n".join(md), encoding="utf-8")
     print(f"wrote 4 line sheets covering {total} takes; manifest has {sum(manifest.values())} vo files "
           f"({sum(v for k, v in manifest.items() if k.startswith('vo_hound'))} of them hound, from the library)")
 

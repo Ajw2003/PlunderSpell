@@ -28,6 +28,11 @@ namespace Plunderspell.Alarm
         private readonly AlarmTuning _tuning;
         private readonly Action<AlarmState> _stateChanged;
         private readonly HashSet<int> _chasers = new HashSet<int>(); // guards chasing right now
+        private readonly HashSet<int> _witnesses = new HashSet<int>(); // guards that have seen an intruder this raid
+        private readonly Dictionary<int, float> _lastNoiseReport = new Dictionary<int, float>(); // guard -> time of its last scored report
+
+        /// <summary>Seconds a guard waits before its next heard noise scores again.</summary>
+        public const float GuardNoiseReportInterval = 2f;
 
         private float _lastNoiseTime;   // server-only timestamp of the most recent noise
         private float _graceEndsAt;     // server-only: nothing raises the alarm before this time
@@ -49,11 +54,35 @@ namespace Plunderspell.Alarm
         /// <summary>Starts the decay delay from now, as when the director spawns.</summary>
         public void NoteNoiseNow() => _lastNoiseTime = Time.time;
 
-        public void ApplyNoise(float strength) => Raise(strength * _tuning.NoiseWeight);
+        /// <summary>How many distinct guards have seen an intruder this raid; the Roused and Hue and Cry gates read it.</summary>
+        public int Witnesses => _witnesses.Count;
 
-        public void ReportSighting() => Raise(_tuning.SightingPoints);
+        /// <summary>A guard heard an intruder's noise (#259). It scores once per guard, and a guard reports at
+        /// most once every <see cref="GuardNoiseReportInterval"/> seconds, so a castle scores what its guards hear.</summary>
+        public void ReportHeardNoise(int guardId, float strength)
+        {
+            if (_lastNoiseReport.TryGetValue(guardId, out float last) && Time.time - last < GuardNoiseReportInterval)
+                return;
+
+            _lastNoiseReport[guardId] = Time.time;
+            Raise(strength * _tuning.NoiseWeight);
+        }
+
+        /// <summary>A guard's first sighting: points, and the guard becomes a witness.</summary>
+        public void ReportSighting(int guardId)
+        {
+            AddWitness(guardId);
+            Raise(_tuning.SightingPoints);
+        }
 
         public void ReportAttack() => Raise(_tuning.AttackPoints);
+
+        // A witness is added before the points so the state check in Raise sees it. Nothing counts in the grace.
+        private void AddWitness(int guardId)
+        {
+            if (!InGrace && _witnesses.Add(guardId))
+                UpdateState();
+        }
 
         /// <summary>A guard started (<paramref name="chasing"/> true) or stopped chasing. Enough guards on the
         /// chase at once force the castle to Roused, then Hue and Cry. Stopping never lowers it.</summary>
@@ -62,6 +91,9 @@ namespace Plunderspell.Alarm
             bool changed = chasing ? _chasers.Add(guardId) : _chasers.Remove(guardId);
             if (!changed || !chasing || InGrace)
                 return;
+
+            // A chaser has seen an intruder, so the floors below never outrun the witness gates.
+            AddWitness(guardId);
 
             float floor = _chasers.Count >= _tuning.HueAndCryChasers ? HueAndCryThreshold
                 : _chasers.Count >= _tuning.RousedChasers ? RousedThreshold
@@ -77,6 +109,8 @@ namespace Plunderspell.Alarm
         {
             IsLocked = false;
             _chasers.Clear();
+            _witnesses.Clear();
+            _lastNoiseReport.Clear();
             _level.value = 0f;
             _lastNoiseTime = Time.time;
             _graceEndsAt = Time.time + Mathf.Max(0f, graceSeconds);
@@ -93,9 +127,12 @@ namespace Plunderspell.Alarm
             UpdateState();
         }
 
-        /// <summary>Forces the level and re-evaluates the state. For tests and setup.</summary>
-        public void SetLevel(float level)
+        /// <summary>Forces the level and re-evaluates the state. For tests and setup. Witness gates still apply;
+        /// <paramref name="witnesses"/> adds that many stand-in witnesses first, for a test that wants Roused or above.</summary>
+        public void SetLevel(float level, int witnesses = 0)
         {
+            for (int i = 0; i < witnesses; i++)
+                _witnesses.Add(-1 - i);
             _level.value = Mathf.Clamp(level, 0f, 100f);
             UpdateState();
         }
@@ -128,10 +165,11 @@ namespace Plunderspell.Alarm
             UpdateState();
         }
 
-        private static AlarmState ComputeState(float level)
+        // Points keep piling up while a witness gate is unmet; the state waits for the witnesses.
+        private AlarmState ComputeState(float level)
         {
-            if (level >= HueAndCryThreshold) return AlarmState.HueAndCry;
-            if (level >= RousedThreshold) return AlarmState.Roused;
+            if (level >= HueAndCryThreshold && _witnesses.Count >= _tuning.HueAndCryWitnesses) return AlarmState.HueAndCry;
+            if (level >= RousedThreshold && _witnesses.Count >= _tuning.RousedWitnesses) return AlarmState.Roused;
             if (level >= StirredThreshold) return AlarmState.Stirred;
             return AlarmState.Calm;
         }

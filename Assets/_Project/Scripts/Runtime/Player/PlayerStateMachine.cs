@@ -1,6 +1,7 @@
 using Interfaces;
 using StateMachine.States;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace StateMachine
 {
@@ -52,9 +53,17 @@ namespace StateMachine
         /// <summary>Share of walk speed while creeping. 5 m/s * 0.4 = 2 m/s, under the 2.2 m/s crouch band of FootstepNoiseEmitter.</summary>
         public const float CreepPace = 0.4f;
 
-        public Rigidbody _rb;
+        /// <summary>Walk pace while the grimoire is open (#325): reading takes both hands.</summary>
+        public const float ReadingPace = 0.6f;
 
-        public float walkSpeed;
+        /// <summary>True while this machine's player has the grimoire open. Only ever set on the local body.</summary>
+        public bool ReadingGrimoire { get; private set; }
+
+        [SerializeField] private Rigidbody _rb;
+        public Rigidbody Rb { get => _rb; set => _rb = value; }
+
+        [FormerlySerializedAs("walkSpeed")] [SerializeField] private float _walkSpeed;
+        public float WalkSpeed { get => _walkSpeed; set => _walkSpeed = value; }
         public float JumpForce;
         public float FallMultiplier = 2.5f;
 
@@ -62,9 +71,10 @@ namespace StateMachine
         public float AirControl = 0.7f;
 
         public float DodgeForce;
-        public float respawnSpeed;
+        [FormerlySerializedAs("respawnSpeed")] [SerializeField] private float _respawnSpeed;
+        public float RespawnSpeed { get => _respawnSpeed; set => _respawnSpeed = value; }
 
-        public float MouseSensitivity = 100f;
+        public float MouseSensitivity = 1.6667f;
         public Transform CameraTransform;
 
         [Header("Ground Check Settings")]
@@ -74,6 +84,9 @@ namespace StateMachine
         [SerializeField] private float _groundSnapSpeed = 15f;
         [SerializeField] private LayerMask _groundLayer;
         public bool IsGrounded { get; private set; }
+
+        // How far above ride height still counts as standing: covers a step down before the snap settles it.
+        private const float GroundedTolerance = 0.15f;
 
         [Header("Physics Damage Settings")]
         public float MinVelocityForDamage = 5f;
@@ -128,8 +141,8 @@ namespace StateMachine
                 return;
             }
 
-            float mouseX = lookDelta.x * MouseSensitivity * Time.deltaTime;
-            float mouseY = lookDelta.y * MouseSensitivity * Time.deltaTime;
+            float mouseX = lookDelta.x * MouseSensitivity;
+            float mouseY = lookDelta.y * MouseSensitivity;
 
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
@@ -198,10 +211,11 @@ namespace StateMachine
             // isActiveAndEnabled, not enabled: a remote player's camera object is switched off by
             // PlayerNetworkOwnership before Start, and must not claim to be this machine's player.
             if (!LocalDecidedByNetwork && Local == null && view != null && view.isActiveAndEnabled)
-                Local = this;
+                SetLocal(this);
 
             Plunderspell.Core.GameServices.Initialize();
-            Plunderspell.Core.GameServices.GameState.StateChanged += OnGameStateChanged;
+            Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (Plunderspell.Core.GameStateChanged e) => OnGameStateChanged(e.Previous, e.Current));
+            Code.Scripts.EventSystems.EventManager.Instance?.Subscribe(this, (GrimoireOpened e) => ReadingGrimoire = e.Open && IsLocal);
             PublishHealth();
         }
 
@@ -228,26 +242,31 @@ namespace StateMachine
         /// <summary>The player this machine renders through (its camera is live). Null until one exists.</summary>
         public static PlayerStateMachine Local { get; private set; }
 
+        private static void SetLocal(PlayerStateMachine player)
+        {
+            if (Local == player)
+                return;
+            Local = player;
+            Code.Scripts.EventSystems.EventManager.Instance?.Publish(new LocalPlayerChanged(player));
+        }
+
         /// <summary>
         /// Asked when this machine's player dies: true when a teammate is still alive to watch.
         /// Installed by Plunderspell.Net; offline there is nobody to watch, so it is always false.
         /// </summary>
         public static System.Func<bool> SpectateOnDeath = () => false;
 
-        /// <summary>Raised when the local player dies. The raid treats it as a lost raid.</summary>
-        public static event System.Action LocalPlayerDied;
-
         public bool IsLocal => Local == this;
 
         /// <summary>Makes this body the one this machine plays as. Called by the network ownership
         /// component when this machine turns out to own it, which can happen after Start.</summary>
-        public void ClaimLocal() => Local = this;
+        public void ClaimLocal() => SetLocal(this);
 
         /// <summary>Undoes <see cref="ClaimLocal"/> when this machine turns out not to own the body.</summary>
         public void ReleaseLocal()
         {
             if (Local == this)
-                Local = null;
+                SetLocal(null);
         }
 
         /// <summary>
@@ -264,7 +283,7 @@ namespace StateMachine
             if (IsLocal)
             {
                 bool spectate = SpectateOnDeath();
-                LocalPlayerDied?.Invoke();
+                Code.Scripts.EventSystems.EventManager.Instance?.Publish(new Plunderspell.Core.LocalPlayerDied());
                 // In co-op with a teammate still standing, the network layer hands the view to them
                 // and ends the raid only when everyone is down; otherwise this is a lost raid now.
                 if (!spectate && Plunderspell.Core.GameServices.GameState != null)
@@ -282,17 +301,17 @@ namespace StateMachine
         /// <summary>Setting out again after dying: a fresh body, full health.</summary>
         private void OnGameStateChanged(Plunderspell.Core.GameState previous, Plunderspell.Core.GameState next)
         {
-            bool freshRaid = previous == Plunderspell.Core.GameState.Lair || previous == Plunderspell.Core.GameState.GameOver;
+            bool freshRaid = previous == Plunderspell.Core.GameState.LairRoom
+                             || previous == Plunderspell.Core.GameState.GameOver;
             if (next == Plunderspell.Core.GameState.Playing && freshRaid && dead)
                 ReviveTo(1f);
         }
 
         private void OnDestroy()
         {
-            if (Plunderspell.Core.GameServices.GameState != null)
-                Plunderspell.Core.GameServices.GameState.StateChanged -= OnGameStateChanged;
+            Code.Scripts.EventSystems.EventManager.Instance?.UnsubscribeFromAllEvents(this);
             if (Local == this)
-                Local = null;
+                SetLocal(null);
         }
 
         public void Walk()
@@ -313,6 +332,24 @@ namespace StateMachine
             // Idle, not RespawnState: that state's exit ran on a thread-pool task and never landed.
             ChangeState(IdleState);
             PublishHealth();
+        }
+
+        /// <summary>
+        /// For another machine's body: follows its owner's replicated down flag. Nothing here damages
+        /// that body, so without this it stayed alive at full health after its owner died. Health
+        /// itself is not replicated; down means 0, back up means full. See docs/4-systems/net.md.
+        /// </summary>
+        public void FollowOwnerDown(bool down)
+        {
+            if (down && !dead)
+            {
+                _health = 0f;
+                Die();
+            }
+            else if (!down && dead)
+            {
+                ReviveTo(1f);
+            }
         }
 
         public void TakeDamage(float damage)
@@ -464,7 +501,9 @@ namespace StateMachine
             float verticalSpeed = Vector3.Dot(_rb.linearVelocity, up);
 
             bool hitGround = Physics.SphereCast(origin, _groundCheckRadius, -up, out RaycastHit hit, _groundCheckDistance, _groundLayer);
-            IsGrounded = hitGround;
+            // The cast reaches well below the feet so the snap can catch a step down; grounded means standing
+            // near ride height, or the first half-metre of every jump counted as grounded and skipped fall gravity.
+            IsGrounded = hitGround && HeightAboveGround(hit) <= _groundedHeight + GroundedTolerance;
 
             // Only snap while not actively rising - snapping mid-jump would cancel the jump.
             if (hitGround && verticalSpeed <= 0f)
@@ -483,10 +522,16 @@ namespace StateMachine
             _rb.linearVelocity -= up * verticalSpeed;
         }
 
+        // The cast starts 0.5 m above the pivot, and the floor is a radius below where the sphere stopped;
+        // leaving the radius out floated the body one radius up.
+        private float HeightAboveGround(RaycastHit hit)
+        {
+            return hit.distance + _groundCheckRadius - 0.5f;
+        }
+
         private void SnapToGroundHeight(RaycastHit hit, Vector3 up)
         {
-            float currentHeight = hit.distance - 0.5f;
-            float error = currentHeight - _groundedHeight;
+            float error = HeightAboveGround(hit) - _groundedHeight;
             if (Mathf.Abs(error) <= 0.001f) return;
 
             float correction = error * _groundSnapSpeed * Time.fixedDeltaTime;

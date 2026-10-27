@@ -1,0 +1,34 @@
+settings: saved a byte-exact copy of the settings files
+03:37:06 build: no (auto)
+03:37:13 host: state MainMenu players 0 local none holding nothing
+03:37:14 host: state LairRoom players 1 local 1005.200,1.499,1.500 holding nothing
+03:37:14 client started (pid 3001)
+03:37:22 client: state LairRoom players 2 local 1005.200,1.498,0.500 holding nothing
+03:37:24 host: state Playing players 2 local 27.500,1.500,24.000 holding nothing
+03:37:25 client: state Playing players 2 local 24.000,1.497,27.500 holding nothing
+03:37:31 spawn: warden at (27.50, 1.50, 31.00), facing away, held still
+03:37:33 look: host looks at the warden
+03:37:34 client: facing the warden, 4.9 m away
+03:37:36 before the turn | host:   LanternWarden(Clone) state=Incapacitated turned=False wickShowing=False at=(27.50, 1.50, 31.00) | player local=False health=100 | player local=True health=100 | 
+03:37:37 before the turn | client: LanternWarden(Clone) state=Incapacitated turned=False wickShowing=False at=(27.50, 1.50, 31.00) | player local=True health=100 | player local=False health=100 | 
+03:37:39 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final2c-before-client.png
+03:37:39 provoke: warden now faces the host's player, 7.0 m away; sees nobody, intruders known 2, director True
+03:37:41 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final2c-turning-client.png
+03:37:42 start of the turn | host:   LanternWarden(Clone) state=Chasing turned=True wickShowing=True at=(24.97, 0.00, 30.23) | lantern at (25.74, 0.51, 30.14) | player local=False health=100 | player local=True health=100 | 
+03:37:43 start of the turn | client: LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(24.28, 0.31, 28.97) | lantern at (25.86, 0.11, 30.26) | player local=True health=-99900 | player local=False health=100 | 
+03:37:45 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final2c-standing-client.png
+03:37:46 the Wick standing (model swapped) | host:   LanternWarden(Clone) state=Combat turned=True wickShowing=True at=(25.81, 0.31, 22.48) | lantern at (25.86, 0.11, 30.26) | player local=False health=100 | player local=True health=-99900 | 
+03:37:47 the Wick standing (model swapped) | client: LanternWarden(Clone) state=Investigating turned=True wickShowing=True at=(26.12, 0.31, 22.79) | lantern at (25.86, 0.11, 30.26) | player local=True health=-99900 | player local=False health=100 | 
+03:37:51 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final2c-stalking-client.png
+03:37:51 stalking or hunting | host:   LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(24.59, 0.31, 26.95) | lantern at (25.86, 0.11, 30.26) | player local=False health=100 | player local=True health=-99900 | 
+03:37:52 stalking or hunting | client: LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(24.72, 0.31, 27.13) | lantern at (25.86, 0.11, 30.26) | player local=True health=-99900 | player local=False health=100 | 
+03:39:04 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final2c-catch-client.png
+03:39:05 at the catch | host:   LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(31.69, 0.00, 29.47) | lantern at (25.86, 0.11, 30.26) | player local=False health=100 | player local=True health=-99900 | 
+03:39:06 at the catch | client: LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(31.04, 0.00, 29.32) | lantern at (25.86, 0.11, 30.26) | player local=True health=-99900 | player local=False health=100 | 
+03:39:09 after the catch | host:   LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(34.11, 0.00, 31.76) | lantern at (25.86, 0.11, 30.26) | player local=False health=100 | player local=True health=-99900 | 
+03:39:10 after the catch | client: LanternWarden(Clone) state=Patrolling turned=True wickShowing=True at=(32.82, 0.00, 32.09) | lantern at (25.86, 0.11, 30.26) | player local=True health=-99900 | player local=False health=100 | 
+03:39:12 client shot: shot requested C:/Users/aj/Desktop/GameDev/PlunderSpell/docs/generated/fear-wick-2026-10-15/final2c-after-client.png
+03:39:12 client log error lines: 2
+03:39:12 cleaning up
+settings: ProjectSettings/ProjectSettings.asset unchanged
+settings: ProjectSettings/Packages/com.unity.pipeline/RuntimePipelineConfig.json unchanged

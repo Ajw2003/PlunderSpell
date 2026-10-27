@@ -6,356 +6,118 @@ that `CastleAudit` uses are tried from the arrival point, on the NavMesh and on 
 
 | Seed | Rooms | Probes | Both reach | Neither reaches | NavMesh only | Graph only | Floor on NavMesh only | Floor on graph only |
 |---|---|---|---|---|---|---|---|---|
-| 12345 | 44 | 1100 | 897 | 114 | 9 | 80 | 9 | 80 |
-| 777 | 44 | 1100 | 922 | 119 | 10 | 49 | 10 | 49 |
-| 2024 | 44 | 1100 | 917 | 108 | 6 | 69 | 6 | 69 |
-| 31337 | 44 | 1100 | 897 | 135 | 6 | 62 | 6 | 62 |
-| 90210 | 44 | 1100 | 928 | 121 | 7 | 44 | 7 | 44 |
+| 12345 | 20 | 500 | 442 | 47 | 3 | 8 | 3 | 8 |
+| 777 | 20 | 500 | 431 | 47 | 3 | 19 | 3 | 19 |
+| 2024 | 20 | 500 | 402 | 62 | 3 | 33 | 3 | 33 |
+| 31337 | 20 | 500 | 431 | 53 | 4 | 12 | 4 | 12 |
+| 90210 | 20 | 500 | 439 | 42 | 2 | 17 | 2 | 17 |
 
 Rooms where one side reaches nothing and the other something: 0.
 Probes with floor on both sides where reachability differs: 0.
 
 ## Differences
 
-- seed 12345: CryptChamberFinal (0, 0) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: CryptChamberFinal (0, 0) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: CryptChamberFinal (0, 0) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: CryptChamberFinal (0, 0) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: CryptChamberFinal (0, 0) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: TreasuryVault (-1, -1) probe (-2,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 12345: KeepStairwell (-1, 0) probe (1,1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 12345: ThroneRoomKeep (1, 0) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ThroneRoomKeep (1, 0) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ThroneRoomKeep (1, 0) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GuardRoomInner (-2, -2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (-2, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ChapelRoom (-1, 2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ChapelRoom (-1, 2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ChapelRoom (-1, 2) probe (-1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ChapelRoom (-1, 2) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ChapelRoom (-1, 2) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ChapelRoom (-1, 2) probe (1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ChapelRoom (-1, 2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: ChapelRoom (-1, 2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (0, -2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (1, 2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GreatHallMain (2, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GuardRoomInner (2, 1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: GuardRoomInner (2, 2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (-3, -2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (-3, -2) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (-3, 0) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (-3, 0) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (-3, 0) probe (0,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (-3, 3) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (-3, 3) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: BlacksmithShop (-2, 3) probe (-2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 12345: StableBlock (-1, -3) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: StableBlock (-1, -3) probe (-1,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 12345: StableBlock (-1, 3) probe (-1,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 12345: StableBlock (-1, 3) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: StableBlock (-1, 3) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: BlacksmithShop (0, 3) probe (-2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 12345: WellCourtyard (3, -3) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: StableBlock (3, -2) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 12345: StableBlock (3, -2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: StableBlock (3, 0) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 12345: StableBlock (3, 0) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (3, 2) probe (0,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (3, 2) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: WellCourtyard (3, 2) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 12345: StableBlock (3, 3) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 12345: StableBlock (3, 3) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: CryptChamberFinal (0, 0) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: CryptChamberFinal (0, 0) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: CryptChamberFinal (0, 0) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: CryptChamberFinal (0, 0) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: CryptChamberFinal (0, 0) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ThroneRoomKeep (-1, -1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ThroneRoomKeep (-1, -1) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ThroneRoomKeep (-1, -1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: KeepStairwell (-1, 1) probe (1,1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: KeepStairwell (0, -1) probe (-1,1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: KeepStairwell (0, 1) probe (1,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: RoyalBedchamber (1, -1) probe (0,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: KeepStairwell (1, 0) probe (-1,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: KeepStairwell (1, 1) probe (-1,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: ChapelRoom (-2, -2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (-2, -2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (-2, -2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (-2, -2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (-2, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GuardRoomInner (-2, 1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GuardRoomInner (-2, 2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GuardRoomInner (-1, -2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ArmouredCourtyard (0, -2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GreatHallMain (0, 2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (1, 2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (1, 2) probe (-1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (1, 2) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (1, 2) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (1, 2) probe (1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (1, 2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (1, 2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: ChapelRoom (1, 2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GuardRoomInner (2, -2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GuardRoomInner (2, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: GuardRoomInner (2, 2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: WellCourtyard (-3, -2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: WellCourtyard (-3, -2) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: WellCourtyard (-3, -2) probe (0,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: StableBlock (-2, 3) probe (-1,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: StableBlock (-2, 3) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: StableBlock (2, -3) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: StableBlock (2, -3) probe (-1,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: BlacksmithShop (2, 3) probe (-2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: StableBlock (3, -3) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: StableBlock (3, -3) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: StableBlock (3, -2) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 777: StableBlock (3, -2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: WellCourtyard (3, 1) probe (0,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: WellCourtyard (3, 1) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 777: WellCourtyard (3, 1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: CryptChamberFinal (0, 0) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: CryptChamberFinal (0, 0) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: CryptChamberFinal (0, 0) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: CryptChamberFinal (0, 0) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: CryptChamberFinal (0, 0) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: KeepStairwell (-1, -1) probe (1,1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 2024: KeepStairwell (-1, 0) probe (1,1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 2024: KeepStairwell (0, -1) probe (-1,1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 2024: KeepStairwell (1, 0) probe (-1,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 2024: GuardRoomInner (-2, -2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GuardRoomInner (-2, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GuardRoomInner (-2, 1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GuardRoomInner (-2, 2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (-1, -2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (-1, -2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (-1, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (-1, -2) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (-1, -2) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (-1, -2) probe (1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (-1, -2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ArmouredCourtyard (-1, 2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, -2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, -2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, -2) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, -2) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, -2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, 2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, 2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, 2) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, 2) probe (1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, 2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, 2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (0, 2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (1, -2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (1, -2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (1, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (1, -2) probe (-1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (1, -2) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (1, -2) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (1, -2) probe (1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (1, -2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ArmouredCourtyard (1, 2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: GreatHallMain (2, 0) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (2, 1) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (2, 1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (2, 1) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (2, 1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (2, 1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (2, 1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (2, 1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: ChapelRoom (2, 1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: WellCourtyard (-3, 2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: WellCourtyard (-3, 2) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: WellCourtyard (-3, 2) probe (0,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: WellCourtyard (-3, 3) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: WellCourtyard (-3, 3) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: StableBlock (-1, -3) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: StableBlock (-1, -3) probe (-1,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 2024: StableBlock (3, -1) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 2024: StableBlock (3, -1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: WellCourtyard (3, 2) probe (0,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: WellCourtyard (3, 2) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 2024: WellCourtyard (3, 2) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: CryptChamberFinal (0, 0) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: CryptChamberFinal (0, 0) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: CryptChamberFinal (0, 0) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: CryptChamberFinal (0, 0) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: CryptChamberFinal (0, 0) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ThroneRoomKeep (-1, 1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ThroneRoomKeep (-1, 1) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ThroneRoomKeep (-1, 1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: TreasuryVault (0, -1) probe (-2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 31337: ThroneRoomKeep (1, -1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ThroneRoomKeep (1, -1) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: KeepStairwell (1, 0) probe (-1,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 31337: KeepStairwell (1, 1) probe (-1,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 31337: GreatHallMain (-2, -2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (-2, -2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GuardRoomInner (-2, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GuardRoomInner (-1, 2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (1, -2) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (1, -2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (1, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (1, -2) probe (-1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (1, -2) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (1, -2) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (1, -2) probe (1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (1, -2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GuardRoomInner (1, 2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GreatHallMain (2, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: GuardRoomInner (2, 0) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (2, 2) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (2, 2) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (2, 2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (2, 2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (2, 2) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (2, 2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: ChapelRoom (2, 2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: WellCourtyard (-3, -3) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: WellCourtyard (-3, -3) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: StableBlock (-3, 0) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: WellCourtyard (-3, 3) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: WellCourtyard (-3, 3) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: StableBlock (1, -3) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: StableBlock (1, -3) probe (-1,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 31337: StableBlock (1, 3) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: StableBlock (1, 3) probe (-1,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 31337: StableBlock (1, 3) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: StableBlock (1, 3) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 31337: BlacksmithShop (2, 3) probe (-2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 90210: CryptChamberFinal (0, 0) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: CryptChamberFinal (0, 0) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: CryptChamberFinal (0, 0) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: CryptChamberFinal (0, 0) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: CryptChamberFinal (0, 0) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: ThroneRoomKeep (-1, -1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: ThroneRoomKeep (-1, -1) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: ThroneRoomKeep (-1, -1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: TreasuryVault (-1, 1) probe (-2,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 90210: KeepStairwell (0, -1) probe (-1,1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 90210: RoyalBedchamber (0, 1) probe (2,0) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: KeepStairwell (1, 0) probe (-1,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 90210: GreatHallMain (-2, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GreatHallMain (-2, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: ChapelRoom (-2, 0) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: ChapelRoom (-2, 0) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: ChapelRoom (-2, 0) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: ChapelRoom (-2, 0) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: ChapelRoom (-2, 0) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GuardRoomInner (-1, -2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GuardRoomInner (-1, 2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GuardRoomInner (0, -2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GuardRoomInner (0, 2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: ArmouredCourtyard (1, -2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GuardRoomInner (1, 2) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: GuardRoomInner (2, 2) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: WellCourtyard (-3, -2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: WellCourtyard (-3, -2) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: WellCourtyard (-3, -2) probe (0,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: StableBlock (-3, 0) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: WellCourtyard (-3, 2) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: WellCourtyard (-3, 2) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: WellCourtyard (-3, 2) probe (0,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: StableBlock (-2, 3) probe (-1,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 90210: StableBlock (-2, 3) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: BlacksmithShop (2, 3) probe (-2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 90210: WellCourtyard (3, 0) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: StableBlock (3, 2) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 90210: StableBlock (3, 2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
-- seed 90210: StableBlock (3, 3) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
-- seed 90210: StableBlock (3, 3) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 12345: GuardRoomInner (-1, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 12345: GuardRoomInner (-1, 1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 12345: GuardRoomInner (0, -1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 12345: GuardRoomInner (0, 1) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 12345: GuardRoomInner (1, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 12345: KitchenRoom (1, 1) probe (2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 12345: WellCourtyard (-2, -1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 12345: WellCourtyard (-2, -1) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 12345: BlacksmithShop (-1, 2) probe (-2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 12345: StableBlock (0, 2) probe (-1,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 12345: StableBlock (0, 2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: KitchenRoom (-1, -1) probe (-2,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 777: ChapelRoom (0, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (0, -1) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (0, -1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (0, -1) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (0, -1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ArmouredCourtyard (0, 1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, -1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, -1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, -1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, 1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, 1) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, 1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, 1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, 1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, 1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: ChapelRoom (1, 1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: WellCourtyard (1, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 777: StableBlock (2, -1) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 777: StableBlock (2, 0) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 777: StableBlock (2, 0) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: ChapelRoom (-1, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: ChapelRoom (-1, -1) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: ChapelRoom (-1, -1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: ChapelRoom (-1, -1) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (-1, 1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: KitchenRoom (0, -1) probe (-2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 2024: GreatHallMain (0, 1) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (0, 1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (0, 1) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (0, 1) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (0, 1) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (0, 1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (0, 1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (0, 1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (0, 1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GreatHallMain (0, 1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GuardRoomInner (1, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: GuardRoomInner (1, 1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: StableBlock (-2, -2) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: WellCourtyard (-1, 2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: WellCourtyard (1, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: WellCourtyard (1, 2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 2024: StableBlock (2, 1) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 2024: StableBlock (2, 2) probe (-2,-1) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 2024: StableBlock (2, 2) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: KitchenRoom (-1, -1) probe (-2,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 31337: ArmouredCourtyard (0, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: KitchenRoom (0, 1) probe (2,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 31337: KitchenRoom (1, -1) probe (2,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 31337: ChapelRoom (1, 1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: ChapelRoom (1, 1) probe (1,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: ChapelRoom (1, 1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: ChapelRoom (1, 1) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: ChapelRoom (1, 1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: ChapelRoom (1, 1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: ChapelRoom (1, 1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: WellCourtyard (-2, -1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: WellCourtyard (-2, -1) probe (-1,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: WellCourtyard (-1, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 31337: StableBlock (0, 2) probe (-1,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 31337: StableBlock (0, 2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GuardRoomInner (-1, -1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GuardRoomInner (-1, 1) probe (-2,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (-2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (-2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (-2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (-1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (2,-1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (2,1) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GreatHallMain (0, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: KitchenRoom (0, 1) probe (2,2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 90210: GuardRoomInner (1, -1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: GuardRoomInner (1, 1) probe (2,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: WellCourtyard (-1, -2) probe (-1,-2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: StableBlock (-1, 2) probe (-1,-2) NavMesh reaches it, graph does not (graph floor False, navmesh floor True).
+- seed 90210: StableBlock (-1, 2) probe (1,2) graph reaches it, NavMesh does not (navmesh floor False).
+- seed 90210: StableBlock (-1, 2) probe (2,-2) graph reaches it, NavMesh does not (navmesh floor False).

@@ -1,0 +1,22 @@
+13:38:18 test slot 99 wiped, owner's slot to restore: 1
+13:38:27 state MainMenu
+13:38:27 solo, slot 99
+13:38:28 player: player
+13:38:29 to the Market: travelled
+13:38:30 spawned GoldenGoblet(Clone) worth 150 at (1103.61, 1.61, -4.15); saved pile 
+13:38:30 haggle: open
+13:38:31 debt purse1 purse2 before the sale: 500 0 0
+13:38:32 Satis: Sold
+13:38:33 pouch coins 133 mass 1.33 lootvalue False carryable True at (1103.59, 1.38, -4.09)
+13:38:33 PASS the sale left one carryable pouch with coins and no LootValue
+13:38:34 sold piece gone: loot pieces 0
+13:38:35 camera 1103.401 2.295338 -3.008573 170.2046 39.61259
+13:38:38 capture: docs/generated/pouch-solo-2026-10-07/run1-pouch-on-counter.png
+13:38:38 back in the Lair, pouch carried False
+13:38:40 pouch (133 coins) set into StrongboxLid1 at (1001.85, 0.81, 1.63)
+13:38:41 debt purse1 purse2 after the strongbox: 367 133 0 (pouches left: 0)
+13:38:41 PASS strongbox 1 banked the pouch: purse 1 grew, purse 2 did not, the debt fell, the pouch is gone
+13:38:42 saved purse 1 in slot 99: 133
+13:38:42 PASS all pouch checks
+13:38:42 cleaning up
+13:38:43 active slot 1

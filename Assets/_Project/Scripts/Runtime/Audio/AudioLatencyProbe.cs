@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -142,14 +143,14 @@ namespace Plunderspell.Audio
                 if (item == piece && impactAt < 0f)
                     impactAt = Time.realtimeSinceStartup;
             }
-            Item.Impacted += OnImpact;
+            EventManager.Instance?.Subscribe(this, (ItemImpacted e) => OnImpact(e.Item, e.Collision));
             float relayedAt = -1f;
             void OnRelayed(Item item, float speed, Vector3 point, bool struckCreature)
             {
                 if (item == piece && relayedAt < 0f)
                     relayedAt = Time.realtimeSinceStartup;
             }
-            Item.ImpactedRemotely += OnRelayed;
+            EventManager.Instance?.Subscribe(this, (ItemImpactedRemotely e) => OnRelayed(e.Item, e.Speed, e.Point, e.StruckCreature));
 
             AudioSource[] sources = AudioDirector.Instance.GetComponentsInChildren<AudioSource>();
             float end = Time.realtimeSinceStartup + seconds;
@@ -190,8 +191,8 @@ namespace Plunderspell.Audio
                     break;
                 yield return null;
             }
-            Item.Impacted -= OnImpact;
-            Item.ImpactedRemotely -= OnRelayed;
+            EventManager.Instance?.Unsubscribe<ItemImpacted>(this);
+            EventManager.Instance?.Unsubscribe<ItemImpactedRemotely>(this);
 
             string Ms(float t) => t < 0f || fallStart < 0f ? "never" : $"{(t - fallStart) * 1000f:F0} ms";
             var body = piece.GetComponent<Rigidbody>();
@@ -216,7 +217,7 @@ namespace Plunderspell.Audio
             // Long enough for a co-op client's watch to start while the piece is still held up.
             yield return new WaitForSecondsRealtime(3f);
 
-            Item.Impacted += OnImpact;
+            EventManager.Instance?.Subscribe(this, (ItemImpacted e) => OnImpact(e.Item, e.Collision));
             body.isKinematic = false;
             body.linearVelocity = Vector3.zero;
             float start = Time.realtimeSinceStartup;
@@ -237,7 +238,7 @@ namespace Plunderspell.Audio
                     break;
                 yield return null;
             }
-            Item.Impacted -= OnImpact;
+            EventManager.Instance?.Unsubscribe<ItemImpacted>(this);
 
             string Ms(float t) => t < 0f ? "never" : $"{(t - start) * 1000f:F0} ms";
             Debug.Log($"[AudioLatency] drop {piece.name} from {height} m: collision {Ms(impactAt)}, sound heard {Ms(heard)}, " +

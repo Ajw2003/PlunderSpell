@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,8 +40,21 @@ namespace Plunderspell.Alarm
             _separation = new GuardSeparation(tuning);
             _stepper = new GuardMoverStepper(tuning, new GuardSweep(tuning, _guardBodies));
             _facing = new GuardMoverFacing(tuning);
-            director.OnMoveRequest += HandleMoveRequest;
+            Listen();
         }
+
+        /// <summary>Starts hearing guards' <see cref="MoveRequest"/>s on the event bus. Safe to call twice.</summary>
+        public void Listen()
+        {
+            EventManager bus = EventManager.Instance;
+            if (bus == null)
+                return;
+
+            StopListening();
+            bus.Subscribe(this, (MoveRequest request) => HandleMoveRequest(request));
+        }
+
+        public void StopListening() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
 
         public GuardPathPlanner Planner => _planner;
 
@@ -133,7 +147,7 @@ namespace Plunderspell.Alarm
                 return;
             }
             mover.Path = route;
-            _director.Publish(new PathReady(mover.Guard, mover.Destination, route.Length, GuardPathPlanner.LengthOf(route)));
+            EventManager.Instance?.Publish(new PathReady(mover.Guard, mover.Destination, route.Length, GuardPathPlanner.LengthOf(route)));
         }
 
         /// <summary>Moves every registered guard one step. Called each frame by the director on the server.</summary>
@@ -165,7 +179,7 @@ namespace Plunderspell.Alarm
         private void Arrive(GuardMover mover)
         {
             mover.Stop();
-            _director.Publish(new Arrived(mover.Guard, mover.Position));
+            EventManager.Instance?.Publish(new Arrived(mover.Guard, mover.Position));
         }
 
         // Held up means the sweep is cutting the guard's own step, not that a crowd is pushing it.
@@ -195,7 +209,7 @@ namespace Plunderspell.Alarm
         private void RaiseBlocked(GuardMover mover, BlockedReason reason)
         {
             mover.Stop();
-            _director.Publish(new Blocked(mover.Guard, mover.Position, reason));
+            EventManager.Instance?.Publish(new Blocked(mover.Guard, mover.Position, reason));
         }
     }
 }

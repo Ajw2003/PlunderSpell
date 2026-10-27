@@ -1,0 +1,97 @@
+{
+  "title": "QA: Staging into main",
+  "eyebrow": "QA for pull request 437, which brings the Wick, the fear art and the lair loot saves into main · nothing here is closed until you have tested",
+  "approval": "QA passed: staging into main",
+  "qa": {
+    "feature": "staging into main",
+    "base": "origin/main",
+    "unverified": [
+      "I have not played it by hand: every check was run by a script",
+      "I did not run lair_pile_check.sh on the merged branch. I ran only coop_lair_check.sh."
+    ],
+    "files": {}
+  },
+  "short": {
+    "lead": "Pull request 437 carries three pull requests into main in one go: #436, the Wick; #414, the fear art, which #436 already holds in full; and #422, which saves lair loot. I merged them one at a time on a new branch and ran the checks after each. The Wick check found one bug, a caught player dying only on their own machine, and I fixed it on this branch. Every check passed after the fix in the logs I read. None of it has been played by hand.",
+    "hint": "Tap an item to see what was checked and what you can try yourself.",
+    "key": [
+      [
+        "Checked by script",
+        "done"
+      ],
+      [
+        "You test this",
+        "you"
+      ]
+    ],
+    "items": [
+      [
+        "check",
+        "Merges",
+        "#436 (with #414), then #422",
+        "done",
+        "#436 merged cleanly. #422 clashed only in docs/5-today/Today.md, where two diary entries were added at the top; I kept both. Merging the result into main is clean.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Round 1 tests",
+        "Staging plus #436",
+        "done",
+        "Compile clean. EditMode: 250 passed, 0 failed, 3 skipped. PlayMode: 528 of 528 passed. Logs: docs/generated/staging-2026-10-26/round1-*.log.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Wick check",
+        "fear_wick_check.sh, co-op",
+        "done",
+        "The warden turns into the Wick on both machines, the lantern lands in the same place on both, and a catch kills the caught player. The 2 error lines on the client are stack frames that contain the word SocketError. They are not errors. Screenshots: docs/generated/fear-wick-2026-10-15/staging-2026-10-26-r1-*.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Round 2 tests",
+        "Plus #422",
+        "done",
+        "Compile clean. EditMode: 261 passed, 0 failed, 3 skipped (243 on staging, plus 7 from #436 and 11 from #422; no test was lost). PlayMode: 528 of 528 passed. Logs: docs/generated/staging-2026-10-26/round2-*.log.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Lair check",
+        "coop_lair_check.sh, co-op",
+        "done",
+        "The script printed PASS for all Lair checks (26 lines), with 0 client error lines. Log: docs/generated/staging-2026-10-26/round2-coop-lair-check.log.",
+        "Nothing from you."
+      ],
+      [
+        "check",
+        "Wick-catch fix",
+        "A caught player dies on both machines",
+        "done",
+        "Before the fix, the other machine kept the caught player alive at health 100, so the host counted a dead teammate as living. Now each machine's copy follows the owner's down flag (PlayerStateMachine.FollowOwnerDown). Round 3: compile clean; EditMode 261 passed, 0 failed, 3 skipped; PlayMode 529 of 529, including the new test. The Wick check failed before the fix and passed after it in both directions: the client saw the caught host dead at health 0, and the host saw the caught client dead at health 0. The co-op Lair check passed (27 PASS lines, 0 client error lines). Screenshots: docs/generated/fear-wick-2026-10-15/staging-2026-10-26-{before,after,after2}-caught-player-*.png.",
+        "When the Wick catches your friend in the play test, check that your screen shows them collapse."
+      ],
+      [
+        "hand",
+        "Play it",
+        "One co-op raid and back",
+        "you",
+        "Host a co-op game with a friend joining. Let a Lantern Warden see you, so it turns into the Wick, and let it catch one of you. Then come home, move one piece of loot in the Lair's pile, quit to the menu and host again.",
+        "Tell me whether the Wick looked right on both screens, whether the caught player went down on both, and whether the piece was still where you left it after you hosted again."
+      ]
+    ]
+  },
+  "wrapup": {
+    "summary": "Pull request 437 brings #436 (with #414) and #422 into main, with a fix so that a player caught by the Wick dies on both machines. Every script check passed after the fix.",
+    "changing": "Main gains the Wick in raids, the fear art with its Unity import settings, and lair loot that stays where you put it. A player caught in co-op now goes down on every machine, not only their own.",
+    "blocking": "Nothing is merged or closed. #414, #436 and #422 stay open until 437 merges.",
+    "next": "After you pass it, merge 437, then close #414, #436 and #422.",
+    "todo": [
+      "Play the steps under Play it.",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with the words \"QA passed: staging into main\", or tell me what failed."
+    ]
+  }
+}

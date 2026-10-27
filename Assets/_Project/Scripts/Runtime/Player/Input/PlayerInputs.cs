@@ -147,7 +147,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""OpenInventory"",
+                    ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""1a5dd3cd-017f-4c50-8d63-416c916f47b6"",
                     ""expectedControlType"": """",
@@ -159,6 +159,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""name"": ""PickUp"",
                     ""type"": ""Button"",
                     ""id"": ""8b8c2727-8e08-46df-86ee-a90278233c76"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Drop"",
+                    ""type"": ""Button"",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d1f01"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -360,7 +369,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""OpenInventory"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -372,6 +381,153 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""PickUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d1f02"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Haggle"",
+            ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2000"",
+            ""actions"": [
+                {
+                    ""name"": ""Plus"",
+                    ""type"": ""Button"",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2001"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Satis"",
+                    ""type"": ""Button"",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2002"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Vale"",
+                    ""type"": ""Button"",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2003"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2011"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Plus"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2012"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Satis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d2013"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vale"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Debug"",
+            ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3000"",
+            ""actions"": [
+                {
+                    ""name"": ""CallExtraction"",
+                    ""type"": ""Button"",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3001"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NextRaid"",
+                    ""type"": ""Button"",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3002"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleBenchHud"",
+                    ""type"": ""Button"",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3003"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3011"",
+                    ""path"": ""<Keyboard>/f5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CallExtraction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3012"",
+                    ""path"": ""<Keyboard>/f6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextRaid"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d3013"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleBenchHud"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -416,8 +572,19 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
         m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
         m_PlayerActions_Look = m_PlayerActions.FindAction("Look", throwIfNotFound: true);
-        m_PlayerActions_OpenInventory = m_PlayerActions.FindAction("OpenInventory", throwIfNotFound: true);
+        m_PlayerActions_Interact = m_PlayerActions.FindAction("Interact", throwIfNotFound: true);
         m_PlayerActions_PickUp = m_PlayerActions.FindAction("PickUp", throwIfNotFound: true);
+        m_PlayerActions_Drop = m_PlayerActions.FindAction("Drop", throwIfNotFound: true);
+        // Haggle
+        m_Haggle = asset.FindActionMap("Haggle", throwIfNotFound: true);
+        m_Haggle_Plus = m_Haggle.FindAction("Plus", throwIfNotFound: true);
+        m_Haggle_Satis = m_Haggle.FindAction("Satis", throwIfNotFound: true);
+        m_Haggle_Vale = m_Haggle.FindAction("Vale", throwIfNotFound: true);
+        // Debug
+        m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
+        m_Debug_CallExtraction = m_Debug.FindAction("CallExtraction", throwIfNotFound: true);
+        m_Debug_NextRaid = m_Debug.FindAction("NextRaid", throwIfNotFound: true);
+        m_Debug_ToggleBenchHud = m_Debug.FindAction("ToggleBenchHud", throwIfNotFound: true);
         // Inventory
         m_Inventory = asset.FindActionMap("Inventory", throwIfNotFound: true);
         m_Inventory_Clicked = m_Inventory.FindAction("Clicked", throwIfNotFound: true);
@@ -426,6 +593,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     ~@PlayerInputs()
     {
         UnityEngine.Debug.Assert(!m_PlayerActions.enabled, "This will cause a leak and performance issues, PlayerInputs.PlayerActions.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Haggle.enabled, "This will cause a leak and performance issues, PlayerInputs.Haggle.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Debug.enabled, "This will cause a leak and performance issues, PlayerInputs.Debug.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Inventory.enabled, "This will cause a leak and performance issues, PlayerInputs.Inventory.Disable() has not been called.");
     }
 
@@ -508,8 +677,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Move;
     private readonly InputAction m_PlayerActions_Dodge;
     private readonly InputAction m_PlayerActions_Look;
-    private readonly InputAction m_PlayerActions_OpenInventory;
+    private readonly InputAction m_PlayerActions_Interact;
     private readonly InputAction m_PlayerActions_PickUp;
+    private readonly InputAction m_PlayerActions_Drop;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerActions".
     /// </summary>
@@ -546,13 +716,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Look => m_Wrapper.m_PlayerActions_Look;
         /// <summary>
-        /// Provides access to the underlying input action "PlayerActions/OpenInventory".
+        /// Provides access to the underlying input action "PlayerActions/Interact".
         /// </summary>
-        public InputAction @OpenInventory => m_Wrapper.m_PlayerActions_OpenInventory;
+        public InputAction @Interact => m_Wrapper.m_PlayerActions_Interact;
         /// <summary>
         /// Provides access to the underlying input action "PlayerActions/PickUp".
         /// </summary>
         public InputAction @PickUp => m_Wrapper.m_PlayerActions_PickUp;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/Drop".
+        /// </summary>
+        public InputAction @Drop => m_Wrapper.m_PlayerActions_Drop;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -597,12 +771,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
-            @OpenInventory.started += instance.OnOpenInventory;
-            @OpenInventory.performed += instance.OnOpenInventory;
-            @OpenInventory.canceled += instance.OnOpenInventory;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
             @PickUp.started += instance.OnPickUp;
             @PickUp.performed += instance.OnPickUp;
             @PickUp.canceled += instance.OnPickUp;
+            @Drop.started += instance.OnDrop;
+            @Drop.performed += instance.OnDrop;
+            @Drop.canceled += instance.OnDrop;
         }
 
         /// <summary>
@@ -632,12 +809,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
-            @OpenInventory.started -= instance.OnOpenInventory;
-            @OpenInventory.performed -= instance.OnOpenInventory;
-            @OpenInventory.canceled -= instance.OnOpenInventory;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
             @PickUp.started -= instance.OnPickUp;
             @PickUp.performed -= instance.OnPickUp;
             @PickUp.canceled -= instance.OnPickUp;
+            @Drop.started -= instance.OnDrop;
+            @Drop.performed -= instance.OnDrop;
+            @Drop.canceled -= instance.OnDrop;
         }
 
         /// <summary>
@@ -671,6 +851,242 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PlayerActionsActions" /> instance referencing this action map.
     /// </summary>
     public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
+
+    // Haggle
+    private readonly InputActionMap m_Haggle;
+    private List<IHaggleActions> m_HaggleActionsCallbackInterfaces = new List<IHaggleActions>();
+    private readonly InputAction m_Haggle_Plus;
+    private readonly InputAction m_Haggle_Satis;
+    private readonly InputAction m_Haggle_Vale;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Haggle".
+    /// </summary>
+    public struct HaggleActions
+    {
+        private @PlayerInputs m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public HaggleActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Haggle/Plus".
+        /// </summary>
+        public InputAction @Plus => m_Wrapper.m_Haggle_Plus;
+        /// <summary>
+        /// Provides access to the underlying input action "Haggle/Satis".
+        /// </summary>
+        public InputAction @Satis => m_Wrapper.m_Haggle_Satis;
+        /// <summary>
+        /// Provides access to the underlying input action "Haggle/Vale".
+        /// </summary>
+        public InputAction @Vale => m_Wrapper.m_Haggle_Vale;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Haggle; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="HaggleActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(HaggleActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="HaggleActions" />
+        public void AddCallbacks(IHaggleActions instance)
+        {
+            if (instance == null || m_Wrapper.m_HaggleActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_HaggleActionsCallbackInterfaces.Add(instance);
+            @Plus.started += instance.OnPlus;
+            @Plus.performed += instance.OnPlus;
+            @Plus.canceled += instance.OnPlus;
+            @Satis.started += instance.OnSatis;
+            @Satis.performed += instance.OnSatis;
+            @Satis.canceled += instance.OnSatis;
+            @Vale.started += instance.OnVale;
+            @Vale.performed += instance.OnVale;
+            @Vale.canceled += instance.OnVale;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="HaggleActions" />
+        private void UnregisterCallbacks(IHaggleActions instance)
+        {
+            @Plus.started -= instance.OnPlus;
+            @Plus.performed -= instance.OnPlus;
+            @Plus.canceled -= instance.OnPlus;
+            @Satis.started -= instance.OnSatis;
+            @Satis.performed -= instance.OnSatis;
+            @Satis.canceled -= instance.OnSatis;
+            @Vale.started -= instance.OnVale;
+            @Vale.performed -= instance.OnVale;
+            @Vale.canceled -= instance.OnVale;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="HaggleActions.UnregisterCallbacks(IHaggleActions)" />.
+        /// </summary>
+        /// <seealso cref="HaggleActions.UnregisterCallbacks(IHaggleActions)" />
+        public void RemoveCallbacks(IHaggleActions instance)
+        {
+            if (m_Wrapper.m_HaggleActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="HaggleActions.AddCallbacks(IHaggleActions)" />
+        /// <seealso cref="HaggleActions.RemoveCallbacks(IHaggleActions)" />
+        /// <seealso cref="HaggleActions.UnregisterCallbacks(IHaggleActions)" />
+        public void SetCallbacks(IHaggleActions instance)
+        {
+            foreach (var item in m_Wrapper.m_HaggleActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_HaggleActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="HaggleActions" /> instance referencing this action map.
+    /// </summary>
+    public HaggleActions @Haggle => new HaggleActions(this);
+
+    // Debug
+    private readonly InputActionMap m_Debug;
+    private List<IDebugActions> m_DebugActionsCallbackInterfaces = new List<IDebugActions>();
+    private readonly InputAction m_Debug_CallExtraction;
+    private readonly InputAction m_Debug_NextRaid;
+    private readonly InputAction m_Debug_ToggleBenchHud;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Debug".
+    /// </summary>
+    public struct DebugActions
+    {
+        private @PlayerInputs m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public DebugActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Debug/CallExtraction".
+        /// </summary>
+        public InputAction @CallExtraction => m_Wrapper.m_Debug_CallExtraction;
+        /// <summary>
+        /// Provides access to the underlying input action "Debug/NextRaid".
+        /// </summary>
+        public InputAction @NextRaid => m_Wrapper.m_Debug_NextRaid;
+        /// <summary>
+        /// Provides access to the underlying input action "Debug/ToggleBenchHud".
+        /// </summary>
+        public InputAction @ToggleBenchHud => m_Wrapper.m_Debug_ToggleBenchHud;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Debug; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="DebugActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(DebugActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="DebugActions" />
+        public void AddCallbacks(IDebugActions instance)
+        {
+            if (instance == null || m_Wrapper.m_DebugActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_DebugActionsCallbackInterfaces.Add(instance);
+            @CallExtraction.started += instance.OnCallExtraction;
+            @CallExtraction.performed += instance.OnCallExtraction;
+            @CallExtraction.canceled += instance.OnCallExtraction;
+            @NextRaid.started += instance.OnNextRaid;
+            @NextRaid.performed += instance.OnNextRaid;
+            @NextRaid.canceled += instance.OnNextRaid;
+            @ToggleBenchHud.started += instance.OnToggleBenchHud;
+            @ToggleBenchHud.performed += instance.OnToggleBenchHud;
+            @ToggleBenchHud.canceled += instance.OnToggleBenchHud;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="DebugActions" />
+        private void UnregisterCallbacks(IDebugActions instance)
+        {
+            @CallExtraction.started -= instance.OnCallExtraction;
+            @CallExtraction.performed -= instance.OnCallExtraction;
+            @CallExtraction.canceled -= instance.OnCallExtraction;
+            @NextRaid.started -= instance.OnNextRaid;
+            @NextRaid.performed -= instance.OnNextRaid;
+            @NextRaid.canceled -= instance.OnNextRaid;
+            @ToggleBenchHud.started -= instance.OnToggleBenchHud;
+            @ToggleBenchHud.performed -= instance.OnToggleBenchHud;
+            @ToggleBenchHud.canceled -= instance.OnToggleBenchHud;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="DebugActions.UnregisterCallbacks(IDebugActions)" />.
+        /// </summary>
+        /// <seealso cref="DebugActions.UnregisterCallbacks(IDebugActions)" />
+        public void RemoveCallbacks(IDebugActions instance)
+        {
+            if (m_Wrapper.m_DebugActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="DebugActions.AddCallbacks(IDebugActions)" />
+        /// <seealso cref="DebugActions.RemoveCallbacks(IDebugActions)" />
+        /// <seealso cref="DebugActions.UnregisterCallbacks(IDebugActions)" />
+        public void SetCallbacks(IDebugActions instance)
+        {
+            foreach (var item in m_Wrapper.m_DebugActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_DebugActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="DebugActions" /> instance referencing this action map.
+    /// </summary>
+    public DebugActions @Debug => new DebugActions(this);
 
     // Inventory
     private readonly InputActionMap m_Inventory;
@@ -817,12 +1233,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLook(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "OpenInventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnOpenInventory(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "PickUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -830,6 +1246,71 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPickUp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Drop" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDrop(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Haggle" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="HaggleActions.AddCallbacks(IHaggleActions)" />
+    /// <seealso cref="HaggleActions.RemoveCallbacks(IHaggleActions)" />
+    public interface IHaggleActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Plus" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPlus(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Satis" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSatis(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Vale" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnVale(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Debug" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="DebugActions.AddCallbacks(IDebugActions)" />
+    /// <seealso cref="DebugActions.RemoveCallbacks(IDebugActions)" />
+    public interface IDebugActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "CallExtraction" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCallExtraction(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "NextRaid" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNextRaid(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleBenchHud" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleBenchHud(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Inventory" which allows adding and removing callbacks.

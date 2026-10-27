@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,6 @@ namespace Plunderspell.Voice
     public class MockVoiceInputService : MonoBehaviour, IVoiceInputService
     {
         public bool IsListening { get; private set; }
-        public event Action<VoiceRecognitionResult> OnPhraseRecognized;
 
         /// <summary>Correct spell word per key.</summary>
         public readonly Dictionary<KeyCode, string> keybindMap = new Dictionary<KeyCode, string>
@@ -156,7 +156,7 @@ namespace Plunderspell.Voice
                 fromKeyboard: true);
 
             Debug.Log($"[MockVoice] Emit {result}");
-            OnPhraseRecognized?.Invoke(result);
+            EventManager.Instance?.Publish(new PhraseRecognized(result));
         }
 
         private void OnDestroy()

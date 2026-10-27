@@ -16,7 +16,8 @@
         "Plunderspell.Core",
         "Plunderspell.UI",
         "Plunderspell.Items",
-        "Plunderspell.Player"
+        "Plunderspell.Player",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

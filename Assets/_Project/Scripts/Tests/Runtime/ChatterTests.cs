@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -73,12 +74,10 @@ namespace Plunderspell.Tests
         {
             public bool IsListening => false;
             public bool ChatterEnabled { get; set; }
-            public event Action<VoiceRecognitionResult> OnPhraseRecognized { add { } remove { } }
-            public event Action<ChatterReport> ChatterHeard;
             public void StartListening() { }
             public void StopListening() { }
             public void Say(string words, CastVolume volume) =>
-                ChatterHeard?.Invoke(new ChatterReport(words, 0.2f, volume));
+                EventManager.Instance?.Publish(new ChatterHeard(new ChatterReport(words, 0.2f, volume)));
         }
 
         [Test]
@@ -101,7 +100,7 @@ namespace Plunderspell.Tests
 
             int resolved = 0;
             Action<ChatterOutcome> count = _ => resolved++;
-            PlayerChatterRelay.ChatterResolved += count;
+            EventManager.Instance.Subscribe(this, (ChatterResolved e) => count(e.Outcome));
             try
             {
                 Assert.IsFalse(fake.ChatterEnabled, "The source must not listen while the setting is off.");
@@ -109,7 +108,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                PlayerChatterRelay.ChatterResolved -= count;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
 
             Assert.AreEqual(0, resolved, "Nothing may be resolved while the setting is off.");
@@ -132,14 +131,14 @@ namespace Plunderspell.Tests
 
             ChatterOutcome? outcome = null;
             Action<ChatterOutcome> take = o => outcome = o;
-            PlayerChatterRelay.ChatterResolved += take;
+            EventManager.Instance.Subscribe(this, (ChatterResolved e) => take(e.Outcome));
             try
             {
                 fake.Say("go left", CastVolume.Normal);
             }
             finally
             {
-                PlayerChatterRelay.ChatterResolved -= take;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
 
             Assert.IsTrue(outcome.HasValue, "Offline, a heard line resolves at once.");
@@ -210,7 +209,7 @@ namespace Plunderspell.Tests
         }
 
         [Test]
-        public void Test_TheAlarmHearsSpeechButIsNotCountedAsAGuard()
+        public void Test_TheDirectorIsNotAListenerAndIsNotCountedAsAGuard()
         {
             var alarmGo = Track(new GameObject("Alarm"));
             alarmGo.transform.position = new Vector3(0f, 0f, 2f);
@@ -223,7 +222,8 @@ namespace Plunderspell.Tests
             int understood = relay.Resolve("hello", CastVolume.Shout, Vector3.zero);
 
             Assert.AreEqual(0, understood);
-            Assert.Greater(alarm.AlarmLevel, before, "The alarm still hears the noise.");
+            // The castle hears only through its guards (#259); with none in earshot, a shout raises nothing.
+            Assert.AreEqual(before, alarm.AlarmLevel, "The director no longer hears noise itself.");
         }
 
         [Test]

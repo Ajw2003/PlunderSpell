@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="10" result="Passed" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.1687358">
+  <test-suite type="TestSuite" id="1522" name="PurrnetTest" fullname="PurrnetTest" runstate="Runnable" testcasecount="441" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.168736" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1509" name="Plunderspell.Tests.dll" fullname="C:/Users/aj/Desktop/GameDev/PlunderSpell/Library/ScriptAssemblies/Plunderspell.Tests.dll" runstate="Runnable" testcasecount="440" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.162061" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="23576" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+      <test-suite type="TestSuite" id="1510" name="Plunderspell" fullname="Plunderspell" runstate="Runnable" testcasecount="440" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.160646" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+        <test-suite type="TestSuite" id="1511" name="Tests" fullname="Plunderspell.Tests" runstate="Runnable" testcasecount="440" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.159390" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+          <test-suite type="TestFixture" id="1143" name="GrimoireTests" fullname="Plunderspell.Tests.GrimoireTests" classname="Plunderspell.Tests.GrimoireTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.116563" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+            <test-case id="1145" name="Test_HoldingTabOpensTheBookAndLettingGoClosesIt" fullname="Plunderspell.Tests.GrimoireTests.Test_HoldingTabOpensTheBookAndLettingGoClosesIt" methodname="Test_HoldingTabOpensTheBookAndLettingGoClosesIt" classname="Plunderspell.Tests.GrimoireTests" runstate="Runnable" seed="116197740" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.077831" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+            </test-case>
+            <test-case id="1146" name="Test_ReadingSlowsOnlyTheLocalPlayersBody" fullname="Plunderspell.Tests.GrimoireTests.Test_ReadingSlowsOnlyTheLocalPlayersBody" methodname="Test_ReadingSlowsOnlyTheLocalPlayersBody" classname="Plunderspell.Tests.GrimoireTests" runstate="Runnable" seed="1302799040" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.008006" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+            </test-case>
+            <test-case id="1147" name="Test_TheFirstRaidOpensTheBookByItselfOnce" fullname="Plunderspell.Tests.GrimoireTests.Test_TheFirstRaidOpensTheBookByItselfOnce" methodname="Test_TheFirstRaidOpensTheBookByItselfOnce" classname="Plunderspell.Tests.GrimoireTests" runstate="Runnable" seed="1400653793" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.012281" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+            </test-case>
+            <test-case id="1148" name="Test_TheMarginKeepsTheLastThreeCastsNewestFirst" fullname="Plunderspell.Tests.GrimoireTests.Test_TheMarginKeepsTheLastThreeCastsNewestFirst" methodname="Test_TheMarginKeepsTheLastThreeCastsNewestFirst" classname="Plunderspell.Tests.GrimoireTests" runstate="Runnable" seed="675703289" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.007010" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1144" name="Test_TurningThePageStaysInsideTheBook" fullname="Plunderspell.Tests.GrimoireTests.Test_TurningThePageStaysInsideTheBook" methodname="Test_TurningThePageStaysInsideTheBook" classname="Plunderspell.Tests.GrimoireTests" runstate="Runnable" seed="1133324076" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.002337" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1492" name="WatchTests" fullname="Plunderspell.Tests.WatchTests" classname="Plunderspell.Tests.WatchTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.032389" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+            <test-case id="1495" name="Test_HoldingTRaisesTheWatchAndReleasingLowersIt" fullname="Plunderspell.Tests.WatchTests.Test_HoldingTRaisesTheWatchAndReleasingLowersIt" methodname="Test_HoldingTRaisesTheWatchAndReleasingLowersIt" classname="Plunderspell.Tests.WatchTests" runstate="Runnable" seed="1188311412" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.010739" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+            </test-case>
+            <test-case id="1494" name="Test_TheCaptionSaysMinutesThenUnderAMinute" fullname="Plunderspell.Tests.WatchTests.Test_TheCaptionSaysMinutesThenUnderAMinute" methodname="Test_TheCaptionSaysMinutesThenUnderAMinute" classname="Plunderspell.Tests.WatchTests" runstate="Runnable" seed="1859095451" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.004011" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1497" name="Test_ThePresenterCarriesTheRaidLengthForTheFace" fullname="Plunderspell.Tests.WatchTests.Test_ThePresenterCarriesTheRaidLengthForTheFace" methodname="Test_ThePresenterCarriesTheRaidLengthForTheFace" classname="Plunderspell.Tests.WatchTests" runstate="Runnable" seed="1311084540" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.006785" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1493" name="Test_TheRingEmptiesAsTheRaidRunsDown" fullname="Plunderspell.Tests.WatchTests.Test_TheRingEmptiesAsTheRaidRunsDown" methodname="Test_TheRingEmptiesAsTheRaidRunsDown" classname="Plunderspell.Tests.WatchTests" runstate="Runnable" seed="1444892517" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.002234" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1496" name="Test_TheWatchStaysDownOutsideARaidAndAMenuPutsItAway" fullname="Plunderspell.Tests.WatchTests.Test_TheWatchStaysDownOutsideARaidAndAMenuPutsItAway" methodname="Test_TheWatchStaysDownOutsideARaidAndAMenuPutsItAway" classname="Plunderspell.Tests.WatchTests" runstate="Runnable" seed="929059426" result="Passed" start-time="2026-10-07 17:18:15Z" end-time="2026-10-07 17:18:15Z" duration="0.006354" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+Saving results to: C:/Users/aj/AppData/LocalLow/DefaultCompany/PurrnetTest\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

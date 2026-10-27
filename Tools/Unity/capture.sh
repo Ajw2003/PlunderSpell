@@ -3,6 +3,7 @@
 # writes under Assets/, which would import every capture as a texture).
 # Usage: bash Tools/Unity/capture.sh <out.png> [screen|camera] [camera name] [width] [height]
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pin.sh"
 
 out="${1:?usage: capture.sh <out.png> [screen|camera] [camera name] [width] [height]}"
 source="${2:-screen}"

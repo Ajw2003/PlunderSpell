@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Alarm;
 using StateMachine;
 using UnityEngine;
@@ -57,14 +58,14 @@ namespace Plunderspell.Guards
             _recoverySecondsLeft = 0f;
             Context.AttackTurn.Begin();
             // Still a chaser as far as the alarm counts, but not a new sighting: it would score again.
-            Context.Link.Director?.Publish(new IntruderSpotted(Context, _target, _lastSeenSpot, false));
+            EventManager.Instance?.Publish(new IntruderSpotted(Context, _target, _lastSeenSpot, false));
         }
 
         public override void Exit()
         {
             Context.AttackTurn.End();
             Context.Navigator.Stop();
-            Context.Link.Director?.Publish(new IntruderLost(Context, _lastSeenSpot));
+            EventManager.Instance?.Publish(new IntruderLost(Context, _lastSeenSpot));
         }
 
         public override State<Guard> Tick(float deltaTime)

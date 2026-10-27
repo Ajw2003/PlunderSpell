@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Animations/Humanoid_Fear.fbx",
+  "sheet": "docs/art/anim/fear/wick_catch.png",
+  "verdict": "pass",
+  "seen": "wick_catch 1.2 s, 8 frames: draws left arm back, lunges, hand closes at chest height at AttackHit 0.42, pulls in and settles; feet stay grounded, no popping.",
+  "date": "2026-10-27T02:45:27+0000"
+}

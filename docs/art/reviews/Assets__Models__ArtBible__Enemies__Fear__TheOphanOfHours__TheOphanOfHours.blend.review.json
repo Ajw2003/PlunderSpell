@@ -1,0 +1,7 @@
+{
+  "model": "Assets/Models/ArtBible/Enemies/Fear/TheOphanOfHours/TheOphanOfHours.blend",
+  "sheet": "docs/art/models/fear/ophan.png",
+  "verdict": "pass",
+  "seen": "Ophan sheet: 9.46 m vs 9.6 spec, 11378 tris, great wheel with inner wheel, central lapis eye, six wings with the lower pair covering the feet, matches concept from all angles; unchanged, arrived via the staging merge of #414.",
+  "date": "2026-10-27T02:45:27+0000"
+}

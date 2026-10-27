@@ -21,6 +21,7 @@ namespace Plunderspell.Net
             Item.CanDriveHere = CanDriveHere;
             Item.RequestDrive = RequestDrive;
             Item.RequestThrow = RequestThrow;
+            Item.RequestMove = RequestMove;
             Item.NetworkedTotalGrip = NetworkedTotalGrip;
         }
 
@@ -42,6 +43,13 @@ namespace Plunderspell.Net
                 pickup.RequestCarry();
             else
                 pickup.RequestHostControl();
+        }
+
+        private static void RequestMove(Item item, Vector3 position, Quaternion rotation)
+        {
+            CarryBeamRelay relay = Object.FindFirstObjectByType<CarryBeamRelay>();
+            if (relay != null)
+                relay.MoveCarried(item, position, rotation);
         }
 
         private static void RequestThrow(Item item, Vector3 direction, float force)

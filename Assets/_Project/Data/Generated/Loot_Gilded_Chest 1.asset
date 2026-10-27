@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 260
   IsArtifact: 0
-  Bulk: 14
+  Category: 4
+  WeightKg: 14
   Fragility: 20
   DisplayName: Gilded Chest
   Icon: {fileID: 0}

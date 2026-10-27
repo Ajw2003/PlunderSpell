@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 #if UNITY_EDITOR
 using System.Collections;
 using NUnit.Framework;
@@ -142,7 +143,7 @@ namespace Plunderspell.Tests
             SpellId lastResolved = SpellId.None;
             void Record(SpellCastingSystem.CastReport report) => lastResolved = report.Spell;
 
-            SpellCastingSystem.CastResolved += Record;
+            EventManager.Instance.Subscribe(this, (CastResolved e) => Record(e.Report));
             try
             {
                 IVoiceInputService voice = VoiceServiceLocator.Current;
@@ -173,7 +174,7 @@ namespace Plunderspell.Tests
             }
             finally
             {
-                SpellCastingSystem.CastResolved -= Record;
+                EventManager.Instance.UnsubscribeFromAllEvents(this);
             }
         }
     }

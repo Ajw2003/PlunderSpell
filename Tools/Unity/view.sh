@@ -7,7 +7,8 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 x="$1"; y="$2"; z="$3"; yaw="$4"; pitch="$5"; out="${6:-}"
 
 bash "$here/eval.sh" "
-var p = UnityEngine.Object.FindFirstObjectByType<StateMachine.PlayerStateMachine>();
+// The local player: in co-op the first one found can be the other player's copy.
+var p = StateMachine.PlayerStateMachine.Local ?? UnityEngine.Object.FindFirstObjectByType<StateMachine.PlayerStateMachine>();
 if (p == null) return \"no player\";
 var cam = UnityEngine.Camera.main;
 if (cam == null) return \"no camera\";

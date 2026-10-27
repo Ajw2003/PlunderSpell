@@ -14,7 +14,7 @@ notes under [Using this prompt](#using-this-prompt) are for the human, not for F
 >
 > **Read first, in this order, before writing any code:**
 >
-> 1. `docs/plunderspell.md` — the design bible. §4 is the spell lexicon and cast/misfire table, §5
+> 1. `docs/7-design/plunderspell.md` — the design bible. §4 is the spell lexicon and cast/misfire table, §5
 >    the physics-and-weight rules, §6 the Ages, §7 the castle shape, §8 the weapon table, §9 the
 >    palette, §10 the honest inventory of what is already built, §11 the milestones. Everything from
 >    §9 onward is plain fact; §1–§8 is written in a herald's voice but the mechanics in it are real

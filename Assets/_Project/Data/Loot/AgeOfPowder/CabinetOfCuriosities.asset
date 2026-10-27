@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 1500
   IsArtifact: 0
-  Bulk: 12
+  Category: 2
+  WeightKg: 12
   Fragility: 6
   DisplayName: Cabinet of Curiosities
   Icon: {fileID: 0}

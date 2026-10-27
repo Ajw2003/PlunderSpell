@@ -5,7 +5,7 @@ using UnityEngine;
 // Gates input/camera/simulation on network ownership for the minimal local-multiplayer test
 // (docs/plans/steam-coop-framework.md Phase 3). One physical client always ends up with more
 // than one active MainCamera/AudioListener and double-simulated remote bodies unless this runs.
-public class PlayerNetworkOwnership : NetworkBehaviour
+public class PlayerNetworkOwnership : NetworkBehaviour, Interfaces.IDownable
 {
     [SerializeField] private PlayerInputController _inputController;
     [SerializeField] private GameObject _playerCamera;
@@ -18,6 +18,14 @@ public class PlayerNetworkOwnership : NetworkBehaviour
     // Set by the owner when its player goes down, cleared when it is revived. The server watches
     // every body's flag to know when the whole party is down.
     private readonly SyncVar<bool> _isDown = new SyncVar<bool>(false, ownerAuth: true);
+
+    // What the wizard's body is doing that its movement alone does not show, written by the owner
+    // so every machine animates the same crouch, cast and jump (Player.WizardAnimationDriver).
+    private readonly SyncVar<bool> _creeping = new SyncVar<bool>(false, ownerAuth: true);
+    private readonly SyncVar<bool> _casting = new SyncVar<bool>(false, ownerAuth: true);
+    private readonly SyncVar<bool> _airborne = new SyncVar<bool>(false, ownerAuth: true);
+
+    private Player.WizardAnimationDriver _wizard;
 
     private static readonly System.Collections.Generic.List<PlayerNetworkOwnership> s_bodies =
         new System.Collections.Generic.List<PlayerNetworkOwnership>();
@@ -59,6 +67,7 @@ public class PlayerNetworkOwnership : NetworkBehaviour
             stateMachine.LocalDecidedByNetwork = true;
         if (_inputController == null) _inputController = GetComponent<PlayerInputController>();
         if (_rigidbody == null) _rigidbody = GetComponent<Rigidbody>();
+        _wizard = GetComponent<Player.WizardAnimationDriver>();
         if (_playerCamera == null)
         {
             var pivot = transform.Find("CameraPivot");
@@ -98,10 +107,19 @@ public class PlayerNetworkOwnership : NetworkBehaviour
     /// <summary>
     /// Lays a downed player's visible body on the ground, on every machine, so teammates can see who
     /// is down; stands it back up on revive. Only the mesh moves: the collider and the replicated
-    /// transform are untouched, so nothing about movement or hits changes.
+    /// transform are untouched, so nothing about movement or hits changes. A body this machine does
+    /// not own also takes the owner's dead flag, so this machine counts it as down too.
     /// </summary>
     private void ShowDownPose(bool down)
     {
+        if (!isOwner && TryGetComponent(out StateMachine.PlayerStateMachine body))
+            body.FollowOwnerDown(down);
+        // The wizard collapses and vanishes through its own animation instead.
+        if (_wizard != null)
+        {
+            _wizard.RemoteDown = down;
+            return;
+        }
         Transform visual = transform.Find("Visual");
         if (visual == null)
             return;
@@ -135,6 +153,7 @@ public class PlayerNetworkOwnership : NetworkBehaviour
             if (_playerCamera.TryGetComponent(out AudioListener ears)) ears.enabled = mine;
         }
         if (_rigidbody != null) _rigidbody.isKinematic = !mine;
+        if (_wizard != null) _wizard.IsRemote = !mine;
         if (!TryGetComponent(out StateMachine.PlayerStateMachine body))
             return;
         if (mine)
@@ -154,6 +173,7 @@ public class PlayerNetworkOwnership : NetworkBehaviour
 
     private void Update()
     {
+        SyncWizardPose();
         if (!isSpawned || !isOwner || !TryGetComponent(out StateMachine.PlayerStateMachine body))
             return;
 
@@ -171,6 +191,23 @@ public class PlayerNetworkOwnership : NetworkBehaviour
 
         if (_isDown.value)
             KeepSpectating();
+    }
+
+    /// <summary>The owner writes its wizard's crouch, cast and airborne flags; everyone else reads them.</summary>
+    private void SyncWizardPose()
+    {
+        if (_wizard == null || !isSpawned)
+            return;
+        if (isOwner)
+        {
+            if (_creeping.value != _wizard.Creeping) _creeping.value = _wizard.Creeping;
+            if (_casting.value != _wizard.Casting) _casting.value = _wizard.Casting;
+            if (_airborne.value != _wizard.Airborne) _airborne.value = _wizard.Airborne;
+            return;
+        }
+        _wizard.RemoteCreeping = _creeping.value;
+        _wizard.RemoteCasting = _casting.value;
+        _wizard.RemoteAirborne = _airborne.value;
     }
 
     private void KeepSpectating()

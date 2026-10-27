@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,27 +92,24 @@ namespace Plunderspell.UI.Screens
         protected override void OnShown()
         {
             RefreshStats();
-            GameServices.PlayerStats.StatsChanged += RefreshStats;
-            GameServices.Extraction.ExtractionStarted += OnExtractionStarted;
-            GameServices.Extraction.ExtractionCancelled += OnExtractionEnded;
-            GameServices.Extraction.ExtractionCompleted += OnExtractionEnded;
-            GameServices.Extraction.ExtractionProgress += OnExtractionProgress;
+            // Hidden, this screen hears no extraction events, so a countdown that ended meanwhile (death, the raid ending)
+            // left the bar at its last reading, e.g. "LEAVING IN 1.0S". Read the countdown itself instead.
+            _extractionGroup.SetActive(GameServices.Extraction != null && GameServices.Extraction.IsExtracting);
+            EventManager bus = EventManager.Instance;
+            if (bus == null)
+                return;
+
+            bus.UnsubscribeFromAllEvents(this);
+            bus.Subscribe(this, (PlayerStatsChanged e) => RefreshStats());
+            bus.Subscribe(this, (ExtractionStarted e) => OnExtractionStarted());
+            bus.Subscribe(this, (ExtractionCancelled e) => OnExtractionEnded());
+            bus.Subscribe(this, (ExtractionCompleted e) => OnExtractionEnded());
+            bus.Subscribe(this, (ExtractionProgress e) => OnExtractionProgress(e.Progress));
         }
 
         private void OnDisable()
         {
-            if (GameServices.PlayerStats != null)
-            {
-                GameServices.PlayerStats.StatsChanged -= RefreshStats;
-            }
-
-            if (GameServices.Extraction != null)
-            {
-                GameServices.Extraction.ExtractionStarted -= OnExtractionStarted;
-                GameServices.Extraction.ExtractionCancelled -= OnExtractionEnded;
-                GameServices.Extraction.ExtractionCompleted -= OnExtractionEnded;
-                GameServices.Extraction.ExtractionProgress -= OnExtractionProgress;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
         }
 
         private void RefreshStats()

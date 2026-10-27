@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Interfaces;
 using Plunderspell.Spells;
 using Plunderspell.Voice;
@@ -20,6 +21,7 @@ namespace Plunderspell.UI
 
         private readonly ShakeTrauma _trauma = new ShakeTrauma();
         private PlayerStateMachine _slamSource;
+        private PlayerStateMachine _local;
 
         public static CameraShakeDirector Instance { get; private set; }
 
@@ -40,14 +42,17 @@ namespace Plunderspell.UI
 
         private void OnEnable()
         {
-            Damage.Dealt += OnDamage;
-            SpellCastingSystem.CastResolved += OnCast;
+            EventManager.Instance?.Subscribe(this, (DamageDealt e) => OnDamage(e.Report));
+            EventManager.Instance?.Subscribe(this, (CastResolved e) => OnCast(e.Report));
+            EventManager.Instance?.Subscribe(this, (LocalPlayerChanged e) => SetLocal(e.Player));
+            EventManager.Instance?.Subscribe(this, (Plunderspell.Raid.OphanArrived e) => _quakeUntil = Time.time + e.Seconds);
+            SetLocal(PlayerStateMachine.Local);
         }
 
         private void OnDisable()
         {
-            Damage.Dealt -= OnDamage;
-            SpellCastingSystem.CastResolved -= OnCast;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            _local = null;
             WatchSlams(null);
         }
 
@@ -63,6 +68,11 @@ namespace Plunderspell.UI
         /// pinned the shake at full. 0.7 is half the angle of a full-strength shake.
         /// </summary>
         public const float OnFireTrauma = 0.7f;
+
+        /// <summary>While the Ophan of Hours arrives, trauma is held at least this high (#439): the ground itself shakes.</summary>
+        public const float OphanQuakeTrauma = 0.8f;
+
+        private float _quakeUntil = float.NegativeInfinity;
 
         /// <summary>Trauma for a hit on the local player: sized by the share of health it took,
         /// so a sword blow jolts. Burning is <see cref="OnFireTrauma"/> instead.</summary>
@@ -99,16 +109,23 @@ namespace Plunderspell.UI
         /// <summary>Trauma for a Saltus slam landing at <paramref name="speed"/> metres a second.</summary>
         public static float ForSlam(float speed) => 0.45f + 0.55f * Mathf.Clamp01(speed / 25f);
 
-        private void Update()
+        // The local player changes rarely, so it is learnt from LocalPlayerChanged rather than looked up every frame (#304).
+        private void SetLocal(PlayerStateMachine local)
         {
-            PlayerStateMachine local = PlayerStateMachine.Local;
+            _local = local;
             WatchSlams(local);
             if (local == null)
-            {
                 _trauma.Clear();
+        }
+
+        private void Update()
+        {
+            // A body destroyed without announcing itself reads as none.
+            if (_local == null)
                 return;
-            }
-            local.ViewShake = _trauma.Step(Time.deltaTime);
+            if (Time.time < _quakeUntil)
+                _trauma.AtLeast(OphanQuakeTrauma);
+            _local.ViewShake = _trauma.Step(Time.deltaTime);
         }
 
         private void WatchSlams(PlayerStateMachine local)
@@ -126,7 +143,7 @@ namespace Plunderspell.UI
 
         private void OnDamage(DamageReport report)
         {
-            PlayerStateMachine local = PlayerStateMachine.Local;
+            PlayerStateMachine local = _local;
             if (local == null || report.Target == null)
                 return;
 
@@ -146,7 +163,7 @@ namespace Plunderspell.UI
 
         private void OnCast(SpellCastingSystem.CastReport report)
         {
-            PlayerStateMachine local = PlayerStateMachine.Local;
+            PlayerStateMachine local = _local;
             if (local == null)
                 return;
             _trauma.Add(ForCast(report.Volume, Vector3.Distance(local.transform.position, report.Origin)));

@@ -1,0 +1,46 @@
+19:44:57 test slot 99 wiped, owner's slot to restore: 1
+19:45:04 state MainMenu
+19:45:05 solo, slot 99
+19:45:05 player: player
+19:45:08 at (999.60, 1.50, 0.20)
+19:45:10 looked at: True
+19:45:11 start: BronzeAge | <size=170%>Bronze Age</size>/Stratum I · c. 1200 BC//Painted plaster, grain stores, and kings who are also gods. Fire runs faster here. / BronzeAge raid BronzeAge
+19:45:12 recording
+19:45:12 keys: E
+19:45:13 keys: none
+19:45:17 after one E: HighMedieval | <size=170%>High Medieval</size>/Stratum II · c. 1250//Curtain walls, spiral stairs, and a chapel worth more than everything around it. / HighMedieval raid BronzeAge
+19:45:17 PASS E turned the dial to High Medieval and the plaque says so
+19:45:18 frames 2038 ring1 final 25.0 ring4 final 100.0 largest one-frame step 0.73 frames moving 314
+19:45:18 PASS the rings eased: many frames in motion, no frame jumped more than 8 degrees
+19:45:27 after four E: BronzeAge | <size=170%>Bronze Age</size>/Stratum I · c. 1200 BC//Painted plaster, grain stores, and kings who are also gods. Fire runs faster here.
+19:45:27 PASS four presses went round to the Bronze Age again
+19:45:35 chosen: LateMedieval | <size=170%>Late Medieval</size>/Stratum III · c. 1450//Fortresses within fortresses, built by men who had you in mind. They hunt in pairs. / LateMedieval raid BronzeAge
+19:45:37 state Playing
+19:45:37 after setting out: LateMedieval raid LateMedieval
+19:45:37 PASS setting out started the raid in the chosen Age
+19:45:37 PASS all century dial checks
+19:45:37 cleaning up
+19:45:39 active slot 1
+19:46:08 test slot 99 wiped, owner's slot to restore: 1
+19:46:15 state MainMenu
+19:46:16 solo, slot 99
+19:46:17 player: player
+19:46:19 at (999.60, 1.50, 0.20)
+19:46:21 looked at: True
+19:46:22 start: BronzeAge | <size=170%>Bronze Age</size>/Stratum I · c. 1200 BC//Painted plaster, grain stores, and kings who are also gods. Fire runs faster here. / BronzeAge raid BronzeAge
+19:46:23 recording
+19:46:24 keys: E
+19:46:24 keys: none
+19:46:28 after one E: HighMedieval | <size=170%>High Medieval</size>/Stratum II · c. 1250//Curtain walls, spiral stairs, and a chapel worth more than everything around it. / HighMedieval raid BronzeAge
+19:46:28 PASS E turned the dial to High Medieval and the plaque says so
+19:46:29 frames 2036 ring1 final 25.0 ring4 final 100.0 largest one-frame step 0.72 frames moving 314
+19:46:29 PASS the rings eased: many frames in motion, no frame jumped more than 8 degrees
+19:46:39 after four E: BronzeAge | <size=170%>Bronze Age</size>/Stratum I · c. 1200 BC//Painted plaster, grain stores, and kings who are also gods. Fire runs faster here.
+19:46:39 PASS four presses went round to the Bronze Age again
+19:46:47 chosen: LateMedieval | <size=170%>Late Medieval</size>/Stratum III · c. 1450//Fortresses within fortresses, built by men who had you in mind. They hunt in pairs. / LateMedieval raid BronzeAge
+19:46:48 state Playing
+19:46:48 after setting out: LateMedieval raid LateMedieval
+19:46:48 PASS setting out started the raid in the chosen Age
+19:46:48 PASS all century dial checks
+19:46:48 cleaning up
+19:46:50 active slot 1

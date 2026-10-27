@@ -38,6 +38,7 @@ this document, not a reason to go grep the repo.
 | 4 | [`docs/4-systems/`](../4-systems/README.md) | How each runtime-critical system works |
 | 5 | [`docs/5-today/Today.md`](../5-today/Today.md) | What's being worked on today, and why |
 | 6 | [`docs/6-decisions/Decisions.md`](../6-decisions/Decisions.md) | Why a decision was made, and what it replaced |
+| 7 | [`docs/7-design/`](../7-design/README.md) | What the game is meant to be: the bible, live designs, and every current visual reference |
 
 Plus `docs/plans/` (a plan for a specific piece of work, live until executed), `docs/archive/`
 (documents that were correct once and are now inert — moved, never deleted), `docs/generated/`
@@ -59,16 +60,18 @@ together and what was deliberately left undocumented, and why.
 | [`castle`](../4-systems/castle.md) | Deterministic seed-driven castle layout and path validation |
 | [`alarm`](../4-systems/alarm.md) | Noise propagation and the castle-wide alarm state machine |
 | [`raid`](../4-systems/raid.md) | The loop: Lair → castle → haul → extraction → Lair |
+| [`market`](../4-systems/market.md) | The Market's counters and vendors, and haggling: selling the haul for coins |
 | [`raid-scene-assembly`](../4-systems/raid-scene-assembly.md) | Wiring the authored art (castle rooms, loot, enemies) into the playable scene |
 | [`enemy-asset-pipeline`](../4-systems/enemy-asset-pipeline.md) | Generating the enemy roster from Python/Blender |
 | [`damage`](../4-systems/damage.md) | One damage pathway, blame, and hit feedback you can read |
 | [`combat-bench`](../4-systems/combat-bench.md) | The one-room arena for trying a weapon, spell or enemy without starting a raid |
 | [`audio`](../4-systems/audio.md) | Mixer, SoundBank, sounds played from game events, music by state and alarm, volume sliders, and what is still silent |
+| [`player-animation`](../4-systems/player-animation.md) | The wizard's body: model, clips, animator and what each machine sees |
 | [`scale`](../4-systems/scale.md) | The 1.8m standard human, and the room, archway and enemy heights measured against it |
 
 ## Everything else worth reaching
 
-- [`docs/plunderspell.md`](../plunderspell.md) — the pitch/design bible (v0.2). Written to be read
+- [`docs/7-design/plunderspell.md`](../7-design/plunderspell.md) — the pitch/design bible (v0.2). Written to be read
   aloud; §9 onward is plain fact. Illustrated mood board:
   [`docs/generated/plunderspell-moodboard.html`](../generated/plunderspell-moodboard.html).
 - [`docs/plans/plunderspell.md`](../plans/plunderspell.md) — the engineering plan the roadmap was
@@ -89,6 +92,12 @@ together and what was deliberately left undocumented, and why.
   ArtForge enemies get into a raid (built: all 16 are in their era's roster) and how they get
   animated (**awaiting approval**; no enemy is animated yet, #141). Review page:
   [`docs/generated/enemy-animation-plan/`](../generated/enemy-animation-plan/index.html).
+- [`docs/plans/multi-floor-castle.md`](../plans/multi-floor-castle.md): **approved** (2026-10-03, #197; steps #247-#250, step 1 plan [`multi-floor-castle-step1-plan.md`](../plans/multi-floor-castle-step1-plan.md)). Castles get a keep floor and a crypt below, joined by period stairs, with doors where zones meet.
+- [`docs/7-design/diegetic-ui-lair-market.md`](../7-design/diegetic-ui-lair-market.md): **approved 2026-10-06**
+  (#284); the Lair (#286) and Market (#287) are being modelled. The raid HUD is replaced by things in the world (a grimoire, a pocket watch, fires that show
+  the alarm); only the crosshair and damage feedback stay on screen. Loot comes home to a physical
+  Lair, and is sold in a Market to vendors who haggle. Illustrated review page:
+  [`docs/generated/diegetic-proposal/`](../generated/diegetic-proposal/index.html).
 - [`docs/plans/guards-hear-chatter.md`](../plans/guards-hear-chatter.md): **awaiting approval.**
   Guards hear what players say between casts (opt-in, local speech-to-text, words sent only to the
   host), react to it as noise, and remember the words for a later local-language-model stage.
@@ -106,6 +115,13 @@ together and what was deliberately left undocumented, and why.
   [`docs/generated/github-issues-moodboard-gap.json`](../generated/github-issues-moodboard-gap.json)
   once filed). Its one open creative-direction question, the bestiary's thematic split, was
   decided on 2026-09-24: each Age's enemies are its household.
+- [`docs/7-design/fear-pass.md`](../7-design/fear-pass.md) — **approved 2026-10-11 (#386).** Raids you barely
+  survive: guards with a Lovecraftian true form, spells earned from Porta up, more guards on the ground floors.
+- [`docs/7-design/wizard-character.md`](../7-design/wizard-character.md) — **approved 2026-10-07, built
+  (#336, #361, #362).** The player character: one wizard outfit for everyone, a colour each player picks (no
+  two exact matches in a raid), their name around the hat band, and a fallen wizard leaves only the
+  hat. For a local agent with Unity; issues #335–#341. Concept plates in
+  `docs/art/concept/wizard/`.
 - **Work on other branches.** `docs/3-state/ProjectState.md`, "Work not on `main` yet", lists
   every branch holding work `main` lacks. The audio plan (`docs/plans/audio.md`) and
   `Tools/AudioForge/` are now merged into `ccr-6bf1f02d-o8jhoy` together with the in-game audio layer.

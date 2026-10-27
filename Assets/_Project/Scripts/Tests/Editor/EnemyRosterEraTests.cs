@@ -1,3 +1,5 @@
+using Plunderspell.Tests.EditMode;
+using Code.Scripts.EventSystems;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Plunderspell.Castle;
@@ -176,15 +178,15 @@ namespace Plunderspell.Tests.Editor
         {
             Assert.IsFalse(RaidContext.HasCurrent, "No raid, no context.");
             RaidContext heard = default;
-            System.Action<RaidContext> listener = context => heard = context;
-            RaidContext.Published += listener;
+            TestEventBus.Create();
+            EventManager.Instance.Subscribe(this, (RaidContextPublished e) => heard = e.Context);
             try
             {
                 RaidContext.Publish(new RaidContext(99, HistoricalEra.AgeOfPowder));
             }
             finally
             {
-                RaidContext.Published -= listener;
+                TestEventBus.Destroy();
             }
 
             Assert.IsTrue(RaidContext.HasCurrent);

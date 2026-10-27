@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 650
   IsArtifact: 1
-  Bulk: 1
+  Category: 1
+  WeightKg: 1
   Fragility: 6
   DisplayName: Arm Reliquary
   Icon: {fileID: 0}

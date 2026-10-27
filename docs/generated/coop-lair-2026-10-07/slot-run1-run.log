@@ -1,0 +1,55 @@
+13:16:03 test slot 99 wiped, owner's slot to restore: 1
+13:16:03 build: no (auto)
+13:16:12 host: state MainMenu local none
+13:16:13 host: state LairRoom local 1005.2,1.5,1.5
+13:16:13 client started (pid 37106)
+13:16:22 client: state LairRoom local 1005.2,1.5,0.5
+13:16:26 host: distance 0.00 from /LairRoom/PlayerSpawns/Spawn1 at 1005.2,0.3,1.5
+13:16:26 PASS the host stands at Lair spawn 1
+13:16:27 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+13:16:27 PASS the client stands at Lair spawn 2
+13:16:28 client: travelled through /LairRoom/MarketDoor to 1100.5,1.3,8.0
+13:16:32 client: distance 0.00 from /MarketYard/PlayerSpawns/Spawn2 at 1100.5,0.3,8.0
+13:16:32 PASS the client's Market door leads to Market spawn 2
+13:16:32 host: bodies 1005.2,1.5,1.5; 1100.5,1.5,8.0; 
+13:16:32 PASS the host sees the client in the Market
+13:16:34 client: travelled through /MarketYard/LairExit to 1001.2,1.3,-3.8
+13:16:37 client: distance 0.00 from /LairRoom/MarketDoorArrivals/Spawn2 at 1001.2,0.3,-3.8
+13:16:37 PASS the client's way out leads back inside the Lair door
+13:16:38 host before: pile 0 
+13:16:39 castle: seed 777
+13:16:40 host: state Playing local -8.5,1.5,-12.0
+13:16:42 client: state Playing local -12.0,1.5,-8.5
+13:16:46 host: on the pad 2
+13:16:49 host: extracting
+13:16:49 host: state LairRoom local 1005.2,1.5,1.5
+13:16:51 client: state LairRoom local 1005.2,1.5,0.5
+13:16:55 client: distance 0.00 from /LairRoom/PlayerSpawns/Spawn2 at 1005.2,0.3,0.5
+13:16:55 PASS the client comes home to Lair spawn 2
+13:16:57 host: pile 2 OxhideIngot(Clone) OxhideIngot(Clone)
+13:16:57 client: pile 2 OxhideIngot(Clone) OxhideIngot(Clone)
+13:16:57 PASS both see the same pile, grown by the two extracted pieces (0 -> 2)
+13:17:00 client: travelled through /LairRoom/MarketDoor to 1100.5,1.3,8.0
+13:17:03 client: looking at the Goldsmith from 1103.1,1.5,-2.2
+13:17:04 host: put FaienceHippopotamus(Clone)
+13:17:07 host: line The Goldsmith: 279 coin.
+13:17:08 client: line The Goldsmith: 279 coin.
+13:17:08 PASS both see the vendor's opening offer
+13:17:08 host before: gold 0 debt 550
+13:17:10 client: spoke Plus
+13:17:14 host: line The Goldsmith: Very well. 307 coin.
+13:17:14 client: line The Goldsmith: Very well. 307 coin.
+13:17:14 PASS the client's Plus is answered, and both see the same line
+13:17:16 client: spoke Satis
+13:17:20 host: line The Goldsmith: 307 coin, counted out. Done.
+13:17:20 client: line The Goldsmith: 307 coin, counted out. Done.
+13:17:20 PASS the client's Satis sells it, and both see the same line
+13:17:21 host after: gold 0 debt 243
+13:17:21 PASS the host's gold and debt moved by the 307 coins sold
+13:17:24 host: pieces 0
+13:17:24 client: pieces 0
+13:17:24 PASS the piece is gone on both sides
+13:17:24 client log error lines: 0
+13:17:24 PASS all Lair checks
+13:17:24 cleaning up
+13:17:29 active slot 1

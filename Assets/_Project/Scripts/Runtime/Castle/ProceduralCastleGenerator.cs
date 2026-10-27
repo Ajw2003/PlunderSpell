@@ -6,14 +6,10 @@ namespace Plunderspell.Castle
     /// <summary>
     /// Deterministic, seed-driven procedural castle builder.
     ///
-    /// The castle is a closed curtain wall enclosing a dense block of concentric wards. The outer
-    /// Chebyshev ring at <see cref="CurtainWallRadius"/> is filled completely — corners, bastions,
-    /// one gatehouse and straight runs — so the wall reads as an unbroken loop. Everything inside
-    /// that ring is enclosed rooms: Crypt at the origin, then Keep, InnerWard and OuterBailey
-    /// outward, filled to <c>m_interiorFillFraction</c> with the remainder left as courtyards.
-    ///
-    /// Courtyards are only ever carved where the interior stays a single 4-connected region, which
-    /// is what lets the A* validator always find (or correctly reject) a crypt→extraction path.
+    /// The castle is a radius-3 curtain wall (<see cref="CurtainWallRadius"/>) round a stacked
+    /// 5 x 5 / 3 x 3 / 3 x 3 block: the ground floor, a keep above and a crypt below, laid out by
+    /// <see cref="CastleFloorPlanner"/> and joined by three stairs. The outer Chebyshev ring is
+    /// filled completely — corners, bastions, one gatehouse and straight runs.
     ///
     /// Because the entire layout is a pure function of the seed, only the seed is replicated over
     /// the network (see <see cref="CastleNetworkManager"/>); no mesh or transform data is sent.
@@ -34,11 +30,6 @@ namespace Plunderspell.Castle
 
         [Tooltip("Parent for instantiated rooms. Auto-created if left null.")]
         [SerializeField] private Transform roomContainer;
-
-        [Tooltip("Chebyshev ring the closed curtain wall sits on. Everything inside it is rooms, " +
-                 "so the castle is (2 x radius + 1) cells across. 4 gives a 9x9 interior.")]
-        [Range(3, 7)]
-        [SerializeField] private int m_curtainWallRadius = 4;
 
         [Tooltip("Fraction of the interior cells that become rooms. The remainder are left open " +
                  "as courtyards, but only where the interior stays one connected region.")]
@@ -66,6 +57,8 @@ namespace Plunderspell.Castle
         private const string k_GatehouseId = "GatehouseModule";
         private const string k_DrawbridgeId = "Drawbridge";
         private const string k_CryptFinalId = "CryptChamberFinal";
+        public const string StairUpId = "StairUp";
+        public const string StairDownId = "StairDown";
 
         /// <summary>
         /// The side the one gatehouse sits on. Fixed rather than rolled so the drawbridge approach,
@@ -82,7 +75,7 @@ namespace Plunderspell.Castle
         public CastleDressingSet Dressing { get => m_dressing; set => m_dressing = value; }
 
         /// <summary>Chebyshev ring the closed curtain wall occupies.</summary>
-        public int CurtainWallRadius => m_curtainWallRadius;
+        public int CurtainWallRadius => CastleFloorPlanner.CurtainWallRadius;
 
         private readonly List<GameObject> _instantiated = new List<GameObject>();
 
@@ -99,12 +92,12 @@ namespace Plunderspell.Castle
             var data = new ProceduralCastleData(seed);
 
             // Maps an occupied grid cell -> index into data.PlacedModules.
-            var occupied = new Dictionary<Vector2Int, int>();
+            var occupied = new Dictionary<Vector3Int, int>();
 
-            BuildInterior(data, occupied, rng);
+            BuildFloors(data, occupied, rng);
             int gatehouseIndex = BuildCurtainWall(data, occupied);
             AssignExtractionExit(data, gatehouseIndex);
-            data.EntranceCells = CastleEntrancePlanner.Plan(data, m_curtainWallRadius,
+            data.EntranceCells = CastleEntrancePlanner.Plan(data, CurtainWallRadius,
                 new HashSet<string> { k_WallStraightId, ResolveRoomId(k_WallStraightId) });
 
             // Every enclosed room is authored with an archway on all four sides, so any side with
@@ -125,119 +118,57 @@ namespace Plunderspell.Castle
         // --- Interior ------------------------------------------------------------
 
         /// <summary>
-        /// Fills the cells inside the curtain wall with enclosed rooms, zoned by ring, leaving a
-        /// deterministic handful open as courtyards. A cell is only left open when the remaining
-        /// interior is still one 4-connected region, so the crypt can always be walked out of.
+        /// Places the floor planner's rooms (#247): crypt, ground, keep, in its order, so placement indices are
+        /// a function of the seed alone. A stair is placed once, at its lowest level, and spans two.
         /// </summary>
-        private void BuildInterior(ProceduralCastleData data, Dictionary<Vector2Int, int> occupied,
-            System.Random rng)
+        private void BuildFloors(ProceduralCastleData data, Dictionary<Vector3Int, int> occupied, System.Random rng)
         {
-            List<Vector2Int> interior = InteriorCells();
-            var kept = new HashSet<Vector2Int>(interior);
-
-            var courtyardOrder = new List<Vector2Int>(interior);
-            Shuffle(courtyardOrder, rng);
-
-            int courtyardTarget = Mathf.RoundToInt(interior.Count * (1f - m_interiorFillFraction));
-            Vector2Int gateApproach = k_GateOutward * (m_curtainWallRadius - 1);
-            int carved = 0;
-
-            for (int i = 0; i < courtyardOrder.Count && carved < courtyardTarget; i++)
+            Vector2Int gateApproach = k_GateOutward * (CurtainWallRadius - 1);
+            foreach (PlannedRoom room in CastleFloorPlanner.Plan(rng, m_interiorFillFraction, gateApproach))
             {
-                Vector2Int cell = courtyardOrder[i];
-
-                // The crypt is the path's start and the gate approach is its end; neither can be a
-                // hole without making some seeds unplayable.
-                if (cell == Vector2Int.zero || cell == gateApproach)
-                    continue;
-
-                kept.Remove(cell);
-                if (IsSingleConnectedRegion(kept))
+                string roomId = room.Kind switch
                 {
-                    carved++;
-                }
-                else
-                {
-                    kept.Add(cell);
-                }
-            }
-
-            // Place innermost-first in a fixed cell order, so placement indices (and therefore
-            // CryptStartIndex) are a function of the seed alone and never of hash iteration order.
-            var ordered = new List<Vector2Int>(kept);
-            ordered.Sort(CompareByRingThenCell);
-
-            for (int i = 0; i < ordered.Count; i++)
-            {
-                Vector2Int cell = ordered[i];
-                CastleZone zone = ZoneForRing(Chebyshev(cell));
-                bool isCryptCentre = cell == Vector2Int.zero;
-
-                string roomId = isCryptCentre
-                    ? ResolveRoomId(k_CryptFinalId)
-                    : PickWeighted(registry != null ? registry.GetModulesForZone(zone) : null, rng, zone);
-
-                int index = PlaceModule(data, occupied, roomId, zone, cell,
-                    RotationForFacing(InwardStep(cell)), isCryptEntry: isCryptCentre);
-
-                if (isCryptCentre)
+                    PlannedRoomKind.StairUp => ResolveRoomId(StairUpId),
+                    PlannedRoomKind.StairDown => ResolveRoomId(StairDownId),
+                    PlannedRoomKind.FinalChamber => ResolveRoomId(k_CryptFinalId),
+                    _ => PickWeighted(PlainRoomPool(room.Zone), rng, room.Zone),
+                };
+                bool stair = room.Kind == PlannedRoomKind.StairUp || room.Kind == PlannedRoomKind.StairDown;
+                // A stair's prefab is authored with its exit facing local north; a room faces inward as before.
+                Quaternion rotation = stair ? RotationForFacing(room.ExitFacing) : RotationForFacing(InwardStep(room.Cell));
+                var shape = new ModuleShape(room.Level, stair ? 2 : 1,
+                    room.Kind == PlannedRoomKind.StairUp ? CastleLevels.Keep : room.Level, room.ExitFacing);
+                int index = PlaceModule(data, occupied, roomId, room.Zone, room.Cell, rotation,
+                    room.Kind == PlannedRoomKind.FinalChamber, shape);
+                if (room.Kind == PlannedRoomKind.FinalChamber)
                     data.CryptStartIndex = index;
             }
         }
 
-        /// <summary>Every cell strictly inside the curtain wall ring.</summary>
-        private List<Vector2Int> InteriorCells()
-        {
-            int limit = m_curtainWallRadius - 1;
-            var cells = new List<Vector2Int>();
-            for (int x = -limit; x <= limit; x++)
-            {
-                for (int y = -limit; y <= limit; y++)
-                {
-                    cells.Add(new Vector2Int(x, y));
-                }
-            }
-            return cells;
-        }
-
         /// <summary>
-        /// Which ward a given Chebyshev ring belongs to. The origin is the crypt and the outermost
-        /// interior ring is the bailey; widening the castle widens the Keep band between them.
+        /// The zone's pool without the final chamber, which the planner places exactly once. A copy,
+        /// so the registry's own list is untouched; order is kept, so the draw stays deterministic.
         /// </summary>
-        private CastleZone ZoneForRing(int ring)
+        private List<CastleRoomModuleData> PlainRoomPool(CastleZone zone)
         {
-            if (ring == 0)
-                return CastleZone.Crypt;
-            if (ring >= m_curtainWallRadius - 1)
-                return CastleZone.OuterBailey;
-            if (ring == m_curtainWallRadius - 2)
-                return CastleZone.InnerWard;
-            return CastleZone.Keep;
+            if (registry == null)
+                return null;
+            string finalId = ResolveRoomId(k_CryptFinalId);
+            return registry.GetModulesForZone(zone).FindAll(entry => entry.RoomId != finalId);
         }
 
-        /// <summary>Whether every cell in <paramref name="cells"/> is reachable from the origin.</summary>
-        private static bool IsSingleConnectedRegion(HashSet<Vector2Int> cells)
+        /// <summary>Where a module stands in height and, for a stair, how it opens. Ground, one storey, by default.</summary>
+        private readonly struct ModuleShape
         {
-            if (cells.Count == 0 || !cells.Contains(Vector2Int.zero))
-                return false;
-
-            var seen = new HashSet<Vector2Int> { Vector2Int.zero };
-            var frontier = new Queue<Vector2Int>();
-            frontier.Enqueue(Vector2Int.zero);
-
-            while (frontier.Count > 0)
+            public ModuleShape(int level, int storeys, int exitLevel, Vector2Int exitFacing)
             {
-                Vector2Int current = frontier.Dequeue();
-                foreach (Vector2Int dir in FourDirs)
-                {
-                    Vector2Int next = current + dir;
-                    if (!cells.Contains(next) || !seen.Add(next))
-                        continue;
-                    frontier.Enqueue(next);
-                }
+                Level = level; Storeys = storeys; ExitLevel = exitLevel; ExitFacing = exitFacing;
             }
-
-            return seen.Count == cells.Count;
+            public static ModuleShape Ground => new ModuleShape(CastleLevels.Ground, 1, CastleLevels.Ground, Vector2Int.zero);
+            public int Level { get; }
+            public int Storeys { get; }
+            public int ExitLevel { get; }
+            public Vector2Int ExitFacing { get; }
         }
 
         // --- Curtain wall --------------------------------------------------------
@@ -248,22 +179,22 @@ namespace Plunderspell.Castle
         /// an axis cell with its drawbridge in the cell immediately outside, and straight wall
         /// everywhere else. Returns the index of the gatehouse module.
         /// </summary>
-        private int BuildCurtainWall(ProceduralCastleData data, Dictionary<Vector2Int, int> occupied)
+        private int BuildCurtainWall(ProceduralCastleData data, Dictionary<Vector3Int, int> occupied)
         {
-            List<Vector2Int> perimeter = PerimeterCells(m_curtainWallRadius);
-            Vector2Int gateCell = k_GateOutward * m_curtainWallRadius;
+            List<Vector2Int> perimeter = PerimeterCells(CurtainWallRadius);
+            Vector2Int gateCell = k_GateOutward * CurtainWallRadius;
             int gatehouseIndex = -1;
 
             for (int i = 0; i < perimeter.Count; i++)
             {
                 Vector2Int cell = perimeter[i];
-                bool isCorner = Mathf.Abs(cell.x) == m_curtainWallRadius
-                                && Mathf.Abs(cell.y) == m_curtainWallRadius;
+                bool isCorner = Mathf.Abs(cell.x) == CurtainWallRadius
+                                && Mathf.Abs(cell.y) == CurtainWallRadius;
 
                 if (isCorner)
                 {
                     PlaceModule(data, occupied, ResolveRoomId(k_WallCornerId), CastleZone.CurtainWall,
-                        cell, RotationForCorner(cell), isCryptEntry: false);
+                        cell, RotationForCorner(cell), false, ModuleShape.Ground);
                     continue;
                 }
 
@@ -272,7 +203,7 @@ namespace Plunderspell.Castle
                 if (cell == gateCell)
                 {
                     gatehouseIndex = PlaceModule(data, occupied, ResolveRoomId(k_GatehouseId),
-                        CastleZone.CurtainWall, cell, rotation, isCryptEntry: false);
+                        CastleZone.CurtainWall, cell, rotation, false, ModuleShape.Ground);
                     continue;
                 }
 
@@ -281,13 +212,13 @@ namespace Plunderspell.Castle
                     : ResolveRoomId(k_WallStraightId);
 
                 PlaceModule(data, occupied, roomId, CastleZone.CurtainWall, cell, rotation,
-                    isCryptEntry: false);
+                    false, ModuleShape.Ground);
             }
 
             // The deck runs inward from its own wall face, so the drawbridge shares the gatehouse's
             // orientation and lands pointing back at the gate.
             PlaceModule(data, occupied, ResolveRoomId(k_DrawbridgeId), CastleZone.CurtainWall,
-                gateCell + k_GateOutward, RotationForOutwardWall(k_GateOutward), isCryptEntry: false);
+                gateCell + k_GateOutward, RotationForOutwardWall(k_GateOutward), false, ModuleShape.Ground);
 
             return gatehouseIndex;
         }
@@ -318,11 +249,11 @@ namespace Plunderspell.Castle
         /// <summary>Which way a non-corner perimeter cell faces out of the castle.</summary>
         private Vector2Int OutwardFacing(Vector2Int cell)
         {
-            if (cell.x == m_curtainWallRadius)
+            if (cell.x == CurtainWallRadius)
                 return new Vector2Int(1, 0);
-            if (cell.x == -m_curtainWallRadius)
+            if (cell.x == -CurtainWallRadius)
                 return new Vector2Int(-1, 0);
-            if (cell.y == m_curtainWallRadius)
+            if (cell.y == CurtainWallRadius)
                 return new Vector2Int(0, 1);
             return new Vector2Int(0, -1);
         }
@@ -379,19 +310,25 @@ namespace Plunderspell.Castle
         // --- Placement -----------------------------------------------------------
 
         /// <summary>Records (and optionally instantiates) a single module, returning its index.</summary>
-        private int PlaceModule(ProceduralCastleData data, Dictionary<Vector2Int, int> occupied,
-            string roomId, CastleZone zone, Vector2Int cell, Quaternion rotation, bool isCryptEntry)
+        private int PlaceModule(ProceduralCastleData data, Dictionary<Vector3Int, int> occupied,
+            string roomId, CastleZone zone, Vector2Int cell, Quaternion rotation, bool isCryptEntry,
+            ModuleShape shape)
         {
-            var worldPos = new Vector3(cell.x * cellSize, 0f, cell.y * cellSize);
+            var worldPos = new Vector3(cell.x * cellSize, CastleLevels.RootY(shape.Level), cell.y * cellSize);
 
             var placed = new ProceduralCastleData.PlacedModule(roomId, worldPos, rotation, zone, cell)
             {
-                IsCryptEntry = isCryptEntry
+                IsCryptEntry = isCryptEntry,
+                Level = shape.Level,
+                Storeys = shape.Storeys,
+                ExitLevel = shape.ExitLevel,
+                ExitFacing = shape.ExitFacing,
             };
 
             int index = data.PlacedModules.Count;
             data.PlacedModules.Add(placed);
-            occupied[cell] = index;
+            for (int level = placed.Level; level <= placed.TopLevel; level++)
+                occupied[new Vector3Int(cell.x, cell.y, level)] = index;
 
             InstantiateModule(roomId, zone, cell, worldPos, rotation, isCryptEntry);
             return index;
@@ -439,7 +376,7 @@ namespace Plunderspell.Castle
                 return placed;
 
             var straightIds = new HashSet<string> { k_WallStraightId, ResolveRoomId(k_WallStraightId) };
-            data.Dressings = CastleDressingPlanner.Plan(data, seed, m_dressing, straightIds, m_curtainWallRadius, cellSize);
+            data.Dressings = CastleDressingPlanner.Plan(data, seed, m_dressing, straightIds, CurtainWallRadius, cellSize);
 
             foreach (PlacedDressing dressing in data.Dressings)
             {
@@ -491,7 +428,7 @@ namespace Plunderspell.Castle
         /// either leads into the neighbouring room or is walled off — never out into nothing.
         /// See docs/4-systems/scale.md ("Archways") for the sizes this relies on.
         /// </summary>
-        private void SealOpenArchways(ProceduralCastleData data, Dictionary<Vector2Int, int> occupied)
+        private void SealOpenArchways(ProceduralCastleData data, Dictionary<Vector3Int, int> occupied)
         {
             if (registry == null)
                 return;
@@ -502,15 +439,22 @@ namespace Plunderspell.Castle
                 if (!IsEnclosedRoom(module.Zone))
                     continue;
 
-                GameObject plug = registry.GetDoorPlugForZone(module.Zone);
-                if (plug == null)
-                    continue;
-
-                foreach (Vector2Int dir in FourDirs)
+                for (int level = module.Level; level <= module.TopLevel; level++)
                 {
-                    if (IsArchwayConnected(data, occupied, module.GridPosition + dir))
+                    // A stair's exit level has its walls closed in the prefab already.
+                    if (module.Storeys > 1 && level == module.ExitLevel)
                         continue;
-                    InstantiateDoorPlug(plug, module, dir);
+
+                    GameObject plug = registry.GetDoorPlugForZone(module.Zone);
+                    if (plug == null)
+                        continue;
+
+                    foreach (Vector2Int dir in FourDirs)
+                    {
+                        if (IsArchwayConnected(data, occupied, module.GridPosition + dir, level, -dir))
+                            continue;
+                        InstantiateDoorPlug(plug, module, dir, level);
+                    }
                 }
             }
         }
@@ -522,24 +466,26 @@ namespace Plunderspell.Castle
         /// strip (<see cref="CastleEntrancePlanner"/>).
         /// </summary>
         private bool IsArchwayConnected(ProceduralCastleData data,
-            Dictionary<Vector2Int, int> occupied, Vector2Int neighbour)
+            Dictionary<Vector3Int, int> occupied, Vector2Int neighbour, int level, Vector2Int towardMe)
         {
-            if (neighbour == k_GateOutward * m_curtainWallRadius)
+            // The gate and the strip entrances are ground-level only.
+            if (level == CastleLevels.Ground && neighbour == k_GateOutward * CurtainWallRadius)
                 return true;
-            if (data.EntranceCells.Contains(neighbour))
+            if (level == CastleLevels.Ground && data.EntranceCells.Contains(neighbour))
                 return true;
-            if (!occupied.TryGetValue(neighbour, out int index))
+            if (!occupied.TryGetValue(new Vector3Int(neighbour.x, neighbour.y, level), out int index))
                 return false;
-            return IsEnclosedRoom(data.PlacedModules[index].Zone);
+            ProceduralCastleData.PlacedModule other = data.PlacedModules[index];
+            return IsEnclosedRoom(other.Zone) && CastleStairRule.Opens(other, level, towardMe);
         }
 
         /// <summary>Places one door plug in the archway of <paramref name="module"/> facing <paramref name="dir"/>.</summary>
         private void InstantiateDoorPlug(GameObject plug, ProceduralCastleData.PlacedModule module,
-            Vector2Int dir)
+            Vector2Int dir, int level)
         {
             EnsureContainer();
 
-            Vector3 position = module.Position
+            Vector3 position = new Vector3(module.Position.x, CastleLevels.RootY(level), module.Position.z)
                                + new Vector3(dir.x, 0f, dir.y) * k_ArchwayInset
                                + Vector3.up * k_FloorThickness;
 
@@ -550,7 +496,7 @@ namespace Plunderspell.Castle
             Quaternion rotation = Quaternion.Euler(0f, yaw, 0f) * plug.transform.rotation;
 
             GameObject go = Instantiate(plug, position, rotation, roomContainer);
-            go.name = $"DoorPlug_{module.Zone}_{module.GridPosition.x}_{module.GridPosition.y}_{dir.x}_{dir.y}";
+            go.name = $"DoorPlug_{module.Zone}_{module.GridPosition.x}_{module.GridPosition.y}_{dir.x}_{dir.y}_L{level}";
             _instantiated.Add(go);
         }
 

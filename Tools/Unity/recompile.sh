@@ -23,13 +23,21 @@ for e in r.get('errors') or []:
 "
 }
 
-unity command recompile "${cli[@]}" > /dev/null
+exit_if_unity_dialog
+# A failed request used to end the script silently under `set -e`; stop with the reason if a dialog
+# holds the Editor, and otherwise let the bounded poll below find out what happened (#371).
+if ! unity command recompile "${cli[@]}" > /dev/null; then
+    exit_if_unity_dialog
+fi
 
 seen_busy=0
 for attempt in $(seq 1 120); do
     sleep 2
     # The Editor drops the connection during the domain reload; keep polling through it.
-    report="$(unity command recompile_status "${cli[@]}" 2>/dev/null | read_status || echo reloading)"
+    raw="$(unity command recompile_status "${cli[@]}" 2>/dev/null || true)"
+    # ...but a dialog waiting for a click never ends by itself (#371).
+    case "$raw" in *"Main thread operation timed out"*) exit_if_unity_dialog ;; esac
+    report="$(printf '%s' "$raw" | read_status || echo reloading)"
     status="$(printf '%s\n' "$report" | head -n 1)"
     case "$status" in
         failed)

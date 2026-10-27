@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Plunderspell.Core;
 using Plunderspell.Lair;
 using UnityEngine;
@@ -42,13 +43,16 @@ namespace Plunderspell.UI.Screens
             var buttonListGo = new GameObject("ButtonList", typeof(RectTransform));
             buttonListGo.transform.SetParent(transform, false);
             var buttonListRect = (RectTransform)buttonListGo.transform;
-            UIFactory.PlaceTopLeft(buttonListRect, ColumnLeft, hookTop + 82f + 40f, 520f, 64f * 5f + 10f * 4f);
+            int rows = Debug.isDebugBuild ? 6 : 5;
+            UIFactory.PlaceTopLeft(buttonListRect, ColumnLeft, hookTop + 82f + 40f, 520f, 64f * rows + 10f * (rows - 1));
             UIFactory.AddVerticalLayout(buttonListRect, spacing: 10f, padding: new RectOffset(0, 0, 0, 0), childAlignment: TextAnchor.UpperLeft);
 
             var buttonSize = new Vector2(520f, 64f);
             BuildSaveRow(buttonListRect);
             UIFactory.CreateButton(buttonListRect, "PlayButton", "Play Solo", OnPlayClicked, buttonSize, ButtonKind.Primary, "ENTER");
             UIFactory.CreateButton(buttonListRect, "HostButton", "Host Co-op", OnHostClicked, buttonSize, ButtonKind.Secondary, "STEAM");
+            if (Debug.isDebugBuild)
+                BuildThisPcRow(buttonListRect);
             UIFactory.CreateButton(buttonListRect, "SettingsButton", "Settings", OnSettingsClicked, buttonSize);
             UIFactory.CreateButton(buttonListRect, "QuitButton", "Quit", OnQuitClicked, buttonSize, ButtonKind.Quiet);
         }
@@ -71,6 +75,23 @@ namespace Plunderspell.UI.Screens
             UIFactory.PlaceTopRight(reset.GetComponent<RectTransform>(), 0f, 0f, resetWidth, 64f);
             _resetLabel = reset.GetComponentInChildren<Text>();
             RefreshSaveLabel();
+        }
+
+        /// <summary>Editor and Development builds only: co-op between two copies of the game on one PC, over the
+        /// local network, since both are the same Steam account and Steam will not let it join itself (#372).</summary>
+        private void BuildThisPcRow(RectTransform list)
+        {
+            const float gap = 10f;
+            const float half = (520f - gap) / 2f;
+            var rowGo = new GameObject("ThisPcRow", typeof(RectTransform));
+            rowGo.transform.SetParent(list, false);
+            var row = (RectTransform)rowGo.transform;
+            row.sizeDelta = new Vector2(520f, 64f);
+
+            Button host = UIFactory.CreateButton(row, "HostThisPcButton", "Host on this PC", () => GameServices.Coop?.HostLocal(), new Vector2(half, 64f), ButtonKind.Quiet);
+            UIFactory.PlaceTopLeft(host.GetComponent<RectTransform>(), 0f, 0f, half, 64f);
+            Button join = UIFactory.CreateButton(row, "JoinThisPcButton", "Join on this PC", () => GameServices.Coop?.JoinLocal(), new Vector2(half, 64f), ButtonKind.Quiet);
+            UIFactory.PlaceTopRight(join.GetComponent<RectTransform>(), 0f, 0f, half, 64f);
         }
 
         private Text _saveValue;
@@ -178,11 +199,8 @@ namespace Plunderspell.UI.Screens
 
         protected override void OnShown()
         {
-            if (GameServices.Coop != null)
-            {
-                GameServices.Coop.Changed -= RefreshStatus;
-                GameServices.Coop.Changed += RefreshStatus;
-            }
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            EventManager.Instance?.Subscribe(this, (CoopChanged e) => RefreshStatus());
             RefreshStatus();
             _resetArmed = false;
             RefreshSaveLabel();
@@ -197,7 +215,7 @@ namespace Plunderspell.UI.Screens
         private void OnPlayClicked()
         {
             GameServices.Coop?.PlaySolo();
-            GameServices.GameState.ChangeState(GameState.Lair);
+            GameServices.GameState.ChangeState(GameState.LairRoom);
         }
 
         /// <summary>The session moves to the Lair itself once hosting has started: over Steam that

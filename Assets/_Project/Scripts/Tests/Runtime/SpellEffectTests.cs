@@ -3,6 +3,7 @@ using Interfaces;
 using NUnit.Framework;
 using Plunderspell.Acoustics;
 using Plunderspell.Alarm;
+using Plunderspell.Guards;
 using Plunderspell.Loot;
 using Plunderspell.Spells;
 using Plunderspell.Status;
@@ -62,12 +63,30 @@ namespace Plunderspell.Tests
             return pickup;
         }
 
-        private EnemyDirector MakeAlarmListener(Vector3 position)
+        // The castle hears only through its guards (#259), so a guard stands at the listening spot and reports to the director.
+        private EnemyDirector MakeAlarmListener(Vector3 position) => MakeAlarmListener(position, out _);
+
+        private EnemyDirector MakeAlarmListener(Vector3 position, out Guard guard)
         {
-            var go = Track(new GameObject("Alarm"));
-            go.transform.position = position;
-            go.AddComponent<BoxCollider>();
-            return go.AddComponent<EnemyDirector>();
+            EnemyDirector director = Track(new GameObject("Alarm")).AddComponent<EnemyDirector>();
+            var guardGo = Track(new GameObject("Guard"));
+            guardGo.transform.position = position;
+            guardGo.AddComponent<BoxCollider>();
+            guardGo.AddComponent<StatusEffectReceiver>();
+            guard = guardGo.AddComponent<Guard>();
+            guard.Configure(director);
+            return director;
+        }
+
+        private Guard MakeListeningGuard(EnemyDirector director, Vector3 position)
+        {
+            var guardGo = Track(new GameObject("Guard"));
+            guardGo.transform.position = position;
+            guardGo.AddComponent<BoxCollider>();
+            guardGo.AddComponent<StatusEffectReceiver>();
+            Guard guard = guardGo.AddComponent<Guard>();
+            guard.Configure(director);
+            return guard;
         }
 
         private static SpellEffectContext Context(SpellId spell, CastVolume volume, Vector3 origin,
@@ -361,15 +380,20 @@ namespace Plunderspell.Tests
         [Test]
         public void Test_ALeapAndItsSlamStirTheCastle()
         {
-            EnemyDirector alarm = MakeAlarmListener(new Vector3(0f, 0f, 3f));
+            EnemyDirector alarm = MakeAlarmListener(new Vector3(0f, 0f, 3f), out Guard guard);
+            MakeListeningGuard(alarm, new Vector3(3f, 0f, 0f));
+            MakeListeningGuard(alarm, new Vector3(-3f, 0f, 0f));
+            int heard = 0;
+            guard.Hearing.NoiseHeard += (_, _) => heard++;
 
             SpellEffectRegistry.Execute(Context(SpellId.Saltus, CastVolume.Normal, Vector3.zero));
-            float afterWord = alarm.AlarmLevel;
+            int afterWord = heard;
             SaltusEffect.ResolveSlam(Vector3.zero, SpellTuning.SaltusSlamSpeed, null, ~0, 0);
 
-            Assert.Greater(alarm.AlarmLevel, afterWord, "The slam's landing makes a noise of its own.");
+            // Measured at the guard's ears: the alarm scores each guard once every 2 s (#259), so its level cannot show the second noise.
+            Assert.Greater(heard, afterWord, "The slam's landing makes a noise of its own.");
             Assert.GreaterOrEqual((int)alarm.State, (int)AlarmState.Stirred,
-                "Saying the word and landing the slam must at least stir the castle.");
+                "Saying the word and landing the slam, heard by three guards, must at least stir the castle.");
         }
 
         // --- Unregistered ids -----------------------------------------------------------------

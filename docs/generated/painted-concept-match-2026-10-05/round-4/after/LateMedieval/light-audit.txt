@@ -1,0 +1,1 @@
+fires keep 19 ground 90 crypt 17 | lights keep 19 ground 91 crypt 17 | sconces with no wall 0 | floating 0

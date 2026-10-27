@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Plunderspell.Castle;
 using Plunderspell.Spells;
@@ -82,6 +83,20 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void Test_PathValidatorRejectsACutStair()
+        {
+            var gen = MakeGenerator();
+            ProceduralCastleData data = gen.Generate(42);
+            Assert.IsTrue(CastlePathValidator.ValidatePath(data, out _), "seed 42 should be walkable");
+            int final = data.CryptStartIndex;
+            var chamber = data.PlacedModules[final];
+            chamber.Level = CastleLevels.Keep + 5;              // move the final chamber off every floor
+            data.PlacedModules[final] = chamber;
+            Assert.IsFalse(CastlePathValidator.ValidatePath(data, out List<Vector2Int> path), "a final chamber no floor reaches must fail");
+            Assert.AreEqual(0, path.Count);
+        }
+
+        [Test]
         public void Test_PathValidatorOnEmptyData()
         {
             var empty = new ProceduralCastleData(0);
@@ -158,6 +173,21 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void Test_ExactlyOneFinalChamberAtTheCryptLevel()
+        {
+            var gen = MakeGenerator();
+
+            foreach (int seed in new[] { 1, 42, 777, 12345, -9, 20260917 })
+            {
+                ProceduralCastleData data = gen.Generate(seed);
+                var finals = data.PlacedModules.Where(m => m.RoomId == "CryptChamberFinal").ToList();
+
+                Assert.AreEqual(1, finals.Count, $"seed {seed}: final chambers");
+                Assert.AreEqual(CastleLevels.Crypt, finals[0].Level, $"seed {seed}: final chamber level");
+            }
+        }
+
+        [Test]
         public void Test_InteriorRoomCountIsPlayable()
         {
             var gen = MakeGenerator();
@@ -173,8 +203,11 @@ namespace Plunderspell.Tests
                         rooms++;
                 }
 
-                Assert.That(rooms, Is.InRange(40, 60),
-                    $"seed {seed}: {rooms} interior rooms is outside the playable range.");
+                Assert.That(rooms, Is.InRange(36, 40),
+                    $"seed {seed}: {rooms} interior modules (ground 25 less courtyards, keep 7, crypt 8, stairs counted once)");
+                Assert.AreEqual(7, data.PlacedModules.Count(m => m.Level == CastleLevels.Keep), $"seed {seed}: keep rooms");
+                Assert.AreEqual(9, data.PlacedModules.Count(m => m.Level == CastleLevels.Crypt), $"seed {seed}: crypt modules incl. the down-stair");
+                Assert.AreEqual(3, data.PlacedModules.Count(m => m.Storeys == 2), $"seed {seed}: three stairs");
             }
         }
 
@@ -219,9 +252,10 @@ namespace Plunderspell.Tests
             {
                 ProceduralCastleData data = gen.Generate(seed);
 
-                var byCell = new Dictionary<Vector2Int, CastleZone>();
+                var byCell = new Dictionary<(Vector2Int, int), CastleZone>();
                 foreach (var pm in data.PlacedModules)
-                    byCell[pm.GridPosition] = pm.Zone;
+                    for (int level = pm.Level; level <= pm.TopLevel; level++)
+                        byCell[(pm.GridPosition, level)] = pm.Zone;
 
                 var directions = new[]
                 {
@@ -236,7 +270,7 @@ namespace Plunderspell.Tests
 
                     foreach (Vector2Int dir in directions)
                     {
-                        if (!byCell.TryGetValue(pm.GridPosition + dir, out CastleZone neighbourZone))
+                        if (!byCell.TryGetValue((pm.GridPosition + dir, pm.Level), out CastleZone neighbourZone))
                             continue;
                         if (!ProceduralCastleGenerator.IsEnclosedRoom(neighbourZone))
                             continue;

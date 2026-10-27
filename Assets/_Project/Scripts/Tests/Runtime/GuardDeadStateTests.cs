@@ -1,3 +1,5 @@
+using Plunderspell.Alarm;
+using Code.Scripts.EventSystems;
 using System.Collections;
 using NUnit.Framework;
 using Plunderspell.Guards;
@@ -21,7 +23,11 @@ namespace Plunderspell.Tests
         }
 
         [TearDown]
-        public void TearDown() => _rig.TearDown();
+        public void TearDown()
+        {
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+            _rig.TearDown();
+        }
 
         [Test]
         public void DeathLeavesNavigationAndTheRegistryAndReleasesTheTurn()
@@ -90,7 +96,7 @@ namespace Plunderspell.Tests
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
             int deaths = 0;
-            _rig.Director.OnGuardDied += died => deaths++;
+            EventManager.Instance.Subscribe(this, (GuardDied died) => deaths++);
 
             guard.TakeDamage(500f);
             guard.TakeDamage(500f);

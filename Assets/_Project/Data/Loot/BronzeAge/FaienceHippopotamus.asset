@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Plunderspell.Loot::Plunderspell.Loot.LootItem
   Worth: 700
   IsArtifact: 0
-  Bulk: 0.5
+  Category: 2
+  WeightKg: 0.5
   Fragility: 4.5
   DisplayName: Faience Hippopotamus
   Icon: {fileID: 0}

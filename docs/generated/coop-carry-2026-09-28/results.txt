@@ -1,0 +1,13 @@
+
+# run 00:04:23 (carry)
+PASS castle_built_once
+PASS host_grabs
+PASS client_grabs
+PASS client_throws
+PASS client_holds_close
+PASS heavy_alone_tows
+FAIL held host=False client=False, wanted both; heavy host=True client=True, wanted light=both; piece rose 0.00 m (wanted at least 0.6 m, or to within 0.3 m of the aim height) heavy_lifted_together
+PASS opposite_pulls_snap
+PASS both_grab_same_piece
+PASS client_lets_go
+PASS client_quits_holding

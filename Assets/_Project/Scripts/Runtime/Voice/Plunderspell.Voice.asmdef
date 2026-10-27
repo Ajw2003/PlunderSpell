@@ -2,6 +2,7 @@
     "name": "Plunderspell.Voice",
     "rootNamespace": "Plunderspell.Voice",
     "references": [
+        "Plunderspell.Foundation",
         "PurrNet.Runtime",
         "Plunderspell.Core",
         "Unity.InputSystem"

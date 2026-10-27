@@ -17,6 +17,9 @@ namespace Plunderspell.Guards
         /// <summary>The director said a player is roughly here: better than a noise, worse than seeing one.</summary>
         public const float HueAndCryStrength = 2f;
 
+        /// <summary>Another guard cried out that it saw a player: as good as the hue and cry, below seeing one.</summary>
+        public const float CryStrength = HueAndCryStrength;
+
         /// <summary>The guard saw a player with its own eyes.</summary>
         public const float SightingStrength = 3f;
 
@@ -30,7 +33,9 @@ namespace Plunderspell.Guards
             _random = random;
             // The link applies its radius rule before it raises this; the hue and cry has none.
             link.InvestigateRequested += position => Offer(Roughly(position), HueAndCryStrength);
-            hearing.NoiseNoticed += (origin, strength) => Offer(origin, Mathf.Clamp01(strength) * LoudestNoiseStrength);
+            // A cry leads to where the crier stood when it saw the intruder (the cry carries no spot of its own).
+            hearing.CryHeard += origin => Offer(origin, CryStrength);
+            hearing.NoiseNoticed +=(origin, strength) => Offer(origin, Mathf.Clamp01(strength) * LoudestNoiseStrength);
         }
 
         // The hue and cry knows only roughly where a player is, so a player who breaks away and hides
