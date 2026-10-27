@@ -16,6 +16,29 @@ PASS) and `raid_length_check` (now with hunts off; 300.5 game s) PASS. Merged in
 locally and run again there: compile clean, EditMode 274 pass / 3 skipped, PlayMode 529/529, `ophan_check.sh staging`
 14/14, Wick, Lair (27) and raid-length (301.3 game s) PASS. Manual co-op test still owed.
 
+**2026-10-27 (night) - the demand page is built and up for QA (#446 and #456: #447 to #450, #457, #458).** Lost and
+found (Q drops the page with empty hands or on death, F picks it up, home puts it back), the ledger model rebuilt with
+plain pages (`lair_builders.py`; review sheet `docs/art/models/lair/ledger-review-457.png`), and a ragged torn edge
+(`RaggedEdge`) on the stub, the raised page and the dropped page. EditMode 264 passed / 3 skipped, PlayMode 545/545,
+`demand_page_check.sh` fails 0, `coop_lair_check.sh demand-458` PASS all. QA page `docs/plans/demand-page-419/qa.html`.
+Co-op checks collide with the Ophan Gym worktree's: both launch `Plunderspell.exe` and `coop_eval.sh` finds the client by
+that name, so never run the two at once.
+
+**2026-10-27 (evening) - the demand page: glowing words, tear out, raise with R (#446: #447, #448, #449 built;
+#450, #457, #458 not built).** Branch `AjsAgent/demand-ledger-page-419`. `demand_page_check.sh` fails 0;
+`coop_lair_check.sh demand-449` PASS all; full suites not yet run. Stopped on the owner's usage limit; next steps in
+`docs/handoff/handoff-2026-10-27-demand-page.md`.
+
+**2026-10-27 - prototype: the demanded piece drawn in ink across the ledger's left page (#419,
+`AjsAgent/demand-ledger-page-419`, cut from `AjsAgent/staging-2026-10-26`).** Design waived by the owner. The left page is
+an ink-and-wash drawing of the Arm Reliquary made live from its model (`LedgerDemandSketch`, `InkSketch`); the right page
+names it above the last raid and the purses; the Owed and Collector lines are no longer shown. Mechanism in
+`docs/4-systems/market.md`, "The ledger". Compile clean; PlayMode `InkSketchTests` 1/1 and `LedgerPageTextTests` 3/3;
+`demand_page_check.sh` PASS 6/6 (pictures in `docs/generated/demand-page-2026-10-27/`); `coop_lair_check.sh demand-419`
+24 PASS, 1 FAIL: its book comparison reads `LairLedgerBook.LeftText`, which this change removed (the ledger numbers
+behind the book still matched the host's in the PASS before it; the book pages themselves were not compared). Restoring `LeftText` is a one-line fix waiting on a "skip design" for
+the code-edit gate.
+
 **2026-10-27 - one tuning asset for the Ophan's demand, and 5-minute raids (#433, `AjsAgent/ophan-demand-tuning-433`).**
 `OphanDemandTuning` (`Runtime/Core/GameFlow`, asset `Resources/OphanDemandTuning.asset`) holds every #433 number with a
 tooltip and a range. `ExtractionZone.RaidLength` reads `RaidSeconds` (300); its serialized `RaidDurationSeconds` (600
@@ -421,6 +444,7 @@ Editor Play mode the Editor takes about half the host's frame (~135 fps vs ~290 
 suite 373/373. PR #246 merges the whole `claude/playability-fixes` branch (186 commits). The owner closed 28
 finished issues; why they piled up is filed as Ajw2003/AjsClaudeCodeTools#141. Lightmap baking was checked:
 the bake call is Editor-only in 6000.3.15f1 and the build ships no `UnityEditor` assemblies.
+
 **2026-10-06 - proposal: the HUD goes into the world, the Lair becomes a place, the Market haggles.**
 Asked for by the owner, ahead of any code: spells in a grimoire you open, the timer on a pocket watch,
 the alarm read from the castle's fires, and the rest of the HUD replaced except the crosshair and
@@ -886,6 +910,7 @@ quality levels that run on a Steam Deck. The spec is [`docs/plans/night-atmosphe
 nothing is built yet. The look samples were rendered in Blender (`Tools/LookSamples/`) because the
 Unity Editor was stuck on a "Recovering Scene Backups" dialog, which still needs a person to click
 Yes.
+
 **2026-09-24, evening — playtest 2 on staging: carrying, loot amount, the Late centre.** The user's
 second test on `claude/staging-2026-09-24` found three things, all fixed there.
 - **Carrying.** Held items lagged and swung when walking. Raids carry through `ItemManager`/`Item`,

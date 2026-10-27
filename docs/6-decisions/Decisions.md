@@ -20,6 +20,26 @@ far clip plane rises to 3000 m. This replaces the 2026-10-15 hunt in `docs/4-sys
 **Why.** The owner asked for a threat that "dwarfs the Castle", is "huge enough and far enough and powerful enough to
 genuinely seem unbeatable", and whose eye follows you.
 
+## 2026-10-27 — The demand in the ledger is a picture and three glowing words
+
+**Status.** Decided by the owner (design approved; build plan still to come).
+
+**Decision.** The Lair ledger shows the Ophan's demand as an ink-and-wash drawing of the piece
+across the whole left page, made live from the piece's own model, and on the right page only the
+words "The Ophan demands". No name, place, due date, last raid or purses appear in the book; the
+purses are decided with the rest of #419 (choice 2A). The words glow a steady colour: faint white
+with 3 raids left, amber with 2, red when the demand is due this raid. The glow's intensity swells
+and fades every two to five seconds, faster and brighter when the demand is due, "so you see it out
+of the corner of your eye when you need to" (choice 1, the owner's own answer). One drawing serves
+the company: whoever presses E on the book tears it out and carries it, and the book shows a torn
+stub until the company comes home (3A). Holding a key raises the page in front of the view while
+still walking (4A). If its carrier dies or drops it, it falls where they fall and anyone can pick
+it up; if nobody does, the ledger draws it again at home (5A).
+
+**Why.** The owner: in a magic medieval world information is fleeting, not in abundance, and
+players infer it by other means; the illustration should carry the page. Reply: "Design approved:
+demand page 1* 2A 3A 4A 5A", on `docs/plans/demand-page-419/demand-page.html`.
+
 ## 2026-10-27 — The Ophan is a celestial threat in the sky, attacking with beams
 
 **Status.** Decided by the owner (design approved; build plan still to come).

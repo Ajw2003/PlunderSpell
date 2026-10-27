@@ -15,6 +15,8 @@ if (cam == null) return \"no camera\";
 var rb = p.GetComponent<UnityEngine.Rigidbody>();
 rb.isKinematic = true;
 p.FaceYaw(${yaw}f);
+// FaceYaw levels the view, and the player reapplies its own pitch every frame: set that pitch too, or the camera looks ahead.
+typeof(StateMachine.PlayerStateMachine).GetField(\"_xRotation\", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(p, ${pitch}f);
 cam.transform.localRotation = UnityEngine.Quaternion.Euler(${pitch}f, ${yaw}f, 0f);
 var offset = cam.transform.position - p.transform.position;
 var at = new UnityEngine.Vector3(${x}f, ${y}f, ${z}f) - offset;

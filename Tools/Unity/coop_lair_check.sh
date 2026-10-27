@@ -114,6 +114,30 @@ log "host: $(L host turndial BronzeAge)"; sleep 3
 dc="$(L client dial)"; log "client: $dc"
 case "$dc" in "dial BronzeAge ["*"Bronze Age"*) check ok "the client's dial follows the host back to the Bronze Age" ;; *) check no "the client's dial follows the host back to the Bronze Age" ;; esac
 
+# The torn page (#448): the CLIENT tears the ledger's left page out; both sides must say it is torn and held by the client's
+# seat (owner 2 is seat 1), the host's local player does not hold it, and the client's does. Coming home from the raid below puts it back.
+log "client: $(L client tear)"; sleep 2
+ph="$(L host page)"; pc="$(L client page)"; log "host: $ph"; log "client: $pc"
+r=no; [ "$ph" = "page torn True holder 1 local False" ] && [ "$pc" = "page torn True holder 1 local True" ] && r=ok
+check $r "the client tore the page out: both see it torn and held by seat 1"
+
+# Dropping and picking up (#450): the client drops it (it lies, torn, for both); the host picks it up (seat 0 holds, both agree);
+# the host drops it and the client picks it up (seat 1 holds, both agree); the client drops it again and leaves it lying
+# on the floor, to be put back in the book by coming home from the raid below.
+page_is() { # page_is <host line> <client line> <label>
+    ph="$(L host page)"; pc="$(L client page)"; log "host: $ph"; log "client: $pc"
+    r=no; [ "$ph" = "$1" ] && [ "$pc" = "$2" ] && r=ok; check $r "$3"
+}
+log "client: $(L client droppage)"; sleep 2
+page_is "page torn True holder -2 local False" "page torn True holder -2 local False" "the client dropped the page: it lies on the floor, torn, on both sides"
+log "host: $(L host pickuppage)"; sleep 2
+page_is "page torn True holder 0 local True" "page torn True holder 0 local False" "the host picked the lying page up: both see seat 0 holding it"
+log "host: $(L host droppage)"; sleep 2
+log "client: $(L client pickuppage)"; sleep 2
+page_is "page torn True holder 1 local False" "page torn True holder 1 local True" "the host dropped it and the client picked it up: both see seat 1 holding it"
+log "client: $(L client droppage)"; sleep 2
+page_is "page torn True holder -2 local False" "page torn True holder -2 local False" "the page is left lying on the floor before the raid"
+
 # A raid: both set out, two pieces come home, both see the same pile, grown by exactly those two.
 # The pile is saved across runs, so what the host sees before setting out is the starting count.
 before="$(L host pile)"; log "host before: $before"
@@ -147,6 +171,9 @@ h="$(L host pile)"; c="$(L client pile)"; log "host: $h"; log "client: $c"
 n="${h#pile }"; n="${n%% *}"
 [ "$h" = "$c" ] && [ "$n" = "$((b + 2))" ] && r=ok || r=no; check $r "both see the same pile, grown by the two extracted pieces ($b -> $n)"
 L client shot "$(cygpath -m "$repo/$out/$label-client-pile.png")" >/dev/null 2>&1 || true
+ph="$(L host page)"; pc="$(L client page)"; log "host: $ph"; log "client: $pc"
+r=no; [ "$ph" = "page torn False holder -1 local False" ] && [ "$pc" = "page torn False holder -1 local False" ] && r=ok
+check $r "coming home put the page back in the book on both sides"
 
 # Selling (#314): the host sets a piece on the Goldsmith's counter (server side); the CLIENT answers Plus then Satis
 # through the counter's word path; both sides must show the same line, the host's gold and debt must move by the sold
@@ -223,10 +250,10 @@ sleep 2
 cled="$(L client ledger)"; log "client ledger: $cled"; log "host ledger:   $led1"
 [ "$cled" = "$led1" ] && r=ok || r=no
 check $r "the client's Lair shows the host's ledger exactly, Collector's line included"
-# The ledger book on the table (#357) says the same on both sides, and says something (the debt page and the purses page).
+# The ledger book on the table (#357) says the same on both sides, and says something (the drawing's caption and the right page's words).
 bh="$(L host book)"; bc="$(L client book)"; log "host book:   $bh"; log "client book: $bc"
-r=no; [ "$bh" = "$bc" ] && case "$bh" in *"Owed"*"Purses"*"Collector takes"*) r=ok ;; esac
-check $r "the client's ledger book reads exactly as the host's, Collector's line included"
+r=no; [ "$bh" = "$bc" ] && case "$bh" in *"[drawing of "*"The Ophan demands"*) r=ok ;; esac # since #447 the left page is a drawing and the right page three words
+check $r "the client's ledger book reads exactly as the host's"
 cs_after="$(L client activeslot)"; log "client's own save after: $cs_after"
 [ "$cs_before" = "$cs_after" ] && r=ok || r=no
 check $r "the client's own save slot is untouched ($cs_before)"

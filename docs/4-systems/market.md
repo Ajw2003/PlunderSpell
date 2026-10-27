@@ -143,6 +143,55 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
 - **The ledger** (the ledger book's pages since #357/#359, `LedgerPageText.cs`; the Lair screen is gone): Owed (kept), then purses for each seat that is
   present or has a purse or paid last time (I to IV): Purse, Owes (the share due tonight), Paid (last collection), then Last raid.
   There is no Banked figure: sales no longer bank, so it would read 0 (the number still exists in the model).
+  **Prototype of the demand page (#419, 2026-10-27, branch `AjsAgent/demand-ledger-page-419`):** the left page is now the
+  demanded piece drawn across the whole page, and the Owed lines and the Collector's line are no longer shown. On Start,
+  `LedgerDemandSketch` (`Runtime/Raid`) photographs the piece's model once, at 2000 m below the world, with an
+  orthographic Preview-type camera (a Preview camera keeps the night fog off the photo) against a magenta backdrop.
+  `InkSketch.Draw` (`Runtime/Lair`) turns the photo into ink: a wobbling outline, inner edges, diagonal hatching on dark
+  parts and a brown wash. The drawing is the texture of `LedgerSketchPage.mat`, a fresh URP Lit sheet in the vellum's own
+  colour laid over the ruled page. The right page reads `LedgerPageText.DemandLines` (what the Ophan demands, "deep in
+  the vault", the last raid) above the purses, auto-sized to fit. The piece is fixed to the Arm Reliquary by
+  `LairRoomForge` until the demand itself chooses it. Both pages lie on clean vellum sheets (`RightSheet`,
+  `DemandSketchPage`) so the book's ruled columns never show. Check: `Tools/Unity/demand_page_check.sh`, pictures in
+  `docs/generated/demand-page-2026-10-27/`.
+  **Planned, approved 2026-10-27 (decision "The demand in the ledger is a picture and three glowing words"):**
+  - *Glowing words.* The right page holds only `LairLedgerBook.Words`, "The Ophan demands". The TMP page uses its own
+    material copy with glow on. Colour is steady: faint white with 3 raids left, amber with 2, red when due this raid.
+    Only the intensity moves: it swells and fades over 2 to 5 s, faster and brighter when the demand is due. That is the
+    book's one per-frame job. Raids left come from a prototype field until #419's demand supplies them.
+  - *Torn page.* One drawing per company. E on the book (the existing Interact) tears it out: the server spawns a
+    networked page object owned by the tearer and the book's left sheet shows a torn stub on every machine. Each machine
+    draws the picture itself from the same model, so only "torn, and by whom" crosses the network.
+    **Built (#448):** `DemandPageKeeper` (a scene network object on `LedgerPages`) holds the server's SyncVar holder seat
+    (-1 in the book, seat n = owner id n+1), publishes `DemandPageChanged`, and returns the page on `RaidPhase.Resolved` (coming home);
+    `LedgerPageTearer` reads E at the book (any player, a client's goes by ServerRpc); `LedgerTornStub` swaps the
+    drawing quad for the `TornStub` strip; pure rules in `DemandPageRules`. All in `Assets/_Project/Scripts/Runtime/Raid/`.
+    Built by `LairRoomForge.AddTearing`; no spawned page object yet (#449, #450). Checks: `demand_page_check.sh`, `coop_lair_check.sh`.
+  - *Raising it.* A new `ReadPage` action on R in `PlayerInputs.inputactions`, held: the carried page is raised in front
+    of the local camera, and the player keeps walking. It does not take the loot-carrying hand.
+    **Built (#449):** `ReadPage` on R (generated `PlayerInputs.cs` kept in sync); `DemandPageReader` (on `LedgerPages`, beside the
+    keeper, so it works in the Lair and in a raid) puts an unlit vellum quad with the drawing on the local camera while the holder
+    holds R, eased over 0.25 s by `PageRaise` (pure rules, `PageRaiseTests`). Local only, nothing networked; it lowers when the page
+    is no longer held. Check: `demand_page_check.sh` (`raised-page-lair.png`, `raised-page-raid.png`, walking with R and W held).
+  - *Lost and found.* The carrier's death or a Drop lets the page fall where they stand, as a pickable world object. On
+    coming home, a page nobody carries is gone and the book's sheet is whole again.
+    **Built (#450):** holder `-2` (`DemandPageRules.Lying`) still counts as torn; `DemandPageKeeper` keeps a SyncVar drop point and
+    takes `RequestDrop(point)` / `RequestPickUp()` (ServerRpc from clients). `PageDropper` (Q with empty hands, or `LocalPlayerDied`;
+    runs before `LootInteractor`, so Q with loot still drops the loot) drops it on the floor 0.4 m ahead; `DroppedPageView` shows a
+    flat vellum sheet with this machine's own drawing and a thin collider (no new network prefab; `NetworkPrefabs.asset` untouched);
+    `PagePicker` takes F while looking at it within 3 m. Coming home returns it to the book and the sheet clears. `DemandPageReader`
+    now follows `DemandPageChanged` and keeps only the R key and its easing per frame. Wired by `LairRoomForge.AddPageDrop`
+    (`Tools/Unity/eval/add_page_drop.cs` for the existing prefab). Checks: `demand_page_check.sh` (`dropped-page.png`), `coop_lair_check.sh`,
+    `DemandPageDropTests`.
+  - **Built (#457):** the ledger model has no Roman numerals, column bars, ruled lines, gutter or dividers: `lair_builders.py
+    build_lair_ledger` makes two plain vellum pages and the red ribbon, and `LairLedger.fbx` was rebuilt with
+    `build_assets.py -- --only LairLedger`. Both pages, whole or torn, show plain vellum (`over-the-book.png`, `torn-book-close.png`).
+  - **Built (#458):** `RaggedEdge` (one generator, `Assets/_Project/Scripts/Runtime/Raid/`) makes the tear: noise-driven reach from
+    the spine up to 6 cm, a few longer wisps, a pale fibrous fringe, alpha-clipped. `Stub` is the strip left in the book
+    (`LedgerTornStub` builds it; paler Lit clip material `LedgerTornStub.mat`); `Cut` takes the same line off the spine side of a
+    copy of the drawing for the raised page and the dropped page (Unlit clip material `Resources/Raid/TornPageUnlit.mat`, so builds keep
+    the variant). The dropper's yaw is a SyncVar on the keeper (`DropYaw`), so the dropped drawing lies upright to them. `RaggedEdgeTests`.
+  - The words and the urgency colour stay in the book: only the picture leaves it.
 - **His line** ("The Collector takes 120 from I, 80 from II.") is `LairHubManager.CollectorLine`, shown in place of the "Debt grows"
   note on the ledger book's page and logged: the company has already left the Lair when he speaks, so the book shows it on
   coming home. A spoken line is not done.

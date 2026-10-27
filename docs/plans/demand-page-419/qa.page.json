@@ -1,0 +1,53 @@
+{
+  "title": "QA: The Demand in the Ledger",
+  "eyebrow": "QA for #446 and #456 · branch AjsAgent/demand-ledger-page-419 · no pull request yet, not merged",
+  "approval": "QA passed: demand page",
+  "qa": {
+    "feature": "demand page",
+    "base": "origin/AjsAgent/staging-2026-10-26",
+    "unverified": [
+      "Nobody has played it by hand yet: every check was run by a script.",
+      "Dying while carrying the page is wired but was never played: the checks drop it with Q, not by dying.",
+      "Q with loot in hand still dropping the loot (and not the page) is covered by a rule test, not in play.",
+      "The demanded piece is always the Arm Reliquary, and the raids left come from a test setting, until the demand itself (#419) supplies both."
+    ],
+    "files": {}
+  },
+  "short": {
+    "lead": "The ledger now shows only the drawing and \"The Ophan demands\", glowing white, amber or red. Pressing E tears the drawing out, R raises it while you walk, Q drops it and F picks it up, and coming home puts it back in the book. Both pages are plain vellum, and the tear is ragged. Every script check passed; the full suites are green.",
+    "hint": "Tap an item to see what was checked and what you can try yourself.",
+    "key": [["Checked by script", "done"], ["You test this", "you"]],
+    "items": [
+      ["eye", "Glowing words", "Only \"The Ophan demands\", white / amber / red (#447)", "done", "Pictures of all three colours were taken in game and looked at; the brightness swells and fades, faster and brighter when due. Tests 2/2.", "Look at the book from the table: is the glow noticeable enough from across the Lair?"],
+      ["list", "Plain pages", "No numerals, bars or ruled lines (#457)", "done", "The ledger model was rebuilt with two plain vellum pages and its red ribbon. Pictures of the whole and torn book show no print.", "Nothing from you."],
+      ["search", "Tear it out", "E on the book; a ragged stub stays (#448, #458)", "done", "The two-player check had the client tear the page; both machines agreed who holds it and both showed the stub. Tests 3/3 and 3/3.", "Press E on the book. Does the tear look ripped enough?"],
+      ["eye", "Raise it", "Hold R to hold the drawing up while walking (#449)", "done", "Raised in the Lair and in a raid; walking with R held moved the player. Tests 2/2.", "Hold R in a raid and walk."],
+      ["check", "Lost and found", "Q drops it, F picks it up, home puts it back (#450)", "done", "Two-player check: the client dropped it and the host picked it up, then the other way round; a page left lying was back in the book on both machines after coming home. Tests 4/4.", "Drop it with Q in a raid and pick it up with F."],
+      ["check", "Tests", "Full suites on the branch", "done", "EditMode: 264 passed, 0 failed, 3 skipped. PlayMode: 545 of 545 passed. The two-player Lair check: PASS all Lair checks (run demand-458).", "Nothing from you."]
+    ]
+  },
+  "changes": [
+    ["chg", "The book", "The drawing on the left; only the glowing words on the right; no print.", null,
+      "Before, the right page held the piece's name, where it lies, the last raid and the purses, across the old printed columns.",
+      null,
+      {"src": "docs/art/models/lair/ledger-review-457.png", "alt": "Three views of the ledger: before, after whole, after torn", "caption": "Before; after, whole; after, torn, with the ragged stub."},
+      {"visual": true}],
+    ["new", "The glow by raids left", "Faint white with 3 raids left, amber with 2, red when due.", null, "", null,
+      {"src": "docs/generated/demand-page-2026-10-27/glow-three-states.png", "alt": "The book three times: white, amber and red words", "caption": "3 raids left, 2, and due this raid, each at the peak of its swell."},
+      {"visual": true}],
+    ["new", "The torn page in a raid", "Held up with R while walking.", null, "", null,
+      {"src": "docs/generated/demand-page-2026-10-27/raised-page-raid.png", "alt": "The drawing held up in front of the view in a Bronze Age courtyard", "caption": "Raised mid-raid, its spine side ragged."},
+      {"visual": true}],
+    ["new", "The dropped page", "Lies where it fell, upright to whoever dropped it; F picks it up.", null, "", null,
+      {"src": "docs/generated/demand-page-2026-10-27/dropped-page.png", "alt": "The torn page lying on a dark stone floor", "caption": "Dropped with Q in a raid."},
+      {"visual": true}]
+  ],
+  "choices": [],
+  "wrapup": {
+    "summary": "The demand page is built: a drawing and three glowing words in a plain ledger, and a page you tear out, raise, drop and pick up.",
+    "changing": "The ledger's numbers and print are gone; players carry the drawing into the raid.",
+    "blocking": "#446 and #456 and their steps stay open until your QA pass. Nothing is merged; main is not touched.",
+    "next": "After your pass, I open a pull request into the staging branch.",
+    "todo": ["Play the items marked for you.", "Tap <b>Copy my reply</b>.", "Send it with \"QA passed: demand page\", or tell me what failed."]
+  }
+}
