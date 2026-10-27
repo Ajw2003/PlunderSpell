@@ -3,6 +3,25 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-27 — The Ophan is a celestial threat in the sky, attacking with beams
+
+**Status.** Decided by the owner (design approved; build plan still to come).
+
+**Decision.** The Ophan never walks, chases or catches. Sixty seconds before the portal closes it
+appears in the sky, larger than life, announced by a loud hum and screen shake. It targets
+whoever carries the most. It has two attacks. A slow beam locks on over 3 seconds and drains
+health fast; walls and roofs block it. A charged beam kills in one hit and can break the wall or
+roof you are hiding behind. A beam on someone carrying the wanted piece lifts the piece into the
+sky, spares them, and sends the Ophan away. Until the demand (#419) exists, any piece marked as an
+artifact counts as wanted. After a kill it keeps hunting the others. This replaces the walking,
+wall-drifting Ophan in #418 and settles #430's sky idea in favour of the sky.
+
+**Why.** In the owner's words: "it appears in the sky larger than life a threat you shouldn't
+believe you can defeat until the lore shows you otherwise", and "it needs to appear a celestial
+level threat". The full answers are in
+`docs/plans/core-loops/owner-direction-2026-10-25.md`, "The Ophan's arrival, answered" and "The
+Ophan's beams, answered".
+
 ## 2026-10-27 — Features go through feature branches and a tested staging branch
 
 **Status.** Decided by the owner.
