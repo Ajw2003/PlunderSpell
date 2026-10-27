@@ -1,0 +1,102 @@
+{
+ "title": "<Project> Changelog",
+ "eyebrow": "Changelog · <date of the newest entry> · real screenshots only",
+ "approval": "Design approved: <project> changelog",
+ "short": {
+  "lead": "One or two plain sentences: what the project is, and the span of time this changelog covers. Say that every picture already existed and that each caption names its file.",
+  "hint": "The Changes tab is the changelog: Kept is built and checked, Changed is something that works differently now, New is being built or comes next.",
+  "key": [
+   [
+    "Built and checked",
+    "done"
+   ],
+   [
+    "Being built now",
+    ""
+   ]
+  ],
+  "items": []
+ },
+ "changes": [
+  [
+   "chg",
+   "<Short name for a before-and-after>",
+   "<One line on what changed.>",
+   [
+    "<Before, a few words>",
+    "<After, a few words>"
+   ],
+   "<Two or three sentences: what it was, what it is now, and why it changed.>",
+   null,
+   null,
+   {
+    "before": {
+     "src": "<repo-relative path to the before picture>",
+     "alt": "<What the before picture shows>"
+    },
+    "after": {
+     "src": "<repo-relative path to the after picture>",
+     "alt": "<What the after picture shows>"
+    },
+    "caption": "<The two source files, repo-relative>"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built <date>: <what was built>",
+   "<One line, the player's view.>",
+   null,
+   "<What it does, what checked it (tests, a co-op run, a screenshot), and the issue numbers with their titles.>",
+   null,
+   null,
+   {
+    "src": "<repo-relative path to a real screenshot>",
+    "alt": "<What the picture shows>",
+    "caption": "<The source file, repo-relative>"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "new",
+   "Now, #<issue>: <title>",
+   "<One line on what it will do.>",
+   null,
+   "<Where it stands, step by step: built, partly, not started. Name the branch.>",
+   null,
+   null,
+   {
+    "src": "<repo-relative path to a real screenshot, if one exists>",
+    "alt": "<What the picture shows>",
+    "caption": "<The source file, repo-relative>"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "new",
+   "Next, #<issue>: <title>",
+   "<One line.>",
+   null,
+   "<What it will do, and the owner's own words where they decided it.>",
+   null,
+   null
+  ]
+ ],
+ "choices": [],
+ "wrapup": {
+  "summary": "<One sentence: what this changelog covers.>",
+  "changing": "<What changed since the last changelog, named.>",
+  "blocking": "<What waits on the owner, named, or 'Nothing.'>",
+  "next": "<What comes next, by issue number and title.>",
+  "todo": [
+   "Read it on your phone.",
+   "Reply \"Design approved: &lt;project&gt; changelog\" if it reads right, or say what to change."
+  ]
+ }
+}

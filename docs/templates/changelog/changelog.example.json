@@ -1,0 +1,327 @@
+{
+ "title": "PlunderSpell Changelog",
+ "eyebrow": "Changelog · 23 September to 27 October 2026 · real screenshots only",
+ "approval": "Design approved: plunderspell changelog",
+ "short": {
+  "lead": "PlunderSpell, a co-op voice-spell heist game, from the first grey-box playtest on 23 September to staging on 27 October. Every picture already existed in the repo, and each caption names its file.",
+  "hint": "The Changes tab is the changelog: Kept is built and checked, Changed is something that works differently now, New is being built or comes next.",
+  "key": [
+   [
+    "Built and checked",
+    "done"
+   ],
+   [
+    "Being built now",
+    ""
+   ]
+  ],
+  "items": []
+ },
+ "changes": [
+  [
+   "chg",
+   "Five weeks apart",
+   "From grey boxes to a lit castle and a modelled wizard.",
+   [
+    "23 September: grey boxes and a debug menu",
+    "8 October on: the wizard, cast and lit"
+   ],
+   "The first playtest on 23 September already had the whole loop, in grey boxes. The wizard, the four Ages' castles and the night look came after.",
+   null,
+   null,
+   {
+    "before": {
+     "src": "docs/roadmap-visual/img/start-greybox.jpg",
+     "alt": "Grey-box room with a capsule guard on fire"
+    },
+    "after": {
+     "src": "docs/roadmap-visual/img/wizard-cast.jpg",
+     "alt": "The modelled wizard casting in a stone vaulted room"
+    },
+    "caption": "docs/generated/playtest-2026-09-23/19-voice-ignis-burns-guard.png and docs/generated/wizard-362/final-cast.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 23 September: a playable raid in grey boxes",
+   "Spawn, cast by voice, fight, carry loot out, die or escape.",
+   null,
+   "Milestones M0 (fork clean, cut gravity) and most of M1 (prove the voice). Voice recognition runs through Vosk, with a keyboard stand-in.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/start-greybox.jpg",
+    "alt": "Grey-box room with a capsule guard on fire",
+    "caption": "docs/generated/playtest-2026-09-23/19-voice-ignis-burns-guard.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 24 September to 6 October: four Ages, each its own castle",
+   "Bronze Age, High Medieval, Late Medieval and the Age of Powder.",
+   null,
+   "Each Age builds from its own rooms. A night atmosphere, fog and a painted surface look replaced the flat grey. Castles stack a crypt, a ground floor and a keep, joined by stairs, with doors that lock when the alarm is raised.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/castle-outside.jpg",
+    "alt": "The castle from outside at night, lit windows in the fog",
+    "caption": "docs/generated/ages-check-2026-10-06/HighMedieval/outside-south.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 30 September to 3 October: guards rebuilt",
+   "Patrol, investigate, chase, fight in turns, search, give up.",
+   null,
+   "A fresh guard brain with its own castle navigation. Guards answer the hue and cry, can be stunned, slept or set on fire, and climb stairs. Issues #203 to #223, #229 and #236 to #239.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/castle-keep.jpg",
+    "alt": "Inside a High Medieval keep, fog and a wall torch",
+    "caption": "docs/generated/ages-check-2026-10-06/HighMedieval/keep-centre.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built early October: the art bible, 36 models",
+   "Every guard and every piece of loot across the four Ages, nine per Age.",
+   null,
+   "Each model was built by the art pipeline with a review sheet. Shown: the Bronze Age gold death mask. The others are in docs/generated/art-bible-models/img/.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/art-mask.jpg",
+    "alt": "Model sheet of the Bronze Age gold death mask",
+    "caption": "docs/generated/art-bible-models/img/bronze-gold-death-mask.jpg"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 7 October: the Lair and the Market as places",
+   "The Lair menu became a room you walk around.",
+   null,
+   "The ledger book shows each wizard's purse, the century dial picks the Age, and the portal sets out. Next door, the Market's four counters haggle, and a sale leaves a coin pouch you carry home. Issues #312 to #314 and #355 to #360.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/lair-room.jpg",
+    "alt": "The Lair in Unity: a long table, strongboxes, a fireplace and the century dial",
+    "caption": "docs/art/models/lair/lair-unity.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 7 October: the Market yard",
+   "Four stalls, a well and a cart.",
+   null,
+   "The Market is reachable from the Lair, solo and in co-op. Nothing is hurt or broken there.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/market-model.jpg",
+    "alt": "The Market yard in Unity",
+    "caption": "docs/art/models/market/market-unity.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 8 October: you play as a wizard",
+   "The capsule became a modelled, animated wizard.",
+   null,
+   "Idle, walk, crouch and cast animations, checked in co-op so each player sees the other move. Issues #336, #361 and #362.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/art-wizard.jpg",
+    "alt": "Model sheet of the wizard from several angles",
+    "caption": "docs/art/models/lair/wizard.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 12 to 15 October: the Wick",
+   "The Lantern Warden drops his lantern and turns into the Wick.",
+   null,
+   "Modelled with nine animations. In a raid the Wick stalks, hunts and catches players. Issues #406, #413 and #417, landed through #414 and #436.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/art-wick.jpg",
+    "alt": "Model sheet of the Wick with its stalk animation",
+    "caption": "docs/art/anim/fear/wick_stalk.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 12 October: the Ophan of Hours, modelled",
+   "Three wheels of eyes, six wings and one great eye.",
+   null,
+   "Modelled with five animations (#411, #412). It is the creature that owns you.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/art-ophan.jpg",
+    "alt": "Model sheet of the Ophan of Hours",
+    "caption": "docs/art/models/fear/ophan.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 18 October: loot in the Lair stays where you left it",
+   "The unsold haul is saved per save slot, each piece in its place.",
+   null,
+   "It comes back after you quit and relaunch. Issue #378, landed through #422.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/lair-pile.jpg",
+    "alt": "The Lair with loot on the floor by the table",
+    "caption": "docs/generated/lair-pile-2026-10-18/run1-host-after.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "keep",
+   "Built 26 to 27 October: staging, all of the above tested together",
+   "The Wick, the fear art, the Lair save, the death fix and five-minute raids.",
+   null,
+   "A player the Wick catches now dies on both machines, not only their own, and raids are five minutes from one tuning file (#433). Checks on staging: compile clean, 264 EditMode tests pass with 3 skipped, all 529 PlayMode tests pass, and the scripted co-op, Wick and raid-length checks pass. The staging pull request into main, #437, waits on your own co-op test by hand.",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/raid-5min.jpg",
+    "alt": "The portal and the pocket watch at the start of a five-minute raid",
+    "caption": "docs/generated/ophan-demand-tuning-433/staging-r1-watch-start.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "new",
+   "Now, #418: the Ophan in the sky",
+   "It appears far beyond the castle in the last minute and hunts with beams.",
+   null,
+   "About 60 seconds before the portal closes it appears 150 times its model's size with a loud hum and screen shake. Its eye follows whoever carries the most worth. After a three-second lock-on a slow beam drains health, and stone blocks it; a charged beam kills in one hit and scorches walls open; a beam on the artifact's carrier lifts the piece away and the Ophan leaves. Steps: #439 sky, hum and shake (built); #440 eye and rings (built); #441 slow beam (works; its look floods the target's view, shown here, and needs tuning); #442 charged beam (code and tests only); #443 wide-wing pose and #444 full checks and landing on staging (not started). Being built on your PC on AjsAgent/ophan-arrival-418.",
+   null,
+   null,
+   {
+    "before": {
+     "src": "docs/roadmap-visual/img/hero-ophan-arrival.jpg",
+     "alt": "The Ophan rising above the curtain wall"
+    },
+    "after": {
+     "src": "docs/roadmap-visual/img/ophan-beam.jpg",
+     "alt": "A huge white wedge of light covering the top of the screen"
+    },
+    "caption": "Arrival, then the slow beam's look that still needs tuning. docs/generated/ophan-418/solo-arrival.png and solo-beam.png"
+   },
+   {
+    "visual": true
+   }
+  ],
+  [
+   "new",
+   "Next, #419: the Ophan's demand",
+   "The coin debt and the Collector go; the Ophan demands one artifact.",
+   null,
+   "The first demand is due at the end of your first raid and sits deep in the vault; after that one falls due every three to five raids. You recognise the piece by its sketch in the ledger. In your words: “The demand has nothing to do with progression. It holds off the beast, a deterrent but never the solution.”",
+   null,
+   null,
+   {
+    "src": "docs/roadmap-visual/img/ledger.jpg",
+    "alt": "The ledger book open on its lectern",
+    "caption": "docs/generated/ledger-book-2026-10-07/book-close.png: the ledger as it is today, where the demand's sketch will go"
+   }
+  ],
+  [
+   "new",
+   "Then, #435: playtest the demand loop",
+   "Solo first, then two players on your two PCs.",
+   null,
+   "In your words: “The game must be fun solo, not only survivable.”",
+   null,
+   null
+  ],
+  [
+   "new",
+   "Later: upgrading",
+   "Coin buys counters to each Age's threats.",
+   null,
+   "Spells, tools and weapons that counter each Age's threats, plus cosmetics and emotes. Worth goes up visibly so progress shows in steps. Frango is the first spell for a new save. Designed with you, one area at a time.",
+   null,
+   null
+  ],
+  [
+   "new",
+   "Later: lore and world-building",
+   "How you learn the Ophan can be beaten.",
+   null,
+   "The Ophan starts undefeatable. Lore found in the world slowly reveals a weakness, without turning this into a narrative game.",
+   null,
+   null
+  ],
+  [
+   "new",
+   "Later: events",
+   "The world reacts to you, and some things just happen.",
+   null,
+   "Plague rats spreading through the castle, the Ophan arriving early, a full moon that turns every enemy, an invasion through the front gate. Each event gets its own designed warning. In your words: “I want this world to feel alive, and dangerous, and for your actions to have clear consequences.”",
+   null,
+   null
+  ],
+  [
+   "new",
+   "Later: enemies",
+   "Each Age's threats need their own counters.",
+   null,
+   "The environment always fights back, and each object needs its own strategy.",
+   null,
+   null
+  ]
+ ],
+ "choices": [],
+ "wrapup": {
+  "summary": "The worked example of the changelog template, filled from the visual roadmap.",
+  "changing": "Nothing in the game.",
+  "blocking": "The co-op test of the staging pull request #437.",
+  "next": "#418 The Ophan in the sky, then #419 the demand.",
+  "todo": [
+   "Copy changelog.template.json, not this file, for a new changelog."
+  ]
+ }
+}
