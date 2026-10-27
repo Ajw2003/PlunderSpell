@@ -128,5 +128,22 @@ sleep 3
 raise_check raised-page-raid "raid"
 lowered_check "raid"
 
+# Dropping the page (#450): still in the raid, empty hands, Q lets the page fall where the player stands; it lies on the floor
+# within reach of the player; looking down at it and pressing F makes the local player hold it again.
+lying() { ev 'var v = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.DroppedPageView>(); var k = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.DemandPageKeeper>(); var p = StateMachine.PlayerStateMachine.Local.transform.position; if (v.Sheet == null) return "lying " + k.IsLying + " holder " + k.HolderSeat + " sheet none"; return "lying " + k.IsLying + " holder " + k.HolderSeat + " sheet near " + (UnityEngine.Vector3.Distance(v.Sheet.position, p) < 1.5f) + " collider " + (v.Sheet.GetComponent<UnityEngine.Collider>() != null);'; }
+log "$(ev 'var p = StateMachine.PlayerStateMachine.Local; p.GetComponent<UnityEngine.Rigidbody>().isKinematic = false; typeof(StateMachine.PlayerStateMachine).GetField("_xRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(p, 8f); var h = p.GetComponentInChildren<Plunderspell.Loot.LootInteractor>(); return "hands empty: " + (h == null || h.Carried == null) + (h == null ? " (no interactor)" : "");')"
+log "$(keys Q)"; sleep 0.3; log "$(keys none)"; sleep 1
+dropped="$(lying)"; log "after Q: $dropped"
+[ "$dropped" = "lying True holder -2 sheet near True collider True" ] && check ok "Q with empty hands dropped the page on the floor near the player" || check no "Q with empty hands dropped the page on the floor near the player"
+log "$(ev 'var p = StateMachine.PlayerStateMachine.Local; typeof(StateMachine.PlayerStateMachine).GetField("_xRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(p, 76f); return "looking down";')"
+sleep 1
+bash Tools/Unity/capture.sh "$out/dropped-page.png" >/dev/null 2>&1
+[ -s "$out/dropped-page.png" ] && check ok "dropped-page.png saved" || check no "dropped-page.png saved"
+seen="$(ev 'return Plunderspell.Raid.LookTarget.IsLookedAt(UnityEngine.Camera.main, UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.DroppedPageView>().Sheet, 3f).ToString();')"
+[ "$seen" = True ] && check ok "the player looks at the page on the floor" || check no "the player looks at the page on the floor"
+log "$(keys F)"; sleep 0.3; log "$(keys none)"; sleep 1
+held="$(page)"; log "after F: $held"
+[ "$held" = "torn True holder 0 local True drawing True" ] && check ok "F while looking at the page picked it up: the local player holds it again" || check no "F while looking at the page picked it up: the local player holds it again"
+
 log "fails $fails"
 exit $((fails > 0))

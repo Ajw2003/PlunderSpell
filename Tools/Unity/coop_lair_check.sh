@@ -121,6 +121,23 @@ ph="$(L host page)"; pc="$(L client page)"; log "host: $ph"; log "client: $pc"
 r=no; [ "$ph" = "page torn True holder 1 local False" ] && [ "$pc" = "page torn True holder 1 local True" ] && r=ok
 check $r "the client tore the page out: both see it torn and held by seat 1"
 
+# Dropping and picking up (#450): the client drops it (it lies, torn, for both); the host picks it up (seat 0 holds, both agree);
+# the host drops it and the client picks it up (seat 1 holds, both agree); the client drops it again and leaves it lying
+# on the floor, to be put back in the book by coming home from the raid below.
+page_is() { # page_is <host line> <client line> <label>
+    ph="$(L host page)"; pc="$(L client page)"; log "host: $ph"; log "client: $pc"
+    r=no; [ "$ph" = "$1" ] && [ "$pc" = "$2" ] && r=ok; check $r "$3"
+}
+log "client: $(L client droppage)"; sleep 2
+page_is "page torn True holder -2 local False" "page torn True holder -2 local False" "the client dropped the page: it lies on the floor, torn, on both sides"
+log "host: $(L host pickuppage)"; sleep 2
+page_is "page torn True holder 0 local True" "page torn True holder 0 local False" "the host picked the lying page up: both see seat 0 holding it"
+log "host: $(L host droppage)"; sleep 2
+log "client: $(L client pickuppage)"; sleep 2
+page_is "page torn True holder 1 local False" "page torn True holder 1 local True" "the host dropped it and the client picked it up: both see seat 1 holding it"
+log "client: $(L client droppage)"; sleep 2
+page_is "page torn True holder -2 local False" "page torn True holder -2 local False" "the page is left lying on the floor before the raid"
+
 # A raid: both set out, two pieces come home, both see the same pile, grown by exactly those two.
 # The pile is saved across runs, so what the host sees before setting out is the starting count.
 before="$(L host pile)"; log "host before: $before"

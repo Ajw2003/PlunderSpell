@@ -897,6 +897,9 @@ GameObject:
   - component: {fileID: 8219350945781248814}
   - component: {fileID: 3536220267971511390}
   - component: {fileID: 5793278951435703840}
+  - component: {fileID: 3139567845878417176}
+  - component: {fileID: 878213159066699468}
+  - component: {fileID: 3704662687151091943}
   m_Layer: 0
   m_Name: LedgerPages
   m_TagString: Untagged
@@ -1023,6 +1026,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.DemandPageReader
   _keeper: {fileID: 8614021771412850821}
+--- !u!114 &3139567845878417176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3503494213041099673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a59dd15515f082479d5a5fe0687af7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.DroppedPageView
+  _keeper: {fileID: 8614021771412850821}
+--- !u!114 &878213159066699468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3503494213041099673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e064b3cbaf0130e4f8f4d036acb45096, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.PageDropper
+  _ahead: 0.4
+  _keeper: {fileID: 8614021771412850821}
+--- !u!114 &3704662687151091943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3503494213041099673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3cb2b6f53291d541a656474ba61736f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.PagePicker
+  _reach: 3
+  _keeper: {fileID: 8614021771412850821}
+  _view: {fileID: 3139567845878417176}
 --- !u!1 &3697748493123637503
 GameObject:
   m_ObjectHideFlags: 0

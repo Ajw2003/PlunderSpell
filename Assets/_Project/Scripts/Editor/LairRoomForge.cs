@@ -236,12 +236,32 @@ namespace Plunderspell.EditorTools
             readerObject.FindProperty("_keeper").objectReferenceValue = keeper;
             readerObject.ApplyModifiedPropertiesWithoutUndo();
 
+            AddPageDrop(pages, keeper);
+
             var view = pages.AddComponent<Plunderspell.Raid.LedgerTornStub>();
             var viewObject = new SerializedObject(view);
             viewObject.FindProperty("_keeper").objectReferenceValue = keeper;
             viewObject.FindProperty("_drawing").objectReferenceValue = drawing.gameObject;
             viewObject.FindProperty("_stub").objectReferenceValue = strip.gameObject;
             viewObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>The dropped page (#450): its view on the floor, the Q dropper and the F picker, all wired to the keeper.</summary>
+        private static void AddPageDrop(GameObject pages, Plunderspell.Raid.DemandPageKeeper keeper)
+        {
+            var view = pages.AddComponent<Plunderspell.Raid.DroppedPageView>();
+            Wire(view, keeper, null);
+            Wire(pages.AddComponent<Plunderspell.Raid.PageDropper>(), keeper, null);
+            Wire(pages.AddComponent<Plunderspell.Raid.PagePicker>(), keeper, view);
+        }
+
+        private static void Wire(Component part, Plunderspell.Raid.DemandPageKeeper keeper, Plunderspell.Raid.DroppedPageView view)
+        {
+            var so = new SerializedObject(part);
+            so.FindProperty("_keeper").objectReferenceValue = keeper;
+            if (view != null)
+                so.FindProperty("_view").objectReferenceValue = view;
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         /// <summary>

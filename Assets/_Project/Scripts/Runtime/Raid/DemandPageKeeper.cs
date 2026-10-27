@@ -15,8 +15,13 @@ namespace Plunderspell.Raid
     {
         private readonly SyncVar<int> _holder = new SyncVar<int>(DemandPageRules.InBook);
 
-        /// <summary>The seat holding the page, -1 while it is in the book.</summary>
+        // Where a dropped page lies (#450); set before the holder becomes Lying.
+        private readonly SyncVar<Vector3> _dropPoint = new SyncVar<Vector3>();
+
+        /// <summary>The seat holding the page, -1 while it is in the book, -2 while it lies on the floor.</summary>
         public int HolderSeat => _holder.value;
+        public bool IsLying => _holder.value == DemandPageRules.Lying;
+        public Vector3 DropPoint => _dropPoint.value;
         public bool IsTorn => DemandPageRules.IsTorn(_holder.value);
         public bool LocalPlayerHolds => IsTorn && _holder.value == LocalSeat;
 
@@ -34,12 +39,14 @@ namespace Plunderspell.Raid
         {
             base.OnSpawned();
             _holder.onChanged += OnReplicated;
+            _dropPoint.onChanged += OnPointReplicated;
         }
 
         protected override void OnDespawned()
         {
             base.OnDespawned();
             _holder.onChanged -= OnReplicated;
+            _dropPoint.onChanged -= OnPointReplicated;
         }
 
         private void OnEnable() =>
@@ -64,6 +71,40 @@ namespace Plunderspell.Raid
         [ServerRpc(requireOwnership: false)]
         private void TearToServer(RPCInfo info = default) => Tear(SeatOf(info.sender));
 
+        /// <summary>The local player drops the page at <paramref name="point"/>: decided here when this side decides, else sent to the server.</summary>
+        public void RequestDrop(Vector3 point)
+        {
+            if (Decides)
+                Drop(LocalSeat, point);
+            else
+                DropToServer(point);
+        }
+
+        [ServerRpc(requireOwnership: false)]
+        private void DropToServer(Vector3 point, RPCInfo info = default) => Drop(SeatOf(info.sender), point);
+
+        /// <summary>The local player picks up the page lying on the floor.</summary>
+        public void RequestPickUp()
+        {
+            if (Decides)
+                PickUp(LocalSeat);
+            else
+                PickUpToServer();
+        }
+
+        [ServerRpc(requireOwnership: false)]
+        private void PickUpToServer(RPCInfo info = default) => PickUp(SeatOf(info.sender));
+
+        private void Drop(int seat, Vector3 point)
+        {
+            if (DemandPageRules.Drop(_holder.value, seat) == _holder.value)
+                return;
+            _dropPoint.value = point;
+            SetHolder(DemandPageRules.Lying);
+        }
+
+        private void PickUp(int seat) => SetHolder(DemandPageRules.PickUp(_holder.value, seat));
+
         private void Tear(int seat) => SetHolder(DemandPageRules.Tear(_holder.value, seat));
 
         private void SetHolder(int holder)
@@ -79,6 +120,13 @@ namespace Plunderspell.Raid
         {
             if (!Decides)
                 Announce(holder);
+        }
+
+        // The point may arrive after the holder; the views place the page again.
+        private void OnPointReplicated(Vector3 point)
+        {
+            if (!Decides)
+                Announce(_holder.value);
         }
 
         private static void Announce(int holder) => EventManager.Instance?.Publish(new DemandPageChanged(holder));

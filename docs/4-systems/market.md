@@ -175,6 +175,14 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
     is no longer held. Check: `demand_page_check.sh` (`raised-page-lair.png`, `raised-page-raid.png`, walking with R and W held).
   - *Lost and found.* The carrier's death or a Drop lets the page fall where they stand, as a pickable world object. On
     coming home, a page nobody carries is gone and the book's sheet is whole again.
+    **Built (#450):** holder `-2` (`DemandPageRules.Lying`) still counts as torn; `DemandPageKeeper` keeps a SyncVar drop point and
+    takes `RequestDrop(point)` / `RequestPickUp()` (ServerRpc from clients). `PageDropper` (Q with empty hands, or `LocalPlayerDied`;
+    runs before `LootInteractor`, so Q with loot still drops the loot) drops it on the floor 0.4 m ahead; `DroppedPageView` shows a
+    flat vellum sheet with this machine's own drawing and a thin collider (no new network prefab; `NetworkPrefabs.asset` untouched);
+    `PagePicker` takes F while looking at it within 3 m. Coming home returns it to the book and the sheet clears. `DemandPageReader`
+    now follows `DemandPageChanged` and keeps only the R key and its easing per frame. Wired by `LairRoomForge.AddPageDrop`
+    (`Tools/Unity/eval/add_page_drop.cs` for the existing prefab). Checks: `demand_page_check.sh` (`dropped-page.png`), `coop_lair_check.sh`,
+    `DemandPageDropTests`.
   - The words and the urgency colour stay in the book: only the picture leaves it.
 - **His line** ("The Collector takes 120 from I, 80 from II.") is `LairHubManager.CollectorLine`, shown in place of the "Debt grows"
   note on the ledger book's page and logged: the company has already left the Lair when he speaks, so the book shows it on

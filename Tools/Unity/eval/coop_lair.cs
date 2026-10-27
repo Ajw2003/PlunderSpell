@@ -24,7 +24,9 @@
 //   dial               the century dial's Age and plaque text on this side (#358)
 //   turndial <era>     host: choose the Age (BronzeAge, HighMedieval, LateMedieval, AgeOfPowder) as the dial's E press does (#358)
 //   page               the ledger's left page: torn, holder seat (-1 in the book), whether the local player holds it (#448)
-//   tear               the local player tears the ledger's left page out, as E at the book does (#448)
+//   droppage           the local player lets the page fall where they stand, as Q with empty hands does (#450)
+//   pickuppage         the local player picks up the page lying on the floor, as F does (#450)
+//   tear              the local player tears the ledger's left page out, as E at the book does (#448)
 //   slot1            what the Lair's saved slot 1 holds (debt, gold, four purses), read without loading it
 //   activeslot         the save slot this side plays in and what it has SAVED (debt, gold, four purses, paid), read without loading
 //   portalwalk         the local player walks into the portal arch's trigger (#359): a client sees "The host sets out", the host sets out
@@ -305,6 +307,21 @@ switch (action)
         var keeper = FindAll("Plunderspell.Raid.DemandPageKeeper")[0];
         keeper.GetType().GetMethod("RequestTear").Invoke(keeper, null);
         return "tore";
+    }
+    case "droppage":
+    {
+        // the local player drops the ledger's page where they stand, as Q with empty hands does (#450)
+        var keeper = FindAll("Plunderspell.Raid.DemandPageKeeper")[0];
+        var me = (UnityEngine.Component)Get(T("StateMachine.PlayerStateMachine"), "Local");
+        keeper.GetType().GetMethod("RequestDrop").Invoke(keeper, new object[] { me.transform.position });
+        return "dropped";
+    }
+    case "pickuppage":
+    {
+        // the local player picks up the page lying on the floor, as F does (#450)
+        var keeper = FindAll("Plunderspell.Raid.DemandPageKeeper")[0];
+        keeper.GetType().GetMethod("RequestPickUp").Invoke(keeper, null);
+        return "picked up";
     }
     case "slot1":
     {

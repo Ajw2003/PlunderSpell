@@ -1,3 +1,4 @@
+using Code.Scripts.EventSystems;
 using Player;
 using UnityEngine;
 
@@ -22,14 +23,22 @@ namespace Plunderspell.Raid
 
         private Transform _page;
         private float _raise;
+        private bool _holds;
 
         public float Raise => _raise;
+
+        private void OnEnable()
+        {
+            EventManager.Instance?.Subscribe(this, (DemandPageChanged _) => _holds = _keeper.LocalPlayerHolds);
+            _holds = _keeper.LocalPlayerHolds;
+        }
+
+        private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
 
         // per-frame: reads the R key, which has no event, and eases the page's position
         private void Update()
         {
-            bool holds = _keeper.LocalPlayerHolds;
-            float target = PageRaise.Target(holds, GameInput.Actions.PlayerActions.ReadPage.IsPressed());
+            float target = PageRaise.Target(_holds, GameInput.Actions.PlayerActions.ReadPage.IsPressed());
             _raise = PageRaise.Step(_raise, target, Time.deltaTime);
             if (_raise <= 0f)
             {
