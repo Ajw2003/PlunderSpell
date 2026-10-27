@@ -201,27 +201,36 @@ namespace Plunderspell.EditorTools
             bookObject.FindProperty("_demanded").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Plunderspell.Loot.LootItem>(DemandedItemPath);
             bookObject.ApplyModifiedPropertiesWithoutUndo();
 
-            AddSketchPage(pages, new Vector3(book.position.x + PageOffset, top, book.position.z), VellumColour(book));
+            Color vellum = VellumColour(book);
+            // Both pages get a clean sheet, so the words face the drawing on the same paper, not across the ruled columns.
+            // The right sheet lies just under its text.
+            AddSheet(pages, "RightSheet", new Vector3(book.position.x - PageOffset, top - PageInk * 0.5f, book.position.z), vellum);
+            AddSketchPage(AddSheet(pages, "DemandSketchPage", new Vector3(book.position.x + PageOffset, top, book.position.z), vellum));
         }
 
         /// <summary>
-        /// A fresh sheet over the left page, without the book's ruled lines, in the vellum's own colour and lit by the room;
-        /// the drawing is its texture. Turned like the text, so the drawing reads upright.
+        /// A fresh sheet over one page, without the book's ruled lines, in the vellum's own colour and lit by the room.
+        /// Turned like the text, so a texture on it reads upright.
         /// </summary>
-        private static void AddSketchPage(GameObject pages, Vector3 at, Color vellum)
+        private static MeshRenderer AddSheet(GameObject pages, string name, Vector3 at, Color vellum)
         {
             var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            quad.name = "DemandSketchPage";
-            Object.DestroyImmediate(quad.GetComponent<MeshCollider>()); // ink, not a thing to bump into
+            quad.name = name;
+            Object.DestroyImmediate(quad.GetComponent<MeshCollider>()); // paper, not a thing to bump into
             quad.transform.SetParent(pages.transform, false);
             quad.transform.position = at;
             quad.transform.rotation = Quaternion.Euler(90f, 180f, 0f);
             quad.transform.localScale = new Vector3(SketchPageSize.x, SketchPageSize.y, 1f);
-            var page = quad.GetComponent<MeshRenderer>();
-            page.sharedMaterial = SketchPageMaterial(vellum);
-            page.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            var sheet = quad.GetComponent<MeshRenderer>();
+            sheet.sharedMaterial = SketchPageMaterial(vellum);
+            sheet.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            return sheet;
+        }
 
-            var sketch = quad.AddComponent<Plunderspell.Raid.LedgerDemandSketch>();
+        /// <summary>The left page's sheet carries the demanded piece's drawing as its texture.</summary>
+        private static void AddSketchPage(MeshRenderer page)
+        {
+            var sketch = page.gameObject.AddComponent<Plunderspell.Raid.LedgerDemandSketch>();
             var sketchObject = new SerializedObject(sketch);
             sketchObject.FindProperty("_model").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(DemandedModelPath);
             sketchObject.FindProperty("_page").objectReferenceValue = page;
