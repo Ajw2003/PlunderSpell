@@ -1,0 +1,199 @@
+{
+  "title": "The Ophan Gym",
+  "eyebrow": "Plan for a test copy of the main level",
+  "approval": "Design approved: Ophan Gym",
+  "short": {
+    "lead": "The Ophan Gym is a copy of the main level (RaidScene) where the Ophan of Hours appears a few seconds after the raid starts, so you can test its eye, beams, scorching and the take without waiting out a raid. You open it from the Editor and play it in co-op the same way as the main game.",
+    "hint": "Tap an item to see what it creates and what it needs from you.",
+    "key": [
+      [
+        "I build it",
+        ""
+      ],
+      [
+        "You pick or act",
+        "you"
+      ]
+    ],
+    "items": [
+      [
+        "bulb",
+        "Today",
+        "What exists today",
+        "",
+        "The Ophan only comes 60 seconds before the portal closes, so a test means playing most of a raid first. My check script (Tools/Unity/ophan_check.sh) can summon it at once, switch guards off and slow time, but only through script commands, not while you play. ItemGym.unity is a test level too, but it uses a stand-in player, not the real one, so it is no use here.",
+        "Nothing from you."
+      ],
+      [
+        "bulb",
+        "The gym",
+        "A copy of the main level",
+        "",
+        "A new scene, Assets/_Project/Scenes/OphanGym.unity: the main level as it is, plus one small gym object that sets the timer and the test keys. The main level itself does not change.",
+        "Pick how the copy is kept up to date (choice 1)."
+      ],
+      [
+        "bulb",
+        "Timer",
+        "The Ophan comes right away",
+        "",
+        "In the gym the Ophan hunts every raid and arrives a few seconds after it starts.",
+        "Pick the timer (choice 2)."
+      ],
+      [
+        "bulb",
+        "Keys",
+        "Test keys while you play",
+        "",
+        "Optional keys to summon it again after it leaves, stop damage, remove guards and slow time, with a small list of them on screen.",
+        "Pick which keys you want (choice 3)."
+      ],
+      [
+        "lock",
+        "Co-op",
+        "Playing it with two machines",
+        "you",
+        "The co-op launcher (Tools/Unity/coop_local.sh) builds its client from the main level only. The gym needs its own client build, or it can only be played alone in the Editor.",
+        "Pick co-op or Editor only (choice 4), then type the approval phrase."
+      ]
+    ]
+  },
+  "changes": [
+    [
+      "new",
+      "OphanGym.unity",
+      "A copy of the main level with the Ophan coming right away.",
+      null,
+      "Made from RaidScene.unity with one extra object, OphanGym, carrying a small OphanGym component. Nothing in RaidScene.unity changes, and the real game never loads the gym.",
+      [
+        "The Ophan only comes near the end of a raid.",
+        "A level where it comes a few seconds in.",
+        "You can test its abilities in under a minute of play."
+      ]
+    ],
+    [
+      "new",
+      "OphanGym component",
+      "Sets the gym's timer and test keys.",
+      null,
+      "On the host it switches the Ophan's hunt on for this level and makes it arrive after the delay you pick. It reuses the switch the check script already uses (OphanOfHours.HuntOverride) and the Ophan's own ArriveNow, so no Ophan code changes. Keys use the project's Input System, like every other key in the game.",
+      [
+        "Only the check script can summon the Ophan early.",
+        "The level does it by itself.",
+        "No commands to type."
+      ]
+    ],
+    [
+      "chg",
+      "Tools/Unity/coop_local.sh",
+      "Gains a way to start the gym in co-op (only with choice 4, option A).",
+      [
+        "Builds and hosts the main level only.",
+        "bash Tools/Unity/coop_local.sh --gym builds a gym client into Build/OphanGym and hosts the gym."
+      ],
+      "The main game's client in Build/DevTest is left alone, so the gym never replaces it.",
+      null
+    ]
+  ],
+  "choices": [
+    [
+      "copy",
+      "How should the gym copy keep up with the main level?",
+      [
+        [
+          "A",
+          "Rebuilt from the main level by a menu item",
+          1,
+          "Tools > Plunderspell > Build Ophan Gym copies RaidScene.unity fresh and adds the gym object, so the gym is never out of date. The co-op launcher runs it for you before building."
+        ],
+        [
+          "B",
+          "Copied once by hand",
+          0,
+          "Simpler, but every later change to the main level (rooms, art, fixes) is missing from the gym until someone copies it again."
+        ]
+      ],
+      "The main level changes most weeks, and a stale gym would test an old castle."
+    ],
+    [
+      "timer",
+      "When should the Ophan come, and how long should the raid last?",
+      [
+        [
+          "A",
+          "Arrives 5 seconds in; the raid lasts 10 minutes",
+          1,
+          "Plenty of time to try every ability without the portal closing on you."
+        ],
+        [
+          "B",
+          "Arrives 5 seconds in; the normal raid length",
+          0,
+          "The portal closes on the usual timer, so you also see the raid end the way it does for real."
+        ],
+        [
+          "C",
+          "A short raid with the real 60-second window",
+          0,
+          "For example a 90-second raid: it arrives at 30 seconds and you test the real ending, but each try is short."
+        ]
+      ],
+      "Testing abilities needs time more than it needs the real ending, which the main level already shows."
+    ],
+    [
+      "keys",
+      "Which test keys should the gym have?",
+      [
+        [
+          "A",
+          "Summon again, no damage, guards off, slow time",
+          1,
+          "F7 summons it again after it leaves or takes a piece; F8 stops you taking damage (the beams still show); F9 removes the guards; F10 cycles time between full, half and a quarter. A small list of the keys shows in a corner."
+        ],
+        [
+          "B",
+          "Only summon again",
+          0,
+          "Fewer keys, but the guards and the charged beam will keep killing you between tries."
+        ],
+        [
+          "C",
+          "No keys",
+          0,
+          "Just the early arrival. Every retry means leaving Play and starting it again."
+        ]
+      ],
+      "The take sends the Ophan away and the charged beam kills, so without summon-again and no-damage each try ends the test."
+    ],
+    [
+      "coop",
+      "Do you want to play the gym in co-op?",
+      [
+        [
+          "A",
+          "Yes: a gym client and a launcher option",
+          1,
+          "bash Tools/Unity/coop_local.sh --gym hosts the gym in the Editor and starts a gym client next to it, the same way you start co-op now."
+        ],
+        [
+          "B",
+          "Editor only",
+          0,
+          "You press Play on OphanGym.unity and test alone. The eye, beams and lift seen from another player's view are not covered."
+        ]
+      ],
+      "Some of what still needs your eyes, such as the beam seen by another player, only shows in co-op."
+    ]
+  ],
+  "wrapup": {
+    "summary": "A plan for the Ophan Gym: a copy of the main level where the Ophan comes right away, with test keys and co-op.",
+    "changing": "A new scene, OphanGym.unity, a small OphanGym component, a Build Ophan Gym menu item and a --gym option on the co-op launcher. The main level and the Ophan's own code do not change.",
+    "blocking": "Your four picks and the approval phrase.",
+    "next": "I build it on its own branch, play it in co-op, show you screenshots, and hand you the exact steps to open it.",
+    "todo": [
+      "Pick your answers (Choices).",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with \"Design approved: Ophan Gym\", or what to change."
+    ]
+  }
+}
