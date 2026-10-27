@@ -2,6 +2,6 @@
   "model": "Assets/Models/ArtBible/Animations/Humanoid_Fear.fbx",
   "sheet": "docs/art/anim/fear/wick_catch.png",
   "verdict": "pass",
-  "seen": "Nine clips, one sheet each in docs/art/anim/fear/ (8 stills on the real model) plus MP4, all opened. warden_turn on the Lantern Warden: rigid, hands to the face, the lantern leaves the hand after 0.4 s and lies by his feet, doubles over. On the Wick: wick_emerge rears up with arms raised like claws and settles into the hunch (first pass read as a dab; redone); wick_idle hunched, breathing; wick_stalk 1.4 m/s and wick_hunt 4.2 m/s with clean single-dot foot traces on the Wick (worst slide 0.3 / 0.2 cm); wick_search sweeps the cage head; wick_catch draws back and lunges, left hand at chest height at the AttackHit; wick_flinch small recoil; wick_stoop crown to 2.33 m. No IK shortfall, no bone below the floor; the FBX re-imports with all nine takes.",
-  "date": "2026-10-12T00:04:40+0000"
+  "seen": "wick_catch 1.2 s, 8 frames: draws left arm back, lunges, hand closes at chest height at AttackHit 0.42, pulls in and settles; feet stay grounded, no popping.",
+  "date": "2026-10-27T02:45:27+0000"
 }
