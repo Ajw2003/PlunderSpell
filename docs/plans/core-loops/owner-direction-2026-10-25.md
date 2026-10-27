@@ -239,3 +239,11 @@ So it has two attacks. A **slow beam** locks on and drains health fast, and wall
 After seeing it at 6 times its model over the curtain wall: "it still doesn't appear large enough it needs to take up the sky to truthfully seem celestial especially being wider and larger, and the underneath doesn't work because i can't see it's eye. it needs to be so large it dwarfs the Castle and can only be seen from the sky never that close to the castle, it needs to be huge enough and far enough and powerful enough to genuinely seem unbeatable"
 
 So: far larger and wider, far away in the sky, never over or near the castle, with its eye always visible to the players.
+
+## The Ophan's tells (owner, 2026-10-27 04:29 UTC, in the project chat)
+
+"Also regarding the Ophan it's eye should follow you as you move, automatically choosing the person with the most worth currently being carried then going down the list. this will make the being truthfully unnerving, along with its rings spinning and speeding up or slowing down based on state. and the eye glowing and growing when it is charging until full blast and a similar tell for the lock on attack"
+
+- The eye tracks its target as they move: whoever carries the most worth, then the next down the list.
+- Its rings spin, speeding up or slowing down with its state.
+- The eye glows and grows while the charged beam charges, up to full blast, with a similar tell for the lock-on.
