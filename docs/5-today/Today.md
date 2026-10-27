@@ -1,5 +1,13 @@
 # Today
 
+**2026-10-27 (night) - the demand page is built and up for QA (#446 and #456: #447 to #450, #457, #458).** Lost and
+found (Q drops the page with empty hands or on death, F picks it up, home puts it back), the ledger model rebuilt with
+plain pages (`lair_builders.py`; review sheet `docs/art/models/lair/ledger-review-457.png`), and a ragged torn edge
+(`RaggedEdge`) on the stub, the raised page and the dropped page. EditMode 264 passed / 3 skipped, PlayMode 545/545,
+`demand_page_check.sh` fails 0, `coop_lair_check.sh demand-458` PASS all. QA page `docs/plans/demand-page-419/qa.html`.
+Co-op checks collide with the Ophan Gym worktree's: both launch `Plunderspell.exe` and `coop_eval.sh` finds the client by
+that name, so never run the two at once.
+
 **2026-10-27 (evening) - the demand page: glowing words, tear out, raise with R (#446: #447, #448, #449 built;
 #450, #457, #458 not built).** Branch `AjsAgent/demand-ledger-page-419`. `demand_page_check.sh` fails 0;
 `coop_lair_check.sh demand-449` PASS all; full suites not yet run. Stopped on the owner's usage limit; next steps in
