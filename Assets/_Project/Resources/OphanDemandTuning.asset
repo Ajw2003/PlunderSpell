@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56b726aac4a7f964db86e4f9a7bce6b3, type: 3}
+  m_Name: OphanDemandTuning
+  m_EditorClassIdentifier: Plunderspell.Core::Plunderspell.Core.OphanDemandTuning
+  RaidSeconds: 300
+  HuntWindowSeconds: 60
+  FirstDemandDueAfterRaids: 1
+  RaidsBetweenDemandsMin: 3
+  RaidsBetweenDemandsMax: 5
+  HuntEveryRaidWhileOwed: 1
+  SpoilsTakenWhileOwed: 1
+  ExtraPiecesPerMissedDemand: 0
+  MaxPiecesPerDemand: 3
+  UnscheduledVisitChance: 0
+  HuntSecondsAfterPaid: 0
+  PieceMarkRadius: 6
+  PieceMarkLastsForDemands: 3
+  FirstPieceMinRoomsFromPortal: 6

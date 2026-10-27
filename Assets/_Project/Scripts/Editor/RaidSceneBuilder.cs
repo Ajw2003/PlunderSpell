@@ -36,7 +36,6 @@ namespace Plunderspell.EditorTools
         // Tune here rather than hunting through the assembled scene.
         private const float CellSize = 12f;
         private const float EyeHeight = 1.65f;
-        private const float RaidSeconds = 300f;
 
         private const string SceneDirectory = "Assets/_Project/Scenes";
         private const string DataDirectory = "Assets/_Project/Data/Generated";
@@ -254,7 +253,6 @@ namespace Plunderspell.EditorTools
             // The raid starts when the player sets out from the lair, not on scene load.
             bootstrapper.Configure(autoStart: false, era: HistoricalEra.HighMedieval);
 
-            extraction.SetRaidDuration(RaidSeconds);
             return director;
         }
 
