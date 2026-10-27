@@ -302,21 +302,13 @@ def build_lair_ledger_table(bm, uv):
 
 
 def build_lair_ledger(bm, uv):
-    """The great ledger, open: 0.72 x 0.52 m. Four columns, one per wizard: a divider
-    strip between each pair, a heading of one to four bars (I..IV) and ruled lines."""
+    """The great ledger, open: 0.72 x 0.52 m. Two plain vellum pages and a red ribbon marker; the game
+    draws the demand on them (the old Roman-numeral headings, column bars and ruled lines are gone, #457)."""
     _sb(bm, uv, LEATHER, (0, 0, 0.015), (0.72, 0.52, 0.03))
     for s in (-1, 1):
         cx = s * 0.17
         _sb(bm, uv, "vellum_dim", (cx, 0, 0.04), (0.33, 0.47, 0.03))
         _sb(bm, uv, VELLUM, (cx, 0, 0.0575), (0.33, 0.47, 0.015))
-    _sb(bm, uv, "vellum_faint", (0, 0, 0.066), (0.012, 0.47, 0.004))      # the gutter
-    for x in (-0.17, 0.17):
-        _sb(bm, uv, "vellum_faint", (x, 0, 0.066), (0.006, 0.44, 0.004))   # column dividers
-    for ci, cx in enumerate((-0.25, -0.09, 0.09, 0.25)):
-        for b in range(ci + 1):                                            # heading: I, II, III, IIII
-            _sb(bm, uv, "bone_black", (cx - ci * 0.0075 + b * 0.015, 0.2, 0.0675), (0.007, 0.03, 0.006))
-        for k in range(7):
-            _sb(bm, uv, "vellum_dim", (cx, 0.14 - k * 0.05, 0.0665), (0.13, 0.005, 0.003))
     _sb(bm, uv, EMBER, (0.0, -0.3, 0.0665), (0.012, 0.18, 0.003))          # ribbon marker
 
 
