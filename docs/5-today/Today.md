@@ -1,5 +1,17 @@
 # Today
 
+**2026-10-27 (later) - the Ophan in the sky, proved in co-op (#418: #441, #442, #443, #444; `AjsAgent/ophan-arrival-418`).**
+The slow beam no longer floods the target's view: 0.8 m wide at the target and faded over its last 25 m on the
+target's own machine (2 m elsewhere). New held pose `ophan_spread` (#443): the hover's wheels and eye with the wings
+spread, 13.2 m wide by 7.8 m tall (hover 11.7 by 9.5), review sheet `docs/art/anim/fear/ophan_spread.png`; the
+controller now goes Arrive, then Spread. The take now lifts a copy of the piece up the beam into the sky on every
+machine (it only flashed before). Found in co-op and fixed: after the charged beam killed one player the Ophan drained
+the next at once with no lock-on (`OphanHunt.Retarget`, new `Test_ANewTargetGetsTheFullLockOnFirst`). New co-op check
+`Tools/Unity/ophan_check.sh coop`: all 14 checks PASS (the take spares its carrier and both machines show the piece
+rising; the client shows the slow beam; cover holds health at 85; the charged beam kills through stone and both
+machines show the room scorched; the next player gets the lock-on first). Screenshots and log in
+`docs/generated/ophan-418/coop-*`. OphanHuntTests 10/10. Manual co-op test still owed.
+
 **2026-10-27 - one tuning asset for the Ophan's demand, and 5-minute raids (#433, `AjsAgent/ophan-demand-tuning-433`).**
 `OphanDemandTuning` (`Runtime/Core/GameFlow`, asset `Resources/OphanDemandTuning.asset`) holds every #433 number with a
 tooltip and a range. `ExtractionZone.RaidLength` reads `RaidSeconds` (300); its serialized `RaidDurationSeconds` (600

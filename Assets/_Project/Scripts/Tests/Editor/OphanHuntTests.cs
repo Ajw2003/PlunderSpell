@@ -90,6 +90,19 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
+        public void Test_ANewTargetGetsTheFullLockOnFirst()
+        {
+            // Found in co-op: after the charged beam killed the host, the Ophan stayed Draining and drained the next
+            // player at once, with no lock-on.
+            ToDraining();
+            _hunt.Retarget();
+            Assert.AreEqual(OphanState.Watching, _hunt.State, "Turning to someone new drops the beam on the last one.");
+            Run(Step);
+            Assert.AreEqual(OphanState.Locking, _hunt.State);
+            Assert.AreEqual(0f, Run(_tuning.LockSeconds - 2 * Step).drain, "The new target gets the 3-second lock-on.");
+        }
+
+        [Test]
         public void Test_ABeamOnAnArtifactsCarrierTakesItAndTheOphanLeaves()
         {
             ToDraining();

@@ -26,13 +26,13 @@ namespace Plunderspell.EditorTools
             var model = AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath);
             var clips = AssetDatabase.LoadAllAssetsAtPath(ClipsPath).OfType<AnimationClip>()
                 .Where(clip => !clip.name.StartsWith("__preview__")).ToDictionary(clip => clip.name);
-            if (model == null || !clips.ContainsKey("ophan_arrive") || !clips.ContainsKey("ophan_hover_turn"))
+            if (model == null || !clips.ContainsKey("ophan_arrive") || !clips.ContainsKey("ophan_spread"))
             {
                 Debug.LogError($"[Ophan] {ModelPath} or its clips in {ClipsPath} are missing. Nothing built.");
                 return;
             }
 
-            AnimatorController controller = BuildController(clips["ophan_arrive"], clips["ophan_hover_turn"]);
+            AnimatorController controller = BuildController(clips["ophan_arrive"], clips["ophan_spread"]);
             System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(PrefabPath));
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(model);
             try
@@ -65,16 +65,16 @@ namespace Plunderspell.EditorTools
             Debug.Log($"[Ophan] built {ControllerPath} and {PrefabPath}.");
         }
 
-        private static AnimatorController BuildController(AnimationClip arrive, AnimationClip hover)
+        private static AnimatorController BuildController(AnimationClip arrive, AnimationClip spread)
         {
             AssetDatabase.DeleteAsset(ControllerPath);
             AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
             AnimatorStateMachine machine = controller.layers[0].stateMachine;
-            // It unfolds out of a point of light, then hangs there turning.
+            // It unfolds out of a point of light, then hangs there turning with its wings spread wide (#443).
             AnimatorState arriving = machine.AddState("Arrive");
             arriving.motion = arrive;
-            AnimatorState hanging = machine.AddState("Hover");
-            hanging.motion = hover;
+            AnimatorState hanging = machine.AddState("Spread");
+            hanging.motion = spread;
             machine.defaultState = arriving;
             AnimatorStateTransition settle = arriving.AddTransition(hanging);
             settle.hasExitTime = true;

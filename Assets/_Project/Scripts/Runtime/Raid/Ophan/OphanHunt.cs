@@ -49,6 +49,16 @@ namespace Plunderspell.Raid
 
         public void Arrive() => Enter(OphanState.Arriving);
 
+        /// <summary>
+        /// It turned to a new target (its last one died or was outworth): a lock-on, drain or charge on the last one does
+        /// not carry over, so the new one gets the full lock-on from watching.
+        /// </summary>
+        public void Retarget()
+        {
+            if (State == OphanState.Locking || State == OphanState.Draining || State == OphanState.Charging)
+                Enter(OphanState.Watching);
+        }
+
         /// <summary>Paid: it leaves at once (HuntSecondsAfterPaid is 0, #433).</summary>
         public void Leave()
         {

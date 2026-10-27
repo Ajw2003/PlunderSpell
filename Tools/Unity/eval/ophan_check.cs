@@ -1,6 +1,8 @@
 // Play mode only. One side of Tools/Unity/ophan_check.sh (#418): runs the same way in the Editor (the host) and in a
 // Development build (the client), so it reaches the game only through reflection. The script replaces the placeholders.
 //   huntoff          switch automatic hunts off on this machine (OphanOfHours.HuntOverride), so the check decides when
+//   noguards         host: remove every guard, so only the Ophan hurts anyone
+//   huntauto         undo huntoff (the static outlives Play mode when domain reload is off)
 //   arrive           host: the Ophan appears now
 //   read             the Ophan's state, target and whether it is beaming as this machine shows it; scorched rooms;
 //                    every player's health and dead flag; what the local player holds
@@ -11,6 +13,7 @@
 //   grabany          bring the most valuable spawned non-artifact piece in front of the local player and grab it
 //   release          let go of whatever is held
 //   roomshot <path>  save a view of the first scorched room from a camera above it (absolute path, forward slashes)
+//   liftshot <path>  save a view up the beam past the piece the Ophan is taking (absolute path, forward slashes)
 //   slow <scale>     set Time.timeScale on this machine (1 restores)
 //   shot <path>      save a screenshot of this machine's view
 string action = "__ACTION__";
@@ -76,9 +79,17 @@ string V(UnityEngine.Vector3 v) => v.x.ToString("F1") + "," + v.y.ToString("F1")
 
 UnityEngine.Vector3 EyeHere()
 {
+    // Remembered between calls (each eval is its own script), so a placing between two arrivals can still aim.
     var look = Get(Ophan(), "Look") as UnityEngine.Component;
-    if (look == null) throw new System.Exception("the Ophan is not showing on this machine");
-    return (UnityEngine.Vector3)Get(look, "EyePoint");
+    if (look == null)
+    {
+        var last = System.AppDomain.CurrentDomain.GetData("ophanCheckEye");
+        if (last == null) throw new System.Exception("the Ophan is not showing on this machine");
+        return (UnityEngine.Vector3)last;
+    }
+    var eye = (UnityEngine.Vector3)Get(look, "EyePoint");
+    System.AppDomain.CurrentDomain.SetData("ophanCheckEye", eye);
+    return eye;
 }
 
 void Look(UnityEngine.Component player, UnityEngine.Vector3 at)
@@ -126,6 +137,19 @@ switch (action)
         T("Plunderspell.Raid.OphanOfHours").GetField("HuntOverride").SetValue(null, (bool?)false);
         return "hunts off on this machine";
 
+    case "noguards":
+    {
+        // Host: guards would hurt the players the check is measuring the beams on. A server destroy despawns
+        // each one for every machine.
+        int n = 0;
+        foreach (UnityEngine.Component guard in FindAll("Plunderspell.Guards.Guard")) { UnityEngine.Object.Destroy(guard.gameObject); n++; }
+        return "removed " + n + " guards";
+    }
+
+    case "huntauto":
+        T("Plunderspell.Raid.OphanOfHours").GetField("HuntOverride").SetValue(null, null);
+        return "hunts back to the raid's own switch";
+
     case "arrive":
         Call(Ophan(), "ArriveNow");
         return "arrive asked; state " + Get(Ophan(), "State");
@@ -142,6 +166,8 @@ switch (action)
                 + " size " + (look.transform.lossyScale.y * 9.6f).ToString("F0") + "m");
         else
             sb.Append(" shown none");
+        var lifted = UnityEngine.GameObject.Find("TakenPiece");
+        if (lifted != null) sb.Append(" lifted " + V(lifted.transform.position) + " x" + lifted.transform.localScale.x.ToString("F1"));
         sb.Append(" | scorched " + Get(T("Plunderspell.Raid.ScorchedRooms"), "Count") + " | ");
         foreach (UnityEngine.Component p in FindAll("StateMachine.PlayerStateMachine"))
             sb.Append("player local=" + Get(p, "IsLocal") + " health=" + ((float)Get(p, "CurrentHealth")).ToString("F0")
@@ -160,7 +186,9 @@ switch (action)
     case "place":
     {
         bool open = arg == "open";
-        var eye = EyeHere();
+        // The host judges cover from the point the hunt aims from, not the eye bone (it bobs and turns, at 150 times
+        // its size tens of metres off); a client only has the eye bone.
+        var eye = (bool)Get(Ophan(), "isServer") ? (UnityEngine.Vector3)Get(Ophan(), "_eyePoint") : EyeHere();
         var player = LocalPlayer();
         var body = player.GetComponent<UnityEngine.Rigidbody>();
         // The castle has its own navigation grid, not a Unity NavMesh: find floors by casting down over every room.
@@ -176,23 +204,35 @@ switch (action)
                 if (UnityEngine.Physics.Raycast(top, UnityEngine.Vector3.down, out var floor, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore))
                     floors.Add(floor.point);
             }
+        // Never on the portal: standing in it carries the party home and ends the raid.
+        var portal = UnityEngine.Object.FindFirstObjectByType(T("Plunderspell.Extraction.ExtractionZone")) as UnityEngine.Component;
         foreach (var c in floors)
         {
             if (c.y < -1f || c.y > 1.5f) continue;   // the ground floor only
-            var head = c + UnityEngine.Vector3.up * 1.2f;
-            if (StoneBetween(eye, head) == open) continue;
-            // Cover: stone close by on the Ophan's side, not a whole castle away.
-            if (!open && !UnityEngine.Physics.Raycast(head, (eye - head).normalized, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)) continue;
+            if (portal != null && (c - portal.transform.position).sqrMagnitude < 10f * 10f) continue;
+            // The Ophan aims 1.2 m above the body's pivot, which settles about 0.9 m over the floor: judge the line at
+            // that height and at chest height, so a spot is open or covered the same way to it.
+            var head = c + UnityEngine.Vector3.up * 2.1f;
+            var chest = c + UnityEngine.Vector3.up * 1.4f;
+            if (open ? (StoneBetween(eye, head) || StoneBetween(eye, chest)) : !(StoneBetween(eye, head) && StoneBetween(eye, chest))) continue;
+            // Cover: a room's stone close by on the Ophan's side (not a whole castle away, and a room so the charged
+            // beam has something to scorch).
+            if (!open && !(UnityEngine.Physics.Raycast(head, (eye - head).normalized, out var near, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)
+                && Call(T("Plunderspell.Raid.ScorchedRooms"), "RoomOf", near.collider) != null)) continue;
             float d = (c - start).sqrMagnitude;
             if (d < bestDistance) { bestDistance = d; best = c; }
         }
         if (best == null) return "no " + arg + " spot found";
+        // Moving the player drops what they carry: let go first and take it up again after.
+        var carried = Items() != null ? Get(Items(), "CarriedItem") as UnityEngine.Component : null;
+        if (carried != null) Call(Items(), "ForceRelease");
         var at = best.Value + UnityEngine.Vector3.up * 1.25f;
         body.position = at;
         player.transform.position = at;
         body.linearVelocity = UnityEngine.Vector3.zero;
         Look(player, eye);
-        return "placed " + arg + " at " + V(at);
+        if (carried != null) { Grab(carried); Look(player, eye); }
+        return "placed " + arg + " at " + V(at) + (carried != null ? " still carrying " + carried.name : "");
     }
 
     case "grabartifact":
@@ -245,6 +285,31 @@ switch (action)
         UnityEngine.Object.Destroy(camGo);
         rt.Release();
         return "room shot of " + room.name + " saved " + arg;
+    }
+
+    case "liftshot":
+    {
+        var lifted = UnityEngine.GameObject.Find("TakenPiece");
+        if (lifted == null) return "no piece being lifted";
+        var camGo = new UnityEngine.GameObject("LiftShotCamera");
+        var cam = camGo.AddComponent<UnityEngine.Camera>();
+        cam.fieldOfView = 50f;
+        cam.farClipPlane = 3000f;
+        var rt = new UnityEngine.RenderTexture(1600, 900, 24);
+        cam.targetTexture = rt;
+        var up = (EyeHere() - lifted.transform.position).normalized;
+        cam.transform.position = lifted.transform.position - up * 25f + UnityEngine.Vector3.right * 6f;
+        cam.transform.LookAt(lifted.transform.position);
+        cam.Render();
+        UnityEngine.RenderTexture.active = rt;
+        var tex = new UnityEngine.Texture2D(1600, 900, UnityEngine.TextureFormat.RGB24, false);
+        tex.ReadPixels(new UnityEngine.Rect(0, 0, 1600, 900), 0, 0);
+        tex.Apply();
+        System.IO.File.WriteAllBytes(arg, UnityEngine.ImageConversion.EncodeToPNG(tex));
+        UnityEngine.RenderTexture.active = null;
+        UnityEngine.Object.Destroy(camGo);
+        rt.Release();
+        return "lift shot at " + V(lifted.transform.position) + " saved " + arg;
     }
 
     case "slow":

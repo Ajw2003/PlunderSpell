@@ -1,3 +1,4 @@
+using StateMachine;
 using UnityEngine;
 
 namespace Plunderspell.Raid
@@ -12,15 +13,19 @@ namespace Plunderspell.Raid
     {
         // Ring speeds as multiples of the hover clip's own spin (pick 4A): fastest charging, half that locking on, a
         // slow turn watching, stopped as it leaves. The clip turns each ring about its own axis at its own rate, measured
-        // from ophan_hover_turn: GreatWheel about -Z at 60 deg/s, InnerWheel about +X at 80.5, TiltWheel about a tilted
-        // axis at 75.5.
+        // from ophan_hover_turn (ophan_spread, the held sky pose, copies its wheels): GreatWheel about -Z at 60 deg/s,
+        // InnerWheel about +X at 80.5, TiltWheel about a tilted axis at 75.5.
         private const float WatchSpin = 0.25f, LockSpin = 1.5f, ChargeSpin = 3f;
         private static readonly Vector3 GreatAxis = new Vector3(0f, 0f, -1f), InnerAxis = new Vector3(1f, 0f, 0f),
             TiltAxis = new Vector3(0.10f, 0.95f, 0.29f).normalized;
         private const float GreatRate = 60f, InnerRate = 80.5f, TiltRate = 75.5f;
         // At a kilometre a player is a few degrees off its centre; the eye's turn is magnified so it can be seen to follow.
         private const float EyeFollowGain = 8f, EyeFollowMaxDegrees = 35f;
-        private const float BeamWidthAtEye = 40f, BeamWidthAtTarget = 2f, ChargedWidthAtEye = 90f, ChargedWidthAtTarget = 8f;
+        private const float BeamWidthAtEye = 40f, BeamWidthAtTarget = 0.8f, ChargedWidthAtEye = 90f, ChargedWidthAtTarget = 8f;
+        // The beam fades out over its last metres. Seen from the target's own eyes it runs from beside the camera to the
+        // sky, and a camera-facing line that close fills the view, so on the target's machine it fades out further away.
+        private const float FadeMetresOnTarget = 25f, FadeMetresSeenByOthers = 2f;
+        private const float LiftGrowthPerMetre = 0.03f;
         private const float ChargedFlashSeconds = 0.6f;
 
         private OphanTuning _tuning;
@@ -31,10 +36,16 @@ namespace Plunderspell.Raid
         private MaterialPropertyBlock _block;
         private Color _baseEmission;
         private LineRenderer _beam;
+        private readonly Gradient _beamGradient = new Gradient();
+        private readonly GradientColorKey[] _beamColours = new GradientColorKey[2];
+        private readonly GradientAlphaKey[] _beamAlphas = new GradientAlphaKey[3];
         private Vector3 _flashTarget;
         private float _flashUntil = float.NegativeInfinity;
         private Vector3 _restScale;
         private Vector3 _restPosition;
+        private Transform _lifted;
+        private Vector3 _liftFrom;
+        private float _liftStart;
 
         public OphanState State { get; private set; } = OphanState.Arriving;
         public Transform Target { get; private set; }
@@ -82,6 +93,22 @@ namespace Plunderspell.Raid
             _flashUntil = Time.time + ChargedFlashSeconds;
         }
 
+        /// <summary>
+        /// The take: a beam flashes to the piece and a copy of it rises into the sky toward the eye as the Ophan leaves.
+        /// Only a copy, made on this machine; the host despawns the real piece for everyone.
+        /// </summary>
+        public void Lift(GameObject piece)
+        {
+            FlashCharged(piece.transform.position);
+            if (_lifted != null)
+                Destroy(_lifted.gameObject);
+            _lifted = CopyLook(piece).transform;
+            foreach (Renderer shown in piece.GetComponentsInChildren<Renderer>())
+                shown.enabled = false;
+            _liftFrom = _lifted.position;
+            _liftStart = Time.time;
+        }
+
         // per-frame: the eye follows a moving player and the rings turn every frame, over the clip's own pose
         private void LateUpdate()
         {
@@ -92,6 +119,49 @@ namespace Plunderspell.Raid
             ShowTells(inState);
             DrawBeam();
             DriftAway(inState);
+            RaiseLifted();
+        }
+
+        private void OnDestroy()
+        {
+            if (_lifted != null)
+                Destroy(_lifted.gameObject);
+        }
+
+        private void RaiseLifted()
+        {
+            if (_lifted == null)
+                return;
+            float t = (Time.time - _liftStart) / Mathf.Max(0.01f, _tuning.LeaveSeconds);
+            if (t >= 1f)
+            {
+                Destroy(_lifted.gameObject);
+                return;
+            }
+            // Slow off the floor, then fast: it is drawn up, not thrown.
+            _lifted.position = Vector3.Lerp(_liftFrom, EyePoint, t * t * t);
+            _lifted.Rotate(0f, 90f * Time.deltaTime, 0f, Space.World);
+            // It grows as it rises so it still reads hundreds of metres up, as a thing being taken in.
+            _lifted.localScale = Vector3.one * (1f + LiftGrowthPerMetre * Vector3.Distance(_liftFrom, _lifted.position));
+        }
+
+        private static GameObject CopyLook(GameObject piece)
+        {
+            var copy = new GameObject("TakenPiece");
+            copy.transform.SetPositionAndRotation(piece.transform.position, piece.transform.rotation);
+            foreach (MeshRenderer source in piece.GetComponentsInChildren<MeshRenderer>())
+            {
+                var filter = source.GetComponent<MeshFilter>();
+                if (filter == null || filter.sharedMesh == null)
+                    continue;
+                var part = new GameObject(source.name);
+                part.transform.SetPositionAndRotation(source.transform.position, source.transform.rotation);
+                part.transform.localScale = source.transform.lossyScale;
+                part.transform.SetParent(copy.transform, true);
+                part.AddComponent<MeshFilter>().sharedMesh = filter.sharedMesh;
+                part.AddComponent<MeshRenderer>().sharedMaterials = source.sharedMaterials;
+            }
+            return copy;
         }
 
         private void SpinRings(float inState)
@@ -170,17 +240,27 @@ namespace Plunderspell.Raid
         {
             bool flashing = Time.time < _flashUntil;
             bool slow = Beaming && Target != null && State == OphanState.Draining;
-            _beam.enabled = flashing || slow;
+            // The take: after its flash, the slow beam's look holds on the piece the whole way up.
+            bool lifting = !flashing && _lifted != null;
+            _beam.enabled = flashing || slow || lifting;
             if (!_beam.enabled)
                 return;
-            Vector3 end = flashing ? _flashTarget : Target.position + Vector3.up * 1.2f;
+            Vector3 end = flashing ? _flashTarget : lifting ? _lifted.position : Target.position + Vector3.up * 1.2f;
             _beam.SetPosition(0, EyePoint);
             _beam.SetPosition(1, end);
             _beam.startWidth = flashing ? ChargedWidthAtEye : BeamWidthAtEye;
             _beam.endWidth = flashing ? ChargedWidthAtTarget : BeamWidthAtTarget;
             Color colour = flashing ? new Color(1f, 1f, 1f, 1f) : new Color(1f, 0.85f, 0.55f, 0.85f);
-            _beam.startColor = colour;
-            _beam.endColor = colour;
+            bool onLocalPlayer = !flashing && PlayerStateMachine.Local != null && Target == PlayerStateMachine.Local.transform;
+            float fadeMetres = onLocalPlayer ? FadeMetresOnTarget : FadeMetresSeenByOthers;
+            float fadeStart = 1f - Mathf.Clamp01(fadeMetres / Mathf.Max(1f, Vector3.Distance(EyePoint, end)));
+            _beamColours[0] = new GradientColorKey(colour, 0f);
+            _beamColours[1] = new GradientColorKey(colour, 1f);
+            _beamAlphas[0] = new GradientAlphaKey(colour.a, 0f);
+            _beamAlphas[1] = new GradientAlphaKey(colour.a, fadeStart);
+            _beamAlphas[2] = new GradientAlphaKey(0f, 1f);
+            _beamGradient.SetKeys(_beamColours, _beamAlphas);
+            _beam.colorGradient = _beamGradient;
         }
 
         private void DriftAway(float inState)

@@ -24,6 +24,7 @@ namespace Plunderspell.Raid
     {
         public const string PrefabResource = "Fear/TheOphanOfHours";
         private const float RepickSeconds = 1f;
+        private const float TakeDespawnDelaySeconds = 1f;
 
         [SerializeField] private OphanTuning _tuning = new OphanTuning();
 
@@ -109,8 +110,11 @@ namespace Plunderspell.Raid
             bool targetLost = _target == null || _target.dead;
             if (targetLost || (_repickIn <= 0f && (_hunt.State == OphanState.Watching || _hunt.State == OphanState.Arriving)))
             {
+                PlayerStateMachine before = _target;
                 Repick();
                 _repickIn = RepickSeconds;
+                if (_target != before)
+                    _hunt.Retarget();
             }
 
             bool hasTarget = _target != null && !_target.dead;
@@ -222,11 +226,12 @@ namespace Plunderspell.Raid
         private void Take(LootValue artifact)
         {
             var identity = artifact.GetComponent<NetworkIdentity>();
-            ShowTake(artifact.transform.position);
+            ShowTake(identity);
             Debug.Log($"[Ophan] takes {artifact.DisplayName} and leaves.");
             _loot.Remove(artifact);
-            // On a spawned piece the server's destroy despawns it for every client (as SellCounter does).
-            Destroy(identity != null ? identity.gameObject : artifact.gameObject);
+            // On a spawned piece the server's destroy despawns it for every client (as SellCounter does). Not at once:
+            // every machine first copies its look for the lift (and hides it), which needs it still there.
+            Destroy(identity != null ? identity.gameObject : artifact.gameObject, TakeDespawnDelaySeconds);
         }
 
         private static Vector3 CastleCentre()
@@ -285,10 +290,10 @@ namespace Plunderspell.Raid
         }
 
         [ObserversRpc]
-        private void ShowTake(Vector3 at)
+        private void ShowTake(NetworkIdentity piece)
         {
-            if (_look != null)
-                _look.FlashCharged(at);
+            if (_look != null && piece != null)
+                _look.Lift(piece.gameObject);
         }
 
         private void RemoveLook()

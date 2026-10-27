@@ -37,18 +37,26 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
 - **A demand falls due every 3 to 5 raids** (a tuning asset). Each is drawn at random from the
   artifacts of the Age being raided, shown in the Lair's ledger, and paid by placing the artifacts on
   the altar beside the portal. While a demand is unpaid, every raid is hunted.
-- **The Ophan in the sky (planned, #418; redesigned 2026-10-27, Decisions).** It never walks, chases or catches. It
+- **The Ophan in the sky (#418, built on `AjsAgent/ophan-arrival-418`; redesigned 2026-10-27, Decisions).** It never walks, chases or catches. It
   hangs far off in the sky, 150 times its model (about 1.4 km tall) and about 900 m from the castle, eye always on the
   players, and appears `OphanDemandTuning.HuntWindowSeconds` (60 s) before the portal closes, announced by a code-made
   drone and the existing camera shake (#434). The player camera's far clip plane rises to 3000 m so it is drawn whole.
-- **Its target and tells (planned).** Its `Eye` bone follows whoever carries the most worth (the carried piece's sell
+  It holds `ophan_spread` after `ophan_arrive` (#443): the hover's wheels and eye with all six wings spread, 13.2 m
+  wide by 7.8 m tall on the model (`OphanPrefabForge`, `Tools/ArtForge/anim_ophan.py`).
+- **Its target and tells.** Its `Eye` bone follows whoever carries the most worth (the carried piece's sell
   value), then down the list. Its rings (`GreatWheel`, `InnerWheel`, `TiltWheel`) spin fastest while charging, half that
   while locking on, slowly while watching, and spin down as it leaves. The lock-on's tell is a quickening pulse of the eye;
   the charge's is the eye swelling to 1.5 times and brightening to full blast.
-- **Its beams (planned).** A slow beam, after a 3 s lock-on, drains 25 health a second while no stone lies between its
+- **Its beams.** A slow beam, after a 3 s lock-on, drains 25 health a second while no stone lies between its
   eye and the target. A charged beam, after 3 s of the target in cover, charges 3 s, kills in one hit, scorches the room
   it hits (the slow beam then passes through that room's walls) and waits 10 s. A beam on a player carrying a piece
   flagged `IsArtifact` lifts that piece into the sky instead: they live and the Ophan leaves (`HuntSecondsAfterPaid` 0).
+  The host despawns the piece a second later; first every machine hides it, flashes a beam to it and raises a copy of
+  its meshes up the beam to the eye over `LeaveSeconds`, growing so it still reads far up (`OphanLook.Lift`). A new
+  target (the last one died or was outworth) always gets the full lock-on: `OphanHunt.Retarget` drops a lock-on, drain
+  or charge on the last one back to watching. The slow beam is 40 m wide at the eye and 0.8 m at the target and fades out over
+  its last 2 m, or its last 25 m on the target's own machine, where a camera-facing line that close would fill the view
+  (`OphanLook.DrawBeam`). The co-op check is `Tools/Unity/ophan_check.sh` (guards removed, hunts switched off so it brings the Ophan itself).
   Until #419 exists, a test switch forces a hunted raid. Plan page: `docs/plans/ophan-sky-418/ophan-sky-418.html`.
 - **Every machine sees the same thing.** The turn, the lantern, the arrival and each catch are
   decided on the host and shown on every client (the Ophan's target, beams, scorched rooms and takes too); nothing here is polled each frame (`core.md`,
