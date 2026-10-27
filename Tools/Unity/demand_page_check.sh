@@ -39,7 +39,7 @@ inked="$(printf '%s' "$sketch" | sed -n 's/.*inked \([0-9]*\).*/\1/p')"
 
 right="$(ev 'return UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.LairLedgerBook>().RightText.Replace("\n", "/");')"
 log "right page: $right"
-case "$right" in *"The Ophan demands"*"Arm Reliquary"*"deep in the vault"*) check ok "the right page names the demanded piece and where it lies" ;; *) check no "the right page names the demanded piece and where it lies" ;; esac
+[ "$right" = "The Ophan demands" ] && check ok "the right page says only \"The Ophan demands\"" || check no "the right page says only \"The Ophan demands\""
 
 # Camera spots, from the book's own position: as a reader stands at the table (+Z side), straight over it, and across the room.
 book="$(ev 'var b = UnityEngine.GameObject.Find("/LairRoom/LairLedger").transform.position; return b.x.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + b.y.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + b.z.ToString(System.Globalization.CultureInfo.InvariantCulture);')"
@@ -48,12 +48,21 @@ log "book at $bx $by $bz"
 at() { python -c "import sys; print(' '.join(str(round(float(a) + float(b), 3)) for a, b in zip(sys.argv[1:4], sys.argv[4:7])))" "$bx" "$by" "$bz" "$@"; }
 shot() { # shot <name> <dx dy dz from the book> <yaw> <pitch>
     read -r x y z <<< "$(at "$2" "$3" "$4")"
-    log "$1: $(bash Tools/Unity/view.sh "$x" "$y" "$z" "$5" "$6" "$out/$1.png" 2>&1 | tr '\n' ' ')"
+    local said; said="$(bash Tools/Unity/view.sh "$x" "$y" "$z" "$5" "$6" "$out/$1.png" 2>&1 | tr '\n' ' ')"
+    log "$1: $said"
+    case "$said" in "camera at"*) ;; *) check no "$1 was taken from its spot (view.sh did not place the camera)" ;; esac
 }
 shot reading 0 0.55 0.5 180 48
 shot over-the-book 0 0.5 0.08 180 82
 shot across-the-room 2.6 0.9 1.6 238 20
-for f in drawing reading over-the-book across-the-room; do [ -s "$out/$f.png" ] && check ok "$f.png saved" || check no "$f.png saved"; done
+# The glow's three colours (#447), each caught near its swell's peak (view.sh captures about 1.6 s after it is called):
+# 3 raids left, 2, and due this raid.
+for raids in 3 2 1; do
+    peak="$(ev 'var b = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.LairLedgerBook>(); b.SetRaidsUntilDue('"$raids"'); float period = Plunderspell.Raid.LairLedgerBook.BreathSeconds('"$raids"'); float wait = period * 0.5f - 1.6f - (UnityEngine.Time.time % period); while (wait < 0f) wait += period; return wait.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);')"
+    sleep "$peak"
+    shot "glow-$raids-raids" 0 0.5 0.08 180 82
+done
+for f in drawing reading over-the-book across-the-room glow-3-raids glow-2-raids glow-1-raids; do [ -s "$out/$f.png" ] && check ok "$f.png saved" || check no "$f.png saved"; done
 
 log "fails $fails"
 exit $((fails > 0))
