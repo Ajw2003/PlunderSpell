@@ -32,10 +32,19 @@ foreach (var r in ophan.GetComponentsInChildren<UnityEngine.Renderer>()) b.Encap
 var target = centre + dir * (wall + beyond);
 ophan.transform.position += new UnityEngine.Vector3(target.x - b.center.x, bottom - b.min.y, target.z - b.center.z);
 b.center += new UnityEngine.Vector3(target.x - b.center.x, bottom - b.min.y, target.z - b.center.z);
+if (beyond > 100f)
+{
+    // A sky-sized Ophan turns its eye down on the castle: rotate about its centre to face the castle's centre.
+    var pivot = b.center;
+    var face = UnityEngine.Quaternion.LookRotation((centre + UnityEngine.Vector3.up * 1.65f) - pivot);
+    var turn = face * UnityEngine.Quaternion.Inverse(ophan.transform.rotation);
+    ophan.transform.position = pivot + turn * (ophan.transform.position - pivot);
+    ophan.transform.rotation = face;
+}
 
 var camGo = new UnityEngine.GameObject("OphanScaleCamera");
 var cam = camGo.AddComponent<UnityEngine.Camera>();
-cam.fieldOfView = 60f; cam.nearClipPlane = 0.1f; cam.farClipPlane = 2000f;
+cam.fieldOfView = 60f; cam.nearClipPlane = 0.1f; cam.farClipPlane = 20000f;
 var rt = new UnityEngine.RenderTexture(1600, 900, 24);
 cam.targetTexture = rt;
 var report = new System.Text.StringBuilder();
@@ -77,6 +86,9 @@ Shot("far-walltop", far + UnityEngine.Vector3.up * 7.15f, mid);
 // Close: looking up at its middle, as in the reference.
 Shot("close-ground", near + UnityEngine.Vector3.up * 1.65f, mid);
 Shot("close-walltop", near + UnityEngine.Vector3.up * 7.15f, mid);
+// Sky views: from the castle's middle and from the near wall top, looking at its centre.
+Shot("sky-centre", centre + UnityEngine.Vector3.up * 1.65f, mid);
+Shot("sky-walltop", near + UnityEngine.Vector3.up * 7.15f, mid);
 UnityEngine.Object.Destroy(camGo);
 rt.Release();
 return report.ToString();

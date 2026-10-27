@@ -1,10 +1,10 @@
 {
   "title": "The Ophan in the Sky",
-  "eyebrow": "Build plan for approval, round 3 · issue #418, the Ophan of Hours · your answers through 2026-10-27 · nothing built yet",
+  "eyebrow": "Build plan for approval, round 4 · issue #418, the Ophan of Hours · your answers through 2026-10-27 · nothing built yet",
   "replyPrefix": "Build plan approved: ophan in the sky, picks",
   "reply": "",
   "short": {
-    "lead": "The Ophan appears in the sky 60 seconds before the portal closes, about 63 m tall, announced by a loud hum and screen shake. It targets whoever carries the most. Its slow beam locks on over 3 seconds and drains health fast; cover stops it. Its charged beam kills in one hit and can break your cover. A beam on someone carrying the wanted piece lifts the piece into the sky, spares them, and sends the Ophan away. Your answers are settled below; five things are still open under Choices, each with my suggestion marked.",
+    "lead": "The Ophan hangs far off in the sky, a kilometre or more from the castle, so large it dwarfs it, always facing the castle with its eye on the players. It appears 60 seconds before the portal closes with a loud hum and screen shake, and targets whoever carries the most. Its slow beam locks on over 3 seconds and drains health fast; cover stops it. Its charged beam kills in one hit and can break your cover. A beam on someone carrying the wanted piece lifts the piece into the sky, spares them, and sends the Ophan away. Six things are still open under Choices, each with my suggestion marked.",
     "hint": "Tap a step to see what it creates and what it needs from you.",
     "key": [
       [
@@ -24,7 +24,7 @@
       [
         "check",
         "Your answers",
-        "Settled: arrival 1A 2B 3* 4* 5B 6A 7*, beam 1* 2A 3A, and your scale photos",
+        "Settled: arrival 1A 2B 3* 4* 5B 6A 7*, beam 1* 2A 3A, your scale photos, and far off in the sky",
         "done",
         "Wanted means any piece flagged IsArtifact until the demand (#419) exists. It targets whoever carries the most and keeps hunting after a kill. It stays in the sky and never chases or catches. The slow beam locks on over 3 seconds; getting under cover escapes it, and walls block it. The charged beam kills in one hit and can take cover down. A beam on the carrier lifts the wanted piece into the sky; they live and it leaves. Its warning is a loud hum and screen shake. Its size comes from your two photos. Recorded in docs/6-decisions/Decisions.md, 2026-10-27.",
         "Nothing from you."
@@ -77,7 +77,7 @@
       "Your far reference",
       "A third to half of the screen's height, towering over the treeline.",
       null,
-      "Measured from your photo: its body takes about 26% of the screen's height above the trees, and its raised arm reaches about 39%. The arm spans about a third of the width.",
+      "Measured from your photo: its body takes about 26% of the screen's height above the trees, and its raised arm reaches about 39%.",
       [
         "",
         "",
@@ -94,28 +94,8 @@
     ],
     [
       "new",
-      "The Ophan from across the castle",
-      "Six times its model: 63 m tall, 72 m across.",
-      null,
-      "A preview in a real raid in the Editor, through a camera with the player's 60-degree view, on the curtain wall 84 m away. It takes about 55% of the screen's height. Hovering 20 m outside the wall instead, it takes about 41% from 110 m. The battlements in front are what a player on the wall sees. At ground level inside the castle the rooms block the view, so it has to sit high to be seen at all.",
-      [
-        "",
-        "",
-        ""
-      ],
-      {
-        "src": "docs/plans/ophan-sky-418/scale-preview/over-wall/far-walltop-6x.png",
-        "alt": "The Ophan at six times its size, seen from across the castle",
-        "caption": "From across the castle, at six times its size."
-      },
-      {
-        "visual": true
-      }
-    ],
-    [
-      "new",
       "Your close reference",
-      "Looking up from its feet, it fills almost the whole screen.",
+      "It fills almost the whole screen.",
       null,
       "Measured from your photo: about 95% of the screen's height.",
       [
@@ -126,7 +106,7 @@
       {
         "src": "docs/plans/ophan-sky-418/scale-refs/ophan-scale-close.jpg",
         "alt": "Your close scale reference",
-        "caption": "Close: looking up from its feet."
+        "caption": "Close: it fills the screen."
       },
       {
         "visual": true
@@ -134,19 +114,79 @@
     ],
     [
       "new",
-      "The Ophan from beneath",
-      "Standing under it, looking up.",
+      "Option C from a courtyard",
+      "150 times its model: 1.4 km tall, 1.65 km across, 900 m out.",
       null,
-      "The same preview, standing beneath it and looking straight up: it fills the screen, as in your photo. Hovering 20 m outside the wall instead, it fills only about two-thirds of the screen from the closest point a player can reach.",
+      "A preview in a real raid in the Editor, through the player's 60-degree view, from an open courtyard 1.1 km away. It is 68 degrees tall, more than the whole view, so its wings run off the top of the screen; it is 75 degrees across. The castle's towers stand under it like toys.",
       [
         "",
         "",
         ""
       ],
       {
-        "src": "docs/plans/ophan-sky-418/scale-preview/over-wall/close-ground-6x.png",
-        "alt": "The Ophan at six times its size, seen from beneath",
-        "caption": "From beneath, at six times its size."
+        "src": "docs/plans/ophan-sky-418/scale-preview/sky/courtyard-150x-900m.png",
+        "alt": "The Ophan at 150 times its size over the castle, from a courtyard",
+        "caption": "Option C, from a courtyard: it overflows the view."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "Option B from inside a room",
+      "117 times its model: 1.1 km tall, 1.3 km across, 1 km out.",
+      null,
+      "From inside a room, which is open to the sky: 51 degrees tall (84% of the view's height) and 57 degrees across. Its eye looks straight down at you over the room's walls.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "docs/plans/ophan-sky-418/scale-preview/sky/room-117x-1000m.png",
+        "alt": "The Ophan at 117 times its size, seen from inside a room",
+        "caption": "Option B, from inside a room."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "Option A from the wall-walk",
+      "52 times its model: 500 m tall, 570 m across, 600 m out.",
+      null,
+      "From the curtain wall's walk: 38 degrees tall (63% of the view's height) and 43 degrees across. Large, but it sits inside the sky rather than filling it.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "docs/plans/ophan-sky-418/scale-preview/sky/wallwalk-52x-600m.png",
+        "alt": "The Ophan at 52 times its size, seen from the wall-walk",
+        "caption": "Option A, from the wall-walk."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "The player's camera cuts it off today",
+      "Its far clip plane is 1000 m; the Ophan sits 700 m to 1.2 km away.",
+      null,
+      "This is the same courtyard view as option B, drawn with the player's own camera setting: everything beyond 1000 m is not drawn, so only a sliver of the Ophan shows. The build raises the player camera's far clip plane to 3000 m. That is one setting, and the castle is small enough that it costs nothing measurable. Fog is off in raids today; the castle's light haze only softens the Ophan's lower edge.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "docs/plans/ophan-sky-418/scale-preview/sky/courtyard-playerclip-117x-1000m.png",
+        "alt": "The Ophan cut off by the player's 1000 m far clip plane",
+        "caption": "Option B with today's 1000 m far clip: most of it is not drawn."
       },
       {
         "visual": true
@@ -167,27 +207,68 @@
       {
         "visual": false
       }
+    ],
+    [
+      "new",
+      "What a beam looks like from a kilometre away",
+      "A thin line would vanish; it has to be drawn huge.",
+      null,
+      "At a kilometre, a beam two metres wide is a tenth of a degree across, too thin to see. So the beam is drawn tens of metres wide where it leaves the eye, narrowing to a pool of light on the target, and it glows. Because the source is so far away, the warning has to show at the eye itself: the eye brightens through the 3-second lock and the charge, which every player can see wherever they stand.",
+      [
+        "",
+        "",
+        ""
+      ],
+      null,
+      {
+        "visual": false
+      }
     ]
   ],
   "choices": [
     [
-      "place",
-      "Where does it hover? (Its size, six times its model, is set by your photos.)",
+      "size",
+      "How big, and how far off? (It always faces the castle, eye first, and never comes near it.)",
       [
         [
           "A",
-          "Over the curtain wall, on the side farthest from the arrival portal, its lowest point 12 m up",
-          1,
-          "From across the castle it takes about 55% of the screen, and standing beneath it fills the screen, as in both your photos."
+          "52 times its model, 600 m out: 63% of the view's height",
+          0,
+          "Large, but it sits in the sky rather than filling it."
         ],
         [
           "B",
-          "20 m outside the wall, its lowest point 20 m up",
+          "117 times its model, 1 km out: 84% of the view's height",
           0,
-          "From across the castle it takes about 41% of the screen, but from the closest point it fills only about two-thirds."
+          "Fills most of the view; you can take it in at a glance."
+        ],
+        [
+          "C",
+          "150 times its model, 900 m out: more than the whole view",
+          1,
+          "You cannot take it all in at once; you look up and around to see it, which is what taking up the sky means."
         ]
       ],
-      "Both of your photos are matched only when it hovers over the wall."
+      "Farther off also means it looks the same from everywhere in the castle: it never seems to come closer."
+    ],
+    [
+      "wings",
+      "You asked for it wider. Its wings rise in a V, so on screen it is taller than it is wide. Spread them?",
+      [
+        [
+          "A",
+          "Yes: a new held pose with the wings spread flat, so it is about half again as wide as it is tall",
+          1,
+          "About a day in the art pipeline: one new pose on the existing rig, checked on a review sheet like the other clips."
+        ],
+        [
+          "B",
+          "No: keep the V; the size alone is enough",
+          0,
+          ""
+        ]
+      ],
+      "The model is 11 m across and 9.6 m tall; only a pose change makes it read wider."
     ],
     [
       "hum",
@@ -239,15 +320,15 @@
       [
         [
           "A",
-          "Real stone: cover is whenever the straight line from the Ophan to you passes through a wall, or a floor above you",
+          "Real stone: cover is whenever the straight line from the Ophan's eye to you passes through a wall, or a floor above you",
           1,
-          "Honest and simple. With no roofs, a room's walls shield you only near the wall facing the Ophan; the crypt and the keep's lower storey shield you everywhere."
+          "It comes in low from one side, about 30 degrees up, so the wall on its side of a room shields you; the crypt and the keep's lower storey shield you everywhere."
         ],
         [
           "B",
           "Being inside any room counts as cover",
           0,
-          "Easier to read, but a room open to the sky would hide you from something hovering above it."
+          "Easier to read, but a room open to the sky would hide you from something looking straight into it."
         ]
       ],
       "The castle has no roofs today, so this decides how much shelter there is."
@@ -279,9 +360,9 @@
     ]
   ],
   "wrapup": {
-    "summary": "A plan for the Ophan of Hours as a celestial threat at six times its size: it appears in the sky with a hum and screen shake, locks on to whoever carries the most, drains health with a slow beam that cover stops, and breaks cover with a one-hit charged beam.",
+    "summary": "A plan for the Ophan of Hours as a celestial threat far off in the sky, large enough to dwarf the castle, eye always on the players: a hum and screen shake, a slow beam that cover stops, and a one-hit charged beam that breaks cover.",
     "changing": "Hunted raids end with the Ophan overhead. A beam takes an artifact and spares the carrier, or kills a player who carries none. Until the quota exists, only the test switch brings it.",
-    "blocking": "Your five picks under Choices. Nothing is built until you approve.",
+    "blocking": "Your six picks under Choices. Nothing is built until you approve.",
     "next": "On approval I log the decision, write the systems doc, file the steps as issues under #418 and build on the feature branch. It is not merged into staging until it passes.",
     "todo": [
       "Pick an answer for each choice under Choices.",
