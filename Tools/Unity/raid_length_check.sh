@@ -17,10 +17,12 @@ cli=(--no-banner --format json)
 log() { printf '%s %s\n' "$(date +%T)" "$*" | tee -a "$out/$label-run.log"; }
 host() { timeout 90 bash Tools/Unity/coop_eval.sh host "$@" 2>&1; }
 probe() { COOP_EVAL_FILE="$repo/Tools/Unity/eval/raid_length.cs" timeout 90 bash Tools/Unity/coop_eval.sh host "$1" "${2:-}" 2>&1; }
+ophan() { COOP_EVAL_FILE="$repo/Tools/Unity/eval/ophan_check.cs" timeout 90 bash Tools/Unity/coop_eval.sh host "$1" 2>&1; }
 num() { sed -n "s/.* $1 \([0-9.-]*\).*/\1/p" <<<"$2"; }
 cleanup() {
     log "cleaning up"
     probe slow 1 >/dev/null 2>&1 || true
+    ophan huntauto >/dev/null 2>&1 || true
     unity command editor_stop "${cli[@]}" >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
@@ -41,6 +43,8 @@ unity command editor_play "${cli[@]}" >/dev/null
 wait_for "state MainMenu" 60
 log "solo: $(timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/start_solo_raid.cs)"
 wait_for "state LairRoom" 20
+# The Ophan (#418) would arrive 60 s before the end and could end the raid early by killing the player.
+log "hunts: $(ophan huntoff)"
 log "set out: $(timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/set_out.cs)"
 wait_for "state Playing" 30
 log "garrison: $(timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/quiet_castle.cs)"
