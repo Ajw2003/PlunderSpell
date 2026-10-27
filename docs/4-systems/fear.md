@@ -66,7 +66,13 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
   F7 summons it again, F8 stops damage to the local player, F9 removes the guards, F10 cycles time (1, 0.5, 0.25); a client's
   key asks the host. `bash Tools/Unity/coop_local.sh --gym` plays it in co-op with its own client in `Build/OphanGym`.
   It reuses the Ophan's own `ArriveNow` and the `OphanOfHours.HuntOverride` switch; no Ophan code changes for it.
-  Plan page: `docs/plans/ophan-gym-plan.html`.
+  Plan page: `docs/plans/ophan-gym-plan.html`. Built and proved in co-op 2026-10-27; F8 is a `Damage.Untouchable` hook.
+- **Beam fixes (#459, approved 2026-10-27, being built on `AjsAgent/ophan-gym-418`).** Found playing: a flat
+  camera-facing ribbon from the eye is end-on to anyone looking up at the Ophan, so the beams showed only as a sliver by
+  the eye. Both beams become a glowing tapered shaft (a tube mesh), which reads end-on as light closing in around the eye
+  (#460). The charged beam bursts a glowing hole in each wall in its path on every machine and the kill lands 0.5 s
+  later (#461); the hole is visual only, walls stay solid. A Lantern Warden before its turn could stand half in the
+  floor on the main floor (#462). Options page: `docs/plans/ophan-beam-fixes.html`.
 - **Every machine sees the same thing.** The turn, the lantern, the arrival and each catch are
   decided on the host and shown on every client (the Ophan's target, beams, scorched rooms and takes too); nothing here is polled each frame (`core.md`,
   "When Update is allowed").
