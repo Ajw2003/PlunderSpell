@@ -1,10 +1,10 @@
 {
   "title": "The Ophan in the Sky",
-  "eyebrow": "Build plan for approval · issue #418, the Ophan of Hours · your design picks from 2026-10-27 · nothing built yet",
+  "eyebrow": "Build plan for approval, round 3 · issue #418, the Ophan of Hours · your answers through 2026-10-27 · nothing built yet",
   "replyPrefix": "Build plan approved: ophan in the sky, picks",
   "reply": "",
   "short": {
-    "lead": "Your picks turn the Ophan from a hunter that chases into a celestial threat. It appears huge in the sky over the castle 60 seconds before the portal closes, announced by a loud hum and screen shake. From the sky it locks on to whoever carries the most, and after a set delay it strikes them with a beam of light. A player carrying an artifact loses that artifact and lives, and the Ophan leaves. A player with no artifact dies, and it keeps hunting the rest. Five numbers and behaviours are still open; they are under Choices.",
+    "lead": "The Ophan appears in the sky 60 seconds before the portal closes, about 63 m tall, announced by a loud hum and screen shake. It targets whoever carries the most. Its slow beam locks on over 3 seconds and drains health fast; cover stops it. Its charged beam kills in one hit and can break your cover. A beam on someone carrying the wanted piece lifts the piece into the sky, spares them, and sends the Ophan away. Your answers are settled below; five things are still open under Choices, each with my suggestion marked.",
     "hint": "Tap a step to see what it creates and what it needs from you.",
     "key": [
       [
@@ -23,10 +23,10 @@
     "items": [
       [
         "check",
-        "Your design",
-        "Design approved: 1A 2B 3* 4* 5B 6A 7*",
+        "Your answers",
+        "Settled: arrival 1A 2B 3* 4* 5B 6A 7*, beam 1* 2A 3A, and your scale photos",
         "done",
-        "Any piece flagged IsArtifact counts as wanted (1A). It targets whoever carries the most (2B). It stays in the sky, larger than life, and attacks with beams of light instead of catching (3). It never chases; it locks on after a set delay (4). It does not hunt on the ground, as in #430 (5B). It keeps hunting the others after a kill (6A). It is announced by a loud hum and screen shake (7).",
+        "Wanted means any piece flagged IsArtifact until the demand (#419) exists. It targets whoever carries the most and keeps hunting after a kill. It stays in the sky and never chases or catches. The slow beam locks on over 3 seconds; getting under cover escapes it, and walls block it. The charged beam kills in one hit and can take cover down. A beam on the carrier lifts the wanted piece into the sky; they live and it leaves. Its warning is a loud hum and screen shake. Its size comes from your two photos. Recorded in docs/6-decisions/Decisions.md, 2026-10-27.",
         "Nothing from you."
       ],
       [
@@ -48,9 +48,9 @@
       [
         "eye",
         "Step 2",
-        "Lock-on and the beam",
+        "The two beams",
         "",
-        "It fixes its eye (the fix_gaze clip) on whoever carries the most. After the lock-on delay it fires a beam of light at them. Hit while carrying an artifact: it takes that artifact (the take clip) and leaves at once. Hit with no artifact: the player dies through the same path as the Wick's catch, so every machine sees it.",
+        "The slow beam: a 3-second lock, then health drains while nothing blocks the line from the Ophan to you. The charged beam: one hit, and it breaks the cover it passes through, as set under Choices. A hit on a carrier lifts the wanted piece away instead. Deaths go through the same path as the Wick's catch, so every machine sees them. The beam numbers sit on the Ophan's own component, the way the Wick's numbers sit on the guard; the #433 asset keeps exactly its approved fields.",
         "Nothing until the build is shown."
       ],
       [
@@ -71,101 +71,123 @@
       ]
     ]
   },
-  "changes": [],
+  "changes": [
+    [
+      "new",
+      "Your far reference",
+      "A third to half of the screen's height, towering over the treeline.",
+      null,
+      "Measured from your photo: its body takes about 26% of the screen's height above the trees, and its raised arm reaches about 39%. The arm spans about a third of the width.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "docs/plans/ophan-sky-418/scale-refs/ophan-scale-far.jpg",
+        "alt": "Your far scale reference",
+        "caption": "Far: a giant towering over the treeline."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "The Ophan from across the castle",
+      "Six times its model: 63 m tall, 72 m across.",
+      null,
+      "A preview in a real raid in the Editor, through a camera with the player's 60-degree view, on the curtain wall 84 m away. It takes about 55% of the screen's height. Hovering 20 m outside the wall instead, it takes about 41% from 110 m. The battlements in front are what a player on the wall sees. At ground level inside the castle the rooms block the view, so it has to sit high to be seen at all.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "docs/plans/ophan-sky-418/scale-preview/over-wall/far-walltop-6x.png",
+        "alt": "The Ophan at six times its size, seen from across the castle",
+        "caption": "From across the castle, at six times its size."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "Your close reference",
+      "Looking up from its feet, it fills almost the whole screen.",
+      null,
+      "Measured from your photo: about 95% of the screen's height.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "docs/plans/ophan-sky-418/scale-refs/ophan-scale-close.jpg",
+        "alt": "Your close scale reference",
+        "caption": "Close: looking up from its feet."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "The Ophan from beneath",
+      "Standing under it, looking up.",
+      null,
+      "The same preview, standing beneath it and looking straight up: it fills the screen, as in your photo. Hovering 20 m outside the wall instead, it fills only about two-thirds of the screen from the closest point a player can reach.",
+      [
+        "",
+        "",
+        ""
+      ],
+      {
+        "src": "docs/plans/ophan-sky-418/scale-preview/over-wall/close-ground-6x.png",
+        "alt": "The Ophan at six times its size, seen from beneath",
+        "caption": "From beneath, at six times its size."
+      },
+      {
+        "visual": true
+      }
+    ],
+    [
+      "new",
+      "What the castle can break today",
+      "Walls and floors are one piece, and rooms have no roofs.",
+      null,
+      "Each room's floor and four walls are a single mesh with a single collider, so no wall can be removed without the floor going too. No room has a roof: the sky is open above every room, and only the crypt and the keep's lower storey have anything overhead. Door plugs are the only separate pieces. The castle is never sent over the network: every machine builds it from one shared seed, so any broken wall needs its own sync.",
+      [
+        "",
+        "",
+        ""
+      ],
+      null,
+      {
+        "visual": false
+      }
+    ]
+  ],
   "choices": [
     [
-      "delay",
-      "How long does it take to lock on before the beam fires?",
+      "place",
+      "Where does it hover? (Its size, six times its model, is set by your photos.)",
       [
         [
           "A",
-          "3 seconds",
+          "Over the curtain wall, on the side farthest from the arrival portal, its lowest point 12 m up",
           1,
-          "Long enough to see it coming and move, short enough to stay a threat."
+          "From across the castle it takes about 55% of the screen, and standing beneath it fills the screen, as in both your photos."
         ],
         [
           "B",
-          "2 seconds",
+          "20 m outside the wall, its lowest point 20 m up",
           0,
-          ""
-        ],
-        [
-          "C",
-          "5 seconds",
-          0,
-          ""
+          "From across the castle it takes about 41% of the screen, but from the closest point it fills only about two-thirds."
         ]
       ],
-      "A set delay you can read, as you asked."
-    ],
-    [
-      "dodge",
-      "Can you get out of the beam's way?",
-      [
-        [
-          "A",
-          "Yes: the beam strikes where you stood when the lock finished",
-          1,
-          "Moving at the last moment saves you, so the hum and the lock-on mean something."
-        ],
-        [
-          "B",
-          "No: once locked, the beam follows you",
-          0,
-          ""
-        ],
-        [
-          "C",
-          "Only by getting under a roof",
-          0,
-          ""
-        ]
-      ],
-      "Running still matters, without ever fighting it."
-    ],
-    [
-      "cover",
-      "Can walls or roofs hide you from it?",
-      [
-        [
-          "A",
-          "No: it sees through everything",
-          1,
-          "The approved plan already says it cannot be hidden from, and that suits a celestial threat."
-        ],
-        [
-          "B",
-          "A roof overhead breaks the lock",
-          0,
-          ""
-        ]
-      ],
-      "It stays the threat you cannot hide from."
-    ],
-    [
-      "sky",
-      "Where in the sky, and how big?",
-      [
-        [
-          "A",
-          "High over the castle's centre, about ten times its modelled size (around 100 m tall)",
-          1,
-          "Visible from every courtyard, larger than life, and never on the ground."
-        ],
-        [
-          "B",
-          "Low on the horizon, filling it",
-          0,
-          ""
-        ],
-        [
-          "C",
-          "Directly above the player it is hunting",
-          0,
-          ""
-        ]
-      ],
-      "Visible everywhere, out of reach."
+      "Both of your photos are matched only when it hovers over the wall."
     ],
     [
       "hum",
@@ -173,9 +195,9 @@
       [
         [
           "A",
-          "A monstrous hum: a low, loud drone, made in code for now until real audio exists",
+          "A monstrous hum: a low, loud drone for the 4-second arrival, made in code until real audio exists, with the existing camera shake",
           1,
-          "There is no Ophan sound in the project yet, so a generated drone is a stand-in you can replace."
+          "There is no Ophan sound in the project yet; a generated drone is a stand-in you can replace. The game already has a camera-shake system."
         ],
         [
           "B",
@@ -184,11 +206,80 @@
           ""
         ]
       ],
-      "There is no audio for the Ophan yet, so the first version would be a stand-in."
+      "A stand-in hum now, real audio later."
+    ],
+    [
+      "numbers",
+      "The beams' numbers",
+      [
+        [
+          "A",
+          "Slow beam: 25 health a second (4 seconds from full). Charged beam: it charges for 3 seconds once its target has been behind cover for 3 seconds, then waits 10 seconds before it can charge again",
+          1,
+          "Fast enough to frighten, slow enough to reach cover; hiding works for a moment, then it blasts the cover."
+        ],
+        [
+          "B",
+          "Slow beam 50 a second (2 seconds); charged beam on a fixed timer every 15 seconds",
+          0,
+          ""
+        ],
+        [
+          "C",
+          "Slow beam 15 a second (about 7 seconds); charged beam every 20 seconds",
+          0,
+          ""
+        ]
+      ],
+      "The 3-second lock-on is already settled by your answer."
+    ],
+    [
+      "cover",
+      "What counts as cover from the slow beam?",
+      [
+        [
+          "A",
+          "Real stone: cover is whenever the straight line from the Ophan to you passes through a wall, or a floor above you",
+          1,
+          "Honest and simple. With no roofs, a room's walls shield you only near the wall facing the Ophan; the crypt and the keep's lower storey shield you everywhere."
+        ],
+        [
+          "B",
+          "Being inside any room counts as cover",
+          0,
+          "Easier to read, but a room open to the sky would hide you from something hovering above it."
+        ]
+      ],
+      "The castle has no roofs today, so this decides how much shelter there is."
+    ],
+    [
+      "break",
+      "How much does the charged beam break?",
+      [
+        [
+          "A",
+          "It scorches the stone open: for the rest of the raid the slow beam passes through that room's walls, drawn burnt, on every machine",
+          1,
+          "The smallest build, about two days: one synced list of scorched rooms and a burnt material, no new art. The walls stay solid to walk into."
+        ],
+        [
+          "B",
+          "It knocks the hit wall down",
+          0,
+          "About two weeks: every room in every Age has its walls split from its floor in the art pipeline, plus a sync of fallen walls and updated guard paths."
+        ],
+        [
+          "C",
+          "It punches a hole where it hits",
+          0,
+          "The largest and riskiest, several weeks: cutting meshes and rebuilding colliders while the game runs, kept the same on every machine."
+        ]
+      ],
+      "Rooms are one piece today, so how much it breaks sets the size of the build."
     ]
   ],
   "wrapup": {
-    "summary": "A plan for the Ophan of Hours as a celestial threat: it appears in the sky with a hum and screen shake, locks on to whoever carries the most, and strikes with a beam of light.",
+    "summary": "A plan for the Ophan of Hours as a celestial threat at six times its size: it appears in the sky with a hum and screen shake, locks on to whoever carries the most, drains health with a slow beam that cover stops, and breaks cover with a one-hit charged beam.",
     "changing": "Hunted raids end with the Ophan overhead. A beam takes an artifact and spares the carrier, or kills a player who carries none. Until the quota exists, only the test switch brings it.",
     "blocking": "Your five picks under Choices. Nothing is built until you approve.",
     "next": "On approval I log the decision, write the systems doc, file the steps as issues under #418 and build on the feature branch. It is not merged into staging until it passes.",
