@@ -1,5 +1,10 @@
 # Today
 
+**2026-10-27 (evening) - the demand page: glowing words, tear out, raise with R (#446: #447, #448, #449 built;
+#450, #457, #458 not built).** Branch `AjsAgent/demand-ledger-page-419`. `demand_page_check.sh` fails 0;
+`coop_lair_check.sh demand-449` PASS all; full suites not yet run. Stopped on the owner's usage limit; next steps in
+`docs/handoff/handoff-2026-10-27-demand-page.md`.
+
 **2026-10-27 - prototype: the demanded piece drawn in ink across the ledger's left page (#419,
 `AjsAgent/demand-ledger-page-419`, cut from `AjsAgent/staging-2026-10-26`).** Design waived by the owner. The left page is
 an ink-and-wash drawing of the Arm Reliquary made live from its model (`LedgerDemandSketch`, `InkSketch`); the right page
