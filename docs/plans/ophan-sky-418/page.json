@@ -1,10 +1,10 @@
 {
   "title": "The Ophan in the Sky",
-  "eyebrow": "Build plan for approval, round 4 · issue #418, the Ophan of Hours · your answers through 2026-10-27 · nothing built yet",
+  "eyebrow": "Build plan for approval, round 5 · issue #418, the Ophan of Hours · your answers through 2026-10-27 · nothing built yet",
   "replyPrefix": "Build plan approved: ophan in the sky, picks",
   "reply": "",
   "short": {
-    "lead": "The Ophan hangs far off in the sky, a kilometre or more from the castle, so large it dwarfs it, always facing the castle with its eye on the players. It appears 60 seconds before the portal closes with a loud hum and screen shake, and targets whoever carries the most. Its slow beam locks on over 3 seconds and drains health fast; cover stops it. Its charged beam kills in one hit and can break your cover. A beam on someone carrying the wanted piece lifts the piece into the sky, spares them, and sends the Ophan away. Six things are still open under Choices, each with my suggestion marked.",
+    "lead": "The Ophan hangs far off in the sky, a kilometre or more from the castle, so large it dwarfs it. Its eye follows its target as they move: whoever carries the most worth, then the next down the list. Its rings spin faster or slower with what it is doing, and its eye glows and grows as it charges to full blast, with a similar tell for the lock-on. It appears 60 seconds before the portal closes with a loud hum and screen shake. Its slow beam locks on over 3 seconds and drains health fast; cover stops it. Its charged beam kills in one hit and can break cover. A beam on the carrier of the wanted piece lifts the piece into the sky, spares them, and sends the Ophan away. Nine things are still open under Choices, each with my suggestion marked.",
     "hint": "Tap a step to see what it creates and what it needs from you.",
     "key": [
       [
@@ -24,9 +24,9 @@
       [
         "check",
         "Your answers",
-        "Settled: arrival 1A 2B 3* 4* 5B 6A 7*, beam 1* 2A 3A, your scale photos, and far off in the sky",
+        "Settled: arrival 1A 2B 3* 4* 5B 6A 7*, beam 1* 2A 3A, your scale photos, far off in the sky, and the eye, rings and tells",
         "done",
-        "Wanted means any piece flagged IsArtifact until the demand (#419) exists. It targets whoever carries the most and keeps hunting after a kill. It stays in the sky and never chases or catches. The slow beam locks on over 3 seconds; getting under cover escapes it, and walls block it. The charged beam kills in one hit and can take cover down. A beam on the carrier lifts the wanted piece into the sky; they live and it leaves. Its warning is a loud hum and screen shake. Its size comes from your two photos. Recorded in docs/6-decisions/Decisions.md, 2026-10-27.",
+        "Wanted means any piece flagged IsArtifact until the demand (#419) exists. It targets whoever carries the most and keeps hunting after a kill. It stays in the sky and never chases or catches. The slow beam locks on over 3 seconds; getting under cover escapes it, and walls block it. The charged beam kills in one hit and can take cover down. A beam on the carrier lifts the wanted piece into the sky; they live and it leaves. Its warning is a loud hum and screen shake. Its size comes from your two photos. Recorded in docs/6-decisions/Decisions.md, 2026-10-27. Its eye follows its target as they move, choosing whoever carries the most worth, then down the list. Its rings spin faster or slower by state. Its eye glows and grows while charging, up to full blast, with a similar tell for the lock-on.",
         "Nothing from you."
       ],
       [
@@ -42,7 +42,7 @@
         "Step 1",
         "The Ophan appears in the sky",
         "",
-        "A prefab of the Ophan with its Animator on TheOphanOfHours_Rig. HuntWindowSeconds (60 s) before the portal closes, it plays its 4-second arrival clip high over the castle, and every machine hears the hum and feels the shake. A test switch forces a hunted raid until the quota (#419) exists.",
+        "A prefab of the Ophan with its Animator on TheOphanOfHours_Rig. HuntWindowSeconds (60 s) before the portal closes, it plays its 4-second arrival clip high over the castle, and every machine hears the hum and feels the shake. A test switch forces a hunted raid until the quota (#419) exists. Its eye turns to follow its target every frame, and its three rings spin at a speed set by what it is doing.",
         "Nothing until the build is shown."
       ],
       [
@@ -194,6 +194,22 @@
     ],
     [
       "new",
+      "The rig can do all of it",
+      "The eye and the three rings are their own bones, and the pupil already glows.",
+      null,
+      "Checked in the model file: the GreatWheel, InnerWheel and TiltWheel bones each carry their own ring (3,530, 1,600 and 1,634 vertices), and the Eye bone carries the eye (1,049 vertices). Code can turn and scale those four bones every frame after the animation plays, so the eye can follow a player and the rings can speed up and slow down without new clips. Its one material has an emission map, so the glow can be raised from code. The pupil is the part that glows, at nine times brightness (docs/4-systems/raid-scene-assembly.md).",
+      [
+        "",
+        "",
+        ""
+      ],
+      null,
+      {
+        "visual": false
+      }
+    ],
+    [
+      "new",
       "What the castle can break today",
       "Walls and floors are one piece, and rooms have no roofs.",
       null,
@@ -269,6 +285,75 @@
         ]
       ],
       "The model is 11 m across and 9.6 m tall; only a pose change makes it read wider."
+    ],
+    [
+      "worth",
+      "What does \"most worth\" mean when it picks its target?",
+      [
+        [
+          "A",
+          "The sell value of the piece a player is carrying, the same worth the portal's tally counts",
+          1,
+          "The same number the haul is judged by, so carrying the best loot is what makes you the target."
+        ],
+        [
+          "B",
+          "Artifacts first, then sell value",
+          0,
+          "Whoever holds an artifact is always first."
+        ],
+        [
+          "C",
+          "Weight carried",
+          0,
+          ""
+        ]
+      ],
+      "Your rule: the most worth first, then down the list."
+    ],
+    [
+      "rings",
+      "Which state spins the rings fastest?",
+      [
+        [
+          "A",
+          "Charging the charged beam is fastest, winding up to full blast; the lock-on is half that; hanging and watching is a slow turn; leaving, they spin down to a stop",
+          1,
+          "The faster the rings, the closer the blow, so you can read its state from anywhere."
+        ],
+        [
+          "B",
+          "The lock-on is fastest, and the charge slows them to a grinding stop before the blast",
+          0,
+          ""
+        ]
+      ],
+      "Speed tells you what is coming."
+    ],
+    [
+      "tells",
+      "How does the lock-on's tell differ from the charge's?",
+      [
+        [
+          "A",
+          "Lock-on: the eye narrows and pulses, the pulse quickening over the 3 seconds. Charge: the eye swells to half again its size and brightens steadily to full blast",
+          1,
+          "A quickening pulse means move now; a swelling glow means get out of the way of what comes next. They read differently at a glance."
+        ],
+        [
+          "B",
+          "Both glow and grow, in different colours: gold for the lock-on, white for the charge",
+          0,
+          ""
+        ],
+        [
+          "C",
+          "The lock-on shows only by the eye turning on you; only the charge glows",
+          0,
+          ""
+        ]
+      ],
+      "Both tells sit at the eye, which every player can see from anywhere."
     ],
     [
       "hum",
