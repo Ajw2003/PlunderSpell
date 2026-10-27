@@ -896,6 +896,7 @@ GameObject:
   - component: {fileID: 8614021771412850821}
   - component: {fileID: 8219350945781248814}
   - component: {fileID: 3536220267971511390}
+  - component: {fileID: 5793278951435703840}
   m_Layer: 0
   m_Name: LedgerPages
   m_TagString: Untagged
@@ -1009,6 +1010,19 @@ MonoBehaviour:
   _keeper: {fileID: 8614021771412850821}
   _drawing: {fileID: 7509935887026516448}
   _stub: {fileID: 7894966939089770117}
+--- !u!114 &5793278951435703840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3503494213041099673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34d0aaf005a9a5c4fa13d19555e03220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.DemandPageReader
+  _keeper: {fileID: 8614021771412850821}
 --- !u!1 &3697748493123637503
 GameObject:
   m_ObjectHideFlags: 0

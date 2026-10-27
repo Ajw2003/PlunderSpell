@@ -172,6 +172,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ReadPage"",
+                    ""type"": ""Button"",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d1f03"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -394,6 +403,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Drop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f1c9a52-6d0e-4b7a-9c14-5a2e8b7d1f04"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ReadPage"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -575,6 +595,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_PlayerActions_Interact = m_PlayerActions.FindAction("Interact", throwIfNotFound: true);
         m_PlayerActions_PickUp = m_PlayerActions.FindAction("PickUp", throwIfNotFound: true);
         m_PlayerActions_Drop = m_PlayerActions.FindAction("Drop", throwIfNotFound: true);
+        m_PlayerActions_ReadPage = m_PlayerActions.FindAction("ReadPage", throwIfNotFound: true);
         // Haggle
         m_Haggle = asset.FindActionMap("Haggle", throwIfNotFound: true);
         m_Haggle_Plus = m_Haggle.FindAction("Plus", throwIfNotFound: true);
@@ -680,6 +701,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Interact;
     private readonly InputAction m_PlayerActions_PickUp;
     private readonly InputAction m_PlayerActions_Drop;
+    private readonly InputAction m_PlayerActions_ReadPage;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerActions".
     /// </summary>
@@ -727,6 +749,10 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PlayerActions/Drop".
         /// </summary>
         public InputAction @Drop => m_Wrapper.m_PlayerActions_Drop;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/ReadPage".
+        /// </summary>
+        public InputAction @ReadPage => m_Wrapper.m_PlayerActions_ReadPage;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -780,6 +806,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Drop.started += instance.OnDrop;
             @Drop.performed += instance.OnDrop;
             @Drop.canceled += instance.OnDrop;
+            @ReadPage.started += instance.OnReadPage;
+            @ReadPage.performed += instance.OnReadPage;
+            @ReadPage.canceled += instance.OnReadPage;
         }
 
         /// <summary>
@@ -818,6 +847,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Drop.started -= instance.OnDrop;
             @Drop.performed -= instance.OnDrop;
             @Drop.canceled -= instance.OnDrop;
+            @ReadPage.started -= instance.OnReadPage;
+            @ReadPage.performed -= instance.OnReadPage;
+            @ReadPage.canceled -= instance.OnReadPage;
         }
 
         /// <summary>
@@ -1253,6 +1285,13 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDrop(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ReadPage" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnReadPage(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Haggle" which allows adding and removing callbacks.

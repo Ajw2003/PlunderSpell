@@ -169,6 +169,10 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
     Built by `LairRoomForge.AddTearing`; no spawned page object yet (#449, #450). Checks: `demand_page_check.sh`, `coop_lair_check.sh`.
   - *Raising it.* A new `ReadPage` action on R in `PlayerInputs.inputactions`, held: the carried page is raised in front
     of the local camera, and the player keeps walking. It does not take the loot-carrying hand.
+    **Built (#449):** `ReadPage` on R (generated `PlayerInputs.cs` kept in sync); `DemandPageReader` (on `LedgerPages`, beside the
+    keeper, so it works in the Lair and in a raid) puts an unlit vellum quad with the drawing on the local camera while the holder
+    holds R, eased over 0.25 s by `PageRaise` (pure rules, `PageRaiseTests`). Local only, nothing networked; it lowers when the page
+    is no longer held. Check: `demand_page_check.sh` (`raised-page-lair.png`, `raised-page-raid.png`, walking with R and W held).
   - *Lost and found.* The carrier's death or a Drop lets the page fall where they stand, as a pickable world object. On
     coming home, a page nobody carries is gone and the book's sheet is whole again.
   - The words and the urgency colour stay in the book: only the picture leaves it.

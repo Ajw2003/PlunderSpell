@@ -91,5 +91,42 @@ log "$shown"
 shot torn-book 0 0.5 0.08 180 82
 [ -s "$out/torn-book.png" ] && check ok "torn-book.png saved" || check no "torn-book.png saved"
 
+# Reading the torn page (#449): hold R and the holder raises it on their own view; W held with R keeps walking; letting go lowers it.
+chord() { # chord <Key names...>: all held together
+    local list=""; for k in "$@"; do list="$list${list:+, }UnityEngine.InputSystem.Key.$k"; done
+    ev "UnityEngine.InputSystem.InputSystem.QueueStateEvent(UnityEngine.InputSystem.Keyboard.current, new UnityEngine.InputSystem.LowLevel.KeyboardState($list)); UnityEngine.InputSystem.InputSystem.Update(); return \"keys: $*\";"
+}
+raise() { ev 'return UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.DemandPageReader>().Raise.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);'; }
+where() { ev 'var p = StateMachine.PlayerStateMachine.Local.transform.position; return p.x.ToString("F2", System.Globalization.CultureInfo.InvariantCulture) + " " + p.z.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);'; }
+raise_check() { # raise_check <picture name> <label>
+    log "$(chord R)"; sleep 0.8
+    local up; up="$(raise)"; log "$2: raise $up"
+    [ "$up" = "1.00" ] && check ok "$2: holding R raised the page" || check no "$2: holding R raised the page"
+    bash Tools/Unity/capture.sh "$out/$1.png" >/dev/null 2>&1
+    [ -s "$out/$1.png" ] && check ok "$1.png saved" || check no "$1.png saved"
+}
+lowered_check() { # lowered_check <label>
+    log "$(keys none)"; sleep 0.8
+    local down; down="$(raise)"; log "$1: raise $down after letting go"
+    [ "$down" = "0.00" ] && check ok "$1: letting go lowered the page" || check no "$1: letting go lowered the page"
+}
+# view.sh left the player parked (kinematic) and looking down at the book: free them and look ahead, as a walking player does.
+log "$(ev 'var p = StateMachine.PlayerStateMachine.Local; p.GetComponent<UnityEngine.Rigidbody>().isKinematic = false; p.FaceYaw(180f); typeof(StateMachine.PlayerStateMachine).GetField("_xRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(p, 8f); return "freed, looking ahead";')"
+sleep 1
+raise_check raised-page-lair "lair"
+walk_from="$(where)"; log "$(chord R W)"; sleep 1; log "$(chord R W)"; sleep 1; walk_to="$(where)"; log "$(chord R)"
+log "walked with the page up: $walk_from -> $walk_to, raise $(raise)"
+[ "$walk_from" != "$walk_to" ] && [ "$(raise)" = "1.00" ] && check ok "W held with R kept walking and the page stayed up" || check no "W held with R kept walking and the page stayed up"
+lowered_check "lair"
+
+# Out on a raid: the page is still held and R raises it there too.
+timeout 60 bash Tools/Unity/eval.sh --file Tools/Unity/eval/set_out.cs >/dev/null
+for _ in $(seq 1 30); do state="$(ev 'return Plunderspell.Core.GameServices.GameState.CurrentState.ToString();' 2>/dev/null)"; [ "$state" = Playing ] && break; sleep 1; done
+log "state $state"
+[ "$state" = Playing ] && check ok "set out on a raid" || check no "set out on a raid"
+sleep 3
+raise_check raised-page-raid "raid"
+lowered_check "raid"
+
 log "fails $fails"
 exit $((fails > 0))

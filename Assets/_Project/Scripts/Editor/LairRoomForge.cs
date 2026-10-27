@@ -231,6 +231,11 @@ namespace Plunderspell.EditorTools
             tearerObject.FindProperty("_keeper").objectReferenceValue = keeper;
             tearerObject.ApplyModifiedPropertiesWithoutUndo();
 
+            var reader = pages.AddComponent<Plunderspell.Raid.DemandPageReader>();
+            var readerObject = new SerializedObject(reader);
+            readerObject.FindProperty("_keeper").objectReferenceValue = keeper;
+            readerObject.ApplyModifiedPropertiesWithoutUndo();
+
             var view = pages.AddComponent<Plunderspell.Raid.LedgerTornStub>();
             var viewObject = new SerializedObject(view);
             viewObject.FindProperty("_keeper").objectReferenceValue = keeper;
