@@ -8,6 +8,8 @@
         "Plunderspell.Core",
         "Plunderspell.Guards",
         "Plunderspell.Raid",
+        "Plunderspell.Loot",
+        "Plunderspell.Extraction",
         "Plunderspell.Player",
         "Unity.InputSystem",
         "PurrNet.Runtime"

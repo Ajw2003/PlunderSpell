@@ -83,6 +83,12 @@ namespace Interfaces
         /// </summary>
         public static Func<bool> SafePlace;
 
+        /// <summary>
+        /// Set by the Ophan Gym's no-damage key (#454): true for a body that takes no harm on this machine. Asked after
+        /// <see cref="Forward"/>, so it is the body owner's machine that decides. Null (always, outside the gym) means none.
+        /// </summary>
+        public static Func<IHealth, bool> Untouchable;
+
         /// <summary>Nothing loses health and no item breaks here right now. Loot breakage asks this too.</summary>
         public static bool InSafePlace => SafePlace != null && SafePlace();
 
@@ -108,6 +114,9 @@ namespace Interfaces
                 return 0f;
 
             if (Forward != null && Forward(target, amount, source, instigator, point, kind, impactVelocity))
+                return 0f;
+
+            if (Untouchable != null && Untouchable(target))
                 return 0f;
 
             float before = target.CurrentHealth;
