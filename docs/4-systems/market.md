@@ -162,6 +162,11 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
   - *Torn page.* One drawing per company. E on the book (the existing Interact) tears it out: the server spawns a
     networked page object owned by the tearer and the book's left sheet shows a torn stub on every machine. Each machine
     draws the picture itself from the same model, so only "torn, and by whom" crosses the network.
+    **Built (#448):** `DemandPageKeeper` (a scene network object on `LedgerPages`) holds the server's SyncVar holder seat
+    (-1 in the book, seat n = owner id n+1), publishes `DemandPageChanged`, and returns the page on `RaidPhase.Resolved` (coming home);
+    `LedgerPageTearer` reads E at the book (any player, a client's goes by ServerRpc); `LedgerTornStub` swaps the
+    drawing quad for the `TornStub` strip; pure rules in `DemandPageRules`. All in `Assets/_Project/Scripts/Runtime/Raid/`.
+    Built by `LairRoomForge.AddTearing`; no spawned page object yet (#449, #450). Checks: `demand_page_check.sh`, `coop_lair_check.sh`.
   - *Raising it.* A new `ReadPage` action on R in `PlayerInputs.inputactions`, held: the carried page is raised in front
     of the local camera, and the player keeps walking. It does not take the loot-carrying hand.
   - *Lost and found.* The carrier's death or a Drop lets the page fall where they stand, as a pickable world object. On
