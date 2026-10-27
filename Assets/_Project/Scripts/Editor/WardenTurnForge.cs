@@ -48,6 +48,10 @@ namespace Plunderspell.EditorTools
             controller.AddParameter("Turn", AnimatorControllerParameterType.Trigger);
             AnimatorStateMachine machine = controller.layers[0].stateMachine;
             AnimatorState idle = machine.AddState("Idle");
+            // Held on the turn's first frame, the standing pose. An empty state wrote the rig's rest pose, which has
+            // the feet 0.74 m below the root, so the Warden stood half in the floor (#462).
+            idle.motion = turn;
+            idle.speed = 0f;
             AnimatorState turning = machine.AddState("Turn");
             turning.motion = turn;
             machine.defaultState = idle;
