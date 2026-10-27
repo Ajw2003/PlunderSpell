@@ -205,7 +205,38 @@ namespace Plunderspell.EditorTools
             // Both pages get a clean sheet, so the words face the drawing on the same paper, not across the ruled columns.
             // The right sheet lies just under its text.
             AddSheet(pages, "RightSheet", new Vector3(book.position.x - PageOffset, top - PageInk * 0.5f, book.position.z), vellum);
-            AddSketchPage(AddSheet(pages, "DemandSketchPage", new Vector3(book.position.x + PageOffset, top, book.position.z), vellum));
+            MeshRenderer drawing = AddSheet(pages, "DemandSketchPage", new Vector3(book.position.x + PageOffset, top, book.position.z), vellum);
+            AddSketchPage(drawing);
+            AddTearing(pages, book, drawing, vellum);
+        }
+
+        /// <summary>
+        /// The torn page (#448): a network object keeping who holds the left page, E at the book to tear it, and the narrow
+        /// ragged strip of vellum by the spine that shows in the drawing's place while it is torn.
+        /// </summary>
+        private static void AddTearing(GameObject pages, Transform book, MeshRenderer drawing, Color vellum)
+        {
+            // The page's spine edge lies 0.0075 m from the book's middle; the strip starts there and is 0.05 m wide, turned a little to look torn.
+            MeshRenderer strip = AddSheet(pages, "TornStub", new Vector3(book.position.x + 0.04f, drawing.transform.position.y, book.position.z), vellum);
+            strip.transform.localScale = new Vector3(0.05f, SketchPageSize.y, 1f);
+            strip.transform.rotation = Quaternion.AngleAxis(3f, Vector3.up) * strip.transform.rotation;
+            strip.gameObject.SetActive(false);
+
+            pages.AddComponent<PurrNet.NetworkIdentity>();
+            var keeper = pages.AddComponent<Plunderspell.Raid.DemandPageKeeper>();
+
+            var tearer = pages.AddComponent<Plunderspell.Raid.LedgerPageTearer>();
+            var tearerObject = new SerializedObject(tearer);
+            tearerObject.FindProperty("_book").objectReferenceValue = book;
+            tearerObject.FindProperty("_keeper").objectReferenceValue = keeper;
+            tearerObject.ApplyModifiedPropertiesWithoutUndo();
+
+            var view = pages.AddComponent<Plunderspell.Raid.LedgerTornStub>();
+            var viewObject = new SerializedObject(view);
+            viewObject.FindProperty("_keeper").objectReferenceValue = keeper;
+            viewObject.FindProperty("_drawing").objectReferenceValue = drawing.gameObject;
+            viewObject.FindProperty("_stub").objectReferenceValue = strip.gameObject;
+            viewObject.ApplyModifiedPropertiesWithoutUndo();
         }
 
         /// <summary>

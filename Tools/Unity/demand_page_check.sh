@@ -13,7 +13,7 @@ out="docs/generated/demand-page-2026-10-27"; mkdir -p "$out"
 cli=(--no-banner --format json)
 log() { printf '%s %s\n' "$(date +%T)" "$*" | tee -a "$out/run.log"; }
 ev() { timeout 90 bash Tools/Unity/eval.sh "$@"; }
-cleanup() { log "cleaning up"; unity command editor_stop "${cli[@]}" >/dev/null 2>&1 || true; test_slot_restore; log "$test_slot_msg"; }
+cleanup() { log "cleaning up"; ev 'UnityEngine.InputSystem.InputSystem.QueueStateEvent(UnityEngine.InputSystem.Keyboard.current, new UnityEngine.InputSystem.LowLevel.KeyboardState()); return "keys up";' >/dev/null 2>&1; unity command editor_stop "${cli[@]}" >/dev/null 2>&1 || true; test_slot_restore; log "$test_slot_msg"; }
 trap cleanup EXIT
 fails=0
 check() { if [ "$1" = ok ]; then log "PASS $2"; else log "FAIL $2"; fails=$((fails + 1)); fi; }
@@ -63,6 +63,33 @@ for raids in 3 2 1; do
     shot "glow-$raids-raids" 0 0.5 0.08 180 82
 done
 for f in drawing reading over-the-book across-the-room glow-3-raids glow-2-raids glow-1-raids; do [ -s "$out/$f.png" ] && check ok "$f.png saved" || check no "$f.png saved"; done
+
+# Tearing the page out (#448): from over the book, look at it and press E (a queued key press through the Input System, as
+# century_dial_check.sh does). The page must be torn and held by the local player (seat 0 solo); a second E changes nothing.
+keys() { # keys <Key name or none>
+    local state="new UnityEngine.InputSystem.LowLevel.KeyboardState()"; [ "$1" = none ] || state="new UnityEngine.InputSystem.LowLevel.KeyboardState(UnityEngine.InputSystem.Key.$1)"
+    ev "UnityEngine.InputSystem.InputSystem.QueueStateEvent(UnityEngine.InputSystem.Keyboard.current, $state); return \"keys: $1\";"
+}
+page() { ev 'var k = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Raid.DemandPageKeeper>(); return "torn " + k.IsTorn + " holder " + k.HolderSeat + " local " + k.LocalPlayerHolds + " drawing " + (k.Drawing != null);'; }
+read -r x y z <<< "$(at 0 0.5 0.08)"
+bash Tools/Unity/view.sh "$x" "$y" "$z" 180 82 >/dev/null 2>&1
+sleep 1
+looked="$(ev 'return Plunderspell.Raid.LookTarget.IsLookedAt(UnityEngine.Camera.main, UnityEngine.GameObject.Find("/LairRoom/LairLedger").transform, 3f).ToString();')"
+log "looking at the book: $looked"
+[ "$looked" = True ] && check ok "the player looks at the book from over the table" || check no "the player looks at the book from over the table"
+before="$(page)"; log "before E: $before"
+[ "$before" = "torn False holder -1 local False drawing True" ] && check ok "the page starts in the book" || check no "the page starts in the book"
+log "$(keys E)"; sleep 0.3; log "$(keys none)"; sleep 1
+after="$(page)"; log "after E: $after"
+[ "$after" = "torn True holder 0 local True drawing True" ] && check ok "E tore the page out and the local player holds it" || check no "E tore the page out and the local player holds it"
+log "$(keys E)"; sleep 0.3; log "$(keys none)"; sleep 1
+again="$(page)"; log "after a second E: $again"
+[ "$again" = "$after" ] && check ok "a second E on the stub changes nothing" || check no "a second E on the stub changes nothing"
+shown="$(ev 'var p = UnityEngine.GameObject.Find("/LairRoom/LedgerPages"); return "drawing quad " + (p.transform.Find("DemandSketchPage") == null ? "gone" : p.transform.Find("DemandSketchPage").gameObject.activeSelf.ToString()) + " stub " + p.transform.Find("TornStub").gameObject.activeSelf;')"
+log "$shown"
+[ "$shown" = "drawing quad False stub True" ] && check ok "the drawing is hidden and the stub shown" || check no "the drawing is hidden and the stub shown"
+shot torn-book 0 0.5 0.08 180 82
+[ -s "$out/torn-book.png" ] && check ok "torn-book.png saved" || check no "torn-book.png saved"
 
 log "fails $fails"
 exit $((fails > 0))
