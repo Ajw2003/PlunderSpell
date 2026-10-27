@@ -227,3 +227,9 @@ The owner answered the three-question beam page after all: "Design approved: oph
 - **3A.** A beam on someone carrying the wanted piece lifts the piece out of their hands into the sky; they live, and the Ophan leaves.
 
 So it has two attacks. A **slow beam** locks on and drains health fast, and walls and roofs block it. A **charged beam** kills in one hit and can break the wall or roof you're hiding behind, leaving you exposed. Still open: where it sits in the sky and how big, the hum, and the charged beam's details (charge time, how often, how much it breaks). These go on the single build plan page in `docs/plans/ophan-sky-418/`.
+
+## The Ophan's size in the sky, by reference (owner, 2026-10-27 04:15 UTC)
+
+"use these for scale references, far away ane close up for the size i want the ophan to appear in the sky". The two photos are in `areas/ophan-arrival/scale-refs/`; they show another game's giant against a forest:
+- **Far** (`ophan-scale-far.jpg`): seen across the forest, the giant towers over the treeline. Its body takes up roughly a third to half of the screen's height, and one outstretched arm reaches about a third of the way across.
+- **Close** (`ophan-scale-close.jpg`): from near its feet, looking up, it fills almost the whole screen's height.
