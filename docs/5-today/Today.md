@@ -10,7 +10,11 @@ the next at once with no lock-on (`OphanHunt.Retarget`, new `Test_ANewTargetGets
 `Tools/Unity/ophan_check.sh coop`: all 14 checks PASS (the take spares its carrier and both machines show the piece
 rising; the client shows the slow beam; cover holds health at 85; the charged beam kills through stone and both
 machines show the room scorched; the next player gets the lock-on first). Screenshots and log in
-`docs/generated/ophan-418/coop-*`. OphanHuntTests 10/10. Manual co-op test still owed.
+`docs/generated/ophan-418/coop-*`. Feature branch: EditMode 274 pass / 3 skipped, PlayMode 528/529 (the known-flaky
+`CarryFeelTests.Test_WalkingDoesNotJoltAHeldItem`, 0.080 m; 20/20 on a rerun), `fear_wick_check`, `coop_lair_check` (27
+PASS) and `raid_length_check` (now with hunts off; 300.5 game s) PASS. Merged into `AjsAgent/staging-2026-10-26`
+locally and run again there: compile clean, EditMode 274 pass / 3 skipped, PlayMode 529/529, `ophan_check.sh staging`
+14/14, Wick, Lair (27) and raid-length (301.3 game s) PASS. Manual co-op test still owed.
 
 **2026-10-27 - one tuning asset for the Ophan's demand, and 5-minute raids (#433, `AjsAgent/ophan-demand-tuning-433`).**
 `OphanDemandTuning` (`Runtime/Core/GameFlow`, asset `Resources/OphanDemandTuning.asset`) holds every #433 number with a
