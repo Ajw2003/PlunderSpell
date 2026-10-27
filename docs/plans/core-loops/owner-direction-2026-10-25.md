@@ -203,3 +203,17 @@ Reply "Hook options: area 1 1* 2A 3A 4A 5*", given in the comparison thread.
 updated and moved under it; the Ophan gets its own designed warning (#434); the coin debt code is removed; Unity runs
 in a Remote Control session on the owner's PC; the Ophan's arrival is built before the demand. The Wick's pull
 request is #436.
+
+## The Ophan's arrival, answered (owner, 2026-10-27 04:10 UTC)
+
+The owner's reply to `areas/ophan-arrival/ophan-arrival.page.html`: "Design approved: ophan arrival 1A 2B 3* 4* 5B 6A 7*".
+
+- **1A.** Until the demand (#419) exists, any carried piece flagged as an artifact counts as wanted.
+- **2B.** With two players, it targets whoever carries the most.
+- **3, the owner's own answer:** "it arrives in the sky first and hunts from the sky too, i want it to not actually catch you but to instead attack you with beams of light or something similar, it appears in the sky larger than life a threat you shouldn't believe you can defeat until the lore shows you otherwise"
+- **4, the owner's own answer:** "it doesn't chase you, it hunts from the sky and had a set delay to lock on, it needs to appear a celestial level threat"
+- **5B.** The sky idea (#430) wins: the Ophan stays in the sky and does not come down to hunt on foot.
+- **6A.** After it kills an empty-handed player, it keeps hunting the others until the portal closes.
+- **7, the owner's own answer:** "build it and warn it's coming with a loud menstrual hum and screen shake". Read as a loud *monstrous* hum (a likely typo), pending the owner's correction.
+
+What this changes in #418: no walking, drifting or catching through walls. The Ophan appears in the sky, larger than life, and attacks with beams of light after a set lock-on delay. Its warning is a loud hum with screen shake. Follow-up questions on how the beam plays are on `areas/ophan-arrival/ophan-beam.page.html`.

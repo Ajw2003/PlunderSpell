@@ -1,0 +1,49 @@
+{
+ "title": "The Ophan's beams: three questions",
+ "eyebrow": "Design area: the demand loop · the Ophan's arrival (#418), part 2 · nothing built",
+ "approval": "Design approved: ophan beam",
+ "short": {
+  "lead": "Your answers make the Ophan a celestial threat. It appears in the sky, larger than life, and strikes with beams of light after a set lock-on delay, with no chase and no catch. That leaves three things about the beam itself undecided. They're below, each with my suggestion marked. One check first: I read \"menstrual hum\" as \"monstrous hum\". Say so if you meant something else.",
+  "hint": "Tap a card for what's already settled or what one question decides.",
+  "key": [["Settled", ""], ["Your answer", "you"], ["Settled by you", "done"]],
+  "items": [
+   ["check", "Settled", "Your answers from the first page", "done",
+    ["It arrives 60 seconds before the portal closes, only on raids where a demand is due or owed.",
+     "It appears in the sky, larger than life, and stays there. It never chases and never walks.",
+     "It attacks with beams of light after a set lock-on delay.",
+     "It targets whoever carries the most.",
+     "Until the demand exists, any piece marked as an artifact counts as wanted.",
+     "After a kill, it keeps hunting the others until the portal closes.",
+     "Its warning is a loud, monstrous hum and screen shake."],
+    ["Nothing from you, unless I've misread the hum."]],
+   ["stop", "The hit", "1. What a beam does to you", "you", ["Whether one beam kills you or only hurts you."], ["Your answer to choice 1."]],
+   ["eye", "Escaping", "2. How you escape a lock-on", "you", ["What you can do during the lock-on delay, and how long it lasts."], ["Your answer to choice 2."]],
+   ["hand", "The piece", "3. How it takes the piece", "you", ["Your rule is that carrying the wanted piece means it takes the piece and you live. With beams, it needs a new shape."], ["Your answer to choice 3."]]
+  ]
+ },
+ "changes": [],
+ "choices": [
+  ["hit", "What does a beam do to an empty-handed player it hits?",
+   [["A", "Kills them outright", 1, "Matches \"caught empty-handed, you die\", and keeps it an overwhelming threat."],
+    ["B", "Heavy damage, so two hits kill", 0, "A second chance, which makes it a little less overwhelming."],
+    ["C", "Your own answer", 0, "Tell me what it does."]],
+   "It keeps your rule that empty-handed means death, and keeps the threat celestial."],
+  ["escape", "During the lock-on delay, how do you escape?",
+   [["A", "Get under a roof or behind cover before it fires; the beam needs a clear line to the sky. Delay: 3 seconds", 1, "The castle's roofs and doorways become shelter, and the delay is one number in the tuning file."],
+    ["B", "Move: the beam strikes where you stood when it locked on. Delay: 2 seconds", 0, "Dodging becomes a skill, and roofs don't matter."],
+    ["C", "Your own answer", 0, "Tell me how, and how long the delay is."]],
+   "Hiding from something in the sky reads at once, and it turns the castle itself into what saves you."],
+  ["take", "When it targets someone carrying the wanted piece, what happens?",
+   [["A", "The beam lifts the piece out of their hands into the sky; they live, and it leaves", 1, "Your rule stays as it is: one holder saves everyone."],
+    ["B", "The carrier must hold the piece up to the sky to offer it", 0, "Paying becomes a choice the player makes, and it never takes the piece by force."],
+    ["C", "Your own answer", 0, "Tell me how it takes it."]],
+   "It keeps \"it takes the piece and you live\" with no new rules to learn."]
+ ],
+ "wrapup": {
+  "summary": "Three questions about the Ophan's beams: what a hit does, how to escape a lock-on, and how it takes the piece.",
+  "changing": "Nothing is built yet. Your first-page answers are recorded in the design notes.",
+  "blocking": "Your answers to the three choices, and a word if I misread the hum.",
+  "next": "Once you answer, I update #418 to match and build it on its own branch, warning included, then test it and merge it into staging.",
+  "todo": ["Pick your answers (Choices).", "Tap <b>Copy my reply</b>.", "Send it, or say what to change."]
+ }
+}
