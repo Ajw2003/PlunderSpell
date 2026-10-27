@@ -127,6 +127,9 @@ namespace Plunderspell.Raid
             if (step.Take && artifact != null)
                 Take(artifact);
 
+            // A killing blow can end the raid on the spot (the last player down), which clears the hunt.
+            if (_hunt == null)
+                return;
             bool beaming = _hunt.State == OphanState.Draining && hasTarget && !inCover;
             if (_hunt.State != _shownState || _target != _shownTarget || beaming != _shownBeaming)
             {
@@ -188,11 +191,17 @@ namespace Plunderspell.Raid
             bool blocked = false;
             for (int i = 0; i < count; i++)
             {
-                CastleRoomModule room = ScorchedRooms.RoomOf(_hits[i].collider);
-                if (room == null || ScorchedRooms.IsScorched(room))
+                Collider hit = _hits[i].collider;
+                // Any part of the built castle is stone, room or not (towers, the keep, the curtain wall's dressing);
+                // only a room can be scorched open.
+                if (hit.GetComponentInParent<ProceduralCastleGenerator>() == null)
+                    continue;
+                CastleRoomModule room = ScorchedRooms.RoomOf(hit);
+                if (ScorchedRooms.IsScorched(room))
                     continue;
                 blocked = true;
-                (rooms ??= new List<CastleRoomModule>()).Add(room);
+                if (room != null)
+                    (rooms ??= new List<CastleRoomModule>()).Add(room);
             }
             return blocked;
         }

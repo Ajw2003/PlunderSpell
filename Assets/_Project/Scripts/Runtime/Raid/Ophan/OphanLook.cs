@@ -10,8 +10,14 @@ namespace Plunderspell.Raid
     /// </summary>
     public sealed class OphanLook : MonoBehaviour
     {
-        // Ring speeds in degrees a second (pick 4A): fastest charging, half that locking on, a slow turn watching.
-        private const float WatchSpin = 12f, LockSpin = 60f, ChargeSpin = 120f;
+        // Ring speeds as multiples of the hover clip's own spin (pick 4A): fastest charging, half that locking on, a
+        // slow turn watching, stopped as it leaves. The clip turns each ring about its own axis at its own rate, measured
+        // from ophan_hover_turn: GreatWheel about -Z at 60 deg/s, InnerWheel about +X at 80.5, TiltWheel about a tilted
+        // axis at 75.5.
+        private const float WatchSpin = 0.25f, LockSpin = 1.5f, ChargeSpin = 3f;
+        private static readonly Vector3 GreatAxis = new Vector3(0f, 0f, -1f), InnerAxis = new Vector3(1f, 0f, 0f),
+            TiltAxis = new Vector3(0.10f, 0.95f, 0.29f).normalized;
+        private const float GreatRate = 60f, InnerRate = 80.5f, TiltRate = 75.5f;
         // At a kilometre a player is a few degrees off its centre; the eye's turn is magnified so it can be seen to follow.
         private const float EyeFollowGain = 8f, EyeFollowMaxDegrees = 35f;
         private const float BeamWidthAtEye = 40f, BeamWidthAtTarget = 2f, ChargedWidthAtEye = 90f, ChargedWidthAtTarget = 8f;
@@ -57,6 +63,7 @@ namespace Plunderspell.Raid
             _restPosition = transform.position;
             _beam = BuildBeam();
             _stateSince = Time.time;
+            _spin = 1f; // arriving, the rings turn as the clip turns them
         }
 
         public void Show(OphanState state, Transform target, bool beaming)
@@ -98,13 +105,15 @@ namespace Plunderspell.Raid
                 _ => WatchSpin,
             };
             // Ease toward the wanted speed so the rings wind up and spin down rather than jump.
-            _spin = Mathf.MoveTowards(_spin, wanted, 60f * Time.deltaTime);
-            _greatAngle += _spin * Time.deltaTime;
-            _innerAngle -= _spin * 1.3f * Time.deltaTime;
-            _tiltAngle += _spin * 0.7f * Time.deltaTime;
-            _greatPose.Set(Quaternion.AngleAxis(_greatAngle, Vector3.up), Vector3.one);
-            _innerPose.Set(Quaternion.AngleAxis(_innerAngle, Vector3.up), Vector3.one);
-            _tiltPose.Set(Quaternion.AngleAxis(_tiltAngle, Vector3.up), Vector3.one);
+            _spin = Mathf.MoveTowards(_spin, wanted, 1.5f * Time.deltaTime);
+            // The clip already turns each ring at 1x; add the rest (negative slows it, -1x stops it).
+            float extra = (_spin - 1f) * Time.deltaTime;
+            _greatAngle += extra * GreatRate;
+            _innerAngle += extra * InnerRate;
+            _tiltAngle += extra * TiltRate;
+            _greatPose.Set(Quaternion.AngleAxis(_greatAngle, GreatAxis), Vector3.one);
+            _innerPose.Set(Quaternion.AngleAxis(_innerAngle, InnerAxis), Vector3.one);
+            _tiltPose.Set(Quaternion.AngleAxis(_tiltAngle, TiltAxis), Vector3.one);
         }
 
         /// <summary>The eye's turn toward its target, in the eye's parent space, magnified so it shows from a kilometre.</summary>
