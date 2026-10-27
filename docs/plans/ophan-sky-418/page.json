@@ -1,0 +1,202 @@
+{
+  "title": "The Ophan in the Sky",
+  "eyebrow": "Build plan for approval · issue #418, the Ophan of Hours · your design picks from 2026-10-27 · nothing built yet",
+  "replyPrefix": "Build plan approved: ophan in the sky, picks",
+  "reply": "",
+  "short": {
+    "lead": "Your picks turn the Ophan from a hunter that chases into a celestial threat. It appears huge in the sky over the castle 60 seconds before the portal closes, announced by a loud hum and screen shake. From the sky it locks on to whoever carries the most, and after a set delay it strikes them with a beam of light. A player carrying an artifact loses that artifact and lives, and the Ophan leaves. A player with no artifact dies, and it keeps hunting the rest. Five numbers and behaviours are still open; they are under Choices.",
+    "hint": "Tap a step to see what it creates and what it needs from you.",
+    "key": [
+      [
+        "Done",
+        "done"
+      ],
+      [
+        "We build it",
+        ""
+      ],
+      [
+        "You act on it",
+        "you"
+      ]
+    ],
+    "items": [
+      [
+        "check",
+        "Your design",
+        "Design approved: 1A 2B 3* 4* 5B 6A 7*",
+        "done",
+        "Any piece flagged IsArtifact counts as wanted (1A). It targets whoever carries the most (2B). It stays in the sky, larger than life, and attacks with beams of light instead of catching (3). It never chases; it locks on after a set delay (4). It does not hunt on the ground, as in #430 (5B). It keeps hunting the others after a kill (6A). It is announced by a loud hum and screen shake (7).",
+        "Nothing from you."
+      ],
+      [
+        "lock",
+        "You approve",
+        "This plan and the five picks below",
+        "you",
+        "A decisions-log entry, the systems doc, and the build starts on the branch AjsAgent/ophan-arrival-418.",
+        "Your picks, sent with \"Build plan approved: ophan in the sky\"."
+      ],
+      [
+        "eye",
+        "Step 1",
+        "The Ophan appears in the sky",
+        "",
+        "A prefab of the Ophan with its Animator on TheOphanOfHours_Rig. HuntWindowSeconds (60 s) before the portal closes, it plays its 4-second arrival clip high over the castle, and every machine hears the hum and feels the shake. A test switch forces a hunted raid until the quota (#419) exists.",
+        "Nothing until the build is shown."
+      ],
+      [
+        "eye",
+        "Step 2",
+        "Lock-on and the beam",
+        "",
+        "It fixes its eye (the fix_gaze clip) on whoever carries the most. After the lock-on delay it fires a beam of light at them. Hit while carrying an artifact: it takes that artifact (the take clip) and leaves at once. Hit with no artifact: the player dies through the same path as the Wick's catch, so every machine sees it.",
+        "Nothing until the build is shown."
+      ],
+      [
+        "eye",
+        "Step 3",
+        "Tests and the co-op check",
+        "",
+        "Tests for the arrival, a hit with an artifact, a hit without one, and leaving once paid. A co-op check where the Ophan strikes the client, with screenshots from both machines that I look at. Then both full suites, the raid-length check, the Wick check and the lair check.",
+        "Nothing from you."
+      ],
+      [
+        "hand",
+        "You test",
+        "Play one hunted raid",
+        "you",
+        "Once it passes, a pull request into staging carries \"Manual co-op test still owed\".",
+        "Whether it reads as a threat you cannot fight."
+      ]
+    ]
+  },
+  "changes": [],
+  "choices": [
+    [
+      "delay",
+      "How long does it take to lock on before the beam fires?",
+      [
+        [
+          "A",
+          "3 seconds",
+          1,
+          "Long enough to see it coming and move, short enough to stay a threat."
+        ],
+        [
+          "B",
+          "2 seconds",
+          0,
+          ""
+        ],
+        [
+          "C",
+          "5 seconds",
+          0,
+          ""
+        ]
+      ],
+      "A set delay you can read, as you asked."
+    ],
+    [
+      "dodge",
+      "Can you get out of the beam's way?",
+      [
+        [
+          "A",
+          "Yes: the beam strikes where you stood when the lock finished",
+          1,
+          "Moving at the last moment saves you, so the hum and the lock-on mean something."
+        ],
+        [
+          "B",
+          "No: once locked, the beam follows you",
+          0,
+          ""
+        ],
+        [
+          "C",
+          "Only by getting under a roof",
+          0,
+          ""
+        ]
+      ],
+      "Running still matters, without ever fighting it."
+    ],
+    [
+      "cover",
+      "Can walls or roofs hide you from it?",
+      [
+        [
+          "A",
+          "No: it sees through everything",
+          1,
+          "The approved plan already says it cannot be hidden from, and that suits a celestial threat."
+        ],
+        [
+          "B",
+          "A roof overhead breaks the lock",
+          0,
+          ""
+        ]
+      ],
+      "It stays the threat you cannot hide from."
+    ],
+    [
+      "sky",
+      "Where in the sky, and how big?",
+      [
+        [
+          "A",
+          "High over the castle's centre, about ten times its modelled size (around 100 m tall)",
+          1,
+          "Visible from every courtyard, larger than life, and never on the ground."
+        ],
+        [
+          "B",
+          "Low on the horizon, filling it",
+          0,
+          ""
+        ],
+        [
+          "C",
+          "Directly above the player it is hunting",
+          0,
+          ""
+        ]
+      ],
+      "Visible everywhere, out of reach."
+    ],
+    [
+      "hum",
+      "The hum: you wrote \"a loud menstrual hum\". Which did you mean?",
+      [
+        [
+          "A",
+          "A monstrous hum: a low, loud drone, made in code for now until real audio exists",
+          1,
+          "There is no Ophan sound in the project yet, so a generated drone is a stand-in you can replace."
+        ],
+        [
+          "B",
+          "Another word: tell me",
+          0,
+          ""
+        ]
+      ],
+      "There is no audio for the Ophan yet, so the first version would be a stand-in."
+    ]
+  ],
+  "wrapup": {
+    "summary": "A plan for the Ophan of Hours as a celestial threat: it appears in the sky with a hum and screen shake, locks on to whoever carries the most, and strikes with a beam of light.",
+    "changing": "Hunted raids end with the Ophan overhead. A beam takes an artifact and spares the carrier, or kills a player who carries none. Until the quota exists, only the test switch brings it.",
+    "blocking": "Your five picks under Choices. Nothing is built until you approve.",
+    "next": "On approval I log the decision, write the systems doc, file the steps as issues under #418 and build on the feature branch. It is not merged into staging until it passes.",
+    "todo": [
+      "Pick an answer for each choice under Choices.",
+      "Tap <b>Copy my reply</b>.",
+      "Paste it into the chat and send it, or say what to change."
+    ]
+  },
+  "approval": "Build plan approved: ophan in the sky"
+}
