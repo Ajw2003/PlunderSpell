@@ -45,6 +45,7 @@ namespace Plunderspell.UI
             EventManager.Instance?.Subscribe(this, (DamageDealt e) => OnDamage(e.Report));
             EventManager.Instance?.Subscribe(this, (CastResolved e) => OnCast(e.Report));
             EventManager.Instance?.Subscribe(this, (LocalPlayerChanged e) => SetLocal(e.Player));
+            EventManager.Instance?.Subscribe(this, (Plunderspell.Raid.OphanArrived e) => _quakeUntil = Time.time + e.Seconds);
             SetLocal(PlayerStateMachine.Local);
         }
 
@@ -67,6 +68,11 @@ namespace Plunderspell.UI
         /// pinned the shake at full. 0.7 is half the angle of a full-strength shake.
         /// </summary>
         public const float OnFireTrauma = 0.7f;
+
+        /// <summary>While the Ophan of Hours arrives, trauma is held at least this high (#439): the ground itself shakes.</summary>
+        public const float OphanQuakeTrauma = 0.8f;
+
+        private float _quakeUntil = float.NegativeInfinity;
 
         /// <summary>Trauma for a hit on the local player: sized by the share of health it took,
         /// so a sword blow jolts. Burning is <see cref="OnFireTrauma"/> instead.</summary>
@@ -117,6 +123,8 @@ namespace Plunderspell.UI
             // A body destroyed without announcing itself reads as none.
             if (_local == null)
                 return;
+            if (Time.time < _quakeUntil)
+                _trauma.AtLeast(OphanQuakeTrauma);
             _local.ViewShake = _trauma.Step(Time.deltaTime);
         }
 

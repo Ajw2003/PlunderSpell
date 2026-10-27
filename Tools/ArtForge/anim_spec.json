@@ -1881,6 +1881,19 @@
    "enemy": "ophan",
    "notes": "the wheels turn at different rates, the wings breathe, the eye drifts"
   },
+  "ophan_spread": {
+   "layer": "fear",
+   "family": null,
+   "fbx": "TheOphanOfHours_Generic.fbx",
+   "length_s": 6.0,
+   "loop": true,
+   "additive": false,
+   "speed_mps": null,
+   "events": [],
+   "status": "fear",
+   "enemy": "ophan",
+   "notes": "the sky pose (#443): the hover's wheels and eye, all six wings spread so it reads wider than tall; held after ophan_arrive"
+  },
   "ophan_advance": {
    "layer": "fear",
    "family": null,

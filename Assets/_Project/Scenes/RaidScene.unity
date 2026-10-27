@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 47651819}
   - component: {fileID: 47651820}
+  - component: {fileID: 47651821}
   m_Layer: 0
   m_Name: DamageRelay
   m_TagString: Untagged
@@ -172,6 +173,41 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
+--- !u!114 &47651821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47651818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2994d4a9c72491042ac8f9ef23e53d1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Raid::Plunderspell.Raid.OphanOfHours
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _tuning:
+    Scale: 150
+    Distance: 900
+    Elevation: 30
+    ArriveSeconds: 4
+    LeaveSeconds: 4
+    LockSeconds: 3
+    SlowBeamDamagePerSecond: 25
+    DamageStepSeconds: 0.2
+    CoverSecondsBeforeCharge: 3
+    ChargeSeconds: 3
+    ChargeCooldownSeconds: 10
+    ChargedBeamDamage: 100000
+  _huntEveryRaid: 1
 --- !u!1 &74181996
 GameObject:
   m_ObjectHideFlags: 0
@@ -1774,7 +1810,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  RaidDurationSeconds: 300
   _minimumRaidSecondsBeforeLeaving: 10
 --- !u!65 &1730551206
 BoxCollider:

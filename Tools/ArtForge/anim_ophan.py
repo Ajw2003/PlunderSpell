@@ -220,8 +220,26 @@ def arrive(t: float, length: float) -> Pose:
     return p
 
 
+SPREAD_UPPER, SPREAD_MID, SPREAD_LOWER = 10.0, 0.0, -40.0   # degrees off the hover's wings, left side
+
+
+def spread(t: float, length: float) -> Pose:
+    """The sky pose (#443): the hover's wheels, eye and bob exactly (the game's ring spin is
+    measured from them), with all six wings swung out flat so it reads wider than tall; they
+    breathe a few degrees every 3 s. Held after ophan_arrive."""
+    u = t / length
+    p = hover_turn(t, length)
+    b = math.sin(2 * TAU * u)
+    lag = math.sin(2 * TAU * u - 0.6)
+    p.wing("WingUpper", (0.0, SPREAD_UPPER + 4.0 * b, 0.0), (0.0, SPREAD_UPPER * 0.3 + 3.0 * lag, 0.0))
+    p.wing("WingMid", (0.0, SPREAD_MID + 3.0 * b, 0.0), (0.0, SPREAD_MID * 0.3 + 2.0 * lag, 0.0))
+    p.wing("WingLower", (0.0, SPREAD_LOWER + 3.0 * b, 0.0), (0.0, SPREAD_LOWER * 0.3 + 2.0 * lag, 0.0))
+    return p
+
+
 CLIPS = {
     "ophan_hover_turn": hover_turn,
+    "ophan_spread": spread,
     "ophan_advance": advance,
     "ophan_fix_gaze": fix_gaze,
     "ophan_take": take,

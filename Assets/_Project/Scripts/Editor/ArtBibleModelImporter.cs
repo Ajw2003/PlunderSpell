@@ -48,7 +48,7 @@ namespace Plunderspell.EditorTools
         /// </summary>
         public static readonly HashSet<string> LoopingFearClips = new HashSet<string>
         {
-            "wick_idle", "wick_stalk", "wick_hunt", "wick_search", "ophan_hover_turn", "ophan_advance"
+            "wick_idle", "wick_stalk", "wick_hunt", "wick_search", "ophan_hover_turn", "ophan_spread", "ophan_advance"
         };
 
         /// <summary>One animation event: the receiver method, normalized time, and its string parameter.</summary>

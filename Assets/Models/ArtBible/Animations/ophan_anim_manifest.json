@@ -3,7 +3,7 @@
  "fps": 30,
  "fbx": [
   {
-   "file": "Assets/Models/ArtBible/Animations/TheOphanOfHours_Generic.fbx",
+   "file": "Assets\\Models\\ArtBible\\Animations\\TheOphanOfHours_Generic.fbx",
    "skeleton": "the Ophan's own Generic rig (TheOphanOfHours_Rig, 18 bones); no retarget. Root never moves; Core bobs, and scales in ophan_arrive",
    "clips": [
     {
@@ -17,6 +17,19 @@
      "frames": 181,
      "lowest_point_m": 0.138,
      "highest_point_m": 10.162,
+     "loop_seam_deg": 0.0
+    },
+    {
+     "clip": "ophan_spread",
+     "take": "TheOphanOfHours_Rig|ophan_spread",
+     "layer": "fear",
+     "loop": true,
+     "additive": false,
+     "length_s": 6.0,
+     "events": [],
+     "frames": 181,
+     "lowest_point_m": 1.154,
+     "highest_point_m": 9.373,
      "loop_seam_deg": 0.0
     },
     {
