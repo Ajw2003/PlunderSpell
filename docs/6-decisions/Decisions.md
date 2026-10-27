@@ -3,6 +3,25 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-27 — Features go through feature branches and a tested staging branch
+
+**Status.** Decided by the owner.
+
+**Decision.** Each feature gets its own feature branch, cut from the current staging branch
+(`AjsAgent/staging-2026-10-26`). The feature is tested there and shown to work with no known bugs,
+the same bar as main. Then it is pushed, merged into staging locally, and staging is tested
+again. If no bugs show up, the next feature branches off the updated staging. This repeats until
+the core loop and the secondary loops are built and testable. Main is not touched in between.
+
+**Still owed.** The owner has not run a manual co-op test of anything on staging yet and will not
+for a while. Every pull request and QA page carries a "manual co-op test still owed" note until he
+does. The automated co-op checks still run on every round.
+
+**Why.** In the owner's words: "features get made on feature branches, tested and made sure they
+work and don't contain bugs same as the rule for main, then are pushed and merged into staging
+locally and tested, then if no bugs arise we rebranch off staging and continue going until we
+have the core loop and secondary loops built and testable."
+
 ## 2026-10-26 — Nothing broken reaches main
 
 **Status.** Decided by the owner.
