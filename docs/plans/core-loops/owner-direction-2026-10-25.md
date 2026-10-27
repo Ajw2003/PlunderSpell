@@ -233,3 +233,9 @@ So it has two attacks. A **slow beam** locks on and drains health fast, and wall
 "use these for scale references, far away ane close up for the size i want the ophan to appear in the sky". The two photos are in `areas/ophan-arrival/scale-refs/`; they show another game's giant against a forest:
 - **Far** (`ophan-scale-far.jpg`): seen across the forest, the giant towers over the treeline. Its body takes up roughly a third to half of the screen's height, and one outstretched arm reaches about a third of the way across.
 - **Close** (`ophan-scale-close.jpg`): from near its feet, looking up, it fills almost the whole screen's height.
+
+## The Ophan's size, corrected (owner, 2026-10-27 04:25 UTC)
+
+After seeing it at 6 times its model over the curtain wall: "it still doesn't appear large enough it needs to take up the sky to truthfully seem celestial especially being wider and larger, and the underneath doesn't work because i can't see it's eye. it needs to be so large it dwarfs the Castle and can only be seen from the sky never that close to the castle, it needs to be huge enough and far enough and powerful enough to genuinely seem unbeatable"
+
+So: far larger and wider, far away in the sky, never over or near the castle, with its eye always visible to the players.
