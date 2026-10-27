@@ -1,70 +1,317 @@
 {
- "title": "The Ophan's arrival: six questions",
+ "title": "The Ophan's arrival: seven questions",
  "eyebrow": "Design area: the demand loop · the Ophan's arrival (#418) · nothing built",
  "approval": "Design approved: ophan arrival",
  "short": {
-  "lead": "The Ophan arriving in the last 60 seconds and catching players (#418) is already approved, but six details were never decided. I stopped before writing any code so you can make these calls. Each question has options with my suggestion marked, and you can always give your own answer. The warning that it's coming (#434) isn't on this page: that one is yours to design from scratch, and until then the build leaves an empty slot for it.",
+  "lead": "The Ophan arriving in the last 60 seconds and catching players (#418) is already approved, but a few details were never decided. I stopped before writing any code so you can make these calls. Each question has options with my suggestion marked, and you can always give your own answer. The warning that it's coming (#434) isn't on this page: that one is yours to design from scratch, and until then the build leaves an empty slot for it.",
   "hint": "Tap a card for what's already settled or what one question decides.",
-  "key": [["Settled", ""], ["Your answer", "you"], ["Settled by you", "done"]],
+  "key": [
+   [
+    "Settled",
+    ""
+   ],
+   [
+    "Your answer",
+    "you"
+   ],
+   [
+    "Settled by you",
+    "done"
+   ]
+  ],
   "items": [
-   ["check", "Settled", "What you've already decided", "done",
-    ["It arrives 60 seconds before the portal closes (HuntWindowSeconds in the tuning file).",
+   [
+    "check",
+    "Settled",
+    "What you've already decided",
+    "done",
+    [
+     "It arrives 60 seconds before the portal closes (HuntWindowSeconds in the tuning file).",
      "It comes only on raids where a demand is due or still owed.",
      "Caught carrying the demanded piece, it takes the piece and you live. Caught empty-handed, you die.",
      "Once it takes the piece it leaves at once, so one holder saves everyone.",
-     "It's 9.6 m tall and drifts through walls."],
-    ["Nothing from you."]],
-   ["list", "What already exists", "What the build reuses", "",
-    ["The Ophan's model, its rig and five animations: arrive (unfolding out of a point of light), hover and turn, advance, fix its gaze, and take.",
+     "It's 9.6 m tall and drifts through walls."
+    ],
+    [
+     "Nothing from you."
+    ]
+   ],
+   [
+    "list",
+    "What already exists",
+    "What the build reuses",
+    "",
+    [
+     "The Ophan's model, its rig and five animations: arrive (unfolding out of a point of light), hover and turn, advance, fix its gaze, and take.",
      "The Wick's whole catch path: a catch that kills, the death showing on every machine, spectating, and the whole party going down.",
      "The tuning file from #433 and the raid clock.",
-     "A flag on loot marking six pieces as artifacts: the Gold Death Mask, Arm Reliquary, Gilded Altarpiece, Jewelled Hat Badge, Nautilus Cup and Ancient Relic."],
-    ["Nothing from you."]],
-   ["search", "Wanted piece", "1. Which piece counts as wanted, for now", "you", ["The demand itself (#419) comes later, so something has to stand in for it."], ["Your answer to choice 1."]],
-   ["eye", "Its target", "2. Who it fixes its eye on", "you", ["With two players in the raid, which one it goes after."], ["Your answer to choice 2."]],
-   ["next", "Where", "3. Where it arrives", "you", ["The spot its point of light opens."], ["Your answer to choice 3."]],
-   ["loop", "Speed", "4. How fast it moves", "you", ["Your 2026-10-15 answer, written for a 90-second hunt, now has to fit 60 seconds."], ["Your answer to choice 4."]],
-   ["stop", "Sky or hunt", "5. Your sky idea (#430)", "you", ["Your 2026-10-21 issue says to show the Ophan in the sky instead of hunting you; the demand loop has it hunting."], ["Your answer to choice 5."]],
-   ["hand", "After a kill", "6. What it does after killing someone", "you", ["Whether it keeps going after the others."], ["Your answer to choice 6."]]
+     "A flag on loot marking six pieces as artifacts: the Gold Death Mask, Arm Reliquary, Gilded Altarpiece, Jewelled Hat Badge, Nautilus Cup and Ancient Relic."
+    ],
+    [
+     "Nothing from you."
+    ]
+   ],
+   [
+    "search",
+    "Wanted piece",
+    "1. Which piece counts as wanted, for now",
+    "you",
+    [
+     "The demand itself (#419) comes later, so something has to stand in for it."
+    ],
+    [
+     "Your answer to choice 1."
+    ]
+   ],
+   [
+    "eye",
+    "Its target",
+    "2. Who it fixes its eye on",
+    "you",
+    [
+     "With two players in the raid, which one it goes after."
+    ],
+    [
+     "Your answer to choice 2."
+    ]
+   ],
+   [
+    "next",
+    "Where",
+    "3. Where it arrives",
+    "you",
+    [
+     "The spot its point of light opens."
+    ],
+    [
+     "Your answer to choice 3."
+    ]
+   ],
+   [
+    "loop",
+    "Speed",
+    "4. How fast it moves",
+    "you",
+    [
+     "Your 2026-10-15 answer, written for a 90-second hunt, now has to fit 60 seconds."
+    ],
+    [
+     "Your answer to choice 4."
+    ]
+   ],
+   [
+    "stop",
+    "Sky or hunt",
+    "5. Your sky idea (#430)",
+    "you",
+    [
+     "Your 2026-10-21 issue says to show the Ophan in the sky instead of hunting you; the demand loop has it hunting."
+    ],
+    [
+     "Your answer to choice 5."
+    ]
+   ],
+   [
+    "hand",
+    "After a kill",
+    "6. What it does after killing someone",
+    "you",
+    [
+     "Whether it keeps going after the others."
+    ],
+    [
+     "Your answer to choice 6."
+    ]
+   ],
+   [
+    "next",
+    "Warning",
+    "7. Whether it ships before its warning",
+    "you",
+    [
+     "Its warning (#434) is yours to design. The question is whether the arrival can go into staging before that, with an empty slot where the warning will go."
+    ],
+    [
+     "Your answer to choice 7."
+    ]
+   ]
   ]
  },
  "changes": [],
  "choices": [
-  ["wanted", "Until the demand exists, which carried piece does it take?",
-   [["A", "Any of the six pieces already marked as artifacts", 1, "Uses the artifact flag that's already on loot. When the demand (#419) lands, it narrows to the demanded piece."],
-    ["B", "Only one piece that a test switch names", 0, "Closest to the real demand, but only reachable through the test switch for now."],
-    ["C", "None yet: build only the kill, and add the take when #419 lands", 0, "Simplest now, but the 'you live if you carry it' half waits."]],
-   "It makes the whole rule playable today with no new data, and #419 swaps in the real demand later."],
-  ["target", "With two players, who does it fix its eye on?",
-   [["A", "The nearest player, switching only when that one is caught or leaves", 1, "Predictable, so the other player can draw it away."],
-    ["B", "Whoever carries the most", 0, "Greed gets punished, and players think about who holds what."],
-    ["C", "Someone chosen at random", 0, "Unpredictable, and nobody can plan for it."]],
-   "Being nearest is something players can see and play around, which suits co-op."],
-  ["where", "Where does it arrive?",
-   [["A", "A point of light a set distance from its target, through the walls", 1, "It's always close enough to matter, wherever the players are."],
-    ["B", "At the arrival portal", 0, "Players far from the portal get a head start."],
-    ["C", "In the middle of the castle", 0, "A fixed place players can learn."]],
-   "It keeps the last minute tense wherever the players are, with the distance as one number to tune."],
-  ["speed", "How fast does it move?",
-   [["A", "2.5 m/s on arrival, rising to the players' 5 m/s by 30 seconds left", 1, "Your 2026-10-15 numbers, squeezed into the 60-second window. The speeds go on the Ophan itself, so the tuning file keeps exactly the fields you approved."],
-    ["B", "The same numbers, but added to the tuning file", 0, "All the demand numbers stay in one place, which means adding fields you didn't approve in #433."],
-    ["C", "Your own numbers", 0, "Tell me the speeds."]],
-   "It keeps your own numbers and adds nothing to the approved tuning file."],
-  ["sky", "Your 2026-10-21 issue (#430) shows the Ophan in the sky instead of hunting you. Which wins for now?",
-   [["A", "The demand loop's hunt wins for now; the sky idea is saved for later, such as the final battle", 1, "#430 stays open as a later idea."],
-    ["B", "The sky idea wins: it watches from above and doesn't hunt", 0, "#418 changes shape before anything is built."],
-    ["C", "Both: it shows in the sky first, then comes down to hunt", 0, "More to build, and more presence before the hunt."]],
-   "You approved the hunting demand loop after #430, so it looks like the later call; this just confirms it."],
-  ["after", "After it kills an empty-handed player, what does it do?",
-   [["A", "Keeps hunting the others until the portal closes", 1, "Only a paid piece sends it away."],
-    ["B", "Leaves, satisfied by the kill", 0, "One death buys everyone else's escape."]],
-   "It matches your rule that only the piece sends it away."]
+  [
+   "wanted",
+   "Until the demand exists, which carried piece does it take?",
+   [
+    [
+     "A",
+     "Any of the six pieces already marked as artifacts",
+     1,
+     "Uses the artifact flag that's already on loot. When the demand (#419) lands, it narrows to the demanded piece."
+    ],
+    [
+     "B",
+     "Only one piece that a test switch names",
+     0,
+     "Closest to the real demand, but only reachable through the test switch for now."
+    ],
+    [
+     "C",
+     "None yet: build only the kill, and add the take when #419 lands",
+     0,
+     "Simplest now, but the 'you live if you carry it' half waits."
+    ]
+   ],
+   "It makes the whole rule playable today with no new data, and #419 swaps in the real demand later."
+  ],
+  [
+   "target",
+   "With two players, who does it fix its eye on?",
+   [
+    [
+     "A",
+     "The nearest player, switching only when that one is caught or leaves",
+     1,
+     "Predictable, so the other player can draw it away."
+    ],
+    [
+     "B",
+     "Whoever carries the most",
+     0,
+     "Greed gets punished, and players think about who holds what."
+    ],
+    [
+     "C",
+     "Someone chosen at random",
+     0,
+     "Unpredictable, and nobody can plan for it."
+    ]
+   ],
+   "Being nearest is something players can see and play around, which suits co-op."
+  ],
+  [
+   "where",
+   "Where does it arrive?",
+   [
+    [
+     "A",
+     "A point of light a set distance from its target, through the walls",
+     1,
+     "It's always close enough to matter, wherever the players are."
+    ],
+    [
+     "B",
+     "At the arrival portal",
+     0,
+     "Players far from the portal get a head start."
+    ],
+    [
+     "C",
+     "In the middle of the castle",
+     0,
+     "A fixed place players can learn."
+    ]
+   ],
+   "It keeps the last minute tense wherever the players are, with the distance as one number to tune."
+  ],
+  [
+   "speed",
+   "How fast does it move?",
+   [
+    [
+     "A",
+     "2.5 m/s on arrival, rising to the players' 5 m/s by 30 seconds left",
+     1,
+     "Your 2026-10-15 numbers, squeezed into the 60-second window. The speeds go on the Ophan itself, so the tuning file keeps exactly the fields you approved."
+    ],
+    [
+     "B",
+     "The same numbers, but added to the tuning file",
+     0,
+     "All the demand numbers stay in one place, which means adding fields you didn't approve in #433."
+    ],
+    [
+     "C",
+     "Your own numbers",
+     0,
+     "Tell me the speeds."
+    ]
+   ],
+   "It keeps your own numbers and adds nothing to the approved tuning file."
+  ],
+  [
+   "sky",
+   "Your 2026-10-21 issue (#430) shows the Ophan in the sky instead of hunting you. Which wins for now?",
+   [
+    [
+     "A",
+     "The demand loop's hunt wins for now; the sky idea is saved for later, such as the final battle",
+     1,
+     "#430 stays open as a later idea."
+    ],
+    [
+     "B",
+     "The sky idea wins: it watches from above and doesn't hunt",
+     0,
+     "#418 changes shape before anything is built."
+    ],
+    [
+     "C",
+     "Both: it shows in the sky first, then comes down to hunt",
+     0,
+     "More to build, and more presence before the hunt."
+    ]
+   ],
+   "You approved the hunting demand loop after #430, so it looks like the later call; this just confirms it."
+  ],
+  [
+   "after",
+   "After it kills an empty-handed player, what does it do?",
+   [
+    [
+     "A",
+     "Keeps hunting the others until the portal closes",
+     1,
+     "Only a paid piece sends it away."
+    ],
+    [
+     "B",
+     "Leaves, satisfied by the kill",
+     0,
+     "One death buys everyone else's escape."
+    ]
+   ],
+   "It matches your rule that only the piece sends it away."
+  ],
+  [
+   "warn",
+   "Can the arrival go into staging before you've designed its warning?",
+   [
+    [
+     "A",
+     "Yes: build it with an empty slot, and add the warning when you've designed it",
+     1,
+     "The loop keeps moving, and nothing about the warning gets decided for you."
+    ],
+    [
+     "B",
+     "No: build and test it on its own branch, but keep it out of staging until the warning is in",
+     0,
+     "Staging never has an Ophan that arrives unannounced."
+    ]
+   ],
+   "It keeps the loop moving, and the slot makes adding the warning later a small change."
+  ]
  ],
  "wrapup": {
-  "summary": "Six details of the Ophan's arrival, each with options and my suggestion marked.",
+  "summary": "Seven details of the Ophan's arrival, each with options and my suggestion marked.",
   "changing": "Nothing is built yet. The branch is cut and waiting.",
-  "blocking": "Your answers to the six choices.",
-  "next": "Once you answer, I build #418 on its own branch, test it, and merge it into staging if you've said yes on the card about adding the warning later.",
-  "todo": ["Pick your answers (Choices).", "Tap <b>Copy my reply</b>.", "Send it, or say what to change."]
+  "blocking": "Your answers to the seven choices.",
+  "next": "Once you answer, I build #418 on its own branch and test it. Choice 7 decides whether it then goes into staging.",
+  "todo": [
+   "Pick your answers (Choices).",
+   "Tap <b>Copy my reply</b>.",
+   "Send it, or say what to change."
+  ]
  }
 }

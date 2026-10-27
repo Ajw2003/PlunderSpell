@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- house-rules make_page 2.73.0 -->
 <meta charset="utf-8">
-<title>The Ophan's arrival: six questions</title><!-- also set this to PAGE.title: galleries read this tag, not the script -->
+<title>The Ophan's arrival: seven questions</title><!-- also set this to PAGE.title: galleries read this tag, not the script -->
 <style>
 /* Layout: a four-step walkthrough. One step on screen at a time; a stepper on top; the same wrap-up block closes every page. */
 :root{
@@ -276,11 +276,11 @@ dialog.lightbox button{margin-top:10px}
 const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#e3eafc"/><circle cx="160" cy="90" r="40" fill="#2f5bd3"/></svg>');
 const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
 const PAGE = {
-  "title": "The Ophan's arrival: six questions",
+  "title": "The Ophan's arrival: seven questions",
   "eyebrow": "Design area: the demand loop · the Ophan's arrival (#418) · nothing built",
   "approval": "Design approved: ophan arrival",
   "short": {
-    "lead": "The Ophan arriving in the last 60 seconds and catching players (#418) is already approved, but six details were never decided. I stopped before writing any code so you can make these calls. Each question has options with my suggestion marked, and you can always give your own answer. The warning that it's coming (#434) isn't on this page: that one is yours to design from scratch, and until then the build leaves an empty slot for it.",
+    "lead": "The Ophan arriving in the last 60 seconds and catching players (#418) is already approved, but a few details were never decided. I stopped before writing any code so you can make these calls. Each question has options with my suggestion marked, and you can always give your own answer. The warning that it's coming (#434) isn't on this page: that one is yours to design from scratch, and until then the build leaves an empty slot for it.",
     "hint": "Tap a card for what's already settled or what one question decides.",
     "key": [
       [
@@ -398,6 +398,18 @@ const PAGE = {
         ],
         [
           "Your answer to choice 6."
+        ]
+      ],
+      [
+        "next",
+        "Warning",
+        "7. Whether it ships before its warning",
+        "you",
+        [
+          "Its warning (#434) is yours to design. The question is whether the arrival can go into staging before that, with an empty slot where the warning will go."
+        ],
+        [
+          "Your answer to choice 7."
         ]
       ]
     ]
@@ -547,13 +559,32 @@ const PAGE = {
         ]
       ],
       "It matches your rule that only the piece sends it away."
+    ],
+    [
+      "warn",
+      "Can the arrival go into staging before you've designed its warning?",
+      [
+        [
+          "A",
+          "Yes: build it with an empty slot, and add the warning when you've designed it",
+          1,
+          "The loop keeps moving, and nothing about the warning gets decided for you."
+        ],
+        [
+          "B",
+          "No: build and test it on its own branch, but keep it out of staging until the warning is in",
+          0,
+          "Staging never has an Ophan that arrives unannounced."
+        ]
+      ],
+      "It keeps the loop moving, and the slot makes adding the warning later a small change."
     ]
   ],
   "wrapup": {
-    "summary": "Six details of the Ophan's arrival, each with options and my suggestion marked.",
+    "summary": "Seven details of the Ophan's arrival, each with options and my suggestion marked.",
     "changing": "Nothing is built yet. The branch is cut and waiting.",
-    "blocking": "Your answers to the six choices.",
-    "next": "Once you answer, I build #418 on its own branch, test it, and merge it into staging if you've said yes on the card about adding the warning later.",
+    "blocking": "Your answers to the seven choices.",
+    "next": "Once you answer, I build #418 on its own branch and test it. Choice 7 decides whether it then goes into staging.",
     "todo": [
       "Pick your answers (Choices).",
       "Tap <b>Copy my reply<\/b>.",
