@@ -15,13 +15,29 @@ namespace Plunderspell.Raid
         [Tooltip("The strip of vellum left by the spine, shown while the page is torn.")]
         [SerializeField] private GameObject _stub;
 
+        private const int StubWidth = 96;
+        private const int StubHeight = 672;
+
+        private Texture2D _edge;
+
         private void OnEnable()
         {
+            if (_edge == null)
+            {
+                _edge = RaggedEdge.Stub(StubWidth, StubHeight);
+                _stub.GetComponent<Renderer>().material.mainTexture = _edge;
+            }
             EventManager.Instance?.Subscribe(this, (DemandPageChanged e) => Show(e.IsTorn));
             Show(_keeper.IsTorn); // a late joiner meets a book already torn
         }
 
         private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
+
+        private void OnDestroy()
+        {
+            if (_edge != null)
+                Destroy(_edge);
+        }
 
         private void Show(bool torn)
         {

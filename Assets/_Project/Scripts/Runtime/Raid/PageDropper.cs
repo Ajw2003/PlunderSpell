@@ -37,7 +37,11 @@ namespace Plunderspell.Raid
         {
             PlayerStateMachine player = PlayerStateMachine.Local;
             if (player != null && _keeper.LocalPlayerHolds)
-                _keeper.RequestDrop(FloorAhead(player));
+                {
+                Transform eye = player.CameraTransform != null ? player.CameraTransform : player.transform;
+                Vector3 facing = Vector3.ProjectOnPlane(eye.forward, Vector3.up);
+                _keeper.RequestDrop(FloorAhead(player), Mathf.Atan2(facing.x, facing.z) * Mathf.Rad2Deg);
+            }
         }
 
         // The floor a little ahead of where the player faces: the body's pivot is not at the feet, so find the ground under that spot.

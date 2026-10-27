@@ -89,7 +89,7 @@ namespace Plunderspell.Raid
                 name = "LedgerDemandSketch", wrapMode = TextureWrapMode.Clamp, anisoLevel = 4,
             };
             Drawing.SetPixels32(InkSketch.Draw(pixels, Width, Height, Backdrop));
-            Drawing.Apply(true, true);
+            Drawing.Apply(true, false); // stays readable: the raised and dropped pages are cut from it (#458)
             _page.material.mainTexture = Drawing;
         }
 

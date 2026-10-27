@@ -313,7 +313,7 @@ switch (action)
         // the local player drops the ledger's page where they stand, as Q with empty hands does (#450)
         var keeper = FindAll("Plunderspell.Raid.DemandPageKeeper")[0];
         var me = (UnityEngine.Component)Get(T("StateMachine.PlayerStateMachine"), "Local");
-        keeper.GetType().GetMethod("RequestDrop").Invoke(keeper, new object[] { me.transform.position });
+        keeper.GetType().GetMethod("RequestDrop").Invoke(keeper, new object[] { me.transform.position, 0f });
         return "dropped";
     }
     case "pickuppage":

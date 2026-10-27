@@ -216,10 +216,13 @@ namespace Plunderspell.EditorTools
         /// </summary>
         private static void AddTearing(GameObject pages, Transform book, MeshRenderer drawing, Color vellum)
         {
-            // The page's spine edge lies 0.0075 m from the book's middle; the strip starts there and is 0.05 m wide, turned a little to look torn.
-            MeshRenderer strip = AddSheet(pages, "TornStub", new Vector3(book.position.x + 0.04f, drawing.transform.position.y, book.position.z), vellum);
-            strip.transform.localScale = new Vector3(0.05f, SketchPageSize.y, 1f);
-            strip.transform.rotation = Quaternion.AngleAxis(3f, Vector3.up) * strip.transform.rotation;
+            // The page's spine edge lies 0.005 m from the book's middle; the strip starts there, as wide as the ragged edge reaches.
+            // Its texture (RaggedEdge.Stub, made by LedgerTornStub) is clear beyond the tear.
+            float width = Plunderspell.Raid.RaggedEdge.StripWidth;
+            MeshRenderer strip = AddSheet(pages, "TornStub", new Vector3(book.position.x + 0.005f + width * 0.5f, drawing.transform.position.y + 0.001f, book.position.z), vellum);
+            strip.transform.localScale = new Vector3(width, SketchPageSize.y, 1f);
+            strip.sharedMaterial = ClippedMaterial(StubMaterialPath, "Universal Render Pipeline/Lit", Color.Lerp(vellum, Color.white, 0.4f)); // paler than the page beneath, so the strip shows
+            ClippedMaterial(TornUnlitPath, "Universal Render Pipeline/Unlit", new Color(0.863f, 0.824f, 0.729f, 1f)); // the raised and dropped pages
             strip.gameObject.SetActive(false);
 
             pages.AddComponent<PurrNet.NetworkIdentity>();
@@ -281,6 +284,27 @@ namespace Plunderspell.EditorTools
             sheet.sharedMaterial = SketchPageMaterial(vellum);
             sheet.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             return sheet;
+        }
+
+        private const string StubMaterialPath = "Assets/_Project/Prefabs/Lair/LedgerTornStub.mat";
+        private const string TornUnlitPath = "Assets/_Project/Resources/Raid/TornPageUnlit.mat";
+
+        /// <summary>A saved material that clips the tear's transparent parts (#458), kept as an asset so a build includes the variant.</summary>
+        private static Material ClippedMaterial(string path, string shader, Color colour)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            var made = Plunderspell.Raid.RaggedEdge.PageMaterial(shader, colour);
+            made.name = Path.GetFileNameWithoutExtension(path);
+            made.SetFloat("_Smoothness", 0.1f);
+            var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(made, path);
+                return made;
+            }
+            EditorUtility.CopySerialized(made, existing);
+            Object.DestroyImmediate(made);
+            return existing;
         }
 
         /// <summary>The left page's sheet carries the demanded piece's drawing as its texture.</summary>

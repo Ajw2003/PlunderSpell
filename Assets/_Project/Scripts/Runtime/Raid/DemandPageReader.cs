@@ -22,6 +22,8 @@ namespace Plunderspell.Raid
         private static readonly Color Vellum = new Color(0.863f, 0.824f, 0.729f, 1f);
 
         private Transform _page;
+        private Texture2D _torn;     // the drawing with the ragged edge on its spine side
+        private Texture2D _tornFrom; // the drawing it was cut from
         private float _raise;
         private bool _holds;
 
@@ -63,7 +65,14 @@ namespace Plunderspell.Raid
             float height = seen * HeightShare;
             float centre = Mathf.Lerp(LoweredCentre, RaisedCentre, Mathf.SmoothStep(0f, 1f, _raise)) * seen;
             _page.gameObject.SetActive(true);
-            _page.GetComponent<Renderer>().sharedMaterial.mainTexture = drawing;
+            if (_torn == null || _tornFrom != drawing)
+            {
+                if (_torn != null)
+                    Destroy(_torn);
+                _torn = RaggedEdge.Cut(drawing);
+                _tornFrom = drawing;
+            }
+            _page.GetComponent<Renderer>().sharedMaterial.mainTexture = _torn;
             _page.localPosition = new Vector3(0f, centre, Distance);
             _page.localRotation = Quaternion.Euler(-12f, 0f, 3f); // tipped back a little, as a page held in hands
             _page.localScale = new Vector3(height * drawing.width / drawing.height, height, 1f);
@@ -74,7 +83,7 @@ namespace Plunderspell.Raid
             var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             quad.name = "RaisedDemandPage";
             Destroy(quad.GetComponent<Collider>());
-            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit")) { color = Vellum };
+            var material = RaggedEdge.PageMaterial("Universal Render Pipeline/Unlit", Vellum);
             quad.GetComponent<Renderer>().sharedMaterial = material;
             return quad.transform;
         }
@@ -83,6 +92,8 @@ namespace Plunderspell.Raid
         {
             if (_page != null)
                 Destroy(_page.gameObject);
+            if (_torn != null)
+                Destroy(_torn);
         }
     }
 }

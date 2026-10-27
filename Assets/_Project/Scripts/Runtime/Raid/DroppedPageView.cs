@@ -18,6 +18,8 @@ namespace Plunderspell.Raid
         private static readonly Color Vellum = new Color(0.863f, 0.824f, 0.729f, 1f);
 
         private Transform _sheet;
+        private Texture2D _torn;     // the drawing with the ragged edge on its spine side
+        private Texture2D _tornFrom; // the drawing it was cut from
 
         /// <summary>The sheet while the page lies on the floor, else null.</summary>
         public Transform Sheet => _sheet != null && _sheet.gameObject.activeSelf ? _sheet : null;
@@ -42,9 +44,17 @@ namespace Plunderspell.Raid
             if (_sheet == null)
                 _sheet = MakeSheet();
             _sheet.gameObject.SetActive(true);
-            _sheet.GetComponent<Renderer>().sharedMaterial.mainTexture = drawing;
+            if (_torn == null || _tornFrom != drawing)
+            {
+                if (_torn != null)
+                    Destroy(_torn);
+                _torn = RaggedEdge.Cut(drawing);
+                _tornFrom = drawing;
+            }
+            _sheet.GetComponent<Renderer>().sharedMaterial.mainTexture = _torn;
             _sheet.position = _keeper.DropPoint + Vector3.up * Lift;
-            _sheet.rotation = Quaternion.Euler(90f, 0f, 0f); // a quad faces -Z; turned to face up
+            // A quad faces -Z; turned to face up, with the drawing's top toward where the dropper faced, so it reads upright to them.
+            _sheet.rotation = Quaternion.Euler(0f, _keeper.DropYaw, 0f) * Quaternion.Euler(90f, 0f, 0f);
             _sheet.localScale = new Vector3(Height * drawing.width / drawing.height, Height, 1f);
         }
 
@@ -55,7 +65,7 @@ namespace Plunderspell.Raid
             Destroy(quad.GetComponent<Collider>());
             var box = quad.AddComponent<BoxCollider>();
             box.size = new Vector3(1f, 1f, Thickness); // a thin slab; the quad's scale is 1 in Z
-            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit")) { color = Vellum };
+            var material = RaggedEdge.PageMaterial("Universal Render Pipeline/Unlit", Vellum);
             quad.GetComponent<Renderer>().sharedMaterial = material;
             return quad.transform;
         }
@@ -64,6 +74,8 @@ namespace Plunderspell.Raid
         {
             if (_sheet != null)
                 Destroy(_sheet.gameObject);
+            if (_torn != null)
+                Destroy(_torn);
         }
     }
 }

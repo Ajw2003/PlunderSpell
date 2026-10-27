@@ -17,11 +17,13 @@ namespace Plunderspell.Raid
 
         // Where a dropped page lies (#450); set before the holder becomes Lying.
         private readonly SyncVar<Vector3> _dropPoint = new SyncVar<Vector3>();
+        private readonly SyncVar<float> _dropYaw = new SyncVar<float>(); // the way the dropper faced, in degrees about up
 
         /// <summary>The seat holding the page, -1 while it is in the book, -2 while it lies on the floor.</summary>
         public int HolderSeat => _holder.value;
         public bool IsLying => _holder.value == DemandPageRules.Lying;
         public Vector3 DropPoint => _dropPoint.value;
+        public float DropYaw => _dropYaw.value;
         public bool IsTorn => DemandPageRules.IsTorn(_holder.value);
         public bool LocalPlayerHolds => IsTorn && _holder.value == LocalSeat;
 
@@ -72,16 +74,16 @@ namespace Plunderspell.Raid
         private void TearToServer(RPCInfo info = default) => Tear(SeatOf(info.sender));
 
         /// <summary>The local player drops the page at <paramref name="point"/>: decided here when this side decides, else sent to the server.</summary>
-        public void RequestDrop(Vector3 point)
+        public void RequestDrop(Vector3 point, float yaw = 0f)
         {
             if (Decides)
-                Drop(LocalSeat, point);
+                Drop(LocalSeat, point, yaw);
             else
-                DropToServer(point);
+                DropToServer(point, yaw);
         }
 
         [ServerRpc(requireOwnership: false)]
-        private void DropToServer(Vector3 point, RPCInfo info = default) => Drop(SeatOf(info.sender), point);
+        private void DropToServer(Vector3 point, float yaw, RPCInfo info = default) => Drop(SeatOf(info.sender), point, yaw);
 
         /// <summary>The local player picks up the page lying on the floor.</summary>
         public void RequestPickUp()
@@ -95,11 +97,12 @@ namespace Plunderspell.Raid
         [ServerRpc(requireOwnership: false)]
         private void PickUpToServer(RPCInfo info = default) => PickUp(SeatOf(info.sender));
 
-        private void Drop(int seat, Vector3 point)
+        private void Drop(int seat, Vector3 point, float yaw)
         {
             if (DemandPageRules.Drop(_holder.value, seat) == _holder.value)
                 return;
             _dropPoint.value = point;
+            _dropYaw.value = yaw;
             SetHolder(DemandPageRules.Lying);
         }
 

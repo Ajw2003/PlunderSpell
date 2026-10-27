@@ -183,6 +183,14 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
     now follows `DemandPageChanged` and keeps only the R key and its easing per frame. Wired by `LairRoomForge.AddPageDrop`
     (`Tools/Unity/eval/add_page_drop.cs` for the existing prefab). Checks: `demand_page_check.sh` (`dropped-page.png`), `coop_lair_check.sh`,
     `DemandPageDropTests`.
+  - **Built (#457):** the ledger model has no Roman numerals, column bars, ruled lines, gutter or dividers: `lair_builders.py
+    build_lair_ledger` makes two plain vellum pages and the red ribbon, and `LairLedger.fbx` was rebuilt with
+    `build_assets.py -- --only LairLedger`. Both pages, whole or torn, show plain vellum (`over-the-book.png`, `torn-book-close.png`).
+  - **Built (#458):** `RaggedEdge` (one generator, `Assets/_Project/Scripts/Runtime/Raid/`) makes the tear: noise-driven reach from
+    the spine up to 6 cm, a few longer wisps, a pale fibrous fringe, alpha-clipped. `Stub` is the strip left in the book
+    (`LedgerTornStub` builds it; paler Lit clip material `LedgerTornStub.mat`); `Cut` takes the same line off the spine side of a
+    copy of the drawing for the raised page and the dropped page (Unlit clip material `Resources/Raid/TornPageUnlit.mat`, so builds keep
+    the variant). The dropper's yaw is a SyncVar on the keeper (`DropYaw`), so the dropped drawing lies upright to them. `RaggedEdgeTests`.
   - The words and the urgency colour stay in the book: only the picture leaves it.
 - **His line** ("The Collector takes 120 from I, 80 from II.") is `LairHubManager.CollectorLine`, shown in place of the "Debt grows"
   note on the ledger book's page and logged: the company has already left the Lair when he speaks, so the book shows it on
