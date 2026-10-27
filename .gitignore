@@ -121,3 +121,4 @@ docs/generated/perf-*/*.raw
 # Local LLM model (~470 MB) is over GitHub's 100 MB limit; never commit (see docs/plans/playability-pass-handoff-2026-09-30.md)
 /Assets/StreamingAssets/LLM/
 /Assets/StreamingAssets/LLM.meta
+.claude/house-rules-loop.json
