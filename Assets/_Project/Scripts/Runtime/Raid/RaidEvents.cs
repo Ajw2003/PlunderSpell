@@ -26,4 +26,14 @@ namespace Plunderspell.Raid
         public readonly int Saved;
         public RaidResolved(float worth, int saved) { Worth = worth; Saved = saved; }
     }
+
+    /// <summary>
+    /// The Ophan of Hours appeared in the sky (#439), raised on every machine. Its warning (#434): the hum plays from
+    /// the Ophan itself, and the camera shakes for <see cref="Seconds"/> (Plunderspell.UI.CameraShakeDirector).
+    /// </summary>
+    public readonly struct OphanArrived : IEvent
+    {
+        public readonly float Seconds;
+        public OphanArrived(float seconds) { Seconds = seconds; }
+    }
 }

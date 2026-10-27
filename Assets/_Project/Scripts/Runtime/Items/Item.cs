@@ -544,6 +544,12 @@ public class Item : MonoBehaviour, Interfaces.IPortalResting
     /// every live remote pull.</summary>
     public int HolderCount => (_isDragging && !_isInHand ? 1 : 0) + _remotePulls.Count;
 
+    /// <summary>On the machine driving this piece: whether <paramref name="body"/> holds it, either as this machine's
+    /// own drag or as the remote holder <paramref name="holderKey"/> (LootPickup.HolderKey). The Ophan weighs players
+    /// by what they carry with this.</summary>
+    public bool IsHeldBy(GameObject body, int holderKey) =>
+        (_isDragging && Holder == body) || _remotePulls.ContainsKey(holderKey);
+
     // Loot in the portal (#158): frozen once it settles, until picked up or out of the portal.
     private bool _inPortal;
     private bool _frozenByPortal;
