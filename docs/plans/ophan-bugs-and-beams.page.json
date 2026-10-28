@@ -1,0 +1,53 @@
+{
+  "title": "Ophan bugs and solid beams",
+  "eyebrow": "Plans for items 2 to 5 on AjsAgent/gym-with-demand-page",
+  "approval": "Design approved: Ophan bugs and solid beams",
+  "short": {
+    "lead": "Item 1 is done: picking up the dropped page now uses E (Interact), committed as a3dbff28. Below are plans for the other four items. I found the causes of the two Ophan bugs in the code. The beam changes and the wall breaking need your picks; the wall breaking also reverses your earlier pick 9A, which kept walls solid.",
+    "hint": "Tap an item to see what I found and what it needs from you.",
+    "key": [["I found it", ""], ["You pick or answer", "you"]],
+    "items": [
+      ["bulb", "Bug 2", "Why part of the Ophan vanishes when you spectate", "", "When a player goes down, PlayerNetworkOwnership.KeepSpectating makes a brand-new camera with Unity's default settings, so it stops drawing at 1000 m. The player's own camera in RaidPlayer.prefab draws to 3000 m, because the Ophan hangs about 900 m out and stands about 1.4 km tall. Everything past 1000 m, which is the top half of the Ophan, is cut off. Clients use the same code, so a spectating client has the same bug. The fix copies the player's own camera settings onto the spectator camera (Camera.CopyFrom), so its range, field of view and layers match.", "Nothing to pick. Approve it with the rest."],
+      ["bulb", "Bug 3", "Why nobody can run or hide", "you", "Every second, OphanOfHours.Repick looks at every living player in the scene and picks the one carrying the most worth. It never checks whether its eye can see them or how far away they are, so its eye follows a player even when they are hidden indoors or far from the castle. The cover test (StoneBetween) exists, but it is only used after a player has been picked. I have not yet checked whether roofs count as cover in that test. Each room is one mesh with one collider, so they should. I will confirm that in the gym before fixing.", "Pick how it finds players, and its range (Choices, finding players)."],
+      ["chg", "Change 4", "Solid light beams, and a charged beam that shows where it will hit", "you", "Both beams are one see-through tube today (OphanBeamShaft): the slow beam at 45% strength, the charged beam only as a 0.6 s white flash when it fires. Nothing shows during the 3 s charge except the eye swelling.", "Pick the look (Choices, solid light and charged beam)."],
+      ["chg", "Change 5", "The charged beam breaks the walls and roofs in its path", "you", "Today OphanWallBurst only draws a glowing hole that fades; the wall stays solid. Each castle room is a single mesh: its walls, floor and roof are one piece with one collider. So removing whole meshes would remove a room's floor too, and anyone standing in it would fall. Every machine builds the same castle from the same seed, so the host can send a cut by position and every machine cuts the same triangles.", "Pick what is removed (Choices, breaking walls)."]
+    ]
+  },
+  "changes": [
+    ["chg", "The spectator camera", "Draws the whole Ophan on the host and the client, alive or spectating.", ["A default camera that stops at 1000 m", "A copy of RaidPlayer's camera, drawing to 3000 m"], "Only PlayerNetworkOwnership.KeepSpectating changes. I check it by spectating in co-op on the host and the client, with a screenshot of each.", null],
+    ["chg", "How the Ophan picks its target", "It hunts only players it can see, within range.", ["Most worth among every living player, seen or not", "Your pick from the finding-players choice"], "OphanOfHours.Repick and OphanTargeting change. The lock-on, drain and charge rules in OphanHunt stay as approved. One editor test covers the new pick.", null],
+    ["chg", "The beams", "The slow beam is solid light; the charged beam grows before it fires.", ["One see-through tube; a flash at the hit", "Your pick from the beam choices"], "OphanLook and OphanBeamShaft change. Damage, timing and cover rules stay as they are. I check it by screenshots in the gym from the target and from a second player.", null],
+    ["chg", "Walls and roofs under the charged beam", "The beam's path is torn open for real, on every machine.", ["A glowing hole that fades; the wall stays solid (pick 9A)", "Your pick from the breaking-walls choice"], "The host works out the cut and tells every machine in one message; each machine removes the same part of the mesh and its collider. The reversal of pick 9A gets a dated entry in docs/6-decisions/Decisions.md. I check it in co-op by walking through the hole on the host and the client.", null]
+  ],
+  "choices": [
+    ["finding", "How should the Ophan find players?", [
+      ["A", "Only players it can see, within range", 1, "Each second it picks the player with the most worth among those with no stone between its eye and them, and within range of the castle. A player hidden before the 3 s lock-on finishes is never picked. A player it is already draining who then hides still draws the charged beam, as approved."],
+      ["B", "As A, and it forgets a hidden target", 0, "As A, but a target who stays hidden for 10 s after a charged shot is dropped, and it goes back to watching. More chances to escape; the charged beam punishes hiding less."],
+      ["C", "Sight only, no range limit", 0, "As A, without the range. Running far away does not help; only cover does."]
+    ], "Option A makes running and hiding work before it locks on, and keeps the punishment for hiding once it has you."],
+    ["range", "How far from the castle should it see?", [
+      ["A", "The castle's footprint plus 30 m", 1, "I measure the castle's widest point from its centre in the gym and add 30 m, so the courtyard and walls are covered and the open ground beyond is not. Kept as a tuning value you can change."],
+      ["B", "A fixed 150 m from the castle's centre", 0, "Simple and the same for every castle, but a large castle's far rooms may fall outside it."]
+    ], "The footprint fits every castle size; I measure it rather than guess."],
+    ["slow", "What should the solid slow beam look like?", [
+      ["A", "A bright solid core inside a soft glow", 1, "A thin opaque core, full strength and bright enough to glow, inside the existing soft tube. It reads as one solid rod of light from the side and end-on."],
+      ["B", "The same tube at full strength", 0, "The existing tube at 100% instead of 45%. Brighter, but the sky still shows through it, so it looks less solid."]
+    ], "A solid core is what makes it read as a thing rather than a haze."],
+    ["charged", "What should the charged beam show before it fires?", [
+      ["A", "A beam that grows and follows the target", 1, "For the 3 s charge a thin glowing beam runs from the eye to the target, widening and brightening until it fires, then the solid blast. It follows the target, and the kill lands wherever they are, as today."],
+      ["B", "A beam that grows, then locks in place", 0, "As A, but for the last 0.75 s it stops following, and the kill only lands if the target is still within 2 m of where it aimed. You can dodge it, which changes the approved rule that hiding does not save you."]
+    ], "Option A shows where it will hit without changing who it kills."],
+    ["breaking", "What should the charged beam remove?", [
+      ["A", "Cut a hole along the beam's path", 1, "Every triangle of wall, roof or floor within 1.5 m of the beam's line is removed from the mesh and its collider. The host sends the room numbers and the beam's line; each machine cuts the same hole. Floors elsewhere in the room stay."],
+      ["B", "Remove each room the beam passes through", 0, "The whole room mesh goes, as you described: simplest, but its floor goes too, and players and loot in it fall."],
+      ["C", "Split rooms into wall pieces first", 0, "Re-export every room model as separate walls, floor and roof, then remove whole pieces. Cleanest result, but it touches every castle model in every era."]
+    ], "Option A breaks exactly what the beam hits and keeps the floor under everyone else."]
+  ],
+  "wrapup": {
+    "summary": "The page pickup is done. The missing Ophan comes from a spectator camera that stops drawing at 1000 m, and the inescapable Ophan from target picking with no sight or range check. Changes 4 and 5 need your picks for the beams' look and for what the charged beam removes.",
+    "changing": "PlayerNetworkOwnership, OphanOfHours, OphanTargeting, OphanLook, OphanBeamShaft and OphanWallBurst, plus the fear systems doc and a Decisions entry for reversing pick 9A.",
+    "blocking": "Your picks for finding players, range, the slow beam, the charged beam and breaking walls.",
+    "next": "I file one parent issue with a child per item and build them in order, one commit each. I check each one in the Ophan Gym in co-op on the host and the client, then hand the build over with a QA page.",
+    "todo": ["Pick your answers (Choices).", "Tap <b>Copy my reply</b>.", "Send it with \"Design approved: Ophan bugs and solid beams\", or what to change."]
+  }
+}
