@@ -17,7 +17,7 @@
     ["keep", "Kept from your fracture system", "Used as it is.", null, "FractureEngine's Burst job, FractureEffect, FractureCompute and FractureRender for the debris, the support graph that drops floating pieces, BakeFractureGraph, and DoubleSidedMeshGenerator.", null],
     ["chg", "Changed in the port", "So host and client break the same pieces.", ["Hit acts only on the machine that calls it; the radius comes from the object's size", "The host sends the room, the part, the beam's line and the radius; every machine calls the same hit"], "Removed triangles and dropped pieces are worked out on the CPU from the same baked graph, so every machine's colliders match. Debris throw stays per machine (GPU hash and Time.deltaTime), since it is only a look. The ground height for debris (hard-coded 0.05 m) becomes the room's floor height. Shader.Find becomes a material set on the component, so builds keep the shader. The bake path becomes a project folder.", null],
     ["cut", "Dropped", "Replaced by the port.", ["OphanWallCut, my triangle-splitting cutter", "Your fracture system"], "OphanWallCut and its two tests are removed once the port works. The unused seed field and the ufo project's demo meshes are not brought over.", null],
-    ["chg", "The beam", "Aimed at your chest, from the eye bone, firing twice.", ["Aimed 2.1 m up, 0.3 m over a 1.8 m player's head; one shot kills", "Aimed at the chest; a hole, then a second shot 1 s later"], "OphanOfHours, OphanHunt, OphanLook and OphanTuning. The look itself stays.", null]
+    ["chg", "The beam", "Aimed at your chest from where it is drawn, firing twice.", ["Aimed 2.1 m up, 0.3 m over a 1.8 m player's head; one shot kills", "Aimed at the chest; a hole, then a second shot 1 s later"], "OphanOfHours, OphanHunt, OphanLook and OphanTuning. The look itself stays.", null]
   ],
   "choices": [
     ["second", "Where does the second shot go?", [
@@ -30,7 +30,7 @@
     ], "Option A works on every model without re-exporting, and the review sheet catches what it sorts wrongly."]
   ],
   "wrapup": {
-    "summary": "A plan for your QA answers: the beam aims at the chest from the eye bone, the charged beam fires twice, and your fracture system replaces my hole cutter, networked, with each room split into parts.",
+    "summary": "A plan for your QA answers: the beam aims at the chest, the charged beam fires twice, and your fracture system replaces my hole cutter, networked, with each room split into parts.",
     "changing": "The Ophan's aim, its charged beam and the castle's destruction. The beam's look and the target choice stay as approved.",
     "blocking": "Your picks for the second shot and for where rooms are split.",
     "next": "I record your answers in the fear systems doc, file one issue per piece under issue #463, and build in order: the aim, the two shots, the split, then the port. I record each test and read the recording before it reaches you.",
