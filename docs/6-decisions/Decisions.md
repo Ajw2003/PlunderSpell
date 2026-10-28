@@ -1654,3 +1654,13 @@ See `docs/4-systems/fear.md`, "Ophan bugs and solid beams".
 aj played the build in co-op (recording: `docs/generated/ophan-bugs-463/qa-recording/`, one frame a second) and failed
 it: "the logic is not quite right", "the beam still insta kills me essentially", "the visual looks wrong too". The work
 may wait. What was seen and the options for the redo: `docs/plans/ophan-qa-findings.html`.
+
+## 2026-10-27 — Every in-game test is recorded and the recording read before QA
+
+**Decided by aj, after failing the Ophan build (#463):** no build goes to aj's QA until each in-game test, scripted or
+played, has been screen-recorded and the recording analysed: one frame a second, the key moments read full size,
+and what each frame shows (health, states, both windows) written up with timestamps and the frames on the QA page.
+**Why:** "you will learn much more from the whole visual of the test than you will from just the numbers". The
+scripted checks reported numbers that looked fine while the beams looked wrong and every hunt killed in 8 to 11 s;
+aj's recording showed both at once. **How:** `Tools/Unity/README.md`, "Record every in-game test before QA"; worked
+example `docs/plans/ophan-qa-findings.html`.
