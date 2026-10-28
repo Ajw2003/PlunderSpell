@@ -17,6 +17,7 @@ namespace Plunderspell.Fracture
         public bool hideStatic;
         private int pieceCount;
         private int vertexCount;
+        private float awakeUntil; // hideStatic only: no dispatch/draw after this time
         
         private int kernelID;
         private int kernelImpactID;
@@ -60,6 +61,7 @@ namespace Plunderspell.Fracture
         {
             if (pieceBuffer == null || pieceIndices == null || pieceIndices.Length == 0) return;
             
+            Wake();
             int kernelDropID = computeShader.FindKernel("CSDrop");
             if (kernelDropID < 0) return;
             
@@ -82,6 +84,7 @@ namespace Plunderspell.Fracture
         {
             if (pieceBuffer == null) return;
             
+            Wake();
             computeShader.SetBuffer(kernelImpactID, "_Pieces", pieceBuffer);
             computeShader.SetVector("_ImpactPoint", point);
             computeShader.SetFloat("_ImpactRadius", impactRadius);
@@ -93,9 +96,13 @@ namespace Plunderspell.Fracture
             computeShader.Dispatch(kernelImpactID, groups, 1, 1);
         }
 
-        private void Update()
+        // Longest a woken piece lives is despawnTime * 1.5 (CSImpact/CSDrop); plus a margin.
+        private void Wake() { awakeUntil = Time.time + despawnTime * 1.5f + 0.5f; }
+
+        private void Update() // per-frame: simulates and draws the falling pieces while any are in flight
         {
             if (pieceBuffer == null || vertexBuffer == null) return;
+            if (hideStatic && Time.time > awakeUntil) return;
             
             computeShader.SetBuffer(kernelID, "_Pieces", pieceBuffer);
             computeShader.SetFloat("_DeltaTime", Time.deltaTime);
@@ -106,7 +113,7 @@ namespace Plunderspell.Fracture
             computeShader.Dispatch(kernelID, groups, 1, 1);
             
             Bounds bounds = new Bounds(transform.position, Vector3.one * 1000f);
-            Graphics.DrawProcedural(renderMaterial, bounds, MeshTopology.Triangles, vertexCount, 1, null, null, UnityEngine.Rendering.ShadowCastingMode.On, true, gameObject.layer);
+            Graphics.DrawProcedural(renderMaterial, bounds, MeshTopology.Triangles, vertexCount, 1, null, null, hideStatic ? UnityEngine.Rendering.ShadowCastingMode.Off : UnityEngine.Rendering.ShadowCastingMode.On, true, gameObject.layer);
         }
 
         public void SetSelfDestruct()
