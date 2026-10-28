@@ -17,6 +17,8 @@ namespace Plunderspell.Guards
     public sealed class InvestigateState : GuardState
     {
         private Vector3 _spot;
+        private Vector3 _heading;
+        private bool _hasHeading;
         private float _leadStrength;
         private float _lookTimeLeft;
         private bool _arrived;
@@ -122,6 +124,8 @@ namespace Plunderspell.Guards
         private void GoToWaitingLead()
         {
             _leadStrength = Context.Leads.Strength;
+            _hasHeading = Context.Leads.HasHeading;
+            _heading = Context.Leads.Heading;
             _spot = Context.Leads.Take();
             _arrived = false;
             _lookTimeLeft = Context.Tuning.InvestigateLookSeconds;
@@ -133,7 +137,11 @@ namespace Plunderspell.Guards
         private void OnReached(Arrived arrived)
         {
             _arrived = true;
-            _look.BeginSweep();
+            // At a doorway the guard faces back toward the sound, then looks about from there (#485).
+            if (_hasHeading)
+                _look.BeginSweepFacing(_heading);
+            else
+                _look.BeginSweep();
         }
 
         // A cry or the hue and cry is followed at chase speed; a mere noise at investigate speed.

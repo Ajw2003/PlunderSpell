@@ -14,7 +14,7 @@ namespace Plunderspell.Guards
         public const float SweepDegrees = 60f;
 
         private readonly Guard _guard;
-        private readonly float[] _headings = new float[3];
+        private readonly float[] _headings = new float[4];
         private int _count;
         private int _next;
 
@@ -26,13 +26,22 @@ namespace Plunderspell.Guards
         /// <summary>True from a Begin call until the last heading is reached.</summary>
         public bool IsTurning => _next < _count;
 
-        public void BeginSweep()
+        public void BeginSweep() => BeginSweepFrom(_guard.transform.eulerAngles.y);
+
+        /// <summary>Faces <paramref name="direction"/> (flat), then sweeps left, right and back to it.</summary>
+        public void BeginSweepFacing(Vector3 direction)
         {
-            float start = _guard.transform.eulerAngles.y;
-            _headings[0] = start - SweepDegrees;
-            _headings[1] = start + SweepDegrees;
-            _headings[2] = start;
-            Start(3);
+            direction.y = 0f;
+            BeginSweepFrom(direction.sqrMagnitude < 0.0001f ? _guard.transform.eulerAngles.y : Quaternion.LookRotation(direction, Vector3.up).eulerAngles.y);
+        }
+
+        private void BeginSweepFrom(float start)
+        {
+            _headings[0] = start;
+            _headings[1] = start - SweepDegrees;
+            _headings[2] = start + SweepDegrees;
+            _headings[3] = start;
+            Start(4);
         }
 
         public void BeginTurnToward(Vector3 point)

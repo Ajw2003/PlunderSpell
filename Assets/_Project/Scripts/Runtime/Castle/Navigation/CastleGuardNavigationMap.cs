@@ -78,6 +78,31 @@ namespace Plunderspell.Castle
             return bestDistance < float.MaxValue;
         }
 
+        /// <summary>
+        /// Follows the cell route and stops at the first step that changes room: the doorway is the middle of
+        /// that step, which is the archway or hole between the two cells.
+        /// </summary>
+        public bool TryFindFirstDoorway(Vector3 from, Vector3 to, out Vector3 doorway)
+        {
+            doorway = to;
+            var route = new List<Vector3>();
+            if (!_graph.FindPath(from, to, route))
+                return false;
+
+            int previous = _graph.NearestWalkableCell(route[0], CastleNavTile.CellSize);
+            for (int i = 1; i < route.Count; i++)
+            {
+                int cell = _graph.NearestWalkableCell(route[i], CastleNavTile.CellSize);
+                if (previous >= 0 && cell >= 0 && CastleNavGrid.ModuleOf(cell) != CastleNavGrid.ModuleOf(previous))
+                {
+                    doorway = (route[i - 1] + route[i]) * 0.5f;
+                    return true;
+                }
+                previous = cell;
+            }
+            return false;
+        }
+
         public bool TryGetFloorHeight(Vector3 position, out float floorHeight)
         {
             int cell = _graph.FloorCellUnder(position, FloorSearchDistance);

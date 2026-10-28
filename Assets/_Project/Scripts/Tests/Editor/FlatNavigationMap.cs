@@ -38,6 +38,12 @@ namespace Plunderspell.Tests.Editor
             return true;
         }
 
+        public bool TryFindFirstDoorway(Vector3 from, Vector3 to, out Vector3 doorway)
+        {
+            doorway = to;
+            return false;
+        }
+
         public bool TryGetFloorHeight(Vector3 position, out float floorHeight)
         {
             floorHeight = 0f;

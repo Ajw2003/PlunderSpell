@@ -29,6 +29,12 @@ namespace Plunderspell.Alarm
         /// </summary>
         bool TryFindNearestReachable(Vector3 from, Vector3 target, out Vector3 reachable);
 
+        /// <summary>
+        /// The first doorway or hole on the route from <paramref name="from"/> toward <paramref name="to"/>, where the route
+        /// leaves the room it starts in. False when there is no route or both points share a room. Read-only.
+        /// </summary>
+        bool TryFindFirstDoorway(Vector3 from, Vector3 to, out Vector3 doorway);
+
         /// <summary>The floor height under a point, so movers can settle onto stairs and drop off ledges.</summary>
         bool TryGetFloorHeight(Vector3 position, out float floorHeight);
     }

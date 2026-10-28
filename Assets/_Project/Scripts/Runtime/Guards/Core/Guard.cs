@@ -138,7 +138,7 @@ namespace Plunderspell.Guards
             AttackTurn = new GuardAttackTurn(this);
             Reach = new GuardReachability(this);
             _ = new GuardHelpResponse(this);
-            Leads = new GuardLeads(Link, Hearing, () => Random);
+            Leads = new GuardLeads(Link, Hearing, new GuardSoundApproach(this), () => Random);
             Cry = new GuardCry(this);
             Hearing.NoiseHeard += (origin, strength) => EventManager.Instance?.Publish(new NoiseReported(this, origin, strength));
             _shove = new GuardShove(transform, _tuning);

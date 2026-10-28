@@ -70,6 +70,46 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void AClearLineToTheSoundSendsTheGuardStraightToIt()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            _rig.SetDoorway(new Vector3(0f, 0f, 3f));
+
+            guard.OnNoiseHeard(new NoiseEvent(NoiseSpot, 0.6f, NoiseType.VoiceCast));
+            guard.Tick(Step);
+
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Investigate));
+            Assert.That(((InvestigateState)guard.CurrentState).Spot, Is.EqualTo(NoiseSpot), "no wall, so the sound itself");
+        }
+
+        [Test]
+        public void AWallInTheWayTakesTheGuardToTheDoorwayFacingTheSource()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            _rig.MakeWall(new Vector3(0f, 0f, 4f), new Vector3(8f, 4f, 0.2f));
+            Physics.SyncTransforms();
+            Vector3 doorway = new Vector3(5f, 0f, 4f);
+            _rig.SetDoorway(doorway);
+
+            guard.OnNoiseHeard(new NoiseEvent(NoiseSpot, 0.6f, NoiseType.VoiceCast));
+            guard.Tick(Step);
+
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Investigate));
+            Assert.That(((InvestigateState)guard.CurrentState).Spot, Is.EqualTo(doorway), "the doorway, not the sound");
+
+            bool arrived = false;
+            guard.Navigator.Reached += at => arrived = true;
+            for (int step = 0; step < StepsToFinishALook && !arrived; step++)
+                _rig.RunNavigation(guard, 1, Step);
+            _rig.RunNavigation(guard, 60, Step);
+
+            Vector3 towardSource = (NoiseSpot - doorway).normalized;
+            Assert.That(arrived, Is.True, "it reached the doorway");
+            Assert.That(Vector3.Angle(guard.transform.forward, towardSource), Is.LessThan(GuardLookAround.SweepDegrees + 1f),
+                "looking about from the direction of the source");
+        }
+
+        [Test]
         public void AtTheSpotTheGuardLooksSixtyDegreesLeftThenRight()
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
