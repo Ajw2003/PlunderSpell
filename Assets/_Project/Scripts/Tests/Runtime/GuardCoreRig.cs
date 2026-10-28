@@ -141,6 +141,12 @@ namespace Plunderspell.Tests
 
             public bool IsWalkClear(Vector3 from, Vector3 to, float halfWidth) => true;
 
+            public bool TryFindNearestReachable(Vector3 from, Vector3 target, out Vector3 reachable)
+            {
+                reachable = target;
+                return true;
+            }
+
             public bool TryGetFloorHeight(Vector3 position, out float floorHeight)
             {
                 floorHeight = 0f;

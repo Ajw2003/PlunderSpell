@@ -22,6 +22,8 @@ namespace Plunderspell.Tests.Editor
                 _floor.TryFindPath(from, to, path, out failure);
             public bool TryGetFloorHeight(Vector3 position, out float floorHeight) =>
                 _floor.TryGetFloorHeight(position, out floorHeight);
+            public bool TryFindNearestReachable(Vector3 from, Vector3 target, out Vector3 reachable) =>
+                _floor.TryFindNearestReachable(from, target, out reachable);
 
             public bool IsWalkClear(Vector3 from, Vector3 to, float halfWidth)
             {

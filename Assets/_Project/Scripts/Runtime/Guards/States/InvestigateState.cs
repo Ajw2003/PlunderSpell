@@ -22,9 +22,12 @@ namespace Plunderspell.Guards
         private bool _arrived;
         private bool _gaveUp;
         private Transform _lastSighting;
+        private readonly GuardNearestReachableWalk _detour;
+        private bool _onDetour;
 
         public InvestigateState(Guard guard) : base(guard)
         {
+            _detour = new GuardNearestReachableWalk(guard);
         }
 
         public override GuardAlertState AlertState => GuardAlertState.Investigating;
@@ -107,12 +110,19 @@ namespace Plunderspell.Guards
             _spot = Context.Leads.Take();
             _arrived = false;
             _lookTimeLeft = Context.Tuning.InvestigateLookSeconds;
+            _onDetour = false;
             Context.Navigator.MoveTo(_spot, Context.Tuning.InvestigateSpeed, MoveReason.Investigate);
         }
 
         private void OnReached(Arrived arrived) => _arrived = true;
 
-        // Any block means the spot cannot be got to now: give up rather than retry.
-        private void OnBlocked(Blocked blocked) => _gaveUp = true;
+        // No route to the spot: look from the nearest floor the guard can reach (#481). Any other block
+        // means the spot cannot be got to now, so give up rather than retry.
+        private void OnBlocked(Blocked blocked)
+        {
+            _onDetour = !_onDetour && GuardNearestReachableWalk.IsMissingRoute(blocked)
+                && _detour.TryStart(_spot, Context.Tuning.InvestigateSpeed, MoveReason.Investigate);
+            _gaveUp = !_onDetour;
+        }
     }
 }

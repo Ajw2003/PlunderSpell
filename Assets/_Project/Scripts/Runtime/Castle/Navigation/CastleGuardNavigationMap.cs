@@ -14,6 +14,9 @@ namespace Plunderspell.Castle
         // Within this of a floor cell counts as standing on it, for settling height.
         private const float FloorSearchDistance = 1.5f;
         private const float SightSampleSpacing = 0.25f;
+        // The nearest-reachable search covers this far round the target, a sample every spacing.
+        private const float NearestSearchRadius = 10f;
+        private const float NearestSearchSpacing = 1f;
 
         private readonly CastleNavGraph _graph;
 
@@ -41,6 +44,38 @@ namespace Plunderspell.Castle
                 return true;
             failure = BlockedReason.DoorClosed;
             return false;
+        }
+
+        /// <summary>
+        /// Looks at floor on a square grid round the target, at the guard's own height, and keeps the cell
+        /// closest to the target that is in the guard's walkable area. Only runs after a route failed.
+        /// </summary>
+        public bool TryFindNearestReachable(Vector3 from, Vector3 target, out Vector3 reachable)
+        {
+            reachable = from;
+            int startCell = _graph.NearestWalkableCell(from);
+            if (startCell < 0)
+                return false;
+
+            float bestDistance = float.MaxValue;
+            int steps = Mathf.RoundToInt(NearestSearchRadius / NearestSearchSpacing);
+            for (int x = -steps; x <= steps; x++)
+            {
+                for (int z = -steps; z <= steps; z++)
+                {
+                    var sample = new Vector3(target.x + x * NearestSearchSpacing, from.y, target.z + z * NearestSearchSpacing);
+                    int cell = _graph.NearestWalkableCell(sample, NearestSearchSpacing);
+                    if (cell < 0 || !_graph.IsReachableWithDoorsOpen(startCell, cell))
+                        continue;
+                    Vector3 spot = _graph.CellPosition(cell);
+                    float distance = (spot - target).sqrMagnitude;
+                    if (distance >= bestDistance)
+                        continue;
+                    bestDistance = distance;
+                    reachable = spot;
+                }
+            }
+            return bestDistance < float.MaxValue;
         }
 
         public bool TryGetFloorHeight(Vector3 position, out float floorHeight)

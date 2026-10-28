@@ -150,7 +150,7 @@ namespace Plunderspell.Tests
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.Patrol), "the weaker noise is forgotten, not queued");
         }
 
-        [TestCase(BlockedReason.Unreachable)]
+        // An Unreachable spot now sends the guard the long way round (#481); GuardNoRouteTests covers that.
         [TestCase(BlockedReason.DoorClosed)]
         public void AnUnreachableSpotMakesTheGuardGiveUpAndPatrol(BlockedReason reason)
         {
