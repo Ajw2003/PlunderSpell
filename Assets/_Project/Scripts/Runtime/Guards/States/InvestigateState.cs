@@ -11,8 +11,8 @@ namespace Plunderspell.Guards
     /// sweep. A newer lead at least as strong re-targets the walk; a weaker one is dropped. A blocked
     /// walk (a closed door, an unreachable spot) is not worth retrying, so the guard gives up.
     ///
-    /// The guard only stands while it looks: turning in place would mean moving the transform, and
-    /// movement belongs to the navigation service alone.
+    /// The guard faces the spot before it walks, and at the spot it sweeps 60 degrees left then right
+    /// (<see cref="GuardLookAround"/>, #483). Only yaw changes; position belongs to the navigation service.
     /// </summary>
     public sealed class InvestigateState : GuardState
     {
@@ -24,9 +24,12 @@ namespace Plunderspell.Guards
         private Transform _lastSighting;
         private readonly GuardNearestReachableWalk _detour;
         private bool _onDetour;
+        private bool _walkPending;
+        private readonly GuardLookAround _look;
 
         public InvestigateState(Guard guard) : base(guard)
         {
+            _look = new GuardLookAround(guard);
             _detour = new GuardNearestReachableWalk(guard);
         }
 
@@ -52,6 +55,8 @@ namespace Plunderspell.Guards
 
         public override void Exit()
         {
+            _look.Cancel();
+            _walkPending = false;
             Context.Navigator.Stop();
             Context.Navigator.Reached -= OnReached;
             Context.Navigator.RouteBlocked -= OnBlocked;
@@ -67,11 +72,21 @@ namespace Plunderspell.Guards
             if (_gaveUp)
                 return Context.States.Patrol;
 
+            _look.Tick(deltaTime);
+            if (_walkPending && !_look.IsTurning)
+                StartWalk();
+
             if (!_arrived)
                 return this;
 
             _lookTimeLeft -= deltaTime;
-            return _lookTimeLeft <= 0f ? Context.States.Patrol : this;
+            return _lookTimeLeft <= 0f && !_look.IsTurning ? Context.States.Patrol : this;
+        }
+
+        private void StartWalk()
+        {
+            _walkPending = false;
+            Context.Navigator.MoveTo(_spot, Context.Tuning.InvestigateSpeed, MoveReason.Investigate);
         }
 
         private State<Guard> NoticePlayer()
@@ -111,10 +126,15 @@ namespace Plunderspell.Guards
             _arrived = false;
             _lookTimeLeft = Context.Tuning.InvestigateLookSeconds;
             _onDetour = false;
-            Context.Navigator.MoveTo(_spot, Context.Tuning.InvestigateSpeed, MoveReason.Investigate);
+            _walkPending = true;
+            _look.BeginTurnToward(_spot);
         }
 
-        private void OnReached(Arrived arrived) => _arrived = true;
+        private void OnReached(Arrived arrived)
+        {
+            _arrived = true;
+            _look.BeginSweep();
+        }
 
         // No route to the spot: look from the nearest floor the guard can reach (#481). Any other block
         // means the spot cannot be got to now, so give up rather than retry.
