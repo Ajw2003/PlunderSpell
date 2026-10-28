@@ -285,7 +285,9 @@ namespace Plunderspell.Raid
             float endWidth = flashing ? ChargedWidthAtTarget : charging ? Mathf.Lerp(ChargeStartWidthAtTarget, ChargedWidthAtTarget, grow) : BeamWidthAtTarget;
             float fade = onLocalPlayer ? FadeMetresOnTarget : FadeMetresSeenByOthers;
             _beam.Draw(EyePoint, end, eyeWidth, endWidth, colour, fade);
-            _core.Draw(EyePoint, end, eyeWidth * CoreWidthFraction, endWidth * CoreWidthFraction, coreColour, fade);
+            // The solid core cannot fade, so on the target's own view it stops short of the camera instead of filling it.
+            Vector3 coreEnd = onLocalPlayer ? end - (end - EyePoint).normalized * fade : end;
+            _core.Draw(EyePoint, coreEnd, eyeWidth * CoreWidthFraction, endWidth * CoreWidthFraction, coreColour, fade);
         }
 
         private void DriftAway(float inState)

@@ -16,6 +16,10 @@
 //   liftshot <path>  save a view up the beam past the piece the Ophan is taking (absolute path, forward slashes)
 //   slow <scale>     set Time.timeScale on this machine (1 restores)
 //   shot <path>      save a screenshot of this machine's view
+//   watch            stand 6-12 m from the other player, facing just above them toward the Ophan (camera check)
+//   faceother        turn the local view to the other player
+//   keepguard        host: remove every guard but the one nearest the local player
+//   place roofed     as cover, with an upper floor or roof overhead
 //   survey           host: over every ground-floor spot, count roofed and open-air spots and which the cover test counts (#465)
 //   hole             host: count cut room meshes and whether room stone still lies on the eye's line to the local player (#467)
 string action = "__ACTION__";
@@ -188,9 +192,12 @@ switch (action)
         // "step": another covered spot about 8 m to the side of this one, so the eye can be seen to follow.
         bool step = arg == "step";
         bool open = arg == "open";
+        // "roofed": cover with an upper floor or roof overhead, so the charged beam breaks a floor as well as a wall.
+        bool roofed = arg == "roofed";
         // The host judges cover from the point the hunt aims from, not the eye bone (it bobs and turns, at 150 times
         // its size tens of metres off); a client only has the eye bone.
-        var eye = (bool)Get(Ophan(), "isServer") ? (UnityEngine.Vector3)Get(Ophan(), "_eyePoint") : EyeHere();
+        // The host aims from the eye bone since #469, the same point the beam is drawn from.
+        var eye = EyeHere();
         var player = LocalPlayer();
         var body = player.GetComponent<UnityEngine.Rigidbody>();
         // The castle has its own navigation grid, not a Unity NavMesh: find floors by casting down over every room.
@@ -222,6 +229,8 @@ switch (action)
             // beam has something to scorch).
             if (!open && !(UnityEngine.Physics.Raycast(head, (eye - head).normalized, out var near, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)
                 && Call(T("Plunderspell.Raid.ScorchedRooms"), "RoomOf", near.collider) != null)) continue;
+            if (roofed && !(UnityEngine.Physics.Raycast(head, UnityEngine.Vector3.up, out var over, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)
+                && over.collider.GetComponentInParent(T("Plunderspell.Castle.ProceduralCastleGenerator")) != null)) continue;
             if (step && (c - here).sqrMagnitude < 4f * 4f) continue;
             float d = (c - start).sqrMagnitude;
             if (d < bestDistance) { bestDistance = d; best = c; }
@@ -329,6 +338,64 @@ switch (action)
         UnityEngine.Time.timeScale = float.Parse(arg, System.Globalization.CultureInfo.InvariantCulture);
         return "time scale " + UnityEngine.Time.timeScale;
 
+    case "watch":
+    {
+        // The local player stands 6-12 m from the other player with a clear line to them, side-on to the beam (looking along
+        // it floods the view, #468 camera check), facing up the beam from the other player toward the Ophan.
+        var player = LocalPlayer();
+        UnityEngine.Component other = null;
+        foreach (UnityEngine.Component p in FindAll("StateMachine.PlayerStateMachine")) if (p != player) other = p;
+        if (other == null) return "no other player";
+        var target = other.transform.position + UnityEngine.Vector3.up * 0.9f;
+        var eye = EyeHere();
+        UnityEngine.Vector3? best = null;
+        float bestScore = float.MaxValue;
+        foreach (UnityEngine.Component room in FindAll("Plunderspell.Castle.CastleRoomModule"))
+            for (float dx = -4.5f; dx <= 4.5f; dx += 1.5f)
+            for (float dz = -4.5f; dz <= 4.5f; dz += 1.5f)
+            {
+                var top = new UnityEngine.Vector3(room.transform.position.x + dx, 3f, room.transform.position.z + dz);
+                if (!UnityEngine.Physics.Raycast(top, UnityEngine.Vector3.down, out var floor, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)) continue;
+                if (floor.point.y < -1f || floor.point.y > 1.5f) continue;
+                var head = floor.point + UnityEngine.Vector3.up * 1.6f;
+                float d = (head - target).magnitude;
+                if (d < 6f || d > 12f) continue;
+                if (UnityEngine.Physics.Linecast(head, target, out var block, ~0, UnityEngine.QueryTriggerInteraction.Ignore)
+                    && block.collider.GetComponentInParent(T("StateMachine.PlayerStateMachine")) == null) continue;
+                // Side-on: the line to the other player as near square to the beam as possible.
+                float score = UnityEngine.Mathf.Abs(UnityEngine.Vector3.Dot((target - head).normalized, (eye - target).normalized));
+                if (score < bestScore) { bestScore = score; best = floor.point; }
+            }
+        if (best == null) return "no watch spot found";
+        var body = player.GetComponent<UnityEngine.Rigidbody>();
+        var at = best.Value + UnityEngine.Vector3.up * 1.25f;
+        body.position = at; player.transform.position = at; body.linearVelocity = UnityEngine.Vector3.zero;
+        Look(player, target + (eye - target).normalized * 6f);
+        return "watching from " + V(at) + ", " + (target - at).magnitude.ToString("F1") + " m from the other player";
+    }
+    case "faceother":
+    {
+        var player = LocalPlayer();
+        foreach (UnityEngine.Component p in FindAll("StateMachine.PlayerStateMachine"))
+            if (p != player) { Look(player, p.transform.position + UnityEngine.Vector3.up * 0.9f); return "facing the other player"; }
+        return "no other player";
+    }
+    case "keepguard":
+    {
+        // Host: every guard but the one nearest the local player goes, so one guard is left to chase through a hole.
+        var here = LocalPlayer().transform.position;
+        UnityEngine.Component keep = null;
+        float bestD = float.MaxValue;
+        foreach (UnityEngine.Component g in FindAll("Plunderspell.Guards.Guard"))
+        {
+            float d = (g.transform.position - here).sqrMagnitude;
+            if (d < bestD) { bestD = d; keep = g; }
+        }
+        int n = 0;
+        foreach (UnityEngine.Component g in FindAll("Plunderspell.Guards.Guard"))
+            if (g != keep) { UnityEngine.Object.Destroy(g.gameObject); n++; }
+        return keep == null ? "no guards" : "kept " + keep.name + " at " + V(keep.transform.position) + ", removed " + n;
+    }
     case "survey":
     {
         // Host (#465): over every ground-floor spot, is there a roof overhead, and does the Ophan's cover test count it?
