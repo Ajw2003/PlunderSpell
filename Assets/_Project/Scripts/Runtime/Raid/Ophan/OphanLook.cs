@@ -22,6 +22,9 @@ namespace Plunderspell.Raid
         // At a kilometre a player is a few degrees off its centre; the eye's turn is magnified so it can be seen to follow.
         private const float EyeFollowGain = 8f, EyeFollowMaxDegrees = 35f;
         private const float BeamWidthAtEye = 40f, BeamWidthAtTarget = 0.8f, ChargedWidthAtEye = 90f, ChargedWidthAtTarget = 8f;
+        // The charge's beam starts this thin and dim and grows to the charged blast; the bright core is a quarter of the soft shaft.
+        private const float ChargeStartWidthAtEye = 4f, ChargeStartWidthAtTarget = 0.1f, ChargeStartBrightness = 0.15f;
+        private const float CoreWidthFraction = 0.25f, CoreBrightness = 4f;
         // The beam fades out over its last metres. Seen from the target's own eyes it runs from around the camera to the
         // sky, and a shaft that close fills the view, so on the target's machine it fades out further away.
         private const float FadeMetresOnTarget = 25f, FadeMetresSeenByOthers = 2f;
@@ -35,7 +38,7 @@ namespace Plunderspell.Raid
         private Renderer[] _renderers;
         private MaterialPropertyBlock _block;
         private Color _baseEmission;
-        private OphanBeamShaft _beam;
+        private OphanBeamShaft _beam, _core;
         private Vector3 _flashTarget;
         private float _flashUntil = float.NegativeInfinity;
         private Vector3 _restScale;
@@ -70,6 +73,7 @@ namespace Plunderspell.Raid
             _restScale = transform.localScale;
             _restPosition = transform.position;
             _beam = new OphanBeamShaft();
+            _core = new OphanBeamShaft(opaque: true);
             _stateSince = Time.time;
             _spin = 1f; // arriving, the rings turn as the clip turns them
         }
@@ -114,7 +118,7 @@ namespace Plunderspell.Raid
             float inState = Time.time - _stateSince;
             SpinRings(inState);
             ShowTells(inState);
-            DrawBeam();
+            DrawBeam(inState);
             DriftAway(inState);
             RaiseLifted();
         }
@@ -124,6 +128,7 @@ namespace Plunderspell.Raid
             if (_lifted != null)
                 Destroy(_lifted.gameObject);
             _beam?.Destroy();
+            _core?.Destroy();
         }
 
         private void RaiseLifted()
@@ -234,26 +239,35 @@ namespace Plunderspell.Raid
             }
         }
 
-        private void DrawBeam()
+        private void DrawBeam(float inState)
         {
             bool flashing = Time.time < _flashUntil;
             bool slow = Beaming && Target != null && State == OphanState.Draining;
+            // The charge: a thin dim beam follows the target and grows to the charged blast before it fires.
+            bool charging = !flashing && State == OphanState.Charging && Target != null;
             // The take: after its flash, the slow beam's look holds on the piece the whole way up.
-            bool lifting = !flashing && _lifted != null;
-            _beam.Visible = flashing || slow || lifting;
+            bool lifting = !flashing && !charging && _lifted != null;
+            _beam.Visible = _core.Visible = flashing || slow || lifting || charging;
             if (!_beam.Visible)
                 return;
+            float grow = charging ? Mathf.Clamp01(inState / _tuning.ChargeSeconds) : 1f;
             Vector3 end = flashing ? _flashTarget : lifting ? _lifted.position : Target.position + Vector3.up * 1.2f;
             // Drawn on both faces and added onto the scene, so it is half the old ribbon's strength.
-            Color colour = flashing ? new Color(1f, 1f, 1f, 1f) : new Color(1f, 0.85f, 0.55f, 0.45f);
+            Color colour = flashing ? new Color(1f, 1f, 1f, 1f)
+                : charging ? new Color(1f, 1f, 1f, Mathf.Lerp(ChargeStartBrightness, 1f, grow))
+                : new Color(1f, 0.85f, 0.55f, 0.45f);
+            // The core is the same colour, full alpha, pushed past white so it reads as a solid rod of light.
+            float coreScale = CoreBrightness * (charging ? grow : 1f);
+            var coreColour = new Color(colour.r * coreScale, colour.g * coreScale, colour.b * coreScale, 1f);
             // The charged flash fades near the player it strikes too, or its 8 m end whites out the wall bursting.
             bool onLocalPlayer = PlayerStateMachine.Local != null && (flashing
                 ? Vector3.Distance(end, PlayerStateMachine.Local.transform.position) < 3f
                 : Target == PlayerStateMachine.Local.transform);
-            _beam.Draw(EyePoint, end,
-                flashing ? ChargedWidthAtEye : BeamWidthAtEye,
-                flashing ? ChargedWidthAtTarget : BeamWidthAtTarget,
-                colour, onLocalPlayer ? FadeMetresOnTarget : FadeMetresSeenByOthers);
+            float eyeWidth = flashing ? ChargedWidthAtEye : charging ? Mathf.Lerp(ChargeStartWidthAtEye, ChargedWidthAtEye, grow) : BeamWidthAtEye;
+            float endWidth = flashing ? ChargedWidthAtTarget : charging ? Mathf.Lerp(ChargeStartWidthAtTarget, ChargedWidthAtTarget, grow) : BeamWidthAtTarget;
+            float fade = onLocalPlayer ? FadeMetresOnTarget : FadeMetresSeenByOthers;
+            _beam.Draw(EyePoint, end, eyeWidth, endWidth, colour, fade);
+            _core.Draw(EyePoint, end, eyeWidth * CoreWidthFraction, endWidth * CoreWidthFraction, coreColour, fade);
         }
 
         private void DriftAway(float inState)

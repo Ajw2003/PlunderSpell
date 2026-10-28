@@ -20,8 +20,12 @@ namespace Plunderspell.Raid
         private readonly Vector3[] _vertices = new Vector3[Sides * Rings];
         private readonly Color[] _colours = new Color[Sides * Rings];
 
-        public OphanBeamShaft()
+        private readonly bool _opaque;
+
+        /// <param name="opaque">A solid unlit core instead of the soft additive shaft; it fades by tapering to a point, as unlit ignores vertex alpha.</param>
+        public OphanBeamShaft(bool opaque = false)
         {
+            _opaque = opaque;
             _go = new GameObject("OphanBeam");
             _mesh = new Mesh { name = "OphanBeamShaft" };
             _mesh.MarkDynamic();
@@ -33,7 +37,18 @@ namespace Plunderspell.Raid
             _renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             _renderer.receiveShadows = false;
             // The grab beam's additive look, drawn on both faces: the target looks up the inside of the shaft.
-            var material = new Material(Resources.Load<Material>("GrabBeam"));
+            Material material;
+            Shader unlit = opaque ? Shader.Find("Universal Render Pipeline/Unlit") : null;
+            if (unlit != null)
+            {
+                material = new Material(unlit);
+            }
+            else
+            {
+                if (opaque)
+                    Debug.LogError("OphanBeamShaft: URP Unlit shader not found; the beam core falls back to the soft material.");
+                material = new Material(Resources.Load<Material>("GrabBeam"));
+            }
             material.SetFloat("_Cull", (float)UnityEngine.Rendering.CullMode.Off);
             _renderer.sharedMaterial = material;
             _go.SetActive(false);
@@ -57,12 +72,16 @@ namespace Plunderspell.Raid
                 return;
             _go.transform.SetPositionAndRotation(eye, Quaternion.LookRotation(along / length));
 
+            if (_opaque && _renderer.sharedMaterial.HasProperty("_BaseColor"))
+                _renderer.sharedMaterial.SetColor("_BaseColor", colour);
             float fadeStart = 1f - Mathf.Clamp01(fadeMetres / length);
             float[] at = { 0f, fadeStart, 1f };
             float[] alpha = { colour.a, colour.a, 0f };
             for (int ring = 0; ring < Rings; ring++)
             {
                 float radius = Mathf.Lerp(eyeWidth, endWidth, at[ring]) * 0.5f;
+                if (_opaque && ring == Rings - 1)
+                    radius = 0f;
                 var ringColour = new Color(colour.r, colour.g, colour.b, alpha[ring]);
                 for (int side = 0; side < Sides; side++)
                 {
