@@ -44,6 +44,8 @@ namespace Plunderspell.Tests.Editor
             return false;
         }
 
+        public int RoomsBetween(Vector3 from, Vector3 to) => 0;
+
         public bool TryGetFloorHeight(Vector3 position, out float floorHeight)
         {
             floorHeight = 0f;

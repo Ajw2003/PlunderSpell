@@ -35,6 +35,12 @@ namespace Plunderspell.Alarm
         /// </summary>
         bool TryFindFirstDoorway(Vector3 from, Vector3 to, out Vector3 doorway);
 
+        /// <summary>
+        /// How many room changes the route from <paramref name="from"/> to <paramref name="to"/> makes (0 when both share a room),
+        /// or -1 when there is no route. Read-only.
+        /// </summary>
+        int RoomsBetween(Vector3 from, Vector3 to);
+
         /// <summary>The floor height under a point, so movers can settle onto stairs and drop off ledges.</summary>
         bool TryGetFloorHeight(Vector3 position, out float floorHeight);
     }

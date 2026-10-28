@@ -302,6 +302,11 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
   block swaps it for a fresh one (`PatrolState.cs:91`). The route is `States/GuardPatrolRoute.cs`.
   `GuardNavigationService.Map` (`GuardNavigationService.cs:50`) exposes the map to states. Numbers are in
   `GuardTuning` ("Patrol").
+- **A guard loses you only when you are rooms away (#487).** `Core/GuardLastKnown.cs` (`Guard.LastKnown`) keeps each player's
+  last-known spot and heading, set by Chase and Combat sightings. A guard that loses a player (`Chase`/`Combat` `GiveUp` calls `Hunt`) searches in
+  `InvestigateState.FinishLook`: the spot, then 6 m legs along the heading, looking round at each stop. It returns to Patrol only when
+  `GuardLastKnown.MayGiveUp` is true: 8 s with no sighting or new lead, and `IGuardNavigationMap.RoomsBetween(guard, spot)` of 3 or more
+  (-1, no route, counts as far). Noise-only investigations are unchanged. Play-mode tests: `GuardLastKnownTests`.
 - **Leads and Investigate (#208).** `Core/GuardLeads.cs` (`Guard.Leads`, `Guard.cs:54`, built `:99`) holds the one
   strongest waiting lead: a noise (`GuardHearing.NoiseNoticed`, strength 0-1, `GuardLeads.cs:33`), the director's hue
   and cry (`GuardDirectorLink.InvestigateRequested`, strength 2, `GuardLeads.cs:32`) or a new sighting (strength 3,

@@ -103,6 +103,25 @@ namespace Plunderspell.Castle
             return false;
         }
 
+        /// <summary>Counts the steps on the cell route that change room, as <see cref="TryFindFirstDoorway"/> finds the first.</summary>
+        public int RoomsBetween(Vector3 from, Vector3 to)
+        {
+            var route = new List<Vector3>();
+            if (!_graph.FindPath(from, to, route))
+                return -1;
+
+            int rooms = 0;
+            int previous = _graph.NearestWalkableCell(route[0], CastleNavTile.CellSize);
+            for (int i = 1; i < route.Count; i++)
+            {
+                int cell = _graph.NearestWalkableCell(route[i], CastleNavTile.CellSize);
+                if (previous >= 0 && cell >= 0 && CastleNavGrid.ModuleOf(cell) != CastleNavGrid.ModuleOf(previous))
+                    rooms++;
+                previous = cell;
+            }
+            return rooms;
+        }
+
         public bool TryGetFloorHeight(Vector3 position, out float floorHeight)
         {
             int cell = _graph.FloorCellUnder(position, FloorSearchDistance);

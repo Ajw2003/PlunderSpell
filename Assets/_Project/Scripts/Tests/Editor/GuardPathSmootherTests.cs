@@ -24,6 +24,7 @@ namespace Plunderspell.Tests.Editor
                 _floor.TryGetFloorHeight(position, out floorHeight);
             public bool TryFindFirstDoorway(Vector3 from, Vector3 to, out Vector3 doorway) =>
                 _floor.TryFindFirstDoorway(from, to, out doorway);
+            public int RoomsBetween(Vector3 from, Vector3 to) => _floor.RoomsBetween(from, to);
             public bool TryFindNearestReachable(Vector3 from, Vector3 target, out Vector3 reachable) =>
                 _floor.TryFindNearestReachable(from, target, out reachable);
 

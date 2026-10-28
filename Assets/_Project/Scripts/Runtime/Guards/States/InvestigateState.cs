@@ -70,6 +70,7 @@ namespace Plunderspell.Guards
             if (chase != null)
                 return chase;
 
+            Context.LastKnown.Tick(deltaTime);
             RetargetOnNewLead();
             if (_gaveUp)
                 return Context.States.Patrol;
@@ -82,7 +83,26 @@ namespace Plunderspell.Guards
                 return this;
 
             _lookTimeLeft -= deltaTime;
-            return _lookTimeLeft <= 0f && !_look.IsTurning ? Context.States.Patrol : this;
+            return _lookTimeLeft <= 0f && !_look.IsTurning ? FinishLook() : this;
+        }
+
+        // A guard that lost a player keeps searching (#487) until 8 s pass with nothing new and the last-known
+        // spot is 3 or more rooms away: first the spot, then on along the heading, looking round at each stop.
+        private State<Guard> FinishLook()
+        {
+            GuardLastKnown known = Context.LastKnown;
+            IGuardNavigationMap map = Context.Link.Director != null ? Context.Link.Director.Navigation.Map : null;
+            if (!known.IsHunting || known.MayGiveUp(map, Context.transform.position))
+            {
+                known.Forget();
+                return Context.States.Patrol;
+            }
+
+            if (known.TryNextLeg(_spot, out Vector3 point))
+                BeginLeg(point, _leadStrength, false, Vector3.zero);
+            else
+                BeginLook();
+            return this;
         }
 
         private void StartWalk()
@@ -123,10 +143,20 @@ namespace Plunderspell.Guards
 
         private void GoToWaitingLead()
         {
-            _leadStrength = Context.Leads.Strength;
-            _hasHeading = Context.Leads.HasHeading;
-            _heading = Context.Leads.Heading;
-            _spot = Context.Leads.Take();
+            float strength = Context.Leads.Strength;
+            bool hasHeading = Context.Leads.HasHeading;
+            Vector3 heading = Context.Leads.Heading;
+            Vector3 spot = Context.Leads.Take();
+            Context.LastKnown.Heard(spot, hasHeading, heading);
+            BeginLeg(spot, strength, hasHeading, heading);
+        }
+
+        private void BeginLeg(Vector3 spot, float strength, bool hasHeading, Vector3 heading)
+        {
+            _leadStrength = strength;
+            _hasHeading = hasHeading;
+            _heading = heading;
+            _spot = spot;
             _arrived = false;
             _lookTimeLeft = Context.Tuning.InvestigateLookSeconds;
             _onDetour = false;
@@ -134,9 +164,12 @@ namespace Plunderspell.Guards
             _look.BeginTurnToward(_spot);
         }
 
-        private void OnReached(Arrived arrived)
+        private void OnReached(Arrived arrived) => BeginLook();
+
+        private void BeginLook()
         {
             _arrived = true;
+            _lookTimeLeft = Context.Tuning.InvestigateLookSeconds;
             // At a doorway the guard faces back toward the sound, then looks about from there (#485).
             if (_hasHeading)
                 _look.BeginSweepFacing(_heading);
@@ -154,7 +187,14 @@ namespace Plunderspell.Guards
         {
             _onDetour = !_onDetour && GuardNearestReachableWalk.IsMissingRoute(blocked)
                 && _detour.TryStart(_spot, LeadSpeed(), MoveReason.Investigate);
-            _gaveUp = !_onDetour;
+            if (_onDetour)
+                return;
+
+            // A hunting guard looks round where it stands instead of leaving the hunt (#487).
+            if (Context.LastKnown.IsHunting)
+                BeginLook();
+            else
+                _gaveUp = true;
         }
     }
 }

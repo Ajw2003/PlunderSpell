@@ -37,6 +37,7 @@ namespace Plunderspell.Guards
             _route.Clear();
             _pauseLeft = 0f;
             _lastSighting = null;
+            Context.LastKnown.Forget();
             _look.Cancel();
             Context.Navigator.Reached += OnReached;
             Context.Navigator.RouteBlocked += OnBlocked;

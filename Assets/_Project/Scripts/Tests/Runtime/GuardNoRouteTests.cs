@@ -90,6 +90,8 @@ namespace Plunderspell.Tests
                 return true;
             }
 
+            public int RoomsBetween(Vector3 from, Vector3 to) => 0;
+
             public bool TryFindFirstDoorway(Vector3 from, Vector3 to, out Vector3 doorway)
             {
                 doorway = to;

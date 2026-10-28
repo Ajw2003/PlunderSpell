@@ -83,6 +83,9 @@ namespace Plunderspell.Guards
 
         /// <summary>What is worth a look (noise, sighting, hue and cry). Patrol and Investigate read it (#208).</summary>
         public GuardLeads Leads { get; private set; }
+
+        /// <summary>Where each player was last known to be and which way they went; Investigate searches from it (#487).</summary>
+        public GuardLastKnown LastKnown { get; private set; }
         public GuardStateSet States { get; private set; }
 
         /// <summary>The cry for help on a first sighting (#259).</summary>
@@ -139,6 +142,7 @@ namespace Plunderspell.Guards
             Reach = new GuardReachability(this);
             _ = new GuardHelpResponse(this);
             Leads = new GuardLeads(Link, Hearing, new GuardSoundApproach(this), () => Random);
+            LastKnown = new GuardLastKnown();
             Cry = new GuardCry(this);
             Hearing.NoiseHeard += (origin, strength) => EventManager.Instance?.Publish(new NoiseReported(this, origin, strength));
             _shove = new GuardShove(transform, _tuning);

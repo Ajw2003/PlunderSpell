@@ -56,6 +56,7 @@ namespace Plunderspell.Guards
         public override void Enter()
         {
             _lastSeenSpot = _target.position;
+            Context.LastKnown.Sighted(_target, _lastSeenSpot);
             _secondsSinceSeen = 0f;
             _inReach = false;
             _holdBelowDue = false;
@@ -90,6 +91,7 @@ namespace Plunderspell.Guards
 
             _target = seen;
             _lastSeenSpot = seen.position;
+            Context.LastKnown.Sighted(seen, _lastSeenSpot);
             _secondsSinceSeen = 0f;
             // A melee guard that cannot get at the player stops chasing and throws instead (#237).
             // Also when the route failed and the nearest reachable floor did not get it any closer (#481).
@@ -125,6 +127,7 @@ namespace Plunderspell.Guards
         {
             // The strongest lead, so Investigate goes straight to the last seen spot.
             Context.Leads.Offer(_lastSeenSpot, GuardLeads.SightingStrength);
+            Context.LastKnown.Hunt(_target);
             return Context.States.Investigate;
         }
 
