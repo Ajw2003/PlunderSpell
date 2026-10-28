@@ -42,6 +42,10 @@ and started clean (Steam ready, 0 error lines); the #372 buttons are built only 
 has not been played.
 
 Still outside it, each needing a keep-or-drop call:
+- `AjsAgent/guard-deep-dive-0031e3` (2026-10-28, from `AjsAgent/gym-with-demand-page`): docs only. Why the
+  guards stare, ignore players near beam holes, give up fast and seem brain dead
+  (`docs/generated/guard-deep-dive-2026-10-28/findings.md`), and the design page waiting on aj
+  (`docs/plans/guard-awareness.html`). No guard code changed yet.
 - `AjsAgent/fear-pass-handoff` (2026-10-12, #386): the fear pass's approved designs, and the art
   for the Wick (model and nine clips, #406) and the Ophan of Hours (model and five clips, #411,
   #412), with `staging-2026-10-11` merged in, and the import rules for all four fear files (#413),
