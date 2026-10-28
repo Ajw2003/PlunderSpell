@@ -123,6 +123,51 @@ namespace Plunderspell.Castle
             _areaId[cell] = areaId;
         }
 
+        /// <summary>Forgets every area, so <see cref="CastleNavAreas.Label"/> can label the map again after cells changed.</summary>
+        public void ResetAreas()
+        {
+            for (int cell = 0; cell < _areaId.Length; cell++)
+                _areaId[cell] = -1;
+        }
+
+        /// <summary>The module standing at a castle-wide cell column and row whose floor is the highest not above <paramref name="y"/>, or -1.</summary>
+        public int ModuleUnder(int castleColumn, int castleRow, float y)
+        {
+            int gridX = FloorDiv(castleColumn, TileSize), gridY = FloorDiv(castleRow, TileSize);
+            int best = -1;
+            for (int level = CastleLevels.Lowest; level < CastleLevels.Lowest + CastleLevels.Count; level++)
+            {
+                int module = ModuleAtGridCell(gridX, gridY, level);
+                if (module >= 0 && _moduleHasTile[module] && _modulePosition[module].y <= y + 0.5f &&
+                    (best < 0 || _modulePosition[module].y > _modulePosition[best].y))
+                    best = module;
+            }
+            return best;
+        }
+
+        /// <summary>
+        /// A not-yet-walkable cell in a module's column for a floor at height <paramref name="y"/>, or <see cref="NoCell"/>
+        /// when the column already has a floor there (within 0.1 m) or both its layers are taken.
+        /// </summary>
+        public int FreeCellAt(int module, int castleColumn, int castleRow, float y)
+        {
+            int column = castleColumn - FloorDiv(castleColumn, TileSize) * TileSize;
+            int row = castleRow - FloorDiv(castleRow, TileSize) * TileSize;
+            int free = NoCell;
+            for (int layer = 0; layer < CastleNavTile.Layers; layer++)
+            {
+                int cell = module * CellsPerModule + CastleNavTile.Index(layer, column, row);
+                if (_walkable[cell] == 0)
+                    free = free == NoCell ? cell : free;
+                else if (Mathf.Abs(_heightCm[cell] / CastleNavTile.HeightScale - y) < 0.1f)
+                    return NoCell;
+            }
+            return free;
+        }
+
+        /// <summary>World X (or Z) of the centre of a castle-wide cell column (or row).</summary>
+        public static float CellCentre(int castleIndex) => (castleIndex + 0.5f) * CastleNavTile.CellSize - HalfSpan;
+
         // --- Reading --------------------------------------------------------------------------
 
         public bool HasTile(int module) => _moduleHasTile[module];

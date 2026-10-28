@@ -39,7 +39,15 @@ namespace Plunderspell.Fracture
         [Tooltip("Keep this object's own renderer drawing what is left, in its own shader, and let the effect draw only falling debris. Off: the effect redraws every piece, as the original did.")]
         public bool keepMeshRenderer = false;
 
+        [Tooltip("Metres of stone strip added along every edge a break leaves, front to back (keepMeshRenderer only). 0 = no caps. Visual only.")]
+        public float capDepthMetres = 0f;
+
         private Mesh renderMesh;
+        private int[] originalPerSubmesh; // triangles per submesh before the reversed twins
+        private readonly List<Vector3> baseVerts = new List<Vector3>(), baseNormals = new List<Vector3>(), capVerts = new List<Vector3>(), capNormals = new List<Vector3>();
+        private readonly List<Vector2> baseUvs = new List<Vector2>(), baseUv2 = new List<Vector2>(), capUvs = new List<Vector2>(), capUv2 = new List<Vector2>();
+        private readonly List<Vector4> baseTangents = new List<Vector4>(), capTangents = new List<Vector4>();
+        private readonly List<Color> baseColors = new List<Color>(), capColors = new List<Color>();
 
         [Header("Optimization")]
         [Tooltip("Initialize fracture data on Start instead of first hit. Prevents lag spikes when first hit.")]
@@ -86,6 +94,12 @@ namespace Plunderspell.Fracture
                 collisionTriangles = initialTriangles;
                 collisionVertices = collisionMesh.vertices;
                 initialTriangleCount = initialTriangles.Length / 3;
+
+                if (capDepthMetres > 0f && keepMeshRenderer)
+                {
+                    originalPerSubmesh = new int[collisionMesh.subMeshCount];
+                    for (int s = 0; s < originalPerSubmesh.Length; s++) originalPerSubmesh[s] = collisionMesh.GetTriangles(s).Length / 6;
+                }
 
                 bfsQueue = new Queue<int>(initialTriangleCount);
                 bfsVisited = new bool[initialTriangleCount];
@@ -497,6 +511,11 @@ namespace Plunderspell.Fracture
             {
                 renderMesh = Instantiate(filter.sharedMesh);
                 filter.sharedMesh = renderMesh;
+                if (capDepthMetres > 0f)
+                {
+                    renderMesh.GetVertices(baseVerts); renderMesh.GetNormals(baseNormals); renderMesh.GetUVs(0, baseUvs);
+                    renderMesh.GetUVs(1, baseUv2); renderMesh.GetTangents(baseTangents); renderMesh.GetColors(baseColors);
+                }
             }
             var lists = new List<int>[renderMesh.subMeshCount];
             for (int s = 0; s < lists.Length; s++) lists[s] = new List<int>();
@@ -509,7 +528,95 @@ namespace Plunderspell.Fracture
                 lists[s].Add(initialTriangles[i * 3 + 1]);
                 lists[s].Add(initialTriangles[i * 3 + 2]);
             }
+            if (capDepthMetres > 0f && originalPerSubmesh != null) AddCaps(lists);
+            // Triangles first, so the vertex count can shrink when a cap goes away.
+            for (int s = 0; s < lists.Length; s++) renderMesh.SetTriangles(System.Array.Empty<int>(), s);
+            if (capDepthMetres > 0f) ApplyCapVertices();
             for (int s = 0; s < lists.Length; s++) renderMesh.SetTriangles(lists[s], s);
+        }
+
+        // Cap quads (#477): every edge of a surviving original triangle whose welded neighbour across it is broken
+        // gets a strip capDepthMetres deep, along -face normal, so the hole is not an empty gap between the two surfaces.
+        private void AddCaps(List<int>[] lists)
+        {
+            capVerts.Clear(); capNormals.Clear(); capUvs.Clear(); capUv2.Clear(); capTangents.Clear(); capColors.Clear();
+            // Both surfaces of a wall cap the same hole: each goes half way, so the strips meet instead of overlapping.
+            float depth = capDepthMetres * 0.5f / transform.lossyScale.x;
+            float weld2 = mergeDistance * mergeDistance;
+            int baseCount = baseVerts.Count;
+            for (int i = 0; i < initialTriangleCount; i++)
+            {
+                if (triangleIsBroken[i] || !IsOriginalTriangle(i)) continue;
+                int sub = pieceMappings[i].submeshIndex;
+                if (sub < 0 || sub >= lists.Length) continue;
+                int[] nb = triangleNeighbors[i];
+                bool any = false;
+                for (int k = 0; k < nb.Length && !any; k++) any = triangleIsBroken[nb[k]] && IsOriginalTriangle(nb[k]);
+                if (!any) continue;
+
+                Vector3 p0 = collisionVertices[initialTriangles[i * 3]];
+                Vector3 p1 = collisionVertices[initialTriangles[i * 3 + 1]];
+                Vector3 p2 = collisionVertices[initialTriangles[i * 3 + 2]];
+                Vector3 inward = -Vector3.Cross(p1 - p0, p2 - p0).normalized * depth;
+                Vector3 centroid = (p0 + p1 + p2) / 3f;
+
+                for (int e = 0; e < 3; e++)
+                {
+                    int ia = initialTriangles[i * 3 + e], ib = initialTriangles[i * 3 + (e + 1) % 3];
+                    Vector3 a = collisionVertices[ia], b = collisionVertices[ib];
+                    for (int k = 0; k < nb.Length; k++)
+                    {
+                        int n = nb[k];
+                        if (!triangleIsBroken[n] || !IsOriginalTriangle(n)) continue;
+                        if (!TriangleHasPoint(n, a, weld2) || !TriangleHasPoint(n, b, weld2)) continue;
+
+                        Vector3 w = Vector3.Cross(b - a, inward);
+                        Vector3 nCentroid = (collisionVertices[initialTriangles[n * 3]] + collisionVertices[initialTriangles[n * 3 + 1]] + collisionVertices[initialTriangles[n * 3 + 2]]) / 3f;
+                        bool flip = Vector3.Dot(w, nCentroid - centroid) < 0f;
+                        Vector3 normal = (flip ? -w : w).normalized;
+
+                        int q = baseCount + capVerts.Count;
+                        capVerts.Add(a); capVerts.Add(b); capVerts.Add(b + inward); capVerts.Add(a + inward);
+                        for (int c = 0; c < 4; c++) capNormals.Add(normal);
+                        int ua = ia, ub = ib;
+                        if (baseUvs.Count == baseCount) { capUvs.Add(baseUvs[ua]); capUvs.Add(baseUvs[ub]); capUvs.Add(baseUvs[ub]); capUvs.Add(baseUvs[ua]); }
+                        if (baseUv2.Count == baseCount) { capUv2.Add(baseUv2[ua]); capUv2.Add(baseUv2[ub]); capUv2.Add(baseUv2[ub]); capUv2.Add(baseUv2[ua]); }
+                        if (baseTangents.Count == baseCount) { capTangents.Add(baseTangents[ua]); capTangents.Add(baseTangents[ub]); capTangents.Add(baseTangents[ub]); capTangents.Add(baseTangents[ua]); }
+                        if (baseColors.Count == baseCount) { capColors.Add(baseColors[ua]); capColors.Add(baseColors[ub]); capColors.Add(baseColors[ub]); capColors.Add(baseColors[ua]); }
+
+                        // Winding faces the hole side; with flip the quad's normal is -w.
+                        int[] order = flip ? new[] { 0, 2, 1, 0, 3, 2 } : new[] { 0, 1, 2, 0, 2, 3 };
+                        foreach (int o in order) lists[sub].Add(q + o);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void ApplyCapVertices()
+        {
+            var v = new List<Vector3>(baseVerts); v.AddRange(capVerts);
+            var nrm = new List<Vector3>(baseNormals); nrm.AddRange(capNormals);
+            renderMesh.SetVertices(v);
+            renderMesh.SetNormals(nrm);
+            if (baseUvs.Count == baseVerts.Count) { var l = new List<Vector2>(baseUvs); l.AddRange(capUvs); renderMesh.SetUVs(0, l); }
+            if (baseUv2.Count == baseVerts.Count) { var l = new List<Vector2>(baseUv2); l.AddRange(capUv2); renderMesh.SetUVs(1, l); }
+            if (baseTangents.Count == baseVerts.Count) { var l = new List<Vector4>(baseTangents); l.AddRange(capTangents); renderMesh.SetTangents(l); }
+            if (baseColors.Count == baseVerts.Count) { var l = new List<Color>(baseColors); l.AddRange(capColors); renderMesh.SetColors(l); }
+        }
+
+        // DoubleSidedMeshGenerator appends the reversed twins after the originals in each submesh.
+        private bool IsOriginalTriangle(int tri)
+        {
+            PieceMapping m = pieceMappings[tri];
+            return m.pieceIndex < originalPerSubmesh[m.submeshIndex];
+        }
+
+        private bool TriangleHasPoint(int tri, Vector3 p, float weld2)
+        {
+            for (int j = 0; j < 3; j++)
+                if ((collisionVertices[initialTriangles[tri * 3 + j]] - p).sqrMagnitude <= weld2) return true;
+            return false;
         }
 
         [ContextMenu("Test Fracture")]

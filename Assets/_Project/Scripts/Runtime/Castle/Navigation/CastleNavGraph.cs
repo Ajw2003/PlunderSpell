@@ -23,6 +23,15 @@ namespace Plunderspell.Castle
         private CastleNavPortalGraph _portals;
         private CastleNavPathFinder _pathFinder;
         private readonly List<Vector3> _scratchPath = new List<Vector3>();
+        // Kept so a break can rebuild: the layout the archway links are found from again, and the links
+        // a broken wall opened (the archway links are not kept, they are found again from the cells).
+        private ProceduralCastleData _data;
+        private readonly List<NavLink> _holeLinks = new List<NavLink>();
+        private static readonly Collider[] s_colliders = new Collider[32];
+        private static readonly RaycastHit[] s_hits = new RaycastHit[32];
+        private static readonly int[] s_stepColumn = { 1, -1, 0, 0 };
+        private static readonly int[] s_stepRow = { 0, 0, 1, -1 };
+        private const int MaxGrowPasses = 6;
 
         private CastleNavGraph() { }
 
@@ -58,20 +67,31 @@ namespace Plunderspell.Castle
             int stamped = CastleNavObstacles.Stamp(grid, obstacles); // before areas, so a cart that seals a gap splits them
             if (obstacles != null && obstacles.Count > 0)
                 Debug.Log($"[CastleNav] {obstacles.Count} dressing pieces took {stamped} cells out of the walk map.");
-            CastleNavAreas areas = CastleNavAreas.Label(grid);
-            List<NavLink> links = CastleNavStitcher.FindLinks(grid, data, areas);
-            areas.Flatten(grid);
+            graph._grid = grid;
+            graph._data = data;
+            graph.Connect();
+            return graph;
+        }
+
+        // Areas, archway links and the room crossings from the cells as they stand, plus the links a break opened.
+        private void Connect()
+        {
+            CastleNavAreas areas = CastleNavAreas.Label(_grid);
+            List<NavLink> links = CastleNavStitcher.FindLinks(_grid, _data, areas);
+            foreach (NavLink hole in _holeLinks)
+            {
+                if (!_grid.IsWalkable(hole.CellA) || !_grid.IsWalkable(hole.CellB))
+                    continue;
+                areas.Join(_grid, hole.CellA, hole.CellB);
+                links.Add(hole);
+            }
+            areas.Flatten(_grid);
 
             var heap = new NavMinHeap();
-            var gridSearch = new CastleNavGridSearch(grid, heap);
-            var portals = new CastleNavPortalGraph(links, grid.ModuleCount);
-            portals.ComputeRoomCrossings(gridSearch, grid.ModuleCount);
-
-            graph._grid = grid;
-            graph._portals = portals;
-            graph._pathFinder = new CastleNavPathFinder(grid, portals, gridSearch,
-                new CastleNavPortalSearch(portals, heap));
-            return graph;
+            var gridSearch = new CastleNavGridSearch(_grid, heap);
+            _portals = new CastleNavPortalGraph(links, _grid.ModuleCount);
+            _portals.ComputeRoomCrossings(gridSearch, _grid.ModuleCount);
+            _pathFinder = new CastleNavPathFinder(_grid, _portals, gridSearch, new CastleNavPortalSearch(_portals, heap));
         }
 
         /// <summary>World position of a cell's centre, at standing height.</summary>
@@ -153,6 +173,241 @@ namespace Plunderspell.Castle
             int startNode = NearestWalkableCell(from);
             int goalNode = NearestWalkableCell(to);
             return IsReachableWithDoorsOpen(startNode, goalNode) && _pathFinder.Find(startNode, goalNode, path);
+        }
+
+        // --- A break changed the castle (#478) -----------------------------------------------------
+
+        /// <summary>True when a guard can stand on the cell.</summary>
+        public bool IsWalkable(int cell) => _grid != null && cell >= 0 && _grid.IsWalkable(cell);
+
+        /// <summary>Takes a cell out of the walk map. Takes effect for paths and reachability at the next <see cref="Rebuild"/>.</summary>
+        public void ClearCell(int cell) => _grid?.ClearWalkable(cell);
+
+        /// <summary>Adds a link between two cells of different rooms, as a hole in a wall makes. Takes effect at the next <see cref="Rebuild"/>.</summary>
+        public void AddLink(int cellA, int cellB)
+        {
+            foreach (NavLink hole in _holeLinks)
+            {
+                if (hole.CellA == cellA && hole.CellB == cellB)
+                    return;
+            }
+            _holeLinks.Add(new NavLink(CastleNavGrid.ModuleOf(cellA), CastleNavGrid.ModuleOf(cellB), cellA, cellB, _grid.CellPosition(cellA)));
+        }
+
+        /// <summary>The two cells a link joins, or false for no such link.</summary>
+        public bool TryGetLinkCells(int link, out int cellA, out int cellB)
+        {
+            cellA = cellB = CastleNavGrid.NoCell;
+            if (_portals == null || link < 0 || link >= _portals.LinkCount)
+                return false;
+            cellA = _portals.Link(link).CellA;
+            cellB = _portals.Link(link).CellB;
+            return true;
+        }
+
+        /// <summary>What crossing a link costs beyond the walk (<see cref="SetDoorCost"/>), or zero for no such link.</summary>
+        public float DoorCost(int link) => _portals != null && link >= 0 && link < _portals.LinkCount ? _portals.ExtraCost(link) : 0f;
+
+        /// <summary>
+        /// Relabels the areas and rebuilds the links and room crossings from the cells as they now stand, the way
+        /// <see cref="Build"/> did. Link numbers change, so each door's cost is moved to the link now nearest its archway,
+        /// and <see cref="DoorVersion"/> goes up so routes planned before are dropped.
+        /// </summary>
+        public void Rebuild()
+        {
+            if (_grid == null)
+                return;
+            CastleNavPortalGraph old = _portals;
+            _grid.ResetAreas();
+            Connect();
+            _portals.StartVersionAt(old.DoorVersion + 1);
+            for (int link = 0; link < old.LinkCount; link++)
+            {
+                if (old.ExtraCost(link) == 0f)
+                    continue;
+                NavLink was = old.Link(link);
+                int now = _portals.FindLinkBetween(was.ModuleA, was.ModuleB, was.Position, CastleLockdownNavigation.DoorToArchwayDistance);
+                if (now >= 0)
+                    _portals.SetExtraCost(now, old.ExtraCost(link));
+                else
+                    Debug.LogWarning($"[CastleNav] The archway of a locked or closed door between modules {was.ModuleA} and {was.ModuleB} no longer exists; its door state is dropped.");
+            }
+        }
+
+        /// <summary>
+        /// Brings the map up to date with a charged beam that broke castle pieces along <paramref name="from"/> to
+        /// <paramref name="to"/>, within <paramref name="radius"/> of that line (host only; colliders must already have
+        /// changed). Cells whose floor is gone or that a wall now overlaps are cleared; cells a broken wall freed are
+        /// added; where a wall between two rooms has a hole a guard fits through, a link joins the two sides; then
+        /// <see cref="Rebuild"/>. Uses the baker's own standing test (<see cref="CastleNavProbe"/>) against the castle's colliders only.
+        /// </summary>
+        public void RefreshAfterBreak(Vector3 from, Vector3 to, float radius)
+        {
+            if (_grid == null || _data == null)
+                return;
+            PhysicsScene physics = Physics.defaultPhysicsScene;
+            int firstColumn = _grid.CastleColumn(Mathf.Min(from.x, to.x) - radius), lastColumn = _grid.CastleColumn(Mathf.Max(from.x, to.x) + radius);
+            int firstRow = _grid.CastleRow(Mathf.Min(from.z, to.z) - radius), lastRow = _grid.CastleRow(Mathf.Max(from.z, to.z) + radius);
+
+            int cleared = 0, added = 0;
+            for (int row = firstRow; row <= lastRow; row++)
+            {
+                for (int column = firstColumn; column <= lastColumn; column++)
+                    cleared += ClearBrokenColumn(physics, column, row, from, to, radius);
+            }
+            for (int pass = 0; pass < MaxGrowPasses; pass++)
+            {
+                int grown = 0;
+                for (int row = firstRow; row <= lastRow; row++)
+                {
+                    for (int column = firstColumn; column <= lastColumn; column++)
+                        grown += GrowColumn(physics, column, row, from, to, radius);
+                }
+                added += grown;
+                if (grown == 0)
+                    break;
+            }
+            int holes = LinkHoles(from, to, radius);
+            int linksBefore = LinkCount;
+            if (cleared + added + holes > 0)
+                Rebuild();
+            Debug.Log($"[CastleNav] Break refresh: {cleared} cells cleared, {added} added, {holes} wall hole links, links {linksBefore} -> {LinkCount}.");
+        }
+
+        // A cell whose floor is gone (rooms only: a curtain piece stands on the scene's ground) or that the castle now overlaps.
+        private int ClearBrokenColumn(PhysicsScene physics, int column, int row, Vector3 from, Vector3 to, float radius)
+        {
+            int cleared = 0;
+            for (int level = CastleLevels.Lowest; level < CastleLevels.Lowest + CastleLevels.Count; level++)
+            {
+                for (int layer = 0; layer < CastleNavTile.Layers; layer++)
+                {
+                    int cell = _grid.CellAt(column, row, layer, level);
+                    if (cell < 0 || !_grid.IsWalkable(cell))
+                        continue;
+                    Vector3 floor = _grid.CellPosition(cell);
+                    if (!NearSegment(floor, from, to, radius))
+                        continue;
+                    bool floorGone = IsRoom(CastleNavGrid.ModuleOf(cell)) && !CastleNavProbe.HasFloor(physics, floor);
+                    if (floorGone || CastleNavProbe.IsBlocked(physics, floor, s_colliders, true))
+                    {
+                        _grid.ClearWalkable(cell);
+                        cleared++;
+                    }
+                }
+            }
+            return cleared;
+        }
+
+        // A cell beside a walkable one, no more than a step off its floor, that now passes the standing test.
+        private int GrowColumn(PhysicsScene physics, int column, int row, Vector3 from, Vector3 to, float radius)
+        {
+            int added = 0;
+            float x = CastleNavGrid.CellCentre(column), z = CastleNavGrid.CellCentre(row);
+            for (int direction = 0; direction < 4; direction++)
+            {
+                for (int level = CastleLevels.Lowest; level < CastleLevels.Lowest + CastleLevels.Count; level++)
+                {
+                    for (int layer = 0; layer < CastleNavTile.Layers; layer++)
+                    {
+                        int beside = _grid.CellAt(column + s_stepColumn[direction], row + s_stepRow[direction], layer, level);
+                        if (beside < 0 || !_grid.IsWalkable(beside))
+                            continue;
+                        float floorY = _grid.HeightCm(beside) / CastleNavTile.HeightScale;
+                        int module = _grid.ModuleUnder(column, row, floorY);
+                        if (module < 0)
+                            continue;
+                        if (IsRoom(module))
+                        {
+                            if (!physics.Raycast(new Vector3(x, floorY + CastleNavTile.StepHeight + 0.05f, z), Vector3.down, out RaycastHit hit,
+                                    CastleNavTile.StepHeight * 2f + 0.1f, ~0, QueryTriggerInteraction.Ignore) || hit.normal.y < CastleNavProbe.MinNormalY)
+                                continue;
+                            floorY = hit.point.y;
+                        }
+                        int cell = _grid.FreeCellAt(module, column, row, floorY);
+                        var floor = new Vector3(x, floorY, z);
+                        if (cell < 0 || !NearSegment(floor, from, to, radius) || CastleNavProbe.IsBlocked(physics, floor, s_colliders, true))
+                            continue;
+                        _grid.SetWalkable(cell, (short)Mathf.RoundToInt(floorY * CastleNavTile.HeightScale));
+                        added++;
+                    }
+                }
+            }
+            return added;
+        }
+
+        // Across each wall between two rooms that is not an open archway, the pair of cells nearest the beam that a guard can slide between.
+        private int LinkHoles(Vector3 from, Vector3 to, float radius)
+        {
+            int added = 0;
+            for (int module = 0; module < _grid.ModuleCount; module++)
+            {
+                if (!_grid.HasTile(module))
+                    continue;
+                ProceduralCastleData.PlacedModule placed = _data.PlacedModules[module];
+                for (int level = placed.Level; level <= placed.TopLevel; level++)
+                {
+                    for (int side = 0; side < 4; side++)
+                    {
+                        Vector2Int at = placed.GridPosition + CastleNavGrid.SideOffset(side);
+                        int other = _grid.ModuleAtGridCell(at.x, at.y, level);
+                        if (other <= module || !_grid.HasTile(other) ||
+                            CastleNavArchwayRule.IsOpen(_data, placed, _data.PlacedModules[other], level))
+                            continue;
+                        if (TryFindHole(module, side, other, from, to, radius, out int cell, out int across))
+                        {
+                            AddLink(cell, across);
+                            added++;
+                        }
+                    }
+                }
+            }
+            return added;
+        }
+
+        private bool TryFindHole(int module, int side, int other, Vector3 from, Vector3 to, float radius, out int bestCell, out int bestAcross)
+        {
+            bestCell = bestAcross = CastleNavGrid.NoCell;
+            float bestSqr = float.MaxValue;
+            for (int along = 0; along < CastleNavGrid.TileSize; along++)
+            {
+                for (int la = 0; la < CastleNavTile.Layers; la++)
+                {
+                    for (int lb = 0; lb < CastleNavTile.Layers; lb++)
+                    {
+                        int cell = CastleNavGrid.EdgeCell(module, side, along) + la * CastleNavGrid.ColumnsPerModule;
+                        int across = CastleNavGrid.EdgeCell(other, (side + 2) % 4, along) + lb * CastleNavGrid.ColumnsPerModule;
+                        if (!_grid.IsWalkable(cell) || !_grid.IsWalkable(across) || !_grid.IsStep(cell, across))
+                            continue;
+                        Vector3 a = _grid.CellPosition(cell), b = _grid.CellPosition(across);
+                        float sqr = SegmentDistanceSqr(a, from, to);
+                        if (sqr > radius * radius || sqr >= bestSqr || CastleNavProbe.SweepBlocked(a, b, s_hits))
+                            continue;
+                        bestSqr = sqr;
+                        bestCell = cell;
+                        bestAcross = across;
+                    }
+                }
+            }
+            return bestCell >= 0;
+        }
+
+        private bool IsRoom(int module) => ProceduralCastleGenerator.IsEnclosedRoom(_data.PlacedModules[module].Zone);
+
+        // Within range if the cell's floor, middle or head is: a wall breaks at body height, a floor at its own.
+        private static bool NearSegment(Vector3 floor, Vector3 from, Vector3 to, float radius)
+        {
+            float limit = radius * radius;
+            return SegmentDistanceSqr(floor, from, to) <= limit ||
+                   SegmentDistanceSqr(floor + Vector3.up * (CastleNavProbe.GuardHeight * 0.5f), from, to) <= limit ||
+                   SegmentDistanceSqr(floor + Vector3.up * CastleNavProbe.GuardHeight, from, to) <= limit;
+        }
+
+        private static float SegmentDistanceSqr(Vector3 point, Vector3 from, Vector3 to)
+        {
+            Vector3 line = to - from;
+            float t = line.sqrMagnitude > 0f ? Mathf.Clamp01(Vector3.Dot(point - from, line) / line.sqrMagnitude) : 0f;
+            return (from + line * t - point).sqrMagnitude;
         }
 
         /// <summary>Order-sensitive hash of everything the build produced, to compare two builds.</summary>

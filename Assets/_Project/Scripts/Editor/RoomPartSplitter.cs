@@ -120,7 +120,7 @@ namespace Plunderspell.EditorTools
         public static void SplitMenu()
         {
             Directory.CreateDirectory(PartDir);
-            foreach (string path in RoomPrefabPaths())
+            foreach (string path in PartPrefabPaths())
             {
                 GameObject root = PrefabUtility.LoadPrefabContents(path);
                 try
@@ -140,7 +140,10 @@ namespace Plunderspell.EditorTools
                     Matrix4x4 toRoom = Matrix4x4.TRS(Vector3.zero, root.transform.rotation, root.transform.lossyScale);
                     Vector3[] verts = source.vertices;
                     int[] tris = source.triangles;
-                    int[] part = Classify(verts.Select(v => toRoom.MultiplyPoint3x4(v)).ToArray(), tris);
+                    // A door plug is one solid block: every triangle is Wall (0), no classification (#474).
+                    int[] part = root.GetComponent<CastleRoomModule>() == null
+                        ? new int[tris.Length / 3]
+                        : Classify(verts.Select(v => toRoom.MultiplyPoint3x4(v)).ToArray(), tris);
 
                     string counts = "";
                     for (int p = 0; p < 4; p++)
@@ -239,6 +242,16 @@ namespace Plunderspell.EditorTools
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Where(p => !p.Contains("/Dressing/") && AssetDatabase.LoadAssetAtPath<GameObject>(p).GetComponent<CastleRoomModule>() != null)
                 .OrderBy(p => p);
+
+        /// <summary>Rooms plus the door plugs of every CastleRoomRegistry asset (the plug prefabs carry no CastleRoomModule, so
+        /// they are found through the registries' DoorPlugs lists, not the prefab folder).</summary>
+        internal static IEnumerable<string> PartPrefabPaths() =>
+            RoomPrefabPaths().Concat(AssetDatabase.FindAssets("t:CastleRoomRegistry")
+                .Select(g => AssetDatabase.LoadAssetAtPath<CastleRoomRegistry>(AssetDatabase.GUIDToAssetPath(g)))
+                .SelectMany(r => r.DoorPlugs)
+                .Where(d => d != null && d.Prefab != null && d.Prefab.GetComponent<CastleRoomModule>() == null)
+                .Select(d => AssetDatabase.GetAssetPath(d.Prefab))
+                .Distinct().OrderBy(p => p));
 
         /// <summary>The triangles of one part as a new mesh with the used submeshes only; null if the part is empty.</summary>
         private static Mesh BuildPart(Mesh src, int p, int[] part, Material[] mats, out Material[] partMats)

@@ -28,6 +28,7 @@ namespace Plunderspell.Raid
         private const float TakeDespawnDelaySeconds = 1f;
         private const float CutRadius = 1.5f;
         private const float CutForce = 12f;
+        private const float NavRefreshRadius = 2f;
 
         [SerializeField] private OphanTuning _tuning = new OphanTuning();
 
@@ -45,7 +46,7 @@ namespace Plunderspell.Raid
         private readonly RaycastHit[] _hits = new RaycastHit[64];
         private OphanState _shownState = OphanState.Absent;
         private PlayerStateMachine _shownTarget;
-        private bool _shownBeaming;
+        private bool _shownBeaming, _shownSparing;
         private OphanLook _look;
 
         public OphanTuning Tuning => _tuning;
@@ -144,12 +145,14 @@ namespace Plunderspell.Raid
             if (_hunt == null)
                 return;
             bool beaming = _hunt.State == OphanState.Draining && hasTarget && !inCover;
-            if (_hunt.State != _shownState || _target != _shownTarget || beaming != _shownBeaming)
+            bool sparing = _target != null && artifact != null;
+            if (_hunt.State != _shownState || _target != _shownTarget || beaming != _shownBeaming || sparing != _shownSparing)
             {
                 _shownState = _hunt.State;
                 _shownTarget = _target;
                 _shownBeaming = beaming;
-                ShowState((int)_hunt.State, _target != null ? _target.GetComponent<NetworkIdentity>() : null, beaming);
+                _shownSparing = sparing;
+                ShowState((int)_hunt.State, _target != null ? _target.GetComponent<NetworkIdentity>() : null, beaming, sparing);
             }
             if (step.Gone)
             {
@@ -202,9 +205,9 @@ namespace Plunderspell.Raid
         private static Vector3 AimPoint(PlayerStateMachine body) => body.transform.position + Vector3.up * ChestAboveBody;
 
         /// <summary>Whether castle stone lies on the line from its eye to the target.</summary>
-        private bool StoneBetween(Vector3 from, Vector3 to, out List<CastleRoomModule> rooms, List<Vector3> entries = null)
+        private bool StoneBetween(Vector3 from, Vector3 to, out List<int> pieces, List<Vector3> entries = null)
         {
-            rooms = null;
+            pieces = null;
             Vector3 line = to - from;
             int count = Physics.RaycastNonAlloc(from, line.normalized, _hits, line.magnitude, ~0, QueryTriggerInteraction.Ignore);
             bool blocked = false;
@@ -215,11 +218,11 @@ namespace Plunderspell.Raid
                 // A charged beam's hole is a gap in the collider itself, so nothing else is let through (#467).
                 if (hit.GetComponentInParent<ProceduralCastleGenerator>() == null)
                     continue;
-                CastleRoomModule room = ScorchedRooms.RoomOf(hit);
+                int piece = ScorchedRooms.PieceIndexOf(hit);
                 blocked = true;
                 entries?.Add(_hits[i].point);
-                if (room != null)
-                    (rooms ??= new List<CastleRoomModule>()).Add(room);
+                if (piece >= 0)
+                    (pieces ??= new List<int>()).Add(piece);
             }
             return blocked;
         }
@@ -229,14 +232,14 @@ namespace Plunderspell.Raid
             // Where it enters the stone, and (cast back from the target) where it breaks out on the target's side.
             var holes = new List<Vector3>();
             StoneBetween(aim, Eye, out _, holes);
-            StoneBetween(Eye, aim, out List<CastleRoomModule> rooms, holes);
+            StoneBetween(Eye, aim, out List<int> pieces, holes);
             var indices = new List<int>();
-            if (rooms != null)
-                foreach (CastleRoomModule room in rooms)
-                    if (!indices.Contains(ScorchedRooms.IndexOf(room)))
-                        indices.Add(ScorchedRooms.IndexOf(room));
+            if (pieces != null)
+                foreach (int piece in pieces)
+                    if (!indices.Contains(piece))
+                        indices.Add(piece);
             ShowCharged(Eye, aim, indices.ToArray(), holes.ToArray());
-            Debug.Log($"[Ophan] charged beam at {aim}; {indices.Count} room(s) scorched, {holes.Count} wall(s) burst.");
+            Debug.Log($"[Ophan] charged beam at {aim}; {indices.Count} piece(s) hit, {holes.Count} wall(s) burst.");
         }
 
         private void Take(LootValue artifact)
@@ -287,17 +290,17 @@ namespace Plunderspell.Raid
         }
 
         [ObserversRpc]
-        private void ShowState(int state, NetworkIdentity target, bool beaming)
+        private void ShowState(int state, NetworkIdentity target, bool beaming, bool sparing)
         {
             if (_look == null)
                 return;
-            _look.Show((OphanState)state, target != null ? target.transform : null, beaming);
+            _look.Show((OphanState)state, target != null ? target.transform : null, beaming, sparing);
             if ((OphanState)state == OphanState.Absent)
                 RemoveLook();
         }
 
         [ObserversRpc]
-        private void ShowCharged(Vector3 eye, Vector3 at, int[] rooms, Vector3[] holes)
+        private void ShowCharged(Vector3 eye, Vector3 at, int[] pieces, Vector3[] holes)
         {
             if (_look != null)
                 _look.FlashCharged(at);
@@ -305,23 +308,37 @@ namespace Plunderspell.Raid
                 OphanWallBurst.At(hole, (at - eye).normalized);
             // Stops 2 m short of the aim so the floor under the target is never broken.
             Vector3 cutEnd = at - (at - eye).normalized * 2f;
-            foreach (int index in rooms)
+            foreach (int index in pieces)
             {
-                CastleRoomModule room = ScorchedRooms.RoomAt(index);
-                if (room == null)
+                Transform piece = ScorchedRooms.PieceAt(index);
+                if (piece == null)
                     continue;
-                // Debris lands on this room's floor slab (room height when it has no floor part).
-                Transform floor = room.transform.Find("Part_Floor");
+                // Debris lands on this piece's floor slab (piece height when it has no floor part).
+                Transform floor = piece.Find("Part_Floor");
                 float groundY = floor != null && floor.TryGetComponent(out Renderer floorRenderer)
                     ? floorRenderer.bounds.max.y
-                    : room.transform.position.y;
-                foreach (FracturableObject part in room.GetComponentsInChildren<FracturableObject>())
+                    : piece.position.y;
+                foreach (FracturableObject part in piece.GetComponentsInChildren<FracturableObject>())
                 {
                     part.groundY = groundY;
                     part.HitAlongLine(eye, cutEnd, CutRadius, CutForce);
                 }
-                ScorchedRooms.Scorch(room);
+                if (piece.TryGetComponent(out CastleRoomModule room))
+                    ScorchedRooms.Scorch(room);
             }
+            // Guards walk on the host's nav map; only the host updates it, once the broken colliders are in physics.
+            if (isServer)
+                StartCoroutine(RefreshNavAfterBreak(eye, cutEnd));
+        }
+
+        // Two fixed updates, so a whole physics step has run since the colliders changed whichever side of the step
+        // WaitForFixedUpdate resumes on; the map's casts then see the holes.
+        private IEnumerator RefreshNavAfterBreak(Vector3 from, Vector3 to)
+        {
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+            ProceduralCastleGenerator generator = FindFirstObjectByType<ProceduralCastleGenerator>();
+            generator?.LastGenerated?.NavGraph?.RefreshAfterBreak(from, to, NavRefreshRadius);
         }
 
         [ObserversRpc]

@@ -15,7 +15,8 @@ namespace Plunderspell.EditorTools
     {
         private const string PartDir = "Assets/_Project/Art/Models/Castle/Parts";
         private const string FractureDir = PartDir + "/Fracture";
-        private const float MaxEdgeMetres = 0.75f;
+        // 1.5 m pieces for the Steam Deck budget (#475): a quarter of the triangles 0.75 m gave (3,083,428 over 79 rooms).
+        private const float MaxEdgeMetres = 1.5f;
         private const float WeldMetres = 0.01f;
         private const int MaxPasses = 12;
 
@@ -23,7 +24,7 @@ namespace Plunderspell.EditorTools
         public static void BakeMenu()
         {
             if (!AssetDatabase.IsValidFolder(FractureDir)) AssetDatabase.CreateFolder(PartDir, "Fracture");
-            foreach (string path in RoomPartSplitter.RoomPrefabPaths())
+            foreach (string path in RoomPartSplitter.PartPrefabPaths())
             {
                 GameObject root = PrefabUtility.LoadPrefabContents(path);
                 try
@@ -36,7 +37,8 @@ namespace Plunderspell.EditorTools
                         Mesh source = AssetDatabase.LoadAssetAtPath<Mesh>($"{PartDir}/{root.name}_{name}.asset");
                         if (part == null || source == null) continue;
 
-                        Mesh sub = Subdivide(source, part.localToWorldMatrix);
+                        // Props break as whole pieces (#475): they gain little from small pieces and cost triangles.
+                        Mesh sub = name == "Props" ? Object.Instantiate(source) : Subdivide(source, part.localToWorldMatrix);
                         Mesh mesh = DoubleSidedMeshGenerator.CreateDoubleSidedMesh(sub);
                         Object.DestroyImmediate(sub);
                         mesh.name = $"{root.name}_{name}_Fracture";
@@ -51,6 +53,8 @@ namespace Plunderspell.EditorTools
                         fo.preInitialize = false;
                         // The castle's own shader keeps drawing what is left; the fracture shader draws only the debris.
                         fo.keepMeshRenderer = true;
+                        // Cap the hole a break leaves with a strip as deep as the part is thick (#477); props break whole.
+                        fo.capDepthMetres = name == "Wall" ? 0.5f : name == "Floor" || name == "Roof" ? 0.3f : 0f;
                         // mergeDistance is in the mesh's own space; the rooms are stored at 1/100 size, so the 0.05 default
                         // welded everything within 5 m and the graph build ran out of memory. 1 cm in metres instead.
                         fo.mergeDistance = WeldMetres / part.lossyScale.x;

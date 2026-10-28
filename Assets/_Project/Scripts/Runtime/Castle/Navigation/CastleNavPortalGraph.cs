@@ -37,6 +37,9 @@ namespace Plunderspell.Castle
         /// <summary>Bumps every time a link's extra cost actually changes.</summary>
         public int DoorVersion { get; private set; }
 
+        /// <summary>Carries the version across a rebuild, so routes planned on the old graph read as stale.</summary>
+        public void StartVersionAt(int version) => DoorVersion = version;
+
         /// <summary>Links currently closed.</summary>
         public int ClosedLinkCount { get; private set; }
 
@@ -70,6 +73,27 @@ namespace Plunderspell.Castle
             for (int link = 0; link < _links.Length; link++)
             {
                 float dx = _links[link].Position.x - position.x, dz = _links[link].Position.z - position.z;
+                if (dx * dx + dz * dz < bestSqr)
+                {
+                    bestSqr = dx * dx + dz * dz;
+                    best = link;
+                }
+            }
+            return best;
+        }
+
+        /// <summary>The link between two rooms nearest a point on the floor plan, within the distance, or -1. How a door finds its link again after a rebuild.</summary>
+        public int FindLinkBetween(int moduleA, int moduleB, Vector3 position, float maxDistance)
+        {
+            int best = -1;
+            float bestSqr = maxDistance * maxDistance;
+            for (int link = 0; link < _links.Length; link++)
+            {
+                NavLink candidate = _links[link];
+                if (Mathf.Min(candidate.ModuleA, candidate.ModuleB) != Mathf.Min(moduleA, moduleB) ||
+                    Mathf.Max(candidate.ModuleA, candidate.ModuleB) != Mathf.Max(moduleA, moduleB))
+                    continue;
+                float dx = candidate.Position.x - position.x, dz = candidate.Position.z - position.z;
                 if (dx * dx + dz * dz < bestSqr)
                 {
                     bestSqr = dx * dx + dz * dz;

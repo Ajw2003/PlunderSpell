@@ -19,11 +19,8 @@ namespace Plunderspell.EditorTools
         private const string OutputDir = "docs/generated/nav-tiles-2026-10-02";
         private const string DefaultRegistryName = "CastleRoomRegistry";
 
-        private const float GuardRadius = 0.4f;
-        private const float GuardHeight = 1.85f;
         private const float RayTop = 14f;
         private const float RayBottom = -1f;
-        private const float MinNormalY = 0.7f;
         private const float ArchHalfWidth = 1.3f;
         private const float MaxDoorwayFloor = 1.0f;
         private const int N = CastleNavTile.Size;
@@ -128,7 +125,6 @@ namespace Plunderspell.EditorTools
             var walk = new bool[Scratch * cells];
             var height = new float[Scratch * cells];
             var capsuleHits = new Collider[1];
-            float lift = CastleNavTile.StepHeight + 0.01f;
 
             for (int z = 0; z < N; z++)
             {
@@ -143,14 +139,10 @@ namespace Plunderspell.EditorTools
                                y - RayBottom, ~0, QueryTriggerInteraction.Ignore))
                     {
                         y = hit.point.y - 0.02f;
-                        if (hit.normal.y < MinNormalY)
+                        if (hit.normal.y < CastleNavProbe.MinNormalY)
                             continue;
                         float h = hit.point.y;
-                        Vector3 bottom = new Vector3(wx, h + lift + GuardRadius, wz);
-                        Vector3 top = new Vector3(wx, h + GuardHeight - GuardRadius, wz);
-                        int n = physics.OverlapCapsule(bottom, top, GuardRadius, capsuleHits, ~0,
-                            QueryTriggerInteraction.Ignore);
-                        if (n > 0)
+                        if (CastleNavProbe.IsBlocked(physics, new Vector3(wx, h, wz), capsuleHits))
                             continue;
                         int idx = (layer * N + z) * N + x;
                         walk[idx] = true;
@@ -162,10 +154,7 @@ namespace Plunderspell.EditorTools
                     // them is walkable where the capsule clears. Added last, so it stays the lowest.
                     if (strip && layer < Scratch && !HasDoorwayFloor(walk, height, x, z))
                     {
-                        Vector3 gBottom = new Vector3(wx, StripGroundHeight + lift + GuardRadius, wz);
-                        Vector3 gTop = new Vector3(wx, StripGroundHeight + GuardHeight - GuardRadius, wz);
-                        if (physics.OverlapCapsule(gBottom, gTop, GuardRadius, capsuleHits, ~0,
-                                QueryTriggerInteraction.Ignore) == 0)
+                        if (!CastleNavProbe.IsBlocked(physics, new Vector3(wx, StripGroundHeight, wz), capsuleHits))
                         {
                             int gi = (layer * N + z) * N + x;
                             walk[gi] = true;

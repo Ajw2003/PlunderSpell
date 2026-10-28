@@ -30,6 +30,11 @@ namespace Plunderspell.Raid
         private const float FadeMetresOnTarget = 25f, FadeMetresSeenByOthers = 2f;
         private const float LiftGrowthPerMetre = 0.03f;
         private const float ChargedFlashSeconds = 0.6f;
+        // Gold is the game's loot colour (orpiment #C9A227): a beam that only wants the piece is gold and breathes slowly.
+        private static readonly Color SparingGold = new Color(0.79f, 0.64f, 0.15f);
+        private const float SparingBrightness = 2f, SparingPulseBase = 0.8f, SparingPulseDepth = 0.2f, SparingPulseHz = 1f;
+        // A beam meant to kill stays white-hot and flickers fast through the charge so the target reads the threat.
+        private const float KillPulseBase = 0.7f, KillPulseDepth = 0.3f, KillPulseHz = 4f;
 
         private OphanTuning _tuning;
         private Transform _eye, _great, _inner, _tilt;
@@ -50,6 +55,8 @@ namespace Plunderspell.Raid
         public OphanState State { get; private set; } = OphanState.Arriving;
         public Transform Target { get; private set; }
         public bool Beaming { get; private set; }
+        /// <summary>The target carries what the Ophan wants: its beams are gold and pulse slowly instead of killing white.</summary>
+        public bool Sparing { get; private set; }
         private float _stateSince;
 
         /// <summary>The eye's world position, where every beam starts.</summary>
@@ -78,13 +85,14 @@ namespace Plunderspell.Raid
             _spin = 1f; // arriving, the rings turn as the clip turns them
         }
 
-        public void Show(OphanState state, Transform target, bool beaming)
+        public void Show(OphanState state, Transform target, bool beaming, bool sparing)
         {
             if (state != State)
                 _stateSince = Time.time;
             State = state;
             Target = target;
             Beaming = beaming;
+            Sparing = sparing;
         }
 
         /// <summary>The charged beam's flash to where it struck.</summary>
@@ -256,6 +264,15 @@ namespace Plunderspell.Raid
             Color colour = flashing ? new Color(1f, 1f, 1f, 1f)
                 : charging ? new Color(1f, 1f, 1f, Mathf.Lerp(ChargeStartBrightness, 1f, grow))
                 : new Color(1f, 0.85f, 0.55f, 0.45f);
+            float pulse = Sparing ? SparingPulseBase + SparingPulseDepth * Mathf.Sin(2f * Mathf.PI * SparingPulseHz * Time.time)
+                : charging ? KillPulseBase + KillPulseDepth * Mathf.Sin(2f * Mathf.PI * KillPulseHz * Time.time)
+                : 1f;
+            if (Sparing)
+            {
+                // Keep the alpha/fade logic; only the colour turns gold (scaled up for the HDR core as the white is).
+                colour = new Color(SparingGold.r * SparingBrightness, SparingGold.g * SparingBrightness, SparingGold.b * SparingBrightness, colour.a);
+            }
+            colour = new Color(colour.r * pulse, colour.g * pulse, colour.b * pulse, colour.a);
             // The core is the same colour, full alpha, pushed past white so it reads as a solid rod of light.
             float coreScale = CoreBrightness * (charging ? grow : 1f);
             var coreColour = new Color(colour.r * coreScale, colour.g * coreScale, colour.b * coreScale, 1f);

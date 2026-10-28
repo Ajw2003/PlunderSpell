@@ -36,6 +36,28 @@ namespace Plunderspell.Raid
             return container.GetChild(index).GetComponent<CastleRoomModule>();
         }
 
+        /// <summary>The top-level castle piece (room, door plug, anything) a collider sits in, as its place under the room
+        /// container; -1 when it is not under the container.</summary>
+        public static int PieceIndexOf(Collider collider)
+        {
+            var any = Object.FindFirstObjectByType<CastleRoomModule>();
+            Transform container = any != null ? any.transform.parent : null;
+            if (container == null || collider == null)
+                return -1;
+            for (Transform t = collider.transform; t != null; t = t.parent)
+                if (t.parent == container)
+                    return t.GetSiblingIndex();
+            return -1;
+        }
+
+        /// <summary>The castle piece at <paramref name="index"/> under the room container, or null.</summary>
+        public static Transform PieceAt(int index)
+        {
+            var any = Object.FindFirstObjectByType<CastleRoomModule>();
+            Transform container = any != null ? any.transform.parent : null;
+            return container == null || index < 0 || index >= container.childCount ? null : container.GetChild(index);
+        }
+
         /// <summary>Marks the room scorched and darkens it. Doing it twice changes nothing.</summary>
         public static void Scorch(CastleRoomModule room)
         {
