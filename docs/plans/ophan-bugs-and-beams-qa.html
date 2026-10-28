@@ -309,7 +309,7 @@ const PAGE = {
         "Start",
         "Open the Ophan Gym in co-op",
         "you",
-        "In Git Bash, from C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell-demand, run: bash Tools/Unity/coop_local.sh --gym. It rebuilds the client if the game changed (about 30 s), presses Play in the Editor, hosts, and opens a second window that joins. You should see the line \"Co-op on this PC is up\" and two windows side by side. The Editor is the host; the small window is the client. In the gym, F7 summons the Ophan, F8 stops damage to you, F9 removes the guards and F10 slows time.",
+        "In Git Bash, from C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell-demand, run: bash Tools/Unity/coop_local.sh --gym. It rebuilds the client if the game changed (the script's own estimate is 30 s), presses Play in the Editor, hosts, and opens a second window that joins. You should see the line \"Co-op on this PC is up\" and two windows side by side. The Editor is the host; the small window is the client. In the gym, F7 summons the Ophan, F8 stops damage to you, F9 removes the guards and F10 slows time.",
         "Run it once; every item below uses this session."
       ],
       [
@@ -334,7 +334,7 @@ const PAGE = {
         "Hiding draws the charge",
         "you",
         "With loot in your hands, go indoors under a roof first, then press F7, and stay there.",
-        "After about 3 s of the Ophan watching, it should charge (its rings speed up and its eye swells) and fire through the stone. If you stand in the open instead, you should get a 3 s lock-on and then the slow beam."
+        "After 3 s of the Ophan watching, it should charge (its rings speed up and its eye swells) and fire through the stone. If you stand in the open instead, you should get a 3 s lock-on and then the slow beam."
       ],
       [
         "play",
@@ -350,7 +350,7 @@ const PAGE = {
         "The hole is real",
         "you",
         "After a charged beam hits a player behind a wall, walk to that wall in both windows (host and client).",
-        "There should be a ragged hole about 3 m across in the wall and in any roof on the beam's line. You should be able to walk and see through it, and the floor under the target should still be there. The rest of that room should still stop the slow beam."
+        "There should be a hole 3 m across, its edge ragged by up to 0.5 m, in the wall and in any roof on the beam's line. You should be able to walk and see through it, and the floor under the target should still be there. The rest of that room should still stop the slow beam."
       ]
     ]
   },
@@ -413,7 +413,7 @@ const PAGE = {
     [
       "chg",
       "Files changed, counted from git against 828c6759",
-      "33 files, +2028 −38",
+      "33 files, +2112 −38",
       null,
       "The added and removed counts come from git (git diff --numstat 828c6759...HEAD); the estimates beside them come from the plan.",
       null,
@@ -768,7 +768,7 @@ const PAGE = {
         ],
         [
           "docs/plans/ophan-bugs-and-beams-qa.html",
-          885,
+          969,
           0,
           [
             [
