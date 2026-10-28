@@ -23,7 +23,7 @@ namespace Plunderspell.Guards
     /// docs/plans/guard-core-inventory.md.
     /// </summary>
     [RequireComponent(typeof(StatusEffectReceiver), typeof(GuardDeathPlayback))]
-    public class Guard : NetworkBehaviour, INoiseListener, IHealth, IShovable
+    public class Guard : NetworkBehaviour, INoiseListener, IFarHearingListener, IHealth, IShovable
     {
         [SerializeField] private GuardTuning _tuning = new GuardTuning();
 

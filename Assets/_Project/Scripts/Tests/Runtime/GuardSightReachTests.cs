@@ -130,18 +130,18 @@ namespace Plunderspell.Tests
         public void AGuardSeesFartherThanFourteenMetresButNotWithoutLimit()
         {
             Guard guard = GuardAtOrigin();
-            Transform intruder = _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 18f));
-            Assert.That(Sees(guard), Is.True, "18 m is in range");
+            Transform intruder = _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 25f));
+            Assert.That(Sees(guard), Is.True, "25 m is in range (31.5 m while Calm, #486)");
 
-            intruder.position = new Vector3(0f, PivotAboveFeet, 25f);
-            Assert.That(Sees(guard), Is.False, "25 m is out of range while Calm");
+            intruder.position = new Vector3(0f, PivotAboveFeet, 35f);
+            Assert.That(Sees(guard), Is.False, "35 m is out of range while Calm");
         }
 
         [Test]
         public void TheAlarmStretchesHowFarAGuardSees()
         {
             Guard guard = GuardAtOrigin();
-            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 25f));
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 35f));
             Assert.That(Sees(guard), Is.False, "out of range while Calm");
 
             _rig.Director.SetAlarmLevel(60f, 3); // Roused needs three witnesses (#259)

@@ -61,6 +61,14 @@ namespace Plunderspell.Acoustics
     }
 
     /// <summary>
+    /// Marks a listener that hears a noise out to <see cref="NoiseBroadcaster.FarHearingScale"/> times its
+    /// radius (guards, #486). Listeners without it, such as the alarm, hear only inside the radius.
+    /// </summary>
+    public interface IFarHearingListener
+    {
+    }
+
+    /// <summary>
     /// Implemented by listeners that can take in spoken words, not just the noise. Called after
     /// <see cref="INoiseListener.OnNoiseHeard"/> for a speech noise; true means the words were understood
     /// (an asleep or stunned guard hears the noise but not the words).

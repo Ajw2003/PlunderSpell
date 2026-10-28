@@ -164,7 +164,7 @@ namespace Plunderspell.Tests
         public void AGuardBeyondCryRangeDoesNotHearIt()
         {
             Guard crier = MakeListener(Vector3.zero);
-            Guard far = MakeListener(new Vector3(GuardCry.Radius + 4f, 0f, 0f));
+            Guard far = MakeListener(new Vector3(GuardCry.Radius * NoiseBroadcaster.FarHearingScale + 4f, 0f, 0f));
 
             crier.Cry.Raise();
 

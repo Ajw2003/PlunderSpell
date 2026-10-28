@@ -121,13 +121,13 @@ namespace Plunderspell.Tests
         public void ADraggedHeavyPieceScrapesFurtherTheHeavierItIs()
         {
             Guard guard = MakeListeningGuard(Vector3.zero);
-            var origin = new Vector3(0f, 0f, -6f);
+            var origin = new Vector3(0f, 0f, -8f); // guards hear 1.5 times a noise's radius (#486)
 
             LootNoise.BroadcastDrag(origin, 4f);
-            Assert.That(guard.Hearing.NoticedCount, Is.EqualTo(0), "a 4 kg piece scrapes 4 m");
+            Assert.That(guard.Hearing.NoticedCount, Is.EqualTo(0), "a 4 kg piece scrapes 4 m, heard to 6 m");
 
             LootNoise.BroadcastDrag(origin, 15f);
-            Assert.That(guard.Hearing.NoticedCount, Is.EqualTo(1), "a 15 kg piece scrapes 7.7 m");
+            Assert.That(guard.Hearing.NoticedCount, Is.EqualTo(1), "a 15 kg piece scrapes 7.7 m, heard to 11.5 m");
         }
     }
 }

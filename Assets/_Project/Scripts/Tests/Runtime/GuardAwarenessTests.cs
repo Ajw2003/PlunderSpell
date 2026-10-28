@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Plunderspell.Acoustics;
+using Plunderspell.Alarm;
 using Plunderspell.Guards;
 using UnityEngine;
 
@@ -122,9 +123,46 @@ namespace Plunderspell.Tests
         {
             Guard guard = MakeListeningGuard(Vector3.zero);
 
-            NoiseBroadcaster.Broadcast(new Vector3(0f, 0f, -10f), RunRadius, FootstepStrength, NoiseType.Footstep);
+            NoiseBroadcaster.Broadcast(new Vector3(0f, 0f, -13f), RunRadius, FootstepStrength, NoiseType.Footstep);
 
-            Assert.That(guard.Hearing.NoticedCount, Is.EqualTo(0));
+            Assert.That(guard.Hearing.NoticedCount, Is.EqualTo(0), "13 m is past 1.5 times the 8 m radius (#486)");
+        }
+
+        [Test]
+        public void AGuardHearsAFootstepAtOnePointFourTimesTheRunRadius()
+        {
+            Guard guard = MakeListeningGuard(Vector3.zero);
+
+            NoiseBroadcaster.Broadcast(new Vector3(0f, 0f, -RunRadius * 1.4f), RunRadius, FootstepStrength, NoiseType.Footstep);
+
+            Assert.That(guard.Hearing.NoticedCount, Is.EqualTo(1), "guards hear out to 1.5 times the radius (#486)");
+        }
+
+        [Test]
+        public void TheAlarmDoesNotHearAFootstepAtOnePointFourTimesTheRunRadius()
+        {
+            var alarmGo = new GameObject("Alarm");
+            alarmGo.transform.position = Vector3.zero;
+            alarmGo.AddComponent<BoxCollider>().size = Vector3.one * 0.1f;
+            EnemyDirector alarm = alarmGo.AddComponent<EnemyDirector>();
+            Physics.SyncTransforms();
+
+            int heard = NoiseBroadcaster.Broadcast(new Vector3(0f, 0f, -RunRadius * 1.4f), RunRadius, FootstepStrength, NoiseType.Footstep);
+            Object.DestroyImmediate(alarmGo);
+
+            Assert.That(heard, Is.EqualTo(0), "the alarm keeps the old radius, so it does not fill faster (#486)");
+        }
+
+        [Test]
+        public void ACalmGuardSeesAPlayerAtThirtyMetres()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            Transform player = _rig.MakeIntruder(new Vector3(0f, 0f, 30f));
+
+            Look(guard);
+
+            Assert.That(GuardBrain.BaseSightScale * guard.Tuning.SightRange, Is.EqualTo(31.5f).Within(0.01f));
+            Assert.That(guard.Sight.Visible, Is.EqualTo(player), "calm sight is 14 m x 2.25 = 31.5 m (#486)");
         }
 
         [Test]

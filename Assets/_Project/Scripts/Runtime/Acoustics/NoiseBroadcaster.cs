@@ -14,6 +14,9 @@ namespace Plunderspell.Acoustics
     /// </summary>
     public static class NoiseBroadcaster
     {
+        /// <summary>Guards hear a noise out to this many times its radius; the alarm does not (#486).</summary>
+        public const float FarHearingScale = 1.5f;
+
         private static readonly Collider[] _overlapBuffer = new Collider[64];
         private static readonly RaycastHit[] _wallBuffer = new RaycastHit[16];
 
@@ -49,7 +52,7 @@ namespace Plunderspell.Acoustics
                 return 0;
 
             int heard = 0;
-            int count = Physics.OverlapSphereNonAlloc(origin, radius, _overlapBuffer,
+            int count = Physics.OverlapSphereNonAlloc(origin, radius * FarHearingScale, _overlapBuffer,
                 listenerLayerMask, QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < count; i++)
