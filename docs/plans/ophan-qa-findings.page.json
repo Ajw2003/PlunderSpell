@@ -1,0 +1,40 @@
+{
+  "title": "Ophan QA findings",
+  "eyebrow": "What your recording of the Ophan bugs and solid beams build shows (#463)",
+  "approval": "Design approved: Ophan QA findings",
+  "short": {
+    "lead": "I went through your 63 s recording at one frame per second, reading the health bars, the Ophan state on the gym panel, and both players' windows. The spectator view and the wall hole work. Two things failed. Hunts kill too fast, so nobody survives one, and the new solid core turns both beams into hard white slabs. Issues #463 to #467 are back to in progress. The fixes are your call, so here are options with my suggestion marked.",
+    "hint": "Tap an item to see the frames and the numbers I read from them.",
+    "key": [["Works", ""], ["Needs your pick", "you"]],
+    "items": [
+      ["bulb", "Deaths", "Every hunt ends in death within 11 s", "you", "The client's health fell from 95 at 0:38 to 45 at 0:41. They hid behind a wall, the Ophan began charging at 0:44, and the charged beam killed them at 0:46, 8 s after the first hit. The host's health fell from 95 at 0:50 to 19 at 0:55, the Ophan began charging at 0:58, and the host died at 1:01, 11 s after the first hit. The slow beam drains 25 health a second, so in the open it kills in 4 s, and hiding brings the charge, which kills in one hit. Neither running nor hiding saves you.", "Pick how a player survives (Choices, \"How should a hunted player be able to survive?\").", {"src": "../generated/ophan-bugs-463/qa-recording/f044.jpg", "alt": "Left, the host sees a wide white wedge from the Ophan's eye; right, the client at 45 health sees a thin white line coming down behind a wall.", "caption": "0:44, charging. The client is at 45 health behind a wall; 2 s later the charged beam kills them."}],
+      ["bulb", "Charge look", "The charged beam is a hard white slab", "you", "While charging, the beam grows to 90 m wide at the eye, and the new opaque core is a quarter of that, 22 m of hard-edged white. Seen from the side it is a solid wedge. Seen by the target it is a white teardrop that fills the screen, because the opaque core cannot fade out near the target the way the soft shaft does. When it fires, the target's screen is blown out white with hard-edged blocks in it.", "Pick the beams' look (Choices, \"How should the beams look?\").", {"src": "../generated/ophan-bugs-463/qa-recording/f060.jpg", "alt": "Left, the host at 19 health sees a white rod beside a wall; right, the spectating client sees a solid white teardrop filling most of the screen.", "caption": "0:60, charging the host. Right: the client, spectating the host, sees the core as a solid white teardrop."}],
+      ["bulb", "Slow look", "The slow beam reads as a solid rod", "", "From the other player's window the slow beam is now a bright solid rod from the eye, which is what you asked for. But the target, standing inside the beam, sees a view washed out with light.", "Covered by your pick on the beams' look.", {"src": "../generated/ophan-bugs-463/qa-recording/f038.jpg", "alt": "Left, the host sees a bright solid rod from the Ophan's eye to the client; right, the client's washed-out view at 95 health.", "caption": "0:38, the slow beam on the client, seen by the host (left)."}],
+      ["check", "Spectating", "The whole Ophan draws while spectating", "", "At 0:50 the client, down and watching the host, sees the whole Ophan, its wheels and wings included, the same as the host does.", "Nothing needed from you.", {"src": "../generated/ophan-bugs-463/qa-recording/f050.jpg", "alt": "Both windows show the whole Ophan above a dark building with a ragged lit gap in its wall.", "caption": "0:50. Right: the client spectating the host sees the whole Ophan. Left of centre: the ragged gap the charged beam cut."}],
+      ["check", "Hole", "The charged beam cut a real hole", "", "In the same frame at 0:50, the wall the client hid behind has a ragged gap lit from inside, cut by the charged beam at 0:46.", "Nothing needed from you."]
+    ]
+  },
+  "changes": [
+    ["chg", "How a hunted player survives", "Gives a hunted player a way to live through the charged beam.", ["Hiding always brings a charge that kills in one hit", "Your pick on how a hunted player survives"], "OphanHunt and OphanOfHours. How the Ophan picks its target (by worth, at any range) stays as approved.", null],
+    ["chg", "The beams' look", "Makes the beams light instead of a hard white slab.", ["An opaque core 22 m wide at the eye that never fades", "Your pick on how the beams look"], "OphanLook and OphanBeamShaft only.", null]
+  ],
+  "choices": [
+    ["surviving", "How should a hunted player be able to survive?", [
+      ["A", "The charged beam can be dodged", 1, "The growing beam stops following the target 0.75 s before it fires, and the kill lands only if they are still within 2 m of where it aimed. The growing beam becomes the warning to move. Hiding still brings the charge."],
+      ["B", "The charged beam wounds instead of kills", 0, "It takes 60 health instead of all of it, so a player at full health lives through one charge but not two."],
+      ["C", "A slower slow beam", 0, "The slow beam drains 10 health a second instead of 25, so a player in the open takes 10 s to die and there is time to reach cover. The charge still kills."],
+      ["D", "Something else", 0, "Tell me what is wrong with how the hunt works, and I will plan from that."]
+    ], "Option A keeps the charge deadly but gives the player something to do, and it uses the warning beam already built."],
+    ["look", "How should the beams look?", [
+      ["A", "A thin glowing core that fades", 1, "The core goes back to soft added light like the shaft, at most 2 m wide at the eye and 0.3 m at the target, and fades out near the target with the shaft. The charge grows brighter and from thin to the slow beam's width, never to 90 m."],
+      ["B", "No core, a brighter shaft", 0, "Remove the core and draw the soft shaft at full strength. This is simpler, but the beam looks less solid from the side."]
+    ], "A thin core that fades keeps the solid look from the side without blinding the target."]
+  ],
+  "wrapup": {
+    "summary": "Your recording shows the spectator fix and the wall hole working. Every hunt ends in death within 11 s, and the new core turns both beams into hard white slabs.",
+    "changing": "Nothing until you pick. Issues #463 to #467 are back to in progress; nothing new is built.",
+    "blocking": "Your two picks, on how a player survives and on how the beams look, or word that this work waits.",
+    "next": "I will turn your picks into a short build plan, change only OphanHunt, OphanOfHours, OphanLook and OphanBeamShaft, and hand it back for your QA.",
+    "todo": ["Pick your answers (Choices).", "Tap <b>Copy my reply</b>.", "Send it with \"Design approved: Ophan QA findings\", or say it waits."]
+  }
+}
