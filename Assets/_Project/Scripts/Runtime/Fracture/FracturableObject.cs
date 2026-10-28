@@ -73,6 +73,7 @@ namespace Plunderspell.Fracture
         private int[] collisionTriangles;
         private Vector3[] collisionVertices;
         private int initialTriangleCount;
+        private int frontTriangleCount;
 
         private PieceMapping[] pieceMappings;
         private int[][] triangleNeighbors;
@@ -80,6 +81,17 @@ namespace Plunderspell.Fracture
         private bool[] triangleIsBroken;
 
         private int[] initialTriangles;
+
+        // Clusters (#491): null when the graph has none, and then every triangle breaks on its own as before.
+        private int[] triangleCluster;
+        private byte[] triangleKind;
+        private int[][] clusterTriangles;
+        private int[][] clusterNeighbors;
+        private bool[] clusterIsSupport;
+        private Vector3[] clusterCentroid;
+        private float[] clusterRadius;
+        private bool[] clusterIsBroken;
+        private bool[] clusterVisited;
 
         // Cached collections for UpdateCollisionMesh
         private Queue<int> bfsQueue;
@@ -108,7 +120,6 @@ namespace Plunderspell.Fracture
                 bfsVisited = new bool[initialTriangleCount];
                 droppedPiecesBySubmesh = new Dictionary<int, List<int>>();
                 newTrianglesBuffer = new int[initialTriangles.Length];
-                if (fractureMesh != null) SetColliderToFrontTriangles();
 
                 if (bakedGraphData != null && bakedGraphData.pieceMappings.Length == initialTriangleCount)
                 {
@@ -121,6 +132,7 @@ namespace Plunderspell.Fracture
                     {
                         triangleNeighbors[i] = bakedGraphData.triangleNeighbors[i].array;
                     }
+                    LoadClusters(bakedGraphData);
                 }
                 else
                 {
@@ -137,12 +149,44 @@ namespace Plunderspell.Fracture
                     
                     BuildAdjacencyGraph();
                 }
+                // After the graph: telling front triangles apart needs the piece mappings, or the cluster kinds.
+                if (fractureMesh != null) SetColliderToFrontTriangles();
             }
 
             if (preInitialize && activeEffects == null)
             {
                 activeEffects = FractureEngine.Fracture(this);
             }
+        }
+
+        private void LoadClusters(FractureGraphData data)
+        {
+            if (data.triangleCluster == null || data.triangleCluster.Length != initialTriangleCount
+                || data.clusterTriangles == null || data.clusterTriangles.Length == 0) return;
+            int count = data.clusterTriangles.Length;
+            triangleCluster = data.triangleCluster;
+            triangleKind = data.triangleKind != null && data.triangleKind.Length == initialTriangleCount ? data.triangleKind : null;
+            clusterTriangles = new int[count][];
+            clusterNeighbors = new int[count][];
+            for (int c = 0; c < count; c++)
+            {
+                clusterTriangles[c] = data.clusterTriangles[c].array;
+                clusterNeighbors[c] = data.clusterNeighbors[c].array;
+            }
+            clusterIsSupport = data.clusterIsSupport;
+            clusterCentroid = data.clusterCentroid;
+            clusterRadius = data.clusterRadius;
+            clusterIsBroken = new bool[count];
+            clusterVisited = new bool[count];
+        }
+
+        /// <summary>The GPU piece layout for FractureEngine when the graph has clusters (#492): each triangle's piece within
+        /// its submesh, and that piece's cluster, whose centroid (mesh space) and radius (mesh units) the piece takes.
+        /// False when there are no clusters; every triangle is then its own piece.</summary>
+        public bool TryGetClusterPieces(out PieceMapping[] mappings, out int[] clusterOfTriangle, out Vector3[] centroids, out float[] radii)
+        {
+            mappings = pieceMappings; clusterOfTriangle = triangleCluster; centroids = clusterCentroid; radii = clusterRadius;
+            return triangleCluster != null && pieceMappings != null;
         }
 
         private void BuildAdjacencyGraph()
@@ -355,7 +399,22 @@ namespace Plunderspell.Fracture
 
             bool changed = false;
             Matrix4x4 localToWorld = transform.localToWorldMatrix;
-            
+
+            if (triangleCluster != null)
+            {
+                // Whole clusters, by the same test CSImpact runs on the cluster pieces, so collider and debris agree.
+                float scale = localToWorld.lossyScale.x;
+                for (int c = 0; c < clusterIsBroken.Length; c++)
+                {
+                    if (clusterIsBroken[c]) continue;
+                    float dist = Vector3.Distance(localToWorld.MultiplyPoint3x4(clusterCentroid[c]), point);
+                    if (dist > radius + clusterRadius[c] * scale + 0.1f) continue;
+                    BreakCluster(c);
+                    changed = true;
+                }
+                return changed;
+            }
+
             for (int i = 0; i < initialTriangleCount; i++)
             {
                 if (triangleIsBroken[i]) continue;
@@ -388,10 +447,45 @@ namespace Plunderspell.Fracture
             return changed;
         }
 
+        private void BreakCluster(int c)
+        {
+            clusterIsBroken[c] = true;
+            foreach (int t in clusterTriangles[c]) triangleIsBroken[t] = true;
+        }
+
+        // Clusters joined to an unbroken ground cluster through unbroken neighbours; their triangles go in bfsVisited.
+        private void FindSupportedClusters()
+        {
+            System.Array.Clear(clusterVisited, 0, clusterVisited.Length);
+            bfsQueue.Clear();
+            for (int c = 0; c < clusterIsBroken.Length; c++)
+            {
+                if (clusterIsBroken[c] || !clusterIsSupport[c]) continue;
+                clusterVisited[c] = true;
+                bfsQueue.Enqueue(c);
+            }
+            while (bfsQueue.Count > 0)
+            {
+                foreach (int n in clusterNeighbors[bfsQueue.Dequeue()])
+                {
+                    if (clusterIsBroken[n] || clusterVisited[n]) continue;
+                    clusterVisited[n] = true;
+                    bfsQueue.Enqueue(n);
+                }
+            }
+            for (int i = 0; i < initialTriangleCount; i++) bfsVisited[i] = clusterVisited[triangleCluster[i]];
+            for (int c = 0; c < clusterIsBroken.Length; c++) if (!clusterVisited[c]) clusterIsBroken[c] = true;
+        }
+
+        /// <summary>For tests: whether cluster <paramref name="c"/> is broken. False when the graph has no clusters.</summary>
+        public bool IsClusterBroken(int c) => clusterIsBroken != null && clusterIsBroken[c];
+
         private void RebuildCollisionMesh()
         {
             if (meshCollider == null || collisionMesh == null || initialTriangles == null) return;
 
+            if (triangleCluster != null) FindSupportedClusters();
+            else
             {
                 // Run BFS to find disconnected islands
                 System.Array.Clear(bfsVisited, 0, initialTriangleCount);
@@ -418,7 +512,9 @@ namespace Plunderspell.Fracture
                         }
                     }
                 }
+            }
 
+            {
                 // Collect dropped pieces grouped by submesh
                 foreach (var list in droppedPiecesBySubmesh.Values)
                 {
@@ -467,7 +563,7 @@ namespace Plunderspell.Fracture
                 }
 
                 // Calculate remaining percentage
-                float remainingPercentage = (float)keptTriangles / (fractureMesh != null ? initialTriangleCount / 2 : initialTriangleCount);
+                float remainingPercentage = (float)keptTriangles / (fractureMesh != null ? frontTriangleCount : initialTriangleCount);
                 
                 if (remainingPercentage <= destroyThreshold || newTriangleCount == 0)
                 {
@@ -627,6 +723,7 @@ namespace Plunderspell.Fracture
                 if (!IsOriginalTriangle(i)) continue;
                 front.Add(initialTriangles[i * 3]); front.Add(initialTriangles[i * 3 + 1]); front.Add(initialTriangles[i * 3 + 2]);
             }
+            frontTriangleCount = front.Count / 3;
             collisionMesh.triangles = front.ToArray();
             meshCollider.sharedMesh = null;
             meshCollider.sharedMesh = collisionMesh;
@@ -635,6 +732,8 @@ namespace Plunderspell.Fracture
         // DoubleSidedMeshGenerator appends the reversed twins after the originals in each submesh.
         private bool IsOriginalTriangle(int tri)
         {
+            // A clustered bake numbers pieces by cluster, not by triangle, so only its kinds tell front from twin and edge.
+            if (triangleKind != null) return triangleKind[tri] == 0;
             PieceMapping m = pieceMappings[tri];
             return m.pieceIndex < originalPerSubmesh[m.submeshIndex];
         }

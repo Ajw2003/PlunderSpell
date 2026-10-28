@@ -117,6 +117,12 @@ namespace Plunderspell.Fracture
             var rawIndices16 = isUInt16 ? meshData.GetIndexData<ushort>() : default;
             var rawIndices32 = !isUInt16 ? meshData.GetIndexData<int>() : default;
 
+            // Piece mappings count triangles across submeshes in order, as the fracture mesh lists them.
+            long meshTriangles = 0;
+            for (int s = 0; s < subMeshCount; s++) meshTriangles += mesh.GetIndexCount(s) / 3;
+            bool clustered = target.TryGetClusterPieces(out PieceMapping[] mappings, out int[] clusterOf, out Vector3[] centroids, out float[] radii)
+                && mappings.Length == meshTriangles;
+            int submeshStart = 0;
             for (int s = 0; s < subMeshCount; s++)
             {
                 var subMeshDesc = meshData.GetSubMesh(s);
@@ -139,27 +145,64 @@ namespace Plunderspell.Fracture
                 }
                 
                 int triangleCount = indexCount / 3;
-                int pieceCount = triangleCount;
-                
-                NativeArray<PieceData> pieceData = new NativeArray<PieceData>(pieceCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
+                int firstTriangle = submeshStart;
+                submeshStart += triangleCount;
+                NativeArray<PieceData> pieceData;
                 NativeArray<VertexData> vertexData = new NativeArray<VertexData>(indexCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
 
-                FractureMathJob job = new FractureMathJob
+                if (clustered)
                 {
-                    triangles = trianglesNative,
-                    vertices = verticesNative,
-                    normals = normalsNative,
-                    uvs = uvsNative,
-                    localToWorld = localToWorld,
-                    lossyScaleX = lossyScaleX,
-                    hasNormals = hasNormals,
-                    hasUVs = hasUVs,
-                    pieceData = pieceData,
-                    vertexData = vertexData
-                };
+                    // One piece per cluster in this submesh, centred on the whole cluster (#492): the compute shader then moves
+                    // and spins it as one rigid unit, and a cluster split over submeshes keeps one centre and one motion.
+                    int pieceCount = 0;
+                    for (int t = 0; t < triangleCount; t++) pieceCount = math.max(pieceCount, mappings[firstTriangle + t].pieceIndex + 1);
+                    pieceData = new NativeArray<PieceData>(pieceCount, Allocator.TempJob);
+                    var pieceCentre = new Vector3[pieceCount];
+                    for (int t = 0; t < triangleCount; t++)
+                    {
+                        int piece = mappings[firstTriangle + t].pieceIndex;
+                        int c = clusterOf[firstTriangle + t];
+                        pieceCentre[piece] = localToWorld.MultiplyPoint3x4(centroids[c]);
+                        pieceData[piece] = new PieceData
+                        {
+                            position = pieceCentre[piece],
+                            isStatic = 1,
+                            rotation = Quaternion.identity,
+                            radius = radii[c] * lossyScaleX
+                        };
+                        for (int j = 0; j < 3; j++)
+                        {
+                            int vIdx = trianglesNative[t * 3 + j];
+                            vertexData[t * 3 + j] = new VertexData
+                            {
+                                localPosition = localToWorld.MultiplyPoint3x4(verticesNative[vIdx]) - pieceCentre[piece],
+                                pieceIndex = (uint)piece,
+                                localNormal = hasNormals ? localToWorld.MultiplyVector(normalsNative[vIdx]).normalized : Vector3.up,
+                                uv = hasUVs ? uvsNative[vIdx] : Vector2.zero
+                            };
+                        }
+                    }
+                }
+                else
+                {
+                    pieceData = new NativeArray<PieceData>(triangleCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
+                    FractureMathJob job = new FractureMathJob
+                    {
+                        triangles = trianglesNative,
+                        vertices = verticesNative,
+                        normals = normalsNative,
+                        uvs = uvsNative,
+                        localToWorld = localToWorld,
+                        lossyScaleX = lossyScaleX,
+                        hasNormals = hasNormals,
+                        hasUVs = hasUVs,
+                        pieceData = pieceData,
+                        vertexData = vertexData
+                    };
 
-                JobHandle handle = job.Schedule(triangleCount, 64);
-                handle.Complete();
+                    JobHandle handle = job.Schedule(triangleCount, 64);
+                    handle.Complete();
+                }
 
                 GameObject effectObj = new GameObject("FractureEffect_" + target.gameObject.name + "_SubMesh_" + s);
                 effectObj.transform.position = target.transform.position;

@@ -29,7 +29,8 @@
         "UnityEditor.TestRunner",
         "Plunderspell.Net",
         "Plunderspell.Atmosphere",
-        "Unity.AI.Navigation"
+        "Unity.AI.Navigation",
+        "Plunderspell.Fracture"
     ],
     "includePlatforms": [
         "Editor"
