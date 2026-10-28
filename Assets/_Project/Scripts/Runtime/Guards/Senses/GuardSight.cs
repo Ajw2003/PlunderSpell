@@ -9,7 +9,8 @@ namespace Plunderspell.Guards
     /// What a guard can see: the cone, the range, the arrival grace and the line of sight. It looks only
     /// when <see cref="GuardSightThrottle"/> says so and keeps the answer until the next look, so a
     /// state asking "who do I see" every frame costs nothing. The line of sight ignores the target's
-    /// own colliders, so a player's body never hides the player from a guard.
+    /// own colliders, so a player's body never hides the player from a guard, and loot, guards and room props
+    /// do not block it either (<see cref="GuardSightBlockers"/>).
     /// </summary>
     public sealed class GuardSight
     {
@@ -131,7 +132,8 @@ namespace Plunderspell.Guards
                 _tuning.GeometryLayers, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < count; i++)
             {
-                if (!_hits[i].collider.transform.IsChildOf(target))
+                Collider hit = _hits[i].collider;
+                if (!hit.transform.IsChildOf(target) && GuardSightBlockers.Blocks(hit))
                     return false;
             }
             return true;

@@ -7,7 +7,8 @@
         "Plunderspell.Acoustics",
         "Plunderspell.Alarm",
         "Plunderspell.Status",
-        "Plunderspell.Items"
+        "Plunderspell.Items",
+        "Plunderspell.Loot"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Plunderspell.Guards;
+using Plunderspell.Loot;
 using UnityEngine;
 
 namespace Plunderspell.Tests
@@ -80,6 +81,47 @@ namespace Plunderspell.Tests
         {
             Guard guard = GuardAtOrigin();
             _rig.MakeWall(new Vector3(0f, 3f, 3f), new Vector3(8f, 8f, 0.5f));
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 6f));
+            Assert.That(Sees(guard), Is.False);
+        }
+
+        [Test]
+        public void ALootPieceBetweenTheGuardAndAPlayerDoesNotHideThePlayer()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeWall(new Vector3(0f, 1.2f, 3f), new Vector3(4f, 4f, 0.5f)).AddComponent<LootPickup>();
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 6f));
+            Assert.That(Sees(guard), Is.True);
+        }
+
+        [Test]
+        public void AnotherGuardBetweenTheGuardAndAPlayerDoesNotHideThePlayer()
+        {
+            Guard guard = GuardAtOrigin();
+            Guard other = _rig.MakeGuard(new Vector3(0f, 0f, 3f));
+            other.gameObject.AddComponent<BoxCollider>().size = new Vector3(4f, 4f, 0.5f);
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 6f));
+            Assert.That(Sees(guard), Is.True);
+        }
+
+        [Test]
+        public void AnythingUnderARoomsPropsPartDoesNotHideAPlayer()
+        {
+            Guard guard = GuardAtOrigin();
+            GameObject props = new GameObject(GuardSightBlockers.PropsPartName);
+            GameObject crate = _rig.MakeWall(new Vector3(0f, 1.2f, 3f), new Vector3(4f, 4f, 0.5f));
+            crate.transform.SetParent(props.transform, true);
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 6f));
+            Assert.That(Sees(guard), Is.True);
+            Object.DestroyImmediate(props);
+        }
+
+        [Test]
+        public void AWallStillHidesAPlayerWhenLootAndPropsStandBesideIt()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeWall(new Vector3(0f, 3f, 3f), new Vector3(8f, 8f, 0.5f));
+            _rig.MakeWall(new Vector3(0f, 1.2f, 2f), new Vector3(4f, 4f, 0.5f)).AddComponent<LootPickup>();
             _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 6f));
             Assert.That(Sees(guard), Is.False);
         }
