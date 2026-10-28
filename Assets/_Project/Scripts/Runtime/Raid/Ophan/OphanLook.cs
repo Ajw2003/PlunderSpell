@@ -29,6 +29,11 @@ namespace Plunderspell.Raid
         // sky, and a shaft that close fills the view, so on the target's machine it fades out further away.
         private const float FadeMetresOnTarget = 25f, FadeMetresSeenByOthers = 2f;
         private const float LiftGrowthPerMetre = 0.03f;
+        /// <summary>The model's pivot is at its feet; its middle is this far up it, in model metres.</summary>
+        public const float MiddleAboveFeet = 4.8f;
+        // It swings round the castle to the side across from its target and turns to face them (aj, 2026-10-28), so the
+        // target sees it move over the sky to them. A target this near the castle's middle has no side; it keeps its bearing.
+        private const float SwingDegreesPerSecond = 12f, TurnDegreesPerSecond = 30f, MinBearingMetres = 8f;
         private const float ChargedFlashSeconds = 0.6f;
         // Gold is the game's loot colour (orpiment #C9A227): a beam that only wants the piece is gold and breathes slowly.
         private static readonly Color SparingGold = new Color(0.79f, 0.64f, 0.15f);
@@ -48,6 +53,7 @@ namespace Plunderspell.Raid
         private float _flashUntil = float.NegativeInfinity;
         private Vector3 _restScale;
         private Vector3 _restPosition;
+        private Vector3 _castle, _centre;
         private Transform _lifted;
         private Vector3 _liftFrom;
         private float _liftStart;
@@ -62,9 +68,12 @@ namespace Plunderspell.Raid
         /// <summary>The eye's world position, where every beam starts.</summary>
         public Vector3 EyePoint => _eye != null ? _eye.position : transform.position;
 
-        public void Init(OphanTuning tuning)
+        /// <param name="castleCentre">The castle's middle at ground level, which it circles.</param>
+        public void Init(OphanTuning tuning, Vector3 castleCentre)
         {
             _tuning = tuning;
+            _castle = castleCentre;
+            _centre = transform.position + transform.up * (MiddleAboveFeet * tuning.Scale);
             _eye = Find("Eye");
             _great = Find("GreatWheel");
             _inner = Find("InnerWheel");
@@ -124,6 +133,7 @@ namespace Plunderspell.Raid
             if (_tuning == null)
                 return;
             float inState = Time.time - _stateSince;
+            FollowTarget();
             SpinRings(inState);
             ShowTells(inState);
             DrawBeam(inState);
@@ -173,6 +183,26 @@ namespace Plunderspell.Raid
                 part.AddComponent<MeshRenderer>().sharedMaterials = source.sharedMaterials;
             }
             return copy;
+        }
+
+        private void FollowTarget()
+        {
+            if (State == OphanState.Leaving || Target == null)
+                return;
+            Vector3 from = _centre - _castle;
+            from.y = 0f;
+            Vector3 across = _castle - Target.position;
+            across.y = 0f;
+            if (across.magnitude >= MinBearingMetres && from.sqrMagnitude > 1f)
+            {
+                Vector3 bearing = Vector3.RotateTowards(from.normalized, across.normalized, SwingDegreesPerSecond * Mathf.Deg2Rad * Time.deltaTime, 0f);
+                _centre = new Vector3(_castle.x, _centre.y, _castle.z) + bearing * from.magnitude;
+            }
+            Vector3 chest = Target.position + Vector3.up * OphanOfHours.ChestAboveBody;
+            Quaternion facing = Quaternion.LookRotation(chest - _centre, Vector3.up);
+            Quaternion turned = Quaternion.RotateTowards(transform.rotation, facing, TurnDegreesPerSecond * Time.deltaTime);
+            transform.SetPositionAndRotation(_centre - turned * Vector3.up * (MiddleAboveFeet * _tuning.Scale), turned);
+            _restPosition = transform.position;
         }
 
         private void SpinRings(float inState)

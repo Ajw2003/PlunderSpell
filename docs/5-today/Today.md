@@ -1,5 +1,12 @@
 # Today
 
+**2026-10-28 (afternoon) - Ophan fixes from aj's co-op play-through; breaking approach awaits aj's pick (`AjsAgent/gym-with-demand-page`).**
+Fixed and checked in co-op: the target is re-weighed every second in every state (the cauldron holder now takes the eye
+mid-drain), the Ophan swings round the castle to face its target, and the wall burst's glowing square is gone. Measured:
+a hit costs 5 to 14 ms per room and the guard map refresh 7 to 24 ms; the stutter is debris effects redrawing every hit
+part's triangles every frame (75 effects, 284,544 vertices after 16 hits). Page: `docs/plans/ophan-breaking-chunks.html`.
+The guard deep dive runs in its own session on `guard-deep-dive`.
+
 **2026-10-27 (late night) - Ophan redo built, recorded, awaiting aj's hand test (#468: #469 to #472; `AjsAgent/gym-with-demand-page`).**
 The beam aims at the chest from the eye bone; the charged beam fires twice (break, then kill 1 s later). Every castle
 room is split into wall, roof, floor and props (`RoomPartSplitter`) and baked for aj's fracture system, ported from

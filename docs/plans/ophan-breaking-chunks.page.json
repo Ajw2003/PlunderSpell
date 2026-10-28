@@ -1,0 +1,142 @@
+{
+  "title": "Ophan breaking in chunks",
+  "eyebrow": "Your co-op play-through on 2026-10-28: three Ophan bugs fixed, and one choice about how the castle breaks",
+  "approval": "Design approved: Ophan breaking chunks",
+  "short": {
+    "lead": "Three of the six Ophan problems from your play-through are fixed and checked in co-op. The Ophan now targets the player carrying the most worth, swings across the sky to face its target, and the square in front of its eye is gone. The other three (lag, glitchy lingering debris, badly filled holes) share one cause, and the fix is a choice for you. You asked whether breaking whole clusters would help performance or only the look. It helps both, and the numbers are below. The guards are being looked into in their own session.",
+    "hint": "Tap an item to see what I found.",
+    "key": [
+      [
+        "Fixed",
+        ""
+      ],
+      [
+        "You pick",
+        "you"
+      ]
+    ],
+    "items": [
+      [
+        "bulb",
+        "Targeting",
+        "Why it kept hunting the empty-handed player",
+        "",
+        "The Ophan weighed who carried the most worth only while it was watching or arriving. Once it was draining or charging someone, it never looked again until that player died or escaped. It also counted only the loot that existed when it arrived. It now re-weighs every second in every state and recounts the loot each time. Checked in co-op: the host held the 1000-worth cauldron and was targeted; the host let go, the client picked it up, and the target switched to the client within 3 seconds, mid-drain.",
+        "Nothing to pick."
+      ],
+      [
+        "bulb",
+        "Facing",
+        "Why it sat still in the sky",
+        "",
+        "It was placed once, facing the castle's middle, and never moved. Now it swings round the castle, at up to 12 degrees a second, to the side across from its target, so the target looks over the castle at it. It turns its whole body to face the target at up to 30 degrees a second. Every machine runs this using the target it has been told about. Checked in co-op: its eye moved from (935, 470, 0) to (718, 480, -586) as it turned to face the host.",
+        "Nothing to pick."
+      ],
+      [
+        "bulb",
+        "The square",
+        "What the square in front of the eye was",
+        "",
+        "Each wall burst still placed a glowing 2.4 m square, the stand-in for a hole from before real breaking existed. A wall between you and the Ophan put that square straight in front of its eye. The small orange squares were the burst's embers, drawn as flat squares. The square is removed, and the embers are now thin streaks that read as sparks. Checked in co-op, using stills from both players looking at the eye.",
+        "Nothing to pick."
+      ],
+      [
+        "bulb",
+        "Lag",
+        "Where the freezes come from",
+        "you",
+        "Measured on the host: one beam's hit on a whole room costs 5 to 14 ms, and refreshing the guards' map costs 7 to 24 ms. Neither of those is the freeze. The freeze comes from the debris drawing. Every part that is ever hit keeps a debris effect alive for the rest of the raid. Each frame, that effect recomputes and redraws the part's every triangle, including the ones still in the wall, and draws them again for each shadow-casting light. After 16 hits there were 75 such effects redrawing 284,544 vertices every frame, with 18 lights casting shadows. The cost grows with every break and never falls. It is uneven because a beam that misses stone adds nothing, and one through a big wall adds a lot.",
+        "Pick A, B or C under Choices."
+      ],
+      [
+        "bulb",
+        "Debris",
+        "Why the pieces linger and look glitchy",
+        "you",
+        "Every falling piece is a single paper-thin triangle that tumbles for 5 seconds, then lies on the floor slab. Seen edge-on a triangle vanishes, and seen face-on it flickers, so a shower of them reads as glitching rather than stone.",
+        "Pick A, B or C under Choices."
+      ],
+      [
+        "bulb",
+        "Holes",
+        "Why holes are not filled",
+        "you",
+        "A hole's edge follows whichever triangles happened to break, so it is a jagged zigzag. The stone caps that close the edge are strips along each broken triangle edge. On a zigzag they leave slivers and gaps, which shows in your pictures as dark notches round the hole.",
+        "Pick A, B or C under Choices."
+      ]
+    ]
+  },
+  "changes": [
+    [
+      "chg",
+      "Targeting",
+      "Re-weighed every second, in every state.",
+      [
+        "Only while watching",
+        "Every second, in any hunting state"
+      ],
+      "OphanOfHours.Update and Repick.",
+      null
+    ],
+    [
+      "chg",
+      "The Ophan in the sky",
+      "It swings round to face its target.",
+      [
+        "Fixed in place",
+        "Moves to the far side from its target and turns to face them"
+      ],
+      "OphanLook.FollowTarget, run on every machine.",
+      null
+    ],
+    [
+      "chg",
+      "Wall bursts",
+      "The square is gone; sparks replace the square embers.",
+      [
+        "2.4 m glowing square",
+        "Thin streak sparks"
+      ],
+      "OphanWallBurst.",
+      null
+    ]
+  ],
+  "choices": [
+    [
+      "break",
+      "How should the castle break?",
+      [
+        [
+          "A",
+          "Solid chunks",
+          1,
+          "At bake, each wall, floor and roof part is cut into blocks 1.5 m across, the size of today's pieces. Each block is a closed piece of stone with a front, a back and sides. A hit removes whole blocks. The block's collider is switched off rather than re-cooked, and it falls as one solid piece that fades 2 seconds after it lands. A block left hanging with nothing holding it up falls too. Holes get straight block edges, and the neighbouring blocks' own sides fill them, so no caps are needed. Nothing is drawn for a wall until it breaks, and then only the blocks in the air. Every machine removes the same blocks from the same beam line, as it does now. This replaces the triangle debris and the caps you ported. It is a rework of the bake and the hit code, and is the biggest of the three options."
+        ],
+        [
+          "B",
+          "Clusters inside your fracture system",
+          0,
+          "Keep your ported system, but group its triangles into clusters 1.5 m across, and break and drop whole clusters. The debris effect would draw only the clusters that are falling, without shadows, and end once they land. Hole edges would follow cluster borders, so they are straighter and the caps line up better. Falling clusters are still thin sheets of surface rather than solid stone."
+        ],
+        [
+          "C",
+          "Fix the cost only",
+          0,
+          "Keep breaking single triangles. Draw only the falling ones, without shadows, end each effect once its pieces have landed, and shorten their life to 2 seconds. That fixes the lag, but the glitchy debris and the zigzag holes stay as they are."
+        ]
+      ],
+      "Clusters help both performance and looks, as you suspected. The performance gain comes less from the number of pieces than from no longer redrawing standing walls: after a break, A and B draw only the pieces in the air. Only A fixes all three problems: B still drops thin sheets, and C keeps the glitchy pieces and the zigzag edges."
+    ]
+  ],
+  "wrapup": {
+    "summary": "Targeting, facing and the square are fixed and checked in co-op. Lag, debris and holes come from breaking single triangles and drawing every hit part forever, and the fix is your pick.",
+    "changing": "The three fixes are on AjsAgent/gym-with-demand-page. Nothing about breaking changes until you pick.",
+    "blocking": "Your pick for how the castle breaks.",
+    "next": "I open a GitHub issue for your pick and build it. Then I record a co-op run showing the other player, the Ophan, the beam, the Ophan sparing a player who carries the artifact, the holes and the guards. I read that recording before it reaches you. The guard deep dive is running in its own session and will send its own page.",
+    "todo": [
+      "Pick A, B or C under Choices.",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with \"Design approved: Ophan breaking chunks\", or tell me what to change."
+    ]
+  }
+}

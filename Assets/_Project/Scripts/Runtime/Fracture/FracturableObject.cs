@@ -42,6 +42,9 @@ namespace Plunderspell.Fracture
         [Tooltip("Metres of stone strip added along every edge a break leaves, front to back (keepMeshRenderer only). 0 = no caps. Visual only.")]
         public float capDepthMetres = 0f;
 
+        [Tooltip("Double-sided mesh the fracture data comes from, when the MeshCollider holds the plain one-sided mesh. The collider then only ever gets the front triangles: a double-sided collider catches a guard's step sweep on the back of every stair riser.")]
+        public Mesh fractureMesh;
+
         private Mesh renderMesh;
         private int[] originalPerSubmesh; // triangles per submesh before the reversed twins
         private readonly List<Vector3> baseVerts = new List<Vector3>(), baseNormals = new List<Vector3>(), capVerts = new List<Vector3>(), capNormals = new List<Vector3>();
@@ -86,16 +89,16 @@ namespace Plunderspell.Fracture
 
         private void Start()
         {
-            if (TryGetComponent<MeshCollider>(out meshCollider) && meshCollider.sharedMesh != null)
+            if (TryGetComponent<MeshCollider>(out meshCollider) && (fractureMesh != null || meshCollider.sharedMesh != null))
             {
-                collisionMesh = Instantiate(meshCollider.sharedMesh);
+                collisionMesh = Instantiate(fractureMesh != null ? fractureMesh : meshCollider.sharedMesh);
                 meshCollider.sharedMesh = collisionMesh;
                 initialTriangles = collisionMesh.triangles;
                 collisionTriangles = initialTriangles;
                 collisionVertices = collisionMesh.vertices;
                 initialTriangleCount = initialTriangles.Length / 3;
 
-                if (capDepthMetres > 0f && keepMeshRenderer)
+                if (fractureMesh != null || (capDepthMetres > 0f && keepMeshRenderer))
                 {
                     originalPerSubmesh = new int[collisionMesh.subMeshCount];
                     for (int s = 0; s < originalPerSubmesh.Length; s++) originalPerSubmesh[s] = collisionMesh.GetTriangles(s).Length / 6;
@@ -105,6 +108,7 @@ namespace Plunderspell.Fracture
                 bfsVisited = new bool[initialTriangleCount];
                 droppedPiecesBySubmesh = new Dictionary<int, List<int>>();
                 newTrianglesBuffer = new int[initialTriangles.Length];
+                if (fractureMesh != null) SetColliderToFrontTriangles();
 
                 if (bakedGraphData != null && bakedGraphData.pieceMappings.Length == initialTriangleCount)
                 {
@@ -421,6 +425,7 @@ namespace Plunderspell.Fracture
                     list.Clear();
                 }
                 int newTriangleCount = 0;
+                int keptTriangles = 0;
                 
                 for (int i = 0; i < initialTriangleCount; i++)
                 {
@@ -438,9 +443,10 @@ namespace Plunderspell.Fracture
                             }
                             list.Add(map.pieceIndex);
                         }
-                        else
+                        else if (fractureMesh == null || IsOriginalTriangle(i))
                         {
                             // Keep it in the collision mesh
+                            keptTriangles++;
                             newTrianglesBuffer[newTriangleCount++] = initialTriangles[i * 3];
                             newTrianglesBuffer[newTriangleCount++] = initialTriangles[i * 3 + 1];
                             newTrianglesBuffer[newTriangleCount++] = initialTriangles[i * 3 + 2];
@@ -461,8 +467,7 @@ namespace Plunderspell.Fracture
                 }
 
                 // Calculate remaining percentage
-                int remainingTriangles = newTriangleCount / 3;
-                float remainingPercentage = (float)remainingTriangles / initialTriangleCount;
+                float remainingPercentage = (float)keptTriangles / (fractureMesh != null ? initialTriangleCount / 2 : initialTriangleCount);
                 
                 if (remainingPercentage <= destroyThreshold || newTriangleCount == 0)
                 {
@@ -613,6 +618,20 @@ namespace Plunderspell.Fracture
             if (baseColors.Count == baseVerts.Count) { var l = new List<Color>(baseColors); l.AddRange(capColors); renderMesh.SetColors(l); }
         }
 
+        // The one-sided collider of a double-sided fracture mesh, with the same vertices so triangle indices still match.
+        private void SetColliderToFrontTriangles()
+        {
+            var front = new List<int>(initialTriangles.Length / 2);
+            for (int i = 0; i < initialTriangleCount; i++)
+            {
+                if (!IsOriginalTriangle(i)) continue;
+                front.Add(initialTriangles[i * 3]); front.Add(initialTriangles[i * 3 + 1]); front.Add(initialTriangles[i * 3 + 2]);
+            }
+            collisionMesh.triangles = front.ToArray();
+            meshCollider.sharedMesh = null;
+            meshCollider.sharedMesh = collisionMesh;
+        }
+
         // DoubleSidedMeshGenerator appends the reversed twins after the originals in each submesh.
         private bool IsOriginalTriangle(int tri)
         {
@@ -638,14 +657,14 @@ namespace Plunderspell.Fracture
         [ContextMenu("Bake Fracture Graph")]
         public void BakeFractureGraph()
         {
-            if (!TryGetComponent<MeshCollider>(out var mCol) || mCol.sharedMesh == null)
+            if (!TryGetComponent<MeshCollider>(out var mCol) || (fractureMesh == null && mCol.sharedMesh == null))
             {
                 Debug.LogError("No MeshCollider or sharedMesh found to bake!");
                 return;
             }
             
             // Re-simulate setup locally
-            collisionMesh = mCol.sharedMesh;
+            collisionMesh = fractureMesh != null ? fractureMesh : mCol.sharedMesh;
             initialTriangles = collisionMesh.triangles;
             collisionVertices = collisionMesh.vertices;
             initialTriangleCount = initialTriangles.Length / 3;

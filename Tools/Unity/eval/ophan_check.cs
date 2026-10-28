@@ -167,7 +167,9 @@ switch (action)
         if (look != null)
             sb.Append(" shown " + Get(look, "State") + " target " + ((Get(look, "Target") as UnityEngine.Transform)?.name ?? "none")
                 + " beaming " + Get(look, "Beaming") + " eye " + V((UnityEngine.Vector3)Get(look, "EyePoint"))
-                + " size " + (look.transform.lossyScale.y * 9.6f).ToString("F0") + "m");
+                + " size " + (look.transform.lossyScale.y * 9.6f).ToString("F0") + "m"
+                + " targetIsLocal " + ((Get(look, "Target") as UnityEngine.Transform)?.GetComponent(T("StateMachine.PlayerStateMachine")) is UnityEngine.Component tp ? Get(tp, "IsLocal") : "none")
+                + " facing " + V(look.transform.forward));
         else
             sb.Append(" shown none");
         var lifted = UnityEngine.GameObject.Find("TakenPiece");

@@ -161,7 +161,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: a5267c256d786834e9cd27dba7d02b62, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 1f5c097e9e35b194ead06165dc12304f, type: 2}
 --- !u!114 &5065844056424129674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +185,7 @@ MonoBehaviour:
   destroyWhenEmpty: 0
   keepMeshRenderer: 1
   capDepthMetres: 0.3
+  fractureMesh: {fileID: 4300000, guid: a5267c256d786834e9cd27dba7d02b62, type: 2}
   preInitialize: 0
   destroyThreshold: 0.005
   supportHeightRatio: 0.1
@@ -306,7 +307,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 4848c24e89a4f6544973e12db5e613d1, type: 2}
+  m_Mesh: {fileID: 4300000, guid: fb7fdae439dd0994aa63d6d72f16f756, type: 2}
 --- !u!114 &2793033609646381277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,6 +331,7 @@ MonoBehaviour:
   destroyWhenEmpty: 0
   keepMeshRenderer: 1
   capDepthMetres: 0
+  fractureMesh: {fileID: 4300000, guid: 4848c24e89a4f6544973e12db5e613d1, type: 2}
   preInitialize: 0
   destroyThreshold: 0.005
   supportHeightRatio: 0.1
@@ -449,7 +451,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 473e16b6fc3b5824aab5010715acaebf, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 6bc12a3cf3929a44c97412e3acbecd79, type: 2}
 --- !u!114 &1859469236761634390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +475,7 @@ MonoBehaviour:
   destroyWhenEmpty: 0
   keepMeshRenderer: 1
   capDepthMetres: 0.5
+  fractureMesh: {fileID: 4300000, guid: 473e16b6fc3b5824aab5010715acaebf, type: 2}
   preInitialize: 0
   destroyThreshold: 0.005
   supportHeightRatio: 0.1

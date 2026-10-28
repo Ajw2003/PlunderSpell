@@ -100,7 +100,7 @@ namespace Plunderspell.Raid
             _repickIn = 0f;
             _loot.Clear();
             _loot.AddRange(FindObjectsByType<LootValue>(FindObjectsSortMode.None));
-            ShowArrival(_eyePoint, OphanSkyPlacement.Facing(_eyePoint, castle));
+            ShowArrival(_eyePoint, OphanSkyPlacement.Facing(_eyePoint, castle), castle);
             Debug.Log($"[Ophan] arrives at {_eyePoint} over the castle at {castle}.");
         }
 
@@ -112,7 +112,9 @@ namespace Plunderspell.Raid
 
             _repickIn -= Time.deltaTime;
             bool targetLost = _target == null || _target.dead;
-            if (targetLost || (_repickIn <= 0f && (_hunt.State == OphanState.Watching || _hunt.State == OphanState.Arriving)))
+            // Re-weighed every second in every state (aj, 2026-10-28): a player who picks up more worth mid-drain or
+            // mid-charge takes the eye at once, rather than after the current target escapes or dies.
+            if (targetLost || (_repickIn <= 0f && _hunt.State != OphanState.Leaving))
             {
                 PlayerStateMachine before = _target;
                 Repick();
@@ -163,6 +165,9 @@ namespace Plunderspell.Raid
 
         private void Repick()
         {
+            // Loot spawned or dropped since it arrived (a torn page, a piece out of a chest) counts too.
+            _loot.Clear();
+            _loot.AddRange(FindObjectsByType<LootValue>(FindObjectsSortMode.None));
             var players = new List<OphanCandidate<PlayerStateMachine>>();
             foreach (PlayerStateMachine body in FindObjectsByType<PlayerStateMachine>(FindObjectsSortMode.InstanceID))
                 players.Add(new OphanCandidate<PlayerStateMachine>(body, WorthCarried(body), !body.dead));
@@ -270,7 +275,7 @@ namespace Plunderspell.Raid
         // -----------------------------------------------------------------------------------------
 
         [ObserversRpc]
-        private void ShowArrival(Vector3 centre, Quaternion facing)
+        private void ShowArrival(Vector3 centre, Quaternion facing, Vector3 castle)
         {
             RemoveLook();
             var prefab = Resources.Load<GameObject>(PrefabResource);
@@ -282,9 +287,9 @@ namespace Plunderspell.Raid
             GameObject go = Instantiate(prefab, centre, facing);
             go.transform.localScale = Vector3.one * _tuning.Scale;
             // The model's pivot is at its feet: lift it so its middle sits on the centre.
-            go.transform.position = centre - go.transform.up * (4.8f * _tuning.Scale);
+            go.transform.position = centre - go.transform.up * (OphanLook.MiddleAboveFeet * _tuning.Scale);
             _look = go.AddComponent<OphanLook>();
-            _look.Init(_tuning);
+            _look.Init(_tuning, castle);
             OphanHum.Play(go);
             EventManager.Instance?.Publish(new OphanArrived(OphanHum.Seconds));
         }

@@ -113,7 +113,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: d32b07d2e86af9d4797d65054f2448a7, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 9ffe73c7cc7935f4c83bdbbac2323545, type: 2}
 --- !u!114 &5687128355636193922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,6 +137,7 @@ MonoBehaviour:
   destroyWhenEmpty: 0
   keepMeshRenderer: 1
   capDepthMetres: 0.5
+  fractureMesh: {fileID: 4300000, guid: d32b07d2e86af9d4797d65054f2448a7, type: 2}
   preInitialize: 0
   destroyThreshold: 0.005
   supportHeightRatio: 0.1

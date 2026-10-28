@@ -100,6 +100,15 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
   (0.5 m in walls, 0.3 m in floors), the same on every machine. The guard navigation grid learns each break on the
   host: cells over a broken floor become unwalkable, and a hole through a wall big enough to walk through joins the
   cells on both sides, so guards can chase through it.
+- **Ophan fixes from the co-op play-through (2026-10-28, `docs/plans/ophan-breaking-chunks.html`).** The host re-weighs
+  its target every second in every state but leaving, recounting the loot each time (`OphanOfHours.Repick`), so a
+  player who picks up more worth mid-drain or mid-charge takes the eye; it had only re-weighed while watching. It no
+  longer hangs still: on every machine it swings round the castle at up to 12 degrees a second to the side across from
+  its target and turns to face them at up to 30 degrees a second (`OphanLook.FollowTarget`). The wall burst's glowing
+  2.4 m square, the stand-in hole from before real breaking, is gone; its embers are stretched sparks. Measured: a hit
+  costs the host 5 to 14 ms per room and the guard map refresh 7 to 24 ms, but every hit part keeps a debris effect that
+  redraws all its triangles every frame for the rest of the raid (75 effects, 284,544 vertices after 16 hits), which
+  is the stutter. How breaking changes to fix that is aj's pick on the page.
 - **Every machine sees the same thing.** The turn, the lantern, the arrival and each catch are
   decided on the host and shown on every client (the Ophan's target, beams, scorched rooms and takes too); nothing here is polled each frame (`core.md`,
   "When Update is allowed").

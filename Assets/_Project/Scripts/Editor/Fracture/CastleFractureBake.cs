@@ -47,8 +47,10 @@ namespace Plunderspell.EditorTools
                         AssetDatabase.CreateAsset(mesh, meshPath);
 
                         part.GetComponent<MeshFilter>().sharedMesh = mesh;
-                        part.GetComponent<MeshCollider>().sharedMesh = mesh;
+                        // The collider keeps the one-sided split mesh (same shape): a double-sided one stopped guards on stairs.
+                        part.GetComponent<MeshCollider>().sharedMesh = source;
                         if (!part.TryGetComponent(out FracturableObject fo)) fo = part.gameObject.AddComponent<FracturableObject>();
+                        fo.fractureMesh = mesh;
                         fo.destroyWhenEmpty = false;
                         fo.preInitialize = false;
                         // The castle's own shader keeps drawing what is left; the fracture shader draws only the debris.
