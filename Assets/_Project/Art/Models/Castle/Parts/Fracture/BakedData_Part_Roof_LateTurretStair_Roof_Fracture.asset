@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1c3f8ea2a686294297252353888aa47, type: 3}
+  m_Name: BakedData_Part_Roof_LateTurretStair_Roof_Fracture
+  m_EditorClassIdentifier: Plunderspell.Fracture::Plunderspell.Fracture.FractureGraphData
+  pieceMappings:
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 4
+  - submeshIndex: 0
+    pieceIndex: 5
+  - submeshIndex: 0
+    pieceIndex: 6
+  - submeshIndex: 0
+    pieceIndex: 7
+  - submeshIndex: 0
+    pieceIndex: 8
+  - submeshIndex: 0
+    pieceIndex: 9
+  - submeshIndex: 0
+    pieceIndex: 10
+  - submeshIndex: 0
+    pieceIndex: 11
+  - submeshIndex: 0
+    pieceIndex: 12
+  - submeshIndex: 0
+    pieceIndex: 13
+  - submeshIndex: 0
+    pieceIndex: 14
+  - submeshIndex: 0
+    pieceIndex: 15
+  triangleNeighbors:
+  - array: 010000000800000009000000030000000b000000
+  - array: 000000000800000009000000
+  - array: 030000000a0000000b000000
+  - array: 0000000002000000080000000a0000000b000000
+  - array: 050000000c0000000d000000070000000f000000
+  - array: 040000000c0000000d000000
+  - array: 070000000e0000000f000000
+  - array: 04000000060000000c0000000e0000000f000000
+  - array: 000000000100000003000000090000000b000000
+  - array: 010000000000000008000000
+  - array: 02000000030000000b000000
+  - array: 000000000300000008000000020000000a000000
+  - array: 0400000005000000070000000d0000000f000000
+  - array: 05000000040000000c000000
+  - array: 06000000070000000f000000
+  - array: 04000000070000000c000000060000000e000000
+  isSupportTriangle: 00010001000100010001000100010001

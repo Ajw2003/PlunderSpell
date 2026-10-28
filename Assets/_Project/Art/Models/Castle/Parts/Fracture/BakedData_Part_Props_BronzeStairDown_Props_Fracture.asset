@@ -1,0 +1,1793 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1c3f8ea2a686294297252353888aa47, type: 3}
+  m_Name: BakedData_Part_Props_BronzeStairDown_Props_Fracture
+  m_EditorClassIdentifier: Plunderspell.Fracture::Plunderspell.Fracture.FractureGraphData
+  pieceMappings:
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 4
+  - submeshIndex: 0
+    pieceIndex: 5
+  - submeshIndex: 0
+    pieceIndex: 6
+  - submeshIndex: 0
+    pieceIndex: 7
+  - submeshIndex: 0
+    pieceIndex: 8
+  - submeshIndex: 0
+    pieceIndex: 9
+  - submeshIndex: 0
+    pieceIndex: 10
+  - submeshIndex: 0
+    pieceIndex: 11
+  - submeshIndex: 0
+    pieceIndex: 12
+  - submeshIndex: 0
+    pieceIndex: 13
+  - submeshIndex: 0
+    pieceIndex: 14
+  - submeshIndex: 0
+    pieceIndex: 15
+  - submeshIndex: 0
+    pieceIndex: 16
+  - submeshIndex: 0
+    pieceIndex: 17
+  - submeshIndex: 0
+    pieceIndex: 18
+  - submeshIndex: 0
+    pieceIndex: 19
+  - submeshIndex: 0
+    pieceIndex: 20
+  - submeshIndex: 0
+    pieceIndex: 21
+  - submeshIndex: 0
+    pieceIndex: 22
+  - submeshIndex: 0
+    pieceIndex: 23
+  - submeshIndex: 0
+    pieceIndex: 24
+  - submeshIndex: 0
+    pieceIndex: 25
+  - submeshIndex: 0
+    pieceIndex: 26
+  - submeshIndex: 0
+    pieceIndex: 27
+  - submeshIndex: 0
+    pieceIndex: 28
+  - submeshIndex: 0
+    pieceIndex: 29
+  - submeshIndex: 0
+    pieceIndex: 30
+  - submeshIndex: 0
+    pieceIndex: 31
+  - submeshIndex: 0
+    pieceIndex: 32
+  - submeshIndex: 0
+    pieceIndex: 33
+  - submeshIndex: 0
+    pieceIndex: 34
+  - submeshIndex: 0
+    pieceIndex: 35
+  - submeshIndex: 0
+    pieceIndex: 36
+  - submeshIndex: 0
+    pieceIndex: 37
+  - submeshIndex: 0
+    pieceIndex: 38
+  - submeshIndex: 0
+    pieceIndex: 39
+  - submeshIndex: 0
+    pieceIndex: 40
+  - submeshIndex: 0
+    pieceIndex: 41
+  - submeshIndex: 0
+    pieceIndex: 42
+  - submeshIndex: 0
+    pieceIndex: 43
+  - submeshIndex: 0
+    pieceIndex: 44
+  - submeshIndex: 0
+    pieceIndex: 45
+  - submeshIndex: 0
+    pieceIndex: 46
+  - submeshIndex: 0
+    pieceIndex: 47
+  - submeshIndex: 0
+    pieceIndex: 48
+  - submeshIndex: 0
+    pieceIndex: 49
+  - submeshIndex: 0
+    pieceIndex: 50
+  - submeshIndex: 0
+    pieceIndex: 51
+  - submeshIndex: 0
+    pieceIndex: 52
+  - submeshIndex: 0
+    pieceIndex: 53
+  - submeshIndex: 0
+    pieceIndex: 54
+  - submeshIndex: 0
+    pieceIndex: 55
+  - submeshIndex: 0
+    pieceIndex: 56
+  - submeshIndex: 0
+    pieceIndex: 57
+  - submeshIndex: 0
+    pieceIndex: 58
+  - submeshIndex: 0
+    pieceIndex: 59
+  - submeshIndex: 0
+    pieceIndex: 60
+  - submeshIndex: 0
+    pieceIndex: 61
+  - submeshIndex: 0
+    pieceIndex: 62
+  - submeshIndex: 0
+    pieceIndex: 63
+  - submeshIndex: 0
+    pieceIndex: 64
+  - submeshIndex: 0
+    pieceIndex: 65
+  - submeshIndex: 0
+    pieceIndex: 66
+  - submeshIndex: 0
+    pieceIndex: 67
+  - submeshIndex: 0
+    pieceIndex: 68
+  - submeshIndex: 0
+    pieceIndex: 69
+  - submeshIndex: 0
+    pieceIndex: 70
+  - submeshIndex: 0
+    pieceIndex: 71
+  - submeshIndex: 0
+    pieceIndex: 72
+  - submeshIndex: 0
+    pieceIndex: 73
+  - submeshIndex: 0
+    pieceIndex: 74
+  - submeshIndex: 0
+    pieceIndex: 75
+  - submeshIndex: 0
+    pieceIndex: 76
+  - submeshIndex: 0
+    pieceIndex: 77
+  - submeshIndex: 0
+    pieceIndex: 78
+  - submeshIndex: 0
+    pieceIndex: 79
+  - submeshIndex: 0
+    pieceIndex: 80
+  - submeshIndex: 0
+    pieceIndex: 81
+  - submeshIndex: 0
+    pieceIndex: 82
+  - submeshIndex: 0
+    pieceIndex: 83
+  - submeshIndex: 0
+    pieceIndex: 84
+  - submeshIndex: 0
+    pieceIndex: 85
+  - submeshIndex: 0
+    pieceIndex: 86
+  - submeshIndex: 0
+    pieceIndex: 87
+  - submeshIndex: 0
+    pieceIndex: 88
+  - submeshIndex: 0
+    pieceIndex: 89
+  - submeshIndex: 0
+    pieceIndex: 90
+  - submeshIndex: 0
+    pieceIndex: 91
+  - submeshIndex: 0
+    pieceIndex: 92
+  - submeshIndex: 0
+    pieceIndex: 93
+  - submeshIndex: 0
+    pieceIndex: 94
+  - submeshIndex: 0
+    pieceIndex: 95
+  - submeshIndex: 0
+    pieceIndex: 96
+  - submeshIndex: 0
+    pieceIndex: 97
+  - submeshIndex: 0
+    pieceIndex: 98
+  - submeshIndex: 0
+    pieceIndex: 99
+  - submeshIndex: 0
+    pieceIndex: 100
+  - submeshIndex: 0
+    pieceIndex: 101
+  - submeshIndex: 0
+    pieceIndex: 102
+  - submeshIndex: 0
+    pieceIndex: 103
+  - submeshIndex: 0
+    pieceIndex: 104
+  - submeshIndex: 0
+    pieceIndex: 105
+  - submeshIndex: 0
+    pieceIndex: 106
+  - submeshIndex: 0
+    pieceIndex: 107
+  - submeshIndex: 0
+    pieceIndex: 108
+  - submeshIndex: 0
+    pieceIndex: 109
+  - submeshIndex: 0
+    pieceIndex: 110
+  - submeshIndex: 0
+    pieceIndex: 111
+  - submeshIndex: 0
+    pieceIndex: 112
+  - submeshIndex: 0
+    pieceIndex: 113
+  - submeshIndex: 0
+    pieceIndex: 114
+  - submeshIndex: 0
+    pieceIndex: 115
+  - submeshIndex: 0
+    pieceIndex: 116
+  - submeshIndex: 0
+    pieceIndex: 117
+  - submeshIndex: 0
+    pieceIndex: 118
+  - submeshIndex: 0
+    pieceIndex: 119
+  - submeshIndex: 0
+    pieceIndex: 120
+  - submeshIndex: 0
+    pieceIndex: 121
+  - submeshIndex: 0
+    pieceIndex: 122
+  - submeshIndex: 0
+    pieceIndex: 123
+  - submeshIndex: 0
+    pieceIndex: 124
+  - submeshIndex: 0
+    pieceIndex: 125
+  - submeshIndex: 0
+    pieceIndex: 126
+  - submeshIndex: 0
+    pieceIndex: 127
+  - submeshIndex: 0
+    pieceIndex: 128
+  - submeshIndex: 0
+    pieceIndex: 129
+  - submeshIndex: 0
+    pieceIndex: 130
+  - submeshIndex: 0
+    pieceIndex: 131
+  - submeshIndex: 0
+    pieceIndex: 132
+  - submeshIndex: 0
+    pieceIndex: 133
+  - submeshIndex: 0
+    pieceIndex: 134
+  - submeshIndex: 0
+    pieceIndex: 135
+  - submeshIndex: 0
+    pieceIndex: 136
+  - submeshIndex: 0
+    pieceIndex: 137
+  - submeshIndex: 0
+    pieceIndex: 138
+  - submeshIndex: 0
+    pieceIndex: 139
+  - submeshIndex: 0
+    pieceIndex: 140
+  - submeshIndex: 0
+    pieceIndex: 141
+  - submeshIndex: 0
+    pieceIndex: 142
+  - submeshIndex: 0
+    pieceIndex: 143
+  - submeshIndex: 0
+    pieceIndex: 144
+  - submeshIndex: 0
+    pieceIndex: 145
+  - submeshIndex: 0
+    pieceIndex: 146
+  - submeshIndex: 0
+    pieceIndex: 147
+  - submeshIndex: 0
+    pieceIndex: 148
+  - submeshIndex: 0
+    pieceIndex: 149
+  - submeshIndex: 0
+    pieceIndex: 150
+  - submeshIndex: 0
+    pieceIndex: 151
+  - submeshIndex: 0
+    pieceIndex: 152
+  - submeshIndex: 0
+    pieceIndex: 153
+  - submeshIndex: 0
+    pieceIndex: 154
+  - submeshIndex: 0
+    pieceIndex: 155
+  - submeshIndex: 0
+    pieceIndex: 156
+  - submeshIndex: 0
+    pieceIndex: 157
+  - submeshIndex: 0
+    pieceIndex: 158
+  - submeshIndex: 0
+    pieceIndex: 159
+  - submeshIndex: 0
+    pieceIndex: 160
+  - submeshIndex: 0
+    pieceIndex: 161
+  - submeshIndex: 0
+    pieceIndex: 162
+  - submeshIndex: 0
+    pieceIndex: 163
+  - submeshIndex: 0
+    pieceIndex: 164
+  - submeshIndex: 0
+    pieceIndex: 165
+  - submeshIndex: 0
+    pieceIndex: 166
+  - submeshIndex: 0
+    pieceIndex: 167
+  - submeshIndex: 0
+    pieceIndex: 168
+  - submeshIndex: 0
+    pieceIndex: 169
+  - submeshIndex: 0
+    pieceIndex: 170
+  - submeshIndex: 0
+    pieceIndex: 171
+  - submeshIndex: 0
+    pieceIndex: 172
+  - submeshIndex: 0
+    pieceIndex: 173
+  - submeshIndex: 0
+    pieceIndex: 174
+  - submeshIndex: 0
+    pieceIndex: 175
+  - submeshIndex: 0
+    pieceIndex: 176
+  - submeshIndex: 0
+    pieceIndex: 177
+  - submeshIndex: 0
+    pieceIndex: 178
+  - submeshIndex: 0
+    pieceIndex: 179
+  - submeshIndex: 0
+    pieceIndex: 180
+  - submeshIndex: 0
+    pieceIndex: 181
+  - submeshIndex: 0
+    pieceIndex: 182
+  - submeshIndex: 0
+    pieceIndex: 183
+  - submeshIndex: 0
+    pieceIndex: 184
+  - submeshIndex: 0
+    pieceIndex: 185
+  - submeshIndex: 0
+    pieceIndex: 186
+  - submeshIndex: 0
+    pieceIndex: 187
+  - submeshIndex: 0
+    pieceIndex: 188
+  - submeshIndex: 0
+    pieceIndex: 189
+  - submeshIndex: 0
+    pieceIndex: 190
+  - submeshIndex: 0
+    pieceIndex: 191
+  - submeshIndex: 1
+    pieceIndex: 0
+  - submeshIndex: 1
+    pieceIndex: 1
+  - submeshIndex: 1
+    pieceIndex: 2
+  - submeshIndex: 1
+    pieceIndex: 3
+  - submeshIndex: 1
+    pieceIndex: 4
+  - submeshIndex: 1
+    pieceIndex: 5
+  - submeshIndex: 1
+    pieceIndex: 6
+  - submeshIndex: 1
+    pieceIndex: 7
+  - submeshIndex: 1
+    pieceIndex: 8
+  - submeshIndex: 1
+    pieceIndex: 9
+  - submeshIndex: 1
+    pieceIndex: 10
+  - submeshIndex: 1
+    pieceIndex: 11
+  - submeshIndex: 1
+    pieceIndex: 12
+  - submeshIndex: 1
+    pieceIndex: 13
+  - submeshIndex: 1
+    pieceIndex: 14
+  - submeshIndex: 1
+    pieceIndex: 15
+  - submeshIndex: 1
+    pieceIndex: 16
+  - submeshIndex: 1
+    pieceIndex: 17
+  - submeshIndex: 1
+    pieceIndex: 18
+  - submeshIndex: 1
+    pieceIndex: 19
+  - submeshIndex: 1
+    pieceIndex: 20
+  - submeshIndex: 1
+    pieceIndex: 21
+  - submeshIndex: 1
+    pieceIndex: 22
+  - submeshIndex: 1
+    pieceIndex: 23
+  - submeshIndex: 1
+    pieceIndex: 24
+  - submeshIndex: 1
+    pieceIndex: 25
+  - submeshIndex: 1
+    pieceIndex: 26
+  - submeshIndex: 1
+    pieceIndex: 27
+  - submeshIndex: 1
+    pieceIndex: 28
+  - submeshIndex: 1
+    pieceIndex: 29
+  - submeshIndex: 1
+    pieceIndex: 30
+  - submeshIndex: 1
+    pieceIndex: 31
+  - submeshIndex: 1
+    pieceIndex: 32
+  - submeshIndex: 1
+    pieceIndex: 33
+  - submeshIndex: 1
+    pieceIndex: 34
+  - submeshIndex: 1
+    pieceIndex: 35
+  - submeshIndex: 1
+    pieceIndex: 36
+  - submeshIndex: 1
+    pieceIndex: 37
+  - submeshIndex: 1
+    pieceIndex: 38
+  - submeshIndex: 1
+    pieceIndex: 39
+  - submeshIndex: 1
+    pieceIndex: 40
+  - submeshIndex: 1
+    pieceIndex: 41
+  - submeshIndex: 1
+    pieceIndex: 42
+  - submeshIndex: 1
+    pieceIndex: 43
+  - submeshIndex: 1
+    pieceIndex: 44
+  - submeshIndex: 1
+    pieceIndex: 45
+  - submeshIndex: 1
+    pieceIndex: 46
+  - submeshIndex: 1
+    pieceIndex: 47
+  - submeshIndex: 1
+    pieceIndex: 48
+  - submeshIndex: 1
+    pieceIndex: 49
+  - submeshIndex: 1
+    pieceIndex: 50
+  - submeshIndex: 1
+    pieceIndex: 51
+  - submeshIndex: 1
+    pieceIndex: 52
+  - submeshIndex: 1
+    pieceIndex: 53
+  - submeshIndex: 1
+    pieceIndex: 54
+  - submeshIndex: 1
+    pieceIndex: 55
+  - submeshIndex: 1
+    pieceIndex: 56
+  - submeshIndex: 1
+    pieceIndex: 57
+  - submeshIndex: 1
+    pieceIndex: 58
+  - submeshIndex: 1
+    pieceIndex: 59
+  - submeshIndex: 1
+    pieceIndex: 60
+  - submeshIndex: 1
+    pieceIndex: 61
+  - submeshIndex: 1
+    pieceIndex: 62
+  - submeshIndex: 1
+    pieceIndex: 63
+  - submeshIndex: 1
+    pieceIndex: 64
+  - submeshIndex: 1
+    pieceIndex: 65
+  - submeshIndex: 1
+    pieceIndex: 66
+  - submeshIndex: 1
+    pieceIndex: 67
+  - submeshIndex: 1
+    pieceIndex: 68
+  - submeshIndex: 1
+    pieceIndex: 69
+  - submeshIndex: 1
+    pieceIndex: 70
+  - submeshIndex: 1
+    pieceIndex: 71
+  - submeshIndex: 1
+    pieceIndex: 72
+  - submeshIndex: 1
+    pieceIndex: 73
+  - submeshIndex: 1
+    pieceIndex: 74
+  - submeshIndex: 1
+    pieceIndex: 75
+  - submeshIndex: 1
+    pieceIndex: 76
+  - submeshIndex: 1
+    pieceIndex: 77
+  - submeshIndex: 1
+    pieceIndex: 78
+  - submeshIndex: 1
+    pieceIndex: 79
+  - submeshIndex: 1
+    pieceIndex: 80
+  - submeshIndex: 1
+    pieceIndex: 81
+  - submeshIndex: 1
+    pieceIndex: 82
+  - submeshIndex: 1
+    pieceIndex: 83
+  - submeshIndex: 1
+    pieceIndex: 84
+  - submeshIndex: 1
+    pieceIndex: 85
+  - submeshIndex: 1
+    pieceIndex: 86
+  - submeshIndex: 1
+    pieceIndex: 87
+  - submeshIndex: 1
+    pieceIndex: 88
+  - submeshIndex: 1
+    pieceIndex: 89
+  - submeshIndex: 1
+    pieceIndex: 90
+  - submeshIndex: 1
+    pieceIndex: 91
+  - submeshIndex: 1
+    pieceIndex: 92
+  - submeshIndex: 1
+    pieceIndex: 93
+  - submeshIndex: 1
+    pieceIndex: 94
+  - submeshIndex: 1
+    pieceIndex: 95
+  - submeshIndex: 1
+    pieceIndex: 96
+  - submeshIndex: 1
+    pieceIndex: 97
+  - submeshIndex: 1
+    pieceIndex: 98
+  - submeshIndex: 1
+    pieceIndex: 99
+  - submeshIndex: 1
+    pieceIndex: 100
+  - submeshIndex: 1
+    pieceIndex: 101
+  - submeshIndex: 1
+    pieceIndex: 102
+  - submeshIndex: 1
+    pieceIndex: 103
+  - submeshIndex: 1
+    pieceIndex: 104
+  - submeshIndex: 1
+    pieceIndex: 105
+  - submeshIndex: 1
+    pieceIndex: 106
+  - submeshIndex: 1
+    pieceIndex: 107
+  - submeshIndex: 1
+    pieceIndex: 108
+  - submeshIndex: 1
+    pieceIndex: 109
+  - submeshIndex: 1
+    pieceIndex: 110
+  - submeshIndex: 1
+    pieceIndex: 111
+  - submeshIndex: 1
+    pieceIndex: 112
+  - submeshIndex: 1
+    pieceIndex: 113
+  - submeshIndex: 1
+    pieceIndex: 114
+  - submeshIndex: 1
+    pieceIndex: 115
+  - submeshIndex: 1
+    pieceIndex: 116
+  - submeshIndex: 1
+    pieceIndex: 117
+  - submeshIndex: 1
+    pieceIndex: 118
+  - submeshIndex: 1
+    pieceIndex: 119
+  - submeshIndex: 1
+    pieceIndex: 120
+  - submeshIndex: 1
+    pieceIndex: 121
+  - submeshIndex: 1
+    pieceIndex: 122
+  - submeshIndex: 1
+    pieceIndex: 123
+  - submeshIndex: 1
+    pieceIndex: 124
+  - submeshIndex: 1
+    pieceIndex: 125
+  - submeshIndex: 1
+    pieceIndex: 126
+  - submeshIndex: 1
+    pieceIndex: 127
+  - submeshIndex: 1
+    pieceIndex: 128
+  - submeshIndex: 1
+    pieceIndex: 129
+  - submeshIndex: 1
+    pieceIndex: 130
+  - submeshIndex: 1
+    pieceIndex: 131
+  - submeshIndex: 1
+    pieceIndex: 132
+  - submeshIndex: 1
+    pieceIndex: 133
+  - submeshIndex: 1
+    pieceIndex: 134
+  - submeshIndex: 1
+    pieceIndex: 135
+  - submeshIndex: 1
+    pieceIndex: 136
+  - submeshIndex: 1
+    pieceIndex: 137
+  - submeshIndex: 1
+    pieceIndex: 138
+  - submeshIndex: 1
+    pieceIndex: 139
+  - submeshIndex: 1
+    pieceIndex: 140
+  - submeshIndex: 1
+    pieceIndex: 141
+  - submeshIndex: 1
+    pieceIndex: 142
+  - submeshIndex: 1
+    pieceIndex: 143
+  - submeshIndex: 1
+    pieceIndex: 144
+  - submeshIndex: 1
+    pieceIndex: 145
+  - submeshIndex: 1
+    pieceIndex: 146
+  - submeshIndex: 1
+    pieceIndex: 147
+  - submeshIndex: 1
+    pieceIndex: 148
+  - submeshIndex: 1
+    pieceIndex: 149
+  - submeshIndex: 1
+    pieceIndex: 150
+  - submeshIndex: 1
+    pieceIndex: 151
+  - submeshIndex: 1
+    pieceIndex: 152
+  - submeshIndex: 1
+    pieceIndex: 153
+  - submeshIndex: 1
+    pieceIndex: 154
+  - submeshIndex: 1
+    pieceIndex: 155
+  - submeshIndex: 1
+    pieceIndex: 156
+  - submeshIndex: 1
+    pieceIndex: 157
+  - submeshIndex: 1
+    pieceIndex: 158
+  - submeshIndex: 1
+    pieceIndex: 159
+  - submeshIndex: 1
+    pieceIndex: 160
+  - submeshIndex: 1
+    pieceIndex: 161
+  - submeshIndex: 1
+    pieceIndex: 162
+  - submeshIndex: 1
+    pieceIndex: 163
+  - submeshIndex: 1
+    pieceIndex: 164
+  - submeshIndex: 1
+    pieceIndex: 165
+  - submeshIndex: 1
+    pieceIndex: 166
+  - submeshIndex: 1
+    pieceIndex: 167
+  - submeshIndex: 1
+    pieceIndex: 168
+  - submeshIndex: 1
+    pieceIndex: 169
+  - submeshIndex: 1
+    pieceIndex: 170
+  - submeshIndex: 1
+    pieceIndex: 171
+  - submeshIndex: 1
+    pieceIndex: 172
+  - submeshIndex: 1
+    pieceIndex: 173
+  - submeshIndex: 1
+    pieceIndex: 174
+  - submeshIndex: 1
+    pieceIndex: 175
+  - submeshIndex: 1
+    pieceIndex: 176
+  - submeshIndex: 1
+    pieceIndex: 177
+  - submeshIndex: 1
+    pieceIndex: 178
+  - submeshIndex: 1
+    pieceIndex: 179
+  - submeshIndex: 1
+    pieceIndex: 180
+  - submeshIndex: 1
+    pieceIndex: 181
+  - submeshIndex: 1
+    pieceIndex: 182
+  - submeshIndex: 1
+    pieceIndex: 183
+  - submeshIndex: 1
+    pieceIndex: 184
+  - submeshIndex: 1
+    pieceIndex: 185
+  - submeshIndex: 1
+    pieceIndex: 186
+  - submeshIndex: 1
+    pieceIndex: 187
+  - submeshIndex: 1
+    pieceIndex: 188
+  - submeshIndex: 1
+    pieceIndex: 189
+  - submeshIndex: 1
+    pieceIndex: 190
+  - submeshIndex: 1
+    pieceIndex: 191
+  - submeshIndex: 1
+    pieceIndex: 192
+  - submeshIndex: 1
+    pieceIndex: 193
+  - submeshIndex: 1
+    pieceIndex: 194
+  - submeshIndex: 1
+    pieceIndex: 195
+  - submeshIndex: 1
+    pieceIndex: 196
+  - submeshIndex: 1
+    pieceIndex: 197
+  - submeshIndex: 1
+    pieceIndex: 198
+  - submeshIndex: 1
+    pieceIndex: 199
+  - submeshIndex: 1
+    pieceIndex: 200
+  - submeshIndex: 1
+    pieceIndex: 201
+  - submeshIndex: 1
+    pieceIndex: 202
+  - submeshIndex: 1
+    pieceIndex: 203
+  - submeshIndex: 1
+    pieceIndex: 204
+  - submeshIndex: 1
+    pieceIndex: 205
+  - submeshIndex: 1
+    pieceIndex: 206
+  - submeshIndex: 1
+    pieceIndex: 207
+  - submeshIndex: 1
+    pieceIndex: 208
+  - submeshIndex: 1
+    pieceIndex: 209
+  - submeshIndex: 1
+    pieceIndex: 210
+  - submeshIndex: 1
+    pieceIndex: 211
+  - submeshIndex: 1
+    pieceIndex: 212
+  - submeshIndex: 1
+    pieceIndex: 213
+  - submeshIndex: 1
+    pieceIndex: 214
+  - submeshIndex: 1
+    pieceIndex: 215
+  - submeshIndex: 1
+    pieceIndex: 216
+  - submeshIndex: 1
+    pieceIndex: 217
+  - submeshIndex: 1
+    pieceIndex: 218
+  - submeshIndex: 1
+    pieceIndex: 219
+  - submeshIndex: 1
+    pieceIndex: 220
+  - submeshIndex: 1
+    pieceIndex: 221
+  - submeshIndex: 1
+    pieceIndex: 222
+  - submeshIndex: 1
+    pieceIndex: 223
+  - submeshIndex: 1
+    pieceIndex: 224
+  - submeshIndex: 1
+    pieceIndex: 225
+  - submeshIndex: 1
+    pieceIndex: 226
+  - submeshIndex: 1
+    pieceIndex: 227
+  - submeshIndex: 1
+    pieceIndex: 228
+  - submeshIndex: 1
+    pieceIndex: 229
+  - submeshIndex: 1
+    pieceIndex: 230
+  - submeshIndex: 1
+    pieceIndex: 231
+  - submeshIndex: 1
+    pieceIndex: 232
+  - submeshIndex: 1
+    pieceIndex: 233
+  - submeshIndex: 1
+    pieceIndex: 234
+  - submeshIndex: 1
+    pieceIndex: 235
+  - submeshIndex: 1
+    pieceIndex: 236
+  - submeshIndex: 1
+    pieceIndex: 237
+  - submeshIndex: 1
+    pieceIndex: 238
+  - submeshIndex: 1
+    pieceIndex: 239
+  - submeshIndex: 1
+    pieceIndex: 240
+  - submeshIndex: 1
+    pieceIndex: 241
+  - submeshIndex: 1
+    pieceIndex: 242
+  - submeshIndex: 1
+    pieceIndex: 243
+  - submeshIndex: 1
+    pieceIndex: 244
+  - submeshIndex: 1
+    pieceIndex: 245
+  - submeshIndex: 1
+    pieceIndex: 246
+  - submeshIndex: 1
+    pieceIndex: 247
+  - submeshIndex: 1
+    pieceIndex: 248
+  - submeshIndex: 1
+    pieceIndex: 249
+  - submeshIndex: 1
+    pieceIndex: 250
+  - submeshIndex: 1
+    pieceIndex: 251
+  - submeshIndex: 1
+    pieceIndex: 252
+  - submeshIndex: 1
+    pieceIndex: 253
+  - submeshIndex: 1
+    pieceIndex: 254
+  - submeshIndex: 1
+    pieceIndex: 255
+  - submeshIndex: 1
+    pieceIndex: 256
+  - submeshIndex: 1
+    pieceIndex: 257
+  - submeshIndex: 1
+    pieceIndex: 258
+  - submeshIndex: 1
+    pieceIndex: 259
+  - submeshIndex: 1
+    pieceIndex: 260
+  - submeshIndex: 1
+    pieceIndex: 261
+  - submeshIndex: 1
+    pieceIndex: 262
+  - submeshIndex: 1
+    pieceIndex: 263
+  - submeshIndex: 1
+    pieceIndex: 264
+  - submeshIndex: 1
+    pieceIndex: 265
+  - submeshIndex: 1
+    pieceIndex: 266
+  - submeshIndex: 1
+    pieceIndex: 267
+  - submeshIndex: 1
+    pieceIndex: 268
+  - submeshIndex: 1
+    pieceIndex: 269
+  - submeshIndex: 1
+    pieceIndex: 270
+  - submeshIndex: 1
+    pieceIndex: 271
+  - submeshIndex: 1
+    pieceIndex: 272
+  - submeshIndex: 1
+    pieceIndex: 273
+  - submeshIndex: 1
+    pieceIndex: 274
+  - submeshIndex: 1
+    pieceIndex: 275
+  - submeshIndex: 1
+    pieceIndex: 276
+  - submeshIndex: 1
+    pieceIndex: 277
+  - submeshIndex: 1
+    pieceIndex: 278
+  - submeshIndex: 1
+    pieceIndex: 279
+  - submeshIndex: 1
+    pieceIndex: 280
+  - submeshIndex: 1
+    pieceIndex: 281
+  - submeshIndex: 1
+    pieceIndex: 282
+  - submeshIndex: 1
+    pieceIndex: 283
+  - submeshIndex: 1
+    pieceIndex: 284
+  - submeshIndex: 1
+    pieceIndex: 285
+  - submeshIndex: 1
+    pieceIndex: 286
+  - submeshIndex: 1
+    pieceIndex: 287
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 5
+  - submeshIndex: 2
+    pieceIndex: 6
+  - submeshIndex: 2
+    pieceIndex: 7
+  - submeshIndex: 2
+    pieceIndex: 8
+  - submeshIndex: 2
+    pieceIndex: 9
+  - submeshIndex: 2
+    pieceIndex: 10
+  - submeshIndex: 2
+    pieceIndex: 11
+  - submeshIndex: 2
+    pieceIndex: 12
+  - submeshIndex: 2
+    pieceIndex: 13
+  - submeshIndex: 2
+    pieceIndex: 14
+  - submeshIndex: 2
+    pieceIndex: 15
+  - submeshIndex: 2
+    pieceIndex: 16
+  - submeshIndex: 2
+    pieceIndex: 17
+  - submeshIndex: 2
+    pieceIndex: 18
+  - submeshIndex: 2
+    pieceIndex: 19
+  - submeshIndex: 2
+    pieceIndex: 20
+  - submeshIndex: 2
+    pieceIndex: 21
+  - submeshIndex: 2
+    pieceIndex: 22
+  - submeshIndex: 2
+    pieceIndex: 23
+  - submeshIndex: 2
+    pieceIndex: 24
+  - submeshIndex: 2
+    pieceIndex: 25
+  - submeshIndex: 2
+    pieceIndex: 26
+  - submeshIndex: 2
+    pieceIndex: 27
+  - submeshIndex: 2
+    pieceIndex: 28
+  - submeshIndex: 2
+    pieceIndex: 29
+  - submeshIndex: 2
+    pieceIndex: 30
+  - submeshIndex: 2
+    pieceIndex: 31
+  - submeshIndex: 2
+    pieceIndex: 32
+  - submeshIndex: 2
+    pieceIndex: 33
+  - submeshIndex: 2
+    pieceIndex: 34
+  - submeshIndex: 2
+    pieceIndex: 35
+  - submeshIndex: 2
+    pieceIndex: 36
+  - submeshIndex: 2
+    pieceIndex: 37
+  - submeshIndex: 2
+    pieceIndex: 38
+  - submeshIndex: 2
+    pieceIndex: 39
+  - submeshIndex: 2
+    pieceIndex: 40
+  - submeshIndex: 2
+    pieceIndex: 41
+  - submeshIndex: 2
+    pieceIndex: 42
+  - submeshIndex: 2
+    pieceIndex: 43
+  - submeshIndex: 2
+    pieceIndex: 44
+  - submeshIndex: 2
+    pieceIndex: 45
+  - submeshIndex: 2
+    pieceIndex: 46
+  - submeshIndex: 2
+    pieceIndex: 47
+  - submeshIndex: 2
+    pieceIndex: 48
+  - submeshIndex: 2
+    pieceIndex: 49
+  - submeshIndex: 2
+    pieceIndex: 50
+  - submeshIndex: 2
+    pieceIndex: 51
+  - submeshIndex: 2
+    pieceIndex: 52
+  - submeshIndex: 2
+    pieceIndex: 53
+  - submeshIndex: 2
+    pieceIndex: 54
+  - submeshIndex: 2
+    pieceIndex: 55
+  - submeshIndex: 2
+    pieceIndex: 56
+  - submeshIndex: 2
+    pieceIndex: 57
+  - submeshIndex: 2
+    pieceIndex: 58
+  - submeshIndex: 2
+    pieceIndex: 59
+  - submeshIndex: 2
+    pieceIndex: 60
+  - submeshIndex: 2
+    pieceIndex: 61
+  - submeshIndex: 2
+    pieceIndex: 62
+  - submeshIndex: 2
+    pieceIndex: 63
+  - submeshIndex: 2
+    pieceIndex: 64
+  - submeshIndex: 2
+    pieceIndex: 65
+  - submeshIndex: 2
+    pieceIndex: 66
+  - submeshIndex: 2
+    pieceIndex: 67
+  - submeshIndex: 2
+    pieceIndex: 68
+  - submeshIndex: 2
+    pieceIndex: 69
+  - submeshIndex: 2
+    pieceIndex: 70
+  - submeshIndex: 2
+    pieceIndex: 71
+  - submeshIndex: 2
+    pieceIndex: 72
+  - submeshIndex: 2
+    pieceIndex: 73
+  - submeshIndex: 2
+    pieceIndex: 74
+  - submeshIndex: 2
+    pieceIndex: 75
+  - submeshIndex: 2
+    pieceIndex: 76
+  - submeshIndex: 2
+    pieceIndex: 77
+  - submeshIndex: 2
+    pieceIndex: 78
+  - submeshIndex: 2
+    pieceIndex: 79
+  - submeshIndex: 2
+    pieceIndex: 80
+  - submeshIndex: 2
+    pieceIndex: 81
+  - submeshIndex: 2
+    pieceIndex: 82
+  - submeshIndex: 2
+    pieceIndex: 83
+  - submeshIndex: 2
+    pieceIndex: 84
+  - submeshIndex: 2
+    pieceIndex: 85
+  - submeshIndex: 2
+    pieceIndex: 86
+  - submeshIndex: 2
+    pieceIndex: 87
+  - submeshIndex: 2
+    pieceIndex: 88
+  - submeshIndex: 2
+    pieceIndex: 89
+  - submeshIndex: 2
+    pieceIndex: 90
+  - submeshIndex: 2
+    pieceIndex: 91
+  - submeshIndex: 2
+    pieceIndex: 92
+  - submeshIndex: 2
+    pieceIndex: 93
+  - submeshIndex: 2
+    pieceIndex: 94
+  - submeshIndex: 2
+    pieceIndex: 95
+  - submeshIndex: 2
+    pieceIndex: 96
+  - submeshIndex: 2
+    pieceIndex: 97
+  - submeshIndex: 2
+    pieceIndex: 98
+  - submeshIndex: 2
+    pieceIndex: 99
+  - submeshIndex: 2
+    pieceIndex: 100
+  - submeshIndex: 2
+    pieceIndex: 101
+  - submeshIndex: 2
+    pieceIndex: 102
+  - submeshIndex: 2
+    pieceIndex: 103
+  - submeshIndex: 2
+    pieceIndex: 104
+  - submeshIndex: 2
+    pieceIndex: 105
+  - submeshIndex: 2
+    pieceIndex: 106
+  - submeshIndex: 2
+    pieceIndex: 107
+  - submeshIndex: 2
+    pieceIndex: 108
+  - submeshIndex: 2
+    pieceIndex: 109
+  - submeshIndex: 2
+    pieceIndex: 110
+  - submeshIndex: 2
+    pieceIndex: 111
+  triangleNeighbors:
+  - array: 010000001a00000060000000610000007a0000000500000065000000
+  - array: 02000000140000006100000062000000740000000000000060000000
+  - array: 01000000440000006100000062000000a40000000300000063000000
+  - array: 04000000290000006300000064000000890000000200000062000000
+  - array: 050000002c00000064000000650000008c0000000300000063000000
+  - array: 040000005f0000006400000065000000bf0000000000000060000000
+  - array: 070000001300000066000000670000007300000045000000a5000000
+  - array: 08000000120000006700000068000000720000000600000066000000
+  - array: 070000001100000067000000680000007100000046000000a6000000
+  - array: 0a00000010000000690000006a000000700000004a000000aa000000
+  - array: 0b0000000f0000006a0000006b0000006f0000000900000069000000
+  - array: 0a000000210000006a0000006b0000008100000048000000a8000000
+  - array: 0d000000160000006c0000006d000000760000001100000071000000
+  - array: 0e000000150000006d0000006e000000750000000c0000006c000000
+  - array: 0d000000220000006d0000006e000000820000000f0000006f000000
+  - array: 0a000000100000006a0000006f000000700000000e0000006e000000
+  - array: 09000000110000006900000070000000710000000f0000006f000000
+  - array: 08000000100000006800000070000000710000000c0000006c000000
+  - array: 07000000130000006700000072000000730000001d0000007d000000
+  - array: 06000000140000006600000073000000740000001200000072000000
+  - array: 01000000130000006100000073000000740000001b0000007b000000
+  - array: 0d000000160000006d000000750000007600000057000000b7000000
+  - array: 0c000000170000006c00000076000000770000001500000075000000
+  - array: 160000001d00000076000000770000007d00000058000000b8000000
+  - array: 190000001c00000078000000790000007c0000005c000000bc000000
+  - array: 1a0000001b000000790000007a0000007b0000001800000078000000
+  - array: 000000001900000060000000790000007a0000005a000000ba000000
+  - array: 190000001c000000790000007b0000007c0000001400000074000000
+  - array: 180000001d000000780000007c0000007d0000001b0000007b000000
+  - array: 170000001c000000770000007c0000007d0000001200000072000000
+  - array: 1f000000380000007e0000007f000000980000002300000083000000
+  - array: 20000000320000007f00000080000000920000001e0000007e000000
+  - array: 1f0000004d0000007f00000080000000ad0000002100000081000000
+  - array: 0b000000220000006b00000081000000820000002000000080000000
+  - array: 0e000000230000006e00000082000000830000002100000081000000
+  - array: 22000000560000008200000083000000b60000001e0000007e000000
+  - array: 25000000310000008400000085000000910000003c0000009c000000
+  - array: 26000000300000008500000086000000900000002400000084000000
+  - array: 250000002f00000085000000860000008f0000003d0000009d000000
+  - array: 280000002e00000087000000880000008e00000041000000a1000000
+  - array: 290000002d00000088000000890000008d0000002700000087000000
+  - array: 03000000280000006300000088000000890000003f0000009f000000
+  - array: 2b000000340000008a0000008b000000940000002f0000008f000000
+  - array: 2c000000330000008b0000008c000000930000002a0000008a000000
+  - array: 040000002b000000640000008b0000008c0000002d0000008d000000
+  - array: 280000002e000000880000008d0000008e0000002c0000008c000000
+  - array: 270000002f000000870000008e0000008f0000002d0000008d000000
+  - array: 260000002e000000860000008e0000008f0000002a0000008a000000
+  - array: 25000000310000008500000090000000910000003b0000009b000000
+  - array: 24000000320000008400000091000000920000003000000090000000
+  - array: 1f000000310000007f00000091000000920000003900000099000000
+  - array: 2b000000340000008b00000093000000940000004e000000ae000000
+  - array: 2a000000350000008a00000094000000950000003300000093000000
+  - array: 340000003b00000094000000950000009b0000004f000000af000000
+  - array: 370000003a00000096000000970000009a00000053000000b3000000
+  - array: 38000000390000009700000098000000990000003600000096000000
+  - array: 1e000000370000007e000000970000009800000051000000b1000000
+  - array: 370000003a00000097000000990000009a0000003200000092000000
+  - array: 360000003b000000960000009a0000009b0000003900000099000000
+  - array: 350000003a000000950000009a0000009b0000003000000090000000
+  - array: 240000003d000000840000009c0000009d0000004d000000ad000000
+  - array: 260000003e000000860000009d0000009e0000003c0000009c000000
+  - array: 3d000000410000009d0000009e000000a10000004b000000ab000000
+  - array: 40000000430000009f000000a0000000a30000002900000089000000
+  - array: 4100000042000000a0000000a1000000a20000003f0000009f000000
+  - array: 3e000000400000009e000000a0000000a10000002700000087000000
+  - array: 4000000043000000a0000000a2000000a300000047000000a7000000
+  - array: 3f000000440000009f000000a3000000a400000042000000a2000000
+  - array: 020000004300000062000000a3000000a400000045000000a5000000
+  - array: 060000004600000066000000a5000000a600000044000000a4000000
+  - array: 080000004700000068000000a6000000a700000045000000a5000000
+  - array: 460000004a000000a6000000a7000000aa00000042000000a2000000
+  - array: 490000004c000000a8000000a9000000ac0000000b0000006b000000
+  - array: 4a0000004b000000a9000000aa000000ab00000048000000a8000000
+  - array: 4700000049000000a7000000a9000000aa0000000900000069000000
+  - array: 490000004c000000a9000000ab000000ac0000003e0000009e000000
+  - array: 480000004d000000a8000000ac000000ad0000004b000000ab000000
+  - array: 200000004c00000080000000ac000000ad0000003c0000009c000000
+  - array: 330000004f00000093000000ae000000af0000005f000000bf000000
+  - array: 350000005000000095000000af000000b00000004e000000ae000000
+  - array: 4f00000053000000af000000b0000000b30000005d000000bd000000
+  - array: 5200000055000000b1000000b2000000b50000003800000098000000
+  - array: 5300000054000000b2000000b3000000b400000051000000b1000000
+  - array: 5000000052000000b0000000b2000000b30000003600000096000000
+  - array: 5200000055000000b2000000b4000000b500000059000000b9000000
+  - array: 5100000056000000b1000000b5000000b600000054000000b4000000
+  - array: 230000005500000083000000b5000000b600000057000000b7000000
+  - array: 150000005800000075000000b7000000b800000056000000b6000000
+  - array: 170000005900000077000000b8000000b900000057000000b7000000
+  - array: 580000005c000000b8000000b9000000bc00000054000000b4000000
+  - array: 5b0000005e000000ba000000bb000000be0000001a0000007a000000
+  - array: 5c0000005d000000bb000000bc000000bd0000005a000000ba000000
+  - array: 590000005b000000b9000000bb000000bc0000001800000078000000
+  - array: 5b0000005e000000bb000000bd000000be00000050000000b0000000
+  - array: 5a0000005f000000ba000000be000000bf0000005d000000bd000000
+  - array: 050000005e00000065000000be000000bf0000004e000000ae000000
+  - array: 00000000010000000500000061000000650000001a0000007a000000
+  - array: 00000000010000000200000060000000620000001400000074000000
+  - array: 02000000030000004400000063000000a40000000100000061000000
+  - array: 02000000030000000400000062000000640000002900000089000000
+  - array: 03000000040000000500000063000000650000002c0000008c000000
+  - array: 00000000050000005f00000060000000bf0000000400000064000000
+  - array: 06000000070000004500000067000000a50000001300000073000000
+  - array: 06000000070000000800000066000000680000001200000072000000
+  - array: 08000000110000004600000071000000a60000000700000067000000
+  - array: 090000000a0000004a0000006a000000aa0000001000000070000000
+  - array: 090000000a0000000b000000690000006b0000000f0000006f000000
+  - array: 0b000000210000004800000081000000a80000000a0000006a000000
+  - array: 0c0000000d000000110000006d000000710000001600000076000000
+  - array: 0c0000000d0000000e0000006c0000006e0000001500000075000000
+  - array: 0e0000000f000000220000006f000000820000000d0000006d000000
+  - array: 0e0000000f000000100000006e000000700000000a0000006a000000
+  - array: 0f00000010000000110000006f000000710000000900000069000000
+  - array: 080000000c00000011000000680000006c0000001000000070000000
+  - array: 12000000130000001d000000730000007d0000000700000067000000
+  - array: 12000000130000001400000072000000740000000600000066000000
+  - array: 01000000140000001b000000610000007b0000001300000073000000
+  - array: 15000000160000005700000076000000b70000000d0000006d000000
+  - array: 15000000160000001700000075000000770000000c0000006c000000
+  - array: 170000001d000000580000007d000000b80000001600000076000000
+  - array: 18000000190000005c00000079000000bc0000001c0000007c000000
+  - array: 18000000190000001a000000780000007a0000001b0000007b000000
+  - array: 000000001a0000005a00000060000000ba0000001900000079000000
+  - array: 140000001b0000001c000000740000007c0000001900000079000000
+  - array: 1b0000001c0000001d0000007b0000007d0000001800000078000000
+  - array: 12000000170000001d00000072000000770000001c0000007c000000
+  - array: 1e0000001f000000230000007f000000830000003800000098000000
+  - array: 1e0000001f000000200000007e000000800000003200000092000000
+  - array: 20000000210000004d00000081000000ad0000001f0000007f000000
+  - array: 20000000210000002200000080000000820000000b0000006b000000
+  - array: 21000000220000002300000081000000830000000e0000006e000000
+  - array: 1e00000023000000560000007e000000b60000002200000082000000
+  - array: 24000000250000003c000000850000009c0000003100000091000000
+  - array: 24000000250000002600000084000000860000003000000090000000
+  - array: 260000002f0000003d0000008f0000009d0000002500000085000000
+  - array: 27000000280000004100000088000000a10000002e0000008e000000
+  - array: 27000000280000002900000087000000890000002d0000008d000000
+  - array: 03000000290000003f000000630000009f0000002800000088000000
+  - array: 2a0000002b0000002f0000008b0000008f0000003400000094000000
+  - array: 2a0000002b0000002c0000008a0000008c0000003300000093000000
+  - array: 040000002c0000002d000000640000008d0000002b0000008b000000
+  - array: 2c0000002d0000002e0000008c0000008e0000002800000088000000
+  - array: 2d0000002e0000002f0000008d0000008f0000002700000087000000
+  - array: 260000002a0000002f000000860000008a0000002e0000008e000000
+  - array: 30000000310000003b000000910000009b0000002500000085000000
+  - array: 30000000310000003200000090000000920000002400000084000000
+  - array: 1f00000032000000390000007f000000990000003100000091000000
+  - array: 33000000340000004e00000094000000ae0000002b0000008b000000
+  - array: 33000000340000003500000093000000950000002a0000008a000000
+  - array: 350000003b0000004f0000009b000000af0000003400000094000000
+  - array: 36000000370000005300000097000000b30000003a0000009a000000
+  - array: 36000000370000003800000096000000980000003900000099000000
+  - array: 1e00000038000000510000007e000000b10000003700000097000000
+  - array: 32000000390000003a000000920000009a0000003700000097000000
+  - array: 390000003a0000003b000000990000009b0000003600000096000000
+  - array: 30000000350000003b00000090000000950000003a0000009a000000
+  - array: 3c0000003d0000004d0000009d000000ad0000002400000084000000
+  - array: 3c0000003d0000003e0000009c0000009e0000002600000086000000
+  - array: 3e000000410000004b000000a1000000ab0000003d0000009d000000
+  - array: 290000003f0000004000000089000000a000000043000000a3000000
+  - array: 3f00000040000000410000009f000000a100000042000000a2000000
+  - array: 270000003e00000041000000870000009e00000040000000a0000000
+  - array: 420000004300000047000000a3000000a700000040000000a0000000
+  - array: 420000004300000044000000a2000000a40000003f0000009f000000
+  - array: 02000000440000004500000062000000a500000043000000a3000000
+  - array: 440000004500000046000000a4000000a60000000600000066000000
+  - array: 450000004600000047000000a5000000a70000000800000068000000
+  - array: 42000000470000004a000000a2000000aa00000046000000a6000000
+  - array: 0b00000048000000490000006b000000a90000004c000000ac000000
+  - array: 48000000490000004a000000a8000000aa0000004b000000ab000000
+  - array: 09000000470000004a00000069000000a700000049000000a9000000
+  - array: 3e0000004b0000004c0000009e000000ac00000049000000a9000000
+  - array: 4b0000004c0000004d000000ab000000ad00000048000000a8000000
+  - array: 200000003c0000004d000000800000009c0000004c000000ac000000
+  - array: 4e0000004f0000005f000000af000000bf0000003300000093000000
+  - array: 4e0000004f00000050000000ae000000b00000003500000095000000
+  - array: 50000000530000005d000000b3000000bd0000004f000000af000000
+  - array: 38000000510000005200000098000000b200000055000000b5000000
+  - array: 510000005200000053000000b1000000b300000054000000b4000000
+  - array: 36000000500000005300000096000000b000000052000000b2000000
+  - array: 540000005500000059000000b5000000b900000052000000b2000000
+  - array: 540000005500000056000000b4000000b600000051000000b1000000
+  - array: 23000000560000005700000083000000b700000055000000b5000000
+  - array: 560000005700000058000000b6000000b80000001500000075000000
+  - array: 570000005800000059000000b7000000b90000001700000077000000
+  - array: 54000000590000005c000000b4000000bc00000058000000b8000000
+  - array: 1a0000005a0000005b0000007a000000bb0000005e000000be000000
+  - array: 5a0000005b0000005c000000ba000000bc0000005d000000bd000000
+  - array: 18000000590000005c00000078000000b90000005b000000bb000000
+  - array: 500000005d0000005e000000b0000000be0000005b000000bb000000
+  - array: 5d0000005e0000005f000000bd000000bf0000005a000000ba000000
+  - array: 050000004e0000005f00000065000000ae0000005e000000be000000
+  - array: e4000000ef00000050010000740100007f010000dc0000006c010000
+  - array: 0a0100001c010000510100009a010000ac01000035010000c5010000
+  - array: 0b01000016010000520100009b010000a60100002f010000bf010000
+  - array: 0e01000013010000530100009e010000a30100000d0100009d010000
+  - array: c50000000f01000054010000550100009f010000de0000006e010000
+  - array: c400000005010000540100005501000095010000c600000056010000
+  - array: c5000000f7000000550100005601000087010000f900000089010000
+  - array: 0c01000022010000570100009c010000b201000012010000a2010000
+  - array: 3e0100003f01000058010000ce010000cf01000038010000c8010000
+  - array: ca0000004b010000590100005a010000db01000047010000d7010000
+  - array: c900000048010000590100005a010000d80100004d010000dd010000
+  - array: 43010000490100005b010000d3010000d9010000cc0000005c010000
+  - array: cb000000e60000005b0100005c010000760100000701000097010000
+  - array: 460100004e0100005d010000d6010000de0100004a010000da010000
+  - array: cf0000004f0100005e0100005f010000df01000042010000d2010000
+  - array: ce000000100100005e0100005f010000a0010000d000000060010000
+  - array: cf000000060100005f0100006001000096010000e500000075010000
+  - array: d2000000db00000061010000620100006b010000d600000066010000
+  - array: d3000000da00000062010000630100006a010000d100000061010000
+  - array: d200000003010000620100006301000093010000d400000064010000
+  - array: d5000000fb00000064010000650100008b010000d300000063010000
+  - array: d6000000fa00000065010000660100008a010000d400000064010000
+  - array: d5000000ef00000065010000660100007f010000d100000061010000
+  - array: d8000000e3000000670100006801000073010000dc0000006c010000
+  - array: d9000000e2000000680100006901000072010000d700000067010000
+  - array: d800000003010000680100006901000093010000da0000006a010000
+  - array: d2000000db000000620100006a0100006b010000d900000069010000
+  - array: d1000000dc000000610100006b0100006c010000da0000006a010000
+  - array: c0000000db000000500100006b0100006c010000d700000067010000
+  - array: de000000250100006d0100006e010000b5010000f900000089010000
+  - array: dd000000200100006d0100006e010000b0010000c400000054010000
+  - array: e0000000eb0000006f010000700100007b010000e400000074010000
+  - array: e1000000ea00000070010000710100007a010000df0000006f010000
+  - array: e000000002010000700100007101000092010000e200000072010000
+  - array: d8000000e3000000680100007201000073010000e100000071010000
+  - array: d7000000e4000000670100007301000074010000e200000072010000
+  - array: c0000000e3000000500100007301000074010000df0000006f010000
+  - array: d0000000e600000060010000750100007601000043010000d3010000
+  - array: e500000006010000750100007601000096010000cc0000005c010000
+  - array: e8000000f4000000770100007801000084010000ec0000007c010000
+  - array: e9000000f3000000780100007901000083010000e700000077010000
+  - array: e800000000010000780100007901000090010000ea0000007a010000
+  - array: e0000000eb000000700100007a0100007b010000e900000079010000
+  - array: df000000ec0000006f0100007b0100007c010000ea0000007a010000
+  - array: eb000000ee0000007b0100007c0100007e010000e700000077010000
+  - array: ee000000ff0000007d0100007e0100008f010000f500000085010000
+  - array: ec000000ed0000007c0100007d0100007e010000ef0000007f010000
+  - array: c0000000ee000000500100007e0100007f010000d600000066010000
+  - array: f1000000fe00000080010000810100008e010000f500000085010000
+  - array: f2000000fd00000081010000820100008d010000f000000080010000
+  - array: f100000000010000810100008201000090010000f300000083010000
+  - array: e8000000f4000000780100008301000084010000f200000082010000
+  - array: e7000000f5000000770100008401000085010000f300000083010000
+  - array: ed000000f40000007d0100008401000085010000f000000080010000
+  - array: f7000000260100008601000087010000b60100000501000095010000
+  - array: f6000000f8000000860100008701000088010000c600000056010000
+  - array: f9000000260100008801000089010000b6010000f700000087010000
+  - array: dd000000f80000006d0100008801000089010000c600000056010000
+  - array: d5000000fb000000650100008a0100008b010000ff0000008f010000
+  - array: d4000000fc000000640100008b0100008c010000fa0000008a010000
+  - array: fb000000010100008b0100008c01000091010000fd0000008d010000
+  - array: f1000000fe000000810100008d0100008e010000fc0000008c010000
+  - array: f0000000ff000000800100008e0100008f010000fd0000008d010000
+  - array: ed000000fe0000007d0100008e0100008f010000fa0000008a010000
+  - array: e900000001010000790100009001000091010000f200000082010000
+  - array: fc000000000100008c01000090010000910100000201000092010000
+  - array: 0101000003010000910100009201000093010000e100000071010000
+  - array: d300000002010000630100009201000093010000d900000069010000
+  - array: 05010000240100009401000095010000b40100000901000099010000
+  - array: f600000004010000860100009401000095010000c500000055010000
+  - array: d000000007010000600100009601000097010000e600000076010000
+  - array: 06010000100100009601000097010000a0010000cc0000005c010000
+  - array: 09010000220100009801000099010000b20100000d0100009d010000
+  - array: 04010000080100009401000098010000990100000f0100009f010000
+  - array: c10000003b010000510100009a010000cb0100000b0100009b010000
+  - array: c20000000a010000520100009a0100009b01000029010000b9010000
+  - array: c70000000d010000570100009c0100009d01000013010000a3010000
+  - array: 080100000c010000980100009c0100009d010000c300000053010000
+  - array: c30000000f010000530100009e0100009f01000021010000b1010000
+  - array: 090100000e010000990100009e0100009f010000c400000054010000
+  - array: cf000000110100005f010000a0010000a10100000701000097010000
+  - array: 100100004c010000a0010000a1010000dc01000049010000d9010000
+  - array: c70000001301000057010000a2010000a301000021010000b1010000
+  - array: 0c010000120100009c010000a2010000a3010000c300000053010000
+  - array: 1501000031010000a4010000a5010000c101000019010000a9010000
+  - array: 1601000030010000a5010000a6010000c001000014010000a4010000
+  - array: c20000001501000052010000a5010000a601000017010000a7010000
+  - array: 180100003a010000a7010000a8010000ca01000016010000a6010000
+  - array: 1901000039010000a8010000a9010000c901000017010000a7010000
+  - array: 1801000040010000a8010000a9010000d001000014010000a4010000
+  - array: 1b01000037010000aa010000ab010000c70100001f010000af010000
+  - array: 1c01000036010000ab010000ac010000c60100001a010000aa010000
+  - array: c10000001b01000051010000ab010000ac0100001d010000ad010000
+  - array: 1e01000028010000ad010000ae010000b80100001c010000ac010000
+  - array: 1f01000027010000ae010000af010000b70100001d010000ad010000
+  - array: 1e0100003f010000ae010000af010000cf0100001a010000aa010000
+  - array: 2101000023010000b0010000b1010000b3010000de0000006e010000
+  - array: 1201000020010000a2010000b0010000b10100000e0100009e010000
+  - array: c70000002301000057010000b2010000b30100000801000098010000
+  - array: 2001000022010000b0010000b2010000b301000024010000b4010000
+  - array: 2301000025010000b3010000b4010000b50100000401000094010000
+  - array: dd000000240100006d010000b4010000b501000026010000b6010000
+  - array: f80000002501000088010000b5010000b6010000f600000086010000
+  - array: 1e01000028010000ae010000b7010000b80100002c010000bc010000
+  - array: 1d01000029010000ad010000b8010000b901000027010000b7010000
+  - array: 0b010000280100009b010000b8010000b90100002a010000ba010000
+  - array: 2b0100002e010000ba010000bb010000be01000029010000b9010000
+  - array: 2c0100002d010000bb010000bc010000bd0100002a010000ba010000
+  - array: 2b01000041010000bb010000bc010000d101000027010000b7010000
+  - array: 2b0100002e010000bb010000bd010000be01000032010000c2010000
+  - array: 2a0100002f010000ba010000be010000bf0100002d010000bd010000
+  - array: c20000002e01000052010000be010000bf01000030010000c0010000
+  - array: 1501000031010000a5010000c0010000c10100002f010000bf010000
+  - array: 1401000032010000a4010000c1010000c201000030010000c0010000
+  - array: 3101000041010000c1010000c2010000d10100002d010000bd010000
+  - array: 340100003d010000c3010000c4010000cd01000038010000c8010000
+  - array: 350100003c010000c4010000c5010000cc01000033010000c3010000
+  - array: c10000003401000051010000c4010000c501000036010000c6010000
+  - array: 1b01000037010000ab010000c6010000c701000035010000c5010000
+  - array: 1a01000038010000aa010000c7010000c801000036010000c6010000
+  - array: c80000003701000058010000c7010000c801000033010000c3010000
+  - array: 180100003a010000a8010000c9010000ca0100003e010000ce010000
+  - array: 170100003b010000a7010000ca010000cb01000039010000c9010000
+  - array: 0a0100003a0100009a010000ca010000cb0100003c010000cc010000
+  - array: 340100003d010000c4010000cc010000cd0100003b010000cb010000
+  - array: 330100003e010000c3010000cd010000ce0100003c010000cc010000
+  - array: c80000003d01000058010000cd010000ce01000039010000c9010000
+  - array: c80000001f01000058010000af010000cf01000040010000d0010000
+  - array: 3f01000041010000cf010000d0010000d101000019010000a9010000
+  - array: 2c01000040010000bc010000d0010000d101000032010000c2010000
+  - array: ce000000430100005e010000d2010000d301000045010000d5010000
+  - array: e50000004201000075010000d2010000d3010000cb0000005b010000
+  - array: 450100004e010000d4010000d5010000de01000047010000d7010000
+  - array: 4201000044010000d2010000d4010000d501000048010000d8010000
+  - array: cd000000470100005d010000d6010000d70100004b010000db010000
+  - array: 4401000046010000d4010000d6010000d7010000c900000059010000
+  - array: ca000000450100005a010000d5010000d801000049010000d9010000
+  - array: cb000000480100005b010000d8010000d901000011010000a1010000
+  - array: cd0000004b0100005d010000da010000db0100004d010000dd010000
+  - array: 460100004a010000d6010000da010000db010000c900000059010000
+  - array: 4d0100004f010000dc010000dd010000df01000011010000a1010000
+  - array: 4a0100004c010000da010000dc010000dd010000ca0000005a010000
+  - array: cd0000004f0100005d010000de010000df01000044010000d4010000
+  - array: 4c0100004e010000dc010000de010000df010000ce0000005e010000
+  - array: c0000000dc000000e40000006c01000074010000ef0000007f010000
+  - array: c10000001c01000035010000ac010000c50100000a0100009a010000
+  - array: c2000000160100002f010000a6010000bf0100000b0100009b010000
+  - array: c30000000d010000130100009d010000a30100000e0100009e010000
+  - array: c4000000c5000000de000000550100006e0100000f0100009f010000
+  - array: c5000000c6000000050100005601000095010000c400000054010000
+  - array: c6000000f7000000f90000008701000089010000c500000055010000
+  - array: c70000000c010000120100009c010000a201000022010000b2010000
+  - array: c8000000380100003e010000c8010000ce0100003f010000cf010000
+  - array: c9000000470100004b010000d7010000db010000ca0000005a010000
+  - array: ca000000480100004d010000d8010000dd010000c900000059010000
+  - array: cb000000cc000000430100005c010000d301000049010000d9010000
+  - array: cc000000e6000000070100007601000097010000cb0000005b010000
+  - array: cd000000460100004a010000d6010000da0100004e010000de010000
+  - array: ce000000cf000000420100005f010000d20100004f010000df010000
+  - array: cf000000d00000001001000060010000a0010000ce0000005e010000
+  - array: d0000000e5000000060100007501000096010000cf0000005f010000
+  - array: d1000000d2000000d60000006201000066010000db0000006b010000
+  - array: d1000000d2000000d30000006101000063010000da0000006a010000
+  - array: d3000000d4000000030100006401000093010000d200000062010000
+  - array: d3000000d4000000d50000006301000065010000fb0000008b010000
+  - array: d4000000d5000000d60000006401000066010000fa0000008a010000
+  - array: d1000000d6000000ef000000610100007f010000d500000065010000
+  - array: d7000000d8000000dc000000680100006c010000e300000073010000
+  - array: d7000000d8000000d90000006701000069010000e200000072010000
+  - array: d9000000da000000030100006a01000093010000d800000068010000
+  - array: d9000000da000000db000000690100006b010000d200000062010000
+  - array: da000000db000000dc0000006a0100006c010000d100000061010000
+  - array: c0000000d7000000dc0000005001000067010000db0000006b010000
+  - array: dd000000de000000f90000006e0100008901000025010000b5010000
+  - array: c4000000de0000002001000054010000b0010000dd0000006d010000
+  - array: df000000e0000000e40000007001000074010000eb0000007b010000
+  - array: df000000e0000000e10000006f01000071010000ea0000007a010000
+  - array: e1000000e2000000020100007201000092010000e000000070010000
+  - array: e1000000e2000000e30000007101000073010000d800000068010000
+  - array: e2000000e3000000e40000007201000074010000d700000067010000
+  - array: c0000000df000000e4000000500100006f010000e300000073010000
+  - array: e5000000e60000004301000076010000d3010000d000000060010000
+  - array: cc000000e6000000060100005c01000096010000e500000075010000
+  - array: e7000000e8000000ec000000780100007c010000f400000084010000
+  - array: e7000000e8000000e90000007701000079010000f300000083010000
+  - array: e9000000ea000000000100007a01000090010000e800000078010000
+  - array: e9000000ea000000eb000000790100007b010000e000000070010000
+  - array: ea000000eb000000ec0000007a0100007c010000df0000006f010000
+  - array: e7000000ec000000ee000000770100007e010000eb0000007b010000
+  - array: ed000000f5000000ff000000850100008f010000ee0000007e010000
+  - array: ec000000ee000000ef0000007c0100007f010000ed0000007d010000
+  - array: c0000000d6000000ef0000005001000066010000ee0000007e010000
+  - array: f0000000f1000000f50000008101000085010000fe0000008e010000
+  - array: f0000000f1000000f20000008001000082010000fd0000008d010000
+  - array: f2000000f3000000000100008301000090010000f100000081010000
+  - array: f2000000f3000000f40000008201000084010000e800000078010000
+  - array: f3000000f4000000f50000008301000085010000e700000077010000
+  - array: ed000000f0000000f50000007d01000080010000f400000084010000
+  - array: f6000000f700000005010000870100009501000026010000b6010000
+  - array: c6000000f7000000f80000005601000088010000f600000086010000
+  - array: f7000000f8000000f9000000870100008901000026010000b6010000
+  - array: c6000000dd000000f9000000560100006d010000f800000088010000
+  - array: fa000000fb000000ff0000008b0100008f010000d500000065010000
+  - array: fa000000fb000000fc0000008a0100008c010000d400000064010000
+  - array: fc000000fd000000010100008d01000091010000fb0000008b010000
+  - array: fc000000fd000000fe0000008c0100008e010000f100000081010000
+  - array: fd000000fe000000ff0000008d0100008f010000f000000080010000
+  - array: ed000000fa000000ff0000007d0100008a010000fe0000008e010000
+  - array: e9000000f20000000001000079010000820100000101000091010000
+  - array: fc00000001010000020100008c010000920100000001000090010000
+  - array: e1000000020100000301000071010000930100000101000091010000
+  - array: d3000000d90000000301000063010000690100000201000092010000
+  - array: 040100000501000009010000950100009901000024010000b4010000
+  - array: c5000000f60000000501000055010000860100000401000094010000
+  - array: e600000006010000070100007601000097010000d000000060010000
+  - array: cc00000007010000100100005c010000a00100000601000096010000
+  - array: 08010000090100000d010000990100009d01000022010000b2010000
+  - array: 04010000090100000f010000940100009f0100000801000098010000
+  - array: 0a0100000b0100003b0100009b010000cb010000c100000051010000
+  - array: c20000000b0100002901000052010000b90100000a0100009a010000
+  - array: 0c0100000d010000130100009d010000a3010000c700000057010000
+  - array: c3000000080100000d01000053010000980100000c0100009c010000
+  - array: 0e0100000f010000210100009f010000b1010000c300000053010000
+  - array: c4000000090100000f01000054010000990100000e0100009e010000
+  - array: 07010000100100001101000097010000a1010000cf0000005f010000
+  - array: 11010000490100004c010000d9010000dc01000010010000a0010000
+  - array: 120100001301000021010000a3010000b1010000c700000057010000
+  - array: c30000000c01000013010000530100009c01000012010000a2010000
+  - array: 140100001501000019010000a5010000a901000031010000c1010000
+  - array: 140100001501000016010000a4010000a601000030010000c0010000
+  - array: c2000000160100001701000052010000a701000015010000a5010000
+  - array: 160100001701000018010000a6010000a80100003a010000ca010000
+  - array: 170100001801000019010000a7010000a901000039010000c9010000
+  - array: 140100001901000040010000a4010000d001000018010000a8010000
+  - array: 1a0100001b0100001f010000ab010000af01000037010000c7010000
+  - array: 1a0100001b0100001c010000aa010000ac01000036010000c6010000
+  - array: c10000001c0100001d01000051010000ad0100001b010000ab010000
+  - array: 1c0100001d0100001e010000ac010000ae01000028010000b8010000
+  - array: 1d0100001e0100001f010000ad010000af01000027010000b7010000
+  - array: 1a0100001f0100003f010000aa010000cf0100001e010000ae010000
+  - array: de00000020010000210100006e010000b101000023010000b3010000
+  - array: 0e01000012010000210100009e010000a201000020010000b0010000
+  - array: 08010000220100002301000098010000b3010000c700000057010000
+  - array: 200100002301000024010000b0010000b401000022010000b2010000
+  - array: 04010000240100002501000094010000b501000023010000b3010000
+  - array: dd00000025010000260100006d010000b601000024010000b4010000
+  - array: f6000000f800000026010000860100008801000025010000b5010000
+  - array: 27010000280100002c010000b8010000bc0100001e010000ae010000
+  - array: 270100002801000029010000b7010000b90100001d010000ad010000
+  - array: 0b010000290100002a0100009b010000ba01000028010000b8010000
+  - array: 290100002a0100002b010000b9010000bb0100002e010000be010000
+  - array: 2a0100002b0100002c010000ba010000bc0100002d010000bd010000
+  - array: 270100002c01000041010000b7010000d10100002b010000bb010000
+  - array: 2d0100002e01000032010000be010000c20100002b010000bb010000
+  - array: 2d0100002e0100002f010000bd010000bf0100002a010000ba010000
+  - array: c20000002f0100003001000052010000c00100002e010000be010000
+  - array: 2f0100003001000031010000bf010000c101000015010000a5010000
+  - array: 300100003101000032010000c0010000c201000014010000a4010000
+  - array: 2d0100003201000041010000bd010000d101000031010000c1010000
+  - array: 330100003401000038010000c4010000c80100003d010000cd010000
+  - array: 330100003401000035010000c3010000c50100003c010000cc010000
+  - array: c1000000350100003601000051010000c601000034010000c4010000
+  - array: 350100003601000037010000c5010000c70100001b010000ab010000
+  - array: 360100003701000038010000c6010000c80100001a010000aa010000
+  - array: c8000000330100003801000058010000c301000037010000c7010000
+  - array: 390100003a0100003e010000ca010000ce01000018010000a8010000
+  - array: 390100003a0100003b010000c9010000cb01000017010000a7010000
+  - array: 0a0100003b0100003c0100009a010000cc0100003a010000ca010000
+  - array: 3b0100003c0100003d010000cb010000cd01000034010000c4010000
+  - array: 3c0100003d0100003e010000cc010000ce01000033010000c3010000
+  - array: c8000000390100003e01000058010000c90100003d010000cd010000
+  - array: 1f0100003f01000040010000af010000d0010000c800000058010000
+  - array: 190100004001000041010000a9010000d10100003f010000cf010000
+  - array: 2c0100003201000041010000bc010000c201000040010000d0010000
+  - array: 420100004301000045010000d3010000d5010000ce0000005e010000
+  - array: cb000000e5000000430100005b0100007501000042010000d2010000
+  - array: 440100004501000047010000d5010000d70100004e010000de010000
+  - array: 420100004501000048010000d2010000d801000044010000d4010000
+  - array: 46010000470100004b010000d7010000db010000cd0000005d010000
+  - array: c9000000440100004701000059010000d401000046010000d6010000
+  - array: 450100004801000049010000d5010000d9010000ca0000005a010000
+  - array: cb00000011010000490100005b010000a101000048010000d8010000
+  - array: 4a0100004b0100004d010000db010000dd010000cd0000005d010000
+  - array: c9000000460100004b01000059010000d60100004a010000da010000
+  - array: 110100004c0100004d010000a1010000dd0100004f010000df010000
+  - array: ca0000004a0100004d0100005a010000da0100004c010000dc010000
+  - array: 440100004e0100004f010000d4010000df010000cd0000005d010000
+  - array: ce0000004c0100004f0100005e010000dc0100004e010000de010000
+  - array: 0e02000010020000180200004602000048020000120200004a020000
+  - array: e201000011020000190200001a02000049020000e801000020020000
+  - array: e10100000a020000190200001a02000042020000e30100001b020000
+  - array: e2010000f60100001a0200001b0200002e0200000c02000044020000
+  - array: 13020000160200001c0200004b0200004e0200000f02000047020000
+  - array: e6010000170200001d0200001e0200004f0200000b02000043020000
+  - array: e5010000e90100001d0200001e02000021020000e70100001f020000
+  - array: e60100000d0200001e0200001f02000045020000f70100002f020000
+  - array: e1010000e90100001902000020020000210200000902000041020000
+  - array: e80100000c020000200200002102000044020000e60100001e020000
+  - array: eb010000fd010000220200002302000035020000f30100002b020000
+  - array: ea010000f0010000220200002302000028020000070200003f020000
+  - array: ed010000f9010000240200002502000031020000f50100002d020000
+  - array: ec010000ee010000240200002502000026020000040200003c020000
+  - array: ef010000fb010000260200002702000033020000ed01000025020000
+  - array: ee010000f201000026020000270200002a020000060200003e020000
+  - array: f1010000fc010000280200002902000034020000eb01000023020000
+  - array: f001000000020000280200002902000038020000050200003d020000
+  - array: f3010000fd0100002a0200002b02000035020000ef01000027020000
+  - array: ea010000f2010000220200002a0200002b020000070200003f020000
+  - array: f5010000f80100002c0200002d02000030020000ff01000037020000
+  - array: ec010000f4010000240200002c0200002d020000020200003a020000
+  - array: e3010000f70100001b0200002e0200002f0200000d02000045020000
+  - array: f60100000a0200002e0200002f02000042020000e70100001f020000
+  - array: f4010000f90100002c0200003002000031020000fe01000036020000
+  - array: f8010000fa010000300200003102000032020000ec01000024020000
+  - array: f901000000020000310200003202000038020000fb01000033020000
+  - array: fa010000fc010000320200003302000034020000ee01000026020000
+  - array: f0010000fb010000280200003302000034020000fd01000035020000
+  - array: ea010000fc010000220200003402000035020000f20100002a020000
+  - array: f8010000ff0100003002000036020000370200000102000039020000
+  - array: f4010000fe0100002c0200003602000037020000020200003a020000
+  - array: fa01000001020000320200003802000039020000f101000029020000
+  - array: fe01000000020000360200003802000039020000030200003b020000
+  - array: ff01000003020000370200003a0200003b020000f50100002d020000
+  - array: 02020000040200003a0200003b0200003c0200000102000039020000
+  - array: ed01000003020000250200003b0200003c020000050200003d020000
+  - array: 04020000060200003c0200003d0200003e020000f101000029020000
+  - array: ef01000005020000270200003d0200003e020000070200003f020000
+  - array: f3010000060200002b0200003e0200003f020000eb01000023020000
+  - array: 09020000100200004002000041020000480200000f02000047020000
+  - array: e801000008020000200200004002000041020000170200004f020000
+  - array: e20100000b0200001a0200004202000043020000f70100002f020000
+  - array: 0a0200001402000042020000430200004c020000e50100001d020000
+  - array: e30100000d0200001b0200004402000045020000e901000021020000
+  - array: f60100000c0200002e0200004402000045020000e70100001f020000
+  - array: e00100000f020000180200004602000047020000130200004b020000
+  - array: 080200000e020000400200004602000047020000e40100001c020000
+  - array: e0010000110200001802000048020000490200000802000040020000
+  - array: 100200001402000048020000490200004c020000e101000019020000
+  - array: e001000013020000180200004a0200004b020000150200004d020000
+  - array: 0e02000012020000460200004a0200004b020000e40100001c020000
+  - array: 1102000015020000490200004c0200004d0200000b02000043020000
+  - array: 12020000140200004a0200004c0200004d020000160200004e020000
+  - array: e4010000170200001c0200004e0200004f020000150200004d020000
+  - array: 0902000016020000410200004e0200004f020000e50100001d020000
+  - array: e00100000e02000012020000460200004a0200001002000048020000
+  - array: e1010000e2010000e80100001a020000200200001102000049020000
+  - array: e2010000e30100000a0200001b02000042020000e101000019020000
+  - array: e3010000f60100000c0200002e02000044020000e20100001a020000
+  - array: e40100000f02000013020000470200004b020000160200004e020000
+  - array: e5010000e60100000b0200001e02000043020000170200004f020000
+  - array: e6010000e7010000e90100001f02000021020000e50100001d020000
+  - array: e7010000f70100000d0200002f02000045020000e60100001e020000
+  - array: e8010000e9010000090200002102000041020000e101000019020000
+  - array: e6010000e90100000c0200001e02000044020000e801000020020000
+  - array: ea010000eb010000f3010000230200002b020000fd01000035020000
+  - array: eb010000f001000007020000280200003f020000ea01000022020000
+  - array: ec010000ed010000f5010000250200002d020000f901000031020000
+  - array: ed010000ee01000004020000260200003c020000ec01000024020000
+  - array: ed010000ee010000ef0100002502000027020000fb01000033020000
+  - array: ef010000f2010000060200002a0200003e020000ee01000026020000
+  - array: eb010000f0010000f10100002302000029020000fc01000034020000
+  - array: f10100000002000005020000380200003d020000f001000028020000
+  - array: ef010000f2010000f3010000270200002b020000fd01000035020000
+  - array: ea010000f301000007020000220200003f020000f20100002a020000
+  - array: f4010000f5010000ff0100002d02000037020000f801000030020000
+  - array: ec010000f501000002020000240200003a020000f40100002c020000
+  - array: f6010000f70100000d0200002f02000045020000e30100001b020000
+  - array: e7010000f70100000a0200001f02000042020000f60100002e020000
+  - array: f4010000f8010000fe0100002c02000036020000f901000031020000
+  - array: ec010000f9010000fa0100002402000032020000f801000030020000
+  - array: fa010000fb010000000200003302000038020000f901000031020000
+  - array: ee010000fb010000fc0100002602000034020000fa01000032020000
+  - array: f0010000fc010000fd0100002802000035020000fb01000033020000
+  - array: ea010000f2010000fd010000220200002a020000fc01000034020000
+  - array: fe010000ff010000010200003702000039020000f801000030020000
+  - array: f4010000ff010000020200002c0200003a020000fe01000036020000
+  - array: f101000000020000010200002902000039020000fa01000032020000
+  - array: fe0100000102000003020000360200003b0200000002000038020000
+  - array: f5010000ff010000020200002d02000037020000030200003b020000
+  - array: 010200000302000004020000390200003c020000020200003a020000
+  - array: ed0100000402000005020000250200003d020000030200003b020000
+  - array: f10100000502000006020000290200003e020000040200003c020000
+  - array: ef0100000602000007020000270200003f020000050200003d020000
+  - array: eb010000f301000007020000230200002b020000060200003e020000
+  - array: 08020000090200000f02000041020000470200001002000048020000
+  - array: e80100000902000017020000200200004f0200000802000040020000
+  - array: f70100000a0200000b0200002f02000043020000e20100001a020000
+  - array: e50100000b020000140200001d0200004c0200000a02000042020000
+  - array: e90100000c0200000d0200002102000045020000e30100001b020000
+  - array: e7010000f60100000d0200001f0200002e0200000c02000044020000
+  - array: 0e0200000f02000013020000470200004b020000e001000018020000
+  - array: e4010000080200000f0200001c020000400200000e02000046020000
+  - array: 0802000010020000110200004002000049020000e001000018020000
+  - array: e10100001102000014020000190200004c0200001002000048020000
+  - array: 1202000013020000150200004b0200004d020000e001000018020000
+  - array: e40100000e020000130200001c02000046020000120200004a020000
+  - array: 0b0200001402000015020000430200004d0200001102000049020000
+  - array: 1202000015020000160200004a0200004e020000140200004c020000
+  - array: 1502000016020000170200004d0200004f020000e40100001c020000
+  - array: e501000009020000170200001d02000041020000160200004e020000
+  isSupportTriangle: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000001010101010000000000000000000101010101010101010101010101010101010101000001010101010101010101010101010101010101010101010101010101010101000001010000010101010000010100000000000000000000000001010101010101000000000000000000000000000000000000000000000000000000000000000000000000000000000001000001010101010000000000000000000101010101010101010101010101010101010101000001010101010101010101010101010101010101010101010101010101010101000001010000010101010000010100000000000000000000000001010101010101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010101010101010101010101000001010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010101010101010100000101010101010101010101010101010100000000000000000000000000000000

@@ -6,7 +6,7 @@ namespace Plunderspell.Raid
 {
     /// <summary>
     /// Rooms the Ophan's charged beam has scorched this raid (#442): their walls are drawn burnt. The beam's hole is cut
-    /// by <see cref="OphanWallCut"/> (#467); a scorched room's other walls still stop the slow beam. A room is named by its place
+    /// by the fracture system (#472); a scorched room's other walls still stop the slow beam. A room is named by its place
     /// among the generated castle's children, which is the same on every machine because every machine builds the
     /// castle from the same seed. Cleared when a new castle is built.
     /// </summary>

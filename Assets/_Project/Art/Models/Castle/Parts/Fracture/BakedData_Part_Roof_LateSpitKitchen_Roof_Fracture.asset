@@ -1,0 +1,641 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1c3f8ea2a686294297252353888aa47, type: 3}
+  m_Name: BakedData_Part_Roof_LateSpitKitchen_Roof_Fracture
+  m_EditorClassIdentifier: Plunderspell.Fracture::Plunderspell.Fracture.FractureGraphData
+  pieceMappings:
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 4
+  - submeshIndex: 0
+    pieceIndex: 5
+  - submeshIndex: 0
+    pieceIndex: 6
+  - submeshIndex: 0
+    pieceIndex: 7
+  - submeshIndex: 0
+    pieceIndex: 8
+  - submeshIndex: 0
+    pieceIndex: 9
+  - submeshIndex: 0
+    pieceIndex: 10
+  - submeshIndex: 0
+    pieceIndex: 11
+  - submeshIndex: 0
+    pieceIndex: 12
+  - submeshIndex: 0
+    pieceIndex: 13
+  - submeshIndex: 0
+    pieceIndex: 14
+  - submeshIndex: 0
+    pieceIndex: 15
+  - submeshIndex: 0
+    pieceIndex: 16
+  - submeshIndex: 0
+    pieceIndex: 17
+  - submeshIndex: 0
+    pieceIndex: 18
+  - submeshIndex: 0
+    pieceIndex: 19
+  - submeshIndex: 0
+    pieceIndex: 20
+  - submeshIndex: 0
+    pieceIndex: 21
+  - submeshIndex: 0
+    pieceIndex: 22
+  - submeshIndex: 0
+    pieceIndex: 23
+  - submeshIndex: 0
+    pieceIndex: 24
+  - submeshIndex: 0
+    pieceIndex: 25
+  - submeshIndex: 0
+    pieceIndex: 26
+  - submeshIndex: 0
+    pieceIndex: 27
+  - submeshIndex: 0
+    pieceIndex: 28
+  - submeshIndex: 0
+    pieceIndex: 29
+  - submeshIndex: 0
+    pieceIndex: 30
+  - submeshIndex: 0
+    pieceIndex: 31
+  - submeshIndex: 0
+    pieceIndex: 32
+  - submeshIndex: 0
+    pieceIndex: 33
+  - submeshIndex: 0
+    pieceIndex: 34
+  - submeshIndex: 0
+    pieceIndex: 35
+  - submeshIndex: 0
+    pieceIndex: 36
+  - submeshIndex: 0
+    pieceIndex: 37
+  - submeshIndex: 0
+    pieceIndex: 38
+  - submeshIndex: 0
+    pieceIndex: 39
+  - submeshIndex: 0
+    pieceIndex: 40
+  - submeshIndex: 0
+    pieceIndex: 41
+  - submeshIndex: 0
+    pieceIndex: 42
+  - submeshIndex: 0
+    pieceIndex: 43
+  - submeshIndex: 0
+    pieceIndex: 44
+  - submeshIndex: 0
+    pieceIndex: 45
+  - submeshIndex: 0
+    pieceIndex: 46
+  - submeshIndex: 0
+    pieceIndex: 47
+  - submeshIndex: 0
+    pieceIndex: 48
+  - submeshIndex: 0
+    pieceIndex: 49
+  - submeshIndex: 0
+    pieceIndex: 50
+  - submeshIndex: 0
+    pieceIndex: 51
+  - submeshIndex: 0
+    pieceIndex: 52
+  - submeshIndex: 0
+    pieceIndex: 53
+  - submeshIndex: 0
+    pieceIndex: 54
+  - submeshIndex: 0
+    pieceIndex: 55
+  - submeshIndex: 0
+    pieceIndex: 56
+  - submeshIndex: 0
+    pieceIndex: 57
+  - submeshIndex: 0
+    pieceIndex: 58
+  - submeshIndex: 0
+    pieceIndex: 59
+  - submeshIndex: 0
+    pieceIndex: 60
+  - submeshIndex: 0
+    pieceIndex: 61
+  - submeshIndex: 0
+    pieceIndex: 62
+  - submeshIndex: 0
+    pieceIndex: 63
+  - submeshIndex: 0
+    pieceIndex: 64
+  - submeshIndex: 0
+    pieceIndex: 65
+  - submeshIndex: 0
+    pieceIndex: 66
+  - submeshIndex: 0
+    pieceIndex: 67
+  - submeshIndex: 0
+    pieceIndex: 68
+  - submeshIndex: 0
+    pieceIndex: 69
+  - submeshIndex: 0
+    pieceIndex: 70
+  - submeshIndex: 0
+    pieceIndex: 71
+  - submeshIndex: 0
+    pieceIndex: 72
+  - submeshIndex: 0
+    pieceIndex: 73
+  - submeshIndex: 0
+    pieceIndex: 74
+  - submeshIndex: 0
+    pieceIndex: 75
+  - submeshIndex: 0
+    pieceIndex: 76
+  - submeshIndex: 0
+    pieceIndex: 77
+  - submeshIndex: 0
+    pieceIndex: 78
+  - submeshIndex: 0
+    pieceIndex: 79
+  - submeshIndex: 0
+    pieceIndex: 80
+  - submeshIndex: 0
+    pieceIndex: 81
+  - submeshIndex: 0
+    pieceIndex: 82
+  - submeshIndex: 0
+    pieceIndex: 83
+  - submeshIndex: 0
+    pieceIndex: 84
+  - submeshIndex: 0
+    pieceIndex: 85
+  - submeshIndex: 0
+    pieceIndex: 86
+  - submeshIndex: 0
+    pieceIndex: 87
+  - submeshIndex: 0
+    pieceIndex: 88
+  - submeshIndex: 0
+    pieceIndex: 89
+  - submeshIndex: 0
+    pieceIndex: 90
+  - submeshIndex: 0
+    pieceIndex: 91
+  - submeshIndex: 0
+    pieceIndex: 92
+  - submeshIndex: 0
+    pieceIndex: 93
+  - submeshIndex: 0
+    pieceIndex: 94
+  - submeshIndex: 0
+    pieceIndex: 95
+  - submeshIndex: 0
+    pieceIndex: 96
+  - submeshIndex: 0
+    pieceIndex: 97
+  - submeshIndex: 0
+    pieceIndex: 98
+  - submeshIndex: 0
+    pieceIndex: 99
+  - submeshIndex: 0
+    pieceIndex: 100
+  - submeshIndex: 0
+    pieceIndex: 101
+  - submeshIndex: 0
+    pieceIndex: 102
+  - submeshIndex: 0
+    pieceIndex: 103
+  - submeshIndex: 0
+    pieceIndex: 104
+  - submeshIndex: 0
+    pieceIndex: 105
+  - submeshIndex: 0
+    pieceIndex: 106
+  - submeshIndex: 0
+    pieceIndex: 107
+  - submeshIndex: 0
+    pieceIndex: 108
+  - submeshIndex: 0
+    pieceIndex: 109
+  - submeshIndex: 0
+    pieceIndex: 110
+  - submeshIndex: 0
+    pieceIndex: 111
+  - submeshIndex: 0
+    pieceIndex: 112
+  - submeshIndex: 0
+    pieceIndex: 113
+  - submeshIndex: 0
+    pieceIndex: 114
+  - submeshIndex: 0
+    pieceIndex: 115
+  - submeshIndex: 0
+    pieceIndex: 116
+  - submeshIndex: 0
+    pieceIndex: 117
+  - submeshIndex: 0
+    pieceIndex: 118
+  - submeshIndex: 0
+    pieceIndex: 119
+  - submeshIndex: 0
+    pieceIndex: 120
+  - submeshIndex: 0
+    pieceIndex: 121
+  - submeshIndex: 0
+    pieceIndex: 122
+  - submeshIndex: 0
+    pieceIndex: 123
+  - submeshIndex: 0
+    pieceIndex: 124
+  - submeshIndex: 0
+    pieceIndex: 125
+  - submeshIndex: 0
+    pieceIndex: 126
+  - submeshIndex: 0
+    pieceIndex: 127
+  - submeshIndex: 1
+    pieceIndex: 0
+  - submeshIndex: 1
+    pieceIndex: 1
+  - submeshIndex: 1
+    pieceIndex: 2
+  - submeshIndex: 1
+    pieceIndex: 3
+  - submeshIndex: 1
+    pieceIndex: 4
+  - submeshIndex: 1
+    pieceIndex: 5
+  - submeshIndex: 1
+    pieceIndex: 6
+  - submeshIndex: 1
+    pieceIndex: 7
+  - submeshIndex: 1
+    pieceIndex: 8
+  - submeshIndex: 1
+    pieceIndex: 9
+  - submeshIndex: 1
+    pieceIndex: 10
+  - submeshIndex: 1
+    pieceIndex: 11
+  - submeshIndex: 1
+    pieceIndex: 12
+  - submeshIndex: 1
+    pieceIndex: 13
+  - submeshIndex: 1
+    pieceIndex: 14
+  - submeshIndex: 1
+    pieceIndex: 15
+  - submeshIndex: 1
+    pieceIndex: 16
+  - submeshIndex: 1
+    pieceIndex: 17
+  - submeshIndex: 1
+    pieceIndex: 18
+  - submeshIndex: 1
+    pieceIndex: 19
+  - submeshIndex: 1
+    pieceIndex: 20
+  - submeshIndex: 1
+    pieceIndex: 21
+  - submeshIndex: 1
+    pieceIndex: 22
+  - submeshIndex: 1
+    pieceIndex: 23
+  - submeshIndex: 1
+    pieceIndex: 24
+  - submeshIndex: 1
+    pieceIndex: 25
+  - submeshIndex: 1
+    pieceIndex: 26
+  - submeshIndex: 1
+    pieceIndex: 27
+  - submeshIndex: 1
+    pieceIndex: 28
+  - submeshIndex: 1
+    pieceIndex: 29
+  - submeshIndex: 1
+    pieceIndex: 30
+  - submeshIndex: 1
+    pieceIndex: 31
+  - submeshIndex: 1
+    pieceIndex: 32
+  - submeshIndex: 1
+    pieceIndex: 33
+  - submeshIndex: 1
+    pieceIndex: 34
+  - submeshIndex: 1
+    pieceIndex: 35
+  - submeshIndex: 1
+    pieceIndex: 36
+  - submeshIndex: 1
+    pieceIndex: 37
+  - submeshIndex: 1
+    pieceIndex: 38
+  - submeshIndex: 1
+    pieceIndex: 39
+  - submeshIndex: 1
+    pieceIndex: 40
+  - submeshIndex: 1
+    pieceIndex: 41
+  - submeshIndex: 1
+    pieceIndex: 42
+  - submeshIndex: 1
+    pieceIndex: 43
+  - submeshIndex: 1
+    pieceIndex: 44
+  - submeshIndex: 1
+    pieceIndex: 45
+  - submeshIndex: 1
+    pieceIndex: 46
+  - submeshIndex: 1
+    pieceIndex: 47
+  - submeshIndex: 1
+    pieceIndex: 48
+  - submeshIndex: 1
+    pieceIndex: 49
+  - submeshIndex: 1
+    pieceIndex: 50
+  - submeshIndex: 1
+    pieceIndex: 51
+  - submeshIndex: 1
+    pieceIndex: 52
+  - submeshIndex: 1
+    pieceIndex: 53
+  - submeshIndex: 1
+    pieceIndex: 54
+  - submeshIndex: 1
+    pieceIndex: 55
+  - submeshIndex: 1
+    pieceIndex: 56
+  - submeshIndex: 1
+    pieceIndex: 57
+  - submeshIndex: 1
+    pieceIndex: 58
+  - submeshIndex: 1
+    pieceIndex: 59
+  - submeshIndex: 1
+    pieceIndex: 60
+  - submeshIndex: 1
+    pieceIndex: 61
+  - submeshIndex: 1
+    pieceIndex: 62
+  - submeshIndex: 1
+    pieceIndex: 63
+  - submeshIndex: 1
+    pieceIndex: 64
+  - submeshIndex: 1
+    pieceIndex: 65
+  - submeshIndex: 1
+    pieceIndex: 66
+  - submeshIndex: 1
+    pieceIndex: 67
+  - submeshIndex: 1
+    pieceIndex: 68
+  - submeshIndex: 1
+    pieceIndex: 69
+  - submeshIndex: 1
+    pieceIndex: 70
+  - submeshIndex: 1
+    pieceIndex: 71
+  - submeshIndex: 1
+    pieceIndex: 72
+  - submeshIndex: 1
+    pieceIndex: 73
+  - submeshIndex: 1
+    pieceIndex: 74
+  - submeshIndex: 1
+    pieceIndex: 75
+  - submeshIndex: 1
+    pieceIndex: 76
+  - submeshIndex: 1
+    pieceIndex: 77
+  - submeshIndex: 1
+    pieceIndex: 78
+  - submeshIndex: 1
+    pieceIndex: 79
+  triangleNeighbors:
+  - array: 06000000210000004000000046000000610000000100000041000000
+  - array: 0000000020000000400000004100000060000000
+  - array: 07000000180000004200000047000000580000000300000043000000
+  - array: 0200000006000000420000004300000046000000
+  - array: 1c00000023000000440000005c000000630000000500000045000000
+  - array: 04000000220000004400000045000000620000000700000047000000
+  - array: 00000000030000004000000043000000460000000700000047000000
+  - array: 02000000060000004200000046000000470000000500000045000000
+  - array: 0e00000019000000480000004e000000590000000900000049000000
+  - array: 0800000018000000480000004900000058000000
+  - array: 0f0000004a0000004f0000000b0000004b000000
+  - array: 0a0000000e0000004a0000004b0000004e000000
+  - array: 1b0000004c0000005b0000000d0000004d000000
+  - array: 0c0000001a0000004c0000004d0000005a0000000f0000004f000000
+  - array: 080000000b000000480000004b0000004e0000000f0000004f000000
+  - array: 0a0000000e0000004a0000004e0000004f0000000d0000004d000000
+  - array: 16000000290000005000000056000000690000001100000051000000
+  - array: 10000000280000005000000051000000680000001d0000005d000000
+  - array: 1700000052000000570000001300000053000000
+  - array: 12000000160000005200000053000000560000001b0000005b000000
+  - array: 2b000000540000006b0000001500000055000000
+  - array: 140000002a00000054000000550000006a0000001700000057000000
+  - array: 10000000130000005000000053000000560000001700000057000000
+  - array: 12000000160000005200000056000000570000001500000055000000
+  - array: 02000000090000004200000049000000580000001900000059000000
+  - array: 08000000180000004800000058000000590000001f0000005f000000
+  - array: 0d0000001e0000004d0000005a0000005e0000001b0000005b000000
+  - array: 0c0000001a0000004c0000005a0000005b0000001300000053000000
+  - array: 040000001f000000440000005c0000005f0000001d0000005d000000
+  - array: 1c0000001e0000005c0000005d0000005e0000001100000051000000
+  - array: 1a0000001d0000005a0000005d0000005e0000001f0000005f000000
+  - array: 1c0000001e0000005c0000005e0000005f0000001900000059000000
+  - array: 0100000041000000600000002100000061000000
+  - array: 00000000200000004000000060000000610000002700000067000000
+  - array: 05000000260000004500000062000000660000002300000063000000
+  - array: 04000000220000004400000062000000630000003900000079000000
+  - array: 2700000064000000670000002500000065000000
+  - array: 24000000260000006400000065000000660000003d0000007d000000
+  - array: 22000000250000006200000065000000660000002700000067000000
+  - array: 24000000260000006400000066000000670000002100000061000000
+  - array: 11000000380000005100000068000000780000002900000069000000
+  - array: 10000000280000005000000068000000690000002f0000006f000000
+  - array: 150000002e000000550000006a0000006e0000002b0000006b000000
+  - array: 140000002a000000540000006a0000006b000000
+  - array: 2f0000003a0000006c0000006f0000007a0000002d0000006d000000
+  - array: 2c0000002e0000006c0000006d0000006e000000
+  - array: 2a0000002d0000006a0000006d0000006e0000002f0000006f000000
+  - array: 2c0000002e0000006c0000006e0000006f0000002900000069000000
+  - array: 3d000000700000007d0000003100000071000000
+  - array: 300000003c00000070000000710000007c0000003700000077000000
+  - array: 360000003b00000072000000760000007b0000003300000073000000
+  - array: 320000003a00000072000000730000007a000000
+  - array: 3700000074000000770000003500000075000000
+  - array: 3400000036000000740000007500000076000000
+  - array: 32000000350000007200000075000000760000003700000077000000
+  - array: 34000000360000007400000076000000770000003100000071000000
+  - array: 280000003f00000068000000780000007f0000003900000079000000
+  - array: 380000003e00000078000000790000007e0000002300000063000000
+  - array: 2c000000330000006c000000730000007a0000003b0000007b000000
+  - array: 320000003a000000720000007a0000007b0000003f0000007f000000
+  - array: 310000003e000000710000007c0000007e0000003d0000007d000000
+  - array: 300000003c000000700000007c0000007d0000002500000065000000
+  - array: 390000003c000000790000007c0000007e0000003f0000007f000000
+  - array: 380000003e000000780000007e0000007f0000003b0000007b000000
+  - array: 00000000010000000600000041000000460000002100000061000000
+  - array: 0000000001000000400000002000000060000000
+  - array: 02000000030000001800000043000000580000000700000047000000
+  - array: 0200000003000000420000000600000046000000
+  - array: 04000000050000001c000000450000005c0000002300000063000000
+  - array: 04000000050000000700000044000000470000002200000062000000
+  - array: 00000000060000000700000040000000470000000300000043000000
+  - array: 05000000060000000700000045000000460000000200000042000000
+  - array: 08000000090000000e000000490000004e0000001900000059000000
+  - array: 0800000009000000480000001800000058000000
+  - array: 0a0000000b0000004b0000000f0000004f000000
+  - array: 0a0000000b0000004a0000000e0000004e000000
+  - array: 0c0000000d0000004d0000001b0000005b000000
+  - array: 0c0000000d0000000f0000004c0000004f0000001a0000005a000000
+  - array: 080000000e0000000f000000480000004f0000000b0000004b000000
+  - array: 0d0000000e0000000f0000004d0000004e0000000a0000004a000000
+  - array: 10000000110000001600000051000000560000002900000069000000
+  - array: 10000000110000001d000000500000005d0000002800000068000000
+  - array: 1200000013000000530000001700000057000000
+  - array: 12000000130000001b000000520000005b0000001600000056000000
+  - array: 1400000015000000550000002b0000006b000000
+  - array: 14000000150000001700000054000000570000002a0000006a000000
+  - array: 10000000160000001700000050000000570000001300000053000000
+  - array: 15000000160000001700000055000000560000001200000052000000
+  - array: 02000000180000001900000042000000590000000900000049000000
+  - array: 18000000190000001f000000580000005f0000000800000048000000
+  - array: 1a0000001b0000001e0000005b0000005e0000000d0000004d000000
+  - array: 130000001a0000001b000000530000005a0000000c0000004c000000
+  - array: 040000001c0000001d000000440000005d0000001f0000005f000000
+  - array: 110000001c0000001d000000510000005c0000001e0000005e000000
+  - array: 1a0000001e0000001f0000005a0000005f0000001d0000005d000000
+  - array: 190000001e0000001f000000590000005e0000001c0000005c000000
+  - array: 2000000021000000610000000100000041000000
+  - array: 20000000210000002700000060000000670000000000000040000000
+  - array: 22000000230000002600000063000000660000000500000045000000
+  - array: 22000000230000003900000062000000790000000400000044000000
+  - array: 2400000025000000650000002700000067000000
+  - array: 24000000250000003d000000640000007d0000002600000066000000
+  - array: 22000000260000002700000062000000670000002500000065000000
+  - array: 21000000260000002700000061000000660000002400000064000000
+  - array: 28000000290000003800000069000000780000001100000051000000
+  - array: 28000000290000002f000000680000006f0000001000000050000000
+  - array: 2a0000002b0000002e0000006b0000006e0000001500000055000000
+  - array: 2a0000002b0000006a0000001400000054000000
+  - array: 2c0000002d0000003a0000006d0000007a0000002f0000006f000000
+  - array: 2c0000002d0000006c0000002e0000006e000000
+  - array: 2a0000002e0000002f0000006a0000006f0000002d0000006d000000
+  - array: 290000002e0000002f000000690000006e0000002c0000006c000000
+  - array: 3000000031000000710000003d0000007d000000
+  - array: 30000000310000003700000070000000770000003c0000007c000000
+  - array: 32000000330000003600000073000000760000003b0000007b000000
+  - array: 3200000033000000720000003a0000007a000000
+  - array: 3400000035000000750000003700000077000000
+  - array: 3400000035000000740000003600000076000000
+  - array: 32000000360000003700000072000000770000003500000075000000
+  - array: 31000000360000003700000071000000760000003400000074000000
+  - array: 28000000380000003900000068000000790000003f0000007f000000
+  - array: 23000000380000003900000063000000780000003e0000007e000000
+  - array: 2c0000003a0000003b0000006c0000007b0000003300000073000000
+  - array: 3a0000003b0000003f0000007a0000007f0000003200000072000000
+  - array: 3c0000003d0000003e0000007d0000007e0000003100000071000000
+  - array: 250000003c0000003d000000650000007c0000003000000070000000
+  - array: 3c0000003e0000003f0000007c0000007f0000003900000079000000
+  - array: 3b0000003e0000003f0000007b0000007e0000003800000078000000
+  - array: 81000000a8000000a9000000
+  - array: 80000000a8000000a9000000
+  - array: 83000000aa000000ab000000
+  - array: 82000000aa000000ab000000
+  - array: 85000000ac000000ad000000
+  - array: 84000000ac000000ad000000
+  - array: 87000000ae000000af000000
+  - array: 86000000ae000000af000000
+  - array: 89000000b0000000b1000000
+  - array: 88000000b0000000b1000000
+  - array: 8b000000b2000000b3000000
+  - array: 8a000000b2000000b3000000
+  - array: 8d000000b4000000b5000000
+  - array: 8c000000b4000000b5000000
+  - array: 8f000000b6000000b7000000
+  - array: 8e000000b6000000b7000000
+  - array: 91000000b8000000b9000000
+  - array: 90000000b8000000b9000000
+  - array: 93000000ba000000bb000000
+  - array: 92000000ba000000bb000000
+  - array: 95000000bc000000bd000000
+  - array: 94000000bc000000bd000000
+  - array: 97000000be000000bf000000
+  - array: 96000000be000000bf000000
+  - array: 99000000c0000000c1000000
+  - array: 98000000c0000000c1000000
+  - array: 9b000000c2000000c3000000
+  - array: 9a000000c2000000c3000000
+  - array: 9d000000c4000000c5000000
+  - array: 9c000000c4000000c5000000
+  - array: 9f000000c6000000c7000000
+  - array: 9e000000c6000000c7000000
+  - array: a1000000c8000000c9000000
+  - array: a0000000c8000000c9000000
+  - array: a3000000ca000000cb000000
+  - array: a2000000ca000000cb000000
+  - array: a5000000cc000000cd000000
+  - array: a4000000cc000000cd000000
+  - array: a7000000ce000000cf000000
+  - array: a6000000ce000000cf000000
+  - array: 8000000081000000a9000000
+  - array: 8100000080000000a8000000
+  - array: 8200000083000000ab000000
+  - array: 8300000082000000aa000000
+  - array: 8400000085000000ad000000
+  - array: 8500000084000000ac000000
+  - array: 8600000087000000af000000
+  - array: 8700000086000000ae000000
+  - array: 8800000089000000b1000000
+  - array: 8900000088000000b0000000
+  - array: 8a0000008b000000b3000000
+  - array: 8b0000008a000000b2000000
+  - array: 8c0000008d000000b5000000
+  - array: 8d0000008c000000b4000000
+  - array: 8e0000008f000000b7000000
+  - array: 8f0000008e000000b6000000
+  - array: 9000000091000000b9000000
+  - array: 9100000090000000b8000000
+  - array: 9200000093000000bb000000
+  - array: 9300000092000000ba000000
+  - array: 9400000095000000bd000000
+  - array: 9500000094000000bc000000
+  - array: 9600000097000000bf000000
+  - array: 9700000096000000be000000
+  - array: 9800000099000000c1000000
+  - array: 9900000098000000c0000000
+  - array: 9a0000009b000000c3000000
+  - array: 9b0000009a000000c2000000
+  - array: 9c0000009d000000c5000000
+  - array: 9d0000009c000000c4000000
+  - array: 9e0000009f000000c7000000
+  - array: 9f0000009e000000c6000000
+  - array: a0000000a1000000c9000000
+  - array: a1000000a0000000c8000000
+  - array: a2000000a3000000cb000000
+  - array: a3000000a2000000ca000000
+  - array: a4000000a5000000cd000000
+  - array: a5000000a4000000cc000000
+  - array: a6000000a7000000cf000000
+  - array: a7000000a6000000ce000000
+  isSupportTriangle: 01010101000001000101010100000100000000000000000001000000000000000100000000000000000000000000000000000000000000000000000000000000010101010000010001010101000001000000000000000000010000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

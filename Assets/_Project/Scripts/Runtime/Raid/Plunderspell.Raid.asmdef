@@ -19,6 +19,7 @@
         "Plunderspell.Voice",
         "Plunderspell.Core",
         "Plunderspell.Player",
+        "Plunderspell.Fracture",
         "Unity.InputSystem",
         "Unity.TextMeshPro"
     ],

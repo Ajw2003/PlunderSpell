@@ -5,6 +5,7 @@ using Interfaces;
 using Plunderspell.Castle;
 using Plunderspell.Core;
 using Plunderspell.Extraction;
+using Plunderspell.Fracture;
 using Plunderspell.Loot;
 using PurrNet;
 using StateMachine;
@@ -25,6 +26,8 @@ namespace Plunderspell.Raid
         public const string PrefabResource = "Fear/TheOphanOfHours";
         private const float RepickSeconds = 1f;
         private const float TakeDespawnDelaySeconds = 1f;
+        private const float CutRadius = 1.5f;
+        private const float CutForce = 12f;
 
         [SerializeField] private OphanTuning _tuning = new OphanTuning();
 
@@ -300,10 +303,25 @@ namespace Plunderspell.Raid
                 _look.FlashCharged(at);
             foreach (Vector3 hole in holes)
                 OphanWallBurst.At(hole, (at - eye).normalized);
-            // Stops 2 m short of the aim so the floor under the target is never cut.
-            OphanWallCut.CutRooms(rooms, eye, at - (at - eye).normalized * 2f);
+            // Stops 2 m short of the aim so the floor under the target is never broken.
+            Vector3 cutEnd = at - (at - eye).normalized * 2f;
             foreach (int index in rooms)
-                ScorchedRooms.Scorch(ScorchedRooms.RoomAt(index));
+            {
+                CastleRoomModule room = ScorchedRooms.RoomAt(index);
+                if (room == null)
+                    continue;
+                // Debris lands on this room's floor slab (room height when it has no floor part).
+                Transform floor = room.transform.Find("Part_Floor");
+                float groundY = floor != null && floor.TryGetComponent(out Renderer floorRenderer)
+                    ? floorRenderer.bounds.max.y
+                    : room.transform.position.y;
+                foreach (FracturableObject part in room.GetComponentsInChildren<FracturableObject>())
+                {
+                    part.groundY = groundY;
+                    part.HitAlongLine(eye, cutEnd, CutRadius, CutForce);
+                }
+                ScorchedRooms.Scorch(room);
+            }
         }
 
         [ObserversRpc]

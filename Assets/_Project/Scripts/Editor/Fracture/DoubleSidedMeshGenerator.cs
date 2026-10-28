@@ -61,7 +61,15 @@ namespace Plunderspell.Fracture.Editor
             EditorUtility.DisplayDialog("Success", $"Double-sided mesh generated and saved to {assetPath}.\nAssigned to MeshFilter and MeshCollider.", "OK");
         }
 
-        private static Mesh CreateDoubleSidedMesh(Mesh original)
+        private static T[] Doubled<T>(T[] a)
+        {
+            var r = new T[a.Length * 2];
+            a.CopyTo(r, 0);
+            a.CopyTo(r, a.Length);
+            return r;
+        }
+
+        public static Mesh CreateDoubleSidedMesh(Mesh original)
         {
             Vector3[] origVerts = original.vertices;
             Vector3[] origNorms = original.normals;
@@ -87,10 +95,18 @@ namespace Plunderspell.Fracture.Editor
             }
 
             Mesh newMesh = new Mesh();
+            newMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             newMesh.name = original.name + "_DoubleSided";
             newMesh.vertices = newVerts;
             newMesh.normals = newNorms;
             newMesh.uv = newUvs;
+            // Keep the other channels when present (the fracture bake subdivides meshes that carry them).
+            Vector2[] uv2 = original.uv2;
+            Vector4[] tangents = original.tangents;
+            Color[] colors = original.colors;
+            if (uv2.Length == vertCount) newMesh.uv2 = Doubled(uv2);
+            if (tangents.Length == vertCount) newMesh.tangents = Doubled(tangents);
+            if (colors.Length == vertCount) newMesh.colors = Doubled(colors);
             
             newMesh.subMeshCount = original.subMeshCount;
             for (int s = 0; s < original.subMeshCount; s++)

@@ -234,7 +234,7 @@ namespace Plunderspell.EditorTools
             }
         }
 
-        private static IEnumerable<string> RoomPrefabPaths() =>
+        internal static IEnumerable<string> RoomPrefabPaths() =>
             AssetDatabase.FindAssets("t:Prefab", new[] { PrefabRoot })
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Where(p => !p.Contains("/Dressing/") && AssetDatabase.LoadAssetAtPath<GameObject>(p).GetComponent<CastleRoomModule>() != null)

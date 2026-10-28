@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 2493322570487175531}
   - component: {fileID: 8043340035593136190}
   - component: {fileID: 8007755749273673379}
+  - component: {fileID: 5457804741011060891}
   m_Layer: 0
   m_Name: Part_Wall
   m_TagString: Untagged
@@ -137,7 +138,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2822699543759056014}
-  m_Mesh: {fileID: 4300000, guid: f3dd10be03cb1fe48940cf48c0d88fa7, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 588b041c0ab23454c8fa132b4d3af809, type: 2}
 --- !u!23 &8043340035593136190
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -215,7 +216,32 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: f3dd10be03cb1fe48940cf48c0d88fa7, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 588b041c0ab23454c8fa132b4d3af809, type: 2}
+--- !u!114 &5457804741011060891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2822699543759056014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72873b0c1317fe541b29c2f6453192d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Fracture::Plunderspell.Fracture.FracturableObject
+  seed: 12345
+  explosionForce: 10
+  mergeDistance: 0.0001
+  gravity: {x: 0, y: -9.81, z: 0}
+  despawnTime: 5
+  computeShader: {fileID: 0}
+  renderMaterial: {fileID: 0}
+  groundY: 0.05
+  destroyWhenEmpty: 0
+  preInitialize: 0
+  destroyThreshold: 0.005
+  supportHeightRatio: 0.1
+  bakedGraphData: {fileID: 11400000, guid: a7da1bba29d39f24bb282bd2015d52b3, type: 2}
 --- !u!1 &4717790473122975865
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,6 +254,7 @@ GameObject:
   - component: {fileID: 3419306960254675039}
   - component: {fileID: 3621027416877119043}
   - component: {fileID: 1812590683145112628}
+  - component: {fileID: 354457197709090334}
   m_Layer: 0
   m_Name: Part_Floor
   m_TagString: Untagged
@@ -257,7 +284,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4717790473122975865}
-  m_Mesh: {fileID: 4300000, guid: 01d2cf7754326014d802ea623b6456a6, type: 2}
+  m_Mesh: {fileID: 4300000, guid: b759adb0de71752438a285c55283adad, type: 2}
 --- !u!23 &3621027416877119043
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -328,7 +355,32 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 01d2cf7754326014d802ea623b6456a6, type: 2}
+  m_Mesh: {fileID: 4300000, guid: b759adb0de71752438a285c55283adad, type: 2}
+--- !u!114 &354457197709090334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4717790473122975865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72873b0c1317fe541b29c2f6453192d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Fracture::Plunderspell.Fracture.FracturableObject
+  seed: 12345
+  explosionForce: 10
+  mergeDistance: 0.0001
+  gravity: {x: 0, y: -9.81, z: 0}
+  despawnTime: 5
+  computeShader: {fileID: 0}
+  renderMaterial: {fileID: 0}
+  groundY: 0.05
+  destroyWhenEmpty: 0
+  preInitialize: 0
+  destroyThreshold: 0.005
+  supportHeightRatio: 0.1
+  bakedGraphData: {fileID: 11400000, guid: 6e99f8c306fdca946bec6b3667dd5d61, type: 2}
 --- !u!1 &4735518567591414871
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,6 +393,7 @@ GameObject:
   - component: {fileID: 7773014729730854318}
   - component: {fileID: 4266607847497177970}
   - component: {fileID: 5216831934070983774}
+  - component: {fileID: 5089551519981104267}
   m_Layer: 0
   m_Name: Part_Props
   m_TagString: Untagged
@@ -370,7 +423,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4735518567591414871}
-  m_Mesh: {fileID: 4300000, guid: 09c9c581dbfed4a4480f21afbc9084f3, type: 2}
+  m_Mesh: {fileID: 4300000, guid: f7e0688c342a1eb4293f1a53e02b7c88, type: 2}
 --- !u!23 &4266607847497177970
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -449,7 +502,32 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 09c9c581dbfed4a4480f21afbc9084f3, type: 2}
+  m_Mesh: {fileID: 4300000, guid: f7e0688c342a1eb4293f1a53e02b7c88, type: 2}
+--- !u!114 &5089551519981104267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4735518567591414871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72873b0c1317fe541b29c2f6453192d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Plunderspell.Fracture::Plunderspell.Fracture.FracturableObject
+  seed: 12345
+  explosionForce: 10
+  mergeDistance: 0.0001
+  gravity: {x: 0, y: -9.81, z: 0}
+  despawnTime: 5
+  computeShader: {fileID: 0}
+  renderMaterial: {fileID: 0}
+  groundY: 0.05
+  destroyWhenEmpty: 0
+  preInitialize: 0
+  destroyThreshold: 0.005
+  supportHeightRatio: 0.1
+  bakedGraphData: {fileID: 11400000, guid: 36e85606b6f90ac4a8b9bf59ea18a2a3, type: 2}
 --- !u!1 &5852755757517876668
 GameObject:
   m_ObjectHideFlags: 0
