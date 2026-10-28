@@ -1,0 +1,42 @@
+{
+  "title": "Fracture clusters build plan",
+  "eyebrow": "How your fracture system will break the castle in 1.5 m clusters, which you picked on the Ophan breaking chunks page (choice 1, option B)",
+  "approval": "Build plan approved: Ophan clusters",
+  "short": {
+    "lead": "Your fracture system stays as it is: the baked graph, the GPU compute debris and its renderer, and no rigid bodies. Four build steps and a recorded co-op run change what a piece is. Today a GPU piece is one triangle. After the change it is a 1.5 m cluster of triangles that share one position, rotation and speed, so a cluster breaks off and tumbles as one unit. The compute shader and the render shader do not change. Two choices are yours, with my suggestion marked on each.",
+    "hint": "Tap an item to see what exists and what each step does.",
+    "key": [["Settled", ""], ["You pick", "you"]],
+    "items": [
+      ["bulb", "Bake", "Cutting parts into clusters", "", "Today's bake splits triangles until no edge is longer than 1.5 m, so a hole's edge follows whichever triangles break. The new bake clips each wall, floor and roof part along a 1.5 m grid that lines up with the room, and gives each grid cell's triangles one cluster number. Cluster edges are therefore straight. The baked graph gains a cluster list: each cluster's triangles, the clusters it touches, and whether it rests on the ground. Props keep one cluster per separate object. The bake prints the new triangle total next to today's 1,000,052.", "No choice here."],
+      ["bulb", "Hit", "What a hit does", "", "The beam's line reaches every machine as it does now. Every cluster within 1.5 m of the line breaks, and so does any cluster no longer joined to a ground cluster. Each machine works from the same baked graph, so all machines break the same clusters and their colliders match. The stone caps now run along straight cluster edges, which closes the gaps and notches you saw round the holes.", "No choice here either."],
+      ["bulb", "Falling", "How a cluster falls", "you", "The Burst job that sets up the GPU pieces gives every triangle of a cluster the same GPU piece, centred on that cluster. The existing compute shader then moves and spins the whole cluster together, lands it at the floor height, and despawns it.", "Pick how long a fallen cluster stays and how solid it looks (see Choices below)."],
+      ["bulb", "Cost", "Why it stops lagging", "", "Measured today: after 16 hits, 75 debris effects redrew 284,544 vertices every frame for the rest of the raid, and repeated that for each of 18 shadow-casting lights. After the change, an effect runs its compute pass and draws only while some of its clusters are falling, and casts no shadows. An idle effect costs nothing. Clusters also mean fewer pieces for the compute pass to move. I measure the same 16 hits and report the new vertex count.", "No choice needed."]
+    ]
+  },
+  "changes": [
+    ["keep", "Kept from your fracture system", "Used as it is.", null, "The baked graph and support drop, FractureCompute and FractureRender, the one-mesh renderer, the stone caps, DoubleSidedMeshGenerator, and no rigid bodies.", null],
+    ["chg", "Changed", "Pieces are clusters, and idle debris costs nothing.", ["A GPU piece per triangle; every hit part draws all its triangles every frame, with shadows, for the raid", "A GPU piece per 1.5 m cluster; drawn only while clusters fall, without shadows"], "CastleFractureBake (grid clipping), FractureGraphData (cluster lists), FracturableObject (break clusters), FractureEngine (one piece per cluster), FractureEffect (sleep when idle).", null],
+    ["keep", "Unchanged", "Everything around the fracture system.", null, "The beam, the two shots, the scorch, the network messages, the guard map refresh, and the one-sided colliders fixed today.", null]
+  ],
+  "choices": [
+    ["life", "How long should a fallen cluster stay?", [
+      ["A", "2 seconds", 1, "A cluster despawns 2 seconds after it breaks off, plus up to 1 more second chosen at random so they do not all vanish together. It is long enough to see the wall come down, and the debris is gone before it reads as clutter."],
+      ["B", "5 seconds, as now", 0, "Your system's own setting. Debris lies on the floor longer, which is what you said lingered too long."]
+    ], "I suggest option A: you said the pieces linger too long."],
+    ["solid", "Should a falling cluster carry its stone edge?", [
+      ["A", "Yes, so it reads as a block", 1, "The bake adds each cluster's edge strip, the same stone as the caps, to its falling piece. A wall cluster then falls as a 1.5 m slab with thickness, not a flat sheet."],
+      ["B", "No, surface only", 0, "The cluster falls as just its front and back faces, a thin sheet. Fewer triangles in the debris."]
+    ], "I suggest option A: a slab with thickness reads as stone, which is what the glitchy sheets were missing."]
+  ],
+  "wrapup": {
+    "summary": "Your fracture system breaks the castle in 1.5 m clusters that fall as one piece each, on the GPU, with no rigid bodies, and debris costs nothing at rest.",
+    "changing": "The castle bake, what a GPU piece is, and when the debris effect runs. The Ophan's behaviour does not change.",
+    "blocking": "Your picks for how long clusters stay and whether they carry their stone edge.",
+    "next": "Issues #490 to #494 are open under issue #468 (the Ophan redo), one per step: the cluster bake, breaking whole clusters, clusters falling as one piece, idle debris costing nothing, and the recorded run. Once you approve, I build them in order, measure the drawing cost against today's 284,544 vertices after 16 hits, and record the co-op run with every shot you listed before the finished build reaches you.",
+    "todo": [
+      "Pick your answers under Choices.",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with \"Build plan approved: Ophan clusters\", or tell me what to change."
+    ]
+  }
+}

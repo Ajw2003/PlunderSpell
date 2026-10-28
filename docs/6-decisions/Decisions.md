@@ -1691,3 +1691,10 @@ cut at bake into closed 1.5 m blocks; a hit removes whole blocks, unsupported bl
 after landing, and the blocks' own sides fill the hole. This replaces the ported triangle debris and the stone caps
 from the polish (pick 4A there). Same pass: room colliders went back to the one-sided split mesh, since the
 double-sided fracture collider stopped guards on stairs.
+
+**Reversed the same day (2026-10-28): clusters inside aj's fracture system (1B).** Reading the solid-chunk build plan
+(rigid bodies and box colliders for falling blocks, the GPU debris retired), aj changed the pick to 1B: "the
+performance gain of the gpu compute and the baking of the fracture system is something I want to keep as well as it's
+lack of rigidbodies or normal expensive physics". The baked graph, the GPU compute debris and the caps stay; triangles
+are grouped at bake into 1.5 m clusters, and a GPU piece becomes a cluster, so it breaks and falls as one rigid unit.
+The solid-chunk plan page (`docs/plans/ophan-chunks-plan.html`) is superseded by `docs/plans/ophan-clusters-plan.html`.

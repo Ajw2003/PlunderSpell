@@ -109,6 +109,13 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
   costs the host 5 to 14 ms per room and the guard map refresh 7 to 24 ms, but every hit part keeps a debris effect that
   redraws all its triangles every frame for the rest of the raid (75 effects, 284,544 vertices after 16 hits), which
   is the stutter. How breaking changes to fix that is aj's pick on the page.
+- **Fracture clusters (planned 2026-10-28, aj's pick 1B; `docs/plans/ophan-clusters-plan.html`; #490 to #494).** aj's
+  fracture system stays: the baked graph, the GPU compute debris and its renderer, no rigid bodies. The bake clips each
+  wall, floor and roof part along a 1.5 m room-aligned grid and numbers each cell's triangles as one cluster (props: one
+  cluster per object); FractureGraphData gains each cluster's triangles, neighbours and ground support. A hit breaks
+  every cluster within the radius of the beam's line, then every cluster cut off from the ground. FractureEngine makes
+  one GPU piece per cluster, centred on it, so the unchanged compute shader moves and spins a cluster as one unit. A
+  FractureEffect runs and draws only while its clusters fall, without shadows. Caps run along the straight cluster edges.
 - **Every machine sees the same thing.** The turn, the lantern, the arrival and each catch are
   decided on the host and shown on every client (the Ophan's target, beams, scorched rooms and takes too); nothing here is polled each frame (`core.md`,
   "When Update is allowed").
