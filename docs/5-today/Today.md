@@ -1,5 +1,13 @@
 # Today
 
+**2026-10-27 (night) - Ophan bugs and solid beams, built, awaiting aj's hand test (#463: #464 to #467; `AjsAgent/gym-with-demand-page`).**
+The dropped page is picked up with E (Interact). The spectator camera copies the player camera (3000 m far clip). Sight
+only picks the attack: a target hidden while the Ophan watches draws the charge. The slow beam has a solid core; the
+charged beam grows and follows through its 3 s charge. The charged beam cuts a real hole (`OphanWallCut`) in mesh and
+collider on every machine, and scorched rooms no longer let the slow beam through whole. EditMode 265 pass / 3 skipped.
+Scripted co-op checks failed on the check's own placement (`ophan_check.cs place` re-grab), so aj tests by hand:
+`docs/plans/ophan-bugs-and-beams-qa.html`.
+
 **2026-10-27 (later) - the Ophan in the sky, proved in co-op (#418: #441, #442, #443, #444; `AjsAgent/ophan-arrival-418`).**
 The slow beam no longer floods the target's view: 0.8 m wide at the target and faded over its last 25 m on the
 target's own machine (2 m elsewhere). New held pose `ophan_spread` (#443): the hover's wheels and eye with the wings

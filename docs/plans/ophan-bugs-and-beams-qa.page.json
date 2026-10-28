@@ -1,0 +1,43 @@
+{
+  "title": "QA: Ophan bugs and solid beams",
+  "eyebrow": "Hand test for issue #463 (#464 to #467) and the page pickup, on AjsAgent/gym-with-demand-page",
+  "qa": {
+    "feature": "Ophan bugs and solid beams",
+    "base": "828c6759",
+    "unverified": [
+      "Nobody has played any of these five items by hand yet.",
+      "The spectator view of the whole Ophan was not captured: in the script runs the host never went down.",
+      "The solid core, the growing charged beam and the cut hole have not been seen on screen in a good view; the script's camera angles were poor.",
+      "Walking through a cut hole was not tried on either machine.",
+      "The page pickup with E compiles, but it was not pressed in game."
+    ],
+    "files": {}
+  },
+  "short": {
+    "lead": "All five items are built, compile cleanly, and pass the editor tests (265 pass, 3 skipped, 0 fail). The scripted co-op checks kept failing on the script's own placement, not on the game, so the steps below are for you to play it yourself. One script result stands: of 2,802 ground-floor spots in one castle, 1,125 of the 1,127 under a roof count as cover.",
+    "hint": "Open the game with the command in Start, then play each item in order. Each says what you should see.",
+    "key": [["Built and tested by code", "done"], ["You play it", "you"]],
+    "items": [
+      ["play", "Start", "Open the Ophan Gym in co-op", "you", "In Git Bash, from C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell-demand, run: bash Tools/Unity/coop_local.sh --gym. It rebuilds the client if the game changed (about 30 s), presses Play in the Editor, hosts, and opens a second window that joins. You should see the line \"Co-op on this PC is up\" and two windows side by side. The Editor is the host; the small window is the client. In the gym, F7 summons the Ophan, F8 stops damage to you, F9 removes the guards and F10 slows time.", "Run it once; every item below uses this session."],
+      ["play", "Item 1", "Pick up the dropped page with E", "you", "In the Lair, tear the demand page at the ledger with E. Then, with empty hands, press Q to drop it. Look at the page on the floor from within 3 m and press E.", "You should see the page leave the floor and be held again. F does nothing."],
+      ["play", "Bug 2", "The whole Ophan while you spectate", "you", "Set out on a raid and press F9 to remove the guards. On the host, pick up any loot so the Ophan hunts you, and press F7. Stand in the open and let the slow beam kill you. Repeat with the client carrying the loot instead.", "While spectating, you should see the whole Ophan, its top wings included, on both machines."],
+      ["play", "Bug 3", "Hiding draws the charge", "you", "With loot in your hands, go indoors under a roof before pressing F7, and stay there.", "After about 3 s of the Ophan watching, it should charge (its rings speed up and its eye swells) and fire through the stone. Standing in the open instead brings the 3 s lock-on and the slow beam."],
+      ["play", "Change 4", "Solid slow beam and the growing charged beam", "you", "Stand in the open with loot and watch from the other player's window. Then step behind a wall during the drain.", "The slow beam should read as a bright solid rod inside a soft glow. During the 3 s charge a thin beam should follow the target and grow wider and brighter until it fires."],
+      ["play", "Change 5", "The hole is real", "you", "After a charged beam hits a player behind a wall, walk to that wall on both machines.", "There should be a ragged hole about 3 m across in the wall and in any roof on the beam's line. You should be able to walk and see through it, and the floor under the target should still be there. The rest of that room still stops the slow beam."]
+    ]
+  },
+  "changes": [
+    ["chg", "Page pickup", "E (Interact) picks up the dropped page.", ["F, never shown to the player", "E, as every other floor interaction"], "PagePicker.cs; docs/4-systems/market.md.", null],
+    ["chg", "Spectator camera (#464)", "It copies the player camera, so it draws to 3000 m.", ["Unity's default, stopping at 1000 m", "The player camera's settings"], "PlayerNetworkOwnership.KeepSpectating.", null],
+    ["chg", "Sight picks the attack (#465)", "A target hidden while the Ophan watches draws the charge.", ["Hidden from the start meant never attacked", "3 s hidden starts the charge"], "OphanHunt, with a new editor test. The target is still the most worth carried, at any range.", null],
+    ["chg", "Beams (#466)", "Solid core, and a charged beam that grows.", ["One see-through tube; a flash at the hit", "A bright core inside the glow; a growing, following charge beam"], "OphanLook and OphanBeamShaft.", null],
+    ["chg", "Wall cut (#467)", "The charged beam cuts a real hole.", ["A glowing hole that faded; walls stayed solid; a scorched room let the slow beam through whole", "Triangles within 1.5 m of the beam's line are removed from the mesh and collider on every machine"], "OphanWallCut, with two editor tests; OphanOfHours sends the host's eye line. Scorched rooms no longer let the slow beam through whole.", null]
+  ],
+  "wrapup": {
+    "summary": "Five items are built and pushed on AjsAgent/gym-with-demand-page; none has been played by hand.",
+    "changing": "The page pickup key, the spectator camera, the Ophan's hunt, its beams, and real holes in the castle from the charged beam.",
+    "blocking": "Your hand test. Issues #463 to #467 stay open and marked needs review until you pass it.",
+    "next": "On a pass I open the pull request into staging. On a failure, tell me the item and what you saw, and I fix it.",
+    "todo": ["Play the items in order.", "Tap <b>Copy my reply</b>.", "Send it with \"QA passed: Ophan bugs and solid beams\", or tell me which item failed."]
+  }
+}

@@ -227,15 +227,22 @@ switch (action)
             if (d < bestDistance) { bestDistance = d; best = c; }
         }
         if (best == null) return "no " + arg + " spot found";
-        // Moving the player drops what they carry: let go first and take it up again after.
+        // The carried piece moves with the player: a release and re-grab in one frame never takes hold (#463), so the
+        // Ophan stopped counting the worth the player still seemed to carry.
         var carried = Items() != null ? Get(Items(), "CarriedItem") as UnityEngine.Component : null;
-        if (carried != null) Call(Items(), "ForceRelease");
         var at = best.Value + UnityEngine.Vector3.up * 1.25f;
+        var delta = at - player.transform.position;
         body.position = at;
         player.transform.position = at;
         body.linearVelocity = UnityEngine.Vector3.zero;
+        if (carried != null)
+        {
+            var piece = carried.GetComponent<UnityEngine.Rigidbody>();
+            piece.position += delta;
+            carried.transform.position += delta;
+            piece.linearVelocity = UnityEngine.Vector3.zero;
+        }
         Look(player, eye);
-        if (carried != null) { Grab(carried); Look(player, eye); }
         return "placed " + arg + " at " + V(at) + (carried != null ? " still carrying " + carried.name : "");
     }
 
