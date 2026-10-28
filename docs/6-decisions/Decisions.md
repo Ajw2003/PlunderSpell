@@ -1648,3 +1648,9 @@ on every machine (`docs/plans/ophan-bugs-and-beams.html`, pick 5A). A room is on
 so the cut removes only triangles near the beam's line rather than whole meshes, keeping floors under players elsewhere.
 **Also settled:** the Ophan's target is chosen by worth alone, at any range; sight only decides slow beam or charge.
 See `docs/4-systems/fear.md`, "Ophan bugs and solid beams".
+
+## 2026-10-27 — QA failed: Ophan bugs and solid beams (#463)
+
+aj played the build in co-op (recording: `docs/generated/ophan-bugs-463/qa-recording/`, one frame a second) and failed
+it: "the logic is not quite right", "the beam still insta kills me essentially", "the visual looks wrong too". The work
+may wait. What was seen and the options for the redo: `docs/plans/ophan-qa-findings.html`.
