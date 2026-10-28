@@ -29,6 +29,11 @@ ffmpeg -y -i docs/generated/<feature>/run.mp4 -vf "fps=1,scale=960:-2" docs/gene
 Write what each frame shows (health, the gym panel's state, both windows) with timestamps, and put the frames on the
 QA page. The first worked example: `docs/plans/ophan-qa-findings.html`.
 
+Before the full run, check the camera angles: take a still from each planned angle and look at it, so the recording
+shows everything the test is about (aj, 2026-10-28). Put both game windows above everything else first
+(`place_windows.ps1` with no argument; `release` after), or another window covers the client and the recording misses
+it. Recording a DX12 game window by its title (`gdigrab -i title=...`) gives a blank white frame, so record the desktop.
+
 ## Waiting on Unity
 
 Use the wrappers below, which already wait correctly. If you must write your own wait:
