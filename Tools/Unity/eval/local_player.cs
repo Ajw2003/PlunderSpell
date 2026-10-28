@@ -1,17 +1,33 @@
 // Play mode, either side: something done to this machine's own player, for guard_baseline_check.sh.
 //   untouchable   turns the gym's no-damage on for this player, leaving it on if it already is (F8 is a toggle)
 //   park x,y,z    holds this player still (kinematic) at that point, out of the way of a test
+// Reaches the game only through reflection, since that is all a Development build's eval can do (the client side).
 string action = "__ACTION__";
 string arg = "__ARG__";
-var p = StateMachine.PlayerStateMachine.Local;
+const System.Reflection.BindingFlags All = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static
+    | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+
+System.Type T(string name)
+{
+    foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+    {
+        var type = assembly.GetType(name);
+        if (type != null) return type;
+    }
+    throw new System.Exception("no type " + name);
+}
+
+var p = T("StateMachine.PlayerStateMachine").GetProperty("Local", All).GetValue(null) as UnityEngine.Component;
 if (p == null) return "no local player";
 
 if (action == "untouchable")
 {
-    var gym = UnityEngine.Object.FindFirstObjectByType<Plunderspell.Playtest.OphanGym>();
+    var gymType = T("Plunderspell.Playtest.OphanGym");
+    var gym = UnityEngine.Object.FindFirstObjectByType(gymType);
     if (gym == null) return "no gym";
-    if (!gym.IsLocalPlayerUntouchable) gym.ToggleLocalPlayerUntouchable();
-    return "untouchable " + gym.IsLocalPlayerUntouchable;
+    var flag = gymType.GetProperty("IsLocalPlayerUntouchable", All);
+    if (!(bool)flag.GetValue(gym)) gymType.GetMethod("ToggleLocalPlayerUntouchable", All).Invoke(gym, null);
+    return "untouchable " + flag.GetValue(gym);
 }
 
 if (action == "park")

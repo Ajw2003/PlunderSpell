@@ -221,13 +221,13 @@ if (action == "stage")
 
 if (action == "hide")
 {
-    // The nearest map floor within 12 m of the player, on its level, that the subject guard's eye has no clear line to.
+    // The nearest map floor within 20 m of the player, on its level, that the subject guard's eye has no clear line to.
     var g = ((Plunderspell.Guards.Guard[])domain.GetData("gb.subjects"))[0];
     var eye = g.transform.position + UnityEngine.Vector3.up * g.Tuning.EyeHeight;
     var me = player.transform.position;
     UnityEngine.Vector3 best = me; float bestDistance = float.MaxValue;
     for (int k = 0; k < 24; k++)
-        for (float r = 2f; r <= 12f; r += 1f)
+        for (float r = 2f; r <= 20f; r += 1f)
         {
             float a = k * UnityEngine.Mathf.PI / 12f;
             int cell = graph.NearestWalkableCell(me + new UnityEngine.Vector3(UnityEngine.Mathf.Cos(a), 0f, UnityEngine.Mathf.Sin(a)) * r, 0.6f);
@@ -235,7 +235,7 @@ if (action == "hide")
             var floor = graph.CellPosition(cell);
             if (UnityEngine.Mathf.Abs(floor.y - Feet().y) > 0.6f) continue;
             var head = floor + UnityEngine.Vector3.up * 1.9f;
-            if (!UnityEngine.Physics.Linecast(eye, head, 1, UnityEngine.QueryTriggerInteraction.Ignore)) continue;
+            if (!UnityEngine.Physics.Linecast(eye, head, g.Tuning.GeometryLayers, UnityEngine.QueryTriggerInteraction.Ignore)) continue;
             float d = (floor - me).sqrMagnitude;
             if (d < bestDistance) { bestDistance = d; best = floor; }
         }
