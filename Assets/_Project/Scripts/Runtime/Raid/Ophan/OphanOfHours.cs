@@ -25,8 +25,6 @@ namespace Plunderspell.Raid
         public const string PrefabResource = "Fear/TheOphanOfHours";
         private const float RepickSeconds = 1f;
         private const float TakeDespawnDelaySeconds = 1f;
-        // The charged beam bursts through the stone first and lands this long after, so the target sees the wall go (#461).
-        private const float ChargedHitDelaySeconds = 0.5f;
 
         [SerializeField] private OphanTuning _tuning = new OphanTuning();
 
@@ -120,8 +118,8 @@ namespace Plunderspell.Raid
             }
 
             bool hasTarget = _target != null && !_target.dead;
-            Vector3 aim = hasTarget ? AimPoint(_target) : _eyePoint;
-            bool inCover = hasTarget && StoneBetween(_eyePoint, aim, out _);
+            Vector3 aim = hasTarget ? AimPoint(_target) : Eye;
+            bool inCover = hasTarget && StoneBetween(Eye, aim, out _);
             LootValue artifact = hasTarget ? HeldArtifact(_target) : null;
 
             OphanStep step = _hunt.Tick(Time.deltaTime, hasTarget, inCover, artifact != null);
@@ -130,6 +128,12 @@ namespace Plunderspell.Raid
                 Damage.Apply(_target, step.Drain, gameObject, gameObject, aim, DamageKind.Spell);
             if (step.ChargedFire && hasTarget)
                 FireCharged(aim);
+            if (step.ChargedKill && hasTarget)
+            {
+                // The second shot re-aims at wherever the target is now, breaking any new stone on that line (#470).
+                FireCharged(aim);
+                Damage.Apply(_target, _tuning.ChargedBeamDamage, gameObject, gameObject, aim, DamageKind.Spell);
+            }
             if (step.Take && artifact != null)
                 Take(artifact);
 
@@ -186,7 +190,13 @@ namespace Plunderspell.Raid
             return item.IsHeldBy(body.gameObject, key);
         }
 
-        private static Vector3 AimPoint(PlayerStateMachine body) => body.transform.position + Vector3.up * 1.2f;
+        /// <summary>Chest height above the body pivot; the pivot sits 0.9 m above the floor, so aiming higher overshoots the head.</summary>
+        public const float ChestAboveBody = 0.3f;
+
+        /// <summary>The eye bone when the look exists, so cover, charge and beam all start at the same point.</summary>
+        private Vector3 Eye => _look != null ? _look.EyePoint : _eyePoint;
+
+        private static Vector3 AimPoint(PlayerStateMachine body) => body.transform.position + Vector3.up * ChestAboveBody;
 
         /// <summary>Whether castle stone lies on the line from its eye to the target.</summary>
         private bool StoneBetween(Vector3 from, Vector3 to, out List<CastleRoomModule> rooms, List<Vector3> entries = null)
@@ -215,23 +225,15 @@ namespace Plunderspell.Raid
         {
             // Where it enters the stone, and (cast back from the target) where it breaks out on the target's side.
             var holes = new List<Vector3>();
-            StoneBetween(aim, _eyePoint, out _, holes);
-            StoneBetween(_eyePoint, aim, out List<CastleRoomModule> rooms, holes);
+            StoneBetween(aim, Eye, out _, holes);
+            StoneBetween(Eye, aim, out List<CastleRoomModule> rooms, holes);
             var indices = new List<int>();
             if (rooms != null)
                 foreach (CastleRoomModule room in rooms)
                     if (!indices.Contains(ScorchedRooms.IndexOf(room)))
                         indices.Add(ScorchedRooms.IndexOf(room));
-            ShowCharged(_eyePoint, aim, indices.ToArray(), holes.ToArray());
-            StartCoroutine(HitAfterTheBurst(_target, aim));
+            ShowCharged(Eye, aim, indices.ToArray(), holes.ToArray());
             Debug.Log($"[Ophan] charged beam at {aim}; {indices.Count} room(s) scorched, {holes.Count} wall(s) burst.");
-        }
-
-        private IEnumerator HitAfterTheBurst(PlayerStateMachine target, Vector3 aim)
-        {
-            yield return new WaitForSeconds(ChargedHitDelaySeconds);
-            if (target != null && !target.dead)
-                Damage.Apply(target, _tuning.ChargedBeamDamage, gameObject, gameObject, aim, DamageKind.Spell);
         }
 
         private void Take(LootValue artifact)

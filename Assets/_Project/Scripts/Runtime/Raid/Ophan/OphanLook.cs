@@ -251,7 +251,7 @@ namespace Plunderspell.Raid
             if (!_beam.Visible)
                 return;
             float grow = charging ? Mathf.Clamp01(inState / _tuning.ChargeSeconds) : 1f;
-            Vector3 end = flashing ? _flashTarget : lifting ? _lifted.position : Target.position + Vector3.up * 1.2f;
+            Vector3 end = flashing ? _flashTarget : lifting ? _lifted.position : Target.position + Vector3.up * OphanOfHours.ChestAboveBody;
             // Drawn on both faces and added onto the scene, so it is half the old ribbon's strength.
             Color colour = flashing ? new Color(1f, 1f, 1f, 1f)
                 : charging ? new Color(1f, 1f, 1f, Mathf.Lerp(ChargeStartBrightness, 1f, grow))

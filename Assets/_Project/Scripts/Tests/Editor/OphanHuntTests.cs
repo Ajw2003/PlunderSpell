@@ -88,6 +88,39 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
+        public void Test_TheChargedBeamBreaksTheStoneThenKillsWithItsSecondShot()
+        {
+            ToDraining();
+            Run(_tuning.CoverSecondsBeforeCharge + Step, cover: true);
+            var steps = new List<OphanStep>();
+            for (float t = 0f; t < _tuning.ChargeSeconds + _tuning.SecondShotDelaySeconds + 2 * Step; t += Step)
+                steps.Add(_hunt.Tick(Step, true, true, false));
+            int first = steps.FindIndex(s => s.ChargedFire);
+            int second = steps.FindIndex(s => s.ChargedKill);
+            Assert.GreaterOrEqual(first, 0, "The first shot fires at the end of the charge.");
+            Assert.AreEqual(1, steps.FindAll(s => s.ChargedKill).Count, "One second shot (#470).");
+            Assert.That((second - first) * Step, Is.EqualTo(_tuning.SecondShotDelaySeconds).Within(Step * 1.5f),
+                "The second shot comes the set delay after the first.");
+        }
+
+        [Test]
+        public void Test_ASecondShotIsNotFiredAtANewTarget()
+        {
+            ToDraining();
+            Run(_tuning.CoverSecondsBeforeCharge + _tuning.ChargeSeconds + 2 * Step, cover: true);
+            _hunt.Retarget();
+            Assert.AreEqual(0, CountKills(_tuning.SecondShotDelaySeconds + 2 * Step), "Retargeting cancels the second shot.");
+        }
+
+        private int CountKills(float seconds)
+        {
+            int kills = 0;
+            for (float t = 0f; t < seconds; t += Step)
+                kills += _hunt.Tick(Step, true, true, false).ChargedKill ? 1 : 0;
+            return kills;
+        }
+
+        [Test]
         public void Test_HidingTooLongBringsTheChargedBeamWhichFiresThroughStone()
         {
             ToDraining();

@@ -44,6 +44,9 @@ namespace Plunderspell.Raid
         [Tooltip("Seconds it charges, its eye swelling to full blast, before the charged beam fires.")]
         [Range(0.5f, 10f)] public float ChargeSeconds = 3f;
 
+        [Tooltip("Seconds between the charged beam's first shot, which breaks the stone, and its second, which re-aims and kills.")]
+        [Range(0f, 5f)] public float SecondShotDelaySeconds = 1f;
+
         [Tooltip("Seconds after a charged beam before it can charge again.")]
         [Range(0f, 60f)] public float ChargeCooldownSeconds = 10f;
 

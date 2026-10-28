@@ -17,8 +17,10 @@ namespace Plunderspell.Raid
     {
         /// <summary>Slow-beam damage to deal its target this step.</summary>
         public float Drain;
-        /// <summary>The charged beam fired this step.</summary>
+        /// <summary>The charged beam's first shot fired this step: it breaks the stone on its line and deals no damage.</summary>
         public bool ChargedFire;
+        /// <summary>The charged beam's second shot, a delay after the first: it re-aims at the target, breaks any new stone, and kills.</summary>
+        public bool ChargedKill;
         /// <summary>A beam reached a target carrying an artifact this step: it takes the piece.</summary>
         public bool Take;
         /// <summary>It has finished leaving and can be removed.</summary>
@@ -39,6 +41,9 @@ namespace Plunderspell.Raid
         private float _cooldown;
         private float _drainOwed;
         private float _sinceDamageStep;
+        // Seconds until the second shot; negative when none is due. Kept across states, so the drain after the first shot
+        // does not cancel it (#470).
+        private float _secondShotIn = -1f;
 
         public OphanHunt(OphanTuning tuning) => _tuning = tuning;
 
@@ -55,6 +60,8 @@ namespace Plunderspell.Raid
         /// </summary>
         public void Retarget()
         {
+            // A second shot is meant for the target the first shot found, not the next one.
+            _secondShotIn = -1f;
             if (State == OphanState.Locking || State == OphanState.Draining || State == OphanState.Charging)
                 Enter(OphanState.Watching);
         }
@@ -62,6 +69,7 @@ namespace Plunderspell.Raid
         /// <summary>Paid: it leaves at once (HuntSecondsAfterPaid is 0, #433).</summary>
         public void Leave()
         {
+            _secondShotIn = -1f;
             if (State != OphanState.Absent && State != OphanState.Leaving)
                 Enter(OphanState.Leaving);
         }
@@ -76,6 +84,15 @@ namespace Plunderspell.Raid
             var step = new OphanStep();
             _stateTime += dt;
             _cooldown -= dt;
+            if (_secondShotIn >= 0f)
+            {
+                _secondShotIn -= dt;
+                if (_secondShotIn <= 0f)
+                {
+                    _secondShotIn = -1f;
+                    step.ChargedKill = hasTarget && State != OphanState.Leaving && State != OphanState.Absent;
+                }
+            }
             switch (State)
             {
                 case OphanState.Arriving:
@@ -141,7 +158,8 @@ namespace Plunderspell.Raid
                     }
                     if (_stateTime >= _tuning.ChargeSeconds)
                     {
-                        // The charged beam goes through stone: hiding does not save you from it.
+                        // The charged beam goes through stone: hiding does not save you from it. Two shots (#470): this
+                        // one breaks the stone, the second re-aims and kills.
                         if (carriesArtifact)
                         {
                             step.Take = true;
@@ -150,6 +168,7 @@ namespace Plunderspell.Raid
                         else
                         {
                             step.ChargedFire = true;
+                            _secondShotIn = _tuning.SecondShotDelaySeconds;
                             _cooldown = _tuning.ChargeCooldownSeconds;
                             Enter(OphanState.Draining);
                         }
