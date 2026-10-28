@@ -610,6 +610,12 @@ namespace Plunderspell.Fracture
             if (filter == null || pieceMappings == null) return;
             if (renderMesh == null)
             {
+                // Seen once on a co-op client (2026-10-28, cause not found yet): the throw stopped every later part's break.
+                if (filter.sharedMesh == null)
+                {
+                    Debug.LogError($"[Fracture] {transform.parent?.name}/{name} has no mesh to redraw after a break; its collider still breaks.", this);
+                    return;
+                }
                 renderMesh = Instantiate(filter.sharedMesh);
                 filter.sharedMesh = renderMesh;
                 if (capDepthMetres > 0f)

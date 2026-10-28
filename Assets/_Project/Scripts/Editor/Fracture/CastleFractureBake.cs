@@ -383,6 +383,15 @@ namespace Plunderspell.EditorTools
                 run.Add(i);
             }
 
+            // Many upper floors and roofs are 2 cm slabs, not 30 cm: a full-depth edge from one face poked through the other as
+            // a ridge along every cluster border (aj, 2026-10-28). Each edge stops half way to the opposite face of its slab.
+            var probe = new GameObject("StoneEdgeDepthProbe") { hideFlags = HideFlags.HideAndDontSave };
+            probe.transform.SetPositionAndRotation(toWorld.GetPosition(), toWorld.rotation);
+            probe.transform.localScale = toWorld.lossyScale;
+            var probeCollider = probe.AddComponent<MeshCollider>();
+            probeCollider.sharedMesh = src;
+            float metresPerUnit = toWorld.lossyScale.x;
+
             var newTris = new List<int>[ch.Subs.Count]; var newClusters = new List<int>[ch.Subs.Count]; var newKinds = new List<byte>[ch.Subs.Count];
             int at = 0;
             for (int s = 0; s < ch.Subs.Count; s++)
@@ -406,9 +415,10 @@ namespace Plunderspell.EditorTools
                     }
                 int t = rep.tri;
                 Vector3 p0 = ch.Verts[tris[t * 3]], p1 = ch.Verts[tris[t * 3 + 1]], p2 = ch.Verts[tris[t * 3 + 2]];
-                Vector3 inward = -Direction(Vector3.Cross(p1 - p0, p2 - p0)) * depth;
-                Vector3 centroid = (p0 + p1 + p2) / 3f;
+                Vector3 inwardDir = -Direction(Vector3.Cross(p1 - p0, p2 - p0));
                 Vector3 a = ch.Verts[ia], b = ch.Verts[ib];
+                Vector3 inward = inwardDir * SlabHalfDepth(probeCollider, toWorld, (a + b) * 0.5f, inwardDir, depth, metresPerUnit);
+                Vector3 centroid = (p0 + p1 + p2) / 3f;
                 Vector3 w = Vector3.Cross(b - a, inward);
                 bool flip = Vector3.Dot(w, centroid - a) > 0f; // the front face points away from the cluster, toward the hole
                 Vector3 normal = Direction(flip ? -w : w);
@@ -421,11 +431,28 @@ namespace Plunderspell.EditorTools
                 for (int k = 0; k < 2; k++) { newClusters[sub[t]].Add(rep.cluster); newKinds[sub[t]].Add(2); }
             }
 
+            Object.DestroyImmediate(probe);
+
             var allClusters = new List<int>(); var allKinds = new List<byte>();
             for (int s = 0; s < ch.Subs.Count; s++) { ch.Subs[s] = newTris[s]; allClusters.AddRange(newClusters[s]); allKinds.AddRange(newKinds[s]); }
             clusters = allClusters.ToArray();
             kinds = allKinds.ToArray();
             return ch.ToMesh();
+        }
+
+        /// <summary>The stone edge's depth (mesh units) at <paramref name="point"/>: <paramref name="maxDepth"/>, or half the
+        /// distance to the slab's opposite face along <paramref name="inwardDir"/> when that face is nearer than twice it.</summary>
+        public static float SlabHalfDepth(MeshCollider slab, Matrix4x4 toWorld, Vector3 point, Vector3 inwardDir, float maxDepth, float metresPerUnit)
+        {
+            Vector3 dirWorld = toWorld.MultiplyVector(inwardDir).normalized;
+            // Starts 1 mm inside, so the face the edge hangs from (and its twin) is never the hit.
+            Vector3 from = toWorld.MultiplyPoint3x4(point) + dirWorld * 0.001f;
+            float reach = maxDepth * 2f * metresPerUnit;
+            bool hitsBackfaces = Physics.queriesHitBackfaces;
+            Physics.queriesHitBackfaces = true;
+            bool hit = slab.Raycast(new Ray(from, dirWorld), out RaycastHit h, reach);
+            Physics.queriesHitBackfaces = hitsBackfaces;
+            return hit ? Mathf.Min(maxDepth, (h.distance + 0.001f) * 0.5f / metresPerUnit) : maxDepth;
         }
     }
 }

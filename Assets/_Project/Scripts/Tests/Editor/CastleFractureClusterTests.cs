@@ -27,5 +27,26 @@ namespace Plunderspell.Tests.Editor
             }
             Object.DestroyImmediate(src); Object.DestroyImmediate(clipped);
         }
+
+        [Test]
+        public void StoneEdgeOnATwoCentimetreSlabStopsHalfWayThrough()
+        {
+            // A 1 m square slab 2 cm thick, as many upper floors are; the edge default is 15 cm.
+            var box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            box.transform.localScale = new Vector3(1f, 0.02f, 1f);
+            var slab = box.GetComponent<BoxCollider>();
+            Object.DestroyImmediate(slab);
+            var mesh = box.AddComponent<MeshCollider>();
+            mesh.sharedMesh = box.GetComponent<MeshFilter>().sharedMesh;
+            // On the top face (mesh space y = 0.5), going down.
+            float depth = CastleFractureBake.SlabHalfDepth(mesh, box.transform.localToWorldMatrix, new Vector3(0.2f, 0.5f, 0.2f), Vector3.down, 0.15f / 0.02f, 1f);
+            // metresPerUnit 1, so the depth comes back in metres: half the 2 cm.
+            Assert.That(depth, Is.EqualTo(0.01f).Within(0.002f), "edge depth in metres");
+            box.transform.localScale = Vector3.one;
+            Physics.SyncTransforms();
+            float thick = CastleFractureBake.SlabHalfDepth(mesh, box.transform.localToWorldMatrix, new Vector3(0.2f, 0.5f, 0.2f), Vector3.down, 0.1f, 1f);
+            Object.DestroyImmediate(box);
+            Assert.AreEqual(0.1f, thick, 1e-5f, "a slab thicker than twice the default keeps the default");
+        }
     }
 }

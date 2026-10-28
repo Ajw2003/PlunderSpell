@@ -503,6 +503,6 @@ MonoBehaviour:
   - array: 
   clusterIsSupport: 01
   clusterCentroid:
-  - {x: 0.036000025, y: 0.053499993, z: -0.02298565}
+  - {x: 0.03600001, y: 0.05349998, z: -0.022965869}
   clusterRadius:
-  - 0.00204752
+  - 0.0020647186
