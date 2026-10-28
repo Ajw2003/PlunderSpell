@@ -1678,3 +1678,5 @@ aj played the redo and found it working ("exactly the feeling of fear turned rel
 Chosen on `docs/plans/ophan-polish.html` (1A 2A 3A 4B): 1.5 m fracture pieces with props whole (Steam Deck budget);
 a gold, slow-pulsing beam for a target the Ophan will spare; stone caps on every broken edge; and guard navigation
 that avoids holes in floors and uses new routes through broken walls. Door plugs break like rooms (a bug fix).
+aj, same day: the polish is part of the redo, not a feature of its own; the redo has not passed QA yet. Its steps
+#474 to #478 sit under #468, and #473 only records the fold.
