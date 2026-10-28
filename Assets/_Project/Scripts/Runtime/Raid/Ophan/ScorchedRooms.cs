@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Plunderspell.Raid
 {
     /// <summary>
-    /// Rooms the Ophan's charged beam has scorched open this raid (#442, approved 2026-10-27 pick 9A): their walls are
-    /// drawn burnt and no longer stop the slow beam, though they stay solid to walk into. A room is named by its place
+    /// Rooms the Ophan's charged beam has scorched this raid (#442): their walls are drawn burnt. The beam's hole is cut
+    /// by <see cref="OphanWallCut"/> (#467); a scorched room's other walls still stop the slow beam. A room is named by its place
     /// among the generated castle's children, which is the same on every machine because every machine builds the
     /// castle from the same seed. Cleared when a new castle is built.
     /// </summary>
@@ -22,7 +22,6 @@ namespace Plunderspell.Raid
         public static CastleRoomModule RoomOf(Collider collider) =>
             collider != null ? collider.GetComponentInParent<CastleRoomModule>() : null;
 
-        public static bool IsScorched(CastleRoomModule room) => room != null && s_scorched.Contains(room);
 
         /// <summary>The room's place in the generated castle, sent over the network instead of the room itself.</summary>
         public static int IndexOf(CastleRoomModule room) => room.transform.GetSiblingIndex();

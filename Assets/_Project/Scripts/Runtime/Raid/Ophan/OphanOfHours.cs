@@ -188,7 +188,7 @@ namespace Plunderspell.Raid
 
         private static Vector3 AimPoint(PlayerStateMachine body) => body.transform.position + Vector3.up * 1.2f;
 
-        /// <summary>Whether castle stone, other than a scorched room's, lies on the line from its eye to the target.</summary>
+        /// <summary>Whether castle stone lies on the line from its eye to the target.</summary>
         private bool StoneBetween(Vector3 from, Vector3 to, out List<CastleRoomModule> rooms, List<Vector3> entries = null)
         {
             rooms = null;
@@ -198,13 +198,11 @@ namespace Plunderspell.Raid
             for (int i = 0; i < count; i++)
             {
                 Collider hit = _hits[i].collider;
-                // Any part of the built castle is stone, room or not (towers, the keep, the curtain wall's dressing);
-                // only a room can be scorched open.
+                // Any part of the built castle is stone, room or not (towers, the keep, the curtain wall's dressing).
+                // A charged beam's hole is a gap in the collider itself, so nothing else is let through (#467).
                 if (hit.GetComponentInParent<ProceduralCastleGenerator>() == null)
                     continue;
                 CastleRoomModule room = ScorchedRooms.RoomOf(hit);
-                if (ScorchedRooms.IsScorched(room))
-                    continue;
                 blocked = true;
                 entries?.Add(_hits[i].point);
                 if (room != null)

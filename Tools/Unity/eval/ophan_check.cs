@@ -108,12 +108,10 @@ void Look(UnityEngine.Component player, UnityEngine.Vector3 at)
 
 bool StoneBetween(UnityEngine.Vector3 from, UnityEngine.Vector3 to)
 {
-    // As the Ophan judges it: any part of the built castle is stone, except a scorched room.
+    // As the Ophan judges it: any part of the built castle is stone; a cut hole is a gap in the collider.
     var castle = T("Plunderspell.Castle.ProceduralCastleGenerator");
-    var scorched = T("Plunderspell.Raid.ScorchedRooms");
     foreach (var hit in UnityEngine.Physics.RaycastAll(from, (to - from).normalized, (to - from).magnitude, ~0, UnityEngine.QueryTriggerInteraction.Ignore))
-        if (hit.collider.GetComponentInParent(castle) != null
-            && !(bool)Call(scorched, "IsScorched", Call(scorched, "RoomOf", hit.collider))) return true;
+        if (hit.collider.GetComponentInParent(castle) != null) return true;
     return false;
 }
 

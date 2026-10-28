@@ -49,7 +49,7 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
   the charge's is the eye swelling to 1.5 times and brightening to full blast.
 - **Its beams.** A slow beam, after a 3 s lock-on, drains 25 health a second while no stone lies between its
   eye and the target. A charged beam, after 3 s of the target in cover, charges 3 s, kills in one hit, scorches the room
-  it hits (the slow beam then passes through that room's walls) and waits 10 s. A beam on a player carrying a piece
+  it hits and cuts a hole along its path (the slow beam passes only through the hole; #467) and waits 10 s. A beam on a player carrying a piece
   flagged `IsArtifact` lifts that piece into the sky instead: they live and the Ophan leaves (`HuntSecondsAfterPaid` 0).
   The host despawns the piece a second later; first every machine hides it, flashes a beam to it and raises a copy of
   its meshes up the beam to the eye over `LeaveSeconds`, growing so it still reads far up (`OphanLook.Lift`). A new
@@ -81,7 +81,7 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
   inside the soft shaft. Through the 3 s charge a thin beam runs from the eye to the target, following them and growing
   wider and brighter until the blast. The charged beam cuts a hole for real: the host sends the rooms and the beam's line,
   and every machine removes the triangles of those room meshes within 1.5 m of the line from both the drawn mesh and its
-  collider. This reverses pick 9A (Decisions, 2026-10-27). Plan page: `docs/plans/ophan-bugs-and-beams.html`.
+  collider. Scorched rooms no longer let the slow beam through whole; only the cut hole does. This reverses pick 9A (Decisions, 2026-10-27). Plan page: `docs/plans/ophan-bugs-and-beams.html`.
 - **Every machine sees the same thing.** The turn, the lantern, the arrival and each catch are
   decided on the host and shown on every client (the Ophan's target, beams, scorched rooms and takes too); nothing here is polled each frame (`core.md`,
   "When Update is allowed").
