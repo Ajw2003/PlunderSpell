@@ -136,6 +136,7 @@ MonoBehaviour:
   renderMaterial: {fileID: 0}
   groundY: 0.05
   destroyWhenEmpty: 0
+  keepMeshRenderer: 1
   preInitialize: 0
   destroyThreshold: 0.005
   supportHeightRatio: 0.1
@@ -280,6 +281,7 @@ MonoBehaviour:
   renderMaterial: {fileID: 0}
   groundY: 0.05
   destroyWhenEmpty: 0
+  keepMeshRenderer: 1
   preInitialize: 0
   destroyThreshold: 0.005
   supportHeightRatio: 0.1
@@ -422,6 +424,7 @@ MonoBehaviour:
   renderMaterial: {fileID: 0}
   groundY: 0.05
   destroyWhenEmpty: 0
+  keepMeshRenderer: 1
   preInitialize: 0
   destroyThreshold: 0.005
   supportHeightRatio: 0.1
@@ -562,6 +565,7 @@ MonoBehaviour:
   renderMaterial: {fileID: 0}
   groundY: 0.05
   destroyWhenEmpty: 0
+  keepMeshRenderer: 1
   preInitialize: 0
   destroyThreshold: 0.005
   supportHeightRatio: 0.1

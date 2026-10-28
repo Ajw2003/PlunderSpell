@@ -260,9 +260,10 @@ namespace Plunderspell.Raid
             float coreScale = CoreBrightness * (charging ? grow : 1f);
             var coreColour = new Color(colour.r * coreScale, colour.g * coreScale, colour.b * coreScale, 1f);
             // The charged flash fades near the player it strikes too, or its 8 m end whites out the wall bursting.
-            bool onLocalPlayer = PlayerStateMachine.Local != null && (flashing
-                ? Vector3.Distance(end, PlayerStateMachine.Local.transform.position) < 3f
-                : Target == PlayerStateMachine.Local.transform);
+            // Seen from the target's own eyes, or a spectator looking through them, the shaft would fill the view.
+            Camera view = Camera.main;
+            bool onLocalPlayer = view != null && Vector3.Distance(view.transform.position, end) < 3f
+                || PlayerStateMachine.Local != null && !flashing && Target == PlayerStateMachine.Local.transform;
             float eyeWidth = flashing ? ChargedWidthAtEye : charging ? Mathf.Lerp(ChargeStartWidthAtEye, ChargedWidthAtEye, grow) : BeamWidthAtEye;
             float endWidth = flashing ? ChargedWidthAtTarget : charging ? Mathf.Lerp(ChargeStartWidthAtTarget, ChargedWidthAtTarget, grow) : BeamWidthAtTarget;
             float fade = onLocalPlayer ? FadeMetresOnTarget : FadeMetresSeenByOthers;

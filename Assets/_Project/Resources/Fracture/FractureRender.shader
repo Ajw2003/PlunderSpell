@@ -54,6 +54,7 @@ Shader "FractureSystem/FractureRender"
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             float4 _Color;
+            int _HideStatic; // 1: the object's own renderer draws what is still in place (#472)
             float _Cutoff;
 
             struct v2f
@@ -77,7 +78,7 @@ Shader "FractureSystem/FractureRender"
                 VertexData vd = _Vertices[vertexID];
                 PieceData pd = _Pieces[vd.pieceIndex];
                 
-                if (pd.isStatic == -1)
+                if (pd.isStatic == -1 || (_HideStatic == 1 && pd.isStatic == 1))
                 {
                     o.pos = float4(0, 0, 0, 0);
                     o.normalWS = float3(0, 1, 0);
@@ -154,6 +155,7 @@ Shader "FractureSystem/FractureRender"
             StructuredBuffer<PieceData> _Pieces;
             StructuredBuffer<VertexData> _Vertices;
 
+            int _HideStatic; // the object's own renderer casts the shadows of what is in place
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             float _Cutoff;
@@ -181,7 +183,7 @@ Shader "FractureSystem/FractureRender"
                 
                 // PERFORMANCE TWEAK: Only cast shadows if the piece is completely static (attached to the tree)
                 // Flying pieces (isStatic == 0) and despawned pieces (isStatic == -1) will not cast shadows.
-                if (pd.isStatic != 1)
+                if (pd.isStatic != 1 || _HideStatic == 1)
                 {
                     o.pos = float4(0,0,0,0);
                     return o;

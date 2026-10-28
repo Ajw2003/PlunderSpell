@@ -49,6 +49,8 @@ namespace Plunderspell.EditorTools
                         if (!part.TryGetComponent(out FracturableObject fo)) fo = part.gameObject.AddComponent<FracturableObject>();
                         fo.destroyWhenEmpty = false;
                         fo.preInitialize = false;
+                        // The castle's own shader keeps drawing what is left; the fracture shader draws only the debris.
+                        fo.keepMeshRenderer = true;
                         // mergeDistance is in the mesh's own space; the rooms are stored at 1/100 size, so the 0.05 default
                         // welded everything within 5 m and the graph build ran out of memory. 1 cm in metres instead.
                         fo.mergeDistance = WeldMetres / part.lossyScale.x;

@@ -36,6 +36,11 @@ namespace Plunderspell.Fracture
         [Tooltip("Destroy this GameObject when almost nothing is left. Turn off for castle parts.")]
         public bool destroyWhenEmpty = true;
 
+        [Tooltip("Keep this object's own renderer drawing what is left, in its own shader, and let the effect draw only falling debris. Off: the effect redraws every piece, as the original did.")]
+        public bool keepMeshRenderer = false;
+
+        private Mesh renderMesh;
+
         [Header("Optimization")]
         [Tooltip("Initialize fracture data on Start instead of first hit. Prevents lag spikes when first hit.")]
         public bool preInitialize = false;
@@ -475,11 +480,36 @@ namespace Plunderspell.Fracture
                 collisionTriangles = finalTriangles;
                 
                 collisionMesh.triangles = collisionTriangles;
+                if (keepMeshRenderer) UpdateRenderMesh();
                 
                 // Force PhysX to rebuild the collision mesh by clearing it first
                 meshCollider.sharedMesh = null;
                 meshCollider.sharedMesh = collisionMesh;
             }
+        }
+
+        // The renderer keeps its materials, so the surviving triangles go back into their own submeshes (#472).
+        private void UpdateRenderMesh()
+        {
+            var filter = GetComponent<MeshFilter>();
+            if (filter == null || pieceMappings == null) return;
+            if (renderMesh == null)
+            {
+                renderMesh = Instantiate(filter.sharedMesh);
+                filter.sharedMesh = renderMesh;
+            }
+            var lists = new List<int>[renderMesh.subMeshCount];
+            for (int s = 0; s < lists.Length; s++) lists[s] = new List<int>();
+            for (int i = 0; i < initialTriangleCount; i++)
+            {
+                if (triangleIsBroken[i]) continue;
+                int s = pieceMappings[i].submeshIndex;
+                if (s < 0 || s >= lists.Length) continue;
+                lists[s].Add(initialTriangles[i * 3]);
+                lists[s].Add(initialTriangles[i * 3 + 1]);
+                lists[s].Add(initialTriangles[i * 3 + 2]);
+            }
+            for (int s = 0; s < lists.Length; s++) renderMesh.SetTriangles(lists[s], s);
         }
 
         [ContextMenu("Test Fracture")]

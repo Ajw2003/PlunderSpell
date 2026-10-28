@@ -14,6 +14,7 @@ namespace Plunderspell.Fracture
         private ComputeBuffer vertexBuffer;
         private ComputeShader computeShader;
         private Material renderMaterial;
+        public bool hideStatic;
         private int pieceCount;
         private int vertexCount;
         
@@ -47,6 +48,7 @@ namespace Plunderspell.Fracture
             if (fractureShader != null) renderMaterial.shader = fractureShader;
             if (baseMap != null) renderMaterial.SetTexture("_MainTex", baseMap);
             if (baseColor.HasValue) renderMaterial.SetColor("_Color", baseColor.Value);
+            renderMaterial.SetInt("_HideStatic", hideStatic ? 1 : 0);
             renderMaterial.SetBuffer("_Pieces", pieceBuffer);
             renderMaterial.SetBuffer("_Vertices", vertexBuffer);
             

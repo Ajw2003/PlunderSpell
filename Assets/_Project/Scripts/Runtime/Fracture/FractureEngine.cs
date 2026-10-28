@@ -168,6 +168,7 @@ namespace Plunderspell.Fracture
                 effect.gravity = target.gravity;
                 effect.despawnTime = target.despawnTime;
                 effect.groundY = target.groundY;
+                effect.hideStatic = target.keepMeshRenderer;
                 
                 // As the original: each submesh keeps its own material (the castle's palette colours), drawn with the fracture shader.
                 Material[] own = mr.sharedMaterials;
@@ -185,7 +186,8 @@ namespace Plunderspell.Fracture
             if (uvsNative.IsCreated) uvsNative.Dispose();
             meshDataArray.Dispose();
 
-            mr.enabled = false;
+            // The castle keeps its own renderer for what is left; the effect then draws only falling pieces (#472).
+            if (!target.keepMeshRenderer) mr.enabled = false;
             
             return effects;
         }
