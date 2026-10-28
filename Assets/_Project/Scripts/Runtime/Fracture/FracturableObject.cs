@@ -557,7 +557,7 @@ namespace Plunderspell.Fracture
                 Vector3 p0 = collisionVertices[initialTriangles[i * 3]];
                 Vector3 p1 = collisionVertices[initialTriangles[i * 3 + 1]];
                 Vector3 p2 = collisionVertices[initialTriangles[i * 3 + 2]];
-                Vector3 inward = -Vector3.Cross(p1 - p0, p2 - p0).normalized * depth;
+                Vector3 inward = -Direction(Vector3.Cross(p1 - p0, p2 - p0)) * depth;
                 Vector3 centroid = (p0 + p1 + p2) / 3f;
 
                 for (int e = 0; e < 3; e++)
@@ -573,7 +573,7 @@ namespace Plunderspell.Fracture
                         Vector3 w = Vector3.Cross(b - a, inward);
                         Vector3 nCentroid = (collisionVertices[initialTriangles[n * 3]] + collisionVertices[initialTriangles[n * 3 + 1]] + collisionVertices[initialTriangles[n * 3 + 2]]) / 3f;
                         bool flip = Vector3.Dot(w, nCentroid - centroid) < 0f;
-                        Vector3 normal = (flip ? -w : w).normalized;
+                        Vector3 normal = Direction(flip ? -w : w);
 
                         int q = baseCount + capVerts.Count;
                         capVerts.Add(a); capVerts.Add(b); capVerts.Add(b + inward); capVerts.Add(a + inward);
@@ -591,6 +591,14 @@ namespace Plunderspell.Fracture
                     }
                 }
             }
+        }
+
+        // Castle parts live at 1/100 size, so their cross products are tiny and Vector3.normalized gives zero below 1e-5:
+        // a zero normal lit in HDR makes NaN pixels that bloom spreads over the screen. Scale up first; up if truly flat.
+        private static Vector3 Direction(Vector3 v)
+        {
+            Vector3 scaled = v * 1e6f;
+            return scaled.sqrMagnitude > 1e-12f ? scaled.normalized : Vector3.up;
         }
 
         private void ApplyCapVertices()

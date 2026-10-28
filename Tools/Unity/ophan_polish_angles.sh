@@ -29,9 +29,24 @@ say "host: $(ophan host grabany)"
 say "$(gym host call Summon)"; sleep 7
 say "host: $(ophan host place roofed)"
 say "client: $(ophan client watch)"
-sleep 2
-bash Tools/Unity/capture.sh "$repo/$out/host.png" screen >/dev/null 2>&1
-say "$(ophan client shot "$abs/client.png")"
-# Desktop Duplication: the ordinary screen grab (gdigrab) shows the client's window black.
-ffmpeg -v error -y -init_hw_device d3d11va -filter_complex "ddagrab=output_idx=0:framerate=10,hwdownload,format=bgra" -frames:v 1 "$out/desktop.png"
+say "host: $(ophan host faceother)"
+stills() {
+    # Both game windows on top right before each set, or the Editor ends up in front of the client.
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$repo/Tools/Unity/place_windows.ps1")" >/dev/null 2>&1
+    sleep 1
+    bash Tools/Unity/capture.sh "$repo/$out/$1-host.png" screen >/dev/null 2>&1
+    say "$(ophan client shot "$abs/$1-client.png")"
+    # Desktop Duplication: the ordinary screen grab (gdigrab) shows the client's window black.
+    ffmpeg -v error -y -init_hw_device d3d11va -filter_complex "ddagrab=output_idx=0:framerate=10,hwdownload,format=bgra" -frames:v 1 "$out/$1-desktop.png"
+}
+state() { ophan host read | grep -o 'hostState [A-Za-z]*' | cut -d' ' -f2; }
+stills setup
+end=$((SECONDS + 25)); while [ $SECONDS -lt $end ] && [ "$(state)" != Charging ]; do :; done
+end=$((SECONDS + 15)); while [ $SECONDS -lt $end ] && [ "$(state)" = Charging ]; do :; done
+sleep 3
+say "after the break: Ophan $(state)"
+stills broken
+if [ "${1:-}" = probe ]; then
+    for what in beams bursts debris ophan; do say "$(ophan host hide $what)"; sleep 1; bash Tools/Unity/capture.sh "$repo/$out/probe-no-$what.png" screen >/dev/null 2>&1; done
+fi
 say "stills in $out"

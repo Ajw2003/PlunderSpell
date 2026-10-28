@@ -24,7 +24,7 @@ namespace Plunderspell.Raid
         private const float BeamWidthAtEye = 40f, BeamWidthAtTarget = 0.8f, ChargedWidthAtEye = 90f, ChargedWidthAtTarget = 8f;
         // The charge's beam starts this thin and dim and grows to the charged blast; the bright core is a quarter of the soft shaft.
         private const float ChargeStartWidthAtEye = 4f, ChargeStartWidthAtTarget = 0.1f, ChargeStartBrightness = 0.15f;
-        private const float CoreWidthFraction = 0.25f, CoreBrightness = 4f;
+        private const float CoreWidthFraction = 0.25f, CoreBrightness = 1.5f; // 4x bloomed over the screen (aj, 2026-10-28)
         // The beam fades out over its last metres. Seen from the target's own eyes it runs from around the camera to the
         // sky, and a shaft that close fills the view, so on the target's machine it fades out further away.
         private const float FadeMetresOnTarget = 25f, FadeMetresSeenByOthers = 2f;

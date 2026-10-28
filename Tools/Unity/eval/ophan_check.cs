@@ -370,7 +370,8 @@ switch (action)
         var body = player.GetComponent<UnityEngine.Rigidbody>();
         var at = best.Value + UnityEngine.Vector3.up * 1.25f;
         body.position = at; player.transform.position = at; body.linearVelocity = UnityEngine.Vector3.zero;
-        Look(player, target + (eye - target).normalized * 6f);
+        // At the other player, tilted up a little: aiming at the eye from under a roof stared into a torch-lit ceiling.
+        Look(player, target + UnityEngine.Vector3.up * 1.5f);
         return "watching from " + V(at) + ", " + (target - at).magnitude.ToString("F1") + " m from the other player";
     }
     case "faceother":
@@ -395,6 +396,19 @@ switch (action)
         foreach (UnityEngine.Component g in FindAll("Plunderspell.Guards.Guard"))
             if (g != keep) { UnityEngine.Object.Destroy(g.gameObject); n++; }
         return keep == null ? "no guards" : "kept " + keep.name + " at " + V(keep.transform.position) + ", removed " + n;
+    }
+    case "hide":
+    {
+        // Probe (#468 camera check): hide one suspect so a still shows what is drawing the white-out.
+        //   ophan: the Ophan's look (model, eye, beams)   bursts: wall-burst glows   debris: fracture debris effects
+        int n = 0;
+        if (arg == "ophan") foreach (UnityEngine.Component c in FindAll("Plunderspell.Raid.OphanLook")) { c.gameObject.SetActive(false); n++; }
+        if (arg == "bursts") foreach (UnityEngine.Component c in FindAll("Plunderspell.Raid.OphanWallBurst")) { c.gameObject.SetActive(false); n++; }
+        if (arg == "debris") foreach (UnityEngine.Component c in FindAll("Plunderspell.Fracture.FractureEffect")) { c.gameObject.SetActive(false); n++; }
+        var beamGos = 0;
+        if (arg == "beams") foreach (var go in UnityEngine.Object.FindObjectsByType<UnityEngine.MeshRenderer>(UnityEngine.FindObjectsSortMode.None))
+            if (go.name == "OphanBeam") { go.enabled = false; beamGos++; }
+        return "hid " + (n + beamGos) + " " + arg;
     }
     case "survey":
     {

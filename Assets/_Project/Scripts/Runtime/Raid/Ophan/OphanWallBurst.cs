@@ -79,7 +79,8 @@ namespace Plunderspell.Raid
             float t = Mathf.Clamp01((Time.time - _bornAt) / GlowSeconds);
             Color colour = Color.Lerp(Color.white, Molten, t * 3f);
             colour.a = 1f - t * t;
-            _glow.SetColor("_BaseColor", colour * 2f);
+            // Below white-hot: at 2x the castle's bloom spread it over the whole screen (aj, 2026-10-28).
+            _glow.SetColor("_BaseColor", colour * 0.8f);
         }
 
         private void OnDestroy() => Destroy(_glow);
