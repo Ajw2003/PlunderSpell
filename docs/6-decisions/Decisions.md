@@ -1664,3 +1664,10 @@ and what each frame shows (health, states, both windows) written up with timesta
 scripted checks reported numbers that looked fine while the beams looked wrong and every hunt killed in 8 to 11 s;
 aj's recording showed both at once. **How:** `Tools/Unity/README.md`, "Record every in-game test before QA"; worked
 example `docs/plans/ophan-qa-findings.html`.
+
+## 2026-10-27 — Ophan redo: two shots, chest aim, aj's fracture system (#468)
+
+After the failed QA (#463), aj chose: the charged beam fires twice, the first shot breaking stone with no damage and the
+second, 1 s later by default, re-aiming at the target and breaking new stone if it must; the beams keep their look but
+aim at the chest from the eye bone; destruction moves to aj's fracture system from ufo-3-rag-dahl, networked, with rooms
+split into wall, roof, floor and props at bake (pick 2A). This replaces `OphanWallCut`. Plan: `docs/plans/ophan-redo-plan.html`.

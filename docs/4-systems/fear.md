@@ -82,6 +82,16 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
   wider and brighter until the blast. The charged beam cuts a hole for real: the host sends the rooms and the beam's line,
   and every machine removes the triangles of those room meshes within 1.5 m of the line from both the drawn mesh and its
   collider. Scorched rooms no longer let the slow beam through whole; only the cut hole does. This reverses pick 9A (Decisions, 2026-10-27). Plan page: `docs/plans/ophan-bugs-and-beams.html`.
+- **Ophan redo after QA (approved 2026-10-27, `docs/plans/ophan-redo-plan.html`).** aj's QA (recording in
+  `docs/generated/ophan-bugs-463/qa-recording/`) found every hunt ending in death within 11 s and the beam coming from
+  overhead. The beam aims at the chest (pivot plus 0.3 m), not 2.1 m up, and the host's cover test, the cut and the drawn
+  beam all start from the eye bone. The beams keep their look. The charged beam fires twice: the first shot breaks the
+  stone on its line and deals no damage; after `OphanTuning.SecondShotDelaySeconds` (default 1 s) the second re-aims at
+  the target, breaks any new stone on its line, and kills. Destruction is aj's fracture system from
+  `Projects/ufo-3-rag-dahl/Assets/FractureSystem`, networked: the host sends the room, the part, the beam's line and the
+  radius, and every machine runs the same hit on the same baked graph, so colliders match; debris is a per-machine look.
+  Each room is split into wall, roof, floor and props in Unity when its fracture data is baked (pick 2A), checked on a
+  review sheet. `OphanWallCut` is removed once the port works.
 - **Every machine sees the same thing.** The turn, the lantern, the arrival and each catch are
   decided on the host and shown on every client (the Ophan's target, beams, scorched rooms and takes too); nothing here is polled each frame (`core.md`,
   "When Update is allowed").
