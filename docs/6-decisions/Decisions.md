@@ -1695,3 +1695,11 @@ player. Causes are in `docs/generated/guard-deep-dive-2026-10-28/findings.md`. a
 The fixes that come with any choice are part of the same approval: a guard with no route takes the long way or holds
 below; standing guards look around; only stone blocks sight; and a guard turns toward a sound.
 The 20 s arrival grace stays. The Ophan, fracture and beam files and the #478 nav files are not touched.
+
+## 2026-10-28 — Guard awareness build plan approved (#479)
+
+aj approved `docs/plans/guard-awareness-plan.html` with merge pick 1A: the finished work merges into
+`AjsAgent/gym-with-demand-page` by pull request, after the Ophan session's fixes are brought in and the guard checks
+run on the combined code. The steps are #480 to #489, in the order the plan page gives. The issues were opened by a
+script, so the design-loop gate never saw them; with aj's yes, they were added by hand to
+`.claude/house-rules-loop.json` as the kept feature "Guard awareness", at the build stage.
