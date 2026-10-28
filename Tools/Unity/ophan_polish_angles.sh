@@ -14,6 +14,8 @@ cleanup() {
     say "cleaning up"
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$repo/Tools/Unity/place_windows.ps1")" release >/dev/null 2>&1
     powershell.exe -NoProfile -Command "Get-Process Plunderspell -ErrorAction SilentlyContinue | Where-Object { \$_.Path -like '*$(basename "$repo")*' } | Stop-Process -Force" >/dev/null 2>&1
+    # PurrNet finishes network destroys asynchronously; stopping Play at once logs "Destroy may not be called from edit mode".
+    sleep 2
     unity command editor_stop --no-banner >/dev/null 2>&1 || true
 }
 trap cleanup EXIT

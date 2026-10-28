@@ -24,13 +24,16 @@ cleanup() {
     [ -n "${rec:-}" ] && kill "$rec" 2>/dev/null
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$repo/Tools/Unity/place_windows.ps1")" release >/dev/null 2>&1
     powershell.exe -NoProfile -Command "Get-Process Plunderspell -ErrorAction SilentlyContinue | Where-Object { \$_.Path -like '*$(basename "$repo")*' } | Stop-Process -Force" >/dev/null 2>&1
+    # PurrNet finishes network destroys asynchronously; stopping Play at once logs "Destroy may not be called from edit mode".
+    sleep 2
     unity command editor_stop --no-banner >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
 bash Tools/Unity/coop_local.sh --gym | tail -1
 # Both game windows above everything else, or the recording shows whatever covers them (#468 first run).
-say "windows: $(powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$repo/Tools/Unity/place_windows.ps1")" | tr -d '')"
+say "windows: $(powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$repo/Tools/Unity/place_windows.ps1")" | tr -d '
+')"
 # Matroska survives being stopped mid-write, so the cleanup can end the recording at any point.
 ffmpeg -v error -y -f gdigrab -framerate 30 -i desktop -t 240 -c:v libx264 -preset ultrafast "$out/run.mkv" </dev/null &
 rec=$!
