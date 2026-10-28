@@ -1680,3 +1680,14 @@ a gold, slow-pulsing beam for a target the Ophan will spare; stone caps on every
 that avoids holes in floors and uses new routes through broken walls. Door plugs break like rooms (a bug fix).
 aj, same day: the polish is part of the redo, not a feature of its own; the redo has not passed QA yet. Its steps
 #474 to #478 sit under #468, and #473 only records the fold.
+
+## 2026-10-28 — The castle breaks in solid chunks, not single triangles (#468)
+
+aj's co-op play-through found the breaking laggy, the debris glitchy and lingering, and holes badly filled, and asked
+whether breaking clusters would help performance or only the look. Measured: a hit costs the host 5 to 14 ms per room,
+but every hit part kept a debris effect redrawing all its triangles every frame (75 effects, 284,544 vertices after 16
+hits). Chosen on `docs/plans/ophan-breaking-chunks.html` (1A, "Design approved: Ophan breaking chunks 1A"): parts are
+cut at bake into closed 1.5 m blocks; a hit removes whole blocks, unsupported blocks fall as solid pieces that fade
+after landing, and the blocks' own sides fill the hole. This replaces the ported triangle debris and the stone caps
+from the polish (pick 4A there). Same pass: room colliders went back to the one-sided split mesh, since the
+double-sided fracture collider stopped guards on stairs.

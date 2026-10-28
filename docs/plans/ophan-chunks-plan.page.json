@@ -1,0 +1,43 @@
+{
+  "title": "Solid chunks build plan",
+  "eyebrow": "How the castle will break in solid 1.5 m blocks, which you picked on the Ophan breaking chunks page (choice 1, option A)",
+  "approval": "Build plan approved: Ophan chunks",
+  "short": {
+    "lead": "Four build steps and a recorded co-op run. The bake cuts every wall, floor and roof part into 1.5 m blocks with closed sides. A hit removes whole blocks from the room's one mesh, with no object per block at rest. Blocks that break off fall as solid pieces and fade. Your ported triangle debris and the stone caps are retired. Two choices are yours, with my suggestion marked on each. One fix is already in: room colliders went back to the one-sided mesh, because the double-sided one stopped guards on stairs. Three stair tests had failed; all pass now.",
+    "hint": "Tap an item to see what exists and what each step does.",
+    "key": [["Settled", ""], ["You pick", "you"]],
+    "items": [
+      ["bulb", "Bake", "Cutting parts into blocks", "", "Today's bake splits every triangle until no edge is longer than 1.5 m, so a hole's edge follows whichever triangles happen to break. The new bake clips each wall, floor and roof part along a 1.5 m grid that lines up with the room, so every block has straight edges. Each block's open edges get a strip of the same stone, half the wall's depth from each face (0.5 m walls, 0.3 m floors and roofs), so a block's sides are solid wherever a neighbour is missing. Props are cut per object instead, one block for each separate piece of furniture. Alongside the mesh, the bake saves a table listing each block's triangles, its bounds, which blocks touch it, and whether it rests on the ground. The bake prints the new triangle total next to today's 1,000,052.", "Nothing to pick."],
+      ["bulb", "Hit", "What a hit does", "", "The Ophan's beam line reaches every machine as it does now. Each block within 1.5 m of the line is removed, then any block no longer joined to a ground block through its neighbours is removed too. Every machine works from the same table, so all machines remove the same blocks and their colliders match. The room keeps one mesh: removing blocks only rebuilds its triangle list. The collider is rebuilt from the front faces left, which measured 1 to 2 ms per part today. Guards' map refresh after a break stays as it is.", "Nothing to pick."],
+      ["bulb", "Debris", "How a broken block falls", "you", "Each removed block becomes its own temporary piece: a copy of that block's mesh, with no shadows.", "Pick how it falls (Choices, \"How should broken blocks fall?\")."],
+      ["bulb", "Your system", "What happens to your ported fracture system", "you", "From ufo-3-rag-dahl the castle keeps the idea of a support graph that drops floating pieces, now over blocks instead of triangles, and the one-mesh renderer. It no longer uses the GPU triangle debris (FractureEngine, FractureEffect, FractureCompute, FractureRender), the triangle graph bake, or the stone caps.", "Pick what happens to it (Choices, \"What happens to the triangle debris code?\")."]
+    ]
+  },
+  "changes": [
+    ["chg", "Bake", "Blocks instead of split triangles.", ["Triangles split to 1.5 m", "1.5 m blocks on a room-aligned grid, closed sides, one table per part"], "CastleFractureBake becomes the block bake; RoomPartSplitter's wall, floor, roof and props split stays.", null],
+    ["chg", "Breaking", "Whole blocks.", ["Triangles near the line, a GPU effect per part kept for the raid", "Blocks near the line and unsupported blocks; nothing drawn at rest"], "A new component on each part replaces FracturableObject. OphanOfHours.ShowCharged calls the new component the same way.", null],
+    ["cut", "Retired", "Not used by the castle any more.", ["Triangle debris and stone caps", "Block sides"], "Where the code goes is your pick under Choices.", null],
+    ["keep", "Kept", "Unchanged.", null, "The beam, the two shots, the scorch, the network messages, the guard map refresh, and the one-sided colliders fixed today.", null]
+  ],
+  "choices": [
+    ["fall", "How should broken blocks fall?", [
+      ["A", "Real physics, then fade", 1, "Each block gets a box collider and a rigid body, is thrown out along the beam, tumbles and lands on whatever is below, then shrinks away 2 seconds after it lands. At most 60 are live at once; the oldest goes first. They are a look only: each machine runs its own, and players and guards pass through them."],
+      ["B", "Drop and fade without physics", 0, "Each block falls straight down to the room's floor height, spinning, and fades over 1.5 seconds. Cheapest to run, but blocks pass through anything in the way."]
+    ], "I suggest option A: it looks like stone breaking, and 60 boxes is a small physics load even for the Steam Deck."],
+    ["code", "What happens to the triangle debris code?", [
+      ["A", "Move it to _to_delete", 1, "FractureEngine, FractureEffect, FractureCompute, FractureRender, FracturableObject and the baked triangle graphs leave the project into _to_delete, so nothing unused ships. The originals stay in ufo-3-rag-dahl."],
+      ["B", "Keep it in the project, unused", 0, "It stays under Plunderspell.Fracture for later use elsewhere, with nothing in the castle using it."]
+    ], "I suggest option A: nothing would use the old code, and your originals are kept in ufo-3-rag-dahl."]
+  ],
+  "wrapup": {
+    "summary": "The castle breaks in solid 1.5 m blocks: a block bake, a block hit on every machine, falling blocks, and retiring the triangle debris, then a recorded co-op run.",
+    "changing": "The castle bake, how parts break, and the debris. The Ophan's behaviour does not change.",
+    "blocking": "Your picks for how blocks fall and for the old code.",
+    "next": "I open one GitHub issue per step under issue #468, build them in order, measure the drawing cost against today's 284,544 vertices after 16 hits, and record the co-op run with every shot you listed before it reaches you.",
+    "todo": [
+      "Pick your answers under Choices.",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with \"Build plan approved: Ophan chunks\", or tell me what to change."
+    ]
+  }
+}
