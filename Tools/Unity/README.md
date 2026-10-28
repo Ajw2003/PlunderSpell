@@ -15,6 +15,20 @@ Scripts that drive the live Unity Editor (and the Development build in `Build/De
 - After a compile, check that PurrNet kept the network prefab list:
   `git diff --ignore-cr-at-eol --stat Assets/_Project/Net/NetworkPrefabs.asset` must print nothing.
 
+## Record every in-game test before QA
+
+aj's rule (2026-10-27): no build goes to aj's QA until each in-game test has been screen-recorded and the recording
+looked at. Numbers from an eval are supporting evidence; the recording is the check. Record the whole desktop while
+the test runs, then pull one frame a second and read the key moments full size:
+
+```bash
+ffmpeg -y -f gdigrab -framerate 30 -i desktop -t 120 -c:v libx264 -preset ultrafast docs/generated/<feature>/run.mp4
+ffmpeg -y -i docs/generated/<feature>/run.mp4 -vf "fps=1,scale=960:-2" docs/generated/<feature>/f%03d.jpg
+```
+
+Write what each frame shows (health, the gym panel's state, both windows) with timestamps, and put the frames on the
+QA page. The first worked example: `docs/plans/ophan-qa-findings.html`.
+
 ## Waiting on Unity
 
 Use the wrappers below, which already wait correctly. If you must write your own wait:
