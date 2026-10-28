@@ -48,9 +48,10 @@ Still outside it, each needing a keep-or-drop call:
   Unity at `efa74bdd`: EditMode 285 pass / 3 skipped / 0 fail, including
   `CastleFractureClusterBreakTests` and the three guard stair tests. An editor render of a broken
   wall shows a straight-edged hole (`docs/generated/ophan-clusters-491/`). The co-op recording
-  (`docs/generated/ophan-redo-468/clusters-1/`) shows clusters flying as blocks, then a large dark
-  untextured slab in the spectator view after the break, not yet explained. #494 (the recorded
-  QA run) not done.
+  (`docs/generated/ophan-redo-468/clusters-1/`) shows clusters flying as blocks. The dark slab
+  seen after the break was the old scorch tint on the whole room; the tint is gone
+  (`ScorchedRooms.Scorch` now only records the room) and the `clusters-3` run shows the walls
+  textured. #494 (the recorded QA run) not done.
 - `AjsAgent/fear-pass-handoff` (2026-10-12, #386): the fear pass's approved designs, and the art
   for the Wick (model and nine clips, #406) and the Ophan of Hours (model and five clips, #411,
   #412), with `staging-2026-10-11` merged in, and the import rules for all four fear files (#413),
