@@ -1,0 +1,39 @@
+{
+  "title": "Ophan redo plan",
+  "eyebrow": "Your QA answers turned into a build plan (#463): the two-shot beam, the beam's direction, and your fracture system in the castle",
+  "approval": "Build plan approved: Ophan redo",
+  "short": {
+    "lead": "Three pieces of work. The beam's direction is a bug I found in the code. The two-shot charged beam follows your QA answer. Your fracture system from ufo-3-rag-dahl would replace the hole cutter I wrote. Your fracture system already exists, so most of the work is making it work over the network and splitting each castle room into its parts. Two choices are yours; my suggestion is marked on each.",
+    "hint": "Tap an item to see what exists, what I found, and what it needs from you.",
+    "key": [["I found it or it is settled", ""], ["You pick", "you"]],
+    "items": [
+      ["bulb", "Direction", "Why the beam comes from the wrong way", "", "The host aims at the player's pivot plus 1.2 m (OphanOfHours.AimPoint), and OphanLook draws to the same point. The pivot sits 0.9 m above the floor, so the beam ends 2.1 m up, above the player's head. From your own camera it comes down from overhead and passes just above you: the vertical rod and the teardrop in your recording at 0:50 and 1:00. A second mismatch: the beam is drawn from the eye bone, while the cover test and the cut use the fixed sky point the host worked out, which can sit tens of metres from the bone. The fix aims at the chest (the pivot plus 0.3 m), and makes the host's cover test, cut and drawn beam all start from the eye bone.", "Nothing to pick. The look stays as it is, as you said."],
+      ["bulb", "Two shots", "The charged beam fires twice", "you", "As you asked: at the end of the charge, the first shot breaks the hole and deals no damage. A second shot follows after a delay, 1 s by default, set in OphanTuning. I read \"time to react\" as: the second shot goes down the same line as the first, and it kills only a player still inside the beam, 1.5 m around that line. Stepping out of the line of the hole within that second saves you.", "Confirm how the second shot aims (Choices, \"Where does the second shot go?\")."],
+      ["bulb", "Port", "What your fracture system already does", "", "In Assets/FractureSystem of ufo-3-rag-dahl. FractureEngine runs a Burst job that removes the triangles a hit reaches. FractureEffect and FractureCompute throw the removed triangles as GPU debris, drawn by FractureRender, a URP shader with main light and shadows. FracturableObject builds a graph of triangles that share an edge, finds pieces no longer joined to the bottom 10% of the mesh, and drops them. BakeFractureGraph saves that graph as an asset, so nothing is worked out at load. DoubleSidedMeshGenerator gives open faces a back side, which is what makes a hole read as a hole. It has no networking: Hit(collider, point, force) only acts on the machine that calls it.", "Nothing to pick. What I keep, change and drop is listed under Changes."],
+      ["bulb", "Split", "Splitting each room into wall, roof, floor and props", "you", "Each castle room is one mesh today, and its materials are palette colours (ash, iron, oak, madder), not parts, so the split cannot come from them. The 31 castle models are built by 25 Blender builder files across the eras, and many bypass the shared room helpers. The split can happen in Blender at the source, or in Unity when the fracture data is baked.", "Pick where the split happens (Choices, \"Where are rooms split into parts?\")."]
+    ]
+  },
+  "changes": [
+    ["keep", "Kept from your fracture system", "Used as it is.", null, "FractureEngine's Burst job, FractureEffect, FractureCompute and FractureRender for the debris, the support graph that drops floating pieces, BakeFractureGraph, and DoubleSidedMeshGenerator.", null],
+    ["chg", "Changed in the port", "So host and client break the same pieces.", ["Hit acts only on the machine that calls it; the radius comes from the object's size", "The host sends the room, the part, the beam's line and the radius; every machine calls the same hit"], "Removed triangles and dropped pieces are worked out on the CPU from the same baked graph, so every machine's colliders match. Debris throw stays per machine (GPU hash and Time.deltaTime), since it is only a look. The ground height for debris (hard-coded 0.05 m) becomes the room's floor height. Shader.Find becomes a material set on the component, so builds keep the shader. The bake path becomes a project folder.", null],
+    ["cut", "Dropped", "Replaced by the port.", ["OphanWallCut, my triangle-splitting cutter", "Your fracture system"], "OphanWallCut and its two tests are removed once the port works. The unused seed field and the ufo project's demo meshes are not brought over.", null],
+    ["chg", "The beam", "Aimed at your chest, from the eye bone, firing twice.", ["Aimed 2.1 m up, 0.3 m over a 1.8 m player's head; one shot kills", "Aimed at the chest; a hole, then a second shot 1 s later"], "OphanOfHours, OphanHunt, OphanLook and OphanTuning. The look itself stays.", null]
+  ],
+  "choices": [
+    ["second", "Where does the second shot go?", [
+      ["A", "Down the same line as the first", 1, "It kills only a player still within 1.5 m of the line the first shot broke open. One second to step aside."],
+      ["B", "At the target again", 0, "It re-aims at wherever the target has moved. Moving does not save you; the second shot only delays the kill."]
+    ], "Option A is the only one where reacting in that second changes anything."],
+    ["split", "Where are rooms split into parts?", [
+      ["A", "In Unity, when the fracture data is baked", 1, "One editor step sorts each room's triangles. Faces at floor height facing up are floor. Faces above the walls, or the undersides of upper floors, are roof. The rest of the joined shell is wall, and loose pieces (beds, barrels, anvils) are props. The Blender builders and models stay as they are. I check every room's split on a review sheet before it is used."],
+      ["B", "In Blender, at the source", 0, "Each builder tags what it makes as wall, roof, floor or prop, and every model is re-exported as four parts. Exact, but it touches all 25 builder files and every model in every era."]
+    ], "Option A works on every model without re-exporting, and the review sheet catches what it sorts wrongly."]
+  ],
+  "wrapup": {
+    "summary": "A plan for your QA answers: the beam aims at the chest from the eye bone, the charged beam fires twice, and your fracture system replaces my hole cutter, networked, with each room split into parts.",
+    "changing": "The Ophan's aim, its charged beam and the castle's destruction. The beam's look and the target choice stay as approved.",
+    "blocking": "Your picks for the second shot and for where rooms are split.",
+    "next": "I record your answers in the fear systems doc, file one issue per piece under issue #463, and build in order: the aim, the two shots, the split, then the port. I record each test and read the recording before it reaches you.",
+    "todo": ["Pick your answers (Choices).", "Tap <b>Copy my reply</b>.", "Send it with \"Build plan approved: Ophan redo\", or tell me what to change."]
+  }
+}
