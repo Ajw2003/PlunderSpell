@@ -1,0 +1,38 @@
+{
+  "title": "Guard awareness build plan",
+  "eyebrow": "How I build your picks (1A 2A 3A 4A 5A) · issue #479",
+  "approval": "Build plan approved: Guard awareness",
+  "short": {
+    "lead": "Ten steps, each its own issue under #479 (Guard awareness after the co-op playtest). First comes a recording of how guards behave today. Then come eight changes to guard logic. Last, the same recording is made again for your QA page. Only guard and sound code changes. One choice is yours: where the work merges.",
+    "hint": "Tap a step to see what it changes and how I check it.",
+    "key": [["I build it", ""], ["You pick", "you"]],
+    "items": [
+      ["flask", "Before", "#480 Record how guards behave today", "", "A co-op run in the Gym, with the Editor as host and a built client, screen-recorded and read frame by frame. It covers the five things you saw: a guard at a checked spot, a player across a floor hole, a chase behind a pillar, three melee guards on one player, and a player beside a guard.", "Nothing from you."],
+      ["hammer", "Fixes", "#481 to #483 The fixes that come with every pick", "", "#481: a guard with no route to you goes the long way round, or holds below and throws. #482: only castle stone blocks sight; loot, guards and room props do not. #483: a standing guard turns 60 degrees left, then 60 degrees right, and turns toward a sound before it walks.", "Nothing from you."],
+      ["eye", "Senses", "#484 to #486 Cone, hearing and range", "", "#484: the three-layer vision cone (centre, sides, and a 2.5 metre circle). #485: hearing tells the guard which doorway or hole a sound came through, and the direction from there back to the source. A 0.3 metre sphere cast from the guard toward the sound decides whether a wall is in the way. #486: sight grows from 21 to 31.5 metres in a calm castle, and guards hear from 1.5 times as far. The alarm's own hearing range does not grow.", "Nothing from you."],
+      ["loop", "Memory", "#487 Losing you only when you are rooms away", "", "Each guard keeps a last-known spot and heading for each player. It goes back to patrol only when two things are true: 8 seconds have passed with nothing new, and that spot is 3 or more rooms away. It needs #481 and #485 first, because it routes the same way and listens to the new hearing.", "Nothing from you."],
+      ["hand", "Push", "#488 Faster, and two swings at once", "", "Guards chase at 5.5 metres a second. The alarm speed bonus is switched on (up to 7.7 at Hue and Cry). Two melee guards can attack each player. Help arrives at chase speed.", "Nothing from you."],
+      ["check", "After", "#489 The same recording, then your QA", "you", "The baseline run is repeated on the finished build and read frame by frame. Then you get a QA page with before and after frames and clips for each of the five things you saw.", "Pass or fail the QA page."]
+    ]
+  },
+  "changes": [
+    ["keep", "Untouched", "Ophan, fracture, beam and the #478 map files.", null, "CastleNavGraph, CastleNavGrid, CastleNavPortalGraph, CastleNavProbe and CastleNavTileBaker stay as they are. The map only gets new read-only questions: the nearest reachable point, the first doorway on a route, and which room a point is in. They are asked through IGuardNavigationMap and its adapter CastleGuardNavigationMap.", null],
+    ["chg", "Guard code", "States, senses and tuning change in place.", null, "ChaseState, InvestigateState, PatrolState, CombatState, GuardSight, GuardHearing, GuardLeads, GuardBrain and GuardTuning are edited line by line, not rewritten. New small classes hold the new jobs: the side-of-view delay, the look-around and the last-known spot. Every guard prefab gets the new numbers.", null],
+    ["chg", "Sound", "Guards hear further than the alarm.", null, "NoiseBroadcaster delivers a noise to guards out to 1.5 times its radius, and to the alarm at the old radius, so the alarm fills no faster.", null],
+    ["new", "Tests", "An edit-mode test for every rule.", null, "Each step adds edit-mode tests next to the existing GuardAwarenessTests and GuardUnreachableTests, and runs the whole test suite once.", ["Guard tests exist for today's rules.", "Tests for each new rule.", "A broken rule shows up before your playtest."]],
+    ["chg", "Order", "One step at a time, by a helper agent.", null, "Order: #480, then #481, #482, #483, #486 and #488 (these do not depend on each other), then #484 and #485, then #487, then #489. Each step is built by a helper agent in its own copy of the code, and I check it before the next starts. I record every in-game check and read it before you see it.", null]
+  ],
+  "choices": [
+    ["merge", "Where should the finished work merge?", [
+      ["A", "Into AjsAgent/gym-with-demand-page, by pull request", 1, "The guard work sits on the Ophan branch it was cut from, which has the #478 map the guards rely on. The other session's Ophan fixes are on the same branch, so I bring them in before the pull request and run the guard checks on the merged code."],
+      ["B", "A pull request of its own, after the Ophan work reaches main", 0, "Kept apart until the Ophan branch is merged. The history is cleaner, but you cannot play both together until then."]
+    ], "Option A lets you play the new guards beside the Ophan in the same build."]
+  ],
+  "wrapup": {
+    "summary": "Ten steps under #479 that build your picks for guard awareness, with a recording before and after.",
+    "changing": "Guard states, senses, tuning and prefab numbers, plus the guard hearing range in NoiseBroadcaster.",
+    "blocking": "Your approval of this plan and where the work merges.",
+    "next": "I start with the baseline recording (#480), then build one step at a time and post progress at each step.",
+    "todo": ["Pick where the work merges (Choices).", "Tap <b>Copy my reply</b>.", "Send it with \"Build plan approved: Guard awareness\", or what to change."]
+  }
+}
