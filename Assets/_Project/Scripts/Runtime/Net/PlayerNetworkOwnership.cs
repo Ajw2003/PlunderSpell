@@ -228,7 +228,13 @@ public class PlayerNetworkOwnership : NetworkBehaviour, Interfaces.IDownable
             go.tag = "MainCamera";
             if (_playerCamera != null)
             {
-                if (_playerCamera.TryGetComponent(out Camera own)) own.enabled = false;
+                if (_playerCamera.TryGetComponent(out Camera own))
+                {
+                    // The player camera's far clip (3000 m) draws the whole Ophan; a default camera stops at 1000 m (#464).
+                    _spectatorCamera.CopyFrom(own);
+                    _spectatorCamera.enabled = true;
+                    own.enabled = false;
+                }
                 if (_playerCamera.TryGetComponent(out AudioListener ownEars)) ownEars.enabled = false;
             }
         }
