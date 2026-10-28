@@ -179,7 +179,7 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
     takes `RequestDrop(point)` / `RequestPickUp()` (ServerRpc from clients). `PageDropper` (Q with empty hands, or `LocalPlayerDied`;
     runs before `LootInteractor`, so Q with loot still drops the loot) drops it on the floor 0.4 m ahead; `DroppedPageView` shows a
     flat vellum sheet with this machine's own drawing and a thin collider (no new network prefab; `NetworkPrefabs.asset` untouched);
-    `PagePicker` takes F while looking at it within 3 m. Coming home returns it to the book and the sheet clears. `DemandPageReader`
+    `PagePicker` takes E (Interact) while looking at it within 3 m. Coming home returns it to the book and the sheet clears. `DemandPageReader`
     now follows `DemandPageChanged` and keeps only the R key and its easing per frame. Wired by `LairRoomForge.AddPageDrop`
     (`Tools/Unity/eval/add_page_drop.cs` for the existing prefab). Checks: `demand_page_check.sh` (`dropped-page.png`), `coop_lair_check.sh`,
     `DemandPageDropTests`.
