@@ -16,6 +16,8 @@
 //   liftshot <path>  save a view up the beam past the piece the Ophan is taking (absolute path, forward slashes)
 //   slow <scale>     set Time.timeScale on this machine (1 restores)
 //   shot <path>      save a screenshot of this machine's view
+//   survey           host: over every ground-floor spot, count roofed and open-air spots and which the cover test counts (#465)
+//   hole             host: count cut room meshes and whether room stone still lies on the eye's line to the local player (#467)
 string action = "__ACTION__";
 string arg = "__ARG__";
 
@@ -322,6 +324,45 @@ switch (action)
         UnityEngine.Time.timeScale = float.Parse(arg, System.Globalization.CultureInfo.InvariantCulture);
         return "time scale " + UnityEngine.Time.timeScale;
 
+    case "survey":
+    {
+        // Host (#465): over every ground-floor spot, is there a roof overhead, and does the Ophan's cover test count it?
+        var eye = (UnityEngine.Vector3)Get(Ophan(), "_eyePoint");
+        var castle = T("Plunderspell.Castle.ProceduralCastleGenerator");
+        int spots = 0, roofed = 0, roofedCovered = 0, openAir = 0, openAirCovered = 0;
+        foreach (UnityEngine.Component room in FindAll("Plunderspell.Castle.CastleRoomModule"))
+            for (float dx = -4.5f; dx <= 4.5f; dx += 1.5f)
+            for (float dz = -4.5f; dz <= 4.5f; dz += 1.5f)
+            {
+                var top = new UnityEngine.Vector3(room.transform.position.x + dx, 3f, room.transform.position.z + dz);
+                if (!UnityEngine.Physics.Raycast(top, UnityEngine.Vector3.down, out var floor, 6f, ~0, UnityEngine.QueryTriggerInteraction.Ignore)) continue;
+                if (floor.point.y < -1f || floor.point.y > 1.5f) continue;
+                spots++;
+                var chest = floor.point + UnityEngine.Vector3.up * 1.4f;
+                bool roof = false;
+                foreach (var up in UnityEngine.Physics.RaycastAll(chest, UnityEngine.Vector3.up, 30f, ~0, UnityEngine.QueryTriggerInteraction.Ignore))
+                    roof |= up.collider.GetComponentInParent(castle) != null;
+                bool covered = StoneBetween(eye, chest);
+                if (roof) { roofed++; if (covered) roofedCovered++; }
+                else { openAir++; if (covered) openAirCovered++; }
+            }
+        return $"survey spots {spots}; roofed {roofed}, of them covered {roofedCovered}; open-air {openAir}, of them covered {openAirCovered}";
+    }
+    case "hole":
+    {
+        // Host (#467): how many room meshes were cut, and does the line from the eye to the local player still meet room stone?
+        var eye = (UnityEngine.Vector3)Get(Ophan(), "_eyePoint");
+        int cut = 0;
+        foreach (var filter in UnityEngine.Object.FindObjectsByType<UnityEngine.MeshFilter>(UnityEngine.FindObjectsSortMode.None))
+            if (filter.sharedMesh != null && filter.sharedMesh.name.EndsWith("_cut")) cut++;
+        var chest = LocalPlayer().transform.position + UnityEngine.Vector3.up * 1.2f;
+        var room = T("Plunderspell.Castle.CastleRoomModule");
+        string first = "none";
+        float far = (chest - eye).magnitude - 2f;
+        foreach (var hit in UnityEngine.Physics.RaycastAll(eye, (chest - eye).normalized, far, ~0, UnityEngine.QueryTriggerInteraction.Ignore))
+            if (hit.collider.GetComponentInParent(room) != null) { first = hit.collider.name + " at " + (far + 2f - hit.distance).ToString("F1") + " m from the player"; break; }
+        return $"hole cut meshes {cut}; room stone on the eye line: {first}";
+    }
     case "shot":
         UnityEngine.ScreenCapture.CaptureScreenshot(arg);
         return "shot requested " + arg;
