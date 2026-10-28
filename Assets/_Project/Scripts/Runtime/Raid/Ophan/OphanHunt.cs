@@ -85,7 +85,14 @@ namespace Plunderspell.Raid
 
                 case OphanState.Watching:
                     if (hasTarget && !inCover)
+                    {
                         Enter(OphanState.Locking);
+                        break;
+                    }
+                    // Sight only picks the attack (#465): a target hidden from the start is charged, not spared.
+                    _coverTime = hasTarget ? _coverTime + dt : 0f;
+                    if (_coverTime >= _tuning.CoverSecondsBeforeCharge && _cooldown <= 0f)
+                        Enter(OphanState.Charging);
                     break;
 
                 case OphanState.Locking:

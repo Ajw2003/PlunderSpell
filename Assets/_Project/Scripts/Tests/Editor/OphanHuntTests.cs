@@ -77,6 +77,17 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
+        public void Test_ATargetHiddenFromTheStartIsChargedNotSpared()
+        {
+            _hunt.Arrive();
+            Run(_tuning.ArriveSeconds + Step, cover: true);
+            Run(_tuning.CoverSecondsBeforeCharge - 2 * Step, cover: true);
+            Assert.AreEqual(OphanState.Watching, _hunt.State, "Under 3 seconds hidden, it still watches.");
+            Run(3 * Step, cover: true);
+            Assert.AreEqual(OphanState.Charging, _hunt.State, "Sight only picks the attack: 3 seconds hidden starts the charge (#465).");
+        }
+
+        [Test]
         public void Test_HidingTooLongBringsTheChargedBeamWhichFiresThroughStone()
         {
             ToDraining();
