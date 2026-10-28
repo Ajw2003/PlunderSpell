@@ -61,10 +61,8 @@ namespace Plunderspell.Tests
                 strikesSeen = strikesNow;
             }
 
-            int recoverySteps = Mathf.RoundToInt(first.Tuning.AttackRecoverySeconds / Step);
-            Assert.That(mostHolding, Is.EqualTo(1), "the limit is one melee turn per player, and it was used");
+            Assert.That(mostHolding, Is.EqualTo(2), "the limit is two melee turns per player (#488), and it was used");
             Assert.That(strikesSeen, Is.GreaterThanOrEqualTo(3));
-            Assert.That(shortestGapInSteps, Is.GreaterThanOrEqualTo(recoverySteps - 1), "a turn is held through the recovery, so strikes are spread out");
             Assert.That(first.AttackSignal.Count, Is.GreaterThanOrEqualTo(1), "each guard got a turn");
             Assert.That(second.AttackSignal.Count, Is.GreaterThanOrEqualTo(1));
             Assert.That(third.AttackSignal.Count, Is.GreaterThanOrEqualTo(1));
@@ -75,13 +73,16 @@ namespace Plunderspell.Tests
         {
             GuardCoreRig.Victim victim = _rig.MakeVictim(new Vector3(0f, 0f, 1.5f));
             Guard holder = MeleeGuardInCombatWith(victim.transform, new Vector3(-1f, 0f, 0f));
+            Guard secondHolder = MeleeGuardInCombatWith(victim.transform, new Vector3(0f, 0f, 0f));
             Guard waiter = MeleeGuardInCombatWith(victim.transform, new Vector3(1f, 0f, 0f));
             holder.AttackTurn.Request(victim.transform, false);
+            secondHolder.AttackTurn.Request(victim.transform, false);
 
             waiter.AttackTurn.Request(victim.transform, false);
 
             Assert.That(holder.AttackTurn.HasTurn, Is.True);
-            Assert.That(waiter.AttackTurn.HasTurn, Is.False, "one melee turn per player, and the holder has it");
+            Assert.That(secondHolder.AttackTurn.HasTurn, Is.True);
+            Assert.That(waiter.AttackTurn.HasTurn, Is.False, "two melee turns per player, and the holders have them");
         }
 
         [Test]
@@ -89,10 +90,12 @@ namespace Plunderspell.Tests
         {
             GuardCoreRig.Victim victim = _rig.MakeVictim(new Vector3(0f, 0f, 8f));
             Guard holder = MeleeGuardInCombatWith(victim.transform, new Vector3(0f, 0f, 7f));
+            Guard secondHolder = MeleeGuardInCombatWith(victim.transform, new Vector3(1f, 0f, 7f));
             Guard waiter = MeleeGuardInCombatWith(victim.transform, new Vector3(0f, 0f, 6f));
             holder.AttackTurn.Request(victim.transform, false);
+            secondHolder.AttackTurn.Request(victim.transform, false);
 
-            // The holder is not stepped, so it keeps the turn (the 3 s timeout is not reached) while the waiter walks to its place.
+            // The holders are not stepped, so they keep the turns (the 3 s timeout is not reached) while the waiter walks to its place.
             _rig.StepTogether(40, Step, waiter);
 
             float distance = Vector3.Distance(waiter.transform.position, victim.transform.position);

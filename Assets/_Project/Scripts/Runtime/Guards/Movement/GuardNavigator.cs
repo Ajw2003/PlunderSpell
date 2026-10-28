@@ -68,8 +68,10 @@ namespace Plunderspell.Guards
             if (_director == null)
                 return;
 
+            // Every move (patrol, investigate, chase) gets the castle's alarm bonus (#488).
+            float alarmSpeed = GuardBrain.MoveSpeed(speed, speed, GuardAlertState.Chasing, _director.State);
             Destination = destination;
-            EventManager.Instance?.Publish(new MoveRequest(_guard, destination, speed, reason));
+            EventManager.Instance?.Publish(new MoveRequest(_guard, destination, alarmSpeed, reason));
         }
 
         /// <summary>Stops the guard where it stands. No event follows: the caller asked for it.</summary>

@@ -71,6 +71,11 @@ namespace Plunderspell.Guards
             if (seen == null)
             {
                 _secondsSinceSeen += deltaTime;
+                // Straight under the player it cannot look up far enough to see them; stepping back to
+                // throwing range brings them into view again.
+                StepBackIntoView();
+                if (!Context.Navigator.Destination.HasValue)
+                    FaceToward(_target, deltaTime);
                 return _secondsSinceSeen >= Context.Tuning.UnreachableLoseSightSeconds ? GiveUp() : this;
             }
 
@@ -93,6 +98,19 @@ namespace Plunderspell.Guards
         {
             Context.Leads.Offer(_lastSeenSpot, GuardLeads.SightingStrength);
             return Context.States.Investigate;
+        }
+
+        private void StepBackIntoView()
+        {
+            Vector3 here = Context.transform.position;
+            Vector3 groundSpot = new Vector3(_target.position.x, here.y, _target.position.z);
+            bool overhead = _target.position.y - here.y > Context.Tuning.UnreachableHeight
+                && Vector3.Distance(here, groundSpot) < Context.Tuning.ThrowStandOff * 0.5f;
+            if (Context.Navigator.Destination.HasValue || !overhead)
+                return;
+
+            Vector3 slot = CombatRing.SlotAround(groundSpot, Context.GetInstanceID(), _sidestep, Context.Tuning.ThrowStandOff);
+            Context.Navigator.MoveTo(slot, Context.Tuning.ChaseSpeed, MoveReason.Combat);
         }
 
         // A guard already within throwing range stays where it is; it moves only to get out of the way of

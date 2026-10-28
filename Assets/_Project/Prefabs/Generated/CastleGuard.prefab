@@ -173,7 +173,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 1
     PatrolSpeed: 2
-    ChaseSpeed: 4.5
+    ChaseSpeed: 5.5
     PatrolPointCount: 3
     PatrolMinimumRadius: 3
     PatrolMaximumRadius: 8

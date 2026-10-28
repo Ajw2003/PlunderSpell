@@ -11,7 +11,7 @@ namespace Plunderspell.Alarm
     public sealed class AttackTurnTuning
     {
         [Tooltip("Melee guards that may strike one player at the same time.")]
-        public int MeleeTurnsPerTarget = 1;
+        public int MeleeTurnsPerTarget = 2;
 
         [Tooltip("Ranged guards that may shoot one player at the same time.")]
         public int RangedTurnsPerTarget = 1;

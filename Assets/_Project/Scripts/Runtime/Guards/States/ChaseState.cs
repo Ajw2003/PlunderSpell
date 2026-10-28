@@ -111,6 +111,13 @@ namespace Plunderspell.Guards
         {
             _secondsSinceSeen += deltaTime;
             _inReach = false;
+            // At chase speed (#488) a melee guard reaches the foot of a ledge before the reach check confirms,
+            // then loses the player overhead; it still knows they were up there, so it holds below.
+            if (!Context.RangedAttack.IsRanged && Context.Reach.IsUnreachable(_target, deltaTime))
+            {
+                Context.States.HoldBelow.Hold(_target);
+                return Context.States.HoldBelow;
+            }
             return _secondsSinceSeen >= Context.Tuning.ChaseLoseSightSeconds ? GiveUp() : this;
         }
 

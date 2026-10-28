@@ -86,7 +86,7 @@ namespace Plunderspell.Guards
         private void StartWalk()
         {
             _walkPending = false;
-            Context.Navigator.MoveTo(_spot, Context.Tuning.InvestigateSpeed, MoveReason.Investigate);
+            Context.Navigator.MoveTo(_spot, LeadSpeed(), MoveReason.Investigate);
         }
 
         private State<Guard> NoticePlayer()
@@ -136,12 +136,16 @@ namespace Plunderspell.Guards
             _look.BeginSweep();
         }
 
+        // A cry or the hue and cry is followed at chase speed; a mere noise at investigate speed.
+        private float LeadSpeed() =>
+            _leadStrength >= GuardLeads.CryStrength ? Context.Tuning.ChaseSpeed : Context.Tuning.InvestigateSpeed;
+
         // No route to the spot: look from the nearest floor the guard can reach (#481). Any other block
         // means the spot cannot be got to now, so give up rather than retry.
         private void OnBlocked(Blocked blocked)
         {
             _onDetour = !_onDetour && GuardNearestReachableWalk.IsMissingRoute(blocked)
-                && _detour.TryStart(_spot, Context.Tuning.InvestigateSpeed, MoveReason.Investigate);
+                && _detour.TryStart(_spot, LeadSpeed(), MoveReason.Investigate);
             _gaveUp = !_onDetour;
         }
     }

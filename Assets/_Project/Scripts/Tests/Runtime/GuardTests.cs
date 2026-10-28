@@ -71,6 +71,34 @@ namespace Plunderspell.Tests
             Assert.AreEqual(0f, stopped, "A stunned guard does not move.");
         }
 
+        [Test]
+        public void Test_ChaseSpeedIsFiveAndAHalfAndTheAlarmBonusReachesEveryMove()
+        {
+            Assert.AreEqual(5.5f, new GuardTuning().ChaseSpeed, "Default chase speed (#488).");
+            Assert.AreEqual(5.5f, GuardBrain.MoveSpeed(2f, 5.5f, GuardAlertState.Chasing, AlarmState.Calm), 1e-4f);
+            Assert.AreEqual(5.5f * 1.4f, GuardBrain.MoveSpeed(2f, 5.5f, GuardAlertState.Chasing, AlarmState.HueAndCry), 1e-4f);
+            // The navigator routes any single speed (patrol, investigate, chase) through the same bonus.
+            Assert.AreEqual(2f * 1.25f, GuardBrain.MoveSpeed(2f, 2f, GuardAlertState.Chasing, AlarmState.Roused), 1e-4f);
+        }
+
+        [Test]
+        public void Test_TwoMeleeGuardsMayAttackOnePlayerAtOnceButNotThree()
+        {
+            var mediator = new AttackTurnMediator(null, new AttackTurnTuning());
+            var player = new GameObject("Player").transform;
+            var guards = new Transform[3];
+            _spawned.Add(player.gameObject);
+            for (int i = 0; i < guards.Length; i++)
+            {
+                guards[i] = new GameObject("Guard" + i).transform;
+                _spawned.Add(guards[i].gameObject);
+                mediator.Handle(new AttackTurnRequested(guards[i], player, false));
+            }
+
+            Assert.AreEqual(2, mediator.TurnsOn(player, false));
+            Assert.IsFalse(mediator.Holds(guards[2]), "A third melee guard waits its turn.");
+        }
+
         // --- What a guard reports to the director (#163) ---------------------------------------
 
         [Test]
