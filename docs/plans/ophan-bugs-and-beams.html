@@ -298,7 +298,7 @@ const PAGE = {
         "Bug 2",
         "Why part of the Ophan vanishes when you spectate",
         "",
-        "When a player goes down, PlayerNetworkOwnership.KeepSpectating makes a brand-new camera with Unity's default settings, so it stops drawing at 1000 m. The player's own camera in RaidPlayer.prefab draws to 3000 m, because the Ophan hangs about 900 m out and stands about 1.4 km tall. Everything past 1000 m, which is the top half of the Ophan, is cut off. Clients use the same code, so a spectating client has the same bug. The fix copies the player's own camera settings onto the spectator camera (Camera.CopyFrom), so its range, field of view and layers match.",
+        "When a player goes down, PlayerNetworkOwnership.KeepSpectating makes a brand-new camera with Unity's default settings, so it stops drawing at 1000 m. The camera in RaidPlayer.prefab draws to 3000 m, because the Ophan hangs about 900 m out and stands about 1.4 km tall. Everything past 1000 m, which is the top half of the Ophan, is cut off. Clients use the same code, so a spectating client has the same bug. The fix copies the player's own camera settings onto the spectator camera (Camera.CopyFrom), so its range, field of view and layers match.",
         "Nothing to pick. Approve it with the rest."
       ],
       [
