@@ -655,7 +655,10 @@ namespace Plunderspell.Fracture
 
 #if UNITY_EDITOR
         [ContextMenu("Bake Fracture Graph")]
-        public void BakeFractureGraph()
+        public void BakeFractureGraph() => BakeFractureGraph(null);
+
+        /// <summary>Bakes the graph. <paramref name="triangleClusters"/> is a cluster id per triangle of the fracture mesh (submesh by submesh); null gives one cluster per triangle. <paramref name="triangleKinds"/> is 0 front surface, 1 back twin, 2 stone edge per triangle; null means all 0.</summary>
+        public void BakeFractureGraph(int[] triangleClusters, byte[] triangleKinds = null)
         {
             if (!TryGetComponent<MeshCollider>(out var mCol) || (fractureMesh == null && mCol.sharedMesh == null))
             {
@@ -669,18 +672,54 @@ namespace Plunderspell.Fracture
             collisionVertices = collisionMesh.vertices;
             initialTriangleCount = initialTriangles.Length / 3;
 
+            bool clustered = triangleClusters != null && triangleClusters.Length == initialTriangleCount;
+            int[] cluster = new int[initialTriangleCount];
+            for (int i = 0; i < cluster.Length; i++) cluster[i] = clustered ? triangleClusters[i] : i;
+
+            // A piece is a (submesh, cluster) pair: pieceIndex counts the submesh's clusters in first-appearance order.
             pieceMappings = new PieceMapping[initialTriangleCount];
             int globalTri = 0;
             for (int s = 0; s < collisionMesh.subMeshCount; s++)
             {
                 int submeshTriCount = collisionMesh.GetTriangles(s).Length / 3;
+                var pieceOf = new Dictionary<int, int>();
                 for (int p = 0; p < submeshTriCount; p++)
                 {
-                    pieceMappings[globalTri++] = new PieceMapping { submeshIndex = s, pieceIndex = p };
+                    if (!pieceOf.TryGetValue(cluster[globalTri], out int piece)) pieceOf[cluster[globalTri]] = piece = pieceOf.Count;
+                    pieceMappings[globalTri++] = new PieceMapping { submeshIndex = s, pieceIndex = piece };
                 }
             }
             
             BuildAdjacencyGraph();
+
+            int clusterCount = 0;
+            foreach (int c in cluster) clusterCount = Mathf.Max(clusterCount, c + 1);
+            var members = new List<int>[clusterCount];
+            var near = new HashSet<int>[clusterCount];
+            var support = new bool[clusterCount];
+            var sum = new Vector3[clusterCount];
+            for (int c = 0; c < clusterCount; c++) { members[c] = new List<int>(); near[c] = new HashSet<int>(); }
+            for (int i = 0; i < initialTriangleCount; i++)
+            {
+                int c = cluster[i];
+                members[c].Add(i);
+                support[c] |= isSupportTriangle[i];
+                for (int j = 0; j < 3; j++) sum[c] += collisionVertices[initialTriangles[i * 3 + j]];
+                foreach (int n in triangleNeighbors[i]) if (cluster[n] != c) near[c].Add(cluster[n]);
+            }
+            var clusterData = new IntArray[clusterCount];
+            var neighborData = new IntArray[clusterCount];
+            var centroids = new Vector3[clusterCount];
+            var radii = new float[clusterCount];
+            for (int c = 0; c < clusterCount; c++)
+            {
+                clusterData[c] = new IntArray { array = members[c].ToArray() };
+                neighborData[c] = new IntArray { array = new List<int>(near[c]).ToArray() };
+                centroids[c] = sum[c] / (members[c].Count * 3);
+                foreach (int i in members[c])
+                    for (int j = 0; j < 3; j++)
+                        radii[c] = Mathf.Max(radii[c], Vector3.Distance(centroids[c], collisionVertices[initialTriangles[i * 3 + j]]));
+            }
 
             // Create asset
             string safeName = string.Join("_", gameObject.name.Split(System.IO.Path.GetInvalidFileNameChars()));
@@ -696,6 +735,13 @@ namespace Plunderspell.Fracture
             FractureGraphData data = ScriptableObject.CreateInstance<FractureGraphData>();
             data.pieceMappings = pieceMappings;
             data.isSupportTriangle = isSupportTriangle;
+            data.triangleCluster = cluster;
+            data.triangleKind = triangleKinds != null && triangleKinds.Length == initialTriangleCount ? triangleKinds : new byte[initialTriangleCount];
+            data.clusterTriangles = clusterData;
+            data.clusterNeighbors = neighborData;
+            data.clusterIsSupport = support;
+            data.clusterCentroid = centroids;
+            data.clusterRadius = radii;
             
             data.triangleNeighbors = new IntArray[triangleNeighbors.Length];
             for (int i = 0; i < triangleNeighbors.Length; i++)

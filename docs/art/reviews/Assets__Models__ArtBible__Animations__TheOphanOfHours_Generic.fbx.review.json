@@ -2,6 +2,6 @@
   "model": "Assets/Models/ArtBible/Animations/TheOphanOfHours_Generic.fbx",
   "sheet": "docs/art/anim/fear/ophan_spread.png",
   "verdict": "pass",
-  "seen": "ophan_spread, 8 stills at 3/4 view: upper wings sit in a broad V well above the eye (lower than hover's steep V), lower wings splay out to the sides instead of crossing over the feet, mid wings cross below the eye as in the concept. Front view probe measured 13.16 m wide by 7.82 m tall (1.68x, hover is 1.23x), so it reads wider than tall as #443 asks. Wheels, eye and bob are hover_turn's exactly; loop seam 0. Other five clips rebuilt unchanged in code.",
-  "date": "2026-10-26T23:23:33-0600"
+  "seen": "Arrived by merging the gym branch, not changed here. Sheet shows the ophan_spread loop beside the concept: wheels, eye and all six wings spread wider than tall, steady across the 8 frames.",
+  "date": "2026-10-27T17:19:07-0600"
 }

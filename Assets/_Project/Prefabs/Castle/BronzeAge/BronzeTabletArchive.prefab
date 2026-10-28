@@ -135,13 +135,13 @@ MonoBehaviour:
   explosionForce: 10
   mergeDistance: 0.0001
   gravity: {x: 0, y: -9.81, z: 0}
-  despawnTime: 5
+  despawnTime: 2
   computeShader: {fileID: 0}
   renderMaterial: {fileID: 0}
   groundY: 0.05
   destroyWhenEmpty: 0
   keepMeshRenderer: 1
-  capDepthMetres: 0.5
+  capDepthMetres: 0
   fractureMesh: {fileID: 4300000, guid: 8afc5b96b7ba97c498c4d737d66c8a65, type: 2}
   preInitialize: 0
   destroyThreshold: 0.005
@@ -328,7 +328,7 @@ MonoBehaviour:
   explosionForce: 10
   mergeDistance: 0.0001
   gravity: {x: 0, y: -9.81, z: 0}
-  despawnTime: 5
+  despawnTime: 2
   computeShader: {fileID: 0}
   renderMaterial: {fileID: 0}
   groundY: 0.05
@@ -614,13 +614,13 @@ MonoBehaviour:
   explosionForce: 10
   mergeDistance: 0.0001
   gravity: {x: 0, y: -9.81, z: 0}
-  despawnTime: 5
+  despawnTime: 2
   computeShader: {fileID: 0}
   renderMaterial: {fileID: 0}
   groundY: 0.05
   destroyWhenEmpty: 0
   keepMeshRenderer: 1
-  capDepthMetres: 0.3
+  capDepthMetres: 0
   fractureMesh: {fileID: 4300000, guid: 5e4534e7f54006c468793a6c9a8fe588, type: 2}
   preInitialize: 0
   destroyThreshold: 0.005

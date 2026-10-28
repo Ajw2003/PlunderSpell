@@ -16,1171 +16,1171 @@ MonoBehaviour:
   - submeshIndex: 0
     pieceIndex: 0
   - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
     pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 1
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 0
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
+  - submeshIndex: 0
+    pieceIndex: 2
   - submeshIndex: 0
     pieceIndex: 2
   - submeshIndex: 0
     pieceIndex: 3
   - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
+    pieceIndex: 3
+  - submeshIndex: 0
     pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 5
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 6
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 7
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 8
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 9
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 10
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 11
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 12
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 13
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 14
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 15
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 16
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 17
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 18
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 19
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 20
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 21
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 22
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 23
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 24
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 25
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 26
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 27
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 28
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 29
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 30
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 31
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 32
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 33
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 34
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 35
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 36
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 37
+    pieceIndex: 1
   - submeshIndex: 0
-    pieceIndex: 38
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 39
+    pieceIndex: 0
   - submeshIndex: 0
-    pieceIndex: 40
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 41
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 42
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 43
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 44
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 45
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 46
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 47
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 48
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 49
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 50
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 51
+    pieceIndex: 2
   - submeshIndex: 0
-    pieceIndex: 52
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 53
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 54
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 55
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 56
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 57
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 58
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 59
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 60
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 61
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 62
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 63
+    pieceIndex: 3
   - submeshIndex: 0
-    pieceIndex: 64
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 65
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 66
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 67
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 68
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 69
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 70
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 71
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 72
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 73
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 74
+    pieceIndex: 4
   - submeshIndex: 0
-    pieceIndex: 75
-  - submeshIndex: 0
-    pieceIndex: 76
-  - submeshIndex: 0
-    pieceIndex: 77
-  - submeshIndex: 0
-    pieceIndex: 78
-  - submeshIndex: 0
-    pieceIndex: 79
-  - submeshIndex: 0
-    pieceIndex: 80
-  - submeshIndex: 0
-    pieceIndex: 81
-  - submeshIndex: 0
-    pieceIndex: 82
-  - submeshIndex: 0
-    pieceIndex: 83
-  - submeshIndex: 0
-    pieceIndex: 84
-  - submeshIndex: 0
-    pieceIndex: 85
-  - submeshIndex: 0
-    pieceIndex: 86
-  - submeshIndex: 0
-    pieceIndex: 87
-  - submeshIndex: 0
-    pieceIndex: 88
-  - submeshIndex: 0
-    pieceIndex: 89
-  - submeshIndex: 0
-    pieceIndex: 90
-  - submeshIndex: 0
-    pieceIndex: 91
-  - submeshIndex: 0
-    pieceIndex: 92
-  - submeshIndex: 0
-    pieceIndex: 93
-  - submeshIndex: 0
-    pieceIndex: 94
-  - submeshIndex: 0
-    pieceIndex: 95
-  - submeshIndex: 0
-    pieceIndex: 96
-  - submeshIndex: 0
-    pieceIndex: 97
-  - submeshIndex: 0
-    pieceIndex: 98
-  - submeshIndex: 0
-    pieceIndex: 99
-  - submeshIndex: 0
-    pieceIndex: 100
-  - submeshIndex: 0
-    pieceIndex: 101
-  - submeshIndex: 0
-    pieceIndex: 102
-  - submeshIndex: 0
-    pieceIndex: 103
-  - submeshIndex: 0
-    pieceIndex: 104
-  - submeshIndex: 0
-    pieceIndex: 105
-  - submeshIndex: 0
-    pieceIndex: 106
-  - submeshIndex: 0
-    pieceIndex: 107
-  - submeshIndex: 0
-    pieceIndex: 108
-  - submeshIndex: 0
-    pieceIndex: 109
-  - submeshIndex: 0
-    pieceIndex: 110
-  - submeshIndex: 0
-    pieceIndex: 111
-  - submeshIndex: 0
-    pieceIndex: 112
-  - submeshIndex: 0
-    pieceIndex: 113
-  - submeshIndex: 0
-    pieceIndex: 114
-  - submeshIndex: 0
-    pieceIndex: 115
-  - submeshIndex: 0
-    pieceIndex: 116
-  - submeshIndex: 0
-    pieceIndex: 117
-  - submeshIndex: 0
-    pieceIndex: 118
-  - submeshIndex: 0
-    pieceIndex: 119
+    pieceIndex: 4
   - submeshIndex: 1
     pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 1
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 2
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 3
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 4
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 5
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 6
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 7
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 8
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 9
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 10
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 11
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 12
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 13
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 14
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 15
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 16
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 17
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 18
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 19
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 20
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 21
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 22
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 23
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 24
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 25
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 26
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 27
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 28
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 29
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 30
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 31
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 32
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 33
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 34
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 35
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 36
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 37
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 38
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 39
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 40
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 41
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 42
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 43
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 44
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 45
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 46
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 47
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 48
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 49
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 50
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 51
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 52
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 53
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 54
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 55
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 56
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 57
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 58
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 59
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 60
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 61
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 62
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 63
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 64
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 65
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 66
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 67
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 68
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 69
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 70
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 71
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 72
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 73
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 74
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 75
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 76
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 77
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 78
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 79
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 80
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 81
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 82
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 83
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 84
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 85
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 86
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 87
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 88
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 89
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 90
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 91
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 92
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 93
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 94
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 95
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 96
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 97
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 98
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 99
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 100
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 101
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 102
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 103
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 104
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 105
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 106
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 107
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 108
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 109
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 110
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 111
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 112
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 113
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 114
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 115
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 116
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 117
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 118
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 119
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 120
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 121
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 122
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 123
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 124
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 125
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 126
+    pieceIndex: 0
   - submeshIndex: 1
-    pieceIndex: 127
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 0
   - submeshIndex: 2
     pieceIndex: 0
   - submeshIndex: 2
     pieceIndex: 1
   - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
     pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 0
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 1
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 2
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 3
+  - submeshIndex: 2
+    pieceIndex: 3
   - submeshIndex: 2
     pieceIndex: 3
   - submeshIndex: 2
     pieceIndex: 4
   - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
+    pieceIndex: 4
+  - submeshIndex: 2
     pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 6
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 7
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 8
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 9
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 10
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 11
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 12
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 13
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 14
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 15
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 16
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 17
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 18
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 19
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 20
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 21
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 22
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 23
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 24
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 25
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 26
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 27
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 28
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 29
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 30
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 31
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 32
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 33
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 34
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 35
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 36
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 37
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 38
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 39
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 40
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 41
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 42
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 43
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 44
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 45
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 46
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 47
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 48
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 49
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 50
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 51
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 52
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 53
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 54
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 55
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 56
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 57
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 58
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 59
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 60
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 61
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 62
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 63
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 64
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 65
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 66
+    pieceIndex: 0
   - submeshIndex: 2
-    pieceIndex: 67
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 68
+    pieceIndex: 1
   - submeshIndex: 2
-    pieceIndex: 69
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 70
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 71
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 72
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 73
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 74
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 75
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 76
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 77
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 78
+    pieceIndex: 2
   - submeshIndex: 2
-    pieceIndex: 79
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 80
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 81
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 82
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 83
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 84
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 85
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 86
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 87
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 88
+    pieceIndex: 3
   - submeshIndex: 2
-    pieceIndex: 89
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 90
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 91
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 92
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 93
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 94
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 95
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 96
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 97
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 98
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 99
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 100
+    pieceIndex: 4
   - submeshIndex: 2
-    pieceIndex: 101
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 102
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 103
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 104
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 105
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 106
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 107
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 108
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 109
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 110
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 111
+    pieceIndex: 5
   - submeshIndex: 2
-    pieceIndex: 112
-  - submeshIndex: 2
-    pieceIndex: 113
-  - submeshIndex: 2
-    pieceIndex: 114
-  - submeshIndex: 2
-    pieceIndex: 115
-  - submeshIndex: 2
-    pieceIndex: 116
-  - submeshIndex: 2
-    pieceIndex: 117
-  - submeshIndex: 2
-    pieceIndex: 118
-  - submeshIndex: 2
-    pieceIndex: 119
-  - submeshIndex: 2
-    pieceIndex: 120
-  - submeshIndex: 2
-    pieceIndex: 121
-  - submeshIndex: 2
-    pieceIndex: 122
-  - submeshIndex: 2
-    pieceIndex: 123
-  - submeshIndex: 2
-    pieceIndex: 124
-  - submeshIndex: 2
-    pieceIndex: 125
-  - submeshIndex: 2
-    pieceIndex: 126
-  - submeshIndex: 2
-    pieceIndex: 127
-  - submeshIndex: 2
-    pieceIndex: 128
-  - submeshIndex: 2
-    pieceIndex: 129
-  - submeshIndex: 2
-    pieceIndex: 130
-  - submeshIndex: 2
-    pieceIndex: 131
-  - submeshIndex: 2
-    pieceIndex: 132
-  - submeshIndex: 2
-    pieceIndex: 133
-  - submeshIndex: 2
-    pieceIndex: 134
-  - submeshIndex: 2
-    pieceIndex: 135
-  - submeshIndex: 2
-    pieceIndex: 136
-  - submeshIndex: 2
-    pieceIndex: 137
-  - submeshIndex: 2
-    pieceIndex: 138
-  - submeshIndex: 2
-    pieceIndex: 139
-  - submeshIndex: 2
-    pieceIndex: 140
-  - submeshIndex: 2
-    pieceIndex: 141
-  - submeshIndex: 2
-    pieceIndex: 142
-  - submeshIndex: 2
-    pieceIndex: 143
-  - submeshIndex: 2
-    pieceIndex: 144
-  - submeshIndex: 2
-    pieceIndex: 145
-  - submeshIndex: 2
-    pieceIndex: 146
-  - submeshIndex: 2
-    pieceIndex: 147
-  - submeshIndex: 2
-    pieceIndex: 148
-  - submeshIndex: 2
-    pieceIndex: 149
-  - submeshIndex: 2
-    pieceIndex: 150
-  - submeshIndex: 2
-    pieceIndex: 151
-  - submeshIndex: 2
-    pieceIndex: 152
-  - submeshIndex: 2
-    pieceIndex: 153
-  - submeshIndex: 2
-    pieceIndex: 154
-  - submeshIndex: 2
-    pieceIndex: 155
-  - submeshIndex: 2
-    pieceIndex: 156
-  - submeshIndex: 2
-    pieceIndex: 157
-  - submeshIndex: 2
-    pieceIndex: 158
-  - submeshIndex: 2
-    pieceIndex: 159
-  - submeshIndex: 2
-    pieceIndex: 160
-  - submeshIndex: 2
-    pieceIndex: 161
-  - submeshIndex: 2
-    pieceIndex: 162
-  - submeshIndex: 2
-    pieceIndex: 163
-  - submeshIndex: 2
-    pieceIndex: 164
-  - submeshIndex: 2
-    pieceIndex: 165
-  - submeshIndex: 2
-    pieceIndex: 166
-  - submeshIndex: 2
-    pieceIndex: 167
-  - submeshIndex: 2
-    pieceIndex: 168
-  - submeshIndex: 2
-    pieceIndex: 169
-  - submeshIndex: 2
-    pieceIndex: 170
-  - submeshIndex: 2
-    pieceIndex: 171
-  - submeshIndex: 2
-    pieceIndex: 172
-  - submeshIndex: 2
-    pieceIndex: 173
-  - submeshIndex: 2
-    pieceIndex: 174
-  - submeshIndex: 2
-    pieceIndex: 175
-  - submeshIndex: 2
-    pieceIndex: 176
-  - submeshIndex: 2
-    pieceIndex: 177
-  - submeshIndex: 2
-    pieceIndex: 178
-  - submeshIndex: 2
-    pieceIndex: 179
-  - submeshIndex: 2
-    pieceIndex: 180
-  - submeshIndex: 2
-    pieceIndex: 181
-  - submeshIndex: 2
-    pieceIndex: 182
-  - submeshIndex: 2
-    pieceIndex: 183
-  - submeshIndex: 2
-    pieceIndex: 184
-  - submeshIndex: 2
-    pieceIndex: 185
-  - submeshIndex: 2
-    pieceIndex: 186
-  - submeshIndex: 2
-    pieceIndex: 187
-  - submeshIndex: 2
-    pieceIndex: 188
-  - submeshIndex: 2
-    pieceIndex: 189
-  - submeshIndex: 2
-    pieceIndex: 190
-  - submeshIndex: 2
-    pieceIndex: 191
+    pieceIndex: 5
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
+  - submeshIndex: 3
+    pieceIndex: 0
   - submeshIndex: 3
     pieceIndex: 0
   - submeshIndex: 3
     pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 2
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 3
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 4
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 5
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 6
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 7
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 8
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 9
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 10
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 11
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 12
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 13
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 14
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 15
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 16
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 17
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 18
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 19
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 20
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 21
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 22
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 23
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 24
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 25
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 26
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 27
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 28
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 29
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 30
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 31
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 32
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 33
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 34
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 35
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 36
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 37
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 38
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 39
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 40
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 41
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 42
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 43
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 44
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 45
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 46
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 47
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 48
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 49
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 50
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 51
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 52
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 53
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 54
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 55
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 56
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 57
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 58
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 59
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 60
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 61
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 62
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 63
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 64
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 65
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 66
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 67
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 68
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 69
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 70
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 71
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 72
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 73
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 74
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 75
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 76
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 77
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 78
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 79
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 80
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 81
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 82
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 83
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 84
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 85
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 86
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 87
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 88
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 89
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 90
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 91
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 92
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 93
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 94
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 95
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 96
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 97
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 98
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 99
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 100
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 101
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 102
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 103
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 104
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 105
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 106
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 107
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 108
+    pieceIndex: 0
   - submeshIndex: 3
-    pieceIndex: 109
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 110
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 111
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 112
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 113
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 114
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 115
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 116
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 117
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 118
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 119
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 120
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 121
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 122
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 123
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 124
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 125
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 126
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 127
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 128
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 129
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 130
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 131
+    pieceIndex: 1
   - submeshIndex: 3
-    pieceIndex: 132
-  - submeshIndex: 3
-    pieceIndex: 133
-  - submeshIndex: 3
-    pieceIndex: 134
-  - submeshIndex: 3
-    pieceIndex: 135
-  - submeshIndex: 3
-    pieceIndex: 136
-  - submeshIndex: 3
-    pieceIndex: 137
-  - submeshIndex: 3
-    pieceIndex: 138
-  - submeshIndex: 3
-    pieceIndex: 139
-  - submeshIndex: 3
-    pieceIndex: 140
-  - submeshIndex: 3
-    pieceIndex: 141
-  - submeshIndex: 3
-    pieceIndex: 142
-  - submeshIndex: 3
-    pieceIndex: 143
+    pieceIndex: 1
   triangleNeighbors:
   - array: 01000000040000003c0000003d000000400000000d00000049000000
   - array: 00000000120000003c0000003d0000004e0000001600000052000000
@@ -1767,3 +1767,65 @@ MonoBehaviour:
   - array: e9010000fe010000ff0100003102000047020000cf01000017020000
   - array: f8010000fc010000ff0100004002000044020000fe01000046020000
   isSupportTriangle: 0000000000000000000000000000000000000000000000000000000000000000000000000101010101010101010101010001000001000101010001000000000000000000000000000000000000000000000000000000000000000000000000000101010101010101010101010001000001000101010001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010101000101000000000101010100010101010101010101010101010101010001010100010101010101010101010101010101010101010101010101010100000000000000000000010101010101010101010101000000000000000000000000010101000101000000000101010100010101010101010101010101010101010001010100010101010101010101010101010101010101010101010101010100000000000000000000010101010101010101010101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  triangleCluster: 00000000000000000100000001000000000000000000000001000000010000000000000000000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000000000000000000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000003000000030000000300000003000000030000000300000003000000030000000300000003000000030000000300000004000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000000000000000000000100000001000000000000000000000001000000010000000000000000000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000000000000000000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000003000000030000000300000003000000030000000300000003000000030000000300000003000000030000000300000004000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000600000006000000070000000700000008000000080000000900000009000000070000000700000008000000080000000600000006000000070000000700000008000000080000000600000006000000080000000800000006000000060000000800000008000000060000000600000008000000080000000700000007000000080000000800000007000000070000000800000008000000080000000800000008000000080000000800000008000000080000000800000008000000080000000600000006000000070000000700000008000000080000000800000008000000080000000800000008000000080000000800000008000000090000000900000009000000090000000900000009000000090000000900000009000000090000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000600000006000000070000000700000008000000080000000900000009000000070000000700000008000000080000000600000006000000070000000700000008000000080000000600000006000000080000000800000006000000060000000800000008000000060000000600000008000000080000000700000007000000080000000800000007000000070000000800000008000000080000000800000008000000080000000800000008000000080000000800000008000000080000000600000006000000070000000700000008000000080000000800000008000000080000000800000008000000080000000800000008000000090000000900000009000000090000000900000009000000090000000900000009000000090000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000c0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000d000000
+  clusterTriangles:
+  - array: 0000000001000000040000000500000008000000090000000c0000000d000000120000001300000016000000170000003c0000003d0000004000000041000000440000004500000048000000490000004e0000004f0000005200000053000000
+  - array: 020000000300000006000000070000000a0000000b0000000e0000000f000000100000001100000014000000150000003e0000003f000000420000004300000046000000470000004a0000004b0000004c0000004d0000005000000051000000
+  - array: 18000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000230000005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f000000
+  - array: 2400000025000000260000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f000000600000006100000062000000630000006400000065000000660000006700000068000000690000006a0000006b000000
+  - array: 300000003100000032000000330000003400000035000000360000003700000038000000390000003a0000003b0000006c0000006d0000006e0000006f0000007000000071000000720000007300000074000000750000007600000077000000
+  - array: 78000000790000007a0000007b0000007c0000007d0000007e0000007f000000800000008100000082000000830000008400000085000000860000008700000088000000890000008a0000008b0000008c0000008d0000008e0000008f000000900000009100000092000000930000009400000095000000960000009700000098000000990000009a0000009b0000009c0000009d0000009e0000009f000000a0000000a1000000a2000000a3000000a4000000a5000000a6000000a7000000a8000000a9000000aa000000ab000000ac000000ad000000ae000000af000000b0000000b1000000b2000000b3000000b4000000b5000000b6000000b7000000b8000000b9000000ba000000bb000000bc000000bd000000be000000bf000000c0000000c1000000c2000000c3000000c4000000c5000000c6000000c7000000c8000000c9000000ca000000cb000000cc000000cd000000ce000000cf000000d0000000d1000000d2000000d3000000d4000000d5000000d6000000d7000000d8000000d9000000da000000db000000dc000000dd000000de000000df000000e0000000e1000000e2000000e3000000e4000000e5000000e6000000e7000000e8000000e9000000ea000000eb000000ec000000ed000000ee000000ef000000f0000000f1000000f2000000f3000000f4000000f5000000f6000000f7000000
+  - array: f8000000f900000004010000050100000a0100000b0100000e0100000f01000012010000130100002801000029010000580100005901000064010000650100006a0100006b0100006e0100006f01000072010000730100008801000089010000
+  - array: fa000000fb0000000001000001010000060100000701000016010000170100001a0100001b0100002a0100002b0100005a0100005b0100006001000061010000660100006701000076010000770100007a0100007b0100008a0100008b010000
+  - array: fc000000fd000000020100000301000008010000090100000c0100000d0100001001000011010000140100001501000018010000190100001c0100001d0100001e0100001f01000020010000210100002201000023010000240100002501000026010000270100002c0100002d0100002e0100002f0100003001000031010000320100003301000034010000350100005c0100005d010000620100006301000068010000690100006c0100006d0100007001000071010000740100007501000078010000790100007c0100007d0100007e0100007f01000080010000810100008201000083010000840100008501000086010000870100008c0100008d0100008e0100008f010000900100009101000092010000930100009401000095010000
+  - array: fe000000ff000000360100003701000038010000390100003a0100003b0100003c0100003d0100003e0100003f0100005e0100005f010000960100009701000098010000990100009a0100009b0100009c0100009d0100009e0100009f010000
+  - array: 400100004101000042010000430100004401000045010000460100004701000048010000490100004a0100004b010000a0010000a1010000a2010000a3010000a4010000a5010000a6010000a7010000a8010000a9010000aa010000ab010000
+  - array: 4c0100004d0100004e0100004f0100005001000051010000520100005301000054010000550100005601000057010000ac010000ad010000ae010000af010000b0010000b1010000b2010000b3010000b4010000b5010000b6010000b7010000
+  - array: b8010000b9010000ba010000bb010000bc010000bd010000be010000bf010000c0010000c1010000c2010000c3010000d0010000d1010000d2010000d3010000d4010000d5010000d6010000d7010000d8010000d9010000da010000db010000dc010000dd010000de010000df010000e0010000e1010000e2010000e3010000e4010000e5010000e6010000e7010000000200000102000002020000030200000402000005020000060200000702000008020000090200000a0200000b02000018020000190200001a0200001b0200001c0200001d0200001e0200001f020000200200002102000022020000230200002402000025020000260200002702000028020000290200002a0200002b0200002c0200002d0200002e0200002f020000
+  - array: c4010000c5010000c6010000c7010000c8010000c9010000ca010000cb010000cc010000cd010000ce010000cf010000e8010000e9010000ea010000eb010000ec010000ed010000ee010000ef010000f0010000f1010000f2010000f3010000f4010000f5010000f6010000f7010000f8010000f9010000fa010000fb010000fc010000fd010000fe010000ff0100000c0200000d0200000e0200000f0200001002000011020000120200001302000014020000150200001602000017020000300200003102000032020000330200003402000035020000360200003702000038020000390200003a0200003b0200003c0200003d0200003e0200003f0200004002000041020000420200004302000044020000450200004602000047020000
+  clusterNeighbors:
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  - array: 
+  clusterIsSupport: 0000000101000101010001000000
+  clusterCentroid:
+  - {x: -0.049999982, y: 0.044999987, z: -0.0068999995}
+  - {x: -0.049999982, y: 0.027000006, z: -0.0068999995}
+  - {x: -0.04999997, y: 0.036, z: -0.01}
+  - {x: 0.046000008, y: -0.042999987, z: -0.011500003}
+  - {x: 0.035000023, y: -0.036999963, z: -0.0115999915}
+  - {x: -0.049999993, y: 0.035999995, z: -0.010000024}
+  - {x: 0.022, y: -0.03899999, z: -0.006850003}
+  - {x: 0.03000001, y: -0.03600001, z: -0.011099998}
+  - {x: 0.04599997, y: -0.043000057, z: -0.007000012}
+  - {x: 0.022000004, y: -0.032999992, z: -0.006850003}
+  - {x: 0.03799999, y: -0.03899999, z: -0.006850003}
+  - {x: 0.03799999, y: -0.032999992, z: -0.006850003}
+  - {x: 0.024000002, y: -0.035999995, z: -0.012200014}
+  - {x: 0.02650001, y: -0.035999995, z: -0.012200011}
+  clusterRadius:
+  - 0.0040398054
+  - 0.004039805
+  - 0.010501904
+  - 0.0017804647
+  - 0.0017578754
+  - 0.004230045
+  - 0.0040401155
+  - 0.009993515
+  - 0.0053151227
+  - 0.0040401155
+  - 0.0040401164
+  - 0.004040116
+  - 0.0012318721
+  - 0.0012318806
