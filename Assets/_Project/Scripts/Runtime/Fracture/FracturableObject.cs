@@ -85,6 +85,7 @@ namespace Plunderspell.Fracture
         // Clusters (#491): null when the graph has none, and then every triangle breaks on its own as before.
         private int[] triangleCluster;
         private byte[] triangleKind;
+        private int[] triangleEdgeOther;
         private int[][] clusterTriangles;
         private int[][] clusterNeighbors;
         private bool[] clusterIsSupport;
@@ -166,6 +167,7 @@ namespace Plunderspell.Fracture
             int count = data.clusterTriangles.Length;
             triangleCluster = data.triangleCluster;
             triangleKind = data.triangleKind != null && data.triangleKind.Length == initialTriangleCount ? data.triangleKind : null;
+            triangleEdgeOther = data.triangleEdgeOther != null && data.triangleEdgeOther.Length == initialTriangleCount ? data.triangleEdgeOther : null;
             clusterTriangles = new int[count][];
             clusterNeighbors = new int[count][];
             for (int c = 0; c < count; c++)
@@ -628,7 +630,7 @@ namespace Plunderspell.Fracture
             for (int s = 0; s < lists.Length; s++) lists[s] = new List<int>();
             for (int i = 0; i < initialTriangleCount; i++)
             {
-                if (triangleIsBroken[i]) continue;
+                if (triangleIsBroken[i] || !EdgeShows(i)) continue;
                 int s = pieceMappings[i].submeshIndex;
                 if (s < 0 || s >= lists.Length) continue;
                 lists[s].Add(initialTriangles[i * 3]);
@@ -640,6 +642,14 @@ namespace Plunderspell.Fracture
             for (int s = 0; s < lists.Length; s++) renderMesh.SetTriangles(System.Array.Empty<int>(), s);
             if (capDepthMetres > 0f) ApplyCapVertices();
             for (int s = 0; s < lists.Length; s++) renderMesh.SetTriangles(lists[s], s);
+        }
+
+        // A stone edge shows only once the cluster across its border has broken (aj, 2026-10-28); every other triangle shows.
+        private bool EdgeShows(int tri)
+        {
+            if (triangleKind == null || triangleKind[tri] != 2) return true;
+            int other = triangleEdgeOther != null ? triangleEdgeOther[tri] : -1;
+            return other >= 0 && clusterIsBroken != null && clusterIsBroken[other];
         }
 
         // Cap quads (#477): every edge of a surviving original triangle whose welded neighbour across it is broken
@@ -762,8 +772,8 @@ namespace Plunderspell.Fracture
         [ContextMenu("Bake Fracture Graph")]
         public void BakeFractureGraph() => BakeFractureGraph(null);
 
-        /// <summary>Bakes the graph. <paramref name="triangleClusters"/> is a cluster id per triangle of the fracture mesh (submesh by submesh); null gives one cluster per triangle. <paramref name="triangleKinds"/> is 0 front surface, 1 back twin, 2 stone edge per triangle; null means all 0.</summary>
-        public void BakeFractureGraph(int[] triangleClusters, byte[] triangleKinds = null)
+        /// <summary>Bakes the graph. <paramref name="triangleClusters"/> is a cluster id per triangle of the fracture mesh (submesh by submesh); null gives one cluster per triangle. <paramref name="triangleKinds"/> is 0 front surface, 1 back twin, 2 stone edge per triangle; null means all 0. <paramref name="edgeOther"/> is a stone edge's cluster across its border (-1 otherwise).</summary>
+        public void BakeFractureGraph(int[] triangleClusters, byte[] triangleKinds = null, int[] edgeOther = null)
         {
             if (!TryGetComponent<MeshCollider>(out var mCol) || (fractureMesh == null && mCol.sharedMesh == null))
             {
@@ -842,6 +852,7 @@ namespace Plunderspell.Fracture
             data.isSupportTriangle = isSupportTriangle;
             data.triangleCluster = cluster;
             data.triangleKind = triangleKinds != null && triangleKinds.Length == initialTriangleCount ? triangleKinds : new byte[initialTriangleCount];
+            data.triangleEdgeOther = edgeOther != null && edgeOther.Length == initialTriangleCount ? edgeOther : null;
             data.clusterTriangles = clusterData;
             data.clusterNeighbors = neighborData;
             data.clusterIsSupport = support;
@@ -854,6 +865,9 @@ namespace Plunderspell.Fracture
                 data.triangleNeighbors[i] = new IntArray { array = triangleNeighbors[i] };
             }
 
+            // Deleted first, as the bake does its meshes: writing over the old asset left loaded prefabs pointing at the
+            // destroyed old graph until each was reimported (2026-10-28).
+            UnityEditor.AssetDatabase.DeleteAsset(path);
             UnityEditor.AssetDatabase.CreateAsset(data, path);
             UnityEditor.AssetDatabase.SaveAssets();
 

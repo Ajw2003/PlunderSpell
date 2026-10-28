@@ -61,10 +61,12 @@ namespace Plunderspell.EditorTools
                         Object.DestroyImmediate(surface);
                         clusters = doubled.ToArray();
                         byte[] kinds = kindList.ToArray();
+                        int[] edgeOther = new int[clusters.Length];
+                        System.Array.Fill(edgeOther, -1);
                         if (thickness > 0f)
                         {
                             // After double-siding: the edge quads are single-sided, only the hole side is ever seen.
-                            Mesh edged = AddStoneEdges(mesh, toWorld, ref clusters, ref kinds, thickness * 0.5f / part.lossyScale.x);
+                            Mesh edged = AddStoneEdges(mesh, toWorld, ref clusters, ref kinds, ref edgeOther, thickness * 0.5f / part.lossyScale.x);
                             Object.DestroyImmediate(mesh);
                             mesh = edged;
                         }
@@ -72,8 +74,15 @@ namespace Plunderspell.EditorTools
                         string meshPath = $"{FractureDir}/{mesh.name}.asset";
                         AssetDatabase.DeleteAsset(meshPath); // a fresh asset every time, never overwritten in place
                         AssetDatabase.CreateAsset(mesh, meshPath);
+                        // What an unbroken part draws: the same vertices with no stone edges, so nothing shows until a
+                        // neighbour breaks and FracturableObject adds that edge back (aj, 2026-10-28).
+                        Mesh visible = WithoutStoneEdges(mesh, kinds);
+                        visible.name = $"{root.name}_{name}_Visible";
+                        string visiblePath = $"{FractureDir}/{visible.name}.asset";
+                        AssetDatabase.DeleteAsset(visiblePath);
+                        AssetDatabase.CreateAsset(visible, visiblePath);
 
-                        part.GetComponent<MeshFilter>().sharedMesh = mesh;
+                        part.GetComponent<MeshFilter>().sharedMesh = visible;
                         // The collider keeps the one-sided split mesh (same shape): a double-sided one stopped guards on stairs.
                         part.GetComponent<MeshCollider>().sharedMesh = source;
                         if (!part.TryGetComponent(out FracturableObject fo)) fo = part.gameObject.AddComponent<FracturableObject>();
@@ -88,7 +97,7 @@ namespace Plunderspell.EditorTools
                         // mergeDistance is in the mesh's own space; the rooms are stored at 1/100 size, so the 0.05 default
                         // welded everything within 5 m and the graph build ran out of memory. 1 cm in metres instead.
                         fo.mergeDistance = WeldMetres / part.lossyScale.x;
-                        fo.BakeFractureGraph(clusters, kinds);
+                        fo.BakeFractureGraph(clusters, kinds, edgeOther);
                         int clusterCount = 0;
                         foreach (int c in clusters) clusterCount = Mathf.Max(clusterCount, c + 1);
                         foreach (byte k in kinds)
@@ -316,7 +325,7 @@ namespace Plunderspell.EditorTools
         /// <paramref name="clusters"/> and <paramref name="kinds"/> (0 front, 1 back twin, 2 stone edge) are per triangle, in
         /// submesh order, and come back extended to the new triangle order.
         /// </summary>
-        public static Mesh AddStoneEdges(Mesh src, Matrix4x4 toWorld, ref int[] clusters, ref byte[] kinds, float depth)
+        public static Mesh AddStoneEdges(Mesh src, Matrix4x4 toWorld, ref int[] clusters, ref byte[] kinds, ref int[] edgeOther, float depth)
         {
             Channels ch = Channels.Read(src);
             int[] weld = WeldVertices(ch.Verts, toWorld);
@@ -342,8 +351,9 @@ namespace Plunderspell.EditorTools
                 }
             }
 
-            // Edges on a cluster border, or with no neighbour.
-            var border = new List<(int cluster, int tri, int a, int b)>();
+            // Edges on a border with another cluster, and which cluster: the edge shows only once that one breaks. An edge
+            // with no neighbour is the part's own rim and never opens onto a hole, so it gets no stone edge.
+            var border = new List<(int cluster, int other, int tri, int a, int b)>();
             if (depth > 0f)
                 for (int t = 0; t < sub.Count; t++)
                 {
@@ -351,14 +361,12 @@ namespace Plunderspell.EditorTools
                     for (int e = 0; e < 3; e++)
                     {
                         int ia = tris[t * 3 + e], ib = tris[t * 3 + (e + 1) % 3];
-                        List<int> sharing = onEdge[EdgeKey(ia, ib)];
-                        bool isBorder = sharing.Count == 1;
-                        foreach (int o in sharing) if (clusters[o] != clusters[t]) isBorder = true;
-                        if (isBorder) border.Add((clusters[t], t, ia, ib));
+                        foreach (int o in onEdge[EdgeKey(ia, ib)])
+                            if (clusters[o] != clusters[t]) { border.Add((clusters[t], clusters[o], t, ia, ib)); break; }
                     }
                 }
 
-            // Touching, parallel border edges of one cluster make a run.
+            // Touching, parallel border edges of one cluster, against the same other cluster, make a run.
             var parent = new int[border.Count];
             for (int i = 0; i < parent.Length; i++) parent[i] = i;
             int Find(int x) { while (parent[x] != x) x = parent[x] = parent[parent[x]]; return x; }
@@ -374,7 +382,8 @@ namespace Plunderspell.EditorTools
             foreach (List<int> l in atVertex.Values)
                 for (int x = 0; x < l.Count; x++)
                     for (int y = x + 1; y < l.Count; y++)
-                        if (Vector3.Cross(Dir(l[x]), Dir(l[y])).sqrMagnitude < 1e-6f) parent[Find(l[x])] = Find(l[y]);
+                        if (border[l[x]].other == border[l[y]].other && Vector3.Cross(Dir(l[x]), Dir(l[y])).sqrMagnitude < 1e-6f)
+                            parent[Find(l[x])] = Find(l[y]);
             var runs = new Dictionary<int, List<int>>();
             for (int i = 0; i < border.Count; i++)
             {
@@ -393,11 +402,12 @@ namespace Plunderspell.EditorTools
             float metresPerUnit = toWorld.lossyScale.x;
 
             var newTris = new List<int>[ch.Subs.Count]; var newClusters = new List<int>[ch.Subs.Count]; var newKinds = new List<byte>[ch.Subs.Count];
+            var newOthers = new List<int>[ch.Subs.Count];
             int at = 0;
             for (int s = 0; s < ch.Subs.Count; s++)
             {
-                newTris[s] = new List<int>(ch.Subs[s]); newClusters[s] = new List<int>(); newKinds[s] = new List<byte>();
-                for (int i = 0; i < ch.Subs[s].Count / 3; i++) { newClusters[s].Add(clusters[at]); newKinds[s].Add(kinds[at]); at++; }
+                newTris[s] = new List<int>(ch.Subs[s]); newClusters[s] = new List<int>(); newKinds[s] = new List<byte>(); newOthers[s] = new List<int>();
+                for (int i = 0; i < ch.Subs[s].Count / 3; i++) { newClusters[s].Add(clusters[at]); newKinds[s].Add(kinds[at]); newOthers[s].Add(edgeOther[at]); at++; }
             }
 
             foreach (List<int> run in runs.Values)
@@ -417,8 +427,11 @@ namespace Plunderspell.EditorTools
                 Vector3 p0 = ch.Verts[tris[t * 3]], p1 = ch.Verts[tris[t * 3 + 1]], p2 = ch.Verts[tris[t * 3 + 2]];
                 Vector3 inwardDir = -Direction(Vector3.Cross(p1 - p0, p2 - p0));
                 Vector3 a = ch.Verts[ia], b = ch.Verts[ib];
-                Vector3 inward = inwardDir * SlabHalfDepth(probeCollider, toWorld, (a + b) * 0.5f, inwardDir, depth, metresPerUnit);
                 Vector3 centroid = (p0 + p1 + p2) / 3f;
+                // Probed 2 cm into the cluster: a ray down the clip plane itself slid along the slab's shared edge and missed.
+                Vector3 mid = (a + b) * 0.5f;
+                Vector3 probeAt = mid + (centroid - mid).normalized * (0.02f / metresPerUnit);
+                Vector3 inward = StoneEdgeInward(probeCollider, toWorld, probeAt, inwardDir, depth, metresPerUnit);
                 Vector3 w = Vector3.Cross(b - a, inward);
                 bool flip = Vector3.Dot(w, centroid - a) > 0f; // the front face points away from the cluster, toward the hole
                 Vector3 normal = Direction(flip ? -w : w);
@@ -428,31 +441,62 @@ namespace Plunderspell.EditorTools
                 if (ch.HasN) for (int k = 0; k < 4; k++) ch.Normals[q + k] = normal;
                 int[] order = flip ? new[] { 0, 2, 1, 0, 3, 2 } : new[] { 0, 1, 2, 0, 2, 3 };
                 foreach (int o in order) newTris[sub[t]].Add(q + o);
-                for (int k = 0; k < 2; k++) { newClusters[sub[t]].Add(rep.cluster); newKinds[sub[t]].Add(2); }
+                for (int k = 0; k < 2; k++) { newClusters[sub[t]].Add(rep.cluster); newKinds[sub[t]].Add(2); newOthers[sub[t]].Add(rep.other); }
             }
 
             Object.DestroyImmediate(probe);
 
-            var allClusters = new List<int>(); var allKinds = new List<byte>();
-            for (int s = 0; s < ch.Subs.Count; s++) { ch.Subs[s] = newTris[s]; allClusters.AddRange(newClusters[s]); allKinds.AddRange(newKinds[s]); }
+            var allClusters = new List<int>(); var allKinds = new List<byte>(); var allOthers = new List<int>();
+            for (int s = 0; s < ch.Subs.Count; s++) { ch.Subs[s] = newTris[s]; allClusters.AddRange(newClusters[s]); allKinds.AddRange(newKinds[s]); allOthers.AddRange(newOthers[s]); }
             clusters = allClusters.ToArray();
             kinds = allKinds.ToArray();
+            edgeOther = allOthers.ToArray();
             return ch.ToMesh();
         }
 
-        /// <summary>The stone edge's depth (mesh units) at <paramref name="point"/>: <paramref name="maxDepth"/>, or half the
-        /// distance to the slab's opposite face along <paramref name="inwardDir"/> when that face is nearer than twice it.</summary>
-        public static float SlabHalfDepth(MeshCollider slab, Matrix4x4 toWorld, Vector3 point, Vector3 inwardDir, float maxDepth, float metresPerUnit)
+        /// <summary>A copy of <paramref name="src"/> with every stone-edge triangle (kind 2, per triangle in submesh order) left out.</summary>
+        public static Mesh WithoutStoneEdges(Mesh src, byte[] kinds)
         {
+            Mesh copy = Object.Instantiate(src);
+            int at = 0;
+            for (int s = 0; s < src.subMeshCount; s++)
+            {
+                int[] all = src.GetTriangles(s);
+                var kept = new List<int>(all.Length);
+                for (int i = 0; i < all.Length; i += 3, at++)
+                    if (kinds[at] != 2) { kept.Add(all[i]); kept.Add(all[i + 1]); kept.Add(all[i + 2]); }
+                copy.SetTriangles(kept, s);
+            }
+            return copy;
+        }
+
+        /// <summary>
+        /// The stone edge's offset (mesh units) from a face at <paramref name="point"/>: toward the slab's opposite face, on
+        /// whichever side of the face it is, and half way to it when that is nearer than <paramref name="maxDepth"/>. A single
+        /// sheet with no opposite face either side (the ground floor) hides a level edge below it, any other along
+        /// <paramref name="inwardDir"/> (aj, 2026-10-28: full-depth edges stuck up out of thin and single-sheet floors).
+        /// </summary>
+        public static Vector3 StoneEdgeInward(MeshCollider slab, Matrix4x4 toWorld, Vector3 point, Vector3 inwardDir, float maxDepth, float metresPerUnit)
+        {
+            if (TrySlabHalfDepth(slab, toWorld, point, inwardDir, maxDepth, metresPerUnit, out float depth)) return inwardDir * depth;
+            if (TrySlabHalfDepth(slab, toWorld, point, -inwardDir, maxDepth, metresPerUnit, out depth)) return -inwardDir * depth;
             Vector3 dirWorld = toWorld.MultiplyVector(inwardDir).normalized;
-            // Starts 1 mm inside, so the face the edge hangs from (and its twin) is never the hit.
+            return Mathf.Abs(dirWorld.y) > 0.7f && dirWorld.y > 0f ? -inwardDir * maxDepth : inwardDir * maxDepth;
+        }
+
+        /// <summary>Half the distance to the face <paramref name="dir"/> meets first from <paramref name="point"/>, capped at
+        /// <paramref name="maxDepth"/>; false when no face is within twice <paramref name="maxDepth"/>.</summary>
+        public static bool TrySlabHalfDepth(MeshCollider slab, Matrix4x4 toWorld, Vector3 point, Vector3 dir, float maxDepth, float metresPerUnit, out float depth)
+        {
+            Vector3 dirWorld = toWorld.MultiplyVector(dir).normalized;
+            // Starts 1 mm off the face, so the face the edge hangs from (and its twin) is never the hit.
             Vector3 from = toWorld.MultiplyPoint3x4(point) + dirWorld * 0.001f;
-            float reach = maxDepth * 2f * metresPerUnit;
             bool hitsBackfaces = Physics.queriesHitBackfaces;
             Physics.queriesHitBackfaces = true;
-            bool hit = slab.Raycast(new Ray(from, dirWorld), out RaycastHit h, reach);
+            bool hit = slab.Raycast(new Ray(from, dirWorld), out RaycastHit h, maxDepth * 2f * metresPerUnit);
             Physics.queriesHitBackfaces = hitsBackfaces;
-            return hit ? Mathf.Min(maxDepth, (h.distance + 0.001f) * 0.5f / metresPerUnit) : maxDepth;
+            depth = hit ? Mathf.Min(maxDepth, (h.distance + 0.001f) * 0.5f / metresPerUnit) : maxDepth;
+            return hit;
         }
     }
 }

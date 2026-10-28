@@ -38,15 +38,23 @@ namespace Plunderspell.Tests.Editor
             Object.DestroyImmediate(slab);
             var mesh = box.AddComponent<MeshCollider>();
             mesh.sharedMesh = box.GetComponent<MeshFilter>().sharedMesh;
-            // On the top face (mesh space y = 0.5), going down.
-            float depth = CastleFractureBake.SlabHalfDepth(mesh, box.transform.localToWorldMatrix, new Vector3(0.2f, 0.5f, 0.2f), Vector3.down, 0.15f / 0.02f, 1f);
-            // metresPerUnit 1, so the depth comes back in metres: half the 2 cm.
-            Assert.That(depth, Is.EqualTo(0.01f).Within(0.002f), "edge depth in metres");
+            // On the top face (mesh space y = 0.5). metresPerUnit 1, so offsets come back in world metres.
+            Vector3 top = new Vector3(0.2f, 0.5f, 0.2f);
+            Vector3 down = CastleFractureBake.StoneEdgeInward(mesh, box.transform.localToWorldMatrix, top, Vector3.down, 0.15f, 1f);
+            Assert.That(down.y, Is.EqualTo(-0.01f).Within(0.002f), "down half the 2 cm");
+            // The face's normal pointing the wrong way (as some floors are wound) still finds the slab below.
+            Vector3 flipped = CastleFractureBake.StoneEdgeInward(mesh, box.transform.localToWorldMatrix, top, Vector3.up, 0.15f, 1f);
+            Assert.That(flipped.y, Is.EqualTo(-0.01f).Within(0.002f), "a face wound the other way still goes into the slab");
             box.transform.localScale = Vector3.one;
             Physics.SyncTransforms();
-            float thick = CastleFractureBake.SlabHalfDepth(mesh, box.transform.localToWorldMatrix, new Vector3(0.2f, 0.5f, 0.2f), Vector3.down, 0.1f, 1f);
+            Vector3 thick = CastleFractureBake.StoneEdgeInward(mesh, box.transform.localToWorldMatrix, top, Vector3.down, 0.1f, 1f);
+            Assert.AreEqual(-0.1f, thick.y, 1e-5f, "a slab thicker than twice the default keeps the default");
+            box.transform.position = new Vector3(0f, -100f, 0f);
+            Physics.SyncTransforms();
+            // A single sheet: nothing either side, so a level edge goes below whichever way the face is wound.
+            Vector3 sheet = CastleFractureBake.StoneEdgeInward(mesh, Matrix4x4.identity, Vector3.zero, Vector3.up, 0.1f, 1f);
             Object.DestroyImmediate(box);
-            Assert.AreEqual(0.1f, thick, 1e-5f, "a slab thicker than twice the default keeps the default");
+            Assert.AreEqual(-0.1f, sheet.y, 1e-5f, "a single level sheet hides its edge below");
         }
     }
 }

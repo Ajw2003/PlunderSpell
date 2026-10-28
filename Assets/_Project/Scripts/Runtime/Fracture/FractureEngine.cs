@@ -91,7 +91,8 @@ namespace Plunderspell.Fracture
             MeshRenderer mr = target.GetComponent<MeshRenderer>();
             if (mr == null) return null;
             
-            Mesh mesh = filter.sharedMesh;
+            // The fracture mesh when there is one: the renderer's own leaves out the stone edges a falling cluster carries.
+            Mesh mesh = target.fractureMesh != null ? target.fractureMesh : filter.sharedMesh;
             
             int subMeshCount = mesh.subMeshCount;
             FractureEffect[] effects = new FractureEffect[subMeshCount];

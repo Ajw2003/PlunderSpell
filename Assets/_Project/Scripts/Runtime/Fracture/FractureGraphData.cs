@@ -25,6 +25,7 @@ namespace Plunderspell.Fracture
         // Clusters (#490): a piece is a (submesh, cluster) pair. Mesh units.
         public int[] triangleCluster;
         public byte[] triangleKind; // 0 front surface, 1 back twin, 2 stone edge
+        public int[] triangleEdgeOther; // a stone edge's cluster across the border: the edge shows once that one breaks; -1 otherwise
         public IntArray[] clusterTriangles;
         public IntArray[] clusterNeighbors;
         public bool[] clusterIsSupport;
