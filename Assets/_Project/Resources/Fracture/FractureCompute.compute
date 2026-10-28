@@ -1,0 +1,163 @@
+#pragma kernel CSMain
+#pragma kernel CSImpact
+#pragma kernel CSDrop
+
+struct PieceData
+{
+    float3 position;
+    int isStatic;
+    float4 rotation;
+    float3 velocity;
+    float radius;
+    float3 angularVelocity;
+    float lifeTime;
+};
+
+RWStructuredBuffer<PieceData> _Pieces;
+float _DeltaTime;
+float3 _Gravity;
+
+// Impact parameters
+float3 _ImpactPoint;
+float _ImpactRadius;
+float _ImpactForce;
+float _DespawnTime;
+float _GroundY;
+
+float rand(float3 co) {
+    return frac(sin(dot(co.xyz, float3(12.9898,78.233,45.5432))) * 43758.5453);
+}
+
+float3 rand3(float3 co) {
+    return float3(rand(co), rand(co + float3(1,0,0)), rand(co + float3(0,1,0))) * 2.0 - 1.0;
+}
+
+float4 qmul(float4 q1, float4 q2)
+{
+    return float4(
+        q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y,
+        q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x,
+        q1.w * q2.z + q1.x * q2.y - q1.y * q2.x + q1.z * q2.w,
+        q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z
+    );
+}
+
+float4 AngleAxis(float angle, float3 axis)
+{
+    float halfAngle = angle * 0.5;
+    float s = sin(halfAngle);
+    float c = cos(halfAngle);
+    return float4(axis * s, c);
+}
+
+[numthreads(64,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    uint count, stride;
+    _Pieces.GetDimensions(count, stride);
+    
+    if (id.x >= count) return;
+    
+    PieceData p = _Pieces[id.x];
+    
+    if (p.isStatic == 0)
+    {
+        p.lifeTime -= _DeltaTime;
+        if (p.lifeTime <= 0.0)
+        {
+            p.isStatic = -1; // Dead
+        }
+        else
+        {
+            p.velocity += _Gravity * _DeltaTime;
+            p.position += p.velocity * _DeltaTime;
+            
+            // Ground collision
+            if (p.position.y <= _GroundY)
+            {
+                p.position.y = _GroundY;
+                
+                // If it hits the ground fast, "shatter" it by adding random velocity
+                if (p.velocity.y < -2.0)
+                {
+                    p.velocity = rand3(p.position) * length(p.velocity) * 0.5;
+                    p.velocity.y = abs(p.velocity.y) + 1.0;
+                    p.angularVelocity = rand3(p.position + float3(1,1,1)) * 10.0;
+                    
+                    // Decrease lifetime faster when hitting ground so it despawns shortly after
+                    p.lifeTime = min(p.lifeTime, 1.5); 
+                }
+                else
+                {
+                    // Rest on ground
+                    p.velocity = float3(0,0,0);
+                    p.angularVelocity = float3(0,0,0);
+                }
+            }
+            else
+            {
+                float angularSpeed = length(p.angularVelocity);
+                if (angularSpeed > 0.001)
+                {
+                    float3 axis = normalize(p.angularVelocity);
+                    float4 dq = AngleAxis(angularSpeed * _DeltaTime, axis);
+                    p.rotation = qmul(dq, p.rotation);
+                    p.rotation = normalize(p.rotation);
+                }
+            }
+        }
+    }
+    
+    _Pieces[id.x] = p;
+}
+
+[numthreads(64,1,1)]
+void CSImpact (uint3 id : SV_DispatchThreadID)
+{
+    uint count, stride;
+    _Pieces.GetDimensions(count, stride);
+    
+    if (id.x >= count) return;
+    
+    PieceData p = _Pieces[id.x];
+    
+    if (p.isStatic == 1)
+    {
+        float dist = distance(p.position, _ImpactPoint);
+        if (dist <= _ImpactRadius + p.radius + 0.1)
+        {
+            p.isStatic = 0;
+            p.lifeTime = _DespawnTime + rand(p.position) * _DespawnTime * 0.5;
+            
+            float3 dir = normalize(p.position - _ImpactPoint + rand3(p.position) * 0.5);
+            p.velocity = dir * _ImpactForce * (1.0 - (dist / (_ImpactRadius + 0.1)));
+            p.angularVelocity = rand3(p.position + float3(1,1,1)) * _ImpactForce * 2.0;
+        }
+    }
+    
+    _Pieces[id.x] = p;
+}
+
+StructuredBuffer<int> _DropIndices;
+int _DropCount;
+
+[numthreads(64,1,1)]
+void CSDrop (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= (uint)_DropCount) return;
+    
+    int pieceIndex = _DropIndices[id.x];
+    PieceData p = _Pieces[pieceIndex];
+    
+    if (p.isStatic == 1)
+    {
+        p.isStatic = 0;
+        p.lifeTime = _DespawnTime + rand(p.position) * _DespawnTime * 0.5;
+        
+        // Fall perfectly rigidly as one unit (no random variation)
+        p.velocity = float3(0,0,0);
+        p.angularVelocity = float3(0,0,0);
+    }
+    
+    _Pieces[pieceIndex] = p;
+}
