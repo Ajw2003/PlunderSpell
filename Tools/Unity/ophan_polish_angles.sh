@@ -6,7 +6,8 @@
 set -uo pipefail
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
-out="docs/generated/ophan-polish-468/angles"; mkdir -p "$out"; abs="$(cygpath -m "$repo/$out")"
+# ANGLES_LABEL names another output folder, so a later check does not overwrite an earlier one's stills.
+out="docs/generated/ophan-polish-468/${ANGLES_LABEL:-angles}"; mkdir -p "$out"; abs="$(cygpath -m "$repo/$out")"
 say() { printf '%s %s\n' "$(date +%T)" "$*"; }
 gym() { COOP_EVAL_FILE="$repo/Tools/Unity/eval/ophan_gym_check.cs" timeout 60 bash Tools/Unity/coop_eval.sh "$@" 2>&1 | tail -1; }
 ophan() { COOP_EVAL_FILE="$repo/Tools/Unity/eval/ophan_check.cs" timeout 90 bash Tools/Unity/coop_eval.sh "$@" 2>&1 | tail -1; }
