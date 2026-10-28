@@ -73,6 +73,15 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
   (#460). The charged beam bursts a glowing hole in each wall in its path on every machine and the kill lands 0.5 s
   later (#461); the hole is visual only, walls stay solid. A Lantern Warden before its turn could stand half in the
   floor on the main floor (#462). Options page: `docs/plans/ophan-beam-fixes.html`.
+- **Ophan bugs and solid beams (approved 2026-10-27, being built on `AjsAgent/gym-with-demand-page`).** Its target is
+  always the living player carrying the most worth, then down the list, at any range and never chosen by sight; sight
+  only picks the attack. Seen, it locks on and drains with the slow beam; behind stone (walls and roofs alike) for
+  `CoverSecondsBeforeCharge`, it charges, from watching as well as from draining. The spectator camera copies the player
+  camera (far clip 3000 m) so the whole Ophan draws while down, on host and client. The slow beam is a bright opaque core
+  inside the soft shaft. Through the 3 s charge a thin beam runs from the eye to the target, following them and growing
+  wider and brighter until the blast. The charged beam cuts a hole for real: the host sends the rooms and the beam's line,
+  and every machine removes the triangles of those room meshes within 1.5 m of the line from both the drawn mesh and its
+  collider. This reverses pick 9A (Decisions, 2026-10-27). Plan page: `docs/plans/ophan-bugs-and-beams.html`.
 - **Every machine sees the same thing.** The turn, the lantern, the arrival and each catch are
   decided on the host and shown on every client (the Ophan's target, beams, scorched rooms and takes too); nothing here is polled each frame (`core.md`,
   "When Update is allowed").

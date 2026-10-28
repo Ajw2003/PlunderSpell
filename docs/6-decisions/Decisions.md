@@ -1639,3 +1639,12 @@ playtest controllers) was still in the tree to be copied. Nothing checked new co
 **The guard.** #350 moves every key onto the input actions asset and sets Active Input Handling to the new Input
 System only, so an old-input call throws the first time it runs. Further guards proposed to the owner: a test that
 fails on any `UnityEngine.Input` use under `Assets/_Project`, and an input line in the shared C# standards.
+
+## 2026-10-27 — The Ophan's charged beam breaks walls for real (reverses pick 9A)
+
+**Was:** the charged beam's wall burst was a look only; walls stayed solid to walk into (pick 9A, `docs/plans/ophan-beam-fixes.html`).
+**Now:** the charged beam cuts a hole along its path in every room mesh it passes, in the drawn mesh and the collider,
+on every machine (`docs/plans/ophan-bugs-and-beams.html`, pick 5A). A room is one mesh (walls, floor and roof together),
+so the cut removes only triangles near the beam's line rather than whole meshes, keeping floors under players elsewhere.
+**Also settled:** the Ophan's target is chosen by worth alone, at any range; sight only decides slow beam or charge.
+See `docs/4-systems/fear.md`, "Ophan bugs and solid beams".
