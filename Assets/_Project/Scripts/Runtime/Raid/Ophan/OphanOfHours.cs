@@ -224,7 +224,7 @@ namespace Plunderspell.Raid
                 foreach (CastleRoomModule room in rooms)
                     if (!indices.Contains(ScorchedRooms.IndexOf(room)))
                         indices.Add(ScorchedRooms.IndexOf(room));
-            ShowCharged(aim, indices.ToArray(), holes.ToArray());
+            ShowCharged(_eyePoint, aim, indices.ToArray(), holes.ToArray());
             StartCoroutine(HitAfterTheBurst(_target, aim));
             Debug.Log($"[Ophan] charged beam at {aim}; {indices.Count} room(s) scorched, {holes.Count} wall(s) burst.");
         }
@@ -294,13 +294,14 @@ namespace Plunderspell.Raid
         }
 
         [ObserversRpc]
-        private void ShowCharged(Vector3 at, int[] rooms, Vector3[] holes)
+        private void ShowCharged(Vector3 eye, Vector3 at, int[] rooms, Vector3[] holes)
         {
             if (_look != null)
                 _look.FlashCharged(at);
-            Vector3 eye = _look != null ? _look.EyePoint : _eyePoint;
             foreach (Vector3 hole in holes)
                 OphanWallBurst.At(hole, (at - eye).normalized);
+            // Stops 2 m short of the aim so the floor under the target is never cut.
+            OphanWallCut.CutRooms(rooms, eye, at - (at - eye).normalized * 2f);
             foreach (int index in rooms)
                 ScorchedRooms.Scorch(ScorchedRooms.RoomAt(index));
         }

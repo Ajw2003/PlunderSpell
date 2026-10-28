@@ -4,8 +4,9 @@ namespace Plunderspell.Raid
 {
     /// <summary>
     /// Where the Ophan's charged beam bursts through stone (#461): a glowing hole with dust and embers blown out the far
-    /// side, shown on every machine half a second before the hit lands, so the target sees the wall give way. A look
-    /// only: the wall stays solid to walk into (pick 9A). Fades and removes itself.
+    /// side, shown on every machine half a second before the hit lands, so the target sees the wall give way. This is
+    /// the look of the burst only: the hole itself is now cut by OphanWallCut (#467), reversing pick 9A. Fades and
+    /// removes itself.
     /// </summary>
     public sealed class OphanWallBurst : MonoBehaviour
     {
