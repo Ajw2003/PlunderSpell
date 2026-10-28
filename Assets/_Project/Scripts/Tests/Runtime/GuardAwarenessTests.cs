@@ -74,7 +74,7 @@ namespace Plunderspell.Tests
         public void AGuardStillTurnsItsBackOnAPlayerSideways()
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
-            _rig.MakeIntruder(new Vector3(0f, 3f, -1.5f));
+            _rig.MakeIntruder(new Vector3(0f, 3f, -4f)); // beyond the 2.5 m circle (#484)
 
             Look(guard);
 

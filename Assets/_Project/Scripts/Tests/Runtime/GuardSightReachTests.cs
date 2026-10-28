@@ -43,6 +43,56 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void APlayerInTheCentreOfTheViewIsSeenAtOnce()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeIntruder(new Vector3(3f, PivotAboveFeet, 8f)); // 20 degrees off, inside the 55 degree centre
+            Assert.That(Sees(guard), Is.True);
+        }
+
+        [Test]
+        public void APlayerAtTheSideOfTheViewIsSeenOnlyAfterPointFourSeconds()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeIntruder(new Vector3(8f, PivotAboveFeet, 2f)); // 76 degrees off: past the centre, inside the sides
+            Assert.That(Sees(guard), Is.False, "first sighting at the side");
+
+            int frames = 1;
+            while (!Sees(guard) && frames < 60)
+                frames++;
+            Assert.That(frames * Frame, Is.InRange(GuardSideNotice.DelaySeconds - Frame, GuardSideNotice.DelaySeconds + 3f * Frame));
+        }
+
+        [Test]
+        public void APlayerBeyondHalfRangeAtTheSideIsNeverSeen()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeIntruder(new Vector3(20f, PivotAboveFeet, 5f)); // 76 degrees off and 20 m: past half of 31.5 m
+            for (int i = 0; i < 60; i++)
+                Assert.That(Sees(guard), Is.False);
+        }
+
+        [Test]
+        public void APlayerInsideTwoAndAHalfMetresIsSeenAtOnceInEveryDirection()
+        {
+            Guard guard = GuardAtOrigin();
+            Transform intruder = _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, -2f));
+            Assert.That(Sees(guard), Is.True, "behind");
+
+            intruder.position = new Vector3(2f, PivotAboveFeet, 0f);
+            Assert.That(Sees(guard), Is.True, "beside");
+        }
+
+        [Test]
+        public void APlayerBehindTheGuardBeyondTwoAndAHalfMetresIsNeverSeen()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, -4f));
+            for (int i = 0; i < 60; i++)
+                Assert.That(Sees(guard), Is.False);
+        }
+
+        [Test]
         public void APlayerOnALedgeWhoseHeadIsClearButWhoseBodyIsBehindTheEdgeIsSeen()
         {
             Guard guard = GuardAtOrigin();
