@@ -1680,3 +1680,18 @@ a gold, slow-pulsing beam for a target the Ophan will spare; stone caps on every
 that avoids holes in floors and uses new routes through broken walls. Door plugs break like rooms (a bug fix).
 aj, same day: the polish is part of the redo, not a feature of its own; the redo has not passed QA yet. Its steps
 #474 to #478 sit under #468, and #473 only records the fold.
+
+## 2026-10-28 — Guard awareness after the co-op playtest
+
+aj saw guards stare at objects, ignore players near beam holes, give up too fast and stand "brain dead" in front of a
+player. Causes are in `docs/generated/guard-deep-dive-2026-10-28/findings.md`. aj approved every suggestion on
+`docs/plans/guard-awareness.html` (1A 2A 3A 4A 5A):
+- a cone in three layers: centre, sides, and a 2.5 m circle all round;
+- hearing that gives the point where a sound reached the guard's room plus a direction back to the source, found with
+  a sphere cast;
+- sight and guard hearing at 1.5 times their range;
+- a guard loses a player only after 8 s with nothing new and with the player 3 or more rooms away;
+- chase at 5.5 m/s with the alarm speed bonus switched on, and two melee guards swinging at once.
+The fixes that come with any choice are part of the same approval: a guard with no route takes the long way or holds
+below; standing guards look around; only stone blocks sight; and a guard turns toward a sound.
+The 20 s arrival grace stays. The Ophan, fracture and beam files and the #478 nav files are not touched.
