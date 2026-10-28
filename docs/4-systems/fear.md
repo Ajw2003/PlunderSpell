@@ -92,6 +92,14 @@ lives under `Guards/`, the quota under `Lair/`, `Raid/RaidDirector.cs` and the l
   radius, and every machine runs the same hit on the same baked graph, so colliders match; debris is a per-machine look.
   Each room is split into wall, roof, floor and props in Unity when its fracture data is baked (pick 2A), checked on a
   review sheet. `OphanWallCut` is removed once the port works.
+- **Ophan polish (approved 2026-10-28, `docs/plans/ophan-polish.html`).** From aj's play-through of the redo: door
+  plugs are split, baked and broken like rooms, and the charged beam names any castle piece on its line, not only
+  rooms. The bake subdivides walls, roofs, floors and plugs to 1.5 m and leaves props whole, for the Steam Deck. A beam
+  aimed at a target carrying what the Ophan wants turns gold with a slow pulse; a killing beam stays white-hot and
+  pulses fast through the charge. Every edge a break leaves is capped front to back with a strip of the same stone
+  (0.5 m in walls, 0.3 m in floors), the same on every machine. The guard navigation grid learns each break on the
+  host: cells over a broken floor become unwalkable, and a hole through a wall big enough to walk through joins the
+  cells on both sides, so guards can chase through it.
 - **Every machine sees the same thing.** The turn, the lantern, the arrival and each catch are
   decided on the host and shown on every client (the Ophan's target, beams, scorched rooms and takes too); nothing here is polled each frame (`core.md`,
   "When Update is allowed").

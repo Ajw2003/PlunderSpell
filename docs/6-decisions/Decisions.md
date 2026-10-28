@@ -1671,3 +1671,10 @@ After the failed QA (#463), aj chose: the charged beam fires twice, the first sh
 second, 1 s later by default, re-aiming at the target and breaking new stone if it must; the beams keep their look but
 aim at the chest from the eye bone; destruction moves to aj's fracture system from ufo-3-rag-dahl, networked, with rooms
 split into wall, roof, floor and props at bake (pick 2A). This replaces `OphanWallCut`. Plan: `docs/plans/ophan-redo-plan.html`.
+
+## 2026-10-28 — Ophan polish after aj's play-through (#468)
+
+aj played the redo and found it working ("exactly the feeling of fear turned relief"), and asked for five changes.
+Chosen on `docs/plans/ophan-polish.html` (1A 2A 3A 4B): 1.5 m fracture pieces with props whole (Steam Deck budget);
+a gold, slow-pulsing beam for a target the Ophan will spare; stone caps on every broken edge; and guard navigation
+that avoids holes in floors and uses new routes through broken walls. Door plugs break like rooms (a bug fix).
