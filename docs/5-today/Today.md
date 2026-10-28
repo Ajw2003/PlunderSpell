@@ -1,5 +1,14 @@
 # Today
 
+**2026-10-27 (late night) - Ophan redo built, recorded, awaiting aj's hand test (#468: #469 to #472; `AjsAgent/gym-with-demand-page`).**
+The beam aims at the chest from the eye bone; the charged beam fires twice (break, then kill 1 s later). Every castle
+room is split into wall, roof, floor and props (`RoomPartSplitter`) and baked for aj's fracture system, ported from
+ufo-3-rag-dahl into `Plunderspell.Fracture` and networked through `OphanOfHours.ShowCharged`; `OphanWallCut` is gone.
+79 rooms, 3.1 M triangles. EditMode 266 pass / 3 skipped. Recorded co-op run (`Tools/Unity/ophan_redo_check.sh`,
+`docs/generated/ophan-redo-468/fourth/`): two shots and the break seen; 185 fps before the break, 114 after. Still off:
+debris reads as flat bright squares, and the charge's soft shaft hazes the target's screen. QA page:
+`docs/plans/ophan-redo-qa.html`.
+
 **2026-10-27 (night) - Ophan bugs and solid beams, built, awaiting aj's hand test (#463: #464 to #467; `AjsAgent/gym-with-demand-page`).**
 The dropped page is picked up with E (Interact). The spectator camera copies the player camera (3000 m far clip). Sight
 only picks the attack: a target hidden while the Ophan watches draws the charge. The slow beam has a solid core; the

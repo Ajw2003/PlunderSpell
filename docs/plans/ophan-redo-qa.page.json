@@ -1,0 +1,42 @@
+{
+  "title": "QA: Ophan redo",
+  "eyebrow": "Hand test for issue #468 (steps #469 to #472) on AjsAgent/gym-with-demand-page, with my recorded co-op run read frame by frame",
+  "qa": {
+    "feature": "Ophan redo",
+    "base": "5271ea71",
+    "unverified": [
+      "Nobody has played the redo by hand yet.",
+      "The client's own window is not in my recordings, because another window covered it, so I read only the host's view.",
+      "Falling debris looks like large, flat, bright squares. I have not changed how debris is drawn.",
+      "While the beam charges, its soft outer shaft spreads a whitish haze over the target player's screen.",
+      "After one wall broke, the frame rate fell from 149 to 119 fps in one run and from 185 to 114 fps in a second run. I did not measure a long hunt with many breaks.",
+      "Whether a player can walk through a broken hole was not tried."
+    ],
+    "files": {}
+  },
+  "short": {
+    "lead": "The redo is built and pushed. The beam aims at the chest from the eye bone, the charged beam fires twice, every castle room is split into wall, roof, floor and props, and your fracture system breaks them on every machine. Editor tests pass: 266 passed, 3 skipped, 0 failed. I recorded the final co-op run and read it two frames a second; what I saw is below, including two things that still look off.",
+    "hint": "Start the gym with the command in Start, then play each item. The frames show what my run looked like.",
+    "key": [["Seen in my recording", "done"], ["You play it", "you"]],
+    "items": [
+      ["play", "Start", "Open the Ophan Gym in co-op", "you", "In Git Bash, from C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell-demand, run: bash Tools/Unity/coop_local.sh --gym. It rebuilds the client if the game changed, presses Play, hosts, and opens a second window that joins. You should see the line \"Co-op on this PC is up\". F7 summons the Ophan, F8 stops damage to you, F9 removes the guards, F10 slows time.", "Run it once; every item below uses this session."],
+      ["play", "Aim", "The beam reaches your chest", "you", "Pick up loot, press F7, and stand in the open. From your own view the slow beam should come down from the eye to you, not from overhead; from the other window it should end at your chest.", "Say whether the beam's direction is right now.", {"src": "../generated/ophan-redo-468/fourth/sheet-end.jpg", "alt": "Spectator frames: a beam runs from the Ophan's eye straight down to the watched player.", "caption": "My run, spectating the client: the slow beam runs from the eye down to the player, no white-out."}],
+      ["play", "Two shots", "The charged beam breaks the wall, then kills", "you", "During a drain, step behind a wall and stay there. After 3 s the Ophan charges for 3 s; a beam grows toward you. The first shot breaks the wall and does no damage. The slow beam drains you through the new hole, and 1 s after the first shot the second re-aims at you and kills. Moving out of the hole's line during that second does not save you; that is the behaviour you chose.", "Say whether the timing feels right.", {"src": "../generated/ophan-redo-468/fourth/sheet-shots.jpg", "alt": "Eight host frames: the charge beam grows beside a wall, the screen brightens, the wall breaks into jagged pieces with debris, then a bright flash.", "caption": "My run, host view, half a second apart: the growing charge, the haze, the break, and the second shot."}],
+      ["play", "Breaking", "Walls and roofs break, and you can walk through", "you", "After a charged shot, look at the wall it went through on both machines, and walk into the hole.", "Say how the break and the debris look. In my run the debris looked like large, flat, bright squares."],
+      ["check", "Split", "Every room is split into parts", "done", "All 79 rooms are split into wall, roof, floor and props. Each part is subdivided to 0.75 m pieces, made double-sided and given a baked fracture graph: 3.1 million triangles in all, about 39 thousand per room against about 600 before.", "Nothing needed from you, unless the frame rate drop bothers you when you play.", {"src": "../generated/room-parts-471-sheet.jpg", "alt": "A grid of 81 castle rooms tinted by part: grey walls, green floors, yellow props, red roofs.", "caption": "The review sheet: grey wall, red roof, green floor, yellow props."}]
+    ]
+  },
+  "changes": [
+    ["chg", "Aim (#469)", "The beam ends at the chest and starts from the eye bone.", ["2.1 m up, over the head; logic and drawing from different points", "Chest height; one eye point for the cover test, the break and the beam"], "OphanOfHours, OphanLook. The beam also fades near any camera looking along it, so a spectator is not whited out.", null],
+    ["chg", "Two shots (#470)", "Break, then kill 1 s later.", ["One shot killed", "The first breaks stone with no damage; the second re-aims and kills"], "OphanHunt, OphanOfHours, OphanTuning.SecondShotDelaySeconds; two new editor tests.", null],
+    ["chg", "Room split (#471)", "Wall, roof, floor and props per room.", ["One mesh per room", "Four parts per room, split at bake"], "Tools/Plunderspell/Castle/Split Castle Rooms Into Parts, with a review sheet.", null],
+    ["chg", "Fracture (#472)", "Your fracture system, networked.", ["A triangle cutter I wrote", "Your system: the host names the rooms and the line, every machine breaks the same pieces"], "Plunderspell.Fracture, ported from ufo-3-rag-dahl; Tools/Plunderspell/Castle/Bake Castle Room Fracture. Fixed while porting: the weld distance in the rooms' 1/100 mesh space, a subdivision that never finished, and intact walls turning white once broken.", null]
+  ],
+  "wrapup": {
+    "summary": "The Ophan redo is built, recorded and pushed; two looks still need your eye: the debris squares and the charge haze.",
+    "changing": "The Ophan's aim, its two-shot charged beam, and real breaking of castle walls and roofs.",
+    "blocking": "Your hand test. Issues #468 to #472 are marked needs review until you pass it.",
+    "next": "On a pass I open the pull request into staging. On a failure, send a recording and I read it the same way.",
+    "todo": ["Play the items in order.", "Tap <b>Copy my reply</b>.", "Send it with \"QA passed: Ophan redo\", or what failed."]
+  }
+}
