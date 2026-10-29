@@ -1,0 +1,58 @@
+{
+ "title": "No debt, no purses",
+ "eyebrow": "Your ask on 2026-10-29: deprecate debt and purses, and keep wealth in the Lair with the rest of the loot",
+ "approval": "Design approved: no debt",
+ "short": {
+  "lead": "Debt and purses touch 12 runtime files and 11 test files. Most of it is in LairHubManager (61 lines mention them). It keeps each seat's purse and the company's debt, and saves both per slot. When the company sets out, it has the Collector take each wizard's share of the debt. A sale at a market counter puts a coin pouch on the counter. Dropping the pouch in a strongbox banks it into that seat's purse. Nothing in the game spends money. Removing all of that leaves selling, the haul pile and the Ophan's demand. This page lists what goes and gives you three choices.",
+  "hint": "Tap an item to see what I found in the code, or what you need to pick.",
+  "key": [["Found in the code", ""], ["You pick", "you"]],
+  "items": [
+   ["search", "Debt", "What debt does today", "",
+    "LairHubManager holds the company's debt. When the company sets out, CollectorRules splits the debt equally among the wizards present. From each wizard it takes the lesser of their purse and their share. The ledger book's pages show purse, share and paid for each seat. The raid HUD and main menu show the debt.",
+    "Nothing to pick."],
+   ["search", "Purses", "What purses do today", "",
+    "Each seat has a saved purse. A sale makes a carryable coin pouch (CoinPouch); dropping it in a wizard's strongbox (LairStrongbox) banks it into that seat's purse. The host sends the ledger to clients through RaidDirector.",
+    "Nothing to pick."],
+   ["stop", "Goes", "What is removed", "",
+    "The debt, each seat's purse, the Collector (CollectorRules), banking into strongboxes, the debt and purse rows of the ledger, the debt on the HUD and menu, the events and saved values for them, and their tests.",
+    "Nothing to pick."],
+   ["hand", "Wealth", "Where wealth lives", "you",
+    "My suggestion is option A under \"What does a sale give?\": a sale's coin pouch is ordinary loot. It lies in the Lair with the haul pile and is saved with it.",
+    "Pick under Choices, in \"What does a sale give?\""],
+   ["hand", "Ledger", "What the ledger book shows", "you",
+    "With no debt or purses, the ledger keeps the Ophan's demand page. Pick whether it also counts the wealth in the Lair.",
+    "Pick under Choices, in \"What does the ledger show?\""]
+  ]
+ },
+ "changes": [
+  ["chg", "LairHubManager", "Keeps the haul pile, the chosen Age and the demand; loses debt, purses and the Collector.", ["Debt, a purse per seat, the Collector", "No money of its own"], "Lair/LairHubManager.cs, LairState.cs, LairEvents.cs.", null],
+  ["chg", "Selling", "A sale still makes a coin pouch.", ["Pouch banked into a seat's purse at a strongbox", "Pouch is loot, saved with the haul pile"], "Raid/SellCounter.cs, CoinPouch.cs, HaulPileSave.", null],
+  ["chg", "Ledger, HUD and menu", "No debt, purse, share or paid rows.", ["Shows debt and each seat's purse", "Shows the demand (and wealth, if you pick it)"], "Lair/LedgerPageText.cs, UI/RaidHud, UI/Screens/MainMenuScreen.cs, the RaidDirector ledger sync.", null],
+  ["chg", "Collector", "Removed.", ["Takes each wizard's share of the debt at setting out", "Gone"], "Market/CollectorRules.cs and its tests.", null]
+ ],
+ "choices": [
+  ["sale", "What does a sale give?", [
+    ["A", "A coin pouch that is loot, kept in the Lair", 1, "The counter still pays out a carryable coin pouch. It is loot like any other: it lies in the Lair or the Market, goes on the haul pile, and is saved and restored with it."],
+    ["B", "One shared wealth number", 0, "A sale adds its price to one shared total, saved per slot, with no pouch to carry."]
+   ], "A matches what you asked for: wealth kept in the Lair with the rest of the loot."],
+  ["box", "What happens to the strongboxes?", [
+    ["A", "Removed", 1, "With no purses, there is nothing to bank into, so the strongboxes go."],
+    ["B", "Kept as storage", 0, "A strongbox becomes a place to keep pouches and small loot, saved with the haul pile, with no banking."]
+   ], "A is the smallest; B only if you want a place to stash things."],
+  ["ledger", "What does the ledger show?", [
+    ["A", "The Ophan's demand only", 1, "The ledger book keeps the demand page and drops the debt and purse pages."],
+    ["B", "The demand and the wealth in the Lair", 0, "It also counts the worth of everything in the Lair and the haul pile and shows the total."]
+   ], "A is the smallest; B gives you a running total."]
+ ],
+ "wrapup": {
+  "summary": "Debt, purses, the Collector and banking go; a sale's coin pouch becomes loot kept in the Lair. The scene split carries on alongside this.",
+  "changing": "Nothing about debt or purses changes until you make your three picks.",
+  "blocking": "Your three picks: what a sale gives, what happens to the strongboxes, and what the ledger shows.",
+  "next": "Next I open a GitHub issue with one sub-issue per step. Then I remove debt and purses and update their tests. Last, I check selling, the haul pile and the ledger in co-op.",
+  "todo": [
+   "Pick one option in each of the three choices.",
+   "Tap <b>Copy my reply</b>.",
+   "Send it with \"Design approved: no debt\", or tell me what to change."
+  ]
+ }
+}
