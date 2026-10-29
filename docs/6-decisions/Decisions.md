@@ -3,6 +3,24 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-29 — Build plan approved: frame pacing for the Ophan's charged shot (#523)
+
+**Status.** Decided by the owner: "Build plan approved: frame pacing" (thread, 2026-10-29), after "go ahead yes" to
+the four-step plan.
+
+**Decision.** Nothing a charged shot does may cost a frame. Steps: #524 the guards' map refresh scans at most 2 ms a
+frame and rebuilds on a background thread; #525 a broken part's collider cooks on a worker, and the copies a first
+break needs are made at castle load; #526 the castle and loot lookups are cached; #527 the rest of the code audit's
+Ophan and fracture items. Fracture debris is set up and its shader warmed at castle load, and the owner's sphere-cast
+beam replaces the room-list beam. Every shot logs its break and refresh cost.
+
+**Why.** The owner "will almost always take anything over stutters, hitching, freezing or frame drops": 170 MB of GPU
+memory at load is better than a hitch. Measured in co-op, a shot cost 5-23 ms to break and the nav refresh 100-340 ms;
+after #524 to #526 a shot breaking 4-5 parts costs 4-9 ms and the refresh at most 2 ms a frame.
+
+**Note.** #524 to #526 were edited by script after the go-ahead but before this build approval, which the house-rules
+gate requires; the owner was told in the thread.
+
 ## 2026-10-27 — Build plan approved: the Ophan in the sky (#418)
 
 **Status.** Decided by the owner: "Build plan approved: ophan in the sky 1C 2A 3A 4A 5A 6A 7A 8A 9A".

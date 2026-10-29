@@ -97,7 +97,8 @@ namespace Plunderspell.Raid
 
         public void Destroy()
         {
-            Object.Destroy(_renderer.sharedMaterial);
+            // When Play stops, Unity may have destroyed the renderer before the Ophan's look cleans up (#527).
+            if (_renderer != null) Object.Destroy(_renderer.sharedMaterial);
             Object.Destroy(_mesh);
             Object.Destroy(_go);
         }
