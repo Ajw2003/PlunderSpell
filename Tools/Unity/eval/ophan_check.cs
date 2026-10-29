@@ -457,7 +457,7 @@ switch (action)
             + ", fracturable parts " + FindAll("Plunderspell.Fracture.FracturableObject").Length
             + ", wall bursts " + FindAll("Plunderspell.Raid.OphanWallBurst").Length
             + ", castle rooms " + FindAll("Plunderspell.Castle.CastleRoomModule").Length
-            + ", state " + Plunderspell.Core.GameServices.GameState.CurrentState;
+            + ", state " + Get(Get(T("Plunderspell.Core.GameServices"), "GameState"), "CurrentState");
 
     case "shot":
         UnityEngine.ScreenCapture.CaptureScreenshot(arg);
