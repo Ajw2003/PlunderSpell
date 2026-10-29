@@ -25,7 +25,18 @@ namespace Plunderspell.Raid
         private NetworkManager _network;
         private bool _switching;
 
-        private void Awake() => Current = this;
+        /// <summary>SessionState key the co-op launcher sets to load a raid scene variant (the Ophan Gym) in place of RaidScene.</summary>
+        public const string RaidSceneOverrideKey = "Plunderspell.RaidSceneOverride";
+
+        private void Awake()
+        {
+            Current = this;
+#if UNITY_EDITOR
+            string raidOverride = UnityEditor.SessionState.GetString(RaidSceneOverrideKey, "");
+            if (!string.IsNullOrEmpty(raidOverride))
+                _raidScene = raidOverride;
+#endif
+        }
 
         // Start, not OnEnable: the network manager and the event manager in the same scene are set up in their Awake.
         private void Start()

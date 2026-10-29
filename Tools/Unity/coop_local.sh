@@ -16,14 +16,17 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/settings_restore.sh"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo"
 build=auto
-scene=Assets/_Project/Scenes/RaidScene.unity
+# The game starts in the Bootstrap scene and loads the Lair and the raid on top (#536); the gym is a raid scene loaded
+# in place of RaidScene (#542), chosen through SceneFlow's SessionState override.
+scene=Assets/_Project/Scenes/Bootstrap.unity
 gym_scene=Assets/_Project/Scenes/OphanGym.unity
+raid_override=""
 client=Build/DevTest
-scenes=()   # the main client builds the Build Settings scene list; the gym's builds the gym alone
+scenes=()   # the main client builds the Build Settings scene list; the gym's builds Bootstrap, Lair and the gym
 while [ $# -gt 0 ]; do
     case "$1" in
         --build) build=yes ;; --no-build) build=no ;;
-        --gym) scene="$gym_scene"; client=Build/OphanGym; scenes=(--scenes "[\"$gym_scene\"]") ;;
+        --gym) raid_override=OphanGym; client=Build/OphanGym; scenes=(--scenes "[\"Assets/_Project/Scenes/Bootstrap.unity\",\"Assets/_Project/Scenes/Lair.unity\",\"$gym_scene\"]") ;;
         *) echo "unknown option $1"; exit 1 ;;
     esac
     shift
@@ -52,7 +55,7 @@ if [ "$playing" = yes ] && [ "$open" != "$scene" ]; then
     exit 1
 fi
 if [ "$playing" = no ]; then
-    if [ "$scene" = "$gym_scene" ] && { [ ! -f "$gym_scene" ] || [ Assets/_Project/Scenes/RaidScene.unity -nt "$gym_scene" ]; }; then
+    if [ -n "$raid_override" ] && { [ ! -f "$gym_scene" ] || [ Assets/_Project/Scenes/RaidScene.unity -nt "$gym_scene" ]; }; then
         say "$(ev 'return Plunderspell.EditorTools.OphanGymBuilder.Build();')"
     fi
     if [ "$(ev 'return UnityEngine.SceneManagement.SceneManager.GetActiveScene().path;')" != "$scene" ]; then
@@ -87,6 +90,8 @@ fi
 [ -f "$client/Plunderspell.exe" ] || { say "No client build yet: run this with the Editor out of Play mode so it can build one."; exit 1; }
 
 if [ "$playing" = no ]; then
+    # Which raid scene the host loads at the portal: the gym, or RaidScene when the override is empty.
+    ev "UnityEditor.SessionState.SetString(\"Plunderspell.RaidSceneOverride\", \"$raid_override\"); return \"raid scene: ${raid_override:-RaidScene}\";" >/dev/null
     say "Pressing Play in the Editor..."
     unity command editor_play "${cli[@]}" >/dev/null
     for _ in $(seq 1 60); do

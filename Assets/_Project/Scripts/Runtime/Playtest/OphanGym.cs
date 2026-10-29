@@ -44,7 +44,8 @@ namespace Plunderspell.Playtest
 
         private void Awake()
         {
-            _ophan = GetComponent<OphanOfHours>();
+            // The Ophan lives in the Bootstrap scene; the gym is a raid scene loaded on top of it (#542).
+            _ophan = FindFirstObjectByType<OphanOfHours>();
             // The gym brings the Ophan itself, on its own clock; the raid's own schedule must stay quiet.
             OphanOfHours.HuntOverride = false;
         }

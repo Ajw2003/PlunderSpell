@@ -33,15 +33,20 @@ namespace Plunderspell.EditorTools
                 return "[OphanGym] not built: could not copy " + RaidScenePath;
 
             var scene = EditorSceneManager.OpenScene(GymScenePath, OpenSceneMode.Single);
-            var ophan = Object.FindFirstObjectByType<OphanOfHours>();
-            if (ophan == null)
-                return "[OphanGym] not built: " + RaidScenePath + " has no OphanOfHours to put the gym beside.";
-            GameObject network = ophan.gameObject;
-            network.AddComponent<OphanGym>();
-            network.AddComponent<OphanGymKeys>();
-            network.AddComponent<OphanGymPanel>();
+            // The Ophan is in the Bootstrap scene since the split (#542): the gym is its own root in this raid scene,
+            // loaded by SceneFlow in place of RaidScene when the launcher asks for the gym.
+            var gym = new GameObject("OphanGym");
+            gym.AddComponent<OphanGym>();
+            gym.AddComponent<OphanGymKeys>();
+            gym.AddComponent<OphanGymPanel>();
             EditorSceneManager.SaveScene(scene);
-            return "[OphanGym] built " + GymScenePath + " from " + RaidScenePath + ", gym on " + network.name + ".";
+            var build = new System.Collections.Generic.List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+            if (!build.Exists(s => s.path == GymScenePath))
+            {
+                build.Add(new EditorBuildSettingsScene(GymScenePath, true));
+                EditorBuildSettings.scenes = build.ToArray();
+            }
+            return "[OphanGym] built " + GymScenePath + " from " + RaidScenePath + ", gym on its own root.";
         }
     }
 }
