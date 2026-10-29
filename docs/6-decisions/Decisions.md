@@ -3,6 +3,23 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-29 — Design approved: the Lair and the Market in their own scene
+
+**Status.** Decided by the owner: "Design approved: lair scene split 1A 2A 3A" (plan page
+`docs/plans/lair-scene-split.html`).
+
+**Decision.** 1A: a Bootstrap scene that is never unloaded holds the network manager, game state, event manager and
+the players; the Lair scene (Lair room and Market yard) and the Raid scene load on top of it one at a time, through
+PurrNet's scene module so both machines switch together. 2A: the next raid scene loads in the background while players
+are in the Lair and switches on at the portal. 3A: the Ophan Gym becomes a raid-scene variant entered through the same
+Lair. Movement stays on Rigidbodies for now; whether to rework it is decided after the split, once the remaining
+moves (spawn on scene load, the portal) are tested with heavy carried pieces (owner, 2026-10-29).
+
+**Why.** The Lair and the Market were rooms 1000 m and 1100 m off to the side inside RaidScene, so a raid's castle and
+debris lived beside them and stayed loaded until code cleaned them up: a co-op run counted 63 rooms, 214 breakable
+parts and 434 debris effects left behind the Lair before the same-scene fix of 2026-10-29. Unloading a raid scene
+removes everything in it, whatever spawned it. The owner put steady frames over memory, hence the background load.
+
 ## 2026-10-29 — Build plan approved: frame pacing for the Ophan's charged shot (#523)
 
 **Status.** Decided by the owner: "Build plan approved: frame pacing" (thread, 2026-10-29), after "go ahead yes" to

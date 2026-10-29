@@ -14,6 +14,7 @@ everything else feeds.
 | [`alarm.md`](alarm.md) | Noise propagation and the castle-wide alarm state machine |
 | [`raid.md`](raid.md) | The loop itself: Lair → castle → haul → extraction → Lair, plus the guards, HUD, status effects and playtest harness that serve it |
 | [`market.md`](market.md) | The Market's four counters, their vendors and the haggle: *Plus* / *Satis* / *Vale* on keys 1 / 2 / 3, how a sale banks coins and leaves the haul pile |
+| [`scene-flow.md`](scene-flow.md) | Planned: the Bootstrap, Lair and Raid scenes, how both machines change scenes together, and what crosses between them |
 | [`raid-scene-assembly.md`](raid-scene-assembly.md) | Wiring the authored castle/loot/enemy art into the playable scene: the three catalogue ScriptableObjects, NavMesh timing, Blender-to-Unity orientation, and the menu → lair → raid flow |
 | [`enemy-asset-pipeline.md`](enemy-asset-pipeline.md) | Generating the enemy roster's meshes/rigs/textures from Python |
 | [`Tools/ArtForge/README.md`](../../Tools/ArtForge/README.md) | Turning the art bible (`docs/art/`) into game models on top of EnemyForge: blueprint API, part kinds, validation, review sheets, traps. Tool-level doc, kept beside the code; all 20 plunder items, all 16 enemies and the player wizard built, no structures |
